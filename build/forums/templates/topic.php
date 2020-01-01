@@ -50,7 +50,8 @@ This File display a topic and the messages which are inside it
         if (!isset($topic->topicinfo->IsClosed)) {
             $topic->topicinfo->IsClosed = false;
         }
-        echo '<h2 class="mb-0">';
+        echo '<div class="clearfix">';
+        echo '<h2 class="mb-0 float-left">';
 
         if ($topic->topicinfo->ThreadDeleted == 'Deleted') {
             echo "[Deleted]";
@@ -62,12 +63,12 @@ This File display a topic and the messages which are inside it
         echo $words->fTrad($topic->topicinfo->IdTitle);
         if ($User) {
             echo '<a href="/forums/reverse" class="h6 ml-2" title="' . $words->getSilent('ReverseOrder') . '" ><i class="fa fa-exchange-alt fa-rotate-90" title="'
-                . $words->getSilent('ReverseOrder') . '" /></i></a> ' . $words->flushBuffer();
+                . $words->getSilent('ReverseOrder') . '" /></i></a></h2> ' . $words->flushBuffer();
         }
 
 
+        echo "<div class='float-right'>";
         if ($User) {
-
             if (isset($topic->isGroupSubscribed) && ($topic->isGroupSubscribed)) {
                 if (isset($topic->IdSubscribe)) {
                     if ($topic->notificationsEnabled > 0) {
@@ -113,7 +114,8 @@ This File display a topic and the messages which are inside it
 
         }
 
-        echo "</h2>";
+        echo "</div>";
+        echo "</div>"
         ?>
             <?php
             if ($topic->topicinfo->IdGroup > 0) {
@@ -178,7 +180,6 @@ This File display a topic and the messages which are inside it
 
 </div>
 </div>
-<div class="row">
 <?php
 // counting for background switch trick
 $cntx = '1';
@@ -194,14 +195,13 @@ if ($User) {
 
     if (!$topic->topicinfo->IsClosed) {
         ?>
-        <div class="col-12 mb-2">
-            <a href="<?php echo $replyuri; ?>" class="btn btn-primary btn-sm float-right"><?php echo $words->getBuffered('ForumReply');; ?></a>
+<div class="row align-content-between mb-2">        <div class="col">
+            <a href="<?php echo $replyuri; ?>" class="btn btn-primary btn-sm"><?php echo $words->getBuffered('ForumReply');; ?></a>
             <?php echo $words->flushBuffer() ?>
-        </div>
+        </div> </div>
         <?php
     }
 
 }
 }
 ?>
-</div>

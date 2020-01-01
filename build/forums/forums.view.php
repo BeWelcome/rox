@@ -104,6 +104,14 @@ class ForumsView extends RoxAppView {
         return $baseurl.'s'.$post->threadid.'-'.preg_replace('/[^A-Za-z0-9]/', '_',$this->words->fTrad($post->IdTitle) ) ;
     }
 
+    public  function groupURL($post, $baseurl = false)
+    {
+        if ($baseurl === false) {
+            $baseurl = $this->uri;
+        }
+        return '/group/'.$post->IdGroup;
+    }
+
 
     public function replyTopic(&$callbackId) {
         $boards = $this->_model->getBoard();

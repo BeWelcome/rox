@@ -123,57 +123,6 @@ function GetIdThread($IdPost) {
 } //GetIdThread
 
 /**
-* this function allows to vote for the given IdPost with teh value $Value
-**/
-function VoteForPost($IdPost,$Value) {
-	if (empty($this->_session->get("IdMember"))) {
-		return ;
-	}
-
-	$IdMember=$this->_session->get("IdMember") ;
-	$MyVote=$this->singleLookup("select * from forums_posts_votes where IdPost=".$IdPost." and IdContributor=".$IdMember) ;
-	if (!empty($MyVote->IdPost)) {
-		$ss="update forums_posts_votes set NbUpdates=NbUpdates+1,Choice='".$Value."' where IdPost=".$IdPost." and IdContributor=".$IdMember ;
-		$qq = $this->dao->query($ss);
-		if (!$qq) {
-            throw new PException('Update VoteForPost failed '.$ss.' !');
-		}
-	    MOD_log::get()->write("Updating vote for forum post #".$IdPost,"Forum") ;
-	}
-	else {
-		$ss="insert into forums_posts_votes(IdPost,IdContributor,Choice,created) values(".$IdPost.",".$IdMember.",'".$Value."',now())" ;
-		$qq = $this->dao->query($ss);
-		if (!$qq) {
-            throw new PException('Insert VoteForPost failed '.$ss.' !');
-		}
-	    MOD_log::get()->write("inserting vote for forum post #".$IdPost,"Forum") ;
-	}
-
-
-} // end of VoteForPost
-
-/**
-* this function allows to vote for the given IdPost with teh value $Value
-**/
-function DeleteVoteForPost($IdPost) {
-	if (empty($this->_session->get("IdMember"))) {
-		return ;
-	}
-
-	$IdMember=$this->_session->get("IdMember") ;
-	$MyVote=$this->singleLookup("select * from forums_posts_votes where IdPost=".$IdPost." and IdContributor=".$IdMember) ;
-	if (!empty($MyVote->IdPost)) {
-		$ss="delete from  forums_posts_votes where IdPost=".$IdPost." and IdContributor=".$IdMember ;
-		$qq = $this->dao->query($ss);
-		if (!$qq) {
-            throw new PException('Delete VoteForPost failed '.$ss.' !');
-		}
-	    MOD_log::get()->write("Deleting vote for forum post #".$IdPost,"Forum") ;
-	}
-
-} // end of DeleteVoteForPost
-
-/**
 * FindAppropriatedLanguage function will retrieve the appropriated default language
 * for a member who want to reply to a thread (started with the#@IdPost post)
 * this retriewal is made according to the language of the post, the current language of the user
@@ -1081,7 +1030,6 @@ SELECT
     `postid`,
     `authorid`,
     `IdWriter`,
-    `HasVotes`,
     `IdLocalEvent`,
     `PostDeleted`,
     `PostVisibility`,
@@ -1163,7 +1111,6 @@ SELECT
     `authorid`,
     `IdWriter`,
     `forums_posts`.`threadid`,
-    `HasVotes`,
     `IdLocalEvent`,
     `first_postid`,
 	`OwnerCanStillEdit`,
@@ -1256,7 +1203,6 @@ WHERE `postid` = $this->messageId
 */
     private function editPost($vars, $editorid) {
         $query = "SELECT message,forums_posts.threadid,
-    `HasVotes`,
     `PostVisibility`,
     `IdLocalEvent`,
 		OwnerCanStillEdit,IdWriter,forums_posts.IdFirstLanguageUsed as post_IdFirstLanguageUsed,forums_threads.IdFirstLanguageUsed as thread_IdFirstLanguageUsed,forums_posts.id,IdWriter,IdContent,forums_threads.IdTitle,forums_threads.first_postid from `forums_posts`,`forums_threads` WHERE forums_posts.threadid=forums_threads.id and forums_posts.id = ".$this->messageId ;
@@ -1723,10 +1669,9 @@ WHERE `threadid` = '%d' ",
 
 		 if (isset($vars["submit"]) and ($vars["submit"]=="update post")) { // if an effective update was chosen for a forum trads
 		 	$OwnerCanStillEdit="'".$vars["OwnerCanStillEdit"]."'"  ;
-		 	$HasVotes="'".$vars["HasVotes"]."'"  ;
 
-        	MOD_log::get()->write("Updating Post=#".$IdPost." Setting OwnerCanStillEdit=[".$OwnerCanStillEdit."] HasVotes=[".$HasVotes."]","ForumModerator");
-			$this->dao->query("update forums_posts set OwnerCanStillEdit=".$OwnerCanStillEdit.",HasVotes=".$HasVotes." where id=".$IdPost);
+        	MOD_log::get()->write("Updating Post=#".$IdPost." Setting OwnerCanStillEdit=[".$OwnerCanStillEdit."]","ForumModerator");
+			$this->dao->query("update forums_posts set OwnerCanStillEdit=".$OwnerCanStillEdit." where id=".$IdPost);
 		 }
 
 		 if (isset($vars["submit"]) and ($vars["submit"]=="add translated post")) { // if a new translation is to be added for a title
@@ -1892,7 +1837,6 @@ WHERE `threadid` = '%d' ",
                 "
 SELECT
     `forums_posts`.`threadid`,
-    `HasVotes`,
     `IdLocalEvent`,
     `forums_threads`.`first_postid`,
     `forums_threads`.`last_postid`,
@@ -2442,7 +2386,6 @@ SELECT
     forums_posts.threadid,
     OwnerCanStillEdit,
     members.Username as OwnerUsername,
-    HasVotes,
     PostVisibility,
     PostDeleted,
     IdLocalEvent,
@@ -2544,7 +2487,6 @@ SELECT
     `ThreadDeleted`,
 	`OwnerCanStillEdit`,
     `geonames`.`country`,
-    `HasVotes`,
     `IdLocalEvent`,
     `IdGroup`
 FROM forums_posts, forums_threads, members, addresses
@@ -3151,7 +3093,6 @@ AND IdTag=%d
         $query = sprintf(
             "SELECT    `postid`,`forums_posts`.`postid` as IdPost, UNIX_TIMESTAMP(`create_time`) AS `posttime`,  `message`,
     `OwnerCanStillEdit`,`IdContent`,  `forums_threads`.`threadid`,   `forums_threads`.`title`,
-    `HasVotes`,
     `ThreadVisibility`,
     `ThreadDeleted`,
     `PostVisibility`,
@@ -3168,7 +3109,7 @@ AND addresses.IdMember = members.id AND addresses.rank = 0
 AND ($this->PublicThreadVisibility)
 AND ($this->PublicPostVisibility)
 AND ($this->PostGroupsRestriction)
-ORDER BY `posttime` DESC    ",    $IdMember   );
+ORDER BY `posttime` DESC",    $IdMember   );
         $s = $this->dao->query($query);
         if (!$s) {
             throw new PException('Could not retrieve Posts via searchUserposts !');

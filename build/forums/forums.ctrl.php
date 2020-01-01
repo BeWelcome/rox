@@ -126,34 +126,7 @@ class ForumsController extends PAppController
         }
 
         ob_start();
-        if ($this->action == self::ACTION_VOTE_POST) {
-            if (!isset($request[2])) {
-                die("Need to have a IdPost") ;
-            }
-            $IdPost=$request[2] ;
-            if (!isset($request[3])) {
-                die("Need to have a vote value") ;
-            }
-            $Value=$request[3] ;
-            $this->_model->VoteForPost($IdPost,$Value);
-            $this->_model->setThreadId($this->_model->GetIdThread($IdPost));
-            $this->isTopLevel = false;
-            $this->_model->prepareTopic(true);
-            $this->_view->showTopic();
-        }
-        elseif ($this->action == self::ACTION_DELETEVOTE_POST) {
-            if (!isset($request[2])) {
-                 die("Need to have a IdPost") ;
-            }
-            $IdPost=$request[2] ;
-			$this->_model->DeleteVoteForPost($IdPost);
-
-            $this->_model->setThreadId($this->_model->GetIdThread($IdPost));
-            $this->isTopLevel = false;
-            $this->_model->prepareTopic(true);
-            $this->_view->showTopic();
-         }
-        elseif ($this->action == self::ACTION_MODERATOR_FULLEDITPOST) {
+        if ($this->action == self::ACTION_MODERATOR_FULLEDITPOST) {
             if (!isset($request[2])) {
                  die("Need to have a IdPost") ;
             }
@@ -825,8 +798,6 @@ class ForumsController extends PAppController
     const ACTION_TRANSLATE = 14;
     const ACTION_VIEW_CATEGORY = 15;
     const ACTION_VIEW_LASTPOSTS = 16;
-    const ACTION_VOTE_POST = 17;
-	const ACTION_DELETEVOTE_POST = 18 ;
 	const ACTION_REPORT_TO_MOD = 19 ;
     const ACTION_VIEW_LANDING = 20;
     const ACTION_VIEW_FORUM = 21;
@@ -882,10 +853,6 @@ class ForumsController extends PAppController
             $this->action = self::ACTION_SEARCH_USERPOSTS;
         } else if (isset($request[1]) && $request[1] == 'modfulleditpost') {
             $this->action = self::ACTION_MODERATOR_FULLEDITPOST;
-        } else if (isset($request[1]) && $request[1] == 'votepost') {
-            $this->action = self::ACTION_VOTE_POST;
-        } else if (isset($request[1]) && $request[1] == 'deltevotepost') {
-            $this->action = self::ACTION_DELETEVOTE_POST;
         } else if (isset($request[1]) && $request[1] == 'modedittag') {
             $this->action = self::ACTION_MODERATOR_EDITTAG;
         } else if (isset($request[1]) && $request[1] == 'subscriptions') {
@@ -923,10 +890,6 @@ class ForumsController extends PAppController
                     $this->action = self::ACTION_REPORT_TO_MOD;
                 } else if ($r == 'modefullditpost') {
                     $this->action = self::ACTION_MODERATOR_FULLEDITPOST;
-                } else if ($r == 'votepost') {
-                    $this->action = self::ACTION_VOTE_POST;
-                } else if ($r == 'deletevotepost') {
-                    $this->action = self::ACTION_DELETEVOTE_POST;
                 } else if ($r == 'modedittag') {
                     $this->action = self::ACTION_MODERATOR_EDITTAG;
                 } else if ($r == 'reverse') {  // This mean user has click on the reverse order box

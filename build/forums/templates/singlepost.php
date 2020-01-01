@@ -36,137 +36,108 @@ if (($post->IdGroup > 0) && ($post->PostVisibility == "GroupOnly")) {
 }
 ?>
 
-<!-- entire row -->
-<div class="col-12 mb-2">
-<div class="d-flex flex-row <?php echo $styles[$cnt % 2]; ?> postbox">
-
+<div class="row no-gutters border border-white <?php echo $styles[$cnt % 2]; ?> mb-2">
     <!-- left column -->
-    <div class="d-flex flex-column col-4 col-md-3 mr-2 p-0 postleftcolumn">
-
-        <!-- member info block -->
-        <div class="d-flex flex-row align-self-start pull-left p-2 w-100 credentials">
-
+    <div class="col-4 col-md-3 postleftcolumn">
+        <div class="d-flex flex-column align-self-start">
             <!-- member avatar -->
-            <div class="p-1">
-                <img class="media-object" src="/members/avatar/<?php echo($post->OwnerUsername); ?>?size=50">
-                <small class="d-block d-md-none username"><a
-                            href="members/<?php echo $post->OwnerUsername; ?>"><?php echo $post->OwnerUsername; ?></a>
+            <div class="media credentials p-1">
+                <img class="mr-1" src="/members/avatar/<?php echo($post->OwnerUsername); ?>?size=50">
+                <div class="media-body">
+                    <p class="small">
+                    <a href="members/<?php echo $post->OwnerUsername; ?>"><?php echo $post->OwnerUsername; ?></a>
                     <br>
                     <?php
-                    if ($this->_session->has("IdMember")) {
-                        if (isset($post->city) && isset($post->country)) {
+                        if ($this->_session->has("IdMember")) {
+                            if (isset($post->city) && isset($post->country)) {
+                                echo $post->city . '<br>' .$post->country;
+                            }
+                        }
+                    ?>
+                    </p>
+                </div>
+            </div>
 
-                            echo $post->city . '<br>' .$post->country;
+            <!-- permalink, bans, reports -->
+            <div class="p-1">
+                <?php
 
+                if ($this->_session->has("IdMember")) {
+                    if ($this->BW_Right->HasRight("ForumModerator")) {
+                        $TheReports = $this->_model->GetReports($post->IdPost);
+                        $max = count($TheReports);
+                        foreach ($TheReports as $report) {
+                            echo "<small class='text-muted'>{$report->Status} report from ", $report->Username, "</small><br>";
+                            echo "<small class='text-muted'><a href='forums/reporttomod/", $report->IdPost, "/" . $report->IdReporter . "'>view report</a></small><br>";
                         }
                     }
-                    ?>
-                </small>
-            </div>
 
-            <!-- member name/location -->
-            <div class="d-none d-md-block">
-                <small class="username"><a
-                            href="members/<?php echo $post->OwnerUsername; ?>"><?php echo $post->OwnerUsername; ?></a>
-                <br>
-                <?php
-                if ($this->_session->has("IdMember")) {
-                    if (isset($post->city) && isset($post->country)) {
-
-                        echo $post->city . '<br>' .$post->country;
-
+                    echo '<small class="text-muted">';
+                    if (isset($TheReports[0]->IdReporter) && ($TheReports[0]->IdReporter == $this->_session->get("IdMember"))) {
+                        echo "<a href='forums/reporttomod/", $post->IdPost, "'>", $words->getBuffered('ForumViewMyReportToMod'), "</a>";
+                    } else {
+                        echo "<a href='forums/reporttomod/", $post->IdPost, "'><i class=\"fa fa-flag\"></i> ", $words->getBuffered('ForumMyReportToMod'), "</a>";
                     }
+                    echo '</small><br>';
+
+                    echo '<small class="text-muted"><a href="forums/s' . $post->threadid . '/#post' . $post->IdPost . '"><i class="fa fa-link"></i> ' . $words->get('ForumPermalink') . '</a></small><br>';
+                    $TheReports = $this->_model->GetReports($post->IdPost, $this->_session->get("IdMember")); // Check if there is a pending report for this member
+
                 }
                 ?>
-                </small>
             </div>
+            <!-- end permalink -->
         </div>
-
-        <!-- permanlink, bans, reports -->
-        <div class="m-2">
-            <?php
-
-            if ($this->_session->has("IdMember")) {
-                if ($this->BW_Right->HasRight("ForumModerator")) {
-                    $TheReports = $this->_model->GetReports($post->IdPost);
-                    $max = count($TheReports);
-                    foreach ($TheReports as $report) {
-                        echo "<small class='text-muted'>{$report->Status} report from ", $report->Username, "</small><br>";
-                        echo "<small class='text-muted'><a href='forums/reporttomod/", $report->IdPost, "/" . $report->IdReporter . "'>view report</a></small><br>";
-                    }
-                }
-
-                echo '<small class="text-muted">';
-                if (isset($TheReports[0]->IdReporter) && ($TheReports[0]->IdReporter == $this->_session->get("IdMember"))) {
-                    echo "<a href='forums/reporttomod/", $post->IdPost, "'>", $words->getBuffered('ForumViewMyReportToMod'), "</a>";
-                } else {
-                    echo "<a href='forums/reporttomod/", $post->IdPost, "'><i class=\"fa fa-flag\"></i> ", $words->getBuffered('ForumMyReportToMod'), "</a>";
-                }
-                echo '</small><br>';
-
-                echo '<small class="text-muted"><a href="forums/s' . $post->threadid . '/#post' . $post->IdPost . '"><i class="fa fa-link"></i> ' . $words->get('ForumPermalink') . '</a></small><br>';
-                $TheReports = $this->_model->GetReports($post->IdPost, $this->_session->get("IdMember")); // Check if there is a pending report for this member
-
-            }
-            ?>
-        </div>
-        <!-- end permalink -->
     </div>
+
     <!-- message -->
     <div class="col-8 col-md-9 p-1">
-        <div class="float-left">
-        <a name="post<?php echo $post->postid; ?>" style="position: relative;top: -50px;"></a>
-        <p class="small gray">
-            <?php
-            //echo "[",$post->posttime,"]",$words->getFormatted('DateHHMMShortFormat') ;
-            echo '<span><i class="fa fa-comment mr-1" title="' . $words->getFormatted('posted'); ?>"></i><?php echo date($words->getBuffered('DateHHMMShortFormat'), ServerToLocalDateTime($post->posttime, $this->getSession())) . '</span>';
-            echo $words->flushBuffer() . '<span class="ml-2"><i class="fa fa-eye mr-1" title="' . $words->getFormatted("forum_label_visibility") . '"></i>' . $words->getFormatted("forum_edit_vis_" . $post->PostVisibility) . '</span>';
-            $max = 0;
-            if (!empty($post->Trad)) {
-                $max = count($post->Trad);
-            }
-            for ($jj = 0; (($jj < $max) and ($topic->WithDetail)); $jj++) { // Not optimized, it is a bit stupid to look in all the trads here
-                if (($post->Trad[$jj]->trad_created != $post->Trad[$jj]->trad_updated)) { // If one of the trads have been updated
-                    if ($post->Trad[$jj]->IdLanguage == $this->_session->get("IdLanguage")) {
-                        echo '<br><em><i class="fa fa-edit mr-1" title="edited"></i>' . date($words->getFormatted('DateHHMMShortFormat'), ServerToLocalDateTime($post->Trad[$jj]->trad_updated, $this->getSession())), ' by ', $post->Trad[$jj]->TranslatorUsername . '</em>';
+        <div class="d-flex flex-column align-content-stretch">
+            <div class="d-flex flex-row justify-content-between mb-1">
+                <div>
+                    <a id="post<?php echo $post->postid; ?>" style="position: relative;top: -50px;"></a>
+                    <small class="gray">
+                        <?php
+                        echo '<span><i class="fa fa-comment mr-1" title="' . $words->getFormatted('posted'); ?>"></i><?php echo date($words->getBuffered('DateHHMMShortFormat'), ServerToLocalDateTime($post->posttime, $this->getSession())) . '</span>';
+                        echo $words->flushBuffer() . '<i class="fa fa-eye mx-1" title="' . $words->getFormatted("forum_label_visibility") . '"></i>' . $words->getFormatted("forum_edit_vis_" . $post->PostVisibility) . '';
+                        $max = 0;
+                        if (!empty($post->Trad)) {
+                            $max = count($post->Trad);
+                        }
+                        for ($jj = 0; (($jj < $max) and ($topic->WithDetail)); $jj++) { // Not optimized, it is a bit stupid to look in all the trads here
+                            if (($post->Trad[$jj]->trad_created != $post->Trad[$jj]->trad_updated)) { // If one of the trads have been updated
+                                if ($post->Trad[$jj]->IdLanguage == $this->_session->get("IdLanguage")) {
+                                    echo '<br><em><i class="fa fa-edit mr-1" title="edited"></i>' . date($words->getFormatted('DateHHMMShortFormat'), ServerToLocalDateTime($post->Trad[$jj]->trad_updated, $this->getSession())), ' by ', $post->Trad[$jj]->TranslatorUsername . '</em>';
+                                }
+                            }
+                        }
+                        ?>
+                    </small>
+                </div>
+                <div>
+                    <?php
+                    if ($can_edit_own && $post->OwnerCanStillEdit == "Yes" && $User && $post->IdWriter == $this->_session->get("IdMember")) {
+                        echo '<a href="forums/edit/m' . $post->postid . '" class="btn btn-sm btn-outline-primary ml-1"><i class="fa fa-edit" title="edit" /></i> ' . $words->getFormatted('forum_EditUser') . '</a>';
                     }
-                }
-            }
-            ?>
-        </p>
-        </div>
+                    if (($this->BW_Right->HasRight("ForumModerator", "Edit")) || ($this->BW_Right->HasRight("ForumModerator", "All"))) {
+        //                 echo ' [<a href="forums/modedit/m'.$post->postid.'">Mod Edit</a>]';
+                        echo '<a href="forums/modfulleditpost/' . $post->postid . '" class="btn btn-sm btn-outline-primary ml-1"><i class="fa fa-edit" title="adminedit"></i> Admin Edit</a>';
+                    }
 
-        <div class="float-right">
+                    if ($can_del) {
+                        if ($post->postid == $topic->topicinfo->first_postid) {
+                            $title = $words->getFormatted('del_topic_href');
+                            $warning = $words->getFormatted('del_topic_warning');
+                        } else {
+                            $title = $words->getFormatted('del_post_href');
+                            $warning = $words->getFormatted('del_post_warning');
+                        }
+                        echo ' [<a href="forums/delete/m' . $post->postid . '" mouseover="return confirm(\'' . $warning . '\');">' . $title . '</a>]';
+                    }
 
-            <?php
-
-            if ($can_edit_own && $post->OwnerCanStillEdit == "Yes" && $User && $post->IdWriter == $this->_session->get("IdMember")) {
-                echo '<a href="forums/edit/m' . $post->postid . '" class="btn btn-sm btn-outline-primary mr-1"><i class="fa fa-edit" title="edit" /></i> ' . $words->getFormatted('forum_EditUser') . '</a>';
-            }
-            if (($this->BW_Right->HasRight("ForumModerator", "Edit")) || ($this->BW_Right->HasRight("ForumModerator", "All"))) {
-//                 echo ' [<a href="forums/modedit/m'.$post->postid.'">Mod Edit</a>]';
-                echo '<a href="forums/modfulleditpost/' . $post->postid . '" class="btn btn-sm btn-outline-primary mr-1"><i class="fa fa-edit" title="adminedit"></i> Admin Edit</a>';
-            }
-
-            if ($can_del) {
-                if ($post->postid == $topic->topicinfo->first_postid) {
-                    $title = $words->getFormatted('del_topic_href');
-                    $warning = $words->getFormatted('del_topic_warning');
-                } else {
-                    $title = $words->getFormatted('del_post_href');
-                    $warning = $words->getFormatted('del_post_warning');
-                }
-                echo ' [<a href="forums/delete/m' . $post->postid . '" mouseover="return confirm(\'' . $warning . '\');">' . $title . '</a>]';
-            }
-
-            if (isset($post->title) && $post->title) { // This is set if it's a SEARCH
-                echo $words->getFormatted('search_topic_text');
-//                echo ' <b>'.$post->title.'</b> &mdash; <a href="'.ForumsView::postURL($post).'">'.$words->getFormatted('search_topic_href').'</a>';
-                echo ' <strong><a href="' . ForumsView::postURL($post) . '">' . $words->fTrad($post->IdTitle) . '</a></strong>';
-            }
-            ?>
-        </div>
-
+                    ?>
+                </div>
+            </div>
 
             <?php
             // Todo : find a way to land here with a $topic variable well initialized
@@ -182,7 +153,7 @@ if (($post->IdGroup > 0) && ($post->PostVisibility == "GroupOnly")) {
                     }
                     if ($PostMaxTrad > 1) { // we will display the list of trads only if there is more than one trad
                         echo "<p class=\"small\">", $words->getFormatted("forum_available_trads"), ":";
-//                  print_r($post); echo"<br>" ;
+
                         for ($jj = 0; $jj < $PostMaxTrad; $jj++) {
                             $Trad = $post->Trad[$jj];
 
@@ -203,11 +174,9 @@ if (($post->IdGroup > 0) && ($post->PostVisibility == "GroupOnly")) {
                 } // end if not deleted
             } // end If the details of trads are available, we will display them
             // If current user has a moderator right, he can see the post
-
-
             ?>
 
-            <div id="d<?= $post->IdContent ?>" class="post float-left pr-2 w-100">
+            <div id="d<?= $post->IdContent ?>">
 
                 <?php
                 $Sentence = $words->fTrad($post->IdContent);
@@ -231,69 +200,19 @@ if (($post->IdGroup > 0) && ($post->PostVisibility == "GroupOnly")) {
 
                 <?php
 
-                // Here add additional data from votes if any
-
-                if (isset($post->Vote)) {
-                    $Vote = $post->Vote;
-
-                    if ($Vote->PossibleAction == "ShowResult") { // If membe can see result, show them
-                        echo "<div>";
-                        echo $words->getFormatted("ForumPostCurrentResults");
-                        echo "<ul>";
-                        foreach ($Vote->PossibleChoice as $cc) {
-                            $ss = $cc;
-                            $count = $Vote->$ss;
-                            $countpercent = "0%";
-                            if ($Vote->Total > 0) {
-                                $countpercent = sprintf("%0.0f", ($count / $Vote->Total) * 100);
-                            }
-                            echo "<li>", $words->getFormatted('ForumResultForChoice', '<b>' . $words->getFormatted('ForumVoteChoice_' . $cc) . '</b>', $count, $countpercent . '%'), "</li>";
-                        }
-                        echo "</ul></div>";
+                if (isset($post->title) && $post->title) { // This is set if it's a SEARCH
+                    echo '<div class="d-flex justify-content-end"><small>';
+                    if (isset($post->GroupName) && $post->GroupName) {
+                        echo '<span class="gray">'.$words->getFormatted('group') . ":</span> ";
+                        echo '<a href="' . ForumsView::groupURL($post) . '">' . $post->GroupName . '</a> ';
                     }
-
-
-                    if (!empty($Vote->Choice)) { // If The current user has voted
-                        echo "<div>";
-                        echo "<a href=\"forums/deletevotepost/", $post->IdPost, "\">", $words->getFormatted('ForumDeleteVotePost'), "</a>";
-                        echo "</div>";
-                    }
-
-                    if ($Vote->PossibleAction == "ProposeVote") { // If member can vote propose vote
-                        echo $words->getFormatted("ForumPostMakeYourChoice"), ":<br />";
-                        foreach ($Vote->PossibleChoice as $cc) {
-                            echo "<a href=\"forums/votepost/", $post->IdPost, "/", $cc, "\">", $words->getBuffered('ForumVoteChoice_' . $cc), "</a>&nbsp; &nbsp; &nbsp;";
-                        }
-                    }
-                }  // End of add additional data from local volunteers messages if any
+                    echo '<span class="gray">'.$words->getFormatted('search_topic_text').'</span>';
+                    echo ' <a href="' . ForumsView::postURL($post) . '">' . $words->fTrad($post->IdTitle) . '</a>';
+                    echo '</small></div>';
+                }
 
             ?>
-
+        </div>
     </div>
     <!-- end message -->
 </div>
-</div>
-
-<?php
-
-if ((isset($PostMaxTrad)) and ($PostMaxTrad > 1)) { // No need to at javascript catcher function is there is no more than one translations
-    ?>
-    <script type="text/javascript">
-        <!--
-        function singlepost_display <?php echo $post->IdContent; ?>(strCode, div_area) {
-            if (document.layers) {
-                document.getElementById(div_area).open();
-                document.getElementById(div_area).write(strCode.replace(/\\/g, ''));
-                document.getElementById(div_area).close();
-            }
-            else {
-                document.getElementById(div_area).innerHTML = strCode;
-//      document.all(div_area).innerHTML = strCode;
-            }
-        }
-        // -->
-    </script>
-    <?php
-}
-
-?>

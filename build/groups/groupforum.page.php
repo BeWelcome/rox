@@ -71,17 +71,11 @@ class GroupForumsOverviewPage extends GroupsBasePage
     protected function column_col3()
     {
         $words = $this->getWords();
-
-    ?>
-        <div class="row">
-    <?php
         $Forums = new ForumsController;
         $Forums->setEngine($this->engine);
         $Forums->index();
-        ?>
-        </div>
-        <?php
     }
+
     protected function teaserContent()
     {
         $words = $this->getWords();

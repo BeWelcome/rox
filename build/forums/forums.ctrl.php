@@ -820,7 +820,7 @@ class ForumsController extends PAppController
           $this->action = self::ACTION_VIEW;
       }
 
-      if (isset($request[0]) && $request[0] == 'group') {
+      if (isset($request[0]) && (($request[0] == 'groups') || ($request[0] == 'group'))) {
             if (isset($request[1])) {
                 if ($request[1] == 'forums') {
                     $this->_model->setTopMode(Forums::CV_TOPMODE_GROUPS);

@@ -21,6 +21,7 @@ use App\Entity\PasswordReset;
 use App\Entity\Poll;
 use App\Entity\PollChoice;
 use App\Entity\PollContribution;
+use App\Entity\PollRecordOfChoice;
 use App\Entity\PrivilegeScope;
 use App\Entity\RightVolunteer;
 use App\Entity\Shout;
@@ -781,6 +782,31 @@ class MemberModel
                 } else {
                     fwrite($handle, "Comment left: " . $contribution->getComment());
                 }
+                fwrite($handle,PHP_EOL . PHP_EOL);
+            }
+            fclose($handle);
+        }
+        /** @var EntityRepository $resultsRepository */
+        $votesRepository = $this->getManager()->getRepository(PollRecordOfChoice::class);
+        $votes = $votesRepository->findBy(['member' => $member], ['poll' => 'DESC', 'pollChoice' => 'DESC']);
+        if (!empty($votes)) {
+            $pollsDir = $tempDir . 'polls/';
+            @mkdir($pollsDir);
+            $handle = fopen($pollsDir . "votes.txt", "w");
+            fwrite($handle, "You following votes have been recorded:" . PHP_EOL . PHP_EOL);
+            /** @var PollRecordOfChoice $vote */
+            foreach ($votes as $vote) {
+                $poll = $vote->getPoll();
+                // Check if a title exists and output it
+                $title = $poll->getTitles()->first();
+                fwrite($handle, "Poll voted: ");
+                if ($title) {
+                    fwrite($handle, $title->getSentence());
+                } else {
+                    fwrite($handle, "Unknown poll");
+                }
+                fwrite($handle, " (" . $poll->getId() . ")" . PHP_EOL);
+                fwrite($handle, "Choice: " . $vote->getPollChoice()->getChoiceTexts()->first()->getSentence());
                 fwrite($handle,PHP_EOL . PHP_EOL);
             }
             fclose($handle);

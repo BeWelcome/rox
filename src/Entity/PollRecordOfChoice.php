@@ -75,8 +75,6 @@ class PollRecordOfChoice
      */
     private $member;
 
-
-
     /**
      * Set updated
      *

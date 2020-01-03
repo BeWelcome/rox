@@ -2,43 +2,50 @@
 
 namespace App\Entity;
 
+use Carbon\Carbon;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * PollsContributions
  *
- * @ORM\Table(name="polls_contributions", uniqueConstraints={@ORM\UniqueConstraint(name="IdMember", columns={"IdMember", "IdPoll"})}, indexes={@ORM\Index(name="idEmail", columns={"Email"}), @ORM\Index(name="IdPoll", columns={"IdPoll"}), @ORM\Index(name="IDX_D41FF2B3EA8330B4", columns={"IdMember"})})
+ * @ORM\Table(name="polls_contributions",
+ *     uniqueConstraints={@ORM\UniqueConstraint(name="IdMember", columns={"IdMember", "IdPoll"})},
+ *     indexes={@ORM\Index(name="idEmail", columns={"Email"}),
+ *     @ORM\Index(name="IdPoll", columns={"IdPoll"}),
+ *     @ORM\Index(name="IDX_D41FF2B3EA8330B4", columns={"IdMember"})})
+ * @ORM\HasLifecycleCallbacks
  * @ORM\Entity
  */
-class PollsContributions
+class PollContribution
 {
     /**
      * @var string
      *
-     * @ORM\Column(name="Email", type="text", length=255, nullable=false)
+     * @ORM\Column(name="`Email`", type="string", length=255, nullable=false)
      */
     private $email;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="EmailIsConfirmed", type="string", nullable=false)
+     * @ORM\Column(name="EmailIsConfirmed", type="string", length=255, nullable=false)
      */
-    private $emailisconfirmed = 'No';
+    private $emailIsConfirmed = 'No';
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(name="updated", type="datetime", nullable=false)
      */
-    private $updated = 'CURRENT_TIMESTAMP';
+    private $updated;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(name="created", type="datetime", nullable=false)
      */
-    private $created = '0000-00-00 00:00:00';
+    private $created;
 
     /**
      * @var string
@@ -48,7 +55,7 @@ class PollsContributions
     private $comment;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -57,33 +64,31 @@ class PollsContributions
     private $id;
 
     /**
-     * @var \App\Entity\Polls
+     * @var Poll
      *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Polls")
+     * @ORM\ManyToOne(targetEntity="Poll", inversedBy="contributions", fetch="EAGER")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="IdPoll", referencedColumnName="id")
      * })
      */
-    private $idpoll;
+    private $poll;
 
     /**
-     * @var \App\Entity\Members
+     * @var Member
      *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Members")
+     * @ORM\ManyToOne(targetEntity="Member")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="IdMember", referencedColumnName="id")
      * })
      */
-    private $idmember;
-
-
+    private $member;
 
     /**
      * Set email
      *
      * @param string $email
      *
-     * @return PollsContributions
+     * @return PollContribution
      */
     public function setEmail($email)
     {
@@ -103,35 +108,35 @@ class PollsContributions
     }
 
     /**
-     * Set emailisconfirmed
+     * Set emailIsConfirmed
      *
-     * @param string $emailisconfirmed
+     * @param string $emailIsConfirmed
      *
-     * @return PollsContributions
+     * @return PollContribution
      */
-    public function setEmailisconfirmed($emailisconfirmed)
+    public function setEmailIsConfirmed($emailIsConfirmed)
     {
-        $this->emailisconfirmed = $emailisconfirmed;
+        $this->emailIsConfirmed = $emailIsConfirmed;
 
         return $this;
     }
 
     /**
-     * Get emailisconfirmed
+     * Get emailIsConfirmed
      *
      * @return string
      */
-    public function getEmailisconfirmed()
+    public function getEmailIsConfirmed()
     {
-        return $this->emailisconfirmed;
+        return $this->emailIsConfirmed;
     }
 
     /**
      * Set updated
      *
-     * @param \DateTime $updated
+     * @param DateTime $updated
      *
-     * @return PollsContributions
+     * @return PollContribution
      */
     public function setUpdated($updated)
     {
@@ -143,19 +148,19 @@ class PollsContributions
     /**
      * Get updated
      *
-     * @return \DateTime
+     * @return Carbon
      */
     public function getUpdated()
     {
-        return $this->updated;
+        return Carbon::instance($this->updated);
     }
 
     /**
      * Set created
      *
-     * @param \DateTime $created
+     * @param DateTime $created
      *
-     * @return PollsContributions
+     * @return PollContribution
      */
     public function setCreated($created)
     {
@@ -167,11 +172,11 @@ class PollsContributions
     /**
      * Get created
      *
-     * @return \DateTime
+     * @return Carbon
      */
     public function getCreated()
     {
-        return $this->created;
+        return Carbon::instance($this->created);
     }
 
     /**
@@ -179,7 +184,7 @@ class PollsContributions
      *
      * @param string $comment
      *
-     * @return PollsContributions
+     * @return PollContribution
      */
     public function setComment($comment)
     {
@@ -211,13 +216,13 @@ class PollsContributions
     /**
      * Set idpoll
      *
-     * @param \App\Entity\Polls $idpoll
+     * @param Poll $poll
      *
-     * @return PollsContributions
+     * @return PollContribution
      */
-    public function setIdpoll(\App\Entity\Polls $idpoll = null)
+    public function setPoll(Poll $poll = null)
     {
-        $this->idpoll = $idpoll;
+        $this->poll = $poll;
 
         return $this;
     }
@@ -225,23 +230,23 @@ class PollsContributions
     /**
      * Get idpoll
      *
-     * @return \App\Entity\Polls
+     * @return Poll
      */
-    public function getIdpoll()
+    public function getPoll()
     {
-        return $this->idpoll;
+        return $this->poll;
     }
 
     /**
      * Set idmember
      *
-     * @param \App\Entity\Members $idmember
+     * @param Member $member
      *
-     * @return PollsContributions
+     * @return PollContribution
      */
-    public function setIdmember(\App\Entity\Members $idmember = null)
+    public function setMember(Member $member = null)
     {
-        $this->idmember = $idmember;
+        $this->member = $member;
 
         return $this;
     }
@@ -249,10 +254,31 @@ class PollsContributions
     /**
      * Get idmember
      *
-     * @return \App\Entity\Members
+     * @return Member
      */
-    public function getIdmember()
+    public function getMember()
     {
-        return $this->idmember;
+        return $this->member;
+    }
+
+    /**
+     * Triggered on insert.
+     *
+     * @ORM\PrePersist
+     */
+    public function onPrePersist()
+    {
+        $this->created = new DateTime('now');
+        $this->updated = new DateTime('now');
+    }
+
+    /**
+     * Triggered on update.
+     *
+     * @ORM\PreUpdate
+     */
+    public function onPreUpdate()
+    {
+        $this->updated = new DateTime('now');
     }
 }

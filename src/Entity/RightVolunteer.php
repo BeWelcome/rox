@@ -7,6 +7,8 @@
 
 namespace App\Entity;
 
+use Carbon\Carbon;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -64,14 +66,14 @@ class RightVolunteer
     private $comment;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(name="updated", type="datetime", nullable=false)
      */
     private $updated;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(name="created", type="datetime", nullable=false)
      */
@@ -184,7 +186,7 @@ class RightVolunteer
     /**
      * Set updated.
      *
-     * @param \DateTime $updated
+     * @param DateTime $updated
      *
      * @return RightVolunteer
      */
@@ -198,7 +200,7 @@ class RightVolunteer
     /**
      * Get updated.
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getUpdated()
     {
@@ -208,7 +210,7 @@ class RightVolunteer
     /**
      * Set created.
      *
-     * @param \DateTime $created
+     * @param DateTime $created
      *
      * @return RightVolunteer
      */
@@ -222,11 +224,11 @@ class RightVolunteer
     /**
      * Get created.
      *
-     * @return \DateTime
+     * @return Carbon
      */
     public function getCreated()
     {
-        return $this->created;
+        return Carbon::instance($this->created);
     }
 
     /**
@@ -246,7 +248,7 @@ class RightVolunteer
      */
     public function onPrePersist()
     {
-        $this->created = new \DateTime('now');
+        $this->created = new DateTime('now');
     }
 
     /**
@@ -256,6 +258,6 @@ class RightVolunteer
      */
     public function onPreUpdate()
     {
-        $this->updated = new \DateTime('now');
+        $this->updated = new DateTime('now');
     }
 }

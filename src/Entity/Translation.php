@@ -2,57 +2,68 @@
 
 namespace App\Entity;
 
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Translations
  *
- * @ORM\Table(name="translations", uniqueConstraints={@ORM\UniqueConstraint(name="unique_entry", columns={"IdTrad", "IdOwner", "IdLanguage"})}, indexes={@ORM\Index(name="IdTrad", columns={"IdTrad"})})
+ * @ORM\Table(name="translations")
+ * @ORM\HasLifecycleCallbacks
  * @ORM\Entity
  */
-class Translations
+class Translation
 {
     /**
-     * @var integer
+     * @var Language
      *
-     * @ORM\Column(name="IdLanguage", type="integer", nullable=false)
+     * @ORM\OneToOne(targetEntity="Language")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="IdLanguage", referencedColumnName="id")
+     * })
      */
-    private $idlanguage;
+    private $language;
 
     /**
-     * @var integer
+     * @var Member
      *
-     * @ORM\Column(name="IdOwner", type="integer", nullable=false)
+     * @ORM\OneToOne(targetEntity="Member")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="IdOwner", referencedColumnName="id")
+     * })
      */
-    private $idowner;
+    private $owner;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="IdTrad", type="integer", nullable=false)
      */
     private $idtrad;
 
     /**
-     * @var integer
+     * @var Member
      *
-     * @ORM\Column(name="IdTranslator", type="integer", nullable=false)
+     * @ORM\OneToOne(targetEntity="Member")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="IdTranslator", referencedColumnName="id")
+     * })
      */
-    private $idtranslator;
+    private $translator;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(name="updated", type="datetime", nullable=false)
      */
-    private $updated = 'CURRENT_TIMESTAMP';
+    private $updated;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(name="created", type="datetime", nullable=false)
      */
-    private $created = '0000-00-00 00:00:00';
+    private $created;
 
     /**
      * @var string
@@ -69,7 +80,7 @@ class Translations
     private $sentence;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="IdRecord", type="integer", nullable=false)
      */
@@ -83,7 +94,7 @@ class Translations
     private $tablecolumn = 'NotSet';
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -91,62 +102,60 @@ class Translations
      */
     private $id;
 
-
-
     /**
-     * Set idlanguage
+     * Set language
      *
-     * @param integer $idlanguage
+     * @param Language $language
      *
-     * @return Translations
+     * @return Translation
      */
-    public function setIdlanguage($idlanguage)
+    public function setLanguage($language)
     {
-        $this->idlanguage = $idlanguage;
+        $this->language = $language;
 
         return $this;
     }
 
     /**
-     * Get idlanguage
+     * Get language
      *
-     * @return integer
+     * @return Language
      */
-    public function getIdlanguage()
+    public function getLanguage()
     {
-        return $this->idlanguage;
+        return $this->language;
     }
 
     /**
-     * Set idowner
+     * Set owner
      *
-     * @param integer $idowner
+     * @param Member $owner
      *
-     * @return Translations
+     * @return Translation
      */
-    public function setIdowner($idowner)
+    public function setOwner($owner)
     {
-        $this->idowner = $idowner;
+        $this->owner = $owner;
 
         return $this;
     }
 
     /**
-     * Get idowner
+     * Get owner
      *
-     * @return integer
+     * @return Member
      */
-    public function getIdowner()
+    public function getOwner()
     {
-        return $this->idowner;
+        return $this->owner;
     }
 
     /**
      * Set idtrad
      *
-     * @param integer $idtrad
+     * @param int $idtrad
      *
-     * @return Translations
+     * @return Translation
      */
     public function setIdtrad($idtrad)
     {
@@ -158,7 +167,7 @@ class Translations
     /**
      * Get idtrad
      *
-     * @return integer
+     * @return int
      */
     public function getIdtrad()
     {
@@ -166,35 +175,35 @@ class Translations
     }
 
     /**
-     * Set idtranslator
+     * Set translator
      *
-     * @param integer $idtranslator
+     * @param Member $translator
      *
-     * @return Translations
+     * @return Translation
      */
-    public function setIdtranslator($idtranslator)
+    public function setTanslator($translator)
     {
-        $this->idtranslator = $idtranslator;
+        $this->translator = $translator;
 
         return $this;
     }
 
     /**
-     * Get idtranslator
+     * Get translator
      *
-     * @return integer
+     * @return Member
      */
-    public function getIdtranslator()
+    public function getTranslator()
     {
-        return $this->idtranslator;
+        return $this->translator;
     }
 
     /**
      * Set updated
      *
-     * @param \DateTime $updated
+     * @param DateTime $updated
      *
-     * @return Translations
+     * @return Translation
      */
     public function setUpdated($updated)
     {
@@ -206,7 +215,7 @@ class Translations
     /**
      * Get updated
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getUpdated()
     {
@@ -216,9 +225,9 @@ class Translations
     /**
      * Set created
      *
-     * @param \DateTime $created
+     * @param DateTime $created
      *
-     * @return Translations
+     * @return Translation
      */
     public function setCreated($created)
     {
@@ -230,7 +239,7 @@ class Translations
     /**
      * Get created
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getCreated()
     {
@@ -242,7 +251,7 @@ class Translations
      *
      * @param string $type
      *
-     * @return Translations
+     * @return Translation
      */
     public function setType($type)
     {
@@ -266,7 +275,7 @@ class Translations
      *
      * @param string $sentence
      *
-     * @return Translations
+     * @return Translation
      */
     public function setSentence($sentence)
     {
@@ -288,9 +297,9 @@ class Translations
     /**
      * Set idrecord
      *
-     * @param integer $idrecord
+     * @param int $idrecord
      *
-     * @return Translations
+     * @return Translation
      */
     public function setIdrecord($idrecord)
     {
@@ -302,7 +311,7 @@ class Translations
     /**
      * Get idrecord
      *
-     * @return integer
+     * @return int
      */
     public function getIdrecord()
     {
@@ -314,7 +323,7 @@ class Translations
      *
      * @param string $tablecolumn
      *
-     * @return Translations
+     * @return Translation
      */
     public function setTablecolumn($tablecolumn)
     {
@@ -336,10 +345,31 @@ class Translations
     /**
      * Get id
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Triggered on insert.
+     *
+     * @ORM\PrePersist
+     */
+    public function onPrePersist()
+    {
+        $this->created = new DateTime('now');
+        $this->updated = new DateTime('now');
+    }
+
+    /**
+     * Triggered on update.
+     *
+     * @ORM\PreUpdate
+     */
+    public function onPreUpdate()
+    {
+        $this->updated = new DateTime('now');
     }
 }

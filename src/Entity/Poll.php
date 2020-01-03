@@ -2,22 +2,29 @@
 
 namespace App\Entity;
 
+use Carbon\Carbon;
+use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Polls
  *
  * @ORM\Table(name="polls", indexes={@ORM\Index(name="IdCreator", columns={"IdCreator"})})
+ * @ORM\HasLifecycleCallbacks
  * @ORM\Entity
  */
-class Polls
+class Poll
 {
     /**
-     * @var integer
+     * @var Member
      *
-     * @ORM\Column(name="IdGroupCreator", type="integer", nullable=false)
+     * @ORM\OneToOne(targetEntity="Member")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="IdGroupCreator", referencedColumnName="id")
+     * })
      */
-    private $idgroupcreator = '0';
+    private $groupCreator;
 
     /**
      * @var string
@@ -41,39 +48,82 @@ class Polls
     private $type = 'MemberPoll';
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(name="updated", type="datetime", nullable=false)
      */
-    private $updated = 'CURRENT_TIMESTAMP';
+    private $updated;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(name="Started", type="datetime", nullable=false)
      */
-    private $started = '0000-00-00 00:00:00';
+    private $started;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(name="Ended", type="datetime", nullable=false)
      */
-    private $ended = '0000-00-00 00:00:00';
+    private $ended;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(name="created", type="datetime", nullable=false)
      */
-    private $created = '0000-00-00 00:00:00';
+    private $created;
 
     /**
-     * @var integer
+     * @var PollChoice
      *
-     * @ORM\Column(name="Title", type="integer", nullable=false)
+     * @ORM\OneToMany(targetEntity="PollChoice", mappedBy="poll" )
+     * @ORM\JoinTable(name="polls_choice",
+     *      joinColumns={@ORM\JoinColumn(name="IdPoll", referencedColumnName="id")},
+     *      )
+     *
+     * Collects all translated titles of the poll
      */
-    private $title;
+    private $choices;
+
+    /**
+     * @var PollContribution
+     *
+     * @ORM\OneToMany(targetEntity="PollContribution", mappedBy="poll" )
+     * @ORM\JoinTable(name="polls_contributions",
+     *      joinColumns={@ORM\JoinColumn(name="IdPoll", referencedColumnName="id")},
+     *      )
+     *
+     * Collects all translated titles of the poll
+     */
+    private $contributions;
+
+    /**
+     * @var Translation
+     *
+     * @ORM\ManyToMany(targetEntity="Translation", fetch="EAGER")
+     * @ORM\JoinTable(name="polls_translations",
+     *      joinColumns={@ORM\JoinColumn(name="poll_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="translation_id", referencedColumnName="id")}
+     *      )
+     *
+     * Collects all translated titles of the poll
+     */
+    private $titles;
+
+    /**
+     * @var Group
+     *
+     * @ORM\ManyToMany(targetEntity="Group", fetch="EAGER")
+     * @ORM\JoinTable(name="polls_list_allowed_groups",
+     *      joinColumns={@ORM\JoinColumn(name="IdPoll", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="IdGroup", referencedColumnName="id")}
+     *      )
+     *
+     * Collects all groups associated with the poll
+     */
+    private $groups;
 
     /**
      * @var string
@@ -90,14 +140,14 @@ class Polls
     private $idlocationslist = '0';
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="IdGroupsList", type="integer", nullable=false)
      */
     private $idgroupslist = '0';
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="IdCountriesList", type="integer", nullable=false)
      */
@@ -152,8 +202,19 @@ class Polls
      */
     private $anonym = 'Yes';
 
+
     /**
-     * @var integer
+     * @var Member
+     *
+     * @ORM\OneToOne(targetEntity="Member")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="IdCreator", referencedColumnName="id")
+     * })
+     */
+    private $creator;
+
+    /**
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -161,40 +222,36 @@ class Polls
      */
     private $id;
 
-    /**
-     * @var \App\Entity\Members
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Members")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="IdCreator", referencedColumnName="id")
-     * })
-     */
-    private $idcreator;
-
-
-
-    /**
-     * Set idgroupcreator
-     *
-     * @param integer $idgroupcreator
-     *
-     * @return Polls
-     */
-    public function setIdgroupcreator($idgroupcreator)
+    public function __construct()
     {
-        $this->idgroupcreator = $idgroupcreator;
+        $this->titles = new ArrayCollection();
+        $this->groups = new ArrayCollection();
+        $this->choices = new ArrayCollection();
+        $this->contributions = new ArrayCollection();
+    }
+
+    /**
+     * Set group creator
+     *
+     * @param Member $groupCreator
+     *
+     * @return Poll
+     */
+    public function setGroupCreator($groupCreator)
+    {
+        $this->groupCreator = $groupCreator;
 
         return $this;
     }
 
     /**
-     * Get idgroupcreator
+     * Get group creator
      *
-     * @return integer
+     * @return Member
      */
-    public function getIdgroupcreator()
+    public function getGroupCreator()
     {
-        return $this->idgroupcreator;
+        return $this->groupCreator;
     }
 
     /**
@@ -202,7 +259,7 @@ class Polls
      *
      * @param string $status
      *
-     * @return Polls
+     * @return Poll
      */
     public function setStatus($status)
     {
@@ -226,7 +283,7 @@ class Polls
      *
      * @param string $resultsvisibility
      *
-     * @return Polls
+     * @return Poll
      */
     public function setResultsvisibility($resultsvisibility)
     {
@@ -250,7 +307,7 @@ class Polls
      *
      * @param string $type
      *
-     * @return Polls
+     * @return Poll
      */
     public function setType($type)
     {
@@ -272,9 +329,9 @@ class Polls
     /**
      * Set updated
      *
-     * @param \DateTime $updated
+     * @param DateTime $updated
      *
-     * @return Polls
+     * @return Poll
      */
     public function setUpdated($updated)
     {
@@ -286,19 +343,19 @@ class Polls
     /**
      * Get updated
      *
-     * @return \DateTime
+     * @return Carbon
      */
     public function getUpdated()
     {
-        return $this->updated;
+        return Carbon::instance($this->updated);
     }
 
     /**
      * Set started
      *
-     * @param \DateTime $started
+     * @param DateTime $started
      *
-     * @return Polls
+     * @return Poll
      */
     public function setStarted($started)
     {
@@ -310,19 +367,19 @@ class Polls
     /**
      * Get started
      *
-     * @return \DateTime
+     * @return Carbon
      */
     public function getStarted()
     {
-        return $this->started;
+        return Carbon::instance($this->started);
     }
 
     /**
      * Set ended
      *
-     * @param \DateTime $ended
+     * @param DateTime $ended
      *
-     * @return Polls
+     * @return Poll
      */
     public function setEnded($ended)
     {
@@ -334,19 +391,19 @@ class Polls
     /**
      * Get ended
      *
-     * @return \DateTime
+     * @return Carbon
      */
     public function getEnded()
     {
-        return $this->ended;
+        return Carbon::instance($this->ended);
     }
 
     /**
      * Set created
      *
-     * @param \DateTime $created
+     * @param DateTime $created
      *
-     * @return Polls
+     * @return Poll
      */
     public function setCreated($created)
     {
@@ -358,35 +415,51 @@ class Polls
     /**
      * Get created
      *
-     * @return \DateTime
+     * @return Carbon
      */
     public function getCreated()
     {
-        return $this->created;
+        return Carbon::instance($this->created);
     }
 
     /**
-     * Set title
+     * Get Choices
      *
-     * @param integer $title
-     *
-     * @return Polls
+     * @return ArrayCollection
      */
-    public function setTitle($title)
+    public function getChoices()
     {
-        $this->title = $title;
-
-        return $this;
+        return $this->choices;
     }
 
     /**
-     * Get title
+     * Get Contributions
      *
-     * @return integer
+     * @return ArrayCollection
      */
-    public function getTitle()
+    public function getContributions()
     {
-        return $this->title;
+        return $this->contributions;
+    }
+
+    /**
+     * Get titles
+     *
+     * @return ArrayCollection
+     */
+    public function getTitles()
+    {
+        return $this->titles;
+    }
+
+    /**
+     * Get groups
+     *
+     * @return ArrayCollection
+     */
+    public function getGroups()
+    {
+        return $this->groups;
     }
 
     /**
@@ -394,7 +467,7 @@ class Polls
      *
      * @param string $formembersonly
      *
-     * @return Polls
+     * @return Poll
      */
     public function setFormembersonly($formembersonly)
     {
@@ -416,9 +489,9 @@ class Polls
     /**
      * Set idlocationslist
      *
-     * @param integer $idlocationslist
+     * @param int $idlocationslist
      *
-     * @return Polls
+     * @return Poll
      */
     public function setIdlocationslist($idlocationslist)
     {
@@ -430,7 +503,7 @@ class Polls
     /**
      * Get idlocationslist
      *
-     * @return integer
+     * @return int
      */
     public function getIdlocationslist()
     {
@@ -440,9 +513,9 @@ class Polls
     /**
      * Set idgroupslist
      *
-     * @param integer $idgroupslist
+     * @param int $idgroupslist
      *
-     * @return Polls
+     * @return Poll
      */
     public function setIdgroupslist($idgroupslist)
     {
@@ -454,7 +527,7 @@ class Polls
     /**
      * Get idgroupslist
      *
-     * @return integer
+     * @return int
      */
     public function getIdgroupslist()
     {
@@ -464,9 +537,9 @@ class Polls
     /**
      * Set idcountrieslist
      *
-     * @param integer $idcountrieslist
+     * @param int $idcountrieslist
      *
-     * @return Polls
+     * @return Poll
      */
     public function setIdcountrieslist($idcountrieslist)
     {
@@ -478,7 +551,7 @@ class Polls
     /**
      * Get idcountrieslist
      *
-     * @return integer
+     * @return int
      */
     public function getIdcountrieslist()
     {
@@ -490,7 +563,7 @@ class Polls
      *
      * @param string $opentosubgroups
      *
-     * @return Polls
+     * @return Poll
      */
     public function setOpentosubgroups($opentosubgroups)
     {
@@ -514,7 +587,7 @@ class Polls
      *
      * @param string $typeofchoice
      *
-     * @return Polls
+     * @return Poll
      */
     public function setTypeofchoice($typeofchoice)
     {
@@ -538,7 +611,7 @@ class Polls
      *
      * @param string $canchangevote
      *
-     * @return Polls
+     * @return Poll
      */
     public function setCanchangevote($canchangevote)
     {
@@ -562,9 +635,9 @@ class Polls
      *
      * @param string $allowcomment
      *
-     * @return Polls
+     * @return Poll
      */
-    public function setAllowcomment($allowcomment)
+    public function setAllowComment($allowcomment)
     {
         $this->allowcomment = $allowcomment;
 
@@ -572,11 +645,11 @@ class Polls
     }
 
     /**
-     * Get allowcomment
+     * Get comments allowed?
      *
      * @return string
      */
-    public function getAllowcomment()
+    public function getAllowComment()
     {
         return $this->allowcomment;
     }
@@ -584,9 +657,9 @@ class Polls
     /**
      * Set description
      *
-     * @param integer $description
+     * @param int $description
      *
-     * @return Polls
+     * @return Poll
      */
     public function setDescription($description)
     {
@@ -598,7 +671,7 @@ class Polls
     /**
      * Get description
      *
-     * @return integer
+     * @return int
      */
     public function getDescription()
     {
@@ -610,7 +683,7 @@ class Polls
      *
      * @param string $wheretorestrictmember
      *
-     * @return Polls
+     * @return Poll
      */
     public function setWheretorestrictmember($wheretorestrictmember)
     {
@@ -634,7 +707,7 @@ class Polls
      *
      * @param string $anonym
      *
-     * @return Polls
+     * @return Poll
      */
     public function setAnonym($anonym)
     {
@@ -656,7 +729,7 @@ class Polls
     /**
      * Get id
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -664,26 +737,47 @@ class Polls
     }
 
     /**
-     * Set idcreator
+     * Set creator
      *
-     * @param \App\Entity\Members $idcreator
+     * @param Member $creator
      *
-     * @return Polls
+     * @return Poll
      */
-    public function setIdcreator(\App\Entity\Members $idcreator = null)
+    public function setCreator(Member $creator)
     {
-        $this->idcreator = $idcreator;
+        $this->creator = $creator;
 
         return $this;
     }
 
     /**
-     * Get idcreator
+     * Get creator
      *
-     * @return \App\Entity\Members
+     * @return Member
      */
-    public function getIdcreator()
+    public function getCreator()
     {
-        return $this->idcreator;
+        return $this->creator;
+    }
+
+    /**
+     * Triggered on insert.
+     *
+     * @ORM\PrePersist
+     */
+    public function onPrePersist()
+    {
+        $this->created = new DateTime('now');
+        $this->updated = new DateTime('now');
+    }
+
+    /**
+     * Triggered on update.
+     *
+     * @ORM\PreUpdate
+     */
+    public function onPreUpdate()
+    {
+        $this->updated = new DateTime('now');
     }
 }

@@ -51,6 +51,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGenerator;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use ZipArchive;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -73,12 +74,18 @@ class MemberController extends AbstractController
      * @param Logger $logger
      * @param ContainerBagInterface $params
      * @param MemberModel $memberModel
+     * @param UrlGeneratorInterface $urlGenerator
      * @return BinaryFileResponse
      * @throws Exception
      * @ParamConverter("member", class="App\Entity\Member", options={"mapping": {"username": "username"}})
      */
-    public function getPersonalData(Request $request, Member $member, Logger $logger, ContainerBagInterface $params, MemberModel $memberModel)
-    {
+    public function getPersonalData(
+        Request $request,
+        Member $member,
+        Logger $logger,
+        ContainerBagInterface $params,
+        MemberModel $memberModel
+    ) {
         // Either the member themselves or a person from the safety or profile team and the admin can access
         if ($member != $this->getUser()) {
             $this->denyAccessUnlessGranted(

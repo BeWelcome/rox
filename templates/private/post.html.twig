@@ -1,0 +1,27 @@
+<html>
+<head>
+    <title>Bewelcome Forums Post</title>
+    <style>
+        a {
+            color: #f37000;
+        }
+        blockquote {
+            color: #444 !important;
+            background: transparent !important;
+            border: 1px #ddd solid !important;
+            border-left: 8px #f37000 solid !important;
+            padding: 0 0.5em !important;
+            margin: 0.5em 0 !important;
+        }
+    </style>
+</head>
+<body>
+<h3>{% if thread %}<a href="{{ url('forum_thread', {'threadId': thread.id}) }}">{{ thread.title }}</a>{% else %}Orphaned post{% endif %}</h3>
+<p>Posted in {% if group %}<a href="{{ url('group_start', {'group_id': group.id}) }}">{{ group.name }}</a>{% else %}the forum{% endif %}.<br>
+Created: {{ post.created }}<br>
+Status: {{ post.getPostDeleted }}</p>
+<div class="post">
+    {{ post.Message | purify }}
+</div>
+</body>
+

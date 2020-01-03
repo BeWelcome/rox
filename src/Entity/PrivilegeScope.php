@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use Carbon\Carbon;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -76,11 +77,11 @@ class PrivilegeScope
     /**
      * Get updated.
      *
-     * @return DateTime
+     * @return Carbon
      */
     public function getUpdated()
     {
-        return $this->updated;
+        return Carbon::instance($this->updated);
     }
 
     /**

@@ -26,14 +26,14 @@ class PollsController extends RoxControllerBase
         $request = $args->request;
         $model = new PollsModel;
 
-        
+
         if (!$this->_session->has( 'IdMember' )) {
             $page = new MessagesMustloginPage();
             $page->setRedirectURL(implode('/',$request));
         		return $page;
-        } 
+        }
 //        print_r($args->post);
-        
+
         // look at the request.
         switch (isset($request[1]) ? $request[1] : false) {
             case 'listall':
@@ -53,13 +53,13 @@ class PollsController extends RoxControllerBase
                 break ;
             case 'cancelvote':
 								$IdPoll=(isset($request[2]) ? $request[2]: false) ;
-      					MOD_log::get()->write("Prepare to contribute cancel vote #".$IdPoll,"polls") ; 				
+      					MOD_log::get()->write("Prepare to contribute cancel vote #".$IdPoll,"polls") ;
 								if ($model->CancelVote($IdPoll,"",$this->_session->get("IdMember"))) {
                 	$page = new PollsPage("","cancelvote");
 								}
 								else {
                 	$page = new PollsPage("","votenotcancelable");
-								} 
+								}
                 break ;
             case 'seeresults':
 								$IdPoll=(isset($request[2]) ? $request[2]: false) ;
@@ -68,18 +68,18 @@ class PollsController extends RoxControllerBase
 								}
 								else {
                 	$page = new PollsPage("","resultsnotyetavailable");
-								} 
+								}
                 break ;
             case 'contribute':
 								$IdPoll=(isset($request[2]) ? $request[2]: false) ;
-      					MOD_log::get()->write("Prepare to contribute to poll #".$IdPoll,"polls") ; 				
+      					MOD_log::get()->write("Prepare to contribute to poll #".$IdPoll,"polls") ;
 								if ($model->CanUserContribute($IdPoll)) {
 									$Data=$model->PrepareContribute($IdPoll) ;
                 	$page = new PollsPage("","contribute",$Data);
 								}
 								else {
                 	$page = new PollsPage("","sorryyoucannotcontribute");
-								} 
+								}
                 break ;
             case 'vote':
                 // a nice trick to get all the post args as local variables...
@@ -88,44 +88,44 @@ class PollsController extends RoxControllerBase
 
 								$IdPoll=$post_IdPoll ;
 								if ($model->CanUserContribute($IdPoll)) {
-      						MOD_log::get()->write("Tryin to vote for poll #".$IdPoll,"polls") ; 				
+      						MOD_log::get()->write("Tryin to vote for poll #".$IdPoll,"polls") ;
 									$Data=$model->AddVote($args->post,"",$this->_session->get("IdMember")) ;
                 	$page = new PollsPage("","votedone",$Data);
 								}
 								else {
-      						MOD_log::get()->write("Refusing vote for poll #".$IdPoll,"polls") ; 				
+      						MOD_log::get()->write("Refusing vote for poll #".$IdPoll,"polls") ;
                 	$page = new PollsPage("","probablyallreadyvote");
-								} 
+								}
                 break ;
             case 'update':
 								$IdPoll=(isset($request[2]) ? $request[2]: false) ;
                 $page = new PollsPage("","showpoll",$model->LoadPoll($IdPoll));
                 break ;
-								
+
             case 'doupdatepoll':
 								$IdPoll=$args->post["IdPoll"] ;
-								$model->UpdatePoll($args->post) ;				
+								$model->UpdatePoll($args->post) ;
                 $page = new PollsPage("","showpoll",$model->LoadPoll($IdPoll));
                 break ;
-								
+
             case 'addchoice':
 								$IdPoll=$args->post["IdPoll"] ;
-								$model->AddChoice($args->post) ;				
+								$model->AddChoice($args->post) ;
                 $page = new PollsPage("","showpoll",$model->LoadPoll($IdPoll));
                 break ;
-								
+
             case 'updatechoice':
 								$IdPoll=$args->post["IdPoll"] ;
-								$model->UpdateChoice($args->post) ;				
+								$model->UpdateChoice($args->post) ;
                 $page = new PollsPage("","showpoll",$model->LoadPoll($IdPoll));
                 break ;
-								
+
             case 'createpoll':
-      					MOD_log::get()->write("Creating a poll ","polls") ; 
-								$model->UpdatePoll($args->post) ;				
+      					MOD_log::get()->write("Creating a poll ","polls") ;
+								$model->UpdatePoll($args->post) ;
                 $page = new PollsPage("","listall",$model->LoadList("Project"));
                 break ;
-								
+
             case false:
             default :
             case '':
@@ -135,6 +135,7 @@ class PollsController extends RoxControllerBase
         }
         // return the $page object,
         // so the framework can call the "$page->render()" function.
+        $page->member = $model->getLoggedInMember();
         return $page;
     }
 }

@@ -30,32 +30,36 @@ if (!isset($vars['errors']) || !is_array($vars['errors'])) {
 
 $list=$this->_data ; // Retrieve the data to display (set by the controller)
 
+$iiMax = 0;
+if (!empty($list)) {
+    $iiMax = count($list) ;
+}
 $words = new MOD_words();
-$styles = array( 'highlight', 'blank' ); // alternating background for table rows
-$iiMax = count($list) ; // This retrieve the number of polls
 ?>
 
 <div class="table-responsive">
-<table class="table">
+<table class="table table-striped">
 
-<?php if ($list != false) { ?>
     <tr>
         <th><?=$words->getFormatted("polls_title") ?></th>
-        <th><?=$words->getFormatted("poll_creator") ?></th>
+        <th><?=$words->getFormatted("poll_creator") ?><br><?=$words->getFormatted("poll_group") ?></th>
         <th><?=$words->getFormatted("poll_NbContributors") ?></th>
         <th><?=$words->getFormatted("poll_status") ?></th>
         <th>Action</th>
     </tr>
-<?php } ?>
-
 <?php
+if ($iiMax == 0) {
+    ?>
+    <tr><td colspan="5"><?=$words->get('polls_no_polls');?></td></tr>
+    <?php
+}
 for ($ii = 0; $ii < $iiMax; $ii++) {
     $p = $list[$ii];
     ?>
-    <tr class="<?=$styles[$ii%2] ?>">
+    <tr>
         <td>
             <h4><? echo $words->fTrad($p->Title); ?></h4>
-            <em><? echo $words->fTrad($p->Description); ?></em>
+            <p><? echo $words->fTrad($p->Description); ?></p>
         </td>
         <td>
             <?
@@ -64,8 +68,8 @@ for ($ii = 0; $ii < $iiMax; $ii++) {
                 echo "<br />" ;
                 echo "<a class=\"username\" href=\"member/",$p->CreatorUsername,"\">",$p->CreatorUsername,"</a>" ;
             }
-            if (!empty($p->IdGroupCreator)) {
-                echo $words->getFormatted("Group"),":","<a  href=\"group/",$p->IdGroupCreator,"\">",$p->GroupCreatorName,"</a>" ;
+            if (null !== $p->GroupId) {
+                echo "<br>" . $words->getFormatted("Group"),":<br>","<a  href=\"group/",$p->GroupId,"\">",$p->GroupName,"</a>" ;
             }
             ?>
         </td>

@@ -2,53 +2,52 @@
 
 namespace App\Entity;
 
+use Carbon\Carbon;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * PollsRecordOfChoices
  *
  * @ORM\Table(name="polls_record_of_choices", indexes={@ORM\Index(name="IdMember", columns={"IdMember"}), @ORM\Index(name="idEmail", columns={"Email"}), @ORM\Index(name="IdPoll", columns={"IdPoll"}), @ORM\Index(name="IdPollChoice", columns={"IdPollChoice"})})
+ * @ORM\HasLifecycleCallbacks
  * @ORM\Entity
  */
-class PollsRecordOfChoices
+class PollRecordOfChoice
 {
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(name="updated", type="datetime", nullable=false)
      */
-    private $updated = 'CURRENT_TIMESTAMP';
+    private $updated;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(name="created", type="datetime", nullable=false)
      */
-    private $created = '0000-00-00 00:00:00';
+    private $created;
 
     /**
-     * @var integer
+     * @var PollChoice
      *
-     * @ORM\Column(name="IdPollChoice", type="integer", nullable=false)
+     * @ORM\ManyToOne(targetEntity="PollChoice")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="IdPollChoice", referencedColumnName="id")
+     * })
      */
-    private $idpollchoice;
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="HierarchyValue", type="integer", nullable=false)
-     */
-    private $hierarchyvalue;
+    private $pollChoice;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="Email", type="text", length=255, nullable=false)
+     * @ORM\Column(name="Email", type="string", length=255, nullable=false)
      */
     private $email;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -57,33 +56,33 @@ class PollsRecordOfChoices
     private $id;
 
     /**
-     * @var \App\Entity\Polls
+     * @var Poll
      *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Polls")
+     * @ORM\ManyToOne(targetEntity="Poll")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="IdPoll", referencedColumnName="id")
      * })
      */
-    private $idpoll;
+    private $poll;
 
     /**
-     * @var \App\Entity\Members
+     * @var Member
      *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Members")
+     * @ORM\ManyToOne(targetEntity="Member")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="IdMember", referencedColumnName="id")
      * })
      */
-    private $idmember;
+    private $member;
 
 
 
     /**
      * Set updated
      *
-     * @param \DateTime $updated
+     * @param DateTime $updated
      *
-     * @return PollsRecordOfChoices
+     * @return PollRecordOfChoice
      */
     public function setUpdated($updated)
     {
@@ -95,19 +94,19 @@ class PollsRecordOfChoices
     /**
      * Get updated
      *
-     * @return \DateTime
+     * @return Carbon
      */
     public function getUpdated()
     {
-        return $this->updated;
+        return Carbon::instance($this->updated);
     }
 
     /**
      * Set created
      *
-     * @param \DateTime $created
+     * @param DateTime $created
      *
-     * @return PollsRecordOfChoices
+     * @return PollRecordOfChoice
      */
     public function setCreated($created)
     {
@@ -119,59 +118,35 @@ class PollsRecordOfChoices
     /**
      * Get created
      *
-     * @return \DateTime
+     * @return Carbon
      */
     public function getCreated()
     {
-        return $this->created;
+        return Carbon::instance($this->created);
     }
 
     /**
-     * Set idpollchoice
+     * Set poll choice
      *
-     * @param integer $idpollchoice
+     * @param PollChoice $pollChoice
      *
-     * @return PollsRecordOfChoices
+     * @return PollRecordOfChoice
      */
-    public function setIdpollchoice($idpollchoice)
+    public function setPollChoice($pollChoice)
     {
-        $this->idpollchoice = $idpollchoice;
+        $this->pollChoice = $pollChoice;
 
         return $this;
     }
 
     /**
-     * Get idpollchoice
+     * Get poll choice
      *
-     * @return integer
+     * @return PollChoice
      */
-    public function getIdpollchoice()
+    public function getPollChoice()
     {
-        return $this->idpollchoice;
-    }
-
-    /**
-     * Set hierarchyvalue
-     *
-     * @param integer $hierarchyvalue
-     *
-     * @return PollsRecordOfChoices
-     */
-    public function setHierarchyvalue($hierarchyvalue)
-    {
-        $this->hierarchyvalue = $hierarchyvalue;
-
-        return $this;
-    }
-
-    /**
-     * Get hierarchyvalue
-     *
-     * @return integer
-     */
-    public function getHierarchyvalue()
-    {
-        return $this->hierarchyvalue;
+        return $this->pollChoice;
     }
 
     /**
@@ -179,7 +154,7 @@ class PollsRecordOfChoices
      *
      * @param string $email
      *
-     * @return PollsRecordOfChoices
+     * @return PollRecordOfChoice
      */
     public function setEmail($email)
     {
@@ -201,7 +176,7 @@ class PollsRecordOfChoices
     /**
      * Get id
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -209,50 +184,71 @@ class PollsRecordOfChoices
     }
 
     /**
-     * Set idpoll
+     * Set poll
      *
-     * @param \App\Entity\Polls $idpoll
+     * @param Poll $poll
      *
-     * @return PollsRecordOfChoices
+     * @return PollRecordOfChoice
      */
-    public function setIdpoll(\App\Entity\Polls $idpoll = null)
+    public function setPoll(Poll $poll = null)
     {
-        $this->idpoll = $idpoll;
+        $this->poll = $poll;
 
         return $this;
     }
 
     /**
-     * Get idpoll
+     * Get poll
      *
-     * @return \App\Entity\Polls
+     * @return Poll
      */
-    public function getIdpoll()
+    public function getPoll()
     {
-        return $this->idpoll;
+        return $this->poll;
     }
 
     /**
-     * Set idmember
+     * Set member
      *
-     * @param \App\Entity\Members $idmember
+     * @param Member $member
      *
-     * @return PollsRecordOfChoices
+     * @return PollRecordOfChoice
      */
-    public function setIdmember(\App\Entity\Members $idmember = null)
+    public function setMember(Member $member = null)
     {
-        $this->idmember = $idmember;
+        $this->member = $member;
 
         return $this;
     }
 
     /**
-     * Get idmember
+     * Get member
      *
-     * @return \App\Entity\Members
+     * @return Member
      */
-    public function getIdmember()
+    public function getMember()
     {
-        return $this->idmember;
+        return $this->member;
+    }
+
+    /**
+     * Triggered on insert.
+     *
+     * @ORM\PrePersist
+     */
+    public function onPrePersist()
+    {
+        $this->created = new DateTime('now');
+        $this->updated = new DateTime('now');
+    }
+
+    /**
+     * Triggered on update.
+     *
+     * @ORM\PreUpdate
+     */
+    public function onPreUpdate()
+    {
+        $this->updated = new DateTime('now');
     }
 }

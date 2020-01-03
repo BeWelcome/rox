@@ -17,7 +17,12 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Group Membership.
  *
- * @ORM\Table(name="membersgroups", uniqueConstraints={@ORM\UniqueConstraint(name="UniqueIdMemberIdGroup", columns={"IdMember", "IdGroup"})}, indexes={@ORM\Index(name="IdGroup", columns={"IdGroup"}), @ORM\Index(name="IdMember", columns={"IdMember"})})
+ * @ORM\Table(name="membersgroups",
+ *     uniqueConstraints={@ORM\UniqueConstraint(name="UniqueIdMemberIdGroup", columns={"IdMember", "IdGroup"})},
+ *     indexes={@ORM\Index(name="IdGroup", columns={"IdGroup"}),
+ *         @ORM\Index(name="IdMember", columns={"IdMember"})
+ *     }
+ * )
  * @ORM\Entity(repositoryClass="App\Repository\GroupMembershipRepository")
  * @ORM\HasLifecycleCallbacks
  *

@@ -10,6 +10,7 @@ use App\Entity\CommunityNewsComment;
 use App\Entity\CryptedField;
 use App\Entity\Donation;
 use App\Entity\ForumPost;
+use App\Entity\Group;
 use App\Entity\Log;
 use App\Entity\Member;
 use App\Entity\MembersPhoto;
@@ -17,10 +18,17 @@ use App\Entity\MemberTranslation;
 use App\Entity\Message;
 use App\Entity\Newsletter;
 use App\Entity\PasswordReset;
+use App\Entity\Poll;
+use App\Entity\PollChoice;
+use App\Entity\PollContribution;
+use App\Entity\PrivilegeScope;
+use App\Entity\RightVolunteer;
+use App\Entity\Shout;
 use App\Entity\Word;
 use App\Repository\ActivityAttendeeRepository;
 use App\Repository\MessageRepository;
 use App\Utilities\ManagerTrait;
+use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Exception as Exception;
@@ -28,11 +36,24 @@ use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Routing\Generator\UrlGenerator;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Templating\EngineInterface;
 use ZipArchive;
 
 class MemberModel
 {
     use ManagerTrait;
+
+    private $urlGenerator;
+
+    private $engine;
+
+    public function __construct(UrlGeneratorInterface $urlGenerator, EngineInterface $engine)
+    {
+        $this->urlGenerator = $urlGenerator;
+        $this->engine = $engine;
+    }
 
     /**
      * @param Member $member
@@ -63,6 +84,12 @@ class MemberModel
         return $token;
     }
 
+    /**
+     * @param ContainerBagInterface $params
+     * @param Member $member
+     * @return string
+     * @throws Exception
+     */
     public function collectPersonalData(ContainerBagInterface $params, Member $member)
     {
         // Create temp directory
@@ -83,7 +110,7 @@ class MemberModel
 
         $this->preparePersonalData($dirname, $params->get('kernel.project_dir'), $member);
 
-        $zipFilename = $dirname.'bewelcome-data-'.date('Y-m-d').'.zip';
+        $zipFilename = $dirname.'bewelcome-'.$member->getUsername()."-".date('Y-m-d').'.zip';
         $zip = new ZipArchive();
         $zip->open($zipFilename, ZipArchive::CREATE);
         $files = new RecursiveIteratorIterator(
@@ -141,6 +168,9 @@ class MemberModel
         $this->prepareCommunityNewsInformation($tempDir, $member);
         $this->prepareDonations($tempDir, $member);
         $this->prepareTranslations($tempDir, $member);
+        $this->prepareRightsAndPrivileges($tempDir, $member);
+        $this->preparePolls($tempDir, $member);
+        $this->prepareShouts($tempDir, $member);
 
         ini_set('memory_limit', $memoryLimit);
     }
@@ -313,6 +343,16 @@ class MemberModel
         }
     }
 
+    private function writePostHtmlStart($handle)
+    {
+        fwrite($handle, "<html lang='en'><head><title>Bewelcome Post</title><style>a {color: blue;}</style></head><body>");
+    }
+
+    private function writePostHtmlClose($handle)
+    {
+        fwrite($handle, "</body>");
+    }
+
     /**
      * @param string $tempDir
      * @param Member $member
@@ -328,9 +368,29 @@ class MemberModel
         $i = 1;
         /** @var ForumPost $post */
         foreach ($posts as $post) {
+            try {
+                // As database column for group has 0 instead of null we need to check if group is valid
+                $group = $post->getThread()->getGroup();
+                $group->getName();
+            }
+            catch(Exception $e) {
+                $group = null;
+            }
+            try {
+                // Some posts do not have an valid thread id. We check by trying to access the thread's title
+                $thread = $post->getThread();
+                $thread->getTitle();
+            }
+            catch(Exception $e) {
+                $thread = null;
+            }
             $handle = fopen($postsDir . "post-".$post->getCreated()->toDateString()."-".$i.".html", "w");
-            fwrite($handle, "<p>Created: " . $post->getCreated()->toDateTimeString() . "<br>Status: " . $post->getPostDeleted() . "</p>" . PHP_EOL);
-            fwrite($handle, $post->getMessage());
+            fwrite($handle, $this->engine->render('private/post.html.twig', [
+                'thread' => $thread,
+                'group' => $group,
+                'post' => $post,
+                ]
+            ));
             fclose($handle);
             $i++;
         }
@@ -342,21 +402,7 @@ class MemberModel
      */
     private function prepareSubscriptions(string $tempDir, Member $member)
     {
-        // now all posts to the forum or groups including status
-        $forumRepository = $this->getManager()->getRepository(ForumPost::class);
-        /** @var ForumPost $posts */
-        $posts = $forumRepository->findBy(['author' => $member]);
-        $postsDir = $tempDir . 'posts/';
-        @mkdir($postsDir);
-        $i = 1;
-        /** @var ForumPost $post */
-        foreach ($posts as $post) {
-            $handle = fopen($postsDir . "post-".$post->getCreated()->toDateString()."-".$i.".html", "w");
-            fwrite($handle, "<p>Created: " . $post->getCreated()->toDateTimeString() . "<br>Status: " . $post->getPostDeleted() . "</p>" . PHP_EOL);
-            fwrite($handle, $post->getMessage());
-            fclose($handle);
-            $i++;
-        }
+        // \todo
     }
 
     /**
@@ -371,14 +417,22 @@ class MemberModel
             $handle = fopen($tempDir . "groups.txt", "w");
             foreach ($groupMemberships as $groupMembership) {
                 try {
-                    fwrite($handle, $groupMembership->getGroup()->getName() . ": " . $groupMembership->getStatus() . " (" . $groupMembership->getCreated()->toDateTimeString() . ")" . PHP_EOL);
+                    fwrite($handle, $groupMembership->getGroup()->getName() . " ["
+                        . $this->urlGenerator->generate(
+                            'group_start',
+                            [ 'group_id' => $groupMembership->getGroup()->getId(), UrlGenerator::ABSOLUTE_URL ]
+                        )
+                        ."]");
                 } catch (Exception $e) {
-                    fwrite($handle, "Deleted Group: " . $groupMembership->getStatus() . " (" . $groupMembership->getCreated()->toDateTimeString() . ")" . PHP_EOL);
+                    fwrite($handle, "Deleted Group");
                 }
+                fwrite($handle, PHP_EOL);
+                fwrite($handle, "Status: " . $groupMembership->getStatus() . " (joined: " . $groupMembership->getCreated()->toDateTimeString() . ")" . PHP_EOL);
                 /** @var MemberTranslation $comment */
                 foreach ($groupMembership->getComments()->getValues() as $comment) {
                     fwrite($handle, $comment->getSentence() . PHP_EOL);
                 }
+                fwrite($handle, PHP_EOL);
             }
             fclose($handle);
         }
@@ -568,7 +622,6 @@ class MemberModel
                 fwrite($handle, "Donated: " . $donation->getCreated() . PHP_EOL);
                 fwrite($handle, "System comment: " . $donation->getSystemcomment() . PHP_EOL);
                 fwrite($handle, "Member comment: " . $donation->getMembercomment() . PHP_EOL);
-                fwrite($handle, "Member comment: " . $donation->getStatusprivate() . PHP_EOL);
                 if ($donation->getStatusprivate() === 'showamountonly') {
                     fwrite($handle, "Visible on site: Amount only");
                 } else {
@@ -599,6 +652,149 @@ class MemberModel
                 fwrite($handle, "Language: " . $translation->getLanguage()->getEnglishname() . PHP_EOL);
                 fwrite($handle, "Created: " . $translation->getCreated() . PHP_EOL);
                 fwrite($handle, "Text: " . $translation->getSentence() . PHP_EOL);
+                fwrite($handle, PHP_EOL);
+            }
+            fclose($handle);
+        }
+    }
+
+    /**
+     * @param string $tempDir
+     * @param Member $member
+     */
+    private function prepareRightsAndPrivileges(string $tempDir, Member $member): void
+    {
+        /** @var RightVolunteer[] $volunteerRights */
+        $volunteerRights = $member->getVolunteerRights();
+        if (!empty($volunteerRights)) {
+            $rightsDir = $tempDir . 'rights/';
+            @mkdir($rightsDir);
+            $handle = fopen($rightsDir . "rights.txt", "w");
+            /** @var RightVolunteer $rightVolunteer */
+            foreach ($volunteerRights as $rightVolunteer) {
+                fwrite($handle, "Right: " . $rightVolunteer->getRight()->getName() . PHP_EOL);
+                fwrite($handle, "Scope: " . $rightVolunteer->getScope() . PHP_EOL);
+                fwrite($handle, "Level: " . $rightVolunteer->getLevel() . PHP_EOL);
+                fwrite($handle, "Assigned: " . $rightVolunteer->getCreated() . PHP_EOL);
+                fwrite($handle, PHP_EOL);
+            }
+            fclose($handle);
+        }
+        /** @var EntityRepository $privilegesRepository */
+        $privilegesRepository = $this->getManager()->getRepository(PrivilegeScope::class);
+        $privileges = $privilegesRepository->findBy(['member' => $member]);
+        if (!empty($privileges)) {
+            $rightsDir = $tempDir . 'rights/';
+            @mkdir($rightsDir);
+            $handle = fopen($rightsDir . "privileges.txt", "w");
+            /** @var PrivilegeScope $privilege */
+            foreach ($privileges as $privilege) {
+                $type = $privilege->getPrivilege()->getType();
+                $scope = $privilege->getType();
+                fwrite($handle, "Privilege: " . $privilege->getPrivilege()->getType() . PHP_EOL);
+                if ($type == 'Group') {
+                    // Naming is a bit odd here
+                    if (is_numeric($scope)) {
+                        // Check if this group still exists
+                        $groupRepository = $this->getManager()->getRepository(Group::class);
+                        /** @var Group $group */
+                        $group = $groupRepository->findOneBy(['id' => $scope]);
+                        if (null !== $group) {
+                            fwrite($handle, "Scope: " . $group->getName() . PHP_EOL);
+                        } else {
+                            fwrite($handle, "Scope: Deleted group (" . $scope . ")" . PHP_EOL);
+                        }
+                    } else {
+                        fwrite($handle, "Scope: " . $scope . PHP_EOL);
+                    }
+                } else {
+                    fwrite($handle, "Scope: " . $scope . PHP_EOL);
+                }
+                fwrite($handle, "Role: " . $privilege->getRole()->getName() . PHP_EOL);
+                fwrite($handle, "Updated: " . $privilege->getUpdated() . PHP_EOL);
+                fwrite($handle, PHP_EOL);
+            }
+            fclose($handle);
+        }
+    }
+
+    private function preparePolls(string $tempDir, Member $member)
+    {
+        /** @var EntityRepository $pollsRepository */
+        $pollsRepository = $this->getManager()->getRepository(Poll::class);
+        $polls = $pollsRepository->findBy(['creator' => $member]);
+        if (!empty($polls)) {
+            $pollsDir = $tempDir . 'polls/';
+            @mkdir($pollsDir);
+            /** @var Poll $poll */
+            foreach ($polls as $poll) {
+                $handle = fopen($pollsDir . "poll-" . $poll->getId() . ".txt", "w");
+                fwrite($handle, "Id: " . $poll->getId() . PHP_EOL);
+                $titles = $poll->getTitles();
+                foreach ($titles as $title) {
+                    fwrite($handle, "Title (" . $title->getLanguage()->getName() . "): " . $title->getSentence() . PHP_EOL);
+                }
+                // There is only one group allowed for polls at the moment but we drive it safe here
+                $groups = $poll->getGroups();
+                foreach ($groups as $group) {
+                    fwrite($handle, "Limited to group: " . $group->getName() . PHP_EOL);
+                }
+                $choices = $poll->getChoices();
+                /** @var PollChoice $choice */
+                foreach ($choices as $choice) {
+                    $choiceTexts = $choice->getChoiceTexts();
+                    foreach ($choiceTexts as $choiceText) {
+                        fwrite($handle, "Choice Text (" . $choiceText->getLanguage()->getName() . "): " . $choiceText->getSentence() . PHP_EOL);
+                    }
+                }
+                fclose($handle);
+            }
+        }
+        /** @var EntityRepository $contributionsRepository */
+        $contributionsRepository = $this->getManager()->getRepository(PollContribution::class);
+        $contributions = $contributionsRepository->findBy(['member' => $member]);
+        if (!empty($contributions)) {
+            $pollsDir = $tempDir . 'polls/';
+            @mkdir($pollsDir);
+            $handle = fopen($pollsDir . "contributions.txt", "w");
+            fwrite($handle, "You contributed to the following polls:" . PHP_EOL . PHP_EOL);
+            /** @var PollContribution $contribution */
+            foreach ($contributions as $contribution) {
+                $poll = $contribution->getPoll();
+                // Check if a title exists and output it
+                $title = $poll->getTitles()->first();
+                fwrite($handle, "Poll voted: ");
+                if ($title) {
+                    fwrite($handle, $title->getSentence());
+                } else {
+                    fwrite($handle, "Unknown poll");
+                }
+                fwrite($handle, " (" . $poll->getId() . ")" . PHP_EOL);
+                if ('' === $contribution->getComment()) {
+                    fwrite($handle, "You voted without leaving a comment");
+                } else {
+                    fwrite($handle, "Comment left: " . $contribution->getComment());
+                }
+                fwrite($handle,PHP_EOL . PHP_EOL);
+            }
+            fclose($handle);
+        }
+    }
+
+    private function prepareShouts(string $tempDir, Member $member)
+    {
+        /** @var EntityRepository $shoutsRepository */
+        $shoutsRepository = $this->getManager()->getRepository(Shout::class);
+        $shouts = $shoutsRepository->findBy(['member' => $member]);
+        if (!empty($shouts)) {
+            $shoutsDir = $tempDir . 'shouts/';
+            @mkdir($shoutsDir);
+            $handle = fopen($shoutsDir . "shouts.txt", "w");
+            /** @var Shout $shout */
+            foreach ($shouts as $shout) {
+                fwrite($handle, "Item: " . $shout->getTable() . " - " . $shout->getTableId() . PHP_EOL);
+                fwrite($handle, "Title: " . $shout->getTitle() . PHP_EOL);
+                fwrite($handle, "Text: " . $shout->getText() . PHP_EOL);
                 fwrite($handle, PHP_EOL);
             }
             fclose($handle);

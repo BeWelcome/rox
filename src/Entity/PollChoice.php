@@ -2,46 +2,66 @@
 
 namespace App\Entity;
 
+use Carbon\Carbon;
+use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * PollsChoices
+ * PollChoice
  *
  * @ORM\Table(name="polls_choices", indexes={@ORM\Index(name="IdPoll", columns={"IdPoll"})})
+ * @ORM\HasLifecycleCallbacks
  * @ORM\Entity
  */
-class PollsChoices
+class PollChoice
 {
     /**
-     * @var integer
+     * @var Translation
      *
-     * @ORM\Column(name="IdChoiceText", type="integer", nullable=false)
+     * @ORM\ManyToMany(targetEntity="Translation", fetch="EAGER")
+     * @ORM\JoinTable(name="poll_choices_translations",
+     *      joinColumns={@ORM\JoinColumn(name="poll_choice_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="translation_id", referencedColumnName="id")}
+     *      )
+     *
+     * Collects all translated choices of the poll
      */
-    private $idchoicetext;
+    private $choiceTexts;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="Counter", type="integer", nullable=false)
      */
     private $counter = '0';
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(name="updated", type="datetime", nullable=false)
      */
-    private $updated = 'CURRENT_TIMESTAMP';
+    private $updated;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(name="created", type="datetime", nullable=false)
      */
-    private $created = '0000-00-00 00:00:00';
+    private $created;
 
     /**
-     * @var integer
+     * @var Poll
+     *
+     * @ORM\ManyToOne(targetEntity="Poll", inversedBy="choices")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="IdPoll", referencedColumnName="id")
+     * })
+     */
+    private $poll;
+
+    /**
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -49,48 +69,41 @@ class PollsChoices
      */
     private $id;
 
-    /**
-     * @var \App\Entity\Polls
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Polls")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="IdPoll", referencedColumnName="id")
-     * })
-     */
-    private $idpoll;
-
-
-
-    /**
-     * Set idchoicetext
-     *
-     * @param integer $idchoicetext
-     *
-     * @return PollsChoices
-     */
-    public function setIdchoicetext($idchoicetext)
+    public function __construct()
     {
-        $this->idchoicetext = $idchoicetext;
+        $this->choiceTexts = new ArrayCollection();
+    }
+
+    /**
+     * Set choice text
+     *
+     * @param Translation $choiceText
+     *
+     * @return PollChoice
+     */
+    public function setChoiceText($choiceText)
+    {
+        $this->choiceText = $choiceText;
 
         return $this;
     }
 
     /**
-     * Get idchoicetext
+     * Get choice texts
      *
-     * @return integer
+     * @return ArrayCollection
      */
-    public function getIdchoicetext()
+    public function getChoiceTexts()
     {
-        return $this->idchoicetext;
+        return $this->choiceTexts;
     }
 
     /**
      * Set counter
      *
-     * @param integer $counter
+     * @param int $counter
      *
-     * @return PollsChoices
+     * @return PollChoice
      */
     public function setCounter($counter)
     {
@@ -102,7 +115,7 @@ class PollsChoices
     /**
      * Get counter
      *
-     * @return integer
+     * @return int
      */
     public function getCounter()
     {
@@ -112,9 +125,9 @@ class PollsChoices
     /**
      * Set updated
      *
-     * @param \DateTime $updated
+     * @param DateTime $updated
      *
-     * @return PollsChoices
+     * @return PollChoice
      */
     public function setUpdated($updated)
     {
@@ -126,7 +139,7 @@ class PollsChoices
     /**
      * Get updated
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getUpdated()
     {
@@ -136,9 +149,9 @@ class PollsChoices
     /**
      * Set created
      *
-     * @param \DateTime $created
+     * @param DateTime $created
      *
-     * @return PollsChoices
+     * @return PollChoice
      */
     public function setCreated($created)
     {
@@ -150,17 +163,17 @@ class PollsChoices
     /**
      * Get created
      *
-     * @return \DateTime
+     * @return Carbon
      */
     public function getCreated()
     {
-        return $this->created;
+        return Carbon::instance($this->created);
     }
 
     /**
      * Get id
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -168,26 +181,47 @@ class PollsChoices
     }
 
     /**
-     * Set idpoll
+     * Set poll
      *
-     * @param \App\Entity\Polls $idpoll
+     * @param Poll $poll
      *
-     * @return PollsChoices
+     * @return PollChoice
      */
-    public function setIdpoll(\App\Entity\Polls $idpoll = null)
+    public function setPoll(Poll $poll = null)
     {
-        $this->idpoll = $idpoll;
+        $this->poll = $poll;
 
         return $this;
     }
 
     /**
-     * Get idpoll
+     * Get poll
      *
-     * @return \App\Entity\Polls
+     * @return Poll
      */
-    public function getIdpoll()
+    public function getPoll()
     {
-        return $this->idpoll;
+        return $this->poll;
+    }
+
+    /**
+     * Triggered on insert.
+     *
+     * @ORM\PrePersist
+     */
+    public function onPrePersist()
+    {
+        $this->created = new DateTime('now');
+        $this->updated = new DateTime('now');
+    }
+
+    /**
+     * Triggered on update.
+     *
+     * @ORM\PreUpdate
+     */
+    public function onPreUpdate()
+    {
+        $this->updated = new DateTime('now');
     }
 }

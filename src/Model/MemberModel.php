@@ -371,7 +371,9 @@ class MemberModel
             try {
                 // Some posts do not have an valid thread id. We check by trying to access the thread's title
                 $thread = $post->getThread();
-                $thread->getTitle();
+                if ($thread) {
+                    $thread->getTitle();
+                }
             }
             catch(Exception $e) {
                 $thread = null;
@@ -381,7 +383,7 @@ class MemberModel
             } else {
                 try {
                     // As database column for group has 0 instead of null we need to check if group is valid
-                    $group = $post->getThread()->getGroup();
+                    $group = $thread->getGroup();
                     $group->getName();
                 }
                 catch(Exception $e) {

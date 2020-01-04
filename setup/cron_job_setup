@@ -4,7 +4,6 @@ cron_forum_cleanup.sh
 cron_geonames_update.sh
 cron_guests_cleanup.sh
 cron_mailbot.sh
-cron_statistics.sh
 cron_update_fulltext_index.sh
 
 And here's the cron file (adapt accordingly):
@@ -15,14 +14,17 @@ And here's the cron file (adapt accordingly):
 # Clean anonymous sessions every hour
 0 * * * * root <rox dir>/setup/cron_guests_cleanup.sh
 
+# Hosting eagerness slider update
+18 * * * * root mysql --database bewelcome -e 'update hosting_eagerness_slider set current=current-step, remaining=remaining-1 where remaining>0\G'
+
 # Deactivate edit for certain forum posts every 30 minutes
 0,30 * * * * root <rox dir>/setup/cron_forum_cleanup.sh
 
 # Update Geonames database at 2:05am
 5 2 * * * root <rox dir>/setup/cron_geonames_update.sh www.bewelcome.org
 
-# Generate user statistics at 7am
-0 7 * * * root <rox dir>/setup/cron_statistics.sh www.bewelcome.org
+# Generate user statistics at 1am (for yesterday)
+0 1 * * * root <rox dir>/bin/console statistics:update:daily
 
 # Reindex full text indices every hour
 0 * * * * root <rox dir>/setup/cron_update_fulltext_indices.sh

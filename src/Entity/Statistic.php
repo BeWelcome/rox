@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Carbon\Carbon;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -10,52 +12,66 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="stats", indexes={@ORM\Index(name="created", columns={"created"})})
  * @ORM\Entity
  */
-class Stats
+class Statistic
 {
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(name="created", type="datetime", nullable=false)
      */
-    private $created = 'CURRENT_TIMESTAMP';
+    private $created;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="NbActiveMembers", type="integer", nullable=false)
      */
-    private $nbactivemembers;
+    private $activeMembers;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="NbMessageSent", type="integer", nullable=false)
      */
-    private $nbmessagesent;
+    private $messagesSent;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="NbMessageRead", type="integer", nullable=false)
      */
-    private $nbmessageread;
+    private $messagesRead;
 
     /**
-     * @var integer
+     * @var int
+     *
+     * @ORM\Column(name="NbRequestsSent", type="integer", nullable=false)
+     */
+    private $requestsSent;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="NbRequestsAccepted", type="integer", nullable=false)
+     */
+    private $requestsAccepted;
+
+    /**
+     * @var int
      *
      * @ORM\Column(name="NbMemberWithOneTrust", type="integer", nullable=false)
      */
-    private $nbmemberwithonetrust;
+    private $membersWithPositiveComment;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="NbMemberWhoLoggedToday", type="integer", nullable=false)
      */
-    private $nbmemberwhologgedtoday;
+    private $membersWhoLoggedInToday;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -63,14 +79,12 @@ class Stats
      */
     private $id;
 
-
-
     /**
      * Set created
      *
-     * @param \DateTime $created
+     * @param DateTime $created
      *
-     * @return Stats
+     * @return Statistic
      */
     public function setCreated($created)
     {
@@ -82,137 +96,185 @@ class Stats
     /**
      * Get created
      *
-     * @return \DateTime
+     * @return Carbon
      */
     public function getCreated()
     {
-        return $this->created;
+        return Carbon::instance($this->created);
     }
 
     /**
-     * Set nbactivemembers
+     * Set number of active members
      *
-     * @param integer $nbactivemembers
+     * @param int $activeMembers
      *
-     * @return Stats
+     * @return Statistic
      */
-    public function setNbactivemembers($nbactivemembers)
+    public function setActiveMembers($activeMembers)
     {
-        $this->nbactivemembers = $nbactivemembers;
+        $this->activeMembers = $activeMembers;
 
         return $this;
     }
 
     /**
-     * Get nbactivemembers
+     * Get number of active members
      *
-     * @return integer
+     * @return int
      */
-    public function getNbactivemembers()
+    public function getActiveMembers()
     {
-        return $this->nbactivemembers;
+        return $this->activeMembers;
     }
 
     /**
-     * Set nbmessagesent
+     * Set number of messages sent
      *
-     * @param integer $nbmessagesent
+     * @param int $messagesSent
      *
-     * @return Stats
+     * @return Statistic
      */
-    public function setNbmessagesent($nbmessagesent)
+    public function setMessagesSent($messagesSent)
     {
-        $this->nbmessagesent = $nbmessagesent;
+        $this->messagesSent = $messagesSent;
 
         return $this;
     }
 
     /**
-     * Get nbmessagesent
+     * Get number of messages sent
      *
-     * @return integer
+     * @return int
      */
-    public function getNbmessagesent()
+    public function getMessagesSent()
     {
-        return $this->nbmessagesent;
+        return $this->messagesSent;
     }
 
     /**
-     * Set nbmessageread
+     * Set number of messages read
      *
-     * @param integer $nbmessageread
+     * @param int $messagesRead
      *
-     * @return Stats
+     * @return Statistic
      */
-    public function setNbmessageread($nbmessageread)
+    public function setMessagesRead($messagesRead)
     {
-        $this->nbmessageread = $nbmessageread;
+        $this->messagesRead = $messagesRead;
 
         return $this;
     }
 
     /**
-     * Get nbmessageread
+     * Get number of messages read
      *
-     * @return integer
+     * @return int
      */
-    public function getNbmessageread()
+    public function getMessagesRead()
     {
-        return $this->nbmessageread;
+        return $this->messagesRead;
     }
 
     /**
-     * Set nbmemberwithonetrust
+     * Set number of requests sent
      *
-     * @param integer $nbmemberwithonetrust
+     * @param int $requestsSent
      *
-     * @return Stats
+     * @return Statistic
      */
-    public function setNbmemberwithonetrust($nbmemberwithonetrust)
+    public function setRequestsSent($requestsSent)
     {
-        $this->nbmemberwithonetrust = $nbmemberwithonetrust;
+        $this->requestsSent = $requestsSent;
 
         return $this;
     }
 
     /**
-     * Get nbmemberwithonetrust
+     * Get number of requests sent
      *
-     * @return integer
+     * @return int
      */
-    public function getNbmemberwithonetrust()
+    public function getRequestsSent()
     {
-        return $this->nbmemberwithonetrust;
+        return $this->requestsSent;
     }
 
     /**
-     * Set nbmemberwhologgedtoday
+     * Set number of requests which have been accepted
      *
-     * @param integer $nbmemberwhologgedtoday
+     * @param int $requestsAccepted
      *
-     * @return Stats
+     * @return Statistic
      */
-    public function setNbmemberwhologgedtoday($nbmemberwhologgedtoday)
+    public function setRequestsAccepted($requestsAccepted)
     {
-        $this->nbmemberwhologgedtoday = $nbmemberwhologgedtoday;
+        $this->requestsAccepted = $requestsAccepted;
 
         return $this;
     }
 
     /**
-     * Get nbmemberwhologgedtoday
+     * Get number of requests which have been accepted
      *
-     * @return integer
+     * @return int
      */
-    public function getNbmemberwhologgedtoday()
+    public function getRequestsAccepted()
     {
-        return $this->nbmemberwhologgedtoday;
+        return $this->requestsAccepted;
+    }
+
+    /**
+     * Set number of members with at least one positive comment
+     *
+     * @param int $membersWithPositiveComment
+     *
+     * @return Statistic
+     */
+    public function setMembersWithPositiveComment($membersWithPositiveComment)
+    {
+        $this->membersWithPositiveComment = $membersWithPositiveComment;
+
+        return $this;
+    }
+
+    /**
+     * Get number of members with at least one positive comment
+     *
+     * @return int
+     */
+    public function getMembersWithPositiveComment()
+    {
+        return $this->membersWithPositiveComment;
+    }
+
+    /**
+     * Set number of members who logged in today
+     *
+     * @param int $membersWhoLoggedInToday
+     *
+     * @return Statistic
+     */
+    public function setMembersWhoLoggedInToday($membersWhoLoggedInToday)
+    {
+        $this->membersWhoLoggedInToday = $membersWhoLoggedInToday;
+
+        return $this;
+    }
+
+    /**
+     * Get number of members who logged in today
+     *
+     * @return int
+     */
+    public function getMembersWhoLoggedInToday()
+    {
+        return $this->membersWhoLoggedInToday;
     }
 
     /**
      * Get id
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {

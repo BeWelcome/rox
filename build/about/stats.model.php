@@ -241,6 +241,8 @@ SELECT
     MAX(NbActiveMembers) AS NbActiveMembers,
     MAX(NbMessageSent) AS NbMessageSent,
     MAX(NbMessageRead) AS NbMessageRead,
+    MAX(NbRequestsSent) AS NbRequestsSent,
+    MAX(NbRequestsAccepted) AS NbRequestsAccepted,
     MAX(NbMemberWithOneTrust) AS NbMemberWithOneTrust,
     MAX(NbMemberWhoLoggedToday) AS NbMemberWhoLoggedToday,
     created,

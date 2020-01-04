@@ -69,7 +69,9 @@ function drawCharts($label, $headlineCode, $words)
     drawCharts('newMembersLoggedInPercent', 'StatsPercentLoginAlltime', $words);
     drawCharts('membersWithPositiveComments', 'StatsTrustAlltime', $words);
     drawCharts('messageSent', 'StatsMessagesAlltime', $words);
-    drawCharts('messageRead', 'StatsMessagesAlltime', $words);
+    drawCharts('messageRead', 'StatsMessagesReadAlltime', $words);
+    drawCharts('requestsSent', 'StatsRequestsAlltime', $words);
+    drawCharts('requestsAccepted', 'StatsRequestsAcceptedAlltime', $words);
     ?>
 <div class="row mb-1">
     <div class="col-12 col-md-6">
@@ -198,7 +200,6 @@ function drawCharts($label, $headlineCode, $words)
                     data: counts
                 }]
             };
-            console.log(pieChartData);
             new Chart(ctx, {
                 type: 'pie',
                 data: pieChartData,
@@ -230,7 +231,6 @@ function drawCharts($label, $headlineCode, $words)
         $.post("/stats/data/other",
             function (data)
             {
-                console.log(data);
                 createLanguageChart(data.languages);
                 createPieChart(data.preferred, 'preferred');
                 createPieChart(data.logins, 'logins');

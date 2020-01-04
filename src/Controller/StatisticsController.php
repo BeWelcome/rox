@@ -10,6 +10,7 @@ namespace App\Controller;
 
 use App\Utilities\SessionSingleton;
 use EnvironmentExplorer;
+use PException;
 use StatsModel;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -83,6 +84,8 @@ class StatisticsController extends AbstractController
         $membersWithPositiveComments = [];
         $messageSent = [];
         $messageRead = [];
+        $requestsSent = [];
+        $requestsAccepted = [];
         foreach ($statistics as $val) {
             $members[$i] = $val->NbActiveMembers;
             if (isset($val->week)) {
@@ -98,15 +101,15 @@ class StatisticsController extends AbstractController
             }
             if (0 === $i) {
                 $newMembersPercent[$i] = 0;
+            } elseif (0 === $members[$i]) {
+                $newMembersPercent[$i] = 0;
             } else {
-                if (0 === $members[$i]) {
-                    $newMembersPercent[$i] = 0;
-                } else {
-                    $newMembersPercent[$i] = $newMembers[$i] / $members[$i] * 100;
-                }
+                $newMembersPercent[$i] = $newMembers[$i] / $members[$i] * 100;
             }
             $messageSent[$i] = $val->NbMessageSent;
             $messageRead[$i] = $val->NbMessageRead;
+            $requestsSent[$i] = $val->NbRequestsSent;
+            $requestsAccepted[$i] = $val->NbRequestsAccepted;
             $membersWithPositiveComments[$i] = $val->NbMemberWithOneTrust;
             $membersLoggedIn[$i] = $val->NbMemberWhoLoggedToday;
             if (0 === $members[$i]) {
@@ -128,6 +131,8 @@ class StatisticsController extends AbstractController
                 'membersWithPositiveComments' => $membersWithPositiveComments,
                 'messageSent' => $messageSent,
                 'messageRead' => $messageRead,
+                'requestsSent' => $requestsSent,
+                'requestsAccepted' => $requestsAccepted,
             ],
         ];
     }
@@ -163,7 +168,7 @@ class StatisticsController extends AbstractController
             $preferredLanguages = $statsModel->getPreferredLanguages();
             $logins = $statsModel->getLastLoginRankGrouped();
             $countries = $statsModel->getMembersPerCountry();
-        } catch (\PException $e) {
+        } catch (PException $e) {
         }
 
         return [

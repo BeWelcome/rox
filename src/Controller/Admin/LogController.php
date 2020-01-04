@@ -26,7 +26,7 @@ class LogController extends AbstractController
      */
     public function showOverview(Request $request, LogModel $logModel)
     {
-        if (!$this->isGranted([Member::ROLE_ADMIN_GROUP])) {
+        if (!$this->isGranted([Member::ROLE_ADMIN_LOGS])) {
             throw $this->createAccessDeniedException('You need to have Logs right to access this.');
         }
 

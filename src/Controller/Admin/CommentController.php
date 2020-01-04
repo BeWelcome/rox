@@ -54,6 +54,10 @@ class CommentController extends AbstractController
      */
     public function adminCommentOverview(Request $request)
     {
+        if (!$this->isGranted([ Member::ROLE_ADMIN_COMMENTS, Member::ROLE_ADMIN_SAFETYTEAM ])) {
+            throw $this->createAccessDeniedException('You need to have Group right to access this.');
+        }
+
         $page = $request->query->get('page', 1);
         $limit = $request->query->get('limit', 10);
 
@@ -79,6 +83,10 @@ class CommentController extends AbstractController
      */
     public function adminSafetyTeamOverview(Request $request)
     {
+        if (!$this->isGranted([ Member::ROLE_ADMIN_SAFETYTEAM ])) {
+            throw $this->createAccessDeniedException('You need to have Group right to access this.');
+        }
+
         $page = $request->query->get('page', 1);
         $limit = $request->query->get('limit', 10);
 
@@ -104,6 +112,10 @@ class CommentController extends AbstractController
      */
     public function adminReportedOverview(Request $request)
     {
+        if (!$this->isGranted([ Member::ROLE_ADMIN_COMMENTS, Member::ROLE_ADMIN_SAFETYTEAM] )) {
+            throw $this->createAccessDeniedException('You need to have Group right to access this.');
+        }
+
         $page = $request->query->get('page', 1);
         $limit = $request->query->get('limit', 10);
 
@@ -129,6 +141,10 @@ class CommentController extends AbstractController
      */
     public function adminNegativeOverview(Request $request)
     {
+        if (!$this->isGranted([ Member::ROLE_ADMIN_COMMENTS, Member::ROLE_ADMIN_SAFETYTEAM] )) {
+            throw $this->createAccessDeniedException('You need to have Group right to access this.');
+        }
+
         $page = $request->query->get('page', 1);
         $limit = $request->query->get('limit', 10);
 
@@ -154,6 +170,10 @@ class CommentController extends AbstractController
      */
     public function adminCheckedOverview(Request $request)
     {
+        if (!$this->isGranted([Member::ROLE_ADMIN_COMMENTS, Member::ROLE_ADMIN_SAFETYTEAM])) {
+            throw $this->createAccessDeniedException('You need to have Group right to access this.');
+        }
+
         $page = $request->query->get('page', 1);
         $limit = $request->query->get('limit', 10);
 
@@ -360,6 +380,10 @@ class CommentController extends AbstractController
      */
     public function showAllCommentsForMember(Request $request, Member $member)
     {
+        if (!$this->isGranted([Member::ROLE_ADMIN_COMMENTS, Member::ROLE_ADMIN_SAFETYTEAM])) {
+            throw $this->createAccessDeniedException('You need to have Group right to access this.');
+        }
+
         $page = $request->query->get('page', 1);
         $limit = $request->query->get('limit', 10);
 
@@ -386,6 +410,10 @@ class CommentController extends AbstractController
      */
     public function showAllCommentsFromMember(Request $request, Member $member)
     {
+        if (!$this->isGranted([Member::ROLE_ADMIN_COMMENTS, Member::ROLE_ADMIN_SAFETYTEAM])) {
+            throw $this->createAccessDeniedException('You need to have Group right to access this.');
+        }
+
         $page = $request->query->get('page', 1);
         $limit = $request->query->get('limit', 10);
 

@@ -3,6 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\CommunityNews;
+use App\Entity\Member;
 use App\Form\CommunityNewsType;
 use App\Model\CommunityNewsModel;
 use DateTime;
@@ -24,6 +25,10 @@ class CommunityNewsController extends AbstractController
      */
     public function showOverviewAction(Request $request, CommunityNewsModel $communityNewsModel)
     {
+        if (!$this->isGranted([Member::ROLE_ADMIN_COMMUNITYNEWS])) {
+            throw $this->createAccessDeniedException('You need to have the CommunityNews right to access this.');
+        }
+
         $page = $request->query->get('page', 1);
         $limit = $request->query->get('limit', 20);
 
@@ -45,6 +50,10 @@ class CommunityNewsController extends AbstractController
      */
     public function createAction(Request $request)
     {
+        if (!$this->isGranted([Member::ROLE_ADMIN_COMMUNITYNEWS])) {
+            throw $this->createAccessDeniedException('You need to have the CommunityNews right to access this.');
+        }
+
         $communityNews = new CommunityNews();
         $communityNewsForm = $this->createForm(CommunityNewsType::class, $communityNews);
 
@@ -78,6 +87,10 @@ class CommunityNewsController extends AbstractController
      */
     public function editAction(Request $request, CommunityNews $communityNews)
     {
+        if (!$this->isGranted([Member::ROLE_ADMIN_COMMUNITYNEWS])) {
+            throw $this->createAccessDeniedException('You need to have the CommunityNews right to access this.');
+        }
+
         $communityNewsForm = $this->createForm(CommunityNewsType::class, $communityNews);
 
         $communityNewsForm->handleRequest($request);
@@ -106,6 +119,10 @@ class CommunityNewsController extends AbstractController
      */
     public function hideAction(CommunityNews $communityNews)
     {
+        if (!$this->isGranted([Member::ROLE_ADMIN_COMMUNITYNEWS])) {
+            throw $this->createAccessDeniedException('You need to have the CommunityNews right to access this.');
+        }
+
         $communityNews->setPublic(false);
         $communityNews->setUpdatedAt(new DateTime());
         $communityNews->setUpdatedby($this->getUser());
@@ -127,6 +144,10 @@ class CommunityNewsController extends AbstractController
      */
     public function unhideAction(CommunityNews $communityNews)
     {
+        if (!$this->isGranted([Member::ROLE_ADMIN_COMMUNITYNEWS])) {
+            throw $this->createAccessDeniedException('You need to have the CommunityNews right to access this.');
+        }
+
         $communityNews->setPublic(true);
         $communityNews->setUpdatedAt(new DateTime());
         $communityNews->setUpdatedby($this->getUser());

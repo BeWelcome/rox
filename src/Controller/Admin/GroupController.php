@@ -84,7 +84,7 @@ class GroupController extends AbstractController
         }
 
         if (!$this->hasGroupRightLevel(10)) {
-            throw $this->createAccessDeniedException('You need to have Group right to access this.');
+            throw $this->createAccessDeniedException('You need to have level 10 to access this.');
         }
 
         // Build Pagerfanta for groups
@@ -125,7 +125,7 @@ class GroupController extends AbstractController
         }
 
         if (!$this->hasGroupRightLevel(10)) {
-            throw $this->createAccessDeniedException('You need to have Group right to access this.');
+            throw $this->createAccessDeniedException('You need to have level 10 to access this.');
         }
 
         // Build Pagerfanta for groups
@@ -170,6 +170,10 @@ class GroupController extends AbstractController
             throw $this->createAccessDeniedException('You need to have Group right to access this.');
         }
 
+        if (!$this->hasGroupRightLevel(10)) {
+            throw $this->createAccessDeniedException('You need to have level 10 to access this.');
+        }
+
         $group->setApproved(Group::IN_DISCUSSION);
         $em = $this->getDoctrine()->getManager();
         $em->persist($group);
@@ -205,6 +209,10 @@ class GroupController extends AbstractController
             throw $this->createAccessDeniedException('You need to have Group right to access this.');
         }
 
+        if (!$this->hasGroupRightLevel(10)) {
+            throw $this->createAccessDeniedException('You need to have level 10 to access this.');
+        }
+
         $group->setApproved(Group::DISMISSED);
         $em = $this->getDoctrine()->getManager();
         $em->persist($group);
@@ -238,6 +246,10 @@ class GroupController extends AbstractController
     {
         if (!$this->isGranted([Member::ROLE_ADMIN_GROUP])) {
             throw $this->createAccessDeniedException('You need to have the Group right to access this.');
+        }
+
+        if (!$this->hasGroupRightLevel(10)) {
+            throw $this->createAccessDeniedException('You need to have level 10 to access this.');
         }
 
         $group->setApproved(Group::APPROVED);
@@ -277,6 +289,10 @@ class GroupController extends AbstractController
             throw $this->createAccessDeniedException('You need to have Group right to access this.');
         }
 
+        if (!$this->hasGroupRightLevel(10)) {
+            throw $this->createAccessDeniedException('You need to have level 10 to access this.');
+        }
+
         $group->setName('[Archived] ' . $group->getName());
         $em = $this->getDoctrine()->getManager();
         $em->persist($group);
@@ -309,6 +325,10 @@ class GroupController extends AbstractController
     {
         if (!$this->isGranted([Member::ROLE_ADMIN_GROUP])) {
             throw $this->createAccessDeniedException('You need to have Group right to access this.');
+        }
+
+        if (!$this->hasGroupRightLevel(10)) {
+            throw $this->createAccessDeniedException('You need to have level 10 to access this.');
         }
 
         $group->setName(str_replace('[Archived] ',  '', $group->getName()));

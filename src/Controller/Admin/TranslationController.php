@@ -418,7 +418,6 @@ class TranslationController extends AbstractController
      * )
      *
      * @param Request             $request
-     * @param TranslatorInterface $translator
      * @param $mode
      *
      * @return RedirectResponse
@@ -597,6 +596,8 @@ class TranslationController extends AbstractController
      */
     public function translateMockup(Request $request, string $template)
     {
+        $this->denyAccessUnlessGranted(Member::ROLE_ADMIN_WORDS, null, 'Unable to access this page!');
+
         $mockMessage = \Mockery::mock(Message::class, [
             'getId' => 1,
             'getMessage' => 'Message text',

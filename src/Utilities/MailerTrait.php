@@ -58,7 +58,9 @@ trait MailerTrait
         $htmlMails = ('Yes' === $receiver->getMemberPreferenceValue($preference));
         */
         $this->setTranslatorLocale($receiver);
-        $parameters = array_merge(['sender' => $sender, 'receiver' => $receiver, 'tenplate' => $template], ...$params);
+        $locale = $receiver->getPreferredLanguage();
+        $parameters = array_merge(['sender' => $sender, 'receiver' => $receiver, 'tenplate' => $template,
+            'locale' => $locale->getShortcode(), '_locale' => $locale->getShortcode()], ...$params);
         $subject = $this->getTranslator()->trans($parameters['subject']);
         $email = (new TemplatedEmail())
             ->to(new Address($receiver->getEmail(), $receiver->getUsername()))

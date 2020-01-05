@@ -274,6 +274,7 @@ class HostingRequestController extends BaseMessageController
      */
     public function newHostingRequestAction(Request $request, Member $host)
     {
+        /** @var Member $member */
         $member = $this->getUser();
         if ($member === $host) {
             $this->addTranslatedFlash('notice', 'flash.request.self');
@@ -386,8 +387,15 @@ class HostingRequestController extends BaseMessageController
         return $requestModel->checkRequestExpired($hostingRequest->getRequest());
     }
 
-    private function sendRequestNotification(Member $sender, Member $receiver, Member $host, Message $request, $subject, $template, $requestChanged)
-    {
+    private function sendRequestNotification(
+        Member $sender,
+        Member $receiver,
+        Member $host,
+        Message $request,
+        $subject,
+        $template,
+        $requestChanged = false
+    ) {
         // Send mail notification
         $this->sendTemplateEmail($sender, $receiver, $template, [
             'host' => $host,

@@ -7,13 +7,20 @@
 
 use App\Utilities\SessionTrait;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Routing\Generator\UrlGenerator;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Zend\Uri\Exception\InvalidUriException;
 use Zend\Uri\Http;
+
 
 class EnvironmentExplorer
 {
     use SessionTrait;
 
-    public function __construct() {
+    private $urlGenerator;
+
+    public function __construct(UrlGeneratorInterface $urlGenerator = null) {
+        $this->urlGenerator = $urlGenerator;
         $this->setSession();
     }
 
@@ -51,11 +58,9 @@ class EnvironmentExplorer
 
     protected function mergeNewConfig(array $settings, $dsn, $db_user, $db_password)
     {
-        $request = \Symfony\Component\HttpFoundation\Request::createFromGlobals();
-
-        $uri = (new Http($request->getUri()))
-            ->setScheme('http')
-            ->setPath('');
+        $uri = (null === $this->urlGenerator) ?
+            'http://localhost/' :
+            $this->urlGenerator->generate('homepage', [], UrlGenerator::ABSOLUTE_URL);
 
         return array_replace_recursive($settings, [
             'db' => [
@@ -64,9 +69,9 @@ class EnvironmentExplorer
                 'password' => $db_password,
             ],
             'env' => [
-                'baseuri' => $uri->toString() . '/',
-                'baseuri_http' => $uri->toString() . '/',
-                'baseuri_https' => $uri->setScheme('https')->toString() . '/',
+                'baseuri' => $uri,
+                'baseuri_http' => str_replace('https://', 'http://', $uri),
+                'baseuri_https' => str_replace('http://', 'https://', $uri),
             ],
         ]);
     }
@@ -206,7 +211,7 @@ class EnvironmentExplorer
 
         // if (empty ($_COOKIE[session_name ()]) ) {
         if (empty ($_COOKIE[$this->_session->getName()]) ) {
-            
+
             PVars::register('cookiesAccepted', false);
         } else {
             PVars::register('cookiesAccepted', true);

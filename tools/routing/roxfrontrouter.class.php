@@ -49,14 +49,14 @@ class RoxFrontRouter
     protected function setBaseUri()
     {
         $env = PVars::get()->env;
-        $override_conds = isset($env["baseuri_override"]) && 
+        $override_conds = isset($env["baseuri_override"]) &&
                                $env["baseuri_override"];
         $http_ref_conds = isset($_SERVER['HTTP_REFERER']) &&
                           strpos($_SERVER['HTTP_REFERER'], 'http://') !== false;
-        //sometimes we will be sending data via ssl even while the user 
+        //sometimes we will be sending data via ssl even while the user
         //is browsing on http.  the http_referer conditions keep user from
         //being automatically rerouted onto https
-        $https_conds = isset($_SERVER['HTTPS']) && 
+        $https_conds = isset($_SERVER['HTTPS']) &&
                             isset($env["baseuri_https"]) &&
                             $env["baseuri_https"] &&
                             !$http_ref_conds;
@@ -70,8 +70,8 @@ class RoxFrontRouter
         } else {
             //TODO: error logging
         }
-        PVars::register('env', $env); 
-        
+        PVars::register('env', $env);
+
     }
 
     /**
@@ -105,8 +105,8 @@ class RoxFrontRouter
 		If not, try with a cookie LastLang is search for, if found, this language is used
 		if not, the web browser http_accept_language header is parsed,  if found, highest quality language is used
 		if not, the default language (english is used)
-		
-		
+
+
 	*/
     public function setLanguage()
     {
@@ -120,7 +120,7 @@ class RoxFrontRouter
         }
         if (!($this->_session->has('lang')) ) {
             $Model = new RoxFrontRouterModel;
-            
+
             $tt=explode(".",$_SERVER['HTTP_HOST']) ;
             if (count($tt)>0) {
                 $urlheader=$tt[0] ;
@@ -142,7 +142,7 @@ class RoxFrontRouter
                 return ;
             }
 
-            if ($this->setLanguageByBrowser()) { 
+            if ($this->setLanguageByBrowser()) {
                 return;
             }
         }
@@ -151,7 +151,7 @@ class RoxFrontRouter
             $this->_session->set('lang', 'en');
             $this->_session->set('IdLanguage', 0);
         }
-       
+
         return;
     } // end of setLanguage
 
@@ -166,7 +166,7 @@ class RoxFrontRouter
         $result_lang = false;
         $lang_list = explode(',', $browser_lang_str);
         foreach ($lang_list as $browser_lang){
-            $browser_lang_regex = '/(\*|[a-zA-Z0-9]{1,8}(?:-[a-zA-Z0-9]{1,8})*)(?:\s*;\s*q\s*=\s*(0(?:\.\d{0,3})|1(?:\.0{0,3})))?/'; 
+            $browser_lang_regex = '/(\*|[a-zA-Z0-9]{1,8}(?:-[a-zA-Z0-9]{1,8})*)(?:\s*;\s*q\s*=\s*(0(?:\.\d{0,3})|1(?:\.0{0,3})))?/';
             if (preg_match($browser_lang_regex, trim($browser_lang), $match)){
                 if (!isset($match[2])){
                     $match[2] = 1.0;//per http_accept_header specs
@@ -189,48 +189,44 @@ class RoxFrontRouter
             $this->_session->set( 'IdLanguage', $result_lang->id );
             return true;
         }
-        return false; 
+        return false;
     } //end of setLanguageByBrowser
-    
-    protected function setSessionLanguage()
-    {
-	}
-    
+
     protected function route_ajax($keyword)
     {
         $request = $this->args->request;
         list($classname, $method, $vars) = $this->router->controllerClassnameForString(isset($request[1]) ? $request[1] : false);
         $this->runControllerAjaxMethod($classname, $keyword);
     }
-    
-    
+
+
     protected function route_normal()
     {
         // alternative post handling !!
         $session_memory = $this->session_memory;
-        
+
         $posthandler = $session_memory->posthandler;
         if (!is_a($posthandler, 'RoxPostHandler')) {
             $posthandler = new RoxPostHandler();
         }
         $this->posthandler = $posthandler;
         // $posthandler->classes = $this->classes;
-        
+
         if ($action = $posthandler->getCallbackAction($this->args->post)) {
-            
+
             // echo 'posthandler action';
             // PPHP::PExit();
-            
+
             // attempt to do what posthandler $action says
-            
+
             if (!method_exists($action->classname, $action->methodname)) {
-                
+
                 // something in the posthandler went wrong.
                 echo '
                 <p>'.__METHOD__.'</p>
                 <p>Method does not exist: '.$action->classname.'::'.$action->methodname.'</p>
                 <p>Please <a href="'.$this->args->url.'">reload</a></p>';
-                
+
             } else {
                 // run the posthandler callback defined in $action
                 $controller = new $action->classname();
@@ -245,21 +241,21 @@ class RoxFrontRouter
                 if (!$mem_for_redirect = $action->mem_from_recovery) {
                     $mem_for_redirect = new ReadWriteObject();
                 }
-                
+
                 $controller->mem_redirect = $mem_for_redirect;
 
                 $mem_resend = $action->mem_resend;
-                
+
                 ob_start();
-                
+
                 $req = $controller->$methodname($this->args, $action, $mem_for_redirect, $mem_resend);
-                
+
                 $mem_for_redirect->buffered_text = ob_get_contents();
                 ob_end_clean();
-                
+
                 // give some information to the next request after the redirect
                 $session_memory->redirection_memory = $mem_for_redirect;
-                
+
                 // redirect
                 if (!is_string($req)) {
                     if (!is_string($req = $action->redirect_req)) {
@@ -267,18 +263,18 @@ class RoxFrontRouter
                     }
                 }
                 header('Location: '.PVars::getObj('env')->baseuri.$req);
-                
+
             }
         }
         else
         {
-            
+
             // echo 'no posthandler action';
             // PPHP::PExit();
-            
+
             $request = $this->args->request;
             $keyword = isset($request[0]) ? $request[0] : false;
-            
+
             // PT posthandling
             if (isset($this->args->post['PPostHandlerShutUp'])) {
                 // PPostHandler is disabled for this form.
@@ -286,28 +282,28 @@ class RoxFrontRouter
             } else {
                 $this->traditionalPostHandling();
             }
-            
+
             // redirection memory,
             // that tells a redirected page about things like form input
             // in POST form submits with callback, that caused the redirect
             $this->memory_from_redirect = $session_memory->redirection_memory;
-            
+
             list($classname, $method, $vars) = $this->router->findRoute($request);
             // run the $controller->index() method, and render the page
             $this->runControllerMethod($classname, $method, $request, $vars);
-            
+
             // forget the redirection memory,
             // so a reload will show an unmodified page
             $session_memory->redirection_memory = false;
-            
+
         }
         // save the posthandler
         $session_memory->posthandler = $posthandler;
     }
-    
+
     //----------------------------------------------------------
-    
-    
+
+
     protected function traditionalPostHandling()
     {
         if (!$this->_session->has( 'PostHandler' )) {
@@ -320,8 +316,8 @@ class RoxFrontRouter
         // traditional posthandler
         PPostHandler::get();
     }
-    
-    
+
+
     protected function try_unserialize($str)
     {
         if (!is_string($str)) {
@@ -339,16 +335,16 @@ class RoxFrontRouter
             return $res;
         }
     }
-    
-    
+
+
     protected function runControllerAjaxMethod($classname, $keyword)
     {
         $json_object = new stdClass();
-        
+
         try {
-            
+
             ob_start();  // buffer any output that would break the json notation
-        
+
             if (method_exists($classname, $keyword)) {
                 $controller = new $classname();
                 $result = $controller->$keyword($this->args, $json_object);
@@ -356,14 +352,14 @@ class RoxFrontRouter
             } else {
                 $json_object->alerts[] = 'PHP method "'.$classname.'::'.$keyword.'()" not found!';
             }
-            
+
             $json_object->text = ob_get_contents();
             ob_end_clean();
-            
+
         } catch (PException $e) {
-            
+
             ob_start();  // buffer any output that would break the json notation
-            
+
             echo '
 
 
@@ -372,13 +368,13 @@ A TERRIBLE PEXCEPTION
 '
             ;
             print_r($e);
-            
+
             $json_object->alerts[] = ob_get_contents();
             ob_end_clean();
-            
+
         } catch (Exception $e) {
             ob_start();  // buffer any output that would break the json notation
-            
+
             echo '
 
 
@@ -387,23 +383,23 @@ A TERRIBLE EXCEPTION
 '
             ;
             print_r($e);
-            
+
             $json_object->alerts[] = ob_get_contents();
             ob_end_clean();
         }
-        
+
         header('Content-type: application/json');
         echo json_encode($json_object);
     }
-    
-    
+
+
     protected function runControllerMethod($classname, $method, $request, $route_vars)
     {
         // set the default page title
         // this should happen before the applications can overwrite it.
         // TODO: maybe there's a better place for this.
         PVars::getObj('page')->title='BeWelcome';
-        
+
         if (method_exists($classname, $method)) {
             $controller = new $classname();
 
@@ -435,11 +431,11 @@ A TERRIBLE EXCEPTION
         }
 
         $this->renderPage($page);
-        
+
         //---------------------------
-        
+
         // some pages need an additional output step.
-        
+
         if (PVars::getObj('page')->output_done) {
             // output already happened, or not planned
         } else {
@@ -447,7 +443,7 @@ A TERRIBLE EXCEPTION
             $pvars_page = PVars::getObj('page');
             $aftermath_page = new PageWithParameterizedRoxLayout();
             $aftermath_page->setEngine($this->engine);
-            
+
             foreach (array(
                 'teaserBar',
                 'currentTab',
@@ -457,20 +453,20 @@ A TERRIBLE EXCEPTION
                 'newBar',
                 'rContent',
                 'content',
-                'precontent'            
+                'precontent'
             ) as $paramname) {
                 $aftermath_page->$paramname = $pvars_page->$paramname;
             }
             $this->renderPage($aftermath_page);
         }
     }
-    
+
     protected function renderPage($page)
     {
         if (is_a($page, 'PageWithHTML')) {
             $page->layoutkit = $this->createLayoutkit();
         }
-        
+
         if (!method_exists($page, 'render')) {
             // ok, don't render it.
         } else  {
@@ -486,12 +482,12 @@ A TERRIBLE EXCEPTION
         $formkit = new Formkit();
         $formkit->mem_from_redirect = $this->memory_from_redirect;
         $formkit->posthandler = $this->posthandler;
-        
+
         $layoutkit = new Layoutkit();
         $layoutkit->formkit = $formkit;
         $layoutkit->mem_from_redirect = $this->memory_from_redirect;
         $layoutkit->words = new MOD_words();
-        
+
         return $layoutkit;
     }
 }

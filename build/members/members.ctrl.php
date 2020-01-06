@@ -1,6 +1,7 @@
 <?php
 
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Generator\UrlGenerator;
 
 class MembersController extends RoxControllerBase
 {
@@ -523,9 +524,22 @@ class MembersController extends RoxControllerBase
 
         $this->model->editPreferences($vars);
 
+        $redirect = null;
         if (isset($vars['PreferenceLanguage']) && $this->_session->get('IdLanguage') != $vars['PreferenceLanguage'])
         {
-            $this->model->setSessionLanguage($vars['PreferenceLanguage']);
+            $lang = $this->model->getLanguage($vars['PreferenceLanguage']);
+            if ($lang) {
+                $shortCode = $lang->ShortCode;
+                // hack to redirect to new language
+                $redirect = $this->getRouter()->generate(
+                    'rox_in_language',
+                    ['language' => $shortCode],
+                    UrlGenerator::ABSOLUTE_URL
+                );
+                if ($redirect) {
+                    $this->setFlashNotice($this->getWords()->get('PreferredLanguageSetFlashNotice'));
+                }
+            }
         }
 
         // set profile as public
@@ -539,6 +553,9 @@ class MembersController extends RoxControllerBase
                 $mem_redirect->problems = array(0 => 'ChangePasswordNotUpdated');
             }
             $this->setFlashNotice($this->getWords()->get('PasswordSetFlashNotice'));
+        }
+        if (null !== $redirect) {
+            return $redirect;
         }
 
         return false;

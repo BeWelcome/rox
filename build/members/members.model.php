@@ -889,13 +889,13 @@ ORDER BY
      *
      * @param int $language_id
      * @access public
-     * @return bool
+     * @return Language|bool
      */
-    public function setSessionLanguage($language_id)
+    public function getLanguage($language_id)
     {
         if (($lang = $this->createEntity('Language', $language_id)) && $lang->isLoaded())
         {
-            return $lang->setLanguage();
+            return $lang;
         }
         return false;
     }

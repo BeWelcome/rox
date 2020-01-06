@@ -1,10 +1,13 @@
 <?php
 
 
-class RequestRouter implements \Symfony\Component\Routing\Generator\UrlGeneratorInterface
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Routing\RequestContext;
+
+class RequestRouter implements UrlGeneratorInterface
 {
     /**
-     * @var \Symfony\Component\Routing\RequestContext
+     * @var RequestContext
      */
     private $_context = null;
 
@@ -327,10 +330,10 @@ class RequestRouter implements \Symfony\Component\Routing\Generator\UrlGenerator
     /**
      * Sets the request context.
      *
-     * @param \Symfony\Component\Routing\RequestContext $context The context
+     * @param RequestContext $context The context
      */
     public function setContext(
-        \Symfony\Component\Routing\RequestContext $context
+        RequestContext $context
     ) {
         $this->_context = $context;
     }
@@ -338,7 +341,7 @@ class RequestRouter implements \Symfony\Component\Routing\Generator\UrlGenerator
     /**
      * Gets the request context.
      *
-     * @return \Symfony\Component\Routing\RequestContext The context
+     * @return RequestContext The context
      */
     public function getContext()
     {
@@ -383,6 +386,3 @@ class RequestRouter implements \Symfony\Component\Routing\Generator\UrlGenerator
         return $url;
     }
 }
-
-
-?>

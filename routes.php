@@ -307,3 +307,6 @@
     // Terms of use
     $this->addRoute('terms_french', 'terms', 'AboutController', 'termsOfUse');
     $this->addRoute('terms_language', 'terms/:language:', 'AboutController', 'termsOfUse');
+
+    // Language switch (done in new code; dummy to have route available in members.ctrl.php when changing the language preference)
+    $this->addRoute('rox_in_language', 'rox/in/:language:', '', '');

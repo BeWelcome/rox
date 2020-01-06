@@ -8,6 +8,9 @@ use App\Entity\Statistic;
 use App\Utilities\ManagerTrait;
 use DatePeriod;
 use DateTime;
+use Doctrine\DBAL\DBALException;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use PDO;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -87,17 +90,27 @@ class StatisticsModel
      * @param DatePeriod $dates
      * @param OutputInterface $output
      * @return int
-     * @throws \Doctrine\DBAL\DBALException
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws DBALException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     public function updateStatistics(DatePeriod $dates, OutputInterface $output)
     {
+
         $progressBar = null;
         $count = iterator_count ($dates);
+        $output->write(['Update statistics ']);
         if (1 !== $count) {
+            $output->writeln(['from ' . $dates->getStartDate()->format('Y-m-d') . ' to ' . $dates->getEndDate()->format('Y-m-d'),
+                '',
+            ]);
             $progressBar = new ProgressBar($output, $count);
             $progressBar->start();
+        } else {
+            $output->writeln([
+                'for ' . $dates->getStartDate()->format('Y-m-d'),
+                '',
+            ]);
         }
 
         $em = $this->getManager();

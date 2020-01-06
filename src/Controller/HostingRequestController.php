@@ -14,6 +14,8 @@ use App\Model\HostingRequestModel;
 use App\Utilities\MailerTrait;
 use App\Utilities\ManagerTrait;
 use App\Utilities\TranslatorTrait;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Exception;
 use InvalidArgumentException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -46,7 +48,6 @@ class HostingRequestController extends BaseMessageController
      *
      * @param Message $message
      *
-     * @throws InvalidArgumentException
      * @throws AccessDeniedException
      *
      * @return RedirectResponse
@@ -70,9 +71,10 @@ class HostingRequestController extends BaseMessageController
         }
 
         // determine if guest or host reply to a request
+        $member = $this->getUser();
         $first = $thread[\count($thread) - 1];
         $parentId = ($message->getParent()) ? $message->getParent()->getId() : $message->getId();
-        if ($this->getUser()->getId() === $first->getSender()->getId()) {
+        if ($member === $first->getSender()) {
             return $this->redirectToRoute('hosting_request_reply_guest', [
                 'id' => $message->getId(),
                 'parentId' => $parentId,
@@ -343,11 +345,11 @@ class HostingRequestController extends BaseMessageController
      *     defaults={"folder": "inbox"})
      *
      * @param Request $request
-     * @param string  $folder
-     *
-     * @throws InvalidArgumentException
+     * @param string $folder
      *
      * @return Response
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     public function requests(Request $request, $folder)
     {
@@ -438,9 +440,10 @@ class HostingRequestController extends BaseMessageController
      * @param mixed $sender
      * @param mixed $receiver
      *
-     * @throws InvalidArgumentException
-     *
      * @return Message
+     * @throws \Doctrine\DBAL\Exception\InvalidArgumentException
+     *
+     * @throws InvalidArgumentException
      */
     private function getFinalRequest(Member $sender, Member $receiver, Message $hostingRequest, Message $data, $clickedButton)
     {
@@ -484,7 +487,7 @@ class HostingRequestController extends BaseMessageController
         $newFlexible = ($data->getRequest()->getFlexible() !== $hostingRequest->getRequest()->getFlexible());
         $newNumberOfTravellers = ($data->getRequest()->getNumberOfTravellers()
             !== $hostingRequest->getRequest()->getNumberOfTravellers());
-        if ($newStateSet || $newArrival || $newDeparture || $newFlexible || $newNumberOfTravellers) {
+        if ($newArrival || $newDeparture || $newFlexible || $newNumberOfTravellers) {
             $newHostingRequest = new HostingRequest();
             $newHostingRequest->setStatus($newState);
             $newHostingRequest->setArrival($data->getRequest()->getArrival());
@@ -494,6 +497,9 @@ class HostingRequestController extends BaseMessageController
             $finalRequest->setRequest($newHostingRequest);
         } else {
             $finalRequest->setRequest($hostingRequest->getRequest());
+        }
+        if ($newStateSet) {
+            $finalRequest->getRequest()->setStatus($newState);
         }
 
         return $finalRequest;
@@ -514,11 +520,7 @@ class HostingRequestController extends BaseMessageController
         // copy only the bare minimum needed
         $newRequest = new Message();
         $newRequest->setSubject($hostingRequest->getSubject());
-        $newHostingRequest = new HostingRequest();
-        $newHostingRequest->setArrival($hostingRequest->getRequest()->getArrival());
-        $newHostingRequest->setDeparture($hostingRequest->getRequest()->getDeparture());
-        $newHostingRequest->setFlexible($hostingRequest->getRequest()->getFlexible());
-        $newHostingRequest->setNumberOfTravellers($hostingRequest->getRequest()->getNumberOfTravellers());
+        $newHostingRequest = clone $hostingRequest->getRequest();
         $newRequest->setRequest($newHostingRequest);
         $newRequest->setMessage('');
 

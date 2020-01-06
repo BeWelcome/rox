@@ -3,7 +3,8 @@
 {% block message %}
     <h4>{% trans with {'%username%': receiver.Username} %}email.greeting{% endtrans %}</h4>
     <p>{% trans with {'%username%': sender.Username} %}email.request.stay{% endtrans %}</p>
-    <p></p>
+    <p>        {{ locale }} -  {{ app.request.locale }} - {{ receiverLocale }}
+    </p>
     <callout class="secondary">
         {{ message.message | raw }}
     </callout>
@@ -24,9 +25,9 @@
     {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_TENTATIVELY_ACCEPTED') %}{% trans with {'%username%': sender.Username} %}email.request.reply.guest.tentatively{% endtrans %}<br>{% endif %}
     <br>
     {{ 'request.arrival' | trans }}:<br>
-    {{ request.arrival|localizeddate('full', 'none', locale) }}<br>
+    {{ request.arrival|localizeddate('full', 'none', receiverLocale) }}<br>
     {% if request.departure %}{{ 'request.departure' | trans }}:<br>
-        {{ request.departure|localizeddate('full', 'none', locale) }}<br>{% endif %}
+        {{ request.departure|localizeddate('full', 'none', receiverLocale) }}<br>{% endif %}
     {% if request.flexible %}{{ 'request.flexible' | trans }}<br>{% endif %}
     {{ 'request.number_of_travellers' | trans}}: {{ request.numberOfTravellers }}<br>
 {% endblock request %}

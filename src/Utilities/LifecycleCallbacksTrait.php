@@ -41,11 +41,7 @@ trait LifecycleCallbacksTrait
      */
     public function onPrePersist()
     {
-        if (!$this->id) {
-            $this->created = new DateTime('now');
-        } else {
-            $this->updated = new DateTime('now');
-        }
+        $this->created = new DateTime('now');
     }
 
     /**

@@ -7,7 +7,9 @@
 
 namespace App\Entity;
 
+use App\Utilities\LifecycleCallbacksTrait;
 use Carbon\Carbon;
+use DateTime;
 use Doctrine\DBAL\Exception\InvalidArgumentException;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -17,12 +19,16 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @ORM\Table(name="request")
  * @ORM\Entity(repositoryClass="App\Repository\RequestRepository")
+ * @ORM\HasLifecycleCallbacks
  *
  * @SuppressWarnings(PHPMD)
  * Auto generated class do not check mess
  */
 class HostingRequest
 {
+    // Add created and updated
+    use LifecycleCallbacksTrait;
+
     const REQUEST_OPEN = 0;
     const REQUEST_CANCELLED = 1;
     const REQUEST_DECLINED = 2;
@@ -39,7 +45,7 @@ class HostingRequest
     private $id;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(name="arrival", type="datetime")
      *
@@ -51,7 +57,7 @@ class HostingRequest
     private $arrival;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(name="departure", type="datetime", nullable=true)
      *

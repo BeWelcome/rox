@@ -12,7 +12,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Zend\Validator\Date;
 
-class UpdateStatisticsRange extends Command
+class UpdateStatistics extends Command
 {
     // the name of the command (the part after "bin/console")
     protected static $defaultName = 'statistics:update';

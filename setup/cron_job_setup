@@ -24,7 +24,7 @@ And here's the cron file (adapt accordingly):
 5 2 * * * root <rox dir>/setup/cron_geonames_update.sh www.bewelcome.org
 
 # Generate user statistics at 1am (for yesterday)
-0 1 * * * root <rox dir>/bin/console statistics:update:daily
+0 1 * * * root <rox dir>/bin/console statistics:update
 
 # Reindex full text indices every hour
 0 * * * * root <rox dir>/setup/cron_update_fulltext_indices.sh

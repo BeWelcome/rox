@@ -220,17 +220,16 @@ class StatisticsModel
                 ->fetch(PDO::FETCH_ASSOC);
             $statistics->setMessagesRead($result['cnt']);
 
-// Number of messages sent from one member to another during the current date
+// Number of requests created from one member to another during the current date
             $result = $connection->executeQuery(
                 "
                     SELECT
-                      COUNT(m.id) AS cnt
+                      COUNT(r.id) AS cnt
                     FROM
-                      messages m
+                      request r
                     WHERE
-                      m.DateSent >= :current
-                      AND m.DateSent < :next
-                      AND m.request_id IS NOT null
+                      r.created >= :current
+                      AND r.created < :next
                       ",
                 [
                     ':current' => $current,
@@ -239,18 +238,16 @@ class StatisticsModel
                 ->fetch(PDO::FETCH_ASSOC);
             $statistics->setRequestsSent($result['cnt']);
 
-// Number of messages read during the current date
+// Number of requests accepted during the current date
             $result = $connection->executeQuery(
                 "
                     SELECT
-                      COUNT(m.id) AS cnt
+                      COUNT(r.id) AS cnt
                     FROM
-                      messages m,
                       request r
                     WHERE
-                      m.updated >= :current
-                      AND m.updated < :next
-                      AND r.id = m.request_id
+                      r.updated >= :current
+                      AND r.updated < :next
                       AND r.`status` = :status
                       ",
                 [

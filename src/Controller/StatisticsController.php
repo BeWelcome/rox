@@ -15,12 +15,21 @@ use StatsModel;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class StatisticsController extends AbstractController
 {
+    /** @var UrlGeneratorInterface */
+    private $urlGenerator;
+
+    public function __construct(UrlGeneratorInterface $urlGenerator)
+    {
+        $this->urlGenerator = $urlGenerator;
+    }
+
     /**
      * @Route("/stats/data/{type}", name="stats_data",
-     *     requirements = {"type" = "alltime|last2month|other"},
+     *     requirements = {"type" = "alltime|requests|last2month|other"},
      *     defaults={"type": "alltime"})
      *
      * @param mixed $type
@@ -34,11 +43,14 @@ class StatisticsController extends AbstractController
             case 'alltime':
                 $data = $this->getDataAllTime();
                 break;
+            case 'requests':
+                $data = $this->getRequestsAllTime();
+                break;
             case 'last2month':
                 $data = $this->getDataLast2Months();
                 break;
             case 'other':
-                $data = $this->otherDataAction();
+                $data = $this->otherData();
                 break;
         }
 
@@ -62,7 +74,7 @@ class StatisticsController extends AbstractController
         SessionSingleton::createInstance($session);
 
         // make sure everything's setup for the old code used below
-        $environmentExplorer = new EnvironmentExplorer();
+        $environmentExplorer = new EnvironmentExplorer($this->urlGenerator);
         $environmentExplorer->initializeGlobalState(
             $this->getParameter('database_host'),
             $this->getParameter('database_name'),
@@ -71,7 +83,7 @@ class StatisticsController extends AbstractController
         );
     }
 
-    private function prepareStatisticsData($statistics)
+    private function prepareStatisticsData($statistics, $includeRequests = false)
     {
         // get all values from stats table
         $i = 0;
@@ -84,8 +96,10 @@ class StatisticsController extends AbstractController
         $membersWithPositiveComments = [];
         $messageSent = [];
         $messageRead = [];
-        $requestsSent = [];
-        $requestsAccepted = [];
+        if ($includeRequests) {
+            $requestsSent = [];
+            $requestsAccepted = [];
+        }
         foreach ($statistics as $val) {
             $members[$i] = $val->NbActiveMembers;
             if (isset($val->week)) {
@@ -108,8 +122,10 @@ class StatisticsController extends AbstractController
             }
             $messageSent[$i] = $val->NbMessageSent;
             $messageRead[$i] = $val->NbMessageRead;
-            $requestsSent[$i] = $val->NbRequestsSent;
-            $requestsAccepted[$i] = $val->NbRequestsAccepted;
+            if ($includeRequests) {
+                $requestsSent[$i] = $val->NbRequestsSent;
+                $requestsAccepted[$i] = $val->NbRequestsAccepted;
+            }
             $membersWithPositiveComments[$i] = $val->NbMemberWithOneTrust;
             $membersLoggedIn[$i] = $val->NbMemberWhoLoggedToday;
             if (0 === $members[$i]) {
@@ -120,17 +136,49 @@ class StatisticsController extends AbstractController
             ++$i;
         }
 
+        $statistics = [
+            'members' => $members,
+            'newMembers' => $newMembers,
+            'newMembersPercent' => $newMembersPercent,
+            'membersLoggedIn' => $membersLoggedIn,
+            'newMembersLoggedInPercent' => $membersLoggedInPercent,
+            'membersWithPositiveComments' => $membersWithPositiveComments,
+            'messageSent' => $messageSent,
+            'messageRead' => $messageRead,
+        ];
+        if ($includeRequests) {
+            $statistics['requestsSent'] = $requestsSent;
+            $statistics['requestsAccepted'] = $requestsAccepted;
+        }
+        return [
+            'labels' => $labels,
+            'statistics' => $statistics,
+        ];
+    }
+
+
+    private function prepareRequestsData($statistics)
+    {
+        // get all values from stats table
+        $i = 0;
+        $labels = [];
+        $requestsSent = [];
+        $requestsAccepted = [];
+        foreach ($statistics as $val) {
+            if (isset($val->week)) {
+                $yearWeek = strtotime(substr($val->week, 0, 4).'-W'.substr($val->week, 4, 2).'-1');
+                $labels[] = date('Y-m-d', $yearWeek);
+            } else {
+                $labels[] = date('Y-m-d', strtotime('-'.(60 - $i).'days'));
+            }
+            $requestsSent[$i] = $val->NbRequestsSent;
+            $requestsAccepted[$i] = $val->NbRequestsAccepted;
+            ++$i;
+        }
+
         return [
             'labels' => $labels,
             'statistics' => [
-                'members' => $members,
-                'newMembers' => $newMembers,
-                'newMembersPercent' => $newMembersPercent,
-                'membersLoggedIn' => $membersLoggedIn,
-                'newMembersLoggedInPercent' => $membersLoggedInPercent,
-                'membersWithPositiveComments' => $membersWithPositiveComments,
-                'messageSent' => $messageSent,
-                'messageRead' => $messageRead,
                 'requestsSent' => $requestsSent,
                 'requestsAccepted' => $requestsAccepted,
             ],
@@ -141,9 +189,18 @@ class StatisticsController extends AbstractController
     {
         $this->kickstartSession();
         $statsModel = new StatsModel();
-        $statsAll = $statsModel->getStatsLogAll();
+        $statsAll = $statsModel->getStatisticsAll();
 
         return $this->prepareStatisticsData($statsAll);
+    }
+
+    private function getRequestsAllTime()
+    {
+        $this->kickstartSession();
+        $statsModel = new StatsModel();
+        $requestsAll = $statsModel->getRequestsAll();
+
+        return $this->prepareRequestsData($requestsAll);
     }
 
     private function getDataLast2Months()
@@ -152,10 +209,10 @@ class StatisticsController extends AbstractController
         $statsModel = new StatsModel();
         $statsLast2Months = $statsModel->getStatsLog2Months();
 
-        return $this->prepareStatisticsData($statsLast2Months);
+        return $this->prepareStatisticsData($statsLast2Months, true);
     }
 
-    private function otherDataAction()
+    private function otherData()
     {
         $this->kickstartSession();
         $statsModel = new StatsModel();

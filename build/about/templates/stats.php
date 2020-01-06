@@ -222,6 +222,12 @@ function drawCharts($label, $headlineCode, $words)
                 createLineChart(data, 'alltime');
             }
         );
+        $.post("/stats/data/requests",
+            function (data)
+            {
+                createLineChart(data, 'alltime');
+            }
+        );
         $.post("/stats/data/last2month",
             function (data)
             {

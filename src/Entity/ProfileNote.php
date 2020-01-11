@@ -2,57 +2,69 @@
 
 namespace App\Entity;
 
+use Carbon\Carbon;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Mycontacts
+ * Notes left by members about other profiles
  *
  * @ORM\Table(name="mycontacts")
+ * @ORM\HasLifecycleCallbacks
  * @ORM\Entity
+ *
+ * @SuppressWarnings(PHPMD)
+ * Auto generated class do not check mess
  */
-class Mycontacts
+class ProfileNote
 {
     /**
-     * @var integer
+     * @var Member
      *
-     * @ORM\Column(name="Idmember", type="integer", nullable=false)
+     * @ORM\OneToOne(targetEntity="Member")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="IdMember", referencedColumnName="id")
+     * })
      */
-    private $idmember;
+    private $owner;
 
     /**
-     * @var integer
+     * @var Member
      *
-     * @ORM\Column(name="IdContact", type="integer", nullable=false)
+     * @ORM\OneToOne(targetEntity="Member")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="IdContact", referencedColumnName="id")
+     * })
      */
-    private $idcontact;
+    private $member;
 
     /**
-     * @var \DateTime
+     * @var DateTime
+     *
+     * @ORM\Column(name="created", type="datetime", nullable=false)
+     */
+    private $created;
+
+    /**
+     * @var DateTime
      *
      * @ORM\Column(name="updated", type="datetime", nullable=false)
      */
-    private $updated = 'CURRENT_TIMESTAMP';
+    private $updated;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="Category", type="text", length=255, nullable=false)
+     * @ORM\Column(name="Category", type="string", length=255, nullable=false)
      */
     private $category;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="Comment", type="text", length=65535, nullable=false)
+     * @ORM\Column(name="Comment", type="text", nullable=false)
      */
     private $comment;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="created", type="datetime", nullable=false)
-     */
-    private $created = '0000-00-00 00:00:00';
 
     /**
      * @var integer
@@ -63,78 +75,52 @@ class Mycontacts
      */
     private $id;
 
-
-
     /**
-     * Set idmember
+     * Set owner
      *
-     * @param integer $idmember
+     * @param Member $owner
      *
-     * @return Mycontacts
+     * @return ProfileNote
      */
-    public function setIdmember($idmember)
+    public function setOwner($owner)
     {
-        $this->idmember = $idmember;
+        $this->owner = $owner;
 
         return $this;
     }
 
     /**
-     * Get idmember
+     * Get owner
      *
-     * @return integer
+     * @return Member
      */
-    public function getIdmember()
+    public function getOwner()
     {
-        return $this->idmember;
+        return $this->owner;
     }
 
     /**
-     * Set idcontact
+     * Set member
      *
-     * @param integer $idcontact
+     * @param Member $member
      *
-     * @return Mycontacts
+     * @return ProfileNote
      */
-    public function setIdcontact($idcontact)
+    public function setMember($member)
     {
-        $this->idcontact = $idcontact;
+        $this->member = $member;
 
         return $this;
     }
 
     /**
-     * Get idcontact
+     * Get member
      *
-     * @return integer
+     * @return Member
      */
-    public function getIdcontact()
+    public function getMember()
     {
-        return $this->idcontact;
-    }
-
-    /**
-     * Set updated
-     *
-     * @param \DateTime $updated
-     *
-     * @return Mycontacts
-     */
-    public function setUpdated($updated)
-    {
-        $this->updated = $updated;
-
-        return $this;
-    }
-
-    /**
-     * Get updated
-     *
-     * @return \DateTime
-     */
-    public function getUpdated()
-    {
-        return $this->updated;
+        return $this->member;
     }
 
     /**
@@ -142,7 +128,7 @@ class Mycontacts
      *
      * @param string $category
      *
-     * @return Mycontacts
+     * @return ProfileNote
      */
     public function setCategory($category)
     {
@@ -166,7 +152,7 @@ class Mycontacts
      *
      * @param string $comment
      *
-     * @return Mycontacts
+     * @return ProfileNote
      */
     public function setComment($comment)
     {
@@ -188,9 +174,9 @@ class Mycontacts
     /**
      * Set created
      *
-     * @param \DateTime $created
+     * @param DateTime $created
      *
-     * @return Mycontacts
+     * @return ProfileNote
      */
     public function setCreated($created)
     {
@@ -202,20 +188,65 @@ class Mycontacts
     /**
      * Get created
      *
-     * @return \DateTime
+     * @return Carbon
      */
     public function getCreated()
     {
-        return $this->created;
+        return Carbon::instance($this->created);
+    }
+
+    /**
+     * Set updated
+     *
+     * @param DateTime $updated
+     *
+     * @return ProfileNote
+     */
+    public function setUpdated($updated)
+    {
+        $this->updated = $updated;
+
+        return $this;
+    }
+
+    /**
+     * Get updated
+     *
+     * @return Carbon
+     */
+    public function getUpdated()
+    {
+        return Carbon::instance($this->updated);
     }
 
     /**
      * Get id
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Triggered on insert.
+     *
+     * @ORM\PrePersist
+     */
+    public function onPrePersist()
+    {
+        $this->created = new DateTime('now');
+        $this->updated = $this->created;
+    }
+
+    /**
+     * Triggered on update.
+     *
+     * @ORM\PreUpdate
+     */
+    public function onPreUpdate()
+    {
+        $this->updated = new DateTime('now');
     }
 }

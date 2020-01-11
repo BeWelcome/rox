@@ -48,7 +48,7 @@ if (($post->IdGroup > 0) && ($post->PostVisibility == "GroupOnly")) {
                     <a href="members/<?php echo $post->OwnerUsername; ?>"><?php echo $post->OwnerUsername; ?></a>
                     <br>
                     <?php
-                        if ($this->_session->has("IdMember")) {
+                        if ($this->session->has("IdMember")) {
                             if (isset($post->city) && isset($post->country)) {
                                 echo $post->city . '<br>' .$post->country;
                             }
@@ -62,7 +62,7 @@ if (($post->IdGroup > 0) && ($post->PostVisibility == "GroupOnly")) {
             <div class="p-1">
                 <?php
 
-                if ($this->_session->has("IdMember")) {
+                if ($this->session->has("IdMember")) {
                     if ($this->BW_Right->HasRight("ForumModerator")) {
                         $TheReports = $this->_model->GetReports($post->IdPost);
                         $max = count($TheReports);
@@ -73,7 +73,7 @@ if (($post->IdGroup > 0) && ($post->PostVisibility == "GroupOnly")) {
                     }
 
                     echo '<small class="text-muted">';
-                    if (isset($TheReports[0]->IdReporter) && ($TheReports[0]->IdReporter == $this->_session->get("IdMember"))) {
+                    if (isset($TheReports[0]->IdReporter) && ($TheReports[0]->IdReporter == $this->session->get("IdMember"))) {
                         echo "<a href='forums/reporttomod/", $post->IdPost, "'>", $words->getBuffered('ForumViewMyReportToMod'), "</a>";
                     } else {
                         echo "<a href='forums/reporttomod/", $post->IdPost, "'><i class=\"fa fa-flag\"></i> ", $words->getBuffered('ForumMyReportToMod'), "</a>";
@@ -81,7 +81,7 @@ if (($post->IdGroup > 0) && ($post->PostVisibility == "GroupOnly")) {
                     echo '</small><br>';
 
                     echo '<small class="text-muted"><a href="forums/s' . $post->threadid . '/#post' . $post->IdPost . '"><i class="fa fa-link"></i> ' . $words->get('ForumPermalink') . '</a></small><br>';
-                    $TheReports = $this->_model->GetReports($post->IdPost, $this->_session->get("IdMember")); // Check if there is a pending report for this member
+                    $TheReports = $this->_model->GetReports($post->IdPost, $this->session->get("IdMember")); // Check if there is a pending report for this member
 
                 }
                 ?>
@@ -106,7 +106,7 @@ if (($post->IdGroup > 0) && ($post->PostVisibility == "GroupOnly")) {
                         }
                         for ($jj = 0; (($jj < $max) and ($topic->WithDetail)); $jj++) { // Not optimized, it is a bit stupid to look in all the trads here
                             if (($post->Trad[$jj]->trad_created != $post->Trad[$jj]->trad_updated)) { // If one of the trads have been updated
-                                if ($post->Trad[$jj]->IdLanguage == $this->_session->get("IdLanguage")) {
+                                if ($post->Trad[$jj]->IdLanguage == $this->session->get("IdLanguage")) {
                                     echo '<br><em><i class="fa fa-edit mr-1" title="edited"></i>' . date($words->getFormatted('DateHHMMShortFormat'), ServerToLocalDateTime($post->Trad[$jj]->trad_updated, $this->getSession())), ' by ', $post->Trad[$jj]->TranslatorUsername . '</em>';
                                 }
                             }
@@ -116,7 +116,7 @@ if (($post->IdGroup > 0) && ($post->PostVisibility == "GroupOnly")) {
                 </div>
                 <div>
                     <?php
-                    if ($can_edit_own && $post->OwnerCanStillEdit == "Yes" && $User && $post->IdWriter == $this->_session->get("IdMember")) {
+                    if ($can_edit_own && $post->OwnerCanStillEdit == "Yes" && $User && $post->IdWriter == $this->session->get("IdMember")) {
                         echo '<a href="forums/edit/m' . $post->postid . '" class="btn btn-sm btn-outline-primary ml-1"><i class="fa fa-edit" title="edit" /></i> ' . $words->getFormatted('forum_EditUser') . '</a>';
                     }
                     if (($this->BW_Right->HasRight("ForumModerator", "Edit")) || ($this->BW_Right->HasRight("ForumModerator", "All"))) {

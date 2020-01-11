@@ -16,8 +16,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program; if not, see <http://www.gnu.org/licenses/> or 
-write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+along with this program; if not, see <http://www.gnu.org/licenses/> or
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
@@ -25,7 +25,7 @@ Boston, MA  02111-1307, USA.
  * geo controller
  *
  * For now this is an application just for tests.
- * 
+ *
  * @package geo
  * @author Felix van Hove <fvanhove@gmx.de>
  */
@@ -33,35 +33,35 @@ class GeoController extends PAppController {
 
     private $_model;
     private $_view;
-    
+
     private $fcode_default = '';
     private $fcode_city = '&featureCode=PPL&featureCode=PPLA&featureCode=PPLA2&featureCode=PPLA3&featureCode=PPLA4&featureCode=PPLC&featureCode=PPLG&featureCode=PPLL&featureCode=PPLS&featureCode=STLMT';
     private $fcode_blog = '';
-    
+
     /**
-     * 
+     *
      *
      */
     public function __construct() {
-        
+
         parent::__construct();
         $this->_model = new GeoModel();
         $this->_view  = new GeoView($this->_model);
     }
-    
+
     public function __destruct() {
         unset($this->_model);
         unset($this->_view);
     }
-    
+
     /**
      * The index function is called by /htdocs/index.php,
      * if your URL looks like this: http://[fqdn]/geo/...
      * ... and by this is the entry point to your application.
-     * 
+     *
      * @param void
      */
-    public function index() 
+    public function index()
     {
         $request = PRequest::get()->request;
         if (!isset($request[1])) {
@@ -69,7 +69,7 @@ class GeoController extends PAppController {
         }
         $matches = array();
         switch ($request[1]) {
-        
+
             case 'countries':    // if your URL looks like this: http://[fqdn]/geo/countries
                 ob_start();
                 $this->_view->displayCountries();    // delegates output to viewer class
@@ -90,7 +90,7 @@ class GeoController extends PAppController {
                 $Page->content .= ob_get_contents();
                 ob_end_clean();
             break;
-          
+
             case 'suggestLocation':
                 // ignore current request, so we can use the last request
                 PRequest::ignoreCurrentRequest();
@@ -106,20 +106,20 @@ class GeoController extends PAppController {
                 switch ($request[3]) {
                     case 'blog':
                         $fcode = $this->fcode_blog;
-                    break;    
-                    
+                    break;
+
                     case 'city':
                         $fcode = $this->fcode_city;
                     break;
                     default:
                         $fcode = $this->fcode_default;
-                        
+
                 }
                 $activities = false;
                 if (isset($request[4]) && ($request[4] == 'activities')) {
                     $activities = true;
                 }
-                
+
                 // get locations from geonames. suggestLocation returns empty array
                 // if nothing is found.
                 if ($activities) {
@@ -155,11 +155,11 @@ class GeoController extends PAppController {
                         $usageUpdate = $this->_model->updateGeoCounters();
                         $page = new GeoAdminPage($request[1]);
                         return $page;
-                
-                        
+
+
                 }
             break;
-        
+
         }
     }
 
@@ -189,20 +189,20 @@ class GeoController extends PAppController {
         }
 
     }
-    
+
     public function SelectorInclude($formvars = false)
     {
         // get the translation module
         $words = $this->layoutkit->getWords();
         $page_url = PVars::getObj('env')->baseuri . implode('/', PRequest::get()->request);
-        
+
         $callbacktag = $this->layoutkit->formkit->setPostCallback('GeoController', 'SelectorCallback');
         if ($formvars) {
             foreach ($formvars as $key => $value) {
                 $callbacktag .= '<input type="hidden" name="'.$key.'" value="'.$value.'" >';
             }
         }
-        
+
         if (!$mem_redirect = $this->layoutkit->formkit->getMemFromRedirect()) {
             $locations_print = '';
         } elseif ($mem_redirect->location) {
@@ -213,34 +213,34 @@ class GeoController extends PAppController {
             $locations_print = $Geo->GeoSearch(' ',40, true, $callbacktag);
         }
         // Just for testing:
-        // if ($this->_session->has( 'GeoVars' ) var_dump($this->_session->get('GeoVars'));
-        // if ($this->_session->has( 'GeoVars']['geonamename' ) var_dump($this->_session->get('GeoVars']['geonamename'));
+        // if ($this->session->has( 'GeoVars' ) var_dump($this->session->get('GeoVars'));
+        // if ($this->session->has( 'GeoVars']['geonamename' ) var_dump($this->session->get('GeoVars']['geonamename'));
         // if (isset($request[2]) && $request[2] == 'save' && $mem_redirect->geolocation) {
             // $geolocation = $mem_redirect->geolocation;
             // list($geonameid, $geonamename) = preg_split('/[\/\/]/', $geolocation);
-            // $this->_session->set( 'SignupBWVars']['geonameid', $geonameid )
-            // $this->_session->set( 'SignupBWVars']['geonamename', $geonamename )
+            // $this->session->set( 'SignupBWVars']['geonameid', $geonameid )
+            // $this->session->set( 'SignupBWVars']['geonamename', $geonamename )
             // print 'GEO SET';
         // } else {
             // print 'GEO NOT SET';
         // }
-        
+
         require 'templates/popup.php';
     }
-    
+
     public function SelectorCallback($args, $action, $mem_redirect, $mem_resend)
     {
         $post_args = $args->post;
         foreach ($args->post as $key => $value) {
             if ($key != 'geo-search')
-                $this->_session->set( 'GeoVars/' . $key, $value );
+                $this->session->set( 'GeoVars/' . $key, $value );
         }
-        if (isset($post_args['geo-search'])) 
+        if (isset($post_args['geo-search']))
             $mem_redirect->location = $post_args['geo-search'];
-        // if (isset($post_args['geonameid'])) 
+        // if (isset($post_args['geonameid']))
         // $mem_redirect->geolocation = $post_args['geolocation'];
     }
-    
+
     public function GeoSearch($search, $number, $js = true, $callbacktag = false)
     {
         $locations = $this->_model->suggestLocation($search,$number,$this->fcode_city);

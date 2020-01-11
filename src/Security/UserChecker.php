@@ -3,12 +3,27 @@
 namespace App\Security;
 
 use App\Entity\Member;
+use DateTime;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Symfony\Component\Security\Core\Exception\AccountExpiredException;
 use Symfony\Component\Security\Core\User\UserCheckerInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 class UserChecker implements UserCheckerInterface
 {
+    /**
+     * @var EntityManager
+     */
+    private $manager;
+
+    public function __construct(EntityManagerInterface $manager)
+    {
+        $this->manager = $manager;
+    }
+
     /**
      * @param UserInterface $user
      *
@@ -21,11 +36,11 @@ class UserChecker implements UserCheckerInterface
             return;
         }
 
-        // user is deleted, show a generic Account Not Found message.
+        // user is banned, show a generic Account Not Found message
         if ($user->isBanned()) {
             throw new AccountBannedException();
         }
-        // user is deleted, show a generic Account Not Found message.
+        // user hasn't confirmed the mail address yet
         if ($user->isNotConfirmedYet()) {
             throw new AccountMailNotConfirmedException();
         }
@@ -51,5 +66,9 @@ class UserChecker implements UserCheckerInterface
         if ($user->isDeniedAccess()) {
             throw new AccountDeniedLoginException();
         }
+
+        $user->setLastLogin(new DateTime());
+        $this->manager->persist($user);
+        $this->manager->flush();
     }
 }

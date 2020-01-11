@@ -35,7 +35,7 @@ Boston, MA  02111-1307, USA.
      */
 class AdminModel extends RoxModelBase
 {
-    
+
     public function procActivitylogs($vars, $level = 0)
     {
 
@@ -44,7 +44,7 @@ class AdminModel extends RoxModelBase
 
 		$cid = $this->_idMember($username);
 		if ($level <= 1) {
-			$cid = $this->_session->get("IdMember"); // Member with level 1 can only see his own rights
+			$cid = $this->session->get("IdMember"); // Member with level 1 can only see his own rights
 		}
 		if ($cid != 0) {
 			$where .= " AND IdMember=" . $cid;
@@ -92,7 +92,7 @@ class AdminModel extends RoxModelBase
 		if (!$R->hasRight('Logs', "\"All\"")) {
 			$scope = RightScope("Logs");
 			str_replace($scope, "\"", "'");
-			$where .= " AND (Type IN (" . $scope . ") OR IdMember=" . $this->_session->get("IdMember") . ") ";
+			$where .= " AND (Type IN (" . $scope . ") OR IdMember=" . $this->session->get("IdMember") . ") ";
 		}
 
 		$tData = array ();

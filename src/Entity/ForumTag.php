@@ -5,12 +5,14 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * ForumsTags
+ * Tags for forum posts (no longer supported, but database table needs to exist)
  *
- * @ORM\Table(name="forums_tags", indexes={@ORM\Index(name="id", columns={"id"}), @ORM\Index(name="tag", columns={"tag"})})
+ * @ORM\Table(name="forums_tags", indexes={
+ *     @ORM\Index(name="tag", columns={"tag"})
+ * })
  * @ORM\Entity
  */
-class ForumsTags
+class ForumTag
 {
     /**
      * @var string
@@ -27,28 +29,28 @@ class ForumsTags
     private $tagDescription;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="tag_position", type="boolean", nullable=false)
      */
     private $tagPosition = '250';
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="counter", type="integer", nullable=false)
      */
     private $counter = '0';
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="IdName", type="integer", nullable=false)
      */
     private $idname = '0';
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="IdDescription", type="integer", nullable=false)
      */
@@ -62,18 +64,18 @@ class ForumsTags
     private $type = 'Member';
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      */
     private $id;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="tagid", type="integer")
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue
      */
     private $tagid;
 
@@ -84,7 +86,7 @@ class ForumsTags
      *
      * @param string $tag
      *
-     * @return ForumsTags
+     * @return ForumTag
      */
     public function setTag($tag)
     {
@@ -108,7 +110,7 @@ class ForumsTags
      *
      * @param string $tagDescription
      *
-     * @return ForumsTags
+     * @return ForumTag
      */
     public function setTagDescription($tagDescription)
     {
@@ -132,7 +134,7 @@ class ForumsTags
      *
      * @param boolean $tagPosition
      *
-     * @return ForumsTags
+     * @return ForumTag
      */
     public function setTagPosition($tagPosition)
     {
@@ -154,9 +156,9 @@ class ForumsTags
     /**
      * Set counter
      *
-     * @param integer $counter
+     * @param int $counter
      *
-     * @return ForumsTags
+     * @return ForumTag
      */
     public function setCounter($counter)
     {
@@ -168,7 +170,7 @@ class ForumsTags
     /**
      * Get counter
      *
-     * @return integer
+     * @return int
      */
     public function getCounter()
     {
@@ -178,9 +180,9 @@ class ForumsTags
     /**
      * Set idname
      *
-     * @param integer $idname
+     * @param int $idname
      *
-     * @return ForumsTags
+     * @return ForumTag
      */
     public function setIdname($idname)
     {
@@ -192,7 +194,7 @@ class ForumsTags
     /**
      * Get idname
      *
-     * @return integer
+     * @return int
      */
     public function getIdname()
     {
@@ -202,9 +204,9 @@ class ForumsTags
     /**
      * Set iddescription
      *
-     * @param integer $iddescription
+     * @param int $iddescription
      *
-     * @return ForumsTags
+     * @return ForumTag
      */
     public function setIddescription($iddescription)
     {
@@ -216,7 +218,7 @@ class ForumsTags
     /**
      * Get iddescription
      *
-     * @return integer
+     * @return int
      */
     public function getIddescription()
     {
@@ -228,7 +230,7 @@ class ForumsTags
      *
      * @param string $type
      *
-     * @return ForumsTags
+     * @return ForumTag
      */
     public function setType($type)
     {
@@ -250,9 +252,9 @@ class ForumsTags
     /**
      * Set id
      *
-     * @param integer $id
+     * @param int $id
      *
-     * @return ForumsTags
+     * @return ForumTag
      */
     public function setId($id)
     {
@@ -264,7 +266,7 @@ class ForumsTags
     /**
      * Get id
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -274,7 +276,7 @@ class ForumsTags
     /**
      * Get tagid
      *
-     * @return integer
+     * @return int
      */
     public function getTagid()
     {

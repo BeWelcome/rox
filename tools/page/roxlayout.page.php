@@ -31,7 +31,7 @@ class PageWithRoxLayout extends PageWithHTML
         }
         return($this->meta_keyword) ;
     }
-    
+
     public function SetMetaKey($ss)
     {
         $words = $this->getWords();
@@ -45,13 +45,13 @@ class PageWithRoxLayout extends PageWithHTML
         }
         return($this->meta_robots) ;
     }
-    
-    public function SetMetaRobots($ss) 
+
+    public function SetMetaRobots($ss)
     {
             $this->meta_robots = $ss ;
     }
 
-    protected function getPage_meta_description() 
+    protected function getPage_meta_description()
     {
         $words = $this->getWords();
         if (empty($this->meta_description)) {
@@ -63,7 +63,7 @@ class PageWithRoxLayout extends PageWithHTML
     {
         $this->meta_description = $ss;
     }
-    
+
     protected function init()
     {
         $this->page_title = 'BeWelcome';
@@ -89,7 +89,7 @@ class PageWithRoxLayout extends PageWithHTML
 
         $user = new APP_User();
         if ($user->isBWLoggedIn()) {
-            $username = $this->_session->has( 'Username' ) ? $this->_session->get('Username') : '';
+            $username = $this->getSession()->has( 'Username' ) ? $this->getSession()->get('Username') : '';
             $items[] = array('profile', 'members/'.$username, $username, true);
         }
         $items[] = array('getanswers', 'about', 'GetAnswers');
@@ -98,7 +98,7 @@ class PageWithRoxLayout extends PageWithHTML
         if ($user->isBWLoggedIn()) {
             $items[] = array('messages', 'messages', 'Messages');
         }
-        
+
         return $items;
     }
 
@@ -162,15 +162,15 @@ class PageWithRoxLayout extends PageWithHTML
                     $login_url = 'login/'.htmlspecialchars(implode('/', $request), ENT_QUOTES);
             }
         } else {
-            $username = $this->_session->has( 'Username' ) ? $this->_session->get('Username') : '';
+            $username = $this->getSession()->has( 'Username' ) ? $this->getSession()->get('Username') : '';
         }
 
         if (class_exists('MOD_online')) {
             $who_is_online_count = MOD_online::get()->howManyMembersOnline();
         } else {
             // echo 'MOD_online not active';
-            if ($this->_session->has( 'WhoIsOnlineCount' )) {
-                $who_is_online_count = $this->_session->get('WhoIsOnlineCount'); // MOD_whoisonline::get()->whoIsOnlineCount();
+            if ($this->getSession()->has( 'WhoIsOnlineCount' )) {
+                $who_is_online_count = $this->getSession()->get('WhoIsOnlineCount'); // MOD_whoisonline::get()->whoIsOnlineCount();
             } else {
                 $who_is_online_count = 0;
             }
@@ -308,15 +308,15 @@ class PageWithRoxLayout extends PageWithHTML
     private function getFlash($type, $remove = false) {
         $flashName = 'flash_' . $type;
         $flashMessage = "";
-        if ($this->_session->has( $flashName )) {
-            $flashMessage = $this->_session->get($flashName);
+        if ($this->getSession()->has( $flashName )) {
+            $flashMessage = $this->getSession()->get($flashName);
         }
-        $symfonyFlashes = $this->_session->getFlashBag()->get($type);
+        $symfonyFlashes = $this->getSession()->getFlashBag()->get($type);
         foreach($symfonyFlashes as $flash) {
             $flashMessage .= $flash . "<br>";
         }
         if ($remove) {
-            $this->_session->remove($flashName);
+            $this->getSession()->remove($flashName);
         }
         return $flashMessage;
     }

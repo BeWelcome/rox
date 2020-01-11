@@ -9,6 +9,7 @@ use App\Entity\CommunityNews;
 use App\Entity\CommunityNewsComment;
 use App\Entity\CryptedField;
 use App\Entity\Donation;
+use App\Entity\FamilyAndFriend;
 use App\Entity\ForumPost;
 use App\Entity\Group;
 use App\Entity\Log;
@@ -46,8 +47,10 @@ class MemberModel
 {
     use ManagerTrait;
 
+    /** @var UrlGeneratorInterface  */
     private $urlGenerator;
 
+    /** @var EngineInterface  */
     private $engine;
 
     public function __construct(UrlGeneratorInterface $urlGenerator, EngineInterface $engine)
@@ -78,7 +81,6 @@ class MemberModel
         $passwordReset
             ->setMember($member)
             ->setToken($token);
-        $em = $this->getManager();
         $this->getManager()->persist($passwordReset);
         $this->getManager()->flush();
 
@@ -96,7 +98,7 @@ class MemberModel
         // Create temp directory
         $i = 0;
         while ($i < 1000) {
-            $dirname = sys_get_temp_dir().'/'.uniqid('mydata_', true);
+            $dirname = sys_get_temp_dir() . '/' . uniqid('mydata_', true);
             if (!is_file($dirname) && !is_dir($dirname)) {
                 mkdir($dirname);
                 break;
@@ -107,11 +109,11 @@ class MemberModel
             throw new Exception('Can\'t generate temp dir');
         }
         // Ensure directory name ends with /
-        $dirname = $dirname."/";
+        $dirname = $dirname . "/";
 
         $this->preparePersonalData($dirname, $params->get('kernel.project_dir'), $member);
 
-        $zipFilename = $dirname.'bewelcome-'.$member->getUsername()."-".date('Y-m-d').'.zip';
+        $zipFilename = $dirname . 'bewelcome-' . $member->getUsername() . "-" . date('Y-m-d') . '.zip';
         $zip = new ZipArchive();
         $zip->open($zipFilename, ZipArchive::CREATE);
         $files = new RecursiveIteratorIterator(
@@ -120,11 +122,9 @@ class MemberModel
         );
 
         $filesToDelete = [];
-        foreach ($files as $name => $file)
-        {
+        foreach ($files as $name => $file) {
             // Skip directories (they would be added automatically)
-            if (!$file->isDir())
-            {
+            if (!$file->isDir()) {
                 // Get real and relative path for current file
                 $filePath = $file->getRealPath();
                 $relativePath = substr($filePath, strlen($dirname));
@@ -139,7 +139,7 @@ class MemberModel
         $zip->close();
 
         // Cleanup as this is personal data
-        foreach($filesToDelete as $name => $file) {
+        foreach ($filesToDelete as $name => $file) {
             unlink($file);
         }
         return $zipFilename;
@@ -153,7 +153,7 @@ class MemberModel
     private function preparePersonalData(string $tempDir, string $projectDir, Member $member)
     {
         $memoryLimit = ini_get('memory_limit');
-        ini_set('memory_limit','512M');
+        ini_set('memory_limit', '512M');
 
         $this->prepareGalleryItems($tempDir, $projectDir, $member);
         $this->prepareProfilePictures($tempDir, $member);
@@ -164,6 +164,7 @@ class MemberModel
         $this->prepareGroupInformation($tempDir, $member);
         $this->prepareActivities($tempDir, $member);
         $this->prepareCommentsLeft($tempDir, $member);
+        $this->prepareSpecialRelations($tempDir, $member);
         $this->prepareMemberData($tempDir, $member);
         $this->prepareNewsletterInformation($tempDir, $member);
         $this->prepareCommunityNewsInformation($tempDir, $member);
@@ -195,23 +196,22 @@ class MemberModel
             // create gallery sub directory
             $galleryDir = $tempDir . 'gallery/';
             @mkdir($galleryDir);
-            if ($dh = opendir($galleryPath)) {
-                while (($file = readdir($dh)) !== false) {
+            if ($directoryHandle = opendir($galleryPath)) {
+                while (($file = readdir($directoryHandle)) !== false) {
                     if (!is_dir($file)) {
                         $ext = $this->imageExtension($galleryPath . $file);
                         $filesystem->copy($galleryPath . $file, $galleryDir . pathinfo($file, PATHINFO_FILENAME) . $ext);
                     }
                 }
-                closedir($dh);
+                closedir($directoryHandle);
             }
         }
     }
 
-    private function imageExtension(string $filename) : string
+    private function imageExtension(string $filename): string
     {
         $mimetype = mime_content_type($filename);
-        switch($mimetype)
-        {
+        switch ($mimetype) {
             case 'image/png':
                 $ext = '.png';
                 break;
@@ -251,8 +251,8 @@ class MemberModel
                     . pathinfo($photo->getFilepath(), PATHINFO_FILENAME)
                     . $this->imageExtension($photo->getFilepath()));
             }
-            foreach($variants as $variant) {
-                $filepath = $photo->getFilepath().$variant;
+            foreach ($variants as $variant) {
+                $filepath = $photo->getFilepath() . $variant;
                 if (is_file($filepath)) {
                     $filesystem->copy($filepath, $pictureDir
                         . pathinfo($filepath, PATHINFO_FILENAME)
@@ -268,18 +268,18 @@ class MemberModel
         $messageText = $message->getMessage();
         $isHtml = ($messageText != strip_tags($messageText));
         $isRequest = ($message->getRequest() !== null);
-        $ext = ($isHtml)?".html":".txt";
-        $filename = ($isRequest)?"request":"message";
-        $handle = fopen($dir . $filename.$message->getCreated()->toDateString()."-".$number.$ext, "w");
+        $ext = ($isHtml) ? ".html" : ".txt";
+        $filename = ($isRequest) ? "request" : "message";
+        $handle = fopen($dir . $filename . $message->getCreated()->toDateString() . "-" . $number . $ext, "w");
         if ($message->getSubject()) {
-            fwrite($handle, '<p>Subject: '. $message->getSubject()->getSubject() .'</p>');
+            fwrite($handle, '<p>Subject: ' . $message->getSubject()->getSubject() . '</p>');
         }
         if ($isRequest) {
             $request = $message->getRequest();
-            fwrite($handle, '<p>Arrival: '. $request->getArrival() .'<br>');
-            fwrite($handle, 'Departure: '. $request->getDeparture() .'<br>');
-            fwrite($handle, '#Travellers: '. $request->getNumberOfTravellers() .'<br>');
-            fwrite($handle, 'Flexible'. $request->getFlexible().'</p>');
+            fwrite($handle, '<p>Arrival: ' . $request->getArrival() . '<br>');
+            fwrite($handle, 'Departure: ' . $request->getDeparture() . '<br>');
+            fwrite($handle, '#Travellers: ' . $request->getNumberOfTravellers() . '<br>');
+            fwrite($handle, 'Flexible' . $request->getFlexible() . '</p>');
         }
         fwrite($handle, $message->getMessage());
         fclose($handle);
@@ -344,16 +344,6 @@ class MemberModel
         }
     }
 
-    private function writePostHtmlStart($handle)
-    {
-        fwrite($handle, "<html lang='en'><head><title>Bewelcome Post</title><style>a {color: blue;}</style></head><body>");
-    }
-
-    private function writePostHtmlClose($handle)
-    {
-        fwrite($handle, "</body>");
-    }
-
     /**
      * @param string $tempDir
      * @param Member $member
@@ -375,8 +365,7 @@ class MemberModel
                 if ($thread) {
                     $thread->getTitle();
                 }
-            }
-            catch(Exception $e) {
+            } catch (Exception $e) {
                 $thread = null;
             }
             if (null === $thread) {
@@ -386,18 +375,16 @@ class MemberModel
                     // As database column for group has 0 instead of null we need to check if group is valid
                     $group = $thread->getGroup();
                     $group->getName();
-                }
-                catch(Exception $e) {
+                } catch (Exception $e) {
                     $group = null;
                 }
             }
-            $handle = fopen($postsDir . "post-".$post->getCreated()->toDateString()."-".$i.".html", "w");
+            $handle = fopen($postsDir . "post-" . $post->getCreated()->toDateString() . "-" . $i . ".html", "w");
             fwrite($handle, $this->engine->render('private/post.html.twig', [
                 'thread' => $thread,
                 'group' => $group,
                 'post' => $post,
-                ]
-            ));
+                ]));
             fclose($handle);
             $i++;
         }
@@ -429,7 +416,7 @@ class MemberModel
                             'group_start',
                             [ 'group_id' => $groupMembership->getGroup()->getId(), UrlGenerator::ABSOLUTE_URL ]
                         )
-                        ."]");
+                        . "]");
                 } catch (Exception $e) {
                     fwrite($handle, "Deleted Group");
                 }
@@ -725,6 +712,25 @@ class MemberModel
         }
     }
 
+
+    /**
+     * @param PollContribution|PollRecordOfChoice $related
+     * @param $handle
+     */
+    private function writePollInformation($related, $handle)
+    {
+        $poll = $related->getPoll();
+        // Check if a title exists and output it
+        $title = $poll->getTitles()->first();
+        fwrite($handle, "Poll voted: ");
+        if ($title) {
+            fwrite($handle, $title->getSentence());
+        } else {
+            fwrite($handle, "Unknown poll");
+        }
+        fwrite($handle, " (" . $poll->getId() . ")" . PHP_EOL);
+    }
+
     private function preparePolls(string $tempDir, Member $member)
     {
         /** @var EntityRepository $pollsRepository */
@@ -767,22 +773,13 @@ class MemberModel
             fwrite($handle, "You contributed to the following polls:" . PHP_EOL . PHP_EOL);
             /** @var PollContribution $contribution */
             foreach ($contributions as $contribution) {
-                $poll = $contribution->getPoll();
-                // Check if a title exists and output it
-                $title = $poll->getTitles()->first();
-                fwrite($handle, "Poll voted: ");
-                if ($title) {
-                    fwrite($handle, $title->getSentence());
-                } else {
-                    fwrite($handle, "Unknown poll");
-                }
-                fwrite($handle, " (" . $poll->getId() . ")" . PHP_EOL);
+                $this->writePollInformation($contribution, $handle);
                 if ('' === $contribution->getComment()) {
                     fwrite($handle, "You voted without leaving a comment");
                 } else {
                     fwrite($handle, "Comment left: " . $contribution->getComment());
                 }
-                fwrite($handle,PHP_EOL . PHP_EOL);
+                fwrite($handle, PHP_EOL . PHP_EOL);
             }
             fclose($handle);
         }
@@ -796,18 +793,9 @@ class MemberModel
             fwrite($handle, "You following votes have been recorded:" . PHP_EOL . PHP_EOL);
             /** @var PollRecordOfChoice $vote */
             foreach ($votes as $vote) {
-                $poll = $vote->getPoll();
-                // Check if a title exists and output it
-                $title = $poll->getTitles()->first();
-                fwrite($handle, "Poll voted: ");
-                if ($title) {
-                    fwrite($handle, $title->getSentence());
-                } else {
-                    fwrite($handle, "Unknown poll");
-                }
-                fwrite($handle, " (" . $poll->getId() . ")" . PHP_EOL);
+                $this->writePollInformation($vote, $handle);
                 fwrite($handle, "Choice: " . $vote->getPollChoice()->getChoiceTexts()->first()->getSentence());
-                fwrite($handle,PHP_EOL . PHP_EOL);
+                fwrite($handle, PHP_EOL . PHP_EOL);
             }
             fclose($handle);
         }
@@ -830,6 +818,28 @@ class MemberModel
                 fwrite($handle, PHP_EOL);
             }
             fclose($handle);
+        }
+    }
+
+    private function prepareSpecialRelations(string $tempDir, Member $member)
+    {
+        /** @var EntityRepository $relationsRepository */
+        $relationsRepository = $this->getManager()->getRepository(FamilyAndFriend::class);
+        $relations = $relationsRepository->findBy(['owner' => $member]);
+        if (!empty($relations)) {
+            $relationsDir = $tempDir . 'relations/';
+            @mkdir($relationsDir);
+            $i = 1;
+            /** @var FamilyAndFriend $relation */
+            foreach ($relations as $relation) {
+                $handle = fopen($relationsDir . "relation." . $i . ".txt", "w");
+                fwrite($handle, "Type: " . $relation->getType() . PHP_EOL);
+                fwrite($handle, "Relation to: " . $relation->getRelation()->getUsername() . PHP_EOL);
+                fwrite($handle, "Comment: " . $relation->getComment() . PHP_EOL);
+                fwrite($handle, "Confirmed: " . $relation->getConfirmed() . PHP_EOL);
+                fclose($handle);
+                $i++;
+            }
         }
     }
 }

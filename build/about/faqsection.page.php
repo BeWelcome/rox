@@ -7,7 +7,7 @@ class AboutFaqsectionPage extends AboutFaqPage
     {
         $words = $this->getWords();
         $req = $_SERVER['REQUEST_URI'];
-        $IdLanguage = $this->_session->get( "IdLanguage", 0 );
+        $IdLanguage = $this->session->get( "IdLanguage", 0 );
         echo '<div class="row"><div class="col-12"><h2>'.$words->get($this->faq_section->Description).'</h2></div>
         <div class="col-12"><dl id="faqs">';
         foreach ($this->faq_section->faqs as $faq_key => &$faq) {
@@ -46,7 +46,7 @@ class AboutFaqsectionPage extends AboutFaqPage
         </div>
         <?php
     }
-    
+
     protected function teaserHeadline()
     {
         echo $this->ww->AboutFAQ;

@@ -60,7 +60,7 @@ class Word
     /**
      * @var Member
      *
-     * @ORM\OneToOne(targetEntity="Member")
+     * @ORM\ManyToOne(targetEntity="Member")
      * @ORM\JoinColumn(name="IdMember", referencedColumnName="id")
      */
     private $author;
@@ -68,7 +68,7 @@ class Word
     /**
      * @var Language
      *
-     * @ORM\OneToOne(targetEntity="Language")
+     * @ORM\ManyToOne(targetEntity="Language")
      * @ORM\JoinColumn(name="IdLanguage", referencedColumnName="id")
      */
     private $language;

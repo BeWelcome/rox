@@ -16,8 +16,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program; if not, see <http://www.gnu.org/licenses/> or 
-write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+along with this program; if not, see <http://www.gnu.org/licenses/> or
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 
@@ -38,11 +38,11 @@ class RoxController extends RoxControllerBase
      * @RoxModelBase Rox
      */
     private $_model;
-    
+
     // for some things we still need a class-scope view object
     private $_view;
-	 
-    
+
+
     /**
      * @see /build/mytravelbook/mytravelbook.ctrl.php
      *
@@ -53,21 +53,21 @@ class RoxController extends RoxControllerBase
         $this->_model = new RoxModelBase();
         $this->_view  = new RoxView($this->_model);
     }
-    
+
     public function __destruct()
     {
         unset($this->_model);
         unset($this->_view);
     }
-    
+
     public function index($args = false)
     {
         if (PPostHandler::isHandling()) {
             return false;
         }
-        
+
         $request = $args->request;
-        
+
         if (isset($request[0]) && 'rox' == $request[0]) {
             // bw.org/rox/in/lang or bw.org/rox/start
             // should be the same as just
@@ -105,7 +105,7 @@ class RoxController extends RoxControllerBase
             case 'www.bewelcome.org':
                 // some emails sent by mailbot contain a link to
                 // http://www.bewelcome.org/www.bewelcome.org/something
-                // we need to redirect them to 
+                // we need to redirect them to
                 // https://www.bewelcome.org/something
                 $this->redirect(array_slice($request, 1), $args->get);
                 PPHP::PExit();
@@ -123,10 +123,10 @@ class RoxController extends RoxControllerBase
                     $page = new \PublicStartpage(); 	// This is the Default Start page for not logged in members
                 }
         }
-        
+
         $page->setModel($this->_model);
         $page->model = $this->_model;  // some want it like this
-        
+
         return $page;
     }
 
@@ -142,7 +142,7 @@ class RoxController extends RoxControllerBase
         }
         return $page;
     }
-    
+
     /**
      * redirect to a location obtained by array_slice on the current url
      * for instance, "rox/in/fr/forums" gets redirected to "forums",
@@ -163,8 +163,8 @@ class RoxController extends RoxControllerBase
         }
         $this->redirect($loc_rel);
     }
-    
-    
+
+
     /**
      * This method is called when someone says "rox/in/fr" or "rox/in/it"
      * TODO: evtl this would belong in the model instead
@@ -176,46 +176,46 @@ class RoxController extends RoxControllerBase
         // check if language is in DB
         $language_lookup_model = new LanguageLookupModel();
         if ($row = $language_lookup_model->findLanguageWithCode($langcode)) {
-            $this->_session->set( 'lang', $langcode );
-            $this->_session->set( 'IdLanguage', $row->id );
+            $this->session->set( 'lang', $langcode );
+            $this->session->set( 'IdLanguage', $row->id );
         } else {
             // catch invalid language codes!
-            $this->_session->set( 'lang', 'en' );
-            $this->_session->set( 'IdLanguage', 0 );
+            $this->session->set( 'lang', 'en' );
+            $this->session->set( 'IdLanguage', 0 );
         }
     }
-    
-    
+
+
     /**
      * This method is called when a translator says "rox/trmode/.."
-     * TODO: Better do this in a model class 
+     * TODO: Better do this in a model class
      *
      * @param string $tr_mode
      */
     private function _switchTrMode($tr_mode)
     {
         if(!MOD_right::get()->hasRight('Words')) {
-            $this->_session->set( 'tr_mode', 'browse' );
+            $this->session->set( 'tr_mode', 'browse' );
             return;
         }
         switch ($tr_mode) {
             case 'browse':
             case 'translate':
             case 'edit':
-                $this->_session->set( 'tr_mode', $tr_mode );
+                $this->session->set( 'tr_mode', $tr_mode );
                 break;
             default:
                 // don't change tr mode
         }
     }
-    
-    
-    
+
+
+
     //-------------------------------------------------------------
     // some shared layout stuff.
-    // sooner or later this will go to another place. 
-    
-    
+    // sooner or later this will go to another place.
+
+
     /**
      * TODO: I'm quite sure we don't need this.
      *
@@ -225,7 +225,7 @@ class RoxController extends RoxControllerBase
     {
         return true;
     }
-    
+
     /**
      * show the top menu
      * TODO: with RoxPageView, we won't need this anymore.
@@ -236,7 +236,7 @@ class RoxController extends RoxControllerBase
     {
         $this->_view->topmenu($currentTab);
     }
-    
+
     /**
      * show a volunteer menu on top (currently not used)
      *
@@ -246,9 +246,9 @@ class RoxController extends RoxControllerBase
         // TODO: Not sure if it is really the best solution
         // to create a widget in the controller.
         $widget = new VolunteermenuWidget();
-        $widget->render();        
+        $widget->render();
     }
-    
+
     /**
      * show the page footer
      *
@@ -257,7 +257,7 @@ class RoxController extends RoxControllerBase
     {
         $this->_view->footer();
     }
-    
+
 }
 
 

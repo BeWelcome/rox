@@ -161,7 +161,7 @@ SQL
 
       public function get_relation_between_members($IdMember_rel)
       {
-          $myself = $this->getMemberWithId($this->_session->get('IdMember'));
+          $myself = $this->getMemberWithId($this->session->get('IdMember'));
           $member = $this->getMemberWithId($IdMember_rel);
           $words = $this->getWords();
           $all_relations = $member->all_relations();
@@ -297,18 +297,18 @@ WHERE
         } else {
             // check if current session language is a profile language
             $found = false;
-            if ($this->_session->has( 'IdMember' )) {
-                $memberId = intval($this->_session->get('IdMember'));
+            if ($this->session->has( 'IdMember' )) {
+                $memberId = intval($this->session->get('IdMember'));
                 $member = $this->createEntity('Member', $memberId);
                 $member->set_profile_languages();
                 $langs = $member->profile_languages;
                 foreach($langs as $lang) {
-                    $found = ($lang->ShortCode == $this->_session->get('lang'));
+                    $found = ($lang->ShortCode == $this->session->get('lang'));
                     if ($found) break;
                 }
             }
             if ($found) {
-                $this->set_profile_language($this->_session->get('lang'));
+                $this->set_profile_language($this->session->get('lang'));
             } else {
                 // if no language is set use English
                 $this->set_profile_language("en");
@@ -396,7 +396,7 @@ SQL;
             return false;
         }
 
-        $membersModel = new MembersModel($this->_session);
+        $membersModel = new MembersModel($this->session);
         $membersModel->set_preference($this->getLoggedInMember()->id, $readCommentGuidlinesPref->id, 1);
     }
 
@@ -500,7 +500,7 @@ SQL;
     {
         $return = true;
         $commentRecipient = $this->createEntity('Member', $vars['IdMember']);
-        $commentSender = $this->createEntity('Member', $this->_session->get('IdMember'));
+        $commentSender = $this->createEntity('Member', $this->session->get('IdMember'));
         // Mark if an admin's check is needed for this comment (in case it is "bad")
         $AdminAction = "NothingNeeded";
         if ($vars['Quality'] == "Bad") {
@@ -545,7 +545,7 @@ INSERT INTO
     )
     values (
         " . $vars['IdMember'] . ",
-        " . $this->_session->get('IdMember') . ",
+        " . $this->session->get('IdMember') . ",
         '" . $LenghtComments . "','" . $vars['Quality'] . "',
         '',
         '" . $this->dao->escape($vars['TextFree']) . "',
@@ -571,7 +571,7 @@ UPDATE
 SET
     AdminAction='" . $AdminAction . "',
     IdToMember=" . $vars['IdMember'] . ",
-    IdFromMember=" . $this->_session->get('IdMember') . ",
+    IdFromMember=" . $this->session->get('IdMember') . ",
     Relations='" . $LenghtComments . "',
     Quality='" . $vars['Quality'] . "',
     TextWhere='',
@@ -595,7 +595,7 @@ WHERE
             $c_add = ($vars['Quality'] == "Bad") ? '_bad' : '';
             $note = array(
                 'IdMember' => $vars['IdMember'],
-                'IdRelMember' => $this->_session->get('IdMember'),
+                'IdRelMember' => $this->session->get('IdMember'),
                 'Type' => 'profile_comment' . $c_add,
                 'Quality' => $vars['Quality'],
                 'commentText' => $vars['TextFree'],
@@ -621,7 +621,7 @@ WHERE
         $return = true;
         $words = new MOD_words();
         $mReceiver=
-        $TData= $this->singleLookup("select * from specialrelations where IdRelation=".$vars["IdRelation"]." and IdOwner=".$this->_session->get("IdMember"));
+        $TData= $this->singleLookup("select * from specialrelations where IdRelation=".$vars["IdRelation"]." and IdOwner=".$this->session->get("IdMember"));
         $mReceiver=$this->getMemberWithId($vars["IdRelation"]) ;
 
         if (!isset ($TData->id) ) {
@@ -635,7 +635,7 @@ INSERT INTO
         created
     )
     values (
-        ".$this->_session->get("IdMember").",
+        ".$this->session->get("IdMember").",
         ".$vars['IdRelation'].",
         '".stripslashes($vars['stype'])."',
         ".$words->InsertInMTrad($this->dao->escape($vars['Comment']),"specialrelations.Comment",0).",
@@ -648,7 +648,7 @@ INSERT INTO
         } else $return = false;
         if ($return != false) {
             // Create a note (member-notification) for this action
-            $note = array('IdMember' => $vars['IdRelation'], 'IdRelMember' => $this->_session->get('IdMember'), 'Type' => 'relation', 'Link' => 'members/'.$vars['IdOwner'].'/relations/add','WordCode' => 'Notify_relation_new');
+            $note = array('IdMember' => $vars['IdRelation'], 'IdRelMember' => $this->session->get('IdMember'), 'Type' => 'relation', 'Link' => 'members/'.$vars['IdOwner'].'/relations/add','WordCode' => 'Notify_relation_new');
             $noteEntity = $this->createEntity('Note');
             $noteEntity->createNote($note);
         }
@@ -660,7 +660,7 @@ INSERT INTO
     {
         $return = true;
         $words = new MOD_words();
-        $TData= $this->singleLookup("select * from specialrelations where IdRelation=".$vars["IdRelation"]." and IdOwner=".$this->_session->get("IdMember"));
+        $TData= $this->singleLookup("select * from specialrelations where IdRelation=".$vars["IdRelation"]." and IdOwner=".$this->session->get("IdMember"));
         $mReceiver=$this->getMemberWithId($vars["IdRelation"]) ;
         if (isset ($TData->id)) {
             $str = "
@@ -670,7 +670,7 @@ SET
     Type = '".stripslashes($vars['stype'])."',
     Comment = ".$words->InsertInMTrad($this->dao->escape($vars['Comment']),"specialrelations.Comment",0)."
 WHERE
-    IdOwner = ".$this->_session->get("IdMember")." AND
+    IdOwner = ".$this->session->get("IdMember")." AND
     IdRelation = ".$vars['IdRelation']."
             ";
             $qry = $this->dao->query($str);
@@ -679,7 +679,7 @@ WHERE
         } else $return = false;
         if ($return != false) {
             // Create a note (member-notification) for this action
-            $note = array('IdMember' => $vars['IdRelation'], 'IdRelMember' => $this->_session->get('IdMember'), 'Type' => 'relation', 'Link' => 'members/'.$vars['IdOwner'].'/relations/add','WordCode' => 'Notify_relation_update');
+            $note = array('IdMember' => $vars['IdRelation'], 'IdRelMember' => $this->session->get('IdMember'), 'Type' => 'relation', 'Link' => 'members/'.$vars['IdOwner'].'/relations/add','WordCode' => 'Notify_relation_update');
             $noteEntity = $this->createEntity('Note');
             $noteEntity->createNote($note);
         }
@@ -814,11 +814,11 @@ WHERE
     public function checkMyPreferences(&$vars)
     {
         $errors = array();
-        $member = $this->createEntity('Member', $this->_session->get('IdMember'));
+        $member = $this->createEntity('Member', $this->session->get('IdMember'));
 
         // Password Check
         if (isset($vars['passwordnew']) && $vars['passwordnew'] != '') {
-        $query = "select id from members where id=" . $this->_session->get('IdMember') . " and PassWord=PASSWORD('" . $member->preparePassword($vars['passwordold']) . "')";
+        $query = "select id from members where id=" . $this->session->get('IdMember') . " and PassWord=PASSWORD('" . $member->preparePassword($vars['passwordold']) . "')";
             $qry = $this->dao->query($query);
             $rr = $qry->fetch(PDB::FETCH_OBJ);
             if (!$rr || !array_key_exists('id', $rr))
@@ -1033,7 +1033,7 @@ ORDER BY
 
         // fantastic ... love the implementation. Fake
         $CanTranslate = false;
-        // $CanTranslate = CanTranslate($vars["memberid"], $this->_session->get('IdMember'));
+        // $CanTranslate = CanTranslate($vars["memberid"], $this->session->get('IdMember'));
         $ReadCrypted = "MemberReadCrypted"; // This might be changed in the future
         if ($rights->hasRight('Admin') || $rights->hasRight('SafetyTeam') /* or $CanTranslate */) { // admin or CanTranslate can alter other profiles
             $ReadCrypted = "AdminReadCrypted"; // In this case the AdminReadCrypted will be used
@@ -1191,7 +1191,7 @@ ORDER BY
             $m->chat_GOOGLE = $cryptModule->NewReplaceInCrypted(addslashes(strip_tags($vars['chat_GOOGLE'])),"members.chat_GOOGLE",$IdMember,$m->chat_GOOGLE, $IdMember, $this->ShallICrypt($vars,"chat_GOOGLE"));
         }
 
-        if ($IdMember == $this->_session->get('IdMember'))
+        if ($IdMember == $this->session->get('IdMember'))
         {
             $this->logWrite("Profile update by member himself [Status={$m->Status}]", "Profile update");
         }
@@ -1484,7 +1484,7 @@ VALUES
     {
         if (!empty($feedback))
         {
-            $feedback_model = new FeedbackModel($this->_session);
+            $feedback_model = new FeedbackModel($this->session);
             $feedback_model->sendFeedback(array(
                 "IdCategory"       => FeedbackModel::DELETE_PROFILE,
                 "FeedbackQuestion" => $feedback,

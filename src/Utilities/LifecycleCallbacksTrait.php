@@ -2,7 +2,6 @@
 
 namespace App\Utilities;
 
-
 use Carbon\Carbon;
 use DateTime;
 
@@ -12,10 +11,18 @@ use DateTime;
  */
 trait LifecycleCallbacksTrait
 {
-    /** @ORM\Column(name="created", type="datetime", nullable=false) */
+    /**
+     * @var DateTime
+     *
+     * @ORM\Column(name="created", type="datetime", nullable=false)
+     */
     private $created;
 
-    /** @ORM\Column(name="updated", type="datetime", nullable=true) */
+    /**
+     * @var DateTime
+     *
+     * @ORM\Column(name="updated", type="datetime", nullable=true)
+     */
     private $updated;
 
     /**
@@ -54,4 +61,3 @@ trait LifecycleCallbacksTrait
         $this->updated = new DateTime('now');
     }
 }
-

@@ -34,7 +34,7 @@ class OneNewsLetterPage extends RoxPageView  /* HelloUniversePage doesn't work! 
         //Search for it in the broadcast array and update the %s/%username% placeholder
         /* \todo Replace username and %s correctly */
         $member = $this->getWords()->getInLang('member', $this->Data->Lang);
-        $username = $this->_session->get('Username', $member);
+        $username = $this->session->get('Username', $member);
         $body = "";
         for($i=0;$i<count($this->Data->BroadCast->Lang);$i++)
         {

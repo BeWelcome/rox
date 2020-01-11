@@ -224,7 +224,6 @@ class HostingRequestController extends BaseMessageController
      * @param Message $message
      *
      * @throws AccessDeniedException
-     * @throws Exception
      *
      * @return Response
      */
@@ -288,11 +287,13 @@ class HostingRequestController extends BaseMessageController
             $this->addTranslatedFlash('note', 'flash.member.invalid');
         }
 
-        if ($this->messageModel->hasMessageLimitExceeded(
-            $member,
-            $this->getParameter('new_members_messages_per_hour'),
-            $this->getParameter('new_members_messages_per_day')
-        )) {
+        if (
+            $this->messageModel->hasMessageLimitExceeded(
+                $member,
+                $this->getParameter('new_members_messages_per_hour'),
+                $this->getParameter('new_members_messages_per_day')
+            )
+        ) {
             $this->addTranslatedFlash('error', 'flash.request.limit');
             $referrer = $request->headers->get('referer');
 
@@ -508,9 +509,9 @@ class HostingRequestController extends BaseMessageController
     private function addExpiredFlash(Member $receiver)
     {
         $this->addTranslatedFlash('notice', 'flash.request.expired', [
-            '%link_start%' => '<a href="'.$this->generateUrl('message_new', [
+            '%link_start%' => '<a href="' . $this->generateUrl('message_new', [
                     'username' => $receiver->getUsername(),
-                ]).'" class="text-primary">',
+                ]) . '" class="text-primary">',
             '%link_end%' => '</a>',
         ]);
     }
@@ -545,30 +546,30 @@ class HostingRequestController extends BaseMessageController
     {
         $subject = $newRequest->getSubject()->getSubject();
         if ('Re:' !== substr($subject, 0, 3)) {
-            $subject = 'Re: '.$subject;
+            $subject = 'Re: ' . $subject;
         }
 
         if (HostingRequest::REQUEST_CANCELLED === $newRequest->getRequest()->getStatus()) {
             if (false === strpos('(Cancelled)', $subject)) {
-                $subject = $subject.' (Cancelled)';
+                $subject = $subject . ' (Cancelled)';
             }
         }
 
         if (HostingRequest::REQUEST_DECLINED === $newRequest->getRequest()->getStatus()) {
             if (false === strpos('(Declined)', $subject)) {
-                $subject = $subject.' (Declined)';
+                $subject = $subject . ' (Declined)';
             }
         }
 
         if (HostingRequest::REQUEST_ACCEPTED === $newRequest->getRequest()->getStatus()) {
             if (false === strpos('(Accepted)', $subject)) {
-                $subject = $subject.' (Accepted)';
+                $subject = $subject . ' (Accepted)';
             }
         }
 
         if (HostingRequest::REQUEST_TENTATIVELY_ACCEPTED === $newRequest->getRequest()->getStatus()) {
             if (false === strpos('(Tentatively accepted)', $subject)) {
-                $subject = $subject.' (Tentatively accepted)';
+                $subject = $subject . ' (Tentatively accepted)';
             }
         }
 

@@ -319,7 +319,7 @@ class MOD_layoutbits
     // COPIED FROM OLD BW
     function getParams($Param) {
 
-		return(self::$_instance->_session->get('Param[' . $Param . ']'));
+		return(self::$_instance->session->get('Param[' . $Param . ']'));
     }
 
     // COPIED FROM OLD BW

@@ -58,7 +58,7 @@ class Faq
     private $sortorder = '0';
 
     /**
-     * @var \App\Entity\FaqCategory
+     * @var FaqCategory
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\FaqCategory", fetch="EAGER")
      * @ORM\JoinColumns({

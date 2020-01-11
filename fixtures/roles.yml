@@ -1,0 +1,10 @@
+App\Entity\Role:
+    SysAdmin:
+        name: 'SysAdmin'
+        description: 'The omnipotent role of the sysadmin - can do everything'
+    GroupOwner:
+        name: 'GroupOwner'
+        description: 'Privileges for group owners'
+    GroupsAdmin:
+        name: 'GroupsAdmin'
+        description: 'Admin from the groups team, has owner access to all groups'

@@ -37,10 +37,10 @@ class LegacyLoader extends Loader
         $this->routes = new RouteCollection();
 
         // Handle current directory (difference between cache clear and web access)
-        $projectDir = realpath(__DIR__.'/../..');
+        $projectDir = realpath(__DIR__ . '/../..');
 
         // Include legacy routes to ensure firewall kicks in
-        require_once $projectDir.'/routes.php';
+        require_once $projectDir . '/routes.php';
 
         // Forum urls
 //        $this->addRouteDirectly('forums', '/forums/page{pageGroups}/page{pageForums}');

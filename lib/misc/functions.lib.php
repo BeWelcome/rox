@@ -17,9 +17,9 @@ use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * Collection of useful functions
- * 
+ *
  * May be called statically
- * 
+ *
  * @author The myTravelbook Team <http://www.sourceforge.net/projects/mytravelbook>
  * @copyright Copyright (c) 2005-2006, myTravelbook Team
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License (GPL)
@@ -27,7 +27,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
  */
 class PFunctions {
     const PREGEXP_BASE64 = '%^[a-z0-9\-=]+$%i';
-    
+
 	public static function glueParsedUrl($parsed) {
 		if (! is_array($parsed)) return false;
 		$uri = isset ($parsed['scheme']) ? $parsed['scheme'].':'.((strtolower($parsed['scheme']) == 'mailto') ? '':'//'): '';
@@ -46,7 +46,7 @@ class PFunctions {
 		$round = round( $unit );
 		return $round / pow( 10, $dec );
 	}
-	
+
 	public static function readCSV ($fileName, $delim, $encl, $optional = TRUE, $lineOffset = 0, $lineLimit = FALSE) {
 		try {
 			if (!file_exists ($fileName))
@@ -54,7 +54,7 @@ class PFunctions {
 			$data = file_get_contents ($fileName);
 			$data = (preg_match ('%\r\n$%', $data) ? $data : $data . "\r\n");
 			$reg = '%((' . $encl . ')' . ($optional ? '?(?(2).*?|[^' . $delim . '\r\n]*)'  :  '([^' . $encl . ']*)' . $encl . '') . ')(?(2)' . $encl . ')('. $delim . '|\r\n)%smi';
-	
+
 			$ret = array ();
 			$line = 0;
 			$i = 1;
@@ -77,9 +77,9 @@ class PFunctions {
 			return $ret;
 		} catch (PException $e) {
 			throw $e;
-		} 
+		}
 	}
-    
+
     public static function hex2base64($h) {
         $tab_fromBin = array (
             '000000' => '0', '000001' => '1', '000010' => '2', '000011' => '3',
@@ -109,7 +109,7 @@ class PFunctions {
         }
         return strtr($d, $tab_fromBin);
     }
-    
+
     public static function base642hex($h) {
         $tab_fromBin = array (
             '000000' => '0', '000001' => '1', '000010' => '2', '000011' => '3',
@@ -143,7 +143,7 @@ class PFunctions {
         }
         return implode('', $d);
     }
-	
+
 	private static function _check_readCSVline ($match, $delim, &$i, &$line, &$linesize) {
 		if ($match[3] != $delim) {
 			if ($i == 0)
@@ -170,7 +170,7 @@ class PFunctions {
   }
 
 
-    
+
     public static function isUTF8($string) {
        // From http://w3.org/International/questions/qa-forms-utf-8.html
        return preg_match('%^(?:
@@ -184,7 +184,7 @@ class PFunctions {
            |  \xF4[\x80-\x8F][\x80-\xBF]{2}    # plane 16
        )*$%xs', $string);
     }
-    
+
     public static function generateUUID() {
         if (function_exists('uuid_create')) {
             return uuid_create();
@@ -204,7 +204,7 @@ class PFunctions {
             .  substr($uuid, 16, 4)."-"
             .  substr($uuid, 20);
     }
-    
+
     public static function getFileSize($file) {
         if (!file_exists($file) || !is_readable($file))
             return false;
@@ -217,7 +217,7 @@ class PFunctions {
         $p = strpos($s, ".");
         if($p !== false && $p > $digits) $s = round($s);
         elseif($p !== false) $s = round($s, $digits-$p);
-        
+
         return round($s, $digits) . " " . $symbols[$i] . 'B';
     }
 
@@ -250,7 +250,7 @@ class PFunctions {
             $p = array('pageno'=>$i);
             if ($i == $currentPage)
                 $p['current'] = true;
-            $pages[] = $p; 
+            $pages[] = $p;
         }
         $results = array();
         $s->seek($offs);
@@ -261,7 +261,7 @@ class PFunctions {
         }
         return array($results, $pages, $maxPage);
     }
-    
+
     function returnBytes($val) {
         $val = trim($val);
         $last = strtolower($val{strlen($val)-1});
@@ -288,14 +288,14 @@ class PFunctions {
             $r = mt_rand();
             $random .= sha1(uniqid($r,TRUE));
         }
-        return substr ($random, 0, $len);   
+        return substr ($random, 0, $len);
     }
 }
 
 /*
 * The ServerToLocalDateTime() function allow to convert server time (whic is GMT) to local time
 * localtime will be computed according to preferences
-* it use $this->_session->get("TimeOffset") which is initialized according to current member preferences
+* it use $this->session->get("TimeOffset") which is initialized according to current member preferences
 * @$EntryTimeStamp is the date (it must be a GMT time, taken for the database)to be converted in localtime
 * it returns a TimeStamp adjusted according to member local time
 *
@@ -303,7 +303,7 @@ class PFunctions {
 *
 */
 function ServerToLocalDateTime($EntryTimeStamp, Session $session) {
-//	$this->_session->get("TimeOffset")=60*60*2 ; // only used for test at developemnt phase
+//	$this->session->get("TimeOffset")=60*60*2 ; // only used for test at developemnt phase
 	if (empty($session->get("TimeOffset"))) {
 		return($EntryTimeStamp) ;
 	}

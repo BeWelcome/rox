@@ -112,7 +112,7 @@ class CommentController extends AbstractController
      */
     public function adminReportedOverview(Request $request)
     {
-        if (!$this->isGranted([ Member::ROLE_ADMIN_COMMENTS, Member::ROLE_ADMIN_SAFETYTEAM] )) {
+        if (!$this->isGranted([ Member::ROLE_ADMIN_COMMENTS, Member::ROLE_ADMIN_SAFETYTEAM])) {
             throw $this->createAccessDeniedException('You need to have Group right to access this.');
         }
 
@@ -141,7 +141,7 @@ class CommentController extends AbstractController
      */
     public function adminNegativeOverview(Request $request)
     {
-        if (!$this->isGranted([ Member::ROLE_ADMIN_COMMENTS, Member::ROLE_ADMIN_SAFETYTEAM] )) {
+        if (!$this->isGranted([ Member::ROLE_ADMIN_COMMENTS, Member::ROLE_ADMIN_SAFETYTEAM])) {
             throw $this->createAccessDeniedException('You need to have Group right to access this.');
         }
 

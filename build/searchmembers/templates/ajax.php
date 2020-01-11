@@ -39,7 +39,7 @@ $Accomodation = array();
 $Accomodation['anytime'] = $words->getBuffered('Accomodation_anytime');
 $Accomodation['dependonrequest'] = $words->getBuffered('Accomodation_dependonrequest');
 $Accomodation['neverask'] = $words->getBuffered('Accomodation_neverask');
-$mapstyle = $this->_session->get('SearchMapStyle');
+$mapstyle = $this->session->get('SearchMapStyle');
 
 header('Content-type: text/xml');
 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
@@ -150,9 +150,9 @@ echo "</content>
 
 
 // Set session variables for use at another time.
-$this->_session->set( 'SearchMapStyle', $mapstyle )
-$this->_session->set( 'SearchMembersVars', $vars )
-$this->_session->set( 'SearchMembersTList', $TList )
+$this->session->set( 'SearchMapStyle', $mapstyle )
+$this->session->set( 'SearchMembersVars', $vars )
+$this->session->set( 'SearchMembersTList', $TList )
 
 function ShowMembersAjax($TM,$maxpos, $Accomodation) {
     static $ii = 0;

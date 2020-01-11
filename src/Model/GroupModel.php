@@ -10,6 +10,9 @@ use App\Entity\Language;
 use App\Entity\Member;
 use App\Entity\MemberTranslation;
 use App\Entity\Notification;
+use App\Entity\Privilege;
+use App\Entity\PrivilegeScope;
+use App\Entity\Role;
 use App\Utilities\MailerTrait;
 use App\Utilities\ManagerTrait;
 use App\Utilities\MessageTrait;
@@ -70,8 +73,8 @@ class GroupModel
                 'memberId' => $member->getId(),
             ], UrlGenerator::ABSOLUTE_URL);
 
-            $acceptTag = '<a href="'.$acceptUrl.'">';
-            $declineTag = '<a href="'.$declineUrl.'">';
+            $acceptTag = '<a href="' . $acceptUrl . '">';
+            $declineTag = '<a href="' . $declineUrl . '">';
 
             $params = [
                 'subject' => 'group.invitation',
@@ -215,8 +218,8 @@ class GroupModel
                     'memberId' => $member->getId(),
                 ], UrlGenerator::ABSOLUTE_URL);
 
-                $acceptTag = '<a href="'.$acceptUrl.'">';
-                $declineTag = '<a href="'.$declineUrl.'">';
+                $acceptTag = '<a href="' . $acceptUrl . '">';
+                $declineTag = '<a href="' . $declineUrl . '">';
 
                 /** @var Member[] $admins */
                 $params = [
@@ -282,10 +285,10 @@ class GroupModel
         $em->persist($group);
         $em->flush();
 
-        // Create the description as a member trad using the current language
+        // Create the description as a member translation using the current language
         $description = new MemberTranslation();
         $description
-            ->setOwner($member)
+            ->setOwner($member->getId())
             ->setIdTranslator($member->getId())
             ->setSentence($data->description)
             ->setIdrecord($group->getId())
@@ -296,7 +299,7 @@ class GroupModel
         // Add a comment for the creator of the group in English
         $groupComment = new MemberTranslation();
         $groupComment
-            ->setOwner($member)
+            ->setOwner($member->getId())
             ->setIdtranslator($member->getId())
             ->setSentence('Group creator')
             ->setIdrecord($group->getId())
@@ -319,24 +322,27 @@ class GroupModel
         $em->persist($group);
         $em->flush();
 
-        // Now add the current member as admin for this group
-        $connection = $this->getManager()->getConnection();
-        /** @var Statement $stmt */
-        $stmt = $connection->prepare('
-                REPLACE INTO
-                    `privilegescopes`
-                SET
-                    `Idmember` = :memberId,
-                    `IdRole` = 2,
-                    `IdPrivilege` = 3,
-                    `IdType` = :groupId,
-                    `updated` = :updated
-            ');
-        $stmt->execute([
-            ':groupId' => $group->getId(),
-            ':memberId' => $member->getId(),
-            'updated' => (new DateTime())->format('Y-m-d'),
-        ]);
+        /** @var Role $groupOwner */
+        $roleRepository = $em->getRepository(Role::class);
+        $groupOwner = $roleRepository->findOneBy(['name' => Role::GROUP_OWNER]);
+
+        /** @var Privilege $groupController */
+        $privilegeRepository = $em->getRepository(Privilege::class);
+        $groupController = $privilegeRepository->findOneBy(['controller' => Privilege::GROUP_CONTROLLER]);
+
+        $privilegeScopeRepository = $em->getRepository(PrivilegeScope::class);
+        $privilege = $privilegeScopeRepository->findOneBy(['member' => $member, 'role' => $groupOwner, 'privilege' => $groupController]);
+
+        if (null === $privilege) {
+            $privilege = new PrivilegeScope();
+        }
+        $privilege
+            ->setMember($member)
+            ->setRole($groupOwner)
+            ->setPrivilege($groupController)
+            ->setType($group->getId());
+        $em->persist($privilege);
+        $em->flush();
 
         return $group;
     }
@@ -351,9 +357,9 @@ class GroupModel
         $this->sendTemplateEmail($admin, $member, 'group/approve.join', [
             'subject' => 'group.approved.join',
             'group' => $group,
-            'group_start' => '<a href="'.$this->urlGenerator->generate('group_start', [
+            'group_start' => '<a href="' . $this->urlGenerator->generate('group_start', [
                     'group_id' => $group->getId(),
-                ], UrlGenerator::ABSOLUTE_URL).'">',
+                ], UrlGenerator::ABSOLUTE_URL) . '">',
             'group_end' => '</a>',
             'member' => $member,
             'admin' => $admin,
@@ -371,9 +377,9 @@ class GroupModel
         $this->sendTemplateEmail($admin, $member, 'group/decline.join', [
             'subject' => 'group.approved.join',
             'group' => $group,
-            'group_start' => '<a href="'.$this->urlGenerator->generate('group_start', [
+            'group_start' => '<a href="' . $this->urlGenerator->generate('group_start', [
                     'group_id' => $group->getId(),
-                ], UrlGenerator::ABSOLUTE_URL).'">',
+                ], UrlGenerator::ABSOLUTE_URL) . '">',
             'group_end' => '</a>',
             'member' => $member,
             'admin' => $admin,

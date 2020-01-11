@@ -7,9 +7,9 @@ class MOD_online
     protected $online_interval;
     private $_members_online_count;
     private $_guests_online_count;
-    
+
     static private $_instance;
-    
+
     private function __construct()
     {
         $db = PVars::getObj('config_rdbms');
@@ -18,7 +18,7 @@ class MOD_online
         }
         $dao = PDB::get($db->dsn, $db->user, $db->password);
         $this->dao =& $dao;
-        
+
         global $_SYSHCVOL;
         if (isset($_SYSHCVOL['WhoIsOnlineDelayInMinutes'])) {
             $this->online_interval = $_SYSHCVOL['WhoIsOnlineDelayInMinutes'];
@@ -26,25 +26,25 @@ class MOD_online
             $this->online_interval = 5;
         }
     }
-    
+
     /**
      * as long as we have no decent dependency injection whatever,
      * we make this a singleton.
      */
     public static function get()
-    {   
+    {
         if (!isset(self::$_instance)) {
             $c = __CLASS__;
             self::$_instance = new $c;
         }
         return self::$_instance;
     }
-    
-    
+
+
     /**
      * Update activity trackers
      * in table membersonline and/or guestsonline
-     * 
+     *
      * This function should be called in the bootstrap.
      *
      * @param int $ip
@@ -54,22 +54,22 @@ class MOD_online
     {
         $time = time();
         $update_interval = $this->online_interval * 60 / 8;
-        if (!$this->_session->has( 'last_online_counter_update_time' )) {
+        if (!$this->session->has( 'last_online_counter_update_time' )) {
             // new session, so need an update
-        } else if ($this->_session->get('last_online_counter_update_time') + $update_interval < $time) {
+        } else if ($this->session->get('last_online_counter_update_time') + $update_interval < $time) {
             // last update is more than one minute ago, so need a new one
-        } else if (!$this->_session->has( 'last_online_counter_update_member_id' ) && $member_id) {
+        } else if (!$this->session->has( 'last_online_counter_update_member_id' ) && $member_id) {
             // just logged in, so needs update
-        } else if ($this->_session->get('last_online_counter_update_member_id') != $member_id) {
+        } else if ($this->session->get('last_online_counter_update_member_id') != $member_id) {
             // logged in as someone else? or already logged out?
             // need an update!
         } else {
             // no update necessary
             return;
         }
-        
-        $this->_session->set( 'last_online_counter_update_member_id', $member_id );
-        $this->_session->set( 'last_online_counter_update_time', $time );
+
+        $this->session->set( 'last_online_counter_update_member_id', $member_id );
+        $this->session->set( 'last_online_counter_update_time', $time );
         if (!$member_id) {
             // not logged in
             $this->_guestIsOnline($ip);
@@ -78,8 +78,8 @@ class MOD_online
             $this->_memberIsOnline($ip, $member_id);
         }
     }
-    
-    
+
+
     private function _guestIsOnline($ip)
     {
         // REMOTE_ADDR is not set when run via CLI
@@ -89,20 +89,20 @@ class MOD_online
             $appearance = '127.0.0.1';
         }
         $lastactivity = 'whocares';
-        
+
         $this->dao->query(
             "
 REPLACE INTO guestsonline (IpGuest, appearance, lastactivity)
 VALUES ('$ip', '$appearance', '$lastactivity')
             "
-        );   
+        );
     }
-    
-    
+
+
     private function _memberIsOnline($ip, $member_id)
     {
         $lastactivity = 'whocares';
-        
+
         // delete from guestsonline, because user is no longer a guest.
         $this->dao->query(
             "
@@ -110,22 +110,22 @@ DELETE FROM guestsonline
 WHERE IpGuest = $ip
             "
         );
-        
-        $IdMember = $this->_session->get('IdMember');
-        $appearance = $this->dao->escape($this->_session->get('Username'));
-        $Status = $this->_session->get('Status');
-        
+
+        $IdMember = $this->session->get('IdMember');
+        $appearance = $this->dao->escape($this->session->get('Username'));
+        $Status = $this->session->get('Status');
+
         $this->dao->query(
             "
 REPLACE INTO online (`IdMember`, `appearance`, `lastactivity`, `Status`)
 VALUES ('$IdMember', '$appearance', '$lastactivity', '$Status')
             "
         );
-        
+
         $this->_checkIfMoreMembersThanEverAreOnline();
     }
-    
-    
+
+
     private function _checkIfMoreMembersThanEverAreOnline()
     {
         // TODO: does the table params and its idea really make sense???
@@ -145,10 +145,10 @@ FROM params
             if ($this->howManyMembersOnline() > $row->recordonline) {
                 // more members than ever before are online!!
                 MOD_log::get()->write(
-                   'New record established, '.$this->_session->get('WhoIsOnlineCount').' members online!',
+                   'New record established, '.$this->session->get('WhoIsOnlineCount').' members online!',
                    'Record'
                 );
-                $recordonline = $this->_session->get('WhoIsOnlineCount');
+                $recordonline = $this->session->get('WhoIsOnlineCount');
                 $this->dao->query(
                     "
 UPDATE params
@@ -158,8 +158,8 @@ SET recordonline = $recordonline
             }
         }
     }
-    
-    
+
+
     /**
      * find out how many members have been online
      * in the last $interval minutes
@@ -170,9 +170,9 @@ SET recordonline = $recordonline
     public function howManyMembersOnline($interval = false)
     {
         if (!$interval) {
-            $interval = $this->online_interval; 
+            $interval = $this->online_interval;
         }
-        
+
         if (!isset($this->_members_online_count)) {
             // count online members
             if (!$result = $this->dao->query(
@@ -193,10 +193,10 @@ AND (online.Status in ('Active','Pending','NeedMore'))
                 $this->_members_online_count = $record->cnt;
             }
         }
-        return $this->_members_online_count; 
+        return $this->_members_online_count;
     }
-    
-    
+
+
     /**
      * find out how many guests have been online
      * in the last $interval minutes
@@ -207,9 +207,9 @@ AND (online.Status in ('Active','Pending','NeedMore'))
     public function howManyGuestsOnline($interval = false)
     {
         if (!$interval) {
-            $interval = $this->online_interval; 
+            $interval = $this->online_interval;
         }
-                
+
         if (!isset($this->_guests_online_count)) {
             // count online guests
             if (!$result = $this->dao->query(
@@ -229,7 +229,7 @@ WHERE guestsonline.updated > DATE_SUB(now(), INTERVAL $interval minute)
                 $this->_guests_online_count = $record->cnt;
             }
         }
-        return $this->_guests_online_count; 
+        return $this->_guests_online_count;
     }
 }
 

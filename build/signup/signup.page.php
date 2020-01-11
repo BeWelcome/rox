@@ -35,7 +35,7 @@ class SignupPage extends SignupBasePage
         }
         return $stylesheets;
     }
-    
+
     private function _cmpEditLang($a, $b)
     {
         if ($a == $b) {
@@ -86,41 +86,41 @@ class SignupPage extends SignupBasePage
         }
 
         // Overwrite Signup-Geo-Info with GeoVars-Session (used for non-js users), afterwards unset it again.
-        if ($this->_session->has( 'GeoVars' )) {
-            foreach ($this->_session->get('GeoVars') as $key => $value) {
-            $this->_session->set( 'SignupBWVars[' . $key . ']', $value );
+        if ($this->session->has( 'GeoVars' )) {
+            foreach ($this->session->get('GeoVars') as $key => $value) {
+            $this->session->set( 'SignupBWVars[' . $key . ']', $value );
             }
-            $this->_session->remove('GeoVars');
+            $this->session->remove('GeoVars');
         }
 
         // values from previous form submit
-        if (!($mem_redirect = $this->layoutkit->formkit->getMemFromRedirect()) && !$this->_session->has( 'SignupBWVars' )) {
+        if (!($mem_redirect = $this->layoutkit->formkit->getMemFromRedirect()) && !$this->session->has( 'SignupBWVars' )) {
             // this is a fresh form
         } else {
-            if ($this->_session->has( 'SignupBWVars' )) {
+            if ($this->session->has( 'SignupBWVars' )) {
                 // we have vars stored already
-                $vars = $this->_session->get('SignupBWVars');
+                $vars = $this->session->get('SignupBWVars');
             } else {
                 $vars = $mem_redirect->post;
             }
-            
+
             if (isset($vars['birthyear'])) {
                 $selYear = $vars['birthyear'];
             }
         }
-        
+
         $birthYearOptions = $this->buildBirthYearOptions($selYear);
-        
+
         // get current request
         $request = PRequest::get()->request;
         if (!isset($vars['errors']) || !is_array($vars['errors'])) {
             $vars['errors'] = array();
         }
-        
+
         $words = $this->layoutkit->words;
-        
+
         $callback_tag = $this->layoutkit->formkit->setPostCallback('SignupController', 'signupFormCallback');
-        
+
         if ($User = APP_User::login()) {
             // show the page anyway.
             // redirect should happen in the controller.
@@ -133,11 +133,11 @@ Normally you cannot see it when logged in.<br>
 Please only use the page for translations!
 </div>
 <br>
-Related page:  
-<a href="signup/1">Signup page 1</a>, 
-<a href="signup/2">Signup page 2</a>, 
-<a href="signup/3">Signup page 3</a>, 
-<a href="signup/4">Signup page 4</a>, 
+Related page:
+<a href="signup/1">Signup page 1</a>,
+<a href="signup/2">Signup page 2</a>,
+<a href="signup/3">Signup page 3</a>,
+<a href="signup/4">Signup page 4</a>,
 <a href="signup/finish">Signup confirmation</a>,
 <a href="login">Login page</a>
 </div>
@@ -147,15 +147,15 @@ Related page:
 
         require 'templates/registerform'.$this->_step.'.php';
     }
-    
+
 // END OF LAYOUT FUNCTIONS
-    
-    
+
+
     protected function buildBirthYearOptions($selYear = 0) {
 
         $old_member_born = date('Y') - 100;
         $young_member_born = date('Y') - SignupModel::YOUNGEST_MEMBER;
-        
+
         $out = '';
         for ($i=$young_member_born; $i>$old_member_born; $i--) {
             if (!empty($selYear) && $selYear == $i) {
@@ -166,6 +166,6 @@ Related page:
         }
         return $out;
     }
-    
-    
+
+
 }

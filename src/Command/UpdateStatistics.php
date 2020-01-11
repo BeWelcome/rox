@@ -6,6 +6,9 @@ use App\Model\StatisticsModel;
 use DateInterval;
 use DatePeriod;
 use DateTime;
+use Doctrine\DBAL\DBALException;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -14,7 +17,11 @@ use Zend\Validator\Date;
 
 class UpdateStatistics extends Command
 {
-    // the name of the command (the part after "bin/console")
+    /**
+     * @var string
+     *
+     * the name of the command (the part after "bin/console")
+     */
     protected static $defaultName = 'statistics:update';
 
     /** @var StatisticsModel */
@@ -37,6 +44,16 @@ class UpdateStatistics extends Command
         ;
     }
 
+    /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     * @return int
+     * @throws DBALException
+     * @throws ORMException
+     * @throws OptimisticLockException
+     *
+     * @SuppressWarnings(PHPMD.StaticAccess)
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $output->writeln([
@@ -86,14 +103,14 @@ class UpdateStatistics extends Command
             return 1;
         }
 
-        $startDate->setTime(0,0,0,0);
-        $endDate->setTime(0,0,0,0);
+        $startDate->setTime(0, 0, 0, 0);
+        $endDate->setTime(0, 0, 0, 0);
 
         if ($startDate == $endDate) {
             $endDate->modify('+1 day');
         }
 
-        $interval = new DateInterval( "P1D" );
+        $interval = new DateInterval("P1D");
         $dates = new DatePeriod($startDate, $interval, $endDate);
 
         return $this->statisticsModel->updateStatistics($dates, $output);

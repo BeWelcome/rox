@@ -43,7 +43,7 @@ class RoxModelBase extends RoxComponentBase
         $session = SessionSingleton::getSession();
         MOD_params::get($session)->loadParams();
         $this->_crypt = new MOD_crypt($session);
-        $this->_session = $session;
+        $this->session = $session;
         $this->_entity_factory = new RoxEntityFactory;
         parent::__construct();
     }
@@ -65,11 +65,11 @@ class RoxModelBase extends RoxComponentBase
             return $this->logged_in_member;
         }
 
-        if (!$this->_session->has( 'IdMember' ))
+        if (!$this->session->has( 'IdMember' ))
         {
             return false;
         }
-        $this->logged_in_member = $this->createEntity('Member')->findById($this->_session->get('IdMember'));
+        $this->logged_in_member = $this->createEntity('Member')->findById($this->session->get('IdMember'));
 
         return $this->logged_in_member;
     }
@@ -116,7 +116,7 @@ class RoxModelBase extends RoxComponentBase
             return unserialize($_COOKIE['bwRemember']);
         } elseif (!empty($_COOKIE['bwRemember'])
         && $_COOKIE['bwRemember'] == 'hijacked') {
-            $this->_session->set( 'flash_error', 'Your last session seems to have been hijacked and was cancelled.' );
+            $this->session->set( 'flash_error', 'Your last session seems to have been hijacked and was cancelled.' );
             $this->setMemoryCookie(false);
         }
         return false;
@@ -242,11 +242,11 @@ class RoxModelBase extends RoxComponentBase
             $query = null;
         }
         catch (PDOException $e) {
-            ExceptionLogger::logException($this->_session, $e);
+            ExceptionLogger::logException($e);
         }
         return $result;
     }
-    
+
     public function pdoSingleLookup($sql, $values = array()) {
         try {
             $query = $this->get_pdo()->prepare($sql);
@@ -256,7 +256,7 @@ class RoxModelBase extends RoxComponentBase
             $query = null;
         }
         catch (PDOException $e) {
-            ExceptionLogger::logException($this->_session, $e);
+            ExceptionLogger::logException($e);
         }
         return $result;
     }
@@ -272,7 +272,7 @@ class RoxModelBase extends RoxComponentBase
             }
             $query = null;
         } catch (PDOException $e) {
-            ExceptionLogger::logException($this->_session, $e);
+            ExceptionLogger::logException($e);
         }
         return $result;
     }
@@ -288,7 +288,7 @@ class RoxModelBase extends RoxComponentBase
         }
         return PDB::get($dbconfig->dsn, $dbconfig->user, $dbconfig->password);
     }
-    
+
     /**
      * normally the $pdo should be injected.
      * If it's not, this function creates a new one out of the blue..
@@ -310,7 +310,7 @@ class RoxModelBase extends RoxComponentBase
                 );
             }
             catch(PDOException $e) {
-                ExceptionLogger::logException($this->_session, $e);
+                ExceptionLogger::logException($e);
                 $this->pdo = null;
             }
         }

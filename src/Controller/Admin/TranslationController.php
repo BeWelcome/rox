@@ -178,8 +178,10 @@ class TranslationController extends AbstractController
         $translator = $this->getUser();
 
         // Volunteer needs rights for this language and for English
-        if (!$translator->hasRightsForLocale($language->getShortcode())
-            && !$translator->hasRightsForLocale('en')) {
+        if (
+            !$translator->hasRightsForLocale($language->getShortcode())
+            && !$translator->hasRightsForLocale('en')
+        ) {
             return $this->redirectToRoute('translations');
         }
 
@@ -646,12 +648,12 @@ class TranslationController extends AbstractController
                 $params['sender'] = $bwadmin;
                 $params['receiver'] = $this->getUser();
                 $params['group'] = $group;
-                $acceptUrl = '/group/'.$group->getId().'/acceptinvite/'.$bwadmin->getId();
-                $declineUrl = '/group/'.$group->getId().'/declineinvite/'.$bwadmin->getId();
+                $acceptUrl = '/group/' . $group->getId() . '/acceptinvite/' . $bwadmin->getId();
+                $declineUrl = '/group/' . $group->getId() . '/declineinvite/' . $bwadmin->getId();
 
-                $params['accept_start'] = '<a href="'.$acceptUrl.'">';
+                $params['accept_start'] = '<a href="' . $acceptUrl . '">';
                 $params['accept_end'] = '</a>';
-                $params['decline_start'] = '<a href="'.$declineUrl.'">';
+                $params['decline_start'] = '<a href="' . $declineUrl . '">';
                 $params['decline_end'] = '</a>';
                 $params['subject'] = 'group.invitation';
 
@@ -725,8 +727,8 @@ class TranslationController extends AbstractController
         }
         if ($action && 'create' !== $action && 'mockup' !== $action) {
             $submenuItems[$action] = [
-                'key' => 'label.translations.'.$action,
-                'url' => $this->generateUrl('translation_'.$action, [
+                'key' => 'label.translations.' . $action,
+                'url' => $this->generateUrl('translation_' . $action, [
                     'locale' => $locale,
                     'code' => $code,
                 ]),

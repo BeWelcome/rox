@@ -70,7 +70,7 @@ class CommentController extends AbstractController
                     ->setSubject('Comment report')
                     ->setFrom(
                         [
-                            $user->getEmail() => 'BeWelcome - '.$user->getUsername(),
+                            $user->getEmail() => 'BeWelcome - ' . $user->getUsername(),
                         ]
                     )
                     ->setTo([

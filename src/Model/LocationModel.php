@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: saeed
@@ -24,10 +25,10 @@ class LocationModel
             ->em
             ->getRepository(Location::class)
             ->createQueryBuilder('l')
-            ->where('l.latitude < '.$coordinates[1]->getLatitudeInDegrees())
-            ->where('l.latitude > '.$coordinates[0]->getLatitudeInDegrees())
-            ->where('l.longitude < '.$coordinates[1]->getLongitudeInDegrees())
-            ->where('l.longitude < '.$coordinates[0]->getLongitudeInDegrees())
+            ->where('l.latitude < ' . $coordinates[1]->getLatitudeInDegrees())
+            ->where('l.latitude > ' . $coordinates[0]->getLatitudeInDegrees())
+            ->where('l.longitude < ' . $coordinates[1]->getLongitudeInDegrees())
+            ->where('l.longitude < ' . $coordinates[0]->getLongitudeInDegrees())
             ->getQuery()
             ->getResult();
     }

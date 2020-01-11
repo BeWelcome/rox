@@ -7,6 +7,7 @@
 
 namespace App\Entity;
 
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -28,10 +29,9 @@ use Doctrine\ORM\Mapping as ORM;
 class MemberTranslation
 {
     /**
-     * @var Member
+     * @var int
      *
-     * @ORM\OneToOne(targetEntity="Member", fetch="EXTRA_LAZY")
-     * @ORM\JoinColumn(name="IdOwner", referencedColumnName="id")
+     * @ORM\Column(name="IdOwner", type="integer", nullable=false)
      */
     private $owner;
 
@@ -50,14 +50,14 @@ class MemberTranslation
     private $idtranslator;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
-     * @ORM\Column(name="updated", type="datetime", nullable=false)
+     * @ORM\Column(name="updated", type="datetime", nullable=true)
      */
     private $updated;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(name="created", type="datetime", nullable=false)
      */
@@ -113,7 +113,7 @@ class MemberTranslation
     /**
      * Set owner.
      *
-     * @param Member $owner
+     * @param int $owner
      *
      * @return MemberTranslation
      */
@@ -127,7 +127,7 @@ class MemberTranslation
     /**
      * Get owner.
      *
-     * @return Member
+     * @return int
      */
     public function getOwner()
     {
@@ -185,7 +185,7 @@ class MemberTranslation
     /**
      * Set updated.
      *
-     * @param \DateTime $updated
+     * @param DateTime $updated
      *
      * @return MemberTranslation
      */
@@ -199,7 +199,7 @@ class MemberTranslation
     /**
      * Get updated.
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getUpdated()
     {
@@ -209,7 +209,7 @@ class MemberTranslation
     /**
      * Set created.
      *
-     * @param \DateTime $created
+     * @param DateTime $created
      *
      * @return MemberTranslation
      */
@@ -223,7 +223,7 @@ class MemberTranslation
     /**
      * Get created.
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getCreated()
     {
@@ -367,7 +367,8 @@ class MemberTranslation
      */
     public function onPrePersist()
     {
-        $this->created = new \DateTime('now');
+        $this->created = new DateTime('now');
+        $this->updated = $this->created;
         $this->idtrad = random_int(0, 24500000);
     }
 
@@ -388,6 +389,6 @@ class MemberTranslation
      */
     public function onPreUpdate()
     {
-        $this->updated = new \DateTime('now');
+        $this->updated = new DateTime('now');
     }
 }

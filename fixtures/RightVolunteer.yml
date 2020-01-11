@@ -1,0 +1,17 @@
+App\Entity\RightVolunteer:
+    Words_bwadmin:
+        member: '@bwadmin'
+        right: '@Words'
+        level: '10'
+        scope: "All"
+        Comment: Granted by someone
+        updated: '<dateTime()>'
+        created: '<dateTime()>'
+    Group_bwadmin:
+        member: '@bwadmin'
+        right: '@Group'
+        level: '10'
+        scope: "All"
+        Comment: Granted by someone
+        updated: '<dateTime()>'
+        created: '<dateTime()>'

@@ -7,6 +7,7 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -50,6 +51,17 @@ class Gallery
     private $description;
 
     /**
+     * @var ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="GalleryImage")
+     * @ORM\JoinTable(name="gallery_items_to_gallery",
+     *      joinColumns={@ORM\JoinColumn(name="gallery_id_foreign", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="item_id_foreign", referencedColumnName="id", unique=true)}
+     *      )
+     */
+    private $images;
+
+    /**
      * @var int
      *
      * @ORM\Column(name="id", type="integer")
@@ -57,6 +69,11 @@ class Gallery
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
+
+    public function __construct()
+    {
+        $this->images = new ArrayCollection();
+    }
 
     /**
      * Set owner.

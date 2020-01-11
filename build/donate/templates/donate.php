@@ -3,12 +3,13 @@ $words = new MOD_words();
 ?>
 
 <?php if ($sub == 'done') {
+echo '<div class="col-12">';
 if ($error) {?>
-
 		<p class="alert alert-danger"><?php echo $words->getFormatted('Donate_NotDoneText')?>: <?=$error?></p>
 <?php } else { ?>
 		<p class="note"><?php echo $words->getFormatted('Donate_DoneText','<a href="feedback">','</a>')?></p>
 <?php }
+echo '</div>';
 } elseif ($sub == 'cancel') { ?>
 		<p class="warning"><?php echo $words->getFormatted('Donate_CancelText'); ?></p>
 <?php } ?>
@@ -67,8 +68,8 @@ if ($error) {?>
 						<input type="hidden" name="page_style" value="Primary" />
 						<input type="hidden" name="no_shipping" value="1" />
 						<input type="hidden" name="lc" value="<?php
-						if ($this->_session->has( "lang" ) ) {
-							switch ($this->_session->get("lang")){
+						if ($this->session->has( "lang" ) ) {
+							switch ($this->session->get("lang")){
 								case 'fr' :
 									echo "FR" ;
 									break ;

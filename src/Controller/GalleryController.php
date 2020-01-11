@@ -123,7 +123,7 @@ class GalleryController extends AbstractController
         // We got an image and need to create a thumbnail for it and put it into the correct place
         list($width, $height) = getimagesize($image);
         $uploadDirectory = $this->getParameter('gallery_directory') . '/member' . $member->getId();
-        $fileName = $this->generateUniqueFileName().'.'.$image->guessExtension();
+        $fileName = $this->generateUniqueFileName() . '.' . $image->guessExtension();
 
         // moves the file to the directory where gallery images are stored
         /** @var UploadedFile */
@@ -140,7 +140,7 @@ class GalleryController extends AbstractController
                 $constraint->aspectRatio();
             });
         }
-        $img->save($uploadDirectory.'/thumb'.$fileName);
+        $img->save($uploadDirectory . '/thumb' . $fileName);
 
         // Create doctrine entity for image and save to database
         $galleryImage = new GalleryImage();
@@ -244,7 +244,7 @@ class GalleryController extends AbstractController
 
         list($width, $height) = getimagesize($image);
         $uploadDirectory = $this->getParameter('upload_directory');
-        $fileName = $this->generateUniqueFileName().'.'.$image->guessExtension();
+        $fileName = $this->generateUniqueFileName() . '.' . $image->guessExtension();
 
         // moves the file to the directory where group images are stored
         /** @var UploadedFile */
@@ -291,7 +291,7 @@ class GalleryController extends AbstractController
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
-        $filepath = $this->getParameter('upload_directory').'/'.$image->getFilename();
+        $filepath = $this->getParameter('upload_directory') . '/' . $image->getFilename();
 
         return new BinaryFileResponse($filepath);
     }

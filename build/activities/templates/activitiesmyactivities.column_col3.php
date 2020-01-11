@@ -1,21 +1,21 @@
 <div class="row">
     <div class="col-12">
 <?php
-if ($this->_session->has( 'ActivityStatus' )) {
+if ($this->session->has( 'ActivityStatus' )) {
     echo '<div class="success">';
-    $status = $this->_session->get('ActivityStatus');
+    $status = $this->session->get('ActivityStatus');
     switch($status[0]) {
         case 'ActivityCreateSuccess':
             echo $words->get('ActivitiesSuccessCreate', $status[1]);
-            break;  
+            break;
         case 'ActivityUpdateSuccess':
             echo $words->get('ActivitiesSuccessUpdate', $status[1]);
-            break;  
+            break;
     }
     echo '</div>';
-    $this->_session->remove('ActivityStatus');
+    $this->session->remove('ActivityStatus');
 }
- 
+
 if (count($this->activities) == 0) {
     echo '<p>' . $words->get('ActivitiesNoMyActivities') . '</p>';
 } else {

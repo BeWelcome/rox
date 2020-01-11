@@ -27,7 +27,7 @@ Boston, MA  02111-1307, USA.
  * object types:
  * - class MODS_bw_memcache handles everything to either query the database or find the entry in the memcache array
  * this is aimed to reduce database load for words and trad
- * - 
+ * -
  * Author : jeanyves
  * April 2009
  */
@@ -58,8 +58,8 @@ class MOD_bw_memcache {
 	private $_idtradcolumn;  // the name of the column IdTrad (or code for words ...)
     private $_dao;  // database access object
 	private $memcache ;
-    
-    
+
+
     /**
      * @tablename is the name of the table to consider
      * @Column is the name of the column which is supposed to have the value in the table
@@ -69,12 +69,12 @@ class MOD_bw_memcache {
 		$this->_tablename=$tablename ;
 		$this->_sentencecolumn=$Column ;
 		$this->_idtradcolumn=$Code ;
-		
+
         if ($this->IsToggle()) {
-		
+
 			if (!extension_loaded('memcache')) { // Check if the module is active ...
-			
-				$this->_session->get("Param")->memcache='False' ; // Set to false the memcache toggle to avoid to fail
+
+				$this->session->get("Param")->memcache='False' ; // Set to false the memcache toggle to avoid to fail
 				die(" extension_loaded('memcache')=".extension_loaded('memcache')." MOD_bw_memcache : memcache extension is not available on this server !") ;
 			}
 
@@ -82,26 +82,26 @@ class MOD_bw_memcache {
 			$this->memcache->connect('localhost',11211) or die ("MOD_bw_memcache: Could not connect to memcache") ;
 		}
 	}
-	
+
     /**
      * IsToggle returns true if memcache is active, it returns false elsewher
      */
 	private function IsToggle() {
-        if (empty($this->_session->get("Param")->memcache)) {
+        if (empty($this->session->get("Param")->memcache)) {
 			return(false) ;
 		}
-        if ($this->_session->get("Param")->memcache!='True') {
+        if ($this->session->get("Param")->memcache!='True') {
 			return(false) ;
 		}
 		return(true) ;
 	} // end of IsToggle
-	
-	
+
+
     /**
      * This function is the core one
 	 * it tries to find in memchache the given value for $Code in $IdLanguage
 	 * if it fails, it then tries to query it from the database
-	 *		if it success, 
+	 *		if it success,
 	 *			if the value is marked as expired, it update it from the database, mark it as uptodate and returns the value to caller
 	 *			if the value is not marked as expired it returns to caller (this is expected to be the most common case !)
 	 *			it stored it in memcache and returns the value to caller
@@ -128,7 +128,7 @@ class MOD_bw_memcache {
 			return (false) ;
 		}
 	} // end of GetValue
-	
+
     /**
      * This function adds a value in memcache
 	 * @$Code : the code for the value
@@ -162,7 +162,7 @@ class MOD_bw_memcache {
 		$this->memcache->replace($Code."_".$IdLanguage,$value,false,80000) ;
 	} // end of AddValue
 
-	
+
     /**
      * This function looks in the database for the value correspondig to a Code and a Language
 	 * it returns false if it fails to find something

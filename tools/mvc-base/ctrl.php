@@ -1,17 +1,23 @@
 <?php
 
+use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\Routing\Router;
+
 /**
  * Class RoxControllerBase
- *
- * @property \Symfony\Component\Routing\Router $router
  */
 abstract class RoxControllerBase extends RoxComponentBase
 {
-    /** @var  \Symfony\Component\Form\FormFactoryInterface */
+    /** @var  FormFactoryInterface */
     protected $formFactory;
 
     /**
-     * @param \Symfony\Component\Routing\Router $router
+     * @var Router
+     */
+    private $router;
+
+    /**
+     * @param Router $router
      *
      * @return RoxControllerBase
      */
@@ -22,14 +28,14 @@ abstract class RoxControllerBase extends RoxComponentBase
     }
 
     /**
-     * @return \Symfony\Component\Routing\Router
+     * @return Router
      */
     protected function getRouter() {
         return $this->router;
     }
 
     /**
-     * @param \Symfony\Component\Form\FormFactoryInterface $formFactory
+     * @param FormFactoryInterface $formFactory
      * @return RoxControllerBase
      */
     public function setFormFactory($formFactory)
@@ -45,15 +51,15 @@ abstract class RoxControllerBase extends RoxComponentBase
             $get_args
         );
     }
-    
+
     protected function redirectHome($get_args = '') {
         $this->redirect('index', $get_args);
     }
-    
+
     protected function redirectRefresh() {
         $this->redirect(implode('/',$this->get('request')));
     }
-    
+
     protected function redirectAbsolute($url, $get_args = '') {
         if (!empty($get_args)) {
             if (!is_array($get_args)) {
@@ -74,7 +80,7 @@ abstract class RoxControllerBase extends RoxComponentBase
         $words = new MOD_words;
         $this->setTitle($words->getBuffered($title));
     }
-    
+
     /**
      * trims all values posted back to controller
      *
@@ -116,7 +122,7 @@ abstract class RoxControllerBase extends RoxComponentBase
      */
     private function setFlash($message, $type) {
         $flashName = 'flash_' . $type;
-        $this->_session->set( $flashName, $message );
+        $this->session->set( $flashName, $message );
     }
 
     /**

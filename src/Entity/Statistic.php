@@ -11,6 +11,9 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="stats", indexes={@ORM\Index(name="created", columns={"created"})})
  * @ORM\Entity
+ *
+ * @SuppressWarnings(PHPMD)
+ * Auto generated class do not check mess
  */
 class Statistic
 {
@@ -22,56 +25,56 @@ class Statistic
     private $created;
 
     /**
-     * @var int
+     * @var integer
      *
      * @ORM\Column(name="NbActiveMembers", type="integer", nullable=false)
      */
     private $activeMembers;
 
     /**
-     * @var int
+     * @var integer
      *
      * @ORM\Column(name="NbMessageSent", type="integer", nullable=false)
      */
     private $messagesSent;
 
     /**
-     * @var int
+     * @var integer
      *
      * @ORM\Column(name="NbMessageRead", type="integer", nullable=false)
      */
     private $messagesRead;
 
     /**
-     * @var int
+     * @var integer
      *
      * @ORM\Column(name="NbRequestsSent", type="integer", nullable=false)
      */
     private $requestsSent;
 
     /**
-     * @var int
+     * @var integer
      *
      * @ORM\Column(name="NbRequestsAccepted", type="integer", nullable=false)
      */
     private $requestsAccepted;
 
     /**
-     * @var int
+     * @var integer
      *
      * @ORM\Column(name="NbMemberWithOneTrust", type="integer", nullable=false)
      */
     private $membersWithPositiveComment;
 
     /**
-     * @var int
+     * @var integer
      *
      * @ORM\Column(name="NbMemberWhoLoggedToday", type="integer", nullable=false)
      */
     private $membersWhoLoggedInToday;
 
     /**
-     * @var int
+     * @var integer
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id

@@ -31,7 +31,7 @@ class AvatarController extends AbstractController
         switch ($size) {
             case '30':
             case '75':
-                $suffix = '_'.$size.'_'.$size;
+                $suffix = '_' . $size . '_' . $size;
                 break;
             case '50':
                 $suffix = '_xs';
@@ -40,7 +40,7 @@ class AvatarController extends AbstractController
             case '200':
             case '500':
             case 'original':
-                $suffix = '_'.$size;
+                $suffix = '_' . $size;
                 break;
             default:
                 $suffix = '';
@@ -48,24 +48,24 @@ class AvatarController extends AbstractController
 
         $member = $this->getDoctrine()->getRepository(Member::class)->findOneBy(['username' => $username]);
         if (!$member) {
-            $filename = 'images/empty_avatar'.$suffix.'.png';
+            $filename = 'images/empty_avatar' . $suffix . '.png';
 
             return new BinaryFileResponse($filename);
         }
 
         $isBrowseable = $member->isBrowseable();
         if (!$isBrowseable) {
-            $filename = 'images/empty_avatar'.$suffix.'.png';
+            $filename = 'images/empty_avatar' . $suffix . '.png';
 
             return new BinaryFileResponse($filename);
         }
 
-        $filename = '../data/user/avatars/'.$member->getId().$suffix;
+        $filename = '../data/user/avatars/' . $member->getId() . $suffix;
         if (file_exists($filename)) {
             return new BinaryFileResponse($filename);
         }
 
-        $filename = 'images/empty_avatar'.$suffix.'.png';
+        $filename = 'images/empty_avatar' . $suffix . '.png';
 
         return new BinaryFileResponse($filename);
     }

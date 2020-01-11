@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * Request handling class
- * 
+ *
  * @author The myTravelbook Team <http://www.sourceforge.net/projects/mytravelbook>
  * @copyright Copyright (c) 2005-2006, myTravelbook Team
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License (GPL)
@@ -31,7 +31,7 @@ class PRequest {
 
     private $_cliArgs;
     private $_request;
-    
+
     private function __construct() {
         $this->setSession();
         if (isset($_SERVER['argc']) && isset($_SERVER['argv']) && is_array($_SERVER['argv']) && $_SERVER['argc'] != 0) {
@@ -43,14 +43,14 @@ class PRequest {
             $request = self::parseRequest();
             PVars::register('request', $request);
             $this->_request = $request;
-            
-            if ($this->_session->has( 'thisRequest' )) {
-                $this->_session->set( 'lastRequest', $this->_session->get('thisRequest') );
+
+            if ($this->session->has( 'thisRequest' )) {
+                $this->session->set( 'lastRequest', $this->session->get('thisRequest') );
             }
-            $this->_session->set( 'thisRequest', $request );
+            $this->session->set( 'thisRequest', $request );
         }
     }
-    
+
     public static function get() {
         if (!isset(self::$_instance)) {
             $c = __CLASS__;
@@ -58,35 +58,35 @@ class PRequest {
         }
         return self::$_instance;
     }
-    
+
     public function __get($name) {
         $name = '_'.$name;
         if (!isset($this->$name))
             return false;
         return $this->$name;
     }
-    
+
     public function __set($name, $value) {
         $name = '_'.$name;
         if (!isset($this->$name))
             return false;
         $this->$name = $value;
     }
-    
+
     public static function home() {
         $base = PVars::getObj('env')->baseuri;
         header('Location: '.$base);
         PPHP::PExit();
     }
-    
+
     public static function ignoreCurrentRequest() {
-        self::$_instance->_session->set( 'thisRequest', (self::$_instance->_session->has( 'lastRequest' ) ? self::$_instance->_session->get('thisRequest') : '' ));
+        self::$_instance->session->set( 'thisRequest', (self::$_instance->session->has( 'lastRequest' ) ? self::$_instance->session->get('thisRequest') : '' ));
     }
-    
+
     public function isCli() {
         return (isset($this->_cliArgs) && is_array($this->_cliArgs));
     }
-    
+
     /**
      * Trying to parse all possible request types
      */
@@ -116,7 +116,7 @@ class PRequest {
         $newReq = array();
         foreach ($req as $r) {
         	$r = rawurldecode($r);
-        	
+
         	// Ignore words with too low charactercodes (control characters etc)
         	$len = strlen($r);
         	for ($i = 0; $i < $len; $i++) {
@@ -125,13 +125,13 @@ class PRequest {
         			continue 2;
         		}
         	}
-        	
+
             if (trim($r) != '')
             	$newReq[] = $r;
-            
+
         }
         return $newReq;
     }
-    
+
 }
 ?>

@@ -16,8 +16,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program; if not, see <http://www.gnu.org/licenses/> or 
-write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+along with this program; if not, see <http://www.gnu.org/licenses/> or
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
@@ -31,7 +31,7 @@ use App\Utilities\SessionTrait;
  */
 class MOD_log {
     use SessionTrait;
-    
+
     /**
      * if LOG2FILE is true, stuff gets additionally loged
      * to file
@@ -43,10 +43,10 @@ class MOD_log {
      * loging
      */
 	const LOG_FILE = '/tmp/bw.log';
-    
+
     /**
      * Singleton instance
-     * 
+     *
      * @var MOD_log
      * @access private
      */
@@ -70,10 +70,10 @@ class MOD_log {
         $dao = PDB::get($db->dsn, $db->user, $db->password);
         $this->dao =& $dao;
     }
-    
+
     /**
      * singleton getter
-     * 
+     *
      * @param void
      * @return MOD_log
      */
@@ -98,23 +98,23 @@ class MOD_log {
      * @param string $type the event, which causes the log
      *                 method to be called
      *
-     * BeWare this function does a nasty parameter change with the $this->_session->get("IdMember")
+     * BeWare this function does a nasty parameter change with the $this->session->get("IdMember")
      * but it restores it as it was before in any cases
      *
      * @throws PException
      */
     public function writeIdMember($IdMember,$message = "", $type  = "Log")
     {
-			if ($this->_session->has( "IdMember" )) {
-				$IdMemberBefore=$this->_session->get("IdMember") ;
-				$this->_session->set("IdMember", $IdMember);
+			if ($this->session->has( "IdMember" )) {
+				$IdMemberBefore=$this->session->get("IdMember") ;
+				$this->session->set("IdMember", $IdMember);
 				$this->write($message, $type) ;
-				$this->_session->set("IdMember", $IdMemberBefore) ;
+				$this->session->set("IdMember", $IdMemberBefore) ;
 			}
 			else {
-				$this->_session->set("IdMember", $IdMember);
+				$this->session->set("IdMember", $IdMember);
 				$this->write($message, $type) ;
-				$this->_session->remove("IdMember") ;
+				$this->session->remove("IdMember") ;
 			}
 		} // end writeIdMember
 
@@ -138,12 +138,12 @@ class MOD_log {
 		if ($type=="Bug") {
 			$message=$message." <font color=\"red\">".__FILE__ ." Line <b>".__LINE__."</b></font>" ;
 		}
-        
-        $idMember = 0;
-        if ($this->_session->has( 'IdMember' )) {
-            $idMember = $this->_session->get('IdMember');
+
+        $idMember = 1; // Use Admin account in case no user is logged in
+        if ($this->session->has( 'IdMember' )) {
+            $idMember = $this->session->get('IdMember');
         }
-        
+
         if (MOD_log::LOG2FILE) {
             $text = date("c") . "|" .
                      $idMember . "|" .
@@ -152,7 +152,7 @@ class MOD_log {
             error_log($text, 3, MOD_log::LOG_FILE);
         }
 		 if (!empty($_SYSHCVOL['ARCH_DB'])) {
-		 	$DB_ARCH='`'.$_SYSHCVOL['ARCH_DB'].'`.' ;		 	
+		 	$DB_ARCH='`'.$_SYSHCVOL['ARCH_DB'].'`.' ;
 		 }
 		 else {
 		 	$DB_ARCH='' ;
@@ -163,14 +163,14 @@ class MOD_log {
 	`Str`,
 	`Type`,
 	`created`
-) 
+)
 VALUES(
 	' . $idMember . ',
 	\'' . $message . '\',
 	\'' . $type . '\',
 	now()
 )';
- 
+
        $res = $this->dao->query($query);
 		if (!$res) 	{ // If the query has failed, log something in the text log file, and after rais the exception
             $text = "Execption raised : in MOD_Log->Write() ".date("c") . "|" .
@@ -180,7 +180,7 @@ VALUES(
             error_log($text, 3, MOD_log::LOG_FILE);
 			 throw new PException('MOD_Log->Write() failed !');
 		}
-   
+
     }
-    
+
 }

@@ -13,6 +13,9 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="polls", indexes={@ORM\Index(name="IdCreator", columns={"IdCreator"})})
  * @ORM\HasLifecycleCallbacks
  * @ORM\Entity
+ *
+ * @SuppressWarnings(PHPMD)
+ * Auto generated class do not check mess
  */
 class Poll
 {
@@ -140,14 +143,14 @@ class Poll
     private $idlocationslist = '0';
 
     /**
-     * @var int
+     * @var integer
      *
      * @ORM\Column(name="IdGroupsList", type="integer", nullable=false)
      */
     private $idgroupslist = '0';
 
     /**
-     * @var int
+     * @var integer
      *
      * @ORM\Column(name="IdCountriesList", type="integer", nullable=false)
      */
@@ -214,7 +217,7 @@ class Poll
     private $creator;
 
     /**
-     * @var int
+     * @var integer
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id

@@ -52,7 +52,7 @@ class FaqCategoryFormType extends AbstractType
                         throw new TransformationFailedException('error.admin.faq.transform.invalid');
                     }
 
-                    return 'faq_cat_'.$strippedWordCode;
+                    return 'faq_cat_' . $strippedWordCode;
                 }
             ));
         $formBuilder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {

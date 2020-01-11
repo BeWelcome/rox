@@ -43,7 +43,7 @@ class AboutController extends RoxControllerBase
             case 'impressum':
             case 'affiliations':
             case 'privacy':
-                $page = new AboutGenericPage($keyword, $this->_session->get('locale', 'en'));
+                $page = new AboutGenericPage($keyword, $this->getSession()->get('locale', 'en'));
                 $page->setModel(new AboutModel());
                 return $page;
             case 'stats':
@@ -155,7 +155,7 @@ class AboutController extends RoxControllerBase
             $lang = $this->route_vars['language'];
         }
         if ($lang === null) {
-            $lang = $this->_session->get('lang');
+            $lang = $this->getSession()->get('lang');
         }
         $page = new AboutGenericPage('terms', $lang);
         $page->lang = $lang;

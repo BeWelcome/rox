@@ -11,9 +11,9 @@ $login_url = 'login/' . htmlspecialchars(implode('/', $request), ENT_QUOTES);
 $purifierModule = new MOD_htmlpure();
 $purifier = $purifierModule->getActivitiesHtmlPurifier();
 $status = array();
-if ($this->_session->has('ActivityStatus')) {
-    $status = $this->_session->get('ActivityStatus');
-    $this->_session->remove('ActivityStatus');
+if ($this->session->has('ActivityStatus')) {
+    $status = $this->session->get('ActivityStatus');
+    $this->session->remove('ActivityStatus');
 }
 if (!empty($status)) {
     echo '<div class="col-12"><div class="alert alert-success" role="alert">' . $words->get($status[0], $status[1]) . '</div></div>';

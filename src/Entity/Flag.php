@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Utilities\LifecycleCallbacksTrait;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -9,15 +10,11 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="flags")
  * @ORM\Entity
+ * @ORM\HasLifecycleCallbacks
  */
-class Flags
+class Flag
 {
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="created", type="datetime", nullable=false)
-     */
-    private $created = 'CURRENT_TIMESTAMP';
+    use LifecycleCallbacksTrait;
 
     /**
      * @var string
@@ -56,7 +53,7 @@ class Flags
      *
      * @param \DateTime $created
      *
-     * @return Flags
+     * @return Flag
      */
     public function setCreated($created)
     {
@@ -66,21 +63,11 @@ class Flags
     }
 
     /**
-     * Get created
-     *
-     * @return \DateTime
-     */
-    public function getCreated()
-    {
-        return $this->created;
-    }
-
-    /**
      * Set name
      *
      * @param string $name
      *
-     * @return Flags
+     * @return Flag
      */
     public function setName($name)
     {
@@ -104,7 +91,7 @@ class Flags
      *
      * @param string $description
      *
-     * @return Flags
+     * @return Flag
      */
     public function setDescription($description)
     {
@@ -128,7 +115,7 @@ class Flags
      *
      * @param integer $relevance
      *
-     * @return Flags
+     * @return Flag
      */
     public function setRelevance($relevance)
     {

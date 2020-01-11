@@ -13,7 +13,7 @@ abstract class MOD_user {
     protected $sessionName;
     protected $tableName;
     protected $dao;
-    
+
     protected function __construct($sessionName = false, $tableName = false) {
         $db = PVars::getObj('config_rdbms');
         if (!$db) {
@@ -21,17 +21,17 @@ abstract class MOD_user {
         }
         $dao = PDB::get($db->dsn, $db->user, $db->password);
         $this->dao =& $dao;
-        
+
         if ($sessionName)
             $this->sessionName = $sessionName;
         if ($tableName)
             $this->tableName = $tableName;
     }
-    
+
     public function __destruct() {
         unset($this->_dao);
     }
-    
+
     public function getAuth() {
         if (!$this->loggedIn)
             return false;
@@ -47,7 +47,7 @@ abstract class MOD_user {
             return false;
         return $Auth->hasRight($right);
     }
-    
+
     protected function setAuth($authId) {
         $this->authId = $authId;
     }
@@ -82,12 +82,12 @@ WHERE
                     if (crypt($pw, $matches[2]) != $matches[2])
                         return false;
                     break;
-                    
+
                 case 'md5':
                     if (md5($pw) != $matches[2])
                         return false;
                     break;
-                
+
                 case 'sha1':
                     if (sha1($pw) != $matches[2])
                         return false;
@@ -98,9 +98,9 @@ WHERE
         }
         $this->setAuth($d->auth_id);
         session_regenerate_id();
-        $this->_session->set( $this->sessionName, (int)$d->id );
+        $this->session->set( $this->sessionName, (int)$d->id );
         $this->loggedIn = true;
-        
+
         $s = $this->dao->prepare(
             "
 UPDATE
@@ -113,7 +113,7 @@ WHERE
         );
         $s->bindParam(0, $d->id);
         $s->execute();
-        
+
         return true;
     }
 
@@ -137,25 +137,25 @@ WHERE
             "
         );
         $d = $q->fetch(PDB::FETCH_OBJ);
-       
+
         if (!$d)
             return false;
-          
+
         $this->setAuth($d->auth_id);
         session_regenerate_id();
-        $this->_session->set( $this->sessionName, (int)$d->id );
+        $this->session->set( $this->sessionName, (int)$d->id );
         $this->loggedIn = true;
 
         $s = $this->dao->prepare('UPDATE `'.$this->tableName.'` SET `lastlogin` = NOW() WHERE `id` = ?');
         $s->bindParam(0, $d->id);
         $s->execute();
-        
+
         return true;
     }
-    
 
 
-    
+
+
     protected function getAuthId($userId) {
         if (!isset($this->tableName))
             return false;
@@ -181,10 +181,10 @@ WHERE
     public function logout() {
         if (!isset($this->sessionName))
             return false;
-        if (!$this->_session->has( $this->sessionName ))
+        if (!$this->session->has( $this->sessionName ))
             return false;
         $this->loggedIn = false;
-        $this->_session->remove($this->sessionName);
+        $this->session->remove($this->sessionName);
         session_regenerate_id();
         return true;
     }
@@ -208,18 +208,18 @@ WHERE
             $r = mt_rand();
             $random .= sha1(uniqid($r,TRUE));
         }
-        return substr ($random, 0, $len);   
+        return substr ($random, 0, $len);
     }
 
     public static function getTranslations($idMember) {
-        
+
         $db = PVars::getObj('config_rdbms');
         if (!$db) {
             throw new PException('DB config error!');
         }
         $dao = PDB::get($db->dsn, $db->user, $db->password);
         $localDao =& $dao;
-        
+
         $result = $localDao->query(
             "
 SELECT DISTINCT
@@ -240,18 +240,18 @@ WHERE
         }
         return $a;
     }
-    
+
     public static function getImage($paramIdMember=0)
     {
         if ($paramIdMember==0) {
-            $IdMember=$this->_session->get('IdMember');
+            $IdMember=$this->session->get('IdMember');
         } else {
             $IdMember=$paramIdMember ;
         }
-    
+
         if ($IdMember==0) {
             return MOD_User::getDummyImage();
-        } 
+        }
 
         $db = PVars::getObj('config_rdbms');
         if (!$db) {
@@ -259,7 +259,7 @@ WHERE
         }
         $dao = PDB::get($db->dsn, $db->user, $db->password);
         $localDao =& $dao;
-        
+
         $result = $localDao->query(
             "
 SELECT
@@ -272,7 +272,7 @@ WHERE
             "
         );
         $record = $result->fetch(PDB::FETCH_OBJ);
-        
+
         if (isset($record->FilePath)) {
             return $path = PVars::getObj('env')->baseuri . $record->FilePath;
         } else {
@@ -291,12 +291,12 @@ WHERE
             return MOD_User::getDummyImage($record->Gender, $record->HideGender);
         }
     }
-    
+
     /**
      * Returns the path to an appropriate dummy image in case
      * no image is found.
-     * 
-     * 
+     *
+     *
      *
      * @param unknown_type $Gender
      * @param unknown_type $HideGender

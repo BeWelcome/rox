@@ -130,7 +130,7 @@ class CommunityNewsController extends AbstractController
         $em->persist($communityNews);
         $em->flush();
 
-        $this->addFlash('notice', 'Community News '.$communityNews->getTitle().' is now hidden for all members');
+        $this->addFlash('notice', 'Community News ' . $communityNews->getTitle() . ' is now hidden for all members');
 
         return new RedirectResponse($this->generateUrl('admin_communitynews_overview'));
     }
@@ -155,7 +155,7 @@ class CommunityNewsController extends AbstractController
         $em->persist($communityNews);
         $em->flush();
 
-        $this->addFlash('notice', 'Community News '.$communityNews->getTitle().' is now visible for all members');
+        $this->addFlash('notice', 'Community News ' . $communityNews->getTitle() . ' is now visible for all members');
 
         return new RedirectResponse($this->generateUrl('admin_communitynews_overview'));
     }

@@ -71,7 +71,6 @@ class MessageController extends BaseMessageController
      * @Route("/message/{id}/delete/{redirect}", name="message_delete",
      *     requirements={"id": "\d+"})
      *
-     * @param Request $request
      * @param Message $message
      * @ParamConverter("redirect", class="App\Entity\Message", options={"id": "redirect"})
      *
@@ -80,7 +79,7 @@ class MessageController extends BaseMessageController
      *
      * @return Response
      */
-    public function deleteMessageOrRequest(Request $request, Message $message, Message $redirect)
+    public function deleteMessageOrRequest(Message $message, Message $redirect)
     {
         if (!$this->isMessageOfMember($message)) {
             throw $this->createAccessDeniedException('Not your message/hosting request');
@@ -94,9 +93,7 @@ class MessageController extends BaseMessageController
 
         if ($message->getId() === $redirect->getId()) {
             return $this->redirectToRoute('messages', ['folder' => 'deleted']);
-        }
-        else
-        {
+        } else {
             return $this->redirectToRoute('message_show', ['id' => $redirect->getId()]);
         }
     }
@@ -170,11 +167,13 @@ class MessageController extends BaseMessageController
             return $this->redirect($referrer);
         }
 
-        if ($this->messageModel->hasMessageLimitExceeded(
-            $sender,
-            $this->getParameter('new_members_messages_per_hour'),
-            $this->getParameter('new_members_messages_per_day')
-        )) {
+        if (
+            $this->messageModel->hasMessageLimitExceeded(
+                $sender,
+                $this->getParameter('new_members_messages_per_hour'),
+                $this->getParameter('new_members_messages_per_day')
+            )
+        ) {
             $this->addTranslatedFlash('error', 'flash.message.limit');
             $referrer = $request->headers->get('referer');
 
@@ -313,7 +312,7 @@ class MessageController extends BaseMessageController
         if (null !== $subject) {
             $subjectText = $subject->getSubject();
             if ('Re:' !== substr($subjectText, 0, 3)) {
-                $subjectText = 'Re: '.$subjectText;
+                $subjectText = 'Re: ' . $subjectText;
             }
             $replyMessage->setSubject(new Subject());
             $replyMessage->getSubject()->setSubject($subjectText);
@@ -325,7 +324,7 @@ class MessageController extends BaseMessageController
         if ($messageForm->isSubmitted() && $messageForm->isValid()) {
             $replySubject = $messageForm->get('subject')->get('subject')->getData();
             if ('Re:' !== substr($replySubject, 0, 3)) {
-                $replySubject = 'Re: '.$replySubject;
+                $replySubject = 'Re: ' . $replySubject;
             }
 
             $messageText = $messageForm->get('message')->getData();

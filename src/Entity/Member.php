@@ -36,42 +36,42 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class Member implements UserInterface, \Serializable, EncoderAwareInterface, ObjectManagerAware
 {
-    const ROLE_ADMIN_ACCEPTER = 'ROLE_ADMIN_ACCEPTER';
-    const ROLE_ADMIN_ADMIN = 'ROLE_ADMIN_ADMIN';
-    const ROLE_ADMIN_BETA = 'ROLE_ADMIN_BETA';
-    const ROLE_ADMIN_CHAT = 'ROLE_ADMIN_CHAT';
-    const ROLE_ADMIN_CHECKER = 'ROLE_ADMIN_CHECKER';
-    const ROLE_ADMIN_COMMENTS = 'ROLE_ADMIN_COMMENTS';
-    const ROLE_ADMIN_COMMUNITYNEWS = 'ROLE_ADMIN_COMMUNITYNEWS';
-    const ROLE_ADMIN_CONTACTLOCATION = 'ROLE_ADMIN_CONTACTLOCATION';
-    const ROLE_ADMIN_CRYPTATION = 'ROLE_ADMIN_CRYPTATION';
-    const ROLE_ADMIN_DEBUG = 'ROLE_ADMIN_DEBUG';
-    const ROLE_ADMIN_FAQ = 'ROLE_ADMIN_FAQ';
-    const ROLE_ADMIN_FLAGS = 'ROLE_ADMIN_FLAGS';
-    const ROLE_ADMIN_FORUMMODERATOR = 'ROLE_ADMIN_FORUMMODERATOR';
-    const ROLE_ADMIN_GALLERY = 'ROLE_ADMIN_GALLERY';
-    const ROLE_ADMIN_GREP = 'ROLE_ADMIN_GREP';
-    const ROLE_ADMIN_GROUP = 'ROLE_ADMIN_GROUP';
-    const ROLE_ADMIN_LOGS = 'ROLE_ADMIN_LOGS';
-    const ROLE_ADMIN_MANAGESUBSCRIPTIONS = 'ROLE_ADMIN_MANAGESUBSCRIPTIONS';
-    const ROLE_ADMIN_MASSCONTACT = 'ROLE_ADMIN_MASSCONTACT';
-    const ROLE_ADMIN_MASSMAIL = 'ROLE_ADMIN_MASSMAIL';
-    const ROLE_ADMIN_NEWMEMBERSBEWELCOME = 'ROLE_ADMIN_NEWMEMBERSBEWELCOME';
-    const ROLE_ADMIN_PANNEL = 'ROLE_ADMIN_PANNEL';
-    const ROLE_ADMIN_POLL = 'ROLE_ADMIN_POLL';
-    const ROLE_ADMIN_PROFILE = 'ROLE_ADMIN_PROFILE';
-    const ROLE_ADMIN_RESPONSIBLE = 'ROLE_ADMIN_RESPONSIBLE';
-    const ROLE_ADMIN_RIGHTS = 'ROLE_ADMIN_RIGHTS';
-    const ROLE_ADMIN_RUNBOT = 'ROLE_ADMIN_RUNBOT';
-    const ROLE_ADMIN_SAFETYTEAM = 'ROLE_ADMIN_SAFETYTEAM';
-    const ROLE_ADMIN_SEEADS = 'ROLE_ADMIN_SEEADS';
-    const ROLE_ADMIN_SQLFORVOLUNTEERS = 'ROLE_ADMIN_SQLFORVOLUNTEERS';
-    const ROLE_ADMIN_SUGGESTIONS = 'ROLE_ADMIN_SUGGESTIONS';
-    const ROLE_ADMIN_TEST = 'ROLE_ADMIN_TEST';
-    const ROLE_ADMIN_TREASURER = 'ROLE_ADMIN_TREASURER';
-    const ROLE_ADMIN_VERIFIER = 'ROLE_ADMIN_VERIFIER';
-    const ROLE_ADMIN_WIKI = 'ROLE_ADMIN_WIKI';
-    const ROLE_ADMIN_WORDS = 'ROLE_ADMIN_WORDS';
+    public const ROLE_ADMIN_ACCEPTER = 'ROLE_ADMIN_ACCEPTER';
+    public const ROLE_ADMIN_ADMIN = 'ROLE_ADMIN_ADMIN';
+    public const ROLE_ADMIN_BETA = 'ROLE_ADMIN_BETA';
+    public const ROLE_ADMIN_CHAT = 'ROLE_ADMIN_CHAT';
+    public const ROLE_ADMIN_CHECKER = 'ROLE_ADMIN_CHECKER';
+    public const ROLE_ADMIN_COMMENTS = 'ROLE_ADMIN_COMMENTS';
+    public const ROLE_ADMIN_COMMUNITYNEWS = 'ROLE_ADMIN_COMMUNITYNEWS';
+    public const ROLE_ADMIN_CONTACTLOCATION = 'ROLE_ADMIN_CONTACTLOCATION';
+    public const ROLE_ADMIN_CRYPTATION = 'ROLE_ADMIN_CRYPTATION';
+    public const ROLE_ADMIN_DEBUG = 'ROLE_ADMIN_DEBUG';
+    public const ROLE_ADMIN_FAQ = 'ROLE_ADMIN_FAQ';
+    public const ROLE_ADMIN_FLAGS = 'ROLE_ADMIN_FLAGS';
+    public const ROLE_ADMIN_FORUMMODERATOR = 'ROLE_ADMIN_FORUMMODERATOR';
+    public const ROLE_ADMIN_GALLERY = 'ROLE_ADMIN_GALLERY';
+    public const ROLE_ADMIN_GREP = 'ROLE_ADMIN_GREP';
+    public const ROLE_ADMIN_GROUP = 'ROLE_ADMIN_GROUP';
+    public const ROLE_ADMIN_LOGS = 'ROLE_ADMIN_LOGS';
+    public const ROLE_ADMIN_MANAGESUBSCRIPTIONS = 'ROLE_ADMIN_MANAGESUBSCRIPTIONS';
+    public const ROLE_ADMIN_MASSCONTACT = 'ROLE_ADMIN_MASSCONTACT';
+    public const ROLE_ADMIN_MASSMAIL = 'ROLE_ADMIN_MASSMAIL';
+    public const ROLE_ADMIN_NEWMEMBERSBEWELCOME = 'ROLE_ADMIN_NEWMEMBERSBEWELCOME';
+    public const ROLE_ADMIN_PANNEL = 'ROLE_ADMIN_PANNEL';
+    public const ROLE_ADMIN_POLL = 'ROLE_ADMIN_POLL';
+    public const ROLE_ADMIN_PROFILE = 'ROLE_ADMIN_PROFILE';
+    public const ROLE_ADMIN_RESPONSIBLE = 'ROLE_ADMIN_RESPONSIBLE';
+    public const ROLE_ADMIN_RIGHTS = 'ROLE_ADMIN_RIGHTS';
+    public const ROLE_ADMIN_RUNBOT = 'ROLE_ADMIN_RUNBOT';
+    public const ROLE_ADMIN_SAFETYTEAM = 'ROLE_ADMIN_SAFETYTEAM';
+    public const ROLE_ADMIN_SEEADS = 'ROLE_ADMIN_SEEADS';
+    public const ROLE_ADMIN_SQLFORVOLUNTEERS = 'ROLE_ADMIN_SQLFORVOLUNTEERS';
+    public const ROLE_ADMIN_SUGGESTIONS = 'ROLE_ADMIN_SUGGESTIONS';
+    public const ROLE_ADMIN_TEST = 'ROLE_ADMIN_TEST';
+    public const ROLE_ADMIN_TREASURER = 'ROLE_ADMIN_TREASURER';
+    public const ROLE_ADMIN_VERIFIER = 'ROLE_ADMIN_VERIFIER';
+    public const ROLE_ADMIN_WIKI = 'ROLE_ADMIN_WIKI';
+    public const ROLE_ADMIN_WORDS = 'ROLE_ADMIN_WORDS';
 
     /**
      * @var ObjectManager
@@ -198,21 +198,21 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
      *
      * @ORM\Column(name="firstname", type="string", nullable=false)
      */
-    private $firstname = '0';
+    private $firstName = '0';
 
     /**
      * @var int
      *
-     * @ORM\Column(name="SecondName", type="string", nullable=false)
+     * @ORM\Column(name="SecondName", type="string", nullable=true)
      */
-    private $secondname = '0';
+    private $secondName = null;
 
     /**
      * @var int
      *
      * @ORM\Column(name="LastName", type="string", nullable=false)
      */
-    private $lastname = '0';
+    private $lastName = '0';
 
     /**
      * @var string
@@ -973,13 +973,13 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
     /**
      * Set firstname.
      *
-     * @param string $firstname
+     * @param string $firstName
      *
      * @return Member
      */
-    public function setFirstname($firstname)
+    public function setFirstName($firstName)
     {
-        $this->firstname = $firstname;
+        $this->firstName = $firstName;
 
         return $this;
     }
@@ -991,19 +991,19 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
      */
     public function getFirstName()
     {
-        return $this->firstname;
+        return $this->firstName;
     }
 
     /**
      * Set secondname.
      *
-     * @param string $secondname
+     * @param string $secondName
      *
      * @return Member
      */
-    public function setSecondname($secondname)
+    public function setSecondName($secondName)
     {
-        $this->secondname = $secondname;
+        $this->secondName = $secondName;
 
         return $this;
     }
@@ -1015,19 +1015,19 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
      */
     public function getSecondName()
     {
-        return $this->secondname;
+        return $this->secondName;
     }
 
     /**
      * Set lastname.
      *
-     * @param string $lastname
+     * @param string $lastName
      *
      * @return Member
      */
-    public function setLastName($lastname)
+    public function setLastName($lastName)
     {
-        $this->lastname = $lastname;
+        $this->lastName = $lastName;
 
         return $this;
     }
@@ -1039,7 +1039,7 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
      */
     public function getLastName()
     {
-        return $this->lastname;
+        return $this->lastName;
     }
 
     /**

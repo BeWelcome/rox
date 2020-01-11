@@ -87,7 +87,7 @@ class ForumsController extends PAppController
         }
 
         // First check if the feature is closed
-        if (($this->_session->get("Param")->FeatureForumClosed!='No')and(!$this->BW_Right->HasRight("Admin"))) {
+        if (($this->session->get("Param")->FeatureForumClosed!='No')and(!$this->BW_Right->HasRight("Admin"))) {
             $this->_view->showFeatureIsClosed();
             PPHP::PExit();
         } // end of test "if feature is closed"
@@ -245,11 +245,11 @@ class ForumsController extends PAppController
 
 			if (isset($request[2])) {
 				if ($request[2]=='AllMyReport') {
-					$DataPost=$this->_model->prepareReportList($this->_session->get("IdMember"),""); // This retrieve all the reports for the current member
+					$DataPost=$this->_model->prepareReportList($this->session->get("IdMember"),""); // This retrieve all the reports for the current member
 					$this->_view->showReportList($callbackId,$DataPost);
 				}
 				elseif ($request[2]=='MyReportActive') {
-					$DataPost=$this->_model->prepareReportList($this->_session->get("IdMember"),"('Open','OnDiscussion')"); // This retrieve the Active current pending report for the current member
+					$DataPost=$this->_model->prepareReportList($this->session->get("IdMember"),"('Open','OnDiscussion')"); // This retrieve the Active current pending report for the current member
 					$this->_view->showReportList($callbackId,$DataPost);
 				}
 				elseif ($request[2]=='AllActiveReports') {
@@ -262,7 +262,7 @@ class ForumsController extends PAppController
 				}
 				else {
 					$IdPost=$request[2] ;
-					$IdWriter=$this->_session->get("IdMember") ;
+					$IdWriter=$this->session->get("IdMember") ;
 					if ((!empty($request[3])) and ($this->BW_Right->HasRight("ForumModerator"))) {
 						$IdWriter=$request[3] ;
 					}
@@ -509,7 +509,7 @@ class ForumsController extends PAppController
      * @param string $type Type of flash, i.e. "error" or "notice"
      */
     private function setFlash($message) {
-        $this->_session->set( 'flash_notice', $message );
+        $this->session->set( 'flash_notice', $message );
     }
 
 

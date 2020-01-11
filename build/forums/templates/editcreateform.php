@@ -213,4 +213,4 @@ $vars =& PPostHandler::getVars($callbackId);
 </div>
 <link rel="stylesheet" type="text/css" href="<?= $this->getUrl('build/roxeditor.css');?>">
 <script src="<?= $this->getUrl('build/roxeditor.js');?>"></script>
-<script src="build/cktranslations/<?= $this->_session->get('lang', 'en');?>.js"></script>
+<script src="build/cktranslations/<?= $this->session->get('lang', 'en');?>.js"></script>

@@ -96,7 +96,7 @@ if (isset($Data->rPoll->id)) { // Form for update
             <?
             $ii = 0;
             if (empty($rr->CreatorUsername)) {
-                $rr->CreatorUsername = $this->_session->get('Username'); // By default a poll is owned by the current member
+                $rr->CreatorUsername = $this->session->get('Username'); // By default a poll is owned by the current member
             }
             echo "<input class='form-control' id=\"CreatorUsername\" name=\"CreatorUsername\" Value=\"" . $rr->CreatorUsername . "\" type=\"text\" />";
             ?>
@@ -189,7 +189,7 @@ if (isset($Data->rPoll->id)) { // Form for update
             <input type="hidden" name="PPostHandlerShutUp" value="ShutUp"/>
 
             <input type="hidden" name="<?= $callbackId ?>" value="1"/>
-            <input name="IdLanguage" value="<?php echo $this->_session->get("IdLanguage"); ?>" type="hidden"/>
+            <input name="IdLanguage" value="<?php echo $this->session->get("IdLanguage"); ?>" type="hidden"/>
             <input type="hidden" name="IdPoll" value="<?= $Data->rPoll->id ?>"/>
             <input type="hidden" name="IdPollChoice" value="<?= $cc->id ?>"/>
             <input type="hidden" name="IdChoiceText" value="
@@ -213,7 +213,7 @@ if (isset($Data->rPoll->id)) { // Form for update
 
         <input type="hidden" name="<?= $callbackId ?>" value="1"/>
         <input type="hidden" name="IdLanguage" value="<?
-        $this->_session->get("IdLanguage") ?>"/>
+        $this->session->get("IdLanguage") ?>"/>
         <input type="hidden" name="IdPoll" value="<?= $Data->rPoll->id ?>"/>
         <div class="form-group">
             <label for="NewOption">New option:</label>
@@ -236,7 +236,7 @@ if (isset($Data->rPoll->id)) { // Form for update
         <input type="hidden" name="PPostHandlerShutUp" value="ShutUp"/>
 
         <input type="hidden" name="<?= $callbackId ?>" value="1"/>
-        <input name="IdLanguage" value="<?php echo $this->_session->get("IdLanguage"); ?>" type="hidden"/>
+        <input name="IdLanguage" value="<?php echo $this->session->get("IdLanguage"); ?>" type="hidden"/>
         <div class="form-group">
             <label for="Title">Poll Title:</label>
             <input type="text" id="Title" name="Title" size="60" class="form-control">

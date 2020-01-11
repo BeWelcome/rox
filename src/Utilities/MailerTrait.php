@@ -65,14 +65,14 @@ trait MailerTrait
         $email = (new TemplatedEmail())
             ->to(new Address($receiver->getEmail(), $receiver->getUsername()))
             ->subject($subject)
-            ->htmlTemplate('emails/'.$template.'.html.twig')
+            ->htmlTemplate('emails/' . $template . '.html.twig')
             ->context($parameters)
         ;
 
         if (\is_string($sender)) {
             $email->from($sender);
         } else {
-            $email->from(new Address('message@bewelcome.org', $sender->getUsername().' - BeWelcome'));
+            $email->from(new Address('message@bewelcome.org', $sender->getUsername() . ' - BeWelcome'));
         }
         try {
             $this->mailer->send($email);

@@ -22,9 +22,9 @@ class LoginMessageRepository extends EntityRepository
     {
         $rsm = new ResultSetMapping();
         $rsm->addEntityResult('App:LoginMessage', 'lm');
-        $rsm->addFieldResult('lm','id','id');
-        $rsm->addFieldResult('lm','text','text');
-        $rsm->addFieldResult('lm','created','created');
+        $rsm->addFieldResult('lm', 'id', 'id');
+        $rsm->addFieldResult('lm', 'text', 'text');
+        $rsm->addFieldResult('lm', 'created', 'created');
         $query = $this->getEntityManager()
             ->createNativeQuery('
                 SELECT lm.id, lm.text, lm.created FROM login_messages lm

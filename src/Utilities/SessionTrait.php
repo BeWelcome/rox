@@ -7,14 +7,14 @@ use Symfony\Component\HttpFoundation\Session\Session;
 trait SessionTrait
 {
     /** @var Session */
-    protected $_session;
+    protected $session;
 
     /**
      * @SuppressWarnings(PHPMD.StaticAccess)
      */
     protected function setSession()
     {
-        $this->_session = SessionSingleton::getSession();
+        $this->session = SessionSingleton::getSession();
     }
 
     /**
@@ -22,6 +22,6 @@ trait SessionTrait
      */
     protected function getSession()
     {
-        return $this->_session;
+        return $this->session;
     }
 }

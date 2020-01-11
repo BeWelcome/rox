@@ -364,6 +364,7 @@ class GroupMembership
     public function onPrePersist()
     {
         $this->created = new DateTime('now');
+        $this->updated = $this->created;
     }
 
     /**

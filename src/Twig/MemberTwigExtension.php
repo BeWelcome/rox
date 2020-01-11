@@ -78,7 +78,7 @@ class MemberTwigExtension extends AbstractExtension implements GlobalsInterface
         }
 
         return [
-            'loginmessages' => $this->member ? $this->getLoginMessages(): null,
+            'loginmessages' => $this->member ? $this->getLoginMessages() : null,
             'groupsInApprovalQueue' => $this->member ? $this->getGroupsInApprovalQueueCount() : null,
             'reportedCommentsCount' => $this->member ? $this->getReportedCommentsCount() : null,
             'reportedMessagesCount' => $this->member ? $this->getReportedMessagesCount() : null,
@@ -217,8 +217,10 @@ class MemberTwigExtension extends AbstractExtension implements GlobalsInterface
     protected function getReportedCommentsCount()
     {
         $reportedCommentsCount = null;
-        if ($this->security->isGranted(Member::ROLE_ADMIN_COMMENTS) ||
-                $this->security->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)) {
+        if (
+            $this->security->isGranted(Member::ROLE_ADMIN_COMMENTS) ||
+                $this->security->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
+        ) {
             /** @var CommentRepository $commentRepository */
             $commentRepository = $this->getManager()->getRepository(Comment::class);
             $reportedCommentsCount = $commentRepository->getReportedCommentsCount();
@@ -230,8 +232,10 @@ class MemberTwigExtension extends AbstractExtension implements GlobalsInterface
     protected function getReportedMessagesCount()
     {
         $reportedMessagesCount = null;
-        if ($this->security->isGranted(Member::ROLE_ADMIN_CHECKER) ||
-                $this->security->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)) {
+        if (
+            $this->security->isGranted(Member::ROLE_ADMIN_CHECKER) ||
+                $this->security->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
+        ) {
             /** @var MessageRepository $messageRepository */
             $messageRepository = $this->getManager()->getRepository(Message::class);
 

@@ -62,8 +62,8 @@ class Member extends RoxEntityBase
             $this->findById($member_id);
         }
         $this->words=new MOD_words;
-        if ($this->_session->has( 'lang' )) {
-        $langarr = explode('-', $this->_session->get('lang'));
+        if ($this->session->has( 'lang' )) {
+        $langarr = explode('-', $this->session->get('lang'));
         $this->lang = $langarr[0];
         } else {
             $this->lang = 'en';
@@ -677,11 +677,11 @@ FROM
     */
     public function count_mynotes()
     {
-        if  (empty($this->_session->get('IdMember'))) return (0) ;
-        $str = "select SQL_CACHE count(*) as cnt from mycontacts where IdMember=".$this->_session->get("IdMember");
+        if  (empty($this->session->get('IdMember'))) return (0) ;
+        $str = "select SQL_CACHE count(*) as cnt from mycontacts where IdMember=".$this->session->get("IdMember");
 
         $rr=$this->singleLookup($str);
-        // $rr=$this->singleLookup("select SQL_CACHE count(*) as cnt from mycontacts where IdMember=".$this->_session->get("IdMember")." and IdContact=".$this->id);
+        // $rr=$this->singleLookup("select SQL_CACHE count(*) as cnt from mycontacts where IdMember=".$this->session->get("IdMember")." and IdContact=".$this->id);
         return($rr->cnt) ;
     } // end of count_mynotes
 
@@ -1682,9 +1682,9 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
         foreach ($keys_to_delete as $key)
         {
             $session->remove($key);
-            // if ($this->_session->has( $key )
+            // if ($this->session->has( $key )
             // {
-            //    $this->_session->remove($key);
+            //    $this->session->remove($key);
             // }
         }
 
@@ -1692,10 +1692,10 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
          old stuff from TB - we don't rely on this
         if (!isset($this->sessionName))
             return false;
-        if (!$this->_session->has( $this->sessionName )
+        if (!$this->session->has( $this->sessionName )
             return false;
         $this->loggedIn = false;
-        $this->_session->remove($this->sessionName);
+        $this->session->remove($this->sessionName);
         */
 
         $query = "delete from online where IdMember={$this->getPKValue()}";
@@ -1890,7 +1890,7 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
                                         SELECT
                                             AuthToken, SeriesToken, modified
                                         FROM
-                                            members_sessions
+                                            members->sessions
                                         WHERE
                                             IdMember = ' . (int)$this->id . '
                                             AND
@@ -1938,7 +1938,7 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
             // update token from existing series
             $s = $this->dao->query('
                                     UPDATE
-                                        members_sessions
+                                        members->sessions
                                     SET
                                         AuthToken = \'' . $authToken . '\'
                                     WHERE
@@ -1947,7 +1947,7 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
         } else { // create new token series
             $s = $this->dao->query('
                                     INSERT INTO
-                                        members_sessions
+                                        members->sessions
                                         (IdMember, AuthToken, SeriesToken)
                                     VALUES
                                         (' . (int) $this->id . ', \'' . $authToken . '\', \'' . $seriesToken . '\')'
@@ -1980,7 +1980,7 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
         // (also removes tokens more than cookie expiry)
         $s = $this->dao->query('
                                 DELETE FROM
-                                    members_sessions
+                                    members->sessions
                                 WHERE
                                     (IdMember = ' . (int) $this->id . '
                                     AND

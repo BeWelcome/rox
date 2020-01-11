@@ -8,7 +8,7 @@
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License (GPL)
  * @version $Id$
  */
-class LinkController extends RoxControllerBase   
+class LinkController extends RoxControllerBase
 {
 
     public function __construct()
@@ -17,7 +17,7 @@ class LinkController extends RoxControllerBase
         $this->_model = new LinkModel();
      //   $this->_view  = new LinkView($this->_model);
     }
-    
+
     public function __destruct()
     {
         unset($this->_model);
@@ -38,7 +38,7 @@ class LinkController extends RoxControllerBase
       }
 
 			$model = new LinkModel();
-        
+
         // look at the request.
         if (!isset($request[0])) {
             $page = new LinkShowPage('showlink');
@@ -48,13 +48,13 @@ class LinkController extends RoxControllerBase
                 if (!isset($request[1])) {
                     $page = new LinkShowPage('showlink');
 
-                } 
+                }
 								else switch ($request[1]) {
 				        case 'myself':
 
 								  $result->strerror="" ;
-									$result->from= $this->_session->get('Username');
-									$result->to = $request[2] ;	
+									$result->from= $this->session->get('Username');
+									$result->to = $request[2] ;
 									$IdGuy=$this->_model->getMemberID($result->to);
 									if ($IdGuy<=0)  {
 										if ($result->to=="") {
@@ -64,7 +64,7 @@ class LinkController extends RoxControllerBase
 											$result->strerror.="<br />No such member ".$result->to ;
 										}
 									}
-									if (isset($request[3])) 
+									if (isset($request[3]))
 											$result->limit=$request[3];
 									else
 											$result->limit=10;
@@ -81,19 +81,19 @@ class LinkController extends RoxControllerBase
                         break;
                     case 'update':
                         // fully decorated page
-  
+
                         set_time_limit(0);
                         $page = new LinkUpdatePage($request[1]);
                         break;
                     case 'rebuild':
                     case 'rebuildmissing':
                         // fully decorated page
-  
+
                         set_time_limit(0);
                         $page = new LinkRebuildPage($request[1]);
                         break;
 
-                        
+
                     case 'showlink':
                         // page with submenu
                         $page = new LinkShowPage($request[1]);
@@ -114,7 +114,7 @@ class LinkController extends RoxControllerBase
 												$result->strerror.="<br />No such member ".$result->from ;
 											}
 										}
-										$result->to = $request[2] ;	
+										$result->to = $request[2] ;
 										$IdGuy=$this->_model->getMemberID($result->to);
 										if ($IdGuy<=0)  {
 											if ($result->to=="") {
@@ -124,7 +124,7 @@ class LinkController extends RoxControllerBase
 												$result->strerror.="<br />No such member ".$result->to ;
 											}
 										}
-										if (isset($request[3])) 
+										if (isset($request[3]))
 											$result->limit=$request[3];
 										else
 											$result->limit=10;
@@ -136,21 +136,21 @@ class LinkController extends RoxControllerBase
 										break ;
                 }
         }
-        
+
         // return the $page object, so the "$page->render()" function can be called somewhere else.
         return $page;
     }
-    
-    
+
+
     public function LinkShowCallback($args, $action, $mem_redirect, $mem_resend)
     {
     $post_args = $args->post;
 		$from = $post_args['from'];
-		$to = $post_args['to'];	
+		$to = $post_args['to'];
     $limit = $post_args['limit'];
 		//$link = $this->_model->getSingleLink($fromID,$toID);
 		if (empty($from)) {
-			$from=$this->_session->get("Username") ;
+			$from=$this->session->get("Username") ;
 		}
 		if (empty($limit)) {
 			$limit=10 ; // give a default value to limit
@@ -173,10 +173,10 @@ class LinkController extends RoxControllerBase
 		if ((int)$limit<=0)  {
 			$mem_redirect->strerror.="<br />limit must be 1 or more " ;
 		}
-				 
+
 
 		$mem_redirect->from= $from;
-		$mem_redirect->to = $to ;	
+		$mem_redirect->to = $to ;
     $mem_redirect->limit = $limit ;
 		$mem_redirect->linksFull = $linksFull =$this->_model->getLinksFull($from,$to,$limit);
 		$mem_redirect->links = $links =$this->_model->getLinks($from,$to,$limit);
@@ -184,14 +184,14 @@ class LinkController extends RoxControllerBase
 
 
     }
-	
+
 	    public function LinkShowFriendsCallback($args, $action, $mem_redirect, $mem_resend)
     {
         $post_args = $args->post;
 				$from = $post_args['from'];
-				$degree = $post_args['degree'];	
+				$degree = $post_args['degree'];
     		$limit = $post_args['limit'];
-				
+
 				$mem_redirect->strerror="" ;
 				$IdGuy=$this->_model->getMemberID($from);
 				if ($IdGuy<=0)  {
@@ -203,10 +203,10 @@ class LinkController extends RoxControllerBase
 				if ($limit<=0)  {
 					$mem_redirect->strerror.="<br />limit must be 1 or more " ;
 				}
-				 
-				
+
+
 				$mem_redirect->from = $from ;
-				$mem_redirect->degree = $degree ;	
+				$mem_redirect->degree = $degree ;
         $mem_redirect->limit = $limit ;
 		//$link = $this->_model->getSingleLink($fromID,$toID);
 		//$mem_redirect->link = $link =$this->_model->getLinks($fromID,$toID,$limit);

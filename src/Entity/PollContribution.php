@@ -16,6 +16,9 @@ use Doctrine\ORM\Mapping as ORM;
  *     @ORM\Index(name="IDX_D41FF2B3EA8330B4", columns={"IdMember"})})
  * @ORM\HasLifecycleCallbacks
  * @ORM\Entity
+ *
+ * @SuppressWarnings(PHPMD)
+ * Auto generated class do not check mess
  */
 class PollContribution
 {
@@ -55,7 +58,7 @@ class PollContribution
     private $comment;
 
     /**
-     * @var int
+     * @var integer
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id

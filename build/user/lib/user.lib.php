@@ -10,17 +10,17 @@
  */
 /**
  * The user library
- * 
+ *
  * @package user
  * @author The myTravelbook Team <http://www.sourceforge.net/projects/mytravelbook>
  * @copyright Copyright( c) 2005-2006, myTravelbook Team
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License( GPL)
  */
-class APP_User extends MOD_bw_user_Auth 
+class APP_User extends MOD_bw_user_Auth
 {
     /**
      * single instance
-     * 
+     *
      * @var APP_User
      * @access private
      */
@@ -32,40 +32,40 @@ class APP_User extends MOD_bw_user_Auth
     private $_settings;
     /**
      * current user id
-     * 
+     *
      * @var int
      * @access private
      */
     private $_userId;
     /**
      * current user handle
-     * 
+     *
      * @var string
      * @access private
      */
     private $_userHandle;
     /**
      * is logged in?
-     * 
+     *
      * @var boolean
      * @access protected
-     */    
+     */
     protected $loggedIn = false;
-    
+
     /**
      * @param void
      * @access protected
      */
-    public function __construct() 
+    public function __construct()
     {
         parent::__construct('APP_User_id', 'user');
         $this->setSession();
         // if an Id is set, then the user is logged in, simple and smooth
-        if( $this->_session->has( 'APP_User_id' )) {
-            $this->_getUser($this->_session->get('APP_User_id'));
+        if( $this->session->has( 'APP_User_id' )) {
+            $this->_getUser($this->session->get('APP_User_id'));
         }
     }
-    
+
     public function __get($name) {
         if( !$this->loggedIn)
             return false;
@@ -76,15 +76,15 @@ class APP_User extends MOD_bw_user_Auth
         $copy = $this->$name;
         return $copy;
     }
-    
+
     /**
      * perform a login through a cookie
-     * 
+     *
      * @param void
      * @return boolean
      * @access private
      */
-    private function _cookieLogin() 
+    private function _cookieLogin()
     {
         if( !isset($_COOKIE) || !is_array($_COOKIE))
             return false;
@@ -101,41 +101,41 @@ class APP_User extends MOD_bw_user_Auth
             $this->removeCookie();
             return false;
         }
-        $this->_session->set( 'APP_User_id', $_COOKIE[$env->cookie_prefix.'userid'] );
+        $this->session->set( 'APP_User_id', $_COOKIE[$env->cookie_prefix.'userid'] );
         $this->loggedIn = true;
         $this->setCookie();
         return true;
     }
-    
 
-    private function _BWcookieLogin() 
+
+    private function _BWcookieLogin()
     {
         if( !isset($_COOKIE) || !is_array($_COOKIE))
             return false;
-            
+
         $env = PVars::getObj('env');
         if( !array_key_exists('ep', $_COOKIE))
             return false;
-        
+
         if( !array_key_exists('MyBWusername', $_COOKIE))
             return false;
-         
-       
+
+
         $o=intval($_COOKIE['ep']);
 		$query='SELECT Username FROM `tantable` WHERE `OnePad` = '. $o;
 		setcookie($env->cookie_prefix.'ep', '', time()-3600, '/');
 		$q = $this->dao->query($query);
-        $d = $q->fetch(PDB::FETCH_OBJ);				
+        $d = $q->fetch(PDB::FETCH_OBJ);
 		if( !$d)
         	return false;
-		
+
 		if( $d->Username != $_COOKIE['MyBWusername']) {
 			return false;
 		}
 		//error_log("name check success found",0);
 		$removefromTantable= 'DELETE FROM `tantable` WHERE `OnePad` = '. $o;
         $q = $this->dao->query($removefromTantable);
-        
+
         return  true;
     }
 
@@ -156,7 +156,7 @@ class APP_User extends MOD_bw_user_Auth
             }
         }
     }
-    
+
     public static function activate($userId) {
         $c = self::get();
         $query = '
@@ -167,7 +167,7 @@ UPDATE `user` SET `active` = 1 WHERE `id` = ?
         $s->execute();
         return $s->affectedRows();
     }
-    
+
     public static function get() {
         if( !isset(self::$_instance)) {
             $c = __CLASS__;
@@ -175,12 +175,12 @@ UPDATE `user` SET `active` = 1 WHERE `id` = ?
         }
         return self::$_instance;
     }
-    
+
     /**
      * Adds/changes a user setting
-     * 
+     *
      * may be called statically
-     * 
+     *
      * @param int $userId
      * @param string $setting
      * @param string $value if "null", then a NULL field will be added
@@ -188,7 +188,7 @@ UPDATE `user` SET `active` = 1 WHERE `id` = ?
      * @param int $valuedate UNIX timestamp - if "null", then a NULL field will be added
      * @return boolean
      */
-    public static function addSetting($userId, $setting, $value = null, $valueint = null, $valuedate = null) 
+    public static function addSetting($userId, $setting, $value = null, $valueint = null, $valuedate = null)
     {
         $c = self::get();
         if( $value === null && $valueint === null && $valuedate === null) {
@@ -196,12 +196,12 @@ UPDATE `user` SET `active` = 1 WHERE `id` = ?
             return true;
         }
         $s = $c->dao->query('
-SELECT 
-    `valueint` 
-FROM 
-    `user_settings` 
-WHERE 
-    `user_id` = '.(int)$userId.' 
+SELECT
+    `valueint`
+FROM
+    `user_settings`
+WHERE
+    `user_id` = '.(int)$userId.'
     AND `setting` = \''.$c->dao->escape($setting).'\'
         ');
         if( $s->numRows() > 1) {
@@ -209,9 +209,9 @@ WHERE
         }
         if( $s->numRows() == 0) {
             $query = '
-INSERT INTO `user_settings` 
-(`user_id`, `setting`, `value`, `valueint`, `valuedate`) 
-VALUES 
+INSERT INTO `user_settings`
+(`user_id`, `setting`, `value`, `valueint`, `valuedate`)
+VALUES
 (
     '.(int)$userId.',
     \''.$c->dao->escape($setting).'\',
@@ -221,12 +221,12 @@ VALUES
 )';
         } else {
             $query = '
-UPDATE `user_settings` 
-SET 
-    `value` = '.(is_null($value) ? 'NULL' : '\''.$c->dao->escape($value).'\'').', 
-    `valueint` = '.(is_null($valueint) ? 'NULL' :( int)$valueint).', 
+UPDATE `user_settings`
+SET
+    `value` = '.(is_null($value) ? 'NULL' : '\''.$c->dao->escape($value).'\'').',
+    `valueint` = '.(is_null($valueint) ? 'NULL' :( int)$valueint).',
     `valuedate` = '.(is_null($valuedate) ? 'NULL' : date('YmdHis', $valuedate)).'
-WHERE 
+WHERE
     `user_id` = '.(int)$userId.'
     AND `setting` = \''.$c->dao->escape($setting).'\'
             ';
@@ -234,17 +234,17 @@ WHERE
         $s = $c->dao->query($query);
         return true;
     }
-    
+
     /**
      * returns all existing user settings
-     * 
+     *
      * this method returns a stdClass object, with the setting names in first level and each "value", "valueint", "valuedate" in second level
      * may be called statically
-     * 
+     *
      * @param int $userId
      * @return stdClass
      */
-    public static function getAllSettings($userId) 
+    public static function getAllSettings($userId)
     {
         $c = self::get();
         $query = '
@@ -263,17 +263,17 @@ WHERE `user_id` = '.(int)$userId.'
         }
         return $settings;
     }
-    
+
     /**
      * retrieves value(s) for one setting
-     * 
+     *
      * may be called statically
-     * 
+     *
      * @param int $userId
      * @param string $setting
      * @return stdClass
      */
-    public static function getSetting($userId, $setting) 
+    public static function getSetting($userId, $setting)
     {
         $c = self::get();
         if( self::loggedIn() && $userId == $c->getId() && isset($c->_settings)) {
@@ -294,34 +294,34 @@ WHERE `user_id` = '.(int)$userId.' AND `setting` = \''.$c->dao->escape($setting)
         }
         return $d;
     }
-    
+
     /**
      * returns a boolean value if logged in
-     * 
+     *
      * may be called statically
-     * 
+     *
      * @param void
      * @return boolean
      */
-    public static function loggedIn() 
+    public static function loggedIn()
     {
         return self::get()->loggedIn;
     }
-    
+
     /**
      * login getter
-     * 
+     *
      * returns either an instance of APP_User or false
      * may be called statically
-     * 
+     *
      * @param string $handle
      * @param string $pw
      * @return mixed
      */
-    public static function login($handle = false, $pw = false) 
+    public static function login($handle = false, $pw = false)
     {
         $c = self::get();
-        
+
         /*
         // default login
         if( !$c->loggedIn) {
@@ -332,10 +332,10 @@ WHERE `user_id` = '.(int)$userId.' AND `setting` = \''.$c->dao->escape($setting)
             $c->_cookieLogin();
         }
 		*/
-        if( !$c->loggedIn) 
+        if( !$c->loggedIn)
         {
 //         	error_log("trying to login ".$handle,0);
-//			if( $c->_BWcookieLogin()) 
+//			if( $c->_BWcookieLogin())
 //			{
             	$c->doLogin( $handle, $pw );
 //			}
@@ -350,14 +350,14 @@ WHERE `user_id` = '.(int)$userId.' AND `setting` = \''.$c->dao->escape($setting)
         //self::getAllSettings($c->getId());
         return self::$_instance;
     }
-    
+
     /**
      * log the current user out
-     * 
+     *
      * @param void
      * @return boolean
      */
-    public function logout() 
+    public function logout()
     {
         $this->removeCookie();
         return parent::logout();
@@ -365,24 +365,24 @@ WHERE `user_id` = '.(int)$userId.' AND `setting` = \''.$c->dao->escape($setting)
 
     /**
      * returns the current id
-     * 
+     *
      * @param void
      * @return int or false if not logged in
      */
-    public function getId() 
+    public function getId()
     {
         if( !$this->loggedIn)
             return false;
-        return( int)$this->_session->get('APP_User_id');
+        return( int)$this->session->get('APP_User_id');
     }
-    
+
     /**
      * returns the current handle
-     * 
-     * @param void 
+     *
+     * @param void
      * @return string or false if not logged in
      */
-    public function getHandle() 
+    public function getHandle()
     {
         if( !$this->loggedIn)
             return false;
@@ -398,14 +398,14 @@ WHERE `user_id` = '.(int)$userId.' AND `setting` = \''.$c->dao->escape($setting)
         $this->_userHandle = $s->fetch(PDB::FETCH_OBJ)->handle;
         return $this->_userHandle;
     }
-    
+
     /**
      * remove session login cookie
-     * 
+     *
      * @param void
      * @return boolean
      */
-    public function removeCookie() 
+    public function removeCookie()
     {
         if( !PVars::get()->cookiesAccepted)
             return false;
@@ -424,14 +424,14 @@ WHERE `user_id` = '.(int)$userId.' AND `setting` = \''.$c->dao->escape($setting)
         }
         return true;
     }
-    
+
     /**
      * set session login cookie
-     * 
+     *
      * @param void
      * @return mixed either the session key or false
      */
-    public function setCookie() 
+    public function setCookie()
     {
         if( !$this->loggedIn)
             return false;
@@ -447,16 +447,16 @@ WHERE `user_id` = '.(int)$userId.' AND `setting` = \''.$c->dao->escape($setting)
         $key = setcookie($env->cookie_prefix.'userkey', $key, $expires, '/');
         return $key;
     }
-    
+
     /**
      * returns the user id for given handle
-     * 
+     *
      * may be called statically
-     * 
+     *
      * @param string $handle
      * @return mixed int or false
      */
-    public static function userId($handle) 
+    public static function userId($handle)
     {
         $c = self::get();
         $query = 'SELECT `id` FROM `user` WHERE `handle` = \''.$c->dao->escape($handle).'\'';
@@ -469,13 +469,13 @@ WHERE `user_id` = '.(int)$userId.' AND `setting` = \''.$c->dao->escape($setting)
 
     /**
      * returns the member id for given handle
-     * 
+     *
      * may be called statically
-     * 
+     *
      * @param string $handle
      * @return mixed int or false
      */
-    public static function memberId($handle) 
+    public static function memberId($handle)
     {
         $c = self::get();
         $query = 'SELECT `id` FROM `members` WHERE `username` = \''.$c->dao->escape($handle).'\'';
@@ -484,21 +484,21 @@ WHERE `user_id` = '.(int)$userId.' AND `setting` = \''.$c->dao->escape($setting)
         if( !$d)
             return false;
         return $d->id;
-    }    
-    
+    }
+
     /**
      * returns the country code for given handle
-     * 
+     *
      * may be called statically
-     * 
+     *
      * @param string $handle
      * @return mixed String or false
      */
-    public static function countryCode($handle) 
+    public static function countryCode($handle)
     {
         $c = self::get();
-        $query = sprintf("SELECT `country` 
-        	FROM `user` 
+        $query = sprintf("SELECT `country`
+        	FROM `user`
         	LEFT JOIN `geonames` ON( `user`.`location` = `geonames`.`geonameid`)
         	WHERE `handle` = '%s'",
         	$c->dao->escape($handle));

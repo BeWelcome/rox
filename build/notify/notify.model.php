@@ -4,7 +4,7 @@
 class NotifyModel extends RoxModelBase
 {
     private $_notes_list = 0;
-    
+
     public function __construct()
     {
         parent::__construct();
@@ -15,7 +15,7 @@ class NotifyModel extends RoxModelBase
      *
      * @param int $note_id
      * @return mixed false or a Note entity
-     */    
+     */
     public function findNote($note_id)
     {
         $note = $this->createEntity('Note',$note_id);
@@ -28,13 +28,13 @@ class NotifyModel extends RoxModelBase
             return false;
         }
     }
-    
+
     /**
      * Find and return one note, using id
      *
      * @param int $note_id
      * @return mixed false or a Note entity
-     */    
+     */
     public function deleteNotes($notes = array())
     {
         foreach ($notes as $note) {
@@ -48,10 +48,10 @@ class NotifyModel extends RoxModelBase
      *
      * @param string $terms - search terms
      * @return mixed false or an array of Notes
-     */    
+     */
     public function findNotes($terms = '', $page = 0, $order = '')
     {
-    
+
         if (!empty($order))
         {
             switch ($order)
@@ -84,7 +84,7 @@ class NotifyModel extends RoxModelBase
         {
             $order = 'Name ASC';
         }
-        
+
         $terms_array = explode(' ', $terms);
 
         $note = $this->createEntity('Note');
@@ -112,8 +112,8 @@ class NotifyModel extends RoxModelBase
             $note->sql_order = $order. ' ASC, IdMember ASC';
         return $this->_note_list = $note->findAll($offset, $limit);
     }
-    
-    
+
+
     /**
      * Get array of notes
      *
@@ -128,16 +128,16 @@ FROM
     notes
 ';
         if (isset($where) && $where != '') $sql .= $where;
-        if (isset($order) && $order != false) $sql .= ' 
+        if (isset($order) && $order != false) $sql .= '
 ORDER BY '.$order.' ASC,IdMember ASC
 ';
-        else $sql .= ' 
+        else $sql .= '
 ORDER BY created DESC,IdMember ASC
 ';
         return $this->bulkLookup($sql);
 
     }
-    
+
     /**
      * Find all notes I am member of
      *
@@ -146,27 +146,27 @@ ORDER BY created DESC,IdMember ASC
      */
     public function getMyNotes()
     {
-        if (!$this->_session->has( 'IdMember' ))
+        if (!$this->session->has( 'IdMember' ))
         {
             return array();
         }
         else
         {
-            return $this->getNotesForMember($this->_session->get('IdMember'));
+            return $this->getNotesForMember($this->session->get('IdMember'));
         }
     }
-    
+
     public function getMemberNotes()
     {
-        if (!$this->_session->has( 'IdMember' )) {
+        if (!$this->session->has( 'IdMember' )) {
             // not logged in - no messages
             return array();
         } else {
-            $member_id = $this->_session->get('IdMember');
+            $member_id = $this->session->get('IdMember');
             return $this->getNotes(false,'WHERE notes.IdMember = '.$member_id.' AND notes.Checked = 0');
         }
     }
-    
+
     /**
      * handles deleting groups
      *
@@ -182,7 +182,7 @@ ORDER BY created DESC,IdMember ASC
         }
         return $note->checkNote();
     }
-    
+
     /**
      * handles deleting groups
      *
@@ -194,7 +194,7 @@ ORDER BY created DESC,IdMember ASC
     {
         $noteEntity = $this->createEntity('Note');
         return $noteEntity->createNote($note);
-    }    
-  
+    }
+
 
 }

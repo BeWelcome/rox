@@ -28,7 +28,7 @@
 
     // Check if preferred language is set
     if (!isset($p['PreferenceLanguage']->Value)) {
-        $p['PreferenceLanguage']->Value = $this->_session->get('IdLanguage');
+        $p['PreferenceLanguage']->Value = $this->session->get('IdLanguage');
     }
     // var_dump ($p);
     $ii = 1;

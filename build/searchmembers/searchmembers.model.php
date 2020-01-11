@@ -709,7 +709,7 @@ WHERE
         }
         if (isset ($rr->id)) {
             // test if the member is the current member and has just bee rejected (security trick to immediately remove the current member in such a case)
-            if (array_key_exists("IdMember", $_SESSION) and $rr->id==$this->_session->get("IdMember")) $this->TestIfIsToReject($rr->Status) ;
+            if (array_key_exists("IdMember", $_SESSION) and $rr->id==$this->session->get("IdMember")) $this->TestIfIsToReject($rr->Status) ;
             return ($rr->id);
         }
         return (0);
@@ -733,8 +733,8 @@ WHERE
         if ($IdTrad == "")
             return ("");
 
-        if ($this->_session->has( 'IdLanguage' )) {
-             $IdLanguage=$this->_session->get('IdLanguage') ;
+        if ($this->session->has( 'IdLanguage' )) {
+             $IdLanguage=$this->session->get('IdLanguage') ;
         }
         else {
              $IdLanguage=0 ; // by default laguange 0
@@ -1010,8 +1010,8 @@ WHERE
     private function fUsername($cid) {
         if (!is_numeric($cid))
             return ($cid); // If cid is not numeric it is assumed to be already a username
-        if (array_key_exists("IdMember", $_SESSION) and $cid == $this->_session->get("IdMember"))
-            return ($this->_session->get("Username"));
+        if (array_key_exists("IdMember", $_SESSION) and $cid == $this->session->get("IdMember"))
+            return ($this->session->get("Username"));
         $query = $this->dao->query(
             "
 SELECT SQL_CACHE

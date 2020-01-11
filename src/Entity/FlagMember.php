@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Utilities\LifecycleCallbacksTrait;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -9,9 +10,12 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="flagsmembers", indexes={@ORM\Index(name="IdMember", columns={"IdMember", "IdFlag"})})
  * @ORM\Entity
+ * @ORM\HasLifecycleCallbacks
  */
-class Flagsmembers
+class FlagMember
 {
+    use LifecycleCallbacksTrait;
+
     /**
      * @var integer
      *
@@ -48,20 +52,6 @@ class Flagsmembers
     private $comment;
 
     /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="updated", type="datetime", nullable=false)
-     */
-    private $updated = 'CURRENT_TIMESTAMP';
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="created", type="datetime", nullable=false)
-     */
-    private $created = '0000-00-00 00:00:00';
-
-    /**
      * @var integer
      *
      * @ORM\Column(name="id", type="integer")
@@ -77,7 +67,7 @@ class Flagsmembers
      *
      * @param integer $idmember
      *
-     * @return Flagsmembers
+     * @return FlagMember
      */
     public function setIdmember($idmember)
     {
@@ -101,7 +91,7 @@ class Flagsmembers
      *
      * @param integer $idflag
      *
-     * @return Flagsmembers
+     * @return FlagMember
      */
     public function setIdflag($idflag)
     {
@@ -125,7 +115,7 @@ class Flagsmembers
      *
      * @param integer $level
      *
-     * @return Flagsmembers
+     * @return FlagMember
      */
     public function setLevel($level)
     {
@@ -149,7 +139,7 @@ class Flagsmembers
      *
      * @param string $scope
      *
-     * @return Flagsmembers
+     * @return FlagMember
      */
     public function setScope($scope)
     {
@@ -173,7 +163,7 @@ class Flagsmembers
      *
      * @param string $comment
      *
-     * @return Flagsmembers
+     * @return FlagMember
      */
     public function setComment($comment)
     {
@@ -197,7 +187,7 @@ class Flagsmembers
      *
      * @param \DateTime $updated
      *
-     * @return Flagsmembers
+     * @return FlagMember
      */
     public function setUpdated($updated)
     {
@@ -221,7 +211,7 @@ class Flagsmembers
      *
      * @param \DateTime $created
      *
-     * @return Flagsmembers
+     * @return FlagMember
      */
     public function setCreated($created)
     {

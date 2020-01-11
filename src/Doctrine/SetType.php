@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: raymund
@@ -25,10 +26,10 @@ abstract class SetType extends Type
     public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
     {
         $values = array_map(function ($val) {
-            return "'".$val."'";
+            return "'" . $val . "'";
         }, $this->values);
 
-        return 'SET('.implode(', ', $values).')';
+        return 'SET(' . implode(', ', $values) . ')';
     }
 
     public function convertToPHPValue($value, AbstractPlatform $platform)
@@ -44,7 +45,7 @@ abstract class SetType extends Type
             $valueCount = \count($values);
 
             if (\count(array_intersect($values, $this->values)) !== $valueCount) {
-                throw new \InvalidArgumentException("Invalid '".$this->name."' value: ".$value.'.');
+                throw new \InvalidArgumentException("Invalid '" . $this->name . "' value: " . $value . '.');
             }
         } else {
             $value = '';

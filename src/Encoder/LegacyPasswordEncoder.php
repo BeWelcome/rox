@@ -32,7 +32,7 @@ class LegacyPasswordEncoder implements PasswordEncoderInterface
      */
     public function encodePassword($raw, $salt)
     {
-        return '*'.strtoupper(
+        return '*' . strtoupper(
             sha1(
                 sha1($raw, true)
             )

@@ -1,89 +1,107 @@
 <?php
+/*
+ * @codingStandardsIgnoreFile
+ *
+ * Auto generated file ignore for Code Sniffer
+ */
+
 
 namespace App\Entity;
 
+use Carbon\Carbon;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Addresses
  *
  * @ORM\Table(name="addresses", indexes={@ORM\Index(name="IdMember", columns={"IdMember"}), @ORM\Index(name="IdCity", columns={"IdCity"}), @ORM\Index(name="CityAndRank", columns={"IdCity", "Rank"})})
+ * @ORM\HasLifecycleCallbacks
  * @ORM\Entity
+ *
+ * @SuppressWarnings(PHPMD)
+ * Auto generated class do not check mess
  */
-class Addresses
+class Address
 {
     /**
-     * @var integer
+     * @var Member
      *
-     * @ORM\Column(name="IdMember", type="integer", nullable=false)
+     * @ORM\OneToOne(targetEntity="Member")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="IdMember", referencedColumnName="id")
+     * })
      */
-    private $idmember;
+    private $member;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="HouseNumber", type="integer", nullable=false)
      */
-    private $housenumber;
+    private $houseNumber;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="StreetName", type="integer", nullable=false)
      */
-    private $streetname;
+    private $streetName;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="Zip", type="integer", nullable=false)
      */
     private $zip;
 
     /**
-     * @var integer
+     * @var Location
      *
-     * @ORM\Column(name="IdCity", type="integer", nullable=false)
+     * @ORM\OneToOne(targetEntity="Location")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="IdCity", referencedColumnName="geonameid")
+     * })
      */
-    private $idcity;
+    private $location;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="Explanation", type="integer", nullable=false)
      */
     private $explanation;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="Rank", type="boolean", nullable=false)
      */
     private $rank = '0';
 
     /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="updated", type="datetime", nullable=false)
-     */
-    private $updated = '0000-00-00 00:00:00';
-
-    /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(name="created", type="datetime", nullable=false)
      */
-    private $created = '0000-00-00 00:00:00';
+    private $created;
 
     /**
-     * @var integer
+     * @var DateTime
+     *
+     * @ORM\Column(name="updated", type="datetime", nullable=false)
+     */
+    private $updated;
+
+    /**
+     * @var int
      *
      * @ORM\Column(name="IdGettingThere", type="integer", nullable=false)
      */
-    private $idgettingthere = '0';
+    private $gettingThere = '0';
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -92,17 +110,16 @@ class Addresses
     private $id;
 
 
-
     /**
-     * Set idmember
+     * Set member
      *
-     * @param integer $idmember
+     * @param Member $idmember
      *
-     * @return Addresses
+     * @return Address
      */
-    public function setIdmember($idmember)
+    public function setMember($member)
     {
-        $this->idmember = $idmember;
+        $this->member = $member;
 
         return $this;
     }
@@ -110,23 +127,23 @@ class Addresses
     /**
      * Get idmember
      *
-     * @return integer
+     * @return Member
      */
-    public function getIdmember()
+    public function getMember()
     {
-        return $this->idmember;
+        return $this->member;
     }
 
     /**
      * Set housenumber
      *
-     * @param integer $housenumber
+     * @param int $houseNumber
      *
-     * @return Addresses
+     * @return Address
      */
-    public function setHousenumber($housenumber)
+    public function setHouseNumber($houseNumber)
     {
-        $this->housenumber = $housenumber;
+        $this->houseNumber = $houseNumber;
 
         return $this;
     }
@@ -134,23 +151,23 @@ class Addresses
     /**
      * Get housenumber
      *
-     * @return integer
+     * @return int
      */
-    public function getHousenumber()
+    public function getHouseNumber()
     {
-        return $this->housenumber;
+        return $this->houseNumber;
     }
 
     /**
      * Set streetname
      *
-     * @param integer $streetname
+     * @param int $streetName
      *
-     * @return Addresses
+     * @return Address
      */
-    public function setStreetname($streetname)
+    public function setStreetName($streetName)
     {
-        $this->streetname = $streetname;
+        $this->streetName = $streetName;
 
         return $this;
     }
@@ -158,19 +175,19 @@ class Addresses
     /**
      * Get streetname
      *
-     * @return integer
+     * @return int
      */
-    public function getStreetname()
+    public function getStreetName()
     {
-        return $this->streetname;
+        return $this->streetName;
     }
 
     /**
      * Set zip
      *
-     * @param integer $zip
+     * @param int $zip
      *
-     * @return Addresses
+     * @return Address
      */
     public function setZip($zip)
     {
@@ -182,7 +199,7 @@ class Addresses
     /**
      * Get zip
      *
-     * @return integer
+     * @return int
      */
     public function getZip()
     {
@@ -190,35 +207,35 @@ class Addresses
     }
 
     /**
-     * Set idcity
+     * Set location
      *
-     * @param integer $idcity
+     * @param Location $location
      *
-     * @return Addresses
+     * @return Address
      */
-    public function setIdcity($idcity)
+    public function setLocation($location)
     {
-        $this->idcity = $idcity;
+        $this->location = $location;
 
         return $this;
     }
 
     /**
-     * Get idcity
+     * Get location
      *
-     * @return integer
+     * @return Location
      */
-    public function getIdcity()
+    public function getLocation()
     {
-        return $this->idcity;
+        return $this->location;
     }
 
     /**
      * Set explanation
      *
-     * @param integer $explanation
+     * @param int $explanation
      *
-     * @return Addresses
+     * @return Address
      */
     public function setExplanation($explanation)
     {
@@ -230,7 +247,7 @@ class Addresses
     /**
      * Get explanation
      *
-     * @return integer
+     * @return int
      */
     public function getExplanation()
     {
@@ -242,7 +259,7 @@ class Addresses
      *
      * @param boolean $rank
      *
-     * @return Addresses
+     * @return Address
      */
     public function setRank($rank)
     {
@@ -254,43 +271,20 @@ class Addresses
     /**
      * Get rank
      *
-     * @return boolean
+     * @return bool
      */
     public function getRank()
     {
         return $this->rank;
     }
 
-    /**
-     * Set updated
-     *
-     * @param \DateTime $updated
-     *
-     * @return Addresses
-     */
-    public function setUpdated($updated)
-    {
-        $this->updated = $updated;
-
-        return $this;
-    }
-
-    /**
-     * Get updated
-     *
-     * @return \DateTime
-     */
-    public function getUpdated()
-    {
-        return $this->updated;
-    }
 
     /**
      * Set created
      *
-     * @param \DateTime $created
+     * @param DateTime $created
      *
-     * @return Addresses
+     * @return Address
      */
     public function setCreated($created)
     {
@@ -302,23 +296,46 @@ class Addresses
     /**
      * Get created
      *
-     * @return \DateTime
+     * @return Carbon
      */
     public function getCreated()
     {
-        return $this->created;
+        return Carbon::instance($this->created);
+    }
+    /**
+     * Set updated
+     *
+     * @param DateTime $updated
+     *
+     * @return Address
+     */
+    public function setUpdated($updated)
+    {
+        $this->updated = $updated;
+
+        return $this;
+    }
+
+    /**
+     * Get updated
+     *
+     * @return Carbon
+     */
+    public function getUpdated()
+    {
+        return Carbon::instance($this->updated);
     }
 
     /**
      * Set idgettingthere
      *
-     * @param integer $idgettingthere
+     * @param int $gettingThere
      *
-     * @return Addresses
+     * @return Address
      */
-    public function setIdgettingthere($idgettingthere)
+    public function setGettingThere($gettingThere)
     {
-        $this->idgettingthere = $idgettingthere;
+        $this->gettingThere = $gettingThere;
 
         return $this;
     }
@@ -326,20 +343,41 @@ class Addresses
     /**
      * Get idgettingthere
      *
-     * @return integer
+     * @return int
      */
-    public function getIdgettingthere()
+    public function getGettingThere()
     {
-        return $this->idgettingthere;
+        return $this->gettingThere;
     }
 
     /**
      * Get id
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Triggered on insert.
+     *
+     * @ORM\PrePersist
+     */
+    public function onPrePersist()
+    {
+        $this->created = new DateTime('now');
+        $this->updated = $this->created;
+    }
+
+    /**
+     * Triggered on update.
+     *
+     * @ORM\PreUpdate
+     */
+    public function onPreUpdate()
+    {
+        $this->updated = new DateTime('now');
     }
 }

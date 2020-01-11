@@ -112,7 +112,7 @@ class SearchAdapter implements AdapterInterface
     /**
      * Returns map data.
      *
-     * @return array|\Traversable the slice
+     * @return array
      */
     public function getFullResults()
     {
@@ -124,7 +124,7 @@ class SearchAdapter implements AdapterInterface
     /**
      * Returns map data.
      *
-     * @return array|\Traversable the slice
+     * @return array
      */
     public function getMapResults()
     {

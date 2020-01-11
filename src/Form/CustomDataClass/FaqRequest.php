@@ -56,8 +56,8 @@ class FaqRequest
 
         // Find matching entry in words table for locale 'en'
         $wordRepository = $em->getRepository(Word::class);
-        $question = $wordRepository->findOneBy(['code' => 'FaqQ_'.$faqRequest->wordCode, 'shortCode' => 'en']);
-        $answer = $wordRepository->findOneBy(['code' => 'FaqA_'.$faqRequest->wordCode, 'shortCode' => 'en']);
+        $question = $wordRepository->findOneBy(['code' => 'FaqQ_' . $faqRequest->wordCode, 'shortCode' => 'en']);
+        $answer = $wordRepository->findOneBy(['code' => 'FaqA_' . $faqRequest->wordCode, 'shortCode' => 'en']);
         $faqRequest->question = $question->getSentence();
         $faqRequest->answer = $answer->getSentence();
         $faqRequest->active = ('Active' === $faq->getActive()) ? true : false;

@@ -44,7 +44,7 @@ class CryptedField
     /**
      * @var Member
      *
-     * @Orm\ManyToOne(targetEntity="Member", inversedBy="cryptedFields")
+     * @ORM\ManyToOne(targetEntity="Member", inversedBy="cryptedFields")
      * @ORM\JoinColumn(name="IdMember", referencedColumnName="id")
      */
     private $member;

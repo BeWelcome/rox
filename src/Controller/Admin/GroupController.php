@@ -183,7 +183,7 @@ class GroupController extends AbstractController
             '%name%' => $group->getName(),
         ]);
 
-        $logger->write('Group '.$group->getName().' moved into discussion by '.$this->getUser()->getUsername().'.', 'Group');
+        $logger->write('Group ' . $group->getName() . ' moved into discussion by ' . $this->getUser()->getUsername() . '.', 'Group');
 
         $referrer = $request->headers->get('referer');
 
@@ -222,7 +222,7 @@ class GroupController extends AbstractController
             '%name%' => $group->getName(),
         ]);
 
-        $logger->write('Group '.$group->getName().' dismissed by '.$this->getUser()->getUsername().'.', 'Group');
+        $logger->write('Group ' . $group->getName() . ' dismissed by ' . $this->getUser()->getUsername() . '.', 'Group');
 
         $referrer = $request->headers->get('referer');
 
@@ -261,7 +261,7 @@ class GroupController extends AbstractController
             '%name%' => $group->getName(),
         ]);
 
-        $logger->write('Group '.$group->getName().' approved by '.$this->getUser()->getUsername().'.', 'Group');
+        $logger->write('Group ' . $group->getName() . ' approved by ' . $this->getUser()->getUsername() . '.', 'Group');
 
         $creator = current($group->getMembers());
         $this->sendNewGroupApprovedNotification($group, $creator);
@@ -302,7 +302,7 @@ class GroupController extends AbstractController
             '%name%' => $group->getName(),
         ]);
 
-        $logger->write('Group '.$group->getName().' archived by '.$this->getUser()->getUsername().'.', 'Group');
+        $logger->write('Group ' . $group->getName() . ' archived by ' . $this->getUser()->getUsername() . '.', 'Group');
 
         $referrer = $request->headers->get('referer');
 
@@ -331,7 +331,7 @@ class GroupController extends AbstractController
             throw $this->createAccessDeniedException('You need to have level 10 to access this.');
         }
 
-        $group->setName(str_replace('[Archived] ',  '', $group->getName()));
+        $group->setName(str_replace('[Archived] ', '', $group->getName()));
         $em = $this->getDoctrine()->getManager();
         $em->persist($group);
         $em->flush();
@@ -340,7 +340,7 @@ class GroupController extends AbstractController
             '%name%' => $group->getName(),
         ]);
 
-        $logger->write('Group '.$group->getName().' un-archived by '.$this->getUser()->getUsername().'.', 'Group');
+        $logger->write('Group ' . $group->getName() . ' un-archived by ' . $this->getUser()->getUsername() . '.', 'Group');
 
         $referrer = $request->headers->get('referer');
 
@@ -349,7 +349,7 @@ class GroupController extends AbstractController
 
     private function sendNewGroupApprovedNotification(Group $group, Member $creator)
     {
-        $subject = '[New Group] '.strip_tags($group->getName()).' approved';
+        $subject = '[New Group] ' . strip_tags($group->getName()) . ' approved';
         $this->sendTemplateEmail('group@bewelcome.org', $creator, 'group.approved', [
             'subject' => $subject,
             'group' => $group,

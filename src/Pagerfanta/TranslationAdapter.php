@@ -49,7 +49,7 @@ class TranslationAdapter implements AdapterInterface
                 AND (pi_lang.isArchived IS NULL OR pi_lang.isArchived = 0)
                 ";
         if (!empty($code)) {
-            $this->query .= " WHERE (pi_lang.code LIKE '%".$code."%' OR pi_dflt.code LIKE '%".$code."%')";
+            $this->query .= " WHERE (pi_lang.code LIKE '%" . $code . "%' OR pi_dflt.code LIKE '%" . $code . "%')";
         }
         $this->query .= '
             ORDER BY created desc';
@@ -64,7 +64,7 @@ class TranslationAdapter implements AdapterInterface
     {
         $query = "SELECT count(*) as cnt FROM words WHERE shortcode = 'en' AND (isArchived IS NULL OR isArchived = 0)";
         if (!empty($this->code)) {
-            $query .= " AND code LIKE '%".$this->code."%'";
+            $query .= " AND code LIKE '%" . $this->code . "%'";
         }
 
         $statement = $this->connection->query($query);
@@ -83,7 +83,7 @@ class TranslationAdapter implements AdapterInterface
      */
     public function getSlice($offset, $length)
     {
-        $query = $this->query.' LIMIT '.$offset.', '.$length;
+        $query = $this->query . ' LIMIT ' . $offset . ', ' . $length;
         $statement = $this->connection->query($query);
 
         return $statement->fetchAll();

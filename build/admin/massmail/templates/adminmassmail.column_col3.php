@@ -15,17 +15,17 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program; if not, see <http://www.gnu.org/licenses/> or 
-write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+along with this program; if not, see <http://www.gnu.org/licenses/> or
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 */
-    /** 
+    /**
      * @author shevek
      */
 
-    /** 
+    /**
      * massmail overview template
-     * 
+     *
      * @package Apps
      * @subpackage Admin
      */
@@ -34,18 +34,18 @@ $words = new MOD_words();
 <div id="adminmassmail">
 <h3><?php echo $words->get('AdminMassMailListHeader'); ?></h3>
 <?php
-$ii = 0; 
+$ii = 0;
 $this->pager->render();
-if ($this->_session->has( 'AdminMassMailStatus' )) {
+if ($this->session->has( 'AdminMassMailStatus' )) {
     echo '<div class="alert alert-success">';
-    $status = $this->_session->get('AdminMassMailStatus');
+    $status = $this->session->get('AdminMassMailStatus');
     switch($status[0]) {
         case 'Edit':
             echo $words->get('AdminMassMailSuccessEdit', $status[1]);
-            break;  
+            break;
         case 'Create':
             echo $words->get('AdminMassMailSuccessCreate', $status[1]);
-            break;  
+            break;
         case 'Enqueue':
             echo $words->get('AdminMassMailSuccessEnqueue', $status[1], $status[2]);
             break;
@@ -60,7 +60,7 @@ if ($this->_session->has( 'AdminMassMailStatus' )) {
             break;
     }
     echo '</div>';
-    $this->_session->remove('AdminMassMailStatus');
+    $this->session->remove('AdminMassMailStatus');
 }
 echo '<table class="table table-striped table-hover">';
 echo '<tr><th>' . $words->getBuffered('AdminMassMailName') . '</th>';
@@ -80,20 +80,20 @@ foreach($this->pager->getActiveSubset($this->massmails) as $massmail) {
     $enqueued = ($massmail->enqueuedCount != 0);
     $triggered = ($massmail->triggeredCount != 0);
     $edit = '<a href="admin/massmail/edit/' . $massmail->id . '">'
-        . '<img src="images/icons/comment_edit.png" alt="edit" /></a><br><a href="admin/massmail/edit/' 
-        . $massmail->id . '">' . $words->getBuffered('AdminMassMailEdit') . '</a>';    
+        . '<img src="images/icons/comment_edit.png" alt="edit" /></a><br><a href="admin/massmail/edit/'
+        . $massmail->id . '">' . $words->getBuffered('AdminMassMailEdit') . '</a>';
     $enqueue = '<a href="admin/massmail/enqueue/' . $massmail->id . '">'
-        . '<img src="images/icons/tick.png" alt="enqueue" /></a><br/><a href="admin/massmail/enqueue/' 
-        . $massmail->id . '">'. $words->getBuffered('AdminMassMailEnqueue') . '</a>'; 
+        . '<img src="images/icons/tick.png" alt="enqueue" /></a><br/><a href="admin/massmail/enqueue/'
+        . $massmail->id . '">'. $words->getBuffered('AdminMassMailEnqueue') . '</a>';
     $unqueue = '<a href="admin/massmail/unqueue/' . $massmail->id . '">'
-        . '<img src="images/icons/delete.png" alt="unqueue" /></a><br/><a href="admin/massmail/unqueue/' 
-        . $massmail->id . '">'. $words->getBuffered('AdminMassMailUnqueue') . '</a>'; 
+        . '<img src="images/icons/delete.png" alt="unqueue" /></a><br/><a href="admin/massmail/unqueue/'
+        . $massmail->id . '">'. $words->getBuffered('AdminMassMailUnqueue') . '</a>';
     $trigger = '<a href="admin/massmail/trigger/' . $massmail->id . '">'
-        . '<img src="images/icons/exclamation.png" alt="trigger" /></a><br/><a href="admin/massmail/trigger/' 
-        . $massmail->id . '">'. $words->getBuffered('AdminMassMailTrigger') . '</a>'; 
+        . '<img src="images/icons/exclamation.png" alt="trigger" /></a><br/><a href="admin/massmail/trigger/'
+        . $massmail->id . '">'. $words->getBuffered('AdminMassMailTrigger') . '</a>';
     $untrigger = '<a href="admin/massmail/trigger/' . $massmail->id . '">'
-        . '<img src="images/icons/delete.png" alt="untrigger" /></a><br/><a href="admin/massmail/untrigger/' 
-        . $massmail->id . '">'. $words->getBuffered('AdminMassMailUntrigger') . '</a>'; 
+        . '<img src="images/icons/delete.png" alt="untrigger" /></a><br/><a href="admin/massmail/untrigger/'
+        . $massmail->id . '">'. $words->getBuffered('AdminMassMailUntrigger') . '</a>';
     if ($ii % 2 == 0) {
         $str = '<tr class="blank">';
     } else {
@@ -102,7 +102,7 @@ foreach($this->pager->getActiveSubset($this->massmails) as $massmail) {
     $str .= '<td class="left"><a href="admin/massmail/details/' . $massmail->id . '">' . $massmail->Name . '</a></td>';
     if (!$enqueued) {
         $str .= '<td>' . $edit . '</td>';
-    } else {   
+    } else {
         $str .= '<td><span style="visibility: hidden;">' . $edit . '<span></td>';
     }
     $str .= '<td>' . $enqueue . '</td>';

@@ -15,8 +15,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program; if not, see <http://www.gnu.org/licenses/> or 
-write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+along with this program; if not, see <http://www.gnu.org/licenses/> or
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 */
 
@@ -29,12 +29,12 @@ Boston, MA  02111-1307, USA.
      * @package Apps
      * @subpackage RelatedGroups
      */
-     
+
 
 class RelatedGroupsModel extends  RoxModelBase
 {
     private $_relatedgroup_list = 0;
-    
+
     public function __construct()
     {
         parent::__construct();
@@ -46,7 +46,7 @@ class RelatedGroupsModel extends  RoxModelBase
      *
      * @param int $groupId
      * @return mixed false or a Group entity
-     */    
+     */
     public function findGroup($groupId)
     {
         $group = $this->createEntity('Group',$groupId);
@@ -61,25 +61,25 @@ class RelatedGroupsModel extends  RoxModelBase
     /**
      * Find all groups I am member of and which are not related groups of a given group
      *
-     * @param object $group - a group entity 
+     * @param object $group - a group entity
      * @access public
      * @return array() Returns an array
      */
     public function getMyGroups(Group $group)
     {
         $notrelatedgroups = array();
-        if (!$this->_session->has( 'IdMember' )) {
+        if (!$this->session->has( 'IdMember' )) {
             return array();
         } else {
-            $mygroups = $this->getGroupsForMember($this->_session->get('IdMember'));
+            $mygroups = $this->getGroupsForMember($this->session->get('IdMember'));
             $relatedgroups = $group->findRelatedGroups($group->getPKValue());
             foreach ($mygroups as $mygroup) {
                 if (!in_array($mygroup, $relatedgroups)) {
                     $notrelatedgroups[] = $mygroup;
                 }
-                    
+
             }
-                
+
             return $notrelatedgroups;
         }
     }

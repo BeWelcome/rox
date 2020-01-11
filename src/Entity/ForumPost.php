@@ -14,7 +14,16 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * ForumsPost.
  *
- * @ORM\Table(name="forums_posts", indexes={@ORM\Index(name="last_editorid", columns={"last_editorid"}), @ORM\Index(name="threadid", columns={"threadid"}), @ORM\Index(name="IdWriter", columns={"IdWriter"}), @ORM\Index(name="id", columns={"id"}), @ORM\Index(name="IdLocalEvent", columns={"IdLocalEvent"}), @ORM\Index(name="IdPoll", columns={"IdPoll"}), @ORM\Index(name="IdLocalVolMessage", columns={"IdLocalVolMessage"}), @ORM\Index(name="PostVisibility", columns={"PostVisibility"}), @ORM\Index(name="PostDeleted", columns={"PostDeleted"}), @ORM\Index(name="create_time", columns={"create_time"})})
+ * @ORM\Table(name="forums_posts", indexes={
+ *     @ORM\Index(name="last_editorid", columns={"last_editorid"}),
+ *     @ORM\Index(name="threadid", columns={"threadid"}),
+ *     @ORM\Index(name="IdWriter", columns={"IdWriter"}),
+ *     @ORM\Index(name="IdLocalEvent", columns={"IdLocalEvent"}),
+ *     @ORM\Index(name="IdPoll", columns={"IdPoll"}),
+ *     @ORM\Index(name="IdLocalVolMessage", columns={"IdLocalVolMessage"}),
+ *     @ORM\Index(name="PostVisibility", columns={"PostVisibility"}),
+ *     @ORM\Index(name="PostDeleted", columns={"PostDeleted"}),
+ *     @ORM\Index(name="create_time", columns={"create_time"})})
  * @ORM\Entity
  *
  * @SuppressWarnings(PHPMD)
@@ -27,8 +36,17 @@ class ForumPost
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
+     * @ORM\GeneratedValue
      */
     private $id;
+
+    /**
+     * Not used (historical)
+     * @var int
+     *
+     * @ORM\Column(name="postid", type="integer", nullable=true)
+     */
+    private $postId;
 
     /**
      * @var ForumThread
@@ -46,9 +64,17 @@ class ForumPost
     private $postvisibility = 'NoRestriction';
 
     /**
+     * not used (historical)
+     *
+     * @var int
+     * @ORM\Column(name="authorid", type="integer", nullable=true)
+     */
+    private $authorId;
+
+    /**
      * @var Member
      *
-     * @ORM\OneToOne(targetEntity="Member")
+     * @ORM\ManyToOne(targetEntity="Member")
      * @ORM\JoinColumn(name="IdWriter", referencedColumnName="id")
      */
     private $author;

@@ -471,9 +471,11 @@ class MessageModel
         $lastHour = $row[0]->numberOfMessagesLastHour;
         $lastDay = $row[0]->numberOfMessagesLastDay;
 
-        if ($comments < 1 && (
+        if (
+            $comments < 1 && (
                 $lastHour >= $perHour ||
-                $lastDay >= $perDay)) {
+                $lastDay >= $perDay)
+        ) {
             return true;
         }
 

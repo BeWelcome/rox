@@ -131,7 +131,7 @@ class AdminTreasurerController extends AdminBaseController
             $mem_redirect->errors = array('AdminTreasurerDbUpdateFailed');
             return false;
         }
-        $this->_session->set( 'AdminTreasurerStatus', 'StartSuccess' );
+        $this->session->set( 'AdminTreasurerStatus', 'StartSuccess' );
         return $this->router->url('admin_treasurer_overview', array(), false);
     }
 
@@ -159,9 +159,9 @@ class AdminTreasurerController extends AdminBaseController
         list($member, $rights) = $this->checkRights('Treasurer');
         $success = $this->model->stopDonationCampaign();
         if ($success) {
-            $this->_session->set( 'AdminTreasurerStatus', 'StopSuccess' );
+            $this->session->set( 'AdminTreasurerStatus', 'StopSuccess' );
         } else {
-            $this->_session->set( 'AdminTreasurerStatus', 'StopFailed' );
+            $this->session->set( 'AdminTreasurerStatus', 'StopFailed' );
         }
         $this->redirectAbsolute($this->router->url('admin_treasurer_overview'));
     }

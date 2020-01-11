@@ -133,7 +133,7 @@ class BaseMessageController extends AbstractController
             'folder' => $folder,
             'filter' => $request->query->all(),
             'submenu' => [
-                'active' => $type.'_'.$folder,
+                'active' => $type . '_' . $folder,
                 'items' => $this->getSubMenuItems(),
             ],
         ]);

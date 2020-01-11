@@ -16,7 +16,7 @@ class HostingRequestModel
         /** @var MessageRepository $repository */
         $repository = $this->getManager()->getRepository(Message::class);
 
-        return $repository->findLatestRequests($member, 'requests_'.$folder, $sort, $sortDir, $page, $limit);
+        return $repository->findLatestRequests($member, 'requests_' . $folder, $sort, $sortDir, $page, $limit);
     }
 
     public function checkRequestExpired(HostingRequest $request)

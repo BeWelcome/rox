@@ -33,8 +33,8 @@ $words = new MOD_words();
 $R = MOD_right::get();
 $hasRight = $R->hasRight('Treasurer');
 
-if ($this->_session->has( 'AdminTreasurerStatus' )) {
-    $status = $this->_session->get('AdminTreasurerStatus');
+if ($this->session->has( 'AdminTreasurerStatus' )) {
+    $status = $this->session->get('AdminTreasurerStatus');
     switch($status) {
         case 'StartSuccess':
             $class = 'success';
@@ -54,7 +54,7 @@ if ($this->_session->has( 'AdminTreasurerStatus' )) {
             break;
     }
     echo '<div class="' . $class . '">' . $word . '</div>';
-    $this->_session->remove('AdminTreasurerStatus');
+    $this->session->remove('AdminTreasurerStatus');
 }
 if($this->campaign) {
     echo '<h3>' . $words->get("AdminTreasurerCurrentCampaign") . '</h3>';

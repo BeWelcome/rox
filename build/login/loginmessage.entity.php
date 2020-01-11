@@ -51,7 +51,6 @@ class LoginMessage extends RoxEntityBase
     }
 
     /**
-     * @param integer $id
      * @param Member $member
      */
     public function acknowledgeMessage(Member $member) {

@@ -3,29 +3,29 @@
 
 class SignupFinishPage extends SignupBasePage
 {
-    
+
     protected function teaserHeadline()
     {
         $words = $this->layoutkit->words;
         echo $words->get('SignupFinishedTitle');
     }
-    
+
     protected function column_col2()
     {
     }
-    
+
     protected function column_col3()
     {
         $email = '(hidden e-mail address)';
-        if ($this->_session->has( 'SignupBWVars' )) {
+        if ($this->session->has( 'SignupBWVars' )) {
             // we have vars still stored, delete them
-            $signupVars = $this->_session->get('SignupBWVars');
+            $signupVars = $this->session->get('SignupBWVars');
             $email = $signupVars['email'];
-            $this->_session->remove('SignupBWVars');
+            $this->session->remove('SignupBWVars');
         }
-        
+
         $words = $this->layoutkit->words;
-        
+
         if ($User = APP_User::login()) {
             // show the page anyway.
             // redirect should happen in the controller.

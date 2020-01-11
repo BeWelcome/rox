@@ -10,7 +10,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * GalleryItems.
+ * Gallery images.
  *
  * @ORM\Table(name="gallery_items", indexes={@ORM\Index(name="file", columns={"file"}), @ORM\Index(name="user_id_foreign", columns={"user_id_foreign"})})
  * @ORM\Entity
@@ -21,6 +21,13 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class GalleryImage
 {
+    /**
+     * @var Gallery
+     *
+     * @ORM\ManyToOne(targetEntity="Gallery", inversedBy="images")
+     */
+    private $gallery;
+
     /**
      * @var Member
      *
@@ -350,6 +357,7 @@ class GalleryImage
     {
         return $this->id;
     }
+
     /**
      * Triggered on insert.
      *
@@ -358,5 +366,25 @@ class GalleryImage
     public function onPrePersist()
     {
         $this->created = new \DateTime('now');
+    }
+
+    /**
+     * Get gallery
+     *
+     * @return Gallery
+     */
+    public function getGallery()
+    {
+        return $this->gallery;
+    }
+
+    /**
+     * Set gallery
+     *
+     * @param Gallery $gallery
+     */
+    public function setGallery(Gallery $gallery)
+    {
+        $this->gallery = $gallery;
     }
 }

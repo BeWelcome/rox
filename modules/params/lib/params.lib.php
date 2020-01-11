@@ -81,7 +81,7 @@ class MOD_params
      */
     public static function loadParams()
     {
-        if (empty(self::$_instance->_session->get("Param")))
+        if (empty(self::$_instance->session->get("Param")))
         {
             // moved from PAppModel
             // todo: move to a PROPER place
@@ -90,9 +90,9 @@ class MOD_params
             // It could also be a good idea to make some $this->BW_Param thing with it instead of using SESSION, but there is already many code with session
             $result = self::$dao->query("SELECT * FROM `params`");
             if (!$result) {
-                    throw new Exception('Failed to retrieve $this->_session->get("Param")!');
+                    throw new Exception('Failed to retrieve $this->session->get("Param")!');
             }
-            self::$_instance->_session->set( "Param", $result->fetch(PDB::FETCH_OBJ) );
+            self::$_instance->session->set( "Param", $result->fetch(PDB::FETCH_OBJ) );
         }
     }
 

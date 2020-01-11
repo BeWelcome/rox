@@ -15,8 +15,8 @@ class LinkShowFriendsPage extends LinkPage
     protected function column_col3()
     {
         $page_url = PVars::getObj('env')->baseuri . implode('/', PRequest::get()->request);
-        
-		$from=$this->_session->get('Username') ;
+
+		$from=$this->session->get('Username') ;
 		$degree=1 ;
 		$limit=50 ;
 		if ($mem_redirect = $this->layoutkit->formkit->getMemFromRedirect()) {
@@ -42,16 +42,16 @@ class LinkShowFriendsPage extends LinkPage
 			show links: show one or more links between two given members<br>
 			update links: flush the link database and create new entries
 			<p>
-			
+
 			<p>
 			So far data from comments and special relations is taken into consideration.
 			<p>
-			
+
 			<p>
 			Stuff like Preference setting to hide/disable oneself from the link system and more is still needed
 			<p>
 			';
-        
+
         echo '
 			<p>
 			<form method="POST" action="'.$page_url.'">
@@ -61,7 +61,7 @@ class LinkShowFriendsPage extends LinkPage
 			</form>
 			</p>
         ';
-		
+
 		if ($mem_redirect) {
             // result from calculation
             echo '
@@ -70,7 +70,7 @@ class LinkShowFriendsPage extends LinkPage
 			</p>
            ';
 
-			$model = new LinkModel();		   
+			$model = new LinkModel();
 			if (MOD_right::get()->hasRight('Debug')) {
 
 				echo "<p>(Debug Right) The IDs for the Friends (retrieved by getFriends): ";
@@ -80,24 +80,24 @@ class LinkShowFriendsPage extends LinkPage
 				}
 				echo "</p>";
 			} // ENd if debug right
-			
+
 
 			$friendsData = $mem_redirect->friendsFull;
 			//var_dump($friendsData);
 			require 'templates/linkshowfriendspage_people.php';
 	   }
-        
+
     }
-	
-	
-    
-    
+
+
+
+
     protected function teaserHeadline()
     {
         echo 'Show Friends';
     }
-    
-    
+
+
     protected function getPageTitle() {
         return 'Friends Links';
     }

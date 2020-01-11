@@ -56,7 +56,7 @@ trait MessageTrait
         $message->setReceiver($receiver);
         $message->setSubject($subject);
 
-        $body = $this->getEngine()->render('_partials/'.$parent.'/'.$template.'.html.twig', $parameters);
+        $body = $this->getEngine()->render('_partials/' . $parent . '/' . $template . '.html.twig', $parameters);
         $message->setMessage($body);
         $em->persist($message);
         $em->flush();

@@ -28,9 +28,12 @@ class LegacyController extends AbstractController
      * @param UrlGeneratorInterface $urlGenerator
      * @param ParameterBagInterface $params
      *
+     * @param Security $securityHelper
      * @return Response
      *
      * @throws DBALException
+     * @throws AccessDeniedException
+     *
      * @SuppressWarnings(PHPMD.StaticAccess)
      */
     public function showAction(

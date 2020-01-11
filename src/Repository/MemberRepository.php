@@ -23,7 +23,7 @@ class MemberRepository extends EntityRepository implements UserLoaderInterface
         return $this->createQueryBuilder('u')
             ->select('u.username')
             ->where('u.username Like :username')
-            ->setParameter('username', '%'.$username.'%')
+            ->setParameter('username', '%' . $username . '%')
             ->andWhere('u.status in (:status)')
             ->setParameter(':status', MemberStatusType::ACTIVE_ALL_ARRAY)
             ->setMaxResults(10)
@@ -57,7 +57,7 @@ class MemberRepository extends EntityRepository implements UserLoaderInterface
     {
         return $this->createQueryBuilder('u')
             ->where('u.username like :term OR u.email like :term')
-            ->setParameter('term', '%'.$term.'%')
+            ->setParameter('term', '%' . $term . '%')
             ->setMaxResults(20)
             ->getQuery()
             ->getResult();

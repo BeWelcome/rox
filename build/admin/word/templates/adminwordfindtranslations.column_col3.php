@@ -1,10 +1,10 @@
 <?php
 
     $vars = $this->getRedirectedMem('vars');
-   
+
     $formkit = $this->layoutkit->formkit;
     $callback_tag = $formkit->setPostCallback('AdminWordController', 'findTranslationsCallback');
-    
+
     $errors = $this->getRedirectedMem('errors');
     if (!empty($errors)) {
         echo '<div class="error">';
@@ -15,9 +15,9 @@
     }
 
 
-if ($this->_session->has( 'trData' )){
-    $data = $this->_session->get('trData');
-    $this->_session->remove('trData');
+if ($this->session->has( 'trData' )){
+    $data = $this->session->get('trData');
+    $this->session->remove('trData');
 }
 ?>
 <form method="post" name="TrEdit">
@@ -70,7 +70,7 @@ foreach($data as $dat){
 <?php
 if ($dat->inScope){
     echo '<a href="/admin/word/edit/'.$dat->EngCode.'/'.$dat->TrShortcode.'">';
-    echo $dat->EngCode.' - '.$words->get("lang_".$dat->TrShortcode).'</a>';    
+    echo $dat->EngCode.' - '.$words->get("lang_".$dat->TrShortcode).'</a>';
 } else {
     echo $dat->EngCode.' - '.$words->get("lang_".$dat->TrShortcode);
 }

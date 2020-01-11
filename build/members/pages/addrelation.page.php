@@ -2,7 +2,7 @@
 
 
 class AddRelationPage extends RelationsPage
-{    
+{
     protected function getSubmenuActiveItem()
     {
         return 'relationsadd';
@@ -15,7 +15,7 @@ class AddRelationPage extends RelationsPage
         $layoutkit = $this->layoutkit;
         $formkit = $layoutkit->formkit;
         $callback_tag = $formkit->setPostCallback('MembersController', 'RelationCallback');
-        $page_url = PVars::getObj('env')->baseuri . implode('/', PRequest::get()->request); 
+        $page_url = PVars::getObj('env')->baseuri . implode('/', PRequest::get()->request);
         $TabRelationsType = $member->get_TabRelationsType();
         $relation = $this->model->get_relation_between_members($member->id);
             if (isset($relation['member']->Confirmed) && $relation['member']->Confirmed == 'No') {
@@ -36,7 +36,7 @@ class AddRelationPage extends RelationsPage
         <form method="post" action="<?=$page_url?>" name="relation" id="relation" enctype="multipart/form-data">
         <fieldset>
             <input type="hidden"  name="IdRelation"  value="<?=$member->id?>" />
-            <input type="hidden"  name="IdOwner"  value="<?=$this->_session->get('IdMember')?>" />
+            <input type="hidden"  name="IdOwner"  value="<?=$this->session->get('IdMember')?>" />
             <?=$callback_tag?>
             <legend><?=$words->get($action.'Relation')?></legend>
             <p class="small"><?=$words->get('MyRelationListExplanation',$member->Username,$member->Username)?></p>

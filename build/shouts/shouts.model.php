@@ -8,14 +8,14 @@
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License (GPL)
  * @version $Id:blog.model.php 201 2007-02-11 14:07:56Z marco $
  */
-class Shouts extends PAppModel 
+class Shouts extends PAppModel
 {
     private $_dao;
     private $_namespace;
 
     /*
      * Blogentry flags
-     * 
+     *
      * binary
      */
     /**
@@ -26,13 +26,13 @@ class Shouts extends PAppModel
      * protected
      */
     const FLAG_VIEW_PROTECTED = 2;
-    const FLAG_STICKY         = 8; 
+    const FLAG_STICKY         = 8;
     /**
      * anyone may comment
      */
     const FLAG_COMMENT_ALL    = 16;
 
-    public function __construct() 
+    public function __construct()
     {
         parent::__construct();
     }
@@ -41,7 +41,7 @@ class Shouts extends PAppModel
          get comments
         */
     public function getShouts($table,$table_id = 0) {
-    	$query = 
+    	$query =
         "
 SELECT
     c.id                          AS shout_id,
@@ -56,10 +56,10 @@ FROM
     shouts c
     JOIN members u ON c.member_id_foreign = u.id
     AND u.Status IN ('Active')
-WHERE 
+WHERE
     c.table = '".$table."'
     AND c.table_id = '".(int)$table_id."'
-ORDER BY 
+ORDER BY
     c.created DESC
         "
         ;
@@ -82,7 +82,7 @@ AND `table_id` = '.(int)$table_id.'
         ';
         return $this->dao->exec($query);
     }
-    
+
     /**
      * Processing creation of a comment
      *
@@ -96,7 +96,7 @@ AND `table_id` = '.(int)$table_id.'
     public function shoutProcess($table = false,$table_id = false) {
     	$callbackId = PFunctions::hex2base64(sha1(__METHOD__));
         if (PPostHandler::isHandling()) {
-            if (!$this->_session->get('IdMember'))
+            if (!$this->session->get('IdMember'))
                 return false;
             $vars =& PPostHandler::getVars();
             $request = PRequest::get()->request;
@@ -117,7 +117,7 @@ SET
     `id`='.$shoutId.',
     `table`=\''.$table.'\',
     `table_id`=\''.$table_id.'\',
-    `member_id_foreign`='.$this->_session->get('IdMember').',
+    `member_id_foreign`='.$this->session->get('IdMember').',
     `title`=\''.(isset($vars['ctit'])?$this->dao->escape($vars['ctit']):'').'\',
     `text`=\''.$this->dao->escape($vars['ctxt']).'\',
     `created`=NOW()';
@@ -133,9 +133,9 @@ SET
             return $callbackId;
         }
     }
-    
-        private function makeClickableLinks($text) 
-        {    
+
+        private function makeClickableLinks($text)
+        {
             $text = preg_replace('/(((f|ht){1}tp:\/\/)[-a-zA-Z0-9@:%_\+.~#?&\/\/=]+)/i',
                 '<a href="\\1">\\1</a>', $text);
             $text = preg_replace('/([[:space:]()[{}])(www.[-a-zA-Z0-9@:%_\+.~#?&\/\/=]+)/i',

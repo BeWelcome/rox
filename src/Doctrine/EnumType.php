@@ -1,4 +1,5 @@
 <?php
+
 /*
  * Borrowed from the Doctrine documentation: http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/cookbook/mysql-enums.html
  */
@@ -22,10 +23,10 @@ abstract class EnumType extends Type
     public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
     {
         $values = array_map(function ($val) {
-            return "'".$val."'";
+            return "'" . $val . "'";
         }, $this->values);
 
-        return 'ENUM('.implode(', ', $values).')';
+        return 'ENUM(' . implode(', ', $values) . ')';
     }
 
     public function convertToPHPValue($value, AbstractPlatform $platform)
@@ -36,7 +37,7 @@ abstract class EnumType extends Type
     public function convertToDatabaseValue($value, AbstractPlatform $platform)
     {
         if (!\in_array($value, $this->values, true)) {
-            throw new \InvalidArgumentException("Invalid '".$this->name."' value: ".$value.'.');
+            throw new \InvalidArgumentException("Invalid '" . $this->name . "' value: " . $value . '.');
         }
 
         return $value;

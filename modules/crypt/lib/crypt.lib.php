@@ -101,7 +101,7 @@ WHERE id = $IdCrypt
             if ($rr->MemberCryptedValue == "" || $rr->MemberCryptedValue == 0) {
                 return (""); // if empty no need to send crypted
             }
-        	if ($this->_session->get("IdMember") == $rr->IdMember) {
+        	if ($this->session->get("IdMember") == $rr->IdMember) {
         		//	  echo $rr->MemberCryptedValue,"<br>";
         		return (self::GetDeCryptM($rr->MemberCryptedValue));
         	}
@@ -171,7 +171,7 @@ WHERE id = $IdCrypt
     	if (!$ss)
     		return (0); // Don't insert null values
     	if (!$IdMember)
-            $IdMember = $this->_session->get('IdMember');
+            $IdMember = $this->session->get('IdMember');
         $ssA = $this->GetCryptA($ss);
         $ssM = $this->GetCryptM($ss,$IsCrypted);
         $crypt_db = PVars::getObj('syshcvol')->Crypted;
@@ -275,7 +275,7 @@ WHERE id = $IdCrypt
         )->fetch(PDB::FETCH_OBJ);
     	if (!$rr)
     		return (false); // if no value, it is not crypted
-    	if ($this->_session->has( "IdMember" ) && $this->_session->get("IdMember") == $rr->IdMember) {
+    	if ($this->session->has( "IdMember" ) && $this->session->get("IdMember") == $rr->IdMember) {
     		//	  echo $rr->MemberCryptedValue,"<br>";
     		return (self::GetDeCryptM($rr->MemberCryptedValue));
     	} else {
@@ -315,7 +315,7 @@ WHERE id = $IdCrypt
     	if (!$ss)
     		return false; // Don't insert null values
     	if (!$IdMember)
-            $IdMember = $this->_session->get('IdMember');
+            $IdMember = $this->session->get('IdMember');
     	if ($IdCrypt == 0) {
     		return (self::insertCrypted($ss,$TableColumn,$IdRecord, $IdMember, $IsCrypted)); // Create a new entry
     	}

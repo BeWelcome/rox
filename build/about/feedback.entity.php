@@ -15,8 +15,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program; if not, see <http://www.gnu.org/licenses/> or 
-write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+along with this program; if not, see <http://www.gnu.org/licenses/> or
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 */
 
@@ -140,7 +140,7 @@ SQL
         $this->Status = $status;
         $this->IdVolunteer = $category->IdVolunteer;
         $this->IdMember = $member ? $member->id : 0;
-        $this->IdLanguage = $this->_session->get('IdLanguage');
+        $this->IdLanguage = $this->session->get('IdLanguage');
         $this->created = date('Y-m-d H:i:s');
         return !!$this->insert();
     }

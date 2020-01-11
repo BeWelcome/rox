@@ -35,7 +35,7 @@ class Translation
     private $owner;
 
     /**
-     * @var int
+     * @var integer
      *
      * @ORM\Column(name="IdTrad", type="integer", nullable=false)
      */
@@ -80,7 +80,7 @@ class Translation
     private $sentence;
 
     /**
-     * @var int
+     * @var integer
      *
      * @ORM\Column(name="IdRecord", type="integer", nullable=false)
      */
@@ -94,7 +94,7 @@ class Translation
     private $tablecolumn = 'NotSet';
 
     /**
-     * @var int
+     * @var integer
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id

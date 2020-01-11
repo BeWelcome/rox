@@ -81,7 +81,7 @@ class RoxFrontRouter
     protected function initUser()
     {
         $this->setLanguage();
-        PVars::register('lang', $this->_session->get('lang'));
+        PVars::register('lang', $this->session->get('lang'));
 
         $roxModelBase = new RoxModelBase();
         $member = $roxModelBase->getLoggedInMember();
@@ -110,15 +110,15 @@ class RoxFrontRouter
 	*/
     public function setLanguage()
     {
-        if ($this->_session->has('_locale')) {
-            $this->_session->set('lang', $this->_session->get('_locale'));
+        if ($this->session->has('_locale')) {
+            $this->session->set('lang', $this->session->get('_locale'));
 
             // Set id of language
             $Model = new RoxFrontRouterModel();
-            $lang = $Model->getLanguage($this->_session->get('_locale'));
-            $this->_session->set('IdLanguage', $lang->id);
+            $lang = $Model->getLanguage($this->session->get('_locale'));
+            $this->session->set('IdLanguage', $lang->id);
         }
-        if (!($this->_session->has('lang')) ) {
+        if (!($this->session->has('lang')) ) {
             $Model = new RoxFrontRouterModel;
 
             $tt=explode(".",$_SERVER['HTTP_HOST']) ;
@@ -129,16 +129,16 @@ class RoxFrontRouter
             }
             if ($urlheader!='www' and $urlheader!='alpha') {
                 if ($trylang = $Model->getPossibleUrlLanguage($urlheader) ) {
-                    $this->_session->set( 'lang', $trylang->ShortCode );
-                    $this->_session->set( 'IdLanguage', $trylang->id );
+                    $this->session->set( 'lang', $trylang->ShortCode );
+                    $this->session->set( 'IdLanguage', $trylang->id );
                     return ;
                 }
             }
 
             if (!empty($_COOKIE['LastLang']) and $trylang = $Model->getLanguage($_COOKIE['LastLang'])) { // If there is already a cookie ide set, we are going try it as language
                 $langcode = $_COOKIE['LastLang'];
-                $this->_session->set( 'lang', $trylang->ShortCode );
-                $this->_session->set( 'IdLanguage', $trylang->id );
+                $this->session->set( 'lang', $trylang->ShortCode );
+                $this->session->set( 'IdLanguage', $trylang->id );
                 return ;
             }
 
@@ -147,9 +147,9 @@ class RoxFrontRouter
             }
         }
 
-        if (!$this->_session->has('lang')) {
-            $this->_session->set('lang', 'en');
-            $this->_session->set('IdLanguage', 0);
+        if (!$this->session->has('lang')) {
+            $this->session->set('lang', 'en');
+            $this->session->set('IdLanguage', 0);
         }
 
         return;
@@ -185,8 +185,8 @@ class RoxFrontRouter
             }
         }
         if ($result_lang){
-            $this->_session->set( 'lang', $result_lang->ShortCode );
-            $this->_session->set( 'IdLanguage', $result_lang->id );
+            $this->session->set( 'lang', $result_lang->ShortCode );
+            $this->session->set( 'IdLanguage', $result_lang->id );
             return true;
         }
         return false;
@@ -306,12 +306,12 @@ class RoxFrontRouter
 
     protected function traditionalPostHandling()
     {
-        if (!$this->_session->has( 'PostHandler' )) {
+        if (!$this->session->has( 'PostHandler' )) {
             // do nothing
-        } else if (!is_a($this->try_unserialize($this->_session->get('PostHandler')), 'PPostHandler')) {
-            // the $this->_session->get('PostHandler') got damaged.
+        } else if (!is_a($this->try_unserialize($this->session->get('PostHandler')), 'PPostHandler')) {
+            // the $this->session->get('PostHandler') got damaged.
             // a reset can repair it.
-            $this->_session->remove('PostHandler');
+            $this->session->remove('PostHandler');
         }
         // traditional posthandler
         PPostHandler::get();

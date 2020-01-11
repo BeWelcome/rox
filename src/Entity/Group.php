@@ -337,16 +337,6 @@ class Group implements ObjectManagerAware
         return $this->approved;
     }
 
-    /**
-     * Triggered on insert.
-     *
-     * @ORM\PrePersist
-     */
-    public function onPrePersist()
-    {
-        $this->created = new DateTime('now');
-    }
-
     public function getGroupMemberships()
     {
         return $this->groupMemberships->toArray();
@@ -460,5 +450,15 @@ class Group implements ObjectManagerAware
     public function injectObjectManager(ObjectManager $objectManager, ClassMetadata $classMetadata)
     {
         $this->objectManager = $objectManager;
+    }
+
+    /**
+     * Triggered on insert.
+     *
+     * @ORM\PrePersist
+     */
+    public function onPrePersist()
+    {
+        $this->created = new DateTime('now');
     }
 }

@@ -624,6 +624,7 @@ class Message
     public function onPrePersist()
     {
         $this->created = new \DateTime('now');
+        $this->dateSent = $this->created;
     }
 
     /**

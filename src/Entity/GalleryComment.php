@@ -2,39 +2,47 @@
 
 namespace App\Entity;
 
+use Carbon\Carbon;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * GalleryComments
  *
  * @ORM\Table(name="gallery_comments", indexes={@ORM\Index(name="blog_id_foreign", columns={"gallery_items_id_foreign"}), @ORM\Index(name="user_id_foreign", columns={"user_id_foreign"})})
+ * @ORM\HasLifecycleCallbacks
  * @ORM\Entity
+ *
+ * @SuppressWarnings(PHPMD)
+ * Auto generated class do not check mess
  */
-class GalleryComments
+class GalleryComment
 {
     /**
      * @var integer
      *
      * @ORM\Column(name="gallery_id_foreign", type="integer", nullable=false)
      */
-    private $galleryIdForeign = '0';
+    private $gallery = 0;
 
     /**
-     * @var integer
+     * @var GalleryImage
      *
-     * @ORM\Column(name="gallery_items_id_foreign", type="integer", nullable=false)
+     * @ORM\OneToOne(targetEntity="GalleryImage", fetch="EAGER")
+     * @ORM\JoinColumn(name="gallery_items_id_foreign", referencedColumnName="id", nullable=false)
      */
-    private $galleryItemsIdForeign = '0';
+    private $image;
 
     /**
-     * @var integer
+     * @var Member
      *
-     * @ORM\Column(name="user_id_foreign", type="integer", nullable=false)
+     * @ORM\OneToOne(targetEntity="Member", fetch="EAGER")
+     * @ORM\JoinColumn(name="user_id_foreign", referencedColumnName="id", nullable=false)
      */
-    private $userIdForeign = '0';
+    private $member;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(name="created", type="datetime", nullable=false)
      */
@@ -63,42 +71,36 @@ class GalleryComments
      */
     private $id;
 
-
-
     /**
-     * Set galleryIdForeign
+     * @param int $gallery
      *
-     * @param integer $galleryIdForeign
-     *
-     * @return GalleryComments
+     * @return GalleryComment
      */
-    public function setGalleryIdForeign($galleryIdForeign)
+    public function setGallery($gallery)
     {
-        $this->galleryIdForeign = $galleryIdForeign;
+        $this->gallery = $gallery;
 
         return $this;
     }
 
     /**
-     * Get galleryIdForeign
-     *
-     * @return integer
+     * @return int
      */
-    public function getGalleryIdForeign()
+    public function getGallery()
     {
-        return $this->galleryIdForeign;
+        return $this->gallery;
     }
 
     /**
      * Set galleryItemsIdForeign
      *
-     * @param integer $galleryItemsIdForeign
+     * @param GalleryImage $image
      *
-     * @return GalleryComments
+     * @return GalleryComment
      */
-    public function setGalleryItemsIdForeign($galleryItemsIdForeign)
+    public function setImage($image)
     {
-        $this->galleryItemsIdForeign = $galleryItemsIdForeign;
+        $this->image = $image;
 
         return $this;
     }
@@ -106,59 +108,41 @@ class GalleryComments
     /**
      * Get galleryItemsIdForeign
      *
-     * @return integer
+     * @return GalleryImage
      */
-    public function getGalleryItemsIdForeign()
+    public function getImage()
     {
-        return $this->galleryItemsIdForeign;
+        return $this->image;
     }
 
     /**
-     * Set userIdForeign
+     * @param int $member
      *
-     * @param integer $userIdForeign
-     *
-     * @return GalleryComments
+     * @return GalleryComment
      */
-    public function setUserIdForeign($userIdForeign)
+    public function setMember($member)
     {
-        $this->userIdForeign = $userIdForeign;
+        $this->member = $member;
 
         return $this;
     }
 
     /**
-     * Get userIdForeign
-     *
-     * @return integer
+     * @return Member
      */
-    public function getUserIdForeign()
+    public function getMember()
     {
-        return $this->userIdForeign;
-    }
-
-    /**
-     * Set created
-     *
-     * @param \DateTime $created
-     *
-     * @return GalleryComments
-     */
-    public function setCreated($created)
-    {
-        $this->created = $created;
-
-        return $this;
+        return $this->member;
     }
 
     /**
      * Get created
      *
-     * @return \DateTime
+     * @return Carbon
      */
     public function getCreated()
     {
-        return $this->created;
+        return Carbon::instance($this->created);
     }
 
     /**
@@ -166,7 +150,7 @@ class GalleryComments
      *
      * @param string $title
      *
-     * @return GalleryComments
+     * @return GalleryComment
      */
     public function setTitle($title)
     {
@@ -190,7 +174,7 @@ class GalleryComments
      *
      * @param string $text
      *
-     * @return GalleryComments
+     * @return GalleryComment
      */
     public function setText($text)
     {
@@ -212,10 +196,20 @@ class GalleryComments
     /**
      * Get id
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Triggered on insert.
+     *
+     * @ORM\PrePersist
+     */
+    public function onPrePersist()
+    {
+        $this->created = new \DateTime('now');
     }
 }

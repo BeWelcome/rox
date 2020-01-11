@@ -25,7 +25,7 @@ class HostingRequestGuest extends HostingRequestAbstractType
             if (!$messageRequest || null === $messageRequest->getSubject()) {
                 $this->addMessageTextArea(
                     $form,
-                    'Please give a short introduction of yourself and let your host know '.
+                    'Please give a short introduction of yourself and let your host know ' .
                     'when and how you\'re going to arrive.'
                 );
                 $form->add('send', SubmitType::class);

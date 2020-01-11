@@ -84,10 +84,10 @@ if (empty($vars)) {
                     <div class="form-group mb-1">
                         <label for="activity-start-date"><?php echo $words->get('ActivityStart'); ?>*</label>
                         <div class="input-group date"
-                             id="datetimepicker1"
+                             id="activity-start-datepicker"
                              data-target-input="nearest">
                             <div class="input-group-prepend"
-                                 data-target="#datetimepicker1"
+                                 data-target="#activity-start-date"
                                  data-toggle="datetimepicker">
                                 <div class="input-group-text">
                                     <i class="fa fa-calendar"></i>
@@ -98,17 +98,17 @@ if (empty($vars)) {
                                    name="activity-start-date"
                                    class="form-control datetimepicker-input"
                                    data-toggle="datetimepicker"
-                                   data-target="#datetimepicker1" value="<?= $vars['activity-start-date'] ?>" >
+                                   data-target="#activity-start-date" value="<?= $vars['activity-start-date'] ?>" >
                         </div>
                     </div>
 
                     <div class="form-group mb-1">
                         <label for="activity-end-date"><?php echo $words->get('ActivityEnd'); ?>*</label>
                         <div class="input-group date"
-                             id="datetimepicker2"
+                             id="activity-end-datepicker"
                              data-target-input="nearest">
                             <div class="input-group-prepend"
-                                 data-target="#datetimepicker2"
+                                 data-target="#activity-end-date"
                                  data-toggle="datetimepicker">
                                 <div class="input-group-text">
                                     <i class="fa fa-calendar"></i>
@@ -119,7 +119,7 @@ if (empty($vars)) {
                                    name="activity-end-date"
                                    class="form-control datetimepicker-input"
                                    data-toggle="datetimepicker"
-                                   data-target="#datetimepicker2" value="<?= $vars['activity-end-date'] ?>" >
+                                   data-target="#activity-end-date" value="<?= $vars['activity-end-date'] ?>" >
                         </div>
                     </div>
 
@@ -162,21 +162,18 @@ if (empty($vars)) {
 </div>
 <script>
     $(function () {
-        let activityStartDate = $('#datetimepicker1');
-        let activityEndDate = $('#datetimepicker2');
-        let lang = document.documentElement.lang;
+        let activityStartDate = $('#activity-start-date');
+        let activityEndDate = $('#activity-end-date');
         activityStartDate.datetimepicker({
-            locale: lang,
             format: 'YYYY-MM-DD HH:mm',
             collapse: false,
-            sideBySide: false
+            sideBySide: false,
         });
         activityEndDate.datetimepicker({
-            locale: lang,
             format: 'YYYY-MM-DD HH:mm',
             collapse: false,
-            sideBySide: true,
-            useCurrent: false
+            sideBySide: false,
+            useCurrent: false,
         });
 
         activityStartDate.on("change.datetimepicker", function (e) {

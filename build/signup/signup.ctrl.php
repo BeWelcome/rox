@@ -44,7 +44,7 @@ class SignupController extends RoxControllerBase {
     public function index($args = false)
     {
         // In case Signup is closed
-        if (isset($this->_session->get('Param')->FeatureSignupClose) && $this->_session->get('Param')->FeatureSignupClose=="Yes") {
+        if (isset($this->session->get('Param')->FeatureSignupClose) && $this->session->get('Param')->FeatureSignupClose=="Yes") {
             return new SignupClosedPage();
         }
 
@@ -60,12 +60,12 @@ class SignupController extends RoxControllerBase {
         $request = $args->request;
         $model = new SignupModel();
 
-        if ($this->_session->has( 'IdMember' ) && !MOD_right::get()->hasRight('words')) {
-            if (!$this->_session->has( 'Username' )) {
-                $this->_session->remove('IdMember');
+        if ($this->session->has( 'IdMember' ) && !MOD_right::get()->hasRight('words')) {
+            if (!$this->session->has( 'Username' )) {
+                $this->session->remove('IdMember');
                 $page = new SignupProblemPage();
             } else {
-                $this->redirect('members/'.$this->_session->get('Username'));
+                $this->redirect('members/'.$this->session->get('Username'));
             }
         } else switch (isset($request[1]) ? $request[1] : '') {
 
@@ -159,7 +159,7 @@ class SignupController extends RoxControllerBase {
                 if ($error === false) {
                     // Redirect to edit profile forcing user to login
                     // Set flash message so that user knows what happened
-                    $this->_session->getFlashBag()->add('notice', $model->getWords()->getSilent('SignupSuccess'));
+                    $this->session->getFlashBag()->add('notice', $model->getWords()->getSilent('SignupSuccess'));
                     return $this->redirectAbsolute('/editmyprofile');
                 } else {
                     // Something bad happened; tell the user
@@ -200,14 +200,14 @@ class SignupController extends RoxControllerBase {
 
     public function signupFormCallback($args, $action, $mem_redirect, $mem_resend)
     {
-        $vars =$this->_session->get('SignupBWVars');
+        $vars =$this->session->get('SignupBWVars');
         if (is_array($vars)) {
             $vars = array_merge($vars, $args->post);
         } else {
             $vars = $args->post;
         }
-        $this->_session->set('SignupBWVars', $vars);
-        $vars = $this->_session->get('SignupBWVars');
+        $this->session->set('SignupBWVars', $vars);
+        $vars = $this->session->get('SignupBWVars');
         $request = $args->request;
 
         if (!isset($request[1])) {
@@ -229,14 +229,14 @@ class SignupController extends RoxControllerBase {
             if (count($errors) > 0) {
                 // show form again
                 $vars['errors'] = $errors;
-                $this->_session->set( 'SignupBWVars', $vars );
+                $this->session->set( 'SignupBWVars', $vars );
                 $mem_redirect->post = $vars;
                 return false;
             }
             if ($step < '4') {
                 $step++;
                 $model->polishFormValues($vars);
-                $this->_session->set( 'SignupBWVars', $vars );
+                $this->session->set( 'SignupBWVars', $vars );
                 $mem_redirect->post = $vars;
                 return 'signup/' . ($step);
             }

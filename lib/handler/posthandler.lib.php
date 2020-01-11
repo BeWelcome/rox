@@ -19,7 +19,7 @@ use App\Utilities\SessionTrait;
 
 /**
  * Post handling class
- * 
+ *
  * @author The myTravelbook Team <http://www.sourceforge.net/projects/mytravelbook>
  * @copyright Copyright (c) 2005-2006, myTravelbook Team
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License (GPL)
@@ -32,15 +32,15 @@ class PPostHandler {
     private $_callback = array();
     private $_postHandling = FALSE;
     private $_activeKey = FALSE;
-    
+
     private function __construct() {
         $this->setSession();
     }
-    
+
     public function __sleep() {
         return array('_vars', '_callback');
     }
-    
+
     public static function get () {
         $session = SessionSingleton::getSession();
         if (!isset(self::$_instance) || get_class(self::$_instance) != __CLASS__) {
@@ -58,7 +58,7 @@ class PPostHandler {
         if (is_array ($_POST) && count ($_POST) > 0) {
             self::$_instance->_postHandling = true;
             self::$_instance->save();
-            self::$_instance->_session->set( 'PostHandler', serialize(self::$_instance) );
+            self::$_instance->getSession()->set( 'PostHandler', serialize(self::$_instance) );
             $req = $_SERVER['REQUEST_URI'];
             if (!PVars::get()->cookiesAccepted) {
                 $req = parse_url($req);
@@ -79,7 +79,7 @@ class PPostHandler {
             header('Location: '.$req);
             PPHP::PExit();
         } else {
-            self::$_instance->_session->set( 'PostHandler', serialize(self::$_instance) );
+            self::$_instance->getSession()->set( 'PostHandler', serialize(self::$_instance) );
             self::$_instance->_postHandling = false;
         }
         return self::$_instance;
@@ -110,7 +110,7 @@ class PPostHandler {
             $cbRet = call_user_func(array(&$c, $callback[1]));
             if ($cbRet)
                 $ret = $cbRet;
-            self::$_instance->_session->set( 'PostHandler', serialize($this) );
+            self::$_instance->getSession()->set( 'PostHandler', serialize($this) );
             if ($ret) {
                 $ret = parse_url($ret);
                 $query = array();
@@ -129,11 +129,11 @@ class PPostHandler {
                 session_write_close ();
                 header ('Location: ' . $ret);
                 PPHP::PExit();
-            }           
+            }
             return TRUE;
         }
     }
-    
+
     public static function varSet($key) {
         if (!isset(self::$_instance)) return false;
         if (!self::$_instance->_activeKey) return false;
@@ -142,7 +142,7 @@ class PPostHandler {
         if (!array_key_exists ($key, self::$_instance->_vars[self::$_instance->_activeKey])) return false;
         return true;
     }
-    
+
     public static function &getVars($key = false) {
         $false = false;
         if (!isset(self::$_instance->_activeKey) || (!self::$_instance->_activeKey && !$key)) return $false;
@@ -158,22 +158,22 @@ class PPostHandler {
             return self::$_instance->_vars[$key];
         }
     }
-    
+
     public static function clearVars($key = false) {
         if (isset(self::$_instance->_activeKey) && self::$_instance->_activeKey && array_key_exists(self::$_instance->_activeKey, self::$_instance->_vars))
             self::$_instance->_vars[self::$_instance->_activeKey] = array();
         if ($key && array_key_exists($key, self::$_instance->_vars))
             self::$_instance->_vars[$key] = array();
-        self::$_instance->_session->set( 'PostHandler', serialize (self::$_instance) );
+        self::$_instance->getSession()->set( 'PostHandler', serialize (self::$_instance) );
     }
-    
+
     public static function setCallback($key, $class, $action) {
         if (!class_exists($class))
             return false;
         if (get_parent_class($class) != 'PAppModel' && $class != 'PAppModel' && get_parent_class($class) != 'PAppController')
             return false;
         self::$_instance->_callback[$key] = array ($class, $action);
-        self::$_instance->_session->set( 'PostHandler', serialize(self::$_instance) );
+        self::$_instance->getSession()->set( 'PostHandler', serialize(self::$_instance) );
         return true;
     }
 

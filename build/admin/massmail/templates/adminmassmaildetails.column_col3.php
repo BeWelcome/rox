@@ -49,7 +49,7 @@ echo '<td><a href="admin/massmail/details/' . $this->id . '/sent">' . $massmail-
 echo '<td><a href="admin/massmail/details/' . $this->id . '/failed">' . $massmail->Failed . '</a></td></tr>';
 if (!$this->detail) {
     echo '<tr class="highlight"><td class="left" colspan="5"><strong>' . $words->get('AdminMassMailAvailableLanguages') . '</strong>:';
-    $lang = $this->_session->get('lang');
+    $lang = $this->session->get('lang');
     foreach($massmail->Languages as $language) {
         if ($language->ShortCode == $lang) {
             echo '<strong>';

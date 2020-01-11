@@ -10,10 +10,15 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="shouts")
  * @ORM\HasLifecycleCallbacks
  * @ORM\Entity
+ *
+ * @SuppressWarnings(PHPMD)
+ * Auto generated class do not check mess
  */
 class Shout
 {
     /**
+     * @var int
+     *
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
@@ -31,26 +36,36 @@ class Shout
     private $member;
 
     /**
+     * @var string
+     *
      * @ORM\Column(name="table", type="string", length=75)
      */
     private $table;
 
     /**
+     * @var int
+     *
      * @ORM\Column(name="table_id", type="integer", length=75)
      */
-    private $table_id;
+    private $tableId;
 
     /**
+     * @var DateTime
+     *
      * @ORM\Column(type="datetime")
      */
     private $created;
 
     /**
+     * @var string
+     *
      * @ORM\Column(type="string", length=75)
      */
     private $title;
 
     /**
+     * @var string
+     *
      * @ORM\Column(name="text", type="text")
      */
     private $text;
@@ -121,12 +136,12 @@ class Shout
 
     public function getTableId(): int
     {
-        return $this->table_id;
+        return $this->tableId;
     }
 
-    public function setTableId(int $table_id): self
+    public function setTableId(int $tableId): self
     {
-        $this->table_id = $table_id;
+        $this->tableId = $tableId;
         return $this;
     }
 

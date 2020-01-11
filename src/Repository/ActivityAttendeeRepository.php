@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Repository;
-
 
 use App\Entity\Member;
 use Doctrine\ORM\EntityRepository;
@@ -30,5 +28,4 @@ class ActivityAttendeeRepository extends EntityRepository
             ->getQuery()
             ->getResult();
     }
-
 }

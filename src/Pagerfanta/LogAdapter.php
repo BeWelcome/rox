@@ -60,7 +60,7 @@ class LogAdapter implements AdapterInterface
         $results = [];
         try {
             list($sql, $params, $paramTypes) = $this->getSqlAndParameters(false);
-            $sql .= ' ORDER BY `l`.`created` DESC LIMIT '.$length.' OFFSET '.$offset;
+            $sql .= ' ORDER BY `l`.`created` DESC LIMIT ' . $length . ' OFFSET ' . $offset;
             $stmt = $this->em->getConnection()->executeQuery($sql, $params, $paramTypes);
             $results = $stmt->fetchAll(PDO::FETCH_OBJ);
         } catch (DBALException $e) {
@@ -78,7 +78,7 @@ class LogAdapter implements AdapterInterface
         if ($count) {
             $sql .= 'count(*) as count';
         } else {
-            $sql .= "`l`.`type` as `type`, `l`.`Str` as logMessage, IFNULL(`m`.`Username`, '') as `Username`,".
+            $sql .= "`l`.`type` as `type`, `l`.`Str` as logMessage, IFNULL(`m`.`Username`, '') as `Username`," .
                 '`l`.`created` as created';
         }
         $sql .= ' FROM logs l LEFT JOIN members m ON l.IdMember = m.id';

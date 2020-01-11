@@ -25,7 +25,7 @@ class HomeController extends AbstractController
     {
         $member = $this->getUser();
         if ($member) {
-            return $this->forward(LandingController::class.'::indexAction');
+            return $this->forward(LandingController::class . '::indexAction');
         }
 
         $loginForm = $this->createForm(LoginFormType::class, null, [

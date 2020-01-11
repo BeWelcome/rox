@@ -130,8 +130,8 @@ WHERE `Email` = \'' . $this->dao->escape(strtolower($email)).'\'';
             SELECT `Username`, members.`Status`, members.`id` AS `idMember`
             FROM " . PVars::getObj('syshcvol')->Crypted . "`cryptedfields`
             RIGHT JOIN `members` ON members.`id` = cryptedfields.`IdMember`";
-        if ($this->_session->has( 'IdMember' )) {
-            $query .= ' AND members.`id`!=' . $this->_session->get('IdMember');
+        if ($this->session->has( 'IdMember' )) {
+            $query .= ' AND members.`id`!=' . $this->session->get('IdMember');
         }
         $query .= " WHERE (`AdminCryptedValue` = '" . $email . "'";
         $query .= " OR `AdminCryptedValue` = '<admincrypted>" . $email . "</admincrypted>'";
@@ -298,14 +298,14 @@ FROM `user` WHERE
             }
 
             $id = $this->registerBWMember($vars);
-            $this->_session->set( 'IdMember', $id );
+            $this->session->set( 'IdMember', $id );
 
             $vars['feedback'] .= $this->takeCareForNonUniqueEmailAddress($vars['email']);
             $vars['feedback'] .= $this->takeCareForComputerUsedByBWMember();
 
             $this->writeFeedback($vars['feedback']);
 			if (!empty($vars['feedback'])) {
-				MOD_log::get()->write("feedback[<b>".stripslashes($vars['feedback'])."</b>] IdMember=#".$this->_session->get('IdMember')." (With New Signup !)","Signup");
+				MOD_log::get()->write("feedback[<b>".stripslashes($vars['feedback'])."</b>] IdMember=#".$this->session->get('IdMember')." (With New Signup !)","Signup");
 			}
 
             $View = new SignupView($this);
@@ -347,7 +347,7 @@ VALUES(
 	0,
 	\'closed by member\',
 	' . $lang . ',
-	' . $this->_session->get('IdMember') . '
+	' . $this->session->get('IdMember') . '
 )';
             $s = $this->dao->query($query);
         }
@@ -358,7 +358,7 @@ VALUES(
         $query = '
 SELECT `id`
 FROM `languages`
-WHERE `ShortCode` = \'' . $this->_session->get('lang') . '\'';
+WHERE `ShortCode` = \'' . $this->session->get('lang') . '\'';
         $q = $this->dao->query($query);
         $result = $q->fetch(PDB::FETCH_OBJ);
         return $result->id;
@@ -520,7 +520,7 @@ VALUES
             return false;
         }
 
-		MOD_log::get()->writeIdMember($memberID,"member  <b>".$vars['username']."</b> is signuping with success in city [".$vars['location']. "]  using language (".$this->_session->get("lang")." IdMember=#".$memberID." (With New Signup !)","Signup");
+		MOD_log::get()->writeIdMember($memberID,"member  <b>".$vars['username']."</b> is signuping with success in city [".$vars['location']. "]  using language (".$this->session->get("lang")." IdMember=#".$memberID." (With New Signup !)","Signup");
 
         return $memberID;
 

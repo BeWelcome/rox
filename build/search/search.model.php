@@ -131,8 +131,8 @@ class SearchModel extends RoxModelBase
             return ("");
         }
 
-        if ($this->_session->has( 'IdLanguage' )) {
-            $IdLanguage = $this->_session->get('IdLanguage');
+        if ($this->session->has( 'IdLanguage' )) {
+            $IdLanguage = $this->session->get('IdLanguage');
         } else {
             $IdLanguage = 0; // by default laguange 0
         }
@@ -506,7 +506,7 @@ LIMIT 1
      */
     private function getMemberDetails(&$vars, $admin1 = false, $country = false)
     {
-        $langarr = explode('-', $this->_session->get('lang'));
+        $langarr = explode('-', $this->session->get('lang'));
         $lang = $langarr[0];
         // First get current page and limits
         $limit = $this->getParameter($vars, 'search-number-items', 10);
@@ -844,7 +844,7 @@ LIMIT 1
 
     private function getPlaces($place, $admin1 = false, $country = false, $limit = false)
     {
-        $langarr = explode('-', $this->_session->get('lang'));
+        $langarr = explode('-', $this->session->get('lang'));
         $lang = $langarr[0];
         $constraint = "";
         if ($country && count($country) > 0) {
@@ -1188,7 +1188,7 @@ LIMIT 1
      */
     public function suggestLocationsFromDatabase($location)
     {
-        $langarr = explode('-', $this->_session->get('lang'));
+        $langarr = explode('-', $this->session->get('lang'));
         $lang = $langarr[0];
 
         $result = array();

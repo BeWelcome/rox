@@ -11,7 +11,7 @@
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License (GPL)
  * @version $Id$
  */
-class GeoPopupPage extends RoxPageView 
+class GeoPopupPage extends RoxPageView
 {
     /**
      * content of the middle column - this is the most important part
@@ -20,11 +20,11 @@ class GeoPopupPage extends RoxPageView
     {
         // get the translation module
         $words = $this->getWords();
-        $page_url = PVars::getObj('env')->baseuri . implode('/', PRequest::get()->request);   
+        $page_url = PVars::getObj('env')->baseuri . implode('/', PRequest::get()->request);
 		$request = PRequest::get()->request;
-		
+
 		$callbacktag = $this->layoutkit->formkit->setPostCallback('GeoController', 'SelectorCallback');
-		
+
         if (!$mem_redirect = $this->layoutkit->formkit->getMemFromRedirect()) {
             $locations_print = '';
         } elseif ($mem_redirect->location) {
@@ -35,21 +35,21 @@ class GeoPopupPage extends RoxPageView
             $locations_print = $Geo->GeoSearch(' ',40,false, $callbacktag);
 		}
 		// Just for testing:
-		// if ($this->_session->has( 'GeoVars' ) var_dump($this->_session->get('GeoVars'));
-		// if ($this->_session->has( 'GeoVars']['geonamename' ) var_dump($this->_session->get('GeoVars']['geonamename'));
+		// if ($this->session->has( 'GeoVars' ) var_dump($this->session->get('GeoVars'));
+		// if ($this->session->has( 'GeoVars']['geonamename' ) var_dump($this->session->get('GeoVars']['geonamename'));
 		// if (isset($request[2]) && $request[2] == 'save' && $mem_redirect->geolocation) {
 			// $geolocation = $mem_redirect->geolocation;
 			// list($geonameid, $geonamename) = preg_split('/[//]/', $geolocation);
-			// $this->_session->set( 'SignupBWVars']['geonameid', $geonameid )
-			// $this->_session->set( 'SignupBWVars']['geonamename', $geonamename )
+			// $this->session->set( 'SignupBWVars']['geonameid', $geonameid )
+			// $this->session->set( 'SignupBWVars']['geonamename', $geonamename )
 			// print 'GEO SET';
 		// } else {
 			// print 'GEO NOT SET';
 		// }
-        
+
 		require 'templates/popup.php';
 	}
-    
+
     /**
      * configure the page title (what appears in your browser's title bar)
      * @return string the page title
@@ -57,7 +57,7 @@ class GeoPopupPage extends RoxPageView
     protected function getPageTitle() {
         return 'Geo!';
     }
-    
+
 
 }
 

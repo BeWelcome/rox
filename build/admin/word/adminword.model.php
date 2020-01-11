@@ -34,7 +34,7 @@ Boston, MA  02111-1307, USA.
      */
 class AdminWordModel extends RoxModelBase
 {
-    
+
     /*
      * Calculate the summed length of all translatable English wordcodes
      *
@@ -51,7 +51,7 @@ WHERE IdLanguage=0 AND (NOT donottranslate='yes')
         $query = $this->dao->query($sql);
         return $query->fetch(PDB::FETCH_OBJ);
     }
-    
+
     /*
      * Calculate the summed length of all translated English wordcodes
      *
@@ -60,7 +60,7 @@ WHERE IdLanguage=0 AND (NOT donottranslate='yes')
      *
      * @param int idLanguage Languageid to be used when only 1 language is selected
      * @return object Modified queryresult
-     */    
+     */
     public function getTranslationLength($idLanguage=false){
 
         // create filter for single-language request
@@ -85,7 +85,7 @@ GROUP BY w1.idlanguage
 ORDER BY SUM(LENGTH(w2.sentence)) DESC';
         return $this->BulkLookup($sql);
     }
-    
+
     /*
      * Fetch translations from database according to searchparameters
      *
@@ -94,8 +94,8 @@ ORDER BY SUM(LENGTH(w2.sentence)) DESC';
      * @return array Queryresult
      */
     public function getFindData($params){
-        $codeSelect = '';    
-        $descSelect = '';    
+        $codeSelect = '';
+        $descSelect = '';
         $sentSelect = '';
         $langSelect = '';
         if (isset($params['EngCode'])){
@@ -110,7 +110,7 @@ ORDER BY SUM(LENGTH(w2.sentence)) DESC';
         if (isset($params['lang'])){
             $langSelect = ' AND w2.shortcode = "'.$this->dao->escape($params['lang']).'"';
         }
-    
+
         $sql = '
 SELECT
     w1.code EngCode,
@@ -136,8 +136,8 @@ ORDER BY w1.code,w2.shortcode';
             return '';
         }
     }
-    
-    
+
+
     /*
      * Collect the data for in the translation list
      *
@@ -145,11 +145,11 @@ ORDER BY w1.code,w2.shortcode';
      * @param int $idLanguage Language of the translations
      * @param string $wordcode Wordcode to select on
      * @return object Queryresult
-     */    
+     */
     public function getTranslationData($type,$limit,$shortcode,$wordcode = false){
         if ($limit == 'short'){
             $dateSelect1 = ' AND datediff(now(),w1.created) > 6 AND datediff(now(),w1.updated) < 183';
-            $dateSelect2 = ' AND datediff(now(),w3.created) > 6 AND datediff(now(),w3.updated) < 183';            
+            $dateSelect2 = ' AND datediff(now(),w3.created) > 6 AND datediff(now(),w3.updated) < 183';
         } else {
             $dateSelect1 = '';
             $dateSelect2 = '';
@@ -157,7 +157,7 @@ ORDER BY w1.code,w2.shortcode';
         if ($wordcode){
             // select by wordcode if wordcode is given
             $singleSelect1 = ' AND w1.code = "'.$this->dao->escape($wordcode).'"';
-            $singleSelect2 = ' AND w3.code = "'.$this->dao->escape($wordcode).'"';            
+            $singleSelect2 = ' AND w3.code = "'.$this->dao->escape($wordcode).'"';
         } elseif ($shortcode == 'en') {
             // show also the DNT items in English list
             $singleSelect1 = ' AND (w1.isarchived = 0 OR w1.isarchived is null)';
@@ -165,7 +165,7 @@ ORDER BY w1.code,w2.shortcode';
         } else {
             // only translatable items in other translationlists
             $singleSelect1 = ' AND w1.donottranslate = "no" AND (w1.isarchived = 0 OR w1.isarchived is null)';
-            $singleSelect2 = ' AND w3.donottranslate = "no" AND (w3.isarchived = 0 OR w3.isarchived is null)';                        
+            $singleSelect2 = ' AND w3.donottranslate = "no" AND (w3.isarchived = 0 OR w3.isarchived is null)';
         }
         $sql = '
 (SELECT
@@ -182,7 +182,7 @@ ORDER BY w1.code,w2.shortcode';
     (SELECT Username from members where id = w2.IdMember) TrMember
 FROM words w1
     JOIN words w2 USING(code)
-WHERE w1.idlanguage=0  
+WHERE w1.idlanguage=0
     AND w2.shortcode="'.$this->dao->escape($shortcode).'"'.
     $dateSelect1.
     $singleSelect1.')
@@ -202,18 +202,18 @@ UNION
     null as Sentence,
     null as TrMember
 FROM words w3
-WHERE w3.idlanguage=0'. 
+WHERE w3.idlanguage=0'.
     $dateSelect2.
     $singleSelect2.'
     AND w3.code NOT IN (SELECT code
                         FROM words w4
                         WHERE w4.shortcode="'.$this->dao->escape($shortcode).'")
-)        
+)
 ORDER BY EngUpdated DESC
             ';
         $listing = $this->BulkLookup($sql);
         $data = array();
-    
+
         // some postprocessing
         if ($type == 'edit'){
             if (isset($listing[0])){
@@ -238,7 +238,7 @@ ORDER BY EngUpdated DESC
 
     return $data;
     }
-    
+
     /*
      * Fetch wordcode for any given translation id
      *
@@ -251,12 +251,12 @@ ORDER BY EngUpdated DESC
         $query = $this->dao->query($sql);
         return $query->fetch(PDB::FETCH_OBJ);
     }
-    
+
     /*
      * Count number of times a wordcode exists in a language
      *
      * The cnt attribute of the returnobject should be 0 or 1
-     * 
+     *
      * @access public
      * @param string $code Wordcode
      * @param string $shortcode Language shortcode
@@ -271,7 +271,7 @@ WHERE code="' . $this->dao->escape($code) . '"
         $query = $this->dao->query($sql);
         return $query->fetch(PDB::FETCH_OBJ);
     }
-    
+
     /*
      * Fetch languages within scope from database
      *
@@ -301,7 +301,7 @@ WHERE code="' . $this->dao->escape($code) . '"
         }
         return $langarr;
     }
-    
+
     /*
      * Perform update when this-is-ok button is clicked
      *
@@ -321,10 +321,10 @@ WHERE code="' . $this->dao->escape($code) . '"
      * @access public
      * @param array $form Content of the submitted form
      * @return array Array: 0 => inserted ID, 1 => affected rows
-     */    
-    public function updateSingleTranslation($form){ 
+     */
+    public function updateSingleTranslation($form){
         $eng_ins = '';
-        $eng_upd = 'IdMember = '.(int)$this->_session->get("IdMember").', updated = now(),';
+        $eng_upd = 'IdMember = '.(int)$this->session->get("IdMember").', updated = now(),';
         $desc = '';
         $changeInAll = '';
         if ($form['lang']=='en'){
@@ -333,13 +333,13 @@ WHERE code="' . $this->dao->escape($code) . '"
             if (isset($form['changetype'])){
                 switch ($form['changetype']){
                     case 'major':
-                    $eng_upd = 'majorupdate = now(), IdMember = '.(int)$this->_session->get("IdMember").',';
+                    $eng_upd = 'majorupdate = now(), IdMember = '.(int)$this->session->get("IdMember").',';
                     break;
                     case 'none':
                     $eng_upd = 'updated = updated,';
                     break;
                     default:
-                    $eng_upd = 'IdMember = '.(int)$this->_session->get("IdMember").',';
+                    $eng_upd = 'IdMember = '.(int)$this->session->get("IdMember").',';
             }}
             if (isset($form['EngDesc'])){
                 $desc = 'description = "'.$this->dao->escape($form['EngDesc']).'", ';
@@ -354,7 +354,7 @@ WHERE code="' . $this->dao->escape($code) . '"
                 $changeInAll.= 'TranslationPriority = '.(int)$form["EngPrio"].', ';
             }
         }
-        
+
         $sql = '
 INSERT INTO words SET
     code = "'.$this->dao->escape($form["EngCode"]).'",
@@ -363,7 +363,7 @@ INSERT INTO words SET
     Sentence = "'.$this->dao->escape($form["Sentence"]).'",
     updated = now(),
     '.$eng_ins.$desc.'
-    IdMember = '.(int)$this->_session->get("IdMember").',
+    IdMember = '.(int)$this->session->get("IdMember").',
     created = now()
 ON DUPLICATE KEY UPDATE
     '.$eng_upd.$desc.'
@@ -379,7 +379,7 @@ SET ' . $changeInAll. 'updated = updated
 WHERE code = "'.$form["EngCode"].'"
                 ';
             $this->dao->query($sql);
-        }    
+        }
         return $returnval;
     }
 
@@ -389,7 +389,7 @@ WHERE code = "'.$form["EngCode"].'"
      * @access public
      * @param array $form Content of the submitted form
      * @return array Array of wordcodes of the error messages that need to be thrown
-     */    
+     */
     public function createCodeFormCheck($form){
         $errors = array();
         if (empty($form['EngCode'])){
@@ -397,13 +397,13 @@ WHERE code = "'.$form["EngCode"].'"
         } else {
             $this->checkWordcodeFormat($form['EngCode'],$errors);
         }
-        
+
         if (empty($form['EngDesc'])){
             $errors[] = 'AdminWordErrorDescriptionEmpty';
         } else {
             if ($form['EngDesc'] == $form['EngCode'] || $form['EngDesc'] == $form['Sentence']) {
                 $errors[] = 'AdminWordErrorDescIsCodeSent';
-            }    
+            }
             if (strlen($form['EngDesc'])<15){
                 $errors[] = 'AdminWordErrorDescriptionTooShort';
             }
@@ -411,7 +411,7 @@ WHERE code = "'.$form["EngCode"].'"
         if (empty($form['Sentence'])){
             $errors[] = 'AdminWordErrorSentenceEmpty';
         }
-        return $errors;        
+        return $errors;
     }
 
     /*
@@ -420,12 +420,12 @@ WHERE code = "'.$form["EngCode"].'"
      * @access public
      * @param array $form Content of the submitted form
      * @return array Array of wordcodes of the error messages that need to be thrown
-     */    
+     */
     public function editCodeFormCheck($form){
         $errors = array();
         $rights = MOD_right::get();
         $wordLevel = $rights->hasRight('Words');
- 
+
         switch($form['DOACTION']){
         case 'Submit':
             if ($wordLevel >= 10) {
@@ -434,9 +434,9 @@ WHERE code = "'.$form["EngCode"].'"
             if (empty($form['changetype'])){$errors[] = 'AdminWordErrorChangeTypeEmpty';}
             break;
         case 'Back':
-            break;  
+            break;
         }
-        return $errors;        
+        return $errors;
     }
 
     /*
@@ -445,7 +445,7 @@ WHERE code = "'.$form["EngCode"].'"
      * @access public
      * @param array $form Content of the submitted form
      * @return array Array of wordcodes of the error messages that need to be thrown
-     */    
+     */
     public function editTranslationFormCheck($form){
         $errors = array();
         if (empty($form['EngCode'])){
@@ -480,7 +480,7 @@ WHERE code = "'.$this->dao->escape($form['EngCode']).'" AND idLanguage=0
      * @access public
      * @param array $form Content of the submitted form
      * @return array Array of wordcodes of the error messages that need to be thrown
-     */    
+     */
     public function findTranslationsFormCheck($form){
         $errors = array();
         if (!preg_match('#(?![_])[\w]#u',$form['EngCode'])
@@ -497,7 +497,7 @@ WHERE code = "'.$this->dao->escape($form['EngCode']).'" AND idLanguage=0
      * @access private
      * @param string $code Wordcode
      * @param array $errors Array of already collected error messages
-     */    
+     */
     private function checkWordcodeFormat($code,&$errors){
         if (!preg_match('#^[a-z][-a-z0-9\._]+[a-z0-9]$#i',$code)){
             $errors[] = 'AdminWordErrorBadCodeFormat';

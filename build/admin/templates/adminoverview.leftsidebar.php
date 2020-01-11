@@ -16,12 +16,12 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program; if not, see <http://www.gnu.org/licenses/> or 
-write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+along with this program; if not, see <http://www.gnu.org/licenses/> or
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
-/** 
+/**
  * @author Manuel <crumbking>
  */
 $words = new MOD_words();
@@ -67,15 +67,15 @@ HTML;
 <li><a href='{$this->router->url('admin_comments_list')}' title='{$description}' class='header'>Comments</a></li>
 HTML;
     }
-    
+
     if (in_array('Checker', $right_names))
     {
         $description = htmlspecialchars($this->rights['Checker']['Description'], ENT_QUOTES);
         echo <<<HTML
-<li><a href='{$this->router->url('admin_spam_overview')}' title='{$description}' class='header'>Spam</a></li>
+<li><a href='{$this->router->url('admin_spam')}' title='{$description}' class='header'>Spam</a></li>
 HTML;
     }
-    
+
     if (in_array('Treasurer', $right_names))
     {
         $description = htmlspecialchars($this->rights['Treasurer']['Description'], ENT_QUOTES);

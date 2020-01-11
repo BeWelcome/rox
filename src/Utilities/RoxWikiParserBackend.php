@@ -58,9 +58,9 @@ class RoxWikiParserBackend extends DefaultParserBackend
         $info['exists'] = ($wikiPage) ? true : false;
 
         if ($info['exists']) {
-            $info['url'] = '/wiki/'.$info['url'];
+            $info['url'] = '/wiki/' . $info['url'];
         } else {
-            $info['url'] = '/wiki/'.$info['url'].'/create';
+            $info['url'] = '/wiki/' . $info['url'] . '/create';
         }
 
         return $info;

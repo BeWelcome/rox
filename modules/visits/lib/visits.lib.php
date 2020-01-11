@@ -16,30 +16,30 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program; if not, see <http://www.gnu.org/licenses/> or 
-write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+along with this program; if not, see <http://www.gnu.org/licenses/> or
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
 /**
  * Build an array with the last visits on the member IdMember
   * assumed it is the currently logged member if no IdMember is provided
- * @author JeanYves 
+ * @author JeanYves
  */
 class MOD_visits {
-    
+
 
     /**
      * Singleton instance
-     * 
+     *
      * @var MOD_visits
      * @access private
      */
     private static $_instance;
-    
+
     public function __construct()
     {
-    
+
         $db = PVars::getObj('config_rdbms');
         if (!$db) {
             throw new PException('DB config error!');
@@ -47,10 +47,10 @@ class MOD_visits {
         $dao = PDB::get($db->dsn, $db->user, $db->password);
         $this->dao =& $dao;
     }
-    
+
     /**
      * singleton getter
-     * 
+     *
      * @param void
      * @return PApps
      */
@@ -62,28 +62,28 @@ class MOD_visits {
         }
         return self::$_instance;
     }
-    
+
     /**
-     * Retrieve the last visits on a profile. 
+     * Retrieve the last visits on a profile.
 		 * only last visits of members with a picture are retrieved
-     * 
-     * @param int $IdMember the the member we want to find the visit 
-     * @quantity int number of last visits to fetch 
+     *
+     * @param int $IdMember the the member we want to find the visit
+     * @quantity int number of last visits to fetch
      * 				 method to be called
      */
     public function BuildLastVisits($pIdMember = 0, $quantity = 3)
     {
         $TVisits=array() ;
-        
+
         $idMember = $pIdMember;
 				if ($pIdMember==0) { // if no pIdMember specified then trt with current member
-        	 if ($this->_session->has( 'IdMember' )) {
-            	$idMember = $this->_session->get('IdMember');
+        	 if ($this->session->has( 'IdMember' )) {
+            	$idMember = $this->session->get('IdMember');
         	 }
 				}
 
 				if ($idMember==0) return($TVisits) ; // Return empty array if no valid id member
-        
+
 
         $query = '
             SELECT
@@ -122,7 +122,7 @@ class MOD_visits {
                     members.Status = \'Pending\'
                     OR
                     members.Status = \'NeedMore\'
-                )    
+                )
             ORDER BY
                 profilesvisits.updated DESC
             LIMIT
@@ -149,15 +149,15 @@ class MOD_visits {
 				} // end of while on visits
 				return($TVisits) ;
 		} // end of	BuildLastVisits
-		
-		
-		
-		
-		
-		
-		
-		
-		
+
+
+
+
+
+
+
+
+
     /**
 
      * Retrieve the 5 last accepted profiles with a picture
@@ -166,13 +166,13 @@ class MOD_visits {
     public function RetrieveLastAcceptedProfilesWithAPicture($quantity = 5)
     {
         $members=array() ;
-        
+
 // retrieve the last members
         $query = <<<SQL
 SELECT SQL_CACHE
     members.id, members.Username, MAX(g2.name) AS countryname
 FROM
-    members, membersphotos, addresses, geonames_cache AS g1, geonames_cache AS g2  
+    members, membersphotos, addresses, geonames_cache AS g1, geonames_cache AS g2
 WHERE
     members.Status='Active' AND ABS(HOURS(TIMEDIFF(members.created, now())) > 24 AND membersphotos.IdMember = members.id AND members.id = addresses.IdMember AND addresses.IdCity = g1.geonameid AND g2.geonameid = g1.parentCountryId
 GROUP BY
@@ -189,5 +189,5 @@ SQL;
 		} // end of while
 		return($members) ;
 	} // end of	RetrieveLastAcceptedProfileWithAPicture
-		
+
 }

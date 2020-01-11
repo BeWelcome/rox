@@ -29,7 +29,7 @@ Boston, MA  02111-1307, USA.
  * @subpackage template
  * @author Michael Dettbarn <lupochen@gmx.de>
  */
- 
+
 $Shouts = new Shouts;
 $callbackId = $Shouts->shoutProcess($table,$table_id);
 $vars =& PPostHandler::getVars($callbackId);
@@ -57,9 +57,9 @@ if (!isset($vars['errors'])) {
 <?php
 
 $comments = $Shouts->getShouts($table,$table_id);
-if (!$comments) 
+if (!$comments)
 {
-    if ($this->_session->has( 'IdMember' ) && $this->_session->get('IdMember'))
+    if ($this->session->has( 'IdMember' ) && $this->session->get('IdMember'))
         {
         echo '<p><a href="#" id="commentadd">'.$words->get('CommentsAdd').'</a></p>';
         }
@@ -67,18 +67,18 @@ if (!$comments)
         {
         echo '<p>'.$words->get('CommentsAdd').'</p>';
         }
-} 
-else 
+}
+else
 {
     $count = 0;
     $lastHandle = '';
-    foreach ($comments as $comment) 
+    foreach ($comments as $comment)
     {
         require 'comment.php';
         ++$count;
         $lastHandle = $comment->username;
     }
-    if ($this->_session->has( 'IdMember' ) && $this->_session->get('IdMember'))
+    if ($this->session->has( 'IdMember' ) && $this->session->get('IdMember'))
         {
         echo '<p><a href="#" id="commentadd">'.$words->get('CommentsAdd').'</a></p>';
         }
@@ -88,7 +88,7 @@ else
         }
 }
 
-if ($this->_session->has( 'IdMember' ) && $this->_session->get('IdMember')) {
+if ($this->session->has( 'IdMember' ) && $this->session->get('IdMember')) {
 ?>
 <div id="comment-form">
 <form method="post" action="" class="def-form" id="blog-comment-form">

@@ -28,7 +28,6 @@ class MissingTranslationAdapter implements AdapterInterface
      * @param Connection $connection
      * @param string     $locale
      * @param string     $code
-     * @param bool       $missing
      */
     public function __construct(Connection $connection, string $locale, string $code)
     {
@@ -49,7 +48,7 @@ class MissingTranslationAdapter implements AdapterInterface
                 AND (isArchived IS NULL OR isArchived = 0)
                 AND code NOT IN (SELECT code FROM words WHERE shortCode = '{$this->locale}')";
         if (!empty($this->code)) {
-            $this->query .= " AND code LIKE '%".$this->code."%'";
+            $this->query .= " AND code LIKE '%" . $this->code . "%'";
         }
         $this->query .= '
             ORDER BY created desc';
@@ -72,7 +71,7 @@ class MissingTranslationAdapter implements AdapterInterface
                 AND (isArchived IS NULL OR isArchived = 0)
                 AND code NOT IN (SELECT code FROM words WHERE shortCode = '{$this->locale}')";
         if (!empty($this->code)) {
-            $query .= " AND code LIKE '%".$this->code."%'";
+            $query .= " AND code LIKE '%" . $this->code . "%'";
         }
         $statement = $this->connection->query($query);
         $result = $statement->fetch(PDO::FETCH_OBJ);
@@ -90,7 +89,7 @@ class MissingTranslationAdapter implements AdapterInterface
      */
     public function getSlice($offset, $length)
     {
-        $query = $this->query.' LIMIT '.$offset.', '.$length;
+        $query = $this->query . ' LIMIT ' . $offset . ', ' . $length;
         $statement = $this->connection->query($query);
 
         return $statement->fetchAll();

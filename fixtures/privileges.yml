@@ -1,0 +1,13 @@
+App\Entity\Privilege:
+    AllController:
+        controller: '*'
+        method: '*'
+        type: ''
+    GroupsController:
+        controller: 'GroupsController'
+        method: '*'
+        type: 'Group'
+    RightsController:
+        controller: 'RightsController'
+        method: '*'
+        type: ''

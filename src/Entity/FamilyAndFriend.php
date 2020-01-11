@@ -2,23 +2,22 @@
 
 namespace App\Entity;
 
+use Carbon\Carbon;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Specialrelations
  *
  * @ORM\Table(name="specialrelations", uniqueConstraints={@ORM\UniqueConstraint(name="UniqueRelation", columns={"IdOwner", "IdRelation"})}, indexes={@ORM\Index(name="IdOwner", columns={"IdOwner"})})
+ * @ORM\HasLifecycleCallbacks
  * @ORM\Entity
+ *
+ * @SuppressWarnings(PHPMD)
+ * Auto generated class do not check mess
  */
-class Specialrelations
+class FamilyAndFriend
 {
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="updated", type="datetime", nullable=false)
-     */
-    private $updated = '0000-00-00 00:00:00';
-
     /**
      * @var string
      *
@@ -34,25 +33,38 @@ class Specialrelations
     private $comment;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(name="created", type="datetime", nullable=false)
      */
-    private $created = '0000-00-00 00:00:00';
+    private $created;
 
     /**
-     * @var integer
+     * @var DateTime
      *
-     * @ORM\Column(name="IdOwner", type="integer", nullable=false)
+     * @ORM\Column(name="updated", type="datetime", nullable=false)
      */
-    private $idowner;
+    private $updated;
 
     /**
-     * @var integer
+     * @var Member
      *
-     * @ORM\Column(name="IdRelation", type="integer", nullable=false)
+     * @ORM\OneToOne(targetEntity="Member")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="IdOwner", referencedColumnName="id")
+     * })
      */
-    private $idrelation;
+    private $owner;
+
+    /**
+     * @var Member
+     *
+     * @ORM\OneToOne(targetEntity="Member")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="IdRelation", referencedColumnName="id")
+     * })
+     */
+    private $relation;
 
     /**
      * @var string
@@ -70,38 +82,12 @@ class Specialrelations
      */
     private $id;
 
-
-
-    /**
-     * Set updated
-     *
-     * @param \DateTime $updated
-     *
-     * @return Specialrelations
-     */
-    public function setUpdated($updated)
-    {
-        $this->updated = $updated;
-
-        return $this;
-    }
-
-    /**
-     * Get updated
-     *
-     * @return \DateTime
-     */
-    public function getUpdated()
-    {
-        return $this->updated;
-    }
-
     /**
      * Set type
      *
      * @param string $type
      *
-     * @return Specialrelations
+     * @return FamilyAndFriend
      */
     public function setType($type)
     {
@@ -123,9 +109,9 @@ class Specialrelations
     /**
      * Set comment
      *
-     * @param integer $comment
+     * @param int $comment
      *
-     * @return Specialrelations
+     * @return FamilyAndFriend
      */
     public function setComment($comment)
     {
@@ -137,7 +123,7 @@ class Specialrelations
     /**
      * Get comment
      *
-     * @return integer
+     * @return int
      */
     public function getComment()
     {
@@ -147,9 +133,9 @@ class Specialrelations
     /**
      * Set created
      *
-     * @param \DateTime $created
+     * @param DateTime $created
      *
-     * @return Specialrelations
+     * @return FamilyAndFriend
      */
     public function setCreated($created)
     {
@@ -161,59 +147,83 @@ class Specialrelations
     /**
      * Get created
      *
-     * @return \DateTime
+     * @return Carbon
      */
     public function getCreated()
     {
-        return $this->created;
+        return Carbon::instance($this->created);
     }
 
     /**
-     * Set idowner
+     * Set updated
      *
-     * @param integer $idowner
+     * @param DateTime $updated
      *
-     * @return Specialrelations
+     * @return FamilyAndFriend
      */
-    public function setIdowner($idowner)
+    public function setUpdated($updated)
     {
-        $this->idowner = $idowner;
+        $this->updated = $updated;
 
         return $this;
     }
 
     /**
-     * Get idowner
+     * Get updated
      *
-     * @return integer
+     * @return Carbon
      */
-    public function getIdowner()
+    public function getUpdated()
     {
-        return $this->idowner;
+        return Carbon::instance($this->updated);
     }
 
     /**
-     * Set idrelation
+     * Set owner
      *
-     * @param integer $idrelation
+     * @param Member $owner
      *
-     * @return Specialrelations
+     * @return FamilyAndFriend
      */
-    public function setIdrelation($idrelation)
+    public function setOwner($owner)
     {
-        $this->idrelation = $idrelation;
+        $this->owner = $owner;
 
         return $this;
     }
 
     /**
-     * Get idrelation
+     * Get owner
      *
-     * @return integer
+     * @return Member
      */
-    public function getIdrelation()
+    public function getOwner()
     {
-        return $this->idrelation;
+        return $this->owner;
+    }
+
+    /**
+     * Set relation
+     *
+     * @param Member $relation
+     *
+     * @return FamilyAndFriend
+     */
+    public function setRelation($relation)
+    {
+        $this->relation = $relation;
+
+        return $this;
+    }
+
+    /**
+     * Get relation
+     *
+     * @return Member
+     */
+    public function getRelation()
+    {
+        return $this->relation;
     }
 
     /**
@@ -221,7 +231,7 @@ class Specialrelations
      *
      * @param string $confirmed
      *
-     * @return Specialrelations
+     * @return FamilyAndFriend
      */
     public function setConfirmed($confirmed)
     {
@@ -243,10 +253,31 @@ class Specialrelations
     /**
      * Get id
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Triggered on insert.
+     *
+     * @ORM\PrePersist
+     */
+    public function onPrePersist()
+    {
+        $this->created = new DateTime('now');
+        $this->updated = $this->created;
+    }
+
+    /**
+     * Triggered on update.
+     *
+     * @ORM\PreUpdate
+     */
+    public function onPreUpdate()
+    {
+        $this->updated = new DateTime('now');
     }
 }

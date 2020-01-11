@@ -16,8 +16,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program; if not, see <http://www.gnu.org/licenses/> or 
-write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+along with this program; if not, see <http://www.gnu.org/licenses/> or
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
@@ -34,13 +34,13 @@ $User = APP_User::login();
 	$uri = 'forums/';
 
 
-	if ($User) { 
+	if ($User) {
 		?>
 		<div class="r">
 		<a class="btn btn-primary" role="button" href="forums/new"><?php echo $this->words->getBuffered('ForumNewTopic'); ?></a>
 		<?php echo $this->words->flushBuffer(); ?>
 		</div> <!-- r -->
-		<?php 
+		<?php
 	}
 
 	foreach ($this->_model->ListBoards as $list) {
@@ -50,16 +50,16 @@ $User = APP_User::login();
                 <h3>
                 <?php
                 if (isset($list->IdName)) {
-                    $TagName=$this->words->fTrad($list->IdName) ;			
-                    $tag_description=$this->words->fTrad($list->IdDescription) ;			
+                    $TagName=$this->words->fTrad($list->IdName) ;
+                    $tag_description=$this->words->fTrad($list->IdDescription) ;
                     echo '<a href="forums/t'.$list->IdTagCategory.'-'.rawurlencode($TagName).'" title="'.$tag_description.'">'.$TagName.'</a>' ;
                 } else {
-                    $TagName=$this->words->getFormatted('ForumNoSpecificCategories') ;			
-                    $tag_description="here goes the unclassfied forums post" ;			
+                    $TagName=$this->words->getFormatted('ForumNoSpecificCategories') ;
+                    $tag_description="here goes the unclassfied forums post" ;
                     $list->IdTagCategory="NoCategory" ;
                     echo '<a  title="'.$tag_description.'">',$TagName,'</a>';
                 }
-                if ($this->_session->has( "IdMember" )){ // Not needed for not logged in member (like google)
+                if ($this->session->has( "IdMember" )){ // Not needed for not logged in member (like google)
                     echo ' <a href="javascript:void();" id="HideUnhide_',$list->IdTagCategory,'">+/-</a> ' ;
                     ?>
                     <script language="Javascript" type="text/javascript">
@@ -76,7 +76,7 @@ $User = APP_User::login();
 			require 'boardonecategory.php';
 			echo '</span>' ;
 		}
-    } // end of for $this->_model->ListBoards 
+    } // end of for $this->_model->ListBoards
 ?>
 </div> <!-- Forum-->
 <?php

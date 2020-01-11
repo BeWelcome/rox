@@ -1,4 +1,4 @@
-﻿<?php 
+﻿<?php
 /*
 
 Copyright (c) 2007 BeVolunteer
@@ -16,8 +16,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program; if not, see <http://www.gnu.org/licenses/> or 
-write to the Free Software Foundation, Inc., 59 Temple PlaceSuite 330, 
+along with this program; if not, see <http://www.gnu.org/licenses/> or
+write to the Free Software Foundation, Inc., 59 Temple PlaceSuite 330,
 Boston, MA  02111-1307, USA.
 
 */
@@ -37,8 +37,8 @@ $i18n = new MOD_i18n('date.php');
         static $iii = 0;
         $T=$TDonationArray[$ii] ;
         $string = $info_styles[($iii++%2)]; // this displays the <tr>
-    if ($this->_session->has( "IdMember" ) and ($T->IdMember==$this->_session->get("IdMember"))) {
-        $string .= "bgcolor=\"yellow\""; 
+    if ($this->session->has( "IdMember" ) and ($T->IdMember==$this->session->get("IdMember"))) {
+        $string .= "bgcolor=\"yellow\"";
     }
         echo "<tr ",$string," align=left><td>",date("y/m/d",strtotime($T->created)),"</td>" ;
         echo "<td>" ;

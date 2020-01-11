@@ -94,7 +94,7 @@ App\Entity\Member:
         SecEmail: 0
         HideAttribute: 8
         FirstName: <firstName()>
-        SecondName: '70%? <firstName()>: '
+        SecondName: '70%? <firstName()>'
         LastName: <lastName()>
         Accommodation: 'dependonrequest'
         AdditionalAccommodationInfo: 0

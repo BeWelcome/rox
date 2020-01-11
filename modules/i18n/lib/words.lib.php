@@ -42,7 +42,7 @@ use App\Utilities\TranslatorSingletonTrait;
  * FIXME: In need of categories to be able to fetch arrays of texts instead of every
  * single text separately.
  * TODO: tracking of unused words
- * FIXME: integrate $this->_session->get('TranslationArray') - but do we really need it?
+ * FIXME: integrate $this->session->get('TranslationArray') - but do we really need it?
  */
 
 class MOD_words
@@ -78,8 +78,8 @@ class MOD_words
         if (!empty($category)) {
             $this->_whereCategory = ' `category`=\'' . $category . '\'';
         }
-        if ($this->_session->has( 'IdLanguage' ))
-            $this->_langWrite = $this->_session->get('IdLanguage');
+        if ($this->session->has( 'IdLanguage' ))
+            $this->_langWrite = $this->session->get('IdLanguage');
         else $this->_langWrite = 0;
 
         $db_vars = \PVars::getObj('config_rdbms');
@@ -94,9 +94,9 @@ class MOD_words
             $this->_offerTranslationLink = true;
         }
 
-        // read translation mode from $this->_session->get('tr_mode')
-        if ($this->_session->has("tr_mode")) {
-            $this->_trMode = $this->_session->get('tr_mode');
+        // read translation mode from $this->session->get('tr_mode')
+        if ($this->session->has("tr_mode")) {
+            $this->_trMode = $this->session->get('tr_mode');
         } else if ($this->_offerTranslationLink) {
             $this->_trMode = 'translate';
         } else {
@@ -547,8 +547,8 @@ WHERE code = "' . $this->_dao->escape(strtolower($code)) . '" AND ShortCode = "'
         $q = $this->_dao->query($query);
         $row = $q->fetch(PDB::FETCH_OBJ);
 		// update the statistic about the use of this word only if the option ToggleStatsForWordsUsage is active
-		if (($this->_session->has('Param'))
-		&& ($this->_session->get('Param')->ToggleStatsForWordsUsage=="Yes")
+		if (($this->session->has('Param'))
+		&& ($this->session->get('Param')->ToggleStatsForWordsUsage=="Yes")
 		&& (isset($row->code))) {
 			$query ="CALL IncWordUse('".$row->code."')" ;
 			$s=$this->_dao->query($query);
@@ -567,7 +567,7 @@ WHERE code = "' . $this->_dao->escape(strtolower($code)) . '" AND ShortCode = "'
     *
     */
     public function deleteMTrad($IdTrad, $IdOwner, $IdLanguage) {
-        $IdMember = $this->_session->get('IdMember');
+        $IdMember = $this->session->get('IdMember');
 
 
         $str = <<<SQL
@@ -709,8 +709,8 @@ WHERE
      * @return string translated according to the best language find
      */
     public function mTrad($IdTrad,$ReplaceWithBr=false) {
-		if ($this->_session->has( 'IdLanguage' )) {
-	 	   	$IdLanguage= $this->_session->get( 'IdLanguage');
+		if ($this->session->has( 'IdLanguage' )) {
+	 	   	$IdLanguage= $this->session->get( 'IdLanguage');
 		}
 		else {
 	 		$IdLanguage=0 ; // by default language 0
@@ -741,8 +741,8 @@ WHERE
 			}
 
 			if ($IdForceLanguage<=0) {
-				if ($this->_session->has( 'IdLanguage' )) {
-					$IdLanguage= $this->_session->get( 'IdLanguage' );
+				if ($this->session->has( 'IdLanguage' )) {
+					$IdLanguage= $this->session->get( 'IdLanguage' );
 				}
 				else {
 					$IdLanguage=0 ; // by default language 0
@@ -832,7 +832,7 @@ WHERE
      * Warning : as default language this function will use by priority :
      * 1) the content of $_IdLanguage if it is set to something else than -1
      * 2) the content of an optional $_POST[IdLanguage] if it is set
-     * 3) the content of the current $this->_session->get('IdLanguage') of the current membr if it set
+     * 3) the content of the current $this->session->get('IdLanguage') of the current membr if it set
      * 4) The default language (0)
      *
      * returns the id of the created trad
@@ -848,7 +848,7 @@ WHERE
         }
 
         if ($_IdMember == 0) { // by default it is current member
-            $IdMember = $this->_session->get('IdMember');
+            $IdMember = $this->session->get('IdMember');
         } else {
             $IdMember = $_IdMember;
         }
@@ -859,7 +859,7 @@ WHERE
             $IdLanguage = $_IdLanguage;
 
         $IdOwner = $IdMember;
-        $IdTranslator = $this->_session->get('IdMember'); // the recorded translator will always be the current logged member
+        $IdTranslator = $this->session->get('IdMember'); // the recorded translator will always be the current logged member
         if (strpos($ss,"\\'")!==false) {
             $Sentence=$ss ;
             $page="" ;
@@ -936,7 +936,7 @@ WHERE
     * @$IdOwner ; is the id of the member who own the record, if set to 0 We Will use the current member
     *
     * Warning : as default language this function will use:
-    * - the content of the current $this->_session->get('IdLanguage') of the current member
+    * - the content of the current $this->session->get('IdLanguage') of the current member
     *
     */
     function ReplaceInMTrad($ss,$TableColumn,$IdRecord, $IdTrad = 0, $IdOwner = 0) {
@@ -951,7 +951,7 @@ WHERE
         // judging from the exception logs this is NOT TRUE. Instead we now have a massive sql injection exploit vector
 
         if ($IdOwner == 0) {
-            $IdMember = $this->_session->get('IdMember');
+            $IdMember = $this->session->get('IdMember');
         } else {
             $IdMember = $IdOwner;
         }
@@ -964,7 +964,7 @@ WHERE
         if ($IdTrad == 0) {
             return ($this->InsertInMTrad($ss,$TableColumn,$IdRecord, $IdMember)); // Create a full new translation
         }
-        $IdTranslator = $this->_session->get('IdMember'); // the recorded translator will always be the current logged member
+        $IdTranslator = $this->session->get('IdMember'); // the recorded translator will always be the current logged member
         $str = "select * from memberstrads where IdTrad=" . $IdTrad . " and IdOwner=" . $IdMember . " and IdLanguage=" . $IdLanguage;
         $s = $this->_dao->query($str);
         if (!$s) {
@@ -1004,7 +1004,7 @@ WHERE
     * Warning : as default language this function will use by priority :
     * 1) the content of $_IdLanguage if it is set to something else than -1
     * 2) the content of an optional $_POST[IdLanguage] if it is set
-    * 3) the content of the current $this->_session->get('IdLanguage') of the current membr if it set
+    * 3) the content of the current $this->session->get('IdLanguage') of the current membr if it set
     * 4) The default language (0)
     *
     * returns the id of the created trad
@@ -1015,7 +1015,7 @@ WHERE
     function InsertInFTrad($ss,$TableColumn,$IdRecord, $_IdMember = 0, $_IdLanguage = -1, $IdTrad = -1) {
         $DefLanguage=$this->GetLanguageChoosen() ;
         if ($_IdMember == 0) { // by default it is current member
-            $IdMember = $this->_session->get('IdMember');
+            $IdMember = $this->session->get('IdMember');
         } else {
             $IdMember = $_IdMember;
         }
@@ -1032,7 +1032,7 @@ WHERE
 				return(0) ;
 			}
             // Compute a new IdTrad
-            $s = $this->_dao->query("SELECT Next_Forum_trads_IdTrad() AS maxi");
+            $s = $this->_dao->query("select max(IdTrad)+1 AS maxi from translations");
             if (!$s) {
                 throw new PException('Failed in InsertInFTrad searching Next_Forum_trads_IdTrad()');
             }
@@ -1045,7 +1045,7 @@ WHERE
         }
 
         $IdOwner = $IdMember;
-        $IdTranslator = $this->_session->get('IdMember'); // the recorded translator will always be the current logged member
+        $IdTranslator = $this->session->get('IdMember'); // the recorded translator will always be the current logged member
         $Sentence = $ss;
         $str = "insert into translations(TableColumn,IdRecord,IdLanguage,IdOwner,IdTrad,IdTranslator,Sentence,created) ";
         $str .= "Values('".$TableColumn."',".$IdRecord.",". $IdLanguage . "," . $IdOwner . "," . $IdTrad . "," . $IdTranslator . ",\"" . $Sentence . "\",now())";
@@ -1075,8 +1075,8 @@ WHERE
     */
     function GetLanguageChoosen() {
         $DefLanguage=0 ;
-       if ($this->_session->has( 'IdLanguage' )) {
-           $DefLanguage= $this->_session->get( 'IdLanguage' );
+       if ($this->session->has( 'IdLanguage' )) {
+           $DefLanguage= $this->session->get( 'IdLanguage' );
         }
         if (isset($_POST['IdLanguage'])) { // This will allow to consider a Language specified in the form
            $DefLanguage=$_POST['IdLanguage'] ;
@@ -1098,7 +1098,7 @@ WHERE
     * Warning : as default language this function will use by priority :
     * 1) the content of $_IdLanguage if it is set to something else than -1
     * 2) the content of an optional $_POST[IdLanguage] if it is set
-    * 3) the content of the current $this->_session->get('IdLanguage') of the current membr if it set
+    * 3) the content of the current $this->session->get('IdLanguage') of the current membr if it set
     * 4) The default language (0)
     *
     */
@@ -1106,14 +1106,14 @@ WHERE
         $DefLanguage=$this->GetLanguageChoosen() ;
     //	echo " ReplaceInFTrad \$DefLanguage=".$DefLanguage ;
         if ($IdOwner == 0) {
-            $IdMember = $this->_session->get('IdMember');
+            $IdMember = $this->session->get('IdMember');
         } else {
             $IdMember = $IdOwner;
         }
         if (empty($IdTrad)) {
             return ($this->InsertInFTrad($ss,$TableColumn,$IdRecord, $IdMember,$DefLanguage)); // Create a full new translation
         }
-        $IdTranslator = $this->_session->get('IdMember'); // the recorded translator will always be the current logged member
+        $IdTranslator = $this->session->get('IdMember'); // the recorded translator will always be the current logged member
         $s = $this->_dao->query("SELECT * FROM translations WHERE IdTrad=" . $IdTrad . " AND IdLanguage=" . $DefLanguage." /* in forum->ReplaceInFTrad */");
         if (!$s) {
            throw new PException('Failed in ReplaceInFTrad searching previous IdTrad=#'.$IdTrad.' for IdLanguage='.$DefLanguage);

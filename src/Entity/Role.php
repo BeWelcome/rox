@@ -9,9 +9,16 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="roles", uniqueConstraints={@ORM\UniqueConstraint(name="name", columns={"name"})})
  * @ORM\Entity
+ *
+ * @SuppressWarnings(PHPMD)
+ * Auto generated class do not check mess
  */
 class Role
 {
+    public const SYSADMIN = 'SysAdmin';
+    public const GROUP_OWNER = 'GroupOwner';
+    public const GROUPS_ADMIN = 'GroupsAdmin';
+
     /**
      * @var string
      *

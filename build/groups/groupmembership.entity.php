@@ -119,7 +119,7 @@ class GroupMembership extends RoxEntityBase
         }
 
         $notLoggedIn = true;
-        if ($this->_session->has( "IdMember" )) {
+        if ($this->session->has( "IdMember" )) {
             $notLoggedIn = false;
         }
         $where_clause = "IdGroup = '{$group_id}'" . (($status = $this->dao->escape($status)) ? " AND Status = '{$status}'" : '');

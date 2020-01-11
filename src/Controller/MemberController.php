@@ -69,18 +69,15 @@ class MemberController extends AbstractController
     /**
      * @Route("/mydata/{username}", name="member_get_data")
      *
-     * @param Request $request
      * @param Member $member
      * @param Logger $logger
      * @param ContainerBagInterface $params
      * @param MemberModel $memberModel
-     * @param UrlGeneratorInterface $urlGenerator
      * @return BinaryFileResponse
      * @throws Exception
      * @ParamConverter("member", class="App\Entity\Member", options={"mapping": {"username": "username"}})
      */
     public function getPersonalData(
-        Request $request,
         Member $member,
         Logger $logger,
         ContainerBagInterface $params,
@@ -91,14 +88,15 @@ class MemberController extends AbstractController
             $this->denyAccessUnlessGranted(
                 [Member::ROLE_ADMIN_SAFETYTEAM, Member::ROLE_ADMIN_ADMIN, Member::ROLE_ADMIN_PROFILE],
                 null,
-                'Unable to access this page!');
-            $logger->write('Extracting personal data for '.$member->getUsername(), 'Members');
+                'Unable to access this page!'
+            );
+            $logger->write('Extracting personal data for ' . $member->getUsername(), 'Members');
         }
         // Collect information and store in zip file
         $zipFilename = $memberModel->collectPersonalData($params, $member);
 
         // main dir is left over!
-        $response = new BinaryFileResponse( $zipFilename );
+        $response = new BinaryFileResponse($zipFilename);
         $response->setContentDisposition(
             ResponseHeaderBag::DISPOSITION_ATTACHMENT
         );

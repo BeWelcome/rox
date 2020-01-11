@@ -145,7 +145,7 @@ WHERE `code` = " . $code
         list($code) = $this->EscapeVariables(array($code));
         $query = "
 UPDATE `words`
-SET `isarchived` = 0
+SET `isarchived` = NULL
 WHERE `code` = " . $code
                     ;
         $this->execute($query);
@@ -165,7 +165,7 @@ WHERE `code` = " . $code
         $query = "DELETE FROM words WHERE code = " . $code;
         $this->execute($query);
     }
-    
+
     /****
      * Escape query variables
      *
@@ -187,7 +187,7 @@ WHERE `code` = " . $code
         {
             $varSafe[] = $connection->quote($var);
         }
-        return $varSafe;        
+        return $varSafe;
     }
 
     /**

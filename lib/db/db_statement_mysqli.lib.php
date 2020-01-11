@@ -25,53 +25,53 @@ class PDBStatement_mysqli extends PDBStatement {
     /**
      * @var PDB_mysqli
      * @access private
-     */    
+     */
     private $_dao;
     /**
      * array of statements
-     * 
+     *
      * @var array
      * @access private
      */
     private $_statement;
     /**
      * index of current statement
-     * 
+     *
      * @var int
      * @access private
      */
     private $_i = 0;
     /**
      * array of bound params (are references)
-     * 
+     *
      * @var array
      * @access private
      */
     private $_bound = array();
     /**
      * result resource
-     * 
+     *
      * @var resource
      * @access protected
      */
     protected $result;
-        
+
     /**
      * @access private
-     * @param PDB_mysql
-     */    
-    public function __construct(&$dao) 
+     * @param PDB_mysqli
+     */
+    public function __construct(&$dao)
     {
         $this->_dao =& $dao;
     }
 
     /**
      * returns the number of affected rows of the preceding statement
-     * 
+     *
      * @param void
      * @return int
      */
-    public function affectedRows() 
+    public function affectedRows()
     {
         if (isset($this->result) && is_object($this->result))
             return $this->result->affected_rows;
@@ -79,24 +79,24 @@ class PDBStatement_mysqli extends PDBStatement {
             return $this->_statement[$this->_i]->affected_rows;
         return false;
     }
-    
+
     /**
      * bind a paramter
-     * 
+     *
      * @param string $name the name (usually the index starting with "1" for the "?" parameters in prepared statements)
      * @param mixed $val
      */
-    public function bindParam($name, &$val) 
+    public function bindParam($name, &$val)
     {
         $this->_bound[$name] =& $val;
     }
-    
+
     /**
      * execute a prepared statement
-     * 
+     *
      * the $params parameter is used for backwards compatibility
      */
-    public function execute() 
+    public function execute()
     {
         if (is_array($this->_bound) && count($this->_bound) > 0) {
             $bstring = '';
@@ -148,17 +148,17 @@ class PDBStatement_mysqli extends PDBStatement {
 
     /**
      * fetch one row
-     * 
+     *
      * you can provide one of the PDB::* constants to set the type
      * PDB::FETCH_BOTH
      * PDB::FETCH_ASSOC
      * PDB::FETCH_NUM
      * PDB::FETCH_OBJ
-     * 
+     *
      * @param mixed $style
      * @return mixed
      */
-    public function fetch($style = false) 
+    public function fetch($style = false)
     {
         if (!$this->result)
             return false;
@@ -167,15 +167,15 @@ class PDBStatement_mysqli extends PDBStatement {
             default:
                 $res = $this->result->fetch_array(MYSQLI_BOTH);
                 break;
-                
+
             case PDB::FETCH_ASSOC:
                 $res = $this->result->fetch_array(MYSQLI_ASSOC);
                 break;
-                
+
             case PDB::FETCH_NUM:
                 $res = $this->result->fetch_array(MYSQLI_NUM);
                 break;
-                
+
             case PDB::FETCH_OBJ:
                 $res = $this->result->fetch_object();
                 break;
@@ -183,56 +183,56 @@ class PDBStatement_mysqli extends PDBStatement {
         if ($res)
             $this->pos++;
         return $res;
-    } 
+    }
 
     /**
      * fetches one column in the row
-     * 
+     *
      * @param int $pos
      * @return mixed
      */
-    public function fetchColumn() 
+    public function fetchColumn()
     {
         if (!$this->result)
             return false;
-        return $this->result->fetch_field(); 
+        return $this->result->fetch_field();
     }
-    
+
     /**
      * returns current statement object
-     * 
+     *
      * @return mysqli_statement
      */
-    public function get() 
+    public function get()
     {
         return $this->_statement[$this->_i];
     }
 
     /**
      * returns the insert ID of previous operation
-     * 
+     *
      * returns false if no matching operation is found
-     * 
+     *
      * @param void
      * @return int
      */
-    public function insertId() 
+    public function insertId()
     {
         $query = 'SELECT LAST_INSERT_ID() AS id';
         $q = $this->_dao->MySQLi->query($query);
         if (!$q)
             return false;
         $d = $q->fetch_object();
-        return $d->id;         
+        return $d->id;
     }
 
     /**
      * returns the number of rows in current result
-     * 
+     *
      * @param void
      * @return int
      */
-    public function numRows() 
+    public function numRows()
     {
         if (isset($this->result) && $this->result) {
             return $this->result->num_rows;
@@ -244,11 +244,11 @@ class PDBStatement_mysqli extends PDBStatement {
 
     /**
      * performs a query
-     * 
+     *
      * @param string $query
      * @return mixed boolean or result object
      */
-    public function query($query) 
+    public function query($query)
     {
         $q = $this->_dao->MySQLi->query($query);
         if (!$q)
@@ -256,12 +256,12 @@ class PDBStatement_mysqli extends PDBStatement {
         $this->result = $q;
         return true;
     }
-        
+
     /**
      * prepares a statement
-     * 
+     *
      * returns the key of the statement
-     * 
+     *
      * @param string $statement
      * @return int
      */
@@ -291,14 +291,14 @@ class PDBStatement_mysqli extends PDBStatement {
         $this->_i = $k;
         return $k;
     }
-    
+
     /**
      * set the result pointer to offset
-     * 
+     *
      * @param int $pos
      * @return boolean
      */
-    public function seek($pos) 
+    public function seek($pos)
     {
         if (!$this->result)
             return false;
@@ -311,14 +311,14 @@ class PDBStatement_mysqli extends PDBStatement {
             return false;
         }
     }
-    
+
     /**
      * sets the statement cursor to key
-     * 
+     *
      * @param int $k
      * @return boolean
      */
-    public function setCursor($k) 
+    public function setCursor($k)
     {
         if (isset($this->result) && $this->result) {
             $this->result->close();

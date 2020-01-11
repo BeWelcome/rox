@@ -2,56 +2,68 @@
 
 namespace App\Entity;
 
+use Carbon\Carbon;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Profilesvisits
  *
  * @ORM\Table(name="profilesvisits", indexes={@ORM\Index(name="IdVisitor", columns={"IdVisitor"})})
+ * @ORM\HasLifecycleCallbacks
  * @ORM\Entity
+ *
+ * @SuppressWarnings(PHPMD)
+ * Auto generated class do not check mess
  */
-class Profilesvisits
+class ProfileVisit
 {
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(name="created", type="datetime", nullable=false)
      */
-    private $created = 'CURRENT_TIMESTAMP';
+    private $created;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(name="updated", type="datetime", nullable=false)
      */
-    private $updated = '0000-00-00 00:00:00';
+    private $updated;
 
     /**
-     * @var integer
+     * @var Member
      *
-     * @ORM\Column(name="IdMember", type="integer")
+     * @ORM\OneToOne(targetEntity="Member")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="IdMember", referencedColumnName="id")
+     * })
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="NONE")
      */
-    private $idmember;
+    private $member;
 
     /**
-     * @var integer
+     * @var Member
      *
-     * @ORM\Column(name="IdVisitor", type="integer")
+     * @ORM\OneToOne(targetEntity="Member")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="IdVisitor", referencedColumnName="id")
+     * })
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="NONE")
      */
-    private $idvisitor;
+    private $visitor;
 
 
 
     /**
      * Set created
      *
-     * @param \DateTime $created
+     * @param DateTime $created
      *
-     * @return Profilesvisits
+     * @return ProfileVisit
      */
     public function setCreated($created)
     {
@@ -63,19 +75,19 @@ class Profilesvisits
     /**
      * Get created
      *
-     * @return \DateTime
+     * @return Carbon
      */
     public function getCreated()
     {
-        return $this->created;
+        return Carbon::instance($this->created);
     }
 
     /**
      * Set updated
      *
-     * @param \DateTime $updated
+     * @param DateTime $updated
      *
-     * @return Profilesvisits
+     * @return ProfileVisit
      */
     public function setUpdated($updated)
     {
@@ -87,23 +99,23 @@ class Profilesvisits
     /**
      * Get updated
      *
-     * @return \DateTime
+     * @return Carbon
      */
     public function getUpdated()
     {
-        return $this->updated;
+        return Carbon::instance($this->updated);
     }
 
     /**
-     * Set idmember
+     * Set member
      *
-     * @param integer $idmember
+     * @param Member $member
      *
-     * @return Profilesvisits
+     * @return ProfileVisit
      */
-    public function setIdmember($idmember)
+    public function setMember($member)
     {
-        $this->idmember = $idmember;
+        $this->member = $member;
 
         return $this;
     }
@@ -111,34 +123,55 @@ class Profilesvisits
     /**
      * Get idmember
      *
-     * @return integer
+     * @return Member
      */
-    public function getIdmember()
+    public function getMember()
     {
-        return $this->idmember;
+        return $this->member;
     }
 
     /**
-     * Set idvisitor
+     * Set visitor
      *
-     * @param integer $idvisitor
+     * @param Member $visitor
      *
-     * @return Profilesvisits
+     * @return ProfileVisit
      */
-    public function setIdvisitor($idvisitor)
+    public function setVisitor($visitor)
     {
-        $this->idvisitor = $idvisitor;
+        $this->visitor = $visitor;
 
         return $this;
     }
 
     /**
-     * Get idvisitor
+     * Get visitor
      *
-     * @return integer
+     * @return Member
      */
-    public function getIdvisitor()
+    public function getVisitor()
     {
-        return $this->idvisitor;
+        return $this->visitor;
+    }
+
+    /**
+     * Triggered on insert.
+     *
+     * @ORM\PrePersist
+     */
+    public function onPrePersist()
+    {
+        $this->created = new DateTime('now');
+        $this->updated = $this->created;
+    }
+
+    /**
+     * Triggered on update.
+     *
+     * @ORM\PreUpdate
+     */
+    public function onPreUpdate()
+    {
+        $this->updated = new DateTime('now');
     }
 }

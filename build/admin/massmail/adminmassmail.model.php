@@ -196,7 +196,7 @@ class AdminMassmailModel extends RoxModelBase
                 AND bm.Status = '" . $status . "'
                 AND bm.IdReceiver = m.id
                 AND g.geonameid = m.IdCity
-                AND g.country = gc.country 
+                AND g.country = gc.country
             LIMIT " . $start . "," . $limit;
         $mmris = $this->BulkLookup($query);
         // Now get email address and preferred language of the found members
@@ -265,7 +265,7 @@ class AdminMassmailModel extends RoxModelBase
                 Name = '" . $name . "',
                 created = NOW(),
                 Status = 'Created',
-                IdCreator = ". $this->_session->get("IdMember");
+                IdCreator = ". $this->session->get("IdMember");
         $this->dao->query($query);
 
         $query = "
@@ -279,7 +279,7 @@ class AdminMassmailModel extends RoxModelBase
                 updated = NOW(),
                 created = NOW(),
                 majorupdate = NOW(),
-                isarchived = 0,
+                isarchived = NULL,
                 donottranslate = 'no',
                 IdMember = " . $this->getLoggedInMember()->id . ",
                 Description = '" . $this->dao->escape($description) . "'";
@@ -296,7 +296,7 @@ class AdminMassmailModel extends RoxModelBase
                 updated = NOW(),
                 created = NOW(),
                 majorupdate = NOW(),
-                isarchived = 0,
+                isarchived = NULL,
                 donottranslate = 'no',
                 IdMember = " . $this->getLoggedInMember()->id . ",
                 Description = '" . $this->dao->escape($description) . "'";
@@ -309,7 +309,7 @@ class AdminMassmailModel extends RoxModelBase
                 broadcast
             SET
                 created = NOW(),
-                IdCreator = ". $this->_session->get("IdMember") . ",
+                IdCreator = ". $this->session->get("IdMember") . ",
                 Type = '" . $type . "'
             WHERE
                 id = " . $id;

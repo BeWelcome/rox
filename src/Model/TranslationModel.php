@@ -32,7 +32,7 @@ class TranslationModel
     {
         $kernelCacheDir = $this->kernel->getCacheDir();
         $finder = new Finder();
-        $finder->files()->in($kernelCacheDir.'/translations')->name('/.*/');
+        $finder->files()->in($kernelCacheDir . '/translations')->name('/.*/');
         $deleted = true;
         foreach ($finder as $file) {
             $path = $file->getRealPath();

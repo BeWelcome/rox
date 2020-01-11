@@ -13,6 +13,9 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="polls_choices", indexes={@ORM\Index(name="IdPoll", columns={"IdPoll"})})
  * @ORM\HasLifecycleCallbacks
  * @ORM\Entity
+ *
+ * @SuppressWarnings(PHPMD)
+ * Auto generated class do not check mess
  */
 class PollChoice
 {
@@ -30,7 +33,7 @@ class PollChoice
     private $choiceTexts;
 
     /**
-     * @var int
+     * @var integer
      *
      * @ORM\Column(name="Counter", type="integer", nullable=false)
      */
@@ -61,7 +64,7 @@ class PollChoice
     private $poll;
 
     /**
-     * @var int
+     * @var integer
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id

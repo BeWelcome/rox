@@ -119,7 +119,7 @@ class ForumsView extends RoxAppView {
         $allow_title = false;
         $edit = false;
         $notifymecheck = "";
-        if ($this->_model->IsThreadSubscribed($topic->IdThread,$this->_session->get("IdMember"))) {
+        if ($this->_model->IsThreadSubscribed($topic->IdThread,$this->session->get("IdMember"))) {
             $notifymecheck = 'checked="checked"' ; // This is to tell that the notifyme cell is preticked
         }
 
@@ -164,7 +164,7 @@ class ForumsView extends RoxAppView {
         $edit = true;
         $messageid = $this->_model->getMessageId();
         $notifymecheck = "" ;
-        if ($this->_model->IsThreadSubscribed($this->_model->getThreadId(),$this->_session->get("IdMember"))) {
+        if ($this->_model->IsThreadSubscribed($this->_model->getThreadId(),$this->session->get("IdMember"))) {
             $notifymecheck = 'checked="checked"' ; // This is to tell that the notifyme cell is preticked
         }
         $IdGroup = $this->_model->IdGroup;
@@ -202,7 +202,7 @@ class ForumsView extends RoxAppView {
         $edit = true;
         $messageid = $this->_model->getMessageId();
         $notifymecheck="";
-        if ($this->_model->IsThreadSubscribed($this->_model->getThreadId(),$this->_session->get("IdMember"))) {
+        if ($this->_model->IsThreadSubscribed($this->_model->getThreadId(),$this->session->get("IdMember"))) {
             $notifymecheck = 'checked="checked"'; // This is to tell that the notifyme cell is preticked
         }
         $AppropriatedLanguage=$this->_model->FindAppropriatedLanguage($vars['first_postid']) ;
@@ -218,7 +218,7 @@ class ForumsView extends RoxAppView {
         $topic = $this->_model->getTopic();
         $request = PRequest::get()->request;
 
-        if (isset($topic->topicinfo->IdGroup) && ($topic->topicinfo->IdGroup > 0) && $this->_session->has( "IdMember" )) {
+        if (isset($topic->topicinfo->IdGroup) && ($topic->topicinfo->IdGroup > 0) && $this->session->has( "IdMember" )) {
              $group_id = $topic->topicinfo->IdGroup;
              $memberIsGroupMember = $this->_model->checkGroupMembership($group_id);
         }
@@ -229,7 +229,7 @@ class ForumsView extends RoxAppView {
         else {
             $this->SetPageTitle($topic->topicinfo->title. ' - BeWelcome '.$this->words->getBuffered('Forum'));
         }
-        if (empty($this->_session->get('IdMember')))  {
+        if (empty($this->session->get('IdMember')))  {
             if (isset($topic->posts[0])) {
                 $this->page->SetMetaDescription(strip_tags($this->_model->words->fTrad(($topic->posts[0]->IdContent)))) ; ;
             }
@@ -325,7 +325,7 @@ class ForumsView extends RoxAppView {
         require 'templates/teaser.php';
     }
     public function leftSidebar() {
-        if ($this->_session->has( "IdMember" )) {
+        if ($this->session->has( "IdMember" )) {
             $topboards = $this->_model->getTopCategoryLevelTags();
             require 'templates/userbar.php';
         }

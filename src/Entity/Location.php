@@ -7,6 +7,7 @@
 
 namespace App\Entity;
 
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -78,7 +79,7 @@ class Location
     private $population;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(name="moddate", type="date", nullable=true)
      */
@@ -288,7 +289,7 @@ class Location
     /**
      * Set moddate.
      *
-     * @param \DateTime $moddate
+     * @param DateTime $moddate
      *
      * @return Location
      */
@@ -302,7 +303,7 @@ class Location
     /**
      * Get moddate.
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getModdate()
     {

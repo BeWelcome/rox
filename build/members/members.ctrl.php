@@ -138,7 +138,7 @@ class MembersController extends RoxControllerBase
                 $geo = new Geo($member_self->IdCity);
                 $vars = [];
                 if ($geo) {
-                    $vars['location'] = $geo->getFullName($this->_session->get('lang'));
+                    $vars['location'] = $geo->getFullName($this->session->get('lang'));
                 } else {
                     $vars['location'] = '';
                 }
@@ -162,7 +162,7 @@ class MembersController extends RoxControllerBase
                         $page = new DeleteTranslationPage();
                     }
                     if (isset($request[2]) && $request[2] == 'add') {
-                        $page->_session->getFlashBag()->add('notice',  $this->getWords()->getSilent('new_language_added'));
+                        $page->session->getFlashBag()->add('notice',  $this->getWords()->getSilent('new_language_added'));
                         $url = 'editmyprofile/' . $request[1];
                         $this->redirect($url);
                         PPHP::PExit();
@@ -340,8 +340,8 @@ class MembersController extends RoxControllerBase
                                             $redirect = 'editmyprofile';
                                             break;
                                         default:
-                                            if ($this->_session->has( 'Username' )) {
-                                                $redirect = 'members/' . $this->_session->get('Username') . '/relations/';
+                                            if ($this->session->has( 'Username' )) {
+                                                $redirect = 'members/' . $this->session->get('Username') . '/relations/';
                                             } else {
                                                 $redirect = '';
                                             }
@@ -458,8 +458,8 @@ class MembersController extends RoxControllerBase
 
     protected function redirect_myprofile()
     {
-        if ($this->_session->has( 'Username' )) {
-            $username = $this->_session->get('Username');
+        if ($this->session->has( 'Username' )) {
+            $username = $this->session->get('Username');
         } else {
             $username = 'henri';
         }
@@ -525,7 +525,7 @@ class MembersController extends RoxControllerBase
         $this->model->editPreferences($vars);
 
         $redirect = null;
-        if (isset($vars['PreferenceLanguage']) && $this->_session->get('IdLanguage') != $vars['PreferenceLanguage'])
+        if (isset($vars['PreferenceLanguage']) && $this->session->get('IdLanguage') != $vars['PreferenceLanguage'])
         {
             $lang = $this->model->getLanguage($vars['PreferenceLanguage']);
             if ($lang) {
@@ -698,7 +698,7 @@ class MembersController extends RoxControllerBase
             $vars = $args->post;
             $request = $args->request;
 
-            if (isset($vars['IdOwner']) && $vars['IdOwner'] == $this->_session->get('IdMember') && isset($vars['IdRelation'])) {
+            if (isset($vars['IdOwner']) && $vars['IdOwner'] == $this->session->get('IdMember') && isset($vars['IdRelation'])) {
                 if (isset($vars['action'])) {
                     $member = $this->getMember($vars['IdRelation']);
                     if (isset($vars['Type'])) $vars['stype'] = $vars['Type'];
@@ -805,8 +805,8 @@ class MembersController extends RoxControllerBase
         // Update database
         $member->inactivateProfile();
         // Update session
-        $this->_session->set( "Status", 'ChoiceInactive');
-        $this->_session->set( "MemberStatus",  'ChoiceInactive');
+        $this->session->set( "Status", 'ChoiceInactive');
+        $this->session->set( "MemberStatus",  'ChoiceInactive');
         $this->setFlashNotice($this->model->getWords()->get('ProfileSetInactiveSuccess'));
         return 'editmyprofile';
     }
@@ -848,8 +848,8 @@ class MembersController extends RoxControllerBase
         // Update database
         $member->activateProfile();
         // Update session
-        $this->_session->set("Status", 'Active');
-        $this->_session->set( "MemberStatus", 'Active');
+        $this->session->set("Status", 'Active');
+        $this->session->set( "MemberStatus", 'Active');
         $this->setFlashNotice($this->model->getWords()->get('ProfileSetActiveSuccess'));
         return 'editmyprofile';
     }
@@ -1103,7 +1103,7 @@ class MembersController extends RoxControllerBase
             $this->model->removeMembers();
         }
         catch(Exception $e) {
-            ExceptionLogger::logException($this->_session, $e);
+            ExceptionLogger::logException($e);
             header("Location: " . PVars::getObj('env')->baseuri);
             exit(0);
         }

@@ -27,8 +27,10 @@ class AccessDeniedRedirectListener
 
     public function onKernelException(GetResponseForExceptionEvent $event)
     {
-        if (!$event->getException() instanceof AccessDeniedHttpException
-            && !$event->getException() instanceof AccessDeniedException) {
+        if (
+            !$event->getException() instanceof AccessDeniedHttpException
+            && !$event->getException() instanceof AccessDeniedException
+        ) {
             return;
         }
 

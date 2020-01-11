@@ -202,13 +202,13 @@ class FaqController extends AbstractController
         $faqForm->handleRequest($request);
 
         if ($faqForm->isSubmitted() && $faqForm->isValid()) {
-           $em = $this->getDoctrine()->getManager();
+            $em = $this->getDoctrine()->getManager();
             /** @var FaqRequest $data */
             $data = $faqForm->getData();
 
             $wordRepository = $em->getRepository(Word::class);
-            $checkQuestion = $wordRepository->findBy(['code' => 'FaqQ_'.$data->wordCode, 'shortCode' => 'en']);
-            $checkAnswer = $wordRepository->findBy(['code' => 'FaqA_'.$data->wordCode, 'shortCode' => 'en']);
+            $checkQuestion = $wordRepository->findBy(['code' => 'FaqQ_' . $data->wordCode, 'shortCode' => 'en']);
+            $checkAnswer = $wordRepository->findBy(['code' => 'FaqA_' . $data->wordCode, 'shortCode' => 'en']);
             $valid = (empty($checkQuestion) && empty($checkAnswer));
             if ($valid) {
                 /** @var Member $author */
@@ -219,7 +219,7 @@ class FaqController extends AbstractController
 
                 $question = new Word();
                 $question->setAuthor($author);
-                $question->setCode('FaqQ_'.$data->wordCode);
+                $question->setCode('FaqQ_' . $data->wordCode);
                 $question->setSentence($data->question);
                 $question->setlanguage($english);
                 $question->setCreated(new \DateTime());
@@ -228,7 +228,7 @@ class FaqController extends AbstractController
 
                 $answer = new Word();
                 $answer->setAuthor($author);
-                $answer->setCode('FaqA_'.$data->wordCode);
+                $answer->setCode('FaqA_' . $data->wordCode);
                 $answer->setSentence($data->question);
                 $answer->setlanguage($english);
                 $answer->setCreated(new \DateTime());
@@ -375,8 +375,8 @@ class FaqController extends AbstractController
 
             /** @var EntityRepository $wordRepository */
             $wordRepository = $em->getRepository(Word::class);
-            $question = $wordRepository->findOneBy(['code' => 'FaqQ_'.$data->wordCode, 'shortCode' => 'en']);
-            $answer = $wordRepository->findOneBy(['code' => 'FaqA_'.$data->wordCode, 'shortCode' => 'en']);
+            $question = $wordRepository->findOneBy(['code' => 'FaqQ_' . $data->wordCode, 'shortCode' => 'en']);
+            $answer = $wordRepository->findOneBy(['code' => 'FaqA_' . $data->wordCode, 'shortCode' => 'en']);
 
             $question
                 ->setSentence($data->question)
@@ -388,7 +388,7 @@ class FaqController extends AbstractController
             $em->persist($answer);
             $em->flush();
 
-            $this->addFlash('notice', 'Update FAQ '.$faq->getQAndA());
+            $this->addFlash('notice', 'Update FAQ ' . $faq->getQAndA());
 
             return $this->redirectToRoute('admin_faqs_overview', ['categoryId' => $faq->getCategory()->getId()]);
         }

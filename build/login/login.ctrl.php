@@ -66,7 +66,7 @@ class LoginController extends RoxControllerBase
                 $errmsg = $this->getWords()->get("LoginErrorWrongCredentials");
             }
         }
-        
+
         if ($errmsg != '') {
 			$mem_for_redirect->errmsg = $errmsg;
 			// error message on top disabled. We're using a div inside the login-form instead!
@@ -144,7 +144,7 @@ class LoginController extends RoxControllerBase
                         $flashNotice .= '<p>' . $words->get('LoginFirstLogin', $bw_member->Username) . '</p>';
                     }
                     if ($this->model->setPreferredLanguage( $bw_member)) {
-                        $flashNotice .= '<p>' . $words->get('LoginPreferredLanguageSet', $words->getSilent('lang_' . $this->_session->get('lang'))) . '</p>';
+                        $flashNotice .= '<p>' . $words->get('LoginPreferredLanguageSet', $words->getSilent('lang_' . $this->session->get('lang'))) . '</p>';
                     }
                     if (!empty($flashNotice)) {
                         $this->setFlashNotice($flashNotice);

@@ -12,6 +12,9 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="polls_record_of_choices", indexes={@ORM\Index(name="IdMember", columns={"IdMember"}), @ORM\Index(name="idEmail", columns={"Email"}), @ORM\Index(name="IdPoll", columns={"IdPoll"}), @ORM\Index(name="IdPollChoice", columns={"IdPollChoice"})})
  * @ORM\HasLifecycleCallbacks
  * @ORM\Entity
+ *
+ * @SuppressWarnings(PHPMD)
+ * Auto generated class do not check mess
  */
 class PollRecordOfChoice
 {
@@ -47,7 +50,7 @@ class PollRecordOfChoice
     private $email;
 
     /**
-     * @var int
+     * @var integer
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -68,7 +71,7 @@ class PollRecordOfChoice
     /**
      * @var Member
      *
-     * @ORM\ManyToOne(targetEntity="Member")
+     * @ORM\OneToOne(targetEntity="Member")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="IdMember", referencedColumnName="id")
      * })

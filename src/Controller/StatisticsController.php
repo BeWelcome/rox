@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: raymund
@@ -83,7 +84,7 @@ class StatisticsController extends AbstractController
         );
     }
 
-    private function prepareStatisticsData($statistics, $includeRequests = false)
+    private function prepareStatisticsData($statistics, $bundleRequests = false)
     {
         // get all values from stats table
         $i = 0;
@@ -96,17 +97,17 @@ class StatisticsController extends AbstractController
         $membersWithPositiveComments = [];
         $messageSent = [];
         $messageRead = [];
-        if ($includeRequests) {
+        if ($bundleRequests) {
             $requestsSent = [];
             $requestsAccepted = [];
         }
         foreach ($statistics as $val) {
             $members[$i] = $val->NbActiveMembers;
             if (isset($val->week)) {
-                $yearWeek = strtotime(substr($val->week, 0, 4).'-W'.substr($val->week, 4, 2).'-1');
+                $yearWeek = strtotime(substr($val->week, 0, 4) . '-W' . substr($val->week, 4, 2) . '-1');
                 $labels[] = date('Y-m-d', $yearWeek);
             } else {
-                $labels[] = date('Y-m-d', strtotime('-'.(60 - $i).'days'));
+                $labels[] = date('Y-m-d', strtotime('-' . (60 - $i) . 'days'));
             }
             if (0 === $i) {
                 $newMembers[$i] = 0;
@@ -122,7 +123,7 @@ class StatisticsController extends AbstractController
             }
             $messageSent[$i] = $val->NbMessageSent;
             $messageRead[$i] = $val->NbMessageRead;
-            if ($includeRequests) {
+            if ($bundleRequests) {
                 $requestsSent[$i] = $val->NbRequestsSent;
                 $requestsAccepted[$i] = $val->NbRequestsAccepted;
             }
@@ -146,7 +147,7 @@ class StatisticsController extends AbstractController
             'messageSent' => $messageSent,
             'messageRead' => $messageRead,
         ];
-        if ($includeRequests) {
+        if ($bundleRequests) {
             $statistics['requestsSent'] = $requestsSent;
             $statistics['requestsAccepted'] = $requestsAccepted;
         }
@@ -166,10 +167,10 @@ class StatisticsController extends AbstractController
         $requestsAccepted = [];
         foreach ($statistics as $val) {
             if (isset($val->week)) {
-                $yearWeek = strtotime(substr($val->week, 0, 4).'-W'.substr($val->week, 4, 2).'-1');
+                $yearWeek = strtotime(substr($val->week, 0, 4) . '-W' . substr($val->week, 4, 2) . '-1');
                 $labels[] = date('Y-m-d', $yearWeek);
             } else {
-                $labels[] = date('Y-m-d', strtotime('-'.(60 - $i).'days'));
+                $labels[] = date('Y-m-d', strtotime('-' . (60 - $i) . 'days'));
             }
             $requestsSent[$i] = $val->NbRequestsSent;
             $requestsAccepted[$i] = $val->NbRequestsAccepted;

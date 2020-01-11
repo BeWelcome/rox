@@ -43,7 +43,7 @@ class WordRepository extends EntityRepository
         if (!empty($code)) {
             $qb
                 ->andWhere('t.code LIKE :code')
-                ->setParameter(':code', '%'.$code.'%');
+                ->setParameter(':code', '%' . $code . '%');
         }
 
         return $qb;

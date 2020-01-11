@@ -69,6 +69,8 @@ class GroupController extends AbstractController
      */
     public function groupsRedirect(Request $request, Group $group, string $path)
     {
+        // Neither group nor path are used.
+        $group = $path = null;
         $pathInfo = str_replace('/groups/', '/group/', $request->getPathInfo());
         return new RedirectResponse($pathInfo);
     }
@@ -356,7 +358,7 @@ class GroupController extends AbstractController
                 '%name%' => $group->getName(),
             ]);
 
-            $logger->write('Group '.$group->getName().' created by '.$member->getUsername().'.', 'Group');
+            $logger->write('Group ' . $group->getName() . ' created by ' . $member->getUsername() . '.', 'Group');
 
             return $this->redirectToRoute('groups_overview');
         }
@@ -409,7 +411,7 @@ class GroupController extends AbstractController
     {
         $member = $this->getUser();
 
-        $pageName = $wikiModel->getPageName('Group_'.$group->getName());
+        $pageName = $wikiModel->getPageName('Group_' . $group->getName());
 
         $em = $this->getDoctrine();
         /** @var WikiRepository $wikiRepository */
@@ -424,7 +426,7 @@ class GroupController extends AbstractController
         }
 
         return $this->render('group/wiki.html.twig', [
-            'title' => 'Group '.$group->getName(),
+            'title' => 'Group ' . $group->getName(),
             'submenu' => [
                 'active' => 'wiki',
                 'items' => $this->getSubmenuItems($member, $group),
@@ -509,7 +511,7 @@ class GroupController extends AbstractController
         // if a file was uploaded move it into the image storage
         $groupImageDir = $this->getParameter('group_directory');
         if (null !== $picture) {
-            $fileName = $this->generateUniqueFileName().'.'.$picture->guessExtension();
+            $fileName = $this->generateUniqueFileName() . '.' . $picture->guessExtension();
 
             // moves the file to the directory where group images are stored
             $picture->move(
@@ -517,11 +519,11 @@ class GroupController extends AbstractController
                 $fileName
             );
             $imageManager = new ImageManager();
-            $img = $imageManager->make($groupImageDir.'/'.$fileName);
+            $img = $imageManager->make($groupImageDir . '/' . $fileName);
             $img->resize(80, 80, function ($constraint) {
                 $constraint->aspectRatio();
             });
-            $img->save($groupImageDir.'/thumb'.$fileName);
+            $img->save($groupImageDir . '/thumb' . $fileName);
 
             return $fileName;
         }

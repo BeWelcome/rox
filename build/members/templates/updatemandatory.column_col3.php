@@ -37,7 +37,7 @@ Boston, MA  02111-1307, USA.
             echo '<p class="error">'.$errors['inserror'].'</p>';
         }
         ?>
-  
+
   <!-- Personal Information -->
   <fieldset>
     <legend><?php echo $words->get('SignupName'); ?></legend>
@@ -228,7 +228,7 @@ Boston, MA  02111-1307, USA.
         $Geo = new GeoController;
         $Geo->layoutkit = $this->layoutkit;
         $Geo->SelectorInclude();
-        if (isset($vars['geonameid']) && !$this->_session->has( 'GeoVars[' . $geonameid . ']' )) { }
+        if (isset($vars['geonameid']) && !$this->session->has( 'GeoVars[' . $geonameid . ']' )) { }
         isset($mem_redirect->location);
     ?>
 

@@ -7,6 +7,7 @@
 
 namespace App\Entity;
 
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -26,11 +27,20 @@ class ForumThread
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
+     * @ORM\GeneratedValue
      */
     private $id;
 
     /**
-     * @var \DateTime
+     * Not used (historical)
+     * @var int
+     *
+     * @ORM\Column(name="threadid", type="integer", nullable=true)
+     */
+    private $threadId;
+
+    /**
+     * @var DateTime
      *
      * @ORM\Column(name="expiredate", type="datetime", nullable=true)
      */
@@ -175,7 +185,7 @@ class ForumThread
      * @var Group
      *
      * @ORM\OneToOne(targetEntity="Group")
-     * @ORM\JoinColumn(name="IdGroup", referencedColumnName="id")
+     * @ORM\JoinColumn(name="IdGroup", referencedColumnName="id", nullable=true)
      */
     private $group;
 
@@ -201,21 +211,21 @@ class ForumThread
     private $threadDeleted = 'NotDeleted';
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(name="created_at", type="datetime", nullable=false)
      */
     private $createdAt = '0000-00-00 00:00:00';
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(name="updated_at", type="datetime", nullable=false)
      */
     private $updatedAt = '0000-00-00 00:00:00';
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(name="deleted_at", type="datetime", nullable=false)
      */
@@ -258,7 +268,7 @@ class ForumThread
     /**
      * Set expiredate.
      *
-     * @param \DateTime $expiredate
+     * @param DateTime $expiredate
      *
      * @return ForumThread
      */
@@ -272,7 +282,7 @@ class ForumThread
     /**
      * Get expiredate.
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getExpiredate()
     {
@@ -786,7 +796,7 @@ class ForumThread
     /**
      * Set createdAt.
      *
-     * @param \DateTime $createdAt
+     * @param DateTime $createdAt
      *
      * @return ForumThread
      */
@@ -800,7 +810,7 @@ class ForumThread
     /**
      * Get createdAt.
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getCreatedAt()
     {
@@ -810,7 +820,7 @@ class ForumThread
     /**
      * Set updatedAt.
      *
-     * @param \DateTime $updatedAt
+     * @param DateTime $updatedAt
      *
      * @return ForumThread
      */
@@ -824,7 +834,7 @@ class ForumThread
     /**
      * Get updatedAt.
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getUpdatedAt()
     {
@@ -834,7 +844,7 @@ class ForumThread
     /**
      * Set deletedAt.
      *
-     * @param \DateTime $deletedAt
+     * @param DateTime $deletedAt
      *
      * @return ForumThread
      */
@@ -848,7 +858,7 @@ class ForumThread
     /**
      * Get deletedAt.
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getDeletedAt()
     {

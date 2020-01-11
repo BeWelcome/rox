@@ -16,15 +16,15 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program; if not, see <http://www.gnu.org/licenses/> or 
-write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+along with this program; if not, see <http://www.gnu.org/licenses/> or
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
 	$words = new MOD_words();
 //	$i18n = new MOD_i18n('apps/forums/board.php');
 //	$boardText = $i18n->getText('boardText');
-	
+
 	echo "<p>" ;
 	if ($res) {
 	   echo $words->getFormatted("forum_UnsubscribeThreadSuccessful") ;
@@ -33,8 +33,8 @@ Boston, MA  02111-1307, USA.
 	   echo $words->getFormatted("forum_UnsubscribeFailed") ;
 	}
 	echo "</p><br />\n" ;
-	
-	if ($this->_session->has( "IdMember" ) {
+
+	if ($this->session->has( "IdMember" ) {
 	   echo "<br /><p>",$words->getFormatted("forum_ToSeeYourSubscription"),"</p>" ;
 	}
 ?>

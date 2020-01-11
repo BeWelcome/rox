@@ -107,7 +107,7 @@ class VolunteerToolController extends AbstractController
                 // check if new username is already taken
                 $newMember = $memberRepository->findOneBy(['username' => $data->newUsername]);
                 if (null === $newMember) {
-                    $logger->write('Changed member username from '.$data->oldUsername.' to '.$data->newUsername.'.', 'adminquery');
+                    $logger->write('Changed member username from ' . $data->oldUsername . ' to ' . $data->newUsername . '.', 'adminquery');
 
                     $em = $this->getDoctrine()->getManager();
                     $oldMember->setUsername($data->newUsername);
@@ -172,7 +172,7 @@ class VolunteerToolController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
 
-            $logger->write('Searched for members using search term: '.$data->term.'.', 'adminquery');
+            $logger->write('Searched for members using search term: ' . $data->term . '.', 'adminquery');
 
             /** @var MemberRepository $memberRepository */
             $memberRepository = $this->getDoctrine()->getRepository(Member::class);
@@ -409,6 +409,8 @@ ORDER BY count(msg.id) DESC')->fetchAll();
      * @throws Exception
      *
      * @return Response
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function showMessagesByMember(Request $request)
     {
@@ -450,7 +452,7 @@ ORDER BY count(msg.id) DESC')->fetchAll();
             $messages = $messageRepository->findAllMessagesWithMember($member);
 
             // Work through all messages and create list of members involved
-            foreach($messages as $message) {
+            foreach ($messages as $message) {
                 $sender = $message->getSender();
                 $receiver = $message->getReceiver();
                 $correspondent = ($sender === $member) ? $receiver : $sender;
@@ -459,8 +461,8 @@ ORDER BY count(msg.id) DESC')->fetchAll();
                     $results[$username] = [
                         'username' => $username,
                         'direction' => 0,
-                        'last_sent' => DateTime::createFromFormat ( 'Y-m-d H:i:s', '1900-01-01 00:00:00'),
-                        'last_received' => DateTime::createFromFormat ( 'Y-m-d H:i:s', '1900-01-01 00:00:00'),
+                        'last_sent' => DateTime::createFromFormat('Y-m-d H:i:s', '1900-01-01 00:00:00'),
+                        'last_received' => DateTime::createFromFormat('Y-m-d H:i:s', '1900-01-01 00:00:00'),
                     ];
                 }
                 $result = $results[$username];

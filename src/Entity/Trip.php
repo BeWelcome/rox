@@ -8,6 +8,7 @@
 namespace App\Entity;
 
 use Carbon\Carbon;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -17,6 +18,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="trips", uniqueConstraints={@ORM\UniqueConstraint(name="id_UNIQUE", columns={"id"})},
  *     indexes={@ORM\Index(name="memberId_idx", columns={"created_by"})})
  * @ORM\Entity(repositoryClass="App\Repository\TripRepository")
+ * @ORM\HasLifecycleCallbacks
  *
  * @SuppressWarnings(PHPMD)
  * Auto generated class do not check mess
@@ -48,7 +50,6 @@ class Trip
      * @var Carbon
      *
      * @ORM\Column(name="created_at", type="datetime", nullable=false)
-     * @ORM\Version
      */
     private $createdAt;
 
@@ -56,7 +57,6 @@ class Trip
      * @var Carbon
      *
      * @ORM\Column(name="updated_at", type="datetime", nullable=true)
-     * @ORM\Version
      */
     private $updatedAt;
 
@@ -91,7 +91,7 @@ class Trip
     private $subtrips;
 
     /**
-     * @var \App\Entity\Member
+     * @var Member
      *
      * @ORM\ManyToOne(targetEntity="\App\Entity\Member")
      * @ORM\JoinColumn(name="created_by", referencedColumnName="id")
@@ -284,11 +284,11 @@ class Trip
     /**
      * Set createdBy.
      *
-     * @param \App\Entity\Member $createdBy
+     * @param Member $createdBy
      *
      * @return Trip
      */
-    public function setCreatedBy(\App\Entity\Member $createdBy = null)
+    public function setCreatedBy(Member $createdBy = null)
     {
         $this->createdBy = $createdBy;
 
@@ -298,7 +298,7 @@ class Trip
     /**
      * Get createdBy.
      *
-     * @return \App\Entity\Member
+     * @return Member
      */
     public function getCreatedBy()
     {
@@ -334,5 +334,26 @@ class Trip
     public function removeSubtrip(SubTrip $subtrip)
     {
         $this->subtrips->remove($subtrip);
+    }
+
+    /**
+     * Triggered on insert.
+     *
+     * @ORM\PrePersist
+     */
+    public function onPrePersist()
+    {
+        $this->createdAt = new DateTime('now');
+        $this->updatedAt = $this->created;
+    }
+
+    /**
+     * Triggered on update.
+     *
+     * @ORM\PreUpdate
+     */
+    public function onPreUpdate()
+    {
+        $this->updatedAt = new DateTime('now');
     }
 }

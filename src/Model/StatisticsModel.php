@@ -8,12 +8,14 @@ use App\Entity\Statistic;
 use App\Utilities\ManagerTrait;
 use DatePeriod;
 use DateTime;
+use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use PDO;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Output\OutputInterface;
+use vendor\project\StatusTest;
 
 class StatisticsModel
 {
@@ -98,10 +100,11 @@ class StatisticsModel
     {
 
         $progressBar = null;
-        $count = iterator_count ($dates);
+        $count = iterator_count($dates);
         $output->write(['Update statistics ']);
         if (1 !== $count) {
-            $output->writeln(['from ' . $dates->getStartDate()->format('Y-m-d') . ' to ' . $dates->getEndDate()->format('Y-m-d'),
+            $output->writeln(['from ' . $dates->getStartDate()->format('Y-m-d')
+                . ' to ' . $dates->getEndDate()->format('Y-m-d'),
                 '',
             ]);
             $progressBar = new ProgressBar($output, $count);
@@ -136,10 +139,36 @@ class StatisticsModel
                 $statistics->setCreated($day);
                 $new = true;
             }
+            $this->setMemberInfo($connection, $current, $statistics);
 
-// Active members
-            $result = $connection->executeQuery(
-                "
+            if ($new) {
+                $this->setLoggedInMembers($connection, $current, $next, $statistics);
+            }
+            $this->setMessagesSentAndRead($connection, $current, $next, $statistics);
+            $this->setRequestsSentAndAccepted($connection, $current, $next, $statistics);
+
+            $em->persist($statistics);
+        }
+        if ($progressBar) {
+            // ensures that the progress bar is at 100%
+            $progressBar->finish();
+        }
+
+        $em->flush();
+        return 0;
+    }
+
+    /**
+     * @param Connection $connection
+     * @param string $current
+     * @param Statistic $statistics
+     * @throws DBALException
+     */
+    private function setMemberInfo(Connection $connection, string $current, $statistics): void
+    {
+        // Active members
+        $result = $connection->executeQuery(
+            "
                     SELECT
                       COUNT(*) AS cnt
                     FROM
@@ -148,15 +177,16 @@ class StatisticsModel
                       m.`Status` IN ('Active','ChoiceInactive','OutOfRemind')
                       AND m.created <= :created
                 ",
-                [
-                    ':created' => $current,
-                ])
-                ->fetch(PDO::FETCH_ASSOC);
-            $statistics->setActiveMembers($result['cnt']);
+            [
+                ':created' => $current,
+            ]
+        )
+            ->fetch(PDO::FETCH_ASSOC);
+        $statistics->setActiveMembers($result['cnt']);
 
-// Number of member with at least one positive comment
-            $result = $connection->executeQuery(
-                "
+        // Number of member with at least one positive comment
+        $result = $connection->executeQuery(
+            "
                     SELECT
                       COUNT(DISTINCT(m.id)) AS cnt
                     FROM
@@ -168,16 +198,26 @@ class StatisticsModel
                       AND c.Quality='Good'
                       AND c.updated <= :updated
                       ",
-                [
-                    ':updated' => $current,
-                ])
-                ->fetch(PDO::FETCH_ASSOC);
-            $statistics->setMembersWithPositiveComment($result['cnt']);
+            [
+                ':updated' => $current,
+            ]
+        )
+            ->fetch(PDO::FETCH_ASSOC);
+        $statistics->setMembersWithPositiveComment($result['cnt']);
+    }
 
-// Number of member who have logged in during the current date
-            if ($new) {
-                $result = $connection->executeQuery(
-                    "
+    /**
+     * @param Connection $connection
+     * @param string $current
+     * @param string $next
+     * @param Statistic $statistics
+     * @throws DBALException
+     */
+    private function setLoggedInMembers(Connection $connection, string $current, string $next, $statistics): void
+    {
+        // Number of member who have logged in during the current date
+        $result = $connection->executeQuery(
+            "
                         SELECT
                           COUNT(m.id) AS cnt
                         FROM
@@ -187,17 +227,27 @@ class StatisticsModel
                           AND m.LastLogin >= :current
                           AND m.LastLogin < :next
                           ",
-                    [
-                        ':current' => $current,
-                        ':next' => $next,
-                    ])
-                    ->fetch(PDO::FETCH_ASSOC);
-                $statistics->setMembersWhoLoggedInToday($result['cnt']);
-            }
+            [
+                ':current' => $current,
+                ':next' => $next,
+            ]
+        )
+            ->fetch(PDO::FETCH_ASSOC);
+        $statistics->setMembersWhoLoggedInToday($result['cnt']);
+    }
 
-// Number of messages sent from one member to another during the current date
-            $result = $connection->executeQuery(
-                "
+    /**
+     * @param Connection $connection
+     * @param string $current
+     * @param string $next
+     * @param Statistic $statistics
+     * @throws DBALException
+     */
+    private function setMessagesSentAndRead(Connection $connection, string $current, string $next, $statistics): void
+    {
+        // Number of messages sent from one member to another during the current date
+        $result = $connection->executeQuery(
+            "
                     SELECT
                       COUNT(m.id) AS cnt
                     FROM
@@ -207,16 +257,17 @@ class StatisticsModel
                       AND m.DateSent < :next
                       AND m.request_id IS null
                       ",
-                [
-                    ':current' => $current,
-                    ':next' => $next,
-                ])
-                ->fetch(PDO::FETCH_ASSOC);
-            $statistics->setMessagesSent($result['cnt']);
+            [
+                ':current' => $current,
+                ':next' => $next,
+            ]
+        )
+            ->fetch(PDO::FETCH_ASSOC);
+        $statistics->setMessagesSent($result['cnt']);
 
-// Number of messages read during the current date
-            $result = $connection->executeQuery(
-                "
+        // Number of messages read during the current date
+        $result = $connection->executeQuery(
+            "
                     SELECT
                       COUNT(m.id) AS cnt
                     FROM
@@ -226,16 +277,27 @@ class StatisticsModel
                       AND m.WhenFirstRead < :next
                       AND m.request_id IS null
                       ",
-                [
-                    ':current' => $current,
-                    ':next' => $next,
-                ])
-                ->fetch(PDO::FETCH_ASSOC);
-            $statistics->setMessagesRead($result['cnt']);
+            [
+                ':current' => $current,
+                ':next' => $next,
+            ]
+        )
+            ->fetch(PDO::FETCH_ASSOC);
+        $statistics->setMessagesRead($result['cnt']);
+    }
 
-// Number of requests created from one member to another during the current date
-            $result = $connection->executeQuery(
-                "
+    /**
+     * @param Connection $connection
+     * @param string $current
+     * @param string $next
+     * @param Statistic $statistics
+     * @throws DBALException
+     */
+    private function setRequestsSentAndAccepted(Connection $connection, string $current, string $next, $statistics): void
+    {
+        // Number of requests created from one member to another during the current date
+        $result = $connection->executeQuery(
+            "
                     SELECT
                       COUNT(r.id) AS cnt
                     FROM
@@ -244,16 +306,17 @@ class StatisticsModel
                       r.created >= :current
                       AND r.created < :next
                       ",
-                [
-                    ':current' => $current,
-                    ':next' => $next,
-                ])
-                ->fetch(PDO::FETCH_ASSOC);
-            $statistics->setRequestsSent($result['cnt']);
+            [
+                ':current' => $current,
+                ':next' => $next,
+            ]
+        )
+            ->fetch(PDO::FETCH_ASSOC);
+        $statistics->setRequestsSent($result['cnt']);
 
-// Number of requests accepted during the current date
-            $result = $connection->executeQuery(
-                "
+        // Number of requests accepted during the current date
+        $result = $connection->executeQuery(
+            "
                     SELECT
                       COUNT(r.id) AS cnt
                     FROM
@@ -263,21 +326,13 @@ class StatisticsModel
                       AND r.updated < :next
                       AND r.`status` = :status
                       ",
-                [
-                    ':current' => $current,
-                    ':next' => $next,
-                    ':status' => HostingRequest::REQUEST_ACCEPTED
-                ])
-                ->fetch(PDO::FETCH_ASSOC);
-            $statistics->setRequestsAccepted($result['cnt']);
-            $em->persist($statistics);
-        }
-        if ($progressBar) {
-            // ensures that the progress bar is at 100%
-            $progressBar->finish();
-        }
-
-        $em->flush();
-        return 0;
+            [
+                ':current' => $current,
+                ':next' => $next,
+                ':status' => HostingRequest::REQUEST_ACCEPTED
+            ]
+        )
+            ->fetch(PDO::FETCH_ASSOC);
+        $statistics->setRequestsAccepted($result['cnt']);
     }
 }

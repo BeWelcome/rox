@@ -3,7 +3,8 @@ rox_local.ini
 *.cache.ini
 .php_cs.cache
 .phpunit.result.cache
-/data/
+/data/*
+!/data/.keep
 google*.html
 tools/testenv/images/status.csv
 components/*
@@ -45,6 +46,8 @@ phploc.xml
 /public/build/
 bewelcome.sql
 bewelcome.sql.bz2
+/tools/testenv/images/lfw/*.jpg
+
 #deployer config
 /config/deployer.yml
 

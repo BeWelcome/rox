@@ -28,7 +28,7 @@ class Post extends RoxEntityBase
      */
     public function findByPostId($id)
     {
-        return $this->findByWhere("postid = '{$this->dao->escape($id)}'");
+        return $this->findByWhere("id = '{$this->dao->escape($id)}'");
     }
 
     /**

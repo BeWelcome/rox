@@ -320,13 +320,11 @@ class ForumsView extends RoxAppView {
     /* This displays the custom teaser */
     public function teaser() {
         $boards = $this->_model->getBoard();
-        $topboards = $this->_model->getTopCategoryLevelTags();
         $request = PRequest::get()->request;
         require 'templates/teaser.php';
     }
     public function leftSidebar() {
         if ($this->session->has( "IdMember" )) {
-            $topboards = $this->_model->getTopCategoryLevelTags();
             require 'templates/userbar.php';
         }
     }
@@ -405,10 +403,6 @@ class ForumsView extends RoxAppView {
         $forumMaxPage = ceil($forum->getNumberOfThreads() / $forum->THREADS_PER_PAGE);
         $groupsMaxPage = ceil($groups->getNumberOfThreads() / $groups->THREADS_PER_PAGE);
 
-
-        $top_tags = $this->_model->getTopCategoryLevelTags();
-        $all_tags_maximum = $this->_model->getTagsMaximum();
-        $all_tags = $this->_model->getAllTags();
         require 'templates/landing.php';
     } // end of ShowTopLevelLandingPage
 
@@ -428,9 +422,6 @@ class ForumsView extends RoxAppView {
         $max = $this->_model->getBoard()->getNumberOfThreads();
         $maxPage = ceil($max / $this->_model->THREADS_PER_PAGE);
 
-        $top_tags = $this->_model->getTopCategoryLevelTags();
-        $all_tags_maximum = $this->_model->getTagsMaximum();
-        $all_tags = $this->_model->getAllTags();
         require 'templates/toplevel.php';
     } // end of ShowTopLevel
 
@@ -450,9 +441,6 @@ class ForumsView extends RoxAppView {
         $max = $this->_model->getBoard()->getNumberOfThreads();
         $maxPage = ceil($max / $this->_model->THREADS_PER_PAGE);
 
-        $top_tags = $this->_model->getTopCategoryLevelTags();
-        $all_tags_maximum = $this->_model->getTagsMaximum();
-        $all_tags = $this->_model->getAllTags();
         require 'templates/topcategories.php';
     } // end of showTopLevelCategories
 

@@ -177,18 +177,29 @@ class MessageRepository extends EntityRepository
             $sort = 'created';
         }
         $qb = $this->createQueryBuilder('m');
-        if ('sent' === $folder) {
-            $qb->where('m.sender = :member');
-        } else {
-            $qb->where('m.receiver = :member');
+        switch($folder)
+        {
+            case 'sent':
+                $qb
+                    ->where('m.sender = :member')
+                    ->andWhere('m.request IS NULL')
+                    ->andWhere('NOT(m.deleteRequest LIKE :deleted)')
+                    ->setParameter('deleted', '%' . DeleteRequestType::SENDER_DELETED . '%')
+                    ->andWhere('NOT(m.deleteRequest LIKE :purged)')
+                    ->setParameter('purged', '%' . DeleteRequestType::SENDER_PURGED . '%')
+                ;
+                break;
+            default:
+                $qb
+                    ->where('m.receiver = :member')
+                    ->andWhere('m.request IS NULL')
+                    ->andWhere('NOT(m.deleteRequest LIKE :deleted)')
+                    ->setParameter('deleted', '%' . DeleteRequestType::RECEIVER_DELETED . '%')
+                    ->andWhere('NOT(m.deleteRequest LIKE :purged)')
+                    ->setParameter('purged', '%' . DeleteRequestType::RECEIVER_PURGED . '%')
+                ;
         }
-        $qb
-            ->setParameter('member', $member)
-            ->andWhere('m.request IS NULL')
-            ->andWhere('NOT(m.deleteRequest LIKE :deleted)')
-            ->setParameter('deleted', '%' . DeleteRequestType::RECEIVER_DELETED . '%')
-            ->andWhere('NOT(m.deleteRequest LIKE :purged)')
-            ->setParameter('purged', '%' . DeleteRequestType::RECEIVER_PURGED . '%');
+        $qb->setParameter('member', $member);
         switch ($folder) {
             case 'inbox':
                 $qb
@@ -245,15 +256,26 @@ class MessageRepository extends EntityRepository
         if ('date' === $sort) {
             $sort = 'created';
         }
-        $qb = $this->createQueryBuilder('m')
-            ->where('NOT(m.deleteRequest LIKE :deleted)')
-            ->setParameter('deleted', '%' . DeleteRequestType::RECEIVER_DELETED . '%')
-            ->andWhere('NOT(m.deleteRequest LIKE :purged)')
-            ->setParameter('purged', '%' . DeleteRequestType::RECEIVER_PURGED . '%');
-        if ('sent' === $folder) {
-            $qb->andWhere('m.sender = :member');
-        } else {
-            $qb->andWhere('m.receiver = :member');
+        $qb = $this->createQueryBuilder('m');
+        switch ($folder)
+        {
+            case 'sent':
+                $qb
+                    ->where('NOT(m.deleteRequest LIKE :deleted)')
+                    ->setParameter('deleted', '%' . DeleteRequestType::SENDER_DELETED . '%')
+                    ->andWhere('NOT(m.deleteRequest LIKE :purged)')
+                    ->setParameter('purged', '%' . DeleteRequestType::SENDER_PURGED . '%')
+                    ->andWhere('m.sender = :member')
+                ;
+                break;
+            default:
+                $qb
+                    ->where('NOT(m.deleteRequest LIKE :deleted)')
+                    ->setParameter('deleted', '%' . DeleteRequestType::RECEIVER_DELETED . '%')
+                    ->andWhere('NOT(m.deleteRequest LIKE :purged)')
+                    ->setParameter('purged', '%' . DeleteRequestType::RECEIVER_PURGED . '%')
+                    ->andWhere('m.receiver = :member')
+                ;
         }
         $qb
             ->setParameter('member', $member)

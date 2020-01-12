@@ -1544,6 +1544,7 @@ VALUES
     {
         $member = $this->createEntity('Member', $memberId);
         if ($member) {
+            MOD_log::get()->write("Set new status for " . $member->Username . ": " . $newStatus . " (was: " . $member->Status . ")", "Profile");
             $member->Status = $newStatus;
             $member->update();
             return true;

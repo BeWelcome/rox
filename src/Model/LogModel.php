@@ -19,7 +19,7 @@ class LogModel
      * @param int $page
      * @param int $limit
      *
-     * @return \Pagerfanta\Pagerfanta
+     * @return Pagerfanta
      */
     public function getFilteredLogs(array $types, $member, $page, $limit)
     {
@@ -89,6 +89,7 @@ class LogModel
             'mytranslators',
             'oldBW',
             'polls',
+            'Profile',
             'Profilupdate',
             'Profileupdate',
             'query',

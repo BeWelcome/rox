@@ -1,0 +1,27 @@
+<html>
+<head>
+    <title>Bewelcome Comment</title>
+    <style>
+        a {
+            color: #f37000;
+        }
+        blockquote {
+            color: #444 !important;
+            background: transparent !important;
+            border: 1px #ddd solid !important;
+            border-left: 8px #f37000 solid !important;
+            padding: 0 0.5em !important;
+            margin: 0.5em 0 !important;
+        }
+    </style>
+</head>
+<body>
+<h3>Comment by <a href="{{ url('members_profile', { username: comment.fromMember.Username }) }}">{{ comment.fromMember.Username }}</a> for
+    <a href="{{ url('members_profile', { username: comment.toMember.Username }) }}">{{ comment.toMember.Username }}</a></h3>
+<p>
+{{ comment.quality }}<br>
+{{ comment.textWhere }}<br>
+{{ comment.textFree | purify }}
+</p>
+</body>
+</html>

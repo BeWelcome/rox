@@ -49,6 +49,7 @@ class LegacyLoader extends Loader
         $this->addRouteDirectly('forums_new', '/forums/new');
         $this->addRouteDirectly('forums_reverse', '/forums/reverse');
         $this->addRouteDirectly('forums_search', '/forums/search/{keyword}');
+        $this->addRouteDirectly('forums_search_pages', '/forums/search/{keyword}/{page}');
         $this->addRouteDirectly('bwforum', 'forums/bwforum');
         $this->addRouteDirectly('bwforum_pages', 'forums/bwforum/page{bwforumsPage}/');
         $this->addRouteDirectly('forum_permalink', '/forums/s{threadId}/');

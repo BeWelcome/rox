@@ -71,6 +71,9 @@ class HostingRequestType extends AbstractType
                 ],
                 'invalid_message' => 'request.error.number_of_travellers',
                 'constraints' => [
+                    new NotBlank([
+                        'message' => 'request.error.numberoftravellers.empty',
+                    ]),
                     new LessThanOrEqual(20),
                     new GreaterThanOrEqual(1),
                 ],

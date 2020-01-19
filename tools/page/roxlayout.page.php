@@ -165,15 +165,10 @@ class PageWithRoxLayout extends PageWithHTML
             $username = $this->getSession()->has( 'Username' ) ? $this->getSession()->get('Username') : '';
         }
 
-        if (class_exists('MOD_online')) {
-            $who_is_online_count = MOD_online::get()->howManyMembersOnline();
+        if ($this->getSession()->has( 'WhoIsOnlineCount' )) {
+            $who_is_online_count = $this->getSession()->get('WhoIsOnlineCount'); // MOD_whoisonline::get()->whoIsOnlineCount();
         } else {
-            // echo 'MOD_online not active';
-            if ($this->getSession()->has( 'WhoIsOnlineCount' )) {
-                $who_is_online_count = $this->getSession()->get('WhoIsOnlineCount'); // MOD_whoisonline::get()->whoIsOnlineCount();
-            } else {
-                $who_is_online_count = 0;
-            }
+            $who_is_online_count = 0;
         }
         PPostHandler::setCallback('quicksearch_callbackId', 'SearchmembersController', 'index');
 

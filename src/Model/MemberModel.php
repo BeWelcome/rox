@@ -28,6 +28,7 @@ use App\Entity\RightVolunteer;
 use App\Entity\Shout;
 use App\Entity\Word;
 use App\Repository\ActivityAttendeeRepository;
+use App\Repository\CommentRepository;
 use App\Repository\MessageRepository;
 use App\Utilities\ManagerTrait;
 use Doctrine\ORM\EntityRepository;
@@ -157,13 +158,12 @@ class MemberModel
 
         $this->prepareGalleryItems($tempDir, $projectDir, $member);
         $this->prepareProfilePictures($tempDir, $member);
-        $this->prepareMessages($tempDir, $member);
-        $this->prepareRequests($tempDir, $member);
+        $this->prepareMessagesAndRequests($tempDir, $member);
         $this->prepareLogs($tempDir, $member);
         $this->prepareForumPosts($tempDir, $member);
         $this->prepareGroupInformation($tempDir, $member);
         $this->prepareActivities($tempDir, $member);
-        $this->prepareCommentsLeft($tempDir, $member);
+        $this->prepareComments($tempDir, $member);
         $this->prepareSpecialRelations($tempDir, $member);
         $this->prepareMemberData($tempDir, $member);
         $this->prepareNewsletterInformation($tempDir, $member);
@@ -262,67 +262,41 @@ class MemberModel
         }
     }
 
-    private function saveMessageOrRequest(Message $message, $dir, $number)
+    private function processMessagesOrRequests($items, $directory, $sent)
     {
-        // Test if message contains html tags
-        $messageText = $message->getMessage();
-        $isHtml = ($messageText != strip_tags($messageText));
-        $isRequest = ($message->getRequest() !== null);
-        $ext = ($isHtml) ? ".html" : ".txt";
-        $filename = ($isRequest) ? "request" : "message";
-        $handle = fopen($dir . $filename . $message->getCreated()->toDateString() . "-" . $number . $ext, "w");
-        if ($message->getSubject()) {
-            fwrite($handle, '<p>Subject: ' . $message->getSubject()->getSubject() . '</p>');
+        $i = 1;
+        foreach ($items as $message) {
+            $isRequest = ($message->getRequest() !== null);
+            $filename = ($isRequest) ? "request" : "message";
+            $handle = fopen($directory . $filename . "-" . $message->getCreated()->toDateString() . "-" . $i
+                . ($sent ? "-sent" : "-received") . ".html", "w");
+            fwrite($handle, $this->engine->render('private/message_or_request.html.twig', [
+                'message' => $message,
+            ]));
+            fclose($handle);
+            $i++;
         }
-        if ($isRequest) {
-            $request = $message->getRequest();
-            fwrite($handle, '<p>Arrival: ' . $request->getArrival() . '<br>');
-            fwrite($handle, 'Departure: ' . $request->getDeparture() . '<br>');
-            fwrite($handle, '#Travellers: ' . $request->getNumberOfTravellers() . '<br>');
-            fwrite($handle, 'Flexible' . $request->getFlexible() . '</p>');
-        }
-        fwrite($handle, $message->getMessage());
-        fclose($handle);
     }
 
     /**
      * @param string $tempDir
      * @param Member $member
      */
-    private function prepareMessages(string $tempDir, Member $member): void
+    private function prepareMessagesAndRequests(string $tempDir, Member $member): void
     {
         // Write all messages into files
+        /** @var MessageRepository $messageRepository */
+        $messageRepository = $this->getManager()->getRepository(Message::class);
+
         $messageDir = $tempDir . 'messages/';
         @mkdir($messageDir);
-        /** @var MessageRepository $messageRepository */
-        $messageRepository = $this->getManager()->getRepository(Message::class);
-        /** @var Message[] $messages */
-        $messages = $messageRepository->getMessagesSentBy($member);
-        $i = 1;
-        foreach ($messages as $message) {
-            $this->saveMessageOrRequest($message, $messageDir, $i);
-            $i++;
-        }
-    }
+        $this->processMessagesOrRequests($messageRepository->getMessagesSentBy($member), $messageDir, true);
+        $this->processMessagesOrRequests($messageRepository->getMessagesReceivedBy($member), $messageDir, false);
 
-    /**
-     * @param string $tempDir
-     * @param Member $member
-     */
-    private function prepareRequests(string $tempDir, Member $member): void
-    {
-        // Write all requests into files
         $requestDir = $tempDir . 'requests/';
         @mkdir($requestDir);
-        /** @var MessageRepository $messageRepository */
-        $messageRepository = $this->getManager()->getRepository(Message::class);
-        /** @var Message[] $requests */
-        $requests = $messageRepository->getRequestsSentBy($member);
-        $i = 1;
-        foreach ($requests as $request) {
-            $this->saveMessageOrRequest($request, $requestDir, $i);
-            $i++;
-        }
+        $this->processMessagesOrRequests($messageRepository->getRequestsSentBy($member), $requestDir, true);
+        $this->processMessagesOrRequests($messageRepository->getRequestsReceivedBy($member), $requestDir, false);
     }
 
     /**
@@ -374,7 +348,6 @@ class MemberModel
                 try {
                     // As database column for group has 0 instead of null we need to check if group is valid
                     $group = $thread->getGroup();
-                    $group->getName();
                 } catch (Exception $e) {
                     $group = null;
                 }
@@ -466,22 +439,35 @@ class MemberModel
      * @param string $tempDir
      * @param Member $member
      */
-    private function prepareCommentsLeft(string $tempDir, Member $member)
+    private function prepareComments(string $tempDir, Member $member)
     {
         // Comments the member left others
         $commentsDir = $tempDir . 'comments/';
         @mkdir($commentsDir);
+        /** @var CommentRepository $commentRepository */
         $commentRepository = $this->getManager()->getRepository(Comment::class);
         /** @var Comment[] $comments */
-        $comments = $commentRepository->findBy(['fromMember' => $member]);
+        $comments = $commentRepository->getCommentsForMember($member);
         if (!empty($comments)) {
             /** @var Comment $comment */
             $i = 1;
             foreach ($comments as $comment) {
-                $handle = fopen($commentsDir . "comment" . $i . ".txt", "w");
-                fwrite($handle, $comment->getToMember()->getUsername() . "(" . $comment->getQuality() . ")" . PHP_EOL);
-                fwrite($handle, $comment->getTextwhere() . PHP_EOL);
-                fwrite($handle, $comment->getTextfree() . PHP_EOL);
+                $handle = fopen($commentsDir . "comment-" . $i . "-received.html", "w");
+                fwrite($handle, $this->engine->render('private/comment.html.twig', [
+                    'comment' => $comment,
+                ]));
+                fclose($handle);
+                $i++;
+            }
+        }
+        $comments = $commentRepository->getCommentsFromMember($member);
+        if (!empty($comments)) {
+            /** @var Comment $comment */
+            foreach ($comments as $comment) {
+                $handle = fopen($commentsDir . "comment-" . $i . "-given.html", "w");
+                fwrite($handle, $this->engine->render('private/comment.html.twig', [
+                    'comment' => $comment,
+                ]));
                 fclose($handle);
                 $i++;
             }
@@ -496,6 +482,7 @@ class MemberModel
     {
         // Write member information into file:
         $handle = fopen($tempDir . "memberinfo.txt", "w");
+        fwrite($handle, json_encode($member));
         fwrite($handle, "Username: " . $member->getUsername() . PHP_EOL);
         fwrite($handle, "Location: " . $member->getCity()->getName() . PHP_EOL);
         fwrite($handle, "Birthdate: " . $member->getBirthdate() . PHP_EOL);

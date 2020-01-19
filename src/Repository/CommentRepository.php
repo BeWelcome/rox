@@ -4,9 +4,12 @@ namespace App\Repository;
 
 use App\Doctrine\CommentAdminActionType;
 use App\Entity\Member;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\QueryBuilder;
+use Exception;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
 
@@ -123,7 +126,7 @@ class CommentRepository extends EntityRepository
     }
 
     /**
-     * @param $action
+     * @param $quality
      *
      * @return QueryBuilder
      */
@@ -182,9 +185,41 @@ class CommentRepository extends EntityRepository
         $results = null;
         try {
             $results = $q->getSingleScalarResult();
-        } catch (NonUniqueResultException $e) {
+        } catch (Exception $e) {
         }
 
         return $results;
+    }
+
+    /**
+     * @param Member $member
+     *
+     * @return Collection
+     */
+    public function getCommentsForMember(Member $member)
+    {
+        return $this->createQueryBuilder('c')
+            ->where('c.toMember = :member')
+            ->setParameter('member', $member)
+            ->orderBy('c.created', 'ASC')
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
+    /**
+     * @param Member $member
+     *
+     * @return Collection
+     */
+    public function getCommentsFromMember(Member $member)
+    {
+        return $this->createQueryBuilder('c')
+            ->where('c.fromMember = :member')
+            ->setParameter('member', $member)
+            ->orderBy('c.created', 'ASC')
+            ->getQuery()
+            ->getResult()
+            ;
     }
 }

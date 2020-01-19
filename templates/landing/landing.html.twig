@@ -99,8 +99,8 @@
 
                     {# message buttons #}
                     <div class="text-center">
-                        <a href="{{ url( 'both' )}}" class="btn btn-outline-primary btn-homewhite"><i
-                                    class="fa fa-envelope px-2"></i>{{ 'landing.button.myinbox' | trans }}{% if messageCount + requestCount %} <span
+                        <a href="{{ url( 'both' )}}" class="btn btn-outline-primary btn-homewhite">
+                            <i class="fa fa-envelope mr-1"></i>{{ 'landing.button.myinbox' | trans }}{% if messageCount + requestCount %} <span
                                     class="badge badge-primary">{{ messageCount + requestCount }}</span>{% endif %}</a>
                     </div>
                 </div>
@@ -207,7 +207,7 @@
                         {{ '€ ' ~ campaign.yearDonated ~ ''}}
                         <span class="ml-1">{{ 'dashboard.donation.received' | trans }}</span></p>
                     <p><a href="{{ url('donate') }}" class="btn btn-outline-primary btn-homewhite btn-block mb-1"><i
-                                    class="fa fa-euro"></i> {{ 'landing.beinvolved.pleasedonate' | trans }}</a></p>
+                                    class="fa fa-euro-sign"></i> {{ 'landing.beinvolved.pleasedonate' | trans }}</a></p>
 
 
                 {% endif %}
@@ -216,7 +216,7 @@
                 <p><a href="{{ url('getactive') }}" class="btn btn-outline-primary btn-homewhite btn-block"><i
                             class="fa fa-wrench"></i> {{ 'landing.beinvolved.helpbewelcome' | trans }}</a></p>
                 <p><a href="{{ url('donate') }}" class="btn btn-outline-primary btn-homewhite btn-block mb-1"><i
-                                class="fa fa-euro"></i> {{ 'landing.beinvolved.pleasedonate' | trans }}</a></p>
+                                class="fa fa-euro-sign"></i> {{ 'landing.beinvolved.pleasedonate' | trans }}</a></p>
 
             </div>
         </div>
@@ -236,7 +236,7 @@
                     {% set commentsCount = communityNews.comments | length %}<small class="float-right">{% transchoice commentsCount with {'%commentsCount%': commentsCount} %}bewelcome_news.nrcomments{% endtranschoice %}</small>
                 </div>
                 <a href="{{ url('communitynews') }}" class="btn btn-outline-primary btn-homewhite btn-block mt-2"><i
-                            class="fa fa-newspaper-o"></i> {{ 'landing.bwnews.allnews' | trans }}</a>
+                            class="far fa-newspaper"></i> {{ 'landing.bwnews.allnews' | trans }}</a>
             </div>
         </div>
 

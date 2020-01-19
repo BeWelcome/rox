@@ -26,13 +26,13 @@
                             {{ macros.profilelink(message.sender.Username) }}
                         {%- endif %}
                         <span title="{{ message.created.toDateTimeString }}">{{ message.created.DiffForHumans }}</span>
-                        <a class="ml-1 pull-right" href="{{ url('message_delete', {'id': message.id, 'redirect': current.id}) }}"><i class="fa fa-trash" title="{{ 'delete'|trans }}"></i></a>
+                        <a class="ml-2 pull-right" href="{{ url('message_delete', {'id': message.id, 'redirect': current.id}) }}"><i class="fa fa-trash" title="{{ 'delete'|trans }}"></i></a>
                         {%- if not own -%}
                             {% if message.folder == "Spam" %}
                                 <span class="ml-1">{{ 'markededspam' | trans }}</span>
                                 <a class="ml-1" href="{{ path('message_mark_nospam', { id: message.id }) }}"><i class="far fa-flag" title="{{ 'marknospam' | trans }}"></i></a>
                             {% else %}
-                                <a class="ml-1 pull-right" href="{{ path('message_mark_spam', { id: message.id }) }}"><i class="fas fa-flag" title="{{ 'markspam' | trans }}"></i></a>
+                                <a class="ml-2 pull-right" href="{{ path('message_mark_spam', { id: message.id }) }}"><i class="fas fa-flag" title="{{ 'markspam' | trans }}"></i></a>
                             {% endif %}
                         {%- endif -%}
                     </small>

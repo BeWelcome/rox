@@ -95,10 +95,12 @@
                     </a>
                 </td>
                 <td class="text-right">
-                    <a href="{{ path('message_show', { id: message.id}) }}" class="btn btn-primary btn-sm">{{ 'view' | trans }}</a>
-                    {% if folder == 'inbox' %}<br>
-                    <a href="{{ path('message_reply', { id: message.id}) }}" class="btn btn-primary btn-sm mt-1">{{ 'reply' | trans }}</a>
-                    {% endif %}
+                    <div class="btn-group-vertical">
+                        <a href="{{ path('message_show', { id: message.id}) }}" class="btn btn-primary btn-sm">{{ 'view' | trans }}</a>
+                        {% if folder == 'inbox' %}
+                            <a href="{{ path('message_reply', { id: message.id}) }}" class="btn btn-primary btn-sm">{{ 'reply' | trans }}</a>
+                        {% endif %}
+                    </div>
                 </td>
             </tr>
         {% endfor %}
@@ -111,7 +113,9 @@
                         {% else %}
                             {{ form_widget(form.delete, { 'attr': { 'class': 'btn btn-danger'} }) }}
                         {% endif %}
-                        {{ form_widget(form.spam, { 'attr': { 'class': 'btn btn-light' } }) }}
+                        {% if folder != 'sent' %}
+                            {{ form_widget(form.spam, { 'attr': { 'class': 'btn btn-light' } }) }}
+                        {% endif %}
                     </div>
                 </td>
             </tr>

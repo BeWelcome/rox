@@ -192,7 +192,6 @@ class MessageRepository extends EntityRepository
             default:
                 $qb
                     ->where('m.receiver = :member')
-                    ->andWhere('m.request IS NULL')
                     ->andWhere('NOT(m.deleteRequest LIKE :deleted)')
                     ->setParameter('deleted', '%' . DeleteRequestType::RECEIVER_DELETED . '%')
                     ->andWhere('NOT(m.deleteRequest LIKE :purged)')
@@ -204,12 +203,20 @@ class MessageRepository extends EntityRepository
             case 'inbox':
                 $qb
                     ->andWhere('m.folder = :folder')
-                    ->setParameter('folder', 'normal');
+                    ->setParameter('folder', 'normal')
+                    ->andWhere('m.request IS NULL')
+                ;
                 break;
             case 'spam':
                 $qb
                     ->andWhere('m.folder = :folder')
-                    ->setParameter('folder', $folder);
+                    ->setParameter('folder', $folder)
+                ;
+                break;
+            default:
+                $qb
+                    ->andWhere('m.request IS NULL')
+                ;
                 break;
         }
         $qb->orderBy('m.' . $sort, $sortDirection);
@@ -470,10 +477,32 @@ class MessageRepository extends EntityRepository
     {
         return $this->createQueryBuilder('m')
             ->where('NOT(m.deleteRequest LIKE :deleted)')
+            ->setParameter('deleted', '%' . DeleteRequestType::SENDER_DELETED . '%')
+            ->andWhere('NOT(m.deleteRequest LIKE :purged)')
+            ->setParameter('purged', '%' . DeleteRequestType::SENDER_PURGED . '%')
+            ->andWhere('m.sender = :member')
+            ->setParameter('member', $member)
+            ->andWhere('m.folder = :folder')
+            ->setParameter('folder', InFolderType::NORMAL)
+            ->andWhere('m.request IS NULL')
+            ->orderBy('m.created', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @param Member $member
+     *
+     * @return Collection
+     */
+    public function getMessagesReceivedBy(Member $member)
+    {
+        return $this->createQueryBuilder('m')
+            ->where('NOT(m.deleteRequest LIKE :deleted)')
             ->setParameter('deleted', '%' . DeleteRequestType::RECEIVER_DELETED . '%')
             ->andWhere('NOT(m.deleteRequest LIKE :purged)')
             ->setParameter('purged', '%' . DeleteRequestType::RECEIVER_PURGED . '%')
-            ->andWhere('m.sender = :member')
+            ->andWhere('m.receiver = :member')
             ->setParameter('member', $member)
             ->andWhere('m.folder = :folder')
             ->setParameter('folder', InFolderType::NORMAL)
@@ -492,10 +521,32 @@ class MessageRepository extends EntityRepository
     {
         return $this->createQueryBuilder('m')
             ->where('NOT(m.deleteRequest LIKE :deleted)')
+            ->setParameter('deleted', '%' . DeleteRequestType::SENDER_DELETED . '%')
+            ->andWhere('NOT(m.deleteRequest LIKE :purged)')
+            ->setParameter('purged', '%' . DeleteRequestType::SENDER_PURGED . '%')
+            ->andWhere('m.sender = :member')
+            ->setParameter('member', $member)
+            ->andWhere('m.folder = :folder')
+            ->setParameter('folder', InFolderType::NORMAL)
+            ->join('m.request', 'r')
+            ->orderBy('m.created', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @param Member $member
+     *
+     * @return Collection
+     */
+    public function getRequestsReceivedBy(Member $member)
+    {
+        return $this->createQueryBuilder('m')
+            ->where('NOT(m.deleteRequest LIKE :deleted)')
             ->setParameter('deleted', '%' . DeleteRequestType::RECEIVER_DELETED . '%')
             ->andWhere('NOT(m.deleteRequest LIKE :purged)')
             ->setParameter('purged', '%' . DeleteRequestType::RECEIVER_PURGED . '%')
-            ->andWhere('m.sender = :member')
+            ->andWhere('m.receiver = :member')
             ->setParameter('member', $member)
             ->andWhere('m.folder = :folder')
             ->setParameter('folder', InFolderType::NORMAL)

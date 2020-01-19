@@ -86,7 +86,7 @@ class MemberController extends AbstractController
         // Either the member themselves or a person from the safety or profile team and the admin can access
         if ($member != $this->getUser()) {
             $this->denyAccessUnlessGranted(
-                [Member::ROLE_ADMIN_SAFETYTEAM, Member::ROLE_ADMIN_ADMIN, Member::ROLE_ADMIN_PROFILE],
+                [Member::ROLE_ADMIN_SAFETYTEAM, Member::ROLE_ADMIN_ADMIN],
                 null,
                 'Unable to access this page!'
             );

@@ -45,8 +45,8 @@
                     class="fa fa-question mr-1"></i> {{ 'request.host.tentatively'|trans }}{% endif %}
             {% endif %}</div>
         <div class="col-12 mb-2">
-            <a class="btn btn-sm btn-primary ml-1"
-               href="{{ path( 'message_mark_spam', { id: thread[0].id }) }}">{{ 'markspam' | trans }}</a>
+            {% if original.Sender.Username != myself.Username %}<a class="btn btn-sm btn-primary ml-1"
+               href="{{ path( 'message_mark_spam', { id: thread[0].id }) }}">{{ 'markspam' | trans }}</a>{% endif %}
             <a class="btn btn-sm btn-primary pull-right mr-1"
                href="{{ path( 'hosting_request_reply', { id: thread[0].id }) }}">{{ label | trans }}</a>
         </div>

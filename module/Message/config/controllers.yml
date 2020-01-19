@@ -1,5 +1,0 @@
-services:
-    Rox\Message\Controller\MessageController:
-        class: Rox\Message\Controller\MessageController
-        autowire: true
-        parent: Rox\Core\Controller\AbstractController

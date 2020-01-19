@@ -1,9 +1,0 @@
-<ul class="nav nav-pills nav-stacked">
-    <li class="nav-item"><a class="nav-link{% if step == 'index' %} active{% endif %}" href="{{ path('tour') }}">1. {{ 'tour_link' | trans }}</a></li>
-    <li class="nav-item"><a class="nav-link{% if step == 'share' %} active{% endif %}" href="{{ path('tour', { page: 'share' }) }}">2. {{ 'tour_link_share' | trans }}</a></li>
-    <li class="nav-item"><a class="nav-link{% if step == 'meet' %} active{% endif %}" href="{{ path('tour', { page: 'meet' }) }}">3. {{ 'tour_link_meet' | trans }}</a></li>
-    <li class="nav-item"><a class="nav-link{% if step == 'trips' %} active{% endif %}" href="{{ path('tour', { page: 'trips' }) }}">4. {{ 'tour_link_trips' | trans }}</a></li>
-    <li class="nav-item"><a class="nav-link{% if step == 'maps' %} active{% endif %}" href="{{ path('tour', { page: 'maps' }) }}">5. {{ 'tour_link_maps' | trans }}</a></li>
-    <li class="nav-item"><a class="nav-link{% if step == 'openness' %} active{% endif %}" href="{{ path('tour', { page: 'openness' }) }}">6. {{ 'tour_link_openness' | trans }}</a></li>
-    <li class="nav-item"><a class="nav-link" href="signup">7. {{ 'signup_now' | trans }}</a></li>
-</ul>

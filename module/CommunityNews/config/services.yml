@@ -1,8 +1,0 @@
-services:
-    Rox\CommunityNews\Model\CommunityNews:
-        class: Rox\CommunityNews\Model\CommunityNews
-        autowiring_types: Rox\CommunityNews\Repository\CommunityNewsRepositoryInterface
-
-    Rox\CommunityNews\Service\CommunityNewsService:
-        class: Rox\CommunityNews\Service\CommunityNewsService
-        autowiring_types: Rox\CommunityNews\Service\CommunityNewsServiceInterface

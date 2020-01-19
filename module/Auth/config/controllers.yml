@@ -1,4 +1,0 @@
-services:
-    Rox\Auth\Controller\LoginController:
-        class: Rox\Auth\Controller\LoginController
-        autowire: true

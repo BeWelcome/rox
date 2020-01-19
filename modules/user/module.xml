@@ -10,7 +10,6 @@
       <file class="MOD_bw_user_Auth">bwauth.lib.php</file>
       <file class="MOD_right">right.lib.php</file>
       <file class="MOD_member">member.lib.php</file>
-      <file class="MOD_online">online.lib.php</file>  
     </lib>
   </moduleFiles>
 </module>

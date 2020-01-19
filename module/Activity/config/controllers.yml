@@ -1,5 +1,0 @@
-services:
-#    Rox\CommunityNews\Controller\CommunityNewsController:
-#       class: Rox\CommunityNews\Controller\CommunityNewsController
-#        autowire: true
-#        parent: Rox\Core\Controller\AbstractController

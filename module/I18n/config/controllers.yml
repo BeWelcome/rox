@@ -1,5 +1,0 @@
-services:
-    Rox\I18n\Controller\LocaleController:
-        class: Rox\I18n\Controller\LocaleController
-        autowire: true
-        parent: Rox\Core\Controller\AbstractController

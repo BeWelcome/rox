@@ -14,13 +14,15 @@
         <div class="text-right">{{ macros.avatarstack(myself.Username, 50, true) }}</div>
     </div>
     <div class="row no-gutters justify-content-between mb-1">
-        {% if current.Sender != myself %}
-            {% if current.folder == constant('App\\Doctrine\\InFolderType::SPAM') %}
-                <div><a class="btn btn-sm btn-primary" href="{{ path('message_mark_nospam', { id: thread[0].id }) }}">{{ 'marknospam' | trans }}</a></div>
-            {% else %}
-                <div><a class="btn btn-sm btn-primary" href="{{ path('message_mark_spam', { id: thread[0].id }) }}"><i class="fas fa-flag"></i> {{ 'markspam' | trans }}</a></div>
-            {% endif %}
-        {%  endif %}
+        <div>{# Always add <div> so that the reply button is on the right hand side for larger displays #}
+            {% if current.Sender != myself %}
+                {% if current.folder == constant('App\\Doctrine\\InFolderType::SPAM') %}
+                    <a class="btn btn-sm btn-primary" href="{{ path('message_mark_nospam', { id: thread[0].id }) }}">{{ 'marknospam' | trans }}</a>
+                {% else %}
+                    <a class="btn btn-sm btn-primary" href="{{ path('message_mark_spam', { id: thread[0].id }) }}"><i class="fas fa-flag"></i> {{ 'markspam' | trans }}</a>
+                {% endif %}
+            {%  endif %}
+        </div>
         <div><a class="btn btn-sm btn-primary ml-auto" href="{{ path('message_reply', { id: thread[0].id }) }}">{{ 'message.button.reply' | trans }}</a></div>
     </div>
 

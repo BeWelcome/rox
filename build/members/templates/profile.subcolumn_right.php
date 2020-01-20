@@ -51,12 +51,12 @@ if (!$this->passedAway){
 
                        <? if ($commentLoopCount > 1){ ?><hr class="m-1"><? } ?>
                     <div class="comment-bg-<?=$quality?> p-2">
-                       <div class="w-100 mt-1">
+                       <div class="my-1 clearfix">
                            <a href="members/<?=$c->UsernameFromMember?>">
                                <img class="float-left mr-2"  src="members/avatar/<?=$c->UsernameFromMember?>/50"  height="50"  width="50"  alt="<?=$c->UsernameFromMember?>" />
                            </a>
                            <div>
-                               <p class="m-0" style="line-height: 0.6;">
+                               <p class="m-0" style="line-height: 1.0;">
                                    <?php if (!$this->passedAway) { ?>
                                        <span class="commenttitle <?=$quality?>"><?= $words->get('CommentQuality_'.$c->comQuality.''); ?></span>
                                        <span class="float-right">
@@ -65,8 +65,8 @@ if (!$this->passedAway){
                                        <? } ?>
                                    </span>
                                    <?php }?>
-                                   <br><?=$words->get('CommentFrom','<a href="members/'.$c->UsernameFromMember.'">'.$c->UsernameFromMember.'</a>')?>
-                                   <br><span title="<?=$c->created?>"><?=$layoutbits->ago($c->created)?></span>
+                                   <br><small><?=$words->get('CommentFrom','<a href="members/'.$c->UsernameFromMember.'">'.$c->UsernameFromMember.'</a>')?></small>
+                                   <br><small><span title="<?=$c->created?>"><?=$layoutbits->ago($c->created)?></span></small>
                                </p>
                            </div>
                        </div>

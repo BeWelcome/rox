@@ -21,10 +21,12 @@ Production OS is Debian GNU/Linux Strech.
 * PHP extensions: mbstring, dom, fileinfo, intl, xsl
 * MariaDB >=10.1
 * SMTP server for email features
-* [Composer](https://www.getcomposer.org) Latest version
-* [Node.js](https://nodejs.org/) Latest version
-* [Sphinxsearch](http://sphinxsearch.com/) (optional)
-* wget (if you want to follow the instructions word to word)
+* [Composer](https://www.getcomposer.org) Latest version (installed globally)
+* [Node.js](https://nodejs.org/) Latest version (installed globally)
+* [Sphinxsearch](http://sphinxsearch.com/) (can be omitted but member search will be slow and forum search won't work)
+* wget (if you want to follow the instructions word to word) other curl and the -o parameter should be your friend
+
+There is rudimentary Docker support. Fill free to update the Dockerfile to help fellow developers.
 
 ### Download
 
@@ -34,55 +36,26 @@ Production OS is Debian GNU/Linux Strech.
     $ git clone https://github.com/BeWelcome/rox.git
     ```
 
-2. For a first look around a read-only clone will do. If you want to support development please fork the repository and send pull requests.
-
-### Create files and set permissions
-
-1.  Create database and set privileges:
-
-    ```bash
-    $ sudo mysql -u root -p
-    mysql> CREATE DATABASE bewelcome;
-    mysql> GRANT ALL PRIVILEGES ON bewelcome.* TO 'bewelcome'@'localhost' IDENTIFIED BY 'bewelcome';
-    mysql> FLUSH PRIVILEGES;
-    mysql> exit
-    ```
-
-1.  Change to BW-Rox directory:
-
-    ```
-    $ cd /path/to/rox
-    ```
-
-2. Create data directory for image uploads and working files:
-
-    ```bash
-    $ mkdir data
-    ```
+    For a first look around a read-only clone will do. If you want to support development please fork the repository and send pull requests.
 
 ### Initialize installation
 
-8. Install the rox dependencies
+8. Install the rox dependencies using composer and npm
 
     ```bash
-    $ php composer.phar install
+    $ composer install
     $ npm install
     ```
 
-1. Execute
- 
-    If your database parameters are different from above copy ```.env``` to ```.env.local``` and match with your MYSQL credentials.       
-
 2.  Initialize the database.
 
-    This generates a new database as given in the ```.env.*``` files and presets some data.
-        
+    This generates a new database as given in the ```.env``` file and presets some data.
+
     ```bash
-    $ php bin/console doctrine:schema:create
-    $ php bin/console hautelook:fixtures:load
-    ``` 
-   
-10. To get translated keywords update words and language tables to match the current translation on the site
+    $ php bin/console test:database:create --drop --force
+    ```
+
+10. (Optional) Load
 
     ```bash
     $ wget http://downloads.bewelcome.org/for_developers/rox_test_db/languages.sql.bz2
@@ -94,29 +67,29 @@ Production OS is Debian GNU/Linux Strech.
 
 ### Test and log in
 
-2. Run 
+2. Run
 
     ```bash
     $ make build version
    ```
 
-   to build the CSS and JS files. The version creates a file referenced in the footer. 
+   to build the CSS and JS files. The version creates a file referenced in the footer.
 
-3. Start the server 
+3. Start the server
 
    ```bash
     $ php bin/console server:start
    ```
 
-   (On Windows use php bin/console server:run)
+   If you installed the symfony command you can also use symfony serve. (On Windows use php bin/console server:run)
 
-   Access the site using http://localhost:8000/
+   Access the site using http://localhost:8000/ or with https://localhost:8000/ (if you installed certificate for symfony)
 
-4. Log in as user `member-1` and password `password`. See [Useful hints](#useful-hints) section below
-   on password usage.
+4. Log in as user `member-2` and password `password`. See [Useful hints](#useful-hints) section below
+   on password usage. There is also a user bwadmin which has some rights assigned (and uses the same password).
 
 5. Click around the site a bit and check if all CSS and images are loaded.
-   Refer to var/log/dev.log if errors appear or something looks broken. Also make use of the Symfony3 debug toolbar.
+   Refer to var/log/dev.log if errors appear or something looks broken. Also make use of the Symfony4 debug toolbar.
 
 ## Useful hints
 
@@ -132,7 +105,7 @@ Production OS is Debian GNU/Linux Strech.
 
     ```sql
     mysql> UPDATE members SET password = PASSWORD('password');
-    mysql> exit
+    mysql> exit;
     ```
 
 * When doing bigger updates clear the cache from time to time with
@@ -140,10 +113,10 @@ Production OS is Debian GNU/Linux Strech.
     ```bash
     $ php bin/console cache:clear
     ```
-    
+
 ## Create documentation
 
-If you need documentation check out mkdoc.
+If you need documentation check out [MKDocs](https://www.mkdocs.org/).
 
 ## Further help
 

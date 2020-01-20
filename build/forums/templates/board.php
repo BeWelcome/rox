@@ -1,6 +1,6 @@
 <?php
 
-$User = APP_User::login();
+$User = $this->_model->getLoggedInMember();
 
 $words = new MOD_words();
 
@@ -23,7 +23,7 @@ $navigationPath .= '<a href="' . htmlspecialchars($boards->getBoardLink(), ENT_Q
 <div class="col-8">
 <?php echo $words->flushBuffer();
 
-	$number = $boards->getTotalThreads(); 
+	$number = $boards->getTotalThreads();
 	if ($number == 0) {
 		echo $words->getFormatted("Found0Threads");
 		$this->page->SetMetaRobots("NOINDEX, NOFOLLOW") ;
@@ -43,7 +43,7 @@ if ($User && empty($noForumNewTopicButton)) {
 <?php
 } // end if $User
 
-	
+
 	if ($threads = $boards->getThreads()) {
 		require 'boardthreads.php';
 	}

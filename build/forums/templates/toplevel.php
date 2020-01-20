@@ -21,7 +21,8 @@ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
-$User = APP_User::login();
+$User = $this->_model->getLoggedInMember();
+
 $noForumLegendBox = true;
 $ToogleTagCloud=true ;
 $TagCloud=true ;

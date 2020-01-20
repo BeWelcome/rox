@@ -41,7 +41,7 @@ This File display a topic and the messages which are inside it
         //$boardText = $i18n->getText('boardText');
         $words = new MOD_words();
 
-        $User = APP_User::login();
+        $User = $this->_model->getLoggedInMember();
         $can_del = $User && $User->hasRight('delete@forums'); // Not to use anymore (JeanYves)
         $can_edit_own = $User;
         //    $can_edit_own = $User && $User->hasRight('edit_own@forums');

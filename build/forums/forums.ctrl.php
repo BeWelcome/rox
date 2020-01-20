@@ -93,13 +93,7 @@ class ForumsController extends PAppController
         } // end of test "if feature is closed"
 
 
-        $a = new APP_User();
-        if ( $a->isBWLoggedIn()) {
-            $User = APP_User::login();
-        }
-        else {
-            $User = false;
-        }
+        $User = $this->_model->getLoggedInMember();
 
         $showSticky = true;
 
@@ -589,7 +583,7 @@ class ForumsController extends PAppController
         // Data will be displayed only if the current user is Logged
         $profileVisitor = $this->_model->getLoggedInMember();
         if ($profileVisitor) {
-            $userId = APP_User::memberId($user);
+            $userId = $this->session->get('IdMember');
             $membersForumPostsPagePublic = $this->_model->isMembersForumPostsPagePublic($userId);
             if ($membersForumPostsPagePublic || ($profileVisitor->getPKValue() == $userId) || $this->BW_Right->HasRight("Admin") || $this->BW_Right->HasRight("ForumModerator") || $this->BW_Right->HasRight("SafetyTeam") ) {
                 $posts = $this->_model->searchUserposts($user);
@@ -835,8 +829,8 @@ class ForumsController extends PAppController
                 }
             }
         }
-        $a = new APP_User();
-        if (!$a->isBWLoggedIn()) {
+        $a = $this->_model->getLoggedInMember();
+        if (!$a) {
             $this->action = self::ACTION_NOT_LOGGED_IN;
         } else if (!isset($request[1])) {
             $this->_model->setTopMode(Forums::CV_TOPMODE_LANDING);

@@ -15,8 +15,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program; if not, see <http://www.gnu.org/licenses/> or 
-write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+along with this program; if not, see <http://www.gnu.org/licenses/> or
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 */
 
@@ -35,16 +35,8 @@ class GroupJoinPage extends GroupsBasePage
     protected function column_col3()
     {
         $words = $this->getWords();
-        $a = new APP_User();
-        if (!$a->isBWLoggedIn('NeedMore,Pending'))
-        {
-            $widg = $this->createWidget('LoginFormWidget');
-            $widg->render();
-        }
-        else
-        {
         //crumbking: this is just a copy/paste of the membersettings layout with small changes in some words, needs a coder ;)
-    
+
             $layoutkit = $this->layoutkit;
             $words = $layoutkit->getWords();
 
@@ -85,14 +77,13 @@ class GroupJoinPage extends GroupsBasePage
                     <input type='submit' class='btn btn-primary' value='{$words->getSilent('GroupsGetMeIn')}' name='join'/>
                 </div>
             </div>
-       
+
             </fieldset>
-             
+
         </form>
 HTML;
-        }
     }
-    
+
     protected function getSubmenuActiveItem() {
         return 'join';
     }

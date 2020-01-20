@@ -1,5 +1,6 @@
 <?php
-$User = APP_User::login();
+$User = $this->_model->getLoggedInMember();
+
 $keyword = '';
 if (isset($this->keyword)) {
     $keyword = $this->keyword;

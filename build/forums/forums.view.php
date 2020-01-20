@@ -321,6 +321,8 @@ class ForumsView extends RoxAppView {
     public function teaser() {
         $boards = $this->_model->getBoard();
         $request = PRequest::get()->request;
+        $User = $this->_model->getLoggedInMember();
+
         require 'templates/teaser.php';
     }
     public function leftSidebar() {
@@ -403,6 +405,7 @@ class ForumsView extends RoxAppView {
         $forumMaxPage = ceil($forum->getNumberOfThreads() / $forum->THREADS_PER_PAGE);
         $groupsMaxPage = ceil($groups->getNumberOfThreads() / $groups->THREADS_PER_PAGE);
 
+        $User = $this->_model->getLoggedInMember();
         require 'templates/landing.php';
     } // end of ShowTopLevelLandingPage
 

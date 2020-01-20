@@ -49,11 +49,6 @@
 <div class="col-12 col-md-4">
 
     <?php
-    $a = new APP_User();
-    if (!$a->isBWLoggedIn('NeedMore,Pending')) {
-        // not logged in users cannot join groups
-        echo $words->get('GroupsJoinLoginFirst');
-    } else {
         $model = new GroupsModel();
         if ($this->member) {
             $memberId = $this->member->id;
@@ -81,7 +76,6 @@
                     <?php echo $words->flushBuffer(); ?>
                 <?php }
         }
-    } // endif logged in member
     ?>
 
     <div class="h4"><?php echo $words->get('GroupAdmins'); ?></div>

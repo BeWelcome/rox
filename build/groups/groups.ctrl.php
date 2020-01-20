@@ -913,7 +913,7 @@ class GroupsController extends RoxControllerBase
         $return = implode('/', $args->request);
 
 
-        if (!APP_User::loggedIn())
+        if (!$this->_model->getLoggedInMember())
         {
             // not logged in.
             // the login form will be shown after the automatic redirect
@@ -983,7 +983,7 @@ class GroupsController extends RoxControllerBase
 
         $return = $args->req;
 
-        if (!APP_User::loggedIn())
+        if (!$this->_model->getLoggedInMember())
         {
             return $return;
         }
@@ -1043,7 +1043,7 @@ class GroupsController extends RoxControllerBase
 
         $return = $args->req;
 
-        if (!APP_User::loggedIn())
+        if (!$this->_model->getLoggedInMember())
         {
             return $return;
         }

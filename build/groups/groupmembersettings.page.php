@@ -49,15 +49,7 @@ class GroupMemberSettingsPage extends GroupsBasePage
             $problemmsg = (($redirected->problems) ? "<p class=\"alert-danger p-2\">{$words->get('GroupMemberSettingsProblems')}</p>" : '');
         }
 
-        $a = new APP_User();
-        if (!$a->isBWLoggedIn('NeedMore,Pending'))
-        {
-            $widg = $this->createWidget('LoginFormWidget');
-            $widg->render();
-        }
-        else
-        {
-            $membershipinfo = $this->member->getGroupMembership($this->group);
+        $membershipinfo = $this->member->getGroupMembership($this->group);
         ?>
         <?= $resultmsg; ?>
         <?= $problemmsg; ?>
@@ -92,9 +84,8 @@ class GroupMemberSettingsPage extends GroupsBasePage
             <input type="submit" class="btn btn-primary pull-right" value="<?= $words->getBuffered('GroupsUpdateMemberSettings') ;?>"><?=$words->flushBuffer();?>
             </div>
         </form>
+        </div></div>
         <?php
-        }
-        echo '</div></div>';
     }
 
     protected function getSubmenuActiveItem() {

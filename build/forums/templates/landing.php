@@ -23,7 +23,6 @@ Boston, MA  02111-1307, USA.
 */
 
 
-$User = APP_User::login();
 $TIGHT_THREADLIST = true;
 $noForumLegendBox = true;
 $noForumNewTopicButton = true;

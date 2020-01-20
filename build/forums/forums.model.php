@@ -456,7 +456,8 @@ WHERE
     } // end of boardTopLevelGroups
 
     private function boardTopLevelLanding($showsticky = true) {
-        if (!($User = APP_User::login())) {
+        $User = $this->getLoggedInMember();
+        if (!$User) {
             // Show informal message that the forums are limited to members only
             return false;
         }
@@ -957,7 +958,7 @@ WHERE `geonameid` = '%d'
     }
 
     public function createProcess() {
-        if (!($User = APP_User::login())) {
+        if (!($User = $this->getLoggedInMember())) {
             return false;
         }
 
@@ -1054,7 +1055,7 @@ AND `forums_posts`.`id` = $this->messageId and `forums_tags`.`id`=`tags_threads`
 	  * by the user
      */
     public function editProcess() {
-        if (!($User = APP_User::login())) {
+        if (!($User = $this->getLoggedInMember())) {
             return false;
         }
 
@@ -1314,7 +1315,7 @@ WHERE `threadid` = '%d' ",
     } // end of editTopic
 
     public function replyProcess($suggestion = false) {
-        if (!($User = APP_User::login())) {
+        if (!($User  = $this->getLoggedInMember())) {
             return false;
         }
 
@@ -1339,7 +1340,7 @@ WHERE `threadid` = '%d' ",
     } // end of replyProcess
 
     public function reportpostProcess() {
-        if (!($User = APP_User::login())) {
+        if (!($User  = $this->getLoggedInMember())) {
             return false;
         }
 
@@ -1587,7 +1588,7 @@ WHERE `threadid` = '%d' ",
 // ---> ($vars["submit"]=="delete Tag")) means that the Tag IdTag is to be deleted
 // ---> ($vars["submit"]=="Add Tag")) means that the Tag IdTag is to be added
     public function ModeratorEditPostProcess() {
-     if (!($User = APP_User::login())) {
+     if (!($User  = $this->getLoggedInMember())) {
         return false;
      }
 
@@ -1710,7 +1711,7 @@ WHERE `threadid` = '%d' ",
 * ModeratorEditTagProcess deals with the tabs updated by moderators
 */
     public function ModeratorEditTagProcess() {
-        if (!($User = APP_User::login())) {
+        if (!($User  = $this->getLoggedInMember())) {
             return false;
         }
 
@@ -1783,7 +1784,7 @@ WHERE `threadid` = '%d' ",
     } // end of ModeratorEditTagProcess
 
     public function delProcess() {
-        if (!($User = APP_User::login())) {
+        if (!($User  = $this->getLoggedInMember())) {
             return false;
         }
 
@@ -1944,7 +1945,7 @@ WHERE `threadid` = '$topicinfo->threadid'
     }
 
     private function replyTopic(&$vars) {
-        if (!($User = APP_User::login())) {
+        if (!($User  = $this->getLoggedInMember())) {
             throw new PException('User gone missing...');
         }
         $IdGroup = 0;
@@ -2019,11 +2020,11 @@ WHERE `threadid` = '$this->threadid'
     * @return int topicid Id of the newly created topic
     */
     private function newTopic(&$vars) {
-        if (!($User = APP_User::login())) {
+        if (!($User  = $this->getLoggedInMember())) {
             throw new PException('User gone missing...');
         }
         $IdGroup = null;
-        if (isset($vars['IdGroup']) && $vars['IdGroup'] === 0) {
+        if (isset($vars['IdGroup']) && $vars['IdGroup'] !== 0) {
             $IdGroup = $vars['IdGroup'];
         }
         if (isset($vars['ThreadVisibility'])) {
@@ -2052,6 +2053,12 @@ WHERE `threadid` = '$this->threadid'
         $result = $statement->execute();
 
         $postId = $statement->insertId();
+
+        $statement = $this->dao->prepare("UPDATE `forums_posts` SET `postId` = ? WHERE `id` = ?");
+        $statement->bindParam(1, $postId);
+        $statement->bindParam(2, $postId);
+
+        $result = $statement->execute();
 
 		if(empty($vars['d_continent'])) {
 			$d_continent=null;
@@ -2375,7 +2382,7 @@ AND IdSubscriber = {$memberId}";
                 $this->topic->IdSubscribe= $row->IdSubscribe ;
                 $this->topic->IdKey= $row->IdKey ;
             }
-            if ($this->topic->topicinfo->IdGroup > 0) {
+            if (null !== $this->topic->topicinfo->IdGroup) {
                 // Check if member has enabled group mails
                 $group = $this->createEntity('Group', $this->topic->topicinfo->IdGroup);
                 $member = $this->createEntity('Member', $this->session->get("IdMember"));
@@ -3639,7 +3646,8 @@ public function NotAllowedForGroup($IdMember, $rPost) {
 	 * @return mixed Either false if there was a problem with the search box content or a list of matches.
 	 */
 	public function searchProcess() {
-		if (!($User = APP_User::login())) {
+	    $User = $this->getLoggedInMember();
+		if (!$User) {
 			return false;
 		}
 

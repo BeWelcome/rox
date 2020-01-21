@@ -1,7 +1,9 @@
 <div class="d-lg-block d-none mb-sm-3 mb-lg-0">
     <?php
 
-if (!$this->passedAway){
+    use Carbon\Carbon;
+
+    if (!$this->passedAway){
     $accIdSuffix = 'Right';
     require 'profile.subcolumn_accommodation.php';
 }
@@ -66,7 +68,10 @@ if (!$this->passedAway){
                                    </span>
                                    <?php }?>
                                    <br><small><?=$words->get('CommentFrom','<a href="members/'.$c->UsernameFromMember.'">'.$c->UsernameFromMember.'</a>')?></small>
-                                   <br><small><span title="<?=$c->created?>"><?=$layoutbits->ago($c->created)?></span></small>
+                                   <br><small><span title="<?=$c->created?>"><?php
+                                           $created = Carbon::createFromFormat('Y-m-d H:i:s', $c->created);
+                                           echo $created->diffForHumans();
+                                           ?></span></small>
                                </p>
                            </div>
                        </div>

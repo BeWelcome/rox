@@ -23,6 +23,8 @@ Boston, MA  02111-1307, USA.
 
 */
 
+use Carbon\Carbon;
+
 $purifier = MOD_htmlpure::getBasicHtmlPurifier();
 $rights = new MOD_right;
 $rights->HasRight('Comments');
@@ -39,12 +41,12 @@ function getShowCondition($com,$login){
 }
 
 function getEditCondition($com,$login){
-    
+
     // don't allow edit bad comment if not marked so
     if ($com->Quality == 'Bad' && $com->AllowEdit != 1) return false;
     // don't allow edit is not logged in as writer
     if ($com->UsernameFromMember != $login) return false;
-    
+
     // allow edit
     return true;
 }
@@ -95,7 +97,7 @@ foreach($comments as $comment) {
     if (isset($comment['from'])) {$c = $comment['from'];}
 //            echo $c->UsernameFromMember;
     if ($showfrom || $editfrom) {
-        $quality = strtolower($c->comQuality); 
+        $quality = strtolower($c->comQuality);
         $tt = explode(',', $c->Relations); ?>
 
         <div class="col-12 col-sm-6 card comment-bg-<?=$quality?> mb-3">
@@ -132,8 +134,11 @@ foreach($comments as $comment) {
             </div>
 
             <div>
-                <? if ($c->created != $c->updated){ ?>
-                    <p class="small">(<?=$words->get('CommentLastUpdated')?>: <span title="<?= $c->updated; ?>"><?php echo $layoutbits->ago($c->unix_updated); ?></span>)</p>
+                <?php
+                    $created = Carbon::createFromFormat('Y-m-d H:i:s', $c->created);
+                    $updated = Carbon::createFromFormat('Y-m-d H:i:s', $c->updated);
+                if ($c->created != $c->updated){ ?>
+                    <p class="small">(<?=$words->get('CommentLastUpdated')?>: <span title="<?= $c->updated; ?>"><?= $updated->diffForHumans(); ?></span>)</p>
                 <? } ?>
 
                         <?php
@@ -185,7 +190,7 @@ foreach($comments as $comment) {
                 <div><? if (!$this->passedAway) { ?><p class="h4 m-0 mr-lg-5 <?=$quality?>"><?= $words->get('CommentQuality_'.$cc->comQuality.''); ?></p><? } ?></div>
 
                 <?php if ($this->loggedInMember) :?>
-                    <div><a href="members/<?php echo $cc->UsernameToMember;?>/comment/<?php echo $cc->id;?>/report" title="<?=$words->getSilent('ReportCommentProblem') ?>"><i class="fa fa-flag-o" alt="<?=$words->getSilent('ReportCommentProblem') ?>"></i></a></div>
+                    <div><a href="members/<?php echo $cc->UsernameToMember;?>/comment/<?php echo $cc->id;?>/report" title="<?=$words->getSilent('ReportCommentProblem') ?>"><i class="fa fa-flag" title="<?=$words->getSilent('ReportCommentProblem') ?>"></i></a></div>
                 <?php endif;?>
             </div>
 

@@ -2,103 +2,100 @@
 
 namespace App\Entity;
 
+use App\Utilities\LifecycleCallbacksTrait;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * MembersThreadsSubscribed
  *
- * @ORM\Table(name="members_threads_subscribed", indexes={@ORM\Index(name="IdSubscriber", columns={"IdSubscriber", "IdThread"})})
+ * @ORM\Table(name="members_threads_subscribed")
  * @ORM\Entity
+ * @ORM\HasLifecycleCallbacks
  */
-class MembersThreadsSubscribed
+class MemberThreadSubscription
 {
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="IdSubscriber", type="integer", nullable=false)
-     */
-    private $idsubscriber;
+    use LifecycleCallbacksTrait;
 
     /**
-     * @var integer
+     * @var Member
      *
-     * @ORM\Column(name="IdThread", type="integer", nullable=false)
+     * @ORM\ManyToOne(targetEntity="Member")
+     * @ORM\JoinColumn(name="IdSubscriber", referencedColumnName="id", nullable=false)
      */
-    private $idthread;
+    private $subscriber;
+
+    /**
+     * @var ForumThread
+     *
+     * @ORM\ManyToOne(targetEntity="ForumThread")
+     * @ORM\JoinColumn(name="IdThread", referencedColumnName="id", nullable=false)
+     */
+    private $thread;
 
     /**
      * @var string
      *
      * @ORM\Column(name="ActionToWatch", type="string", nullable=false)
      */
-    private $actiontowatch = 'replies';
+    private $actionToWatch = 'replies';
 
     /**
      * @var string
      *
      * @ORM\Column(name="UnSubscribeKey", type="string", length=20, nullable=false)
      */
-    private $unsubscribekey;
+    private $unsubscribeKey;
 
     /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="created", type="datetime", nullable=false)
-     */
-    private $created = 'CURRENT_TIMESTAMP';
-
-    /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="notificationsEnabled", type="boolean", nullable=false)
      */
-    private $notificationsenabled = '1';
+    private $notificationsEnabled = '1';
 
     /**
-     * @var integer
+     * @var int
      *
-     * @ORM\Column(name="id", type="integer")
+     * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
 
-
-
     /**
-     * Set idsubscriber
+     * Set subscriber
      *
-     * @param integer $idsubscriber
+     * @param Member $subscriber
      *
-     * @return MembersThreadsSubscribed
+     * @return MemberThreadSubscription
      */
-    public function setIdsubscriber($idsubscriber)
+    public function setSubscriber($subscriber)
     {
-        $this->idsubscriber = $idsubscriber;
+        $this->subscriber = $subscriber;
 
         return $this;
     }
 
     /**
-     * Get idsubscriber
+     * Get subscriber
      *
-     * @return integer
+     * @return Member
      */
-    public function getIdsubscriber()
+    public function getSubscriber()
     {
-        return $this->idsubscriber;
+        return $this->subscriber;
     }
 
     /**
-     * Set idthread
+     * Set thread
      *
-     * @param integer $idthread
+     * @param ForumThread $thread
      *
-     * @return MembersThreadsSubscribed
+     * @return MemberThreadSubscription
      */
-    public function setIdthread($idthread)
+    public function setThread($thread)
     {
-        $this->idthread = $idthread;
+        $this->thread = $thread;
 
         return $this;
     }
@@ -106,23 +103,23 @@ class MembersThreadsSubscribed
     /**
      * Get idthread
      *
-     * @return integer
+     * @return ForumThread
      */
-    public function getIdthread()
+    public function getThread()
     {
-        return $this->idthread;
+        return $this->thread;
     }
 
     /**
-     * Set actiontowatch
+     * Set action to watch
      *
-     * @param string $actiontowatch
+     * @param string $actionToWatch
      *
-     * @return MembersThreadsSubscribed
+     * @return MemberThreadSubscription
      */
-    public function setActiontowatch($actiontowatch)
+    public function setActionToWatch($actionToWatch)
     {
-        $this->actiontowatch = $actiontowatch;
+        $this->actionToWatch = $actionToWatch;
 
         return $this;
     }
@@ -132,89 +129,63 @@ class MembersThreadsSubscribed
      *
      * @return string
      */
-    public function getActiontowatch()
+    public function getActionToWatch()
     {
-        return $this->actiontowatch;
+        return $this->actionToWatch;
     }
 
     /**
-     * Set unsubscribekey
+     * Set unsubscribe key
      *
-     * @param string $unsubscribekey
+     * @param string $unsubscribeKey
      *
-     * @return MembersThreadsSubscribed
+     * @return MemberThreadSubscription
      */
-    public function setUnsubscribekey($unsubscribekey)
+    public function setUnsubscribeKey($unsubscribeKey)
     {
-        $this->unsubscribekey = $unsubscribekey;
+        $this->unsubscribeKey = $unsubscribeKey;
 
         return $this;
     }
 
     /**
-     * Get unsubscribekey
+     * Get unsubscribe key
      *
      * @return string
      */
-    public function getUnsubscribekey()
+    public function getUnsubscribeKey()
     {
-        return $this->unsubscribekey;
+        return $this->unsubscribeKey;
     }
 
     /**
-     * Set created
+     * Set notifications enabled
      *
-     * @param \DateTime $created
+     * @param bool $notificationsEnabled
      *
-     * @return MembersThreadsSubscribed
+     * @return MemberThreadSubscription
      */
-    public function setCreated($created)
+    public function setNotificationsEnabled($notificationsEnabled)
     {
-        $this->created = $created;
+        $this->notificationsEnabled = $notificationsEnabled;
 
         return $this;
     }
 
     /**
-     * Get created
+     * Get notifications enabled
      *
-     * @return \DateTime
+     * @return bool
      */
-    public function getCreated()
+    public function getNotificationsEnabled()
     {
-        return $this->created;
+        return $this->notificationsEnabled;
     }
 
     /**
-     * Set notificationsenabled
-     *
-     * @param boolean $notificationsenabled
-     *
-     * @return MembersThreadsSubscribed
+     * @return int
      */
-    public function setNotificationsenabled($notificationsenabled)
-    {
-        $this->notificationsenabled = $notificationsenabled;
-
-        return $this;
-    }
-
-    /**
-     * Get notificationsenabled
-     *
-     * @return boolean
-     */
-    public function getNotificationsenabled()
-    {
-        return $this->notificationsenabled;
-    }
-
-    /**
-     * Get id
-     *
-     * @return integer
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }

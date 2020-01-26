@@ -7,21 +7,31 @@
 
 namespace App\Entity;
 
+use App\Utilities\LifecycleCallbacksTrait;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * ForumThread.
  *
- * @ORM\Table(name="forums_threads", indexes={@ORM\Index(name="first_postid", columns={"first_postid"}), @ORM\Index(name="last_postid", columns={"last_postid"}), @ORM\Index(name="geonameid", columns={"geonameid"}), @ORM\Index(name="admincode", columns={"admincode"}), @ORM\Index(name="countrycode", columns={"countrycode"}), @ORM\Index(name="continent", columns={"continent"}), @ORM\Index(name="IdGroup", columns={"IdGroup"}), @ORM\Index(name="ThreadVisibility", columns={"ThreadVisibility"}), @ORM\Index(name="ThreadDeleted", columns={"ThreadDeleted"})})
+ * @ORM\Table(name="forums_threads", indexes={
+ *     @ORM\Index(name="first_postid", columns={"first_postid"}),
+ *     @ORM\Index(name="last_postid", columns={"last_postid"}),
+ *     @ORM\Index(name="IdGroup", columns={"IdGroup"}),
+ *     @ORM\Index(name="ThreadVisibility", columns={"ThreadVisibility"}),
+ *     @ORM\Index(name="ThreadDeleted", columns={"ThreadDeleted"})})
  * @ORM\Entity
+ * @ORM\HasLifecycleCallbacks
  *
  * @SuppressWarnings(PHPMD)
  * Auto generated class do not check mess
  */
 class ForumThread
 {
+    use LifecycleCallbacksTrait;
+
     /**
      * @var int
      *
@@ -32,7 +42,7 @@ class ForumThread
     private $id;
 
     /**
-     * Not used (historical)
+     * Not used (historic)
      * @var int
      *
      * @ORM\Column(name="threadid", type="integer", nullable=true)
@@ -44,14 +54,14 @@ class ForumThread
      *
      * @ORM\Column(name="expiredate", type="datetime", nullable=true)
      */
-    private $expiredate = '0000-00-00 00:00:00';
+    private $expiredate = null;
 
     /**
      * @var int
      *
      * @ORM\Column(name="IdTitle", type="integer", nullable=false)
      */
-    private $idtitle = '0';
+    private $idTitle = '0';
 
     /**
      * @var string
@@ -64,122 +74,84 @@ class ForumThread
      * @var ForumPost
      *
      * @ORM\OneToOne(targetEntity="ForumPost")
-     * @ORM\JoinColumn(name="first_postid", referencedColumnName="id")
+     * @ORM\JoinColumn(name="first_postid", referencedColumnName="id", nullable=false)
      */
     private $firstPost;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="first_postid", type="integer", nullable=true)
-     */
-    private $firstPostid;
 
     /**
      * @var ForumPost
      *
      * @ORM\OneToOne(targetEntity="ForumPost")
-     * @ORM\JoinColumn(name="last_postid", referencedColumnName="id")
+     * @ORM\JoinColumn(name="last_postid", referencedColumnName="id", nullable=false)
      */
     private $lastPost;
 
     /**
      * @var int
      *
-     * @ORM\Column(name="last_postid", type="integer", nullable=true)
+     * @ORM\Column(name="replies", type="integer", nullable=false)
      */
-    private $lastPostid;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="replies", type="smallint", nullable=false)
-     */
-    private $replies = '0';
+    private $replies = 0;
 
     /**
      * @var int
      *
      * @ORM\Column(name="views", type="integer", nullable=false)
      */
-    private $views = '0';
+    private $views = 0;
 
     /**
+     * Not used (historic)
+     *
      * @var int
      *
      * @ORM\Column(name="geonameid", type="integer", nullable=true)
      */
-    private $geonameid;
+    private $geonameId = null;
 
     /**
+     * Not used (historic)
+     *
      * @var string
      *
      * @ORM\Column(name="admincode", type="string", length=2, nullable=true)
      */
-    private $admincode;
+    private $adminCode = null;
 
     /**
+     * Not used (historic)
+     *
      * @var string
      *
      * @ORM\Column(name="countrycode", type="string", length=2, nullable=true)
      */
-    private $countrycode;
+    private $countrycode = null;
 
     /**
+     * Not used (historic)
+     *
      * @var string
      *
      * @ORM\Column(name="continent", type="string", nullable=true)
      */
-    private $continent;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="tag1", type="integer", nullable=true)
-     */
-    private $tag1;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="tag2", type="integer", nullable=true)
-     */
-    private $tag2;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="tag3", type="integer", nullable=true)
-     */
-    private $tag3;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="tag4", type="integer", nullable=true)
-     */
-    private $tag4;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="tag5", type="integer", nullable=true)
-     */
-    private $tag5;
+    private $continent = null;
 
     /**
      * @var int
      *
      * @ORM\Column(name="stickyvalue", type="integer", nullable=false)
      */
-    private $stickyvalue = '0';
+    private $stickyValue = 0;
 
     /**
-     * @var int
+     * @var Language
      *
-     * @ORM\Column(name="IdFirstLanguageUsed", type="integer", nullable=false)
+     * Default English
+     *
+     * @ORM\ManyToOne(targetEntity="Language")
+     * @ORM\JoinColumn(name="IdFirstLanguageUsed", referencedColumnName="id", nullable=false)
      */
-    private $idfirstlanguageused = '0';
+    private $language = 0;
 
     /**
      * @var Group
@@ -194,42 +166,21 @@ class ForumThread
      *
      * @ORM\Column(name="ThreadVisibility", type="string", nullable=false)
      */
-    private $threadvisibility = 'NoRestriction';
+    private $visibility = 'NoRestriction';
 
     /**
      * @var string
      *
      * @ORM\Column(name="WhoCanReply", type="string", nullable=false)
      */
-    private $whocanreply = 'MembersOnly';
+    private $whoCanReply = 'MembersOnly';
 
     /**
      * @var string
      *
      * @ORM\Column(name="ThreadDeleted", type="string", nullable=false)
      */
-    private $threadDeleted = 'NotDeleted';
-
-    /**
-     * @var DateTime
-     *
-     * @ORM\Column(name="created_at", type="datetime", nullable=false)
-     */
-    private $createdAt = '0000-00-00 00:00:00';
-
-    /**
-     * @var DateTime
-     *
-     * @ORM\Column(name="updated_at", type="datetime", nullable=false)
-     */
-    private $updatedAt = '0000-00-00 00:00:00';
-
-    /**
-     * @var DateTime
-     *
-     * @ORM\Column(name="deleted_at", type="datetime", nullable=false)
-     */
-    private $deletedAt = '0000-00-00 00:00:00';
+    private $deleted = 'NotDeleted';
 
     /**
      * @ORM\OneToMany(targetEntity="ForumPost", mappedBy="thread")
@@ -292,13 +243,13 @@ class ForumThread
     /**
      * Set idtitle.
      *
-     * @param int $idtitle
+     * @param int $idTitle
      *
      * @return ForumThread
      */
-    public function setIdtitle($idtitle)
+    public function setIdTitle($idTitle)
     {
-        $this->idtitle = $idtitle;
+        $this->idTitle = $idTitle;
 
         return $this;
     }
@@ -308,9 +259,9 @@ class ForumThread
      *
      * @return int
      */
-    public function getIdtitle()
+    public function getIdTitle()
     {
-        return $this->idtitle;
+        return $this->idTitle;
     }
 
     /**
@@ -436,13 +387,13 @@ class ForumThread
     /**
      * Set geonameid.
      *
-     * @param int $geonameid
+     * @param int $geonameId
      *
      * @return ForumThread
      */
-    public function setGeonameid($geonameid)
+    public function setGeonameId($geonameId)
     {
-        $this->geonameid = $geonameid;
+        $this->geonameId = $geonameId;
 
         return $this;
     }
@@ -452,21 +403,21 @@ class ForumThread
      *
      * @return int
      */
-    public function getGeonameid()
+    public function getGeonameId()
     {
-        return $this->geonameid;
+        return $this->geonameId;
     }
 
     /**
      * Set admincode.
      *
-     * @param string $admincode
+     * @param string $adminCode
      *
      * @return ForumThread
      */
-    public function setAdmincode($admincode)
+    public function setAdminCode($adminCode)
     {
-        $this->admincode = $admincode;
+        $this->adminCode = $adminCode;
 
         return $this;
     }
@@ -476,9 +427,9 @@ class ForumThread
      *
      * @return string
      */
-    public function getAdmincode()
+    public function getAdminCode()
     {
-        return $this->admincode;
+        return $this->adminCode;
     }
 
     /**
@@ -652,13 +603,13 @@ class ForumThread
     /**
      * Set stickyvalue.
      *
-     * @param int $stickyvalue
+     * @param int $stickyValue
      *
      * @return ForumThread
      */
-    public function setStickyvalue($stickyvalue)
+    public function setStickyValue($stickyValue)
     {
-        $this->stickyvalue = $stickyvalue;
+        $this->stickyValue = $stickyValue;
 
         return $this;
     }
@@ -668,21 +619,21 @@ class ForumThread
      *
      * @return int
      */
-    public function getStickyvalue()
+    public function getStickyValue()
     {
-        return $this->stickyvalue;
+        return $this->stickyValue;
     }
 
     /**
      * Set idfirstlanguageused.
      *
-     * @param int $idfirstlanguageused
+     * @param int $language
      *
      * @return ForumThread
      */
-    public function setIdfirstlanguageused($idfirstlanguageused)
+    public function setLanguage($language)
     {
-        $this->idfirstlanguageused = $idfirstlanguageused;
+        $this->language = $language;
 
         return $this;
     }
@@ -692,9 +643,9 @@ class ForumThread
      *
      * @return int
      */
-    public function getIdfirstlanguageused()
+    public function getLanguage()
     {
-        return $this->idfirstlanguageused;
+        return $this->language;
     }
 
     /**
@@ -724,13 +675,13 @@ class ForumThread
     /**
      * Set threadvisibility.
      *
-     * @param string $threadvisibility
+     * @param string $visibility
      *
      * @return ForumThread
      */
-    public function setThreadvisibility($threadvisibility)
+    public function setVisibility($visibility)
     {
-        $this->threadvisibility = $threadvisibility;
+        $this->visibility = $visibility;
 
         return $this;
     }
@@ -740,21 +691,21 @@ class ForumThread
      *
      * @return string
      */
-    public function getThreadvisibility()
+    public function getVisibility()
     {
-        return $this->threadvisibility;
+        return $this->visibility;
     }
 
     /**
      * Set whocanreply.
      *
-     * @param string $whocanreply
+     * @param string $whoCanReply
      *
      * @return ForumThread
      */
-    public function setWhocanreply($whocanreply)
+    public function setWhoCanReply($whoCanReply)
     {
-        $this->whocanreply = $whocanreply;
+        $this->whoCanReply = $whoCanReply;
 
         return $this;
     }
@@ -764,21 +715,21 @@ class ForumThread
      *
      * @return string
      */
-    public function getWhocanreply()
+    public function getWhoCanReply()
     {
-        return $this->whocanreply;
+        return $this->whoCanReply;
     }
 
     /**
      * Set threaddeleted.
      *
-     * @param string $threadDeleted
+     * @param string $deleted
      *
      * @return ForumThread
      */
-    public function setThreadDeleted($threadDeleted)
+    public function setDeleted($deleted)
     {
-        $this->threadDeleted = $threadDeleted;
+        $this->deleted = $deleted;
 
         return $this;
     }
@@ -788,101 +739,29 @@ class ForumThread
      *
      * @return string
      */
-    public function getThreadDeleted()
+    public function getDeleted()
     {
-        return $this->threadDeleted;
+        return $this->deleted;
     }
 
     /**
-     * Set createdAt.
-     *
-     * @param DateTime $createdAt
-     *
-     * @return ForumThread
-     */
-    public function setCreatedAt($createdAt)
-    {
-        $this->createdAt = $createdAt;
-
-        return $this;
-    }
-
-    /**
-     * Get createdAt.
-     *
-     * @return DateTime
-     */
-    public function getCreatedAt()
-    {
-        return $this->createdAt;
-    }
-
-    /**
-     * Set updatedAt.
-     *
-     * @param DateTime $updatedAt
-     *
-     * @return ForumThread
-     */
-    public function setUpdatedAt($updatedAt)
-    {
-        $this->updatedAt = $updatedAt;
-
-        return $this;
-    }
-
-    /**
-     * Get updatedAt.
-     *
-     * @return DateTime
-     */
-    public function getUpdatedAt()
-    {
-        return $this->updatedAt;
-    }
-
-    /**
-     * Set deletedAt.
-     *
-     * @param DateTime $deletedAt
-     *
-     * @return ForumThread
-     */
-    public function setDeletedAt($deletedAt)
-    {
-        $this->deletedAt = $deletedAt;
-
-        return $this;
-    }
-
-    /**
-     * Get deletedAt.
-     *
-     * @return DateTime
-     */
-    public function getDeletedAt()
-    {
-        return $this->deletedAt;
-    }
-
-    /**
-     * Get threadid.
+     * Get thread id.
      *
      * @return int
      */
-    public function getThreadid()
+    public function getThreadId()
     {
-        return $this->threadid;
+        return $this->threadId;
     }
 
     /**
      * Set group.
      *
-     * @param \App\Entity\Group $group
+     * @param Group $group
      *
      * @return ForumThread
      */
-    public function setGroup(\App\Entity\Group $group = null)
+    public function setGroup(Group $group = null)
     {
         $this->group = $group;
 
@@ -892,7 +771,7 @@ class ForumThread
     /**
      * Get group.
      *
-     * @return \App\Entity\Group
+     * @return Group
      */
     public function getGroup()
     {
@@ -902,11 +781,11 @@ class ForumThread
     /**
      * Add post.
      *
-     * @param \App\Entity\ForumPost $post
+     * @param ForumPost $post
      *
      * @return ForumThread
      */
-    public function addPost(\App\Entity\ForumPost $post)
+    public function addPost(ForumPost $post)
     {
         $this->posts[] = $post;
 
@@ -916,9 +795,9 @@ class ForumThread
     /**
      * Remove post.
      *
-     * @param \App\Entity\ForumPost $post
+     * @param ForumPost $post
      */
-    public function removePost(\App\Entity\ForumPost $post)
+    public function removePost(ForumPost $post)
     {
         $this->posts->removeElement($post);
     }
@@ -926,7 +805,7 @@ class ForumThread
     /**
      * Get posts.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getPosts()
     {
@@ -936,11 +815,11 @@ class ForumThread
     /**
      * Set firstPost.
      *
-     * @param \App\Entity\ForumPost $firstPost
+     * @param ForumPost $firstPost
      *
      * @return ForumThread
      */
-    public function setFirstPost(\App\Entity\ForumPost $firstPost = null)
+    public function setFirstPost(ForumPost $firstPost)
     {
         $this->firstPost = $firstPost;
 
@@ -950,7 +829,7 @@ class ForumThread
     /**
      * Get firstPost.
      *
-     * @return \App\Entity\ForumPost
+     * @return ForumPost
      */
     public function getFirstPost()
     {
@@ -960,11 +839,11 @@ class ForumThread
     /**
      * Set lastPost.
      *
-     * @param \App\Entity\ForumPost $lastPost
+     * @param ForumPost $lastPost
      *
      * @return ForumThread
      */
-    public function setLastPost(\App\Entity\ForumPost $lastPost = null)
+    public function setLastPost(ForumPost $lastPost)
     {
         $this->lastPost = $lastPost;
 
@@ -974,10 +853,17 @@ class ForumThread
     /**
      * Get lastPost.
      *
-     * @return \App\Entity\ForumPost
+     * @return ForumPost
      */
     public function getLastPost()
     {
         return $this->lastPost;
+    }
+
+    public function setThreadId(?int $threadId): self
+    {
+        $this->threadId = $threadId;
+
+        return $this;
     }
 }

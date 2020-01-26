@@ -126,4 +126,11 @@ class PasswordReset
     {
         $this->generated = new DateTime('now');
     }
+
+    public function setGenerated(\DateTimeInterface $generated): self
+    {
+        $this->generated = $generated;
+
+        return $this;
+    }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Utilities\LifecycleCallbacksTrait;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -9,9 +10,12 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="posts_notificationqueue", indexes={@ORM\Index(name="IdxStatus", columns={"Status"})})
  * @ORM\Entity
+ * @ORM\HasLifecycleCallbacks
  */
-class PostsNotificationqueue
+class PostNotificationQueue
 {
+    use LifecycleCallbacksTrait;
+
     /**
      * @var string
      *
@@ -20,32 +24,19 @@ class PostsNotificationqueue
     private $status = 'ToSend';
 
     /**
-     * @var integer
-     *
-     * @ORM\Column(name="IdMember", type="integer", nullable=false)
+     * @var Member
+     * @ORM\ManyToOne(targetEntity="Member")
+     * @ORM\JoinColumn(name="IdMember", referencedColumnName="id")
      */
-    private $idmember;
+    private $member;
 
     /**
-     * @var integer
+     * @var ForumPost
      *
-     * @ORM\Column(name="IdPost", type="integer", nullable=false)
+     * @ORM\ManyToOne(targetEntity="ForumPost")
+     * @ORM\JoinColumn(name="IdPost", referencedColumnName="id")
      */
-    private $idpost;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="updated", type="datetime", nullable=false)
-     */
-    private $updated = '0000-00-00 00:00:00';
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="created", type="datetime", nullable=false)
-     */
-    private $created = '0000-00-00 00:00:00';
+    private $post;
 
     /**
      * @var string
@@ -55,11 +46,11 @@ class PostsNotificationqueue
     private $type = 'buggy';
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="IdSubscription", type="integer", nullable=false)
      */
-    private $idsubscription = '0';
+    private $subscription = 0;
 
     /**
      * @var string
@@ -69,7 +60,7 @@ class PostsNotificationqueue
     private $tablesubscription = 'NotSet';
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -77,14 +68,12 @@ class PostsNotificationqueue
      */
     private $id;
 
-
-
     /**
      * Set status
      *
      * @param string $status
      *
-     * @return PostsNotificationqueue
+     * @return PostNotificationQueue
      */
     public function setStatus($status)
     {
@@ -106,13 +95,13 @@ class PostsNotificationqueue
     /**
      * Set idmember
      *
-     * @param integer $idmember
+     * @param int $member
      *
-     * @return PostsNotificationqueue
+     * @return PostNotificationQueue
      */
-    public function setIdmember($idmember)
+    public function setMember($member)
     {
-        $this->idmember = $idmember;
+        $this->member = $member;
 
         return $this;
     }
@@ -120,23 +109,23 @@ class PostsNotificationqueue
     /**
      * Get idmember
      *
-     * @return integer
+     * @return int
      */
-    public function getIdmember()
+    public function getMember()
     {
-        return $this->idmember;
+        return $this->member;
     }
 
     /**
      * Set idpost
      *
-     * @param integer $idpost
+     * @param int $post
      *
-     * @return PostsNotificationqueue
+     * @return PostNotificationQueue
      */
-    public function setIdpost($idpost)
+    public function setPost($post)
     {
-        $this->idpost = $idpost;
+        $this->post = $post;
 
         return $this;
     }
@@ -144,11 +133,11 @@ class PostsNotificationqueue
     /**
      * Get idpost
      *
-     * @return integer
+     * @return int
      */
-    public function getIdpost()
+    public function getPost()
     {
-        return $this->idpost;
+        return $this->post;
     }
 
     /**
@@ -156,7 +145,7 @@ class PostsNotificationqueue
      *
      * @param \DateTime $updated
      *
-     * @return PostsNotificationqueue
+     * @return PostNotificationQueue
      */
     public function setUpdated($updated)
     {
@@ -180,7 +169,7 @@ class PostsNotificationqueue
      *
      * @param \DateTime $created
      *
-     * @return PostsNotificationqueue
+     * @return PostNotificationQueue
      */
     public function setCreated($created)
     {
@@ -204,7 +193,7 @@ class PostsNotificationqueue
      *
      * @param string $type
      *
-     * @return PostsNotificationqueue
+     * @return PostNotificationQueue
      */
     public function setType($type)
     {
@@ -226,13 +215,13 @@ class PostsNotificationqueue
     /**
      * Set idsubscription
      *
-     * @param integer $idsubscription
+     * @param int $subscription
      *
-     * @return PostsNotificationqueue
+     * @return PostNotificationQueue
      */
-    public function setIdsubscription($idsubscription)
+    public function setSubscription($subscription)
     {
-        $this->idsubscription = $idsubscription;
+        $this->subscription = $subscription;
 
         return $this;
     }
@@ -240,11 +229,11 @@ class PostsNotificationqueue
     /**
      * Get idsubscription
      *
-     * @return integer
+     * @return int
      */
-    public function getIdsubscription()
+    public function getSubscription()
     {
-        return $this->idsubscription;
+        return $this->subscription;
     }
 
     /**
@@ -252,7 +241,7 @@ class PostsNotificationqueue
      *
      * @param string $tablesubscription
      *
-     * @return PostsNotificationqueue
+     * @return PostNotificationQueue
      */
     public function setTablesubscription($tablesubscription)
     {
@@ -274,7 +263,7 @@ class PostsNotificationqueue
     /**
      * Get id
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {

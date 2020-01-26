@@ -8,6 +8,7 @@
 namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -24,8 +25,8 @@ class Gallery
     /**
      * @var Member
      *
-     * @ORM\OneToOne(targetEntity="Member", fetch="EAGER")
-     * @ORM\JoinColumn(name="user_id_foreign", referencedColumnName="id", nullable=false)
+     * @ORM\ManyToOne(targetEntity="Member", fetch="EAGER")
+     * @ORM\JoinColumn(name="user_id_foreign")
      */
     private $owner;
 
@@ -53,10 +54,10 @@ class Gallery
     /**
      * @var ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="GalleryImage")
+     * @ORM\ManyToMany(targetEntity="GalleryImage", inversedBy="galleries")
      * @ORM\JoinTable(name="gallery_items_to_gallery",
      *      joinColumns={@ORM\JoinColumn(name="gallery_id_foreign", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="item_id_foreign", referencedColumnName="id", unique=true)}
+     *      inverseJoinColumns={@ORM\JoinColumn(name="item_id_foreign", referencedColumnName="id")}
      *      )
      */
     private $images;
@@ -179,5 +180,31 @@ class Gallery
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @return Collection|GalleryImage[]
+     */
+    public function getImages(): Collection
+    {
+        return $this->images;
+    }
+
+    public function addImage(GalleryImage $image): self
+    {
+        if (!$this->images->contains($image)) {
+            $this->images[] = $image;
+        }
+
+        return $this;
+    }
+
+    public function removeImage(GalleryImage $image): self
+    {
+        if ($this->images->contains($image)) {
+            $this->images->removeElement($image);
+        }
+
+        return $this;
     }
 }

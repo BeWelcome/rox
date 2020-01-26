@@ -135,7 +135,7 @@ class CreateTestDatabase extends Command
         $command = $this->getApplication()->find('hautelook:fixtures:load');
 
         $loadFixtures = new ArrayInput([
-            '--no-interaction' => true,
+            '--no-interaction' => "--no-interaction",
             '-n' => true,
         ]);
 

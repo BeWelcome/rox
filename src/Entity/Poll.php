@@ -5,6 +5,7 @@ namespace App\Entity;
 use Carbon\Carbon;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -782,5 +783,87 @@ class Poll
     public function onPreUpdate()
     {
         $this->updated = new DateTime('now');
+    }
+
+    public function addChoice(PollChoice $choice): self
+    {
+        if (!$this->choices->contains($choice)) {
+            $this->choices[] = $choice;
+            $choice->setPoll($this);
+        }
+
+        return $this;
+    }
+
+    public function removeChoice(PollChoice $choice): self
+    {
+        if ($this->choices->contains($choice)) {
+            $this->choices->removeElement($choice);
+            // set the owning side to null (unless already changed)
+            if ($choice->getPoll() === $this) {
+                $choice->setPoll(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function addContribution(PollContribution $contribution): self
+    {
+        if (!$this->contributions->contains($contribution)) {
+            $this->contributions[] = $contribution;
+            $contribution->setPoll($this);
+        }
+
+        return $this;
+    }
+
+    public function removeContribution(PollContribution $contribution): self
+    {
+        if ($this->contributions->contains($contribution)) {
+            $this->contributions->removeElement($contribution);
+            // set the owning side to null (unless already changed)
+            if ($contribution->getPoll() === $this) {
+                $contribution->setPoll(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function addTitle(Translation $title): self
+    {
+        if (!$this->titles->contains($title)) {
+            $this->titles[] = $title;
+        }
+
+        return $this;
+    }
+
+    public function removeTitle(Translation $title): self
+    {
+        if ($this->titles->contains($title)) {
+            $this->titles->removeElement($title);
+        }
+
+        return $this;
+    }
+
+    public function addGroup(Group $group): self
+    {
+        if (!$this->groups->contains($group)) {
+            $this->groups[] = $group;
+        }
+
+        return $this;
+    }
+
+    public function removeGroup(Group $group): self
+    {
+        if ($this->groups->contains($group)) {
+            $this->groups->removeElement($group);
+        }
+
+        return $this;
     }
 }

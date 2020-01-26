@@ -7,6 +7,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -22,24 +24,24 @@ use Doctrine\ORM\Mapping as ORM;
 class GalleryImage
 {
     /**
-     * @var Gallery
+     * @var ArrayCollection
      *
-     * @ORM\ManyToOne(targetEntity="Gallery", inversedBy="images")
+     * @ORM\ManyToMany(targetEntity="Gallery", mappedBy="images")
      */
-    private $gallery;
+    private $galleries;
 
     /**
      * @var Member
      *
-     * @ORM\OneToOne(targetEntity="Member", fetch="EAGER")
-     * @ORM\JoinColumn(name="user_id_foreign", referencedColumnName="id", nullable=false)
+     * @ORM\ManyToOne(targetEntity="Member", fetch="EAGER")
+     * @ORM\JoinColumn(name="user_id_foreign")
      */
     private $owner;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="file", type="string", length=40, nullable=false)
+     * @ORM\Column(name="file", type="string", length=48, nullable=false)
      */
     private $file;
 
@@ -107,6 +109,11 @@ class GalleryImage
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
+
+    public function __construct()
+    {
+        $this->galleries = new ArrayCollection();
+    }
 
     /**
      * Set owner.
@@ -369,13 +376,13 @@ class GalleryImage
     }
 
     /**
-     * Get gallery
+     * Get galleries
      *
-     * @return Gallery
+     * @return ArrayCollection
      */
-    public function getGallery()
+    public function getGalleries()
     {
-        return $this->gallery;
+        return $this->galleries;
     }
 
     /**
@@ -383,8 +390,18 @@ class GalleryImage
      *
      * @param Gallery $gallery
      */
-    public function setGallery(Gallery $gallery)
+    public function addGallery(Gallery $gallery)
     {
-        $this->gallery = $gallery;
+        $this->galleries->add($gallery);
+    }
+
+    public function removeGallery(Gallery $gallery): self
+    {
+        if ($this->galleries->contains($gallery)) {
+            $this->galleries->removeElement($gallery);
+            $gallery->removeImage($this);
+        }
+
+        return $this;
     }
 }

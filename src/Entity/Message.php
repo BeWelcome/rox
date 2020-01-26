@@ -636,4 +636,11 @@ class Message
     {
         $this->updated = new \DateTime('now');
     }
+
+    public function setMessageType(string $messageType): self
+    {
+        $this->messageType = $messageType;
+
+        return $this;
+    }
 }

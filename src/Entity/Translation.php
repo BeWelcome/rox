@@ -17,7 +17,7 @@ class Translation
     /**
      * @var Language
      *
-     * @ORM\OneToOne(targetEntity="Language")
+     * @ORM\ManyToOne(targetEntity="Language")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="IdLanguage", referencedColumnName="id")
      * })
@@ -27,7 +27,7 @@ class Translation
     /**
      * @var Member
      *
-     * @ORM\OneToOne(targetEntity="Member")
+     * @ORM\ManyToOne(targetEntity="Member")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="IdOwner", referencedColumnName="id")
      * })
@@ -44,7 +44,7 @@ class Translation
     /**
      * @var Member
      *
-     * @ORM\OneToOne(targetEntity="Member")
+     * @ORM\ManyToOne(targetEntity="Member")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="IdTranslator", referencedColumnName="id")
      * })
@@ -371,5 +371,12 @@ class Translation
     public function onPreUpdate()
     {
         $this->updated = new DateTime('now');
+    }
+
+    public function setTranslator(?Member $translator): self
+    {
+        $this->translator = $translator;
+
+        return $this;
     }
 }

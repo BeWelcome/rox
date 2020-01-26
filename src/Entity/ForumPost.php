@@ -663,4 +663,11 @@ class ForumPost
 
         return Carbon::instance($this->created);
     }
+
+    public function setPostId(?int $postId): self
+    {
+        $this->postId = $postId;
+
+        return $this;
+    }
 }

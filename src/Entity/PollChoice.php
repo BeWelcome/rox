@@ -5,6 +5,7 @@ namespace App\Entity;
 use Carbon\Carbon;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -226,5 +227,23 @@ class PollChoice
     public function onPreUpdate()
     {
         $this->updated = new DateTime('now');
+    }
+
+    public function addChoiceText(Translation $choiceText): self
+    {
+        if (!$this->choiceTexts->contains($choiceText)) {
+            $this->choiceTexts[] = $choiceText;
+        }
+
+        return $this;
+    }
+
+    public function removeChoiceText(Translation $choiceText): self
+    {
+        if ($this->choiceTexts->contains($choiceText)) {
+            $this->choiceTexts->removeElement($choiceText);
+        }
+
+        return $this;
     }
 }

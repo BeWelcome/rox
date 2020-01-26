@@ -11,6 +11,7 @@ use App\Doctrine\GroupTypeType;
 use App\Doctrine\MemberStatusType;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\Common\Collections\Expr\Comparison;
 use Doctrine\Common\Persistence\Mapping\ClassMetadata;
@@ -460,5 +461,29 @@ class Group implements ObjectManagerAware
     public function onPrePersist()
     {
         $this->created = new DateTime('now');
+    }
+
+    public function getMoreInfo(): ?string
+    {
+        return $this->moreInfo;
+    }
+
+    public function setMoreInfo(string $moreInfo): self
+    {
+        $this->moreInfo = $moreInfo;
+
+        return $this;
+    }
+
+    public function getIdDescription(): ?int
+    {
+        return $this->idDescription;
+    }
+
+    public function setIdDescription(int $idDescription): self
+    {
+        $this->idDescription = $idDescription;
+
+        return $this;
     }
 }

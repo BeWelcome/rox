@@ -36,8 +36,8 @@ class GalleryComment
     /**
      * @var Member
      *
-     * @ORM\OneToOne(targetEntity="Member", fetch="EAGER")
-     * @ORM\JoinColumn(name="user_id_foreign", referencedColumnName="id", nullable=false)
+     * @ORM\ManyToOne(targetEntity="Member", fetch="EAGER")
+     * @ORM\JoinColumn(name="user_id_foreign")
      */
     private $member;
 
@@ -211,5 +211,12 @@ class GalleryComment
     public function onPrePersist()
     {
         $this->created = new \DateTime('now');
+    }
+
+    public function setCreated(\DateTimeInterface $created): self
+    {
+        $this->created = $created;
+
+        return $this;
     }
 }

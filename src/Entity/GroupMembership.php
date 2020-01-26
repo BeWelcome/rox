@@ -394,4 +394,9 @@ class GroupMembership
     {
         $this->comment = $commentId;
     }
+
+    public function getComment(): ?int
+    {
+        return $this->comment;
+    }
 }

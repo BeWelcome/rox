@@ -191,4 +191,11 @@ class UploadedImage
     {
         $this->created = new DateTime('now');
     }
+
+    public function setCreated(\DateTimeInterface $created): self
+    {
+        $this->created = $created;
+
+        return $this;
+    }
 }

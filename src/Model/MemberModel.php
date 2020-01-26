@@ -348,6 +348,9 @@ class MemberModel
                 try {
                     // As database column for group has 0 instead of null we need to check if group is valid
                     $group = $thread->getGroup();
+                    if ($group) {
+                        $group->getTitle();
+                    }
                 } catch (Exception $e) {
                     $group = null;
                 }

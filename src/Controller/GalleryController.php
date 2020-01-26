@@ -9,12 +9,15 @@ use App\Entity\Member;
 use App\Entity\UploadedImage;
 use App\Form\CustomDataClass\GalleryImageEditRequest;
 use App\Form\GalleryEditImageFormType;
+use App\Form\Select2Type;
+use App\Utilities\ManagerTrait;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
 use App\Utilities\UniqueFilenameTrait;
 use Intervention\Image\ImageManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\MakerBundle\Validator;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -50,7 +53,7 @@ class GalleryController extends AbstractController
      *
      * @return Response
      */
-    public function editImageAction(Request $request, GalleryImage $image)
+    public function editImage(Request $request, GalleryImage $image)
     {
         $user = $this->getUser();
         if ($user !== $image->getOwner()) {
@@ -142,8 +145,21 @@ class GalleryController extends AbstractController
         }
         $img->save($uploadDirectory . '/thumb' . $fileName);
 
+        $albumId = $request->get('album');
+
         // Create doctrine entity for image and save to database
         $galleryImage = new GalleryImage();
+        if ($albumId !== 0) {
+            // Check if album exists
+            // and if so check if the current member is owner of that album
+            $galleryRepository = $this->getDoctrine()->getRepository(Gallery::class);
+            /** @var Gallery $gallery */
+            $gallery = $galleryRepository->findOneBy(['id' => $albumId]);
+            if ($gallery && $gallery->getOwner() === $member) {
+                $galleryImage->addGallery($gallery);
+                $gallery->addImage($galleryImage);
+            }
+        }
         $galleryImage->setFile($fileName);
         $galleryImage->setFlags('');
         $galleryImage->setOriginal($originalName);
@@ -175,7 +191,27 @@ class GalleryController extends AbstractController
      */
     public function uploadImagesToGallery(Request $request)
     {
+        /** @var Member $member */
+        $member = $this->getUser();
+
+        $galleryRepository = $this->getDoctrine()->getRepository(Gallery::class);
+        $galleries = $galleryRepository->findBy(['owner' => $member]);
+
+        $albumTitles = [];
+        if ($galleries) {
+            $albumTitles[''] = 0;
+            foreach($galleries as $gallery)
+            {
+                $albumTitles[$gallery->getTitle()] = $gallery->getId();
+            }
+        }
+
         $uploadImageForm = $this->createFormBuilder()
+            ->add('albums', Select2Type::class, [
+                'label' => 'gallery.upload_to_album',
+                'choices' => $albumTitles,
+                'searchbox' => false,
+            ])
             ->add('files', FileType::class, [
                 'label' => 'files',
                 // 'multiple' => true,

@@ -18,7 +18,7 @@
         <meta name="description" content="{{ 'default_meta_description' | trans }}">
         <meta name="keywords" content="{{ 'default_meta_keyword' | trans }}">
         <meta name="robots" content="{{ robots }}">
-
+        {% block redirect %}{% endblock %}
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!--[if lt IE 9]>
             <script src="{{ asset('build/backwards.js') }}"></script>

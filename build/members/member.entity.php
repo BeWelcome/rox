@@ -1624,9 +1624,20 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
         if (!$this->isLoaded()) {
             return false;
         }
-        $pw = $this->preparePassword($pw);
-        $query = "UPDATE `members` SET `PassWord` = PASSWORD('" . $pw . "') WHERE `id` = ".$this->id;
-        if ($this->dao->exec($query)) {
+        $rights = $this->getOldRights();
+        if ($rights) {
+            $pw = password_hash($pw, PASSWORD_DEFAULT, [ 'cost' => 13]);
+        }
+        else
+        {
+            $pw = password_hash($pw, PASSWORD_DEFAULT, [ 'cost' => 13]);
+        }
+        /** @var PDBStatement_mysqli $stmt */
+        $stmt = $this->dao->prepare("UPDATE `members` SET `PassWord` = ? WHERE `id` = ?");
+        $id = $this->id;
+        $stmt->bindParam(1, $pw);
+        $stmt->bindParam(2, $id);
+        if ($stmt->execute()) {
             if ($noisy) {
                 $L = MOD_log::get();
                 $L->write("Password changed", "change password");

@@ -43,6 +43,7 @@
 
             //Fügt dem formData Objekt unser File Objekt hinzu
             formData.append("file", file);
+            formData.append("album", $('#form_albums').val());
 
             client.onerror = function(e) {
                 alert("onError");
@@ -52,12 +53,14 @@
                 $("#progress-" + index).remove();
                 let response = JSON.parse(client.responseText);
                 if (response.success) {
-                    $('#images').append('<div class="mb-1"><a href="{{ path('gallery_manage') }}"><img src={{ path('gallery_thumbnail') }}?id=' + response.imageId + '></a> ' + response.filename + ' - uploaded successfully</div>');
+                    $('#images').append('<div class="mb-1"><a href="{{ path('gallery_manage') }}"><img class="img-thumbnail" src={{ path('gallery_thumbnail') }}?id=' + response.imageId + '></a> ' + response.filename + ' - uploaded successfully</div>');
                 } else {
                     $('#images').append('<div class="mb-1">' + response.filename + ' - ' + response.error + '</div>');
                 }
                 clients = clients.filter((value)=>value!==client);
                 if (clients.length === 0) {
+                    let form = document.querySelector('form');
+                    form.reset()
                     $('#upload').prop('disabled', false);
                     $('#abort').prop('disabled', true);
                 }
@@ -83,6 +86,8 @@
                 clients[i].abort();
             }
             alert("{{ 'upload.canceled'|trans }}");
+            let form = document.querySelector('form');
+            form.reset()
             $('#upload').prop('disabled', false);
             $('#abort').prop('disabled', true);
 
@@ -96,15 +101,16 @@
 
 {% block content %}
    <div class="row no-gutters">
-       <div class="col-12"><h1><span class="d-none d.md-block">{{ 'gallery' | trans }} - </span>{{ 'upload' | trans }}</h1>
+       <div class="col-12"><h1><span class="d-none d-md-block">{{ 'gallery' | trans }} - </span>{{ 'upload' | trans }}</h1>
        <p>{{ 'gallery.upload.helptext' | trans}}</p></div>
        {{ form_start(form, {'attr': {'class': 'col-12'}}) }}
+       {{ form_row(form.albums) }}
        <div class="custom-file col-12 mb-2">
            <input type="file" class="custom-file-input" multiple="multiple" id="form_files">
-           <label class="custom-file-label custom-file-label-fix" for="inputGroupFile01">Choose file</label>
+           <label class="custom-file-label custom-file-label-fix" id="form_files_label" for="form_files">Choose file</label>
        </div>
 
-       <button id="upload" class="btn btn-primary col-4 col-md-2 mr-2 mb-2" type="button"">{{ 'upload'|trans }}</button>
+       <button id="upload" class="btn btn-primary col-4 col-md-2 mr-2 mb-2" type="button">{{ 'upload'|trans }}</button>
        <button id="abort" class="btn btn-danger col-4 col-md-2 mb-2" type="button" disabled="disabled" onclick="uploadAbort()">{{ 'abort'|trans }}</button>
 
        <div id="template" class="progress position-relative p-0 mt-2 d-none">

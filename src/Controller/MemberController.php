@@ -40,18 +40,24 @@ use Swift_Message;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGenerator;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Core\Encoder\EncoderFactory;
+use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use ZipArchive;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -69,21 +75,29 @@ class MemberController extends AbstractController
     /**
      * @Route("/mydata/{username}", name="member_get_data")
      *
+     * @param Request $request
      * @param Member $member
      * @param Logger $logger
      * @param ContainerBagInterface $params
      * @param MemberModel $memberModel
-     * @return BinaryFileResponse
+     * @param Security $security
+     * @param EncoderFactoryInterface $encoderFactory
+     * @return StreamedResponse|Response
      * @throws Exception
      * @ParamConverter("member", class="App\Entity\Member", options={"mapping": {"username": "username"}})
      */
     public function getPersonalData(
+        Request $request,
         Member $member,
         Logger $logger,
         ContainerBagInterface $params,
-        MemberModel $memberModel
+        MemberModel $memberModel,
+        Security $security,
+        EncoderFactoryInterface $encoderFactory
     ) {
-        // Either the member themselves or a person from the safety or profile team and the admin can access
+        // Either the member themselves or a person from the safety or the admin can access
+        $allowed = false;
+        $passwordForm = null;
         if ($member != $this->getUser()) {
             $this->denyAccessUnlessGranted(
                 [Member::ROLE_ADMIN_SAFETYTEAM, Member::ROLE_ADMIN_ADMIN],
@@ -91,18 +105,79 @@ class MemberController extends AbstractController
                 'Unable to access this page!'
             );
             $logger->write('Extracting personal data for ' . $member->getUsername(), 'Members');
+            $allowed = true;
         }
-        // Collect information and store in zip file
-        $zipFilename = $memberModel->collectPersonalData($params, $member);
+        else
+        {
+            // If user themselves ask for data check password first
+            $passwordForm = $this->createFormBuilder()
+                ->add('password', PasswordType::class)
+                ->add('submit', SubmitType::class)
+                ->getForm();
+            $passwordForm->handleRequest($request);
 
-        // main dir is left over!
-        $response = new BinaryFileResponse($zipFilename);
-        $response->setContentDisposition(
-            ResponseHeaderBag::DISPOSITION_ATTACHMENT
-        );
-        $response->deleteFileAfterSend(true);
+            if ($passwordForm->isSubmitted() && $passwordForm->isValid())
+            {
+                $password=$passwordForm->get('password')->getData();
 
-        return $response;
+                $token = $security->getToken();
+
+                if ($token)
+                {
+                    $encoder = $encoderFactory->getEncoder($member);
+
+                    if ($encoder->isPasswordValid($member->getPassword(), $password, $member->getSalt())) {
+                        $allowed = true;
+                    } else {
+                        $passwordForm->addError(new FormError($this->translator->trans("password.incorrect")));
+                    }
+                }
+            }
+        }
+
+        if ($allowed)
+        {
+            // Collect information and store in zip file
+            $zipFilename = $memberModel->collectPersonalData($params, $member);
+
+            $request->getSession()->set('mydata_file', $zipFilename);
+            return $this->render('private/download.html.twig', [
+                'username' => $member->getUsername(),
+                'url' => $this->generateUrl('member_download_data', ['username' => $member->getUsername()]),
+            ]);
+        }
+
+        return $this->render('private/password.html.twig', [
+            'form' => $passwordForm->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/mydata/{username}/download", name="member_download_data")
+     *
+     * @param Request $request
+     * @param Member $member
+     * @return BinaryFileResponse|RedirectResponse
+     * @throws Exception
+     * @ParamConverter("member", class="App\Entity\Member", options={"mapping": {"username": "username"}})
+     */
+    public function downloadPersonalData(Request $request, Member $member)
+    {
+        $zipFilename = $request->getSession()->get('mydata_file');
+        if (file_exists($zipFilename)) {
+            // main dir is left over!
+            $response = new BinaryFileResponse($zipFilename);
+            $response->headers->set('Content-Type', 'application/zip');
+            $response->headers->set('Location', '/members/member-1223');
+            $response->setContentDisposition(
+                ResponseHeaderBag::DISPOSITION_INLINE
+            );
+            $response->deleteFileAfterSend(true);
+
+            return $response;
+        }
+
+        return new RedirectResponse($this->generateUrl('members_profile', [ 'username' => $member->getUsername()]));
     }
 
     /**

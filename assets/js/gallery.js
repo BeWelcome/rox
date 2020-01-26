@@ -1,17 +1,19 @@
-var Masonry = require('masonry-layout');
-var imagesLoaded = require('imagesloaded');
+let Masonry = require('masonry-layout');
+let imagesLoaded = require('imagesloaded');
 
 $(function () {
     // init Masonry
-    var grid = document.getElementById('masonry-grid');
+    let grid = document.getElementById('masonry-grid');
 
-    var msnry = new Masonry( grid, {
-        percentPosition: true
-    });
+    if (grid !== null)
+    {
+        var msnry = new Masonry( grid, {
+            percentPosition: true
+        });
 
-    imagesLoaded( grid ).on( 'done', function() {
-        // layout Masonry after each image loads
-        msnry.layout();
-    });
-
+        imagesLoaded( grid ).on( 'done', function() {
+            // layout Masonry after each image loads
+            msnry.layout();
+        });
+    }
 });

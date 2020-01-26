@@ -519,7 +519,7 @@ class MembersController extends RoxControllerBase
             return false;
         }
 
-        if( !($User = APP_User::login()))
+        if( !($User = $this->model->getLoggedInMember()))
             return false;
 
         $this->model->editPreferences($vars);

@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block redirect %}<meta
+    http-equiv="refresh"
+    content="1; URL={{url}}">{% endblock %}
+
+{% block content %}
+    <h1>{{ 'mydata.headline.download'|trans }}</h1>
+    <p>{{ 'mydata.download.start'|trans }}</p>
+    <p><a class="btn btn-primary" href="{{ url('members_profile', {username: username}) }}">{{ 'Back to profile' }}</a></p>
+{% endblock content %}

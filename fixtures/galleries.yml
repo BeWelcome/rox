@@ -1,0 +1,8 @@
+App\Entity\Gallery:
+    member_2_test:
+        owner: '@member_2'
+        title: 'Test'
+        description: 'Test Album'
+        flags: 0
+
+

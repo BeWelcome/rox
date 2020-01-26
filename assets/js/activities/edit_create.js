@@ -1,7 +1,6 @@
 require('../tempusdominus.js');
 
 $(function () {
-
     let activityStartDate = $('#activity-start-date');
     let activityEndDate = $('#activity-end-date');
     activityStartDate.datetimepicker({

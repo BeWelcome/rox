@@ -15,3 +15,11 @@ App\Entity\RightVolunteer:
         Comment: Granted by someone
         updated: '<dateTime()>'
         created: '<dateTime()>'
+    SafetyTeam_bwadmin:
+        member: '@bwadmin'
+        right: '@SafetyTeam'
+        level: '10'
+        scope: "All"
+        Comment: Granted by someone
+        updated: '<dateTime()>'
+        created: '<dateTime()>'

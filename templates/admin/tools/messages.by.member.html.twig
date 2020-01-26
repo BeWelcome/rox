@@ -16,7 +16,7 @@
 
 {% block content %}
     <h1>{{ 'admin.tools.headline' | trans }}</h1>
-    <h2>{{ 'admin.tools.messages_last_week' | trans }}</h2>
+    <h2>{{ 'admin.tools.messages_by_member' | trans }}</h2>
 
     {{ form(form) }}
 
@@ -35,6 +35,11 @@
                 <td><i class="fas fa-fw {% if (result.direction == 1) or (result.direction == 3) %}fa-arrow-left{% endif %}"></i><i class="fas fa-fw {% if (result.direction == 2) or (result.direction == 3)%}fa-arrow-right{% endif %}"></i></td>
                 <td>{{ macros.avatar(result.username) }}</td>
                 <td>{{ macros.profilelink(result.username) }}<br>{% if (result.direction == 2) or (result.direction == 3) %}{{ result.last_sent|localizeddate('medium', 'medium') }}{% endif %}</td>
+            </tr>
+            <tr>
+                <td>{{ macros.avatarstack(result.username, 50,50, true) }}</td>
+                <td colspan="4">{% if (result.direction == 1) or (result.direction == 3) %}<i class="fas fa-fw fa-arrow-left"></i>{{ result.last_received|localizeddate('medium', 'medium') }}{% endif %}<br>
+                    {% if (result.direction == 2) or (result.direction == 3)%}<i class="fas fa-fw fa-arrow-right"></i>{{ result.last_sent|localizeddate('medium', 'medium') }}{% endif %}</td>
             </tr>
         {% endfor %}
         </table>

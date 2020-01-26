@@ -11,11 +11,11 @@
 
             <div class="text-truncate mr-2 ml-5" style="white-space: normal;">
                 <p class="m-0 p-0 dashentry"><strong><a href="activities/{{ activity.id }}">{{ activity.title }}</a></strong></p>
-                <p class="p-0 m-0"><small><i class="fa fa-map-marker-alt"></i> {{ activity.location.name }}, {{ activity.location.country.name }}</small></p>
+                <p class="p-0 m-0"><small><i class="fa fa-2x fa-map-marker-alt"></i> {{ activity.location.name }}, {{ activity.location.country.name }}</small></p>
             </div>
 
             <div class="ml-auto relative">
-                <div class="mr-5rem"><i class="fa fa-2x fa  fa-user-circle-o"></i></div>
+                <div class="mr-5rem"><i class="fa fa-2x fa-user"></i></div>
                 <div class="absolute attendees">
                     <small>{{ activity.attendeesyes.count }} yes
                         <br><span{% if activity.attendeesmaybe.count==0 %} class="invisible"{% endif %}>{{ activity.attendeesmaybe.count }} maybe</span></small>

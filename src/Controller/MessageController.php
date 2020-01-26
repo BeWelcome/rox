@@ -8,6 +8,8 @@ use App\Entity\Subject;
 use App\Form\MessageToMemberType;
 use App\Utilities\MailerTrait;
 use App\Utilities\ManagerTrait;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Exception;
 use InvalidArgumentException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -72,12 +74,13 @@ class MessageController extends BaseMessageController
      *     requirements={"id": "\d+"})
      *
      * @param Message $message
+     * @param Message $redirect
      * @ParamConverter("redirect", class="App\Entity\Message", options={"id": "redirect"})
-     *
-     * @throws AccessDeniedException
-     * @throws Exception
-     *
+
      * @return Response
+     * @throws ORMException
+     * @throws OptimisticLockException
+     *
      */
     public function deleteMessageOrRequest(Message $message, Message $redirect)
     {

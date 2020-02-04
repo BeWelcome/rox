@@ -60,11 +60,11 @@ $layoutbits = new MOD_layoutbits();
             <td><?php if ($memberDetails->level <> 0) { ?>
                 <a href="admin/flags/remove/<?= $flagId ?>/<?= $memberDetails->Username ?>">
                     <i class="fa fa-times" alt="remove"></i></a>
-                <? } ?>
+                <?php } ?>
                 </td>
             </tr>
-        <? } ?>
-    <? } ?>
+        <?php } ?>
+    <?php } ?>
 
     </table>
 </div>

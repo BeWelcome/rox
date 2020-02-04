@@ -48,4 +48,4 @@ $words = new MOD_words();
 <input name="importfilename" id="importfilename" type="hidden" />
 <input type="submit" class="button" name="SubmitUpload" value="<?php echo $words->getBuffered("WordsUpload_SubmitButton"); ?>" />
 </form>
-<? } ?>
+<?php } ?>

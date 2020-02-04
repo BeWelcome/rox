@@ -98,7 +98,7 @@ if ($this->session->has( 'IdMember' ) && $this->session->get('IdMember')) {
 echo isset($vars['ctit']) ? 'value="'.htmlentities($vars['ctit'], ENT_COMPAT, 'utf-8').'" ' : '';
 ?>/>
         <div id="bcomment-title" class="statbtn"></div>
-<?
+<?php
 if (in_array('title', $vars['errors'])) {
     echo '<span class="error">'.$commentsError['title'].'</span>';
 }
@@ -111,7 +111,7 @@ if (in_array('title', $vars['errors'])) {
 echo isset($vars['ctxt']) ? htmlentities($vars['ctxt'], ENT_COMPAT, 'utf-8') : '';
       ?></textarea>
         <div id="bcomment-text" class="statbtn"></div>
-<?
+<?php
 if (in_array('textlen', $vars['errors'])) {
     echo '<span class="error">'.$commentsError['textlen'].'</span>';
 }
@@ -133,7 +133,7 @@ $('comment-form').hide();
 $('commentadd').onclick = function (){ $('comment-form').toggle(); return false;}
 //-->
 </script>
-<?
+<?php
 } else {
     // not logged in.
 

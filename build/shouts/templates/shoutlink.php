@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * blog item template controller
  *

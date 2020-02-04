@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * defined vars:
  * $comment     - the comment object to display.

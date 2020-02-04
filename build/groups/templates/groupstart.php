@@ -18,13 +18,13 @@
             <div class="card-body">
                 <?php echo $purifier->purify(nl2br($this->group->getDescription())) ?>
                 <?php if ($this->isGroupMember()) { ?>
-                    <a href="<? echo $uri; ?>/forum/new"
+                    <a href="<?php echo $uri; ?>/forum/new"
                         class="btn btn-primary float-left"><?php echo $this->words->getBuffered('ForumNewTopic'); ?></a>
                 <?php } else { ?>
                     <a class="btn btn-primary float-left" href="group/<?= $this->group->id ?>/join">
                         <?= $words->getSilent('GroupsJoinTheGroup'); ?>
                     </a>
-                <? } ?>
+                <?php } ?>
             </div>
         </div>
 
@@ -133,11 +133,11 @@
     <?php
     $relatedgroups = $this->group->findRelatedGroups($group_id); ?>
     <div class="col-12 col-md-8 h3"><?php echo $words->getFormatted('RelatedGroupsTitle'); ?></div>
-    <? if ($this->isGroupMember()) { ?>
+    <?php if ($this->isGroupMember()) { ?>
         <div class="col-12 col-md-4 float-md-right">
-            <a href="group/<? echo $this->group->id; ?>/selectrelatedgroup" class="btn btn-block btn-outline-primary"><?= $words->getFormatted('AddRelatedGroupButton'); ?></a>
+            <a href="group/<?php echo $this->group->id; ?>/selectrelatedgroup" class="btn btn-block btn-outline-primary"><?= $words->getFormatted('AddRelatedGroupButton'); ?></a>
         </div>
-    <? } else {
+    <?php } else {
         echo '<div class="col-12 col-md-4"></div>';
     }
     foreach ($relatedgroups as $group_data) :

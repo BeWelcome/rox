@@ -83,7 +83,7 @@
 
 <div class="col-12">
     <div class="row">
-<?
+<?php
         foreach ($search_result as $group_data) :
 
             include('groupsdisplay.php');

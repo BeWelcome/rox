@@ -1,6 +1,6 @@
 <div class="row">
     <div id="groups">
-        <h3><? echo $this->words->get('GroupsFeaturedGroups'); ?></h3>
+        <h3><?php echo $this->words->get('GroupsFeaturedGroups'); ?></h3>
         <form action="groups/featured" method="get">
             <input type="hidden" name="GroupsFeaturedInput" value="" id="GroupsFeaturedInput" />
         </form>
@@ -18,7 +18,7 @@
             <a class="grey" href="groups/featured?GroupsFeaturedInput=<?=$this->search_terms;?>&amp;order=<?=$member_order;?>&amp;<?=$this->pager->getActivePageMarker();?>"><?= $words->get('GroupsOrderMembers'); ?></a>
             |
             <a class="grey" href="groups/featured?GroupsFeaturedInput=<?=$this->search_terms;?>&amp;order=<?=$created_order;?>&amp;<?=$this->pager->getActivePageMarker();?>"><?= $words->get('GroupsOrderDate'); ?></a>
-<?
+<?php
 // Categories link disabled until we have categories
 //            |
 //            <a class="grey" href="groups/search?GroupsSearchInput={$this->search_terms}&amp;Order={$category_order}&Page={$this->result_page}">Category</a>

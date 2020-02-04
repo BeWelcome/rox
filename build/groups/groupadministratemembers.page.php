@@ -138,7 +138,7 @@ class GroupMemberAdministrationPage extends GroupsBasePage
             ?>
             </div>
             <div class="col-12">
-                <?
+                <?php
                 $this->pager_widget->render();
                 ?>
             </div>

@@ -23,9 +23,9 @@
         $mygroups = $this->pager->getActiveSubset($search_result);
         ?>
         <div class="col-12">
-            <? $this->pager->render(); ?>
+            <?php $this->pager->render(); ?>
         </div>
-        <?
+        <?php
             foreach ($mygroups as $group_data) :
 
                 include('groupsdisplay.php');
@@ -33,9 +33,9 @@
             endforeach ;
             ?>
         <div class="col-12 order-12 mt-3">
-            <? $this->pager->render(); ?>
+            <?php $this->pager->render(); ?>
         </div>
-<?
+<?php
         }
         else
         {

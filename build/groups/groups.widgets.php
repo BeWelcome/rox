@@ -66,7 +66,7 @@ class GroupMemberlistWidget  // extends MemberlistWidget?
             <div class="pb-1">
             <?= MOD_layoutbits::PIC_50_50($membership->Username); ?>
             </div>
-        <?
+        <?php
         }
     }
 

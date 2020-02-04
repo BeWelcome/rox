@@ -19,7 +19,7 @@ if ($galleries) {
     $galleriesonpage = $p[0];
 
     ?>
-    <? foreach ($galleriesonpage as $g) {
+    <?php foreach ($galleriesonpage as $g) {
     	static $ii = 0;
         $d = $Gallery->getLatestGalleryItem($g->id);
         $s = $Gallery->getGalleryItems($g->id,1);
@@ -44,7 +44,7 @@ if ($galleries) {
 ?>
     <div class="w-100"></div>
     <div class="col-12 mt-3">
-        <?
+        <?php
     if (isset($emptyPhotosets)) echo $emptyPhotosets;
     $pages = $p[1];
     $maxPage = $p[2];
@@ -53,5 +53,5 @@ if ($galleries) {
     $request = $requestStr.'/=page%d';
     require 'pages.php'; ?>
     </div>
-<? } ?>
+<?php } ?>
 </div>

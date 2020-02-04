@@ -1,4 +1,4 @@
-<? 
+<?php 
     $words = $this->words;
     $loggedInMember = $this->loggedInMember;
     // values from previous form submit
@@ -63,4 +63,4 @@
         </form>
     </p>
 
-<? } 
+<?php } 

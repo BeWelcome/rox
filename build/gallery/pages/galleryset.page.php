@@ -36,7 +36,7 @@ class GallerySetPage extends GalleryBasePage
                 <?=$this->teaserHeadline()?>
             </div>
         </div>
-        <?
+        <?php
     }
 
     protected function getTopmenuActiveItem()

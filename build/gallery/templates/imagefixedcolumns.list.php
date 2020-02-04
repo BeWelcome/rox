@@ -25,7 +25,7 @@ $statement = $p[0];
 
 ?>
 <div id="masonry-grid" class="row">
-    <?
+    <?php
     foreach ($statement as $d) {
         echo '<div class="col-sm-6 col-lg-4 mb-4">';
         echo '<div class="card">';
@@ -48,7 +48,7 @@ $statement = $p[0];
 </div>
 <div class="row">
 <div class="col-12">
-<?
+<?php
     $pages = $p[1];
     $maxPage = $p[2];
     $currentPage = $page;

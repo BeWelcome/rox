@@ -134,7 +134,7 @@ if ($member) {
 echo isset($varsCom['ctit']) ? 'value="'.htmlentities($varsCom['ctit'], ENT_COMPAT, 'utf-8').'" ' : ''; 
 ?>/>
         <div id="bcomment-title" class="statbtn"></div>
-<?
+<?php
 if (in_array('title', $vars['errors'])) {
     echo '<span class="error">'.$commentsError['title'].'</span>';
 }
@@ -147,7 +147,7 @@ if (in_array('title', $vars['errors'])) {
 echo isset($varsCom['ctxt']) ? htmlentities($varsCom['ctxt'], ENT_COMPAT, 'utf-8') : ''; 
       ?></textarea>
         <div id="bcomment-text" class="statbtn"></div>
-<?
+<?php
 if (in_array('textlen', $vars['errors'])) {
     echo '<span class="error">'.$commentsError['textlen'].'</span>';
 }
@@ -161,7 +161,7 @@ if (in_array('textlen', $vars['errors'])) {
 echo $callbackIdCom; ?>" value="1"/>
     </p>
 </form>
-<?
+<?php
 }
 else
 {

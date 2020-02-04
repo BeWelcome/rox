@@ -43,11 +43,11 @@ if ($this->myself) {
 ?>
 <hr/>
 <div class="clearfix"><a href="gallery/show/sets/<?=$gallery->id?>/delete" class="bigbuttongrey"><span><?=$words->get('GalleryDelete')?></span></a></div>
-<?
+<?php
 }
 ?>
 <hr/>
-<?
+<?php
 $shoutsCtrl = new ShoutsController;
 $shoutsCtrl->shoutsList('gallery', $gallery->id);
 

@@ -25,7 +25,7 @@ $picture_url = 'members/avatar/'.$member->Username.'/100';
             <input type="checkbox" name="selectAllRadio" id="selectAllRadio" class="form-check-input checker" onClick="toggle(this);">&nbsp;&nbsp;
             <label class=form-label" for="selectAllRadio"><?= $words->get('SelectAll')?></label>
         </div>
-        <?
+        <?php
         if (isset($galleries) && $galleries) {
             ?>
             <input name="removeOnly" type="hidden" value="0">
@@ -37,14 +37,14 @@ $picture_url = 'members/avatar/'.$member->Username.'/100';
                 </div>
                 <select name="gallery" size="1" onchange="$('oldGallery').checked = true;" class="form-control">
                     <option value="">- <?= $words->get('GalleryAddToPhotoset') ?> -</option>
-                    <?
+                    <?php
                     foreach ($galleries as $d) {
                         echo '<option value="'.$d->id.'">'.$d->title.'</option>';
                     }
                     ?>
                 </select>
             </div>
-            <?
+            <?php
         }
         ?>
 
@@ -62,7 +62,7 @@ $picture_url = 'members/avatar/'.$member->Username.'/100';
         <input type="submit" class="btn btn-sm btn-danger btn-block mb-2" name="deleteImages" value="<?= $words->getBuffered('Delete images') ?>" onclick="return askDelete()" style="cursor:pointer">
     </div>
     <div class="col-12 order-sm-1 col-lg-9 order-lg-12">
-        <?
+        <?php
             require SCRIPT_BASE . 'build/gallery/templates/overview.php';
         ?>
     </div>

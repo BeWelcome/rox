@@ -26,7 +26,7 @@ class GalleryBasePage extends PageWithActiveSkin
         <div>
             <?=$this->submenu()?>
         </div>
-        <?
+        <?php
     }
 
     protected function breadcrumbs() {

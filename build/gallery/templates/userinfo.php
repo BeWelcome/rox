@@ -1,4 +1,4 @@
-﻿<? 
+﻿<?php 
     $words = $this->words;
     $loggedInMember = $this->loggedInMember;
     // values from previous form submit
@@ -16,7 +16,7 @@
     $callback_tag = $formkit->setPostCallback('GalleryController', 'createGalleryCallback');
     
 ?>
-<? if ($this->loggedInMember) { ?>
+<?php if ($this->loggedInMember) { ?>
 <div class="row">
     <div class="col-12 col-md-6">
         <h3><?=$words->get('GalleryYourGallery')?></h3>
@@ -56,4 +56,4 @@
     </div>
 </div>
 
-<? } ?>
+<?php } ?>

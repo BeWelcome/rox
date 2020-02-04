@@ -59,7 +59,7 @@ class NotifyAdminPage extends NotifyBasePage
                     $widget->showPagination();
                 }
                 ?>
-                <? $widget->render() ?>
+                <?php $widget->render() ?>
                 <?php
                 if ($widget->needsPagination()) {
                     $widget->showPagination();
@@ -71,7 +71,7 @@ class NotifyAdminPage extends NotifyBasePage
             </form>
                 <hr />
             <form action="<?=$page_url?>" method="post">
-                <? $this->notesActions($callback_tag)?>
+                <?php $this->notesActions($callback_tag)?>
             </form>
         </div>
         <?php

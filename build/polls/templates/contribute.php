@@ -36,16 +36,16 @@ $list=$Data->Choices ; // Retrieve the possible choices
 ?>
 <h2><?= $words->fTrad($Data->rPoll->Title); ?></h2>
 <p><?= $words->fTrad($Data->rPoll->Description); ?></p>
-<?
+<?php
         if ($Data->rPoll->Anonym=="Yes") {
             ?>
             <p class="note"><?= $words->getFormatted("pols_IsAnonymExplanation"); ?></p>
-            <?
+            <?php
         }
         else {
             ?>
             <p class="note"><?= $words->getFormatted("pols_IsNotAnonymExplanation"); ?></p>
-            <?
+            <?php
         }
 
 $styles = array( 'highlight', 'blank' ); // alternating background for table rows
@@ -75,18 +75,18 @@ for ($ii = 0; $ii < $iiMax; $ii++) {
     $p = $list[$ii];
     ?>
         <div class="form-check">
-            <?
+            <?php
             if ($Data->rPoll->TypeOfChoice=="Exclusive") {
                 ?>
-                <input class="form-check-input" type="radio" id="choice<?=$ii;?>" name="ExclusiveChoice" value="<? echo $p->id; ?>" />
-                <label class="form-check-label" for="choice<?=$ii;?>"><? echo $words->fTrad($p->IdChoiceText); ?></label>
-                <?
+                <input class="form-check-input" type="radio" id="choice<?=$ii;?>" name="ExclusiveChoice" value="<?php echo $p->id; ?>" />
+                <label class="form-check-label" for="choice<?=$ii;?>"><?php echo $words->fTrad($p->IdChoiceText); ?></label>
+                <?php
             }
             if ($Data->rPoll->TypeOfChoice=="Inclusive") {
                 ?>
                 <input class="form-check-input" type="checkbox" id="choice<?=$ii;?>" name="choice_<?=$p->id;?>" />
-                <label class="form-check-label" for="choice<?=$ii;?>"><? echo $words->fTrad($p->IdChoiceText); ?></label>
-                <?
+                <label class="form-check-label" for="choice<?=$ii;?>"><?php echo $words->fTrad($p->IdChoiceText); ?></label>
+                <?php
             }
             ?>
         </div>
@@ -99,12 +99,12 @@ if ($Data->rPoll->AllowComment=="Yes") {
     <div class="form-group"><label for="comment"><?=$words->getFormatted("polls_comment");?></label>
     <textarea class="form-control" id="comment" name="Comment" cols="60" rows="4"></textarea>
     </div>
-    <?
+    <?php
 }
 else {
     ?>
     <input type="hidden" name="Comment" value="" />
-    <?
+    <?php
 }
 ?>
 <input type="submit" class="btn btn-primary" value="<?=$words->getFormatted("polls_vote");?>" />

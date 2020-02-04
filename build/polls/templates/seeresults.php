@@ -37,7 +37,7 @@ $list=$Data->Choices ; // Retrieve the possible choices
 <h2><?=$words->fTrad($Data->rPoll->Title);?></h2>
 <p><?=$words->fTrad($Data->rPoll->Description);?></p>
 <p><?=$words->getFormatted("polls_peoplehavecontributed",$Data->rPoll->Started,$Data->rPoll->Ended,$Data->TotContrib);?></p>
-<?
+<?php
 $styles = array( 'highlight', 'blank' ); // alternating background for table rows
 $iiMax = count($list) ; // This retrieve the number of polls
 $IdPoll=$Data->rPoll->id ;
@@ -59,7 +59,7 @@ for ($ii = 0; $ii < $iiMax; $ii++) {
         $NonBlankCount=$NonBlankCount+$p->Counter ;
     ?>
     <tr class="<?=$styles[$ii%2] ?>">
-        <td ><? echo $words->fTrad($p->IdChoiceText); ?></td>
+        <td ><?php echo $words->fTrad($p->IdChoiceText); ?></td>
         <td>
             <?php echo sprintf("%4d (%3.1f%%)",$p->Counter,$p->Percent) ; ?>
         </td>
@@ -92,11 +92,11 @@ for ($ii = 0; $ii < $iiMax; $ii++) {
     </tr>
 </table>
 </div>
-<?
+<?php
 if ($Data->rPoll->AllowComment=="Yes") {
 ?>
     <h3><?=$words->getFormatted("polls_commentspeoplehavemade",count($Data->Contributions))?></h3>
-<?  $jj=0 ;
+<?php  $jj=0 ;
     $ii=0 ;
     for ($jj=0;$jj<count($Data->Contributions);$jj++) {
         $Contrib=$Data->Contributions[$jj] ;
@@ -106,7 +106,7 @@ if ($Data->rPoll->AllowComment=="Yes") {
     <div class="<?=$styles[$ii%2] ?>">
         <p><?=$Contrib->Username.': <em>'.$Contrib->comment."</em>"?></p>
     </div>
-        <?
+        <?php
     }
 }
 

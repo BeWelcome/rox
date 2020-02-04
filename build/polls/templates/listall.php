@@ -58,11 +58,11 @@ for ($ii = 0; $ii < $iiMax; $ii++) {
     ?>
     <tr>
         <td>
-            <h4><? echo $words->fTrad($p->Title); ?></h4>
-            <p><? echo $words->fTrad($p->Description); ?></p>
+            <h4><?php echo $words->fTrad($p->Title); ?></h4>
+            <p><?php echo $words->fTrad($p->Description); ?></p>
         </td>
         <td>
-            <?
+            <?php
             if (!empty($p->IdCreator)) {
                 echo MOD_layoutbits::PIC_50_50($p->CreatorUsername) ;
                 echo "<br />" ;
@@ -73,9 +73,9 @@ for ($ii = 0; $ii < $iiMax; $ii++) {
             }
             ?>
         </td>
-        <td><? echo $p->NbContributors; ?></td>
-        <td><? echo $p->Status; ?></td>
-        <td><? echo $p->PossibleActions; ?></td>
+        <td><?php echo $p->NbContributors; ?></td>
+        <td><?php echo $p->Status; ?></td>
+        <td><?php echo $p->PossibleActions; ?></td>
     </tr>
     <?php
 }

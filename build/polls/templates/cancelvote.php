@@ -27,7 +27,7 @@ $words = $this->getWords();
 if (!empty($errormessage)) {
     ?>
     <p class="error"><?=$errormessage; ?></p>
-    <?
+    <?php
 }
 
 ?>

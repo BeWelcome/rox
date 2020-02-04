@@ -28,7 +28,7 @@ $words = $this->getWords();
 if (!empty($errormessage)) {
     ?>
     <p class="alert alert-error"><?= $errormessage; ?></p>
-    <?
+    <?php
 }
 $words = new MOD_words();
 $Data = $this->_data;
@@ -51,7 +51,7 @@ if (isset($Data->rPoll->id)) { // Form for update
         <input type="hidden" name="IdPoll" value="<?= $Data->rPoll->id ?>"/>
         <div class="form-group">
             <label for="Status">Polls Status:</label>
-            <?
+            <?php
             $sChoice = array("Project", "Open", "Close");
             if (empty($rr->Status)) $rr->Status = "Project"; // By default a poll will be at Project Status
             echo "<select class='form-control select2' data-minimum-results-for-search=\"Infinity\" id=\"Status\" name=\"Status\">\n";
@@ -67,7 +67,7 @@ if (isset($Data->rPoll->id)) { // Form for update
         </div>
         <div class="form-group">
             <label for="TypeOfChoice">Type of choice:</label>
-            <?
+            <?php
             $sChoice = array('Exclusive', 'Inclusive', 'Ordered');
             if (empty($rr->TypeOfChoice)) $rr->TypeOfChoice = "Exclusive"; // By default a poll will be Exclusive
             echo "<select class='form-control select2' data-minimum-results-for-search=\"Infinity\" id=\"TypeOfChoice\" name=\"TypeOfChoice\">\n";
@@ -93,7 +93,7 @@ if (isset($Data->rPoll->id)) { // Form for update
         </div>
         <div class="form-group">
             <label for="CreatorUsername">Owner:</label>
-            <?
+            <?php
             $ii = 0;
             if (empty($rr->CreatorUsername)) {
                 $rr->CreatorUsername = $this->session->get('Username'); // By default a poll is owned by the current member
@@ -103,7 +103,7 @@ if (isset($Data->rPoll->id)) { // Form for update
         </div>
         <div class="form-group">
             <label for="Allow Comment">Allow Comments</label>
-            <?
+            <?php
             if (empty($rr->AllowComment)) $rr->AllowComment = "No"; // By default a poll is not aimed to collect comments
             $sChoice = array("Yes", "No");
             echo "<select class='form-control select2' data-minimum-results-for-search=\"Infinity\" id=\"AllowComment\" name=\"AllowComment\">";
@@ -119,7 +119,7 @@ if (isset($Data->rPoll->id)) { // Form for update
         </div>
         <div class="form-group">
             <label for="Anonym">Anonymous Poll</label>
-            <?
+            <?php
             if (empty($rr->Anonym)) $rr->Anonym = "No"; // By default a poll is not aimed to collect comments
             $sChoice = array("Yes", "No");
             echo "<select class='form-control select2' data-minimum-results-for-search=\"Infinity\" id=\"Anonym\"name=\"Anonym\">";
@@ -135,7 +135,7 @@ if (isset($Data->rPoll->id)) { // Form for update
         </div>
         <div class="form-group">
             <label for="ResultVisibility">Result visibility:</label>
-            <?
+            <?php
             if ($rr->ResultsVisibility == "") $rr->ResultsVisibility = "No"; // By default a poll is not aimed to collect comments
             $sChoice = array("Not Visible", "Visible", "VisibleAfterVisit");
             echo "<select class='form-control select2' data-minimum-results-for-search=\"Infinity\" id=\"ResultVisibiliyt\" name=\"ResultsVisibility\">";
@@ -180,7 +180,7 @@ if (isset($Data->rPoll->id)) { // Form for update
 
     <hr>
 
-    <?
+    <?php
     for ($ii = 0; $ii < count($Data->Choices); $ii++) {
         $cc = $Data->Choices[$ii];
         ?>
@@ -202,7 +202,7 @@ if (isset($Data->rPoll->id)) { // Form for update
                 <input type="submit" class="btn btn-primary" value="update choice"/>
 
         </form>
-        <?
+        <?php
     }
     ?>
 
@@ -212,7 +212,7 @@ if (isset($Data->rPoll->id)) { // Form for update
         <input type="hidden" name="PPostHandlerShutUp" value="ShutUp"/>
 
         <input type="hidden" name="<?= $callbackId ?>" value="1"/>
-        <input type="hidden" name="IdLanguage" value="<?
+        <input type="hidden" name="IdLanguage" value="<?php
         $this->session->get("IdLanguage") ?>"/>
         <input type="hidden" name="IdPoll" value="<?= $Data->rPoll->id ?>"/>
         <div class="form-group">
@@ -222,7 +222,7 @@ if (isset($Data->rPoll->id)) { // Form for update
         <input type="submit" class="btn btn-primary" value="Add"/>
 
     </form>
-    <?
+    <?php
 } else { // form for create
     ?>
     <p class="alert alert-notice">
@@ -261,7 +261,7 @@ if (isset($Data->rPoll->id)) { // Form for update
         <input type="submit" class="btn btn-primary" name="go create">
 
     </form>
-    <?
+    <?php
 }
 ?>
 </div>

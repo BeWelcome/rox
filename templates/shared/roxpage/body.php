@@ -46,7 +46,7 @@ use Symfony\Component\Asset\VersionStrategy\JsonManifestVersionStrategy;
 </div>
 
 <div class="container">
-    <?
+    <?php
         $side_column_names = $this->getColumnNames();
         $mid_column_name = array_pop($side_column_names);
 

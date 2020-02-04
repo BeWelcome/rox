@@ -58,12 +58,12 @@
                 <li><a href="donate"><?=$words->get('DonateLink')?></a></li>
           </ul>
         </li>
-<? if (isset($volunteer) && $volunteer) { ?>
+<?php if (isset($volunteer) && $volunteer) { ?>
         <li class="dropdown">
           <a href="volunteer" class="dropdown-toggle" data-toggle="dropdown"><?=$words->get('Volunteer')?> <b class="caret"></b></a>
           <?=$this->volunteerMenu() ?>
         </li>
-<? } ?>
+<?php } ?>
         </ul>
         <ul class="nav navbar-nav navbar-right">
         <?php if ($logged_in) { ?>

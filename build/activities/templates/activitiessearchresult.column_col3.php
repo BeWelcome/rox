@@ -9,7 +9,7 @@ if ($this->session->has( 'errors' )) {
 }
 ?>
 <div class="row">
-<?
+<?php
 if (!empty($errors)) {
     echo '<div class="col-12 alert alert-danger">';
     foreach($errors as $error) {

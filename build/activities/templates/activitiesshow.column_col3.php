@@ -78,7 +78,7 @@ if (empty($vars)) {
             <div class="d-flex flex-row justify-content-between">
                 <div class="h4"><?php echo $words->getSilent('activity.headline.join'); ?></div>
                 <div class="float-right">
-                <?
+                <?php
                 if ($this->activity->dateStart == $this->activity->dateEnd) {
                     echo '<i class="far fa-calendar-alt mr-1"></i>' . $this->activity->dateStart . '<br>';
                     echo '<i class="far fa-clock mr-1"></i> <span class="compacttext back">' . $this->activity->timeStart . ' - ' . $this->activity->timeEnd . '</span><br>';
@@ -209,7 +209,7 @@ if (empty($vars)) {
                             <br><a href="new/message/member-16526"><i class="fa fa-envelope mt-3" title="Write organiser"></i></a>
                         </div>
                     </div>
-                <? } ?>
+                <?php } ?>
             </div>
     </div>
     <div id="activity-description" class="col-12 col-md-8 col-lg-9 mt-3 order-5 order-md-6">
@@ -231,7 +231,7 @@ if (empty($vars)) {
 
             ?>
             <div class="col m-1 p-2
-<?
+<?php
             switch ($attendee->status) {
                 case 1:
                     echo " attendyes";
@@ -250,7 +250,7 @@ if (empty($vars)) {
                                     src="members/avatar/<?php echo $attendee->Username; ?>/50" width="50" height="50"></a></div>
                     <div><a href="members/<?php echo $attendee->Username; ?>"><?php echo $attendee->Username; ?></a><br>
                         <small>
-                            <?
+                            <?php
                             switch ($attendee->status) {
                                 case 1:
                                     echo $words->get('ActivityYesIAttend');
@@ -266,21 +266,21 @@ if (empty($vars)) {
                         </small>
                     </div>
                 </div>
-                <? if ($attendee->comment) { ?>
+                <?php if ($attendee->comment) { ?>
                     <div class="small gray"><i><?php echo htmlspecialchars($attendee->comment); ?></i></div>
-                <? } ?>
+                <?php } ?>
             </div>
             <?php
         }
         ?>
         </div>
         <div class="col-12 order-10">
-            <?
+            <?php
         echo $this->attendeesPager->render();
         ?>
         </div>
 
-            <?
+            <?php
     } else {
         echo '<div class="col-12 order-9"><h3>' . $words->get('ActivityAttendees') . '</h3>';
         echo '<p>' . $words->getBuffered('ActivitiesLogInWhoIsComing', '<a href="' . $login_url . '">', '</a>') . '</p></div>';

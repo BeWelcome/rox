@@ -6,7 +6,7 @@ $lastcontinent = "";
 <div class="row">
 <div class="col-12">
     <div class="card-columns">
-        <? foreach ($this->continents as $continent => $value) { ?>
+        <?php foreach ($this->continents as $continent => $value) { ?>
             <div class="card">
                 <div class="card-header bg-primary" id="heading<?= $value[0] ?>">
                     <h5 class="m-0"><?= $value[0] ?></h5>
@@ -34,7 +34,7 @@ $lastcontinent = "";
                     </div>
                 </div>
             </div>
-        <? } ?>
+        <?php } ?>
     </div>
 </div>
 </div>

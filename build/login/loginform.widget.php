@@ -97,7 +97,7 @@ class LoginFormWidget extends RoxWidget
                 <div class="info" id="login-widget">
                 <?if ($err) : ?>
                 <p class="note warning"><?=$err?></p>
-                <? endif ?>
+                <?php endif ?>
                 <script type="text/javascript">
                     if(!navigator.cookieEnabled)
                         document.write("<p class=\"note warning\">Please enable cookies in your browser.</p>");

@@ -130,7 +130,7 @@ class LoginController extends RoxControllerBase
                         });
                     </script>
 
-                    <?
+                    <?php
                     }
                     $this->model->setupBWSession($bw_member);
                     $this->model->setTBUserAsLoggedIn($tb_user);

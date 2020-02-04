@@ -16,7 +16,6 @@ Production OS is Debian GNU/Linux Strech.
 * Apache with mod_rewrite enabled
 * PHP version >= 7.1 (and < 7.3)
 * PHP GD lib enabled
-* PHP short opening tags enabled
 * PHP magic quotes gpc disabled
 * PHP extensions: mbstring, dom, fileinfo, intl, xsl
 * MariaDB >=10.1
@@ -24,9 +23,9 @@ Production OS is Debian GNU/Linux Strech.
 * [Composer](https://www.getcomposer.org) Latest version (installed globally)
 * [Node.js](https://nodejs.org/) Latest version (installed globally)
 * [Sphinxsearch](http://sphinxsearch.com/) (can be omitted but member search will be slow and forum search won't work)
-* wget (if you want to follow the instructions word to word) other curl and the -o parameter should be your friend
+* wget (if you want to follow the instructions word to word) otherwise curl and the -o parameter should be your friend
 
-There is rudimentary Docker support. Fill free to update the Dockerfile to help fellow developers.
+There is rudimentary Docker support. Feel free to update the Dockerfile to help fellow developers.
 
 ### Download
 
@@ -58,8 +57,8 @@ There is rudimentary Docker support. Fill free to update the Dockerfile to help 
 10. (Optional) Load
 
     ```bash
-    $ wget http://downloads.bewelcome.org/for_developers/rox_test_db/languages.sql.bz2
-    $ wget http://downloads.bewelcome.org/for_developers/rox_test_db/words.sql.bz2
+    $ wget https://downloads.bewelcome.org/for_developers/rox_test_db/languages.sql.bz2
+    $ wget https://downloads.bewelcome.org/for_developers/rox_test_db/words.sql.bz2
     $ bunzip2 languages.sql.bz2 words.sql.bz2
     $ mysql bewelcome -u bewelcome -pbewelcome < languages.sql
     $ mysql bewelcome -u bewelcome -pbewelcome < words.sql
@@ -69,7 +68,7 @@ There is rudimentary Docker support. Fill free to update the Dockerfile to help 
 
 2. Run
 
-    ```bash
+   ```bash
     $ make build version
    ```
 

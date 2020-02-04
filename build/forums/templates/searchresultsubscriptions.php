@@ -51,30 +51,30 @@ Boston, MA  02111-1307, USA.
             </tr>
             </thead>
             <tbody>
-        <?
+        <?php
             foreach ($TResults->Groups as $group) {
         ?>
         <tr>
-            <th scope="row"><img src="group/thumbimg/<? echo $group->IdGroup; ?>" width="50" height="50"></th>
-            <td class="align-middle"><a href="group/<? echo $group->IdGroup; ?>/forum"><? echo htmlspecialchars($group->Name); ?></a></td>
+            <th scope="row"><img src="group/thumbimg/<?php echo $group->IdGroup; ?>" width="50" height="50"></th>
+            <td class="align-middle"><a href="group/<?php echo $group->IdGroup; ?>/forum"><?php echo htmlspecialchars($group->Name); ?></a></td>
             <td class="align-middle">
                 <div class="btn-group" role="group" aria-label="Toggle Subscription On-Off">
-                <? if ($group->AcceptMails == 'yes') { ?>
+                <?php if ($group->AcceptMails == 'yes') { ?>
                     <a class="btn btn-primary" style="color: #fff; cursor: default; border: 1px solid #868e96 !important;">On</a>
-                    <a href="forums/subscriptions/unsubscribe/group/<? echo $group->IdGroup; ?>" type="button" class="btn btn-light mb-0 border-0" style="border: 1px solid #868e96 !important;">Off</a>
+                    <a href="forums/subscriptions/unsubscribe/group/<?php echo $group->IdGroup; ?>" type="button" class="btn btn-light mb-0 border-0" style="border: 1px solid #868e96 !important;">Off</a>
                 </div></td>
-                <?
+                <?php
                 } else { ?>
-                <a href="forums/subscriptions/subscribe/group/<? echo $group->IdGroup; ?>" type="button" class="btn btn-light mb-0 border-0" style="border: 1px solid #868e96 !important;">On</a>
+                <a href="forums/subscriptions/subscribe/group/<?php echo $group->IdGroup; ?>" type="button" class="btn btn-light mb-0 border-0" style="border: 1px solid #868e96 !important;">On</a>
                 <a class="btn btn-primary" style="color: #fff; cursor: default; border: 1px solid #868e96 !important;">Off</a>
                 </div></td>
-                <? } ?>
+                <?php } ?>
         </tr>
-    <? } ?>
+    <?php } ?>
     </tbody>
     </table>
     </div>
-<?
+<?php
 } else {
     echo '<div class="col-12">' . $words->get('ForumNoGroups') . '</div>';
 }
@@ -82,7 +82,7 @@ Boston, MA  02111-1307, USA.
 
 <div class="col-12 mt-3"><h3><?= $words->getFormatted("ForumThreadSubscriptions") ?></h3></div>
 
-<?
+<?php
 if (count($TResults->TData) > 0) { ?>
 
     <div class="col-12">
@@ -95,7 +95,7 @@ if (count($TResults->TData) > 0) { ?>
             </tr>
             </thead>
             <tbody>
-<?
+<?php
     foreach ($TResults->TData as $data) {
 
         echo '<tr><th scope="row">';

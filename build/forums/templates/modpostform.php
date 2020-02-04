@@ -47,7 +47,7 @@ $request = PRequest::get()->request;
 $uri = implode('/', $request);
 ?>
 
-<?
+<?php
 if (isset($DataPost->Thread->title))
 ?>
     <legend>Thread Properties</legend>
@@ -99,7 +99,7 @@ if (isset($DataPost->Thread->title))
         <label class="col-3 col-form-label" for="IdGroup">Group</label>
         <select id="IdGroup" name="IdGroup" class="col-9 form-control">
             <option value="0"> no group</option>
-            <?
+            <?php
             foreach ($DataPost->PossibleGroups as $Group) {
                 echo "<option value=\"" . $Group->IdGroup . "\"";
                 if ($Group->IdGroup == $DataPost->Thread->IdGroup) {

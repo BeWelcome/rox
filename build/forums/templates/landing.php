@@ -132,7 +132,7 @@ if ($threads = $forum->getThreads()) {
 
         require 'boardthreads.php';
 ?>
-    <?
+    <?php
         $pages = null;
 
     if ($User && $moreLessThreadsCallbackId) {

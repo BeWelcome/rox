@@ -35,7 +35,7 @@ $navigationPath .= '<a href="' . htmlspecialchars($boards->getBoardLink(), ENT_Q
 	?>
 </div>
 
-<?
+<?php
 if ($User && empty($noForumNewTopicButton)) {
 ?>
 	<div class="col-4 mb-1">

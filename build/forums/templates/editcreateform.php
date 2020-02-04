@@ -40,7 +40,7 @@ if (isset($this->suggestionsGroupId)) {
 $vars =& PPostHandler::getVars($callbackId);
 
 ?>
-<? /* obsolete javascript?
+<?php /* obsolete javascript?
 <script type="text/javascript" src="script/blog_suggest.js"></script>
 <script type="text/javascript" src="script/forums_suggest.js"></script>
 */ ?>
@@ -101,7 +101,7 @@ $vars =& PPostHandler::getVars($callbackId);
         ?>
 
 <div class="col-12">
-        <?
+        <?php
         if (isset($allow_title) && $allow_title) {
 
             ?>
@@ -126,7 +126,7 @@ $vars =& PPostHandler::getVars($callbackId);
                            value="<?php echo $topic_titletrad; ?>" aria-describedby="forumaddtitle">
             </div>
 
-        <? } ?>
+        <?php } ?>
     </div>
     <div class="col-12 mb-2">
         <div class="form-group">

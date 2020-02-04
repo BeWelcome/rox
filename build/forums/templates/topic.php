@@ -109,7 +109,7 @@ This File display a topic and the messages which are inside it
                 ?>
                 <a class="btn btn-primary btn-sm float-right"
                    href="<?= $replyuri ?>"><?= $words->getBuffered('ForumReply') ?></a><?= $words->flushBuffer() ?>
-                <?
+                <?php
             }
 
         }
@@ -125,7 +125,7 @@ This File display a topic and the messages which are inside it
                         <?php echo $this->_model->getGroupName($topic->topicinfo->GroupName); ?>
                     </a>
 
-                    <?
+                    <?php
                     }
                     ?>
                 </p>

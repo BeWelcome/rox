@@ -201,7 +201,7 @@ $layoutbits = new MOD_layoutbits();
         </td>
     </tr>
             <!-- end of loop -->
-    <? } ?>
+    <?php } ?>
     </tbody>
 </table>
 <!-- end of new table structure -->

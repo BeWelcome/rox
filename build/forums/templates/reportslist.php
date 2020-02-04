@@ -62,7 +62,7 @@ for ($ii = 0; $ii < $iiMax; $ii++) {
     <tr>
         <th scope="row"><?=$p->Status ?></th>
         <td>
-            <?
+            <?php
             if (!empty($p->IdReporter)) {
                 echo MOD_layoutbits::PIC_50_50($p->Username) ;
                 echo '<br>';

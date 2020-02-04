@@ -41,13 +41,13 @@ $uri = implode('/', $request);
 ?>
 
 <table class="table table-bordered table-sm">
-    <? if (isset($DataPost->Thread->title)) ?>
+    <?php if (isset($DataPost->Thread->title)) ?>
     <form method="post" action="forums/modeditpost/<?=$DataPost->Post->id;?>" id="modpostforum">
         <input type="hidden" name="<?=$callbackId;?>"  value="1">
         <input type="hidden" name="IdThread" value="<?=$DataPost->Thread->id;?>">
         <input type="hidden" name="IdPost" value="<?=$DataPost->Post->id;?>">
             <tr><td>
-        <?
+        <?php
         if (isset($DataPost->UserNameStarter)) echo "Thread started by ".$DataPost->UserNameStarter;
         ?>
         </td>
@@ -61,20 +61,20 @@ $uri = implode('/', $request);
         <tr>
             <td colspan="3"><label for="Status">Status</label>
                 <select Name="Status">
-        <?
+        <?php
         $Status = "Open";
         if (isset($DataPost->Report->Status)) $Status=$DataPost->Report->Status;
         ?>
-        <option value="Open"<? if ($Status=='Open') echo ' selected'; ?>>Open</option>
-        <option value="OnDiscussion"<? if ($Status=='OnDiscussion') echo ' selected'; ?>>In discussion</option>
-        <option value="Closed"<? if ($Status=='Closed') echo ' selected';?>>Closed</option>
+        <option value="Open"<?php if ($Status=='Open') echo ' selected'; ?>>Open</option>
+        <option value="OnDiscussion"<?php if ($Status=='OnDiscussion') echo ' selected'; ?>>In discussion</option>
+        <option value="Closed"<?php if ($Status=='Closed') echo ' selected';?>>Closed</option>
         </select>
             </td>
         </tr>
 
         <tr>
             <td colspan="3">
-                <?
+                <?php
                 $IdReporter=0 ;
                 if (isset($DataPost->Report->IdReporter)) $IdReporter=$DataPost->Report->IdReporter ;
                 echo "<input type='hidden' name='IdReporter' value='".$IdReporter."'>"; ?>
@@ -83,7 +83,7 @@ $uri = implode('/', $request);
             </td>
         </tr>
 
-<?
+<?php
 if (isset($DataPost->Report->PostComment))  {
     echo '<tr><td colspan="3">'.$DataPost->Report->PostComment.'</td></tr>';
 }

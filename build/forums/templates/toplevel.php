@@ -67,7 +67,7 @@ $uri = 'forums/';
 require 'boardthreads.php';
 ?>
         </div>
-    <? }
+    <?php }
     if (!$noForumNewTopicButton) { ?>
     <div class="col-12 mt-2">
         <a class="btn btn-primary" role="button" href="<?php echo $uri; ?>new"><?php echo $this->words->getBuffered('ForumNewTopic'); ?></a><?php echo $this->words->flushBuffer(); ?>

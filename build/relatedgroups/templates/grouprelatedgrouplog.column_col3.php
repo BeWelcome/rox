@@ -54,13 +54,13 @@ Boston, MA  02111-1307, USA.
             if ($this->isGroupMember())  {
                 ?>
 
-                    <a class="btn btn-primary" role="button" href="group/<? echo $this->group->id; ?>/selectrelatedgroup">
+                    <a class="btn btn-primary" role="button" href="group/<?php echo $this->group->id; ?>/selectrelatedgroup">
                         <?php echo $words->get('AddRelatedGroupButton'); ?>
                     </a>
         <?php
                     if (!empty($relatedgroups)) { ?>
-                        <a class="btn btn-primary" role="button" href="group/<? echo $this->group->id; ?>/selectdeleterelatedgroup">
-                            <? echo $words->get('RemoveRelatedGroupButton'); ?>
+                        <a class="btn btn-primary" role="button" href="group/<?php echo $this->group->id; ?>/selectdeleterelatedgroup">
+                            <?php echo $words->get('RemoveRelatedGroupButton'); ?>
                         </a><?php
                     } ?>
                <?php

@@ -53,12 +53,12 @@ if (count($languages) > 1 || $myself) {
             foreach($languages as $language) {
                 if (($language->ShortCode == $profile_language_code)) {
                 ?>
-                    <button class="btn btn-primary"><?=$profile_language_name ?><? if ($this->myself && $max > 1) { ?></button>
-                    <a href="editmyprofile/<?=$profile_language_code?>/delete" title="<?= $words->getSilent('delete')?>" class="btn btn-primary px-1"> <i class="fas fa-times-circle"></i></a><? }
+                    <button class="btn btn-primary"><?=$profile_language_name ?><?php if ($this->myself && $max > 1) { ?></button>
+                    <a href="editmyprofile/<?=$profile_language_code?>/delete" title="<?= $words->getSilent('delete')?>" class="btn btn-primary px-1"> <i class="fas fa-times-circle"></i></a><?php }
                     $activelang_set = true;
                 } else {
 
-                    ?><a href="<?=$urlstring?>/<?=$language->ShortCode ?>" class="btn btn-outline-primary"><?=$language->Name ?></a><?
+                    ?><a href="<?=$urlstring?>/<?=$language->ShortCode ?>" class="btn btn-outline-primary"><?=$language->Name ?></a><?php
                 $ii++;
                 }
             }

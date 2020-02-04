@@ -1,8 +1,8 @@
 <div id="accommodationinfo<?= $accIdSuffix ?>" class="card mb-3">
-    <h3 class="card-header<? if ($member->Accomodation == 'neverask'){ echo ' bg-secondary'; } ?>"><?php echo $words->get('ProfileAccommodation'); ?>
+    <h3 class="card-header<?php if ($member->Accomodation == 'neverask'){ echo ' bg-secondary'; } ?>"><?php echo $words->get('ProfileAccommodation'); ?>
         <?php if ($showEditLinks): ?>
             <span class="float-right">
-                    <a href="editmyprofile/<?php echo $profile_language_code; ?>#!profileaccommodation" class="btn btn-sm <? if ($member->Accomodation == 'neverask'){ echo ' btn-secondary'; } else { echo 'btn-primary'; } ?> p-0"><?= $words->get('Edit'); ?></a>
+                    <a href="editmyprofile/<?php echo $profile_language_code; ?>#!profileaccommodation" class="btn btn-sm <?php if ($member->Accomodation == 'neverask'){ echo ' btn-secondary'; } else { echo 'btn-primary'; } ?> p-0"><?= $words->get('Edit'); ?></a>
                 </span>
         <?php endif; ?>
     </h3>
@@ -118,11 +118,11 @@
                     <div><?php echo $restrictions; ?></div>
                 <?php } ?>
             </div>
-            <? if (!$this->myself && $member->Accomodation != 'neverask') { ?>
+            <?php if (!$this->myself && $member->Accomodation != 'neverask') { ?>
             <div>
                <a href="new/request/<?= $member->Username ?>" class="btn btn-primary float-right"><i class="fa fa-bed mr-1"></i><?=$words->get('profile.request.hosting');?></a>
             </div>
-            <? } ?>
+            <?php } ?>
         </div>
     </div>
 </div>

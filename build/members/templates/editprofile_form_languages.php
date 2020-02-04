@@ -33,12 +33,12 @@
                     </div>
                     <div class="col-10 offset-2 col-md-7 offset-md-0">
                         <select class="mll form-control" name="memberslanguageslevel[]">
-                            <?
+                            <?php
                             for ($jj = 0; $jj < count($vars['language_levels']); $jj++) {
                                 $selected = $vars['language_levels'][$jj] == $vars['languages_selected'][$ii]->Level ? ' selected="selected"' : '';
                                 ?>
                                 <option value='<?= $vars['language_levels'][$jj] ?>'<?= $selected ?>><?= $words->getSilent("LanguageLevel_" . $vars['language_levels'][$jj]) ?></option>
-                            <? } ?>
+                            <?php } ?>
 
                         </select>
                         <?= $words->flushBuffer() ?>
@@ -55,7 +55,7 @@
                     <select class='lang_selector form-control' name="memberslanguages[]">
                         <option selected="selected">-<?= $words->get("ChooseNewLanguage") ?>-</option>
                         <optgroup label="<?= $words->getSilent('SpokenLanguages') ?>">
-                            <?
+                            <?php
                             for ($jj = 0; $jj < count($vars['languages_all_spoken']); $jj++) {
                                 if (in_array($vars['languages_all_spoken'][$jj]->id, $lang_ids)) {
                                     continue;
@@ -64,19 +64,19 @@
                                 <option value="<?= $vars['languages_all_spoken'][$jj]->id ?>"><?= $vars['languages_all_spoken'][$jj]->TranslatedName ?>
                                     (<?= $vars['languages_all_spoken'][$jj]->Name ?>)
                                 </option>
-                                <?
+                                <?php
                             }
                             ?>
                         </optgroup>
                         <optgroup label="<?= $words->getSilent('SignedLanguages') ?>">
-                            <?
+                            <?php
                             for ($jj = 0; $jj < count($vars['languages_all_signed']); $jj++) {
                                 if (in_array($vars['languages_all_signed'][$jj]->id, $lang_ids)) {
                                     continue;
                                 }
                                 ?>
                                 <option value="<?= $vars['languages_all_signed'][$jj]->id ?>"><?= $vars['languages_all_signed'][$jj]->TranslatedName ?></option>
-                                <?
+                                <?php
                             }
                             ?>
                         </optgroup>
@@ -84,11 +84,11 @@
                 </div>
                 <div class="col-10 offset-2 col-md-7 offset-md-0">
                     <select class="mll form-control" name="memberslanguageslevel[]">
-                        <?
+                        <?php
                         for ($jj = 0; $jj < count($vars['language_levels']); $jj++) {
                             ?>
                             <option value="<?= $vars['language_levels'][$jj] ?>"><?= $words->get("LanguageLevel_" . $vars['language_levels'][$jj]) ?></option>
-                            <?
+                            <?php
                         }
                         ?>
                     </select>

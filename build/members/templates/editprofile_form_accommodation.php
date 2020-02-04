@@ -22,19 +22,19 @@
                         ?>
 
                         <label for="<?= $tt[$ii] ?>"
-                               class="btn btn-light <? if ($tt[$ii] == $vars['Accomodation']) echo "active"; ?>">
+                               class="btn btn-light <?php if ($tt[$ii] == $vars['Accomodation']) echo "active"; ?>">
                             <input type="radio" id="<?= $tt[$ii] ?>" name="Accomodation" value="<?= $tt[$ii] ?>"
-                                   class="noradio" <? if ($tt[$ii] == $vars['Accomodation']) echo "checked"; ?>><img
+                                   class="noradio" <?php if ($tt[$ii] == $vars['Accomodation']) echo "checked"; ?>><img
                                     src="images/icons/<?= $tt[$ii]; ?>.png" alt="<?= $acctext; ?>"
                                     title="<?= $acctext; ?>">
                         </label>
 
-                    <? } ?>
+                    <?php } ?>
                 </div>
             </div>
             <div class="form-group row">
                 <label for="hes-duration"
-                       class="col-md-4 col-form-label"><? echo $words->get('profile.accommodation.hes.label'); ?></label>
+                       class="col-md-4 col-form-label"><?php echo $words->get('profile.accommodation.hes.label'); ?></label>
                 <div class="col-12 col-md-8">
                     <input type="hidden" id="hes-id" name="hes-id" value="<?= $vars['hes-id']; ?>">
                     <div class="input-group date" id="hes-duration-div" data-target-input="nearest">
@@ -55,7 +55,7 @@
             </div>
             <div class="form-group row">
                 <label for="MaxGuests"
-                       class="col-md-4 col-form-label"><? echo $words->get('ProfileNumberOfGuests'); ?></label>
+                       class="col-md-4 col-form-label"><?php echo $words->get('ProfileNumberOfGuests'); ?></label>
                 <div class="col-12 col-md-8">
                     <input type="number" min="1" max="20" name="MaxGuest" class="form-control"
                            value="<?= $vars['MaxGuest']; ?>">

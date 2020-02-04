@@ -98,17 +98,17 @@
                                 <?php echo $words->flushBuffer(); ?>
                             <?php } elseif (count($PossibleValueArray) > 1) { ?>
                                     <div class="col-12 col-md-4 order-3 order-md-2">
-                                <? foreach ($PossibleValueArray as $PValue) : ?>
+                                <?php foreach ($PossibleValueArray as $PValue) : ?>
                                         <input type="radio" name="<?=$rr->codeName?>" value="<?=$PValue?>" <?=($Value == $PValue) ? 'checked' : '' ?> />
                                         <label><?=$words->get($rr->codeName.preg_replace("/[^a-zA-Z0-9s]/", "", $PValue))?></label><br>
-                                <? endforeach ?>
+                                <?php endforeach ?>
                                     </div>
-                            <? } else { ?>
+                            <?php } else { ?>
                             <div class="col-12 col-md-4 order-3 order-md-2">
                                 <input type="radio" name="<?=$rr->codeName?>" value="Yes" <?=($Value == 'Yes' || ($rr->Value != 'No' && $rr->DefaultValue == 'Yes')) ? 'checked' : '' ?> /><label><?=$words->get('Yes')?></label><br>
                                 <input type="radio" name="<?=$rr->codeName?>" value="No" <?=($Value == 'No' || ($rr->Value != 'Yes' && $rr->DefaultValue == 'No')) ? 'checked' : '' ?> /><label><?=$words->get('No')?></label>
                             </div>
-                                <? } ?>
+                                <?php } ?>
 
                                 <div class="col-2 col-md-4 small order-2 order-md-3">
                                     <a tabindex="0" class="btn btn-outline-primary btn-sm ml-1 py-0" data-container="body" data-toggle="popover" data-placement="right" data-trigger="focus" data-html="true" data-content="<?= htmlentities($words->get($rr->codeDescription)) ?>">
@@ -116,7 +116,7 @@
                                     </a>
                                 </div>
                         </div>
-                            <? } // end if
+                            <?php } // end if
                               } // end foreach
                              ?>
                     </div>

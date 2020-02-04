@@ -75,7 +75,7 @@ if (!$showfrom && !$this->myself) {
    ?>
         <div class="col-12 p-0 pb-3"><a href="members/<?php echo $username; ?>/comments/add"
                 class="btn btn-primary"><?php echo $words->get('addcomments'); ?></a></div>
-    <?
+    <?php
 }
 
 foreach($comments as $comment) {
@@ -107,8 +107,8 @@ foreach($comments as $comment) {
             <div class="d-flex flex-row justify-content-between">
                 <?php if ($this->loggedInMember){ ?>
                     <div><a href="/members/<?= $this->member->Username;?>/comment/<?php echo $c->id;?>/report" title="<?=$words->getSilent('ReportCommentProblem') ?>" class="gray"><i class="fa fa-flag" alt="<?=$words->getSilent('ReportCommentProblem') ?>"></i></a></div>
-                <? } ?>
-                <div><? if (!$this->passedAway) { ?><p class="h4 m-0 ml-lg-5 <?=$quality?>"><?= $words->get('CommentQuality_'.$c->comQuality.''); ?></p><? } ?></div>
+                <?php } ?>
+                <div><?php if (!$this->passedAway) { ?><p class="h4 m-0 ml-lg-5 <?=$quality?>"><?= $words->get('CommentQuality_'.$c->comQuality.''); ?></p><?php } ?></div>
             <div><span title="<?php echo $c->created; ?>" class="small float-right"><?php echo $layoutbits->ago($c->unix_created); ?></span></div>
             </div>
 
@@ -122,9 +122,9 @@ foreach($comments as $comment) {
                     <p class="text-mute p-3 m-0 font-italic">
                         <?= $words->get('about') ?>
                     </p>
-                    <? if ($editfrom){ ?>
+                    <?php if ($editfrom){ ?>
                         <a class="btn btn-sm btn-primary" href="members/<?= $this->member->Username ?>/comments/add" title="Edit"><?= $ww->edit ?></a>
-                    <? } ?>
+                    <?php } ?>
                 </div>
                 <div class="ml-lg-3 text-center">
                     <a href="members/<?= $c->UsernameToMember ?>">
@@ -139,7 +139,7 @@ foreach($comments as $comment) {
                     $updated = Carbon::createFromFormat('Y-m-d H:i:s', $c->updated);
                 if ($c->created != $c->updated){ ?>
                     <p class="small">(<?=$words->get('CommentLastUpdated')?>: <span title="<?= $c->updated; ?>"><?= $updated->diffForHumans(); ?></span>)</p>
-                <? } ?>
+                <?php } ?>
 
                         <?php
                         for ($jj = 0; $jj < count($tt); $jj++) {
@@ -148,7 +148,7 @@ foreach($comments as $comment) {
                         }
                         ?>
 
-                <? echo $purifier->purify(nl2br($c->TextFree)); ?>
+                <?php echo $purifier->purify(nl2br($c->TextFree)); ?>
 
                 <?php if (MOD_right::get()->HasRight('Comments'))  { ?>
                     <a href="bw/admin/admincomments.php?action=editonecomment&IdComment=<?php echo $c->id; ?>"><?=$words->get('EditComment')?></a>
@@ -160,14 +160,14 @@ foreach($comments as $comment) {
     <?php
     } else { ?>
         <div class="col-12 col-sm-6 card comment-bg-neutral mb-3">
-            <? if (!$this->myself && ($c->UsernameToMember==$loginuser)){ ?>
+            <?php if (!$this->myself && ($c->UsernameToMember==$loginuser)){ ?>
             <a href="members/<?php echo $c->UsernameFromMember; ?>/comments/add"
            class="btn btn-primary mt-3"><?php echo $words->get('addcomments'); ?></a>
-            <? } else { ?>
+            <?php } else { ?>
                 <div><p class="text-center mt-3"><?php echo $words->get('CommentNoComment'); ?></p></div>
-            <? } ?>
+            <?php } ?>
         </div>
-    <? }
+    <?php }
 
      if ($showto || $editto){
          $cc = $comment['to'];
@@ -187,7 +187,7 @@ foreach($comments as $comment) {
                     </span>
                 </div>
 
-                <div><? if (!$this->passedAway) { ?><p class="h4 m-0 mr-lg-5 <?=$quality?>"><?= $words->get('CommentQuality_'.$cc->comQuality.''); ?></p><? } ?></div>
+                <div><?php if (!$this->passedAway) { ?><p class="h4 m-0 mr-lg-5 <?=$quality?>"><?= $words->get('CommentQuality_'.$cc->comQuality.''); ?></p><?php } ?></div>
 
                 <?php if ($this->loggedInMember) :?>
                     <div><a href="members/<?php echo $cc->UsernameToMember;?>/comment/<?php echo $cc->id;?>/report" title="<?=$words->getSilent('ReportCommentProblem') ?>"><i class="fa fa-flag" title="<?=$words->getSilent('ReportCommentProblem') ?>"></i></a></div>
@@ -204,9 +204,9 @@ foreach($comments as $comment) {
                     <p class="text-mute p-3 m-0 font-italic">
                         <?=$words->getSilent('about') ?>
                     </p>
-                    <? if ($editto){ ?>
+                    <?php if ($editto){ ?>
                     <a class="btn btn-sm btn-primary" role="button" href="members/<?= $cc->UsernameToMember ?>/comments/add" title="Edit"><?= $ww->edit ?></a>
-                    <? } ?>
+                    <?php } ?>
                 </div>
                 <div class="ml-lg-3 text-center">
                     <a href="members/<?= $cc->UsernameToMember ?>">
@@ -217,9 +217,9 @@ foreach($comments as $comment) {
 
             <div>
 
-             <? if ($cc->created != $cc->updated){ ?>
+             <?php if ($cc->created != $cc->updated){ ?>
                  <p class="small">(<?=$words->get('CommentLastUpdated')?>: <span title="<?= $cc->updated; ?>"><?php echo $layoutbits->ago($cc->unix_updated); ?></span>)</p>
-             <? }
+             <?php }
 
              for ($jj = 0; $jj < count($tt); $jj++) {
                 echo '<p class="small font-italic p-0 mb-1">'.$words->get("Comment_" . $tt[$jj]).'</p>';
@@ -229,7 +229,7 @@ foreach($comments as $comment) {
 
              if (MOD_right::get()->HasRight('Comments'))  { ?>
                 <a href="bw/admin/admincomments.php?action=editonecomment&IdComment=<?php echo $cc->id; ?>"><?=$words->get('EditComment')?></a>
-                 <? } ?>
+                 <?php } ?>
             </div>
         </div>
 
@@ -238,14 +238,14 @@ foreach($comments as $comment) {
          ?>
         <div class="col-12 col-sm-6 card comment-bg-neutral mb-3">
 
-         <? if ($this->myself && ($c->UsernameToMember==$loginuser)){ ?>
+         <?php if ($this->myself && ($c->UsernameToMember==$loginuser)){ ?>
              <a href="members/<?php echo $c->UsernameFromMember; ?>/comments/add"
                 class="btn btn-primary mt-3"><?php echo $words->get('addcomments'); ?></a>
-            <? } else { ?>
+            <?php } else { ?>
              <p class="text-center mt-3"><?php echo $words->get('profile.comments.nocomment'); ?></p>
-             <? } ?>
+             <?php } ?>
         </div>
-        <? }
+        <?php }
     } ?>
 </div>
 

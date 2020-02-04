@@ -135,14 +135,14 @@
                         ?>
                         <div class="mb-3 d-flex d-column">
                             <div>
-                                <a href="group/<? echo $group_id; ?>">
+                                <a href="group/<?php echo $group_id; ?>">
                                 <img class="framed float-left mr-2" width="50" height="50" alt="Group"
-                                     src="<? echo $group_img; ?>"/>
+                                     src="<?php echo $group_img; ?>"/>
                             </a>
                             </div>
                             <div class="text-truncate">
-                                <h4 class="m-0 text-truncate"><a href="group/<? echo $group_id; ?>"><? echo $group_name; ?></a></h4>
-                                <p class="m-0 text-truncate"><? echo $comment; ?></p>
+                                <h4 class="m-0 text-truncate"><a href="group/<?php echo $group_id; ?>"><?php echo $group_name; ?></a></h4>
+                                <p class="m-0 text-truncate"><?php echo $comment; ?></p>
                             </div>  <!-- groupinfo -->
                         </div>
                         <?php
@@ -153,9 +153,9 @@
                     ?>
             </div>
         </div>
-        <? } ?>
+        <?php } ?>
 
-        <?
+        <?php
         if ($this->model->getLoggedInMember() && !$this->passedAway){ ?>
 
 
@@ -211,4 +211,4 @@
                         </dl>
                 </div>
             </div>
-        <? } ?>
+        <?php } ?>

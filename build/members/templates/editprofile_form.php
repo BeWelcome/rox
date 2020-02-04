@@ -76,7 +76,7 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
         </li>
     </ul>
     <div class="tab-content" id="myTabContent">
-        <? include_once 'editprofile_form_basics.php';
+        <?php include_once 'editprofile_form_basics.php';
          include_once 'editprofile_form_aboutme.php';
          include_once 'editprofile_form_accommodation.php';
          include_once 'editprofile_form_myinterests.php';

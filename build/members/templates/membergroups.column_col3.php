@@ -1,6 +1,6 @@
 <div id="profile">
 
-    <?
+    <?php
     // display my groups, if there are any
     if (!empty($my_groups)) :
     ?>
@@ -22,7 +22,7 @@
                     </div>  <!-- groupinfo -->
                 </div> <!-- groupbox clearfix -->
             <?php endforeach; ?>
-        <? $this->pager->render(); ?>
+        <?php $this->pager->render(); ?>
     </div> <!-- profile_groups -->
     <?php endif ; ?>
 

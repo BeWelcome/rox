@@ -20,7 +20,7 @@
                 <tbody>
 
 
-          <?
+          <?php
                 $purifier = MOD_htmlpure::getAdvancedHtmlPurifier();
                 echo $this->pager->render();
                 $left = "";
@@ -56,7 +56,7 @@
                 <?php } ?>
                 </tbody>
             </table>
-            <?
+            <?php
                 $this->pager->render();
             } else {
                 echo $words->get("MyNotesNoNotes");

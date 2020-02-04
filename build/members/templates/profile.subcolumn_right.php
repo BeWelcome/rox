@@ -10,7 +10,7 @@
 
 ?>
 </div>
-<?
+<?php
 
     $comments = $this->member->comments;
     $username = $this->member->Username;
@@ -51,7 +51,7 @@
                    $quality = "bad";
                    } ?>
 
-                       <? if ($commentLoopCount > 1){ ?><hr class="m-1"><? } ?>
+                       <?php if ($commentLoopCount > 1){ ?><hr class="m-1"><?php } ?>
                     <div class="comment-bg-<?=$quality?> p-2">
                        <div class="my-1 clearfix">
                            <a href="members/<?=$c->UsernameFromMember?>">
@@ -64,7 +64,7 @@
                                        <span class="float-right">
                                        <?php if ($this->loggedInMember){ ?>
                                            <a href="/members/<?= $this->member->Username;?>/comment/<?php echo $c->id;?>/report" title="<?=$words->getSilent('ReportCommentProblem') ?>" class="gray"><i class="fa fa-flag" alt="<?=$words->getSilent('ReportCommentProblem') ?>"></i></a>
-                                       <? } ?>
+                                       <?php } ?>
                                    </span>
                                    <?php }?>
                                    <br><small><?=$words->get('CommentFrom','<a href="members/'.$c->UsernameFromMember.'">'.$c->UsernameFromMember.'</a>')?></small>

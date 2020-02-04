@@ -32,7 +32,7 @@
                     <input type="submit" class="btn btn-primary float-right my-2" id="submit" name="submit"
                            value="<?= $words->getSilent('upload.profile.picture') ?>"/> <?php echo $words->flushBuffer(); ?>
                 </div>
-                <? if ($this->adminedit || !$CanTranslate) { // member translator is not allowed to update crypted data ?>
+                <?php if ($this->adminedit || !$CanTranslate) { // member translator is not allowed to update crypted data ?>
                     <div class="col-12 form-group row mb-1">
                         <label for="FirstName" class="col-md-3 col-form-label"><?= $words->get('FirstName') ?></label>
                         <div class="col-8 col-md-7">
@@ -98,7 +98,7 @@
                         <?php } ?>
                     </div>
 
-                <? } ?>
+                <?php } ?>
 
                 <div class="col-12 form-group form-row align-items-center mt-2 mb-0">
                         <label for="SignupBirthDate" class="col-md-3 col-form-label pb-0"><?= $words->get('SignupBirthDate') ?></label>

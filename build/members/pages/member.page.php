@@ -201,14 +201,14 @@ class MemberPage extends PageWithActiveSkin
             </a>
             <?php } ?>
             </div>
-        <?
+        <?php
             if ($this->myself) {
                 // TODO : change language code (en) and wordcode
                 ?>
         <div>
             <a href="editmyprofile" class="btn btn-info btn-block"><?= $words->get('profile.change.avatar'); ?></a>
         </div>
-                <? } ?>
+                <?php } ?>
 
         <div class="list-group mt-2">
             <?php

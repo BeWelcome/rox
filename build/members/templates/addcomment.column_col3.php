@@ -115,7 +115,7 @@ if (isset($TCom->comQuality) && $TCom->comQuality == "Bad" && $TCom->AllowEdit !
     <input type="text" id="sweet" name="sweet" value="" title="Leave free of content" hidden>
     <?php } ?>
 
-    <? /* <h1><?=(!$edit_mode) ? $words->get("AddComments") : $words->get("EditComments")?></h1> */ ?>
+    <?php /* <h1><?=(!$edit_mode) ? $words->get("AddComments") : $words->get("EditComments")?></h1> */ ?>
 
 <input name="IdMember" value="<?=$member->id?>" type="hidden" />
 
@@ -162,11 +162,11 @@ if (isset($TCom->comQuality) && $TCom->comQuality == "Bad" && $TCom->AllowEdit !
                 ?>
                 <div class="form-check my-2">
                     <label class="form-check-label">
-                        <input class="form-check-input" type="checkbox" id="<?= $chkName; ?>" name="<?= $chkName; ?>"<? if (in_array($ttc[$ii], $ttRelation)) echo ' checked'; ?>>
+                        <input class="form-check-input" type="checkbox" id="<?= $chkName; ?>" name="<?= $chkName; ?>"<?php if (in_array($ttc[$ii], $ttRelation)) echo ' checked'; ?>>
                         <?= $words->get($chkName); ?>
                     </label>
                 </div>
-            <? } ?>
+            <?php } ?>
 
         </div>
 

@@ -4,9 +4,9 @@ if ($this->passedAway) {
 } ?>
 <div class="row mt-2">
     <div class="col-12 col-lg-6">
-      <? require 'profile.subcolumn_left.php' ?>
+      <?php require 'profile.subcolumn_left.php' ?>
     </div>
     <div class="col-12 col-lg-6">
-        <? require 'profile.subcolumn_right.php' ?>
+        <?php require 'profile.subcolumn_right.php' ?>
     </div>
 </div>

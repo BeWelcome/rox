@@ -9,7 +9,7 @@
     <div id="collapse-contactinfo" class="collapse" role="tabpanel" aria-labelledby="heading-contactinfo">
         <div class="card-body">
 
-                <? if ($this->adminedit || !$CanTranslate) { // member translator is not allowed to update crypted data ?>
+                <?php if ($this->adminedit || !$CanTranslate) { // member translator is not allowed to update crypted data ?>
                 <div class="form-row">
                     <div class="form-group col-12 col-md-5">
                         <label for="Street" class="col-form-label">
@@ -129,7 +129,7 @@
                             ?>
             <div class="form-row">
                             <div class="col-12 col-md-3 mb-0">
-                                <i class="<? if ($me["image"] == 'user-plus'){ echo 'fa'; } else { echo 'fab'; } ?> fa-<?= $me["image"]; ?> pr-2" alt="<?= $me["image"]; ?>"
+                                <i class="<?php if ($me["image"] == 'user-plus'){ echo 'fa'; } else { echo 'fab'; } ?> fa-<?= $me["image"]; ?> pr-2" alt="<?= $me["image"]; ?>"
                                    title="<?= $me["image"]; ?>"></i>
                                 <label for="<?= $val ?>" class="col-form-label"><?= $me["network"] ?></label>
                             </div>

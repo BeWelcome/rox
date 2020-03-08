@@ -54,6 +54,11 @@ class CreateTestDatabase extends Command
                 null,
                 InputOption::VALUE_NONE,
                 'Will drop the database if one already exist. Needs to be used with --force.')
+            ->addOption(
+                'translations',
+                null,
+                InputOption::VALUE_NONE,
+                'Will download the current translations and languages.')
             ->setHelp($descriptionAndHelp)
         ;
     }
@@ -129,15 +134,31 @@ class CreateTestDatabase extends Command
         }
 
         $output->writeln([
+            'Adding stored functions',
+            '',
+        ]);
+        $command = $this->getApplication()->find('doctrine:migrations:migrate');
+
+        $addFunctions = new ArrayInput([]);
+        $addFunctions->setInteractive(false);
+
+        $returnCode = $command->run($addFunctions, $output);
+        if ($returnCode) {
+            $output->writeln([
+                'Failed adding functions (see above for reasons).',
+                '',
+            ]);
+            return 1;
+        }
+
+        $output->writeln([
             'Seeding the database',
             '',
         ]);
         $command = $this->getApplication()->find('hautelook:fixtures:load');
 
-        $loadFixtures = new ArrayInput([
-            '--no-interaction' => "--no-interaction",
-            '-n' => true,
-        ]);
+        $loadFixtures = new ArrayInput([]);
+        $loadFixtures->setInteractive(false);
 
         $returnCode = $command->run($loadFixtures, $output);
         if ($returnCode) {
@@ -148,18 +169,16 @@ class CreateTestDatabase extends Command
             return 1;
         }
 
-        $output->writeln([
-            'Fixing things :)',
-            '',
-        ]);
         // Now set id for English to 0 as the old code expects that
         $connection = $this->entityManager->getConnection();
         $connection->executeUpdate("
             SET FOREIGN_KEY_CHECKS=0;
             UPDATE languages SET id = 0 WHERE ShortCode = 'en';
             UPDATE words SET IdLanguage = 0 WHERE ShortCode = 'en';
+            UPDATE memberslanguageslevel SET IdLanguage = 0 WHERE IdLanguage = 1;
             UPDATE languages SET id = 1 WHERE ShortCode = 'fr';
             UPDATE words SET IdLanguage = 1 WHERE ShortCode = 'fr';
+            UPDATE memberslanguageslevel SET IdLanguage = 1 WHERE IdLanguage = 2;
             SET FOREIGN_KEY_CHECKS=1;
         ");
 

@@ -10,6 +10,7 @@ namespace App\Entity;
 use App\Utilities\LifecycleCallbacksTrait;
 use Carbon\Carbon;
 use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\DBAL\Exception\InvalidArgumentException;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -93,6 +94,17 @@ class HostingRequest
      * @ORM\Column(name="status", type="integer")
      */
     private $status = self::REQUEST_OPEN;
+
+    /**
+     * @var Message[]
+     * @ORM\OneToMany(targetEntity="Message", mappedBy="request")
+     */
+    private $messages;
+
+    public function __construct()
+    {
+        $this->messages = new ArrayCollection();
+    }
 
     /**
      * Get id.

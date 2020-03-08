@@ -4,19 +4,23 @@ namespace App\Entity;
 
 use Carbon\Carbon;
 use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Persistence\ObjectManagerAware;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Persistence\Mapping\ClassMetadata;
+use Doctrine\Persistence\ObjectManager;
 
 /**
  * Specialrelations
  *
  * @ORM\Table(name="specialrelations", uniqueConstraints={@ORM\UniqueConstraint(name="UniqueRelation", columns={"IdOwner", "IdRelation"})}, indexes={@ORM\Index(name="IdOwner", columns={"IdOwner"})})
  * @ORM\HasLifecycleCallbacks
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\FamilyAndFriendRepository")
  *
  * @SuppressWarnings(PHPMD)
  * Auto generated class do not check mess
  */
-class FamilyAndFriend
+class FamilyAndFriend implements ObjectManagerAware
 {
     /**
      * @var string
@@ -26,7 +30,12 @@ class FamilyAndFriend
     private $type;
 
     /**
-     * @var integer
+     * Contains all comments for this relations (indexed by language)
+     */
+    private $comments = null;
+
+    /**
+     * @var int
      *
      * @ORM\Column(name="Comment", type="integer", nullable=false)
      */
@@ -74,13 +83,18 @@ class FamilyAndFriend
     private $confirmed = 'No';
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
+
+    /**
+     * @var ObjectManager
+     */
+    private $objectManager;
 
     /**
      * Set type
@@ -107,39 +121,42 @@ class FamilyAndFriend
     }
 
     /**
-     * Set comment
+     * Get comments
      *
-     * @param int $comment
+     * @return MemberTranslation[]
+     */
+    public function getComments()
+    {
+        return $this->comments;
+    }
+
+    /**
+     * Add comment
+     *
+     * @param MemberTranslation $comment
      *
      * @return FamilyAndFriend
      */
-    public function setComment($comment)
+    public function addComment($comment)
     {
-        $this->comment = $comment;
+        $this->comments->add($comment);
 
         return $this;
     }
 
     /**
-     * Get comment
+     * Remove comment
      *
-     * @return int
-     */
-    public function getComment()
-    {
-        return $this->comment;
-    }
-
-    /**
-     * Set created
-     *
-     * @param DateTime $created
+     * @param MemberTranslation $comment
      *
      * @return FamilyAndFriend
      */
-    public function setCreated($created)
+    public function removeComment($comment)
     {
-        $this->created = $created;
+        if ($this->comments->contains($comment))
+        {
+            $this->comments->removeElement($comment);
+        }
 
         return $this;
     }
@@ -152,20 +169,6 @@ class FamilyAndFriend
     public function getCreated()
     {
         return Carbon::instance($this->created);
-    }
-
-    /**
-     * Set updated
-     *
-     * @param DateTime $updated
-     *
-     * @return FamilyAndFriend
-     */
-    public function setUpdated($updated)
-    {
-        $this->updated = $updated;
-
-        return $this;
     }
 
     /**
@@ -261,6 +264,25 @@ class FamilyAndFriend
     }
 
     /**
+     * Triggered after load from database
+     *
+     * @ORM\PostLoad
+     */
+    public function onPostLoad()
+    {
+        $memberTranslationRepository = $this->objectManager->getRepository(MemberTranslation::class);
+        $translatedCmments = $memberTranslationRepository->findBy(['translation' => $this->comment]);
+
+        // Index by language.
+        $comments = [];
+        foreach ($translatedCmments as $comment) {
+            $comments[$comment->getLanguage()->getShortCode()] = $comment;
+        }
+
+        $this->comments = $comments;
+    }
+
+    /**
      * Triggered on insert.
      *
      * @ORM\PrePersist
@@ -279,5 +301,17 @@ class FamilyAndFriend
     public function onPreUpdate()
     {
         $this->updated = new DateTime('now');
+    }
+
+    /**
+     * Injects responsible ObjectManager and the ClassMetadata into this persistent object.
+     *
+     * @param ObjectManager $objectManager
+     * @param ClassMetadata $classMetadata
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function injectObjectManager(ObjectManager $objectManager, ClassMetadata $classMetadata)
+    {
+        $this->objectManager = $objectManager;
     }
 }

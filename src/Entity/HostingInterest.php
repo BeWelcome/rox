@@ -7,6 +7,8 @@
 
 namespace App\Entity;
 
+use Carbon\Carbon;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -19,17 +21,17 @@ use Doctrine\ORM\Mapping as ORM;
  * @SuppressWarnings(PHPMD)
  * Auto generated class do not check mess
  */
-class HostingEagernessSlider
+class HostingInterest
 {
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(name="updated", type="datetime", nullable=false)
      */
     private $updated;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(name="created", type="datetime", nullable=false)
      */
@@ -65,6 +67,13 @@ class HostingEagernessSlider
     private $remaining;
 
     /**
+     * @var DateTime
+     * @ORM\Column(name="enddate", type="datetime", nullable=false)
+     */
+    private $endDate;
+
+
+    /**
      * @var int
      *
      * @ORM\Column(name="id", type="integer")
@@ -84,7 +93,7 @@ class HostingEagernessSlider
      */
     public function onPrePersist()
     {
-        $this->initialized = new \DateTime('now');
+        $this->initialized = new DateTime('now');
     }
 
     /**
@@ -94,34 +103,26 @@ class HostingEagernessSlider
      */
     public function onPreUpdate()
     {
-        $this->updated = new \DateTime('now');
+        $this->updated = new DateTime('now');
     }
 
-    public function getUpdated(): ?\DateTimeInterface
+    /**
+     * @return Carbon
+     */
+    public function getUpdated():Carbon
     {
-        return $this->updated;
+        return Carbon::instance($this->updated);
     }
 
-    public function setUpdated(\DateTimeInterface $updated): self
+    /**
+     * @return Carbon
+     */
+    public function getInitialized(): Carbon
     {
-        $this->updated = $updated;
-
-        return $this;
+        return Carbon::instance($this->initialized);
     }
 
-    public function getInitialized(): ?\DateTimeInterface
-    {
-        return $this->initialized;
-    }
-
-    public function setInitialized(\DateTimeInterface $initialized): self
-    {
-        $this->initialized = $initialized;
-
-        return $this;
-    }
-
-    public function getStep(): ?int
+    public function getStep(): int
     {
         return $this->step;
     }
@@ -133,7 +134,7 @@ class HostingEagernessSlider
         return $this;
     }
 
-    public function getCurrent(): ?int
+    public function getCurrent(): int
     {
         return $this->current;
     }
@@ -145,7 +146,7 @@ class HostingEagernessSlider
         return $this;
     }
 
-    public function getRemaining(): ?int
+    public function getRemaining(): int
     {
         return $this->remaining;
     }
@@ -157,17 +158,29 @@ class HostingEagernessSlider
         return $this;
     }
 
-    public function getId(): ?int
+    public function getEndDate(): Carbon
+    {
+        return Carbon::instance($this->endDate);
+    }
+
+    public function setEndDate(DateTime $endDate): self
+    {
+        $this->endDate = $endDate;
+
+        return $this;
+    }
+
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function getMember(): ?Member
+    public function getMember(): Member
     {
         return $this->member;
     }
 
-    public function setMember(?Member $member): self
+    public function setMember(Member $member): self
     {
         $this->member = $member;
 

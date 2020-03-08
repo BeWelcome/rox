@@ -7,6 +7,7 @@
 
 namespace App\Entity;
 
+use Carbon\Carbon;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -40,14 +41,14 @@ class MemberTranslation
      *
      * @ORM\Column(name="IdTrad", type="integer", nullable=false)
      */
-    private $idtrad;
+    private $translation;
 
     /**
      * @var Member
      *
      * @ORM\Column(name="IdTranslator", type="integer", nullable=false)
      */
-    private $idtranslator;
+    private $translator;
 
     /**
      * @var DateTime
@@ -135,51 +136,51 @@ class MemberTranslation
     }
 
     /**
-     * Set idtrad.
+     * Set translation.
      *
-     * @param int $idtrad
+     * @param int $translation
      *
      * @return MemberTranslation
      */
-    public function setIdtrad($idtrad)
+    public function setTranslation($translation)
     {
-        $this->idtrad = $idtrad;
+        $this->translation = $translation;
 
         return $this;
     }
 
     /**
-     * Get idtrad.
+     * Get translation.
      *
      * @return int
      */
-    public function getIdtrad()
+    public function getTranslation()
     {
-        return $this->idtrad;
+        return $this->translation;
     }
 
     /**
-     * Set idtranslator.
+     * Set translator.
      *
-     * @param int $idtranslator
+     * @param int $translator
      *
      * @return MemberTranslation
      */
-    public function setIdtranslator($idtranslator)
+    public function setTranslator($translator)
     {
-        $this->idtranslator = $idtranslator;
+        $this->translator = $translator;
 
         return $this;
     }
 
     /**
-     * Get idtranslator.
+     * Get translator.
      *
-     * @return int
+     * @return Member
      */
-    public function getIdtranslator()
+    public function getTranslator()
     {
-        return $this->idtranslator;
+        return $this->translator;
     }
 
     /**
@@ -199,11 +200,11 @@ class MemberTranslation
     /**
      * Get updated.
      *
-     * @return DateTime
+     * @return Carbon
      */
     public function getUpdated()
     {
-        return $this->updated;
+        return Carbon::instance($this->updated);
     }
 
     /**
@@ -223,11 +224,11 @@ class MemberTranslation
     /**
      * Get created.
      *
-     * @return DateTime
+     * @return Carbon
      */
     public function getCreated()
     {
-        return $this->created;
+        return Carbon::instance($this->created);
     }
 
     /**
@@ -369,7 +370,7 @@ class MemberTranslation
     {
         $this->created = new DateTime('now');
         $this->updated = $this->created;
-        $this->idtrad = random_int(0, 24500000);
+        $this->translation = random_int(0, 24500000);
     }
 
     /**
@@ -379,7 +380,7 @@ class MemberTranslation
      */
     public function onPostPersist()
     {
-        $this->idtrad = $this->id;
+        $this->translation = $this->id;
     }
 
     /**

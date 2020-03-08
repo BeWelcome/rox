@@ -7,6 +7,7 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -35,6 +36,18 @@ class Subject
      * @ORM\Column(name="subject", type="string", length=255)
      */
     private $subject;
+
+    /**
+     * @var Message[]
+     * @ORM\OneToMany(targetEntity="Message", mappedBy="subject")
+     */
+    private $messages;
+
+    public function __construct()
+    {
+        $this->messages = new ArrayCollection();
+    }
+
 
     /**
      * Get id.

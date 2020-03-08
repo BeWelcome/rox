@@ -136,7 +136,7 @@ class Message
     /**
      * @var Subject
      *
-     * @ORM\OneToOne(targetEntity="Subject", cascade={"persist"}, fetch="EAGER")
+     * @ORM\ManyToOne(targetEntity="Subject", cascade={"persist"}, inversedBy="messages")
      *
      * @Assert\NotBlank()
      */
@@ -145,7 +145,7 @@ class Message
     /**
      * @var HostingRequest
      *
-     * @ORM\OneToOne(targetEntity="HostingRequest", cascade={"persist"}, fetch="EAGER")
+     * @ORM\ManyToOne(targetEntity="HostingRequest", cascade={"persist"}, fetch="EAGER", inversedBy="messages")
      * @ORM\JoinColumn(nullable=true)
      */
     private $request;

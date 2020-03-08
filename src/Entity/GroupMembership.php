@@ -12,7 +12,10 @@ use Carbon\Carbon;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Persistence\ObjectManagerAware;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Persistence\Mapping\ClassMetadata;
+use Doctrine\Persistence\ObjectManager;
 
 /**
  * Group Membership.
@@ -29,7 +32,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @SuppressWarnings(PHPMD)
  * Auto generated class do not check mess
  */
-class GroupMembership
+class GroupMembership implements ObjectManagerAware
 {
     /**
      * @var DateTime
@@ -50,16 +53,10 @@ class GroupMembership
      *
      * @ORM\Column(name="comment", type="integer", nullable=false)
      */
-    private $comment = 0;
+    private $comment;
 
     /**
-     * @var MemberTranslation
-     *
-     * @ORM\ManyToMany(targetEntity="MemberTranslation", fetch="LAZY")
-     * @ORM\JoinTable(name="group_membership_trads",
-     *      joinColumns={@ORM\JoinColumn(name="group_membership_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="members_trad_id", referencedColumnName="id", unique=true)}
-     *      )
+     * @var MemberTranslation[]
      */
     private $comments;
 
@@ -116,10 +113,10 @@ class GroupMembership
      */
     private $id;
 
-    public function __construct()
-    {
-        $this->comments = new ArrayCollection();
-    }
+    /**
+     * @var ObjectManager
+     */
+    private $objectManager;
 
     /**
      * Set updated.
@@ -357,6 +354,17 @@ class GroupMembership
     }
 
     /**
+     * Triggered after load from database
+     *
+     * @ORM\PostLoad
+     */
+    public function onPostLoad()
+    {
+        $memberTranslationRepository = $this->objectManager->getRepository(MemberTranslation::class);
+        $this->comments = $memberTranslationRepository->findBy(['translation' => $this->comment]);
+    }
+
+    /**
      * Triggered on insert.
      *
      * @ORM\PrePersist
@@ -378,9 +386,9 @@ class GroupMembership
     }
 
     /**
-     * @return Collection|MemberTranslation[]
+     * @return MemberTranslation[]
      */
-    public function getComments(): Collection
+    public function getComments(): array
     {
         return $this->comments;
     }
@@ -398,5 +406,10 @@ class GroupMembership
     public function getComment(): ?int
     {
         return $this->comment;
+    }
+
+    public function injectObjectManager(ObjectManager $objectManager, ClassMetadata $classMetadata)
+    {
+        $this->objectManager = $objectManager;
     }
 }

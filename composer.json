@@ -5,6 +5,7 @@
     "type": "project",
     "license": "GPL",
     "require": {
+        "ext-fileinfo": "*",
         "ext-gd": "*",
         "ext-json": "*",
         "ext-mysqli": "*",
@@ -12,8 +13,10 @@
         "ext-pdo": "*",
         "ext-pdo_mysql": "*",
         "ext-session": "*",
+        "ext-zip": "*",
         "anthonymartin/geo-location": "^1.0",
         "doctrine/doctrine-bundle": "^1.9",
+        "doctrine/doctrine-migrations-bundle": "^2.0",
         "doctrine/orm": "^2.6",
         "exercise/htmlpurifier-bundle": "^2.0",
         "ezyang/htmlpurifier": "^4.0",
@@ -30,6 +33,7 @@
         "swiftmailer/swiftmailer": "^6.0",
         "symfony/apache-pack": "^1.0",
         "symfony/asset": "^4.1",
+        "symfony/cache": "^4.1",
         "symfony/dotenv": "4.*",
         "symfony/flex": "^1.1",
         "symfony/form": "^4.1",
@@ -45,7 +49,6 @@
         "symfony/validator": "^4.1",
         "symfony/var-dumper": "^4.1",
         "symfony/webpack-encore-bundle": "^1.6",
-        "symfony/cache": "^4.1",
         "twig/cssinliner-extra": "^2.0",
         "twig/extensions": "^1.5",
         "twig/extra-bundle": "^3.0",
@@ -54,9 +57,7 @@
         "twig/twig": "^2.4",
         "white-october/pagerfanta-bundle": "^1.0",
         "xemlock/htmlpurifier-html5": "^0.1.10",
-        "zendframework/zend-uri": "^2.4",
-      "ext-zip": "*",
-      "ext-fileinfo": "*"
+        "zendframework/zend-uri": "^2.4"
     },
     "conflict": {
         "symfony/symfony": "*"
@@ -77,14 +78,13 @@
         "phpstan/phpstan": "^0.11.8",
         "phpstan/phpstan-doctrine": "^0.11.5",
         "phpstan/phpstan-symfony": "^0.11.6",
-        "phpunit/phpunit": "^7.0",
         "robmorgan/phinx": "*",
         "sebastian/phpcpd": "^4.0",
         "squizlabs/php_codesniffer": "3.*",
         "symfony/debug-bundle": "^4.1",
         "symfony/debug-pack": "^1.0",
         "symfony/maker-bundle": "^1.8",
-        "symfony/phpunit-bridge": "^4.1",
+        "symfony/phpunit-bridge": "^5.0",
         "symfony/web-profiler-bundle": "^4.1",
         "symfony/web-server-bundle": "^4.1"
     },
@@ -128,7 +128,7 @@
     },
     "extra": {
         "symfony": {
-            "allow-contrib": false,
+            "allow-contrib": true,
             "require": "4.*"
         }
     }

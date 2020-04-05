@@ -16,38 +16,39 @@
 
 use App\Utilities\SessionTrait;
 use Symfony\Component\Templating\EngineInterface;
+use Twig\Environment;
 
 /**
  * The controller base class
  *
- * @package core 
+ * @package core
  * @author The myTravelbook Team <http://www.sourceforge.net/projects/mytravelbook>
  * @copyright Copyright (c) 2005-2006, myTravelbook Team
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License (GPL)
  * @abstract
  */
-abstract class PAppController implements PApplication 
+abstract class PAppController implements PApplication
 {
     use SessionTrait;
 
     /**
      * The database access object
-     * 
+     *
      * @var object
      */
     protected $dao;
 
     /**
-     * @var EngineInterface
+     * @var Environment
      */
-    protected $engine;
+    protected $environment;
 
     /**
      * The constructor
-     * 
+     *
      * @param void
      */
-    public function __construct() 
+    public function __construct()
     {
         // instantiate the dao
         $db = PVars::getObj('config_rdbms');
@@ -58,21 +59,21 @@ abstract class PAppController implements PApplication
         $this->dao =& $dao;
         $this->setSession();
     }
-    
+
     /**
      * The destructor
-     * 
+     *
      * @param void
      */
-    public function __destruct() 
+    public function __destruct()
     {
         unset($this->dao);
     }
 
-    public function setEngine(EngineInterface $engine)
+    public function setEnvironment(Environment $environment)
     {
-        $this->engine = $engine;
+        $this->environment = $environment;
 
         return $this;
     }
-} 
+}

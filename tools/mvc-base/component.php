@@ -4,16 +4,21 @@
 use App\Utilities\SessionTrait;
 use Symfony\Component\Asset\Package;
 use Symfony\Component\Asset\VersionStrategy\JsonManifestVersionStrategy;
+use Symfony\WebpackEncoreBundle\Asset\EntrypointLookup;
 
 class RoxComponentBase
 {
     use SessionTrait;
 
     protected $package;
+    /**
+     * @var EntrypointLookup
+     */
+    protected $entryPointLookup;
 
     public function __construct() {
         $this->setSession();
-        $this->package = new Package(new JsonManifestVersionStrategy('build/manifest.json'));
+        $this->entryPointLookup = new EntrypointLookup('build/entrypoints.json');
     }
 
     // TODO: The __get / __set mechanic is quite cool, but
@@ -25,7 +30,7 @@ class RoxComponentBase
     // Anyway, PHP doc says that __get and __set are always public.
     private $_parameters = array();  // injected parameters
     private $_cache = array();  // cache for __get methods
-    
+
     function __call($key, $args)
     {
         if (empty($args)) {
@@ -37,7 +42,7 @@ class RoxComponentBase
         }
         return false;
     }
-    
+
     function __get($key)
     {
         if (isset($this->_parameters[$key])) {
@@ -50,8 +55,8 @@ class RoxComponentBase
             return false;
         }
     }
-    
-    
+
+
 
     function __set($key, $value)
     {
@@ -71,22 +76,22 @@ class RoxComponentBase
             $this->_parameters[$key] = $value;
         }
     }
-    
+
     protected function get($key) {
         return isset($this->_parameters[$key]) ? $this->_parameters[$key] : false;
     }
-    
+
     protected function getValues()
     {
         return $this->_parameters;
     }
-    
+
     function refresh_get($key)
     {
         $methodname = 'get_'.$key;
         return $this->_cache[$key] = $this->$methodname();
     }
-    
+
     function __toString() {
         return print_r($this, true);
     }
@@ -97,7 +102,7 @@ class RoxComponentBase
      *
      * @access protected
      * @return object
-     */    
+     */
     protected function getWords()
     {
         if (!$this->MOD_words)
@@ -149,7 +154,6 @@ class RoxComponentBase
 
     protected function getUrl($path)
     {
-        return $this->package->getUrl($path);
     }
 }
 

@@ -45,6 +45,9 @@ security:
             logout:
                 path:   /logout
                 target: /
+            guard:
+                authenticators:
+                    - App\Security\LoginFormAuthenticator
 
 #            access_denied_handler: App\Security\AccessDeniedHandler
 

@@ -2,11 +2,11 @@
 twig:
   debug:            "%kernel.debug%"
   strict_variables: "%kernel.debug%"
-  exception_controller:  twig.controller.exception::showAction
   form_themes:
     - 'bootstrap_4_layout.html.twig'
     - 'ckeditor/ckeditor.html.twig'
 
   paths:
-    # point this wherever your images live
-    '%kernel.project_dir%/public/images': 'images'
+      '%kernel.project_dir%/build': 'build'
+      '%kernel.project_dir%/public/images': 'images'
+      '%kernel.project_dir%/public': 'public'

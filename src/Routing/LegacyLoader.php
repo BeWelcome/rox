@@ -98,9 +98,7 @@ class LegacyLoader extends Loader
         $this->addRouteDirectly('group_add_related_group', '/groups/{groupId}/selectrelatedgroup');
         $this->addRouteDirectly('group_invite_member', '/groups/{groupId}/invitemembers/search');
         $this->addRouteDirectly('community', '/community');
-        $this->addRouteDirectly('faq', '/faq');
         $this->addRouteDirectly('about_faq', '/about/faq');
-        $this->addRouteDirectly('faq_category', '/faq/{category}');
         $this->addRouteDirectly('about_faq_category', '/about/faq/{category}');
         $this->addRouteDirectly('about', '/about');
         $this->addRouteDirectly('about_people', '/about/thepeople');

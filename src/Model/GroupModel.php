@@ -195,7 +195,7 @@ class GroupModel
             $comment->setLanguage($language);
             $comment->setSentence($reason);
             $comment->setOwner($member);
-            $comment->setIdtranslator($member->getId());
+            $comment->setTranslator($member->getId());
 
             $em->persist($comment);
             $em->flush();
@@ -289,7 +289,7 @@ class GroupModel
         $description = new MemberTranslation();
         $description
             ->setOwner($member->getId())
-            ->setIdTranslator($member->getId())
+            ->setTranslator($member->getId())
             ->setSentence($data->description)
             ->setIdrecord($group->getId())
             ->setLanguage($language);
@@ -300,7 +300,7 @@ class GroupModel
         $groupComment = new MemberTranslation();
         $groupComment
             ->setOwner($member->getId())
-            ->setIdtranslator($member->getId())
+            ->setTranslator($member->getId())
             ->setSentence('Group creator')
             ->setIdrecord($group->getId())
             ->setLanguage($english);

@@ -56,7 +56,7 @@
                 </div>
                 <div class="col-12 mt-1">
                     <a href="{{ url('about') }}" class="font-weight-bold">{{ 'aboutuspage' | trans }}</a> &bull;
-                    <a href="{{ url('terms_french') }}" class="footnav" target="new">{{ 'termsofuse' | trans }}</a> &bull;
+                    <a href="{{ url('terms_language', {'language': app.request.locale}) }}" class="footnav" target="new">{{ 'termsofuse' | trans }}</a> &bull;
                     <a href="{{ url('privacy') }}" class="footnav" target="new">{{ 'privacy' | trans }}</a> &bull;
                     <a href="{{ url('imprint') }}" class="footnav">{{ 'impressum' | trans }}</a> &bull;
                     <a href="{{ url('about_faq') }}" class="footnav">{{ 'faq' | trans }}</a> &bull;
@@ -64,7 +64,7 @@
                     <a href="{{ url('feedback', { IdCategory: 1, RequestURI: url('homepage')}) }}" class="footnav">{{ 'footer.reportbug' | trans }}</a>
                 </div>
                 <div class="col-12 mt-1">
-                    &copy; 2007 &mdash; {{ "now" | date("Y") }} <a href="http://www.bevolunteer.org/"
+                    &copy; 2007 &mdash; {{ "now" | date("Y") }} <a href="https://www.bevolunteer.org/"
                                                                    target="_blank">BeVolunteer</a> and contributors
 
                     - <em>Running on open source <a class="d-inline" href="https://github.com/bewelcome/rox">BW

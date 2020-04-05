@@ -50,7 +50,7 @@ class GroupForumPage extends GroupsBasePage
                 $memberlist_widget->setGroup($this->group);
 
                 $Forums = new ForumsController;
-                $Forums->setEngine($this->engine);
+                $Forums->setEngine($this->environment);
                 $Forums->index('group');
                 //$forums_widget->setGroup($this->getGroup());
 
@@ -72,7 +72,7 @@ class GroupForumsOverviewPage extends GroupsBasePage
     {
         $words = $this->getWords();
         $Forums = new ForumsController;
-        $Forums->setEngine($this->engine);
+        $Forums->setEngine($this->environment);
         $Forums->index();
     }
 

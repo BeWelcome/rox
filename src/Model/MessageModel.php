@@ -422,14 +422,15 @@ class MessageModel
                     messages
                 WHERE
                     messages.IdSender = :id
+                    AND messages.request_id IS NULL
                     AND
                     (
                         Status = 'ToSend'
                         OR
                         Status = 'Sent'
-                        AND
-                        DateSent > DATE_SUB(NOW(), INTERVAL 1 HOUR)
                     )
+                    AND
+                    DateSent > DATE_SUB(NOW(), INTERVAL 1 HOUR)
                 ) AS numberOfMessagesLastHour,
                 (
                 SELECT
@@ -438,14 +439,110 @@ class MessageModel
                     messages
                 WHERE
                     messages.IdSender = :id
+                    AND messages.request_id IS NULL
                     AND
                     (
                         Status = 'ToSend'
                         OR
                         Status = 'Sent'
-                        AND
-                        DateSent > DATE_SUB(NOW(), INTERVAL 1 DAY)
                     )
+                    AND
+                    DateSent > DATE_SUB(NOW(), INTERVAL 1 DAY)
+                ) AS numberOfMessagesLastDay
+            ";
+        $connection = $this->getManager()->getConnection();
+
+        $row = null;
+        try {
+            $query = $connection->prepare($sql);
+            $query->bindValue(':id', $id);
+
+            $result = $query->execute();
+            if ($result) {
+                $row = $query->fetchAll(PDO::FETCH_OBJ);
+            }
+        } catch (DBALException $e) {
+            return false;
+        }
+
+        if (null === $row) {
+            return false;
+        }
+
+        $comments = $row[0]->numberOfComments;
+        $lastHour = $row[0]->numberOfMessagesLastHour;
+        $lastDay = $row[0]->numberOfMessagesLastDay;
+
+        if (
+            $comments < 1 && (
+                $lastHour >= $perHour ||
+                $lastDay >= $perDay)
+        ) {
+            return true;
+        }
+
+        return false;
+    }
+
+
+    /**
+     * Tests if a member has exceeded its limit for sending messages.
+     *
+     * @param Member $member
+     * @param int    $perHour
+     * @param int    $perDay
+     *
+     * @return bool
+     */
+    public function hasRequestLimitExceeded($member, $perHour, $perDay)
+    {
+        $id = $member->getId();
+
+        $sql = "
+            SELECT
+                (
+                SELECT
+                    COUNT(*)
+                FROM
+                    comments
+                WHERE
+                    comments.IdToMember = :id
+                    AND
+                    comments.Quality = 'Good'
+                ) AS numberOfComments,
+                (
+                SELECT
+                    COUNT(*)
+                FROM
+                    messages
+                WHERE
+                    messages.IdSender = :id
+                    AND NOT messages.request_id IS NULL
+                    AND
+                    (
+                        Status = 'ToSend'
+                        OR
+                        Status = 'Sent'
+                    )
+                    AND
+                    DateSent > DATE_SUB(NOW(), INTERVAL 1 HOUR)
+                ) AS numberOfMessagesLastHour,
+                (
+                SELECT
+                    COUNT(*)
+                FROM
+                    messages
+                WHERE
+                    messages.IdSender = :id
+                    AND NOT messages.request_id IS NULL
+                    AND
+                    (
+                        Status = 'ToSend'
+                        OR
+                        Status = 'Sent'
+                    )
+                    AND
+                    DateSent > DATE_SUB(NOW(), INTERVAL 1 DAY)
                 ) AS numberOfMessagesLastDay
             ";
         $connection = $this->getManager()->getConnection();

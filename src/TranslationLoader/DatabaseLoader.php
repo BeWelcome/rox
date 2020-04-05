@@ -6,6 +6,7 @@ use App\Entity\Word;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Translation\Loader\LoaderInterface;
 use Symfony\Component\Translation\MessageCatalogue;
+use Symfony\Component\Translation\MessageCatalogueInterface;
 
 /**
  * DatabaseLoader loads translations from the words table (into the SQL cache).
@@ -44,7 +45,7 @@ class DatabaseLoader implements LoaderInterface
             $messages[$code] = $translation->getSentence();
         }
 
-        $catalogue = new MessageCatalogue($locale, ['messages' => $messages, 'validators' => $validators]);
+        $catalogue = new MessageCatalogue($locale, ['messages'.MessageCatalogueInterface::INTL_DOMAIN_SUFFIX => $messages, 'validators' => $validators]);
 
         return $catalogue;
     }

@@ -3,12 +3,19 @@
 namespace App\Repository;
 
 use App\Doctrine\MemberStatusType;
-use Doctrine\ORM\EntityRepository;
+use App\Entity\Member;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bridge\Doctrine\Security\User\UserLoaderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-class MemberRepository extends EntityRepository implements UserLoaderInterface
+class MemberRepository extends ServiceEntityRepository implements UserLoaderInterface
 {
+    public function __construct(ManagerRegistry $registry)
+    {
+        parent::__construct($registry, Member::class);
+    }
+
     /**
      * Loads the user for the given username.
      *

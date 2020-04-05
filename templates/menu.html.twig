@@ -118,7 +118,7 @@
                                     <div class="py-3 pr-3">
                                         <a href="{{ url('about') }}" class="h4">{{ 'getanswers' | trans }}</a>
 
-                                        <a href="{{ url('faq') }}"
+                                        <a href="{{ url('about_faq') }}"
                                            class="btn btn-block py-1 text-left mt-1">{{ 'menu.faq' | trans }}</a>
                                         <a href="{{ url('feedback') }}"
                                            class="btn btn-block py-1 text-left">{{ 'contactus' | trans }}</a>
@@ -231,11 +231,11 @@
             <div class="row no-gutters justify-content-end">
                 <div class="py-2">
                     {% if not groupsInApprovalQueue is null %}<a class="btn btn-primary btn-sm"
-                                                              href="{{ path('admin_groups_approval') }}">{% transchoice groupsInApprovalQueue %}admin.groups.awaiting.approval{% endtranschoice %}</a>{% endif %}
+                                                              href="{{ path('admin_groups_approval') }}">{{ 'label.admin.groups.awaiting.approval' | trans({'groups':groupsInApprovalQueue}) }}</a>{% endif %}
                     {% if not reportedCommentsCount is null %}<a class="btn btn-primary btn-sm"
-                        href="{{ path('admin_comment_reported_overview') }}">{% transchoice reportedCommentsCount %}admin.comments.reported{% endtranschoice %}</a>{% endif %}
+                        href="{{ path('admin_comment_reported_overview') }}">{{ 'label.admin.comments.reported'|trans({'comments':reportedCommentsCount}) }}</a>{% endif %}
                     {% if not reportedMessagesCount is null %}<a class="btn btn-primary btn-sm"
-                        href="{{ path('admin_spam_messages') }}">{% transchoice reportedMessagesCount %}admin.spam.reported{% endtranschoice %}</a>{% endif %}
+                        href="{{ path('admin_spam_messages') }}">{{ 'label.admin.messages.reported'|trans({'messages': reportedMessagesCount}) }}</a>{% endif %}
                 </div>
             </div>
         </div>

@@ -6,12 +6,12 @@
 {% endblock %}
 
 {% block javascripts %}
-    <script src="{{ asset('build/jquery_ui.js') }}"></script>
-    <script src="{{ asset('build/member/autocomplete.js') }}"></script>
+    {{ encore_entry_script_tags('jquery_ui') }}
+    {{ encore_entry_script_tags('member/autocomplete') }}
 {% endblock %}
 
 {% block stylesheets %}
-    <link rel="stylesheet" href="{{ asset('build/jquery_ui.css') }}" />
+    {{ encore_entry_link_tags('jquery_ui') }}
 {% endblock stylesheets %}
 
 {% block content %}

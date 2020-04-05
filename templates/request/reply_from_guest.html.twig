@@ -2,7 +2,7 @@
 {% import 'macros.twig' as macros %}
 
 {% block javascripts %}
-    <script type="text/javascript" src="{{ asset('build/requests.js') }}"></script>
+    {{ encore_entry_script_tags('build/requests.js') }}"
 {% endblock javascripts %}
 
 {% block subnav %}

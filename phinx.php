@@ -16,15 +16,16 @@ $config = [
         'default_database' => 'development',
         'development' => [
             'adapter' => 'mysql',
-            'host' => getenv('DB_HOST'),
-            'name' => getenv('DB_NAME'),
-            'user' => getenv('DB_USER'),
-            'pass' => getenv('DB_PASS'),
-            'port' => getenv('DB_PORT'),
+            'host' => $_ENV['DB_HOST'],
+            'name' => $_ENV['DB_NAME'],
+            'user' => $_ENV['DB_USER'],
+            'pass' => $_ENV['DB_PASS'],
+            'port' => $_ENV['DB_PORT'],
             'charset' => 'utf8mb4',
         ],
     ],
 ];
 
 echo print_r($config, true);
+
 return $config;

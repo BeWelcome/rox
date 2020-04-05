@@ -4,7 +4,6 @@ rox_local.ini
 .php_cs.cache
 .phpunit.result.cache
 /data/*
-!/data/.keep
 google*.html
 tools/testenv/images/status.csv
 components/*
@@ -63,14 +62,6 @@ bewelcome.sql.bz2
 /.php_cs
 /.php_cs.cache
 ###< friendsofphp/php-cs-fixer ###
-
-###> phpunit/phpunit ###
-/phpunit.xml
-###< phpunit/phpunit ###
-###> symfony/web-server-bundle ###
-/.web-server-pid
-###< symfony/web-server-bundle ###
-
 ###> symfony/phpunit-bridge ###
 .phpunit
 /phpunit.xml
@@ -82,3 +73,8 @@ bewelcome.sql.bz2
 npm-debug.log
 yarn-error.log
 ###< symfony/webpack-encore-bundle ###
+
+###> squizlabs/php_codesniffer ###
+/.phpcs-cache
+/phpcs.xml
+###< squizlabs/php_codesniffer ###

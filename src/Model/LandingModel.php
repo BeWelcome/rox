@@ -8,6 +8,7 @@ use App\Repository\ActivityRepository;
 use App\Utilities\ManagerTrait;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+use Doctrine\ORM\Query\Expr;
 use Exception;
 
 class LandingModel
@@ -116,8 +117,12 @@ class LandingModel
         $queryBuilder
             ->select('ft')
             ->from('App:ForumThread', 'ft')
-            ->where("ft.threadDeleted = 'NotDeleted'")
-            ->orderBy('ft.lastPostid', 'desc');
+            ->join('App:ForumPost', 'fp',  Expr\Join::WITH, 'ft.lastPost = fp.id')
+//            ->addSelect('fp.created')
+            ->where("ft.deleted = 'NotDeleted'")
+            ->andWhere("fp.deleted = 'NotDeleted'")
+            ->orderBy('fp.created', 'desc')
+        ;
 
         $groupIds = [];
         if ($groups) {

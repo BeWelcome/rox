@@ -38,4 +38,11 @@ class LegacyPasswordEncoder implements PasswordEncoderInterface
             )
         );
     }
+
+    public function needsRehash(string $encoded): bool
+    {
+        $isOldHash = strlen($encoded) == 45 && strpos($encoded, '*') !== false;
+
+        return $isOldHash;
+    }
 }

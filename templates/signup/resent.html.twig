@@ -1,0 +1,10 @@
+{% extends 'base-lite.html.twig' %}
+{% import 'macros.twig' as macros %}
+
+{% block title %}
+BeWelcome - {{ 'signup' | trans }}
+{% endblock title %}
+
+{% block content %}
+    {% include '_partials/signup/resent.html.twig' %}
+{% endblock content %}

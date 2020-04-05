@@ -22,6 +22,7 @@ Boston, MA  02111-1307, USA.
 
 */
 
+use App\Entity\MemberPreference;
 use Carbon\Carbon;
 
 /**
@@ -122,30 +123,17 @@ WHERE `Email` = \'' . $this->dao->escape(strtolower($email)).'\'';
     {
         $email = $this->dao->escape($email);
 
-        // Thanks to the messed up database we need to check more than just the DB column
-        // First try with the 'real' email address and a plain entry in AdminCryptedValue
-        // Second try with the 'real' email address and an 'XML' entry in AdminCryptedValue
-        // And finally check for a 'URL encoded' email address only happens with an 'XML' entry
-        $query = "
-            SELECT `Username`, members.`Status`, members.`id` AS `idMember`
-            FROM " . PVars::getObj('syshcvol')->Crypted . "`cryptedfields`
-            RIGHT JOIN `members` ON members.`id` = cryptedfields.`IdMember`";
-        if ($this->session->has( 'IdMember' )) {
-            $query .= ' AND members.`id`!=' . $this->session->get('IdMember');
+        $result = $this->dao->query("SELECT email FROM members m WHERE m.email = '{$email}'");
+
+        if ($result) {
+            $row = $result->fetch(PDB::FETCH_OBJ);
+            if ($row) {
+                $text = "Non unique email address: " . $email . " (With New Signup !)";
+                MOD_log::get()->write($text, "Signup");
+                return $text;
+            }
         }
-        $query .= " WHERE (`AdminCryptedValue` = '" . $email . "'";
-        $query .= " OR `AdminCryptedValue` = '<admincrypted>" . $email . "</admincrypted>'";
-        $email = str_replace("@", "%40", $email);
-        $query .= " OR `AdminCryptedValue` = '<admincrypted>" . $email . "</admincrypted>')";
-        $s = $this->dao->query($query);
-        $found = ($s->numRows() != 0);
-        if (!$found) {
-			if (!empty($email)) MOD_log::get()->write("Unique email checking done successfuly","Signup") ;
-            return '';
-        }
-        $text = "Non unique email address: " . $email . " (With New Signup !)";
-		MOD_log::get()->write($text, "Signup");
-		return $text;
+        return '';
     } // end takeCareForNonUniqueEmailAddress
 
     /**
@@ -364,49 +352,25 @@ WHERE `ShortCode` = \'' . $this->session->get('lang') . '\'';
         return $result->id;
     }
 
-    public function registerTBMember($vars)
+    private function getPreferenceId($preference)
     {
-        $Auth = new MOD_bw_user_Auth;
-        $authId = $Auth->checkAuth('defaultUser');
-
-        $query = '
-INSERT INTO `user`
-(`auth_id`, `handle`, `email`, `active`)
-VALUES
-(
-    '.(int)$authId.',
-    \'' . $vars['username'] . '\',
-    \'' . $vars['email'] . '\',
-    0
-)';
-        $s = $this->dao->query($query);
-        if (!$s->insertId()) {
-            $vars['errors'] = array('inserror');
-            return false;
+        $preferenceID = null;
+        $result = $this->dao->query("SELECT id FROM preferences WHERE codename = '" . $preference . "'");
+        if ($result) {
+            $row = $result->fetch(PDB::FETCH_OBJ);
+            if ($row) {
+                $preferenceID = $row->id;
+            }
         }
-        $userId = $s->insertId();
-        $key = PFunctions::randomString(16);
-        // save register key
-        if (!APP_User::addSetting($userId, 'regkey', $key)) {
-            $vars['errors'] = array('inserror');
-            return false;
+        if (null === $preferenceID) {
+            throw new Exception("Can't find preference " . $preference . ".");
         }
-        // save lang
-        if (!APP_User::addSetting($userId, 'lang', PVars::get()->lang)) {
-            $vars['errors'] = array('inserror');
-            return false;
-        }
-
-        return $userId;
+        return $preferenceID;
     }
 
     /**
+     * Registers a new member into the database.
      *
-     * This has NOT been executed:
-     * ALTER TABLE members
-     * MODIFY COLUMN `id` int( 11 ) NOT NULL COMMENT 'IdMember'
-     * As a result, we do NOT use
-     * '.$this->dao->nextId('members').',
      * @param $vars
      * @return bool
      * @throws EntityException
@@ -471,20 +435,21 @@ VALUES
             return function ($v) use ($lang) { return $v->id == $lang; };
         };
 
+        $languagePreferenceID = $this->getPreferenceId("PreferenceLanguage");
+        $newsletterPreferenceID = $this->getPreferenceId("PreferenceAcceptNewsByMail");
+        $localNewsPreferenceID = $this->getPreferenceId("PreferenceLocalEvent");
+
         $update="INSERT INTO memberspreferences (IdMember, IdPreference, Value) VALUES ";
         $filteredLanguages = array_filter($languages, $languageFilter($motherTongue->id));
         if (!empty($filteredLanguages)) {
-            // \todo Remove hard coded pointer into preference table
-            $update .= "($memberEntity->id, 1, " . $motherTongue->id . ")," . PHP_EOL;
+            $update .= "($memberEntity->id, $languagePreferenceID, " . $motherTongue->id . ")," . PHP_EOL;
         }
 
         // Set newsletter preference
-        // \todo Remove hard coded pointer into preference table
-        $update .= "($memberEntity->id, 8, '" . $vars['newsletters'] . "'), " . PHP_EOL;
+        $update .= "($memberEntity->id, $newsletterPreferenceID, '" . $vars['newsletters'] . "'), " . PHP_EOL;
 
         // Set local info preference
-        // \todo Remove hard coded pointer into preference table
-        $update .= "($memberEntity->id, 13, '" . $vars['local-info'] . "')" . PHP_EOL;
+        $update .= "($memberEntity->id, $localNewsPreferenceID, '" . $vars['local-info'] . "')" . PHP_EOL;
 
         $this->dao->query($update);
 

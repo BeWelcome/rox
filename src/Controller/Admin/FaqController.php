@@ -62,7 +62,7 @@ class FaqController extends AbstractController
      */
     public function showOverviewAction(Request $request, FaqCategory $faqCategory)
     {
-        if (!$this->isGranted([Member::ROLE_ADMIN_FAQ])) {
+        if (!$this->isGranted(Member::ROLE_ADMIN_FAQ)) {
             throw $this->createAccessDeniedException('You need to have Faq right to access this.');
         }
 
@@ -117,7 +117,7 @@ class FaqController extends AbstractController
      */
     public function createCategoryAction(Request $request, TranslationModel $translationModel)
     {
-        if (!$this->isGranted([Member::ROLE_ADMIN_FAQ])) {
+        if (!$this->isGranted(Member::ROLE_ADMIN_FAQ)) {
             throw $this->createAccessDeniedException('You need to have Faq right to access this.');
         }
 
@@ -191,7 +191,7 @@ class FaqController extends AbstractController
      */
     public function createFaqInCategoryAction(Request $request, FaqCategory $faqCategory, TranslationModel $translationModel)
     {
-        if (!$this->isGranted([Member::ROLE_ADMIN_FAQ])) {
+        if (!$this->isGranted(Member::ROLE_ADMIN_FAQ)) {
             throw $this->createAccessDeniedException('You need to have Faq right to access this.');
         }
 
@@ -283,7 +283,7 @@ class FaqController extends AbstractController
      */
     public function editCategoryAction(Request $request, FaqCategory $faqCategory, TranslationModel $translationModel)
     {
-        if (!$this->isGranted([Member::ROLE_ADMIN_FAQ])) {
+        if (!$this->isGranted(Member::ROLE_ADMIN_FAQ)) {
             throw $this->createAccessDeniedException('You need to have Faq right to access this.');
         }
 
@@ -332,7 +332,7 @@ class FaqController extends AbstractController
      */
     public function editFaqAction(Request $request, Faq $faq)
     {
-        if (!$this->isGranted([Member::ROLE_ADMIN_FAQ])) {
+        if (!$this->isGranted(Member::ROLE_ADMIN_FAQ)) {
             throw $this->createAccessDeniedException('You need to have Faq right to access this.');
         }
 
@@ -418,7 +418,7 @@ class FaqController extends AbstractController
      */
     public function sortFaqCategoriesAction(Request $request, TranslatorInterface $translator)
     {
-        if (!$this->isGranted([Member::ROLE_ADMIN_FAQ])) {
+        if (!$this->isGranted(Member::ROLE_ADMIN_FAQ)) {
             throw $this->createAccessDeniedException('You need to have Faq right to access this.');
         }
 
@@ -474,7 +474,7 @@ class FaqController extends AbstractController
      */
     private function getSubMenuItems(FaqCategory $faqCategory = null)
     {
-        if (!$this->isGranted([Member::ROLE_ADMIN_FAQ])) {
+        if (!$this->isGranted(Member::ROLE_ADMIN_FAQ)) {
             throw $this->createAccessDeniedException('You need to have Faq right to access this.');
         }
 

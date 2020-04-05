@@ -135,7 +135,7 @@ class PageWithRoxLayout extends PageWithHTML
     {
         $template = 'menu.html.twig';
 
-        $topmenu = $this->engine->render($template);
+        $topmenu = $this->environment->render($template);
 
         echo $topmenu;
     }
@@ -205,7 +205,7 @@ class PageWithRoxLayout extends PageWithHTML
      */
     protected function footer()
     {
-        echo $this->engine->render('footer.html.twig');
+        echo $this->environment->render('footer.html.twig');
         // require SCRIPT_BASE . "build/rox/templates/footer.php";
     }
 

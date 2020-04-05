@@ -2,7 +2,7 @@
 {% import 'macros.twig' as macros %}
 
 {% block javascripts %}
-    <script src="{{ asset('build/bsfileselect.js') }}"></script>
+    {{ encore_entry_script_tags('bsfileselect') }}
     <script type="text/javascript">
         document.getElementById("upload").addEventListener("click", uploadFiles);
         document.getElementById("abort").addEventListener("click", uploadAbort);

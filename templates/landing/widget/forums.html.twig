@@ -4,13 +4,19 @@
     {# 5 most recent forum messages #}
     {% for thread in threads %}
         <div class="d-flex flex-row justify-content-start align-items-center p-2">
-            <div class="pr-2">{{ macros.avatar(thread.firstpost.author.Username, 50, true) }}</div>
+            <div class="pr-2">{{ macros.avatar(thread.firstPost.author.Username, 50, true) }}</div>
             <div class="dashentry">
                 <div class="text-truncate text">
                     <a href="{{ url('forum_thread', {'threadId': thread.id}) }}">{{ thread.title }}</a>
                 </div>
                 <div>
-                    <small>in <a href={%  if thread.group.id != 0 %}"{{ url('group_start', {'group_id': thread.group.id}) }}">{{ thread.group.name }}{% else %}"/forums/bwforum">{{ 'dashboard.bwforum' | trans }}{% endif %}</a> {{ 'thread.lastpostby' | trans }} {{ macros.profilelink(thread.lastpost.author.Username) }} <span title="{{ thread.lastpost.updated.toDateTimeString }}">{{ thread.lastpost.updated.diffForHumans }}</span> </small>
+                    <small>in
+                    {%- if thread.group.id != 0 %}
+                        <a href="{{ url('group_start', {'group_id': thread.group.id}) }}">{{ thread.group.name }}</a>
+                    {% else %}
+                        <a href="{{ url('bwforum') }}">{{ 'dashboard.bwforum' | trans }}</a>
+                    {% endif %} {{ 'thread.lastpostby' | trans }} {{ macros.profilelink(thread.lastpost.author.Username) }} <span title="{{ thread.lastpost.updated.toDateTimeString }}">{{ thread.lastpost.updated.diffForHumans }}</span>
+                    </small>
                 </div>
 
             </div>

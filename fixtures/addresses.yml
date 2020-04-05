@@ -1,0 +1,8 @@
+App\Entity\Address:
+  address_{2..10}:
+    member: "@member_<current()>"
+    housenumber: 0
+    streetname: 0
+    rank: 1
+    city: '@Berlin'
+

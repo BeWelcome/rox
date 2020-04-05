@@ -84,7 +84,7 @@ class MemberPage extends PageWithActiveSkin
             $tt=array(
                 array('editmyprofile', 'editmyprofile/' . $profile_language_code, '<i class="fa fa-fw fa-edit"></i> ' . $ww->EditMyProfile, 'editmyprofile'),
                 array('mypreferences', 'mypreferences', '<i class="fa fa-fw fa-cogs"></i> ' . $ww->MyPreferences, 'mypreferences'),
-                array('mydata', 'mydata/'.$username, '<i class="fa fa-fw fa-database"></i> ' . $ww->MyData, 'mydata'),
+                array('mydata', 'mydata', '<i class="fa fa-fw fa-database"></i> ' . $ww->MyData, 'mydata'),
                 array('mynotes', 'mynotes', '<i class="fa fa-fw fa-sticky-note"></i> ' . $words->get('MyNotes', '<span class="badge badge-primary pull-right">' . $mynotes_count . '</span>'), 'mynotes')
                 );
 
@@ -145,8 +145,8 @@ class MemberPage extends PageWithActiveSkin
         {
             $tt[] = array('adminedit',"members/{$username}/adminedit", '<i class="fa fa-fw fa-bed invisible"></i> Admin: Edit Profile');
         }
-        if (MOD_right::get()->HasRight('SafetyTeam') || MOD_right::get()->HasRight('Admin') || Mod_right::get()->HasRight('Profile')) {
-            $tt[] = array('mydata', 'mydata/'.$username, '<i class="fa fa-fw fa-database"></i> ' . $ww->PersonalData, 'personaldata');
+        if (MOD_right::get()->HasRight('SafetyTeam') || MOD_right::get()->HasRight('Admin')) {
+            $tt[] = array('mydata', 'members/'.$username.'/data', '<i class="fa fa-fw fa-database"></i> ' . $ww->PersonalData, 'personaldata');
         }
         if (MOD_right::get()->HasRight('Rights')) {
             array_push($tt,array('adminrights','admin/rights/list/members/'.$username, '<i class="fa fa-fw fa-bed invisible"></i> ' .  $ww->AdminRights) ) ;

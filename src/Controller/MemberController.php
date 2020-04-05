@@ -2,25 +2,9 @@
 
 namespace App\Controller;
 
-use App\Entity\Activity;
-use App\Entity\ActivityAttendee;
-use App\Entity\BroadcastMessage;
-use App\Entity\CommunityNews;
-use App\Entity\CommunityNewsComment;
-use App\Entity\Donation;
-use App\Entity\Newsletter;
-use App\Entity\Comment;
-use App\Entity\CryptedField;
-use App\Entity\ForumPost;
-use App\Entity\GroupMembership;
-use App\Entity\Log;
 use App\Entity\Member;
-use App\Entity\MembersPhoto;
-use App\Entity\MemberTranslation;
 use App\Entity\Message;
 use App\Entity\PasswordReset;
-use App\Entity\Preference;
-use App\Form\FindUserFormType;
 use App\Form\ResetPasswordFormType;
 use App\Logger\Logger;
 use App\Model\MemberModel;
@@ -32,20 +16,13 @@ use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
 use Doctrine\ORM\NonUniqueResultException;
 use Exception;
-use Html2Text\Html2Text;
-use Mockery\Container;
-use RecursiveDirectoryIterator;
-use RecursiveIteratorIterator;
-use Swift_Message;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
-use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -53,13 +30,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Routing\Generator\UrlGenerator;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Security\Core\Encoder\EncoderFactory;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Validator\Constraints\NotBlank;
-use ZipArchive;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 /**
@@ -73,15 +46,71 @@ class MemberController extends AbstractController
     use TranslatedFlashTrait;
 
     /**
-     * @Route("/mydata/{username}", name="member_get_data")
+     * @Route("/mydata", name="member_personal_data")
+     *
+     * @param Request $request
+     * @param Logger $logger
+     * @param ContainerBagInterface $params
+     * @param MemberModel $memberModel
+     * @param Security $security
+     * @param EncoderFactoryInterface $encoderFactory
+     * @return StreamedResponse|Response
+     * @throws Exception
+     */
+    public function getPersonalDataSelf(
+        Request $request,
+        ContainerBagInterface $params,
+        MemberModel $memberModel,
+        Security $security,
+        EncoderFactoryInterface $encoderFactory
+    )
+    {
+        $passwordForm = $this->createFormBuilder()
+            ->add('password', PasswordType::class)
+            ->add('submit', SubmitType::class)
+            ->getForm();
+        $passwordForm->handleRequest($request);
+
+        if ($passwordForm->isSubmitted() && $passwordForm->isValid())
+        {
+            /** @var Member $member */
+            $member = $this->getUser();
+            $password=$passwordForm->get('password')->getData();
+
+            $token = $security->getToken();
+
+            if ($token)
+            {
+                $encoder = $encoderFactory->getEncoder($member);
+
+                if ($encoder->isPasswordValid($member->getPassword(), $password, $member->getSalt())) {
+                    // Collect information and store in zip file
+                    $zipFilename = $memberModel->collectPersonalData($params, $member);
+
+                    $request->getSession()->set('mydata_file', $zipFilename);
+                    return $this->render('private/download.html.twig', [
+                        'username' => $member->getUsername(),
+                        'url' => $this->generateUrl('member_download_data', ['username' => $member->getUsername()]),
+                    ]);
+                } else {
+                    $passwordForm->addError(new FormError($this->translator->trans("password.incorrect")));
+                }
+            }
+        }
+
+        return $this->render('private/password.html.twig', [
+            'form' => $passwordForm->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/members/{username}/data", name="admin_personal_data")
      *
      * @param Request $request
      * @param Member $member
      * @param Logger $logger
      * @param ContainerBagInterface $params
      * @param MemberModel $memberModel
-     * @param Security $security
-     * @param EncoderFactoryInterface $encoderFactory
      * @return StreamedResponse|Response
      * @throws Exception
      * @ParamConverter("member", class="App\Entity\Member", options={"mapping": {"username": "username"}})
@@ -91,64 +120,23 @@ class MemberController extends AbstractController
         Member $member,
         Logger $logger,
         ContainerBagInterface $params,
-        MemberModel $memberModel,
-        Security $security,
-        EncoderFactoryInterface $encoderFactory
+        MemberModel $memberModel
     ) {
         // Either the member themselves or a person from the safety or the admin can access
-        $allowed = false;
-        $passwordForm = null;
-        if ($member != $this->getUser()) {
-            $this->denyAccessUnlessGranted(
-                [Member::ROLE_ADMIN_SAFETYTEAM, Member::ROLE_ADMIN_ADMIN],
-                null,
-                'Unable to access this page!'
-            );
-            $logger->write('Extracting personal data for ' . $member->getUsername(), 'Members');
-            $allowed = true;
-        }
-        else
-        {
-            // If user themselves ask for data check password first
-            $passwordForm = $this->createFormBuilder()
-                ->add('password', PasswordType::class)
-                ->add('submit', SubmitType::class)
-                ->getForm();
-            $passwordForm->handleRequest($request);
+        $this->denyAccessUnlessGranted(
+            [Member::ROLE_ADMIN_ADMIN],
+            null,
+            'Unable to access this page!'
+        );
 
-            if ($passwordForm->isSubmitted() && $passwordForm->isValid())
-            {
-                $password=$passwordForm->get('password')->getData();
+        $logger->write('Extracting personal data for ' . $member->getUsername(), 'Members');
 
-                $token = $security->getToken();
+        $zipFilename = $memberModel->collectPersonalData($params, $member);
 
-                if ($token)
-                {
-                    $encoder = $encoderFactory->getEncoder($member);
-
-                    if ($encoder->isPasswordValid($member->getPassword(), $password, $member->getSalt())) {
-                        $allowed = true;
-                    } else {
-                        $passwordForm->addError(new FormError($this->translator->trans("password.incorrect")));
-                    }
-                }
-            }
-        }
-
-        if ($allowed)
-        {
-            // Collect information and store in zip file
-            $zipFilename = $memberModel->collectPersonalData($params, $member);
-
-            $request->getSession()->set('mydata_file', $zipFilename);
-            return $this->render('private/download.html.twig', [
-                'username' => $member->getUsername(),
-                'url' => $this->generateUrl('member_download_data', ['username' => $member->getUsername()]),
-            ]);
-        }
-
-        return $this->render('private/password.html.twig', [
-            'form' => $passwordForm->createView(),
+        $request->getSession()->set('mydata_file', $zipFilename);
+        return $this->render('private/download.html.twig', [
+            'username' => $member->getUsername(),
+            'url' => $this->generateUrl('member_download_data', ['username' => $member->getUsername()]),
         ]);
     }
 
@@ -226,6 +214,7 @@ class MemberController extends AbstractController
     {
         // Someone obviously lost their way. No sense in resetting your password if you're currently logged in.
         if ($this->isGranted('ROLE_USER')) {
+            $this->addTranslatedFlash('notice', 'flash.reset.password.not_logged_in');
             return $this->redirectToRoute('landingpage');
         }
 
@@ -235,7 +224,9 @@ class MemberController extends AbstractController
                     new NotBlank(),
                 ],
             ])
-            ->add('reset.password', SubmitType::class)
+            ->add('reset_password', SubmitType::class, [
+                'label' => 'label.reset.password',
+            ])
             ->setMethod('POST')
             ->getForm();
 

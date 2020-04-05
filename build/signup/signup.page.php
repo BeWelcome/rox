@@ -121,7 +121,8 @@ class SignupPage extends SignupBasePage
 
         $callback_tag = $this->layoutkit->formkit->setPostCallback('SignupController', 'signupFormCallback');
 
-        if ($User = APP_User::login()) {
+        $model = $this->getModel();
+        if ($User = $model->getLoggedInMember()) {
             // show the page anyway.
             // redirect should happen in the controller.
             // but for translators show the page.

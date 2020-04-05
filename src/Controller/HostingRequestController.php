@@ -288,7 +288,7 @@ class HostingRequestController extends BaseMessageController
         }
 
         if (
-            $this->messageModel->hasMessageLimitExceeded(
+            $this->messageModel->hasRequestLimitExceeded(
                 $member,
                 $this->getParameter('new_members_messages_per_hour'),
                 $this->getParameter('new_members_messages_per_day')

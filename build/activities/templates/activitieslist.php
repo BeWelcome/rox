@@ -13,7 +13,7 @@ if ($this->allActivities != null && sizeof ($this->allActivities) > 0){
 
     // activities map data
     echo '<div id="activities-data" class="table-responsive">';
-    
+
     $latitudeMin = null;
     $latitudeMax = null;
     $longitudeMin = null;
@@ -26,26 +26,26 @@ if ($this->allActivities != null && sizeof ($this->allActivities) > 0){
 
         if ($location != null && $location->latitude != null && $location->longitude != null){
             echo '<tr>';
-            
+
             // activity title
             echo '<td>' . $activity->title . '</td>';
-            
+
             // location name
             echo '<td>' . $location->name . '</td>';
             // location latitude
             echo '<td>' . $location->latitude . '</td>';
             // location longitude
             echo '<td>' . $location->longitude . '</td>';
-            
+
             // activity details link URL
             echo '<td>' . $env_conf->baseuri . 'activities/' . $activity->id . '</td>';
-            
+
             // date start
             echo '<td>' . $activity->dateStart . '</td>';
-            
+
             // address
             echo '<td>' . $activity->address . '</td>';
-            
+
             echo '</tr>';
 
             // update the bounds of the map with this point
@@ -68,10 +68,10 @@ if ($this->allActivities != null && sizeof ($this->allActivities) > 0){
 
     }
     echo '</table>';
-    
+
     if ($latitudeMin != null){
         // at least one point with valid location
-        
+
         // min & max latitude
         echo '<input type="hidden" id="activity-data-min-latitude" value="' . $latitudeMin . '" />';
         echo '<input type="hidden" id="activity-data-max-latitude" value="' . $latitudeMax . '" />';
@@ -132,11 +132,11 @@ foreach($this->activities as $activity) {
                 }
                 echo $locationName . '<br>' . $countryName; ?>
             </div>
-            <div class="px-2"><i class="fa fa-25 fa-map-marker-alt"></i></div>
+            <div class="px-2"><i class="fa fa-2x fa-map-marker-alt"></i></div>
         </div>
 
         <div class="ml-auto flex-md-row d-none d-md-flex">
-            <div><i class="fa fa-25 fa fa-user-circle-o"></i></div>
+            <div><i class="far fa-2x fa-user"></i></div>
             <div class="attendees">
                         <?php
                         echo '<p class="p-0 m-0 pl-2';

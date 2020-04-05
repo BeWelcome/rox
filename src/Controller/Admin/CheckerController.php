@@ -33,7 +33,9 @@ class CheckerController extends AbstractController
      */
     public function showOverview(Request $request, MessageModel $messageModel)
     {
-        if (!$this->isGranted([Member::ROLE_ADMIN_CHECKER, Member::ROLE_ADMIN_SAFETYTEAM])) {
+        if (!$this->isGranted(Member::ROLE_ADMIN_CHECKER)
+            || !$this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
+        ) {
             throw $this->createAccessDeniedException('You need to have Group right to access this.');
         }
 
@@ -92,7 +94,9 @@ class CheckerController extends AbstractController
      */
     public function showActivities(Request $request, ActivityModel $activitiesModel)
     {
-        if (!$this->isGranted([Member::ROLE_ADMIN_CHECKER, Member::ROLE_ADMIN_SAFETYTEAM])) {
+        if (!$this->isGranted(Member::ROLE_ADMIN_CHECKER)
+            || !$this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
+        ) {
             throw $this->createAccessDeniedException('You need to have Group right to access this.');
         }
 

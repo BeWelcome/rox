@@ -174,10 +174,10 @@ class MemberTwigExtension extends AbstractExtension implements GlobalsInterface
         foreach ($allTeams as $name => $team) {
             foreach ($roles as $role) {
                 if (!\in_array($name, $assignedTeams, true)) {
-                    if (\in_array($role->getRole(), $team['rights'], true)) {
+                    if (\in_array($role, $team['rights'], true)) {
                         $add = true;
                         if (isset($team['minimum_level'])) {
-                            $level = $this->member->getLevelForRight($role->getRole());
+                            $level = $this->member->getLevelForRight($role);
                             if ($level !== $team['minimum_level']) {
                                 $add = false;
                             }
@@ -219,7 +219,7 @@ class MemberTwigExtension extends AbstractExtension implements GlobalsInterface
         $reportedCommentsCount = null;
         if (
             $this->security->isGranted(Member::ROLE_ADMIN_COMMENTS) ||
-                $this->security->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
+            $this->security->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
         ) {
             /** @var CommentRepository $commentRepository */
             $commentRepository = $this->getManager()->getRepository(Comment::class);
@@ -234,7 +234,7 @@ class MemberTwigExtension extends AbstractExtension implements GlobalsInterface
         $reportedMessagesCount = null;
         if (
             $this->security->isGranted(Member::ROLE_ADMIN_CHECKER) ||
-                $this->security->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
+            $this->security->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
         ) {
             /** @var MessageRepository $messageRepository */
             $messageRepository = $this->getManager()->getRepository(Message::class);

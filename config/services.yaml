@@ -6,6 +6,8 @@
 parameters:
   new_members_messages_per_hour: "%env(new_members_messages_per_hour)%"
   new_members_messages_per_day: "%env(new_members_messages_per_day)%"
+  new_members_requests_per_hour: "%env(new_members_requests_per_hour)%"
+  new_members_requests_per_day: "%env(new_members_requests_per_day)%"
   data_directory: "%kernel.project_dir%/data"
   group_directory: "%kernel.project_dir%/%env(group_directory)%"
   gallery_directory: "%kernel.project_dir%/%env(gallery_directory)%"
@@ -61,7 +63,7 @@ services:
   rox.legacy_kernel:
     class: App\LegacyKernel\LegacyHttpKernel
     public: true
-    arguments: ['@templating.engine.twig', '@event_dispatcher', '@controller_resolver', '@request_stack', '@argument_resolver', '@service_container']
+    arguments: ['@twig', '@event_dispatcher', '@controller_resolver', '@request_stack', '@argument_resolver', '@service_container']
 
   rox.legacy_password_encoder:
     public: true
@@ -110,13 +112,6 @@ services:
     class: App\Logger\Logger
     arguments: ['@doctrine.orm.entity_manager', '@security.helper']
 
-  rox.authentication_listener:
-    public: true
-    class: App\EventListener\AuthListener
-    arguments: ['@doctrine.orm.entity_manager']
-    tags:
-      - { name: kernel.event_listener, event: security.interactive_login, method: onAuthenticationSuccess }
-
   rox.datacollector_translator:
     public: true
     class: Symfony\Component\Translation\DataCollectorTranslator
@@ -164,6 +159,10 @@ services:
   rox.html_purifier:
     class: App\Utilities\CustomHTMLPurifier
     tags: [{ name: exercise.html_purifier, profile: custom }]
+
+  rox.words_extractor:
+    class: App\Utilities\WordsExtractor
+    tags: [{ name: translation.extractor, alias: words }]
 
 #  rox.activator:
 #    class: App\Activator\RoleActivator

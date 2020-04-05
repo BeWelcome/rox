@@ -1,0 +1,24 @@
+{# TODO: make a wordcode for this text #}
+
+<div class="row">
+    <div class="col-12 col-lg-6 mb-3">
+        <h1 class="m-0">{{ 'signup.resent.confirmation.link'|trans }}</h1>
+        <p>{{ 'email.greeting'|trans({'%username%': username}) }}<br>
+           sorry you're having trouble completing the signup.</p>
+        <p>We have resent you an email to <strong>{{ email_address }}</strong> that contains a link to confirm your
+            email address and to activate your profile.</p>
+        <p>If you don't find the message in your inbox, <strong>please check the spam folder</strong>. It sometimes
+            happens that automatic e-mail confirmation messages are marked as junk by e-mail providers or by the safety
+            settings in your e-mail program. If you find the confirmation e-mail there just click on the confirmation
+            link and you should be able to access your account.</p>
+        <p>Otherwise contact our <a href="{{ url('feedback', { 'IdCategory':3}) }}">support team</a>.</p>
+    </div>
+
+    <div class="w-100"></div>
+
+    {# TODO: add useful info #}
+    <div class="col-12 col-lg-6">
+        <a href="{{ url('landingpage') }}" class="btn btn-primary">BeWelcome</a>
+    </div>
+
+</div>

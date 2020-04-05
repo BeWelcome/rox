@@ -17,7 +17,7 @@ $edit_mode = $TCom;
 // values from previous form submit
 if (!$mem_redirect = $this->layoutkit->formkit->getMemFromRedirect()) {
     // this is a fresh form
-    $ttRelation = ($TCom) ? explode(',',$TCom->Relation) : array();
+    $ttRelation = ($TCom) ? explode(',',$TCom->Relations) : array();
     if ($this->commentGuidelinesRead) {
         $vars["CommentGuidelines"] = 'checked';
     }
@@ -90,7 +90,7 @@ $callback_tag = $formkit->setPostCallback('MembersController', $callbackFunction
 
 
 <?php
-// Display errors from last submit	
+// Display errors from last submit
 if (isset($vars['errors']) && !empty($vars['errors']))
 {
     foreach ($vars['errors'] as $error)
@@ -99,7 +99,7 @@ if (isset($vars['errors']) && !empty($vars['errors']))
     }
 }
 
-// Display the form to propose to add a comment	
+// Display the form to propose to add a comment
 ?>
 <?php
 if (isset($TCom->comQuality) && $TCom->comQuality == "Bad" && $TCom->AllowEdit != 1) {
@@ -134,7 +134,7 @@ if (isset($TCom->comQuality) && $TCom->comQuality == "Bad" && $TCom->AllowEdit !
                 <i class="fa fa-question"></i>
             </a>
 
-            <select class="custom-select mb-2 mr-sm-2 mb-sm-0" name="Quality" id="Quality">
+            <select class="select2 mb-2 mr-sm-2 mb-sm-0" name="Quality" id="Quality">
                 <option value=""><?=$words->getSilent("CommentQuality_SelectOne")?></option>
                 <option value="Good"
                     <?=(isset($TCom->comQuality) && $TCom->comQuality == "Good") ? " selected " : ""?>
@@ -225,7 +225,7 @@ if (isset($TCom->comQuality) && $TCom->comQuality == "Bad" && $TCom->AllowEdit !
             trigger: 'focus'
         })
     </script>
-<?php 
-} 
+<?php
+}
 $words->flushBuffer();?>
 

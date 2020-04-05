@@ -16,11 +16,17 @@
         <div class="collapse navbar-collapse my-1" id="navbarToggler">
             <div class="d-sm-block d-md-none">
                 <form class="form-inline p-1" method="post" action="{{ url('security_check') }}">
-                    {{ macros.input('_username', 'Username') }}
-                    {{ macros.input('_password', 'Password', '', 'password') }}
+                    <div class="form-group floating-label mr-1">
+                        <label for="_username_1" class="sr-only">Username</label>
+                        <input class="form-control m-1" type="text" id="_username_1" name="_username" placeholder="{{ 'username'|trans }}" value="" />
+                    </div>
+                    <div class="form-group floating-label mr-1">
+                        <label for="_password_1" class="sr-only"></label>
+                        <input class="form-control m-1" type="password" id="_password_1" name="_password" placeholder="{{ 'password'|trans }}" value="">
+                    </div>
                     <div class="form-check">
-                        <input type="checkbox" class="form-check-input" id="login-r" value="1"
-                               name="_remember_me"><label for="login-r" class="form-check-label">
+                        <input type="checkbox" class="form-check-input" id="login-r-1" value="1"
+                               name="_remember_me"><label for="login-r-1" class="form-check-label">
                             &nbsp;{{ 'stayloggedin' | trans }}
                         </label>
                     </div>
@@ -30,10 +36,16 @@
             </div>
             <div>
                 <ul class="nav navbar-nav mr-auto ml-md-3">
-                    <li class="nav-item float-left d-none d-md-block">
+                    <li class="nav-item d-none d-md-block">
                         <form class="form-inline p-1" method="post" action="{{ url('security_check') }}">
-                            {{ macros.input('_username', 'Username') }}
-                            {{ macros.input('_password', 'Password', '', 'password') }}
+                            <div class="form-group floating-label mr-1">
+                                <input class="form-control" type="text" id="_username_2" name="_username" placeholder="{{ 'username'|trans }}" autofocus>
+                                <label for="_username_2">{{ 'username'|trans }}</label>
+                            </div>
+                            <div class="form-group floating-label mr-1">
+                                <input class="form-control" type="password" id="_password_2" name="_password" placeholder="{{ 'password'|trans }}">
+                                <label for="_password_2">{{ 'password'|trans }}</label>
+                            </div>
                             <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
                             <div class="btn-group">
                                 <button type="submit" class="btn btn-primary border-white" id="loginDropdownButton">{{ 'indexpageloginsubmit' | trans }}</button>
@@ -42,8 +54,8 @@
                                 </button>
                                 <div class="dropdown-menu white">
                                     <div class="form-check">
-                                        <input type="checkbox" class="form-check-input" id="login-r" value="1"
-                                               name="_remember_me"><label for="login-r" class="form-check-label">
+                                        <input type="checkbox" class="form-check-input" id="login-r-2" value="1"
+                                               name="_remember_me"><label for="login-r-2" class="form-check-label">
                                             &nbsp;{{ 'stayloggedin' | trans }}
                                     </label>
                                     </div>
@@ -51,9 +63,9 @@
                             </div>
                         </form>
                     </li>
-                    <li class="d-none d-md-inline-block mt-2"><span class="mt-1 mx-2">{{ 'or' | trans }}</span><a
-                                href="/signup" class="btn btn-primary border-white">{{ 'navbar.button.signup'|trans }}</a></li>
-                    <li class="d-block d-md-none mx-1"><a href="/signup"
+                    <li class="d-none d-md-inline-block p-1"><span class="mx-2">{{ 'or' | trans }}</span><a
+                                href="{{ url('signup') }}" class="btn btn-primary border-white">{{ 'navbar.button.signup'|trans }}</a></li>
+                    <li class="d-block d-md-none mx-1"><a href="{{ url('signup') }}"
                                                           class="btn btn-block btn-outline-light">{{ 'navbar.button.signup'|trans }}</a>
                     </li>
                 </ul>

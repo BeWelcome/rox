@@ -2,16 +2,16 @@
 {% import 'macros.twig' as macros %}
 
 {% block javascripts %}
-    <script src="{{ asset('build/jquery_ui.js') }}"></script>
-    <script src="{{ asset('build/leaflet.js') }}"></script>
-    <script src="{{ asset('build/search/searchpicker.js') }}"></script>
-    <script src="{{ asset('build/search/loadcontent.js') }}"></script>
-    <script src="{{ asset('build/search/search.js') }}"></script>
+    {{ encore_entry_script_tags('jquery_ui') }}
+    {{ encore_entry_script_tags('leaflet') }}
+    {{ encore_entry_script_tags('search/searchpicker') }}
+    {{ encore_entry_script_tags('search/loadcontent') }}
+    {{ encore_entry_script_tags('search/search') }}
 {% endblock javascripts %}
 
 {% block stylesheets %}
-    <link rel="stylesheet" href="{{ asset('build/leaflet.css') }}"/>
-    <link rel="stylesheet" href="{{ asset('build/jquery_ui.css') }}"/>
+    {{ encore_entry_link_tags('leaflet') }}
+    {{ encore_entry_link_tags('jquery_ui') }}
 {% endblock stylesheets %}
 
 {% block content %}

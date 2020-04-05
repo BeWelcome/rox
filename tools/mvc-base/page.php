@@ -1,6 +1,7 @@
 <?php
 
 use Symfony\Component\Templating\EngineInterface;
+use Twig\Environment;
 
 abstract class AbstractBasePage extends VisualComponent
 {
@@ -8,13 +9,13 @@ abstract class AbstractBasePage extends VisualComponent
     private $_model = 0;
 
     /**
-     * @var EngineInterface
+     * @var Environment
      */
-    protected $engine;
+    protected $environment;
 
-    public function setEngine(EngineInterface $engine)
+    public function setEnvironment(Environment $environment)
     {
-        $this->engine = $engine;
+        $this->environment = $environment;
 
         return $this;
     }
@@ -26,7 +27,7 @@ abstract class AbstractBasePage extends VisualComponent
     {
         $this->_model = $model;
     }
-    
+
     /**
      * Get the model object that was stored using setModel
      */
@@ -34,7 +35,7 @@ abstract class AbstractBasePage extends VisualComponent
     {
         return $this->_model;
     }
-    
+
     public function createWidget($classname)
     {
         $widget = new $classname();
@@ -50,15 +51,15 @@ abstract class AbstractBasePage extends VisualComponent
         }
         return $widget;
     }
-    
-    
+
+
     protected function showTemplate($rel_path, $args=array())
     {
         $args['words'] = $this->getWords();
         $template = new RoxTemplate($rel_path, $args);
         $template->render();
     }
-    
+
     public abstract function render();
 }
 

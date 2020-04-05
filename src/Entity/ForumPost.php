@@ -168,7 +168,7 @@ class ForumPost
      *
      * @ORM\Column(name="PostDeleted", type="string", nullable=false)
      */
-    private $postdeleted = 'NotDeleted';
+    private $deleted = 'NotDeleted';
 
     /**
      * Set id.
@@ -531,27 +531,27 @@ class ForumPost
     }
 
     /**
-     * Set postdeleted.
+     * Set deleted.
      *
-     * @param string $postdeleted
+     * @param string $deleted
      *
      * @return ForumPost
      */
-    public function setPostdeleted($postdeleted)
+    public function setDeleted($deleted)
     {
-        $this->postdeleted = $postdeleted;
+        $this->deleted = $deleted;
 
         return $this;
     }
 
     /**
-     * Get postdeleted.
+     * Get deleted.
      *
      * @return string
      */
-    public function getPostdeleted()
+    public function getDeleted()
     {
-        return $this->postdeleted;
+        return $this->deleted;
     }
 
     /**
@@ -657,7 +657,7 @@ class ForumPost
      */
     public function getUpdated()
     {
-        if ($this->updated) {
+        if ($this->updated && $this->updated->getTimestamp() != -62169987208) {
             return Carbon::instance($this->updated);
         }
 
@@ -669,5 +669,15 @@ class ForumPost
         $this->postId = $postId;
 
         return $this;
+    }
+
+    /**
+     * Triggered on insert.
+     *
+     * @ORM\PostPersist
+     */
+    public function onPostPersist()
+    {
+        $this->postId = $this->id;
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Provider;
 
 use App\Entity\Member;
+use App\Repository\MemberRepository;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
@@ -14,13 +15,13 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 class UserProvider implements UserProviderInterface
 {
     /**
-     * @var EntityManager
+     * @var MemberRepository
      */
-    protected $entityManager;
+    protected $memberRepository;
 
-    public function __construct(EntityManager $entityManager)
+    public function __construct(MemberRepository $memberRepository)
     {
-        $this->entityManager = $entityManager;
+        $this->memberRepository = $memberRepository;
     }
 
     public function refreshUser(UserInterface $user)
@@ -40,7 +41,7 @@ class UserProvider implements UserProviderInterface
     public function loadUserByUsername($username)
     {
         try {
-            return $this->entityManager->getRepository(Member::class)->loadUserByUsername($username);
+            return $this->memberRepository->loadUserByUsername($username);
         } catch (NonUniqueResultException $e) {
             throw new UsernameNotFoundException(
                 sprintf('Username "%s" isn\'t unique.', $username),

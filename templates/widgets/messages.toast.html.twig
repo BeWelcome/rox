@@ -7,8 +7,8 @@
         </button>
     </div>
     <div class="toast-body">
-        {% transchoice (messageCount - lastMessageCount) %}
+        {% trans with {'count': (messageCount - lastMessageCount)} %}
         {0} There are no new messages|{1} There is one new message|]1,Inf[ There are %count% new messages
-        {% endtranschoice %}
+        {% endtrans %}
     </div>
 </div>

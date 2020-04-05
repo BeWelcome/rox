@@ -29,6 +29,7 @@ use App\Entity\Shout;
 use App\Entity\Word;
 use App\Repository\ActivityAttendeeRepository;
 use App\Repository\CommentRepository;
+use App\Repository\FamilyAndFriendRepository;
 use App\Repository\MessageRepository;
 use App\Utilities\ManagerTrait;
 use Doctrine\ORM\EntityRepository;
@@ -42,6 +43,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Routing\Generator\UrlGenerator;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Templating\EngineInterface;
+use Twig\Environment;
 use ZipArchive;
 
 class MemberModel
@@ -51,13 +53,13 @@ class MemberModel
     /** @var UrlGeneratorInterface  */
     private $urlGenerator;
 
-    /** @var EngineInterface  */
-    private $engine;
+    /** @var Environment  */
+    private $environment;
 
-    public function __construct(UrlGeneratorInterface $urlGenerator, EngineInterface $engine)
+    public function __construct(UrlGeneratorInterface $urlGenerator, Environment $environment)
     {
         $this->urlGenerator = $urlGenerator;
-        $this->engine = $engine;
+        $this->environment = $environment;
     }
 
     /**
@@ -156,23 +158,23 @@ class MemberModel
         $memoryLimit = ini_get('memory_limit');
         ini_set('memory_limit', '512M');
 
-        $this->prepareGalleryItems($tempDir, $projectDir, $member);
-        $this->prepareProfilePictures($tempDir, $member);
-        $this->prepareMessagesAndRequests($tempDir, $member);
-        $this->prepareLogs($tempDir, $member);
-        $this->prepareForumPosts($tempDir, $member);
-        $this->prepareGroupInformation($tempDir, $member);
-        $this->prepareActivities($tempDir, $member);
-        $this->prepareComments($tempDir, $member);
+//        $this->prepareGalleryItems($tempDir, $projectDir, $member);
+//        $this->prepareProfilePictures($tempDir, $member);
+//        $this->prepareMessagesAndRequests($tempDir, $member);
+//        $this->prepareLogs($tempDir, $member);
+//        $this->prepareForumPosts($tempDir, $member);
+//        $this->prepareGroupInformation($tempDir, $member);
+//        $this->prepareActivities($tempDir, $member);
+//        $this->prepareComments($tempDir, $member);
         $this->prepareSpecialRelations($tempDir, $member);
-        $this->prepareMemberData($tempDir, $member);
-        $this->prepareNewsletterInformation($tempDir, $member);
-        $this->prepareCommunityNewsInformation($tempDir, $member);
-        $this->prepareDonations($tempDir, $member);
-        $this->prepareTranslations($tempDir, $member);
-        $this->prepareRightsAndPrivileges($tempDir, $member);
-        $this->preparePolls($tempDir, $member);
-        $this->prepareShouts($tempDir, $member);
+//        $this->prepareMemberData($tempDir, $member);
+//        $this->prepareNewsletterInformation($tempDir, $member);
+//        $this->prepareCommunityNewsInformation($tempDir, $member);
+//        $this->prepareDonations($tempDir, $member);
+//        $this->prepareTranslations($tempDir, $member);
+//        $this->prepareRightsAndPrivileges($tempDir, $member);
+//        $this->preparePolls($tempDir, $member);
+//        $this->prepareShouts($tempDir, $member);
 
         ini_set('memory_limit', $memoryLimit);
     }
@@ -270,7 +272,7 @@ class MemberModel
             $filename = ($isRequest) ? "request" : "message";
             $handle = fopen($directory . $filename . "-" . $message->getCreated()->toDateString() . "-" . $i
                 . ($sent ? "-sent" : "-received") . ".html", "w");
-            fwrite($handle, $this->engine->render('private/message_or_request.html.twig', [
+            fwrite($handle, $this->environment->render('private/message_or_request.html.twig', [
                 'message' => $message,
             ]));
             fclose($handle);
@@ -356,7 +358,7 @@ class MemberModel
                 }
             }
             $handle = fopen($postsDir . "post-" . $post->getCreated()->toDateString() . "-" . $i . ".html", "w");
-            fwrite($handle, $this->engine->render('private/post.html.twig', [
+            fwrite($handle, $this->environment->render('private/post.html.twig', [
                 'thread' => $thread,
                 'group' => $group,
                 'post' => $post,
@@ -456,7 +458,7 @@ class MemberModel
             $i = 1;
             foreach ($comments as $comment) {
                 $handle = fopen($commentsDir . "comment-" . $i . "-received.html", "w");
-                fwrite($handle, $this->engine->render('private/comment.html.twig', [
+                fwrite($handle, $this->environment->render('private/comment.html.twig', [
                     'comment' => $comment,
                 ]));
                 fclose($handle);
@@ -468,7 +470,7 @@ class MemberModel
             /** @var Comment $comment */
             foreach ($comments as $comment) {
                 $handle = fopen($commentsDir . "comment-" . $i . "-given.html", "w");
-                fwrite($handle, $this->engine->render('private/comment.html.twig', [
+                fwrite($handle, $this->environment->render('private/comment.html.twig', [
                     'comment' => $comment,
                 ]));
                 fclose($handle);
@@ -813,23 +815,57 @@ class MemberModel
 
     private function prepareSpecialRelations(string $tempDir, Member $member)
     {
-        /** @var EntityRepository $relationsRepository */
+        /** @var FamilyAndFriendRepository $relationsRepository */
         $relationsRepository = $this->getManager()->getRepository(FamilyAndFriend::class);
-        $relations = $relationsRepository->findBy(['owner' => $member]);
-        if (!empty($relations)) {
+        $rawRelations = $relationsRepository->findRelationsFor($member);
+        if (!empty($rawRelations)) {
+            // build list of relations from raw data (list contains relations from both sides)
             $relationsDir = $tempDir . 'relations/';
             @mkdir($relationsDir);
-            $i = 1;
+            $relations = [];
+            $memberId = $member->getId();
             /** @var FamilyAndFriend $relation */
-            foreach ($relations as $relation) {
-                $handle = fopen($relationsDir . "relation." . $i . ".txt", "w");
-                fwrite($handle, "Type: " . $relation->getType() . PHP_EOL);
-                fwrite($handle, "Relation to: " . $relation->getRelation()->getUsername() . PHP_EOL);
-                fwrite($handle, "Comment: " . $relation->getComment() . PHP_EOL);
-                fwrite($handle, "Confirmed: " . $relation->getConfirmed() . PHP_EOL);
-                fclose($handle);
+            foreach ($rawRelations as $relation) {
+                $author = $relation->getOwner();
+                $authorId = $author->getId();
+                $recipient = $relation->getRelation();
+                $recipientId = $recipient->getId();
+                if ($recipient !== $member)
+                {
+                    $relations[$recipientId] = [];
+                    $relations[$recipientId]['right'] = $relation;
+                    $relations[$recipientId]['right']->setType($this->adaptType($relations[$recipientId]['right']->getType()));
+                }
+                elseif (key_exists($authorId, $relations)) {
+                    $relations[$authorId]['left'] = $relation;
+                    $relations[$authorId]['left']->setType($this->adaptType($relations[$authorId]['left']->getType()));
+                }
+                else
+                {
+                    $relations[$authorId] = [];
+                    $relations[$authorId]['left'] = $relation;
+                    $relations[$authorId]['left']->setType($this->adaptType($relations[$authorId]['left']->getType()));
+                }
+            }
+            $i = 1;
+            foreach($relations as $relation)
+            {
+                $handle = fopen($relationsDir . "relation." . $i . ".html", "w");
+                fwrite($handle, $this->environment->render('private/relation.html.twig', [
+                    'relation' => $relation,
+                ]));
                 $i++;
             }
         }
+    }
+
+    /**
+     * @param string $type
+     * @return string
+     */
+    private function adaptType(string $type): string
+    {
+        $type = implode(', ', explode(',', $type));
+        return $type;
     }
 }

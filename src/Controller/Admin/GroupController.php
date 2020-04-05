@@ -45,7 +45,7 @@ class GroupController extends AbstractController
      */
     public function approveGroups()
     {
-        if (!$this->isGranted([Member::ROLE_ADMIN_GROUP])) {
+        if (!$this->isGranted(Member::ROLE_ADMIN_GROUP)) {
             throw $this->createAccessDeniedException('You need to have Group right to access this.');
         }
 
@@ -79,7 +79,7 @@ class GroupController extends AbstractController
      */
     public function archiveGroups(Request $request)
     {
-        if (!$this->isGranted([Member::ROLE_ADMIN_GROUP])) {
+        if (!$this->isGranted(Member::ROLE_ADMIN_GROUP)) {
             throw $this->createAccessDeniedException('You need to have Group right to access this.');
         }
 
@@ -120,7 +120,7 @@ class GroupController extends AbstractController
      */
     public function unarchiveGroups(Request $request)
     {
-        if (!$this->isGranted([Member::ROLE_ADMIN_GROUP])) {
+        if (!$this->isGranted(Member::ROLE_ADMIN_GROUP)) {
             throw $this->createAccessDeniedException('You need to have Group right to access this.');
         }
 
@@ -166,7 +166,7 @@ class GroupController extends AbstractController
      */
     public function discussGroup(Request $request, Group $group, Logger $logger)
     {
-        if (!$this->isGranted([Member::ROLE_ADMIN_GROUP])) {
+        if (!$this->isGranted(Member::ROLE_ADMIN_GROUP)) {
             throw $this->createAccessDeniedException('You need to have Group right to access this.');
         }
 
@@ -205,7 +205,7 @@ class GroupController extends AbstractController
      */
     public function dismissGroup(Request $request, Group $group, Logger $logger)
     {
-        if (!$this->isGranted([Member::ROLE_ADMIN_GROUP])) {
+        if (!$this->isGranted(Member::ROLE_ADMIN_GROUP)) {
             throw $this->createAccessDeniedException('You need to have Group right to access this.');
         }
 
@@ -244,7 +244,7 @@ class GroupController extends AbstractController
      */
     public function approveGroup(Request $request, Group $group, Logger $logger)
     {
-        if (!$this->isGranted([Member::ROLE_ADMIN_GROUP])) {
+        if (!$this->isGranted(Member::ROLE_ADMIN_GROUP)) {
             throw $this->createAccessDeniedException('You need to have the Group right to access this.');
         }
 
@@ -285,7 +285,7 @@ class GroupController extends AbstractController
      */
     public function archiveGroup(Request $request, Group $group, Logger $logger)
     {
-        if (!$this->isGranted([Member::ROLE_ADMIN_GROUP])) {
+        if (!$this->isGranted(Member::ROLE_ADMIN_GROUP)) {
             throw $this->createAccessDeniedException('You need to have Group right to access this.');
         }
 
@@ -323,7 +323,7 @@ class GroupController extends AbstractController
      */
     public function unarchiveGroup(Request $request, Group $group, Logger $logger)
     {
-        if (!$this->isGranted([Member::ROLE_ADMIN_GROUP])) {
+        if (!$this->isGranted(Member::ROLE_ADMIN_GROUP)) {
             throw $this->createAccessDeniedException('You need to have Group right to access this.');
         }
 

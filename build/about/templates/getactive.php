@@ -48,7 +48,7 @@ $words = new MOD_words();
 <div class="col-12 col-md-6 mb-3">
     <div class="card p-3 h-100">
         <div class="card-body">
-            <h3 class="card-title m-0"><i class="fa fa-question-circle-o"
+            <h3 class="card-title m-0"><i class="far fa-question-circle"
                                       aria-hidden="true"></i> <?php echo $words->get('GetActiveSupportTitle') ?></h3>
             <p class="text-muted"><?php echo $words->get('HelpBeWelcomeSupportTags') . " <br> " . $words->get('HelpBeWelcomeContact') . ": " . $words->get('GetActiveSupportContact') ?></p>
             <p class="card-text"><?php echo $words->get('GetActiveSupportText') ?></p>
@@ -70,7 +70,7 @@ $words = new MOD_words();
 <div class="col-12 col-md-6 mb-3">
     <div class="card p-3 h-100">
         <div class="card-body">
-            <h3 class="card-title m-0"><i class="fa fa-handshake-o"
+            <h3 class="card-title m-0"><i class="far fa-handshake"
                                       aria-hidden="true"></i> <?php echo $words->get('GetActiveNMBWTitle') ?></h3>
             <p class="text-muted"><?php echo $words->get('HelpBeWelcomeNMBWTags') . " <br> " . $words->get('HelpBeWelcomeContact') . ": " . $words->get('GetActiveNMBWContact') ?></p>
             <p class="card-text"><?php echo $words->get('GetActiveNMBWText') ?></p>
@@ -125,7 +125,7 @@ $words = new MOD_words();
 <div class="col-12 col-md-6 mb-3">
     <div class="card p-3 h-100">
         <div class="card-body">
-            <h3 class="card-title m-0"><i class="fa fa-money"
+            <h3 class="card-title m-0"><i class="fa fa-euro-sign"
                                       aria-hidden="true"></i> <?php echo $words->get('GetActiveDonationTitle') ?></h3>
             <p class="text-muted"><?php echo $words->get('HelpBeWelcomeDonationTags') . " <br> " . $words->get('HelpBeWelcomeContact') . ": " . $words->get('GetActiveDonationContact') ?></p>
             <p class="card-text"><?php echo $words->get('GetActiveDonationText') ?></p>

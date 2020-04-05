@@ -15,16 +15,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class UserChecker implements UserCheckerInterface
 {
     /**
-     * @var EntityManager
-     */
-    private $manager;
-
-    public function __construct(EntityManagerInterface $manager)
-    {
-        $this->manager = $manager;
-    }
-
-    /**
      * @param UserInterface $user
      *
      * @throws AccountBannedException
@@ -36,13 +26,12 @@ class UserChecker implements UserCheckerInterface
             return;
         }
 
-        // user is banned, show a generic Account Not Found message
         if ($user->isBanned()) {
             throw new AccountBannedException();
         }
-        // user hasn't confirmed the mail address yet
-        if ($user->isNotConfirmedYet()) {
-            throw new AccountMailNotConfirmedException();
+
+        if ($user->isDeniedAccess()) {
+            throw new AccountDeniedLoginException();
         }
     }
 
@@ -58,17 +47,12 @@ class UserChecker implements UserCheckerInterface
             return;
         }
 
-        // user account is expired, the user may be notified
         if ($user->isExpired()) {
             throw new AccountExpiredException();
         }
 
-        if ($user->isDeniedAccess()) {
-            throw new AccountDeniedLoginException();
+        if ($user->isNotConfirmedYet()) {
+            throw new AccountMailNotConfirmedException();
         }
-
-        $user->setLastLogin(new DateTime());
-        $this->manager->persist($user);
-        $this->manager->flush();
     }
 }

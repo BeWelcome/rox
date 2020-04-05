@@ -81,10 +81,10 @@ if (empty($vars)) {
                 <?php
                 if ($this->activity->dateStart == $this->activity->dateEnd) {
                     echo '<i class="far fa-calendar-alt mr-1"></i>' . $this->activity->dateStart . '<br>';
-                    echo '<i class="far fa-clock mr-1"></i> <span class="compacttext back">' . $this->activity->timeStart . ' - ' . $this->activity->timeEnd . '</span><br>';
+                    echo '<i class="far fa-clock mr-1"></i>' . $this->activity->timeStart . ' - ' . $this->activity->timeEnd . '<br>';
                 } else {
-                    echo '<i class="far fa-calendar-alt mr-1"></i>' . $this->activity->dateStart . ' <i class="far fa-clock px-2"></i><span class="compacttext back">' . $this->activity->timeStart . '</span><br>';
-                    echo '<i class="far fa-calendar-alt mr-1"></i>' . $this->activity->dateEnd . ' <i class="far fa-clock px-2"></i><span class="compacttext back">' . $this->activity->timeEnd . '</span>';
+                    echo '<i class="far fa-calendar-alt mr-1"></i>' . $this->activity->dateStart . ' <i class="far fa-clock mr-1"></i>' . $this->activity->timeStart . '<br>';
+                    echo '<i class="far fa-calendar-alt mr-1"></i>' . $this->activity->dateEnd . ' <i class="far fa-clock mr-1"></i>' . $this->activity->timeEnd . '';
                 } ?>
                 </div>
             </div>

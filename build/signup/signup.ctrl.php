@@ -123,7 +123,7 @@ class SignupController extends RoxControllerBase {
                     PPHP::PExit();
                 }
                 $words = $model->getWords();
-                $usernameValid = preg_match(User::HANDLE_PREGEXP, $_REQUEST['value']);
+                $usernameValid = preg_match(SignupModel::HANDLE_PREGEXP, $_REQUEST['value']);
                 if (!$usernameValid) {
                     echo json_encode(
                         array(
@@ -191,7 +191,7 @@ class SignupController extends RoxControllerBase {
                 $page = new SignupPage($step);
 				$StrLog="Entering Signup step: #".$step ;
 				MOD_log::get()->write($StrLog,"Signup") ;
-                $page->model = $model;
+                $page->setModel($model);
         }
 
         return $page;
@@ -241,13 +241,21 @@ class SignupController extends RoxControllerBase {
                 return 'signup/' . ($step);
             }
 
-            // step 4 successfully done register new member
-            if (!$idTB = $model->registerTBMember($vars)) {
-                // MyTB registration didn't work
-            } else {
-                // signup on MyTB successful, yeah.
-                $model->registerBWMember($vars);
+            // Check all fields correctly set.
+            $errors = $model->checkRegistrationForm($vars, 1);
+            array_merge($errors, $model->checkRegistrationForm($vars, 2));
+            array_merge($errors, $model->checkRegistrationForm($vars, 3));
+            array_merge($errors, $model->checkRegistrationForm($vars, 4));
+
+            if (count($errors) > 0) {
+                $vars['errors'] = $errors;
+                $this->session->set( 'SignupBWVars', $vars );
+                $mem_redirect->post = $vars;
+                return false;
             }
+
+            // step 4 successfully done register new member
+            $model->registerBWMember($vars);
 
             return 'signup/finish';
         }

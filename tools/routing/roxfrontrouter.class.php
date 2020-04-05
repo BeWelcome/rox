@@ -2,21 +2,23 @@
 
 use App\Utilities\SessionTrait;
 use Symfony\Component\Templating\EngineInterface;
+use Twig\Environment;
+use Twig\Environmentment;
 
 class RoxFrontRouter
 {
     use SessionTrait;
 
-    protected $engine;
+    protected $environment;
 
     private $args;
     private $router;
 
-    public function __construct(EngineInterface $engine)
+    public function __construct(Environment $environment)
     {
         $this->setSession();
 
-        $this->engine = $engine;
+        $this->environment = $environment;
 
         $this->router = new RequestRouter();
         $this->args = $this->router->getRequestAndArgs();
@@ -404,7 +406,7 @@ A TERRIBLE EXCEPTION
             $controller = new $classname();
 
             if ($controller instanceof PAppController) {
-                $controller->setEngine($this->engine);
+                $controller->setEnvironment($this->environment);
             }
 
             $controller->route_vars = $route_vars;
@@ -413,7 +415,7 @@ A TERRIBLE EXCEPTION
 
             if ($controller instanceof RoxControllerBase) {
                 $controller->setRouter($this->router);
-                $controller->setEngine($this->engine);
+                $controller->setEnvironment($this->environment);
             }
 
             $controller->router = $this->router;
@@ -423,7 +425,7 @@ A TERRIBLE EXCEPTION
                 // used for a html comment
                 $page->controller_classname = $classname;
                 $page->router = $this->router;
-                $page->setEngine($this->engine);
+                $page->setEnvironment($this->environment);
                 $page->setSession();
             }
         } else {
@@ -442,7 +444,7 @@ A TERRIBLE EXCEPTION
             // assemble the strings buffered in PVars::getObj('page')
             $pvars_page = PVars::getObj('page');
             $aftermath_page = new PageWithParameterizedRoxLayout();
-            $aftermath_page->setEngine($this->engine);
+            $aftermath_page->setEnvironment($this->environment);
 
             foreach (array(
                 'teaserBar',

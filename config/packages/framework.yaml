@@ -18,18 +18,15 @@ framework:
         enable_annotations: true
         enabled: true
     #serializer:      { enable_annotations: true }
-    templating:
-        engines:
-            twig
     default_locale:  "en"
     trusted_hosts:   ~
+#    error_controller:  Symfony\\Bundle\\TwigBundle\\Controller\\ExceptionController::showAction
 
     # Enables session support. Note that the session will ONLY be started if you read or write from it.
     # Remove or comment this section to explicitly disable session support.
     session:
         # http://symfony.com/doc/current/reference/configuration/framework.html#handler-id
         handler_id:  session.handler.native_file
-        save_path:   "%kernel.root_dir%/../var/sessions/%kernel.environment%"
     fragments:       ~
     http_method_override: true
     assets:

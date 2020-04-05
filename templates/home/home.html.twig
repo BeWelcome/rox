@@ -5,15 +5,16 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="shortcut icon" href="/favicon.ico"/>
+    <link rel="shortcut icon" href="{{ asset('favicon.ico') }}"/>
 
     <title>{{ title }} - BeWelcome</title>
     <meta name="description" content="{{ 'default_meta_description' }}"/>
     <meta name="keywords" content="{{ 'default_meta_keyword' | trans }}"/>
     <meta name="robots" content="{{ 'default_meta_robots' | trans }}"/>
 
-    <link rel="stylesheet" href="{{ asset('build/bewelcome.css') }}"/>
-    <link rel="stylesheet" href="{{ asset('build/jquery_ui.css') }}"/>
+    {{ encore_entry_link_tags('bewelcome') }}
+    {{ encore_entry_link_tags('floating_labels') }}
+    {{ encore_entry_link_tags('jquery_ui') }}
 </head>
 <body id="parallax-home">
 {% include 'loginbar.html.twig' %}
@@ -197,10 +198,10 @@
         <div class="row">
             <div class="col-12 text-left">
                 <a href="{{ url('about') }}"><strong>{{ 'aboutuspage' | trans }}</strong></a> •
-                <a href="{{ url('terms_french') }}" target="new">{{ 'termsofuse' | trans }}</a> •
+                <a href="{{ url('terms_language', {'language':  locale }) }}" target="new">{{ 'termsofuse' | trans }}</a> •
                 <a href="{{ url('privacy') }}" target="new">{{ 'footer.privacy' | trans }}</a> •
                 <a href="{{ url('imprint') }}">{{ 'impressum' | trans }}</a> •
-                <a href="{{ url('faq') }}">{{ 'faq' | trans }}</a> •
+                <a href="{{ url('about_faq') }}">{{ 'faq' | trans }}</a> •
                 <a href="{{ url('feedback') }}">{{ 'footer.contactus' | trans }}</a> •
                 <a href="{{ url('feedback', {'IdCategory': 1, 'RequestUri': url('homepage')}) }}">{{ 'footer.reportbug' | trans }}</a><br>
                 &copy;2007
@@ -210,11 +211,10 @@
         </div>
     </div>
 </div>
-<script src="{{ asset('build/runtime.js') }}"></script>
-<script src="{{ asset('build/bewelcome.js') }}"></script>
-<script src="{{ asset('build/jquery_ui.js') }}"></script>
-<script src="{{ asset('build/search/searchpicker.js') }}"></script>
-<script src="{{ asset('build/scrollmagic.js') }}"></script>
+{{ encore_entry_script_tags('bewelcome') }}
+{{ encore_entry_script_tags('jquery_ui') }}
+{{ encore_entry_script_tags('search/searchpicker') }}
+{{ encore_entry_script_tags('scrollmagic') }}
 <script type="application/javascript">
     $(".select2").select2({
         theme: 'bootstrap',
@@ -241,7 +241,7 @@
             "theme": "classic",
             "position": "bottom-right",
             "content": {
-                "href": "https://www.bewelcome.org/privacy"
+                "href": "/privacy"
             }
         })
     });

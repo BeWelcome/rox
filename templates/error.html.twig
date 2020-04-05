@@ -17,12 +17,9 @@
     <meta name="keywords" content="{{ 'default_meta_keyword' | trans }}">
     <meta name="robots" content="{{ robots }}">
 
-    <link rel="stylesheet" media="screen" href="{{ asset('build/bewelcome.css') }}" />
-    <!-- link rel="stylesheet" media="print" href="{{ asset('build/print.css') }}" / -->
-
+    {{ encore_entry_link_tags('bewelcome') }}
     {% block stylesheets %}{% endblock %}
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
-    <link rel="stylesheet" href="{{ asset('build/bewelcome.css') }}" />
 </head>
 <body>
 <nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-primary navbar-shadow bordert-1 borderb-1">

@@ -25,7 +25,7 @@ class CommunityNewsController extends AbstractController
      */
     public function showOverviewAction(Request $request, CommunityNewsModel $communityNewsModel)
     {
-        if (!$this->isGranted([Member::ROLE_ADMIN_COMMUNITYNEWS])) {
+        if (!$this->isGranted(Member::ROLE_ADMIN_COMMUNITYNEWS)) {
             throw $this->createAccessDeniedException('You need to have the CommunityNews right to access this.');
         }
 
@@ -50,7 +50,7 @@ class CommunityNewsController extends AbstractController
      */
     public function createAction(Request $request)
     {
-        if (!$this->isGranted([Member::ROLE_ADMIN_COMMUNITYNEWS])) {
+        if (!$this->isGranted(Member::ROLE_ADMIN_COMMUNITYNEWS)) {
             throw $this->createAccessDeniedException('You need to have the CommunityNews right to access this.');
         }
 
@@ -87,7 +87,7 @@ class CommunityNewsController extends AbstractController
      */
     public function editAction(Request $request, CommunityNews $communityNews)
     {
-        if (!$this->isGranted([Member::ROLE_ADMIN_COMMUNITYNEWS])) {
+        if (!$this->isGranted(Member::ROLE_ADMIN_COMMUNITYNEWS)) {
             throw $this->createAccessDeniedException('You need to have the CommunityNews right to access this.');
         }
 
@@ -119,7 +119,7 @@ class CommunityNewsController extends AbstractController
      */
     public function hideAction(CommunityNews $communityNews)
     {
-        if (!$this->isGranted([Member::ROLE_ADMIN_COMMUNITYNEWS])) {
+        if (!$this->isGranted(Member::ROLE_ADMIN_COMMUNITYNEWS)) {
             throw $this->createAccessDeniedException('You need to have the CommunityNews right to access this.');
         }
 
@@ -144,7 +144,7 @@ class CommunityNewsController extends AbstractController
      */
     public function unhideAction(CommunityNews $communityNews)
     {
-        if (!$this->isGranted([Member::ROLE_ADMIN_COMMUNITYNEWS])) {
+        if (!$this->isGranted(Member::ROLE_ADMIN_COMMUNITYNEWS)) {
             throw $this->createAccessDeniedException('You need to have the CommunityNews right to access this.');
         }
 

@@ -9,7 +9,7 @@ use Carbon\Carbon;
 use Doctrine\ORM\EntityManagerInterface;
 use PVars;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 class LocaleListener implements EventSubscriberInterface
@@ -47,9 +47,9 @@ class LocaleListener implements EventSubscriberInterface
     /**
      * @SuppressWarnings(PHPMD.StaticAccess)
      *
-     * @param GetResponseEvent $event
+     * @param RequestEvent $event
      */
-    public function onKernelRequest(GetResponseEvent $event)
+    public function onKernelRequest(RequestEvent $event)
     {
         $request = $event->getRequest();
         if (!$request->hasPreviousSession()) {
@@ -61,7 +61,11 @@ class LocaleListener implements EventSubscriberInterface
             $request->getSession()->set('_locale', $locale);
         } else {
             // if no explicit locale has been set on this request, use one from the session
-            $locale = $request->getSession()->get('_locale', $this->defaultLocale);
+            $locale = $request->getSession()->get('_locale');
+            if (null === $locale)
+            {
+                $locale = 'br';
+            }
         }
         $request->setLocale($locale);
         Carbon::setLocale($locale);

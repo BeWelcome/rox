@@ -64,7 +64,3 @@ phpmetrics:
 
 version:
 	git rev-parse --short HEAD > VERSION
-
-checkjs:
-	./node_modules/.bin/grunt checkjs
-

@@ -26,7 +26,7 @@ class HostingRequestControllerTest extends TestCase
     /** @var Subject */
     private $subject;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sender = new Member();
         $this->receiver = new Member();

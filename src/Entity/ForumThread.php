@@ -30,8 +30,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class ForumThread
 {
-    use LifecycleCallbacksTrait;
-
     /**
      * @var int
      *
@@ -289,51 +287,51 @@ class ForumThread
     }
 
     /**
-     * Set firstPostid.
+     * Set first post.
      *
-     * @param int $firstPostid
+     * @param ForumPost $firstPost
      *
      * @return ForumThread
      */
-    public function setFirstPostid($firstPostid)
+    public function setFirstPost($firstPost)
     {
-        $this->firstPostid = $firstPostid;
+        $this->firstPost = $firstPost;
 
         return $this;
     }
 
     /**
-     * Get firstPostid.
+     * Get first post.
      *
-     * @return int
+     * @return ForumPost
      */
-    public function getFirstPostid()
+    public function getFirstPost()
     {
-        return $this->firstPostid;
+        return $this->firstPost;
     }
 
     /**
-     * Set lastPostid.
+     * Set last post.
      *
-     * @param int $lastPostid
+     * @param ForumPost $lastPost
      *
      * @return ForumThread
      */
-    public function setLastPostid($lastPostid)
+    public function setLastPost($lastPost)
     {
-        $this->lastPostid = $lastPostid;
+        $this->lastPost = $lastPost;
 
         return $this;
     }
 
     /**
-     * Get lastPostid.
+     * Get last post.
      *
-     * @return int
+     * @return ForumPost
      */
-    public function getLastPostid()
+    public function getLastPost()
     {
-        return $this->lastPostid;
+        return $this->lastPost;
     }
 
     /**
@@ -812,58 +810,20 @@ class ForumThread
         return $this->posts;
     }
 
-    /**
-     * Set firstPost.
-     *
-     * @param ForumPost $firstPost
-     *
-     * @return ForumThread
-     */
-    public function setFirstPost(ForumPost $firstPost)
-    {
-        $this->firstPost = $firstPost;
-
-        return $this;
-    }
-
-    /**
-     * Get firstPost.
-     *
-     * @return ForumPost
-     */
-    public function getFirstPost()
-    {
-        return $this->firstPost;
-    }
-
-    /**
-     * Set lastPost.
-     *
-     * @param ForumPost $lastPost
-     *
-     * @return ForumThread
-     */
-    public function setLastPost(ForumPost $lastPost)
-    {
-        $this->lastPost = $lastPost;
-
-        return $this;
-    }
-
-    /**
-     * Get lastPost.
-     *
-     * @return ForumPost
-     */
-    public function getLastPost()
-    {
-        return $this->lastPost;
-    }
-
     public function setThreadId(?int $threadId): self
     {
         $this->threadId = $threadId;
 
         return $this;
+    }
+
+    /**
+     * Triggered on insert.
+     *
+     * @ORM\PostPersist
+     */
+    public function onPostPersist()
+    {
+        $this->threadId = $this->id;
     }
 }

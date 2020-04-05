@@ -1,0 +1,38 @@
+<html style="width:100%">
+<head>
+    <title>Bewelcome Relation</title>
+</head>
+<body style="width:80%; margin: 0 auto;">
+<h3>{{ 'mydata.relation'|trans}}</h3>
+<div>
+{% if relation.left is defined %}
+    <div style="width:49%; float: left; background-color: lightgreen;">
+        {% trans with {'%username%': relation.left.owner.username}  %}mydata.relation.received{% endtrans %}<br>
+        {{ 'mydata.relation.type' | trans }}: {{ relation.left.Type }}<br>
+        Confirmed: {{ relation.left.confirmed }}<br>
+        Comments: <br>
+        <br>
+        {% for comment in relation.left.comments %}
+            Created {{ comment.created.DiffForHumans }} in {{ comment.language.name }}<br>
+            {{ comment.sentence }}<br>
+            <hr>
+        {% endfor %}
+    </div>
+{% endif %}
+{% if relation.right is defined %}
+    <div style="width:49%; float: right; background-color: lightgreen;">
+        {% trans with {'%username%': relation.right.owner.username}  %}mydata.relation.given{% endtrans %}<br>
+        Type: {{ relation.right.Type }}<br>
+        Confirmed: {{ relation.right.confirmed }}<br>
+        Comments: <br>
+        <br>
+        {% for comment in relation.right.comments %}
+            Created {{ comment.created.DiffForHumans }} in {{ comment.language.name }}<br>
+            {{ comment.sentence }}<br>
+            <hr>
+        {% endfor %}
+    </div>
+{% endif %}
+</div>
+</body>
+</html>

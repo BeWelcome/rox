@@ -12,6 +12,7 @@ use App\Doctrine\GroupMembershipStatusType;
 use App\Doctrine\MemberStatusType;
 use App\Encoder\LegacyPasswordEncoder;
 use Carbon\Carbon;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
@@ -21,7 +22,6 @@ use Doctrine\Common\Persistence\ObjectManagerAware;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\Encoder\EncoderAwareInterface;
 use Symfony\Component\Security\Core\Exception\RuntimeException;
-use Symfony\Component\Security\Core\Role\Role;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
@@ -93,11 +93,11 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
     protected $email;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
-     * @ORM\Column(name="LastLogin", type="datetime", nullable=false)
+     * @ORM\Column(name="LastLogin", type="datetime", nullable=true)
      */
-    protected $lastlogin = '0000-00-00 00:00:00';
+    protected $lastLogin = null;
 
     /**
      * @var string
@@ -320,14 +320,14 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
     private $byear;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(name="updated", type="datetime", nullable=false)
      */
     private $updated;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(name="created", type="datetime", nullable=false)
      */
@@ -418,7 +418,7 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
     private $hidebirthdate = 'No';
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(name="BirthDate", type="date", nullable=true)
      */
@@ -579,7 +579,7 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
     private $chatGoogle;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(name="LastSwitchToActive", type="datetime", nullable=true)
      */
@@ -598,6 +598,13 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
      * @ORM\Column(name="HideAttribute", type="integer", nullable=false)
      */
     private $hideAttribute;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="registration_key", type="string", nullable=false)
+     */
+    private $registrationKey;
 
     /**
      * @ORM\OneToMany(targetEntity="CryptedField", mappedBy="member", fetch="EAGER")
@@ -1405,7 +1412,7 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
     /**
      * Set updated.
      *
-     * @param \DateTime $updated
+     * @param DateTime $updated
      *
      * @return Member
      */
@@ -1419,7 +1426,7 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
     /**
      * Get updated.
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getUpdated()
     {
@@ -1429,7 +1436,7 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
     /**
      * Set created.
      *
-     * @param \DateTime $created
+     * @param DateTime $created
      *
      * @return Member
      */
@@ -1443,7 +1450,7 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
     /**
      * Get created.
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getCreated()
     {
@@ -1453,13 +1460,13 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
     /**
      * Set last login.
      *
-     * @param \DateTime $lastLogin
+     * @param DateTime $lastLogin
      *
      * @return Member
      */
-    public function setLastlogin(\DateTime $lastLogin = null)
+    public function setLastLogin(DateTime $lastLogin = null)
     {
-        $this->lastlogin = $lastLogin;
+        $this->lastLogin = $lastLogin;
 
         return $this;
     }
@@ -1467,11 +1474,16 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
     /**
      * Get last login.
      *
-     * @return Carbon
+     * @return ?Carbon
      */
-    public function getLastlogin()
+    public function getLastLogin(): ?Carbon
     {
-        return Carbon::instance($this->lastlogin);
+        if (null !== $this->lastLogin)
+        {
+            return Carbon::instance($this->lastLogin);
+        }
+
+        return null;
     }
 
     /**
@@ -1793,7 +1805,7 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
     /**
      * Set birthdate.
      *
-     * @param \DateTime $birthdate
+     * @param DateTime $birthdate
      *
      * @return Member
      */
@@ -2345,7 +2357,7 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
     /**
      * Set lastswitchtoactive.
      *
-     * @param \DateTime $lastswitchtoactive
+     * @param DateTime $lastswitchtoactive
      *
      * @return Member
      */
@@ -2359,7 +2371,7 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
     /**
      * Get lastswitchtoactive.
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getLastswitchtoactive()
     {
@@ -2445,26 +2457,26 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
     /**
      * Returns the roles granted to the user.
      *
-     * @return array Role[] The user roles
+     * @return array string[] The user roles
      */
     public function getRoles()
     {
         // Grant user role to everyone
         $roles = [
-            new Role('ROLE_USER'),
+            'ROLE_USER',
         ];
 
         $volunteerRights = $this->getVolunteerRights();
         if (null !== $volunteerRights) {
             foreach ($volunteerRights->getIterator() as $volunteerRight) {
                 if (0 !== $volunteerRight->getLevel()) {
-                    $roles[] = new Role('ROLE_ADMIN_'.strtoupper($volunteerRight->getRight()->getName()));
+                    $roles[] = 'ROLE_ADMIN_'.strtoupper($volunteerRight->getRight()->getName());
                 }
             }
 
             // If additional roles are found add ROLE_ADMIN as well to get past the /admin firewall
             if (\count($roles) > 1) {
-                $roles[] = new Role('ROLE_ADMIN');
+                $roles[] = 'ROLE_ADMIN';
             }
         }
 
@@ -2794,7 +2806,9 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
 
     public function isExpired()
     {
-        return (MemberStatusType::SUSPENDED === $this->status) ? true : false;
+        $suspended = (MemberStatusType::SUSPENDED === $this->status) ? true : false;
+        $askedToLeave = (MemberStatusType::ASKED_TO_LEAVE === $this->status) ? true : false;
+        return $suspended || $askedToLeave;
     }
 
     public function isBanned()
@@ -2815,11 +2829,6 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
     public function isNotConfirmedYet()
     {
         return (MemberStatusType::AWAITING_MAIL_CONFIRMATION === $this->status) ? true : false;
-    }
-
-    public function generatePasswordResetKey()
-    {
-        return hash('sha256', $this->getEmail().' - '.$this->getUsername().' - '.$this->getGender());
     }
 
     /**
@@ -2921,7 +2930,7 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
      */
     public function onPrePersist()
     {
-        $this->created = new \DateTime('now');
+        $this->created = new DateTime('now');
     }
 
     /**
@@ -2931,7 +2940,7 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
      */
     public function onPreUpdate()
     {
-        $this->updated = new \DateTime('now');
+        $this->updated = new DateTime('now');
     }
 
     /**
@@ -3020,5 +3029,25 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
     public function injectObjectManager(ObjectManager $objectManager, ClassMetadata $classMetadata)
     {
         $this->em = $objectManager;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRegistrationKey(): string
+    {
+        return $this->registrationKey;
+    }
+
+    /**
+     * @param string $registrationKey
+     *
+     * @return Member
+     */
+    public function setRegistrationKey(string $registrationKey): self
+    {
+        $this->registrationKey = $registrationKey;
+
+        return $this;
     }
 }

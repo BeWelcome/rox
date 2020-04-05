@@ -8,27 +8,32 @@ use App\Entity\Subject;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Symfony\Component\Templating\EngineInterface;
+use Twig\Environment;
 
 trait MessageTrait
 {
     use TranslatorTrait;
 
-    /** @var EngineInterface */
-    private $engine;
+    /**
+     * Twig environment used to render templates
+     *
+     * @var Environment
+     */
+    private $environment;
 
     /**
      * @Required
      *
-     * @param EngineInterface $engine
+     * @param Environment $environment
      */
-    public function setEngine(EngineInterface $engine)
+    public function setTwigEnvironment(Environment $environment)
     {
-        $this->engine = $engine;
+        $this->environment = $environment;
     }
 
-    protected function getEngine()
+    protected function getEnvironment()
     {
-        return $this->engine;
+        return $this->environment;
     }
 
     /**
@@ -38,8 +43,13 @@ trait MessageTrait
      * @param string $template
      * @param mixed ...$params
      */
-    protected function createTemplateMessage(Member $sender, Member $receiver, string $parent, string $template, ...$params)
-    {
+    protected function createTemplateMessage(
+        Member $sender,
+        Member $receiver,
+        string $parent,
+        string $template,
+        ...$params
+    ) {
         $parameters = array_merge(['sender' => $sender, 'receiver' => $receiver, 'template' => $template], ...$params);
 
         $em = $this->getManager();
@@ -56,7 +66,7 @@ trait MessageTrait
         $message->setReceiver($receiver);
         $message->setSubject($subject);
 
-        $body = $this->getEngine()->render('_partials/' . $parent . '/' . $template . '.html.twig', $parameters);
+        $body = $this->getEnvironment()->render('_partials/' . $parent . '/' . $template . '.html.twig', $parameters);
         $message->setMessage($body);
         $em->persist($message);
         $em->flush();

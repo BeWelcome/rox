@@ -1,9 +1,19 @@
 const CKEditorWebpackPlugin = require( '@ckeditor/ckeditor5-dev-webpack-plugin' );
 const { styles } = require( '@ckeditor/ckeditor5-dev-utils' );
+
 var Encore = require('@symfony/webpack-encore');
 
+// Manually configure the runtime environment if not already configured yet by the "encore" command.
+// It's useful when you use tools that rely on webpack.config.js file.
+if (!Encore.isRuntimeEnvironmentConfigured()) {
+    Encore.configureRuntimeEnvironment(process.env.NODE_ENV || 'dev');
+}
+
 Encore
-//    .configureRuntimeEnvironment('dev')
+    // directory where compiled assets will be stored
+    .setOutputPath('public/build/')
+    // public path used by the web server to access the output path
+    .setPublicPath('/build')
     .addPlugin( new CKEditorWebpackPlugin( {
         // Main language that will be built into the main bundle.
         language: 'en',
@@ -25,14 +35,12 @@ Encore
         // Defaults to `false`.
         // verbose: true
     } ) )
+    .splitEntryChunks()
     .enableSingleRuntimeChunk()
-    .setOutputPath('public/build/')
-    .setPublicPath('/build')
     .cleanupOutputBeforeBuild()
     .addEntry('bewelcome', './assets/js/bewelcome.js')
-//     .addEntry('print', './assets/scss/print.scss')
+    .addEntry('floating_labels', './assets/scss/floating_labels.scss')
     .addEntry('jquery_ui', './assets/js/jquery_ui.js')
-    .addEntry('backwards', './assets/js/backwards.js')
     .addEntry('signup/signup', './assets/js/signup.js')
     .addEntry('landing', './assets/js/landing/landing.js')
     .addEntry('scrollmagic', './assets/js/scrollmagic.js')
@@ -50,12 +58,12 @@ Encore
     .addEntry('chartjs', './node_modules/chart.js/dist/Chart.js')
     .addEntry('offcanvas', './assets/js/offcanvas.js')
     .addEntry('profile/profile', './assets/js/profile.js')
-    .addEntry( 'updatecounters', './assets/js/updateCounters.js')
-    .addEntry( 'lightbox', './assets/js/lightbox.js')
-    .addEntry( 'gallery', './assets/js/gallery.js')
+    .addEntry('updatecounters', './assets/js/updateCounters.js')
+    .addEntry('lightbox', './assets/js/lightbox.js')
+    .addEntry('gallery', './assets/js/gallery.js')
     .addEntry('bsfileselect', './assets/js/bsfileselect.js')
     .addEntry('email', './assets/scss/email.scss')
-    .addEntry( 'roxeditor', './assets/js/roxeditor.js')
+    .addEntry('roxeditor', './assets/js/roxeditor.js')
 
     .enableSassLoader()
     // allow legacy applications to use $/jQuery as a global variable, make popper visible for bootstrap

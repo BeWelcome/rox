@@ -68,7 +68,7 @@ class ForumsController extends PAppController
 
         $page = $view->page = new RoxGenericPage();
 
-        $page->setEngine($this->engine);
+        $page->setEnvironment($this->environment);
 
         $request = $this->request;
         if (isset($request[0]) && $request[0] != 'forums') {

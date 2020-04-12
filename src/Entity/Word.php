@@ -32,6 +32,13 @@ class Word
     /**
      * @var string
      *
+     * @ORM\Column(name="domain", type="domain", length=16, nullable=false)
+     */
+    private $domain;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="ShortCode", type="string", length=16, nullable=false)
      */
     private $shortCode = 'en';
@@ -414,5 +421,25 @@ class Word
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDomain(): string
+    {
+        return $this->domain;
+    }
+
+    /**
+     * @param string $domain
+     *
+     * @return Word
+     */
+    public function setDomain(string $domain): self
+    {
+        $this->domain = $domain;
+
+        return $this;
     }
 }

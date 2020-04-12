@@ -2382,7 +2382,7 @@ AND IdSubscriber = {$memberId}";
                 $this->topic->IdSubscribe= $row->IdSubscribe ;
                 $this->topic->IdKey= $row->IdKey ;
             }
-            if (null !== $this->topic->topicinfo->IdGroup) {
+            if (isset($this->topic->topicinfo->IdGroup)) {
                 // Check if member has enabled group mails
                 $group = $this->createEntity('Group', $this->topic->topicinfo->IdGroup);
                 $member = $this->createEntity('Member', $this->session->get("IdMember"));

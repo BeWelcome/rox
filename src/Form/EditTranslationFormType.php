@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -36,10 +37,6 @@ class EditTranslationFormType extends AbstractType
                 'disabled' => true,
                 'label' => 'label.admin.translation.locale',
             ])
-            ->add('translatedText', TextAreaType::class, [
-                'label' => 'label.admin.translation',
-                'required' => true,
-            ])
             ->add('update', SubmitType::class, [
                 'label' => 'label.update',
             ])
@@ -47,18 +44,36 @@ class EditTranslationFormType extends AbstractType
         $formBuilder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             $translationRequest = $event->getData();
             $form = $event->getForm();
+            $translatedTextHelp = null;
             if ('en' === $translationRequest->locale) {
                 $form
+                    ->add('isMajorUpdate', CheckboxType::class, [
+                        'label' => 'translation.is.major.update',
+                        'required' => false,
+                    ])
                     ->add('description', TextAreaType::class, [
                         'label' => 'label.admin.translation.description',
-                    ]);
+                    ])
+                ;
             } else {
                 $form
                     ->add('description', TextAreaType::class, [
-                        'disabled' => true,
                         'label' => 'label.admin.translation.description',
-                    ]);
+                        'disabled' => true,
+                    ])
+                ;
+                if ($translationRequest->isMajorUpdate)
+                {
+                    $translatedTextHelp = 'translation.needs.update';
+                }
             }
+            $form
+                ->add('translatedText', TextAreaType::class, [
+                    'label' => 'label.admin.translation',
+                    'required' => true,
+                    'help' => $translatedTextHelp,
+                ])
+            ;
         });
     }
 }

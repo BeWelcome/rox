@@ -37,7 +37,7 @@ class GroupStartPage extends GroupsBasePage
 
 		if (!$this->isGroupMember() && $this->group->Type == 'NeedInvitation')
 		{
-			echo "not public";
+			echo $words->get('GroupsNotPublic');
 		}
 		else
 		{

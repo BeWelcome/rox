@@ -197,8 +197,8 @@ class PageWithHTML extends AbstractBasePage
             $stylesheetFile = str_replace('build/', '', $stylesheetUrl);
             $stylesheetFile = str_replace('.css', '', $stylesheetFile);
             $stylesheetFiles = $this->entryPointLookup->getCssFiles($stylesheetFile);
-            foreach($stylesheetFiles as $stylesheetFile) {
-                echo '<link rel="stylesheet" href="' . $stylesheetFile . '">' .PHP_EOL;
+            foreach ($stylesheetFiles as $stylesheetFile) {
+                echo '<link rel="stylesheet" href="' . $stylesheetFile . '">' . PHP_EOL;
             }
         }
     }
@@ -256,7 +256,7 @@ class PageWithHTML extends AbstractBasePage
 
     protected function printScriptTags($scriptUrl)
     {
-        if (false === strpos($scriptUrl, 'build/'))
+        if (false === strpos($scriptUrl, 'build/') || false !== strpos($scriptUrl, 'cktranslations/'))
         {
             echo '<script type="text/javascript" src="' .  ltrim($scriptUrl, '/') . '"></script>' . PHP_EOL;
         }

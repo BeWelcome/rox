@@ -12,6 +12,9 @@
     {{ form_row(form.description) }}
     {{ form_row(form.englishText) }}
     {{ form_row(form.translatedText) }}
+    {% if form.isMajorUpdate is defined %}
+        {{ form_row(form.isMajorUpdate) }}
+    {% endif %}
     {{ form_row(form.update) }}
     {{ form_end(form) }}
 {% endblock content %}

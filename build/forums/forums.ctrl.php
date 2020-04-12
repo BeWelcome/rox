@@ -502,8 +502,8 @@ class ForumsController extends PAppController
      * @param string $message Message text for flash
      * @param string $type Type of flash, i.e. "error" or "notice"
      */
-    private function setFlash($message) {
-        $this->session->set( 'flash_notice', $message );
+    private function setFlash($message, $type = 'flash_notice') {
+        $this->session->set( $type, $message );
     }
 
 

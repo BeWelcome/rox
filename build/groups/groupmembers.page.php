@@ -15,8 +15,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program; if not, see <http://www.gnu.org/licenses/> or 
-write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+along with this program; if not, see <http://www.gnu.org/licenses/> or
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 */
 
@@ -32,8 +32,20 @@ Boston, MA  02111-1307, USA.
      */
 class GroupMembersPage extends GroupsBasePage
 {
+    protected function teaserContent()
+    {
+        // &gt; or &raquo; ?
+        $words = $this->getWords();
+        ?>
+        <div>
+            <h2><a href="groups/mygroups"><?= $words->get('Groups');?></a> &raquo; <a href="group/<?=$this->group->getPKValue(); ?>"><?php echo htmlspecialchars($this->getGroupTitle(),ENT_QUOTES); ?></a>  &raquo;  <?= $words->get('GroupMembers');?></h2>
+        </div>
+        <?php
+    }
+
+
     protected function getSubmenuActiveItem() {
         return 'members';
     }
-    
+
 }

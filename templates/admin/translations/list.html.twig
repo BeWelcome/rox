@@ -9,6 +9,8 @@
     <p>
         {%- if type == 'missing' %}
             {% trans with { '%locale%': locale } %}translation.abstract.missing{% endtrans %}
+        {% elseif type == 'update' %}
+            {% trans with { '%locale%': locale } %}translation.abstract.update.needed{% endtrans %}
         {% else %}
             {% trans with { '%locale%': locale } %}translation.abstract{% endtrans %}
         {% endif -%}
@@ -44,9 +46,9 @@
                                 <p class="m-0">{{ translation.code | trans( {}, 'messages', 'en' ) | purify | truncate(50) }}</p>
                             </td>
                             <td class="w-75">
-                                <p class="m-0"><small class="invisible text-muted">&nbsp;</small></p>
+                                <p class="m-0"><small class="text-muted">{{ translation.domain }}</small></p>
                                 {% if translation.shortcode == locale %}
-                                    <p class="m-0">{{ translation.Sentence | purify | truncate(50) }}</p>
+                                    <p class="m-0">{{ translation.sentence | purify | truncate(50) }}</p>
                                 {% else %}
                                     <p class="m-0">{{ 'translations.missing' | trans }}</p>
                                 {% endif %}

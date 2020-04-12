@@ -34,7 +34,8 @@ class TranslationAdapter implements AdapterInterface
         $this->query = "
             SELECT distinct p.code
                  , COALESCE(pi_lang.shortcode,pi_dflt.shortcode) AS shortcode
-                 , COALESCE(pi_lang.Sentence,pi_dflt.Sentence) AS Sentence
+                 , COALESCE(pi_lang.domain,pi_dflt.domain) AS domain
+                 , COALESCE(pi_lang.Sentence,pi_dflt.Sentence) AS sentence
                  , COALESCE(pi_lang.created,pi_dflt.created) AS created
               FROM words AS p
             LEFT OUTER

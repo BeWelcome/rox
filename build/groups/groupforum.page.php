@@ -33,29 +33,31 @@ Boston, MA  02111-1307, USA.
 
 class GroupForumPage extends GroupsBasePage
 {
+    public function __construct()
+    {
+        parent::__construct();
+        $this->addLateLoadScriptFile('build/roxeditor.js');
+    }
+
     protected function column_col3()
     {
         $words = $this->getWords();
         if (!$this->member) {
             $loginWidget = $this->layoutkit->createWidget('LoginFormWidget');
             $loginWidget->render();
+        } elseif (!$this->isGroupMember() && !$this->group->isGroupAdmin($this->member) &&
+            ($this->group->Type == 'NeedInvitation'
+                || $this->group->Type == 'NeedAcceptance')) {
+            echo $words->get('GroupsNotPublic');
         } else {
+            $group_id = $this->group->id;
 
-            if (!$this->isGroupMember() && $this->group->Type == 'NeedInvitation') {
-                echo $words->get('GroupsNotPublic');
-            } else {
-                $group_id = $this->group->id;
+            $memberlist_widget = new GroupMemberlistWidget();
+            $memberlist_widget->setGroup($this->group);
 
-                $memberlist_widget = new GroupMemberlistWidget();
-                $memberlist_widget->setGroup($this->group);
-
-                $Forums = new ForumsController;
-                $Forums->setEngine($this->environment);
-                $Forums->index('group');
-                //$forums_widget->setGroup($this->getGroup());
-
-                //include "templates/groupforum.column_col3.php";
-            }
+            $Forums = new ForumsController;
+            $Forums->setEnvironment($this->environment);
+            $Forums->index('group');
         }
     }
 
@@ -72,7 +74,7 @@ class GroupForumsOverviewPage extends GroupsBasePage
     {
         $words = $this->getWords();
         $Forums = new ForumsController;
-        $Forums->setEngine($this->environment);
+        $Forums->setEnvironment($this->environment);
         $Forums->index();
     }
 
@@ -81,7 +83,7 @@ class GroupForumsOverviewPage extends GroupsBasePage
         $words = $this->getWords();
         ?>
         <div>
-            <h1><a href="forums"><?= $words->get('CommunityLanding');?></a> &raquo <a href="groups/forums"><?= $words->get('Groups');?></a></h1>
+            <h2><a href="forums"><?= $words->get('CommunityLanding');?></a> &raquo <a href="groups/forums"><?= $words->get('Groups');?></a></h2>
         </div>
         <?php
     }

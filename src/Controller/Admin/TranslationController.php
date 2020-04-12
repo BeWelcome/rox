@@ -9,7 +9,7 @@ use App\Entity\Member;
 use App\Entity\Message;
 use App\Entity\RightVolunteer;
 use App\Entity\Word;
-use App\Form\CustomDataClass\Translation\CreateTranslationRequest;
+use App\Form\CustomDataClass\Translation\TranslationRequest;
 use App\Form\CustomDataClass\Translation\EditTranslationRequest;
 use App\Form\EditTranslationFormType;
 use App\Form\TranslationFormType;
@@ -17,6 +17,7 @@ use App\Kernel;
 use App\Model\TranslationModel;
 use App\Pagerfanta\MissingTranslationAdapter;
 use App\Pagerfanta\TranslationAdapter;
+use App\Pagerfanta\UpdateTranslationAdapter;
 use App\Repository\LanguageRepository;
 use App\Twig\MockupExtension;
 use App\Utilities\TranslatedFlashTrait;
@@ -124,6 +125,9 @@ class TranslationController extends AbstractController
             $translation->setAuthor($this->getUser());
             if ('en' === $language->getShortcode()) {
                 $translation->setDescription($data->description);
+                if ($data->isMajorUpdate) {
+                    $translation->setMajorUpdate($translation->getUpdated());
+                }
             } else {
                 // No need for a description as the English original has one
                 $translation->setDescription('');
@@ -140,6 +144,7 @@ class TranslationController extends AbstractController
 
         return $this->render('admin/translations/edit.html.twig', [
             'form' => $editForm->createView(),
+            'isMajorUpdate' => $translationRequest->isMajorUpdate,
             'submenu' => [
                 'active' => 'edit',
                 'items' => $this->getSubmenuItems(
@@ -152,29 +157,29 @@ class TranslationController extends AbstractController
     }
 
     /**
-     * @Route("/admin/translations/create/{locale}/{code}", name="translation_create",
-     *     requirements={"code"=".+"}))
+     * @Route("/admin/translations/create/{locale}/{translationId}", name="translation_create",
+     *     requirements={"translationId"=".+"}))
      *
      * Creates an English index and the matching translation (if locale != 'en')
      *
      * @param Request         $request
      * @param Language        $language
      * @param KernelInterface $kernel
-     * @param mixed           $code
-     *
-     * @throws Exception
+     * @param mixed           $translationId
      *
      * @return Response
      * @ParamConverter("language", class="App\Entity\Language", options={"mapping": {"locale": "shortcode"}})
+     * @throws Exception
      */
-    public function createTranslationAction(
+    public function createTranslationForId(
         Request $request,
         Language $language,
         KernelInterface $kernel,
-        $code
+        $translationId
     ) {
         $this->denyAccessUnlessGranted(Member::ROLE_ADMIN_WORDS, null, 'Unable to access this page!');
 
+        /** @var Member $translator */
         $translator = $this->getUser();
 
         // Volunteer needs rights for this language and for English
@@ -189,7 +194,7 @@ class TranslationController extends AbstractController
         $translationRepository = $this->getDoctrine()->getRepository(Word::class);
         /** @var Word $original */
         $englishTranslation = $translationRepository->findOneBy([
-            'code' => $code,
+            'code' => $translationId,
             'shortCode' => 'en',
         ]);
 
@@ -197,7 +202,7 @@ class TranslationController extends AbstractController
             // There already is a translation ID in the database redirect to edit
             return $this->redirectToRoute('translation_edit', [
                 'locale' => 'en',
-                'code' => $code,
+                'code' => $translationId,
             ]);
         }
 
@@ -206,8 +211,8 @@ class TranslationController extends AbstractController
         /** @var Language $english */
         $english = $languageRepository->findOneBy(['shortcode' => 'en']);
 
-        $createTranslationRequest = new CreateTranslationRequest();
-        $createTranslationRequest->wordCode = $code;
+        $createTranslationRequest = new TranslationRequest();
+        $createTranslationRequest->wordCode = $translationId;
         $createTranslationRequest->locale = $language->getShortcode();
         if ('en' === $language->getShortcode()) {
             // to ensure form validates correctly
@@ -218,10 +223,11 @@ class TranslationController extends AbstractController
 
         if ($createForm->isSubmitted() && $createForm->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            /** @var CreateTranslationRequest $data */
+            /** @var TranslationRequest $data */
             $data = $createForm->getData();
             $original = new Word();
             $original->setCode($data->wordCode);
+            $original->setDomain($data->domain);
             $original->setDescription($data->description);
             $original->setSentence($data->englishText);
             $original->setCreated(new DateTime());
@@ -231,6 +237,7 @@ class TranslationController extends AbstractController
             if ('en' !== $createTranslationRequest->locale) {
                 $translation = new Word();
                 $translation->setCode($data->wordCode);
+                $translation->setDomain($data->domain);
                 $translation->setDescription($data->description);
                 $translation->setSentence($data->translatedText);
                 $translation->setCreated(new DateTime());
@@ -240,12 +247,16 @@ class TranslationController extends AbstractController
             }
             $em->flush();
             $this->translationModel->removeCacheFiles();
-            $this->addTranslatedFlash('notice', 'flash.added.translatable.item', ['%code%' => $code]);
+            $this->addTranslatedFlash('notice', 'flash.added.translatable.item', ['%code%' => $translationId]);
 
             return $this->redirectToRoute('translations');
         }
 
-        return $this->render('admin/translations/create.html.twig', [
+        $template = ($english === $language) ?
+            'admin/translations/create.en.html.twig' :
+            'admin/translations/create.locale.html.twig';
+
+        return $this->render($template, [
             'form' => $createForm->createView(),
             'submenu' => [
                 'active' => 'missing',
@@ -261,14 +272,12 @@ class TranslationController extends AbstractController
      *
      * @param Request             $request
      * @param KernelInterface     $kernel
-     * @param TranslatorInterface $translator
-     * @param mixed               $code
      *
      * @throws Exception
      *
      * @return Response
      */
-    public function createTranslationDirectAction(
+    public function createTranslationDirect(
         Request $request,
         KernelInterface $kernel
     ) {
@@ -285,7 +294,7 @@ class TranslationController extends AbstractController
         /** @var Language $english */
         $english = $languageRepository->findOneBy(['shortcode' => 'en']);
 
-        $createTranslationRequest = new CreateTranslationRequest();
+        $createTranslationRequest = new TranslationRequest();
         $createTranslationRequest->locale = 'en';
         // to ensure form validates correctly (we force english locale)
         $createTranslationRequest->translatedText = 'safely ignored';
@@ -294,10 +303,11 @@ class TranslationController extends AbstractController
 
         if ($createForm->isSubmitted() && $createForm->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            /** @var CreateTranslationRequest $data */
+            /** @var TranslationRequest $data */
             $data = $createForm->getData();
             $newTranslatableItem = new Word();
             $newTranslatableItem->setCode($data->wordCode);
+            $newTranslatableItem->setDomain($data->domain);
             $newTranslatableItem->setDescription($data->description);
             $newTranslatableItem->setSentence($data->englishText);
             $newTranslatableItem->setCreated(new DateTime());
@@ -311,7 +321,7 @@ class TranslationController extends AbstractController
             return $this->redirectToRoute('translations');
         }
 
-        return $this->render('admin/translations/create.html.twig', [
+        return $this->render('admin/translations/create.en.html.twig', [
             'form' => $createForm->createView(),
             'submenu' => [
                 'active' => 'create',
@@ -340,7 +350,7 @@ class TranslationController extends AbstractController
     {
         $this->denyAccessUnlessGranted(Member::ROLE_ADMIN_WORDS, null, 'Unable to access this page!');
 
-        /** @var Member $ranslator */
+        /** @var Member $translator */
         $translator = $this->getUser();
 
         // Check that the volunteer has rights for this language
@@ -352,8 +362,8 @@ class TranslationController extends AbstractController
             $this->addTranslatedFlash('notice', 'flash.translation.weird');
             $this->redirectToRoute('translations');
         }
-        $translationRepository = $this->getDoctrine()
-            ->getRepository(Word::class);
+        $translationRepository = $this->getDoctrine()->getRepository(Word::class);
+
         /** @var Word $original */
         $original = $translationRepository->findOneBy([
             'code' => $code,
@@ -385,6 +395,7 @@ class TranslationController extends AbstractController
         if ($addForm->isSubmitted() && $addForm->isValid()) {
             $data = $addForm->getData();
             $em = $this->getDoctrine()->getManager();
+            $translation->setDomain($original->getDomain());
             $translation->setSentence($data->translatedText);
             $translation->setLanguage($language);
             $translation->setCreated(new DateTime());
@@ -479,7 +490,7 @@ class TranslationController extends AbstractController
     /**
      * @Route("/admin/translations/{type}/{locale}/{code}", name="translations_locale_code",
      *     defaults={"code":""},
-     *     requirements={"code"=".+", "type"="missing|all"})
+     *     requirements={"code"=".+", "type"="missing|update|all"})
      *
      * @param Request  $request
      * @param Language $language
@@ -527,11 +538,20 @@ class TranslationController extends AbstractController
 
         /** @var Connection $connection */
         $connection = $this->getDoctrine()->getConnection();
-        if ('missing' === $type) {
-            $translationAdapter = new MissingTranslationAdapter($connection, $locale, $code);
-        } else {
-            $translationAdapter = new TranslationAdapter($connection, $locale, $code);
+        $translationAdapter = null;
+        switch($type)
+        {
+            case 'missing':
+                $translationAdapter = new MissingTranslationAdapter($connection, $locale, $code);
+                break;
+            case 'update':
+                $translationAdapter = new UpdateTranslationAdapter($connection, $locale);
+                break;
+            case 'all':
+                $translationAdapter = new TranslationAdapter($connection, $locale, $code);
+                break;
         }
+
         $translations = new Pagerfanta($translationAdapter);
         $translations->setMaxPerPage($limit);
         $translations->setCurrentPage($page);
@@ -719,6 +739,15 @@ class TranslationController extends AbstractController
                 'url' => $this->generateUrl('translations_mockups'),
             ],
         ];
+        if ('en' !== $locale) {
+            $submenuItems['needs_update'] = [
+                'key' => 'label.translations.update_needed',
+                'url' => $this->generateUrl('translations_locale_code', [
+                    'locale' => $locale,
+                    'type' => 'update',
+                ]),
+            ];
+        }
         if ($translator->hasRightsForLocale('en')) {
             $submenuItems['create'] = [
                 'key' => 'label.translations.create',

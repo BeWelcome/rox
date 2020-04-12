@@ -2,7 +2,7 @@
 {% import 'macros.twig' as macros %}
 
 {% block javascripts %}
-    {{ encore_entry_script_tags('requests.js') }}
+    {{ encore_entry_script_tags('requests') }}
 {% endblock javascripts %}
 
 {% block subnav %}
@@ -13,6 +13,9 @@
 {% endblock %}
 
 {% block content %}
+    {{ 'greeting'|trans({'username': 'shevek', 'gender': 'male'}) }}
+    {{ 'greeting'|trans({'username': 'sitatara', 'gender': 'female'}) }}
+    {{ 'greeting'|trans({'username': 'shevektest', 'gender': 'other'}) }}
     <div class="row no-gutters bg-white mb-1">
         {% set myself = app.user %}
         <div class="pull-left">{{ macros.avatarstack(host.Username, 50, false) }}</div>

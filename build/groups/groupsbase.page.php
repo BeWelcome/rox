@@ -125,7 +125,7 @@ class GroupsBasePage extends PageWithActiveSkin
         // &gt; or &raquo; ?
         $words = $this->getWords();
         ?>
-        <h4><a href="forums"><?= $words->get('CommunityDiscussions');?></a> &raquo; <a href="groups/search"><?= $words->get('Groups');?></a> &raquo; <a href="groups/<?=$this->group->id ?>"><?= htmlspecialchars($this->group->Name, ENT_QUOTES) ?></a></h4>
+        <h2><a href="forums"><?= $words->get('CommunityDiscussions');?></a> &raquo; <a href="groups/search"><?= $words->get('Groups');?></a> &raquo; <a href="groups/<?=$this->group->id ?>"><?= htmlspecialchars($this->group->Name, ENT_QUOTES) ?></a></h2>
         <?php
     }
 
@@ -137,6 +137,8 @@ class GroupsBasePage extends PageWithActiveSkin
     protected function getSubmenuItems()
     {
         $items = array();
+        $isAdmin = $this->group->isGroupAdmin($this->member);
+        $isOwner = $this->group->isGroupOwner($this->member);
 
         $layoutkit = $this->layoutkit;
         $words = $layoutkit->getWords();
@@ -153,7 +155,8 @@ class GroupsBasePage extends PageWithActiveSkin
                 $items[] = array('membersettings', 'group/'.$group_id.'/membersettings', $words->getSilent('GroupMembersettings'));
                 $items[] = array('relatedgroupsettings', 'group/'.$group_id.'/relatedgroupsettings', $words->getSilent('GroupRelatedGroups'));
             }
-            if ($this->member && $this->member->hasPrivilege('GroupsController', 'GroupSettings', $this->group))
+            if ($this->member && ($this->member->hasPrivilege('GroupsController', 'GroupSettings', $this->group)
+                || $isAdmin))
             {
                 $items[] = array('admin', "group/{$this->group->getPKValue()}/groupsettings", $words->getSilent('GroupGroupsettings'));
             }

@@ -241,7 +241,7 @@
                         {% endif %}
                         {% if message.state == constant('Symfony\\Component\\Translation\\DataCollectorTranslator::MESSAGE_MISSING') and hasEnglishRights %}
                             {% if message.id %}
-                                <a href="{{ url('translation_create', { code: message.id, locale: locale }) }}" target="_blank"><i class="fa fa-plus"></i></a>
+                                <a href="{{ url('translation_create', { translationId: message.id, locale: locale }) }}" target="_blank"><i class="fa fa-plus"></i></a>
                             {% else %}
                                 message.id not correctly set.
                             {% endif %}

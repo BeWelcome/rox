@@ -4,7 +4,7 @@ namespace App\Form\CustomDataClass\Translation;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-class CreateTranslationRequest
+class TranslationRequest
 {
     /**
      * @var string
@@ -17,6 +17,12 @@ class CreateTranslationRequest
      * @Assert\NotBlank()
      */
     public $locale;
+
+    /**
+     * @var string
+     * @Assert\NotBlank()
+     */
+    public $domain;
 
     /**
      * @var string

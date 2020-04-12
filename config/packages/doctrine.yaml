@@ -45,6 +45,7 @@ doctrine:
             group_membership_status: App\Doctrine\GroupMembershipStatusType
             member_status: App\Doctrine\MemberStatusType
             accommodation: App\Doctrine\AccommodationType
+            domain: App\Doctrine\DomainType
 
         mapping_types:
             enum:       string

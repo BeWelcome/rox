@@ -29,6 +29,12 @@ class WordsExtractor extends PhpExtractor
      */
     protected $sequences = [
         [
+            '$words->',
+            'get',
+            '(',
+            self::MESSAGE_TOKEN,
+        ],
+        [
             '->',
             'getSilent',
             '(',

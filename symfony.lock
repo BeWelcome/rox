@@ -5,9 +5,6 @@
     "babdev/pagerfanta-bundle": {
         "version": "v2.1.0"
     },
-    "cakephp/cache": {
-        "version": "3.8.10"
-    },
     "cakephp/collection": {
         "version": "3.8.10"
     },
@@ -18,9 +15,6 @@
         "version": "3.8.10"
     },
     "cakephp/datasource": {
-        "version": "3.8.10"
-    },
-    "cakephp/log": {
         "version": "3.8.10"
     },
     "cakephp/utility": {
@@ -116,18 +110,6 @@
     },
     "doctrine/reflection": {
         "version": "v1.1.0"
-    },
-    "easycorp/easy-log-handler": {
-        "version": "1.0",
-        "recipe": {
-            "repo": "github.com/symfony/recipes",
-            "branch": "master",
-            "version": "1.0",
-            "ref": "70062abc2cd58794d2a90274502f81b55cd9951b"
-        },
-        "files": [
-            "./config/packages/dev/easy_log_handler.yaml"
-        ]
     },
     "egulias/email-validator": {
         "version": "2.1.17"

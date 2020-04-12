@@ -20,6 +20,9 @@ use Symfony\Component\Asset\VersionStrategy\JsonManifestVersionStrategy;
 
 <div class="container">
     <?php $flashError = $this->getFlashError(true);
+    if (substr($flashError,0, 2) == 't.') {
+        $flashError = $this->words->getSilent($flashError);
+    }
     if (strlen($flashError) != 0): ?>
         <div class="row">
             <div class="col-12">
@@ -28,6 +31,9 @@ use Symfony\Component\Asset\VersionStrategy\JsonManifestVersionStrategy;
         </div>
     <?php endif; ?>
     <?php $flashNotice = $this->getFlashNotice(true);
+    if (substr($flashNotice,0, 2) == 't.') {
+        $flashNotice = $this->words->getSilent($flashNotice);
+    }
     if (strlen($flashNotice) != 0): ?>
         <div class="row">
             <div class="col-12">
@@ -36,6 +42,9 @@ use Symfony\Component\Asset\VersionStrategy\JsonManifestVersionStrategy;
         </div>
     <?php endif; ?>
     <?php $flashSuccess = $this->getFlashSuccess(true);
+    if (substr($flashSuccess,0, 2) == 't.') {
+        $flashSuccess = $this->words->getSilent($flashSuccess);
+    }
     if (strlen($flashSuccess) != 0): ?>
         <div class="row">
             <div class="col-12">

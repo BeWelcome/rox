@@ -37,8 +37,7 @@ This File display a topic and the messages which are inside it
         if ((!isset($topic->topicinfo->IdTitle)) and (!isset($topic->topicinfo->ThreadDeleted))) {
             echo "<h2>", $topic->topicinfo->title, "</h2>";
         } else {
-        //$i18n = new MOD_i18n('apps/forums/board.php');
-        //$boardText = $i18n->getText('boardText');
+
         $words = new MOD_words();
 
         $User = $this->_model->getLoggedInMember();

@@ -55,7 +55,7 @@ class Role extends RoxEntityBase
         {
             return false;
         }
-        
+
         return $this->_entity_factory->get('MemberRole')->getRoleMembers($this);
     }
 
@@ -72,7 +72,7 @@ class Role extends RoxEntityBase
         {
             return false;
         }
-        
+
         return (($this->createEntity('RolePrivilege')->findById($this, $privilege)) ? true : false);
      }
 
@@ -95,7 +95,8 @@ class Role extends RoxEntityBase
             return $priv->getPrivilege();
         }
 
-        $return = false; 
+        $return = false;
+        $result = null;
         $privileges = $this->getPrivileges();
         foreach ($privileges as $priv)
         {
@@ -126,7 +127,7 @@ class Role extends RoxEntityBase
         {
             return false;
         }
-        
+
         $privileges = $this->getPrivileges();
         if (is_array($privileges) && (empty($scopes) || !is_array($scopes)))
         {
@@ -186,7 +187,7 @@ class Role extends RoxEntityBase
         {
             return false;
         }
-        
+
         $privileges = $this->getPrivileges();
         if (!empty($privileges))
         {
@@ -263,7 +264,7 @@ class Role extends RoxEntityBase
         $in_string = "'" . implode("', '", $priv_ids) . "'";
         $return = $this->createEntity('PrivilegeScope')->findByWhereMany("IdMember = '{$member->getPKValue()}' AND IdRole = '{$this->getPKValue()}' AND IdPrivilege IN ({$in_string}) AND IdType = '{$object_id}'");
         return (($return) ? $return : array());
- 
+
     }
 
 }

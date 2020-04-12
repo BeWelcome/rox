@@ -468,6 +468,25 @@ SQL;
      * @return bool
      * @access public
      */
+    public function isGroupAdmin($member)
+    {
+        if (!is_object($member) || !$member->isPKSet() || !$this->isLoaded())
+        {
+            return false;
+        }
+
+        $role = $this->createEntity('Role')->findByName('GroupsAdmin');
+        return (($member->hasRole($role)) ? true : false);
+    }
+
+
+    /**
+     * checks whether a given member entity is the owner of the group
+     *
+     * @param object $member - entity to check for
+     * @return bool
+     * @access public
+     */
     public function isGroupOwner($member)
     {
         if (!is_object($member) || !$member->isPKSet() || !$this->isLoaded())
@@ -476,7 +495,8 @@ SQL;
         }
 
         $role = $this->createEntity('Role')->findByName('GroupOwner');
-        return (($member->hasRole($role, $this)) ? true : false);
+        $hasrole = $this->createEntity('MemberRole')->memberHasRole($this, $role);
+        return $hasrole;
     }
 
 

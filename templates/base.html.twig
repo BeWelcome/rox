@@ -79,24 +79,24 @@
             </div>
         </main>
         {% include 'footer.html.twig' %}
-        {{ encore_entry_script_tags('bewelcome') }}
-        {{ encore_entry_script_tags('updatecounters') }}
-        {% if sidebar %}
-            {{ encore_entry_script_tags('offcanvas') }}
-        {% endif %}
-        <script type="application/javascript">
-            $(".select2").select2({
-                theme: 'bootstrap',
-                containerCssClass: 'form-control'
-            });
-            $(".select2-inline").select2({
-                theme: 'bootstrap',
-                containerCssClass: 'form-control',
-                width: 'style'
-            });
-            $(".toast").toast('show');
+            {{ encore_entry_script_tags('bewelcome') }}
+            {{ encore_entry_script_tags('updatecounters') }}
+            {% if sidebar %}
+                {{ encore_entry_script_tags('offcanvas') }}
+            {% endif %}
+            <script type="application/javascript">
+                $(".select2").select2({
+                    theme: 'bootstrap',
+                    containerCssClass: 'form-control'
+                });
+                $(".select2-inline").select2({
+                    theme: 'bootstrap',
+                    containerCssClass: 'form-control',
+                    width: 'style'
+                });
+                $(".toast").toast('show');
 
-        </script>
+            </script>
         {% block javascripts %}{% endblock javascripts %}
     </body>
 </html>

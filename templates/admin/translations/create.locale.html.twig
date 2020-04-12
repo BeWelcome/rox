@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{ 'translations.title' | trans }}
+{% endblock %}
+
+{% block content %}
+    <h1>{{ 'translations.headline' | trans }}</h1>
+    {{ form_start(form) }}
+    {{ form_row(form.wordCode) }}
+    {{ form_row(form.domain) }}
+    {{ form_row(form.description) }}
+    {{ form_row(form.englishText) }}
+    {{ form_row(form.locale) }}
+    {{ form_row(form.translatedText) }}
+    {{ form_row(form.create) }}
+    {{ form_end(form) }}
+{% endblock content %}

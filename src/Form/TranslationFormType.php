@@ -2,7 +2,10 @@
 
 namespace App\Form;
 
+use App\Doctrine\DomainType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -37,17 +40,47 @@ class TranslationFormType extends AbstractType
                     ])
                     ->add('translatedText', TextAreaType::class, [
                         'required' => false,
-                    ]);
+                    ])
+                ;
             }
-            if ('' === $translationRequest->wordCode) {
+            if (null === $translationRequest->wordCode) {
                 $form->add('wordCode', TextType::class, [
-                    'label' => 'translation.wordcode',
-                ]);
+                        'label' => 'translation.wordcode',
+                    ])
+                    ->add('domain', ChoiceType::class, [
+                        'label' => 'translation.domain',
+                        'choices' => [
+                            DomainType::MESSAGES => DomainType::MESSAGES,
+                            DomainType::ICU_MESSAGES => DomainType::ICU_MESSAGES,
+                            DomainType::VALIDATORS => DomainType::VALIDATORS,
+                        ],
+                        'choice_translation_domain' => false,
+                        'required' => true,
+                        'attr' => [
+                            'class' => 'select2',
+                        ],
+                    ])
+                ;
             } else {
                 $form->add('wordCode', TextType::class, [
-                    'disabled' => true,
-                    'label' => 'translation.wordcode',
-                ]);
+                        'disabled' => true,
+                        'label' => 'translation.wordcode',
+                    ])
+                    ->add('domain', ChoiceType::class, [
+                        'label' => 'translation.domain',
+                        'choices' => [
+                            DomainType::MESSAGES => DomainType::MESSAGES,
+                            DomainType::ICU_MESSAGES => DomainType::ICU_MESSAGES,
+                            DomainType::VALIDATORS => DomainType::VALIDATORS,
+                        ],
+                        'choice_translation_domain' => false,
+                        'required' => true,
+                        'disabled' => true,
+                        'attr' => [
+                            'class' => 'select2',
+                        ],
+                    ])
+                ;
             }
             $form->add('create', SubmitType::class);
         });

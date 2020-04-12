@@ -6,37 +6,12 @@ use App\Entity\Word;
 use InvalidArgumentException;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class EditTranslationRequest
+class EditTranslationRequest extends TranslationRequest
 {
     /**
-     * @var string
-     *
-     * @Assert\NotBlank()
+     * @var bool
      */
-    public $wordCode;
-
-    /**
-     * @var string
-     * @Assert\NotBlank()
-     */
-    public $locale;
-
-    /**
-     * @var string
-     * @Assert\NotBlank()
-     */
-    public $englishText;
-
-    /**
-     * @var string
-     */
-    public $description;
-
-    /**
-     * @var string
-     * @Assert\NotBlank()
-     */
-    public $translatedText;
+    public $isMajorUpdate;
 
     /**
      * @param Word $original
@@ -54,10 +29,12 @@ class EditTranslationRequest
 
         $editTranslationRequest = new self();
         $editTranslationRequest->wordCode = $original->getCode();
+        $editTranslationRequest->domain = $original->getDomain();
         $editTranslationRequest->englishText = $original->getSentence();
         $editTranslationRequest->description = $original->getDescription();
         $editTranslationRequest->locale = $translation->getShortCode();
         $editTranslationRequest->translatedText = $translation->getSentence();
+        $editTranslationRequest->isMajorUpdate = ($original->getMajorUpdate() > $translation->getUpdated());
 
         return $editTranslationRequest;
     }

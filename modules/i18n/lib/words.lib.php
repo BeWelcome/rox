@@ -666,7 +666,7 @@ WHERE
 			}
 
 			// Try default chosen language
-        	$query ="SELECT SQL_CACHE `Sentence` FROM `memberstrads` WHERE `IdTrad`=".$IdTrad." and `IdLanguage`=".$IdLanguage ;
+        	$query ="SELECT SQL_CACHE `Sentence` FROM `memberstrads` WHERE `IdTrad`=".$IdTrad." and `IdLanguage`=".$IdLanguage." ORDER BY updated DESC" ;
 			$q = $this->_dao->query($query);
 			$row = $q->fetch(PDB::FETCH_OBJ);
 			if (isset ($row->Sentence)) {
@@ -678,7 +678,7 @@ WHERE
 				}
 			}
 			// Try default en
-        	$query ="SELECT SQL_CACHE `Sentence` FROM `memberstrads` WHERE `IdTrad`=".$IdTrad." and `IdLanguage`=0" ;
+        	$query ="SELECT SQL_CACHE `Sentence` FROM `memberstrads` WHERE `IdTrad`=".$IdTrad." and `IdLanguage`=0 ORDER BY updated DESC" ;
 			$q = $this->_dao->query($query);
 			$row = $q->fetch(PDB::FETCH_OBJ);
 			if (isset ($row->Sentence)) {

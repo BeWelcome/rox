@@ -6,14 +6,13 @@
 {% endblock stylesheets %}
 
 {% block javascripts %}
-    {{ encore_entry_link_tags('jquery_ui') }}
-    {{ encore_entry_link_tags('landing') }}
-    {{ encore_entry_link_tags('search/searchpicker') }}
+    {{ encore_entry_script_tags('landing') }}
+    {{ encore_entry_script_tags('jquery_ui') }}
+    {{ encore_entry_script_tags('search/searchpicker') }}
 {% endblock javascripts %}
 
 {% block content %}
     <div class="row welcomeback mx-0 mb-4 p-2">
-
         {% include 'landing/widget/profilepicturewithaccommodation.html.twig' with {
         member: app.user
         } only %}

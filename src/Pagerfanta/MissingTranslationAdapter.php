@@ -38,8 +38,9 @@ class MissingTranslationAdapter implements AdapterInterface
         $this->query = "
             SELECT
                 code,
+                domain,
                 shortcode,
-                Sentence,
+                sentence,
                 created
             FROM
                 words

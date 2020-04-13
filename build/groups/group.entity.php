@@ -494,9 +494,13 @@ SQL;
             return false;
         }
 
-        $role = $this->createEntity('Role')->findByName('GroupOwner');
-        $hasrole = $this->createEntity('MemberRole')->memberHasRole($this, $role);
-        return $hasrole;
+        $found = false;
+        $groupOwners = $this->getGroupOwners();
+        if ($groupOwners) {
+            $found = (false !== array_search($member, $groupOwners));
+        }
+
+        return $found;
     }
 
 

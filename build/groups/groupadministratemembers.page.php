@@ -51,8 +51,7 @@ class GroupMemberAdministrationPage extends GroupsBasePage
         // &gt; or &raquo; ?
         ?>
         <div>
-            <h1><a href="groups"><?= $words->get('Groups'); ?></a> &raquo; <a
-                    href=""><?= $words->get('GroupsAdministrateMembers'); ?></a></h1>
+            <h2><a href="groups/search"><?= $words->get('Groups'); ?></a> &raquo; <a href="group/<?=$this->group->getPKValue(); ?>"><?php echo htmlspecialchars($this->getGroupTitle(),ENT_QUOTES); ?></a> &raquo; <?= $words->get('GroupsAdministrateMembers'); ?></h2>
         </div>
         <?php
     }

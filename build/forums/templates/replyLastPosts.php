@@ -16,8 +16,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program; if not, see <http://www.gnu.org/licenses/> or 
-write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+along with this program; if not, see <http://www.gnu.org/licenses/> or
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
@@ -29,11 +29,12 @@ Boston, MA  02111-1307, USA.
 	$can_edit_own = false;
 	$can_edit_foreign = false;
 ?>
-<div class="row">
-<div class="col-12 order-12">
+<div class="row no-gutters">
+<div class="col-12">
 <h2 class="mt-5 mb-0 w-100"><?php echo $words->getFormatted('last_posts'); ?></h2>
 <p><?php echo $words->getFormatted('LastPostSubline'); ?></p>
-    <div class="row">
+</div>
+    <div class="col-12">
 <?php
   // counting for background switch trick
   $cntx = '1';
@@ -44,5 +45,4 @@ Boston, MA  02111-1307, USA.
   }
 ?>
     </div>
-</div>
 </div>

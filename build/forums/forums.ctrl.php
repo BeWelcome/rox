@@ -223,6 +223,7 @@ class ForumsController extends PAppController
             }
             $this->_model->prepareForum();
             $callbackId = $this->createProcess();
+
             $this->_view->createTopic($callbackId,$IdGroup);
             PPostHandler::clearVars($callbackId);
         }

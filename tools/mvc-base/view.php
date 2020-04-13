@@ -10,9 +10,6 @@ class RoxAppView extends PAppView
         call_user_func_array(array(&$this, $methodname), $args);
         $str = ob_get_contents();
         ob_end_clean();
-        return $str; 
+        return $str;
     }
 }
-
-
-?>

@@ -10,6 +10,10 @@
 $active_menu_item = $this->getSubmenuActiveItem();
 foreach ($this->getSubmenuItems() as $index => $item) {
     $name = $item[0];
+    if ('separator' === $name) {
+        echo '</div><div class="list-group mb-2">';
+        continue;
+    }
     $url = $item[1];
     $label = $item[2];
     if ($name === $active_menu_item) {

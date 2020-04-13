@@ -31,11 +31,12 @@ class LogController extends AbstractController
         }
 
         $member = null;
+        /** @var Member $logViewer */
         $logViewer = $this->getUser();
         $page = $request->query->get('page', 1);
         $limit = $request->query->get('limit', 20);
-        $types = $request->query->get('types', []);
-        $username = $request->query->get('username', null);
+        $types = $request->query->get('log.types', []);
+        $username = $request->query->get('log[username]', null);
 
         $logTypes = $logModel->getLogTypes($logViewer);
         if (count($logTypes) == 1) {
@@ -65,6 +66,31 @@ class LogController extends AbstractController
 
         return  $this->render('admin/logs/index.html.twig', [
             'form' => $logForm->createView(),
+            'logs' => $logs,
+        ]);
+    }
+
+    /**
+     * @Route("/admin/logs/groups", name="admin_groups_logs")
+     *
+     * @param Request  $request
+     * @param LogModel $logModel
+     *
+     * @return Response
+     */
+    public function showGroupLogs(Request $request, LogModel $logModel)
+    {
+        if (!$this->isGranted(Member::ROLE_ADMIN_FORUMMODERATOR)) {
+            throw $this->createAccessDeniedException('You need to have Logs right to access this.');
+        }
+
+        $member = null;
+        $page = $request->query->get('page', 1);
+        $limit = $request->query->get('limit', 20);
+
+        $logs = $logModel->getFilteredLogs(['Group'], null, $page, $limit);
+
+        return  $this->render('admin/logs/index.html.twig', [
             'logs' => $logs,
         ]);
     }

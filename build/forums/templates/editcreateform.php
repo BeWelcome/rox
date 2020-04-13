@@ -152,14 +152,14 @@ $vars =& PPostHandler::getVars($callbackId);
             } ?>
         </div>
     </div>
-    <div class="col-12 col-md-4 order-1 order-md-2 form-inline mb-1 px-1">
+    <div class="col-12 col-md-4 order-1 order-md-2 mb-1 px-1">
         <div class="form-check">
             <input type="checkbox" name="NotifyMe" id="NotifyMe" class="form-check-input" <?php echo $notifymecheck ?>>
             <label for="NotifyMe" class="form-check-label"><?php echo $words->getFormatted("forum_NotifyMeForThisThread") ?></label>
         </div>
     </div>
 
-        <div class="col-12 col-md-4 order-2 order-md-3 form-inline mb-1 px-1">
+        <div class="col-12 col-md-4 order-2 order-md-3 mb-1 px-1">
                     <legend class="sr-only"><?= $words->getFormatted("forum_label_visibility") ?></legend>
                     <?php
                     // visibility can only be set on groups with 'VisiblePosts' set to 'yes'.
@@ -211,6 +211,3 @@ $vars =& PPostHandler::getVars($callbackId);
     </form>
     </div>
 </div>
-<link rel="stylesheet" type="text/css" href="<?= $this->getUrl('build/roxeditor.css');?>">
-<script src="<?= $this->getUrl('build/roxeditor.js');?>"></script>
-<script src="build/cktranslations/<?= $this->session->get('lang', 'en');?>.js"></script>

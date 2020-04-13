@@ -7,16 +7,24 @@ class PageWithHTML extends AbstractBasePage
     // Add or increment query string if a JS file changes to make sure browsers
     // reload the file (e.g. "?1" -> "?2")
     private $_early_scriptfiles = array(
-//        'build/runtime.js',
-        'build/bewelcome.js',
-        'build/offcanvas.js',
-        'build/updatecounters.js',
         '/script/main.js?9',
-//         '/script/common/common.js?1',
         '/script/common/initialize.js?1',
     );
 
     private $_late_scriptfiles = array(
+        'build/bewelcome.js',
+        'build/offcanvas.js',
+        'build/updatecounters.js',
+    );
+
+    private $_stylesheets = array(
+        'build/bewelcome.css',
+    );
+
+    private $_rendered_scripts = array(
+    );
+
+    private $_rendered_stylesheets = array(
     );
 
     public function render() {
@@ -50,7 +58,7 @@ class PageWithHTML extends AbstractBasePage
      */
     protected function getStylesheets()
     {
-        $stylesheets = array();
+        $stylesheets = $this->_stylesheets;
         foreach ($this->_widgets as $widget) {
             foreach ($widget->getStylesheets() as $stylesheet) {
                 $stylesheets[] = $stylesheet;
@@ -108,7 +116,7 @@ class PageWithHTML extends AbstractBasePage
      * @access protected
      * @return void
      */
-    protected function addEarlyLoadScriptFile($file)
+    public function addEarlyLoadScriptFile($file)
     {
         $this->_early_scriptfiles[] = $file;
     }
@@ -121,9 +129,14 @@ class PageWithHTML extends AbstractBasePage
      * @access protected
      * @return void
      */
-    protected function addLateLoadScriptFile($file)
+    public function addLateLoadScriptFile($file)
     {
         $this->_late_scriptfiles[] = $file;
+    }
+
+    public function addStylesheet($file)
+    {
+        $this->_stylesheets[] = $file;
     }
 
     protected function getPageTitle() {
@@ -198,7 +211,30 @@ class PageWithHTML extends AbstractBasePage
             $stylesheetFile = str_replace('.css', '', $stylesheetFile);
             $stylesheetFiles = $this->entryPointLookup->getCssFiles($stylesheetFile);
             foreach ($stylesheetFiles as $stylesheetFile) {
-                echo '<link rel="stylesheet" href="' . $stylesheetFile . '">' . PHP_EOL;
+                if (!isset($this->_rendered_stylesheets[$stylesheetFile])) {
+                    echo '<link rel="stylesheet" href="' . $stylesheetFile . '">' . PHP_EOL;
+                    $this->_rendered_stylesheets[$stylesheetFile] = $stylesheetFile;
+                }
+            }
+        }
+    }
+
+    protected function printScriptTags($scriptUrl)
+    {
+        if (false === strpos($scriptUrl, 'build/') || false !== strpos($scriptUrl, 'cktranslations/'))
+        {
+            echo '<script src="' .  ltrim($scriptUrl, '/') . '"></script>' . PHP_EOL;
+        }
+        else
+        {
+            $scriptFile = str_replace('build/', '', $scriptUrl);
+            $scriptFile = str_replace('.js', '', $scriptFile);
+            $scriptFiles = $this->entryPointLookup->getJavaScriptFiles($scriptFile);
+            foreach($scriptFiles as $scriptFile) {
+                if (!isset($this->_rendered_scripts[$scriptFile])) {
+                    echo '<script src="' . $scriptFile . '"></script>' . PHP_EOL;
+                    $this->_rendered_scripts[$scriptFile] = $scriptFile;
+                }
             }
         }
     }
@@ -251,23 +287,6 @@ class PageWithHTML extends AbstractBasePage
             $html[] = '}';
             $html[] = '</script>';
             echo implode($html, "\n");
-        }
-    }
-
-    protected function printScriptTags($scriptUrl)
-    {
-        if (false === strpos($scriptUrl, 'build/') || false !== strpos($scriptUrl, 'cktranslations/'))
-        {
-            echo '<script type="text/javascript" src="' .  ltrim($scriptUrl, '/') . '"></script>' . PHP_EOL;
-        }
-        else
-        {
-            $scriptFile = str_replace('build/', '', $scriptUrl);
-            $scriptFile = str_replace('.js', '', $scriptFile);
-            $scriptFiles = $this->entryPointLookup->getJavaScriptFiles($scriptFile);
-            foreach($scriptFiles as $scriptFile) {
-                echo '<script type="text/javascript" src="' . $scriptFile . '"></script>' . PHP_EOL;
-            }
         }
     }
 

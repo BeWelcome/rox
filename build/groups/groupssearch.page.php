@@ -38,7 +38,7 @@ class GroupsSearchPage extends GroupsBasePage
         $words = $this->getWords();
         ?>
         <div>
-            <h1><a href="forums"><?= $words->get('CommunityDiscussions');?></a> &raquo; <a href="groups/forums"><?= $words->get('Groups');?></a> &raquo; <a href="groups/search"><?= $words->get('search');?></a></h1>
+            <h2><a href="groups/search"><?= $words->get('Groups');?></a> &raquo;<?= $words->get('search');?></h2>
         </div>
         <?php
     }
@@ -49,6 +49,42 @@ class GroupsSearchPage extends GroupsBasePage
         $items = array();
         $items[] = array('mygroups', 'groups/mygroups', $words->getSilent('GroupsMyGroups'));
         $items[] = array('search', 'groups/search', $words->getSilent('GroupsFindGroups'));
+
+        $isForumModerator = $this->member->hasOldRight(['ForumModerator' => 10]);
+
+        if ($isForumModerator)
+        {
+            $forumsModel = new Forums();
+            $items[] = ['separator'];
+            $items[] = ['allmyreports', 'forums/reporttomod/AllMyReport', 'All reports for me'];
+            $items[] = [
+                'myactivereports',
+                'forums/reporttomod/MyReportActive',
+                'Pending reports for me <span class="badge badge-default">'
+                . $forumsModel->countReportList($this->session->get("IdMember"),
+                    "('Open','OnDiscussion')"
+                )
+                . '</span>'
+            ];
+            $items[] = [
+                'allactivereports',
+                'forums/reporttomod/AllActiveReports',
+                'All pending reports <span class="badge badge-default">'
+                . $forumsModel->countReportList(0,"('Open','OnDiscussion')")
+                . '</span>'
+            ];
+            $items[] = ['separator'];
+            $items[] = [
+                'groupadmin',
+                '/admin/groups/approval',
+                'Group Administration'
+            ];
+            $items[] = [
+                'grouplogs',
+                'admin/logs/groups',
+                'Group Logs'
+            ];
+        }
 
         return $items;
     }

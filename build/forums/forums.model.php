@@ -2421,11 +2421,13 @@ SELECT
     `PostDeleted`,
     `ThreadDeleted`,
 	`OwnerCanStillEdit`,
-    `geonames`.`country`,
+    `geonames`.`name` as `city`,
+    `geonamescountries`.`name` as `country`,
     `IdLocalEvent`,
     `IdGroup`
 FROM forums_posts, forums_threads, members, addresses
 LEFT JOIN `geonames` ON (addresses.IdCity = `geonames`.`geonameid`)
+LEFT JOIN `geonamescountries` ON (geonames.country = `geonamescountries`.`country`)
 WHERE `forums_posts`.`threadid` = '%d' AND `forums_posts`.`IdWriter` = `members`.`id`
 AND addresses.IdMember = members.id AND addresses.rank = 0
  AND `forums_posts`.`threadid`=`forums_threads`.`id`

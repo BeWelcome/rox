@@ -37,6 +37,7 @@ class GroupForumPage extends GroupsBasePage
     {
         parent::__construct();
         $this->addLateLoadScriptFile('build/roxeditor.js');
+        $this->addStylesheet('build/roxeditor.css');
     }
 
     protected function column_col3()
@@ -45,16 +46,14 @@ class GroupForumPage extends GroupsBasePage
         if (!$this->member) {
             $loginWidget = $this->layoutkit->createWidget('LoginFormWidget');
             $loginWidget->render();
-        } elseif (!$this->isGroupMember() && !$this->group->isGroupAdmin($this->member) &&
-            ($this->group->Type == 'NeedInvitation'
-                || $this->group->Type == 'NeedAcceptance')) {
+        } elseif (!$this->canMemberAccess()) {
             echo $words->get('GroupsNotPublic');
         } else {
             $group_id = $this->group->id;
 
             $memberlist_widget = new GroupMemberlistWidget();
             $memberlist_widget->setGroup($this->group);
-
+            $testVariable = true;
             $Forums = new ForumsController;
             $Forums->setEnvironment($this->environment);
             $Forums->index('group');
@@ -83,7 +82,7 @@ class GroupForumsOverviewPage extends GroupsBasePage
         $words = $this->getWords();
         ?>
         <div>
-            <h2><a href="forums"><?= $words->get('CommunityLanding');?></a> &raquo <a href="groups/forums"><?= $words->get('Groups');?></a></h2>
+            <h2><a href="groups/search"><?= $words->get('Groups');?></a></h2>
         </div>
         <?php
     }

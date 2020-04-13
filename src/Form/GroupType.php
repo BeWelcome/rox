@@ -37,22 +37,22 @@ class GroupType extends AbstractType
             ])
             ->add('type', ChoiceType::class, [
                 'choices' => [
-                    'label.group.join.public' => 'Public',
-                    'label.group.join.approve' => 'NeedAcceptance',
-                    'label.group.join.invite' => 'NeedInvitation',
+                    'groupsjoinpublic' => 'Public',
+                    'groupsjoinapproved' => 'NeedAcceptance',
+                    'groupsjoininvited' => 'NeedInvitation',
                 ],
                 'expanded' => true,
                 'multiple' => false,
-                'label' => 'headline.group.join',
+                'label' => 'groupspublicstatusheading',
             ])
             ->add('membersOnly', ChoiceType::class, [
                 'choices' => [
-                    'label.group.posts.invisible' => 'Yes',
-                    'label.group.posts.visible' => 'No',
+                    'groupsvisibleposts' => 'Yes',
+                    'groupsinvisibleposts' => 'No',
                 ],
                 'expanded' => true,
                 'multiple' => false,
-                'label' => 'headline.group.posts',
+                'label' => 'groupsvisiblepostsheading',
             ])
             ->add('picture', FileType::class, [
                 'label' => 'label.group.picture',

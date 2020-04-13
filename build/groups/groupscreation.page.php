@@ -38,7 +38,7 @@ class GroupsCreationPage extends GroupsBasePage
         $words = $this->getWords();
         ?>
         <div>
-            <h1><a href="groups"><?= $words->get('Groups');?></a> &raquo; <a href="new/group"><?= $words->get('GroupsCreateNew');?></a></h1>
+            <h2><a href="groups/search"><?= $words->get('Groups');?></a> &raquo; <?= $words->get('GroupsCreateNew');?></h2>
         </div>
         <?php
     }

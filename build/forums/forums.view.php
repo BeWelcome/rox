@@ -1,8 +1,7 @@
 <?php
 
 use App\Utilities\SessionTrait;
-use Symfony\Component\Asset\Package;
-use Symfony\Component\Asset\VersionStrategy\JsonManifestVersionStrategy;
+use Symfony\WebpackEncoreBundle\Asset\EntrypointLookup;
 
 /**
 * Forums view
@@ -18,22 +17,24 @@ class ForumsView extends RoxAppView {
     use SessionTrait;
 
     private $_model;
+    /** @var PageWithHTML */
     public $page;
     private $words ;
     public $uri;
     public $forum_uri;
     public $BW_Right;
-    private $package;
+    private $entryPointLookup;
 
     public function __construct(Forums &$model) {
+        parent::__construct();
         $this->setSession();
         $this->_model =& $model;
         $this->words=$this->_model->words ;
         $this->BW_Right=$this->_model->BW_Right ;
         $this->uri=$this->getURI() ;
         $this->forum_uri='forums' ;
-        $this->page = new stdClass();
-        $this->package = new Package(new JsonManifestVersionStrategy('build/manifest.json'));
+        $this->page = new PageWithHTML();
+        $this->entryPointLookup = new EntrypointLookup('build/entrypoints.json');
     }
 
 
@@ -46,6 +47,8 @@ class ForumsView extends RoxAppView {
     * Create a new topic in the current forum
     */
     public function createTopic(&$callbackId,$IdGroup=0) {
+        $this->page->addStyleSheet('build/roxeditor.css');
+        $this->page->addLateLoadScriptFile('build/roxeditor.js');
         $boards = $this->_model->getBoard();
         $allow_title = true;
         $tags = $this->_model->getTagsNamed();
@@ -114,6 +117,8 @@ class ForumsView extends RoxAppView {
 
 
     public function replyTopic(&$callbackId) {
+        $this->page->addStyleSheet('build/roxeditor.css');
+        $this->page->addLateLoadScriptFile('build/roxeditor.js');
         $boards = $this->_model->getBoard();
         $topic = $this->_model->getTopic();
         $allow_title = false;
@@ -154,6 +159,8 @@ class ForumsView extends RoxAppView {
 
     // This is the normal edit/translate post by a member
     public function editPost(&$callbackId,$translate=false) {
+        $this->page->addStyleSheet('build/roxeditor.css');
+        $this->page->addLateLoadScriptFile('build/roxeditor.js');
         $boards = $this->_model->getBoard();
         $topic = $this->_model->getTopic();
         $vars =& PPostHandler::getVars($callbackId);
@@ -183,6 +190,9 @@ class ForumsView extends RoxAppView {
             $AppropriatedLanguage=$fTradIdLastUsedLanguage ;
         }
         $disableTinyMCE = $this->_model->getTinyMCEPreference();
+        if ($IdGroup == 0) {
+            $this->renderScriptAndStyleTags = true;
+        }
         require 'templates/editcreateform.php';
     } // end of editPost
 
@@ -677,9 +687,16 @@ class ForumsView extends RoxAppView {
         require 'templates/featureclosed.php';
         } // end of showFeatureIsClosed()
 
-    protected function getUrl($path)
+    protected function printScriptAndStyleTags($package)
     {
-        return $this->package->getUrl($path);
+        $stylesheetFiles = $this->entryPointLookup->getCssFiles($package);
+        foreach ($stylesheetFiles as $stylesheetFile) {
+            echo '<link rel="stylesheet" href="' . $stylesheetFile . '">' . PHP_EOL;
+        }
+        $scriptFiles = $this->entryPointLookup->getJavaScriptFiles($package);
+        foreach ($scriptFiles as $scriptFile) {
+            echo '<script type="text/javascript" src="' . $scriptFile . '"></script>' . PHP_EOL;
+        }
     }
 
 }

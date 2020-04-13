@@ -382,6 +382,10 @@ class GroupController extends AbstractController
                 'key' => 'admin.groups.unarchival',
                 'url' => $this->generateUrl('admin_groups_unarchival'),
             ],
+            'logs' => [
+                'key' => 'admin.groups.logs',
+                'url' => $this->generateUrl('admin_groups_logs'),
+            ],
         ];
     }
 }

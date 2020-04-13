@@ -42,6 +42,12 @@ class GroupsBasePage extends PageWithActiveSkin
      */
     protected $_messages;
 
+    /** @var Group */
+    public $group;
+
+    /** @var Member */
+    public $member;
+
     /**
      * set a message for the member to see
      *
@@ -119,13 +125,44 @@ class GroupsBasePage extends PageWithActiveSkin
         }
     }
 
+    protected function isGroupOwner() {
+        if (!$this->group || !$this->member)
+        {
+            return false;
+        }
+        else
+        {
+            return $this->group->isGroupOwner($this->member);
+        }
+    }
+
+    protected function isGroupAdmin() {
+        if (!$this->group || !$this->member)
+        {
+            return false;
+        }
+        else
+        {
+            return $this->group->isGroupAdmin($this->member);
+        }
+    }
+
+    protected function canMemberAccess()
+    {
+        $canAccess =
+            ('Public' == $this->group->Type)
+            || $this->isGroupMember()
+            || ('NeedAcceptance' == $this->group->Type && $this->isGroupAdmin());
+
+        return $canAccess;
+    }
 
     protected function teaserContent()
     {
         // &gt; or &raquo; ?
         $words = $this->getWords();
         ?>
-        <h2><a href="forums"><?= $words->get('CommunityDiscussions');?></a> &raquo; <a href="groups/search"><?= $words->get('Groups');?></a> &raquo; <a href="groups/<?=$this->group->id ?>"><?= htmlspecialchars($this->group->Name, ENT_QUOTES) ?></a></h2>
+        <h2><a href="groups/search"><?= $words->get('Groups');?></a> &raquo; <?= htmlspecialchars($this->group->Name, ENT_QUOTES) ?></h2>
         <?php
     }
 
@@ -155,12 +192,10 @@ class GroupsBasePage extends PageWithActiveSkin
                 $items[] = array('membersettings', 'group/'.$group_id.'/membersettings', $words->getSilent('GroupMembersettings'));
                 $items[] = array('relatedgroupsettings', 'group/'.$group_id.'/relatedgroupsettings', $words->getSilent('GroupRelatedGroups'));
             }
-            if ($this->member && ($this->member->hasPrivilege('GroupsController', 'GroupSettings', $this->group)
-                || $isAdmin))
+            if ($isOwner || ($isAdmin && 'NeedInvitation' !== $this->group->Type))
             {
                 $items[] = array('admin', "group/{$this->group->getPKValue()}/groupsettings", $words->getSilent('GroupGroupsettings'));
             }
-
         } else {
             $items[] = [ 'search', 'groups/search', $words->getSilent('GroupsSearchHeading') ];
             $items[] = [ 'rules', 'forums/rules', $words->getSilent('ForumRulesShort') ];
@@ -168,6 +203,41 @@ class GroupsBasePage extends PageWithActiveSkin
         }
 
         $items[] = [ 'subscription', 'forums/subscriptions', $this->words->getSilent('forum_YourSubscription') ];
+        $isForumModerator = $this->member->hasOldRight(['ForumModerator' => 10]);
+
+        if ($isForumModerator)
+        {
+            $forumsModel = new Forums();
+            $items[] = ['separator'];
+            $items[] = ['allmyreports', 'forums/reporttomod/AllMyReport', 'All reports for me'];
+            $items[] = [
+                'myactivereports',
+                'forums/reporttomod/MyReportActive',
+                'Pending reports for me <span class="badge badge-default">'
+                . $forumsModel->countReportList($this->session->get("IdMember"),
+                    "('Open','OnDiscussion')"
+                )
+                . '</span>'
+            ];
+            $items[] = [
+                'allactivereports',
+                'forums/reporttomod/AllActiveReports',
+                'All pending reports <span class="badge badge-default">'
+                . $forumsModel->countReportList(0,"('Open','OnDiscussion')")
+                . '</span>'
+            ];
+            $items[] = ['separator'];
+            $items[] = [
+                'groupadmin',
+                '/admin/groups/approval',
+                'Group Administration'
+            ];
+            $items[] = [
+                'grouplogs',
+                'admin/logs/groups',
+                'Group Logs'
+            ];
+        }
 
         return $items;
     }

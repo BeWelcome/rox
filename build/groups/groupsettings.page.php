@@ -51,7 +51,7 @@ class GroupSettingsPage extends GroupsBasePage
         $words = $this->getWords();
         ?>
         <div>
-            <h2><a href="groups/mygroups"><?= $words->get('Groups');?></a> &raquo; <a href="group/<?=$this->group->getPKValue(); ?>"><?php echo htmlspecialchars($this->getGroupTitle(),ENT_QUOTES); ?></a>  &raquo;  <?= $words->get('GroupsAdministrateGroup');?></h2>
+            <h2><a href="groups/search"><?= $words->get('Groups');?></a> &raquo; <a href="group/<?=$this->group->getPKValue(); ?>"><?php echo htmlspecialchars($this->getGroupTitle(),ENT_QUOTES); ?></a>  &raquo;  <?= $words->get('GroupsAdministrateGroup');?></h2>
         </div>
         <?php
     }
@@ -67,10 +67,14 @@ class GroupSettingsPage extends GroupsBasePage
         $layoutkit = $this->layoutkit;
         $words = $layoutkit->getWords();
 
-        if (!$this->isGroupMember() && !$this->group->isGroupAdmin($this->member) &&
-            ($this->group->Type == 'NeedInvitation'
-                || $this->group->Type == 'NeedAcceptance')) {
+        if (!$this->canMemberAccess())
+        {
             echo $words->get('GroupsNotPublic');
+            return;
+        }
+
+        if (!$this->isGroupOwner()) {
+            echo $words->get('GroupsSettingsOnlyAdmin');
             return;
         }
 
@@ -152,6 +156,7 @@ class GroupSettingsPage extends GroupsBasePage
                     <label class="m-0"><h5><?= $words->get('GroupsPublicStatusHeading'); ?></h5></label>
                 </legend>
 
+                <?php if ('NeedInvitation' !== $Type) { ?>
                 <div class="form-check mb-3">
                     <input type="radio" class="form-check-input" id="public" name="Type" value="Public"<?= (($Type=='Public') ? ' checked': ''); ?>>
                     <label for="public" class="form-check-label">
@@ -164,12 +169,14 @@ class GroupSettingsPage extends GroupsBasePage
                         <?=$words->get('GroupsJoinApproved'); ?>
                     </label>
                 </div>
-                <div class="form-check mb-3">
-                    <input type="radio" class="form-check-input" id="invitation" name="Type" value="NeedInvitation"<?= (($Type=='NeedInvitation') ? ' checked': ''); ?>>
-                    <label for="invitation" class="form-check-label">
-                        <?=$words->get('groupsjoininvited'); ?>
-                    </label>
-                </div>
+                <?php } else { ?>
+                    <div class="form-check mb-3">
+                        <input type="radio" disabled="disabled" class="form-check-input" id="invitation" name="Type" value="NeedInvitation"<?= (($Type=='NeedInvitation') ? ' checked': ''); ?>>
+                        <label for="invitation" class="form-check-label">
+                            <?=$words->get('groupsjoininvited'); ?>
+                        </label>
+                    </div>
+                <?php } ?>
             </fieldset>
         </div>
 
@@ -204,4 +211,3 @@ class GroupSettingsPage extends GroupsBasePage
     <?php
     }
 }
-?>

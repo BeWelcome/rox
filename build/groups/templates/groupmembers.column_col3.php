@@ -1,5 +1,5 @@
 <?php
-if (!$this->isGroupMember() && $this->group->Type == 'NeedInvitation')
+if (!$this->canMemberAccess())
 {
     echo '<div class="row"><div class="col-12">' . $words->get("GroupsNotPublic") . '</div></div>';
 }

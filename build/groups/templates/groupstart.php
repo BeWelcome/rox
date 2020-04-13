@@ -17,7 +17,7 @@
                 <?= $group_name_html; ?></h5>
             <div class="card-body">
                 <?php echo $purifier->purify(nl2br($this->group->getDescription())) ?>
-                <?php if ($this->isGroupMember()) { ?>
+                <?php if ($this->isGroupMember() || $this->isGroupAdmin()) { ?>
                     <a href="<?php echo $uri; ?>/forum/new"
                         class="btn btn-primary float-left"><?php echo $this->words->getBuffered('ForumNewTopic'); ?></a>
                 <?php } else { ?>
@@ -36,7 +36,7 @@
             }
 
             $showNewTopicButton = false;
-            if ($this->isGroupMember()) {
+            if ($this->isGroupMember() || $this->isGroupAdmin()) {
                 $showNewTopicButton = true;
             }
 

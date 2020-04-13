@@ -91,6 +91,4 @@ use Symfony\Component\Asset\VersionStrategy\JsonManifestVersionStrategy;
     </div> <!-- row -->
 </div>
 <div>
-    <?php $this->debugInfo() ?>
-    <?php $this->leftoverTranslationLinks() ?>
 </div>

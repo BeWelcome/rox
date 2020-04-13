@@ -53,10 +53,10 @@
                                           rows="3"><?= $vars['Organizations'] ?></textarea>
                 </div>
             </div>
-            
+
             <div class="row">
                 <div class="col-12 mt-3">
-                    <input type="submit" class="btn btn-primary float-right m-2" id="submit" name="submit"
+                    <input type="submit" class="btn btn-primary float-right m-2" name="submit"
                            value="<?= $words->getSilent('Save Profile') ?>"/> <?php echo $words->flushBuffer(); ?>
                 </div>
             </div>

@@ -56,7 +56,7 @@ class RoxModelBase extends RoxComponentBase
      * returns the currently logged in member
      *
      * @access public
-     * @return object|false
+     * @return Member|false
      */
     public function getLoggedInMember()
     {

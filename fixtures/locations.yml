@@ -1,0 +1,45 @@
+App\Entity\Location:
+    Berlin:
+        name: 'Berlin'
+        latitude: 52.5243700
+        longitude: 13.4105300
+        fclass: P
+        fcode: PPLC
+        admin1: 16
+        population: 3426354
+        moddate: '<DateTime()>'
+        geonameid: 2950159
+        country: '@Germany'
+    Jayapura:
+        name: 'Jayapura'
+        latitude: -2.5428400
+        longitude: 140.7027600
+        fclass: P
+        fcode: PPLA
+        admin1: 36
+        population: 134895
+        moddate: '<DateTime()>'
+        geonameid: 2082600
+        country: '@Indonesia'
+    Germany:
+        name: 'Germany'
+        latitude: 51.5000000
+        longitude: 10.5000000
+        fclass: A
+        fcode: PCLI
+        admin1: 00
+        population: 3426354
+        moddate: '<DateTime()>'
+        geonameid: 2950159
+        country: '@Germany'
+    Indonesia:
+        name: 'Indonesia'
+        latitude: -5.0000000
+        longitude: 120.0000000
+        fclass: A
+        fcode: PCLI
+        admin1: 00
+        population: 242968342
+        moddate: '<DateTime()>'
+        geonameid: 1643084
+        country: '@Indonesia'

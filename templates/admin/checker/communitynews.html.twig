@@ -1,0 +1,59 @@
+{% extends 'base.html.twig' %}
+{% import 'macros.twig' as macros %}
+
+{% block javascripts %}
+<script type="text/javascript">
+    $(window).on('load', function () {
+        $('#checkAllDelete').click(function () {
+            $('input:checkbox.checkableDelete').prop('checked', this.checked);
+        });
+    });
+</script>
+{% endblock %}
+
+{% block content %}
+    {% if reported.nbResults == 0 %}
+        <div class="alert alert-warning">{{ 'admin.checker.no.communitynews.comments' | trans }}</div>
+    {% else %}
+        {{ form_start(form) }}
+        {{ form_errors(form) }}
+        {% if reported.haveToPaginate %}
+            <div class="float-left">
+                {{ pagerfanta( reported, 'rox_default') }}
+            </div>
+        {% endif %}
+        <table class="table table-striped table-hover">
+
+            <tr>
+                <th>Title</th>
+                <th>Admin</th>
+                <th>Created</th>
+                <th>{{ 'delete' | trans }}</th>
+            </tr>
+            <tr>
+                <th colspan="3"></th>
+                <th><input type="checkbox" id="checkAllDelete"></th>
+            </tr>
+        {% for comment in reported.currentPageResults %}
+            <tr>
+                <td><a href="{{ url('communitynews_show', {'id': comment.id}) }}">{{ comment.title|purify }}</a><br><small>{{ comment.text|truncate(50) }}</small></td>
+                <td>{{ macros.avatarstack(comment.author.username) }}</td>
+                <td>{{ comment.created | localizeddate('short', 'short') }}</td>
+                <td>{{ form_widget(form.spamComments[loop.index0], {'attr': {'class': 'checkableDelete'}}) }}</td>
+            </tr>
+        {% endfor %}
+        </table>
+        <div class="row">
+            <div class="col-12 text-right">
+                <button type="submit" class="btn btn-primary">{{ 'button.delete' | trans }}</button>
+            </div>
+        </div>
+        {% if reported.haveToPaginate %}
+            <div class="float-left">
+                {{ pagerfanta( reported, 'rox_default') }}
+            </div>
+        {% endif %}
+        {{ form_rest(form) }}
+        {{ form_end(form) }}
+    {% endif %}
+{% endblock %}

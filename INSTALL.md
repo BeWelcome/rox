@@ -29,6 +29,8 @@ There is rudimentary Docker support. Feel free to update the Dockerfile to help 
 
 ### Download
 
+1. Download/setup [symfony command line interface](https://symfony.com/download)
+
 1. Clone via Git:
 
     ```bash
@@ -77,10 +79,8 @@ There is rudimentary Docker support. Feel free to update the Dockerfile to help 
 3. Start the server
 
    ```bash
-    $ php bin/console server:start
+    $ symfony serve
    ```
-
-   If you installed the symfony command you can also use symfony serve. (On Windows use php bin/console server:run)
 
    Access the site using http://localhost:8000/ or with https://localhost:8000/ (if you installed certificate for symfony)
 

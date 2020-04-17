@@ -341,8 +341,12 @@ class GroupController extends AbstractController
      */
     public function createNewGroup(Request $request, Logger $logger)
     {
+        /** @var Member $member */
+        $member = $this->getUser();
         $groupRequest = new GroupRequest();
-        $form = $this->createForm(GroupType::class, $groupRequest);
+        $form = $this->createForm(GroupType::class, $groupRequest, [
+            'allowInvitationOnly' => $member->getLevelForRight(Member::ROLE_ADMIN_GROUP),
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

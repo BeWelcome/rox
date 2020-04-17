@@ -204,28 +204,21 @@ class GroupsBasePage extends PageWithActiveSkin
 
         $items[] = [ 'subscription', 'forums/subscriptions', $this->words->getSilent('forum_YourSubscription') ];
         $isForumModerator = $this->member->hasOldRight(['ForumModerator' => 10]);
+        $isGroupAdministrator = $this->member->hasOldRight(['Group' => 10]);
 
-        if ($isForumModerator)
-        {
+        if ($isForumModerator) {
             $forumsModel = new Forums();
             $items[] = ['separator'];
-            $items[] = ['allmyreports', 'forums/reporttomod/AllMyReport', 'All reports for me'];
-            $items[] = [
-                'myactivereports',
-                'forums/reporttomod/MyReportActive',
-                'Pending reports for me <span class="badge badge-default">'
-                . $forumsModel->countReportList($this->session->get("IdMember"),
-                    "('Open','OnDiscussion')"
-                )
-                . '</span>'
-            ];
             $items[] = [
                 'allactivereports',
                 'forums/reporttomod/AllActiveReports',
-                'All pending reports <span class="badge badge-default">'
-                . $forumsModel->countReportList(0,"('Open','OnDiscussion')")
+                'All pending reports <span class="badge badge-primary">'
+                . $forumsModel->countReportList(0, "('Open','OnDiscussion')")
                 . '</span>'
             ];
+        }
+
+        if ($isGroupAdministrator) {
             $items[] = ['separator'];
             $items[] = [
                 'groupadmin',

@@ -37,14 +37,14 @@ Boston, MA  02111-1307, USA.
         if ($this->BW_Right->HasRight("ForumModerator")) { ?>
             </div>
             <h3>Moderation actions</h3>
-            <div class="list-group">
-                <a href="forums/reporttomod/AllMyReport" class="list-group-item nav-link">All reports for me</a>
-                <a href="forums/reporttomod/MyReportActive" class="list-group-item nav-link">Pending reports for me <span class="badge badge-default"><?php echo $this->_model->countReportList($this->session->get("IdMember"),"('Open','OnDiscussion')"); ?></span></a>
-                <a href="forums/reporttomod/AllActiveReports" class="list-group-item nav-link">All pending reports <span class="badge badge-default"><?php echo $this->_model->countReportList(0,"('Open','OnDiscussion')"); ?></span></a>
-            </div><div class="list-group">
-                <a href="admin/groups/approval" class="list-group-item nav-link">Group Administration</a>
-                <a href="admin/logs/group" class="list-group-item nav-link">Group Log</a>
+            <div class="list-group mb-3">
+                <a href="forums/reporttomod/AllActiveReports" class="list-group-item nav-link">All pending reports <span class="badge badge-primary"><?php echo $this->_model->countReportList(0,"('Open','OnDiscussion')"); ?></span></a>
+            </div>
        <?php }
-    }
-    ?>
+       if ($this->BW_Right->HasRight("ForumModerator")) { ?>
+        <div class="list-group">
+            <a href="admin/groups/approval" class="list-group-item nav-link">Group Administration</a>
+            <a href="admin/logs/group" class="list-group-item nav-link">Group Log</a>
+        <?php }
+    } ?>
 </div>

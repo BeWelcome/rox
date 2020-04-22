@@ -28,57 +28,55 @@ if (!isset($vars['errors']) || !is_array($vars['errors'])) {
     $vars['errors'] = array();
 }
 
-$list=$this->_data ; // Retrieve the data to display (set by the controller)
+$list = $this->_data; // Retrieve the data to display (set by the controller)
 
 $iiMax = 0;
 if (!empty($list)) {
-    $iiMax = count($list) ;
+    $iiMax = count($list);
 }
 $words = new MOD_words();
 ?>
-
-<div class="table-responsive">
-<table class="table table-striped">
-
+<table class="table table-striped table-hover">
     <tr>
-        <th><?=$words->getFormatted("polls_title") ?></th>
-        <th><?=$words->getFormatted("poll_creator") ?><br><?=$words->getFormatted("poll_group") ?></th>
-        <th><?=$words->getFormatted("poll_NbContributors") ?></th>
-        <th><?=$words->getFormatted("poll_status") ?></th>
-        <th>Action</th>
-    </tr>
-<?php
-if ($iiMax == 0) {
-    ?>
-    <tr><td colspan="5"><?=$words->get('polls_no_polls');?></td></tr>
-    <?php
-}
-for ($ii = 0; $ii < $iiMax; $ii++) {
-    $p = $list[$ii];
-    ?>
-    <tr>
-        <td>
-            <h4><?php echo $words->fTrad($p->Title); ?></h4>
-            <p><?php echo $words->fTrad($p->Description); ?></p>
-        </td>
-        <td>
-            <?php
-            if (!empty($p->IdCreator)) {
-                echo MOD_layoutbits::PIC_50_50($p->CreatorUsername) ;
-                echo "<br />" ;
-                echo "<a class=\"username\" href=\"member/",$p->CreatorUsername,"\">",$p->CreatorUsername,"</a>" ;
-            }
-            if (null !== $p->GroupId) {
-                echo "<br>" . $words->getFormatted("Group"),":<br>","<a  href=\"group/",$p->GroupId,"\">",$p->GroupName,"</a>" ;
-            }
-            ?>
-        </td>
-        <td><?php echo $p->NbContributors; ?></td>
-        <td><?php echo $p->Status; ?></td>
-        <td><?php echo $p->PossibleActions; ?></td>
+        <th scope="col"><?= $words->getFormatted("polls_title") ?></th>
+        <th scope="col"><?= $words->getFormatted("poll_creator") ?></th>
+        <th scope="col"><?= $words->getFormatted("poll_NbContributors") ?></th>
+        <th scope="col"><?= $words->getFormatted("poll_status") ?></th>
+        <th scope="col">Action</th>
     </tr>
     <?php
-}
-?>
+    if ($iiMax == 0) {
+        ?>
+        <tr>
+            <td colspan="5"><?= $words->get('polls_no_polls'); ?></td>
+        </tr>
+        <?php
+    }
+    for ($ii = 0; $ii < $iiMax; $ii++) {
+        $p = $list[$ii];
+        ?>
+        <tr>
+            <td class="text-wrap text-break">
+                <p><strong><?php echo $words->fTrad($p->Title); ?></strong><br>
+                    <?php if (null !== $p->GroupId) {
+                        echo $words->getFormatted("Group"), ": ", "<a  href=\"group/", $p->GroupId, "\">", $p->GroupName, "</a><br><br>";
+                    }
+                    echo $this->_purifier->purify($words->fTrad($p->Description)); ?></p>
+            </td>
+            <td>
+                <?php
+                if (!empty($p->IdCreator)) {
+                    echo MOD_layoutbits::PIC_50_50($p->CreatorUsername);
+                    echo "<br />";
+                    echo "<a class=\"username\" href=\"member/", $p->CreatorUsername, "\">", $p->CreatorUsername, "</a>";
+                }
+                ?>
+            </td>
+            <td><?php echo $p->NbContributors; ?></td>
+            <td><?php echo $p->Status; ?></td>
+            <td><?php if (isset($p->PossibleActions)) { echo $p->PossibleActions; }?></td>
+        </tr>
+        <?php
+    }
+    ?>
 </table>
-</div>

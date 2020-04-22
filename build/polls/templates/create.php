@@ -155,7 +155,7 @@ if (isset($Data->rPoll->id)) { // Form for update
                    value="<?= $words->fTrad($Data->rPoll->Title) ?>"/></div>
         <div class="form-group">
             <label for="Description">Poll Description:</label>
-            <textarea class="form-control" id="Description" name="Description" cols="60"
+            <textarea class="form-control editor" id="Description" name="Description" cols="60"
                       rows="5"><?= $words->fTrad($Data->rPoll->Description) ?></textarea>
         </div>
         <div class="form-group">
@@ -173,7 +173,7 @@ if (isset($Data->rPoll->id)) { // Form for update
                 }
                 ?>
             </select>
-            <small class="form-text text-muted ">Select one or leave empty for no restriction (can't be changed after creation)</small>
+            <small class="form-text text-muted ">Group selected (can't be changed after creation).</small>
         </div>
         <input type="submit" class="btn btn-primary" value="go update">
     </form>
@@ -196,7 +196,7 @@ if (isset($Data->rPoll->id)) { // Form for update
     <?= $cc->IdChoiceText ?>
     "/>
             <div class="form-group"><label for="Option">Option:</label>
-                <textarea class="form-control" id="Option" name="ChoiceText" cols="60"
+                <textarea class="form-control editor" id="Option" name="ChoiceText" cols="60"
                           rows="2"><?= $words->fTrad($cc->IdChoiceText) ?></textarea>
             </div>
                 <input type="submit" class="btn btn-primary" value="update choice"/>
@@ -217,7 +217,7 @@ if (isset($Data->rPoll->id)) { // Form for update
         <input type="hidden" name="IdPoll" value="<?= $Data->rPoll->id ?>"/>
         <div class="form-group">
             <label for="NewOption">New option:</label>
-            <textarea class="form-control" id="NewOption" name="ChoiceText" cols="60" rows="2"></textarea>
+            <textarea class="form-control editor" id="NewOption" name="ChoiceText" cols="60" rows="2"></textarea>
         </div>
         <input type="submit" class="btn btn-primary" value="Add"/>
 
@@ -243,11 +243,11 @@ if (isset($Data->rPoll->id)) { // Form for update
         </div>
         <div class="form-group">
             <label for="Description">Poll Description:</label>
-            <textarea id="Description" name="Description" rows="5" cols="60" class="form-control"></textarea>
+            <textarea id="Description" name="Description" rows="5" cols="60" class="form-control editor"></textarea>
         </div>
         <div class="form-group">
             <label for="GroupIdLimit">Limited to Group</label>
-            <select class="form-control select2" id="GroupIdLimit" name="GroupIdLimit">
+            <select class="form-control select2" id="GroupIdLimit" name="GroupIdLimit" required="required">
                 <option value="-1"></option>
                 <?php
                     $groups = $this->member->getGroups();
@@ -256,7 +256,7 @@ if (isset($Data->rPoll->id)) { // Form for update
                     }
                     ?>
             </select>
-            <small class="form-text text-muted">Select one or leave empty for no restriction.</small>
+            <small class="form-text text-muted">Select one.</small>
         </div>
         <input type="submit" class="btn btn-primary" name="go create">
 

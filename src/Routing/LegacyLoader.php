@@ -17,18 +17,16 @@ class LegacyLoader extends Loader
     /** @var RouteCollection */
     private $routes;
 
-    /** @var boolean */
+    /** @var bool */
     private $loaded = false;
 
     /**
      * @param mixed $resource
-     * @param null  $type
-     *
-     * @throws \RuntimeException
+     * @param string $type
      *
      * @return RouteCollection
      */
-    public function load($resource, $type = null)
+    public function load($resource, string $type = null)
     {
         if (true === $this->loaded) {
             throw new \RuntimeException('Do not add the "legacy" loader twice');
@@ -172,24 +170,33 @@ class LegacyLoader extends Loader
         // Polls
         $this->addRouteDirectly('polls', '/polls');
         $this->addRouteDirectly('polls_create', '/polls/create');
-        $this->addRouteDirectly('polls_list_all', '/polls/listall');
-        $this->addRouteDirectly('polls_listClose', '/polls/listClose');
-        $this->addRouteDirectly('polls_listOpen', '/polls/listOpen');
+        $this->addRouteDirectly('polls_list_all', '/polls/list/all');
+        $this->addRouteDirectly('polls_list_closed', '/polls/list/closed');
+        $this->addRouteDirectly('polls_list_open', '/polls/list/open');
+        $this->addRouteDirectly('polls_list_new', '/polls/list/new');
+        $this->addRouteDirectly('polls_list_contributed', '/polls/list/contributed');
         $this->addRouteDirectly('polls_listProject', '/polls/listProject');
         $this->addRouteDirectly('polls_cancelvote', '/polls/cancelvote/{pollId}');
         $this->addRouteDirectly('polls_contribute', '/polls/contribute/{pollId}');
         $this->addRouteDirectly('polls_vote', '/polls/vote');
         $this->addRouteDirectly('polls_update', '/polls/update/{pollId}');
+        $this->addRouteDirectly('polls_update_status', '/polls/updatestatus');
         $this->addRouteDirectly('polls_doupdatepoll', '/polls/doupdatepoll');
         $this->addRouteDirectly('polls_addchoice', '/polls/addchoice');
         $this->addRouteDirectly('polls_updatechoice', '/polls/updatechoice');
         $this->addRouteDirectly('polls_createpoll', '/polls/createpoll');
-        $this->addRouteDirectly('polls_view_results', '/polls/seeresults/{pollId}');
+        $this->addRouteDirectly('polls_see_results', '/polls/seeresults/{pollId}');
+        $this->addRouteDirectly('polls_view_results', '/polls/results/{pollId}');
 
         return $this->routes;
     }
 
-    public function supports($resource, $type = null)
+    /**
+     * @param mixed $resource
+     * @param string $type
+     * @return bool
+     */
+    public function supports($resource, string $type = null)
     {
         return 'legacy' === $type;
     }

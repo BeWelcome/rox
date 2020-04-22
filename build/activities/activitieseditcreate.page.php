@@ -32,6 +32,18 @@ Boston, MA  02111-1307, USA.
  */
 class ActivitiesEditCreatePage extends ActivitiesBasePage
 {
+    public function __construct()
+    {
+        parent::__construct();
+        $this->addStylesheet('build/jquery_ui.css');
+        $this->addStylesheet('build/roxeditor.css');
+        $this->addLateLoadScriptFile('build/tempusdominus.js');
+        $this->addLateLoadScriptFile('build/jquery_ui.js');
+        $this->addLateLoadScriptFile('build/search/searchpicker.js');
+        $this->addLateLoadScriptFile('build/roxeditor.js');
+        $this->addLateLoadScriptFile('build/cktranslations/'.$this->getSession()->get('lang', 'en').'.js');
+    }
+
     protected function getSubmenuItems()
     {
         if ($this->activity->id == 0) {
@@ -46,23 +58,5 @@ class ActivitiesEditCreatePage extends ActivitiesBasePage
     protected function getSubmenuActiveItem()
     {
         return 'createactivities';
-    }
-
-    protected function getStylesheets() {
-        $stylesheets = parent::getStylesheets();
-        $stylesheets[] = 'build/jquery_ui.css';
-        $stylesheets[] = 'build/roxeditor.css';
-        return $stylesheets;
-    }
-
-    public function getLateLoadScriptFiles()
-    {
-        $scripts = parent::getLateLoadScriptfiles();
-        $scripts[] = 'build/tempusdominus.js';
-        $scripts[] = 'build/jquery_ui.js';
-        $scripts[] = 'build/search/searchpicker.js';
-        $scripts[] = 'build/roxeditor.js';
-        $scripts[] = 'build/cktranslations/'.$this->getSession()->get('lang', 'en').'.js';
-        return $scripts;
     }
 }

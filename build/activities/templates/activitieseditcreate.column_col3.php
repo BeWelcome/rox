@@ -184,4 +184,5 @@ if (empty($vars)) {
         });
     });
 </script>
+<script src="build/cktranslations/<?= $this->session->get('lang', 'en');?>.js"></script>
 

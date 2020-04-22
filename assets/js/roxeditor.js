@@ -7,7 +7,6 @@ import UnderlinePlugin from '@ckeditor/ckeditor5-basic-styles/src/underline';
 import ItalicPlugin from '@ckeditor/ckeditor5-basic-styles/src/italic';
 import BlockQuotePlugin from '@ckeditor/ckeditor5-block-quote/src/blockquote';
 import EasyImagePlugin from '@ckeditor/ckeditor5-easy-image/src/easyimage';
-import HeadingPlugin from '@ckeditor/ckeditor5-heading/src/heading';
 import ImagePlugin from '@ckeditor/ckeditor5-image/src/image';
 import ImageCaptionPlugin from '@ckeditor/ckeditor5-image/src/imagecaption';
 import ImageStylePlugin from '@ckeditor/ckeditor5-image/src/imagestyle';
@@ -60,15 +59,12 @@ for (var i = 0; i < allEditors.length; ++i) {
         ],
         image: {
             toolbar: [
-                'imageStyle:full',
-                'imageStyle:side',
-                '|',
                 'imageTextAlternative'
             ]
-        }
+        },
+        language: document.documentElement.lang
     } )
         .then( editor => {
-            console.log( editor );
         } )
         .catch( error => {
             console.error( error );

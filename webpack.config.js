@@ -16,7 +16,7 @@ Encore
     .setPublicPath('/build')
     .addPlugin( new CKEditorWebpackPlugin( {
         // Main language that will be built into the main bundle.
-        language: 'en',
+        language: 'de',
 
         // Additional languages that will be emitted to the `outputDirectory`.
         // This option can be set to an array of language codes or `'all'` to build all found languages.
@@ -47,7 +47,6 @@ Encore
     .addEntry('search/searchpicker', './assets/js/search/searchpicker.js')
     .addEntry('search/loadcontent', './assets/js/search/loadajax.js')
     .addEntry('search/search', './assets/js/search/search.js')
-
     .addEntry('tempusdominus', './assets/js/tempusdominus.js')
     .addEntry('requests', './assets/js/requests.js')
     .addEntry('treasurer', './assets/js/treasurer.js')
@@ -64,6 +63,7 @@ Encore
     .addEntry('bsfileselect', './assets/js/bsfileselect.js')
     .addEntry('email', './assets/scss/email.scss')
     .addEntry('roxeditor', './assets/js/roxeditor.js')
+//    .addEntry('roxinlineeditor', './assets/js/roxinlineeditor.js')
 
     .enableSassLoader()
     // allow legacy applications to use $/jQuery as a global variable, make popper visible for bootstrap
@@ -122,7 +122,8 @@ Encore
                 themePath: require.resolve('@ckeditor/ckeditor5-theme-lark')
             }
         } )
-    } );
+    } )
+;
 
 // console.log(JSON.stringify(Encore.getWebpackConfig(), null, 4));
 

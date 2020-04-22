@@ -41,7 +41,7 @@ doctrine:
             comment_quality: App\Doctrine\CommentQualityType
             comment_relations: App\Doctrine\CommentRelationsType
             language_level: App\Doctrine\LanguageLevelType
-            group_type: App\Doctrine\GroupTypeType
+            group_type: App\Doctrine\GroupType
             group_membership_status: App\Doctrine\GroupMembershipStatusType
             member_status: App\Doctrine\MemberStatusType
             accommodation: App\Doctrine\AccommodationType

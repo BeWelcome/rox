@@ -161,11 +161,17 @@ class MemberTwigExtension extends AbstractExtension implements GlobalsInterface
             ],
             'tools' => [
                 'trans' => 'AdminVolunteerTools',
-                'rights' => [Member::ROLE_ADMIN_SAFETYTEAM, Member::ROLE_ADMIN_ADMIN,
+                'rights' => [
+                    Member::ROLE_ADMIN_SAFETYTEAM, Member::ROLE_ADMIN_ADMIN,
                     Member::ROLE_ADMIN_SQLFORVOLUNTEERS, Member::ROLE_ADMIN_PROFILE,
                     Member::ROLE_ADMIN_CHECKER, Member::ROLE_ADMIN_ACCEPTER,
                 ],
                 'route' => 'admin_volunteer_tools',
+            ],
+            'polls' => [
+                'trans' => 'AdminPolls',
+                'rights' => [Member::ROLE_ADMIN_POLL],
+                'route' => 'polls',
             ],
         ];
 

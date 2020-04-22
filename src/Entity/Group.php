@@ -7,7 +7,7 @@
 
 namespace App\Entity;
 
-use App\Doctrine\GroupTypeType;
+use App\Doctrine\GroupType;
 use App\Doctrine\MemberStatusType;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -63,7 +63,7 @@ class Group implements ObjectManagerAware
      *
      * @ORM\Column(name="Type", type="group_type", nullable=false)
      */
-    private $type = 'Public';
+    private $type = GroupType::PUBLIC;
 
     /**
      * @var DateTime
@@ -438,7 +438,7 @@ class Group implements ObjectManagerAware
 
     public function isPublic()
     {
-        return GroupTypeType::PUBLIC === $this->type;
+        return GroupType::PUBLIC === $this->type;
     }
 
     /**

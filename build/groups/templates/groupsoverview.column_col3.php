@@ -1,3 +1,8 @@
+<?php
+
+use App\Doctrine\GroupType;
+
+?>
 <div id="groups">
     <div class="row mb-1">
         <div class="col-12 col-md-8">
@@ -28,7 +33,7 @@
                 $count=0;
                 $featured_groups = (($this->featured_groups) ? $this->featured_groups : array());
                 foreach($featured_groups as $group_data) :
-                    if ($group_data->Type == 'NeedInvitation' && !$this->model->getLoggedInMember()) continue;
+                    if ($group_data->Type == GroupType::INVITE_ONLY && !$this->model->getLoggedInMember()) continue;
                     if ($count % 2 == 0) { ?>
                     <div class="c50l groupbox clearfix">
                     <?php } else { ?>

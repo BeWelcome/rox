@@ -2,7 +2,7 @@
 
 namespace App\Doctrine;
 
-class GroupTypeType extends EnumType
+class GroupType extends EnumType
 {
     const PUBLIC = 'Public';
     const NEED_ACCEPTANCE = 'NeedAcceptance';

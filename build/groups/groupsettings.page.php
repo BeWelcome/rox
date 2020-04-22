@@ -23,7 +23,9 @@ Boston, MA  02111-1307, USA.
      * @author Fake51
      */
 
-    /**
+use App\Doctrine\GroupType;
+
+/**
      * This page allows for administration of groups
      *
      * @package Apps
@@ -36,13 +38,7 @@ class GroupSettingsPage extends GroupsBasePage
         parent::__construct();
         $this->addLateLoadScriptFile('build/roxeditor.js');
         $this->addLateLoadScriptFile('build/bsfileselect.js');
-    }
-
-    protected function getStylesheets()
-    {
-        $stylesheets = parent::getStylesheets();
-        $stylesheets[] = 'build/roxeditor.css';
-        return $stylesheets;
+        $this->addStylesheet('build/roxeditor.css');
     }
 
     protected function teaserContent()
@@ -156,7 +152,7 @@ class GroupSettingsPage extends GroupsBasePage
                     <label class="m-0"><h5><?= $words->get('GroupsPublicStatusHeading'); ?></h5></label>
                 </legend>
 
-                <?php if ('NeedInvitation' !== $Type) { ?>
+                <?php if (GroupType::INVITE_ONLY !== $Type) { ?>
                 <div class="form-check mb-3">
                     <input type="radio" class="form-check-input" id="public" name="Type" value="Public"<?= (($Type=='Public') ? ' checked': ''); ?>>
                     <label for="public" class="form-check-label">
@@ -171,7 +167,7 @@ class GroupSettingsPage extends GroupsBasePage
                 </div>
                 <?php } else { ?>
                     <div class="form-check mb-3">
-                        <input type="radio" disabled="disabled" class="form-check-input" id="invitation" name="Type" value="NeedInvitation"<?= (($Type=='NeedInvitation') ? ' checked': ''); ?>>
+                        <input type="radio" disabled="disabled" class="form-check-input" id="invitation" name="Type" value="NeedInvitation" checked="checked">
                         <label for="invitation" class="form-check-label">
                             <?=$words->get('groupsjoininvited'); ?>
                         </label>

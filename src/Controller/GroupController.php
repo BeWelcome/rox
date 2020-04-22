@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Doctrine\GroupMembershipStatusType;
-use App\Doctrine\GroupTypeType;
+use App\Doctrine\GroupType As DoctrineGroupType;
 use App\Entity\Group;
 use App\Entity\GroupMembership;
 use App\Entity\Member;
@@ -23,6 +23,7 @@ use App\Utilities\TranslatorTrait;
 use App\Utilities\UniqueFilenameTrait;
 use Exception;
 use Intervention\Image\ImageManager;
+use PhpParser\Comment\Doc;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -98,7 +99,7 @@ class GroupController extends AbstractController
             ]);
         }
 
-        if (GroupTypeType::INVITE_ONLY === $group->getType()) {
+        if (DoctrineGroupType::INVITE_ONLY === $group->getType()) {
             $this->addTranslatedFlash('notice', 'flash.group.need.invite');
 
             return $this->redirectToRoute('groups');
@@ -106,7 +107,7 @@ class GroupController extends AbstractController
 
         /** @var GroupMembership $membership */
         $membership = $group->getGroupMembership($member);
-        if (GroupTypeType::NEED_ACCEPTANCE === $group->getType()) {
+        if (DoctrineGroupType::NEED_ACCEPTANCE === $group->getType()) {
             // Check if a join request is currently open
 
             if (false !== $membership) {
@@ -116,7 +117,7 @@ class GroupController extends AbstractController
             }
         }
 
-        if (GroupTypeType::PUBLIC === $group->getType()) {
+        if (DoctrineGroupType::PUBLIC === $group->getType()) {
             if (false !== $membership && GroupMembershipStatusType::INVITED_INTO_GROUP === $membership->getStatus()) {
                 // Accept the invitation
                 return $this->acceptInviteToGroup($group, $member);
@@ -166,6 +167,7 @@ class GroupController extends AbstractController
      */
     public function approveJoin(Group $group, Member $member)
     {
+        /** @var Member $admin */
         $admin = $this->getUser();
         if (!$group->isAdmin($admin)) {
             throw $this->createAccessDeniedException('No group admin');
@@ -200,6 +202,7 @@ class GroupController extends AbstractController
      */
     public function declineJoin(Group $group, Member $member)
     {
+        /** @var Member $admin */
         $admin = $this->getUser();
         if (!$group->isAdmin($admin)) {
             throw $this->createAccessDeniedException('No group admin');
@@ -235,7 +238,7 @@ class GroupController extends AbstractController
      */
     public function inviteMemberToGroup(Group $group, Member $member)
     {
-        // Check if current user is admin of given group
+        /** @var Member $admin */
         $admin = $this->getUser();
         if (!$group->isAdmin($admin)) {
             throw $this->createAccessDeniedException();

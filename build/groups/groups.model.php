@@ -24,6 +24,7 @@ Boston, MA  02111-1307, USA.
      * @author Fake51
      */
 
+use App\Doctrine\GroupType;
 use App\Doctrine\MemberStatusType;
 
 /**
@@ -341,7 +342,8 @@ WHERE IdGroup=" . (int)$group->id . " AND IdMember=" . (int)$memberid;
             $problems['GroupDesc_'] = true;
         }
 
-        if (!isset($input['Type']) || !in_array($input['Type'], array('NeedAcceptance', 'NeedInvitation','Public')))
+        if (!isset($input['Type'])
+            || !in_array($input['Type'], [GroupType::PUBLIC, GroupType::NEED_ACCEPTANCE, GroupType::INVITE_ONLY]))
         {
             $problems['Type'] = true;
         }
@@ -486,11 +488,11 @@ WHERE IdGroup=" . (int)$group->id . " AND IdMember=" . (int)$memberid;
         {
             return $membership->updateStatus('In');
         }
-        elseif ($group->Type == 'NeedInvitation')
+        elseif ($group->Type == GroupType::INVITE_ONLY)
         {
             return false;
         }
-        $status = (($group->Type == 'NeedAcceptance') ? 'WantToBeIn' : 'In');
+        $status = (($group->Type == GroupType::NEED_ACCEPTANCE) ? 'WantToBeIn' : 'In');
         $result = (bool) $this->createEntity('GroupMembership')->memberJoin($group, $member, $status);
         if ($result && $status == 'WantToBeIn')
         {

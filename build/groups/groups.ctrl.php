@@ -23,6 +23,7 @@ Boston, MA  02111-1307, USA.
      * @author Fake51
      */
 
+use App\Doctrine\GroupType;
 use App\Entity\Group;
 
 /**
@@ -58,9 +59,9 @@ class GroupsController extends RoxControllerBase
     public function showGroup()
     {
         $group = $this->_getGroupFromRequest();
-        if (false === $group || ($group->Type == 'NeedInvitation' && !$this->_model->getLoggedInMember()))
+        if (false === $group || ($group->Type == GroupType::INVITE_ONLY && !$this->_model->getLoggedInMember()))
         {
-            return $this->redirectAbsolute($this->router->url('groups_overview'));
+            $this->redirectAbsolute($this->router->url('groups_overview'));
         }
         $this->_model->setGroupVisit($group->getPKValue());
         $page = new GroupStartPage();

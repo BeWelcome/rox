@@ -3,7 +3,7 @@
 namespace App\Model;
 
 use App\Doctrine\GroupMembershipStatusType;
-use App\Doctrine\GroupTypeType;
+use App\Doctrine\GroupType;
 use App\Entity\Group;
 use App\Entity\GroupMembership;
 use App\Entity\Language;
@@ -205,7 +205,7 @@ class GroupModel
             $membership->setMember($member);
             $membership->addComment($comment);
             $membership->setNotificationsenabled('yes' === $notifications ? true : false);
-            if (GroupTypeType::NEED_ACCEPTANCE === $group->getType()) {
+            if (GroupType::NEED_ACCEPTANCE === $group->getType()) {
                 $membership->setStatus(GroupMembershipStatusType::APPLIED_FOR_MEMBERSHIP);
 
                 $acceptUrl = $this->urlGenerator->generate('group_accept_join', [

@@ -25,7 +25,9 @@ Boston, MA  02111-1307, USA.
      * @author Fake51
      */
 
-    /**
+use App\Doctrine\GroupType;
+
+/**
      * base class for all groups pages
      *
      * @package Apps
@@ -192,7 +194,7 @@ class GroupsBasePage extends PageWithActiveSkin
                 $items[] = array('membersettings', 'group/'.$group_id.'/membersettings', $words->getSilent('GroupMembersettings'));
                 $items[] = array('relatedgroupsettings', 'group/'.$group_id.'/relatedgroupsettings', $words->getSilent('GroupRelatedGroups'));
             }
-            if ($isOwner || ($isAdmin && 'NeedInvitation' !== $this->group->Type))
+            if ($isOwner || ($isAdmin && GroupType::INVITE_ONLY !== $this->group->Type))
             {
                 $items[] = array('admin', "group/{$this->group->getPKValue()}/groupsettings", $words->getSilent('GroupGroupsettings'));
             }

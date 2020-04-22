@@ -1,4 +1,6 @@
-<div class="row"><?php foreach ($this->getMessages() as $message) : ?>
+<div class="row"><?php use App\Doctrine\GroupType;
+
+    foreach ($this->getMessages() as $message) : ?>
 <p><?= $words->get($message); ?>
     <?php endforeach; ?>
     <?php
@@ -36,7 +38,7 @@
             }
 
             $showNewTopicButton = false;
-            if ($this->isGroupMember() || $this->isGroupAdmin()) {
+            if ($this->isGroupMember() || ($this->group->Type !== GroupType::INVITE_ONLY && $this->isGroupAdmin())) {
                 $showNewTopicButton = true;
             }
 
@@ -78,21 +80,7 @@
         }
     ?>
 
-    <div class="h4"><?php echo $words->get('GroupAdmins'); ?></div>
-
-    <?php $admins = $this->group->getGroupOwners();
-    if (isset($admins) && !empty($admins)) {
-        foreach ($admins as $admin) {
-            echo '<div class="w-100 mb-1">';
-            echo MOD_layoutbits::PIC_50_50($admin->Username);
-            echo '<a href="members/' . $admin->Username . '" class="small"> ' . $admin->Username . '</a>';
-            echo '</div>';
-        }
-    } else {
-        echo $words->get('GroupNoAdmin');
-    } ?>
-
-    <div class="h4 mt-2 mb-0"><?= $words->get('GroupMembers'); ?></div>
+    <div class="h4 mb-0"><?= $words->get('GroupMembers'); ?></div>
 
     <div class="row justify-content-between px-3">
     <?php $memberlist_widget->render() ?>
@@ -107,6 +95,25 @@
         <a href="group/<?= $group_id . '/members'; ?>"
            class="btn btn-block btn-outline-primary"><?= $words->get('GroupSeeAllMembers'); ?></a>
     <?php } ?>
+
+    <div class="h4"><?php echo $words->get('GroupAdmins'); ?></div>
+    <div class="row justify-content-between px-3">
+
+    <?php $admins = $this->group->getGroupOwners();
+    if (isset($admins) && !empty($admins)) {
+        $i = 0;
+        foreach ($admins as $admin) {
+            $padding = ($i % 2 == 0) ? 'pl-0' : 'pl-2';
+            echo '<div class="col-6 ' . $padding . ' mb-1">';
+            echo MOD_layoutbits::PIC_50_50($admin->Username);
+            echo '<br><a href="members/' . $admin->Username . '" class="small"> ' . $admin->Username . '</a>';
+            echo '</div>';
+            $i++;
+        }
+    } else {
+        echo $words->get('GroupNoAdmin');
+    } ?>
+    </div>
 
     <?php
     // Hide the admin list if no user is logged in (which means that visible lis

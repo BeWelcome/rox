@@ -23,7 +23,9 @@ Boston, MA  02111-1307, USA.
      * @author Fake51
      */
 
-    /**
+use App\Doctrine\GroupType;
+
+/**
      * This page shows details for a given group
      *
      * @package Apps
@@ -35,7 +37,7 @@ class GroupStartPage extends GroupsBasePage
     {
         $words = $this->getWords();
 
-		if (!$this->isGroupMember() && $this->group->Type == 'NeedInvitation')
+		if (!$this->isGroupMember() && $this->group->Type == GroupType::INVITE_ONLY)
 		{
 			echo $words->get('GroupsNotPublic');
 		}

@@ -48,7 +48,9 @@ class ForumsView extends RoxAppView {
     */
     public function createTopic(&$callbackId,$IdGroup=0) {
         $this->page->addStyleSheet('build/roxeditor.css');
+        $this->page->addLateLoadScriptFile('build/cktranslations/'.$this->session->get('lang', 'en').'.js');
         $this->page->addLateLoadScriptFile('build/roxeditor.js');
+
         $boards = $this->_model->getBoard();
         $allow_title = true;
         $tags = $this->_model->getTagsNamed();
@@ -118,7 +120,9 @@ class ForumsView extends RoxAppView {
 
     public function replyTopic(&$callbackId) {
         $this->page->addStyleSheet('build/roxeditor.css');
+        $this->page->addLateLoadScriptFile('build/cktranslations/'.$this->session->get('lang', 'en').'.js');
         $this->page->addLateLoadScriptFile('build/roxeditor.js');
+
         $boards = $this->_model->getBoard();
         $topic = $this->_model->getTopic();
         $allow_title = false;
@@ -160,7 +164,9 @@ class ForumsView extends RoxAppView {
     // This is the normal edit/translate post by a member
     public function editPost(&$callbackId,$translate=false) {
         $this->page->addStyleSheet('build/roxeditor.css');
+        $this->page->addLateLoadScriptFile('build/cktranslations/'.$this->session->get('lang', 'en').'.js');
         $this->page->addLateLoadScriptFile('build/roxeditor.js');
+
         $boards = $this->_model->getBoard();
         $topic = $this->_model->getTopic();
         $vars =& PPostHandler::getVars($callbackId);

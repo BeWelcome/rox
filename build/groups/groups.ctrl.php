@@ -737,6 +737,7 @@ class GroupsController extends RoxControllerBase
             $this->setFlashError($this->getWords()->getSilent('GroupLeaveFail_ResignAdminFirst'));
         } else {
             $page = new GroupLeavePage();
+            $page->member = $this->_model->getLoggedInMember();
             $page->group = $group;
         }
         return $page;
@@ -767,6 +768,7 @@ class GroupsController extends RoxControllerBase
             $this->setFlashError($this->getWords()->getSilent('GroupsLeaveFail'));
         }
         $page->group = $group;
+        $page->member = $member;
         return $page;
     }
 

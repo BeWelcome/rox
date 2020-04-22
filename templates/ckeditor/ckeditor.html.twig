@@ -1,14 +1,12 @@
 {% block ckeditor_widget %}
     <textarea {{ block('widget_attributes') }}>{{ value }}</textarea>
-    {% if not async %}
-        {{ block( '_ckeditor_javascript' ) }}
-        {{ block( '_ckeditor_stylesheet' ) }}
-    {% endif %}
+    {{ block( '_ckeditor_javascript' ) }}
+    {{ block( '_ckeditor_stylesheet' ) }}
 {% endblock %}
 
 {% block _ckeditor_javascript %}
+    <script src="{{ asset('build/cktranslations/' ~ app.request.locale ~ '.js') }}"></script>
     {{ encore_entry_script_tags('roxeditor') }}
-{#    <script src="{{ asset('build/cktranslations/' ~ app.request.locale ~ '.js') }}"></script> #}
 {% endblock %}
 
 {% block _ckeditor_stylesheet %}

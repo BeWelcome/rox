@@ -63,12 +63,8 @@
                             </div>
                             <div class="list-group">
                                 {% for filter,menuItem in submenu.items %}
-                                    {% if submenu.active == filter %}
-                                        <span class="list-group-item nav-link active">{{ menuItem.key | lower | trans }}</span>
-                                    {% else %}
-                                        <a class="list-group-item nav-link "
-                                           href="{{ menuItem.url }}">{{ menuItem.key | lower | trans }}</a>
-                                    {% endif %}
+                                    <a class="list-group-item nav-link{% if submenu.active == filter %} active{% endif %}"
+                                       href="{{ menuItem.url }}">{{ menuItem.key | lower | trans }}</a>
                                 {% endfor %}
                             </div>
                         </div>

@@ -42,7 +42,8 @@ class DatabaseLoader implements LoaderInterface
             $i++;
         }
         if (false === $original) {
-            throw new Exception('Translation problem: original not found');
+            // we didn't find any original for this code (weird!), so assume we keep the last pos for the next try
+            $i = $lastPos;
         }
 
         return [$original, $i];
@@ -83,12 +84,14 @@ class DatabaseLoader implements LoaderInterface
             $sentence = $translation->getSentence();
 
             list($original, $lastPos)  = $this->findOriginal($originals, $code, $lastPos);
-            if ($original->getMajorUpdate() > $translation->getUpdated())
-            {
-                // If english text has been updated and marked as major use the english text
-                $messages[$code] = $original->getSentence();
-            } else {
-                $messages[$code] = $sentence;
+            if (false !== $original) {
+                if ($original->getMajorUpdate() > $translation->getUpdated())
+                {
+                    // If english text has been updated and marked as major use the english text
+                    $messages[$code] = $original->getSentence();
+                } else {
+                    $messages[$code] = $sentence;
+                }
             }
         }
 

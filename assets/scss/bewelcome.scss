@@ -271,7 +271,7 @@ figure > figcaption {
   text-align: center;
 }
 
-.editor, .ck-editor__editable {
+.editor, .ck-editor__editable[role=textbox] {
   min-height: 10rem;
 }
 
@@ -300,4 +300,18 @@ figure > figcaption {
   // problem is the button width is not constant.
   padding-right: 6em;
   text-overflow: ellipsis;
+}
+
+@mixin make-td-col($size, $columns: $grid-columns) {
+  width: percentage($size / $columns);
+}
+
+@each $breakpoint in map-keys($grid-breakpoints) {
+  $infix: breakpoint-infix($breakpoint, $grid-breakpoints);
+
+  @for $i from 1 through $grid-columns {
+    td.col#{$infix}-#{$i}, th.col#{$infix}-#{$i} {
+      @include make-td-col($i, $grid-columns);
+    }
+  }
 }

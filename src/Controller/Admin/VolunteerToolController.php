@@ -34,7 +34,7 @@ class VolunteerToolController extends AbstractController
 {
     const CHANGE_USERNAME = 'admin.tools.change_username';
     const FIND_USER = 'admin.tools.find_user';
-    const MESSAGES_LAST_WEEK = 'admin.tools.messages_last_week';
+    const MESSAGES_SENT = 'admin.tools.messages_sent';
     const MESSAGES_BY_MEMBER = 'admin.tools.messages_by_member';
     const CHECK_FEEDBACK = 'admin.tools.check_feedback';
     const CHECK_TOP_SPAMMER = 'admin.tools.check_spam_messages';
@@ -351,7 +351,7 @@ class VolunteerToolController extends AbstractController
     }
 
     /**
-     * @Route("/admin/tools/messages/lastweek", name="admin_tools_messages_last_week")
+     * @Route("/admin/tools/messages/sent", name="admin_tools_messages_sent")
      *
      * @param Request $request
      *
@@ -363,7 +363,7 @@ class VolunteerToolController extends AbstractController
     {
         // check permissions
         $subMenuItems = $this->getSubMenuItems();
-        if (empty($subMenuItems) | !\array_key_exists(self::MESSAGES_LAST_WEEK, $subMenuItems)) {
+        if (empty($subMenuItems) | !\array_key_exists(self::MESSAGES_SENT, $subMenuItems)) {
             $this->addFlash('notice', 'admin.tools.not.allowed');
             $referrer = $request->headers->get('referer');
 
@@ -390,12 +390,12 @@ HAVING COUNT(msg.id) > 9
 ORDER BY count(msg.id) DESC')->fetchAll();
 
         return $this->render(
-            'admin/tools/messages.lastweek.html.twig',
+            'admin/tools/messages.sent.html.twig',
             [
                 'results' => $results,
                 'submenu' => [
                     'items' => $subMenuItems,
-                    'active' => self::MESSAGES_LAST_WEEK,
+                    'active' => self::MESSAGES_SENT,
                 ],
             ]
         );
@@ -601,9 +601,9 @@ ORDER BY count(msg.id) DESC')->fetchAll();
             || !$this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
             || !$this->isGranted(Member::ROLE_ADMIN_ADMIN)
         ) {
-            $subMenu[self::MESSAGES_LAST_WEEK] = [
-                'key' => self::MESSAGES_LAST_WEEK,
-                'url' => $this->generateUrl('admin_tools_messages_last_week'),
+            $subMenu[self::MESSAGES_SENT] = [
+                'key' => self::MESSAGES_SENT,
+                'url' => $this->generateUrl('admin_tools_messages_sent'),
             ];
         }
         if ($this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)) {

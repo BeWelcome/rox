@@ -4,7 +4,7 @@
         {% if pager.haveToPaginate %}
             <div class="pull-left"><div style="position: relative;
                                         display: block;
-                                        padding: 0.375rem 0.75rem;
+                                        padding: 0.375rem 0;
                                         line-height: 1.25;
                                         ">{% trans with {'%first%': pager.getCurrentPageOffsetStart, '%last%': pager.getCurrentPageOffsetEnd, '%count%': pager.getNbResults} %}search.members.showing{% endtrans %}</div></div>
             <div class="pull-right">{{ pagerfanta( pager, 'twitter_bootstrap4_ajax_translated', { 'routeName': routeName, 'routeParams': routeParams, 'ajaxFunction': 'loadAjax' } ) }}</div>
@@ -23,7 +23,7 @@
                     <tr>
                         <td>
                             {{ macros.avatar(member.Username, 100, true) }}
-                            <div class="align-center">{{ macros.profilelink( member.Username ) }}</div>
+                            <small><a href="{{ path( 'members_profile', { 'username': member.Username }) }}">{{ member.Username  }}</a></small>
                         </td>
                         <td>
                             <div>
@@ -75,7 +75,7 @@
                             <div>
                                 <div class="float-left"><img src="/images/icons/{{ member.Accommodation }}.png"
                                                              alt="{{ member.Accommodation | trans }}"></div>
-                                <div class="float-left ml-2"><i class="fa fa-bed p-1"></i><span
+                                <div class="float-left ml-2"><i class="fa fa-bed fa-2x p-1"></i><span
                                             class="h4">{{ member.MaxGuest }}</span></div>
                             </div>
                             <div class="clearfix"></div>

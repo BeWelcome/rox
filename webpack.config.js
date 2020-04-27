@@ -63,6 +63,7 @@ Encore
     .addEntry('bsfileselect', './assets/js/bsfileselect.js')
     .addEntry('email', './assets/scss/email.scss')
     .addEntry('roxeditor', './assets/js/roxeditor.js')
+    .addEntry('rangeslider', './assets/js/rangeslider.js')
 //    .addEntry('roxinlineeditor', './assets/js/roxinlineeditor.js')
 
     .enableSassLoader()

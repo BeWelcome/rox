@@ -132,7 +132,7 @@ services:
   rox.default.pagerfanta:
     class: Pagerfanta\View\OptionableView
     arguments:
-      - '@pagerfanta.view.twitter_bootstrap4_translated'
+      - '@pagerfanta.view.twitter_bootstrap4'
       - { proximity: 2, prev_message: '«', next_message: '»' , css_container_class: 'pagination float-right'}
     public: false
     tags: [{ name: pagerfanta.view, alias: rox_default }]

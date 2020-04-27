@@ -136,32 +136,6 @@ WHERE `Email` = \'' . $this->dao->escape(strtolower($email)).'\'';
         return '';
     } // end takeCareForNonUniqueEmailAddress
 
-    /**
-     * Check, if computer has previously been used by BW member
-     *
-     * (If signup team wanna get nicer e-mails, we'll provide adequate
-     * functionalities via signup.view.php and a template.)
-     *
-     * TODO: I wonder, why BW signup team cares for my box; member Bin L.
-     * has been logged in before at this computer, - should be nothing to them.
-     *
-     * @return string text (not HTML) to be added to feedback text, in
-     * 				  case of no cookie ''
-     */
-    public function takeCareForComputerUsedByBWMember()
-    {
-        if (isset($_COOKIE['MyBWusername'])) {
-            $text = 'takeCareForComputerUsedByBWMember: This user had previously been logged in as a BW member ' .
-                    'at the same computer, which has been used for ' .
-                    'registration: ' . $_COOKIE['MyBWusername'];
-			MOD_log::get()->write($text." (With New Signup !)", "Signup");
-			return $text;
-        }
-				MOD_log::get()->write("takeCareForComputerUsedByBWMember: Seems never used before"." (With New Signup !)", "Signup");
-
-        return '';
-    } // takeCareForComputerUsedByBWMember
-
     public function find($str)
     {
     	if (!preg_match(self::HANDLE_PREGEXP, $str))
@@ -289,7 +263,6 @@ FROM `user` WHERE
             $this->session->set( 'IdMember', $id );
 
             $vars['feedback'] .= $this->takeCareForNonUniqueEmailAddress($vars['email']);
-            $vars['feedback'] .= $this->takeCareForComputerUsedByBWMember();
 
             $this->writeFeedback($vars['feedback']);
 			if (!empty($vars['feedback'])) {
@@ -397,10 +370,12 @@ WHERE `ShortCode` = \'' . $this->session->get('lang') . '\'';
                 `FirstName`,
                 `SecondName`,
                 `LastName`,
-                `HideAttribute`
+                `HideAttribute`,
+                `accomodation`,
+                `hosting_interest`
             )
             VALUES
-            ( ?, ?, ?, ?, ?, ?, NOW(), ?, ?, 1, ?, ?, ?, ?, ? );";
+            ( ?, ?, ?, ?, ?, ?, NOW(), ?, ?, 1, ?, ?, ?, ?, ?, ?, ? );";
         $stmt = $this->dao->prepare($query);
         $stmt->bindParam(0, $vars['username']);
         $stmt->bindParam(1, $vars['location-geoname-id']);
@@ -416,6 +391,8 @@ WHERE `ShortCode` = \'' . $this->session->get('lang') . '\'';
         $stmt->bindParam(11, $vars['lastname']);
         $hide = \Member::MEMBER_All_HIDDEN;
         $stmt->bindParam(12, $hide);
+        $stmt->bindParam(13, $vars['accommodation']);
+        $stmt->bindParam(14, $vars['hosting_interest']);
 
         $res = $stmt->execute();
         $memberID = $stmt->insertId();
@@ -567,9 +544,17 @@ VALUES
         }
 
         // accommodation
-        if (empty($vars['accommodation']) || ($vars['accommodation']!='anytime' && $vars['accommodation']!='dependonrequest'
-                && $vars['accommodation']!='neverask')) {
+        if (empty($vars['accommodation']) || ($vars['accommodation']!='anytime' && $vars['accommodation']!='neverask'))
+        {
             $errors[] = 'SignupErrorProvideAccommodation';
+        }
+
+        // hosting interest needs to be set to a value different than 0 if accommodation is anytime
+        if (!empty($vars['accommodation']) && $vars['accommodation']=='anytime')
+        {
+            if (empty($vars['hosting_interest']) || $vars['hosting_interest'] == 0) {
+                $errors[] = 'SignupErrorProvideHostingInterest';
+            }
         }
 
         if (!empty($vars['sweet'])) {

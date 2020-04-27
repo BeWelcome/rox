@@ -4,7 +4,14 @@ use Carbon\Carbon;
 
 class EditProfilePage extends ProfilePage
 {
-// Utility function to sort the languages
+    public function __construct()
+    {
+        parent::__construct();
+        $this->addLateLoadScriptFile('build/rangeslider.js');
+        $this->addLateLoadScriptFile('build/tempusdominus.js');
+    }
+
+    // Utility function to sort the languages
     private function _cmpEditLang($a, $b)
     {
         if ($a == $b) {
@@ -98,6 +105,10 @@ class EditProfilePage extends ProfilePage
         $vars['messengers'] = $member->messengers();
 
         $vars['Accomodation'] = $member->Accomodation;
+        if ($member->hosting_interest !== 0)
+        {
+            $vars['hosting_interest'] = $member->hosting_interest;
+        }
 
         /** @var Carbon $hesData->enddate */
         $vars['hes-id'] = $hesData->id;

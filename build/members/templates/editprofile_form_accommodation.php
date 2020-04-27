@@ -1,3 +1,17 @@
+<?php
+$hostingInterest = [
+    $words->get('Please set your hosting interest'),
+    $words->get('Very low'),
+    $words->get('low'),
+    $words->get('lower'),
+    $words->get('low to medium'),
+    $words->get('medium'),
+    $words->get('medium to high'),
+    $words->get('high'),
+    $words->get('higher'),
+    $words->get('very high'),
+    $words->get('can\'t wait')
+]; ?>
 <div class="tab-pane fade card" id="accommodation" role="tabpanel" aria-labelledby="accommodation-tab">
     <div class="card-header" role="tab" id="heading-accommodation">
         <h5 class="mb-0">
@@ -11,47 +25,60 @@
         <div class="card-body">
             <div class="form-group row align-items-center mb-2">
                 <label for="Accommodation" class="col-md-4 col-form-label"><?= $words->get('HostingStatus') ?></label>
-                <div class="col-12 col-md-8 btn-group" data-toggle="buttons">
-
-                    <?php
-                    $syshcvol = PVars::getObj('syshcvol');
-                    $tt = $syshcvol->Accomodation;
-                    $max = count($tt);
-                    for ($ii = 0; $ii < $max; $ii++) {
-                        $acctext = $words->get("Accomodation_" . $tt[$ii]);
-                        ?>
-
-                        <label for="<?= $tt[$ii] ?>"
-                               class="btn btn-light <?php if ($tt[$ii] == $vars['Accomodation']) echo "active"; ?>">
-                            <input type="radio" id="<?= $tt[$ii] ?>" name="Accomodation" value="<?= $tt[$ii] ?>"
-                                   class="noradio" <?php if ($tt[$ii] == $vars['Accomodation']) echo "checked"; ?>><img
-                                    src="images/icons/<?= $tt[$ii]; ?>.png" alt="<?= $acctext; ?>"
-                                    title="<?= $acctext; ?>">
-                        </label>
-
-                    <?php } ?>
+                <div class="btn-group col-md-8 mt-2" data-toggle="buttons">
+                    <label for="neverask"
+                           class="btn btn-light <?php if (isset($vars['Accomodation']) && $vars['Accomodation'] == 'neverask') { echo 'active'; } ?>">
+                        <input type="radio" id="neverask" name="Accomodation" value="neverask"
+                            <?php if (isset($vars['Accomodation']) && $vars['Accomodation'] == 'neverask') { echo ' checked="checked"'; } ?>
+                               class="noradio" >
+                        <div class="d-block-inline"><img
+                                src="images/icons/neverask.png" alt=""
+                                title=""><br><small>
+                                <?php echo $words->get('Accomodation_neverask'); ?></small>
+                        </div>
+                    </label>
+                    <label for="anytime"
+                           class="btn btn-light <?php if (isset($vars['Accomodation']) && $vars['Accomodation'] == 'anytime') { echo 'active'; } ?>">
+                        <input type="radio" id="anytime" name="Accomodation" value="anytime"
+                            <?php if (isset($vars['Accomodation']) && $vars['Accomodation'] == 'anytime') { echo ' checked="checked"'; } ?>
+                               class="noradio" ><div class="d-block-inline"><img
+                                src="images/icons/anytime.png" alt=""
+                                title=""><br><small>
+                                <?php echo $words->get('Accomodation_anytime'); ?></small>
+                        </div>
+                    </label>
+                    <div class="invalid-feedback">Select one of the above.</div>
+                    <?php if (in_array('SignupErrorProvideAccommodation', $vars['errors'])) {
+                        echo '<div class="error">'.$words->get('SignupErrorProvideAccommodation').'</div>';
+                    }
+                    ?>
                 </div>
             </div>
-            <div class="form-group row">
-                <label for="hes-duration"
-                       class="col-md-4 col-form-label"><?php echo $words->get('profile.accommodation.hes.label'); ?></label>
+            <div id="hi_block" class="form-group row mb-2 <?php if (isset($vars['Accomodation']) && $vars['Accomodation'] == 'neverask') { echo ' d-none'; } ?>">
+                <label for="hosting_interest" class="col-md-4 col-form-label">Hosting Interest</label>
                 <div class="col-12 col-md-8">
-                    <input type="hidden" id="hes-id" name="hes-id" value="<?= $vars['hes-id']; ?>">
-                    <div class="input-group date" id="hes-duration-div" data-target-input="nearest">
-                        <input type="text" class="form-control datetimepicker-input" data-target="#hes-duration-div" id="hes-duration"
-                               name="hes-duration" value="<?= $vars['hes-duration']; ?>">
-                        <div class="input-group-append" data-target="#hes-duration-div"
-                             data-toggle="datetimepicker"><i class="input-group-text bg-primary white far fa-calendar"></i></div>
-                    </div>
-                    <div class="form-check">
-                        <?php $checked = ''; if ($vars['hes-boost'] === 'Yes') { $checked = 'checked="checked"'; }?>
-                        <input type="checkbox" class="form-check-input" id="hes-boost"
-                               name="hes-boost" <?= $checked ?>>
-                        <label for="hes-boost" class="form-check-label"><?= $words->get('profile.accommodation.hes.boost'); ?></label>
-                    </div>
-                    <small class="form-text text-muted"><?= $words->get('profile.accommodation.hes.helptext'); ?></small>
+                <input
+                    type="range"
+                    class="form-control <?php if (in_array('SignupErrorProvideHostingInterest', $vars['errors'])) {
+                        echo 'is-invalid';
+                    } else {
+                        echo 'is-valid';
+                    }
+                    ?>"
+                    id="hosting_interest"
+                    name="hosting_interest"
+                    min="<?php echo (isset($vars['hosting_interest'])) ? 1 : 0; ?>"
+                    max="10"
+                    step="-1"
+                    value="<?php echo (isset($vars['hosting_interest'])) ? $vars['hosting_interest'] : 0; ?>"
+                    required="required"
+                    data-orientation="horizontal"
+                >
+                <div class="range text-center">
+                    <p class="rangeslider__value-output"><?php echo (isset($vars['hosting_interest'])) ? $hostingInterest[$vars['hosting_interest']] : $hostingInterest[0]; ?></p>
                 </div>
-
+                <div class="invalid-feedback"><?php echo $words->get('SignupErrorProvideHostingInterest'); ?></div>
+                </div>
             </div>
             <div class="form-group row">
                 <label for="MaxGuests"

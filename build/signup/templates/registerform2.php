@@ -152,7 +152,7 @@
                     <label for="birthdate"><?php echo $words->get('SignupBirthDate'); ?></label>
                     <div class="input-group date" id="datetimepicker1" data-target-input="nearest">
                         <div class="input-group-prepend" data-target="#datetimepicker1"
-                                data-toggle="datetimepicker"><i class="input-group-text bg-primary white far fa-calendar"></i></div>
+                                data-toggle="datetimepicker"><div class="input-group-text bg-primary white"><i class="far fa-calendar fa-fw"></i></div></div>
                         <input type="text" class="form-control datetimepicker-input" data-target="#datetimepicker1" id="birthdate"
                                name="birthdate" data-toggle="datetimepicker"/>
                         <button type="button" class="input-group-append btn btn-primary" data-trigger="focus" data-container="body"

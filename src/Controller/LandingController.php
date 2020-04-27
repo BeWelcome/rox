@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Twig\Environment;
 
 class LandingController extends AbstractController
 {
@@ -40,6 +41,7 @@ class LandingController extends AbstractController
      */
     public function showMessagesAction(Request $request)
     {
+        /** @var Member $member */
         $member = $this->getUser();
         $unread = $request->query->get('unread', '0');
 
@@ -73,6 +75,7 @@ class LandingController extends AbstractController
      */
     public function showNotificationsAction()
     {
+        /** @var Member $member */
         $member = $this->getUser();
 
         $notifications = $this->landingModel->getNotifications($member, 5);
@@ -97,6 +100,7 @@ class LandingController extends AbstractController
         $forum = $request->query->get('forum', '0');
         $following = $request->query->get('following');
 
+        /** @var Member $member */
         $member = $this->getUser();
         $preferenceRepository = $this->getDoctrine()->getRepository(Preference::class);
         /** @var Preference $preference */
@@ -135,6 +139,7 @@ class LandingController extends AbstractController
      */
     public function showActivitiesAction()
     {
+        /** @var Member $member */
         $member = $this->getUser();
         $activities = $this->landingModel->getActivities($member);
 
@@ -150,15 +155,15 @@ class LandingController extends AbstractController
      *
      * @param Request $request
      *
+     * @param Environment $twig
      * @return Response
      */
-    public function setAccommodationAction(Request $request)
+    public function setAccommodationAction(Request $request, Environment $twig)
     {
         $accommodation = $request->request->get('accommodation');
 
         switch ($accommodation) {
             case AccommodationType::YES:
-            case AccommodationType::MAYBE:
             case AccommodationType::NO:
                 $valid = true;
                 break;
@@ -166,17 +171,18 @@ class LandingController extends AbstractController
                 $valid = false;
         }
 
+        /** @var Member $member */
         $member = $this->getUser();
         if ($valid) {
             $member = $this->landingModel->updateMemberAccommodation($member, $accommodation);
         }
 
         // we need raw HTML and no response therefore we do not use the render method of the controller
-        $profilePictureWithAccommodation = $this->container->get('twig')->render('landing/widget/profilepicturewithaccommodation.html.twig', [
+        $profilePictureWithAccommodation = $twig->render('landing/widget/profilepicturewithaccommodation.html.twig', [
             'member' => $member,
         ]);
 
-        $accommodationHtml = $this->container->get('twig')->render('landing/widget/accommodation.html.twig', [
+        $accommodationHtml = $twig->render('landing/widget/accommodation.html.twig', [
             'member' => $member,
         ]);
 
@@ -204,6 +210,7 @@ class LandingController extends AbstractController
             throw $this->createAccessDeniedException();
         }
 
+        /** @var Member $member */
         $member = $this->getUser();
         $campaignDetails = $donateModel->getStatForDonations();
 

@@ -35,6 +35,8 @@ class ChangeUsernameFormType extends AbstractType
                     'placeholder' => 'new.username',
                 ],
             ])
-            ->add('label.admin.tools.change.username', SubmitType::class);
+            ->add('change_username', SubmitType::class, [
+                'label' => 'label.admin.tools.change.username',
+            ]);
     }
 }

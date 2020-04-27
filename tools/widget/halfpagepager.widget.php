@@ -66,7 +66,7 @@ HTML;
             {
                 $return .= "<li class='page-item'>{$this->pager->outputLink(1, '&laquo;', $this->getWords()->getSilent('PagerToFirstPage'))}</li>\n";
             }
-            $return .= "<li class='page-item'>{$this->pager->outputLink($this->active_page - 1, '&lsaquo;',$this->getWords()->getSilent('PagerToFirstPage'))}</li>\n";
+            $return .= "<li class='page-item'>{$this->pager->outputLink($this->active_page - 1, '&lsaquo;',$this->getWords()->getSilent('PagerToPreviousPage'))}</li>\n";
         }
         else
         {

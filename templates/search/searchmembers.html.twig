@@ -31,12 +31,6 @@
                                      alt="{{ 'search.filter.host.yes' | trans }}"/>
                 <div class="d-none">{{ form_widget(form.accommodation_anytime) }}</div>
             </label>
-            <label class="mr-2"><img src="{{ asset('images/icons/dependonrequest.png') }}"
-                                     class="img-check {% if form.accommodation_dependonrequest.vars.checked %}checked{% else %}not_checked{% endif %}"
-                                     alt="{{ 'search.filter.host.maybe' | trans }}"/>
-                <div class="d-none">
-                    {{ form_widget(form.accommodation_dependonrequest) }}</div>
-            </label>
             <label class="mr-2"><img src="{{ asset('images/icons/neverask.png') }}"
                                      class="img-check {% if form.accommodation_neverask.vars.checked %}checked{% else %}not_checked{% endif %}"
                                      alt="{{ 'search.filter.host.no' | trans }}"/>
@@ -55,17 +49,10 @@
             {{ form_widget(form.distance, {'attr': {'data-minimum-results-for-search': '-1'} }) }}
         </div>
         <div class="form-group mr-2 mb-1 mb-md-0 mt-md-1 mt-xl-0">
-            <a class="btn {% if form.showadvanced.vars.checked %}btn-outline-primary{% else %}btn-primary{% endif %} advanced" data-toggle="collapse" href="#advancedNav" role="button"
+            <button class="btn {% if form.showadvanced.vars.checked %}btn-outline-primary{% else %}btn-primary{% endif %} advanced" data-toggle="collapse" data-target="#advancedNav" role="button"
                aria-expanded="false" aria-controls="advancedNav"
-               >{{ 'search.show.advanced' | trans }}</a>
+               >{{ 'search.show.advanced' | trans }}</button>
         </div>
-        <div class="form-group mb-1 mb-md-0 mt-md-1 mt-xl-0">
-            {{ form_widget(form.updateMap, {'attr': {'class': 'btn-primary float-right'}}) }}
-        </div>
-    </div>
-    <div class="form-row my-1">
-        {{ form_widget(form.showmap, { 'attr': {'class': 'showMap'}}) }}
-        {{ form_widget(form.showadvanced) }}
     </div>
     <div class="collapse{% if form.showadvanced.vars.checked %} show{% endif %}" id="advancedNav">
         <div class="form-row my-1">
@@ -98,19 +85,25 @@
                 {{ form_label(form.languages, '', { 'label_attr': {'class': 'mb-0'} }) }}
                 {{ form_widget(form.languages) }}
             </div>
-            <div class="form-group col-12 col-md-6 mb-1">
-                {{ form_label(form.order, '', { 'label_attr': {'class': 'mb-0'} }) }}
-                {{ form_widget(form.order) }}
-            </div>
-            <div class="form-group col-12 col-md-6 mb-1">
-                {{ form_label(form.items, '', { 'label_attr': {'class': 'mb-0'} }) }}
-                {{ form_widget(form.items) }}
-            </div>
         </div>
-        <div class="form-row mb-1">
-            <div class="form-group w-100">
-                <button type="submit" name="search_form[updateMap]" class="btn-primary float-right btn">{{ 'search.find.members'|trans }}</button>
-            </div>
+    </div>
+    <div class="form-row mb-1">
+        <div class="form-group col-12 col-md-6 mb-1">
+            {{ form_label(form.order, '', { 'label_attr': {'class': 'mb-0'} }) }}
+            {{ form_widget(form.order) }}
+        </div>
+        <div class="form-group col-12 col-md-6 mb-1">
+            {{ form_label(form.items, '', { 'label_attr': {'class': 'mb-0'} }) }}
+            {{ form_widget(form.items) }}
+        </div>
+    </div>
+    <div class="form-row my-1">
+        <div class="form-group col-12 col-md-6 mb-1">
+            {{ form_widget(form.showmap, { 'attr': {'class': 'showMap'}}) }}
+            {{ form_widget(form.showadvanced) }}
+        </div>
+        <div class="form-group col-12 col-md-6 mb-1">
+            {{ form_widget(form.updateMap, { 'attr': {'class': 'btn btn-primary float-right'}}) }}
         </div>
     </div>
     {{ form_rest(form) }}

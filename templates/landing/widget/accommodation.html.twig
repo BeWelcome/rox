@@ -1,12 +1,10 @@
 <div id="accommodation" class="btn-group mx-1">
     <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         {%  if member.Accommodation == 'anytime' %}{{ 'hosting' | trans }}{% endif %}
-        {%  if member.Accommodation == 'dependonrequest' %}{{ 'maybe hosting' | trans }}{% endif %}
         {%  if member.Accommodation == 'neverask' %}{{ 'not hosting' | trans }}{% endif %}
     </button>
     <div class="dropdown-menu hoststatusdropdown">
-        <a id="anytime" class="hosting dropdown-item" href="#">{{ 'dashboard.hosting.yes' | trans }}</a>
-        <a id="dependonrequest" class="hosting dropdown-item" href="#">{{ 'dashboard.hosting.maybe' | trans }}</a>
-        <a id="neverask" class="hosting dropdown-item" href="#">{{ 'dashboard.hosting.no' | trans }}</a>
+        <a id="anytime" class="hosting dropdown-item" href="{{ url('member_set_accommodation', {'accommodation':'anytime'}) }}">{{ 'dashboard.hosting.yes' | trans }}</a>
+        <a id="neverask" class="hosting dropdown-item" href="{{ url('member_set_accommodation', {'accommodation':'neverask'}) }}">{{ 'dashboard.hosting.no' | trans }}</a>
     </div>
 </div>

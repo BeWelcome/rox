@@ -40,7 +40,7 @@ class SearchController extends AbstractController
         $showMap = $member->getMemberPreferenceValue($preference);
 
         $searchFormRequest = SearchFormRequest::fromRequest($request, $this->getDoctrine()->getManager());
-        $searchFormRequest->showmap = ('Yes' === $showMap) ? true : false;
+        $searchFormRequest->showmap = ('Yes' === $showMap);
 
         // There are three different forms that might end up on this page
         $formFactory = $this->get('form.factory');
@@ -104,13 +104,12 @@ class SearchController extends AbstractController
                 // only set data if the form wasn't submitted from search_members
                 $search->setData($data);
             }
-        } else {
-            if ($tinyIsSubmitted) {
+        } elseif ($tinyIsSubmitted)
+        {
                 // The user probably clicked on 'go' to fast on the landing page
                 // so set the entered location into the search location field and just show the form
                 $viewData = $tiny->getViewData();
                 $search->get('location')->submit($viewData->location);
-            }
         }
 
         return $this->render('search/searchmembers.html.twig', [

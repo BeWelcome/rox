@@ -5,8 +5,6 @@
 
 echo $callback_tag;
 
-$this->addLateLoadScriptFile('build/tempusdominus.js');
-
 require_once 'editprofile_form.php';
 
 ?>
@@ -62,14 +60,48 @@ require_once 'editprofile_form.php';
         $('button.remove_lang').click( removeLang );
         initLanguageSelect2s();
 
-        let minDate = moment().subtract(24, 'hours');
-        let maxDate = moment().add(60, 'days');
-        $("#hes-duration-div").datetimepicker({
-            format: 'YYYY-MM-DD',
-            minDate: minDate,
-            maxDate: maxDate,
-            keepInvalid: true
+        $('input[type="range"]').rangeslider({
+            polyfill: false,
+            onInit: function() {
+                updateValueOutput(this.value);
+            },
+            onSlide: function(pos, value) {
+                updateValueOutput(value);
+            }
         });
     });
+
+    $( "input:radio[name='Accomodation']" ).change(function() {
+        let value = document.forms.signup.Accomodation.value;
+        switch(value) {
+            case 'neverask':
+                $('#hi_block').addClass('d-none');
+                break;
+            case 'anytime':
+                $('#hi_block').removeClass('d-none');
+                break;
+        }
+    });
+
+    let markers = [
+        "<?= $words->get('Please set your hosting interest') ?>",
+        "<?= $words->get('Very low') ?>",
+        "<?= $words->get('low') ?>",
+        "<?= $words->get('lower') ?>",
+        "<?= $words->get('low to medium') ?>",
+        "<?= $words->get('medium') ?>",
+        "<?= $words->get('medium to high') ?>",
+        "<?= $words->get('high') ?>",
+        "<?= $words->get('higher') ?>",
+        "<?= $words->get('very high') ?>",
+        "<?= $words->get('can\'t wait') ?>"
+    ];
+
+    function updateValueOutput(value) {
+        let $valueOutput = $('.rangeslider__value-output');
+        if ($valueOutput.length) {
+            $valueOutput[0].innerHTML = markers[value];
+        }
+    }
 
 </script>

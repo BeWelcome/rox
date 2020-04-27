@@ -339,6 +339,7 @@ class MemberController extends AbstractController
      */
     public function getUnreadMessagesCount(Request $request)
     {
+        /** @var Member $member */
         $member = $this->getUser();
         $countWidget = $toastWidget = '';
         $lastUnreadCount = (int) ($request->request->get('current'));
@@ -376,6 +377,7 @@ class MemberController extends AbstractController
      */
     public function getUnreadRequestsCount(Request $request)
     {
+        /** @var Member $member */
         $member = $this->getUser();
         $countWidget = $toastWidget = '';
         $lastUnreadCount = (int) ($request->request->get('current'));

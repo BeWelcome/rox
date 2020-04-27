@@ -302,10 +302,6 @@ class SearchFormType extends AbstractType
                 'label' => false,
                 'required' => false,
             ])
-            ->add('accommodation_dependonrequest', CheckboxType::class, [
-                'label' => false,
-                'required' => false,
-            ])
             ->add('accommodation_neverask', CheckboxType::class, [
                 'label' => false,
                 'required' => false,

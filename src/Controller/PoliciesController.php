@@ -34,7 +34,8 @@ class PoliciesController extends AbstractController
 
     /**
      * @Route("/datarights/{locale}", name="data_rights",
-     *     requirements={"locale":"en|fr"})
+     *     requirements={"locale":"en|fr"},
+     *     defaults={"locale":"en"})
      * @param string $locale
      * @return Response
      */

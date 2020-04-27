@@ -64,11 +64,12 @@ class SearchModel extends RoxModelBase
     private $languagesCondition = "";
     private $accommodationCondition = "";
     private $typicalOfferCondition = "";
+    private $modCrypt = null;
     private $tables = "";
 
     private static $ORDERBY = array(
         self::ORDER_USERNAME => array('WordCode' => 'SearchOrderUsername', 'Column' => 'm.Username'),
-        self::ORDER_ACCOM => array('WordCode' => 'SearchOrderAccommodation', 'Column' => '(m.Accomodation * 12441600 + COALESCE(hes.current, 0))'),
+        self::ORDER_ACCOM => array('WordCode' => 'SearchOrderAccommodation', 'Column' => 'hosting_interest'),
         self::ORDER_DISTANCE => array('WordCode' => 'SearchOrderDistance', 'Column' => 'Distance'),
         self::ORDER_LOGIN => array('WordCode' => 'SearchOrderLogin', 'Column' => 'LastLogin'),
         self::ORDER_MEMBERSHIP => array('WordCode' => 'SearchOrderMembership', 'Column' => 'm.created'),
@@ -83,7 +84,7 @@ class SearchModel extends RoxModelBase
     public function __construct()
     {
         parent::__construct();
-        $this->modcrypt = new MOD_crypt($this->getSession());
+        $this->modCrypt = new MOD_crypt();
     }
 
     public static function getOrderByArray()
@@ -104,10 +105,10 @@ class SearchModel extends RoxModelBase
         switch ($orderType) {
             case self::ORDER_ACCOM:
             case self::ORDER_COMMENTS:
-                $order .= ', Distance ASC, HasProfileSummary DESC, HasProfilePhoto DESC, LastLogin DESC';
+                $order .= ', Distance ASC, HasProfileSummary DESC, LastLogin DESC, HasProfilePhoto DESC';
                 break;
             case self::ORDER_DISTANCE:
-                $order = $order.', (m.Accomodation * 12441600 + COALESCE(hes.current, 0)) DESC, HasProfileSummary DESC, HasProfilePhoto DESC, LastLogin DESC';
+                $order = $order.', hosting_interest DESC, HasProfileSummary DESC, LastLogin DESC, HasProfilePhoto DESC';
                 break;
         }
 
@@ -207,9 +208,9 @@ LIMIT 1
         if ($namePartId == 0) {
             return $namePart;
         }
-        if ($this->modcrypt->IsCrypted($namePartId) == 1) {
+        if ($this->modCrypt->IsCrypted($namePartId) == 1) {
         } else {
-            $namePart = $this->modcrypt->get_crypted($namePartId, "");
+            $namePart = $this->modCrypt->get_crypted($namePartId, "");
         }
 
         return $namePart;
@@ -537,7 +538,7 @@ LIMIT 1
                 m.FirstName,
                 m.SecondName,
                 m.LastName,
-                hes.current,
+                IF (m.accomodation = 'neverask', 0, m.hosting_interest) as hosting_interest,
                 date_format(m.LastLogin,'%Y-%m-%d') AS LastLogin,
                 IF(m.ProfileSummary != 0, 1, 0) AS HasProfileSummary,
                 IF(mp.photoCount IS NULL, 0, 1) AS HasProfilePhoto,

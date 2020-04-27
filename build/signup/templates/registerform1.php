@@ -132,44 +132,67 @@
                 </div>
 
                 <!-- Accommodation -->
-
-                <div class="form-group">
+                <div class="form-group align-content-center mb-2">
                     <span class="form-control-label"><?php echo $words->get('Accommodation'); ?></span>
                     <button type="button" class="btn btn-primary float-right" data-trigger="focus" data-container="body" data-toggle="popover" data-placement="right" data-content="<?= $words->get('signup.help.accommodation'); ?>">
                         <i class="fa fa-question"></i>
                     </button>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" required name="accommodation" id="anytime" value="anytime" <?php
-                        if (isset($vars['accommodation']) && $vars['accommodation'] == 'anytime') { echo ' checked="checked"'; } ?>>
-                        <label class="form-check-label" for="anytime">
-                            <img src="/images/icons/anytime.png">
-                            <?php echo $words->get('Accomodation_anytime'); ?>
+                    <div class="btn-group w-100 mt-2" data-toggle="buttons">
+                        <label for="neverask"
+                               class="btn btn-light">
+                            <input type="radio" id="neverask" name="accommodation" value="neverask"
+                                <?php if (isset($vars['accommodation']) && $vars['accommodation'] == 'neverask') { echo ' checked="checked"'; } ?>
+                                   class="noradio" >
+                            <div class="d-block-inline"><img
+                                src="images/icons/neverask.png" alt=""
+                                title=""><br><small>
+                            <?php echo $words->get('Accomodation_neverask'); ?></small>
+                            </div>
                         </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" required name="accommodation" id="dependonrequest" value="dependonrequest" <?php
-                        if (isset($vars['accommodation']) && $vars['accommodation'] == 'dependonrequest') { echo ' checked="checked"'; } ?>>
-                        <label class="form-check-label" for="dependonrequest">
-                            <img src="/images/icons/dependonrequest.png">
-                            <?php echo $words->get('Accomodation_dependonrequest'); ?>
+                        <label for="anytime"
+                               class="btn btn-light">
+                            <input type="radio" id="anytime" name="accommodation" value="anytime"
+                                <?php if (isset($vars['accommodation']) && $vars['accommodation'] == 'anytime') { echo ' checked="checked"'; } ?>
+                                   class="noradio" ><div class="d-block-inline"><img
+                                src="images/icons/anytime.png" alt=""
+                                title=""><br><small>
+                                    <?php echo $words->get('Accomodation_anytime'); ?></small>
+                            </div>
                         </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" required name="accommodation" id="neverask" value="neverask" <?php
-                        if (isset($vars['accommodation']) && $vars['accommodation'] == 'neverask') { echo ' checked="checked"'; } ?>>
-                        <label class="form-check-label" for="neverask">
-                            <img src="/images/icons/neverask.png">
-                            <?php echo $words->get('Accomodation_neverask'); ?>
-                        </label>
-                    </div>
                     <div class="invalid-feedback">Select one of the above.</div>
                     <?php if (in_array('SignupErrorProvideAccommodation', $vars['errors'])) {
                         echo '<div class="error">'.$words->get('SignupErrorProvideAccommodation').'</div>';
                     }
                     ?>
+                    </div>
+                </div>
+
+                <div id="hi_block" class="form-group mb-2 <?php if (isset($vars['accommodation']) && $vars['accommodation'] == 'anytime') { echo ' d-block'; } else { echo ' d-none'; } ?>">
+                    <label for="hosting_interest">Hosting Interest</label>
+                    <input
+                        type="range"
+                        class="form-control my-3 <?php if (in_array('SignupErrorProvideHostingInterest', $vars['errors'])) {
+                            echo 'is-invalid';
+                        } else {
+                            echo 'is-valid';
+                        }
+                        ?>"
+                        id="hosting_interest"
+                        name="hosting_interest"
+                        min="0"
+                        max="10"
+                        step="-1"
+                        value="0"
+                        required="required"
+                        data-orientation="horizontal"
+                    >
+                    <div class="range text-center">
+                        <p class="rangeslider__value-output">Please set your hosting interest</p>
+                    </div>
+                    <div class="invalid-feedback"><?php echo $words->get('SignupErrorProvideHostingInterest'); ?></div>
                 </div>
                 <!-- Next button -->
-                <div class="form-group">
+                <div class="form-group mt-3">
                         <button type="submit" class="btn btn-primary w-100"><?php echo $words->getSilent('NextStep'); ?> <i class="fa fa-angle-double-right"></i></button>
                         <?php echo $words->flushBuffer(); ?>
                     </div>
@@ -292,11 +315,55 @@
         }
     });
 
+    $( "input:radio[name='accommodation']" ).change(function() {
+        let value = document.forms.signup.accommodation.value;
+        switch(value) {
+            case 'neverask':
+                $('#hi_block').addClass('d-none').removeClass('d-block');
+                break;
+            case 'anytime':
+                $('#hi_block').addClass('d-block').removeClass('d-none');
+                break;
+        }
+    });
+
+    let markers = [
+        "<?= $words->get('Please set your hosting interest') ?>",
+        "<?= $words->get('Very low') ?>",
+        "<?= $words->get('low') ?>",
+        "<?= $words->get('lower') ?>",
+        "<?= $words->get('low to medium') ?>",
+        "<?= $words->get('medium') ?>",
+        "<?= $words->get('medium to high') ?>",
+        "<?= $words->get('high') ?>",
+        "<?= $words->get('higher') ?>",
+        "<?= $words->get('very high') ?>",
+        "<?= $words->get('can\'t wait') ?>"
+    ];
+
+    function updateValueOutput(value) {
+        let $valueOutput = $('.rangeslider__value-output');
+        if ($valueOutput.length) {
+            $valueOutput[0].innerHTML = markers[value];
+        }
+    }
+
     // Example starter JavaScript for disabling form submissions if there are invalid fields
     (function(){
         'use strict';
 
         $(document).ready(function() {
+
+            $('input[type="range"]').rangeslider({
+                polyfill: false,
+                onInit: function() {
+                    updateValueOutput(0);
+                },
+                onSlide: function(pos, value) {
+                    updateValueOutput(value);
+                }
+            });
+
             var form = $('#user-register-form');
             $(form).submit(function (e) {
                 if (this.checkValidity() === false) {

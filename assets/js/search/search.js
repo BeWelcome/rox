@@ -162,10 +162,6 @@ Map.prototype.addMarkers = function (map) {
                 iconFile = 'anytime';
                 break;
 
-            case 'dependonrequest':
-                iconFile = 'dependonrequest';
-                break;
-
             case 'neverask':
                 iconFile = 'neverask';
                 break;

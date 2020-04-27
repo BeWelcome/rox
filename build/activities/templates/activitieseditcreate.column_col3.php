@@ -89,7 +89,7 @@ if (empty($vars)) {
                             <div class="input-group-prepend"
                                  data-target="#activity-start-date"
                                  data-toggle="datetimepicker">
-                                <div class="input-group-text">
+                                <div class="input-group-text bg-primary white">
                                     <i class="fa fa-calendar"></i>
                                 </div>
                             </div>

@@ -3,11 +3,23 @@
 
 class SignupBasePage extends PageWithRoxLayout
 {
+    public function __construct()
+    {
+        parent::__construct();
+        $this->addLateLoadScriptFile('build/rangeslider.js');
+        $this->addLateLoadScriptFile('build/signup/signup.js');
+    }
+
+    protected function getSubmenuItems()
+    {
+        return '';
+    }
+
     protected function getPageTitle() {
         $words = $this->getWords();
         return $words->getBuffered('signup') . ' - BeWelcome';
     }
-    
+
     protected function teaserHeadline()
     {
         $words = $this->layoutkit->words;
@@ -18,13 +30,6 @@ class SignupBasePage extends PageWithRoxLayout
     {
         // we don't need the other columns
         return array('col3');
-    }
-
-    protected function getLateLoadScriptfiles()
-    {
-        $scripts = parent::getLateLoadScriptfiles();
-        $scripts[] = 'build/signup/signup.js';
-        return $scripts;
     }
 
     private function _cmpEditLang($a, $b)

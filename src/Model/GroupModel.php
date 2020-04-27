@@ -194,7 +194,7 @@ class GroupModel
             $comment = new MemberTranslation();
             $comment->setLanguage($language);
             $comment->setSentence($reason);
-            $comment->setOwner($member);
+            $comment->setOwner($member->getId());
             $comment->setTranslator($member->getId());
 
             $em->persist($comment);

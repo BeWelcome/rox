@@ -43,6 +43,6 @@ class SubjectType extends AbstractType
      */
     public function getBlockPrefix()
     {
-        return 'App_subject';
+        return 'app_subject';
     }
 }

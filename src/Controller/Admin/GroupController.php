@@ -183,7 +183,9 @@ class GroupController extends AbstractController
             '%name%' => $group->getName(),
         ]);
 
-        $logger->write('Group ' . $group->getName() . ' moved into discussion by ' . $this->getUser()->getUsername() . '.', 'Group');
+        $logger->write('Group ' . $this->getGroupLinkTag($group) . ' moved into discussion by ' . $this->getUser()->getUsername() . '.',
+            'Group'
+        );
 
         $referrer = $request->headers->get('referer');
 
@@ -222,7 +224,7 @@ class GroupController extends AbstractController
             '%name%' => $group->getName(),
         ]);
 
-        $logger->write('Group ' . $group->getName() . ' dismissed by ' . $this->getUser()->getUsername() . '.', 'Group');
+        $logger->write('Group ' . $this->getGroupLinkTag($group)  . ' dismissed by ' . $this->getUser()->getUsername() . '.', 'Group');
 
         $referrer = $request->headers->get('referer');
 
@@ -261,7 +263,7 @@ class GroupController extends AbstractController
             '%name%' => $group->getName(),
         ]);
 
-        $logger->write('Group ' . $group->getName() . ' approved by ' . $this->getUser()->getUsername() . '.', 'Group');
+        $logger->write('Group ' . $this->getGroupLinkTag($group) . ' approved by ' . $this->getUser()->getUsername() . '.', 'Group');
 
         $creator = current($group->getMembers());
         $this->sendNewGroupApprovedNotification($group, $creator);
@@ -302,7 +304,7 @@ class GroupController extends AbstractController
             '%name%' => $group->getName(),
         ]);
 
-        $logger->write('Group ' . $group->getName() . ' archived by ' . $this->getUser()->getUsername() . '.', 'Group');
+        $logger->write('Group ' . $this->getGroupLinkTag($group) . ' archived by ' . $this->getUser()->getUsername() . '.', 'Group');
 
         $referrer = $request->headers->get('referer');
 
@@ -340,7 +342,7 @@ class GroupController extends AbstractController
             '%name%' => $group->getName(),
         ]);
 
-        $logger->write('Group ' . $group->getName() . ' un-archived by ' . $this->getUser()->getUsername() . '.', 'Group');
+        $logger->write('Group ' . $this->getGroupLinkTag($group) . ' un-archived by ' . $this->getUser()->getUsername() . '.', 'Group');
 
         $referrer = $request->headers->get('referer');
 
@@ -349,11 +351,15 @@ class GroupController extends AbstractController
 
     private function sendNewGroupApprovedNotification(Group $group, Member $creator)
     {
-        $subject = '[New Group] ' . strip_tags($group->getName()) . ' approved';
-        $this->sendTemplateEmail('group@bewelcome.org', $creator, 'group.approved', [
+        $subject = $this->translator->trans(// 'email.subject.group.approved'
+            '[New Group] %group% approved',
+           ['%group%' => strip_tags($group->getName())]
+        );
+        $this->sendTemplateEmail('group@bewelcome.org', $creator, 'group/approved', [
             'subject' => $subject,
             'group' => $group,
             'creator' => $creator,
+            'admin' => $this->getUser(),
         ]);
     }
 
@@ -387,5 +393,10 @@ class GroupController extends AbstractController
                 'url' => $this->generateUrl('admin_groups_logs'),
             ],
         ];
+    }
+
+    private function getGroupLinkTag(Group $group)
+    {
+        return '<a href="'.$this->generateUrl('group_start', [ 'group_id' => $group->getId()]).'">'.$group->getName().'</a>';
     }
 }

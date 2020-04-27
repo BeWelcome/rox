@@ -1031,9 +1031,7 @@ ORDER BY
         /** @var Member $m */
         $m = $vars['member'];
 
-        // fantastic ... love the implementation. Fake
-        $CanTranslate = false;
-        // $CanTranslate = CanTranslate($vars["memberid"], $this->session->get('IdMember'));
+        $CanTranslate = false; // CanTranslate($vars["memberid"], $this->session->get('IdMember'));
         $ReadCrypted = "MemberReadCrypted"; // This might be changed in the future
         if ($rights->hasRight('Admin') || $rights->hasRight('SafetyTeam') /* or $CanTranslate */) { // admin or CanTranslate can alter other profiles
             $ReadCrypted = "AdminReadCrypted"; // In this case the AdminReadCrypted will be used
@@ -1080,6 +1078,7 @@ ORDER BY
         $m->ProfileSummary = $words->ReplaceInMTrad($vars['ProfileSummary'],"members.ProfileSummary", $IdMember, $m->ProfileSummary, $IdMember);
         $m->WebSite = strip_tags($vars['WebSite']);
         $m->Accomodation = $vars['Accomodation'];
+        $m->hosting_interest = $vars['hosting_interest'];
         $m->Organizations = $words->ReplaceInMTrad($vars['Organizations'],"members.Organizations", $IdMember, $m->Organizations, $IdMember);
         $m->Occupation = $words->ReplaceInMTrad(strip_tags($vars['Occupation']),"members.Occupation", $IdMember, $m->Occupation, $IdMember);
         $m->ILiveWith = $words->ReplaceInMTrad($vars['ILiveWith'],"members.ILiveWith", $IdMember, $m->ILiveWith, $IdMember);
@@ -1161,17 +1160,6 @@ ORDER BY
                 }
                 $this->logWrite("updating relation #".$Relation->id." Relation Confirmed=".$Relation->Confirmed, "Profile update");
             }
-        }
-
-        // Update hosting eagerness data if necessary
-        $hesData = $this->getHostingEagernessData($m);
-        $hesBoost = ($hesData->step < 0) ? 'No' : 'Yes';
-        if (($hesData->endDate !== $vars['hes-duration']) || ($hesBoost !== $vars['hes-boost'])) {
-            $this->setHostingEagernessData($m, $vars['hes-id'], $vars['hes-duration'], $vars['hes-boost']);
-        }
-
-        if ($hesData->step < 0 && ($vars['hes-boost'] === 'Yes')) {
-            $this->setHostingEagernessData($m, $vars['hes-id'], $vars['hes-duration'], $vars['hes-boost']);
         }
 
         if (!empty($_FILES['profile_picture']) && !empty($_FILES['profile_picture']['tmp_name']))

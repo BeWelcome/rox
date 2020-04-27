@@ -15,15 +15,15 @@ else
         <?php $this->pager_widget->render(); ?>
     </div>
 </div>
-<div class="row">
-    <div class="col-12 table-responsive">
+<div class="row no-gutters">
+    <div class="table-responsive">
         <table class="table table-striped table-hover">
             <thead class="blank">
             <tr>
-                <th colspan="2">
+                <th colspan="2" class="col-3">
                     <?= $words->get('Username'); ?>
                 </th>
-                <th>
+                <th class="col-9">
                     <?= $words->get('GroupsMemberComment'); ?>
                 </th>
             </tr>

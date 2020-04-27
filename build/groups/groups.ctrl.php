@@ -669,6 +669,7 @@ class GroupsController extends RoxControllerBase
         $page = new GroupJoinPage();
         $this->_fillObject($page);
         $page->group = $group;
+        $page->member = $member;
         return $page;
     }
 

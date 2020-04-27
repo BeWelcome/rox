@@ -69,7 +69,7 @@ class GroupSettingsPage extends GroupsBasePage
             return;
         }
 
-        if (!$this->isGroupOwner()) {
+        if (!$this->isGroupOwner() && !($this->group->Type !== GroupType::INVITE_ONLY && $this->isGroupAdmin())) {
             echo $words->get('GroupsSettingsOnlyAdmin');
             return;
         }

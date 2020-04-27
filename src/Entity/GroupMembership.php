@@ -118,6 +118,11 @@ class GroupMembership implements ObjectManagerAware
      */
     private $objectManager;
 
+    public function __construct()
+    {
+        $this->comments = new ArrayCollection();
+    }
+
     /**
      * Set updated.
      *

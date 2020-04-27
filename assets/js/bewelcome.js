@@ -14,3 +14,4 @@ import 'cookieconsent/src/styles/themes/edgeless.css';
 import 'select2/dist/js/select2.full.js';
 import './loginmessages.js';
 import '@fortawesome/fontawesome-free/js/all.js';
+

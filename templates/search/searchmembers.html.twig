@@ -17,8 +17,8 @@
 {% block content %}
     {{ form_start(form, {'attr': {'class': 'm-1 search_form', 'onkeypress': 'return event.keyCode != 13;'}}) }}
     {{ form_errors(form) }}
-    <div class="form-row form-inline mb-1">
-        <div class="input-group mr-2 mb-2 mb-md-0">
+    <div class="form-row form-inline ml-1 mb-1">
+        <div class="input-group mr-2 mb-2">
             <div class="input-group-prepend"><span class="input-group-text"><i
                             class="fa fa-lg fa-globe"></i></span>
             </div>
@@ -48,7 +48,7 @@
             {{ form_label(form.distance) }}
             {{ form_widget(form.distance, {'attr': {'data-minimum-results-for-search': '-1'} }) }}
         </div>
-        <div class="form-group mr-2 mb-1 mb-md-0 mt-md-1 mt-xl-0">
+        <div class="form-group mr-2 mb-1">
             <button class="btn {% if form.showadvanced.vars.checked %}btn-outline-primary{% else %}btn-primary{% endif %} advanced" data-toggle="collapse" data-target="#advancedNav" role="button"
                aria-expanded="false" aria-controls="advancedNav"
                >{{ 'search.show.advanced' | trans }}</button>
@@ -99,11 +99,16 @@
     </div>
     <div class="form-row my-1">
         <div class="form-group col-12 col-md-6 mb-1">
-            {{ form_widget(form.showmap, { 'attr': {'class': 'showMap'}}) }}
-            {{ form_widget(form.showadvanced) }}
+            <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input show_map" id="search_showmap" name="search[showmap]"
+                       {% if form.showmap.vars.checked %}checked{% endif %}
+                >
+                <label class="custom-control-label" for="search_showmap">{{ form.showmap.vars.label|trans }}</label>
+                {% do form.showmap.setRendered  %}
+            </div>
         </div>
         <div class="form-group col-12 col-md-6 mb-1">
-            {{ form_widget(form.updateMap, { 'attr': {'class': 'btn btn-primary float-right'}}) }}
+        {{ form_widget(form.updateMap, { 'attr': {'class': 'btn btn-primary float-right'}}) }}
         </div>
     </div>
     {{ form_rest(form) }}

@@ -221,10 +221,11 @@ $(function () {
             $("#search_showadvanced").prop("checked", true);
         }
     });
-    if ($(".showMap").is(":checked")) {
+
+    if ($(".show_map").is(":checked")) {
         map.showMap();
     }
-    $(".showMap").click(function(){
+    $(".show_map").click(function(){
         if ($(this).is(":checked")) {
             map.showMap();
         } else {

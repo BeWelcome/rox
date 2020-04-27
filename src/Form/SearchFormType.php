@@ -233,18 +233,18 @@ class SearchFormType extends AbstractType
             ->add('order', ChoiceType::class, [
                 'label' => 'label.order',
                 'choices' => [
-                    'searchorderusernameasc' => 2,
-                    'searchorderusernamedesc' => 3,
                     'searchorderaccommodationasc' => 6,
                     'searchorderaccommodationdesc' => 7,
                     'searchorderdistanceasc' => 14,
                     'searchorderdistancedesc' => 15,
                     'searchorderloginasc' => 8,
                     'searchorderlogindesc' => 9,
-                    'searchordermembershipasc' => 10,
-                    'searchordermembershipdesc' => 11,
                     'searchordercommentsasc' => 12,
                     'searchordercommentsdesc' => 13,
+                    'searchordermembershipasc' => 10,
+                    'searchordermembershipdesc' => 11,
+                    'searchorderusernameasc' => 2,
+                    'searchorderusernamedesc' => 3,
                 ],
                 'attr' => [
                     'class' => 'select2',

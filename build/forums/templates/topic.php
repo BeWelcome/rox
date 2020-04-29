@@ -38,6 +38,11 @@ This File display a topic and the messages which are inside it
             echo "<h2>", $topic->topicinfo->title, "</h2>";
         } else {
 
+        $topic->topicinfo->IsClosed = false;
+        if ($topic->topicinfo->expiredate != "0000-00-00 00:00:00") {
+            $topic->topicinfo->IsClosed = (strtotime($topic->topicinfo->expiredate) <= time());
+        }
+
         $words = new MOD_words();
 
         $User = $this->_model->getLoggedInMember();
@@ -46,9 +51,6 @@ This File display a topic and the messages which are inside it
         //    $can_edit_own = $User && $User->hasRight('edit_own@forums');
         $can_edit_foreign = $User && $User->hasRight('edit_foreign@forums');
 
-        if (!isset($topic->topicinfo->IsClosed)) {
-            $topic->topicinfo->IsClosed = false;
-        }
         echo '<div class="clearfix">';
         echo '<h2 class="mb-0 float-left">';
 
@@ -166,17 +168,14 @@ This File display a topic and the messages which are inside it
 
             ?>
             <?php
-            $topic->topicinfo->IsClosed = false;
-            if ($topic->topicinfo->expiredate != "0000-00-00 00:00:00") {
-                echo "&nbsp;&nbsp;&nbsp;<span class=\"forumsthreadtags\"><strong> expiration date :", ServerToLocalDateTime($topic->topicinfo->expiredate, $this->getSession()), "</strong>";
-                $topic->topicinfo->IsClosed = (strtotime($topic->topicinfo->expiredate) <= time());
-            }
-
             if ($topic->topicinfo->IsClosed) {
-                echo " &nbsp;&nbsp;&nbsp;<span class=\"forumsthreadtags\"><strong>this thread is closed</strong>";
+                echo "<span class='forumsthreadtags'><strong>"
+                    . $words->getFormatted('threadclosed',
+                        substr(ServerToLocalDateTime($topic->topicinfo->expiredate, $this->getSession()), 0, 10)
+                    )
+                    . ")</strong></span>";
             }
-            ?>
-
+?>
 </div>
 </div>
 <?php

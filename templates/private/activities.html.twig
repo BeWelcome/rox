@@ -1,0 +1,26 @@
+{% extends 'private/mydata.html.twig' %}
+
+{% block content %}
+    <h1>{{ 'mydata.activities.headline' | trans }}</h1>
+    <p>{{ 'mydata.activities.abstract' | trans }}</p>
+    {% if activities|length == 0 %}
+        <p>{{ 'mydata.activities.no.activity' }}</p>
+    {% else %}
+        <p>{{ 'mydata.activities.attended'|trans({'attended': activities|length}) }}</p>
+        <div class="card-columns">
+            {% for activity in activities|keys %}
+                <div class="card">
+                    <div class="card-header text-truncate">
+                        {{ activities[activity].title }}
+                    </div>
+                    <div class="card-body">
+                        {{ activities[activity].description|purify }}
+                    </div>
+                    <div class="card-footer text-right">
+                        <a href="activities/activity-{{ activity }}.html" class="btn btn-primary">{{ 'showdetails'|trans }}</a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endblock content %}

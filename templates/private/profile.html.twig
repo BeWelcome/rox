@@ -1,0 +1,221 @@
+{% extends 'private/mydata.html.twig' %}
+
+{% block content %}
+    {% set fields = member.memberFields %}
+    <main role="main">
+        <div class="container">
+            <div class="row"> {# header #}
+                <div class="col-12 col-md-6">
+                    <div class="p-2"><img src="{{ profilepicture }}"
+                                          alt="{{ 'mydata.profile.picture'|trans }}"
+                                          class="float-left img-thumbnail"></div>
+
+                    <h2 class="m-0 d-inline"><strong>member-1223 </strong>
+                        <img src="images/{{ member.accommodation }}.png" class="mb-2"
+                             alt="{{ member.accommodation|trans }}">
+                        <span class="h4">{{ member.firstname }} {{ member.secondname }} {{ member.lastname }}</span>
+                    </h2>
+
+                    <h5>
+                        <strong><a href="{{ url('places_city', {'countryname': member.country.name, 'countrycode': member.country.country, 'regionname': member.region.name, 'regioncode': member.region.admin1,
+                                'cityname': member.city.name, 'citycode': member.city.geonameId }) }}">{{ member.city.name }}</a></strong>,
+                        <a href="{{ url('places_region', {'countryname': member.country.name, 'countrycode': member.country.country, 'regionname': member.region.name, 'regioncode': member.region.admin1 }) }}">{{ member.region.name }}</a>,
+                        <a href="{{ url('places_country', {'countryname': member.country.name, 'countrycode': member.country.country }) }}">{{ member.country.name }}</a>
+                    </h5><!-- city -->
+
+                    <div class="form-group form-inline small">{{ member.status|trans }}</div>
+
+                </div>
+                <div class="col-12 col-md-6" style="border-left: 1px solid #ccc;">
+
+                    <p class="m-0">
+                        {{ 'age'|trans }}: {{ member.age }}, {{ 'gender'|trans }}: {{ member.gender|trans }}
+                        <br> <span
+                                class="font-weight-bold">{{ 'membersince'|trans }}: {{ member.created|localizeddate('medium', 'short', app.request.locale) }}
+                    </p>
+                </div>
+                <ul class="nav nav-pills" id="profileTab" role="tablist">
+                {% for locale in fields|keys %}
+                    <li class="nav-item">
+                        <a class="nav-link{% if loop.first %} active{% endif %}" id="{{ locale }}-tab" data-toggle="tab" href="#{{ locale }}" role="tab" aria-controls="{{ locale }}" aria-selected="true">{{ ('lang_' ~ locale)|lower|trans }}</a>
+                    </li>
+                {% endfor %}
+                </ul>
+            </div> {# end of header #}
+            <div class="tab-content" id="profileTabContent">
+                {% set phones = member.phoneNumbers %}
+                {% set messengers = member.messengers %}
+                {% set fallback = fields|keys|first %}
+                {% for locale in fields|keys %}
+                    <div  class="tab-pane fade {% if loop.first %}show active{% endif %}" role="tabpanel" aria-labelledby="{{ locale }}-tab" id="{{ locale }}">
+                        <div class="row mt-2">
+                        <div class="col-12 col-md-6">
+
+                            <div id="profilesummary" class="card mb-3">
+                                <h3 class="card-header bg-secondary">{{ 'profilesummary'|trans({}, "messages", locale) }}</h3>
+
+                                <div class="p-2">
+                                    {{ fields[locale]['ProfileSummary']|purify }}
+                                </div>
+                            </div>
+                            <div id="occupation" class="card mb-3">
+                                <h3 class="card-header bg-secondary">{{ 'occupation'|trans({}, "messages", locale) }}</h3>
+                                <div class="p-2">
+                                    {{ fields[locale]['Occupation'] }}
+                                </div>
+                            </div>
+
+                            <div id="languages" class="card mb-3">
+                                <h3 class="card-header bg-secondary">{{ 'profilelanguagesspoken'|trans({}, "messages", locale) }}</h3>
+
+                                <div class="p-2">
+                                    {% for ll in member.languageLevels %}
+                                    <p class="m-0">{{ (ll.language.wordCode)|lower|trans({}, "messages", locale) }} <sup class="ml-1 gray">{{ ('LanguageLevel_' ~ ll.level)|lower|trans({}, "messages", locale) }}</sup></p>
+                                    {% endfor %}
+                                </div>
+                            </div>
+
+                            <div id="interests" class="card mb-3">
+                                <h3 class="card-header bg-secondary">{{ 'profileinterests'|trans({}, "messages", locale) }}</h3>
+                                <div class="p-2">
+                                    <div class="h5 mb-0">{{ 'profilehobbies'|trans({}, "messages", locale) }}</div>
+                                    <div>{{ fields[locale]['Hobbies']|purify }}</div>
+
+                                    <div class="h5 mb-0">{{ 'profilebooks'|trans({}, "messages", locale) }}</div>
+                                    <div>{{ fields[locale]['Books'] }}</div>
+
+                                    <div class="h5 mb-0">{{ 'profilemusic'|trans({}, "messages", locale) }}</div>
+                                    <div>{{ fields[locale]['Music'] }}</div>
+
+                                    <div class="h5 mb-0">{{ 'profilemovies'|trans({}, "messages", locale) }}</div>
+                                    <div>{{ fields[locale]['Movies'] }}</div>
+
+                                    <div class="h5 mb-0">{{ 'profileorganizations'|trans({}, "messages", locale) }}</div>
+                                    <div>{{ fields[locale]['Organizations'] }}</div>
+                                </div>
+                            </div>
+                            <div id="travel" class="card mb-3">
+                                <h3 class="card-header bg-secondary">{{ 'profiletravelexperience'|trans({}, "messages", locale) }}</h3>
+                                <div class="p-2">
+                                    <dl>
+                                        <dt class="h5">{{ 'profilepasttrips'|trans({}, "messages", locale) }}</dt>
+                                        <dd>{{ fields[locale]['PastTrips']|purify }}</dd>
+                                        <dt class="h5">{{ 'profileplannedtrips'|trans({}, "messages", locale) }}</dt>
+                                        <dd>{{ fields[locale]['PlannedTrips']|purify }}</dd>
+                                    </dl>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <div id="accommodationinfo" class="card mb-3">
+                                <h3 class="card-header {% if member.accommodation == 'neverask' %}bg-secondary{% endif %}">{{ 'profileaccommodation'|trans({}, "messages", locale) }}</h3>
+                                <div class="card-block p-2">
+                                    <div class="card-text m-0">
+
+                                        <div id="quickinfo" class="float-right text-right">
+                                            {% if 'CanHostWeelChair' in member.typicOffer %}
+                                                <img src="images/wheelchairblue.png" alt="{{ 'wheelchair'|trans({}, "messages", locale) }}"
+                                                     title="{{ 'canhostwheelchairyes'|trans({}, "messages", locale) }}"/>
+                                            {% endif %}
+                                            <img src="images/{{ member.accommodation }}.png" alt="{{ 'accommodation' }}"
+                                                 title="{{ ('canoffer'~member.accommodation)|trans({}, "messages", locale) }}">
+                                        </div>
+
+                                        <div id="accommodation<?= $accIdSuffix ?>" class="clearfix mb-1">
+                                            <div class="guests h5">{{ 'profilenumberofguests'|trans({}, "messages", locale) }}
+                                                : {{ member.maxGuest }}</div>
+                                            {% if fields[locale]['MaxLenghtOfStay'] %}
+                                                <div class="stay h5 mb-0">{{ 'profilemaxlenghtofstay'|trans({}, "messages", locale) }}:</div>
+                                                <div>{{ fields[locale]['MaxLenghtOfStay']|purify }}</div>
+                                            {% endif %}
+                                            {% if fields[locale]['ILiveWith'] %}
+                                                <div class="stay h5 mb-0">{{ 'profileilivewith'|trans({}, "messages", locale) }}:</div>
+                                                <div>{{ fields[locale]['ILiveWith']|purify }}</div>
+                                            {% endif %}
+                                            {% if fields[locale]['PleaseBring'] %}
+                                                <div class="stay h5 mb-0">{{ 'profilepleasebring'|trans({}, "messages", locale) }}:</div>
+                                                <div>{{ fields[locale]['PleaseBring']|purify }}</div>
+                                            {% endif %}
+
+                                            {% set offers = member.TypicOffer|split(',') %}
+                                            {% if offers|length %}
+                                                <div class="h5 mb-0">{{ 'profileofferguests'|trans({}, "messages", locale) }}:</div>
+
+                                                {% for offer in offers %}
+                                                    {% if offer != 'CanHostWeelChair' %}
+                                                        {{ ('profiletypicoffer_' ~ offer)|trans({}, "messages", locale) }}
+                                                        {% if not loop.last %}<br>{% endif %}
+                                                    {% endif %}
+                                                {% endfor %}
+                                            {% endif %}
+
+                                            <div class="h5 mb-0">{{ 'profileofferhosts'|trans({}, "messages", locale) }}:</div>
+                                            <div>{{ fields[locale]['OfferHosts'] }}</div>
+
+                                            <div class="h5 mb-0">{{ 'otherinfosforguest'| trans({}, "messages", locale) }}:</div>
+                                            <div>
+                                                {{ fields[locale]['AdditionalAccomodationInfo']|purify }}
+                                                {{ fields[locale]['InformationToGuest']|purify }}
+                                            </div>
+
+                                            <div class="h5 mb-0">{{ 'profilepublictransport'| trans({}, "messages", locale) }}:</div>
+                                            <div>{{ fields[locale]['PublicTransport'] }}</div>
+
+                                            <div class="h5 mb-0">{{ 'profilehouserules' }}:</div>
+                                            {% set restrictions = member.restrictions|split(',') %}
+                                            {% for restriction in restrictions %}
+                                                {{ ('restrictions_' ~ restriction)|lower|trans({}, "messages", locale) }}
+                                                {% if not loop.last %}<br>{% endif %}
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card mb-3">
+                                <h3 class="card-header bg-secondary">{{ 'contactinfo'|trans({}, "messages", locale) }}</h3>
+                                <div class="p-2">
+                                    <dl id="address">
+                                        <dt class="h5">{{ 'name'| trans({}, "messages", locale) }}</dt>
+                                        <dd>{{ member.firstname }} {{ member.secondname }} {{ member.lastname }}</dd>
+
+                                        <dt class="h5">{{ 'address'| trans({}, "messages", locale) }}</dt>
+                                        <dd>member.street<br>
+                                            member.zip {{ member.city.name }}<br>
+                                            {{ member.country.name }}
+                                        </dd>
+
+                                        <dt class="h5">{{ 'profilephone'| trans({}, "messages", locale) }}</dt>
+                                        {% for phone in phones|keys %}
+                                            <dd>{{ ('profile' ~ phone)|lower|trans({}, "messages", locale) }}: {{ phones[phone] }}</dd>
+                                        {% else %}
+                                            {{ 'mydata.profile.no.phone' }}
+                                        {% endfor %}
+
+                                        <dt class="h5">{{ 'website'|trans({}, "messages", locale) }}</dt>
+                                        {% for website in member.webSite|split(',') %}
+                                            <dd><a href="{{ website }}">{{ website }}</a></dd>
+                                        {% endfor %}
+                                        <dt class="h5">{{ 'messenger'|trans({}, "messages", locale) }}:</dt>
+                                        {% if messengers.GOOGLE|length %}
+                                            Google: {{ messengers.GOOGLE }}
+                                        {% endif %}
+                                        {% if messengers.SKYPE|length %}
+                                            Skype: {{ messengers.SKYPE }}
+                                        {% endif %}
+                                        {% if messengers.Others|length %}
+                                            Others: {{ messengers.Others }}
+                                        {% endif %}
+                                        <dd>Messenger</dd>
+                                    </dl>
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        <!-- content -->            <!-- col-12 -->
+    </main>
+{% endblock content %}

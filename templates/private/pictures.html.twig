@@ -1,0 +1,23 @@
+{% extends 'private/mydata.html.twig' %}
+
+{% block javascripts %}
+    {% for jsfile in  encore_entry_js_files('gallery')%}
+        <script src="{% if isSubDir is defined %}../{% endif %}{{ jsfile|trim('/') }}"></script>
+    {% endfor %}
+{% endblock javascripts %}
+
+{% block content %}
+    <h1>{{ 'mydata.pictures.headline' | trans }}</h1>
+    <p>{{ 'mydata.pictures.abstract' | trans }}</p>
+    {% if pictures|length == 0 %}
+        <p>{{ 'mydata.pictures.no.image' }}</p>
+    {% else %}
+        <div id="masonry-grid" class="row mb-2">
+        {% for picture in pictures %}
+            <div class="col-12 col-md-4">
+                <a href="pictures/{{ picture }}"><img class="img-thumbnail" src="pictures/{{ picture }}"></a>
+            </div>
+        {% endfor %}
+        </div>
+    {% endif %}
+{% endblock content %}

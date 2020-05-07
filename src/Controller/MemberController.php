@@ -34,6 +34,7 @@ use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\WebpackEncoreBundle\Asset\EntrypointLookupInterface;
 
 /**
  * Class MemberController.
@@ -104,6 +105,14 @@ class MemberController extends AbstractController
     }
 
     /**
+     * @Route("/tabtest", name="tabtest")
+     */
+    public function tabTest()
+    {
+        return $this->render('tabtest.html.twig');
+    }
+
+    /**
      * @Route("/members/{username}/data", name="admin_personal_data")
      *
      * @param Request $request
@@ -111,6 +120,7 @@ class MemberController extends AbstractController
      * @param Logger $logger
      * @param ContainerBagInterface $params
      * @param MemberModel $memberModel
+     * @param EntrypointLookupInterface $entrypointLookup
      * @return StreamedResponse|Response
      * @throws Exception
      * @ParamConverter("member", class="App\Entity\Member", options={"mapping": {"username": "username"}})
@@ -120,11 +130,12 @@ class MemberController extends AbstractController
         Member $member,
         Logger $logger,
         ContainerBagInterface $params,
-        MemberModel $memberModel
+        MemberModel $memberModel,
+        EntrypointLookupInterface $entrypointLookup
     ) {
         // Either the member themselves or a person from the safety or the admin can access
         $this->denyAccessUnlessGranted(
-            [Member::ROLE_ADMIN_ADMIN],
+            Member::ROLE_ADMIN_ADMIN,
             null,
             'Unable to access this page!'
         );

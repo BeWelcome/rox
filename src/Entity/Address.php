@@ -27,10 +27,8 @@ class Address
     /**
      * @var Member
      *
-     * @ORM\OneToOne(targetEntity="Member")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="IdMember", referencedColumnName="id")
-     * })
+     * @ORM\ManyToOne(targetEntity="Member")
+     * @ORM\JoinColumn(name="IdMember", referencedColumnName="id")
      */
     private $member;
 
@@ -58,10 +56,8 @@ class Address
     /**
      * @var Location
      *
-     * @ORM\OneToOne(targetEntity="Location")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="IdCity", referencedColumnName="geonameid")
-     * })
+     * @ORM\ManyToOne(targetEntity="Location")
+     * @ORM\JoinColumn(name="IdCity", referencedColumnName="geonameid")
      */
     private $location;
 

@@ -149,7 +149,7 @@ class ForumThread
      * @ORM\ManyToOne(targetEntity="Language")
      * @ORM\JoinColumn(name="IdFirstLanguageUsed", referencedColumnName="id", nullable=false)
      */
-    private $language = 0;
+    private $language = null;
 
     /**
      * @var Group

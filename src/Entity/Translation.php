@@ -35,11 +35,11 @@ class Translation
     private $owner;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="IdTrad", type="integer", nullable=false)
      */
-    private $idtrad;
+    private $idTrad;
 
     /**
      * @var Member
@@ -94,7 +94,7 @@ class Translation
     private $tablecolumn = 'NotSet';
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -151,27 +151,27 @@ class Translation
     }
 
     /**
-     * Set idtrad
+     * Set idTrad
      *
-     * @param int $idtrad
+     * @param int $idTrad
      *
      * @return Translation
      */
-    public function setIdtrad($idtrad)
+    public function setIdTrad($idTrad)
     {
-        $this->idtrad = $idtrad;
+        $this->idTrad = $idTrad;
 
         return $this;
     }
 
     /**
-     * Get idtrad
+     * Get idTrad
      *
      * @return int
      */
-    public function getIdtrad()
+    public function getIdTrad()
     {
-        return $this->idtrad;
+        return $this->idTrad;
     }
 
     /**
@@ -181,7 +181,7 @@ class Translation
      *
      * @return Translation
      */
-    public function setTanslator($translator)
+    public function setTranslator($translator)
     {
         $this->translator = $translator;
 
@@ -199,20 +199,6 @@ class Translation
     }
 
     /**
-     * Set updated
-     *
-     * @param DateTime $updated
-     *
-     * @return Translation
-     */
-    public function setUpdated($updated)
-    {
-        $this->updated = $updated;
-
-        return $this;
-    }
-
-    /**
      * Get updated
      *
      * @return DateTime
@@ -220,20 +206,6 @@ class Translation
     public function getUpdated()
     {
         return $this->updated;
-    }
-
-    /**
-     * Set created
-     *
-     * @param DateTime $created
-     *
-     * @return Translation
-     */
-    public function setCreated($created)
-    {
-        $this->created = $created;
-
-        return $this;
     }
 
     /**
@@ -371,12 +343,5 @@ class Translation
     public function onPreUpdate()
     {
         $this->updated = new DateTime('now');
-    }
-
-    public function setTranslator(?Member $translator): self
-    {
-        $this->translator = $translator;
-
-        return $this;
     }
 }

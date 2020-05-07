@@ -6,7 +6,10 @@ use Carbon\Carbon;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Persistence\ObjectManagerAware;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Persistence\Mapping\ClassMetadata;
+use Doctrine\Persistence\ObjectManager;
 
 /**
  * PollChoice
@@ -18,23 +21,24 @@ use Doctrine\ORM\Mapping as ORM;
  * @SuppressWarnings(PHPMD)
  * Auto generated class do not check mess
  */
-class PollChoice
+class PollChoice implements ObjectManagerAware
 {
     /**
-     * @var Translation
+     * @var int
      *
-     * @ORM\ManyToMany(targetEntity="Translation", fetch="EAGER")
-     * @ORM\JoinTable(name="poll_choices_translations",
-     *      joinColumns={@ORM\JoinColumn(name="poll_choice_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="translation_id", referencedColumnName="id")}
-     *      )
+     * @ORM\Column(name="IdChoiceText", type="integer", nullable=false)
+     */
+    private $text;
+
+    /**
+     * @var string[]
      *
      * Collects all translated choices of the poll
      */
-    private $choiceTexts;
+    private $texts;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="Counter", type="integer", nullable=false)
      */
@@ -65,7 +69,7 @@ class PollChoice
     private $poll;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -73,10 +77,10 @@ class PollChoice
      */
     private $id;
 
-    public function __construct()
-    {
-        $this->choiceTexts = new ArrayCollection();
-    }
+    /**
+     * @var ObjectManager
+     */
+    private $objectManager;
 
     /**
      * Set choice text
@@ -95,11 +99,11 @@ class PollChoice
     /**
      * Get choice texts
      *
-     * @return ArrayCollection
+     * @return string[]
      */
-    public function getChoiceTexts()
+    public function getTexts()
     {
-        return $this->choiceTexts;
+        return $this->texts;
     }
 
     /**
@@ -229,21 +233,42 @@ class PollChoice
         $this->updated = new DateTime('now');
     }
 
-    public function addChoiceText(Translation $choiceText): self
+    /**
+     * Triggered after load from database
+     *
+     * @ORM\PostLoad
+     */
+    public function onPostLoad()
     {
-        if (!$this->choiceTexts->contains($choiceText)) {
-            $this->choiceTexts[] = $choiceText;
-        }
+        $translationRepository = $this->objectManager->getRepository(Translation::class);
+        $translatedTexts = $translationRepository->findBy(['idTrad' => $this->text]);
 
-        return $this;
+        $texts = [];
+        /** @var Translation $text */
+        foreach ($translatedTexts as $text) {
+            $texts[$text->getLanguage()->getShortCode()] = $text->getSentence();
+        }
+        $this->texts = $texts;
     }
 
-    public function removeChoiceText(Translation $choiceText): self
+    public function injectObjectManager(ObjectManager $objectManager, ClassMetadata $classMetadata)
     {
-        if ($this->choiceTexts->contains($choiceText)) {
-            $this->choiceTexts->removeElement($choiceText);
-        }
+        $this->objectManager = $objectManager;
+    }
 
-        return $this;
+    /**
+     * @return int
+     */
+    public function getText(): int
+    {
+        return $this->text;
+    }
+
+    /**
+     * @param int $text
+     */
+    public function setText(int $text): void
+    {
+        $this->text = $text;
     }
 }

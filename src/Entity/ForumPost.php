@@ -9,7 +9,10 @@ namespace App\Entity;
 
 use Carbon\Carbon;
 use DateTime;
+use Doctrine\Common\Persistence\ObjectManagerAware;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Persistence\Mapping\ClassMetadata;
+use Doctrine\Persistence\ObjectManager;
 
 /**
  * ForumsPost.
@@ -29,7 +32,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @SuppressWarnings(PHPMD)
  * Auto generated class do not check mess
  */
-class ForumPost
+class ForumPost implements ObjectManagerAware
 {
     /**
      * @var int
@@ -129,11 +132,14 @@ class ForumPost
     private $editCount = '0';
 
     /**
-     * @var int
+     * @var Language
      *
-     * @ORM\Column(name="IdFirstLanguageUsed", type="integer", nullable=false)
+     * Default English
+     *
+     * @ORM\ManyToOne(targetEntity="Language")
+     * @ORM\JoinColumn(name="IdFirstLanguageUsed", referencedColumnName="id", nullable=false)
      */
-    private $idfirstlanguageused = '0';
+    private $language = null;
 
     /**
      * @var string
@@ -169,6 +175,10 @@ class ForumPost
      * @ORM\Column(name="PostDeleted", type="string", nullable=false)
      */
     private $deleted = 'NotDeleted';
+    /**
+     * @var ObjectManager
+     */
+    private $objectManager;
 
     /**
      * Set id.
@@ -411,27 +421,27 @@ class ForumPost
     }
 
     /**
-     * Set idfirstlanguageused.
+     * Set language
      *
-     * @param int $idfirstlanguageused
+     * @param Language $language
      *
      * @return ForumPost
      */
-    public function setIdfirstlanguageused($idfirstlanguageused)
+    public function setLanguage($language)
     {
-        $this->idfirstlanguageused = $idfirstlanguageused;
+        $this->language = $language;
 
         return $this;
     }
 
     /**
-     * Get idfirstlanguageused.
+     * Get language.
      *
-     * @return int
+     * @return Language
      */
-    public function getIdfirstlanguageused()
+    public function getLanguage()
     {
-        return $this->idfirstlanguageused;
+        return $this->language;
     }
 
     /**
@@ -679,5 +689,30 @@ class ForumPost
     public function onPostPersist()
     {
         $this->postId = $this->id;
+    }
+
+    /*
+     * Translated post content is only provided on explicit call to avoid long load times
+     */
+    public function getMessageTranslations()
+    {
+        $translationRepository = $this->objectManager->getRepository(Translation::class);
+        $translatedMessages = $translationRepository->findBy(['idTrad' => $this->idcontent]);
+
+        $messages = [];
+        /** @var Translation $message */
+        foreach ($translatedMessages as $message) {
+            $messages[$message->getLanguage()->getShortCode()] = [
+                'language' => $message->getLanguage(),
+                'message' => $message->getSentence(),
+            ];
+        }
+
+        return $messages;
+    }
+
+    public function injectObjectManager(ObjectManager $objectManager, ClassMetadata $classMetadata)
+    {
+        $this->objectManager = $objectManager;
     }
 }

@@ -1,0 +1,12 @@
+<div class="card">
+    <div class="card-header text-truncate">{{ commentsAndNews.news.title }}</div>
+    <div class="card-body">{{ commentsAndNews.news.text|purify|truncate(100) }}
+            {% for comment in commentsAndNews.comments %}
+                <p class="mb-0 border-bottom"><strong>{{ comment.title }}</strong></p>
+            {{ comment.text|purify }}
+        {% endfor %}
+    </div>
+    <div class="card-footer text-right">
+        <a class="btn btn-primary" href="{{ url('communitynews_show', {'id':commentsAndNews.news.id}) }}">{{ 'showfull'|trans }}</a>
+    </div>
+</div>

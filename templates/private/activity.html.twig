@@ -1,0 +1,18 @@
+{% extends 'private/mydata.html.twig' %}
+
+{% block content %}
+    <h1>{{ activity.title }} <a class="btn btn-primary" href="{{ url('activities_show', {'id': activity.id}) }}">{{ 'goto activity' }}</a></h1>
+    <p>{{ 'mydata.activity.starts.ends'|trans({'starts': activity.starts, 'ends': activity.ends}) }}</p>
+    <p>{{ activity.description | purify}}</p>
+
+    <p>{{ activity.address | purify }}</p>
+    <p>{{ 'mydata.activity.location.country'|trans({'location': activity.location.name, 'country': activity.location.country.name}) }}</p>
+
+    {% if organizer %}<p>{{ 'mydata.activity.organizer'|trans }}</p>{% endif %}
+    <p>
+        {%- if status == constant('App\\Entity\\ActivityAttendee::ATTENDS_NO') %}{{ 'mydata.activity.wont.attended'|trans }}{% endif -%}
+        {%- if status == constant('App\\Entity\\ActivityAttendee::ATTENDS_MAYBE') %}{{ 'mydata.activity.maybe.attends'|trans }}{% endif -%}
+        {%- if status == constant('App\\Entity\\ActivityAttendee::ATTENDS_YES') %}{{ 'mydata.activity.will.attend'|trans }}{% endif -%}
+    </p>
+    <p>{{ comment|purify }}</p>
+{% endblock content %}

@@ -1,0 +1,28 @@
+{% extends 'private/mydata.html.twig' %}
+
+{% block content %}
+    <h1>{{ 'mydata.donations.headline' | trans }}</h1>
+    <p>{{ 'mydata.donations.abstract' | trans }}</p>
+    {% if donations|length == 0 %}
+        <p>{{ 'mydata.donations.no.donations'|trans }}</p>
+    {% else %}
+        <div class="card-columns">
+            {% for donation in donations %}
+                <div class="card">
+                    <div class="card-header text-truncate">
+                        {{ donation.money }}{{ donation.amount }}
+                    </div>
+                    <div class="card-body">
+                        <p>{{ donation.namegiven }}</p>
+                        {% if donation.referencepaypal %}
+                            <p>{{ 'mydata.donations.paypal'|trans }}: {{ donation.referencepaypal }}</p>
+                        {% endif %}
+                        <p>{{ donation.systemcomment }}</p>
+                        <p>{{ donation.membercomment }}</p>
+                        <p>{% if donation.statusprivate == 'showamountonly' %}{{ 'mydata.donations.amount.only'|trans }}{% else %}{{ 'mydata.donations.full.details'|trans }}{% endif %}</p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endblock content %}

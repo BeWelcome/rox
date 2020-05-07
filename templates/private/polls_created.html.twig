@@ -1,0 +1,27 @@
+{% extends 'private/mydata.html.twig' %}
+
+{% block content %}
+    <h1>{{ 'mydata.polls.created.headline'|trans }}</h1>
+    <p>{{ 'mydata.polls.created.abstract'|trans }}</p>
+    {% if polls|length == 0 %}
+    <p><strong>{{ 'mydata.polls.created.no.polls.'|trans }}</strong></p>
+    {% else %}
+        <div class="card-columns">
+            {% for poll in polls %}
+            <div class="card">
+                <div class="card-header text-truncate">
+                    {% if poll.titles|length %}
+                        {{ poll.titles|first }}
+                    {% else %}No Title?{% endif %}
+                </div>
+                <div class="card-body">
+                    {% include 'private/poll.html.twig' with {'poll':poll} %}
+                </div>
+                <div class="card-footer text-right">
+                    <a class="btn btn-primary" href="{{ url('polls_view_results', {'pollId': poll.id}) }}">{{ 'showdetails'|trans }}</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endblock %}

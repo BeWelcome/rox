@@ -16,10 +16,10 @@ use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
-use Doctrine\Common\Persistence\Mapping\ClassMetadata;
-use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\Persistence\ObjectManagerAware;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Persistence\Mapping\ClassMetadata;
+use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\Security\Core\Encoder\EncoderAwareInterface;
 use Symfony\Component\Security\Core\Exception\RuntimeException;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -143,6 +143,16 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
      * @ORM\JoinColumn(name="IdCity", referencedColumnName="geonameid")
      */
     private $city;
+
+    /**
+     * @var Location
+     */
+    private $region;
+
+    /**
+     * @var Country
+     */
+    private $country;
 
     /**
      * @var string
@@ -635,7 +645,7 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
     /**
      * @var ArrayCollection
      */
-    private $memberFields;
+    private $memberFields = null;
 
     /**
      * @var ArrayCollection
@@ -2670,7 +2680,7 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
     /**
      * Remove group.
      *
-     * @param \App\Entity\Group $group
+     * @param Group $group
      */
     public function removeGroup(Group $group)
     {
@@ -3012,11 +3022,93 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
      */
     public function getMemberFields() : array
     {
-        $memberTranslationRepository = $this->em->getRepository(MemberTranslation::class);
-        $memberTranslations = $memberTranslationRepository->findBy(['owner' => $this]);
-        $this->memberFields = $memberTranslations;
+        if (null === $this->memberFields)
+        {
+            $memberTranslationRepository = $this->em->getRepository(MemberTranslation::class);
+            /** @var MemberTranslation[] $memberTranslations */
+            $memberTranslations = $memberTranslationRepository->findBy(['owner' => $this]);
+
+            $memberFields = [];
+            foreach($memberTranslations as $memberTranslation)
+            {
+                $tableColumn = $memberTranslation->getTablecolumn();
+                if ("members." !== substr($tableColumn, 0, 8))
+                {
+                    continue;
+                }
+                $tableColumn = str_ireplace('members.', '', $tableColumn);
+
+                $memberFields[$memberTranslation->getLanguage()->getShortcode()][$tableColumn] = $memberTranslation->getSentence();
+            }
+
+            // Normalize array: make sure for all locales all fields are set, use first locale as fallback for the other
+            $fallback = array_key_first($memberFields);
+            $fields = [
+                'Occupation',
+                'ILiveWith',
+                'MaxLenghtOfStay',
+                'MotivationForHospitality',
+                'Offer',
+                'Organizations',
+                'AdditionalAccomodationInfo',
+                'OtherRestrictions',
+                'InformationToGuest',
+                'Hobbies',
+                'Books',
+                'Music',
+                'Movies',
+                'PleaseBring',
+                'OfferGuests',
+                'OfferHosts',
+                'PublicTransport',
+                'PastTrips',
+                'PlannedTrips',
+                'ProfileSummary',
+            ];
+
+            foreach(array_keys($memberFields) as $locale)
+            {
+                foreach($fields as $field)
+                {
+                    if (!isset($memberFields[$locale][$field]))
+                    {
+                        // Check if field exists in fallback locale
+                        if (isset($memberFields[$fallback][$field])) {
+                            $memberFields[$locale][$field] = $memberFields[$fallback][$field];
+                        } else {
+                            // Hack. Set field to empty value and make sure it is also set for next next locale
+                            $memberFields[$fallback][$field] = '';
+                            $memberFields[$locale][$field] = '';
+                        }
+                    }
+                }
+            }
+            $this->memberFields = $memberFields;
+
+        }
 
         return $this->memberFields;
+    }
+
+    public function getPhoneNumbers()
+    {
+        $phoneNumbers = [
+            'HomePhoneNumber' => $this->getCryptedField('HomePhoneNumber'),
+            'CellPhoneNumber' => $this->getCryptedField('CellPhoneNumber'),
+            'WorkPhoneNumber' => $this->getCryptedField('WorkPhoneNumber'),
+        ];
+
+        return $phoneNumbers;
+    }
+
+    public function getMessengers() {
+        $messengers = [
+            'GOOGLE' => $this->getCryptedField('chat_GOOGLE'),
+            'SKYPE' =>  $this->getCryptedField('chat_SKYPE'),
+            'Others' =>  $this->getCryptedField('chat_Others'),
+        ];
+
+        return $messengers;
     }
 
     /**
@@ -3049,5 +3141,37 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
         $this->registrationKey = $registrationKey;
 
         return $this;
+    }
+
+    /**
+     * @return AdminUnit
+     */
+    public function getRegion(): AdminUnit
+    {
+        /** @var  $adminUnitRepository */
+        $adminUnitRepository = $this->em->getRepository(AdminUnit::class);
+
+        /** @var AdminUnit $adminUnit */
+        $adminUnit = $adminUnitRepository->findOneBy([
+            'admin1' => $this->city->getAdmin1(),
+            'country' => $this->city->getCountry(),
+        ]);
+
+        return $adminUnit;
+    }
+
+    /**
+     * @return Country
+     */
+    public function getCountry(): Country
+    {
+        return $this->city->getCountry();
+    }
+
+    public function getAge(): int
+    {
+        $birthday = $this->getBirthdate();
+
+        return ($birthday->diffInYears());
     }
 }

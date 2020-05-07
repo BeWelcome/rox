@@ -1,0 +1,28 @@
+<p><strong>{{ 'mydata.polls.description' }}</strong><br>
+{% if poll.descriptions|length %}
+    {% for locale,description in poll.descriptions %}
+        <small class="text-muted mt-0 pt-0">{{ locale }}</small><br>
+        {{ description|purify }}{% if not loop.last %}<br>{% endif %}
+    {% endfor %}
+{% else %}
+    {{ 'mydata.polls.no.description'|trans }}
+{% endif %}
+</p>
+{% if poll.groups|length %}
+    <p>{{ 'mydata.polls.groups' }}:{% for group in poll.groups %}
+        {{ group.name }}{% if not loop.last %}, {% endif %}
+        {% endfor %}</p>
+{% endif %}
+<p><strong>{{ 'mydata.polls.choices' }}</strong><br>
+{% if poll.choices|length %}
+    {% for choice in poll.choices %}
+        <small class="text-muted mt-0 pt-0">{{ 'mydata.polls.choice'|trans({'choice':loop.index}) }}</small><br>
+            {% for locale,text in choice.texts %}
+                {{ text|purify }} (<span class="text-muted">{{ locale }}</span>){% if not loop.last %},<br> {% endif %}
+            {% endfor %}
+        <br>
+    {% endfor %}
+{% else %}
+    {{ 'mydata.polls.no.choices'|trans }}
+{% endif %}
+</p>

@@ -7,6 +7,9 @@ use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Persistence\ObjectManagerAware;
+use Doctrine\Persistence\Mapping\ClassMetadata;
+use Doctrine\Persistence\ObjectManager;
 
 /**
  * Polls
@@ -18,7 +21,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @SuppressWarnings(PHPMD)
  * Auto generated class do not check mess
  */
-class Poll
+class Poll implements ObjectManagerAware
 {
     /**
      * @var Member
@@ -104,13 +107,14 @@ class Poll
     private $contributions;
 
     /**
-     * @var Translation
+     * @var int
      *
-     * @ORM\ManyToMany(targetEntity="Translation", fetch="EAGER")
-     * @ORM\JoinTable(name="polls_translations",
-     *      joinColumns={@ORM\JoinColumn(name="poll_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="translation_id", referencedColumnName="id")}
-     *      )
+     * @ORM\Column(name="title", type="integer", nullable=false)
+     */
+    private $title;
+
+    /**
+     * @var string[]
      *
      * Collects all translated titles of the poll
      */
@@ -137,21 +141,21 @@ class Poll
     private $formembersonly = 'Yes';
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="IdLocationsList", type="integer", nullable=false)
      */
     private $idlocationslist = '0';
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="IdGroupsList", type="integer", nullable=false)
      */
     private $idgroupslist = '0';
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="IdCountriesList", type="integer", nullable=false)
      */
@@ -186,11 +190,16 @@ class Poll
     private $allowcomment = 'No';
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="Description", type="integer", nullable=false)
      */
     private $description;
+
+    /**
+     * @var string[]
+     */
+    private $descriptions;
 
     /**
      * @var string
@@ -226,9 +235,13 @@ class Poll
      */
     private $id;
 
+    /**
+     * @var ObjectManager
+     */
+    private $objectManager;
+
     public function __construct()
     {
-        $this->titles = new ArrayCollection();
         $this->groups = new ArrayCollection();
         $this->choices = new ArrayCollection();
         $this->contributions = new ArrayCollection();
@@ -447,13 +460,23 @@ class Poll
     }
 
     /**
-     * Get titles
+     * Get titles (translated)
      *
-     * @return ArrayCollection
+     * @return array
      */
     public function getTitles()
     {
         return $this->titles;
+    }
+
+    /**
+     * Get descriptions (translated)
+     *
+     * @return array
+     */
+    public function getDescriptions()
+    {
+        return $this->descriptions;
     }
 
     /**
@@ -785,6 +808,34 @@ class Poll
         $this->updated = new DateTime('now');
     }
 
+    /**
+     * Triggered after load from database
+     *
+     * @ORM\PostLoad
+     */
+    public function onPostLoad()
+    {
+        $translationRepository = $this->objectManager->getRepository(Translation::class);
+        $translatedTitles = $translationRepository->findBy(['idTrad' => $this->title]);
+
+        $titles = [];
+        /** @var Translation $title */
+        foreach ($translatedTitles as $title) {
+            $titles[$title->getLanguage()->getShortCode()] = $title->getSentence();
+        }
+        $this->titles = $titles;
+
+        $translatedDescriptions = $translationRepository->findBy(['idTrad' => $this->description]);
+
+        // Index by language.
+        $descriptions = [];
+        /** @var Translation $description */
+        foreach ($translatedDescriptions as $description) {
+            $descriptions[$description->getLanguage()->getShortCode()] = $description->getSentence();
+        }
+        $this->descriptions = $descriptions;
+    }
+
     public function addChoice(PollChoice $choice): self
     {
         if (!$this->choices->contains($choice)) {
@@ -865,5 +916,10 @@ class Poll
         }
 
         return $this;
+    }
+
+    public function injectObjectManager(ObjectManager $objectManager, ClassMetadata $classMetadata)
+    {
+        $this->objectManager = $objectManager;
     }
 }

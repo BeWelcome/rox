@@ -1,0 +1,30 @@
+{% extends 'private/mydata.html.twig' %}
+
+{% block content %}
+    <h1>{{ 'mydata.shouts.headline' | trans }}</h1>
+    <p>{{ 'mydata.shouts.abstract' | trans }}</p>
+    {% if shouts|length == 0 %}
+        <p>{{ 'mydata.shouts.no.shouts'|trans }}</p>
+    {% else %}
+        <div class="card-columns">
+            {% for shout in shouts %}
+                <div class="card">
+                    {% if shout.title|length %}
+                    <div class="card-header text-truncate">
+                        {{ shout.title }}
+                    </div>
+                    {% endif %}
+                    <div class="card-body">
+                        <p>{{ shout.text }}</p>
+                        <p>{{ 'mydata.shouts.left.for'|trans }}<br>
+                            {% if shout.table == constant('App\\Entity\\Shout::GALLERY_ITEM') %}<a href="{{ url('gallery_show_image', {'imageId': shout.tableId}) }}">{{ 'mydata.shouts.image'|trans }}</a>{% endif %}
+                            {% if shout.table == constant('App\\Entity\\Shout::GALLERY') %}<a href="{{ url('gallery_album_new', {'galleryId': shout.tableId}) }}">{{ 'mydata.shouts.gallery'|trans }}</a>{% endif %}
+                            {% if shout.table == constant('App\\Entity\\Shout::GROUP') %}<a href="{{ url('group_start', {'group_id': shout.tableId}) }}">{{ 'mydata.shouts.group'|trans }}</a>{% endif %}
+                            {% if shout.table == constant('App\\Entity\\Shout::TRIP') %}{{ 'mydata.shouts.trip'|trans }}{% endif %}
+                        </p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endblock content %}

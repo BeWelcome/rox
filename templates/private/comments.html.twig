@@ -1,0 +1,20 @@
+{% extends 'private/mydata.html.twig' %}
+
+{% block content %}
+    <h1>{{ 'mydata.comments.headline' | trans }}</h1>
+    <p>{{ 'mydata.comments.abstract' | trans }}</p>
+    {% if comments|length == 0 %}
+        <p>{{ 'mydata.comments.no.comment' }}</p>
+    {% else %}
+        {% for comment in comments %}
+        <div class="row mb-2">
+            {% if comment.to %}
+                {% include 'private/comment.html.twig' with { 'comment': comment.to, 'mute': false } %}
+            {% endif %}
+            {% if comment.from %}
+                {% include 'private/comment.html.twig' with { 'comment': comment.from, 'mute': true } %}
+            {% endif %}
+        </div>
+        {% endfor %}
+    {% endif %}
+{% endblock content %}

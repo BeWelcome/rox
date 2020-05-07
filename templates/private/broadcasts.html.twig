@@ -1,0 +1,32 @@
+{% extends 'private/mydata.html.twig' %}
+
+{% block content %}
+    <h1>{{ 'mydata.broadcasts.headline'|trans }}</h1>
+    <p>{{ 'mydata.broadcasts.abstract'|trans }}</p>
+    {% if broadcasts|length == 0 %}
+        <p><strong>{{ 'mydata.broadcasts.no.broadcasts'|trans }}</strong></p>
+    {% else %}
+    <div class="card-columns">
+        {% for broadcast in broadcasts %}
+            {% set translations = broadcast.newsletter.translations %}
+            {% if translations[app.request.locale] is defined %}
+                {% set newsletter = translations[app.request.locale] %}
+            {% else %}
+                {% set newsletter = translations|first %}
+            {% endif %}
+            <div class="card">
+                <div class="card-header text-truncate">
+                    {% if newsletter.title is defined %}{{ newsletter.title }}{% else %}{{ 'mydata.newsletter.no.title' }}{% endif %}
+                </div>
+                <div class="card-body">
+                    {% if newsletter.body is defined %}{{ newsletter.body|purify|truncate(100) }}{% else %}{{ 'mydata.newsletter.no.body' }}{% endif %}
+                    <p class="small text-muted mb-0">{{ 'sent'|trans|capitalize }}:{{ broadcast.updated|localizeddate('medium','none', app.request.locale) }}</p>
+                </div>
+                <div class="card-footer text-right">
+                    <a class="btn btn-primary" href="{{ url('newsletter_single', {'shortCode':broadcast.newsletter.name, 'language':newsletter.locale}) }}">{{ 'showfull'|trans }}</a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+{% endblock %}

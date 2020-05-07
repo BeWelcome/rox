@@ -53,7 +53,7 @@ class Language
      *
      * @ORM\Column(name="WordCode", type="text", length=255, nullable=false)
      */
-    private $wordcode;
+    private $wordCode;
 
     /**
      * @var int
@@ -201,27 +201,27 @@ class Language
     }
 
     /**
-     * Set wordcode.
+     * Set word code.
      *
-     * @param string $wordcode
+     * @param string $wordCode
      *
      * @return Language
      */
-    public function setWordcode($wordcode)
+    public function setWordCode($wordCode)
     {
-        $this->wordcode = $wordcode;
+        $this->wordCode = $wordCode;
 
         return $this;
     }
 
     /**
-     * Get wordcode.
+     * Get word code.
      *
      * @return string
      */
-    public function getWordcode()
+    public function getWordCode()
     {
-        return $this->wordcode;
+        return $this->wordCode;
     }
 
     /**

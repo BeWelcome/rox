@@ -32,6 +32,8 @@ use App\Repository\CommentRepository;
 use App\Repository\FamilyAndFriendRepository;
 use App\Repository\MessageRepository;
 use App\Utilities\ManagerTrait;
+use App\Utilities\TranslatorTrait;
+use DateTime;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
@@ -43,12 +45,18 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Routing\Generator\UrlGenerator;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Templating\EngineInterface;
+use Symfony\WebpackEncoreBundle\Asset\EntrypointLookup;
+use Symfony\WebpackEncoreBundle\Asset\EntrypointLookupInterface;
 use Twig\Environment;
 use ZipArchive;
 
 class MemberModel
 {
     use ManagerTrait;
+    use TranslatorTrait;
+
+    /** @var EntrypointLookup  */
+    private $entrypointLookup;
 
     /** @var UrlGeneratorInterface  */
     private $urlGenerator;
@@ -56,10 +64,17 @@ class MemberModel
     /** @var Environment  */
     private $environment;
 
-    public function __construct(UrlGeneratorInterface $urlGenerator, Environment $environment)
+    /** @var string */
+    private $tempDir;
+
+    /** @var string */
+    private $projectDir;
+
+    public function __construct(UrlGeneratorInterface $urlGenerator, Environment $environment, EntrypointLookupInterface $entrypointLookup)
     {
         $this->urlGenerator = $urlGenerator;
         $this->environment = $environment;
+        $this->entrypointLookup = $entrypointLookup;
     }
 
     /**
@@ -100,6 +115,7 @@ class MemberModel
     {
         // Create temp directory
         $i = 0;
+        $dirname = "";
         while ($i < 1000) {
             $dirname = sys_get_temp_dir() . '/' . uniqid('mydata_', true);
             if (!is_file($dirname) && !is_dir($dirname)) {
@@ -111,16 +127,18 @@ class MemberModel
             // 1000 tries to create a temp directory failed, oh my
             throw new Exception('Can\'t generate temp dir');
         }
-        // Ensure directory name ends with /
-        $dirname = $dirname . "/";
+        // Ensure directory name ends with / and store it in private variable $tempDir as it is used all over the place
+        // and clutters function signatures
+        $this->tempDir = $dirname . "/";
+        $this->projectDir = $params->get('kernel.project_dir');
 
-        $this->preparePersonalData($dirname, $params->get('kernel.project_dir'), $member);
+        $this->preparePersonalData($member);
 
-        $zipFilename = $dirname . 'bewelcome-' . $member->getUsername() . "-" . date('Y-m-d') . '.zip';
+        $zipFilename = $this->tempDir . 'bewelcome-' . $member->getUsername() . "-" . date('Y-m-d') . '.zip';
         $zip = new ZipArchive();
         $zip->open($zipFilename, ZipArchive::CREATE);
         $files = new RecursiveIteratorIterator(
-            new RecursiveDirectoryIterator($dirname),
+            new RecursiveDirectoryIterator($this->tempDir),
             RecursiveIteratorIterator::LEAVES_ONLY
         );
 
@@ -130,7 +148,7 @@ class MemberModel
             if (!$file->isDir()) {
                 // Get real and relative path for current file
                 $filePath = $file->getRealPath();
-                $relativePath = substr($filePath, strlen($dirname));
+                $relativePath = substr($filePath, strlen($this->tempDir));
 
                 // Add current file to archive
                 $zip->addFile($filePath, $relativePath);
@@ -149,32 +167,37 @@ class MemberModel
     }
 
     /**
-     * @param string $tempDir
-     * @param string $projectDir
      * @param Member $member
      */
-    private function preparePersonalData(string $tempDir, string $projectDir, Member $member)
+    private function preparePersonalData(Member $member)
     {
         $memoryLimit = ini_get('memory_limit');
         ini_set('memory_limit', '512M');
 
-//        $this->prepareGalleryItems($tempDir, $projectDir, $member);
-//        $this->prepareProfilePictures($tempDir, $member);
-//        $this->prepareMessagesAndRequests($tempDir, $member);
-//        $this->prepareLogs($tempDir, $member);
-//        $this->prepareForumPosts($tempDir, $member);
-//        $this->prepareGroupInformation($tempDir, $member);
-//        $this->prepareActivities($tempDir, $member);
-//        $this->prepareComments($tempDir, $member);
-        $this->prepareSpecialRelations($tempDir, $member);
-//        $this->prepareMemberData($tempDir, $member);
-//        $this->prepareNewsletterInformation($tempDir, $member);
-//        $this->prepareCommunityNewsInformation($tempDir, $member);
-//        $this->prepareDonations($tempDir, $member);
-//        $this->prepareTranslations($tempDir, $member);
-//        $this->prepareRightsAndPrivileges($tempDir, $member);
-//        $this->preparePolls($tempDir, $member);
-//        $this->prepareShouts($tempDir, $member);
+        $extracted = [];
+        $this->createStylesheetAndImageFolder();
+        $extracted[] = $this->prepareGalleryItems($member);
+        $extracted[] = $this->prepareProfilePictures($member);
+        $extracted[] = $this->prepareMessages($member);
+        $extracted[] = $this->prepareRequests($member);
+        $extracted[] = $this->prepareLogs($member);
+        $extracted[] = $this->prepareForumPosts($member);
+        $extracted[] = $this->prepareGroupInformation($member);
+        $extracted[] = $this->prepareActivities($member);
+        $extracted[] = $this->prepareComments($member);
+        $extracted[] = $this->prepareSpecialRelations($member);
+        $extracted[] = $this->prepareMemberData($this->tempDir, $member);
+        $extracted[] = $this->prepareNewsletters($member);
+        $extracted[] = $this->prepareBroadcasts($member);
+        $extracted[] = $this->prepareCommunityNews($member);
+        $extracted[] = $this->prepareCommunityNewsComments($member);
+        $extracted[] = $this->prepareDonations($member);
+        $extracted[] = $this->prepareTranslations($member);
+        $extracted[] = $this->prepareRights($member);
+        $extracted[] = $this->preparePrivileges($member);
+        $extracted[] = $this->preparePolls($member);
+        $extracted[] = $this->prepareShouts($member);
+        $this->writePersonalDataFile(['member' => $member, 'extracted' => $extracted],'index');
 
         ini_set('memory_limit', $memoryLimit);
     }
@@ -182,32 +205,34 @@ class MemberModel
     /**
      * copy all files for the gallery into the gallery subdirectory
      *
-     * @param string $tempDir
-     * @param string $projectDir
      * @param Member $member
+     * @return string
      */
-    private function prepareGalleryItems(string $tempDir, string $projectDir, Member $member): void
+    private function prepareGalleryItems(Member $member): string
     {
-        /** @var Member $member */
         $memberId = $member->getId();
 
         $filesystem = new Filesystem();
-        $galleryPath = $projectDir . '/data/gallery/member' . $memberId . '/';
+        $galleryPath = $this->projectDir . '/data/gallery/member' . $memberId . '/';
 
         if (is_dir($galleryPath)) {
             // create gallery sub directory
-            $galleryDir = $tempDir . 'gallery/';
+            $galleryDir = $this->tempDir . 'gallery/';
+            $hrefs = [];
             @mkdir($galleryDir);
             if ($directoryHandle = opendir($galleryPath)) {
                 while (($file = readdir($directoryHandle)) !== false) {
                     if (!is_dir($file)) {
                         $ext = $this->imageExtension($galleryPath . $file);
+                        $destination = $galleryDir . pathinfo($file, PATHINFO_FILENAME) . $ext;
                         $filesystem->copy($galleryPath . $file, $galleryDir . pathinfo($file, PATHINFO_FILENAME) . $ext);
+                        $hrefs[] = str_replace($this->tempDir, '', $destination);
                     }
                 }
                 closedir($directoryHandle);
             }
         }
+        return $this->writePersonalDataFile(['hrefs' => $hrefs],'gallery');
     }
 
     private function imageExtension(string $filename): string
@@ -233,16 +258,17 @@ class MemberModel
     }
 
     /**
-     * @param string $tempDir
      * @param Member $member
+     * @return string
      */
-    private function prepareProfilePictures(string $tempDir, Member $member)
+    private function prepareProfilePictures(Member $member): string
     {
+        $pictures = [];
         $variants = ['_xs', '_30_30', '_75_75', '_150', '_200', '_500', '_original'];
 
         // Copy all profile pictures
         $filesystem = new Filesystem();
-        $pictureDir = $tempDir . 'pictures/';
+        $pictureDir = $this->tempDir . 'pictures/';
         @mkdir($pictureDir);
         $photoRepository = $this->getManager()->getRepository(MembersPhoto::class);
         /** @var MembersPhoto[] $photos */
@@ -252,16 +278,22 @@ class MemberModel
                 $filesystem->copy($photo->getFilepath(), $pictureDir
                     . pathinfo($photo->getFilepath(), PATHINFO_FILENAME)
                     . $this->imageExtension($photo->getFilepath()));
+                $pictures[] =
+                    pathinfo($photo->getFilepath(), PATHINFO_FILENAME)
+                    .$this->imageExtension($photo->getFilepath());
             }
             foreach ($variants as $variant) {
                 $filepath = $photo->getFilepath() . $variant;
+                $filename = pathinfo($filepath, PATHINFO_FILENAME);
                 if (is_file($filepath)) {
                     $filesystem->copy($filepath, $pictureDir
-                        . pathinfo($filepath, PATHINFO_FILENAME)
+                        . $filename
                         . $this->imageExtension($filepath));
+                    $pictures[] = $filename . $this->imageExtension($filepath);
                 }
             }
         }
+        return $this->writePersonalDataFile([ 'pictures' => $pictures ],"pictures" );
     }
 
     private function processMessagesOrRequests($items, $directory, $sent)
@@ -270,69 +302,153 @@ class MemberModel
         foreach ($items as $message) {
             $isRequest = ($message->getRequest() !== null);
             $filename = ($isRequest) ? "request" : "message";
-            $handle = fopen($directory . $filename . "-" . $message->getCreated()->toDateString() . "-" . $i
-                . ($sent ? "-sent" : "-received") . ".html", "w");
-            fwrite($handle, $this->environment->render('private/message_or_request.html.twig', [
-                'message' => $message,
-            ]));
-            fclose($handle);
+            $this->writePersonalDataFileSubDirectory(
+                [
+                    'message' => $message,
+                ],
+                'message_or_request',
+                $directory,
+                $filename . "-" . $message->getCreated()->toDateString() . "-" . $i . ($sent ? "-sent" : "-received")
+            );
             $i++;
         }
     }
 
     /**
-     * @param string $tempDir
      * @param Member $member
+     * @return string
      */
-    private function prepareMessagesAndRequests(string $tempDir, Member $member): void
+    private function prepareMessages(Member $member): string
     {
-        // Write all messages into files
         /** @var MessageRepository $messageRepository */
         $messageRepository = $this->getManager()->getRepository(Message::class);
 
-        $messageDir = $tempDir . 'messages/';
-        @mkdir($messageDir);
-        $this->processMessagesOrRequests($messageRepository->getMessagesSentBy($member), $messageDir, true);
-        $this->processMessagesOrRequests($messageRepository->getMessagesReceivedBy($member), $messageDir, false);
+        $messagesSentBy = $messageRepository->getMessagesSentBy($member);
+        $messagesReceivedBy = $messageRepository->getMessagesReceivedBy($member);
+        $this->processMessagesOrRequests($messagesSentBy, 'messages', true);
+        $this->processMessagesOrRequests($messagesReceivedBy, 'messages', false);
 
-        $requestDir = $tempDir . 'requests/';
-        @mkdir($requestDir);
-        $this->processMessagesOrRequests($messageRepository->getRequestsSentBy($member), $requestDir, true);
-        $this->processMessagesOrRequests($messageRepository->getRequestsReceivedBy($member), $requestDir, false);
+        return $this->writePersonalDataFile(
+            [
+                'messagesSent' => count($messagesSentBy),
+                'messagesReceived' => count($messagesReceivedBy),
+            ],
+            'messages'
+        );
     }
 
     /**
-     * @param string $tempDir
      * @param Member $member
+     * @return string
      */
-    private function prepareLogs(string $tempDir, Member $member)
+    private function prepareRequests(Member $member): string
+    {
+        /** @var MessageRepository $messageRepository */
+        $messageRepository = $this->getManager()->getRepository(Message::class);
+
+        $requestsSentBy = $messageRepository->getRequestsSentBy($member);
+        $requestsReceivedBy = $messageRepository->getRequestsReceivedBy($member);
+        $this->processMessagesOrRequests($requestsSentBy, 'requests', true);
+        $this->processMessagesOrRequests($requestsReceivedBy, 'requests', false);
+
+        return $this->writePersonalDataFile(
+            [
+                'requestsSent' => count($requestsSentBy),
+                'requestsReceived' => count($requestsReceivedBy),
+            ],
+            'requests'
+        );
+    }
+
+    /**
+     * @param $filename
+     * @param $template
+     * @param $parameters
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
+     */
+    private function writeRenderedTemplate($filename, $template, $parameters)
+    {
+        $this->entrypointLookup->reset();
+        $parameters = array_merge($parameters, ['date_generated' => new DateTime()]);
+
+        $handle = fopen($this->tempDir.$filename.".html", "w");
+        fwrite($handle, $this->environment->render('private/' . $template . '.html.twig', $parameters));
+        fclose($handle);
+    }
+
+    /**
+     * @param array $parameters
+     * @param string $template
+     * @param string $filename
+     * @return string
+     */
+    private function writePersonalDataFile($parameters, $template, $filename = null) : string
+    {
+        $filename = (null === $filename) ? $template : $filename;
+
+        $this->writeRenderedTemplate(
+            $filename,
+            $template,
+            $parameters
+        );
+        return $template;
+    }
+
+    /**
+     * @param array $parameters
+     * @param string $template Template (without .html.twig) to be used (located in private/)
+     * @param string $subDirectory Subdirectory name (no trailing /)
+     * @param string $filename File to be written (.html is added)
+     */
+    private function writePersonalDataFileSubDirectory($parameters, $template, $subDirectory, $filename = null)
+    {
+        if (!is_dir($this->tempDir.$subDirectory)) {
+            @mkdir($this->tempDir.$subDirectory);
+        }
+
+        $filename = (null === $filename) ? $template : $filename;
+
+        $parameters = array_merge($parameters, [
+            'isSubDir' => true,
+        ]);
+
+        $this->writeRenderedTemplate(
+            $subDirectory . '/' . $filename,
+            $template,
+            $parameters
+        );
+    }
+
+    /**
+     * @param Member $member
+     * @return string
+     */
+    private function prepareLogs(Member $member): string
     {
         // Add all log information about member
         $logRepository = $this->getManager()->getRepository(Log::class);
         /** @var Log[] $logs */
         $logs = $logRepository->findBy(['member' => $member]);
-        if (!empty($logs)) {
-            $handle = fopen($tempDir . "logs.txt", "w");
-            foreach ($logs as $log) {
-                fwrite($handle, $log->getType() . ": " . $log->getLogMessage() . " (" . $log->getCreated()->toDateTimeString() . ")" . PHP_EOL);
-            }
-            fclose($handle);
-        }
+        return $this->writePersonalDataFile(
+            [
+                'logs' => $logs,
+            ],
+            'logs'
+        );
     }
 
-    /**
-     * @param string $tempDir
-     * @param Member $member
-     */
-    private function prepareForumPosts(string $tempDir, Member $member)
+    private function prepareForumPosts(Member $member): string
     {
         // now all posts to the forum or groups including status
         $forumRepository = $this->getManager()->getRepository(ForumPost::class);
         /** @var ForumPost $posts */
-        $posts = $forumRepository->findBy(['author' => $member]);
-        $postsDir = $tempDir . 'posts/';
-        @mkdir($postsDir);
+        $posts = $forumRepository->findBy(['author' => $member], ['created' => 'DESC']);
         $i = 1;
+        $postsPerYear = [];
+        $threadsPerYear = [];
+        $threadsContributed = [];
         /** @var ForumPost $post */
         foreach ($posts as $post) {
             try {
@@ -351,21 +467,72 @@ class MemberModel
                     // As database column for group has 0 instead of null we need to check if group is valid
                     $group = $thread->getGroup();
                     if ($group) {
-                        $group->getTitle();
+                        $group->getName();
                     }
                 } catch (Exception $e) {
                     $group = null;
                 }
             }
-            $handle = fopen($postsDir . "post-" . $post->getCreated()->toDateString() . "-" . $i . ".html", "w");
-            fwrite($handle, $this->environment->render('private/post.html.twig', [
-                'thread' => $thread,
-                'group' => $group,
-                'post' => $post,
-                ]));
-            fclose($handle);
+            $this->writePersonalDataFileSubdirectory(
+                [
+                    'thread' => $thread,
+                    'group' => $group,
+                    'post' => $post,
+                ],
+                'post',
+                'posts',
+                "post-" . $post->getCreated()->toDateString() . "-" . $i
+            );
+            $year = $post->getCreated()->year;
+            if (!isset($threadsPerYear[$year])) {
+                $threadsPerYear[$year] = [];
+                $postsPerYear[$year] = 0;
+            }
+            $thread = $post->getThread();
+            $threadId = (null === $thread) ? 0 : $thread->getThreadId();
+            if (!isset($threadsPerYear[$year][$threadId]))
+            {
+                if (!in_array($threadId, $threadsContributed)) {
+                    $threadsContributed[] = $threadId;
+                }
+                $threadsPerYear[$year][$threadId] = [
+                    'thread' => $thread,
+                    'posts' => [],
+                    'count' => 0,
+                ];
+            }
+            $threadsPerYear[$year][$threadId]['count'] = $threadsPerYear[$year][$threadId]['count'] + 1;
+            $threadsPerYear[$year][$threadId]['posts'][$i] = $post;
+            $postsPerYear[$year] = $postsPerYear[$year] + 1;
             $i++;
         }
+        if (!empty($threadsPerYear))
+        {
+            foreach(array_keys($threadsPerYear) as $year)
+            {
+                $this->writePersonalDataFileSubDirectory(
+                    [
+                        'year' => $year,
+                        'post_count' => $postsPerYear[$year],
+                        'threads' => $threadsPerYear[$year],
+                        'thread_count' => count(array_keys($threadsPerYear[$year])),
+                    ],
+                    "posts_year",
+                    'posts',
+                    "posts-".$year
+                );
+            }
+        }
+        return $this->writePersonalDataFile(
+            [
+                'years' => array_keys($threadsPerYear),
+                'threadsPerYear' => $threadsPerYear,
+                'postsPerYear' => $postsPerYear,
+                'threads_contributed' => count($threadsContributed),
+                'posts_written' => $i - 1,
+            ],
+            'posts'
+        );
     }
 
     /**
@@ -378,47 +545,37 @@ class MemberModel
     }
 
     /**
-     * @param string $tempDir
      * @param Member $member
      */
-    private function prepareGroupInformation(string $tempDir, Member $member)
+    private function prepareGroupInformation(Member $member)
     {
         // Groups the member is in and why
+        $memberships = [];
         $groupMemberships = $member->getGroupMemberships();
         if (!empty($groupMemberships)) {
-            $handle = fopen($tempDir . "groups.txt", "w");
             foreach ($groupMemberships as $groupMembership) {
                 try {
-                    fwrite($handle, $groupMembership->getGroup()->getName() . " ["
-                        . $this->urlGenerator->generate(
-                            'group_start',
-                            [ 'group_id' => $groupMembership->getGroup()->getId(), UrlGenerator::ABSOLUTE_URL ]
-                        )
-                        . "]");
+                    // Database is messy. Check if group still exists
+                    if ($groupMembership->getGroup()->getName())
+                    {
+                        $memberships[] = $groupMembership;
+                    };
                 } catch (Exception $e) {
-                    fwrite($handle, "Deleted Group");
+                    // Deleted Group
                 }
-                fwrite($handle, PHP_EOL);
-                fwrite($handle, "Status: " . $groupMembership->getStatus() . " (joined: " . $groupMembership->getCreated()->toDateTimeString() . ")" . PHP_EOL);
-                /** @var MemberTranslation $comment */
-                foreach ($groupMembership->getComments()->getValues() as $comment) {
-                    fwrite($handle, $comment->getSentence() . PHP_EOL);
-                }
-                fwrite($handle, PHP_EOL);
             }
-            fclose($handle);
         }
+        return $this->writePersonalDataFile(['groupmemberships' => $memberships],'groups');
     }
 
     /**
-     * @param string $tempDir
+     *  Activities the member joined with comment
+     *
      * @param Member $member
+     * @return string
      */
-    private function prepareActivities(string $tempDir, Member $member)
+    private function prepareActivities(Member $member): string
     {
-        // Activities the member joined with comment
-        $commentsDir = $tempDir . 'activities/';
-        @mkdir($commentsDir);
         /** @var ActivityAttendeeRepository $attendeeRepository */
         $attendeeRepository = $this->getManager()->getRepository(ActivityAttendee::class);
         /** @var ActivityAttendee[] $activities */
@@ -427,56 +584,63 @@ class MemberModel
             /** @var ActivityAttendee $attendee */
             $i = 1;
             foreach ($activitiesOfMember as $attendee) {
-                $handle = fopen($commentsDir . "activitity" . $i . ".txt", "w");
-                fwrite($handle, $attendee->getActivity()->getTitle() . "(" . $attendee->getActivity()->getId() . ")" . PHP_EOL);
-                fwrite($handle, $attendee->getActivity()->getDescription() . "(" . $attendee->getActivity()->getId() . ")" . PHP_EOL);
-                if ($attendee->getOrganizer()) {
-                    fwrite($handle, "You organized this activity" . PHP_EOL);
-                }
-                fwrite($handle, $attendee->getComment() . PHP_EOL);
-                fclose($handle);
+                $this->writePersonalDataFileSubDirectory(
+                    [
+                        'activity' => $attendee->getActivity(),
+                        'organizer' => $attendee->getOrganizer(),
+                        'status' => $attendee->getStatus(),
+                        'comment' => $attendee->getComment(),
+                    ],
+                    'activity',
+                    'activities',
+                    "activity-" . $i
+                );
+                $activities[$i] = $attendee->getActivity();
                 $i++;
             }
         }
+        return $this->writePersonalDataFile([ 'activities' => $activities ], 'activities');
     }
 
     /**
-     * @param string $tempDir
      * @param Member $member
+     * @return string
      */
-    private function prepareComments(string $tempDir, Member $member)
+    private function prepareComments(Member $member): string
     {
         // Comments the member left others
-        $commentsDir = $tempDir . 'comments/';
-        @mkdir($commentsDir);
         /** @var CommentRepository $commentRepository */
         $commentRepository = $this->getManager()->getRepository(Comment::class);
         /** @var Comment[] $comments */
-        $comments = $commentRepository->getCommentsForMember($member);
-        if (!empty($comments)) {
-            /** @var Comment $comment */
-            $i = 1;
-            foreach ($comments as $comment) {
-                $handle = fopen($commentsDir . "comment-" . $i . "-received.html", "w");
-                fwrite($handle, $this->environment->render('private/comment.html.twig', [
-                    'comment' => $comment,
-                ]));
-                fclose($handle);
-                $i++;
-            }
+        $commentsForMember = $commentRepository->getCommentsForMember($member);
+        $commentsFromMember = $commentRepository->getCommentsFromMember($member);
+        $comments = [];
+        /** @var Comment $comment */
+        foreach($commentsForMember as $comment)
+        {
+            $commentArray = [
+                'to' => null,
+                'from' => $comment,
+            ];
+            $comments[$comment->getFromMember()->getId()] = $commentArray;
         }
-        $comments = $commentRepository->getCommentsFromMember($member);
-        if (!empty($comments)) {
-            /** @var Comment $comment */
-            foreach ($comments as $comment) {
-                $handle = fopen($commentsDir . "comment-" . $i . "-given.html", "w");
-                fwrite($handle, $this->environment->render('private/comment.html.twig', [
-                    'comment' => $comment,
-                ]));
-                fclose($handle);
-                $i++;
+
+        /** @var Comment $comment */
+        foreach($commentsFromMember as $comment)
+        {
+            if (isset($comments[$comment->getToMember()->getId()]))
+            {
+                $commentArray = $comments[$comment->getToMember()->getId()];
+                $commentArray['to'] = $comment;
+            } else {
+                $commentArray = [
+                    'to' => $comment,
+                    'from' => null,
+                ];
             }
+            $comments[$comment->getToMember()->getId()] = $commentArray;
         }
+        return $this->writePersonalDataFile(['comments' => $comments],'comments');
     }
 
     /**
@@ -485,6 +649,14 @@ class MemberModel
      */
     private function prepareMemberData(string $tempDir, Member $member)
     {
+        return $this->writePersonalDataFile(
+            [
+                'member' => $member,
+                'profilepicture' => 'images/empty_avatar.png',
+            ],
+            'profile'
+        );
+
         // Write member information into file:
         $handle = fopen($tempDir . "memberinfo.txt", "w");
         fwrite($handle, json_encode($member));
@@ -508,176 +680,104 @@ class MemberModel
         fclose($handle);
     }
 
-    /**
-     * @param string $tempDir
-     * @param Member $member
-     */
-    private function prepareNewsletterInformation(string $tempDir, Member $member)
+    private function prepareNewsletters(Member $member)
     {
         // Get newsletters the member wrote
         $newsletterRepository = $this->getManager()->getRepository(Newsletter::class);
         $newsletters = $newsletterRepository->findBy(['createdBy' => $member]);
-        if (!empty($newsletters)) {
-            $newslettersDir = $tempDir . 'newsletters/';
-            @mkdir($newslettersDir);
-            $i = 1;
-            /** @var Newsletter $newsletter */
-            foreach ($newsletters as $newsletter) {
-                $handle = fopen($newslettersDir . "newsletter" . $i . ".txt", "w");
-                fwrite($handle, $newsletter->getName() . " (" . $newsletter->getCreated() . ")" . PHP_EOL);
-                fclose($handle);
-                $i++;
-            }
-        }
 
+        return $this->writePersonalDataFile(['newsletters' => $newsletters, 'creator' => $member], 'newsletters');
+
+    }
+
+    private function prepareBroadcasts(Member $member)
+    {
         // Get all broadcasts the member received
         $broadcastMessageRepository = $this->getManager()->getRepository(BroadcastMessage::class);
         $broadcastMessages = $broadcastMessageRepository->findBy(['receiver' => $member]);
-        if (!empty($broadcastMessages)) {
-            $newslettersDir = $tempDir . 'newsletters/';
-            @mkdir($newslettersDir);
-            $handle = fopen($newslettersDir . "received.txt", "w");
-            /** @var BroadcastMessage $broadcastMessage */
-            foreach ($broadcastMessages as $broadcastMessage) {
-                fwrite($handle, $broadcastMessage->getNewsletter()->getName() . " on " . $broadcastMessage->getUpdated() . PHP_EOL);
-            }
-            fclose($handle);
-        }
+
+        return $this->writePersonalDataFile(['broadcasts' => $broadcastMessages], 'broadcasts');
     }
 
-    /**
-     * @param string $tempDir
-     * @param Member $member
-     */
-    private function prepareCommunityNewsInformation(string $tempDir, Member $member)
+    private function prepareCommunityNews(Member $member)
     {
         // Get community news the member wrote
         $newsRepository = $this->getManager()->getRepository(CommunityNews::class);
         $news = $newsRepository->findBy(['createdBy' => $member]);
-        if (!empty($news)) {
-            $communityNewsDir = $tempDir . 'communitynews/';
-            @mkdir($communityNewsDir);
-            $i = 1;
-            /** @var CommunityNews $communityNews */
-            foreach ($news as $communityNews) {
-                $handle = fopen($communityNewsDir . "communitynews" . $i . ".txt", "w");
-                fwrite($handle, $communityNews->getTitle() . " (" . $communityNews->getCreatedAt() . ")" . PHP_EOL);
-                fwrite($handle, $communityNews->getText());
-                fclose($handle);
-                $i++;
-            }
-        }
 
+        return $this->writePersonalDataFile(['communitynews' => $news], 'communitynews');
+    }
+
+    private function prepareCommunityNewsComments(Member $member)
+    {
         // Get community news comments the member wrote
         $commentRepository = $this->getManager()->getRepository(CommunityNewsComment::class);
         $comments = $commentRepository->findBy(['author' => $member]);
-        if (!empty($comments)) {
-            $communityNewsDir = $tempDir . 'communitynews/';
-            @mkdir($communityNewsDir);
-            $i = 1;
-            /** @var CommunityNewsComment $comment */
-            foreach ($comments as $comment) {
-                $handle = fopen($communityNewsDir . "comment" . $i . ".txt", "w");
-                fwrite($handle, $comment->getTitle() . " (" . $comment->getCreated() . ")" . PHP_EOL);
-                fwrite($handle, $comment->getText());
-                fclose($handle);
-                $i++;
+
+        $newsAndComments = [];
+        /** @var CommunityNewsComment $comment */
+        foreach($comments as $comment)
+        {
+            if (!isset($newsAndComments[$comment->getCommunityNews()->getId()]))
+            {
+                $commentWithNews = [
+                    'news' => $comment->getCommunityNews(),
+                    'comments' => [],
+                ];
+            } else {
+                $commentWithNews = $newsAndComments[$comment->getCommunityNews()->getId()];
             }
+            $commentWithNews['comments'][] = $comment;
+            $newsAndComments[$comment->getCommunityNews()->getId()] = $commentWithNews;
         }
+        return $this->writePersonalDataFile(['newsAndComments' => $newsAndComments], 'communitynews_comments');
     }
 
-    /**
-     * @param string $tempDir
-     * @param Member $member
-     */
-    private function prepareDonations(string $tempDir, Member $member): void
+    private function prepareDonations(Member $member): string
     {
         // Get donations the member did
         $donationRepository = $this->getManager()->getRepository(Donation::class);
         $donations = $donationRepository->findBy(['donor' => $member]);
-        if (!empty($donations)) {
-            $donationDir = $tempDir . 'donations/';
-            @mkdir($donationDir);
-            $i = 1;
-            /** @var Donation $donation */
-            foreach ($donations as $donation) {
-                $handle = fopen($donationDir . "donation" . $i . ".txt", "w");
-                fwrite($handle, "Name: " . $donation->getNamegiven() . PHP_EOL);
-                fwrite($handle, "Amount: " . $donation->getAmount() . PHP_EOL);
-                fwrite($handle, "Paypal: " . $donation->getReferencepaypal() . PHP_EOL);
-                fwrite($handle, "Donated: " . $donation->getCreated() . PHP_EOL);
-                fwrite($handle, "System comment: " . $donation->getSystemcomment() . PHP_EOL);
-                fwrite($handle, "Member comment: " . $donation->getMembercomment() . PHP_EOL);
-                if ($donation->getStatusprivate() === 'showamountonly') {
-                    fwrite($handle, "Visible on site: Amount only");
-                } else {
-                    fwrite($handle, "Visible on site: Full details");
-                }
-                fclose($handle);
-                $i++;
-            }
-        }
+        return $this->writePersonalDataFile(['donations' => $donations], 'donations');
     }
 
-    /**
-     * @param string $tempDir
-     * @param Member $member
-     */
-    private function prepareTranslations(string $tempDir, Member $member): void
+    private function prepareTranslations(Member $member): string
     {
         // Get translations the member did
         $translationRepository = $this->getManager()->getRepository(Word::class);
         $translations = $translationRepository->findBy(['author' => $member]);
-        if (!empty($translations)) {
-            $translationDir = $tempDir . 'translations/';
-            @mkdir($translationDir);
-            $handle = fopen($translationDir . "translations.txt", "w");
-            /** @var Word $translation */
-            foreach ($translations as $translation) {
-                fwrite($handle, "Wordcode: " . $translation->getCode() . PHP_EOL);
-                fwrite($handle, "Language: " . $translation->getLanguage()->getEnglishname() . PHP_EOL);
-                fwrite($handle, "Created: " . $translation->getCreated() . PHP_EOL);
-                fwrite($handle, "Text: " . $translation->getSentence() . PHP_EOL);
-                fwrite($handle, PHP_EOL);
-            }
-            fclose($handle);
-        }
+        return $this->writePersonalDataFile(['translations' => $translations], 'translations');
     }
 
     /**
-     * @param string $tempDir
      * @param Member $member
+     * @return string
      */
-    private function prepareRightsAndPrivileges(string $tempDir, Member $member): void
+    private function prepareRights(Member $member): string
     {
         /** @var RightVolunteer[] $volunteerRights */
         $volunteerRights = $member->getVolunteerRights();
-        if (!empty($volunteerRights)) {
-            $rightsDir = $tempDir . 'rights/';
-            @mkdir($rightsDir);
-            $handle = fopen($rightsDir . "rights.txt", "w");
-            /** @var RightVolunteer $rightVolunteer */
-            foreach ($volunteerRights as $rightVolunteer) {
-                fwrite($handle, "Right: " . $rightVolunteer->getRight()->getName() . PHP_EOL);
-                fwrite($handle, "Scope: " . $rightVolunteer->getScope() . PHP_EOL);
-                fwrite($handle, "Level: " . $rightVolunteer->getLevel() . PHP_EOL);
-                fwrite($handle, "Assigned: " . $rightVolunteer->getCreated() . PHP_EOL);
-                fwrite($handle, PHP_EOL);
-            }
-            fclose($handle);
-        }
+        return $this->writePersonalDataFile(['volunteerrights' => $volunteerRights],"rights");
+    }
+
+    /**
+     * @param Member $member
+     * @return string
+     */
+    private function preparePrivileges(Member $member): string
+    {
+        $privilegesCombined = [];
         /** @var EntityRepository $privilegesRepository */
         $privilegesRepository = $this->getManager()->getRepository(PrivilegeScope::class);
         $privileges = $privilegesRepository->findBy(['member' => $member]);
         if (!empty($privileges)) {
-            $rightsDir = $tempDir . 'rights/';
-            @mkdir($rightsDir);
-            $handle = fopen($rightsDir . "privileges.txt", "w");
             /** @var PrivilegeScope $privilege */
             foreach ($privileges as $privilege) {
                 $type = $privilege->getPrivilege()->getType();
                 $scope = $privilege->getType();
-                fwrite($handle, "Privilege: " . $privilege->getPrivilege()->getType() . PHP_EOL);
+                $realScope = $scope;
+                $privilegeCombined = [];
+                $privilegeCombined['privilege'] = $type;
                 if ($type == 'Group') {
                     // Naming is a bit odd here
                     if (is_numeric($scope)) {
@@ -686,24 +786,20 @@ class MemberModel
                         /** @var Group $group */
                         $group = $groupRepository->findOneBy(['id' => $scope]);
                         if (null !== $group) {
-                            fwrite($handle, "Scope: " . $group->getName() . PHP_EOL);
+                            $realScope = $group->getName();
                         } else {
-                            fwrite($handle, "Scope: Deleted group (" . $scope . ")" . PHP_EOL);
+                            $realScope = 'Deleted group (' . $scope . ')';
                         }
-                    } else {
-                        fwrite($handle, "Scope: " . $scope . PHP_EOL);
                     }
-                } else {
-                    fwrite($handle, "Scope: " . $scope . PHP_EOL);
                 }
-                fwrite($handle, "Role: " . $privilege->getRole()->getName() . PHP_EOL);
-                fwrite($handle, "Updated: " . $privilege->getUpdated() . PHP_EOL);
-                fwrite($handle, PHP_EOL);
+                $privilegeCombined['scope'] = $realScope;
+                $privilegeCombined['role'] = $privilege->getRole()->getName();
+                $privilegeCombined['assigned'] = $privilege->getUpdated();
+                $privilegesCombined[] = $privilegeCombined;
             }
-            fclose($handle);
         }
+        return $this->writePersonalDataFile(['privileges' => $privilegesCombined],"privileges");
     }
-
 
     /**
      * @param PollContribution|PollRecordOfChoice $related
@@ -723,106 +819,55 @@ class MemberModel
         fwrite($handle, " (" . $poll->getId() . ")" . PHP_EOL);
     }
 
-    private function preparePolls(string $tempDir, Member $member)
+    /**
+     * @param Member $member
+     * @return string
+     */
+    private function preparePolls(Member $member): string
     {
+        $pollsDir = $this->tempDir . 'polls/';
+        @mkdir($pollsDir);
+
         /** @var EntityRepository $pollsRepository */
         $pollsRepository = $this->getManager()->getRepository(Poll::class);
         $polls = $pollsRepository->findBy(['creator' => $member]);
-        if (!empty($polls)) {
-            $pollsDir = $tempDir . 'polls/';
-            @mkdir($pollsDir);
-            /** @var Poll $poll */
-            foreach ($polls as $poll) {
-                $handle = fopen($pollsDir . "poll-" . $poll->getId() . ".txt", "w");
-                fwrite($handle, "Id: " . $poll->getId() . PHP_EOL);
-                $titles = $poll->getTitles();
-                foreach ($titles as $title) {
-                    fwrite($handle, "Title (" . $title->getLanguage()->getName() . "): " . $title->getSentence() . PHP_EOL);
-                }
-                // There is only one group allowed for polls at the moment but we drive it safe here
-                $groups = $poll->getGroups();
-                foreach ($groups as $group) {
-                    fwrite($handle, "Limited to group: " . $group->getName() . PHP_EOL);
-                }
-                $choices = $poll->getChoices();
-                /** @var PollChoice $choice */
-                foreach ($choices as $choice) {
-                    $choiceTexts = $choice->getChoiceTexts();
-                    foreach ($choiceTexts as $choiceText) {
-                        fwrite($handle, "Choice Text (" . $choiceText->getLanguage()->getName() . "): " . $choiceText->getSentence() . PHP_EOL);
-                    }
-                }
-                fclose($handle);
-            }
-        }
+        $this->writePersonalDataFileSubDirectory(['polls' => $polls],'polls_created','polls');
+
         /** @var EntityRepository $contributionsRepository */
         $contributionsRepository = $this->getManager()->getRepository(PollContribution::class);
         $contributions = $contributionsRepository->findBy(['member' => $member]);
-        if (!empty($contributions)) {
-            $pollsDir = $tempDir . 'polls/';
-            @mkdir($pollsDir);
-            $handle = fopen($pollsDir . "contributions.txt", "w");
-            fwrite($handle, "You contributed to the following polls:" . PHP_EOL . PHP_EOL);
-            /** @var PollContribution $contribution */
-            foreach ($contributions as $contribution) {
-                $this->writePollInformation($contribution, $handle);
-                if ('' === $contribution->getComment()) {
-                    fwrite($handle, "You voted without leaving a comment");
-                } else {
-                    fwrite($handle, "Comment left: " . $contribution->getComment());
-                }
-                fwrite($handle, PHP_EOL . PHP_EOL);
-            }
-            fclose($handle);
-        }
+        $this->writePersonalDataFileSubDirectory(['contributions' => $contributions],'polls_contributed','polls');
+
         /** @var EntityRepository $resultsRepository */
         $votesRepository = $this->getManager()->getRepository(PollRecordOfChoice::class);
         $votes = $votesRepository->findBy(['member' => $member], ['poll' => 'DESC', 'pollChoice' => 'DESC']);
-        if (!empty($votes)) {
-            $pollsDir = $tempDir . 'polls/';
-            @mkdir($pollsDir);
-            $handle = fopen($pollsDir . "votes.txt", "w");
-            fwrite($handle, "You following votes have been recorded:" . PHP_EOL . PHP_EOL);
-            /** @var PollRecordOfChoice $vote */
-            foreach ($votes as $vote) {
-                $this->writePollInformation($vote, $handle);
-                fwrite($handle, "Choice: " . $vote->getPollChoice()->getChoiceTexts()->first()->getSentence());
-                fwrite($handle, PHP_EOL . PHP_EOL);
-            }
-            fclose($handle);
-        }
+        $this->writePersonalDataFileSubDirectory(['votes' => $votes],'polls_voted','polls');
+
+        return $this->writePersonalDataFile([], 'polls');
     }
 
-    private function prepareShouts(string $tempDir, Member $member)
+    /**
+     * Prepares a list of comments left by the current user (also knows as shouts)
+     *
+     * @param Member $member
+     * @return string
+     */
+    private function prepareShouts(Member $member): string
     {
         /** @var EntityRepository $shoutsRepository */
         $shoutsRepository = $this->getManager()->getRepository(Shout::class);
         $shouts = $shoutsRepository->findBy(['member' => $member]);
-        if (!empty($shouts)) {
-            $shoutsDir = $tempDir . 'shouts/';
-            @mkdir($shoutsDir);
-            $handle = fopen($shoutsDir . "shouts.txt", "w");
-            /** @var Shout $shout */
-            foreach ($shouts as $shout) {
-                fwrite($handle, "Item: " . $shout->getTable() . " - " . $shout->getTableId() . PHP_EOL);
-                fwrite($handle, "Title: " . $shout->getTitle() . PHP_EOL);
-                fwrite($handle, "Text: " . $shout->getText() . PHP_EOL);
-                fwrite($handle, PHP_EOL);
-            }
-            fclose($handle);
-        }
+        return $this->writePersonalDataFile(['shouts' => $shouts], 'shouts');
     }
 
-    private function prepareSpecialRelations(string $tempDir, Member $member)
+    private function prepareSpecialRelations(Member $member)
     {
+        $relations = [];
         /** @var FamilyAndFriendRepository $relationsRepository */
         $relationsRepository = $this->getManager()->getRepository(FamilyAndFriend::class);
         $rawRelations = $relationsRepository->findRelationsFor($member);
         if (!empty($rawRelations)) {
             // build list of relations from raw data (list contains relations from both sides)
-            $relationsDir = $tempDir . 'relations/';
-            @mkdir($relationsDir);
-            $relations = [];
             $memberId = $member->getId();
             /** @var FamilyAndFriend $relation */
             foreach ($rawRelations as $relation) {
@@ -834,38 +879,58 @@ class MemberModel
                 {
                     $relations[$recipientId] = [];
                     $relations[$recipientId]['right'] = $relation;
-                    $relations[$recipientId]['right']->setType($this->adaptType($relations[$recipientId]['right']->getType()));
                 }
                 elseif (key_exists($authorId, $relations)) {
                     $relations[$authorId]['left'] = $relation;
-                    $relations[$authorId]['left']->setType($this->adaptType($relations[$authorId]['left']->getType()));
                 }
                 else
                 {
                     $relations[$authorId] = [];
                     $relations[$authorId]['left'] = $relation;
-                    $relations[$authorId]['left']->setType($this->adaptType($relations[$authorId]['left']->getType()));
                 }
             }
-            $i = 1;
-            foreach($relations as $relation)
-            {
-                $handle = fopen($relationsDir . "relation." . $i . ".html", "w");
-                fwrite($handle, $this->environment->render('private/relation.html.twig', [
-                    'relation' => $relation,
-                ]));
-                $i++;
-            }
         }
+        return $this->writePersonalDataFile(['relations' => $relations], 'relations');
     }
 
-    /**
-     * @param string $type
-     * @return string
-     */
-    private function adaptType(string $type): string
+    private function createStylesheetAndImageFolder()
     {
-        $type = implode(', ', explode(',', $type));
-        return $type;
+        $filesystem = new Filesystem();
+
+        $cssFiles = $this->entrypointLookup->getCssFiles('bewelcome');
+        foreach($cssFiles as $cssFile)
+        {
+            $source = $this->projectDir . '/public' . $cssFile;
+            $destination = $this->tempDir . $cssFile;
+            $filesystem->copy($source, $destination);
+        }
+
+        $jsFiles = $this->entrypointLookup->getJavaScriptFiles('gallery');
+        foreach($jsFiles as $jsFile)
+        {
+            $source = $this->projectDir . '/public' . $jsFile;
+            $destination = $this->tempDir . $jsFile;
+            $filesystem->copy($source, $destination);
+        }
+
+        $jsFiles = $this->entrypointLookup->getJavaScriptFiles('bewelcome');
+        foreach($jsFiles as $jsFile)
+        {
+            $source = $this->projectDir . '/public' . $jsFile;
+            $destination = $this->tempDir . $jsFile;
+            $filesystem->copy($source, $destination);
+        }
+
+        // Add the Bewelcome logo
+        $filesystem->copy($this->projectDir . '/public/images/logo_index_top.png', $this->tempDir.'images/logo_index_top.png');
+
+        // We also need to empty avatar image
+        $filesystem->copy($this->projectDir . '/public/images/empty_avatar.png', $this->tempDir.'images/empty_avatar.png');
+
+        // The accommodation images
+        $filesystem->copy($this->projectDir . '/public/images/icons/wheelchairblue.png', $this->tempDir.'images/wheelchairblue.png');
+        $filesystem->copy($this->projectDir . '/public/images/icons/anytime.png', $this->tempDir.'images/anytime.png');
+        $filesystem->copy($this->projectDir . '/public/images/icons/dependonrequest.png', $this->tempDir.'images/dependonrequest.png');
+        $filesystem->copy($this->projectDir . '/public/images/icons/neverask.png', $this->tempDir.'images/neverask.png');
     }
 }

@@ -1,0 +1,37 @@
+{% extends 'private/mydata.html.twig' %}
+
+{% block content %}
+    <h1>{{ 'mydata.groups.headline'|trans }}</h1>
+    <p>{{ 'mydata.groups.abstract'|trans }}</p>
+    {% if groupmemberships|length == 0 %}
+    <p><strong>{{ 'mydata.groups.no.groups.'|trans }}</strong></p>
+    {% else %}
+        <div class="card-columns">
+            {% for membership in groupmemberships %}
+                <div class="card">
+                    <div class="card-header text-truncate">
+                        {{ membership.group.name }}
+                    </div>
+                    <div class="card-body">
+
+                <p>{% if membership.status == constant('App\\Doctrine\\GroupMembershipStatusType::CURRENT_MEMBER') %}{{ 'mydata.groups.joined'|trans({'joined': membership.created}) }}{% endif %}
+                {% if membership.status == constant('App\\Doctrine\\GroupMembershipStatusType::APPLIED_FOR_MEMBERSHIP') %}{{ 'mydata.groups.wantin'|trans({'wantin': membership.created}) }}{% endif %}
+                {% if membership.status == constant('App\\Doctrine\\GroupMembershipStatusType::KICKED_FROM_GROUP') %}{{ 'mydata.groups.kicked'|trans({'kicked': membership.updated}) }}{% endif %}
+                {% if membership.status == constant('App\\Doctrine\\GroupMembershipStatusType::INVITED_INTO_GROUP') %}{{ 'mydata.groups.invited'|trans({'kicked': membership.created}) }}{% endif %}</p>
+                {% if membership.comments|length %}
+                    <p>{{ 'mydata.groups.why.im.here'|trans }}</p>
+                    {% for comment in membership.comments %}
+                        <p>
+                            <small class="text-muted">{{ comment.Language.WordCode|lower|trans }} ({{ locale }})</small><br>
+                            {{ comment.Sentence|purify }}
+                        </p>
+                    {% endfor %}
+                {% endif %}
+
+                    </div>
+                    <div class="card-footer text-right"> <a class="btn btn-primary" href="{{ url('group_start', {'group_id': membership.group.id}) }}">{{ 'goto group' }}</a></div>
+                </div>
+        {% endfor %}
+        </div>
+    {% endif %}
+{% endblock %}

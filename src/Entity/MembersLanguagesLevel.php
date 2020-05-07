@@ -31,14 +31,14 @@ class MembersLanguagesLevel
     protected $member;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(name="updated", type="datetime", nullable=true)
      */
     private $updated;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(name="created", type="datetime", nullable=false)
      */
@@ -70,13 +70,13 @@ class MembersLanguagesLevel
 
     public function __construct()
     {
-        $this->created = new \DateTime();
+        $this->created = new DateTime();
     }
 
     /**
      * Set updated.
      *
-     * @param \DateTime $updated
+     * @param DateTime $updated
      *
      * @return Memberslanguageslevel
      */
@@ -90,7 +90,7 @@ class MembersLanguagesLevel
     /**
      * Get updated.
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getUpdated()
     {
@@ -100,7 +100,7 @@ class MembersLanguagesLevel
     /**
      * Set created.
      *
-     * @param \DateTime $created
+     * @param DateTime $created
      *
      * @return Memberslanguageslevel
      */
@@ -114,7 +114,7 @@ class MembersLanguagesLevel
     /**
      * Get created.
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getCreated()
     {

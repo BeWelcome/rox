@@ -271,11 +271,11 @@ class FamilyAndFriend implements ObjectManagerAware
     public function onPostLoad()
     {
         $memberTranslationRepository = $this->objectManager->getRepository(MemberTranslation::class);
-        $translatedCmments = $memberTranslationRepository->findBy(['translation' => $this->comment]);
+        $translatedComments = $memberTranslationRepository->findBy(['translation' => $this->comment]);
 
         // Index by language.
         $comments = [];
-        foreach ($translatedCmments as $comment) {
+        foreach ($translatedComments as $comment) {
             $comments[$comment->getLanguage()->getShortCode()] = $comment;
         }
 

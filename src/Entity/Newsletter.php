@@ -6,6 +6,9 @@ use App\Entity\Member as Member;
 use Carbon\Carbon;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Persistence\Mapping\ClassMetadata;
+use Doctrine\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManagerAware;
 
 /**
  * Broadcast
@@ -13,7 +16,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="broadcast")
  * @ORM\Entity
  */
-class Newsletter
+class Newsletter implements ObjectManagerAware
 {
     /**
      * @var Member
@@ -68,6 +71,11 @@ class Newsletter
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
+
+    /**
+     * @var ObjectManager
+     */
+    private $objectManager;
 
     /**
      * Set createdBy
@@ -221,5 +229,43 @@ class Newsletter
     public function getId()
     {
         return $this->id;
+    }
+
+    /*
+     * Translated post content is only provided on explicit call to avoid long load times
+     */
+    public function getTranslations()
+    {
+        $translationRepository = $this->objectManager->getRepository(Word::class);
+        $translatedNews = $translationRepository->findBy([
+            'code' => [
+                'Broadcast_body_'.$this->name,
+                'Broadcast_title_'.$this->name
+            ],
+        ]);
+
+        $newsletters = [];
+        /** @var Word $item */
+        foreach ($translatedNews as $item) {
+            if (!isset($newsletters[$item->getLanguage()->getShortCode()]))
+            {
+                $newsletter = [];
+            } else {
+                $newsletter = $newsletters[$item->getLanguage()->getShortCode()];
+            }
+            // Determine if this is the title or the body of the newsletter (code is broadcast_title|body_$name)
+            $part = str_ireplace('Broadcast_', '', str_ireplace('_'.$this->getName(), '', $item->getCode()));
+            $newsletter[$part] = $item->getSentence();
+            $newsletter['author'] = $item->getAuthor();
+            $newsletter['locale'] = $item->getShortCode();
+            $newsletters[$item->getLanguage()->getShortCode()] = $newsletter;
+        }
+
+        return $newsletters;
+    }
+
+    public function injectObjectManager(ObjectManager $objectManager, ClassMetadata $classMetadata)
+    {
+        $this->objectManager = $objectManager;
     }
 }

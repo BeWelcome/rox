@@ -1,0 +1,41 @@
+{% extends 'private/mydata.html.twig' %}
+
+{% block content %}
+    <h1>{{ 'mydata.polls.headline'|trans }}</h1>
+    <p>{{ 'mydata.polls.abstract'|trans }}</p>
+    <div class="card-columns">
+        <div class="card">
+            <div class="card-header text-truncate">
+                {{ 'mydata.polls.created.headline'|trans }}
+            </div>
+            <div class="card-body">
+                {{ 'mydata.polls.created.abstract'|trans }}
+            </div>
+            <div class="card-footer text-right">
+                <a class="btn btn-primary" href="polls/polls_created.html">{{ 'showdetails'|trans }}</a>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header text-truncate">
+                {{ 'mydata.polls.contributed.headline'|trans }}
+            </div>
+            <div class="card-body">
+                {{ 'mydata.polls.contributed.abstract'|trans }}
+            </div>
+            <div class="card-footer text-right">
+                <a class="btn btn-primary" href="polls/polls_contributed.html">{{ 'showdetails'|trans }}</a>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header text-truncate">
+                {{ 'mydata.polls.voted.headline'|trans }}
+            </div>
+            <div class="card-body">
+                {{ 'mydata.polls.voted.abstract'|trans }}
+            </div>
+            <div class="card-footer text-right">
+                <a class="btn btn-primary" href="polls/polls_voted.html">{{ 'showdetails'|trans }}</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends 'private/mydata.html.twig' %}
+
+{% block content %}
+    <h1>{{ 'mydata.communitynews.headline' | trans }}</h1>
+    <p>{{ 'mydata.communitynews.abstract' | trans }}</p>
+    {% if communitynews|length == 0 %}
+        <p>{{ 'mydata.communitynews.no.communitynews' }}</p>
+    {% else %}
+        <div class="card-columns">
+            {% for news in communitynews %}
+                {% include 'private/communitynews_single.html.twig' with { 'news': news } %}
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endblock content %}

@@ -1,0 +1,13 @@
+{% extends 'private/mydata.html.twig' %}
+
+{% block content %}
+    <h1>{{ 'mydata.messages.headline'|trans }}</h1>
+    <p>{{ 'mydata.messages.abstract'|trans }}</p>
+    {% if messagesSent == 0 or messagesReceived == 0%}
+    <p><strong>{{ 'mydata.messages.no.messages.'|trans }}</strong></p>
+    {% else %}
+        <p>{{ 'mydata.messages.sent'|trans({'sent': messagesSent }) }}</p>
+        <p>{{ 'mydata.messages.received'|trans({'received': messagesReceived }) }}</p>
+        <p>{{ 'mydata.messages.check.messages'|trans }}</p>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends 'private/mydata.html.twig' %}
+
+{% block content %}
+    <h1>{{ 'mydata.relations.headline' | trans }}</h1>
+    <p>{{ 'mydata.relations.abstract' | trans }}</p>
+    {% if relations|length == 0 %}
+        <p>{{ 'mydata.relations.no.comment' }}</p>
+    {% else %}
+        {% for relation in relations %}
+            <div class="row mb-2">
+                {% if relation.left is defined %}
+                    {% include 'private/relation.html.twig' with { 'relation': relation.left, 'background': 'bg-light' } %}
+                {% else %}
+                    <div class="col-6"></div>
+                {% endif %}
+                {% if relation.right is defined %}
+                    {% include 'private/relation.html.twig' with { 'relation': relation.right, 'background': 'bg-white' } %}
+                {% else %}
+                    <div class="col-6"></div>
+                {% endif %}
+            </div>
+            {% if not loop.last %}
+                <hr>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+{% endblock content %}

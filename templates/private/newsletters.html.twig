@@ -1,0 +1,30 @@
+{% extends 'private/mydata.html.twig' %}
+
+{% block content %}
+    <h1>{{ 'mydata.newsletters.headline'|trans }}</h1>
+    <p>{{ 'mydata.newsletters.abstract'|trans }}</p>
+    {% if newsletters|length == 0 %}
+        <p><strong>{{ 'mydata.newsletters.no.newsletters'|trans }}</strong></p>
+    {% else %}
+    <div class="card-columns">
+        {% for newsletter in newsletters %}
+            {% for translation in newsletter.translations %}
+                {% if translation.author == creator %}
+            <div class="card">
+                <div class="card-header text-truncate">
+                    {% if translation.title is defined %}{{ translation.title }}{% else %}{{ 'mydata.newsletter.no.title' }}{% endif %}
+                </div>
+                <div class="card-body">
+                    {% if translation.body is defined %}{{ translation.body|purify|truncate(500) }}{% else %}{{ 'mydata.newsletter.no.body' }}{% endif %}
+                    <p class="small text-muted mb-0">{{ 'created'|trans|capitalize }}:{{ newsletter.created|localizeddate('medium','none', app.request.locale) }}</p>
+                </div>
+                <div class="card-footer text-right">
+                    <a class="btn btn-primary" href="{{ url('newsletter_single', {'shortCode':newsletter.name, 'language':translation.locale}) }}">{{ 'showfull'|trans }}</a>
+                </div>
+            </div>
+                {% endif %}
+            {% endfor %}
+        {% endfor %}
+    </div>
+    {% endif %}
+{% endblock %}

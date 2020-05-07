@@ -1,0 +1,25 @@
+{% extends 'private/mydata.html.twig' %}
+
+{% block content %}
+    <h1>{{ 'mydata.translations.headline' | trans }}</h1>
+    <p>{{ 'mydata.translations.abstract' | trans }}</p>
+    {% if translations|length == 0 %}
+        <p>{{ 'mydata.translations.no.translations'|trans }}</p>
+    {% else %}
+        <div class="card-columns">
+            {% for translation in translations %}
+                <div class="card">
+                    <div class="card-header text-truncate">
+                        {{ translation.code }}
+                    </div>
+                    <div class="card-body">
+                        <p><small class="text-muted">{{ translation.code }}</small><br>
+                        {{ translation.sentence|purify|truncate(500, ' <strong><a style="color:#f37000" href="' ~ url('translation_edit', {'code': translation.code, 'locale':translation.shortCode}) ~ '">' ~ 'seefull'|trans ~ '</a></strong>') }}</p>
+                        <p><strong>{{ 'language'|trans|capitalize }}:</strong> {{ translation.language.wordCode|lower|trans }}<br>
+                            <strong>{{ 'created'|trans|capitalize }}:</strong> {{ translation.created }}</p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endblock content %}

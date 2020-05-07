@@ -1,0 +1,30 @@
+{% extends 'private/mydata.html.twig' %}
+
+{% block content %}
+    <h1>{{ year }}</h1>
+    <div class="row"><div class="col-12 d-flex justify-content-between mb-2">
+            <div>
+                <p>{{ 'mydata.posts.year.count'|trans({'count':post_count }) }}</p>
+                <p>{{ 'mydata.threads.year.count'|trans({'count':threads|length }) }}</p>
+            </div>
+            <div>
+                <a class="btn btn-primary" href="../posts.html">{{ 'Back to overview'|trans }}</a>
+            </div>
+        </div>
+    </div>
+    <div class="card-columns">
+        {% for info in threads %}
+            <div class="card">
+                <div class="card-body p-2">{% if info.thread %}{{ info.thread.title|purify }}{% else %}{{ 'No thread found'|trans }}{% endif %}<br>
+                {{ 'mydata.posts.thread.count'|trans({'count':info.posts|length}) }}</div>
+                <div class="card-footer text-right p-2">
+                    {% for post in info.posts|keys %}
+                    <a class="btn btn-sm btn-primary mb-1" href="post-{{ info.posts[post].created|date("Y-m-d") }}-{{ post }}.html">
+                        {{ info.posts[post].created|localizeddate('medium', 'none', app.request.locale) }}
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock content %}

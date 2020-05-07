@@ -16,6 +16,11 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Shout
 {
+    public const GALLERY_ITEM = 'gallery_items';
+    public const GROUP = 'groups';
+    public const TRIP = 'trip';
+    public const GALLERY = 'gallery';
+
     /**
      * @var int
      *

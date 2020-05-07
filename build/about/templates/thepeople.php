@@ -38,23 +38,38 @@ $words = new MOD_words();
     <div class="col-12">
         <!-- bootstrap carousel !-->
         <div id="carousel-team" class="carousel slide" data-ride="carousel">
+            <ol class="carousel-indicators">
+                <li data-target="#carousel-team" data-slide-to="0" class="active"></li>
+                <li data-target="#carousel-team" data-slide-to="1"></li>
+                <li data-target="#carousel-team" data-slide-to="2"></li>
+                <li data-target="#carousel-team" data-slide-to="3"></li>
+                <li data-target="#carousel-team" data-slide-to="4"></li>
+            </ol>
             <div class="carousel-inner">
-                    <div class="carousel-item active">
+                <div class="carousel-item active">
                     <img class="d-block w-100" src="http://farm3.static.flickr.com/2200/2204242456_f2a726c103.jpg">
-                    </div>
-                    <div class="carousel-item">
+                </div>
+                <div class="carousel-item">
                     <img class="d-block w-100" src="http://farm3.static.flickr.com/2275/2204241012_756d5234e6.jpg">
-                    </div>
-                    <div class="carousel-item">
+                </div>
+                <div class="carousel-item">
                     <img class="d-block w-100" src="http://farm3.static.flickr.com/2157/2204319026_8764a0573a.jpg">
-                    </div>
-                    <div class="carousel-item">
+                </div>
+                <div class="carousel-item">
                     <img class="d-block w-100" src="http://farm3.static.flickr.com/2161/2206203954_9a511d50d2.jpg">
-                    </div>
-                    <div class="carousel-item">
+                </div>
+                <div class="carousel-item">
                     <img class="d-block w-100" src="http://farm3.static.flickr.com/2179/2204240888_d90054b31a.jpg">
-                    </div>
+                </div>
             </div>
+            <a class="carousel-control-prev" href="#carousel-team" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#carousel-team" role="button" data-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+            </a>
         </div><!-- end: bootstrap carousel !-->
             <div class=" pt-1 caption">
                     <p class="small"><?php echo $words->getFormatted('ThePeople_PictureText1','<a title="unconference: A meeting with a non-fixed schedule that can be changed all the time.">','</a>') ?>

@@ -105,7 +105,6 @@ This File display a topic and the messages which are inside it
                 }
             }
             $replyuri = preg_replace('#/page.{1,3}/#', '/', $uri . 'reply');
-
             if ((!$topic->topicinfo->IsClosed) and ($topic->topicinfo->CanReply)) {
                 ?>
                 <a class="btn btn-primary btn-sm float-right"
@@ -173,7 +172,7 @@ This File display a topic and the messages which are inside it
                     . $words->getFormatted('threadclosed',
                         substr(ServerToLocalDateTime($topic->topicinfo->expiredate, $this->getSession()), 0, 10)
                     )
-                    . ")</strong></span>";
+                    . "</strong></span>";
             }
 ?>
 </div>

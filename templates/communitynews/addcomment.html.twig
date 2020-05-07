@@ -15,11 +15,11 @@
 
                 {{ macros.avatar( communityNews.createdBy.Username, 100, true) }}<br>
 
-                {% if communityNews.updatedBy and communityNews.updatedBy.Username != communityNews.createdBy.Username %}<p>{{ 'bewelcome_news.lastupdater' | trans}}{{ macros.avatar( communityNews.updatedBy.Username, 30, true) }} {{ communityNews.updatedAt.DiffForHumans }}</p>{% endif %}
-
                 <div class="media-body ml-2">
                     <h1 class="my-0">{{ communityNews.title }}</h1>
-                    <p class="small text-muted">{{ 'bewelcome_news.writtenby' | trans }} {{ macros.profilelink( communityNews.createdBy.Username ) }} {{ communityNews.createdAt.DiffForHumans }}
+                    <small class="text-muted">{{ 'bewelcome_news.writtenby' | trans }} {{ macros.profilelink( communityNews.createdBy.Username ) }} {{ communityNews.createdAt.DiffForHumans }}
+                        {% if communityNews.updatedBy and communityNews.updatedBy.Username != communityNews.createdBy.Username %}{{ 'bewelcome_news.lastupdater' | trans}}{{ macros.avatar( communityNews.updatedBy.Username, 30, true) }} {{ communityNews.updatedAt.DiffForHumans }}{% endif %}</small>
+
                         {{ communityNews.text| raw }}
                 </div>
             </div>

@@ -24,7 +24,7 @@
         {% if translations.haveToPaginate %}
             <div class="row">
                 <div class="col-12">
-                    {{ pagerfanta( translations , 'rox_default') }}
+                    {{ pagerfanta( translations , 'rox_default', { 'routeName': routeName, 'routeParams': routeParams }) }}
                 </div>
             </div>
         {% endif %}
@@ -70,7 +70,7 @@
         {% if translations.haveToPaginate %}
             <div class="row">
                 <div class="col-12">
-                    {{ pagerfanta( translations, 'rox_default') }}
+                    {{ pagerfanta( translations, 'rox_default', { 'routeName': routeName, 'routeParams': routeParams }) }}
                 </div>
             </div>
         {% endif %}

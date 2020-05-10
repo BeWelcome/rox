@@ -355,7 +355,7 @@ class TranslationController extends AbstractController
 
         // Check that the volunteer has rights for this language
         if (!$translator->hasRightsForLocale($language->getShortcode())) {
-            return $this->redirectToRoute('translations_no_rights');
+            return $this->redirectToRoute('translations_no_permissions');
         }
 
         if ('en' === $language->getShortcode()) {
@@ -451,7 +451,7 @@ class TranslationController extends AbstractController
     }
 
     /**
-     * @Route("/admin/translation/no_permissions", name="translations_no_rights")
+     * @Route("/admin/translation/no_permissions", name="translations_no_permissions")
      *
      * @param Request $request
      *
@@ -507,14 +507,16 @@ class TranslationController extends AbstractController
         /** @var Member $translator */
         $translator = $this->getUser();
         if (!$translator->hasRightsForLocale($language->getShortcode())) {
-            return $this->redirectToRoute('translations_no_rights');
+            return $this->redirectToRoute('translations_no_permissions');
         }
 
         $page = $request->query->get('page', 1);
         $limit = $request->query->get('limit', 20);
+
         $locale = $language->getShortcode();
 
         $form = $this->createFormBuilder(['wordCode' => $code])
+            ->setMethod('GET')
             ->add('wordCode', TextType::class, [
                 'label' => 'translation.id',
                 'constraints' => [
@@ -561,6 +563,8 @@ class TranslationController extends AbstractController
             'form' => $form->createView(),
             'code' => $code,
             'locale' => $locale,
+            'routeName' => 'translations_locale_code',
+            'routeParams' => array_merge(['type' => $type, 'code' => $code, 'locale' => $locale], $request->query->all()),
             'translations' => $translations,
             'submenu' => [
                 'active' => $type,
@@ -583,7 +587,7 @@ class TranslationController extends AbstractController
         /** @var Member $translator */
         $translator = $this->getUser();
         if (!$translator->hasRightsForLocale($request->getLocale())) {
-            return $this->redirectToRoute('translations_no_rights');
+            return $this->redirectToRoute('translations_no_permissions');
         }
 
         $mockups = [

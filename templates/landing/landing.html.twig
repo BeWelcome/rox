@@ -80,11 +80,11 @@
                 <div role="tabpanel" class="tab-pane h-100 active" id="messages">
                     {# all / unread messages toggle #}
                     <div class="d-flex btn-group justify-content-center m-1" data-toggle="buttons" role="radiogroup">
-                        <label class="btn btn-primary btn-radio{% if messageFilter == 'All' %} active{% endif %}" id="all" role="radio">
+                        <label class="btn btn-outline-primary{% if messageFilter == 'All' %} active{% endif %}" id="all" role="radio">
                             <input type="radio" name="options" autocomplete="off" onclick="updateMessages()"
                                    {% if messageFilter == 'All' %}checked{% endif %} hidden>{{ 'landing.button.all' | trans }}
                         </label>
-                        <label for="unread" class="btn btn-primary btn-radio{% if messageFilter == 'Unread' %} active{% endif %}" id="unread" role="radio">
+                        <label for="unread" class="btn btn-outline-primary{% if messageFilter == 'Unread' %} active{% endif %}" id="unread" role="radio">
                             <input type="radio" name="options" autocomplete="off" onclick="updateMessages()" {% if messageFilter == 'Unread' %}checked{% endif %} hidden>{{ 'landing.button.unread' | trans }}
                         </label>
                     </div>
@@ -135,10 +135,10 @@
 
                     {# display settings#}
                     <div class="d-flex btn-group justify-content-center m-1" data-toggle="buttons">
-                        <label class="btn btn-primary btn-radio{% if forumFilter == 'GroupsAndForums' or forumFilter == 'Groups' %} active{% endif %}" id="groupsButton">
+                        <label class="btn btn-outline-primary{% if forumFilter == 'GroupsAndForums' or forumFilter == 'Groups' %} active{% endif %}" id="groupsButton">
                             <input type="checkbox" autocomplete="off"{% if forumFilter == 'GroupsAndForums' or forumFilter == 'Groups' %} checked{% endif %} hidden>{{ 'landing.button.groups' | trans }}
                         </label>
-                        <label class="btn btn-primary btn-radio{% if forumFilter == 'GroupsAndForums' or forumFilter == 'Forums' %} active{% endif %}" id="forumButton">
+                        <label class="btn btn-outline-primary{% if forumFilter == 'GroupsAndForums' or forumFilter == 'Forums' %} active{% endif %}" id="forumButton">
                             <input type="checkbox" autocomplete="off"{% if forumFilter == 'GroupsAndForums' or forumFilter == 'Forums' %} checked{% endif %} hidden>{{ 'landing.button.forum' | trans }}
                         </label>
                     </div>
@@ -167,11 +167,11 @@
                 <div role="tabpanel" class="tab-pane h-100" id="activities">
                     <div class="d-flex btn-group justify-content-center m-1" role="group">
                         <a href="/activities" class="btn btn-outline-primary btn-homewhite"><i
-                                    class="fa fa-map-o"></i> {{ 'landing.activities.allactivities' | trans }}</a>
+                                    class="fa fa-map"></i> {{ 'landing.activities.allactivities' | trans }}</a>
                         <a href="/activities/myactivities" class="btn btn-outline-primary btn-homewhite"><i
                                     class="fa fa-calendar"></i> {{ 'landing.activities.myactivities' | trans }}</a>
                         <a href="/activities/create" class="btn btn-outline-primary btn-homewhite"><i
-                                    class="fa fa-calendar-plus-o"></i> {{ 'landing.activities.create' | trans }}</a>
+                                    class="fa fa-calendar-plus"></i> {{ 'landing.activities.create' | trans }}</a>
                     </div>
                     <div id="activitiesdisplay" class="col-12">
                         <p class="text-center my-3">

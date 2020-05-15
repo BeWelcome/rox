@@ -4,8 +4,13 @@
 {% block content %}
     <h1>{{ title | title }}</h1>
 
-    <div id="wiki">{{ wikipage | raw }}</div>
+    {% if wikipage %}
+        <div id="wiki">{{ wikipage | raw }}</div>
 
-    <a class="btn btn-primary mb-3 float-right" href="{{ url('wiki_page_edit', { 'pageTitle': title}) }}">{{ 'wiki.page.edit' | trans }}</a>
+        <a class="btn btn-primary mb-3 float-right" href="{{ url('group_wiki_page_edit', { 'id': group.id} ) }}">{{ 'wiki.page.edit' | trans }}</a>
+    {% else %}
+        <div id="wiki">{{ 'group.wiki.no.wiki'|trans }}</div>
+        <a class="btn btn-primary mb-3 float-right" href="{{ url('group_wiki_page_create', { 'id': group.id}) }}">{{ 'wiki.page.create' | trans }}</a>
+    {% endif %}
 
 {% endblock content %}

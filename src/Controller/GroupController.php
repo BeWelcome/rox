@@ -11,6 +11,7 @@ use App\Entity\Wiki;
 use App\Form\CustomDataClass\GroupRequest;
 use App\Form\GroupType;
 use App\Form\JoinGroupType;
+use App\Form\WikiCreateForm;
 use App\Logger\Logger;
 use App\Model\GroupModel;
 use App\Model\WikiModel;
@@ -23,9 +24,10 @@ use App\Utilities\TranslatorTrait;
 use App\Utilities\UniqueFilenameTrait;
 use Exception;
 use Intervention\Image\ImageManager;
-use PhpParser\Comment\Doc;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -427,7 +429,7 @@ class GroupController extends AbstractController
         $wikiPage = $wikiRepository->getPageByName($pageName);
 
         if (null === $wikiPage) {
-            $output = 'No wiki found for this group.';
+            $output = null;
         } else {
             $output = $wikiModel->parseWikiMarkup($wikiPage->getContent());
         }
@@ -438,7 +440,74 @@ class GroupController extends AbstractController
                 'active' => 'wiki',
                 'items' => $this->getSubmenuItems($member, $group),
             ],
+            'group' => $group,
             'wikipage' => $output,
+        ]);
+    }
+
+    /**
+     * @Route("/group/{id}/wiki/create", name="group_wiki_page_create")
+     *
+     * @param Group $group
+     * @param WikiModel $wikiModel
+     *
+     * @return RedirectResponse
+     */
+    public function createGroupWikiPage(Group $group, WikiModel $wikiModel)
+    {
+        $pageName = $wikiModel->getPageName('Group_' . $group->getName());
+
+        /** @var Wiki $wikiPage */
+        $wikiPage = $wikiModel->getPage($pageName);
+
+        if (null === $wikiPage) {
+            $wikiModel->createWikiPage($pageName, '');
+        }
+
+        return $this->redirectToRoute('group_wiki_page_edit', ['id' => $group->getId()]);
+    }
+
+    /**
+     * @Route("/group/{id}/wiki/edit", name="group_wiki_page_edit")
+     *
+     * @param Request $request
+     * @param Group $group
+     * @param WikiModel $wikiModel
+     *
+     * @return Response
+     */
+    public function editGroupWikiPage(Request $request, Group $group, WikiModel $wikiModel)
+    {
+        /** @var Member $member */
+        $member = $this->getUser();
+
+        $pageName = $wikiModel->getPageName('Group_' . $group->getName());
+
+        /** @var Wiki $wikiPage */
+        $wikiPage = $wikiModel->getPage($pageName);
+
+        if (null === $wikiPage) {
+            return $this->redirectToRoute('group_wiki_page_create');
+        }
+
+        $form = $this->createForm(WikiCreateForm::class, ['wiki_markup' => $wikiPage->getContent()]);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
+            $wikiModel->addNewVersion($wikiPage, $data['wiki_markup']);
+            $this->addTranslatedFlash('notice', 'flash.wiki.updated');
+
+            return $this->redirectToRoute('group_wiki_page', ['id' => $group->getId()]);
+        }
+
+        return $this->render('group/wiki.edit.html.twig', [
+            'title' => $group->getName(),
+            'submenu' => [
+                'active' => 'wiki',
+                'items' => $this->getSubmenuItems($member, $group),
+            ],
+            'form' => $form->createView(),
         ]);
     }
 

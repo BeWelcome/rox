@@ -139,13 +139,7 @@ class WikiController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
-            $newWikiPage = new Wiki();
-            $newWikiPage->setPagename($wikiModel->getPagename($pageTitle));
-            $newWikiPage->setVersion(1);
-            $newWikiPage->setContent($data['wiki_markup']);
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($newWikiPage);
-            $em->flush();
+            $wikiModel->createWikiPage($pageTitle, $data['wiki_markup']);
             $this->addTranslatedFlash('notice', 'flash.wiki.created');
 
             return $this->redirectToRoute('wiki_page', ['pageTitle' => $pageTitle]);

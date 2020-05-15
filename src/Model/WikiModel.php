@@ -71,4 +71,30 @@ class WikiModel
 
         return $result;
     }
+
+    public function createWikiPage($pageTitle, $wikiMarkup)
+    {
+        $newWikiPage = new Wiki();
+        $newWikiPage->setPagename($this->getPagename($pageTitle));
+        $newWikiPage->setVersion(1);
+        $newWikiPage->setContent($wikiMarkup);
+        $em = $this->getManager();
+        $em->persist($newWikiPage);
+        $em->flush();
+
+        return $newWikiPage;
+    }
+
+    public function addNewVersion($wikiPage, $wikiMarkup)
+    {
+        $newWikiPage = clone $wikiPage;
+        $newWikiPage->setContent($wikiMarkup);
+        // \todo make this safe against multiple edits at the same time
+        $newWikiPage->setVersion($wikiPage->getVersion() + 1);
+        $em = $this->getManager();
+        $em->persist($newWikiPage);
+        $em->flush();
+
+        return $newWikiPage;
+    }
 }

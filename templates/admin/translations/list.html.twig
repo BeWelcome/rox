@@ -47,19 +47,22 @@
                             </td>
                             <td class="w-75">
                                 <p class="m-0"><small class="text-muted">{{ translation.domain }}</small></p>
-                                {% if translation.shortcode == locale %}
-                                    <p class="m-0">{{ translation.sentence | purify | truncate(50) }}</p>
+                                <p class="m-0">{% if translation.shortcode == locale %}
+                                    {{ translation.sentence | purify | truncate(50) }}
                                 {% else %}
-                                    <p class="m-0">{{ 'translations.missing' | trans }}</p>
+                                    {{ 'translations.missing' | trans }}
                                 {% endif %}
+                                </p>
                             </td>
-                            <td>
-                                <p class="m-0"><small>&nbsp;</small></p>
+                            <td class="text-right">
+                                <p class="m-0"><small class="text-muted">{{ translation.created|localizeddate('medium', 'none', app.request.locale) }}</small></p>
+                                <p class="m-0">
                                 {% if translation.shortcode == locale %}
-                                    <p class="m-0"><a href="{{ url('translation_edit', { code: translation.code, locale: locale }) }}"><i class="fa fa-edit"></i></a></p>
+                                    <a href="{{ url('translation_edit', { code: translation.code, locale: locale }) }}"><i class="fa fa-edit"></i></a>
                                 {% else %}
-                                    <p class="m-0"><a href="{{ url('translation_add', { code: translation.code, locale: locale }) }}"><i class="fa fa-plus"></i></a></p>
+                                    <a href="{{ url('translation_add', { code: translation.code, locale: locale }) }}"><i class="fa fa-plus"></i></a>
                                 {% endif %}
+                                </p>
                             </td>
                         </tr>
                     {% endfor %}

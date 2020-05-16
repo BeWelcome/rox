@@ -52,6 +52,7 @@ class UpdateTranslationAdapter implements AdapterInterface
                 AND w2.shortcode = :locale
                 AND (w1.isarchived = 0
                 OR w1.isArchived IS NULL)
+                AND (w1.donottranslate = 'No')
                 AND w1.code = w2.code
                 AND w1.majorUpdate > w2.updated
             ORDER BY w1.updated DESC;");
@@ -86,6 +87,7 @@ class UpdateTranslationAdapter implements AdapterInterface
                 AND w2.shortcode = :locale
                 AND (w1.isarchived = 0
                 OR w1.isArchived IS NULL)
+                AND (w1.donottranslate = 'No')
                 AND w1.code = w2.code
                 AND w1.majorUpdate > w2.updated
             ORDER BY w1.updated DESC

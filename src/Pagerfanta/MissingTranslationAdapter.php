@@ -5,6 +5,7 @@ namespace App\Pagerfanta;
 use Doctrine\DBAL\Driver\Connection;
 use Pagerfanta\Adapter\AdapterInterface;
 use PDO;
+use Traversable;
 
 class MissingTranslationAdapter implements AdapterInterface
 {
@@ -47,6 +48,7 @@ class MissingTranslationAdapter implements AdapterInterface
             WHERE
                 shortCode = 'en'
                 AND (isArchived IS NULL OR isArchived = 0)
+                AND (donottranslate = 'No')
                 AND code NOT IN (SELECT code FROM words WHERE shortCode = '{$this->locale}')";
         if (!empty($this->code)) {
             $this->query .= " AND code LIKE '%" . $this->code . "%'";
@@ -70,6 +72,7 @@ class MissingTranslationAdapter implements AdapterInterface
             WHERE
                 shortCode = 'en'
                 AND (isArchived IS NULL OR isArchived = 0)
+                AND (donottranslate = 'No')
                 AND code NOT IN (SELECT code FROM words WHERE shortCode = '{$this->locale}')";
         if (!empty($this->code)) {
             $query .= " AND code LIKE '%" . $this->code . "%'";
@@ -86,7 +89,7 @@ class MissingTranslationAdapter implements AdapterInterface
      * @param int $offset the offset
      * @param int $length the length
      *
-     * @return array|\Traversable the slice
+     * @return array|Traversable the slice
      */
     public function getSlice($offset, $length)
     {

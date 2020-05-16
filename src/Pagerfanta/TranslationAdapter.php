@@ -43,6 +43,7 @@ class TranslationAdapter implements AdapterInterface
                 ON pi_dflt.code = p.code
                 AND pi_dflt.shortcode = 'en'
                 AND (pi_dflt.isArchived IS NULL OR pi_dflt.isArchived = 0)
+                AND (pi_dflt.donottranslate = 'No')
             LEFT OUTER
               JOIN words AS pi_lang
                 ON pi_lang.code = p.code
@@ -63,7 +64,16 @@ class TranslationAdapter implements AdapterInterface
      */
     public function getNbResults()
     {
-        $query = "SELECT count(*) as cnt FROM words WHERE shortcode = 'en' AND (isArchived IS NULL OR isArchived = 0)";
+        $query = "
+            SELECT
+                count(*) as cnt
+            FROM
+                 words
+            WHERE
+                shortcode = 'en'
+                AND (isArchived IS NULL OR isArchived = 0)
+                AND (donottranslate = 'No')
+        ";
         if (!empty($this->code)) {
             $query .= " AND code LIKE '%" . $this->code . "%'";
         }

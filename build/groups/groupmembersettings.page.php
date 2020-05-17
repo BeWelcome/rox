@@ -69,10 +69,10 @@ class GroupMemberSettingsPage extends GroupsBasePage
 
                     <div class="btn-group w-100" data-toggle="buttons">
                         <label class="btn btn-primary btn-radio <?= (($membershipinfo->IacceptMassMailFromThisGroup == 'yes') ? 'active' : '' ); ?>" for="yes_option">
-                            <input id='yes_option' class="noradio" autocomplete="off" type="radio" value="yes" name="membershipinfo_acceptgroupmail" <?= (($membershipinfo->IacceptMassMailFromThisGroup == 'yes') ? 'checked="checked" ' : '' ); ?>>Yes
+                            <input id='yes_option' class="noradio" autocomplete="off" type="radio" value="yes" name="membershipinfo_acceptgroupmail" <?= (($membershipinfo->IacceptMassMailFromThisGroup == 'yes') ? 'checked="checked" ' : '' ); ?>><?= $words->get('yes'); ?>
                         </label>
                         <label for="no_option" class="btn btn-primary btn-radio <?= (($membershipinfo->IacceptMassMailFromThisGroup == 'no') ? 'active' : '' ); ?>">
-                            <input id='no_option' class="noradio" autocomplete="off" type="radio" value="no" name="membershipinfo_acceptgroupmail" <?= (($membershipinfo->IacceptMassMailFromThisGroup == 'no' || !$membershipinfo->IacceptMassMailFromThisGroup) ? 'checked="checked" ' : '' ); ?>>No
+                            <input id='no_option' class="noradio" autocomplete="off" type="radio" value="no" name="membershipinfo_acceptgroupmail" <?= (($membershipinfo->IacceptMassMailFromThisGroup == 'no' || !$membershipinfo->IacceptMassMailFromThisGroup) ? 'checked="checked" ' : '' ); ?>><?= $words->get('no'); ?>
                         </label>
                     </div>
                 </div>

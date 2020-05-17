@@ -2305,7 +2305,7 @@ and ($this->ThreadGroupsRestriction)
         $this->topic->IdThread=$this->threadid ;
 
         $from = $this->POSTS_PER_PAGE * ($this->getPage() - 1);
-        $order = ($this->ForumOrderList == "Yes") ? "DESC" : "ASC";
+        $order = ($this->ForumOrderList == "Yes") ? "ASC" : "DESC";
 
         $query = sprintf("
 SELECT

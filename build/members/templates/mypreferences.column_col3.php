@@ -80,7 +80,7 @@
 
                             <?php $PossibleValueArray = explode((strpos($rr->PossibleValues,',') ? ',' : ';'),$rr->PossibleValues); ?>
                             <?php if ($rr->codeName == 'PreferenceLocalTime') { ?>
-                                <div class="col-12 col-md-4 order-3 order-md-2"><select name="PreferenceLocalTime" class="prefsel select2">
+                                <div class="col-12 col-md-7 order-3 order-md-2"><select name="PreferenceLocalTime" class="prefsel select2">
                                     <?php
                                     foreach($timezones as $timezone) {
                                         $option = '<option value="' . $timezone['timeshift'] . '"';
@@ -97,22 +97,22 @@
                                 </div>
                                 <?php echo $words->flushBuffer(); ?>
                             <?php } elseif (count($PossibleValueArray) > 1) { ?>
-                                    <div class="col-12 col-md-4 order-3 order-md-2">
+                                    <div class="col-12 col-md-7 order-3 order-md-2">
                                 <?php foreach ($PossibleValueArray as $PValue) : ?>
-                                        <input type="radio" name="<?=$rr->codeName?>" value="<?=$PValue?>" <?=($Value == $PValue) ? 'checked' : '' ?> />
-                                        <label><?=$words->get($rr->codeName.preg_replace("/[^a-zA-Z0-9s]/", "", $PValue))?></label><br>
+                                        <input type="radio" id="<?=$rr->codeName?><?=$PValue?>" name="<?=$rr->codeName?>" value="<?=$PValue?>" <?=($Value == $PValue) ? 'checked' : '' ?> />
+                                        <label for="<?=$rr->codeName?><?=$PValue?>"><?=$words->get($rr->codeName.preg_replace("/[^a-zA-Z0-9s]/", "", $PValue))?></label><br>
                                 <?php endforeach ?>
                                     </div>
                             <?php } else { ?>
-                            <div class="col-12 col-md-4 order-3 order-md-2">
-                                <input type="radio" name="<?=$rr->codeName?>" value="Yes" <?=($Value == 'Yes' || ($rr->Value != 'No' && $rr->DefaultValue == 'Yes')) ? 'checked' : '' ?> /><label><?=$words->get('Yes')?></label><br>
-                                <input type="radio" name="<?=$rr->codeName?>" value="No" <?=($Value == 'No' || ($rr->Value != 'Yes' && $rr->DefaultValue == 'No')) ? 'checked' : '' ?> /><label><?=$words->get('No')?></label>
+                            <div class="col-12 col-md-7 order-3 order-md-2">
+                                <input type="radio" id="<?=$rr->codeName?>Yes" name="<?=$rr->codeName?>" value="Yes" <?=($Value == 'Yes' || ($rr->Value != 'No' && $rr->DefaultValue == 'Yes')) ? 'checked' : '' ?> /><label for="<?=$rr->codeName?>Yes"><?=$words->get('Yes')?></label><br>
+                                <input type="radio" id="<?=$rr->codeName?>No" name="<?=$rr->codeName?>" value="No" <?=($Value == 'No' || ($rr->Value != 'Yes' && $rr->DefaultValue == 'No')) ? 'checked' : '' ?> /><label for="<?=$rr->codeName?>No"><?=$words->get('No')?></label>
                             </div>
                                 <?php } ?>
 
-                                <div class="col-2 col-md-4 small order-2 order-md-3">
-                                    <a tabindex="0" class="btn btn-outline-primary btn-sm ml-1 py-0" data-container="body" data-toggle="popover" data-placement="right" data-trigger="focus" data-html="true" data-content="<?= htmlentities($words->get($rr->codeDescription)) ?>">
-                                        <i class="fa fa-question"></i>
+                                <div class="col-2 col-md-1 small order-2 order-md-3">
+                                    <a tabindex="0" class="btn btn-primary btn-sm ml-1 py-0" data-container="body" data-toggle="popover" data-placement="right" data-trigger="focus" data-html="true" data-content="<?= htmlentities($words->get($rr->codeDescription)) ?>">
+                                        <i class="fa fa-question white"></i>
                                     </a>
                                 </div>
                         </div>

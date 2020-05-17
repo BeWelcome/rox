@@ -83,18 +83,18 @@
             {% if collector.messages|length %}
                 <div class="row">
                     <div class="col-12">
-                        <h2>{{ 'Translation information' | trans }}</h2>
+                        <h2>{{ 'translation.information' | trans }}</h2>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-12 metrics">
                         <div class="metric">
-                            <span class="value">{{ collector.locale|default('-') }}</span>
+                            <span class="value">{{ app.request.locale }}</span>
                             <span class="label">Locale</span>
                         </div>
                         <div class="metric">
-                            <span class="value">{{ collector.fallbackLocales|join(', ')|default('-') }}</span>
-                            <span class="label">Fallback locales</span>
+                            <span class="value">en</span>
+                            <span class="label">Fallback Locale</span>
                         </div>
 
 
@@ -102,7 +102,7 @@
                 </div>
                 <div class="row">
                     <div class="col-12">
-                        <h2>{{ 'Translatable items' | trans }}</h2>
+                        <h2>{{ 'translation.translatable' | trans }}</h2>
                     </div>
                 </div>
                 {% block messages %}
@@ -204,7 +204,7 @@
             <thead>
             <tr>
                 {% if state == constant('Symfony\\Component\\Translation\\DataCollectorTranslator::MESSAGE_DEFINED') %}
-                <th>{{ 'translations.id.and.message' | trans }}|{{ 'translation.domain' | trans }}</th>
+                <th>{{ 'translations.id.and.message' | trans }}</th>
                 <th>{{ 'translations.translated.message' | trans }}</th>
                 <th></th>
                 {% else %}
@@ -217,8 +217,10 @@
             {% for message in messages %}
                 <tr>
                     <td {% if state == constant('Symfony\\Component\\Translation\\DataCollectorTranslator::MESSAGE_DEFINED') %}class="w-25"{% else %}class="w-100"{% endif %}>
-                        <small class="text-muted">{{ message.id }}|{{ message.domain }}</small>
-                        <p>{{ message.id | trans( {}, message.domain, 'en' ) | truncate(50) }}</p>
+                        <small class="text-muted m-0">{{ message.id }}
+                            {% if not state == constant('Symfony\\Component\\Translation\\DataCollectorTranslator::MESSAGE_DEFINED') %}|{{ message.domain }}{% endif %}
+                        </small>
+                        <p class="m-0">{{ message.id | trans( {}, message.domain, 'en' ) | truncate(50) }}</p>
                         {% if message.transChoiceNumber is not null %}
                             <small class="newline">(pluralization is used)</small>
                         {% endif %}
@@ -231,12 +233,12 @@
                     </td>
                     {% if state == constant('Symfony\\Component\\Translation\\DataCollectorTranslator::MESSAGE_DEFINED') %}
                         <td class="w-75">
-                            <small class="invisible text-muted">{{ message.id }}</small>
-                            <p>{{ message.translation | truncate(50)  }}</p>
+                            <small class="m-0 text-muted">{{ message.domain }}</small>
+                            <p class="m-0">{{ message.translation | truncate(50)  }}</p>
                         </td>
                     {% endif %}
-                    <td>
-                        <small>&nbsp;</small>
+                    <td class="text-right">
+                        <small class="m-0">&nbsp;</small>
                         {% if message.state == constant('Symfony\\Component\\Translation\\DataCollectorTranslator::MESSAGE_DEFINED') %}
                             <a href="{{ url('translation_edit', { code: message.id, locale: app.request.locale }) }}" target="_blank"><i class="fa fa-edit"></i></a>
                         {% endif %}

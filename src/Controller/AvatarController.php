@@ -26,7 +26,7 @@ class AvatarController extends AbstractController
      *
      * @return BinaryFileResponse
      */
-    public function showAvatarAction($username, $size = 50)
+    public function showAvatar($username, $size = 50)
     {
         switch ($size) {
             case '30':
@@ -44,6 +44,12 @@ class AvatarController extends AbstractController
                 break;
             default:
                 $suffix = '';
+        }
+
+        if (!$this->isGranted('IS_AUTHENTICATED_FULLY')) {
+            $filename = 'images/empty_avatar' . $suffix . '.png';
+
+            return new BinaryFileResponse($filename);
         }
 
         $member = $this->getDoctrine()->getRepository(Member::class)->findOneBy(['username' => $username]);

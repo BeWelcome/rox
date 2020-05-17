@@ -35,9 +35,9 @@
                             <td>{% if group.members|first %}{{ macros.avatarstack((group.members|first).Username) }}{% endif %}</td>
                             <td class="text-center">
                                 {% if group.name starts with '[Archived] ' %}
-                                    <a href="{{ path('admin_groups_unarchive', { 'id': group.id }) }}"><i class="fas fa-fw fa-2x fa-box-open" title="{{ 'Unarchive group'|trans }}"></i></a><br>
+                                    <a href="{{ path('admin_groups_unarchive', { 'id': group.id }) }}"><i class="fas fa-fw fa-2x fa-box-open" title="{{ 'admin.groups.unarchive'|trans }}"></i></a><br>
                                 {% else %}
-                                    <a href="{{ path('admin_groups_archive', { 'id': group.id }) }}"><i class="fas fa-fw fa-2x fa-archive" title="{{ 'Archive group'|trans }}"></i></a><br>
+                                    <a href="{{ path('admin_groups_archive', { 'id': group.id }) }}"><i class="fas fa-fw fa-2x fa-archive" title="{{ 'admin.groups.archive'|trans }}"></i></a><br>
                                 {% endif %}
                             </td>
                         </tr>

@@ -10,8 +10,8 @@
 
     {% if organizer %}<p>{{ 'mydata.activity.organizer'|trans }}</p>{% endif %}
     <p>
-        {%- if status == constant('App\\Entity\\ActivityAttendee::ATTENDS_NO') %}{{ 'mydata.activity.wont.attended'|trans }}{% endif -%}
-        {%- if status == constant('App\\Entity\\ActivityAttendee::ATTENDS_MAYBE') %}{{ 'mydata.activity.maybe.attends'|trans }}{% endif -%}
+        {%- if status == constant('App\\Entity\\ActivityAttendee::ATTENDS_NO') %}{{ 'mydata.activity.wont.attend'|trans }}{% endif -%}
+        {%- if status == constant('App\\Entity\\ActivityAttendee::ATTENDS_MAYBE') %}{{ 'mydata.activity.maybe.attend'|trans }}{% endif -%}
         {%- if status == constant('App\\Entity\\ActivityAttendee::ATTENDS_YES') %}{{ 'mydata.activity.will.attend'|trans }}{% endif -%}
     </p>
     <p>{{ comment|purify }}</p>

@@ -8,14 +8,14 @@
                 <p>{{ 'mydata.threads.year.count'|trans({'count':threads|length }) }}</p>
             </div>
             <div>
-                <a class="btn btn-primary" href="../posts.html">{{ 'Back to overview'|trans }}</a>
+                <a class="btn btn-primary" href="../posts.html">{{ 'mydata.overview'|trans }}</a>
             </div>
         </div>
     </div>
     <div class="card-columns">
         {% for info in threads %}
             <div class="card">
-                <div class="card-body p-2">{% if info.thread %}{{ info.thread.title|purify }}{% else %}{{ 'No thread found'|trans }}{% endif %}<br>
+                <div class="card-body p-2">{% if info.thread %}{{ info.thread.title|purify }}{% else %}{{ 'mydata.posts.no.thread'|trans }}{% endif %}<br>
                 {{ 'mydata.posts.thread.count'|trans({'count':info.posts|length}) }}</div>
                 <div class="card-footer text-right p-2">
                     {% for post in info.posts|keys %}

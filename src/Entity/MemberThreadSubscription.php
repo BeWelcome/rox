@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Utilities\LifecycleCallbacksTrait;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -14,8 +15,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class MemberThreadSubscription
 {
-    use LifecycleCallbacksTrait;
-
     /**
      * @var Member
      *
@@ -23,6 +22,13 @@ class MemberThreadSubscription
      * @ORM\JoinColumn(name="IdSubscriber", referencedColumnName="id", nullable=false)
      */
     private $subscriber;
+
+    /**
+     * @var DateTime
+     *
+     * @ORM\Column(name="created", type="datetime", nullable=false)
+     */
+    private $subscribed;
 
     /**
      * @var ForumThread
@@ -188,5 +194,21 @@ class MemberThreadSubscription
     public function getId(): int
     {
         return $this->id;
+    }
+
+    /**
+     * @return DateTime
+     */
+    public function getSubscribed(): DateTime
+    {
+        return $this->subscribed;
+    }
+
+    /**
+     * @param DateTime $subscribed
+     */
+    public function setSubscribed(DateTime $subscribed): void
+    {
+        $this->subscribed = $subscribed;
     }
 }

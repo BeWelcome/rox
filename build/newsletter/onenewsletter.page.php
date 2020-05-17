@@ -59,6 +59,9 @@ class OneNewsLetterPage extends RoxPageView  /* HelloUniversePage doesn't work! 
             echo '<p>Still to be sent to '.$this->Data->CountToSend,' members</p>' ;
     }
 
+    protected function getSubmenuItems() {
+    }
+
     /**
      * which item in the top menu should be activated when showing this page?
      * Let's use the 'getanswers' menu item for this one.

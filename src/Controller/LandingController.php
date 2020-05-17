@@ -39,7 +39,7 @@ class LandingController extends AbstractController
      *
      * @return Response
      */
-    public function showMessagesAction(Request $request)
+    public function getMessages(Request $request)
     {
         /** @var Member $member */
         $member = $this->getUser();
@@ -48,7 +48,6 @@ class LandingController extends AbstractController
         $preferenceRepository = $this->getDoctrine()->getRepository(Preference::class);
         /** @var Preference $preference */
         $preference = $preferenceRepository->findOneBy(['codename' => Preference::MESSAGE_AND_REQUEST_FILTER]);
-        /** @var MemberPreference $memberPreference */
         $memberPreference = $member->getMemberPreference($preference);
         if ('1' === $unread) {
             $memberPreference->setValue('Unread');
@@ -59,7 +58,7 @@ class LandingController extends AbstractController
         $em->persist($memberPreference);
         $em->flush();
 
-        $messages = $this->landingModel->getMessages($member, $unread, 4);
+        $messages = $this->landingModel->getMessages($member, $unread, 5);
 
         $content = $this->render('landing/widget/messages.html.twig', [
             'messages' => $messages,
@@ -73,7 +72,7 @@ class LandingController extends AbstractController
      *
      * @return Response
      */
-    public function showNotificationsAction()
+    public function getNotifications()
     {
         /** @var Member $member */
         $member = $this->getUser();
@@ -94,7 +93,7 @@ class LandingController extends AbstractController
      *
      * @return Response
      */
-    public function showThreadsAction(Request $request)
+    public function getThreads(Request $request)
     {
         $groups = $request->query->get('groups', '0');
         $forum = $request->query->get('forum', '0');
@@ -105,7 +104,6 @@ class LandingController extends AbstractController
         $preferenceRepository = $this->getDoctrine()->getRepository(Preference::class);
         /** @var Preference $preference */
         $preference = $preferenceRepository->findOneBy(['codename' => Preference::FORUM_FILTER]);
-        /** @var MemberPreference $memberPreference */
         $memberPreference = $member->getMemberPreference($preference);
         $value = '';
         if ('1' === $groups) {
@@ -123,11 +121,9 @@ class LandingController extends AbstractController
         $em->flush();
         $threads = $this->landingModel->getThreads($member, $groups, $forum, $following, 5);
 
-        $content = $this->render('landing/widget/forums.html.twig', [
+        return $this->render('landing/widget/forums.html.twig', [
             'threads' => $threads,
         ]);
-
-        return $content;
     }
 
     /**
@@ -137,11 +133,11 @@ class LandingController extends AbstractController
      *
      * @return Response
      */
-    public function showActivitiesAction()
+    public function getActivities()
     {
         /** @var Member $member */
         $member = $this->getUser();
-        $activities = $this->landingModel->getActivities($member);
+        $activities = $this->landingModel->getLocalActivities($member);
 
         $content = $this->render('landing/widget/activities.html.twig', [
             'activities' => $activities,

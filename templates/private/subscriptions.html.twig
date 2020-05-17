@@ -1,0 +1,43 @@
+{% extends 'private/mydata.html.twig' %}
+
+{% block content %}
+    <h1>{{ 'mydata.subscriptions.headline'|trans }}</h1>
+    <p>{{ 'mydata.subscriptions.abstract'|trans }}</p>
+    {% if subscriptions|length == 0 %}
+        <p><strong>{{ 'mydata.subscriptions.no.subscriptions'|trans }}</strong></p>
+    {% else %}
+        <div class="row">
+            <div class="col-12 table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th class="w-100">Thread Name</th>
+                        <th>Subscription</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for subscription in subscriptions %}
+                        <tr>
+                            <td class="align-middle"><a
+                                        href="{{ url('forum_thread', {'threadId': subscription.thread.id }) }}">{{ subscription.thread.title|purify }}</a><br>
+                                <span class="small">{{ subscription.subscribed|localizeddate('medium', 'short', app.request.locale ) }}</span></td>
+
+                            <td class="align-middle">
+                                <div class="btn-group" role="group">
+                                    {% if subscription.notificationsEnabled %}
+                                        <span class="btn btn-primary active">{{ 'on'|trans }}</span>
+                                        <span class="btn btn-primary">{{ 'off'|trans }}</span>
+                                    {% else %}
+                                        <span class="btn btn-primary">{{ 'on'|trans }}</span>
+                                        <span class="btn btn-primary active">{{ 'off'|trans }}</span>
+                                    {% endif %}
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

@@ -162,7 +162,7 @@ class MembersController extends RoxControllerBase
                         $page = new DeleteTranslationPage();
                     }
                     if (isset($request[2]) && $request[2] == 'add') {
-                        $page->session->getFlashBag()->add('notice',  $this->getWords()->getSilent('new_language_added'));
+                        $page->session->getFlashBag()->add('notice',  $this->getWords()->getSilent('profile.language.added'));
                         $url = 'editmyprofile/' . $request[1];
                         $this->redirect($url);
                         PPHP::PExit();

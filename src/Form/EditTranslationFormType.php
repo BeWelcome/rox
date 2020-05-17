@@ -30,6 +30,7 @@ class EditTranslationFormType extends AbstractType
                 'disabled' => false,
                 'attr' => [
                     'readonly' => true,
+                    'rows' => 10,
                 ],
                 'label' => 'label.admin.translation.englishtext',
             ])
@@ -51,6 +52,14 @@ class EditTranslationFormType extends AbstractType
                         'label' => 'translation.is.major.update',
                         'required' => false,
                     ])
+                    ->add('isArchived', CheckboxType::class, [
+                        'label' => 'translation.is.archived',
+                        'required' => false,
+                    ])
+                    ->add('doNotTranslate', CheckboxType::class, [
+                        'label' => 'translation.do.not.translate',
+                        'required' => false,
+                    ])
                     ->add('description', TextAreaType::class, [
                         'label' => 'label.admin.translation.description',
                     ])
@@ -69,6 +78,9 @@ class EditTranslationFormType extends AbstractType
             }
             $form
                 ->add('translatedText', TextAreaType::class, [
+                    'attr' => [
+                        'rows' => 10,
+                    ],
                     'label' => 'label.admin.translation',
                     'required' => true,
                     'help' => $translatedTextHelp,

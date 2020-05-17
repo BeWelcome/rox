@@ -24,7 +24,7 @@
     <button type="submit" class="btn btn-primary">{{ 'button.update' | trans }}</button>
     {{ form_end(form) }}
     {% if feedbacks.nbResults == 0 %}
-        <div class="alert alert-warning">{{ 'No feedback found for these parameters.' | trans }}</div>
+        <div class="alert alert-warning">{{ 'admin.feedback.no.feedback' | trans }}</div>
     {% else %}
         {% if feedbacks.haveToPaginate %}
             <div class="float-left">

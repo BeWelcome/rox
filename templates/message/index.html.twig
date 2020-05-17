@@ -42,7 +42,7 @@
             </th>
             <th class="from text-center align-middle text-nowrap">
                 <span class="small"><a href="{{ path( _route, { folder: folder, sort: correspondent, dir: 'asc' }) }}">&#x25b2;</a> {{ correspondent | trans | capitalize }} <a href="{{ path( _route, { folder: folder, sort: correspondent, dir: 'desc' }) }}">&#x25bc;</a></span><br>
-                <span class="small"><a href="{{ path( _route, { folder: folder, sort: 'date', dir: 'asc' }) }}">&#x25b2;</a> {{ 'Date' | trans }} <a href="{{ path( _route, { folder: folder, sort: 'date', dir: 'desc' }) }}">&#x25bc;</a></span>
+                <span class="small"><a href="{{ path( _route, { folder: folder, sort: 'date', dir: 'asc' }) }}">&#x25b2;</a> {{ 'date' | trans }} <a href="{{ path( _route, { folder: folder, sort: 'date', dir: 'desc' }) }}">&#x25bc;</a></span>
             </th>
             <th colspan="2" class="align-middle">{{ 'messagestext' | trans }}</th>
         </tr>

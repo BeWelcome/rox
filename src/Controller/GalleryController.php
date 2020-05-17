@@ -38,9 +38,6 @@ class GalleryController extends AbstractController
     use TranslatedFlashTrait;
     use UniqueFilenameTrait;
 
-    // Limit uploaded files to 8MB
-    const MAX_SIZE = 8 * 1024 * 1024;
-
     /**
      * @Route("/gallery/show/image/{id}/edit", name="gallery_edit_image",
      *     requirements = {"id": "\d+"}
@@ -103,7 +100,8 @@ class GalleryController extends AbstractController
         $constraint = new Image([
             'maxSize' => (int) ($this->getParameter('upload_max_size')),
             'mimeTypes' => ['image/jpeg', 'image/png', 'image/gif'],
-            'mimeTypesMessage' => 'upload.error.not_supported'
+            'mimeTypesMessage' => 'upload.error.not_supported',
+            'maxPixels' => 16000000,
         ]);
 
         /** @var UploadedFile $image */
@@ -177,6 +175,10 @@ class GalleryController extends AbstractController
             'success' => true,
             'filename' => $originalName,
             'imageId' => $galleryImage->getId(),
+            'constraints' => [
+                'size' => (int) ($this->getParameter('upload_max_size')),
+                'pixels' => 16000000,
+            ]
         ]);
 
         return $response;

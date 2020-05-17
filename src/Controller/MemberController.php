@@ -30,6 +30,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -50,11 +51,11 @@ class MemberController extends AbstractController
      * @Route("/mydata", name="member_personal_data")
      *
      * @param Request $request
-     * @param Logger $logger
      * @param ContainerBagInterface $params
      * @param MemberModel $memberModel
      * @param Security $security
      * @param EncoderFactoryInterface $encoderFactory
+     * @param EntrypointLookupInterface $entrypointLookup
      * @return StreamedResponse|Response
      * @throws Exception
      */
@@ -63,7 +64,8 @@ class MemberController extends AbstractController
         ContainerBagInterface $params,
         MemberModel $memberModel,
         Security $security,
-        EncoderFactoryInterface $encoderFactory
+        EncoderFactoryInterface $encoderFactory,
+        EntrypointLookupInterface $entrypointLookup
     )
     {
         $passwordForm = $this->createFormBuilder()
@@ -85,16 +87,20 @@ class MemberController extends AbstractController
                 $encoder = $encoderFactory->getEncoder($member);
 
                 if ($encoder->isPasswordValid($member->getPassword(), $password, $member->getSalt())) {
+
                     // Collect information and store in zip file
                     $zipFilename = $memberModel->collectPersonalData($params, $member);
+
+                    // Entrypoints need to be reset as they will be used during rendering of the sub pages for the data extract
+                    $entrypointLookup->reset();
 
                     $request->getSession()->set('mydata_file', $zipFilename);
                     return $this->render('private/download.html.twig', [
                         'username' => $member->getUsername(),
-                        'url' => $this->generateUrl('member_download_data', ['username' => $member->getUsername()]),
+                        'url' => $this->generateUrl('member_download_data', ['username' => $member->getUsername()], UrlGeneratorInterface::ABSOLUTE_URL),
                     ]);
                 } else {
-                    $passwordForm->addError(new FormError($this->translator->trans("password.incorrect")));
+                    $passwordForm->addError(new FormError($this->translator->trans("form.error.password.incorrect")));
                 }
             }
         }
@@ -102,14 +108,6 @@ class MemberController extends AbstractController
         return $this->render('private/password.html.twig', [
             'form' => $passwordForm->createView(),
         ]);
-    }
-
-    /**
-     * @Route("/tabtest", name="tabtest")
-     */
-    public function tabTest()
-    {
-        return $this->render('tabtest.html.twig');
     }
 
     /**
@@ -147,7 +145,7 @@ class MemberController extends AbstractController
         $request->getSession()->set('mydata_file', $zipFilename);
         return $this->render('private/download.html.twig', [
             'username' => $member->getUsername(),
-            'url' => $this->generateUrl('member_download_data', ['username' => $member->getUsername()]),
+            'url' => $this->generateUrl('member_download_data', ['username' => $member->getUsername()], UrlGeneratorInterface::ABSOLUTE_URL),
         ]);
     }
 

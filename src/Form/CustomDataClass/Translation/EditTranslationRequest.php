@@ -14,6 +14,16 @@ class EditTranslationRequest extends TranslationRequest
     public $isMajorUpdate;
 
     /**
+     * @var bool
+     */
+    public $isArchived;
+
+    /**
+     * @var bool
+     */
+    public $doNotTranslate;
+
+    /**
      * @param Word $original
      * @param Word $translation
      *
@@ -35,6 +45,8 @@ class EditTranslationRequest extends TranslationRequest
         $editTranslationRequest->locale = $translation->getShortCode();
         $editTranslationRequest->translatedText = $translation->getSentence();
         $editTranslationRequest->isMajorUpdate = ($original->getMajorUpdate() > $translation->getUpdated());
+        $editTranslationRequest->isArchived = $original->getIsArchived();
+        $editTranslationRequest->doNotTranslate = ('yes' === $original->getDoNotTranslate());
 
         return $editTranslationRequest;
     }

@@ -1,6 +1,5 @@
 <p>
 {{ 'greeting'|trans({'username': creator.Username, 'gender': creator.Gender}) }}<br><br>
-{{ '%admin% approved your application for %group_start%%groupname%%group_end% and you are now a member
-        of that group.'|trans({'%admin%': admin.Username, '%group_start%': '<a href="' ~ url('group_start', { 'group_id': group.id}) ~ '">', '%group_end%': '</a>', '%groupname%': group.Name})|raw }}
+{{ '%admin% approved your application for %group_start%%groupname%%group_end% and you are now a member of that group.'|trans({'%admin%': admin.Username, '%group_start%': '<a href="' ~ url('group_start', { 'group_id': group.id}) ~ '">', '%group_end%': '</a>', '%groupname%': group.Name})|raw }}
 </p>
 <p>{{ 'email.farewell' | trans }}</p>

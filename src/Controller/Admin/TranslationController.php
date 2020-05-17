@@ -116,18 +116,22 @@ class TranslationController extends AbstractController
 
         $editForm->handleRequest($request);
         if ($editForm->isSubmitted() && $editForm->isValid()) {
+            /** @var EditTranslationRequest $data */
             $data = $editForm->getData();
             $em = $this->getDoctrine()->getManager();
             // Make sure the ID of the translations match
             $translation->setCode($original->getCode());
             $translation->setSentence($data->translatedText);
             $translation->setUpdated(new DateTime());
-            $translation->setAuthor($this->getUser());
+            $translation->setAuthor($translator);
             if ('en' === $language->getShortcode()) {
                 $translation->setDescription($data->description);
                 if ($data->isMajorUpdate) {
                     $translation->setMajorUpdate($translation->getUpdated());
                 }
+                $translation->setIsArchived($data->isArchived);
+                $doNotTranslate = $data->doNotTranslate ? 'Yes' : 'No';
+                $translation->setDoNotTranslate($doNotTranslate);
             } else {
                 // No need for a description as the English original has one
                 $translation->setDescription('');
@@ -490,7 +494,7 @@ class TranslationController extends AbstractController
     /**
      * @Route("/admin/translations/{type}/{locale}/{code}", name="translations_locale_code",
      *     defaults={"code":""},
-     *     requirements={"code"=".+", "type"="missing|update|all"})
+     *     requirements={"code"=".+", "type"="missing|update|all|archived|donottranslate"})
      *
      * @param Request  $request
      * @param Language $language
@@ -538,21 +542,7 @@ class TranslationController extends AbstractController
             }
         }
 
-        /** @var Connection $connection */
-        $connection = $this->getDoctrine()->getConnection();
-        $translationAdapter = null;
-        switch($type)
-        {
-            case 'missing':
-                $translationAdapter = new MissingTranslationAdapter($connection, $locale, $code);
-                break;
-            case 'update':
-                $translationAdapter = new UpdateTranslationAdapter($connection, $locale);
-                break;
-            case 'all':
-                $translationAdapter = new TranslationAdapter($connection, $locale, $code);
-                break;
-        }
+        $translationAdapter = $this->translationModel->getAdapter($type, $locale, $code);
 
         $translations = new Pagerfanta($translationAdapter);
         $translations->setMaxPerPage($limit);
@@ -753,6 +743,20 @@ class TranslationController extends AbstractController
             ];
         }
         if ($translator->hasRightsForLocale('en')) {
+            $submenuItems['archived'] = [
+                'key' => 'label.translations.archived',
+                'url' => $this->generateUrl('translations_locale_code', [
+                    'locale' => $locale,
+                    'type' => 'archived',
+                ]),
+            ];
+            $submenuItems['donottranslate'] = [
+                'key' => 'label.translations.donottranslate',
+                'url' => $this->generateUrl('translations_locale_code', [
+                    'locale' => $locale,
+                    'type' => 'donottranslate',
+                ]),
+            ];
             $submenuItems['create'] = [
                 'key' => 'label.translations.create',
                 'url' => $this->generateUrl('translation_create_direct'),

@@ -2,6 +2,8 @@
 
 namespace Rox\Tools;
 
+use App\Doctrine\DomainType;
+use Exception;
 use Phinx\Db\Adapter\MysqlAdapter;
 use Phinx\Db\Adapter\PdoAdapter;
 use Phinx\Db\Adapter\TimedOutputAdapter;
@@ -28,7 +30,7 @@ class RoxMigration extends AbstractMigration
      * @param bool $majorUpdate
      * @param string $dnt
      * @param string $priority
-     * @throws \Exception
+     * @throws Exception
      */
     private function _writeWordCodeToDb($add, $code, $sentence, $description, $majorUpdate = false, $dnt = 'No', $priority = '5')
     {
@@ -37,10 +39,10 @@ class RoxMigration extends AbstractMigration
         // Check if $dnt is either 'Yes' or 'No', if not throw exception
         $dnt = strtolower($dnt);
         if ($dnt != "'yes'" & $dnt != "'no'") {
-            throw new \Exception("AddWordCode: Donottranslate has to be yes or no");
+            throw new Exception("AddWordCode: Donottranslate has to be yes or no");
         }
         if (!is_numeric($priority)) {
-            throw new \Exception("AddWordCode: Priority has to be numeric");
+            throw new Exception("AddWordCode: Priority has to be numeric");
         }
 
         if ($add) {
@@ -72,11 +74,44 @@ class RoxMigration extends AbstractMigration
         try {
             $this->execute($query);
         }
-        catch(\Exception $e) {
+        catch(Exception $e) {
             echo "Couldn't add/update wordcode " . $code . PHP_EOL;
             echo $e->getMessage() . PHP_EOL;
             echo PHP_EOL;
         }
+    }
+
+    /***
+     * Private worker function to either update the word code in the DB or to add it as a new one.
+     *
+     * Basically the same query but the created column is handled differently
+     *
+     * @param string $code
+     * @param string $sentence
+     * @param string $description
+     * @param $domain
+     */
+    private function _writeTranslationToDb($code, $sentence, $description, $domain)
+    {
+        list($code,$sentence,$description,$domain) = $this->EscapeVariables(array($code,$sentence,$description,$domain));
+
+        $query = "INSERT INTO
+                words
+            SET
+                code = " . $code . ",
+                Shortcode = 'en',
+                sentence = " . $sentence . ",
+                updated = NOW(),
+                donottranslate = 'No',
+                IdLanguage = 0,
+                Description = " . $description . ",
+                IdMember = 1,
+                created = NOW(),
+                TranslationPriority = 5,
+                isarchived = NULL,
+                majorupdate = NOW(),
+                domain = " . $domain;
+        $this->execute($query);
     }
 
     /*****
@@ -89,7 +124,7 @@ class RoxMigration extends AbstractMigration
      * @param string $description The description needs to be at least 15 characters long
      * @param string $dnt Sets the donottranslate flag (either 'yes' or 'no')
      * @param string $priority Sets the translation priority
-     * @throws \Exception
+     * @throws Exception
      */
     protected function AddWordCode($code, $sentence, $description, $dnt = 'No', $priority = '5')
     {
@@ -108,7 +143,7 @@ class RoxMigration extends AbstractMigration
      * @param bool $majorUpdate The update is a major one rendering the old translation obsolete
      * @param string $dnt Sets the donottranslate flag (either 'yes' or 'no')
      * @param string $priority Sets the translation priority
-     * @throws \Exception
+     * @throws Exception
      */
     protected function UpdateWordCode($code, $sentence, $description, $majorUpdate = false, $dnt = 'No', $priority = '5')
     {
@@ -212,4 +247,50 @@ WHERE `code` = " . $code
         // To be used in the down method of a migration (renaming RenameWordCode to RevertRenameWordCode for easier maintenance)
         $this->RenameWordCode($newCode, $oldCode);
     }
+
+    /*****
+     * Adds a word code during a migration (English language only)
+     *
+     * If the word code already exists an PDO exception will be thrown
+     *
+     * @param string $code The new WordCode
+     * @param string $sentence The 'translation'
+     * @param string $description The description needs to be at least 15 characters long
+     * @param string $domain
+     * @throws Exception
+     */
+    protected function addTranslation($code, $sentence, $description, $domain = DomainType::ICU_MESSAGES)
+    {
+        $this->_writeTranslationToDb($code, $sentence, $description, $domain);
+    }
+
+    /**
+     * @param $oldCode
+     * @param $newCode
+     */
+    protected function copyTranslation($oldCode, $newCode)
+    {
+        $statement = $this->getAdapter()->getConnection()->prepare("INSERT INTO words (code, shortcode, sentence, created, updated, donottranslate, idLanguage, description, idMember, TranslationPriority, isArchived, majorUpdate, domain)
+            SELECT :newCode, shortcode, sentence, created, updated, donottranslate, idLanguage, description, idMember, TranslationPriority, isArchived, majorUpdate, domain
+            FROM words 
+            WHERE code = :oldCode");
+        $statement->execute([
+            ':oldCode' => $oldCode,
+            ':newCode' => $newCode,
+        ]);
+    }
+
+    /**
+     * @param $oldCode
+     * @param $newCode
+     */
+    protected function undoCopyTranslation($oldCode, $newCode)
+    {
+        // Easier maintenance ignore oldCode
+        $statement = $this->getAdapter()->getConnection()->prepare("DELETE FROM words  WHERE code = :newCode");
+        $statement->execute([
+            ':newCode' => $newCode,
+        ]);
+    }
+
 }

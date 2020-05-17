@@ -12,9 +12,11 @@ use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NativeQuery;
 use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\Query\ResultSetMappingBuilder;
+use Doctrine\ORM\QueryBuilder;
 use Exception;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
@@ -83,19 +85,13 @@ class ActivityRepository extends EntityRepository
     }
 
     /**
-     * Get all activities around a given location.
-     *
      * @param Location $location
-     * @param int      $limit
-     * @param int      $distance
+     * @param int $distance
+     * @return QueryBuilder
      *
      * @throws Exception
-     *
-     * @return array
-     *
-     * @SuppressWarnings(PHPMD.StaticAccess)
      */
-    public function findUpcomingAroundLocation(Location $location, $limit = 5, $distance = 20)
+    private function getUpcomingAroundLocationQueryBuilder(Location $location, $distance)
     {
         // Fetch latitude and longitude of member's location
         $latitude = $location->getLatitude();
@@ -117,7 +113,7 @@ class ActivityRepository extends EntityRepository
         $qb = $this->createQueryBuilder('a');
         $qb
             ->where('a.location IN (:locations)')
-            ->andWhere($qb->expr()->orX(
+            ->andWhere($qb->expr()->andX(
                 $qb->expr()->lte('a.ends', ':threeMonths'),
                 $qb->expr()->gte('a.starts', ':now')
             ))
@@ -125,18 +121,41 @@ class ActivityRepository extends EntityRepository
             ->setParameter('threeMonths', (new DateTime())->modify('+3 months'))
             ->setParameter('locations', $locations)
             ->orderBy('a.ends', 'DESC')
-            ->setMaxResults($limit);
+        ;
 
-        return $qb
+        return $qb;
+
+    }
+    /**
+     * Get all activities around a given location.
+     *
+     * @param Location $location
+     * @param int      $limit
+     * @param int      $distance
+     *
+     * @throws Exception
+     *
+     * @return array
+     *
+     * @SuppressWarnings(PHPMD.StaticAccess)
+     */
+    public function findUpcomingAroundLocation(Location $location, $limit = 5, $distance = 20)
+    {
+        $qb = $this->getUpcomingAroundLocationQueryBuilder($location, $distance);
+
+        $query = $qb
+            ->setMaxResults($limit)
             ->getQuery()
-            ->getResult();
+        ;
+
+        return $query->getResult();
     }
 
     /**
      * Get all activities around a given location.
      *
      * @param Location $location
-     * @param int      $distance
+     * @param int $distance
      *
      * @return int
      *
@@ -144,46 +163,17 @@ class ActivityRepository extends EntityRepository
      */
     public function getUpcomingAroundLocationCount(Location $location, $distance = 20)
     {
-        // Fetch latitude and longitude of member's location
-        $latitude = $location->getLatitude();
-        $longitude = $location->getLongitude();
-
-        $edison = GeoLocation::fromDegrees($latitude, $longitude);
-
-        try {
-            $coordinates = $edison->boundingCoordinates($distance, 'km');
-        } catch (Exception $e) {
-            return 0;
-        }
-
-        $expr = Criteria::expr();
-        $criteria = Criteria::create();
-        $criteria->where($expr->gte('latitude', $coordinates[0]->getLatitudeInDegrees()))
-            ->andWhere($expr->lte('latitude', $coordinates[1]->getLatitudeInDegrees()))
-            ->andWhere($expr->gte('longitude', $coordinates[0]->getLongitudeInDegrees()))
-            ->andWhere($expr->lte('longitude', $coordinates[1]->getLongitudeInDegrees()));
-
-        $locations = $this->getEntityManager()->getRepository('App:Location')
-            ->matching($criteria);
-
-        $qb = $this->createQueryBuilder('a');
+        $qb = $this->getUpcomingAroundLocationQueryBuilder($location, $distance);
         $qb
             ->select('count(a.id)')
-            ->where('a.location IN (:locations)')
-            ->andWhere($qb->expr()->orX(
-                $qb->expr()->lte('a.ends', ':threeMonths'),
-                $qb->expr()->gte('a.starts', ':now')
-            ))
-            ->setParameter('now', new DateTime())
-            ->setParameter('threeMonths', (new DateTime())->modify('+3 months'))
-            ->setParameter('locations', $locations)
-            ->orderBy('a.ends', 'DESC');
+        ;
 
         $unreadCount = 0;
         try {
             $q = $qb->getQuery();
             $unreadCount = $q->getSingleScalarResult();
         } catch (NonUniqueResultException $e) {
+        } catch (NoResultException $e) {
         }
 
         return (int) $unreadCount;

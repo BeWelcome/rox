@@ -15,6 +15,7 @@ use App\Entity\Group;
 use App\Entity\Log;
 use App\Entity\Member;
 use App\Entity\MembersPhoto;
+use App\Entity\MemberThreadSubscription;
 use App\Entity\MemberTranslation;
 use App\Entity\Message;
 use App\Entity\Newsletter;
@@ -48,6 +49,9 @@ use Symfony\Component\Templating\EngineInterface;
 use Symfony\WebpackEncoreBundle\Asset\EntrypointLookup;
 use Symfony\WebpackEncoreBundle\Asset\EntrypointLookupInterface;
 use Twig\Environment;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
 use ZipArchive;
 
 class MemberModel
@@ -187,6 +191,7 @@ class MemberModel
         $extracted[] = $this->prepareComments($member);
         $extracted[] = $this->prepareSpecialRelations($member);
         $extracted[] = $this->prepareMemberData($this->tempDir, $member);
+        $extracted[] = $this->prepareSubscriptions($member);
         $extracted[] = $this->prepareNewsletters($member);
         $extracted[] = $this->prepareBroadcasts($member);
         $extracted[] = $this->prepareCommunityNews($member);
@@ -364,9 +369,9 @@ class MemberModel
      * @param $filename
      * @param $template
      * @param $parameters
-     * @throws \Twig\Error\LoaderError
-     * @throws \Twig\Error\RuntimeError
-     * @throws \Twig\Error\SyntaxError
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
      */
     private function writeRenderedTemplate($filename, $template, $parameters)
     {
@@ -535,18 +540,14 @@ class MemberModel
         );
     }
 
-    /**
-     * @param string $tempDir
-     * @param Member $member
-     */
-    private function prepareSubscriptions(string $tempDir, Member $member)
+    private function prepareSubscriptions(Member $member)
     {
-        // \todo
+        $subscriptionRepository = $this->getManager()->getRepository(MemberThreadSubscription::class);
+        /** @var MemberThreadSubscription $subscription */
+        $subscriptions = $subscriptionRepository->findBy(['subscriber' => $member], ['subscribed' => 'DESC']);
+        return $this->writePersonalDataFile(['subscriptions' => $subscriptions],'subscriptions');
     }
 
-    /**
-     * @param Member $member
-     */
     private function prepareGroupInformation(Member $member)
     {
         // Groups the member is in and why

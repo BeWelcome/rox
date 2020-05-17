@@ -110,7 +110,7 @@ if (empty($vars)) {
                             <div class="input-group-prepend"
                                  data-target="#activity-end-date"
                                  data-toggle="datetimepicker">
-                                <div class="input-group-text">
+                                <div class="input-group-text bg-primary white">
                                     <i class="fa fa-calendar"></i>
                                 </div>
                             </div>
@@ -127,7 +127,7 @@ if (empty($vars)) {
                         <label for="activity-location"><?php echo $words->getBuffered('ActivitiesLocationSearch'); ?></label>
                         <div class="input-group">
                             <div class="input-group-prepend">
-                                <span class="input-group-text"><i class="fa fa-globe"></i></span>
+                                <span class="input-group-text bg-primary white"><i class="fa fa-globe"></i></span>
                             </div>
                             <input type="text" id="activity-location" name="activity-location"
                                    class="form-control search-picker" value="<?= $vars['activity-location'] ?? ''; ?>"

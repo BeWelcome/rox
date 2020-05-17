@@ -7,8 +7,6 @@
         </button>
     </div>
     <div class="toast-body">
-        {% trans with {'count': (requestCount - lastRequestCount)} %}
-        {0} There are no new requests|{1} There is one new request|]1,Inf[ There are %count% new requests
-        {% endtrans %}
+        {{ 'toast.requests.count'|trans({'count': (requestCount - lastRequestCount)}) }}
     </div>
 </div>

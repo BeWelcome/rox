@@ -20,7 +20,7 @@
                         <p>{{ 'mydata.posts.threads.contributed'|trans({'contributed':threadsPerYear[year]|length}) }}</p>
                         <p>{{ 'mydata.posts.posts.written'|trans({'written':postsPerYear[year]}) }}</p>
                     </div>
-                    <div class="card-footer text-right">{{ 'Open overview page for'|trans }} <a class="btn btn-primary" href="posts/posts-{{ year }}.html">{{ year }}</a></div>
+                    <div class="card-footer text-right">{{ 'mydata.posts.overview.year'|trans }} <a class="btn btn-primary" href="posts/posts-{{ year }}.html">{{ year }}</a></div>
                 </div>
             {% endfor %}
         </div>

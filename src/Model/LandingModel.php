@@ -161,7 +161,7 @@ class LandingModel
      *
      * @return array
      */
-    public function getActivities(Member $member)
+    public function getLocalActivities(Member $member)
     {
         /** @var ActivityRepository $repository */
         $repository = $this->getManager()->getRepository(Activity::class);

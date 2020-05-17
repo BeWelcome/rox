@@ -15,29 +15,29 @@
     <div class="row">
         <div class="col-12 mb-2">
             <div class="row bg-white p-1 no-gutters">
-            {% set myself = app.user %}
-            <div class="d-none d-md-block mr-1">{{ macros.avatar(receiver.Username, 50, true) }}
-                <br/><small>{{ receiver.city.name }},<br>{{ receiver.city.country.name }}</small>
-            </div>
-            <div class="col">
-                <h2>{{ 'message.write_to' | trans | format(receiver.Username) }}
+                {% set myself = app.user %}
+                <div class="d-none d-md-block mr-1">{{ macros.avatar(receiver.Username, 50, true) }}
+                    <br/><small>{{ receiver.city.name }},<br>{{ receiver.city.country.name }}</small>
+                </div>
+                <div class="col">
+                    <h2>{{ 'message.write_to' | trans | format(receiver.Username) }}
                         <a class="small" href="{{ url('all_messages_with', {'username': receiver.Username}) }}">
-                            <i class="far fa-envelope-open" title="{{ 'messages_allmessageswith' | trans | format(receiver.Username) }}"></i>
+                            <i class="far fa-envelope-open"
+                               title="{{ 'messages_allmessageswith' | trans | format(receiver.Username) }}"></i>
                         </a>
-                </h2>
-                <small class="text-muted">                {{ 'Speaks' | trans }}
-                    {% for level in receiver.languageLevels %}
-                        {% spaceless %}
-                            {{ ('lang_' ~ level.language.shortcode) | trans }}<span class="d-none d-md-inline">
-                            - {{ ('languagelevel_' ~ level.level) | lower | trans }}</span>
-                            {%- if not loop.last -%}
-                                ,
-                            {%- endif -%}
-                        {% endspaceless %}
-
-                    {% endfor %}
-                </small>
-            </div>
+                    </h2>
+                    <small class="text-muted">{{ 'speaks' | trans | capitalize }}
+                        {% for level in receiver.languageLevels %}
+                            {% apply spaceless %}
+                                {{ ('lang_' ~ level.language.shortcode) | trans }}<span class="d-none d-md-inline">
+                                - {{ ('languagelevel_' ~ level.level) | lower | trans }}</span>
+                                {%- if not loop.last -%}
+                                    ,
+                                {%- endif -%}
+                            {% endapply %}
+                        {% endfor %}
+                    </small>
+                </div>
             </div>
             <div class="col text-right">
             </div>

@@ -7,8 +7,6 @@
         </button>
     </div>
     <div class="toast-body">
-        {% trans with {'count': (messageCount - lastMessageCount)} %}
-        {0} There are no new messages|{1} There is one new message|]1,Inf[ There are %count% new messages
-        {% endtrans %}
+        {{ 'toast.messages.count'|trans({'count': (messageCount - lastMessageCount)}) }}
     </div>
 </div>

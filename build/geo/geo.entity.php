@@ -83,8 +83,6 @@ class Geo extends RoxEntityBase
             return false;
         }
         if ($this->countryId == 0) {
-            $code = $this->country;
-            $geo = $this->createEntity('Geo');
             $this->countryGeo = $this->createEntity('Geo')->findByWhere("((fcode LIKE 'PCL%' AND fcode <> 'PCLH') OR (fcode = 'TERR')) AND country = '{$this->country}'");
             $this->countryId = $this->countryGeo->geonameid;
         }

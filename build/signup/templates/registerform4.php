@@ -178,7 +178,6 @@
                                 </th>
                                 <td class="border-0">
                                     <?php
-                                    // TODO: Select the name of the language ID
                                     echo $vars['mothertonguename'];
                                     ?>
                                 </td>

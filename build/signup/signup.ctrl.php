@@ -143,45 +143,6 @@ class SignupController extends RoxControllerBase {
                 PPHP::PExit();
                 break;
 
-            case 'confirm':  // or give it a different name?
-                // this happens when you click the link in the confirmation email
-                if (
-                    !isset($request[2])
-                    || !isset($request[3])
-                    || !preg_match(User::HANDLE_PREGEXP, $request[2])
-                    || !$model->UsernameInUse($request[2])
-                    || !preg_match('/^[a-f0-9]{16}$/', $request[3])
-                ) {
-                    $error = 'InvalidLink';
-                } else {
-                    $error = $model->confirmSignup($request[2], $request[3]);
-                }
-                if ($error === false) {
-                    // Redirect to edit profile forcing user to login
-                    // Set flash message so that user knows what happened
-                    $this->session->getFlashBag()->add('notice', $model->getWords()->getSilent('SignupSuccess'));
-                    return $this->redirectAbsolute('/editmyprofile');
-                } else {
-                    // Something bad happened; tell the user
-                    $page = new SignupMailConfirmPage();
-                    $page->error = $error;
-                }
-                break;
-
-            case 'resendmail':  // shown when clicking on the link in the MailToConfirm error message
-                $error = '';
-                if (!isset($request[2])) {
-                    $error = 'InvalidLink';
-                } else {
-                    $resent = $model->resendConfirmationMail($request[2]);
-                    if ($resent !== true) {
-                        $error = $resent;
-                    }
-                }
-                $page = new SignupResentMailPage();
-                $page->error = $error;
-                break;
-
             case 'finish':
                 $page = new SignupFinishPage();
                 break;

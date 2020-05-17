@@ -26,7 +26,7 @@
         <div class="container my-1">
             <div class="row align-items-center row justify-content-end">
                 <div class="col-12 mt-1">
-                    {{ 'mydata.generated'|trans({'date_generated':date_generated, 'time_generated':date_generated}) }}
+                    {{ 'mydata.generated'|trans({'generated':date_generated|date}) }}
                 </div>
             </div>
         </div>

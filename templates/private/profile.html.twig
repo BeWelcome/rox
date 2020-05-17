@@ -34,6 +34,7 @@
                                 class="font-weight-bold">{{ 'membersince'|trans }}: {{ member.created|localizeddate('medium', 'short', app.request.locale) }}
                     </p>
                 </div>
+                <div class="col-12">
                 <ul class="nav nav-pills" id="profileTab" role="tablist">
                 {% for locale in fields|keys %}
                     <li class="nav-item">
@@ -41,6 +42,7 @@
                     </li>
                 {% endfor %}
                 </ul>
+                </div>
             </div> {# end of header #}
             <div class="tab-content" id="profileTabContent">
                 {% set phones = member.phoneNumbers %}

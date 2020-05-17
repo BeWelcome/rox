@@ -15,6 +15,12 @@
     {% if form.isMajorUpdate is defined %}
         {{ form_row(form.isMajorUpdate) }}
     {% endif %}
+    {% if form.isArchived is defined %}
+        {{ form_row(form.isArchived) }}
+    {% endif %}
+    {% if form.doNotTranslate is defined %}
+        {{ form_row(form.doNotTranslate) }}
+    {% endif %}
     {{ form_row(form.update) }}
     {{ form_end(form) }}
 {% endblock content %}

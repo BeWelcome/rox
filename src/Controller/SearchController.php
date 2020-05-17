@@ -27,7 +27,7 @@ class SearchController extends AbstractController
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.StaticAccess)
      */
-    public function searchAction(Request $request, TranslatorInterface $translator)
+    public function searchMembers(Request $request, TranslatorInterface $translator)
     {
         $pager = false;
         $results = false;

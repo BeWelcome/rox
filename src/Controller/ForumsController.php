@@ -4,19 +4,20 @@ namespace App\Controller;
 
 use App\Entity\MemberPreference;
 use App\Entity\Preference;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Routing\Annotation\Route;
 
 class ForumsController extends AbstractController
 {
-    const POSTS_DIFF = 3;
-    const POSTS_MAX = 10;
-    const POSTS_MIN = 1;
+    private const POSTS_DIFF = 3;
+    private const POSTS_MAX = 10;
+    private const POSTS_MIN = 1;
 
     /**
      * @Route("/forums/more/group", name="forums_more_group_posts")
      *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @return RedirectResponse
      */
     public function showMoreGroupPostsAction()
     {
@@ -40,7 +41,7 @@ class ForumsController extends AbstractController
     /**
      * @Route("/forums/less/group", name="forums_less_group_posts")
      *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @return RedirectResponse
      */
     public function showLessGroupPostsAction()
     {
@@ -64,7 +65,7 @@ class ForumsController extends AbstractController
     /**
      * @Route("/forums/more/agora", name="forums_more_agora_posts")
      *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @return RedirectResponse
      */
     public function showMoreAgoraPostsAction()
     {
@@ -88,7 +89,7 @@ class ForumsController extends AbstractController
     /**
      * @Route("/forums/less/agora", name="forums_less_agora_posts")
      *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @return RedirectResponse
      */
     public function showLessAgoraPostsAction()
     {
@@ -112,7 +113,7 @@ class ForumsController extends AbstractController
     /**
      * @Route("/forums/show/groups/only-mine", name="forums_groups_only_mine")
      *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @return RedirectResponse
      */
     public function showOnlyPostsInMyGroupsAction()
     {
@@ -134,7 +135,7 @@ class ForumsController extends AbstractController
     /**
      * @Route("/forums/show/groups/all", name="forums_groups_all")
      *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @return RedirectResponse
      */
     public function showPostsInAllGroupsAction()
     {

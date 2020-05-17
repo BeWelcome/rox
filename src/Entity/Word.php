@@ -62,7 +62,7 @@ class Word
      *
      * @ORM\Column(name="donottranslate", type="string", nullable=false)
      */
-    private $donottranslate = 'no';
+    private $doNotTranslate = 'no';
 
     /**
      * @var Member
@@ -106,7 +106,7 @@ class Word
      *
      * @ORM\Column(name="isarchived", type="boolean", nullable=true)
      */
-    private $isarchived = null;
+    private $isArchived = null;
 
     /**
      * @var DateTime
@@ -223,13 +223,13 @@ class Word
     /**
      * Set donottranslate.
      *
-     * @param string $donottranslate
+     * @param string $doNotTranslate
      *
      * @return Word
      */
-    public function setDonottranslate($donottranslate)
+    public function setDoNotTranslate($doNotTranslate)
     {
-        $this->donottranslate = $donottranslate;
+        $this->doNotTranslate = $doNotTranslate;
 
         return $this;
     }
@@ -239,9 +239,9 @@ class Word
      *
      * @return string
      */
-    public function getDonottranslate()
+    public function getDoNotTranslate()
     {
-        return $this->donottranslate;
+        return $this->doNotTranslate;
     }
 
     /**
@@ -368,13 +368,13 @@ class Word
     /**
      * Set isarchived.
      *
-     * @param bool $isarchived
+     * @param bool $isArchived
      *
      * @return Word
      */
-    public function setIsarchived($isarchived)
+    public function setIsArchived($isArchived)
     {
-        $this->isarchived = $isarchived;
+        $this->isArchived = $isArchived;
 
         return $this;
     }
@@ -384,9 +384,9 @@ class Word
      *
      * @return bool
      */
-    public function getIsarchived()
+    public function getIsArchived()
     {
-        return $this->isarchived;
+        return $this->isArchived;
     }
 
     /**

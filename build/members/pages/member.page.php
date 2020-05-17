@@ -155,7 +155,7 @@ class MemberPage extends PageWithActiveSkin
             array_push($tt,array('adminflags', 'admin/flags/list/members/'. $username, '<i class="fa fa-fw fa-flag"></i> ' .  $ww->AdminFlags) ) ;
         }
         if ($rights->HasRight('Logs')) {
-            array_push($tt,array('admin','admin/logs?username='.$username,'<i class="fa fa-fw fa-bed invisible"></i> ' .  $ww->AdminLogs) ) ;
+            array_push($tt,array('admin','admin/logs?log[username='.$username.']','<i class="fa fa-fw fa-bed invisible"></i> ' .  $ww->AdminLogs) ) ;
         }
         return($tt) ;
     }

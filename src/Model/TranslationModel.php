@@ -3,6 +3,12 @@
 namespace App\Model;
 
 use App\Kernel;
+use App\Pagerfanta\ArchivedTranslationAdapter;
+use App\Pagerfanta\DoNotTranslateTranslationAdapter;
+use App\Pagerfanta\MissingTranslationAdapter;
+use App\Pagerfanta\TranslationAdapter;
+use App\Pagerfanta\UpdateTranslationAdapter;
+use App\Utilities\ManagerTrait;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Mailer\Mailer;
@@ -10,6 +16,8 @@ use Symfony\Component\Mailer\MailerInterface;
 
 class TranslationModel
 {
+    use ManagerTrait;
+
     /** @var Kernel */
     private $kernel;
 
@@ -42,5 +50,32 @@ class TranslationModel
         $finder->files()->in($kernelCacheDir)->name('');
 
         return $deleted;
+    }
+
+    public function getAdapter($type, $locale, $code)
+    {
+        $translationAdapter = null;
+        $connection = $this->getManager()->getConnection();
+
+        switch($type)
+        {
+            case 'missing':
+                $translationAdapter = new MissingTranslationAdapter($connection, $locale, $code);
+                break;
+            case 'update':
+                $translationAdapter = new UpdateTranslationAdapter($connection, $locale);
+                break;
+            case 'all':
+                $translationAdapter = new TranslationAdapter($connection, $locale, $code);
+                break;
+            case 'archived':
+                $translationAdapter = new ArchivedTranslationAdapter($connection, $locale);
+                break;
+            case 'donottranslate':
+                $translationAdapter = new DoNotTranslateTranslationAdapter($connection, $locale);
+                break;
+        }
+
+        return $translationAdapter;
     }
 }

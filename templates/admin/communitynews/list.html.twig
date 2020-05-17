@@ -23,9 +23,9 @@
                     <td class="w-100">
                         <div class="pull-right"><a class="ml-1 btn btn-primary" href="{{ path('admin_communitynews_edit', { id: news.id }) }}"><i class="fa fa-pencil-alt" title="{{ 'button.edit' | trans }}"></i></a>
                             {%- if news.public == true -%}
-                                <a class="ml-1 btn btn-primary" href="{{ path('admin_communitynews_hide', { id: news.id }) }}"><i class="fa fa-ban" title="{{ 'hide' | trans }}"></i></a>
+                                <a class="ml-1 btn btn-primary" href="{{ path('admin_communitynews_hide', { id: news.id }) }}"><i class="fa fa-ban" title="{{ 'admin.checker.communitynews.hide' | trans }}"></i></a>
                             {%- else -%}
-                                <a class="ml-1 btn btn-outline-secondary" href="{{ path('admin_communitynews_unhide', { id: news.id }) }}"><i class="fa fa-ban" title="{{ 'show' | trans }}"></i></a>
+                                <a class="ml-1 btn btn-outline-secondary" href="{{ path('admin_communitynews_unhide', { id: news.id }) }}"><i class="fa fa-ban" title="{{ 'admin.checker.communitynews.show' | trans }}"></i></a>
                             {%- endif -%}</div>
                         <p class="h1">{{ news.title }}</p>
                         <p class="m-0"><small>{{ 'bewelcome_news.writtenby' | trans }}

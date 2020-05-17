@@ -14,7 +14,7 @@
                     </div>
                     <div class="card-body">
                         <p><small class="text-muted">{{ translation.code }}</small><br>
-                        {{ translation.sentence|purify|truncate(500, ' <strong><a style="color:#f37000" href="' ~ url('translation_edit', {'code': translation.code, 'locale':translation.shortCode}) ~ '">' ~ 'seefull'|trans ~ '</a></strong>') }}</p>
+                        {{ translation.sentence|purify|truncate(500, ' <strong><a style="color:#f37000" href="' ~ url('translation_edit', {'code': translation.code, 'locale':translation.shortCode}) ~ '">' ~ 'showfull'|trans ~ '</a></strong>') }}</p>
                         <p><strong>{{ 'language'|trans|capitalize }}:</strong> {{ translation.language.wordCode|lower|trans }}<br>
                             <strong>{{ 'created'|trans|capitalize }}:</strong> {{ translation.created }}</p>
                     </div>

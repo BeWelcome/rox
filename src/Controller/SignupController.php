@@ -14,6 +14,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -118,16 +119,15 @@ class SignupController extends AbstractController
     }
 
     /**
-     * @Route("/signup/confirm/{username}/{regkey}", name="signup_confirm")
+     * @Route("/signup/confirm/{username}/{registrationKey}", name="signup_confirm")
      *
+     * @param Request $request
      * @param $username
-     * @param $regkey
-     *
-     * @throws Exception
+     * @param $registrationKey
      *
      * @return Response
      */
-    public function confirmEmailAddress($username, $regkey)
+    public function confirmEmailAddress(Request $request, $username, $registrationKey)
     {
         $em = $this->getDoctrine()->getManager();
         /** @var MemberRepository $memberRepository */
@@ -135,11 +135,11 @@ class SignupController extends AbstractController
         /** @var Member $member */
         $member = $memberRepository->findOneBy(['username' => $username]);
         if (null === $member) {
-            $this->addFlash('error', $this->getTranslator()->trans('flash.username.invalid'));
+            $this->addFlash('error', $this->getTranslator()->trans('flash.signuo.username.invalid'));
 
             return $this->redirectToRoute('login');
         }
-        if ($regkey === $member->getRegistrationKey()) {
+        if ($registrationKey === $member->getRegistrationKey()) {
             // Yeah, successfully confirmed email address
             $member
                 ->setStatus('Active')
@@ -149,10 +149,10 @@ class SignupController extends AbstractController
             $em->flush();
 
             $this->addFlash('notice', $this->getTranslator()->trans('flash.signup.activated'));
-
+            $request->getSession()->set(Security::LAST_USERNAME, $username);
             return $this->redirect('/login');
         }
-        $this->addFlash('error', $this->getTranslator()->trans('flash.key.invalid'));
+        $this->addFlash('error', $this->getTranslator()->trans('flash.signup.key.invalid'));
 
         return $this->redirect('/login');
     }

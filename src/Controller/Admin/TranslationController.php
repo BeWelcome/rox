@@ -91,6 +91,11 @@ class TranslationController extends AbstractController
             ]);
         }
 
+        if (!$request->getSession()->has('originalReferrer'))
+        {
+            $request->getSession()->set('originalReferrer', $request->headers->get('referer'));
+        }
+
         $translationRepository = $this->getDoctrine()->getRepository(Word::class);
         /** @var Word $original */
         $original = $translationRepository->findOneBy([
@@ -139,9 +144,13 @@ class TranslationController extends AbstractController
             $em->persist($translation);
             $em->flush();
             $this->translationModel->removeCacheFiles();
-            $this->addTranslatedFlash('notice', 'translation.edit');
+            $this->addTranslatedFlash('notice', 'translation.edit', [
+                'translationId' => $original->getCode(),
+                'locale' => $language->getShortcode(),
+            ]);
 
-            $referrer = $request->headers->get('referer');
+            $referrer = $request->getSession()->get('originalReferrer');
+            $request->getSession()->remove('originalReferrer');
 
             return $this->redirect($referrer);
         }
@@ -354,6 +363,11 @@ class TranslationController extends AbstractController
     {
         $this->denyAccessUnlessGranted(Member::ROLE_ADMIN_WORDS, null, 'Unable to access this page!');
 
+        if (!$request->getSession()->has('originalReferrer'))
+        {
+            $request->getSession()->set('originalReferrer', $request->headers->get('referer'));
+        }
+
         /** @var Member $translator */
         $translator = $this->getUser();
 
@@ -409,9 +423,13 @@ class TranslationController extends AbstractController
             $em->persist($translation);
             $em->flush();
             $this->translationModel->removeCacheFiles();
-            $this->addTranslatedFlash('notice', 'translation.edit');
+            $this->addTranslatedFlash('notice', 'translation.add', [
+                'translationId' => $original->getCode(),
+                'locale' => $language->getShortcode(),
+            ]);
 
-            $referrer = $request->headers->get('referer');
+            $referrer = $request->getSession()->get('originalReferrer');
+            $request->getSession()->remove('originalReferrer');
 
             return $this->redirect($referrer);
         }

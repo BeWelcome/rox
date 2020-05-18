@@ -102,7 +102,7 @@
 {% block content %}
    <div class="row no-gutters">
        <div class="col-12"><h1><span class="d-none d-md-block">{{ 'gallery' | trans }} - </span>{{ 'upload' | trans }}</h1>
-       <p>{{ 'gallery.upload.abstract' | trans}}</p></div>
+       <p>{{ 'gallery.upload.abstract'|trans({'size': constraints.size, 'pixels': constraints.pixels})}}</p></div>
        {{ form_start(form, {'attr': {'class': 'col-12'}}) }}
        {{ form_row(form.albums) }}
        <div class="custom-file col-12 mb-2">

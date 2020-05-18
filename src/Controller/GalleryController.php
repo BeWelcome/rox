@@ -38,6 +38,8 @@ class GalleryController extends AbstractController
     use TranslatedFlashTrait;
     use UniqueFilenameTrait;
 
+    private const MAX_PIXELS = 16000000;
+
     /**
      * @Route("/gallery/show/image/{id}/edit", name="gallery_edit_image",
      *     requirements = {"id": "\d+"}
@@ -101,7 +103,7 @@ class GalleryController extends AbstractController
             'maxSize' => (int) ($this->getParameter('upload_max_size')),
             'mimeTypes' => ['image/jpeg', 'image/png', 'image/gif'],
             'mimeTypesMessage' => 'upload.error.not_supported',
-            'maxPixels' => 16000000,
+            'maxPixels' => self::MAX_PIXELS,
         ]);
 
         /** @var UploadedFile $image */
@@ -177,7 +179,7 @@ class GalleryController extends AbstractController
             'imageId' => $galleryImage->getId(),
             'constraints' => [
                 'size' => (int) ($this->getParameter('upload_max_size')),
-                'pixels' => 16000000,
+                'pixels' => self::MAX_PIXELS,
             ]
         ]);
 
@@ -238,6 +240,10 @@ class GalleryController extends AbstractController
                 'active' => 'upload',
                 'items' => $this->getSubmenuItems(),
             ],
+            'constraints' => [
+                'size' => $this->getMaxUploadSizeInMegaBytes(),
+                'pixels' => self::MAX_PIXELS,
+            ]
         ]);
     }
 
@@ -356,5 +362,10 @@ class GalleryController extends AbstractController
         ];
 
         return $submenuItems;
+    }
+
+    private function getMaxUploadSizeInMegaBytes()
+    {
+        return ((int) ($this->getParameter('upload_max_size'))) / 1024 / 1024;
     }
 }

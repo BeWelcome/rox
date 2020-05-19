@@ -16,11 +16,15 @@ use Exception;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
  * Class GroupController.
@@ -310,6 +314,7 @@ class GroupController extends AbstractController
 
         return $this->redirect($referrer);
     }
+
     /**
      * Un-archive a group .
      *
@@ -347,6 +352,71 @@ class GroupController extends AbstractController
         $referrer = $request->headers->get('referer');
 
         return $this->redirect($referrer);
+    }
+
+    /**
+     * Rename a group .
+     *
+     * @Route("/admin/groups/rename", name="admin_groups_rename")
+     *
+     * @param Request $request
+     * @param Logger  $logger
+     *
+     * @throws Exception
+     *
+     * @return Response|RedirectResponse
+     */
+    public function renameGroup(Request $request, Logger $logger)
+    {
+        if (!$this->isGranted(Member::ROLE_ADMIN_GROUP)) {
+            throw $this->createAccessDeniedException('You need to have Group right to access this.');
+        }
+
+        if (!$this->hasGroupRightLevel(10)) {
+            throw $this->createAccessDeniedException('You need to have level 10 to access this.');
+        }
+
+        $groupForm = $this->createFormBuilder()
+            ->add('old_name', TextType::class, [
+                'label' => 'admin.group.old.name',
+                'required' => false,
+                'constraints' => [
+                    new NotBlank(),
+                ],
+            ])
+            ->add('new_name', TextType::class, [
+                'label' => 'admin.group.new.name',
+                'required' => false,
+                'constraints' => [
+                    new NotBlank(),
+                ],
+            ])
+            ->add('submit', SubmitType::class)
+            ->getForm();
+        $groupForm->handleRequest($request);
+        if($groupForm->isSubmitted() && $groupForm->isValid())
+        {
+            $em = $this->getManager();
+            $data = $groupForm->getData();
+            $groupRepository = $em->getRepository(Group::class);
+            /** @var Group $group */
+            $group = $groupRepository->findOneBy(['name' => $data['old_name']]);
+            if (null === $group) {
+                $groupForm->addError(new FormError($this->getTranslator()->trans('admin.group.not.found')));
+            } else {
+                $group->setName($data['new_name']);
+                $em->persist($group);
+                $em->flush($group);
+                $this->addTranslatedFlash('notice', 'admin.group.renamed', [
+                    'oldName' => $data['old_name'],
+                    'newName' => $data['new_name'],
+                ]);
+                return $this->redirectToRoute('admin_groups_approval');
+            }
+        }
+        return $this->render('admin/groups/rename.html.twig', [
+            'form' => $groupForm->createView(),
+        ]);
     }
 
     private function sendNewGroupApprovedNotification(Group $group, Member $creator)
@@ -391,6 +461,10 @@ class GroupController extends AbstractController
             'logs' => [
                 'key' => 'admin.groups.logs',
                 'url' => $this->generateUrl('admin_groups_logs'),
+            ],
+            'rename' => [
+                'key' => 'admin.groups.rename',
+                'url' => $this->generateUrl('admin_groups_rename'),
             ],
         ];
     }

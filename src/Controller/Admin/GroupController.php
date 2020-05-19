@@ -411,6 +411,10 @@ class GroupController extends AbstractController
                     'oldName' => $data['old_name'],
                     'newName' => $data['new_name'],
                 ]);
+
+                $logger->write('Group ' . $data['old_name'] . ' renamed to ' . $this->getGroupLinkTag($group)
+                    . ' by '. $this->getUser()->getUsername() . '.', 'Group');
+
                 return $this->redirectToRoute('admin_groups_approval');
             }
         }
@@ -458,13 +462,13 @@ class GroupController extends AbstractController
                 'key' => 'admin.groups.unarchival',
                 'url' => $this->generateUrl('admin_groups_unarchival'),
             ],
-            'logs' => [
-                'key' => 'admin.groups.logs',
-                'url' => $this->generateUrl('admin_groups_logs'),
-            ],
             'rename' => [
                 'key' => 'admin.groups.rename',
                 'url' => $this->generateUrl('admin_groups_rename'),
+            ],
+            'logs' => [
+                'key' => 'admin.groups.logs',
+                'url' => $this->generateUrl('admin_groups_logs'),
             ],
         ];
     }

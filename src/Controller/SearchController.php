@@ -7,8 +7,11 @@ use App\Entity\Preference;
 use App\Form\CustomDataClass\SearchFormRequest;
 use App\Form\SearchFormType;
 use App\Pagerfanta\SearchAdapter;
+use App\Repository\MemberRepository;
 use Pagerfanta\Pagerfanta;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -16,8 +19,46 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SearchController extends AbstractController
 {
+
     /**
      * @Route("/search/members", name="search_members")
+     *
+     * @param Request             $request
+     *
+     * @return Response
+     */
+    public function searchMembers(Request $request)
+    {
+        $members = null;
+        $memberSearch = $this->createFormBuilder()
+            ->add('username', TextType::class, [
+                'label' => 'label.username',
+                'attr' => [
+                    'class' => 'member-autocomplete',
+                ],
+                'help' => 'help.username.auto.complete',
+            ])
+            ->add('search', SubmitType::class)
+            ->getForm()
+        ;
+        $memberSearch->handleRequest($request);
+        if ($memberSearch->isSubmitted() && $memberSearch->isValid())
+        {
+            $data = $memberSearch->getData();
+            $username = $data['username'];
+            /** @var MemberRepository $memberRepository */
+            $memberRepository = $this->getDoctrine()->getRepository(Member::class);
+            $members = $memberRepository->findByProfileInfoStartsWith($username);
+        }
+
+        return $this->render('search/searchmembers.html.twig', [
+            'form' => $memberSearch->createView(),
+            'members' => $members,
+        ]);
+    }
+
+    /**
+     * @Route("/search/locations", name="search_locations")
      *
      * @param Request             $request
      * @param TranslatorInterface $translator
@@ -27,7 +68,7 @@ class SearchController extends AbstractController
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.StaticAccess)
      */
-    public function searchMembers(Request $request, TranslatorInterface $translator)
+    public function searchLocations(Request $request, TranslatorInterface $translator)
     {
         $pager = false;
         $results = false;
@@ -112,7 +153,7 @@ class SearchController extends AbstractController
                 $search->get('location')->submit($viewData->location);
         }
 
-        return $this->render('search/searchmembers.html.twig', [
+        return $this->render('search/searchlocations.html.twig', [
             'form' => $search->createView(),
             'pager' => $pager,
             'routeName' => 'search_members_ajax',

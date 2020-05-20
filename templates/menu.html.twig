@@ -18,9 +18,14 @@
             {# Navbar small screens #}
             <div class="collapse d-lg-none px-0 w-100" id="smallNavBar">
                 <ul class="navbar-nav mr-auto mt-2 pl-1">
-                    <li class="nav-item bordert-1">
-                        <a href="{{ url( 'search_members' ) }}" class="nav-link"><i
-                                    class="fa fa-globe-americas"></i>&nbsp;{{ 'findmembers' | trans }}</a>
+                    <li class="nav-item dropdown">
+                        <a href="#search_menu_small" class="nav-link dropdown-toggle px-1"
+                           data-target="search_menu_small" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label="{{ 'findmembers' | trans }}">
+                            &nbsp;{{ 'findmembers'|trans }}</span></a>
+                        <ul id="search_menu_small_menu" class="dropdown-menu" role="menu">
+                            <li><a href="{{ url( 'search_locations' ) }}" class="dropdown-item"><i class="fa fa-globe mr-1"></i>{{ 'search.locations' | trans }}</a></li>
+                            <li><a href="{{ path('search_members') }}" class="dropdown-item"><i class="fa fa-users mr-1"></i>{{ 'search.members' | trans }}</a></li>
+                        </ul>
                     </li>
                     <li class="nav-item">
                         <a href="{{ url('community') }}" class="nav-link"><i
@@ -71,8 +76,14 @@
             {# Navbar big screens #}
             <div class="collapse navbar-collapse d-none d-lg-block" id="mainNavBar">
                 <ul class="navbar-nav mr-auto">
-                    <li class="menuborder">
-                        <a href="{{ url( 'search_members' ) }}" class="nav-link">{{ 'findmembers' | trans }}</a>
+                    <li class="nav-item dropdown">
+                        <a href="#search_menu" class="nav-link dropdown-toggle px-1"
+                           data-target="search_menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label="{{ 'findmembers' | trans }}">
+                            &nbsp;{{ 'findmembers'|trans }}</span></a>
+                        <ul id="search_menu" class="dropdown-menu" role="menu">
+                            <li><a href="{{ url( 'search_locations' ) }}" class="dropdown-item"><i class="fa fa-globe mr-1"></i>{{ 'search.locations' | trans }}</a></li>
+                            <li><a href="{{ path('search_members') }}" class="dropdown-item"><i class="fa fa-users mr-1"></i>{{ 'search.members' | trans }}</a></li>
+                        </ul>
                     </li>
                     <li class="menuborder">
                         <a href="{{ url('community') }}" class="nav-link">{{ 'communitymenu' | trans }}</a>

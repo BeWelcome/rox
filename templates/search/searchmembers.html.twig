@@ -3,133 +3,38 @@
 
 {% block javascripts %}
     {{ encore_entry_script_tags('jquery_ui') }}
-    {{ encore_entry_script_tags('leaflet') }}
-    {{ encore_entry_script_tags('search/searchpicker') }}
-    {{ encore_entry_script_tags('search/loadcontent') }}
-    {{ encore_entry_script_tags('search/search') }}
+    {{ encore_entry_script_tags('member/autocomplete') }}
 {% endblock javascripts %}
 
 {% block stylesheets %}
-    {{ encore_entry_link_tags('leaflet') }}
     {{ encore_entry_link_tags('jquery_ui') }}
 {% endblock stylesheets %}
 
 {% block content %}
-    {{ form_start(form, {'attr': {'class': 'm-1 search_form', 'onkeypress': 'return event.keyCode != 13;'}}) }}
-    {{ form_errors(form) }}
-    <div class="form-row form-inline ml-1 mb-1">
-        <div class="input-group mr-2 mb-2">
-            <div class="input-group-prepend"><span class="input-group-text"><i
-                            class="fa fa-lg fa-globe"></i></span>
+    <h1>{{ 'search.members'|trans }}</h1>
+    <p>{{ 'search.member.abstract'|trans }}</p>
+    {{ form(form) }}
+    {% if members %}
+        <div class="row">
+        {% for member in members %}
+            {% set fields = member.memberFields %}
+            <div class="col-12 col-md-6 mb-2">
+                <div class="media">
+                    {{ macros.avatar(member.username, 100, true) }}
+                    <div class="ml-3 media-body">
+                        <h5 class="mt-0">{{ member.username }}</h5>
+                        <p>{{ member.city.name }}, {{ member.country.name }}</p>
+                        {% if fields|length %}
+                            {% if fields[app.request.locale] is defined %}
+                                <p>{{ fields[app.request.locale]['ProfileSummary']|truncate(500) }}</p>
+                            {% else %}
+                                <p>{{ (fields|first)['ProfileSummary']|truncate(500) }}</p>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
             </div>
-            {{ form_label(form.location) }}
-            {{ form_widget(form.location, {'attr': {'class': 'search-picker'}, 'required': false }) }}
-        </div>
-        <div class="form-group mb-0">
-            <label class="mr-2 ml-1 ml-md-0"><img src="{{ asset('images/icons/anytime.png') }}"
-                                     class="img-check {% if form.accommodation_anytime.vars.checked %}checked{% else %}not_checked{% endif %}"
-                                     alt="{{ 'search.filter.host.yes' | trans }}"/>
-                <div class="d-none">{{ form_widget(form.accommodation_anytime) }}</div>
-            </label>
-            <label class="mr-2"><img src="{{ asset('images/icons/neverask.png') }}"
-                                     class="img-check {% if form.accommodation_neverask.vars.checked %}checked{% else %}not_checked{% endif %}"
-                                     alt="{{ 'search.filter.host.no' | trans }}"/>
-                <div class="d-none">
-                    {{ form_widget(form.accommodation_neverask) }}</div>
-            </label>
-        </div>
-        <div class="input-group mr-2 mb-1 mb-md-0">
-            <div class="input-group-prepend"><span class="input-group-text"><i class="fa fa-bed" title="{{ 'search.filter.hosts_at_least' | trans }}"></i></span></div>
-            {{ form_label(form.can_host) }}
-            {{ form_widget(form.can_host, {'attr': {'data-minimum-results-for-search': '-1'}} ) }}
-        </div>
-        <div class="input-group mr-2 mb-1 mb-md-0">
-            <div class="input-group-prepend"><span class="input-group-text"><i class="fa fa-bullseye" title="{{ 'search.filter.radius' | trans }}"></i></span></div>
-            {{ form_label(form.distance) }}
-            {{ form_widget(form.distance, {'attr': {'data-minimum-results-for-search': '-1'} }) }}
-        </div>
-        <div class="form-group mr-2 mb-1">
-            <button class="btn {% if form.showadvanced.vars.checked %}btn-outline-primary{% else %}btn-primary{% endif %} advanced" data-toggle="collapse" data-target="#advancedNav" role="button"
-               aria-expanded="false" aria-controls="advancedNav"
-               >{{ 'search.show.advanced' | trans }}</button>
-        </div>
-    </div>
-    <div class="collapse{% if form.showadvanced.vars.checked %} show{% endif %}" id="advancedNav">
-        <div class="form-row my-1">
-            <div class="form-group col-12 col-md-6 mt-2 mb-1">
-                {{ form_label(form.keywords, '', { 'label_attr': {'class': 'mb-0'} }) }}
-                {{ form_widget(form.keywords) }}
-            </div>
-            <div class="form-group col-4 col-md-2 mb-1">
-                {{ form_row(form.offerdinner) }}
-                {{ form_row(form.offertour) }}
-            </div>
-            <div class="form-group col-8 col-md-4 mb-1">
-                {{ form_row(form.accessible) }}
-                {{ form_row(form.inactive) }}
-            </div>
-            <div class="form-group col-6 col-md-3 mb-1">
-                {{ form_row(form.min_age, { 'label_attr': {'class': 'mb-0'} }) }}
-            </div>
-            <div class="form-group col-6 col-md-3 mb-1">
-                {{ form_row(form.max_age, { 'label_attr': {'class': 'mb-0'} }) }}
-            </div>
-            <div class="form-group col-12 col-md-6 mb-1">
-                {{ form_row(form.gender, { 'label_attr': {'class': 'mb-0'} }) }}
-            </div>
-            <div class="form-group col-12 col-md-6 mb-1">
-                {{ form_label(form.groups, '', { 'label_attr': {'class': 'mb-0'} }) }}
-                {{ form_widget(form.groups) }}
-            </div>
-            <div class="form-group col-12 col-md-6 mb-1">
-                {{ form_label(form.languages, '', { 'label_attr': {'class': 'mb-0'} }) }}
-                {{ form_widget(form.languages) }}
-            </div>
-        </div>
-    </div>
-    <div class="form-row mb-1">
-        <div class="form-group col-12 col-md-6 mb-1">
-            {{ form_label(form.order, '', { 'label_attr': {'class': 'mb-0'} }) }}
-            {{ form_widget(form.order) }}
-        </div>
-        <div class="form-group col-12 col-md-6 mb-1">
-            {{ form_label(form.items, '', { 'label_attr': {'class': 'mb-0'} }) }}
-            {{ form_widget(form.items) }}
-        </div>
-    </div>
-    <div class="form-row my-1">
-        <div class="form-group col-12 col-md-6 mb-1">
-            <div class="custom-control custom-switch">
-                <input type="checkbox" class="custom-control-input show_map" id="search_showmap" name="search[showmap]"
-                       {% if form.showmap.vars.checked %}checked{% endif %}
-                >
-                <label class="custom-control-label" for="search_showmap">{{ form.showmap.vars.label|trans }}</label>
-                {% do form.showmap.setRendered  %}
-            </div>
-        </div>
-        <div class="form-group col-12 col-md-6 mb-1">
-        {{ form_widget(form.updateMap, { 'attr': {'class': 'btn btn-primary float-right'}}) }}
-        </div>
-    </div>
-    {{ form_rest(form) }}
-    {{ form_end(form) }}
-
-    <div id="map-box">
-    </div>
-
-    <script>
-        var mapMembers = {% if results %}
-                {{ results.map | json_encode | raw }};
-        {% else %}
-        null;
-        {% endif %}
-    </script>
-
-    {% if showMemberDetails %}
-        <div class="row no-gutters">
-            {% if results %}
-                {% include 'member/results.html.twig' %}
-            {% endif %}
+        {% endfor %}
         </div>
     {% endif %}
 {% endblock content %}

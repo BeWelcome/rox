@@ -12,7 +12,6 @@
  */
 class CommunityPage extends RoxPageView
 {
-
     protected function getTopmenuActiveItem() {
         return 'explore';
     }
@@ -45,6 +44,10 @@ class CommunityPage extends RoxPageView
        $stylesheets = parent::getStylesheets();
        $stylesheets[] = 'styles/css/minimal/screen/custom/explore.css';
        return $stylesheets;
+    }
+
+    public function getSubmenuItems() {
+
     }
 }
 

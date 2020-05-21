@@ -12,6 +12,7 @@ $distance = array(
     50 => '50 km/30 mi',
     100 => '100 km/60 mi',
     200 => '200 km/120 mi',
+    20100 => '20000 km/12000 mi'
 );
 foreach($distance as $value => $display) :
     $radiusSelect .= '<option value="' . $value . '"';
@@ -22,11 +23,11 @@ foreach($distance as $value => $display) :
 endforeach;
 $radiusSelect .= '</select>';
 ?>
-<div class="row">
+<div class="row no-gutters">
 <div class="col-12">
-<form method="POST" name="activity-radius-form" class="form-inline">
-    <label for="" class="form-control-label"><?php echo $this->layoutkit->formkit->setPostCallback('ActivitiesController', 'setRadiusCallback');?></label>&nbsp;<?= $words->get('ActivitiesRadiusSelect', $radiusSelect); ?>
-<input type="submit" class="ml-1 btn btn-primary btn-sm" id="activity-nearme" name="activity-nearme" value="<?= $words->getSilent('activity.update'); ?>" />
+<form method="POST" name="activity-radius-form" class="form-inline mb-2">
+    <?php echo $this->layoutkit->formkit->setPostCallback('ActivitiesController', 'setRadiusCallback');?>
+    <label for="activity-nearme" class="form-control-label mr-2"><?= $words->get('ActivitiesRadiusSelectLabel'); ?></label><?= $radiusSelect ?>&nbsp;<input type="submit" class="ml-1 btn btn-primary btn-sm" id="activity-nearme" name="activity-nearme" value="<?= $words->getSilent('activity.update'); ?>" />
 </form>
 </div>
 <?php

@@ -205,7 +205,7 @@ class LegacyLoader extends Loader
     {
         $path = preg_replace('^:(.*?):^', '{\1}', $path);
         $this->routes->add($name, new Route($path, [
-            '_controller' => 'rox.legacy_controller::showAction',
+            '_controller' => 'rox.legacy_controller::showLegacyPage',
         ], [], [], '', [], ['get', 'post']));
     }
 
@@ -213,7 +213,7 @@ class LegacyLoader extends Loader
     {
         $path = preg_replace('^:(.*?):^', '{\1}', $path);
         $this->routes->add($name, new Route($path, [
-            '_controller' => 'rox.legacy_controller::showAction',
+            '_controller' => 'rox.legacy_controller::showLegacyPage',
         ], [], [], '', [], ['get', 'post']));
     }
 }

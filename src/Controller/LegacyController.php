@@ -36,7 +36,7 @@ class LegacyController extends AbstractController
      *
      * @SuppressWarnings(PHPMD.StaticAccess)
      */
-    public function showAction(
+    public function showLegacyPage(
         Request $request,
         TranslatorInterface $translator,
         UrlGeneratorInterface $urlGenerator,

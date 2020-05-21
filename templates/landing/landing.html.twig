@@ -192,31 +192,40 @@
     <div class="d-flex row flex-wrap">
 
         <div class="col-12 col-lg-5 mb-3">
-            <div class="card p-2 h-100">
-                <h4 class="homehfour">{{ 'landing.beinvolved.title' | trans }}<br/><span class="homesubt">{{ 'landing.beinvolved.subtitle' | trans }}</span></h4>
+            <div class="card p-2 mb-3">
+                <h4 class="homehfour">{{ 'landing.beinvolved.title' | trans }}<br/><span class="homesubt">{{ 'landing.beinvolved.donate' | trans }}</span></h4>
+
+                <p class="text-center mb-0">{{ 'landing.beinvolved.goalfor' | trans }} {{ campaign.year }} - {{ campaign.year + 1 }}:
+                    <strong>€{{ campaign.yearNeeded }}</strong></p>
 
                 {% if campaign.yearDonated < campaign.yearNeeded %}
-                    <p class="text-center mb-0">{{ 'landing.beinvolved.goalfor' | trans }} {{ campaign.year }} - {{ campaign.year + 1 }}:
-                        <strong>€{{ campaign.yearNeeded }}</strong></p>
-
                     <div class="progress">
                         <div class="progress-bar" role="progressbar" style="width: {{ (campaign.yearDonated / campaign.yearNeeded) * 100 }}%;" aria-valuenow="{{ campaign.yearDonated }}" aria-valuemin="0" aria-valuemax="{{ campaign.yearNeeded }}"></div>
                     </div>
-                    <p class="text-center">
-                        {{ '€ ' ~ campaign.yearDonated ~ ''}}
-                        <span class="ml-1">{{ 'dashboard.donation.received' | trans }}</span></p>
-                    <p><a href="{{ url('donate') }}" class="btn btn-outline-primary btn-homewhite btn-block mb-1"><i
-                                    class="fa fa-euro-sign"></i> {{ 'landing.beinvolved.pleasedonate' | trans }}</a></p>
-
-
+                {% else %}
+                    <div class="progress">
+                        <div class="progress-bar" role="progressbar" style="width: {{ (campaign.yearNeeded / campaign.yearDonated) * 100 }}%" aria-valuenow="campaign.yearNeeded" aria-valuemin="0" aria-valuemax="campaign.yearDonated" title="{{ 'donation.needed'|trans }}"></div>
+                        <div class="progress-bar bg-success" role="progressbar" style="width: {{ ((campaign.yearDonated - campaign.yearNeeded) / campaign.yearDonated) * 100 }}%" aria-valuenow="((campaign.yearDonated - campaign.yearNeeded) / campaign.yearDonated)" aria-valuemin="0" aria-valuemax="100" title="{{ 'donation.additional'|trans }}"></div>
+                    </div>
                 {% endif %}
+
+                <p class="text-center">
+                    {{ '€ ' ~ campaign.yearDonated ~ ''}}
+                    <span class="ml-1">{{ 'dashboard.donation.received' | trans }}</span></p>
+                {% if campaign.yearDonated >= campaign.yearNeeded %}
+                    <p>{{ 'donation.thank.you'|trans }}</p>
+                {% endif %}
+                <p><a href="{{ url('donate') }}" class="btn btn-block {% if campaign.yearDonated < campaign.yearNeeded %}btn-primary{% else %}btn-outline-primary{% endif %} mb-1"><i
+                                class="fa fa-euro-sign"></i> {{ 'landing.beinvolved.pleasedonate' | trans }}</a></p>
+
+            </div>
+
+            <div class="card p-2">
+                <h4 class="homehfour">{{ 'landing.beinvolved.title' | trans }}<br/><span class="homesubt">{{ 'landing.beinvolved.volunteer' | trans }}</span></h4>
 
                 <p>{{ 'landing.beinvolved.intro' | trans }}</p>
                 <p><a href="{{ url('getactive') }}" class="btn btn-outline-primary btn-homewhite btn-block"><i
-                            class="fa fa-wrench"></i> {{ 'landing.beinvolved.helpbewelcome' | trans }}</a></p>
-                <p><a href="{{ url('donate') }}" class="btn btn-outline-primary btn-homewhite btn-block mb-1"><i
-                                class="fa fa-euro-sign"></i> {{ 'landing.beinvolved.pleasedonate' | trans }}</a></p>
-
+                                class="fa fa-wrench"></i> {{ 'landing.beinvolved.helpbewelcome' | trans }}</a></p>
             </div>
         </div>
 

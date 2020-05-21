@@ -206,7 +206,7 @@ if (empty($vars)) {
                                         src="members/avatar/<?php echo $organizer->Username; ?>/50" width="50" height="50"></a></div>
                         <div>
                             <a href="members/<?php echo $organizer->Username; ?>"><?php echo $organizer->Username; ?></a>
-                            <br><a href="new/message/member-16526"><i class="fa fa-envelope mt-3" title="Write organiser"></i></a>
+                            <br><a href="new/message/<?php echo $organizer->Username; ?>"><i class="fa fa-envelope mt-3" title="Write organiser"></i></a>
                         </div>
                     </div>
                 <?php } ?>

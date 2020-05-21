@@ -89,7 +89,7 @@ $this->pager->render(); ?>
 
 foreach($this->activities as $activity) {
     ?>
-    <div class="d-flex flex-row justify-content-start align-items-center p-2 w-100">
+    <div class="d-flex flex-row justify-content-start align-items-center py-2 w-100">
 
         <div class="text-truncate w-100">
             <h4 class="m-0 p-0 w-100 text-truncate"><?php echo '<a href="activities/' . $activity->id . '">' . htmlspecialchars($activity->title) . '</a>'; ?>

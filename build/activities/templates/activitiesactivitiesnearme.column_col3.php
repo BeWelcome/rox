@@ -12,7 +12,6 @@ $distance = array(
     50 => '50 km/30 mi',
     100 => '100 km/60 mi',
     200 => '200 km/120 mi',
-    20100 => '20000 km/12000 mi'
 );
 foreach($distance as $value => $display) :
     $radiusSelect .= '<option value="' . $value . '"';

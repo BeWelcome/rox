@@ -5,10 +5,17 @@
 {% endblock %}
 
 {% block content %}
-    <h1>{{ 'translations.headline' | trans }}</h1>
+    <h1>{{ 'translations.headline.mockups' | trans }}</h1>
+    <h2>{{ 'pages'|trans|capitalize }}</h2>
     <div class="row">
-    {% for mockup, template in mockups %}
-        <div class="col-auto mr-1 mb-1"><a href="{{url('translation_mockup', {'template': template})}}" class="btn btn-primary">{{ mockup }}</a></div>
+        {% for name, page in mockups.pages %}
+            <div class="col-4 mb-2"><a href="{{url('translation_mockup_page', {'name': name})}}" class="btn btn-primary">{{ name }}</a></div>
+        {% endfor %}
+    </div>
+    <h2>{{ 'emails'|trans|capitalize }}</h2>
+    <div class="row">
+        {% for name, email in mockups.emails %}
+            <div class="col-4 mb-2"><a href="{{url('translation_mockup_email', {'name': name})}}" class="btn btn-primary">{{ name }}</a></div>
         {% endfor %}
     </div>
 {% endblock content %}

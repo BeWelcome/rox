@@ -16,14 +16,14 @@
         {% endif -%}
     </p>
     {{ form(form) }}
-    {% if count_all is defined %}
-        <p class="py-2">{{ 'translation.ratio'|trans }}: {{ (count_translated/count_all*100)|number_format(2) }}% ({{ count_translated }} {{ 'translation.out.of'|trans }} {{ count_all }})</p>
-    {% endif %}
     {% if translations.nbResults == 0  %}
     {% else %}
         {% if translations.haveToPaginate %}
             <div class="row">
-                <div class="col-12">
+                <div class="col-12 col-sm-6">
+                    <p class="py-2"><strong>{{ 'translation.ratio'|trans }}:</strong> {{ 'translations.out.of'|trans({'percent': (count_translated/count_all*100)|number_format(2), 'translated':count_translated, 'all': count_all}) }}</p>
+                </div>
+                <div class="col-12 col-sm-6">
                     {{ pagerfanta( translations , 'rox_default', { 'routeName': routeName, 'routeParams': routeParams }) }}
                 </div>
             </div>

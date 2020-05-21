@@ -13,17 +13,13 @@ use App\Form\CustomDataClass\Translation\TranslationRequest;
 use App\Form\CustomDataClass\Translation\EditTranslationRequest;
 use App\Form\EditTranslationFormType;
 use App\Form\TranslationFormType;
-use App\Kernel;
 use App\Model\TranslationModel;
-use App\Pagerfanta\MissingTranslationAdapter;
-use App\Pagerfanta\TranslationAdapter;
-use App\Pagerfanta\UpdateTranslationAdapter;
 use App\Repository\LanguageRepository;
+use App\Repository\WordRepository;
 use App\Twig\MockupExtension;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
 use DateTime;
-use Doctrine\DBAL\Connection;
 use Exception;
 use Pagerfanta\Pagerfanta;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -36,8 +32,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Contracts\Translation\TranslatorInterface;
-use Symfony\Contracts\Translation\TranslatorInterface as Translator;
 
 /**
  * Class TranslationController.
@@ -48,6 +42,43 @@ class TranslationController extends AbstractController
 {
     use TranslatorTrait;
     use TranslatedFlashTrait;
+
+    private const MOCKUPS = [
+        'emails' => [
+            'message' => [
+                'template' => 'emails/message.html.twig',
+            ],
+            'request (initial)' => [
+                'template' => 'emails/request.html.twig',
+            ],
+            'request (guest)' => [
+                'template' => 'emails/reply_from_guest.html.twig',
+            ],
+            'request (host)' => [
+                'template' => 'emails/reply_from_host.html.twig',
+            ],
+            'group invitation' => [
+                'template' => 'emails/group.invitation.html.twig',
+            ],
+        ],
+        'pages' => [
+            'signup_finish' => [
+                'template' => 'signup/finish.html.twig'
+            ],
+            'signup_error' => [
+                'template' => 'signup/error.html.twig'
+            ],
+            'error 403' => [
+                'template' => 'bundles/TwigBundle/Exception/error403.html.twig'
+            ],
+            'error 404' => [
+                'template' => 'bundles/TwigBundle/Exception/error404.html.twig'
+            ],
+            'error 500' => [
+                'template' => 'bundles/TwigBundle/Exception/error500.html.twig'
+            ],
+        ]
+    ];
 
     /** @var TranslationModel */
     private $translationModel;
@@ -566,11 +597,18 @@ class TranslationController extends AbstractController
         $translations->setMaxPerPage($limit);
         $translations->setCurrentPage($page);
 
+        /** @var WordRepository $translationRepository */
+        $translationRepository = $this->getDoctrine()->getRepository(Word::class);
+        $countAll = $translationRepository->getTranslationIdCount('en');
+        $countTranslated = $translationRepository->getTranslationIdCount($language->getShortcode());
+
         return $this->render('admin/translations/list.html.twig', [
             'type' => $type,
             'form' => $form->createView(),
             'code' => $code,
             'locale' => $locale,
+            'count_all' => $countAll,
+            'count_translated' => $countTranslated,
             'routeName' => 'translations_locale_code',
             'routeParams' => array_merge(['type' => $type, 'code' => $code, 'locale' => $locale], $request->query->all()),
             'translations' => $translations,
@@ -598,21 +636,8 @@ class TranslationController extends AbstractController
             return $this->redirectToRoute('translations_no_permissions');
         }
 
-        $mockups = [
-            'signup/finish' => '_partials/signup/finish.html.twig',
-            'signup/error' => '_partials/signup/error.html.twig',
-            'group invitation' => '_partials/group/invitation.html.twig',
-            'message' => 'emails/message.html.twig',
-            'request (initial)' => 'emails/request.html.twig',
-            'request (guest)' => 'emails/reply_from_guest.html.twig',
-            'request (host)' => 'emails/reply_from_host.html.twig',
-            'error 403' => 'bundles/TwigBundle/Exception/error403.html.twig',
-            'error 404' => 'bundles/TwigBundle/Exception/error404.html.twig',
-            'error 500' => 'bundles/TwigBundle/Exception/error500.html.twig',
-        ];
-
         return $this->render('admin/translations/mockups.html.twig', [
-            'mockups' => $mockups,
+            'mockups' => self::MOCKUPS,
             'submenu' => [
                 'active' => 'mockups',
                 'items' => $this->getSubmenuItems($request->getLocale()),
@@ -620,22 +645,13 @@ class TranslationController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/admin/translate/mockup/{template}", name="translation_mockup",
-     *     requirements={"template"=".+"})
-     *
-     * @param string $template
-     *
-     * @return Response
-     */
-    public function translateMockup(Request $request, string $template)
+    private function getMockParams($template)
     {
-        $this->denyAccessUnlessGranted(Member::ROLE_ADMIN_WORDS, null, 'Unable to access this page!');
-
         $mockMessage = \Mockery::mock(Message::class, [
             'getId' => 1,
             'getMessage' => 'Message text',
         ]);
+
         $mockRequest = \Mockery::mock(HostingRequest::class, [
             'getId' => 1,
             'getArrival' => new DateTime(),
@@ -644,6 +660,7 @@ class TranslationController extends AbstractController
             'getFlexible' => true,
             'getStatus' => HostingRequest::REQUEST_DECLINED,
         ]);
+
         // Use the bwadmin account as counter part for all of this
         $memberRepository = $this->getDoctrine()->getRepository(Member::class);
         $bwadmin = $memberRepository->find(1);
@@ -660,33 +677,31 @@ class TranslationController extends AbstractController
             'email' => new MockupExtension(),
             'message' => $mockMessage,
             'request' => $mockRequest,
-            'submenu' => [
-                'active' => 'mockup',
-                'items' => $this->getSubmenuItems($request->getLocale(), 'mockup', $template),
-            ],
         ];
         switch ($template) {
+            case 'emails/message.html.twig':
+                $params['sender'] = $this->getUser();
+                $params['receiver'] = $bwadmin;
+                break;
+            case 'emails/request.html.twig':
             case 'emails/reply_from_guest.html.twig':
                 $params['host'] = $bwadmin;
                 $params['sender'] = $this->getUser();
                 $params['receiver'] = $bwadmin;
+                $params['receiverLocale'] = 'en';
+            $params['changed'] = true;
                 break;
             case 'emails/reply_from_host.html.twig':
                 $params['host'] = $bwadmin;
                 $params['sender'] = $bwadmin;
                 $params['receiver'] = $this->getUser();
+                $params['receiverLocale'] = 'en';
+                $params['changed'] = true;
                 break;
-            case '_partials/group/invitation.html.twig':
+            case 'emails/group.invitation.html.twig':
                 $params['sender'] = $bwadmin;
                 $params['receiver'] = $this->getUser();
                 $params['group'] = $group;
-                $acceptUrl = '/group/' . $group->getId() . '/acceptinvite/' . $bwadmin->getId();
-                $declineUrl = '/group/' . $group->getId() . '/declineinvite/' . $bwadmin->getId();
-
-                $params['accept_start'] = '<a href="' . $acceptUrl . '">';
-                $params['accept_end'] = '</a>';
-                $params['decline_start'] = '<a href="' . $declineUrl . '">';
-                $params['decline_end'] = '</a>';
                 $params['subject'] = 'group.invitation';
 
                 break;
@@ -694,8 +709,74 @@ class TranslationController extends AbstractController
                 $params['host'] = $bwadmin;
                 break;
         }
+        return $params;
+    }
 
-        return $this->render('admin/translations/mockup.html.twig', $params);
+    /**
+     * @Route("/admin/translate/mockup/page/{name}", name="translation_mockup_page",
+     *     requirements={"template"=".+"})
+     *
+     * @param Request $request
+     * @param string $name
+     *
+     * @return Response
+     */
+    public function translateMockupPage(Request $request, string $name)
+    {
+        $this->denyAccessUnlessGranted(Member::ROLE_ADMIN_WORDS, null, 'Unable to access this page!');
+
+        if (!isset(self::MOCKUPS['pages'][$name]))
+        {
+            return $this->redirectToRoute('translations_mockups');
+        }
+
+        $template = self::MOCKUPS['pages'][$name]['template'];
+
+        return $this->render('admin/translations/mockup.page.html.twig',
+            array_merge(
+                $this->getMockParams($template),
+                [
+                    'template' => $template,
+                    'submenu' => [
+                        'active' => 'mockups',
+                        'items' => $this->getSubmenuItems($request->getLocale(), 'mockup', $name),
+                    ]
+                ]
+            ),
+        );
+    }
+
+    /**
+     * @Route("/admin/translate/mockup/email/{name}", name="translation_mockup_email")
+     *
+     * @param Request $request
+     * @param string $name
+     *
+     * @return Response
+     */
+    public function translateMockupEmail(Request $request, string $name)
+    {
+        $this->denyAccessUnlessGranted(Member::ROLE_ADMIN_WORDS, null, 'Unable to access this page!');
+
+        if (!isset(self::MOCKUPS['emails'][$name]))
+        {
+            return $this->redirectToRoute('translations_mockups');
+        }
+
+        $template = self::MOCKUPS['emails'][$name]['template'];
+
+        return $this->render('admin/translations/mockup.email.html.twig',
+            array_merge(
+                $this->getMockParams($template),
+                [
+                    'template' => $template,
+                    'submenu' => [
+                        'active' => 'mockups',
+                        'items' => $this->getSubmenuItems($request->getLocale(), 'mockup', $template),
+                    ]
+                ]
+            ),
+        );
     }
 
     /**
@@ -746,10 +827,6 @@ class TranslationController extends AbstractController
                     'type' => 'missing',
                 ]),
             ],
-            'translations_mockups' => [
-                'key' => 'label.translations.mockups',
-                'url' => $this->generateUrl('translations_mockups'),
-            ],
         ];
         if ('en' !== $locale) {
             $submenuItems['needs_update'] = [
@@ -780,6 +857,10 @@ class TranslationController extends AbstractController
                 'url' => $this->generateUrl('translation_create_direct'),
             ];
         }
+        $submenuItems['mockups'] = [
+            'key' => 'label.translations.mockups',
+            'url' => $this->generateUrl('translations_mockups'),
+        ];
         if ($action && 'create' !== $action && 'mockup' !== $action) {
             $submenuItems[$action] = [
                 'key' => 'label.translations.' . $action,

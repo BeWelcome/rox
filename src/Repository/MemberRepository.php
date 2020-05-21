@@ -73,7 +73,7 @@ class MemberRepository extends ServiceEntityRepository implements UserLoaderInte
     public function findByProfileInfoStartsWith($term)
     {
         return $this->createQueryBuilder('u')
-            ->where('u.username like :term OR u.email like :term')
+            ->where('u.username like :term')
             ->setParameter('term', $term . '%')
             ->andWhere('u.status in (:status)')
             ->setParameter(':status', MemberStatusType::ACTIVE_ALL_ARRAY)

@@ -24,8 +24,10 @@ class WordRepository extends EntityRepository
         $qb = $this->createQueryBuilder('t');
         $q = $qb
             ->select('count(t.id)')
-            ->where('(t.isarchived <> 1 OR t.isarchived IS NULL)')
+            ->where('(t.isArchived = 0 OR t.isArchived IS NULL)')
+            ->andWhere('t.doNotTranslate = :doNotTranslate')
             ->andWhere('t.shortCode = :locale')
+            ->setParameter(':doNotTranslate', 'no')
             ->setParameter(':locale', $locale)
             ->getQuery();
         $count = $q->getSingleScalarResult();

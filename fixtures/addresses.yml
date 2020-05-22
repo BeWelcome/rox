@@ -4,5 +4,8 @@ App\Entity\Address:
     housenumber: 0
     streetname: 0
     rank: 1
-    city: '@Berlin'
+    zip: 0
+    explanation: 0
+    gettingthere: 0
+    location: '@Berlin'
 

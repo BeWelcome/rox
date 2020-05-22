@@ -3,16 +3,17 @@
 namespace App\Entity;
 
 use App\Utilities\LifecycleCallbacksTrait;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * PostsNotificationqueue
+ * PostNotification
  *
  * @ORM\Table(name="posts_notificationqueue", indexes={@ORM\Index(name="IdxStatus", columns={"Status"})})
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks
  */
-class PostNotificationQueue
+class PostNotification
 {
     use LifecycleCallbacksTrait;
 
@@ -28,7 +29,7 @@ class PostNotificationQueue
      * @ORM\ManyToOne(targetEntity="Member")
      * @ORM\JoinColumn(name="IdMember", referencedColumnName="id")
      */
-    private $member;
+    private $receiver;
 
     /**
      * @var ForumPost
@@ -73,7 +74,7 @@ class PostNotificationQueue
      *
      * @param string $status
      *
-     * @return PostNotificationQueue
+     * @return PostNotification
      */
     public function setStatus($status)
     {
@@ -95,33 +96,33 @@ class PostNotificationQueue
     /**
      * Set idmember
      *
-     * @param int $member
+     * @param int $receiver
      *
-     * @return PostNotificationQueue
+     * @return PostNotification
      */
-    public function setMember($member)
+    public function setReceiver($receiver)
     {
-        $this->member = $member;
+        $this->receiver = $receiver;
 
         return $this;
     }
 
     /**
-     * Get idmember
+     * Get member
      *
-     * @return int
+     * @return Member
      */
-    public function getMember()
+    public function getReceiver()
     {
-        return $this->member;
+        return $this->receiver;
     }
 
     /**
-     * Set idpost
+     * Set post
      *
-     * @param int $post
+     * @param ForumPost $post
      *
-     * @return PostNotificationQueue
+     * @return PostNotification
      */
     public function setPost($post)
     {
@@ -131,9 +132,9 @@ class PostNotificationQueue
     }
 
     /**
-     * Get idpost
+     * Get post
      *
-     * @return int
+     * @return ForumPost
      */
     public function getPost()
     {
@@ -141,59 +142,11 @@ class PostNotificationQueue
     }
 
     /**
-     * Set updated
-     *
-     * @param \DateTime $updated
-     *
-     * @return PostNotificationQueue
-     */
-    public function setUpdated($updated)
-    {
-        $this->updated = $updated;
-
-        return $this;
-    }
-
-    /**
-     * Get updated
-     *
-     * @return \DateTime
-     */
-    public function getUpdated()
-    {
-        return $this->updated;
-    }
-
-    /**
-     * Set created
-     *
-     * @param \DateTime $created
-     *
-     * @return PostNotificationQueue
-     */
-    public function setCreated($created)
-    {
-        $this->created = $created;
-
-        return $this;
-    }
-
-    /**
-     * Get created
-     *
-     * @return \DateTime
-     */
-    public function getCreated()
-    {
-        return $this->created;
-    }
-
-    /**
      * Set type
      *
      * @param string $type
      *
-     * @return PostNotificationQueue
+     * @return PostNotification
      */
     public function setType($type)
     {
@@ -217,7 +170,7 @@ class PostNotificationQueue
      *
      * @param int $subscription
      *
-     * @return PostNotificationQueue
+     * @return PostNotification
      */
     public function setSubscription($subscription)
     {
@@ -241,7 +194,7 @@ class PostNotificationQueue
      *
      * @param string $tablesubscription
      *
-     * @return PostNotificationQueue
+     * @return PostNotification
      */
     public function setTablesubscription($tablesubscription)
     {

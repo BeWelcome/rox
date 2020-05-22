@@ -3,6 +3,7 @@ App\Entity\Word:
         code: welcometosignup
         ShortCode: en
         Sentence: 'Welcome to the sign-up page'
+        domain: 'messages'
         updated: <dateTime()>
         donottranslate : no
         Language: '@language_en'
@@ -16,6 +17,7 @@ App\Entity\Word:
         code: welcometosignup
         ShortCode: fr
         Sentence: 'Bienvenue sur la page d’inscription'
+        domain: 'messages'
         updated: <dateTime()>
         donottranslate : no
         Language: '@language_fr'

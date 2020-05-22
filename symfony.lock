@@ -188,6 +188,24 @@
     "judev/php-htmltruncator": {
         "version": "1.2.2"
     },
+    "laminas/laminas-code": {
+        "version": "3.4.1"
+    },
+    "laminas/laminas-escaper": {
+        "version": "2.6.1"
+    },
+    "laminas/laminas-eventmanager": {
+        "version": "3.2.1"
+    },
+    "laminas/laminas-stdlib": {
+        "version": "3.2.1"
+    },
+    "laminas/laminas-uri": {
+        "version": "2.7.1"
+    },
+    "laminas/laminas-validator": {
+        "version": "2.13.4"
+    },
     "laminas/laminas-zendframework-bridge": {
         "version": "1.0.1"
     },
@@ -227,6 +245,9 @@
     },
     "nikic/php-parser": {
         "version": "v4.3.0"
+    },
+    "ocramius/package-versions": {
+        "version": "1.5.1"
     },
     "ocramius/proxy-manager": {
         "version": "2.2.3"

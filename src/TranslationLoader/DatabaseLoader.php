@@ -3,6 +3,7 @@
 namespace App\TranslationLoader;
 
 use App\Entity\Word;
+use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManager;
 use Exception;
 use Symfony\Component\Translation\Loader\LoaderInterface;

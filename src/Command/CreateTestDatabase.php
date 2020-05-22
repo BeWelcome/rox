@@ -105,7 +105,7 @@ class CreateTestDatabase extends Command
         ]);
         $command = $this->getApplication()->find('doctrine:database:create');
 
-        $createDatabase = new ArrayInput([]);
+        $createDatabase = new ArrayInput(['--if-not-exists' => true]);
 
         $returnCode = $command->run($createDatabase, $output);
         if ($returnCode) {

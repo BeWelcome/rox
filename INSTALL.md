@@ -50,6 +50,8 @@ There is rudimentary Docker support. Feel free to update the Dockerfile to help 
 
 2.  Initialize the database.
 
+	Create a new global user `bewelcome` with password `bewelcome`.
+
     This generates a new database as given in the ```.env``` file and presets some data.
 
     ```bash

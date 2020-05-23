@@ -60,8 +60,14 @@ class GroupController extends AbstractController
         $this->groupModel = $groupModel;
     }
 
+    private function redirectGroup(Request $request)
+    {
+        $pathInfo = str_replace('/groups/', '/group/', $request->getPathInfo());
+        return new RedirectResponse($pathInfo);
+    }
+
     /**
-     * @Route("/groups/{groupId}/{path}", name="groups_redirect",
+     * @Route("/groups/{groupId}/{path}", name="groups_redirect_path",
      *     requirements = {"groupId": "\d+", "path":".+"})
      * @ParamConverter("group", class="App\Entity\Group", options={"id" = "groupId"})
      *
@@ -70,12 +76,23 @@ class GroupController extends AbstractController
      * @param string $path
      * @return RedirectResponse
      */
-    public function groupsRedirect(Request $request, Group $group, string $path)
+    public function groupsRedirectPath(Request $request, Group $group, string $path)
     {
-        // Neither group nor path are used.
-        $group = $path = null;
-        $pathInfo = str_replace('/groups/', '/group/', $request->getPathInfo());
-        return new RedirectResponse($pathInfo);
+        return $this->redirectGroup($request);
+    }
+
+    /**
+     * @Route("/groups/{groupId}", name="groups_redirect",
+     *     requirements = {"groupId": "\d+"})
+     * @ParamConverter("group", class="App\Entity\Group", options={"id" = "groupId"})
+     *
+     * @param Request $request
+     * @param Group $group
+     * @return RedirectResponse
+     */
+    public function groupsRedirect(Request $request, Group $group)
+    {
+        return $this->redirectGroup($request);
     }
 
     /**

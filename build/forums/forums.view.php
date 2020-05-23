@@ -98,7 +98,7 @@ class ForumsView extends RoxAppView {
         if ($baseurl === false) {
             $baseurl = $this->uri;
         }
-        return $baseurl.'s'.$thread->threadid.'-'.preg_replace('/[^A-Za-z0-9]/', '_',$this->words->fTrad($thread->IdTitle) ) ;
+        return $baseurl.'s'.$thread->id.'-'.preg_replace('/[^A-Za-z0-9]/', '_',$this->words->fTrad($thread->IdTitle) ) ;
     }
 
     public  function postURL($post, $baseurl = false)
@@ -243,7 +243,7 @@ class ForumsView extends RoxAppView {
             $this->SetPageTitle($this->words->fTrad($topic->topicinfo->IdTitle));
         }
         else {
-            $this->SetPageTitle($topic->topicinfo->title. ' - BeWelcome '.$this->words->getBuffered('Forum'));
+            $this->SetPageTitle('Forums - BeWelcome '.$this->words->getBuffered('Forum'));
         }
         if (empty($this->session->get('IdMember')))  {
             if (isset($topic->posts[0])) {

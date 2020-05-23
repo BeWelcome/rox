@@ -11,7 +11,7 @@
                 </div>
                 <div>
                     <small>in
-                    {%- if thread.group.id != 0 %}
+                    {%- if thread.group %}
                         <a href="{{ url('group_start', {'group_id': thread.group.id}) }}">{{ thread.group.name }}</a>
                     {% else %}
                         <a href="{{ url('bwforum') }}">{{ 'dashboard.bwforum' | trans }}</a>

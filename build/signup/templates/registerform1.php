@@ -328,7 +328,7 @@
     });
 
     let markers = [
-        "<?= $words->get('Please set your hosting interest') ?>",
+        "<?= $words->get('hosting.interest.select') ?>",
         "<?= $words->get('Very low') ?>",
         "<?= $words->get('low') ?>",
         "<?= $words->get('lower') ?>",

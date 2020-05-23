@@ -151,7 +151,7 @@ foreach($comments as $comment) {
                 <?php echo $purifier->purify(nl2br($c->TextFree)); ?>
 
                 <?php if (MOD_right::get()->HasRight('Comments'))  { ?>
-                    <a href="bw/admin/admincomments.php?action=editonecomment&IdComment=<?php echo $c->id; ?>"><?=$words->get('EditComment')?></a>
+                    <a href="/admin/comment/<?php echo $c->id; ?>"><?=$words->get('EditComment')?></a>
                     <?php } ?>
 
             </div>
@@ -228,7 +228,7 @@ foreach($comments as $comment) {
              echo $purifier->purify(nl2br($cc->TextFree));
 
              if (MOD_right::get()->HasRight('Comments'))  { ?>
-                <a href="bw/admin/admincomments.php?action=editonecomment&IdComment=<?php echo $cc->id; ?>"><?=$words->get('EditComment')?></a>
+                <a href="/admin/comment/<?php echo $cc->id; ?>"><?=$words->get('EditComment')?></a>
                  <?php } ?>
             </div>
         </div>

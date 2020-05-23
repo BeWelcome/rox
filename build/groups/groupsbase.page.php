@@ -176,8 +176,12 @@ class GroupsBasePage extends PageWithActiveSkin
     protected function getSubmenuItems()
     {
         $items = array();
-        $isAdmin = $this->group->isGroupAdmin($this->member);
-        $isOwner = $this->group->isGroupOwner($this->member);
+        $isAdmin = false;
+        $isOwner = false;
+        if ($this->group) {
+            $isAdmin = $this->group->isGroupAdmin($this->member);
+            $isOwner = $this->group->isGroupOwner($this->member);
+        }
 
         $layoutkit = $this->layoutkit;
         $words = $layoutkit->getWords();
@@ -205,8 +209,12 @@ class GroupsBasePage extends PageWithActiveSkin
         }
 
         $items[] = [ 'subscription', 'forums/subscriptions', $this->words->getSilent('forum_YourSubscription') ];
-        $isForumModerator = $this->member->hasOldRight(['ForumModerator' => 10]);
-        $isGroupAdministrator = $this->member->hasOldRight(['Group' => 10]);
+        $isForumModerator = false;
+        $isGroupAdministrator = false;
+        if ($this->member) {
+            $isForumModerator = $this->member->hasOldRight(['ForumModerator' => 10]);
+            $isGroupAdministrator = $this->member->hasOldRight(['Group' => 10]);
+        }
 
         if ($isForumModerator) {
             $forumsModel = new Forums();
@@ -244,5 +252,8 @@ class GroupsBasePage extends PageWithActiveSkin
        return $stylesheets;
     }
 
+    protected function getSubmenuActiveItem() {
+        return '';
+    }
 }
 

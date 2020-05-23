@@ -130,15 +130,16 @@ class LandingModel
                 return $group->getId();
             }, $member->getGroups());
         }
-        if ($forum) {
-            // The forum is identified by a group set to 0
-            array_push($groupIds, 0);
-        }
         $queryBuilder
             ->andWhere('ft.group IN (:groups)')
             ->setParameter('groups', $groupIds);
+        if ($forum) {
+            $queryBuilder
+                ->orWhere('ft.group IS NULL');
+        }
 
         if ($following) {
+            // \todo: Add subscriptions?
         }
 
         if ($limit) {

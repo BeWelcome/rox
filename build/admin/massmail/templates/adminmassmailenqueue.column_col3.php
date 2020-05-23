@@ -156,7 +156,7 @@ $words = new MOD_words();
                         <option value="0">Select a country</option>
                         <?php
                         foreach ($countries as $country) {
-                            echo '<option value="' . $country->iso_alpha2 . '">' . $country->name . '</option>';
+                            echo '<option value="' . $country->country . '">' . $country->name . '</option>';
                         }
                         ?>
                     </select>

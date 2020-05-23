@@ -40,14 +40,6 @@ class ForumThread
     private $id;
 
     /**
-     * Not used (historic)
-     * @var int
-     *
-     * @ORM\Column(name="threadid", type="integer", nullable=true)
-     */
-    private $threadId;
-
-    /**
      * @var DateTime
      *
      * @ORM\Column(name="expiredate", type="datetime", nullable=true)
@@ -154,7 +146,7 @@ class ForumThread
     /**
      * @var Group
      *
-     * @ORM\OneToOne(targetEntity="Group")
+     * @ORM\ManyToOne(targetEntity="Group")
      * @ORM\JoinColumn(name="IdGroup", referencedColumnName="id", nullable=true)
      */
     private $group;
@@ -743,16 +735,6 @@ class ForumThread
     }
 
     /**
-     * Get thread id.
-     *
-     * @return int
-     */
-    public function getThreadId()
-    {
-        return $this->threadId;
-    }
-
-    /**
      * Set group.
      *
      * @param Group $group
@@ -808,22 +790,5 @@ class ForumThread
     public function getPosts()
     {
         return $this->posts;
-    }
-
-    public function setThreadId(?int $threadId): self
-    {
-        $this->threadId = $threadId;
-
-        return $this;
-    }
-
-    /**
-     * Triggered on insert.
-     *
-     * @ORM\PostPersist
-     */
-    public function onPostPersist()
-    {
-        $this->threadId = $this->id;
     }
 }

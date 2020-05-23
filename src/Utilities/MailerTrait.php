@@ -40,7 +40,7 @@ trait MailerTrait
     }
 
     /**
-     * @param Member|string $sender
+     * @param Member|Address|string $sender
      * @param Member        $receiver
      * @param string        $template
      * @param mixed         ...$params
@@ -50,13 +50,6 @@ trait MailerTrait
     protected function sendTemplateEmail($sender, Member $receiver, string $template, ...$params)
     {
         $success = true;
-        /* Only HTML mails supported
-        $preferenceRepository = $this->getManager()->getRepository(Preference::class);
-        /** @var Preference $preference /
-        $preference = $preferenceRepository->findOneBy(['codename' => Preference::HTML_MAILS]);
-        // Only HTML mails with text part supported
-        $htmlMails = ('Yes' === $receiver->getMemberPreferenceValue($preference));
-        */
         $this->setTranslatorLocale($receiver);
         $locale = $receiver->getPreferredLanguage();
         $parameters = array_merge(['sender' => $sender, 'receiver' => $receiver, 'tenplate' => $template,
@@ -71,6 +64,8 @@ trait MailerTrait
 
         if (\is_string($sender)) {
             $email->from($sender);
+        } elseif ($sender instanceof Address) {
+            $email->from($sender);
         } else {
             $email->from(new Address('message@bewelcome.org', $sender->getUsername() . ' - BeWelcome'));
         }
@@ -79,7 +74,7 @@ trait MailerTrait
         } catch (TransportExceptionInterface $e) {
             $success = false;
         }
-        if (!\is_string($sender)) {
+        if ($sender instanceof Member) {
             $this->setTranslatorLocale($sender);
         }
 

@@ -139,12 +139,20 @@ class Extension extends AbstractExtension implements GlobalsInterface
      */
     public function getGlobals()
     {
+        $version = '';
+        $versionCreated = new Carbon();
+
         $locale = $this->session->get('locale', 'en');
         $languages = $this->languageModel->getLanguagesWithTranslations($locale);
 
+
+        if (file_exists('../VERSION')) {
+            $version = trim(file_get_contents('../VERSION'));
+            $versionCreated = Carbon::createFromTimestamp(filemtime('../VERSION'));
+        }
         return [
-            'version' => trim(file_get_contents('../VERSION')),
-            'version_dt' => Carbon::createFromTimestamp(filemtime('../VERSION')),
+            'version' => $version,
+            'version_dt' => $versionCreated,
             'title' => 'BeWelcome',
             'languages' => $languages,
             'robots' => 'ALL',

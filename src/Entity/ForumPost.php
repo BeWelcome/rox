@@ -44,14 +44,6 @@ class ForumPost implements ObjectManagerAware
     private $id;
 
     /**
-     * Not used (historical)
-     * @var int
-     *
-     * @ORM\Column(name="postid", type="integer", nullable=true)
-     */
-    private $postId;
-
-    /**
      * @var ForumThread
      *
      * @ORM\ManyToOne(targetEntity="ForumThread", inversedBy="posts")
@@ -565,16 +557,6 @@ class ForumPost implements ObjectManagerAware
     }
 
     /**
-     * Get postid.
-     *
-     * @return int
-     */
-    public function getPostid()
-    {
-        return $this->postid;
-    }
-
-    /**
      * Set thread.
      *
      * @param ForumThread $thread
@@ -672,23 +654,6 @@ class ForumPost implements ObjectManagerAware
         }
 
         return Carbon::instance($this->created);
-    }
-
-    public function setPostId(?int $postId): self
-    {
-        $this->postId = $postId;
-
-        return $this;
-    }
-
-    /**
-     * Triggered on insert.
-     *
-     * @ORM\PostPersist
-     */
-    public function onPostPersist()
-    {
-        $this->postId = $this->id;
     }
 
     /*

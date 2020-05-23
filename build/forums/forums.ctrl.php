@@ -218,7 +218,7 @@ class ForumsController extends PAppController
             }
             else {
                 if (!isset($IdGroup)) {
-                 $IdGroup=0 ;
+                 $IdGroup=null ;
             }
             }
             $this->_model->prepareForum();

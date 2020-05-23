@@ -33,10 +33,6 @@ $request = PRequest::get()->request;
 $uri = implode('/', $request);
 $groupsforum = ($request[0] == 'group' && is_numeric($request[1])) ? $request[1] : false;
 
-if (isset($this->suggestionsGroupId)) {
-    $groupsforum = $this->suggestionsGroupId;
-}
-
 $vars =& PPostHandler::getVars($callbackId);
 
 ?>
@@ -146,8 +142,6 @@ $vars =& PPostHandler::getVars($callbackId);
             } else {
                 if (isset($vars['IdGroup']) && $vars['IdGroup'] != 0 && is_numeric($vars['IdGroup'])) {
                     echo '<input type="hidden" name="IdGroup" value="' . intval($vars['IdGroup']) . '">';
-                } else {
-                    echo '<input type="hidden" name="IdGroup" value="0">';
                 }
             } ?>
         </div>

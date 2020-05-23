@@ -140,7 +140,7 @@ class AdminMassmailController extends AdminBaseController
     /**
      * get admin units for country code used by enqueue to fill drop down
      *
-     * @return json encoded list of admin units
+     * @return string json encoded list of admin units
      */
     public function getAdminUnits() {
         $countrycode = $this->route_vars['countrycode'];
@@ -153,7 +153,7 @@ class AdminMassmailController extends AdminBaseController
     /**
      * get places for country code and admin unit used by enqueue to fill drop down
      *
-     * @return json encoded list of places
+     * @return string json encoded list of places
      */
     public function getPlaces() {
         $countrycode = $this->route_vars['countrycode'];

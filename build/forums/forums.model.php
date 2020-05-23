@@ -9,9 +9,6 @@
 * @version $Id: forums.model.php 32 2007-04-03 10:22:22Z marco_p $
 */
 
-use Monolog\Logger;
-use Monolog\Handler\StreamHandler;
-
 // Utility function to sort the languages
 function cmpForumLang($a, $b)
 {
@@ -202,7 +199,7 @@ function FindAppropriatedLanguage($IdPost=0) {
 
 		$this->words = new MOD_words();
 		$this->BW_Right = MOD_right::get();
-		$this->IdGroup = 0; // By default no group
+		$this->IdGroup = false; // By default no group
 		$this->ByCategories = false; // toggle or not toglle the main view is TopCategories or TopLevel
 
 		//	Decide if it is an active LoggeMember or not
@@ -212,14 +209,14 @@ function FindAppropriatedLanguage($IdPost=0) {
                 $this->session->get("MemberStatus") == 'NeedMore' ) {
 			$this->PublicThreadVisibility=" (ThreadVisibility = 'NoRestriction') AND (ThreadDeleted != 'Deleted')";
 			$this->PublicPostVisibility = " (PostVisibility = 'NoRestriction') AND (PostDeleted != 'Deleted')";
-			$this->ThreadGroupsRestriction = " (IdGroup = 0 OR ThreadVisibility = 'NoRestriction')";
-			$this->PostGroupsRestriction = " (IdGroup = 0 OR PostVisibility = 'NoRestriction')" ;
+			$this->ThreadGroupsRestriction = " (IdGroup IS NULL OR ThreadVisibility = 'NoRestriction')";
+			$this->PostGroupsRestriction = " (IdGroup IS NULL OR PostVisibility = 'NoRestriction')" ;
 		}
 		else {
 			$this->PublicThreadVisibility = "(ThreadVisibility != 'ModeratorOnly') AND (ThreadDeleted != 'Deleted')" ;
 			$this->PublicPostVisibility = "(PostVisibility != 'ModeratorOnly') AND (PostDeleted !='Deleted')" ;
-			$this->PostGroupsRestriction = " PostVisibility IN ('MembersOnly','NoRestriction') OR (PostVisibility='GroupOnly' AND IdGroup in(0" ;
-			$this->ThreadGroupsRestriction = " ThreadVisibility IN ('MembersOnly','NoRestriction') OR (ThreadVisibility = 'GroupOnly' and IdGroup in(0" ;
+			$this->PostGroupsRestriction = " PostVisibility IN ('MembersOnly','NoRestriction') OR (PostVisibility='GroupOnly' AND (IdGroup IS NULL OR IdGroup in (0" ;
+			$this->ThreadGroupsRestriction = " ThreadVisibility IN ('MembersOnly','NoRestriction') OR (ThreadVisibility = 'GroupOnly' and (IdGroup IS NULL OR IdGroup in (0" ;
 			$qry = $this->dao->query("SELECT IdGroup FROM membersgroups WHERE IdMember = " . $this->session->get("IdMember") . " AND Status = 'In'");
 			if (!$qry) {
 				throw new PException('Failed to retrieve groups for member id =#'.$this->session->get("IdMember").' !');
@@ -229,8 +226,8 @@ function FindAppropriatedLanguage($IdPost=0) {
 				$this->ThreadGroupsRestriction = $this->ThreadGroupsRestriction . "," . $rr->IdGroup;
 				array_push($MyGroups,$rr->IdGroup) ; // Save the group list
 			}
-			$this->PostGroupsRestriction = $this->PostGroupsRestriction . "))";
-			$this->ThreadGroupsRestriction = $this->ThreadGroupsRestriction . "))";
+			$this->PostGroupsRestriction = $this->PostGroupsRestriction . ")))";
+			$this->ThreadGroupsRestriction = $this->ThreadGroupsRestriction . ")))";
 		}
 
 		// Prepares additional visibility options for moderator
@@ -444,7 +441,7 @@ WHERE
     );
 
     private function boardTopLevelForum($showsticky = true) {
-        $this->board = new Board($this->dao, 'Forum', '.', $this->getSession(), false, false, false, false, false, false, false, 0);
+        $this->board = new Board($this->dao, 'Forum', '.', $this->getSession(), false, false, false, false, false, false, false, null, false);
         $this->board->initThreads($this->getPage(), $showsticky);
 
     } // end of boardTopLevelForum
@@ -482,7 +479,7 @@ WHERE
 
         $this->board = new Board($this->dao, 'Forums and Groups', '.', $this->getSession());
 
-        $forum = new Board($this->dao, 'Forum', '.', $this->getSession(), false, false, false, false, false, false, false, 0);
+        $forum = new Board($this->dao, 'Forum', '.', $this->getSession(), false, false, false, false, false, false, false, null, false);
         $forum->THREADS_PER_PAGE = max(1, min($forumthreads, $MAX_THREADS));
         $forum->initThreads($forumpage, $showsticky);
         $forumMaxPage = max(ceil($forum->getNumberOfThreads() / $forum->THREADS_PER_PAGE), 1);
@@ -1005,12 +1002,12 @@ SELECT
     `forums_threads`.`admincode`,
     `forums_threads`.`countrycode`
 FROM `forums_posts`
-LEFT JOIN `forums_threads` ON (`forums_posts`.`threadid` = `forums_threads`.`threadid`)
+LEFT JOIN `forums_threads` ON (`forums_posts`.`threadid` = `forums_threads`.`id`)
 WHERE `forums_posts`.`id` = $this->messageId
 and ($this->PublicPostVisibility)
             ";
 
-        $s = $this->dao->query($query);
+       $s = $this->dao->query($query);
         if (!$s) {
             throw new PException('getEditData :: Could not retrieve Postinfo!');
         }
@@ -1078,7 +1075,7 @@ SELECT
 	`forums_threads`.`IdGroup`,
     `last_postid`
 FROM `forums_posts`
-LEFT JOIN `forums_threads` ON (`forums_posts`.`threadid` = `forums_threads`.`threadid`)
+LEFT JOIN `forums_threads` ON (`forums_posts`.`threadid` = `forums_threads`.`id`)
 WHERE `forums_posts`.`id` = $this->messageId
             "
         ;
@@ -1173,13 +1170,13 @@ WHERE `forums_posts`.`id` = $this->messageId
 
 		// case the update concerns the reference language of the posts
 		if ($rBefore->post_IdFirstLanguageUsed==$this->GetLanguageChoosen()) {
-		 	$query="update forums_posts set message='".$this->dao->escape($this->cleanupText($vars['topic_text']))."' where postid=".$this->messageId ;
+		 	$query="update forums_posts set message='".$this->dao->escape($this->cleanupText($vars['topic_text']))."' where id=".$this->messageId ;
         	$s=$this->dao->query($query);
 		}
 
 		// case the visibility has changed
 		if ($rBefore->PostVisibility!=$vars['PostVisibility']) {
-		 	$query="update forums_posts set PostVisibility='".$vars['PostVisibility']."' where postid=".$this->messageId ;
+		 	$query="update forums_posts set PostVisibility='".$vars['PostVisibility']."' where id=".$this->messageId ;
         	$s=$this->dao->query($query);
 			MOD_log::get()->write("Changing Post Visibility from <b>".$rBefore->PostVisibility."</b> to <b>".$vars['PostVisibility']."</b>", "Forum");
 		}
@@ -1277,7 +1274,7 @@ WHERE `forums_posts`.`id` = $this->messageId
         $query = sprintf("
 UPDATE `forums_threads`
 SET `title` = '%s',`geonameid` = %s, `admincode` = %s, `countrycode` = %s, `continent` = %s
-WHERE `threadid` = '%d' ",
+WHERE `id` = '%d' ",
             $this->dao->escape(strip_tags($vars['topic_title'])),
             "'".$d_geoname."'" ,
             "'".$d_admin."'" ,
@@ -1593,23 +1590,29 @@ WHERE `threadid` = '%d' ",
      }
 
      $vars =& PPostHandler::getVars();
-		 if (isset($vars["submit"]) and ($vars["submit"]=="update thread")) { // if an effective update was chosen for a forum trads
-		 	$IdThread=(int)$vars["IdThread"] ;
-		 	$IdGroup=(int)$vars["IdGroup"] ;
-		 	$ThreadVisibility=$vars["ThreadVisibility"] ;
-		 	$ThreadDeleted=$vars["ThreadDeleted"] ;
-		 	$WhoCanReply=$vars["WhoCanReply"] ;
-		 	$expiredate="'".$vars["expiredate"]."'"  ;
-		 	$stickyvalue=(int)$vars["stickyvalue"];
-			if (empty($expiredate)) {
-			   $expiredate="NULL" ;
-			}
-        	MOD_log::get()->write("Updating Thread=#".$IdThread." IdGroup=#".$IdGroup." Setting expiredate=[".$expiredate."] stickyvalue=".$stickyvalue." ThreadDeleted=".$ThreadDeleted." ThreadVisibility=".$ThreadVisibility." WhoCanReply=".$WhoCanReply,"ForumModerator");
-			$sql="update forums_threads set IdGroup=".$IdGroup.",stickyvalue=".$stickyvalue.",expiredate=".$expiredate.",ThreadVisibility='".$ThreadVisibility."',ThreadDeleted='".$ThreadDeleted."',WhoCanReply='".$WhoCanReply."' where id=".$IdThread ;
+     if (isset($vars["submit"]) and ($vars["submit"]=="update thread")) { // if an effective update was chosen for a forum trads
+        $IdThread=(int)$vars["IdThread"] ;
+        $IdGroup=(int)$vars["IdGroup"] ;
+        $ThreadVisibility=$vars["ThreadVisibility"] ;
+        $ThreadDeleted=$vars["ThreadDeleted"] ;
+        $WhoCanReply=$vars["WhoCanReply"] ;
+        $expiredate="'".$vars["expiredate"]."'"  ;
+        $stickyvalue=(int)$vars["stickyvalue"];
+        if (empty($expiredate)) {
+           $expiredate="NULL" ;
+        }
+        MOD_log::get()->write("Updating Thread=#".$IdThread." IdGroup=#".$IdGroup." Setting expiredate=[".$expiredate."] stickyvalue=".$stickyvalue." ThreadDeleted=".$ThreadDeleted." ThreadVisibility=".$ThreadVisibility." WhoCanReply=".$WhoCanReply,"ForumModerator");
+        $sql="update forums_threads set ";
+         if ($IdGroup === 0) {
+             $sql .= "IdGroup = NULL";
+         } else {
+             $sql .= "IdGroup=" . $IdGroup;
+         }
+         $sql .= ",stickyvalue=".$stickyvalue.",expiredate=".$expiredate.",ThreadVisibility='".$ThreadVisibility."',ThreadDeleted='".$ThreadDeleted."',WhoCanReply='".$WhoCanReply."' where id=".$IdThread;
 
 //			die ($sql) ;
-			$this->dao->query($sql);
-		 }
+        $this->dao->query($sql);
+     }
 
 		 if (isset($vars["submit"]) and ($vars["submit"]=="add translated title")) { // if a new translation is to be added for a title
 		 	$IdThread=(int)$vars["IdThread"] ;
@@ -1800,8 +1803,8 @@ SELECT
     `forums_threads`.`expiredate`,
     `forums_threads`.`stickyvalue`
 FROM `forums_posts`
-LEFT JOIN `forums_threads` ON (`forums_posts`.`threadid` = `forums_threads`.`threadid`)
-WHERE `forums_posts`.`postid` = '%d'
+LEFT JOIN `forums_threads` ON (`forums_posts`.`threadid` = `forums_threads`.`id`)
+WHERE `forums_posts`.`id` = '%d'
                 ",
                 $this->messageId
             );
@@ -1818,7 +1821,7 @@ WHERE `forums_posts`.`postid` = '%d'
                     "
 UPDATE `forums_threads`
 SET `first_postid` = NULL, `last_postid` = NULL
-WHERE `threadid` = '$topicinfo->threadid'
+WHERE `id` = '$topicinfo->threadid'
                     "
                 ;
                 $this->dao->query($query);
@@ -1838,7 +1841,7 @@ WHERE `threadid` = '$topicinfo->threadid'
                 $query =
                     "
 DELETE FROM `forums_threads`
-WHERE `threadid` = '$topicinfo->threadid'
+WHERE `id` = '$topicinfo->threadid'
                     "
                 ;
                 $this->dao->query($query);
@@ -1854,7 +1857,7 @@ WHERE `threadid` = '$topicinfo->threadid'
                         "
 UPDATE `forums_threads`
 SET `last_postid` = NULL
-WHERE `threadid` = '$topicinfo->threadid'
+WHERE `id` = '$topicinfo->threadid'
                         "
                     ;
                     $this->dao->query($query);
@@ -1895,7 +1898,7 @@ ORDER BY `create_time` DESC LIMIT 1
                     "
 UPDATE `forums_threads`
 SET `replies` = (`replies` - 1) $lastpostupdate
-WHERE `threadid` = '$topicinfo->threadid'
+WHERE `id` = '$topicinfo->threadid'
                     "
                 ;
                 $this->dao->query($query);
@@ -1976,10 +1979,6 @@ VALUES ('%d', '%d', NOW(), '%s','%d',%d,'%s')
 
         $postid = $result->insertId();
 
-// todo one day, remove this line (aim to manage the redudancy with the new id)
-		$query="update `forums_posts` set `postid`=`id` where id=" . $postId;
-        $result = $this->dao->query($query);
-
 		 // Now create the text in forum_trads
  		 $this->InsertInFTrad($this->dao->escape($this->cleanupText($vars['topic_text'])),"forums_posts.IdContent",$postid) ;
 
@@ -1987,7 +1986,7 @@ VALUES ('%d', '%d', NOW(), '%s','%d',%d,'%s')
             "
 UPDATE `forums_threads`
 SET `last_postid` = '$postid', `replies` = `replies` + 1
-WHERE `threadid` = '$this->threadid'
+WHERE `id` = '$this->threadid'
             "
         ;
         $this->dao->query($query);
@@ -2053,12 +2052,6 @@ WHERE `threadid` = '$this->threadid'
         $result = $statement->execute();
 
         $postId = $statement->insertId();
-
-        $statement = $this->dao->prepare("UPDATE `forums_posts` SET `postId` = ? WHERE `id` = ?");
-        $statement->bindParam(1, $postId);
-        $statement->bindParam(2, $postId);
-
-        $result = $statement->execute();
 
 		if(empty($vars['d_continent'])) {
 			$d_continent=null;
@@ -2213,7 +2206,7 @@ WHERE `threadid` = '$this->threadid'
                 if ($tagid) {
                     $query = "UPDATE `forums_tags` SET `counter` = `counter` + 1".$IdNameUpdate." WHERE `tagid` = '$tagid' ";
                     $this->dao->query($query);
-//                    $query = "UPDATE `forums_threads` SET `tag$ii` = '$tagid' WHERE `threadid` = '$threadid'"; // todo this tag1, tag2 ... thing is going to become obsolete
+//                    $query = "UPDATE `forums_threads` SET `tag$ii` = '$tagid' WHERE `ud` = '$threadid'"; // todo this tag1, tag2 ... thing is going to become obsolete
 //                    $this->dao->query($query);
                     $query ="replace INTO `tags_threads` (`IdTag`,`IdThread`) VALUES($tagid, $threadid) ";
                     $this->dao->query($query);
@@ -2261,7 +2254,7 @@ LEFT JOIN `geonames` ON (`forums_threads`.`geonameid` = `geonames`.`geonameid`)
 LEFT JOIN `geonamescountries` ON (`forums_threads`.`countrycode` = `geonamescountries`.`country`)
 LEFT JOIN `geonamesadminunits` ON (`forums_threads`.`admincode` = `geonamesadminunits`.`admin1` AND `forums_threads`.`countrycode` = `geonamescountries`.`country`)
 LEFT JOIN `groups` ON (`forums_threads`.`IdGroup` = `groups`.`id`)
-WHERE `threadid` = '$this->threadid'
+WHERE `forums_threads`.`id` = '$this->threadid'
 and ($this->PublicThreadVisibility)
 and ($this->ThreadGroupsRestriction)
 "
@@ -2400,7 +2393,7 @@ AND IdSubscriber = {$memberId}";
         $query = "
 UPDATE `forums_threads`
 SET `views` = (`views` + 1)
-WHERE `threadid` = '$this->threadid' LIMIT 1
+WHERE `id` = '$this->threadid' LIMIT 1
             "     ;
         $this->dao->query($query);
 
@@ -2416,7 +2409,7 @@ SELECT
 	`IdContent`,
     `members`.`Username` AS `OwnerUsername`,
     `IdWriter`,
-	forums_threads.`threadid`,
+	 forums_threads.`id` as `threadid`,
     `PostVisibility`,
     `PostDeleted`,
     `ThreadDeleted`,
@@ -2585,14 +2578,14 @@ SELECT
     `members_threads_subscribed`.`created` AS `subscribedtime`,
     `ThreadVisibility`,
     `ThreadDeleted`,
-    `forums_threads`.`threadid` as IdThread,
+    `forums_threads`.`id` as IdThread,
     `forums_threads`.`title`,
     `forums_threads`.`IdTitle`,
     `members_threads_subscribed`.`ActionToWatch`,
     `members_threads_subscribed`.`UnSubscribeKey`,
     `members_threads_subscribed`.`notificationsEnabled`
 FROM `forums_threads`,`members_threads_subscribed`
-WHERE `forums_threads`.`threadid` = `members_threads_subscribed`.`IdThread`
+WHERE `forums_threads`.`id` = `members_threads_subscribed`.`IdThread`
 AND `members_threads_subscribed`.`IdSubscriber`= {$member->id}
 ORDER BY `subscribedtime` DESC
                 ";
@@ -3028,8 +3021,8 @@ AND IdTag=%d
         }
 
         $query = sprintf(
-            "SELECT    `forums_posts`.`id` AS `postid`,`forums_posts`.`postid` as IdPost, UNIX_TIMESTAMP(`create_time`) AS `posttime`,  `message`,
-    `OwnerCanStillEdit`,`IdContent`,  `forums_threads`.`threadid`,   `forums_threads`.`title`,
+            "SELECT    `forums_posts`.`id` AS `postid`,`forums_posts`.id` as IdPost, UNIX_TIMESTAMP(`create_time`) AS `posttime`,  `message`,
+    `OwnerCanStillEdit`,`IdContent`,  `forums_threads`.`id`,   `forums_threads`.`title`,
     `ThreadVisibility`,
     `ThreadDeleted`,
     `PostVisibility`,
@@ -3041,7 +3034,7 @@ AND IdTag=%d
 LEFT JOIN `groups` ON (`forums_threads`.`IdGroup` = `groups`.`id`)
 LEFT JOIN `geonames` ON (addresses.IdCity = geonames.geonameid)
 WHERE `forums_posts`.`IdWriter` = %d AND `forums_posts`.`IdWriter` = `members`.`id`
-AND `forums_posts`.`threadid` = `forums_threads`.`threadid`
+AND `forums_posts`.`threadid` = `forums_threads`.`id`
 AND addresses.IdMember = members.id AND addresses.rank = 0
 AND ($this->PublicThreadVisibility)
 AND ($this->PublicPostVisibility)
@@ -3561,7 +3554,7 @@ public function NotAllowedForGroup($IdMember, $rPost) {
 
 
     public function GetThreadVisibility($IdThread) {
-        $query = "SELECT ThreadVisibility FROM forums_threads WHERE threadid = " . intval($IdThread);
+        $query = "SELECT ThreadVisibility FROM forums_threads WHERE id = " . intval($IdThread);
         $s = $this->dao->query($query);
         if (!$s) {
             // Couldn't fetch the result from the DB assume 'MembersOnly'
@@ -3717,54 +3710,63 @@ class Board implements Iterator {
                    }
 		}
 		else {
-			$this->PublicThreadVisibility="(ThreadVisibility!='ModeratorOnly') and (ThreadDeleted!='Deleted')" ;
-			$this->PublicPostVisibility=" (PostDeleted!='Deleted')" ;
-			//if the member prefers to see only posts to his/her groups
+            $this->PublicThreadVisibility = "(ThreadVisibility!='ModeratorOnly') and (ThreadDeleted!='Deleted')";
+            $this->PublicPostVisibility = " (PostDeleted!='Deleted')";
+            //if the member prefers to see only posts to his/her groups
             $roxmodel = new RoxModelBase();
             $member = $roxmodel->getLoggedInMember();
             $owngroupsonly = $member->getPreference("ShowMyGroupsTopicsOnly", $default = "No");
             $this->owngroupsonly = $owngroupsonly;
-            if ($owngroupsonly == "Yes" && ($this->IdGroup === false || !isset($this->IdGroup))) {
-                // 0 is the group id for topics without an explicit group, we don't want them in this case. Lazy hack to avoid changing more than necessary: replace 0 with -1
-                $this->PostGroupsRestriction = " (((IdGroup IN (-1";
-                $this->ThreadGroupsRestriction = " (((IdGroup IN (-1";
+            if ($this->IdGroup === null) {
+                $this->PostGroupsRestriction = " ((PostVisibility IN ('MembersOnly','NoRestriction') or (PostVisibility = 'GroupOnly')) AND (IdGroup IS NULL))";
+                $this->ThreadGroupsRestriction = " ((ThreadVisibility IN ('MembersOnly','NoRestriction') OR (ThreadVisibility = 'GroupOnly')) AND (IdGroup IS NULL))";
             } else {
-                $this->PostGroupsRestriction = " ((PostVisibility IN ('MembersOnly','NoRestriction') or (PostVisibility = 'GroupOnly' AND IdGroup IN (0";
-			    $this->ThreadGroupsRestriction = " ((ThreadVisibility IN ('MembersOnly','NoRestriction') OR (ThreadVisibility = 'GroupOnly' AND IdGroup IN (0";
+                if ($owngroupsonly == "Yes" && ($this->IdGroup === false || !isset($this->IdGroup))) {
+                    // 0 is the group id for topics without an explicit group, we don't want them in this case. Lazy hack to avoid changing more than necessary: replace 0 with -1
+                    $this->PostGroupsRestriction = " (((IdGroup IN (-1";
+                    $this->ThreadGroupsRestriction = " (((IdGroup IN (-1";
+                } else {
+                    $this->PostGroupsRestriction = " ((PostVisibility IN ('MembersOnly','NoRestriction') or (PostVisibility = 'GroupOnly' AND (IdGroup IS NULL OR IdGroup IN (0";
+                    $this->ThreadGroupsRestriction = " ((ThreadVisibility IN ('MembersOnly','NoRestriction') OR (ThreadVisibility = 'GroupOnly' AND (IdGroup IS NULL OR IdGroup IN (0";
+                }
+                $qry = $this->dao->query("SELECT IdGroup FROM membersgroups WHERE IdMember=" . $this->session->get("IdMember") . " AND Status = 'In'");
+                if (!$qry) {
+                    throw new PException('Failed to retrieve groups for member id =#' . $this->session->get("IdMember") . ' !');
+                }
+                while ($rr = $qry->fetch(PDB::FETCH_OBJ)) {
+                    $this->PostGroupsRestriction = $this->PostGroupsRestriction . "," . $rr->IdGroup;
+                    $this->ThreadGroupsRestriction = $this->ThreadGroupsRestriction . "," . $rr->IdGroup;
+                }
+
+                if ($no_forumsgroup) {
+                    $this->PostGroupsRestriction = $this->PostGroupsRestriction . ")))) AND (NOT IdGroup IS NULL))";
+                    $this->ThreadGroupsRestriction = $this->ThreadGroupsRestriction . ")))) AND (NOT IdGroup IS NULL))";
+                } else {
+                    $this->PostGroupsRestriction = $this->PostGroupsRestriction . ")))) AND (IDGroup IS NULL))";
+                    $this->ThreadGroupsRestriction = $this->ThreadGroupsRestriction . ")))) AND (IDGroup IS NULL))";
+                }
             }
-			$qry = $this->dao->query("SELECT IdGroup FROM membersgroups WHERE IdMember=" . $this->session->get("IdMember") . " AND Status = 'In'");
-			if (!$qry) {
-				throw new PException('Failed to retrieve groups for member id =#'.$this->session->get("IdMember").' !');
-			}
-			while ($rr=$qry->fetch(PDB::FETCH_OBJ)) {
-				$this->PostGroupsRestriction = $this->PostGroupsRestriction . "," . $rr->IdGroup;
-				$this->ThreadGroupsRestriction = $this->ThreadGroupsRestriction . "," . $rr->IdGroup;
-			}
+        }
 
-            if ($no_forumsgroup) {
-			    $this->PostGroupsRestriction = $this->PostGroupsRestriction . "))) and IdGroup != 0)";
-			    $this->ThreadGroupsRestriction = $this->ThreadGroupsRestriction . "))) and IdGroup != 0)";
-                        }
-                        else {
-			    $this->PostGroupsRestriction = $this->PostGroupsRestriction . "))))";
-			    $this->ThreadGroupsRestriction = $this->ThreadGroupsRestriction . "))))";
-                        }
-		}
-
-		// Prepares additional visibility options for moderator
+        // Prepares additional visibility options for moderator
 		if ($this->BW_Right->HasRight("ForumModerator")) {
 			$this->PublicPostVisibility = " PostVisibility IN ('NoRestriction', 'MembersOnly','GroupOnly','ModeratorOnly')";
 			$this->PublicThreadVisibility = " ThreadVisibility IN ('NoRestriction', 'MembersOnly','GroupOnly','ModeratorOnly')";
 			if ($this->BW_Right->HasRight("ForumModerator","AllGroups") or $this->BW_Right->HasRight("ForumModerator","All")) {
-				if ($no_forumsgroup) {
-                                    $this->PostGroupsRestriction = " (IdGroup != 0)";
-				    $this->ThreadGroupsRestriction = " (IdGroup != 0)";
-                                }
-                                else {
-                                    $this->PostGroupsRestriction = " (1=1)";
-				    $this->ThreadGroupsRestriction = " (1=1)";
-                                }
-			}
+			    if ($IdGroup === null) {
+                    $this->PostGroupsRestriction = " (IdGroup IS NULL)";
+                    $this->ThreadGroupsRestriction = " (IdGroup IS NULL)";
+                } else {
+                    if ($no_forumsgroup) {
+                        $this->PostGroupsRestriction = " (IdGroup != 0)";
+                        $this->ThreadGroupsRestriction = " (IdGroup != 0)";
+                    }
+                    else {
+                        $this->PostGroupsRestriction = " (1=1)";
+                        $this->ThreadGroupsRestriction = " (1=1)";
+                    }
+                }
+            }
 		}
     }
 
@@ -3806,7 +3808,7 @@ class Board implements Iterator {
         $wherethread="" ;
 
 		if (count($ids) <> 0) {
-			$wherethread = " AND `forums_threads`.`threadid` in ('" . implode("', '", $ids) . "') ";
+			$wherethread = " AND `forums_threads`.`id` in ('" . implode("', '", $ids) . "') ";
 			return $wherethread;
 		}
 
@@ -3819,8 +3821,12 @@ class Board implements Iterator {
         if (isset($this->admincode) && $this->admincode !== false) {
             $wherethread .= sprintf("AND `admincode` = '%s' ", $this->admincode);
         }
-        if (isset($this->IdGroup) && $this->IdGroup !== false) {
-            $wherethread .= sprintf("AND `forums_threads`.`IdGroup` = '%d' ", $this->IdGroup);
+        if (isset($this->IdGroup)) {
+            if (is_numeric($this->IdGroup)) {
+                $wherethread .= sprintf("AND `forums_threads`.`IdGroup` = '%d' ", $this->IdGroup);
+            } elseif ($this->IdGroup === null) {
+                $wherethread .= "AND `forums_threads`.`IdGroup` IS NULL ";
+            }
         }
         if (isset($this->geonameid) && $this->geonameid !== false) {
             $wherethread .= sprintf("AND `forums_threads`.`geonameid` = '%s' ", $this->geonameid);
@@ -3883,7 +3889,7 @@ class Board implements Iterator {
 		    $from = $this->THREADS_PER_PAGE * ($page - 1);
         }
 
-		$query = "SELECT SQL_CALC_FOUND_ROWS `forums_threads`.`threadid`,
+		$query = "SELECT SQL_CALC_FOUND_ROWS `forums_threads`.`id`,
 		 		  `forums_threads`.`id` as IdThread, `forums_threads`.`title`,
 				  `forums_threads`.`IdTitle`,
 				  `forums_threads`.`IdGroup`,
@@ -3894,11 +3900,11 @@ class Board implements Iterator {
 					`ThreadDeleted`,
 				  `forums_threads`.`views`,
 				  `forums_threads`.`continent`,
-				  `first`.`postid` AS `first_postid`,
+				  `first`.`id` AS `first_postid`,
 				  `first`.`authorid` AS `first_authorid`,
 				  UNIX_TIMESTAMP(`first`.`create_time`) AS `first_create_time`,
 				  UNIX_TIMESTAMP(`last`.`create_time`) AS `last_create_time`,
-				  `last`.`postid` AS `last_postid`,
+				  `last`.`id` AS `last_postid`,
 				  `last`.`authorid` AS `last_authorid`,
 				  UNIX_TIMESTAMP(`last`.`create_time`) AS `last_create_time`," ;
 		$query .= "`first_member`.`Username` AS `first_author`,`last_member`.`Username` AS `last_author`,`geonames`.`name` AS `geonames_name`, `geonames`.`geonameid`," ;
@@ -3961,7 +3967,7 @@ class Board implements Iterator {
 		$threads=array() ;
 
 		if ($NoInCategoryList!="") {
-			$query= "SELECT SQL_CALC_FOUND_ROWS `forums_threads`.`threadid`,
+			$query= "SELECT SQL_CALC_FOUND_ROWS `forums_threads`.`id`,
 		 		`forums_threads`.`id` as IdThread, `forums_threads`.`title`,
 				`forums_threads`.`IdTitle`,
 				`forums_threads`.`IdGroup`,
@@ -3996,7 +4002,7 @@ class Board implements Iterator {
 			$query .= " ORDER BY `stickyvalue` asc,`last_create_time` DESC LIMIT 3 " ;
 		}
 		else {
-			$query = "SELECT SQL_CALC_FOUND_ROWS `forums_threads`.`threadid`,
+			$query = "SELECT SQL_CALC_FOUND_ROWS `forums_threads`.`id`,
 		 		`forums_threads`.`id` as IdThread, `forums_threads`.`title`,
 				`forums_threads`.`IdTitle`,
 				`forums_threads`.`IdGroup`,

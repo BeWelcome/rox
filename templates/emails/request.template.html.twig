@@ -1,4 +1,5 @@
-{% filter inky_to_html|inline_css(source('emails/email.css')) %}
+{% block content %}
+    {% filter inky_to_html|inline_css(source('emails/email.css')) %}
 <!-- move the above styles into your custom stylesheet -->
 <wrapper class="header" bgcolor="#f37000">
     <container>
@@ -37,3 +38,4 @@
     </row>
 </container>
 {% endfilter %}
+{% endblock content %}

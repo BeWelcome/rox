@@ -16,4 +16,3 @@
         $query = "SELECT id, Name FROM groups ORDER BY Name";
     }
     $groups = $this->model->BulkLookup($query);
-?>

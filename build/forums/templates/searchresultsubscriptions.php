@@ -1,3 +1,4 @@
+<div class="row">
 <?php
 /*
 
@@ -101,7 +102,7 @@ if (count($TResults->TData) > 0) { ?>
         echo '<tr><th scope="row">';
         echo '<a href="forums/subscriptions/unsubscribe/thread/' . $data->IdSubscribe . '/' . $data->UnSubscribeKey . '" class="btn btn-danger"><i class="fa fa-times" aria-hidden="true" title="Remove from list"></i></a>';
         echo '</th>';
-        echo '<td class="align-middle"><a href="forums/s ' . $data->IdThread . ' ">' . $words->fTrad($data->IdTitle) . '</a><br>';
+        echo '<td class="align-middle"><a href="forums/s' . $data->IdThread . ' ">' . $words->fTrad($data->IdTitle) . '</a><br>';
         echo '<span class="small">' . $data->subscribedtime . '</span></td>';
 
         echo '<td class="align-middle"><div class="btn-group" role="group" aria-label="Toggle Subscription On-Off">';
@@ -125,3 +126,4 @@ if (count($TResults->TData) > 0) { ?>
     echo '<div class="col-12">' . $words->get('ForumNoThreadsSubscribed') . '</div>';
 }
 ?>
+</div>

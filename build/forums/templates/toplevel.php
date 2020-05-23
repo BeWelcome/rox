@@ -34,11 +34,12 @@ if ($ownGroupsButtonCallbackId) {
         $buttonText = $this->words->getBuffered('SwitchShowAllGroupsTopics');
     }
     ?>
-    <div class="col-12 col-md-4 order-2 text-right">
+    <div class="row"><div class="col-12">
         <form method="post" action="<?php echo rtrim(implode('/', $request), '/').'/';?>">
             <input type="hidden" name="<?php echo $ownGroupsButtonCallbackId; ?>"  value="1">
-            <input type="submit" class="btn btn-primary" name="submit" value="<?php echo $buttonText; ?>">
+            <input type="submit" class="btn btn-primary float-right" name="submit" value="<?php echo $buttonText; ?>">
         </form>
+    </div>
     </div>
     <?php
     echo $this->words->flushBuffer();
@@ -58,7 +59,7 @@ $uri = 'forums/';
   </div><!--  row -->
 
 <?php if (!$noForumNewTopicButton) { ?>
-  <div class="col-12 col-md-4 mt-2">
+  <div class="col-12 col-md-4 mb-2">
       <a class="btn btn-primary float-right" role="button" href="<?php echo $uri; ?>new"><?php echo $this->words->getBuffered('ForumNewTopic'); ?></a><?php echo $this->words->flushBuffer(); ?>
   </div>
 <?php
@@ -68,10 +69,4 @@ require 'boardthreads.php';
 ?>
         </div>
     <?php }
-    if (!$noForumNewTopicButton) { ?>
-    <div class="col-12 mt-2">
-        <a class="btn btn-primary" role="button" href="<?php echo $uri; ?>new"><?php echo $this->words->getBuffered('ForumNewTopic'); ?></a><?php echo $this->words->flushBuffer(); ?>
-    </div>
-    <?php
-}
 

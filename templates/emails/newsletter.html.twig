@@ -1,0 +1,5 @@
+{% extends 'emails/email.html.twig' %}
+
+{% block content %}
+    {{ wordcode|trans({'gender': receiver.gender, 'username': receiver.username})|purify }}
+{% endblock %}

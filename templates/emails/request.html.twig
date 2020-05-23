@@ -3,7 +3,6 @@
 {% block message %}
     <h4>{% trans with {'%username%': receiver.Username} %}email.greeting{% endtrans %}</h4>
     <p>{% trans with {'%username%': sender.Username} %}email.request.stay{% endtrans %}</p>
-    <p>        {{ locale }} -  {{ app.request.locale }} - {{ receiverLocale }}
     </p>
     <callout class="secondary">
         {{ message.message | raw }}

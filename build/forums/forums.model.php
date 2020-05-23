@@ -3720,16 +3720,20 @@ class Board implements Iterator {
             if ($this->IdGroup === null) {
                 $this->PostGroupsRestriction = " ((PostVisibility IN ('MembersOnly','NoRestriction') or (PostVisibility = 'GroupOnly')) AND (IdGroup IS NULL))";
                 $this->ThreadGroupsRestriction = " ((ThreadVisibility IN ('MembersOnly','NoRestriction') OR (ThreadVisibility = 'GroupOnly')) AND (IdGroup IS NULL))";
+            } elseif ($this->IdGroup > 0) {
+                $this->PostGroupsRestriction = " (IdGroup= " . (int)$this->IdGroup . ") ";
+                $this->ThreadGroupsRestriction = " (IdGroup= " . (int)$this->IdGroup . ") ";
             } else {
                 if ($owngroupsonly == "Yes" && ($this->IdGroup === false || !isset($this->IdGroup))) {
                     // 0 is the group id for topics without an explicit group, we don't want them in this case. Lazy hack to avoid changing more than necessary: replace 0 with -1
-                    $this->PostGroupsRestriction = " (((IdGroup IN (-1";
-                    $this->ThreadGroupsRestriction = " (((IdGroup IN (-1";
+                    $this->PostGroupsRestriction = " ((((IdGroup IN (-1";
+                    $this->ThreadGroupsRestriction = " ((((IdGroup IN (-1";
                 } else {
                     $this->PostGroupsRestriction = " ((PostVisibility IN ('MembersOnly','NoRestriction') or (PostVisibility = 'GroupOnly' AND (IdGroup IS NULL OR IdGroup IN (0";
                     $this->ThreadGroupsRestriction = " ((ThreadVisibility IN ('MembersOnly','NoRestriction') OR (ThreadVisibility = 'GroupOnly' AND (IdGroup IS NULL OR IdGroup IN (0";
                 }
-                $qry = $this->dao->query("SELECT IdGroup FROM membersgroups WHERE IdMember=" . $this->session->get("IdMember") . " AND Status = 'In'");
+                $query = "SELECT IdGroup FROM membersgroups WHERE IdMember=" . $this->session->get("IdMember") . " AND Status = 'In'";
+                $qry = $this->dao->query($query);
                 if (!$qry) {
                     throw new PException('Failed to retrieve groups for member id =#' . $this->session->get("IdMember") . ' !');
                 }

@@ -3021,8 +3021,8 @@ AND IdTag=%d
         }
 
         $query = sprintf(
-            "SELECT    `forums_posts`.`id` AS `postid`,`forums_posts`.`id` `as IdPost, UNIX_TIMESTAMP(`create_time`) AS `posttime`,  `message`,
-    `OwnerCanStillEdit`,`IdContent`,  `forums_threads`.`id`,   `forums_threads`.`title`,
+            "SELECT    `forums_posts`.`id` AS `postid`,`forums_posts`.`id` as IdPost, UNIX_TIMESTAMP(`create_time`) AS `posttime`,  `message`,
+    `OwnerCanStillEdit`,`IdContent`,  `forums_threads`.`id` AS `threadid`,   `forums_threads`.`title`,
     `ThreadVisibility`,
     `ThreadDeleted`,
     `PostVisibility`,
@@ -3835,8 +3835,8 @@ class Board implements Iterator {
         if (isset($this->geonameid) && $this->geonameid !== false) {
             $wherethread .= sprintf("AND `forums_threads`.`geonameid` = '%s' ", $this->geonameid);
         }
-		$wherethread=$wherethread."and (".$this->PublicThreadVisibility.")" ;
-		$wherethread=$wherethread."and (".$this->ThreadGroupsRestriction.")" ;
+		$wherethread=$wherethread." AND (".$this->PublicThreadVisibility.")" ;
+		$wherethread=$wherethread." AND (".$this->ThreadGroupsRestriction.")" ;
 		return($wherethread) ;
 	} // end of FilterThreadListResultsWithIdCriteria
 

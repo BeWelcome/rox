@@ -2,18 +2,18 @@
 
 {% block content %}
     {% set post = notification.post %}
-    <p><a href="{{ absolute_url('forum_thread', {'threadId': post.thread.id}) }}">{{ post.thread.title }}</a> (<a href="{{ absolute_url('forum_reply', {'threadId': post.thread.id}) }}">{{ 'reply'|trans }}</a>)</p>
+    <p><a href="{{ url('forum_thread', {'threadId': post.thread.id}) }}">{{ post.thread.title }}</a> (<a href="{{ url('forum_reply', {'threadId': post.thread.id}) }}">{{ 'reply'|trans }}</a>)</p>
     {{ post.message|purify }}
 
     <hr>
     <small>
     {{ 'forumunsubscribegroup'|trans }}<br>
-    <a href="{{ absolute_url('forum_thread_subscription_disable', {'threadId': post.thread.id}) }}">{{ 'mailbotdisablethread'|trans }}</a><br>
+    <a href="{{ url('forum_thread_subscription_disable', {'threadId': post.thread.id}) }}">{{ 'mailbotdisablethread'|trans }}</a><br>
     {% if notification.subscription == 0 and post.thread.group %}
-        <a href="{{ absolute_url('group_notifications_disable', {'groupId': post.thread.group.id}) }}">{{ 'mailbotdisablegroup'|trans }}</a><br>
-        <a href="{{ absolute_url('group_unsubscribe', {'groupId': post.thread.group.id}) }}">{{ 'mailbotunsubscribegroup'|trans }}</a><br>
+        <a href="{{ url('group_notifications_disable', {'groupId': post.thread.group.id}) }}">{{ 'mailbotdisablegroup'|trans }}</a><br>
+        <a href="{{ url('group_unsubscribe', {'groupId': post.thread.group.id}) }}">{{ 'mailbotunsubscribegroup'|trans }}</a><br>
     {% else %}
-        <a href="{{ absolute_url('thread_unsubscribe', {'threadId': post.thread.id, 'subscriptionId': notification.subscription }) }}">{{ 'mailbotunsubscribethread'|trans }}</a><br>
+        <a href="{{ url('thread_unsubscribe', {'threadId': post.thread.id, 'subscriptionId': notification.subscription }) }}">{{ 'mailbotunsubscribethread'|trans }}</a><br>
     {% endif %}
     <br>
     {{ 'mailfootermessage'|trans({'year':'now'|date('Y')})|purify }}

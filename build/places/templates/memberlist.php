@@ -1,6 +1,6 @@
 <?php
 echo '<div class="row mt-3"><div class="col-12"><h2 class="m-0">' . $words->get('members') . '</h2></div>';
-$User = new APP_User;
+// $User = new APP_User;
 $words = new MOD_words();
 $layoutbits = new MOD_layoutbits;
 $url = '/places/' . htmlspecialchars($this->countryName) . '/' . $this->countryCode . '/';

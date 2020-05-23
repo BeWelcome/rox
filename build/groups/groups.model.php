@@ -161,10 +161,10 @@ class GroupsModel extends  RoxModelBase
                     $order = "(SELECT COUNT(*) FROM membersgroups AS mg, members as m WHERE mg.IdGroup = g.id AND mg.Status = 'In' AND m.id = mg.idmember AND m.status IN (" . MemberStatusType::ACTIVE_ALL . ")) DESC, Name ASC";
                     break;
                 case "actasc":
-                    $order = "(SELECT MAX(forums_posts.create_time) FROM forums_threads, forums_posts WHERE g.id = forums_threads.IdGroup AND forums_posts.postid = forums_threads.last_postid) ASC, Name ASC";
+                    $order = "(SELECT MAX(forums_posts.create_time) FROM forums_threads, forums_posts WHERE g.id = forums_threads.IdGroup AND forums_posts.id = forums_threads.last_postid) ASC, Name ASC";
                     break;
                 case "actdesc":
-                    $order = "(SELECT MAX(forums_posts.create_time) FROM forums_threads, forums_posts WHERE g.id = forums_threads.IdGroup AND forums_posts.postid = forums_threads.last_postid) DESC, Name ASC";
+                    $order = "(SELECT MAX(forums_posts.create_time) FROM forums_threads, forums_posts WHERE g.id = forums_threads.IdGroup AND forums_posts.id = forums_threads.last_postid) DESC, Name ASC";
                     break;
                 case "createdasc":
                     $order = 'created ASC, Name ASC';

@@ -190,7 +190,7 @@ class GroupsController extends RoxControllerBase
      */
     public function search()
     {
-         $terms = ((!empty($this->args_vars->get['GroupsSearchInput'])) ? $this->args_vars->get['GroupsSearchInput'] : '');
+        $terms = ((!empty($this->args_vars->get['GroupsSearchInput'])) ? $this->args_vars->get['GroupsSearchInput'] : '');
         if ($terms == '') {
             $order = ((!empty($this->args_vars->get['order'])) ? $this->args_vars->get['order'] : 'actdesc');
             $terms_array = [];

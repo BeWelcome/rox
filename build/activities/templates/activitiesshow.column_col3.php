@@ -223,14 +223,15 @@ if (empty($vars)) {
 
     <?php if ($this->member) { ?>
 
-        <div class="col-12 d-flex flex-row flex-wrap justify-content-start order-9">
-
+        <div class="col-12 order-9">
+<div class="row no-gutters">
 
         <?php
         foreach ($this->attendeesPager->getActiveSubset($this->activity->attendees) as $attendee) {
 
             ?>
-            <div class="col m-1 p-2
+            <div class="col-12 col-sm-6 col-md-4">
+                <div class="m-1 p-2
 <?php
             switch ($attendee->status) {
                 case 1:
@@ -270,6 +271,7 @@ if (empty($vars)) {
                     <div class="small gray"><i><?php echo htmlspecialchars($attendee->comment); ?></i></div>
                 <?php } ?>
             </div>
+            </div>
             <?php
         }
         ?>
@@ -279,7 +281,7 @@ if (empty($vars)) {
         echo $this->attendeesPager->render();
         ?>
         </div>
-
+        </div>
             <?php
     } else {
         echo '<div class="col-12 order-9"><h3>' . $words->get('ActivityAttendees') . '</h3>';

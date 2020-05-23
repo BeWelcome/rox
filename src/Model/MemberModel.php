@@ -494,7 +494,7 @@ class MemberModel
                 $postsPerYear[$year] = 0;
             }
             $thread = $post->getThread();
-            $threadId = (null === $thread) ? 0 : $thread->getThreadId();
+            $threadId = (null === $thread) ? 0 : $thread->getId();
             if (!isset($threadsPerYear[$year][$threadId]))
             {
                 if (!in_array($threadId, $threadsContributed)) {

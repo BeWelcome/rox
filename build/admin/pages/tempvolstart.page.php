@@ -56,7 +56,4 @@ class TempVolStartPage extends AdminBasePage
     {
 
     }
-    protected function getSubmenuItems() {
-        return '';
-    }
 }

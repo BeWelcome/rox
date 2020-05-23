@@ -35,17 +35,29 @@ trait MailerTrait
 
     /**
      * @param Member|Address|string $sender
-     * @param mixed                 ...$params
+     * @param Member|Address        $receiver
+     * @param string        $template
+     * @param mixed         ...$params
      *
      * @return bool
      */
-    protected function sendTemplateEmail($sender, Member $receiver, string $template, ...$params)
+    protected function sendTemplateEmail($sender, $receiver, string $template, ...$params)
     {
         $success = true;
-        $this->setTranslatorLocale($receiver);
-        $locale = $receiver->getPreferredLanguage();
-        $parameters = array_merge(['sender' => $sender, 'receiver' => $receiver, 'tenplate' => $template,
-            'receiverLocale' => $locale->getShortcode(), ], ...$params);
+        $locale = 'en';
+        if ($receiver instanceof Member) {
+            $this->setTranslatorLocale($receiver);
+            $locale = $receiver->getPreferredLanguage()->getShortcode();
+            $params = array_merge([
+                'receiver' => $receiver,
+            ], ...$params);
+            $receiver = new Address($receiver->getEmail(), $receiver->getUsername());
+        }
+        $parameters = array_merge([
+            'sender' => $sender,
+            'template' => $template,
+            'receiverLocale' => $locale,
+        ], $params);
         $subject = $parameters['subject'];
         $subjectParams = [];
         if (\is_array($subject)) {
@@ -54,7 +66,7 @@ trait MailerTrait
         }
         $subject = $this->getTranslator()->trans($subject, $subjectParams);
         $email = (new TemplatedEmail())
-            ->to(new Address($receiver->getEmail(), $receiver->getUsername()))
+            ->to($receiver)
             ->subject($subject)
             ->htmlTemplate('emails/' . $template . '.html.twig')
             ->context($parameters)

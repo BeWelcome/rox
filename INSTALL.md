@@ -14,7 +14,7 @@ Production OS is Debian GNU/Linux Strech.
 ## Requirements
 
 * Apache with mod_rewrite enabled
-* PHP version >= 7.1 (and < 7.3)
+* PHP version >= 7.3
 * PHP GD lib enabled
 * PHP magic quotes gpc disabled
 * PHP extensions: mbstring, dom, fileinfo, intl, xsl

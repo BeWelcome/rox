@@ -7,6 +7,7 @@ class EditProfilePage extends ProfilePage
     public function __construct()
     {
         parent::__construct();
+        $this->addLateLoadScriptFile('build/bsfileselect.js');
         $this->addLateLoadScriptFile('build/rangeslider.js');
         $this->addLateLoadScriptFile('build/tempusdominus.js');
     }

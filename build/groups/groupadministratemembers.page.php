@@ -73,6 +73,7 @@ class GroupMemberAdministrationPage extends GroupsBasePage
         $invited = $this->group->getMembers('Invited');
 
         ?>
+    <div class="row">
         <div class="col-12">
             <h3><?= $words->get('GroupsAdministrateMembers'); ?></h3>
         </div>
@@ -361,6 +362,7 @@ class GroupMemberAdministrationPage extends GroupsBasePage
                 e.preventDefault();
             });
         </script>
+    </div>
 <?php
     }
 }

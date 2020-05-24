@@ -220,10 +220,10 @@ class MemberModel
         $filesystem = new Filesystem();
         $galleryPath = $this->projectDir . '/data/gallery/member' . $memberId . '/';
 
+        $hrefs = [];
         if (is_dir($galleryPath)) {
             // create gallery sub directory
             $galleryDir = $this->tempDir . 'gallery/';
-            $hrefs = [];
             @mkdir($galleryDir);
             if ($directoryHandle = opendir($galleryPath)) {
                 while (($file = readdir($directoryHandle)) !== false) {
@@ -577,6 +577,7 @@ class MemberModel
      */
     private function prepareActivities(Member $member): string
     {
+        $activities = [];
         /** @var ActivityAttendeeRepository $attendeeRepository */
         $attendeeRepository = $this->getManager()->getRepository(ActivityAttendee::class);
         /** @var ActivityAttendee[] $activities */

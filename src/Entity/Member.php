@@ -2982,6 +2982,36 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
         return $language;
     }
 
+    public function setPreferredLanguage(Language $language): void
+    {
+        // Get current preference if any
+        $preferenceRepository = $this->em->getRepository(Preference::class);
+        /** @var Preference $preference */
+        $preference = $preferenceRepository->findOneBy([
+            'codename' => Preference::LOCALE,
+        ]);
+        if (null === $preference) {
+            return;
+        }
+
+        $memberPreferenceRepository = $this->em->getRepository(MemberPreference::class);
+        /** @var MemberPreference $memberPreference */
+        $memberPreference = $memberPreferenceRepository->findOneBy(['preference' => $preference, 'member' => $this]);
+
+        if ($memberPreference) {
+            $memberPreference->setValue($language->getId());
+        } else {
+            $memberPreference = new MemberPreference();
+            $memberPreference
+                ->setMember($this)
+                ->setPreference($preference)
+                ->setValue($language->getId())
+                ;
+        }
+        $this->em->persist($memberPreference);
+        $this->em->flush();
+    }
+
     /**
      * @return Collection|MemberPreference[]
      */

@@ -2,6 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\Language;
+use App\Entity\Member;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -11,13 +14,21 @@ class LocaleController extends AbstractController
 {
     /**
      * @Route("/rox/in/{locale}", name="language", requirements={"locale" = "[a-z]{2}(-[A-Za-z]{2,})?"})
+     * @ParamConverter("language", class="App\Entity\Language", options={"mapping": {"locale": "shortcode"}})
      *
      * @param Request $request
      *
+     * @param Language $language
      * @return RedirectResponse
      */
-    public function selectLocaleAction(Request $request)
+    public function selectLocaleAction(Request $request, Language $language)
     {
+        /** @var Member $member */
+        $member = $this->getUser();
+        if ($member) {
+            $member->setPreferredLanguage($language);
+        }
+
         $redirect = $request->headers->get('referer');
 
         if (!$redirect) {

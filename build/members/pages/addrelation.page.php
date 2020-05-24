@@ -40,7 +40,7 @@ class AddRelationPage extends RelationsPage
             <?=$callback_tag?>
             <legend><?=$words->get($action.'Relation')?></legend>
             <p class="small"><?=$words->get('MyRelationListExplanation',$member->Username,$member->Username)?></p>
-            <?php if (count($relation['member']) <= 0) : ?>
+            <?php if (isset($relation['member'])) : ?>
             <div>
             <label class="grey"><?=$words->get('RelationListCategory')?></label><br />
             <?php
@@ -48,7 +48,7 @@ class AddRelationPage extends RelationsPage
                 $max=count($tt);
                 for ($ii = 0; $ii < $max; $ii++) {
                     echo "<input type=checkbox name=\"Type_" . $tt[$ii] . "\"";
-                    if (count($relation['myself']) > 0 && strpos(" ".$relation['myself']->Type,$tt[$ii] )!=0)
+                    if (isset($relation['myself']) && is_object($relation['myself']) > 0 && strpos(" ".$relation['myself']->Type,$tt[$ii] )!=0)
                     echo " checked ";
                     echo "> ".$words->get("Relation_Type_" . $tt[$ii])."<br />";
                 }

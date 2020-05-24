@@ -694,7 +694,7 @@ WHERE
         $TData = array();
         $TData[1]= $this->singleLookup("select * from specialrelations where IdOwner=".$vars['IdOwner']." AND IdRelation=".$vars['IdRelation']);
         $TData[2]= $this->singleLookup("select * from specialrelations where IdOwner=".$vars['IdRelation']." AND IdRelation=".$vars['IdOwner']);
-        if (isset($TData) && count($TData[1]) > 0 && count($TData[2]) > 0 && isset($vars['confirm'])) {
+        if (isset($TData) && isset($TData[1]) && isset($TData[2]) > 0 && isset($vars['confirm'])) {
             foreach ($TData as $rel) {
                 $IdOwner = $rel->IdOwner;
                 $IdRelation = $rel->IdRelation;

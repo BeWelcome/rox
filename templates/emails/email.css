@@ -1381,3 +1381,12 @@ body.outlook p {
     table.button.small-expand center,
     table.button.small-expanded center {
         min-width: 0; } }
+
+blockquote {
+    color: #444 !important;
+    background: transparent !important;
+    border: 1px #ddd solid !important;
+    border-left: 8px #f37000 solid !important;
+    padding: 0 0.5em !important;
+    margin: 0.5em 0 !important;
+}

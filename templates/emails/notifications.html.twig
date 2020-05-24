@@ -2,7 +2,7 @@
 
 {% block content %}
     {% set post = notification.post %}
-    <p><a href="{{ url('forum_thread', {'threadId': post.thread.id}) }}">{{ post.thread.title }}</a> (<a href="{{ url('forum_reply', {'threadId': post.thread.id}) }}">{{ 'reply'|trans }}</a>)</p>
+    <p><a href="{{ url('forum_thread', {'threadId': post.thread.id}) }}">{{ post.thread.title|striptags }}</a> (<a href="{{ url('forum_reply', {'threadId': post.thread.id}) }}">{{ 'reply'|trans }}</a>)</p>
     {{ post.message|purify }}
 
     <hr>

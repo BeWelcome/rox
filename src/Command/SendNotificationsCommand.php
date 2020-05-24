@@ -85,7 +85,7 @@ class SendNotificationsCommand extends Command
         if ($notification->getPost()->getThread()->getGroup()) {
             $subject .= " [" . $notification->getPost()->getThread()->getGroup()->getName() . "]";
         }
-        return $subject;
+        return strip_tags($subject);
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

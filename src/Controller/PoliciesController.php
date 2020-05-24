@@ -11,13 +11,21 @@ use Symfony\Component\Routing\Annotation\Route;
 class PoliciesController extends AbstractController
 {
     /**
-     * @Route("/terms/{locale}/new", name="terms_of_use",
-     *     requirements={"locale":"en|fr"})
+     * @Route("/terms/{locale}", name="terms_of_use",
+     *     _defaults={"locale":"en"})
      * @param string $locale
      * @return Response
      */
     public function showTermsOfUse(string $locale)
     {
+        switch($locale) {
+            case 'en':
+            case 'fr':
+                // Show English or French version depending on locale (no translations at the moment)!
+                break;
+            default:
+                $locale = 'en';
+        }
         return $this->render('policies/terms.'.$locale.'.html.twig');
     }
 

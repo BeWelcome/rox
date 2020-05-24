@@ -57,7 +57,7 @@
                 <div class="col-12 mt-1">
                     <a href="{{ url('about') }}" class="font-weight-bold">{{ 'aboutuspage' | trans }}</a> &bull;
                     <a href="{{ url('donate') }}">{{ 'donate' | trans }}</a> &bull;
-                    <a href="{{ url('terms_language', {'language': app.request.locale}) }}" class="footnav" target="new">{{ 'termsofuse' | trans }}</a> &bull;
+                    <a href="{{ url('terms_of_use', {'locale': app.request.locale}) }}" class="footnav" target="new">{{ 'termsofuse' | trans }}</a> &bull;
                     <a href="{{ url('privacy') }}" class="footnav" target="new">{{ 'privacy' | trans }}</a> &bull;
                     <a href="{{ url('data_rights') }}" class="footnav" target="new">{{ 'datarights' | trans }}</a> &bull;
                     <a href="{{ url('imprint') }}" class="footnav">{{ 'impressum' | trans }}</a> &bull;

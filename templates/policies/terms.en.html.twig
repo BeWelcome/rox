@@ -2,7 +2,10 @@
 
 {% block content %}
     <h1>BeWelcome Terms of Use</h1>
-    <p>These Terms of Use were last updated on 13 November 2019. (<a href="{{ url('terms_of_use', {'locale':'fr'}) }}">French
+    {%  if locale != 'en' %}
+        <p><strong>{{ 'terms.not.translated'|trans }}</strong></p>
+    {% endif %}
+    <p>These Terms of Use will supersede the <a href="{{ url('old_terms_language', {'locale': locale }) }}">currently valid version</a> starting July, 1st 2020. (<a href="{{ url('terms_of_use', {'locale':'fr'}) }}">French
             version</a>)</p>
 
     <p>BeWelcome (<a href="https://www.bewelcome.org">www.bewelcome.org</a>) is a network that promotes the ideas of

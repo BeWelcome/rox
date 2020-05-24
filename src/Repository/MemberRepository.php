@@ -52,6 +52,10 @@ class MemberRepository extends ServiceEntityRepository implements UserLoaderInte
      */
     public function loadUserByUsername($username)
     {
+        if (empty($username)) {
+            return null;
+        }
+
         return $this->createQueryBuilder('u')
             ->where('u.username = :username OR u.email = :email')
             ->setParameter('username', $username)

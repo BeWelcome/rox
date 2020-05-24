@@ -63,6 +63,10 @@ class GroupsController extends RoxControllerBase
         {
             $this->redirectAbsolute($this->router->url('groups_overview'));
         }
+        if ($group->approved == 0) {
+            $this->setFlashNotice($this->_model->getWords()->get('group.not.approved.yet'));
+            return $this->redirectAbsolute('/groups/search');
+        }
         $this->_model->setGroupVisit($group->getPKValue());
         $page = new GroupStartPage();
         $page->group = $group;

@@ -29,8 +29,8 @@ class FindMemberFormType extends AbstractType
                     'pattern'
                 ]
             ])
-            ->add('reset_password', SubmitType::class, [
-                'label' => 'label.reset.password',
+            ->add('search_member', SubmitType::class, [
+                'label' => 'label.search.member',
             ]);
     }
 }

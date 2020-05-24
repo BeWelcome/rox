@@ -31,24 +31,40 @@ class PoliciesController extends AbstractController
 
     /**
      * @Route("/privacy/{locale}", name="privacy_policy",
-     *     requirements={"locale":"en|fr"})
+     *     _defaults={"locale":"en"})
+     *
      * @param string $locale
      * @return Response
      */
     public function showPrivacyPolicy(string $locale)
     {
+        switch($locale) {
+            case 'en':
+            case 'fr':
+                // Show English or French version depending on locale (no translations at the moment)!
+                break;
+            default:
+                $locale = 'en';
+        }
         return $this->render('policies/privacy.'.$locale.'.html.twig');
     }
 
     /**
      * @Route("/datarights/{locale}", name="data_rights",
-     *     requirements={"locale":"en|fr"},
      *     defaults={"locale":"en"})
      * @param string $locale
      * @return Response
      */
     public function showDataRights(string $locale)
     {
+        switch($locale) {
+            case 'en':
+            case 'fr':
+                // Show English or French version depending on locale (no translations at the moment)!
+                break;
+            default:
+                $locale = 'en';
+        }
         return $this->render('policies/datarights.'.$locale.'.html.twig');
     }
 }

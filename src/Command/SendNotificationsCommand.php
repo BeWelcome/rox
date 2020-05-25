@@ -3,25 +3,20 @@
 namespace App\Command;
 
 use App\Doctrine\MemberStatusType;
-use App\Entity\BroadcastMessage;
 use App\Entity\ForumPost;
-use App\Entity\Member;
-use App\Entity\Notification;
 use App\Entity\PostNotification;
+use App\Repository\PostNotificationRepository;
 use App\Utilities\MailerTrait;
-use App\Utilities\MessageTrait;
 use App\Utilities\TranslatorTrait;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bridge\Twig\Mime\TemplatedEmail;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
-use Symfony\Component\Mailer\Mailer;
 use Symfony\Component\Mime\Address;
 
 class SendNotificationsCommand extends Command
@@ -38,10 +33,16 @@ class SendNotificationsCommand extends Command
      */
     private $entityManager;
 
-    public function __construct(EntityManagerInterface $entityManager, ParameterBagInterface $params)
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    public function __construct(EntityManagerInterface $entityManager, ParameterBagInterface $params, LoggerInterface $logger)
     {
         parent::__construct();
         $this->params = $params;
+        $this->logger = $logger;
         $this->entityManager = $entityManager;
     }
 
@@ -90,6 +91,8 @@ class SendNotificationsCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $this->logger->notice('Started the export');
+
         $io = new SymfonyStyle($input, $output);
         $batchSize = $input->getArgument('batchSize');
 
@@ -98,9 +101,10 @@ class SendNotificationsCommand extends Command
         }
 
 
+        /** @var PostNotificationRepository $notificationQueue */
         $notificationQueue = $this->entityManager->getRepository(PostNotification::class);
         /** @var PostNotification[] $scheduled */
-        $scheduledNotifications = $notificationQueue->findBy(['status' => 'ToSend'], ['updated' => 'ASC'], $batchSize, 0);
+        $scheduledNotifications = $notificationQueue->getScheduledNotifications($batchSize);
 
         $sent = 0;
         if (!empty($scheduledNotifications))

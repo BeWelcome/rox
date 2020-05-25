@@ -58,12 +58,13 @@ class GroupsController extends RoxControllerBase
      */
     public function showGroup()
     {
+        $member = $this->_model->getLoggedInMember();
         $group = $this->_getGroupFromRequest();
         if (false === $group || ($group->Type == GroupType::INVITE_ONLY && !$this->_model->getLoggedInMember()))
         {
             $this->redirectAbsolute($this->router->url('groups_overview'));
         }
-        if ($group->approved == 0) {
+        if (($group->approved <> 1) && !$group->isGroupAdmin($member)) {
             $this->setFlashNotice($this->_model->getWords()->get('group.not.approved.yet'));
             return $this->redirectAbsolute('/groups/search');
         }

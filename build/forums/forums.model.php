@@ -2039,7 +2039,7 @@ WHERE `id` = '$this->threadid'
                 `authorid`, `create_time`, `message`,`IdWriter`,`IdFirstLanguageUsed`,`PostVisibility`)
             VALUES (?, NOW(), ?, ?, ?, ?)
             ");
-        $text = $this->dao->escape($this->cleanupText($vars['topic_text']));
+        $text = $this->cleanupText($vars['topic_text']);
         $userId = $User->getId();
         $memberId = $this->session->get("IdMember");
         $language = $this->GetLanguageChoosen();
@@ -2113,7 +2113,7 @@ WHERE `id` = '$this->threadid'
                 `continent`,`IdFirstLanguageUsed`,`IdGroup`,`ThreadVisibility`)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ");
- 		$title = $this->dao->escape(strip_tags($vars['topic_title']));
+ 		$title = strip_tags($vars['topic_title']);
  		$statement->bindParam(1, $title);
  		$statement->bindParam(2, $postId);
  		$statement->bindParam(3, $postId);

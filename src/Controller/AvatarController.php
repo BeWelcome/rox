@@ -46,7 +46,7 @@ class AvatarController extends AbstractController
                 $suffix = '';
         }
 
-        if (!$this->isGranted('IS_AUTHENTICATED_FULLY')) {
+        if (!$this->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             $filename = 'images/empty_avatar' . $suffix . '.png';
 
             return new BinaryFileResponse($filename);

@@ -111,6 +111,9 @@
     "doctrine/reflection": {
         "version": "v1.1.0"
     },
+    "doctrine/sql-formatter": {
+        "version": "1.0.1"
+    },
     "egulias/email-validator": {
         "version": "2.1.17"
     },
@@ -175,9 +178,6 @@
     },
     "intervention/image": {
         "version": "2.5.1"
-    },
-    "jdorn/sql-formatter": {
-        "version": "v1.2.17"
     },
     "judev/php-htmltruncator": {
         "version": "1.2.2"

@@ -31,7 +31,7 @@ class SecurityController extends AbstractController
     public function loginAction(AuthenticationUtils $helper)
     {
         $user = $this->getUser();
-        if ($user) {
+        if (null !== $user) {
             return $this->redirectToRoute('homepage');
         }
 

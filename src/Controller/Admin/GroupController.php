@@ -192,6 +192,9 @@ class GroupController extends AbstractController
         );
 
         $referrer = $request->headers->get('referer');
+        if (null === $referrer ) {
+            return $this->redirectToRoute('admin_groups_approval');
+        }
 
         return $this->redirect($referrer);
     }

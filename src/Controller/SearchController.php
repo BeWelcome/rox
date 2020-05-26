@@ -205,7 +205,7 @@ class SearchController extends AbstractController
             $pager->setCurrentPage($data->page);
         }
 
-        return $this->render('search/searchmembers.html.twig', [
+        return $this->render('search/searchlocations.html.twig', [
             'form' => $form->createView(),
             'pager' => $pager,
             'routeName' => 'search_members_ajax',
@@ -230,7 +230,7 @@ class SearchController extends AbstractController
         if ('POST' !== $request->getMethod()) {
             // JavaScript doesn't work on client
             // redirect to search members
-            return $this->redirectToRoute('search_members', $request->query->all());
+            return $this->redirectToRoute('search_locations', $request->query->all());
         }
 
         $searchFormRequest = SearchFormRequest::fromRequest($request, $this->getDoctrine()->getManager());

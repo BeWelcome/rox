@@ -202,7 +202,7 @@ class LandingController extends AbstractController
      */
     public function indexAction(CommunityNewsModel $communityNewsModel, DonateModel $donateModel)
     {
-        if (!$this->isGranted('IS_AUTHENTICATED_FULLY')) {
+        if (!$this->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             throw $this->createAccessDeniedException();
         }
 

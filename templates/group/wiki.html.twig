@@ -2,7 +2,8 @@
 {% import 'macros.twig' as macros %}
 
 {% block content %}
-    <h1>{{ title | title }}</h1>
+    <h5><a href="{{ url('groups_search') }}">{{ 'groups'|trans }}</a> &raquo; <a href="{{ url('group_start', {'group_id': group.id}) }}">{{ group.name }}</a></h5>
+    <h3>{{ 'wiki' }}: {{ title | title }}</h3>
 
     {% if wikipage %}
         <div id="wiki">{{ wikipage | raw }}</div>

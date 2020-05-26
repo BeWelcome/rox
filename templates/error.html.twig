@@ -43,7 +43,7 @@
 
     {% set blockcontent %}{% block content %}{% endblock content %}{% endset %}
 
-    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+    {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
         <p>
             Hi {{ app.user.Username }},<br>
             {{ blockcontent | raw }}

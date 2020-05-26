@@ -14,7 +14,7 @@
     <h1>{{ 'search.members'|trans }}</h1>
     <p>{{ 'search.member.abstract'|trans }}</p>
     {{ form(form) }}
-    {% if members %}
+    {% if members is defined %}
         <div class="row">
         {% for member in members %}
             {% set fields = member.memberFields %}

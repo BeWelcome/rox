@@ -32,6 +32,16 @@ Boston, MA  02111-1307, USA.
      */
 class GroupMemberSettingsPage extends GroupsBasePage
 {
+    protected function teaserContent()
+    {
+        $words = $this->getWords();
+        ?>
+        <div>
+            <h5><a href="forums"><?= $words->get('CommunityDiscussions');?></a> &raquo; <a href="groups/forums"><?= $words->get('Groups');?></a> &raquo; <a href="group/<?=$this->group->getPKValue(); ?>"><?php echo htmlspecialchars($this->getGroupTitle(),ENT_QUOTES); ?></a>  &raquo;  <?= $words->get('GroupMemberSettings');?></h5>
+        </div>
+        <?php
+    }
+
     protected function column_col3()
     {
         echo '<div class="row"><div class="col-12">';
@@ -76,15 +86,16 @@ class GroupMemberSettingsPage extends GroupsBasePage
                         </label>
                     </div>
                 </div>
-            </div>
             <?php if ($membershipinfo->IdMember < 0) { ?>
                 <p><?= $words->get('GroupMemberSettingsDisabledInfo') ?></p>
             <?php } ?>
             <div class="col-12">
             <input type="submit" class="btn btn-primary pull-right" value="<?= $words->getBuffered('GroupsUpdateMemberSettings') ;?>"><?=$words->flushBuffer();?>
             </div>
+            </div>
         </form>
-        </div></div>
+        </div>
+        </div>
         <?php
     }
 

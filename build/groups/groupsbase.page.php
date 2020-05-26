@@ -164,7 +164,8 @@ class GroupsBasePage extends PageWithActiveSkin
         // &gt; or &raquo; ?
         $words = $this->getWords();
         ?>
-        <h2><a href="groups/search"><?= $words->get('Groups');?></a> &raquo; <?= htmlspecialchars($this->group->Name, ENT_QUOTES) ?></h2>
+        <h5><a href="forums"><?= $words->get('CommunityDiscussions');?></a> &raquo; </a><a href="groups/forums"><?= $words->get('Groups');?></a></h5>
+        <h3><?= htmlspecialchars($this->group->Name, ENT_QUOTES) ?></h3>
         <?php
     }
 

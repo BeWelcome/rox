@@ -69,7 +69,7 @@ $vars =& PPostHandler::getVars($callbackId);
         if ($edit) {
             echo $words->getFormatted("forum_edit_post");
         } else {
-            echo $words->getFormatted("forum_reply_title") . ' &quot;<i>' . $topic->topicinfo->title . '</i>&quot;';
+            echo $words->getFormatted("forum_reply_title") . ' &quot;<i>' . strip_tags($topic->topicinfo->title) . '</i>&quot;';
         }
     }
     echo '</h3>';
@@ -184,7 +184,7 @@ $vars =& PPostHandler::getVars($callbackId);
         </div>
 
             <div class="col-12 col-md-4 order-3 order-md-1 mb-2">
-                <input type="submit" class="btn btn-primary px-5" value="<?php
+                <input type="submit" class="btn btn-primary" value="<?php
                 if ($allow_title) { // New Topic
                     if ($edit) {
                         echo $words->getFormatted("forum_label_update_topic");

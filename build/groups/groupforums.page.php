@@ -25,27 +25,42 @@ Boston, MA  02111-1307, USA.
      */
 
     /**
-     * displays members of a group
+     * handles the forum page for groups
      *
      * @package Apps
      * @subpackage Groups
      */
-class GroupMembersPage extends GroupsBasePage
+
+
+class GroupForumsOverviewPage extends GroupsBasePage
 {
+    protected function teaserContent()
+    {
+        // &gt; or &raquo; ?
+        $words = $this->getWords();
+        ?>
+        <div>
+            <h5><a href="forums"><?= $words->get('CommunityDiscussions');?></a> &raquo; <a href="groups/forums"><?= $words->get('Groups');?></a> &raquo; <a href="group/<?=$this->group->getPKValue(); ?>"><?php echo htmlspecialchars($this->getGroupTitle(),ENT_QUOTES); ?></a></h5>
+            <h3><?= $words->get('GroupDiscussions');?></h3>
+        </div>
+        <?php
+    }
+
+    protected function column_col3()
+    {
+        $words = $this->getWords();
+        $Forums = new ForumsController;
+        $Forums->setEnvironment($this->environment);
+        $Forums->index();
+    }
+
     protected function teaserContent()
     {
         $words = $this->getWords();
         ?>
         <div>
-            <h5><a href="forums"><?= $words->get('CommunityDiscussions');?></a> &raquo; <a href="groups/forums"><?= $words->get('Groups');?></a> &raquo; <a href="group/<?=$this->group->getPKValue(); ?>"><?php echo htmlspecialchars($this->getGroupTitle(),ENT_QUOTES); ?></a></h5>
-            <h3><?= $words->get('GroupMembers');?></h3>
+            <h2><a href="groups/search"><?= $words->get('Groups');?></a></h2>
         </div>
         <?php
     }
-
-
-    protected function getSubmenuActiveItem() {
-        return 'members';
-    }
-
 }

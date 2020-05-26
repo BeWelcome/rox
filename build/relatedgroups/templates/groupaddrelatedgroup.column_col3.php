@@ -1,3 +1,4 @@
+<div class="row">
 <?php
 /*
 Copyright (c) 2007-2009 BeVolunteer
@@ -64,4 +65,4 @@ Boston, MA  02111-1307, USA.
                 }
             endforeach;
         } ?>
-
+</div>

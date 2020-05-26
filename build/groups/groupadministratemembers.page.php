@@ -51,7 +51,8 @@ class GroupMemberAdministrationPage extends GroupsBasePage
         // &gt; or &raquo; ?
         ?>
         <div>
-            <h2><a href="groups/search"><?= $words->get('Groups'); ?></a> &raquo; <a href="group/<?=$this->group->getPKValue(); ?>"><?php echo htmlspecialchars($this->getGroupTitle(),ENT_QUOTES); ?></a> &raquo; <?= $words->get('GroupsAdministrateMembers'); ?></h2>
+            <h5><a href="forums"><?= $words->get('CommunityDiscussions');?></a> &raquo; <a href="groups/forums"><?= $words->get('Groups');?></a> &raquo; <a href="group/<?=$this->group->getPKValue(); ?>"><?php echo htmlspecialchars($this->getGroupTitle(),ENT_QUOTES); ?></a></h5>
+            <h2><?= $words->get('GroupsAdministrateMembers'); ?></h2>
         </div>
         <?php
     }
@@ -74,9 +75,6 @@ class GroupMemberAdministrationPage extends GroupsBasePage
 
         ?>
     <div class="row">
-        <div class="col-12">
-            <h3><?= $words->get('GroupsAdministrateMembers'); ?></h3>
-        </div>
         <div class="col-12">
             <?php $this->pager_widget->render(); ?>
         </div>

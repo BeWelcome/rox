@@ -84,7 +84,7 @@ $layoutbits = new MOD_layoutbits();
             }
             echo "<a href=\"",$url,"\">" ;
             echo $words->fTrad($thread->IdTitle);
-            ?></a>
+            ?>
             <br>
             <span class="small gray"><?php
                 // show tags if post is part of a group

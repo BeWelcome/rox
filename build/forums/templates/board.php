@@ -20,19 +20,19 @@ $navigationPath .= '<a href="' . htmlspecialchars($boards->getBoardLink(), ENT_Q
 
 ?>
 <div class="row">
-<div class="col-8">
+<div class="col-8"><h3>
 <?php echo $words->flushBuffer();
 
 	$number = $boards->getTotalThreads();
 	if ($number == 0) {
 		echo $words->getFormatted("Found0Threads");
-		$this->page->SetMetaRobots("NOINDEX, NOFOLLOW") ;
 	} else if ($number == 1) {
 		echo $words->getFormatted("Found1Threads");
 	} else {
 		echo $words->getFormatted("FoundXThreads", $number);
 	}
 	?>
+    </h3>
 </div>
 
 <?php

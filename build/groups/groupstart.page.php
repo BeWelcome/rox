@@ -33,6 +33,16 @@ use App\Doctrine\GroupType;
      */
 class GroupStartPage extends GroupsBasePage
 {
+    protected function teaserContent()
+    {
+        // &gt; or &raquo; ?
+        $words = $this->getWords();
+        ?>
+        <h5><a href="forums"><?= $words->get('CommunityDiscussions');?></a> &raquo; <a href="groups/forums"><?= $words->get('Groups');?></a></h5>
+        <h3><a href="/group/<?= $this->group->id ?>"><?= htmlspecialchars($this->group->Name, ENT_QUOTES) ?></a></h3>
+        <?php
+    }
+
     protected function column_col3()
     {
         $words = $this->getWords();

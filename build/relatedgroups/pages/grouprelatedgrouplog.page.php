@@ -33,6 +33,16 @@ Boston, MA  02111-1307, USA.
      */
 class GroupRelatedGroupLogPage extends GroupsBasePage
 {
+    protected function teaserContent()
+    {
+        $words = $this->getWords();
+        ?>
+        <div>
+            <h5><a href="forums"><?= $words->get('CommunityDiscussions');?></a> &raquo; <a href="groups/forums"><?= $words->get('Groups');?></a> &raquo; <a href="group/<?=$this->group->getPKValue(); ?>"><?php echo htmlspecialchars($this->getGroupTitle(),ENT_QUOTES); ?></a>  &raquo;  <?= $words->get('CurrentRelatedGroupsTitle');?></h5>
+        </div>
+        <?php
+    }
+
     protected function column_col3() {
         $layoutbits = new MOD_layoutbits();
         $words = $this->getWords();

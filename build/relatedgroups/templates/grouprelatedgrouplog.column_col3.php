@@ -1,3 +1,4 @@
+<div class="row">
 <?php
 /*
 Copyright (c) 2007-2009 BeVolunteer
@@ -27,21 +28,23 @@ Boston, MA  02111-1307, USA.
         foreach ($relatedgroups as $group_data) :
         ?>
 
-        <div class="col-12 col-md-6 col-lg-4">
-            <div class="float-left h-100 mr-2 groupimg">
-                <!-- group image -->
-                <a href="group/<?=$group_data->getPKValue() ?>">
-                    <img class="framed groupimg" alt="<?=htmlspecialchars($group_data->Name, ENT_QUOTES) ?>" src="<?= ((strlen($group_data->Picture) > 0) ? "group/thumbimg/{$group_data->getPKValue()}" : 'images/icons/group.png' ) ?>" />
-                </a>
-            </div>
-            <div>
-                <!-- group name -->
-                <a href="group/<?=$group_data->getPKValue() ?>" class="h4"><?=htmlspecialchars($group_data->Name, ENT_QUOTES) ?></a>
-                <!-- group details -->
-                <ul class="groupul mt-1">
-                    <li><i class="fa fa-users pr-1" title="<?php echo $words->get('GroupsMemberCount');?>"></i><?=$group_data->getMemberCount(); ?></li>
-                    <li><i class="fa fa-history pr-1" title="<?= $words->get('GroupsDateCreation');?>"></i><?=date('d F Y', ServerToLocalDateTime(strtotime($group_data->created), $this->getSession())); ?></li>
-                </ul>
+        <div class="col-12 col-md-6">
+            <div class="d-flex flex-row justify-content-start">
+                <div class="mr-2">
+                    <!-- group image -->
+                    <a href="group/<?=$group_data->getPKValue() ?>">
+                        <img class="framed groupimg" alt="<?=htmlspecialchars($group_data->Name, ENT_QUOTES) ?>" src="<?= ((strlen($group_data->Picture) > 0) ? "group/thumbimg/{$group_data->getPKValue()}" : 'images/icons/group.png' ) ?>" />
+                    </a>
+                </div>
+                <div>
+                    <!-- group name -->
+                    <a href="group/<?=$group_data->getPKValue() ?>" class="h4"><?=htmlspecialchars($group_data->Name, ENT_QUOTES) ?></a>
+                    <!-- group details -->
+                    <ul class="groupul mt-1 text-truncate">
+                        <li><i class="fa fa-users pr-1" title="<?php echo $words->get('GroupsMemberCount');?>"></i><?=$group_data->getMemberCount(); ?></li>
+                        <li><i class="fa fa-history pr-1" title="<?= $words->get('GroupsDateCreation');?>"></i><?=date('d F Y', ServerToLocalDateTime(strtotime($group_data->created), $this->getSession())); ?></li>
+                    </ul>
+                </div>
             </div>
         </div>
         <?php endforeach; ?>
@@ -49,7 +52,7 @@ Boston, MA  02111-1307, USA.
     <div class="col-12">
         <?php $logvar = $this->logs;?>
     </div>
-    <div class="col-12">
+    <div class="col-12 mt-3">
         <?php
             if ($this->isGroupMember())  {
                 ?>
@@ -70,27 +73,29 @@ Boston, MA  02111-1307, USA.
     if ($this->isGroupAdmin) {
         ?>
         <div class="col-12 mt-3">
-            <h4><?php echo $words->get('NbOfLogEntries', count($logvar)); ?></h4>
+            <h5><?php echo $words->get('NbOfLogEntries', count($logvar)); ?></h5>
         </div>
             <?php
                 foreach ($logvar as &$value) : ?>
 
                     <div class="col-12 col-md-6">
-                        <div class="float-left h-100 mr-2">
-                            <a href="members/<?php echo $value->member->Username; ?>">
-                                <img class="framed float-left" src="members/avatar/<?php echo $value->member->Username; ?>?50"/>
-                            </a>
-                        </div>
-                        <div class="p-2">
-                            <?php
-                            $layoutbits->ago(strtotime($value->ts));
-                            ?>
-                            <?php
-                            $memberlink = '<a href="members/' . $value->member->Username . '">' . $value->member->Username . '</a>';
-                            $grouplink =  '<a href="group/' . $value->relatedgroup->getPKValue() . '">' . htmlspecialchars($value->relatedgroup->Name, ENT_QUOTES) . '</a>';
-                            $logentry = $words->get($value->RelatedGroupAction, $memberlink, $grouplink);
-                            echo $logentry;
-                            echo "<br>" . $layoutbits->ago(strtotime($value->ts)); ?>
+                        <div class="d-flex flex-row justify-content-start">
+                            <div class="mr-2">
+                                <a href="members/<?php echo $value->member->Username; ?>">
+                                    <img class="framed" src="members/avatar/<?php echo $value->member->Username; ?>?50"/>
+                                </a>
+                            </div>
+                            <div>
+                                <?php
+                                $layoutbits->ago(strtotime($value->ts));
+                                ?>
+                                <?php
+                                $memberlink = '<a href="members/' . $value->member->Username . '">' . $value->member->Username . '</a>';
+                                $grouplink =  '<a href="group/' . $value->relatedgroup->getPKValue() . '">' . htmlspecialchars($value->relatedgroup->Name, ENT_QUOTES) . '</a>';
+                                $logentry = $words->get($value->RelatedGroupAction, $memberlink, $grouplink);
+                                echo $logentry;
+                                echo "<br>" . $layoutbits->ago(strtotime($value->ts)); ?>
+                            </div>
                         </div>
                     </div>
 
@@ -100,3 +105,4 @@ Boston, MA  02111-1307, USA.
         <?php
     }
     ?>
+</div>

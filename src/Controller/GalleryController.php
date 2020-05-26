@@ -91,7 +91,7 @@ class GalleryController extends AbstractController
      */
     public function handleImageUploadToGallery(Request $request, ValidatorInterface $validator)
     {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_REMEMBERED');
 
         /** @var Member $member */
         $member = $this->getUser();
@@ -260,7 +260,7 @@ class GalleryController extends AbstractController
      */
     public function uploadImageFromCKEditor5(Request $request, ValidatorInterface $validator)
     {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_REMEMBERED');
 
         $response = new JsonResponse();
 
@@ -333,7 +333,7 @@ class GalleryController extends AbstractController
      */
     public function showUploadedImage(UploadedImage $image)
     {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_REMEMBERED');
 
         $filepath = $this->getParameter('upload_directory') . '/' . $image->getFilename();
 

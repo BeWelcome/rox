@@ -75,7 +75,7 @@ class CommunityNewsController extends AbstractController
      */
     public function addCommentAction(Request $request, CommunityNews $communityNews)
     {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY', null, "Can't access this page");
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_REMEMBERED', null, "Can't access this page");
 
         $communityNewsCommentRequest = new CommunityNewsCommentRequest();
         $form = $this->createForm(CommunityNewsCommentType::class, $communityNewsCommentRequest);

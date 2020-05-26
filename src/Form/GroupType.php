@@ -61,7 +61,7 @@ class GroupType extends AbstractType
                     'expanded' => true,
                     'multiple' => false,
                     'label' => 'groupspublicstatusheading',
-r                ]);
+                ]);
         }
         $formBuilder
             ->add('membersOnly', ChoiceType::class, [

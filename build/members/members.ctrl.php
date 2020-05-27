@@ -531,11 +531,7 @@ class MembersController extends RoxControllerBase
             if ($lang) {
                 $shortCode = $lang->ShortCode;
                 // hack to redirect to new language
-                $redirect = $this->getRouter()->generate(
-                    'rox_in_language',
-                    ['language' => $shortCode],
-                    UrlGenerator::ABSOLUTE_URL
-                );
+                $redirect = 'rox/in/'. $shortCode;
                 if ($redirect) {
                     $this->setFlashNotice($this->getWords()->get('PreferredLanguageSetFlashNotice'));
                 }

@@ -168,10 +168,7 @@ http://www.bewelcome.org/donate/?action=done&tx=0ME24142PE152304A&st=Completed&a
          $header = "POST /cgi-bin/webscr HTTP/1.0\r\n";
          $header .= "Content-Type: application/x-www-form-urlencoded\r\n";
          $header .= "Content-Length: " . strlen($req) . "\r\n\r\n";
-         $fp = fsockopen ('www.paypal.com', 80, $errno, $errstr, 30);
-         // If possible, securely post back to paypal using HTTPS
-         // Your PHP server will need to be SSL enabled
-         // $fp = fsockopen ('ssl://www.paypal.com', 443, $errno, $errstr, 30);
+         $fp = fsockopen ('tls://www.paypal.com', 443, $errno, $errstr, 30);
 
 
          if (!$fp) {

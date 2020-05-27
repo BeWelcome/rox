@@ -29,7 +29,7 @@
                     } only %}
                     in
                     {# Provide a way to search in member's location #}
-                    {{ form_start( searchLocation, { 'action': path('search_members'), 'attr' : {'style' : 'display: inline;'}} ) }}
+                    {{ form_start( searchLocation, { 'action': path('search_locations'), 'attr' : {'style' : 'display: inline;'}} ) }}
                     {{ form_widget(searchLocation.updateMap, {'attr' : {'class' : 'searchsubmit ml-1 mb-0 homecity'},
                         'label': searchLocation.vars.value.location } ) }}
                     <div class="d-none invisible">{{ form_rest(searchLocation) }}</div>

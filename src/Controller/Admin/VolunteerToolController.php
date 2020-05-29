@@ -553,7 +553,7 @@ ORDER BY count(msg.id) DESC')->fetchAll();
     {
         $subMenu = [];
         if ($this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
-            || !$this->isGranted(Member::ROLE_ADMIN_PROFILE)
+            || $this->isGranted(Member::ROLE_ADMIN_PROFILE)
         ) {
             $subMenu[self::CHANGE_USERNAME] = [
                 'key' => self::CHANGE_USERNAME,
@@ -561,8 +561,8 @@ ORDER BY count(msg.id) DESC')->fetchAll();
             ];
         }
         if ($this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
-            || !$this->isGranted(Member::ROLE_ADMIN_PROFILE)
-            || !$this->isGranted(Member::ROLE_ADMIN_ACCEPTER)
+            || $this->isGranted(Member::ROLE_ADMIN_PROFILE)
+            || $this->isGranted(Member::ROLE_ADMIN_ACCEPTER)
         ) {
             $subMenu[self::FIND_USER] = [
                 'key' => self::FIND_USER,
@@ -570,7 +570,7 @@ ORDER BY count(msg.id) DESC')->fetchAll();
             ];
         }
         if ($this->isGranted(Member::ROLE_ADMIN_ADMIN)
-            || !$this->isGranted(Member::ROLE_ADMIN_CHECKER)
+            || $this->isGranted(Member::ROLE_ADMIN_CHECKER)
         ) {
             $subMenu[self::CHECK_FEEDBACK] = [
                 'key' => self::CHECK_FEEDBACK,
@@ -578,7 +578,7 @@ ORDER BY count(msg.id) DESC')->fetchAll();
             ];
         }
         if ($this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
-            || !$this->isGranted(Member::ROLE_ADMIN_CHECKER)
+            || $this->isGranted(Member::ROLE_ADMIN_CHECKER)
         ) {
             $subMenu[self::CHECK_TOP_SPAMMER] = [
                 'key' => self::CHECK_TOP_SPAMMER,
@@ -590,7 +590,7 @@ ORDER BY count(msg.id) DESC')->fetchAll();
             ];
         }
         if ($this->isGranted(Member::ROLE_ADMIN_ADMIN)
-            || !$this->isGranted(Member::ROLE_ADMIN_CHECKER)
+            || $this->isGranted(Member::ROLE_ADMIN_CHECKER)
         ) {
             $subMenu[self::AGE_BY_COUNTRY] = [
                 'key' => self::AGE_BY_COUNTRY,
@@ -598,8 +598,8 @@ ORDER BY count(msg.id) DESC')->fetchAll();
             ];
         }
         if ($this->isGranted(Member::ROLE_ADMIN_PROFILE)
-            || !$this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
-            || !$this->isGranted(Member::ROLE_ADMIN_ADMIN)
+            || $this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
+            || $this->isGranted(Member::ROLE_ADMIN_ADMIN)
         ) {
             $subMenu[self::MESSAGES_SENT] = [
                 'key' => self::MESSAGES_SENT,

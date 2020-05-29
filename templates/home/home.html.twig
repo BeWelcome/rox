@@ -8,7 +8,7 @@
     <link rel="shortcut icon" href="{{ asset('favicon.ico') }}"/>
 
     <title>{{ title }} - BeWelcome</title>
-    <meta name="description" content="{{ 'default_meta_description' }}"/>
+    <meta name="description" content="{{ 'default_meta_description' | trans }}"/>
     <meta name="keywords" content="{{ 'default_meta_keyword' | trans }}"/>
 
     {{ encore_entry_link_tags('bewelcome') }}

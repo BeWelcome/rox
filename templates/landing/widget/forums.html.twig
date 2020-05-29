@@ -7,7 +7,7 @@
             <div class="pr-2">{{ macros.avatar(thread.firstPost.author.Username, 50, true) }}</div>
             <div class="dashentry">
                 <div class="text-truncate text">
-                    <a href="{{ url('forum_thread', {'threadId': thread.id}) }}">{{ thread.title }}</a>
+                    <a href="{{ url('forum_thread', {'threadId': thread.id}) }}">{{ thread.title|striptags }}</a>
                 </div>
                 <div>
                     <small>in

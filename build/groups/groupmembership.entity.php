@@ -198,7 +198,7 @@ class GroupMembership extends RoxEntityBase
             return array();
         }
 
-        $where = "id IN ('" . implode("','", $groups) . "') AND Approved = 1 ORDER BY Name";
+        $where = "id IN ('" . implode("','", $groups) . "') AND NOT (Name LIKE '[Archived] %') AND Approved = 1 ORDER BY Name";
         return $this->createEntity('Group')->findByWhereMany($where);
     }
 

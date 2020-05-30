@@ -4,6 +4,7 @@ namespace App\Model;
 
 use App\Entity\Activity;
 use App\Entity\Member;
+use App\Entity\Message;
 use App\Repository\ActivityRepository;
 use App\Utilities\ManagerTrait;
 use Doctrine\ORM\OptimisticLockException;
@@ -32,34 +33,12 @@ class LandingModel
      *
      * @return array
      */
-    public function getMessages(Member $member, $unread, $limit = 0)
+    public function getMessagesAndRequests(Member $member, $unread, $limit = 5)
     {
-        $qb = $this->getManager()->createQueryBuilder();
-        $qb
-            ->select('m')
-            ->from('App:Message', 'm')
-            ->where('m.receiver = :member')
-            ->setParameter('member', $member);
-        if ($unread) {
-            $qb
-                ->andWhere(
-                    $qb->expr()->orX(
-                        $qb->expr()->eq('m.firstRead', "'0000-00-00 00:00.00'"),
-                        $qb->expr()->isNull('m.firstRead')
-                    )
-                );
-        }
+        $messageRepository = $this->getManager()->getRepository(Message::class);
 
-        if (0 !== $limit) {
-            $qb->setMaxResults($limit);
-        }
-
-        // throw new Exception($qb->getDQL());
-
-        return $qb
-            ->orderBy('m.created', 'DESC')
-            ->getQuery()
-            ->getResult();
+        $messagesAndRequests = $messageRepository->getLatestMessagesAndRequests($member, $unread, $limit);
+        return $messagesAndRequests;
     }
 
     /**

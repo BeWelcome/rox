@@ -555,4 +555,35 @@ class MessageRepository extends EntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function getLatestMessagesAndRequests(Member $member, bool $unread, int $limit = 5)
+    {
+        $qb = $this->createQueryBuilder('m')
+            ->where('m.receiver = :member')
+            ->setParameter('member', $member)
+            ->andWhere('NOT(m.deleteRequest LIKE :deleted)')
+            ->setParameter('deleted', '%' . DeleteRequestType::RECEIVER_DELETED . '%')
+            ->andWhere('NOT(m.deleteRequest LIKE :purged)')
+            ->setParameter('purged', '%' . DeleteRequestType::RECEIVER_PURGED . '%')
+            ->andWhere('m.folder = :folder')
+            ->setParameter('folder', InFolderType::NORMAL);
+        if ($unread) {
+            $qb
+                ->andWhere(
+                    $qb->expr()->orX(
+                        $qb->expr()->eq('m.firstRead', "'0000-00-00 00:00.00'"),
+                        $qb->expr()->isNull('m.firstRead')
+                    )
+                );
+        }
+
+        if (0 !== $limit) {
+            $qb->setMaxResults($limit);
+        }
+
+        return $qb
+            ->orderBy('m.created', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
 }

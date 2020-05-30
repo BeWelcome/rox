@@ -58,7 +58,7 @@ class LandingController extends AbstractController
         $em->persist($memberPreference);
         $em->flush();
 
-        $messages = $this->landingModel->getMessages($member, $unread, 5);
+        $messages = $this->landingModel->getMessagesAndRequests($member, $unread, 5);
 
         $content = $this->render('landing/widget/messages.html.twig', [
             'messages' => $messages,

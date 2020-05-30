@@ -2,6 +2,7 @@
 
 namespace App\Controller\Admin;
 
+use App\Doctrine\DomainType;
 use App\Entity\Faq;
 use App\Entity\FaqCategory;
 use App\Entity\Language;
@@ -14,6 +15,7 @@ use App\Form\FaqFormType;
 use App\Kernel;
 use App\Model\FaqModel;
 use App\Model\TranslationModel;
+use DateTime;
 use Doctrine\ORM\EntityRepository;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -146,8 +148,9 @@ class FaqController extends AbstractController
                 $word->setAuthor($author);
                 $word->setCode($data->wordCode);
                 $word->setSentence($data->description);
+                $word->setDomain(DomainType::MESSAGES);
                 $word->setlanguage($english);
-                $word->setCreated(new \DateTime());
+                $word->setCreated(new DateTime());
                 $word->setDescription('FAQ category');
                 $em->persist($word);
 
@@ -219,19 +222,21 @@ class FaqController extends AbstractController
 
                 $question = new Word();
                 $question->setAuthor($author);
+                $question->setDomain(DomainType::MESSAGES);
                 $question->setCode('FaqQ_' . $data->wordCode);
                 $question->setSentence($data->question);
                 $question->setlanguage($english);
-                $question->setCreated(new \DateTime());
+                $question->setCreated(new DateTime());
                 $question->setDescription('FAQ Question');
                 $em->persist($question);
 
                 $answer = new Word();
                 $answer->setAuthor($author);
+                $answer->setDomain(DomainType::MESSAGES);
                 $answer->setCode('FaqA_' . $data->wordCode);
                 $answer->setSentence($data->question);
                 $answer->setlanguage($english);
-                $answer->setCreated(new \DateTime());
+                $answer->setCreated(new DateTime());
                 $answer->setDescription('FAQ Question');
                 $em->persist($answer);
 
@@ -380,11 +385,11 @@ class FaqController extends AbstractController
 
             $question
                 ->setSentence($data->question)
-                ->setMajorUpdate(new \DateTime());
+                ->setMajorUpdate(new DateTime());
             $em->persist($question);
             $answer
                 ->setSentence($data->answer)
-                ->setMajorUpdate(new \DateTime());
+                ->setMajorUpdate(new DateTime());
             $em->persist($answer);
             $em->flush();
 

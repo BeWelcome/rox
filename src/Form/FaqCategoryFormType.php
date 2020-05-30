@@ -25,9 +25,6 @@ class FaqCategoryFormType extends AbstractType
             ->add('wordCode', TextType::class, [
                 'label' => 'label.admin.faq.category.translation.id',
                 'help' => 'help.admin.faq.category.translation.id',
-                'attr' => [
-                    'readonly' => true,
-                ],
             ])
             ->add('description', TextType::class, [
                 'label' => 'label.admin.faq.category.description',

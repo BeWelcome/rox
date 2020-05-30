@@ -31,7 +31,6 @@ class FaqFormType extends AbstractType
                 'label' => 'label.admin.faq.translation.id',
             ])
             ->add('question', CkEditorType::class, [
-                'async' => true,
                 'label' => 'label.admin.faq.question',
                 'attr' => [
                     'class' => 'editor',

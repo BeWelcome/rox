@@ -76,6 +76,7 @@ class LogModel
             'Geo',
             'Group',
             'hacking',
+            'Image',
             'Log',
             'Login',
             'lostpassword',

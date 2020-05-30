@@ -10,12 +10,14 @@ use App\Entity\UploadedImage;
 use App\Form\CustomDataClass\GalleryImageEditRequest;
 use App\Form\GalleryEditImageFormType;
 use App\Form\Select2Type;
+use App\Logger\Logger;
 use App\Utilities\ManagerTrait;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
 use App\Utilities\UniqueFilenameTrait;
 use Hidehalo\Nanoid\Client;
 use Intervention\Image\ImageManager;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\MakerBundle\Validator;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -330,6 +332,28 @@ class GalleryController extends AbstractController
         return $response;
     }
 
+
+    /**
+     * @Route("/gallery/show/uploaded/{id}", name="gallery_uploaded_ckeditor_old",
+     *     requirements={"id":"\d+"})
+     *
+     * @param UploadedImage $image
+     *
+     * @param Request $request
+     * @param Logger $logger
+     * @return Response
+     * @throws \Exception
+     */
+    public function showUploadedImageOld(UploadedImage $image, Request $request, Logger $logger)
+    {
+        $logger->write('Image ' . $image->getId()  . ' accessed using old URL','Image');
+
+        return $this->forward(GalleryController::class . '::showUploadedImage', [
+            'id' =>  $image->getId(),
+            'fileInfo' => '']
+        );
+    }
+
     /**
      * @Route("/gallery/show/uploaded/{id}/{fileInfo}", name="gallery_uploaded_ckeditor",
      *     requirements={"id":"\d+"})
@@ -338,8 +362,6 @@ class GalleryController extends AbstractController
      *
      * @param string $fileInfo
      * @return BinaryFileResponse
-     *
-     * @throw AccessDeniedException
      */
     public function showUploadedImage(UploadedImage $image, string $fileInfo)
     {

@@ -39,6 +39,13 @@ class UploadedImage
     /**
      * @var int
      *
+     * @ORM\Column(name="size", type="integer", nullable=false)
+     */
+    private $size = 0;
+
+    /**
+     * @var int
+     *
      * @ORM\Column(name="width", type="integer", nullable=false)
      */
     private $width = 0;
@@ -56,6 +63,13 @@ class UploadedImage
      * @ORM\Column(name="created", type="datetime", nullable=false)
      */
     private $created;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="fileinfo", type="text", length=32, nullable=false)
+     */
+    private $fileInfo;
 
     /**
      * @var int
@@ -192,10 +206,38 @@ class UploadedImage
         $this->created = new DateTime('now');
     }
 
-    public function setCreated(\DateTimeInterface $created): self
+    /**
+     * @param string $fileInfo
+     * @return UploadedImage
+     */
+    public function setFileInfo($fileInfo)
     {
-        $this->created = $created;
+        $this->fileInfo = $fileInfo;
 
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFileInfo(): string
+    {
+        return $this->fileInfo;
+    }
+
+    /**
+     * @return int
+     */
+    public function getSize(): int
+    {
+        return $this->size;
+    }
+
+    /**
+     * @param int $size
+     */
+    public function setSize(int $size): void
+    {
+        $this->size = $size;
     }
 }

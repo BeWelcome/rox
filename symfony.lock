@@ -156,6 +156,9 @@
     "hamcrest/hamcrest-php": {
         "version": "v1.2.2"
     },
+    "hashids/hashids": {
+        "version": "4.0.0"
+    },
     "hautelook/alice-bundle": {
         "version": "2.1",
         "recipe": {
@@ -169,6 +172,9 @@
             "./config/packages/test/hautelook_alice.yaml",
             "./fixtures/.gitignore"
         ]
+    },
+    "hidehalo/nanoid-php": {
+        "version": "1.1.6"
     },
     "html2text/html2text": {
         "version": "4.2.1"

@@ -14,6 +14,7 @@ use App\Utilities\ManagerTrait;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
 use App\Utilities\UniqueFilenameTrait;
+use Hidehalo\Nanoid\Client;
 use Intervention\Image\ImageManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\MakerBundle\Validator;
@@ -99,17 +100,18 @@ class GalleryController extends AbstractController
         $response = new JsonResponse();
         // Create Image constraint to check if uploaded file is an image and not something else
 
+        $this->getTranslator()->setLocale($request->getLocale());
+
+        /** @var UploadedFile $image */
+        $image = $request->files->get('file');
+
         $constraint = new Image([
-            'maxSize' => (int) ($this->getParameter('upload_max_size')),
+            'maxSize' => UploadedFile::getMaxFilesize(),
             'mimeTypes' => ['image/jpeg', 'image/png', 'image/gif'],
             'mimeTypesMessage' => 'upload.error.not_supported',
             'maxPixels' => self::MAX_PIXELS,
         ]);
 
-        /** @var UploadedFile $image */
-        $this->getTranslator()->setLocale($request->getLocale());
-
-        $image = $request->files->get('file');
         $violations = $validator->validate($image, $constraint);
 
         $originalName = $image->getClientOriginalName();
@@ -178,7 +180,7 @@ class GalleryController extends AbstractController
             'filename' => $originalName,
             'imageId' => $galleryImage->getId(),
             'constraints' => [
-                'size' => (int) ($this->getParameter('upload_max_size')),
+                'size' => UploadedFile::getMaxFilesize(),
                 'pixels' => self::MAX_PIXELS,
             ]
         ]);
@@ -214,6 +216,7 @@ class GalleryController extends AbstractController
             ->add('albums', Select2Type::class, [
                 'label' => 'gallery.upload_to_album',
                 'choices' => $albumTitles,
+                'choice_translation_domain' => false,
                 'searchbox' => false,
             ])
             ->add('files', FileType::class, [
@@ -267,7 +270,7 @@ class GalleryController extends AbstractController
         // Create Image constraint to check if uploaded file is an image and not something else
 
         $constraint = new Image([
-            'maxSize' => (int) ($this->getParameter('upload_max_size')),
+            'maxSize' => UploadedFile::getMaxFilesize(),
             'mimeTypes' => ['image/jpeg', 'image/png', 'image/gif'],
             'mimeTypesMessage' => 'upload.error.not_supported',
         ]);
@@ -297,13 +300,18 @@ class GalleryController extends AbstractController
             $fileName
         );
 
+        $nanoId = new Client();
+        $fileInfo = $nanoId->generateId(16, Client::MODE_DYNAMIC);
+
         // Write database entry and get id for response
         $em = $this->getDoctrine()->getManager();
         $uploadedImage = new UploadedImage();
         $uploadedImage->setFilename($fileName);
+        $uploadedImage->setSize($image->getSize());
         $uploadedImage->setwidth($width);
         $uploadedImage->setHeight($height);
         $uploadedImage->setMimeType($image->getMimeType());
+        $uploadedImage->setFileInfo($fileInfo);
         $em->persist($uploadedImage);
         $em->flush();
 
@@ -313,6 +321,7 @@ class GalleryController extends AbstractController
                 'gallery_uploaded_ckeditor',
                 [
                     'id' => $uploadedImage->getId(),
+                    'fileInfo' => $uploadedImage->getFileInfo(),
                 ],
                 UrlGeneratorInterface::ABSOLUTE_URL
             ),
@@ -322,20 +331,31 @@ class GalleryController extends AbstractController
     }
 
     /**
-     * @Route("/gallery/show/uploaded/{id}", name="gallery_uploaded_ckeditor",
+     * @Route("/gallery/show/uploaded/{id}/{fileInfo}", name="gallery_uploaded_ckeditor",
      *     requirements={"id":"\d+"})
      *
      * @param UploadedImage $image
      *
+     * @param string $fileInfo
      * @return BinaryFileResponse
      *
      * @throw AccessDeniedException
      */
-    public function showUploadedImage(UploadedImage $image)
+    public function showUploadedImage(UploadedImage $image, string $fileInfo)
     {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_REMEMBERED');
-
-        $filepath = $this->getParameter('upload_directory') . '/' . $image->getFilename();
+        $uploadDirectory = $this->getParameter('upload_directory') . '/';
+        if (!$this->isGranted('IS_AUTHENTICATED_REMEMBERED') || $image->getFileInfo() !== $fileInfo) {
+            $filepath = sprintf($uploadDirectory . 'placeholder_%d_%d.png', $image->getWidth(), $image->getHeight());
+            if (!file_exists($filepath)) {
+                // create image!
+                $imageManager = new ImageManager();
+                $imageManager
+                    ->canvas($image->getWidth(), $image->getHeight(), '#ccc')
+                    ->save($filepath);
+            }
+        } else {
+            $filepath = $this->getParameter('upload_directory') . '/' . $image->getFilename();
+        }
 
         return new BinaryFileResponse($filepath);
     }
@@ -366,6 +386,6 @@ class GalleryController extends AbstractController
 
     private function getMaxUploadSizeInMegaBytes()
     {
-        return ((int) ($this->getParameter('upload_max_size'))) / 1024 / 1024;
+        return (UploadedFile::getMaxFilesize()) / 1024 / 1024;
     }
 }

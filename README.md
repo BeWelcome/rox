@@ -8,6 +8,30 @@ You probably want to get started by checking out the code in `src/`.
 
 `build/` is deprecated and the code needs to be rewritten in `src/`.
 
+## Quick start with docker
+Requirments:
+* docker
+* docker-compose
+* make
+* bunzip2
+* git
+* curl
+Then run:
+```
+git clone --depth=1 https://github.com/BeWelcome/rox.git
+cd rox
+cp docker-compose.override.yml.dist docker-compose.override.yml
+sudo docker-compose build
+make install
+```
+It takes a while for the container to start first. You can follow it by running:
+```
+sudo docker-compose logs --follow
+```
+Once you see the following message, your instance of BeWelcome should be avilable on http://localhost:8080
+```
+php_1     | [date] NOTICE: fpm is running, pid 1
+```
 ## Documentation
 
 Documentation is [in the doc tree](doc/book/) and can be compiled using

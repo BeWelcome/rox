@@ -280,7 +280,8 @@ class EnvironmentExplorer
          $_SYSHCVOL['Accomodation'] = array (   'dependonrequest',  'neverask', 'anytime');
 
         // possible lenght of stay
-        $_SYSHCVOL['CommentsRelation'] = array ('hewasmyguest', 'hehostedme', 'OnlyOnce', 'HeIsMyFamily', 'HeHisMyOldCloseFriend','NeverMetInRealLife');
+        $_SYSHCVOL['CommentsRelation'] = array ('hewasmyguest', 'hehostedme', 'OnlyOnce', 'HeIsMyFamily', 'HeHisMyOldCloseFriend', 'CommunicatedOnline',
+            /* 'NeverMetInRealLife'  Comment out after discussion with the SafetyTeam */);
 
         $_SYSHCVOL['EvaluateEventMessageReceived'] = "Yes"; // If set to "Yes" events messages received is evaludated at each page refresh
         $_SYSHCVOL['UploadPictMaxSize'] = 500000; // This define the size of the max loaded pictures

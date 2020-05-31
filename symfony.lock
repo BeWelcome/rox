@@ -156,9 +156,6 @@
     "hamcrest/hamcrest-php": {
         "version": "v1.2.2"
     },
-    "hashids/hashids": {
-        "version": "4.0.0"
-    },
     "hautelook/alice-bundle": {
         "version": "2.1",
         "recipe": {
@@ -421,6 +418,9 @@
     "symfony/dependency-injection": {
         "version": "v4.4.5"
     },
+    "symfony/deprecation-contracts": {
+        "version": "v2.1.2"
+    },
     "symfony/doctrine-bridge": {
         "version": "v4.4.5"
     },
@@ -560,11 +560,17 @@
     "symfony/polyfill-iconv": {
         "version": "v1.14.0"
     },
+    "symfony/polyfill-intl-grapheme": {
+        "version": "v1.17.0"
+    },
     "symfony/polyfill-intl-icu": {
         "version": "v1.14.0"
     },
     "symfony/polyfill-intl-idn": {
         "version": "v1.14.0"
+    },
+    "symfony/polyfill-intl-normalizer": {
+        "version": "v1.17.0"
     },
     "symfony/polyfill-mbstring": {
         "version": "v1.14.0"
@@ -578,6 +584,9 @@
     "symfony/polyfill-php73": {
         "version": "v1.14.0"
     },
+    "symfony/polyfill-php80": {
+        "version": "v1.17.0"
+    },
     "symfony/process": {
         "version": "v4.4.5"
     },
@@ -586,6 +595,9 @@
     },
     "symfony/property-access": {
         "version": "v4.4.5"
+    },
+    "symfony/property-info": {
+        "version": "v5.1.0"
     },
     "symfony/routing": {
         "version": "4.2",
@@ -630,6 +642,9 @@
     },
     "symfony/stopwatch": {
         "version": "v4.4.5"
+    },
+    "symfony/string": {
+        "version": "v5.1.0"
     },
     "symfony/swiftmailer-bundle": {
         "version": "2.5",

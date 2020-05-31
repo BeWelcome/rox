@@ -11,6 +11,41 @@ using a browser or use curl _url_ > _filename_.
 
 Production OS is Debian GNU/Linux Strech.
 
+## Install using Docker and Docker Compose
+
+1. Clone via Git:
+
+    ```bash
+    $ git clone https://github.com/BeWelcome/rox.git
+    ```
+
+1. Install using Docker and Docker Compose:
+
+    ```bash
+    $ make install
+    ```
+
+   If you need to run Docker Compose as sudo, run the following:
+
+    ```bash
+    $ make install root=1
+    ```
+
+Wait a few minutes for containers to build and start (it might take awhile). Project is running at
+[http://localhost:8080](http://localhost:8080).
+
+If you want to import geonames data, run the following (this operation might take awhile!):
+
+    ```bash
+    $ make install-geonames
+    ```
+
+Once again, if you need to run Docker Compose as sudo, run the following:
+
+    ```bash
+    $ make install-geonames root=1
+    ```
+
 ## Requirements
 
 * Apache with mod_rewrite enabled

@@ -25,6 +25,19 @@ else
 		docker-compose up -d
 endif
 
+install-geonames:
+	curl http://download.geonames.org/export/dump/allCountries.zip > docker/db/allCountries.zip
+	curl http://download.geonames.org/export/dump/alternateNames.zip > docker/db/alternateNames.zip
+	curl http://download.geonames.org/export/dump/countryInfo.txt > docker/db/countryInfo.txt
+	unzip docker/db/allCountries.zip -d docker/db/
+	unzip docker/db/alternateNames.zip -d docker/db/
+	rm docker/db/*.zip
+ifdef root
+		sudo docker-compose exec php sh -c "mysql bewelcome -u bewelcome -pbewelcome -h db < import.sql"
+else
+		docker-compose exec php sh -c "mysql bewelcome -u bewelcome -pbewelcome -h db < import.sql"
+endif
+
 phpcsfix:
 	./vendor/bin/phpcbf $(SRC_DIR)
 	./vendor/bin/php-cs-fixer fix -v

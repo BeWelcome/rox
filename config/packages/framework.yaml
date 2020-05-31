@@ -25,7 +25,6 @@ framework:
     # Enables session support. Note that the session will ONLY be started if you read or write from it.
     # Remove or comment this section to explicitly disable session support.
     session:
-        # http://symfony.com/doc/current/reference/configuration/framework.html#handler-id
         handler_id: Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler
 
     fragments:       ~

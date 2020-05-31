@@ -51,7 +51,10 @@ Encore
     .addEntry('rangeslider', './assets/js/rangeslider.js')
     //    .addEntry('roxinlineeditor', './assets/js/roxinlineeditor.js')
 
-    .enableSassLoader()
+    .enableSassLoader(options => {
+        // Prefer using sass instead of node-sass to not depend on Python
+        options.implementation = require('sass');
+    })
     // allow legacy applications to use $/jQuery as a global variable, make popper visible for bootstrap
     .autoProvidejQuery()
     .autoProvideVariables({

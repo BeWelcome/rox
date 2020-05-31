@@ -24,3 +24,6 @@ indent_size = 2
 [docker-compose{,.*}.{yaml,yml}]
 indent_style = space
 indent_size = 2
+
+[.github/*/*.yml]
+indent_size = 2

@@ -1,6 +1,7 @@
 # Rox the software running BeWelcome.org :earth_asia:
 
 [![Build Status](https://travis-ci.org/BeWelcome/rox.svg?branch=bootstrap4)](https://travis-ci.org/BeWelcome/rox)
+[![GitHub CI](https://github.com/BeWelcome/rox/workflows/CI/badge.svg)](https://github.com/BeWelcome/rox/actions?query=workflow%3ACI)
 
 **A community-driven hospitality exchange network**
 
@@ -8,17 +9,17 @@
 
 # Why this is incredible :heart_eyes:
 * :sleeping_bed: **Member profiles** with focus on finding a place to stay
-* :world_map: **Search members** by map, location, username 
+* :world_map: **Search members** by map, location, username
 * :handshake: **Comment system** to increase trust between each other
 * :left_speech_bubble: **Forum and groups** for discussions
-* :partying_face: **Activities, galleries** to show how who you are 
+* :partying_face: **Activities, galleries** to show how who you are
 * :toolbox: **Volunteer tools** (safety, moderation, spam, rights member welcome tools and more)
 * :rainbow_flag: **On page translation** for 305 languages
 * :cartwheeling::standing_man::standing_person::standing_woman::mage: BeWelcome is people and volunteers [Learn more](https://www.bewelcome.org/about)
 
 # Join the team :people_holding_hands:
 
-You like the idea? Development is only one way to contribute! Find out how to [get active](https://www.bewelcome.org/about/getactive), including as designer, tester, translator, moderator, helping others and much more! :heart_eyes: 
+You like the idea? Development is only one way to contribute! Find out how to [get active](https://www.bewelcome.org/about/getactive), including as designer, tester, translator, moderator, helping others and much more! :heart_eyes:
 
 ## Get your Rox development enviroment :computer:
 
@@ -56,22 +57,22 @@ The result can then be accessed via `doc/phpdox/` in your cloned repository.
 
 ## Procedure
 
-If you see an updated ```composer.json``` or ```composer.lock``` make sure to run 
+If you see an updated ```composer.json``` or ```composer.lock``` make sure to run
 
 ```bash
 composer install
 ```
 
-Also run 
+Also run
 
 ```bash
 npm install
 ```
- 
+
 everytime you see a change in either ```package.json``` or ```package-lock.json```.
 
 If any ```.scss``` file or a file in ```assets/``` changed a ```make build``` is necessary.
- 
+
 ## Useful links
 * [Writing great Git commit messages](http://chris.beams.io/posts/git-commit/)
 * [Git crash course](http://git.or.cz/course/svn.html)

@@ -1,0 +1,197 @@
+name: CI
+
+on:
+  pull_request:
+
+jobs:
+  phpcpd:
+    name: PHPCPD
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v1
+        with:
+          php-version: 7.3
+          extensions: curl, dom, gd, iconv, intl, json, libxml, mbstring, mysqli, pcntl, pdo_mysql, phar, tokenizer, xdebug, xml, xmlwriter, xsl, zip
+
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+      - name: Cache dependencies
+        uses: actions/cache@v1
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
+          restore-keys: ${{ runner.os }}-composer-
+
+      - name: Install project dependencies
+        run: composer install --prefer-dist --no-progress --no-suggest --no-interaction --no-scripts
+
+      - name: Run phpcpd tests
+        run: vendor/bin/phpcpd src --progress --no-interaction --exclude=Entity --exclude=Repository
+
+  phpunit:
+    name: PHPUnit
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v1
+        with:
+          php-version: 7.3
+          extensions: curl, dom, gd, iconv, intl, json, libxml, mbstring, mysqli, pcntl, pdo_mysql, phar, tokenizer, xdebug, xml, xmlwriter, xsl, zip
+
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+      - name: Cache dependencies
+        uses: actions/cache@v1
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
+          restore-keys: ${{ runner.os }}-composer-
+
+      - name: Install project dependencies
+        run: composer install --prefer-dist --no-progress --no-suggest --no-interaction --no-scripts
+
+      - name: Run phpunit tests
+        run: bin/phpunit
+
+  phploc:
+    name: PHPLoc
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v1
+        with:
+          php-version: 7.3
+          extensions: curl, dom, gd, iconv, intl, json, libxml, mbstring, mysqli, pcntl, pdo_mysql, phar, tokenizer, xdebug, xml, xmlwriter, xsl, zip
+
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+      - name: Cache dependencies
+        uses: actions/cache@v1
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
+          restore-keys: ${{ runner.os }}-composer-
+
+      - name: Install project dependencies
+        run: composer install --prefer-dist --no-progress --no-suggest --no-interaction --no-scripts
+
+      - name: Run phploc tests
+        run: vendor/bin/phploc --log-xml=phploc.xml src tests
+
+  phpmd:
+    name: PHPMD
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v1
+        with:
+          php-version: 7.3
+          extensions: curl, dom, gd, iconv, intl, json, libxml, mbstring, mysqli, pcntl, pdo_mysql, phar, tokenizer, xdebug, xml, xmlwriter, xsl, zip
+
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+      - name: Cache dependencies
+        uses: actions/cache@v1
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
+          restore-keys: ${{ runner.os }}-composer-
+
+      - name: Install project dependencies
+        run: composer install --prefer-dist --no-progress --no-suggest --no-interaction --no-scripts
+
+      - name: Run phpmd tests
+        run: vendor/bin/phpmd src,tests text phpmd.xml
+
+  php-cs-fixer:
+    name: PHP-CS-Fixer
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v1
+        with:
+          php-version: 7.3
+          extensions: curl, dom, gd, iconv, intl, json, libxml, mbstring, mysqli, pcntl, pdo_mysql, phar, tokenizer, xdebug, xml, xmlwriter, xsl, zip
+
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+      - name: Cache dependencies
+        uses: actions/cache@v1
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
+          restore-keys: ${{ runner.os }}-composer-
+
+      - name: Install project dependencies
+        run: composer install --prefer-dist --no-progress --no-suggest --no-interaction --no-scripts
+
+      - name: Run php-cs-fixer tests
+        run: vendor/bin/php-cs-fixer fix -v --diff --dry-run
+
+  php-code-sniffer:
+    name: PHP-Code-Sniffer
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v1
+        with:
+          php-version: 7.3
+          extensions: curl, dom, gd, iconv, intl, json, libxml, mbstring, mysqli, pcntl, pdo_mysql, phar, tokenizer, xdebug, xml, xmlwriter, xsl, zip
+
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+      - name: Cache dependencies
+        uses: actions/cache@v1
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
+          restore-keys: ${{ runner.os }}-composer-
+
+      - name: Install project dependencies
+        run: composer install --prefer-dist --no-progress --no-suggest --no-interaction --no-scripts
+
+      - name: Run php-code-sniffer tests
+        run: vendor/bin/phpcs --colors --warning-severity=Error

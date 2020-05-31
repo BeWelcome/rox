@@ -15,6 +15,7 @@ use App\Utilities\ManagerTrait;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
 use App\Utilities\UniqueFilenameTrait;
+use Exception;
 use Hidehalo\Nanoid\Client;
 use Intervention\Image\ImageManager;
 use Psr\Log\LoggerInterface;
@@ -34,6 +35,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Validator\Constraints\Image;
 use Symfony\Component\Validator\Validation;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use function count;
 
 class GalleryController extends AbstractController
 {
@@ -59,7 +61,7 @@ class GalleryController extends AbstractController
     {
         $user = $this->getUser();
         if ($user !== $image->getOwner()) {
-            throw $this->createAccessDeniedException('Not your image!');
+            $this->createAccessDeniedException('Not your image!');
         }
 
         $editImageRequest = new GalleryImageEditRequest($image);
@@ -117,7 +119,7 @@ class GalleryController extends AbstractController
         $violations = $validator->validate($image, $constraint);
 
         $originalName = $image->getClientOriginalName();
-        if (\count($violations) > 0) {
+        if (count($violations) > 0) {
             $response->setData([
                 'success' => false,
                 'filename' => $originalName,
@@ -280,7 +282,7 @@ class GalleryController extends AbstractController
         $image = $request->files->get('upload');
         $violations = $validator->validate($image, $constraint);
 
-        if (\count($violations) > 0) {
+        if (count($violations) > 0) {
             $response->setData([
                 'uploaded' => false,
                 'error' => [
@@ -342,7 +344,6 @@ class GalleryController extends AbstractController
      * @param Request $request
      * @param Logger $logger
      * @return Response
-     * @throws \Exception
      */
     public function showUploadedImageOld(UploadedImage $image, Request $request, Logger $logger)
     {
@@ -379,7 +380,11 @@ class GalleryController extends AbstractController
             $filepath = $this->getParameter('upload_directory') . '/' . $image->getFilename();
         }
 
-        return new BinaryFileResponse($filepath);
+        // Uploaded images aren't updated; set expiry to 1 year
+        $response = new BinaryFileResponse($filepath);
+        $response->setSharedMaxAge(31536000);
+
+        return $response;
     }
 
     /**

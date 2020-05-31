@@ -769,14 +769,14 @@ FROM
      * @access public
      * @return array
      */
-    public function getGroups()
+    public function getGroups($limit = null)
     {
         if (!$this->_has_loaded)
         {
             return false;
         }
 
-        return $this->createEntity('GroupMembership')->getMemberGroups($this, 'In');
+        return $this->createEntity('GroupMembership')->getMemberGroups($this, 'In', $limit);
     }
 
     /** get_note gets the note for this member written by id

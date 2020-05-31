@@ -105,7 +105,7 @@ class CheckerController extends AbstractController
         $page = $request->query->get('page', 1);
         $limit = $request->query->get('limit', 10);
 
-        $latestActivities = $activitiesModel->getLatestBannedAdmins($page, $limit);
+        $latestActivities = $activitiesModel->getProblematicActivities($page, $limit);
         $activityIds = [];
         foreach ($latestActivities->getIterator() as $key => $val) {
             $activityIds[$key] = $val->getId();

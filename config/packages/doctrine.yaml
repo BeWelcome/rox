@@ -65,3 +65,6 @@ doctrine:
             language_filter:
                 class:   App\Doctrine\Filter\LanguageFilter
                 enabled: true
+        dql:
+            datetime_functions:
+                datediff: App\Doctrine\Functions\DateDiff

@@ -25,7 +25,7 @@ class PostNotificationRepository extends EntityRepository
             ->setParameter(':toSend', 'ToSend')
             ->andWhere('n.created < :date')
             ->setParameter(':date', $date)
-            ->orderBy('n.updated', 'asc')
+            ->orderBy('n.created', 'asc')
             ->setMaxResults($batchSize)
             ->getQuery()
             ->getResult();

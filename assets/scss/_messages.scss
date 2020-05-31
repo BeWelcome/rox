@@ -70,8 +70,13 @@
       margin: 0;
     }
   }
-  img {
+  figure {
     max-width: 100%;
+  }
+  figcaption {
+    @include font-size($small-font-size);
+    font-weight: $font-weight-normal;
+    color: $text-muted;
   }
 }
 

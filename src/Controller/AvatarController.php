@@ -49,30 +49,40 @@ class AvatarController extends AbstractController
         if (!$this->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             $filename = 'images/empty_avatar' . $suffix . '.png';
 
-            return new BinaryFileResponse($filename);
+            $response = new BinaryFileResponse($filename);
+            $response->setSharedMaxAge(600);
+            return $response;
         }
 
         $member = $this->getDoctrine()->getRepository(Member::class)->findOneBy(['username' => $username]);
         if (!$member) {
             $filename = 'images/empty_avatar' . $suffix . '.png';
 
-            return new BinaryFileResponse($filename);
+            $response = new BinaryFileResponse($filename);
+            $response->setSharedMaxAge(600);
+            return $response;
         }
 
         $isBrowseable = $member->isBrowseable();
         if (!$isBrowseable) {
             $filename = 'images/empty_avatar' . $suffix . '.png';
 
-            return new BinaryFileResponse($filename);
+            $response = new BinaryFileResponse($filename);
+            $response->setSharedMaxAge(600);
+            return $response;
         }
 
         $filename = '../data/user/avatars/' . $member->getId() . $suffix;
         if (file_exists($filename)) {
-            return new BinaryFileResponse($filename);
+            $response = new BinaryFileResponse($filename);
+            $response->setSharedMaxAge(600);
+            return $response;
         }
 
         $filename = 'images/empty_avatar' . $suffix . '.png';
 
-        return new BinaryFileResponse($filename);
+        $response = new BinaryFileResponse($filename);
+        $response->setSharedMaxAge(600);
+        return $response;
     }
 }

@@ -133,6 +133,11 @@ class MemberTwigExtension extends AbstractExtension implements GlobalsInterface
                 'rights' => [Member::ROLE_ADMIN_SAFETYTEAM, Member::ROLE_ADMIN_COMMENTS],
                 'route' => 'admin_comment_overview',
             ],
+            'checker' => [
+                'trans' => 'AdminChecker',
+                'rights' => [Member::ROLE_ADMIN_SAFETYTEAM, Member::ROLE_ADMIN_CHECKER],
+                'route' => 'admin_spam_activities',
+            ],
             'newmembersbewelcome' => [
                 'trans' => 'AdminNewMembers',
                 'rights' => [Member::ROLE_ADMIN_SAFETYTEAM, Member::ROLE_ADMIN_NEWMEMBERSBEWELCOME],

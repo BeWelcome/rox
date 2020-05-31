@@ -15,6 +15,7 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\Security;
@@ -28,12 +29,11 @@ class LegacyController extends AbstractController
      * @param UrlGeneratorInterface $urlGenerator
      * @param ParameterBagInterface $params
      *
+     * @param SessionInterface $session
      * @param Security $securityHelper
      * @return Response
      *
      * @throws DBALException
-     * @throws AccessDeniedException
-     *
      * @SuppressWarnings(PHPMD.StaticAccess)
      */
     public function showLegacyPage(
@@ -41,13 +41,12 @@ class LegacyController extends AbstractController
         TranslatorInterface $translator,
         UrlGeneratorInterface $urlGenerator,
         ParameterBagInterface $params,
+        SessionInterface $session,
         Security $securityHelper
     ) {
         // Kick-start the Symfony session. This replaces session_start() in the
         // old code, which is now turned off.
-        /** @var Session $session */
-        $session = $this->get('session');
-        $session->start();
+        // $session->start();
 
         // Make sure the Rox classes find this session and the translator
         SessionSingleton::createInstance($session);

@@ -11,14 +11,16 @@
 
     {{ form(form) }}
     {% if members is defined %}
-        <table class="table table-responsive">
-        {%  for member in members %}
-            <tr>
-                <td>{{ macros.avatar(member.username) }}</td>
-                <td>{{ macros.profilelink(member.username) }}</td>
-                <td>{{ member.email }}</td>
-            </tr>
-        {% endfor %}
-        </table>
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                {% for member in members %}
+                    <tr>
+                        <td>{{ macros.avatar(member.username) }}</td>
+                        <td>{{ macros.profilelink(member.username) }}</td>
+                        <td>{{ member.email }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
     {% endif %}
 {% endblock content %}

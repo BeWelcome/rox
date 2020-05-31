@@ -34,7 +34,7 @@ class SearchController extends AbstractController
             ->add('username', TextType::class, [
                 'label' => 'label.username',
                 'attr' => [
-                    'class' => 'member-autocomplete',
+                    'class' => 'member-autocomplete-start',
                 ],
                 'help' => 'help.username.auto.complete',
             ])

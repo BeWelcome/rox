@@ -26,20 +26,21 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use function array_key_exists;
 
 /**
  * Class VolunteerToolController.
  */
 class VolunteerToolController extends AbstractController
 {
-    const CHANGE_USERNAME = 'admin.tools.change_username';
-    const FIND_USER = 'admin.tools.find_user';
-    const MESSAGES_SENT = 'admin.tools.messages_sent';
-    const MESSAGES_BY_MEMBER = 'admin.tools.messages_by_member';
-    const CHECK_FEEDBACK = 'admin.tools.check_feedback';
-    const CHECK_TOP_SPAMMER = 'admin.tools.check_spam_messages';
-    const DAMAGE_DONE = 'admin.tools.damage_done';
-    const AGE_BY_COUNTRY = 'admin.tools.age_by_country';
+    private const CHANGE_USERNAME = 'admin.tools.change_username';
+    private const FIND_USER = 'admin.tools.find_user';
+    private const MESSAGES_SENT = 'admin.tools.messages_sent';
+    private const MESSAGES_BY_MEMBER = 'admin.tools.messages_by_member';
+    private const CHECK_FEEDBACK = 'admin.tools.check_feedback';
+    private const CHECK_TOP_SPAMMER = 'admin.tools.check_spam_messages';
+    private const DAMAGE_DONE = 'admin.tools.damage_done';
+    private const AGE_BY_COUNTRY = 'admin.tools.age_by_country';
 
     /** @var FeedbackModel */
     private $feedbackModel;
@@ -58,17 +59,9 @@ class VolunteerToolController extends AbstractController
      *
      * @return Response
      */
-    public function showOverviewAction(Request $request)
+    public function showOverview(Request $request)
     {
-        // check permissions
-        $subMenuItems = $this->getSubMenuItems();
-        if (empty($subMenuItems)) {
-            $this->addFlash('notice', 'flash.admin.tools.forbidden');
-            $referrer = $request->headers->get('referer');
-
-            return $this->redirect($referrer);
-        }
-
+        $subMenuItems = $this->checkPermissions($request);
         $firstSubMenuItem = reset($subMenuItems);
 
         return $this->redirect($firstSubMenuItem['url']);
@@ -85,16 +78,10 @@ class VolunteerToolController extends AbstractController
      *
      * @return Response|RedirectResponse
      */
-    public function changeUsernameAction(Request $request, TranslatorInterface $translator, Logger $logger)
+    public function changeUsername(Request $request, TranslatorInterface $translator, Logger $logger)
     {
         // check permissions
-        $subMenuItems = $this->getSubMenuItems();
-        if (empty($subMenuItems) | !\array_key_exists(self::CHANGE_USERNAME, $subMenuItems)) {
-            $this->addFlash('notice', 'admin.tools.not.allowed');
-            $referrer = $request->headers->get('referer');
-
-            return $this->redirect($referrer);
-        }
+        $subMenuItems = $this->checkPermissions($request, self::CHANGE_USERNAME);
 
         $form = $this->createForm(ChangeUsernameFormType::class, new ChangeUsernameRequest());
         $form->handleRequest($request);
@@ -154,16 +141,10 @@ class VolunteerToolController extends AbstractController
      *
      * @return Response|RedirectResponse
      */
-    public function findUserAction(Request $request, Logger $logger)
+    public function findUser(Request $request, Logger $logger)
     {
         // check permissions
-        $subMenuItems = $this->getSubMenuItems();
-        if (empty($subMenuItems) | !\array_key_exists(self::FIND_USER, $subMenuItems)) {
-            $this->addFlash('notice', 'admin.tools.not.allowed');
-            $referrer = $request->headers->get('referer');
-
-            return $this->redirect($referrer);
-        }
+        $subMenuItems = $this->checkPermissions($request, self::FIND_USER);
 
         $form = $this->createForm(FindUserFormType::class, new FindUserRequest());
         $form->handleRequest($request);
@@ -199,16 +180,10 @@ class VolunteerToolController extends AbstractController
      *
      * @return Response|RedirectResponse
      */
-    public function showSignupFeedbackAction(Request $request)
+    public function showSignupFeedback(Request $request)
     {
         // check permissions
-        $subMenuItems = $this->getSubMenuItems();
-        if (empty($subMenuItems) | !\array_key_exists(self::CHECK_FEEDBACK, $subMenuItems)) {
-            $this->addFlash('notice', 'admin.tools.not.allowed');
-            $referrer = $request->headers->get('referer');
-
-            return $this->redirect($referrer);
-        }
+        $subMenuItems = $this->checkPermissions($request, self::CHECK_FEEDBACK);
 
         $page = $request->query->get('page', 1);
         $limit = $request->query->get('limit', 20);
@@ -250,16 +225,10 @@ class VolunteerToolController extends AbstractController
      *
      * @return Response
      */
-    public function showTopSpammerAction(Request $request)
+    public function showTopSpammer(Request $request)
     {
         // check permissions
-        $subMenuItems = $this->getSubMenuItems();
-        if (empty($subMenuItems) | !\array_key_exists(self::CHECK_TOP_SPAMMER, $subMenuItems)) {
-            $this->addFlash('notice', 'admin.tools.not.allowed');
-            $referrer = $request->headers->get('referer');
-
-            return $this->redirect($referrer);
-        }
+        $subMenuItems = $this->checkPermissions($request, self::CHECK_TOP_SPAMMER);
 
         // Get all banned members with the number of sent messages for the last two months
         $connection = $this->getDoctrine()->getConnection();
@@ -304,16 +273,10 @@ class VolunteerToolController extends AbstractController
      *
      * @return Response
      */
-    public function showDamageDoneAction(Request $request)
+    public function showDamageDone(Request $request)
     {
         // check permissions
-        $subMenuItems = $this->getSubMenuItems();
-        if (empty($subMenuItems) | !\array_key_exists(self::DAMAGE_DONE, $subMenuItems)) {
-            $this->addFlash('notice', 'admin.tools.not.allowed');
-            $referrer = $request->headers->get('referer');
-
-            return $this->redirect($referrer);
-        }
+        $subMenuItems = $this->checkPermissions($request, self::DAMAGE_DONE);
 
         // Get all banned members with the number of sent messages for the last two months
         $connection = $this->getDoctrine()->getConnection();
@@ -334,7 +297,7 @@ class VolunteerToolController extends AbstractController
                 AND messages.IdReceiver = m1.id
                 AND m2.Status IN ('Banned' , 'Rejected')
                 AND m1.Status IN ('TakenOut' , 'AskToLeave')
-            ORDER BY m2.Updated, m2.Username, m1.updated DESC , m1.id
+            ORDER BY m2.Updated DESC, m2.Username, m1.updated DESC , m1.id
             LIMIT 40
         ")->fetchAll();
 
@@ -362,13 +325,7 @@ class VolunteerToolController extends AbstractController
     public function showMessagesLastWeekAction(Request $request)
     {
         // check permissions
-        $subMenuItems = $this->getSubMenuItems();
-        if (empty($subMenuItems) | !\array_key_exists(self::MESSAGES_SENT, $subMenuItems)) {
-            $this->addFlash('notice', 'admin.tools.not.allowed');
-            $referrer = $request->headers->get('referer');
-
-            return $this->redirect($referrer);
-        }
+        $subMenuItems = $this->checkPermissions($request, self::MESSAGES_SENT);
 
         $connection = $this->getDoctrine()->getConnection();
         $results = $connection->executeQuery('
@@ -414,15 +371,7 @@ ORDER BY count(msg.id) DESC')->fetchAll();
      */
     public function showMessagesByMember(Request $request)
     {
-        // check permissions
-        $subMenuItems = $this->getSubMenuItems();
-
-        if (empty($subMenuItems) | !\array_key_exists(self::MESSAGES_BY_MEMBER, $subMenuItems)) {
-            $this->addFlash('notice', 'admin.tools.not.allowed');
-            $referrer = $request->headers->get('referer');
-
-            return $this->redirect($referrer);
-        }
+        $subMenuItems = $this->checkPermissions($request, self::MESSAGES_BY_MEMBER);
 
         $usernameForm = $this->createFormBuilder()
             ->add('username', TextType::class, [
@@ -507,13 +456,7 @@ ORDER BY count(msg.id) DESC')->fetchAll();
     public function showAverageAgePerCountryAction(Request $request)
     {
         // check permissions
-        $subMenuItems = $this->getSubMenuItems();
-        if (empty($subMenuItems) | !\array_key_exists(self::AGE_BY_COUNTRY, $subMenuItems)) {
-            $this->addFlash('notice', 'admin.tools.not.allowed');
-            $referrer = $request->headers->get('referer');
-
-            return $this->redirect($referrer);
-        }
+        $subMenuItems = $this->checkPermissions($request, self::AGE_BY_COUNTRY);
 
         $connection = $this->getDoctrine()->getConnection();
         $results = $connection->executeQuery("
@@ -614,5 +557,25 @@ ORDER BY count(msg.id) DESC')->fetchAll();
         }
 
         return $subMenu;
+    }
+
+    /** Throws
+     * @param Request $request
+     * @param string $tool
+     * @return RedirectResponse
+     */
+    private function checkPermissions(Request $request, string $tool = null)
+    {
+        // check permissions
+        $subMenuItems = $this->getSubMenuItems();
+
+        if (empty($subMenuItems) || ((null!== $tool) && !array_key_exists($tool, $subMenuItems))) {
+            $this->addFlash('notice', 'admin.tools.not.allowed');
+            $referrer = $request->headers->get('referer');
+
+            return $this->redirect($referrer);
+        }
+
+        return $subMenuItems;
     }
 }

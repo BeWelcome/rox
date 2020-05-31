@@ -479,9 +479,6 @@ SQL;
         if (!isset($one_selected)) {
             $errors[] = 'Comment_NoCommentLengthSelected';
         }
-        if ($vars['Quality'] == "Good" && isset ($vars["Comment_NeverMetInRealLife"])) {
-            $errors[] = 'NoPositiveComment_if_NeverMetInRealLife';
-        }
         if (!isset ($vars["CommentGuidelines"])) {
             $errors[] = 'CommentMustAcceptGuidelines';
         }

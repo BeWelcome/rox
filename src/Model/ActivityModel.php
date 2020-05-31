@@ -18,12 +18,12 @@ class ActivityModel
         return $repository->findLatest($page, $limit);
     }
 
-    public function getLatestBannedAdmins($page, $limit)
+    public function getProblematicActivities($page, $limit)
     {
         /** @var ActivityRepository $repository */
         $repository = $this->getManager()->getRepository(Activity::class);
 
-        return $repository->findLatestBannedAdmins($page, $limit);
+        return $repository->findProblematicActivities($page, $limit);
     }
 
     public function deleteAsSpamByChecker($activityIds)

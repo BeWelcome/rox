@@ -130,8 +130,6 @@ function addMarkers(map) {
      */
 
     $.each(mapMembers, function (index, value) {
-        // TODO the icons might be easier to see on the map if they had a drop shadow.
-        // Add a class to the img tag and css eg. box-shadow: 10px 10px 5px #888888;
         var iconFile;
 
         switch (value.Accommodation) {

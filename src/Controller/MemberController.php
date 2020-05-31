@@ -212,6 +212,40 @@ class MemberController extends AbstractController
     }
 
     /**
+     * @Route("/member/autocomplete/start", name="members_autocomplete_starts_with")
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function autoCompleteStartsWith(Request $request)
+    {
+        $names = [];
+        $callback = trim(strip_tags($request->get('callback')));
+        $term = trim(strip_tags($request->get('term')));
+
+        $em = $this->getDoctrine()->getManager();
+
+        /** @var MemberRepository $memberRepository */
+        $memberRepository = $em->getRepository(Member::class);
+        $entities = $memberRepository->findByProfileInfoStartsWith($term);
+
+        foreach ($entities as $entity) {
+            $names[] = [
+                'id' => $entity->getUsername(),
+                'label' => $entity->getUsername(),
+                'value' => $entity->getUsername(),
+            ];
+        }
+
+        $response = new JsonResponse();
+        $response->setCallback($callback);
+        $response->setData($names);
+
+        return $response;
+    }
+
+    /**
      * @Route("/resetpassword", name="member_request_reset_password")
      *
      * @param Request     $request

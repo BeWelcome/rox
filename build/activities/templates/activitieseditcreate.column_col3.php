@@ -119,7 +119,7 @@ if (empty($vars)) {
                                    name="activity-end-date"
                                    class="form-control datetimepicker-input"
                                    data-toggle="datetimepicker"
-                                   data-target="#activity-end-date" value="<?= $vars['activity-end-date'] ?>" >
+                                   data-target="#activity-end-date" value="<?= substr($vars['activity-end-date'], 0, 15); ?>" >
                         </div>
                     </div>
 
@@ -170,7 +170,7 @@ if (empty($vars)) {
             sideBySide: false,
         });
         activityEndDate.datetimepicker({
-            format: 'YYYY-MM-DD HH:mm',
+            format: 'YYYY-MM-DD',
             collapse: false,
             sideBySide: false,
             useCurrent: false,

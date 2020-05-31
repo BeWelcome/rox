@@ -109,7 +109,7 @@ if (isset($TCom->comQuality) && $TCom->comQuality == "Bad" && $TCom->AllowEdit !
 <?=$words->flushBuffer();?>
 
 
-<form method="post" name="addcomment" OnSubmit="return DoVerifySubmit('addcomment');">
+<form method="post" name="addcomment">
 <?=$callback_tag ?>
     <?php if ($random == 2) { ?>
     <input type="text" id="sweet" name="sweet" value="" title="Leave free of content" hidden>
@@ -134,7 +134,7 @@ if (isset($TCom->comQuality) && $TCom->comQuality == "Bad" && $TCom->AllowEdit !
                 <i class="fa fa-question"></i>
             </a>
 
-            <select class="select2 mb-2 mr-sm-2 mb-sm-0" name="Quality" id="Quality">
+            <select class="form-control select2 mb-2 mr-sm-2 mb-sm-0" name="Quality" id="Quality">
                 <option value=""><?=$words->getSilent("CommentQuality_SelectOne")?></option>
                 <option value="Good"
                     <?=(isset($TCom->comQuality) && $TCom->comQuality == "Good") ? " selected " : ""?>
@@ -183,8 +183,8 @@ if (isset($TCom->comQuality) && $TCom->comQuality == "Bad" && $TCom->AllowEdit !
         </div>
 
         <div class="col-12">
-            <div class="form-check alert alert-warning">
-                <label class="form-check-label">
+            <div class="form-check alertwarning">
+                <label class="form-check-label mb-2">
                     <input type="checkbox" name="CommentGuidelines" class="form-check-input"
                         <?php
                         if (isset ($vars["CommentGuidelines"]))
@@ -202,30 +202,18 @@ if (isset($TCom->comQuality) && $TCom->comQuality == "Bad" && $TCom->AllowEdit !
 
     </div>
 
-
-
 </form>
 
-
 <script type="text/javascript">
-    function DoVerifySubmit(nameform) {
-    nevermet=document.forms[nameform].elements['Comment_NeverMetInRealLife'].checked;
-        if ((document.forms[nameform].elements['Quality'].value=='Good') && (nevermet)) {
-           alert('<?=addslashes($words->getSilent("RuleForNeverMetComment"))?>');
-           return (false);
-        }
-        return(true);
-    }
+    $(function () {
+        $('[data-toggle="popover"]').popover()
+    })
+    $('.popover-dismiss').popover({
+        trigger: 'focus'
+    })
 </script>
-    <script type="text/javascript">
-        $(function () {
-            $('[data-toggle="popover"]').popover()
-        })
-        $('.popover-dismiss').popover({
-            trigger: 'focus'
-        })
-    </script>
 <?php
 }
-$words->flushBuffer();?>
+$words->flushBuffer();
+
 

@@ -3320,9 +3320,9 @@ public function NotAllowedForGroup($IdMember, $rPost) {
 
 
 	/**
-	 * Handle forum notifications (public to be able to call it from suggestions)
+	 * Handle forum notifications
 	 */
-    public function prepare_notification($postId, $type) {
+    private function prepare_notification($postId, $type) {
         // Get post details
         $query = "
             SELECT

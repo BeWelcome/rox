@@ -106,16 +106,16 @@
        {{ form_start(form, {'attr': {'class': 'col-12'}}) }}
        {{ form_row(form.albums) }}
        <div class="custom-file col-12 mb-2">
-           <input type="file" class="custom-file-input" multiple="multiple" id="form_files">
-           <label class="custom-file-label custom-file-label-fix" id="form_files_label" for="form_files">Choose file</label>
+           <input type="file" class="custom-file-input" multiple="multiple" id="form_files" data-browse="{{ 'browsefile'|trans }}">
+           <label class="custom-file-label custom-file-label-fix" id="form_files_label" for="form_files">{{ 'choosefile'|trans }}</label>
        </div>
 
        <button id="upload" class="btn btn-primary col-4 col-md-2 mr-2 mb-2" type="button">{{ 'upload'|trans }}</button>
        <button id="abort" class="btn btn-danger col-4 col-md-2 mb-2" type="button" disabled="disabled" onclick="uploadAbort()">{{ 'abort'|trans }}</button>
 
-       <div id="template" class="progress position-relative p-0 mt-2 d-none">
+       <div id="template" class="progress position-relative d-none">
            <div class="progress-bar" role="progressbar" style="width: 0;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-           <small class="justify-content-center d-flex position-absolute w-100">{filename}</small>
+           <small class="mt-2 justify-content-center d-flex position-absolute w-100">{filename}</small>
        </div>
 
        <div class="col-12 p-0 mt-2" id="progressbars">

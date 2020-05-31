@@ -10,23 +10,25 @@
     <h2>{{ 'admin.tools.check_spam_messages' | trans }}</h2>
 
     {% if messagesSent|length %}
-        <table class="table table-responsive">
-            <tr>
-                <th colspan="2">Member</th>
-                <th>Status</th>
-                <th>Updated</th>
-                <th># messages</th>
-            </tr>
-        {%  for result in messagesSent %}
-            <tr>
-                <td>{{ macros.avatar(result.Username) }}</td>
-                <td>{{ macros.profilelink(result.Username) }}</td>
-                <td>{{ result.Status }}</td>
-                <td>{{ result.Updated }}</td>
-                <td>{{ result.MessagesSent }}</td>
-            </tr>
-        {% endfor %}
-        </table>
+        <div class="table-responsive">
+            <table class="table table-striped tabel-hover">
+                <tr>
+                    <th colspan="2">Member</th>
+                    <th>Status</th>
+                    <th>Updated</th>
+                    <th># messages</th>
+                </tr>
+                {% for result in messagesSent %}
+                    <tr>
+                        <td>{{ macros.avatar(result.Username) }}</td>
+                        <td>{{ macros.profilelink(result.Username) }}</td>
+                        <td>{{ result.Status }}</td>
+                        <td>{{ result.Updated }}</td>
+                        <td>{{ result.MessagesSent }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
     {% else %}
         {{ 'admin.tools.nothing' | trans }}
     {% endif %}

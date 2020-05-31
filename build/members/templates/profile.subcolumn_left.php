@@ -110,7 +110,8 @@
                     }
 
         // display my groups, if there are any
-        $my_groups = $member->getGroups();
+        $my_groups = $member->getGroups(5);
+        $all_groups = $member->getGroups();
         if (!empty($my_groups)){ ?>
 
         <div id="groups" class="card mb-3">
@@ -147,7 +148,7 @@
                         </div>
                         <?php
                     endfor;
-                    if (count($my_groups) > 5) :
+                    if (count($all_groups) > 5) :
                         echo '<a class="btn btn-sm btn-block btn-outline-primary" href="members/' . $member->Username . '/groups">' . $words->get('GroupsAllMyLink') . '</a>';
                     endif;
                     ?>

@@ -13,6 +13,7 @@ use App\Entity\Notification;
 use App\Entity\Privilege;
 use App\Entity\PrivilegeScope;
 use App\Entity\Role;
+use App\Utilities\BewelcomeAddressTrait;
 use App\Utilities\MailerTrait;
 use App\Utilities\ManagerTrait;
 use App\Utilities\MessageTrait;
@@ -24,6 +25,7 @@ use Doctrine\DBAL\Statement;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Exception;
+use Symfony\Component\Mime\Address;
 use Symfony\Component\Routing\Generator\UrlGenerator;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -32,6 +34,7 @@ class GroupModel
     use ManagerTrait;
     use MailerTrait;
     use MessageTrait;
+    use BewelcomeAddressTrait;
 
     /**
      * @var UrlGenerator
@@ -53,9 +56,29 @@ class GroupModel
     public function inviteMemberToGroup(Group $group, Member $member, Member $admin)
     {
         $em = $this->getManager();
+        // We need a comment on the GroupMembership, so let's create one in English
+        $languageRepository = $em->getRepository(Language::class);
+        /** @var Language $language */
+        $language = $languageRepository->findOneBy(['shortcode' => 'en']);
+
         $membership = new GroupMembership();
         $membership->setGroup($group);
         $membership->setMember($member);
+
+        $translator = $this->getTranslator();
+        $translator->setLocale($member->getPreferredLanguage()->getShortcode());
+        $comment = (new MemberTranslation())
+            ->setLanguage( $language )
+            ->setSentence($translator->trans('group.got.invited.by'))
+            ->setOwner($member->getId())
+            ->setTranslator($member->getId())
+        ;
+        $em->persist($comment);
+        $em->flush();
+
+        $translator->setLocale($admin->getPreferredLanguage()->getShortcode());
+
+        $membership->addComment($comment);
         $membership->setStatus(GroupMembershipStatusType::INVITED_INTO_GROUP);
         try {
             $em->persist($membership);
@@ -86,6 +109,7 @@ class GroupModel
                 'decline_start' => $declineTag,
                 'decline_end' => '</a>',
             ];
+            $adminEmail = $this->bewelcomeAddress($admin, "group@bewelcome.org");
             $this->createTemplateMessage($admin, $member, 'group', 'invitation', $params);
 
             $this->sendTemplateEmail($admin, $member, 'group.invitation', $params);

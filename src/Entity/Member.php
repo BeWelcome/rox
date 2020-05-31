@@ -23,6 +23,7 @@ use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\Security\Core\Encoder\EncoderAwareInterface;
 use Symfony\Component\Security\Core\Exception\RuntimeException;
 use Symfony\Component\Security\Core\User\UserInterface;
+use function in_array;
 
 /**
  * Member.
@@ -2540,7 +2541,7 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
 
     public function isPrivileged()
     {
-        if (\in_array(new Role('ROLE_ADMIN'), $this->getRoles(), true)) {
+        if (in_array('ROLE_ADMIN', $this->getRoles(), true)) {
             return true;
         }
 
@@ -2734,10 +2735,10 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
                 if ($volunteerRight->getRight() === $word) {
                     $strScope = str_replace('"', '', str_replace(',', ';', $volunteerRight->getScope()));
                     $scope = explode(';', $strScope);
-                    if (\in_array($locale, $scope, true)) {
+                    if (in_array($locale, $scope, true)) {
                         $hasRight = true;
                     }
-                    if (\in_array('All', $scope, true)) {
+                    if (in_array('All', $scope, true)) {
                         $hasRight = true;
                     }
                 }
@@ -2795,7 +2796,7 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
 
     public function isBrowseable()
     {
-        if (\in_array(
+        if (in_array(
             $this->status,
             [
                 MemberStatusType::TAKEN_OUT,

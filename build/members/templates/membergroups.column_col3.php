@@ -4,11 +4,12 @@
     // display my groups, if there are any
     if (!empty($my_groups)) :
     ?>
-    <div id="profile_groups" class="clearfix box">
+    <div id="profile_groups" class="clearfix box row">
         <?php // display my groups, if there are any
             $purifier = MOD_htmlpure::getAdvancedHtmlPurifier();
             echo "<h3>{$words->getInLang('ProfileGroups', $profile_language_code)}</h3>";
             $this->pager->render();
+            echo "<div class='row'>";
             foreach ($this->pager->getActiveSubset($my_groups) as $group)  : ?>
                 <div class="groupbox clearfix">
                     <a href="group/<?=$group->id ?>">
@@ -22,6 +23,7 @@
                     </div>  <!-- groupinfo -->
                 </div> <!-- groupbox clearfix -->
             <?php endforeach; ?>
+            </div>
         <?php $this->pager->render(); ?>
     </div> <!-- profile_groups -->
     <?php endif ; ?>

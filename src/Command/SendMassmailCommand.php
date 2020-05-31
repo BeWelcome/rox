@@ -8,6 +8,7 @@ use App\Utilities\MessageTrait;
 use App\Utilities\TranslatorTrait;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -72,7 +73,6 @@ class SendMassmailCommand extends Command
         if (!$batchSize) {
             $batchSize = $this->params->get('massmail_batch_size');
         }
-
 
         $massmailRepository = $this->entityManager->getRepository(BroadcastMessage::class);
         /** @var BroadcastMessage[] $scheduled */

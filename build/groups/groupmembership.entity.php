@@ -174,23 +174,30 @@ class GroupMembership extends RoxEntityBase
      *
      * @param Member $member - member entity to find groups for
      * @param string $status - member status enum('In','WantToBeIn','Kicked','Invited')
-     * @access public
+     * @param null $limit
      * @return array
+     * @access public
      */
-    public function getMemberGroups($member, $status = null)
+    public function getMemberGroups($member, $status = null, $limit = null)
     {
         if (!is_object($member) || !($member_id = $member->getPKValue()))
         {
             return array();
         }
 
+        $this->sql_order = 'updated desc';
         $links = $this->findByWhereMany("IdMember = '{$member_id}'" . ((!empty($status)) ? " AND Status = '" . $this->dao->escape($status) . "'" : ''));
 
         $groups = array();
+        $current = 0;
         foreach ($links as &$link)
         {
+            if (null !== $limit && $current >= $limit) {
+                unset($link);
+                continue;
+            }
             $groups[] = $link->IdGroup;
-            unset($link);
+            $current++;
         }
         unset($links);
         if (empty($groups))
@@ -198,8 +205,10 @@ class GroupMembership extends RoxEntityBase
             return array();
         }
 
-        $where = "id IN ('" . implode("','", $groups) . "') AND NOT (Name LIKE '[Archived] %') AND Approved = 1 ORDER BY Name";
-        return $this->createEntity('Group')->findByWhereMany($where);
+        $where = "id IN ('" . implode("','", $groups) . "') AND NOT (Name LIKE '[Archived] %') AND Approved = 1";
+        $group = $this->createEntity('Group');
+        $group->sql_order = '';
+        return $group->findByWhereMany($where);
     }
 
 

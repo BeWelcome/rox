@@ -21,28 +21,39 @@
     {{ form(form) }}
 
     {% if results|length %}
-        <div class="row"><div class="col-12 table-responsive">
-        <table class="table">
-            <tr>
-                <th colspan="2">Member 1</th>
-                <th>Direction</th>
-                <th colspan="2">Member 2</th>
-            </tr>
-        {%  for result in results %}
-            <tr>
-                <td>{{ macros.avatar(member.Username) }}</td>
-                <td>{{ macros.profilelink(member.Username) }}<br>{% if (result.direction == 1) or (result.direction == 3) %}{{ result.last_received|localizeddate('medium', 'medium') }}{% endif %}</td>
-                <td><i class="fas fa-fw {% if (result.direction == 1) or (result.direction == 3) %}fa-arrow-left{% endif %}"></i><i class="fas fa-fw {% if (result.direction == 2) or (result.direction == 3)%}fa-arrow-right{% endif %}"></i></td>
-                <td>{{ macros.avatar(result.username) }}</td>
-                <td>{{ macros.profilelink(result.username) }}<br>{% if (result.direction == 2) or (result.direction == 3) %}{{ result.last_sent|localizeddate('medium', 'medium') }}{% endif %}</td>
-            </tr>
-            <tr>
-                <td>{{ macros.avatarstack(result.username, 50,50, true) }}</td>
-                <td colspan="4">{% if (result.direction == 1) or (result.direction == 3) %}<i class="fas fa-fw fa-arrow-left"></i>{{ result.last_received|localizeddate('medium', 'medium') }}{% endif %}<br>
-                    {% if (result.direction == 2) or (result.direction == 3)%}<i class="fas fa-fw fa-arrow-right"></i>{{ result.last_sent|localizeddate('medium', 'medium') }}{% endif %}</td>
-            </tr>
-        {% endfor %}
-        </table>
-            </div></div>
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <tr>
+                    <th colspan="2">Member 1</th>
+                    <th>Direction</th>
+                    <th colspan="2">Member 2</th>
+                </tr>
+                {% for result in results %}
+                    <tr>
+                        <td>{{ macros.avatar(member.Username) }}</td>
+                        <td>{{ macros.profilelink(member.Username) }}
+                            <br>{% if (result.direction == 1) or (result.direction == 3) %}{{ result.last_received|localizeddate('medium', 'medium') }}{% endif %}
+                        </td>
+                        <td>
+                            <i class="fas fa-fw {% if (result.direction == 1) or (result.direction == 3) %}fa-arrow-left{% endif %}"></i><i
+                                    class="fas fa-fw {% if (result.direction == 2) or (result.direction == 3) %}fa-arrow-right{% endif %}"></i>
+                        </td>
+                        <td>{{ macros.avatar(result.username) }}</td>
+                        <td>{{ macros.profilelink(result.username) }}
+                            <br>{% if (result.direction == 2) or (result.direction == 3) %}{{ result.last_sent|localizeddate('medium', 'medium') }}{% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>{{ macros.avatarstack(result.username, 50,50, true) }}</td>
+                        <td colspan="4">{% if (result.direction == 1) or (result.direction == 3) %}<i
+                                class="fas fa-fw fa-arrow-left"></i>{{ result.last_received|localizeddate('medium', 'medium') }}{% endif %}
+                            <br>
+                            {% if (result.direction == 2) or (result.direction == 3) %}<i
+                                    class="fas fa-fw fa-arrow-right"></i>{{ result.last_sent|localizeddate('medium', 'medium') }}{% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
     {% endif %}
 {% endblock content %}

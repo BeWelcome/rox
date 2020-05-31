@@ -9,22 +9,24 @@
     <h1>{{ 'admin.tools.headline' | trans }}</h1>
     <h2>{{ 'admin.tools.age_by_country' | trans }}</h2>
     {% if results|length %}
-        <table class="table table-responsive">
-            <tr>
-                <th>{{ 'country' | trans }}</th>
-                <th>{{ 'number.members' | trans }}</th>
-                <th>{{ 'birth.year' | trans }}</th>
-                <th>{{ 'age' | trans }}</th>
-            </tr>
-        {%  for result in results %}
-            <tr>
-                <td>{{ result.Name }}</td>
-                <td>{{ result.Count }}</td>
-                <td>{{ result.BirthYear }}</td>
-                <td>{{ result.Age }}</td>
-            </tr>
-        {% endfor %}
-        </table>
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <tr>
+                    <th>{{ 'country' | trans }}</th>
+                    <th>{{ 'number.members' | trans }}</th>
+                    <th>{{ 'birth.year' | trans }}</th>
+                    <th>{{ 'age' | trans }}</th>
+                </tr>
+                {% for result in results %}
+                    <tr>
+                        <td>{{ result.Name }}</td>
+                        <td>{{ result.Count }}</td>
+                        <td>{{ result.BirthYear }}</td>
+                        <td>{{ result.Age }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
     {% else %}
         {{ 'admin.tools.age_by_country.nothing'| trans }}
     {% endif %}

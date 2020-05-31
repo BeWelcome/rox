@@ -63,9 +63,9 @@ class ActivityRepository extends EntityRepository
      *
      * @return Pagerfanta
      */
-    public function findLatestBannedAdmins($page = 1, $items = 10)
+    public function findProblematicActivities($page = 1, $items = 10)
     {
-        $paginator = new Pagerfanta(new DoctrineORMAdapter($this->queryLatestBannedAdmins(), false));
+        $paginator = new Pagerfanta(new DoctrineORMAdapter($this->queryProblematicActivities(), false));
         $paginator->setMaxPerPage($items);
         $paginator->setCurrentPage($page);
 
@@ -75,11 +75,13 @@ class ActivityRepository extends EntityRepository
     /**
      * @return Query
      */
-    public function queryLatestBannedAdmins()
+    public function queryProblematicActivities()
     {
         return $this->createQueryBuilder('a')
             ->join('App:ActivityAttendee', 'aa', Join::WITH, 'aa.activity = a and aa.organizer = 1')
-            ->join('App:Member', 'm', Join::WITH, "aa.attendee = m and m.status = 'Banned'")
+            ->join('App:Member', 'm', Join::WITH, "aa.attendee = m")
+            ->where("m.status = 'Banned'")
+            ->orWhere('DATEDIFF(a.ends, a.starts) > 1')
             ->orderBy('a.starts', 'desc')
             ->getQuery();
     }

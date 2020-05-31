@@ -44,7 +44,7 @@ if ($galleryId) $postURL = 'gallery/show/sets/'.$galleryId;
                     <div class="upload max5 alert alert-warning">You can only upload 5 images at a time</div>
                                 <input type="hidden" name="galleryId" value="<?=$galleryId;?>">
                 <?php echo $callbacktag; ?>
-                <input type="submit" class="btn btn-sm btn-primary my-2 px-5" value="<?=$words->getSilent('Gallery_UploadSubmit')?>"/>
+                <input type="submit" class="btn btn-sm btn-primary my-2" value="<?=$words->getSilent('Gallery_UploadSubmit')?>"/>
             </div>
         </div>
         <div class="col-12 col-md-6">

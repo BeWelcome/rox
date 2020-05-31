@@ -4,7 +4,7 @@ namespace App\Doctrine\Filter;
 
 use App\Doctrine\Annotation\LanguageAware;
 use Doctrine\Common\Annotations\Reader;
-use Doctrine\ORM\Mapping\ClassMetaData;
+use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Query\Filter\SQLFilter;
 
 class LanguageFilter extends SQLFilter

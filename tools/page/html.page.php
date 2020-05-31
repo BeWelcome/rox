@@ -376,7 +376,10 @@ class PageWithHTML extends AbstractBasePage
         }
         ?></div><?php
     }
-}
+    }
 
-
+    protected function getSubmenuItems()
+    {
+        return [];
+    }
 }

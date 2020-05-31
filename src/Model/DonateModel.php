@@ -4,6 +4,7 @@ namespace App\Model;
 
 use App\Entity\Params;
 use App\Utilities\ManagerTrait;
+use Carbon\Carbon;
 
 class DonateModel
 {
@@ -63,6 +64,7 @@ class DonateModel
             $row->YearNeededAmount = $campaignValue['neededperyear'];
             $row->QuarterNeededAmount = $requiredPerMonth * 3;
             $row->YearDonation = $rowYear['YearDonation'];
+            $row->year = Carbon::instance($campaignValue['campaignstartdate'])->year;
 
             return $row;
         }

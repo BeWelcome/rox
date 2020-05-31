@@ -11,6 +11,10 @@ php:
 addons:
   mariadb: '10.1'
 
+env:
+  - DB_HOST=127.0.0.1
+  - APP_ENV=test
+
 cache:
   directories:
     - $HOME/.composer/cache
@@ -32,9 +36,9 @@ install:
   - composer install --no-interaction --ignore-platform-reqs --no-scripts
 
 script:
-  - php bin/console doctrine:schema:create
-  - php bin/console hautelook:fixtures:load --no-interaction
-  - php bin/console cache:clear
+  - bin/console doctrine:schema:create
+  - bin/console hautelook:fixtures:load --no-interaction
+  - bin/console cache:clear
   - make version
   - make
   - make build

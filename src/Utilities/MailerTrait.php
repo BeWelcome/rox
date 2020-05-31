@@ -52,7 +52,10 @@ trait MailerTrait
                 'receiver' => $receiver,
             ], ...$params);
             $receiver = new Address($receiver->getEmail(), $receiver->getUsername());
+        } elseif (!$receiver instanceof Address) {
+            throw new \InvalidArgumentException(sprintf('$receiver must be an instance of %s or %s.', Member::class, Address::class));
         }
+
         $parameters = array_merge([
             'sender' => $sender,
             'template' => $template,

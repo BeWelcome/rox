@@ -8,6 +8,7 @@ use App\Entity\FeedbackCategory;
 use App\Entity\Member;
 use App\Form\CustomDataClass\ReportCommentRequest;
 use App\Form\ReportCommentType;
+use App\Utilities\BewelcomeAddressTrait;
 use App\Utilities\MailerTrait;
 use App\Utilities\TranslatedFlashTrait;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -22,6 +23,7 @@ class CommentController extends AbstractController
 {
     use MailerTrait;
     use TranslatedFlashTrait;
+    use BewelcomeAddressTrait;
 
     /**
      * @Route("/members/{username}/comment/{commentId}/report", name="report_comment",
@@ -42,6 +44,7 @@ class CommentController extends AbstractController
 //            throw new AccessDeniedException('Hau ab!');
 //        }
 
+        /** @var Member $member */
         $user = $this->getUser();
 
         $form = $this->createForm(ReportCommentType::class, new ReportCommentRequest());
@@ -58,7 +61,7 @@ class CommentController extends AbstractController
                 $feedbackCategory = $feedbackCategoryRepository->findOneBy(['name' => 'Comment_issue']);
 
                 $success = $this->sendTemplateEmail(
-                    new Address($user->getEmail(), 'BeWelcome - ' . $user->getUsername()),
+                    $this->BeWelcomeAddress($user),
                     new Address($feedbackCategory->getEmailToNotify(), 'Comment Issue'),
                     'comment.feedback', [
                         'subject' => 'Comment report',

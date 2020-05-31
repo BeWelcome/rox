@@ -618,6 +618,13 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
     private $registrationKey;
 
     /**
+     * @var int
+     *
+     * @ORM\Column(name="hosting_interest", type="integer", nullable=true)
+     */
+    private $hostingInterest;
+
+    /**
      * @ORM\OneToMany(targetEntity="CryptedField", mappedBy="member", fetch="EAGER")
      */
     private $cryptedFields;
@@ -2720,6 +2727,27 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
     public function getHideAttribute()
     {
         return $this->hideAttribute;
+    }
+
+
+    /**
+     * @param int $hostingInterest
+     *
+     * @return Member
+     */
+    public function setHostingInterest($hostingInterest)
+    {
+        $this->hostingInterest = $hostingInterest;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getHostingInterest()
+    {
+        return $this->hostingInterest;
     }
 
     public function hasRightsForLocale($locale)

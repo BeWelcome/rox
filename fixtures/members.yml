@@ -83,7 +83,7 @@ App\Entity\Member:
         LastLogin: <dateTimeBetween($created, "now")>
         LastSwitchToActive: null
         ExUserId: 0
-        Status: 'Active'
+        Status: '<randomElement(["Active", "OutOfRemind"])>'
         ChangedId: 0
         city: '@Berlin'
         Latitude: <latitude(@Berlin->Latitude,@Berlin->Latitude)>
@@ -97,7 +97,8 @@ App\Entity\Member:
         FirstName: <firstName()>
         SecondName: '70%? <firstName()>'
         LastName: <lastName()>
-        Accommodation: 'dependonrequest'
+        Accommodation: '<randomElement(["neverask", "anytime"])>'
+        hostingInterest: '<numberBetween(1,10)>'
         AdditionalAccommodationInfo: 0
         ILiveWith: 0
         IdentityCheckLevel: 0
@@ -172,7 +173,7 @@ App\Entity\Member:
         FirstName: <firstName()>
         SecondName: '70%? <firstName()>'
         LastName: <lastName()>
-        Accommodation: 'dependonrequest'
+        Accommodation: '<randomElement(["neverask", "anytime"])>'
         AdditionalAccommodationInfo: 0
         ILiveWith: 0
         IdentityCheckLevel: 0

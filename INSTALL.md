@@ -34,7 +34,7 @@ Production OS is Debian GNU/Linux Strech.
 Wait a few minutes for containers to build and start (it might take awhile). Project is running at
 [http://localhost:8080](http://localhost:8080).
 
-If you want to import geonames data, run the following (this operation might take awhile!):
+If you want to import geonames data, run the following (this operation takes awhile!):
 
     ```bash
     $ make install-geonames
@@ -59,8 +59,6 @@ Once again, if you need to run Docker Compose as sudo, run the following:
 * [Node.js](https://nodejs.org/) Latest version (installed globally)
 * [Sphinxsearch](http://sphinxsearch.com/) (can be omitted but member search will be slow and forum search won't work)
 * wget (if you want to follow the instructions word to word) otherwise curl and the -o parameter should be your friend
-
-There is rudimentary Docker support. Feel free to update the Dockerfile to help fellow developers.
 
 ### Download
 
@@ -131,7 +129,7 @@ There is rudimentary Docker support. Feel free to update the Dockerfile to help 
 
 * Geographical data:
 
-    There is exactly one city in the dump: Berlin.
+    There are exactly two cities in the dump: Berlin and Jayapura.
 
 * Resetting all user passwords:
 

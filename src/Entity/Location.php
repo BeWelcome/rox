@@ -59,7 +59,7 @@ class Location
     /**
      * @var Country
      *
-     * @ORM\OneToOne(targetEntity="Country")
+     * @ORM\ManyToOne(targetEntity="Country")
      * @ORM\JoinColumn(name="country", referencedColumnName="country")
      */
     private $country;

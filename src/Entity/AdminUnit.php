@@ -43,15 +43,17 @@ class AdminUnit
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="country", type="string", length=2, nullable=true)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="NONE")
+     * @ORM\Column(name="country", type="string", length=2, nullable=false)
      */
     private $country;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="admin1", type="string", length=20, nullable=true)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="NONE")
+     * @ORM\Column(name="admin1", type="string", length=20, nullable=false)
      */
     private $admin1;
 
@@ -66,8 +68,6 @@ class AdminUnit
      * @var int
      *
      * @ORM\Column(name="geonameid", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $geonameid;
 

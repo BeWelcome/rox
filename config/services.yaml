@@ -14,7 +14,6 @@ parameters:
   group_directory: "%kernel.project_dir%/%env(group_directory)%"
   gallery_directory: "%kernel.project_dir%/%env(gallery_directory)%"
   upload_directory: "%kernel.project_dir%/%env(upload_directory)%"
-  upload_max_size: "%env(upload_max_size)%"
   massmail_batch_size: "%env(massmail_batch_size)%"
   forum_notification_batch_size: "%env(forum_notification_batch_size)%"
 
@@ -162,7 +161,9 @@ services:
 
   rox.html_purifier:
     class: App\Utilities\CustomHTMLPurifier
-    tags: [{ name: exercise.html_purifier, profile: custom }]
+    tags:
+      - name: exercise.html_purifier
+        profile: custom
 
   rox.words_extractor:
     class: App\Utilities\WordsExtractor

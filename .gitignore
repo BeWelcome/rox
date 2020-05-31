@@ -1,19 +1,24 @@
+# It's highly recommended to use a global gitignore: https://help.github.com/en/github/using-git/ignoring-files
+# Here is a sample: https://gist.github.com/vincentchalamon/d5defad563ed49d9306a4aa57dfd4498
 errors.log
 rox_local.ini
 *.cache.ini
 .php_cs.cache
 .phpunit.result.cache
 /data/*
+!data/user/avatars/.gitkeep
+!data/gallery/member/.gitkeep
 google*.html
 tools/testenv/images/status.csv
 components/*
 revision.txt
 .buildpath
-.project
-.idea
 .sass-cache
 doc/
-/node_modules/*
+/docker/db/*
+!docker/db/.gitkeep
+docker-compose.override.*
+!docker-compose.override.yml.dist
 composer.phar
 auth.json
 /.vagrant/*
@@ -26,28 +31,10 @@ phpmetrics.xml
 VERSION
 htdocs/assets/
 config/*.local.yml
-.env
 phploc.xml
-.env
-/phpunit.xml
-/var/*
-!/var/cache
-/var/cache/*
-!var/cache/.gitkeep
-!/var/logs
-/var/logs/*
-!var/logs/.gitkeep
-!/var/sessions
-/var/sessions/*
-!var/sessions/.gitkeep
-!var/SymfonyRequirements.php
-/vendor/
-/public/build/
-bewelcome.sql
-bewelcome.sql.bz2
 /tools/testenv/images/lfw/*.jpg
 
-#deployer config
+# deployer config
 /config/deployer.yml
 
 ###> symfony/framework-bundle ###

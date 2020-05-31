@@ -1,0 +1,14 @@
+version: '3.4'
+
+services:
+  web:
+    ports:
+      - target: 80
+        published: 8080
+        protocol: tcp
+
+  mailer:
+    ports:
+      - target: 80
+        published: 1080
+        protocol: tcp

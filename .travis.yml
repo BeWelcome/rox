@@ -12,8 +12,7 @@ addons:
   mariadb: '10.1'
 
 env:
-  - DB_HOST=127.0.0.1
-  - APP_ENV=test
+  - DB_HOST=127.0.0.1 APP_ENV=test
 
 cache:
   directories:

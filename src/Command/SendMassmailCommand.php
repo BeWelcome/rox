@@ -78,14 +78,12 @@ class SendMassmailCommand extends Command
         /** @var BroadcastMessage[] $scheduled */
         $scheduledBroadcastMessages = $massmailRepository->findBy(['status' => 'ToSend'], ['updated' => 'ASC'], $batchSize, 0);
 
+        $sent = 0;
         if (!empty($scheduledBroadcastMessages))
         {
             /** @var BroadcastMessage $scheduled */
             foreach($scheduledBroadcastMessages as $scheduled)
             {
-                // Get preferred language for recipient
-                $language = $scheduled->getReceiver()->getPreferredLanguage();
-
                 $sender = $this->determineSender($scheduled->getNewsletter()->getType());
                 $receiver = $scheduled->getReceiver();
                 try {
@@ -95,6 +93,7 @@ class SendMassmailCommand extends Command
                         'wordcode' => strtolower('Broadcast_Body_' . $scheduled->getNewsletter()->getName()),
                     ]);
                     $scheduled->setStatus('Sent');
+                    $sent++;
                 } catch(Exception $e) {
                     $scheduled->setStatus('Freeze');
                 }
@@ -103,7 +102,7 @@ class SendMassmailCommand extends Command
             $this->entityManager->flush();
         }
 
-        $io->success(sprintf('Sent %d messages', $batchSize));
+        $io->success(sprintf('Sent %d messages', $sent));
 
         return 0;
     }

@@ -6,7 +6,7 @@
             <a href="{{ url('group_forum_thread', {'thread': post.thread.id, 'group_id': post.thread.group.id}) }}">{{ post.thread.title|striptags }} [{{ post.thread.group.name }}]</a>
             (<a href="{{ url('group_forum_thread', {'thread': post.thread.id, 'group_id': post.thread.group.id}) }}/reply">{{ 'reply'|trans }}</a>)
         {% else %}
-            <a href="{{ url('forum_thread', {'thread': post.thread.id}) }}">{{ post.thread.title|striptags }}</a>
+            <a href="{{ url('forum_thread', {'threadId': post.thread.id}) }}">{{ post.thread.title|striptags }}</a>
             (<a href="{{ url('forum_reply', {'threadId': post.thread.id}) }}">{{ 'reply'|trans }}</a>)
         {% endif %}
     </p>

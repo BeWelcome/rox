@@ -63,7 +63,8 @@ class CommentController extends AbstractController
                 $success = $this->sendTemplateEmail(
                     $this->BeWelcomeAddress($user),
                     new Address($feedbackCategory->getEmailToNotify(), 'Comment Issue'),
-                    'comment.feedback', [
+                    'comment.feedback',
+                    [
                         'subject' => 'Comment report',
                         'comment' => $comment,
                         'feedback' => $feedback,

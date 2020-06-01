@@ -13,16 +13,20 @@ if [ "$1" = 'php-fpm' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ]; then
 	fi
 	ln -sf "$PHP_INI_RECOMMENDED" "$PHP_INI_DIR/php.ini"
 
-	mkdir -p var/cache var/log data/user/avatars data/gallery/member
-	setfacl -R -m u:www-data:rwX -m u:"$(whoami)":rwX var build data
-	setfacl -dR -m u:www-data:rwX -m u:"$(whoami)":rwX var build data
+	mkdir -p var/cache var/log data/user/avatars data/gallery/member upload/images
+	setfacl -R -m u:www-data:rwX -m u:"$(whoami)":rwX var build data upload
+	setfacl -dR -m u:www-data:rwX -m u:"$(whoami)":rwX var build data upload
 
 	if [ "$APP_ENV" != 'prod' ] && [ -f /certs/localCA.crt ]; then
 		ln -sf /certs/localCA.crt /usr/local/share/ca-certificates/localCA.crt
 		update-ca-certificates
 	fi
 
-	if [ "$APP_ENV" != 'prod' ] && [ -f VERSION ]; then
+	if [ "$APP_ENV" != 'prod' ] && [ -f rox_docker.ini ]; then
+		cp rox_docker.ini rox_local.ini
+	fi
+
+	if [ "$APP_ENV" != 'prod' ] && [ ! -f VERSION ]; then
 		git rev-parse --short HEAD > VERSION
 	fi
 

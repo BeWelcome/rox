@@ -36,8 +36,7 @@ trait MailerTrait
     /**
      * @param Member|Address|string $sender
      * @param Member|Address        $receiver
-     * @param string        $template
-     * @param mixed         ...$params
+     * @param mixed                 ...$params
      *
      * @return bool
      */

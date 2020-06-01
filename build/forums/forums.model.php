@@ -1499,22 +1499,28 @@ WHERE `id` = '%d' ",
 		}
 
         if (!$moderator) {
-            // first check if post was made in a group and if the current member is a member of that group
-            $query = "SELECT IdGroup FROM forums_posts fp, forums_threads ft WHERE fp.id = " . $this->dao->escape($IdPost) . " AND fp.threadId = ft.id";
-            $s = $this->dao->query($query);
-            $row = $s->fetch(PDB::FETCH_OBJ);
-            $IdGroup = $row->IdGroup;
-            if ($IdGroup <> 0) {
-                $group = $this->createEntity('Group')->findByid($IdGroup);
-                $member = $this->getLoggedInMember();
-                // Can't use $group->isMember() for some reason
-                $query = " SELECT * FROM membersgroups WHERE IdMember = " . $member->id . " AND IdGroup = " . $IdGroup;
+            if ($DataPost->Post->PostVisibility == 'GroupOnly') {
+                // first check if post was made in a group and if the current member is a member of that group
+                $query = "SELECT IdGroup FROM forums_posts fp, forums_threads ft WHERE fp.id = " . $this->dao->escape($IdPost) . " AND fp.threadId = ft.id";
                 $s = $this->dao->query($query);
                 $row = $s->fetch(PDB::FETCH_OBJ);
-                if (!$row) {
-		 	        $DataPost->Error="NoGroupMember";
-			        return($DataPost) ;
+                $IdGroup = $row->IdGroup;
+                if ($IdGroup <> 0) {
+                    $group = $this->createEntity('Group')->findByid($IdGroup);
+                    $member = $this->getLoggedInMember();
+                    // Can't use $group->isMember() for some reason
+                    $query = " SELECT * FROM membersgroups WHERE IdMember = " . $member->id . " AND IdGroup = " . $IdGroup;
+                    $s = $this->dao->query($query);
+                    $row = $s->fetch(PDB::FETCH_OBJ);
+                    if (!$row) {
+                        $DataPost->Error="NoGroupMember";
+                        return($DataPost) ;
+                    }
                 }
+            }
+            if ($DataPost->Post->PostVisibility == 'ModeratorOnly') {
+                $DataPost->Error = "NoModerator";
+                return $DataPost;
             }
         }
 

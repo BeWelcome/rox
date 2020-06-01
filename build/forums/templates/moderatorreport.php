@@ -56,7 +56,7 @@ $uri = implode('/', $request);
         </tr>
         <tr><td colspan="3" class="h5"><?= $DataPost->Thread->Title[0]->Sentence; ?></td></tr>
         <tr><td colspan="3" ><?= $DataPost->Post->Content[0]->Sentence; ?></td></tr>
-        <tr><td colspan="3"><label for="PostComment">Your message to the moderators:</label><textarea name="PostComment" class="w-100" rows="2"></textarea></td></tr>
+        <tr><td colspan="3"><label for="PostComment">Your message to the moderators:</label><textarea name="PostComment" class="w-100" rows="5"></textarea></td></tr>
 
         <tr>
             <td colspan="3"><label for="Status">Status</label>

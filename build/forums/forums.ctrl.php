@@ -264,7 +264,10 @@ class ForumsController extends PAppController
 
 					$DataPost=$this->_model->prepareModeratorEditPost($IdPost, $this->BW_Right->HasRight('ForumModerator')); // We will use the same data as the one used for Moderator edit
 
-                    if ($DataPost->Error == 'NoGroupMember') {
+                    if ($DataPost->Error == 'NoGroupMember' || $DataPost->Error == 'NoModerator') {
+                        echo "<div class='alert alert-danger'>Access Denied!</div>";
+                        echo "<p>Sorry, you can't access this post</p>";
+                        echo "<p><a href='/'>Go back to homepage.</a></p>";
                         // if someone who isn't a member of the associated group
                         // tries to access this just pull the brakes
                         PPHP::PExit();

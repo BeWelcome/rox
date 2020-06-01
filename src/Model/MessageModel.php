@@ -401,8 +401,6 @@ class MessageModel
      */
     public function hasMessageLimitExceeded($member, $perHour, $perDay)
     {
-        $id = $member->getId();
-
         $sql = "
             SELECT
                 (
@@ -450,38 +448,7 @@ class MessageModel
                     DateSent > DATE_SUB(NOW(), INTERVAL 1 DAY)
                 ) AS numberOfMessagesLastDay
             ";
-        $connection = $this->getManager()->getConnection();
-
-        $row = null;
-        try {
-            $query = $connection->prepare($sql);
-            $query->bindValue(':id', $id);
-
-            $result = $query->execute();
-            if ($result) {
-                $row = $query->fetchAll(PDO::FETCH_OBJ);
-            }
-        } catch (DBALException $e) {
-            return false;
-        }
-
-        if (null === $row) {
-            return false;
-        }
-
-        $comments = $row[0]->numberOfComments;
-        $lastHour = $row[0]->numberOfMessagesLastHour;
-        $lastDay = $row[0]->numberOfMessagesLastDay;
-
-        if (
-            $comments < 1 && (
-                $lastHour >= $perHour ||
-                $lastDay >= $perDay)
-        ) {
-            return true;
-        }
-
-        return false;
+        return $this->hasLimitExceeded($member, $sql, $perHour, $perDay);
     }
 
 
@@ -496,8 +463,6 @@ class MessageModel
      */
     public function hasRequestLimitExceeded($member, $perHour, $perDay)
     {
-        $id = $member->getId();
-
         $sql = "
             SELECT
                 (
@@ -545,38 +510,8 @@ class MessageModel
                     DateSent > DATE_SUB(NOW(), INTERVAL 1 DAY)
                 ) AS numberOfMessagesLastDay
             ";
-        $connection = $this->getManager()->getConnection();
 
-        $row = null;
-        try {
-            $query = $connection->prepare($sql);
-            $query->bindValue(':id', $id);
-
-            $result = $query->execute();
-            if ($result) {
-                $row = $query->fetchAll(PDO::FETCH_OBJ);
-            }
-        } catch (DBALException $e) {
-            return false;
-        }
-
-        if (null === $row) {
-            return false;
-        }
-
-        $comments = $row[0]->numberOfComments;
-        $lastHour = $row[0]->numberOfMessagesLastHour;
-        $lastDay = $row[0]->numberOfMessagesLastDay;
-
-        if (
-            $comments < 1 && (
-                $lastHour >= $perHour ||
-                $lastDay >= $perDay)
-        ) {
-            return true;
-        }
-
-        return false;
+        return $this->hasLimitExceeded($member, $sql, $perHour, $perDay);
     }
 
     /**
@@ -639,5 +574,50 @@ class MessageModel
         $host = $first->getReceiver();
 
         return [$thread, $first, $last, $guest, $host];
+    }
+
+    /**
+     * @param Member $member
+     * @param string $sql
+     * @param int $perHour
+     * @param int $perDay
+     * @return bool
+     */
+    private function hasLimitExceeded(Member $member, string $sql, int $perHour, int $perDay): bool
+    {
+        $id = $member->getId();
+
+        $connection = $this->getManager()->getConnection();
+
+        $row = null;
+        try {
+            $query = $connection->prepare($sql);
+            $query->bindValue(':id', $id);
+
+            $result = $query->execute();
+            if ($result) {
+                $row = $query->fetchAll(PDO::FETCH_OBJ);
+            }
+        } catch (DBALException $e) {
+            return false;
+        }
+
+        if (null === $row) {
+            return false;
+        }
+
+        $comments = $row[0]->numberOfComments;
+        $lastHour = $row[0]->numberOfMessagesLastHour;
+        $lastDay = $row[0]->numberOfMessagesLastDay;
+
+        if (
+            $comments < 1 && (
+                $lastHour >= $perHour ||
+                $lastDay >= $perDay)
+        ) {
+            return true;
+        }
+
+        return false;
     }
 }

@@ -148,8 +148,6 @@ class MembersLanguagesLevel
     /**
      * Set language.
      *
-     * @param Language $language
-     *
      * @return Memberslanguageslevel
      */
     public function setLanguage(Language $language)

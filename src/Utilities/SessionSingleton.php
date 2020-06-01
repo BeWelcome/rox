@@ -21,8 +21,6 @@ class SessionSingleton
     /**
      * Protected constructor to prevent creating a new instance of the
      * *Singleton* via the `new` operator from outside of this class.
-     *
-     * @param SessionInterface $session
      */
     protected function __construct(SessionInterface $session)
     {
@@ -31,8 +29,6 @@ class SessionSingleton
 
     /**
      * Returns the *SessionSingleton* instance of this class.
-     *
-     * @param SessionInterface $session
      *
      * @return SessionSingleton the *session* instance
      */

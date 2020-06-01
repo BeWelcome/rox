@@ -20,7 +20,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 /**
  * Class CommentController.
  *
- *
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class CommentController extends AbstractController
@@ -35,9 +34,6 @@ class CommentController extends AbstractController
 
     /**
      * CommentController constructor.
-     *
-     * @param TranslatorInterface $translator
-     * @param CommentModel        $commentModel
      */
     public function __construct(TranslatorInterface $translator, CommentModel $commentModel)
     {
@@ -48,14 +44,15 @@ class CommentController extends AbstractController
     /**
      * @Route("/admin/comment", name="admin_comment_overview")
      *
-     * @param Request $request
+     * @throws AccessDeniedException
      *
      * @return Response
      */
     public function adminCommentOverview(Request $request)
     {
-        if (!$this->isGranted(Member::ROLE_ADMIN_COMMENTS)
-            || !$this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM )
+        if (
+            !$this->isGranted(Member::ROLE_ADMIN_COMMENTS)
+            || !$this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
         ) {
             throw $this->createAccessDeniedException('You need to have Group right to access this.');
         }
@@ -79,7 +76,7 @@ class CommentController extends AbstractController
     /**
      * @Route("/admin/comment/safetyteam", name="admin_abuser_overview")
      *
-     * @param Request $request
+     * @throws AccessDeniedException
      *
      * @return Response
      */
@@ -108,13 +105,14 @@ class CommentController extends AbstractController
     /**
      * @Route("/admin/comment/reported", name="admin_comment_reported_overview")
      *
-     * @param Request $request
+     * @throws AccessDeniedException
      *
      * @return Response
      */
     public function adminReportedOverview(Request $request)
     {
-        if (!$this->isGranted(Member::ROLE_ADMIN_COMMENTS)
+        if (
+            !$this->isGranted(Member::ROLE_ADMIN_COMMENTS)
             || !$this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
         ) {
             throw $this->createAccessDeniedException('You need to have Group right to access this.');
@@ -139,18 +137,19 @@ class CommentController extends AbstractController
     /**
      * @Route("/admin/comment/negative", name="admin_negative_overview")
      *
-     * @param Request $request
+     * @throws AccessDeniedException
      *
      * @return Response
      */
     public function adminNegativeOverview(Request $request)
     {
-        if (!$this->isGranted( Member::ROLE_ADMIN_COMMENTS)
-            || !$this->isGranted( Member::ROLE_ADMIN_SAFETYTEAM)
+        if (
+            !$this->isGranted(Member::ROLE_ADMIN_COMMENTS)
+            || !$this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
         ) {
             throw $this->createAccessDeniedException('You need to have Group right to access this.');
         }
-$page = $request->query->get('page', 1);
+        $page = $request->query->get('page', 1);
         $limit = $request->query->get('limit', 10);
 
         $comments = $this->commentModel->getCommentsByQuality(CommentQualityType::NEGATIVE, $page, $limit);
@@ -169,13 +168,14 @@ $page = $request->query->get('page', 1);
     /**
      * @Route("/admin/comment/checked", name="admin_checked_overview")
      *
-     * @param Request $request
+     * @throws AccessDeniedException
      *
      * @return Response
      */
     public function adminCheckedOverview(Request $request)
     {
-        if (!$this->isGranted(Member::ROLE_ADMIN_COMMENTS)
+        if (
+            !$this->isGranted(Member::ROLE_ADMIN_COMMENTS)
             || !$this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
         ) {
             throw $this->createAccessDeniedException('You need to have Group right to access this.');
@@ -200,9 +200,6 @@ $page = $request->query->get('page', 1);
     /**
      * @Route("/admin/comment/{commentId}", name="admin_comment")
      *
-     * @param Request $request
-     * @param Comment $comment
-     *
      * @throws AccessDeniedException
      *
      * @return Response
@@ -210,7 +207,8 @@ $page = $request->query->get('page', 1);
      */
     public function adminCommentAction(Request $request, Comment $comment)
     {
-        if (!$this->isGranted(Member::ROLE_ADMIN_COMMENTS)
+        if (
+            !$this->isGranted(Member::ROLE_ADMIN_COMMENTS)
             || !$this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
         ) {
             throw $this->createAccessDeniedException('error.access.comment');
@@ -270,9 +268,6 @@ $page = $request->query->get('page', 1);
     /**
      * @Route("/admin/comment/{commentId}/safetyteam", name="admin_comment_assign_safetyteam")
      *
-     * @param Request $request
-     * @param Comment $comment
-     *
      * @throws AccessDeniedException
      *
      * @return RedirectResponse
@@ -281,7 +276,8 @@ $page = $request->query->get('page', 1);
      */
     public function adminCommentAssignSafetyTeamAction(Request $request, Comment $comment)
     {
-        if (!$this->isGranted(Member::ROLE_ADMIN_COMMENTS)
+        if (
+            !$this->isGranted(Member::ROLE_ADMIN_COMMENTS)
             || !$this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
         ) {
             throw $this->createAccessDeniedException('You need to have either Comments right or be a member of the Safety Team to access this.');
@@ -300,9 +296,6 @@ $page = $request->query->get('page', 1);
     /**
      * @Route("/admin/comment/{commentId}/checked", name="admin_comment_mark_checked")
      *
-     * @param Request $request
-     * @param Comment $comment
-     *
      * @throws AccessDeniedException
      *
      * @return RedirectResponse
@@ -311,7 +304,8 @@ $page = $request->query->get('page', 1);
      */
     public function adminCommentMarkChecked(Request $request, Comment $comment)
     {
-        if (!$this->isGranted(Member::ROLE_ADMIN_COMMENTS)
+        if (
+            !$this->isGranted(Member::ROLE_ADMIN_COMMENTS)
             || !$this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
         ) {
             throw $this->createAccessDeniedException('You need to have either Comments right or be a member of the Safety Team to access this.');
@@ -330,9 +324,6 @@ $page = $request->query->get('page', 1);
     /**
      * @Route("/admin/comment/{commentId}/hide", name="admin_comment_hide")
      *
-     * @param Request $request
-     * @param Comment $comment
-     *
      * @throws AccessDeniedException
      *
      * @return RedirectResponse
@@ -341,7 +332,8 @@ $page = $request->query->get('page', 1);
      */
     public function adminCommentHide(Request $request, Comment $comment)
     {
-        if (!$this->isGranted(Member::ROLE_ADMIN_COMMENTS)
+        if (
+            !$this->isGranted(Member::ROLE_ADMIN_COMMENTS)
             || !$this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
         ) {
             throw $this->createAccessDeniedException('You need to have either Comments right or be a member of the Safety Team to access this.');
@@ -360,9 +352,6 @@ $page = $request->query->get('page', 1);
     /**
      * @Route("/admin/comment/{commentId}/show", name="admin_comment_show")
      *
-     * @param Request $request
-     * @param Comment $comment
-     *
      * @throws AccessDeniedException
      *
      * @return RedirectResponse
@@ -371,7 +360,8 @@ $page = $request->query->get('page', 1);
      */
     public function adminCommentShow(Request $request, Comment $comment)
     {
-        if (!$this->isGranted(Member::ROLE_ADMIN_COMMENTS)
+        if (
+            !$this->isGranted(Member::ROLE_ADMIN_COMMENTS)
             || !$this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
         ) {
             throw $this->createAccessDeniedException('You need to have either Comments right or be a member of the Safety Team to access this.');
@@ -390,14 +380,14 @@ $page = $request->query->get('page', 1);
     /**
      * @Route("/admin/comment/for/{username}", name="admin_comments_for_member")
      *
-     * @param Request $request
-     * @param Member  $member
+     * @throws AccessDeniedException
      *
      * @return Response
      */
     public function showAllCommentsForMember(Request $request, Member $member)
     {
-        if (!$this->isGranted(Member::ROLE_ADMIN_COMMENTS)
+        if (
+            !$this->isGranted(Member::ROLE_ADMIN_COMMENTS)
             || !$this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
         ) {
             throw $this->createAccessDeniedException('You need to have Group right to access this.');
@@ -422,14 +412,14 @@ $page = $request->query->get('page', 1);
     /**
      * @Route("/admin/comment/from/{username}", name="admin_comments_from_member")
      *
-     * @param Request $request
-     * @param Member  $member
+     * @throws AccessDeniedException
      *
      * @return Response
      */
     public function showAllCommentsFromMember(Request $request, Member $member)
     {
-        if (!$this->isGranted(Member::ROLE_ADMIN_COMMENTS)
+        if (
+            !$this->isGranted(Member::ROLE_ADMIN_COMMENTS)
             || !$this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
         ) {
             throw $this->createAccessDeniedException('You need to have Group right to access this.');

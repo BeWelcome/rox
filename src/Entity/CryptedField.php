@@ -279,8 +279,6 @@ class CryptedField
     /**
      * Set member.
      *
-     * @param Member $member
-     *
      * @return Cryptedfield
      */
     public function setMember(Member $member)

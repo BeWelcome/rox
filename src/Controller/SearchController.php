@@ -19,11 +19,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SearchController extends AbstractController
 {
-
     /**
      * @Route("/search/members", name="search_members")
-     *
-     * @param Request             $request
      *
      * @return Response
      */
@@ -42,8 +39,7 @@ class SearchController extends AbstractController
             ->getForm()
         ;
         $memberSearch->handleRequest($request);
-        if ($memberSearch->isSubmitted() && $memberSearch->isValid())
-        {
+        if ($memberSearch->isSubmitted() && $memberSearch->isValid()) {
             $data = $memberSearch->getData();
             $username = $data['username'];
             /** @var MemberRepository $memberRepository */
@@ -59,9 +55,6 @@ class SearchController extends AbstractController
 
     /**
      * @Route("/search/locations", name="search_locations")
-     *
-     * @param Request             $request
-     * @param TranslatorInterface $translator
      *
      * @return Response
      *
@@ -145,12 +138,11 @@ class SearchController extends AbstractController
                 // only set data if the form wasn't submitted from search_members
                 $search->setData($data);
             }
-        } elseif ($tinyIsSubmitted)
-        {
-                // The user probably clicked on 'go' to fast on the landing page
-                // so set the entered location into the search location field and just show the form
-                $viewData = $tiny->getViewData();
-                $search->get('location')->submit($viewData->location);
+        } elseif ($tinyIsSubmitted) {
+            // The user probably clicked on 'go' to fast on the landing page
+            // so set the entered location into the search location field and just show the form
+            $viewData = $tiny->getViewData();
+            $search->get('location')->submit($viewData->location);
         }
 
         return $this->render('search/searchlocations.html.twig', [
@@ -168,9 +160,6 @@ class SearchController extends AbstractController
      * available in a location.
      *
      * @Route("/search/map", name="search_map")
-     *
-     * @param Request             $request
-     * @param TranslatorInterface $translator
      *
      * @return Response
      *
@@ -217,9 +206,6 @@ class SearchController extends AbstractController
 
     /**
      * @Route("/search/members/ajax", name="search_members_ajax")
-     *
-     * @param Request             $request
-     * @param TranslatorInterface $translator
      *
      * @return Response
      *

@@ -4,7 +4,6 @@ namespace App\Utilities;
 
 use App\Entity\Wiki;
 use App\Model\WikiModel;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Mike42\Wikitext\DefaultParserBackend;
 
@@ -22,9 +21,6 @@ class RoxWikiParserBackend extends DefaultParserBackend
 
     /**
      * RoxWikiParserBackend constructor.
-     *
-     * @param WikiModel $wikiModel
-     * @param EntityManagerInterface $em
      */
     public function __construct(WikiModel $wikiModel, EntityManagerInterface $em)
     {

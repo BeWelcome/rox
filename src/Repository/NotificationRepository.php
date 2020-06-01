@@ -90,8 +90,6 @@ class NotificationRepository extends EntityRepository
     }
 
     /**
-     * @param Member $member
-     *
      * @return int
      */
     public function getUncheckedNotificationsCount(Member $member)

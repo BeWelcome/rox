@@ -2,14 +2,14 @@
 
 namespace App\Entity;
 
+use App\Entity\Member as Member;
+use App\Entity\Newsletter as Newsletter;
 use Carbon\Carbon;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
-use App\Entity\Member as Member;
-use App\Entity\Newsletter as Newsletter;
 
 /**
- * Broadcastmessages
+ * Broadcastmessages.
  *
  * @ORM\Table(name="broadcastmessages")
  * @ORM\Entity
@@ -64,10 +64,8 @@ class BroadcastMessage
      */
     private $receiver;
 
-
-
     /**
-     * Set enqueuedBy
+     * Set enqueuedBy.
      *
      * @param Member $enqueuedBy
      *
@@ -81,7 +79,7 @@ class BroadcastMessage
     }
 
     /**
-     * Get enqueuedBy
+     * Get enqueuedBy.
      *
      * @return Member
      */
@@ -91,7 +89,7 @@ class BroadcastMessage
     }
 
     /**
-     * Set status
+     * Set status.
      *
      * @param string $status
      *
@@ -105,7 +103,7 @@ class BroadcastMessage
     }
 
     /**
-     * Get status
+     * Get status.
      *
      * @return string
      */
@@ -115,7 +113,7 @@ class BroadcastMessage
     }
 
     /**
-     * Set updated
+     * Set updated.
      *
      * @param DateTime $updated
      *
@@ -129,7 +127,7 @@ class BroadcastMessage
     }
 
     /**
-     * Get updated
+     * Get updated.
      *
      * @return Carbon
      */
@@ -139,7 +137,7 @@ class BroadcastMessage
     }
 
     /**
-     * Set newsletter
+     * Set newsletter.
      *
      * @param Newsletter $newsletter
      *
@@ -153,7 +151,7 @@ class BroadcastMessage
     }
 
     /**
-     * Get newsletter
+     * Get newsletter.
      *
      * @return Newsletter
      */
@@ -163,7 +161,7 @@ class BroadcastMessage
     }
 
     /**
-     * Set receiver
+     * Set receiver.
      *
      * @param Member $receiver
      *
@@ -177,7 +175,7 @@ class BroadcastMessage
     }
 
     /**
-     * Get receiver
+     * Get receiver.
      *
      * @return Member
      */

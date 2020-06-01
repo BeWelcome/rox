@@ -64,17 +64,12 @@ class User
      */
     protected $id;
 
-    /**
-     * @return string
-     */
     public function getHandle(): string
     {
         return $this->handle;
     }
 
     /**
-     * @param string $handle
-     *
      * @return User
      */
     public function setHandle(string $handle): self
@@ -84,17 +79,12 @@ class User
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getEmail(): string
     {
         return $this->email;
     }
 
     /**
-     * @param string $email
-     *
      * @return User
      */
     public function setEmail(string $email): self
@@ -104,17 +94,12 @@ class User
         return $this;
     }
 
-    /**
-     * @return \DateTime
-     */
     public function getLastlogin(): \DateTime
     {
         return $this->lastlogin;
     }
 
     /**
-     * @param \DateTime $lastlogin
-     *
      * @return User
      */
     public function setLastlogin(\DateTime $lastlogin): self
@@ -124,17 +109,12 @@ class User
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getPassword(): string
     {
         return $this->password;
     }
 
     /**
-     * @param string $password
-     *
      * @return User
      */
     public function setPassword(string $password): self
@@ -144,17 +124,12 @@ class User
         return $this;
     }
 
-    /**
-     * @return int
-     */
     public function getId(): int
     {
         return $this->id;
     }
 
     /**
-     * @param int $id
-     *
      * @return User
      */
     public function setId(int $id): self
@@ -164,17 +139,11 @@ class User
         return $this;
     }
 
-    /**
-     * @return int
-     */
     public function getLocation(): int
     {
         return $this->location;
     }
 
-    /**
-     * @param int $location
-     */
     public function setLocation(int $location): void
     {
         $this->location = $location;

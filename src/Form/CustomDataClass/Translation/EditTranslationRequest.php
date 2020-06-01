@@ -4,7 +4,6 @@ namespace App\Form\CustomDataClass\Translation;
 
 use App\Entity\Word;
 use InvalidArgumentException;
-use Symfony\Component\Validator\Constraints as Assert;
 
 class EditTranslationRequest extends TranslationRequest
 {
@@ -24,9 +23,6 @@ class EditTranslationRequest extends TranslationRequest
     public $doNotTranslate;
 
     /**
-     * @param Word $original
-     * @param Word $translation
-     *
      * @throws InvalidArgumentException
      *
      * @return EditTranslationRequest

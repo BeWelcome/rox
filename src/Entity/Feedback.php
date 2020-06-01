@@ -236,8 +236,6 @@ class Feedback
     /**
      * Set category.
      *
-     * @param FeedbackCategory $category
-     *
      * @return Feedback
      */
     public function setCategory(FeedbackCategory $category)

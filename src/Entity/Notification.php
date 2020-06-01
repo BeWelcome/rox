@@ -103,8 +103,6 @@ class Notification
     /**
      * Set member.
      *
-     * @param Member $member
-     *
      * @return Notification
      */
     public function setMember(Member $member)
@@ -126,8 +124,6 @@ class Notification
 
     /**
      * Set relMember.
-     *
-     * @param Member $relMember
      *
      * @return Notification
      */

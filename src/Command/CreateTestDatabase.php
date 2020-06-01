@@ -2,23 +2,13 @@
 
 namespace App\Command;
 
-use App\Model\StatisticsModel;
-use DateInterval;
-use DatePeriod;
-use DateTime;
-use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
-use Exception;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArrayInput;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Output\OutputInterface;
-use Zend\Validator\Date;
 
 class CreateTestDatabase extends Command
 {
@@ -29,7 +19,9 @@ class CreateTestDatabase extends Command
      */
     protected static $defaultName = 'test:database:create';
 
-    /** EntityManager $entityManager */
+    /**
+     * @var EntityManagerInterface
+     */
     private $entityManager;
 
     public function __construct(EntityManagerInterface $entityManager)
@@ -48,24 +40,25 @@ class CreateTestDatabase extends Command
                 'force',
                 null,
                 InputOption::VALUE_NONE,
-                'Will create a new database even if one already exist')
+                'Will create a new database even if one already exist'
+            )
             ->addOption(
                 'drop',
                 null,
                 InputOption::VALUE_NONE,
-                'Will drop the database if one already exist. Needs to be used with --force.')
+                'Will drop the database if one already exist. Needs to be used with --force.'
+            )
             ->addOption(
                 'translations',
                 null,
                 InputOption::VALUE_NONE,
-                'Will download the current translations and languages.')
+                'Will download the current translations and languages.'
+            )
             ->setHelp($descriptionAndHelp)
         ;
     }
 
     /**
-     * @param InputInterface $input
-     * @param OutputInterface $output
      * @return int
      *
      * @SuppressWarnings(PHPMD.StaticAccess)
@@ -90,7 +83,7 @@ class CreateTestDatabase extends Command
             $command = $this->getApplication()->find('doctrine:database:drop');
 
             $arguments = [
-                '--force'  => true,
+                '--force' => true,
             ];
 
             $dropDatabase = new ArrayInput($arguments);
@@ -113,6 +106,7 @@ class CreateTestDatabase extends Command
                 'Failed creating the database (see output above for reasons).',
                 '',
             ]);
+
             return 1;
         }
 
@@ -130,6 +124,7 @@ class CreateTestDatabase extends Command
                 'Failed creating the schema (see output above for reasons).',
                 '',
             ]);
+
             return 1;
         }
 
@@ -148,6 +143,7 @@ class CreateTestDatabase extends Command
                 'Failed adding functions (see above for reasons).',
                 '',
             ]);
+
             return 1;
         }
 
@@ -166,6 +162,7 @@ class CreateTestDatabase extends Command
                 'Failed seeding the database.',
                 '',
             ]);
+
             return 1;
         }
 

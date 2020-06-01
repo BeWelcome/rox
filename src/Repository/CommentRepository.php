@@ -6,8 +6,6 @@ use App\Doctrine\CommentAdminActionType;
 use App\Entity\Member;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\QueryBuilder;
 use Exception;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
@@ -46,9 +44,8 @@ class CommentRepository extends EntityRepository
     /**
      * Returns a Pagerfanta object encapsulating the matching paginated activities.
      *
-     * @param Member $member
-     * @param int    $page
-     * @param int    $items
+     * @param int $page
+     * @param int $items
      *
      * @return Pagerfanta
      */
@@ -62,8 +59,6 @@ class CommentRepository extends EntityRepository
     }
 
     /**
-     * @param Member $member
-     *
      * @return QueryBuilder
      */
     public function queryAllForMember(Member $member)
@@ -78,9 +73,8 @@ class CommentRepository extends EntityRepository
     /**
      * Returns a Pagerfanta object encapsulating the matching paginated activities.
      *
-     * @param Member $member
-     * @param int    $page
-     * @param int    $items
+     * @param int $page
+     * @param int $items
      *
      * @return Pagerfanta
      */
@@ -94,8 +88,6 @@ class CommentRepository extends EntityRepository
     }
 
     /**
-     * @param Member $member
-     *
      * @return QueryBuilder
      */
     public function queryAllFromMember(Member $member)
@@ -192,8 +184,6 @@ class CommentRepository extends EntityRepository
     }
 
     /**
-     * @param Member $member
-     *
      * @return Collection
      */
     public function getCommentsForMember(Member $member)
@@ -208,8 +198,6 @@ class CommentRepository extends EntityRepository
     }
 
     /**
-     * @param Member $member
-     *
      * @return Collection
      */
     public function getCommentsFromMember(Member $member)

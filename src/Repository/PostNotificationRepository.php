@@ -2,13 +2,8 @@
 
 namespace App\Repository;
 
-use App\Entity\Member;
 use DateTime;
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\QueryBuilder;
-use Pagerfanta\Adapter\DoctrineORMAdapter;
-use Pagerfanta\Pagerfanta;
 
 /**
  * Class PostNotificationRepository.

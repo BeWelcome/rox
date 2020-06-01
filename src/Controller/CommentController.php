@@ -27,12 +27,6 @@ class CommentController extends AbstractController
      * @ParamConverter("member", class="App\Entity\Member", options={"mapping": {"username": "username"}})
      * @ParamConverter("comment", class="App\Entity\Comment", options={"mapping": {"commentId": "id"}})
      *
-     * @param Request             $request
-     * @param Member              $member
-     * @param Comment             $comment
-     * @param Swift_Mailer        $mailer
-     * @param TranslatorInterface $translator
-     *
      * @return Response
      */
     public function reportCommentAction(

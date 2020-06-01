@@ -8,8 +8,6 @@
 namespace App\Entity;
 
 use DateTime;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -165,8 +163,6 @@ class Right
     /**
      * Add rightVolunteer.
      *
-     * @param RightVolunteer $rightVolunteer
-     *
      * @return Right
      */
     public function addRightVolunteer(RightVolunteer $rightVolunteer)
@@ -178,8 +174,6 @@ class Right
 
     /**
      * Remove rightVolunteer.
-     *
-     * @param RightVolunteer $rightVolunteer
      */
     public function removeRightVolunteer(RightVolunteer $rightVolunteer)
     {

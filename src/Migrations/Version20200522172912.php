@@ -12,14 +12,14 @@ use Doctrine\Migrations\AbstractMigration;
  */
 final class Version20200522172912 extends AbstractMigration
 {
-    public function getDescription() : string
+    public function getDescription(): string
     {
         return 'Add forum_trads view';
     }
 
-    public function up(Schema $schema) : void
+    public function up(Schema $schema): void
     {
-        $this->addSql("
+        $this->addSql('
             CREATE 
                 ALGORITHM = MERGE 
                 SQL SECURITY DEFINER
@@ -38,12 +38,11 @@ final class Version20200522172912 extends AbstractMigration
                     `translations`.`TableColumn` AS `TableColumn`
                 FROM
                     `translations`;
-        ");
+        ');
     }
 
-    public function down(Schema $schema) : void
+    public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
-
     }
 }

@@ -30,9 +30,6 @@ class UserLocaleListener implements EventSubscriberInterface
 
     /**
      * UserLocaleListener constructor.
-     *
-     * @param SessionInterface       $session
-     * @param EntityManagerInterface $em
      */
     public function __construct(SessionInterface $session, EntityManagerInterface $em)
     {
@@ -42,8 +39,6 @@ class UserLocaleListener implements EventSubscriberInterface
 
     /**
      * @SuppressWarnings(PHPMD.StaticAccess)
-     *
-     * @param InteractiveLoginEvent $event
      */
     public function onInteractiveLogin(InteractiveLoginEvent $event)
     {

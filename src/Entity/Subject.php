@@ -48,7 +48,6 @@ class Subject
         $this->messages = new ArrayCollection();
     }
 
-
     /**
      * Get id.
      *

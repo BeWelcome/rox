@@ -34,9 +34,6 @@ class MessageModel
     /**
      * Mark a message as purged (can not be unmarked).
      *
-     * @param Member $member
-     * @param array  $messageIds
-     *
      * @throws ORMException
      * @throws OptimisticLockException
      */
@@ -65,9 +62,6 @@ class MessageModel
     }
 
     /**
-     * @param Member $member
-     * @param array  $messageIds
-     *
      * @throws ORMException
      * @throws OptimisticLockException
      */
@@ -96,9 +90,6 @@ class MessageModel
     }
 
     /**
-     * @param Member $member
-     * @param array  $messageIds
-     *
      * @throws ORMException
      * @throws OptimisticLockException
      */
@@ -126,8 +117,6 @@ class MessageModel
     }
 
     /**
-     * @param array $messageIds
-     *
      * @throws ORMException
      * @throws OptimisticLockException
      */
@@ -152,8 +141,6 @@ class MessageModel
     }
 
     /**
-     * @param array $messageIds
-     *
      * @throws ORMException
      * @throws OptimisticLockException
      */
@@ -181,8 +168,6 @@ class MessageModel
     }
 
     /**
-     * @param array $messageIds
-     *
      * @throws ORMException
      * @throws OptimisticLockException
      */
@@ -209,8 +194,6 @@ class MessageModel
     }
 
     /**
-     * @param array $messageIds
-     *
      * @throws ORMException
      * @throws OptimisticLockException
      */
@@ -305,8 +288,6 @@ class MessageModel
     }
 
     /**
-     * @param Member $member
-     * @param Member $other
      * @param $sort
      * @param $sortDir
      * @param int $page
@@ -324,8 +305,6 @@ class MessageModel
 
     /**
      * Returns the thread that contains the given message.
-     *
-     * @param Message $message
      *
      * @return Message[]
      */
@@ -448,9 +427,9 @@ class MessageModel
                     DateSent > DATE_SUB(NOW(), INTERVAL 1 DAY)
                 ) AS numberOfMessagesLastDay
             ";
+
         return $this->hasLimitExceeded($member, $sql, $perHour, $perDay);
     }
-
 
     /**
      * Tests if a member has exceeded its limit for sending messages.
@@ -518,9 +497,6 @@ class MessageModel
      * Creates a new message and stores it into the database afterwards sends an notification to the receiver
      * Only used for messages therefore request is set to null!
      *
-     * @param Member       $sender
-     * @param Member       $receiver
-     * @param Message|null $parent
      * @param $subjectText
      * @param $body
      *
@@ -576,13 +552,6 @@ class MessageModel
         return [$thread, $first, $last, $guest, $host];
     }
 
-    /**
-     * @param Member $member
-     * @param string $sql
-     * @param int $perHour
-     * @param int $perDay
-     * @return bool
-     */
     private function hasLimitExceeded(Member $member, string $sql, int $perHour, int $perDay): bool
     {
         $id = $member->getId();

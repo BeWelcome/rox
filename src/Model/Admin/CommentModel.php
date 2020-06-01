@@ -33,9 +33,8 @@ class CommentModel
     }
 
     /**
-     * @param Member $member
-     * @param int    $page
-     * @param int    $limit
+     * @param int $page
+     * @param int $limit
      *
      * @return Pagerfanta
      */
@@ -48,9 +47,8 @@ class CommentModel
     }
 
     /**
-     * @param Member $member
-     * @param int    $page
-     * @param int    $limit
+     * @param int $page
+     * @param int $limit
      *
      * @return Pagerfanta
      */

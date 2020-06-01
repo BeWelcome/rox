@@ -34,7 +34,7 @@ class FaqRequest
     public $answer;
 
     /**
-     * @var boolean
+     * @var bool
      */
     public $active = true;
 
@@ -44,9 +44,6 @@ class FaqRequest
     }
 
     /**
-     * @param EntityManager $em
-     * @param Faq           $faq
-     *
      * @return FaqRequest
      */
     public static function fromFaq(EntityManager $em, Faq $faq)

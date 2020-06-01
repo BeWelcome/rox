@@ -25,8 +25,7 @@ class LocaleListener implements EventSubscriberInterface
     /**
      * LocaleListener constructor.
      *
-     * @param EntityManagerInterface $em
-     * @param string                 $defaultLocale
+     * @param string $defaultLocale
      */
     public function __construct(EntityManagerInterface $em, $defaultLocale = 'en')
     {
@@ -46,8 +45,6 @@ class LocaleListener implements EventSubscriberInterface
 
     /**
      * @SuppressWarnings(PHPMD.StaticAccess)
-     *
-     * @param RequestEvent $event
      */
     public function onKernelRequest(RequestEvent $event)
     {
@@ -62,8 +59,7 @@ class LocaleListener implements EventSubscriberInterface
         } else {
             // if no explicit locale has been set on this request, use one from the session
             $locale = $request->getSession()->get('_locale');
-            if (null === $locale)
-            {
+            if (null === $locale) {
                 $locale = 'en';
             }
         }

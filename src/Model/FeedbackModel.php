@@ -14,9 +14,8 @@ class FeedbackModel
     /**
      * Returns a Pagerfanta object that contains the currently selected logs.
      *
-     * @param array $categories
-     * @param int   $page
-     * @param int   $limit
+     * @param int $page
+     * @param int $limit
      *
      * @return Pagerfanta
      */

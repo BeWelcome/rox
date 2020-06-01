@@ -149,8 +149,6 @@ class FaqCategory
     }
 
     /**
-     * @param string $description
-     *
      * @return FaqCategory
      */
     public function setDescription(string $description)

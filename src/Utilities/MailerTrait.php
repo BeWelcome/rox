@@ -10,11 +10,7 @@ use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
 
 /**
- * Trait MailerTrait
- * @package App\Utilities
- *
- * Need ManagerTrait and TranslatorTrait to be included beforehand
- *
+ * Trait MailerTrait.
  */
 trait MailerTrait
 {
@@ -23,8 +19,6 @@ trait MailerTrait
 
     /**
      * @required
-     *
-     * @param MailerInterface $mailer
      */
     public function setMailer(MailerInterface $mailer)
     {
@@ -41,9 +35,7 @@ trait MailerTrait
 
     /**
      * @param Member|Address|string $sender
-     * @param Member        $receiver
-     * @param string        $template
-     * @param mixed         ...$params
+     * @param mixed                 ...$params
      *
      * @return bool
      */
@@ -53,15 +45,14 @@ trait MailerTrait
         $this->setTranslatorLocale($receiver);
         $locale = $receiver->getPreferredLanguage();
         $parameters = array_merge(['sender' => $sender, 'receiver' => $receiver, 'tenplate' => $template,
-            'receiverLocale' => $locale->getShortcode()], ...$params);
+            'receiverLocale' => $locale->getShortcode(), ], ...$params);
         $subject = $parameters['subject'];
         $subjectParams = [];
-        if (is_array($subject)) {
+        if (\is_array($subject)) {
             $subjectParams = $subject['parameters'];
             $subject = $subject['translationId'];
         }
         $subject = $this->getTranslator()->trans($subject, $subjectParams);
-
         $email = (new TemplatedEmail())
             ->to(new Address($receiver->getEmail(), $receiver->getUsername()))
             ->subject($subject)

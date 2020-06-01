@@ -345,6 +345,7 @@ class Word
      * Set translationpriority.
      *
      * @param int   $translationpriority
+     * @param mixed $translationPriority
      *
      * @return Word
      */
@@ -423,17 +424,12 @@ class Word
         return $this->id;
     }
 
-    /**
-     * @return string
-     */
     public function getDomain(): string
     {
         return $this->domain;
     }
 
     /**
-     * @param string $domain
-     *
      * @return Word
      */
     public function setDomain(string $domain): self

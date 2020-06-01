@@ -2,7 +2,6 @@
 
 namespace App\Controller\Admin;
 
-use ActivitiesModel;
 use App\Entity\Member;
 use App\Form\SpamActivitiesIndexFormType;
 use App\Form\SpamCommunityNewsCommentsIndexFormType;
@@ -10,8 +9,6 @@ use App\Form\SpamMessagesIndexFormType;
 use App\Model\ActivityModel;
 use App\Model\CommunityNewsModel;
 use App\Model\MessageModel;
-use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -25,17 +22,14 @@ class CheckerController extends AbstractController
     /**
      * @Route("/admin/spam/messages", name="admin_spam_messages")
      *
-     * @param Request      $request
-     * @param MessageModel $messageModel
-     *
-     * @throws ORMException
-     * @throws OptimisticLockException
+     * @throws AccessDeniedException
      *
      * @return Response
      */
     public function showOverview(Request $request, MessageModel $messageModel)
     {
-        if (!$this->isGranted(Member::ROLE_ADMIN_CHECKER)
+        if (
+            !$this->isGranted(Member::ROLE_ADMIN_CHECKER)
             && !$this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
         ) {
             throw $this->createAccessDeniedException('You need to have Checker right to access this.');
@@ -88,15 +82,14 @@ class CheckerController extends AbstractController
     /**
      * @Route("/admin/spam/activities", name="admin_spam_activities")
      *
-     * @param Request      $request
-     * @param ActivityModel $activitiesModel
-     *
      * @throws AccessDeniedException
+     *
      * @return Response
      */
     public function showActivities(Request $request, ActivityModel $activitiesModel)
     {
-        if (!$this->isGranted(Member::ROLE_ADMIN_CHECKER)
+        if (
+            !$this->isGranted(Member::ROLE_ADMIN_CHECKER)
             && !$this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
         ) {
             throw $this->createAccessDeniedException('You need to have Group right to access this.');
@@ -120,6 +113,7 @@ class CheckerController extends AbstractController
             $data = $form->getData();
             $activitiesModel->deleteAsSpamByChecker($data['spamActivities']);
             $this->addFlash('notice', 'deleted spam activities');
+
             return $this->redirectToRoute('admin_spam_activities');
         }
 
@@ -133,18 +127,17 @@ class CheckerController extends AbstractController
         ]);
     }
 
-
     /**
      * @Route("/admin/spam/communitynews", name="admin_spam_community_news")
      *
-     * @param Request $request
+     * @throws AccessDeniedException
      *
-     * @param CommunityNewsModel $communityNewsModel
      * @return Response
      */
     public function showCommunityNewsComments(Request $request, CommunityNewsModel $communityNewsModel)
     {
-        if (!$this->isGranted(Member::ROLE_ADMIN_CHECKER)
+        if (
+            !$this->isGranted(Member::ROLE_ADMIN_CHECKER)
             && !$this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
         ) {
             throw $this->createAccessDeniedException('You need to have Checker right to access this.');
@@ -168,6 +161,7 @@ class CheckerController extends AbstractController
             $data = $form->getData();
             $communityNewsModel->deleteAsSpamByChecker($data['spamComments']);
             $this->addFlash('notice', 'deleted spam community news comment');
+
             return $this->redirectToRoute('admin_spam_community_news');
         }
 

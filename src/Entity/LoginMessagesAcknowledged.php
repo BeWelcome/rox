@@ -10,7 +10,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * LoginMessagesAcknowledged
+ * LoginMessagesAcknowledged.
  *
  * @ORM\Table(name="login_messages_acknowledged")
  * @ORM\Entity
@@ -49,7 +49,7 @@ class LoginMessagesAcknowledged
     private $member;
 
     /**
-     * Set acknowledged
+     * Set acknowledged.
      *
      * @param bool $acknowledged
      *
@@ -63,7 +63,7 @@ class LoginMessagesAcknowledged
     }
 
     /**
-     * Get acknowledged
+     * Get acknowledged.
      *
      * @return bool
      */
@@ -73,9 +73,10 @@ class LoginMessagesAcknowledged
     }
 
     /**
-     * Set message
+     * Set message.
      *
      * @param LoginMessage
+     * @param mixed $message
      *
      * @return LoginMessagesAcknowledged
      */
@@ -87,7 +88,7 @@ class LoginMessagesAcknowledged
     }
 
     /**
-     * Get message
+     * Get message.
      *
      * @return LoginMessage
      */
@@ -97,7 +98,7 @@ class LoginMessagesAcknowledged
     }
 
     /**
-     * Set memberid
+     * Set memberid.
      *
      * @param Member
      *
@@ -111,7 +112,7 @@ class LoginMessagesAcknowledged
     }
 
     /**
-     * Get member
+     * Get member.
      *
      * @return Member
      */

@@ -17,15 +17,10 @@ use App\Utilities\BewelcomeAddressTrait;
 use App\Utilities\MailerTrait;
 use App\Utilities\ManagerTrait;
 use App\Utilities\MessageTrait;
-use App\Utilities\TranslatedFlashTrait;
-use App\Utilities\TranslatorTrait;
-use DateTime;
 use Doctrine\DBAL\DBALException;
-use Doctrine\DBAL\Statement;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Exception;
-use Symfony\Component\Mime\Address;
 use Symfony\Component\Routing\Generator\UrlGenerator;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -47,10 +42,6 @@ class GroupModel
     }
 
     /**
-     * @param Group  $group
-     * @param Member $member
-     * @param Member $admin
-     *
      * @return bool
      */
     public function inviteMemberToGroup(Group $group, Member $member, Member $admin)
@@ -68,7 +59,7 @@ class GroupModel
         $translator = $this->getTranslator();
         $translator->setLocale($member->getPreferredLanguage()->getShortcode());
         $comment = (new MemberTranslation())
-            ->setLanguage( $language )
+            ->setLanguage($language)
             ->setSentence($translator->trans('group.got.invited.by'))
             ->setOwner($member->getId())
             ->setTranslator($member->getId())
@@ -109,9 +100,9 @@ class GroupModel
                 'decline_start' => $declineTag,
                 'decline_end' => '</a>',
             ];
-            $adminEmail = $this->bewelcomeAddress($admin, "group@bewelcome.org");
+            $adminEmail = $this->bewelcomeAddress($admin, 'group@bewelcome.org');
             // $this->createTemplateMessage($admin, $member, 'group/invitation', $params);
-            $this->sendTemplateEmail($admin, $member, 'group/invitation', $params);
+            $this->sendTemplateEmail($adminEmail, $member, 'group/invitation', $params);
 
             $note = new Notification();
             $note->setMember($member);
@@ -132,9 +123,6 @@ class GroupModel
     }
 
     /**
-     * @param Group  $group
-     * @param Member $member
-     *
      * @return bool
      */
     public function acceptInviteToGroup(Group $group, Member $member)
@@ -156,9 +144,6 @@ class GroupModel
     }
 
     /**
-     * @param Group  $group
-     * @param Member $member
-     *
      * @return bool
      */
     public function declineInviteToGroup(Group $group, Member $member)
@@ -179,9 +164,6 @@ class GroupModel
     }
 
     /**
-     * @param Group  $group
-     * @param Member $member
-     *
      * @return bool
      */
     public function withdrawInviteMemberToGroup(Group $group, Member $member)
@@ -265,7 +247,6 @@ class GroupModel
     /**
      * @param $data
      * @param $locale
-     * @param Member $member
      * @param $groupPicture
      *
      * @throws DBALException
@@ -410,10 +391,6 @@ class GroupModel
     }
 
     /**
-     * @param Group  $group
-     * @param Member $member
-     * @param string $status
-     *
      * @throws ORMException
      * @throws OptimisticLockException
      */
@@ -435,18 +412,18 @@ class GroupModel
         return $status === $membership->getStatus();
     }
 
-/*    private function informGroupAdmins(Group $group, $member)
-    {
-        $admins = $group->getAdmins();
+    /*    private function informGroupAdmins(Group $group, $member)
+        {
+            $admins = $group->getAdmins();
 
-        if (!empty($admins)) {
-            foreach ($admins as $admin) {
-                $this->sendTemplateEmail('group@bewelcome.org', $admin, 'group.approve.join', [
-                    'subject' => 'group.approve.join',
-                    'member' => $member,
-                ]);
+            if (!empty($admins)) {
+                foreach ($admins as $admin) {
+                    $this->sendTemplateEmail('group@bewelcome.org', $admin, 'group.approve.join', [
+                        'subject' => 'group.approve.join',
+                        'member' => $member,
+                    ]);
+                }
             }
         }
-    }
-*/
+    */
 }

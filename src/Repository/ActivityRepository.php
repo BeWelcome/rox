@@ -3,19 +3,14 @@
 namespace App\Repository;
 
 use AnthonyMartin\GeoLocation\GeoLocation;
-use App\Entity\Activity;
-use App\Entity\Language;
 use App\Entity\Location;
-use App\Entity\Member;
 use DateTime;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\NativeQuery;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\Query\Expr\Join;
-use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Doctrine\ORM\QueryBuilder;
 use Exception;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
@@ -79,7 +74,7 @@ class ActivityRepository extends EntityRepository
     {
         return $this->createQueryBuilder('a')
             ->join('App:ActivityAttendee', 'aa', Join::WITH, 'aa.activity = a and aa.organizer = 1')
-            ->join('App:Member', 'm', Join::WITH, "aa.attendee = m")
+            ->join('App:Member', 'm', Join::WITH, 'aa.attendee = m')
             ->where("m.status = 'Banned'")
             ->orWhere('DATEDIFF(a.ends, a.starts) > 1')
             ->orderBy('a.id', 'desc')
@@ -87,11 +82,62 @@ class ActivityRepository extends EntityRepository
     }
 
     /**
-     * @param Location $location
+     * Get all activities around a given location.
+     *
+     * @param int $limit
      * @param int $distance
-     * @return QueryBuilder
      *
      * @throws Exception
+     *
+     * @return array
+     *
+     * @SuppressWarnings(PHPMD.StaticAccess)
+     */
+    public function findUpcomingAroundLocation(Location $location, $limit = 5, $distance = 20)
+    {
+        $qb = $this->getUpcomingAroundLocationQueryBuilder($location, $distance);
+
+        $query = $qb
+            ->setMaxResults($limit)
+            ->getQuery()
+        ;
+
+        return $query->getResult();
+    }
+
+    /**
+     * Get all activities around a given location.
+     *
+     * @param int $distance
+     *
+     * @return int
+     *
+     * @SuppressWarnings(PHPMD.StaticAccess)
+     */
+    public function getUpcomingAroundLocationCount(Location $location, $distance = 20)
+    {
+        $qb = $this->getUpcomingAroundLocationQueryBuilder($location, $distance);
+        $qb
+            ->select('count(a.id)')
+        ;
+
+        $unreadCount = 0;
+        try {
+            $q = $qb->getQuery();
+            $unreadCount = $q->getSingleScalarResult();
+        } catch (NonUniqueResultException $e) {
+        } catch (NoResultException $e) {
+        }
+
+        return (int) $unreadCount;
+    }
+
+    /**
+     * @param int $distance
+     *
+     * @throws Exception
+     *
+     * @return QueryBuilder
      */
     private function getUpcomingAroundLocationQueryBuilder(Location $location, $distance)
     {
@@ -126,58 +172,5 @@ class ActivityRepository extends EntityRepository
         ;
 
         return $qb;
-
-    }
-    /**
-     * Get all activities around a given location.
-     *
-     * @param Location $location
-     * @param int      $limit
-     * @param int      $distance
-     *
-     * @throws Exception
-     *
-     * @return array
-     *
-     * @SuppressWarnings(PHPMD.StaticAccess)
-     */
-    public function findUpcomingAroundLocation(Location $location, $limit = 5, $distance = 20)
-    {
-        $qb = $this->getUpcomingAroundLocationQueryBuilder($location, $distance);
-
-        $query = $qb
-            ->setMaxResults($limit)
-            ->getQuery()
-        ;
-
-        return $query->getResult();
-    }
-
-    /**
-     * Get all activities around a given location.
-     *
-     * @param Location $location
-     * @param int $distance
-     *
-     * @return int
-     *
-     * @SuppressWarnings(PHPMD.StaticAccess)
-     */
-    public function getUpcomingAroundLocationCount(Location $location, $distance = 20)
-    {
-        $qb = $this->getUpcomingAroundLocationQueryBuilder($location, $distance);
-        $qb
-            ->select('count(a.id)')
-        ;
-
-        $unreadCount = 0;
-        try {
-            $q = $qb->getQuery();
-            $unreadCount = $q->getSingleScalarResult();
-        } catch (NonUniqueResultException $e) {
-        } catch (NoResultException $e) {
-        }
-
-        return (int) $unreadCount;
     }
 }

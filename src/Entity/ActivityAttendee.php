@@ -66,8 +66,6 @@ class ActivityAttendee
     /**
      * ActivityAttendee constructor.
      *
-     * @param Activity $activity
-     * @param Member   $attendee
      * @param $status
      * @param $comment
      * @param bool $isOrganizer

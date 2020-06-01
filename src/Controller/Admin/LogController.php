@@ -11,16 +11,15 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class LogController extends AbstractController
 {
     /**
      * @Route("/admin/logs", name="admin_logs_overview")
      *
-     * @param Request  $request
-     * @param LogModel $logModel
-     *
      * @throws NonUniqueResultException
+     * @throws AccessDeniedException
      *
      * @return Response
      */
@@ -39,7 +38,7 @@ class LogController extends AbstractController
         $username = $request->query->get('log[username]', null);
 
         $logTypes = $logModel->getLogTypes($logViewer);
-        if (count($logTypes) == 1) {
+        if (1 === \count($logTypes)) {
             $request->query->set('types', $logTypes);
             $types = $logTypes;
         }
@@ -73,8 +72,7 @@ class LogController extends AbstractController
     /**
      * @Route("/admin/logs/groups", name="admin_groups_logs")
      *
-     * @param Request  $request
-     * @param LogModel $logModel
+     * @throws AccessDeniedException
      *
      * @return Response
      */

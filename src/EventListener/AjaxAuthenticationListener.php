@@ -6,18 +6,13 @@ namespace App\EventListener;
 
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
-use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
-/**
- */
 class AjaxAuthenticationListener
 {
-
     /**
      * Handles security related exceptions.
-     *
-     * @param ExceptionEvent $event
      */
     public function onCoreException(ExceptionEvent $event)
     {

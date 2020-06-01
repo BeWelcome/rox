@@ -4,24 +4,18 @@ namespace App\Controller;
 
 use App\Entity\Gallery;
 use App\Entity\GalleryImage;
-use App\Entity\Group;
 use App\Entity\Member;
 use App\Entity\UploadedImage;
 use App\Form\CustomDataClass\GalleryImageEditRequest;
 use App\Form\GalleryEditImageFormType;
 use App\Form\Select2Type;
 use App\Logger\Logger;
-use App\Utilities\ManagerTrait;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
 use App\Utilities\UniqueFilenameTrait;
-use Exception;
 use Hidehalo\Nanoid\Client;
 use Intervention\Image\ImageManager;
-use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Bundle\MakerBundle\Validator;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -33,9 +27,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Validator\Constraints\Image;
-use Symfony\Component\Validator\Validation;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
-use function count;
 
 class GalleryController extends AbstractController
 {
@@ -49,9 +41,6 @@ class GalleryController extends AbstractController
      * @Route("/gallery/show/image/{id}/edit", name="gallery_edit_image",
      *     requirements = {"id": "\d+"}
      * )
-     *
-     * @param Request      $request
-     * @param GalleryImage $image
      *
      * @throws AccessDeniedException
      *
@@ -89,9 +78,6 @@ class GalleryController extends AbstractController
     /**
      * @Route("/new/image/upload", name="gallery_upload_new")
      *
-     * @param Request $request
-     *
-     * @param ValidatorInterface $validator
      * @return JsonResponse
      */
     public function handleImageUploadToGallery(Request $request, ValidatorInterface $validator)
@@ -119,13 +105,14 @@ class GalleryController extends AbstractController
         $violations = $validator->validate($image, $constraint);
 
         $originalName = $image->getClientOriginalName();
-        if (count($violations) > 0) {
+        if (\count($violations) > 0) {
             $response->setData([
                 'success' => false,
                 'filename' => $originalName,
                 'error' => $violations->get(0)->getMessage(),
             ]);
             $response->setStatusCode(415);
+
             return $response;
         }
 
@@ -155,7 +142,7 @@ class GalleryController extends AbstractController
 
         // Create doctrine entity for image and save to database
         $galleryImage = new GalleryImage();
-        if ($albumId !== 0) {
+        if (0 !== $albumId) {
             // Check if album exists
             // and if so check if the current member is owner of that album
             $galleryRepository = $this->getDoctrine()->getRepository(Gallery::class);
@@ -186,7 +173,7 @@ class GalleryController extends AbstractController
             'constraints' => [
                 'size' => UploadedFile::getMaxFilesize(),
                 'pixels' => self::MAX_PIXELS,
-            ]
+            ],
         ]);
 
         return $response;
@@ -194,8 +181,6 @@ class GalleryController extends AbstractController
 
     /**
      * @Route("/gallery/upload_multiple", name="gallery_upload_multiple")
-     *
-     * @param Request $request
      *
      * @return Response
      */
@@ -210,8 +195,7 @@ class GalleryController extends AbstractController
         $albumTitles = [];
         if ($galleries) {
             $albumTitles[''] = 0;
-            foreach($galleries as $gallery)
-            {
+            foreach ($galleries as $gallery) {
                 $albumTitles[$gallery->getTitle()] = $gallery->getId();
             }
         }
@@ -250,16 +234,13 @@ class GalleryController extends AbstractController
             'constraints' => [
                 'size' => $this->getMaxUploadSizeInMegaBytes(),
                 'pixels' => self::MAX_PIXELS,
-            ]
+            ],
         ]);
     }
 
     /**
      * @Route("/gallery/upload/image", name="gallery_upload_ckeditor")
      *
-     * @param Request $request
-     *
-     * @param ValidatorInterface $validator
      * @return JsonResponse
      *
      * @throw AccessDeniedException
@@ -282,7 +263,7 @@ class GalleryController extends AbstractController
         $image = $request->files->get('upload');
         $violations = $validator->validate($image, $constraint);
 
-        if (count($violations) > 0) {
+        if (\count($violations) > 0) {
             $response->setData([
                 'uploaded' => false,
                 'error' => [
@@ -334,34 +315,25 @@ class GalleryController extends AbstractController
         return $response;
     }
 
-
     /**
      * @Route("/gallery/show/uploaded/{id}", name="gallery_uploaded_ckeditor_old",
      *     requirements={"id":"\d+"})
      *
-     * @param UploadedImage $image
-     *
-     * @param Request $request
-     * @param Logger $logger
      * @return Response
      */
     public function showUploadedImageOld(UploadedImage $image, Request $request, Logger $logger)
     {
-        $logger->write('Image ' . $image->getId()  . ' accessed using old URL','Image');
+        $logger->write('Image ' . $image->getId() . ' accessed using old URL', 'Image');
 
-        return $this->forward(GalleryController::class . '::showUploadedImage', [
-            'id' =>  $image->getId(),
-            'fileInfo' => '']
-        );
+        return $this->forward(self::class . '::showUploadedImage', [
+            'id' => $image->getId(),
+            'fileInfo' => '', ]);
     }
 
     /**
      * @Route("/gallery/show/uploaded/{id}/{fileInfo}", name="gallery_uploaded_ckeditor",
      *     requirements={"id":"\d+"})
      *
-     * @param UploadedImage $image
-     *
-     * @param string $fileInfo
      * @return BinaryFileResponse
      */
     public function showUploadedImage(UploadedImage $image, string $fileInfo)

@@ -3,11 +3,10 @@
 namespace App\Entity;
 
 use App\Utilities\LifecycleCallbacksTrait;
-use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * PostNotification
+ * PostNotification.
  *
  * @ORM\Table(name="posts_notificationqueue", indexes={@ORM\Index(name="IdxStatus", columns={"Status"})})
  * @ORM\Entity(repositoryClass="App\Repository\PostNotificationRepository")
@@ -70,7 +69,7 @@ class PostNotification
     private $id;
 
     /**
-     * Set status
+     * Set status.
      *
      * @param string $status
      *
@@ -84,7 +83,7 @@ class PostNotification
     }
 
     /**
-     * Get status
+     * Get status.
      *
      * @return string
      */
@@ -94,7 +93,7 @@ class PostNotification
     }
 
     /**
-     * Set idmember
+     * Set idmember.
      *
      * @param int $receiver
      *
@@ -108,7 +107,7 @@ class PostNotification
     }
 
     /**
-     * Get member
+     * Get member.
      *
      * @return Member
      */
@@ -118,7 +117,7 @@ class PostNotification
     }
 
     /**
-     * Set post
+     * Set post.
      *
      * @param ForumPost $post
      *
@@ -132,7 +131,7 @@ class PostNotification
     }
 
     /**
-     * Get post
+     * Get post.
      *
      * @return ForumPost
      */
@@ -142,7 +141,7 @@ class PostNotification
     }
 
     /**
-     * Set type
+     * Set type.
      *
      * @param string $type
      *
@@ -156,7 +155,7 @@ class PostNotification
     }
 
     /**
-     * Get type
+     * Get type.
      *
      * @return string
      */
@@ -166,7 +165,7 @@ class PostNotification
     }
 
     /**
-     * Set idsubscription
+     * Set idsubscription.
      *
      * @param int $subscription
      *
@@ -180,7 +179,7 @@ class PostNotification
     }
 
     /**
-     * Get idsubscription
+     * Get idsubscription.
      *
      * @return int
      */
@@ -190,7 +189,7 @@ class PostNotification
     }
 
     /**
-     * Set tablesubscription
+     * Set tablesubscription.
      *
      * @param string $tablesubscription
      *
@@ -204,7 +203,7 @@ class PostNotification
     }
 
     /**
-     * Get tablesubscription
+     * Get tablesubscription.
      *
      * @return string
      */
@@ -214,7 +213,7 @@ class PostNotification
     }
 
     /**
-     * Get id
+     * Get id.
      *
      * @return int
      */

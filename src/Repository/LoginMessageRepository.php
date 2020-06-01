@@ -4,18 +4,13 @@ namespace App\Repository;
 
 use App\Entity\Member;
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\Query\ResultSetMapping;
-use Doctrine\ORM\QueryBuilder;
-use Pagerfanta\Adapter\DoctrineORMAdapter;
-use Pagerfanta\Pagerfanta;
 
 class LoginMessageRepository extends EntityRepository
 {
     /**
-     * Gets open login messages for member
+     * Gets open login messages for member.
      *
-     * @param Member $member
      * @return mixed
      */
     public function getLoginMessages(Member $member)
@@ -39,6 +34,7 @@ class LoginMessageRepository extends EntityRepository
             ;
         $result = $query
             ->getResult();
+
         return $result;
     }
 }

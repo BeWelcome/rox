@@ -11,8 +11,6 @@ use App\Pagerfanta\UpdateTranslationAdapter;
 use App\Utilities\ManagerTrait;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpKernel\KernelInterface;
-use Symfony\Component\Mailer\Mailer;
-use Symfony\Component\Mailer\MailerInterface;
 
 class TranslationModel
 {
@@ -23,8 +21,6 @@ class TranslationModel
 
     /**
      * @required
-     *
-     * @param KernelInterface $kernel
      */
     public function setKernel(KernelInterface $kernel)
     {
@@ -57,8 +53,7 @@ class TranslationModel
         $translationAdapter = null;
         $connection = $this->getManager()->getConnection();
 
-        switch($type)
-        {
+        switch ($type) {
             case 'missing':
                 $translationAdapter = new MissingTranslationAdapter($connection, $locale, $code);
                 break;

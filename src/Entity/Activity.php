@@ -10,7 +10,6 @@ namespace App\Entity;
 use Carbon\Carbon;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -408,8 +407,6 @@ class Activity
     /**
      * Add attendee.
      *
-     * @param ActivityAttendee $attendee
-     *
      * @return Activity
      */
     public function addAttendee(ActivityAttendee $attendee)
@@ -421,8 +418,6 @@ class Activity
 
     /**
      * Remove attendee.
-     *
-     * @param ActivityAttendee $attendee
      */
     public function removeAttendee(ActivityAttendee $attendee)
     {

@@ -32,7 +32,7 @@ class ActivityModel
         $em = $this->getManager();
         /** @var ActivityRepository $activityRepository */
         $activityRepository = $em->getRepository(Activity::class);
-        $activities = $activityRepository->findBy([ 'id' => $activityIds]);
+        $activities = $activityRepository->findBy(['id' => $activityIds]);
         foreach ($activities as $activity) {
             $em->remove($activity);
         }

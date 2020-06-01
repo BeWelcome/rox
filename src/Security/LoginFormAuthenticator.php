@@ -9,7 +9,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Core\Security;
@@ -20,10 +19,10 @@ use Symfony\Component\Security\Http\Util\TargetPathTrait;
 
 class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
 {
+    use TargetPathTrait;
+
     private const LOGIN_CHECK_ROUTE = 'security_check';
     private const LOGIN_ROUTE = 'security_login';
-
-    use TargetPathTrait;
 
     /**
      * @var MemberRepository
@@ -59,7 +58,7 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
 
     public function supports(Request $request)
     {
-        return $request->attributes->get('_route') === self::LOGIN_CHECK_ROUTE
+        return self::LOGIN_CHECK_ROUTE === $request->attributes->get('_route')
             && $request->isMethod('POST');
     }
 
@@ -96,8 +95,7 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
             $member->setStatus(MemberStatusType::ACTIVE);
         }
         $firstLogin = null === $member->getLastLogin();
-        if ($firstLogin)
-        {
+        if ($firstLogin) {
             $url = $this->urlGenerator->generate('editmyprofile');
         } else {
             $url = $this->getTargetPath($request->getSession(), $providerKey) ?? $this->urlGenerator->generate('homepage');

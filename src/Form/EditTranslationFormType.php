@@ -14,9 +14,6 @@ use Symfony\Component\Form\FormEvents;
 class EditTranslationFormType extends AbstractType
 {
     /**
-     * @param FormBuilderInterface $formBuilder
-     * @param array                $options
-     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function buildForm(FormBuilderInterface $formBuilder, array $options)
@@ -71,8 +68,7 @@ class EditTranslationFormType extends AbstractType
                         'disabled' => true,
                     ])
                 ;
-                if ($translationRequest->isMajorUpdate)
-                {
+                if ($translationRequest->isMajorUpdate) {
                     $translatedTextHelp = 'translation.needs.update';
                 }
             }

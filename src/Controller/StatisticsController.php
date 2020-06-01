@@ -151,12 +151,12 @@ class StatisticsController extends AbstractController
             $statistics['requestsSent'] = $requestsSent;
             $statistics['requestsAccepted'] = $requestsAccepted;
         }
+
         return [
             'labels' => $labels,
             'statistics' => $statistics,
         ];
     }
-
 
     private function prepareRequestsData($statistics)
     {

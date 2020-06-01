@@ -10,8 +10,8 @@ use App\Entity\Message;
 use App\Entity\RightVolunteer;
 use App\Entity\Word;
 use App\Form\CustomDataClass\SearchFormRequest;
-use App\Form\CustomDataClass\Translation\TranslationRequest;
 use App\Form\CustomDataClass\Translation\EditTranslationRequest;
+use App\Form\CustomDataClass\Translation\TranslationRequest;
 use App\Form\EditTranslationFormType;
 use App\Form\SearchFormType;
 use App\Form\TranslationFormType;
@@ -65,24 +65,24 @@ class TranslationController extends AbstractController
         ],
         'pages' => [
             'signup_finish' => [
-                'template' => 'signup/finish.html.twig'
+                'template' => 'signup/finish.html.twig',
             ],
             'signup_error' => [
-                'template' => 'signup/error.html.twig'
+                'template' => 'signup/error.html.twig',
             ],
             'error 403' => [
-                'template' => 'bundles/TwigBundle/Exception/error403.html.twig'
+                'template' => 'bundles/TwigBundle/Exception/error403.html.twig',
             ],
             'error 404' => [
-                'template' => 'bundles/TwigBundle/Exception/error404.html.twig'
+                'template' => 'bundles/TwigBundle/Exception/error404.html.twig',
             ],
             'error 500' => [
-                'template' => 'bundles/TwigBundle/Exception/error500.html.twig'
+                'template' => 'bundles/TwigBundle/Exception/error500.html.twig',
             ],
             'homepage' => [
-                'template' => 'home/home.html.twig'
-            ]
-        ]
+                'template' => 'home/home.html.twig',
+            ],
+        ],
     ];
 
     /** @var TranslationModel */
@@ -99,10 +99,7 @@ class TranslationController extends AbstractController
      *
      * Update an existing translation for the locale
      *
-     * @param Request         $request
-     * @param Language        $language
-     * @param KernelInterface $kernel
-     * @param mixed           $code
+     * @param mixed $code
      *
      * @throws Exception
      *
@@ -127,8 +124,7 @@ class TranslationController extends AbstractController
             ]);
         }
 
-        if (!$request->getSession()->has('originalReferrer'))
-        {
+        if (!$request->getSession()->has('originalReferrer')) {
             $request->getSession()->set('originalReferrer', $request->headers->get('referer'));
         }
 
@@ -211,14 +207,12 @@ class TranslationController extends AbstractController
      *
      * Creates an English index and the matching translation (if locale != 'en')
      *
-     * @param Request         $request
-     * @param Language        $language
-     * @param KernelInterface $kernel
-     * @param mixed           $translationId
+     * @param mixed $translationId
+     *
+     * @throws Exception
      *
      * @return Response
      * @ParamConverter("language", class="App\Entity\Language", options={"mapping": {"locale": "shortcode"}})
-     * @throws Exception
      */
     public function createTranslationForId(
         Request $request,
@@ -319,9 +313,6 @@ class TranslationController extends AbstractController
      *
      * Creates an new English index bypassing the translation interface
      *
-     * @param Request             $request
-     * @param KernelInterface     $kernel
-     *
      * @throws Exception
      *
      * @return Response
@@ -385,10 +376,7 @@ class TranslationController extends AbstractController
      *
      * Adds a missing translation for an existing english index
      *
-     * @param Request         $request
-     * @param Language        $language
-     * @param KernelInterface $kernel
-     * @param mixed           $code
+     * @param mixed $code
      *
      * @throws Exception
      *
@@ -399,8 +387,7 @@ class TranslationController extends AbstractController
     {
         $this->denyAccessUnlessGranted(Member::ROLE_ADMIN_WORDS, null, 'Unable to access this page!');
 
-        if (!$request->getSession()->has('originalReferrer'))
-        {
+        if (!$request->getSession()->has('originalReferrer')) {
             $request->getSession()->set('originalReferrer', $request->headers->get('referer'));
         }
 
@@ -488,7 +475,6 @@ class TranslationController extends AbstractController
      *     requirements={"mode": "on|off"}
      * )
      *
-     * @param Request             $request
      * @param $mode
      *
      * @return RedirectResponse
@@ -511,8 +497,6 @@ class TranslationController extends AbstractController
     /**
      * @Route("/admin/translation/no_permissions", name="translations_no_permissions")
      *
-     * @param Request $request
-     *
      * @return Response
      */
     public function translationNoRightsAction(Request $request)
@@ -528,8 +512,6 @@ class TranslationController extends AbstractController
 
     /**
      * @Route("/admin/translations", name="translations")
-     *
-     * @param Request $request
      *
      * @return RedirectResponse
      */
@@ -550,8 +532,6 @@ class TranslationController extends AbstractController
      *     defaults={"code":""},
      *     requirements={"code"=".+", "type"="missing|update|all|archived|donottranslate"})
      *
-     * @param Request  $request
-     * @param Language $language
      * @param $code
      * @param mixed $type
      * @ParamConverter("language", class="App\Entity\Language", options={"mapping": {"locale": "shortcode"}})
@@ -627,8 +607,6 @@ class TranslationController extends AbstractController
     /**
      * @Route("/admin/translations/mockups", name="translations_mockups")
      *
-     * @param Request $request
-     *
      * @return Response
      */
     public function selectMockup(Request $request)
@@ -648,6 +626,67 @@ class TranslationController extends AbstractController
                 'items' => $this->getSubmenuItems($request->getLocale()),
             ],
         ]);
+    }
+
+    /**
+     * @Route("/admin/translate/mockup/page/{name}", name="translation_mockup_page",
+     *     requirements={"template"=".+"})
+     *
+     * @return Response
+     */
+    public function translateMockupPage(Request $request, string $name)
+    {
+        $this->denyAccessUnlessGranted(Member::ROLE_ADMIN_WORDS, null, 'Unable to access this page!');
+
+        if (!isset(self::MOCKUPS['pages'][$name])) {
+            return $this->redirectToRoute('translations_mockups');
+        }
+
+        $template = self::MOCKUPS['pages'][$name]['template'];
+
+        return $this->render(
+            'admin/translations/mockup.page.html.twig',
+            array_merge(
+                $this->getMockParams($template),
+                [
+                    'template' => $template,
+                    'submenu' => [
+                        'active' => 'mockups',
+                        'items' => $this->getSubmenuItems($request->getLocale(), 'mockup', $name),
+                    ],
+                ]
+            ),
+        );
+    }
+
+    /**
+     * @Route("/admin/translate/mockup/email/{name}", name="translation_mockup_email")
+     *
+     * @return Response
+     */
+    public function translateMockupEmail(Request $request, string $name)
+    {
+        $this->denyAccessUnlessGranted(Member::ROLE_ADMIN_WORDS, null, 'Unable to access this page!');
+
+        if (!isset(self::MOCKUPS['emails'][$name])) {
+            return $this->redirectToRoute('translations_mockups');
+        }
+
+        $template = self::MOCKUPS['emails'][$name]['template'];
+
+        return $this->render(
+            'admin/translations/mockup.email.html.twig',
+            array_merge(
+                $this->getMockParams($template),
+                [
+                    'template' => $template,
+                    'submenu' => [
+                        'active' => 'mockups',
+                        'items' => $this->getSubmenuItems($request->getLocale(), 'mockup', $template),
+                    ],
+                ]
+            ),
+        );
     }
 
     private function getMockParams($template)
@@ -723,7 +762,7 @@ class TranslationController extends AbstractController
                 $params['sender'] = $this->getUser();
                 $params['receiver'] = $bwadmin;
                 $params['receiverLocale'] = 'en';
-            $params['changed'] = true;
+                $params['changed'] = true;
                 break;
             case 'emails/reply_from_host.html.twig':
                 $params['host'] = $bwadmin;
@@ -742,74 +781,8 @@ class TranslationController extends AbstractController
                 $params['host'] = $bwadmin;
                 break;
         }
+
         return $params;
-    }
-
-    /**
-     * @Route("/admin/translate/mockup/page/{name}", name="translation_mockup_page",
-     *     requirements={"template"=".+"})
-     *
-     * @param Request $request
-     * @param string $name
-     *
-     * @return Response
-     */
-    public function translateMockupPage(Request $request, string $name)
-    {
-        $this->denyAccessUnlessGranted(Member::ROLE_ADMIN_WORDS, null, 'Unable to access this page!');
-
-        if (!isset(self::MOCKUPS['pages'][$name]))
-        {
-            return $this->redirectToRoute('translations_mockups');
-        }
-
-        $template = self::MOCKUPS['pages'][$name]['template'];
-
-        return $this->render('admin/translations/mockup.page.html.twig',
-            array_merge(
-                $this->getMockParams($template),
-                [
-                    'template' => $template,
-                    'submenu' => [
-                        'active' => 'mockups',
-                        'items' => $this->getSubmenuItems($request->getLocale(), 'mockup', $name),
-                    ]
-                ]
-            ),
-        );
-    }
-
-    /**
-     * @Route("/admin/translate/mockup/email/{name}", name="translation_mockup_email")
-     *
-     * @param Request $request
-     * @param string $name
-     *
-     * @return Response
-     */
-    public function translateMockupEmail(Request $request, string $name)
-    {
-        $this->denyAccessUnlessGranted(Member::ROLE_ADMIN_WORDS, null, 'Unable to access this page!');
-
-        if (!isset(self::MOCKUPS['emails'][$name]))
-        {
-            return $this->redirectToRoute('translations_mockups');
-        }
-
-        $template = self::MOCKUPS['emails'][$name]['template'];
-
-        return $this->render('admin/translations/mockup.email.html.twig',
-            array_merge(
-                $this->getMockParams($template),
-                [
-                    'template' => $template,
-                    'submenu' => [
-                        'active' => 'mockups',
-                        'items' => $this->getSubmenuItems($request->getLocale(), 'mockup', $template),
-                    ]
-                ]
-            ),
-        );
     }
 
     /**

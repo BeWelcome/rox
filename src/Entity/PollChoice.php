@@ -4,15 +4,13 @@ namespace App\Entity;
 
 use Carbon\Carbon;
 use DateTime;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Persistence\ObjectManagerAware;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Persistence\Mapping\ClassMetadata;
 use Doctrine\Persistence\ObjectManager;
 
 /**
- * PollChoice
+ * PollChoice.
  *
  * @ORM\Table(name="polls_choices", indexes={@ORM\Index(name="IdPoll", columns={"IdPoll"})})
  * @ORM\HasLifecycleCallbacks
@@ -83,7 +81,7 @@ class PollChoice implements ObjectManagerAware
     private $objectManager;
 
     /**
-     * Set choice text
+     * Set choice text.
      *
      * @param Translation $choiceText
      *
@@ -97,7 +95,7 @@ class PollChoice implements ObjectManagerAware
     }
 
     /**
-     * Get choice texts
+     * Get choice texts.
      *
      * @return string[]
      */
@@ -107,7 +105,7 @@ class PollChoice implements ObjectManagerAware
     }
 
     /**
-     * Set counter
+     * Set counter.
      *
      * @param int $counter
      *
@@ -121,7 +119,7 @@ class PollChoice implements ObjectManagerAware
     }
 
     /**
-     * Get counter
+     * Get counter.
      *
      * @return int
      */
@@ -131,7 +129,7 @@ class PollChoice implements ObjectManagerAware
     }
 
     /**
-     * Set updated
+     * Set updated.
      *
      * @param DateTime $updated
      *
@@ -145,7 +143,7 @@ class PollChoice implements ObjectManagerAware
     }
 
     /**
-     * Get updated
+     * Get updated.
      *
      * @return DateTime
      */
@@ -155,7 +153,7 @@ class PollChoice implements ObjectManagerAware
     }
 
     /**
-     * Set created
+     * Set created.
      *
      * @param DateTime $created
      *
@@ -169,7 +167,7 @@ class PollChoice implements ObjectManagerAware
     }
 
     /**
-     * Get created
+     * Get created.
      *
      * @return Carbon
      */
@@ -179,7 +177,7 @@ class PollChoice implements ObjectManagerAware
     }
 
     /**
-     * Get id
+     * Get id.
      *
      * @return int
      */
@@ -189,7 +187,7 @@ class PollChoice implements ObjectManagerAware
     }
 
     /**
-     * Set poll
+     * Set poll.
      *
      * @param Poll $poll
      *
@@ -203,7 +201,7 @@ class PollChoice implements ObjectManagerAware
     }
 
     /**
-     * Get poll
+     * Get poll.
      *
      * @return Poll
      */
@@ -234,7 +232,7 @@ class PollChoice implements ObjectManagerAware
     }
 
     /**
-     * Triggered after load from database
+     * Triggered after load from database.
      *
      * @ORM\PostLoad
      */
@@ -256,17 +254,11 @@ class PollChoice implements ObjectManagerAware
         $this->objectManager = $objectManager;
     }
 
-    /**
-     * @return int
-     */
     public function getText(): int
     {
         return $this->text;
     }
 
-    /**
-     * @param int $text
-     */
     public function setText(int $text): void
     {
         $this->text = $text;

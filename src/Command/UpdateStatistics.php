@@ -51,12 +51,11 @@ class UpdateStatistics extends Command
     }
 
     /**
-     * @param InputInterface $input
-     * @param OutputInterface $output
-     * @return int
      * @throws DBALException
      * @throws ORMException
      * @throws OptimisticLockException
+     *
+     * @return int
      *
      * @SuppressWarnings(PHPMD.StaticAccess)
      */
@@ -81,8 +80,9 @@ class UpdateStatistics extends Command
         $today->setTime(0, 0, 0, 0);
         if ($startDate >= $today) {
             $output->writeln([
-                'Start date must be in the past (or empty for yesterday).'
+                'Start date must be in the past (or empty for yesterday).',
             ]);
+
             return 1;
         }
 
@@ -96,35 +96,37 @@ class UpdateStatistics extends Command
         if (!$startDate || !$endDate) {
             $output->writeln([
                 'start or end date not correctly formatted (need YYYY-MM-DD)',
-                ''
+                '',
             ]);
+
             return 1;
         }
 
         if ($startDate > $endDate) {
             $output->writeln([
                 'start date must be earlier than end date',
-                ''
+                '',
             ]);
+
             return 1;
         }
 
         $startDate->setTime(0, 0, 0, 0);
         $endDate->setTime(0, 0, 0, 0);
 
-        if ($startDate == $endDate) {
+        if ($startDate === $endDate) {
             $endDate->modify('+1 day');
         }
 
-        $interval = new DateInterval("P1D");
+        $interval = new DateInterval('P1D');
         $dates = new DatePeriod($startDate, $interval, $endDate);
 
         $this->logger->info('Updating statistics from ' . $startDate->format('Y-m-d') . ' to ' . $endDate->format('Y-m-d'));
 
         $returnCode = 1;
         try {
-            $returnCode =  $this->statisticsModel->updateStatistics($dates, $output);
-        } catch(Exception $e) {
+            $returnCode = $this->statisticsModel->updateStatistics($dates, $output);
+        } catch (Exception $e) {
             $this->logger->error('Updating statistics failed: ' . $e->getMessage());
         }
 

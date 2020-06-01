@@ -18,8 +18,6 @@ class TranslatorSingleton
     /**
      * Protected constructor to prevent creating a new instance of the
      * *Singleton* via the `new` operator from outside of this class.
-     *
-     * @param TranslatorInterface $translator
      */
     protected function __construct(TranslatorInterface $translator)
     {
@@ -28,8 +26,6 @@ class TranslatorSingleton
 
     /**
      * Returns the *TranslatorSingleton* instance of this class.
-     *
-     * @param TranslatorInterface $translator
      *
      * @return TranslatorSingleton the *session* instance
      *

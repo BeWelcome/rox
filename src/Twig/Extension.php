@@ -40,9 +40,6 @@ class Extension extends AbstractExtension implements GlobalsInterface
     /**
      * Extension constructor.
      *
-     * @param SessionInterface    $session
-     * @param TranslatorInterface $translator
-     * @param LanguageModel       $languageModel
      * @param $dataDirectory
      */
     public function __construct(SessionInterface $session, TranslatorInterface $translator, LanguageModel $languageModel, $dataDirectory)
@@ -145,11 +142,11 @@ class Extension extends AbstractExtension implements GlobalsInterface
         $locale = $this->session->get('locale', 'en');
         $languages = $this->languageModel->getLanguagesWithTranslations($locale);
 
-
         if (file_exists('../VERSION')) {
             $version = trim(file_get_contents('../VERSION'));
             $versionCreated = Carbon::createFromTimestamp(filemtime('../VERSION'));
         }
+
         return [
             'version' => $version,
             'version_dt' => $versionCreated,

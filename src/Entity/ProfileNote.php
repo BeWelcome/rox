@@ -7,7 +7,7 @@ use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Notes left by members about other profiles
+ * Notes left by members about other profiles.
  *
  * @ORM\Table(name="mycontacts")
  * @ORM\HasLifecycleCallbacks
@@ -67,7 +67,7 @@ class ProfileNote
     private $comment;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -76,7 +76,7 @@ class ProfileNote
     private $id;
 
     /**
-     * Set owner
+     * Set owner.
      *
      * @param Member $owner
      *
@@ -90,7 +90,7 @@ class ProfileNote
     }
 
     /**
-     * Get owner
+     * Get owner.
      *
      * @return Member
      */
@@ -100,7 +100,7 @@ class ProfileNote
     }
 
     /**
-     * Set member
+     * Set member.
      *
      * @param Member $member
      *
@@ -114,7 +114,7 @@ class ProfileNote
     }
 
     /**
-     * Get member
+     * Get member.
      *
      * @return Member
      */
@@ -124,7 +124,7 @@ class ProfileNote
     }
 
     /**
-     * Set category
+     * Set category.
      *
      * @param string $category
      *
@@ -138,7 +138,7 @@ class ProfileNote
     }
 
     /**
-     * Get category
+     * Get category.
      *
      * @return string
      */
@@ -148,7 +148,7 @@ class ProfileNote
     }
 
     /**
-     * Set comment
+     * Set comment.
      *
      * @param string $comment
      *
@@ -162,7 +162,7 @@ class ProfileNote
     }
 
     /**
-     * Get comment
+     * Get comment.
      *
      * @return string
      */
@@ -172,7 +172,7 @@ class ProfileNote
     }
 
     /**
-     * Set created
+     * Set created.
      *
      * @param DateTime $created
      *
@@ -186,7 +186,7 @@ class ProfileNote
     }
 
     /**
-     * Get created
+     * Get created.
      *
      * @return Carbon
      */
@@ -196,7 +196,7 @@ class ProfileNote
     }
 
     /**
-     * Set updated
+     * Set updated.
      *
      * @param DateTime $updated
      *
@@ -210,7 +210,7 @@ class ProfileNote
     }
 
     /**
-     * Get updated
+     * Get updated.
      *
      * @return Carbon
      */
@@ -220,7 +220,7 @@ class ProfileNote
     }
 
     /**
-     * Get id
+     * Get id.
      *
      * @return int
      */

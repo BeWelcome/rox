@@ -7,7 +7,6 @@
 
 namespace App\Entity;
 
-use App\Utilities\LifecycleCallbacksTrait;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -91,7 +90,7 @@ class ForumThread
     private $views = 0;
 
     /**
-     * Not used (historic)
+     * Not used (historic).
      *
      * @var int
      *
@@ -100,7 +99,7 @@ class ForumThread
     private $geonameId = null;
 
     /**
-     * Not used (historic)
+     * Not used (historic).
      *
      * @var string
      *
@@ -109,7 +108,7 @@ class ForumThread
     private $adminCode = null;
 
     /**
-     * Not used (historic)
+     * Not used (historic).
      *
      * @var string
      *
@@ -118,7 +117,7 @@ class ForumThread
     private $countrycode = null;
 
     /**
-     * Not used (historic)
+     * Not used (historic).
      *
      * @var string
      *
@@ -761,8 +760,6 @@ class ForumThread
     /**
      * Add post.
      *
-     * @param ForumPost $post
-     *
      * @return ForumThread
      */
     public function addPost(ForumPost $post)
@@ -774,8 +771,6 @@ class ForumThread
 
     /**
      * Remove post.
-     *
-     * @param ForumPost $post
      */
     public function removePost(ForumPost $post)
     {

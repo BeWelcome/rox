@@ -13,14 +13,10 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class GroupType extends AbstractType
 {
     /**
-     * @param FormBuilderInterface $formBuilder
-     * @param array                $options
-     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function buildForm(FormBuilderInterface $formBuilder, array $options)
     {
-
         $formBuilder
             ->add('name', TextType::class, [
                 'label' => 'label.group.name',
@@ -38,8 +34,7 @@ class GroupType extends AbstractType
                 ],
             ]);
         // \todo check if there is a better way to do this without compromising translation extraction
-        if ($options['allowInvitationOnly'])
-        {
+        if ($options['allowInvitationOnly']) {
             $formBuilder
                 ->add('type', ChoiceType::class, [
                     'choices' => [

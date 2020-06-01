@@ -3,11 +3,6 @@
 namespace App\Security;
 
 use App\Entity\Member;
-use DateTime;
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
 use Symfony\Component\Security\Core\Exception\AccountExpiredException;
 use Symfony\Component\Security\Core\User\UserCheckerInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -15,10 +10,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class UserChecker implements UserCheckerInterface
 {
     /**
-     * @param UserInterface $user
-     *
      * @throws AccountBannedException
-     * @throws AccountMailNotConfirmedException
+     * @throws AccountDeniedLoginException
      */
     public function checkPreAuth(UserInterface $user)
     {
@@ -36,10 +29,8 @@ class UserChecker implements UserCheckerInterface
     }
 
     /**
-     * @param UserInterface $user
-     *
      * @throws AccountExpiredException
-     * @throws AccountDeniedLoginException
+     * @throws AccountMailNotConfirmedException
      */
     public function checkPostAuth(UserInterface $user)
     {

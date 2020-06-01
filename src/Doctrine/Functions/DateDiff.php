@@ -1,19 +1,25 @@
 <?php
 
-
 namespace App\Doctrine\Functions;
 
-
 use Doctrine\ORM\Query\AST\Functions\FunctionNode;
+use Doctrine\ORM\Query\AST\Node;
 use Doctrine\ORM\Query\Lexer;
 use Doctrine\ORM\Query\Parser;
 
 /**
- * DateDiffFunction ::= "DATEDIFF" "(" ArithmeticPrimary "," ArithmeticPrimary ")"
+ * DateDiffFunction ::= "DATEDIFF" "(" ArithmeticPrimary "," ArithmeticPrimary ")".
  */
 class DateDiff extends FunctionNode
 {
+    /**
+     * @var Node|null
+     */
     public $firstDateExpression = null;
+
+    /**
+     * @var Node|null
+     */
     public $secondDateExpression = null;
 
     public function parse(Parser $parser)

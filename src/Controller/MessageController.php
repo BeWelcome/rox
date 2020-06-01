@@ -12,11 +12,11 @@ use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Exception;
 use InvalidArgumentException;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
@@ -38,9 +38,6 @@ class MessageController extends BaseMessageController
      *
      * @Route("/message/{id}/reply", name="message_reply",
      *     requirements={"id": "\d+"})
-     *
-     * @param Request $request
-     * @param Message $message
      *
      * @throws AccessDeniedException
      * @throws Exception
@@ -73,14 +70,13 @@ class MessageController extends BaseMessageController
      * @Route("/message/{id}/delete/{redirect}", name="message_delete",
      *     requirements={"id": "\d+"})
      *
-     * @param Message $message
-     * @param Message $redirect
      * @ParamConverter("redirect", class="App\Entity\Message", options={"id": "redirect"})
 
-     * @return Response
+     *
      * @throws ORMException
      * @throws OptimisticLockException
      *
+     * @return Response
      */
     public function deleteMessageOrRequest(Message $message, Message $redirect)
     {
@@ -96,16 +92,14 @@ class MessageController extends BaseMessageController
 
         if ($message->getId() === $redirect->getId()) {
             return $this->redirectToRoute('messages', ['folder' => 'deleted']);
-        } else {
-            return $this->redirectToRoute('message_show', ['id' => $redirect->getId()]);
         }
+
+        return $this->redirectToRoute('message_show', ['id' => $redirect->getId()]);
     }
 
     /**
      * @Route("/message/{id}", name="message_show",
      *     requirements={"id": "\d+"})
-     *
-     * @param Message $message
      *
      * @throws Exception
      * @throws AccessDeniedException
@@ -152,9 +146,6 @@ class MessageController extends BaseMessageController
 
     /**
      * @Route("/new/message/{username}", name="message_new")
-     *
-     * @param Request $request
-     * @param Member  $receiver
      *
      * @throws Exception
      *
@@ -206,8 +197,7 @@ class MessageController extends BaseMessageController
      * @Route("/messages/{folder}", name="messages",
      *     defaults={"folder": "inbox"})
      *
-     * @param Request $request
-     * @param string  $folder
+     * @param string $folder
      *
      * @throws InvalidArgumentException
      *
@@ -233,8 +223,6 @@ class MessageController extends BaseMessageController
     /**
      * @Route("/message/{id}/spam", name="message_mark_spam")
      *
-     * @param Message $message
-     *
      * @return Response
      */
     public function markAsSpamAction(Message $message)
@@ -249,8 +237,6 @@ class MessageController extends BaseMessageController
     /**
      * @Route("/message/{id}/nospam", name="message_mark_nospam")
      *
-     * @param Message $message
-     *
      * @return Response
      */
     public function unmarkAsSpamAction(Message $message)
@@ -264,9 +250,6 @@ class MessageController extends BaseMessageController
 
     /**
      * @Route("/all/messages/with/{username}", name="all_messages_with")
-     *
-     * @param Request $request
-     * @param Member  $other
      *
      * @throws InvalidArgumentException
      *
@@ -297,8 +280,6 @@ class MessageController extends BaseMessageController
     /**
      * Takes care of the reply to a message.
      *
-     * @param Request   $request
-     * @param Member    $sender
      * @param Message[] $thread
      *
      * @throws Exception

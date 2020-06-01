@@ -4,7 +4,6 @@ namespace App\Provider;
 
 use App\Entity\Member;
 use App\Repository\MemberRepository;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
@@ -27,12 +26,7 @@ class UserProvider implements UserProviderInterface
     public function refreshUser(UserInterface $user)
     {
         if (!$user instanceof Member) {
-            throw new UnsupportedUserException(
-                sprintf(
-                    'Instances of "%s" are not supported.',
-                    \get_class($user)
-                )
-            );
+            throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', \get_class($user)));
         }
 
         return $this->loadUserByUsername($user->getUsername());
@@ -43,11 +37,7 @@ class UserProvider implements UserProviderInterface
         try {
             return $this->memberRepository->loadUserByUsername($username);
         } catch (NonUniqueResultException $e) {
-            throw new UsernameNotFoundException(
-                sprintf('Username "%s" isn\'t unique.', $username),
-                0,
-                $e
-            );
+            throw new UsernameNotFoundException(sprintf('Username "%s" isn\'t unique.', $username), 0, $e);
         } catch (ORMException $e) {
         }
     }

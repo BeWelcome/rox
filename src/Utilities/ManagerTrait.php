@@ -12,8 +12,6 @@ trait ManagerTrait
 
     /**
      * @required
-     *
-     * @param EntityManagerInterface $entityManager
      */
     public function setManager(EntityManagerInterface $entityManager)
     {

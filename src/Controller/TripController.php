@@ -17,9 +17,7 @@ class TripController extends AbstractController
     /**
      * @Route("/trip", name="trip")
      *
-     * @param Request   $request
-     * @param TripModel $tripModel
-     * @param int       $items
+     * @param int $items
      *
      * @return Response
      */
@@ -61,8 +59,6 @@ class TripController extends AbstractController
      *
      * @Route("/trip/create", name="trip_create")
      *
-     * @param Request $request
-     *
      * @throws
      *
      * @return Response
@@ -99,8 +95,7 @@ class TripController extends AbstractController
      * @Route("/trip/{id}/update", name="trip_update",
      *     requirements={"id": "\d+"})
      *
-     * @param Request $request
-     * @param Trip    $trip    The trip to update
+     * @param Trip $trip The trip to update
      *
      * @throws AccessDeniedException
      *

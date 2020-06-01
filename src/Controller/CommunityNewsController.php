@@ -25,8 +25,6 @@ class CommunityNewsController extends AbstractController
     }
 
     /**
-     * @param Request $request
-     *
      * @Route("/communitynews", name="communitynews")
      *
      * @return Response
@@ -46,8 +44,6 @@ class CommunityNewsController extends AbstractController
     /**
      * @Route("/communitynews/{id}", name="communitynews_show")
      *
-     * @param CommunityNews $communityNews
-     *
      * @return Response
      */
     public function showAction(Request $request, CommunityNews $communityNews)
@@ -65,9 +61,6 @@ class CommunityNewsController extends AbstractController
 
     /**
      * @Route("/communitynews/{id}/comment/add", name="communitynews_comment_add")
-     *
-     * @param Request       $request
-     * @param CommunityNews $communityNews
      *
      * @throws \Exception
      *

@@ -4,7 +4,6 @@ namespace App\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
-use Doctrine\ORM\Query\Expr\Join;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
 
@@ -41,5 +40,4 @@ class CommunityNewsCommentRepository extends EntityRepository
             ->orderBy('c.created', 'desc')
             ->getQuery();
     }
-
 }

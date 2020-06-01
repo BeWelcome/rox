@@ -12,14 +12,14 @@ use Doctrine\Migrations\AbstractMigration;
  */
 final class Version20200307133359 extends AbstractMigration
 {
-    public function getDescription() : string
+    public function getDescription(): string
     {
         return 'Add the functions needed for message threads';
     }
 
-    public function up(Schema $schema) : void
+    public function up(Schema $schema): void
     {
-        $this->addSql("
+        $this->addSql('
             CREATE FUNCTION hierarchy_connect_by_parent_eq_prior_id(value INT) RETURNS int(11)
                 READS SQL DATA
             BEGIN
@@ -52,9 +52,8 @@ final class Version20200307133359 extends AbstractMigration
                             WHERE   id = _parent;
                     END LOOP;
             END;
-        "
-        );
-        $this->addSql("
+        ');
+        $this->addSql('
             CREATE FUNCTION hierarchy_connect_by_parent_eq_prior_id_with_level(value INT, maxlevel INT) RETURNS int(11)
                 READS SQL DATA
             BEGIN
@@ -92,8 +91,8 @@ final class Version20200307133359 extends AbstractMigration
                 END LOOP;
                 RETURN NULL;
             END;
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             CREATE FUNCTION hierarchy_sys_connect_by_path(delimiter TEXT, node INT) RETURNS text CHARSET latin1
                 READS SQL DATA
             BEGIN
@@ -112,19 +111,19 @@ final class Version20200307133359 extends AbstractMigration
                           SET _path = CONCAT(_id, delimiter, _path);
                  END LOOP;
             END;
-        ");
+        ');
     }
 
-    public function down(Schema $schema) : void
+    public function down(Schema $schema): void
     {
-        $this->addSql("
+        $this->addSql('
             DROP FUNCTION IF EXISTS hierarchy_connect_by_parent_eq_prior_id;
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             DROP FUNCTION IF EXISTS hierarchy_connect_by_parent_eq_prior_id_with_level
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             DROP FUNCTION IF EXISTS hierarchy_sys_connect_by_path
-        ");
+        ');
     }
 }

@@ -5,18 +5,16 @@ namespace App\Controller;
 use App\Entity\Member;
 use App\Repository\MemberRepository;
 use App\Utilities\MailerTrait;
-use App\Utilities\MessageTrait;
 use App\Utilities\TranslatorTrait;
 use Exception;
-use Html2Text\Html2Text;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SignupController extends AbstractController
 {
@@ -26,10 +24,9 @@ class SignupController extends AbstractController
     /**
      * @Route("/signup/finish", name="signup_finish")
      *
-     * @param Request $request
-     * @param LoggerInterface $logger
-     * @return Response
      * @throws Exception
+     *
+     * @return Response
      */
     public function finishSignup(Request $request, LoggerInterface $logger)
     {
@@ -45,7 +42,7 @@ class SignupController extends AbstractController
             /** @var Member $member */
             $member = $memberRepository->findOneBy(['username' => $username]);
             if (!$member) {
-                throw new Exception("No member found in database. Terminating.");
+                throw new Exception('No member found in database. Terminating.');
             }
 
             $member->setRegistrationKey($key);
@@ -83,13 +80,13 @@ class SignupController extends AbstractController
      *
      * @param $username
      *
-     * @param AuthenticationUtils $helper
+     * @throws AccessDeniedException
+     *
      * @return Response
      */
     public function resendConfirmationEmail($username, AuthenticationUtils $helper)
     {
-        if ($helper->getLastUsername() !== $username)
-        {
+        if ($helper->getLastUsername() !== $username) {
             throw $this->createAccessDeniedException();
         }
 
@@ -121,7 +118,6 @@ class SignupController extends AbstractController
     /**
      * @Route("/signup/confirm/{username}/{registrationKey}", name="signup_confirm")
      *
-     * @param Request $request
      * @param $username
      * @param $registrationKey
      *
@@ -150,6 +146,7 @@ class SignupController extends AbstractController
 
             $this->addFlash('notice', $this->getTranslator()->trans('flash.signup.activated'));
             $request->getSession()->set(Security::LAST_USERNAME, $username);
+
             return $this->redirect('/login');
         }
         $this->addFlash('error', $this->getTranslator()->trans('flash.signup.key.invalid'));

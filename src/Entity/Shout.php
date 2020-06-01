@@ -136,6 +136,7 @@ class Shout
     public function setTable($table): self
     {
         $this->table = $table;
+
         return $this;
     }
 
@@ -147,6 +148,7 @@ class Shout
     public function setTableId(int $tableId): self
     {
         $this->tableId = $tableId;
+
         return $this;
     }
 

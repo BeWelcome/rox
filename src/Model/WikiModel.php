@@ -17,8 +17,6 @@ class WikiModel
 
     /**
      * @required
-     *
-     * @param RoxWikiParserBackend $wikiParserBackend
      */
     public function setWikiParserBackend(RoxWikiParserBackend $wikiParserBackend)
     {
@@ -39,11 +37,11 @@ class WikiModel
 
     public function getPagename($pageTitle)
     {
-        if (substr($pageTitle, 0, 6) === 'Group ') {
+        if ('Group ' === substr($pageTitle, 0, 6)) {
             $pageTitle = str_replace('Group ', 'Group_', trim($pageTitle));
         }
 
-        if (substr($pageTitle, 0, 6) === 'Group_') {
+        if ('Group_' === substr($pageTitle, 0, 6)) {
             return str_replace(' ', '', trim($pageTitle));
         }
 

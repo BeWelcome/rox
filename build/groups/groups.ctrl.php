@@ -70,6 +70,7 @@ class GroupsController extends RoxControllerBase
         }
         $this->_model->setGroupVisit($group->getPKValue());
         $page = new GroupStartPage();
+        $page->setTeaserHeadline($group->Name);
         $page->group = $group;
         $this->_fillObject($page);
         if (!$page->member) {
@@ -216,24 +217,6 @@ class GroupsController extends RoxControllerBase
         $this->_fillObject($page);
         return $page;
     }
-
-    /**
-     *  shows a group creation page
-     *
-     * @access public
-     * @return object
-     */
-    public function create()
-    {
-        if (!$this->_model->getLoggedInMember())
-        {
-            $this->redirectToLogin($this->router->url('groups_new', null, false));
-        }
-        $page = new GroupsCreationPage();
-        $this->_fillObject($page);
-        return $page;
-    }
-
 
     /**
      * fetches the groups for the logged in member and shows them
@@ -414,10 +397,9 @@ class GroupsController extends RoxControllerBase
             $this->redirectAbsolute($this->router->url('groups_overview'));
         } else {
             $this->logWrite("Member #{$member_id} accepted invitation to join group #{$group->getPKValue()}");
-            $page = new GroupMemberSettingsPage();
+            $page = new GroupMemberSettingsPage($group);
             $this->setFlashNotice($this->getWords()->getSilent('GroupJoinSuccess'));
             $this->_fillObject($page);
-            $page->group = $group;
             return $page;
         }
     }
@@ -792,7 +774,7 @@ class GroupsController extends RoxControllerBase
             $this->redirectToLogin($this->router->url('group_membersettings', array('group_id' => $group->getPKValue()), false));
         }
 
-        $page = ((isset($request[3]) && strtolower($request[3]) == 'true') ? new GroupStartPage() : new GroupMemberSettingsPage());
+        $page = ((isset($request[3]) && strtolower($request[3]) == 'true') ? new GroupStartPage() : new GroupMemberSettingsPage($group));
         $this->_fillObject($page);
         $page->group = $group;
         return $page;
@@ -807,16 +789,12 @@ class GroupsController extends RoxControllerBase
     public function groupSettings()
     {
         $group = $this->_getGroupFromRequest();
-        if (!$this->_model->getLoggedInMember())
-        {
-            $this->redirectToLogin($this->router->url('group_groupsettings', array('group_id' => $group->getPKValue()), false));
-        }
-        elseif (!$this->_model->canAccessGroupAdmin($group))
+        if (!$this->_model->canAccessGroupAdmin($group))
         {
             $this->redirectAbsolute($this->router->url('groups_overview'));
         }
 
-        $page = ((isset($request[3]) && strtolower($request[3]) == 'true') ? new GroupStartPage() : new GroupSettingsPage());
+        $page = ((isset($request[3]) && strtolower($request[3]) == 'true') ? new GroupStartPage() : new GroupSettingsPage($group));
         $this->_fillObject($page);
         $page->group = $group;
         $page->group_members = $group->getMembers();
@@ -867,8 +845,8 @@ class GroupsController extends RoxControllerBase
      */
     public function forum()
     {
-        $page = new GroupForumPage();
-        $page->group = $this->_getGroupFromRequest();
+        $group = $this->_getGroupFromRequest();
+        $page = new GroupForumPage($group);
         $this->_fillObject($page);
         if (!$page->member) {
             $this->setFlashNotice($this->_model->getWords()->get('GroupsFullFunctionalityLoggedIn'));
@@ -890,8 +868,8 @@ class GroupsController extends RoxControllerBase
      */
     public function members()
     {
-        $page = new GroupMembersPage();
-        $page->group = $this->_getGroupFromRequest();
+        $group = $this->_getGroupFromRequest();
+        $page = new GroupMembersPage($group);
         $this->_fillObject($page);
         $pager_params = new stdClass;
         $pager_params->strategy = new HalfPagePager;

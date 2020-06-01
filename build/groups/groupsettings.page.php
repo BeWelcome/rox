@@ -31,26 +31,14 @@ use App\Doctrine\GroupType;
      * @package Apps
      * @subpackage Groups
      */
-class GroupSettingsPage extends GroupsBasePage
+class GroupSettingsPage extends GroupsSubPage
 {
-    public function __construct()
+    public function __construct($group)
     {
-        parent::__construct();
+        parent::__construct($group);
         $this->addLateLoadScriptFile('build/roxeditor.js');
         $this->addLateLoadScriptFile('build/bsfileselect.js');
         $this->addStylesheet('build/roxeditor.css');
-    }
-
-    protected function teaserContent()
-    {
-        // &gt; or &raquo; ?
-        $words = $this->getWords();
-        ?>
-        <div>
-            <h5><a href="forums"><?= $words->get('CommunityDiscussions');?></a> &raquo; <a href="groups/search"><?= $words->get('Groups');?></a> &raquo; <a href="group/<?=$this->group->getPKValue(); ?>"><?php echo htmlspecialchars($this->getGroupTitle(),ENT_QUOTES); ?></a></h5>
-            <h3><?= $words->get('GroupsAdministrateGroup');?></h3>
-        </div>
-        <?php
     }
 
     protected function getSubmenuActiveItem()

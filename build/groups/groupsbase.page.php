@@ -35,7 +35,6 @@ use App\Doctrine\GroupType;
      */
 class GroupsBasePage extends PageWithActiveSkin
 {
-
     /**
      * An array of messages that should be shown to the user
      * They are strings to be used in words->get
@@ -43,6 +42,13 @@ class GroupsBasePage extends PageWithActiveSkin
      * @var array
      */
     protected $_messages;
+
+    protected $crumbs = [
+        'forums' => 'CommunityDiscussions',
+        'groups/forums' => 'Groups',
+    ];
+
+    protected $teaserHeadline;
 
     /** @var Group */
     public $group;
@@ -54,7 +60,6 @@ class GroupsBasePage extends PageWithActiveSkin
      * set a message for the member to see
      *
      * @param string $message - Message to set
-     * @access public
      */
     public function setMessage($message)
     {
@@ -69,7 +74,6 @@ class GroupsBasePage extends PageWithActiveSkin
     /**
      * get all set messages
      *
-     * @access public
      * @return array
      */
     public function getMessages()
@@ -82,6 +86,14 @@ class GroupsBasePage extends PageWithActiveSkin
         {
             return array();
         }
+    }
+
+    /**
+     * @param mixed $teaserHeadline
+     */
+    public function setTeaserHeadline($teaserHeadline): void
+    {
+        $this->teaserHeadline = $teaserHeadline;
     }
 
     protected function getColumnNames ()
@@ -100,7 +112,6 @@ class GroupsBasePage extends PageWithActiveSkin
      * returns the name of the group
      *
      * @todo return translated name
-     * @access protected
      * @return string
      */
     protected function getGroupTitle()
@@ -159,14 +170,27 @@ class GroupsBasePage extends PageWithActiveSkin
         return $canAccess;
     }
 
+    protected function breadcrumbs()
+    {
+        $words = $this->getWords();
+        $breadcrumbs = '<h5>';
+        foreach($this->crumbs as $key => $value)
+        {
+            $breadcrumbs .= '<a href="' . $key . '">' . $words->get($value) . '</a>';
+                $breadcrumbs .= " » ";
+        }
+        $breadcrumbs = substr($breadcrumbs, 0, -3);
+        $breadcrumbs .= '</h5>';
+        return $breadcrumbs;
+    }
+
     protected function teaserContent()
     {
-        // &gt; or &raquo; ?
-        $words = $this->getWords();
-        ?>
-        <h5><a href="forums"><?= $words->get('CommunityDiscussions');?></a> &raquo; </a><a href="groups/forums"><?= $words->get('Groups');?></a></h5>
-        <h3><?= htmlspecialchars($this->group->Name, ENT_QUOTES) ?></h3>
-        <?php
+        echo $this->breadcrumbs();
+        if (!empty($this->teaserHeadline))
+        {
+            echo '<h3>' . $this->teaserHeadline . '</h3>';
+        }
     }
 
     protected function getTopmenuActiveItem()

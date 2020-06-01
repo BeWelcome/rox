@@ -1,7 +1,7 @@
 <div class="row"><?php use App\Doctrine\GroupType;
 
     foreach ($this->getMessages() as $message) : ?>
-<p><?= $words->get($message); ?>
+    <p><?= $words->get($message); ?>
     <?php endforeach; ?>
     <?php
     $group_name_html = htmlspecialchars($this->getGroupTitle(), ENT_QUOTES);
@@ -12,18 +12,15 @@
 
     <div class="col-12 col-md-8">
 
-        <div class="card">
-            <h5 class="card-header bg-groupheader">
+        <div class="media bg-white p-1">
                 <?= ((strlen($this->group->Picture) > 0) ? "<img class=\"float-left mr-2 mb-2 img-thumbnail\" src='group/realimg/{$this->group->getPKValue()}' width=\"100px\" alt='Image for the group {$group_name_html}' />" : ''); ?>
-
-                <?= $group_name_html; ?></h5>
-            <div class="card-body">
+            <div class="media-body bg-groupheader p-1">
                 <?php echo $purifier->purify(nl2br($this->group->getDescription())) ?>
                 <?php if ($this->isGroupMember() || $this->isGroupAdmin()) { ?>
                     <a href="<?php echo $uri; ?>/forum/new"
-                        class="btn btn-primary float-left"><?php echo $this->words->getBuffered('ForumNewTopic'); ?></a>
+                        class="btn btn-primary float-right"><?php echo $this->words->getBuffered('ForumNewTopic'); ?></a>
                 <?php } else { ?>
-                    <a class="btn btn-primary float-left" href="group/<?= $this->group->id ?>/join">
+                    <a class="btn btn-primary float-right" href="group/<?= $this->group->id ?>/join">
                         <?= $words->getSilent('GroupsJoinTheGroup'); ?>
                     </a>
                 <?php } ?>

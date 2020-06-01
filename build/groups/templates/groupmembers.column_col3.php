@@ -6,12 +6,12 @@ if (!$this->canMemberAccess())
 else
 {
 ?>
-<div class="row">
-    <div class="col-12">
+<div class="row d-flex justify-content-between">
+    <div class="col">
         <h3><?= $words->get('GroupsMembers'); ?></h3>
     </div>
 
-    <div class="col-12">
+    <div class="col">
         <?php $this->pager_widget->render(); ?>
     </div>
 </div>

@@ -441,11 +441,16 @@ WHERE IdGroup=" . (int)$group->id . " AND IdMember=" . (int)$memberid;
             return false;
         }
 
-        if (!$this->getLoggedInMember()->hasPrivilege('GroupsController', 'GroupSettings', $group))
+        $member = $this->getLoggedInMember();
+        if (!$member)
         {
             return false;
         }
-        return true;
+
+        $isGroupAdmin = $group->isGroupAdmin($member);
+        $isGroupOwner = $group->isGroupOwner($member);
+
+        return $isGroupAdmin || $isGroupOwner;
     }
 
     /**

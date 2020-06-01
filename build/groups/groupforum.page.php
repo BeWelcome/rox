@@ -31,27 +31,13 @@ Boston, MA  02111-1307, USA.
      * @subpackage Groups
      */
 
-class GroupForumPage extends GroupsBasePage
+class GroupForumPage extends GroupsSubPage
 {
-    public function __construct()
+    public function __construct($group)
     {
-        parent::__construct();
+        parent::__construct($group);
         $this->addLateLoadScriptFile('build/roxeditor.js');
         $this->addStylesheet('build/roxeditor.css');
-    }
-
-    protected function teaserContent()
-    {
-        // &gt; or &raquo; ?
-        $words = $this->getWords();
-        ?>
-        <div>
-            <h5><a href="forums"><?= $words->get('CommunityDiscussions');?></a> &raquo; <a href="groups/forums"><?= $words->get('Groups');?></a>
-                &raquo; <a href="group/<?=$this->group->getPKValue(); ?>"><?php echo htmlspecialchars($this->getGroupTitle(),ENT_QUOTES); ?></a>
-                &raquo; <?= $words->get('GroupDiscussions');?>
-            </h5>
-        </div>
-        <?php
     }
 
     protected function column_col3()

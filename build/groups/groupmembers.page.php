@@ -30,19 +30,8 @@ Boston, MA  02111-1307, USA.
      * @package Apps
      * @subpackage Groups
      */
-class GroupMembersPage extends GroupsBasePage
+class GroupMembersPage extends GroupsSubPage
 {
-    protected function teaserContent()
-    {
-        $words = $this->getWords();
-        ?>
-        <div>
-            <h5><a href="forums"><?= $words->get('CommunityDiscussions');?></a> &raquo; <a href="groups/forums"><?= $words->get('Groups');?></a> &raquo; <a href="group/<?=$this->group->getPKValue(); ?>"><?php echo htmlspecialchars($this->getGroupTitle(),ENT_QUOTES); ?></a></h5>
-            <h3><?= $words->get('GroupMembers');?></h3>
-        </div>
-        <?php
-    }
-
 
     protected function getSubmenuActiveItem() {
         return 'members';

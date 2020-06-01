@@ -113,58 +113,12 @@ This File display a topic and the messages which are inside it
             }
 
         }
-
-        echo "</div>";
-        echo "</div>"
         ?>
-            <?php
-            if ($topic->topicinfo->IdGroup > 0) {
-                ?>
-                <p class="m-0 text-muted"><strong><?php echo $words->get("group"); ?>:</strong>
-                    <a href="group/<?php echo $this->_model->getGroupName($topic->topicinfo->IdGroup); ?>">
-                        <?php echo $this->_model->getGroupName($topic->topicinfo->GroupName); ?>
-                    </a>
 
-                    <?php
-                    }
-                    ?>
-                </p>
-
+        </div>
+        </div>
             <?php
                 $replyuri = preg_replace('#/page.{1,3}/#', '/', $uri . 'reply');
-            /*
-                       $url = ForumsView::getURI() . '';
-                       $breadcrumb = '';
-
-                       // Append slash to URL if it's not there yet
-                       if (substr($url, -1) != '/') {
-                           $url = $url . '/';
-                       }
-
-                       $replyuri = preg_replace('#/page.{1,3}/#', '/', $uri . 'reply');
-
-                       $tagBase = $url;
-
-                       if (isset($topic->topicinfo->continent) && $topic->topicinfo->continent) {
-                           $url = $url . 'k' . $topic->topicinfo->continent . '-' . Forums::$continents[$topic->topicinfo->continent] . '/';
-                           $breadcrumb .= '<a href="' . $url . '">' . Forums::$continents[$topic->topicinfo->continent] . '</a> ';
-
-                           if (isset($topic->topicinfo->countryname) && $topic->topicinfo->countryname) {
-                               $url = $url . 'c' . $topic->topicinfo->countrycode . '-' . $topic->topicinfo->countryname . '/';
-                               $breadcrumb .= '&raquo; <a href="' . $url . '">' . $topic->topicinfo->countryname . '</a> ';
-
-                               if (isset($topic->topicinfo->adminname) && $topic->topicinfo->adminname) {
-                                   $url = $url . 'a' . $topic->topicinfo->admincode . '-' . $topic->topicinfo->adminname . '/';
-                                   $breadcrumb .= '&raquo; <a href="' . $url . '">' . $topic->topicinfo->adminname . '</a> ';
-
-                                   if (isset($topic->topicinfo->geonames_name) && $topic->topicinfo->geonames_name) {
-                                       $url = $url . 'g' . $topic->topicinfo->geonameid . '-' . $topic->topicinfo->geonames_name . '/';
-                                       $breadcrumb .= '&raquo; <a href="' . $url . '">' . $topic->topicinfo->geonames_name . '</a> ';
-                                   }
-                               }
-                           }
-                       } */
-
             ?>
             <?php
             if ($topic->topicinfo->IsClosed) {

@@ -51,7 +51,7 @@ $layoutbits = new MOD_layoutbits();
             <span class="small"><?= $details->Status ?></span><br>
             <span class="smaller">Last login: <?= $details->LastLogin ?></span><br>
         <a href="admin/rights/assign/<?= $username ?>" class="btn btn-outline-primary btn-sm">
-            <i class="fa fa-plus-square-o"></i>
+            <i class="fa fa-plus-square"></i>
             <?= $words->getSilent('AdminRightsAssignRight') ?></a><?= $words->flushBuffer() ?></td>
         <?php foreach($details->Rights as $id => $right) :
             if ($firstRow) :

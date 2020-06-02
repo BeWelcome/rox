@@ -50,7 +50,7 @@ $layoutbits = new MOD_layoutbits();
             <span class="small"><?= $details->Status ?></span><br>
             <span class="smaller">Last login: <?= $details->LastLogin ?><br>
         <a href="admin/flags/assign/<?= $username ?>" class="btn btn-sm btn-outline-primary">
-            <i class="fa fa-plus-square-o"></i>
+            <i class="fa fa-plus-square"></i>
             <?= $words->getSilent('AdminFlagsAssignFlag') ?></a><?= $words->flushBuffer() ?></td>
         <?php foreach($details->Flags as $id => $flag) {
         $ss = ($flag->level == 0) ? '<span class="adminhistory">' : '';

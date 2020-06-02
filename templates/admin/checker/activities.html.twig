@@ -36,7 +36,7 @@
             </tr>
         {% for activity in reported.currentPageResults %}
             <tr>
-                <td><a href="{{ url('activities_show', {'id': activity.id}) }}">{{ activity.title|purify }}</a><br><small>{{ activity.description|truncate(50) }}</small></td>
+                <td><a href="{{ url('activities_show', {'id': activity.id}) }}">{{ activity.title|purify }}</a> ({{ activity.id }})<br><small>{{ activity.description|truncate(50) }}</small></td>
                 <td>{% for activityOrganizer in activity.organizers %}{{ macros.avatarstack(activityOrganizer.attendee.username) }}{% if not loop.last %},{% endif %}{% endfor %}</td>
                 <td>{{ activity.starts | localizeddate('short', 'short') }} &mdash; <br>
                 {{  activity.ends | localizeddate('short', 'short') }}</td>

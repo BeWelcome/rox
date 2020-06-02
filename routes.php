@@ -15,6 +15,8 @@
      */
 
     // group routes
+    $this->addRoute('group_start','group/:group_id:', 'GroupsController', 'showGroup');
+    $this->addRoute('group_new_post', 'group/:group_id:/new', 'GroupsController', 'newPost');
     $this->addRoute('group_acceptinvitation','group/:group_id:/acceptinvitation/:member_id:', 'GroupsController', 'acceptInvitation');
     $this->addRoute('group_acceptmember','group/:group_id:/acceptmember/:member_id:', 'GroupsController', 'acceptMember');
     $this->addRoute('group_banmember','group/:group_id:/banmember/:member_id:', 'GroupsController', 'banMember');
@@ -40,7 +42,6 @@
     $this->addRoute('group_membersearch_ajax','group/:group_id:/membersearchajax/:search_term:', 'GroupsController', 'memberSearchAjax');
     $this->addRoute('group_membersettings','group/:group_id:/membersettings', 'GroupsController', 'memberSettings');
     $this->addRoute('group_wiki','group/:group_id:/wiki', 'GroupsController', 'wiki');
-    $this->addRoute('group_start','group/:group_id:', 'GroupsController', 'showGroup');
     $this->addRoute('group_realimg','group/realimg/:group_id:', 'GroupsController', 'realImg');
     $this->addRoute('group_thumbimg','group/thumbimg/:group_id:', 'GroupsController', 'thumbImg');
     $this->addRoute('groups_featured','groups/featured', 'GroupsController', 'featured');

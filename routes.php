@@ -25,6 +25,7 @@
     $this->addRoute('group_delete','group/:group_id:/delete', 'GroupsController', 'delete');
     $this->addRoute('group_deleted','group/:group_id:/delete/true', 'GroupsController', 'delete');
     $this->addRoute('group_forum','group/:group_id:/forum', 'GroupsController', 'forum');
+    $this->addRoute('group_forum_pages','group/:group_id:/forum/page:page_id:', 'GroupsController', 'forum');
     $this->addRoute('group_forum_thread','group/:group_id:/forum/s:thread:', 'GroupsController', 'forum');
     $this->addRoute('group_forum_thread_slash','group/:group_id:/forum/:thread:/', 'GroupsController', 'forum');
     $this->addRoute('group_forum_action','group/:group_id:/forum/:thread:/:action:', 'GroupsController', 'forum');
@@ -38,8 +39,8 @@
     $this->addRoute('group_members_paged','group/:group_id:/members/page/:page_number:', 'GroupsController', 'members');
     $this->addRoute('group_membersearch_ajax','group/:group_id:/membersearchajax/:search_term:', 'GroupsController', 'memberSearchAjax');
     $this->addRoute('group_membersettings','group/:group_id:/membersettings', 'GroupsController', 'memberSettings');
-    $this->addRoute('group_start','group/:group_id:', 'GroupsController', 'showGroup');
     $this->addRoute('group_wiki','group/:group_id:/wiki', 'GroupsController', 'wiki');
+    $this->addRoute('group_start','group/:group_id:', 'GroupsController', 'showGroup');
     $this->addRoute('group_realimg','group/realimg/:group_id:', 'GroupsController', 'realImg');
     $this->addRoute('group_thumbimg','group/thumbimg/:group_id:', 'GroupsController', 'thumbImg');
     $this->addRoute('groups_featured','groups/featured', 'GroupsController', 'featured');

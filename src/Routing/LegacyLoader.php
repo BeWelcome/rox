@@ -2,6 +2,7 @@
 
 namespace App\Routing;
 
+use RuntimeException;
 use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
@@ -29,7 +30,7 @@ class LegacyLoader extends Loader
     public function load($resource, string $type = null)
     {
         if (true === $this->loaded) {
-            throw new \RuntimeException('Do not add the "legacy" loader twice');
+            throw new RuntimeException('Do not add the "legacy" loader twice');
         }
 
         $this->routes = new RouteCollection();
@@ -119,6 +120,7 @@ class LegacyLoader extends Loader
         $this->addRouteDirectly('editmyprofile_locale', '/editmyprofile/{locale}');
         $this->addRouteDirectly('donate', '/donate');
         $this->addRouteDirectly('donate_list', '/donate/list');
+        $this->addRouteDirectly('donate_cancel', '/donate/cancel');
         $this->addRouteDirectly('donate_done', '/donate/done');
         $this->addRouteDirectly('gallery_show_user', '/gallery/show/user/{username}');
         $this->addRouteDirectly('gallery_show_user_images', '/gallery/show/user/{username}/pictures');

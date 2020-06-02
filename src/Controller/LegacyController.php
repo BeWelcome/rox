@@ -46,7 +46,9 @@ class LegacyController extends AbstractController
     ) {
         // Kick-start the Symfony session. This replaces session_start() in the
         // old code, which is now turned off.
-        // $session->start();
+        /** @var Session $session */
+        $session = $this->get('session');
+        $session->start();
 
         // Make sure the Rox classes find this session and the translator
         SessionSingleton::createInstance($session);

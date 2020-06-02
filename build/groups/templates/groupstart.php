@@ -17,9 +17,9 @@
             <div class="media-body bg-groupheader p-1">
                 <?php echo $purifier->purify(nl2br($this->group->getDescription())) ?>
                 <?php if ($this->isGroupMember() || $this->isGroupAdmin()) { ?>
-                    <a href="<?php echo $uri; ?>/forum/new"
+                    <a href="/group/<?= $this->group->id ?>/new"
                         class="btn btn-primary float-right"><?php echo $this->words->getBuffered('ForumNewTopic'); ?></a>
-                <?php } else { ?>
+                <?php } elseif ($this->group->Type !== GroupType::NEED_ACCEPTANCE) { ?>
                     <a class="btn btn-primary float-right" href="group/<?= $this->group->id ?>/join">
                         <?= $words->getSilent('GroupsJoinTheGroup'); ?>
                     </a>
@@ -39,7 +39,10 @@
                 $showNewTopicButton = true;
             }
 
-            echo $Forums->showExternalGroupThreads($group_id, $this->isGroupMember(), false, $showNewTopicButton); ?>
+            if ($this->group->Type !== GroupType::NEED_ACCEPTANCE) {
+                echo $Forums->showExternalGroupThreads($group_id, $this->isGroupMember(), false, $showNewTopicButton);
+            }
+            ?>
         </div>
 
 </div>

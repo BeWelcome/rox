@@ -1935,7 +1935,7 @@ WHERE `id` = '$topicinfo->threadid'
         return true;
     }
 
-    private function checkVarsTopic(&$vars) {
+    public function checkVarsTopic(&$vars) {
         $errors = array();
 
         if (!isset($vars['topic_title']) || empty($vars['topic_title'])) {
@@ -2024,7 +2024,7 @@ WHERE `id` = '$this->threadid'
     * Create a new Topic (with initial first post)
     * @return int topicid Id of the newly created topic
     */
-    private function newTopic(&$vars) {
+    public  function newTopic(&$vars) {
         if (!($User  = $this->getLoggedInMember())) {
             throw new PException('User gone missing...');
         }

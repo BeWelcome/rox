@@ -1066,6 +1066,50 @@ class GroupsController extends RoxControllerBase
         return $return;
     }
 
+    public function newPostCallback($args, $action, $mem_redirect, $mem_resend)
+    {
+        $count = $action->count;
+
+        $return = $args->req;
+
+        if (!$this->_model->getLoggedInMember())
+        {
+            return $return;
+        }
+
+        if ($count < 0)
+        {
+            $mem_redirect->expired = true;
+            return $return;
+        }
+
+        if ($mem_resend->already_sent_as)
+        {
+            $mem_redirect->already_sent_as = $mem_resend->already_sent_as;
+            return $return;
+        }
+
+        $vars = $args->post;
+        $forumsModel = new Forums();
+        $vars_ok = $forumsModel->checkVarsTopic($vars);
+        if ($vars_ok) {
+            $threadId = $forumsModel->newTopic($vars);
+            $mem_redirect->result = true;
+            return "group/" . $vars['IdGroup'] . '/forum/s' . $threadId;
+        }
+        $mem_redirect->vars = $vars;
+
+        return $return;
+    }
+
+    public function newPost()
+    {
+        $group = $this->_getGroupFromRequest();
+        $page = new GroupNewPostPage($group);
+        $page->vars = $this->args_vars;
+        $this->_fillObject($page);
+        return $page;
+    }
 
 }
 

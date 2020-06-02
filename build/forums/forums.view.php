@@ -564,7 +564,7 @@ class ForumsView extends RoxAppView {
         return '';
     }
 
-    private function getVisibilityCheckbox($visibility, $highestVisibility, $IdGroup, $newTopic) {
+    public function getVisibilityCheckbox($visibility, $highestVisibility, $IdGroup, $newTopic) {
         if ($IdGroup == 0) {
             // Indicate to the form that only MembersOnly is allowed; this is a hack to avoid too much code changes
             return '';

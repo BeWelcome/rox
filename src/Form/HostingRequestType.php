@@ -42,7 +42,7 @@ class HostingRequestType extends AbstractType
                         'message' => 'request.error.arrival.empty',
                     ]),
                     new LessThanOrEqual([
-                        'propertyPath' => 'parent.all[departure].data',
+                        'propertyPath' => '[departure][data]',
                         'message' => 'request.error.arrival.after.departure',
                     ]),
                 ],

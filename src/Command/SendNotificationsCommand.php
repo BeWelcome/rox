@@ -112,13 +112,10 @@ class SendNotificationsCommand extends Command
             /** @var PostNotification $scheduled */
             foreach($scheduledNotifications as $scheduled)
             {
-                // Get preferred language for recipient
-                $language = $scheduled->getReceiver()->getPreferredLanguage();
-
                 $receiver = $scheduled->getReceiver();
-                if (!in_array($receiver->getStatus(), MemberStatusType::ACTIVE_ALL_ARRAY, true )) {
-                    continue;
-                }
+//                if (!in_array($receiver->getStatus(), MemberStatusType::ACTIVE_ALL_ARRAY, true )) {
+//                    continue;
+//                }
 
                 try {
                     // Force locale for all methods

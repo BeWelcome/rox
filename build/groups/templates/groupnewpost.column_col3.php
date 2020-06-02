@@ -35,7 +35,8 @@ $notifyChecked = ($vars['NotifyMe']) ? 'checked="checked"' : '';
                             <input type="text" class="form-control <?= ($error['title']) ? 'is-invalid': ''; ?>" name="topic_title" maxlength="200" id="topic_title"
                                    value="<?= $vars['topic_title']; ?>" aria-describedby="forumaddtitle">
                         <div class="invalid-feedback">
-                            Cannot be empty
+                            <span class="form-error-icon badge badge-danger text-uppercase"><?= $words->get('Error'); ?></span>
+                            <span class="form-error-message">Cannot be empty</span></div>
                         </div>
                     </div>
                 </div>
@@ -51,7 +52,8 @@ $notifyChecked = ($vars['NotifyMe']) ? 'checked="checked"' : '';
                             echo '<input type="hidden" name="IdGroup" value="' . $this->group->id . '">';
                          ?>
                         <div class="invalid-feedback">
-                            Cannot be empty
+                            <span class="form-error-icon badge badge-danger text-uppercase"><?= $words->get('Error'); ?></span>
+                            <span class="form-error-message">Cannot be empty</span></div>
                         </div>
                     </div>
                 </div>

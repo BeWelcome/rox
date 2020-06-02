@@ -30,16 +30,18 @@
         <div class="w-100 mt-3">
             <h3 class="float-left w-100"><?php echo $words->getFormatted('ForumRecentPostsLong'); ?></h3>
             <?php
-            if (!$this->isGroupMember() && $this->group->latestPost) {
+            $isGroupMember = $this->isGroupMember();
+            if (!$isGroupMember && $this->group->latestPost) {
                 echo '<div class="small">' . $words->get('GroupInfoLastActivity', date('Y-m-d H:i', $this->group->latestPost)) . '</div>';
             }
 
             $showNewTopicButton = false;
-            if ($this->isGroupMember() || ($this->group->Type !== GroupType::INVITE_ONLY && $this->isGroupAdmin())) {
+            if ($isGroupMember || ($this->group->Type !== GroupType::INVITE_ONLY && $this->isGroupAdmin())) {
                 $showNewTopicButton = true;
             }
 
-            if ($this->group->Type !== GroupType::NEED_ACCEPTANCE) {
+            if ($isGroupMember || $this->group->Type !== GroupType::NEED_ACCEPTANCE)
+            {
                 echo $Forums->showExternalGroupThreads($group_id, $this->isGroupMember(), false, $showNewTopicButton);
             }
             ?>

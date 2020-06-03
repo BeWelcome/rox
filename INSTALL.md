@@ -15,7 +15,7 @@
 ### Requirements
 
 * [Docker](https://docs.docker.com/get-docker/)
-* [Docker Compose] (https://docs.docker.com/compose/install/)
+* [Docker Compose](https://docs.docker.com/compose/install/)
 
 ### Initialize installation
 
@@ -40,12 +40,12 @@ Wait a few minutes for containers to build and start (it might take awhile). Pro
     $ make install-geonames
     ```
 
-Once again, if you need to run Docker Compose as sudo, run the following:
+    Once again, if you need to run Docker Compose as sudo, run the following:
 
     ```bash
     $ make install-geonames root=1
     ```
-
+    
 Please read [Useful hints](#useful-hints) section below.
 
 ## B) Installation step by step of BW-Rox (GNU/Linux)

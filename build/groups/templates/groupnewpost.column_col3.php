@@ -36,7 +36,7 @@ $notifyChecked = ($vars['NotifyMe']) ? 'checked="checked"' : '';
                                    value="<?= $vars['topic_title']; ?>" aria-describedby="forumaddtitle">
                         <div class="invalid-feedback">
                             <span class="form-error-icon badge badge-danger text-uppercase"><?= $words->get('Error'); ?></span>
-                            <span class="form-error-message">Cannot be empty</span></div>
+                            <span class="form-error-message">Cannot be empty</span>
                         </div>
                     </div>
                 </div>
@@ -53,7 +53,7 @@ $notifyChecked = ($vars['NotifyMe']) ? 'checked="checked"' : '';
                          ?>
                         <div class="invalid-feedback">
                             <span class="form-error-icon badge badge-danger text-uppercase"><?= $words->get('Error'); ?></span>
-                            <span class="form-error-message">Cannot be empty</span></div>
+                            <span class="form-error-message">Cannot be empty</span>
                         </div>
                     </div>
                 </div>

@@ -100,13 +100,11 @@ $threadsliced = array_slice($threads, 0, 5);
     }
 
     if ($showNewTopicButton && $User && $uri != 'forums/') {
-    ?>
-    <div id="boardnewtopicbottom"><a class="btn btn-primary" href="<?php echo $this->uri; ?>new
-    <?php
-    if (!empty($this->_model->IdGroup)) echo "/u" . $this->_model->IdGroup ;
-    echo "\">",$words->getBuffered('ForumNewTopic');
-    ?></a><?php echo $words->flushBuffer(); ?></div>
-    <?php
+        if ($this->_model->IdGroup) {
+            echo '<div id="boardnewtopicbottom"><a class="btn btn-primary" href="group/' . $this->_model->IdGroup . '/new">';
+        } else {
+            echo '<div id="boardnewtopicbottom"><a class="btn btn-primary" href="' . $this->uri . 'new">';
+        }
+        echo $words->getBuffered('ForumNewTopic');
+        echo '</a></div>';
     }
-
-?>

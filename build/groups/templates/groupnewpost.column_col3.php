@@ -6,6 +6,7 @@ if (empty($vars))
 {
     $vars['topic_text'] = '';
     $vars['topic_title'] = '';
+    $vars['ThreadVisibility'] = 'GroupOnly';
     $vars['NotifyMe'] = false;
     $error['text'] = false;
     $error['title'] = false;
@@ -18,6 +19,7 @@ elseif (isset($vars['errors'])) {
     $error['title'] = in_array('title', $vars['errors']);
 }
 $notifyChecked = ($vars['NotifyMe']) ? 'checked="checked"' : '';
+$groupOnly = ($this->group->VisiblePosts == 'no');
 ?>
 <div class="row">
     <div class="col-12">
@@ -66,9 +68,16 @@ $notifyChecked = ($vars['NotifyMe']) ? 'checked="checked"' : '';
 
                 <div class="col-12 col-md-4 order-2 order-md-3 mb-1 px-1">
                     <legend class="sr-only"><?= $words->getFormatted("forum_label_visibility") ?></legend>
-                    <?php
-                        echo $this->visibilityCheckbox;
-                    ?>
+
+                    <input type="hidden" id="groupOnly" name="groupOnly" value="<?= $groupOnly ? "1" : "0"; ?>">
+                    <div class="form-check"><input type="checkbox" class="form-check-input" name="ThreadVisibility" id="ThreadVisibility" value="GroupOnly"
+                    <?php if ($groupOnly or (isset($vars['ThreadVisibility']))) {
+                        echo ' checked="checked" ';
+                    }
+                    if ($groupOnly) {
+                        echo ' disabled="disabled" ';
+                    }
+                    ?>/> <label for="ThreadVisibility" class="form-check-label"><?php echo $words->get('ForumVisibilityGroupOnlyThread'); ?></label></div>
                 </div>
 
                 <div class="col-12 col-md-4 order-3 order-md-1 mb-2">

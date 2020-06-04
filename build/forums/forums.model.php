@@ -2036,7 +2036,12 @@ WHERE `id` = '$this->threadid'
             $ThreadVisibility = $vars['ThreadVisibility'];
         } else {
             // Someone unchecked the box for group only posts
-            $ThreadVisibility = 'MembersOnly';
+            if (isset($vars['groupOnly']) && ($vars['groupOnly'] === '1'))
+            {
+                $ThreadVisibility = 'GroupOnly';
+            } else {
+                $ThreadVisibility = 'MembersOnly';
+            }
         }
 
         /** @var PDBStatement_mysqli $statement */

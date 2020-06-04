@@ -1,0 +1,16 @@
+{% extends 'emails/email.html.twig' %}
+
+{% block content %}
+<p>
+    {{ 'group.want.in'|trans({'username': '<a href="' ~ url('members_profile', {'username': sender.Username}) ~ '">' ~ sender.Username ~ '</a>'}) }}<br><br>
+    {{ 'group'|trans }}: <a href="{{ url('group_start', {'group_id': group.id}) }}">{{ group.Name }}</a>
+</p>
+<p>
+{{
+   'group.accept.decline.join'|trans({
+      'accept': '<a href="' ~ url('group_accept_join', {'groupId': group.id, 'memberId': sender.id}) ~ '">' ~ 'accept'|trans ~ '</a>',
+      'decline': '<a href="' ~ url('group_decline_join', {'groupId': group.id, 'memberId': sender.id}) ~ '">' ~ 'decline'|trans ~ '</a>'
+   })
+}}
+</p>
+{% endblock %}

@@ -625,9 +625,8 @@ class GroupsController extends RoxControllerBase
             $isBWAdmin = true;
         }
 
-        $page = new GroupMemberAdministrationPage;
+        $page = new GroupMemberAdministrationPage($group);
         $this->_fillObject($page);
-        $page->group = $group;
         $page->$isBWAdmin = $isBWAdmin;
         $pager_params = new stdClass;
         $pager_params->strategy = new HalfPagePager;
@@ -792,6 +791,7 @@ class GroupsController extends RoxControllerBase
         if (!$this->_model->canAccessGroupAdmin($group))
         {
             $this->redirectAbsolute($this->router->url('groups_overview'));
+            PPHP::PExit();
         }
 
         $page = ((isset($request[3]) && strtolower($request[3]) == 'true') ? new GroupStartPage() : new GroupSettingsPage($group));
@@ -810,13 +810,10 @@ class GroupsController extends RoxControllerBase
     public function delete()
     {
         $group = $this->_getGroupFromRequest();
-        if (!$this->_model->getLoggedInMember())
-        {
-            $this->redirectToLogin($this->router->url('group_delete', array('group_id' => $group->getPKValue()), false));
-        }
-        elseif (!$this->_model->canAccessGroupDelete($group))
+        if (!$this->_model->canAccessGroupAdmin($group))
         {
             $this->redirectAbsolute($this->router->url('groups_overview'));
+            PPHP::PExit();
         }
 
         $request = $this->request_vars;
@@ -826,6 +823,7 @@ class GroupsController extends RoxControllerBase
             $this->_model->deleteGroup($group);
             $this->logWrite("Group #{$group->getPKValue()} was deleted by member #{$this->_model->getLoggedInMember()->getPKValue()}");
             $this->redirectAbsolute($this->router->url('groups_overview'));
+            PPHP::PExit();
         }
         else
         {

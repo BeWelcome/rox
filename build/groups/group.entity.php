@@ -497,7 +497,13 @@ SQL;
         $found = false;
         $groupOwners = $this->getGroupOwners();
         if ($groupOwners) {
-            $found = (false !== array_search($member, $groupOwners));
+            foreach($groupOwners as $groupOwner)
+            {
+                if ($groupOwner->id == $member->id) {
+                    $found = true;
+                    break;
+                }
+            }
         }
 
         return $found;

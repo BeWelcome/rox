@@ -110,9 +110,8 @@ class GroupModel
                 'decline_end' => '</a>',
             ];
             $adminEmail = $this->bewelcomeAddress($admin, "group@bewelcome.org");
-            $this->createTemplateMessage($admin, $member, 'group', 'invitation', $params);
-
-            $this->sendTemplateEmail($admin, $member, 'group.invitation', $params);
+            // $this->createTemplateMessage($admin, $member, 'group/invitation', $params);
+            $this->sendTemplateEmail($admin, $member, 'group/invitation', $params);
 
             $note = new Notification();
             $note->setMember($member);
@@ -228,37 +227,19 @@ class GroupModel
             $membership->setGroup($group);
             $membership->setMember($member);
             $membership->addComment($comment);
-            $membership->setNotificationsenabled('yes' === $notifications ? true : false);
+            $membership->setNotificationsenabled('yes' === $notifications);
             if (GroupType::NEED_ACCEPTANCE === $group->getType()) {
                 $membership->setStatus(GroupMembershipStatusType::APPLIED_FOR_MEMBERSHIP);
-
-                $acceptUrl = $this->urlGenerator->generate('group_accept_join', [
-                    'groupId' => $group->getId(),
-                    'memberId' => $member->getId(),
-                ], UrlGenerator::ABSOLUTE_URL);
-
-                $declineUrl = $this->urlGenerator->generate('group_decline_join', [
-                    'groupId' => $group->getId(),
-                    'memberId' => $member->getId(),
-                ], UrlGenerator::ABSOLUTE_URL);
-
-                $acceptTag = '<a href="' . $acceptUrl . '">';
-                $declineTag = '<a href="' . $declineUrl . '">';
 
                 /** @var Member[] $admins */
                 $params = [
                     'subject' => 'group.wantin',
-                    'accept_start' => $acceptTag,
-                    'decline_start' => $declineTag,
-                    'accept_end' => '</a>',
-                    'decline_end' => '</a>',
                     'group' => $group,
-                    'template' => 'wantin',
                 ];
                 $admins = $group->getAdmins();
                 foreach ($admins as $admin) {
-                    $this->createTemplateMessage($member, $admin, 'group', 'wantin', $params);
-                    $this->sendTemplateEmail($member, $admin, 'group', $params);
+                    // $this->createTemplateMessage($member, $admin, 'group/wantin', $params);
+                    $this->sendTemplateEmail($member, $admin, 'group/wantin', $params);
                 }
             } else {
                 $membership->setStatus(GroupMembershipStatusType::CURRENT_MEMBER);

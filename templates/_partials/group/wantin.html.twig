@@ -1,8 +1,0 @@
-<p>
-    {% trans with {'%username%': receiver.Username} %}email.greeting{% endtrans %}<br><br>
-    {% trans with {'%username%': sender.Username, '%groupname%': group.Name} %}<a href="{{ url('members_profile', {'username': sender.Username}) }}">%username%</a> wants to join the group
-        <a href="{{ url('groups_show', {'groupId': group.Name}) }}">%groupname%</a>.{% endtrans %}
-</p>
-<p>
-    {% trans with {'%accept_start': accept_start, '%accept_end': accept_end, '%decline_start': decline_start, '%decline_end': decline_end} %}You can %accept_start%accept%accept_end% or %decline_start%decline%decline_end% this request.{% endtrans %}
-</p>

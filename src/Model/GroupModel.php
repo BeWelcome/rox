@@ -233,8 +233,15 @@ class GroupModel
 
                 /** @var Member[] $admins */
                 $params = [
-                    'subject' => 'group.wantin',
+                    'subject' => [
+                        'translationId' => 'group.wantin',
+                        'parameters' => [
+                            'username' => $member->getUsername(),
+                            'group' => $group->getName(),
+                        ],
+                    ],
                     'group' => $group,
+                    'reason' => $reason,
                 ];
                 $admins = $group->getAdmins();
                 foreach ($admins as $admin) {
@@ -359,13 +366,9 @@ class GroupModel
         }
 
         $this->updateMembership($group, $member, GroupMembershipStatusType::CURRENT_MEMBER);
-        $this->sendTemplateEmail($admin, $member, 'group/approve.join', [
+        $this->sendTemplateEmail($admin, $member, 'group/join.approved', [
             'subject' => 'group.approved.join',
             'group' => $group,
-            'group_start' => '<a href="' . $this->urlGenerator->generate('group_start', [
-                    'group_id' => $group->getId(),
-                ], UrlGenerator::ABSOLUTE_URL) . '">',
-            'group_end' => '</a>',
             'member' => $member,
             'admin' => $admin,
         ]);
@@ -379,13 +382,9 @@ class GroupModel
             return false;
         }
         $this->updateMembership($group, $member, GroupMembershipStatusType::KICKED_FROM_GROUP);
-        $this->sendTemplateEmail($admin, $member, 'group/decline.join', [
-            'subject' => 'group.approved.join',
+        $this->sendTemplateEmail($admin, $member, 'group/join.declined', [
+            'subject' => 'group.declined.join',
             'group' => $group,
-            'group_start' => '<a href="' . $this->urlGenerator->generate('group_start', [
-                    'group_id' => $group->getId(),
-                ], UrlGenerator::ABSOLUTE_URL) . '">',
-            'group_end' => '</a>',
             'member' => $member,
             'admin' => $admin,
         ]);

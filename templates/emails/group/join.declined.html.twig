@@ -1,0 +1,11 @@
+{% extends 'emails/email.html.twig' %}
+
+{% block content %}
+    <p>
+        {{ 'group.join.declined'| trans({
+            'admin': '<a href="' ~ url('members_profile', {'username': admin.Username}) ~ '">' ~ admin.Username ~ . '</a>',
+            'group': '<a href="' ~ url('group_start', {'group_id': group.id}) ~ '">' ~ group.Name ~ '</a>'
+            })|raw
+        }}
+    </p>
+{% endblock content %}

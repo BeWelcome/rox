@@ -9,9 +9,11 @@ use App\Entity\Member;
 use App\Entity\Message;
 use App\Entity\RightVolunteer;
 use App\Entity\Word;
+use App\Form\CustomDataClass\SearchFormRequest;
 use App\Form\CustomDataClass\Translation\TranslationRequest;
 use App\Form\CustomDataClass\Translation\EditTranslationRequest;
 use App\Form\EditTranslationFormType;
+use App\Form\SearchFormType;
 use App\Form\TranslationFormType;
 use App\Model\TranslationModel;
 use App\Repository\LanguageRepository;
@@ -77,6 +79,9 @@ class TranslationController extends AbstractController
             'error 500' => [
                 'template' => 'bundles/TwigBundle/Exception/error500.html.twig'
             ],
+            'homepage' => [
+                'template' => 'home/home.html.twig'
+            ]
         ]
     ];
 
@@ -679,6 +684,35 @@ class TranslationController extends AbstractController
             'request' => $mockRequest,
         ];
         switch ($template) {
+            case 'home/home.html.twig':
+                $formFactory = $this->get('form.factory');
+                $searchFormRequest = new SearchFormRequest($this->getDoctrine()->getManager());
+                $searchFormRequest->showmap = true;
+                $searchFormRequest->accommodation_neverask = true;
+                $searchFormRequest->inactive = true;
+                $searchFormRequest->distance = 100;
+                $searchForm = $formFactory->createNamed('map', SearchFormType::class, $searchFormRequest, [
+                    'action' => '/search/map',
+                ]);
+
+                $usernameForm = $this->createFormBuilder()
+                    ->add('username', TextType::class, [
+                        'constraints' => [
+                            new NotBlank(),
+                        ],
+                    ])
+                    ->getForm()
+                ;
+                $params['stats'] = [
+                    'members' => 100000,
+                    'languages' => 210,
+                    'countries' => 192,
+                    'comments' => 50000,
+                    'activities' => 1300,
+                ];
+                $params['username'] = $usernameForm->createView();
+                $params['search'] = $searchForm->createView();
+                break;
             case 'emails/message.html.twig':
                 $params['sender'] = $this->getUser();
                 $params['receiver'] = $bwadmin;
@@ -703,7 +737,6 @@ class TranslationController extends AbstractController
                 $params['receiver'] = $this->getUser();
                 $params['group'] = $group;
                 $params['subject'] = 'group.invitation';
-
                 break;
             default:
                 $params['host'] = $bwadmin;

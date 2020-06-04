@@ -16,7 +16,7 @@
     {{ encore_entry_link_tags('jquery_ui') }}
 </head>
 <body id="parallax-home">
-{% include 'loginbar.html.twig' %}
+{% block content %}{% include 'loginbar.html.twig' %}
 <!-- Section #1 -->
 <!-- first section - Home -->
 <div>
@@ -136,7 +136,7 @@
                 </div>
                 <div class="col-12 col-md-6 col-lg-5">
                     {{ form_start(username) }}
-                    {{ postHandler.registerCallbackMethod('SignupController', 'signupFormCallback')|raw }}
+                    {# {{ postHandler.registerCallbackMethod('SignupController', 'signupFormCallback')|raw }} #}
                     <div class="form-group">
                         <p class="parallax--numsubh text-uppercase text-md-left">{{ 'indexpageword_share' | trans }}</p>
                     </div>
@@ -246,5 +246,6 @@
         })
     });
 </script>
+{% endblock content %}
 </body>
 </html>

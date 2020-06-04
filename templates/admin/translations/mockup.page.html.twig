@@ -8,5 +8,5 @@
     <h1>{{ 'translations.headline' | trans }}</h1>
     <p>{{ 'translation.mockup.abstract'|trans }}</p>
     <p>{{ 'translations.mockup.url'|trans }}: {{ html_template }}</p>
-    <div class="p-2" style="background-color:#ccc; color:black;">{{ block("content", html_template)|raw }}</div>
+    <div id="mockup" class="p-2">{{ block("content", html_template)|raw }}</div>
 {% endblock content %}

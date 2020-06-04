@@ -1,6 +1,10 @@
-# BeWelcome Rox
+# Rox the software running BeWelcome.org 
 
 [![Build Status](https://travis-ci.org/BeWelcome/rox.svg?branch=bootstrap4)](https://travis-ci.org/BeWelcome/rox)
+
+**A community-driven hospitality exchange network**
+
+![Image of BeWelcome Startpage](https://raw.githubusercontent.com/BeWelcome/bewelcome.github.io/master/images/startpage%20bewelcome.png)
 
 Check [INSTALL](INSTALL.md) for installation instructions.
 

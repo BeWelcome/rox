@@ -9,7 +9,7 @@
 # Why this is incredible :heart_eyes:
 * :sleeping_bed: **Member profiles** with focus on finding a place to stay
 * :world_map: **Search members** by map, location, username 
-* :handshake: **Comment system** to increase trust between
+* :handshake: **Comment system** to increase trust between each other
 * :left_speech_bubble: **Forum and groups** for discussions
 * :partying_face: **Activities, galleries** to show how you are and 
 * :toolbox: **Volunteer tools** (safety, moderation, spam, rights member welcome tools and more)

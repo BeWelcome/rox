@@ -11,7 +11,7 @@
 * :world_map: **Search members** by map, location, username 
 * :handshake: **Comment system** to increase trust between each other
 * :left_speech_bubble: **Forum and groups** for discussions
-* :partying_face: **Activities, galleries** to show how you are and 
+* :partying_face: **Activities, galleries** to show how who you are 
 * :toolbox: **Volunteer tools** (safety, moderation, spam, rights member welcome tools and more)
 * :rainbow_flag: **On page translation** for 305 languages
 * :cartwheeling::standing_man::standing_person::standing_woman::mage: BeWelcome is people and volunteers [Learn more](https://www.bewelcome.org/about)

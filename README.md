@@ -1,4 +1,4 @@
-# Rox the software running BeWelcome.org 
+# Rox the software running BeWelcome.org :earth_asia:
 
 [![Build Status](https://travis-ci.org/BeWelcome/rox.svg?branch=bootstrap4)](https://travis-ci.org/BeWelcome/rox)
 
@@ -6,7 +6,27 @@
 
 ![Image of BeWelcome Startpage](https://raw.githubusercontent.com/BeWelcome/bewelcome.github.io/master/images/startpage%20bewelcome.png)
 
-Check [INSTALL](INSTALL.md) for installation instructions.
+# Why this is incredible :heart_eyes:
+* :sleeping_bed: **Member profiles** with focus on finding a place to stay
+* :world_map: **Search members** by map, location, username 
+* :handshake: **Comment system** to increase trust between
+* :left_speech_bubble: **Forum and groups** for discussions
+* :partying_face: **Activities, galleries** to show how you are and 
+* :toolbox: **Volunteer tools** (safety, moderation, spam, rights member welcome tools and more)
+* :rainbow_flag: **On page translation** for 305 languages
+* :cartwheeling::standing_man::standing_person::standing_woman::mage: BeWelcome is people and volunteers [Learn more](https://www.bewelcome.org/about)
+
+# Join the team :people_holding_hands:
+
+You like the idea? Development is only one way to contribute! Find out how to [get active](https://www.bewelcome.org/about/getactive), including as designer, tester, translator, moderator, helping others and much more! :heart_eyes: 
+
+## Get your Rox development enviroment :computer:
+
+1. :parachute: [Set up you local development enviroment](INSTALL.md) and fork the repository on Github.
+2. :medal_sports: Pick a good starter issue
+3. :sparkles: Create a [pull request](https://opensource.guide/how-to-contribute/#opening-a-pull-request) and `@mention` the people from the issue to review
+4. :sun_with_face: Fix the remaining things during review
+4. :tada: Wait for it being merged!
 
 You probably want to get started by checking out the code in `src/`.
 
@@ -36,8 +56,6 @@ The result can then be accessed via `doc/phpdox/` in your cloned repository.
 
 ## Procedure
 
-Fork a repository on Github. Work on what you like to update and send a pull request to merge it into the main repository.
-
 If you see an updated ```composer.json``` or ```composer.lock``` make sure to run 
 
 ```bash
@@ -55,7 +73,6 @@ everytime you see a change in either ```package.json``` or ```package-lock.json`
 If any ```.scss``` file or a file in ```assets/``` changed a ```make build``` is necessary.
  
 ## Useful links
-* [Legacy developer space on Trac](http://trac.bewelcome.org/)
 * [Writing great Git commit messages](http://chris.beams.io/posts/git-commit/)
 * [Git crash course](http://git.or.cz/course/svn.html)
 

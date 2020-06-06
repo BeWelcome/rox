@@ -122,6 +122,7 @@ class LegacyLoader extends Loader
         $this->addRouteDirectly('donate_list', '/donate/list');
         $this->addRouteDirectly('donate_cancel', '/donate/cancel');
         $this->addRouteDirectly('donate_done', '/donate/done');
+        $this->addRouteDirectly('donate_notify', '/donate/notify');
         $this->addRouteDirectly('gallery_show_user', '/gallery/show/user/{username}');
         $this->addRouteDirectly('gallery_show_user_images', '/gallery/show/user/{username}/pictures');
         $this->addRouteDirectly('gallery_show_user_images_pages', '/gallery/show/user/{username}/pictures/=page{pageNo}');

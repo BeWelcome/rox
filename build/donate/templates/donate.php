@@ -3,15 +3,17 @@ $words = new MOD_words();
 ?>
 
 <?php if ($sub == 'done') {
-echo '<div class="col-12">';
+    echo '<div class="col-12">';
 if ($error) {?>
 		<p class="alert alert-danger"><?php echo $words->getFormatted('Donate_NotDoneText')?>: <?=$error?></p>
 <?php } else { ?>
-		<p class="note"><?php echo $words->getFormatted('Donate_DoneText','<a href="feedback">','</a>')?></p>
+		<p class="alert alert-success"><?php echo $words->getFormatted('Donate_DoneText','<a href="feedback">','</a>')?></p>
 <?php }
-echo '</div>';
+    echo '</div>';
 } elseif ($sub == 'cancel') { ?>
-		<p class="warning"><?php echo $words->getFormatted('Donate_CancelText'); ?></p>
+    <div class="col-12">
+		<p class="alert alert-notice"><?php echo $words->getFormatted('Donate_CancelText'); ?></p>
+    </div>
 <?php } ?>
 
 	<div class="col-12 col-lg-6">
@@ -47,7 +49,7 @@ echo '</div>';
 					<h3><?=$words->get('Donate_Paypal_Legend')?></h3>
 					<p><img src="images/misc/paymethods.gif" alt="methods of payment" /></p>
 					<p>
-						<input type="hidden" name="cmd" value="_donations" />
+						<input type="hidden" name="cmd" value="_xclick" />
 						<input type="hidden" name="business" value="<?= $_ENV['PaypalBusinessAddress'] ?>" />
 						<select name="amountSelect" id="amountSelect" onchange="changeAmount(this.value); clearForm('amountSelectText');">
 							<option value=""></option>
@@ -92,12 +94,13 @@ echo '</div>';
 						}
 						?>" />
 						<input type="hidden" name="return" value="<?=PVars::getObj('env')->baseuri?>donate/done" />
-                        <input type="hidden" name="notify_return" value="<?=PVars::getObj('env')->baseuri?>donate/cancel" />
+                        <input type="hidden" name="notify_return" value="<?=PVars::getObj('env')->baseuri?>donate/notify" />
                         <input type="hidden" name="cancel_return" value="<?=PVars::getObj('env')->baseuri?>donate/cancel" />
 						<input type="hidden" name="cn" value="comment" />
 						<input type="hidden" name="currency_code" value="EUR" />
 						<input type="hidden" name="tax" value="0" />
 						<input type="hidden" name="bn" value="PP-DonationsBF" />
+                        <input type="hidden" name="rm" value="0" />
 						<input type="submit" class="btn btn-primary btn-block" name="submit" alt="<?php echo $words->getBuffered('Donate_DonateNow'); ?>" onmouseover="return('<?php echo $words->getBuffered('Donate_DonateNow'); ?>')" value="<?php echo $words->getBuffered('Donate_DonateNow'); ?>" />
 						<img alt="Donate now" src="<?= $_ENV['PaypalScrPixel'] ?>" width="1" height="1" />
 					</p>

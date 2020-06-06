@@ -41,8 +41,9 @@ class DonateController extends PAppController
                 $TDonationArray = $this->_model->getDonations();
                 break;
             case 'notify':
-                $error = $this->_model->returnFromPayPal();
+                $error = $this->_model->processIpnNotificationFromPayPal();
                 $TDonationArray = $this->_model->getDonations();
+                PPHP:Exit;
                 break;
             case 'cancel':
                 if ($this->session->has( "PaypalBW_key" )) {

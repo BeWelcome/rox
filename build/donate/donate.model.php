@@ -132,23 +132,25 @@ class DonateModel extends RoxModelBase
 
     public function processIpnNotificationFromPayPal()
     {
-        $ipn = new PaypalIPN();
+        $logStr = implode(' , ', $_POST);
+        MOD_log::get()->write($logStr, 'donation');
 
-        // Use the sandbox endpoint during testing.
-        $ipn->useSandbox();
-        $verified = $ipn->verifyIPN();
-        if ($verified) {
-            $logStr = implode(' , ', $_POST);
-            MOD_log::get()->write($logStr, 'donate');
-            /*
-             * Process IPN
-             * A list of variables is available here:
-             * https://developer.paypal.com/webapps/developer/docs/classic/ipn/integration-guide/IPNandPDTVariables/
-             */
+        try {
+            $ipn = new PaypalIPN();// Use the sandbox endpoint during testing.
+            $ipn->useSandbox();
+            $verified = $ipn->verifyIPN();
+            if ($verified) {
+                /*
+                 * Process IPN
+                 * A list of variables is available here:
+                 * https://developer.paypal.com/webapps/developer/docs/classic/ipn/integration-guide/IPNandPDTVariables/
+                 */
+            }// Reply with an empty 200 response to indicate to paypal the IPN was received correctly.
+            header("HTTP/1.1 200 OK");
+            PPHP::PExit();
+        } catch (Exception $e) {
         }
-
-        // Reply with an empty 200 response to indicate to paypal the IPN was received correctly.
-        header("HTTP/1.1 200 OK");    }
+    }
 
     public function returnFromPayPal()
     {

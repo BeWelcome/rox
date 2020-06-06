@@ -140,6 +140,7 @@ class DonateModel extends RoxModelBase
             $ipn->useSandbox();
             $verified = $ipn->verifyIPN();
             if ($verified) {
+                MOD_log::get()->write("Verified", 'donation');
                 /*
                  * Process IPN
                  * A list of variables is available here:

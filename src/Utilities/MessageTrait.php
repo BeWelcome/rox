@@ -46,11 +46,10 @@ trait MessageTrait
     protected function createTemplateMessage(
         Member $sender,
         Member $receiver,
-        string $parent,
         string $template,
         ...$params
     ) {
-        $parameters = array_merge(['sender' => $sender, 'receiver' => $receiver, 'template' => $template], ...$params);
+        $parameters = array_merge(['sender' => $sender, 'receiver' => $receiver], ...$params);
 
         $em = $this->getManager();
 
@@ -66,7 +65,7 @@ trait MessageTrait
         $message->setReceiver($receiver);
         $message->setSubject($subject);
 
-        $body = $this->getEnvironment()->render('_partials/' . $parent . '/' . $template . '.html.twig', $parameters);
+        $body = $this->getEnvironment()->render('emails/' . $template . '.html.twig', $parameters);
         $message->setMessage($body);
         $em->persist($message);
         $em->flush();

@@ -43,12 +43,12 @@ echo '</div>';
 				<p><?php echo $words->get('Donate_Bitcoins_Text');?></p>
 			</div>
 			<div class="tab-pane card p-2" id="paypal" role="tabpanel">
-				<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+				<form action="<?= $_ENV['PaypalUrl'] ?>" method="post">
 					<h3><?=$words->get('Donate_Paypal_Legend')?></h3>
 					<p><img src="images/misc/paymethods.gif" alt="methods of payment" /></p>
 					<p>
-						<input type="hidden" name="cmd" value="_xclick" />
-						<input type="hidden" name="business" value="treasurer@bevolunteer.org" />
+						<input type="hidden" name="cmd" value="_donations" />
+						<input type="hidden" name="business" value="<?= $_ENV['PaypalBusinessAddress'] ?>" />
 						<select name="amountSelect" id="amountSelect" onchange="changeAmount(this.value); clearForm('amountSelectText');">
 							<option value=""></option>
 							<option value="10">10 &#8364;</option>
@@ -79,7 +79,7 @@ echo '</div>';
 								case 'it' :
 									echo "IT" ;
 									break ;
-								case 'esp' :
+								case 'es' :
 									echo "ES" ;
 									break ;
 								default :
@@ -92,13 +92,14 @@ echo '</div>';
 						}
 						?>" />
 						<input type="hidden" name="return" value="<?=PVars::getObj('env')->baseuri?>donate/done" />
-						<input type="hidden" name="cancel_return" value="<?=PVars::getObj('env')->baseuri?>donate/cancel" />
+                        <input type="hidden" name="notify_return" value="<?=PVars::getObj('env')->baseuri?>donate/cancel" />
+                        <input type="hidden" name="cancel_return" value="<?=PVars::getObj('env')->baseuri?>donate/cancel" />
 						<input type="hidden" name="cn" value="comment" />
 						<input type="hidden" name="currency_code" value="EUR" />
 						<input type="hidden" name="tax" value="0" />
 						<input type="hidden" name="bn" value="PP-DonationsBF" />
 						<input type="submit" class="btn btn-primary btn-block" name="submit" alt="<?php echo $words->getBuffered('Donate_DonateNow'); ?>" onmouseover="return('<?php echo $words->getBuffered('Donate_DonateNow'); ?>')" value="<?php echo $words->getBuffered('Donate_DonateNow'); ?>" />
-						<img alt="Donate now" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1" />
+						<img alt="Donate now" src="<?= $_ENV['PaypalScrPixel'] ?>" width="1" height="1" />
 					</p>
 				</form>
 				<p><?=$words->get('Donate_Process')?></p>

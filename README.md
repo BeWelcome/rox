@@ -23,7 +23,7 @@ You like the idea? Development is only one way to contribute! Find out how to [g
 ## Get your Rox development enviroment :computer:
 
 1. :parachute: [Set up you local development enviroment](INSTALL.md) and fork the repository on Github.
-2. :medal_sports: Pick a good starter issue
+2. :medal_sports: Pick a [good starter issue](https://github.com/BeWelcome/rox/labels/good%20starter%20issue)
 3. :sparkles: Create a [pull request](https://opensource.guide/how-to-contribute/#opening-a-pull-request) and `@mention` the people from the issue to review
 4. :sun_with_face: Fix the remaining things during review
 4. :tada: Wait for it being merged!

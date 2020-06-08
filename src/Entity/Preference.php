@@ -22,7 +22,7 @@ class Preference
     const SHOW_MY_GROUP_POSTS_ONLY = 'ShowMyGroupsTopicsOnly';
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="position", type="integer", nullable=false)
      */
@@ -78,7 +78,7 @@ class Preference
     private $status = 'Inactive';
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id

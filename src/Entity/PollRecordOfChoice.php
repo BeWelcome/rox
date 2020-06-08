@@ -7,7 +7,7 @@ use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * PollsRecordOfChoices
+ * PollsRecordOfChoices.
  *
  * @ORM\Table(name="polls_record_of_choices", indexes={@ORM\Index(name="IdMember", columns={"IdMember"}), @ORM\Index(name="idEmail", columns={"Email"}), @ORM\Index(name="IdPoll", columns={"IdPoll"}), @ORM\Index(name="IdPollChoice", columns={"IdPollChoice"})})
  * @ORM\HasLifecycleCallbacks
@@ -50,7 +50,7 @@ class PollRecordOfChoice
     private $email;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -79,7 +79,7 @@ class PollRecordOfChoice
     private $member;
 
     /**
-     * Set updated
+     * Set updated.
      *
      * @param DateTime $updated
      *
@@ -93,7 +93,7 @@ class PollRecordOfChoice
     }
 
     /**
-     * Get updated
+     * Get updated.
      *
      * @return Carbon
      */
@@ -103,7 +103,7 @@ class PollRecordOfChoice
     }
 
     /**
-     * Set created
+     * Set created.
      *
      * @param DateTime $created
      *
@@ -117,7 +117,7 @@ class PollRecordOfChoice
     }
 
     /**
-     * Get created
+     * Get created.
      *
      * @return Carbon
      */
@@ -127,7 +127,7 @@ class PollRecordOfChoice
     }
 
     /**
-     * Set poll choice
+     * Set poll choice.
      *
      * @param PollChoice $pollChoice
      *
@@ -141,7 +141,7 @@ class PollRecordOfChoice
     }
 
     /**
-     * Get poll choice
+     * Get poll choice.
      *
      * @return PollChoice
      */
@@ -151,7 +151,7 @@ class PollRecordOfChoice
     }
 
     /**
-     * Set email
+     * Set email.
      *
      * @param string $email
      *
@@ -165,7 +165,7 @@ class PollRecordOfChoice
     }
 
     /**
-     * Get email
+     * Get email.
      *
      * @return string
      */
@@ -175,7 +175,7 @@ class PollRecordOfChoice
     }
 
     /**
-     * Get id
+     * Get id.
      *
      * @return int
      */
@@ -185,7 +185,7 @@ class PollRecordOfChoice
     }
 
     /**
-     * Set poll
+     * Set poll.
      *
      * @param Poll $poll
      *
@@ -199,7 +199,7 @@ class PollRecordOfChoice
     }
 
     /**
-     * Get poll
+     * Get poll.
      *
      * @return Poll
      */
@@ -209,7 +209,7 @@ class PollRecordOfChoice
     }
 
     /**
-     * Set member
+     * Set member.
      *
      * @param Member $member
      *
@@ -223,7 +223,7 @@ class PollRecordOfChoice
     }
 
     /**
-     * Get member
+     * Get member.
      *
      * @return Member
      */

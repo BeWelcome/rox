@@ -25,10 +25,6 @@ class MissingTranslationAdapter implements AdapterInterface
      * SearchAdapter constructor.
      *
      * @SuppressWarnings(PHPMD.StaticAccess)
-     *
-     * @param Connection $connection
-     * @param string     $locale
-     * @param string     $code
      */
     public function __construct(Connection $connection, string $locale, string $code)
     {

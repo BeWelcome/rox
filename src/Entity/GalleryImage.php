@@ -8,7 +8,6 @@
 namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -376,7 +375,7 @@ class GalleryImage
     }
 
     /**
-     * Get galleries
+     * Get galleries.
      *
      * @return ArrayCollection
      */
@@ -386,9 +385,7 @@ class GalleryImage
     }
 
     /**
-     * Set gallery
-     *
-     * @param Gallery $gallery
+     * Set gallery.
      */
     public function addGallery(Gallery $gallery)
     {

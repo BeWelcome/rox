@@ -9,10 +9,8 @@
 
 namespace App\Model;
 
-use App\Entity\Activity;
 use App\Entity\CommunityNews;
 use App\Entity\CommunityNewsComment;
-use App\Repository\ActivityRepository;
 use App\Repository\CommunityNewsCommentRepository;
 use App\Repository\NotificationRepository;
 use App\Utilities\ManagerTrait;
@@ -91,7 +89,7 @@ class CommunityNewsModel
         $em = $this->getManager();
         /** @var CommunityNewsCommentRepository $repository */
         $communityNewsCommentRepository = $em->getRepository(CommunityNewsComment::class);
-        $comments = $communityNewsCommentRepository->findBy([ 'id' => $commentIds]);
+        $comments = $communityNewsCommentRepository->findBy(['id' => $commentIds]);
         foreach ($comments as $comment) {
             $em->remove($comment);
         }

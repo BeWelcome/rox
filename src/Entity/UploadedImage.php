@@ -208,6 +208,7 @@ class UploadedImage
 
     /**
      * @param string $fileInfo
+     *
      * @return UploadedImage
      */
     public function setFileInfo($fileInfo)
@@ -217,25 +218,16 @@ class UploadedImage
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getFileInfo(): string
     {
         return $this->fileInfo;
     }
 
-    /**
-     * @return int
-     */
     public function getSize(): int
     {
         return $this->size;
     }
 
-    /**
-     * @param int $size
-     */
     public function setSize(int $size): void
     {
         $this->size = $size;

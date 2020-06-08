@@ -24,7 +24,7 @@ class SearchFormRequest
     public $location;
 
     /**
-     * @var integer
+     * @var int
      * @Assert\NotNull(message="search.location.dropdown", groups={"text-search"})
      */
     public $location_geoname_id;
@@ -67,39 +67,39 @@ class SearchFormRequest
      */
     public $sw_longitude;
 
-    /** @var boolean */
+    /** @var bool */
     public $accommodation_anytime = true;
 
-    /** @var boolean */
+    /** @var bool */
     public $accommodation_dependonrequest = true;
 
-    /** @var boolean */
+    /** @var bool */
     public $accommodation_neverask = false;
 
-    /** @var boolean */
+    /** @var bool */
     public $showmap = false;
 
-    /** @var boolean */
+    /** @var bool */
     public $showadvanced = false;
 
     /**
-     * @var integer
+     * @var int
      *
      * @Assert\Choice({ -1, 0, 5, 10, 15, 20, 50, 100, 200})
      */
     public $distance = 20;
 
     /**
-     * @var integer
+     * @var int
      */
     public $showOnMap = false;
 
     /**
-     * @var boolean
+     * @var bool
      */
     public $showAdvanced = false;
 
-    /** @var integer */
+    /** @var int */
     public $can_host = 1;
 
     /** @var PersistentCollection */
@@ -108,34 +108,34 @@ class SearchFormRequest
     /** @var PersistentCollection */
     public $languages;
 
-    /** @var integer */
+    /** @var int */
     public $min_age;
 
-    /** @var integer */
+    /** @var int */
     public $max_age;
 
     /** @var string */
     public $gender;
 
-    /** @var boolean */
+    /** @var bool */
     public $inactive;
 
-    /** @var boolean */
+    /** @var bool */
     public $offerdinner;
 
-    /** @var boolean */
+    /** @var bool */
     public $offertour;
 
-    /** @var boolean */
+    /** @var bool */
     public $accessible;
 
     /** @var string */
     public $keywords;
 
-    /** @var integer */
+    /** @var int */
     public $order = 6;
 
-    /** @var integer */
+    /** @var int */
     public $items = 20;
 
     /**
@@ -145,8 +145,6 @@ class SearchFormRequest
 
     /**
      * SearchFormRequest constructor.
-     *
-     * @param ObjectManager $em
      */
     public function __construct(ObjectManager $em)
     {

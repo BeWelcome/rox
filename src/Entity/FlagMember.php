@@ -6,7 +6,7 @@ use App\Utilities\LifecycleCallbacksTrait;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Flagsmembers
+ * Flagsmembers.
  *
  * @ORM\Table(name="flagsmembers", indexes={@ORM\Index(name="IdMember", columns={"IdMember", "IdFlag"})})
  * @ORM\Entity
@@ -17,21 +17,21 @@ class FlagMember
     use LifecycleCallbacksTrait;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="IdMember", type="integer", nullable=false)
      */
     private $idmember;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="IdFlag", type="integer", nullable=false)
      */
     private $idflag;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="Level", type="integer", nullable=false)
      */
@@ -52,7 +52,7 @@ class FlagMember
     private $comment;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -60,12 +60,10 @@ class FlagMember
      */
     private $id;
 
-
-
     /**
-     * Set idmember
+     * Set idmember.
      *
-     * @param integer $idmember
+     * @param int $idmember
      *
      * @return FlagMember
      */
@@ -77,9 +75,9 @@ class FlagMember
     }
 
     /**
-     * Get idmember
+     * Get idmember.
      *
-     * @return integer
+     * @return int
      */
     public function getIdmember()
     {
@@ -87,9 +85,9 @@ class FlagMember
     }
 
     /**
-     * Set idflag
+     * Set idflag.
      *
-     * @param integer $idflag
+     * @param int $idflag
      *
      * @return FlagMember
      */
@@ -101,9 +99,9 @@ class FlagMember
     }
 
     /**
-     * Get idflag
+     * Get idflag.
      *
-     * @return integer
+     * @return int
      */
     public function getIdflag()
     {
@@ -111,9 +109,9 @@ class FlagMember
     }
 
     /**
-     * Set level
+     * Set level.
      *
-     * @param integer $level
+     * @param int $level
      *
      * @return FlagMember
      */
@@ -125,9 +123,9 @@ class FlagMember
     }
 
     /**
-     * Get level
+     * Get level.
      *
-     * @return integer
+     * @return int
      */
     public function getLevel()
     {
@@ -135,7 +133,7 @@ class FlagMember
     }
 
     /**
-     * Set scope
+     * Set scope.
      *
      * @param string $scope
      *
@@ -149,7 +147,7 @@ class FlagMember
     }
 
     /**
-     * Get scope
+     * Get scope.
      *
      * @return string
      */
@@ -159,7 +157,7 @@ class FlagMember
     }
 
     /**
-     * Set comment
+     * Set comment.
      *
      * @param string $comment
      *
@@ -173,7 +171,7 @@ class FlagMember
     }
 
     /**
-     * Get comment
+     * Get comment.
      *
      * @return string
      */
@@ -183,7 +181,7 @@ class FlagMember
     }
 
     /**
-     * Set updated
+     * Set updated.
      *
      * @param \DateTime $updated
      *
@@ -197,7 +195,7 @@ class FlagMember
     }
 
     /**
-     * Get updated
+     * Get updated.
      *
      * @return \DateTime
      */
@@ -207,7 +205,7 @@ class FlagMember
     }
 
     /**
-     * Set created
+     * Set created.
      *
      * @param \DateTime $created
      *
@@ -221,7 +219,7 @@ class FlagMember
     }
 
     /**
-     * Get created
+     * Get created.
      *
      * @return \DateTime
      */
@@ -231,9 +229,9 @@ class FlagMember
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {

@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Tests\Model;
 
 use App\Entity\HostingRequest;

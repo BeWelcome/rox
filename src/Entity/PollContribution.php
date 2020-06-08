@@ -7,7 +7,7 @@ use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * PollsContributions
+ * PollsContributions.
  *
  * @ORM\Table(name="polls_contributions",
  *     uniqueConstraints={@ORM\UniqueConstraint(name="IdMember", columns={"IdMember", "IdPoll"})},
@@ -58,7 +58,7 @@ class PollContribution
     private $comment;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -87,7 +87,7 @@ class PollContribution
     private $member;
 
     /**
-     * Set email
+     * Set email.
      *
      * @param string $email
      *
@@ -101,7 +101,7 @@ class PollContribution
     }
 
     /**
-     * Get email
+     * Get email.
      *
      * @return string
      */
@@ -111,7 +111,7 @@ class PollContribution
     }
 
     /**
-     * Set emailIsConfirmed
+     * Set emailIsConfirmed.
      *
      * @param string $emailIsConfirmed
      *
@@ -125,7 +125,7 @@ class PollContribution
     }
 
     /**
-     * Get emailIsConfirmed
+     * Get emailIsConfirmed.
      *
      * @return string
      */
@@ -135,7 +135,7 @@ class PollContribution
     }
 
     /**
-     * Set updated
+     * Set updated.
      *
      * @param DateTime $updated
      *
@@ -149,7 +149,7 @@ class PollContribution
     }
 
     /**
-     * Get updated
+     * Get updated.
      *
      * @return Carbon
      */
@@ -159,7 +159,7 @@ class PollContribution
     }
 
     /**
-     * Set created
+     * Set created.
      *
      * @param DateTime $created
      *
@@ -173,7 +173,7 @@ class PollContribution
     }
 
     /**
-     * Get created
+     * Get created.
      *
      * @return Carbon
      */
@@ -183,7 +183,7 @@ class PollContribution
     }
 
     /**
-     * Set comment
+     * Set comment.
      *
      * @param string $comment
      *
@@ -197,7 +197,7 @@ class PollContribution
     }
 
     /**
-     * Get comment
+     * Get comment.
      *
      * @return string
      */
@@ -207,9 +207,9 @@ class PollContribution
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -217,7 +217,7 @@ class PollContribution
     }
 
     /**
-     * Set idpoll
+     * Set idpoll.
      *
      * @param Poll $poll
      *
@@ -231,7 +231,7 @@ class PollContribution
     }
 
     /**
-     * Get idpoll
+     * Get idpoll.
      *
      * @return Poll
      */
@@ -241,7 +241,7 @@ class PollContribution
     }
 
     /**
-     * Set idmember
+     * Set idmember.
      *
      * @param Member $member
      *
@@ -255,7 +255,7 @@ class PollContribution
     }
 
     /**
-     * Get idmember
+     * Get idmember.
      *
      * @return Member
      */

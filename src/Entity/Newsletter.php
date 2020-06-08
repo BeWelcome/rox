@@ -11,7 +11,7 @@ use Doctrine\Persistence\ObjectManager;
 use Doctrine\Persistence\ObjectManagerAware;
 
 /**
- * Broadcast
+ * Broadcast.
  *
  * @ORM\Table(name="broadcast")
  * @ORM\Entity
@@ -64,7 +64,7 @@ class Newsletter implements ObjectManagerAware
     private $emailFrom;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -78,7 +78,7 @@ class Newsletter implements ObjectManagerAware
     private $objectManager;
 
     /**
-     * Set createdBy
+     * Set createdBy.
      *
      * @param Member $createdBy
      *
@@ -92,7 +92,7 @@ class Newsletter implements ObjectManagerAware
     }
 
     /**
-     * Get createdBy
+     * Get createdBy.
      *
      * @return Member
      */
@@ -102,7 +102,7 @@ class Newsletter implements ObjectManagerAware
     }
 
     /**
-     * Set name
+     * Set name.
      *
      * @param string $name
      *
@@ -116,7 +116,7 @@ class Newsletter implements ObjectManagerAware
     }
 
     /**
-     * Get name
+     * Get name.
      *
      * @return string
      */
@@ -126,7 +126,7 @@ class Newsletter implements ObjectManagerAware
     }
 
     /**
-     * Set created
+     * Set created.
      *
      * @param DateTime $created
      *
@@ -140,7 +140,7 @@ class Newsletter implements ObjectManagerAware
     }
 
     /**
-     * Get created
+     * Get created.
      *
      * @return Carbon
      */
@@ -150,7 +150,7 @@ class Newsletter implements ObjectManagerAware
     }
 
     /**
-     * Set status
+     * Set status.
      *
      * @param string $status
      *
@@ -164,7 +164,7 @@ class Newsletter implements ObjectManagerAware
     }
 
     /**
-     * Get status
+     * Get status.
      *
      * @return string
      */
@@ -174,7 +174,7 @@ class Newsletter implements ObjectManagerAware
     }
 
     /**
-     * Set type
+     * Set type.
      *
      * @param string $type
      *
@@ -188,7 +188,7 @@ class Newsletter implements ObjectManagerAware
     }
 
     /**
-     * Get type
+     * Get type.
      *
      * @return string
      */
@@ -198,7 +198,7 @@ class Newsletter implements ObjectManagerAware
     }
 
     /**
-     * Set emailFrom
+     * Set emailFrom.
      *
      * @param string $emailFrom
      *
@@ -212,7 +212,7 @@ class Newsletter implements ObjectManagerAware
     }
 
     /**
-     * Get emailFrom
+     * Get emailFrom.
      *
      * @return string
      */
@@ -222,9 +222,9 @@ class Newsletter implements ObjectManagerAware
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -239,22 +239,21 @@ class Newsletter implements ObjectManagerAware
         $translationRepository = $this->objectManager->getRepository(Word::class);
         $translatedNews = $translationRepository->findBy([
             'code' => [
-                'Broadcast_body_'.$this->name,
-                'Broadcast_title_'.$this->name
+                'Broadcast_body_' . $this->name,
+                'Broadcast_title_' . $this->name,
             ],
         ]);
 
         $newsletters = [];
         /** @var Word $item */
         foreach ($translatedNews as $item) {
-            if (!isset($newsletters[$item->getLanguage()->getShortCode()]))
-            {
+            if (!isset($newsletters[$item->getLanguage()->getShortCode()])) {
                 $newsletter = [];
             } else {
                 $newsletter = $newsletters[$item->getLanguage()->getShortCode()];
             }
             // Determine if this is the title or the body of the newsletter (code is broadcast_title|body_$name)
-            $part = str_ireplace('Broadcast_', '', str_ireplace('_'.$this->getName(), '', $item->getCode()));
+            $part = str_ireplace('Broadcast_', '', str_ireplace('_' . $this->getName(), '', $item->getCode()));
             $newsletter[$part] = $item->getSentence();
             $newsletter['author'] = $item->getAuthor();
             $newsletter['locale'] = $item->getShortCode();

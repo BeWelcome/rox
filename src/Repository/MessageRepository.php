@@ -20,8 +20,6 @@ use Pagerfanta\Pagerfanta;
 class MessageRepository extends EntityRepository
 {
     /**
-     * @param Member $member
-     *
      * @return int
      */
     public function getUnreadMessagesCount(Member $member)
@@ -46,15 +44,13 @@ class MessageRepository extends EntityRepository
         try {
             $unreadCount = $q->getSingleScalarResult();
         } catch (NonUniqueResultException $e) {
-        }catch (NoResultException $e) {
+        } catch (NoResultException $e) {
         }
 
         return (int) $unreadCount;
     }
 
     /**
-     * @param Member $member
-     *
      * @return int
      */
     public function getUnreadRequestsCount(Member $member)
@@ -143,7 +139,6 @@ class MessageRepository extends EntityRepository
     /**
      * Returns a Pagerfanta object encapsulating the matching paginated activities.
      *
-     * @param Member $member
      * @param $filter
      * @param $sort
      * @param $sortDirection
@@ -164,7 +159,6 @@ class MessageRepository extends EntityRepository
     }
 
     /**
-     * @param Member $member
      * @param $folder
      * @param $sort
      * @param $sortDirection
@@ -177,8 +171,7 @@ class MessageRepository extends EntityRepository
             $sort = 'created';
         }
         $qb = $this->createQueryBuilder('m');
-        switch($folder)
-        {
+        switch ($folder) {
             case 'sent':
                 $qb
                     ->where('m.sender = :member')
@@ -227,7 +220,6 @@ class MessageRepository extends EntityRepository
     /**
      * Returns a Pagerfanta object encapsulating the matching paginated activities.
      *
-     * @param Member $member
      * @param $filter
      * @param $sort
      * @param $sortDirection
@@ -251,7 +243,6 @@ class MessageRepository extends EntityRepository
     }
 
     /**
-     * @param Member $member
      * @param $folder
      * @param $sort
      * @param $sortDirection
@@ -264,8 +255,7 @@ class MessageRepository extends EntityRepository
             $sort = 'created';
         }
         $qb = $this->createQueryBuilder('m');
-        switch ($folder)
-        {
+        switch ($folder) {
             case 'sent':
                 $qb
                     ->where('NOT(m.deleteRequest LIKE :deleted)')
@@ -297,7 +287,6 @@ class MessageRepository extends EntityRepository
     /**
      * Returns a Pagerfanta object encapsulating the matching paginated activities.
      *
-     * @param Member $member
      * @param $folder
      * @param $sort
      * @param $sortDirection
@@ -327,7 +316,6 @@ class MessageRepository extends EntityRepository
     }
 
     /**
-     * @param Member $member
      * @param $folder
      * @param $sort
      * @param $sortDirection
@@ -380,8 +368,6 @@ class MessageRepository extends EntityRepository
     /**
      * Returns a Pagerfanta object encapsulating the matching paginated activities.
      *
-     * @param Member $loggedInUser
-     * @param Member $member
      * @param $sort
      * @param $sortDirection
      * @param int $page
@@ -404,12 +390,10 @@ class MessageRepository extends EntityRepository
     }
 
     /**
-     * @param Member $loggedInUser
-     * @param Member $member
-     * @param int    $page
-     * @param int    $items
-     * @param mixed  $sort
-     * @param mixed  $sortDirection
+     * @param int   $page
+     * @param int   $items
+     * @param mixed $sort
+     * @param mixed $sortDirection
      *
      * @return QueryBuilder
      */
@@ -445,8 +429,6 @@ class MessageRepository extends EntityRepository
     }
 
     /**
-     * @param Member $member
-     *
      * @return Message[]
      */
     public function findAllMessagesWithMember(Member $member)
@@ -469,8 +451,6 @@ class MessageRepository extends EntityRepository
     }
 
     /**
-     * @param Member $member
-     *
      * @return Collection
      */
     public function getMessagesSentBy(Member $member)
@@ -491,8 +471,6 @@ class MessageRepository extends EntityRepository
     }
 
     /**
-     * @param Member $member
-     *
      * @return Collection
      */
     public function getMessagesReceivedBy(Member $member)
@@ -513,8 +491,6 @@ class MessageRepository extends EntityRepository
     }
 
     /**
-     * @param Member $member
-     *
      * @return Collection
      */
     public function getRequestsSentBy(Member $member)
@@ -535,8 +511,6 @@ class MessageRepository extends EntityRepository
     }
 
     /**
-     * @param Member $member
-     *
      * @return Collection
      */
     public function getRequestsReceivedBy(Member $member)

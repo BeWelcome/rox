@@ -5,14 +5,13 @@ namespace App\Entity;
 use Carbon\Carbon;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Persistence\ObjectManagerAware;
+use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Persistence\Mapping\ClassMetadata;
 use Doctrine\Persistence\ObjectManager;
 
 /**
- * Polls
+ * Polls.
  *
  * @ORM\Table(name="polls", indexes={@ORM\Index(name="IdCreator", columns={"IdCreator"})})
  * @ORM\HasLifecycleCallbacks
@@ -215,7 +214,6 @@ class Poll implements ObjectManagerAware
      */
     private $anonym = 'Yes';
 
-
     /**
      * @var Member
      *
@@ -227,7 +225,7 @@ class Poll implements ObjectManagerAware
     private $creator;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -248,7 +246,7 @@ class Poll implements ObjectManagerAware
     }
 
     /**
-     * Set group creator
+     * Set group creator.
      *
      * @param Member $groupCreator
      *
@@ -262,7 +260,7 @@ class Poll implements ObjectManagerAware
     }
 
     /**
-     * Get group creator
+     * Get group creator.
      *
      * @return Member
      */
@@ -272,7 +270,7 @@ class Poll implements ObjectManagerAware
     }
 
     /**
-     * Set status
+     * Set status.
      *
      * @param string $status
      *
@@ -286,7 +284,7 @@ class Poll implements ObjectManagerAware
     }
 
     /**
-     * Get status
+     * Get status.
      *
      * @return string
      */
@@ -296,7 +294,7 @@ class Poll implements ObjectManagerAware
     }
 
     /**
-     * Set resultsvisibility
+     * Set resultsvisibility.
      *
      * @param string $resultsvisibility
      *
@@ -310,7 +308,7 @@ class Poll implements ObjectManagerAware
     }
 
     /**
-     * Get resultsvisibility
+     * Get resultsvisibility.
      *
      * @return string
      */
@@ -320,7 +318,7 @@ class Poll implements ObjectManagerAware
     }
 
     /**
-     * Set type
+     * Set type.
      *
      * @param string $type
      *
@@ -334,7 +332,7 @@ class Poll implements ObjectManagerAware
     }
 
     /**
-     * Get type
+     * Get type.
      *
      * @return string
      */
@@ -344,7 +342,7 @@ class Poll implements ObjectManagerAware
     }
 
     /**
-     * Set updated
+     * Set updated.
      *
      * @param DateTime $updated
      *
@@ -358,7 +356,7 @@ class Poll implements ObjectManagerAware
     }
 
     /**
-     * Get updated
+     * Get updated.
      *
      * @return Carbon
      */
@@ -368,7 +366,7 @@ class Poll implements ObjectManagerAware
     }
 
     /**
-     * Set started
+     * Set started.
      *
      * @param DateTime $started
      *
@@ -382,7 +380,7 @@ class Poll implements ObjectManagerAware
     }
 
     /**
-     * Get started
+     * Get started.
      *
      * @return Carbon
      */
@@ -392,7 +390,7 @@ class Poll implements ObjectManagerAware
     }
 
     /**
-     * Set ended
+     * Set ended.
      *
      * @param DateTime $ended
      *
@@ -406,7 +404,7 @@ class Poll implements ObjectManagerAware
     }
 
     /**
-     * Get ended
+     * Get ended.
      *
      * @return Carbon
      */
@@ -416,7 +414,7 @@ class Poll implements ObjectManagerAware
     }
 
     /**
-     * Set created
+     * Set created.
      *
      * @param DateTime $created
      *
@@ -430,7 +428,7 @@ class Poll implements ObjectManagerAware
     }
 
     /**
-     * Get created
+     * Get created.
      *
      * @return Carbon
      */
@@ -440,7 +438,7 @@ class Poll implements ObjectManagerAware
     }
 
     /**
-     * Get Choices
+     * Get Choices.
      *
      * @return ArrayCollection
      */
@@ -450,7 +448,7 @@ class Poll implements ObjectManagerAware
     }
 
     /**
-     * Get Contributions
+     * Get Contributions.
      *
      * @return ArrayCollection
      */
@@ -460,7 +458,7 @@ class Poll implements ObjectManagerAware
     }
 
     /**
-     * Get titles (translated)
+     * Get titles (translated).
      *
      * @return array
      */
@@ -470,7 +468,7 @@ class Poll implements ObjectManagerAware
     }
 
     /**
-     * Get descriptions (translated)
+     * Get descriptions (translated).
      *
      * @return array
      */
@@ -480,7 +478,7 @@ class Poll implements ObjectManagerAware
     }
 
     /**
-     * Get groups
+     * Get groups.
      *
      * @return ArrayCollection
      */
@@ -490,7 +488,7 @@ class Poll implements ObjectManagerAware
     }
 
     /**
-     * Set formembersonly
+     * Set formembersonly.
      *
      * @param string $formembersonly
      *
@@ -504,7 +502,7 @@ class Poll implements ObjectManagerAware
     }
 
     /**
-     * Get formembersonly
+     * Get formembersonly.
      *
      * @return string
      */
@@ -514,7 +512,7 @@ class Poll implements ObjectManagerAware
     }
 
     /**
-     * Set idlocationslist
+     * Set idlocationslist.
      *
      * @param int $idlocationslist
      *
@@ -528,7 +526,7 @@ class Poll implements ObjectManagerAware
     }
 
     /**
-     * Get idlocationslist
+     * Get idlocationslist.
      *
      * @return int
      */
@@ -538,7 +536,7 @@ class Poll implements ObjectManagerAware
     }
 
     /**
-     * Set idgroupslist
+     * Set idgroupslist.
      *
      * @param int $idgroupslist
      *
@@ -552,7 +550,7 @@ class Poll implements ObjectManagerAware
     }
 
     /**
-     * Get idgroupslist
+     * Get idgroupslist.
      *
      * @return int
      */
@@ -562,7 +560,7 @@ class Poll implements ObjectManagerAware
     }
 
     /**
-     * Set idcountrieslist
+     * Set idcountrieslist.
      *
      * @param int $idcountrieslist
      *
@@ -576,7 +574,7 @@ class Poll implements ObjectManagerAware
     }
 
     /**
-     * Get idcountrieslist
+     * Get idcountrieslist.
      *
      * @return int
      */
@@ -586,7 +584,7 @@ class Poll implements ObjectManagerAware
     }
 
     /**
-     * Set opentosubgroups
+     * Set opentosubgroups.
      *
      * @param string $opentosubgroups
      *
@@ -600,7 +598,7 @@ class Poll implements ObjectManagerAware
     }
 
     /**
-     * Get opentosubgroups
+     * Get opentosubgroups.
      *
      * @return string
      */
@@ -610,7 +608,7 @@ class Poll implements ObjectManagerAware
     }
 
     /**
-     * Set typeofchoice
+     * Set typeofchoice.
      *
      * @param string $typeofchoice
      *
@@ -624,7 +622,7 @@ class Poll implements ObjectManagerAware
     }
 
     /**
-     * Get typeofchoice
+     * Get typeofchoice.
      *
      * @return string
      */
@@ -634,7 +632,7 @@ class Poll implements ObjectManagerAware
     }
 
     /**
-     * Set canchangevote
+     * Set canchangevote.
      *
      * @param string $canchangevote
      *
@@ -648,7 +646,7 @@ class Poll implements ObjectManagerAware
     }
 
     /**
-     * Get canchangevote
+     * Get canchangevote.
      *
      * @return string
      */
@@ -658,7 +656,7 @@ class Poll implements ObjectManagerAware
     }
 
     /**
-     * Set allowcomment
+     * Set allowcomment.
      *
      * @param string $allowcomment
      *
@@ -682,7 +680,7 @@ class Poll implements ObjectManagerAware
     }
 
     /**
-     * Set description
+     * Set description.
      *
      * @param int $description
      *
@@ -696,7 +694,7 @@ class Poll implements ObjectManagerAware
     }
 
     /**
-     * Get description
+     * Get description.
      *
      * @return int
      */
@@ -706,7 +704,7 @@ class Poll implements ObjectManagerAware
     }
 
     /**
-     * Set wheretorestrictmember
+     * Set wheretorestrictmember.
      *
      * @param string $wheretorestrictmember
      *
@@ -720,7 +718,7 @@ class Poll implements ObjectManagerAware
     }
 
     /**
-     * Get wheretorestrictmember
+     * Get wheretorestrictmember.
      *
      * @return string
      */
@@ -730,7 +728,7 @@ class Poll implements ObjectManagerAware
     }
 
     /**
-     * Set anonym
+     * Set anonym.
      *
      * @param string $anonym
      *
@@ -744,7 +742,7 @@ class Poll implements ObjectManagerAware
     }
 
     /**
-     * Get anonym
+     * Get anonym.
      *
      * @return string
      */
@@ -754,7 +752,7 @@ class Poll implements ObjectManagerAware
     }
 
     /**
-     * Get id
+     * Get id.
      *
      * @return int
      */
@@ -764,9 +762,7 @@ class Poll implements ObjectManagerAware
     }
 
     /**
-     * Set creator
-     *
-     * @param Member $creator
+     * Set creator.
      *
      * @return Poll
      */
@@ -778,7 +774,7 @@ class Poll implements ObjectManagerAware
     }
 
     /**
-     * Get creator
+     * Get creator.
      *
      * @return Member
      */
@@ -809,7 +805,7 @@ class Poll implements ObjectManagerAware
     }
 
     /**
-     * Triggered after load from database
+     * Triggered after load from database.
      *
      * @ORM\PostLoad
      */

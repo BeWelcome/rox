@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Doctrine\GroupMembershipStatusType;
-use App\Doctrine\GroupType As DoctrineGroupType;
+use App\Doctrine\GroupType as DoctrineGroupType;
 use App\Entity\Group;
 use App\Entity\GroupMembership;
 use App\Entity\Member;
@@ -26,8 +26,6 @@ use Exception;
 use Intervention\Image\ImageManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -60,20 +58,11 @@ class GroupController extends AbstractController
         $this->groupModel = $groupModel;
     }
 
-    private function redirectGroup(Request $request)
-    {
-        $pathInfo = str_replace('/groups/', '/group/', $request->getPathInfo());
-        return new RedirectResponse($pathInfo);
-    }
-
     /**
      * @Route("/groups/{groupId}/{path}", name="groups_redirect_path",
      *     requirements = {"groupId": "\d+", "path":".+"})
      * @ParamConverter("group", class="App\Entity\Group", options={"id" = "groupId"})
      *
-     * @param Request $request
-     * @param Group $group
-     * @param string $path
      * @return RedirectResponse
      */
     public function groupsRedirectPath(Request $request, Group $group, string $path)
@@ -86,8 +75,6 @@ class GroupController extends AbstractController
      *     requirements = {"groupId": "\d+"})
      * @ParamConverter("group", class="App\Entity\Group", options={"id" = "groupId"})
      *
-     * @param Request $request
-     * @param Group $group
      * @return RedirectResponse
      */
     public function groupsRedirect(Request $request, Group $group)
@@ -99,9 +86,6 @@ class GroupController extends AbstractController
      * @Route("/group/{groupId}/join", name="join_group")
      *
      * @ParamConverter("group", class="App\Entity\Group", options={"id" = "groupId"})
-     *
-     * @param Request $request
-     * @param Group   $group
      *
      * @return Response
      *
@@ -178,11 +162,9 @@ class GroupController extends AbstractController
      * @ParamConverter("group", class="App\Entity\Group", options={"id" = "groupId"})
      * @ParamConverter("member", class="App\Entity\Member", options={"id" = "memberId"})
      *
-     * @param Group  $group
-     * @param Member $member
+     * @throws AccessDeniedException
      *
      * @return RedirectResponse
-     * @throws AccessDeniedException
      */
     public function approveJoin(Group $group, Member $member)
     {
@@ -213,11 +195,9 @@ class GroupController extends AbstractController
      * @ParamConverter("group", class="App\Entity\Group", options={"id" = "groupId"})
      * @ParamConverter("member", class="App\Entity\Member", options={"id" = "memberId"})
      *
-     * @param Group  $group
-     * @param Member $member
+     * @throws AccessDeniedException
      *
      * @return RedirectResponse
-     * @throws AccessDeniedException
      */
     public function declineJoin(Group $group, Member $member)
     {
@@ -248,9 +228,6 @@ class GroupController extends AbstractController
      * @ParamConverter("group", class="App\Entity\Group", options={"id" = "groupId"})
      * @ParamConverter("member", class="App\Entity\Member", options={"id" = "memberId"})
      *
-     * @param Group  $group
-     * @param Member $member
-     *
      * @throws AccessDeniedException
      *
      * @return JsonResponse
@@ -276,9 +253,6 @@ class GroupController extends AbstractController
      * @ParamConverter("group", class="App\Entity\Group", options={"id" = "groupId"})
      * @ParamConverter("member", class="App\Entity\Member", options={"id" = "memberId"})
      *
-     * @param Group  $group
-     * @param Member $member
-     *
      * @return RedirectResponse
      */
     public function acceptInviteToGroup(Group $group, Member $member)
@@ -301,9 +275,6 @@ class GroupController extends AbstractController
      *
      * @ParamConverter("group", class="App\Entity\Group", options={"id" = "groupId"})
      * @ParamConverter("member", class="App\Entity\Member", options={"id" = "memberId"})
-     *
-     * @param Group  $group
-     * @param Member $member
      *
      * @return RedirectResponse
      */
@@ -328,10 +299,6 @@ class GroupController extends AbstractController
      * @ParamConverter("group", class="App\Entity\Group", options={"id" = "groupId"})
      * @ParamConverter("member", class="App\Entity\Member", options={"id" = "memberId"})
      *
-     * @param Request $request
-     * @param Group   $group
-     * @param Member  $member
-     *
      * @return RedirectResponse
      */
     public function withdrawInviteMemberGroup(Request $request, Group $group, Member $member)
@@ -350,9 +317,6 @@ class GroupController extends AbstractController
 
     /**
      * @Route("/new/group", name="new_group")
-     *
-     * @param Request $request
-     * @param Logger  $logger
      *
      * @throws Exception
      *
@@ -397,8 +361,6 @@ class GroupController extends AbstractController
     /**
      * @Route("/new/group/check", name="new_group_check")
      *
-     * @param Request $request
-     *
      * @return JsonResponse
      */
     public function ajaxCheckNewGroup(Request $request)
@@ -427,9 +389,6 @@ class GroupController extends AbstractController
 
     /**
      * @Route("/group/{id}/wiki", name="group_wiki_page")
-     *
-     * @param Group     $group
-     * @param WikiModel $wikiModel
      *
      * @return Response
      */
@@ -465,9 +424,6 @@ class GroupController extends AbstractController
     /**
      * @Route("/group/{id}/wiki/create", name="group_wiki_page_create")
      *
-     * @param Group $group
-     * @param WikiModel $wikiModel
-     *
      * @return RedirectResponse
      */
     public function createGroupWikiPage(Group $group, WikiModel $wikiModel)
@@ -486,10 +442,6 @@ class GroupController extends AbstractController
 
     /**
      * @Route("/group/{id}/wiki/edit", name="group_wiki_page_edit")
-     *
-     * @param Request $request
-     * @param Group $group
-     * @param WikiModel $wikiModel
      *
      * @return Response
      */
@@ -528,9 +480,14 @@ class GroupController extends AbstractController
         ]);
     }
 
+    private function redirectGroup(Request $request)
+    {
+        $pathInfo = str_replace('/groups/', '/group/', $request->getPathInfo());
+
+        return new RedirectResponse($pathInfo);
+    }
+
     /**
-     * @param Group    $group
-     * @param Member   $member
      * @param Member[] $admins
      */
     private function sendAdminNotification(Group $group, Member $member, $admins)
@@ -546,9 +503,6 @@ class GroupController extends AbstractController
     }
 
     /**
-     * @param Member $member
-     * @param Group  $group
-     *
      * @return array
      */
     private function getSubmenuItems(Member $member, Group $group)

@@ -2,17 +2,13 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\FaqCategory;
 use App\Entity\Group;
 use App\Entity\Member;
-use App\Entity\Right;
 use App\Logger\Logger;
-use App\Repository\GroupRepository;
 use App\Utilities\MailerTrait;
 use App\Utilities\ManagerTrait;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
-use Exception;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -78,7 +74,8 @@ class GroupController extends AbstractController
      *
      * @Route("/admin/groups/archival", name="admin_groups_archival")
      *
-     * @param Request $request
+     * @throws AccessDeniedException
+     *
      * @return Response
      */
     public function archiveGroups(Request $request)
@@ -119,7 +116,8 @@ class GroupController extends AbstractController
      *
      * @Route("/admin/groups/unarchival", name="admin_groups_unarchival")
      *
-     * @param Request $request
+     * @throws AccessDeniedException
+     *
      * @return Response
      */
     public function unarchiveGroups(Request $request)
@@ -160,11 +158,7 @@ class GroupController extends AbstractController
      *
      * @Route("/admin/groups/{id}/discuss", name="admin_groups_discuss")
      *
-     * @param Request $request
-     * @param Group   $group
-     * @param Logger  $logger
-     *
-     * @throws Exception
+     * @throws AccessDeniedException
      *
      * @return RedirectResponse
      */
@@ -187,12 +181,13 @@ class GroupController extends AbstractController
             '%name%' => $group->getName(),
         ]);
 
-        $logger->write('Group ' . $this->getGroupLinkTag($group) . ' moved into discussion by ' . $this->getUser()->getUsername() . '.',
+        $logger->write(
+            'Group ' . $this->getGroupLinkTag($group) . ' moved into discussion by ' . $this->getUser()->getUsername() . '.',
             'Group'
         );
 
         $referrer = $request->headers->get('referer');
-        if (null === $referrer ) {
+        if (null === $referrer) {
             return $this->redirectToRoute('admin_groups_approval');
         }
 
@@ -204,11 +199,7 @@ class GroupController extends AbstractController
      *
      * @Route("/admin/groups/{id}/dismiss", name="admin_groups_dismiss")
      *
-     * @param Request $request
-     * @param Group   $group
-     * @param Logger  $logger
-     *
-     * @throws Exception
+     * @throws AccessDeniedException
      *
      * @return RedirectResponse
      */
@@ -231,7 +222,7 @@ class GroupController extends AbstractController
             '%name%' => $group->getName(),
         ]);
 
-        $logger->write('Group ' . $this->getGroupLinkTag($group)  . ' dismissed by ' . $this->getUser()->getUsername() . '.', 'Group');
+        $logger->write('Group ' . $this->getGroupLinkTag($group) . ' dismissed by ' . $this->getUser()->getUsername() . '.', 'Group');
 
         $referrer = $request->headers->get('referer');
 
@@ -243,11 +234,7 @@ class GroupController extends AbstractController
      *
      * @Route("/admin/groups/{id}/approve", name="admin_groups_approve")
      *
-     * @param Request $request
-     * @param Group   $group
-     * @param Logger  $logger
-     *
-     * @throws Exception
+     * @throws AccessDeniedException
      *
      * @return RedirectResponse
      */
@@ -284,11 +271,7 @@ class GroupController extends AbstractController
      *
      * @Route("/admin/groups/{id}/archive", name="admin_groups_archive")
      *
-     * @param Request $request
-     * @param Group   $group
-     * @param Logger  $logger
-     *
-     * @throws Exception
+     * @throws AccessDeniedException
      *
      * @return RedirectResponse
      */
@@ -323,11 +306,7 @@ class GroupController extends AbstractController
      *
      * @Route("/admin/groups/{id}/unarchive", name="admin_groups_unarchive")
      *
-     * @param Request $request
-     * @param Group   $group
-     * @param Logger  $logger
-     *
-     * @throws Exception
+     * @throws AccessDeniedException
      *
      * @return RedirectResponse
      */
@@ -362,10 +341,7 @@ class GroupController extends AbstractController
      *
      * @Route("/admin/groups/rename", name="admin_groups_rename")
      *
-     * @param Request $request
-     * @param Logger  $logger
-     *
-     * @throws Exception
+     * @throws AccessDeniedException
      *
      * @return Response|RedirectResponse
      */
@@ -397,8 +373,7 @@ class GroupController extends AbstractController
             ->add('submit', SubmitType::class)
             ->getForm();
         $groupForm->handleRequest($request);
-        if($groupForm->isSubmitted() && $groupForm->isValid())
-        {
+        if ($groupForm->isSubmitted() && $groupForm->isValid()) {
             $em = $this->getManager();
             $data = $groupForm->getData();
             $groupRepository = $em->getRepository(Group::class);
@@ -416,11 +391,12 @@ class GroupController extends AbstractController
                 ]);
 
                 $logger->write('Group ' . $data['old_name'] . ' renamed to ' . $this->getGroupLinkTag($group)
-                    . ' by '. $this->getUser()->getUsername() . '.', 'Group');
+                    . ' by ' . $this->getUser()->getUsername() . '.', 'Group');
 
                 return $this->redirectToRoute('admin_groups_approval');
             }
         }
+
         return $this->render('admin/groups/rename.html.twig', [
             'form' => $groupForm->createView(),
         ]);
@@ -430,7 +406,7 @@ class GroupController extends AbstractController
     {
         $subject = $this->translator->trans(// 'email.subject.group.approved'
             '[New Group] %group% approved',
-           ['%group%' => strip_tags($group->getName())]
+            ['%group%' => strip_tags($group->getName())]
         );
         $this->sendTemplateEmail('group@bewelcome.org', $creator, 'group/approved', [
             'subject' => $subject,
@@ -444,7 +420,8 @@ class GroupController extends AbstractController
     {
         /** @var Member $admin */
         $admin = $this->getUser();
-        return ($admin->getLevelForRight(Member::ROLE_ADMIN_GROUP) == $level);
+
+        return $admin->getLevelForRight(Member::ROLE_ADMIN_GROUP) === $level;
     }
 
     /**
@@ -478,6 +455,6 @@ class GroupController extends AbstractController
 
     private function getGroupLinkTag(Group $group)
     {
-        return '<a href="'.$this->generateUrl('group_start', [ 'group_id' => $group->getId()]).'">'.$group->getName().'</a>';
+        return '<a href="' . $this->generateUrl('group_start', ['group_id' => $group->getId()]) . '">' . $group->getName() . '</a>';
     }
 }

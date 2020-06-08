@@ -11,7 +11,6 @@ use App\Doctrine\GroupType;
 use App\Doctrine\MemberStatusType;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\Common\Collections\Expr\Comparison;
 use Doctrine\Common\Persistence\Mapping\ClassMetadata;
@@ -40,15 +39,15 @@ class Group implements ObjectManagerAware
     const IN_DISCUSSION_CLOSED = 6;
 
     const OPEN = [
-        self::NOT_APPROVED, self::IN_DISCUSSION
+        self::NOT_APPROVED, self::IN_DISCUSSION,
     ];
 
     const HANDLED = [
-        self::APPROVED, self::DISMISSED
+        self::APPROVED, self::DISMISSED,
     ];
 
     const CLOSED = [
-        self::APPROVED_CLOSED, self::DISMISSED_CLOSED, self::IN_DISCUSSION_CLOSED
+        self::APPROVED_CLOSED, self::DISMISSED_CLOSED, self::IN_DISCUSSION_CLOSED,
     ];
 
     /**
@@ -252,8 +251,6 @@ class Group implements ObjectManagerAware
     /**
      * Add description.
      *
-     * @param MemberTranslation $description
-     *
      * @return Group
      */
     public function addDescription(MemberTranslation $description)
@@ -268,8 +265,6 @@ class Group implements ObjectManagerAware
 
     /**
      * Remove description.
-     *
-     * @param MemberTranslation $description
      */
     public function removeDescription(MemberTranslation $description)
     {
@@ -444,8 +439,6 @@ class Group implements ObjectManagerAware
     /**
      * Injects responsible ObjectManager and the ClassMetadata into this persistent object.
      *
-     * @param ObjectManager $objectManager
-     * @param ClassMetadata $classMetadata
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function injectObjectManager(ObjectManager $objectManager, ClassMetadata $classMetadata)

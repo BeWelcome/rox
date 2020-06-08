@@ -16,6 +16,7 @@ use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
 use Doctrine\ORM\NonUniqueResultException;
 use Exception;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
@@ -34,7 +35,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Validator\Constraints\NotBlank;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\WebpackEncoreBundle\Asset\EntrypointLookupInterface;
 
 /**
@@ -50,14 +50,9 @@ class MemberController extends AbstractController
     /**
      * @Route("/mydata", name="member_personal_data")
      *
-     * @param Request $request
-     * @param ContainerBagInterface $params
-     * @param MemberModel $memberModel
-     * @param Security $security
-     * @param EncoderFactoryInterface $encoderFactory
-     * @param EntrypointLookupInterface $entrypointLookup
-     * @return StreamedResponse|Response
      * @throws Exception
+     *
+     * @return StreamedResponse|Response
      */
     public function getPersonalDataSelf(
         Request $request,
@@ -66,28 +61,24 @@ class MemberController extends AbstractController
         Security $security,
         EncoderFactoryInterface $encoderFactory,
         EntrypointLookupInterface $entrypointLookup
-    )
-    {
+    ) {
         $passwordForm = $this->createFormBuilder()
             ->add('password', PasswordType::class)
             ->add('submit', SubmitType::class)
             ->getForm();
         $passwordForm->handleRequest($request);
 
-        if ($passwordForm->isSubmitted() && $passwordForm->isValid())
-        {
+        if ($passwordForm->isSubmitted() && $passwordForm->isValid()) {
             /** @var Member $member */
             $member = $this->getUser();
-            $password=$passwordForm->get('password')->getData();
+            $password = $passwordForm->get('password')->getData();
 
             $token = $security->getToken();
 
-            if ($token)
-            {
+            if ($token) {
                 $encoder = $encoderFactory->getEncoder($member);
 
                 if ($encoder->isPasswordValid($member->getPassword(), $password, $member->getSalt())) {
-
                     // Collect information and store in zip file
                     $zipFilename = $memberModel->collectPersonalData($params, $member);
 
@@ -95,13 +86,13 @@ class MemberController extends AbstractController
                     $entrypointLookup->reset();
 
                     $request->getSession()->set('mydata_file', $zipFilename);
+
                     return $this->render('private/download.html.twig', [
                         'username' => $member->getUsername(),
                         'url' => $this->generateUrl('member_download_data', ['username' => $member->getUsername()], UrlGeneratorInterface::ABSOLUTE_URL),
                     ]);
-                } else {
-                    $passwordForm->addError(new FormError($this->translator->trans("form.error.password.incorrect")));
                 }
+                $passwordForm->addError(new FormError($this->translator->trans('form.error.password.incorrect')));
             }
         }
 
@@ -113,14 +104,9 @@ class MemberController extends AbstractController
     /**
      * @Route("/members/{username}/data", name="admin_personal_data")
      *
-     * @param Request $request
-     * @param Member $member
-     * @param Logger $logger
-     * @param ContainerBagInterface $params
-     * @param MemberModel $memberModel
-     * @param EntrypointLookupInterface $entrypointLookup
-     * @return StreamedResponse|Response
      * @throws Exception
+     *
+     * @return StreamedResponse|Response
      * @ParamConverter("member", class="App\Entity\Member", options={"mapping": {"username": "username"}})
      */
     public function getPersonalData(
@@ -143,6 +129,7 @@ class MemberController extends AbstractController
         $zipFilename = $memberModel->collectPersonalData($params, $member);
 
         $request->getSession()->set('mydata_file', $zipFilename);
+
         return $this->render('private/download.html.twig', [
             'username' => $member->getUsername(),
             'url' => $this->generateUrl('member_download_data', ['username' => $member->getUsername()], UrlGeneratorInterface::ABSOLUTE_URL),
@@ -152,10 +139,9 @@ class MemberController extends AbstractController
     /**
      * @Route("/mydata/{username}/download", name="member_download_data")
      *
-     * @param Request $request
-     * @param Member $member
-     * @return BinaryFileResponse|RedirectResponse
      * @throws Exception
+     *
+     * @return BinaryFileResponse|RedirectResponse
      * @ParamConverter("member", class="App\Entity\Member", options={"mapping": {"username": "username"}})
      */
     public function downloadPersonalData(Request $request, Member $member)
@@ -174,13 +160,11 @@ class MemberController extends AbstractController
             return $response;
         }
 
-        return new RedirectResponse($this->generateUrl('members_profile', [ 'username' => $member->getUsername()]));
+        return new RedirectResponse($this->generateUrl('members_profile', ['username' => $member->getUsername()]));
     }
 
     /**
      * @Route("/member/autocomplete", name="members_autocomplete")
-     *
-     * @param Request $request
      *
      * @return JsonResponse
      */
@@ -214,8 +198,6 @@ class MemberController extends AbstractController
     /**
      * @Route("/member/autocomplete/start", name="members_autocomplete_starts_with")
      *
-     * @param Request $request
-     *
      * @return JsonResponse
      */
     public function autoCompleteStartsWith(Request $request)
@@ -248,9 +230,6 @@ class MemberController extends AbstractController
     /**
      * @Route("/resetpassword", name="member_request_reset_password")
      *
-     * @param Request     $request
-     * @param MemberModel $memberModel
-     *
      * @return Response
      */
     public function requestResetPasswordAction(Request $request, MemberModel $memberModel)
@@ -258,6 +237,7 @@ class MemberController extends AbstractController
         // Someone obviously lost their way. No sense in resetting your password if you're currently logged in.
         if ($this->isGranted('ROLE_USER')) {
             $this->addTranslatedFlash('notice', 'flash.reset.password.not_logged_in');
+
             return $this->redirectToRoute('landingpage');
         }
 
@@ -323,8 +303,6 @@ class MemberController extends AbstractController
      * @Route("/resetpassword/{username}/{token}", name="member_reset_password",
      *     requirements={"key": "[a-z0-9]{32}"})
      *
-     * @param Request $request
-     * @param Member  $member
      * @param $token
      *
      * @return Response
@@ -376,8 +354,6 @@ class MemberController extends AbstractController
     /**
      * @Route("/count/messages/unread", name="count_messages_unread")
      *
-     * @param Request $request
-     *
      * @return JsonResponse
      */
     public function getUnreadMessagesCount(Request $request)
@@ -413,8 +389,6 @@ class MemberController extends AbstractController
 
     /**
      * @Route("/count/requests/unread", name="count_requests_unread")
-     *
-     * @param Request $request
      *
      * @return JsonResponse
      */

@@ -22,8 +22,6 @@ class WikiController extends AbstractController
     /**
      * @Route("/wiki", name="wiki_front_page")
      *
-     * @param WikiModel $wikiModel
-     *
      * @return Response
      */
     public function showWikiFrontPage(WikiModel $wikiModel)
@@ -35,7 +33,6 @@ class WikiController extends AbstractController
      * @Route("/wiki/{pageTitle}", name="wiki_page")
      *
      * @param $pageTitle
-     * @param WikiModel $wikiModel
      *
      * @return Response
      */
@@ -69,8 +66,6 @@ class WikiController extends AbstractController
     /**
      * @Route("/wiki/{pageTitle}/edit", name="wiki_page_edit")
      *
-     * @param Request   $request
-     * @param WikiModel $wikiModel
      * @param $pageTitle
      *
      * @return Response
@@ -115,8 +110,6 @@ class WikiController extends AbstractController
     /**
      * @Route("/wiki/{pageTitle}/create", name="wiki_page_create")
      *
-     * @param Request   $request
-     * @param WikiModel $wikiModel
      * @param $pageTitle
      *
      * @return Response

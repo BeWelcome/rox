@@ -12,7 +12,6 @@ use App\Form\CustomDataClass\FaqCategoryRequest;
 use App\Form\CustomDataClass\FaqRequest;
 use App\Form\FaqCategoryFormType;
 use App\Form\FaqFormType;
-use App\Kernel;
 use App\Model\FaqModel;
 use App\Model\TranslationModel;
 use DateTime;
@@ -26,6 +25,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -55,8 +55,7 @@ class FaqController extends AbstractController
      *
      * @ParamConverter("faqCategory", class="App\Entity\FaqCategory", options={"id" = "categoryId"})
      *
-     * @param Request     $request
-     * @param FaqCategory $faqCategory
+     * @throws AccessDeniedException
      *
      * @return Response
      *
@@ -111,11 +110,9 @@ class FaqController extends AbstractController
     /**
      * @Route("/admin/faqs/category/create", name="admin_faqs_category_create")
      *
-     * @param Request $request
-     *
-     * @param TranslationModel $translationModel
-     * @return Response
      * @throws Exception
+     *
+     * @return Response
      */
     public function createCategoryAction(Request $request, TranslationModel $translationModel)
     {
@@ -185,12 +182,9 @@ class FaqController extends AbstractController
      *
      * @ParamConverter("faqCategory", class="App\Entity\FaqCategory", options={"id" = "categoryId"})
      *
-     * @param Request $request
-     * @param FaqCategory $faqCategory
-     *
-     * @param TranslationModel $translationModel
-     * @return RedirectResponse|Response
      * @throws Exception
+     *
+     * @return RedirectResponse|Response
      */
     public function createFaqInCategoryAction(Request $request, FaqCategory $faqCategory, TranslationModel $translationModel)
     {
@@ -251,14 +245,13 @@ class FaqController extends AbstractController
                 $this->addFlash('notice', "Faq '{$data->wordCode}' created.");
 
                 return $this->redirectToRoute('admin_faqs_overview', ['categoryId' => $faqCategory->getId()]);
-            } else {
-                // Add form error so that user gets informed
-                if (!empty($checkAnswer)) {
-                    $faqForm->get('answer')->addError(new FormError('Answer already exists for this FAQ keyword.'));
-                }
-                if (!empty($checkQuestion)) {
-                    $faqForm->get('question')->addError(new FormError('Question already exists for this FAQ keyword.'));
-                }
+            }
+            // Add form error so that user gets informed
+            if (!empty($checkAnswer)) {
+                $faqForm->get('answer')->addError(new FormError('Answer already exists for this FAQ keyword.'));
+            }
+            if (!empty($checkQuestion)) {
+                $faqForm->get('question')->addError(new FormError('Question already exists for this FAQ keyword.'));
             }
         }
 
@@ -280,10 +273,8 @@ class FaqController extends AbstractController
      * @Route("/admin/faqs/category/{id}/edit", name="admin_faqs_category_edit",
      *     requirements={"id": "\d+"})
      *
-     * @param Request $request
-     * @param FaqCategory $faqCategory
+     * @throws AccessDeniedException
      *
-     * @param TranslationModel $translationModel
      * @return Response
      */
     public function editCategoryAction(Request $request, FaqCategory $faqCategory, TranslationModel $translationModel)
@@ -329,11 +320,9 @@ class FaqController extends AbstractController
      * @Route("/admin/faqs/faq/{id}/edit", name="admin_faqs_faq_edit",
      *     requirements={"id": "\d+"})
      *
-     * @param Request $request
-     * @param Faq $faq
+     * @throws Exception
      *
      * @return Response
-     * @throws Exception
      */
     public function editFaqAction(Request $request, Faq $faq)
     {
@@ -415,8 +404,7 @@ class FaqController extends AbstractController
     /**
      * @Route("/admin/faqs/sort", name="admin_faqs_category_sort")
      *
-     * @param Request             $request
-     * @param TranslatorInterface $translator
+     * @throws AccessDeniedException
      *
      * @return Response
      * @SuppressWarnings(PHPMD.UnusedLocalVariable)
@@ -473,7 +461,7 @@ class FaqController extends AbstractController
     }
 
     /**
-     * @param FaqCategory|null $faqCategory
+     * @throws AccessDeniedException
      *
      * @return array
      */

@@ -15,7 +15,6 @@ use App\Repository\LoginMessageRepository;
 use App\Repository\MessageRepository;
 use App\Repository\NotificationRepository;
 use App\Utilities\ManagerTrait;
-use Doctrine\ORM\EntityRepository;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Router;
@@ -50,10 +49,6 @@ class MemberTwigExtension extends AbstractExtension implements GlobalsInterface
 
     /**
      * MemberTwigExtension constructor.
-     *
-     * @param SessionInterface $session
-     * @param RouterInterface  $router
-     * @param Security         $security
      */
     public function __construct(
         SessionInterface $session,
@@ -213,7 +208,7 @@ class MemberTwigExtension extends AbstractExtension implements GlobalsInterface
         $groupsInApprovalCount = null;
         if ($this->security->isGranted(Member::ROLE_ADMIN_GROUP)) {
             $level = $this->member->getLevelForRight(Member::ROLE_ADMIN_GROUP);
-            if ($level == 10) {
+            if (10 === $level) {
                 $groupsRepository = $this->getManager()->getRepository(Group::class);
                 $groups = $groupsRepository->findBy([
                     'approved' => Group::OPEN,

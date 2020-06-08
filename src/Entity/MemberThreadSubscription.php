@@ -2,12 +2,11 @@
 
 namespace App\Entity;
 
-use App\Utilities\LifecycleCallbacksTrait;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * MembersThreadsSubscribed
+ * MembersThreadsSubscribed.
  *
  * @ORM\Table(name="members_threads_subscribed")
  * @ORM\Entity
@@ -69,7 +68,7 @@ class MemberThreadSubscription
     private $id;
 
     /**
-     * Set subscriber
+     * Set subscriber.
      *
      * @param Member $subscriber
      *
@@ -83,7 +82,7 @@ class MemberThreadSubscription
     }
 
     /**
-     * Get subscriber
+     * Get subscriber.
      *
      * @return Member
      */
@@ -93,7 +92,7 @@ class MemberThreadSubscription
     }
 
     /**
-     * Set thread
+     * Set thread.
      *
      * @param ForumThread $thread
      *
@@ -107,7 +106,7 @@ class MemberThreadSubscription
     }
 
     /**
-     * Get idthread
+     * Get idthread.
      *
      * @return ForumThread
      */
@@ -117,7 +116,7 @@ class MemberThreadSubscription
     }
 
     /**
-     * Set action to watch
+     * Set action to watch.
      *
      * @param string $actionToWatch
      *
@@ -131,7 +130,7 @@ class MemberThreadSubscription
     }
 
     /**
-     * Get actiontowatch
+     * Get actiontowatch.
      *
      * @return string
      */
@@ -141,7 +140,7 @@ class MemberThreadSubscription
     }
 
     /**
-     * Set unsubscribe key
+     * Set unsubscribe key.
      *
      * @param string $unsubscribeKey
      *
@@ -155,7 +154,7 @@ class MemberThreadSubscription
     }
 
     /**
-     * Get unsubscribe key
+     * Get unsubscribe key.
      *
      * @return string
      */
@@ -165,7 +164,7 @@ class MemberThreadSubscription
     }
 
     /**
-     * Set notifications enabled
+     * Set notifications enabled.
      *
      * @param bool $notificationsEnabled
      *
@@ -179,7 +178,7 @@ class MemberThreadSubscription
     }
 
     /**
-     * Get notifications enabled
+     * Get notifications enabled.
      *
      * @return bool
      */
@@ -188,25 +187,16 @@ class MemberThreadSubscription
         return $this->notificationsEnabled;
     }
 
-    /**
-     * @return int
-     */
     public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * @return DateTime
-     */
     public function getSubscribed(): DateTime
     {
         return $this->subscribed;
     }
 
-    /**
-     * @param DateTime $subscribed
-     */
     public function setSubscribed(DateTime $subscribed): void
     {
         $this->subscribed = $subscribed;

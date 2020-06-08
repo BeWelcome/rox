@@ -7,7 +7,7 @@ use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Stats
+ * Stats.
  *
  * @ORM\Table(name="stats", indexes={@ORM\Index(name="created", columns={"created"})})
  * @ORM\Entity
@@ -25,56 +25,56 @@ class Statistic
     private $created;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="NbActiveMembers", type="integer", nullable=false)
      */
     private $activeMembers;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="NbMessageSent", type="integer", nullable=false)
      */
     private $messagesSent;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="NbMessageRead", type="integer", nullable=false)
      */
     private $messagesRead;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="NbRequestsSent", type="integer", nullable=false)
      */
     private $requestsSent;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="NbRequestsAccepted", type="integer", nullable=false)
      */
     private $requestsAccepted;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="NbMemberWithOneTrust", type="integer", nullable=false)
      */
     private $membersWithPositiveComment;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="NbMemberWhoLoggedToday", type="integer", nullable=false)
      */
     private $membersWhoLoggedInToday;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -83,7 +83,7 @@ class Statistic
     private $id;
 
     /**
-     * Set created
+     * Set created.
      *
      * @param DateTime $created
      *
@@ -97,7 +97,7 @@ class Statistic
     }
 
     /**
-     * Get created
+     * Get created.
      *
      * @return Carbon
      */
@@ -107,7 +107,7 @@ class Statistic
     }
 
     /**
-     * Set number of active members
+     * Set number of active members.
      *
      * @param int $activeMembers
      *
@@ -121,7 +121,7 @@ class Statistic
     }
 
     /**
-     * Get number of active members
+     * Get number of active members.
      *
      * @return int
      */
@@ -131,7 +131,7 @@ class Statistic
     }
 
     /**
-     * Set number of messages sent
+     * Set number of messages sent.
      *
      * @param int $messagesSent
      *
@@ -145,7 +145,7 @@ class Statistic
     }
 
     /**
-     * Get number of messages sent
+     * Get number of messages sent.
      *
      * @return int
      */
@@ -155,7 +155,7 @@ class Statistic
     }
 
     /**
-     * Set number of messages read
+     * Set number of messages read.
      *
      * @param int $messagesRead
      *
@@ -169,7 +169,7 @@ class Statistic
     }
 
     /**
-     * Get number of messages read
+     * Get number of messages read.
      *
      * @return int
      */
@@ -179,7 +179,7 @@ class Statistic
     }
 
     /**
-     * Set number of requests sent
+     * Set number of requests sent.
      *
      * @param int $requestsSent
      *
@@ -193,7 +193,7 @@ class Statistic
     }
 
     /**
-     * Get number of requests sent
+     * Get number of requests sent.
      *
      * @return int
      */
@@ -203,7 +203,7 @@ class Statistic
     }
 
     /**
-     * Set number of requests which have been accepted
+     * Set number of requests which have been accepted.
      *
      * @param int $requestsAccepted
      *
@@ -217,7 +217,7 @@ class Statistic
     }
 
     /**
-     * Get number of requests which have been accepted
+     * Get number of requests which have been accepted.
      *
      * @return int
      */
@@ -227,7 +227,7 @@ class Statistic
     }
 
     /**
-     * Set number of members with at least one positive comment
+     * Set number of members with at least one positive comment.
      *
      * @param int $membersWithPositiveComment
      *
@@ -241,7 +241,7 @@ class Statistic
     }
 
     /**
-     * Get number of members with at least one positive comment
+     * Get number of members with at least one positive comment.
      *
      * @return int
      */
@@ -251,7 +251,7 @@ class Statistic
     }
 
     /**
-     * Set number of members who logged in today
+     * Set number of members who logged in today.
      *
      * @param int $membersWhoLoggedInToday
      *
@@ -265,7 +265,7 @@ class Statistic
     }
 
     /**
-     * Get number of members who logged in today
+     * Get number of members who logged in today.
      *
      * @return int
      */
@@ -275,7 +275,7 @@ class Statistic
     }
 
     /**
-     * Get id
+     * Get id.
      *
      * @return int
      */

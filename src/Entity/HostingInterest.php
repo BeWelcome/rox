@@ -72,7 +72,6 @@ class HostingInterest
      */
     private $endDate;
 
-
     /**
      * @var int
      *
@@ -106,17 +105,11 @@ class HostingInterest
         $this->updated = new DateTime('now');
     }
 
-    /**
-     * @return Carbon
-     */
-    public function getUpdated():Carbon
+    public function getUpdated(): Carbon
     {
         return Carbon::instance($this->updated);
     }
 
-    /**
-     * @return Carbon
-     */
     public function getInitialized(): Carbon
     {
         return Carbon::instance($this->initialized);

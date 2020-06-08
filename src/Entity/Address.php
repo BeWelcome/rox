@@ -5,7 +5,6 @@
  * Auto generated file ignore for Code Sniffer
  */
 
-
 namespace App\Entity;
 
 use Carbon\Carbon;
@@ -13,7 +12,7 @@ use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Addresses
+ * Addresses.
  *
  * @ORM\Table(name="addresses", indexes={@ORM\Index(name="IdMember", columns={"IdMember"}), @ORM\Index(name="IdCity", columns={"IdCity"}), @ORM\Index(name="CityAndRank", columns={"IdCity", "Rank"})})
  * @ORM\HasLifecycleCallbacks
@@ -105,11 +104,11 @@ class Address
      */
     private $id;
 
-
     /**
-     * Set member
+     * Set member.
      *
      * @param Member $idmember
+     * @param mixed  $member
      *
      * @return Address
      */
@@ -121,7 +120,7 @@ class Address
     }
 
     /**
-     * Get idmember
+     * Get idmember.
      *
      * @return Member
      */
@@ -131,7 +130,7 @@ class Address
     }
 
     /**
-     * Set housenumber
+     * Set housenumber.
      *
      * @param int $houseNumber
      *
@@ -145,7 +144,7 @@ class Address
     }
 
     /**
-     * Get housenumber
+     * Get housenumber.
      *
      * @return int
      */
@@ -155,7 +154,7 @@ class Address
     }
 
     /**
-     * Set streetname
+     * Set streetname.
      *
      * @param int $streetName
      *
@@ -169,7 +168,7 @@ class Address
     }
 
     /**
-     * Get streetname
+     * Get streetname.
      *
      * @return int
      */
@@ -179,7 +178,7 @@ class Address
     }
 
     /**
-     * Set zip
+     * Set zip.
      *
      * @param int $zip
      *
@@ -193,7 +192,7 @@ class Address
     }
 
     /**
-     * Get zip
+     * Get zip.
      *
      * @return int
      */
@@ -203,7 +202,7 @@ class Address
     }
 
     /**
-     * Set location
+     * Set location.
      *
      * @param Location $location
      *
@@ -217,7 +216,7 @@ class Address
     }
 
     /**
-     * Get location
+     * Get location.
      *
      * @return Location
      */
@@ -227,7 +226,7 @@ class Address
     }
 
     /**
-     * Set explanation
+     * Set explanation.
      *
      * @param int $explanation
      *
@@ -241,7 +240,7 @@ class Address
     }
 
     /**
-     * Get explanation
+     * Get explanation.
      *
      * @return int
      */
@@ -251,9 +250,9 @@ class Address
     }
 
     /**
-     * Set rank
+     * Set rank.
      *
-     * @param boolean $rank
+     * @param bool $rank
      *
      * @return Address
      */
@@ -265,7 +264,7 @@ class Address
     }
 
     /**
-     * Get rank
+     * Get rank.
      *
      * @return bool
      */
@@ -274,9 +273,8 @@ class Address
         return $this->rank;
     }
 
-
     /**
-     * Set created
+     * Set created.
      *
      * @param DateTime $created
      *
@@ -290,7 +288,7 @@ class Address
     }
 
     /**
-     * Get created
+     * Get created.
      *
      * @return Carbon
      */
@@ -298,8 +296,9 @@ class Address
     {
         return Carbon::instance($this->created);
     }
+
     /**
-     * Set updated
+     * Set updated.
      *
      * @param DateTime $updated
      *
@@ -313,7 +312,7 @@ class Address
     }
 
     /**
-     * Get updated
+     * Get updated.
      *
      * @return Carbon
      */
@@ -323,7 +322,7 @@ class Address
     }
 
     /**
-     * Set idgettingthere
+     * Set idgettingthere.
      *
      * @param int $gettingThere
      *
@@ -337,7 +336,7 @@ class Address
     }
 
     /**
-     * Get idgettingthere
+     * Get idgettingthere.
      *
      * @return int
      */
@@ -347,7 +346,7 @@ class Address
     }
 
     /**
-     * Get id
+     * Get id.
      *
      * @return int
      */

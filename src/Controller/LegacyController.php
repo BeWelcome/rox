@@ -6,7 +6,6 @@ use App\Doctrine\MemberStatusType;
 use App\Entity\Member;
 use App\Utilities\SessionSingleton;
 use App\Utilities\TranslatorSingleton;
-use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Statement;
 use EnvironmentExplorer;
 use PDO;
@@ -24,16 +23,10 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class LegacyController extends AbstractController
 {
     /**
-     * @param Request $request
-     * @param TranslatorInterface $translator
-     * @param UrlGeneratorInterface $urlGenerator
-     * @param ParameterBagInterface $params
+     * @throws AccessDeniedException
      *
-     * @param SessionInterface $session
-     * @param Security $securityHelper
      * @return Response
      *
-     * @throws DBALException
      * @SuppressWarnings(PHPMD.StaticAccess)
      */
     public function showLegacyPage(

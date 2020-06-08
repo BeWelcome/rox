@@ -27,7 +27,6 @@ class LandingModel
      *   'time': '10 minutes ago',
      *   'read': true
      *
-     * @param Member $member
      * @param $unread
      * @param int|bool $limit
      *
@@ -38,6 +37,7 @@ class LandingModel
         $messageRepository = $this->getManager()->getRepository(Message::class);
 
         $messagesAndRequests = $messageRepository->getLatestMessagesAndRequests($member, $unread, $limit);
+
         return $messagesAndRequests;
     }
 
@@ -49,7 +49,6 @@ class LandingModel
      *   'user': 'Member-102',
      *   'time': '10 minutes ago',.
      *
-     * @param Member   $member
      * @param int|bool $limit
      *
      * @return array
@@ -76,7 +75,6 @@ class LandingModel
      *
      * Depends on checkboxes shown above the display
      *
-     * @param Member   $member
      * @param bool     $groups
      * @param bool     $forum
      * @param bool     $following
@@ -96,7 +94,7 @@ class LandingModel
         $queryBuilder
             ->select('ft')
             ->from('App:ForumThread', 'ft')
-            ->join('App:ForumPost', 'fp',  Expr\Join::WITH, 'ft.lastPost = fp.id')
+            ->join('App:ForumPost', 'fp', Expr\Join::WITH, 'ft.lastPost = fp.id')
 //            ->addSelect('fp.created')
             ->where("ft.deleted = 'NotDeleted'")
             ->andWhere("fp.deleted = 'NotDeleted'")
@@ -135,8 +133,6 @@ class LandingModel
     /**
      * Generates activities (near you) for display on home page.
      *
-     * @param Member $member
-     *
      * @throws Exception
      *
      * @return array
@@ -159,8 +155,6 @@ class LandingModel
     }
 
     /**
-     * @param Member $member
-     *
      * @return array
      */
     public function getTravellersInAreaOfMember(Member $member)
@@ -169,7 +163,6 @@ class LandingModel
     }
 
     /**
-     * @param Member $member
      * @param $accommodation
      *
      * @return Member

@@ -7,7 +7,7 @@ use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Profilesvisits
+ * Profilesvisits.
  *
  * @ORM\Table(name="profilesvisits", indexes={@ORM\Index(name="IdVisitor", columns={"IdVisitor"})})
  * @ORM\HasLifecycleCallbacks
@@ -56,10 +56,8 @@ class ProfileVisit
      */
     private $visitor;
 
-
-
     /**
-     * Set created
+     * Set created.
      *
      * @param DateTime $created
      *
@@ -73,7 +71,7 @@ class ProfileVisit
     }
 
     /**
-     * Get created
+     * Get created.
      *
      * @return Carbon
      */
@@ -83,7 +81,7 @@ class ProfileVisit
     }
 
     /**
-     * Set updated
+     * Set updated.
      *
      * @param DateTime $updated
      *
@@ -97,7 +95,7 @@ class ProfileVisit
     }
 
     /**
-     * Get updated
+     * Get updated.
      *
      * @return Carbon
      */
@@ -107,7 +105,7 @@ class ProfileVisit
     }
 
     /**
-     * Set member
+     * Set member.
      *
      * @param Member $member
      *
@@ -121,7 +119,7 @@ class ProfileVisit
     }
 
     /**
-     * Get idmember
+     * Get idmember.
      *
      * @return Member
      */
@@ -131,7 +129,7 @@ class ProfileVisit
     }
 
     /**
-     * Set visitor
+     * Set visitor.
      *
      * @param Member $visitor
      *
@@ -145,7 +143,7 @@ class ProfileVisit
     }
 
     /**
-     * Get visitor
+     * Get visitor.
      *
      * @return Member
      */

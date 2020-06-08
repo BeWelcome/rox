@@ -11,7 +11,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\AccountExpiredException;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 /**
@@ -23,8 +22,6 @@ class SecurityController extends AbstractController
      * @Route("/login", name="login", defaults={"access_denied_redirect" = "/"}))
      * @Route("/login", name="security_login", defaults={"access_denied_redirect" = "/"}))
      * @Route("/login_check", name="security_check", defaults={"access_denied_redirect" = "/"}))
-     *
-     * @param AuthenticationUtils $helper
      *
      * @return Response
      */
@@ -43,9 +40,8 @@ class SecurityController extends AbstractController
         $showBannedHint = false;
         $showExpiredHint = false;
         $showNotAllowedToLogin = false;
-        if (is_object($error)) {
-            switch(get_class($error))
-            {
+        if (\is_object($error)) {
+            switch (\get_class($error)) {
                 case AccountMailNotConfirmedException::class:
                     $showResendConfirmationLink = ($lastUsername) ? true : false;
                     break;

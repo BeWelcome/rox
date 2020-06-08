@@ -6,7 +6,7 @@ use App\Utilities\LifecycleCallbacksTrait;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Flags
+ * Flags.
  *
  * @ORM\Table(name="flags")
  * @ORM\Entity
@@ -31,14 +31,14 @@ class Flag
     private $description;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="Relevance", type="integer", nullable=false)
      */
     private $relevance;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -46,10 +46,8 @@ class Flag
      */
     private $id;
 
-
-
     /**
-     * Set created
+     * Set created.
      *
      * @param \DateTime $created
      *
@@ -63,7 +61,7 @@ class Flag
     }
 
     /**
-     * Set name
+     * Set name.
      *
      * @param string $name
      *
@@ -77,7 +75,7 @@ class Flag
     }
 
     /**
-     * Get name
+     * Get name.
      *
      * @return string
      */
@@ -87,7 +85,7 @@ class Flag
     }
 
     /**
-     * Set description
+     * Set description.
      *
      * @param string $description
      *
@@ -101,7 +99,7 @@ class Flag
     }
 
     /**
-     * Get description
+     * Get description.
      *
      * @return string
      */
@@ -111,9 +109,9 @@ class Flag
     }
 
     /**
-     * Set relevance
+     * Set relevance.
      *
-     * @param integer $relevance
+     * @param int $relevance
      *
      * @return Flag
      */
@@ -125,9 +123,9 @@ class Flag
     }
 
     /**
-     * Get relevance
+     * Get relevance.
      *
-     * @return integer
+     * @return int
      */
     public function getRelevance()
     {
@@ -135,9 +133,9 @@ class Flag
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {

@@ -11,7 +11,6 @@ use App\Doctrine\GroupMembershipStatusType;
 use Carbon\Carbon;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Persistence\ObjectManagerAware;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Persistence\Mapping\ClassMetadata;
@@ -318,8 +317,6 @@ class GroupMembership implements ObjectManagerAware
     /**
      * Add a comment for the membership.
      *
-     * @param MemberTranslation $comment
-     *
      * @return GroupMembership
      */
     public function addComment(MemberTranslation $comment)
@@ -334,8 +331,6 @@ class GroupMembership implements ObjectManagerAware
 
     /**
      * Remove a comment from the membership.
-     *
-     * @param MemberTranslation $comment
      *
      * @return GroupMembership
      */
@@ -359,7 +354,7 @@ class GroupMembership implements ObjectManagerAware
     }
 
     /**
-     * Triggered after load from database
+     * Triggered after load from database.
      *
      * @ORM\PostLoad
      */
@@ -398,16 +393,6 @@ class GroupMembership implements ObjectManagerAware
         return $this->comments;
     }
 
-    /**
-     * Sets the comment for the membership.
-     *
-     * @param mixed $commentId
-     */
-    private function setComment($commentId)
-    {
-        $this->comment = $commentId;
-    }
-
     public function getComment(): ?int
     {
         return $this->comment;
@@ -416,5 +401,15 @@ class GroupMembership implements ObjectManagerAware
     public function injectObjectManager(ObjectManager $objectManager, ClassMetadata $classMetadata)
     {
         $this->objectManager = $objectManager;
+    }
+
+    /**
+     * Sets the comment for the membership.
+     *
+     * @param mixed $commentId
+     */
+    private function setComment($commentId)
+    {
+        $this->comment = $commentId;
     }
 }

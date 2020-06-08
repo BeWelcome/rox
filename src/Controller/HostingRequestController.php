@@ -7,15 +7,12 @@ use App\Doctrine\MessageStatusType;
 use App\Entity\HostingRequest;
 use App\Entity\Member;
 use App\Entity\Message;
-use App\Entity\Subject;
 use App\Form\HostingRequestGuest;
 use App\Form\HostingRequestHost;
 use App\Model\HostingRequestModel;
 use App\Utilities\MailerTrait;
 use App\Utilities\ManagerTrait;
 use App\Utilities\TranslatorTrait;
-use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
 use Exception;
 use InvalidArgumentException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -45,8 +42,6 @@ class HostingRequestController extends BaseMessageController
      *
      * @Route("/request/{id}/reply", name="hosting_request_reply",
      *     requirements={"id": "\d+"})
-     *
-     * @param Message $message
      *
      * @throws AccessDeniedException
      *
@@ -91,12 +86,7 @@ class HostingRequestController extends BaseMessageController
      * @Route("/request/{id}/reply/guest/{parentId}", name="hosting_request_reply_guest",
      *     requirements={"id": "\d+"})
      *
-     * @param Request $request
-     * @param Message $hostingRequest
-     *
      * @ParamConverter("parent", class="App\Entity\Message", options={"id": "parentId"})
-     *
-     * @param Message $parent
      *
      * @return Response
      *
@@ -157,12 +147,7 @@ class HostingRequestController extends BaseMessageController
      * @Route("/request/{id}/reply/host/{parentId}", name="hosting_request_reply_host",
      *     requirements={"id": "\d+"})
      *
-     * @param Request $request
-     * @param Message $hostingRequest
-     *
      * @ParamConverter("parent", class="App\Entity\Message", options={"id": "parentId"})
-     *
-     * @param Message $parent
      *
      * @return Response
      *
@@ -221,8 +206,6 @@ class HostingRequestController extends BaseMessageController
      * @Route("/request/{id}", name="hosting_request_show",
      *     requirements={"id": "\d+"})
      *
-     * @param Message $message
-     *
      * @throws AccessDeniedException
      *
      * @return Response
@@ -265,9 +248,6 @@ class HostingRequestController extends BaseMessageController
 
     /**
      * @Route("/new/request/{username}", name="hosting_request")
-     *
-     * @param Request $request
-     * @param Member  $host
      *
      * @throws Exception
      *
@@ -345,12 +325,11 @@ class HostingRequestController extends BaseMessageController
      * @Route("/requests/{folder}", name="requests",
      *     defaults={"folder": "inbox"})
      *
-     * @param Request $request
      * @param string $folder
      *
+     * @throws InvalidArgumentException
+     *
      * @return Response
-     * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function requests(Request $request, $folder)
     {
@@ -367,9 +346,6 @@ class HostingRequestController extends BaseMessageController
     }
 
     /**
-     * @param Member $host
-     * @param Member $guest
-     * @param Message $request
      * @param mixed $subject
      * @param $requestChanged
      */
@@ -379,8 +355,6 @@ class HostingRequestController extends BaseMessageController
     }
 
     /**
-     * @param Message $hostingRequest
-     *
      * @return bool
      */
     protected function checkRequestExpired(Message $hostingRequest)
@@ -411,11 +385,6 @@ class HostingRequestController extends BaseMessageController
         return true;
     }
 
-    /**
-     * @param Member  $host
-     * @param Member  $guest
-     * @param Message $request
-     */
     private function sendInitialRequestNotification(Member $host, Member $guest, Message $request)
     {
         $subject = $request->getSubject()->getSubject();
@@ -424,10 +393,8 @@ class HostingRequestController extends BaseMessageController
     }
 
     /**
-     * @param Member  $guest
-     * @param Member  $host
-     * @param Message $request
-     * @param mixed   $subject
+     * @param mixed $subject
+     * @param mixed $requestChanged
      */
     private function sendHostReplyNotification(Member $host, Member $guest, Message $request, $subject, $requestChanged)
     {
@@ -435,16 +402,14 @@ class HostingRequestController extends BaseMessageController
     }
 
     /**
-     * @param Message $hostingRequest
-     * @param Message $data
      * @param $clickedButton
      * @param mixed $sender
      * @param mixed $receiver
      *
-     * @return Message
      * @throws \Doctrine\DBAL\Exception\InvalidArgumentException
-     *
      * @throws InvalidArgumentException
+     *
+     * @return Message
      */
     private function getFinalRequest(Member $sender, Member $receiver, Message $hostingRequest, Message $data, $clickedButton)
     {

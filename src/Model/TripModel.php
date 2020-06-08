@@ -2,7 +2,6 @@
 
 namespace App\Model;
 
-use App\Entity\Member;
 use App\Entity\Trip;
 use App\Repository\TripRepository;
 use App\Utilities\ManagerTrait;

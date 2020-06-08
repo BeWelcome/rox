@@ -5,9 +5,6 @@ namespace App\Utilities;
 use App\Entity\Member;
 use App\Entity\Message;
 use App\Entity\Subject;
-use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
-use Symfony\Component\Templating\EngineInterface;
 use Twig\Environment;
 
 trait MessageTrait
@@ -15,7 +12,7 @@ trait MessageTrait
     use TranslatorTrait;
 
     /**
-     * Twig environment used to render templates
+     * Twig environment used to render templates.
      *
      * @var Environment
      */
@@ -23,8 +20,6 @@ trait MessageTrait
 
     /**
      * @Required
-     *
-     * @param Environment $environment
      */
     public function setTwigEnvironment(Environment $environment)
     {
@@ -37,10 +32,6 @@ trait MessageTrait
     }
 
     /**
-     * @param Member $sender
-     * @param Member $receiver
-     * @param string $parent
-     * @param string $template
      * @param mixed ...$params
      */
     protected function createTemplateMessage(

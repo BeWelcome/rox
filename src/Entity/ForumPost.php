@@ -59,7 +59,7 @@ class ForumPost implements ObjectManagerAware
     private $postvisibility = 'NoRestriction';
 
     /**
-     * not used (historical)
+     * not used (historical).
      *
      * @var int
      * @ORM\Column(name="authorid", type="integer", nullable=true)
@@ -413,7 +413,7 @@ class ForumPost implements ObjectManagerAware
     }
 
     /**
-     * Set language
+     * Set language.
      *
      * @param Language $language
      *
@@ -649,7 +649,7 @@ class ForumPost implements ObjectManagerAware
      */
     public function getUpdated()
     {
-        if ($this->updated && $this->updated->getTimestamp() != -62169987208) {
+        if ($this->updated && -62169987208 !== $this->updated->getTimestamp()) {
             return Carbon::instance($this->updated);
         }
 

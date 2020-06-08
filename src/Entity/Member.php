@@ -23,7 +23,6 @@ use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\Security\Core\Encoder\EncoderAwareInterface;
 use Symfony\Component\Security\Core\Exception\RuntimeException;
 use Symfony\Component\Security\Core\User\UserInterface;
-use function in_array;
 
 /**
  * Member.
@@ -806,8 +805,6 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
     /**
      * Set city.
      *
-     * @param Location $city
-     *
      * @return Member
      */
     public function setCity(Location $city)
@@ -1496,8 +1493,7 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
      */
     public function getLastLogin(): ?Carbon
     {
-        if (null !== $this->lastLogin)
-        {
+        if (null !== $this->lastLogin) {
             return Carbon::instance($this->lastLogin);
         }
 
@@ -2488,7 +2484,7 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
         if (null !== $volunteerRights) {
             foreach ($volunteerRights->getIterator() as $volunteerRight) {
                 if (0 !== $volunteerRight->getLevel()) {
-                    $roles[] = 'ROLE_ADMIN_'.strtoupper($volunteerRight->getRight()->getName());
+                    $roles[] = 'ROLE_ADMIN_' . strtoupper($volunteerRight->getRight()->getName());
                 }
             }
 
@@ -2548,7 +2544,7 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
 
     public function isPrivileged()
     {
-        if (in_array('ROLE_ADMIN', $this->getRoles(), true)) {
+        if (\in_array('ROLE_ADMIN', $this->getRoles(), true)) {
             return true;
         }
 
@@ -2616,8 +2612,6 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
     /**
      * Add cryptedField.
      *
-     * @param CryptedField $cryptedField
-     *
      * @return Member
      */
     public function addCryptedField(CryptedField $cryptedField)
@@ -2629,8 +2623,6 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
 
     /**
      * Remove cryptedField.
-     *
-     * @param CryptedField $cryptedField
      */
     public function removeCryptedField(CryptedField $cryptedField)
     {
@@ -2650,8 +2642,6 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
     /**
      * Add volunteerRight.
      *
-     * @param RightVolunteer $volunteerRight
-     *
      * @return Member
      */
     public function addVolunteerRight(RightVolunteer $volunteerRight)
@@ -2663,8 +2653,6 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
 
     /**
      * Remove volunteerRight.
-     *
-     * @param RightVolunteer $volunteerRight
      */
     public function removeVolunteerRight(RightVolunteer $volunteerRight)
     {
@@ -2673,8 +2661,6 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
 
     /**
      * Add group.
-     *
-     * @param Group $group
      *
      * @return Member
      */
@@ -2687,8 +2673,6 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
 
     /**
      * Remove group.
-     *
-     * @param Group $group
      */
     public function removeGroup(Group $group)
     {
@@ -2699,7 +2683,7 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
     {
         $stripped = '';
         $criteria = Criteria::create()
-            ->where(Criteria::expr()->eq('tablecolumn', 'members.'.$fieldName));
+            ->where(Criteria::expr()->eq('tablecolumn', 'members.' . $fieldName));
         $cryptedField = $this->cryptedFields->matching($criteria)->first();
         if (false !== $cryptedField) {
             $value = $cryptedField->getMemberCryptedValue();
@@ -2728,7 +2712,6 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
     {
         return $this->hideAttribute;
     }
-
 
     /**
      * @param int $hostingInterest
@@ -2763,10 +2746,10 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
                 if ($volunteerRight->getRight() === $word) {
                     $strScope = str_replace('"', '', str_replace(',', ';', $volunteerRight->getScope()));
                     $scope = explode(';', $strScope);
-                    if (in_array($locale, $scope, true)) {
+                    if (\in_array($locale, $scope, true)) {
                         $hasRight = true;
                     }
-                    if (in_array('All', $scope, true)) {
+                    if (\in_array('All', $scope, true)) {
                         $hasRight = true;
                     }
                 }
@@ -2813,7 +2796,7 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
             /** @var RightVolunteer $volunteerRight */
             foreach ($volunteerRights->getIterator() as $volunteerRight) {
                 if ($volunteerRight->getRight() === $right) {
-                    $scopes = str_replace(';', ',', str_replace('"','', $volunteerRight->getScope()));
+                    $scopes = str_replace(';', ',', str_replace('"', '', $volunteerRight->getScope()));
                     $scope = explode(',', $scopes);
                 }
             }
@@ -2824,7 +2807,7 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
 
     public function isBrowseable()
     {
-        if (in_array(
+        if (\in_array(
             $this->status,
             [
                 MemberStatusType::TAKEN_OUT,
@@ -2847,6 +2830,7 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
     {
         $suspended = (MemberStatusType::SUSPENDED === $this->status) ? true : false;
         $askedToLeave = (MemberStatusType::ASKED_TO_LEAVE === $this->status) ? true : false;
+
         return $suspended || $askedToLeave;
     }
 
@@ -2879,8 +2863,6 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
     }
 
     /**
-     * @param MembersLanguagesLevel $level
-     *
      * @return $this
      */
     public function addLanguageLevel(MembersLanguagesLevel $level)
@@ -2894,8 +2876,6 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
     }
 
     /**
-     * @param MembersLanguagesLevel $level
-     *
      * @return $this
      */
     public function removeLanguageLevel(MembersLanguagesLevel $level)
@@ -2922,8 +2902,6 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
     }
 
     /**
-     * @param Preference $preference
-     *
      * @return MemberPreference
      */
     public function getMemberPreference(Preference $preference)
@@ -2943,8 +2921,6 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
     }
 
     /**
-     * @param Preference $preference
-     *
      * @return string
      */
     public function getMemberPreferenceValue(Preference $preference)
@@ -3073,26 +3049,21 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
     }
 
     /**
-     * Provides an array collection of all translated items of a profile
+     * Provides an array collection of all translated items of a profile.
      *
      * Needs to be called explicitly
-     *
-     * @return array
      */
-    public function getMemberFields() : array
+    public function getMemberFields(): array
     {
-        if (null === $this->memberFields)
-        {
+        if (null === $this->memberFields) {
             $memberTranslationRepository = $this->em->getRepository(MemberTranslation::class);
             /** @var MemberTranslation[] $memberTranslations */
             $memberTranslations = $memberTranslationRepository->findBy(['owner' => $this]);
 
             $memberFields = [];
-            foreach($memberTranslations as $memberTranslation)
-            {
+            foreach ($memberTranslations as $memberTranslation) {
                 $tableColumn = $memberTranslation->getTablecolumn();
-                if ("members." !== substr($tableColumn, 0, 8))
-                {
+                if ('members.' !== substr($tableColumn, 0, 8)) {
                     continue;
                 }
                 $tableColumn = str_ireplace('members.', '', $tableColumn);
@@ -3125,12 +3096,9 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
                 'ProfileSummary',
             ];
 
-            foreach(array_keys($memberFields) as $locale)
-            {
-                foreach($fields as $field)
-                {
-                    if (!isset($memberFields[$locale][$field]))
-                    {
+            foreach (array_keys($memberFields) as $locale) {
+                foreach ($fields as $field) {
+                    if (!isset($memberFields[$locale][$field])) {
                         // Check if field exists in fallback locale
                         if (isset($memberFields[$fallback][$field])) {
                             $memberFields[$locale][$field] = $memberFields[$fallback][$field];
@@ -3143,7 +3111,6 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
                 }
             }
             $this->memberFields = $memberFields;
-
         }
 
         return $this->memberFields;
@@ -3160,11 +3127,12 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
         return $phoneNumbers;
     }
 
-    public function getMessengers() {
+    public function getMessengers()
+    {
         $messengers = [
             'GOOGLE' => $this->getCryptedField('chat_GOOGLE'),
-            'SKYPE' =>  $this->getCryptedField('chat_SKYPE'),
-            'Others' =>  $this->getCryptedField('chat_Others'),
+            'SKYPE' => $this->getCryptedField('chat_SKYPE'),
+            'Others' => $this->getCryptedField('chat_Others'),
         ];
 
         return $messengers;
@@ -3173,8 +3141,6 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
     /**
      * Injects responsible ObjectManager and the ClassMetadata into this persistent object.
      *
-     * @param ObjectManager $objectManager
-     * @param ClassMetadata $classMetadata
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function injectObjectManager(ObjectManager $objectManager, ClassMetadata $classMetadata)
@@ -3182,17 +3148,12 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
         $this->em = $objectManager;
     }
 
-    /**
-     * @return string
-     */
     public function getRegistrationKey(): string
     {
         return $this->registrationKey;
     }
 
     /**
-     * @param string $registrationKey
-     *
      * @return Member
      */
     public function setRegistrationKey(string $registrationKey): self
@@ -3202,12 +3163,9 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
         return $this;
     }
 
-    /**
-     * @return AdminUnit
-     */
     public function getRegion(): AdminUnit
     {
-        /** @var  $adminUnitRepository */
+        /** @var $adminUnitRepository */
         $adminUnitRepository = $this->em->getRepository(AdminUnit::class);
 
         /** @var AdminUnit $adminUnit */
@@ -3219,9 +3177,6 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
         return $adminUnit;
     }
 
-    /**
-     * @return Country
-     */
     public function getCountry(): Country
     {
         return $this->city->getCountry();
@@ -3231,6 +3186,6 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
     {
         $birthday = $this->getBirthdate();
 
-        return ($birthday->diffInYears());
+        return $birthday->diffInYears();
     }
 }

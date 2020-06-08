@@ -51,6 +51,7 @@ class AvatarController extends AbstractController
 
             $response = new BinaryFileResponse($filename);
             $response->setSharedMaxAge(600);
+
             return $response;
         }
 
@@ -60,6 +61,7 @@ class AvatarController extends AbstractController
 
             $response = new BinaryFileResponse($filename);
             $response->setSharedMaxAge(600);
+
             return $response;
         }
 
@@ -69,6 +71,7 @@ class AvatarController extends AbstractController
 
             $response = new BinaryFileResponse($filename);
             $response->setSharedMaxAge(600);
+
             return $response;
         }
 
@@ -76,6 +79,7 @@ class AvatarController extends AbstractController
         if (file_exists($filename)) {
             $response = new BinaryFileResponse($filename);
             $response->setSharedMaxAge(600);
+
             return $response;
         }
 
@@ -83,6 +87,7 @@ class AvatarController extends AbstractController
 
         $response = new BinaryFileResponse($filename);
         $response->setSharedMaxAge(600);
+
         return $response;
     }
 }

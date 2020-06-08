@@ -20,9 +20,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class SearchFormType extends AbstractType
 {
     /**
-     * @param FormBuilderInterface $formBuilder
-     * @param array                $options
-     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function buildForm(FormBuilderInterface $formBuilder, array $options)
@@ -83,8 +80,6 @@ class SearchFormType extends AbstractType
     /**
      * Add 'see map' option in case the map shows result from a zoom/pan operation or
      * an empty search location (\todo).
-     *
-     * @param FormEvent $event
      *
      * @throws AlreadySubmittedException
      * @throws LogicException

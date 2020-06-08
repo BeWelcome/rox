@@ -24,9 +24,6 @@ class UpdateTranslationAdapter implements AdapterInterface
      * SearchAdapter constructor.
      *
      * @SuppressWarnings(PHPMD.StaticAccess)
-     *
-     * @param Connection $connection
-     * @param string     $locale
      */
     public function __construct(Connection $connection, string $locale)
     {
@@ -97,6 +94,7 @@ class UpdateTranslationAdapter implements AdapterInterface
         $statement->bindValue('limit', $length, ParameterType::INTEGER);
         $statement->bindValue('offset', $offset, ParameterType::INTEGER);
         $statement->execute();
+
         return $statement->fetchAll();
     }
 }

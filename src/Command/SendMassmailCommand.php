@@ -4,20 +4,16 @@ namespace App\Command;
 
 use App\Entity\BroadcastMessage;
 use App\Utilities\MailerTrait;
-use App\Utilities\MessageTrait;
 use App\Utilities\TranslatorTrait;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
-use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
-use Symfony\Component\Mailer\Mailer;
 use Symfony\Component\Mime\Address;
 
 class SendMassmailCommand extends Command
@@ -25,9 +21,15 @@ class SendMassmailCommand extends Command
     use TranslatorTrait;
     use MailerTrait;
 
-    private $params;
-
+    /**
+     * @var string
+     */
     protected static $defaultName = 'send:massmail';
+
+    /**
+     * @var ParameterBagInterface
+     */
+    private $params;
 
     /**
      * @var EntityManager
@@ -49,22 +51,6 @@ class SendMassmailCommand extends Command
         ;
     }
 
-    private function determineSender($type): Address
-    {
-        switch($type) {
-            case "RemindToLog":
-            case "MailToConfirmReminder":
-                $sender = new Address("reminder@bewelcome.org", "BeWelcome");
-                break;
-            case "TermsOfUse":
-                $sender = new Address("tou@bewelcome.org", "BeWelcome");
-                break;
-            default:
-                $sender = new Address("newsletter@bewelcome.org", "BeWelcome");
-        }
-        return $sender;
-    }
-
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
@@ -79,11 +65,9 @@ class SendMassmailCommand extends Command
         $scheduledBroadcastMessages = $massmailRepository->findBy(['status' => 'ToSend'], ['updated' => 'ASC'], $batchSize, 0);
 
         $sent = 0;
-        if (!empty($scheduledBroadcastMessages))
-        {
+        if (!empty($scheduledBroadcastMessages)) {
             /** @var BroadcastMessage $scheduled */
-            foreach($scheduledBroadcastMessages as $scheduled)
-            {
+            foreach ($scheduledBroadcastMessages as $scheduled) {
                 $sender = $this->determineSender($scheduled->getNewsletter()->getType());
                 $receiver = $scheduled->getReceiver();
                 try {
@@ -93,8 +77,8 @@ class SendMassmailCommand extends Command
                         'wordcode' => strtolower('Broadcast_Body_' . $scheduled->getNewsletter()->getName()),
                     ]);
                     $scheduled->setStatus('Sent');
-                    $sent++;
-                } catch(Exception $e) {
+                    ++$sent;
+                } catch (Exception $e) {
                     $scheduled->setStatus('Freeze');
                 }
                 $this->entityManager->persist($scheduled);
@@ -105,5 +89,22 @@ class SendMassmailCommand extends Command
         $io->success(sprintf('Sent %d messages', $sent));
 
         return 0;
+    }
+
+    private function determineSender($type): Address
+    {
+        switch ($type) {
+            case 'RemindToLog':
+            case 'MailToConfirmReminder':
+                $sender = new Address('reminder@bewelcome.org', 'BeWelcome');
+                break;
+            case 'TermsOfUse':
+                $sender = new Address('tou@bewelcome.org', 'BeWelcome');
+                break;
+            default:
+                $sender = new Address('newsletter@bewelcome.org', 'BeWelcome');
+        }
+
+        return $sender;
     }
 }

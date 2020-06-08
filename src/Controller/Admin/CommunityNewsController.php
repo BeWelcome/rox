@@ -12,14 +12,14 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class CommunityNewsController extends AbstractController
 {
     /**
      * @Route("/admin/communitynews", name="admin_communitynews_overview")
      *
-     * @param Request            $request
-     * @param CommunityNewsModel $communityNewsModel
+     * @throws AccessDeniedException
      *
      * @return Response
      */
@@ -42,9 +42,7 @@ class CommunityNewsController extends AbstractController
     /**
      * @Route("/admin/communitynews/create", name="admin_communitynews_create")
      *
-     * @param Request $request
-     *
-     * @throws \Exception
+     * @throws AccessDeniedException
      *
      * @return Response
      */
@@ -80,8 +78,7 @@ class CommunityNewsController extends AbstractController
     /**
      * @Route("/admin/communitynews/{id}/edit", name="admin_communitynews_edit")
      *
-     * @param Request       $request
-     * @param CommunityNews $communityNews
+     * @throws AccessDeniedException
      *
      * @return Response
      */
@@ -113,7 +110,7 @@ class CommunityNewsController extends AbstractController
     /**
      * @Route("/admin/communitynews/{id}/hide", name="admin_communitynews_hide")
      *
-     * @param CommunityNews $communityNews
+     * @throws AccessDeniedException
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
@@ -138,7 +135,7 @@ class CommunityNewsController extends AbstractController
     /**
      * @Route("/admin/communitynews/{id}/show", name="admin_communitynews_unhide")
      *
-     * @param CommunityNews $communityNews
+     * @throws AccessDeniedException
      *
      * @return Response
      */

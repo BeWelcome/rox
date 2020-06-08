@@ -220,8 +220,6 @@ class Message
     /**
      * Set datesent.
      *
-     * @param DateTime $dateSent
-     *
      * @return Message
      */
     public function setDateSent(DateTime $dateSent)
@@ -292,8 +290,6 @@ class Message
     /**
      * Set Receiver.
      *
-     * @param Member $receiver
-     *
      * @return Message
      */
     public function setReceiver(Member $receiver)
@@ -315,8 +311,6 @@ class Message
 
     /**
      * Set Sender.
-     *
-     * @param Member $sender
      *
      * @return Message
      */
@@ -561,8 +555,6 @@ class Message
     }
 
     /**
-     * @param Member $member
-     *
      * @return bool
      */
     public function isReceiverDeleted(Member $member)
@@ -584,8 +576,6 @@ class Message
     }
 
     /**
-     * @param Member $member
-     *
      * @return bool
      */
     public function isSenderDeleted(Member $member)

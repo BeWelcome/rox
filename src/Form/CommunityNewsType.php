@@ -12,9 +12,6 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 class CommunityNewsType extends AbstractType
 {
     /**
-     * @param FormBuilderInterface $formBuilder
-     * @param array                $options
-     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function buildForm(FormBuilderInterface $formBuilder, array $options)

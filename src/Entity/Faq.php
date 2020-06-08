@@ -236,8 +236,6 @@ class Faq
     }
 
     /**
-     * @param string $answer
-     *
      * @return Faq
      */
     public function setAnswer(string $answer)
@@ -253,8 +251,6 @@ class Faq
     }
 
     /**
-     * @param string $question
-     *
      * @return Faq
      */
     public function setQuestion(string $question)

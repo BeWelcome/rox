@@ -22,8 +22,10 @@ class LegacyLoader extends Loader
     private $loaded = false;
 
     /**
-     * @param mixed $resource
+     * @param mixed  $resource
      * @param string $type
+     *
+     * @throws \RuntimeException
      *
      * @return RouteCollection
      */
@@ -195,8 +197,9 @@ class LegacyLoader extends Loader
     }
 
     /**
-     * @param mixed $resource
+     * @param mixed  $resource
      * @param string $type
+     *
      * @return bool
      */
     public function supports($resource, string $type = null)

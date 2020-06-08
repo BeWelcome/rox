@@ -66,9 +66,7 @@ class BaseMessageController extends AbstractController
     }
 
     /**
-     * @param Request    $request
-     * @param string     $folder
-     * @param Pagerfanta $messages
+     * @param string $folder
      * @param $type
      *
      * @throws ORMException
@@ -140,10 +138,9 @@ class BaseMessageController extends AbstractController
     }
 
     /**
-     * @param Message $message
+     * @throws AccessDeniedException
      *
      * @return bool
-     * @throws AccessDeniedException
      */
     protected function isMessageOfMember(Message $message)
     {
@@ -173,8 +170,6 @@ class BaseMessageController extends AbstractController
     }
 
     /**
-     * @param Request $request
-     *
      * @return array
      */
     protected function getOptionsFromRequest(Request $request)

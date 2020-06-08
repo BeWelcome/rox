@@ -6,7 +6,7 @@ use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Translations
+ * Translations.
  *
  * @ORM\Table(name="translations")
  * @ORM\HasLifecycleCallbacks
@@ -80,7 +80,7 @@ class Translation
     private $sentence;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="IdRecord", type="integer", nullable=false)
      */
@@ -103,7 +103,7 @@ class Translation
     private $id;
 
     /**
-     * Set language
+     * Set language.
      *
      * @param Language $language
      *
@@ -117,7 +117,7 @@ class Translation
     }
 
     /**
-     * Get language
+     * Get language.
      *
      * @return Language
      */
@@ -127,7 +127,7 @@ class Translation
     }
 
     /**
-     * Set owner
+     * Set owner.
      *
      * @param Member $owner
      *
@@ -141,7 +141,7 @@ class Translation
     }
 
     /**
-     * Get owner
+     * Get owner.
      *
      * @return Member
      */
@@ -151,7 +151,7 @@ class Translation
     }
 
     /**
-     * Set idTrad
+     * Set idTrad.
      *
      * @param int $idTrad
      *
@@ -165,7 +165,7 @@ class Translation
     }
 
     /**
-     * Get idTrad
+     * Get idTrad.
      *
      * @return int
      */
@@ -175,7 +175,7 @@ class Translation
     }
 
     /**
-     * Set translator
+     * Set translator.
      *
      * @param Member $translator
      *
@@ -189,7 +189,7 @@ class Translation
     }
 
     /**
-     * Get translator
+     * Get translator.
      *
      * @return Member
      */
@@ -199,7 +199,7 @@ class Translation
     }
 
     /**
-     * Get updated
+     * Get updated.
      *
      * @return DateTime
      */
@@ -209,7 +209,7 @@ class Translation
     }
 
     /**
-     * Get created
+     * Get created.
      *
      * @return DateTime
      */
@@ -219,7 +219,7 @@ class Translation
     }
 
     /**
-     * Set type
+     * Set type.
      *
      * @param string $type
      *
@@ -233,7 +233,7 @@ class Translation
     }
 
     /**
-     * Get type
+     * Get type.
      *
      * @return string
      */
@@ -243,7 +243,7 @@ class Translation
     }
 
     /**
-     * Set sentence
+     * Set sentence.
      *
      * @param string $sentence
      *
@@ -257,7 +257,7 @@ class Translation
     }
 
     /**
-     * Get sentence
+     * Get sentence.
      *
      * @return string
      */
@@ -267,7 +267,7 @@ class Translation
     }
 
     /**
-     * Set idrecord
+     * Set idrecord.
      *
      * @param int $idrecord
      *
@@ -281,7 +281,7 @@ class Translation
     }
 
     /**
-     * Get idrecord
+     * Get idrecord.
      *
      * @return int
      */
@@ -291,7 +291,7 @@ class Translation
     }
 
     /**
-     * Set tablecolumn
+     * Set tablecolumn.
      *
      * @param string $tablecolumn
      *
@@ -305,7 +305,7 @@ class Translation
     }
 
     /**
-     * Get tablecolumn
+     * Get tablecolumn.
      *
      * @return string
      */
@@ -315,7 +315,7 @@ class Translation
     }
 
     /**
-     * Get id
+     * Get id.
      *
      * @return int
      */

@@ -7,7 +7,7 @@ use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * GalleryComments
+ * GalleryComments.
  *
  * @ORM\Table(name="gallery_comments", indexes={@ORM\Index(name="blog_id_foreign", columns={"gallery_items_id_foreign"}), @ORM\Index(name="user_id_foreign", columns={"user_id_foreign"})})
  * @ORM\HasLifecycleCallbacks
@@ -19,7 +19,7 @@ use Doctrine\ORM\Mapping as ORM;
 class GalleryComment
 {
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="gallery_id_foreign", type="integer", nullable=false)
      */
@@ -63,7 +63,7 @@ class GalleryComment
     private $text;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -92,7 +92,7 @@ class GalleryComment
     }
 
     /**
-     * Set galleryItemsIdForeign
+     * Set galleryItemsIdForeign.
      *
      * @param GalleryImage $image
      *
@@ -106,7 +106,7 @@ class GalleryComment
     }
 
     /**
-     * Get galleryItemsIdForeign
+     * Get galleryItemsIdForeign.
      *
      * @return GalleryImage
      */
@@ -136,7 +136,7 @@ class GalleryComment
     }
 
     /**
-     * Get created
+     * Get created.
      *
      * @return Carbon
      */
@@ -146,7 +146,7 @@ class GalleryComment
     }
 
     /**
-     * Set title
+     * Set title.
      *
      * @param string $title
      *
@@ -160,7 +160,7 @@ class GalleryComment
     }
 
     /**
-     * Get title
+     * Get title.
      *
      * @return string
      */
@@ -170,7 +170,7 @@ class GalleryComment
     }
 
     /**
-     * Set text
+     * Set text.
      *
      * @param string $text
      *
@@ -184,7 +184,7 @@ class GalleryComment
     }
 
     /**
-     * Get text
+     * Get text.
      *
      * @return string
      */
@@ -194,7 +194,7 @@ class GalleryComment
     }
 
     /**
-     * Get id
+     * Get id.
      *
      * @return int
      */

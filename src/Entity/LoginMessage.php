@@ -11,7 +11,7 @@ use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * LoginMessages
+ * LoginMessages.
  *
  * @ORM\Table(name="login_messages")
  * @ORM\Entity(repositoryClass="App\Repository\LoginMessageRepository")
@@ -45,7 +45,7 @@ class LoginMessage
     private $id;
 
     /**
-     * Set text
+     * Set text.
      *
      * @param string $text
      *
@@ -59,7 +59,7 @@ class LoginMessage
     }
 
     /**
-     * Get text
+     * Get text.
      *
      * @return string
      */
@@ -69,7 +69,7 @@ class LoginMessage
     }
 
     /**
-     * Set created
+     * Set created.
      *
      * @param DateTime $created
      *
@@ -83,7 +83,7 @@ class LoginMessage
     }
 
     /**
-     * Get created
+     * Get created.
      *
      * @return DateTime
      */
@@ -93,7 +93,7 @@ class LoginMessage
     }
 
     /**
-     * Get id
+     * Get id.
      *
      * @return int
      */

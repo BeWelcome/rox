@@ -7,12 +7,11 @@
 
 namespace App\Entity;
 
+use App\Entity\Country as Country;
+use App\Entity\Member as Member;
 use Carbon\Carbon;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
-use App\Entity\Member as Member;
-use App\Entity\Country as Country;
-
 
 /**
  * DonationEntity.

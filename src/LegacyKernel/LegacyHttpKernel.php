@@ -15,7 +15,6 @@ use Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface;
 use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
 use Symfony\Component\HttpKernel\HttpKernel;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
-use Symfony\Component\Templating\EngineInterface;
 use Twig\Environment;
 
 /**
@@ -55,9 +54,8 @@ class LegacyHttpKernel extends HttpKernel
     }
 
     /**
-     * @param Request $request
-     * @param int     $type
-     * @param bool    $catch
+     * @param int  $type
+     * @param bool $catch
      *
      * @return Response
      *

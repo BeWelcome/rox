@@ -15,7 +15,6 @@ use Doctrine\ORM\ORMException;
 use PDO;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Output\OutputInterface;
-use vendor\project\StatusTest;
 
 class StatisticsModel
 {
@@ -79,7 +78,7 @@ class StatisticsModel
 
         $stats = [
             'members' => $members['cnt'],
-            'countries' => count($countries),
+            'countries' => \count($countries),
             'languages' => $languages['cnt'],
             'comments' => $positiveComments['cnt'],
             'activities' => $activities['cnt'],
@@ -89,16 +88,14 @@ class StatisticsModel
     }
 
     /**
-     * @param DatePeriod $dates
-     * @param OutputInterface $output
-     * @return int
      * @throws DBALException
      * @throws ORMException
      * @throws OptimisticLockException
+     *
+     * @return int
      */
     public function updateStatistics(DatePeriod $dates, OutputInterface $output)
     {
-
         $progressBar = null;
         $count = iterator_count($dates);
         $output->write(['Update statistics ']);
@@ -155,13 +152,13 @@ class StatisticsModel
         }
 
         $em->flush();
+
         return 0;
     }
 
     /**
-     * @param Connection $connection
-     * @param string $current
      * @param Statistic $statistics
+     *
      * @throws DBALException
      */
     private function setMemberInfo(Connection $connection, string $current, $statistics): void
@@ -207,10 +204,8 @@ class StatisticsModel
     }
 
     /**
-     * @param Connection $connection
-     * @param string $current
-     * @param string $next
      * @param Statistic $statistics
+     *
      * @throws DBALException
      */
     private function setLoggedInMembers(Connection $connection, string $current, string $next, $statistics): void
@@ -237,17 +232,15 @@ class StatisticsModel
     }
 
     /**
-     * @param Connection $connection
-     * @param string $current
-     * @param string $next
      * @param Statistic $statistics
+     *
      * @throws DBALException
      */
     private function setMessagesSentAndRead(Connection $connection, string $current, string $next, $statistics): void
     {
         // Number of messages sent from one member to another during the current date
         $result = $connection->executeQuery(
-            "
+            '
                     SELECT
                       COUNT(m.id) AS cnt
                     FROM
@@ -256,7 +249,7 @@ class StatisticsModel
                       m.DateSent >= :current
                       AND m.DateSent < :next
                       AND m.request_id IS null
-                      ",
+                      ',
             [
                 ':current' => $current,
                 ':next' => $next,
@@ -267,7 +260,7 @@ class StatisticsModel
 
         // Number of messages read during the current date
         $result = $connection->executeQuery(
-            "
+            '
                     SELECT
                       COUNT(m.id) AS cnt
                     FROM
@@ -276,7 +269,7 @@ class StatisticsModel
                       m.WhenFirstRead >= :current
                       AND m.WhenFirstRead < :next
                       AND m.request_id IS null
-                      ",
+                      ',
             [
                 ':current' => $current,
                 ':next' => $next,
@@ -287,17 +280,15 @@ class StatisticsModel
     }
 
     /**
-     * @param Connection $connection
-     * @param string $current
-     * @param string $next
      * @param Statistic $statistics
+     *
      * @throws DBALException
      */
     private function setRequestsSentAndAccepted(Connection $connection, string $current, string $next, $statistics): void
     {
         // Number of requests created from one member to another during the current date
         $result = $connection->executeQuery(
-            "
+            '
                     SELECT
                       COUNT(r.id) AS cnt
                     FROM
@@ -305,7 +296,7 @@ class StatisticsModel
                     WHERE
                       r.created >= :current
                       AND r.created < :next
-                      ",
+                      ',
             [
                 ':current' => $current,
                 ':next' => $next,
@@ -316,7 +307,7 @@ class StatisticsModel
 
         // Number of requests accepted during the current date
         $result = $connection->executeQuery(
-            "
+            '
                     SELECT
                       COUNT(r.id) AS cnt
                     FROM
@@ -325,11 +316,11 @@ class StatisticsModel
                       r.updated >= :current
                       AND r.updated < :next
                       AND r.`status` = :status
-                      ",
+                      ',
             [
                 ':current' => $current,
                 ':next' => $next,
-                ':status' => HostingRequest::REQUEST_ACCEPTED
+                ':status' => HostingRequest::REQUEST_ACCEPTED,
             ]
         )
             ->fetch(PDO::FETCH_ASSOC);

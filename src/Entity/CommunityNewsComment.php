@@ -32,7 +32,7 @@ class CommunityNewsComment
 
     /**
      * @var Member
-     * A comment has one author
+     *             A comment has one author
      *
      * @ORM\OneToOne(targetEntity="Member")
      */
@@ -170,17 +170,12 @@ class CommunityNewsComment
         return $this;
     }
 
-    /**
-     * @return Member
-     */
     public function getAuthor(): Member
     {
         return $this->author;
     }
 
     /**
-     * @param Member $author
-     *
      * @return CommunityNewsComment
      */
     public function setAuthor(Member $author)

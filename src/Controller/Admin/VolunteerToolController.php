@@ -2,7 +2,6 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\Feedback;
 use App\Entity\Member;
 use App\Entity\Message;
 use App\Form\ChangeUsernameFormType;
@@ -26,7 +25,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use function array_key_exists;
 
 /**
  * Class VolunteerToolController.
@@ -55,8 +53,6 @@ class VolunteerToolController extends AbstractController
      *
      * @Route("/admin/tools", name="admin_volunteer_tools")
      *
-     * @param Request $request
-     *
      * @return Response
      */
     public function showOverview(Request $request)
@@ -69,10 +65,6 @@ class VolunteerToolController extends AbstractController
 
     /**
      * @Route("/admin/tools/change", name="admin_tools_change_username")
-     *
-     * @param Request             $request
-     * @param TranslatorInterface $translator
-     * @param Logger              $logger
      *
      * @throws Exception
      *
@@ -134,9 +126,6 @@ class VolunteerToolController extends AbstractController
     /**
      * @Route("/admin/tools/findmember", name="admin_tools_find_user")
      *
-     * @param Request $request
-     * @param Logger  $logger
-     *
      *@throws Exception
      *
      * @return Response|RedirectResponse
@@ -175,8 +164,6 @@ class VolunteerToolController extends AbstractController
 
     /**
      * @Route("/admin/tools/check/feedback", name="admin_tools_check_feedback")
-     *
-     * @param Request $request
      *
      * @return Response|RedirectResponse
      */
@@ -218,8 +205,6 @@ class VolunteerToolController extends AbstractController
 
     /**
      * @Route("/admin/tools/topspammer", name="admin_tools_top_spammer")
-     *
-     * @param Request $request
      *
      * @throws Exception
      *
@@ -266,8 +251,6 @@ class VolunteerToolController extends AbstractController
 
     /**
      * @Route("/admin/tools/damagedone", name="admin_tools_damage_done")
-     *
-     * @param Request $request
      *
      * @throws Exception
      *
@@ -316,8 +299,6 @@ class VolunteerToolController extends AbstractController
     /**
      * @Route("/admin/tools/messages/sent", name="admin_tools_messages_sent")
      *
-     * @param Request $request
-     *
      * @throws Exception
      *
      * @return Response
@@ -360,8 +341,6 @@ ORDER BY count(msg.id) DESC')->fetchAll();
 
     /**
      * @Route("/admin/tools/messages/member", name="admin_tools_messages_by_member")
-     *
-     * @param Request $request
      *
      * @throws Exception
      *
@@ -406,7 +385,7 @@ ORDER BY count(msg.id) DESC')->fetchAll();
                 $receiver = $message->getReceiver();
                 $correspondent = ($sender === $member) ? $receiver : $sender;
                 $username = $correspondent->getUsername();
-                if (!array_key_exists($username, $results)) {
+                if (!\array_key_exists($username, $results)) {
                     $results[$username] = [
                         'username' => $username,
                         'direction' => 0,
@@ -446,8 +425,6 @@ ORDER BY count(msg.id) DESC')->fetchAll();
 
     /**
      * @Route("/admin/tools/countryage", name="admin_tools_age_by_country")
-     *
-     * @param Request $request
      *
      * @throws Exception
      *
@@ -495,7 +472,8 @@ ORDER BY count(msg.id) DESC')->fetchAll();
     private function getSubMenuItems()
     {
         $subMenu = [];
-        if ($this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
+        if (
+            $this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
             || $this->isGranted(Member::ROLE_ADMIN_PROFILE)
         ) {
             $subMenu[self::CHANGE_USERNAME] = [
@@ -503,7 +481,8 @@ ORDER BY count(msg.id) DESC')->fetchAll();
                 'url' => $this->generateUrl('admin_tools_change_username'),
             ];
         }
-        if ($this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
+        if (
+            $this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
             || $this->isGranted(Member::ROLE_ADMIN_PROFILE)
             || $this->isGranted(Member::ROLE_ADMIN_ACCEPTER)
         ) {
@@ -512,7 +491,8 @@ ORDER BY count(msg.id) DESC')->fetchAll();
                 'url' => $this->generateUrl('admin_tools_find_user'),
             ];
         }
-        if ($this->isGranted(Member::ROLE_ADMIN_ADMIN)
+        if (
+            $this->isGranted(Member::ROLE_ADMIN_ADMIN)
             || $this->isGranted(Member::ROLE_ADMIN_CHECKER)
         ) {
             $subMenu[self::CHECK_FEEDBACK] = [
@@ -520,7 +500,8 @@ ORDER BY count(msg.id) DESC')->fetchAll();
                 'url' => $this->generateUrl('admin_tools_check_feedback'),
             ];
         }
-        if ($this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
+        if (
+            $this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
             || $this->isGranted(Member::ROLE_ADMIN_CHECKER)
         ) {
             $subMenu[self::CHECK_TOP_SPAMMER] = [
@@ -532,7 +513,8 @@ ORDER BY count(msg.id) DESC')->fetchAll();
                 'url' => $this->generateUrl('admin_tools_damage_done'),
             ];
         }
-        if ($this->isGranted(Member::ROLE_ADMIN_ADMIN)
+        if (
+            $this->isGranted(Member::ROLE_ADMIN_ADMIN)
             || $this->isGranted(Member::ROLE_ADMIN_CHECKER)
         ) {
             $subMenu[self::AGE_BY_COUNTRY] = [
@@ -540,7 +522,8 @@ ORDER BY count(msg.id) DESC')->fetchAll();
                 'url' => $this->generateUrl('admin_tools_age_by_country'),
             ];
         }
-        if ($this->isGranted(Member::ROLE_ADMIN_PROFILE)
+        if (
+            $this->isGranted(Member::ROLE_ADMIN_PROFILE)
             || $this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
             || $this->isGranted(Member::ROLE_ADMIN_ADMIN)
         ) {
@@ -559,9 +542,9 @@ ORDER BY count(msg.id) DESC')->fetchAll();
         return $subMenu;
     }
 
-    /** Throws
-     * @param Request $request
+    /** Throws.
      * @param string $tool
+     *
      * @return RedirectResponse
      */
     private function checkPermissions(Request $request, string $tool = null)
@@ -569,7 +552,7 @@ ORDER BY count(msg.id) DESC')->fetchAll();
         // check permissions
         $subMenuItems = $this->getSubMenuItems();
 
-        if (empty($subMenuItems) || ((null!== $tool) && !array_key_exists($tool, $subMenuItems))) {
+        if (empty($subMenuItems) || ((null !== $tool) && !\array_key_exists($tool, $subMenuItems))) {
             $this->addFlash('notice', 'admin.tools.not.allowed');
             $referrer = $request->headers->get('referer');
 

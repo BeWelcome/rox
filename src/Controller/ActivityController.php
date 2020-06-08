@@ -14,8 +14,6 @@ class ActivityController extends AbstractController
     /**
      * @Route("/activity", name="activity")
      *
-     * @param Request $request
-     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function listAction(Request $request, ActivityModel $activityModel)
@@ -35,8 +33,6 @@ class ActivityController extends AbstractController
      * @Route("/activity/{id}", name="activity_show",
      *     requirements={"id": "\d+"})
      *
-     * @param Activity $activity
-     *
      * @return Response
      */
     public function showAction(Activity $activity)
@@ -51,8 +47,6 @@ class ActivityController extends AbstractController
     /**
      * @Route("/activity/{id}/edit", name="activity_edit",
      *     requirements={"id": "\d+"})
-     *
-     * @param Activity $activity
      *
      * @return Response
      */

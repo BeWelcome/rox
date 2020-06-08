@@ -5,7 +5,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Privileges
+ * Privileges.
  *
  * @ORM\Table(name="privileges", uniqueConstraints={@ORM\UniqueConstraint(name="controller", columns={"controller", "method", "type"})})
  * @ORM\Entity
@@ -41,7 +41,7 @@ class Privilege
     private $type;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -50,7 +50,7 @@ class Privilege
     private $id;
 
     /**
-     * Set controller
+     * Set controller.
      *
      * @param string $controller
      *
@@ -64,7 +64,7 @@ class Privilege
     }
 
     /**
-     * Get controller
+     * Get controller.
      *
      * @return string
      */
@@ -74,7 +74,7 @@ class Privilege
     }
 
     /**
-     * Set method
+     * Set method.
      *
      * @param string $method
      *
@@ -88,7 +88,7 @@ class Privilege
     }
 
     /**
-     * Get method
+     * Get method.
      *
      * @return string
      */
@@ -98,7 +98,7 @@ class Privilege
     }
 
     /**
-     * Set type
+     * Set type.
      *
      * @param string $type
      *
@@ -112,7 +112,7 @@ class Privilege
     }
 
     /**
-     * Get type
+     * Get type.
      *
      * @return string
      */
@@ -122,9 +122,9 @@ class Privilege
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {

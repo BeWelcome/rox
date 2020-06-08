@@ -10,7 +10,6 @@ namespace App\Entity;
 use Carbon\Carbon;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -314,8 +313,6 @@ class Trip
     /**
      * Add subtrip.
      *
-     * @param SubTrip $subtrip
-     *
      * @return Trip
      */
     public function addSubtrip(SubTrip $subtrip)
@@ -329,8 +326,6 @@ class Trip
 
     /**
      * Remove subtrip.
-     *
-     * @param SubTrip $subtrip
      */
     public function removeSubtrip(SubTrip $subtrip)
     {

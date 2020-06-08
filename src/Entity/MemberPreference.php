@@ -51,7 +51,7 @@ class MemberPreference
     private $created;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -61,8 +61,6 @@ class MemberPreference
 
     /**
      * Set member.
-     *
-     * @param Member $member
      *
      * @return MemberPreference
      */
@@ -85,8 +83,6 @@ class MemberPreference
 
     /**
      * Set preference.
-     *
-     * @param Preference $preference
      *
      * @return MemberPreference
      */

@@ -13,9 +13,6 @@ use Symfony\Component\Form\FormEvents;
 class FaqFormType extends AbstractType
 {
     /**
-     * @param FormBuilderInterface $formBuilder
-     * @param array                $options
-     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function buildForm(FormBuilderInterface $formBuilder, array $options)

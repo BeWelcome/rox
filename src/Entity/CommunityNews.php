@@ -9,7 +9,6 @@ namespace App\Entity;
 
 use Carbon\Carbon;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -196,8 +195,6 @@ class CommunityNews
     /**
      * Set createdBy.
      *
-     * @param Member $createdBy
-     *
      * @return CommunityNews
      */
     public function setCreatedBy(Member $createdBy)
@@ -243,8 +240,6 @@ class CommunityNews
 
     /**
      * Set updatedBy.
-     *
-     * @param Member $updatedBy
      *
      * @return CommunityNews
      */

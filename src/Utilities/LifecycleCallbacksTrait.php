@@ -6,8 +6,7 @@ use Carbon\Carbon;
 use DateTime;
 
 /**
- * Trait LifecycleCallbacksTrait
- * @package App\Utilities
+ * Trait LifecycleCallbacksTrait.
  */
 trait LifecycleCallbacksTrait
 {

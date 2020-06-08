@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Doctrine\AccommodationType;
 use App\Entity\Member;
-use App\Entity\MemberPreference;
 use App\Entity\Preference;
 use App\Form\CustomDataClass\SearchFormRequest;
 use App\Form\SearchFormType;
@@ -33,8 +32,6 @@ class LandingController extends AbstractController
     }
 
     /**
-     * @param Request $request
-     *
      * @Route( "/widget/messages", name="/widget/messages")
      *
      * @return Response
@@ -87,8 +84,6 @@ class LandingController extends AbstractController
     }
 
     /**
-     * @param Request $request
-     *
      * @Route( "/widget/threads", name="/widget/threads")
      *
      * @return Response
@@ -149,9 +144,6 @@ class LandingController extends AbstractController
     /**
      * @Route( "/widget/accommodation", name="/widget/accommodation")
      *
-     * @param Request $request
-     *
-     * @param Environment $twig
      * @return Response
      */
     public function setAccommodationAction(Request $request, Environment $twig)
@@ -192,9 +184,6 @@ class LandingController extends AbstractController
      * Shows the landing page.
      *
      * @Route("/", name="landingpage")
-     *
-     * @param CommunityNewsModel $communityNewsModel
-     * @param DonateModel        $donateModel
      *
      * @throws AccessDeniedException
      *
@@ -247,8 +236,6 @@ class LandingController extends AbstractController
     }
 
     /**
-     * @param Member $member
-     *
      * @return SearchFormRequest
      */
     private function getSearchHomeLocationRequest(Member $member)

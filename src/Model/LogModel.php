@@ -14,7 +14,6 @@ class LogModel
     /**
      * Returns a Pagerfanta object that contains the currently selected logs.
      *
-     * @param array $types
      * @param $member
      * @param int $page
      * @param int $limit
@@ -32,7 +31,6 @@ class LogModel
     }
 
     /**
-     * @param Member $member
      * @return array|false
      */
     public function getLogTypes(Member $member)
@@ -115,7 +113,7 @@ class LogModel
         ];
         // Reduce list of types to scope
         $allowedTypes = $member->getScopeForRight(Member::ROLE_ADMIN_LOGS);
-        if ($allowedTypes[0] !== 'All') {
+        if ('All' !== $allowedTypes[0]) {
             $types = array_intersect($allowedTypes, $types);
         }
         $logTypes = array_combine($types, $types);

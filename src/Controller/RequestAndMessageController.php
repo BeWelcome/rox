@@ -16,8 +16,7 @@ class RequestAndMessageController extends BaseMessageController
      * @Route("/both/{folder}", name="both",
      *     defaults={"folder": "inbox"})
      *
-     * @param Request $request
-     * @param string  $folder
+     * @param string $folder
      *
      * @throws InvalidArgumentException
      *

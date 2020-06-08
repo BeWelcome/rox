@@ -5,7 +5,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Tags for forum posts (no longer supported, but database table needs to exist)
+ * Tags for forum posts (no longer supported, but database table needs to exist).
  *
  * @ORM\Table(name="forums_tags", indexes={
  *     @ORM\Index(name="tag", columns={"tag"})
@@ -79,10 +79,8 @@ class ForumTag
      */
     private $tagid;
 
-
-
     /**
-     * Set tag
+     * Set tag.
      *
      * @param string $tag
      *
@@ -96,7 +94,7 @@ class ForumTag
     }
 
     /**
-     * Get tag
+     * Get tag.
      *
      * @return string
      */
@@ -106,7 +104,7 @@ class ForumTag
     }
 
     /**
-     * Set tagDescription
+     * Set tagDescription.
      *
      * @param string $tagDescription
      *
@@ -120,7 +118,7 @@ class ForumTag
     }
 
     /**
-     * Get tagDescription
+     * Get tagDescription.
      *
      * @return string
      */
@@ -130,9 +128,9 @@ class ForumTag
     }
 
     /**
-     * Set tagPosition
+     * Set tagPosition.
      *
-     * @param boolean $tagPosition
+     * @param bool $tagPosition
      *
      * @return ForumTag
      */
@@ -144,9 +142,9 @@ class ForumTag
     }
 
     /**
-     * Get tagPosition
+     * Get tagPosition.
      *
-     * @return boolean
+     * @return bool
      */
     public function getTagPosition()
     {
@@ -154,7 +152,7 @@ class ForumTag
     }
 
     /**
-     * Set counter
+     * Set counter.
      *
      * @param int $counter
      *
@@ -168,7 +166,7 @@ class ForumTag
     }
 
     /**
-     * Get counter
+     * Get counter.
      *
      * @return int
      */
@@ -178,7 +176,7 @@ class ForumTag
     }
 
     /**
-     * Set idname
+     * Set idname.
      *
      * @param int $idname
      *
@@ -192,7 +190,7 @@ class ForumTag
     }
 
     /**
-     * Get idname
+     * Get idname.
      *
      * @return int
      */
@@ -202,7 +200,7 @@ class ForumTag
     }
 
     /**
-     * Set iddescription
+     * Set iddescription.
      *
      * @param int $iddescription
      *
@@ -216,7 +214,7 @@ class ForumTag
     }
 
     /**
-     * Get iddescription
+     * Get iddescription.
      *
      * @return int
      */
@@ -226,7 +224,7 @@ class ForumTag
     }
 
     /**
-     * Set type
+     * Set type.
      *
      * @param string $type
      *
@@ -240,7 +238,7 @@ class ForumTag
     }
 
     /**
-     * Get type
+     * Get type.
      *
      * @return string
      */
@@ -250,7 +248,7 @@ class ForumTag
     }
 
     /**
-     * Set id
+     * Set id.
      *
      * @param int $id
      *
@@ -264,7 +262,7 @@ class ForumTag
     }
 
     /**
-     * Get id
+     * Get id.
      *
      * @return int
      */
@@ -274,7 +272,7 @@ class ForumTag
     }
 
     /**
-     * Get tagid
+     * Get tagid.
      *
      * @return int
      */

@@ -10,9 +10,6 @@ use Symfony\Component\Form\FormBuilderInterface;
 class WikiCreateForm extends AbstractType
 {
     /**
-     * @param FormBuilderInterface $formBuilder
-     * @param array                $options
-     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function buildForm(FormBuilderInterface $formBuilder, array $options)

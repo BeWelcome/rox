@@ -2,6 +2,8 @@
 
 namespace App\Command;
 
+use App\Doctrine\MemberStatusType;
+use App\Doctrine\NotificationStatusType;
 use App\Entity\ForumPost;
 use App\Entity\PostNotification;
 use App\Repository\PostNotificationRepository;
@@ -80,9 +82,10 @@ class SendNotificationsCommand extends Command
             /** @var PostNotification $scheduled */
             foreach ($scheduledNotifications as $scheduled) {
                 $receiver = $scheduled->getReceiver();
-//                if (!\in_array($receiver->getStatus(), MemberStatusType::ACTIVE_ALL_ARRAY, true)) {
-//                    continue;
-//                }
+                $status = $receiver->getStatus();
+                if (!in_array($status, MemberStatusType::ACTIVE_ALL_ARRAY, true )) {
+                    continue;
+                }
 
                 try {
                     // Force locale for all methods
@@ -93,11 +96,11 @@ class SendNotificationsCommand extends Command
                         'subject' => $subject,
                         'notification' => $scheduled,
                     ]);
-                    $scheduled->setStatus('Sent');
+                    $scheduled->setStatus(NotificationStatusType::SENT);
                     ++$sent;
                 } catch (\Exception $e) {
                     $io->error($e->getMessage());
-                    $scheduled->setStatus('Freeze');
+                    $scheduled->setStatus(NotificationStatusType::FROZEN);
                 }
                 $this->entityManager->persist($scheduled);
             }

@@ -3,8 +3,8 @@
 
 {% block content %}
     <p>
-        The page you tried to open ({{ app.request.pathInfo }}) doesn't exist.<br>
+        {{ 'error.404'|trans({'url', app.request.pathInfo }) }}
         <br>
-        <a href="{{ url('homepage') }}">Return to the homepage</a>.
+        <a href="{{ url('homepage') }}">{{ 'error.return.home'|trans }}</a>.
     </p>
 {% endblock %}

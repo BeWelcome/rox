@@ -8,6 +8,7 @@
 namespace App\Entity;
 
 use Carbon\Carbon;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -23,22 +24,18 @@ use Doctrine\ORM\Mapping as ORM;
 class Notification
 {
     /**
-     * @var \App\Entity\Member
+     * @var Member
      *
-     * @ORM\OneToOne(targetEntity="\App\Entity\Member")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="IdMember", referencedColumnName="id")
-     * })
+     * @ORM\ManyToOne(targetEntity="\App\Entity\Member")
+     * @ORM\JoinColumn(name="IdMember", referencedColumnName="id")
      */
     private $member;
 
     /**
-     * @var \App\Entity\Member
+     * @var Member
      *
-     * @ORM\OneToOne(targetEntity="\App\Entity\Member")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="IdRelMember", referencedColumnName="id")
-     * })
+     * @ORM\ManyToOne(targetEntity="\App\Entity\Member")
+     * @ORM\JoinColumn(name="IdRelMember", referencedColumnName="id")
      */
     private $relMember;
 
@@ -78,7 +75,7 @@ class Notification
     private $sendmail = '0';
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(name="created", type="datetime", nullable=false)
      */
@@ -267,7 +264,7 @@ class Notification
     /**
      * Set created.
      *
-     * @param \DateTime $created
+     * @param DateTime $created
      *
      * @return Notification
      */
@@ -347,7 +344,7 @@ class Notification
      */
     public function onPrePersist()
     {
-        $this->created = new \DateTime('now');
+        $this->created = new DateTime('now');
     }
 
     public function getTranslationparams(): ?string

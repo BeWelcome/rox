@@ -40,9 +40,8 @@ if (($post->IdGroup > 0) && ($post->PostVisibility == "GroupOnly")) {
     <!-- left column -->
     <div class="col-4 col-md-3 postleftcolumn">
         <div class="d-flex flex-column align-self-start">
-            <!-- member avatar -->
             <div class="media credentials p-1">
-                <img class="mr-1" src="/members/avatar/<?php echo($post->OwnerUsername); ?>?size=50">
+                <img class="avatar-50 mr-1" src="/members/avatar/<?php echo($post->OwnerUsername); ?>/50">
                 <div class="media-body">
                     <p class="small">
                     <a href="members/<?php echo $post->OwnerUsername; ?>"><?php echo $post->OwnerUsername; ?></a>
@@ -64,7 +63,7 @@ if (($post->IdGroup > 0) && ($post->PostVisibility == "GroupOnly")) {
 
                 if ($this->session->has("IdMember")) {
                     if ($this->BW_Right->HasRight("ForumModerator")) {
-                        $TheReports = $this->_model->GetReports($post->IdPost);
+                        $TheReports = $this->_model->GetReports($post->postid);
                         $max = count($TheReports);
                         foreach ($TheReports as $report) {
                             echo "<small class='text-muted'>{$report->Status} report from ", $report->Username, "</small><br>";
@@ -74,14 +73,14 @@ if (($post->IdGroup > 0) && ($post->PostVisibility == "GroupOnly")) {
 
                     echo '<small class="text-muted">';
                     if (isset($TheReports[0]->IdReporter) && ($TheReports[0]->IdReporter == $this->session->get("IdMember"))) {
-                        echo "<a href='forums/reporttomod/", $post->IdPost, "'>", $words->getBuffered('ForumViewMyReportToMod'), "</a>";
+                        echo "<a href='forums/reporttomod/", $post->postid, "'>", $words->getBuffered('ForumViewMyReportToMod'), "</a>";
                     } else {
-                        echo "<a href='forums/reporttomod/", $post->IdPost, "'><i class=\"fa fa-flag\"></i> ", $words->getBuffered('ForumMyReportToMod'), "</a>";
+                        echo "<a href='forums/reporttomod/", $post->postid, "'><i class=\"fa fa-flag\"></i> ", $words->getBuffered('ForumMyReportToMod'), "</a>";
                     }
                     echo '</small><br>';
 
-                    echo '<small class="text-muted"><a href="forums/s' . $post->threadid . '/#post' . $post->IdPost . '"><i class="fa fa-link"></i> ' . $words->get('ForumPermalink') . '</a></small><br>';
-                    $TheReports = $this->_model->GetReports($post->IdPost, $this->session->get("IdMember")); // Check if there is a pending report for this member
+                    echo '<small class="text-muted"><a href="forums/s' . $post->threadid . '/#post' . $post->postid . '"><i class="fa fa-link"></i> ' . $words->get('ForumPermalink') . '</a></small><br>';
+                    $TheReports = $this->_model->GetReports($post->postid, $this->session->get("IdMember")); // Check if there is a pending report for this member
 
                 }
                 ?>

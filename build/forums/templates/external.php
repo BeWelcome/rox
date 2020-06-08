@@ -51,8 +51,7 @@ $threadsliced = array_slice($threads, 0, 5);
 
         ?>
             <tr>
-                <td><i class="far fa-comment pr-1"></i>
-                    <?php
+                <td><?php
                     if ($thread->ThreadDeleted=='Deleted') {
                         echo "[Deleted]" ;
                     }

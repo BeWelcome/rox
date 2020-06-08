@@ -32,7 +32,7 @@
                                      <small class="text-muted">{{ description.Language.WordCode|lower|trans }} ({{ locale }})</small><br>{{ description.Sentence|purify }}
                                 {% endfor %}
                                 </td>
-                            <td>{% if group.members|first %}{{ macros.avatarstack((group.members|first).Username) }}{% endif %}</td>
+                            <td>{% if group.members|first %}{{ macros.avatarstack((group.members|first).Username, 50) }}{% endif %}</td>
                             <td class="text-center">
                                 {% if group.name starts with '[Archived] ' %}
                                     <a href="{{ path('admin_groups_unarchive', { 'id': group.id }) }}"><i class="fas fa-fw fa-2x fa-box-open" title="{{ 'admin.groups.unarchive'|trans }}"></i></a><br>

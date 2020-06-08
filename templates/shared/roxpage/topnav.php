@@ -35,7 +35,7 @@ $R = MOD_right::get();
 if ($logged_in) {
     $roxModel = new RoxModelBase();
     if ($R->hasRight('Comments') || ($R->hasRight('Checker'))) {
-        echo '<div class="container"><div class="row"><ul class="nav nav-inline pull-right mt-1 mb-1">';
+        echo '<div class="container-lg"><div class="row"><ul class="nav nav-inline pull-right mt-1 mb-1">';
     }
     if ($R->hasRight('Comments')) {
         echo '<li class="nav-item"><a class="nav-link" href="admin/comment/negative" title="Review negative comments">Negative comments <span class="badge badge-primary">' . $numberReportedComments . '</span></a></li>';

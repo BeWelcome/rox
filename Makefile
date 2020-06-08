@@ -89,3 +89,4 @@ phpmetrics:
 
 version:
 	git rev-parse --short HEAD > VERSION
+

@@ -18,7 +18,7 @@ use Symfony\Component\Asset\VersionStrategy\JsonManifestVersionStrategy;
         endforeach;
     endif; ?>
 
-<div class="container">
+<div class="container-lg">
     <?php $flashError = $this->getFlashError(true);
     if (substr($flashError,0, 2) == 't.') {
         $flashError = $this->words->getSilent($flashError);
@@ -54,7 +54,7 @@ use Symfony\Component\Asset\VersionStrategy\JsonManifestVersionStrategy;
     <?php endif; ?>
 </div>
 
-<div class="container">
+<div class="container-lg">
     <?php
         $side_column_names = $this->getColumnNames();
         $mid_column_name = array_pop($side_column_names);

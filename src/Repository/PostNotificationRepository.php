@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Doctrine\NotificationStatusType;
 use DateTime;
 use Doctrine\ORM\EntityRepository;
 
@@ -17,7 +18,7 @@ class PostNotificationRepository extends EntityRepository
 
         return $this->createQueryBuilder('n')
             ->where('n.status = :toSend')
-            ->setParameter(':toSend', 'ToSend')
+            ->setParameter(':toSend', NotificationStatusType::SCHEDULED)
             ->andWhere('n.created < :date')
             ->setParameter(':date', $date)
             ->orderBy('n.created', 'asc')

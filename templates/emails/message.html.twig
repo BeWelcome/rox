@@ -1,10 +1,7 @@
 {% extends 'emails/email.html.twig' %}
 
 {% block content %}
-    <p>
-        {% trans with {'%username%': receiver.Username} %}email.greeting{% endtrans %}<br>
-        <br>
-        {% trans with {'%username%': sender.Username} %}email.message{% endtrans %}</p>
+    <p>{% trans with {'%username%': sender.Username} %}email.message{% endtrans %}</p>
 
     <p>{{ message.message | raw }}</p>
     <p><a href="{{ url('message_reply', { 'id': message.id }) }}">{{ 'reply' | trans }}</a></p>

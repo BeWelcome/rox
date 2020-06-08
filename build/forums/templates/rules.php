@@ -40,7 +40,7 @@ $words = new MOD_words(); ?>
       <li><?php echo $words->getFormatted('ForumRulesCharterText6'); ?></li>
     </ol>
 
-    <h3 class="mt-3"><?php echo $words->getFormatted('ForumRulesHeadline1'); ?></h3>
+    <h3><?php echo $words->getFormatted('ForumRulesHeadline1'); ?></h3>
 
     <h4><?php echo $words->getFormatted('ForumRulesHeadline2'); ?></h4>
     <p><?php echo $words->getFormatted('ForumRulesText1'); ?></p>

@@ -1,4 +1,40 @@
 {
+    "amphp/amp": {
+        "version": "v2.4.4"
+    },
+    "amphp/byte-stream": {
+        "version": "v1.7.3"
+    },
+    "amphp/cache": {
+        "version": "v1.3.0"
+    },
+    "amphp/dns": {
+        "version": "v1.2.1"
+    },
+    "amphp/hpack": {
+        "version": "v3.1.0"
+    },
+    "amphp/http": {
+        "version": "v1.6.0"
+    },
+    "amphp/http-client": {
+        "version": "v4.3.1"
+    },
+    "amphp/parser": {
+        "version": "v1.0.0"
+    },
+    "amphp/process": {
+        "version": "v1.1.0"
+    },
+    "amphp/socket": {
+        "version": "v1.1.1"
+    },
+    "amphp/sync": {
+        "version": "v1.4.0"
+    },
+    "amphp/windows-registry": {
+        "version": "v0.3.2"
+    },
     "anthonymartin/geo-location": {
         "version": "v1.0.3"
     },
@@ -28,6 +64,9 @@
     },
     "container-interop/container-interop": {
         "version": "1.2.0"
+    },
+    "daverandom/libdns": {
+        "version": "v2.0.2"
     },
     "deployer/dist": {
         "version": "v6.7.3"
@@ -185,6 +224,9 @@
     "judev/php-htmltruncator": {
         "version": "1.2.2"
     },
+    "kelunik/certificate": {
+        "version": "v1.1.2"
+    },
     "laminas/laminas-code": {
         "version": "3.4.1"
     },
@@ -208,6 +250,15 @@
     },
     "league/html-to-markdown": {
         "version": "4.9.1"
+    },
+    "league/uri": {
+        "version": "6.2.1"
+    },
+    "league/uri-interfaces": {
+        "version": "2.1.0"
+    },
+    "league/uri-parser": {
+        "version": "1.4.1"
     },
     "lorenzo/pinky": {
         "version": "1.0.5"
@@ -497,6 +548,12 @@
             "./src/Controller/.gitignore",
             "./src/Kernel.php"
         ]
+    },
+    "symfony/http-client": {
+        "version": "v5.1.0"
+    },
+    "symfony/http-client-contracts": {
+        "version": "v2.1.2"
     },
     "symfony/http-foundation": {
         "version": "v5.0.0"

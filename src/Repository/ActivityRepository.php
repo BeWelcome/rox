@@ -93,7 +93,7 @@ class ActivityRepository extends EntityRepository
      *
      * @SuppressWarnings(PHPMD.StaticAccess)
      */
-    public function findUpcomingAroundLocation(Location $location, $limit = 5, $distance = 20)
+    public function findUpcomingAroundLocation(Location $location, $distance = 20, $limit = 5)
     {
         $qb = $this->getUpcomingAroundLocationQueryBuilder($location, $distance);
 

@@ -322,10 +322,8 @@ class GroupController extends AbstractController
      *
      * @return Response
      *
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
-     * Because of the mix between old code and new code this method is way too long.
      */
-    public function createNewGroup(Request $request, Logger $logger)
+    public function createGroup(Request $request, Logger $logger)
     {
         /** @var Member $member */
         $member = $this->getUser();
@@ -567,7 +565,7 @@ class GroupController extends AbstractController
             );
             $imageManager = new ImageManager();
             $img = $imageManager->make($groupImageDir . '/' . $fileName);
-            $img->resize(80, 80, function ($constraint) {
+            $img->resize(80, null, function ($constraint) {
                 $constraint->aspectRatio();
             });
             $img->save($groupImageDir . '/thumb' . $fileName);

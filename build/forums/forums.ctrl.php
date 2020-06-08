@@ -1,4 +1,5 @@
-<?php
+<?php /** @noinspection ALL */
+
 /**
 * forums controller
 *
@@ -277,8 +278,7 @@ class ForumsController extends PAppController
 				}
 				PPostHandler::clearVars($callbackId);
 			}
-		}
-        else if ($this->action == self::ACTION_REPLY) {
+		} elseif ($this->action == self::ACTION_REPLY) {
             if ($this->BW_Flag->hasFlag("NotAllowedToPostInForum")) { // Test if teh user has right for this, if not rough exit
                 MOD_log::get()->write("Forums.ctrl : Forbid to do action [".$this->action."] because of Flag "."NotAllowedToPostInForum","FlagEvent") ;
                 $words = new MOD_words();
@@ -293,26 +293,7 @@ class ForumsController extends PAppController
             $callbackId = $this->replyProcess();
             $this->_view->replyTopic($callbackId);
             PPostHandler::clearVars($callbackId);
-        }
-        else if ($this->action == self::ACTION_SUGGEST) {
-            // ignore current request, so we can use the last request
-            PRequest::ignoreCurrentRequest();
-            if (!isset($request[2])) {
-                PPHP::PExit();
-            }
-            $new_tags = $this->_model->suggestTags($request[2]);
-            echo $this->_view->generateClickableTagSuggestions($new_tags);
-            PPHP::PExit();
-        }
-        else if ($this->action == self::ACTION_LOCATIONDROPDOWNS) {
-            // ignore current request, so we can use the last request
-            PRequest::ignoreCurrentRequest();
-            if (!isset($request[2])) {
-                PPHP::PExit();
-            }
-            echo $this->_view->getLocationDropdowns();
-            PPHP::PExit();
-        } else if ($this->action == self::ACTION_DELETE) {
+        } elseif ($this->action == self::ACTION_DELETE) {
             if ($this->BW_Flag->hasFlag("NotAllowedToPostInForum")) { // Test if the user has right for this, if not rough exit
                 MOD_log::get()->write("Forums.ctrl : Forbid to do action [".$this->action."] because of Flag "."NotAllowedToPostInForum","FlagEvent") ;
                 $words = new MOD_words();
@@ -322,7 +303,7 @@ class ForumsController extends PAppController
                 PRequest::home();
             }
             $this->delProcess();
-        } else if ($this->action == self::ACTION_EDIT) {
+        } elseif ($this->action == self::ACTION_EDIT) {
             if ($this->BW_Flag->hasFlag("NotAllowedToPostInForum")) { // Test if the user has right for this, if not rough exit
                 MOD_log::get()->write("Forums.ctrl : Forbid to do action [".$this->action."] because of Flag "."NotAllowedToPostInForum","FlagEvent") ;
                 $words = new MOD_words();
@@ -925,9 +906,6 @@ class ForumsController extends PAppController
                         $this->isTopLevel = false;
                     } else if ($char == 'u') { // Group ID (This is a dedicated group)
                         $this->_model->setGroupId((int) substr($r, 1, $dashpos));
-                        $this->isTopLevel = false;
-                    } else if ($char == 'k' && $r != "kickmember") { // Continent-ID
-                        $this->_model->setContinent(substr($r, 1, $dashpos));
                         $this->isTopLevel = false;
                     } else if ($char == 'm' && $r != "mygroupsonly") { // Message-ID (Single Post)
                         $this->_model->setMessageId(substr($r, 1, $dashpos));

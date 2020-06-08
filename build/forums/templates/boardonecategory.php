@@ -50,7 +50,6 @@ Boston, MA  02111-1307, USA.
             <tr class="<?php echo $styles[$cnt%2]; ?>">
                 <td class="forumsboardthreadtitle">
                     <?php
-
                     if ($thread->ThreadDeleted=="Deleted") {
                         echo "[Deleted]" ;
                     }
@@ -61,55 +60,6 @@ Boston, MA  02111-1307, USA.
                     echo $words->fTrad($thread->IdTitle);
                     ?></a>
                     <br />
-                    <span class="forumsboardthreadtags"><?php
-
-                        // show tags if post is part of a group
-                    if ($thread->IdGroup>0) {
-                            echo "<a href=\"group/".$thread->IdGroup."\"><strong>Group: </strong>",$this->_model->getGroupName( $thread->GroupName),"</a><br >" ;
-                    }
-
-                        $breadcrumb = '';
-
-
-                        $ShowHelp=false ; // todo process in a better way this hritage of travel book (create a type help for tags)
-                        for ($ii=0;$ii<$thread->NbTags;$ii++) {
-                            if ($breadcrumb) {
-                                $breadcrumb .= '<span class="small"> | </span>';
-                            }
-                            $wordtag=$words->fTrad($thread->IdName[$ii]) ;
-                            $url_bit = 't'.$thread->IdTag[$ii].'-'.$wordtag;
-                            if (!in_array($url_bit, $request)) {
-                                $url = $uri.$url_bit.'/';
-                                $breadcrumb .= '<a href="'.$url.'">'.$wordtag.'</a> ';
-                            } else {
-                                $breadcrumb .= ''.$wordtag.' ';
-                            }
-
-                            // Heritage of TravelBook
-                            if ($wordtag=='help' ||$wordtag == 'Help and Support') {
-                                  $ShowHelp=true ; // todo deal with this in a better way
-                            }
-                        }
-
-
-
-                    if ($breadcrumb) {
-                        // we will later use the 'tags' word, but don't want an edit link inside the html tag!
-                        if ($ShowHelp) {
-                        echo '<img src="styles/css/minimal/images/iconsfam/help.png" alt="'. $words->getBuffered('tags') .'" title="'. $words->getBuffered('tags') .'" class="forum_icon" />' . $words->flushBuffer();
-                        }
-                        elseif (isset($thread->continent) && $thread->continent) {
-                        echo '<img src="styles/css/minimal/images/iconsfam/world.png" alt="'. $words->getBuffered('tags') .'" title="'. $words->getBuffered('tags') .'" class="forum_icon" />' . $words->flushBuffer();
-                        }
-                        else {
-                        echo '<img src="styles/css/minimal/images/iconsfam/tag_blue.png" alt="'. $words->getBuffered('tags') .'" title="'. $words->getBuffered('tags') .'" class="forum_icon" />' . $words->flushBuffer();
-                        }
-                        echo $breadcrumb;
-                    }
-
-
-
-                    ?></span>
                 </td>
                 <td class="forumsboardthreadreplies"><?php echo $thread->replies; ?></td>
                 <td class="forumsboardthreadauthor"><a href="bw/member.php?cid=<?php echo $thread->first_author; ?>"><?php echo $thread->first_author; ?></a></td>

@@ -71,55 +71,49 @@ class GroupModel
 
         $membership->addComment($comment);
         $membership->setStatus(GroupMembershipStatusType::INVITED_INTO_GROUP);
-        try {
-            $em->persist($membership);
-            $em->flush();
+        $em->persist($membership);
+        $em->flush();
 
-            // Send email to invitee
-            $url = $this->urlGenerator->generate('group_start', ['group_id' => $group->getId()]);
-            $acceptUrl = $this->urlGenerator->generate('accept_invite_to_group', [
-                'groupId' => $group->getId(),
-                'memberId' => $member->getId(),
-            ], UrlGenerator::ABSOLUTE_URL);
+        // Send email to invitee
+        $url = $this->urlGenerator->generate('group_start', ['group_id' => $group->getId()]);
+        $acceptUrl = $this->urlGenerator->generate('accept_invite_to_group', [
+            'groupId' => $group->getId(),
+            'memberId' => $member->getId(),
+        ], UrlGenerator::ABSOLUTE_URL);
 
-            $declineUrl = $this->urlGenerator->generate('decline_invite_to_group', [
-                'groupId' => $group->getId(),
-                'memberId' => $member->getId(),
-            ], UrlGenerator::ABSOLUTE_URL);
+        $declineUrl = $this->urlGenerator->generate('decline_invite_to_group', [
+            'groupId' => $group->getId(),
+            'memberId' => $member->getId(),
+        ], UrlGenerator::ABSOLUTE_URL);
 
-            $acceptTag = '<a href="' . $acceptUrl . '">';
-            $declineTag = '<a href="' . $declineUrl . '">';
+        $acceptTag = '<a href="' . $acceptUrl . '">';
+        $declineTag = '<a href="' . $declineUrl . '">';
 
-            $params = [
-                'subject' => 'group.invitation',
-                'receiver' => $member,
-                'sender' => $admin,
-                'group' => $group,
-                'accept_start' => $acceptTag,
-                'accept_end' => '</a>',
-                'decline_start' => $declineTag,
-                'decline_end' => '</a>',
-            ];
-            $adminEmail = $this->bewelcomeAddress($admin, 'group@bewelcome.org');
-            // $this->createTemplateMessage($admin, $member, 'group/invitation', $params);
-            $this->sendTemplateEmail($adminEmail, $member, 'group/invitation', $params);
+        $params = [
+            'subject' => 'group.invitation',
+            'receiver' => $member,
+            'sender' => $admin,
+            'group' => $group,
+            'accept_start' => $acceptTag,
+            'accept_end' => '</a>',
+            'decline_start' => $declineTag,
+            'decline_end' => '</a>',
+        ];
+        $adminEmail = $this->bewelcomeAddress($admin, 'group@bewelcome.org');
+        // $this->createTemplateMessage($admin, $member, 'group/invitation', $params);
+        $this->sendTemplateEmail($adminEmail, $member, 'group/invitation', $params);
 
-            $note = new Notification();
-            $note->setMember($member);
-            $note->setRelMember($admin);
-            $note->setType('message');
-            $note->setLink($url);
-            $note->setWordCode('');
-            $note->setTranslationparams(serialize(['GroupsInvitedNote', $group->getName()]));
-            $em->persist($note);
-            $em->flush();
+        $note = new Notification();
+        $note->setMember($member);
+        $note->setRelMember($admin);
+        $note->setType('message');
+        $note->setLink($url);
+        $note->setWordCode('');
+        $note->setTranslationparams(serialize(['GroupsInvitedNote', $group->getName()]));
+        $em->persist($note);
+        $em->flush();
 
-            $success = true;
-        } catch (Exception $e) {
-            $success = false;
-        }
-
-        return $success;
+        return true;
     }
 
     /**
@@ -254,6 +248,9 @@ class GroupModel
      * @throws OptimisticLockException
      *
      * @return Group
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * Because of the mix between old code and new code this method is way too long.
      */
     public function new($data, $locale, Member $member, $groupPicture)
     {
@@ -303,6 +300,7 @@ class GroupModel
         $groupMembership = new GroupMembership();
         $groupMembership
             ->setStatus(GroupMembershipStatusType::CURRENT_MEMBER)
+            ->setAcceptMailNotifications('Yes')
             ->addComment($groupComment)
             ->setGroup($group)
             ->setMember($member);

@@ -3,21 +3,6 @@
 $User = $this->_model->getLoggedInMember();
 
 $words = new MOD_words();
-
-// Build board navigation path
-$navigationPath = '';
-$navichain_items = $boards->getNaviChain();
-if (is_array($navichain_items)) {
-    // trim off first item ("forums")
-    array_shift($navichain_items);
-    foreach ($navichain_items as $link => $title) {
-        $navigationPath .= '<a href="' . htmlspecialchars($link, ENT_QUOTES) . '">' . htmlspecialchars($title, ENT_QUOTES) . '</a> » ';
-    }
-}
-$boardName = htmlspecialchars($boards->getBoardName(), ENT_QUOTES);
-$navigationPath .= '<a href="' . htmlspecialchars($boards->getBoardLink(), ENT_QUOTES) . '">'
-    . $boardName . '</a>';
-
 ?>
 <div class="row">
 <div class="col-8"><h3>
@@ -39,7 +24,11 @@ $navigationPath .= '<a href="' . htmlspecialchars($boards->getBoardLink(), ENT_Q
 if ($User && empty($noForumNewTopicButton)) {
 ?>
 	<div class="col-4 mb-1">
-    <a class="btn btn-primary float-right" role="button" href="<?php echo $uri; ?>new"><?php echo $words->getBuffered('ForumNewTopic'); ?></a><?php echo $words->flushBuffer(); ?></div>
+        <a class="btn btn-primary float-right" href="group/<?php if ($this->_model->IdGroup) {
+            echo $this->_model->IdGroup;
+        } else {
+            echo $this->uri;
+        } ?>/new"><?php echo $words->getBuffered('ForumNewTopic'); ?></a><?php echo $words->flushBuffer(); ?></div>
 <?php
 } // end if $User
 

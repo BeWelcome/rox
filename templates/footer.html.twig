@@ -78,7 +78,7 @@
         </div>
     </div>
     {% if is_granted('ROLE_ADMIN_WORDS') and app.session.get('translation_mode') == 'on' %}
-        <div id="translations" class="container">
+        <div id="translations" class="container-lg">
             {% set translations = getTranslations() %}
             {% set collector = translations.collector %}
             {% if collector.messages|length %}

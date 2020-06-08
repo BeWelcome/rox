@@ -53,9 +53,6 @@ class ForumsView extends RoxAppView {
 
         $boards = $this->_model->getBoard();
         $allow_title = true;
-        $tags = $this->_model->getTagsNamed();
-        $locationDropdowns = $this->getLocationDropdowns();
-//                           die ("1 IdGroup=".$IdGroup) ;
         $groupsDropdowns = $this->getGroupsDropdowns($IdGroup);
         $edit = false;
 
@@ -170,8 +167,6 @@ class ForumsView extends RoxAppView {
         $boards = $this->_model->getBoard();
         $topic = $this->_model->getTopic();
         $vars =& PPostHandler::getVars($callbackId);
-        $all_tags = $this->_model->getAllTags();
-        $locationDropdowns = $this->getLocationDropdowns();
         $groupsDropdowns = $this->getGroupsDropdowns($this->_model->IdGroup);
         $allow_title = $vars['first_postid'] == $vars['postid'];
         $edit = true;
@@ -188,11 +183,9 @@ class ForumsView extends RoxAppView {
         // By default no appropriated language is propose, the member can choose to translate
         $LanguageChoices=$this->_model->LanguageChoices() ;
         if (!$translate) { // In case this is a edit, by default force the original post language
-            $IdContent=$this->_model->getIdContent();
-            global $fTradIdLastUsedLanguage ; $fTradIdLastUsedLanguage=1 ; // willbe change by ftrad
+            global $fTradIdLastUsedLanguage ; $fTradIdLastUsedLanguage=1 ; // will be change by ftrad
             $word = new MOD_words();
             // This function is just called for finding the language in which one the post will be displayed
-            $void_string=$word->ftrad($IdContent) ;
             $AppropriatedLanguage=$fTradIdLastUsedLanguage ;
         }
         $disableTinyMCE = $this->_model->getTinyMCEPreference();
@@ -209,10 +202,6 @@ class ForumsView extends RoxAppView {
         $boards = $this->_model->getBoard();
         $topic = $this->_model->getTopic();
         $vars =& PPostHandler::getVars($callbackId);
-        $all_tags = $this->_model->getAllTags();
-        $locationDropdowns = $this->getLocationDropdowns();
-//              echo "<pre>";print_r($this->_model->IdGroup) ;;echo "</pre>" ;
-//              die ("\$topic->topicinfo->IdGroup=".$topic->topicinfo->IdGroup) ;
         $groupsDropdowns = $this->getModeratorGroupsDropdowns($this->_model->IdGroup);
         $allow_title = $vars['first_postid'] == $vars['postid'];
         $edit = true;
@@ -249,19 +238,6 @@ class ForumsView extends RoxAppView {
             if (isset($topic->posts[0])) {
                 $this->page->SetMetaDescription(strip_tags($this->_model->words->fTrad(($topic->posts[0]->IdContent)))) ; ;
             }
-            $wordtag="" ;
-
-            for ($ii=0;$ii<$topic->topicinfo->NbTags;$ii++) {
-                if ($ii>0) {
-                    $wordtag.=',' ;
-                }
-                $wordtag.=$this->_model->words->fTrad($topic->topicinfo->IdName[$ii]) ;
-            }
-            if ($wordtag!="") {
-                $wordtag.="," ;
-            }
-            $wordtag.=$this->_model->words->getFormatted("default_meta_keyword") ;
-            $this->page->SetMetaKey($wordtag)  ;
         }
 
         $uri = implode('/', $request);
@@ -547,23 +523,6 @@ class ForumsView extends RoxAppView {
         return $pages;
     }
 
-    public function generateClickableTagSuggestions($tags) {
-        if ($tags) {
-            $out = '';
-            foreach ($tags as $suggestion) {
-                $out .= '<a href="#" onclick="javascript:ForumsSuggest.updateForm(\'';
-                foreach ($suggestion as $word) {
-                    $out .= htmlspecialchars($word, ENT_QUOTES).', ';
-                }
-                $out = rtrim($out, ', ');
-                $out .= '\'); return false;">'.htmlspecialchars($word, ENT_QUOTES).'</a>, ';
-            }
-            $out = rtrim($out, ', ');
-            return $out;
-        }
-        return '';
-    }
-
     public function getVisibilityCheckbox($visibility, $highestVisibility, $IdGroup, $newTopic) {
         if ($IdGroup == 0) {
             // Indicate to the form that only MembersOnly is allowed; this is a hack to avoid too much code changes
@@ -593,51 +552,6 @@ class ForumsView extends RoxAppView {
         return $out;
     }
 
-    private function getContinentDropdown($preselect = false) {
-        $continents = $this->_model->getAllContinents();
-
-        $out = '<select name="d_continent" id="d_continent" onchange="javascript: updateContinent();">
-        <option value="">' . $this->words->getFormatted("SelectNone") . '</option>';
-        foreach ($continents as $code => $continent) {
-            $out .= '<option value="'.$code.'"'.($code == "$preselect" ? ' selected="selected"' : '').'>'.$continent.'</option>';
-        }
-        $out .= '</select>';
-        return $out;
-    }
-
-    private function getCountryDropdown($continent, $preselect = false) {
-        $countries = $this->_model->getAllCountries($continent);
-        $out = '<select name="d_country" id="d_country" onchange="javascript: updateCountry();">
-            <option value="">' . $this->words->getFormatted("SelectNone") . '</option>';
-        foreach ($countries as $code => $country) {
-            $out .= '<option value="'.$code.'"'.($code == "$preselect" ? ' selected="selected"' : '').'>'.$country.'</option>';
-        }
-        $out .= '</select>';
-        return $out;
-    }
-
-    private function getAreaDropdown($country, $preselect = false) {
-        $areas = $this->_model->getAllAdmincodes($country);
-        $out = '<select name="d_admin" id="d_admin" onchange="javascript: updateAdmincode();">
-            <option value="">' . $this->words->getFormatted("SelectNone") . '</option>';
-        foreach ($areas as $code => $area) {
-            $out .= '<option value="'.$code.'"'.($code == "$preselect" ? ' selected="selected"' : '').'>'.$area.'</option>';
-        }
-        $out .= '</select>';
-        return $out;
-    }
-
-    private function getLocationDropdown($country, $areacode, $preselect = false) {
-        $locations = $this->_model->getAllLocations($country, $areacode);
-        $out = '<select name="d_geoname" id="d_geoname" onchange="javascript: updateGeonames();">
-            <option value="">' . $this->words->getFormatted("SelectNone") . '</option>';
-        foreach ($locations as $code => $location) {
-            $out .= '<option value="'.$code.'"'.($code == "$preselect" ? ' selected="selected"' : '').'>'.$location.'</option>';
-        }
-        $out .= '</select>';
-        return $out;
-    }
-
     private function getGroupsDropdowns($IdGroup=0) {
         $tt = $this->_model->GroupChoice();
         $out = '<select name="IdGroup" id="IdGroup"><option value="0">'. $this->words->getFormatted("SelectNone").'</option>';
@@ -661,28 +575,6 @@ class ForumsView extends RoxAppView {
         $out .= '</select>';
         return $out;
     } // end of getGroupsDropdowns
-
-
-
-    public function getLocationDropdowns() {
-        $out = '';
-
-        $out .= $this->getContinentDropdown($this->_model->getContinent());
-
-        if ($this->_model->getContinent()) {
-            $out .= $this->getCountryDropdown($this->_model->getContinent(), $this->_model->getCountryCode());
-
-            if ($this->_model->getCountryCode()) {
-                $out .= $this->getAreaDropdown($this->_model->getCountryCode(), $this->_model->getAdminCode());
-
-                if ($this->_model->getAdminCode()) {
-                    $out .= $this->getLocationDropdown($this->_model->getCountryCode(), $this->_model->getAdminCode(), $this->_model->getGeonameid());
-                }
-            }
-        }
-
-        return $out;
-    } // end of getLocationDropdowns
 
 /*
 *       This is the function which is called if the feature is disabled

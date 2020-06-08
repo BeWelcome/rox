@@ -1,11 +1,28 @@
 App\Entity\Address:
-  address_{2..10}:
-    member: "@member_<current()>"
+  address_1:
+    member: "@bwadmin"
     housenumber: 0
     streetname: 0
-    rank: 1
+    rank: 0
     zip: 0
     explanation: 0
     gettingthere: 0
     location: '@Berlin'
-
+  address_{2..5}:
+    member: "@member_<current()>"
+    housenumber: 0
+    streetname: 0
+    rank: 0
+    zip: 0
+    explanation: 0
+    gettingthere: 0
+    location: '@Berlin'
+  address_{6..10}:
+    member: "@member_<current()>"
+    housenumber: 0
+    streetname: 0
+    rank: 0
+    zip: 0
+    explanation: 0
+    gettingthere: 0
+    location: '@Jayapura'

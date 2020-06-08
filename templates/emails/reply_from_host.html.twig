@@ -1,7 +1,6 @@
 {% extends 'emails/request.template.html.twig' %}
 
 {% block message %}
-    <h4>{% trans with {'%username%': receiver.Username} %}email.greeting{% endtrans %}</h4>
     <p>{% trans with {'%username%': sender.Username} %}email.request.reply.host{% endtrans %}</p>
     <p></p>
     <callout class="secondary">

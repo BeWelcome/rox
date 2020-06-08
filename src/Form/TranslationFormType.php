@@ -31,7 +31,9 @@ class TranslationFormType extends AbstractType
             $form = $event->getForm();
             if ('en' !== $translationRequest->locale) {
                 $form->add('locale', TextType::class, [
-                        'disabled' => true,
+                    'attr' => [
+                        'readonly' => true,
+                    ],
                         'label' => 'translation.locale',
                     ])
                     ->add('translatedText', TextAreaType::class, [
@@ -59,7 +61,9 @@ class TranslationFormType extends AbstractType
                 ;
             } else {
                 $form->add('wordCode', TextType::class, [
-                        'disabled' => true,
+                        'attr' => [
+                            'readonly' => true,
+                        ],
                         'label' => 'translation.wordcode',
                     ])
                     ->add('domain', ChoiceType::class, [

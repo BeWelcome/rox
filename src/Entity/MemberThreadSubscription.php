@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Doctrine\ActionToWatchType;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -40,9 +41,9 @@ class MemberThreadSubscription
     /**
      * @var string
      *
-     * @ORM\Column(name="ActionToWatch", type="string", nullable=false)
+     * @ORM\Column(name="ActionToWatch", type="action_to_watch", nullable=false)
      */
-    private $actionToWatch = 'replies';
+    private $actionToWatch = ActionToWatchType::REPLIES;
 
     /**
      * @var string

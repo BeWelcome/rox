@@ -8,15 +8,15 @@ if (isset($this->keyword)) {
 ?>
 <div class="row">
     <div class="col-12">
-    <h1 class="pull-left">
+    <h3 class="pull-left mb-3">
         <a href="forums"><?php echo $this->_model->words->getFormatted('CommunityLanding'); ?></a>
 
         <?php if ($this->_model->getTopMode() == Forums::CV_TOPMODE_FORUM) {
             echo '&raquo <a href="forums/bwforum">' . $this->_model->words->getFormatted('AgoraForum') . '</a>';
         }
         ?>
-    </h1>
-    <form action="/forums/search" method="POST" id="search-box" class="pull-right">
+    </h3>
+    <form action="/forums/search" method="POST" id="search-box" class="pull-right mb-1">
         <div class="input-group">
             <input type="hidden" name="<?= $this->searchCallbackId ?>" value="1"/>
             <input type="text" name="fs-keyword" class="form-control"

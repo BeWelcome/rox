@@ -12,12 +12,12 @@
 </head>
 <body>
 <nav class="navbar navbar-expand-md navbar-light bg-primary bordert-1 borderb-1">
-    <div class="container">
+    <div class="container-lg">
         <a class="navbar-brand ml-3" href="{% if isSubDir is defined %}../{% endif %}index.html"><img src="{% if isSubDir is defined %}../{% endif %}images/logo_index_top.png" alt="{{ 'bewelcome' | trans }}"></a>
     </div>
 </nav>
 <main>
-    <div class="container">
+    <div class="container-lg">
         {% block content %}{% endblock content %}
     </div>
 </main>

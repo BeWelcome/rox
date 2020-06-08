@@ -1,0 +1,121 @@
+App\Entity\RightVolunteer:
+    Words_bwadmin:
+        member: '@bwadmin'
+        right: '@Words'
+        level: '10'
+        scope: '"All"'
+        Comment: Granted by the System
+        updated: '<dateTime()>'
+        created: '<dateTime()>'
+    Group_bwadmin:
+        member: '@bwadmin'
+        right: '@Group'
+        level: '10'
+        scope: '"All"'
+        Comment: Granted by the System
+        updated: '<dateTime()>'
+        created: '<dateTime()>'
+    ForumModerator_bwadmin:
+        member: '@bwadmin'
+        right: '@ForumModerator'
+        level: '10'
+        scope: '"All"'
+        Comment: Granted by the System
+        updated: '<dateTime()>'
+        created: '<dateTime()>'
+    SafetyTeam_bwadmin:
+        member: '@bwadmin'
+        right: '@SafetyTeam'
+        level: '10'
+        scope: '"All"'
+        Comment: Granted by the System
+        updated: '<dateTime()>'
+        created: '<dateTime()>'
+    Poll_bwadmin:
+        member: '@bwadmin'
+        right: '@Poll'
+        level: '10'
+        scope: '"All"'
+        Comment: Granted by the System
+        updated: '<dateTime()>'
+        created: '<dateTime()>'
+    Rights_bwadmin:
+        member: '@bwadmin'
+        right: '@Rights'
+        level: '10'
+        scope: '"All"'
+        Comment: Granted by the System
+        updated: '<dateTime()>'
+        created: '<dateTime()>'
+    Checker_bwadmin:
+        member: '@bwadmin'
+        right: '@Checker'
+        level: '10'
+        scope: '"All"'
+        Comment: Granted by the System
+        updated: '<dateTime()>'
+        created: '<dateTime()>'
+    Comments_bwadmin:
+        member: '@bwadmin'
+        right: '@Comments'
+        level: '10'
+        scope: '"All"'
+        Comment: Granted by the System
+        updated: '<dateTime()>'
+        created: '<dateTime()>'
+    MassMail_bwadmin:
+        member: '@bwadmin'
+        right: '@MassMail'
+        level: '10'
+        scope: '"All"'
+        Comment: Granted by the System
+        updated: '<dateTime()>'
+        created: '<dateTime()>'
+    NewMembersBeWelcome_bwadmin:
+        member: '@bwadmin'
+        right: '@NewMembersBeWelcome'
+        level: '10'
+        scope: '"All"'
+        Comment: Granted by the System
+        updated: '<dateTime()>'
+        created: '<dateTime()>'
+    NewMembersBeWelcome_member_2:
+        member: '@member_2'
+        right: '@NewMembersBeWelcome'
+        level: '10'
+        scope: '"All"'
+        Comment: Granted by the BW Admin
+        updated: '<dateTime()>'
+        created: '<dateTime()>'
+    ForumModerator_member_3:
+        member: '@member_3'
+        right: '@ForumModerator'
+        level: '10'
+        scope: '"All"'
+        Comment: Granted by the BW Admin
+        updated: '<dateTime()>'
+        created: '<dateTime()>'
+    Group_member_3:
+        member: '@member_3'
+        right: '@Group'
+        level: '10'
+        scope: '"All"'
+        Comment: Granted by the BW Admin
+        updated: '<dateTime()>'
+        created: '<dateTime()>'
+    Treasurer_member_3:
+        member: '@member_3'
+        right: '@Treasurer'
+        level: '10'
+        scope: '"All"'
+        Comment: Granted by the BW Admin
+        updated: '<dateTime()>'
+        created: '<dateTime()>'
+    ManageSubscriptions_member_3:
+        member: '@member_3'
+        right: '@ManageSubscriptions'
+        level: '10'
+        scope: '"All"'
+        Comment: Granted by the BW Admin
+        updated: '<dateTime()>'
+        created: '<dateTime()>'

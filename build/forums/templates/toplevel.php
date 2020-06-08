@@ -24,8 +24,7 @@ Boston, MA  02111-1307, USA.
 $User = $this->_model->getLoggedInMember();
 
 $noForumLegendBox = true;
-$ToogleTagCloud=true ;
-$TagCloud=true ;
+$multipages = null;
 ?><?php
 if ($ownGroupsButtonCallbackId) {
     if ($boards->owngroupsonly == "No") {
@@ -50,7 +49,7 @@ $uri = 'forums/';
 <!-- Now displays the recent post list -->
 
 <?php
-    if ($threads = $boards->getThreads()) {
+$threads = $boards->getThreads()
 ?>
         <div class="row">
   <div class="col-12 col-md-8">
@@ -67,6 +66,22 @@ $uri = 'forums/';
 
 require 'boardthreads.php';
 ?>
+</div>
+<?php
+    if ($ownGroupsButtonCallbackId) {
+    if ($boards->owngroupsonly == "No") {
+    $buttonText = $this->words->getBuffered('SwitchShowOnlyMyGroupsTopics');
+    } else {
+    $buttonText = $this->words->getBuffered('SwitchShowAllGroupsTopics');
+    }
+    ?>
+    <div class="row"><div class="col-12">
+            <form method="post" action="<?php echo rtrim(implode('/', $request), '/').'/';?>">
+                <input type="hidden" name="<?php echo $ownGroupsButtonCallbackId; ?>"  value="1">
+                <input type="submit" class="btn btn-primary float-right" name="submit" value="<?php echo $buttonText; ?>">
+            </form>
         </div>
-    <?php }
-
+    </div>
+<?php
+echo $this->words->flushBuffer();
+}

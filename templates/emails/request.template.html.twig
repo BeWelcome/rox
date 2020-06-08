@@ -1,41 +1,42 @@
 {% block content %}
     {% filter inky_to_html|inline_css(source('emails/email.css')) %}
-<!-- move the above styles into your custom stylesheet -->
-<wrapper class="header" bgcolor="#f37000">
-    <container>
-        <row class="collapse">
-            <columns small="6" valign="middle"><a href="{{ url('homepage') }}"><img
-                        src="{{ email.image('@images/logo_index_top.png') }}"><</a>
+    <!-- move the above styles into your custom stylesheet -->
+    <wrapper class="header" bgcolor="#f37000">
+        <container>
+            <row class="collapse">
+                <columns small="6" valign="middle"><a href="{{ url('homepage') }}"><img
+                            src="{{ email.image('@images/logo_index_top.png') }}"><</a>
+                </columns>
+                <columns small="6" valign="middle">
+                    <p class="text-right">BeWelcome</p>
+                </columns>
+            </row>
+        </container>
+    </wrapper>
+
+    <container class="secondary">
+
+        <spacer size="16"></spacer>
+
+        <row>
+            <columns small="12" large="7">
+                <h4>{{ 'email.greeting'|trans({ 'username': receiver.Username, 'gender': receiver.gender}) }}</h4>
+                {% block message %}{% endblock %}
             </columns>
-            <columns small="6" valign="middle">
-                <p class="text-right">BeWelcome</p>
+            <columns small="12" large="5" class="sidebar">
+                <callout class="secondary">
+                    <h5>{{ 'request.details'|trans }}</h5>
+                    {% block request %}{% endblock %}
+                </callout>
+            </columns>
+        </row>
+        <row>
+            <columns>
+                <center>
+                        <p>{{ "now" | date("Y") }} - <a href="{{ url('homepage') }}" target="_blank">BeWelcome</a></p>
+                </center>
             </columns>
         </row>
     </container>
-</wrapper>
-
-<container class="secondary">
-
-    <spacer size="16"></spacer>
-
-    <row>
-        <columns small="12" large="7">
-            {% block message %}{% endblock %}
-        </columns>
-        <columns small="12" large="5" class="sidebar">
-            <callout class="secondary">
-                <h5>{{ 'request.details'|trans }}</h5>
-                {% block request %}{% endblock %}
-            </callout>
-        </columns>
-    </row>
-    <row>
-        <columns>
-            <center>
-                    <p>{{ "now" | date("Y") }} - <a href="{{ url('homepage') }}" target="_blank">BeWelcome</a></p>
-            </center>
-        </columns>
-    </row>
-</container>
-{% endfilter %}
+    {% endfilter %}
 {% endblock content %}

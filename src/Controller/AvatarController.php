@@ -14,20 +14,11 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class AvatarController extends AbstractController
 {
-    const OFFSET = 172800;
+    private const EXPIRY = 60 * 60 * 24 * 365; // One year
 
-    /**
-     * @Route("/members/avatar/{username}/{size}", name="avatar",
-     *     requirements={"username" : "(?i:[a-z](?!.*[-_.][-_.])[a-z0-9-._]{2,18}[a-z0-9])",
-     *          "size" : "\d+|original" }))
-     *
-     * @param mixed $username
-     * @param mixed $size
-     *
-     * @return BinaryFileResponse
-     */
-    public function showAvatar($username, $size = 50)
+    private function getSuffix($size)
     {
+        $suffix = '';
         switch ($size) {
             case '30':
             case '75':
@@ -42,51 +33,65 @@ class AvatarController extends AbstractController
             case 'original':
                 $suffix = '_' . $size;
                 break;
-            default:
-                $suffix = '';
         }
+        return $suffix;
+    }
+
+    /**
+     * @param mixed $size
+     *
+     * @return BinaryFileResponse
+     */
+    private function emptyAvatar($size)
+    {
+        $filename = 'images/empty_avatar' . $this->getSuffix($size) . '.png';
+
+        return $this->createCacheableResponse($filename, self::EXPIRY);
+    }
+
+    /**
+     * @Route("/members/avatar/{username}/{size}", name="avatar",
+     *     requirements={"username" : "(?i:[a-z](?!.*[-_.][-_.])[a-z0-9-._]{2,18}[a-z0-9])",
+     *          "size" : "\d+|original" },
+     *     _defaults={"size": "50"})
+     *
+     * @param mixed $username
+     * @param mixed $size
+     *
+     * @return BinaryFileResponse|RedirectResponse
+     */
+    public function showAvatar($username, $size)
+    {
 
         if (!$this->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
-            $filename = 'images/empty_avatar' . $suffix . '.png';
-
-            $response = new BinaryFileResponse($filename);
-            $response->setSharedMaxAge(600);
-
-            return $response;
+            return $this->emptyAvatar($size);
         }
 
         $member = $this->getDoctrine()->getRepository(Member::class)->findOneBy(['username' => $username]);
         if (!$member) {
-            $filename = 'images/empty_avatar' . $suffix . '.png';
+            return $this->emptyAvatar($size);
 
-            $response = new BinaryFileResponse($filename);
-            $response->setSharedMaxAge(600);
-
-            return $response;
         }
 
         $isBrowseable = $member->isBrowseable();
         if (!$isBrowseable) {
-            $filename = 'images/empty_avatar' . $suffix . '.png';
+            return $this->emptyAvatar($size);
 
-            $response = new BinaryFileResponse($filename);
-            $response->setSharedMaxAge(600);
-
-            return $response;
         }
 
-        $filename = '../data/user/avatars/' . $member->getId() . $suffix;
+        $filename = '../data/user/avatars/' . $member->getId() . $this->getSuffix($size);
         if (file_exists($filename)) {
-            $response = new BinaryFileResponse($filename);
-            $response->setSharedMaxAge(600);
+            return $this->createCacheableResponse($filename);
 
-            return $response;
         }
 
-        $filename = 'images/empty_avatar' . $suffix . '.png';
+        return $this->emptyAvatar($size);
+    }
 
+    private function createCacheableResponse(string $filename, $expiry = 86400)
+    {
         $response = new BinaryFileResponse($filename);
-        $response->setSharedMaxAge(600);
+        $response->setSharedMaxAge(self::EXPIRY);
 
         return $response;
     }

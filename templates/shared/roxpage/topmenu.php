@@ -1,6 +1,6 @@
 <!-- #nav: main navigation -->
 <nav class="navbar navbar-fixed-top" role="navigation">
-  <div class="container">
+  <div class="container-lg">
     <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header">
       <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bewelcome-navbar-collapse-1">

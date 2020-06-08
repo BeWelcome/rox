@@ -87,7 +87,7 @@ class GroupMembership implements ObjectManagerAware
      *
      * @ORM\Column(name="IacceptMassMailFromThisGroup", type="string", nullable=false)
      */
-    private $iacceptmassmailfromthisgroup = 'no';
+    private $mailNotifications = 'no';
 
     /**
      * @var string
@@ -243,27 +243,27 @@ class GroupMembership implements ObjectManagerAware
     }
 
     /**
-     * Set iacceptmassmailfromthisgroup.
+     * Set accept mail notifications.
      *
-     * @param string $iacceptmassmailfromthisgroup
+     * @param string $mailNotifications
      *
      * @return GroupMembership
      */
-    public function setIacceptmassmailfromthisgroup($iacceptmassmailfromthisgroup)
+    public function setAcceptMailNotifications($mailNotifications)
     {
-        $this->iacceptmassmailfromthisgroup = $iacceptmassmailfromthisgroup;
+        $this->mailNotifications = $mailNotifications;
 
         return $this;
     }
 
     /**
-     * Get iacceptmassmailfromthisgroup.
+     * Get accept mail notifications.
      *
      * @return string
      */
-    public function getIacceptmassmailfromthisgroup()
+    public function getAcceptMailNotifications()
     {
-        return $this->iacceptmassmailfromthisgroup;
+        return $this->mailNotifications;
     }
 
     /**

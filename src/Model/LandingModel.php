@@ -5,6 +5,7 @@ namespace App\Model;
 use App\Entity\Activity;
 use App\Entity\Member;
 use App\Entity\Message;
+use App\Entity\Preference;
 use App\Repository\ActivityRepository;
 use App\Utilities\ManagerTrait;
 use Doctrine\ORM\OptimisticLockException;
@@ -139,9 +140,19 @@ class LandingModel
      */
     public function getLocalActivities(Member $member)
     {
+        $preferenceRepository = $this->getManager()->getRepository(Preference::class);
+        /** @var Preference $preference */
+        $preference = $preferenceRepository->findOneBy(['codename' => Preference::ACTIVITIES_NEAR_ME_RADIUS]);
+        $memberPreference = $member->getMemberPreference($preference);
+
+        $distance = 20;
+        if ($preference) {
+            $distance = intval($memberPreference->getValue());
+        }
+
         /** @var ActivityRepository $repository */
         $repository = $this->getManager()->getRepository(Activity::class);
-        $activities = $repository->findUpcomingAroundLocation($member->getCity());
+        $activities = $repository->findUpcomingAroundLocation($member->getCity(), $distance);
 
         return $activities;
     }

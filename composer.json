@@ -5,6 +5,7 @@
     "type": "project",
     "license": "GPL",
     "require": {
+        "ext-curl": "*",
         "ext-fileinfo": "*",
         "ext-gd": "*",
         "ext-json": "*",
@@ -14,6 +15,7 @@
         "ext-pdo_mysql": "*",
         "ext-session": "*",
         "ext-zip": "*",
+        "amphp/http-client": "^4.3",
         "anthonymartin/geo-location": "^1.0",
         "babdev/pagerfanta-bundle": "^2.1",
         "doctrine/doctrine-bundle": "^2.0",
@@ -44,6 +46,7 @@
         "symfony/dotenv": "5.1.*",
         "symfony/flex": "^1.1",
         "symfony/form": "5.1.*",
+        "symfony/http-client": "5.1.*",
         "symfony/mailer": "5.1.*",
         "symfony/monolog-bundle": "^3.3",
         "symfony/orm-pack": "^1.0",

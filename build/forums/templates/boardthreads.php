@@ -67,7 +67,7 @@ $layoutbits = new MOD_layoutbits();
     ?>
     <tr>
         <th class="middle p-1">
-            <a href="members/<?php echo $thread->first_author; ?>"><img src="members/avatar/<?php echo $thread->first_author; ?>?size=50" alt="<?php echo $thread->first_author; ?>" title="<?php echo $thread->first_author; ?>" /><br>
+            <a href="members/<?php echo $thread->first_author; ?>"><img class="avatar-50" src="members/avatar/<?php echo $thread->first_author; ?>/50" alt="<?php echo $thread->first_author; ?>" title="<?php echo $thread->first_author; ?>" /><br>
                 <small><?php echo $thread->first_author; ?></small>
             </a>
         </th>
@@ -87,109 +87,16 @@ $layoutbits = new MOD_layoutbits();
             ?>
             <br>
             <span class="small gray"><?php
-                // show tags if post is part of a group
                 if ($thread->IdGroup>0) {
                     echo "<a href=\"group/".$thread->IdGroup."\"><strong>" . $words->getFormatted('Group'). ": </strong>",$this->_model->getGroupName($thread->GroupName),"</a>" ;
                 }
-
-
-            /* PART OF TAGS, CAN BE DELETED IN MY OPINION (amnesiac84)
-                $breadcrumb = '';
-
-                if (isset($thread->continent) && $thread->continent) {
-                    $continentset = 1;
-                    $url_bit = 'k'.$thread->continentid.'-'.$thread->continent;
-                    if (!in_array($url_bit, $request)) {
-                        $url = $uri.$url_bit.'/';
-                        $breadcrumb .= '<a href="'.$url.'">'.$thread->continent.'</a> ';
-                    } else {
-//                              $url = 'forums/'.$url_bit.'/';
-                        $url = $uri;
-                        $breadcrumb .= ''.$thread->continent.' ';
-                    }
-
-                    if (isset($thread->countryname) && $thread->countryname) {
-                        $url_bit = 'c'.$thread->countrycode.'-'.$thread->countryname;
-                        if (!in_array($url_bit, $request)) {
-                            $url = $url.$url_bit.'/';
-                            $breadcrumb .= '&raquo; <a href="'.$url.'">'.$thread->countryname.'</a> ';
-                        } else {
-//                                  $url = $url.$url_bit.'/';
-                            $breadcrumb .= '&raquo; '.$thread->countryname.' ';
-                        }
-
-
-                        if (isset($thread->adminname) && $thread->adminname) {
-                            $url_bit = 'a'.$thread->admincode.'-'.$thread->adminname;
-                            if (!in_array($url_bit, $request)) {
-                                $url = $url.$url_bit.'/';
-                                $breadcrumb .= '&raquo; <a href="'.$url.'">'.$thread->adminname.'</a> ';
-                            } else {
-                                //                                  $url = $url.$url_bit.'/';
-                                $breadcrumb .= '&raquo; '.$thread->adminname.' ';
-                            }
-//                                  echo '<a href="'.$uri.'k'.$thread->continentid.'-'.$thread->continent.'/c'.$thread->countrycode.'-'.$thread->countryname.'/a'.$thread->admincode.'-'.$thread->adminname.'">'.$thread->adminname.'</a> ';
-
-                            if (isset($thread->geonames_name) && $thread->geonames_name) {
-                                $url_bit = 'g'.$thread->geonameid.'-'.$thread->geonames_name;
-                                if (!in_array($url_bit, $request)) {
-                                    $url = $url.$url_bit.'/';
-                                    $breadcrumb .= ':: <a href="'.$url.'">'.$thread->geonames_name.'</a> ';
-                                } else {
-                                    //                                  $url = $url.$url_bit.'/';
-                                    $breadcrumb .= ':: '.$thread->geonames_name.' ';
-                                }
-
-
-//                                      echo '<a href="'.$uri.'k'.$thread->continentid.'-'.$thread->continent.'/c'.$thread->countrycode.'-'.$thread->countryname.'/a'.$thread->admincode.'-'.$thread->adminname.'/g'.$thread->geonameid.'-'.$thread->geonames_name.'">'.$thread->geonames_name.'</a> ';
-                            }
-
-                        }
-
-                    }
-                }
-
-                $ShowHelp=false ; // todo process in a better way this hritage of travel book (create a type help for tags)
-                for ($ii=0;$ii<$thread->NbTags;$ii++) {
-                    if ($breadcrumb) {
-                        $breadcrumb .= '<span class="small"> | </span>';
-                    }
-                    $wordtag=$words->fTrad($thread->IdName[$ii]) ;
-                    $url_bit = 't'.$thread->IdTag[$ii].'-'.$wordtag;
-                    if (!in_array($url_bit, $request)) {
-                        $url = $uri.$url_bit.'/';
-                        $breadcrumb .= '<a href="'.$url.'">'.$wordtag.'</a> ';
-                    } else {
-                        $breadcrumb .= ''.$wordtag.' ';
-                    }
-
-                    // Heritage of TravelBook
-                    if ($wordtag=='help' ||$wordtag == 'Help and Support') {
-                        $ShowHelp=true ; // todo deal with this in a better way
-                    }
-                }
-
-                if ($breadcrumb) {
-                    // we will later use the 'tags' word, but don't want an edit link inside the html tag!
-                    if ($ShowHelp) {
-                        echo '<i class="fa fa-question-circle-o pr-1" alt="'. $words->getBuffered('tags') .'" title="'. $words->getBuffered('tags') .'></i>' . $words->flushBuffer();
-                    }
-                    elseif (isset($thread->continent) && $thread->continent) {
-                        echo '<i class="fa fa-globe pr-1" alt="'. $words->getBuffered('tags') .'" title="'. $words->getBuffered('tags') .'></i>' . $words->flushBuffer();
-                    }
-                    else {
-                        echo '<i class="fa fa-tag" alt="'. $words->getBuffered('tags') .'" title="'. $words->getBuffered('tags') .'"/></i>' . $words->flushBuffer();
-                    }
-                    echo $breadcrumb;
-                }
-            */
                 ?></span>
         </td>
         <td class="middle p-1"><?php echo $thread->replies; ?></td>
         <td class="middle p-1 d-none d-md-table-cell"><?php echo number_format($thread->views); ?></td>
         <td class="middle text-nowrap p-1 d-none d-md-table-cell">
             <div class="d-flex flex-row mr-2">
-                <div class="align-self-center"><a href="members/<?php echo $thread->last_author; ?>"><img src="members/avatar/<?php echo $thread->last_author; ?>?size=30" alt="<?php echo $thread->last_author; ?>" title="<?php echo $thread->last_author; ?>" /></a></div>
+                <div class="align-self-center"><a href="members/<?php echo $thread->last_author; ?>"><img class="avatar-50" src="members/avatar/<?php echo $thread->last_author; ?>/50" alt="<?php echo $thread->last_author; ?>" title="<?php echo $thread->last_author; ?>" /></a></div>
                 <div class="pl-2 align-self-center text-left">
                     <small><a href="members/<?php echo $thread->last_author; ?>"><?php echo $thread->last_author; ?></a></small><br>
                     <span class="small gray" title="<?php echo date($words->getSilent('DateHHMMShortFormat'), ServerToLocalDateTime($thread->last_create_time, $this->getSession())); ?>"><a href="<?php echo $last_url; ?>"><?php echo $layoutbits->ago($thread->last_create_time); ?></a></span>
@@ -204,6 +111,10 @@ $layoutbits = new MOD_layoutbits();
     <?php } ?>
     </tbody>
 </table>
+
+    <?php if (count($threads) == 0) {
+        echo '<div class="alert alert-notice">' . $words->getSilent('ForumNoThreads') . '</div>';
+    } ?>
 <!-- end of new table structure -->
 </div>
 
@@ -211,7 +122,11 @@ $layoutbits = new MOD_layoutbits();
 if ($User && empty($noForumNewTopicButton)) {
 ?>
     <div class="col-12">
-        <a class="btn btn-primary" href="<?php echo $uri; ?>new"><?php echo $words->getBuffered('ForumNewTopic'); ?></a><?php echo $words->flushBuffer(); ?>
+        <a class="btn btn-primary" href="<?php if ($this->_model->IdGroup) {
+            echo "group/" . $this->_model->IdGroup . "/";
+        } else {
+            echo $this->uri;
+        } ?>new"><?php echo $words->getBuffered('ForumNewTopic'); ?></a><?php echo $words->flushBuffer(); ?>
     </div>
     <?php
 }

@@ -1,6 +1,6 @@
 global.moment = require('moment');
 
-require('tempusdominus-bootstrap-4');
+require('tempusdominus-bootstrap');
 
 $.fn.datetimepicker.Constructor.Default = $.extend({}, $.fn.datetimepicker.Constructor.Default, {
     locale: document.getElementsByTagName('html')[0].getAttribute('lang'),

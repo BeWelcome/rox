@@ -45,19 +45,6 @@ $vars =& PPostHandler::getVars($callbackId);
     <div class="col-12">
 
     <?php
-    if ($navichain_items = $boards->getNaviChain()) {
-        foreach ($navichain_items as $link => $title) {
-            $navichain .= '<a href="' . $link . '">' . $title . '</a> :: ';
-        }
-        $navichain .= '<a href="' . $boards->getBoardLink() . '">' . $boards->getBoardName() . '</a>';
-    } else {
-        $navichain = '';
-    }
-
-    if ($navichain != '') {
-        echo '<p class="h4 gray">' . $navichain . '</p>';
-    }
-
     echo '<h3>';
     if ($allow_title) { // New Topic
         if ($edit) {

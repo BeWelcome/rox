@@ -3,8 +3,8 @@
 
 {% block content %}
     <p>
-        Unfortunately the server ran into an error and your request can't be fulfilled.<br>
+        {{ 'error.500'|trans }}<br>
 
-        <a href="{{ url('homepage') }}">Return to the homepage</a>.
+        <a href="{{ url('homepage') }}">{{ 'error.return.home'|trans }}</a>.
     </p>
 {% endblock %}

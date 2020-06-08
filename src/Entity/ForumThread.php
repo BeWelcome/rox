@@ -7,6 +7,9 @@
 
 namespace App\Entity;
 
+use App\Doctrine\ForumDeleteStatusType;
+use App\Doctrine\ForumVisibilityType;
+use App\Doctrine\ThreadReplyType;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -43,14 +46,14 @@ class ForumThread
      *
      * @ORM\Column(name="expiredate", type="datetime", nullable=true)
      */
-    private $expiredate = null;
+    private $expiryDate = null;
 
     /**
      * @var int
      *
      * @ORM\Column(name="IdTitle", type="integer", nullable=false)
      */
-    private $idTitle = '0';
+    private $idTitle;
 
     /**
      * @var string
@@ -90,42 +93,6 @@ class ForumThread
     private $views = 0;
 
     /**
-     * Not used (historic).
-     *
-     * @var int
-     *
-     * @ORM\Column(name="geonameid", type="integer", nullable=true)
-     */
-    private $geonameId = null;
-
-    /**
-     * Not used (historic).
-     *
-     * @var string
-     *
-     * @ORM\Column(name="admincode", type="string", length=2, nullable=true)
-     */
-    private $adminCode = null;
-
-    /**
-     * Not used (historic).
-     *
-     * @var string
-     *
-     * @ORM\Column(name="countrycode", type="string", length=2, nullable=true)
-     */
-    private $countrycode = null;
-
-    /**
-     * Not used (historic).
-     *
-     * @var string
-     *
-     * @ORM\Column(name="continent", type="string", nullable=true)
-     */
-    private $continent = null;
-
-    /**
      * @var int
      *
      * @ORM\Column(name="stickyvalue", type="integer", nullable=false)
@@ -153,23 +120,23 @@ class ForumThread
     /**
      * @var string
      *
-     * @ORM\Column(name="ThreadVisibility", type="string", nullable=false)
+     * @ORM\Column(name="ThreadVisibility", type="forum_visibility", nullable=false)
      */
-    private $visibility = 'NoRestriction';
+    private $visibility = ForumVisibilityType::MEMBERS_ONLY;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="WhoCanReply", type="string", nullable=false)
+     * @ORM\Column(name="WhoCanReply", type="thread_reply", nullable=false)
      */
-    private $whoCanReply = 'MembersOnly';
+    private $whoCanReply = ThreadReplyType::MEMBERS_ONLY;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="ThreadDeleted", type="string", nullable=false)
+     * @ORM\Column(name="ThreadDeleted", type="forum_delete_status", nullable=false)
      */
-    private $deleted = 'NotDeleted';
+    private $deleted = ForumDeleteStatusType::NOT_DELETED;
 
     /**
      * @ORM\OneToMany(targetEntity="ForumPost", mappedBy="thread")
@@ -208,13 +175,13 @@ class ForumThread
     /**
      * Set expiredate.
      *
-     * @param DateTime $expiredate
+     * @param DateTime $expiryDate
      *
      * @return ForumThread
      */
-    public function setExpiredate($expiredate)
+    public function setExpiryDate($expiryDate)
     {
-        $this->expiredate = $expiredate;
+        $this->expiryDate = $expiryDate;
 
         return $this;
     }
@@ -224,9 +191,9 @@ class ForumThread
      *
      * @return DateTime
      */
-    public function getExpiredate()
+    public function getExpiryDate()
     {
-        return $this->expiredate;
+        return $this->expiryDate;
     }
 
     /**

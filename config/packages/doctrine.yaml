@@ -43,6 +43,14 @@ doctrine:
             member_status: App\Doctrine\MemberStatusType
             accommodation: App\Doctrine\AccommodationType
             domain: App\Doctrine\DomainType
+            forum_visibility: App\Doctrine\ForumVisibilityType
+            thread_reply: App\Doctrine\ThreadReplyType
+            forum_delete_status: App\Doctrine\ForumDeleteStatusType
+            can_still_edit: App\Doctrine\PostCanStillEditType
+            action_to_watch: App\Doctrine\ActionToWatchType
+            report_status: App\Doctrine\ReportStatusType
+            report_type: App\Doctrine\ReportTypeType
+            who_spoke_last: App\Doctrine\WhoSpokeLastType
 
         mapping_types:
             enum:       string

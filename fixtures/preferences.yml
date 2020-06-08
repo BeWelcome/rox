@@ -43,15 +43,76 @@ App\Entity\Preference:
         created: <DateTime()>
         DefaultValue: 'Yes'
         PossibleValues: 'Yes:No'
-        Status: 'Normal'
+        Status: 'Inactive'
     FORUM_FIRST_PAGE:
         codename: 'PreferenceForumFirstPage'
-        position: 51
+        position: 52
         codeDescription: 'PreferenceForumFirstPageDesc'
         Description: 'This preference is used to state what is the first page of the forum for the user'
         created: <DateTime()>
         DefaultValue: 'Pref_ForumFirstPageLastPost'
         PossibleValues: 'Pref_ForumFirstPageLastPost:Pref_ForumFirstPageCategory'
+        Status: 'Inactive'
+    FORUM_ORDER:
+        position: 53
+        codename: 'PreferenceForumOrderListAsc'
+        codeDescription: 'PreferenceForumOrderListAscDes'
+        Description: 'This preference allows to define the forum order list.'
+        created: <DateTime()>
+        DefaultValue: Yes
+        PossibleValues: 'No;Yes'
+        Status: 'Inactive'
+    FORUM_THREADS_LANDING_PAGE:
+        position: 54
+        codename: 'ForumThreadsOnLandingPage'
+        codeDescription: 'ForumThreadsOnLandingPageDesc'
+        Description: 'How many forum threads on community landing'
+        created: <DateTime()>
+        DefaultValue: 5
+        PossibleValues: ''
+        Status: 'Inactive'
+    GROUPS_THREADS_LANDING_PAGE:
+        position: 55
+        codename: 'GroupsThreadsOnLandingPage'
+        codeDescription: 'GroupsThreadsOnLandingPageDesc'
+        Description: 'How many group threads on community landing'
+        created: <DateTime()>
+        DefaultValue: 5
+        PossibleValues: ''
+        Status: 'Inactive'
+    SHOW_PROFILE_VISITS:
+        position: 56
+        codename: 'PreferenceShowProfileVisits'
+        codeDescription: 'PreferenceShowProfileVisitsDes'
+        Description: 'ShowProfileVisits description'
+        created: <DateTime()>
+        DefaultValue: Yes
+        PossibleValues: 'Yes;No'
+        Status: 'Inactive'
+    SHOW_MY_GROUP_TOPICS_ONLY:
+        position: 57
+        codename: 'ShowMyGroupsTopicsOnly'
+        codeDescription: 'ShowMyGroupsTopicsOnlyDes'
+        description: 'ShowMyGroupsTopicsOnly description'
+        created: <DateTime()>
+        DefaultValue: No
+        PossibleValues: 'No;Yes'
         Status: 'Normal'
-
-
+    ACTIVITIES_NEAR_ME_RADIUS:
+        position: 58
+        codename: 'ActivitiesNearMeRadius'
+        codeDescription: 'ActivitiesRadius'
+        description: Radius set by the user for the list of activities around their location
+        created: <DateTime()>
+        DefaultValue: ''
+        PossibleValues: ''
+        Status: 'Inactive'
+    READ_COMMENT_GUIDELINES:
+        position: 59
+        codename: 'ReadCommentGuidelines'
+        codeDescription: 'ReadCommentGuidelines'
+        description: Stores if user has read the comment guidelines (at least once)
+        created: <DateTime()>
+        DefaultValue: ''
+        PossibleValues: ''
+        Status: 'Inactive'

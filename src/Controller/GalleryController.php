@@ -243,7 +243,7 @@ class GalleryController extends AbstractController
      *
      * @return JsonResponse
      *
-     * @throw AccessDeniedException
+     * @throws AccessDeniedException
      * @SuppressWarnings(PHPMD.StaticAccess)
      */
     public function uploadImageFromCKEditor5(Request $request, ValidatorInterface $validator)

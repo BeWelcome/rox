@@ -7,6 +7,9 @@
 
 namespace App\Entity;
 
+use App\Doctrine\ForumDeleteStatusType;
+use App\Doctrine\ForumVisibilityType;
+use App\Doctrine\PostCanStillEditType;
 use Carbon\Carbon;
 use DateTime;
 use Doctrine\Common\Persistence\ObjectManagerAware;
@@ -21,9 +24,6 @@ use Doctrine\Persistence\ObjectManager;
  *     @ORM\Index(name="last_editorid", columns={"last_editorid"}),
  *     @ORM\Index(name="threadid", columns={"threadid"}),
  *     @ORM\Index(name="IdWriter", columns={"IdWriter"}),
- *     @ORM\Index(name="IdLocalEvent", columns={"IdLocalEvent"}),
- *     @ORM\Index(name="IdPoll", columns={"IdPoll"}),
- *     @ORM\Index(name="IdLocalVolMessage", columns={"IdLocalVolMessage"}),
  *     @ORM\Index(name="PostVisibility", columns={"PostVisibility"}),
  *     @ORM\Index(name="PostDeleted", columns={"PostDeleted"}),
  *     @ORM\Index(name="create_time", columns={"create_time"})})
@@ -54,17 +54,9 @@ class ForumPost implements ObjectManagerAware
     /**
      * @var string
      *
-     * @ORM\Column(name="PostVisibility", type="string", nullable=false)
+     * @ORM\Column(name="PostVisibility", type="forum_visibility", nullable=false)
      */
-    private $postvisibility = 'NoRestriction';
-
-    /**
-     * not used (historical).
-     *
-     * @var int
-     * @ORM\Column(name="authorid", type="integer", nullable=true)
-     */
-    private $authorId;
+    private $postvisibility = ForumVisibilityType::MEMBERS_ONLY;
 
     /**
      * @var Member
@@ -98,9 +90,9 @@ class ForumPost implements ObjectManagerAware
     /**
      * @var string
      *
-     * @ORM\Column(name="OwnerCanStillEdit", type="string", nullable=false)
+     * @ORM\Column(name="OwnerCanStillEdit", type="can_still_edit", nullable=false)
      */
-    private $ownercanstilledit = 'Yes';
+    private $ownerCanStillEdit = PostCanStillEditType::CAN_STILL_EDIT;
 
     /**
      * @var DateTime
@@ -136,37 +128,10 @@ class ForumPost implements ObjectManagerAware
     /**
      * @var string
      *
-     * @ORM\Column(name="HasVotes", type="string", nullable=false)
+     * @ORM\Column(name="PostDeleted", type="forum_delete_status", nullable=false)
      */
-    private $hasvotes = 'No';
+    private $deleted = ForumDeleteStatusType::NOT_DELETED;
 
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="IdLocalVolMessage", type="integer", nullable=false)
-     */
-    private $idlocalvolmessage = '0';
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="IdLocalEvent", type="integer", nullable=false)
-     */
-    private $idlocalevent = '0';
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="IdPoll", type="integer", nullable=false)
-     */
-    private $idpoll = '0';
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="PostDeleted", type="string", nullable=false)
-     */
-    private $deleted = 'NotDeleted';
     /**
      * @var ObjectManager
      */
@@ -319,13 +284,13 @@ class ForumPost implements ObjectManagerAware
     /**
      * Set ownercanstilledit.
      *
-     * @param string $ownercanstilledit
+     * @param string $ownerCanStillEdit
      *
      * @return ForumPost
      */
-    public function setOwnercanstilledit($ownercanstilledit)
+    public function setOwnerCanStillEdit($ownerCanStillEdit)
     {
-        $this->ownercanstilledit = $ownercanstilledit;
+        $this->ownerCanStillEdit = $ownerCanStillEdit;
 
         return $this;
     }
@@ -335,9 +300,9 @@ class ForumPost implements ObjectManagerAware
      *
      * @return string
      */
-    public function getOwnercanstilledit()
+    public function getOwnerCanStillEdit()
     {
-        return $this->ownercanstilledit;
+        return $this->ownerCanStillEdit;
     }
 
     /**

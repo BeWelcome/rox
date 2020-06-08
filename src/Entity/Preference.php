@@ -12,14 +12,16 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Preference
 {
-    const MESSAGE_AND_REQUEST_FILTER = 'PreferenceMessageFilter';
-    const FORUM_FILTER = 'PreferenceForumFilter';
-    const SHOW_MAP = 'PreferenceShowMap';
-    const LOCALE = 'PreferenceLanguage';
-    const HTML_MAILS = 'PreferenceHtmlMails';
-    const NUMBER_FORUM_POSTS = 'ForumThreadsOnLandingPage';
-    const NUMBER_GROUPS_POSTS = 'GroupsThreadsOnLandingPage';
-    const SHOW_MY_GROUP_POSTS_ONLY = 'ShowMyGroupsTopicsOnly';
+    public const MESSAGE_AND_REQUEST_FILTER = 'PreferenceMessageFilter';
+    public const FORUM_FILTER = 'PreferenceForumFilter';
+    public const SHOW_MAP = 'PreferenceShowMap';
+    public const LOCALE = 'PreferenceLanguage';
+    public const HTML_MAILS = 'PreferenceHtmlMails';
+    public const NUMBER_FORUM_POSTS = 'ForumThreadsOnLandingPage';
+    public const NUMBER_GROUPS_POSTS = 'GroupsThreadsOnLandingPage';
+    public const SHOW_MY_GROUP_POSTS_ONLY = 'ShowMyGroupsTopicsOnly';
+    public const ACTIVITIES_NEAR_ME_RADIUS = 'ActivitiesNearMeRadius';
+    public const READ_COMMENT_GUIDELINES = 'ReadCommentGuidelines';
 
     /**
      * @var int

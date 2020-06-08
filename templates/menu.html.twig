@@ -2,7 +2,7 @@
 {% set member = app.user %}
 {% if member %}
     <nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-primary navbar-shadow bordert-1 borderb-1">
-        <div class="container">
+        <div class="container-lg">
             <a class="navbar-brand d-none d-lg-inline" href="{{ url('homepage') }}"><img
                         src="{{ asset('images/logo_index_top.png') }}"
                         alt="BeWelcome"/></a>
@@ -104,7 +104,7 @@
                         <div id="subNavBar" class="dropdown-menu subnav py-1 bordert-1 borderb-1"
                              aria-labelledby="subNavBarToggle">
 
-                            <div class="container">
+                            <div class="container-lg">
 
                                 <div class="d-flex flex-row justify-content-between">
                                     <div class="py-3 pr-3">
@@ -240,7 +240,7 @@
     </nav>
     {% if is_granted('ROLE_ADMIN_CHECKER') or is_granted('ROLE_ADMIN_COMMENTS') or is_granted('ROLE_ADMIN_SAFETYTEAM')
         or is_granted('ROLE_ADMIN_GROUP')%}
-        <div class="container">
+        <div class="container-lg">
             <div class="row no-gutters justify-content-end">
                 <div class="py-2">
                     {% if not groupsInApprovalQueue is null %}<a class="btn btn-primary btn-sm"
@@ -256,7 +256,7 @@
 {% else %}
     {# navbar not logged in, showing main links #}
     <nav class="navbar navbar-sticky-top navbar-expand-lg navbar-dark bg-primary navbar-shadow bordert-1 borderb-1">
-        <div class="container">
+        <div class="container.lg">
             <a class="navbar-brand mr-3 pl-3 pl-md-0 float-left" href="{{ url('homepage') }}"><img
                         src="{{ asset('images/logo_index_top.png') }}" alt="BeWelcome"/></a>
 
@@ -308,9 +308,9 @@
         </div>
     </nav>
 {% endif %}
-<noscript><div class="container"><div class="alert alert-danger"><p class="h5">You need to activate Javascript for bewelcome.org</p><small>Without it some function won't work.</small></div></div></noscript>
+<noscript><div class="container-lg"><div class="alert alert-danger"><p class="h5">You need to activate Javascript for bewelcome.org</p><small>Without it some function won't work.</small></div></div></noscript>
 {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
-<div class="container">{% for message in loginmessages %}
+<div class="container-lg">{% for message in loginmessages %}
         <div class="alert alert-warning alert-dismissible fade show" role="alert">
             {{ message.text|raw }}
             <button data-alert="{{ message.id }}" class="close" data-dismiss="alert" aria-label="Close">

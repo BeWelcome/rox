@@ -118,7 +118,7 @@ class Group implements ObjectManagerAware
     /**
      * @var bool
      *
-     * @ORM\Column(name="Approved", type="smallint", nullable = true)
+     * @ORM\Column(name="approved", type="smallint", nullable = true)
      */
     private $approved = self::NOT_APPROVED;
 

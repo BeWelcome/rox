@@ -32,12 +32,21 @@ Boston, MA  02111-1307, USA.
      */
 
 
-class GroupForumsOverviewPage extends GroupsBasePage
+class GroupForumsOverviewPage extends PageWithActiveSkin
 {
+    protected function teaserContent()
+    {
+        echo '<h3>';
+        echo '<a href="forums">' . $this->getWords()->getSilent('CommunityDiscussions') . '</a>';
+        echo ' » ';
+        echo '<a href="groups/forums">' . $this->getWords()->getSilent('Groups') . '</a>';
+        echo '</h3>';
+    }
+
     protected function column_col3()
     {
         $words = $this->getWords();
-        $Forums = new ForumsController;
+        $Forums = new ForumsController();
         $Forums->setEnvironment($this->environment);
         $Forums->index();
     }

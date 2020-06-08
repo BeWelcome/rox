@@ -1,10 +1,7 @@
 {% extends 'emails/email.html.twig' %}
 
 {% block content%}
-    <p>Dear {{ username }},<br />
     Thank you for signing up on BeWelcome. We need to be sure that you're email address is valid as you will get notifications for messages and hosting requests to that address.</p>
     <p>Please use the following link to confirm your email address ({{ email_address }}):<p>
     <p><a href="{{ url('signup_confirm', { username: username, registrationKey: key }) }}">Confirm email address</a></p>
-    <p>Cheers,<br>
-    The volunteers of BeWelcome</p>
 {% endblock content %}

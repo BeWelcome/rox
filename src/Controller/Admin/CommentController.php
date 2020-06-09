@@ -8,6 +8,8 @@ use App\Entity\Comment;
 use App\Entity\Member;
 use App\Form\AdminCommentFormType;
 use App\Model\Admin\CommentModel;
+use App\Utilities\TranslatedFlashTrait;
+use App\Utilities\TranslatorTrait;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -15,7 +17,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class CommentController.
@@ -24,10 +25,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class CommentController extends AbstractController
 {
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
+    use TranslatorTrait;
+    use TranslatedFlashTrait;
 
     /** @var CommentModel */
     private $commentModel;
@@ -35,9 +34,8 @@ class CommentController extends AbstractController
     /**
      * CommentController constructor.
      */
-    public function __construct(TranslatorInterface $translator, CommentModel $commentModel)
+    public function __construct(CommentModel $commentModel)
     {
-        $this->translator = $translator;
         $this->commentModel = $commentModel;
     }
 
@@ -226,28 +224,29 @@ class CommentController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $clickedButton = $form->getClickedButton()->getName();
-            if ('hideComment' === $clickedButton) {
-                $comment->setDisplayinpublic(false);
-                $this->addTranslatedFlash('notice', 'flash.admin.comment.hidden');
-            }
-            if ('showComment' === $clickedButton) {
-                $comment->setDisplayinpublic(true);
-                $this->addTranslatedFlash('notice', 'flash.admin.comment.visible');
-            }
-            if ('allowEditing' === $clickedButton) {
-                $comment->setAllowedit(true);
-                $this->addTranslatedFlash('notice', 'flash.admin.comment.editable');
-            }
-            if ('disableEditing' === $clickedButton) {
-                $comment->setAllowedit(false);
-                $this->addTranslatedFlash('notice', 'flash.admin.comment.locked');
-            }
-            if ('delectComment' === $clickedButton) {
-                $this->addTranslatedFlash('notice', 'flash.admin.comment.deleted');
-                $em->remove($comment);
-                $em->flush();
+            switch ($clickedButton) {
+                case 'hideComment':
+                    $comment->setDisplayinpublic(false);
+                    $this->addTranslatedFlash('notice', 'flash.admin.comment.hidden');
+                    break;
+                case 'showComment':
+                    $comment->setDisplayinpublic(true);
+                    $this->addTranslatedFlash('notice', 'flash.admin.comment.visible');
+                    break;
+                case 'allowEditing':
+                    $comment->setAllowedit(true);
+                    $this->addTranslatedFlash('notice', 'flash.admin.comment.editable');
+                    break;
+                case 'disableEditing':
+                    $comment->setAllowedit(false);
+                    $this->addTranslatedFlash('notice', 'flash.admin.comment.locked');
+                    break;
+                case 'deleteComment':
+                    $this->addTranslatedFlash('notice', 'flash.admin.comment.deleted');
+                    $em->remove($comment);
+                    $em->flush();
 
-                return $this->redirectToRoute('admin_comment_overview');
+                    return $this->redirectToRoute('admin_comment_overview');
             }
             $em->persist($comment);
             $em->flush();

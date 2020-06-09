@@ -7,7 +7,6 @@ use App\Entity\Member;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
-use Exception;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
 
@@ -164,7 +163,7 @@ class CommentRepository extends EntityRepository
     }
 
     /**
-     * @return mixed|null
+     * @return int
      */
     public function getReportedCommentsCount()
     {
@@ -174,11 +173,7 @@ class CommentRepository extends EntityRepository
             ->setParameter('status', CommentAdminActionType::ADMIN_CHECK)
             ->getQuery();
 
-        $results = null;
-        try {
-            $results = $q->getSingleScalarResult();
-        } catch (Exception $e) {
-        }
+        $results = (int) $q->getSingleScalarResult();
 
         return $results;
     }

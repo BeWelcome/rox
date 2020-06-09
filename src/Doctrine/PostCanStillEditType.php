@@ -4,7 +4,6 @@ namespace App\Doctrine;
 
 class PostCanStillEditType extends EnumType
 {
-
     public const CAN_STILL_EDIT = 'Yes';
     public const EDIT_DISABLED = 'No';
 

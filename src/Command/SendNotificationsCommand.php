@@ -20,6 +20,10 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\Mime\Address;
 
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * The execute method which does all the work is understandable. The high coupling stems in the framework.
+ */
 class SendNotificationsCommand extends Command
 {
     use TranslatorTrait;
@@ -61,6 +65,10 @@ class SendNotificationsCommand extends Command
         ;
     }
 
+    /**
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->logger->notice('Started the export');
@@ -83,7 +91,7 @@ class SendNotificationsCommand extends Command
             foreach ($scheduledNotifications as $scheduled) {
                 $receiver = $scheduled->getReceiver();
                 $status = $receiver->getStatus();
-                if (!in_array($status, MemberStatusType::ACTIVE_ALL_ARRAY, true )) {
+                if (!\in_array($status, MemberStatusType::ACTIVE_ALL_ARRAY, true)) {
                     continue;
                 }
 

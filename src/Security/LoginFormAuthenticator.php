@@ -5,6 +5,7 @@ namespace App\Security;
 use App\Doctrine\MemberStatusType;
 use App\Entity\Member;
 use App\Repository\MemberRepository;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -79,7 +80,7 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
 
     public function getUser($credentials, UserProviderInterface $userProvider)
     {
-        return $this->memberRepository->loadUserByUsername($credentials['username']);
+        return $userProvider->loadUserByUsername($credentials['username']);
     }
 
     public function checkCredentials($credentials, UserInterface $user)
@@ -100,7 +101,7 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
         } else {
             $url = $this->getTargetPath($request->getSession(), $providerKey) ?? $this->urlGenerator->generate('homepage');
         }
-        $member->setLastLogin(new \DateTime());
+        $member->setLastLogin(new DateTime());
         $this->entityManager->persist($member);
         $this->entityManager->flush();
 

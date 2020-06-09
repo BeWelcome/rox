@@ -2,17 +2,21 @@
 
 namespace App\Utilities;
 
+use ArrayIterator;
+use InvalidArgumentException;
+use Iterator;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Translation\Extractor\PhpExtractor;
 use Symfony\Component\Translation\Extractor\PhpStringTokenParser;
 use Symfony\Component\Translation\MessageCatalogue;
 
+/**
+ * @SuppressWarnings(PHPMD)
+ *
+ * This is based on an example from the Symfony documentation.
+ */
 class WordsExtractor extends PhpExtractor
 {
-    const MESSAGE_TOKEN = 300;
-    const METHOD_ARGUMENTS_TOKEN = 1000;
-    const DOMAIN_TOKEN = 1001;
-
     /**
      * The sequence that captures translation messages.
      *
@@ -94,7 +98,7 @@ class WordsExtractor extends PhpExtractor
      */
     protected function parseTokens(array $tokens, MessageCatalogue $catalog, string $filename)
     {
-        $tokenIterator = new \ArrayIterator($tokens);
+        $tokenIterator = new ArrayIterator($tokens);
 
         for ($key = 0; $key < $tokenIterator->count(); ++$key) {
             foreach ($this->sequences as $sequence) {
@@ -142,7 +146,7 @@ class WordsExtractor extends PhpExtractor
     }
 
     /**
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      *
      * @return bool
      */
@@ -164,32 +168,32 @@ class WordsExtractor extends PhpExtractor
     /**
      * Seeks to a non-whitespace token.
      */
-    private function seekToNextRelevantToken(\Iterator $tokenIterator)
+    private function seekToNextRelevantToken(Iterator $tokenIterator)
     {
         for (; $tokenIterator->valid(); $tokenIterator->next()) {
-            $t = $tokenIterator->current();
-            if (T_WHITESPACE !== $t[0]) {
+            $token = $tokenIterator->current();
+            if (T_WHITESPACE !== $token[0]) {
                 break;
             }
         }
     }
 
-    private function skipMethodArgument(\Iterator $tokenIterator)
+    private function skipMethodArgument(Iterator $tokenIterator)
     {
         $openBraces = 0;
 
         for (; $tokenIterator->valid(); $tokenIterator->next()) {
-            $t = $tokenIterator->current();
+            $token = $tokenIterator->current();
 
-            if ('[' === $t[0] || '(' === $t[0]) {
+            if ('[' === $token[0] || '(' === $token[0]) {
                 ++$openBraces;
             }
 
-            if (']' === $t[0] || ')' === $t[0]) {
+            if (']' === $token[0] || ')' === $token[0]) {
                 --$openBraces;
             }
 
-            if ((0 === $openBraces && ',' === $t[0]) || (-1 === $openBraces && ')' === $t[0])) {
+            if ((0 === $openBraces && ',' === $token[0]) || (-1 === $openBraces && ')' === $token[0])) {
                 break;
             }
         }
@@ -199,32 +203,32 @@ class WordsExtractor extends PhpExtractor
      * Extracts the message from the iterator while the tokens
      * match allowed message tokens.
      */
-    private function getValue(\Iterator $tokenIterator)
+    private function getValue(Iterator $tokenIterator)
     {
         $message = '';
         $docToken = '';
         $docPart = '';
 
         for (; $tokenIterator->valid(); $tokenIterator->next()) {
-            $t = $tokenIterator->current();
-            if ('.' === $t) {
+            $token = $tokenIterator->current();
+            if ('.' === $token) {
                 // Concatenate with next token
                 continue;
             }
-            if (!isset($t[1])) {
+            if (!isset($token[1])) {
                 break;
             }
 
-            switch ($t[0]) {
+            switch ($token[0]) {
                 case T_START_HEREDOC:
-                    $docToken = $t[1];
+                    $docToken = $token[1];
                     break;
                 case T_ENCAPSED_AND_WHITESPACE:
                 case T_CONSTANT_ENCAPSED_STRING:
                     if ('' === $docToken) {
-                        $message .= PhpStringTokenParser::parse($t[1]);
+                        $message .= PhpStringTokenParser::parse($token[1]);
                     } else {
-                        $docPart = $t[1];
+                        $docPart = $token[1];
                     }
                     break;
                 case T_END_HEREDOC:

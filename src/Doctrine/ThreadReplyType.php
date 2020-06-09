@@ -4,7 +4,6 @@ namespace App\Doctrine;
 
 class ThreadReplyType extends EnumType
 {
-
     public const MEMBERS_ONLY = 'MembersOnly';
     public const GROUP_ONLY = 'GroupMembersOnly';
     public const MODERATOR_ONLY = 'Moderators';

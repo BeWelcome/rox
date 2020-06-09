@@ -9,7 +9,7 @@ use App\Utilities\LifecycleCallbacksTrait;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * ReportToModerator
+ * ReportToModerator.
  *
  * @ORM\Table(name="reports_to_moderators", indexes={@ORM\Index(name="IdReporter", columns={"IdReporter", "IdPost", "IdThread"})})
  * @ORM\HasLifecycleCallbacks
@@ -96,7 +96,7 @@ class ReportToModerator
     private $id;
 
     /**
-     * Set postcomment
+     * Set postcomment.
      *
      * @param string $postComment
      *
@@ -110,7 +110,7 @@ class ReportToModerator
     }
 
     /**
-     * Get postcomment
+     * Get postcomment.
      *
      * @return string
      */
@@ -120,7 +120,7 @@ class ReportToModerator
     }
 
     /**
-     * Set moderatorcomment
+     * Set moderatorcomment.
      *
      * @param string $moderatorComment
      *
@@ -134,7 +134,7 @@ class ReportToModerator
     }
 
     /**
-     * Get moderatorcomment
+     * Get moderatorcomment.
      *
      * @return string
      */
@@ -144,7 +144,7 @@ class ReportToModerator
     }
 
     /**
-     * Set status
+     * Set status.
      *
      * @param string $status
      *
@@ -158,7 +158,7 @@ class ReportToModerator
     }
 
     /**
-     * Get status
+     * Get status.
      *
      * @return string
      */
@@ -168,7 +168,7 @@ class ReportToModerator
     }
 
     /**
-     * Set type
+     * Set type.
      *
      * @param string $type
      *
@@ -182,7 +182,7 @@ class ReportToModerator
     }
 
     /**
-     * Get type
+     * Get type.
      *
      * @return string
      */
@@ -216,7 +216,7 @@ class ReportToModerator
     }
 
     /**
-     * Get id
+     * Get id.
      *
      * @return int
      */
@@ -225,33 +225,21 @@ class ReportToModerator
         return $this->id;
     }
 
-    /**
-     * @return Member
-     */
     public function getReporter(): Member
     {
         return $this->reporter;
     }
 
-    /**
-     * @param Member $reporter
-     */
     public function setReporter(Member $reporter): void
     {
         $this->reporter = $reporter;
     }
 
-    /**
-     * @return Member
-     */
     public function getModerator(): Member
     {
         return $this->moderator;
     }
 
-    /**
-     * @param Member $moderator
-     */
     public function setModerator(Member $moderator): void
     {
         $this->moderator = $moderator;

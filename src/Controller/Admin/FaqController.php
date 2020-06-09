@@ -8,9 +8,7 @@ use App\Entity\FaqCategory;
 use App\Entity\Language;
 use App\Entity\Member;
 use App\Entity\Word;
-use App\Form\CustomDataClass\FaqCategoryRequest;
 use App\Form\CustomDataClass\FaqRequest;
-use App\Form\FaqCategoryFormType;
 use App\Form\FaqFormType;
 use App\Model\FaqModel;
 use App\Model\TranslationModel;
@@ -18,7 +16,6 @@ use DateTime;
 use Doctrine\ORM\EntityRepository;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -26,14 +23,13 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class FaqController.
  *
  * @SuppressWarnings(PHPMD.StaticAccess)
  */
-class FaqController extends AbstractController
+class FaqController extends FaqBaseController
 {
     /**
      * @var FaqModel
@@ -58,10 +54,8 @@ class FaqController extends AbstractController
      * @throws AccessDeniedException
      *
      * @return Response
-     *
-     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
      */
-    public function showOverviewAction(Request $request, FaqCategory $faqCategory)
+    public function showOverview(Request $request, FaqCategory $faqCategory)
     {
         if (!$this->isGranted(Member::ROLE_ADMIN_FAQ)) {
             throw $this->createAccessDeniedException('You need to have Faq right to access this.');
@@ -78,7 +72,7 @@ class FaqController extends AbstractController
                 $ids = explode('&', $data['sortOrder']);
                 array_walk(
                     $ids,
-                    function (&$item, $key) {
+                    function (&$item) {
                         $item = str_replace('faq=', '', $item);
                     }
                 );
@@ -108,75 +102,6 @@ class FaqController extends AbstractController
     }
 
     /**
-     * @Route("/admin/faqs/category/create", name="admin_faqs_category_create")
-     *
-     * @throws Exception
-     *
-     * @return Response
-     */
-    public function createCategoryAction(Request $request, TranslationModel $translationModel)
-    {
-        if (!$this->isGranted(Member::ROLE_ADMIN_FAQ)) {
-            throw $this->createAccessDeniedException('You need to have Faq right to access this.');
-        }
-
-        $faqCategories = $this->getSubMenuItems();
-
-        $faqCategoryRequest = new FaqCategoryRequest();
-        $faqCategoryForm = $this->createForm(FaqCategoryFormType::class, $faqCategoryRequest);
-        $faqCategoryForm->handleRequest($request);
-
-        if ($faqCategoryForm->isSubmitted() && $faqCategoryForm->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            /** @var FaqCategoryRequest $data */
-            $data = $faqCategoryForm->getData();
-
-            $wordRepository = $em->getRepository(Word::class);
-            $check = $wordRepository->findBy(['code' => $data->wordCode, 'shortCode' => 'en']);
-            $valid = empty($check);
-            if ($valid) {
-                /** @var Member $author */
-                $author = $this->getUser();
-                $languageRepository = $em->getRepository(Language::class);
-                /** @var Language $english */
-                $english = $languageRepository->findOneBy(['shortcode' => 'en']);
-
-                $word = new Word();
-                $word->setAuthor($author);
-                $word->setCode($data->wordCode);
-                $word->setSentence($data->description);
-                $word->setDomain(DomainType::MESSAGES);
-                $word->setlanguage($english);
-                $word->setCreated(new DateTime());
-                $word->setDescription('FAQ category');
-                $em->persist($word);
-
-                $faqCategory = new FaqCategory();
-                $faqCategory->setDescription($data->wordCode);
-                $em->persist($faqCategory);
-                $em->flush();
-
-                $translationModel->removeCacheFiles();
-                $this->addFlash('notice', "Faq category '{$data->wordCode}' created.");
-
-                return $this->redirectToRoute('admin_faqs_overview', ['categoryId' => $faqCategory->getId()]);
-            }
-        }
-
-        return  $this->render(
-            'admin/faqs/editcreate.category.html.twig',
-            [
-                'submenu' => [
-                    'items' => $faqCategories,
-                    'active' => 'createCategory',
-                ],
-                'form' => $faqCategoryForm->createView(),
-                'edit' => false,
-            ]
-        );
-    }
-
-    /**
      * @Route("/admin/faqs/{categoryId}/create", name="admin_faqs_faq_create",
      *     requirements={"categoryId": "\d+"})
      *
@@ -186,7 +111,7 @@ class FaqController extends AbstractController
      *
      * @return RedirectResponse|Response
      */
-    public function createFaqInCategoryAction(Request $request, FaqCategory $faqCategory, TranslationModel $translationModel)
+    public function createFaqInCategory(Request $request, FaqCategory $faqCategory, TranslationModel $translationModel)
     {
         if (!$this->isGranted(Member::ROLE_ADMIN_FAQ)) {
             throw $this->createAccessDeniedException('You need to have Faq right to access this.');
@@ -270,53 +195,6 @@ class FaqController extends AbstractController
     }
 
     /**
-     * @Route("/admin/faqs/category/{id}/edit", name="admin_faqs_category_edit",
-     *     requirements={"id": "\d+"})
-     *
-     * @throws AccessDeniedException
-     *
-     * @return Response
-     */
-    public function editCategoryAction(Request $request, FaqCategory $faqCategory, TranslationModel $translationModel)
-    {
-        if (!$this->isGranted(Member::ROLE_ADMIN_FAQ)) {
-            throw $this->createAccessDeniedException('You need to have Faq right to access this.');
-        }
-
-        $faqCategories = $this->getSubMenuItems($faqCategory);
-
-        $em = $this->getDoctrine()->getManager();
-        $faqCategoryRequest = FaqCategoryRequest::fromFaqCategory($em, $faqCategory);
-        $faqCategoryForm = $this->createForm(FaqCategoryFormType::class, $faqCategoryRequest);
-        $faqCategoryForm->handleRequest($request);
-
-        if ($faqCategoryForm->isSubmitted() && $faqCategoryForm->isValid()) {
-            // Update description accordingly
-            $data = $faqCategoryForm->getData();
-            $wordRepository = $em->getRepository(Word::class);
-            $description = $wordRepository->findOneBy(['code' => $faqCategoryRequest->wordCode, 'shortCode' => 'en']);
-            $description->setSentence($data->description);
-            $em->persist($description);
-            $em->flush();
-            $translationModel->removeCacheFiles();
-
-            return $this->redirectToRoute('admin_faqs_overview', ['categoryId' => $faqCategory->getId()]);
-        }
-
-        return  $this->render(
-            'admin/faqs/editcreate.category.html.twig',
-            [
-                'submenu' => [
-                    'items' => $faqCategories,
-                    'active' => 'editCategory',
-                ],
-                'form' => $faqCategoryForm->createView(),
-                'edit' => true,
-            ]
-        );
-    }
-
-    /**
      * @Route("/admin/faqs/faq/{id}/edit", name="admin_faqs_faq_edit",
      *     requirements={"id": "\d+"})
      *
@@ -324,7 +202,7 @@ class FaqController extends AbstractController
      *
      * @return Response
      */
-    public function editFaqAction(Request $request, Faq $faq)
+    public function editFaq(Request $request, Faq $faq)
     {
         if (!$this->isGranted(Member::ROLE_ADMIN_FAQ)) {
             throw $this->createAccessDeniedException('You need to have Faq right to access this.');
@@ -399,106 +277,5 @@ class FaqController extends AbstractController
                 'edit' => false,
             ]
         );
-    }
-
-    /**
-     * @Route("/admin/faqs/sort", name="admin_faqs_category_sort")
-     *
-     * @throws AccessDeniedException
-     *
-     * @return Response
-     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
-     */
-    public function sortFaqCategoriesAction(Request $request, TranslatorInterface $translator)
-    {
-        if (!$this->isGranted(Member::ROLE_ADMIN_FAQ)) {
-            throw $this->createAccessDeniedException('You need to have Faq right to access this.');
-        }
-
-        $form = $this->createFormBuilder()
-            ->add('sortOrder', HiddenType::class)
-            ->getForm();
-
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $data = $form->getData();
-            if (!empty($data['sortOrder'])) {
-                $ids = explode('&', $data['sortOrder']);
-                array_walk(
-                    $ids,
-                    function (&$item, $key) {
-                        $item = str_replace('faq=', '', $item);
-                    }
-                );
-                $em = $this->getDoctrine()->getManager();
-                $faqCategoryRepository = $em->getRepository(FaqCategory::class);
-                foreach ($ids as $index => $id) {
-                    $faq = $faqCategoryRepository->find($id);
-                    $faq->setSortOrder($index);
-                    $em->persist($faq);
-                }
-                $em->flush();
-
-                $this->addFlash('notice', $translator->trans('flash.admin.faq.sort.order.updated'));
-                $this->redirectToRoute('admin_faqs_category_sort');
-            }
-        }
-
-        $subMenuItems = $this->getSubMenuItems();
-        $faqCategories = $this->faqModel->getFaqCategories();
-
-        return $this->render(
-            'admin/faqs/sort.categories.html.twig',
-            [
-                'form' => $form->createView(),
-                'submenu' => [
-                    'items' => $subMenuItems,
-                    'active' => 'sortCategories',
-                ],
-                'faqCategories' => $faqCategories,
-            ]
-        );
-    }
-
-    /**
-     * @throws AccessDeniedException
-     *
-     * @return array
-     */
-    private function getSubMenuItems(FaqCategory $faqCategory = null)
-    {
-        if (!$this->isGranted(Member::ROLE_ADMIN_FAQ)) {
-            throw $this->createAccessDeniedException('You need to have Faq right to access this.');
-        }
-
-        $repository = $this->getDoctrine()->getRepository(FaqCategory::class);
-        $faqCategories = $repository->findBy([], ['sortOrder' => 'ASC']);
-
-        $subMenu = [];
-        if (null === $faqCategory) {
-            $subMenu['createCategory'] = [
-                'key' => 'admin.faq.create.category',
-                'url' => $this->generateUrl('admin_faqs_category_create'),
-            ];
-        } else {
-            $subMenu['editCategory'] = [
-                'key' => 'admin.faq.edit.category',
-                'url' => $this->generateUrl('admin_faqs_category_edit', [
-                    'id' => $faqCategory->getId(),
-                ]),
-            ];
-        }
-        $subMenu['sortCategories'] = [
-            'key' => 'admin.faq.sort.categories',
-            'url' => $this->generateUrl('admin_faqs_category_sort'),
-        ];
-        foreach ($faqCategories as $faqCategory) {
-            $subMenu[$faqCategory->getId()] = [
-                'key' => $faqCategory->getDescription(),
-                'url' => $this->generateUrl('admin_faqs_overview', ['categoryId' => $faqCategory->getId()]),
-            ];
-        }
-
-        return $subMenu;
     }
 }

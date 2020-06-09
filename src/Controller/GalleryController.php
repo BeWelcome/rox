@@ -241,9 +241,10 @@ class GalleryController extends AbstractController
     /**
      * @Route("/gallery/upload/image", name="gallery_upload_ckeditor")
      *
+     * @throws AccessDeniedException
+     *
      * @return JsonResponse
      *
-     * @throws AccessDeniedException
      * @SuppressWarnings(PHPMD.StaticAccess)
      */
     public function uploadImageFromCKEditor5(Request $request, ValidatorInterface $validator)

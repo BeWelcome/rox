@@ -27,6 +27,84 @@ class MemberTwigExtension extends AbstractExtension implements GlobalsInterface
 {
     use ManagerTrait;
 
+    private const ALL_TEAMS = [
+        'communitynews' => [
+            'trans' => 'AdminCommunityNews',
+            'rights' => [Member::ROLE_ADMIN_COMMUNITYNEWS],
+            'route' => 'admin_communitynews_overview',
+        ],
+        'words' => [
+            'trans' => 'AdminWord',
+            'rights' => [Member::ROLE_ADMIN_WORDS],
+            'route' => 'translations',
+        ],
+        'flags' => [
+            'trans' => 'AdminFlags',
+            'rights' => [Member::ROLE_ADMIN_FLAGS],
+            'route' => 'admin_flags',
+        ],
+        'rights' => [
+            'trans' => 'AdminRights',
+            'rights' => [Member::ROLE_ADMIN_RIGHTS],
+            'route' => 'admin_rights',
+        ],
+        'logs' => [
+            'trans' => 'AdminLogs',
+            'rights' => [Member::ROLE_ADMIN_LOGS],
+            'route' => 'admin_logs_overview',
+        ],
+        'comments' => [
+            'trans' => 'AdminComments',
+            'rights' => [Member::ROLE_ADMIN_SAFETYTEAM, Member::ROLE_ADMIN_COMMENTS],
+            'route' => 'admin_comment_overview',
+        ],
+        'checker' => [
+            'trans' => 'AdminChecker',
+            'rights' => [Member::ROLE_ADMIN_SAFETYTEAM, Member::ROLE_ADMIN_CHECKER],
+            'route' => 'admin_spam_activities',
+        ],
+        'newmembersbewelcome' => [
+            'trans' => 'AdminNewMembers',
+            'rights' => [Member::ROLE_ADMIN_SAFETYTEAM, Member::ROLE_ADMIN_NEWMEMBERSBEWELCOME],
+            'route' => 'newmembers',
+        ],
+        'massmail' => [
+            'trans' => 'AdminMassMail',
+            'rights' => [Member::ROLE_ADMIN_MASSMAIL],
+            'route' => 'admin_massmail',
+        ],
+        'treasurer' => [
+            'trans' => 'AdminTreasurer',
+            'rights' => [Member::ROLE_ADMIN_TREASURER],
+            'route' => 'admin_treasurer_overview',
+        ],
+        'faq' => [
+            'trans' => 'AdminFAQ',
+            'rights' => [Member::ROLE_ADMIN_FAQ],
+            'route' => 'admin_faqs_overview',
+        ],
+        'group' => [
+            'trans' => 'AdminGroup',
+            'rights' => [Member::ROLE_ADMIN_GROUP],
+            'route' => 'admin_groups_approval',
+            'minimum_level' => 10,
+        ],
+        'tools' => [
+            'trans' => 'AdminVolunteerTools',
+            'rights' => [
+                Member::ROLE_ADMIN_SAFETYTEAM, Member::ROLE_ADMIN_ADMIN,
+                Member::ROLE_ADMIN_SQLFORVOLUNTEERS, Member::ROLE_ADMIN_PROFILE,
+                Member::ROLE_ADMIN_CHECKER, Member::ROLE_ADMIN_ACCEPTER,
+            ],
+            'route' => 'admin_volunteer_tools',
+        ],
+        'polls' => [
+            'trans' => 'AdminPolls',
+            'rights' => [Member::ROLE_ADMIN_POLL],
+            'route' => 'polls',
+        ],
+    ];
+
     /**
      * @var Session
      */
@@ -66,21 +144,32 @@ class MemberTwigExtension extends AbstractExtension implements GlobalsInterface
      */
     public function getGlobals()
     {
-        $teams = null;
-        if (null !== $this->member) {
-            $roles = $this->security->getUser()->getRoles();
-            $teams = $this->getTeams($roles);
+        if (null === $this->member) {
+            return [
+                'loginmessages' => null,
+                'groupsInApprovalQueue' => null,
+                'reportedCommentsCount' => null,
+                'reportedMessagesCount' => null,
+                'messageCount' => null,
+                'requestCount' => null,
+                'notificationCount' => null,
+                'activityCount' => null,
+                'teams' => null,
+            ];
         }
 
+        $roles = $this->security->getUser()->getRoles();
+        $teams = $this->getTeams($roles);
+
         return [
-            'loginmessages' => $this->member ? $this->getLoginMessages() : null,
-            'groupsInApprovalQueue' => $this->member ? $this->getGroupsInApprovalQueueCount() : null,
-            'reportedCommentsCount' => $this->member ? $this->getReportedCommentsCount() : null,
-            'reportedMessagesCount' => $this->member ? $this->getReportedMessagesCount() : null,
-            'messageCount' => $this->member ? $this->getUnreadMessagesCount() : null,
-            'requestCount' => $this->member ? $this->getUnreadRequestsCount() : null,
-            'notificationCount' => $this->member ? $this->getUncheckedNotificationsCount() : null,
-            'activityCount' => $this->member ? $this->getUpcomingAroundLocationCount() : null,
+            'loginmessages' => $this->getLoginMessages(),
+            'groupsInApprovalQueue' => $this->getGroupsInApprovalQueueCount(),
+            'reportedCommentsCount' => $this->getReportedCommentsCount(),
+            'reportedMessagesCount' => $this->getReportedMessagesCount(),
+            'messageCount' => $this->getUnreadMessagesCount(),
+            'requestCount' => $this->getUnreadRequestsCount(),
+            'notificationCount' => $this->getUncheckedNotificationsCount(),
+            'activityCount' => $this->getUpcomingAroundLocationCount(),
             'teams' => $teams,
         ];
     }
@@ -97,83 +186,7 @@ class MemberTwigExtension extends AbstractExtension implements GlobalsInterface
      */
     protected function getTeams($roles)
     {
-        $allTeams = [
-            'communitynews' => [
-                'trans' => 'AdminCommunityNews',
-                'rights' => [Member::ROLE_ADMIN_COMMUNITYNEWS],
-                'route' => 'admin_communitynews_overview',
-            ],
-            'words' => [
-                'trans' => 'AdminWord',
-                'rights' => [Member::ROLE_ADMIN_WORDS],
-                'route' => 'translations',
-            ],
-            'flags' => [
-                'trans' => 'AdminFlags',
-                'rights' => [Member::ROLE_ADMIN_FLAGS],
-                'route' => 'admin_flags',
-            ],
-            'rights' => [
-                'trans' => 'AdminRights',
-                'rights' => [Member::ROLE_ADMIN_RIGHTS],
-                'route' => 'admin_rights',
-            ],
-            'logs' => [
-                'trans' => 'AdminLogs',
-                'rights' => [Member::ROLE_ADMIN_LOGS],
-                'route' => 'admin_logs_overview',
-            ],
-            'comments' => [
-                'trans' => 'AdminComments',
-                'rights' => [Member::ROLE_ADMIN_SAFETYTEAM, Member::ROLE_ADMIN_COMMENTS],
-                'route' => 'admin_comment_overview',
-            ],
-            'checker' => [
-                'trans' => 'AdminChecker',
-                'rights' => [Member::ROLE_ADMIN_SAFETYTEAM, Member::ROLE_ADMIN_CHECKER],
-                'route' => 'admin_spam_activities',
-            ],
-            'newmembersbewelcome' => [
-                'trans' => 'AdminNewMembers',
-                'rights' => [Member::ROLE_ADMIN_SAFETYTEAM, Member::ROLE_ADMIN_NEWMEMBERSBEWELCOME],
-                'route' => 'newmembers',
-            ],
-            'massmail' => [
-                'trans' => 'AdminMassMail',
-                'rights' => [Member::ROLE_ADMIN_MASSMAIL],
-                'route' => 'admin_massmail',
-            ],
-            'treasurer' => [
-                'trans' => 'AdminTreasurer',
-                'rights' => [Member::ROLE_ADMIN_TREASURER],
-                'route' => 'admin_treasurer_overview',
-            ],
-            'faq' => [
-                'trans' => 'AdminFAQ',
-                'rights' => [Member::ROLE_ADMIN_FAQ],
-                'route' => 'admin_faqs_overview',
-            ],
-            'group' => [
-                'trans' => 'AdminGroup',
-                'rights' => [Member::ROLE_ADMIN_GROUP],
-                'route' => 'admin_groups_approval',
-                'minimum_level' => 10,
-            ],
-            'tools' => [
-                'trans' => 'AdminVolunteerTools',
-                'rights' => [
-                    Member::ROLE_ADMIN_SAFETYTEAM, Member::ROLE_ADMIN_ADMIN,
-                    Member::ROLE_ADMIN_SQLFORVOLUNTEERS, Member::ROLE_ADMIN_PROFILE,
-                    Member::ROLE_ADMIN_CHECKER, Member::ROLE_ADMIN_ACCEPTER,
-                ],
-                'route' => 'admin_volunteer_tools',
-            ],
-            'polls' => [
-                'trans' => 'AdminPolls',
-                'rights' => [Member::ROLE_ADMIN_POLL],
-                'route' => 'polls',
-            ],
-        ];
+        $allTeams = self::ALL_TEAMS;
 
         $teams = [];
         $assignedTeams = [];

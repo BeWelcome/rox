@@ -147,7 +147,7 @@ class LandingModel
 
         $distance = 20;
         if ($preference) {
-            $distance = intval($memberPreference->getValue());
+            $distance = (int) ($memberPreference->getValue());
         }
 
         /** @var ActivityRepository $repository */

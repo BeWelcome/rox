@@ -61,7 +61,8 @@ class CreateTestDatabase extends Command
     /**
      * @return int
      *
-     * @SuppressWarnings(PHPMD.StaticAccess)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * The method is 123 lines long due to the way the command output is organized.
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {

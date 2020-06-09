@@ -82,7 +82,6 @@ class LogController extends AbstractController
             throw $this->createAccessDeniedException('You need to have Logs right to access this.');
         }
 
-        $member = null;
         $page = $request->query->get('page', 1);
         $limit = $request->query->get('limit', 20);
 

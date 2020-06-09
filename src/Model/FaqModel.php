@@ -9,6 +9,7 @@ use App\Utilities\ManagerTrait;
 use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\ParameterType;
 use Doctrine\ORM\EntityRepository;
+use Pagerfanta\Pagerfanta;
 
 class FaqModel
 {
@@ -20,7 +21,7 @@ class FaqModel
      * @param int $page
      * @param int $limit
      *
-     * @return \Pagerfanta\Pagerfanta
+     * @return Pagerfanta
      */
     public function getFilteredFaqs($page, $limit)
     {

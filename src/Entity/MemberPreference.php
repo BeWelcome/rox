@@ -128,6 +128,7 @@ class MemberPreference
 
     /**
      * @param DateTime $updated
+     *
      * @return MemberPreference
      */
     public function setUpdated($updated)

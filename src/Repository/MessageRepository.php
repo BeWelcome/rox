@@ -10,8 +10,6 @@ use App\Entity\Member;
 use App\Entity\Message;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
@@ -40,12 +38,7 @@ class MessageRepository extends EntityRepository
             ->andWhere('m.request IS NULL')
             ->getQuery();
 
-        $unreadCount = 0;
-        try {
-            $unreadCount = $q->getSingleScalarResult();
-        } catch (NonUniqueResultException $e) {
-        } catch (NoResultException $e) {
-        }
+        $unreadCount = $q->getSingleScalarResult();
 
         return (int) $unreadCount;
     }
@@ -71,11 +64,7 @@ class MessageRepository extends EntityRepository
             ->setParameter(':status', 'Sent')
             ->getQuery();
 
-        $unreadCount = 0;
-        try {
-            $unreadCount = $q->getSingleScalarResult();
-        } catch (NonUniqueResultException $e) {
-        }
+        $unreadCount = $q->getSingleScalarResult();
 
         return (int) $unreadCount;
     }
@@ -93,11 +82,7 @@ class MessageRepository extends EntityRepository
             ->setParameter('spamInfo', SpamInfoType::MEMBER_SAYS_SPAM)
             ->getQuery();
 
-        $result = 0;
-        try {
-            $result = $q->getSingleScalarResult();
-        } catch (NonUniqueResultException $e) {
-        }
+        $result = $q->getSingleScalarResult();
 
         return $result;
     }
@@ -119,21 +104,6 @@ class MessageRepository extends EntityRepository
         $paginator->setCurrentPage($page);
 
         return $paginator;
-    }
-
-    /**
-     * @return QueryBuilder
-     */
-    public function queryReportedMessages()
-    {
-        $qb = $this->createQueryBuilder('m');
-        $qb
-            ->where('m.status = :status')
-            ->setParameter('status', MessageStatusType::CHECK)
-            ->andWhere('m.spaminfo LIKE :spaminfo')
-            ->setParameter('spaminfo', SpamInfoType::MEMBER_SAYS_SPAM);
-
-        return $qb;
     }
 
     /**
@@ -159,65 +129,6 @@ class MessageRepository extends EntityRepository
     }
 
     /**
-     * @param $folder
-     * @param $sort
-     * @param $sortDirection
-     *
-     * @return QueryBuilder
-     */
-    public function queryLatestMessages(Member $member, $folder, $sort, $sortDirection)
-    {
-        if ('date' === $sort) {
-            $sort = 'created';
-        }
-        $qb = $this->createQueryBuilder('m');
-        switch ($folder) {
-            case 'sent':
-                $qb
-                    ->where('m.sender = :member')
-                    ->andWhere('m.request IS NULL')
-                    ->andWhere('NOT(m.deleteRequest LIKE :deleted)')
-                    ->setParameter('deleted', '%' . DeleteRequestType::SENDER_DELETED . '%')
-                    ->andWhere('NOT(m.deleteRequest LIKE :purged)')
-                    ->setParameter('purged', '%' . DeleteRequestType::SENDER_PURGED . '%')
-                ;
-                break;
-            default:
-                $qb
-                    ->where('m.receiver = :member')
-                    ->andWhere('NOT(m.deleteRequest LIKE :deleted)')
-                    ->setParameter('deleted', '%' . DeleteRequestType::RECEIVER_DELETED . '%')
-                    ->andWhere('NOT(m.deleteRequest LIKE :purged)')
-                    ->setParameter('purged', '%' . DeleteRequestType::RECEIVER_PURGED . '%')
-                ;
-        }
-        $qb->setParameter('member', $member);
-        switch ($folder) {
-            case 'inbox':
-                $qb
-                    ->andWhere('m.folder = :folder')
-                    ->setParameter('folder', 'normal')
-                    ->andWhere('m.request IS NULL')
-                ;
-                break;
-            case 'spam':
-                $qb
-                    ->andWhere('m.folder = :folder')
-                    ->setParameter('folder', $folder)
-                ;
-                break;
-            default:
-                $qb
-                    ->andWhere('m.request IS NULL')
-                ;
-                break;
-        }
-        $qb->orderBy('m.' . $sort, $sortDirection);
-
-        return $qb;
-    }
-
-    /**
      * Returns a Pagerfanta object encapsulating the matching paginated activities.
      *
      * @param $filter
@@ -240,48 +151,6 @@ class MessageRepository extends EntityRepository
         $paginator->setCurrentPage($page);
 
         return $paginator;
-    }
-
-    /**
-     * @param $folder
-     * @param $sort
-     * @param $sortDirection
-     *
-     * @return QueryBuilder
-     */
-    public function queryLatestRequests(Member $member, $folder, $sort, $sortDirection)
-    {
-        if ('date' === $sort) {
-            $sort = 'created';
-        }
-        $qb = $this->createQueryBuilder('m');
-        switch ($folder) {
-            case 'sent':
-                $qb
-                    ->where('NOT(m.deleteRequest LIKE :deleted)')
-                    ->setParameter('deleted', '%' . DeleteRequestType::SENDER_DELETED . '%')
-                    ->andWhere('NOT(m.deleteRequest LIKE :purged)')
-                    ->setParameter('purged', '%' . DeleteRequestType::SENDER_PURGED . '%')
-                    ->andWhere('m.sender = :member')
-                ;
-                break;
-            default:
-                $qb
-                    ->where('NOT(m.deleteRequest LIKE :deleted)')
-                    ->setParameter('deleted', '%' . DeleteRequestType::RECEIVER_DELETED . '%')
-                    ->andWhere('NOT(m.deleteRequest LIKE :purged)')
-                    ->setParameter('purged', '%' . DeleteRequestType::RECEIVER_PURGED . '%')
-                    ->andWhere('m.receiver = :member')
-                ;
-        }
-        $qb
-            ->setParameter('member', $member)
-            ->andWhere('m.folder = :folder')
-            ->setParameter('folder', InFolderType::NORMAL)
-            ->join('m.request', 'r')
-            ->orderBy('m.' . $sort, $sortDirection);
-
-        return $qb;
     }
 
     /**
@@ -313,45 +182,6 @@ class MessageRepository extends EntityRepository
         $paginator->setCurrentPage($page);
 
         return $paginator;
-    }
-
-    /**
-     * @param $folder
-     * @param $sort
-     * @param $sortDirection
-     *
-     * @return QueryBuilder
-     */
-    public function queryLatestRequestsAndMessages(Member $member, $folder, $sort, $sortDirection)
-    {
-        if ('date' === $sort) {
-            $sort = 'created';
-        }
-        switch ($folder) {
-            case 'deleted':
-                $qb = $this->createQueryBuilder('m')
-                    ->where('m.deleteRequest LIKE :deleted')
-                    ->setParameter('deleted', '%' . DeleteRequestType::RECEIVER_DELETED . '%')
-                    ->andWhere('m.receiver = :member')
-                    ->setParameter('member', $member)
-                    ->orderBy('m.' . $sort, $sortDirection);
-                break;
-            case 'inbox':
-            default:
-                $qb = $this->createQueryBuilder('m')
-                    ->where('NOT(m.deleteRequest LIKE :deleted)')
-                    ->setParameter(':deleted', '%' . DeleteRequestType::RECEIVER_DELETED . '%')
-                    ->andWhere('NOT(m.deleteRequest LIKE :purged)')
-                    ->setParameter(':purged', '%' . DeleteRequestType::RECEIVER_PURGED . '%')
-                    ->andWhere('m.folder = :folder')
-                    ->setParameter('folder', InFolderType::NORMAL)
-                    ->andWhere('m.receiver = :member')
-                    ->setParameter('member', $member)
-                    ->orderBy('m.' . $sort, $sortDirection);
-                break;
-        }
-
-        return $qb;
     }
 
     public function getThread(Message $message)
@@ -387,45 +217,6 @@ class MessageRepository extends EntityRepository
         $paginator->setCurrentPage($page);
 
         return $paginator;
-    }
-
-    /**
-     * @param int   $page
-     * @param int   $items
-     * @param mixed $sort
-     * @param mixed $sortDirection
-     *
-     * @return QueryBuilder
-     */
-    public function queryAllMessagesBetween(Member $loggedInUser, Member $member, $sort, $sortDirection)
-    {
-        if ('date' === $sort) {
-            $sort = 'created';
-        }
-        $qb = $this->createQueryBuilder('m');
-        $qb
-            ->where('NOT(m.deleteRequest LIKE :deleted)')
-            ->setParameter('deleted', '%' . DeleteRequestType::RECEIVER_DELETED . '%')
-            ->andWhere('NOT(m.deleteRequest LIKE :purged)')
-            ->setParameter('purged', '%' . DeleteRequestType::RECEIVER_PURGED . '%')
-            ->andWhere(
-                $qb
-                    ->expr()->orX(
-                        $qb->expr()->andX(
-                            $qb->expr()->eq('m.sender', ':loggedin'),
-                            $qb->expr()->eq('m.receiver', ':member')
-                        ),
-                        $qb->expr()->andX(
-                            $qb->expr()->eq('m.sender', ':member'),
-                            $qb->expr()->eq('m.receiver', ':loggedin')
-                        )
-                    )
-            )
-            ->setParameter('loggedin', $loggedInUser)
-            ->setParameter('member', $member)
-            ->orderBy('m.' . $sort, $sortDirection);
-
-        return $qb;
     }
 
     /**
@@ -559,5 +350,199 @@ class MessageRepository extends EntityRepository
             ->orderBy('m.created', 'DESC')
             ->getQuery()
             ->getResult();
+    }
+
+    /**
+     * @return QueryBuilder
+     */
+    private function queryReportedMessages()
+    {
+        $qb = $this->createQueryBuilder('m');
+        $qb
+            ->where('m.status = :status')
+            ->setParameter('status', MessageStatusType::CHECK)
+            ->andWhere('m.spaminfo LIKE :spaminfo')
+            ->setParameter('spaminfo', SpamInfoType::MEMBER_SAYS_SPAM);
+
+        return $qb;
+    }
+
+    /**
+     * @param $folder
+     * @param $sort
+     * @param $sortDirection
+     *
+     * @return QueryBuilder
+     */
+    private function queryLatestMessages(Member $member, $folder, $sort, $sortDirection)
+    {
+        if ('date' === $sort) {
+            $sort = 'created';
+        }
+        $qb = $this->createQueryBuilder('m');
+        switch ($folder) {
+            case 'sent':
+                $qb
+                    ->where('m.sender = :member')
+                    ->andWhere('m.request IS NULL')
+                    ->andWhere('NOT(m.deleteRequest LIKE :deleted)')
+                    ->setParameter('deleted', '%' . DeleteRequestType::SENDER_DELETED . '%')
+                    ->andWhere('NOT(m.deleteRequest LIKE :purged)')
+                    ->setParameter('purged', '%' . DeleteRequestType::SENDER_PURGED . '%')
+                ;
+                break;
+            default:
+                $qb
+                    ->where('m.receiver = :member')
+                    ->andWhere('NOT(m.deleteRequest LIKE :deleted)')
+                    ->setParameter('deleted', '%' . DeleteRequestType::RECEIVER_DELETED . '%')
+                    ->andWhere('NOT(m.deleteRequest LIKE :purged)')
+                    ->setParameter('purged', '%' . DeleteRequestType::RECEIVER_PURGED . '%')
+                ;
+        }
+        $qb->setParameter('member', $member);
+        switch ($folder) {
+            case 'inbox':
+                $qb
+                    ->andWhere('m.folder = :folder')
+                    ->setParameter('folder', 'normal')
+                    ->andWhere('m.request IS NULL')
+                ;
+                break;
+            case 'spam':
+                $qb
+                    ->andWhere('m.folder = :folder')
+                    ->setParameter('folder', $folder)
+                ;
+                break;
+            default:
+                $qb
+                    ->andWhere('m.request IS NULL')
+                ;
+                break;
+        }
+        $qb->orderBy('m.' . $sort, $sortDirection);
+
+        return $qb;
+    }
+
+    /**
+     * @param $folder
+     * @param $sort
+     * @param $sortDirection
+     *
+     * @return QueryBuilder
+     */
+    private function queryLatestRequests(Member $member, $folder, $sort, $sortDirection)
+    {
+        if ('date' === $sort) {
+            $sort = 'created';
+        }
+        $qb = $this->createQueryBuilder('m');
+        switch ($folder) {
+            case 'sent':
+                $qb
+                    ->where('NOT(m.deleteRequest LIKE :deleted)')
+                    ->setParameter('deleted', '%' . DeleteRequestType::SENDER_DELETED . '%')
+                    ->andWhere('NOT(m.deleteRequest LIKE :purged)')
+                    ->setParameter('purged', '%' . DeleteRequestType::SENDER_PURGED . '%')
+                    ->andWhere('m.sender = :member')
+                ;
+                break;
+            default:
+                $qb
+                    ->where('NOT(m.deleteRequest LIKE :deleted)')
+                    ->setParameter('deleted', '%' . DeleteRequestType::RECEIVER_DELETED . '%')
+                    ->andWhere('NOT(m.deleteRequest LIKE :purged)')
+                    ->setParameter('purged', '%' . DeleteRequestType::RECEIVER_PURGED . '%')
+                    ->andWhere('m.receiver = :member')
+                ;
+        }
+        $qb
+            ->setParameter('member', $member)
+            ->andWhere('m.folder = :folder')
+            ->setParameter('folder', InFolderType::NORMAL)
+            ->join('m.request', 'r')
+            ->orderBy('m.' . $sort, $sortDirection);
+
+        return $qb;
+    }
+
+    /**
+     * @param $folder
+     * @param $sort
+     * @param $sortDirection
+     *
+     * @return QueryBuilder
+     */
+    private function queryLatestRequestsAndMessages(Member $member, $folder, $sort, $sortDirection)
+    {
+        if ('date' === $sort) {
+            $sort = 'created';
+        }
+        switch ($folder) {
+            case 'deleted':
+                $qb = $this->createQueryBuilder('m')
+                    ->where('m.deleteRequest LIKE :deleted')
+                    ->setParameter('deleted', '%' . DeleteRequestType::RECEIVER_DELETED . '%')
+                    ->andWhere('m.receiver = :member')
+                    ->setParameter('member', $member)
+                    ->orderBy('m.' . $sort, $sortDirection);
+                break;
+            case 'inbox':
+            default:
+                $qb = $this->createQueryBuilder('m')
+                    ->where('NOT(m.deleteRequest LIKE :deleted)')
+                    ->setParameter(':deleted', '%' . DeleteRequestType::RECEIVER_DELETED . '%')
+                    ->andWhere('NOT(m.deleteRequest LIKE :purged)')
+                    ->setParameter(':purged', '%' . DeleteRequestType::RECEIVER_PURGED . '%')
+                    ->andWhere('m.folder = :folder')
+                    ->setParameter('folder', InFolderType::NORMAL)
+                    ->andWhere('m.receiver = :member')
+                    ->setParameter('member', $member)
+                    ->orderBy('m.' . $sort, $sortDirection);
+                break;
+        }
+
+        return $qb;
+    }
+
+    /**
+     * @param int   $page
+     * @param int   $items
+     * @param mixed $sort
+     * @param mixed $sortDirection
+     *
+     * @return QueryBuilder
+     */
+    private function queryAllMessagesBetween(Member $loggedInUser, Member $member, $sort, $sortDirection)
+    {
+        if ('date' === $sort) {
+            $sort = 'created';
+        }
+        $qb = $this->createQueryBuilder('m');
+        $qb
+            ->where('NOT(m.deleteRequest LIKE :deleted)')
+            ->setParameter('deleted', '%' . DeleteRequestType::RECEIVER_DELETED . '%')
+            ->andWhere('NOT(m.deleteRequest LIKE :purged)')
+            ->setParameter('purged', '%' . DeleteRequestType::RECEIVER_PURGED . '%')
+            ->andWhere(
+                $qb
+                    ->expr()->orX(
+                        $qb->expr()->andX(
+                            $qb->expr()->eq('m.sender', ':loggedin'),
+                            $qb->expr()->eq('m.receiver', ':member')
+                        ),
+                        $qb->expr()->andX(
+                            $qb->expr()->eq('m.sender', ':member'),
+                            $qb->expr()->eq('m.receiver', ':loggedin')
+                        )
+                    )
+            )
+            ->setParameter('loggedin', $loggedInUser)
+            ->setParameter('member', $member)
+            ->orderBy('m.' . $sort, $sortDirection);
+
+        return $qb;
     }
 }

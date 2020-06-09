@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use DateTime;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
 
@@ -22,7 +23,7 @@ class TripRepository extends EntityRepository
     {
         return $this->createQueryBuilder('t')
             ->where('t.createdAt <= :now')
-            ->setParameter('now', new \DateTime())
+            ->setParameter('now', new DateTime())
             ->orderBy('t.createdAt', 'DESC')
             ->getQuery();
     }

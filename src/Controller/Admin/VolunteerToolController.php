@@ -472,38 +472,56 @@ ORDER BY count(msg.id) DESC')->fetchAll();
     private function getSubMenuItems()
     {
         $subMenu = [];
-        if (
-            $this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
-            || $this->isGranted(Member::ROLE_ADMIN_PROFILE)
-        ) {
+        if ($this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)) {
             $subMenu[self::CHANGE_USERNAME] = [
                 'key' => self::CHANGE_USERNAME,
                 'url' => $this->generateUrl('admin_tools_change_username'),
             ];
-        }
-        if (
-            $this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
-            || $this->isGranted(Member::ROLE_ADMIN_PROFILE)
-            || $this->isGranted(Member::ROLE_ADMIN_ACCEPTER)
-        ) {
             $subMenu[self::FIND_USER] = [
                 'key' => self::FIND_USER,
                 'url' => $this->generateUrl('admin_tools_find_user'),
             ];
+            $subMenu[self::MESSAGES_SENT] = [
+                'key' => self::MESSAGES_SENT,
+                'url' => $this->generateUrl('admin_tools_messages_sent'),
+            ];
+            $subMenu[self::MESSAGES_BY_MEMBER] = [
+                'key' => self::MESSAGES_BY_MEMBER,
+                'url' => $this->generateUrl('admin_tools_messages_by_member'),
+            ];
         }
-        if (
-            $this->isGranted(Member::ROLE_ADMIN_ADMIN)
-            || $this->isGranted(Member::ROLE_ADMIN_CHECKER)
-        ) {
+
+        if ($this->isGranted(Member::ROLE_ADMIN_PROFILE)) {
+            $subMenu[self::CHANGE_USERNAME] = [
+                'key' => self::CHANGE_USERNAME,
+                'url' => $this->generateUrl('admin_tools_change_username'),
+            ];
+            $subMenu[self::FIND_USER] = [
+                'key' => self::FIND_USER,
+                'url' => $this->generateUrl('admin_tools_find_user'),
+            ];
+            $subMenu[self::MESSAGES_SENT] = [
+                'key' => self::MESSAGES_SENT,
+                'url' => $this->generateUrl('admin_tools_messages_sent'),
+            ];
+        }
+
+        if ($this->isGranted(Member::ROLE_ADMIN_ACCEPTER)) {
+            $subMenu[self::FIND_USER] = [
+                'key' => self::FIND_USER,
+                'url' => $this->generateUrl('admin_tools_find_user'),
+            ];
+            $subMenu[self::AGE_BY_COUNTRY] = [
+                'key' => self::AGE_BY_COUNTRY,
+                'url' => $this->generateUrl('admin_tools_age_by_country'),
+            ];
+        }
+
+        if ($this->isGranted(Member::ROLE_ADMIN_CHECKER)) {
             $subMenu[self::CHECK_FEEDBACK] = [
                 'key' => self::CHECK_FEEDBACK,
                 'url' => $this->generateUrl('admin_tools_check_feedback'),
             ];
-        }
-        if (
-            $this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
-            || $this->isGranted(Member::ROLE_ADMIN_CHECKER)
-        ) {
             $subMenu[self::CHECK_TOP_SPAMMER] = [
                 'key' => self::CHECK_TOP_SPAMMER,
                 'url' => $this->generateUrl('admin_tools_top_spammer'),
@@ -512,30 +530,20 @@ ORDER BY count(msg.id) DESC')->fetchAll();
                 'key' => self::DAMAGE_DONE,
                 'url' => $this->generateUrl('admin_tools_damage_done'),
             ];
-        }
-        if (
-            $this->isGranted(Member::ROLE_ADMIN_ADMIN)
-            || $this->isGranted(Member::ROLE_ADMIN_CHECKER)
-        ) {
             $subMenu[self::AGE_BY_COUNTRY] = [
                 'key' => self::AGE_BY_COUNTRY,
                 'url' => $this->generateUrl('admin_tools_age_by_country'),
             ];
         }
-        if (
-            $this->isGranted(Member::ROLE_ADMIN_PROFILE)
-            || $this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
-            || $this->isGranted(Member::ROLE_ADMIN_ADMIN)
-        ) {
-            $subMenu[self::MESSAGES_SENT] = [
-                'key' => self::MESSAGES_SENT,
-                'url' => $this->generateUrl('admin_tools_messages_sent'),
+
+        if ($this->isGranted(Member::ROLE_ADMIN_ADMIN)) {
+            $subMenu[self::CHECK_FEEDBACK] = [
+                'key' => self::CHECK_FEEDBACK,
+                'url' => $this->generateUrl('admin_tools_check_feedback'),
             ];
-        }
-        if ($this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)) {
-            $subMenu[self::MESSAGES_BY_MEMBER] = [
-                'key' => self::MESSAGES_BY_MEMBER,
-                'url' => $this->generateUrl('admin_tools_messages_by_member'),
+            $subMenu[self::AGE_BY_COUNTRY] = [
+                'key' => self::AGE_BY_COUNTRY,
+                'url' => $this->generateUrl('admin_tools_age_by_country'),
             ];
         }
 
@@ -545,7 +553,7 @@ ORDER BY count(msg.id) DESC')->fetchAll();
     /** Throws.
      * @param string $tool
      *
-     * @return RedirectResponse
+     * @return RedirectResponse|array
      */
     private function checkPermissions(Request $request, string $tool = null)
     {

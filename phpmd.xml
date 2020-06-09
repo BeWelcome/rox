@@ -19,7 +19,8 @@
           externalInfoUrl="http://phpmd.org/rules/cleancode.html#staticaccess">
         <priority>3</priority>
         <properties>
-            <property name="exceptions" value="\Locale,\Carbon\Carbon,\Illuminate\Database\Eloquent\Relations\HasMany,\Faker\Factory,\Symfony\Component\Debug\Debug" />
+            <property name="exceptions" value="\AnthonyMartin\GeoLocation\GeoLocation,\Carbon\Carbon,\Faker\Factory,
+                \Symfony\Component\Debug\Debug,Doctrine\Common\Collections\Criteria, \DateTime" />
         </properties>
     </rule>
 
@@ -44,7 +45,7 @@
         <priority>3</priority>
         <properties>
             <property name="minimum" description="Minimum length for a variable, property or parameter name" value="3"/>
-            <property name="exceptions" value="a,b,id,i,e,q,qb,dt,em" />
+            <property name="exceptions" value="a,b,id,i,e,q,qb,dt,em,io" />
         </properties>
     </rule>
 

@@ -8,6 +8,10 @@ class MockupExtension
     {
         // This is only used for the mockups
         // so we replace inline images with the logo
-        return '/images/logo_index_top.png';
+        if ('logo_index_top' !== $image) {
+            $image = 'logo_index_top';
+        }
+
+        return '/images/' . $image . '.png';
     }
 }

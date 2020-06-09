@@ -15,8 +15,6 @@ class WikiRepository extends EntityRepository
      */
     public function getPageByName($pagename)
     {
-        $wikiPage = null;
-
         try {
             $wikiPage = $this->createQueryBuilder('w')
                 ->where('w.pagename = :pagename')
@@ -26,6 +24,7 @@ class WikiRepository extends EntityRepository
                 ->getQuery()
                 ->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
+            $wikiPage = null;
         }
 
         return $wikiPage;

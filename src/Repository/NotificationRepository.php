@@ -4,7 +4,6 @@ namespace App\Repository;
 
 use App\Entity\Member;
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
@@ -101,11 +100,7 @@ class NotificationRepository extends EntityRepository
             ->andWhere('n.checked = 0')
             ->getQuery();
 
-        $unreadCount = 0;
-        try {
-            $unreadCount = $q->getSingleScalarResult();
-        } catch (NonUniqueResultException $e) {
-        }
+        $unreadCount = $q->getSingleScalarResult();
 
         return (int) $unreadCount;
     }

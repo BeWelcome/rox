@@ -7,8 +7,6 @@ use App\Entity\Location;
 use DateTime;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
@@ -111,8 +109,6 @@ class ActivityRepository extends EntityRepository
      * @param int $distance
      *
      * @return int
-     *
-     * @SuppressWarnings(PHPMD.StaticAccess)
      */
     public function getUpcomingAroundLocationCount(Location $location, $distance = 20)
     {
@@ -121,13 +117,8 @@ class ActivityRepository extends EntityRepository
             ->select('count(a.id)')
         ;
 
-        $unreadCount = 0;
-        try {
-            $q = $qb->getQuery();
-            $unreadCount = $q->getSingleScalarResult();
-        } catch (NonUniqueResultException $e) {
-        } catch (NoResultException $e) {
-        }
+        $q = $qb->getQuery();
+        $unreadCount = $q->getSingleScalarResult();
 
         return (int) $unreadCount;
     }

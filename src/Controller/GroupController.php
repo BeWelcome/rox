@@ -321,7 +321,6 @@ class GroupController extends AbstractController
      * @throws Exception
      *
      * @return Response
-     *
      */
     public function createGroup(Request $request, Logger $logger)
     {

@@ -4,6 +4,10 @@ namespace App\Utilities;
 
 use Exception;
 
+/**
+ * @SuppressWarnings(PHPMD)
+ * Class borrowed directly from github.com/paypal.
+ */
 class PaypalIPN
 {
     /** Production Postback URL */

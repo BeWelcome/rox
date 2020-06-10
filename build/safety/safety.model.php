@@ -21,6 +21,7 @@ class SafetyModel extends RoxModelBase
                 members, rights, rightsvolunteers
             WHERE
                 members.Status = 'Active'
+                AND members.Username <> 'SafetyTeam'
                 AND members.id = rightsvolunteers.IdMember
                 AND rights.`Name` = 'SafetyTeam'
                 AND rightsvolunteers.IdRight = rights.id

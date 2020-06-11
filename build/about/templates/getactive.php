@@ -45,18 +45,18 @@ $words = new MOD_words();
     </div>
 </div>
 
-<div class="col-12 col-md-6 mb-3">
-    <div class="card p-3 h-100">
-        <div class="card-body">
-            <h3 class="card-title m-0"><i class="far fa-question-circle"
-                                      aria-hidden="true"></i> <?php echo $words->get('GetActiveSupportTitle') ?></h3>
-            <p class="text-muted"><?php echo $words->get('HelpBeWelcomeSupportTags') . " <br> " . $words->get('HelpBeWelcomeContact') . ": " . $words->get('GetActiveSupportContact') ?></p>
-            <p class="card-text"><?php echo $words->get('GetActiveSupportText') ?></p>
+    <div class="col-12 col-md-6 mb-3">
+        <div class="card p-3 h-100">
+            <div class="card-body">
+                <h3 class="card-title m-0"><i class="fa fa-server"
+                                              aria-hidden="true"></i> <?php echo $words->get('getactivesysadmintitle') ?></h3>
+                <p class="text-muted"><?php echo $words->get('helpsysadmintags') . " <br> " . $words->get('helpsysadmincontact') . ": " . $words->get('getactivesysadmincontact') ?></p>
+                <p class="card-text"><?php echo $words->get('getactivesysadmintext') ?></p>
+            </div>
         </div>
     </div>
-</div>
 
-<div class="col-12 col-md-6 mb-3">
+    <div class="col-12 col-md-6 mb-3">
     <div class="card p-3 h-100">
         <div class="card-body">
             <h3 class="card-title m-0"><i class="fa fa-paint-brush"
@@ -67,16 +67,17 @@ $words = new MOD_words();
     </div>
 </div>
 
-<div class="col-12 col-md-6 mb-3">
-    <div class="card p-3 h-100">
-        <div class="card-body">
-            <h3 class="card-title m-0"><i class="far fa-handshake"
-                                      aria-hidden="true"></i> <?php echo $words->get('GetActiveNMBWTitle') ?></h3>
-            <p class="text-muted"><?php echo $words->get('HelpBeWelcomeNMBWTags') . " <br> " . $words->get('HelpBeWelcomeContact') . ": " . $words->get('GetActiveNMBWContact') ?></p>
-            <p class="card-text"><?php echo $words->get('GetActiveNMBWText') ?></p>
+    <div class="col-12 col-md-6 mb-3">
+        <div class="card p-3 h-100">
+            <div class="card-body">
+                <h3 class="card-title m-0"><i class="far fa-question-circle"
+                                              aria-hidden="true"></i> <?php echo $words->get('GetActiveSupportTitle') ?></h3>
+                <p class="text-muted"><?php echo $words->get('HelpBeWelcomeSupportTags') . " <br> " . $words->get('HelpBeWelcomeContact') . ": " . $words->get('GetActiveSupportContact') ?></p>
+                <p class="card-text"><?php echo $words->get('GetActiveSupportText') ?></p>
+            </div>
         </div>
     </div>
-</div>
+
 
 <div class="col-12 col-md-6 mb-3">
     <div class="card p-3 h-100">
@@ -100,7 +101,18 @@ $words = new MOD_words();
     </div>
 </div>
 
-<div class="col-12 col-md-6 mb-3">
+    <div class="col-12 col-md-6 mb-3">
+        <div class="card p-3 h-100">
+            <div class="card-body">
+                <h3 class="card-title m-0"><i class="far fa-handshake"
+                                              aria-hidden="true"></i> <?php echo $words->get('GetActiveNMBWTitle') ?></h3>
+                <p class="text-muted"><?php echo $words->get('HelpBeWelcomeNMBWTags') . " <br> " . $words->get('HelpBeWelcomeContact') . ": " . $words->get('GetActiveNMBWContact') ?></p>
+                <p class="card-text"><?php echo $words->get('GetActiveNMBWText') ?></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 col-md-6 mb-3">
     <div class="card p-3 h-100">
         <div class="card-body">
             <h3 class="card-title m-0"><i class="fa fa-user-circle"

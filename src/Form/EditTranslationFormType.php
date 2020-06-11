@@ -2,8 +2,10 @@
 
 namespace App\Form;
 
+use App\Doctrine\DomainType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -59,6 +61,18 @@ class EditTranslationFormType extends AbstractType
                     ])
                     ->add('description', TextAreaType::class, [
                         'label' => 'label.admin.translation.description',
+                    ])
+                    ->add('domain', ChoiceType::class, [
+                        'label' => 'translation.domain',
+                        'choices' => [
+                            DomainType::MESSAGES => DomainType::MESSAGES,
+                            DomainType::ICU_MESSAGES => DomainType::ICU_MESSAGES,
+                            DomainType::VALIDATORS => DomainType::VALIDATORS,
+                        ],
+                        'choice_translation_domain' => false,
+                        'attr' => [
+                            'class' => 'select2',
+                        ],
                     ])
                 ;
             } else {

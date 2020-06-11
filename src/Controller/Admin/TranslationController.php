@@ -106,7 +106,7 @@ class TranslationController extends AbstractController
      * @return Response
      * @ParamConverter("language", class="App\Entity\Language", options={"mapping": {"locale": "shortcode"}})
      */
-    public function editTranslationAction(
+    public function editTranslation(
         Request $request,
         Language $language,
         KernelInterface $kernel,
@@ -155,9 +155,12 @@ class TranslationController extends AbstractController
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             /** @var EditTranslationRequest $data */
             $data = $editForm->getData();
+            $originalDomain = $translation->getDomain();
+
             $em = $this->getDoctrine()->getManager();
             // Make sure the ID of the translations match
             $translation->setCode($original->getCode());
+            $translation->setDomain($data->domain);
             $translation->setSentence($data->translatedText);
             $translation->setUpdated(new DateTime());
             $translation->setAuthor($translator);
@@ -175,6 +178,10 @@ class TranslationController extends AbstractController
             }
             $em->persist($translation);
             $em->flush();
+            if ($originalDomain !== $translation->getDomain())
+            {
+                $this->translationModel->updateDomainOfTranslations($translation);
+            }
             $this->translationModel->removeCacheFiles();
             $this->addTranslatedFlash('notice', 'translation.edit', [
                 'translationId' => $original->getCode(),
@@ -202,8 +209,8 @@ class TranslationController extends AbstractController
     }
 
     /**
-     * @Route("/admin/translations/create/{locale}/{translationId}", name="translation_create",
-     *     requirements={"translationId"=".+"}))
+     * @Route("/admin/translations/create/{domain}/{locale}/{translationId}", name="translation_create",
+     *     requirements={"domain"="messages|message+intl-icu|validators", "translationId"=".+"}))
      *
      * Creates an English index and the matching translation (if locale != 'en')
      *
@@ -216,6 +223,7 @@ class TranslationController extends AbstractController
      */
     public function createTranslationForId(
         Request $request,
+        string $domain,
         Language $language,
         KernelInterface $kernel,
         $translationId
@@ -256,6 +264,7 @@ class TranslationController extends AbstractController
 
         $createTranslationRequest = new TranslationRequest();
         $createTranslationRequest->wordCode = $translationId;
+        $createTranslationRequest->domain = $domain;
         $createTranslationRequest->locale = $language->getShortcode();
         if ('en' === $language->getShortcode()) {
             // to ensure form validates correctly
@@ -383,7 +392,7 @@ class TranslationController extends AbstractController
      * @return Response
      * @ParamConverter("language", class="App\Entity\Language", options={"mapping": {"locale": "shortcode"}})
      */
-    public function addTranslationAction(Request $request, Language $language, KernelInterface $kernel, $code)
+    public function addTranslation(Request $request, Language $language, KernelInterface $kernel, $code)
     {
         $this->denyAccessUnlessGranted(Member::ROLE_ADMIN_WORDS, null, 'Unable to access this page!');
 
@@ -479,7 +488,7 @@ class TranslationController extends AbstractController
      *
      * @return RedirectResponse
      */
-    public function setTranslationModeAction(Request $request, $mode)
+    public function setTranslationMode(Request $request, $mode)
     {
         if ('on' === $mode) {
             $flashId = 'flash.translation.enabled';
@@ -499,7 +508,7 @@ class TranslationController extends AbstractController
      *
      * @return Response
      */
-    public function translationNoRightsAction(Request $request)
+    public function translationNoRights(Request $request)
     {
         $locale = $request->getLocale();
         $locales = $this->getUserLocales();
@@ -515,7 +524,7 @@ class TranslationController extends AbstractController
      *
      * @return RedirectResponse
      */
-    public function translationSwitchAction(Request $request)
+    public function translationSwitch(Request $request)
     {
         $this->denyAccessUnlessGranted(Member::ROLE_ADMIN_WORDS, null, 'Unable to access this page!');
 

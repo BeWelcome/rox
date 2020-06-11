@@ -2,6 +2,8 @@
 
 namespace App\Model;
 
+use App\Entity\Translation;
+use App\Entity\Word;
 use App\Kernel;
 use App\Pagerfanta\ArchivedTranslationAdapter;
 use App\Pagerfanta\DoNotTranslateTranslationAdapter;
@@ -72,5 +74,19 @@ class TranslationModel
         }
 
         return $translationAdapter;
+    }
+
+    public function updateDomainOfTranslations(Word $updatedTranslation)
+    {
+        $em = $this->getManager();
+        $translationRepository = $em->getRepository(Word::class);
+        $translations = $translationRepository->findBy(['code' => $updatedTranslation->getCode()]);
+
+        foreach($translations as $translation)
+        {
+            $translation->setDomain($updatedTranslation->getDomain());
+            $em->persist($translation);
+        }
+        $em->flush();
     }
 }

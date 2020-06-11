@@ -25,7 +25,14 @@ class TranslationFormType extends AbstractType
             ])
             ->add('englishText', TextAreaType::class, [
                 'label' => 'label.admin.translation.englishtext',
-            ]);
+            ])
+            ->add('domain', TextType::class, [
+                'label' => 'translation.domain',
+                'attr' => [
+                    'readonly' => true,
+                ],
+            ])
+        ;
         $formBuilder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             $translationRequest = $event->getData();
             $form = $event->getForm();
@@ -45,19 +52,6 @@ class TranslationFormType extends AbstractType
                 $form->add('wordCode', TextType::class, [
                         'label' => 'translation.wordcode',
                     ])
-                    ->add('domain', ChoiceType::class, [
-                        'label' => 'translation.domain',
-                        'choices' => [
-                            DomainType::MESSAGES => DomainType::MESSAGES,
-                            DomainType::ICU_MESSAGES => DomainType::ICU_MESSAGES,
-                            DomainType::VALIDATORS => DomainType::VALIDATORS,
-                        ],
-                        'choice_translation_domain' => false,
-                        'required' => true,
-                        'attr' => [
-                            'class' => 'select2',
-                        ],
-                    ])
                 ;
             } else {
                 $form->add('wordCode', TextType::class, [
@@ -65,20 +59,6 @@ class TranslationFormType extends AbstractType
                             'readonly' => true,
                         ],
                         'label' => 'translation.wordcode',
-                    ])
-                    ->add('domain', ChoiceType::class, [
-                        'label' => 'translation.domain',
-                        'choices' => [
-                            DomainType::MESSAGES => DomainType::MESSAGES,
-                            DomainType::ICU_MESSAGES => DomainType::ICU_MESSAGES,
-                            DomainType::VALIDATORS => DomainType::VALIDATORS,
-                        ],
-                        'choice_translation_domain' => false,
-                        'required' => true,
-                        'disabled' => true,
-                        'attr' => [
-                            'class' => 'select2',
-                        ],
                     ])
                 ;
             }

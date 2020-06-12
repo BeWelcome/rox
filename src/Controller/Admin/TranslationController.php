@@ -82,6 +82,15 @@ class TranslationController extends AbstractController
             'homepage' => [
                 'template' => 'home/home.html.twig',
             ],
+            'Terms of Use' => [
+                'template' => 'policies/tou_translated.html.twig',
+            ],
+            'Privacy Policy' => [
+                'template' => 'policies/pp_translated.html.twig',
+            ],
+            'Data Privacy' => [
+                'template' => 'policies/dp_translated.html.twig',
+            ],
         ],
     ];
 

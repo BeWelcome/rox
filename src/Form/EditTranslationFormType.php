@@ -81,6 +81,12 @@ class EditTranslationFormType extends AbstractType
                         'label' => 'label.admin.translation.description',
                         'disabled' => true,
                     ])
+                    ->add('domain', TextType::class, [
+                        'label' => 'translation.domain',
+                        'attr' => [
+                            'readonly' => true,
+                        ],
+                    ])
                 ;
                 if ($translationRequest->isMajorUpdate) {
                     $translatedTextHelp = 'translation.needs.update';

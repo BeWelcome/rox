@@ -130,11 +130,12 @@ class LandingController extends AbstractController
      *
      * @return Response
      */
-    public function getActivities()
+    public function getActivities(Request $request)
     {
         /** @var Member $member */
         $member = $this->getUser();
-        $activities = $this->landingModel->getLocalActivities($member);
+        $online = $request->query->get('online', '0');
+        $activities = $this->landingModel->getUpcomingActivities($member, $online);
 
         $content = $this->render('landing/widget/activities.html.twig', [
             'activities' => $activities,
@@ -219,6 +220,10 @@ class LandingController extends AbstractController
 
         $preference = $preferenceRepository->findOneBy(['codename' => Preference::FORUM_FILTER]);
         $forumFilter = $member->getMemberPreferenceValue($preference);
+
+        $preference = $preferenceRepository->findOneBy(['codename' => Preference::SHOW_ONLINE_ACTIVITIES]);
+        $onlineActivities = ($member->getMemberPreferenceValue($preference) === 'Yes') ? 1 : 0;
+
         $content = $this->render('landing/landing.html.twig', [
             'title' => 'BeWelcome',
             'searchLocation' => $searchHomeLocation->createView(),
@@ -232,7 +237,8 @@ class LandingController extends AbstractController
             'communityNews' => $latestNews,
             'messageFilter' => $messageFilter,
             'forumFilter' => $forumFilter,
-            'activityCount' => $this->getUpcomingAroundLocationCount($member),
+            'onlineActivities' => $onlineActivities,
+            'activityCount' => $this->getUpcomingAroundLocationCount($member, $onlineActivities),
         ]);
 
         return $content;
@@ -241,12 +247,12 @@ class LandingController extends AbstractController
     /**
      * @return int
      */
-    private function getUpcomingAroundLocationCount(Member $member)
+    private function getUpcomingAroundLocationCount(Member $member, $showOnlineActivities)
     {
         /** @var ActivityRepository $activityRepository */
         $activityRepository = $this->getDoctrine()->getRepository(Activity::class);
 
-        return $activityRepository->getUpcomingAroundLocationCount($member->getCity());
+        return $activityRepository->getUpcomingAroundLocationCount($member, $showOnlineActivities);
     }
 
     /**

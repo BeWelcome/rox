@@ -173,6 +173,13 @@
                         <a href="/activities/create" class="btn btn-outline-primary btn-homewhite"><i
                                     class="fa fa-calendar-plus"></i> {{ 'landing.activities.create' | trans }}</a>
                     </div>
+                    <div class="m-1">
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" class="custom-control-input" id="show_online"
+                                   name="show_online" {% if onlineActivities %}checked{% endif %}>
+                            <label class="custom-control-label" for="show_online">{{ 'landing.activities.show.online'|trans }}</label>
+                        </div>
+                    </div>
                     <div id="activitiesdisplay" class="col-12">
                         <p class="text-center my-3">
                             <i class="fa fa-4x fa-pulse fa-spinner my-3"></i><br/>

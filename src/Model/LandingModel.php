@@ -8,6 +8,7 @@ use App\Entity\Message;
 use App\Entity\Preference;
 use App\Repository\ActivityRepository;
 use App\Utilities\ManagerTrait;
+use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\Query\Expr;
@@ -138,21 +139,22 @@ class LandingModel
      *
      * @return array
      */
-    public function getLocalActivities(Member $member)
+    public function getUpcomingActivities(Member $member, $online)
     {
-        $preferenceRepository = $this->getManager()->getRepository(Preference::class);
-        /** @var Preference $preference */
-        $preference = $preferenceRepository->findOneBy(['codename' => Preference::ACTIVITIES_NEAR_ME_RADIUS]);
-        $memberPreference = $member->getMemberPreference($preference);
+        $em = $this->getManager();
+        $preferenceRepository = $em->getRepository(Preference::class);
 
-        $distance = 20;
-        if ($preference) {
-            $distance = (int) ($memberPreference->getValue());
-        }
+        /** @var Preference $preference */
+        $preference = $preferenceRepository->findOneBy(['codename' => Preference::SHOW_ONLINE_ACTIVITIES]);
+        $memberPreference = $member->getMemberPreference($preference);
+        $value = ($online) ? 'Yes' : 'No';
+        $memberPreference->setValue($value);
+        $em->persist($memberPreference);
+        $em->flush();
 
         /** @var ActivityRepository $repository */
         $repository = $this->getManager()->getRepository(Activity::class);
-        $activities = $repository->findUpcomingAroundLocation($member->getCity(), $distance);
+        $activities = $repository->findUpcomingAroundLocation($member, $online);
 
         return $activities;
     }

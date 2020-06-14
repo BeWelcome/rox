@@ -15,6 +15,7 @@ class Preference
     public const MESSAGE_AND_REQUEST_FILTER = 'PreferenceMessageFilter';
     public const FORUM_FILTER = 'PreferenceForumFilter';
     public const SHOW_MAP = 'PreferenceShowMap';
+    public const SHOW_ONLINE_ACTIVITIES = 'PreferenceOnlineActivities';
     public const LOCALE = 'PreferenceLanguage';
     public const HTML_MAILS = 'PreferenceHtmlMails';
     public const NUMBER_FORUM_POSTS = 'ForumThreadsOnLandingPage';

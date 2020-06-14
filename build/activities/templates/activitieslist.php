@@ -130,9 +130,9 @@ foreach($this->activities as $activity) {
                     $locationName = '';
                     $countryName = '';
                 }
-                echo $locationName . '<br>' . $countryName; ?>
+                if (!$activity->public) { echo $locationName . '<br>' . $countryName; } ?>
             </div>
-            <div class="px-2"><i class="fa fa-2x fa-map-marker-alt"></i></div>
+            <div class="px-2"><?php if ($activity->public) { ?><i class="fa fa-2x fa-wifi"><?php } else { ?><i class="fa fa-2x fa-map-marker-alt"><?php } ?></i></div>
         </div>
 
         <div class="ml-auto flex-md-row d-none d-md-flex">

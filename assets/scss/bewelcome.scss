@@ -485,7 +485,7 @@ $avatar-sizes: 30, 50, 75, 100, 150, 200, 500;
 
 @each $size in $avatar-sizes {
   .avatar-#{$size} {
-    height: $size;
-    width: $size;
+    height: #{$size}px;
+    width: #{$size}px;
   }
 }

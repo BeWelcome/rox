@@ -17,6 +17,9 @@ $(document).ready(function() {
     });
 
     $('.hosting').click(Home.setHostingStatus);
+    $('#show_online').change(function() {
+        setTimeout(Home.updateActivities, 500);
+    });
 });
 
 var Home = {
@@ -97,11 +100,14 @@ var Home = {
         });
     },
     updateActivities: function () {
+        var online = $('#show_online').prop('checked') ? 1 : 0;
         // Get parameters
         $.ajax({
             type: 'GET',
             url: '/widget/activities',
-            data: {},
+            data: {
+                online: online
+            },
             success: function (activities) {
                 $('#activitiesdisplay').replaceWith(activities);
             }

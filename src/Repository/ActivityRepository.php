@@ -4,6 +4,8 @@ namespace App\Repository;
 
 use AnthonyMartin\GeoLocation\GeoLocation;
 use App\Entity\Location;
+use App\Entity\Member;
+use App\Entity\Preference;
 use DateTime;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityRepository;
@@ -91,9 +93,9 @@ class ActivityRepository extends EntityRepository
      *
      * @SuppressWarnings(PHPMD.StaticAccess)
      */
-    public function findUpcomingAroundLocation(Location $location, $distance = 20, $limit = 5)
+    public function findUpcomingAroundLocation(Member $member, $online, $limit = 5)
     {
-        $qb = $this->getUpcomingAroundLocationQueryBuilder($location, $distance);
+        $qb = $this->getUpcomingAroundLocationQueryBuilder($member, $online);
 
         $query = $qb
             ->setMaxResults($limit)
@@ -110,9 +112,10 @@ class ActivityRepository extends EntityRepository
      *
      * @return int
      */
-    public function getUpcomingAroundLocationCount(Location $location, $distance = 20)
+    public function getUpcomingAroundLocationCount(Member $member, $online)
     {
-        $qb = $this->getUpcomingAroundLocationQueryBuilder($location, $distance);
+        $distance = $this->getActivitiesRadius($member);
+        $qb = $this->getUpcomingAroundLocationQueryBuilder($member, $online);
         $qb
             ->select('count(a.id)')
         ;
@@ -123,6 +126,20 @@ class ActivityRepository extends EntityRepository
         return (int) $unreadCount;
     }
 
+    private function getActivitiesRadius(Member $member)
+    {
+        $preferenceRepository = $this->getEntityManager()->getRepository(Preference::class);
+        /** @var Preference $preference */
+        $preference = $preferenceRepository->findOneBy(['codename' => Preference::ACTIVITIES_NEAR_ME_RADIUS]);
+        $memberPreference = $member->getMemberPreference($preference);
+
+        $distance = 20;
+        if ($preference) {
+            $distance = (int) ($memberPreference->getValue());
+        }
+        return $distance;
+    }
+
     /**
      * @param int $distance
      *
@@ -130,8 +147,11 @@ class ActivityRepository extends EntityRepository
      *
      * @return QueryBuilder
      */
-    private function getUpcomingAroundLocationQueryBuilder(Location $location, $distance)
+    private function getUpcomingAroundLocationQueryBuilder(Member $member, $online)
     {
+        $location = $member->getCity();
+        $distance = $this->getActivitiesRadius($member);
+
         // Fetch latitude and longitude of member's location
         $latitude = $location->getLatitude();
         $longitude = $location->getLongitude();
@@ -150,8 +170,19 @@ class ActivityRepository extends EntityRepository
             ->matching($criteria);
 
         $qb = $this->createQueryBuilder('a');
+        if ($online)
+        {
+            $qb
+                ->where($qb->expr()->orX(
+                    $qb->expr()->eq('a.public', 1),
+                    $qb->expr()->in('a.location', ':locations')
+                ));
+        } else {
+            $qb
+                ->where($qb->expr()->in('a.location', ':locations'))
+            ;
+        }
         $qb
-            ->where('a.location IN (:locations)')
             ->andWhere($qb->expr()->andX(
                 $qb->expr()->lte('a.ends', ':threeMonths'),
                 $qb->expr()->gte('a.starts', ':now')

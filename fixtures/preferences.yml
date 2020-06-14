@@ -35,6 +35,15 @@ App\Entity\Preference:
         DefaultValue: 'Yes'
         PossibleValues: 'Yes:No'
         Status: 'Normal'
+    SHOW_ONLINE_ACTIVITIES:
+        codename: 'PreferenceOnlineActivities'
+        position: 100
+        codeDescription: 'PreferenceOnlineActivities'
+        Description: 'Stores if the user wants to see the online activities on the landing page'
+        created: <DateTime()>
+        DefaultValue: 'Yes'
+        PossibleValues: 'Yes:No'
+        Status: 'Normal'
     HTML_MAILS:
         codename: 'PreferenceHtmlMails'
         position: 51

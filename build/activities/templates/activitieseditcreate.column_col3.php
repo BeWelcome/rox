@@ -17,9 +17,7 @@ if (empty($vars)) {
     $vars['activity-start-date'] = $this->activity->dateTimeStart;
     $vars['activity-end-date'] = $this->activity->dateTimeEnd;
     $vars['activity-description'] = $this->activity->description;
-    if ($this->activity->public) {
-        $vars['activity-public'] = true;
-    }
+    $vars['activity-public'] = $this->activity->public;
 }
 ?>
 <div class="row">
@@ -78,6 +76,11 @@ if (empty($vars)) {
                             echo $vars['activity-description'];
                         } ?>
                     </textarea>
+                    </div>
+                    <div class="form-check mb-1">
+                        <input type="checkbox" class="form-check-input" id="activity-public" name="activity-public" value="1"
+                            <?php if (isset($vars['activity-public']) && $vars['activity-public']) { echo 'checked="checked"'; } ?>>
+                        <label for="activity-public" class="form-check-label"><?php echo $words->get('ActivityOnline'); ?></label>
                     </div>
                 </div>
                 <div class="col-12 col-md-4">

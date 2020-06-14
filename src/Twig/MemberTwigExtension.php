@@ -169,7 +169,6 @@ class MemberTwigExtension extends AbstractExtension implements GlobalsInterface
             'messageCount' => $this->getUnreadMessagesCount(),
             'requestCount' => $this->getUnreadRequestsCount(),
             'notificationCount' => $this->getUncheckedNotificationsCount(),
-            'activityCount' => $this->getUpcomingAroundLocationCount(),
             'teams' => $teams,
         ];
     }
@@ -286,17 +285,6 @@ class MemberTwigExtension extends AbstractExtension implements GlobalsInterface
         $notificationRepository = $this->getManager()->getRepository(Notification::class);
 
         return $notificationRepository->getUncheckedNotificationsCount($this->member);
-    }
-
-    /**
-     * @return int
-     */
-    protected function getUpcomingAroundLocationCount()
-    {
-        /** @var ActivityRepository $activityRepository */
-        $activityRepository = $this->getManager()->getRepository(Activity::class);
-
-        return $activityRepository->getUpcomingAroundLocationCount($this->member->getCity());
     }
 
     /**

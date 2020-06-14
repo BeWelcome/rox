@@ -18,16 +18,14 @@ $layoutbits = new MOD_layoutbits();
 
 ?>
 <div class="w-100 row p-3">
-    <form method="post">
+    <form class="form form-inline" method="post">
         <?= $callbackTags ?>
+        <input type="hidden" id="history" name="history" value="1">
 
-            <label for="member" class="mb-0"><?= $words->get("AdminRightsMember") ?></label>
+            <label for="member" class="mb-0 mr-2"><?= $words->get("AdminRightsMember") ?></label>
             <?= memberSelect($this->members, $this->vars['member']) ?>
 
-            <input type="checkbox" id="history" name="history" value="1" <?= (isset($this->vars['history'])) ? 'checked="checked' : '' ?> />
-            <label for="history" class="mb-0"><?= $words->get("AdminRightsHistory") ?></label>
-
-            <input type="submit" id="submit" name="submit" class="btn btn-primary"
+            <input type="submit" id="submit" name="submit" class="btn btn-primary ml-2"
                    value="<?= $words->getSilent("AdminRightsListMembersSubmit") ?>"/><?php echo $words->flushBuffer(); ?>
     </form>
 </div>
@@ -65,12 +63,12 @@ $layoutbits = new MOD_layoutbits();
         <td><span title="tooltip<?= $id ?>"><?= $ss .  $this->rights[$id]->Name . $se ?></span></td>
         <td><?= $ss . $right->level . $se ?></td>
         <td style="word-break: break-word"><?= $ss . $right->scope . $se ?></td>
-        <td class="w-100"><?= $right->comment ?></td>
-        <td><a href="admin/rights/edit/<?= $id ?>/<?= $username ?>">
-                <i class="fa fa-edit" alt="edit"></i></a></td>
-        <td><?php if ($right->level <> 0) : ?>
+        <td style="width:70%"><?= $right->comment ?></td>
+        <td style="text-align:center; width:40px"><a href="admin/rights/edit/<?= $id ?>/<?= $username ?>">
+                <i class="fa fa-edit" title="edit"></i></a></td>
+        <td style="text-align:center; width:40px"><?php if ($right->level <> 0) : ?>
             <a href="admin/rights/remove/<?= $id ?>/<?= $username ?>">
-                <i class="fa fa-times" alt="remove"></i></a>
+                <i class="fa fa-times" title="remove"></i></a>
             <?php endif; ?></td>
         </tr>
         <?php

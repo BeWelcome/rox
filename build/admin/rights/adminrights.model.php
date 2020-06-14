@@ -87,9 +87,9 @@ class AdminRightsModel extends RoxModelBase {
      * get list of members with all assigned rights
      *
      * @access public
-     * @return list of members with rights
+     * @return array of members with rights
      */
-    public function getMembersWithRights($member = false, $includeLevelZero = false)
+    public function getMembersWithRights($member = false)
     {
         $query = '
             SELECT
@@ -125,9 +125,6 @@ class AdminRightsModel extends RoxModelBase {
                 AND rv.IdRight = r.id
                 AND m.IdCity = g.geonameid
                 AND g.country = gc.country ';
-        if (!$includeLevelZero) {
-            $query .= ' AND rv.Level <> 0';
-        }
         $query .= '
             ORDER BY
                 m.Username,
@@ -138,7 +135,7 @@ class AdminRightsModel extends RoxModelBase {
         $membersWithRights = array();
         foreach ($result as $mwr) {
             if (!isset($membersWithRights[$mwr->Username])) {
-                $memberDetails = new StdClass();
+                $memberDetails = new stdClass();
                 $memberDetails->id = $mwr->id;
                 $memberDetails->Status = $mwr->status;
                 $memberDetails->LastLogin = date('Y-m-d', strtotime($mwr->LastLogin));
@@ -147,7 +144,7 @@ class AdminRightsModel extends RoxModelBase {
                 $memberDetails->Rights = array();
                 $membersWithRights[$mwr->Username] = $memberDetails;
             }
-            $rightDetails = new StdClass();
+            $rightDetails = new stdClass();
             $rightDetails->level = $mwr->Level;
             $rightDetails->scope = $mwr->Scope;
             $rightDetails->comment = $mwr->Comment;
@@ -240,10 +237,10 @@ class AdminRightsModel extends RoxModelBase {
 		if (stripos($scope, 'All') === false) {
 			$rights = explode(',', $scope);
 		}
-		
+
 		return $rights;
 	}
-	
+
     /**
      * get all rights defined or rights allowed for member
      *

@@ -46,7 +46,7 @@ class MemberTwigExtension extends AbstractExtension implements GlobalsInterface
         'rights' => [
             'trans' => 'AdminRights',
             'rights' => [Member::ROLE_ADMIN_RIGHTS],
-            'route' => 'admin_rights',
+            'route' => 'admin_rights_members',
         ],
         'logs' => [
             'trans' => 'AdminLogs',

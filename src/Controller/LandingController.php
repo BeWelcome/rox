@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Doctrine\AccommodationType;
+use App\Entity\Activity;
 use App\Entity\Member;
 use App\Entity\Preference;
 use App\Form\CustomDataClass\SearchFormRequest;
@@ -10,6 +11,7 @@ use App\Form\SearchFormType;
 use App\Model\CommunityNewsModel;
 use App\Model\DonateModel;
 use App\Model\LandingModel;
+use App\Repository\ActivityRepository;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -218,21 +220,33 @@ class LandingController extends AbstractController
         $preference = $preferenceRepository->findOneBy(['codename' => Preference::FORUM_FILTER]);
         $forumFilter = $member->getMemberPreferenceValue($preference);
         $content = $this->render('landing/landing.html.twig', [
-                'title' => 'BeWelcome',
-                'searchLocation' => $searchHomeLocation->createView(),
-                'tinySearch' => $searchGotoLocation->createView(),
-                'campaign' => [
-                    'year' => $campaignDetails->year,
-                    'yearNeeded' => $campaignDetails->YearNeededAmount,
-                    'yearDonated' => $campaignDetails->YearDonation,
-                ],
-                'travellers' => $travellersInArea,
-                'communityNews' => $latestNews,
-                'messageFilter' => $messageFilter,
-                'forumFilter' => $forumFilter,
+            'title' => 'BeWelcome',
+            'searchLocation' => $searchHomeLocation->createView(),
+            'tinySearch' => $searchGotoLocation->createView(),
+            'campaign' => [
+                'year' => $campaignDetails->year,
+                'yearNeeded' => $campaignDetails->YearNeededAmount,
+                'yearDonated' => $campaignDetails->YearDonation,
+            ],
+            'travellers' => $travellersInArea,
+            'communityNews' => $latestNews,
+            'messageFilter' => $messageFilter,
+            'forumFilter' => $forumFilter,
+            'activityCount' => $this->getUpcomingAroundLocationCount($member),
         ]);
 
         return $content;
+    }
+
+    /**
+     * @return int
+     */
+    private function getUpcomingAroundLocationCount(Member $member)
+    {
+        /** @var ActivityRepository $activityRepository */
+        $activityRepository = $this->getDoctrine()->getRepository(Activity::class);
+
+        return $activityRepository->getUpcomingAroundLocationCount($member->getCity());
     }
 
     /**

@@ -10,7 +10,7 @@ namespace App\Pagerfanta;
  */
 class TwitterBootstrap4AjaxTemplate extends TwitterBootstrap4Template
 {
-    protected function linkLi($class, $href, $text, $rel = null)
+    protected function linkLi($class, $href, $text, $rel = null): string
     {
         $liClass = implode(' ', array_filter(['page-item', $class]));
         $rel = $rel ? sprintf(' rel="%s"', $rel) : '';
@@ -24,7 +24,7 @@ class TwitterBootstrap4AjaxTemplate extends TwitterBootstrap4Template
         );
     }
 
-    protected function spanLi($class, $text)
+    protected function spanLi($class, $text): string
     {
         $liClass = implode(' ', array_filter(['page-item', $class]));
 

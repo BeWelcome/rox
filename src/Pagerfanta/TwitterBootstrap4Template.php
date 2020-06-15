@@ -28,7 +28,7 @@ class TwitterBootstrap4Template extends TwitterBootstrap3Template
         'rel_next' => 'next',
     ];
 
-    protected function linkLi($class, $href, $text, $rel = null)
+    protected function linkLi($class, $href, $text, $rel = null): string
     {
         $liClass = implode(' ', array_filter(['page-item', $class]));
         $rel = $rel ? sprintf(' rel="%s"', $rel) : '';
@@ -36,7 +36,7 @@ class TwitterBootstrap4Template extends TwitterBootstrap3Template
         return sprintf('<li class="%s"><a class="page-link" href="%s"%s>%s</a></li>', $liClass, $href, $rel, $text);
     }
 
-    protected function spanLi($class, $text)
+    protected function spanLi($class, $text): string
     {
         $liClass = implode(' ', array_filter(['page-item', $class]));
 

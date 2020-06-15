@@ -3,7 +3,7 @@
 
 {% block content %}
     <p>
-        {{ 'error.404'|trans({'url', app.request.pathInfo }) }}
+        {{ 'error.404'|trans({'url': app.request.pathInfo }) }}
         <br>
         <a href="{{ url('homepage') }}">{{ 'error.return.home'|trans }}</a>.
     </p>

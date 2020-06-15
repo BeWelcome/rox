@@ -19,8 +19,15 @@
           externalInfoUrl="http://phpmd.org/rules/cleancode.html#staticaccess">
         <priority>3</priority>
         <properties>
-            <property name="exceptions" value="\AnthonyMartin\GeoLocation\GeoLocation,\Carbon\Carbon,\Faker\Factory,
-                \Symfony\Component\Debug\Debug,Doctrine\Common\Collections\Criteria, \DateTime" />
+            <property name="exceptions" value="
+                \DateTime,
+                \Faker\Factory,
+                \Carbon\Carbon,
+                \Symfony\Component\Debug\Debug,
+                Doctrine\Common\Collections\Criteria,
+                \AnthonyMartin\GeoLocation\GeoLocation,
+                \Symfony\Component\HttpFoundation\File\UploadedFile
+            " />
         </properties>
     </rule>
 

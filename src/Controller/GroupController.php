@@ -65,8 +65,9 @@ class GroupController extends AbstractController
      *
      * @return RedirectResponse
      */
-    public function groupsRedirectPath(Request $request, Group $group, string $path)
+    public function groupsRedirectPath(Request $request)
     {
+        // We only need the request
         return $this->redirectGroup($request);
     }
 
@@ -77,7 +78,7 @@ class GroupController extends AbstractController
      *
      * @return RedirectResponse
      */
-    public function groupsRedirect(Request $request, Group $group)
+    public function groupsRedirect(Request $request)
     {
         return $this->redirectGroup($request);
     }

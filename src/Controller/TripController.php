@@ -6,6 +6,7 @@ use App\Entity\SubTrip;
 use App\Entity\Trip;
 use App\Form\TripType;
 use App\Model\TripModel;
+use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -73,7 +74,7 @@ class TripController extends AbstractController
 
         if ($createForm->isSubmitted() && $createForm->isValid()) {
             $trip
-                ->setCreatedAt(new \DateTime())
+                ->setCreatedAt(new DateTime())
                 ->setCreatedBy($this->getUser());
 
             $entityManager = $this->getDoctrine()->getManager();
@@ -114,7 +115,7 @@ class TripController extends AbstractController
 
         if ($updateForm->isSubmitted() && $updateForm->isValid()) {
             $trip
-                ->setUpdatedAt(new \DateTime());
+                ->setUpdatedAt(new DateTime());
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($trip);

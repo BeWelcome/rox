@@ -13,6 +13,7 @@ use App\Model\HostingRequestModel;
 use App\Utilities\MailerTrait;
 use App\Utilities\ManagerTrait;
 use App\Utilities\TranslatorTrait;
+use DateTime;
 use Exception;
 use InvalidArgumentException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -234,7 +235,7 @@ class HostingRequestController extends BaseMessageController
             if ($member === $item->getReceiver()) {
                 // Only mark as read if it is a message and when the receiver reads the message,
                 // not when the message is presented to the Sender with url /messages/{id}/sent
-                $item->setFirstRead(new \DateTime());
+                $item->setFirstRead(new DateTime());
                 $em->persist($item);
             }
         }
@@ -298,7 +299,7 @@ class HostingRequestController extends BaseMessageController
             $hostingRequest->setFirstRead(null);
             $hostingRequest->setStatus('Sent');
             $hostingRequest->setFolder('Normal');
-            $hostingRequest->setCreated(new \DateTime());
+            $hostingRequest->setCreated(new DateTime());
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($hostingRequest);

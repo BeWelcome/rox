@@ -114,8 +114,7 @@ class MemberController extends AbstractController
         Member $member,
         Logger $logger,
         ContainerBagInterface $params,
-        MemberModel $memberModel,
-        EntrypointLookupInterface $entrypointLookup
+        MemberModel $memberModel
     ) {
         // Either the member themselves or a person from the safety or the admin can access
         $this->denyAccessUnlessGranted(
@@ -257,21 +256,21 @@ class MemberController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
-            $member = null;
             /** @var MemberRepository $memberRepository */
             $memberRepository = $this->getDoctrine()->getRepository(Member::class);
             try {
                 /** @var Member $member */
                 $member = $memberRepository->loadUserByUsername($data['username']);
             } catch (NonUniqueResultException $e) {
+                $member = null;
             }
             if (null === $member) {
                 $form->addError(new FormError($this->getTranslator()->trans('flash.email.reset.password')));
             } else {
-                $token = null;
                 try {
                     $token = $memberModel->generatePasswordResetToken($member);
                 } catch (Exception $e) {
+                    $token = null;
                 }
                 if (null === $token) {
                     $this->addTranslatedFlash('error', 'flash.no.reset.password');

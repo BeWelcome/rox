@@ -322,7 +322,7 @@ class GalleryController extends AbstractController
      *
      * @return Response
      */
-    public function showUploadedImageOld(UploadedImage $image, Request $request, Logger $logger)
+    public function showUploadedImageOld(UploadedImage $image, Logger $logger)
     {
         $logger->write('Image ' . $image->getId() . ' accessed using old URL', 'Image');
 

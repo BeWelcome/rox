@@ -6,6 +6,7 @@ use App\Form\CustomDataClass\SearchFormRequest;
 use App\Form\LoginFormType;
 use App\Form\SearchFormType;
 use App\Model\StatisticsModel;
+use RoxPostHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Response;
@@ -54,7 +55,7 @@ class HomeController extends AbstractController
             ->getForm();
 
         $statistics = $statisticsModel->getStatistics();
-        $roxPostHandler = new \RoxPostHandler();
+        $roxPostHandler = new RoxPostHandler();
         $roxPostHandler->setClasses([
             'SignupController',
         ]);

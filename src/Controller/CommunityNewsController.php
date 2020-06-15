@@ -81,7 +81,6 @@ class CommunityNewsController extends AbstractController
             $communityNewsComment->setCommunityNews($communityNews);
             $communityNewsComment->setTitle($data->title);
             $communityNewsComment->setText($data->text);
-            $communityNewsComment->setCreated(new \DateTime());
             $communityNewsComment->setAuthor($this->getUser());
             $em->persist($communityNewsComment);
             $em->flush();

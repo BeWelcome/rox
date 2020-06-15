@@ -8,6 +8,7 @@ use App\Entity\Subject;
 use App\Form\MessageToMemberType;
 use App\Utilities\MailerTrait;
 use App\Utilities\ManagerTrait;
+use DateTime;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Exception;
@@ -130,7 +131,7 @@ class MessageController extends BaseMessageController
             if ($member === $item->getReceiver()) {
                 // Only mark as read if it is a message and when the receiver reads the message,
                 // not when the message is presented to the Sender with url /messages/{id}/sent
-                $item->setFirstRead(new \DateTime());
+                $item->setFirstRead(new DateTime());
                 $em->persist($item);
             }
         }

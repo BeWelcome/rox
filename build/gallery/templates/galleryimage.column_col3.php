@@ -1,7 +1,7 @@
         <div class="card">
             <a id="link_<?= $d->id ?>" href="gallery/img?id=<?= $d->id ?>" class="p-1" title="<?= $d->title ?>" rel="image"
                data-toggle="lightbox" data-type="image">
-                <img src="gallery/thumbimg?id=<?= $d->id ?>"
+                <img src="gallery/img?id=<?= $d->id ?>"
                      class="card-img-top" alt="<?= $d->title ?>">
             </a>
             <?php $title_short = ((strlen($d->title) >= 26) ? substr($d->title, 0, 20) . '...' : $d->title); ?>

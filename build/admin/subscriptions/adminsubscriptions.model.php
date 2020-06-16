@@ -24,7 +24,6 @@ class AdminSubscriptionsModel extends RoxModelBase {
         $member = $temp->findByUsername($vars['username']);
         $memberId = $member->id;
         // update subscription (keep old assignments through negating if disabling)
-        // members_tags_subscribed
         // members_threads_subscribed
         if ($enable) {
             $newSubscriberId = $memberId;
@@ -33,14 +32,6 @@ class AdminSubscriptionsModel extends RoxModelBase {
             $newSubscriberId = (-1) * $memberId;
             $oldSubscriberId = $memberId;
         }
-        $query = "
-            UPDATE
-                members_tags_subscribed
-            SET
-                IdSubscriber = " . $newSubscriberId . "
-            WHERE
-                IdSubscriber = " . $oldSubscriberId;
-        $this->dao->query($query);
         $query ="
             UPDATE
                 members_threads_subscribed

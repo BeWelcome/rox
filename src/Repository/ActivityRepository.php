@@ -114,14 +114,18 @@ class ActivityRepository extends EntityRepository
      */
     public function getUpcomingAroundLocationCount(Member $member, $online)
     {
-        $distance = $this->getActivitiesRadius($member);
         $qb = $this->getUpcomingAroundLocationQueryBuilder($member, $online);
         $qb
-            ->select('count(a.id)')
+            ->select('count(a.id) AS cnt')
         ;
 
         $q = $qb->getQuery();
-        $unreadCount = $q->getSingleScalarResult();
+        $result = $q->getResult();
+        if ($result) {
+            $unreadCount = $result[0]['cnt'];
+        } else {
+            $unreadCount = 0;
+        }
 
         return (int) $unreadCount;
     }

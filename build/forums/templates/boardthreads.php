@@ -26,7 +26,7 @@ $words = new MOD_words();
 $layoutbits = new MOD_layoutbits();
 ?>
 
-<div class="col-12">
+<div class="col-12 table-responsive">
 <!-- table structure -->
 <table class="table table-striped table-hover">
     <!-- beginning of table head -->

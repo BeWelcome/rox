@@ -1822,16 +1822,7 @@ LIMIT %d
 
     private function updateSubscriptions($memberId, $enable) {
         // update subscription (keep old assignments through negating if disabling)
-        // members_tags_subscribed
         // members_threads_subscribed
-        $query = "
-            UPDATE
-                members_tags_subscribed
-            SET
-                notificationsEnabled = '" . ($enable ? 1 : 0) . "'
-            WHERE
-                IdSubscriber = " . $memberId;
-        $this->dao->query($query);
         $query ="
             UPDATE
                 members_threads_subscribed
@@ -1969,55 +1960,26 @@ ORDER BY `subscribedtime` DESC
             $TResults->TData[] = $row;
         }
 
-// now the Tags
-
-            $query =
-                "
-SELECT
-    `members_tags_subscribed`.`id` as IdSubscribe,
-    `members_tags_subscribed`.`created` AS `subscribedtime`,
-    `forums_tags`.`id` as IdTag,
-    `forums_tags`.`IdName`,
-    `forums_tags`.`tag` as title,
-    `forums_tags`.`IdName`,
-    `members_tags_subscribed`.`ActionToWatch`,
-    `members_tags_subscribed`.`UnSubscribeKey`,
-    `members_tags_subscribed`.`notificationsEnabled`
-FROM `forums_tags`,`members_tags_subscribed`
-WHERE `forums_tags`.`id` = `members_tags_subscribed`.`IdTag`
-AND `members_tags_subscribed`.`IdSubscriber` = {$member->id}
-ORDER BY `subscribedtime` DESC
-                ";
+        $query = "
+            SELECT
+                Name, IdGroup, IdMember, IacceptMassMailFromThisGroup As AcceptMails, notificationsEnabled
+            FROM
+                `membersgroups` mg,
+                `groups` g
+            WHERE
+                g.id = mg.IdGroup
+                AND IdMember = '{$member->id}'
+                AND Status = 'In'
+            ORDER BY
+                Name";
         $s = $this->dao->query($query);
         if (!$s) {
-            throw new PException('Could not retrieve members_tags_subscribed sts via searchSubscription !');
+            throw new PException('Could load group memberships');
         }
-
-        $TResults->TDataTag = array();
+        $TResults->Groups = array();
         while ($row = $s->fetch(PDB::FETCH_OBJ)) {
-            $TResults->TDataTag[] = $row;
+            $TResults->Groups[] = $row;
         }
-
-            $query = "
-                SELECT
-                    Name, IdGroup, IdMember, IacceptMassMailFromThisGroup As AcceptMails, notificationsEnabled
-                FROM
-                    `membersgroups` mg,
-                    `groups` g
-                WHERE
-                    g.id = mg.IdGroup
-                    AND IdMember = '{$member->id}'
-                    AND Status = 'In'
-                ORDER BY
-                	Name";
-            $s = $this->dao->query($query);
-            if (!$s) {
-                throw new PException('Could load group memberships');
-            }
-            $TResults->Groups = array();
-            while ($row = $s->fetch(PDB::FETCH_OBJ)) {
-                $TResults->Groups[] = $row;
-            }
         return $TResults;
     } // end of searchSubscriptions
 

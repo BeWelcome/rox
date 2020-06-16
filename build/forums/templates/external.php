@@ -33,7 +33,7 @@ $layoutbits = new MOD_layoutbits();
     if ($threads = $boards->getThreads()) {
 ?>
 
-<table class="table table-striped table-hover">
+<table class="table table-striped table-hover" style="table-layout: fixed;">
     <tbody>
 <?php
 $threadsliced = array_slice($threads, 0, 5);
@@ -51,7 +51,7 @@ $threadsliced = array_slice($threads, 0, 5);
 
         ?>
             <tr>
-                <td><?php
+                <td class="text-truncate"><?php
                     if ($thread->ThreadDeleted=='Deleted') {
                         echo "[Deleted]" ;
                     }

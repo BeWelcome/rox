@@ -95,6 +95,10 @@ class HostingRequestController extends BaseMessageController
      */
     public function hostingRequestGuestReply(Request $request, Message $hostingRequest, Message $parent)
     {
+        if (!$this->isMessageOfMember($hostingRequest)) {
+            throw $this->createAccessDeniedException('Not your message/hosting request');
+        }
+
         /** @var Message $first */
         /** @var Message $last */
         /** @var Member $guest */

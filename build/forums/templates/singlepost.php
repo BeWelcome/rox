@@ -94,7 +94,7 @@ if (($post->IdGroup > 0) && ($post->PostVisibility == "GroupOnly")) {
         <div class="d-flex flex-column align-content-stretch">
             <div class="d-flex flex-row justify-content-between mb-1">
                 <div>
-                    <a id="post<?php echo $post->postid; ?>" style="position: relative;top: -50px;"></a>
+                    <a id="post<?php echo $post->postid; ?>" class="text-truncate" style="position: relative;top: -50px;"></a>
                     <small class="gray">
                         <?php
                         echo '<span><i class="fa fa-comment mr-1" title="' . $words->getFormatted('posted'); ?>"></i><?php echo date($words->getBuffered('DateHHMMShortFormat'), ServerToLocalDateTime($post->posttime, $this->getSession())) . '</span>';

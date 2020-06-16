@@ -71,6 +71,14 @@ App\Entity\RightVolunteer:
         Comment: Granted by the System
         updated: '<dateTime()>'
         created: '<dateTime()>'
+    Faq_bwadmin:
+        member: '@bwadmin'
+        right: '@Faq'
+        level: '10'
+        scope: '"All"'
+        Comment: Granted by the System
+        updated: '<dateTime()>'
+        created: '<dateTime()>'
     NewMembersBeWelcome_bwadmin:
         member: '@bwadmin'
         right: '@NewMembersBeWelcome'

@@ -21,7 +21,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Group.
  *
- * @ORM\Table(name="groups")
+ * @ORM\Table(name="`groups`")
  * @ORM\Entity(repositoryClass="App\Repository\GroupRepository")
  * @ORM\HasLifecycleCallbacks
  *
@@ -104,7 +104,7 @@ class Group implements ObjectManagerAware
 
     /** @var ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="GroupMembership", mappedBy="group", cascade={"persist", "remove"}, orphanRemoval=TRUE)
+     * @ORM\OneToMany(targetEntity="GroupMembership", mappedBy="`group`", cascade={"persist", "remove"}, orphanRemoval=TRUE)
      */
     private $groupMemberships;
 

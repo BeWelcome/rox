@@ -14,7 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Addresses.
  *
- * @ORM\Table(name="addresses", indexes={@ORM\Index(name="IdMember", columns={"IdMember"}), @ORM\Index(name="IdCity", columns={"IdCity"}), @ORM\Index(name="CityAndRank", columns={"IdCity", "Rank"})})
+ * @ORM\Table(name="addresses", indexes={@ORM\Index(name="IdMember", columns={"IdMember"}), @ORM\Index(name="IdCity", columns={"IdCity"}), @ORM\Index(name="CityAndRank", columns={"IdCity", "`Rank`"})})
  * @ORM\HasLifecycleCallbacks
  * @ORM\Entity
  *
@@ -70,7 +70,7 @@ class Address
     /**
      * @var bool
      *
-     * @ORM\Column(name="Rank", type="boolean", nullable=false)
+     * @ORM\Column(name="`Rank`", type="boolean", nullable=false)
      */
     private $rank = '0';
 

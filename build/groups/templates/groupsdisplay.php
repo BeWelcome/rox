@@ -26,7 +26,9 @@
                             <div class="small"><i class="far fa-comment mr-1" title="<?php echo $words->get('GroupsLastPost'); ?>"></i><span class="text-nowrap"><?=date($words->getBuffered('d F Y'), ServerToLocalDateTime($group_data->latestPost, $this->getSession())); ?></span></div>
                             <?php
                         } else {
-                            echo $words->get('GroupsNoPostYet');
+                            ?>
+                            <div class="small"><i class="far fa-comment mr-1" title="<?php echo $words->get('GroupsNoPostYet'); ?>"></i><span class="text-nowrap"><?=$words->getBuffered('GroupsNoPostYet'); ?></span></div>
+                            <?php
                         }
                         ?>
                 <?php } ?>

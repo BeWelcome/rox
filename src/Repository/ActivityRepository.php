@@ -84,8 +84,9 @@ class ActivityRepository extends EntityRepository
     /**
      * Get all activities around a given location.
      *
-     * @param int $limit
-     * @param int $distance
+     * @param int   $limit
+     * @param int   $distance
+     * @param mixed $online
      *
      * @throws Exception
      *
@@ -108,7 +109,8 @@ class ActivityRepository extends EntityRepository
     /**
      * Get all activities around a given location.
      *
-     * @param int $distance
+     * @param int   $distance
+     * @param mixed $online
      *
      * @return int
      */
@@ -141,11 +143,13 @@ class ActivityRepository extends EntityRepository
         if ($preference) {
             $distance = (int) ($memberPreference->getValue());
         }
+
         return $distance;
     }
 
     /**
-     * @param int $distance
+     * @param int   $distance
+     * @param mixed $online
      *
      * @throws Exception
      *
@@ -174,8 +178,7 @@ class ActivityRepository extends EntityRepository
             ->matching($criteria);
 
         $qb = $this->createQueryBuilder('a');
-        if ($online)
-        {
+        if ($online) {
             $qb
                 ->where($qb->expr()->orX(
                     $qb->expr()->eq('a.public', 1),

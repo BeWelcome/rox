@@ -53,7 +53,6 @@ class SafetyController extends AbstractController
         ]);
     }
 
-
     /**
      * @Route("/safety/tips", name="safety_tips")
      *
@@ -88,11 +87,10 @@ class SafetyController extends AbstractController
      * @Route("/safety/team", name="safety_team")
      *
      * @return Response
-     * 
      */
     public function showSafetyTeamAction()
     {
-        return $this->render('safety/safetyteam.html.twig', [            
+        return $this->render('safety/safetyteam.html.twig', [
             'submenu' => [
                 'items' => $this->getSubMenuItems(),
                 'active' => 'safety_team',
@@ -104,11 +102,10 @@ class SafetyController extends AbstractController
      * @Route("/feedback?IdCategory=2", name="safety_contact")
      *
      * @return Response
-     * 
      */
     public function showSafetyContactAction()
     {
-        return $this->redirectToRoute('feedback', ['IdCategory' => 2]) ;
+        return $this->redirectToRoute('feedback', ['IdCategory' => 2]);
     }
 
     /**

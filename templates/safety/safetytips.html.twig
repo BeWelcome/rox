@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{ 'safety' | trans }}
+{% endblock %}
+
+
+
+{% block content %}
+<h1><a href="safety">{{ 'Safety' | trans }}</a></h1>
+<div class="row">
+    <div class="col-12 col-lg-6">
+        <h3>{{ 'safety_tipsgeneral' | trans }}</h3>
+        <p>{{ 'safety_tipsgeneraltext' | trans | purify }}</p>
+        <p>{{ 'safety_tipsgeneraltext_cont' | trans 
+            ({ 'safety.tipsgeneraltext_cont.contact.us' : '<a href="' ~ url('safety_contact') ~ '">' ~ 'safety.tipsgeneraltext_cont.contact.us'|trans ~ '</a>' })
+            | purify }}
+        </p>
+    </div>
+    <div class="col-12 col-lg-6">
+        <h3>{{ 'safety_tipsfemale' | trans }}</h3>
+        <p>{{ 'safety_tipsfemaletext' | trans | purify }}</p>
+        <p>{{ 'safety_tipsfemaletext_cont' | trans 
+            ({ 'safety.tipsfemaletext_cont.contact.us' : '<a href="' ~ url('safety_contact') ~ '">' ~ 'safety.tipsfemaletext_cont.contact.us'|trans ~ '</a>' })
+            | purify }}
+        </p>
+        <p><a class="btn btn-outline-primary" href="{{ path('safety')}}"><i class="fa fa-user-shield mr-1"></i>{{'safety_learnaboutsafety' | trans }}</a></p>
+    </div>
+</div>
+{% endblock content %}

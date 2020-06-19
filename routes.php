@@ -208,16 +208,6 @@
 
     $this->addRoute('searchmembers_username', 'search/members/username', 'SearchController', 'searchMemberUsernames');
 
-    // safety pages
-    $this->addRoute('safety', 'safety', 'SafetyController', 'safety');
-    $this->addRoute('safety_basics', 'safety/basics', 'SafetyController', 'safetyBasics');
-    $this->addRoute('safety_whattodo', 'safety/whattodo', 'SafetyController', 'safetyWhatToDo');
-    $this->addRoute('safety_tips', 'safety/tips', 'SafetyController', 'safetyTips');
-    $this->addRoute('safety_female', 'safety/female', 'SafetyController', 'safetyFemale');
-    $this->addRoute('safety_faq', 'safety/faq', 'SafetyController', 'safetyFaq');
-    $this->addRoute('safety_team', 'safety/team', 'SafetyController', 'safetyTeam');
-    $this->addRoute('safety_contact', 'feedback?IdCategory=2', 'SafetyController', 'safetyContact');
-
     // New Members Be Welcome
     $this->addRoute('newmembers', 'admin/newmembers', 'AdminNewMembersController', 'listMembers');
     $this->addRoute('newmembers_pages', 'admin/newmembers/page/:pageno:', 'AdminNewMembersController', 'listMembers');

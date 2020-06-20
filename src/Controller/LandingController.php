@@ -222,7 +222,7 @@ class LandingController extends AbstractController
         $forumFilter = $member->getMemberPreferenceValue($preference);
 
         $preference = $preferenceRepository->findOneBy(['codename' => Preference::SHOW_ONLINE_ACTIVITIES]);
-        $onlineActivities = ($member->getMemberPreferenceValue($preference) === 'Yes') ? 1 : 0;
+        $onlineActivities = ('Yes' === $member->getMemberPreferenceValue($preference)) ? 1 : 0;
 
         $content = $this->render('landing/landing.html.twig', [
             'title' => 'BeWelcome',
@@ -245,6 +245,8 @@ class LandingController extends AbstractController
     }
 
     /**
+     * @param mixed $showOnlineActivities
+     *
      * @return int
      */
     private function getUpcomingAroundLocationCount(Member $member, $showOnlineActivities)

@@ -7,7 +7,6 @@
 
 namespace App\Entity;
 
-use App\Utilities\LifecycleCallbacksTrait;
 use Carbon\Carbon;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;

@@ -2,7 +2,6 @@
 
 namespace App\Model;
 
-use App\Entity\Translation;
 use App\Entity\Word;
 use App\Kernel;
 use App\Pagerfanta\ArchivedTranslationAdapter;
@@ -82,8 +81,7 @@ class TranslationModel
         $translationRepository = $em->getRepository(Word::class);
         $translations = $translationRepository->findBy(['code' => $updatedTranslation->getCode()]);
 
-        foreach($translations as $translation)
-        {
+        foreach ($translations as $translation) {
             $translation->setDomain($updatedTranslation->getDomain());
             $em->persist($translation);
         }

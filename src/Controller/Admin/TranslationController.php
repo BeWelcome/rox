@@ -187,8 +187,7 @@ class TranslationController extends AbstractController
             }
             $em->persist($translation);
             $em->flush();
-            if ($originalDomain !== $translation->getDomain())
-            {
+            if ($originalDomain !== $translation->getDomain()) {
                 $this->translationModel->updateDomainOfTranslations($translation);
             }
             $this->translationModel->removeCacheFiles();

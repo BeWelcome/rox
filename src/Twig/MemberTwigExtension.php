@@ -2,14 +2,12 @@
 
 namespace App\Twig;
 
-use App\Entity\Activity;
 use App\Entity\Comment;
 use App\Entity\Group;
 use App\Entity\LoginMessage;
 use App\Entity\Member;
 use App\Entity\Message;
 use App\Entity\Notification;
-use App\Repository\ActivityRepository;
 use App\Repository\CommentRepository;
 use App\Repository\LoginMessageRepository;
 use App\Repository\MessageRepository;

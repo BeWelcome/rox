@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{ 'safety' | trans }}
+{% endblock %}
+
+{% block content %}
+<h1><a href="safety">{{ 'Safety' | trans }}</a></h1>
+<div class="row">
+    <div class="col-12 col-lg-6">
+        <a id="tasks"></a>
+        <h3>{{ 'safety_team' | trans }}</h3>
+        <p>{{ 'safety_teamintro' | trans | purify }}</p>
+        <a id="proactive"></a>
+        <h5>{{ 'safety_proactive' | trans }}</h5>
+        <p>{{ 'safety_proactivetext' | trans | purify }}</p>
+        <a id="reactive"></a>
+        <h5>{{ 'safety_reactive' | trans }}</h5>
+        <p>{{ 'safety_reactivetext' | trans | purify }}</p>
+        <p>{{ 'safety_reactivetext' | trans 
+            ({ 'safety_reactivetext.terms' : '<a href="' ~ url('terms_of_use', {'locale': app.request.locale}) ~ '">' ~ 'safety_reactivetext.terms'|trans ~ '</a>' })
+            | purify }}
+        </p>
+    </div>
+    <div class="col-12 col-lg-6 card p-2">
+        <div class="card-body">
+            <div class="card-title">
+                <a id="members"></a>
+                <h3>{{ 'safety_teammembers' | trans }}</h3>
+            </div>
+            <div class="card-text">
+                <p>{{ 'safety_teammemberstext' | trans | purify }}</p>
+                <ul>
+                    {% for member in team_members %}
+                        <li >{{ member.username }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 mt-3">
+        <a id="confidentiality"></a>
+        <h3>{{ 'safety_confidentiality' | trans }}</h3>
+        <p>{{ 'safety_confidentialitytext' | trans | purify }}</p>
+    </div>
+</div>
+{% endblock content %}

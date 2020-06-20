@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Model\SafetyModel;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -13,7 +14,7 @@ class SafetyController extends AbstractController
      *
      * @return Response
      */
-    public function showSafetyMainAction()
+    public function showSafetyMain()
     {
         return $this->render('safety/safetymain.html.twig', [
             'submenu' => [
@@ -28,7 +29,7 @@ class SafetyController extends AbstractController
      *
      * @return Response
      */
-    public function showSafetyBasicsAction()
+    public function showSafetyBasics()
     {
         return $this->render('safety/safetybasics.html.twig', [
             'submenu' => [
@@ -39,16 +40,16 @@ class SafetyController extends AbstractController
     }
 
     /**
-     * @Route("/safety/whattodo", name="safety_whattodo")
+     * @Route("/safety/whattodo", name="safety_what_to_do")
      *
      * @return Response
      */
-    public function showSafetyWhattodoAction()
+    public function showSafetyWhatToDo()
     {
         return $this->render('safety/safetywhattodo.html.twig', [
             'submenu' => [
                 'items' => $this->getSubMenuItems(),
-                'active' => 'safety_whattodo',
+                'active' => 'safety_what_to_do',
             ],
         ]);
     }
@@ -58,7 +59,7 @@ class SafetyController extends AbstractController
      *
      * @return Response
      */
-    public function showSafetyTipsAction()
+    public function showSafetyTips()
     {
         return $this->render('safety/safetytips.html.twig', [
             'submenu' => [
@@ -73,7 +74,7 @@ class SafetyController extends AbstractController
      *
      * @return Response
      */
-    public function showSafetyFAQAction()
+    public function showSafetyFAQ()
     {
         return $this->render('safety/safetyfaq.html.twig', [
             'submenu' => [
@@ -88,9 +89,12 @@ class SafetyController extends AbstractController
      *
      * @return Response
      */
-    public function showSafetyTeamAction()
+    public function showSafetyTeam(SafetyModel $safetyModel)
     {
+        $teamMembers = $safetyModel->getSafetyTeamMembers();
+
         return $this->render('safety/safetyteam.html.twig', [
+            'team_members' => $teamMembers,
             'submenu' => [
                 'items' => $this->getSubMenuItems(),
                 'active' => 'safety_team',
@@ -103,7 +107,7 @@ class SafetyController extends AbstractController
      *
      * @return Response
      */
-    public function showSafetyContactAction()
+    public function showSafetyContact()
     {
         return $this->redirectToRoute('feedback', ['IdCategory' => 2]);
     }
@@ -122,9 +126,9 @@ class SafetyController extends AbstractController
                 'key' => 'SafetyBasics',
                 'url' => $this->generateUrl('safety_basics'),
             ],
-            'safety_whattodo' => [
+            'safety_what_to_do' => [
                 'key' => 'SafetyWhatToDo',
-                'url' => $this->generateUrl('safety_whattodo'),
+                'url' => $this->generateUrl('safety_what_to_do'),
             ],
             'safety_tips' => [
                 'key' => 'SafetyTips',

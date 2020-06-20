@@ -34,12 +34,12 @@
         <h5>{{ 'faqq_commentguidelines' | trans }}</h5>
         <p>{{ 'faqa_commentguidelines' | trans 
             ({ 'faqa_commentguidelines.link' : '<a href="' ~ url('profilecomments') ~ '">' ~ 'faqa_commentguidelines.link'|trans ~ '</a>' })
-             }}
+            | purify }}
         </p>
         <h5>{{ 'faqq_canieditcomment' | trans }}</h5>
         <p>{{ 'faqa_canieditcomment' | trans 
             ({ 'faqa_canieditcomment.contact.us' : '<a href="' ~ url('safety_contact') ~ '">' ~ 'faqa_canieditcomment.contact.us'|trans ~ '</a>' })
-             }}
+            | purify }}
         </p>
     </div>
     <div class="col-12">
@@ -48,7 +48,7 @@
         <h5>{{ 'faqq_ifoundapronlink' | trans }}</h5>
         <p>{{ 'faqa_ifoundapronlink' | trans 
             ({ 'faqa_ifoundapronlink.contact.us' : '<a href="' ~ url('safety_contact') ~ '">' ~ 'faqa_ifoundapronlink.contact.us'|trans ~ '</a>' })
-             }}
+            | purify }}
         </p>
         <h5>{{ 'faqq_dontwanttoreceiveinmyemail' | trans }}</h5>
         <p>{{ 'faqa_dontwanttoreceiveinmyemail' | trans 

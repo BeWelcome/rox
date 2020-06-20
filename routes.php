@@ -187,6 +187,8 @@
     $this->addRoute('activities_create', 'activities/create', 'ActivitiesController', 'editcreate');
     $this->addRoute('activities_upcoming_activities', 'activities/upcoming', 'ActivitiesController', 'upcomingActivities');
     $this->addRoute('activities_upcoming_activities_pages', 'activities/upcoming/page/:pageno:', 'ActivitiesController', 'upcomingActivities');
+    $this->addRoute('activities_upcoming_online_activities', 'activities/online', 'ActivitiesController', 'upcomingOnlineActivities');
+    $this->addRoute('activities_upcoming_online_activities_pages', 'activities/online/page/:pageno:', 'ActivitiesController', 'upcomingOnlineActivities');
     $this->addRoute('activities_past_activities', 'activities/past', 'ActivitiesController', 'pastActivities');
     $this->addRoute('activities_past_activities_pages', 'activities/past/page/:pageno:', 'ActivitiesController', 'pastActivities');
     $this->addRoute('activities_near_me', 'activities/nearme', 'ActivitiesController', 'activitiesNearMe');

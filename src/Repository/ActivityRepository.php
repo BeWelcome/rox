@@ -121,14 +121,7 @@ class ActivityRepository extends EntityRepository
             ->select('count(a.id) AS cnt')
         ;
 
-        $q = $qb->getQuery();
-        $result = $q->getResult();
-        if ($result) {
-            $unreadCount = $result[0]['cnt'];
-        } else {
-            $unreadCount = 0;
-        }
-
+        $unreadCount = $qb->getQuery()->getScalarResult();
         return (int) $unreadCount;
     }
 
@@ -167,38 +160,23 @@ class ActivityRepository extends EntityRepository
         $edison = GeoLocation::fromDegrees($latitude, $longitude);
         $coordinates = $edison->boundingCoordinates($distance, 'km');
 
-        $expr = Criteria::expr();
-        $criteria = Criteria::create();
-        $criteria->where($expr->gte('latitude', $coordinates[0]->getLatitudeInDegrees()))
-            ->andWhere($expr->lte('latitude', $coordinates[1]->getLatitudeInDegrees()))
-            ->andWhere($expr->gte('longitude', $coordinates[0]->getLongitudeInDegrees()))
-            ->andWhere($expr->lte('longitude', $coordinates[1]->getLongitudeInDegrees()));
-
-        $locations = $this->getEntityManager()->getRepository('App:Location')
-            ->matching($criteria);
-
-        $qb = $this->createQueryBuilder('a');
-        if ($online) {
-            $qb
-                ->where($qb->expr()->orX(
-                    $qb->expr()->eq('a.public', 1),
-                    $qb->expr()->in('a.location', ':locations')
-                ));
-        } else {
-            $qb
-                ->where($qb->expr()->in('a.location', ':locations'))
-            ;
-        }
-        $qb
-            ->andWhere($qb->expr()->andX(
-                $qb->expr()->lte('a.ends', ':threeMonths'),
-                $qb->expr()->gte('a.starts', ':now')
-            ))
+        $qb = $this->createQueryBuilder('a')
+            ->leftJoin('App:Location', 'l', Join::WITH, 'a.location = l.geonameid AND l.latitude BETWEEN :lat_e AND :lat_w AND l.longitude BETWEEN :long_s AND :long_n')
+            ->setParameter('lat_e', $coordinates[0]->getLatitudeInDegrees())
+            ->setParameter('lat_w', $coordinates[1]->getLatitudeInDegrees())
+            ->setParameter('long_s', $coordinates[0]->getLongitudeInDegrees())
+            ->setParameter('long_n', $coordinates[1]->getLongitudeInDegrees())
+            ->where('a.ends <= :three_months AND a.starts >= :now')
             ->setParameter('now', new DateTime())
-            ->setParameter('threeMonths', (new DateTime())->modify('+3 months'))
-            ->setParameter('locations', $locations)
-            ->orderBy('a.ends', 'DESC')
-        ;
+            ->setParameter('three_months', (new DateTime())->modify('+3 months'))
+            ->orderBy('a.starts', 'asc');
+
+        if (!$online) {
+            $qb->andWhere($qb->expr()->orX(
+                $qb->expr()->isNull('a.online'),
+                $qb->expr()->eq('a.online', 0)
+            ));
+        }
 
         return $qb;
     }

@@ -20,6 +20,7 @@ use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Security;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\GlobalsInterface;
+use function in_array;
 
 class MemberTwigExtension extends AbstractExtension implements GlobalsInterface
 {
@@ -143,21 +144,10 @@ class MemberTwigExtension extends AbstractExtension implements GlobalsInterface
     public function getGlobals()
     {
         if (null === $this->member) {
-            return [
-                'loginmessages' => null,
-                'groupsInApprovalQueue' => null,
-                'reportedCommentsCount' => null,
-                'reportedMessagesCount' => null,
-                'messageCount' => null,
-                'requestCount' => null,
-                'notificationCount' => null,
-                'activityCount' => null,
-                'teams' => null,
-            ];
+            return [];
         }
 
-        $roles = $this->security->getUser()->getRoles();
-        $teams = $this->getTeams($roles);
+        $teams = $this->getTeams();
 
         return [
             'loginmessages' => $this->getLoginMessages(),
@@ -166,7 +156,6 @@ class MemberTwigExtension extends AbstractExtension implements GlobalsInterface
             'reportedMessagesCount' => $this->getReportedMessagesCount(),
             'messageCount' => $this->getUnreadMessagesCount(),
             'requestCount' => $this->getUnreadRequestsCount(),
-            'notificationCount' => $this->getUncheckedNotificationsCount(),
             'teams' => $teams,
         ];
     }
@@ -177,20 +166,18 @@ class MemberTwigExtension extends AbstractExtension implements GlobalsInterface
     }
 
     /**
-     * @param array $roles
-     *
      * @return array
      */
-    protected function getTeams($roles)
+    protected function getTeams()
     {
-        $allTeams = self::ALL_TEAMS;
+        $roles = $this->security->getUser()->getRoles();
 
         $teams = [];
         $assignedTeams = [];
-        foreach ($allTeams as $name => $team) {
+        foreach (self::ALL_TEAMS as $name => $team) {
             foreach ($roles as $role) {
-                if (!\in_array($name, $assignedTeams, true)) {
-                    if (\in_array($role, $team['rights'], true)) {
+                if (!in_array($name, $assignedTeams, true)) {
+                    if (in_array($role, $team['rights'], true)) {
                         $add = true;
                         if (isset($team['minimum_level'])) {
                             $level = $this->member->getLevelForRight($role);
@@ -275,14 +262,6 @@ class MemberTwigExtension extends AbstractExtension implements GlobalsInterface
         $messageRepository = $this->getManager()->getRepository(Message::class);
 
         return $messageRepository->getUnreadRequestsCount($this->member);
-    }
-
-    protected function getUncheckedNotificationsCount()
-    {
-        /** @var NotificationRepository $notificationRepository */
-        $notificationRepository = $this->getManager()->getRepository(Notification::class);
-
-        return $notificationRepository->getUncheckedNotificationsCount($this->member);
     }
 
     /**

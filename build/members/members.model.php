@@ -598,7 +598,7 @@ WHERE
                 'commentText' => $vars['TextFree'],
                 'Link' => 'members/' . $commentRecipient->Username . '/comments',
                 'replyLink'   => 'members/' . $commentSender->Username . '/comments/add',
-                'reportLink'  => 'members/reportcomment/' . $commentRecipient->Username . '/' . $commentId,
+                'reportLink'  => 'members/' . $commentRecipient->Username . '/comment/' . $commentId . '/report',
                 'WordCode' => $noteWordCode
             );
 

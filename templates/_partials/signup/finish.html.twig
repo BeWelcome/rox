@@ -3,9 +3,9 @@
 <div class="row">
     <div class="col-12 col-lg-6 mb-3">
         <h1 class="m-0">{{ 'signup.finished' | trans }}</h1>
-        <p>{{ 'signup.finished.congratulations'|trans({'username': username}) }}</p>
-        <p>{{ 'signup.finished.sent.to'|trans({'email': email_address}) }}</p>
-        <p>{{ 'signup.finished.check.spam'|trans }}</p>
+        {{ 'signup.finished.congratulations'|trans({'username': username})|purify }}
+        {{ 'signup.finished.sent.to'|trans({'email': email_address})|purify }}
+        {{ 'signup.finished.check.spam'|trans|purify }}
     </div>
 
     <div class="w-100"></div>

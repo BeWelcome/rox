@@ -91,7 +91,7 @@ class Activity
      *
      * @ORM\Column(name="public", type="smallint", nullable=true)
      */
-    private $public;
+    private $online;
 
     /**
      * @var int
@@ -309,13 +309,13 @@ class Activity
     /**
      * Set public.
      *
-     * @param int $public
+     * @param int $online
      *
      * @return Activity
      */
-    public function setPublic($public)
+    public function setOnline($online)
     {
-        $this->public = $public;
+        $this->online = $online;
 
         return $this;
     }
@@ -325,9 +325,9 @@ class Activity
      *
      * @return int
      */
-    public function getPublic()
+    public function getOnline()
     {
-        return $this->public;
+        return $this->online;
     }
 
     /**

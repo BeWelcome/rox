@@ -28,11 +28,7 @@ class ActivitiesController extends RoxControllerBase
      * Redirects to my activities if a member is logged in otherwise shows upcoming activities
      */
     public function activities() {
-        if ($this->_model->getLoggedInMember()) {
-            $this->redirectAbsolute($this->router->url('activities_near_me'));
-        } else {
-            $this->redirectAbsolute($this->router->url('activities_upcoming_activities'));
-        }
+        $this->redirectAbsolute($this->router->url('activities_near_me'));
     }
 
     public function joinLeaveActivityCallback(\stdClass $args, ReadOnlyObject $action,
@@ -216,6 +212,22 @@ class ActivitiesController extends RoxControllerBase
         return $page;
     }
 
+    public function upcomingOnlineActivities() {
+        $page = new ActivitiesUpcomingOnlineActivitiesPage();
+        $loggedInMember = $this->_model->getLoggedInMember();
+        $page->member = $loggedInMember;
+        $pageno = 0;
+        if (isset($this->route_vars['pageno'])) {
+            $pageno = $this->route_vars['pageno'] - 1;
+        }
+        $count = $this->_model->getUpcomingOnlineActivitiesCount();
+        $page->activities = $this->_model->getUpcomingOnlineActivities($pageno, self::ACTIVITIES_PER_PAGE);
+        $page->pager = $this->getPager('upcoming', $count, $pageno);
+
+        $page->allActivities = $this->_model->getUpcomingOnlineActivities($page->onlineOnly, 0, PVars::getObj('activities')->max_activities_on_map);
+
+        return $page;
+    }
 
     public function pastActivities() {
         $page = new ActivitiesPastActivitiesPage();

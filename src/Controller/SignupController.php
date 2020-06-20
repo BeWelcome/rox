@@ -131,7 +131,7 @@ class SignupController extends AbstractController
         /** @var Member $member */
         $member = $memberRepository->findOneBy(['username' => $username]);
         if (null === $member) {
-            $this->addFlash('error', $this->getTranslator()->trans('flash.signuo.username.invalid'));
+            $this->addFlash('error', $this->getTranslator()->trans('flash.signup.username.invalid'));
 
             return $this->redirectToRoute('login');
         }

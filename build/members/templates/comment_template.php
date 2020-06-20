@@ -98,7 +98,7 @@ foreach($comments as $comment) {
 //            echo $c->UsernameFromMember;
     if ($showfrom || $editfrom) {
         $quality = strtolower($c->comQuality);
-        $tt = explode(',', $c->Relations); ?>
+        $tt = explode(',', $c->relations); ?>
 
         <div class="col-12 col-sm-6 card comment-bg-<?=$quality?> mb-3">
             <div>
@@ -172,7 +172,7 @@ foreach($comments as $comment) {
      if ($showto || $editto){
          $cc = $comment['to'];
          $quality = strtolower($cc->comQuality);
-         $tt = explode(',', $cc->Relations); ?>
+         $tt = explode(',', $cc->relations); ?>
         <div class="col-12 col-sm-6 card comment-bg-<?=$quality?> mb-3">
 
             <div>

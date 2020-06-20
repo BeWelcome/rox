@@ -45,7 +45,7 @@ if (empty($vars)) {
     </div>
     <div class="col-md-3 d-none d-md-block ml-md-auto mb-2 order-2">
         <div class="d-flex flex-row hidden-md-down pull-right">
-            <div class="pr-2 align-self-center"><i class="fa fa-3x fa-users"></i></div>
+            <div class="pr-2 align-self-center"><?php if ($this->activity->public) { ?><img src="images/online_meeting_noun_3384309.svg" width="32" height="32"><?php } else { ?><i class="fa fa-3x fa-users"></i><?php } ?></div>
             <div>
                 <p class="text-nowrap">
                     <?php if ($this->activity->attendeesYes != 0) {

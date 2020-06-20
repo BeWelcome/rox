@@ -13,7 +13,7 @@
 
             <div class="text-truncate mr-2 ml-5" style="white-space: normal;">
                 <p class="m-0 p-0 dashentry"><strong><a href="activities/{{ activity.id }}">{{ activity.title }}</a></strong></p>
-                <p class="p-0 m-0"><small>{% if activity.public %}<i class="fa fa-2x fa-wifi">{% else %}<i class="fa fa-2x fa-map-marker-alt">{% endif %}</i> {{ activity.location.name }}, {{ activity.location.country.name }}</small></p>
+                <p class="p-0 m-0"><small>{% if activity.online %}<img src="images/online_meeting_noun_3384309.svg" width="32" height="32">{% else %}<i class="fa fa-2x fa-map-marker-alt"></i>{% endif %} {{ activity.location.name }}, {{ activity.location.country.name }}</small></p>
             </div>
 
             <div class="ml-auto relative">

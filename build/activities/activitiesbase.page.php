@@ -53,20 +53,16 @@ class ActivitiesBasePage extends PageWithActiveSkin
         $items = array();
         $layoutkit = $this->layoutkit;
         $words = $layoutkit->getWords();
-        if ($this->member) {
-            $items[] = array('myactivities', 'activities/myactivities', $words->getSilent('ActivitiesMyActivities'));
-            $items[] = array('upcomingactivities', 'activities/upcoming', $words->getSilent('ActivitiesUpcoming'));
-            $items[] = array('pastactivities', 'activities/past', $words->getSilent('ActivitiesPastActivities'));
-            $geo = new Geo($this->member->IdCity);
-            $items[] = array('activitiesnearme', 'activities/nearme', $words->getSilent('ActivitiesActivitiesNear', $geo->name));
-            if ($this->update) {
-                $items[] = array('createactivities', 'activities/' . $this->activity->id . '/edit', $words->getSilent('ActivitiesEdit'));
-            } else {
-                $items[] = array('createactivities', 'activities/create', $words->getSilent('ActivitiesCreate'));
-            }
+        $items[] = array('myactivities', 'activities/myactivities', $words->getSilent('ActivitiesMyActivities'));
+        $items[] = array('upcomingactivities', 'activities/upcoming', $words->getSilent('ActivitiesUpcoming'));
+        $items[] = array('upcomingonlineactivities', 'activities/online', $words->getSilent('ActivitiesUpcomingOnline'));
+        $items[] = array('pastactivities', 'activities/past', $words->getSilent('ActivitiesPastActivities'));
+        $geo = new Geo($this->member->IdCity);
+        $items[] = array('activitiesnearme', 'activities/nearme', $words->getSilent('ActivitiesActivitiesNear', $geo->name));
+        if ($this->update) {
+            $items[] = array('createactivities', 'activities/' . $this->activity->id . '/edit', $words->getSilent('ActivitiesEdit'));
         } else {
-            $items[] = array('upcomingactivities', 'activities/upcoming', $words->getSilent('ActivitiesUpcoming'));
-            $items[] = array('pastactivities', 'activities/past', $words->getSilent('ActivitiesPastActivities'));
+            $items[] = array('createactivities', 'activities/create', $words->getSilent('ActivitiesCreate'));
         }
         return $items;
     }

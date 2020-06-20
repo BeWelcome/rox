@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Doctrine\AccommodationType;
 use App\Entity\Activity;
 use App\Entity\Member;
+use App\Entity\Notification;
 use App\Entity\Preference;
 use App\Form\CustomDataClass\SearchFormRequest;
 use App\Form\SearchFormType;
@@ -12,6 +13,7 @@ use App\Model\CommunityNewsModel;
 use App\Model\DonateModel;
 use App\Model\LandingModel;
 use App\Repository\ActivityRepository;
+use App\Repository\NotificationRepository;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -238,10 +240,19 @@ class LandingController extends AbstractController
             'messageFilter' => $messageFilter,
             'forumFilter' => $forumFilter,
             'onlineActivities' => $onlineActivities,
+            'notificationCount' => $this->getUncheckedNotificationsCount($member),
             'activityCount' => $this->getUpcomingAroundLocationCount($member, $onlineActivities),
         ]);
 
         return $content;
+    }
+
+    protected function getUncheckedNotificationsCount(Member $member)
+    {
+        /** @var NotificationRepository $notificationRepository */
+        $notificationRepository = $this->getDoctrine()->getRepository(Notification::class);
+
+        return $notificationRepository->getUncheckedNotificationsCount($member);
     }
 
     /**

@@ -134,7 +134,6 @@ class LandingModel
     /**
      * Generates activities (near you) for display on home page.
      *
-     *
      * @param mixed $online
      *
      * @throws Exception

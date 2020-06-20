@@ -2,12 +2,9 @@
 
 namespace App\Model;
 
-use App\Entity\Language;
 use App\Entity\Member;
-use App\Pagerfanta\LogAdapter;
 use App\Utilities\ManagerTrait;
 use Doctrine\ORM\Query\ResultSetMappingBuilder;
-use Pagerfanta\Pagerfanta;
 
 class SafetyModel
 {
@@ -38,6 +35,7 @@ class SafetyModel
             ORDER BY
                 username
                 ", $rsm);
+
         return $query->getResult();
     }
 }

@@ -30,14 +30,12 @@
             </div>
             <div class="card-text">
                 <p>{{ 'safety_teammemberstext' | trans | purify }}</p>
-            </div>
-                {# todo get the team members   
                 <ul>
-                    {% for key in listOfMembers %}
-                    <li >{{ user.username }}</li>
+                    {% for member in team_members %}
+                        <li >{{ member.username }}</li>
                     {% endfor %}
                 </ul>
-                #}
+            </div>
         </div>
     </div>
     <div class="col-12 mt-3">

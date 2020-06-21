@@ -121,7 +121,7 @@ class ActivityRepository extends EntityRepository
             ->select('count(a.id) AS cnt')
         ;
 
-        $unreadCount = $qb->getQuery()->getScalarResult();
+        $unreadCount = $qb->getQuery()->getSingleScalarResult();
         return (int) $unreadCount;
     }
 
@@ -166,12 +166,17 @@ class ActivityRepository extends EntityRepository
             ->setParameter('lat_w', $coordinates[1]->getLatitudeInDegrees())
             ->setParameter('long_s', $coordinates[0]->getLongitudeInDegrees())
             ->setParameter('long_n', $coordinates[1]->getLongitudeInDegrees())
-            ->where('a.ends <= :three_months AND a.starts >= :now')
+            ->where('(a.ends >= :now AND a.ends <= :three_months) OR (a.starts >= :now AND a.starts <= :three_months)')
             ->setParameter('now', new DateTime())
             ->setParameter('three_months', (new DateTime())->modify('+3 months'))
             ->orderBy('a.starts', 'asc');
 
-        if (!$online) {
+        if ($online) {
+            $qb->andWhere($qb->expr()->orX(
+                $qb->expr()->eq('a.online', 1),
+                $qb->expr()->isNotNull('l.geonameid')
+            ));
+        } else {
             $qb->andWhere($qb->expr()->orX(
                 $qb->expr()->isNull('a.online'),
                 $qb->expr()->eq('a.online', 0)

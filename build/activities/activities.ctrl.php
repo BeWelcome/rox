@@ -270,7 +270,7 @@ class ActivitiesController extends RoxControllerBase
             $pageno = $this->route_vars['pageno'] - 1;
         }
         $page->radius = $this->_model->getRadius();
-        $distance = 2 * $page->radius;
+        $distance = $page->radius;
         $count = $this->_model->getActivitiesNearMeCount($distance);
         $page->activities = $this->_model->getActivitiesNearMe($distance, $pageno, self::ACTIVITIES_PER_PAGE);
         $page->pager = $this->getPager('nearme', $count, $pageno);

@@ -9,22 +9,22 @@
 
 # Why this is incredible :heart_eyes:
 * :sleeping_bed: **Member profiles** with focus on finding a place to stay
-* :world_map: **Search members** by map, location, username
-* :handshake: **Comment system** to increase trust between each other
-* :left_speech_bubble: **Forum and groups** for discussions
-* :partying_face: **Activities, galleries** to show how who you are
-* :toolbox: **Volunteer tools** (safety, moderation, spam, rights member welcome tools and more)
-* :rainbow_flag: **On page translation** for 305 languages
-* :cartwheeling::standing_man::standing_person::standing_woman::mage: BeWelcome is people and volunteers [Learn more](https://www.bewelcome.org/about)
+* :mag_right: **Search members** by map, location, username
+* :two_men_holding_hands: **Comment system** to increase trust between each other
+* :pencil: **Forum and groups** for discussions
+* :rowboat::bicyclist: **Activities, galleries** to show how who you are
+* :wrench: **Volunteer tools** (safety, moderation, spam, rights member welcome tools and more)
+* :rainbow: **On page translation** for 305 languages
+* :raising_hand::muscle: BeWelcome is people and volunteers [Learn more](https://www.bewelcome.org/about)
 
-# Join the team :people_holding_hands:
+# Join the team :girl::boy::woman::man:
 
 You like the idea? Development is only one way to contribute! Find out how to [get active](https://www.bewelcome.org/about/getactive), including as designer, tester, translator, moderator, helping others and much more! :heart_eyes:
 
 ## Get your Rox development enviroment :computer:
 
-1. :parachute: [Set up you local development enviroment](INSTALL.md) and fork the repository on Github.
-2. :medal_sports: Pick a [good starter issue](https://github.com/BeWelcome/rox/labels/good%20starter%20issue)
+1. :balloon: [Set up you local development enviroment](INSTALL.md) and fork the repository on Github.
+2. :mag: Pick a [good starter issue](https://github.com/BeWelcome/rox/labels/good%20starter%20issue)
 3. :sparkles: Create a [pull request](https://opensource.guide/how-to-contribute/#opening-a-pull-request) and `@mention` the people from the issue to review
 4. :sun_with_face: Fix the remaining things during review
 4. :tada: Wait for it being merged!

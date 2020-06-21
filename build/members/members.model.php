@@ -815,21 +815,31 @@ WHERE
 
         // Password Check
         if (isset($vars['passwordnew']) && $vars['passwordnew'] != '') {
-        $query = "select id from members where id=" . $this->session->get('IdMember') . " and PassWord=PASSWORD('" . $member->preparePassword($vars['passwordold']) . "')";
+            $query = "select password, PASSWORD('" . $vars['passwordold'] . "') AS mysql from members where id=" . $this->session->get('IdMember');
             $qry = $this->dao->query($query);
-            $rr = $qry->fetch(PDB::FETCH_OBJ);
-            if (!$rr || !array_key_exists('id', $rr))
+            $rr = $qry->fetch(PDB::FETCH_ASSOC);
+            if (!$rr || !array_key_exists('password', $rr)) {
                 $errors[] = 'ChangePasswordInvalidPasswordError';
-            if( isset($vars['passwordnew']) && strlen($vars['passwordnew']) > 0) {
-                if( strlen($vars['passwordnew']) < 6) {
-                    $errors[] = 'ChangePasswordPasswordLengthError';
-                }
-                if(isset($vars['passwordconfirm'])) {
-                    if(strlen(trim($vars['passwordconfirm'])) == 0) {
-                        $errors[] = 'ChangePasswordConfirmPasswordError';
-                    } elseif(trim($vars['passwordnew']) != trim($vars['passwordconfirm'])) {
-                        $errors[] = 'ChangePasswordMatchError';
-                    }
+            }
+            $password = $rr['password'];
+            $mysqlHash = $rr['mysql'];
+
+            $mysqlCorrect = ($password === $mysqlHash);
+            $bcryptCorrect = password_verify( $vars['passwordold'], $password);
+
+            if (!( $mysqlCorrect | $bcryptCorrect )) {
+                $errors[] = 'ChangePasswordInvalidPasswordError';
+            }
+        }
+        if( isset($vars['passwordnew']) && strlen($vars['passwordnew']) > 0) {
+            if( strlen($vars['passwordnew']) < 6) {
+                $errors[] = 'ChangePasswordPasswordLengthError';
+            }
+            if(isset($vars['passwordconfirm'])) {
+                if(strlen(trim($vars['passwordconfirm'])) == 0) {
+                    $errors[] = 'ChangePasswordConfirmPasswordError';
+                } elseif(trim($vars['passwordnew']) != trim($vars['passwordconfirm'])) {
+                    $errors[] = 'ChangePasswordMatchError';
                 }
             }
         }

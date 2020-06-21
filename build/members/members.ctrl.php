@@ -764,7 +764,7 @@ class MembersController extends RoxControllerBase
         }
         $member->removeProfile();
         $this->model->sendRetiringFeedback($feedback);
-        $member->logOut();
+
         return 'logout';
     }
 

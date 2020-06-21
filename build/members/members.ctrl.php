@@ -34,88 +34,6 @@ class MembersController extends RoxControllerBase
 
     protected function index_loggedOut($args)
     {
-        $request = $args->request;
-
-        switch (isset($request[0]) ? $request[0] : false)
-        {
-            case 'updatemandatory':
-            case 'mypreferences':
-            case 'editmyprofile':
-            case 'myvisitors':
-            case 'self':
-            case 'myself':
-            case 'my':
-            case 'deleteprofile':
-                // you are not supposed to open these pages when not logged in!
-                $page = new MembersMustloginPage;
-                break;
-            case 'members':
-            case 'people':
-            default:
-                if (!isset($request[1]) || empty($request[1]))
-                {
-                    // no member specified
-                    $this->redirect("places");
-                }
-                else if ($request[1] == 'avatar')
-                {
-                    if (!isset($request[2]) || !$member = $this->getMember($request[2]))
-                    {
-                        PPHP::PExit();
-                    }
-                    PRequest::ignoreCurrentRequest();
-                    $this->model->showAvatar($member->id);
-                    break;
-                }
-                else if (!($member = $this->getMember($request[1])) || !$member->isBrowsable())
-                {
-                    // did not find such a member
-                    $page = new MembersMembernotfoundPage;
-                }
-                else if (!$member->publicProfile)
-                {
-                    // this profile is not public
-                    $page = new MembersMustloginPage;
-                }
-                else if ($member->status == 'ChoiceInactive' ) {
-                    $page = new InactiveProfilePage();
-                } else {
-                    // found a member with given id or username. juhu
-                    switch (isset($request[2]) ? $request[2] : false)
-                    {
-                        case 'comments':
-                        case 'relations':
-                            // not logged in users don't get to see comments page
-                            $page = new MembersMustLoginPage;
-                            break;
-                        case 'groups':
-                            $my_groups = $member->getGroups();
-                            $params = new StdClass;
-                            $params->strategy = new HalfPagePager('left');
-                            $params->items = $my_groups;
-                            $params->items_per_page = 10;
-                            $pager = new PagerWidget($params);
-                            $page = new MemberGroupsPage();
-                            $page->my_groups = $my_groups;
-                            $page->pager = $pager;
-                            break;
-                        case 'profile':
-                        case '':
-                        case false:
-                            $page = new ProfilePage();
-                        $page->enableLightBox();
-                            break;
-                        default:
-                            $page = new ProfilePage();
-                            $page->enableLightBox();
-                            $this->model->set_profile_language($request[2]);
-                            break;
-                    }
-                    $page->member = $member;
-                }
-        }
-        $page->model = $this->model;
-        return $page;
     }
 
     protected function index_loggedIn($args, $member_self)
@@ -371,7 +289,7 @@ class MembersController extends RoxControllerBase
                             $params = new stdClass();
                             $params->strategy = new HalfPagePager('left');
                             $params->items = $my_groups;
-                            $params->items_per_page = 10;
+                            $params->items_per_page = 30;
                             $pager = new PagerWidget($params);
                             $page = new MemberGroupsPage();
                             $page->my_groups = $my_groups;

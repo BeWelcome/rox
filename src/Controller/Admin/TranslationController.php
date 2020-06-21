@@ -880,9 +880,13 @@ class TranslationController extends AbstractController
                 'url' => $this->generateUrl('translation_create_direct'),
             ];
         }
-        $submenuItems['mockups'] = [
-            'key' => 'label.translations.mockups',
-            'url' => $this->generateUrl('translations_mockups'),
+        $submenuItems['group'] = [
+            'key' => 'label.translations.group',
+            'url' => $this->generateUrl('group_start', [ 'group_id' => 60]),
+        ];
+        $submenuItems['wiki'] = [
+            'key' => 'label.translations.wiki',
+            'url' => $this->generateUrl('group_wiki_page', ['id' => 60]),
         ];
         if ($action && 'create' !== $action && 'mockup' !== $action) {
             $submenuItems[$action] = [

@@ -50,7 +50,6 @@
     $this->addRoute('groups_forums_overview','groups/forums', 'GroupsController', 'groupForumsOverview');
     $this->addRoute('groups_forums_overview_paged','groups/forums/:page_number:', 'GroupsController', 'groupForumsOverview');
     $this->addRoute('groups_mygroups','groups/mygroups', 'GroupsController', 'myGroups');
-    $this->addRoute('groups_overview','groups/search', 'GroupsController', 'search');
     $this->addRoute('groups_search','groups/search', 'GroupsController', 'search');
 
     // related groups routes

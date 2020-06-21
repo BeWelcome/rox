@@ -488,6 +488,7 @@ VALUES
         }
 
         $vars['email'] = strtolower($vars['email']);
+        $vars['emailcheck'] = strtolower($vars['emailcheck']);
 
         $escapeList = array('username', 'email', 'gender',
                             'feedback', 'housenumber', 'street','FirstName','SecondName','LastName', 'zip');

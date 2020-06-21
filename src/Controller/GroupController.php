@@ -59,6 +59,22 @@ class GroupController extends AbstractController
     }
 
     /**
+     * @Route("/groups/", name="groups_redirect", priority="10")
+     *
+     * @return RedirectResponse
+     */
+    public function redirectToOverviewPage()
+    {
+        /** @var Member $member */
+        $member = $this->getUser();
+        if ($member->getGroups())
+        {
+            return $this->redirectToRoute('groups_mygroups');
+        } else  {
+            return $this->redirectToRoute('groups_search');
+        }
+    }
+    /**
      * @Route("/groups/{groupId}/{path}", name="groups_redirect_path",
      *     requirements = {"groupId": "\d+", "path":".+"})
      * @ParamConverter("group", class="App\Entity\Group", options={"id" = "groupId"})
@@ -72,7 +88,7 @@ class GroupController extends AbstractController
     }
 
     /**
-     * @Route("/groups/{groupId}", name="groups_redirect",
+     * @Route("/groups/{groupId}", name="groups_redirect_group",
      *     requirements = {"groupId": "\d+"})
      * @ParamConverter("group", class="App\Entity\Group", options={"id" = "groupId"})
      *
@@ -348,7 +364,7 @@ class GroupController extends AbstractController
 
             $logger->write('Group ' . $group->getName() . ' created by ' . $member->getUsername() . '.', 'Group');
 
-            return $this->redirectToRoute('groups_overview');
+            return $this->redirectToRoute('groups_redirect');
         }
 
         return $this->render('group/create.html.twig', [

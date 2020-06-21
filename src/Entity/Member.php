@@ -631,7 +631,7 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
     /**
      * @var ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="RightVolunteer", mappedBy="member", fetch="EAGER")
+     * @ORM\OneToMany(targetEntity="RightVolunteer", mappedBy="member", fetch="LAZY")
      */
     private $volunteerRights;
 

@@ -36,7 +36,7 @@ class SearchController extends AbstractController
                 'help' => 'help.username.auto.complete',
             ])
             ->add('search', SubmitType::class, [
-            'label' => 'label.search.username',
+                'label' => 'label.search.username',
             ])
             ->getForm()
         ;

@@ -56,7 +56,7 @@ class RelatedGroupsController extends RoxControllerBase
     {
         if (!($vars = $this->route_vars) || empty($vars['group_id']) || !($group = $this->_model->findGroup($vars['group_id']))) {
             if (!$redirect) {
-                $redirect = $this->router->url('groups_overview');
+                $redirect = $this->router->url('groups_redirect');
             }
             $this->redirectAbsolute($redirect);
         }
@@ -76,7 +76,7 @@ class RelatedGroupsController extends RoxControllerBase
     {
         if (!($vars = $this->route_vars) || empty($vars['related_id']) || !($relatedgroup = $this->_model->findGroup($vars['related_id']))) {
             if (!$redirect) {
-                $redirect = $this->router->url('groups_overview');
+                $redirect = $this->router->url('groups_redirect');
             }
             $this->redirectAbsolute($redirect);
         }

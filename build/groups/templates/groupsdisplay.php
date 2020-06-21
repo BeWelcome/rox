@@ -23,7 +23,7 @@
                         if ($group_data->latestPost) {
                             $interval = date_diff(date_create(date('d F Y')), date_create(date('d F Y', ServerToLocalDateTime($group_data->latestPost, $this->getSession()))));
                             ?>
-                            <div class="small"><i class="far fa-comment mr-1" title="<?php echo $words->get('GroupsLastPost'); ?>"></i><span class="text-nowrap"><?=date($words->getBuffered('d F Y'), ServerToLocalDateTime($group_data->latestPost, $this->getSession())); ?></span></div>
+                            <div class="small"><i class="far fa-comment mr-1" title="<?php echo $words->get('GroupsLastPost'); ?>"></i><span class="text-nowrap"><?=date('Y-m-d', $group_data->latestPost); ?></span></div>
                             <?php
                         } else {
                             ?>

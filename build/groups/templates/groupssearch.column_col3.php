@@ -64,14 +64,14 @@
             <label class="font-weight-bold"><?php echo $words->get('GroupsSearchOrdered'); ?>:</label>
             <span class="dropdown">
                 <button class="btn btn-sm btn-secondary " type="button" id="dropdownVisibility" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?php echo $words->get('GroupsSearchOrdered' . $this->result_order) ?></button>
-                <div class="dropdown-menu ddextras px-0 py-1" aria-labelledby="dropdownVisibility">
-                    <a class="btn btn-sm btn-light mx-1"
+                <div class="dropdown-menu px-0 py-1" aria-labelledby="dropdownVisibility">
+                    <a class="dropdown-item"
                        href="groups/search?GroupsSearchInput=<?= $this->search_terms; ?>&order=<?= $act_order; ?>&<?= $this->pager->getActivePageMarker(); ?>"><?= $words->get('GroupsOrderBy' . $act_order); ?></a>
-                    <a class="btn btn-sm btn-light mx-1"
+                    <a class="dropdown-item"
                        href="groups/search?GroupsSearchInput=<?= $this->search_terms; ?>&order=<?= $name_order; ?>&<?= $this->pager->getActivePageMarker(); ?>"><?= $words->get('GroupsOrderBy' . $name_order); ?></a>
-                    <a class="btn btn-sm btn-light mx-1"
+                    <a class="dropdown-item"
                        href="groups/search?GroupsSearchInput=<?= $this->search_terms; ?>&order=<?= $member_order; ?>&<?= $this->pager->getActivePageMarker(); ?>"><?= $words->get('GroupsOrderBy' . $member_order); ?></a>
-                    <a class="btn btn-sm btn-light mx-1"
+                    <a class="dropdown-item"
                        href="groups/search?GroupsSearchInput=<?= $this->search_terms; ?>&order=<?= $created_order; ?>&<?= $this->pager->getActivePageMarker(); ?>"><?= $words->get('GroupsOrderDate' . $created_order); ?></a>
                 </div>
             </span>

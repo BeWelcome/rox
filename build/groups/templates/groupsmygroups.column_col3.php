@@ -40,9 +40,9 @@
         else
         {
             echo <<<HTML
-            <p class="note">
+            <div class="col-12"><p class="note">
             {$words->get('GroupsMyGroupsNoResults', '<a href="groups/search">', '</a>', '<a href="new/group">', '</a>')}
-            </p>
+            </p></div>
 HTML;
         }
         ?>

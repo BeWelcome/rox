@@ -7,11 +7,9 @@ use App\Entity\Group;
 use App\Entity\LoginMessage;
 use App\Entity\Member;
 use App\Entity\Message;
-use App\Entity\Notification;
 use App\Repository\CommentRepository;
 use App\Repository\LoginMessageRepository;
 use App\Repository\MessageRepository;
-use App\Repository\NotificationRepository;
 use App\Utilities\ManagerTrait;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -20,7 +18,6 @@ use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Security;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\GlobalsInterface;
-use function in_array;
 
 class MemberTwigExtension extends AbstractExtension implements GlobalsInterface
 {
@@ -176,8 +173,8 @@ class MemberTwigExtension extends AbstractExtension implements GlobalsInterface
         $assignedTeams = [];
         foreach (self::ALL_TEAMS as $name => $team) {
             foreach ($roles as $role) {
-                if (!in_array($name, $assignedTeams, true)) {
-                    if (in_array($role, $team['rights'], true)) {
+                if (!\in_array($name, $assignedTeams, true)) {
+                    if (\in_array($role, $team['rights'], true)) {
                         $add = true;
                         if (isset($team['minimum_level'])) {
                             $level = $this->member->getLevelForRight($role);

@@ -177,10 +177,13 @@ class ActivityRepository extends EntityRepository
                 $qb->expr()->isNotNull('l.geonameid')
             ));
         } else {
-            $qb->andWhere($qb->expr()->orX(
-                $qb->expr()->isNull('a.online'),
-                $qb->expr()->eq('a.online', 0)
-            ));
+            $qb
+                ->andWhere($qb->expr()->orX(
+                    $qb->expr()->isNull('a.online'),
+                    $qb->expr()->eq('a.online', 0),
+                ))
+                ->andWhere($qb->expr()->isNotNull('l.geonameid'))
+           ;
         }
 
         return $qb;

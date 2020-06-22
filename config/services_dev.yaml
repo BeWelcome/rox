@@ -1,7 +1,0 @@
-services:
-    mailer.dev.set_recipients:
-        class: Symfony\Component\Mailer\EventListener\EnvelopeListener
-        tags: ['kernel.event_subscriber']
-        arguments:
-            $sender: null
-            $recipients: ['me@bewelcome.org']

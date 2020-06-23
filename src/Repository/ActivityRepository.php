@@ -7,7 +7,6 @@ use App\Entity\Location;
 use App\Entity\Member;
 use App\Entity\Preference;
 use DateTime;
-use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\Query\Expr\Join;
@@ -122,6 +121,7 @@ class ActivityRepository extends EntityRepository
         ;
 
         $unreadCount = $qb->getQuery()->getSingleScalarResult();
+
         return (int) $unreadCount;
     }
 

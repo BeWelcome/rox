@@ -117,6 +117,7 @@ class EnvironmentExplorer
         $settings = $loader->load(array(
             SCRIPT_BASE.'rox_default.ini',
             SCRIPT_BASE.(isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : 'cronjob').'.ini',
+            SCRIPT_BASE.'rox_local.ini',
             SCRIPT_BASE.'rox_secret.ini'
         ));
 

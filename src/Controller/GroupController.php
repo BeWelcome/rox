@@ -67,13 +67,13 @@ class GroupController extends AbstractController
     {
         /** @var Member $member */
         $member = $this->getUser();
-        if ($member->getGroups())
-        {
+        if ($member->getGroups()) {
             return $this->redirectToRoute('groups_mygroups');
-        } else  {
-            return $this->redirectToRoute('groups_search');
         }
+
+        return $this->redirectToRoute('groups_search');
     }
+
     /**
      * @Route("/groups/{groupId}/{path}", name="groups_redirect_path",
      *     requirements = {"groupId": "\d+", "path":".+"})

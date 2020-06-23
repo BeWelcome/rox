@@ -13,11 +13,11 @@
         <p>{{ 'safety_howtext' | trans | purify }}</p>
         <a id="trustworthy"></a>
         <h3>{{'safety_trustworthy' | trans }}</h3>
-        <p>{{'safety_trustworthyintro' | trans }}</p>
+        <p>{{'safety_trustworthyintro' | trans | purify }}</p>
         <p><a class="btn btn-outline-primary" href="{{ path('safety_basics', {'_fragment': 'trustworthy'}) }}"> <i class="fa fa-handshake mr-2"></i>{{'safety_read.more.trustworthy' | trans }}</a></p>
         <a id="uncomfortable"></a>
         <h3>{{'safety_uncomfortablesituation' | trans }}</h3>
-        <p>{{'safety_uncomfortablesituationintro' | trans }}</p>
+        <p>{{'safety_uncomfortablesituationintro' | trans | purify  }}</p>
         <p><a class="btn btn-outline-primary" href="{{ path('safety_what_to_do', {'_fragment': 'uncomfortable'}) }}"><i class="fa fa-question mr-2"></i>{{'safety_read.more.uncomfortablesituation' | trans }}</a></p>
         <a id="emergency"></a>
         <h3>{{'safety_emergency' | trans }}</h3>
@@ -34,9 +34,9 @@
         <div class="card p-2 mb-3">
             <a id="contact"></a>
             <h3>{{'safety_contact' | trans }}</h3>
-            <p>{{'safety_contacttext'|trans 
+            <p>{{'safety_contacttext'| trans 
                 ({ 'safety.contacttext.contact.form' : '<a href="' ~ url('safety_contact') ~ '">' ~ 'safety.contacttext.contact.form'|trans ~ '</a>' })
-                |purify
+                | purify
                 }}
             </p>
             <p><a class="btn btn-outline-primary" href="{{ path('safety_team')}}"><i class="fa fa-users mr-1"></i>{{'safety_learnaboutteam' | trans }}</a></p>
@@ -44,9 +44,9 @@
         <div class="p-2">
             <a id="keepitsafe"></a>
             <h3>{{'safety_keepitsafe' | trans }}</h3>
-            <p>{{'safety_keepitsafetext'|trans 
+            <p>{{'safety_keepitsafetext'| trans 
                 ({ 'safety.keepitsafe.contact.form' : '<a href="' ~ url('safety_contact') ~ '">' ~ 'safety.keepitsafe.contact.form'|trans ~ '</a>' })
-                |purify
+                | purify
                 }}
             </p>
         </div>

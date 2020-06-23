@@ -52,7 +52,6 @@
         "symfony/orm-pack": "^1.0",
         "symfony/polyfill-apcu": "^1.0",
         "symfony/security-bundle": "5.1.*",
-        "symfony/swiftmailer-bundle": "^3.2",
         "symfony/templating": "5.1.*",
         "symfony/translation": "5.1.*",
         "symfony/twig-bundle": "5.1.*",

@@ -882,7 +882,7 @@ class TranslationController extends AbstractController
         }
         $submenuItems['group'] = [
             'key' => 'label.translations.group',
-            'url' => $this->generateUrl('group_start', [ 'group_id' => 60]),
+            'url' => $this->generateUrl('group_start', ['group_id' => 60]),
         ];
         $submenuItems['wiki'] = [
             'key' => 'label.translations.wiki',

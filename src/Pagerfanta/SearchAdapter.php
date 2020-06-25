@@ -72,7 +72,7 @@ class SearchAdapter implements AdapterInterface
             $dbPassword
         );
         $dbPassword = str_repeat('*', \strlen($dbPassword));
-        $this->model = new \SearchModel();
+        $this->model = new SearchModel();
         $this->modelData = $this->prepareModelData($data);
 
         // Determine if we search for a country or an admin unit and call prepareQuery accordingly

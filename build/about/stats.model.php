@@ -26,7 +26,7 @@ class StatsModel extends RoxModelBase
      * retrieve the number of members for each country
      */
     public function getMembersPerCountry() {
-		// This query countes the number of members in the same way as HC or CS
+		// This query counts the number of members in the same way as HC or CS
         $query = "
             SELECT
                 gc.name AS countryname,

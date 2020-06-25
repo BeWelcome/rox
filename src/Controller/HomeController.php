@@ -54,7 +54,7 @@ class HomeController extends AbstractController
             ->setMethod('POST')
             ->getForm();
 
-        $statistics = $statisticsModel->getStatistics();
+        $statistics = $statisticsModel->getStatisticsHomepage();
         $roxPostHandler = new RoxPostHandler();
         $roxPostHandler->setClasses([
             'SignupController',

@@ -278,7 +278,7 @@ class GroupController extends AbstractController
 
         if ($success) {
             $admins = $group->getAdmins();
-            $this->sendAdminNotification($group, $member, $admins);
+            $this->groupModel->sendAdminNotification($group, $member, $admins);
             $this->addTranslatedFlash('notice', 'flash.invite.accepted');
         } else {
             $this->addTranslatedFlash('error', 'flash.invite.accepted.error');
@@ -301,7 +301,7 @@ class GroupController extends AbstractController
 
         if ($success) {
             $admins = $group->getAdmins();
-            $this->sendAdminNotification($group, $member, $admins);
+            $this->groupModel->sendAdminNotification($group, $member, $admins);
             $this->addTranslatedFlash('notice', 'flash.invite.declined');
         } else {
             $this->addTranslatedFlash('error', 'flash.invite.declined.error');
@@ -499,21 +499,6 @@ class GroupController extends AbstractController
         $pathInfo = str_replace('/groups/', '/group/', $request->getPathInfo());
 
         return new RedirectResponse($pathInfo);
-    }
-
-    /**
-     * @param Member[] $admins
-     */
-    private function sendAdminNotification(Group $group, Member $member, $admins)
-    {
-        foreach ($admins as $admin) {
-            $this->sendTemplateEmail('group@bewelcome.org', $admin, 'group/accept.invite', [
-                'subject' => 'group.invitation.accepted',
-                'group' => $group,
-                'invitee' => $member,
-                'admin' => $admin,
-            ]);
-        }
     }
 
     /**

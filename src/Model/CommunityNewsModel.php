@@ -58,10 +58,7 @@ class CommunityNewsModel
         /** @var NotificationRepository $repository */
         $repository = $this->getManager()->getRepository(CommunityNews::class);
 
-        try {
-            return $repository->getLatest();
-        } catch (NonUniqueResultException $e) {
-        }
+        return $repository->getLatest();
     }
 
     public function getCommentsPaginator(CommunityNews $communityNews, $page, $limit)

@@ -28,7 +28,7 @@ class SignupController extends AbstractController
      *
      * @return Response
      */
-    public function finishSignup(Request $request, LoggerInterface $logger)
+    public function finishSignup(Request $request)
     {
         $signupVars = $request->getSession()->get('SignupBWVars');
 

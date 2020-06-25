@@ -38,7 +38,6 @@ class UserProvider implements UserProviderInterface
             return $this->memberRepository->loadUserByUsername($username);
         } catch (NonUniqueResultException $e) {
             throw new UsernameNotFoundException(sprintf('Username "%s" isn\'t unique.', $username), 0, $e);
-        } catch (ORMException $e) {
         }
     }
 

@@ -786,16 +786,6 @@ WHERE `forums_posts`.`id` = $this->messageId
         MOD_log::get()->write("Editing Post=#".$this->messageId." Text Before=<i>".addslashes($rBefore->message)."</i> <br /> NotifyMe=[".$vars['NotifyMe']."]", "Forum");
     } // editPost
 
-    private function subtractTagCounter($threadid) {
-        // in fact now this function does a full update of counters for tags of this thread
-
-        $query=" UPDATE `forums_tags` SET `counter` = (select count(*) from `tags_threads` where `forums_tags`.`id`=`tags_threads`.`IdTag`)" ;
-        $s = $this->dao->query($query);
-        if (!$s) {
-            throw new PException('Failed for subtractTagCounter!');
-        }
-    } // end of subtractTagCounter
-
     /**
     *	editTopic write the data in of change thread in the database
     *	warning : dont start any transaction in it since there is already one
@@ -1172,28 +1162,6 @@ WHERE `id` = '%d' ",
                 $this->dao->query($update);
 		}
 
-		if (isset($vars["submit"]) and ($vars["submit"]=="delete Tag")) { // if an effective update was chosen for a forum trads
-		 	 $IdTag=(int)$vars["IdTag"] ;
-		 	 $IdThread=(int)$vars["IdThread"] ;
-       MOD_log::get()->write("Updating thread=#".$IdThread." removing tag =[".$IdTag."]","ForumModerator");
-       $this->dao->query("delete from tags_threads where IdThread=".$IdThread." and  IdTag=".$IdTag);
-				$this->dao->query("UPDATE `forums_tags` SET `counter` = ".
-			"(select count(*) from `tags_threads` where `IdTag`=".$IdTag.") where `id`=".$IdTag) ; // update counters
-		 }
-
-
-		 if (isset($vars["submit"]) and ($vars["submit"]=="Add Tag") and !(empty($vars["IdTag"]))) { // if an effective update was chosen for a forum trads
-		 	 $IdTag=(int)$vars["IdTag"] ;
-		 	 $IdThread=(int)$vars["IdThread"] ;
-       MOD_log::get()->write("Updating Thread=#".$IdThread." adding tag =[".$IdTag."]","ForumModerator");
-			 $sql="replace into tags_threads(IdTag,IdThread) values (".$IdTag.",".$IdThread.")" ;
-//			 echo $sql ;
-       $this->dao->query($sql);
-				$this->dao->query("UPDATE `forums_tags` SET `counter` = ".
-			"(select count(*) from `tags_threads` where `IdTag`=".$IdTag.") where `id`=".$IdTag) ; // update counters
-		 }
-
-
  		if (isset($vars["IdForumTrads"])) { // if an effective update was chosen for a forum trads
 		 			$this->DofTradUpdate($vars["IdForumTrads"],$vars["Sentence"],$vars["IdLanguage"]) ; // update the corresponding translations
 		 }
@@ -1202,82 +1170,6 @@ WHERE `id` = '%d' ",
 
      return PVars::getObj('env')->baseuri.$this->forums_uri.'modfulleditpost/'.$IdPost;
  		} // end of ModeratorEditPostProcess
-
-/*
-* ModeratorEditTagProcess deals with the tabs updated by moderators
-*/
-    public function ModeratorEditTagProcess() {
-        if (!($User  = $this->getLoggedInMember())) {
-            return false;
-        }
-
-        $vars =& PPostHandler::getVars();
-		 if ($vars["submit"]=="replace tag") { // if an effective update was chosen for a forum trads
-		 	$IdTag=$vars["IdTag"] ;
-		 	$IdTagToReplace=$vars["IdTagToReplace"] ;
-			// first save the list of the thread where the tag is going to be replacec for the logs
-        	$s=$this->dao->query("select IdThread from tags_threads where IdTag=".$IdTagToReplace) ;
-			$strlogs="" ;
-        	while ($row = $s->fetch(PDB::FETCH_OBJ)) {
-			  if ($strlogs=="") {
-			  	 $strlogs="(".$row->IdThread ;
-			  }
-			  else {
-			  	 $strlogs=$strlogs.",".$row->IdThread ;
-			  }
-			}
-		  	$strlogs.=")" ;
-        	MOD_log::get()->write("Replacing tag IdTag=#".$IdTagToReplace." with tag IdTag=#".$IdTag." for thread ".$strlogs,"ForumModerator");
-			$s=$this->dao->query("select * from tags_threads where IdTag=".$IdTagToReplace) ; // replace the tags
-			while ($row = $s->fetch(PDB::FETCH_OBJ)) {
-				$s2=$this->dao->query("select * from tags_threads where IdTag=".$IdTag." and IdThread=".$row->IdThread) ; // replace the tags
-				$row2 = $s2->fetch(PDB::FETCH_OBJ) ;
-				if (isset($row2->IdTad)) continue ; // Don't try to recreate an allready associated tag
-				$this->dao->query("update tags_threads set IdTag=".$IdTag." where IdTag=".$row->IdTag." and IdThread=".$row->IdThread) ; // replace the tags
-
-			}
-			$this->dao->query("delete from tags_threads where IdTag=".$IdTagToReplace) ; // delete the one who are still here after replace
-			$this->dao->query("delete from forums_tags where id=".$IdTagToReplace) ; // delete the tag
-			$this->dao->query("UPDATE `forums_tags` SET `counter` = ".
-			"(select count(*) from `tags_threads` where `forums_tags`.`id`=`tags_threads`.`IdTag`)") ; // update counters
-		 }
-		 elseif (isset($vars["IdForumTradsTag"]) and ($vars["submit"]=="update")) { // if an effective update was chosen for a forum trads
-		 	$this->DofTradUpdate($vars["IdForumTradsTag"],$vars["SentenceTag"],$vars["IdLanguage"]) ; // update the corresponding translations
-		 }
-		 elseif (isset($vars["IdForumTradsDescription"]) and ($vars["submit"]=="update")) { // if an effective update was chosen for a forum trads
-		 	$this->DofTradUpdate($vars["IdForumTradsDescription"],$vars["SentenceDescription"],$vars["IdLanguage"]) ; // update the corresponding translations
-		 }
-		 elseif ($vars["submit"]=="delete") { // if an effective update was chosen for a forum trads
-		 	if (isset($vars["IdForumTradsTag"])) {
-        	   MOD_log::get()->write("Deleting forum_trads=#".$vars["IdForumTradsTag"]." for tag IdTag=#".$vars["IdTag"].
-						 " Name=[".$vars["SentenceTag"]."]", "ForumModerator");
-        	   $this->dao->query("delete from forum_trads where id=".(int)$vars["IdForumTradsTag"]);
-			}
-		 	if (isset($vars["IdForumTradsDescription"])) {
-        	   MOD_log::get()->write("Deleting forum_trads=#".$vars["IdForumTradsDescription"]." for Tag IdTag=#".$vars["IdTag"].
-						 " Description=[".$vars["SentenceDescription"]."]", "ForumModerator");
-        	   $this->dao->query("delete from forum_trads where id=".(int)$vars["IdForumTradsDescription"]);
-			}
-		 }
-		 elseif (isset($vars["submit"]) and ($vars["submit"]=="add translation")) {
-		 	$SaveIdLanguage=$this->session->get("IdLanguage") ; // Nasty trick because ReplaceInFTrad will use $session["IdLanguage") as a global var
-			$this->session->set("IdLanguage", $vars["NewIdLanguage"]) ;
-        	MOD_log::get()->write("Adding a translation for Tag IdTag=#".$vars["IdTag"].
-					" [".$vars["SentenceTag"]."] <br />Desc [<i>".$vars["SentenceDescription"].
-					"</i>]<br /> in Lang :".$vars["NewIdLanguage"], "ForumModerator");
-		 	if (!empty($vars["SentenceTag"])) {
-			   $this->ReplaceInFTrad(addslashes($vars["SentenceTag"]), "forums_tags.IdName", $vars["IdTag"], $vars["IdName"])  ;
-			}
-		 	if (!empty($vars["SentenceDescription"])) {
-			   $this->ReplaceInFTrad(addslashes($vars["SentenceDescription"]), "forums_tags.IdDescription", $vars["IdTag"], $vars["IdDescription"]) ;
-			}
-			$this->session->set("IdLanguage", $SaveIdLanguage) ; // restore the NastyTrick
-		 }
-	     $IdTag=$vars['IdTag'] ;
-        PPostHandler::clearVars();
-
-        return PVars::getObj('env')->baseuri.$this->forums_uri.'modedittag/'.$IdTag;
-    } // end of ModeratorEditTagProcess
 
     public function delProcess() {
         if (!($User  = $this->getLoggedInMember())) {
@@ -1307,7 +1199,6 @@ WHERE `forums_posts`.`id` = '%d'
             $topicinfo = $s->fetch(PDB::FETCH_OBJ);
 
             if ($topicinfo->first_postid == $this->messageId) { // Delete the complete topic
-                $this->subtractTagCounter($topicinfo->threadid);
 
                 $query =
                     "

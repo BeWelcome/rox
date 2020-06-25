@@ -1,0 +1,231 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{ 'statistics.title' | trans }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('chartjs') }}
+    <script type="application/javascript">
+        $(document).ready(function () {
+            function createLineChart(data, key, period) {
+                let ctx = document.getElementById(key + "-" + period).getContext('2d');
+                let barChartData = {
+                    labels: data.labels,
+                    datasets: [{
+                        label: 'Data',
+                        backgroundColor: '#999',
+                        borderColor: '#888',
+                        pointRadius: .5,
+                        data: data.numbers
+                    }]
+                };
+                new Chart(ctx, {
+                    type: 'line',
+                    data: barChartData,
+                    options: {
+                        title: {
+                            display: false,
+                        },
+                        legend: {
+                            display: false
+                        }
+
+                    }
+                });
+            }
+
+            function createLineChartOld(data, duration) {
+                let stats = data.statistics;
+                Object.keys(stats).forEach(
+                    function (key) {
+                        let ctx = document.getElementById(key + "-" + duration).getContext('2d');
+                        let barChartData = {
+                            labels: data.labels,
+                            datasets: [{
+                                label: 'Data',
+                                backgroundColor: '#999',
+                                borderColor: '#888',
+                                pointRadius: .5,
+                                data: stats[key]
+                            }]
+                        };
+                        new Chart(ctx, {
+                            type: 'line',
+                            data: barChartData,
+                            options: {
+                                title: {
+                                    display: false,
+                                },
+                                legend: {
+                                    display: false
+                                }
+
+                            }
+                        });
+                    }
+                );
+            }
+
+            function createLanguageChart(data) {
+                let labels = [];
+                let counts = [];
+                let i = 0;
+                Object.keys(data).forEach(
+                    function (key) {
+                        labels[i] = key;
+                        counts[i] = data[key];
+                        i++;
+                    }
+                );
+                let ctx = document.getElementById('languages').getContext('2d');
+                let barChartData = {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Languages',
+                        backgroundColor: ["#BCE02E", "#E0642E", "#E0D62E", "#2E97E0", "#B02EE0", "#E02E75", "#5CE02E", "#E0B02E", "#FF3179", "#374AF9"],
+                        data: counts
+                    }]
+                };
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: barChartData,
+                    options: {
+                        responsive: true,
+                        title: {
+                            display: false,
+                        },
+                        legend: {
+                            display: false,
+                            position: 'bottom'
+                        }
+                    }
+                });
+            }
+
+            function createPieChart(data, canvas) {
+                let labels = [];
+                let counts = [];
+                let i = 0;
+                Object.keys(data).forEach(
+                    function (key) {
+                        labels[i] = key;
+                        counts[i] = data[key];
+                        i++;
+                    }
+                );
+                let ctx = document.getElementById(canvas).getContext('2d');
+                let pieChartData = {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Data',
+                        backgroundColor: ["#BCE02E", "#E0642E", "#E0D62E", "#2E97E0", "#B02EE0", "#E02E75", "#5CE02E", "#E0B02E", "#FF3179", "#374AF9",
+                            "#E105A7", "#58A29E", "#4ADB83", "#916184", "#0EB109"],
+                        data: counts
+                    }]
+                };
+                new Chart(ctx, {
+                    type: 'pie',
+                    data: pieChartData,
+                    options: {
+                        responsive: true,
+                        title: {
+                            display: false,
+                        },
+                        legend: {
+                            display: true,
+                            position: 'bottom'
+                        }
+                    }
+                });
+            }
+            {% for key,current in statistics %}
+                $.post("{{ url(current.route, {'period': 'weekly'}) }}",
+                    function (data) {
+                        createLineChart(data, '{{ key }}', 'weekly');
+                    }
+                );
+                $.post("{{ url(current.route, {'period': 'daily'}) }}",
+                    function (data) {
+                        createLineChart(data, '{{ key }}', 'daily');
+                    }
+                );
+            {% endfor %}
+
+            $.post("/stats/data/other",
+                function (data) {
+                    createLanguageChart(data.languages);
+                    createPieChart(data.preferred, 'preferred');
+                    createPieChart(data.logins, 'logins');
+                    createPieChart(data.countries, 'countries');
+                }
+            );
+        });
+    </script>
+{% endblock javascripts %}
+
+{% block content %}
+    <h1>{{ 'bw statistics'|trans }}</h1>
+    <p>{{ 'statshead' | trans }}</p>
+    {% for key,current in statistics %}
+        <div class="row mb-1">
+            <div class="col-12 mt-3">
+                <h3>{{ current.headline|trans }}</h3>
+            </div>
+        </div>
+        <div class="row mb-1">
+            <div class="col-12 col-md-6">
+                <div class="card">
+                    <div class="card-header">{{ 'statsheadcol1'|trans }}</div>
+                    <div class="card-body">
+                        <canvas id="{{ key }}-weekly"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6">
+                <div class="card">
+                    <div class="card-header">{{ 'statsheadcol2'|trans }}</div>
+                    <div class="card-body">
+                        <canvas id="{{ key }}-daily"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+    <div class="row mb-1">
+        <div class="col-12 col-md-6">
+            <div class="card">
+                <div class="card-header">{{ 'statslastlogin'|trans }}</div>
+                <div class="card-body">
+                    <canvas id="logins" width="100" height="130"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-md-6">
+            <div class="card">
+                <div class="card-header">{{ 'statsmembercountry'|trans }}</h4></div>
+                <div class="card-body">
+                    <canvas id="countries" width="100" height="130"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mb-1">
+        <div class="col-12 col-md-6">
+            <div class="card">
+                <div class="card-header">{{ 'statslanguages'|trans }}</div>
+                <div class="card-body">
+                    <canvas id="languages" width="100" height="130"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-md-6">
+            <div class="card">
+                <div class="card-header">{{ 'statspreferredlanguages'|trans }}</h4></div>
+                <div class="card-body">
+                    <canvas id="preferred" width="100" height="130"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

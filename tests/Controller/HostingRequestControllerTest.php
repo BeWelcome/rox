@@ -12,6 +12,7 @@ use DateInterval;
 use DateTime;
 use Doctrine\DBAL\Exception\InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
+use ReflectionClass;
 use ReflectionException;
 
 class HostingRequestControllerTest extends TestCase
@@ -46,7 +47,7 @@ class HostingRequestControllerTest extends TestCase
      */
     private function invokeGetFinalRequest(array $parameters)
     {
-        $reflection = new \ReflectionClass(HostingRequestController::class);
+        $reflection = new ReflectionClass(HostingRequestController::class);
         $method = $reflection->getMethod('getFinalRequest');
         $method->setAccessible(true);
 

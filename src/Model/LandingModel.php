@@ -183,14 +183,10 @@ class LandingModel
      */
     public function updateMemberAccommodation(Member $member, $accommodation)
     {
-        try {
-            $member->setAccommodation($accommodation);
-            $em = $this->getManager();
-            $em->persist($member);
-            $em->flush($member);
-        } catch (OptimisticLockException $e) {
-        } catch (ORMException $e) {
-        }
+        $member->setAccommodation($accommodation);
+        $em = $this->getManager();
+        $em->persist($member);
+        $em->flush($member);
 
         return $member;
     }

@@ -93,13 +93,15 @@ class BaseMessageController extends AbstractController
             $data = $form->getData();
             $messageIds = $data->getMessages();
 
-            if ($form->has('purge') && $form->get('purge')->isClicked()) {
+            $clickedButton = $form->getClickedButton();
+
+            if ('purge' === $clickedButton) {
                 $this->messageModel->markPurged($member, $messageIds);
                 $this->addTranslatedFlash('notice', 'flash.purged');
 
                 return $this->redirect($request->getRequestUri());
             }
-            if ($form->has('delete') && $form->get('delete')->isClicked()) {
+            if ('delete' == $clickedButton) {
                 if ('deleted' === $folder) {
                     $this->messageModel->unmarkDeleted($member, $messageIds);
                     $this->addTranslatedFlash('notice', 'flash.undeleted');
@@ -111,7 +113,7 @@ class BaseMessageController extends AbstractController
 
                 return $this->redirect($request->getRequestUri());
             }
-            if ($form->get('spam')->isClicked()) {
+            if ('spam' === $clickedButton) {
                 if ('spam' === $folder) {
                     $this->messageModel->unmarkAsSpam($messageIds);
                     $this->addTranslatedFlash('notice', 'flash.marked.nospam');

@@ -50,6 +50,7 @@ use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
 use ZipArchive;
+use function in_array;
 
 class MemberModel
 {
@@ -71,11 +72,19 @@ class MemberModel
     /** @var string */
     private $projectDir;
 
-    public function __construct(UrlGeneratorInterface $urlGenerator, Environment $environment, EntrypointLookupInterface $entrypointLookup)
-    {
+    /** @var ContainerBagInterface */
+    private $params;
+
+    public function __construct(
+        UrlGeneratorInterface $urlGenerator,
+        Environment $environment,
+        EntrypointLookupInterface $entrypointLookup,
+        ContainerBagInterface $params
+    ){
         $this->urlGenerator = $urlGenerator;
         $this->environment = $environment;
         $this->entrypointLookup = $entrypointLookup;
+        $this->params = $params;
     }
 
     /**
@@ -109,7 +118,7 @@ class MemberModel
      *
      * @return string
      */
-    public function collectPersonalData(ContainerBagInterface $params, Member $member)
+    public function collectPersonalData(Member $member)
     {
         // Create temp directory
         $i = 0;
@@ -128,7 +137,7 @@ class MemberModel
         // Ensure directory name ends with / and store it in private variable $tempDir as it is used all over the place
         // and clutters function signatures
         $this->tempDir = $dirname . '/';
-        $this->projectDir = $params->get('kernel.project_dir');
+        $this->projectDir = $this->params->get('kernel.project_dir');
 
         $this->preparePersonalData($member);
 
@@ -214,7 +223,8 @@ class MemberModel
             // create gallery sub directory
             $galleryDir = $this->tempDir . 'gallery/';
             @mkdir($galleryDir);
-            if ($directoryHandle = opendir($galleryPath)) {
+            $directoryHandle = opendir($galleryPath);
+            if ($directoryHandle) {
                 while (false !== ($file = readdir($directoryHandle))) {
                     if (!is_dir($file)) {
                         $ext = $this->imageExtension($galleryPath . $file);
@@ -434,28 +444,7 @@ class MemberModel
         $threadsContributed = [];
         /** @var ForumPost $post */
         foreach ($posts as $post) {
-            try {
-                // Some posts do not have an valid thread id. We check by trying to access the thread's title
-                $thread = $post->getThread();
-                if ($thread) {
-                    $thread->getTitle();
-                }
-            } catch (Exception $e) {
-                $thread = null;
-            }
-            if (null === $thread) {
-                $group = null;
-            } else {
-                try {
-                    // As database column for group has 0 instead of null we need to check if group is valid
-                    $group = $thread->getGroup();
-                    if ($group) {
-                        $group->getName();
-                    }
-                } catch (Exception $e) {
-                    $group = null;
-                }
-            }
+            list($thread, $group) = $this->getThreadAndGroup($post);
             $this->writePersonalDataFileSubdirectory(
                 [
                     'thread' => $thread,
@@ -474,9 +463,7 @@ class MemberModel
             $thread = $post->getThread();
             $threadId = (null === $thread) ? 0 : $thread->getId();
             if (!isset($threadsPerYear[$year][$threadId])) {
-                if (!\in_array($threadId, $threadsContributed, true)) {
-                    $threadsContributed[] = $threadId;
-                }
+                $threadsContributed[$threadId] = $threadId;
                 $threadsPerYear[$year][$threadId] = [
                     'thread' => $thread,
                     'posts' => [],
@@ -488,20 +475,18 @@ class MemberModel
             $postsPerYear[$year] = $postsPerYear[$year] + 1;
             ++$i;
         }
-        if (!empty($threadsPerYear)) {
-            foreach (array_keys($threadsPerYear) as $year) {
-                $this->writePersonalDataFileSubDirectory(
-                    [
-                        'year' => $year,
-                        'post_count' => $postsPerYear[$year],
-                        'threads' => $threadsPerYear[$year],
-                        'thread_count' => \count(array_keys($threadsPerYear[$year])),
-                    ],
-                    'posts_year',
-                    'posts',
-                    'posts-' . $year
-                );
-            }
+        foreach (array_keys($threadsPerYear) as $year) {
+            $this->writePersonalDataFileSubDirectory(
+                [
+                    'year' => $year,
+                    'post_count' => $postsPerYear[$year],
+                    'threads' => $threadsPerYear[$year],
+                    'thread_count' => \count(array_keys($threadsPerYear[$year])),
+                ],
+                'posts_year',
+                'posts',
+                'posts-' . $year
+            );
         }
 
         return $this->writePersonalDataFile(
@@ -762,24 +747,6 @@ class MemberModel
         return $this->writePersonalDataFile(['privileges' => $privilegesCombined], 'privileges');
     }
 
-    /**
-     * @param PollContribution|PollRecordOfChoice $related
-     * @param $handle
-     */
-    private function writePollInformation($related, $handle)
-    {
-        $poll = $related->getPoll();
-        // Check if a title exists and output it
-        $title = $poll->getTitles()->first();
-        fwrite($handle, 'Poll voted: ');
-        if ($title) {
-            fwrite($handle, $title->getSentence());
-        } else {
-            fwrite($handle, 'Unknown poll');
-        }
-        fwrite($handle, ' (' . $poll->getId() . ')' . PHP_EOL);
-    }
-
     private function preparePolls(Member $member): string
     {
         $pollsDir = $this->tempDir . 'polls/';
@@ -823,7 +790,6 @@ class MemberModel
         $rawRelations = $relationsRepository->findRelationsFor($member);
         if (!empty($rawRelations)) {
             // build list of relations from raw data (list contains relations from both sides)
-            $memberId = $member->getId();
             /** @var FamilyAndFriend $relation */
             foreach ($rawRelations as $relation) {
                 $author = $relation->getOwner();
@@ -881,5 +847,26 @@ class MemberModel
         $filesystem->copy($this->projectDir . '/public/images/icons/anytime.png', $this->tempDir . 'images/anytime.png');
         $filesystem->copy($this->projectDir . '/public/images/icons/dependonrequest.png', $this->tempDir . 'images/dependonrequest.png');
         $filesystem->copy($this->projectDir . '/public/images/icons/neverask.png', $this->tempDir . 'images/neverask.png');
+    }
+
+    private function getThreadAndGroup(ForumPost $post)
+    {
+        $group = null;
+        try {
+            // Some posts do not have an valid thread id. We check by trying to access the thread's title
+            $thread = $post->getThread();
+            if ($thread) {
+                $thread->getTitle();
+            }
+        } catch (Exception $e) {
+            $thread = null;
+        }
+        if (null !== $thread) {
+            $group = $thread->getGroup();
+            if ($group) {
+                $group->getName();
+            }
+        }
+        return [$thread, $group];
     }
 }

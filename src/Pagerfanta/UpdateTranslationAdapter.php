@@ -4,16 +4,12 @@ namespace App\Pagerfanta;
 
 use Doctrine\DBAL\Driver\Connection;
 use Doctrine\DBAL\ParameterType;
-use Doctrine\DBAL\Statement;
 use Pagerfanta\Adapter\AdapterInterface;
 use PDO;
 use Traversable;
 
 class UpdateTranslationAdapter implements AdapterInterface
 {
-    /** @var Statement */
-    private $statement;
-
     /** @var string */
     private $locale;
 

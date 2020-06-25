@@ -182,6 +182,9 @@ class MemberThreadSubscription
      * Get notifications enabled.
      *
      * @return bool
+     *
+     * This triggered by the column name (NotificationsEnabled)
+     * @SuppressWarnings(PHPMD.BooleanGetMethodName)
      */
     public function getNotificationsEnabled()
     {

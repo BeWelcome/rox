@@ -9,6 +9,7 @@
 
 namespace App\Controller;
 
+use App\Model\StatisticsModel;
 use App\Utilities\SessionSingleton;
 use EnvironmentExplorer;
 use PException;
@@ -20,12 +21,110 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class StatisticsController extends AbstractController
 {
-    /** @var UrlGeneratorInterface */
+    /** @var StatisticsModel */
+    private $statisticsModel;
+
+    /**
+     * @var UrlGeneratorInterface
+     */
     private $urlGenerator;
 
-    public function __construct(UrlGeneratorInterface $urlGenerator)
+    public function __construct(StatisticsModel $statisticsModel, UrlGeneratorInterface $urlGenerator)
     {
+        $this->statisticsModel = $statisticsModel;
         $this->urlGenerator = $urlGenerator;
+    }
+
+    /**
+     * @Route("/stats/members/{period}", name="stats_members",
+     *     requirements = {"period" = "weekly|daily"})
+     *
+     * @param string $period timeframe for data
+     *
+     * @return JsonResponse
+     */
+    public function membersData(string $period)
+    {
+        $membersData = $this->statisticsModel->getMembersData($period);
+
+        $response = new JsonResponse();
+        $response->setData($membersData);
+
+        return $response;
+    }
+
+    /**
+     * @Route("/stats/messages/sent/{period}", name="stats_messages_sent",
+     *     requirements = {"period" = "weekly|daily"})
+     *
+     * @param string $period timeframe for data
+     *
+     * @return JsonResponse
+     */
+    public function sentMessagesData(string $period)
+    {
+        $membersData = $this->statisticsModel->getSentMessagesData($period);
+
+        $response = new JsonResponse();
+        $response->setData($membersData);
+
+        return $response;
+    }
+
+
+    /**
+     * @Route("/stats/messages/read/{period}", name="stats_messages_read",
+     *     requirements = {"period" = "weekly|daily"})
+     *
+     * @param string $period timeframe for data
+     *
+     * @return JsonResponse
+     */
+    public function readMessagesData(string $period)
+    {
+        $membersData = $this->statisticsModel->getReadMessagesData($period);
+
+        $response = new JsonResponse();
+        $response->setData($membersData);
+
+        return $response;
+    }
+
+    /**
+     * @Route("/stats/requests/sent/{period}", name="stats_requests_sent",
+     *     requirements = {"period" = "weekly|daily"})
+     *
+     * @param string $period timeframe for data
+     *
+     * @return JsonResponse
+     */
+    public function sentRequestsData(string $period)
+    {
+        $membersData = $this->statisticsModel->getSentRequestsData($period);
+
+        $response = new JsonResponse();
+        $response->setData($membersData);
+
+        return $response;
+    }
+
+
+    /**
+     * @Route("/stats/requests/accepted/{period}", name="stats_requests_accepted",
+     *     requirements = {"period" = "weekly|daily"})
+     *
+     * @param string $period timeframe for data
+     *
+     * @return JsonResponse
+     */
+    public function acceptedRequestsData(string $period)
+    {
+        $membersData = $this->statisticsModel->getAcceptedRequestsData($period);
+
+        $response = new JsonResponse();
+        $response->setData($membersData);
+
+        return $response;
     }
 
     /**
@@ -37,19 +136,10 @@ class StatisticsController extends AbstractController
      *
      * @return JsonResponse
      */
-    public function membersDataAction($type)
+    public function data($type)
     {
         $data = [];
         switch ($type) {
-            case 'alltime':
-                $data = $this->getDataAllTime();
-                break;
-            case 'requests':
-                $data = $this->getRequestsAllTime();
-                break;
-            case 'last2month':
-                $data = $this->getDataLast2Months();
-                break;
             case 'other':
                 $data = $this->otherData();
                 break;
@@ -59,6 +149,30 @@ class StatisticsController extends AbstractController
         $response->setData($data);
 
         return $response;
+    }
+
+    private function otherData()
+    {
+        $this->kickstartSession();
+        $statsModel = new StatsModel();
+        try {
+            $languages = $statsModel->getLanguages();
+            $preferredLanguages = $statsModel->getPreferredLanguages();
+            $logins = $statsModel->getLastLoginRankGrouped();
+            $countries = $statsModel->getMembersPerCountry();
+        } catch (PException $e) {
+            $logins = [];
+            $countries = [];
+            $languages = [];
+            $preferredLanguages = [];
+        }
+
+        return [
+            'languages' => $languages,
+            'preferred' => $preferredLanguages,
+            'countries' => $countries,
+            'logins' => $logins,
+        ];
     }
 
     /**
@@ -82,158 +196,5 @@ class StatisticsController extends AbstractController
             $this->getParameter('database_user'),
             $this->getParameter('database_password')
         );
-    }
-
-    private function prepareStatisticsData($statistics, $bundleRequests = false)
-    {
-        // get all values from stats table
-        $i = 0;
-        $labels = [];
-        $members = [];
-        $newMembers = [];
-        $newMembersPercent = [];
-        $membersLoggedIn = [];
-        $membersLoggedInPercent = [];
-        $membersWithPositiveComments = [];
-        $messageSent = [];
-        $messageRead = [];
-        if ($bundleRequests) {
-            $requestsSent = [];
-            $requestsAccepted = [];
-        }
-        foreach ($statistics as $val) {
-            $members[$i] = $val->NbActiveMembers;
-            if (isset($val->week)) {
-                $yearWeek = strtotime(substr($val->week, 0, 4) . '-W' . substr($val->week, 4, 2) . '-1');
-                $labels[] = date('Y-m-d', $yearWeek);
-            } else {
-                $labels[] = date('Y-m-d', strtotime('-' . (60 - $i) . 'days'));
-            }
-            if (0 === $i) {
-                $newMembers[$i] = 0;
-            } else {
-                $newMembers[$i] = $members[$i] - $members[$i - 1];
-            }
-            if (0 === $i) {
-                $newMembersPercent[$i] = 0;
-            } elseif (0 === $members[$i]) {
-                $newMembersPercent[$i] = 0;
-            } else {
-                $newMembersPercent[$i] = $newMembers[$i] / $members[$i] * 100;
-            }
-            $messageSent[$i] = $val->NbMessageSent;
-            $messageRead[$i] = $val->NbMessageRead;
-            if ($bundleRequests) {
-                $requestsSent[$i] = $val->NbRequestsSent;
-                $requestsAccepted[$i] = $val->NbRequestsAccepted;
-            }
-            $membersWithPositiveComments[$i] = $val->NbMemberWithOneTrust;
-            $membersLoggedIn[$i] = $val->NbMemberWhoLoggedToday;
-            if (0 === $members[$i]) {
-                $membersLoggedInPercent[$i] = 0;
-            } else {
-                $membersLoggedInPercent[$i] = $membersLoggedIn[$i] / $members[$i] * 100;
-            }
-            ++$i;
-        }
-
-        $statistics = [
-            'members' => $members,
-            'newMembers' => $newMembers,
-            'newMembersPercent' => $newMembersPercent,
-            'membersLoggedIn' => $membersLoggedIn,
-            'newMembersLoggedInPercent' => $membersLoggedInPercent,
-            'membersWithPositiveComments' => $membersWithPositiveComments,
-            'messageSent' => $messageSent,
-            'messageRead' => $messageRead,
-        ];
-        if ($bundleRequests) {
-            $statistics['requestsSent'] = $requestsSent;
-            $statistics['requestsAccepted'] = $requestsAccepted;
-        }
-
-        return [
-            'labels' => $labels,
-            'statistics' => $statistics,
-        ];
-    }
-
-    private function prepareRequestsData($statistics)
-    {
-        // get all values from stats table
-        $i = 0;
-        $labels = [];
-        $requestsSent = [];
-        $requestsAccepted = [];
-        foreach ($statistics as $val) {
-            if (isset($val->week)) {
-                $yearWeek = strtotime(substr($val->week, 0, 4) . '-W' . substr($val->week, 4, 2) . '-1');
-                $labels[] = date('Y-m-d', $yearWeek);
-            } else {
-                $labels[] = date('Y-m-d', strtotime('-' . (60 - $i) . 'days'));
-            }
-            $requestsSent[$i] = $val->NbRequestsSent;
-            $requestsAccepted[$i] = $val->NbRequestsAccepted;
-            ++$i;
-        }
-
-        return [
-            'labels' => $labels,
-            'statistics' => [
-                'requestsSent' => $requestsSent,
-                'requestsAccepted' => $requestsAccepted,
-            ],
-        ];
-    }
-
-    private function getDataAllTime()
-    {
-        $this->kickstartSession();
-        $statsModel = new StatsModel();
-        $statsAll = $statsModel->getStatisticsAll();
-
-        return $this->prepareStatisticsData($statsAll);
-    }
-
-    private function getRequestsAllTime()
-    {
-        $this->kickstartSession();
-        $statsModel = new StatsModel();
-        $requestsAll = $statsModel->getRequestsAll();
-
-        return $this->prepareRequestsData($requestsAll);
-    }
-
-    private function getDataLast2Months()
-    {
-        $this->kickstartSession();
-        $statsModel = new StatsModel();
-        $statsLast2Months = $statsModel->getStatsLog2Months();
-
-        return $this->prepareStatisticsData($statsLast2Months, true);
-    }
-
-    private function otherData()
-    {
-        $this->kickstartSession();
-        $statsModel = new StatsModel();
-        $logins = [];
-        $countries = [];
-        $languages = [];
-        $preferredLanguages = [];
-        try {
-            $languages = $statsModel->getLanguages();
-            $preferredLanguages = $statsModel->getPreferredLanguages();
-            $logins = $statsModel->getLastLoginRankGrouped();
-            $countries = $statsModel->getMembersPerCountry();
-        } catch (PException $e) {
-        }
-
-        return [
-            'languages' => $languages,
-            'preferred' => $preferredLanguages,
-            'countries' => $countries,
-            'logins' => $logins,
-        ];
     }
 }

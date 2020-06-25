@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Stats.
  *
  * @ORM\Table(name="stats", indexes={@ORM\Index(name="created", columns={"created"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\StatisticsRepository")
  *
  * @SuppressWarnings(PHPMD)
  * Auto generated class do not check mess

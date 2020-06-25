@@ -55,7 +55,7 @@ class FullPagePager extends RoxWidget
     public function getHtml()
     {
         $pager = $this->pager;
-        $return = '<div class="col-12 col-md-6 justify-content-end"><small class="text-muted">' . $this->getWords()->get('PagerShowing', $pager->getActiveStart() + 1,
+        $return = '<div class="col-12 justify-content-end"><small class="text-muted">' . $this->getWords()->get('PagerShowing', $pager->getActiveStart() + 1,
             $pager->getActiveStart() + $pager->getActiveLength(), $pager->getTotalCount()) . '</small><ul class="pagination">';
         if ($this->active_page > 1)
         {

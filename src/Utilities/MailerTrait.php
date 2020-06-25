@@ -3,6 +3,7 @@
 namespace App\Utilities;
 
 use App\Entity\Member;
+use InvalidArgumentException;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\Mailer;
@@ -14,11 +15,14 @@ use Symfony\Component\Mime\Address;
  */
 trait MailerTrait
 {
+    use BewelcomeAddressTrait;
+
     /** @var Mailer */
     private $mailer;
 
     /**
      * @required
+     * @param MailerInterface $mailer
      */
     public function setMailer(MailerInterface $mailer)
     {
@@ -52,7 +56,7 @@ trait MailerTrait
             ], ...$params);
             $receiver = new Address($receiver->getEmail(), $receiver->getUsername());
         } elseif (!$receiver instanceof Address) {
-            throw new \InvalidArgumentException(sprintf('$receiver must be an instance of %s or %s.', Member::class, Address::class));
+            throw new InvalidArgumentException(sprintf('$receiver must be an instance of %s or %s.', Member::class, Address::class));
         }
 
         $parameters = array_merge([
@@ -79,7 +83,7 @@ trait MailerTrait
         } elseif ($sender instanceof Address) {
             $email->from($sender);
         } else {
-            $email->from(new Address('message@bewelcome.org', $sender->getUsername() . ' - BeWelcome'));
+            $email->from($this->beWelcomeAddress($sender));
         }
         try {
             $this->mailer->send($email);

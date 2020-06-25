@@ -345,8 +345,6 @@ ORDER BY count(msg.id) DESC')->fetchAll();
      * @throws Exception
      *
      * @return Response
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function showMessagesByMember(Request $request)
     {

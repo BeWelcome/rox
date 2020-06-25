@@ -5,6 +5,7 @@ namespace App\Model;
 use App\Doctrine\MemberStatusType;
 use App\Entity\HostingRequest;
 use App\Entity\Statistic;
+use App\Repository\StatisticsRepository;
 use App\Utilities\ManagerTrait;
 use DatePeriod;
 use DateTime;
@@ -20,7 +21,7 @@ class StatisticsModel
 {
     use ManagerTrait;
 
-    public function getStatistics()
+    public function getStatisticsHomepage()
     {
         $connection = $this->getManager()->getConnection();
 
@@ -325,5 +326,105 @@ class StatisticsModel
         )
             ->fetch(PDO::FETCH_ASSOC);
         $statistics->setRequestsAccepted($result['cnt']);
+    }
+
+    public function getMembersData($period): array
+    {
+        /** @var StatisticsRepository $statisticsRepository */
+        $statisticsRepository = $this->getManager()->getRepository(Statistic::class);
+        if ('weekly' === $period )
+        {
+            return $this->prepareWeeklyData($statisticsRepository->getMembersDataWeekly());
+        }
+
+        return $this->prepareDailyData($statisticsRepository->getMembersDataDaily());
+    }
+
+    public function getSentMessagesData($period): array
+    {
+        /** @var StatisticsRepository $statisticsRepository */
+        $statisticsRepository = $this->getManager()->getRepository(Statistic::class);
+
+        if ('weekly' === $period )
+        {
+            return $this->prepareWeeklyData($statisticsRepository->getSentMessagesDataWeekly());
+        }
+
+        return $this->prepareDailyData($statisticsRepository->getSentMessagesDataDaily());
+    }
+
+    public function getReadMessagesData($period): array
+    {
+        /** @var StatisticsRepository $statisticsRepository */
+        $statisticsRepository = $this->getManager()->getRepository(Statistic::class);
+
+        if ('weekly' === $period )
+        {
+            return $this->prepareWeeklyData($statisticsRepository->getReadMessagesDataWeekly());
+        }
+
+        return $this->prepareDailyData($statisticsRepository->getReadMessagesDataDaily());
+    }
+
+    public function getSentRequestsData($period): array
+    {
+        /** @var StatisticsRepository $statisticsRepository */
+        $statisticsRepository = $this->getManager()->getRepository(Statistic::class);
+
+        if ('weekly' === $period )
+        {
+            return $this->prepareWeeklyData($statisticsRepository->getSentRequestsDataWeekly());
+        }
+
+        return $this->prepareDailyData($statisticsRepository->getSentRequestsDataDaily());
+    }
+
+    public function getAcceptedRequestsData($period): array
+    {
+        /** @var StatisticsRepository $statisticsRepository */
+        $statisticsRepository = $this->getManager()->getRepository(Statistic::class);
+
+        if ('weekly' === $period )
+        {
+            return $this->prepareWeeklyData($statisticsRepository->getAcceptedRequestsDataWeekly());
+        }
+
+        return $this->prepareDailyData($statisticsRepository->getAcceptedRequestsDataDaily());
+    }
+
+    private function prepareDailyData($data): array
+    {
+        $preparedData = [
+            'labels' => [],
+            'numbers' => [],
+        ];
+
+        foreach($data as $datum)
+        {
+            $preparedData['labels'][] = $datum['day']->format('Y-m-d');
+            $preparedData['numbers'][] = $datum['count'];
+        }
+
+        return $preparedData;
+    }
+
+    private function prepareWeeklyData($data): array
+    {
+        $preparedData = [
+            'labels' => [],
+            'numbers' => [],
+        ];
+
+        foreach($data as $datum)
+        {
+            // turn provided yearweek into a date (first day of the week)
+            $preparedData['labels'][] = date('Y-m-d',
+                strtotime(substr($datum['week'], 0, 4)
+                    . '-W' . substr($datum['week'], 4, 2) . '-1')
+            );
+            $preparedData['numbers'][] = $datum['count'];
+        }
+
+        return $preparedData;
     }
 }

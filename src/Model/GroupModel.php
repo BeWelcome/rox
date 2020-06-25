@@ -99,7 +99,7 @@ class GroupModel
             'decline_start' => $declineTag,
             'decline_end' => '</a>',
         ];
-        $adminEmail = $this->bewelcomeAddress($admin, 'group@bewelcome.org');
+        $adminEmail = $this->beWelcomeAddress($admin, 'group@bewelcome.org');
         // $this->createTemplateMessage($admin, $member, 'group/invitation', $params);
         $this->sendTemplateEmail($adminEmail, $member, 'group/invitation', $params);
 
@@ -121,7 +121,6 @@ class GroupModel
      */
     public function acceptInviteToGroup(Group $group, Member $member)
     {
-        $success = false;
         try {
             $membership = $this->getMembership($group, $member);
 
@@ -132,6 +131,7 @@ class GroupModel
                 $success = true;
             }
         } catch (Exception $e) {
+            $success = false;
         }
 
         return $success;
@@ -142,7 +142,6 @@ class GroupModel
      */
     public function declineInviteToGroup(Group $group, Member $member)
     {
-        $success = false;
         try {
             $membership = $this->getMembership($group, $member);
 
@@ -152,6 +151,7 @@ class GroupModel
                 $success = true;
             }
         } catch (Exception $e) {
+            $success = false;
         }
 
         return $success;
@@ -162,8 +162,6 @@ class GroupModel
      */
     public function withdrawInviteMemberToGroup(Group $group, Member $member)
     {
-        $success = false;
-
         try {
             $membership = $this->getMembership($group, $member);
 
@@ -173,6 +171,7 @@ class GroupModel
                 $success = true;
             }
         } catch (Exception $e) {
+            $success = false;
         }
 
         return $success;
@@ -180,8 +179,6 @@ class GroupModel
 
     public function join(Group $group, Member $member, $data, $locale)
     {
-        $success = false;
-
         try {
             $reason = $data['reason'] ?? '';
             $notifications = $data['notifications'];
@@ -232,7 +229,9 @@ class GroupModel
             $em->flush();
             $success = true;
         } catch (OptimisticLockException $e) {
+            $success = false;
         } catch (ORMException $e) {
+            $success = false;
         }
 
         return $success;
@@ -408,6 +407,22 @@ class GroupModel
         $membership = $membershipRepository->findOneBy(['group' => $group, 'member' => $member]);
 
         return $status === $membership->getStatus();
+    }
+
+
+    /**
+     * @param Member[] $admins
+     */
+    public function sendAdminNotification(Group $group, Member $member, $admins)
+    {
+        foreach ($admins as $admin) {
+            $this->sendTemplateEmail('group@bewelcome.org', $admin, 'group/accept.invite', [
+                'subject' => 'group.invitation.accepted',
+                'group' => $group,
+                'invitee' => $member,
+                'admin' => $admin,
+            ]);
+        }
     }
 
     /*    private function informGroupAdmins(Group $group, $member)

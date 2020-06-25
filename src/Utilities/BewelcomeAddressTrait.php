@@ -7,7 +7,7 @@ use Symfony\Component\Mime\Address;
 
 trait BewelcomeAddressTrait
 {
-    public function bewelcomeAddress(Member $member, $email = null): Address
+    public function beWelcomeAddress(Member $member, $email = null): Address
     {
         if (null === $email) {
             $email = $member->getEmail();

@@ -33,7 +33,6 @@ class FaqModel
 
     public function getFaqsForCategory(FaqCategory $faqCategory)
     {
-        $results = [];
         try {
             $connection = $this->getManager()->getConnection();
             $stmt = $connection->prepare(
@@ -56,6 +55,7 @@ ORDER BY
             $stmt->execute();
             $results = $stmt->fetchAll();
         } catch (DBALException $e) {
+            $results = [];
         }
 
         return $results;

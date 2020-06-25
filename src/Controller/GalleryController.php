@@ -8,6 +8,7 @@ use App\Entity\Member;
 use App\Entity\UploadedImage;
 use App\Form\CustomDataClass\GalleryImageEditRequest;
 use App\Form\GalleryEditImageFormType;
+use App\Form\GalleryUploadForm;
 use App\Form\Select2Type;
 use App\Logger\Logger;
 use App\Utilities\TranslatedFlashTrait;
@@ -82,7 +83,7 @@ class GalleryController extends AbstractController
      */
     public function handleImageUploadToGallery(Request $request, ValidatorInterface $validator)
     {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_REMEMBERED');
+        $this->denyAccessUnlessGranted("IS_AUTHENTICATED_REMEMBERED");
 
         /** @var Member $member */
         $member = $this->getUser();
@@ -199,25 +200,7 @@ class GalleryController extends AbstractController
                 $albumTitles[$gallery->getTitle()] = $gallery->getId();
             }
         }
-
-        $uploadImageForm = $this->createFormBuilder()
-            ->add('albums', Select2Type::class, [
-                'label' => 'gallery.upload_to_album',
-                'choices' => $albumTitles,
-                'choice_translation_domain' => false,
-                'searchbox' => false,
-            ])
-            ->add('files', FileType::class, [
-                'label' => 'files',
-                // 'multiple' => true,
-            ])
-            ->add('upload', SubmitType::class, [
-                'label' => 'upload',
-            ])
-            ->add('abort', SubmitType::class, [
-                'label' => 'abort',
-            ])
-            ->getForm();
+        $uploadImageForm = $this->createForm(GalleryUploadForm::class, null, [ 'albums' => $albumTitles]);
         $uploadImageForm->handleRequest($request);
         if ($uploadImageForm->isSubmitted() && $uploadImageForm->isValid()) {
             // if this is called someone tries to hack the system as the Javascript on the upload page

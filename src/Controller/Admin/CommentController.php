@@ -203,7 +203,7 @@ class CommentController extends AbstractController
      * @return Response
      * @ParamConverter("comment", class="App\Entity\Comment", options={"mapping": {"commentId": "id"}})
      */
-    public function adminCommentAction(Request $request, Comment $comment)
+    public function adminComment(Request $request, Comment $comment)
     {
         if (
             !$this->isGranted(Member::ROLE_ADMIN_COMMENTS)
@@ -224,30 +224,14 @@ class CommentController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $clickedButton = $form->getClickedButton()->getName();
-            switch ($clickedButton) {
-                case 'hideComment':
-                    $comment->setDisplayinpublic(false);
-                    $this->addTranslatedFlash('notice', 'flash.admin.comment.hidden');
-                    break;
-                case 'showComment':
-                    $comment->setDisplayinpublic(true);
-                    $this->addTranslatedFlash('notice', 'flash.admin.comment.visible');
-                    break;
-                case 'allowEditing':
-                    $comment->setAllowedit(true);
-                    $this->addTranslatedFlash('notice', 'flash.admin.comment.editable');
-                    break;
-                case 'disableEditing':
-                    $comment->setAllowedit(false);
-                    $this->addTranslatedFlash('notice', 'flash.admin.comment.locked');
-                    break;
-                case 'deleteComment':
-                    $this->addTranslatedFlash('notice', 'flash.admin.comment.deleted');
-                    $em->remove($comment);
-                    $em->flush();
+            if ('deleteComment' === $clickedButton) {
+                $this->addTranslatedFlash('notice', 'flash.admin.comment.deleted');
+                $em->remove($comment);
+                $em->flush();
 
-                    return $this->redirectToRoute('admin_comment_overview');
+                return $this->redirectToRoute('admin_comment_overview');
             }
+            $this->handleClickedButton($clickedButton, $comment);
             $em->persist($comment);
             $em->flush();
 
@@ -469,8 +453,25 @@ class CommentController extends AbstractController
         ];
     }
 
-    private function addTranslatedFlash($type, $flashId)
+    private function handleClickedButton($clickedButton, &$comment)
     {
-        $this->addFlash($type, $this->translator->trans($flashId));
+        switch ($clickedButton) {
+            case 'hideComment':
+                $comment->setDisplayinpublic(false);
+                $this->addTranslatedFlash('notice', 'flash.admin.comment.hidden');
+                break;
+            case 'showComment':
+                $comment->setDisplayinpublic(true);
+                $this->addTranslatedFlash('notice', 'flash.admin.comment.visible');
+                break;
+            case 'allowEditing':
+                $comment->setAllowedit(true);
+                $this->addTranslatedFlash('notice', 'flash.admin.comment.editable');
+                break;
+            case 'disableEditing':
+                $comment->setAllowedit(false);
+                $this->addTranslatedFlash('notice', 'flash.admin.comment.locked');
+                break;
+        }
     }
 }

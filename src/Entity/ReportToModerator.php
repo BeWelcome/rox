@@ -57,7 +57,7 @@ class ReportToModerator
     private $status = ReportStatusType::OPEN;
 
     /**
-     * @var int
+     * @var ForumPost
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\ForumPost")
      * @ORM\Column(name="IdPost", type="integer", nullable=false)
@@ -65,7 +65,7 @@ class ReportToModerator
     private $post;
 
     /**
-     * @var int
+     * @var ForumThread
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\ForumThread")
      * @ORM\Column(name="IdThread", type="integer", nullable=false)
@@ -243,5 +243,37 @@ class ReportToModerator
     public function setModerator(Member $moderator): void
     {
         $this->moderator = $moderator;
+    }
+
+    /**
+     * @return ForumPost
+     */
+    public function getPost(): int
+    {
+        return $this->post;
+    }
+
+    /**
+     * @param ForumPost $post
+     */
+    public function setPost(ForumPost $post): void
+    {
+        $this->post = $post;
+    }
+
+    /**
+     * @return ForumThread
+     */
+    public function getThread(): int
+    {
+        return $this->thread;
+    }
+
+    /**
+     * @param ForumThread $thread
+     */
+    public function setThread(ForumThread $thread): void
+    {
+        $this->thread = $thread;
     }
 }

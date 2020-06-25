@@ -68,7 +68,7 @@ class DonateModel
 
             return $row;
         }
-        $campaignDetails = new \stdClass();
+        $campaignDetails = new stdClass();
         $campaignDetails->year = 0;
         $campaignDetails->YearNeededAmount = 0;
         $campaignDetails->YearDonation = 0;

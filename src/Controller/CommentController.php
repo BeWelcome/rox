@@ -23,7 +23,7 @@ class CommentController extends AbstractController
 {
     use MailerTrait;
     use TranslatedFlashTrait;
-    use BewelcomeAddressTrait;
+//    use BewelcomeAddressTrait;
 
     /**
      * @Route("/members/{username}/comment/{commentId}/report", name="report_comment",
@@ -61,7 +61,7 @@ class CommentController extends AbstractController
                 $feedbackCategory = $feedbackCategoryRepository->findOneBy(['name' => 'Comment_issue']);
 
                 $success = $this->sendTemplateEmail(
-                    $this->BeWelcomeAddress($user),
+                    $this->beWelcomeAddress($user),
                     new Address($feedbackCategory->getEmailToNotify(), 'Comment Issue'),
                     'comment.feedback',
                     [

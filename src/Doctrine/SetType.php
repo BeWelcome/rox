@@ -11,9 +11,12 @@ namespace App\Doctrine;
 
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Type;
+use InvalidArgumentException;
+use function count;
 
 /**
  * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+ * @SuppressWarnings(PHPMD.NumberOfChildren)
  */
 abstract class SetType extends Type
 {
@@ -42,10 +45,10 @@ abstract class SetType extends Type
         if (null !== $value) {
             // Split given value
             $values = explode(',', $value);
-            $valueCount = \count($values);
+            $valueCount = count($values);
 
-            if (\count(array_intersect($values, $this->values)) !== $valueCount) {
-                throw new \InvalidArgumentException("Invalid '" . $this->name . "' value: " . $value . '.');
+            if (count(array_intersect($values, $this->values)) !== $valueCount) {
+                throw new InvalidArgumentException("Invalid '" . $this->name . "' value: " . $value . '.');
             }
         } else {
             $value = '';

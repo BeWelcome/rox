@@ -3,8 +3,10 @@
 namespace App\Logger;
 
 use App\Entity\Log;
+use DateTime;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Symfony\Component\Security\Core\Security;
 
 class Logger
@@ -26,7 +28,7 @@ class Logger
      * @param mixed $type
      * @param mixed $member
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function write($msg, $type, $member = null)
     {
@@ -39,10 +41,10 @@ class Logger
             $log->setLogMessage($msg);
             $log->setMember($member);
             $log->setType($type);
-            $log->setCreated(new \DateTime());
+            $log->setCreated(new DateTime());
             $this->em->persist($log);
             $this->em->flush();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw $e;
         }
     }

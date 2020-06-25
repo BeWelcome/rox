@@ -6,6 +6,8 @@ use App\Entity\HostingRequest;
 use App\Entity\Message;
 use App\Repository\MessageRepository;
 use App\Utilities\ManagerTrait;
+use DateInterval;
+use DateTime;
 
 class HostingRequestModel
 {
@@ -21,14 +23,14 @@ class HostingRequestModel
 
     public function checkRequestExpired(HostingRequest $request)
     {
-        $today = (new \DateTime())->setTime(0, 0);
+        $today = (new DateTime())->setTime(0, 0);
         $departure = $request->getDeparture();
         if (null !== $departure) {
-            $departure = $departure->add(new \DateInterval('P1D'))->setTime(23, 59);
+            $departure = $departure->add(new DateInterval('P1D'))->setTime(23, 59);
         } else {
             // No departure date given assume an interval of two days max
             $arrival = $request->getArrival();
-            $departure = $arrival->add(new \DateInterval('P1D'))->setTime(47, 59);
+            $departure = $arrival->add(new DateInterval('P1D'))->setTime(47, 59);
         }
 
         return ($today < $departure) ? false : true;

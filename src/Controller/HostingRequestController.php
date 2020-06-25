@@ -369,6 +369,10 @@ class HostingRequestController extends BaseMessageController
         return $requestModel->checkRequestExpired($hostingRequest->getRequest());
     }
 
+    /**
+     * The requestChanged parameter triggers a PHPMD warning which is out of place in this case
+     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
+     */
     private function sendRequestNotification(
         Member $sender,
         Member $receiver,
@@ -376,7 +380,7 @@ class HostingRequestController extends BaseMessageController
         Message $request,
         $subject,
         $template,
-        $requestChanged = false
+        $requestChanged
     ) {
         // Send mail notification
         $this->sendTemplateEmail($sender, $receiver, $template, [

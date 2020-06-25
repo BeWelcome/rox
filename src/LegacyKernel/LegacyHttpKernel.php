@@ -61,6 +61,9 @@ class LegacyHttpKernel extends HttpKernel
      *
      * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
+     * The next one is triggered by preg_match. PHP doc says everything's fine with that.
+     * @SuppressWarnings(PHPMD.UndefinedVariable)
      */
     public function handle(Request $request, $type = HttpKernelInterface::MASTER_REQUEST, $catch = true)
     {

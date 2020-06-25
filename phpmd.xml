@@ -63,7 +63,7 @@
           externalInfoUrl="http://phpmd.org/rules/design.html#couplingbetweenobjects">
         <priority>2</priority>
         <properties>
-            <property name="minimum" value="20" description="Maximum number of acceptable dependencies." />
+            <property name="maximum" value="20" description="Maximum number of acceptable dependencies." />
         </properties>
     </rule>
 

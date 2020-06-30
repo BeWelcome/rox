@@ -50,6 +50,8 @@ class SearchModel extends RoxModelBase
     const ORDER_DISTANCE = 14;
     const ORDER_TEST_1 = 16;
     const ORDER_TEST_2 = 18;
+    const ORDER_TEST_3 = 20;
+    const ORDER_TEST_4 = 22;
 
     const SUGGEST_MAX_ITEMS = 30;
     // No need to find historical and destroyed places
@@ -78,6 +80,8 @@ class SearchModel extends RoxModelBase
         self::ORDER_COMMENTS => array('WordCode' => 'SearchOrderComments', 'Column' => 'CommentCount'),
         self::ORDER_TEST_1 => array('WordCode' => 'SearchOrderTest1', 'Column' => 'hosting_interest'),
         self::ORDER_TEST_2 => array('WordCode' => 'SearchOrderTest2', 'Column' => 'weighted'),
+        self::ORDER_TEST_3 => array('WordCode' => 'SearchOrderTest3', 'Column' => 'weighted2'),
+        self::ORDER_TEST_4 => array('WordCode' => 'SearchOrderTest4', 'Column' => 'HasProfilePhoto'),
     );
 
     private $membersLowDetails = false;
@@ -100,12 +104,13 @@ class SearchModel extends RoxModelBase
     {
         $orderType = $orderBy - ($orderBy % 2);
         $order = self::$ORDERBY[$orderType]['Column'];
-        if ($orderType == self::ORDER_ACCOM) {
-            $orderSuffix = [ 'DESC', 'ASC'];
+        if ($orderType == self::ORDER_ACCOM || $orderType == self::ORDER_TEST_1
+            || $orderType == self::ORDER_TEST_2 || $orderType == self::ORDER_TEST_3) {
+            $orderSuffix = 'DESC';
         } else {
-            $orderSuffix = [ 'ASC', 'DESC'];
+            $orderSuffix = 'ASC';
         }
-        $order .= " " . $orderSuffix[$orderBy % 2];
+        $order .= " " . $orderSuffix;
         switch ($orderType) {
             case self::ORDER_ACCOM:
             case self::ORDER_COMMENTS:
@@ -115,12 +120,23 @@ class SearchModel extends RoxModelBase
                 $order = $order.', hosting_interest DESC, HasProfileSummary DESC, LastLogin DESC, HasProfilePhoto DESC';
                 break;
             case self::ORDER_TEST_1:
-                    $order .= ', HasProfileSummary DESC, HasProfilePhoto DESC, LastLogin DESC';
+                $order .= ', HasProfileSummary DESC, HasProfilePhoto DESC, LastLogin DESC';
                 break;
             case self::ORDER_TEST_2:
+            case self::ORDER_TEST_3:
+                break;
+            case self::ORDER_TEST_4:
+                $order .= ', HasProfileSummary DESC, hosting_interest DESC, LastLogin DESC';
                 break;
         }
 
+        // if descending order is requested switch all ASC to DESC and vice versa
+        if ($orderBy % 2)
+        {
+            $order = str_replace('ASC', 'BSC', $order);
+            $order = str_replace('DESC', 'ASC', $order);
+            $order = str_replace('BSC', 'ASC', $order);
+        }
         return $order;
     }
 
@@ -558,7 +574,8 @@ LIMIT 1
                 ((g.latitude - " . $vars['location-latitude'] . ") * (g.latitude - " . $vars['location-latitude'] . ") +
                         (g.longitude - " . $vars['location-longitude'] . ") * (g.longitude - " . $vars['location-longitude'] . "))  AS Distance,
                 IF(c.IdToMember IS NULL, 0, c.commentCount) AS CommentCount,
-                (hosting_interest * 5 + IF(mp.photoCount IS NULL, 0, 1) * 4 + IF(m.ProfileSummary != 0, 1, 0) * 3) as weighted
+                (hosting_interest * 5 + IF(mp.photoCount IS NULL, 0, 1) * 4 + IF(m.ProfileSummary != 0, 1, 0) * 3) as weighted,
+                ((hosting_interest * 6) / (DATEDIFF(NOW(), m.LastLogin) + 7) + IF(mp.photoCount IS NULL, 0, 1) * 4 + IF(m.ProfileSummary != 0, 1, 0) * 3) as weighted2
             *FROM*
                 " . $this->tables . "
             LEFT JOIN

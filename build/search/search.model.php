@@ -48,6 +48,8 @@ class SearchModel extends RoxModelBase
     const ORDER_MEMBERSHIP = 10;
     const ORDER_COMMENTS = 12;
     const ORDER_DISTANCE = 14;
+    const ORDER_TEST_1 = 16;
+    const ORDER_TEST_2 = 18;
 
     const SUGGEST_MAX_ITEMS = 30;
     // No need to find historical and destroyed places
@@ -73,7 +75,9 @@ class SearchModel extends RoxModelBase
         self::ORDER_DISTANCE => array('WordCode' => 'SearchOrderDistance', 'Column' => 'Distance'),
         self::ORDER_LOGIN => array('WordCode' => 'SearchOrderLogin', 'Column' => 'LastLogin'),
         self::ORDER_MEMBERSHIP => array('WordCode' => 'SearchOrderMembership', 'Column' => 'm.created'),
-        self::ORDER_COMMENTS => array('WordCode' => 'SearchOrderComments', 'Column' => 'CommentCount')
+        self::ORDER_COMMENTS => array('WordCode' => 'SearchOrderComments', 'Column' => 'CommentCount'),
+        self::ORDER_TEST_1 => array('WordCode' => 'SearchOrderTest1', 'Column' => 'hosting_interest'),
+        self::ORDER_TEST_2 => array('WordCode' => 'SearchOrderTest2', 'Column' => 'weighted'),
     );
 
     private $membersLowDetails = false;
@@ -109,6 +113,11 @@ class SearchModel extends RoxModelBase
                 break;
             case self::ORDER_DISTANCE:
                 $order = $order.', hosting_interest DESC, HasProfileSummary DESC, LastLogin DESC, HasProfilePhoto DESC';
+                break;
+            case self::ORDER_TEST_1:
+                    $order .= ', HasProfileSummary DESC, HasProfilePhoto DESC, LastLogin DESC';
+                break;
+            case self::ORDER_TEST_2:
                 break;
         }
 
@@ -548,7 +557,8 @@ LIMIT 1
                 g.longitude,
                 ((g.latitude - " . $vars['location-latitude'] . ") * (g.latitude - " . $vars['location-latitude'] . ") +
                         (g.longitude - " . $vars['location-longitude'] . ") * (g.longitude - " . $vars['location-longitude'] . "))  AS Distance,
-                IF(c.IdToMember IS NULL, 0, c.commentCount) AS CommentCount
+                IF(c.IdToMember IS NULL, 0, c.commentCount) AS CommentCount,
+                (hosting_interest * 5 + IF(mp.photoCount IS NULL, 0, 1) * 4 + IF(m.ProfileSummary != 0, 1, 0) * 3) as weighted
             *FROM*
                 " . $this->tables . "
             LEFT JOIN

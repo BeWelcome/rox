@@ -240,6 +240,10 @@ class SearchFormType extends AbstractType
                     'searchordermembershipdesc' => 11,
                     'searchorderusernameasc' => 2,
                     'searchorderusernamedesc' => 3,
+                    'searchordertest1asc' => 16,
+                    'searchordertest1desc' => 17,
+                    'searchordertest2asc' => 18,
+                    'searchordertest2desc' => 19,
                 ],
                 'attr' => [
                     'class' => 'select2',

@@ -14,6 +14,16 @@
     {{ encore_entry_link_tags('bewelcome') }}
     {{ encore_entry_link_tags('floating_labels') }}
     {{ encore_entry_link_tags('jquery_ui') }}
+    <link rel='manifest' href='/manifest.json'>
+    <script>
+        // Check that service workers are supported
+        if ('serviceWorker' in navigator) {
+            // Use the window load event to keep the page load performant
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('{{ asset('build/service-worker.js') }}');
+            });
+        }
+    </script>
 </head>
 <body id="parallax-home">
 {% block content %}{% include 'loginbar.html.twig' %}
@@ -37,7 +47,7 @@
                     </p>
                     <h2 class="parallax--numsubh parallax--fixed--letteranim d-md-block py-2">{{ 'home.abstract.bewelcome.cultural' | trans }}
                         {{ 'home.bewelcome.free' | trans | escape |replace({'%link_start%': '<a class="parallax--fixed--linkanim bold" href="'~path('wiki_page', { 'pageTitle': 'Can BeWelcome be sold'})~'" class="parallax--a bold">', '%link_end%': '</a>'})|raw }}
-                        &nbsp;</h2>
+                    </h2>
                     <!-- <p class="parallax--fixed--letteranim py-2">{{ 'home.bewelcome.free' | trans | escape |replace({'%link_start%': '<a href="'~path('wiki_page', { 'pageTitle': 'Can BeWelcome be sold'})~'" class="text-primary bold">', '%link_end%': '</a>'})|raw }}</p> -->
                 </div>
             </div>

@@ -1,5 +1,6 @@
 const CKEditorWebpackPlugin = require('@ckeditor/ckeditor5-dev-webpack-plugin');
 const {styles} = require('@ckeditor/ckeditor5-dev-utils');
+const WorkboxPlugin = require('workbox-webpack-plugin');
 
 let Encore = require('@symfony/webpack-encore');
 
@@ -19,6 +20,29 @@ Encore
         additionalLanguages: 'all',
         outputDirectory: 'cktranslations',
         buildAllTranslationsToSeparateFiles: true
+    }))
+    .addPlugin(new WorkboxPlugin.GenerateSW({
+        // Do not precache images
+        exclude: [/\.(?:png|jpg|jpeg|svg)$/],
+
+        // Define runtime caching rules.
+        runtimeCaching: [{
+            // Match any request that ends with .png, .jpg, .jpeg or .svg.
+            urlPattern: /\.(?:png|jpg|jpeg|svg)$/,
+
+            // Apply a cache-first strategy.
+            handler: 'CacheFirst',
+
+            options: {
+                // Use a custom cache name.
+                cacheName: 'images',
+
+                // Only cache 10 images.
+                expiration: {
+                    maxEntries: 10,
+                },
+            },
+        }],
     }))
     .splitEntryChunks()
     .enableSingleRuntimeChunk()

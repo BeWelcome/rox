@@ -1,0 +1,23 @@
+{
+  "dir": "ltr",
+  "lang": "en",
+  "name": "BeWelcome Progressive Web App",
+  "short_name": "BeWelcome",
+  "scope": "/",
+  "display": "standalone",
+  "start_url": ".",
+  "background_color": "transparent",
+  "theme_color": "#f37000",
+  "description": "Hospitality exchange with BeWelcome free network for better intercultural understanding",
+  "orientation": "any",
+  "related_applications": [],
+  "prefer_related_applications": false,
+  "icons": [
+    {
+      "src": "images/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "screenshots": []
+}

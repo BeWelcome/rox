@@ -26,6 +26,16 @@
         {% block stylesheets %}{% endblock %}
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
         {% block matomo %}{% endblock %}
+        <link rel='manifest' href='/manifest.json'>
+        <script>
+            // Check that service workers are supported
+            if ('serviceWorker' in navigator) {
+                // Use the window load event to keep the page load performant
+                window.addEventListener('load', () => {
+                    navigator.serviceWorker.register('{{ asset('build/service-worker.js') }}');
+                });
+            }
+        </script>
     </head>
     <body>
         {% include 'menu.html.twig' %}

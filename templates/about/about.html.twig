@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	{{ 'aboutuspage' | trans }} - {{  'aboutus_theidea' | trans }}
+{% endblock %}
+
+{% block content %}
+<div class="row">
+	<div class="col-12">
+        <h1>{{ 'aboutuspage' | trans }}</h1>
+		<h2>{{ 'sowhat' | trans }}</h2>
+	</div>
+	<div class="col-12 col-md-6">
+		<h3>{{ 'aboutus_theidea' | trans }}</h3>
+		<p>{{ 'aboutus_theideatext'  | trans| purify }}</p>
+		<h3>{{ 'aboutus_howorganized'  | trans }}</h3>
+		<p>{{ 'aboutus_howorganizedtext' | trans | purify }}</p>
+	</div>
+	<div class="col-12 col-md-6">
+		<h3>{{ 'aboutus_getactive'  | trans }}</h3>
+		<p>{{ 'aboutus_getactivetext'  | trans | purify }}</p>
+		<p>{{ 'aboutus_greetings'  | trans | purify }}</p>
+		<h3>{{ 'aboutus_givefeedback'  | trans }}</h3>
+		<p>{{ 'aboutus_givefeedbacktext'  | trans | purify }}</p>
+	</div>
+</div>
+{% endblock content %}

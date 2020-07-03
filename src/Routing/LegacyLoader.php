@@ -101,12 +101,12 @@ class LegacyLoader extends Loader
         $this->addRouteDirectly('community', '/community');
         $this->addRouteDirectly('about_faq', '/about/faq');
         $this->addRouteDirectly('about_faq_category', '/about/faq/{category}');
-        $this->addRouteDirectly('about', '/about');
+        //$this->addRouteDirectly('about', '/about');
         $this->addRouteDirectly('about_people', '/about/thepeople');
         $this->addRouteDirectly('stats', '/stats');
         $this->addRouteDirectly('stats_images', '/stats/{image}.png');
         $this->addRouteDirectly('getactive', '/about/getactive');
-        $this->addRouteDirectly('contactus', '/about/feedback');
+        //$this->addRouteDirectly('contactus', '/about/feedback');
         $this->addRouteDirectly('feedback', '/feedback');
         $this->addRouteDirectly('feedback_submit', '/feedback/submit');
         $this->addRouteDirectly('privacy', '/privacy');
@@ -150,7 +150,7 @@ class LegacyLoader extends Loader
         $this->addRouteDirectly('comment_edit', '/members/{username}/comments/edit');
         $this->addRouteDirectly('mypreferences', '/mypreferences');
         $this->addRouteDirectly('myvisitors', '/myvisitors');
-        $this->addRouteDirectly('profilecomments', '/about/commentguidelines');
+        //$this->addRouteDirectly('profilecomments', '/about/commentguidelines');
         $this->addRouteDirectly('profile_addtorelations', '/members/{username}/relations/add');
         $this->addRouteDirectly('setlocation', '/setlocation');
         $this->addRouteDirectly('editmyprofile_finish', '/editmyprofile/finish');

@@ -61,7 +61,7 @@
     </div>
     <div class="col-12">
         <h3>{{ 'thepeople_title3' | trans }}</h3>
-        <p>{{ 'thepeople_text3' | trans | raw | nl2br }}</p>
+        <p>{{ 'thepeople_text3' | trans | purify | nl2br }}</p>
     </div>
 </div>
 {% endblock content %}

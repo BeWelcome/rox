@@ -115,13 +115,13 @@ const webpack = require('webpack');
 const WorkboxPlugin = require('workbox-webpack-plugin');
 
 workboxConfig = {
-        mode: process.env.NODE_ENV,
+        mode: "development",
         entry: {
             main: "./assets/js/index.js"
         },
         output: {
-            filename: "[name].[chunkhash].js",
-            chunkFilename: "[name].[chunkhash].bundle.js",
+            filename: "[name].js",
+            chunkFilename: "[name].bundle.js",
             path: path.resolve(__dirname, "public")
         },
         plugins: [

@@ -15,12 +15,12 @@
     {{ encore_entry_link_tags('floating_labels') }}
     {{ encore_entry_link_tags('jquery_ui') }}
     <link rel='manifest' href='/manifest.json'>
-    <script>
+    <script type="module">
         // Check that service workers are supported
         if ('serviceWorker' in navigator) {
             // Use the window load event to keep the page load performant
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('{{ asset('build/service-worker.js') }}');
+                navigator.serviceWorker.register('{{ asset('/service-worker.js') }}');
             });
         }
     </script>

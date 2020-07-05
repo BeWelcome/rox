@@ -76,7 +76,7 @@ class SearchController extends AbstractController
         $showMap = $member->getMemberPreferenceValue($preference);
 
         $searchFormRequest = SearchFormRequest::fromRequest($request, $this->getDoctrine()->getManager());
-        $searchFormRequest->showmap = ('Yes' === $showMap);
+        $searchFormRequest->show_map = ('Yes' === $showMap);
 
         // There are three different forms that might end up on this page
         $formFactory = $this->get('form.factory');
@@ -113,7 +113,7 @@ class SearchController extends AbstractController
                 $data = $search->getData();
             }
             $memberPreference = $member->getMemberPreference($preference);
-            if ($data->showmap) {
+            if ($data->show_map) {
                 $memberPreference->setValue('Yes');
             } else {
                 $memberPreference->setValue('No');

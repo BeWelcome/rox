@@ -34,11 +34,9 @@ use AnthonyMartin\GeoLocation\GeoLocation as GeoLocation;
  */
 class SearchModel extends RoxModelBase
 {
-    const SPHINX_PLACES = 1;
-    const SPHINX_ADMINUNITS = 2;
-    const SPHINX_COUNTRIES = 4;
-
-    const EARTH_RADIUS = 6378;
+    private const SPHINX_PLACES = 1;
+    private const SPHINX_ADMINUNITS = 2;
+    private const SPHINX_COUNTRIES = 4;
 
     // const ORDER_NOSORT = 0; // Not needed as this would be the same as for MEMBERSHIP
     const ORDER_USERNAME = 2;
@@ -54,6 +52,7 @@ class SearchModel extends RoxModelBase
     const ORDER_TEST_4 = 22;
 
     const SUGGEST_MAX_ITEMS = 30;
+
     // No need to find historical and destroyed places
     const PLACES_FILTER = " g.fclass = 'P' AND g.fcode <> 'PPLH' AND g.fcode <> 'PPLW' AND g.fcode <> 'PPLQ' AND g.fcode <> 'PPLCH' ";
 
@@ -65,11 +64,17 @@ class SearchModel extends RoxModelBase
     private $genderCondition = "";
     private $locationCondition = "";
     private $groupsCondition = "";
+    private $offersCondition = "";
+    private $restrictionsCondition = "";
     private $languagesCondition = "";
     private $accommodationCondition = "";
     private $typicalOfferCondition = "";
+    private $commentsCondition = "";
+    private $profilePictureCondition = "";
+    private $profileSummaryCondition = "";
     private $modCrypt = null;
     private $tables = "";
+    private $joins = "";
 
     private static $ORDERBY = array(
         self::ORDER_USERNAME => array('WordCode' => 'SearchOrderUsername', 'Column' => 'm.Username'),
@@ -105,7 +110,8 @@ class SearchModel extends RoxModelBase
         $orderType = $orderBy - ($orderBy % 2);
         $order = self::$ORDERBY[$orderType]['Column'];
         if ($orderType == self::ORDER_ACCOM || $orderType == self::ORDER_TEST_1
-            || $orderType == self::ORDER_TEST_2 || $orderType == self::ORDER_TEST_3) {
+            || $orderType == self::ORDER_TEST_2 || $orderType == self::ORDER_TEST_3
+            || $orderType == self::ORDER_TEST_4) {
             $orderSuffix = 'DESC';
         } else {
             $orderSuffix = 'ASC';
@@ -243,17 +249,59 @@ LIMIT 1
 
     /**
      * @param array $vars
-     * r@return string
+     * @return string
      */
     private function getStatusCondition($vars)
     {
-        if (array_key_exists('search-membership', $vars) && ($vars['search-membership'] == 1)) {
-            $statusCondition = " AND m.status IN (" . MemberStatusType::ACTIVE_SEARCH . ") ";
-        } else {
-            $statusCondition = " AND m.status IN ( 'Active') ";
-        }
+        // Calculate last login since x month rougly
+        $daysSinceLastLogin = intval($vars['search-last-login'] * 30.4);
+        $statusCondition = " AND m.status IN (" . MemberStatusType::ACTIVE_SEARCH . ") AND ";
+        $statusCondition .= " DATEDIFF(NOW(), m.LastLogin) <= ";
+        $statusCondition .= $daysSinceLastLogin . " ";
 
         return $statusCondition;
+    }
+
+    /**
+     * @param array $vars
+     * @return string
+     */
+    private function getCommentsCondition($vars)
+    {
+        $commentsCondition = "";
+        if ($vars['search-has-comments']) {
+            $commentsCondition .= " AND CommentCount > 0 ";
+        }
+
+        return $commentsCondition;
+    }
+
+    /**
+     * @param array $vars
+     * @return string
+     */
+    private function getProfilePictureCondition($vars)
+    {
+        $profilePictureCondition = "";
+        if ($vars['search-has-profile-picture']) {
+            $profilePictureCondition .= " AND IF(mp.photoCount IS NULL, 0, 1) = 1 ";
+        }
+
+        return $profilePictureCondition;
+    }
+
+    /**
+     * @param array $vars
+     * @return string
+     */
+    private function getProfileSummaryCondition($vars)
+    {
+        $profileSummaryCondition = "";
+        if ($vars['search-has-about-me']) {
+            $profileSummaryCondition .= " AND IF(m.ProfileSummary != 0, 1, 0) = 1 ";
+        }
+
+        return $profileSummaryCondition;
     }
 
     /**
@@ -265,7 +313,7 @@ LIMIT 1
      */
     private function _getRectangle($latitude, $longitude, $distance) {
 
-        $result = new stdClass;
+        $result = new stdClass();
         $edison = GeoLocation::fromDegrees($latitude, $longitude);
         try {
             $coordinates = $edison->boundingCoordinates($distance, 'km');
@@ -461,6 +509,25 @@ LIMIT 1
         return $condition;
     }
 
+    private function getRestrictionsCondition($vars)
+    {
+        $condition = "";
+        if (isset($vars['search-restrictions'])) {
+            $restrictions = [];
+            $searchRestrictions = $vars['search-restrictions'];
+            foreach ($searchRestrictions as $value) {
+                if ($value='') {
+                    continue;
+                }
+                $restrictions[] = "m.restrictions LIKE '{$value}'";
+            }
+            if (!empty($restrictions)) {
+                $condition = " AND ( " . implode(" AND ", $restrictions) . ") ";
+            }
+        }
+        return $condition;
+    }
+
     private function getTypicalOfferCondition($vars)
     {
         $condition = "";
@@ -490,20 +557,28 @@ LIMIT 1
             SELECT
                 COUNT(m.id) cnt
             FROM
-            " . $this->tables;
+            " . $this->tables . "
+            " . $this->joins . "
+        ";
         $str .= "
             WHERE
                 " . $this->maxGuestCondition . "
-                " . $this->statusCondition;
-        $str .= $this->locationCondition . "
-            " . $this->genderCondition . "
-            " . $this->ageCondition . "
-            " . $this->usernameCondition . "
-            " . $this->keywordCondition . "
-            " . $this->groupsCondition . "
-            " . $this->languagesCondition . "
-            " . $this->accommodationCondition . "
-            " . $this->typicalOfferCondition;
+                " . $this->statusCondition . "
+                " . $this->locationCondition . "
+                " . $this->genderCondition . "
+                " . $this->commentsCondition . "
+                " . $this->profilePictureCondition . "
+                " . $this->profileSummaryCondition . "
+                " . $this->restrictionsCondition . "
+                " . $this->offersCondition . "
+                " . $this->ageCondition . "
+                " . $this->usernameCondition . "
+                " . $this->keywordCondition . "
+                " . $this->groupsCondition . "
+                " . $this->languagesCondition . "
+                " . $this->accommodationCondition . "
+                " . $this->typicalOfferCondition
+        ;
 
         $count = $this->dao->query($str);
 
@@ -578,8 +653,6 @@ LIMIT 1
                 ((hosting_interest * 6) / (DATEDIFF(NOW(), m.LastLogin) + 7) + IF(mp.photoCount IS NULL, 0, 1) * 4 + IF(m.ProfileSummary != 0, 1, 0) * 3) as weighted2
             *FROM*
                 " . $this->tables . "
-            LEFT JOIN
-                hosting_eagerness_slider hes on (hes.member_id = m.id)
             LEFT JOIN (
                 SELECT
                     COUNT(*) As commentCount, IdToMember
@@ -604,6 +677,11 @@ LIMIT 1
             *WHERE*
                 " . $this->maxGuestCondition . "
                 " . $this->statusCondition . "
+                " . $this->commentsCondition . "
+                " . $this->profilePictureCondition . "
+                " . $this->profileSummaryCondition . "
+                " . $this->restrictionsCondition . "
+                " . $this->offersCondition . "
                 " . $this->locationCondition . "
                 " . $this->genderCondition . "
                 " . $this->ageCondition . "
@@ -613,6 +691,7 @@ LIMIT 1
                 " . $this->languagesCondition . "
                 " . $this->accommodationCondition . "
                 " . $this->typicalOfferCondition . "
+                " . $this->commentsCondition . "
                 AND m.IdCity = g.geonameId
             ORDER BY
                 " . $this->getOrderBy($vars['search-sort-order']) . "
@@ -822,7 +901,7 @@ LIMIT 1
         $countryNames = array();
         foreach ($countryRawNames as $countryRawName) {
             if (!isset($countryNames[$countryRawName->countryCode])) {
-                $data = new StdClass;
+                $data = new stdClass();
                 $data->country = $countryRawName->country;
                 $data->code = $countryRawName->countryCode;
                 $countryNames[$countryRawName->countryCode] = $data;
@@ -1472,9 +1551,14 @@ LIMIT 1
                     m.Accomodation as Accommodation, m.Username, m.latitude, m.longitude, m.maxGuest as CanHost
                 FROM
                     " . $this->tables . "
+                    " . $this->joins . "
                 WHERE
                     " . $this->maxGuestCondition . "
                     " . $this->statusCondition . "
+                    " . $this->commentsCondition . "
+                    " . $this->profilePictureCondition . "
+                    " . $this->restrictionsCondition . "
+                    " . $this->offersCondition . "
                     " . $this->locationCondition . "
                     " . $this->genderCondition . "
                     " . $this->ageCondition . "
@@ -1499,6 +1583,11 @@ LIMIT 1
     public function prepareQuery($vars, $admin1 = false, $country = false)
     {
         $this->statusCondition = $this->getStatusCondition($vars);
+        $this->commentsCondition = $this->getCommentsCondition($vars);
+        $this->profilePictureCondition = $this->getProfilePictureCondition($vars);
+        $this->profileSummaryCondition = $this->getProfileSummaryCondition($vars);
+        $this->offersCondition = $this->getTypicalOfferCondition($vars);
+        $this->restrictionsCondition = $this->getRestrictionsCondition($vars);
         $this->maxGuestCondition = "m.MaxGuest >= " . $vars['search-can-host'];
         $this->locationCondition = $this->getLocationCondition($vars, $admin1, $country);
         $this->genderCondition = $this->getGenderCondition($vars);
@@ -1521,6 +1610,37 @@ LIMIT 1
             $this->tables .= ", memberslanguageslevel mll";
         }
         $this->tables .= ', members m';
+
+        $this->joins = '';
+        if (!empty($this->profilePictureCondition)) {
+            $this->joins .= "
+                LEFT JOIN (
+                    SELECT
+                        COUNT(*) As photoCount, IdMember
+                    FROM
+                        membersphotos
+                    GROUP BY
+                        IdMember) mp 
+                    ON
+                        mp.IdMember = m.id
+            ";
+        }
+        if (!empty($this->commentsCondition)) {
+            $this->joins .= "
+                LEFT JOIN (
+                    SELECT
+                        COUNT(*) As commentCount, IdToMember
+                    FROM
+                        comments, members m2
+                    WHERE
+                        IdFromMember = m2.id
+                        AND m2.Status IN ('Active', 'OutOfRemind')
+                    GROUP BY
+                        IdToMember ) c
+                ON
+                    c.IdToMember = m.id
+            ";
+        }
     }
 }
 

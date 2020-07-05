@@ -177,13 +177,13 @@ class SearchAdapter implements AdapterInterface
             $vars['search-accommodation'][] = 'anytime';
         }
 
-        if ($data->accommodation_dependonrequest) {
-            $vars['search-accommodation'][] = 'dependonrequest';
-        }
-
         if ($data->accommodation_neverask) {
             $vars['search-accommodation'][] = 'neverask';
         }
+
+        $vars['search-has-profile-picture'] = $data->profile_picture;
+        $vars['search-has-about-me'] = $data->about_me;
+        $vars['search-has-comments'] = $data->has_comments;
 
         if ($data->offerdinner) {
             $vars['search-typical-offers'][] = 'dinner';
@@ -197,6 +197,18 @@ class SearchAdapter implements AdapterInterface
             $vars['search-typical-offers'][] = 'CanHostWeelChair';
         }
 
+        if ($data->no_smoking) {
+            $vars['search-restriction'][] = 'NoSmoker';
+        }
+
+        if ($data->no_alcohol) {
+            $vars['search-restriction'][] = 'NoAlchool';
+        }
+
+        if ($data->no_drugs) {
+            $vars['search-restriction'][] = 'NoDrugs';
+        }
+
         $vars['search-distance'] = $data->distance;
         $vars['search-can-host'] = $data->can_host;
         $vars['search-gender'] = $data->gender;
@@ -207,11 +219,10 @@ class SearchAdapter implements AdapterInterface
         $vars['search-text'] = $data->keywords;
         $vars['search-number-items'] = 20;
         $vars['search-sort-order'] = 6;
-        if ($data->inactive) {
-            $vars['search-membership'] = 1;
-        }
+        $vars['search-last-login'] = $data->last_login;
         $vars['search-page'] = $data->page;
         $vars['search-sort-order'] = $data->order;
+        $vars['search-sort-direction'] = $data->direction;
         $vars['search-number-items'] = $data->items;
 
         return $vars;

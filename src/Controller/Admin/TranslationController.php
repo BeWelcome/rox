@@ -743,7 +743,7 @@ class TranslationController extends AbstractController
             case 'home/home.html.twig':
                 $formFactory = $this->get('form.factory');
                 $searchFormRequest = new SearchFormRequest($this->getDoctrine()->getManager());
-                $searchFormRequest->showmap = true;
+                $searchFormRequest->show_map = true;
                 $searchFormRequest->accommodation_neverask = true;
                 $searchFormRequest->inactive = true;
                 $searchFormRequest->distance = 100;

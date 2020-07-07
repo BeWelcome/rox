@@ -86,10 +86,9 @@ class AboutController extends AbstractController
      */
     public function showAboutTheIdea()
     {
-        return $this->redirectToRoute('about', [
+        return $this->render('about/about.html.twig', [
         'submenu' => [
             'items' => $this->getSubMenuItems(),
-            'active' => 'about',
             'active' => 'about_theidea',
         ],
     ]);
@@ -183,6 +182,22 @@ class AboutController extends AbstractController
         ]);
     }
 
+
+    /**
+     * @Route("/impressum", name="imprint")
+     *
+     * @return Response
+     */
+    public function showImpressum()
+    {
+        return $this->render('about/impressum.html.twig', [
+            'submenu' => [
+                'items' => $this->getSubMenuItems(),
+                'active' => 'about',
+            ],
+        ]);
+    }
+
     /**
      * @return array
      */
@@ -207,7 +222,7 @@ class AboutController extends AbstractController
             ],
             'about_theidea' => [
                 'key' => 'About_TheIdea',
-                'url' => $this->generateUrl('about'),
+                'url' => $this->generateUrl('about_theidea'),
             ],
             'about_thepeople' => [
                 'key' => 'About_ThePeople',

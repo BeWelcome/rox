@@ -159,7 +159,7 @@ class LegacyLoader extends Loader
         $this->addRouteDirectly('delete_profile_language', '/editmyprofile/{language}/delete');
         $this->addRouteDirectly('admin_editprofile_finish', '/members/{username}/adminedit/finish');
         $this->addRouteDirectly('myprofile_in_langauge', '/members/{username}/{language}');
-        $this->addRouteDirectly('imprint', '/impressum');
+        //$this->addRouteDirectly('imprint', '/impressum');
         $this->addRouteDirectly('add_relation_finish', '/members/{username}/relations/add/finish');
         $this->addRouteDirectly(
             'delete_relation_editprofile',

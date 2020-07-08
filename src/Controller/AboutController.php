@@ -66,6 +66,7 @@ class AboutController extends AbstractController
 
     /**
      * @Route("/about/getactive", name="getactive")
+     * @Route("/volunteer", name="volunteer")
      *
      * @return Response
      */

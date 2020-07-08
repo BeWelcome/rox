@@ -50,7 +50,7 @@ class AboutController extends AbstractController
     }
 
     /**
-     * @Route("/about/thepeople", name="about_thepeople")
+     * @Route("/about/thepeople", name="about_people")
      *
      * @return Response
      */
@@ -59,13 +59,13 @@ class AboutController extends AbstractController
         return $this->render('about/thepeople.html.twig', [
             'submenu' => [
                 'items' => $this->getSubMenuItems(),
-                'active' => 'about_thepeople',
+                'active' => 'about_people',
             ],
         ]);
     }
 
     /**
-     * @Route("/about/getactive", name="about_getactive")
+     * @Route("/about/getactive", name="getactive")
      *
      * @return Response
      */
@@ -74,7 +74,7 @@ class AboutController extends AbstractController
         return $this->render('about/getactive.html.twig', [
             'submenu' => [
                 'items' => $this->getSubMenuItems(),
-                'active' => 'about_getactive',
+                'active' => 'getactive',
             ],
         ]);
     }
@@ -131,7 +131,8 @@ class AboutController extends AbstractController
 
     /**
      * @Route("/about/statistics", name="about_statistics")
-     *
+     * @Route("/about/stats", name="stats")
+     * 
      * @return Response
      */
     public function showAboutStatistics()
@@ -224,13 +225,13 @@ class AboutController extends AbstractController
                 'key' => 'About_TheIdea',
                 'url' => $this->generateUrl('about_theidea'),
             ],
-            'about_thepeople' => [
+            'about_people' => [
                 'key' => 'About_ThePeople',
-                'url' => $this->generateUrl('about_thepeople'),
+                'url' => $this->generateUrl('about_people'),
             ],
-            'about_getactive' => [
+            'getactive' => [
                 'key' => 'About_GetActive',
-                'url' => $this->generateUrl('about_getactive'),
+                'url' => $this->generateUrl('getactive'),
             ],
             'separator2' => [
                 'key' => 'MoreInfo',
@@ -260,7 +261,7 @@ class AboutController extends AbstractController
                 'key' => 'CommentGuidelinesPage',
                 'url' => $this->generateUrl('profilecomments'),
             ],
-            'about_statistics' => [
+            'statistics' => [
                 'key' => 'StatsPage',
                 'url' => $this->generateUrl('about_statistics'),
             ],

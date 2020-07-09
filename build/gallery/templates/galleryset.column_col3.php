@@ -1,4 +1,4 @@
-<div id="masonry-grid" class="row">
+<div id="masonry-grid" class="row" data-masonry='{"percentPosition": true }'>
         <?php
 /* Template for showing the col3-content of a single gallery */
 

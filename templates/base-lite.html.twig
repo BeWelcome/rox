@@ -10,11 +10,11 @@
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
 
     <title>
-        {%- spaceless -%}
+        {% apply spaceless %}
             {% if block('title') is defined %}
                 {{ block('title') | trim }} |
             {% endif %} BeWelcome
-        {%- endspaceless -%}
+        {% endapply %}
     </title>
 
     <meta name="description" content="{{ 'default_meta_description' | trans }}">

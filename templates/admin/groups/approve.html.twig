@@ -23,7 +23,7 @@
                     {% for group in groups %}
                         <tr>
                             <td><p><strong><a href="{{ url('group_start', {'group_id': group.id}) }}">{{ group.Name }}</a></strong><br>
-                                    <small>Created: {{ group.created|localizeddate }}</small></p>
+                                    <small>Created: {{ group.created|format_date }}</small></p>
                                 {% if group.approved == constant('App\\Entity\\Group::IN_DISCUSSION') %}
                                     <p class="alert alert-danger my-2">{{ 'Group approval under discussion' }}</p>{% endif %}
                                 </td>

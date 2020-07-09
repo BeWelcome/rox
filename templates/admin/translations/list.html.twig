@@ -55,7 +55,7 @@
                                 </p>
                             </td>
                             <td class="text-right">
-                                <p class="m-0"><small class="text-muted">{{ translation.created|localizeddate('medium', 'none', app.request.locale) }}</small></p>
+                                <p class="m-0"><small class="text-muted">{{ translation.created|format_date('medium', 'none', app.request.locale) }}</small></p>
                                 <p class="m-0">
                                 {% if translation.shortcode == locale %}
                                     <a href="{{ url('translation_edit', { code: translation.code, locale: locale }) }}"><i class="fa fa-edit"></i></a>

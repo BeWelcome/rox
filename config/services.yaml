@@ -126,12 +126,6 @@ services:
     class: App\Security\UserChecker
     autowire: true
 
-  intl.twig_extension:
-    public: true
-    class: Twig_Extensions_Extension_Intl
-    tags:
-      - { name: 'twig.extension' }
-
   rox.default.pagerfanta:
     class: Pagerfanta\View\OptionableView
     arguments:
@@ -176,7 +170,7 @@ services:
   Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler:
     arguments:
       - !service { class: PDO, factory: ['@database_connection', 'getWrappedConnection'] }
-      - { lock_mode: 1 }
+      - { lock_mode: LOCK_NONE }
 
   _defaults:
     autowire: true      # Automatically injects dependencies in your services.

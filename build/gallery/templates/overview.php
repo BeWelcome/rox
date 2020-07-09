@@ -23,7 +23,7 @@ if ($statement) {
     $request = $requestStr.'/=page%d';
     require 'pages.php';
     ?>
-    <div id="masonry-grid" class="row">
+    <div id="masonry-grid" class="row" data-masonry='{"percentPosition": true }'>
         <?php
         foreach ($statement as $d) {
         echo '<div class="col-sm-6 col-lg-4 mb-4">';

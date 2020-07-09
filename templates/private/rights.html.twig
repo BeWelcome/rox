@@ -15,7 +15,7 @@
                 <div class="card-body">
                     <p>{{ 'mydata.rights.scope'|trans }}: {{ volunteerright.scope }}</p>
                     <p>{{ 'mydata.rights.level'|trans }}: {{ volunteerright.level }}</p>
-                    <p>{{ 'mydata.rights.assigned'|trans }}: {{ volunteerright.created|localizeddate('medium', 'short', app.request.locale) }}</p>
+                    <p>{{ 'mydata.rights.assigned'|trans }}: {{ volunteerright.created|format_date('medium', 'short', app.request.locale) }}</p>
                 </div>
             </div>
         {% endfor %}

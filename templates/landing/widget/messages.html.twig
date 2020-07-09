@@ -11,8 +11,8 @@
                     <div class="d-flex justify-content-start align-items-center">
                         <div><i class="fa fa-lg fa-bed"></i></div>
                         <div class="small mx-2 alert alert-dark my-0 px-1 py-0 text-nowrap">
-                            {{ message.request.arrival | localizeddate( 'medium', 'none') }}<br>
-                            {{ message.request.departure | localizeddate( 'medium', 'none') }}
+                            {{ message.request.arrival | format_date( 'medium') }}<br>
+                            {{ message.request.departure | format_date( 'medium') }}
                         </div>
                         <div class="text-truncate text">
                             <a href="{{ path(route, { id: message.id } ) }}" {% if unread %}class="unread"{% endif %}>

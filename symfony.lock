@@ -26,6 +26,9 @@
     "amphp/process": {
         "version": "v1.1.0"
     },
+    "amphp/serialization": {
+        "version": "v1.0.0"
+    },
     "amphp/socket": {
         "version": "v1.1.1"
     },
@@ -724,20 +727,6 @@
     "symfony/string": {
         "version": "v5.1.0"
     },
-    "symfony/swiftmailer-bundle": {
-        "version": "2.5",
-        "recipe": {
-            "repo": "github.com/symfony/recipes",
-            "branch": "master",
-            "version": "2.5",
-            "ref": "ae4d22af30bbd484506bc1817c5a3ef72c855b93"
-        },
-        "files": [
-            "./config/packages/dev/swiftmailer.yaml",
-            "./config/packages/swiftmailer.yaml",
-            "./config/packages/test/swiftmailer.yaml"
-        ]
-    },
     "symfony/templating": {
         "version": "v4.4.5"
     },
@@ -847,23 +836,14 @@
     "twig/cssinliner-extra": {
         "version": "v2.12.5"
     },
-    "twig/extensions": {
-        "version": "1.0",
-        "recipe": {
-            "repo": "github.com/symfony/recipes",
-            "branch": "master",
-            "version": "1.0",
-            "ref": "a86723ee8d8b2f9437c8ce60a5546a1c267da5ed"
-        },
-        "files": [
-            "./config/packages/twig_extensions.yaml"
-        ]
-    },
     "twig/extra-bundle": {
         "version": "v3.0.3"
     },
     "twig/inky-extra": {
         "version": "v3.0.3"
+    },
+    "twig/intl-extra": {
+        "version": "v3.0.4"
     },
     "twig/markdown-extra": {
         "version": "v2.12.5"

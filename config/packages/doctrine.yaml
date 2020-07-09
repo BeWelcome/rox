@@ -76,3 +76,4 @@ doctrine:
         dql:
             datetime_functions:
                 datediff: App\Doctrine\Functions\DateDiff
+                yearweek: App\Doctrine\Functions\YearWeek

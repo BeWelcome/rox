@@ -46,7 +46,7 @@
                 <td>{{ message.Message|purify }}</td>
                 <td>{{ macros.avatarstack(message.Receiver.Username, 30) }}</td>
                 <td>{{ message.created.DiffForHumans }}<br>
-                ({{  message.created | localizeddate('short', 'short') }})</td>
+                ({{  message.created | format_date('short', 'short') }})</td>
                 <td>{{ form_widget(form.noSpamMessages[loop.index0], {'attr': {'class': 'checkableNoSpam'}}) }}</td>
                 <td>{{ form_widget(form.spamMessages[loop.index0], {'attr': {'class': 'checkableSpam'}}) }}</td>
             </tr>

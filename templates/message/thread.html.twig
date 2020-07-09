@@ -66,13 +66,13 @@
 
                         <div class="col-12 col-sm-6 col-md-4 mb-1">
                             <div><i class="fa fa-calendar mr-1"></i>{{ 'request.arrival' | trans }}</div>
-                            <div>{{ request.arrival|localizeddate('full', 'none', app.request.locale) }}</div>
+                            <div>{{ request.arrival|format_date('full', 'none', app.request.locale) }}</div>
                         </div>
 
                         {% if  request.Departure -%}
                             <div class="col-12 col-sm-6 col-md-4 mb-1">
                                 <div><i class="fa fa-calendar mr-1"></i>{{ 'request.departure' | trans }}</div>
-                                <div>{{ request.departure|localizeddate('full', 'none', app.request.locale) }}</div>
+                                <div>{{ request.departure|format_date('full', 'none', app.request.locale) }}</div>
                             </div>
                         {%- endif %}
                         {% set currentArrival = message.Request.Arrival%}

@@ -134,7 +134,7 @@ class Extension extends AbstractExtension implements GlobalsInterface
     /**
      * @return array
      */
-    public function getGlobals()
+    public function getGlobals(): array
     {
         $version = '';
         $versionCreated = new Carbon();

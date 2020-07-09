@@ -9,11 +9,11 @@
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
 
         <title>
-            {%- spaceless -%}
+            {% apply spaceless %}
                 {% if block('title') is defined %}
                     {{ block('title') | trim }} |
                 {% endif %} BeWelcome
-            {%- endspaceless -%}
+            {% endapply %}
         </title>
 
         <meta name="description" content="{{ 'default_meta_description' | trans }}">
@@ -94,12 +94,12 @@
             <script type="application/javascript">
                 $(".select2").select2({
                     theme: 'bootstrap',
-                    containerCssClass: 'form-control'
+                    width: 'auto',
+                    dropdownAutoWidth: true
                 });
                 $(".select2-inline").select2({
                     theme: 'bootstrap',
-                    containerCssClass: 'form-control',
-                    width: 'style'
+                    width: 'auto'
                 });
                 $(".toast").toast('show');
 

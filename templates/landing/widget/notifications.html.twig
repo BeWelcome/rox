@@ -12,7 +12,7 @@
                     {% set notificationText %}{{ notification.translationcode|lower|trans|raw|format(notification.relMember.Username)|raw }}{% endset %}
                 {% endif %}
                 <p class="m-0 p-0"><a href="{{ notification.link }}" title="{{ notificationText }}">{{ notificationText }}</a><br>
-                <small title="{{ notification.created|localizeddate('medium', 'none') }}">{{ notification.created.DiffForHumans }}</small></p>
+                <small title="{{ notification.created|format_date('medium', 'none') }}">{{ notification.created.DiffForHumans }}</small></p>
             </div>
             <div class="ml-auto"><a class="notify" id="notify-{{ notification.id }}" href="#"><i class="fas fa-times"></i></a></div>
         </div>

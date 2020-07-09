@@ -213,13 +213,8 @@ $(function () {
     $(".img-check").click(function(){
         $(this).toggleClass("checked").toggleClass("not_checked");
     });
-    $(".advanced").click(function(){
-        $(this).toggleClass("btn-primary").toggleClass("btn-outline-primary");
-        if ($("#search_showadvanced").is(":checked")) {
-            $("#search_showadvanced").prop("checked", false);
-        } else {
-            $("#search_showadvanced").prop("checked", true);
-        }
+    $(".show_options").click(function(){
+        $("#search_options").toggleClass("d-block").toggleClass("d-none");
     });
 
     if ($(".show_map").is(":checked")) {

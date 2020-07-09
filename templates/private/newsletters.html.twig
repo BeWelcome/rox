@@ -16,7 +16,7 @@
                 </div>
                 <div class="card-body">
                     {% if translation.body is defined %}{{ translation.body|purify|truncate(500) }}{% else %}{{ 'mydata.newsletter.no.body' }}{% endif %}
-                    <p class="small text-muted mb-0">{{ 'created'|trans|capitalize }}:{{ newsletter.created|localizeddate('medium','none', app.request.locale) }}</p>
+                    <p class="small text-muted mb-0">{{ 'created'|trans|capitalize }}:{{ newsletter.created|format_date('medium','none', app.request.locale) }}</p>
                 </div>
                 <div class="card-footer text-right">
                     <a class="btn btn-primary" href="{{ url('newsletter_single', {'shortCode':newsletter.name, 'language':translation.locale}) }}">{{ 'showfull'|trans }}</a>

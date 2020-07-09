@@ -2,7 +2,7 @@
 <div class="col-12 col-sm-6 card {% if not mute %}comment-bg-{{ comment.quality|lower }}{% else %}text-muted{% endif %}">
     <div class="d-flex flex-row justify-content-between">
         <div><p class="h4 good">{{ ('commentquality_' ~ comment.quality)|lower|trans }}</p></div>
-        <div><span title="2013-01-22 00:00:00" class="small">{{ comment.created | localizeddate('medium', 'none', app.request.locale )}}</span></div>
+        <div><span title="2013-01-22 00:00:00" class="small">{{ comment.created | format_date('medium', 'none', app.request.locale )}}</span></div>
     </div>
 
     <div class="d-flex flex-row justify-content-between">

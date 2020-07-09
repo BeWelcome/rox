@@ -48,7 +48,7 @@
                                                     class="nav-link">{{ 'about_getactive' | trans }}</a></li>
                             <li class="nav-item"><a href="{{ url('donate') }}"
                                                     class="nav-link">{{ 'donatelink'  | trans }}</a></li>
-                            {% for team in teams if teams %}
+                            {% for team in teams %}
                                 {% if team.route starts with '/' %}
                                     <li class="nav-item">
                                         <a href="{{ team.route }}" class="nav-link">&nbsp;<i
@@ -149,7 +149,7 @@
                                            class="btn btn-block py-1 text-left mt-1">{{ 'about_getactive' | trans }}</a>
                                         <a href="{{ url('donate') }}"
                                            class="btn btn-block py-1 text-left">{{ 'donatelink'  | trans }}</a>
-                                        {% for team in teams if teams %}
+                                        {% for team in teams %}
                                             {% if team.route starts with '/' %}
                                                 <a href="{{ team.route }}"
                                                    class="btn btn-block py-1 text-left">{{ team.trans | trans }}</a>

@@ -71,12 +71,16 @@ class SearchController extends AbstractController
         $member = $this->getUser();
 
         $preferenceRepository = $this->getDoctrine()->getRepository(Preference::class);
-        /** @var Preference $preference */
-        $preference = $preferenceRepository->findOneBy(['codename' => Preference::SHOW_MAP]);
-        $showMap = $member->getMemberPreferenceValue($preference);
+        /** @var Preference $showMapPreference */
+        $showMapPreference = $preferenceRepository->findOneBy(['codename' => Preference::SHOW_MAP]);
+        $showMap = $member->getMemberPreferenceValue($showMapPreference);
+        /** @var Preference $showOptionsPreference */
+        $showOptionsPreference = $preferenceRepository->findOneBy(['codename' => Preference::SHOW_SEARCH_OPTIONS]);
+        $showOptions = $member->getMemberPreferenceValue($showOptionsPreference);
 
         $searchFormRequest = SearchFormRequest::fromRequest($request, $this->getDoctrine()->getManager());
         $searchFormRequest->show_map = ('Yes' === $showMap);
+        $searchFormRequest->show_options = ('Yes' === $showOptions);
 
         // There are three different forms that might end up on this page
         $formFactory = $this->get('form.factory');
@@ -112,14 +116,21 @@ class SearchController extends AbstractController
             if ($searchIsValid) {
                 $data = $search->getData();
             }
-            $memberPreference = $member->getMemberPreference($preference);
+            $memberShowMapPreference = $member->getMemberPreference($showMapPreference);
             if ($data->show_map) {
-                $memberPreference->setValue('Yes');
+                $memberShowMapPreference->setValue('Yes');
             } else {
-                $memberPreference->setValue('No');
+                $memberShowMapPreference->setValue('No');
+            }
+            $memberShowOptionsPreference = $member->getMemberPreference($showOptionsPreference);
+            if ($data->show_map) {
+                $memberShowOptionsPreference->setValue('Yes');
+            } else {
+                $memberShowOptionsPreference->setValue('No');
             }
             $em = $this->getDoctrine()->getManager();
-            $em->persist($memberPreference);
+            $em->persist($memberShowMapPreference);
+            $em->persist($memberShowOptionsPreference);
             $em->flush();
 
             $searchAdapter = new SearchAdapter(

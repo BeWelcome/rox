@@ -35,6 +35,15 @@ App\Entity\Preference:
         DefaultValue: 'Yes'
         PossibleValues: 'Yes:No'
         Status: 'Normal'
+    SHOW_SEARCH_OPTIONS:
+        codename: 'PreferenceShowSearchOptions'
+        position: 100
+        codeDescription: 'PreferenceShowSearchOptions'
+        Description: 'Stores if the user wants to see the search options on find members'
+        created: <DateTime()>
+        DefaultValue: 'Yes'
+        PossibleValues: 'Yes:No'
+        Status: 'Normal'
     SHOW_ONLINE_ACTIVITIES:
         codename: 'PreferenceOnlineActivities'
         position: 100

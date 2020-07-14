@@ -1,0 +1,36 @@
+App\Entity\Faq:
+  faq1:
+    qAndA: 'interstedinjoininghowto'
+    updated: '<dateTime()>'
+    created: '<dateTime()>'
+    active: 'Active'
+    sortorder: '0'
+    category: '@category0'
+  faq2:
+    qAndA: 'howdoijoin'
+    updated: '<dateTime()>'
+    created: '<dateTime()>'
+    active: 'Active'
+    sortorder: '0'
+    category: '@category0'
+  faq3:
+    qAndA: 'membershipfree'
+    updated: '<dateTime()>'
+    created: '<dateTime()>'
+    active: 'Active'
+    sortorder: '0'
+    category: '@category0'
+  faq4:
+    qAndA: 'howdoifindaccomodation'
+    updated: '<dateTime()>'
+    created: '<dateTime()>'
+    active: 'Active'
+    sortorder: '0'
+    category: '@category1'
+  faq5:
+    qAndA: 'howdoicontactmember'
+    updated: '<dateTime()>'
+    created: '<dateTime()>'
+    active: 'Active'
+    sortorder: '0'
+    category: '@category1'

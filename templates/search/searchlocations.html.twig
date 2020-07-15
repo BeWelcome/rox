@@ -112,7 +112,7 @@
                     {{ form_row(form.order) }}
                 </div>
                 <div class="col-sm-4">
-                    {{ form_row(form.direction) }}
+                    {{ form_row(form.direction, {'attr': {'class': 'select2', 'data-minimum-results-for-search': '-1'}}) }}
                 </div>
                 <div class="col-sm-4">
                     {{ form_row(form.items) }}

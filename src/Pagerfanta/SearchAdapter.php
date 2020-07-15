@@ -104,7 +104,7 @@ class SearchAdapter implements AdapterInterface
      */
     public function getNbResults()
     {
-        return $this->model->getMembersCount(false);
+        return $this->model->getMembersCount();
     }
 
     /**

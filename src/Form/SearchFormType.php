@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use App\Form\CustomDataClass\SearchFormRequest;
+use SearchModel;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Exception\AlreadySubmittedException;
 use Symfony\Component\Form\Exception\LogicException;
@@ -228,16 +229,12 @@ class SearchFormType extends AbstractType
             ->add('order', ChoiceType::class, [
                 'label' => 'label.order',
                 'choices' => [
-                    'searchorderaccommodationasc' => 6,
-                    'searchorderdistanceasc' => 14,
-                    'searchorderloginasc' => 8,
-                    'searchordercommentsasc' => 12,
-                    'searchordermembershipasc' => 10,
-                    'searchorderusernameasc' => 2,
-                    'searchordertest1asc' => 16,
-                    'searchordertest2asc' => 18,
-                    'searchordertest3asc' => 20,
-                    'searchordertest4asc' => 22,
+                    'search.order.accommodation' => 6,
+                    'search.order.distance' => 14,
+                    'search.order.login' => 8,
+                    'search.order.comments' => 12,
+                    'search.order.membership' => 10,
+                    'search.order.username' => 2,
                 ],
                 'attr' => [
                     'class' => 'select2',
@@ -248,8 +245,8 @@ class SearchFormType extends AbstractType
             ->add('direction', ChoiceType::class, [
                 'label' => 'label.direction',
                 'choices' => [
-                    'search.direction.ascending' => 0,
-                    'search.direction.descending' => 1,
+                    'search.direction.ascending' => SearchModel::DIRECTION_ASCENDING,
+                    'search.direction.descending' => SearchModel::DIRECTION_DESCENDING,
                 ],
             ])
             ->add('items', ChoiceType::class, [

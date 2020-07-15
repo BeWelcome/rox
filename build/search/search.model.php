@@ -51,6 +51,9 @@ class SearchModel extends RoxModelBase
     const ORDER_TEST_3 = 20;
     const ORDER_TEST_4 = 22;
 
+    const DIRECTION_ASCENDING = 1;
+    const DIRECTION_DESCENDING = 2;
+
     const SUGGEST_MAX_ITEMS = 30;
 
     // No need to find historical and destroyed places
@@ -105,13 +108,11 @@ class SearchModel extends RoxModelBase
         return self::$ORDERBY;
     }
 
-    private function getOrderBy($orderBy)
+    private function getOrderBy($orderBy, $direction)
     {
         $orderType = $orderBy - ($orderBy % 2);
         $order = self::$ORDERBY[$orderType]['Column'];
-        if ($orderType == self::ORDER_ACCOM || $orderType == self::ORDER_TEST_1
-            || $orderType == self::ORDER_TEST_2 || $orderType == self::ORDER_TEST_3
-            || $orderType == self::ORDER_TEST_4) {
+        if ($orderType == self::ORDER_ACCOM) {
             $orderSuffix = 'DESC';
         } else {
             $orderSuffix = 'ASC';
@@ -120,24 +121,15 @@ class SearchModel extends RoxModelBase
         switch ($orderType) {
             case self::ORDER_ACCOM:
             case self::ORDER_COMMENTS:
-                $order .= ', Distance ASC, HasProfileSummary DESC, LastLogin DESC, HasProfilePhoto DESC';
+                $order .= ', LastLogin DESC, Distance ASC';
                 break;
             case self::ORDER_DISTANCE:
-                $order = $order.', hosting_interest DESC, HasProfileSummary DESC, LastLogin DESC, HasProfilePhoto DESC';
-                break;
-            case self::ORDER_TEST_1:
-                $order .= ', HasProfileSummary DESC, HasProfilePhoto DESC, LastLogin DESC';
-                break;
-            case self::ORDER_TEST_2:
-            case self::ORDER_TEST_3:
-                break;
-            case self::ORDER_TEST_4:
-                $order .= ', HasProfileSummary DESC, hosting_interest DESC, LastLogin DESC';
+                $order = $order.', hosting_interest DESC, LastLogin DESC';
                 break;
         }
 
         // if descending order is requested switch all ASC to DESC and vice versa
-        if ($orderBy % 2)
+        if (self::DIRECTION_ASCENDING === $direction)
         {
             $order = str_replace('ASC', 'BSC', $order);
             $order = str_replace('DESC', 'ASC', $order);
@@ -346,7 +338,7 @@ LIMIT 1
                 AND g.country = '" . $country . "'";
             } else {
                 // we're looking for all members of a country
-                $condition = "AND g.country = '" . $country . "'";
+                $condition .= "AND g.country = '" . $country . "'";
             }
         } else {
             // a simple place with a square rectangle around it
@@ -550,7 +542,7 @@ LIMIT 1
         return $condition;
     }
 
-    public function getMembersCount($publicOnly = true)
+    public function getMembersCount()
     {
         // Fetch count of public members at/around the given place
         $str = "
@@ -615,8 +607,7 @@ LIMIT 1
         $start = ($pageno - 1) * $limit;
 
         // Fetch count of members at/around the given place
-        $vars['countOfMembers'] = $this->getMembersCount(false);
-        $vars['countOfPublicMembers'] = $this->getMembersCount(true);
+        $vars['countOfMembers'] = $vars['countOfPublicMembers'] = $this->getMembersCount();
 
         // *FROM* and *WHERE* will be replaced later on (don't change)
         $str = "
@@ -694,7 +685,7 @@ LIMIT 1
                 " . $this->commentsCondition . "
                 AND m.IdCity = g.geonameId
             ORDER BY
-                " . $this->getOrderBy($vars['search-sort-order']) . "
+                " . $this->getOrderBy($vars['search-sort-order'], $vars['search-sort-direction']) . "
             LIMIT
                 " . $start . ", " . $limit;
 

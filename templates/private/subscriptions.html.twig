@@ -20,7 +20,7 @@
                         <tr>
                             <td class="align-middle"><a
                                         href="{{ url('forum_thread', {'threadId': subscription.thread.id }) }}">{{ subscription.thread.title|purify }}</a><br>
-                                <span class="small">{{ subscription.subscribed|format_date('medium', 'short', app.request.locale ) }}</span></td>
+                                <span class="small">{{ subscription.subscribed|format_datetime('medium', 'short') }}</span></td>
 
                             <td class="align-middle">
                                 <div class="btn-group" role="group">

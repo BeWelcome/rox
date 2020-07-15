@@ -32,7 +32,7 @@
                     <tr>
                         <td>{{ macros.avatar(member.Username) }}</td>
                         <td>{{ macros.profilelink(member.Username) }}
-                            <br>{% if (result.direction == 1) or (result.direction == 3) %}{{ result.last_received|format_date('medium', 'medium') }}{% endif %}
+                            <br>{% if (result.direction == 1) or (result.direction == 3) %}{{ result.last_received|format_datetime('medium', 'medium') }}{% endif %}
                         </td>
                         <td>
                             <i class="fas fa-fw {% if (result.direction == 1) or (result.direction == 3) %}fa-arrow-left{% endif %}"></i><i
@@ -40,16 +40,16 @@
                         </td>
                         <td>{{ macros.avatar(result.username) }}</td>
                         <td>{{ macros.profilelink(result.username) }}
-                            <br>{% if (result.direction == 2) or (result.direction == 3) %}{{ result.last_sent|format_date('medium', 'medium') }}{% endif %}
+                            <br>{% if (result.direction == 2) or (result.direction == 3) %}{{ result.last_sent|format_datetime('medium', 'medium') }}{% endif %}
                         </td>
                     </tr>
                     <tr>
                         <td>{{ macros.avatarstack(result.username, 50,50, true) }}</td>
                         <td colspan="4">{% if (result.direction == 1) or (result.direction == 3) %}<i
-                                class="fas fa-fw fa-arrow-left"></i>{{ result.last_received|format_date('medium', 'medium') }}{% endif %}
+                                class="fas fa-fw fa-arrow-left"></i>{{ result.last_received|format_datetime('medium', 'medium') }}{% endif %}
                             <br>
                             {% if (result.direction == 2) or (result.direction == 3) %}<i
-                                    class="fas fa-fw fa-arrow-right"></i>{{ result.last_sent|format_date('medium', 'medium') }}{% endif %}
+                                    class="fas fa-fw fa-arrow-right"></i>{{ result.last_sent|format_datetime('medium', 'medium') }}{% endif %}
                         </td>
                     </tr>
                 {% endfor %}

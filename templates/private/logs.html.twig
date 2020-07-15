@@ -16,7 +16,7 @@
                 <tr>
                     <td>{{ log.type }}</td>
                     <td>{{ log.logMessage }}</td>
-                    <td>{{ log.created | format_date('medium', 'none', app.request.locale) }}</td>
+                    <td>{{ log.created | format_date('medium') }}</td>
                 </tr>
             {% endfor %}
         </table>

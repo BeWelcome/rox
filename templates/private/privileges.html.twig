@@ -15,7 +15,7 @@
                 <div class="card-body">
                     <p>{{ 'mydata.privileges.scope'|trans }}: {{ privilege.scope }}</p>
                     <p>{{ 'mydata.privileges.role'|trans }}: {{ privilege.role }}</p>
-                    <p>{{ 'mydata.privileges.assigned'|trans }}: {{ privilege.assigned|format_date('medium', 'short', app.request.locale) }}</p>
+                    <p>{{ 'mydata.privileges.assigned'|trans }}: {{ privilege.assigned|format_date('medium') }}</p>
                 </div>
             </div>
         {% endfor %}

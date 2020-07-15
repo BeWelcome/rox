@@ -66,15 +66,14 @@
                                     <i class="fa fa-calendar mr-1"></i>{{ 'request.departure' | trans }}{%- endif %}
                             </div>
                             <div>
-                                {{ message.request.arrival | format_date( 'medium', 'none') }}
+                                {{ message.request.arrival | format_date( 'medium') }}
                                 {%- if message.request.departure %}<br>
-                                    {{ message.request.departure | format_date( 'medium', 'none') }}{%- endif %}
+                                    {{ message.request.departure | format_date( 'medium') }}{%- endif %}
                             </div>
                         </div>
                     {% endif %}
                     {# Handle the case where a message/request doesn't have a sent date #}
-                    {% set sentDate %}{% if message.dateSent != '-0001-11-30 00:00:00' %}{{ message.dateSent | format_date( 'medium', 'none') }}{% else %}{{ message.updated | format_date( 'medium', 'none')}}{% endif %}{% endset %}
-                    <span class="text-muted small">{% trans with {'%sentDate%': sentDate} %}message.sentdate{% endtrans %}</span>
+                    <span class="text-muted small">{% trans with {'%sentDate%': message.created | format_datetime( 'medium', 'short')} %}message.sentdate{% endtrans %}</span>
                         </div>
                     </a>
                 </td>

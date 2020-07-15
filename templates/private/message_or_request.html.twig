@@ -16,9 +16,9 @@
         {% if message.request.status == constant('App\\Entity\\HostingRequest::REQUEST_ACCEPTED') %}{{ 'request.accepted' | trans }}{% endif %}
         {% if message.request.status == constant('App\\Entity\\HostingRequest::REQUEST_TENTATIVELY_ACCEPTED') %}{{ 'request.tentatively_accepted' | trans }}{% endif %}
         <br>
-        {{ 'request.arrival' | trans }}: {{ message.request.arrival | format_date( 'medium', 'none') }}<br>
+        {{ 'request.arrival' | trans }}: {{ message.request.arrival | format_date( 'medium') }}<br>
         {%- if message.request.departure %}
-            {{ 'request.departure' | trans }}: {{ message.request.departure | format_date( 'medium', 'none') }}<br>
+            {{ 'request.departure' | trans }}: {{ message.request.departure | format_date( 'medium') }}<br>
         {%- endif %}
         {% if message.request.flexible %}{{ 'request.flexible' | trans }}<br>{% endif %}
         {{ 'request.number_of_travellers' | trans}}: {{ message.request.numberOfTravellers }}<br>

@@ -38,8 +38,8 @@
             <tr>
                 <td><a href="{{ url('activities_show', {'id': activity.id}) }}">{{ activity.title|purify }}</a> ({{ activity.id }})<br><small>{{ activity.description|truncate(50) }}</small></td>
                 <td>{% for activityOrganizer in activity.organizers %}{{ macros.avatarstack(activityOrganizer.attendee.username) }}{% if not loop.last %},{% endif %}{% endfor %}</td>
-                <td>{{ activity.starts | format_date('short', 'short') }} &mdash; <br>
-                {{  activity.ends | format_date('short', 'short') }}</td>
+                <td>{{ activity.starts | format_datetime('short', 'short') }} &mdash; <br>
+                {{  activity.ends | format_datetime('short', 'short') }}</td>
                 <td>{{ form_widget(form.spamActivities[loop.index0], {'attr': {'class': 'checkableDelete'}}) }}</td>
             </tr>
         {% endfor %}

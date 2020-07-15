@@ -20,7 +20,7 @@
                 <div class="card-footer text-right p-2">
                     {% for post in info.posts|keys %}
                     <a class="btn btn-sm btn-primary mb-1" href="post-{{ info.posts[post].created|date("Y-m-d") }}-{{ post }}.html">
-                        {{ info.posts[post].created|format_date('medium', 'none', app.request.locale) }}
+                        {{ info.posts[post].created|format_date('medium') }}
                     </a>
                     {% endfor %}
                 </div>

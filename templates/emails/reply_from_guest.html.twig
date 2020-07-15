@@ -24,9 +24,9 @@
     {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_TENTATIVELY_ACCEPTED') %}{% trans with {'%username%': sender.Username} %}email.request.reply.guest.tentatively{% endtrans %}<br>{% endif %}
     <br>
     {{ 'request.arrival' | trans }}:<br>
-    {{ request.arrival|format_date('full', 'none', receiverLocale) }}<br>
+    {{ request.arrival|format_date('full', locale=receiverLocale) }}<br>
     {% if request.departure %}{{ 'request.departure' | trans }}:<br>
-        {{ request.departure|format_date('full', 'none', receiverLocale) }}<br>{% endif %}
+        {{ request.departure|format_date('full', locale=receiverLocale) }}<br>{% endif %}
     {% if request.flexible %}{{ 'request.flexible' | trans }}<br>{% endif %}
     {{ 'request.number_of_travellers' | trans}}: {{ request.numberOfTravellers }}<br>
 {% endblock request %}

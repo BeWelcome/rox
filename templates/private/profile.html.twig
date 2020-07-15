@@ -31,7 +31,7 @@
                     <p class="m-0">
                         {{ 'age'|trans }}: {{ member.age }}, {{ 'gender'|trans }}: {{ member.gender|trans }}
                         <br> <span
-                                class="font-weight-bold">{{ 'membersince'|trans }}: {{ member.created|format_date('medium', 'short', app.request.locale) }}
+                                class="font-weight-bold">{{ 'membersince'|trans }}: {{ member.created|format_datetime('medium', 'short') }}
                     </p>
                 </div>
                 <div class="col-12">

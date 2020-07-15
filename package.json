@@ -40,7 +40,7 @@
     "leaflet": "^1.6.0",
     "leaflet.markercluster": "^1.4.1",
     "leaflet.markercluster.webpack": "^1.0.2",
-    "lodash": "^4.17.18",
+    "lodash": "^4.17.19",
     "node-sass": "^4.14.1",
     "postcss-loader": "^3.0.0",
     "raw-loader": "^4.0.1",

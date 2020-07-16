@@ -1,6 +1,7 @@
 <div class="card card-block w-100">
     <form method="post" name="signup" id="user-register-form">
         <?= $callback_tag ?>
+        <?php $errors = $vars['errors']; ?>
         <div class="row">
             <div class="col-12 col-md-3">
 

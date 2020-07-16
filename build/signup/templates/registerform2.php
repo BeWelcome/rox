@@ -61,10 +61,11 @@
                 <div class="text-muted"><?= $words->get('signup.names.hidden'); ?></div>
 
                 <!-- First Name -->
+                <?php $fullnameMissing = in_array('SignupErrorFullNameRequired', $vars['errors']); ?>
                 <div class="form-group">
                     <label for="register-firstname"><?php echo $words->get('FirstName'); ?></label>
                     <div class="input-group">
-                        <input type="text" required minlength="1" class="form-control" name="firstname"
+                        <input type="text" required minlength="1" class="form-control <?php if ($fullnameMissing) { echo 'is-invalid'; } ?>" name="firstname"
                                id="register-firstname" placeholder="<?php echo $words->get('FirstName'); ?>"
                             <?php
                             echo isset($vars['firstname']) ? 'value="' . htmlentities($vars['firstname'], ENT_COMPAT, 'utf-8') . '" ' : '';
@@ -74,12 +75,7 @@
                                 data-content="<?= htmlentities($words->get('subline_firstname')) ?>">
                             <i class="fa fa-question"></i>
                         </button>
-                        <div class="invalid-feedback"><?= $words->get('signup.error.name.empty'); ?></div>
-                        <?php
-                        if (in_array('SignupErrorFullNameRequired', $vars['errors'])) {
-                            echo '<div class="invalid-feedback">' . $words->get('SignupErrorFullNameRequired') . '</div>';
-                        }
-                        ?>
+                        <div class="invalid-feedback"><?= $words->get('SignupErrorFullNameRequired') ?></div>
                     </div>
                 </div>
 
@@ -100,7 +96,7 @@
                 <div class="form-group">
                     <label for="lastname"><?php echo $words->get('LastName'); ?></label>
                     <div class="input-group">
-                        <input type="text" minlength="1" required class="form-control" name="lastname" id="lastname"
+                        <input type="text" minlength="1" required class="form-control <?php if ($fullnameMissing) { echo 'is-invalid'; } ?>" name="lastname" id="lastname"
                                placeholder="<?php echo $words->get('LastName'); ?>"
                             <?php
                             echo isset($vars['lastname']) ? 'value="' . htmlentities($vars['lastname'], ENT_COMPAT, 'utf-8') . '" ' : '';
@@ -110,12 +106,12 @@
                                 data-content="<?= htmlentities($words->get('subline_lastname')) ?>">
                             <i class="fa fa-question"></i>
                         </button>
-                        <div class="invalid-feedback">The lastname must at least be 1 characters long</div>
+                        <div class="invalid-feedback"><?= $words->get('SignupErrorFullNameRequired') ?></div>
                     </div>
                 </div>
 
                 <!-- Mother tongues -->
-                <div class="form-group pt-3">
+                <div class="form-group">
                     <?php
                     $motherTongueError = in_array('SignupErrorNoMotherTongue', $errors);
                     $motherTongue = "";
@@ -124,8 +120,8 @@
                     }
                     ?>
                     <label for="mothertongue"><?php echo $words->get('LanguageLevel_MotherLanguage'); ?></label>
-                    <div class="input-group <?= ($motherTongueError) ? "was-validated" : "" ?>">
-                        <select required class="form-control" name="mothertongue" id="mothertongue"
+                    <div class="input-group">
+                        <select required class="form-control <?= ($motherTongueError) ? "is-invalid" : "" ?>" name="mothertongue" id="mothertongue"
                                 data-placeholder="<?= $words->getBuffered('SignupSelectMotherTongue') ?>">
                             <option></option>
                             <optgroup label="<?= $words->getSilent('SpokenLanguages') ?>">
@@ -140,69 +136,70 @@
                                 data-content="<?= htmlentities($words->get('subline_mothertongue')) ?>">
                             <i class="fa fa-question"></i>
                         </button>
-                        <?php
-                        if ($motherTongueError) { ?>
-                            <div class="invalid-feedback" id="mothertongue-invalid"><?= $words->get('signup.error.mothertongue') ?></div>
-                        <?php } ?>
+                        <div class="invalid-feedback" id="mothertongue-invalid"><?= $words->get('signup.error.mothertongue') ?></div>
                     </div>
                 </div>
 
                 <!-- Date of birth-->
-                <div class="form-group pt-3">
+                <?php $birthdateError = (in_array('SignupErrorBirthDate', $vars['errors'])) ||
+                    (in_array('SignupErrorBirthDateToLow', $vars['errors'])); ?>
+                <div class="form-group">
                     <label for="birthdate"><?php echo $words->get('SignupBirthDate'); ?></label>
                     <div class="input-group date" id="datetimepicker1" data-target-input="nearest">
                         <div class="input-group-prepend" data-target="#datetimepicker1"
                                 data-toggle="datetimepicker"><div class="input-group-text bg-primary white"><i class="far fa-calendar fa-fw"></i></div></div>
-                        <input type="text" class="form-control datetimepicker-input" data-target="#datetimepicker1" id="birthdate"
+                        <input type="text" class="form-control datetimepicker-input <?php if ($birthdateError) { echo 'is-invalid'; }?>" data-target="#datetimepicker1" id="birthdate"
                                name="birthdate" data-toggle="datetimepicker"/>
                         <button type="button" class="input-group-append btn btn-primary" data-trigger="focus" data-container="body"
                                 data-toggle="popover" data-placement="right"
                                 data-content="<?= htmlentities($words->get('signup.help.birthdate')); ?>">
                             <i class="fa fa-question"></i>
                         </button>
-                    </div>
                     <?php
                     if (in_array('SignupErrorBirthDate', $vars['errors'])) {
-                        echo '<span class="alert alert-danger">' . $words->get('SignupErrorBirthDate') . '</span>';
+                        echo '<div class="invalid-feedback">' . $words->get('SignupErrorBirthDate') . '</div>';
                     }
                     if (in_array('SignupErrorBirthDateToLow', $vars['errors'])) {
-                        echo '<span class="alert alert-danger">' . $words->getFormatted('SignupErrorBirthDateToLow', SignupModel::YOUNGEST_MEMBER) . '</span>';
+                        echo '<div class="invalid-feedback">' . $words->getFormatted('SignupErrorBirthDateToLow', SignupModel::YOUNGEST_MEMBER) . '</div>';
                     }
                     ?>
+                    </div>
                 </div>
 
                 <!-- Gender-->
-                <div class="form-group has-feedback pt-3">
+                <?php $genderError = in_array('SignupErrorProvideGender', $vars['errors']); ?>
+                <div class="form-group">
                     <span class="d-block form-control-label"><?php echo $words->get('Gender'); ?></span>
+                    <div class="form-control <?php if ($genderError) { echo "is-invalid"; } ?> d-none"></div>
                     <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                    <label class="btn btn-outline-primary" <?php
+                    <label class="btn btn-outline-primary" for="female" <?php
                     if (isset($vars['gender']) && $vars['gender'] == 'female') {
                         echo ' active"';
                     }
                     ?>">
-                        <input type="radio" id="gender" required name="gender" value="female"<?php
+                        <input type="radio" id="female" required name="gender" value="female"<?php
                         if (isset($vars['gender']) && $vars['gender'] == 'female') {
                             echo ' checked="checked"';
                         }
                         ?> ><?php echo $words->get('female'); ?>
                     </label>
-                    <label class="btn btn-outline-primary <?php
+                    <label class="btn btn-outline-primary for="male" <?php
                     if (isset($vars['gender']) && $vars['gender'] == 'male') {
                         echo ' active"';
                     }
                     ?>">
-                        <input type="radio" required name="gender" value="male"<?php
+                        <input type="radio" id="male" required name="gender" value="male"<?php
                         if (isset($vars['gender']) && $vars['gender'] == 'male') {
                             echo ' checked="checked"';
                         }
                         ?> ><?php echo $words->get('male'); ?>
                     </label>
-                    <label class="btn btn-outline-primary <?php
+                    <label class="btn btn-outline-primary for="other" <?php
                     if (isset($vars['gender']) && $vars['gender'] == 'other') {
                         echo ' active"';
                     }
                     ?>">
-                        <input type="radio" required name="gender" value="other"<?php
+                        <input type="radio" id="other" required name="gender" value="other"<?php
                         if (isset($vars['gender']) && $vars['gender'] == 'other') {
                             echo ' checked="checked"';
                         }
@@ -214,8 +211,8 @@
                             data-content="<?= htmlentities($words->get('signup.help.gender')); ?>">
                         <i class="fa fa-question"></i>
                     </button>
-                    <?php if (in_array('SignupErrorProvideGender', $vars['errors'])) {
-                        echo '<span class="help-block alert alert-danger">' . $words->get('SignupErrorProvideGender') . '</span>';
+                    <?php if ($genderError) {
+                        echo '<div class="invalid-feedback">' . $words->get('SignupErrorProvideGender') . '</div>';
                     }
                     ?>
 
@@ -246,7 +243,8 @@
         $("#datetimepicker1").datetimepicker({
             format: 'YYYY-MM-DD',
             maxDate: maxDate,
-            viewMode: 'years'
+            viewMode: 'years',
+            keepInvalid: true
         });
     });
 </script>

@@ -10,7 +10,7 @@ $map_conf = PVars::getObj('map');
     <div class="card card-block w-100">
         <form method="post" class="form" name="geo-form-js" id="geo-form-js">
             <?= $callback_tag ?>
-
+            <?php $locationError = in_array('SignupErrorProvideLocation', $vars['errors']); ?>
             <div class="row">
                 <div class="col-12 col-md-3">
 
@@ -31,25 +31,19 @@ $map_conf = PVars::getObj('map');
 
                 <div class="col-12 col-md-9">
 
-                    <label for="location" class="form-control-label sr-only"><?= $words->getSilent('label_setlocation') ?></label>
-                    <?php echo $words->flushBuffer(); ?>
-                    <input type="hidden" name="location-geoname-id" id="location-geoname-id" value="<?= isset($vars['location-geoname-id']) ? $vars['location-geoname-id'] : '' ?>"/>
-                    <input type="hidden" name="location-latitude" id="location-latitude" value="<?= isset($vars['location-latitude']) ? $vars['location-latitude'] : '' ?>"/>
-                    <input type="hidden" name="location-longitude" id="location-longitude" value="<?= isset($vars['location-longitude']) ? $vars['location-longitude'] : '' ?>"/>
-                    <input type="text" name="location" id="location" oninput="RemoveOverlay();" class="form-control location-picker" placeholder="<?= $words->get('label_setlocation') ?>"
-                        <?php
-                        echo isset($vars['location']) ? 'value="'. htmlentities($vars['location'],ENT_COMPAT, 'utf-8') . '" ' : '';
-                        ?>
-                    >
-                    <script>
-                        function RemoveOverlay() {
-                            document.getElementById("mapoverlay").style.display = "none";
-                        }
-                    </script>
                     <div class="form-group">
-                        <div id="mapoverlay">
-                            <span class="text-muted text-justify"><?= $words->get('subline_location') ?></span>
-                        </div>
+                        <label for="location" class="form-control-label"><?= $words->getSilent('label_setlocation') ?></label>
+                        <?php echo $words->flushBuffer(); ?>
+                        <input type="hidden" name="location-geoname-id" id="location-geoname-id" value="<?= isset($vars['location-geoname-id']) ? $vars['location-geoname-id'] : '' ?>"/>
+                        <input type="hidden" name="location-latitude" id="location-latitude" value="<?= isset($vars['location-latitude']) ? $vars['location-latitude'] : '' ?>"/>
+                        <input type="hidden" name="location-longitude" id="location-longitude" value="<?= isset($vars['location-longitude']) ? $vars['location-longitude'] : '' ?>"/>
+                        <input type="text" name="location" id="location" class="form-control location-picker <?php if ($locationError) { echo 'is-invalid'; } ?>" placeholder="<?= $words->get('label_setlocation') ?>"
+                            <?php
+                            echo isset($vars['location']) ? 'value="'. htmlentities($vars['location'],ENT_COMPAT, 'utf-8') . '" ' : '';
+                            ?>
+                        >
+                        <div class="invalid-feedback"><?= $words->get('SignupErrorProvideLocation'); ?></div>
+                        <small class="text-muted text-justify"><?= $words->get('subline_location') ?></small>
                         <div class="w-100">
                             <div id="map" class="signupmap mb-1"></div>
                         </div>

@@ -1,4 +1,4 @@
-{% filter inky_to_html|inline_css(source('emails/email.css')) %}
+{% apply inky_to_html|inline_css(source('emails/email.css')) %}
     <wrapper class="header">
         <container>
             <row class="collapse">
@@ -32,4 +32,4 @@
         </wrapper>
 
     </container>
-{% endfilter %}
+{% endapply %}

@@ -1,6 +1,6 @@
 {% import 'macros.twig' as macros %}
 <!DOCTYPE html>
-<html lang="{{ locale }}">
+<html lang="{{ app.request.locale }}">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -239,6 +239,11 @@
 </script>
 <script>
     window.addEventListener("load", function () {
+        let locale = document.getElementsByTagName('html')[0].getAttribute('lang');
+        let privacyUrl = "/privacy";
+        if ('fr' === locale) {
+            privacyUrl += "/fr";
+        }
         window.cookieconsent.initialise({
             "palette": {
                 "popup": {
@@ -252,7 +257,7 @@
             "theme": "classic",
             "position": "bottom-right",
             "content": {
-                "href": "/privacy",
+                "href": privacyUrl,
                 message: "{{ 'cookie.consent.message'|trans }}",
                 dismiss: "{{ 'cookie.consent.dismiss'|trans }}",
                 link: "{{ 'cookie.consent.learnmore'|trans }}"

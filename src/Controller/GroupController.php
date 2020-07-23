@@ -17,7 +17,6 @@ use App\Model\GroupModel;
 use App\Model\WikiModel;
 use App\Repository\GroupRepository;
 use App\Repository\WikiRepository;
-use App\Utilities\MailerTrait;
 use App\Utilities\ManagerTrait;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
@@ -42,7 +41,6 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
  */
 class GroupController extends AbstractController
 {
-    use MailerTrait;
     use ManagerTrait;
     use TranslatorTrait;
     use TranslatedFlashTrait;

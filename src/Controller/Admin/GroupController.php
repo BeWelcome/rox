@@ -5,7 +5,7 @@ namespace App\Controller\Admin;
 use App\Entity\Group;
 use App\Entity\Member;
 use App\Logger\Logger;
-use App\Utilities\MailerTrait;
+use App\Service\Mailer;
 use App\Utilities\ManagerTrait;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
@@ -29,10 +29,18 @@ use Symfony\Component\Validator\Constraints\NotBlank;
  */
 class GroupController extends AbstractController
 {
-    use MailerTrait;
-    use ManagerTrait;
     use TranslatorTrait;
     use TranslatedFlashTrait;
+
+    /**
+     * @var Mailer
+     */
+    private $mailer;
+
+    public function __construct(Mailer $mailer)
+    {
+        $this->mailer = $mailer;
+    }
 
     /**
      * Allows to set a status for group creation requests.
@@ -408,7 +416,7 @@ class GroupController extends AbstractController
             '[New Group] %group% approved',
             ['%group%' => strip_tags($group->getName())]
         );
-        $this->sendTemplateEmail('group@bewelcome.org', $creator, 'group/approved', [
+        $this->mailer->sendGroupApprovalEmail($creator, [
             'subject' => $subject,
             'group' => $group,
             'creator' => $creator,

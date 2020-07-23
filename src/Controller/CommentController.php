@@ -8,22 +8,18 @@ use App\Entity\FeedbackCategory;
 use App\Entity\Member;
 use App\Form\CustomDataClass\ReportCommentRequest;
 use App\Form\ReportCommentType;
-use App\Utilities\BewelcomeAddressTrait;
-use App\Utilities\MailerTrait;
+use App\Service\Mailer;
 use App\Utilities\TranslatedFlashTrait;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Mime\Address;
 use Symfony\Component\Routing\Annotation\Route;
 
 class CommentController extends AbstractController
 {
-    use MailerTrait;
     use TranslatedFlashTrait;
-//    use BewelcomeAddressTrait;
 
     /**
      * @Route("/members/{username}/comment/{commentId}/report", name="report_comment",
@@ -37,7 +33,8 @@ class CommentController extends AbstractController
     public function reportCommentAction(
         Request $request,
         Member $member,
-        Comment $comment
+        Comment $comment,
+        Mailer $mailer
     ) {
 //        \todo Should we only allow the receiver of a comment to report it?
 //        if ($comment->getToMember()->getId() !== $member->getId() && $comment->getFromMember()->getId() !== $member->getId()) {
@@ -60,10 +57,8 @@ class CommentController extends AbstractController
                 $feedbackCategoryRepository = $this->getDoctrine()->getRepository(FeedbackCategory::class);
                 $feedbackCategory = $feedbackCategoryRepository->findOneBy(['name' => 'Comment_issue']);
 
-                $success = $this->sendTemplateEmail(
-                    $this->beWelcomeAddress($user),
-                    new Address($feedbackCategory->getEmailToNotify(), 'Comment Issue'),
-                    'comment.feedback',
+                $success = $mailer->sendCommentReportedFeedbackEmail(
+                    $user,
                     [
                         'subject' => 'Comment report',
                         'comment' => $comment,

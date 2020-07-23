@@ -1,0 +1,17 @@
+<p>
+{{ 'group.invitation.groupname'|trans({'groupname': group.name}) }}
+</p>
+<p>
+    {{
+    'group.accept.invitation'|trans({
+        'accept': '<a href="' ~ url('accept_invite_to_group', {'groupId': group.id, 'memberId': receiver.id}) ~ '">' ~ 'group.email.accept'|trans ~ '</a>',
+    })|raw
+    }}
+</p>
+<p>
+    {{
+    'group.decline.invitation'|trans({
+        'decline': '<a href="' ~ url('decline_invite_to_group', {'groupId': group.id, 'memberId': receiver.id}) ~ '">' ~ 'group.email.decline'|trans ~ '</a>',
+    })|raw
+    }}
+</p>

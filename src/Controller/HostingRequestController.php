@@ -10,7 +10,6 @@ use App\Entity\Message;
 use App\Form\HostingRequestGuest;
 use App\Form\HostingRequestHost;
 use App\Model\HostingRequestModel;
-use App\Utilities\MailerTrait;
 use App\Utilities\ManagerTrait;
 use App\Utilities\TranslatorTrait;
 use DateTime;
@@ -34,7 +33,6 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
  */
 class HostingRequestController extends BaseMessageController
 {
-    use MailerTrait;
     use ManagerTrait;
     use TranslatorTrait;
 
@@ -356,7 +354,7 @@ class HostingRequestController extends BaseMessageController
      */
     protected function sendGuestReplyNotification(Member $host, Member $guest, Message $request, $subject, $requestChanged)
     {
-        $this->sendRequestNotification($guest, $host, $host, $request, $subject, 'reply_from_guest', $requestChanged);
+        $this->messageModel->sendRequestNotification($guest, $host, $host, $request, $subject, 'reply_from_guest', $requestChanged);
     }
 
     /**
@@ -369,36 +367,11 @@ class HostingRequestController extends BaseMessageController
         return $requestModel->checkRequestExpired($hostingRequest->getRequest());
     }
 
-    /**
-     * The requestChanged parameter triggers a PHPMD warning which is out of place in this case
-     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
-     */
-    private function sendRequestNotification(
-        Member $sender,
-        Member $receiver,
-        Member $host,
-        Message $request,
-        $subject,
-        $template,
-        $requestChanged
-    ) {
-        // Send mail notification
-        $this->sendTemplateEmail($sender, $receiver, $template, [
-            'host' => $host,
-            'subject' => $subject,
-            'message' => $request,
-            'request' => $request->getRequest(),
-            'changed' => $requestChanged,
-        ]);
-
-        return true;
-    }
-
     private function sendInitialRequestNotification(Member $host, Member $guest, Message $request)
     {
         $subject = $request->getSubject()->getSubject();
 
-        $this->sendRequestNotification($guest, $host, $host, $request, $subject, 'request');
+        $this->messageModel->sendRequestNotification($guest, $host, $host, $request, $subject, 'request', false);
     }
 
     /**
@@ -407,7 +380,7 @@ class HostingRequestController extends BaseMessageController
      */
     private function sendHostReplyNotification(Member $host, Member $guest, Message $request, $subject, $requestChanged)
     {
-        $this->sendRequestNotification($host, $guest, $host, $request, $subject, 'reply_from_host', $requestChanged);
+        $this->messageModel->sendRequestNotification($host, $guest, $host, $request, $subject, 'reply_from_host', $requestChanged);
     }
 
     /**

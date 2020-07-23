@@ -10,7 +10,7 @@ use App\Entity\Member;
 use App\Entity\Message;
 use App\Entity\Subject;
 use App\Repository\MessageRepository;
-use App\Utilities\MailerTrait;
+use App\Service\Mailer;
 use App\Utilities\ManagerTrait;
 use App\Utilities\TranslatorTrait;
 use Doctrine\DBAL\DBALException;
@@ -27,9 +27,18 @@ use PDO;
  */
 class MessageModel
 {
-    use MailerTrait;
     use ManagerTrait;
     use TranslatorTrait;
+
+    /**
+     * @var Mailer
+     */
+    private $mailer;
+
+    public function __construct(Mailer $mailer)
+    {
+        $this->mailer = $mailer;
+    }
 
     /**
      * Mark a message as purged (can not be unmarked).
@@ -223,7 +232,7 @@ class MessageModel
      * @param int $page
      * @param int $limit
      *
-     * @return \Pagerfanta\Pagerfanta
+     * @return Pagerfanta
      */
     public function getReportedMessages($page = 1, $limit = 10)
     {
@@ -525,11 +534,11 @@ class MessageModel
         $em->persist($message);
         $em->flush();
 
-        // \todo Send email notification
-        $this->sendTemplateEmail($sender, $receiver, 'message', [
+        $this->mailer->sendMessageNotificationEmail($sender, $receiver, 'message', [
             'message' => $message,
             'subject' => $subjectText,
             'body' => $body,
+
         ]);
 
         return $message;
@@ -583,4 +592,30 @@ class MessageModel
 
         return false;
     }
+
+    /**
+     * The requestChanged parameter triggers a PHPMD warning which is out of place in this case
+     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
+     */
+    public function sendRequestNotification(
+        Member $sender,
+        Member $receiver,
+        Member $host,
+        Message $request,
+        $subject,
+        $template,
+        $requestChanged
+    ) {
+        // Send mail notification
+        $this->mailer->sendMessageNotificationEmail($sender, $receiver, $template, [
+            'host' => $host,
+            'subject' => $subject,
+            'message' => $request,
+            'request' => $request->getRequest(),
+            'changed' => $requestChanged,
+        ]);
+
+        return true;
+    }
+
 }

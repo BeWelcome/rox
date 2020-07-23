@@ -45,7 +45,13 @@ trait MessageTrait
         $em = $this->getManager();
 
         $this->setTranslatorLocale($receiver);
-        $subjectText = $this->getTranslator()->trans($parameters['subject']);
+        $subject = $parameters['subject'];
+        $translator = $this->getTranslator();
+        if (\is_array($subject)) {
+            $subjectText = $translator->trans($subject['translationId'], $subject['parameters']);
+        } else {
+            $subjectText = $translator->trans($subject);
+        }
         $subject = new Subject();
         $subject->setSubject($subjectText);
         $em->persist($subject);
@@ -56,7 +62,7 @@ trait MessageTrait
         $message->setReceiver($receiver);
         $message->setSubject($subject);
 
-        $body = $this->getEnvironment()->render('emails/' . $template . '.html.twig', $parameters);
+        $body = $this->getEnvironment()->render( $template . '.html.twig', $parameters);
         $message->setMessage($body);
         $em->persist($message);
         $em->flush();

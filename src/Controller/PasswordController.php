@@ -8,7 +8,7 @@ use App\Form\ResetPasswordFormType;
 use App\Form\ResetPasswordRequestFormType;
 use App\Model\MemberModel;
 use App\Repository\MemberRepository;
-use App\Utilities\MailerTrait;
+use App\Service\Mailer;
 use App\Utilities\ManagerTrait;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
@@ -22,7 +22,6 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class PasswordController extends AbstractController
 {
-    use MailerTrait;
     use ManagerTrait;
     use TranslatorTrait;
     use TranslatedFlashTrait;
@@ -32,7 +31,7 @@ class PasswordController extends AbstractController
      *
      * @return Response
      */
-    public function requestResetPasswordAction(Request $request, MemberModel $memberModel)
+    public function requestResetPasswordAction(Request $request, MemberModel $memberModel, Mailer $mailer)
     {
         // Someone obviously lost their way. No sense in resetting your password if you're currently logged in.
         if ($this->isGranted('ROLE_USER')) {
@@ -68,10 +67,13 @@ class PasswordController extends AbstractController
                 }
 
                 /* Sent the member a link to follow to reset the password */
-                $sent = $this->sendPasswordResetLink(
+                $sent = $mailer->sendPasswordResetLinkEmail(
                     $member,
-                    'Password Reset for BeWelcome',
-                    $token
+                    [
+                        'receiver' => $member,
+                        'subject' => 'reset.password.subject',
+                        'token' => $token,
+                    ]
                 );
                 if ($sent) {
                     $this->addTranslatedFlash('notice', 'flash.email.reset.password');
@@ -139,14 +141,4 @@ class PasswordController extends AbstractController
         ]);
     }
 
-    private function sendPasswordResetLink(Member $receiver, $subject, $token)
-    {
-        $this->sendTemplateEmail('password@bewelcome.org', $receiver, 'reset.password', [
-            'receiver' => $receiver,
-            'subject' => $subject,
-            'token' => $token,
-        ]);
-
-        return true;
-    }
 }

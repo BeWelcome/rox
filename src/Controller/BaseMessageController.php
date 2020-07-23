@@ -8,6 +8,7 @@ use App\Form\CustomDataClass\MessageIndexRequest;
 use App\Form\MessageIndexFormType;
 use App\Model\MessageModel;
 use App\Repository\MessageRepository;
+use App\Service\Mailer;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
 use Doctrine\ORM\OptimisticLockException;

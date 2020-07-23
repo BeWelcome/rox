@@ -1,5 +1,3 @@
 <p>
-    {% trans with {'%username%': member.Username} %}email.greeting{% endtrans %}<br><br>
     {% trans with {'%admin%': admin.Username, '%group_start%': group_start, '%group_end': group_end, '%groupname%': group.Name} %}%admin% approved your application for %group_start%"%groupname%"%group_end% and you are now a member of that group.{% endtrans %}
 </p>
-<p>{{ 'email.farewell' | trans }}</p>

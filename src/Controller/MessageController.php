@@ -6,7 +6,6 @@ use App\Entity\Member;
 use App\Entity\Message;
 use App\Entity\Subject;
 use App\Form\MessageToMemberType;
-use App\Utilities\MailerTrait;
 use App\Utilities\ManagerTrait;
 use DateTime;
 use Doctrine\ORM\OptimisticLockException;
@@ -31,7 +30,6 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
  */
 class MessageController extends BaseMessageController
 {
-    use MailerTrait;
     use ManagerTrait;
 
     /**

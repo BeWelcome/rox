@@ -1,13 +1,5 @@
 {% extends 'emails/email.html.twig' %}
 
 {% block content %}
-    <p>
-        {% trans with {'%groupname%': group.Name} %}You have been invited to the group "%groupname%".{% endtrans %}
-    </p>
-    <p>
-        {% trans with {'%link_start%': '<a href="' ~ path('decline_invite_to_group', {'groupId':group.id, 'memberId':sender.id}) ~ '">', '%link_end%': '</a>'} %}If you do not want to join the group, please click this link instead: %link_start%Decline Invitation%link_end%.{% endtrans %}
-    </p>
-    <p>
-        {% trans with {'%link_start%': '<a href="' ~ path('accept_invite_to_group', {'groupId':group.id, 'memberId':sender.id}) ~ '">', '%link_end%': '</a>'} %}If you would like to join the group, click the following link: %link_start%Accept Invitation%link_end%.{% endtrans %}
-    </p>
+    {% include '_partials/group/invitation.html.twig' %}
 {% endblock content %}

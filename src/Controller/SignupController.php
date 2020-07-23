@@ -4,7 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Member;
 use App\Repository\MemberRepository;
-use App\Utilities\MailerTrait;
+use App\Service\Mailer;
 use App\Utilities\TranslatorTrait;
 use Exception;
 use Psr\Log\LoggerInterface;
@@ -19,7 +19,6 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 class SignupController extends AbstractController
 {
     use TranslatorTrait;
-    use MailerTrait;
 
     /**
      * @Route("/signup/finish", name="signup_finish")
@@ -28,7 +27,7 @@ class SignupController extends AbstractController
      *
      * @return Response
      */
-    public function finishSignup(Request $request)
+    public function finishSignup(Request $request, Mailer $mailer)
     {
         $signupVars = $request->getSession()->get('SignupBWVars');
 
@@ -58,10 +57,8 @@ class SignupController extends AbstractController
                 'key' => $key,
             ];
 
-            $this->sendTemplateEmail(
-                'signup@bewelcome.org',
+            $mailer->sendSignupSuccessfulEmail(
                 $member,
-                'signup',
                 $parameters
             );
 
@@ -84,7 +81,7 @@ class SignupController extends AbstractController
      *
      * @return Response
      */
-    public function resendConfirmationEmail($username, AuthenticationUtils $helper)
+    public function resendConfirmationEmail($username, AuthenticationUtils $helper, Mailer $mailer)
     {
         if ($helper->getLastUsername() !== $username) {
             throw $this->createAccessDeniedException();
@@ -105,10 +102,8 @@ class SignupController extends AbstractController
             'key' => $member->getRegistrationKey(),
         ];
 
-        $this->sendTemplateEmail(
-            'signup@bewelcome.org',
+        $mailer->sendSignupEmailConfirmationEmail(
             $member,
-            'resent',
             $parameters
         );
 

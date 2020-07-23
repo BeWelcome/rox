@@ -22,8 +22,8 @@ class FindUserFormType extends AbstractType
                     'placeholder' => 'placeholder.username.part',
                 ],
             ])
-            ->add('reset_password', SubmitType::class, [
-                'label' => 'label.reset.password',
+            ->add('find_member', SubmitType::class, [
+                'label' => 'label.find.member',
             ]);
     }
 }

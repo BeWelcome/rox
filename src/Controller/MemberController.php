@@ -3,12 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\Member;
-use App\Entity\Message;
 use App\Form\PasswordFormType;
 use App\Logger\Logger;
 use App\Model\MemberModel;
-use App\Repository\MessageRepository;
-use App\Utilities\MailerTrait;
 use App\Utilities\ManagerTrait;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
@@ -18,7 +15,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -35,7 +31,6 @@ use Symfony\WebpackEncoreBundle\Asset\EntrypointLookupInterface;
  */
 class MemberController extends AbstractController
 {
-    use MailerTrait;
     use ManagerTrait;
     use TranslatorTrait;
     use TranslatedFlashTrait;

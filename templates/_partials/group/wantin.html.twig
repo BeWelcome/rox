@@ -1,0 +1,15 @@
+<p>
+    {{ 'group.wants.in'|trans({
+        'username': '<a href="' ~ url('members_profile', {'username': sender.Username}) ~ '">' ~ sender.Username ~ '</a>',
+        'group': '<a href="' ~ url('group_start', {'group_id': group.id}) ~ '">' ~ group.Name ~ '</a>'})|raw
+    }}
+</p>
+<p>{{ 'group.join.reason'|trans }} {{ reason }}</p>
+<p>
+    {{
+    'group.accept.decline.join'|trans({
+        'accept': '<a href="' ~ url('group_accept_join', {'groupId': group.id, 'memberId': sender.id}) ~ '">' ~ 'group.email.accept'|trans ~ '</a>',
+        'decline': '<a href="' ~ url('group_decline_join', {'groupId': group.id, 'memberId': sender.id}) ~ '">' ~ 'group.email.decline'|trans ~ '</a>'
+    })|raw
+    }}
+</p>

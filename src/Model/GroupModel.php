@@ -13,8 +13,8 @@ use App\Entity\Notification;
 use App\Entity\Privilege;
 use App\Entity\PrivilegeScope;
 use App\Entity\Role;
+use App\Service\Mailer;
 use App\Utilities\BewelcomeAddressTrait;
-use App\Utilities\MailerTrait;
 use App\Utilities\ManagerTrait;
 use App\Utilities\MessageTrait;
 use Doctrine\DBAL\DBALException;
@@ -27,7 +27,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 class GroupModel
 {
     use ManagerTrait;
-    use MailerTrait;
     use MessageTrait;
     use BewelcomeAddressTrait;
 
@@ -36,9 +35,15 @@ class GroupModel
      */
     private $urlGenerator;
 
-    public function __construct(UrlGeneratorInterface $urlGenerator)
+    /**
+     * @var Mailer
+     */
+    private $mailer;
+
+    public function __construct(UrlGeneratorInterface $urlGenerator, Mailer $mailer)
     {
         $this->urlGenerator = $urlGenerator;
+        $this->mailer = $mailer;
     }
 
     /**
@@ -75,34 +80,19 @@ class GroupModel
         $em->flush();
 
         // Send email to invitee
-        $url = $this->urlGenerator->generate('group_start', ['group_id' => $group->getId()]);
-        $acceptUrl = $this->urlGenerator->generate('accept_invite_to_group', [
-            'groupId' => $group->getId(),
-            'memberId' => $member->getId(),
-        ], UrlGenerator::ABSOLUTE_URL);
-
-        $declineUrl = $this->urlGenerator->generate('decline_invite_to_group', [
-            'groupId' => $group->getId(),
-            'memberId' => $member->getId(),
-        ], UrlGenerator::ABSOLUTE_URL);
-
-        $acceptTag = '<a href="' . $acceptUrl . '">';
-        $declineTag = '<a href="' . $declineUrl . '">';
-
         $params = [
             'subject' => 'group.invitation',
             'receiver' => $member,
             'sender' => $admin,
-            'group' => $group,
-            'accept_start' => $acceptTag,
-            'accept_end' => '</a>',
-            'decline_start' => $declineTag,
-            'decline_end' => '</a>',
+            'group' => [
+                'name' => $group->getName(),
+                'id' => $group->getId(),
+            ],
         ];
-        $adminEmail = $this->beWelcomeAddress($admin, 'group@bewelcome.org');
-        // $this->createTemplateMessage($admin, $member, 'group/invitation', $params);
-        $this->sendTemplateEmail($adminEmail, $member, 'group/invitation', $params);
+        $this->createTemplateMessage($admin, $member, '_partials/group/invitation', $params);
+        $this->mailer->sendGroupNotificationEmail($admin, $member,'group/invitation', $params);
 
+        $url = $this->urlGenerator->generate('group_start', ['group_id' => $group->getId()]);
         $note = new Notification();
         $note->setMember($member);
         $note->setRelMember($admin);
@@ -143,6 +133,7 @@ class GroupModel
     public function declineInviteToGroup(Group $group, Member $member)
     {
         try {
+            $success = false;
             $membership = $this->getMembership($group, $member);
 
             if ($membership) {
@@ -218,8 +209,8 @@ class GroupModel
                 ];
                 $admins = $group->getAdmins();
                 foreach ($admins as $admin) {
-                    // $this->createTemplateMessage($member, $admin, 'group/wantin', $params);
-                    $this->sendTemplateEmail($member, $admin, 'group/wantin', $params);
+                    $this->createTemplateMessage($member, $admin, '_partials/group/wantin', $params);
+                    $this->mailer->sendGroupNotificationEmail($member, $admin, 'group/wantin', $params);
                 }
             } else {
                 $membership->setStatus(GroupMembershipStatusType::CURRENT_MEMBER);
@@ -344,7 +335,7 @@ class GroupModel
         }
 
         $this->updateMembership($group, $member, GroupMembershipStatusType::CURRENT_MEMBER);
-        $this->sendTemplateEmail($admin, $member, 'group/join.approved', [
+        $this->mailer->sendGroupNotificationEmail($admin, $member, 'group/join.approved', [
             'subject' => 'group.approved.join',
             'group' => $group,
             'member' => $member,
@@ -360,7 +351,7 @@ class GroupModel
             return false;
         }
         $this->updateMembership($group, $member, GroupMembershipStatusType::KICKED_FROM_GROUP);
-        $this->sendTemplateEmail($admin, $member, 'group/join.declined', [
+        $this->mailer->sendGroupNotificationEmail($admin, $member, 'group/join.declined', [
             'subject' => 'group.declined.join',
             'group' => $group,
             'member' => $member,
@@ -416,7 +407,7 @@ class GroupModel
     public function sendAdminNotification(Group $group, Member $member, $admins)
     {
         foreach ($admins as $admin) {
-            $this->sendTemplateEmail('group@bewelcome.org', $admin, 'group/accept.invite', [
+            $this->mailer->sendAdminGroupNotificationEmail($admin, 'group/accept.invite', [
                 'subject' => 'group.invitation.accepted',
                 'group' => $group,
                 'invitee' => $member,

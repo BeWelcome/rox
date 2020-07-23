@@ -3,8 +3,7 @@
 namespace App\Command;
 
 use App\Entity\BroadcastMessage;
-use App\Utilities\MailerTrait;
-use App\Utilities\TranslatorTrait;
+use App\Service\Mailer;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
@@ -18,9 +17,6 @@ use Symfony\Component\Mime\Address;
 
 class SendMassmailCommand extends Command
 {
-    use TranslatorTrait;
-    use MailerTrait;
-
     /**
      * @var string
      */
@@ -35,12 +31,20 @@ class SendMassmailCommand extends Command
      * @var EntityManager
      */
     private $entityManager;
+    /**
+     * @var Mailer
+     */
+    private $mailer;
 
-    public function __construct(EntityManagerInterface $entityManager, ParameterBagInterface $params)
-    {
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        ParameterBagInterface $params,
+        Mailer $mailer
+    ) {
         parent::__construct();
         $this->params = $params;
         $this->entityManager = $entityManager;
+        $this->mailer = $mailer;
     }
 
     protected function configure()
@@ -71,11 +75,15 @@ class SendMassmailCommand extends Command
                 $sender = $this->determineSender($scheduled->getNewsletter()->getType());
                 $receiver = $scheduled->getReceiver();
                 try {
-                    $this->sendTemplateEmail($sender, $receiver, 'newsletter', [
-                        'receiver' => $receiver,
-                        'subject' => strtolower('Broadcast_Title_' . $scheduled->getNewsletter()->getName()),
-                        'wordcode' => strtolower('Broadcast_Body_' . $scheduled->getNewsletter()->getName()),
-                    ]);
+                    $this->mailer->sendNewsletterEmail(
+                        $sender,
+                        $receiver,
+                        [
+                            'receiver' => $receiver,
+                            'subject' => strtolower('Broadcast_Title_' . $scheduled->getNewsletter()->getName()),
+                            'wordcode' => strtolower('Broadcast_Body_' . $scheduled->getNewsletter()->getName()),
+                        ]
+                    );
                     $scheduled->setStatus('Sent');
                     ++$sent;
                 } catch (Exception $e) {

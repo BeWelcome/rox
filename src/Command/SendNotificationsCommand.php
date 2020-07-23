@@ -7,7 +7,7 @@ use App\Doctrine\NotificationStatusType;
 use App\Entity\ForumPost;
 use App\Entity\PostNotification;
 use App\Repository\PostNotificationRepository;
-use App\Utilities\MailerTrait;
+use App\Service\Mailer;
 use App\Utilities\TranslatorTrait;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
@@ -27,7 +27,6 @@ use Symfony\Component\Mime\Address;
 class SendNotificationsCommand extends Command
 {
     use TranslatorTrait;
-    use MailerTrait;
 
     /**
      * @var string
@@ -48,13 +47,22 @@ class SendNotificationsCommand extends Command
      * @var LoggerInterface
      */
     private $logger;
+    /**
+     * @var Mailer
+     */
+    private $mailer;
 
-    public function __construct(EntityManagerInterface $entityManager, ParameterBagInterface $params, LoggerInterface $logger)
-    {
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        ParameterBagInterface $params,
+        LoggerInterface $logger,
+        Mailer $mailer
+    ) {
         parent::__construct();
         $this->params = $params;
         $this->logger = $logger;
         $this->entityManager = $entityManager;
+        $this->mailer = $mailer;
     }
 
     protected function configure()
@@ -100,10 +108,14 @@ class SendNotificationsCommand extends Command
                     $this->setTranslatorLocale($receiver);
                     $sender = $this->determineSender($scheduled->getPost());
                     $subject = $this->getSubject($scheduled);
-                    $this->sendTemplateEmail($sender, $receiver, 'notifications', [
-                        'subject' => $subject,
-                        'notification' => $scheduled,
-                    ]);
+                    $this->mailer->sendNotificationEmail(
+                        $sender,
+                        $receiver,
+                        [
+                            'subject' => $subject,
+                            'notification' => $scheduled,
+                        ]
+                    );
                     $scheduled->setStatus(NotificationStatusType::SENT);
                     ++$sent;
                 } catch (\Exception $e) {

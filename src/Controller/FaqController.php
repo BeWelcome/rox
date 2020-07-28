@@ -2,20 +2,18 @@
 
 namespace App\Controller;
 
+use App\Entity\FaqCategory;
+use App\Model\FaqModel;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
-use App\Entity\FaqCategory;
-use App\Model\FaqModel;
 use Symfony\Component\HttpFoundation\Response;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-
+use Symfony\Component\Routing\Annotation\Route;
 
 class FaqController extends AbstractController
 {
-
-   /**
+    /**
      * @var FaqModel
      */
     private $faqModel;
@@ -43,8 +41,33 @@ class FaqController extends AbstractController
     }
 
     /**
+     * @Route(
+     *     "/about/faq/{categoryId}",
+     *     name="faqs_overview",
+     *     defaults={"categoryId": "1"},
+     *     requirements={"categoryId": "\d+"}
+     * )
      *
+     * @ParamConverter("faqCategory", class="App\Entity\FaqCategory", options={"id" = "categoryId"})
      *
+     * @return Response
+     */
+    public function showOverview(Request $request, FaqCategory $faqCategory)
+    {
+        $faqs = $this->faqModel->getFaqsForCategory($faqCategory);
+        $faqCategories = $this->getSubMenuItems();
+
+        return  $this->render('faq/faq.html.twig', [
+            'submenu' => [
+                'items' => $faqCategories,
+                'active' => $faqCategory->getId(),
+            ],
+            'faqCategory' => $faqCategory,
+            'faqs' => $faqs,
+        ]);
+    }
+
+    /**
      * @return array
      */
     protected function getSubMenuItems(FaqCategory $faqCategory = null)
@@ -53,20 +76,20 @@ class FaqController extends AbstractController
         $faqCategories = $repository->findBy([], ['sortOrder' => 'ASC']);
 
         $subMenu = [];
-            $subMenu['about'] = [
+        $subMenu['about'] = [
                 'key' => 'AboutUsSubmenu',
                 'url' => $this->generateUrl('about'),
             ];
-            $subMenu['about_faq'] = [
+        $subMenu['about_faq'] = [
                 'key' => 'Faq',
                 'url' => $this->generateUrl('faqs_overview', [
                 ]),
             ];
-            $subMenu['about_feedback'] = [
+        $subMenu['about_feedback'] = [
                 'key' => 'ContactUs',
                 'url' => $this->generateUrl('contactus'),
             ];
-            $subMenu['separator'] = [
+        $subMenu['separator'] = [
                 'key' => 'Faq',
                 'url' => '',
             ];
@@ -79,35 +102,5 @@ class FaqController extends AbstractController
         }
 
         return $subMenu;
-    }
-
-    /**
-     * @Route(
-     *     "/about/faq/{categoryId}",
-     *     name="faqs_overview",
-     *     defaults={"categoryId": "1"},
-     *     requirements={"categoryId": "\d+"}
-     * )
-     *
-     * @ParamConverter("faqCategory", class="App\Entity\FaqCategory", options={"id" = "categoryId"})
-     *
-     *
-     *
-     * @return Response
-     */
-    public function showOverview(Request $request, FaqCategory $faqCategory)
-    {
-      
-        $faqs = $this->faqModel->getFaqsForCategory($faqCategory);
-        $faqCategories = $this->getSubMenuItems();
-
-        return  $this->render('faq/faq.html.twig', [
-            'submenu' => [
-                'items' => $faqCategories,
-                'active' => $faqCategory->getId(),
-            ],
-            'faqCategory' => $faqCategory,
-            'faqs' => $faqs,
-        ]);
     }
 }

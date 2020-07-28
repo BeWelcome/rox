@@ -31,7 +31,7 @@ class AboutController extends AbstractController
      */
     public function showAboutFAQ()
     {
-        return $this->redirectToRoute('about_faq');
+        return $this->redirectToRoute('faqs_overview');
     }
 
     /**
@@ -88,15 +88,15 @@ class AboutController extends AbstractController
     public function showAboutTheIdea()
     {
         return $this->render('about/about.html.twig', [
-        'submenu' => [
-            'items' => $this->getSubMenuItems(),
-            'active' => 'about_theidea',
-        ],
-    ]);
+            'submenu' => [
+                'items' => $this->getSubMenuItems(),
+                'active' => 'about_theidea',
+            ],
+        ]);
     }
 
     /**
-     * @Route("https://www.bevolunteer.org/about-bevolunteer/board-of-directors/", name="about_bod")
+     * @Route("/bod", name="about_bod")
      *
      * @return RedirectResponse
      */
@@ -106,13 +106,13 @@ class AboutController extends AbstractController
     }
     
     /**
-     * @Route("http://www.bevolunteer.org/", name="about_bv")
+     * @Route("bv", name="about_bv")
      *
      * @return RedirectResponse
      */
     public function showAboutBv()
     {
-        return $this->redirect('http://www.bevolunteer.org/');
+        return $this->redirect('https://www.bevolunteer.org/');
     }
     
     /**
@@ -133,7 +133,7 @@ class AboutController extends AbstractController
     /**
      * @Route("/about/statistics", name="about_statistics")
      * @Route("/about/stats", name="stats")
-     * 
+     *
      * @return Response
      */
     public function showAboutStatistics()

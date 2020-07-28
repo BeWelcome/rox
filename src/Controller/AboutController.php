@@ -3,8 +3,8 @@
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class AboutController extends AbstractController
@@ -104,7 +104,7 @@ class AboutController extends AbstractController
     {
         return $this->redirect('https://www.bevolunteer.org/about-bevolunteer/board-of-directors/');
     }
-    
+
     /**
      * @Route("bv", name="about_bv")
      *
@@ -114,7 +114,7 @@ class AboutController extends AbstractController
     {
         return $this->redirect('https://www.bevolunteer.org/');
     }
-    
+
     /**
      * @Route("/about/commentguidelines", name="profilecomments")
      *
@@ -160,6 +160,7 @@ class AboutController extends AbstractController
                 'route' => 'stats_requests_accepted',
             ],
         ];
+
         return $this->render('about/statistics.html.twig', [
             'statistics' => $statistics,
             'submenu' => [
@@ -183,7 +184,6 @@ class AboutController extends AbstractController
             ],
         ]);
     }
-
 
     /**
      * @Route("/impressum", name="imprint")

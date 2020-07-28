@@ -36,6 +36,7 @@ class AboutController extends AbstractController
 
     /**
      * @Route("/about/feedback", name="contactus")
+     * @Route("/feedback", name="feedback")
      *
      * @return Response
      */

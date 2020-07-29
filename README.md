@@ -12,7 +12,7 @@
 * :mag_right: **Search members** by map, location, username
 * :two_men_holding_hands: **Comment system** to increase trust between each other
 * :pencil: **Forum and groups** for discussions
-* :rowboat::bicyclist: **Activities, galleries** to show how who you are
+* :rowboat::bicyclist: **Activities, galleries** to show who you are
 * :wrench: **Volunteer tools** (safety, moderation, spam, rights member welcome tools and more)
 * :rainbow: **On page translation** for 305 languages
 * :raising_hand::muscle: BeWelcome is people and volunteers [Learn more](https://www.bewelcome.org/about)

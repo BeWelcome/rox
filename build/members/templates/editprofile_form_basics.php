@@ -8,7 +8,7 @@
         </h5>
     </div>
     <div id="collapse-home" class="collapse show" role="tabpanel" aria-labelledby="heading-home">
-        <div class="card-body col-12 p-0 p-md-3">
+        <div class="card-body">
             <div class="form-row mb-1">
                 <label for="SignupUsername" class="col-12 col-md-3"><?= $words->get('SignupUsername') ?></label>
                 <div class="col-12 col-md-9">
@@ -47,7 +47,7 @@
                                name="FirstName"
                                value="<?php echo htmlentities($vars['FirstName'], ENT_COMPAT, 'UTF-8'); ?>"/>
                     </div>
-                    <div class="col-4 col-md-2 form-inline">
+                    <div class="col-4 col-md-2 form-check">
                         <input type="checkbox" value="Yes" name="IsHidden_FirstName"
                             <?php if ($vars['IsHidden_FirstName'] === 'Yes')
                                 echo 'checked="checked"';
@@ -64,7 +64,7 @@
                         <input type="text" name="SecondName" class="form-control"
                                value="<?php echo htmlentities($vars['SecondName'], ENT_COMPAT, 'UTF-8'); ?>"/>
                     </div>
-                    <div class="col-4 col-md-2 form-inline">
+                    <div class="col-4 col-md-2 form-check">
                         <input type="checkbox" value="Yes" name="IsHidden_SecondName"
                             <?php if ($vars['IsHidden_SecondName'] === 'Yes')
                                 echo 'checked="checked"';
@@ -81,7 +81,7 @@
                                name="LastName"
                                value="<?php echo htmlentities($vars['LastName'], ENT_COMPAT, 'UTF-8'); ?>"/>
                     </div>
-                    <div class="col-4 col-md-2 form-inline">
+                    <div class="col-4 col-md-2 form-check">
                         <input type="checkbox" value="Yes" name="IsHidden_LastName"
                             <?php if ($vars['IsHidden_LastName'] === 'Yes')
                                 echo 'checked="checked"';

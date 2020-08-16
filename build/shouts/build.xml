@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<build>
-  <app name="Shouts"/>
-  <files>
-    <file class="ShoutsController">shouts.ctrl.php</file>
-    <file class="Shouts">shouts.model.php</file>
-    <file class="ShoutsView">shouts.view.php</file>
-  </files>
-</build>

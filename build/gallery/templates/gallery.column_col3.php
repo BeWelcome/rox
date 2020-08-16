@@ -46,9 +46,3 @@ if ($this->myself) {
 <?php
 }
 ?>
-<hr/>
-<?php
-$shoutsCtrl = new ShoutsController;
-$shoutsCtrl->shoutsList('gallery', $gallery->id);
-
-?>

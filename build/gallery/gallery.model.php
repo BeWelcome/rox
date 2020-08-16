@@ -41,16 +41,6 @@ VALUES
     	$dataDir = new PDataDir('gallery');
     }
 
-    public function deleteAll()
-    {
-    	$query = 'TRUNCATE TABLE `gallery_items`';
-        $this->dao->exec($query);
-        $this->dao->dropSequence('gallery_items');
-        $dataDir = new PDataDir('gallery');
-        $dataDir->remove(false, false, false);
-        return true;
-    }
-
     /**
      * Delete a single selfuploaded picture as loggedin owner or with gallery rights
      *
@@ -166,8 +156,6 @@ WHERE `item_id_foreign`= ' . (int)$image->id);
         $this->dao->exec('
 DELETE FROM `gallery_items`
 WHERE `id` = ' . (int)$image->id);
-
-        $this->deleteComments($image->id);
     }
 
     public function updateGalleryProcess($vars = null)

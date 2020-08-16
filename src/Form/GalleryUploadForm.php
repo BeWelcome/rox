@@ -4,12 +4,13 @@
 namespace App\Form;
 
 
+use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class GalleryUploadForm
+class GalleryUploadForm extends AbstractType
 {
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)

@@ -157,6 +157,65 @@ class StatisticsModel
         return 0;
     }
 
+    public function getMembersData($period): array
+    {
+        /** @var StatisticsRepository $statisticsRepository */
+        $statisticsRepository = $this->getManager()->getRepository(Statistic::class);
+        if ('weekly' === $period) {
+            return $this->prepareWeeklyData($statisticsRepository->getMembersDataWeekly());
+        }
+
+        return $this->prepareDailyData($statisticsRepository->getMembersDataDaily());
+    }
+
+    public function getSentMessagesData($period): array
+    {
+        /** @var StatisticsRepository $statisticsRepository */
+        $statisticsRepository = $this->getManager()->getRepository(Statistic::class);
+
+        if ('weekly' === $period) {
+            return $this->prepareWeeklyData($statisticsRepository->getSentMessagesDataWeekly());
+        }
+
+        return $this->prepareDailyData($statisticsRepository->getSentMessagesDataDaily());
+    }
+
+    public function getReadMessagesData($period): array
+    {
+        /** @var StatisticsRepository $statisticsRepository */
+        $statisticsRepository = $this->getManager()->getRepository(Statistic::class);
+
+        if ('weekly' === $period) {
+            return $this->prepareWeeklyData($statisticsRepository->getReadMessagesDataWeekly());
+        }
+
+        return $this->prepareDailyData($statisticsRepository->getReadMessagesDataDaily());
+    }
+
+    public function getSentRequestsData($period): array
+    {
+        /** @var StatisticsRepository $statisticsRepository */
+        $statisticsRepository = $this->getManager()->getRepository(Statistic::class);
+
+        if ('weekly' === $period) {
+            return $this->prepareWeeklyData($statisticsRepository->getSentRequestsDataWeekly());
+        }
+
+        return $this->prepareDailyData($statisticsRepository->getSentRequestsDataDaily());
+    }
+
+    public function getAcceptedRequestsData($period): array
+    {
+        /** @var StatisticsRepository $statisticsRepository */
+        $statisticsRepository = $this->getManager()->getRepository(Statistic::class);
+
+        if ('weekly' === $period) {
+            return $this->prepareWeeklyData($statisticsRepository->getAcceptedRequestsDataWeekly());
+        }
+
+        return $this->prepareDailyData($statisticsRepository->getAcceptedRequestsDataDaily());
+    }
+
     /**
      * @param Statistic $statistics
      *
@@ -326,65 +385,6 @@ class StatisticsModel
         )
             ->fetch(PDO::FETCH_ASSOC);
         $statistics->setRequestsAccepted($result['cnt']);
-    }
-
-    public function getMembersData($period): array
-    {
-        /** @var StatisticsRepository $statisticsRepository */
-        $statisticsRepository = $this->getManager()->getRepository(Statistic::class);
-        if ('weekly' === $period) {
-            return $this->prepareWeeklyData($statisticsRepository->getMembersDataWeekly());
-        }
-
-        return $this->prepareDailyData($statisticsRepository->getMembersDataDaily());
-    }
-
-    public function getSentMessagesData($period): array
-    {
-        /** @var StatisticsRepository $statisticsRepository */
-        $statisticsRepository = $this->getManager()->getRepository(Statistic::class);
-
-        if ('weekly' === $period) {
-            return $this->prepareWeeklyData($statisticsRepository->getSentMessagesDataWeekly());
-        }
-
-        return $this->prepareDailyData($statisticsRepository->getSentMessagesDataDaily());
-    }
-
-    public function getReadMessagesData($period): array
-    {
-        /** @var StatisticsRepository $statisticsRepository */
-        $statisticsRepository = $this->getManager()->getRepository(Statistic::class);
-
-        if ('weekly' === $period) {
-            return $this->prepareWeeklyData($statisticsRepository->getReadMessagesDataWeekly());
-        }
-
-        return $this->prepareDailyData($statisticsRepository->getReadMessagesDataDaily());
-    }
-
-    public function getSentRequestsData($period): array
-    {
-        /** @var StatisticsRepository $statisticsRepository */
-        $statisticsRepository = $this->getManager()->getRepository(Statistic::class);
-
-        if ('weekly' === $period) {
-            return $this->prepareWeeklyData($statisticsRepository->getSentRequestsDataWeekly());
-        }
-
-        return $this->prepareDailyData($statisticsRepository->getSentRequestsDataDaily());
-    }
-
-    public function getAcceptedRequestsData($period): array
-    {
-        /** @var StatisticsRepository $statisticsRepository */
-        $statisticsRepository = $this->getManager()->getRepository(Statistic::class);
-
-        if ('weekly' === $period) {
-            return $this->prepareWeeklyData($statisticsRepository->getAcceptedRequestsDataWeekly());
-        }
-
-        return $this->prepareDailyData($statisticsRepository->getAcceptedRequestsDataDaily());
     }
 
     private function prepareDailyData($data): array

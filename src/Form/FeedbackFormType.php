@@ -3,19 +3,14 @@
 namespace App\Form;
 
 use App\Entity\FeedbackCategory;
-use App\Entity\SubTrip;
-use Laminas\Validator\NotEmpty;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Email;
-use Symfony\Component\Validator\Constraints\GreaterThan;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
 
@@ -41,9 +36,8 @@ class FeedbackFormType extends AbstractType
                     'class' => 'select2',
                 ],
                 'constraints' => [
-                    new NotNull(['message' => 'feedback.select.category'])
+                    new NotNull(['message' => 'feedback.select.category']),
                 ],
-
             ])
             ->add('FeedbackQuestion', CkEditorType::class, [
                 'label' => 'feedbackenteryourquestion',

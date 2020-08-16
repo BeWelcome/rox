@@ -1,11 +1,8 @@
 <?php
 
-
 namespace App\Service;
 
-
 use App\Entity\FeedbackCategory;
-use App\Entity\Group;
 use App\Entity\Member;
 use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
@@ -23,7 +20,7 @@ class Mailer
     private const PASSWORD_EMAIL_ADDRESS = 'password@bewelcome.org';
     private const SIGNUP_EMAIL_ADDRESS = 'signup@bewelcome.org';
 
-    /** @var Environment  */
+    /** @var Environment */
     private $twig;
     /** @var MailerInterface */
     private $mailer;
@@ -39,8 +36,7 @@ class Mailer
         EntityManagerInterface $entityManager,
         Environment $twig,
         TranslatorInterface $translator
-    )
-    {
+    ) {
         $this->mailer = $mailer;
         $this->twig = $twig;
         $this->translator = $translator;
@@ -50,6 +46,7 @@ class Mailer
     public function sendMessageNotificationEmail(Member $sender, Member $receiver, string $template, $parameters)
     {
         $parameters['sender'] = $sender;
+
         return $this->sendTemplateEmail(
             $this->getBewelcomeAddress($sender, self::MESSAGE_EMAIL_ADDRESS),
             $receiver,
@@ -62,7 +59,6 @@ class Mailer
     {
         $parameters['sender'] = $sender;
         $parameters['receiver'] = $receiver;
-        $parameters['receiver'] = $receiver;
 
         return $this->sendTemplateEmail(
             $this->getBewelcomeAddress($sender, self::GROUP_EMAIL_ADDRESS),
@@ -72,22 +68,12 @@ class Mailer
         );
     }
 
-    public function sendAdminGroupNotificationEmail(Member $receiver, string $template, $parameters)
+    public function sendGroupEmail(Member $receiver, string $template, $parameters)
     {
         return $this->sendTemplateEmail(
             self::GROUP_EMAIL_ADDRESS,
             $receiver,
             $template,
-            $parameters
-        );
-    }
-
-    public function sendGroupApprovalEmail(Member $creator, $parameters)
-    {
-        return $this->sendTemplateEmail(
-            self::GROUP_EMAIL_ADDRESS,
-            $creator,
-            'group/approved',
             $parameters
         );
     }
@@ -116,22 +102,12 @@ class Mailer
         );
     }
 
-    public function sendSignupSuccessfulEmail(Member $receiver, $parameters)
+    public function sendSignupEmail(Member $receiver, string $template, $parameters)
     {
         return $this->sendTemplateEmail(
             self::SIGNUP_EMAIL_ADDRESS,
             $receiver,
-            'signup',
-            $parameters
-        );
-    }
-
-    public function sendSignupEmailConfirmationEmail(Member $receiver, $parameters)
-    {
-        return $this->sendTemplateEmail(
-            self::SIGNUP_EMAIL_ADDRESS,
-            $receiver,
-            'resent',
+            $template,
             $parameters
         );
     }
@@ -159,14 +135,14 @@ class Mailer
     /**
      * This feeds the feedback given by a user into the OTRS queues.
      *
-     * @param string $sender
-     * @param string $receiver
      * @param $parameters
+     *
      * @return bool
      */
     public function sendFeedbackEmail(string $sender, string $receiver, $parameters)
     {
-        $parameters['subject'] = "Your feedback in '" . str_replace('_', ' ', ($parameters['IdCategory'])->getName()) ."'";
+        $parameters['subject'] = "Your feedback in '" . str_replace('_', ' ', ($parameters['IdCategory'])->getName()) . "'";
+
         return $this->sendTemplateEmail(
             $sender,
             new Address($receiver),
@@ -182,9 +158,8 @@ class Mailer
 
     /**
      * @param Member|Address|string $sender
-     * @param Member|Address $receiver
-     * @param string $template
-     * @param mixed $parameters
+     * @param Member|Address        $receiver
+     * @param mixed                 $parameters
      *
      * @return bool
      */
@@ -214,16 +189,13 @@ class Mailer
             ->to($receiver)
             ->subject($subject)
             ->htmlTemplate('emails/' . $template . '.html.twig')
-            ->context($parameters)
-        ;
+            ->context($parameters);
 
-        if (\is_string($sender)) {
-            $email->from($sender);
-        } elseif ($sender instanceof Address) {
-            $email->from($sender);
-        } else {
-            $email->from($this->getBewelcomeAddress($sender, 'message@bewelcome.org'));
+        if (!\is_string($sender) && !$sender instanceof Address) {
+            $sender = $email->from($this->getBewelcomeAddress($sender, 'message@bewelcome.org'));
         }
+        $email->from($sender);
+
         try {
             $this->mailer->send($email);
         } catch (TransportExceptionInterface $e) {

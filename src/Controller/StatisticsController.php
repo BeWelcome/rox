@@ -111,7 +111,6 @@ class StatisticsController extends AboutBaseController
         return $response;
     }
 
-
     /**
      * @Route("/stats/messages/read/{period}", name="stats_messages_read",
      *     requirements = {"period" = "weekly|daily"})
@@ -147,7 +146,6 @@ class StatisticsController extends AboutBaseController
 
         return $response;
     }
-
 
     /**
      * @Route("/stats/requests/accepted/{period}", name="stats_requests_accepted",

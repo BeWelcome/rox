@@ -6,7 +6,6 @@ use App\Entity\Faq;
 use App\Entity\FaqCategory;
 use App\Repository\FaqRepository;
 use App\Utilities\ManagerTrait;
-use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\ParameterType;
 use Doctrine\ORM\EntityRepository;
 use Pagerfanta\Pagerfanta;
@@ -33,9 +32,9 @@ class FaqModel
 
     public function getFaqsForCategory(FaqCategory $faqCategory)
     {
-            $connection = $this->getManager()->getConnection();
-            $stmt = $connection->prepare(
-                "SELECT 
+        $connection = $this->getManager()->getConnection();
+        $stmt = $connection->prepare(
+            "SELECT 
     f.*
 FROM
     faq f    
@@ -46,11 +45,11 @@ WHERE
     AND f.Active = 'Active'
 ORDER BY 
     f.SortOrder"
-            );
-            $stmt->bindValue(':categoryId', $faqCategory->getId(), ParameterType::INTEGER);
+        );
+        $stmt->bindValue(':categoryId', $faqCategory->getId(), ParameterType::INTEGER);
 
-            $stmt->execute();
-            $results = $stmt->fetchAll();
+        $stmt->execute();
+        $results = $stmt->fetchAll();
 
         return $results;
     }

@@ -264,9 +264,6 @@ class Newsletter implements ObjectManagerAware
     }
 
     /**
-     * @param ObjectManager $objectManager
-     * @param ClassMetadata $classMetadata
-     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function injectObjectManager(ObjectManager $objectManager, ClassMetadata $classMetadata)

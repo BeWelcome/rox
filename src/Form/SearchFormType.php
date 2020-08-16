@@ -213,12 +213,12 @@ class SearchFormType extends AbstractType
             ->add('last_login', ChoiceType::class, [
                 'label' => 'search.filter.last.login',
                 'choices' => [
-                    "search.filter.last.login.1month" => 1,
-                    "search.filter.last.login.2months" => 2,
-                    "search.filter.last.login.3months" => 3,
-                    "search.filter.last.login.6months" => 6,
-                    "search.filter.last.login.year" => 12,
-                    "search.filter.last.login.all" => 2400,
+                    'search.filter.last.login.1month' => 1,
+                    'search.filter.last.login.2months' => 2,
+                    'search.filter.last.login.3months' => 3,
+                    'search.filter.last.login.6months' => 6,
+                    'search.filter.last.login.year' => 12,
+                    'search.filter.last.login.all' => 2400,
                 ],
                 'attr' => [
                     'class' => 'select2',

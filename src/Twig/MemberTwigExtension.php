@@ -135,9 +135,6 @@ class MemberTwigExtension extends AbstractExtension implements GlobalsInterface
         $this->member = $this->security->getUser();
     }
 
-    /**
-     * @return array
-     */
     public function getGlobals(): array
     {
         if (null === $this->member) {

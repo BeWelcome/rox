@@ -9,7 +9,6 @@ namespace App\Doctrine;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Type;
 use InvalidArgumentException;
-use function in_array;
 
 /**
  * @SuppressWarnings(PHPMD.UnusedFormalParameter)
@@ -39,7 +38,7 @@ abstract class EnumType extends Type
 
     public function convertToDatabaseValue($value, AbstractPlatform $platform)
     {
-        if (!in_array($value, $this->values, true)) {
+        if (!\in_array($value, $this->values, true)) {
             throw new InvalidArgumentException("Invalid '" . $this->name . "' value: " . $value . '.');
         }
 

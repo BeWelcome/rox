@@ -60,7 +60,7 @@ class FeedbackController extends AboutBaseController
                 if (file_exists('../VERSION')) {
                     $version = trim(file_get_contents('../VERSION'));
                     $versionCreated = Carbon::createFromTimestamp(filemtime('../VERSION'));
-                    $data['version'] = $version . " (" . $versionCreated . ")";
+                    $data['version'] = $version . ' (' . $versionCreated . ')';
                 }
 
                 $data['host'] = $request->headers->get('Host');

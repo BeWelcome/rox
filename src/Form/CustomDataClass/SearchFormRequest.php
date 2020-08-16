@@ -196,7 +196,6 @@ class SearchFormRequest
         return false;
     }
 
-
     /**
      * @Assert\IsTrue(message="search.accommodation.invalid")
      */

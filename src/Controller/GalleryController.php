@@ -9,7 +9,6 @@ use App\Entity\UploadedImage;
 use App\Form\CustomDataClass\GalleryImageEditRequest;
 use App\Form\GalleryEditImageFormType;
 use App\Form\GalleryUploadForm;
-use App\Form\Select2Type;
 use App\Logger\Logger;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
@@ -17,8 +16,6 @@ use App\Utilities\UniqueFilenameTrait;
 use Hidehalo\Nanoid\Client;
 use Intervention\Image\ImageManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\Extension\Core\Type\FileType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -83,7 +80,7 @@ class GalleryController extends AbstractController
      */
     public function handleImageUploadToGallery(Request $request, ValidatorInterface $validator)
     {
-        $this->denyAccessUnlessGranted("IS_AUTHENTICATED_REMEMBERED");
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_REMEMBERED');
 
         /** @var Member $member */
         $member = $this->getUser();
@@ -200,7 +197,7 @@ class GalleryController extends AbstractController
                 $albumTitles[$gallery->getTitle()] = $gallery->getId();
             }
         }
-        $uploadImageForm = $this->createForm(GalleryUploadForm::class, null, [ 'albums' => $albumTitles]);
+        $uploadImageForm = $this->createForm(GalleryUploadForm::class, null, ['albums' => $albumTitles]);
         $uploadImageForm->handleRequest($request);
         if ($uploadImageForm->isSubmitted() && $uploadImageForm->isValid()) {
             // if this is called someone tries to hack the system as the Javascript on the upload page

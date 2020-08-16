@@ -2,12 +2,13 @@
 
 namespace App;
 
+use App\Model\MemberDataExtractor\ExtractorInterface;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
-use Symfony\Component\Routing\RouteCollectionBuilder;
+use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 
 class Kernel extends BaseKernel
 {
@@ -42,6 +43,8 @@ class Kernel extends BaseKernel
         // if you are using symfony/dependency-injection 4.0+ as it's the default behavior
         $container->setParameter('container.autowiring.strict_mode', true);
         $container->setParameter('container.dumper.inline_class_loader', true);
+        $container->registerForAutoconfiguration(ExtractorInterface::class)->addTag('app.member_data_extractor');
+
         $confDir = $this->getProjectDir() . '/config';
 
         $loader->load($confDir . '/{packages}/*' . self::CONFIG_EXTS, 'glob');
@@ -50,7 +53,7 @@ class Kernel extends BaseKernel
         $loader->load($confDir . '/{services}_' . $this->environment . self::CONFIG_EXTS, 'glob');
     }
 
-    protected function configureRoutes(RouteCollectionBuilder $routes)
+    protected function configureRoutes(RoutingConfigurator $routes)
     {
         $confDir = $this->getProjectDir() . '/config';
 

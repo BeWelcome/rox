@@ -14,7 +14,6 @@ use App\Entity\CommunityNewsComment;
 use App\Repository\CommunityNewsCommentRepository;
 use App\Repository\NotificationRepository;
 use App\Utilities\ManagerTrait;
-use Doctrine\ORM\NonUniqueResultException;
 use Pagerfanta\Adapter\DoctrineCollectionAdapter;
 use Pagerfanta\Pagerfanta;
 

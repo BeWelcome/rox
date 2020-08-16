@@ -140,5 +140,4 @@ class PasswordController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
-
 }

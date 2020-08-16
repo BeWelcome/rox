@@ -8,8 +8,6 @@ use App\Entity\Message;
 use App\Entity\Preference;
 use App\Repository\ActivityRepository;
 use App\Utilities\ManagerTrait;
-use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
 use Doctrine\ORM\Query\Expr;
 use Exception;
 

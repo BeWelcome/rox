@@ -6,7 +6,6 @@ use App\Entity\Group;
 use App\Entity\Member;
 use App\Logger\Logger;
 use App\Service\Mailer;
-use App\Utilities\ManagerTrait;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
@@ -416,7 +415,7 @@ class GroupController extends AbstractController
             '[New Group] %group% approved',
             ['%group%' => strip_tags($group->getName())]
         );
-        $this->mailer->sendGroupApprovalEmail($creator, [
+        $this->mailer->sendGroupEmail($creator, 'group/approved', [
             'subject' => $subject,
             'group' => $group,
             'creator' => $creator,

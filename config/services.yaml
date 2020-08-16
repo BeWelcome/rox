@@ -18,6 +18,15 @@ parameters:
   forum_notification_batch_size: "%env(forum_notification_batch_size)%"
 
 services:
+  _defaults:
+    autowire: true      # Automatically injects dependencies in your services.
+    autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+    public: false       # Allows optimizing the container by removing unused services; this also means
+    # fetching services directly from the container via $container->get() won't work.
+    # The best practice is to be explicit about your dependencies anyway.
+    bind:
+      $projectDir: '%kernel.project_dir%'
+
   # makes classes in src/ available to be used as services
   # this creates a service per class whose id is the fully-qualified class name
   App\:
@@ -30,6 +39,65 @@ services:
     resource: '../src/Controller'
     tags: ['controller.service_arguments']
 
+  app.member_data_extractor.donations:
+    factory: ['App\Model\MemberDataExtractor\DoctrineExtractorFactory', 'create']
+    arguments:
+      $className: 'App\Entity\Donation'
+      $memberRelationName: donor
+      $alias: donations
+
+  app.member_data_extractor.broadcasts:
+    factory: ['App\Model\MemberDataExtractor\DoctrineExtractorFactory', 'create']
+    arguments:
+      $className: 'App\Entity\BroadcastMessage'
+      $memberRelationName: receiver
+      $alias: broadcasts
+
+  app.member_data_extractor.community_news:
+    factory: ['App\Model\MemberDataExtractor\DoctrineExtractorFactory', 'create']
+    arguments:
+      $className: 'App\Entity\CommunityNews'
+      $memberRelationName: createdBy
+      $alias: communitynews
+
+  app.member_data_extractor.logs:
+    factory: ['App\Model\MemberDataExtractor\DoctrineExtractorFactory', 'create']
+    arguments:
+      $className: 'App\Entity\Log'
+      $memberRelationName: member
+      $alias: logs
+
+  app.member_data_extractor.newsletters:
+    factory: ['App\Model\MemberDataExtractor\DoctrineExtractorFactory', 'create']
+    arguments:
+      $className: 'App\Entity\Newsletter'
+      $memberRelationName: createdBy
+      $alias: newsletters
+
+  app.member_data_extractor.shouts:
+    factory: ['App\Model\MemberDataExtractor\DoctrineExtractorFactory', 'create']
+    arguments:
+      $className: 'App\Entity\Shout'
+      $memberRelationName: member
+      $alias: shouts
+
+  app.member_data_extractor.subscriptions:
+    factory: ['App\Model\MemberDataExtractor\DoctrineExtractorFactory', 'create']
+    arguments:
+      $className: 'App\Entity\MemberThreadSubscription'
+      $memberRelationName: subscriber
+      $alias: subscriptions
+
+  app.member_data_extractor.translations:
+    factory: ['App\Model\MemberDataExtractor\DoctrineExtractorFactory', 'create']
+    arguments:
+      $className: 'App\Entity\Word'
+      $memberRelationName: author
+      $alias: translations
+
+  App\Model\MemberModel:
+    arguments:
+      $extractors: !tagged_iterator app.member_data_extractor
 
   translation.loader.db:
     public: true
@@ -171,11 +239,3 @@ services:
     arguments:
       - !service { class: PDO, factory: ['@database_connection', 'getWrappedConnection'] }
       - { lock_mode: LOCK_NONE }
-
-  _defaults:
-    autowire: true      # Automatically injects dependencies in your services.
-    autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
-    public: false       # Allows optimizing the container by removing unused services; this also means
-    # fetching services directly from the container via $container->get() won't work.
-    # The best practice is to be explicit about your dependencies anyway.
-

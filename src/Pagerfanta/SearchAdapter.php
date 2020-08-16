@@ -185,28 +185,28 @@ class SearchAdapter implements AdapterInterface
         $vars['search-has-about-me'] = $data->about_me;
         $vars['search-has-comments'] = $data->has_comments;
 
-        if ($data->offerdinner) {
-            $vars['search-typical-offers'][] = 'dinner';
+        foreach (
+            [
+            'offerdinner' => 'dinner',
+            'offertour' => 'guidedtour',
+            'accessible' => 'CanHostWeelChair',
+            ] as $param => $value
+        ) {
+            if ($data->$param) {
+                $vars['search-typical-offers'][] = $value;
+            }
         }
 
-        if ($data->offertour) {
-            $vars['search-typical-offers'][] = 'guidedtour';
-        }
-
-        if ($data->accessible) {
-            $vars['search-typical-offers'][] = 'CanHostWeelChair';
-        }
-
-        if ($data->no_smoking) {
-            $vars['search-restriction'][] = 'NoSmoker';
-        }
-
-        if ($data->no_alcohol) {
-            $vars['search-restriction'][] = 'NoAlchool';
-        }
-
-        if ($data->no_drugs) {
-            $vars['search-restriction'][] = 'NoDrugs';
+        foreach (
+            [
+            'no_smoking' => 'NoSmoker',
+            'no_alcohol' => 'NoAlchool',
+            'no_drugs' => 'NoDrugs',
+            ] as $param => $value
+        ) {
+            if ($data->$param) {
+                $vars['search-restriction'][] = $value;
+            }
         }
 
         $vars['search-distance'] = $data->distance;

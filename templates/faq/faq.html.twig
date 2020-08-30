@@ -16,12 +16,12 @@
 <div class="row">
 	<div class="col-12">
 		<h1>{{ 'aboutfaq' | trans}}</h1>
-		<h2>{{ faqCategory.description | trans }}</h2>
+		<h2>{{ faqCategory.description | lower | trans }}</h2>
 
 		<dl id="faqs">
-			{% for faqCategory, faq in faqs %}
-				<dt class="h5"><i class="fas fa-plus-circle"></i> {{ faq.Question | trans | striptags }}</dt>
-				<dd id="question{{ faq.id }}">{{ faq.Answer | trans | purify }}</dd>
+			{% for faq in faqs %}
+				<dt class="h5"><i class="fas fa-plus-circle"></i> {{ ('faqq_' ~ faq.QandA) | lower | trans | striptags }}</dt>
+				<dd id="question{{ faq.id }}">{{ ('faqa_' ~ faq.QandA) | lower | trans | purify }}</dd>
 			{% endfor %}
 		</dl>
 	</div>

@@ -24,62 +24,18 @@ class FaqController extends AbstractController
     }
 
     /**
-     * @Route("/faq/", name="faq_redirect",
-     *     defaults = {"path":""})
-     * @Route("/faq/{path}", name="faq_all_redirect",
-     *     requirements = {"path":".+"})
+     * @Route("/about/faq", name="about_faq")
      *
-     * @return RedirectResponse
+     * @return Response
      */
-    public function faqRedirect(Request $request, string $path)
+    public function showAboutFAQ()
     {
-        // Path isn't used.
-        $path = null;
-        $pathInfo = str_replace('/faq/', '/about/faq/', $request->getPathInfo());
-
-        return new RedirectResponse($pathInfo);
-    }
-
-    /**
-     * @return array
-     */
-    protected function getSubMenuItems(FaqCategory $faqCategory = null)
-    {
-        $repository = $this->getDoctrine()->getRepository(FaqCategory::class);
-        $faqCategories = $repository->findBy([], ['sortOrder' => 'ASC']);
-
-        $subMenu = [];
-        $subMenu['about'] = [
-                'key' => 'AboutUsSubmenu',
-                'url' => $this->generateUrl('about'),
-            ];
-        $subMenu['about_faq'] = [
-                'key' => 'Faq',
-                'url' => $this->generateUrl('faqs_overview', [
-                ]),
-            ];
-        $subMenu['about_feedback'] = [
-                'key' => 'ContactUs',
-                'url' => $this->generateUrl('contactus'),
-            ];
-        $subMenu['separator'] = [
-                'key' => 'Faq',
-                'url' => '',
-            ];
-        /** @var FaqCategory $category */
-        foreach ($faqCategories as $category) {
-            $subMenu[$category->getId()] = [
-                'key' => $category->getDescription(),
-                'url' => $this->generateUrl('faqs_overview', ['categoryId' => $category->getId()]),
-            ];
-        }
-
-        return $subMenu;
+        return $this->redirectToRoute('faqs_overview', [ 'categoryId' => 1]);
     }
 
     /**
      * @Route(
-     *     "/about/faq/{categoryId}",
+     *     "/faq/{categoryId}",
      *     name="faqs_overview",
      *     defaults={"categoryId": "1"},
      *     requirements={"categoryId": "\d+"}
@@ -89,7 +45,7 @@ class FaqController extends AbstractController
      *
      * @return Response
      */
-    public function showOverview(Request $request, FaqCategory $faqCategory)
+    public function showOverview(FaqCategory $faqCategory)
     {
         $faqs = $this->faqModel->getFaqsForCategory($faqCategory);
         $faqCategories = $this->getSubMenuItems();
@@ -104,4 +60,40 @@ class FaqController extends AbstractController
         ]);
     }
 
+    /**
+     * @return array
+     */
+    protected function getSubMenuItems()
+    {
+        $repository = $this->getDoctrine()->getRepository(FaqCategory::class);
+        $faqCategories = $repository->findBy([], ['sortOrder' => 'ASC']);
+
+        $subMenu = [];
+        $subMenu['about'] = [
+            'key' => 'AboutUsSubmenu',
+            'url' => $this->generateUrl('about'),
+        ];
+        $subMenu['about_faq'] = [
+            'key' => 'Faq',
+            'url' => $this->generateUrl('faqs_overview', [
+            ]),
+        ];
+        $subMenu['about_feedback'] = [
+            'key' => 'ContactUs',
+            'url' => $this->generateUrl('contactus'),
+        ];
+        $subMenu['separator'] = [
+            'key' => 'Faq',
+            'url' => '',
+        ];
+        /** @var FaqCategory $category */
+        foreach ($faqCategories as $category) {
+            $subMenu[$category->getId()] = [
+                'key' => $category->getDescription(),
+                'url' => $this->generateUrl('faqs_overview', ['categoryId' => $category->getId()]),
+            ];
+        }
+
+        return $subMenu;
+    }
 }

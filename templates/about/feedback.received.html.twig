@@ -11,12 +11,8 @@
 		<p>{{ 'feedbackdisclaimer' | trans | purify | nl2br }}</p>
 	</div>
 	<div class="col-12 col-md-6">
-		{{ form_start(form) }}
-		{{ form_rest(form) }}
-		<div class="form-group">
-			<button type="submit" id="submit" name="submit" class="btn-primary btn">{{ 'submit'|trans }}</button>
-		</div>
-		{{ form_end(form) }}
+		<p>{{ 'feedback.thank.you'|trans }}</p>
+		<p><a class="btn btn-outline-primary" href="{{ path('feedback')}}"><i class="fa fa-comment-alt mr-1"></i>{{ 'feedback.send.more' | trans }}</a></p>
     </div>
 </div>
 

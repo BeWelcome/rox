@@ -2,12 +2,17 @@
 
 namespace App\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Form\FeedbackFormType;
+use App\Model\AboutModel;
+use Carbon\Carbon;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
-class AboutController extends AbstractController
+class AboutController extends AboutBaseController
 {
     /**
      * @Route("/about", name="about")
@@ -20,32 +25,6 @@ class AboutController extends AbstractController
             'submenu' => [
                 'items' => $this->getSubMenuItems(),
                 'active' => 'about',
-            ],
-        ]);
-    }
-
-    /**
-     * @Route("/about/faq", name="about_faq")
-     *
-     * @return Response
-     */
-    public function showAboutFAQ()
-    {
-        return $this->redirectToRoute('faqs_overview');
-    }
-
-    /**
-     * @Route("/about/feedback", name="contactus")
-     * @Route("/feedback", name="feedback")
-     *
-     * @return Response
-     */
-    public function showAboutFeedback()
-    {
-        return $this->render('about/feedback.html.twig', [
-            'submenu' => [
-                'items' => $this->getSubMenuItems(),
-                'active' => 'about_feedback',
             ],
         ]);
     }
@@ -132,46 +111,6 @@ class AboutController extends AbstractController
     }
 
     /**
-     * @Route("/about/statistics", name="about_statistics")
-     * @Route("/about/stats", name="stats")
-     *
-     * @return Response
-     */
-    public function showAboutStatistics()
-    {
-        $statistics = [
-            'members' => [
-                'headline' => 'members',
-                'route' => 'stats_members',
-            ],
-            'sent_messages' => [
-                'headline' => 'sent_messages',
-                'route' => 'stats_messages_sent',
-            ],
-            'read_messages' => [
-                'headline' => 'read_messages',
-                'route' => 'stats_messages_read',
-            ],
-            'sent_requests' => [
-                'headline' => 'sent_requests',
-                'route' => 'stats_requests_sent',
-            ],
-            'accepted_requests' => [
-                'headline' => 'accepted_requests',
-                'route' => 'stats_requests_accepted',
-            ],
-        ];
-
-        return $this->render('about/statistics.html.twig', [
-            'statistics' => $statistics,
-            'submenu' => [
-                'items' => $this->getSubMenuItems(),
-                'active' => 'statistics',
-            ],
-        ]);
-    }
-
-    /**
      * @Route("/about/credits", name="about_credits")
      *
      * @return Response
@@ -199,78 +138,5 @@ class AboutController extends AbstractController
                 'active' => 'about',
             ],
         ]);
-    }
-
-    /**
-     * @return array
-     */
-    private function getSubMenuItems()
-    {
-        return [
-            'about' => [
-                'key' => 'AboutUsSubmenu',
-                'url' => $this->generateUrl('about'),
-            ],
-            'about_faq' => [
-                'key' => 'Faq',
-                'url' => $this->generateUrl('about_faq'),
-            ],
-            'about_feedback' => [
-                'key' => 'ContactUs',
-                'url' => $this->generateUrl('contactus'),
-            ],
-            'separator' => [
-                'key' => 'About_AtAGlance',
-                'url' => '',
-            ],
-            'about_theidea' => [
-                'key' => 'About_TheIdea',
-                'url' => $this->generateUrl('about_theidea'),
-            ],
-            'about_people' => [
-                'key' => 'About_ThePeople',
-                'url' => $this->generateUrl('about_people'),
-            ],
-            'getactive' => [
-                'key' => 'About_GetActive',
-                'url' => $this->generateUrl('getactive'),
-            ],
-            'separator2' => [
-                'key' => 'MoreInfo',
-                'url' => '',
-            ],
-            'about_press' => [
-                'key' => 'PressInfoPage',
-                'url' => $this->generateUrl('wiki_page', ['pageTitle' => 'press information']),
-            ],
-            'about_bod' => [
-                'key' => 'BoardOfDirectorsPage',
-                'url' => $this->generateUrl('about_bod'),
-            ],
-            'about_bv' => [
-                'key' => 'BeVolunteerBlogs',
-                'url' => $this->generateUrl('about_bv'),
-            ],
-            'about_terms' => [
-                'key' => 'TermsPage',
-                'url' => $this->generateUrl('terms_of_use'),
-            ],
-            'about_privacy' => [
-                'key' => 'PrivacyPage',
-                'url' => $this->generateUrl('privacy_policy'),
-            ],
-            'about_commentguidelines' => [
-                'key' => 'CommentGuidelinesPage',
-                'url' => $this->generateUrl('profilecomments'),
-            ],
-            'statistics' => [
-                'key' => 'StatsPage',
-                'url' => $this->generateUrl('about_statistics'),
-            ],
-            'about_credits' => [
-                'key' => 'credits.title',
-                'url' => $this->generateUrl('about_credits'),
-            ],
-        ];
     }
 }

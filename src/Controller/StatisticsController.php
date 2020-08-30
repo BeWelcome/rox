@@ -14,12 +14,12 @@ use App\Utilities\SessionSingleton;
 use EnvironmentExplorer;
 use PException;
 use StatsModel;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-class StatisticsController extends AbstractController
+class StatisticsController extends AboutBaseController
 {
     /** @var StatisticsModel */
     private $statisticsModel;
@@ -33,6 +33,46 @@ class StatisticsController extends AbstractController
     {
         $this->statisticsModel = $statisticsModel;
         $this->urlGenerator = $urlGenerator;
+    }
+
+    /**
+     * @Route("/about/statistics", name="about_statistics")
+     * @Route("/about/stats", name="stats")
+     *
+     * @return Response
+     */
+    public function showAboutStatistics()
+    {
+        $statistics = [
+            'members' => [
+                'headline' => 'members',
+                'route' => 'stats_members',
+            ],
+            'sent_messages' => [
+                'headline' => 'sent_messages',
+                'route' => 'stats_messages_sent',
+            ],
+            'read_messages' => [
+                'headline' => 'read_messages',
+                'route' => 'stats_messages_read',
+            ],
+            'sent_requests' => [
+                'headline' => 'sent_requests',
+                'route' => 'stats_requests_sent',
+            ],
+            'accepted_requests' => [
+                'headline' => 'accepted_requests',
+                'route' => 'stats_requests_accepted',
+            ],
+        ];
+
+        return $this->render('about/statistics.html.twig', [
+            'statistics' => $statistics,
+            'submenu' => [
+                'items' => $this->getSubMenuItems(),
+                'active' => 'statistics',
+            ],
+        ]);
     }
 
     /**

@@ -241,7 +241,7 @@ $words = new MOD_words();
                 // clear admin units and places list
                 adminUnits.empty().append('<option selected="selected" value="0">All administrative units</option>');
                 places.empty().append('<option selected="selected" value="0">All places</option>');
-                if (value == 0) {
+                if (value === 0) {
                     adminUnits.attr('disabled', 'disabled');
                     places.attr('disabled', 'disabled');
                 } else {
@@ -252,7 +252,7 @@ $words = new MOD_words();
                         var html = '';
                         var len = data.length;
                         for (var i = 0; i < len; i++) {
-                            html += '<option value="' + data[i].fk_admincode + '">' + data[i].name + '</option>';
+                            html += '<option value="' + data[i].admin1 + '">' + data[i].name + '</option>';
                         }
                         adminUnits.append(html);
                         adminUnits.select2({
@@ -267,7 +267,7 @@ $words = new MOD_words();
                 var value = adminUnits.val();
                 // clear places list
                 places.empty().append('<option selected="selected" value="0">All places</option>');
-                if (value == 0) {
+                if (value === 0) {
                     places.attr('disabled', 'disabled');
                 } else {
                     $.getJSON('admin/massmail/getplaces/' + $('#CountryIsoCode').val() + '/' + value, function (data) {

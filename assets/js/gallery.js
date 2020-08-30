@@ -11,7 +11,7 @@ $(function () {
             percentPosition: true
         });
 
-        imagesLoaded( grid ).on( 'done', function() {
+        imagesLoaded( grid ).on( 'progress', function() {
             // layout Masonry after each image loads
             msnry.layout();
         });

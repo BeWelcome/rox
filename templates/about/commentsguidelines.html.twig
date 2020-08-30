@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	{{ 'commentguidelines' | trans }}
+{% endblock %}
+
+{% block content %}
+<h1>{{ 'aboutuspage' | trans }}</h1>
+<h3>{{ 'commentguidelines' | trans }}</h3>
+<p>{{ 'commentguidelinesintro' | trans | purify }}</p>
+<h4>{{ 'commentguidelineslistheading' | trans }}</h4>
+<p>{{ 'commentguidelineslist' | trans | purify }}</p>
+<p>{{ 'commentguidelineslistinfo' | trans | purify }}</p>
+<h4>{{ 'commentguidelineseditheading' | trans }}</h4>
+<p>{{ 'commentguidelinesedittext' | trans | purify }}</p>
+<h4>{{ 'commentguidelinesremoveheading' | trans }}</h4>
+<p>{{ 'commentguidelinesremovetext' | trans | purify }}</p>
+<p>{{ 'commentguidelinesadditionalinfo' | trans | purify }}</p>
+{% endblock content %}

@@ -33,30 +33,24 @@ class FaqModel
 
     public function getFaqsForCategory(FaqCategory $faqCategory)
     {
-        try {
             $connection = $this->getManager()->getConnection();
             $stmt = $connection->prepare(
                 "SELECT 
-    f.*, q.Sentence as Question, a.Sentence as Answer
+    f.*
 FROM
     faq f    
 LEFT JOIN
     faqcategories fc ON f.idCategory = fc.id    
-LEFT JOIN
-    words a ON a.code = CONCAT('FaqA_', f.qanda) and a.ShortCode = 'en'
-LEFT JOIN
-	words q ON q.code = CONCAT('FaqQ_', f.qanda) and q.ShortCode = 'en'
-WHERE fc.id = :categoryId	
+WHERE 
+    fc.id = :categoryId
+    AND f.Active = 'Active'
 ORDER BY 
-    fc.SortOrder, f.SortOrder"
+    f.SortOrder"
             );
             $stmt->bindValue(':categoryId', $faqCategory->getId(), ParameterType::INTEGER);
 
             $stmt->execute();
             $results = $stmt->fetchAll();
-        } catch (DBALException $e) {
-            $results = [];
-        }
 
         return $results;
     }

@@ -135,9 +135,9 @@ class AdminMassmailModel extends RoxModelBase
                 words AS w1,
                 words AS w2
             WHERE
-                w1.Code = 'BroadCast_Title_" . $this->dao->escape($broadcast->Name) . "'
+                w1.Code = 'broadcast_title_" . $this->dao->escape($broadcast->Name) . "'
                 AND w1.IdLanguage = 0
-                AND w2.Code = 'BroadCast_Body_" . $this->dao->escape($broadcast->Name) . "'
+                AND w2.Code = 'broadcast_body_" . $this->dao->escape($broadcast->Name) . "'
                 AND w2.IdLanguage = 0";
         $entry = $this->SingleLookup($query);
         $ret = new StdClass;
@@ -155,7 +155,7 @@ class AdminMassmailModel extends RoxModelBase
                 languages.Name AS Name
             FROM
                 languages, words
-            WHERE words.code='BroadCast_Body_" . $broadcast->Name . "'
+            WHERE words.code='broadcast_body_" . $broadcast->Name . "'
             AND languages.id=words.IdLanguage";
         $ret->Languages = $this->BulkLookup($query);
 
@@ -255,7 +255,7 @@ class AdminMassmailModel extends RoxModelBase
     }
 
     public function createMassmail($name, $type, $subject, $body, $description) {
-        $name = $this->dao->escape($name);
+        $name = $this->dao->escape(strtolower($name));
         // first create entry in the broadcast table
         $query = "
             INSERT INTO
@@ -272,9 +272,10 @@ class AdminMassmailModel extends RoxModelBase
             INSERT INTO
                 words
             SET
-                code = 'Broadcast_Title_" . $name . "',
+                code = 'broadcast_title_" . $name . "',
                 ShortCode = 'en',
                 IdLanguage = 0,
+                `domain` = 'messages+intl-icu',
                 Sentence = '" . $this->dao->escape($subject) . "',
                 updated = NOW(),
                 created = NOW(),
@@ -289,9 +290,10 @@ class AdminMassmailModel extends RoxModelBase
             INSERT INTO
                 words
             SET
-                code = 'Broadcast_Body_" . $name . "',
+                code = 'broadcast_body_" . $name . "',
                 ShortCode = 'en',
                 IdLanguage = 0,
+                `domain` = 'messages+intl-icu',
                 Sentence = '" . $this->dao->escape($body) . "',
                 updated = NOW(),
                 created = NOW(),
@@ -323,7 +325,7 @@ class AdminMassmailModel extends RoxModelBase
                 updated = NOW(),
                 IdMember = " . $this->getLoggedInMember()->id . "
             WHERE
-                code = 'Broadcast_Title_" . $name . "'
+                code = 'broadcast_title_" . $name . "'
                 AND ShortCode = 'en'
                 AND IdLanguage = 0";
         $this->dao->query($query);
@@ -336,7 +338,7 @@ class AdminMassmailModel extends RoxModelBase
                 updated = NOW(),
                 IdMember = " . $this->getLoggedInMember()->id . "
             WHERE
-                code = 'Broadcast_Body_" . $name . "'
+                code = 'broadcast_body_" . $name . "'
                 AND ShortCode = 'en'
                 AND IdLanguage = 0";
         $this->dao->query($query);
@@ -344,7 +346,7 @@ class AdminMassmailModel extends RoxModelBase
 
     public function massmailEditCreateVarsOk(&$vars) {
         $id = $vars['Id'];
-        $name = $vars['Name'];
+        $name = strtolower($vars['Name']);
         $subject = $vars['Subject'];
         $body = $vars['Body'];
         $description = $vars['Description'];
@@ -370,8 +372,8 @@ class AdminMassmailModel extends RoxModelBase
         // if $id = 0 check if a word code for $name already exists
         if ($id == 0) {
             $words = new MOD_words();
-            $subject = 'BroadCast_Title_' . $name;
-            $body = 'BroadCast_Body_' . $name;
+            $subject = 'broadcast_title_' . $name;
+            $body = 'broadcast_body_' . $name;
             $subjectCode = $words->getAsIs($subject);
             $bodyCode = $words->getAsIs($body);
             if (!($subject == $subjectCode) || !($body == $bodyCode)) {
@@ -384,7 +386,7 @@ class AdminMassmailModel extends RoxModelBase
     public function getAdminUnits($countrycode) {
         $query = "
             SELECT
-                country, name
+                admin1, name
             FROM
                 geonames
             WHERE

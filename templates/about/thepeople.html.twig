@@ -1,0 +1,71 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	{{ 'aboutuspage' | trans }} - {{  'about_thepeople' | trans }}
+{% endblock %}
+
+{% block base_url %}
+    <base id="baseuri" href="{{ app.request.schemeAndHttpHost ~ app.request.baseUrl }}">
+{% endblock %}
+
+{% block content %}
+<div class="row">
+	<div class="col-12">
+        <h1>{{ 'aboutuspage' | trans }}</h1>
+        <h2>{{ 'thepeople' | trans }}</h2>
+    </div>
+    <div class="col-12 col-md-6">
+        <h3>{{ 'thepeople_title1' | trans }}</h3>
+        <p>{{ 'thepeople_text1' | trans | purify | nl2br }}</p>
+    </div>    
+    <div class="col-12 col-md-6">
+        <h3>{{ 'thepeople_titleinterviews' | trans }}</h3>
+        <p><a href="{{ url('wiki_page', { 'pageTitle': 'Interviews'}) }}">{{ 'thepeople_textinterviews' | trans | purify | nl2br }}</a></p>
+    </div>
+    <div class="col-12">
+        <!-- bootstrap carousel !-->
+        <div id="carousel-team" class="carousel slide" data-ride="carousel">
+            <ol class="carousel-indicators">
+                <li data-target="#carousel-team" data-slide-to="0" class="active"></li>
+                <li data-target="#carousel-team" data-slide-to="1"></li>
+                <li data-target="#carousel-team" data-slide-to="2"></li>
+                <li data-target="#carousel-team" data-slide-to="3"></li>
+                <li data-target="#carousel-team" data-slide-to="4"></li>
+            </ol>
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img class="d-block w-100" src="https://farm3.static.flickr.com/2200/2204242456_f2a726c103.jpg">
+                </div>
+                <div class="carousel-item">
+                    <img class="d-block w-100" src="https://farm3.static.flickr.com/2275/2204241012_756d5234e6.jpg">
+                </div>
+                <div class="carousel-item">
+                    <img class="d-block w-100" src="https://farm3.static.flickr.com/2157/2204319026_8764a0573a.jpg">
+                </div>
+                <div class="carousel-item">
+                    <img class="d-block w-100" src="https://farm3.static.flickr.com/2161/2206203954_9a511d50d2.jpg">
+                </div>
+                <div class="carousel-item">
+                    <img class="d-block w-100" src="https://farm3.static.flickr.com/2179/2204240888_d90054b31a.jpg">
+                </div>
+            </div>
+            <a class="carousel-control-prev" href="#carousel-team" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="sr-only">{{ 'the.people.previous' | trans }}</span>
+            </a>
+            <a class="carousel-control-next" href="#carousel-team" role="button" data-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="sr-only">{{ 'the.people.next' | trans }}</span>
+            </a>
+        </div><!-- end: bootstrap carousel !-->
+            <div class=" pt-1 caption">
+                <p class="small">{{ 'thepeople_picturetext1' | trans | purify }} <a title="unconference: A meeting with a non-fixed schedule that can be changed all the time."></a>
+                {{ 'thepeople_picturetext2' | trans | purify }} <a href="https://www.flickr.com/photos/22828233@N05/"></a></p>
+            </div>
+    </div>
+    <div class="col-12">
+        <h3>{{ 'thepeople_title3' | trans }}</h3>
+        <p>{{ 'thepeople_text3' | trans | purify | nl2br }}</p>
+    </div>
+</div>
+{% endblock content %}

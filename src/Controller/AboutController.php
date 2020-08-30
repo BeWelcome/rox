@@ -2,79 +2,141 @@
 
 namespace App\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Form\FeedbackFormType;
+use App\Model\AboutModel;
+use Carbon\Carbon;
+use Symfony\Component\Form\FormError;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
-class AboutController extends AbstractController
+class AboutController extends AboutBaseController
 {
     /**
-     * @Route("/about/credits", name="credits")
+     * @Route("/about", name="about")
      *
      * @return Response
      */
-    public function showCredits()
+    public function showAbout()
+    {
+        return $this->render('about/about.html.twig', [
+            'submenu' => [
+                'items' => $this->getSubMenuItems(),
+                'active' => 'about',
+            ],
+        ]);
+    }
+
+    /**
+     * @Route("/about/thepeople", name="about_people")
+     *
+     * @return Response
+     */
+    public function showAboutThePeople()
+    {
+        return $this->render('about/thepeople.html.twig', [
+            'submenu' => [
+                'items' => $this->getSubMenuItems(),
+                'active' => 'about_people',
+            ],
+        ]);
+    }
+
+    /**
+     * @Route("/about/getactive", name="getactive")
+     * @Route("/volunteer", name="volunteer")
+     *
+     * @return Response
+     */
+    public function showAboutGetActive()
+    {
+        return $this->render('about/getactive.html.twig', [
+            'submenu' => [
+                'items' => $this->getSubMenuItems(),
+                'active' => 'getactive',
+            ],
+        ]);
+    }
+
+    /**
+     * @Route("/about", name="about_theidea")
+     *
+     * @return Response
+     */
+    public function showAboutTheIdea()
+    {
+        return $this->render('about/about.html.twig', [
+            'submenu' => [
+                'items' => $this->getSubMenuItems(),
+                'active' => 'about_theidea',
+            ],
+        ]);
+    }
+
+    /**
+     * @Route("/bod", name="about_bod")
+     *
+     * @return RedirectResponse
+     */
+    public function showAboutBod()
+    {
+        return $this->redirect('https://www.bevolunteer.org/about-bevolunteer/board-of-directors/');
+    }
+
+    /**
+     * @Route("bv", name="about_bv")
+     *
+     * @return RedirectResponse
+     */
+    public function showAboutBv()
+    {
+        return $this->redirect('https://www.bevolunteer.org/');
+    }
+
+    /**
+     * @Route("/about/commentguidelines", name="profilecomments")
+     *
+     * @return Response
+     */
+    public function showAboutCommentGuidelines()
+    {
+        return $this->render('about/commentsguidelines.html.twig', [
+            'submenu' => [
+                'items' => $this->getSubMenuItems(),
+                'active' => 'about_commentguidelines',
+            ],
+        ]);
+    }
+
+    /**
+     * @Route("/about/credits", name="about_credits")
+     *
+     * @return Response
+     */
+    public function showAboutCredits()
     {
         return $this->render('about/credits.html.twig', [
             'submenu' => [
                 'items' => $this->getSubMenuItems(),
-                'active' => 'credits',
+                'active' => 'about_credits',
             ],
         ]);
     }
 
     /**
-     * @Route("/about/statistics", name="statistics")
+     * @Route("/impressum", name="imprint")
      *
      * @return Response
      */
-    public function showStatistics()
+    public function showImpressum()
     {
-        $statistics = [
-            'members' => [
-                'headline' => 'members',
-                'route' => 'stats_members',
-            ],
-            'sent_messages' => [
-                'headline' => 'sent_messages',
-                'route' => 'stats_messages_sent',
-            ],
-            'read_messages' => [
-                'headline' => 'read_messages',
-                'route' => 'stats_messages_read',
-            ],
-            'sent_requests' => [
-                'headline' => 'sent_requests',
-                'route' => 'stats_requests_sent',
-            ],
-            'accepted_requests' => [
-                'headline' => 'accepted_requests',
-                'route' => 'stats_requests_accepted',
-            ],
-        ];
-        return $this->render('about/statistics.html.twig', [
-            'statistics' => $statistics,
+        return $this->render('about/impressum.html.twig', [
             'submenu' => [
                 'items' => $this->getSubMenuItems(),
-                'active' => 'statistics',
+                'active' => 'about',
             ],
         ]);
-    }
-
-    /**
-     * @return array
-     */
-    private function getSubMenuItems()
-    {
-        return [
-            'credits' => [
-                'key' => 'credits.title',
-                'url' => $this->generateUrl('credits'),
-            ],
-            'statistics' => [
-                'key' => 'statistics.title',
-                'url' => $this->generateUrl('statistics'),
-            ],
-        ];
     }
 }

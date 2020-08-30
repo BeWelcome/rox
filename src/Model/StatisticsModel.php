@@ -332,8 +332,7 @@ class StatisticsModel
     {
         /** @var StatisticsRepository $statisticsRepository */
         $statisticsRepository = $this->getManager()->getRepository(Statistic::class);
-        if ('weekly' === $period )
-        {
+        if ('weekly' === $period) {
             return $this->prepareWeeklyData($statisticsRepository->getMembersDataWeekly());
         }
 
@@ -345,8 +344,7 @@ class StatisticsModel
         /** @var StatisticsRepository $statisticsRepository */
         $statisticsRepository = $this->getManager()->getRepository(Statistic::class);
 
-        if ('weekly' === $period )
-        {
+        if ('weekly' === $period) {
             return $this->prepareWeeklyData($statisticsRepository->getSentMessagesDataWeekly());
         }
 
@@ -358,8 +356,7 @@ class StatisticsModel
         /** @var StatisticsRepository $statisticsRepository */
         $statisticsRepository = $this->getManager()->getRepository(Statistic::class);
 
-        if ('weekly' === $period )
-        {
+        if ('weekly' === $period) {
             return $this->prepareWeeklyData($statisticsRepository->getReadMessagesDataWeekly());
         }
 
@@ -371,8 +368,7 @@ class StatisticsModel
         /** @var StatisticsRepository $statisticsRepository */
         $statisticsRepository = $this->getManager()->getRepository(Statistic::class);
 
-        if ('weekly' === $period )
-        {
+        if ('weekly' === $period) {
             return $this->prepareWeeklyData($statisticsRepository->getSentRequestsDataWeekly());
         }
 
@@ -384,8 +380,7 @@ class StatisticsModel
         /** @var StatisticsRepository $statisticsRepository */
         $statisticsRepository = $this->getManager()->getRepository(Statistic::class);
 
-        if ('weekly' === $period )
-        {
+        if ('weekly' === $period) {
             return $this->prepareWeeklyData($statisticsRepository->getAcceptedRequestsDataWeekly());
         }
 
@@ -399,8 +394,7 @@ class StatisticsModel
             'numbers' => [],
         ];
 
-        foreach($data as $datum)
-        {
+        foreach ($data as $datum) {
             $preparedData['labels'][] = $datum['day']->format('Y-m-d');
             $preparedData['numbers'][] = $datum['count'];
         }
@@ -415,10 +409,10 @@ class StatisticsModel
             'numbers' => [],
         ];
 
-        foreach($data as $datum)
-        {
+        foreach ($data as $datum) {
             // turn provided yearweek into a date (first day of the week)
-            $preparedData['labels'][] = date('Y-m-d',
+            $preparedData['labels'][] = date(
+                'Y-m-d',
                 strtotime(substr($datum['week'], 0, 4)
                     . '-W' . substr($datum['week'], 4, 2) . '-1')
             );

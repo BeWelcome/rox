@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('faq') }}
+{% endblock javascripts %}
+
+{% block stylesheets %}
+    {{ encore_entry_link_tags('faq') }}
+{% endblock stylesheets %}
+
+{% block title %}
+    {{  'faq' | trans }}
+{% endblock %}
+
+{% block content %}
+<div class="row">
+	<div class="col-12">
+		<h1>{{ 'aboutfaq' | trans}}</h1>
+		<h2>{{ faqCategory.description | lower | trans }}</h2>
+
+		<dl id="faqs">
+			{% for faq in faqs %}
+				<dt class="h5"><i class="fas fa-plus-circle"></i> {{ ('faqq_' ~ faq.QandA) | lower | trans | striptags }}</dt>
+				<dd id="question{{ faq.id }}">{{ ('faqa_' ~ faq.QandA) | lower | trans | purify }}</dd>
+			{% endfor %}
+		</dl>
+	</div>
+</div>
+
+   
+{% endblock content %}

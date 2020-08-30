@@ -1,0 +1,12 @@
+{% if member is not null %}
+    Member {{ member.username }} has sent some feedback.<br>
+    <br>
+{% endif %}
+{{ FeedbackQuestion|raw }}
+<br>
+{% if not no_reply_needed is defined %}
+    Please reply to this feedback<br>
+{% endif %}
+Browser: {{ browser }}<br>
+Host: {{ host }}<br>
+Version: {{ version }}

@@ -26,6 +26,7 @@
         {% block stylesheets %}{% endblock %}
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
         {% block matomo %}{% endblock %}
+        {% block base_url %}{% endblock %}
         <link rel='manifest' href='/manifest.json'>
         <script>
             // Check that service workers are supported
@@ -72,10 +73,14 @@
                                     <i class="fa fa-lg fa-times white" aria-hidden="true"></i>
                                 </button>
                             </div>
-                            <div class="list-group">
+                            <div class="list-group mb-2">
                                 {% for filter,menuItem in submenu.items %}
+                                {% if (filter is same as ('separator') or filter is same as ('separator2')) %}
+                                    </div><h3 class="mt-3 h3-canvas-color">{{ menuItem.key | lower | trans }}</h3><div class="list-group mb-2">
+                                {% else %}           
                                     <a class="list-group-item nav-link{% if submenu.active == filter %} active{% endif %}"
                                        href="{{ menuItem.url }}">{{ menuItem.key | lower | trans }}</a>
+                                {% endif %}   
                                 {% endfor %}
                             </div>
                         </div>

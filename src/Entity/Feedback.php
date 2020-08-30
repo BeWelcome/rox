@@ -8,6 +8,7 @@
 namespace App\Entity;
 
 use Carbon\Carbon;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -23,14 +24,14 @@ use Doctrine\ORM\Mapping as ORM;
 class Feedback
 {
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(name="updated", type="datetime", nullable=false)
      */
     private $updated;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(name="created", type="datetime", nullable=false)
      */
@@ -40,7 +41,7 @@ class Feedback
      * @var Member
      *
      * @ORM\OneToOne(targetEntity="Member")
-     * @ORM\JoinColumn(name="IdMember", referencedColumnName="id")
+     * @ORM\JoinColumn(name="IdMember", referencedColumnName="id", nullable=true)
      */
     private $author;
 
@@ -81,7 +82,7 @@ class Feedback
     /**
      * Set updated.
      *
-     * @param \DateTime $updated
+     * @param DateTime $updated
      *
      * @return Feedback
      */
@@ -105,7 +106,7 @@ class Feedback
     /**
      * Set created.
      *
-     * @param \DateTime $created
+     * @param DateTime $created
      *
      * @return Feedback
      */
@@ -262,7 +263,7 @@ class Feedback
      */
     public function onPrePersist()
     {
-        $this->created = new \DateTime('now');
+        $this->created = new DateTime('now');
     }
 
     /**
@@ -272,6 +273,6 @@ class Feedback
      */
     public function onPreUpdate()
     {
-        $this->updated = new \DateTime('now');
+        $this->updated = new DateTime('now');
     }
 }

@@ -99,17 +99,17 @@ class LegacyLoader extends Loader
         $this->addRouteDirectly('group_add_related_group', '/groups/{groupId}/selectrelatedgroup');
         $this->addRouteDirectly('group_invite_member', '/groups/{groupId}/invitemembers/search');
         $this->addRouteDirectly('community', '/community');
-        $this->addRouteDirectly('about_faq', '/about/faq');
-        $this->addRouteDirectly('about_faq_category', '/about/faq/{category}');
-        $this->addRouteDirectly('about', '/about');
-        $this->addRouteDirectly('about_people', '/about/thepeople');
-        $this->addRouteDirectly('stats', '/stats');
-        $this->addRouteDirectly('stats_images', '/stats/{image}.png');
-        $this->addRouteDirectly('getactive', '/about/getactive');
-        $this->addRouteDirectly('contactus', '/about/feedback');
-        $this->addRouteDirectly('feedback', '/feedback');
-        $this->addRouteDirectly('feedback_submit', '/feedback/submit');
-        $this->addRouteDirectly('privacy', '/privacy');
+        // $this->addRouteDirectly('about_faq', '/about/faq');
+        // $this->addRouteDirectly('about_faq_category', '/about/faq/{category}');
+        // $this->addRouteDirectly('about', '/about');
+        // $this->addRouteDirectly('about_people', '/about/thepeople');
+        // $this->addRouteDirectly('stats', '/stats');
+        // $this->addRouteDirectly('stats_images', '/stats/{image}.png');
+        // $this->addRouteDirectly('getactive', '/about/getactive');
+        // $this->addRouteDirectly('contactus', '/about/feedback');
+        // $this->addRouteDirectly('feedback', '/feedback');
+        // $this->addRouteDirectly('feedback_submit', '/feedback/submit');
+        // $this->addRouteDirectly('privacy', '/privacy');
         $this->addRouteDirectly('signup', '/signup');
         $this->addRouteDirectly('signup_1', '/signup/1');
         $this->addRouteDirectly('signup_2', '/signup/2');
@@ -150,7 +150,7 @@ class LegacyLoader extends Loader
         $this->addRouteDirectly('comment_edit', '/members/{username}/comments/edit');
         $this->addRouteDirectly('mypreferences', '/mypreferences');
         $this->addRouteDirectly('myvisitors', '/myvisitors');
-        $this->addRouteDirectly('profilecomments', '/about/commentguidelines');
+        //$this->addRouteDirectly('profilecomments', '/about/commentguidelines');
         $this->addRouteDirectly('profile_addtorelations', '/members/{username}/relations/add');
         $this->addRouteDirectly('setlocation', '/setlocation');
         $this->addRouteDirectly('editmyprofile_finish', '/editmyprofile/finish');
@@ -159,7 +159,7 @@ class LegacyLoader extends Loader
         $this->addRouteDirectly('delete_profile_language', '/editmyprofile/{language}/delete');
         $this->addRouteDirectly('admin_editprofile_finish', '/members/{username}/adminedit/finish');
         $this->addRouteDirectly('myprofile_in_langauge', '/members/{username}/{language}');
-        $this->addRouteDirectly('imprint', '/impressum');
+        // $this->addRouteDirectly('imprint', '/impressum');
         $this->addRouteDirectly('add_relation_finish', '/members/{username}/relations/add/finish');
         $this->addRouteDirectly(
             'delete_relation_editprofile',

@@ -31,6 +31,7 @@ class PoliciesController extends AbstractController
     /**
      * @Route("/privacy/{locale}", name="privacy_policy",
      *     _defaults={"locale":"en"})
+     * @Route("/privacy", name="privacy")
      *
      * @return Response
      */

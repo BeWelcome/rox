@@ -5,7 +5,7 @@ namespace App\Model\MemberDataExtractor;
 use DateTime;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\ObjectRepository;
-use Symfony\WebpackEncoreBundle\Asset\EntrypointLookup;
+use Symfony\WebpackEncoreBundle\Asset\EntrypointLookupInterface;
 use Twig\Environment;
 
 abstract class AbstractExtractor
@@ -14,7 +14,7 @@ abstract class AbstractExtractor
     protected $environment;
     protected $registry;
 
-    public function __construct(EntrypointLookup $entrypointLookup, Environment $environment, ManagerRegistry $registry)
+    public function __construct(EntrypointLookupInterface $entrypointLookup, Environment $environment, ManagerRegistry $registry)
     {
         $this->entrypointLookup = $entrypointLookup;
         $this->environment = $environment;

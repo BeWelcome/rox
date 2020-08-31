@@ -5,14 +5,14 @@ namespace App\Model\MemberDataExtractor;
 use App\Entity\Member;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\WebpackEncoreBundle\Asset\EntrypointLookup;
+use Symfony\WebpackEncoreBundle\Asset\EntrypointLookupInterface;
 use Twig\Environment;
 
 final class GalleryItemsExtractor extends AbstractExtractor implements ExtractorInterface
 {
     private $projectDir;
 
-    public function __construct(EntrypointLookup $entrypointLookup, Environment $environment, ManagerRegistry $registry, string $projectDir)
+    public function __construct(EntrypointLookupInterface $entrypointLookup, Environment $environment, ManagerRegistry $registry, string $projectDir)
     {
         parent::__construct($entrypointLookup, $environment, $registry);
         $this->projectDir = $projectDir;

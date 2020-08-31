@@ -31,7 +31,7 @@ services:
   # this creates a service per class whose id is the fully-qualified class name
   App\:
     resource: '../src/*'
-    exclude: '../src/{DependencyInjection,Entity,Migrations,Twig,Tests,Kernel.php}'
+    exclude: '../src/{DependencyInjection,Entity,Migrations,Model/MemberDataExtractor/DoctrineExtractor.php,Twig,Tests,Kernel.php}'
 
   # controllers are imported separately to make sure services can be injected
   # as action arguments even if you don't extend any base controller class
@@ -40,6 +40,7 @@ services:
     tags: ['controller.service_arguments']
 
   app.member_data_extractor.donations:
+    class: App\Model\MemberDataExtractor\DoctrineExtractor
     factory: ['App\Model\MemberDataExtractor\DoctrineExtractorFactory', 'create']
     arguments:
       $className: 'App\Entity\Donation'
@@ -47,6 +48,7 @@ services:
       $alias: donations
 
   app.member_data_extractor.broadcasts:
+    class: App\Model\MemberDataExtractor\DoctrineExtractor
     factory: ['App\Model\MemberDataExtractor\DoctrineExtractorFactory', 'create']
     arguments:
       $className: 'App\Entity\BroadcastMessage'
@@ -54,6 +56,7 @@ services:
       $alias: broadcasts
 
   app.member_data_extractor.community_news:
+    class: App\Model\MemberDataExtractor\DoctrineExtractor
     factory: ['App\Model\MemberDataExtractor\DoctrineExtractorFactory', 'create']
     arguments:
       $className: 'App\Entity\CommunityNews'
@@ -61,6 +64,7 @@ services:
       $alias: communitynews
 
   app.member_data_extractor.logs:
+    class: App\Model\MemberDataExtractor\DoctrineExtractor
     factory: ['App\Model\MemberDataExtractor\DoctrineExtractorFactory', 'create']
     arguments:
       $className: 'App\Entity\Log'
@@ -68,6 +72,7 @@ services:
       $alias: logs
 
   app.member_data_extractor.newsletters:
+    class: App\Model\MemberDataExtractor\DoctrineExtractor
     factory: ['App\Model\MemberDataExtractor\DoctrineExtractorFactory', 'create']
     arguments:
       $className: 'App\Entity\Newsletter'
@@ -75,6 +80,7 @@ services:
       $alias: newsletters
 
   app.member_data_extractor.shouts:
+    class: App\Model\MemberDataExtractor\DoctrineExtractor
     factory: ['App\Model\MemberDataExtractor\DoctrineExtractorFactory', 'create']
     arguments:
       $className: 'App\Entity\Shout'
@@ -82,6 +88,7 @@ services:
       $alias: shouts
 
   app.member_data_extractor.subscriptions:
+    class: App\Model\MemberDataExtractor\DoctrineExtractor
     factory: ['App\Model\MemberDataExtractor\DoctrineExtractorFactory', 'create']
     arguments:
       $className: 'App\Entity\MemberThreadSubscription'
@@ -89,6 +96,7 @@ services:
       $alias: subscriptions
 
   app.member_data_extractor.translations:
+    class: App\Model\MemberDataExtractor\DoctrineExtractor
     factory: ['App\Model\MemberDataExtractor\DoctrineExtractorFactory', 'create']
     arguments:
       $className: 'App\Entity\Word'

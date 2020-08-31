@@ -56,6 +56,9 @@
     "cakephp/utility": {
         "version": "3.8.10"
     },
+    "composer/package-versions-deprecated": {
+        "version": "1.11.99"
+    },
     "composer/semver": {
         "version": "1.5.1"
     },

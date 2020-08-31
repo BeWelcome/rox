@@ -4,7 +4,7 @@ namespace App\Model\MemberDataExtractor;
 
 use App\Entity\Member;
 use Doctrine\Persistence\ManagerRegistry;
-use Symfony\WebpackEncoreBundle\Asset\EntrypointLookup;
+use Symfony\WebpackEncoreBundle\Asset\EntrypointLookupInterface;
 use Twig\Environment;
 
 final class DoctrineExtractor extends AbstractExtractor implements ExtractorInterface
@@ -13,7 +13,7 @@ final class DoctrineExtractor extends AbstractExtractor implements ExtractorInte
     private $memberRelationName;
     private $alias;
 
-    public function __construct(EntrypointLookup $entrypointLookup, Environment $environment, ManagerRegistry $registry, string $className, string $memberRelationName, string $alias)
+    public function __construct(EntrypointLookupInterface $entrypointLookup, Environment $environment, ManagerRegistry $registry, string $className, string $memberRelationName, string $alias)
     {
         parent::__construct($entrypointLookup, $environment, $registry);
         $this->className = $className;

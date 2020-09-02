@@ -47,7 +47,7 @@ class MemberModel
         Environment $environment,
         EntrypointLookupInterface $entrypointLookup,
         ContainerBagInterface $params,
-        \Iterator $extractors
+        iterable $extractors
     ) {
         $this->environment = $environment;
         $this->entrypointLookup = $entrypointLookup;

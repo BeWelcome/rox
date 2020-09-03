@@ -31,6 +31,6 @@ final class CommunityNewsCommentsExtractor extends AbstractExtractor implements 
             $newsAndComments[$comment->getCommunityNews()->getId()] = $commentWithNews;
         }
 
-        return $this->writePersonalDataFile(['newsAndComments' => $newsAndComments], 'communitynews_comments');
+        return $this->writePersonalDataFile(['newsAndComments' => $newsAndComments], 'communitynews_comments', $tempDir . 'communitynews_comments.html');
     }
 }

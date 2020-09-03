@@ -18,7 +18,8 @@ final class MemberDataExtractor extends AbstractExtractor implements ExtractorIn
                 'member' => $member,
                 'profilepicture' => 'images/empty_avatar.png',
             ],
-            'profile'
+            'profile',
+            $tempDir . 'profile.html'
         );
 
         // Write member information into file:

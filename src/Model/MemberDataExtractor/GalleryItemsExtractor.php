@@ -47,6 +47,6 @@ final class GalleryItemsExtractor extends AbstractExtractor implements Extractor
             }
         }
 
-        return $this->writePersonalDataFile(['hrefs' => $hrefs], $tempDir . 'gallery.html');
+        return $this->writePersonalDataFile(['hrefs' => $hrefs], 'gallery', $tempDir . 'gallery.html');
     }
 }

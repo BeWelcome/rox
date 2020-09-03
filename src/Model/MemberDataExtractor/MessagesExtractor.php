@@ -26,7 +26,8 @@ class MessagesExtractor extends AbstractExtractor implements ExtractorInterface
                 'messagesSent' => \count($messagesSentBy),
                 'messagesReceived' => \count($messagesReceivedBy),
             ],
-            'messages'
+            'messages',
+            $tempDir . 'messages.html'
         );
     }
 
@@ -42,7 +43,7 @@ class MessagesExtractor extends AbstractExtractor implements ExtractorInterface
                 ],
                 'message_or_request',
                 $directory,
-                $filename . '-' . $message->getCreated()->toDateString() . '-' . $i . ($sent ? '-sent' : '-received')
+                $filename . '-' . $message->getCreated()->toDateString() . '-' . $i . ($sent ? '-sent' : '-received') . '.html'
             );
             ++$i;
         }

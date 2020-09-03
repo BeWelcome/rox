@@ -26,7 +26,8 @@ final class RequestsExtractor extends MessagesExtractor
                 'requestsSent' => \count($requestsSentBy),
                 'requestsReceived' => \count($requestsReceivedBy),
             ],
-            'requests'
+            'requests',
+            $tempDir . 'requests.html'
         );
     }
 }

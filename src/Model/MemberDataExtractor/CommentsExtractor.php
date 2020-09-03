@@ -43,6 +43,6 @@ final class CommentsExtractor extends AbstractExtractor implements ExtractorInte
             $comments[$comment->getToMember()->getId()] = $commentArray;
         }
 
-        return $this->writePersonalDataFile(['comments' => $comments], 'comments');
+        return $this->writePersonalDataFile(['comments' => $comments], 'comments', $tempDir . 'comments.html');
     }
 }

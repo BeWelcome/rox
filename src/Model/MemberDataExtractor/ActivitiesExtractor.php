@@ -31,13 +31,13 @@ final class ActivitiesExtractor extends AbstractExtractor implements ExtractorIn
                     ],
                     'activity',
                     $tempDir . 'activities',
-                    'activity-' . $i
+                    'activity-' . $i . '.html'
                 );
                 $activities[$i] = $attendee->getActivity();
                 ++$i;
             }
         }
 
-        return $this->writePersonalDataFile(['activities' => $activities], 'activities');
+        return $this->writePersonalDataFile(['activities' => $activities], 'activities', $tempDir . 'activities.html');
     }
 }

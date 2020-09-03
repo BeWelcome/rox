@@ -45,6 +45,6 @@ final class PrivilegesExtractor extends AbstractExtractor implements ExtractorIn
             }
         }
 
-        return $this->writePersonalDataFile(['privileges' => $privilegesCombined], 'privileges');
+        return $this->writePersonalDataFile(['privileges' => $privilegesCombined], 'privileges', $tempDir . 'privileges.html');
     }
 }

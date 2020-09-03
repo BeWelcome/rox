@@ -37,6 +37,6 @@ final class SpecialRelationsExtractor extends AbstractExtractor implements Extra
             }
         }
 
-        return $this->writePersonalDataFile(['relations' => $relations], 'relations');
+        return $this->writePersonalDataFile(['relations' => $relations], 'relations', $tempDir . 'relations.html');
     }
 }

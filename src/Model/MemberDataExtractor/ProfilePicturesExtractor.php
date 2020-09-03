@@ -44,6 +44,6 @@ final class ProfilePicturesExtractor extends AbstractExtractor implements Extrac
             }
         }
 
-        return $this->writePersonalDataFile(['pictures' => $pictures], 'pictures');
+        return $this->writePersonalDataFile(['pictures' => $pictures], 'pictures', $tempDir . 'pictures.html');
     }
 }

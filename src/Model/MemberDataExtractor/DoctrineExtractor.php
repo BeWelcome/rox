@@ -29,6 +29,6 @@ final class DoctrineExtractor extends AbstractExtractor implements ExtractorInte
         $donationRepository = $this->getRepository($this->className);
         $donations = $donationRepository->findBy([$this->memberRelationName => $member]);
 
-        return $this->writePersonalDataFile([$this->alias => $donations], $this->alias);
+        return $this->writePersonalDataFile([$this->alias => $donations], $this->alias, $tempDir . $this->alias . '.html');
     }
 }

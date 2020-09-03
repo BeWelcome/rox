@@ -27,6 +27,6 @@ final class GroupInformationExtractor extends AbstractExtractor implements Extra
             }
         }
 
-        return $this->writePersonalDataFile(['groupmemberships' => $memberships], 'groups');
+        return $this->writePersonalDataFile(['groupmemberships' => $memberships], 'groups', $tempDir . 'groups.html');
     }
 }

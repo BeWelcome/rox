@@ -15,6 +15,6 @@ final class RightsExtractor extends AbstractExtractor implements ExtractorInterf
         /** @var RightVolunteer[] $volunteerRights */
         $volunteerRights = $member->getVolunteerRights();
 
-        return $this->writePersonalDataFile(['volunteerrights' => $volunteerRights], 'rights');
+        return $this->writePersonalDataFile(['volunteerrights' => $volunteerRights], 'rights', $tempDir . 'rights.html');
     }
 }

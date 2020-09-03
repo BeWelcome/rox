@@ -31,7 +31,7 @@ final class ForumPostsExtractor extends AbstractExtractor implements ExtractorIn
                 ],
                 'post',
                 $tempDir . 'posts',
-                'post-' . $post->getCreated()->toDateString() . '-' . $i
+                'post-' . $post->getCreated()->toDateString() . '-' . $i . '.html'
             );
             $year = $post->getCreated()->year;
             if (!isset($threadsPerYear[$year])) {
@@ -63,7 +63,7 @@ final class ForumPostsExtractor extends AbstractExtractor implements ExtractorIn
                 ],
                 'posts_year',
                 $tempDir . 'posts',
-                'posts-' . $year
+                'posts-' . $year . '.html'
             );
         }
 
@@ -75,7 +75,8 @@ final class ForumPostsExtractor extends AbstractExtractor implements ExtractorIn
                 'threads_contributed' => \count($threadsContributed),
                 'posts_written' => $i - 1,
             ],
-            'posts'
+            'posts',
+            $tempDir . 'posts.html'
         );
     }
 

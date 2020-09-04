@@ -57,6 +57,7 @@ class WordRepository extends EntityRepository
 
         return $translations;
     }
+
     private function queryAll($locale, $code = '')
     {
         $qb = $this->createQueryBuilder('t')

@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Entity\FeedbackCategory;
 use App\Form\FeedbackFormType;
 use App\Model\AboutModel;
 use Carbon\Carbon;

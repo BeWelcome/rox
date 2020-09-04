@@ -69,7 +69,7 @@ using a browser or use curl _url_ > _filename_.
 * SMTP server for email features
 * [Composer](https://www.getcomposer.org) Latest version (installed globally)
 * [Node.js](https://nodejs.org/) Latest version (installed globally)
-* [yarn](https://classic.yarnpkg.com/en/docs/install/) Latest version
+* [Yarn](https://classic.yarnpkg.com/en/docs/install/) Latest version
 * [Sphinxsearch](http://sphinxsearch.com/) (can be omitted but member search will be slow and forum search won't work)
 * wget (if you want to follow the instructions word to word) otherwise curl and the -o parameter should be your friend
 

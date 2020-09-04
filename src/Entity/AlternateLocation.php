@@ -76,7 +76,6 @@ class AlternateLocation
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\Location")
      * @ORM\JoinColumn(name="geonameId", referencedColumnName="geonameId")
-     *
      */
     private $geonameId;
 

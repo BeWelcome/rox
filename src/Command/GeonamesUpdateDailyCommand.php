@@ -132,12 +132,12 @@ class GeonamesUpdateDailyCommand extends Command
                 $this->handleDuplicates($removeGeonameId, $newGeonameId);
             }
             // Remove id from data base
-            $statement =  $connection->prepare("
+            $statement = $connection->prepare('
                 DELETE FROM
                     `geonames`
                 WHERE
                     geonameid = :geoname_id
-            ");
+            ');
             $statement->execute([
                 ':geoname_id' => $removeGeonameId,
             ]);
@@ -188,17 +188,16 @@ class GeonamesUpdateDailyCommand extends Command
             . 'alternateNamesDeletes-' . $date->format('Y-m-d') . '.txt');
         foreach ($deletes as $delete) {
             if (is_numeric($delete[0])) {
-                $statement = $connection->prepare("
+                $statement = $connection->prepare('
     				DELETE FROM
     				    `geonamesalternatenames`
     				WHERE
     				    alternatenameid = :alternate_id
     				    AND geonameid = :geoname_id
-    		    ");
+    		    ');
                 $statement->execute([
                     ':alternate_id' => $delete[0],
                     ':geoname_id' => $delete[1],
-
                 ]);
             }
         }
@@ -233,56 +232,56 @@ class GeonamesUpdateDailyCommand extends Command
         $connection = $this->entityManager->getConnection();
 
         // First update members table which points to the old geoname id
-        $statement =  $connection->prepare("
+        $statement = $connection->prepare('
                 UPDATE
                     `members`
                 SET 
                     IdCity = :new_geoname_id
                 WHERE
                     IdCity = :old_geoname_id
-            ");
+            ');
         $statement->execute([
             ':old_geoname_id' => $removeGeonameId,
             ':new_geoname_id' => $newGeonameId,
         ]);
 
         // Second update addresses table
-        $statement =  $connection->prepare("
+        $statement = $connection->prepare('
                 UPDATE
                     `addresses`
                 SET 
                     IdCity = :new_geoname_id
                 WHERE
                     IdCity = :old_geoname_id
-            ");
+            ');
         $statement->execute([
             ':old_geoname_id' => $removeGeonameId,
             ':new_geoname_id' => $newGeonameId,
         ]);
 
         // Third update activities table
-        $statement =  $connection->prepare("
+        $statement = $connection->prepare('
                 UPDATE
                     `activities`
                 SET 
                     locationId = :new_geoname_id
                 WHERE
                     locationId = :old_geoname_id
-            ");
+            ');
 
         $statement->execute([
             ':old_geoname_id' => $removeGeonameId,
             ':new_geoname_id' => $newGeonameId,
         ]);
 
-        $statement =  $connection->prepare("
+        $statement = $connection->prepare('
                 UPDATE
                     `geonames`
                 SET 
                     geonameid = :new_geoname_id
                 WHERE
                     geonameid = :old_geoname_id
-            ");
+            ');
         $statement->execute([
             ':old_geoname_id' => $removeGeonameId,
             ':new_geoname_id' => $newGeonameId,

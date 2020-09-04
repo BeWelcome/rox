@@ -45,19 +45,19 @@ phpcsfix:
 deploy: composer yarn encore assets
 
 composer:
-	composer install
+	composer install --prefer-dist --no-progress --no-suggest --no-interaction --no-scripts
 
 yarn:
 	yarn install
 
 encore:
-	./node_modules/.bin/encore production
+	yarn encore production
 
 assets:
 	php bin/console assets:install --env=prod
 
 build:
-	./node_modules/.bin/encore dev
+	yarn encore dev
 	php bin/console assets:install
 
 phpdox: phploc phpmd php-code-sniffer phpunit

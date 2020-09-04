@@ -36,11 +36,8 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Constraints\NotBlank;
-
-use function in_array;
 
 /**
  * Class TranslationController.
@@ -129,7 +126,6 @@ class TranslationController extends AbstractController
                 'url' => 'terms/{locale}',
                 'template' => 'policies/tou_translated.html.twig',
                 'description' => 'The terms of use. Make sure to translate them fully before asking for publication.',
-
             ],
             'Privacy Policy' => [
                 'url' => 'privacy/{locale}',
@@ -144,7 +140,7 @@ class TranslationController extends AbstractController
             'Login' => [
                 'url' => '/login',
                 'template' => 'security/login.html.twig',
-                'description' => 'The login page (without error message)'
+                'description' => 'The login page (without error message)',
             ],
             'Reset Password Request' => [
                 'url' => '/resetpassword',
@@ -159,7 +155,7 @@ class TranslationController extends AbstractController
         ],
     ];
 
-    /** @var TranslationModel  */
+    /** @var TranslationModel */
     private $translationModel;
 
     public function __construct(TranslationModel $translationModel)
@@ -758,6 +754,7 @@ class TranslationController extends AbstractController
 
         $template = self::MOCKUPS['emails'][$name]['template'];
         $description = self::MOCKUPS['emails'][$name]['description'] ?? '';
+
         return $this->render(
             'admin/translations/mockup.email.html.twig',
             array_merge(
@@ -949,7 +946,7 @@ class TranslationController extends AbstractController
         })->first();
 
         $scope = preg_split('/[,;]/', str_replace('"', '', $wordRight->getScope()));
-        if (in_array('All', $scope, true)) {
+        if (\in_array('All', $scope, true)) {
             return ['this', 'should', 'never', 'happen'];
         }
 

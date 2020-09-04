@@ -1,0 +1,29 @@
+default:
+    suites:
+        default:
+            contexts:
+                - 'Alex\MailCatcher\Behat\MailCatcherContext': ~
+                - 'App\Tests\Behat\DatabaseContext': ~
+                - 'App\Tests\Behat\RefreshTokenContext': ~
+                - 'App\Tests\Behat\SecurityContext': ~
+                - 'Behat\MinkExtension\Context\MinkContext': ~
+                - 'Behatch\Context\JsonContext': ~
+                - 'Behatch\Context\RestContext': ~
+
+    extensions:
+        'Behat\MinkExtension':
+            base_url: 'https://www.bewelcome.org/'
+            files_path: 'features/assets/files'
+            sessions:
+                symfony:
+                    symfony: ~
+        'Behatch\Extension': ~
+        'FriendsOfBehat\SymfonyExtension': ~
+        'Alex\MailCatcher\Behat\MailCatcherExtension\Extension':
+            url: http://mailcatcher
+            purge_before_scenario: true
+
+localhost:
+    extensions:
+        'Alex\MailCatcher\Behat\MailCatcherExtension\Extension':
+            url: http://localhost:1080

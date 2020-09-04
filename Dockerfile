@@ -4,7 +4,7 @@
 
 
 # https://docs.docker.com/engine/reference/builder/#understand-how-arg-and-from-interact
-ARG PHP_VERSION=7.3.14
+ARG PHP_VERSION=7.4.12
 ARG NGINX_VERSION=1.17
 
 
@@ -21,6 +21,8 @@ RUN apk add --no-cache \
 		file \
 		gettext \
 		git \
+		openssh-client \
+		python \
 	;
 
 ARG APCU_VERSION=5.1.18
@@ -72,7 +74,7 @@ RUN set -eux; \
 	echo "@edge http://nl.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories; \
 	apk add --no-cache yarn@edge
 
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+COPY --from=composer:1 /usr/bin/composer /usr/bin/composer
 
 RUN ln -s $PHP_INI_DIR/php.ini-production $PHP_INI_DIR/php.ini
 COPY docker/php/conf.d/bewelcome.prod.ini $PHP_INI_DIR/conf.d/bewelcome.ini
@@ -127,7 +129,7 @@ RUN set -eux; \
 COPY package.json yarn.lock webpack.config.js ./
 RUN set -eux; \
 	yarn install --frozen-lock; \
-	./node_modules/.bin/encore production --mode=production
+	yarn encore production --mode=production
 
 # do not use .env files in production
 COPY .env ./

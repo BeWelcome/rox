@@ -1,0 +1,400 @@
+{
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+        "@context": {
+            "pattern": "^/api/contexts/Member$",
+            "required": true
+        },
+        "@id": {
+            "pattern": "^/api/members/2$",
+            "required": true
+        },
+        "@type": {
+            "pattern": "^Member$",
+            "required": true
+        },
+        "username": {
+            "pattern": "^member-2$",
+            "required": true
+        },
+        "email": {
+            "pattern": "^member-2@bewelcome\\.org$",
+            "required": true
+        },
+        "city": {
+            "type": "object",
+            "required": true,
+            "additionalProperties": false,
+            "properties": {
+                "name": {
+                    "required": true
+                },
+                "latitude": {
+                    "required": true
+                },
+                "longitude": {
+                    "required": true
+                },
+                "geonameId": {
+                    "required": true
+                },
+                "country": {
+                    "type": "object",
+                    "required": true,
+                    "additionalProperties": false,
+                    "properties": {
+                        "geonameId": {
+                            "required": true
+                        },
+                        "name": {
+                            "required": true
+                        },
+                        "continent": {
+                            "required": true
+                        }
+                    }
+                }
+            }
+        },
+        "firstName": {
+            "type": "string",
+            "required": true
+        },
+        "secondName": {
+            "type": [
+                "string",
+                "null"
+            ],
+            "required": true
+        },
+        "lastName": {
+            "type": "string",
+            "required": true
+        },
+        "accommodation": {
+            "type": "string",
+            "required": true
+        },
+        "additionalAccommodationInfo": {
+            "type": "string",
+            "required": false
+        },
+        "ilivewith": {
+            "type": "string",
+            "required": false
+        },
+        "informationtoguest": {
+            "type": "string",
+            "required": false
+        },
+        "typicoffer": {
+            "type": "string",
+            "required": false
+        },
+        "offer": {
+            "type": "string",
+            "required": false
+        },
+        "maxguest": {
+            "type": "integer",
+            "required": false
+        },
+        "maxlenghtofstay": {
+            "type": "string",
+            "required": false
+        },
+        "organizations": {
+            "type": "string",
+            "required": false
+        },
+        "restrictions": {
+            "type": "string",
+            "required": false
+        },
+        "otherrestrictions": {
+            "type": "string",
+            "required": false
+        },
+        "profileSummary": {
+            "type": "string",
+            "required": false
+        },
+        "occupation": {
+            "type": "string",
+            "required": false
+        },
+        "counterguests": {
+            "type": "integer",
+            "required": false
+        },
+        "counterhosts": {
+            "type": "integer",
+            "required": false
+        },
+        "countertrusts": {
+            "type": "integer",
+            "required": false
+        },
+        "gender": {
+            "type": "string",
+            "required": false
+        },
+        "genderofguest": {
+            "type": "string",
+            "required": false
+        },
+        "motivationforhospitality": {
+            "type": "string",
+            "required": false
+        },
+        "website": {
+            "type": "string",
+            "required": false
+        },
+        "hobbies": {
+            "type": "string",
+            "required": false
+        },
+        "books": {
+            "type": "string",
+            "required": false
+        },
+        "music": {
+            "type": "string",
+            "required": false
+        },
+        "movies": {
+            "type": "string",
+            "required": false
+        },
+        "pasttrips": {
+            "type": "string",
+            "required": false
+        },
+        "plannedtrips": {
+            "type": "string",
+            "required": false
+        },
+        "pleasebring": {
+            "type": "string",
+            "required": false
+        },
+        "offerguests": {
+            "type": "string",
+            "required": false
+        },
+        "offerhosts": {
+            "type": "string",
+            "required": false
+        },
+        "publictransport": {
+            "type": "string",
+            "required": false
+        },
+        "hostingInterest": {
+            "type": [
+                "integer",
+                "null"
+            ],
+            "required": false
+        },
+        "lastLogin": {
+            "type": "string",
+            "required": false
+        },
+        "created": {
+            "type": "string",
+            "required": false
+        },
+        "languageLevels": {
+            "type": "array",
+            "required": true,
+            "items": {
+                "level": {
+                    "required": true
+                },
+                "language": {
+                    "type": "object",
+                    "required": true,
+                    "additionalProperties": false,
+                    "properties": {
+                        "englishname": {
+                            "required": true
+                        },
+                        "shortcode": {
+                            "required": true
+                        }
+                    }
+                }
+            }
+        },
+        "memberFields": {
+            "type": [
+                "object",
+                "array"
+            ],
+            "required": true,
+            "additionalProperties": false,
+            "properties": {
+                "en": {
+                    "type": "object",
+                    "required": false,
+                    "additionalProperties": false,
+                    "properties": {
+                        "ProfileSummary": {
+                            "required": true
+                        },
+                        "MaxLenghtOfStay": {
+                            "required": true
+                        },
+                        "Occupation": {
+                            "required": true
+                        },
+                        "ILiveWith": {
+                            "required": true
+                        },
+                        "AdditionalAccomodationInfo": {
+                            "required": true
+                        },
+                        "OtherRestrictions": {
+                            "required": true
+                        },
+                        "Hobbies": {
+                            "required": true
+                        },
+                        "Books": {
+                            "required": true
+                        },
+                        "Music": {
+                            "required": true
+                        },
+                        "Movies": {
+                            "required": true
+                        },
+                        "PleaseBring": {
+                            "required": true
+                        },
+                        "OfferGuests": {
+                            "required": true
+                        },
+                        "OfferHosts": {
+                            "required": true
+                        },
+                        "PublicTransport": {
+                            "required": true
+                        },
+                        "MotivationForHospitality": {
+                            "required": true
+                        },
+                        "Offer": {
+                            "required": true
+                        },
+                        "Organizations": {
+                            "required": true
+                        },
+                        "InformationToGuest": {
+                            "required": true
+                        },
+                        "PastTrips": {
+                            "required": true
+                        },
+                        "PlannedTrips": {
+                            "required": true
+                        }
+                    }
+                }
+            }
+        },
+        "messengers": {
+            "type": "object",
+            "required": true,
+            "additionalProperties": false,
+            "properties": {
+                "GOOGLE": {
+                    "required": true
+                },
+                "SKYPE": {
+                    "required": true
+                },
+                "Others": {
+                    "required": true
+                }
+            }
+        },
+        "age": {
+            "type": "integer",
+            "required": true
+        },
+        "avatar": {
+            "type": "string",
+            "pattern": "^/members/avatar/.*$",
+            "required": true
+        },
+        "address": {
+            "type": "object",
+            "required": false,
+            "additionalProperties": false,
+            "properties": {
+                "houseNumber": {
+                    "required": true
+                },
+                "streetName": {
+                    "required": true
+                },
+                "zip": {
+                    "required": true
+                },
+                "location": {
+                    "type": "object",
+                    "required": true,
+                    "additionalProperties": false,
+                    "properties": {
+                        "name": {
+                            "required": true
+                        },
+                        "latitude": {
+                            "required": true
+                        },
+                        "longitude": {
+                            "required": true
+                        },
+                        "geonameId": {
+                            "required": true,
+                            "type": "integer"
+                        },
+                        "country": {
+                            "type": "object",
+                            "required": true,
+                            "additionalProperties": false,
+                            "properties": {
+                                "geonameId": {
+                                    "required": true,
+                                    "type": "integer"
+                                },
+                                "name": {
+                                    "required": true
+                                },
+                                "continent": {
+                                    "required": true
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "homePhoneNumber": {
+            "type": "string",
+            "required": false
+        },
+        "cellPhoneNumber": {
+            "type": "string",
+            "required": false
+        },
+        "workPhoneNumber": {
+            "type": "string",
+            "required": false
+        }
+    }
+}

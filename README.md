@@ -1,6 +1,5 @@
 # Rox the software running BeWelcome.org :earth_asia:
 
-[![Build Status](https://travis-ci.org/BeWelcome/rox.svg?branch=bootstrap4)](https://travis-ci.org/BeWelcome/rox)
 [![GitHub CI](https://github.com/BeWelcome/rox/workflows/CI/badge.svg)](https://github.com/BeWelcome/rox/actions?query=workflow%3ACI)
 
 **A community-driven hospitality exchange network**
@@ -60,7 +59,7 @@ The result can then be accessed via `doc/phpdox/` in your cloned repository.
 If you see an updated ```composer.json``` or ```composer.lock``` make sure to run
 
 ```bash
-composer install
+composer install --prefer-dist --no-progress --no-suggest --no-interaction --no-scripts
 ```
 
 Also run

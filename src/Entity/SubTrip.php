@@ -63,7 +63,7 @@ class SubTrip
     /**
      * @var Trip
      *
-     * @ORM\ManyToOne(targetEntity="Trip", inversedBy="subtrips", cascade={"persist", "remove"})
+     * @ORM\ManyToOne(targetEntity="Trip", inversedBy="subTrips", cascade={"persist", "remove"})
      * @ORM\JoinColumn(name="trip_id", referencedColumnName="id")
      */
     private $trip;

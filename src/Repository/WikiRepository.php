@@ -10,6 +10,7 @@ class WikiRepository extends EntityRepository
 {
     /**
      * @param $pagename
+     * @param mixed $version
      *
      * @return Wiki|null
      */

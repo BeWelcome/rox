@@ -77,9 +77,6 @@
 
     $this->addRoute('members_edit_flags', 'members/:username:/flags', 'MembersController', 'editFlags');
 
-    // admin temporary vol page route
-    // $this->addRoute('volunteer', 'volunteer', 'AdminGeneralController', 'tempVolStart');
-
     // admin app routes
     $this->addRoute('admin_main', 'admin', 'AdminGeneralController', 'index');
     $this->addRoute('admin_norights', 'admin/norights', 'AdminGeneralController', 'noRights');

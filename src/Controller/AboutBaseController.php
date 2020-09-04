@@ -55,7 +55,7 @@ class AboutBaseController extends AbstractController
             ],
             'about_press' => [
                 'key' => 'PressInfoPage',
-                'url' => $this->generateUrl('wiki_page', ['pageTitle' => 'press information']),
+                'url' => $this->generateUrl('about_press'),
             ],
             'about_bod' => [
                 'key' => 'BoardOfDirectorsPage',

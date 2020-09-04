@@ -1,0 +1,10 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{ 'pressinfo.title' | trans }}
+{% endblock %}
+
+{% block content %}
+    <h1>{{ 'pressinfo.headline' | trans }}</h1>
+    {{ 'pressinfo.text' | trans | purify }}
+{% endblock content %}

@@ -63,6 +63,8 @@ security:
         - { path: ^/datarights, roles:  IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/stats, roles:  IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/safety, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/media, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/press-information, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/signup, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/newsletter, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/faq, roles: IS_AUTHENTICATED_ANONYMOUSLY }

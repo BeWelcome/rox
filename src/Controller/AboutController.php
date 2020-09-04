@@ -76,6 +76,22 @@ class AboutController extends AboutBaseController
     }
 
     /**
+     * @Route("/press-information", name="about_press")
+     * @Route("/media", name="media")
+     * 
+     * @return Response
+     */
+    public function showAboutPressInfo()
+    {
+        return $this->render('about/pressinfo.html.twig', [
+            'submenu' => [
+                'items' => $this->getSubMenuItems(),
+                'active' => 'about_press',
+            ],
+        ]);
+    }
+
+    /**
      * @Route("/bod", name="about_bod")
      *
      * @return RedirectResponse

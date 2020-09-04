@@ -28,10 +28,8 @@ abstract class AbstractExtractor
 
     protected function writePersonalDataFile(array $parameters, string $template, string $filename = null): string
     {
-        $filename = (null === $filename) ? $template : $filename;
-
         $this->writeRenderedTemplate(
-            $filename,
+            $filename ?: $template,
             $template,
             $parameters
         );

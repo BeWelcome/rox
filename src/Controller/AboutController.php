@@ -72,7 +72,7 @@ class AboutController extends AboutBaseController
     /**
      * @Route("/press-information", name="about_press")
      * @Route("/media", name="media")
-     * 
+     *
      * @return Response
      */
     public function showAboutPressInfo()

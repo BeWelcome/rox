@@ -134,10 +134,7 @@ class MemberController extends AbstractController
             // main dir is left over!
             $response = new BinaryFileResponse($zipFilename);
             $response->headers->set('Content-Type', 'application/zip');
-            $response->headers->set('Location', '/members/member-1223');
-            $response->setContentDisposition(
-                ResponseHeaderBag::DISPOSITION_INLINE
-            );
+            $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_INLINE);
             $response->deleteFileAfterSend(true);
 
             return $response;

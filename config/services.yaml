@@ -41,7 +41,7 @@ services:
 
   app.member_data_extractor.donations:
     class: App\Model\MemberDataExtractor\DoctrineExtractor
-    factory: ['App\Model\MemberDataExtractor\DoctrineExtractorFactory', 'create']
+    factory: ['@App\Model\MemberDataExtractor\DoctrineExtractorFactory', 'create']
     arguments:
       $className: 'App\Entity\Donation'
       $memberRelationName: donor
@@ -49,7 +49,7 @@ services:
 
   app.member_data_extractor.broadcasts:
     class: App\Model\MemberDataExtractor\DoctrineExtractor
-    factory: ['App\Model\MemberDataExtractor\DoctrineExtractorFactory', 'create']
+    factory: ['@App\Model\MemberDataExtractor\DoctrineExtractorFactory', 'create']
     arguments:
       $className: 'App\Entity\BroadcastMessage'
       $memberRelationName: receiver
@@ -57,7 +57,7 @@ services:
 
   app.member_data_extractor.community_news:
     class: App\Model\MemberDataExtractor\DoctrineExtractor
-    factory: ['App\Model\MemberDataExtractor\DoctrineExtractorFactory', 'create']
+    factory: ['@App\Model\MemberDataExtractor\DoctrineExtractorFactory', 'create']
     arguments:
       $className: 'App\Entity\CommunityNews'
       $memberRelationName: createdBy
@@ -65,7 +65,7 @@ services:
 
   app.member_data_extractor.logs:
     class: App\Model\MemberDataExtractor\DoctrineExtractor
-    factory: ['App\Model\MemberDataExtractor\DoctrineExtractorFactory', 'create']
+    factory: ['@App\Model\MemberDataExtractor\DoctrineExtractorFactory', 'create']
     arguments:
       $className: 'App\Entity\Log'
       $memberRelationName: member
@@ -73,7 +73,7 @@ services:
 
   app.member_data_extractor.newsletters:
     class: App\Model\MemberDataExtractor\DoctrineExtractor
-    factory: ['App\Model\MemberDataExtractor\DoctrineExtractorFactory', 'create']
+    factory: ['@App\Model\MemberDataExtractor\DoctrineExtractorFactory', 'create']
     arguments:
       $className: 'App\Entity\Newsletter'
       $memberRelationName: createdBy
@@ -81,7 +81,7 @@ services:
 
   app.member_data_extractor.shouts:
     class: App\Model\MemberDataExtractor\DoctrineExtractor
-    factory: ['App\Model\MemberDataExtractor\DoctrineExtractorFactory', 'create']
+    factory: ['@App\Model\MemberDataExtractor\DoctrineExtractorFactory', 'create']
     arguments:
       $className: 'App\Entity\Shout'
       $memberRelationName: member
@@ -89,7 +89,7 @@ services:
 
   app.member_data_extractor.subscriptions:
     class: App\Model\MemberDataExtractor\DoctrineExtractor
-    factory: ['App\Model\MemberDataExtractor\DoctrineExtractorFactory', 'create']
+    factory: ['@App\Model\MemberDataExtractor\DoctrineExtractorFactory', 'create']
     arguments:
       $className: 'App\Entity\MemberThreadSubscription'
       $memberRelationName: subscriber
@@ -97,7 +97,7 @@ services:
 
   app.member_data_extractor.translations:
     class: App\Model\MemberDataExtractor\DoctrineExtractor
-    factory: ['App\Model\MemberDataExtractor\DoctrineExtractorFactory', 'create']
+    factory: ['@App\Model\MemberDataExtractor\DoctrineExtractorFactory', 'create']
     arguments:
       $className: 'App\Entity\Word'
       $memberRelationName: author

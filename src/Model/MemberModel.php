@@ -184,10 +184,8 @@ class MemberModel
      */
     private function writePersonalDataFile($parameters, $template, $filename = null): string
     {
-        $filename = (null === $filename) ? $template : $filename;
-
         $this->writeRenderedTemplate(
-            $filename,
+            $filename ?: $template,
             $template,
             $parameters
         );

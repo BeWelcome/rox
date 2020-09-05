@@ -109,7 +109,7 @@ class MemberController extends AbstractController
 
         $logger->write('Extracting personal data for ' . $member->getUsername(), 'Members');
 
-        $zipFilename = $memberModel->collectPersonalData($params, $member);
+        $zipFilename = $memberModel->collectPersonalData($member);
 
         $request->getSession()->set('mydata_file', $zipFilename);
 

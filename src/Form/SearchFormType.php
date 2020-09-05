@@ -245,8 +245,8 @@ class SearchFormType extends AbstractType
             ->add('direction', ChoiceType::class, [
                 'label' => 'label.direction',
                 'choices' => [
-                    'search.direction.ascending' => SearchModel::DIRECTION_ASCENDING,
                     'search.direction.descending' => SearchModel::DIRECTION_DESCENDING,
+                    'search.direction.ascending' => SearchModel::DIRECTION_ASCENDING,
                 ],
             ])
             ->add('items', ChoiceType::class, [

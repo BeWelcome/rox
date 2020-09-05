@@ -36,6 +36,7 @@ if (!empty($list)) {
 }
 $words = new MOD_words();
 ?>
+<div class="table-responsive">
 <table class="table table-striped table-hover">
     <tr>
         <th scope="col"><?= $words->getFormatted("polls_title") ?></th>
@@ -80,3 +81,4 @@ $words = new MOD_words();
     }
     ?>
 </table>
+</div>

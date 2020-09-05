@@ -90,16 +90,10 @@ class SignupModel extends RoxModelBase
      */
     public function emailInUse($email)
     {
-/*
-        $query = '
-SELECT `id`
-FROM `user`
-WHERE `email` = \''.$this->dao->escape(strtolower($email)).'\'';
-*/
         $query = '
 SELECT `id`
 FROM `members`
-WHERE `Email` = \'' . $this->dao->escape(strtolower($email)).'\'';
+WHERE `Email` = \'' . $this->dao->escape($this->normalizeEmail($email)).'\'';
 
         $s = $this->dao->query($query);
         if (!$s) {    // TODO: always integrate this check?
@@ -487,8 +481,8 @@ VALUES
             $vars['IdCity'] = $vars['geonameid'];
         }
 
-        $vars['email'] = strtolower($vars['email']);
-        $vars['emailcheck'] = strtolower($vars['emailcheck']);
+        $vars['email'] = $this->normalizeEmail($vars['email']);
+        $vars['emailcheck'] = $this->normalizeEmail($vars['emailcheck']);
 
         $escapeList = array('username', 'email', 'gender',
                             'feedback', 'housenumber', 'street','FirstName','SecondName','LastName', 'zip');
@@ -728,4 +722,12 @@ VALUES
         }
         return true;
 	}
+
+	private function normalizeEmail($email)
+    {
+        $pos = strrpos($email, '@');
+        $domain = strtolower(substr($email, $pos - strlen($email)));
+        $local = substr($email, 0, $pos);
+        return $local . $domain;
+    }
 }

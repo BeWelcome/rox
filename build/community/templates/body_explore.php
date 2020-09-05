@@ -33,7 +33,7 @@ $words = new MOD_words();
             </a>
         </div>
         <div class="card mb-3">
-            <a href="/groups/search" class="list-group-item list-group-item-action">
+            <a href="/groups/" class="list-group-item list-group-item-action">
                 <h5 class="list-group-item-heading"><i class="fa fa-users mr-1"></i><?php echo $words->get('Groups') ?></h5>
                 <p class="list-group-item-text"><?php echo $words->get('ExploreGroupsDescription') ?></p>
             </a>

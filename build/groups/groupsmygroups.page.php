@@ -38,7 +38,7 @@ class GroupsMyGroupsPage extends GroupsBasePage
         $words = $this->getWords();
         ?>
         <div>
-            <h2><a href="groups/search"><?= $words->get('Groups');?></a> &raquo; <?= $words->get('GroupsMyGroups');?></h2>
+            <h2><a href="groups/"><?= $words->get('Groups');?></a> &raquo; <?= $words->get('GroupsMyGroups');?></h2>
         </div>
         <?php
     }

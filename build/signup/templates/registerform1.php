@@ -121,9 +121,10 @@
 
                 <!-- confirm E-mail -->
                 <div class="form-group mt-1">
+                    <?php $emailError = in_array('SignupErrorEmailCheck', $errors); ?>
                     <label for="register-emailcheck"><?php echo $words->get('SignupCheckEmail'); ?></label>
                     <input type="email"
-                           class="form-control" id="register-emailcheck" name="emailcheck" placeholder="<?php echo $words->get('SignupCheckEmail'); ?>"
+                           class="form-control <?php if ($emailError) { echo 'is-invalid'; }?>" id="register-emailcheck" name="emailcheck" placeholder="<?php echo $words->get('SignupCheckEmail'); ?>"
                         <?php
                         echo isset($vars['emailcheck']) ? 'value="'.$vars['emailcheck'].'" ' : '';
                         ?> />

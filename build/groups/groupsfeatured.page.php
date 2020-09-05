@@ -39,7 +39,7 @@ class GroupsFeaturedPage extends GroupsBasePage
         // &gt; or &raquo; ?
         ?>
             <div>
-                <h2><a href="groups/search"><?= $words->get('Groups');?></a> &raquo; <a href="groups/featured"><?= $words->get('GroupsFeaturedTeaser'); ?></a></h2>
+                <h2><a href="groups/"><?= $words->get('Groups');?></a> &raquo; <a href="groups/featured"><?= $words->get('GroupsFeaturedTeaser'); ?></a></h2>
             </div>
 
         <?php

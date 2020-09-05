@@ -26,9 +26,9 @@ final class DoctrineExtractor extends AbstractExtractor implements ExtractorInte
      */
     public function extract(Member $member, string $tempDir): string
     {
-        $donationRepository = $this->getRepository($this->className);
-        $donations = $donationRepository->findBy([$this->memberRelationName => $member]);
+        $repository = $this->getRepository($this->className);
+        $data = $repository->findBy([$this->memberRelationName => $member]);
 
-        return $this->writePersonalDataFile([$this->alias => $donations], $this->alias, $tempDir . $this->alias . '.html');
+        return $this->writePersonalDataFile([$this->alias => $data, 'member' => $member], $this->alias, $tempDir . $this->alias . '.html');
     }
 }

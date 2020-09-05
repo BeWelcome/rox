@@ -12,7 +12,6 @@ use App\Utilities\TranslatorTrait;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -97,7 +96,6 @@ class MemberController extends AbstractController
         Request $request,
         Member $member,
         Logger $logger,
-        ContainerBagInterface $params,
         MemberModel $memberModel
     ) {
         // Either the member themselves or a person from the safety or the admin can access

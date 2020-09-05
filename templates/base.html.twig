@@ -26,8 +26,9 @@
         {% block stylesheets %}{% endblock %}
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
         {% block matomo %}{% endblock %}
-        {% block base_url %}{% endblock %}
-        <link rel='manifest' href='/manifest.json'>
+        <base id="baseuri" href="{{ app.request.schemeAndHttpHost ~ app.request.baseUrl }}">
+
+        <link rel='manifest' href='manifest.webmanifest'>
         <script>
             // Check that service workers are supported
             if ('serviceWorker' in navigator) {

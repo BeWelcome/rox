@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Doctrine\CommentAdminActionType;
 use App\Entity\Comment;
-use App\Entity\FeedbackCategory;
 use App\Entity\Member;
 use App\Form\CustomDataClass\ReportCommentRequest;
 use App\Form\ReportCommentType;
@@ -53,10 +52,6 @@ class CommentController extends AbstractController
             if (empty($feedback)) {
                 $form->addError(new FormError('Feedback can not be empty.'));
             } else {
-                // Get the email address that is associated with admin comments category
-                $feedbackCategoryRepository = $this->getDoctrine()->getRepository(FeedbackCategory::class);
-                $feedbackCategory = $feedbackCategoryRepository->findOneBy(['name' => 'Comment_issue']);
-
                 $success = $mailer->sendCommentReportedFeedbackEmail(
                     $user,
                     [

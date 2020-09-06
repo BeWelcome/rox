@@ -131,9 +131,6 @@ class Extension extends AbstractExtension implements GlobalsInterface
         return 'LayoutKit';
     }
 
-    /**
-     * @return array
-     */
     public function getGlobals(): array
     {
         $version = '';

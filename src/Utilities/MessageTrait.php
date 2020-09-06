@@ -62,7 +62,7 @@ trait MessageTrait
         $message->setReceiver($receiver);
         $message->setSubject($subject);
 
-        $body = $this->getEnvironment()->render( $template . '.html.twig', $parameters);
+        $body = $this->getEnvironment()->render($template . '.html.twig', $parameters);
         $message->setMessage($body);
         $em->persist($message);
         $em->flush();

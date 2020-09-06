@@ -8,6 +8,7 @@ use App\Entity\Member;
 use App\Entity\Message;
 use App\Entity\Subject;
 use App\Model\MessageModel;
+use App\Service\Mailer;
 use DateInterval;
 use DateTime;
 use Doctrine\DBAL\Exception\InvalidArgumentException;
@@ -51,7 +52,7 @@ class HostingRequestControllerTest extends TestCase
         $method = $reflection->getMethod('getFinalRequest');
         $method->setAccessible(true);
 
-        return $method->invokeArgs(new HostingRequestController(new MessageModel()), $parameters);
+        return $method->invokeArgs(new HostingRequestController(new MessageModel($this->createMock(Mailer::class))), $parameters);
     }
 
     /**

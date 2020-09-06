@@ -90,7 +90,7 @@ class GroupModel
             ],
         ];
         $this->createTemplateMessage($admin, $member, '_partials/group/invitation', $params);
-        $this->mailer->sendGroupNotificationEmail($admin, $member,'group/invitation', $params);
+        $this->mailer->sendGroupNotificationEmail($admin, $member, 'group/invitation', $params);
 
         $url = $this->urlGenerator->generate('group_start', ['group_id' => $group->getId()]);
         $note = new Notification();
@@ -362,6 +362,21 @@ class GroupModel
     }
 
     /**
+     * @param Member[] $admins
+     */
+    public function sendAdminNotification(Group $group, Member $member, $admins)
+    {
+        foreach ($admins as $admin) {
+            $this->mailer->sendGroupEmail($admin, 'group/accept.invite', [
+                'subject' => 'group.invitation.accepted',
+                'group' => $group,
+                'invitee' => $member,
+                'admin' => $admin,
+            ]);
+        }
+    }
+
+    /**
      * @param $group
      * @param $member
      *
@@ -398,22 +413,6 @@ class GroupModel
         $membership = $membershipRepository->findOneBy(['group' => $group, 'member' => $member]);
 
         return $status === $membership->getStatus();
-    }
-
-
-    /**
-     * @param Member[] $admins
-     */
-    public function sendAdminNotification(Group $group, Member $member, $admins)
-    {
-        foreach ($admins as $admin) {
-            $this->mailer->sendAdminGroupNotificationEmail($admin, 'group/accept.invite', [
-                'subject' => 'group.invitation.accepted',
-                'group' => $group,
-                'invitee' => $member,
-                'admin' => $admin,
-            ]);
-        }
     }
 
     /*    private function informGroupAdmins(Group $group, $member)

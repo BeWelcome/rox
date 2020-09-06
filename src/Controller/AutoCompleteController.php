@@ -11,7 +11,6 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class AutoCompleteController extends AbstractController
 {
-
     /**
      * @Route("/member/autocomplete", name="members_autocomplete")
      *

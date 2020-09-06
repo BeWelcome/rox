@@ -117,17 +117,9 @@ class SearchController extends AbstractController
                 $data = $search->getData();
             }
             $memberShowMapPreference = $member->getMemberPreference($showMapPreference);
-            if ($data->show_map) {
-                $memberShowMapPreference->setValue('Yes');
-            } else {
-                $memberShowMapPreference->setValue('No');
-            }
+            $memberShowMapPreference->setValue($data->show_map ? 'Yes' : 'No');
             $memberShowOptionsPreference = $member->getMemberPreference($showOptionsPreference);
-            if ($data->show_map) {
-                $memberShowOptionsPreference->setValue('Yes');
-            } else {
-                $memberShowOptionsPreference->setValue('No');
-            }
+            $memberShowOptionsPreference->setValue($data->show_map ? 'Yes' : 'No');
             $em = $this->getDoctrine()->getManager();
             $em->persist($memberShowMapPreference);
             $em->persist($memberShowOptionsPreference);
@@ -140,7 +132,7 @@ class SearchController extends AbstractController
                 $this->getParameter('database_name'),
                 $this->getParameter('database_user'),
                 $this->getParameter('database_password'),
-                $this->getDoctrine()->getManager(),
+                $em,
                 $translator
             );
             $results = $searchAdapter->getFullResults();

@@ -53,6 +53,9 @@ if [ "$1" = 'php-fpm' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ]; then
 		if [ -f docker/db/words.sql ]; then
 			mysql $database_name -u $database_user -p$database_password -h $database_host < docker/db/words.sql
 		fi
+		if [ -f docker/db/geonamesadminunits.sql ]; then
+			mysql $database_name -u $database_user -p$database_password -h $database_host < docker/db/geonamesadminunits.sql
+		fi
 	elif ls -A src/Migrations/*.php > /dev/null 2>&1; then
 		bin/console doctrine:migrations:migrate --no-interaction
 	fi

@@ -7,7 +7,6 @@ use App\Repository\MemberRepository;
 use App\Service\Mailer;
 use App\Utilities\TranslatorTrait;
 use Exception;
-use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -57,8 +56,9 @@ class SignupController extends AbstractController
                 'key' => $key,
             ];
 
-            $mailer->sendSignupSuccessfulEmail(
+            $mailer->sendSignupEmail(
                 $member,
+                'signup',
                 $parameters
             );
 
@@ -102,8 +102,9 @@ class SignupController extends AbstractController
             'key' => $member->getRegistrationKey(),
         ];
 
-        $mailer->sendSignupEmailConfirmationEmail(
+        $mailer->sendSignupEmail(
             $member,
+            'resent',
             $parameters
         );
 

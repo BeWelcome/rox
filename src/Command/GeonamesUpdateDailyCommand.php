@@ -28,6 +28,20 @@ class GeonamesUpdateDailyCommand extends Command
         $this->entityManager = $entityManager;
     }
 
+    public function fetchFile($url)
+    {
+        $content = [];
+        $handle = @fopen($url, 'r');
+        if (!$handle) {
+            return $content;
+        }
+        while (false !== ($data = fgetcsv($handle, 0, "\t"))) {
+            $content[] = $data;
+        }
+
+        return $content;
+    }
+
     protected function configure()
     {
         $this
@@ -50,26 +64,26 @@ class GeonamesUpdateDailyCommand extends Command
         $count = 0;
         $connection = $this->entityManager->getConnection();
 
-        $changes = $this->fetchFile('http://download.geonames.org/export/dump/modifications-'.$date->format('Y-m-d').'.txt');
-        foreach($changes as $change) {
-            if (is_numeric($change[0]) && ($change[6] == 'A' || $change[6] == 'P')) {
-                $count++;
+        $changes = $this->fetchFile('http://download.geonames.org/export/dump/modifications-' . $date->format('Y-m-d') . '.txt');
+        foreach ($changes as $change) {
+            if (is_numeric($change[0]) && ('A' === $change[6] || 'P' === $change[6])) {
+                ++$count;
                 // (0 geonameid, 1 name, 2 @skip, 3 @skip, 4 latitude, 5 longitude, 6 fclass, 7 fcode, 8 country, 9 @skip, 10 admin1,
                 // 11 @skip, 12 @skip, 13 @skip, 14 population, 15 @skip, 16 @skip, 17 @skip, 18 moddate);
-                $statement = $connection->prepare("
+                $statement = $connection->prepare('
 				    REPLACE INTO
 				        `geonames`
 				    SET
 				        geonameid = :geonameId,
 				        name = :name
-				        ");
+				        ');
                 $statement->execute([
                     ':geonameId' => $change[0],
                     ':name' => $connection->quote($change[1], ParameterType::STRING),
                 ]);
-                if ($change[6] == 'A') {
+                if ('A' === $change[6]) {
                     // update geonamesadminunits accordingly
-                    $statement = $connection->prepare("
+                    $statement = $connection->prepare('
     				    REPLACE INTO
     				        `geonamesadminunits`
     				    SET
@@ -80,7 +94,7 @@ class GeonamesUpdateDailyCommand extends Command
                             country = :country,
                             admin1 = :admin1,
                             moddate = :moddate
-    				        ");
+    				        ');
                     $statement->execute([
                         ':geonameId' => $change[0],
                         ':name' => $connection->quote($change[1], ParameterType::STRING),
@@ -95,39 +109,40 @@ class GeonamesUpdateDailyCommand extends Command
             }
         }
 
-/*        $deletes = $this->fetchFile('http://download.geonames.org/export/dump/deletes-'.$date.'.txt');
-        foreach($deletes as $delete) {
-            if (is_numeric($delete[0])) {
-                $res = $this->dao->query("
-    				DELETE FROM
-    				    `geonames`
-    				WHERE
-    				    geonameid = '" . $this->dao->escape($delete[0]) . "'");
-                if (!$res) {
-                    $result = false;
+        /*        $deletes = $this->fetchFile('http://download.geonames.org/export/dump/deletes-'.$date.'.txt');
+                foreach($deletes as $delete) {
+                    if (is_numeric($delete[0])) {
+                        $res = $this->dao->query("
+                            DELETE FROM
+                                `geonames`
+                            WHERE
+                                geonameid = '" . $this->dao->escape($delete[0]) . "'");
+                        if (!$res) {
+                            $result = false;
+                        }
+                    }
                 }
-            }
-        }
-*/
+        */
     }
 
-    private function updateAltnames($date) {
+    private function updateAltnames($date)
+    {
         $result = true;
-        $changes = $this->fetchFile('http://download.geonames.org/export/dump/alternateNamesModifications-'.$date.'.txt');
-        foreach($changes as $change) {
+        $changes = $this->fetchFile('http://download.geonames.org/export/dump/alternateNamesModifications-' . $date . '.txt');
+        foreach ($changes as $change) {
             if (is_numeric($change[0])) {
-                $query= "
+                $query = "
 				    REPLACE INTO
 				        `geonamesalternatenames`
 				    SET
-				        alternateNameId = '".$this->dao->escape($change[0])."',
-				        geonameid = '".$this->dao->escape($change[1])."',
-				        isolanguage = '".$this->dao->escape($change[2])."',
-				        alternateName = '".$this->dao->escape($change[3])."',
-				        ispreferred = '".$this->dao->escape($change[4])."',
-				        isshort = '".$this->dao->escape($change[5])."',
-				        isColloquial = '".$this->dao->escape($change[6])."',
-				        isHistoric = '".$this->dao->escape($change[7])."'";
+				        alternateNameId = '" . $this->dao->escape($change[0]) . "',
+				        geonameid = '" . $this->dao->escape($change[1]) . "',
+				        isolanguage = '" . $this->dao->escape($change[2]) . "',
+				        alternateName = '" . $this->dao->escape($change[3]) . "',
+				        ispreferred = '" . $this->dao->escape($change[4]) . "',
+				        isshort = '" . $this->dao->escape($change[5]) . "',
+				        isColloquial = '" . $this->dao->escape($change[6]) . "',
+				        isHistoric = '" . $this->dao->escape($change[7]) . "'";
                 $res = $this->dao->query($query);
                 if (!$res) {
                     $result = false;
@@ -135,8 +150,8 @@ class GeonamesUpdateDailyCommand extends Command
             }
         }
 
-        $deletes = $this->fetchFile('http://download.geonames.org/export/dump/alternateNamesDeletes-'.$date.'.txt');
-        foreach($deletes as $delete) {
+        $deletes = $this->fetchFile('http://download.geonames.org/export/dump/alternateNamesDeletes-' . $date . '.txt');
+        foreach ($deletes as $delete) {
             if (is_numeric($delete[0])) {
                 $res = $this->dao->query("
     				DELETE FROM
@@ -149,36 +164,29 @@ class GeonamesUpdateDailyCommand extends Command
                 }
             }
         }
+
         return $result;
     }
 
     /**
-     * get updates from geonames
+     * get updates from geonames.
+     *
+     * @param mixed $io
      **/
-    private function updateGeonames($io) {
+    private function updateGeonames($io)
+    {
         $this->updateGeonamesForDate((new DateTime())->modify('-1day'), $io); // Yesterday
         $this->updateGeonamesForDate((new DateTime())->modify('-2days'), $io); // the day before yesterday
-        if (date('d', time()) == '01') {
+        if ('01' === date('d', time())) {
             // \todo: Update country list on the first day of a month
         }
     }
 
-    private function updateAlternatenames($io) {
+    private function updateAlternatenames($io)
+    {
         $result = $this->updateAltnames((new DateTime())->modify('-1day'), $io); // Yesterday
         $result |= $this->updateAltnames((new DateTime())->modify('-2days'), $io); // the day before yesterday
+
         return $result;
     }
-
-    function fetchFile($url) {
-        $content = array();
-        $handle = @fopen( $url, "r");
-        if (!$handle) {
-            return $content;
-        }
-        while (($data = fgetcsv($handle, 0, "\t")) !== FALSE) {
-            $content[] = $data;
-        }
-        return $content;
-    }
-
 }

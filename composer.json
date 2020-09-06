@@ -79,7 +79,7 @@
         "nelmio/alice": "^3.0",
         "nikic/php-parser": "^4.0",
         "phploc/phploc": "^6.0",
-        "phpmd/phpmd": "^2.6",
+        "phpmd/phpmd": "^2.6 <2.9.0",
         "phpstan/extension-installer": "*",
         "phpstan/phpstan": "*",
         "phpstan/phpstan-doctrine": "*",

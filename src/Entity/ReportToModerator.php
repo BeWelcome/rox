@@ -253,9 +253,6 @@ class ReportToModerator
         return $this->post;
     }
 
-    /**
-     * @param ForumPost $post
-     */
     public function setPost(ForumPost $post): void
     {
         $this->post = $post;
@@ -269,9 +266,6 @@ class ReportToModerator
         return $this->thread;
     }
 
-    /**
-     * @param ForumThread $thread
-     */
     public function setThread(ForumThread $thread): void
     {
         $this->thread = $thread;

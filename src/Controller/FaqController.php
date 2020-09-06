@@ -6,8 +6,6 @@ use App\Entity\FaqCategory;
 use App\Model\FaqModel;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -30,7 +28,7 @@ class FaqController extends AbstractController
      */
     public function showAboutFAQ()
     {
-        return $this->redirectToRoute('faqs_overview', [ 'categoryId' => 1]);
+        return $this->redirectToRoute('faqs_overview', ['categoryId' => 1]);
     }
 
     /**

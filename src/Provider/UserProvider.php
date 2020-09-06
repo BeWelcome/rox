@@ -5,7 +5,6 @@ namespace App\Provider;
 use App\Entity\Member;
 use App\Repository\MemberRepository;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\ORMException;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;

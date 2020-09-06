@@ -13,29 +13,6 @@ use Doctrine\ORM\EntityRepository;
  */
 class StatisticsRepository extends EntityRepository
 {
-    private function getStatisticsDataWeekly($column)
-    {
-        $result = $this->createQueryBuilder('s')
-            ->select('MAX(' . $column . ') AS count, YEARWEEK(s.created) AS week')
-            ->groupBy('week')
-            ->getQuery()
-            ->getResult();
-
-        return $result;
-    }
-
-    private function getStatisticsDataDaily($column)
-    {
-        $result = $this->createQueryBuilder('s')
-            ->select($column . ' AS count, s.created AS day')
-            ->where('s.created >= :two_months_ago')
-            ->setParameter('two_months_ago', (new DateTime())->modify('-2months'))
-            ->getQuery()
-            ->getResult();
-
-        return $result;
-    }
-
     public function getMembersDataWeekly()
     {
         return $this->getStatisticsDataWeekly('s.activeMembers');
@@ -76,22 +53,6 @@ class StatisticsRepository extends EntityRepository
         return $this->getStatisticsDataDaily('s.messagesRead');
     }
 
-    /**
-     * Requests were added April, 2019 so data can only exist after that
-     */
-    private function getRequestsDataWeekly($column)
-    {
-        $result = $this->createQueryBuilder('s')
-            ->select('MAX(' . $column . ') AS count, YEARWEEK(s.created) AS week')
-            ->where('s.created >= :firstRequest')
-            ->setParameter('firstRequest', new DateTime('2019-04-23'))
-            ->groupBy('week')
-            ->getQuery()
-            ->getResult();
-
-        return $result;
-    }
-
     public function getSentRequestsDataWeekly()
     {
         return $this->getRequestsDataWeekly('s.requestsSent');
@@ -110,5 +71,46 @@ class StatisticsRepository extends EntityRepository
     public function getAcceptedRequestsDataDaily()
     {
         return $this->getStatisticsDataDaily('s.requestsAccepted');
+    }
+
+    private function getStatisticsDataWeekly($column)
+    {
+        $result = $this->createQueryBuilder('s')
+            ->select('MAX(' . $column . ') AS count, YEARWEEK(s.created) AS week')
+            ->groupBy('week')
+            ->getQuery()
+            ->getResult();
+
+        return $result;
+    }
+
+    private function getStatisticsDataDaily($column)
+    {
+        $result = $this->createQueryBuilder('s')
+            ->select($column . ' AS count, s.created AS day')
+            ->where('s.created >= :two_months_ago')
+            ->setParameter('two_months_ago', (new DateTime())->modify('-2months'))
+            ->getQuery()
+            ->getResult();
+
+        return $result;
+    }
+
+    /**
+     * Requests were added April, 2019 so data can only exist after that.
+     *
+     * @param mixed $column
+     */
+    private function getRequestsDataWeekly($column)
+    {
+        $result = $this->createQueryBuilder('s')
+            ->select('MAX(' . $column . ') AS count, YEARWEEK(s.created) AS week')
+            ->where('s.created >= :firstRequest')
+            ->setParameter('firstRequest', new DateTime('2019-04-23'))
+            ->groupBy('week')
+            ->getQuery()
+            ->getResult();
+
+        return $result;
     }
 }

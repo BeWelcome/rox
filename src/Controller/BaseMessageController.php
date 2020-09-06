@@ -8,7 +8,6 @@ use App\Form\CustomDataClass\MessageIndexRequest;
 use App\Form\MessageIndexFormType;
 use App\Model\MessageModel;
 use App\Repository\MessageRepository;
-use App\Service\Mailer;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
 use Doctrine\ORM\OptimisticLockException;
@@ -102,7 +101,7 @@ class BaseMessageController extends AbstractController
 
                 return $this->redirect($request->getRequestUri());
             }
-            if ('delete' == $clickedButton) {
+            if ('delete' === $clickedButton) {
                 if ('deleted' === $folder) {
                     $this->messageModel->unmarkDeleted($member, $messageIds);
                     $this->addTranslatedFlash('notice', 'flash.undeleted');

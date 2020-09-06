@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	{{ 'communitytitle' | trans }}
+{% endblock %}
+
+{% block content %}
+<h1>{{ 'communitypage' | trans }}</h1>
+<div class="row">
+    <div class="col-12 col-md-6">
+        <div class="card mb-3">
+            <a href="{{ path('forums')}}" class="list-group-item list-group-item-action">
+                <h5 class="list-group-item-heading"><i class="fa fa-comment mr-1"></i>{{ 'communitydiscussions' | trans }}</h5>
+                <p class="list-group-item-text">{{ 'exploreforumdescription' | trans | purify }}</p>
+            </a>
+        </div>
+        <div class="card mb-3">
+            <a href="{{ path('groups_mygroups')}}" class="list-group-item list-group-item-action">
+                <h5 class="list-group-item-heading"><i class="fa fa-users mr-1"></i>{{ 'groups' | trans }}</h5>
+                <p class="list-group-item-text">{{ 'exploregroupsdescription' | trans | purify }}</p>
+            </a>
+        </div>
+    </div>
+
+    <div class="col-12 col-md-6">
+        <div class="card mb-3">
+            <a href="{{ path('activities')}}" class="list-group-item list-group-item-action">
+                <h5 class="list-group-item-heading"><i class="fa fa-calendar mr-1"></i>{{ 'activities' | trans }}</h5>
+                <p class="list-group-item-text">{{ 'exploreactivitiesdescription' | trans | purify }}</p>
+            </a>
+        </div>
+
+        <div class="card mb-3">
+            <a href="{{ path('newsletters')}}" class="list-group-item list-group-item-action">
+                <h5 class="list-group-item-heading"><i class="fa fa-newspaper mr-1"></i>{{ 'newsletters' | trans }}</h5>
+                <p class="list-group-item-text">{{ 'explorenewslettersdescription' | trans | purify }}</p>
+            </a>
+        </div>
+        <div class="card mb-3">
+            <a href="{{ path('communitynews')}}" class="list-group-item list-group-item-action">
+                <h5 class="list-group-item-heading"><i class="fa fa-newspaper mr-1"></i>{{ 'communitynews' | trans }}</h5>
+                <p class="list-group-item-text">{{ 'explorecommunitynewsdescription' | trans | purify }}</p>
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock content %}

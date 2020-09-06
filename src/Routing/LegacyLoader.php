@@ -98,18 +98,6 @@ class LegacyLoader extends Loader
         $this->addRouteDirectly('group_user_all', '/members/{username}/groups');
         $this->addRouteDirectly('group_add_related_group', '/groups/{groupId}/selectrelatedgroup');
         $this->addRouteDirectly('group_invite_member', '/groups/{groupId}/invitemembers/search');
-        $this->addRouteDirectly('community', '/community');
-        // $this->addRouteDirectly('about_faq', '/about/faq');
-        // $this->addRouteDirectly('about_faq_category', '/about/faq/{category}');
-        // $this->addRouteDirectly('about', '/about');
-        // $this->addRouteDirectly('about_people', '/about/thepeople');
-        // $this->addRouteDirectly('stats', '/stats');
-        // $this->addRouteDirectly('stats_images', '/stats/{image}.png');
-        // $this->addRouteDirectly('getactive', '/about/getactive');
-        // $this->addRouteDirectly('contactus', '/about/feedback');
-        // $this->addRouteDirectly('feedback', '/feedback');
-        // $this->addRouteDirectly('feedback_submit', '/feedback/submit');
-        // $this->addRouteDirectly('privacy', '/privacy');
         $this->addRouteDirectly('signup', '/signup');
         $this->addRouteDirectly('signup_1', '/signup/1');
         $this->addRouteDirectly('signup_2', '/signup/2');

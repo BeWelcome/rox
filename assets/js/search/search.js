@@ -215,6 +215,7 @@ $(function () {
     });
     $(".show_options").click(function(){
         $("#search_options").toggleClass("d-block").toggleClass("d-none");
+        $(".search").toggleClass("d-block").toggleClass("d-none");
     });
 
     if ($(".show_map").is(":checked")) {

@@ -41,7 +41,7 @@ App\Entity\Preference:
         codeDescription: 'PreferenceShowSearchOptions'
         Description: 'Stores if the user wants to see the search options on find members'
         created: <DateTime()>
-        DefaultValue: 'Yes'
+        DefaultValue: 'No'
         PossibleValues: 'Yes:No'
         Status: 'Normal'
     SHOW_ONLINE_ACTIVITIES:

@@ -21,6 +21,15 @@
         <div class="col-12">
             {{ form_row(form.location, {'attr': {'class': 'search-picker col-12'}, 'required': false }) }}
         </div>
+        <div class="col-sm-4">
+            {{ form_row(form.show_options, {'label_attr': {'class':'switch-custom'}, 'attr': {'class':'show_options'}}) }}
+        </div>
+        <div class="col-sm-4">
+            {{ form_row(form.show_map, {'label_attr': {'class':'switch-custom'}, 'attr': {'class':'show_map'}}) }}
+        </div>
+        <div class="col-sm-4">
+            {{ form_widget(form.updateMap, { 'attr': {'class': 'btn-primary float-right search d-block'}}) }}
+        </div>
         <div id="search_options"
              class="col-12 {% if form.show_options.vars.checked %}d-block{% else %}d-none{% endif %}">
             <div class="form-row">
@@ -119,14 +128,8 @@
                 </div>
             </div>
         </div>
-        <div class="col-sm-4">
-            {{ form_row(form.show_map, {'label_attr': {'class':'switch-custom'}, 'attr': {'class':'show_map'}}) }}
-        </div>
-        <div class="col-sm-4">
-            {{ form_row(form.show_options, {'label_attr': {'class':'switch-custom'}, 'attr': {'class':'show_options'}}) }}
-        </div>
-        <div class="col-sm-4">
-            {{ form_widget(form.updateMap, { 'attr': {'class': 'btn btn-primary float-right'}}) }}
+        <div class="col-sm-12">
+            <button type="submit" id="search_updateMap" name="search[updateMap]" class="btn btn-primary float-right search d-none">Find Members</button>
         </div>
     </div>
     {{ form_rest(form) }}

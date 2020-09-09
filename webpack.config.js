@@ -115,7 +115,7 @@ const path = require('path');
 const WorkboxPlugin = require('workbox-webpack-plugin');
 
 workboxConfig = {
-        mode: process.env.NODE_ENV,
+        mode: Encore.isProduction() ? 'production' : 'development',
         entry: {
             main: "./assets/js/index.js"
         },

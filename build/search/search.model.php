@@ -46,10 +46,6 @@ class SearchModel extends RoxModelBase
     const ORDER_MEMBERSHIP = 10;
     const ORDER_COMMENTS = 12;
     const ORDER_DISTANCE = 14;
-    const ORDER_TEST_1 = 16;
-    const ORDER_TEST_2 = 18;
-    const ORDER_TEST_3 = 20;
-    const ORDER_TEST_4 = 22;
 
     const DIRECTION_ASCENDING = 1;
     const DIRECTION_DESCENDING = 2;
@@ -86,10 +82,6 @@ class SearchModel extends RoxModelBase
         self::ORDER_LOGIN => array('WordCode' => 'SearchOrderLogin', 'Column' => 'LastLogin'),
         self::ORDER_MEMBERSHIP => array('WordCode' => 'SearchOrderMembership', 'Column' => 'm.created'),
         self::ORDER_COMMENTS => array('WordCode' => 'SearchOrderComments', 'Column' => 'CommentCount'),
-        self::ORDER_TEST_1 => array('WordCode' => 'SearchOrderTest1', 'Column' => 'hosting_interest'),
-        self::ORDER_TEST_2 => array('WordCode' => 'SearchOrderTest2', 'Column' => 'weighted'),
-        self::ORDER_TEST_3 => array('WordCode' => 'SearchOrderTest3', 'Column' => 'weighted2'),
-        self::ORDER_TEST_4 => array('WordCode' => 'SearchOrderTest4', 'Column' => 'HasProfilePhoto'),
     );
 
     private $membersLowDetails = false;

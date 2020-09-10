@@ -229,12 +229,12 @@ class SearchFormType extends AbstractType
             ->add('order', ChoiceType::class, [
                 'label' => 'label.order',
                 'choices' => [
-                    'search.order.accommodation' => 6,
-                    'search.order.distance' => 14,
-                    'search.order.login' => 8,
-                    'search.order.comments' => 12,
-                    'search.order.membership' => 10,
-                    'search.order.username' => 2,
+                    'search.order.accommodation' => SearchModel::ORDER_ACCOM,
+                    'search.order.distance' => SearchModel::ORDER_DISTANCE,
+                    'search.order.login' => SearchModel::ORDER_LOGIN,
+                    'search.order.comments' => SearchModel::ORDER_COMMENTS,
+                    'search.order.membership' => SearchModel::ORDER_MEMBERSHIP,
+                    'search.order.username' => SearchModel::ORDER_USERNAME,
                 ],
                 'attr' => [
                     'class' => 'select2',

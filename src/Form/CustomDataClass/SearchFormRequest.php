@@ -151,7 +151,7 @@ class SearchFormRequest
     public $order = 6;
 
     /** @var int */
-    public $direction = 1;
+    public $direction = SearchModel::DIRECTION_DESCENDING;
 
     /** @var int */
     public $items = 20;

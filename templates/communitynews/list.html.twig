@@ -15,7 +15,14 @@
         <div class="col-12 mb-3">
             <div class="card p-3">
                 <h1><a href="{{ url('communitynews_show', { id: news.id} ) }}">{{ news.title }}</a></h1>
-                <small>{{ 'bewelcome_news.writtenby' | trans }} {{ macros.avatar( news.createdBy.Username , 30, true) }} ({{ news.createdAt.DiffForHumans }}){% if news.createdAt != news.updatedAt %} {{ 'bewelcome_news.lastupdater' | trans }} {{ macros.avatar( news.updatedBy.Username , 20, true) }} ({{ news.updatedAt.DiffForHumans }}){% endif %}</small>
+                <small>{{ 'bewelcome_news.writtenby' | trans }} {{ macros.avatar( news.createdBy.Username , 30, true) }}
+                    ({{ news.createdAt.DiffForHumans }})
+                    {% if news.createdAt != news.updatedAt %}
+                        {{ 'bewelcome_news.lastupdater' | trans }}
+                        {{ macros.avatar( news.updatedBy.Username , 30, true) }}
+                        ({{ news.updatedAt.DiffForHumans }})
+                    {% endif %}
+                </small>
                 {{ news.text | truncate(500) | raw }}
                 <p><a href="{{ url('communitynews_show', { id: news.id} ) }}">{{ 'label.read.more' | trans }}</a> (<span class="text-muted">{% trans with {'%commentsCount%': news.comments|length} %}bewelcome_news.nrcomments{% endtrans %}</span>)</p>
             </div>

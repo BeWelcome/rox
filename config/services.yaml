@@ -16,6 +16,7 @@ parameters:
   upload_directory: "%kernel.project_dir%/%env(upload_directory)%"
   massmail_batch_size: "%env(massmail_batch_size)%"
   forum_notification_batch_size: "%env(forum_notification_batch_size)%"
+  locales: "%env(LOCALES)%"
 
 services:
   _defaults:
@@ -164,6 +165,7 @@ services:
     public: true
     class: App\Twig\Extension
     arguments:
+      $locales: '%locales%'
       $dataDirectory: '%data_directory%'
     tags:
       - { name: 'twig.extension' }

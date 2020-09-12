@@ -2,7 +2,6 @@
 
 namespace App\Twig;
 
-use App\Model\LanguageModel;
 use Carbon\Carbon;
 use HtmlTruncator\InvalidHtmlException;
 use HtmlTruncator\Truncator;
@@ -23,11 +22,6 @@ class Extension extends AbstractExtension implements GlobalsInterface
     protected $session;
 
     /**
-     * @var LanguageModel
-     */
-    protected $languageModel;
-
-    /**
      * @var DataCollectorTranslator
      */
     protected $translator;
@@ -38,15 +32,23 @@ class Extension extends AbstractExtension implements GlobalsInterface
     private $dataDirectory;
 
     /**
+     * @var array list of all enabled locales
+     */
+    private $locales;
+
+    /**
      * Extension constructor.
      *
+     * @param SessionInterface $session
+     * @param TranslatorInterface $translator
+     * @param $locales
      * @param $dataDirectory
      */
-    public function __construct(SessionInterface $session, TranslatorInterface $translator, LanguageModel $languageModel, $dataDirectory)
+    public function __construct(SessionInterface $session, TranslatorInterface $translator, $locales, $dataDirectory)
     {
         $this->session = $session;
         $this->translator = $translator;
-        $this->languageModel = $languageModel;
+        $this->locales = explode(',', $locales);
         $this->dataDirectory = $dataDirectory;
     }
 
@@ -63,7 +65,27 @@ class Extension extends AbstractExtension implements GlobalsInterface
             new TwigFunction('dump_it', [$this, 'dumpIt'], [
                 'is_safe' => ['html'],
             ]),
+            new TwigFunction('language_name', [$this, 'language_name']),
+            new TwigFunction('language_name_translated', [$this, 'language_name_translated']),
         ];
+    }
+
+    public function language_name(string $locale): string
+    {
+        $current = $this->translator->getLocale();
+        $this->translator->setLocale($locale);
+        $languageName = $this->translator->trans(strtolower('lang_' . $locale));
+        $this->translator->setLocale($current);
+        return $languageName;
+    }
+
+    public function language_name_translated(string $locale, string $display): string
+    {
+        $current = $this->translator->getLocale();
+        $this->translator->setLocale($display);
+        $languageName = $this->translator->trans(strtolower('lang_' . $locale));
+        $this->translator->setLocale($current);
+        return $languageName;
     }
 
     public function ago(Carbon $carbon)
@@ -95,7 +117,7 @@ class Extension extends AbstractExtension implements GlobalsInterface
      *
      * @return string truncated string
      */
-    public function truncate($text, $length = 100, $ellipsis = '&#8230;')
+    public function truncate(string $text, $length = 100, $ellipsis = '&#8230;')
     {
         $truncator = new Truncator();
         $truncated = $truncator->truncate($text, $length, [
@@ -137,7 +159,6 @@ class Extension extends AbstractExtension implements GlobalsInterface
         $versionCreated = new Carbon();
 
         $locale = $this->session->get('locale', 'en');
-        $languages = $this->languageModel->getLanguagesWithTranslations($locale);
 
         if (file_exists('../VERSION')) {
             $version = trim(file_get_contents('../VERSION'));
@@ -148,7 +169,7 @@ class Extension extends AbstractExtension implements GlobalsInterface
             'version' => $version,
             'version_dt' => $versionCreated,
             'title' => 'BeWelcome',
-            'languages' => $languages,
+            'locales' => $this->locales,
             'robots' => 'ALL',
             'locale' => $locale,
         ];

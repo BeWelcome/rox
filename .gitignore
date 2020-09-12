@@ -33,6 +33,10 @@ htdocs/assets/
 config/*.local.yml
 phploc.xml
 /tools/testenv/images/lfw/*.jpg
+/public/main.js
+/public/main.js.map
+/public/service-worker.js
+/public/service-worker.js.map
 
 # deployer config
 /config/deployer.yml

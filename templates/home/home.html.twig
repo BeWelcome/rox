@@ -14,7 +14,7 @@
     {{ encore_entry_link_tags('bewelcome') }}
     {{ encore_entry_link_tags('floating_labels') }}
     {{ encore_entry_link_tags('jquery_ui') }}
-    <link rel='manifest' href='manifest.webmanifest'>
+    <link rel='manifest' href='{{ asset('manifest.webmanifest') }}'>
     <script type="module">
         // Check that service workers are supported
         if ('serviceWorker' in navigator) {

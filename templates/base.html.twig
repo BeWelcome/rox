@@ -28,7 +28,7 @@
         {% block matomo %}{% endblock %}
         <base id="baseuri" href="{{ app.request.schemeAndHttpHost ~ app.request.baseUrl }}">
 
-        <link rel='manifest' href='manifest.webmanifest'>
+        <link rel="manifest" href="{{ asset('manifest.webmanifest') }}">
         <script>
             // Check that service workers are supported
             if ('serviceWorker' in navigator) {
@@ -78,10 +78,10 @@
                                 {% for filter,menuItem in submenu.items %}
                                 {% if (filter is same as ('separator') or filter is same as ('separator2')) %}
                                     </div><h3 class="mt-3 h3-canvas-color">{{ menuItem.key | lower | trans }}</h3><div class="list-group mb-2">
-                                {% else %}           
+                                {% else %}
                                     <a class="list-group-item nav-link{% if submenu.active == filter %} active{% endif %}"
                                        href="{{ menuItem.url }}">{{ menuItem.key | lower | trans }}</a>
-                                {% endif %}   
+                                {% endif %}
                                 {% endfor %}
                             </div>
                         </div>

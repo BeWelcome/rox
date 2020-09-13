@@ -210,9 +210,6 @@ Map.prototype.boundingBox = function(latitude, longitude, distance) {
 
 $(function () {
     var map = new Map();
-    $(".img-check").click(function(){
-        $(this).toggleClass("checked").toggleClass("not_checked");
-    });
     $(".show_options").click(function(){
         $("#search_options").toggleClass("d-block").toggleClass("d-none");
         $(".search").toggleClass("d-block").toggleClass("d-none");

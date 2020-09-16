@@ -880,6 +880,10 @@ class TranslationController extends AbstractController
                 'url' => $this->generateUrl('translation_create_direct'),
             ];
         }
+        $submenuItems['mockups'] = [
+            'key' => 'label.translations.mockups',
+            'url' => $this->generateUrl('translations_mockups'),
+        ];
         $submenuItems['group'] = [
             'key' => 'label.translations.group',
             'url' => $this->generateUrl('group_start', ['group_id' => 60]),

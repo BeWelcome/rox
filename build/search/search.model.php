@@ -674,7 +674,6 @@ LIMIT 1
                 " . $this->languagesCondition . "
                 " . $this->accommodationCondition . "
                 " . $this->typicalOfferCondition . "
-                " . $this->commentsCondition . "
                 AND m.IdCity = g.geonameId
             ORDER BY
                 " . $this->getOrderBy($vars['search-sort-order'], $vars['search-sort-direction']) . "
@@ -1540,6 +1539,7 @@ LIMIT 1
                     " . $this->statusCondition . "
                     " . $this->commentsCondition . "
                     " . $this->profilePictureCondition . "
+                    " . $this->profileSummaryCondition . "
                     " . $this->restrictionsCondition . "
                     " . $this->offersCondition . "
                     " . $this->locationCondition . "

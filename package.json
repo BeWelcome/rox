@@ -27,7 +27,7 @@
     "@ckeditor/ckeditor5-list": "^22.0.0",
     "@ckeditor/ckeditor5-paragraph": "^22.0.0",
     "@ckeditor/ckeditor5-theme-lark": "^22.0.0",
-    "@symfony/webpack-encore": "^0.30.2",
+    "@symfony/webpack-encore": "^0.31.0",
     "@ttskch/select2-bootstrap4-theme": "^1.4.0",
     "autoprefixer": "^9.8.6",
     "bootstrap": "^4.5.2",

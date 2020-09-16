@@ -49,7 +49,7 @@
 <nav class="navbar navbar-sticky-top navbar-expand-md navbar-dark bg-primary navbar-shadow bordert-1 borderb-1">
     <div class="container-lg">
         <a class="navbar-brand mr-3 float-left" href="{{ url('homepage') }}"><img
-                src="{{ asset('images/logo_index_top.png') }}" alt="BeWelcome"/></a>
+                    src="{{ asset('images/logo_index_top.png') }}" alt="BeWelcome"/></a>
     </div>
 </nav>
 <main role="main">
@@ -73,104 +73,35 @@
         {% endfor %}
     </div>
     <div class="container-lg">
-            <div class="row">
-                <div class="col-10 offset-1 col-md-6 offset-md-3 col-sm-8 offset-sm-2 mb-3">
-                    {% for flash_message in app.session.flashBag.get('error') %}
-                        <div class="flash error">
-                            {{ flash_message | trans }}
-                        </div>
-                    {% endfor %}
-                    {% for flash_message in app.session.flashBag.get('notice') %}
-                        <div class="flash notice">
-                            {{ flash_message | trans }}
-                        </div>
-                    {% endfor %}
-                    <h1 class="text-center white">BeWelcome - {{ 'indexpageteaseropendoor' | trans }}</h1>
-                </div>
-                {% if error %}
-                    <div class="col-12">
-                        <div class="alert alert-danger">
-                            {{ error.messageKey|trans(error.messageData, 'security') }}
-                        </div>
+        <div class="row">
+            <div class="col-10 offset-1 col-md-6 offset-md-3 col-sm-8 offset-sm-2 mb-3">
+                {% for flash_message in app.session.flashBag.get('error') %}
+                    <div class="flash error">
+                        {{ flash_message | trans }}
                     </div>
-                {% endif %}
+                {% endfor %}
+                {% for flash_message in app.session.flashBag.get('notice') %}
+                    <div class="flash notice">
+                        {{ flash_message | trans }}
+                    </div>
+                {% endfor %}
+                <h1 class="text-center white">BeWelcome - {{ 'indexpageteaseropendoor' | trans }}</h1>
+            </div>
+            {% if error %}
+                <div class="col-12">
+                    <div class="alert alert-danger">
+                        {{ error.messageKey|trans(error.messageData, 'security') }}
+                    </div>
+                </div>
+            {% endif %}
 
-                <div class="col-10 offset-1 col-sm-8 offset-sm-2">
-                    <div class="card-deck">
-                        <div class="card">
-                            <form id="main-login-form" role="form" method="post"
-                                  action="{{ path('security_check') }}">
+            <div class="col-10 offset-1 col-sm-8 offset-sm-2">
+                <div class="card-deck">
+                    <div class="card">
+                        <form id="main-login-form" role="form" method="post"
+                              action="{{ path('security_check') }}">
                             <div class="card-body p-2">
                                 <h4 class="card-title">{{ 'login' | trans }}</h4>
-                                    <div class="form-group">
-                                        <label class="m-0" for="login-u">{{ 'username' | trans }}</label>
-                                        <input type="text" id="login-u" name="_username" autofocus required
-                                               value="{{ last_username }}"
-                                               class="form-control">
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="m-0" for="login-p">{{ 'password' | trans }}</label>
-                                        <input type="password" id="login-p" name="_password" class="form-control">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="login-r">
-                                            <input type="checkbox" id="login-r" value="1"
-                                                   name="_remember_me">&nbsp;{{ 'stayloggedin' | trans }}
-                                        </label>
-                                    </div>
-                                    <input type="hidden" name="_csrf_token"
-                                           value="{{ csrf_token('authenticate') }}"
-                                    >
-                                    {% if invalid_credentials or resend_confirmation or member_banned or member_expired or member_not_allowed_to_login %}
-                                        <p class="col-12 mt-3">
-                                            {% if invalid_credentials %}
-                                                {{ 'login.forgot.password' | trans }}<br>
-                                                <a href="{{ url('member_request_reset_password') }}">{{ 'login.password.getnew' | trans }}</a>
-                                                <br>
-                                                {{ 'login.forgot.username' | trans }}
-                                            {% endif %}
-                                            {% if resend_confirmation %}
-                                                {{ 'login.mail.not_confirmed' | trans }}<br>
-                                                <a href="{{ url('resend_confirmation_email', { 'username': last_username}) }}">{{ 'login.resend.confirmation' | trans }}</a>
-                                            {% endif %}
-                                            {% if member_banned %}
-                                                {{ 'login.account.banned' | trans }}
-                                            {% endif %}
-                                            {% if member_expired %}
-                                                {{ 'login.account.expired' | trans }}
-                                            {% endif %}
-                                            {% if member_not_allowed_to_login %}
-                                                {{ 'login.account.no_login' | trans }}
-                                            {% endif %}
-                                            <br>
-                                            <a href="{{ url('feedback', { 'IdCategory': 3}) }}">{{ 'login.contact.support' | trans }}</a>
-                                        </p>
-                                    {% endif %}
-                            </div>
-                            <div class="card-footer"><button type="submit"
-                                                             class="btn btn-primary btn-block">{{ 'indexpageloginsubmit' | trans }}</button></div>
-                            </form>
-                        </div>
-                        <div class="card">
-                            <div class="card-body p-2">
-                                <h4 class="card-title">{{ 'signupnow' | trans }}</h4>
-                                <div class="form-group">
-                                    <label>{{ 'indexpageword17'|trans }}</label>
-                                </div>
-                            </div>
-                            <div class="card-footer"><a href="signup/1" class="btn btn-primary btn-block" role="button">
-                                    {{ 'signup'|trans }}</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-{#                 <div class="col-10 offset-1 col-sm-8 offset-sm-2">
-                    <div class="card-deck">
-                        <div class="card">
-                            <div class="card-body p-2">
-                                <h4 class="card-title">{{ 'login' | trans }}</h4>
-                                <form id="main-login-form" role="form" method="post"
-                                      action="{{ path('security_check') }}">
                                 <div class="form-group">
                                     <label class="m-0" for="login-u">{{ 'username' | trans }}</label>
                                     <input type="text" id="login-u" name="_username" autofocus required
@@ -190,8 +121,6 @@
                                 <input type="hidden" name="_csrf_token"
                                        value="{{ csrf_token('authenticate') }}"
                                 >
-                                <button type="submit"
-                                        class="btn btn-primary btn-block">{{ 'indexpageloginsubmit' | trans }}</button>
                                 {% if invalid_credentials or resend_confirmation or member_banned or member_expired or member_not_allowed_to_login %}
                                     <p class="col-12 mt-3">
                                         {% if invalid_credentials %}
@@ -217,22 +146,27 @@
                                         <a href="{{ url('feedback', { 'IdCategory': 3}) }}">{{ 'login.contact.support' | trans }}</a>
                                     </p>
                                 {% endif %}
-                                </form>
                             </div>
-                        </div>
+                            <div class="card-footer">
+                                <button type="submit"
+                                        class="btn btn-primary btn-block">{{ 'indexpageloginsubmit' | trans }}</button>
+                            </div>
+                        </form>
                     </div>
                     <div class="card">
                         <div class="card-body p-2">
                             <h4 class="card-title">{{ 'signupnow' | trans }}</h4>
                             <div class="form-group">
-                                <label>{{ 'indexpageword17'|trans }}</label>
-                                <input type="button" class="btn btn-primary btn-block" role="button"
-                                       value="{{ 'signup'|trans }}">
+                                <label>{{ 'login.signup.info'|trans }}</label>
                             </div>
+                        </div>
+                        <div class="card-footer"><a href="{{ url('signup_1') }}" class="btn btn-primary btn-block" role="button">
+                                {{ 'signup'|trans }}</a>
                         </div>
                     </div>
                 </div>
-#}            </div>
+            </div>
+        </div>
     </div>
 </main>
 {% include 'footer.html.twig' %}

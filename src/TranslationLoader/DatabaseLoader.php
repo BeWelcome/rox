@@ -2,6 +2,7 @@
 
 namespace App\TranslationLoader;
 
+use App\Controller\MessageController;
 use App\Entity\Word;
 use Doctrine\ORM\EntityManager;
 use Exception;
@@ -17,6 +18,9 @@ class DatabaseLoader implements LoaderInterface
 {
     /** @var EntityManager */
     private $em;
+
+    /** @var array MessageCatalogue */
+    private $originals = [];
 
     public function __construct(EntityManager $em)
     {
@@ -73,8 +77,10 @@ class DatabaseLoader implements LoaderInterface
 
     private function getTranslationsForLocale($locale, $domain)
     {
-        return $this->em->getRepository(Word::class)
-            ->findBy(['shortCode' => $locale, 'domain' => $domain], ['code' => 'ASC']);
+        $repository = $this->em->getRepository(Word::class);
+        $translations = $repository->findBy(['shortCode' => $locale, 'domain' => $domain], ['code' => 'ASC']);
+
+        return $translations;
     }
 
     private function loadTranslationsForLocale($locale, $domain)
@@ -83,27 +89,17 @@ class DatabaseLoader implements LoaderInterface
         $translations = $this->getTranslationsForLocale($locale, $domain);
 
         /** @var Word[] $originals */
-        $originals = $this->getTranslationsForLocale('en', $domain);
+        $originals = $this->originals[$domain];
 
-        $lastPos = 0;
         $messages = [];
         foreach ($translations as $translation) {
             $code = $translation->getCode();
             $sentence = $translation->getSentence();
-
-            list($original, $lastPos) = $this->findOriginal($originals, $code, $lastPos);
-            if (false !== $original) {
-                if ($original->getMajorUpdate() > $translation->getUpdated()) {
-                    // If english text has been updated and marked as major use the english text
-                    $messages[$code] = $original->getSentence();
-                } else {
-                    $messages[$code] = $sentence;
-                }
-            }
+            $messages[$code] = $sentence;
         }
 
         $catalogue = new MessageCatalogue($locale, [
-            $domain => $messages,
+            $domain => array_merge($originals, $messages),
         ]);
 
         return $catalogue;
@@ -120,6 +116,7 @@ class DatabaseLoader implements LoaderInterface
             $sentence = $translation->getSentence();
             $messages[$code] = $sentence;
         }
+        $this->originals[$domain] = $messages;
 
         $catalogue = new MessageCatalogue('en', [
             $domain => $messages,

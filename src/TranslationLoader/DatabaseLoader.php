@@ -41,40 +41,6 @@ class DatabaseLoader implements LoaderInterface
         return $this->loadTranslationsForLocale($locale, $domain);
     }
 
-    public function startsWith($string, $startString)
-    {
-        $len = \strlen($startString);
-
-        return substr($string, 0, $len) === $startString;
-    }
-
-    /**
-     * @param Word[] $originals
-     * @param string $code
-     * @param mixed  $lastPos
-     *
-     * @throws Exception
-     *
-     * @return array
-     */
-    private function findOriginal($originals, $code, $lastPos)
-    {
-        $i = $lastPos;
-        $original = false;
-        while (!$original && $i < \count($originals)) {
-            if ($originals[$i]->getCode() === $code) {
-                $original = $originals[$i];
-            }
-            ++$i;
-        }
-        if (false === $original) {
-            // we didn't find any original for this code (weird!), so assume we keep the last pos for the next try
-            $i = $lastPos;
-        }
-
-        return [$original, $i];
-    }
-
     private function getTranslationsForLocale($locale, $domain)
     {
         $repository = $this->em->getRepository(Word::class);

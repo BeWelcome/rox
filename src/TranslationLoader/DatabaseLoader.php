@@ -55,6 +55,9 @@ class DatabaseLoader implements LoaderInterface
         $translations = $this->getTranslationsForLocale($locale, $domain);
 
         /** @var Word[] $originals */
+        if (!isset($this->originals[$domain])) {
+            $this->loadEnglishOriginals($domain);
+        }
         $originals = $this->originals[$domain];
 
         $messages = [];

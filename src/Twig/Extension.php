@@ -62,15 +62,40 @@ class Extension extends AbstractExtension implements GlobalsInterface
         return [
             new TwigFunction('ago', [$this, 'ago']),
             new TwigFunction('getTranslations', [$this, 'getTranslations']),
-            new TwigFunction('dump_it', [$this, 'dumpIt'], [
-                'is_safe' => ['html'],
-            ]),
-            new TwigFunction('language_name', [$this, 'language_name']),
-            new TwigFunction('language_name_translated', [$this, 'language_name_translated']),
+            new TwigFunction(
+                'dump_it',
+                [
+                    $this,
+                    'dumpIt'
+                ],
+                [
+                    'is_safe' => ['html'],
+                ]
+            ),
+            new TwigFunction(
+                'language_name',
+                [
+                    $this,
+                    'languageName'
+                ],
+                [
+                    'is_safe' => ['html'],
+                ]
+            ),
+            new TwigFunction(
+                'language_name_translated',
+                [
+                    $this,
+                    'languageNameTranslated'
+                ],
+                [
+                    'is_safe' => ['html'],
+                ]
+            ),
         ];
     }
 
-    public function language_name(string $locale): string
+    public function languageName(string $locale): string
     {
         $current = $this->translator->getLocale();
         $this->translator->setLocale($locale);
@@ -79,7 +104,7 @@ class Extension extends AbstractExtension implements GlobalsInterface
         return $languageName;
     }
 
-    public function language_name_translated(string $locale, string $display): string
+    public function languageNameTranslated(string $locale, string $display): string
     {
         $current = $this->translator->getLocale();
         $this->translator->setLocale($display);

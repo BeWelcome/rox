@@ -9,7 +9,7 @@
                 onchange="window.location.href=this.value; return false">
             {% for lang in locales %}
                 <option {% if lang == app.request.locale %}selected="selected"{% endif %}
-                        value="{{ path('language', { locale: lang }) }}">{{ language_name(lang) | trans | raw }}
+                        value="{{ path('language', { locale: lang }) }}">{{ language_name(lang) }}
                     ({{ language_name_translated(lang, app.request.locale) }})
                 </option>
             {% endfor %}

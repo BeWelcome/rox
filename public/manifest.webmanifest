@@ -4,7 +4,7 @@
   "name": "BeWelcome Progressive Web App",
   "short_name": "BeWelcome",
   "scope": "/",
-  "display": "standalone",
+  "display": "fullscreen",
   "start_url": "/login",
   "background_color": "transparent",
   "theme_color": "#f37000",

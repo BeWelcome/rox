@@ -19,10 +19,19 @@
     <meta name="keywords" content="{{ 'default_meta_keyword' | trans }}">
     <meta name="robots" content="{{ 'robots' | trans }}">
 
-    {# {% include '@base/stylesheets.html.twig' %} #}
-    {# {% include '@base/scriptfiles.html.twig' with {scriptFiles : earlyScriptFiles} %} #}
-
     {{ encore_entry_link_tags('bewelcome') }}
+    <base id="baseuri" href="{{ app.request.schemeAndHttpHost ~ app.request.baseUrl }}">
+
+    <link rel="manifest" href="{{ asset('manifest.webmanifest') }}">
+    <script>
+        // Check that service workers are supported
+        if ('serviceWorker' in navigator) {
+            // Use the window load event to keep the page load performant
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('{{ asset('service-worker.js') }}');
+            });
+        }
+    </script>
 </head>
 <body style="
   /* Location of the image */

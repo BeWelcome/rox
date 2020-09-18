@@ -35,7 +35,10 @@ class HostingRequestAbstractType extends AbstractType
             ->add('message', CkEditorType::class, [
                 'label' => 'label.message',
                 'invalid_message' => 'request.message.empty',
-                'placeholder' => $placeholder,
+                'attr' => [
+                    'placeholder' => $placeholder,
+                    'class' => 'editor',
+                ],
             ])
         ;
     }

@@ -25,15 +25,20 @@ class HostingRequestGuest extends HostingRequestAbstractType
             if (!$messageRequest || null === $messageRequest->getSubject()) {
                 $this->addMessageTextArea(
                     $form,
-                    'Please give a short introduction of yourself and let your host know ' .
-                    'when and how you\'re going to arrive.'
+                    'give.short.intro.yourself.let.host.know.when.how.you.arrive.'
                 );
-                $form->add('send', SubmitType::class);
+                $form->add('send', SubmitType::class, [
+                    'label' => 'label.hosting.send',
+                ]);
                 $form->add('subject', SubjectType::class);
             } else {
-                $this->addMessageTextArea($form, 'Please enter a message for your host.');
-                $form->add('cancel', SubmitType::class);
-                $form->add('update', SubmitType::class);
+                $this->addMessageTextArea($form, 'please.enter.a.message.for.your.host');
+                $form->add('cancel', SubmitType::class, [
+                    'label' => 'label.hosting.cancel',
+                ]);
+                $form->add('update', SubmitType::class, [
+                    'label' => 'label.hosting.update',
+                ]);
             }
         });
     }

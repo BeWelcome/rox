@@ -22,14 +22,22 @@ class HostingRequestHost extends HostingRequestAbstractType
             ->add('request', HostingRequestType::class, [
                 'reply_host' => true,
             ])
-            ->add('decline', SubmitType::class)
-            ->add('tentatively', SubmitType::class)
-            ->add('accept', SubmitType::class)
-            ->add('update', SubmitType::class);
+            ->add('decline', SubmitType::class, [
+                'label' => 'label.hosting.decline',
+            ])
+            ->add('tentatively', SubmitType::class, [
+                'label' => 'label.hosting.tentatively',
+            ])
+            ->add('accept', SubmitType::class, [
+                'label' => 'label.hosting.accept',
+            ])
+            ->add('update', SubmitType::class, [
+                'label' => 'label.hosting.update',
+            ]);
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             $form = $event->getForm();
-            $this->addMessageTextArea($form, 'Please enter a message for your guest.');
+            $this->addMessageTextArea($form, 'enter.message.for.guest');
 //            $form->add('subject', SubjectType::class, ['disabled' => true]);
         });
     }

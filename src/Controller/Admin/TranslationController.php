@@ -190,7 +190,7 @@ class TranslationController extends AbstractController
             if ($originalDomain !== $translation->getDomain()) {
                 $this->translationModel->updateDomainOfTranslations($translation);
             }
-            $this->translationModel->removeCacheFiles();
+            $this->translationModel->removeCacheFiles($language->getShortCode());
             $this->addTranslatedFlash('notice', 'translation.edit', [
                 'translationId' => $original->getCode(),
                 'locale' => $language->getShortcode(),
@@ -306,7 +306,7 @@ class TranslationController extends AbstractController
                 $em->persist($translation);
             }
             $em->flush();
-            $this->translationModel->removeCacheFiles();
+            $this->translationModel->removeCacheFiles($language->getShortCode());
             $this->addTranslatedFlash('notice', 'flash.added.translatable.item', ['%code%' => $translationId]);
 
             return $this->redirectToRoute('translations');
@@ -341,6 +341,7 @@ class TranslationController extends AbstractController
         $this->denyAccessUnlessGranted(Member::ROLE_ADMIN_WORDS, null, 'Unable to access this page!');
 
         // Volunteer needs rights for this language and for English
+        /** @var Member $translator */
         $translator = $this->getUser();
         if (!$translator->hasRightsForLocale('en')) {
             return $this->redirectToRoute('translations');
@@ -372,7 +373,7 @@ class TranslationController extends AbstractController
             $newTranslatableItem->setLanguage($english);
             $em->persist($newTranslatableItem);
             $em->flush();
-            $this->translationModel->removeCacheFiles();
+            $this->translationModel->removeCacheFiles('en');
             $this->addTranslatedFlash('notice', 'flash.added.translatable.item', ['%code%' => $data->wordCode]);
 
             return $this->redirectToRoute('translations');
@@ -462,7 +463,7 @@ class TranslationController extends AbstractController
             $translation->setDescription('');
             $em->persist($translation);
             $em->flush();
-            $this->translationModel->removeCacheFiles();
+            $this->translationModel->removeCacheFiles($language->getShortCode());
             $this->addTranslatedFlash('notice', 'translation.add', [
                 'translationId' => $original->getCode(),
                 'locale' => $language->getShortcode(),

@@ -86,7 +86,7 @@ class FaqCategoryController extends FaqBaseController
                 $em->persist($faqCategory);
                 $em->flush();
 
-                $translationModel->removeCacheFiles();
+                $translationModel->removeCacheFiles('en');
                 $this->addFlash('notice', "Faq category '{$data->wordCode}' created.");
 
                 return $this->redirectToRoute('admin_faqs_overview', ['categoryId' => $faqCategory->getId()]);
@@ -135,7 +135,7 @@ class FaqCategoryController extends FaqBaseController
             $description->setSentence($data->description);
             $em->persist($description);
             $em->flush();
-            $translationModel->removeCacheFiles();
+            $translationModel->removeCacheFiles('en');
 
             return $this->redirectToRoute('admin_faqs_overview', ['categoryId' => $faqCategory->getId()]);
         }

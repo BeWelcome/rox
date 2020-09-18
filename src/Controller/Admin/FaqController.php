@@ -166,7 +166,7 @@ class FaqController extends FaqBaseController
                 $em->persist($faq);
                 $em->flush();
 
-                $translationModel->removeCacheFiles();
+                $translationModel->removeCacheFiles('en');
                 $this->addFlash('notice', "Faq '{$data->wordCode}' created.");
 
                 return $this->redirectToRoute('admin_faqs_overview', ['categoryId' => $faqCategory->getId()]);

@@ -10,43 +10,61 @@ use App\Pagerfanta\MissingTranslationAdapter;
 use App\Pagerfanta\TranslationAdapter;
 use App\Pagerfanta\UpdateTranslationAdapter;
 use App\Utilities\ManagerTrait;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
+use Symfony\Component\HttpKernel\CacheWarmer\WarmableInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class TranslationModel
 {
     use ManagerTrait;
 
-    /** @var Kernel */
+    /** @var KernelInterface */
     private $kernel;
+
+    /** @var TranslatorInterface */
+    private $translator;
+
+    /** @var Filesystem */
+    private $filesystem;
 
     /**
      * @required
+     * @param KernelInterface $kernel
+     * @param TranslatorInterface $translator
+     * @param Filesystem $filesystem
      */
-    public function setKernel(KernelInterface $kernel)
+    public function setKernel(KernelInterface $kernel, TranslatorInterface $translator, Filesystem $filesystem)
     {
         $this->kernel = $kernel;
+        $this->translator = $translator;
+        $this->filesystem = $filesystem;
     }
 
     /**
      * Remove the cache file corresponding to the given locale.
-     *
-     * @return bool
+     * @param string|null $locale
      */
-    public function removeCacheFiles()
+    public function removeCacheFiles(?string $locale = null): void
     {
-        $kernelCacheDir = $this->kernel->getCacheDir();
+        $translationDir = \sprintf('%s/translations', $this->kernel->getCacheDir());
+
         $finder = new Finder();
-        $finder->files()->in($kernelCacheDir . '/translations')->name('/.*/');
-        $deleted = true;
-        foreach ($finder as $file) {
-            $path = $file->getRealPath();
-            $deleted = unlink($path);
+
+        // Make sure the directory exists
+        $this->filesystem->mkdir($translationDir);
+
+        // Remove the translations for this locale
+        $files = $finder->files()->name($locale ? '*.'.$locale.'.*' : '*')->in($translationDir);
+        foreach ($files as $file) {
+            $this->filesystem->remove($file);
         }
 
-        $finder->files()->in($kernelCacheDir)->name('');
-
-        return $deleted;
+        // Build them again
+        if ($this->translator instanceof WarmableInterface) {
+            $this->translator->warmUp($translationDir);
+        }
     }
 
     public function getAdapter($type, $locale, $code)

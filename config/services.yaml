@@ -167,6 +167,7 @@ services:
     arguments:
       $locales: '%locales%'
       $dataDirectory: '%data_directory%'
+      $publicDirectory: '%kernel.project_dir%/public'
     tags:
       - { name: 'twig.extension' }
 

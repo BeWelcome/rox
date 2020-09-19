@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Translation\DataCollector\TranslationDataCollector;
 use Symfony\Component\Translation\DataCollectorTranslator;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\WebpackEncoreBundle\Asset\EntrypointLookupInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\GlobalsInterface;
 use Twig\TwigFilter;
@@ -37,19 +38,39 @@ class Extension extends AbstractExtension implements GlobalsInterface
     private $locales;
 
     /**
+     * @var string
+     */
+    private $publicDirectory;
+
+    /**
+     * @var EntrypointLookupInterface
+     */
+    private $entrypointLookup;
+
+    /**
      * Extension constructor.
      *
      * @param SessionInterface $session
      * @param TranslatorInterface $translator
+     * @param EntrypointLookupInterface $entrypointLookup
      * @param $locales
      * @param $dataDirectory
+     * @param $publicDirectory
      */
-    public function __construct(SessionInterface $session, TranslatorInterface $translator, $locales, $dataDirectory)
-    {
+    public function __construct(
+        SessionInterface $session,
+        TranslatorInterface $translator,
+        EntrypointLookupInterface $entrypointLookup,
+        $locales,
+        $dataDirectory,
+        $publicDirectory
+    ) {
         $this->session = $session;
         $this->translator = $translator;
         $this->locales = explode(',', $locales);
         $this->dataDirectory = $dataDirectory;
+        $this->entrypointLookup = $entrypointLookup;
+        $this->publicDirectory = $publicDirectory;
     }
 
     /**
@@ -92,6 +113,7 @@ class Extension extends AbstractExtension implements GlobalsInterface
                     'is_safe' => ['html'],
                 ]
             ),
+            new TwigFunction('encore_entry_css_source', [$this, 'getEncoreEntryCssSource']),
         ];
     }
 
@@ -156,6 +178,17 @@ class Extension extends AbstractExtension implements GlobalsInterface
     public function dumpIt($variable)
     {
         return highlight_string(var_export($variable, true), true);
+    }
+
+    public function getEncoreEntryCssSource(string $entryName): string
+    {
+        $files = $this->entrypointLookup
+            ->getCssFiles($entryName);
+        $source = '';
+        foreach ($files as $file) {
+            $source .= file_get_contents($this->publicDirectory . '/' . $file);
+        }
+        return $source;
     }
 
     public function getTranslations()

@@ -50,6 +50,7 @@ Encore
     .addEntry('roxeditor', './assets/js/roxeditor.js')
     .addEntry('rangeslider', './assets/js/rangeslider.js')
     .addEntry('faq', './assets/js/faq.js')
+    .autoProvidejQuery()
     //    .addEntry('roxinlineeditor', './assets/js/roxinlineeditor.js')
 
     .enableSassLoader(options => {
@@ -70,16 +71,16 @@ Encore
         'animation.gsap': 'scrollmagic/scrollmagic/minified/plugins/animation.gsap.min.js',
         'debug.addIndicators': 'scrollmagic/scrollmagic/minified/plugins/debug.addIndicators.min.js'
     })
-    .addLoader({
-        test: require.resolve('jquery'),
-        use: [{
-            loader: 'expose-loader',
-            options: 'jQuery'
-        }, {
-            loader: 'expose-loader',
-            options: '$'
-        }]
-    })
+//    .addLoader({
+//        test: require.resolve('jquery'),
+//        use: [{
+//            loader: 'expose-loader',
+//            options: 'jQuery'
+//        }, {
+//          loader: 'expose-loader',
+//            options: '$'
+//        }]
+//    })
     .addLoader({
         test: require.resolve('select2'),
         use: "imports-loader?define=>false"

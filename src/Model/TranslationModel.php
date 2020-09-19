@@ -56,7 +56,7 @@ class TranslationModel
         $this->filesystem->mkdir($translationDir);
 
         // Remove the translations for this locale
-        $files = $finder->files()->name($locale ? '*.'.$locale.'.*' : '*')->in($translationDir);
+        $files = $finder->files()->name($locale ? '*.' . $locale . '.*' : '*')->in($translationDir);
         foreach ($files as $file) {
             $this->filesystem->remove($file);
         }

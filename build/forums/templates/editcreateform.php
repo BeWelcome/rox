@@ -56,7 +56,8 @@ $vars =& PPostHandler::getVars($callbackId);
         if ($edit) {
             echo $words->getFormatted("forum_edit_post");
         } else {
-            echo $words->getFormatted("forum_reply_title") . ' &quot;<i>' . strip_tags($topic->topicinfo->title) . '</i>&quot;';
+            $backUrl = str_replace('/reply', '', $uri);
+            echo $words->getFormatted("forum_reply_title") . ' &quot;<i><a href="' . $backUrl . '">' . strip_tags($topic->topicinfo->title) . '</a></i>&quot;';
         }
     }
     echo '</h3>';

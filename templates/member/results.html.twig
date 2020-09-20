@@ -22,7 +22,7 @@
                 {% for member in pager.currentPageResults %}
                     <tr>
                         <td>
-                            {{ macros.avatar(member.Username, 100, true) }}
+                            {{ macros.avatar(member.Username, 100, true, 'd-block') }}
                             <small><a href="{{ path( 'members_profile', { 'username': member.Username }) }}">{{ member.Username  }}</a></small>
                         </td>
                         <td>

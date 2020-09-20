@@ -37,7 +37,7 @@ class HostingRequestAbstractType extends AbstractType
                 'invalid_message' => 'request.message.empty',
                 'attr' => [
                     'placeholder' => $placeholder,
-                    'class' => 'editor',
+                    'class' => 'editor form-control',
                 ],
             ])
         ;

@@ -21,7 +21,7 @@ class MessageToMemberType extends AbstractType
             ->add('message', CkEditorType::class, [
                 'attr' => [
                     'placeholder' => 'please.enter.a.message',
-                    'class' => 'editor mb-1',
+                    'class' => 'form-control editor',
                 ],
                 'constraints' => [
                     new NotBlank([

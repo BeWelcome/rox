@@ -82,7 +82,7 @@ php-code-sniffer:
 	./vendor/bin/phpcs  --colors --warning-severity=Error
 
 phpunit:
-	./vendor/bin/phpunit
+	php bin/phpunit
 
 phpmetrics:
 	./vendor/bin/phpmetrics --exclude=src/App/Entity --report-violations=phpmetrics.xml $(SRC_DIR_COMMA)

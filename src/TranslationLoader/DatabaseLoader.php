@@ -19,12 +19,16 @@ class DatabaseLoader implements LoaderInterface
     /** @var EntityManager */
     private $em;
 
-    /** @var array MessageCatalogue */
-    private $originals = [];
+    /** @var MessageCatalogue */
+    private $originals;
+
+    /** @var array DateTime */
+    private $majorUpdates = [];
 
     public function __construct(EntityManager $em)
     {
         $this->em = $em;
+        $this->originals = new MessageCatalogue('en');
     }
 
     /**
@@ -35,7 +39,8 @@ class DatabaseLoader implements LoaderInterface
     public function load($resource, $locale, $domain = 'messages')
     {
         if ('en' === $locale) {
-            return $this->loadEnglishOriginals($domain);
+            $this->loadEnglishOriginals($domain);
+            return $this->originals;
         }
 
         return $this->loadTranslationsForLocale($locale, $domain);
@@ -44,7 +49,7 @@ class DatabaseLoader implements LoaderInterface
     private function getTranslationsForLocale($locale, $domain)
     {
         $repository = $this->em->getRepository(Word::class);
-        $translations = $repository->findBy(['shortCode' => $locale, 'domain' => $domain], ['code' => 'ASC']);
+        $translations = $repository->getTranslationsForLocale($locale, $domain);
 
         return $translations;
     }
@@ -55,42 +60,38 @@ class DatabaseLoader implements LoaderInterface
         $translations = $this->getTranslationsForLocale($locale, $domain);
 
         /** @var Word[] $originals */
-        if (!isset($this->originals[$domain])) {
+        $domains = $this->originals->getDomains();
+        if (!in_array($domain, $domains)) {
             $this->loadEnglishOriginals($domain);
         }
-        $originals = $this->originals[$domain];
 
-        $messages = [];
+        $catalogue = new MessageCatalogue($locale);
+
         foreach ($translations as $translation) {
             $code = $translation->getCode();
-            $sentence = $translation->getSentence();
-            $messages[$code] = $sentence;
+            if ($this->originals->has($code, $domain)) {
+                $majorUpdate = $this->originals->getMetadata($code, $domain);
+                if ($majorUpdate <= $translation->getUpdated()) {
+                    $catalogue->set($code, $translation->getSentence());
+                } else {
+                    $catalogue->set($code, $this->originals->get($code, $domain));
+                }
+            }
         }
-
-        $catalogue = new MessageCatalogue($locale, [
-            $domain => array_merge($originals, $messages),
-        ]);
 
         return $catalogue;
     }
 
-    private function loadEnglishOriginals($domain)
+    private function loadEnglishOriginals($domain): void
     {
         /** @var Word[] $translations */
         $translations = $this->getTranslationsForLocale('en', $domain);
 
-        $messages = [];
         foreach ($translations as $translation) {
             $code = $translation->getCode();
             $sentence = $translation->getSentence();
-            $messages[$code] = $sentence;
+            $this->originals->set($code, $sentence, $domain);
+            $this->originals->setMetadata($code, $translation->getMajorUpdate(), $domain);
         }
-        $this->originals[$domain] = $messages;
-
-        $catalogue = new MessageCatalogue('en', [
-            $domain => $messages,
-        ]);
-
-        return $catalogue;
     }
 }

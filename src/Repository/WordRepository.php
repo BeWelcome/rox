@@ -29,12 +29,34 @@ class WordRepository extends EntityRepository
             ->andWhere('t.shortCode = :locale')
             ->setParameter(':doNotTranslate', 'no')
             ->setParameter(':locale', $locale)
-            ->getQuery();
+            ->getQuery()
+        ;
         $count = $q->getSingleScalarResult();
 
         return $count;
     }
 
+    public function getTranslationsForLocale(string $locale, string $domain)
+    {
+        $qb = $this->createQueryBuilder('t');
+        $q = $qb
+            ->where('t.shortCode = :locale')
+            ->where('(t.isArchived = 0 OR t.isArchived IS NULL)')
+            ->andWhere('t.doNotTranslate = :doNotTranslate')
+            ->andWhere('t.shortCode = :locale')
+            ->setParameter(':locale', $locale)
+        ;
+        if ('en' === $locale) {
+            $q->setParameter(':doNotTranslate', 'yes');
+        } else {
+            $q->setParameter(':doNotTranslate', 'no');
+        }
+        $q = $q->getQuery();
+
+        $translations = $q->getResult();
+
+        return $translations;
+    }
     private function queryAll($locale, $code = '')
     {
         $qb = $this->createQueryBuilder('t')

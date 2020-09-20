@@ -28,7 +28,12 @@
             {{ form_row(form.show_map, {'label_attr': {'class':'switch-custom'}, 'attr': {'class':'show_map'}}) }}
         </div>
         <div class="col-sm-4">
-            {{ form_widget(form.updateMap, { 'attr': {'class': 'btn-primary float-right search d-block'}}) }}
+            {% if form.show_options.vars.checked %}
+                {% set class = 'search btn-primary float-right d-none'  %}
+            {% else %}
+                {% set class = 'search btn-primary float-right d-block'  %}
+            {% endif %}
+            {{ form_widget(form.updateMap, { 'attr': { 'class': class }}) }}
         </div>
         <div id="search_options"
              class="col-12 {% if form.show_options.vars.checked %}d-block{% else %}d-none{% endif %}">
@@ -130,7 +135,7 @@
         </div>
         <div class="col-sm-12">
             <button type="submit" id="search_updateMap" name="search[updateMap]" class="btn btn-primary float-right search
-                {% if form.show_options.vars.checked %}d-block{% else %}d-none{% endif %}">Find Members</button>
+                {% if form.show_options.vars.checked %}d-block{% else %}d-none{% endif %}">{{ 'search.find.members'|trans }}</button>
         </div>
     </div>
     {{ form_rest(form) }}

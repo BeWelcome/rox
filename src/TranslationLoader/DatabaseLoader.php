@@ -29,6 +29,9 @@ class DatabaseLoader implements LoaderInterface
     {
         $this->em = $em;
         $this->originals = new MessageCatalogue('en');
+        $this->loadEnglishOriginals('messages');
+        $this->loadEnglishOriginals('messages+intl-icu');
+        $this->loadEnglishOriginals('validators');
     }
 
     /**
@@ -39,7 +42,6 @@ class DatabaseLoader implements LoaderInterface
     public function load($resource, $locale, $domain = 'messages')
     {
         if ('en' === $locale) {
-            $this->loadEnglishOriginals($domain);
             return $this->originals;
         }
 
@@ -56,16 +58,10 @@ class DatabaseLoader implements LoaderInterface
 
     private function loadTranslationsForLocale($locale, $domain)
     {
+        $catalogue = new MessageCatalogue($locale);
+
         /** @var Word[] $translations */
         $translations = $this->getTranslationsForLocale($locale, $domain);
-
-        /** @var Word[] $originals */
-        $domains = $this->originals->getDomains();
-        if (!in_array($domain, $domains)) {
-            $this->loadEnglishOriginals($domain);
-        }
-
-        $catalogue = new MessageCatalogue($locale);
 
         foreach ($translations as $translation) {
             $code = $translation->getCode();

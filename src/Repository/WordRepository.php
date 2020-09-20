@@ -38,20 +38,20 @@ class WordRepository extends EntityRepository
 
     public function getTranslationsForLocale(string $locale, string $domain)
     {
-        $qb = $this->createQueryBuilder('t');
-        $q = $qb
+        $qb = $this->createQueryBuilder('t')
             ->where('t.shortCode = :locale')
             ->where('(t.isArchived = 0 OR t.isArchived IS NULL)')
-            ->andWhere('t.doNotTranslate = :doNotTranslate')
             ->andWhere('t.shortCode = :locale')
+            ->andWhere('t.domain = :domain')
             ->setParameter(':locale', $locale)
+            ->setParameter(':domain', $domain)
         ;
-        if ('en' === $locale) {
-            $q->setParameter(':doNotTranslate', 'yes');
-        } else {
-            $q->setParameter(':doNotTranslate', 'no');
+        if ('en' !== $locale) {
+            $qb
+                ->andWhere('t.doNotTranslate = :doNotTranslate')
+                ->setParameter(':doNotTranslate', 'no');
         }
-        $q = $q->getQuery();
+        $q = $qb->getQuery();
 
         $translations = $q->getResult();
 

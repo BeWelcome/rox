@@ -250,3 +250,5 @@ services:
     arguments:
       - !service { class: PDO, factory: ['@database_connection', 'getWrappedConnection'] }
       - { lock_mode: LOCK_NONE }
+
+  Symfony\Bridge\Doctrine\Security\RememberMe\DoctrineTokenProvider: ~

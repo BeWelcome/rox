@@ -17,6 +17,8 @@ doctrine:
         # IMPORTANT: You MUST configure your server version,
         server_version: '10.1.41'
 
+        schema_filter: ~^(?!rememberme_token)~
+
         charset: utf8mb4
 
         default_table_options:

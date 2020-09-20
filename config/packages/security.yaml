@@ -31,7 +31,7 @@ security:
                 secret: '%env(APP_SECRET)%'
                 lifetime: 31536000 # 1 year in seconds
                 path: /
-                domain: "%env(DOMAIN)%"
+                token_provider: 'Symfony\Bridge\Doctrine\Security\RememberMe\DoctrineTokenProvider'
 
             user_checker: rox.user_checker
             anonymous: ~

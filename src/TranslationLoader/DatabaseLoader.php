@@ -19,19 +19,12 @@ class DatabaseLoader implements LoaderInterface
     /** @var EntityManager */
     private $em;
 
-    /** @var MessageCatalogue */
-    private $originals;
-
-    /** @var array DateTime */
-    private $majorUpdates = [];
+    /** @var array MessageCatalogue */
+    private $originals = [];
 
     public function __construct(EntityManager $em)
     {
         $this->em = $em;
-        $this->originals = new MessageCatalogue('en');
-        $this->loadEnglishOriginals('messages');
-        $this->loadEnglishOriginals('messages+intl-icu');
-        $this->loadEnglishOriginals('validators');
     }
 
     /**
@@ -42,7 +35,7 @@ class DatabaseLoader implements LoaderInterface
     public function load($resource, $locale, $domain = 'messages')
     {
         if ('en' === $locale) {
-            return $this->originals;
+            return $this->loadEnglishOriginals($domain);
         }
 
         return $this->loadTranslationsForLocale($locale, $domain);
@@ -58,19 +51,26 @@ class DatabaseLoader implements LoaderInterface
 
     private function loadTranslationsForLocale($locale, $domain)
     {
+        if (!isset($this->originals[$domain])) {
+            $this->loadEnglishOriginals($domain);
+        }
+        $originals = $this->originals[$domain];
+
         $catalogue = new MessageCatalogue($locale);
 
         /** @var Word[] $translations */
         $translations = $this->getTranslationsForLocale($locale, $domain);
 
-        foreach ($translations as $translation) {
-            $code = $translation->getCode();
-            if ($this->originals->has($code, $domain)) {
-                $majorUpdate = $this->originals->getMetadata($code, $domain);
-                if ($majorUpdate <= $translation->getUpdated()) {
-                    $catalogue->set($code, $translation->getSentence());
-                } else {
-                    $catalogue->set($code, $this->originals->get($code, $domain));
+        if (null !== $translations) {
+            foreach ($translations as $translation) {
+                $code = $translation->getCode();
+                if ($originals->has($code, $domain)) {
+                    $majorUpdate = $originals->getMetadata($code, $domain);
+                    if ($majorUpdate <= $translation->getUpdated()) {
+                        $catalogue->set($code, $translation->getSentence(), $domain);
+                    } else {
+                        $catalogue->set($code, $originals->get($code, $domain));
+                    }
                 }
             }
         }
@@ -78,16 +78,25 @@ class DatabaseLoader implements LoaderInterface
         return $catalogue;
     }
 
-    private function loadEnglishOriginals($domain): void
+    private function loadEnglishOriginals($domain): MessageCatalogue
     {
+        if (!isset($this->originals[$domain])) {
+            $this->originals[$domain] = new MessageCatalogue('en');
+        }
+        $catalogue = $this->originals[$domain];
+
         /** @var Word[] $translations */
         $translations = $this->getTranslationsForLocale('en', $domain);
 
-        foreach ($translations as $translation) {
-            $code = $translation->getCode();
-            $sentence = $translation->getSentence();
-            $this->originals->set($code, $sentence, $domain);
-            $this->originals->setMetadata($code, $translation->getMajorUpdate(), $domain);
+        if (null !== $translations ) {
+            foreach ($translations as $translation) {
+                $code = $translation->getCode();
+                $sentence = $translation->getSentence();
+                $catalogue->set($code, $sentence, $domain);
+                $catalogue->setMetadata($code, $translation->getMajorUpdate(), $domain);
+            }
         }
+
+        return $catalogue;
     }
 }

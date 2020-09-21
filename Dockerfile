@@ -44,6 +44,7 @@ RUN set -eux; \
 		mysqli \
 		pcntl \
 		pdo_mysql \
+		xmlrpc \
 		xsl \
 		zip \
 	; \

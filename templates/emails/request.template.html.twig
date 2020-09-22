@@ -1,5 +1,5 @@
 {% block content %}
-    {% apply inky_to_html|inline_css(source('emails/email.css')) %}
+    {% apply inky_to_html|inline_css(encore_entry_css_source('email')) %}
     <!-- move the above styles into your custom stylesheet -->
     <wrapper class="header" bgcolor="#f37000">
         <container>

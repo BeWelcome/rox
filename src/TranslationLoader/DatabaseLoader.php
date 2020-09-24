@@ -88,7 +88,7 @@ class DatabaseLoader implements LoaderInterface
         /** @var Word[] $translations */
         $translations = $this->getTranslationsForLocale('en', $domain);
 
-        if (null !== $translations ) {
+        if (null !== $translations) {
             foreach ($translations as $translation) {
                 $code = $translation->getCode();
                 $sentence = $translation->getSentence();

@@ -182,6 +182,7 @@ class Extension extends AbstractExtension implements GlobalsInterface
 
     public function getEncoreEntryCssSource(string $entryName): string
     {
+        $this->entrypointLookup->reset();
         $files = $this->entrypointLookup
             ->getCssFiles($entryName);
         $source = '';

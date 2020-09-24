@@ -122,7 +122,7 @@ class Mailer
         );
     }
 
-    public function sendNotificationEmail(string $sender, Member $receiver, $parameters)
+    public function sendNotificationEmail(Address $sender, Member $receiver, $parameters)
     {
         return $this->sendTemplateEmail(
             $sender,
@@ -135,11 +135,13 @@ class Mailer
     /**
      * This feeds the feedback given by a user into the OTRS queues.
      *
+     * @param $sender
+     * @param string $receiver
      * @param $parameters
      *
      * @return bool
      */
-    public function sendFeedbackEmail(string $sender, string $receiver, $parameters)
+    public function sendFeedbackEmail($sender, Address $receiver, $parameters)
     {
         $parameters['subject'] = "Your feedback in '" . str_replace('_', ' ', ($parameters['IdCategory'])->getName()) . "'";
 

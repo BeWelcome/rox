@@ -7,6 +7,7 @@ use App\Entity\FeedbackCategory;
 use App\Entity\Language;
 use App\Service\Mailer;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Mime\Address;
 
 class AboutModel
 {
@@ -37,7 +38,7 @@ class AboutModel
     {
         /** @var FeedbackCategory $category */
         $category = $data['IdCategory'];
-        $notifyEmail = $category->getEmailtonotify();
+        $notifyEmail = new Address($category->getEmailtonotify());
         $feedbackEmail = $data['FeedbackEmail'];
         if (null === $feedbackEmail) {
             $feedbackEmail = 'feedback@bewelcome.org';

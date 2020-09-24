@@ -12,7 +12,7 @@
     {{ form_row(form.domain) }}
     {{ form_row(form.description) }}
     {{ form_row(form.englishText) }}
-    {{ form_row(form.translatedText) }}
+    {{ form_row(form.translatedText, {'attr':{'autofocus':true}}) }}
     {% if form.isMajorUpdate is defined %}
         {{ form_row(form.isMajorUpdate) }}
     {% endif %}

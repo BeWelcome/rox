@@ -7,7 +7,7 @@
 {% block content %}
     <h1>{{ 'translations.headline' | trans }}</h1>
     {{ form_start(form) }}
-    {{ form_row(form.wordCode) }}
+    {{ form_row(form.wordCode, {'attr':{'autofocus':true}}) }}
     {{ form_row(form.domain) }}
     {{ form_row(form.description) }}
     {{ form_row(form.englishText) }}

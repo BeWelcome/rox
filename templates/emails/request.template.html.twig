@@ -1,11 +1,10 @@
 {% block content %}
     {% apply inky_to_html|inline_css(encore_entry_css_source('email')) %}
-    <!-- move the above styles into your custom stylesheet -->
     <wrapper class="header" bgcolor="#f37000">
         <container>
             <row class="collapse">
                 <columns small="6" valign="middle"><a href="{{ url('homepage') }}"><img
-                            src="{{ email.image('@images/logo_index_top.png') }}"><</a>
+                            src="{{ email.image('@images/logo_index_top.png') }}"></a>
                 </columns>
                 <columns small="6" valign="middle">
                     <p class="text-right">BeWelcome</p>

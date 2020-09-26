@@ -246,6 +246,12 @@ services:
 #    class: App\Activator\RoleActivator
 #    arguments: ["@security.helper"]
 
+  App\Model\TranslationModel:
+    public: true
+    arguments:
+      $cacheDirectory: '%kernel.cache_dir%'
+      $locales: '%locales%'
+
   Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler:
     arguments:
       - !service { class: PDO, factory: ['@database_connection', 'getWrappedConnection'] }

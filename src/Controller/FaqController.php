@@ -41,6 +41,7 @@ class FaqController extends AbstractController
      *
      * @ParamConverter("faqCategory", class="App\Entity\FaqCategory", options={"id" = "categoryId"})
      *
+     * @param FaqCategory $faqCategory
      * @return Response
      */
     public function showOverview(FaqCategory $faqCategory)

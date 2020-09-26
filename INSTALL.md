@@ -63,7 +63,7 @@ using a browser or use curl _url_ > _filename_.
 * PHP version >= 7.3
 * PHP GD lib enabled
 * PHP magic quotes gpc disabled
-* PHP extensions: mbstring, dom, fileinfo, intl, xsl
+* PHP extensions: mbstring, dom, fileinfo, intl, xsl, xmlrpc, 
 * MariaDB >=10.1
 * [symfony command line interface](https://symfony.com/download) (download/setup)
 * SMTP server for email features

@@ -190,7 +190,7 @@ class TranslationController extends AbstractController
             if ($originalDomain !== $translation->getDomain()) {
                 $this->translationModel->updateDomainOfTranslations($translation);
             }
-            $this->translationModel->removeCacheFiles($language->getShortCode());
+            $this->translationModel->refreshTranslationsCacheForLocale($language->getShortCode());
             $this->addTranslatedFlash('notice', 'translation.edit', [
                 'translationId' => $original->getCode(),
                 'locale' => $language->getShortcode(),
@@ -306,7 +306,7 @@ class TranslationController extends AbstractController
                 $em->persist($translation);
             }
             $em->flush();
-            $this->translationModel->removeCacheFiles($language->getShortCode());
+            $this->translationModel->refreshTranslationsCacheForLocale($language->getShortCode());
             $this->addTranslatedFlash('notice', 'flash.added.translatable.item', ['%code%' => $translationId]);
 
             return $this->redirectToRoute('translations');
@@ -373,7 +373,7 @@ class TranslationController extends AbstractController
             $newTranslatableItem->setLanguage($english);
             $em->persist($newTranslatableItem);
             $em->flush();
-            $this->translationModel->removeCacheFiles('en');
+            $this->translationModel->refreshTranslationsCacheForLocale('en');
             $this->addTranslatedFlash('notice', 'flash.added.translatable.item', ['%code%' => $data->wordCode]);
 
             return $this->redirectToRoute('translations');
@@ -463,7 +463,7 @@ class TranslationController extends AbstractController
             $translation->setDescription('');
             $em->persist($translation);
             $em->flush();
-            $this->translationModel->removeCacheFiles($language->getShortCode());
+            $this->translationModel->refreshTranslationsCacheForLocale($language->getShortCode());
             $this->addTranslatedFlash('notice', 'translation.add', [
                 'translationId' => $original->getCode(),
                 'locale' => $language->getShortcode(),

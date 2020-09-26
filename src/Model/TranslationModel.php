@@ -20,50 +20,47 @@ class TranslationModel
 {
     use ManagerTrait;
 
-    /** @var KernelInterface */
-    private $kernel;
-
     /** @var TranslatorInterface */
     private $translator;
 
     /** @var Filesystem */
     private $filesystem;
 
-    /**
-     * @required
-     * @param KernelInterface $kernel
-     * @param TranslatorInterface $translator
-     * @param Filesystem $filesystem
-     */
-    public function setKernel(KernelInterface $kernel, TranslatorInterface $translator, Filesystem $filesystem)
-    {
-        $this->kernel = $kernel;
+    /** @var string */
+    private $cacheDirectory;
+
+    /** @var string */
+    private $locales;
+
+    public function __construct(
+        TranslatorInterface $translator,
+        Filesystem $filesystem,
+        string $cacheDirectory,
+        string $locales
+    ) {
         $this->translator = $translator;
+        $this->cacheDirectory = $cacheDirectory;
         $this->filesystem = $filesystem;
+        $this->locales = $locales;
     }
 
     /**
      * Remove the cache file corresponding to the given locale.
      * @param string|null $locale
      */
-    public function removeCacheFiles(?string $locale = null): void
+    public function refreshTranslationsCacheForLocale(?string $locale = null): void
     {
-        $translationDir = \sprintf('%s/translations', $this->kernel->getCacheDir());
+        $this->removeAndWarmupCacheForLocale($locale);
+    }
 
-        $finder = new Finder();
-
-        // Make sure the directory exists
-        $this->filesystem->mkdir($translationDir);
-
-        // Remove the translations for this locale
-        $files = $finder->files()->name($locale ? '*.' . $locale . '.*' : '*')->in($translationDir);
-        foreach ($files as $file) {
-            $this->filesystem->remove($file);
-        }
-
-        // Build them again
-        if ($this->translator instanceof WarmableInterface) {
-            $this->translator->warmUp($translationDir);
+    /**
+     * Remove the translation cache files.
+     */
+    public function refreshTranslationsCache(): void
+    {
+        $locales = explode(',', $this->locales);
+        foreach($locales as $locale) {
+            $this->removeAndWarmupCacheForLocale($locale);
         }
     }
 
@@ -104,5 +101,29 @@ class TranslationModel
             $em->persist($translation);
         }
         $em->flush();
+    }
+
+    /**
+     * @param string|null $locale
+     */
+    private function removeAndWarmupCacheForLocale(?string $locale): void
+    {
+        $translationDir = \sprintf('%s/translations', $this->cacheDirectory);
+
+        $finder = new Finder();
+
+        // Make sure the directory exists
+        $this->filesystem->mkdir($translationDir);
+
+        // Remove the translations for this locale
+        $files = $finder->files()->name($locale ? '*.' . $locale . '.*' : '*')->in($translationDir);
+        foreach ($files as $file) {
+            $this->filesystem->remove($file);
+        }
+
+        // Build them again
+        if ($this->translator instanceof WarmableInterface) {
+            $this->translator->warmUp($translationDir);
+        }
     }
 }

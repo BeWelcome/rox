@@ -6,6 +6,9 @@ class SignupPage extends SignupBasePage
     /** @var int Stores the current signup step */
     private $_step;
 
+    /** @var MembersModel */
+    private $model;
+
     /**
      * SignupPage constructor.
      *
@@ -14,6 +17,7 @@ class SignupPage extends SignupBasePage
     public function __construct($step = 0)
     {
         parent::__construct();
+        $this->model = new MembersModel();
         $this->_step = $step;
         if ($step == 2) {
             $this->addLateLoadScriptFile('build/tempusdominus.js');
@@ -60,9 +64,9 @@ class SignupPage extends SignupBasePage
     protected function getAllLanguages($spoken, $selected) {
         $member = new Member();
         if ($spoken) {
-            $languages = $this->_sortLanguages($member->get_all_spoken_languages());
+            $languages = $this->_sortLanguages($this->model->getSpokenLanguages());
         } else {
-            $languages = $this->_sortLanguages($member->get_all_signed_languages());
+            $languages = $this->_sortLanguages($this->model->getSignedLanguages());
         }
         $options = "";
         foreach($languages as $language) {

@@ -25,10 +25,12 @@ class Select2Type extends AbstractType
             ->setDefaults([
                 'error_bubbling' => false,
                 'inline' => false,
-                'searchbox' => true,
+                'searchbox' => false,
+                'allow_clear' => false,
             ])
             ->addAllowedTypes('inline', 'bool')
             ->addAllowedTypes('searchbox', 'bool')
+            ->addAllowedTypes('allow_clear', 'bool')
         ;
     }
 
@@ -39,12 +41,20 @@ class Select2Type extends AbstractType
     {
         parent::buildView($view, $form, $options);
         $attr = $view->vars['attr'];
-        $attr['class'] = 'select2';
+        $class = 'select2';
         if (true === $options['inline']) {
-            $attr['class'] .= '-inline';
+            $class .= '-inline';
+        }
+        $attr['class'] = $class;
+        if (true === $options['allow_clear']) {
+            $attr['data-allow-clear'] = 'true';
         }
         if (false === $options['searchbox']) {
             $attr['data-minimum-results-for-search'] = '-1';
+        }
+        if (true === $options['multiple']) {
+            // Always show search box when multiple selections are allowed
+            unset($attr['data-minimum-results-for-search']);
         }
         $view->vars['attr'] = $attr;
     }

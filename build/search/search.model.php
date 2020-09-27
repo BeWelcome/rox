@@ -75,14 +75,14 @@ class SearchModel extends RoxModelBase
     private $tables = "";
     private $joins = "";
 
-    private static $ORDERBY = array(
-        self::ORDER_USERNAME => array('WordCode' => 'SearchOrderUsername', 'Column' => 'm.Username'),
-        self::ORDER_ACCOM => array('WordCode' => 'SearchOrderAccommodation', 'Column' => 'hosting_interest'),
-        self::ORDER_DISTANCE => array('WordCode' => 'SearchOrderDistance', 'Column' => 'Distance'),
-        self::ORDER_LOGIN => array('WordCode' => 'SearchOrderLogin', 'Column' => 'LastLogin'),
-        self::ORDER_MEMBERSHIP => array('WordCode' => 'SearchOrderMembership', 'Column' => 'm.created'),
-        self::ORDER_COMMENTS => array('WordCode' => 'SearchOrderComments', 'Column' => 'CommentCount'),
-    );
+    private const ORDER_BY = [
+        self::ORDER_USERNAME => ['WordCode' => 'SearchOrderUsername', 'Column' => 'm.Username'],
+        self::ORDER_ACCOM => ['WordCode' => 'SearchOrderAccommodation', 'Column' => 'hosting_interest'],
+        self::ORDER_DISTANCE => ['WordCode' => 'SearchOrderDistance', 'Column' => 'Distance'],
+        self::ORDER_LOGIN => ['WordCode' => 'SearchOrderLogin', 'Column' => 'LastLogin'],
+        self::ORDER_MEMBERSHIP => ['WordCode' => 'SearchOrderMembership', 'Column' => 'm.created'],
+        self::ORDER_COMMENTS => ['WordCode' => 'SearchOrderComments', 'Column' => 'CommentCount'],
+    ];
 
     private $membersLowDetails = false;
 
@@ -95,21 +95,10 @@ class SearchModel extends RoxModelBase
         $this->modCrypt = new MOD_crypt();
     }
 
-    public static function getOrderByArray()
-    {
-        return self::$ORDERBY;
-    }
-
     private function getOrderBy($orderBy, $direction)
     {
         $orderType = $orderBy - ($orderBy % 2);
-        $order = self::$ORDERBY[$orderType]['Column'];
-        if ($orderType == self::ORDER_ACCOM) {
-            $orderSuffix = 'DESC';
-        } else {
-            $orderSuffix = 'ASC';
-        }
-        $order .= " " . $orderSuffix;
+        $order = self::ORDER_BY[$orderType]['Column'] . " ASC";
         switch ($orderType) {
             case self::ORDER_ACCOM:
             case self::ORDER_COMMENTS:
@@ -121,11 +110,11 @@ class SearchModel extends RoxModelBase
         }
 
         // if descending order is requested switch all ASC to DESC and vice versa
-        if (self::DIRECTION_ASCENDING === $direction)
+        if (self::DIRECTION_DESCENDING === $direction)
         {
             $order = str_replace('ASC', 'BSC', $order);
             $order = str_replace('DESC', 'ASC', $order);
-            $order = str_replace('BSC', 'ASC', $order);
+            $order = str_replace('BSC', 'DESC', $order);
         }
         return $order;
     }

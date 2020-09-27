@@ -119,7 +119,7 @@ class SearchController extends AbstractController
             $memberShowMapPreference = $member->getMemberPreference($showMapPreference);
             $memberShowMapPreference->setValue($data->show_map ? 'Yes' : 'No');
             $memberShowOptionsPreference = $member->getMemberPreference($showOptionsPreference);
-            $memberShowOptionsPreference->setValue($data->show_map ? 'Yes' : 'No');
+            $memberShowOptionsPreference->setValue($data->show_options ? 'Yes' : 'No');
             $em = $this->getDoctrine()->getManager();
             $em->persist($memberShowMapPreference);
             $em->persist($memberShowOptionsPreference);

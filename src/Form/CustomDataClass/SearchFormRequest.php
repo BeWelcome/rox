@@ -4,6 +4,7 @@ namespace App\Form\CustomDataClass;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\PersistentCollection;
 use SearchModel;
 use Symfony\Component\Form\FormInterface;
@@ -103,7 +104,7 @@ class SearchFormRequest
     /**
      * @var bool
      */
-    public $showOptions = true;
+    public $showOptions = false;
 
     /** @var int */
     public $can_host = 1;
@@ -115,10 +116,10 @@ class SearchFormRequest
     public $languages;
 
     /** @var int */
-    public $min_age;
+    public $min_age = 0;
 
     /** @var int */
-    public $max_age;
+    public $max_age = 120;
 
     /** @var string */
     public $gender;
@@ -164,13 +165,13 @@ class SearchFormRequest
     /**
      * SearchFormRequest constructor.
      */
-    public function __construct(ObjectManager $em)
+    public function __construct(EntityManagerInterface $em)
     {
         $this->em = $em;
     }
 
     /**
-     * @Assert\IsTrue(message="search.location.invalid")
+     * @Assert\IsTrue(message="search.location.invalid", groups={"text-search"})
      */
     public function isLocationValid()
     {
@@ -197,15 +198,14 @@ class SearchFormRequest
     }
 
     /**
-     * @Assert\IsTrue(message="search.accommodation.invalid")
+     * @Assert\IsTrue(message="search.accommodation.invalid", groups={"text-search"})
      */
     public function isAccommodationValid()
     {
-//        return (false === $this->accommodation_yes && false === $this->accommodation_no);
-        return true;
+        return ($this->accommodation_anytime || $this->accommodation_neverask);
     }
 
-    public static function fromRequest(Request $request, ObjectManager $em)
+    public static function fromRequest(Request $request, EntityManagerInterface $em)
     {
         $formRequest = new self($em);
         $data = [];

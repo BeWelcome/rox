@@ -19,7 +19,7 @@
     {{ form_errors(form) }}
     <div class="row mb-3">
         <div class="col-12">
-            {{ form_row(form.location, {'attr': {'class': 'search-picker col-12'}, 'required': false }) }}
+            {{ form_row(form.location, {'attr': {'class': 'search-picker'}, 'required': false }) }}
         </div>
         <div class="col-sm-4">
             {{ form_row(form.show_options, {'label_attr': {'class':'switch-custom'}, 'attr': {'class':'show_options'}}) }}
@@ -81,7 +81,7 @@
                 <div class="col-sm-4">
                     <div class="row no-gutters">
                         <div class="col-12">
-                            {{ form_row(form.can_host, {'attr': {'class':'select2', 'data-minimum-results-for-search': '-1'}} ) }}
+                            {{ form_row(form.can_host) }}
                         </div>
                         <div class="col-12">
                             {{ form_row(form.keywords) }}
@@ -100,7 +100,7 @@
                 <div class="col-sm-4">
                     <div class="row no-gutters">
                         <div class="col-12">
-                            {{ form_row(form.distance, {'attr': {'class': 'select2', 'data-minimum-results-for-search': '-1'} }) }}
+                            {{ form_row(form.distance) }}
                         </div>
                         <div class="col-12">
                             {{ form_row(form.min_age) }}
@@ -126,7 +126,7 @@
                     {{ form_row(form.order) }}
                 </div>
                 <div class="col-sm-4">
-                    {{ form_row(form.direction, {'attr': {'class': 'select2', 'data-minimum-results-for-search': '-1'}}) }}
+                    {{ form_row(form.direction) }}
                 </div>
                 <div class="col-sm-4">
                     {{ form_row(form.items) }}

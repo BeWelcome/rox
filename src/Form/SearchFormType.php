@@ -100,7 +100,7 @@ class SearchFormType extends AbstractType
             $choices = ['search.see_map' => -1] + $choices;
         }
         $form = $event->getForm();
-        $form->add('distance', ChoiceType::class, [
+        $form->add('distance', Select2Type::class, [
             'choices' => $choices,
             'label' => 'label.radius',
         ]);
@@ -123,22 +123,16 @@ class SearchFormType extends AbstractType
             }
         }
         $formBuilder
-            ->add('groups', ChoiceType::class, [
+            ->add('groups', Select2Type::class, [
                 'choices' => $groups,
                 'choice_translation_domain' => false,
                 'label' => 'groups',
-                'attr' => [
-                    'class' => 'select2',
-                ],
                 'multiple' => true,
                 'required' => false,
             ])
-            ->add('languages', ChoiceType::class, [
+            ->add('languages', Select2Type::class, [
                 'choices' => $languages,
                 'label' => 'languages',
-                'attr' => [
-                    'class' => 'select2',
-                ],
                 'multiple' => true,
                 'required' => false,
             ]);
@@ -146,45 +140,36 @@ class SearchFormType extends AbstractType
 
     protected function addAgeAndGenderSelects(FormBuilderInterface $formBuilder)
     {
-        $ageArray = [];
-        for ($i = 18; $i <= 118; $i = $i + 2) {
-            $ageArray[$i] = $i;
+        $minAgeArray = [];
+        for ($i = 18; $i <= 120; $i += 2) {
+            $minAgeArray[$i] = $i;
+        }
+        $maxAgeArray = [];
+        for ($i = 18; $i <= 120; $i += 2) {
+            $maxAgeArray[$i] = $i;
         }
         $formBuilder
-            ->add('min_age', ChoiceType::class, [
-                'choices' => $ageArray,
+            ->add('min_age', Select2Type::class, [
+                'choices' => $minAgeArray,
                 'choice_translation_domain' => false,
-                'attr' => [
-                    'class' => 'select2',
-                    'data-minimum-results-for-search' => '-1',
-                ],
-                'required' => false,
                 'label' => 'findpeopleminimumage',
                 'translation_domain' => 'messages',
             ])
-            ->add('max_age', ChoiceType::class, [
-                'choices' => $ageArray,
+            ->add('max_age', Select2Type::class, [
+                'choices' => $maxAgeArray,
                 'choice_translation_domain' => false,
-                'attr' => [
-                    'class' => 'select2',
-                    'data-minimum-results-for-search' => '-1',
-                ],
-                'required' => false,
                 'label' => 'findpeoplemaximumage',
                 'translation_domain' => 'messages',
             ])
-            ->add('gender', ChoiceType::class, [
+            ->add('gender', Select2Type::class, [
                 'choices' => [
+                    'any' => null,
                     'male' => 'male',
                     'female' => 'female',
                     'other' => 'idonttell',
                 ],
                 'label' => 'gender',
-                'attr' => [
-                    'class' => 'select2',
-                    'data-minimum-results-for-search' => '-1',
-                ],
-                'required' => false,
+                'required' => true,
                 'translation_domain' => 'messages',
             ]);
     }
@@ -192,7 +177,7 @@ class SearchFormType extends AbstractType
     protected function addSelects(FormBuilderInterface $formBuilder)
     {
         $formBuilder
-            ->add('can_host', ChoiceType::class, [
+            ->add('can_host', Select2Type::class, [
                 'choices' => [
                     0 => '0',
                     1 => '1',
@@ -207,7 +192,7 @@ class SearchFormType extends AbstractType
                 'label' => 'searchcanhostatleast',
                 'translation_domain' => 'messages',
             ])
-            ->add('last_login', ChoiceType::class, [
+            ->add('last_login', Select2Type::class, [
                 'label' => 'search.filter.last.login',
                 'choices' => [
                     'search.filter.last.login.1month' => 1,
@@ -217,13 +202,9 @@ class SearchFormType extends AbstractType
                     'search.filter.last.login.year' => 12,
                     'search.filter.last.login.all' => 2400,
                 ],
-                'attr' => [
-                    'class' => 'select2',
-                    'data-minimum-results-for-search' => '-1',
-                ],
                 'translation_domain' => 'messages',
             ])
-            ->add('order', ChoiceType::class, [
+            ->add('order', Select2Type::class, [
                 'label' => 'label.order',
                 'choices' => [
                     'search.order.accommodation' => SearchModel::ORDER_ACCOM,
@@ -233,20 +214,16 @@ class SearchFormType extends AbstractType
                     'search.order.membership' => SearchModel::ORDER_MEMBERSHIP,
                     'search.order.username' => SearchModel::ORDER_USERNAME,
                 ],
-                'attr' => [
-                    'class' => 'select2',
-                    'data-minimum-results-for-search' => '-1',
-                ],
                 'translation_domain' => 'messages',
             ])
-            ->add('direction', ChoiceType::class, [
+            ->add('direction', Select2Type::class, [
                 'label' => 'label.direction',
                 'choices' => [
                     'search.direction.descending' => SearchModel::DIRECTION_DESCENDING,
                     'search.direction.ascending' => SearchModel::DIRECTION_ASCENDING,
                 ],
             ])
-            ->add('items', ChoiceType::class, [
+            ->add('items', Select2Type::class, [
                 'label' => 'label.items',
                 'choices' => [
                     5 => 5,
@@ -256,10 +233,6 @@ class SearchFormType extends AbstractType
                     100 => 100,
                 ],
                 'choice_translation_domain' => false,
-                'attr' => [
-                    'class' => 'select2',
-                    'data-minimum-results-for-search' => '-1',
-                ],
                 'translation_domain' => 'messages',
             ])
         ;

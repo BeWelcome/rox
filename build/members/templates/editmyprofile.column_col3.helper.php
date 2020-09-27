@@ -11,7 +11,7 @@ $profile_language = $lang->id;
 $profile_language_code = $lang->ShortCode;
 $profile_language_name = $lang->Name;
 $languages = $member->profile_languages;
-$languages_spoken = $member->languages_spoken;
+$languages_spoken = $this->model->getSpokenLanguaged();
 
 $CanTranslate = false; // FIXME that seems to be incorrect
 
@@ -46,7 +46,7 @@ if (is_array($this->statuses)) {
 <?php
 // Check for errors and update status and display a message
 if (isset($vars['errors']) and count($vars['errors']) > 0) {
-    echo '<div class="row">';
+    echo '<div class="row no-gutters">';
     echo '<div class="col-12 alert alert-danger" role="alert">'.$ww->EditmyprofileError;
     echo "<ul>";
     foreach ($vars['errors'] as $error)
@@ -62,4 +62,3 @@ if (isset($vars['errors']) and count($vars['errors']) > 0) {
     }
     $vars['errors'] = array();
 }
-?>

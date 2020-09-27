@@ -256,7 +256,7 @@ $words = new MOD_words();
                         }
                         adminUnits.append(html);
                         adminUnits.select2({
-                            theme: 'bootstrap',
+                            theme: 'bootstrap4',
                             containerCssClass: 'form-control'
                         });
                     });
@@ -280,7 +280,7 @@ $words = new MOD_words();
                         }
                         places.append(html);
                         places.select2({
-                            theme: 'bootstrap',
+                            theme: 'bootstrap4',
                             containerCssClass: 'form-control'
                         });
                     });

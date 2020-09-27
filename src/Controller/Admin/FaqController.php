@@ -36,9 +36,15 @@ class FaqController extends FaqBaseController
      */
     private $faqModel;
 
-    public function __construct(FaqModel $faqModel)
+    /**
+     * @var TranslationModel
+     */
+    private $translationModel;
+
+    public function __construct(FaqModel $faqModel, TranslationModel $translationModel)
     {
         $this->faqModel = $faqModel;
+        $this->translationModel = $translationModel;
     }
 
     /**
@@ -111,7 +117,7 @@ class FaqController extends FaqBaseController
      *
      * @return RedirectResponse|Response
      */
-    public function createFaqInCategory(Request $request, FaqCategory $faqCategory, TranslationModel $translationModel)
+    public function createFaqInCategory(Request $request, FaqCategory $faqCategory)
     {
         if (!$this->isGranted(Member::ROLE_ADMIN_FAQ)) {
             throw $this->createAccessDeniedException('You need to have Faq right to access this.');
@@ -129,8 +135,8 @@ class FaqController extends FaqBaseController
             $data = $faqForm->getData();
 
             $wordRepository = $em->getRepository(Word::class);
-            $checkQuestion = $wordRepository->findBy(['code' => 'FaqQ_' . $data->wordCode, 'shortCode' => 'en']);
-            $checkAnswer = $wordRepository->findBy(['code' => 'FaqA_' . $data->wordCode, 'shortCode' => 'en']);
+            $checkQuestion = $wordRepository->findBy(['code' => 'faqq_' . $data->wordCode, 'shortCode' => 'en']);
+            $checkAnswer = $wordRepository->findBy(['code' => 'faqa_' . $data->wordCode, 'shortCode' => 'en']);
             $valid = (empty($checkQuestion) && empty($checkAnswer));
             if ($valid) {
                 /** @var Member $author */
@@ -142,7 +148,7 @@ class FaqController extends FaqBaseController
                 $question = new Word();
                 $question->setAuthor($author);
                 $question->setDomain(DomainType::MESSAGES);
-                $question->setCode('FaqQ_' . $data->wordCode);
+                $question->setCode('faqq_' . $data->wordCode);
                 $question->setSentence($data->question);
                 $question->setlanguage($english);
                 $question->setCreated(new DateTime());
@@ -152,11 +158,11 @@ class FaqController extends FaqBaseController
                 $answer = new Word();
                 $answer->setAuthor($author);
                 $answer->setDomain(DomainType::MESSAGES);
-                $answer->setCode('FaqA_' . $data->wordCode);
-                $answer->setSentence($data->question);
+                $answer->setCode('faqa_' . $data->wordCode);
+                $answer->setSentence($data->answer);
                 $answer->setlanguage($english);
                 $answer->setCreated(new DateTime());
-                $answer->setDescription('FAQ Question');
+                $answer->setDescription('FAQ Answer');
                 $em->persist($answer);
 
                 $faq = new Faq();
@@ -166,8 +172,8 @@ class FaqController extends FaqBaseController
                 $em->persist($faq);
                 $em->flush();
 
-                $translationModel->removeCacheFiles('en');
                 $this->addFlash('notice', "Faq '{$data->wordCode}' created.");
+                $this->translationModel->refreshTranslationsCache();
 
                 return $this->redirectToRoute('admin_faqs_overview', ['categoryId' => $faqCategory->getId()]);
             }
@@ -247,8 +253,8 @@ class FaqController extends FaqBaseController
 
             /** @var EntityRepository $wordRepository */
             $wordRepository = $em->getRepository(Word::class);
-            $question = $wordRepository->findOneBy(['code' => 'FaqQ_' . $data->wordCode, 'shortCode' => 'en']);
-            $answer = $wordRepository->findOneBy(['code' => 'FaqA_' . $data->wordCode, 'shortCode' => 'en']);
+            $question = $wordRepository->findOneBy(['code' => 'faqq_' . $data->wordCode, 'shortCode' => 'en']);
+            $answer = $wordRepository->findOneBy(['code' => 'faqa_' . $data->wordCode, 'shortCode' => 'en']);
 
             $question
                 ->setSentence($data->question)
@@ -261,6 +267,7 @@ class FaqController extends FaqBaseController
             $em->flush();
 
             $this->addFlash('notice', 'Update FAQ ' . $faq->getQAndA());
+            $this->translationModel->refreshTranslationsCache();
 
             return $this->redirectToRoute('admin_faqs_overview', ['categoryId' => $faq->getCategory()->getId()]);
         }
@@ -274,7 +281,7 @@ class FaqController extends FaqBaseController
                 ],
                 'faqCategory' => $faq->getCategory(),
                 'form' => $faqForm->createView(),
-                'edit' => false,
+                'edit' => true,
             ]
         );
     }

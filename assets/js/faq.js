@@ -16,3 +16,18 @@ document.addEventListener('DOMContentLoaded', function () {
         .toggleClass('fa-minus-circle');
     });
   });
+
+window.addEventListener('hashchange', openHash);
+
+function openHash()
+{
+    // Alerts every time the hash changes!
+    let hash = location.hash;
+    $(hash).click();
+    $(document).scrollTop($(hash).offset().top);
+}
+
+$(function () {
+    // Trigger the event (useful on page load).
+    openHash();
+});

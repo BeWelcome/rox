@@ -29,15 +29,10 @@ class FaqFormType extends AbstractType
             ])
             ->add('question', CkEditorType::class, [
                 'label' => 'label.admin.faq.question',
-                'attr' => [
-                    'class' => 'editor',
-                ],
+                'async' => true,
             ])
             ->add('answer', CkEditorType::class, [
                 'label' => 'label.admin.faq.answer',
-                'attr' => [
-                    'class' => 'editor',
-                ],
             ])
             ->add('active', CheckboxType::class, [
                 'label' => 'label.admin.faq.active',

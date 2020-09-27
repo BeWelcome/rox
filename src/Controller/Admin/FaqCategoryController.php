@@ -32,9 +32,15 @@ class FaqCategoryController extends FaqBaseController
      */
     private $faqModel;
 
-    public function __construct(FaqModel $faqModel)
+    /**
+     * @var TranslationModel
+     */
+    private $translationModel;
+
+    public function __construct(FaqModel $faqModel, TranslationModel $translationModel)
     {
         $this->faqModel = $faqModel;
+        $this->translationModel = $translationModel;
     }
 
     /**
@@ -44,7 +50,7 @@ class FaqCategoryController extends FaqBaseController
      *
      * @return Response
      */
-    public function createCategoryAction(Request $request, TranslationModel $translationModel)
+    public function createCategoryAction(Request $request)
     {
         if (!$this->isGranted(Member::ROLE_ADMIN_FAQ)) {
             throw $this->createAccessDeniedException('You need to have Faq right to access this.');
@@ -86,8 +92,8 @@ class FaqCategoryController extends FaqBaseController
                 $em->persist($faqCategory);
                 $em->flush();
 
-                $translationModel->removeCacheFiles('en');
                 $this->addFlash('notice', "Faq category '{$data->wordCode}' created.");
+                $this->translationModel->refreshTranslationsCache();
 
                 return $this->redirectToRoute('admin_faqs_overview', ['categoryId' => $faqCategory->getId()]);
             }
@@ -114,7 +120,7 @@ class FaqCategoryController extends FaqBaseController
      *
      * @return Response
      */
-    public function editCategoryAction(Request $request, FaqCategory $faqCategory, TranslationModel $translationModel)
+    public function editCategoryAction(Request $request, FaqCategory $faqCategory)
     {
         if (!$this->isGranted(Member::ROLE_ADMIN_FAQ)) {
             throw $this->createAccessDeniedException('You need to have Faq right to access this.');
@@ -135,7 +141,10 @@ class FaqCategoryController extends FaqBaseController
             $description->setSentence($data->description);
             $em->persist($description);
             $em->flush();
-            $translationModel->removeCacheFiles('en');
+            $this->translationModel->refreshTranslationsCacheForLocale('en');
+            if ('en' !== $request->getLocale()) {
+                $this->translationModel->refreshTranslationsCacheForLocale($request->getLocale());
+            }
 
             return $this->redirectToRoute('admin_faqs_overview', ['categoryId' => $faqCategory->getId()]);
         }

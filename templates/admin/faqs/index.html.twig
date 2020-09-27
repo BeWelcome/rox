@@ -11,7 +11,7 @@
 {% endblock stylesheets %}
 
 {% block content %}
-    <h1>{{ faqCategory.description | trans({}, 'messages', 'en') }}<a class="float-right" href="{{ path('admin_faqs_category_edit', {'id' : faqCategory.id}) }}"><button class="btn btn-primary">{{ 'button.edit' | trans }}</button></a></h1>
+    <h1>{{ faqCategory.description | lower | trans({}, 'messages', 'en') }}<a class="float-right" href="{{ path('admin_faqs_category_edit', {'id' : faqCategory.id}) }}"><button class="btn btn-primary">{{ 'button.edit' | trans }}</button></a></h1>
     {% if faqs|length == 0 %}
         <p>{{ 'faqs.none' | trans }}</p>
         <p>{{ 'faqs.none.create' | trans }}<a class="float-right" href="{{ path('admin_faqs_faq_create', {'categoryId' : faqCategory.id}) }}"><button class="btn btn-primary">{{ 'faqs.button.create' | trans }}</button></a></p>
@@ -32,10 +32,10 @@
             {% for faq in faqs %}
                 <div id="faq_{{ faq.id }}" class="card mb-1 {% if faq.Active == "Not Active" %}bg-secondary{% endif %}">
                     <div class="card-body">
-                        <p class="card-title"><small {% if faq.Active == "Active" %}class="text-muted"{% endif %}>{{ faq.QandA }}</small></p>
-                        <p class="card-text">{{ faq.Question|truncate(50) }}</p>
-                        <p class="card-text">{{ faq.Answer|truncate(50) }}</p>
-                        <a class="btn btn-primary float-right" href="{{ path('admin_faqs_faq_edit', {'id' : faq.id}) }}">{{ 'faqs.button.edit' | trans }}</a>
+                        <small {% if faq.Active == "Active" %}class="text-muted card-title"{% endif %}>{{ faq.QandA }}</small>
+                        <div class="card-text"><em>Q: </em>{{ ('faqq_' ~ faq.QandA)|lower|trans|truncate(50)|purify }}</div>
+                        <div class="card-text"><em>A: </em>{{ ('faqa_' ~ faq.QandA)|lower|trans|truncate(100)|purify }}</div>
+                        <a class="btn btn-sm btn-primary float-right" href="{{ path('admin_faqs_faq_edit', {'id' : faq.id}) }}">{{ 'faqs.button.edit' | trans }}</a>
                     </div>
                 </div>
             {% endfor %}

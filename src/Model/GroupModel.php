@@ -364,10 +364,25 @@ class GroupModel
     /**
      * @param Member[] $admins
      */
-    public function sendAdminNotification(Group $group, Member $member, $admins)
+    public function sendAdminNotificationDeclined(Group $group, Member $member, $admins)
     {
         foreach ($admins as $admin) {
-            $this->mailer->sendGroupEmail($admin, 'group/accept.invite', [
+            $this->mailer->sendGroupEmail($admin, 'group/declined.invite', [
+                'subject' => 'group.invitation.declined',
+                'group' => $group,
+                'invitee' => $member,
+                'admin' => $admin,
+            ]);
+        }
+    }
+
+    /**
+     * @param Member[] $admins
+     */
+    public function sendAdminNotificationAccepted(Group $group, Member $member, $admins)
+    {
+        foreach ($admins as $admin) {
+            $this->mailer->sendGroupEmail($admin, 'group/accepted.invite', [
                 'subject' => 'group.invitation.accepted',
                 'group' => $group,
                 'invitee' => $member,

@@ -330,7 +330,7 @@ class GroupsController extends RoxControllerBase
             exit;
         }
         $invitedby = $this->_model->getLoggedInMember();
-        if ( !$invitedby || ($group->Status != 'Public' && !$group->isGroupOwner($invitedby)))
+        if ( !$invitedby || ($group->Type != 'Public' && !$group->isGroupOwner($invitedby)))
         {
             header('Status: 500 Fudged it');
             exit;
@@ -358,7 +358,7 @@ class GroupsController extends RoxControllerBase
         if (!empty($vars['member_id']) && !empty($vars['group_id']) && ($group = $this->_model->findGroup($vars['group_id'])))
         {
             $invitedby = $this->_model->getLoggedInMember();
-            if (!($group->Status != 'Public' && !$group->isGroupOwner($invitedby)) && $this->_model->inviteMember($group, $vars['member_id']))
+            if (!($group->Type != 'Public' && !$group->isGroupOwner($invitedby)) && $this->_model->inviteMember($group, $vars['member_id']))
             {
                 $this->logWrite("Member #{$vars['member_id']} was invited to group #{$group->getPKValue()} by member #{$this->_model->getLoggedInMember()->getPKValue()}");
                 $this->_model->sendInvitation($group, $vars['member_id'], $this->_model->getLoggedInMember());

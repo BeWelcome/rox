@@ -60,7 +60,22 @@ class TranslationController extends AbstractController
                 'template' => 'emails/reply_from_host.html.twig',
             ],
             'group invitation' => [
-                'template' => 'emails/group.invitation.html.twig',
+                'template' => 'emails/group/invitation.html.twig',
+            ],
+            'group want in' => [
+                'template' => 'emails/group/wantin.html.twig',
+            ],
+            'accepted invite' => [
+                'template' => 'emails/group/accepted.invite.html.twig',
+            ],
+            'declined invite' => [
+                'template' => 'emails/group/declined.invite.html.twig',
+            ],
+            'join approved' => [
+                'template' => 'emails/group/join.approved.html.twig',
+            ],
+            'join declined' => [
+                'template' => 'emails/group/join.declined.html.twig',
             ],
         ],
         'pages' => [
@@ -789,7 +804,13 @@ class TranslationController extends AbstractController
                 $params['receiverLocale'] = 'en';
                 $params['changed'] = true;
                 break;
-            case 'emails/group.invitation.html.twig':
+            case 'emails/group/invitation.html.twig':
+            case 'emails/group/accepted.invite.html.twig':
+            case 'emails/group/approve.join.html.twig':
+            case 'emails/group/declined.invite.html.twig':
+            case 'emails/group/wantin.html.twig':
+            case 'emails/group/join.approved.html.twig':
+            case 'emails/group/join.declined.html.twig':
                 $params['sender'] = $bwadmin;
                 $params['receiver'] = $this->getUser();
                 $params['group'] = $group;

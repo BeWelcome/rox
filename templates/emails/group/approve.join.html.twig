@@ -1,5 +1,7 @@
 {% extends 'emails/email.html.twig' %}
 
 {% block content %}
-    {% include '_partials/group/approve.join.html.twig' %}
+    <p>
+        {{ 'group.join.approve'| trans({'admin': admin.Username, 'group': '<a href="' ~ url('group_start', {'groupId': group.id}) ~ '">' ~ group.Name ~ '</a>'} %}) }}
+    </p>
 {% endblock content %}

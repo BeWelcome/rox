@@ -5,7 +5,6 @@
     "type": "project",
     "license": "GPL",
     "require": {
-        "ext-curl": "*",
         "ext-fileinfo": "*",
         "ext-gd": "*",
         "ext-json": "*",

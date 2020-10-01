@@ -29,7 +29,7 @@
             ({ 'faqa_purposeofcomment.contact.us' : '<a href="' ~ url('safety_contact') ~ '">' ~ 'faqa_purposeofcomment.contact.us'|trans ~ '</a>' })
             | purify }}
         </p>
-        <p><a class="btn btn-outline-primary" href="{{ path('about_faq_category', {'category' : '0', '_fragment': 'question6'}) }}"><i class="fa fa-user-shield mr-1"></i>{{'safety_learnaboutfaq' | trans }}</a></p>
+        <p><a class="btn btn-outline-primary" href="{{ path('faqs_overview', {'categoryId' : '1', '_fragment': 'question3'}) }}"><i class="fa fa-user-shield mr-1"></i>{{'safety_learnaboutfaq' | trans }}</a></p>
 
         <h5>{{ 'faqq_commentguidelines' | trans }}</h5>
         <p>{{ 'faqa_commentguidelines' | trans 

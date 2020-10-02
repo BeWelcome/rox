@@ -74,8 +74,8 @@ class TripController extends AbstractController
 
         if ($createForm->isSubmitted() && $createForm->isValid()) {
             $trip
-                ->setCreatedAt(new DateTime())
-                ->setCreatedBy($this->getUser());
+                ->setCreated(new DateTime())
+                ->setCreator($this->getUser());
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($trip);
@@ -105,7 +105,7 @@ class TripController extends AbstractController
     public function updateAction(Request $request, Trip $trip)
     {
         $member = $this->getUser();
-        if ($trip->getCreatedBy() !== $member) {
+        if ($trip->getCreator() !== $member) {
             throw new AccessDeniedException();
         }
 
@@ -115,7 +115,7 @@ class TripController extends AbstractController
 
         if ($updateForm->isSubmitted() && $updateForm->isValid()) {
             $trip
-                ->setUpdatedAt(new DateTime());
+                ->setUpdated(new DateTime());
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($trip);

@@ -7,12 +7,14 @@
 
 namespace App\Entity;
 
+use Carbon\Carbon;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * SubTrip.
  *
- * @ORM\Table(name="sub_trips", indexes={@ORM\Index(name="trip_id_idx", columns={"trip_id"})})
+ * @ORM\Table(name="sub_trips")
  * @ORM\Entity
  *
  * @SuppressWarnings(PHPMD)
@@ -21,23 +23,24 @@ use Doctrine\ORM\Mapping as ORM;
 class SubTrip
 {
     /**
-     * @var int
+     * @var Location
      *
-     * @ORM\Column(name="geonameId", type="integer", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Location")
+     * @ORM\JoinColumn(name="location", referencedColumnName="geonameId")
      */
-    private $geonameid;
+    private $location;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
-     * @ORM\Column(name="arrival", type="date", nullable=true)
+     * @ORM\Column(name="arrival", type="date")
      */
     private $arrival;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
-     * @ORM\Column(name="departure", type="date", nullable=true)
+     * @ORM\Column(name="departure", type="date")
      */
     private $departure;
 
@@ -65,86 +68,43 @@ class SubTrip
      */
     private $trip;
 
-    /**
-     * Set geonameid.
-     *
-     * @param int $geonameid
-     *
-     * @return SubTrip
-     */
-    public function setSearchGeonameId($geonameid)
+    public function setLocation(Location $location): self
     {
-        $this->geonameid = $geonameid;
+        $this->location = $location;
 
         return $this;
     }
 
-    /**
-     * Get geonameid.
-     *
-     * @return int
-     */
-    public function getSearchGeonameId()
+    public function getLocation(): Location
     {
-        return $this->geonameid;
+        return $this->location;
     }
 
-    /**
-     * Set arrival.
-     *
-     * @param \DateTime $arrival
-     *
-     * @return SubTrip
-     */
-    public function setArrival($arrival)
+    public function setArrival(DateTime $arrival): self
     {
         $this->arrival = $arrival;
 
         return $this;
     }
 
-    /**
-     * Get arrival.
-     *
-     * @return \DateTime
-     */
-    public function getArrival()
+    public function getArrival(): Carbon
     {
-        return $this->arrival;
+        return Carbon::instance($this->arrival);
     }
 
-    /**
-     * Set departure.
-     *
-     * @param \DateTime $departure
-     *
-     * @return SubTrip
-     */
-    public function setDeparture($departure)
+    public function setDeparture(DateTime $departure): self
     {
         $this->departure = $departure;
 
         return $this;
     }
 
-    /**
-     * Get departure.
-     *
-     * @return \DateTime
-     */
-    public function getDeparture()
+    public function getDeparture(): Carbon
     {
-        return $this->departure;
+        return Carbon::instance($this->departure);
     }
 
-    /**
-     * Set options.
-     *
-     * @param array $options
-     *
-     * @return SubTrip
-     */
-    public function setOptions($options)
+    public function setOptions(array $options): self
     {
         $optionsValue = 0;
         foreach ($options as $key => $value) {
@@ -155,71 +115,25 @@ class SubTrip
         return $this;
     }
 
-    /**
-     * Get options.
-     *
-     * @return int
-     */
-    public function getOptions()
+    public function getOptions(): int
     {
         return $this->options;
     }
 
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * Set trip.
-     *
-     * @param Trip $trip
-     *
-     * @return SubTrip
-     */
-    public function setTrip(Trip $trip = null)
+    public function setTrip(Trip $trip): self
     {
         $this->trip = $trip;
 
         return $this;
     }
 
-    /**
-     * Get trip.
-     *
-     * @return Trip
-     */
-    public function getTrip()
+    public function getTrip(): Trip
     {
         return $this->trip;
-    }
-
-    /**
-     * Set geonameid.
-     *
-     * @param int $geonameid
-     *
-     * @return SubTrip
-     */
-    public function setGeonameid($geonameid)
-    {
-        $this->geonameid = $geonameid;
-
-        return $this;
-    }
-
-    /**
-     * Get geonameid.
-     *
-     * @return int
-     */
-    public function getGeonameid()
-    {
-        return $this->geonameid;
     }
 }

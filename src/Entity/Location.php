@@ -92,7 +92,7 @@ class Location
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $geonameid;
+    private $geonameId;
 
     /**
      * Set name.
@@ -315,21 +315,21 @@ class Location
      *
      * @return int
      */
-    public function getGeonameid()
+    public function getGeonameId()
     {
-        return $this->geonameid;
+        return $this->geonameId;
     }
 
     /**
      * Set geonameid.
      *
-     * @param int $geonameid
+     * @param int $geonameId
      *
      * @return Location
      */
-    public function setGeonameId($geonameid)
+    public function setGeonameId($geonameId)
     {
-        $this->geonameid = $geonameid;
+        $this->geonameId = $geonameId;
 
         return $this;
     }

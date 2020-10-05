@@ -70,7 +70,7 @@ RUN set -eux; \
 # https://github.com/nodejs/docker-node/issues/1126
 RUN set -eux; \
 	echo "@edge http://nl.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories; \
-	apk add --no-cache npm@edge
+	apk add --no-cache yarn@edge
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
@@ -124,9 +124,9 @@ RUN set -eux; \
 	composer clear-cache
 
 # prevent the reinstallation of node_modules at every changes in the source code
-COPY package.json package-lock.json webpack.config.js ./
+COPY package.json yarn.lock webpack.config.js ./
 RUN set -eux; \
-	npm install; \
+	yarn install --frozen-lock; \
 	./node_modules/.bin/encore production --mode=production
 
 # do not use .env files in production

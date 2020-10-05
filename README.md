@@ -66,7 +66,7 @@ composer install
 Also run
 
 ```bash
-npm install
+yarn install --frozen-lock
 ```
 
 everytime you see a change in either ```package.json``` or ```package-lock.json```.

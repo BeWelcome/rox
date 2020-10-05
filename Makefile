@@ -42,13 +42,13 @@ phpcsfix:
 	./vendor/bin/phpcbf $(SRC_DIR)
 	./vendor/bin/php-cs-fixer fix -v
 
-deploy: composer npm encore assets
+deploy: composer yarn encore assets
 
 composer:
 	composer install
 
-npm:
-	npm install
+yarn:
+	yarn install
 
 encore:
 	./node_modules/.bin/encore production

@@ -45,7 +45,7 @@ Wait a few minutes for containers to build and start (it might take awhile). Pro
     ```bash
     $ make install-geonames root=1
     ```
-    
+
 Please read [Useful hints](#useful-hints) section below.
 
 ## B) Installation step by step of BW-Rox (GNU/Linux)
@@ -63,12 +63,13 @@ using a browser or use curl _url_ > _filename_.
 * PHP version >= 7.3
 * PHP GD lib enabled
 * PHP magic quotes gpc disabled
-* PHP extensions: mbstring, dom, fileinfo, intl, xsl, xmlrpc, 
+* PHP extensions: mbstring, dom, fileinfo, intl, xsl, xmlrpc,
 * MariaDB >=10.1
 * [symfony command line interface](https://symfony.com/download) (download/setup)
 * SMTP server for email features
 * [Composer](https://www.getcomposer.org) Latest version (installed globally)
 * [Node.js](https://nodejs.org/) Latest version (installed globally)
+* [yarn](https://classic.yarnpkg.com/en/docs/install/) Latest version
 * [Sphinxsearch](http://sphinxsearch.com/) (can be omitted but member search will be slow and forum search won't work)
 * wget (if you want to follow the instructions word to word) otherwise curl and the -o parameter should be your friend
 
@@ -78,7 +79,7 @@ using a browser or use curl _url_ > _filename_.
 
     ```bash
     $ composer install
-    $ npm install
+    $ yarn
     ```
 
 2.  Initialize the database.

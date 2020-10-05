@@ -32,7 +32,7 @@ if [ "$1" = 'php-fpm' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ]; then
 
 	if [ "$APP_ENV" != 'prod' ]; then
 		composer install --prefer-dist --no-progress --no-suggest --no-interaction --no-scripts
-		npm install
+		yarn install --frozen-lock
 	fi
 
 	echo "Waiting for db to be ready..."

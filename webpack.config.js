@@ -1,7 +1,10 @@
+let Encore = require('@symfony/webpack-encore');
+
 const CKEditorWebpackPlugin = require('@ckeditor/ckeditor5-dev-webpack-plugin');
 const {styles} = require('@ckeditor/ckeditor5-dev-utils');
-
-let Encore = require('@symfony/webpack-encore');
+const PurgeCssPlugin = require('purgecss-webpack-plugin');
+const glob = require('glob-all');
+const path = require('path');
 
 // Manually configure the runtime environment if not already configured yet by the "encore" command.
 // It's useful when you use tools that rely on webpack.config.js file.
@@ -50,6 +53,7 @@ Encore
     .addEntry('roxeditor', './assets/js/roxeditor.js')
     .addEntry('rangeslider', './assets/js/rangeslider.js')
     .addEntry('faq', './assets/js/faq.js')
+    .addEntry('addtohomescreen', './assets/js/addtohomescreen.js')
     .autoProvidejQuery()
     //    .addEntry('roxinlineeditor', './assets/js/roxinlineeditor.js')
 
@@ -71,16 +75,17 @@ Encore
         'animation.gsap': 'scrollmagic/scrollmagic/minified/plugins/animation.gsap.min.js',
         'debug.addIndicators': 'scrollmagic/scrollmagic/minified/plugins/debug.addIndicators.min.js'
     })
-//    .addLoader({
-//        test: require.resolve('jquery'),
-//        use: [{
-//            loader: 'expose-loader',
-//            options: 'jQuery'
-//        }, {
-//          loader: 'expose-loader',
-//            options: '$'
-//        }]
-//    })
+    // .addPlugin(new PurgeCssPlugin({
+    //    paths: glob.sync([
+    //        path.join(__dirname, 'templates/**/*.html.twig'),
+    //         path.join(__dirname, 'assets/js/*.js'),
+    //         path.join(__dirname, 'build/**/*.php'),
+    //     ]),
+    //     content: ["**/*.twig", "**/*.js", "**/*.php"],
+    //     defaultExtractor: (content) => {
+    //        return content.match(/[\w-/:]+(?<!:)/g) || [];
+    //     }
+    //}))
     .addLoader({
         test: require.resolve('select2'),
         use: "imports-loader?define=>false"
@@ -112,7 +117,6 @@ Encore
 
 const assetsConfig = Encore.getWebpackConfig();
 
-const path = require('path');
 const WorkboxPlugin = require('workbox-webpack-plugin');
 
 workboxConfig = {

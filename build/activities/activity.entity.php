@@ -189,7 +189,7 @@ class Activity extends RoxEntityBase
         if ($publicOnly) {
             $sql .= "public = 1 AND ";
         }
-        $sql .= "a.locationId = g.geonameid AND g.name LIKE '%" . $keywordEscaped . "%' ";
+        $sql .= "a.locationId = g.geonameId AND g.name LIKE '%" . $keywordEscaped . "%' ";
         $sql .= "UNION ";
 
         // Add results for countries (english names only sorry)
@@ -197,7 +197,7 @@ class Activity extends RoxEntityBase
         if ($publicOnly) {
             $sql .= "public = 1 AND ";
         }
-        $sql .= "a.locationId = g.geonameid AND g.country = gc.country AND gc.name LIKE '%" . $keywordEscaped . "%' ";
+        $sql .= "a.locationId = g.geonameId AND g.country = gc.country AND gc.name LIKE '%" . $keywordEscaped . "%' ";
         $sql .= ") AS r ORDER BY r.dateTimeEnd DESC LIMIT " . $items . " OFFSET " . ($pageno * $items);
         return $this->findBySQLMany($sql);
     }
@@ -224,13 +224,13 @@ class Activity extends RoxEntityBase
         if ($publicOnly) {
             $sql .= "public = 1 AND ";
         }
-        $sql .= "a.locationId = g.geonameid AND g.name LIKE '%" . $keywordEscaped . "%' ";
+        $sql .= "a.locationId = g.geonameId AND g.name LIKE '%" . $keywordEscaped . "%' ";
         $sql .= "UNION ";
         $sql .= "SELECT a.* FROM activities AS a, geonames AS g, geonamescountries AS gc WHERE ";
         if ($publicOnly) {
             $sql .= "public = 1 AND ";
         }
-        $sql .= "a.locationId = g.geonameid AND g.country = gc.country AND gc.name LIKE '%" . $keywordEscaped . "%' ";
+        $sql .= "a.locationId = g.geonameId AND g.country = gc.country AND gc.name LIKE '%" . $keywordEscaped . "%' ";
         $sql .= ") AS r";
         return $this->sqlCount($sql);
     }

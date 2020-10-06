@@ -29,23 +29,23 @@ class Places extends RoxModelBase {
     private function getCityName($geonameid) {
         $query = "SELECT *  FROM (
                 SELECT
-                    g.geonameid geonameid, g.name name, 0 ispreferred, 0 isshort, 'geo' source
+                    g.geonameId geonameId, g.name name, 0 ispreferred, 0 isshort, 'geo' source
                 FROM
                     geonames g
                 WHERE
-                    geonameid = {$geonameid}
+                    geonameId = {$geonameid}
                 UNION SELECT
-                    a.geonameid geonameid, a.alternatename name, ispreferred, isshort, 'alt' source
+                    a.geonameId geonameId, a.alternatename name, ispreferred, isshort, 'alt' source
                 FROM
                     geonamesalternatenames a
                 WHERE
-                    geonameid = {$geonameid}
+                    geonameId = {$geonameid}
                     AND isolanguage = '{$this->lang}'
                 ORDER BY
-                    geonameid, ispreferred DESC, isshort DESC, source, name
+                    geonameId, ispreferred DESC, isshort DESC, source, name
             ) geo
             GROUP BY
-                geonameid";
+                geonameId";
         $result = $this->dao->query($query);
         if (!$result) {
             return false;
@@ -93,7 +93,7 @@ class Places extends RoxModelBase {
             WHERE
                 m.status = 'Active'
                 AND m.MaxGuest >= 1
-                AND m.IdCity = g.geonameid
+                AND m.IdCity = g.geonameId
                 AND g.country = '%s'", $this->dao->escape($country));
         $row = $this->singleLookup($countQuery);
         return $row->cnt;
@@ -113,7 +113,7 @@ class Places extends RoxModelBase {
             WHERE
                 m.status = 'Active'
                 AND m.MaxGuest >= 1
-                AND m.IdCity = g.geonameid
+                AND m.IdCity = g.geonameId
                 AND g.country = '%s'
                 AND g.admin1 = '%s'", $this->dao->escape($country), $this->dao->escape($admin1));
         $row = $this->singleLookup($countQuery);
@@ -121,7 +121,7 @@ class Places extends RoxModelBase {
     }
 
     /**
-     * get count of all members for a given city (geonameid)
+     * get count of all members for a given city (geonameId)
      *
      */
     private function getTotalMemberCountCity($city) {
@@ -186,7 +186,7 @@ class Places extends RoxModelBase {
             WHERE
                 m.Status = 'Active'
                 AND m.MaxGuest >= 1
-                AND m.idCity = g.geonameid
+                AND m.idCity = g.geonameId
                 AND g.admin1 = '%2\$s'
                 AND g.country = '%1\$s'
                 AND g.fclass = 'P'
@@ -214,8 +214,8 @@ class Places extends RoxModelBase {
             WHERE
                 m.Status = 'Active'
                 AND m.MaxGuest >= 1
-                AND m.IdCity = g.geonameid
-                AND g.geonameid = '%s'
+                AND m.IdCity = g.geonameId
+                AND g.geonameId = '%s'
             ORDER BY
                 m.Accomodation ASC, HasProfileSummary DESC, m.LastLogin DESC",
             $this->dao->escape($cityCode));
@@ -259,7 +259,7 @@ class Places extends RoxModelBase {
             WHERE
                 m.Status = 'Active'
                 AND m.MaxGuest >= 1
-                AND m.IdCity = g.geonameid
+                AND m.IdCity = g.geonameId
                 AND g.fclass = 'P'
                 AND g.country = c.country
             GROUP BY
@@ -288,7 +288,7 @@ class Places extends RoxModelBase {
                 geonamescountries c,
                 geonamesalternatenames a
             WHERE
-                a.geonameid = c.geonameid
+                a.geonameId = c.geonameId
                 AND a.isolanguage = '" . $this->dao->escape($this->lang) . "'
                 AND a.isHistoric = 0
             UNION SELECT
@@ -353,7 +353,7 @@ class Places extends RoxModelBase {
                 geonames ga,
                 geonamesalternatenames a
             WHERE
-                ga.geonameid = a.geonameid
+                ga.geonameId = a.geonameId
                 AND ga.country = '%1\$s'
                 AND ga.fcode = 'ADM1'
                 AND a.isoLanguage = '%2\$s'
@@ -386,7 +386,7 @@ class Places extends RoxModelBase {
             WHERE
                 g.country = '%1\$s'
                 AND g.fclass = 'P'
-                AND g.geonameid = m.IdCity
+                AND g.geonameId = m.IdCity
                 AND m.Status = 'Active'
                 AND m.MaxGuest >= 1
             GROUP BY
@@ -443,10 +443,10 @@ class Places extends RoxModelBase {
         // get all cities for a given region
         // use MYSQL specific query trick to get only the first interesting result
         $query = sprintf("SELECT * FROM (
-            SELECT geonameid, city, ispreferred,isshort, source,count(m.id) NbMember
+            SELECT geonameId, city, ispreferred,isshort, source,count(m.id) NbMember
             FROM (
                 SELECT * from (
-                    SELECT g.geonameid geonameid, a.alternatename city,
+                    SELECT g.geonameId geonameId, a.alternatename city,
                         a.ispreferred ispreferred, a.isshort isshort, 'alt' source
                     FROM
                         geonamesalternatenames a,
@@ -454,34 +454,34 @@ class Places extends RoxModelBase {
                     WHERE
                         g.country = '%1\$s'
                         AND g.admin1 = '%2\$s'
-                        AND g.geonameid = a.geonameid
+                        AND g.geonameId = a.geonameId
                         AND a.isoLanguage = '%3\$s'
                     ORDER BY isshort DESC, ispreferred DESC
                 ) allA
-            GROUP BY geonameid
+            GROUP BY geonameId
             ) AByGid,
             members m
-            WHERE m.idcity = AByGid.geonameid
+            WHERE m.idcity = AByGid.geonameId
                 AND m.status = 'Active'
                 AND m.MaxGuest >= 1
-            GROUP BY geonameid
+            GROUP BY geonameId
             UNION SELECT
-                g.geonameid g, g.name AS city, 0 ispreferred, 0 isshort, 'geo' source, COUNT(m.id) NbMember
+                g.geonameId g, g.name AS city, 0 ispreferred, 0 isshort, 'geo' source, COUNT(m.id) NbMember
             FROM
                 geonames g,
                 members m
             WHERE
                 g.country = '%1\$s'
                 AND g.admin1 = '%2\$s'
-                AND g.geonameid = m.IdCity
+                AND g.geonameId = m.IdCity
                 AND m.status = 'Active'
                 AND m.MaxGuest >= 1
             GROUP BY
-                geonameid
+                geonameId
             ORDER BY
-                geonameid, isshort DESC, ispreferred DESC, source ASC, city ASC) ag
+                geonameId, isshort DESC, ispreferred DESC, source ASC, city ASC) ag
             GROUP BY
-                geonameid
+                geonameId
             ", $this->dao->escape($countrycode), $this->dao->escape($regioncode), $this->dao->escape($this->lang));
         $result = $this->dao->query($query);
         if (!$result) {

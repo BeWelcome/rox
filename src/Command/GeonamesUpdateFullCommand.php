@@ -22,7 +22,11 @@ class GeonamesUpdateFullCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        $io->success('You have a new command! Now make it your own! Pass --help to see your options.');
+        file_put_contents( 'allCountries.zip',file_get_contents('http://download.geonames.org/export/dump/allCountries.zip'));
+
+        $io->success('Updated the geonames databases to current state.');
+
+        $io->note('The following geonames id are missing for members:');
 
         return 0;
     }

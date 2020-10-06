@@ -88,7 +88,7 @@ class Location
     /**
      * @var int
      *
-     * @ORM\Column(name="geonameid", type="integer")
+     * @ORM\Column(name="geonameId", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
@@ -311,7 +311,7 @@ class Location
     }
 
     /**
-     * Get geonameid.
+     * Get geonameId.
      *
      * @return int
      */
@@ -321,7 +321,7 @@ class Location
     }
 
     /**
-     * Set geonameid.
+     * Set geonameId.
      *
      * @param int $geonameId
      *

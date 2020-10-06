@@ -56,7 +56,7 @@ class Address
      * @var Location
      *
      * @ORM\ManyToOne(targetEntity="Location")
-     * @ORM\JoinColumn(name="IdCity", referencedColumnName="geonameid")
+     * @ORM\JoinColumn(name="IdCity", referencedColumnName="geonameId")
      */
     private $location;
 

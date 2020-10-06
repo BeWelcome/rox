@@ -41,11 +41,11 @@ function removeHighlight() {
 /**
  * called when an user click on a result of the list, to update the marker.
  * */
-function setMap(geonameid, latitude, longitude, zoom, geonamename, countryname, countrycode, admincode) {
-    setGeonameIdInFormBlog(geonameid, latitude, longitude, geonamename, countryname, countrycode, admincode);
+function setMap(geonameId, latitude, longitude, zoom, geonamename, countryname, countrycode, admincode) {
+    setGeonameIdInFormBlog(geonameId, latitude, longitude, geonamename, countryname, countrycode, admincode);
     changeMarkerBlog(latitude, longitude, zoom, decodeURIComponent(geonamename) + ', ' + decodeURIComponent(countryname));
     removeHighlight();
-    Element.setStyle($('li_'+geonameid), {
+    Element.setStyle($('li_'+geonameId), {
         fontWeight: 'bold',
         backgroundColor: '#ffffff',
         backgroundImage: 'url(images/icons/tick.png)'
@@ -67,8 +67,8 @@ function changeMarkerBlog(markerLatitude, markerLongitude, zoomLevel, markerDesc
   }
 }
 
-function setGeonameIdInFormBlog(geonameid, latitude, longitude, geonamename, countrycode, admincode) {
-    jQuery('#geonameid').val(geonameid);
+function setGeonameIdInFormBlog(geonameId, latitude, longitude, geonamename, countrycode, admincode) {
+    jQuery('#geonameId').val(geonameId);
     jQuery('#latitude').val(latitude);
     jQuery('#longitude').val(longitude);
     jQuery('#geonamename').val(geonamename);

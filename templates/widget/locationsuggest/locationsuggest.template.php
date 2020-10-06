@@ -14,7 +14,7 @@ echo '<div class="floatbox">';
         if ($i % 3 == 2) {
         $class = 'c33r';
         }
-        echo '<div class="' . $class . '"><span id="geoname' . $big->geonameid . '"><input type="submit" id="geonameid-' . $big->geonameid . '" name="geonameid-' . $big->geonameid . '" value="' . htmlentities($big->name, ENT_COMPAT, 'utf-8') . '" /><br />'
+        echo '<div class="' . $class . '"><span id="geoname' . $big->geonameId . '"><input type="submit" id="geonameId-' . $big->geonameId . '" name="geonameId-' . $big->geonameId . '" value="' . htmlentities($big->name, ENT_COMPAT, 'utf-8') . '" /><br />'
                 . htmlentities($big->admin1, ENT_COMPAT, 'utf-8') . ', ' . htmlentities($big->country, ENT_COMPAT, 'utf-8') . ', ' . $words->get('SearchSuggestionsMembersFound', $big->cnt);
             echo '</span></div>';
         if ($i %3 == 2) {
@@ -50,7 +50,7 @@ echo '<div class="subcolumns row">';
     }
     echo '<div class="' . $class . '">';
         if (empty($type)) :
-        echo '<span id="geoname' . $location->geonameid . '"><input type="submit" id="geonameid-' . $location->geonameid . '" name="geonameid-' . $location->geonameid . '" value="' . htmlentities($location->name, ENT_COMPAT, 'utf-8') . '" /><br />'
+        echo '<span id="geoname' . $location->geonameId . '"><input type="submit" id="geonameId-' . $location->geonameId . '" name="geonameId-' . $location->geonameId . '" value="' . htmlentities($location->name, ENT_COMPAT, 'utf-8') . '" /><br />'
                 . ((isset($location->admin1)) ? htmlentities($location->admin1, ENT_COMPAT, 'utf-8') . ', ' : '') . htmlentities($location->country, ENT_COMPAT, 'utf-8') . ', ';
             if ($location->cnt == 0) :
                 echo $words->get('SearchSuggestionsNoMembersFound');

@@ -218,7 +218,7 @@ class GeoController extends PAppController {
         // if (isset($request[2]) && $request[2] == 'save' && $mem_redirect->geolocation) {
             // $geolocation = $mem_redirect->geolocation;
             // list($geonameid, $geonamename) = preg_split('/[\/\/]/', $geolocation);
-            // $this->session->set( 'SignupBWVars']['geonameid', $geonameid )
+            // $this->session->set( 'SignupBWVars']['geonameId', $geonameid )
             // $this->session->set( 'SignupBWVars']['geonamename', $geonamename )
             // print 'GEO SET';
         // } else {
@@ -237,7 +237,7 @@ class GeoController extends PAppController {
         }
         if (isset($post_args['geo-search']))
             $mem_redirect->location = $post_args['geo-search'];
-        // if (isset($post_args['geonameid']))
+        // if (isset($post_args['geonameId']))
         // $mem_redirect->geolocation = $post_args['geolocation'];
     }
 

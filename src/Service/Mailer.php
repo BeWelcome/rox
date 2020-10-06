@@ -147,7 +147,7 @@ class Mailer
 
         return $this->sendTemplateEmail(
             $sender,
-            new Address($receiver),
+            $receiver,
             'feedback',
             $parameters
         );

@@ -195,7 +195,7 @@ class AdminMassmailModel extends RoxModelBase
                 bm.IdBroadcast = " . $id . "
                 AND bm.Status = '" . $status . "'
                 AND bm.IdReceiver = m.id
-                AND g.geonameid = m.IdCity
+                AND g.geonameId = m.IdCity
                 AND g.country = gc.country
             LIMIT " . $start . "," . $limit;
         $mmris = $this->BulkLookup($query);
@@ -400,7 +400,7 @@ class AdminMassmailModel extends RoxModelBase
     public function getPlaces($countrycode, $adminunit) {
         $query = "
             SELECT
-                geonameid, name
+                geonameId, name
             FROM
                 geonames
             WHERE
@@ -549,7 +549,7 @@ class AdminMassmailModel extends RoxModelBase
             $query .= " AND g.admin1 = '". $adminunit . "'";
         }
         if ($place) {
-            $query .= " AND g.geonameid = ". $place;
+            $query .= " AND g.geonameId = ". $place;
         }
         $r = $this->dao->query($query);
         if (!$r) {

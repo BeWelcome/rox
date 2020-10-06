@@ -394,7 +394,7 @@ class MembersController extends RoxControllerBase
             }
 
             $errors = array();
-            // geonameid
+            // geonameId
             if (empty($vars['location-geoname-id'])) {
                 $errors[] = 'SignupErrorProvideLocation';
                 unset($vars['location-geoname-id']);

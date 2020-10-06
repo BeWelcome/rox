@@ -106,9 +106,9 @@ class MOD_visits {
                         AND
                         membersphotos.SortOrder = 0
             WHERE
-                geonames_cache.geonameid = members.IdCity
+                geonames_cache.geonameId = members.IdCity
                 AND
-                geonames_cache2.geonameid = geonames_cache.parentCountryId
+                geonames_cache2.geonameId = geonames_cache.parentCountryId
                 AND
                 status = \'Active\'
                 AND
@@ -174,7 +174,7 @@ SELECT SQL_CACHE
 FROM
     members, membersphotos, addresses, geonames_cache AS g1, geonames_cache AS g2
 WHERE
-    members.Status='Active' AND ABS(HOURS(TIMEDIFF(members.created, now())) > 24 AND membersphotos.IdMember = members.id AND members.id = addresses.IdMember AND addresses.IdCity = g1.geonameid AND g2.geonameid = g1.parentCountryId
+    members.Status='Active' AND ABS(HOURS(TIMEDIFF(members.created, now())) > 24 AND membersphotos.IdMember = members.id AND members.id = addresses.IdMember AND addresses.IdCity = g1.geonameId AND g2.geonameId = g1.parentCountryId
 GROUP BY
     members.id, members.Username
 ORDER BY

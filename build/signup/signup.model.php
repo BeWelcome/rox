@@ -477,8 +477,8 @@ VALUES
             $vars['genderhidden'] = self::BW_FALSE;
         }
 
-        if (isset($vars['geonameid'])) {
-            $vars['IdCity'] = $vars['geonameid'];
+        if (isset($vars['geonameId'])) {
+            $vars['IdCity'] = $vars['geonameId'];
         }
 
         $vars['email'] = $this->normalizeEmail($vars['email']);
@@ -596,7 +596,7 @@ VALUES
     private function checkStepThree(&$vars)
     {
         $errors = [];
-        // geonameid
+        // geonameId
         if (empty($vars['location-geoname-id'])) {
             $errors[] = 'SignupErrorProvideLocation';
             unset($vars['location-geoname-id']);

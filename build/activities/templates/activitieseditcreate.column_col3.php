@@ -10,7 +10,7 @@ if (empty($vars)) {
     $vars['activity-title'] = $this->activity->title;
     $location = $this->activity->location;
     $vars['activity-location'] = $location->name;
-    $vars['activity-location-id'] = $vars['activity-location_geoname_id'] = $location->geonameid;
+    $vars['activity-location-id'] = $vars['activity-location_geoname_id'] = $location->geonameId;
     $vars['activity-location_latitude'] = $location->latitude;
     $vars['activity-location_longitude'] = $location->longitude;
     $vars['activity-address'] = $this->activity->address;

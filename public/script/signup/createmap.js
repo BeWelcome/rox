@@ -18,7 +18,7 @@ var myIcon = L.icon({
 });
 
 // addMarker function used by the auto completion
-var addMarker = function(id, label, geonameid, latitude, longitude) {
+var addMarker = function(id, label, geonameId, latitude, longitude) {
     if (marker != null) {
         map.removeLayer(marker);
     }

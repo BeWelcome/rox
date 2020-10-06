@@ -2,6 +2,13 @@
 <!DOCTYPE html>
 <html lang="{{ app.request.locale }}">
 <head>
+    <link rel="stylesheet" type="text/css" href="addtohomescreen.css">
+    <script src="addtohomescreen.js"></script>
+    <script>
+        addToHomescreen({
+            autostart: true
+        });
+    </script>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -15,7 +22,7 @@
     {{ encore_entry_link_tags('floating_labels') }}
     {{ encore_entry_link_tags('jquery_ui') }}
     <link rel='manifest' href='{{ asset('manifest.webmanifest') }}'>
-    <script type="module">
+{#     <script type="module">
         // Check that service workers are supported
         if ('serviceWorker' in navigator) {
             // Use the window load event to keep the page load performant
@@ -54,7 +61,7 @@
             });
         });
     </script>
-</head>
+#}</head>
 <body id="parallax-home">
 {% block content %}{% include 'loginbar.html.twig' %}
 <!-- Section #1 -->

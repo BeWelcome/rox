@@ -126,7 +126,7 @@ class ActivitiesModel extends RoxModelBase
     protected function getNearMeQuery($distance, $count = false) {
         // get latitude and longitude for location of logged in member
         $loggedInMember = $this->getLoggedInMember();
-        $query = "SELECT latitude, longitude FROM geonames WHERE geonameid = " . $loggedInMember->IdCity;
+        $query = "SELECT latitude, longitude FROM geonames WHERE geonameId = " . $loggedInMember->IdCity;
         $sql = $this->dao->query($query);
         if (!$sql) {
             return false;
@@ -160,7 +160,7 @@ class ActivitiesModel extends RoxModelBase
         } else {
             $query = "SELECT a.* ";
         }
-        $query .= "FROM activities AS a, geonames AS g WHERE a.locationId = g.geonameid ";
+        $query .= "FROM activities AS a, geonames AS g WHERE a.locationId = g.geonameId ";
         $query .= 'AND g.latitude < ' . $latne . '
             AND g.latitude > ' . $latsw . '
             AND g.longitude < ' . $longne . '

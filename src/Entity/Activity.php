@@ -53,7 +53,7 @@ class Activity
      *
      * @ORM\OneToOne(targetEntity="\App\Entity\Location")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="locationId", referencedColumnName="geonameid")
+     *   @ORM\JoinColumn(name="locationId", referencedColumnName="geonameId")
      * })
      */
     private $location;

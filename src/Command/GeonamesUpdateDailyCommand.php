@@ -55,9 +55,12 @@ class GeonamesUpdateDailyCommand extends Command
         $this->updateGeonames($io);
         $this->updateAlternatenames($io);
         $io->success('Geonames data update successful.');
+
+        // always successful
+        return 0;
     }
 
-    private function updateGeonamesForDate(DateTime $date, SymfonyStyle $io): void
+    private function updateGeonamesForDate(DateTime $date, SymfonyStyle $io): int
     {
         $io->note('Working on date ' . $date->format('Y-m-d'));
 
@@ -71,15 +74,25 @@ class GeonamesUpdateDailyCommand extends Command
                 // (0 geonameid, 1 name, 2 @skip, 3 @skip, 4 latitude, 5 longitude, 6 fclass, 7 fcode, 8 country, 9 @skip, 10 admin1,
                 // 11 @skip, 12 @skip, 13 @skip, 14 population, 15 @skip, 16 @skip, 17 @skip, 18 moddate);
                 $statement = $connection->prepare('
-				    REPLACE INTO
-				        `geonames`
-				    SET
-				        geonameid = :geonameId,
-				        name = :name
-				        ');
+                    REPLACE INTO
+                        `geonamesadminunits`
+                    SET
+                        geonameid = :geoname_id,
+                        name = :name,
+                        fclass = :fclass,
+                        fcode = :fcode,
+                        country = :country,
+                        admin1 = :admin1,
+                        moddate = :mod_date
+                ');
                 $statement->execute([
-                    ':geonameId' => $change[0],
+                    ':geoname_id' => $change[0],
                     ':name' => $connection->quote($change[1], ParameterType::STRING),
+                    ':fclass' => $change[6],
+                    ':fcode' => $change[7],
+                    ':country' => $change[8],
+                    ':admin1' => $change[10],
+                    ':mod_date' => $change[18],
                 ]);
                 if ('A' === $change[6]) {
                     // update geonamesadminunits accordingly
@@ -87,85 +100,107 @@ class GeonamesUpdateDailyCommand extends Command
     				    REPLACE INTO
     				        `geonamesadminunits`
     				    SET
-                            geonameid = :geonameId,
+                            geonameid = :geoname_id,
                             name = :name,
-                            fclass = :flcass,
+                            fclass = :fclass,
                             fcode = :fcode,
                             country = :country,
                             admin1 = :admin1,
-                            moddate = :moddate
-    				        ');
+                            moddate = :mod_date
+    				');
                     $statement->execute([
-                        ':geonameId' => $change[0],
+                        ':geoname_id' => $change[0],
                         ':name' => $connection->quote($change[1], ParameterType::STRING),
                         ':fclass' => $change[6],
                         ':fcode' => $change[7],
-                        ':country' => $change[9],
+                        ':country' => $change[8],
                         ':admin1' => $change[10],
-                        ':moddate' => $change[18],
+                        ':mod_date' => $change[18],
                     ]);
-                    $statement->fetchAll();
                 }
             }
         }
 
-        /*        $deletes = $this->fetchFile('http://download.geonames.org/export/dump/deletes-'.$date.'.txt');
-                foreach($deletes as $delete) {
-                    if (is_numeric($delete[0])) {
-                        $res = $this->dao->query("
-                            DELETE FROM
-                                `geonames`
-                            WHERE
-                                geonameid = '" . $this->dao->escape($delete[0]) . "'");
-                        if (!$res) {
-                            $result = false;
-                        }
-                    }
-                }
-        */
+        $deletes = $this->fetchFile('http://download.geonames.org/export/dump/' .
+            'deletes-' . $date->format('Y-m-d') . '.txt');
+        foreach($deletes as $delete) {
+            $removeGeonameId = $delete[0];
+            // handle duplication
+            if (0 === strpos('duplicate ', $delete[2])) {
+                $newGeonameId = str_replace('duplicate ', '', $delete[2]);
+                $this->handleDuplicates($removeGeonameId, $newGeonameId);
+
+            }
+            // Remove id from data base
+            $statement =  $connection->prepare("
+                DELETE FROM
+                    `geonames`
+                WHERE
+                    geonameid = :geoname_id
+            ");
+            $statement->execute([
+                ':geoname_id' => $removeGeonameId,
+            ]);
+        }
+
+        return $count;
     }
 
-    private function updateAltnames($date)
+    private function updateAlternateNamesForDate($date): int
     {
-        $result = true;
-        $changes = $this->fetchFile('http://download.geonames.org/export/dump/alternateNamesModifications-' . $date . '.txt');
+        $count = 0;
+        $connection = $this->entityManager->getConnection();
+
+        $changes = $this->fetchFile('http://download.geonames.org/export/dump/'
+            . 'alternateNamesModifications-' . $date->format('Y-m-d') . '.txt');
         foreach ($changes as $change) {
-            if (is_numeric($change[0])) {
-                $query = "
-				    REPLACE INTO
-				        `geonamesalternatenames`
-				    SET
-				        alternateNameId = '" . $this->dao->escape($change[0]) . "',
-				        geonameid = '" . $this->dao->escape($change[1]) . "',
-				        isolanguage = '" . $this->dao->escape($change[2]) . "',
-				        alternateName = '" . $this->dao->escape($change[3]) . "',
-				        ispreferred = '" . $this->dao->escape($change[4]) . "',
-				        isshort = '" . $this->dao->escape($change[5]) . "',
-				        isColloquial = '" . $this->dao->escape($change[6]) . "',
-				        isHistoric = '" . $this->dao->escape($change[7]) . "'";
-                $res = $this->dao->query($query);
-                if (!$res) {
-                    $result = false;
-                }
+            if (is_numeric($change[0] && 'link' !== $change[2])) {
+                // 0 alternatenameid, 1 geonameid, 2 isolanguage, 3 alternatename, 4 ispreferred, 5 isshort, 6 iscolloquial, 7 ishistoric
+                $statement = $connection->prepare('
+                    REPLACE INTO
+                        `geonamesalternatenames`
+                    SET
+                        alternatenameId = :alternate_id,
+                        geonameid = :geoname_id,
+                        isolanguage = :isolanguage,
+                        alternatename = :alternatename,
+                        ispreferred = :ispreferred,
+                        isshort = :isshort,
+                        iscolloquial = :iscolloquial,
+                        ishistoric = :ishistoric
+                ');
+                $statement->execute([
+                    ':alternate_id' => $change[0],
+                    ':geoname_id' => $change[1],
+                    ':isolanguage' => $change[2],
+                    ':alternatename' => $connection->quote($change[3], ParameterType::STRING),
+                    ':ispreferred' => $change[4],
+                    ':isshort' => $change[5],
+                    ':iscolloquial' => $change[6],
+                    ':ishistoric' => $change[7],
+                ]);
             }
         }
 
-        $deletes = $this->fetchFile('http://download.geonames.org/export/dump/alternateNamesDeletes-' . $date . '.txt');
+        $deletes = $this->fetchFile('http://download.geonames.org/export/dump/'
+            . 'alternateNamesDeletes-' . $date->format('Y-m-d') . '.txt');
         foreach ($deletes as $delete) {
             if (is_numeric($delete[0])) {
-                $res = $this->dao->query("
+                $statement = $connection->prepare("
     				DELETE FROM
     				    `geonamesalternatenames`
     				WHERE
-    				    alternatenameid = '" . $this->dao->escape($delete[0]) . "'
-    				    AND geonameid = '" . $this->dao->escape($delete[1]) . "'");
-                if (!$res) {
-                    $result = false;
-                }
+    				    alternatenameid = :alternate_id
+    				    AND geonameid = :geoname_id
+    		    ");
+                $statement->execute([
+                    ':alternate_id' => $delete[0],
+                    ':geoname_id' => $delete[1],
+                ]);
             }
         }
 
-        return $result;
+        return $count;
     }
 
     /**
@@ -184,9 +219,70 @@ class GeonamesUpdateDailyCommand extends Command
 
     private function updateAlternatenames($io)
     {
-        $result = $this->updateAltnames((new DateTime())->modify('-1day'), $io); // Yesterday
-        $result |= $this->updateAltnames((new DateTime())->modify('-2days'), $io); // the day before yesterday
+        $result = $this->updateAlternateNamesForDate((new DateTime())->modify('-1day'), $io); // Yesterday
+        $result |= $this->updateAlternateNamesForDate((new DateTime())->modify('-2days'), $io); // the day before yesterday
 
         return $result;
+    }
+
+    private function handleDuplicates($removeGeonameId, $newGeonameId)
+    {
+        $connection = $this->entityManager->getConnection();
+
+        // First update members table which points to the old geoname id
+        $statement =  $connection->prepare("
+                UPDATE
+                    `members`
+                SET 
+                    IdCity = :new_geoname_id
+                WHERE
+                    IdCity = :old_geoname_id
+            ");
+        $statement->execute([
+            ':old_geoname_id' => $removeGeonameId,
+            ':new_geoname_id' => $newGeonameId,
+        ]);
+
+        // Second update addresses table
+        $statement =  $connection->prepare("
+                UPDATE
+                    `addresses`
+                SET 
+                    IdCity = :new_geoname_id
+                WHERE
+                    IdCity = :old_geoname_id
+            ");
+        $statement->execute([
+            ':old_geoname_id' => $removeGeonameId,
+            ':new_geoname_id' => $newGeonameId,
+        ]);
+
+        // Third update activities table
+        $statement =  $connection->prepare("
+                UPDATE
+                    `activities`
+                SET 
+                    locationId = :new_geoname_id
+                WHERE
+                    locationId = :old_geoname_id
+            ");
+
+        $statement->execute([
+            ':old_geoname_id' => $removeGeonameId,
+            ':new_geoname_id' => $newGeonameId,
+        ]);
+
+        $statement =  $connection->prepare("
+                UPDATE
+                    `geonames`
+                SET 
+                    geonameid = :new_geoname_id
+                WHERE
+                    geonameid = :old_geoname_id
+            ");
+        $statement->execute([
+            ':old_geoname_id' => $removeGeonameId,
+            ':new_geoname_id' => $newGeonameId,
+        ]);
     }
 }

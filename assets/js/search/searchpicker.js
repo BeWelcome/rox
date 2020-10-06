@@ -42,7 +42,7 @@ $( function() {
                         $.map(data.locations, function (item) {
                             return {
                                 label: (item.name ? item.name : "") + (item.admin1 ? (item.name ? ", " : "") + item.admin1 : "") + (item.country ? ", " + item.country : ""),
-                                value: item.geonameid, latitude: item.latitude, longitude: item.longitude,
+                                value: item.geonameId, latitude: item.latitude, longitude: item.longitude,
                                 category: item.category
                             };
                         }));

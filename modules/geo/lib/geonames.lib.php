@@ -71,13 +71,13 @@ class MOD_geonames
         $changes = $this->fetchFile('http://download.geonames.org/export/dump/modifications-'.$date.'.txt');
         foreach($changes as $change) {
             if (is_numeric($change[0]) && ($change[6] == 'A' || $change[6] == 'P')) {
-                // (0 geonameid, 1 name, 2 @skip, 3 @skip, 4 latitude, 5 longitude, 6 fclass, 7 fcode, 8 country, 9 @skip, 10 admin1,
+                // (0 geonameId, 1 name, 2 @skip, 3 @skip, 4 latitude, 5 longitude, 6 fclass, 7 fcode, 8 country, 9 @skip, 10 admin1,
                 // 11 @skip, 12 @skip, 13 @skip, 14 population, 15 @skip, 16 @skip, 17 @skip, 18 moddate);
                 $res = $this->dao->query("
 				    REPLACE INTO
 				        `geonames`
 				    SET
-				        geonameid = '".$this->dao->escape($change[0])."',
+				        geonameId = '".$this->dao->escape($change[0])."',
 				        name = '".$this->dao->escape($change[1])."',
 				        latitude = '".$this->dao->escape($change[4])."',
 				        longitude = '".$this->dao->escape($change[5])."',
@@ -97,7 +97,7 @@ class MOD_geonames
     				    REPLACE INTO
     				        `geonamesadminunits`
     				    SET
-    				        geonameid = '".$this->dao->escape($change[0])."',
+    				        geonameId = '".$this->dao->escape($change[0])."',
     				        name = '".$this->dao->escape($change[1])."',
     				        fclass = '".$this->dao->escape($change[6])."',
     				        fcode = '".$this->dao->escape($change[7])."',
@@ -119,7 +119,7 @@ class MOD_geonames
     				DELETE FROM
     				    `geonames`
     				WHERE
-    				    geonameid = '" . $this->dao->escape($delete[0]) . "'");
+    				    geonameId = '" . $this->dao->escape($delete[0]) . "'");
                 if (!$res) {
                     $result = false;
                 }
@@ -138,7 +138,7 @@ class MOD_geonames
 				        `geonamesalternatenames`
 				    SET
 				        alternateNameId = '".$this->dao->escape($change[0])."',
-				        geonameid = '".$this->dao->escape($change[1])."',
+				        geonameId = '".$this->dao->escape($change[1])."',
 				        isolanguage = '".$this->dao->escape($change[2])."',
 				        alternateName = '".$this->dao->escape($change[3])."',
 				        ispreferred = '".$this->dao->escape($change[4])."',
@@ -160,7 +160,7 @@ class MOD_geonames
     				    `geonamesalternatenames`
     				WHERE
     				    alternatenameid = '" . $this->dao->escape($delete[0]) . "'
-    				    AND geonameid = '" . $this->dao->escape($delete[1]) . "'");
+    				    AND geonameId = '" . $this->dao->escape($delete[1]) . "'");
 				if (!$res) {
 				    $result = false;
 				}

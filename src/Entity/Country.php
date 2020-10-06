@@ -50,7 +50,7 @@ class Country
     private $country;
 
     /**
-     * Set geonameid.
+     * Set geonameId.
      *
      * @param int $geonameid
      *
@@ -58,19 +58,19 @@ class Country
      */
     public function setGeonameid($geonameid)
     {
-        $this->geonameid = $geonameid;
+        $this->geonameId = $geonameid;
 
         return $this;
     }
 
     /**
-     * Get geonameid.
+     * Get geonameId.
      *
      * @return int
      */
     public function getGeonameid()
     {
-        return $this->geonameid;
+        return $this->geonameId;
     }
 
     /**

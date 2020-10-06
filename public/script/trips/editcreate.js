@@ -100,15 +100,15 @@ function enableSelect2() {
  */
 function BWTripsLocations(htmlMapId) // Constructor
 {
-    this.addMarkerCallback = function(label, geonameid, latitude, longitude) {
-        BWTripsLocations.addMarker(label, geonameid, latitude, longitude);
+    this.addMarkerCallback = function(label, geonameId, latitude, longitude) {
+        BWTripsLocations.addMarker(label, geonameId, latitude, longitude);
     };
 
     var instance = this;
     instance.map = initMap(htmlMapId).fitWorld();
     instance.latLngs = [];
     instance.polyline = null;
-    instance.addMarker = function(id, label, geonameid, latitude, longitude) {
+    instance.addMarker = function(id, label, geonameId, latitude, longitude) {
         // get current location number
         var parts = id.split("-");
         var current = parts[1] - 1;

@@ -341,7 +341,7 @@ class ForumThread
     }
 
     /**
-     * Set geonameid.
+     * Set geonameId.
      *
      * @param int $geonameId
      *
@@ -355,7 +355,7 @@ class ForumThread
     }
 
     /**
-     * Get geonameid.
+     * Get geonameId.
      *
      * @return int
      */

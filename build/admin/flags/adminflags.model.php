@@ -110,7 +110,7 @@ class AdminFlagsModel extends RoxModelBase {
                 AND fm.IdMember = m.id
                 AND fm.IdFlag = f.id
                 AND f.Relevance <> 0
-                AND m.IdCity = g.geonameid
+                AND m.IdCity = g.geonameId
                 AND g.country = gc.country ';
         if (!$includeLevelZero) {
             $query .= ' AND fm.Level <> 0';
@@ -179,7 +179,7 @@ class AdminFlagsModel extends RoxModelBase {
             $query .= ' AND f.id = ' . $flagId;
         }
         $query .= '
-                AND m.IdCity = g.geonameid
+                AND m.IdCity = g.geonameId
                 AND g.country = gc.country
                 ';
         if (!$includeLevelZero) {

@@ -8,7 +8,7 @@ App\Entity\Location:
         admin1: 00
         population: 3426354
         moddate: '<DateTime()>'
-        geonameid: 2921044
+        geonameId: 2921044
         country: '@Germany'
     CountryReferenceIndonesia:
         name: 'Indonesia'
@@ -19,10 +19,10 @@ App\Entity\Location:
         admin1: 00
         population: 242968342
         moddate: '<DateTime()>'
-        geonameid: 1643084
+        geonameId: 1643084
         country: '@Indonesia'
     Admin1ReferenceLandBerlin:
-        geonameid: 2950157
+        geonameId: 2950157
         name: 'Land Berlin'
         fclass: A
         fcode: ADM1
@@ -31,7 +31,7 @@ App\Entity\Location:
         moddate: '<DateTime()>'
         country: '@Germany'
     Admin1ReferenceProvinsiPapua:
-        geonameid: 1643012
+        geonameId: 1643012
         name: 'Provinsi Papua'
         fclass: A
         fcode: ADM1
@@ -47,7 +47,7 @@ App\Entity\Location:
         admin1: 16
         population: 3426354
         moddate: '<DateTime()>'
-        geonameid: 2950159
+        geonameId: 2950159
         country: '@Germany'
     Jayapura:
         name: 'Jayapura'
@@ -58,5 +58,5 @@ App\Entity\Location:
         admin1: 36
         population: 134895
         moddate: '<DateTime()>'
-        geonameid: 2082600
+        geonameId: 2082600
         country: '@Indonesia'

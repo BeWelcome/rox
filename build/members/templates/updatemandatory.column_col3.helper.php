@@ -25,7 +25,7 @@ $m = new \stdClass();
 $m->firstname = $modCrypt->MemberReadCrypted($member->FirstName,'');
 $m->secondname = $modCrypt->MemberReadCrypted($member->SecondName,'');
 $m->lastname = $modCrypt->MemberReadCrypted($member->LastName,'');
-$m->geonameid = $member->IdCity;
+$m->geonameId = $member->IdCity;
 $m->street = $modCrypt->MemberReadCrypted($member->address->StreetName);
 $m->housenumber = $modCrypt->MemberReadCrypted($member->address->HouseNumber);
 $m->zip = $modCrypt->MemberReadCrypted($member->address->Zip);
@@ -42,8 +42,8 @@ if (!$mem_redirect = $this->layoutkit->formkit->getMemFromRedirect()) {
         $vars[$key] = $value;
     }
     $Geo = new GeoModel;
-    if (isset($vars['geonameid']) && !isset($vars['geonamename']))
-        $vars['geonamename'] = $Geo->getDataById($vars['geonameid'])->name;
+    if (isset($vars['geonameId']) && !isset($vars['geonamename']))
+        $vars['geonamename'] = $Geo->getDataById($vars['geonameId'])->name;
         $vars['geonamecountry'] = '';
     if (!isset($vars['errors']))
         $vars['errors'] = array();

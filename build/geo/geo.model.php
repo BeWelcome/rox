@@ -46,7 +46,7 @@ class GeoModel extends RoxModelBase {
             "
             SELECT *
             FROM `geonames_cache`
-            WHERE `geonameid` = '".$geonameId."'
+            WHERE `geonameId` = '".$geonameId."'
             ");
 
         if ($lang) {
@@ -232,7 +232,7 @@ class GeoModel extends RoxModelBase {
 //        var_dump($result);
         $storedGeonameIds = array();
         foreach($result as $key => $value) {
-            array_push($storedGeonameIds,$value->geonameid);
+            array_push($storedGeonameIds,$value->geonameId);
         }
 //        var_dump($storedGeonameIds);
         foreach ($data as $level => $dataset) {
@@ -258,7 +258,7 @@ class GeoModel extends RoxModelBase {
                 "
                 INSERT INTO geonames_cache
                     SET
-                    geonameid = '".$this->dao->escape($dataset['geonameId'])."',
+                    geonameId = '".$this->dao->escape($dataset['geonameId'])."',
                     latitude = '".$this->dao->escape($dataset['lat'])."',
                     longitude= '".$this->dao->escape($dataset['lng'])."',
                     name = '".$this->dao->escape($dataset['name'])."',
@@ -406,7 +406,7 @@ class GeoModel extends RoxModelBase {
         $result = $this->getAllGeonameIds();
         $storedGeonameIds = array();
         foreach($result as $key => $value) {
-            array_push($storedGeonameIds,$value->geonameid);
+            array_push($storedGeonameIds,$value->geonameId);
         }
 
         //retireve info currently sotred in DB for specific  GeonameIds
@@ -414,14 +414,14 @@ class GeoModel extends RoxModelBase {
             "
             SELECT `geonames_cache`.*,`geo_hierarchy`.`parentid`
             FROM `geonames_cache`,`geo_hierarchy`
-            WHERE geonames_cache.geonameid = '".$geonameId."' AND geo_hierarchy.geoid = '".$geonameId."' AND `geo_hierarchy`.`comment` = 'geonames'
+            WHERE geonames_cache.geonameId = '".$geonameId."' AND geo_hierarchy.geoid = '".$geonameId."' AND `geo_hierarchy`.`comment` = 'geonames'
             "
             );
         if (!$result) {
             throw new PException('GeoGeonameIdLookupFailed');
             return false;
         }
-//        var_dump($result->geonameid);
+//        var_dump($result->geonameId);
 
         //write to geonames_cache_backup table:
             $insert = $this->dao->query(
@@ -429,7 +429,7 @@ class GeoModel extends RoxModelBase {
             INSERT INTO geonames_cache_backup
                 SET
                 id = NULL,
-                geonameid = '".$this->dao->escape($result->geonameid)."',
+                geonameId = '".$this->dao->escape($result->geonameId)."',
                 latitude = '".$this->dao->escape($result->latitude)."',
                 longitude = '".$this->dao->escape($result->longitude)."',
                 name = '".$this->dao->escape($result->name)."',
@@ -473,7 +473,7 @@ class GeoModel extends RoxModelBase {
                     "
                     REPLACE INTO geonames_cache
                         SET
-                        geonameid = '".$this->dao->escape($dataset['geonameId'])."',
+                        geonameId = '".$this->dao->escape($dataset['geonameId'])."',
                         latitude = '".$this->dao->escape($dataset['lat'])."',
                         longitude= '".$this->dao->escape($dataset['lng'])."',
                         name = '".$this->dao->escape($dataset['name'])."',
@@ -670,9 +670,9 @@ class GeoModel extends RoxModelBase {
 
         $result = $this->bulkLookup(
         "
-        SELECT `geonameid`
+        SELECT `geonameId`
         FROM `geonames_cache`
-        ORDER BY `geonameid` Asc
+        ORDER BY `geonameId` Asc
         "
         );
 //        var_dump($result);
@@ -684,7 +684,7 @@ class GeoModel extends RoxModelBase {
     }
 
     /**
-    * Check if a geonameid exists, if not, add it to the DB.
+    * Check if a geonameId exists, if not, add it to the DB.
     **/
 
     public function checkGeonameId($geonameId,$usagetype = false)
@@ -700,7 +700,7 @@ class GeoModel extends RoxModelBase {
 
 
     /**
-    * Check if a geonameid exists, if not, add it to the DB.
+    * Check if a geonameId exists, if not, add it to the DB.
     **/
 
     public function getContinents()

@@ -263,7 +263,7 @@ SQL;
                           geonames AS g,
                           addresses AS a
                       WHERE
-                          a.IdCity = g.geonameid
+                          a.IdCity = g.geonameId
                           AND m.id = ' . $rr->IdMember . '
                           AND m.id = a.IdMember';
 
@@ -401,18 +401,18 @@ SQL;
         $where = '1=1';
 
         // only use consistent records
-        $where .= " AND geonames.geonameid = addresses.IdCity AND addresses.IdMember = members.id AND geonamescountries.country=geonames.country" ;
+        $where .= " AND geonames.geonameId = addresses.IdCity AND addresses.IdMember = members.id AND geonamescountries.country=geonames.country" ;
         if ($IdCountry = $this->GetParam($vars, 'IdCountry', 0)) {
             $where .= " AND geonamescountries.country='" . $IdCountry . "'";
         }
         if ($IdCity = $this->GetParam($vars, 'IdCity', 0)) {
-            $where .= ' AND geonames.geonameid=' . $IdCity;
+            $where .= ' AND geonames.geonameId=' . $IdCity;
         }
         if (($g_city = $this->GetParam($vars, 'CityName', '')) || ($g_city = $this->GetParam($vars, 'CityNameOrg', ''))) {
             if ($places = $this->createEntity('Geo')->findLocationsByName($g_city)) {
                 foreach ($places as $geo) {
                     if ($geo->isCity() || $geo->isBorough()) {
-                        $WhereCity = 'geonames.geonameid = ' . $geo->getPKValue();
+                        $WhereCity = 'geonames.geonameId = ' . $geo->getPKValue();
                         break;
                     }
                 }
@@ -428,12 +428,12 @@ SQL;
             foreach ($this->createEntity('Geo')->findLocationsByCoordinates(array('long' => $long, 'lat' => $lat)) as $geo)
             {
                 if ($geo->isCity() || $geo->isBorough()) {
-                    $cities[] = $geo->geonameid;
+                    $cities[] = $geo->geonameId;
                 }
             }
 
             if (!empty($cities)) {
-                $WhereCity = 'geonames.geonameid IN (' . implode(',', $cities) . ')';
+                $WhereCity = 'geonames.geonameId IN (' . implode(',', $cities) . ')';
             } else {
                 $WhereCity = "1 = 0";
             }

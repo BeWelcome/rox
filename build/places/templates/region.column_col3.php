@@ -17,7 +17,7 @@ foreach ($this->cities as $city) {
 
     echo '<div class="p-1"><a href="places/' . htmlspecialchars($this->countryName) . '/' . $this->countryCode
          . '/' . htmlspecialchars($this->regionName) . '/' . $this->regionCode . '/'
-         . htmlspecialchars($city->city) . '/' . $city->geonameid . '">'. htmlentities($city->city, ENT_COMPAT, 'utf-8') .'</a><span class="small ml-1 badge badge-primary">' . $city->NbMember . '</span>';
+         . htmlspecialchars($city->city) . '/' . $city->geonameId . '">'. htmlentities($city->city, ENT_COMPAT, 'utf-8') .'</a><span class="small ml-1 badge badge-primary">' . $city->NbMember . '</span>';
     echo '</div>';
 
 }

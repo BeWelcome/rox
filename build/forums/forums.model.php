@@ -1587,7 +1587,7 @@ WHERE `id` = '$this->threadid'
             LEFT JOIN
                 addresses AS a ON a.IdMember = members.id AND a.rank = 0
             LEFT JOIN
-                geonames ON a.IdCity = geonames.geonameid
+                geonames ON a.IdCity = geonames.geonameId
             LEFT JOIN
                 geonamescountries ON geonames.country = geonamescountries.country
             WHERE
@@ -1680,7 +1680,7 @@ SELECT
     `geonamescountries`.`name` as `country`,
     `IdGroup`
 FROM forums_posts, forums_threads, members, addresses
-LEFT JOIN `geonames` ON (addresses.IdCity = `geonames`.`geonameid`)
+LEFT JOIN `geonames` ON (addresses.IdCity = `geonames`.`geonameId`)
 LEFT JOIN `geonamescountries` ON (geonames.country = `geonamescountries`.`country`)
 WHERE `forums_posts`.`threadid` = '%d' AND `forums_posts`.`IdWriter` = `members`.`id`
 AND addresses.IdMember = members.id AND addresses.rank = 0
@@ -2079,7 +2079,7 @@ AND IdThread=%d
     `forums_threads`.`IdTitle`,`forums_threads`.`IdGroup`,   `IdWriter`,   `members`.`Username` AS `OwnerUsername`, `groups`.`Name` AS `GroupName`,    `geonames`.`country`
 		FROM (forums_posts, members, forums_threads, addresses)
 LEFT JOIN `groups` ON (`forums_threads`.`IdGroup` = `groups`.`id`)
-LEFT JOIN `geonames` ON (addresses.IdCity = geonames.geonameid)
+LEFT JOIN `geonames` ON (addresses.IdCity = geonames.geonameId)
 WHERE `forums_posts`.`IdWriter` = %d AND `forums_posts`.`IdWriter` = `members`.`id`
 AND `forums_posts`.`threadid` = `forums_threads`.`id`
 AND addresses.IdMember = members.id AND addresses.rank = 0

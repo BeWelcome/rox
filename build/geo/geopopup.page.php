@@ -40,7 +40,7 @@ class GeoPopupPage extends RoxPageView
 		// if (isset($request[2]) && $request[2] == 'save' && $mem_redirect->geolocation) {
 			// $geolocation = $mem_redirect->geolocation;
 			// list($geonameid, $geonamename) = preg_split('/[//]/', $geolocation);
-			// $this->session->set( 'SignupBWVars']['geonameid', $geonameid )
+			// $this->session->set( 'SignupBWVars']['geonameId', $geonameid )
 			// $this->session->set( 'SignupBWVars']['geonamename', $geonamename )
 			// print 'GEO SET';
 		// } else {

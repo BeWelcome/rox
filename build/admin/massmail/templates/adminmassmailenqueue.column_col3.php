@@ -276,7 +276,7 @@ $words = new MOD_words();
                         var html = '';
                         var len = data.length;
                         for (var i = 0; i < len; i++) {
-                            html += '<option value="' + data[i].geonameid + '">' + data[i].name + '</option>';
+                            html += '<option value="' + data[i].geonameId + '">' + data[i].name + '</option>';
                         }
                         places.append(html);
                         places.select2({

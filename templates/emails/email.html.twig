@@ -1,10 +1,10 @@
-{% apply inky_to_html|inline_css(encore_entry_css_source('email')) %}
+{% apply inky_to_html | inline_css (encore_entry_css_source('email')) %}
     <wrapper class="header">
         <container>
             <row class="collapse">
                 <columns small="12" valign="middle">
                     <a href="{{ url('homepage') }}"><img
-                            src="{{ email.image('@images/logo_index_top.png') }}"><</a>
+                            src="{{ email.image('@images/logo_index_top.png') }}"></a>
                 </columns>
             </row>
         </container>

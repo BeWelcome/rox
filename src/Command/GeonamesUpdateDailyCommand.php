@@ -123,13 +123,12 @@ class GeonamesUpdateDailyCommand extends Command
 
         $deletes = $this->fetchFile('http://download.geonames.org/export/dump/' .
             'deletes-' . $date->format('Y-m-d') . '.txt');
-        foreach($deletes as $delete) {
+        foreach ($deletes as $delete) {
             $removeGeonameId = $delete[0];
             // handle duplication
             if (0 === strpos('duplicate ', $delete[2])) {
                 $newGeonameId = str_replace('duplicate ', '', $delete[2]);
                 $this->handleDuplicates($removeGeonameId, $newGeonameId);
-
             }
             // Remove id from data base
             $statement =  $connection->prepare("
@@ -196,6 +195,7 @@ class GeonamesUpdateDailyCommand extends Command
                 $statement->execute([
                     ':alternate_id' => $delete[0],
                     ':geoname_id' => $delete[1],
+
                 ]);
             }
         }

@@ -59,7 +59,7 @@ class TranslationModel
     public function refreshTranslationsCache(): void
     {
         $locales = explode(',', $this->locales);
-        foreach($locales as $locale) {
+        foreach ($locales as $locale) {
             $this->removeAndWarmupCacheForLocale($locale);
         }
     }

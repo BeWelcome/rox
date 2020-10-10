@@ -22,7 +22,7 @@ class GeonamesUpdateFullCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        file_put_contents( 'allCountries.zip',file_get_contents('http://download.geonames.org/export/dump/allCountries.zip'));
+        file_put_contents('allCountries.zip', file_get_contents('http://download.geonames.org/export/dump/allCountries.zip'));
 
         $io->success('Updated the geonames databases to current state.');
 

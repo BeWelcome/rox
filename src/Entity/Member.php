@@ -49,7 +49,6 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
     public const ROLE_ADMIN_FAQ = 'ROLE_ADMIN_FAQ';
     public const ROLE_ADMIN_FLAGS = 'ROLE_ADMIN_FLAGS';
     public const ROLE_ADMIN_FORUMMODERATOR = 'ROLE_ADMIN_FORUMMODERATOR';
-    public const ROLE_ADMIN_GALLERY = 'ROLE_ADMIN_GALLERY';
     public const ROLE_ADMIN_GREP = 'ROLE_ADMIN_GREP';
     public const ROLE_ADMIN_GROUP = 'ROLE_ADMIN_GROUP';
     public const ROLE_ADMIN_LOGS = 'ROLE_ADMIN_LOGS';
@@ -64,13 +63,11 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
     public const ROLE_ADMIN_RIGHTS = 'ROLE_ADMIN_RIGHTS';
     public const ROLE_ADMIN_RUNBOT = 'ROLE_ADMIN_RUNBOT';
     public const ROLE_ADMIN_SAFETYTEAM = 'ROLE_ADMIN_SAFETYTEAM';
-    public const ROLE_ADMIN_SEEADS = 'ROLE_ADMIN_SEEADS';
     public const ROLE_ADMIN_SQLFORVOLUNTEERS = 'ROLE_ADMIN_SQLFORVOLUNTEERS';
     public const ROLE_ADMIN_SUGGESTIONS = 'ROLE_ADMIN_SUGGESTIONS';
     public const ROLE_ADMIN_TEST = 'ROLE_ADMIN_TEST';
     public const ROLE_ADMIN_TREASURER = 'ROLE_ADMIN_TREASURER';
     public const ROLE_ADMIN_VERIFIER = 'ROLE_ADMIN_VERIFIER';
-    public const ROLE_ADMIN_WIKI = 'ROLE_ADMIN_WIKI';
     public const ROLE_ADMIN_WORDS = 'ROLE_ADMIN_WORDS';
 
     /**

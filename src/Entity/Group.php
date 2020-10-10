@@ -381,7 +381,9 @@ class Group implements ObjectManagerAware
     {
         $admins = $this->getAdmins();
 
-        return \in_array($admin, $admins, true);
+        $isAdmin = \in_array($admin, $admins, true);
+
+        return $isAdmin;
     }
 
     public function isMember(Member $member)
@@ -403,11 +405,18 @@ class Group implements ObjectManagerAware
         $privilegeScopesRepo = $this->objectManager->getRepository(PrivilegeScope::class);
         $privilegeScopes = $privilegeScopesRepo->findBy(['role' => $role, 'type' => $this->getId()]);
 
-        if (!$privilegeScopes) {
-            return [];
+        $admins = [];
+        foreach ($privilegeScopes as $privilegeScope) {
+            $admin = $privilegeScope->getMember();
+            if (false !== strpos(MemberStatusType::ACTIVE_WITH_MESSAGES, $admin->getStatus())) {
+                $admins[] = $admin;
+            }
         }
 
-        $admins = [];
+        $role = $roleRepo->findBy(['name' => 'GroupsAdmin']);
+        $privilegeScopesRepo = $this->objectManager->getRepository(PrivilegeScope::class);
+        $privilegeScopes = $privilegeScopesRepo->findBy(['role' => $role, 'type' => '*']);
+
         foreach ($privilegeScopes as $privilegeScope) {
             $admin = $privilegeScope->getMember();
             if (false !== strpos(MemberStatusType::ACTIVE_WITH_MESSAGES, $admin->getStatus())) {

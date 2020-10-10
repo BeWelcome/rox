@@ -216,11 +216,15 @@ class HostingRequestController extends BaseMessageController
     public function show(Message $message)
     {
         if (!$this->isMessageOfMember($message)) {
-            throw $this->createAccessDeniedException('Not your message');
+            throw $this->createAccessDeniedException('Not your request');
         }
 
         if ($this->isMessage($message)) {
             return $this->redirectToMessage($message);
+        }
+
+        if ($this->isPurgedByMember($message)) {
+            return $this->redirectToRoute('requests');
         }
 
         $thread = $this->messageModel->getThreadForMessage($message);

@@ -14,6 +14,8 @@ use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Pagerfanta\Pagerfanta;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\ClickableInterface;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -58,7 +60,7 @@ class BaseMessageController extends AbstractController
                 'key' => 'MessagesSpam',
                 'url' => $this->generateUrl('messages', ['folder' => 'spam']),
             ],
-            'messages_deleted' => [
+            'both_deleted' => [
                 'key' => 'MessagesDeleted',
                 'url' => $this->generateUrl('both', ['folder' => 'deleted']),
             ],
@@ -74,7 +76,7 @@ class BaseMessageController extends AbstractController
      *
      * @return Response
      */
-    protected function handleFolderRequest(Request $request, $folder, Pagerfanta $messages, $type)
+    protected function handleFolderRequest(Request $request, $folder, Pagerfanta $messages, $type): Response
     {
         /** @var Member $member */
         $member = $this->getUser();
@@ -93,8 +95,7 @@ class BaseMessageController extends AbstractController
             $data = $form->getData();
             $messageIds = $data->getMessages();
 
-            $clickedButton = $form->getClickedButton();
-
+            $clickedButton = $form->getClickedButton()->getName();
             if ('purge' === $clickedButton) {
                 $this->messageModel->markPurged($member, $messageIds);
                 $this->addTranslatedFlash('notice', 'flash.purged');
@@ -148,10 +149,27 @@ class BaseMessageController extends AbstractController
     {
         $member = $this->getUser();
         if (($message->getReceiver() !== $member) && ($message->getSender() !== $member)) {
-            throw $this->createAccessDeniedException();
+            return false;
         }
 
         return true;
+    }
+
+    /**
+     * @return bool
+     */
+    protected function isPurgedByMember(Message $message): bool
+    {
+        $member = $this->getUser();
+        if (($message->getReceiver() === $member) && (false !== strpos($message->getDeleteRequest(), 'receiverpurged'))) {
+            return true;
+        }
+
+        if (($message->getSender() === $member) && (false !== strpos($message->getDeleteRequest(), 'senderpurged'))) {
+            return true;
+        }
+
+        return false;
     }
 
     /**

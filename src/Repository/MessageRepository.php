@@ -484,7 +484,9 @@ class MessageRepository extends EntityRepository
             case 'deleted':
                 $qb = $this->createQueryBuilder('m')
                     ->where('m.deleteRequest LIKE :deleted')
+                    ->andWhere('NOT(m.deleteRequest LIKE :purged)')
                     ->setParameter('deleted', '%' . DeleteRequestType::RECEIVER_DELETED . '%')
+                    ->setParameter('purged', '%' . DeleteRequestType::RECEIVER_PURGED . '%')
                     ->andWhere('m.receiver = :member')
                     ->setParameter('member', $member)
                     ->orderBy('m.' . $sort, $sortDirection);

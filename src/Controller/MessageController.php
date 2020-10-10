@@ -115,6 +115,10 @@ class MessageController extends BaseMessageController
             return $this->redirectToHostingRequest($message);
         }
 
+        if ($this->isPurgedByMember($message)) {
+            return $this->redirectToRoute('messages');
+        }
+
         $thread = $this->messageModel->getThreadForMessage($message);
         $current = $thread[0];
 
@@ -150,8 +154,9 @@ class MessageController extends BaseMessageController
      *
      * @return Response
      */
-    public function newMessageAction(Request $request, Member $receiver)
+    public function newMessageAction(Request $request, Member $receiver): Response
     {
+        /** @var Member $sender */
         $sender = $this->getUser();
         if (!$receiver->isBrowseable()) {
             $this->addTranslatedFlash('error', 'flash.member.invalid');

@@ -47,16 +47,19 @@ class MyVisitorsPage extends ProfilePage
             else $m->age = $words->get("Hidden");
             echo <<<HTML
 <div class="card">
-    <div class="card-header">
-        {$image}
-        <div class="userinfo">
-            <a class="username" href="members/{$m->Username}">{$m->Username}</a><br />
+    <div class="card-body p-2">
+        <div class="card-title">
+            <div class="float-left">{$image}</div>
+            <div class="float-left">
+                <a class="username" href="members/{$m->Username}">{$m->Username}</a><br>
+                <small>{$words->getFormatted("yearsold",$m->age)}, {$m->city}</small>
+             </div>
+             <div class="clearfix"></div>
         </div>
+        {$purifier->purify($aboutMe)}
     </div>
-    <div class="card-body py-1">
-            <p><small>{$words->getFormatted("visited")}: {$layoutbits->ago(strtotime($m->visited))}</small><br>
-            <small>{$words->getFormatted("yearsold",$m->age)}, {$m->city}</small></p>
-            <div class="profilesummary">{$purifier->purify($aboutMe)}</div>
+    <div class="card-footer text-right p-2">
+        <small>{$words->getFormatted("visited")}: {$layoutbits->ago(strtotime($m->visited))}</small>
     </div>
 </div>
 HTML;

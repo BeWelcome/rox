@@ -37,6 +37,15 @@ class HostingRequestController extends BaseMessageController
     use TranslatorTrait;
 
     /**
+     * @var HostingRequestModel
+     */
+    private HostingRequestModel $requestModel;
+
+    public function __construct(HostingRequestModel $requestModel) {
+        $this->requestModel = $requestModel;
+    }
+
+    /**
      * Deals with replies to messages and hosting requests.
      *
      * @Route("/request/{id}/reply", name="hosting_request_reply",
@@ -368,7 +377,7 @@ class HostingRequestController extends BaseMessageController
     {
         $requestModel = new HostingRequestModel();
 
-        return $requestModel->checkRequestExpired($hostingRequest->getRequest());
+        return $requestModel->isRequestExpired($hostingRequest->getRequest());
     }
 
     private function sendInitialRequestNotification(Member $host, Member $guest, Message $request)
@@ -385,76 +394,6 @@ class HostingRequestController extends BaseMessageController
     private function sendHostReplyNotification(Member $host, Member $guest, Message $request, $subject, $requestChanged)
     {
         $this->messageModel->sendRequestNotification($host, $guest, $host, $request, $subject, 'reply_from_host', $requestChanged);
-    }
-
-    /**
-     * @param $clickedButton
-     * @param mixed $sender
-     * @param mixed $receiver
-     *
-     * @throws \Doctrine\DBAL\Exception\InvalidArgumentException
-     * @throws InvalidArgumentException
-     *
-     * @return Message
-     */
-    private function getFinalRequest(Member $sender, Member $receiver, Message $hostingRequest, Message $data, $clickedButton)
-    {
-        $finalRequest = new Message();
-        $finalRequest->setSender($sender);
-        $finalRequest->setReceiver($receiver);
-        $finalRequest->setParent($hostingRequest);
-        $finalRequest->setMessage($data->getMessage());
-        $finalRequest->setSubject($hostingRequest->getSubject());
-        $finalRequest->setStatus(MessageStatusType::SENT);
-
-        $oldState = $hostingRequest->getRequest()->getStatus();
-        $newState = $oldState;
-        switch ($clickedButton) {
-            case 'cancel':
-                $newState = HostingRequest::REQUEST_CANCELLED;
-                break;
-            case 'decline':
-                $newState = HostingRequest::REQUEST_DECLINED;
-                break;
-            case 'tentatively':
-                $newState = HostingRequest::REQUEST_TENTATIVELY_ACCEPTED;
-                break;
-            case 'accept':
-                $newState = HostingRequest::REQUEST_ACCEPTED;
-                break;
-        }
-
-        $newStateSet = ($oldState !== $newState);
-
-        // check if request was altered
-        $diff = date_diff($data->getRequest()->getArrival(), $hostingRequest->getRequest()->getArrival());
-        $newArrival = (0 !== $diff->y) || (0 !== $diff->m) || (0 !== $diff->d);
-        if (null !== $data->getRequest()->getDeparture() && null !== $hostingRequest->getRequest()->getDeparture()) {
-            $diff = date_diff($data->getRequest()->getDeparture(), $hostingRequest->getRequest()->getDeparture());
-            $newDeparture = (0 !== $diff->y) || (0 !== $diff->m) || (0 !== $diff->d);
-        } else {
-            // departure date was either set or removed so we set newDeparture to true
-            $newDeparture = true;
-        }
-        $newFlexible = ($data->getRequest()->getFlexible() !== $hostingRequest->getRequest()->getFlexible());
-        $newNumberOfTravellers = ($data->getRequest()->getNumberOfTravellers()
-            !== $hostingRequest->getRequest()->getNumberOfTravellers());
-        if ($newArrival || $newDeparture || $newFlexible || $newNumberOfTravellers) {
-            $newHostingRequest = new HostingRequest();
-            $newHostingRequest->setStatus($newState);
-            $newHostingRequest->setArrival($data->getRequest()->getArrival());
-            $newHostingRequest->setDeparture($data->getRequest()->getDeparture());
-            $newHostingRequest->setFlexible($data->getRequest()->getFlexible());
-            $newHostingRequest->setNumberOfTravellers($data->getRequest()->getNumberOfTravellers());
-            $finalRequest->setRequest($newHostingRequest);
-        } else {
-            $finalRequest->setRequest($hostingRequest->getRequest());
-        }
-        if ($newStateSet) {
-            $finalRequest->getRequest()->setStatus($newState);
-        }
-
-        return $finalRequest;
     }
 
     private function addExpiredFlash(Member $receiver)
@@ -486,7 +425,7 @@ class HostingRequestController extends BaseMessageController
         $clickedButton = $requestForm->getClickedButton()->getName();
 
         // handle changes in request and subject
-        $newRequest = $this->getFinalRequest($sender, $receiver, $currentRequest, $data, $clickedButton);
+        $newRequest = $this->requestModel->getFinalRequest($sender, $receiver, $currentRequest, $data, $clickedButton);
         $em->persist($newRequest);
         $em->flush();
 

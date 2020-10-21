@@ -7,6 +7,8 @@
 {% block content %}
     <h1>{{ 'translations.headline' | trans }}</h1>
     <p>{{ 'translation.mockup.abstract'|trans }}</p>
-    <p>{{ 'translations.mockup.url'|trans }}: {{ html_template }}</p>
+    <p>{{ 'translations.mockup.url'|trans }}: {{ url }}<br>
+        {{ 'translations.mockup.template'|trans }}: {{ template}}<br>
+        {% if description != '' %}{{ description }}{% endif %}</p>
     <div id="mockup" class="p-2">{{ block("content", html_template)|raw }}</div>
 {% endblock content %}

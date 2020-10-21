@@ -7,6 +7,7 @@
 {% block content %}
     <h1>{{ 'translations.headline' | trans }}</h1>
     <p>{{ 'translation.mockup.abstract'|trans }}</p>
-    <p>{{ 'translations.mockup.url'|trans }}: {{ html_template }}</p>
+    <p>{{ 'translations.mockup.template'|trans }}: {{ html_template }}<br>
+    {% if description != '' %}{{ description }}{% endif %}</p>
     <div class="p-2" style="background-color:#ccc; color:black;">{{ block("content", html_template)|raw }}</div>
 {% endblock content %}

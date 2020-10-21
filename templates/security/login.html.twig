@@ -61,6 +61,7 @@
                     src="{{ asset('images/logo_index_top.png') }}" alt="BeWelcome"/></a>
     </div>
 </nav>
+{% block content %}
 <main role="main">
     <noscript>
         <div class="container-lg">
@@ -178,12 +179,14 @@
         </div>
     </div>
 </main>
+{% endblock content %}
 {% include 'footer.html.twig' %}
 {{ encore_entry_script_tags('bewelcome') }}
 <script type="application/javascript">
     $(".select2").select2({
         theme: 'bootstrap4',
-        containerCssClass: 'form-control'
+        width: 'auto',
+        dropdownAutoWidth: true
     });
 </script>
 </body>

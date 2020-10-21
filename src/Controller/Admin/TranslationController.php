@@ -2,6 +2,8 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\ForumPost;
+use App\Entity\ForumThread;
 use App\Entity\Group;
 use App\Entity\HostingRequest;
 use App\Entity\Language;
@@ -13,6 +15,8 @@ use App\Form\CustomDataClass\SearchFormRequest;
 use App\Form\CustomDataClass\Translation\EditTranslationRequest;
 use App\Form\CustomDataClass\Translation\TranslationRequest;
 use App\Form\EditTranslationFormType;
+use App\Form\ResetPasswordFormType;
+use App\Form\ResetPasswordRequestFormType;
 use App\Form\SearchFormType;
 use App\Form\TranslationFormType;
 use App\Model\TranslationModel;
@@ -77,40 +81,82 @@ class TranslationController extends AbstractController
             'join declined' => [
                 'template' => 'emails/group/join.declined.html.twig',
             ],
+            'reset password' => [
+                'template' => 'emails/reset.password.html.twig',
+            ],
+            'forum post' => [
+                'template' => 'emails/notifications.html.twig',
+            ],
+            'group post (subscribed)' => [
+                'template' => 'emails/notifications.html.twig',
+            ],
+            'group post (not subscribed)' => [
+                'template' => 'emails/notifications.html.twig',
+            ],
         ],
         'pages' => [
             'signup_finish' => [
+                'url' => 'signup/finish',
                 'template' => 'signup/finish.html.twig',
+                'description' => 'Successful signup.',
             ],
             'signup_error' => [
+                'url' => 'signup/finish',
                 'template' => 'signup/error.html.twig',
+                'description' => 'Error during signup.',
             ],
             'error 403' => [
                 'template' => 'bundles/TwigBundle/Exception/error403.html.twig',
+                'description' => 'Access to a resource was denied.',
             ],
             'error 404' => [
                 'template' => 'bundles/TwigBundle/Exception/error404.html.twig',
+                'description' => 'The page doesn\'t exists.',
             ],
             'error 500' => [
                 'template' => 'bundles/TwigBundle/Exception/error500.html.twig',
+                'description' => 'A server problem (something bad happened).',
             ],
             'homepage' => [
+                'url' => '/',
                 'template' => 'home/home.html.twig',
+                'description' => 'The page that is shown to unauthenticated visitors.',
             ],
             'Terms of Use' => [
+                'url' => 'terms/{locale}',
                 'template' => 'policies/tou_translated.html.twig',
+                'description' => 'The terms of use. Make sure to translate them fully before asking for publication.',
+
             ],
             'Privacy Policy' => [
+                'url' => 'privacy/{locale}',
                 'template' => 'policies/pp_translated.html.twig',
+                'description' => 'The privacy policy. Make sure to translate them fully before asking for publication.',
             ],
             'Data Privacy' => [
+                'url' => 'dataprivacy/{locale}',
                 'template' => 'policies/dp_translated.html.twig',
+                'description' => 'The data privacy policy. Make sure to translate them fully before asking for publication.',
+            ],
+            'Login' => [
+                'url' => '/login',
+                'template' => 'security/login.html.twig',
+                'description' => 'The login page (without error message)'
+            ],
+            'Reset Password Request' => [
+                'url' => '/resetpassword',
+                'template' => 'member/request.password.reset.html.twig',
+                'description' => 'The page that is shown when a member asks for a new password',
+            ],
+            'Reset Password' => [
+                'url' => '/resetpassword/{username}/{token}',
+                'template' => 'member/reset.password.html.twig',
+                'description' => 'The page that is shown when a member really sets a new password',
             ],
         ],
     ];
 
-    /** @var TranslationModel */
-    private $translationModel;
+    private TranslationModel $translationModel;
 
     public function __construct(TranslationModel $translationModel)
     {
@@ -676,12 +722,16 @@ class TranslationController extends AbstractController
         }
 
         $template = self::MOCKUPS['pages'][$name]['template'];
+        $url = self::MOCKUPS['pages'][$name]['url'] ?? '';
+        $description = self::MOCKUPS['pages'][$name]['description'] ?? '';
 
         return $this->render(
             'admin/translations/mockup.page.html.twig',
             array_merge(
-                $this->getMockParams($template),
+                $this->getMockParams($template, $name),
                 [
+                    'url' => $url,
+                    'description' => $description,
                     'template' => $template,
                     'submenu' => [
                         'active' => 'mockups',
@@ -706,13 +756,14 @@ class TranslationController extends AbstractController
         }
 
         $template = self::MOCKUPS['emails'][$name]['template'];
-
+        $description = self::MOCKUPS['emails'][$name]['description'] ?? '';
         return $this->render(
             'admin/translations/mockup.email.html.twig',
             array_merge(
-                $this->getMockParams($template),
+                $this->getMockParams($template, $name),
                 [
                     'template' => $template,
+                    'description' => $description,
                     'submenu' => [
                         'active' => 'mockups',
                         'items' => $this->getSubmenuItems($request->getLocale(), 'mockup', $template),
@@ -722,7 +773,7 @@ class TranslationController extends AbstractController
         );
     }
 
-    private function getMockParams($template)
+    private function getMockParams($template, $name = null)
     {
         $mockMessage = \Mockery::mock(Message::class, [
             'getId' => 1,
@@ -815,6 +866,64 @@ class TranslationController extends AbstractController
                 $params['receiver'] = $this->getUser();
                 $params['group'] = $group;
                 $params['subject'] = 'group.invitation';
+                break;
+            case 'emails/reset.password.html.twig':
+                $params['sender'] = $bwadmin;
+                $params['receiver'] = $this->getUser();
+                $params['token'] = '91aeecc7154b8fc9b2855a331e975bc8aafb088b6617d9aefe543e5fee427ae7';
+                break;
+            case 'emails/notifications.html.twig':
+                if ('forum post' === substr($name, 0, 10) ) {
+                    $mockThread = \Mockery::mock(ForumThread::class, [
+                        'getId' => 1,
+                        'getGroup' => null,
+                        'getTitle' => 'Thread title',
+                    ]);
+
+                    $mockPost = \Mockery::mock(ForumPost::class, [
+                        'getId' => 1,
+                        'getMessage' => 'Post text',
+                        'getThread' => $mockThread,
+                    ]);
+                } elseif ('group post' === substr($name, 0, 10) ) {
+                    $mockThread = \Mockery::mock(ForumThread::class, [
+                        'getId' => 1,
+                        'getGroup' => $group,
+                        'getTitle' => 'Thread title',
+                    ]);
+
+                    $mockPost = \Mockery::mock(ForumPost::class, [
+                        'getId' => 1,
+                        'getMessage' => 'Post text',
+                        'getThread' => $mockThread,
+                    ]);
+                }
+                if (false !== strpos($name, 'not')) {
+                    $subscription = 0;
+                } else {
+                    $subscription = 123456;
+                }
+                $params['sender'] = $bwadmin;
+                $params['receiver'] = $this->getUser();
+                $params['notification'] = [
+                    'post' => $mockPost,
+                    'subscription' => $subscription,
+                ];
+                break;
+            case 'security/login.html.twig':
+                $params['error'] = null;
+                $params['last_username'] = $this->getUser()->getUsername();
+                $params['invalid_credentials'] = false;
+                $params['resend_confirmation'] = false;
+                $params['member_banned'] = false;
+                $params['member_expired'] = false;
+                $params['member_not_allowed_to_login'] = false;
+                break;
+            case 'member/request.password.reset.html.twig':
+                $params['form'] = $this->createForm(ResetPasswordRequestFormType::class)->createView();
+                break;
+            case 'member/reset.password.html.twig':
+                $params['form'] = $this->createForm(ResetPasswordFormType::class)->createView();
                 break;
             default:
                 $params['host'] = $bwadmin;

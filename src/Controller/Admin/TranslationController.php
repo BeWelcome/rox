@@ -27,6 +27,7 @@ use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
 use DateTime;
 use Exception;
+use Mockery;
 use Pagerfanta\Pagerfanta;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -38,6 +39,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use function in_array;
 
 /**
  * Class TranslationController.
@@ -156,7 +158,8 @@ class TranslationController extends AbstractController
         ],
     ];
 
-    private TranslationModel $translationModel;
+    /** @var TranslationModel  */
+    private  $translationModel;
 
     public function __construct(TranslationModel $translationModel)
     {
@@ -179,7 +182,6 @@ class TranslationController extends AbstractController
     public function editTranslation(
         Request $request,
         Language $language,
-        KernelInterface $kernel,
         $code
     ) {
         $this->denyAccessUnlessGranted(Member::ROLE_ADMIN_WORDS, null, 'Unable to access this page!');
@@ -294,7 +296,6 @@ class TranslationController extends AbstractController
         Request $request,
         string $domain,
         Language $language,
-        KernelInterface $kernel,
         $translationId
     ) {
         $this->denyAccessUnlessGranted(Member::ROLE_ADMIN_WORDS, null, 'Unable to access this page!');
@@ -396,8 +397,7 @@ class TranslationController extends AbstractController
      * @return Response
      */
     public function createTranslationDirect(
-        Request $request,
-        KernelInterface $kernel
+        Request $request
     ) {
         $this->denyAccessUnlessGranted(Member::ROLE_ADMIN_WORDS, null, 'Unable to access this page!');
 
@@ -462,7 +462,7 @@ class TranslationController extends AbstractController
      * @return Response
      * @ParamConverter("language", class="App\Entity\Language", options={"mapping": {"locale": "shortcode"}})
      */
-    public function addTranslation(Request $request, Language $language, KernelInterface $kernel, $code)
+    public function addTranslation(Request $request, Language $language, $code)
     {
         $this->denyAccessUnlessGranted(Member::ROLE_ADMIN_WORDS, null, 'Unable to access this page!');
 
@@ -775,12 +775,12 @@ class TranslationController extends AbstractController
 
     private function getMockParams($template, $name = null)
     {
-        $mockMessage = \Mockery::mock(Message::class, [
+        $mockMessage = Mockery::mock(Message::class, [
             'getId' => 1,
             'getMessage' => 'Message text',
         ]);
 
-        $mockRequest = \Mockery::mock(HostingRequest::class, [
+        $mockRequest = Mockery::mock(HostingRequest::class, [
             'getId' => 1,
             'getArrival' => new DateTime(),
             'getDeparture' => new DateTime(),
@@ -874,25 +874,25 @@ class TranslationController extends AbstractController
                 break;
             case 'emails/notifications.html.twig':
                 if ('forum post' === substr($name, 0, 10) ) {
-                    $mockThread = \Mockery::mock(ForumThread::class, [
+                    $mockThread = Mockery::mock(ForumThread::class, [
                         'getId' => 1,
                         'getGroup' => null,
                         'getTitle' => 'Thread title',
                     ]);
 
-                    $mockPost = \Mockery::mock(ForumPost::class, [
+                    $mockPost = Mockery::mock(ForumPost::class, [
                         'getId' => 1,
                         'getMessage' => 'Post text',
                         'getThread' => $mockThread,
                     ]);
                 } elseif ('group post' === substr($name, 0, 10) ) {
-                    $mockThread = \Mockery::mock(ForumThread::class, [
+                    $mockThread = Mockery::mock(ForumThread::class, [
                         'getId' => 1,
                         'getGroup' => $group,
                         'getTitle' => 'Thread title',
                     ]);
 
-                    $mockPost = \Mockery::mock(ForumPost::class, [
+                    $mockPost = Mockery::mock(ForumPost::class, [
                         'getId' => 1,
                         'getMessage' => 'Post text',
                         'getThread' => $mockThread,
@@ -948,7 +948,7 @@ class TranslationController extends AbstractController
         })->first();
 
         $scope = preg_split('/[,;]/', str_replace('"', '', $wordRight->getScope()));
-        if (\in_array('All', $scope, true)) {
+        if (in_array('All', $scope, true)) {
             return ['this', 'should', 'never', 'happen'];
         }
 

@@ -31,7 +31,6 @@
     "@popperjs/core": "^2.5.2",
     "@symfony/webpack-encore": "^0.31.0",
     "@ttskch/select2-bootstrap4-theme": "^1.4.0",
-    "add-to-homescreen": "github:docluv/add-to-homescreen",
     "autoprefixer": "^9.8.6",
     "bootstrap": "^4.5.2",
     "bootstrap-autohidingnavbar": "github:istvan-ujjmeszaros/bootstrap-autohidingnavbar",
@@ -59,7 +58,6 @@
     "leaflet": "^1.7.1",
     "leaflet.markercluster": "^1.4.1",
     "leaflet.markercluster.webpack": "^1.0.2",
-    "lodash": "^4.17.20",
     "masonry-layout": "^4.2.2",
     "minimatch": "^3.0.4",
     "minimist": "^1.2.5",
@@ -88,5 +86,8 @@
     "uglify-js": "^3.11.1",
     "underscore.string": "^3.3.5",
     "workbox-webpack-plugin": "^5.1.4"
+  },
+  "dependencies": {
+    "add-to-homescreen": "^3.2.6"
   }
 }

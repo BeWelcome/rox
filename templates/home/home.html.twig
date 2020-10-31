@@ -2,13 +2,6 @@
 <!DOCTYPE html>
 <html lang="{{ app.request.locale }}">
 <head>
-    <link rel="stylesheet" type="text/css" href="addtohomescreen.css">
-    <script src="addtohomescreen.js"></script>
-    <script>
-        addToHomescreen({
-            autostart: true
-        });
-    </script>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -22,46 +15,7 @@
     {{ encore_entry_link_tags('floating_labels') }}
     {{ encore_entry_link_tags('jquery_ui') }}
     <link rel='manifest' href='{{ asset('manifest.webmanifest') }}'>
-{#     <script type="module">
-        // Check that service workers are supported
-        if ('serviceWorker' in navigator) {
-            // Use the window load event to keep the page load performant
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('{{ asset('service-worker.js') }}');
-            });
-        }
-
-        let deferredPrompt;
-
-        const installPWA = document.getElementById('install-pwa');
-        const installButton = document.getElementById('install-button');
-
-        window.addEventListener('beforeinstallprompt', (e) => {
-            // Prevent Chrome 67 and earlier from automatically showing the prompt
-            e.preventDefault();
-            // Stash the event so it can be triggered later.
-            deferredPrompt = e;
-            // Update UI to notify the user they can add to home screen
-            installPWA.style.display = 'block';
-
-            installButton.addEventListener('click', (e) => {
-                // hide our user interface that shows our A2HS button
-                installPWA.style.display = 'none';
-                // Show the prompt
-                deferredPrompt.prompt();
-                // Wait for the user to respond to the prompt
-                deferredPrompt.userChoice.then((choiceResult) => {
-                    if (choiceResult.outcome === 'accepted') {
-                        console.log('User accepted the A2HS prompt');
-                    } else {
-                        console.log('User dismissed the A2HS prompt');
-                    }
-                    deferredPrompt = null;
-                });
-            });
-        });
-    </script>
-#}</head>
+</head>
 <body id="parallax-home">
 {% block content %}{% include 'loginbar.html.twig' %}
 <!-- Section #1 -->

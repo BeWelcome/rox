@@ -53,7 +53,6 @@ Encore
     .addEntry('roxeditor', './assets/js/roxeditor.js')
     .addEntry('rangeslider', './assets/js/rangeslider.js')
     .addEntry('faq', './assets/js/faq.js')
-    .addEntry('addtohomescreen', './assets/js/addtohomescreen.js')
     .autoProvidejQuery()
     //    .addEntry('roxinlineeditor', './assets/js/roxinlineeditor.js')
 

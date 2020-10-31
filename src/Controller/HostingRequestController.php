@@ -23,6 +23,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
+use function count;
+
 /**
  * Class HostingRequestController.
  *
@@ -36,12 +38,11 @@ class HostingRequestController extends BaseMessageController
     use ManagerTrait;
     use TranslatorTrait;
 
-    /**
-     * @var HostingRequestModel
-     */
-    private HostingRequestModel $requestModel;
+    /** HostingRequestModel */
+    private $requestModel;
 
-    public function __construct(HostingRequestModel $requestModel) {
+    public function __construct(HostingRequestModel $requestModel)
+    {
         $this->requestModel = $requestModel;
     }
 
@@ -75,7 +76,7 @@ class HostingRequestController extends BaseMessageController
 
         // determine if guest or host reply to a request
         $member = $this->getUser();
-        $first = $thread[\count($thread) - 1];
+        $first = $thread[count($thread) - 1];
         $parentId = ($message->getParent()) ? $message->getParent()->getId() : $message->getId();
         if ($member === $first->getSender()) {
             return $this->redirectToRoute('hosting_request_reply_guest', [
@@ -131,7 +132,7 @@ class HostingRequestController extends BaseMessageController
             $realParent = $this->getParent($parent);
 
             /** @var Message $newRequest */
-            $newRequest = $this->persistRequest($requestForm, $guest, $host, $realParent);
+            $newRequest = $this->persistRequest($requestForm, $realParent);
 
             $subject = $this->getSubjectForReply($newRequest);
 
@@ -190,7 +191,7 @@ class HostingRequestController extends BaseMessageController
             $realParent = $this->getParent($parent);
 
             /** @var Message $newRequest */
-            $newRequest = $this->persistRequest($requestForm, $host, $guest, $realParent);
+            $newRequest = $this->persistRequest($requestForm, $realParent);
 
             $subject = $this->getSubjectForReply($newRequest);
 
@@ -418,14 +419,14 @@ class HostingRequestController extends BaseMessageController
         return $newRequest;
     }
 
-    private function persistRequest(Form $requestForm, Member $sender, Member $receiver, $currentRequest)
+    private function persistRequest(Form $requestForm, $currentRequest)
     {
         $data = $requestForm->getData();
         $em = $this->getDoctrine()->getManager();
         $clickedButton = $requestForm->getClickedButton()->getName();
 
         // handle changes in request and subject
-        $newRequest = $this->requestModel->getFinalRequest($sender, $receiver, $currentRequest, $data, $clickedButton);
+        $newRequest = $this->requestModel->getFinalRequest($currentRequest, $data, $clickedButton);
         $em->persist($newRequest);
         $em->flush();
 

@@ -8,10 +8,16 @@ use App\Entity\Member;
 use App\Entity\Message;
 use App\Repository\MessageRepository;
 use App\Utilities\ManagerTrait;
+use Carbon\Carbon;
 use DateInterval;
 use DateTime;
 use InvalidArgumentException;
 
+/**
+ * Ignore complexity warning. \todo fix this.
+ *
+ * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+ */
 class HostingRequestModel
 {
     use ManagerTrait;
@@ -38,22 +44,23 @@ class HostingRequestModel
 
     /**
      * @param $clickedButton
-     * @param mixed $sender
-     * @param mixed $receiver
      *
      * @return Message
-     * @throws InvalidArgumentException
      *
+     * @throws InvalidArgumentException|\Doctrine\DBAL\Exception\InvalidArgumentException
      */
-    public function getFinalRequest(Member $sender, Member $receiver, Message $hostingRequest, Message $data, $clickedButton)
-    {
+    public function getFinalRequest(/* Member $sender, Member $receiver, */
+        Message $hostingRequest,
+        Message $data,
+        $clickedButton
+    ) {
         if (null === $hostingRequest->getRequest()->getDeparture() || null === $data->getRequest()->getDeparture()) {
             throw new InvalidArgumentException();
         }
 
         $finalRequest = new Message();
         $finalRequest->setSender($hostingRequest->getSender());
-        $finalRequest->setReceiver($hostingRequest->getSender());
+        $finalRequest->setReceiver($hostingRequest->getReceiver());
         $finalRequest->setParent($hostingRequest);
         $finalRequest->setMessage($data->getMessage());
         $finalRequest->setSubject($hostingRequest->getSubject());
@@ -79,31 +86,52 @@ class HostingRequestModel
         $newStateSet = ($oldState !== $newState);
 
         // check if request was altered
-        $arrivalDiff = date_diff($data->getRequest()->getArrival(), $hostingRequest->getRequest()->getArrival());
+        $originalRequest = $hostingRequest->getRequest();
+        $currentRequest = $data->getRequest();
+        $arrivalDiff = date_diff($originalRequest->getArrival(), $currentRequest->getArrival());
         $newArrival = !(0 === $arrivalDiff->y && 0 === $arrivalDiff->m && 0 === $arrivalDiff->d);
 
-        $departureDiff = date_diff($data->getRequest()->getDeparture(), $hostingRequest->getRequest()->getDeparture());
+        $departureDiff = date_diff($originalRequest->getDeparture(), $currentRequest->getDeparture());
         $newDeparture = !(0 === $departureDiff->y && 0 === $departureDiff->m && 0 === $departureDiff->d);
 
-        $newFlexible = ($data->getRequest()->getFlexible() !== $hostingRequest->getRequest()->getFlexible());
+        $newFlexible = ($originalRequest->getFlexible() !== $currentRequest->getFlexible());
 
-        $newNumberOfTravellers = ($data->getRequest()->getNumberOfTravellers()
-            !== $hostingRequest->getRequest()->getNumberOfTravellers());
+        $newNumberOfTravellers =
+            ($originalRequest->getNumberOfTravellers() !== $currentRequest->getNumberOfTravellers());
 
+        $newHostingRequest = new HostingRequest();
+        $newHostingRequest->setArrival(
+            $this->getFinal($originalRequest->getArrival(), $currentRequest->getArrival())
+        );
+        $newHostingRequest->setDeparture(
+            $this->getFinal($originalRequest->getDeparture(), $currentRequest->getDeparture())
+        );
+        $newHostingRequest->setFlexible(
+            $this->getFinal($originalRequest->getFlexible(), $currentRequest->getFlexible())
+        );
+        $newHostingRequest->setNumberOfTravellers(
+            $this->getFinal($originalRequest->getNumberOfTravellers(), $currentRequest->getNumberOfTravellers())
+        );
         if ($newArrival || $newDeparture || $newFlexible || $newNumberOfTravellers) {
-            $newHostingRequest = new HostingRequest();
-            $newHostingRequest->setArrival($data->getRequest()->getArrival());
-            $newHostingRequest->setDeparture($data->getRequest()->getDeparture());
-            $newHostingRequest->setFlexible($data->getRequest()->getFlexible());
-            $newHostingRequest->setNumberOfTravellers($data->getRequest()->getNumberOfTravellers());
             $finalRequest->setRequest($newHostingRequest);
         } else {
             $finalRequest->setRequest($hostingRequest->getRequest());
         }
+
         if ($newStateSet) {
             $finalRequest->getRequest()->setStatus($newState);
         }
 
         return $finalRequest;
+    }
+
+    /**
+     * @param $original
+     * @param $current
+     * @return mixed
+     */
+    private function getFinal($original, $current)
+    {
+        return ($original !== $current) ? $current : $original;
     }
 }

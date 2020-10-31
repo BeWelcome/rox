@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\FeedbackCategory;
 use App\Form\FeedbackFormType;
 use App\Model\AboutModel;
 use Carbon\Carbon;
@@ -33,12 +34,16 @@ class FeedbackController extends AboutBaseController
     {
         $member = $this->getUser();
         $categories = $aboutModel->getFeedbackCategories();
-        $form = $this->createForm(FeedbackFormType::class, null, [
-            'categories' => $categories,
-            'member' => $member,
-            'csrf_protection' => false,
-            'allow_extra_fields' => true,
-        ]);
+        $form = $this->createForm(
+            FeedbackFormType::class,
+            null,
+            [
+                'categories' => $categories,
+                'member' => $member,
+                'csrf_protection' => false,
+                'allow_extra_fields' => true,
+            ]
+        );
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -46,7 +51,6 @@ class FeedbackController extends AboutBaseController
             $reply = !($data['no_reply_needed']);
             if ($reply && null === $data['FeedbackEmail']) {
                 $form
-                    ->get('FeedbackEmail')
                     ->addError(
                         new FormError(
                             $translator->trans('form.error.feedback.email.needed', [], 'validators')

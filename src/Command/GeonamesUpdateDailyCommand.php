@@ -16,10 +16,11 @@ class GeonamesUpdateDailyCommand extends Command
 {
     protected static $defaultName = 'geonames:update:daily';
 
-    /**
-     * @var EntityManager
-     */
+    /** @var EntityManager */
     private $entityManager;
+
+    /** @var ParameterBagInterface */
+    private $params;
 
     public function __construct(EntityManagerInterface $entityManager, ParameterBagInterface $params)
     {
@@ -145,8 +146,10 @@ class GeonamesUpdateDailyCommand extends Command
         return $count;
     }
 
-    private function updateAlternateNamesForDate($date): int
+    private function updateAlternateNamesForDate($date, SymfonyStyle $io): int
     {
+        $io->note('Alternate names: Working on date ' . $date->format('Y-m-d'));
+
         $count = 0;
         $connection = $this->entityManager->getConnection();
 

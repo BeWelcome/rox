@@ -176,34 +176,9 @@ class Feedback
     }
 
     /**
-     * Set status.
-     *
-     * @param string $status
-     *
-     * @return Feedback
-     */
-    public function setStatus($status)
-    {
-        $this->status = $status;
-
-        return $this;
-    }
-
-    /**
-     * Get status.
-     *
-     * @return string
-     */
-    public function getStatus()
-    {
-        return $this->status;
-    }
-
-    /**
      * Set language.
      *
-     * @param int   $ianguage
-     * @param mixed $language
+     * @param Language $language
      *
      * @return Feedback
      */
@@ -215,7 +190,7 @@ class Feedback
     }
 
     /**
-     * Get idlanguage.
+     * Get language.
      *
      * @return Language
      */

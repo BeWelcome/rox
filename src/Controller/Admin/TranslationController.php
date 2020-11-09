@@ -39,6 +39,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Constraints\NotBlank;
+
 use function in_array;
 
 /**
@@ -159,7 +160,7 @@ class TranslationController extends AbstractController
     ];
 
     /** @var TranslationModel  */
-    private  $translationModel;
+    private $translationModel;
 
     public function __construct(TranslationModel $translationModel)
     {
@@ -873,7 +874,7 @@ class TranslationController extends AbstractController
                 $params['token'] = '91aeecc7154b8fc9b2855a331e975bc8aafb088b6617d9aefe543e5fee427ae7';
                 break;
             case 'emails/notifications.html.twig':
-                if ('forum post' === substr($name, 0, 10) ) {
+                if ('forum post' === substr($name, 0, 10)) {
                     $mockThread = Mockery::mock(ForumThread::class, [
                         'getId' => 1,
                         'getGroup' => null,
@@ -885,7 +886,7 @@ class TranslationController extends AbstractController
                         'getMessage' => 'Post text',
                         'getThread' => $mockThread,
                     ]);
-                } elseif ('group post' === substr($name, 0, 10) ) {
+                } elseif ('group post' === substr($name, 0, 10)) {
                     $mockThread = Mockery::mock(ForumThread::class, [
                         'getId' => 1,
                         'getGroup' => $group,

@@ -69,7 +69,7 @@ class AdminUnit
      *
      * @ORM\Column(name="geonameId", type="integer")
      */
-    private $geonameid;
+    private $geonameId;
 
     /**
      * Set name.
@@ -220,7 +220,7 @@ class AdminUnit
      *
      * @return int
      */
-    public function getGeonameid()
+    public function getGeonameId()
     {
         return $this->geonameId;
     }

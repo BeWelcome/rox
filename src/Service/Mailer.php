@@ -193,6 +193,10 @@ class Mailer
             ->htmlTemplate('emails/' . $template . '.html.twig')
             ->context($parameters);
 
+        if (isset($parameters['datesent'])) {
+            $email->date($parameters['datesent']);
+        }
+
         if (!\is_string($sender) && !$sender instanceof Address) {
             $sender = $email->from($this->getBewelcomeAddress($sender, 'message@bewelcome.org'));
         }

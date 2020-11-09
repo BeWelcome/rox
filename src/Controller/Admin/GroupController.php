@@ -96,7 +96,7 @@ class GroupController extends AbstractController
         }
 
         // Build Pagerfanta for groups
-        $queryBuilder = $this->getManager()->createQueryBuilder()
+        $queryBuilder = $this->getDoctrine()->getManager()->createQueryBuilder()
             ->select('g')
             ->from('App:Group', 'g')
             ->where("g.name NOT LIKE '[Archived] %'")
@@ -138,7 +138,7 @@ class GroupController extends AbstractController
         }
 
         // Build Pagerfanta for groups
-        $queryBuilder = $this->getManager()->createQueryBuilder()
+        $queryBuilder = $this->getManager()->getManager()->createQueryBuilder()
             ->select('g')
             ->from('App:Group', 'g')
             ->where("g.name LIKE '[Archived] %'")
@@ -381,7 +381,7 @@ class GroupController extends AbstractController
             ->getForm();
         $groupForm->handleRequest($request);
         if ($groupForm->isSubmitted() && $groupForm->isValid()) {
-            $em = $this->getManager();
+            $em = $this->getDoctrine()->getManager();
             $data = $groupForm->getData();
             $groupRepository = $em->getRepository(Group::class);
             /** @var Group $group */

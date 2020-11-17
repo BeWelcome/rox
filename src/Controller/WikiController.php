@@ -7,6 +7,8 @@ use App\Model\WikiModel;
 use App\Repository\WikiRepository;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
+use Pagerfanta\Adapter\ArrayAdapter;
+use Pagerfanta\Pagerfanta;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -26,17 +28,19 @@ class WikiController extends AbstractController
      */
     public function showWikiFrontPage(WikiModel $wikiModel)
     {
-        return $this->showWikiPage('WikiFrontPage', $wikiModel);
+        return $this->showWikiPage('WikiFrontPage', $wikiModel, 0);
     }
 
     /**
-     * @Route("/wiki/{pageTitle}", name="wiki_page")
+     * @Route("/wiki/{pageTitle}/{version}", name="wiki_page",
+     *     requirements={"version"="\d+"},
+     *     defaults={"version"=0})
      *
      * @param $pageTitle
      *
      * @return Response
      */
-    public function showWikiPage($pageTitle, WikiModel $wikiModel)
+    public function showWikiPage($pageTitle, WikiModel $wikiModel, int $version)
     {
         $pageName = $wikiModel->getPageName($pageTitle);
 
@@ -44,22 +48,46 @@ class WikiController extends AbstractController
         /** @var WikiRepository $wikiRepository */
         $wikiRepository = $em->getRepository(Wiki::class);
 
-        $wikiPage = $wikiRepository->getPageByName($pageName);
+        $wikiPage = $wikiRepository->getPageByName($pageName, $version);
 
+        $output = null;
+        $pagerFanta = null;
+        $content = null;
         if (null === $wikiPage) {
-            return $this->redirectToRoute('wiki_page_create', ['pageTitle' => $pageTitle]);
+            // No wiki page found if no version was given create a new page.
+            if (0 === $version) {
+                return $this->redirectToRoute('wiki_page_create', ['pageTitle' => $pageTitle]);
+            }
+
+            // the given version of the wiki page doesn't exist. Just keep going
+            // (show appropriate message in the template)
+        } else {
+            $content = $wikiModel->parseWikiMarkup($wikiPage->getContent());
+            if (null === $content) {
+                $this->addTranslatedFlash('error', 'flash.wiki.markup.invalid');
+
+                return $this->redirectToRoute('wiki_page_edit', ['pageTitle' => $pageTitle]);
+            }
+
+            // Create paginator
+            $history = $wikiModel->getHistory($wikiPage);
+
+            $adapter = new ArrayAdapter($history);
+            $pagerFanta = new Pagerfanta($adapter);
+            $pagerFanta->setMaxPerPage(1);
+            if (0 === $version) {
+                $pagerFanta->setCurrentPage($pagerFanta->getNbResults());
+            } else {
+                $pagerFanta->setCurrentPage($version);
+            }
         }
 
-        $output = $wikiModel->parseWikiMarkup($wikiPage->getContent());
-        if (null === $output) {
-            $this->addTranslatedFlash('error', 'flash.wiki.markup.invalid');
-
-            return $this->redirectToRoute('wiki_page_edit', ['pageTitle' => $pageTitle]);
-        }
 
         return $this->render('wiki/wiki.html.twig', [
             'title' => $pageTitle,
-            'wikipage' => $output,
+            'wikipage' => $wikiPage,
+            'content' => $content,
+            'history' => $pagerFanta,
         ]);
     }
 

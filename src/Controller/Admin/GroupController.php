@@ -138,7 +138,7 @@ class GroupController extends AbstractController
         }
 
         // Build Pagerfanta for groups
-        $queryBuilder = $this->getManager()->getManager()->createQueryBuilder()
+        $queryBuilder = $this->getDoctrine()->getManager()->createQueryBuilder()
             ->select('g')
             ->from('App:Group', 'g')
             ->where("g.name LIKE '[Archived] %'")

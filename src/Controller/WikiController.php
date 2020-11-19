@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Member;
 use App\Entity\Wiki;
 use App\Model\WikiModel;
 use App\Repository\WikiRepository;
@@ -117,10 +118,13 @@ class WikiController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
+            /** @var Member $member */
+            $member = $this->getUser();
             $newWikiPage = clone $wikiPage;
             $newWikiPage->setContent($data['wiki_markup']);
             // \todo make this safe against multiple edits at the same time
             $newWikiPage->setVersion($wikiPage->getVersion() + 1);
+            $newWikiPage->setAuthor($member->getUsername());
             $em = $this->getDoctrine()->getManager();
             $em->persist($newWikiPage);
             $em->flush();

@@ -23,7 +23,7 @@ class WikiModel
         $this->roxWikiParserBackend = $wikiParserBackend;
     }
 
-    public function getPage($pageTitle, $version)
+    public function getPage($pageTitle, $version = 0)
     {
         $pageName = $this->getPagename($pageTitle);
 

@@ -259,7 +259,7 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
     /**
      * @var string
      *
-     * @ORM\Column(name="TypicOffer", type="string", nullable=false)
+     * @ORM\Column(name="TypicOffer", type="typical_offer", nullable=false)
      */
     private $typicoffer;
 

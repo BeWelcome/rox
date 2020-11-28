@@ -27,7 +27,7 @@ App\Entity\Member:
         ILiveWith: 0
         IdentityCheckLevel: 0
         InformationToGuest: 0
-        TypicOffer: 0
+        TypicOffer: null
         Offer: 0
         MaxGuest: 1
         MaxLenghtOfStay: 0
@@ -103,7 +103,7 @@ App\Entity\Member:
         ILiveWith: 0
         IdentityCheckLevel: 0
         InformationToGuest: 0
-        TypicOffer: 0
+        TypicOffer: null
         Offer: 0
         MaxGuest: 1
         MaxLenghtOfStay: 2
@@ -178,7 +178,7 @@ App\Entity\Member:
         ILiveWith: 0
         IdentityCheckLevel: 0
         InformationToGuest: 0
-        TypicOffer: 0
+        TypicOffer: null
         Offer: 0
         MaxGuest: 1
         MaxLenghtOfStay: 2

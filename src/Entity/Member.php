@@ -203,7 +203,7 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
     /**
      * @var int
      *
-     * @ORM\Column(name="firstname", type="string", nullable=false)
+     * @ORM\Column(name="FirstName", type="string", nullable=false)
      */
     private $firstName = '0';
 

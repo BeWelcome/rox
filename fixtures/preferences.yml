@@ -53,6 +53,15 @@ App\Entity\Preference:
         DefaultValue: 'Yes'
         PossibleValues: 'Yes:No'
         Status: 'Normal'
+    NEWSLETTERS_VIA_EMAIL:
+        position: 50
+        codename: 'PreferenceAcceptNewsByMail'
+        codeDescription: 'PreferenceAcceptNewsByMailDesc'
+        description: 'This preference is used to say whether a member is ready or not to receive news by mail'
+        created: <DateTime()>
+        DefaultValue: 'Yes'
+        PossibleValues: 'Yes:No'
+        Status: 'Normal'
     HTML_MAILS:
         codename: 'PreferenceHtmlMails'
         position: 51
@@ -89,6 +98,15 @@ App\Entity\Preference:
         DefaultValue: 5
         PossibleValues: ''
         Status: 'Inactive'
+    LOCAL_EVENT_NOTIFICATIONS:
+        position: 55
+        codename: 'PreferenceLocalEvent'
+        codeDescription: 'PreferenceLocalEventDesc'
+        Description: 'this preference which is by default set to True will allow the owner to receive the notification for local event in its area (City/Region or Country)'
+        created: <DateTime()>
+        DefaultValue: 'Yes'
+        PossibleValues: 'Yes:No'
+        Status: 'Normal'
     GROUPS_THREADS_LANDING_PAGE:
         position: 55
         codename: 'GroupsThreadsOnLandingPage'

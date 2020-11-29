@@ -27,3 +27,6 @@ indent_size = 2
 
 [.github/*/*.yml]
 indent_size = 2
+
+[*.feature]
+indent_size = 2

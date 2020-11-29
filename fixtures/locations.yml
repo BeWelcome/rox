@@ -5,7 +5,7 @@ App\Entity\Location:
         longitude: 10.5000000
         fclass: A
         fcode: PCLI
-        admin1: 00
+        admin1: '00'
         population: 3426354
         moddate: '<DateTime()>'
         geonameId: 2921044
@@ -16,7 +16,7 @@ App\Entity\Location:
         longitude: 120.0000000
         fclass: A
         fcode: PCLI
-        admin1: 00
+        admin1: '00'
         population: 242968342
         moddate: '<DateTime()>'
         geonameId: 1643084
@@ -26,7 +26,7 @@ App\Entity\Location:
         name: 'Land Berlin'
         fclass: A
         fcode: ADM1
-        admin1: 16
+        admin1: '16'
         population: 12
         moddate: '<DateTime()>'
         country: '@Germany'
@@ -36,7 +36,7 @@ App\Entity\Location:
         fclass: A
         fcode: ADM1
         country: '@Indonesia'
-        admin1: 36
+        admin1: '36'
         moddate: '<DateTime()>'
     Berlin:
         name: 'Berlin'
@@ -44,7 +44,7 @@ App\Entity\Location:
         longitude: 13.4105300
         fclass: P
         fcode: PPLC
-        admin1: 16
+        admin1: '16'
         population: 3426354
         moddate: '<DateTime()>'
         geonameId: 2950159
@@ -55,7 +55,7 @@ App\Entity\Location:
         longitude: 140.7027600
         fclass: P
         fcode: PPLA
-        admin1: 36
+        admin1: '36'
         population: 134895
         moddate: '<DateTime()>'
         geonameId: 2082600

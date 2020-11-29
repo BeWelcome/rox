@@ -2,10 +2,8 @@
 
 namespace App\TranslationLoader;
 
-use App\Controller\MessageController;
 use App\Entity\Word;
-use Doctrine\ORM\EntityManager;
-use Exception;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Translation\Loader\LoaderInterface;
 use Symfony\Component\Translation\MessageCatalogue;
 
@@ -16,13 +14,13 @@ use Symfony\Component\Translation\MessageCatalogue;
  */
 class DatabaseLoader implements LoaderInterface
 {
-    /** @var EntityManager */
+    /** @var EntityManagerInterface */
     private $em;
 
     /** @var array MessageCatalogue */
     private $originals = [];
 
-    public function __construct(EntityManager $em)
+    public function __construct(EntityManagerInterface $em)
     {
         $this->em = $em;
     }
@@ -43,10 +41,7 @@ class DatabaseLoader implements LoaderInterface
 
     private function getTranslationsForLocale($locale, $domain)
     {
-        $repository = $this->em->getRepository(Word::class);
-        $translations = $repository->getTranslationsForLocale($locale, $domain);
-
-        return $translations;
+        return $this->em->getRepository(Word::class)->getTranslationsForLocale($locale, $domain);
     }
 
     private function loadTranslationsForLocale($locale, $domain)

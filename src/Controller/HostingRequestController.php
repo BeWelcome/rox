@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Doctrine\AccommodationType;
-use App\Doctrine\MessageStatusType;
 use App\Entity\HostingRequest;
 use App\Entity\Member;
 use App\Entity\Message;
@@ -22,8 +21,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-
-use function count;
 
 /**
  * Class HostingRequestController.
@@ -76,7 +73,7 @@ class HostingRequestController extends BaseMessageController
 
         // determine if guest or host reply to a request
         $member = $this->getUser();
-        $first = $thread[count($thread) - 1];
+        $first = $thread[\count($thread) - 1];
         $parentId = ($message->getParent()) ? $message->getParent()->getId() : $message->getId();
         if ($member === $first->getSender()) {
             return $this->redirectToRoute('hosting_request_reply_guest', [

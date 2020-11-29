@@ -1,41 +1,41 @@
 App\Entity\FaqCategory:
-  category0:
-    description: 'faq_cat_general'
-    sortOrder: '0'
-    created: '<dateTime()>'
-    updated: '<dateTime()>'
-  category1:
-    description: 'faq_cat_accomodation'
-    sortOrder: '0'
-    created: '<dateTime()>'
-    updated: '<dateTime()>'
-  category2:
-    description: 'faq_cat_bewelcomeorganization'
-    sortOrder: '0'
-    created: '<dateTime()>'
-    updated: '<dateTime()>'
-  category3:
-    description: 'faq_cat_bugproblemabuse'
-    sortOrder: '0'
-    created: '<dateTime()>'
-    updated: '<dateTime()>'
-  category4:
-    description: 'faq_cat_usingcontact'
-    sortOrder: '0'
-    created: '<dateTime()>'
-    updated: '<dateTime()>'
-  category5:
-    description: 'faq_cat_usingprofile'
-    sortOrder: '0'
-    created: '<dateTime()>'
-    updated: '<dateTime()>'
-  category6:
-    description: 'faq_cat_cooltools'
-    sortOrder: '0'
-    created: '<dateTime()>'
-    updated: '<dateTime()>'
-  category7:
-    description: 'faq_cat_mobile'
-    sortOrder: '0'
-    created: '<dateTime()>'
-    updated: '<dateTime()>' 
+    category0:
+        description: 'faq_cat_general'
+        sortOrder: '0'
+        created: '<dateTime()>'
+        updated: '<dateTime()>'
+    category1:
+        description: 'faq_cat_accomodation'
+        sortOrder: '0'
+        created: '<dateTime()>'
+        updated: '<dateTime()>'
+    category2:
+        description: 'faq_cat_bewelcomeorganization'
+        sortOrder: '0'
+        created: '<dateTime()>'
+        updated: '<dateTime()>'
+    category3:
+        description: 'faq_cat_bugproblemabuse'
+        sortOrder: '0'
+        created: '<dateTime()>'
+        updated: '<dateTime()>'
+    category4:
+        description: 'faq_cat_usingcontact'
+        sortOrder: '0'
+        created: '<dateTime()>'
+        updated: '<dateTime()>'
+    category5:
+        description: 'faq_cat_usingprofile'
+        sortOrder: '0'
+        created: '<dateTime()>'
+        updated: '<dateTime()>'
+    category6:
+        description: 'faq_cat_cooltools'
+        sortOrder: '0'
+        created: '<dateTime()>'
+        updated: '<dateTime()>'
+    category7:
+        description: 'faq_cat_mobile'
+        sortOrder: '0'
+        created: '<dateTime()>'
+        updated: '<dateTime()>'

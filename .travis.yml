@@ -31,7 +31,7 @@ before_install:
   - sudo mysql -u root -e 'FLUSH PRIVILEGES;'
 
 install:
-  - yarn
+  - yarn install --frozen-lock
   - composer install --no-interaction --ignore-platform-reqs --no-scripts
 
 script:

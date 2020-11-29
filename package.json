@@ -78,6 +78,7 @@
     "select2": "4.0.13",
     "select2-theme-bootstrap4": "^1.0.0",
     "style-loader": "^1.2.1",
+    "swagger-cli": "^4.0.4",
     "tar": "^6.0.5",
     "tempusdominus": "github:tonix-tuft/tempusdominus",
     "tempusdominus-bootstrap": "github:tonix-tuft/tempusdominus-bootstrap",

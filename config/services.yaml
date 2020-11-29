@@ -4,257 +4,279 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
-  router.request_context.host: 'www.bewelcome.org'
-  router.request_context.scheme: 'https'
-  new_members_messages_per_hour: "%env(new_members_messages_per_hour)%"
-  new_members_messages_per_day: "%env(new_members_messages_per_day)%"
-  new_members_requests_per_hour: "%env(new_members_requests_per_hour)%"
-  new_members_requests_per_day: "%env(new_members_requests_per_day)%"
-  data_directory: "%kernel.project_dir%/data"
-  group_directory: "%kernel.project_dir%/%env(group_directory)%"
-  gallery_directory: "%kernel.project_dir%/%env(gallery_directory)%"
-  upload_directory: "%kernel.project_dir%/%env(upload_directory)%"
-  massmail_batch_size: "%env(massmail_batch_size)%"
-  forum_notification_batch_size: "%env(forum_notification_batch_size)%"
-  locales: "%env(LOCALES)%"
+    router.request_context.host: 'www.bewelcome.org'
+    router.request_context.scheme: 'https'
+    new_members_messages_per_hour: "%env(new_members_messages_per_hour)%"
+    new_members_messages_per_day: "%env(new_members_messages_per_day)%"
+    new_members_requests_per_hour: "%env(new_members_requests_per_hour)%"
+    new_members_requests_per_day: "%env(new_members_requests_per_day)%"
+    data_directory: "%kernel.project_dir%/data"
+    group_directory: "%kernel.project_dir%/%env(group_directory)%"
+    gallery_directory: "%kernel.project_dir%/%env(gallery_directory)%"
+    upload_directory: "%kernel.project_dir%/%env(upload_directory)%"
+    massmail_batch_size: "%env(massmail_batch_size)%"
+    forum_notification_batch_size: "%env(forum_notification_batch_size)%"
+    locales: "%env(LOCALES)%"
 
 services:
-  _defaults:
-    autowire: true      # Automatically injects dependencies in your services.
-    autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
-    public: false       # Allows optimizing the container by removing unused services; this also means
-    # fetching services directly from the container via $container->get() won't work.
-    # The best practice is to be explicit about your dependencies anyway.
-    bind:
-      $projectDir: '%kernel.project_dir%'
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+        public: false       # Allows optimizing the container by removing unused services; this also means
+        # fetching services directly from the container via $container->get() won't work.
+        # The best practice is to be explicit about your dependencies anyway.
+        bind:
+            $projectDir: '%kernel.project_dir%'
+            $refreshTokenTtl: '%env(APP_REFRESH_TOKEN_TTL)%'
 
-  # makes classes in src/ available to be used as services
-  # this creates a service per class whose id is the fully-qualified class name
-  App\:
-    resource: '../src/*'
-    exclude: '../src/{DependencyInjection,Entity,Migrations,Model/MemberDataExtractor/DoctrineExtractor.php,Twig,Tests,Kernel.php}'
+    # makes classes in src/ available to be used as services
+    # this creates a service per class whose id is the fully-qualified class name
+    App\:
+        resource: '../src/*'
+        exclude: '../src/{DependencyInjection,Entity,Migrations,Model/MemberDataExtractor/DoctrineExtractor.php,Twig,Tests,Kernel.php}'
 
-  # controllers are imported separately to make sure services can be injected
-  # as action arguments even if you don't extend any base controller class
-  App\Controller\:
-    resource: '../src/Controller'
-    tags: ['controller.service_arguments']
+    # controllers are imported separately to make sure services can be injected
+    # as action arguments even if you don't extend any base controller class
+    App\Controller\:
+        resource: '../src/Controller'
+        tags: [ 'controller.service_arguments' ]
 
-  app.member_data_extractor.donations:
-    class: App\Model\MemberDataExtractor\DoctrineExtractor
-    factory: ['@App\Model\MemberDataExtractor\DoctrineExtractorFactory', 'create']
-    arguments:
-      $className: 'App\Entity\Donation'
-      $memberRelationName: donor
-      $alias: donations
+    App\Swagger\SwaggerDecorator:
+        decorates: 'api_platform.swagger.normalizer.documentation'
+        arguments: ['@App\Swagger\SwaggerDecorator.inner']
+        autoconfigure: false
 
-  app.member_data_extractor.broadcasts:
-    class: App\Model\MemberDataExtractor\DoctrineExtractor
-    factory: ['@App\Model\MemberDataExtractor\DoctrineExtractorFactory', 'create']
-    arguments:
-      $className: 'App\Entity\BroadcastMessage'
-      $memberRelationName: receiver
-      $alias: broadcasts
+    App\Security\RefreshToken\RefreshTokenStorageInterface: '@App\Security\RefreshToken\DoctrineRefreshTokenStorage'
 
-  app.member_data_extractor.community_news:
-    class: App\Model\MemberDataExtractor\DoctrineExtractor
-    factory: ['@App\Model\MemberDataExtractor\DoctrineExtractorFactory', 'create']
-    arguments:
-      $className: 'App\Entity\CommunityNews'
-      $memberRelationName: createdBy
-      $alias: communitynews
+    App\Security\RefreshToken\JWTTokenManager:
+        decorates: lexik_jwt_authentication.jwt_manager
+        arguments:
+            $decorated: '@App\Security\RefreshToken\JWTTokenManager.inner'
 
-  app.member_data_extractor.logs:
-    class: App\Model\MemberDataExtractor\DoctrineExtractor
-    factory: ['@App\Model\MemberDataExtractor\DoctrineExtractorFactory', 'create']
-    arguments:
-      $className: 'App\Entity\Log'
-      $memberRelationName: member
-      $alias: logs
+    App\Command\RefreshTokensExpireCommand:
+        arguments:
+            $repository: '@App\Repository\MemberRepository'
 
-  app.member_data_extractor.newsletters:
-    class: App\Model\MemberDataExtractor\DoctrineExtractor
-    factory: ['@App\Model\MemberDataExtractor\DoctrineExtractorFactory', 'create']
-    arguments:
-      $className: 'App\Entity\Newsletter'
-      $memberRelationName: createdBy
-      $alias: newsletters
+    App\Serializer\MemberContextBuilder:
+        decorates: api_platform.serializer.context_builder
+        arguments:
+            $decorated: '@App\Serializer\MemberContextBuilder.inner'
 
-  app.member_data_extractor.shouts:
-    class: App\Model\MemberDataExtractor\DoctrineExtractor
-    factory: ['@App\Model\MemberDataExtractor\DoctrineExtractorFactory', 'create']
-    arguments:
-      $className: 'App\Entity\Shout'
-      $memberRelationName: member
-      $alias: shouts
+    app.member_data_extractor.donations:
+        class: App\Model\MemberDataExtractor\DoctrineExtractor
+        factory: [ '@App\Model\MemberDataExtractor\DoctrineExtractorFactory', 'create' ]
+        arguments:
+            $className: 'App\Entity\Donation'
+            $memberRelationName: donor
+            $alias: donations
 
-  app.member_data_extractor.subscriptions:
-    class: App\Model\MemberDataExtractor\DoctrineExtractor
-    factory: ['@App\Model\MemberDataExtractor\DoctrineExtractorFactory', 'create']
-    arguments:
-      $className: 'App\Entity\MemberThreadSubscription'
-      $memberRelationName: subscriber
-      $alias: subscriptions
+    app.member_data_extractor.broadcasts:
+        class: App\Model\MemberDataExtractor\DoctrineExtractor
+        factory: [ '@App\Model\MemberDataExtractor\DoctrineExtractorFactory', 'create' ]
+        arguments:
+            $className: 'App\Entity\BroadcastMessage'
+            $memberRelationName: receiver
+            $alias: broadcasts
 
-  app.member_data_extractor.translations:
-    class: App\Model\MemberDataExtractor\DoctrineExtractor
-    factory: ['@App\Model\MemberDataExtractor\DoctrineExtractorFactory', 'create']
-    arguments:
-      $className: 'App\Entity\Word'
-      $memberRelationName: author
-      $alias: translations
+    app.member_data_extractor.community_news:
+        class: App\Model\MemberDataExtractor\DoctrineExtractor
+        factory: [ '@App\Model\MemberDataExtractor\DoctrineExtractorFactory', 'create' ]
+        arguments:
+            $className: 'App\Entity\CommunityNews'
+            $memberRelationName: createdBy
+            $alias: communitynews
 
-  App\Model\MemberModel:
-    arguments:
-      $extractors: !tagged_iterator app.member_data_extractor
+    app.member_data_extractor.logs:
+        class: App\Model\MemberDataExtractor\DoctrineExtractor
+        factory: [ '@App\Model\MemberDataExtractor\DoctrineExtractorFactory', 'create' ]
+        arguments:
+            $className: 'App\Entity\Log'
+            $memberRelationName: member
+            $alias: logs
 
-  translation.loader.db:
-    public: true
-    class: App\TranslationLoader\DatabaseLoader
-    arguments: ['@doctrine.orm.entity_manager']
-    tags:
-      - { name: translation.loader, alias: db}
+    app.member_data_extractor.newsletters:
+        class: App\Model\MemberDataExtractor\DoctrineExtractor
+        factory: [ '@App\Model\MemberDataExtractor\DoctrineExtractorFactory', 'create' ]
+        arguments:
+            $className: 'App\Entity\Newsletter'
+            $memberRelationName: createdBy
+            $alias: newsletters
 
-  app.locale_listener:
-    public: true
-    class: App\EventListener\LocaleListener
-    arguments: ['@doctrine.orm.entity_manager', '%kernel.default_locale%']
-    tags:
-      - { name: kernel.event_subscriber }
+    app.member_data_extractor.shouts:
+        class: App\Model\MemberDataExtractor\DoctrineExtractor
+        factory: [ '@App\Model\MemberDataExtractor\DoctrineExtractorFactory', 'create' ]
+        arguments:
+            $className: 'App\Entity\Shout'
+            $memberRelationName: member
+            $alias: shouts
 
-  app.user_locale_listener:
-    public: true
-    class: App\EventListener\UserLocaleListener
-    arguments: ['@session', '@doctrine.orm.entity_manager']
-    tags:
-      - { name: kernel.event_subscriber }
+    app.member_data_extractor.subscriptions:
+        class: App\Model\MemberDataExtractor\DoctrineExtractor
+        factory: [ '@App\Model\MemberDataExtractor\DoctrineExtractorFactory', 'create' ]
+        arguments:
+            $className: 'App\Entity\MemberThreadSubscription'
+            $memberRelationName: subscriber
+            $alias: subscriptions
 
-  app.userprovider:
-    public: true
-    class: App\Provider\UserProvider
-    arguments: ['@doctrine.orm.entity_manager']
+    app.member_data_extractor.translations:
+        class: App\Model\MemberDataExtractor\DoctrineExtractor
+        factory: [ '@App\Model\MemberDataExtractor\DoctrineExtractorFactory', 'create' ]
+        arguments:
+            $className: 'App\Entity\Word'
+            $memberRelationName: author
+            $alias: translations
 
-  #    rox.legacy_dispatch_listener:
-  #        class: App\EventListener\LegacyDispatchListener
-  #        arguments: ['@rox.legacy_kernel', '@session', '@security.token_storage' ]
-  #        tags:
-  #            - { name: kernel.event_listener, event: kernel.exception, method: onKernelException, priority: 200000 }
+    App\Model\MemberModel:
+        arguments:
+            $extractors: !tagged_iterator app.member_data_extractor
 
-  rox.legacy_kernel:
-    class: App\LegacyKernel\LegacyHttpKernel
-    public: true
-    arguments: ['@twig', '@event_dispatcher', '@controller_resolver', '@request_stack', '@argument_resolver', '@service_container']
+    translation.loader.db:
+        public: true
+        class: App\TranslationLoader\DatabaseLoader
+        arguments: [ '@doctrine.orm.entity_manager' ]
+        tags:
+            - { name: translation.loader, alias: db }
 
-  rox.legacy_password_encoder:
-    public: true
-    class: App\Encoder\LegacyPasswordEncoder
+    app.locale_listener:
+        public: true
+        class: App\EventListener\LocaleListener
+        arguments: [ '@doctrine.orm.entity_manager', '%kernel.default_locale%' ]
+        tags:
+            - { name: kernel.event_subscriber }
 
-  rox.legacy_loader:
-    public: true
-    class: App\Routing\LegacyLoader
-    tags:
-      - { name: routing.loader }
+    app.user_locale_listener:
+        public: true
+        class: App\EventListener\UserLocaleListener
+        arguments: [ '@session', '@doctrine.orm.entity_manager' ]
+        tags:
+            - { name: kernel.event_subscriber }
 
-  rox.legacy_controller:
-    public: true
-    class: App\Controller\LegacyController
-    calls:
-      - [setContainer, ['@service_container']]
+    app.userprovider:
+        public: true
+        class: App\Provider\UserProvider
+        arguments: [ '@doctrine.orm.entity_manager' ]
 
-  rox.twig_extension:
-    public: true
-    class: App\Twig\Extension
-    arguments:
-      $locales: '%locales%'
-      $dataDirectory: '%data_directory%'
-      $publicDirectory: '%kernel.project_dir%/public'
-    tags:
-      - { name: 'twig.extension' }
+    #    rox.legacy_dispatch_listener:
+    #        class: App\EventListener\LegacyDispatchListener
+    #        arguments: ['@rox.legacy_kernel', '@session', '@security.token_storage' ]
+    #        tags:
+    #            - { name: kernel.event_listener, event: kernel.exception, method: onKernelException, priority: 200000 }
 
-  rox.member_twig_extension:
-    class: App\Twig\MemberTwigExtension
-    public: true
-    arguments: ['@session', '@router', '@security.helper']
-    tags:
-      - { name: twig.extension }
+    rox.legacy_kernel:
+        class: App\LegacyKernel\LegacyHttpKernel
+        public: true
+        arguments: [ '@twig', '@event_dispatcher', '@controller_resolver', '@request_stack', '@argument_resolver', '@service_container' ]
 
-  pagerfanta.bootstrap4.ajax.template:
-    public: true
-    class: App\Pagerfanta\TwitterBootstrap4AjaxTemplate
+    rox.legacy_password_encoder:
+        public: true
+        class: App\Encoder\LegacyPasswordEncoder
 
-  pagerfanta.bootstrap4.ajax.view:
-    public: true
-    class: Pagerfanta\View\DefaultView
-    arguments:
-      - "@pagerfanta.bootstrap4.ajax.template"
-      - "@translator"
-    tags: [{ name: pagerfanta.view, alias: twitter_bootstrap4_ajax_translated }]
+    rox.legacy_loader:
+        public: true
+        class: App\Routing\LegacyLoader
+        tags:
+            - { name: routing.loader }
 
-  rox.logger:
-    class: App\Logger\Logger
-    arguments: ['@doctrine.orm.entity_manager', '@security.helper']
+    rox.legacy_controller:
+        public: true
+        class: App\Controller\LegacyController
+        calls:
+            - [ setContainer, [ '@service_container' ] ]
 
-  rox.datacollector_translator:
-    public: true
-    class: Symfony\Component\Translation\DataCollectorTranslator
-    decorates: translator
-    arguments: ['@rox.datacollector_translator.inner']
+    rox.twig_extension:
+        public: true
+        class: App\Twig\Extension
+        arguments:
+            $locales: '%locales%'
+            $dataDirectory: '%data_directory%'
+            $publicDirectory: '%kernel.project_dir%/public'
+        tags:
+            - { name: 'twig.extension' }
 
-  rox.user_checker:
-    public: true
-    class: App\Security\UserChecker
-    autowire: true
+    rox.member_twig_extension:
+        class: App\Twig\MemberTwigExtension
+        public: true
+        arguments: [ '@session', '@router', '@security.helper' ]
+        tags:
+            - { name: twig.extension }
 
-  rox.default.pagerfanta:
-    class: Pagerfanta\View\OptionableView
-    arguments:
-      - '@pagerfanta.view.twitter_bootstrap4'
-      - { proximity: 2, prev_message: '«', next_message: '»' , css_container_class: 'pagination float-right'}
-    public: false
-    tags: [{ name: pagerfanta.view, alias: rox_default }]
+    pagerfanta.bootstrap4.ajax.template:
+        public: true
+        class: App\Pagerfanta\TwitterBootstrap4AjaxTemplate
 
-#  doctrine.filter.configurator:
-#    public: true
-#    class: App\Doctrine\Filter\Configurator
-#    arguments:
-#      - "@doctrine.orm.entity_manager"
-#      - "@request_stack"
-#      - "@annotation_reader"
-#    tags:
-#      - { name: kernel.event_listener, event: kernel.request }
+    pagerfanta.bootstrap4.ajax.view:
+        public: true
+        class: Pagerfanta\View\DefaultView
+        arguments:
+            - "@pagerfanta.bootstrap4.ajax.template"
+            - "@translator"
+        tags: [ { name: pagerfanta.view, alias: twitter_bootstrap4_ajax_translated } ]
 
-  rox.wiki.model:
-    public: true
-    class: App\Model\WikiModel
-    arguments:
-      - "@doctrine.orm.entity_manager"
+    rox.logger:
+        class: App\Logger\Logger
+        arguments: [ '@doctrine.orm.entity_manager', '@security.helper' ]
 
-  \HTMLPurifier:
-    alias: rox.html_purifier
+    rox.datacollector_translator:
+        public: true
+        class: Symfony\Component\Translation\DataCollectorTranslator
+        decorates: translator
+        arguments: [ '@rox.datacollector_translator.inner' ]
 
-  rox.html_purifier:
-    class: App\Utilities\CustomHTMLPurifier
-    tags:
-      - name: exercise.html_purifier
-        profile: custom
+    rox.user_checker:
+        public: true
+        class: App\Security\UserChecker
+        autowire: true
 
-  rox.words_extractor:
-    class: App\Utilities\WordsExtractor
-    tags: [{ name: translation.extractor, alias: words }]
+    rox.default.pagerfanta:
+        class: Pagerfanta\View\OptionableView
+        arguments:
+            - '@pagerfanta.view.twitter_bootstrap4'
+            - { proximity: 2, prev_message: '«', next_message: '»' , css_container_class: 'pagination float-right' }
+        public: false
+        tags: [ { name: pagerfanta.view, alias: rox_default } ]
 
-#  rox.activator:
-#    class: App\Activator\RoleActivator
-#    arguments: ["@security.helper"]
+    #  doctrine.filter.configurator:
+    #    public: true
+    #    class: App\Doctrine\Filter\Configurator
+    #    arguments:
+    #      - "@doctrine.orm.entity_manager"
+    #      - "@request_stack"
+    #      - "@annotation_reader"
+    #    tags:
+    #      - { name: kernel.event_listener, event: kernel.request }
 
-  App\Model\TranslationModel:
-    public: true
-    arguments:
-      $cacheDirectory: '%kernel.cache_dir%'
-      $locales: '%locales%'
+    rox.wiki.model:
+        public: true
+        class: App\Model\WikiModel
+        arguments:
+            - "@doctrine.orm.entity_manager"
 
-  Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler:
-    arguments:
-      - !service { class: PDO, factory: ['@database_connection', 'getWrappedConnection'] }
-      - { lock_mode: LOCK_NONE }
+    \HTMLPurifier:
+        alias: rox.html_purifier
 
-  Symfony\Bridge\Doctrine\Security\RememberMe\DoctrineTokenProvider: ~
+    rox.html_purifier:
+        class: App\Utilities\CustomHTMLPurifier
+        tags:
+            -   name: exercise.html_purifier
+                profile: custom
+
+    rox.words_extractor:
+        class: App\Utilities\WordsExtractor
+        tags: [ { name: translation.extractor, alias: words } ]
+
+    #  rox.activator:
+    #    class: App\Activator\RoleActivator
+    #    arguments: ["@security.helper"]
+
+    App\Model\TranslationModel:
+        public: true
+        arguments:
+            $cacheDirectory: '%kernel.cache_dir%'
+            $locales: '%locales%'
+
+    Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler:
+        arguments:
+            - !service { class: PDO, factory: [ '@database_connection', 'getWrappedConnection' ] }
+            - { lock_mode: LOCK_NONE }
+
+    Symfony\Bridge\Doctrine\Security\RememberMe\DoctrineTokenProvider: ~

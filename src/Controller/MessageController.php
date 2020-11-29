@@ -151,8 +151,6 @@ class MessageController extends BaseMessageController
      * @Route("/new/message/{username}", name="message_new")
      *
      * @throws Exception
-     *
-     * @return Response
      */
     public function newMessageAction(Request $request, Member $receiver): Response
     {

@@ -58,7 +58,7 @@ class FeedbackFormType extends AbstractType
             ]);
         } else {
             $formBuilder->add('FeedbackEmail', HiddenType::class, [
-                'attr' => [ 'value' => $member->getEmail() ],
+                'attr' => ['value' => $member->getEmail()],
             ]);
         }
         $formBuilder

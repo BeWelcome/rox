@@ -100,6 +100,7 @@ class WikiModel
     {
         /** @var WikiRepository $wikiRepository */
         $wikiRepository = $this->getManager()->getRepository(Wiki::class);
+
         return $wikiRepository->getHistory($wikiPage);
     }
 }

@@ -2,7 +2,6 @@
 
 namespace App\Form\CustomDataClass;
 
-use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\PersistentCollection;
@@ -202,7 +201,7 @@ class SearchFormRequest
      */
     public function isAccommodationValid()
     {
-        return ($this->accommodation_anytime || $this->accommodation_neverask);
+        return $this->accommodation_anytime || $this->accommodation_neverask;
     }
 
     public static function fromRequest(Request $request, EntityManagerInterface $em)

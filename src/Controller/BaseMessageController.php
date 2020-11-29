@@ -14,8 +14,6 @@ use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Pagerfanta\Pagerfanta;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\ClickableInterface;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -73,8 +71,6 @@ class BaseMessageController extends AbstractController
      *
      * @throws ORMException
      * @throws OptimisticLockException
-     *
-     * @return Response
      */
     protected function handleFolderRequest(Request $request, $folder, Pagerfanta $messages, $type): Response
     {
@@ -155,9 +151,6 @@ class BaseMessageController extends AbstractController
         return true;
     }
 
-    /**
-     * @return bool
-     */
     protected function isPurgedByMember(Message $message): bool
     {
         $member = $this->getUser();

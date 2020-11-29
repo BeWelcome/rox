@@ -51,7 +51,6 @@ class WikiController extends AbstractController
 
         $wikiPage = $wikiRepository->getPageByName($pageName, $version);
 
-        $output = null;
         $pagerFanta = null;
         $content = null;
         if (null === $wikiPage) {
@@ -82,7 +81,6 @@ class WikiController extends AbstractController
                 $pagerFanta->setCurrentPage($version);
             }
         }
-
 
         return $this->render('wiki/wiki.html.twig', [
             'title' => $pageTitle,

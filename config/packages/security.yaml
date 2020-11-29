@@ -26,6 +26,27 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
 
+        # disables authentication for api doc
+        api-doc:
+            pattern: ^/api(?:/index.(html|json|jsonld))?$
+            security: false
+
+        api:
+            pattern: ^/api
+            anonymous: true
+            stateless: true
+            user_checker: rox.user_checker
+            json_login:
+                check_path: /api/login
+                success_handler: lexik_jwt_authentication.handler.authentication_success
+                failure_handler: lexik_jwt_authentication.handler.authentication_failure
+            logout:
+                path: /api/logout
+                delete_cookies: ['bewelcome']
+            guard:
+                authenticators:
+                    - lexik_jwt_authentication.jwt_token_authenticator
+
         main:
             remember_me:
                 secret: '%env(APP_SECRET)%'
@@ -79,6 +100,7 @@ security:
         - { path: ^/communitynews, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/members/avatar/, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: ^/api, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/, roles: ROLE_USER }
 
 #    role_hierarchy:

@@ -4,12 +4,9 @@ namespace App\Model;
 
 use App\Doctrine\MessageStatusType;
 use App\Entity\HostingRequest;
-use App\Entity\Member;
 use App\Entity\Message;
 use App\Repository\MessageRepository;
 use App\Utilities\ManagerTrait;
-use Carbon\Carbon;
-use DateInterval;
 use DateTime;
 use InvalidArgumentException;
 
@@ -36,7 +33,7 @@ class HostingRequestModel
         $departure = $request->getDeparture();
         if (null === $departure) {
             // No departure date given assume an interval of two days max
-            $departure = (clone($today))->modify('+2days');
+            $departure = (clone $today)->modify('+2days');
         }
 
         return ($today < $departure) ? false : true;
@@ -45,9 +42,9 @@ class HostingRequestModel
     /**
      * @param $clickedButton
      *
-     * @return Message
-     *
      * @throws InvalidArgumentException|\Doctrine\DBAL\Exception\InvalidArgumentException
+     *
+     * @return Message
      */
     public function getFinalRequest(/* Member $sender, Member $receiver, */
         Message $hostingRequest,
@@ -128,6 +125,7 @@ class HostingRequestModel
     /**
      * @param $original
      * @param $current
+     *
      * @return mixed
      */
     private function getFinal($original, $current)

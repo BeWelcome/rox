@@ -20,7 +20,7 @@
 
 		<dl id="faqs">
 			{% for faq in faqs %}
-				<dt id="question{{ faq.id }}" class="h5"><i class="fas fa-plus-circle"></i> {{ ('faqq_' ~ faq.QandA) | lower | trans | striptags }}</dt>
+				<dt id="question{{ faq.id }}" class="h5"><i class="fas fa-plus-circle"></i> {{ ('faqq_' ~ faq.QandA) | lower | trans | purify | striptags }}</dt>
 				<dd>{{ ('<p>' ~ ('faqa_' ~ faq.QandA) | lower | trans ~ '</p>') | purify }}</dd>
 			{% endfor %}
 		</dl>

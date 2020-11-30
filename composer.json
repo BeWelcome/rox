@@ -4,6 +4,7 @@
     "homepage": "https://www.bewelcome.org/",
     "type": "project",
     "license": "GPL",
+    "minimum-stability": "RC",
     "require": {
         "ext-fileinfo": "*",
         "ext-gd": "*",
@@ -31,7 +32,7 @@
         "html2text/html2text": "*",
         "incenteev/composer-parameter-handler": "^2.0",
         "intervention/image": "^2.4",
-        "judev/php-htmltruncator": "^1.1",
+        "judev/php-htmltruncator": "^1.2",
         "laminas/laminas-code": "3.*",
         "laminas/laminas-eventmanager": "3.*",
         "laminas/laminas-uri": "^2.7",
@@ -48,27 +49,27 @@
         "sensiolabs/security-checker": "^6.0",
         "swiftmailer/swiftmailer": "^6.0",
         "symfony/apache-pack": "^1.0",
-        "symfony/asset": "5.1.*",
-        "symfony/browser-kit": "5.1.*",
-        "symfony/cache": "5.1.*",
-        "symfony/css-selector": "5.1.*",
+        "symfony/asset": "5.2.*",
+        "symfony/browser-kit": "5.2.*",
+        "symfony/cache": "5.2.*",
+        "symfony/css-selector": "5.2.*",
         "symfony/debug-pack": "^1.0",
-        "symfony/dotenv": "5.1.*",
-        "symfony/expression-language": "5.1.*",
+        "symfony/dotenv": "5.2.*",
+        "symfony/expression-language": "5.2.*",
         "symfony/flex": "^1.1",
-        "symfony/form": "5.1.*",
-        "symfony/http-client": "5.1.*",
-        "symfony/mailer": "5.1.*",
+        "symfony/form": "5.2.*",
+        "symfony/http-client": "5.2.*",
+        "symfony/mailer": "5.2.*",
         "symfony/monolog-bundle": "^3.3",
         "symfony/orm-pack": "^1.0",
-        "symfony/phpunit-bridge": "5.1.*",
+        "symfony/phpunit-bridge": "5.2.*",
         "symfony/polyfill-apcu": "^1.0",
-        "symfony/security-bundle": "5.1.*",
-        "symfony/templating": "5.1.*",
-        "symfony/translation": "5.1.*",
-        "symfony/twig-bundle": "5.1.*",
-        "symfony/validator": "5.1.*",
-        "symfony/var-dumper": "5.1.*",
+        "symfony/security-bundle": "5.2.*",
+        "symfony/templating": "5.2.*",
+        "symfony/translation": "5.2.*",
+        "symfony/twig-bundle": "5.2.*",
+        "symfony/validator": "5.2.*",
+        "symfony/var-dumper": "5.2.*",
         "symfony/webpack-encore-bundle": "^1.6",
         "twig/cssinliner-extra": "^2.0",
         "twig/extra-bundle": "^3.0",
@@ -107,11 +108,11 @@
         "robmorgan/phinx": "*",
         "sebastian/phpcpd": "^5.0",
         "squizlabs/php_codesniffer": "^3.5",
-        "symfony/browser-kit": "5.1.*",
-        "symfony/css-selector": "5.1.*",
-        "symfony/debug-bundle": "5.1.*",
+        "symfony/browser-kit": "5.2.*",
+        "symfony/css-selector": "5.2.*",
+        "symfony/debug-bundle": "5.2.*",
         "symfony/maker-bundle": "^1.8",
-        "symfony/web-profiler-bundle": "5.1.*"
+        "symfony/web-profiler-bundle": "5.2.*"
     },
     "autoload": {
         "psr-4": {
@@ -154,7 +155,7 @@
     "extra": {
         "symfony": {
             "allow-contrib": true,
-            "require": "5.1.*"
+            "require": "5.2.*"
         }
     }
 }

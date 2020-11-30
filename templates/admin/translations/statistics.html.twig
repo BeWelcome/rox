@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{ 'translations.title' | trans }}
+{% endblock %}
+
+{% block content %}
+<h1>{{ ('translation.headline.statistics') | trans }}</h1>
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover">
+            <tr><th>{{ 'language'|trans }}</th><th>{{ 'translation.ratio'|trans }}</th><th>{{ 'translation.translator'|trans }}<br>{{ 'translation.last.change'|trans }}</th></tr>
+            {% for language, detail in details %}
+                <tr>
+                    <td>{{ ('lang_' ~ language)|lower|trans }} ({{ language }})</td>
+                    <td>{{ (detail.count/count_all*100)|number_format(2) }}</td>
+                    <td>
+                        {% if detail.translator %}
+                            <a href="{{ path('members_profile', { 'username': detail.translator}) }}">{{ detail.translator }}</a><br>
+                            {{ detail.date|format_date('medium') }}
+                        {% else %}
+                            {{ 'unknown' }}<br>
+                            {{ detail.date|format_date('medium') }}
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+{% endblock %}

@@ -27,6 +27,7 @@
     "@ckeditor/ckeditor5-list": "^23.0.0",
     "@ckeditor/ckeditor5-paragraph": "^23.0.0",
     "@ckeditor/ckeditor5-theme-lark": "^23.0.0",
+    "@ckeditor/ckeditor5-special-characters": "^23.0.0",
     "@fortawesome/fontawesome-free": "^5.14.0",
     "@popperjs/core": "^2.5.2",
     "@symfony/webpack-encore": "^0.31.0",

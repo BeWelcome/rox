@@ -15,6 +15,14 @@ import ImageUploadPlugin from '@ckeditor/ckeditor5-image/src/imageupload';
 import LinkPlugin from '@ckeditor/ckeditor5-link/src/link';
 import ListPlugin from '@ckeditor/ckeditor5-list/src/list';
 import ParagraphPlugin from '@ckeditor/ckeditor5-paragraph/src/paragraph';
+import SpecialCharacters from '@ckeditor/ckeditor5-special-characters/src/specialcharacters';
+import SpecialCharactersEssentials from '@ckeditor/ckeditor5-special-characters/src/specialcharactersessentials';
+
+function SpecialCharactersTextExtended( editor ) {
+    editor.plugins.get( 'SpecialCharacters' ).addItems( 'Text', [
+        { title: 'non breaking space', character: '\u00A0' }
+    ] );
+}
 
 var allEditors = document.querySelectorAll('.editor');
 for (var i = 0; i < allEditors.length; ++i) {
@@ -36,7 +44,10 @@ for (var i = 0; i < allEditors.length; ++i) {
             LinkPlugin,
             ListPlugin,
             ParagraphPlugin,
-            UploadAdapterPlugin
+            UploadAdapterPlugin,
+            SpecialCharacters,
+            SpecialCharactersEssentials,
+            SpecialCharactersTextExtended
         ],
         ckfinder: {
             uploadUrl:"/gallery/upload/image"
@@ -50,6 +61,7 @@ for (var i = 0; i < allEditors.length; ++i) {
             'link',
             'bulletedList',
             'numberedList',
+            'specialCharacters',
             '|',
             'imageUpload',
             'blockQuote',

@@ -578,7 +578,7 @@ class TranslationController extends AbstractController
     public function translationNoRights(Request $request)
     {
         $locale = $request->getLocale();
-        $locales = $this->getUserLocales();
+        $locales = $this->getTranslatorLocales();
 
         return $this->render('admin/translations/no.right.html.twig', [
             'locale' => $locale,
@@ -931,12 +931,35 @@ class TranslationController extends AbstractController
         return $params;
     }
 
+
+    /**
+     * @Route("/admin/translate/statistics", name="translation_statistics")
+     *
+     * @return Response
+     */
+    public function statistics(Request $request)
+    {
+        /** @var WordRepository $translationRepository */
+        $translationRepository = $this->getDoctrine()->getRepository(Word::class);
+        $countAll = $translationRepository->getTranslationIdCount('en');
+        $translationDetails = $translationRepository->getTranslationDetails();
+
+        return $this->render('admin/translations/statistics.html.twig', [
+                'count_all' => $countAll,
+                'details' => $translationDetails,
+                'submenu' => [
+                    'active' => 'statistics',
+                    'items' => $this->getSubmenuItems($request->getLocale(), 'statistics'),
+                ],
+            ]);
+    }
+
     /**
      * Returns the locales that the user is allowed to translate.
      *
      * @return string[]
      */
-    private function getUserLocales()
+    private function getTranslatorLocales(): array
     {
         $volunteer = $this->getUser();
 
@@ -952,6 +975,7 @@ class TranslationController extends AbstractController
 
         return $scope;
     }
+
 
     /**
      * @param $locale
@@ -1020,6 +1044,10 @@ class TranslationController extends AbstractController
         $submenuItems['wiki'] = [
             'key' => 'label.translations.wiki',
             'url' => $this->generateUrl('group_wiki_page', ['id' => 60]),
+        ];
+        $submenuItems['statistics'] = [
+            'key' => 'label.translations.statistics',
+            'url' => $this->generateUrl('translation_statistics'),
         ];
         if ($action && 'create' !== $action && 'mockup' !== $action) {
             $submenuItems[$action] = [

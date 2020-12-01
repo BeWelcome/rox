@@ -122,9 +122,9 @@ App\Entity\Preference:
         codeDescription: 'PreferenceShowProfileVisitsDes'
         Description: 'ShowProfileVisits description'
         created: <DateTime()>
-        DefaultValue: Yes
+        DefaultValue: No
         PossibleValues: 'Yes;No'
-        Status: 'Inactive'
+        Status: 'Normal'
     SHOW_MY_GROUP_TOPICS_ONLY:
         position: 57
         codename: 'ShowMyGroupsTopicsOnly'

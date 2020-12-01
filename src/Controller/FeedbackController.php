@@ -19,7 +19,7 @@ class FeedbackController extends AboutBaseController
      *
      * @return RedirectResponse
      */
-    public function showAboutFeedback(Request $request)
+    public function showAboutFeedback()
     {
         return $this->redirectToRoute('feedback');
     }

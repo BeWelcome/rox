@@ -153,19 +153,11 @@ class LandingController extends AbstractController
      */
     public function setAccommodationAction(Request $request, Environment $twig)
     {
-        $accommodation = $request->request->get('accommodation');
-
-        switch ($accommodation) {
-            case AccommodationType::YES:
-            case AccommodationType::NO:
-                $valid = true;
-                break;
-            default:
-                $valid = false;
-        }
-
         /** @var Member $member */
         $member = $this->getUser();
+        $accommodation = $request->request->get('accommodation');
+
+        $valid = (AccommodationType::YES === $accommodation) && (AccommodationType::NO === $accommodation);
         if ($valid) {
             $member = $this->landingModel->updateMemberAccommodation($member, $accommodation);
         }

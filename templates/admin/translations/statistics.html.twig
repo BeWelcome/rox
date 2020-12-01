@@ -6,8 +6,9 @@
 
 {% block content %}
 <h1>{{ ('translation.headline.statistics') | trans }}</h1>
+    {{ 'translation.overall.count'|trans({'all': count_all}) }}
     <div class="table-responsive">
-        <table class="table table-bordered table-hover">
+        <table class="table table-striped table-hover">
             <tr><th>{{ 'language'|trans }}</th><th>{{ 'translation.ratio'|trans }}</th><th>{{ 'translation.translator'|trans }}<br>{{ 'translation.last.change'|trans }}</th></tr>
             {% for language, detail in details %}
                 <tr>

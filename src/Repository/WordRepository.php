@@ -23,16 +23,23 @@ class WordRepository extends EntityRepository
 
     public function getTranslationIdCount($locale)
     {
-        $qb = $this->createQueryBuilder('t');
-        $q = $qb
+        $qb = $this
+            ->createQueryBuilder('t')
             ->select('count(t.id)')
             ->where('(t.isArchived = 0 OR t.isArchived IS NULL)')
-            ->andWhere('t.doNotTranslate = :doNotTranslate')
             ->andWhere('t.shortCode = :locale')
-            ->setParameter(':doNotTranslate', 'no')
             ->setParameter(':locale', $locale)
-            ->getQuery()
         ;
+
+        if ('en' !== $locale) {
+            $qb
+                ->andWhere('t.doNotTranslate = :doNotTranslate')
+                ->setParameter(':doNotTranslate', 'no')
+            ;
+        }
+
+        $q = $qb->getQuery();
+
         $count = $q->getSingleScalarResult();
 
         return $count;

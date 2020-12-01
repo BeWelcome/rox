@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -13,11 +14,11 @@ class AboutController extends AboutBaseController
      *
      * @return Response
      */
-    public function showAbout()
+    public function showAbout(Request $request)
     {
         return $this->render('about/about.html.twig', [
             'submenu' => [
-                'items' => $this->getSubMenuItems(),
+                'items' => $this->getSubMenuItems($request->getLocale()),
                 'active' => 'about',
             ],
         ]);
@@ -110,11 +111,11 @@ class AboutController extends AboutBaseController
      *
      * @return Response
      */
-    public function showAboutCommentGuidelines()
+    public function showAboutCommentGuidelines(Request $request)
     {
         return $this->render('about/commentsguidelines.html.twig', [
             'submenu' => [
-                'items' => $this->getSubMenuItems(),
+                'items' => $this->getSubMenuItems($request->getLocale()),
                 'active' => 'about_commentguidelines',
             ],
         ]);
@@ -125,11 +126,11 @@ class AboutController extends AboutBaseController
      *
      * @return Response
      */
-    public function showAboutCredits()
+    public function showAboutCredits(Request $request)
     {
         return $this->render('about/credits.html.twig', [
             'submenu' => [
-                'items' => $this->getSubMenuItems(),
+                'items' => $this->getSubMenuItems($request->getLocale()),
                 'active' => 'about_credits',
             ],
         ]);
@@ -140,11 +141,11 @@ class AboutController extends AboutBaseController
      *
      * @return Response
      */
-    public function showImpressum()
+    public function showImpressum(Request $request)
     {
         return $this->render('about/impressum.html.twig', [
             'submenu' => [
-                'items' => $this->getSubMenuItems(),
+                'items' => $this->getSubMenuItems($request->getLocale()),
                 'active' => 'about',
             ],
         ]);

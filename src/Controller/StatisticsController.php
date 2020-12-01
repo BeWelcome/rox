@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Created by PhpStorm.
- * User: raymund
- * Date: 28.06.2018
- * Time: 19:08.
- */
-
 namespace App\Controller;
 
 use App\Model\StatisticsModel;
@@ -15,6 +8,7 @@ use EnvironmentExplorer;
 use PException;
 use StatsModel;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -41,7 +35,7 @@ class StatisticsController extends AboutBaseController
      *
      * @return Response
      */
-    public function showAboutStatistics()
+    public function showAboutStatistics(Request $request)
     {
         $statistics = [
             'members' => [
@@ -69,7 +63,7 @@ class StatisticsController extends AboutBaseController
         return $this->render('about/statistics.html.twig', [
             'statistics' => $statistics,
             'submenu' => [
-                'items' => $this->getSubMenuItems(),
+                'items' => $this->getSubMenuItems($request->getLocale()),
                 'active' => 'statistics',
             ],
         ]);

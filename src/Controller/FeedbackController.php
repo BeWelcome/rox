@@ -19,7 +19,7 @@ class FeedbackController extends AboutBaseController
      *
      * @return RedirectResponse
      */
-    public function showAboutFeedback()
+    public function showAboutFeedback(Request $request)
     {
         return $this->redirectToRoute('feedback');
     }
@@ -77,7 +77,7 @@ class FeedbackController extends AboutBaseController
         return $this->render('about/feedback.html.twig', [
             'form' => $form->createView(),
             'submenu' => [
-                'items' => $this->getSubMenuItems(),
+                'items' => $this->getSubMenuItems($request->getLocale()),
                 'active' => 'about_feedback',
             ],
         ]);
@@ -88,11 +88,11 @@ class FeedbackController extends AboutBaseController
      *
      * @return Response
      */
-    public function feedbackReceived()
+    public function feedbackReceived(Request $request)
     {
         return $this->render('about/feedback.received.html.twig', [
             'submenu' => [
-                'items' => $this->getSubMenuItems(),
+                'items' => $this->getSubMenuItems($request->getLocale()),
                 'active' => 'about_feedback',
             ],
         ]);

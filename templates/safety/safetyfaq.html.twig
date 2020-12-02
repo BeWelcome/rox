@@ -11,8 +11,8 @@
 <div class="row">
     <div class="col-12 col-md-6">
         <a id="general"></a>
-        <h3>{{ 'safetyfaqcategorygeneral' | trans }}</h3>
-        <h5>{{ 'faqq_isitsafe' | trans }}</h5>
+        <h3>{{ 'safetyfaqcategorygeneral' | trans | purify }}</h3>
+        <h5>{{ 'faqq_isitsafe' | trans  | purify}}</h5>
         <p>{{ 'faqa_isitsafe' | trans 
             ({ 'faqa_isitsafe.contact.us' : '<a href="' ~ url('safety_contact') ~ '">' ~ 'faqa_isitsafe.contact.us'|trans ~ '</a>' })
             | purify }}
@@ -22,8 +22,8 @@
     </div>
     <div class="col-12 col-md-6">
         <a id="comments"></a>
-        <h3>{{ 'safetyfaqcategorycomments' | trans }}</h3>
-        <h5>{{ 'faqq_purposeofcomment' | trans }}</h5>
+        <h3>{{ 'safetyfaqcategorycomments' | trans | purify }}</h3>
+        <h5>{{ 'faqq_purposeofcomment' | trans | purify }}</h5>
         <p>{{ 'faqa_purposeofcomment' | trans  | purify }}</p>
         <p>{{ 'faqa_purposeofcomment' | trans 
             ({ 'faqa_purposeofcomment.contact.us' : '<a href="' ~ url('safety_contact') ~ '">' ~ 'faqa_purposeofcomment.contact.us'|trans ~ '</a>' })
@@ -31,12 +31,12 @@
         </p>
         <p><a class="btn btn-outline-primary" href="{{ path('faqs_overview', {'categoryId' : '1', '_fragment': 'question3'}) }}"><i class="fa fa-user-shield mr-1"></i>{{'safety_learnaboutfaq' | trans }}</a></p>
 
-        <h5>{{ 'faqq_commentguidelines' | trans }}</h5>
+        <h5>{{ 'faqq_commentguidelines' | trans | purify }}</h5>
         <p>{{ 'faqa_commentguidelines' | trans 
             ({ 'faqa_commentguidelines.link' : '<a href="' ~ url('profilecomments') ~ '">' ~ 'faqa_commentguidelines.link'|trans ~ '</a>' })
             | purify }}
         </p>
-        <h5>{{ 'faqq_canieditcomment' | trans }}</h5>
+        <h5>{{ 'faqq_canieditcomment' | trans | purify }}</h5>
         <p>{{ 'faqa_canieditcomment' | trans 
             ({ 'faqa_canieditcomment.contact.us' : '<a href="' ~ url('safety_contact') ~ '">' ~ 'faqa_canieditcomment.contact.us'|trans ~ '</a>' })
             | purify }}
@@ -44,8 +44,8 @@
     </div>
     <div class="col-12">
         <a id="spam"></a>
-        <h3>{{ 'safetyfaqcategoryspam' | trans }}</h3>
-        <h5>{{ 'faqq_ifoundapronlink' | trans }}</h5>
+        <h3>{{ 'safetyfaqcategoryspam' | trans | purify }}</h3>
+        <h5>{{ 'faqq_ifoundapronlink' | trans | purify }}</h5>
         <p>{{ 'faqa_ifoundapronlink' | trans 
             ({ 'faqa_ifoundapronlink.contact.us' : '<a href="' ~ url('safety_contact') ~ '">' ~ 'faqa_ifoundapronlink.contact.us'|trans ~ '</a>' })
             | purify }}

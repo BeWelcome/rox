@@ -128,7 +128,7 @@ class WordRepository extends EntityRepository
 
         $date = $details->getUpdated();
         try {
-            $translator = $details->getAuthor()->getUsername();
+            $translator = $details->getAuthor();
         } catch (\Exception $e) {
             $translator = null;
         }

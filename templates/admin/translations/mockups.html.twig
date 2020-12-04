@@ -18,4 +18,10 @@
             <div class="col-4 mb-2"><a href="{{url('translation_mockup_email', {'name': name})}}" class="btn btn-primary">{{ name }}</a></div>
         {% endfor %}
     </div>
+    <h2>{{ 'templates'|trans|capitalize }}</h2>
+    <div class="row">
+        {% for name, template in mockups.templates %}
+            <div class="col-4 mb-2"><a href="{{url('translation_mockup_template', {'name': name})}}" class="btn btn-primary">{{ name }}</a></div>
+        {% endfor %}
+    </div>
 {% endblock content %}

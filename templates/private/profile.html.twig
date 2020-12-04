@@ -10,9 +10,8 @@
                                           alt="{{ 'mydata.profile.picture'|trans }}"
                                           class="float-left img-thumbnail"></div>
 
-                    <h2 class="m-0 d-inline"><strong>member-1223 </strong>
-                        <img src="images/{{ member.accommodation }}.png" class="mb-2"
-                             alt="{{ member.accommodation|trans }}">
+                    <h2 class="m-0 d-inline"><strong>{{ member.username }}</strong><br>
+                        <span class="h5">{{ member.accommodation|trans }}</span><br>
                         <span class="h4">{{ member.firstname }} {{ member.secondname }} {{ member.lastname }}</span>
                     </h2>
 

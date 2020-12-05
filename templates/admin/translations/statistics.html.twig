@@ -16,12 +16,15 @@
                     <td>{{ (detail.count/count_all*100)|number_format(2) }}</td>
                     <td>
                         {% if detail.translator %}
-                            <a href="{{ path('members_profile', { 'username': detail.translator}) }}">{{ detail.translator }}</a><br>
-                            {{ detail.date|format_date('medium') }}
+                            {% if detail.translator.status == constant('App\\Doctrine\\MemberStatusType::ACTIVE') or detail.translator.status == constant('App\\Doctrine\\MemberStatusType::OUT_OF_REMIND') %}
+                                <a href="{{ path('members_profile', { 'username': detail.translator.username}) }}">{{ detail.translator.username }}</a><br>
+                            {%  else %}
+                                {{ 'retired'|trans }}
+                            {% endif %}
                         {% else %}
-                            {{ 'unknown' }}<br>
-                            {{ detail.date|format_date('medium') }}
+                            {{ 'unknown'|trans }}<br>
                         {% endif %}
+                        {{ detail.date|format_date('medium') }}
                     </td>
                 </tr>
             {% endfor %}

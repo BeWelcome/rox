@@ -2,6 +2,7 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\Activity;
 use App\Entity\ForumPost;
 use App\Entity\ForumThread;
 use App\Entity\Group;
@@ -151,6 +152,24 @@ class TranslationController extends AbstractController
                 'url' => '/resetpassword/{username}/{token}',
                 'template' => 'member/reset.password.html.twig',
                 'description' => 'The page that is shown when a member really sets a new password',
+            ],
+        ],
+        'templates' => [
+            'mydata (start page)' => [
+                'template' => 'private/index.html.twig',
+                'description' => 'Index page of the data dump created by /mydata (profile)',
+            ],
+            'mydata (activities, none)' => [
+                'template' => 'private/activities.html.twig',
+                'description' => 'Resulting page for the own data export with no activities',
+            ],
+            'mydata (activities, some)' => [
+                'template' => 'private/activities.html.twig',
+                'description' => 'Resulting page for the own data export with some activities',
+            ],
+            'mydata (profile)' => [
+                'template' => 'private/profile.html.twig',
+                'description' => 'Your profile in the data dump',
             ],
         ],
     ];
@@ -771,7 +790,90 @@ class TranslationController extends AbstractController
         );
     }
 
-    private function getMockParams($template, $name = null)
+    /**
+     * @Route("/admin/translate/mockup/template/{name}", name="translation_mockup_template",
+     *     requirements={"template"=".+"})
+     *
+     * @return Response
+     */
+    public function translateMockupTemplate(Request $request, string $name)
+    {
+        $this->denyAccessUnlessGranted(Member::ROLE_ADMIN_WORDS, null, 'Unable to access this page!');
+
+        if (!isset(self::MOCKUPS['templates'][$name])) {
+            return $this->redirectToRoute('translations_mockups');
+        }
+
+        $template = self::MOCKUPS['templates'][$name]['template'];
+        $description = self::MOCKUPS['templates'][$name]['description'] ?? '';
+
+        return $this->render(
+            'admin/translations/mockup.template.html.twig',
+            array_merge(
+                $this->getMockTemplateParams($template, $name),
+                [
+                    'description' => $description,
+                    'template' => $template,
+                    'submenu' => [
+                        'active' => 'mockups',
+                        'items' => $this->getSubmenuItems($request->getLocale(), 'mockup', $name),
+                    ],
+                ]
+            ),
+        );
+    }
+
+    private function getMockTemplateParams($template, $name = null): array
+    {
+        $params = [
+            'extracted' => [
+                'activities',
+                'broadcasts',
+                'comments',
+                'communitynews',
+                'communitynews_comments',
+                'donations',
+                'gallery',
+                'logs',
+                'messages',
+                'newsletters',
+                'pictures',
+                'polls',
+                'polls_contributed',
+                'polls_created',
+                'polls_voted',
+                'posts',
+                'posts_year',
+                'privileges',
+                'profile',
+                'relations',
+                'requests',
+                'rights',
+                'shouts',
+                'subscriptions',
+                'subscriptions',
+                'translations',
+            ],
+            'member' => $this->getUser(),
+            'profilepicture' => '/members/avatar/' . $this->getUser()->getUsername() . '/50'
+        ];
+
+        if (false === strpos($name, 'some')) {
+            $params['activities'] = [];
+        } else {
+            $mockActivity = Mockery::mock(Activity::class, [
+                'getTitle' => 'Activity Title',
+                'getDescription' => 'Activity Description',
+            ]);
+            $params['activities'] = [
+                0 => $mockActivity,
+                1 => $mockActivity,
+            ];
+        }
+        return $params;
+    }
+
+    private function getMockParams($template, $name = null): array
     {
         $mockMessage = Mockery::mock(Message::class, [
             'getId' => 1,

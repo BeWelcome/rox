@@ -93,6 +93,15 @@ class WordRepository extends EntityRepository
                 'translator' => $translator,
                 'date' => $date,
             ];
+            uasort($translationDetails, function ($a, $b) {
+                if ($a['count'] === $b['count']) {
+                    return 0;
+                } elseif ($a['count'] > $b['count']) {
+                    return -1;
+                }
+
+                return 1;
+            });
         }
 
         return $translationDetails;
@@ -119,7 +128,7 @@ class WordRepository extends EntityRepository
 
         $date = $details->getUpdated();
         try {
-            $translator = $details->getAuthor()->getUsername();
+            $translator = $details->getAuthor();
         } catch (\Exception $e) {
             $translator = null;
         }

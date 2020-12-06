@@ -9,6 +9,7 @@ use App\Entity\Message;
 use App\Form\HostingRequestGuest;
 use App\Form\HostingRequestHost;
 use App\Model\HostingRequestModel;
+use App\Model\MessageModel;
 use App\Utilities\ManagerTrait;
 use App\Utilities\TranslatorTrait;
 use DateTime;
@@ -38,9 +39,10 @@ class HostingRequestController extends BaseMessageController
     /** HostingRequestModel */
     private $requestModel;
 
-    public function __construct(HostingRequestModel $requestModel)
+    public function __construct(HostingRequestModel $requestModel, MessageModel $messageModel)
     {
         $this->requestModel = $requestModel;
+        $this->messageModel = $messageModel;
     }
 
     /**
@@ -53,7 +55,7 @@ class HostingRequestController extends BaseMessageController
      *
      * @return RedirectResponse
      */
-    public function replyToHostingRequestAction(Message $message)
+    public function replyToHostingRequestAction(Message $message): RedirectResponse
     {
         if (!$this->isMessageOfMember($message)) {
             throw $this->createAccessDeniedException('Not your message/hosting request');
@@ -108,7 +110,8 @@ class HostingRequestController extends BaseMessageController
         /** @var Message $last */
         /** @var Member $guest */
         /** @var Member $host */
-        list($thread, $first, $last, $guest, $host) = $this->messageModel->getThreadInformationForMessage($hostingRequest);
+        list($thread, $first, $last, $guest, $host) =
+            $this->messageModel->getThreadInformationForMessage($hostingRequest);
 
         if ($this->checkRequestExpired($last)) {
             $this->addExpiredFlash($host);
@@ -169,7 +172,8 @@ class HostingRequestController extends BaseMessageController
         /** @var Message $last */
         /** @var Member $guest */
         /** @var Member $host */
-        list($thread, $first, $last, $guest, $host) = $this->messageModel->getThreadInformationForMessage($hostingRequest);
+        list($thread, $first, $last, $guest, $host) =
+            $this->messageModel->getThreadInformationForMessage($hostingRequest);
 
         if ($this->checkRequestExpired($last)) {
             $this->addExpiredFlash($guest);
@@ -345,7 +349,7 @@ class HostingRequestController extends BaseMessageController
      *
      * @return Response
      */
-    public function requests(Request $request, $folder)
+    public function requests(Request $request, $folder): Response
     {
         list($page, $limit, $sort, $direction) = $this->getOptionsFromRequest($request);
 
@@ -354,7 +358,7 @@ class HostingRequestController extends BaseMessageController
         }
 
         $member = $this->getUser();
-        $messages = $this->messageModel->getFilteredRequests($member, $folder, $sort, $direction, $page, $limit);
+        $messages = $this->requestModel->getFilteredRequests($member, $folder, $sort, $direction, $page, $limit);
 
         return $this->handleFolderRequest($request, $folder, $messages, 'requests');
     }
@@ -371,7 +375,7 @@ class HostingRequestController extends BaseMessageController
     /**
      * @return bool
      */
-    protected function checkRequestExpired(Message $hostingRequest)
+    protected function checkRequestExpired(Message $hostingRequest): bool
     {
         $requestModel = new HostingRequestModel();
 

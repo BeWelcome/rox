@@ -97,7 +97,7 @@ App\Entity\Member:
         FirstName: <firstName()>
         SecondName: '70%? <firstName()>'
         LastName: <lastName()>
-        Accommodation: '<randomElement(["neverask", "anytime"])>'
+        Accommodation: '<randomElement(["anytime", "neverask"])>'
         hostingInterest: '<numberBetween(1,10)>'
         AdditionalAccommodationInfo: 0
         ILiveWith: 0

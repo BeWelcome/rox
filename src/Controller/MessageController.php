@@ -184,7 +184,7 @@ class MessageController extends BaseMessageController
             $body = $messageForm->get('message')->getData();
 
             $this->messageModel->addMessage($sender, $receiver, null, $subject, $body);
-            $this->addTranslatedFlash('success', 'flash.message.sent');
+            $this->addTranslatedFlash('success', 'flash.message.sent', [], null, $sender->getPreferredLanguage()->getShortcode());
 
             return $this->redirectToRoute('members_profile', ['username' => $receiver->getUsername()]);
         }

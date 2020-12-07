@@ -22,7 +22,7 @@ RUN apk add --no-cache \
 		gettext \
 		git \
 		openssh-client \
-		python \
+		python3 \
 	;
 
 ARG APCU_VERSION=5.1.18

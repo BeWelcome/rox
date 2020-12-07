@@ -1,4 +1,4 @@
-.PHONY: all build phpcpd phploc phpmd php-cs-fixer php-code-sniffer phpmetrics phpunit version
+.PHONY: all build phpcpd phploc phpmd php-cs-fixer php-code-sniffer phpmetrics phpunit infection behat version
 export COMPOSER_MEMORY_LIMIT := -1
 
 SRC_DIR=src tests
@@ -11,7 +11,7 @@ SRC_DIR_COMMA := $(subst $(SPACE),$(COMMA),$(SRC_DIR))
 
 all: phpci
 
-phpci: phpcpd phploc phpmd php-code-sniffer phpunit infection version
+phpci: phpcpd phploc phpmd php-code-sniffer phpunit infection behat version
 
 install:
 	git rev-parse --short HEAD > VERSION
@@ -76,22 +76,25 @@ phpmd:
 	"./vendor/bin/phpmd" $(SRC_DIR_COMMA) text phpmd.xml
 
 php-cs-fixer:
-	"./vendor/bin/php-cs-fixer" fix -v --diff --dry-run --warning-severity=0
+	"./vendor/bin/php-cs-fixer" fix -v --diff --dry-run
 
 php-code-sniffer:
 	"./vendor/bin/phpcs"  --colors --warning-severity=Error
 
 phpunit:
-	php bin/phpunit --coverage-xml=build/logs/phpunit/coverage-xml --coverage-clover=build/logs/phpunit/clover.xml --log-junit=build/logs/phpunit/junit.xml --colors=never
+	phpdbg -qrr bin/phpunit --coverage-xml=build/logs/phpunit/coverage-xml --coverage-clover=build/logs/phpunit/clover.xml --log-junit=build/logs/phpunit/junit.xml --colors=never
 
 infection: phpunit
-#	php bin/phpunit --coverage-text --coverage-xml=build/logs/phpunit/coverage-xml --coverage-clover=build/logs/phpunit/clover.xml --log-junit=build/logs/phpunit/junit.xml --colors=never
 	"./vendor/bin/infection" --only-covered --coverage=build/logs/phpunit --min-covered-msi=85 --threads=30
+
+behat: encore
+	bin/console doctrine:database:create --env=test --if-not-exists
+	bin/console doctrine:schema:create --env=test
+	bin/console hautelook:fixtures:load --env=test --no-interaction
+	vendor/bin/behat --colors --tags='~@wip'
 
 phpmetrics:
 	"./vendor/bin/phpmetrics" --exclude=src/App/Entity --report-violations=phpmetrics.xml $(SRC_DIR_COMMA)
 
 version:
 	git rev-parse --short HEAD > VERSION
-
-

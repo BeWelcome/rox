@@ -22,7 +22,7 @@ RUN apk add --no-cache \
 		gettext \
 		git \
 		openssh-client \
-		python \
+		python3 \
 	;
 
 ARG APCU_VERSION=5.1.18
@@ -84,9 +84,6 @@ RUN set -eux; \
 		echo '[www]'; \
 		echo 'ping.path = /ping'; \
 	} | tee /usr/local/etc/php-fpm.d/docker-healthcheck.conf
-
-# Workaround to allow using PHPUnit 8 with Symfony 4.3
-ENV SYMFONY_PHPUNIT_VERSION=8.3
 
 # https://getcomposer.org/doc/03-cli.md#composer-allow-superuser
 ENV COMPOSER_ALLOW_SUPERUSER=1

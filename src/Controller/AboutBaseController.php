@@ -6,9 +6,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class AboutBaseController extends AbstractController
 {
-    /**
-     * @return array
-     */
     protected function getSubMenuItems(string $locale): array
     {
         return [

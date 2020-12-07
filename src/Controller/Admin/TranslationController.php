@@ -823,6 +823,28 @@ class TranslationController extends AbstractController
         );
     }
 
+    /**
+     * @Route("/admin/translate/statistics", name="translation_statistics")
+     *
+     * @return Response
+     */
+    public function statistics(Request $request)
+    {
+        /** @var WordRepository $translationRepository */
+        $translationRepository = $this->getDoctrine()->getRepository(Word::class);
+        $countAll = $translationRepository->getTranslationIdCount('en');
+        $translationDetails = $translationRepository->getTranslationDetails();
+
+        return $this->render('admin/translations/statistics.html.twig', [
+                'count_all' => $countAll,
+                'details' => $translationDetails,
+                'submenu' => [
+                    'active' => 'statistics',
+                    'items' => $this->getSubmenuItems($request->getLocale(), 'statistics'),
+                ],
+            ]);
+    }
+
     private function getMockTemplateParams($template, $name = null): array
     {
         $params = [
@@ -855,7 +877,7 @@ class TranslationController extends AbstractController
                 'translations',
             ],
             'member' => $this->getUser(),
-            'profilepicture' => '/members/avatar/' . $this->getUser()->getUsername() . '/50'
+            'profilepicture' => '/members/avatar/' . $this->getUser()->getUsername() . '/50',
         ];
 
         if (false === strpos($name, 'some')) {
@@ -870,6 +892,7 @@ class TranslationController extends AbstractController
                 1 => $mockActivity,
             ];
         }
+
         return $params;
     }
 
@@ -1033,29 +1056,6 @@ class TranslationController extends AbstractController
         return $params;
     }
 
-
-    /**
-     * @Route("/admin/translate/statistics", name="translation_statistics")
-     *
-     * @return Response
-     */
-    public function statistics(Request $request)
-    {
-        /** @var WordRepository $translationRepository */
-        $translationRepository = $this->getDoctrine()->getRepository(Word::class);
-        $countAll = $translationRepository->getTranslationIdCount('en');
-        $translationDetails = $translationRepository->getTranslationDetails();
-
-        return $this->render('admin/translations/statistics.html.twig', [
-                'count_all' => $countAll,
-                'details' => $translationDetails,
-                'submenu' => [
-                    'active' => 'statistics',
-                    'items' => $this->getSubmenuItems($request->getLocale(), 'statistics'),
-                ],
-            ]);
-    }
-
     /**
      * Returns the locales that the user is allowed to translate.
      *
@@ -1077,7 +1077,6 @@ class TranslationController extends AbstractController
 
         return $scope;
     }
-
 
     /**
      * @param $locale

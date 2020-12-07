@@ -27,6 +27,13 @@
             "required": true,
             "additionalProperties": false,
             "properties": {
+                "@type": {
+                    "pattern": "^Location$",
+                    "required": false
+                },
+                "@id": {
+                    "required": false
+                },
                 "name": {
                     "required": true
                 },
@@ -44,6 +51,13 @@
                     "required": true,
                     "additionalProperties": false,
                     "properties": {
+                        "@type": {
+                            "pattern": "^Country$",
+                            "required": false
+                        },
+                        "@id": {
+                            "required": false
+                        },
                         "geonameId": {
                             "required": true
                         },
@@ -211,6 +225,13 @@
             "type": "array",
             "required": true,
             "items": {
+                "@type": {
+                    "pattern": "^MembersLanguagesLevel$",
+                    "required": false
+                },
+                "@id": {
+                    "required": false
+                },
                 "level": {
                     "required": true
                 },
@@ -219,6 +240,13 @@
                     "required": true,
                     "additionalProperties": false,
                     "properties": {
+                        "@type": {
+                            "pattern": "^Language$",
+                            "required": false
+                        },
+                        "@id": {
+                            "required": false
+                        },
                         "englishname": {
                             "required": true
                         },
@@ -336,6 +364,13 @@
             "required": false,
             "additionalProperties": false,
             "properties": {
+                "@type": {
+                    "pattern": "^Address$",
+                    "required": false
+                },
+                "@id": {
+                    "required": false
+                },
                 "houseNumber": {
                     "required": true
                 },
@@ -350,6 +385,13 @@
                     "required": true,
                     "additionalProperties": false,
                     "properties": {
+                        "@type": {
+                            "pattern": "^Location$",
+                            "required": false
+                        },
+                        "@id": {
+                            "required": false
+                        },
                         "name": {
                             "required": true
                         },
@@ -368,6 +410,13 @@
                             "required": true,
                             "additionalProperties": false,
                             "properties": {
+                                "@type": {
+                                    "pattern": "^Country$",
+                                    "required": false
+                                },
+                                "@id": {
+                                    "required": false
+                                },
                                 "geonameId": {
                                     "required": true,
                                     "type": "integer"

@@ -52,8 +52,6 @@ class HostingRequestController extends BaseMessageController
      *     requirements={"id": "\d+"})
      *
      * @throws AccessDeniedException
-     *
-     * @return RedirectResponse
      */
     public function replyToHostingRequestAction(Message $message): RedirectResponse
     {
@@ -346,8 +344,6 @@ class HostingRequestController extends BaseMessageController
      * @param string $folder
      *
      * @throws InvalidArgumentException
-     *
-     * @return Response
      */
     public function requests(Request $request, $folder): Response
     {
@@ -372,9 +368,6 @@ class HostingRequestController extends BaseMessageController
         $this->messageModel->sendRequestNotification($guest, $host, $host, $request, $subject, 'reply_from_guest', $requestChanged);
     }
 
-    /**
-     * @return bool
-     */
     protected function checkRequestExpired(Message $hostingRequest): bool
     {
         $requestModel = new HostingRequestModel();

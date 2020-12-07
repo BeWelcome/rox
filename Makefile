@@ -1,4 +1,4 @@
-.PHONY: all build phpcpd phploc phpmd php-cs-fixer php-code-sniffer phpmetrics phpunit version
+.PHONY: all build phpcpd phploc phpmd php-cs-fixer php-code-sniffer phpmetrics phpunit infection behat version
 export COMPOSER_MEMORY_LIMIT := -1
 
 SRC_DIR=src tests
@@ -11,7 +11,7 @@ SRC_DIR_COMMA := $(subst $(SPACE),$(COMMA),$(SRC_DIR))
 
 all: phpci
 
-phpci: phpcpd phploc phpmd php-code-sniffer phpunit infection version
+phpci: phpcpd phploc phpmd php-code-sniffer phpunit infection behat version
 
 install:
 	git rev-parse --short HEAD > VERSION
@@ -86,6 +86,12 @@ phpunit:
 
 infection: phpunit
 	"./vendor/bin/infection" --only-covered --coverage=build/logs/phpunit --min-covered-msi=85 --threads=30
+
+behat: encore
+	bin/console doctrine:database:create --env=test --if-not-exists
+	bin/console doctrine:schema:create --env=test
+	bin/console hautelook:fixtures:load --env=test --no-interaction
+	vendor/bin/behat --colors --tags='~@wip'
 
 phpmetrics:
 	"./vendor/bin/phpmetrics" --exclude=src/App/Entity --report-violations=phpmetrics.xml $(SRC_DIR_COMMA)

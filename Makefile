@@ -82,10 +82,9 @@ php-code-sniffer:
 	"./vendor/bin/phpcs"  --colors --warning-severity=Error
 
 phpunit:
-	php bin/phpunit --coverage-xml=build/logs/phpunit/coverage-xml --coverage-clover=build/logs/phpunit/clover.xml --log-junit=build/logs/phpunit/junit.xml --colors=never
+	phpdbg -qrr bin/phpunit --coverage-xml=build/logs/phpunit/coverage-xml --coverage-clover=build/logs/phpunit/clover.xml --log-junit=build/logs/phpunit/junit.xml --colors=never
 
 infection: phpunit
-#	php bin/phpunit --coverage-text --coverage-xml=build/logs/phpunit/coverage-xml --coverage-clover=build/logs/phpunit/clover.xml --log-junit=build/logs/phpunit/junit.xml --colors=never
 	"./vendor/bin/infection" --only-covered --coverage=build/logs/phpunit --min-covered-msi=85 --threads=30
 
 phpmetrics:
@@ -93,5 +92,3 @@ phpmetrics:
 
 version:
 	git rev-parse --short HEAD > VERSION
-
-

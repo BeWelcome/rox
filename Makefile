@@ -76,7 +76,7 @@ phpmd:
 	"./vendor/bin/phpmd" $(SRC_DIR_COMMA) text phpmd.xml
 
 php-cs-fixer:
-	"./vendor/bin/php-cs-fixer" fix -v --diff --dry-run --warning-severity=0
+	"./vendor/bin/php-cs-fixer" fix -v --diff --dry-run
 
 php-code-sniffer:
 	"./vendor/bin/phpcs"  --colors --warning-severity=Error

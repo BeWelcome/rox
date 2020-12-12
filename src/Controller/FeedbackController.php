@@ -16,6 +16,9 @@ class FeedbackController extends AboutBaseController
 {
     /**
      * @Route("/about/feedback", name="contactus")
+     * @Route("/contact")
+     * @Route("/contactus")
+     * @Route("/support")
      *
      * @return RedirectResponse
      */

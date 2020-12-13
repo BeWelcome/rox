@@ -5,8 +5,7 @@
 {#    {%  if locale != 'en' %}
         <p><strong>{{ 'terms.not.translated'|trans }}</strong></p>
     {% endif %}
-#}    <p><em>These Terms of Use will supersede the <a href="{{ url('old_terms_language', {'locale': locale }) }}">currently valid version</a> starting July, 1st 2020. (<a href="{{ url('terms_of_use', {'locale':'fr'}) }}">French
-                version</a>)</em></p>
+#}    <p><em>(<a href="{{ url('terms_of_use', {'locale':'fr'}) }}">French version</a>)</em></p>
 
     <p>BeWelcome (<a href="https://www.bewelcome.org">www.bewelcome.org</a>) is a network that promotes the ideas of
         hospitality and cultural exchange. It is a project of the non-profit association BeVolunteer and run exclusively

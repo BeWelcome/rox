@@ -97,7 +97,7 @@ class AboutController extends AboutBaseController
     }
 
     /**
-     * @Route("bv", name="about_bv")
+     * @Route("/bv", name="about_bv")
      *
      * @return RedirectResponse
      */

@@ -45,11 +45,11 @@ class AboutController extends AboutBaseController
      *
      * @return Response
      */
-    public function showAboutGetActive()
+    public function showAboutGetActive(Request $request)
     {
         return $this->render('about/getactive.html.twig', [
             'submenu' => [
-                'items' => $this->getSubMenuItems(),
+                'items' => $this->getSubMenuItems($request->getLocale()),
                 'active' => 'getactive',
             ],
         ]);
@@ -60,11 +60,11 @@ class AboutController extends AboutBaseController
      *
      * @return Response
      */
-    public function showAboutTheIdea()
+    public function showAboutTheIdea(Request $request)
     {
         return $this->render('about/about.html.twig', [
             'submenu' => [
-                'items' => $this->getSubMenuItems(),
+                'items' => $this->getSubMenuItems($request->getLocale()),
                 'active' => 'about_theidea',
             ],
         ]);
@@ -76,11 +76,11 @@ class AboutController extends AboutBaseController
      *
      * @return Response
      */
-    public function showAboutPressInfo()
+    public function showAboutPressInfo(Request $request)
     {
         return $this->render('about/pressinfo.html.twig', [
             'submenu' => [
-                'items' => $this->getSubMenuItems(),
+                'items' => $this->getSubMenuItems($request->getLocale()),
                 'active' => 'about_press',
             ],
         ]);

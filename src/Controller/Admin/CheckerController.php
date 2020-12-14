@@ -69,7 +69,7 @@ class CheckerController extends AbstractController
             }
         }
 
-        return  $this->render('admin/checker/messages.html.twig', [
+        return $this->render('admin/checker/messages.html.twig', [
             'form' => $form->createView(),
             'reported' => $reportedMessages,
             'submenu' => [
@@ -117,7 +117,7 @@ class CheckerController extends AbstractController
             return $this->redirectToRoute('admin_spam_activities');
         }
 
-        return  $this->render('admin/checker/activities.html.twig', [
+        return $this->render('admin/checker/activities.html.twig', [
             'form' => $form->createView(),
             'reported' => $latestActivities,
             'submenu' => [
@@ -165,7 +165,7 @@ class CheckerController extends AbstractController
             return $this->redirectToRoute('admin_spam_community_news');
         }
 
-        return  $this->render('admin/checker/communitynews.html.twig', [
+        return $this->render('admin/checker/communitynews.html.twig', [
             'form' => $form->createView(),
             'reported' => $latestComments,
             'submenu' => [

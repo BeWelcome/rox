@@ -235,7 +235,7 @@ class GeonamesUpdateDailyCommand extends Command
         $statement = $connection->prepare('
                 UPDATE
                     `members`
-                SET 
+                SET
                     IdCity = :new_geoname_id
                 WHERE
                     IdCity = :old_geoname_id
@@ -249,7 +249,7 @@ class GeonamesUpdateDailyCommand extends Command
         $statement = $connection->prepare('
                 UPDATE
                     `addresses`
-                SET 
+                SET
                     IdCity = :new_geoname_id
                 WHERE
                     IdCity = :old_geoname_id
@@ -263,7 +263,7 @@ class GeonamesUpdateDailyCommand extends Command
         $statement = $connection->prepare('
                 UPDATE
                     `activities`
-                SET 
+                SET
                     locationId = :new_geoname_id
                 WHERE
                     locationId = :old_geoname_id
@@ -277,7 +277,7 @@ class GeonamesUpdateDailyCommand extends Command
         $statement = $connection->prepare('
                 UPDATE
                     `geonames`
-                SET 
+                SET
                     geonameid = :new_geoname_id
                 WHERE
                     geonameid = :old_geoname_id

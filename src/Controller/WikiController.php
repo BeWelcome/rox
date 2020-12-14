@@ -20,8 +20,8 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class WikiController extends AbstractController
 {
-    use TranslatorTrait;
     use TranslatedFlashTrait;
+    use TranslatorTrait;
 
     /**
      * @Route("/wiki", name="wiki_front_page")

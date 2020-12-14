@@ -42,7 +42,7 @@ class EditTranslationRequest extends TranslationRequest
         $editTranslationRequest->translatedText = $translation->getSentence();
         $editTranslationRequest->isMajorUpdate = ($original->getMajorUpdate() > $translation->getUpdated());
         $editTranslationRequest->isArchived = $original->getIsArchived();
-        $editTranslationRequest->doNotTranslate = ('yes' === $original->getDoNotTranslate());
+        $editTranslationRequest->doNotTranslate = ('yes' === $original->getTranslationAllowed());
 
         return $editTranslationRequest;
     }

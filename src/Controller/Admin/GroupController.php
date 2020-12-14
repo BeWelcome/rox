@@ -28,8 +28,8 @@ use Symfony\Component\Validator\Constraints\NotBlank;
  */
 class GroupController extends AbstractController
 {
-    use TranslatorTrait;
     use TranslatedFlashTrait;
+    use TranslatorTrait;
 
     /**
      * @var Mailer

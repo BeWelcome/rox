@@ -16,16 +16,26 @@ final class MemberExtension implements QueryCollectionExtensionInterface, QueryI
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function applyToCollection(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, string $operationName = null): void
-    {
+    public function applyToCollection(
+        QueryBuilder $queryBuilder,
+        QueryNameGeneratorInterface $queryNameGenerator,
+        string $resourceClass,
+        string $operationName = null
+    ): void {
         $this->apply($queryBuilder, $resourceClass);
     }
 
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function applyToItem(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, array $identifiers, string $operationName = null, array $context = []): void
-    {
+    public function applyToItem(
+        QueryBuilder $queryBuilder,
+        QueryNameGeneratorInterface $queryNameGenerator,
+        string $resourceClass,
+        array $identifiers,
+        string $operationName = null,
+        array $context = []
+    ): void {
         $this->apply($queryBuilder, $resourceClass);
     }
 

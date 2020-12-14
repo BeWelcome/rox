@@ -99,7 +99,7 @@ class FaqCategoryController extends FaqBaseController
             }
         }
 
-        return  $this->render(
+        return $this->render(
             'admin/faqs/editcreate.category.html.twig',
             [
                 'submenu' => [
@@ -149,7 +149,7 @@ class FaqCategoryController extends FaqBaseController
             return $this->redirectToRoute('admin_faqs_overview', ['categoryId' => $faqCategory->getId()]);
         }
 
-        return  $this->render(
+        return $this->render(
             'admin/faqs/editcreate.category.html.twig',
             [
                 'submenu' => [

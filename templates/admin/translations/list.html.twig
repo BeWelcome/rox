@@ -17,7 +17,8 @@
     </p>
     {{ form(form) }}
     {% if translations.nbResults == 0  %}
-        // This is really unlikely :)
+        {{ 'translation.no.results'|trans }}
+        {% if code %}<br>{{ 'translation.create.code'|trans({'code': code}) }}{% endif %}
     {% else %}
         {% if translations.haveToPaginate %}
             <div class="row">

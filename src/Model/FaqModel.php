@@ -34,16 +34,16 @@ class FaqModel
     {
         $connection = $this->getManager()->getConnection();
         $stmt = $connection->prepare(
-            "SELECT 
+            "SELECT
     f.*
 FROM
-    faq f    
+    faq f
 LEFT JOIN
-    faqcategories fc ON f.idCategory = fc.id    
-WHERE 
+    faqcategories fc ON f.idCategory = fc.id
+WHERE
     fc.id = :categoryId
     AND f.Active = 'Active'
-ORDER BY 
+ORDER BY
     f.SortOrder"
         );
         $stmt->bindValue(':categoryId', $faqCategory->getId(), ParameterType::INTEGER);

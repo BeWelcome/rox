@@ -42,8 +42,8 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 class GroupController extends AbstractController
 {
     use ManagerTrait;
-    use TranslatorTrait;
     use TranslatedFlashTrait;
+    use TranslatorTrait;
     use UniqueFilenameTrait;
 
     /**

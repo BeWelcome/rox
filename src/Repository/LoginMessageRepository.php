@@ -28,7 +28,7 @@ class LoginMessageRepository extends EntityRepository
                     lma.messageId IS NULL
                     AND (lm.created > (NOW() - INTERVAL 1 MONTH))
                 ORDER BY
-                    lm.created ASC                
+                    lm.created ASC
             ', $rsm)
             ->setParameter('memberId', $member->getId())
             ;

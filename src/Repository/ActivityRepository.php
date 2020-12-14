@@ -108,12 +108,9 @@ class ActivityRepository extends EntityRepository
     /**
      * Get all activities around a given location.
      *
-     * @param int   $distance
      * @param mixed $online
-     *
-     * @return int
      */
-    public function getUpcomingAroundLocationCount(Member $member, $online)
+    public function getUpcomingAroundLocationCount(Member $member, $online): int
     {
         $qb = $this->getUpcomingAroundLocationQueryBuilder($member, $online);
         $qb
@@ -141,7 +138,6 @@ class ActivityRepository extends EntityRepository
     }
 
     /**
-     * @param int   $distance
      * @param mixed $online
      *
      * @throws Exception

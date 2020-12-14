@@ -2,6 +2,7 @@
 
 namespace App\TranslationLoader;
 
+use App\Doctrine\TranslationAllowedType;
 use App\Entity\Word;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Translation\Loader\LoaderInterface;
@@ -44,7 +45,7 @@ class DatabaseLoader implements LoaderInterface
         return $this->em->getRepository(Word::class)->getTranslationsForLocale($locale, $domain);
     }
 
-    private function loadTranslationsForLocale($locale, $domain)
+    private function loadTranslationsForLocale($locale, $domain): MessageCatalogue
     {
         if (!isset($this->originals[$domain])) {
             $this->loadEnglishOriginals($domain);
@@ -60,11 +61,16 @@ class DatabaseLoader implements LoaderInterface
             foreach ($translations as $translation) {
                 $code = $translation->getCode();
                 if ($originals->has($code, $domain)) {
-                    $majorUpdate = $originals->getMetadata($code, $domain);
-                    if ($majorUpdate <= $translation->getUpdated()) {
-                        $catalogue->set($code, $translation->getSentence(), $domain);
+                    $majorUpdate = $originals->getMetadata($code, $domain)['majorUpdate'];
+                    if ($translation->getUpdated() <= $majorUpdate) {
+                        $catalogue->set($code, $originals->get($code, $domain), $domain);
                     } else {
-                        $catalogue->set($code, $originals->get($code, $domain));
+                        $translationAllowed = TranslationAllowedType::TRANSLATION_ALLOWED === $originals->getMetadata($code, $domain)['translationAllowed'];
+                        if ($translationAllowed) {
+                            $catalogue->set($code, $translation->getSentence(), $domain);
+                        } else {
+                            $catalogue->set($code, $originals->get($code, $domain), $domain);
+                        }
                     }
                 }
             }
@@ -88,7 +94,11 @@ class DatabaseLoader implements LoaderInterface
                 $code = $translation->getCode();
                 $sentence = $translation->getSentence();
                 $catalogue->set($code, $sentence, $domain);
-                $catalogue->setMetadata($code, $translation->getMajorUpdate(), $domain);
+                $metaData = [
+                    'majorUpdate' => $translation->getMajorUpdate(),
+                    'translationAllowed' => $translation->getTranslationAllowed(),
+                ];
+                $catalogue->setMetadata($code, $metaData, $domain);
             }
         }
 

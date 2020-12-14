@@ -47,8 +47,8 @@ use Symfony\Component\Validator\Constraints\NotBlank;
  */
 class TranslationController extends AbstractController
 {
-    use TranslatedFlashTrait;
     use TranslatorTrait;
+    use TranslatedFlashTrait;
 
     private const MOCKUPS = [
         'emails' => [
@@ -1036,6 +1036,32 @@ class TranslationController extends AbstractController
         return $params;
     }
 
+<<<<<<< Updated upstream
+=======
+
+    /**
+     * @Route("/admin/translate/statistics", name="translation_statistics")
+     *
+     * @return Response
+     */
+    public function statistics(Request $request)
+    {
+        /** @var WordRepository $translationRepository */
+        $translationRepository = $this->getDoctrine()->getRepository(Word::class);
+        $countAll = $translationRepository->getTranslatableItemsCount('en');
+        $translationDetails = $translationRepository->getTranslationDetails();
+
+        return $this->render('admin/translations/statistics.html.twig', [
+                'count_all' => $countAll,
+                'details' => $translationDetails,
+                'submenu' => [
+                    'active' => 'statistics',
+                    'items' => $this->getSubmenuItems($request->getLocale(), 'statistics'),
+                ],
+            ]);
+    }
+
+>>>>>>> Stashed changes
     /**
      * Returns the locales that the user is allowed to translate.
      *
@@ -1143,6 +1169,12 @@ class TranslationController extends AbstractController
         return $submenuItems;
     }
 
+    /**
+     * @param TranslationRequest $data
+     * @param Member $translator
+     * @param Language $english
+     * @return Word
+     */
     private function generateTranslatableItem(TranslationRequest $data, Member $translator, Language $english): Word
     {
         $original = new Word();
@@ -1153,7 +1185,6 @@ class TranslationController extends AbstractController
         $original->setCreated(new DateTime());
         $original->setAuthor($translator);
         $original->setLanguage($english);
-
         return $original;
     }
 }

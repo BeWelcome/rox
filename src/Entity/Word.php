@@ -7,6 +7,7 @@
 
 namespace App\Entity;
 
+use App\Doctrine\TranslationAllowedType;
 use Carbon\Carbon;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
@@ -60,9 +61,9 @@ class Word
     /**
      * @var string
      *
-     * @ORM\Column(name="donottranslate", type="string", nullable=false)
+     * @ORM\Column(name="donottranslate", type="translation_allowed", nullable=false)
      */
-    private $doNotTranslate = 'no';
+    private $translationAllowed = TranslationAllowedType::TRANSLATION_ALLOWED;
 
     /**
      * @var Member
@@ -221,37 +222,27 @@ class Word
     }
 
     /**
-     * Set donottranslate.
-     *
-     * @param string $doNotTranslate
-     *
-     * @return Word
+     * Set translation allowed flag.
      */
-    public function setDoNotTranslate($doNotTranslate)
+    public function setTranslationAllowed(string $translationAllowed): self
     {
-        $this->doNotTranslate = $doNotTranslate;
+        $this->translationAllowed = $translationAllowed;
 
         return $this;
     }
 
     /**
-     * Get donottranslate.
-     *
-     * @return string
+     * Get translation allowed flag.
      */
-    public function getDoNotTranslate()
+    public function getTranslationAllowed(): string
     {
-        return $this->doNotTranslate;
+        return $this->translationAllowed;
     }
 
     /**
-     * Sets language and the matching shortcode (\todo remove shortcode or idlanguage when old code is finally replaced).
-     *
-     * @param Language $language
-     *
-     * @return Word
+     * Sets the language of the translated item.
      */
-    public function setLanguage($language)
+    public function setLanguage(Language $language): self
     {
         $this->language = $language;
         $this->setShortCode($language->getShortcode());
@@ -260,11 +251,9 @@ class Word
     }
 
     /**
-     * Get language.
-     *
-     * @return Language
+     * Get language of the translated item.
      */
-    public function getLanguage()
+    public function getLanguage(): Language
     {
         return $this->language;
     }

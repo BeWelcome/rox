@@ -96,7 +96,7 @@ class FaqController extends FaqBaseController
         $faqs = $this->faqModel->getFaqsForCategory($faqCategory);
         $faqCategories = $this->getSubMenuItems();
 
-        return  $this->render('admin/faqs/index.html.twig', [
+        return $this->render('admin/faqs/index.html.twig', [
             'form' => $form->createView(),
             'submenu' => [
                 'items' => $faqCategories,
@@ -186,7 +186,7 @@ class FaqController extends FaqBaseController
             }
         }
 
-        return  $this->render(
+        return $this->render(
             'admin/faqs/editcreate.faq.html.twig',
             [
                 'submenu' => [
@@ -272,7 +272,7 @@ class FaqController extends FaqBaseController
             return $this->redirectToRoute('admin_faqs_overview', ['categoryId' => $faq->getCategory()->getId()]);
         }
 
-        return  $this->render(
+        return $this->render(
             'admin/faqs/editcreate.faq.html.twig',
             [
                 'submenu' => [

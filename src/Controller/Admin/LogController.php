@@ -63,7 +63,7 @@ class LogController extends AbstractController
 
         $logs = $logModel->getFilteredLogs($types, $member, $page, $limit);
 
-        return  $this->render('admin/logs/index.html.twig', [
+        return $this->render('admin/logs/index.html.twig', [
             'form' => $logForm->createView(),
             'logs' => $logs,
         ]);
@@ -87,7 +87,7 @@ class LogController extends AbstractController
 
         $logs = $logModel->getFilteredLogs(['Group'], null, $page, $limit);
 
-        return  $this->render('admin/logs/index.html.twig', [
+        return $this->render('admin/logs/index.html.twig', [
             'logs' => $logs,
         ]);
     }

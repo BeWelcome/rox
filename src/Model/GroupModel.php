@@ -26,9 +26,9 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class GroupModel
 {
+    use BewelcomeAddressTrait;
     use ManagerTrait;
     use MessageTrait;
-    use BewelcomeAddressTrait;
 
     /**
      * @var UrlGenerator

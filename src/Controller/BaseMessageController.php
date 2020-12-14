@@ -20,8 +20,8 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class BaseMessageController extends AbstractController
 {
-    use TranslatorTrait;
     use TranslatedFlashTrait;
+    use TranslatorTrait;
 
     /** @var MessageModel */
     protected $messageModel;

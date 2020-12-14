@@ -54,6 +54,7 @@ doctrine:
             thread_reply: App\Doctrine\ThreadReplyType
             typical_offer: App\Doctrine\TypicalOfferType
             who_spoke_last: App\Doctrine\WhoSpokeLastType
+            translation_allowed: App\Doctrine\TranslationAllowedType
 
         mapping_types:
             enum:       string

@@ -5,7 +5,7 @@ App\Entity\Word:
         Sentence: 'Welcome to the sign-up page'
         domain: 'messages'
         updated: <dateTime()>
-        donottranslate : no
+        translationAllowed: Yes
         Language: '@language_en'
         author: '@bwadmin'
         created: <dateTime()>
@@ -19,7 +19,7 @@ App\Entity\Word:
         Sentence: 'Bienvenue sur la page d’inscription'
         domain: 'messages'
         updated: <dateTime()>
-        donottranslate : no
+        translationAllowed: Yes
         Language: '@language_fr'
         author: '@member_2'
         created: <dateTime()>
@@ -33,7 +33,7 @@ App\Entity\Word:
         Sentence: 'General questions & registration'
         domain: 'messages'
         updated: <dateTime()>
-        donottranslate : no
+        translationAllowed: Yes
         Language: '@language_en'
         author: '@member_2'
         created: <dateTime()>
@@ -47,7 +47,7 @@ App\Entity\Word:
         Sentence: 'What is BeWelcome?'
         domain: 'messages'
         updated: <dateTime()>
-        donottranslate : no
+        translationAllowed: Yes
         Language: '@language_en'
         author: '@member_2'
         created: <dateTime()>
@@ -61,7 +61,7 @@ App\Entity\Word:
         Sentence: 'BeWelcome is a hospitality exchange network. Every member of the network has a profile. Members can search for other members at their travel destination, check out their profiles and send them a message or accommodation request. Most members of BeWelcome offer hospitality to travellers and/or can show them around. If that sounds good to you, just sign up.'
         domain: 'messages'
         updated: <dateTime()>
-        donottranslate : no
+        translationAllowed: Yes
         Language: '@language_en'
         author: '@member_2'
         created: <dateTime()>
@@ -75,7 +75,7 @@ App\Entity\Word:
         Sentence: 'How do I join?'
         domain: 'messages'
         updated: <dateTime()>
-        donottranslate : no
+        translationAllowed: Yes
         Language: '@language_en'
         author: '@member_2'
         created: <dateTime()>
@@ -89,7 +89,7 @@ App\Entity\Word:
         Sentence: 'You can sign up at https://www.bewelcome.org/signup. We ask you for a username, your real name, your e-mail address, your date of birth, gender and your approximate location. Your name, e-mail address and date of birth will not be visible for other members. You can decide what other information you want to show in your personal settings. After you signed up we will send you a confirmation e-mail. Once you clicked the link in that mail you can use BeWelcome.'
         domain: 'messages'
         updated: <dateTime()>
-        donottranslate : no
+        translationAllowed: Yes
         Language: '@language_en'
         author: '@member_2'
         created: <dateTime()>
@@ -103,7 +103,7 @@ App\Entity\Word:
         Sentence: 'Can I join for free?'
         domain: 'messages'
         updated: <dateTime()>
-        donottranslate : no
+        translationAllowed: Yes
         Language: '@language_en'
         author: '@member_2'
         created: <dateTime()>
@@ -117,7 +117,7 @@ App\Entity\Word:
         Sentence: 'Yes, joining and being a member of BeWelcome is free of charge. We encourage you to dedicate some time and contribute to the community through hosting, meeting other members or helping to run the site. Although the website is non-profit and completely run by volunteers, we do have some costs (such as servers, domains, administrative fees, etc.) which we hope to cover through donations. We will never sell data or show advertisements to cover the costs. Please also read the FAQ about how the project is financed.'
         domain: 'messages'
         updated: <dateTime()>
-        donottranslate : no
+        translationAllowed: Yes
         Language: '@language_en'
         author: '@member_2'
         created: <dateTime()>
@@ -131,7 +131,7 @@ App\Entity\Word:
         Sentence: 'How do I find a host?'
         domain: 'messages'
         updated: <dateTime()>
-        donottranslate : no
+        translationAllowed: Yes
         Language: '@language_en'
         author: '@member_2'
         created: <dateTime()>
@@ -145,7 +145,7 @@ App\Entity\Word:
         Sentence: 'Go to the “Find members” page and enter the name of the location you are going to visit in the text box (a city, town, or village – the search does not work with countries or regions). When you start typing the location name, a list will show the possible locations. If the place has BeWelcome members that will be indicated with a number in parenthesis. Choose the correct location, click on “search”, and you will get a list of all active profiles registered at that location (and, by default, in a radius of 25km/15mi around that location). Take your time to review the profiles and read the information given there carefully. Then write a message to those members you would like to stay with. There are also advanced options available to refine your search. For example, you can limit your search to the exact location you entered or extend it to a wider area by choosing a wider radius. You can also limit your search to members who can host more than one person by choosing the respective option. Additionally, there are several options to sort your results. Other possibilities to find host include the “Browse countries” page and the “Map search” (detailed instructions available on that page).'
         domain: 'messages'
         updated: <dateTime()>
-        donottranslate : no
+        translationAllowed: Yes
         Language: '@language_en'
         author: '@member_2'
         created: <dateTime()>
@@ -159,7 +159,7 @@ App\Entity\Word:
         Sentence: 'How can I contact another member?'
         domain: 'messages'
         updated: <dateTime()>
-        donottranslate : no
+        translationAllowed: Yes
         Language: '@language_en'
         author: '@member_2'
         created: <dateTime()>
@@ -173,7 +173,7 @@ App\Entity\Word:
         Sentence: 'To contact another member, go to his/her profile. There, you will find a "Send Message" link in the left sidebar below the profile picture. Just click on it and write your message in the blank field provided and then click on "send". The member will receive your message in his BeWelcome mailbox but all messages will also be sent to his/her e-mail address.'
         domain: 'messages'
         updated: <dateTime()>
-        donottranslate : no
+        translationAllowed: Yes
         Language: '@language_en'
         author: '@member_2'
         created: <dateTime()>

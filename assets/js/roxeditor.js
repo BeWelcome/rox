@@ -1,7 +1,7 @@
 import ClassicEditor from '@ckeditor/ckeditor5-editor-classic/src/classiceditor';
 import EssentialsPlugin from '@ckeditor/ckeditor5-essentials/src/essentials';
 import UploadAdapterPlugin from '@ckeditor/ckeditor5-adapter-ckfinder/src/uploadadapter';
-import AutoformatPlugin from '@ckeditor/ckeditor5-autoformat/src/autoformat';
+// import AutoformatPlugin from '@ckeditor/ckeditor5-autoformat/src/autoformat';
 import BoldPlugin from '@ckeditor/ckeditor5-basic-styles/src/bold';
 import UnderlinePlugin from '@ckeditor/ckeditor5-basic-styles/src/underline';
 import ItalicPlugin from '@ckeditor/ckeditor5-basic-styles/src/italic';
@@ -30,7 +30,7 @@ for (var i = 0; i < allEditors.length; ++i) {
         // The plugins are now passed directly to .create().
         plugins: [
             EssentialsPlugin,
-            AutoformatPlugin,
+//            AutoformatPlugin,
             BoldPlugin,
             UnderlinePlugin,
             ItalicPlugin,

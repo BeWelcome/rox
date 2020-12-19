@@ -552,7 +552,7 @@ SQL;
      * @param Member $member
      * @access public
      * @return bool
-m     */
+     */
     public function setGroupOwner(Member $member)
     {
         /** @var $role \Role */

@@ -38,6 +38,7 @@ phploc.xml
 /public/service-worker.js
 /public/service-worker.js.map
 /swagger.json
+/build/logs/
 
 # deployer config
 /config/deployer.yml
@@ -51,15 +52,9 @@ phploc.xml
 /vendor/
 ###< symfony/framework-bundle ###
 
-###> friendsofphp/php-cs-fixer ###
-/.php_cs
-/.php_cs.cache
-###< friendsofphp/php-cs-fixer ###
-
 ###> symfony/phpunit-bridge ###
 .phpunit
 /phpunit.xml
-/build
 .phpunit.result.cache
 ###< symfony/phpunit-bridge ###
 

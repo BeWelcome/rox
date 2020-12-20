@@ -14,18 +14,19 @@
 {% block content %}
     <div class="row welcomeback mx-0 mb-4 p-2">
         {% include 'landing/widget/profilepicturewithaccommodation.html.twig' with {
-        member: app.user
+            member: app.user
         } only %}
 
         <div class="col-12 col-lg-6 align-self-center">
             <div class="d-flex flex-column">
                 <div class="d-inline-flex h2 my-2">
-                    <span class="d-none d-md-flex mr-md-2">{{ 'landing.welcomeback' | trans }}</span>{{ macros.profilelink(app.user.Username) }}
+                    <span
+                        class="d-none d-md-flex mr-md-2">{{ 'landing.welcomeback' | trans }}</span>{{ macros.profilelink(app.user.Username) }}
                 </div>
                 <div class="d-inline-flex align-items-center h4">
                     <span class="d-none d-md-flex">{{ 'landing.yourhostingstatus' | trans }}</span>
                     {% include 'landing/widget/accommodation.html.twig' with {
-                    member: app.user
+                        member: app.user
                     } only %}
                     in
                     {# Provide a way to search in member's location #}
@@ -64,13 +65,15 @@
 
             <ul class="nav nav-tabs" role="tablist">
                 <li class="nav-item">
-                    <a class="nav-link active" aria-controls="messages" href="#messages" role="tab" data-toggle="tab">{{ 'landing.tab.messagesreceived' | trans }}{% if messageCount + requestCount %} <span
+                    <a class="nav-link active" aria-controls="messages" href="#messages" role="tab"
+                       data-toggle="tab">{{ 'landing.tab.messagesreceived' | trans }}{% if messageCount + requestCount %}
+                            <span
                                 class="badge badge-primary">{{ messageCount + requestCount }}</span>{% endif %}</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" aria-controls="notifications" href="#notifications" role="tab"
                        data-toggle="tab">{{ 'landing.tab.notifications' | trans }}{% if notificationCount %} <span
-                                class="badge badge-primary">{{ notificationCount }}</span>{% endif %}</a>
+                            class="badge badge-primary">{{ notificationCount }}</span>{% endif %}</a>
                 </li>
             </ul>
 
@@ -80,12 +83,18 @@
                 <div role="tabpanel" class="tab-pane h-100 active" id="messages">
                     {# all / unread messages toggle #}
                     <div class="d-flex btn-group justify-content-center m-1" data-toggle="buttons" role="radiogroup">
-                        <label class="btn btn-outline-primary{% if messageFilter == 'All' %} active{% endif %}" id="all" role="radio">
+                        <label class="btn btn-outline-primary{% if messageFilter == 'All' %} active{% endif %}" id="all"
+                               role="radio">
                             <input type="radio" name="options" autocomplete="off" onclick="updateMessages()"
-                                   {% if messageFilter == 'All' %}checked{% endif %} hidden>{{ 'landing.button.all' | trans }}
+                                   {% if messageFilter == 'All' %}checked{% endif %}
+                                   hidden>{{ 'landing.button.all' | trans }}
                         </label>
-                        <label for="unread" class="btn btn-outline-primary{% if messageFilter == 'Unread' %} active{% endif %}" id="unread" role="radio">
-                            <input type="radio" name="options" autocomplete="off" onclick="updateMessages()" {% if messageFilter == 'Unread' %}checked{% endif %} hidden>{{ 'landing.button.unread' | trans }}
+                        <label for="unread"
+                               class="btn btn-outline-primary{% if messageFilter == 'Unread' %} active{% endif %}"
+                               id="unread" role="radio">
+                            <input type="radio" name="options" autocomplete="off" onclick="updateMessages()"
+                                   {% if messageFilter == 'Unread' %}checked{% endif %}
+                                   hidden>{{ 'landing.button.unread' | trans }}
                         </label>
                     </div>
 
@@ -98,8 +107,9 @@
 
                     {# message buttons #}
                     <div class="text-center mt-2">
-                        <a href="{{ url( 'both' )}}" class="btn btn-outline-primary btn-homewhite">
-                            <i class="fa fa-envelope mr-1"></i>{{ 'landing.button.myinbox' | trans }}{% if messageCount + requestCount %} <span
+                        <a href="{{ url( 'both' ) }}" class="btn btn-outline-primary btn-homewhite">
+                            <i class="fa fa-envelope mr-1"></i>{{ 'landing.button.myinbox' | trans }}{% if messageCount + requestCount %}
+                                <span
                                     class="badge badge-primary">{{ messageCount + requestCount }}</span>{% endif %}</a>
                     </div>
                 </div>
@@ -121,11 +131,13 @@
 
             <ul class="nav nav-tabs" role="tablist">
                 <li class="nav-item">
-                    <a href="#threads" class="nav-link active" aria-controls="threads" role="tab" data-toggle="tab">{{ 'landing.tab.forum' | trans }}</a>
+                    <a href="#threads" class="nav-link active" aria-controls="threads" role="tab"
+                       data-toggle="tab">{{ 'landing.tab.forum' | trans }}</a>
                 </li>
                 <li class="nav-item">
-                    <a href="#activities" class="nav-link" aria-controls="activities" role="tab" data-toggle="tab">{{ 'landing.tab.activities' | trans }}{% if activityCount %} <span
-                                class="badge badge-primary">{{ activityCount }}</span>{% endif %}</a>
+                    <a href="#activities" class="nav-link" aria-controls="activities" role="tab"
+                       data-toggle="tab">{{ 'landing.tab.activities' | trans }}{% if activityCount %} <span
+                            class="badge badge-primary">{{ activityCount }}</span>{% endif %}</a>
                 </li>
             </ul>
 
@@ -133,13 +145,21 @@
                 {# forum discussions #}
                 <div role="tabpanel" class="tab-pane h-100 active" id="threads">
 
-                    {# display settings#}
+                    {# display settings #}
                     <div class="d-flex btn-group justify-content-center m-1" data-toggle="buttons">
-                        <label class="btn btn-outline-primary{% if forumFilter == 'GroupsAndForums' or forumFilter == 'Groups' %} active{% endif %}" id="groupsButton">
-                            <input type="checkbox" autocomplete="off"{% if forumFilter == 'GroupsAndForums' or forumFilter == 'Groups' %} checked{% endif %} hidden>{{ 'landing.button.groups' | trans }}
+                        <label
+                            class="btn btn-outline-primary{% if forumFilter == 'GroupsAndForums' or forumFilter == 'Groups' %} active{% endif %}"
+                            id="groupsButton">
+                            <input type="checkbox"
+                                   autocomplete="off"{% if forumFilter == 'GroupsAndForums' or forumFilter == 'Groups' %} checked{% endif %}
+                                   hidden>{{ 'landing.button.groups' | trans }}
                         </label>
-                        <label class="btn btn-outline-primary{% if forumFilter == 'GroupsAndForums' or forumFilter == 'Forums' %} active{% endif %}" id="forumButton">
-                            <input type="checkbox" autocomplete="off"{% if forumFilter == 'GroupsAndForums' or forumFilter == 'Forums' %} checked{% endif %} hidden>{{ 'landing.button.forum' | trans }}
+                        <label
+                            class="btn btn-outline-primary{% if forumFilter == 'GroupsAndForums' or forumFilter == 'Forums' %} active{% endif %}"
+                            id="forumButton">
+                            <input type="checkbox"
+                                   autocomplete="off"{% if forumFilter == 'GroupsAndForums' or forumFilter == 'Forums' %} checked{% endif %}
+                                   hidden>{{ 'landing.button.forum' | trans }}
                         </label>
                     </div>
 
@@ -153,11 +173,11 @@
                     <div class="text-center mt-2">
                         <div class="btn-group" role="group" aria-label="...">
                             <a href="/forums" class="btn btn-outline-primary btn-homewhite"><i
-                                        class="fa fa-comments mr-1"></i>{{ 'landing.button.discussions' | trans }}</a>
+                                    class="fa fa-comments mr-1"></i>{{ 'landing.button.discussions' | trans }}</a>
                             <a href="/groups/mygroups" class="btn btn-outline-primary btn-homewhite"><i
-                                        class="fa fa-users mr-1"></i>{{ 'landing.button.mygroups' | trans }}</a>
+                                    class="fa fa-users mr-1"></i>{{ 'landing.button.mygroups' | trans }}</a>
                             <a href="/forums/subscriptions" class="btn btn-outline-primary btn-homewhite"><i
-                                        class="fa fa-check-square mr-1"></i>{{ 'landing.button.subscriptions' | trans }}</a>
+                                    class="fa fa-check-square mr-1"></i>{{ 'landing.button.subscriptions' | trans }}</a>
                         </div>
                     </div>
 
@@ -167,17 +187,18 @@
                 <div role="tabpanel" class="tab-pane h-100" id="activities">
                     <div class="d-flex btn-group justify-content-center m-1" role="group">
                         <a href="/activities" class="btn btn-outline-primary btn-homewhite"><i
-                                    class="fa fa-map"></i> {{ 'landing.activities.allactivities' | trans }}</a>
+                                class="fa fa-map"></i> {{ 'landing.activities.allactivities' | trans }}</a>
                         <a href="/activities/myactivities" class="btn btn-outline-primary btn-homewhite"><i
-                                    class="fa fa-calendar"></i> {{ 'landing.activities.myactivities' | trans }}</a>
+                                class="fa fa-calendar"></i> {{ 'landing.activities.myactivities' | trans }}</a>
                         <a href="/activities/create" class="btn btn-outline-primary btn-homewhite"><i
-                                    class="fa fa-calendar-plus"></i> {{ 'landing.activities.create' | trans }}</a>
+                                class="fa fa-calendar-plus"></i> {{ 'landing.activities.create' | trans }}</a>
                     </div>
                     <div class="m-1">
                         <div class="custom-control custom-switch">
                             <input type="checkbox" class="custom-control-input" id="show_online"
                                    name="show_online" {% if onlineActivities %}checked{% endif %}>
-                            <label class="custom-control-label" for="show_online">{{ 'landing.activities.show.online'|trans }}</label>
+                            <label class="custom-control-label"
+                                   for="show_online">{{ 'landing.activities.show.online'|trans }}</label>
                         </div>
                     </div>
                     <div id="activitiesdisplay" class="col-12">
@@ -195,89 +216,118 @@
         &nbsp; {# rendering fix #}
     </div>
 
-    {# 4 widgets#}
+    {# 4 widgets #}
     <div class="d-flex row flex-wrap">
 
         <div class="col-12 col-lg-5 mb-3">
             <div class="card p-2 mb-3">
-                <h4 class="homehfour">{{ 'landing.beinvolved.title' | trans }}<br/><span class="homesubt">{{ 'landing.beinvolved.donate' | trans }}</span></h4>
+                <h4 class="homehfour">{{ 'landing.beinvolved.title' | trans }}<br/><span
+                        class="homesubt">{{ 'landing.beinvolved.donate' | trans }}</span></h4>
 
-                <p class="text-center mb-0">{{ 'landing.beinvolved.goalfor' | trans }} {{ campaign.year }} - {{ campaign.year + 1 }}:
+                <p class="text-center mb-0">{{ 'landing.beinvolved.goalfor' | trans }} {{ campaign.year }}
+                    - {{ campaign.year + 1 }}:
                     <strong>€{{ campaign.yearNeeded }}</strong></p>
 
                 {% if campaign.yearDonated < campaign.yearNeeded %}
                     <div class="progress">
-                        <div class="progress-bar" role="progressbar" style="width: {{ (campaign.yearDonated / campaign.yearNeeded) * 100 }}%;" aria-valuenow="{{ campaign.yearDonated }}" aria-valuemin="0" aria-valuemax="{{ campaign.yearNeeded }}"></div>
+                        <div class="progress-bar" role="progressbar"
+                             style="width: {{ (campaign.yearDonated / campaign.yearNeeded) * 100 }}%;"
+                             aria-valuenow="{{ campaign.yearDonated }}" aria-valuemin="0"
+                             aria-valuemax="{{ campaign.yearNeeded }}"></div>
                     </div>
                 {% else %}
                     <div class="progress">
-                        <div class="progress-bar" role="progressbar" style="width: {{ (campaign.yearNeeded / campaign.yearDonated) * 100 }}%" aria-valuenow="campaign.yearNeeded" aria-valuemin="0" aria-valuemax="campaign.yearDonated" title="{{ 'donation.needed'|trans }}"></div>
-                        <div class="progress-bar bg-success" role="progressbar" style="width: {{ ((campaign.yearDonated - campaign.yearNeeded) / campaign.yearDonated) * 100 }}%" aria-valuenow="((campaign.yearDonated - campaign.yearNeeded) / campaign.yearDonated)" aria-valuemin="0" aria-valuemax="100" title="{{ 'donation.additional'|trans }}"></div>
+                        <div class="progress-bar" role="progressbar"
+                             style="width: {{ (campaign.yearNeeded / campaign.yearDonated) * 100 }}%"
+                             aria-valuenow="campaign.yearNeeded" aria-valuemin="0" aria-valuemax="campaign.yearDonated"
+                             title="{{ 'donation.needed'|trans }}"></div>
+                        <div class="progress-bar bg-success" role="progressbar"
+                             style="width: {{ ((campaign.yearDonated - campaign.yearNeeded) / campaign.yearDonated) * 100 }}%"
+                             aria-valuenow="((campaign.yearDonated - campaign.yearNeeded) / campaign.yearDonated)"
+                             aria-valuemin="0" aria-valuemax="100" title="{{ 'donation.additional'|trans }}"></div>
                     </div>
                 {% endif %}
 
                 <p class="text-center">
-                    {{ '€ ' ~ campaign.yearDonated ~ ''}}
+                    {{ '€ ' ~ campaign.yearDonated ~ '' }}
                     <span class="ml-1">{{ 'dashboard.donation.received' | trans }}</span></p>
                 {% if campaign.yearDonated >= campaign.yearNeeded %}
                     <p>{{ 'donation.thank.you'|trans({'amount':'€' ~ campaign.yearNeeded}) }}</p>
                 {% endif %}
-                <p><a href="{{ url('donate') }}" class="btn btn-block {% if campaign.yearDonated < campaign.yearNeeded %}btn-primary{% else %}btn-outline-primary{% endif %} mb-1"><i
-                                class="fa fa-euro-sign"></i> {{ 'landing.beinvolved.pleasedonate' | trans }}</a></p>
+                <p><a href="{{ url('donate') }}"
+                      class="btn btn-block {% if campaign.yearDonated < campaign.yearNeeded %}btn-primary{% else %}btn-outline-primary{% endif %} mb-1"><i
+                            class="fa fa-euro-sign"></i> {{ 'landing.beinvolved.pleasedonate' | trans }}</a></p>
 
             </div>
 
             <div class="card p-2">
-                <h4 class="homehfour">{{ 'landing.beinvolved.title' | trans }}<br/><span class="homesubt">{{ 'landing.beinvolved.volunteer' | trans }}</span></h4>
+                <h4 class="homehfour">{{ 'landing.beinvolved.title' | trans }}<br/><span
+                        class="homesubt">{{ 'landing.beinvolved.volunteer' | trans }}</span></h4>
 
                 <p>{{ 'landing.beinvolved.intro' | trans }}</p>
                 <p><a href="{{ url('getactive') }}" class="btn btn-outline-primary btn-homewhite btn-block"><i
-                                class="fa fa-wrench"></i> {{ 'landing.beinvolved.helpbewelcome' | trans }}</a></p>
+                            class="fa fa-wrench"></i> {{ 'landing.beinvolved.helpbewelcome' | trans }}</a></p>
             </div>
         </div>
 
         <div class="col-12 col-md-6 col-lg-5 mb-3">
             <div class="card p-2 h-100">
-                <h4 class="homehfour">{{ 'landing.bwnews.title' | trans }}<br/><span class="homesubt">{{ 'landing.bwnews.subtitle' | trans }}</span></h4>
+                <h4 class="homehfour">{{ 'landing.bwnews.title' | trans }}<br/><span
+                        class="homesubt">{{ 'landing.bwnews.subtitle' | trans }}</span></h4>
 
                 <h5>
                     <a href="{{ url('communitynews_show', { id: communityNews.id} ) }}">{{ communityNews.title }}</a>
                 </h5>
                 {{ communityNews.text | truncate(200) | raw }}<a
-                            href="{{ url('communitynews_show', { id: communityNews.id} ) }}"
-                            class="btn btn-sm btn-primary">{{ 'label.read.more' | trans }}</a>
+                    href="{{ url('communitynews_show', { id: communityNews.id} ) }}"
+                    class="btn btn-sm btn-primary">{{ 'label.read.more' | trans }}</a>
                 <div>
                     <small>{{ communityNews.createdAt.diffForHumans }}</small>
-                    {% set commentsCount = communityNews.comments | length %}<small class="float-right">{% trans with {'%commentsCount%': commentsCount} %}bewelcome_news.nrcomments{% endtrans %}</small>
+                    {% set commentsCount = communityNews.comments | length %}<small
+                        class="float-right">{% trans with {'%commentsCount%': commentsCount} %}bewelcome_news.nrcomments{% endtrans %}</small>
                 </div>
                 <a href="{{ url('communitynews') }}" class="btn btn-outline-primary btn-homewhite btn-block mt-2"><i
-                            class="far fa-newspaper"></i> {{ 'landing.bwnews.allnews' | trans }}</a>
+                        class="far fa-newspaper"></i> {{ 'landing.bwnews.allnews' | trans }}</a>
             </div>
         </div>
 
         <div class="col-12 col-md-6 col-lg-2 mb-3">
             <div class="card p-2 h-100">
-                <h4 class="homehfour">{{ 'landing.beinformed.title' | trans }}<br/><span class="homesubt">{{ 'landing.beinformed.subtitle' | trans }}</span></h4>
-                <a href="{{ url('about') }}" class="btn btn-outline-primary btn-homewhite btn-sm btn-block text-truncate"><i
-                            class="fa fa-question mr-2"></i>{{ 'landing.beinformed.about' | trans }}</a>
-                <a href="{{ url('about_faq') }}" class="btn btn-outline-primary btn-homewhite btn-sm btn-block text-truncate"><i
-                            class="fa fa-question mr-2"></i>{{ 'landing.beinformed.faq' | trans }}</a>
-                <a href="{{ url('safety') }}" class="btn btn-outline-primary btn-homewhite btn-sm btn-block mb-1 text-truncate"><i
-                            class="fa fa-user-shield mr-2"></i>{{ 'landing.beinformed.safety' | trans }}</a>
-                <a href="https://www.bevolunteer.org/" target="_blank" class="btn btn-outline-primary btn-homewhite btn-sm btn-block text-truncate"><i
-                            class="fa fa-bullseye mr-2"></i>{{ 'landing.beinformed.bevolunteer' | trans }}</a>
-                <a href="https://www.bevolunteer.org/reports/annual-reports/" target="_blank" class="btn btn-outline-primary btn-homewhite btn-sm btn-block text-truncate"><i
-                            class="fa fa-book mr-2"></i>{{ 'landing.beinformed.annualreport' | trans }}</a>
-                <a href="https://www.bevolunteer.org/reports/financial-reports/" target="_blank" class="btn btn-outline-primary btn-homewhite btn-sm btn-block mb-1 text-truncate"><i
-                            class="fa fa-money-bill-wave-alt mr-2"></i>{{ 'landing.beinformed.finances' | trans }}</a>
-                <a href="{{ url('terms_of_use', {'locale': app.request.locale }) }}" class="btn btn-outline-primary btn-homewhite btn-sm btn-block text-truncate"><i
-                            class="fa fa-book mr-2"></i>{{ 'landing.beinformed.termsofuse' | trans }}</a>
-                <a href="{{ url('privacy') }}" class="btn btn-outline-primary btn-homewhite btn-sm btn-block text-truncate"><i
-                            class="fa fa-book mr-2"></i>{{ 'landing.beinformed.privacypolicy' | trans }}</a>
-                <a href="{{ url('data_rights') }}" class="btn btn-outline-primary btn-homewhite btn-sm btn-block text-truncate"><i
-                            class="fa fa-book mr-2"></i>{{ 'landing.beinformed.datarights' | trans }}</a>
-                <a href="{{ url('about_credits') }}" class="btn btn-outline-primary btn-homewhite btn-sm btn-block text-truncate"><i
-                            class="fa fa-book mr-2"></i>{{ 'credits.title' | trans }}</a>
+                <h4 class="homehfour">{{ 'landing.beinformed.title' | trans }}<br/><span
+                        class="homesubt">{{ 'landing.beinformed.subtitle' | trans }}</span></h4>
+                <a href="{{ url('about') }}"
+                   class="btn btn-outline-primary btn-homewhite btn-sm btn-block text-truncate"><i
+                        class="fa fa-question mr-2"></i>{{ 'landing.beinformed.about' | trans }}</a>
+                <a href="{{ url('about_faq') }}"
+                   class="btn btn-outline-primary btn-homewhite btn-sm btn-block text-truncate"><i
+                        class="fa fa-question mr-2"></i>{{ 'landing.beinformed.faq' | trans }}</a>
+                <a href="{{ url('safety') }}"
+                   class="btn btn-outline-primary btn-homewhite btn-sm btn-block mb-1 text-truncate"><i
+                        class="fa fa-user-shield mr-2"></i>{{ 'landing.beinformed.safety' | trans }}</a>
+                <a href="{{ url('newsletters') }}" class="btn btn-outline-primary btn-homewhite btn-sm btn-block mb-1
+                    text-truncate"><i
+                        class="far fa-newspaper mr-2"></i>{{ 'newsletters' | trans }}</a>
+                <a href="https://www.bevolunteer.org/" target="_blank"
+                   class="btn btn-outline-primary btn-homewhite btn-sm btn-block text-truncate"><i
+                        class="fa fa-bullseye mr-2"></i>{{ 'landing.beinformed.bevolunteer' | trans }}</a>
+                <a href="https://www.bevolunteer.org/reports/annual-reports/" target="_blank"
+                   class="btn btn-outline-primary btn-homewhite btn-sm btn-block text-truncate"><i
+                        class="fa fa-book mr-2"></i>{{ 'landing.beinformed.annualreport' | trans }}</a>
+                <a href="https://www.bevolunteer.org/reports/financial-reports/" target="_blank"
+                   class="btn btn-outline-primary btn-homewhite btn-sm btn-block mb-1 text-truncate"><i
+                        class="fa fa-money-bill-wave-alt mr-2"></i>{{ 'landing.beinformed.finances' | trans }}</a>
+                <a href="{{ url('terms_of_use', {'locale': app.request.locale }) }}"
+                   class="btn btn-outline-primary btn-homewhite btn-sm btn-block text-truncate"><i
+                        class="fa fa-book mr-2"></i>{{ 'landing.beinformed.termsofuse' | trans }}</a>
+                <a href="{{ url('privacy') }}"
+                   class="btn btn-outline-primary btn-homewhite btn-sm btn-block text-truncate"><i
+                        class="fa fa-book mr-2"></i>{{ 'landing.beinformed.privacypolicy' | trans }}</a>
+                <a href="{{ url('data_rights') }}"
+                   class="btn btn-outline-primary btn-homewhite btn-sm btn-block text-truncate"><i
+                        class="fa fa-book mr-2"></i>{{ 'landing.beinformed.datarights' | trans }}</a>
+                <a href="{{ url('about_credits') }}"
+                   class="btn btn-outline-primary btn-homewhite btn-sm btn-block text-truncate"><i
+                        class="fa fa-book mr-2"></i>{{ 'credits.title' | trans }}</a>
             </div>
         </div>
     </div>

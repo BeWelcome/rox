@@ -35,8 +35,8 @@
                             <br>{% if (result.direction == 1) or (result.direction == 3) %}{{ result.last_received|format_datetime('medium', 'medium') }}{% endif %}
                         </td>
                         <td>
-                            <i class="fas fa-fw {% if (result.direction == 1) or (result.direction == 3) %}fa-arrow-left{% endif %}"></i><i
-                                    class="fas fa-fw {% if (result.direction == 2) or (result.direction == 3) %}fa-arrow-right{% endif %}"></i>
+                            <i class="fas fa-fw fa-arrow-left {% if (result.direction == 2) %}invisible{% endif %}"></i>
+                            <i class="fas fa-fw fa-arrow-right {% if (result.direction == 1) %}invisible {% endif %}"></i>
                         </td>
                         <td>{{ macros.avatar(result.username) }}</td>
                         <td>{{ macros.profilelink(result.username) }}

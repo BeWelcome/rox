@@ -44,3 +44,12 @@ Feature: Members list
       | member-banned    |
       | member-taken-out |
       | invalid          |
+
+  Scenario: As a member, I can search for members by country name
+    Given I am authenticated as "member-2"
+    And I add "Accept" header equal to "application/ld+json"
+    When I send a "GET" request to "/api/members?city.country.name=Germany"
+    Then the response status code should be 200
+    And the response should be in JSON
+    And the header "Content-Type" should be equal to "application/ld+json; charset=utf-8"
+    And the JSON should be valid according to the schema "tests/Behat/json/member/collection/search_country.json"

@@ -17,8 +17,8 @@
         "hydra:member": {
             "type": "array",
             "additionalItems": false,
-            "maxItems": 1,
-            "minItems": 1,
+            "maxItems": 5,
+            "minItems": 5,
             "items": {
                 "type": "object",
                 "additionalProperties": false,

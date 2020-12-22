@@ -7,7 +7,7 @@
             "required": true
         },
         "@id": {
-            "pattern": "^/api/members/2$",
+            "pattern": "^/api/members/member-2$",
             "required": true
         },
         "@type": {

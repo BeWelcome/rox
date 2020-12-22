@@ -33,7 +33,7 @@ final class MemberEventSubscriber implements EventSubscriberInterface
     {
         $request = $event->getRequest();
         $attributes = $request->attributes;
-        if ('api_members_get_by_username_item' !== $attributes->get('_route')) {
+        if ('api_members_get_item' !== $attributes->get('_route')) {
             return;
         }
 

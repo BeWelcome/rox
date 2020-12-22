@@ -24,7 +24,7 @@
                 "additionalProperties": false,
                 "properties": {
                     "@id": {
-                        "pattern": "^/api/members/member-[A-z\\d]+$",
+                        "pattern": "^/api/members/[A-z\\-\\d]+$",
                         "required": true
                     },
                     "@type": {

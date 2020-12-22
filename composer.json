@@ -20,7 +20,7 @@
         "amphp/http-client": "^4.3",
         "anthonymartin/geo-location": "^1.0",
         "anyx/login-gate-bundle": "^2.0",
-        "api-platform/core": "^2.5",
+        "api-platform/core": "^2.6-beta",
         "babdev/pagerfanta-bundle": "^2.1",
         "doctrine/doctrine-bundle": "^2.0",
         "doctrine/doctrine-migrations-bundle": "^2.0",

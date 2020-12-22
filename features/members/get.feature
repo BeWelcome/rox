@@ -16,7 +16,7 @@ Feature: Members get
     And the header "Content-Type" should be equal to "application/ld+json; charset=utf-8"
     And the JSON should be valid according to the schema "tests/Behat/json/member/item/member-2.json"
 
-  Scenario Outline: As a member, I cannot get a banned or invalid member
+  Scenario Outline: As a member, I cannot get a banned or invalid member, or a valid member by its identifier
     Given I am authenticated as "member-2"
     And I add "Accept" header equal to "application/ld+json"
     When I send a "GET" request to "/api/members/<username>"
@@ -26,12 +26,7 @@ Feature: Members get
       | member-banned    |
       | member-taken-out |
       | member-invalid   |
-
-  Scenario: As a member, I cannot get a valid member by its identifier
-    Given I am authenticated as "member-2"
-    And I add "Accept" header equal to "application/ld+json"
-    When I send a "GET" request to "/api/members/3"
-    Then the response status code should be 404
+      | 3                |
 
   Scenario: As a member, I can get any member by its username
     Given I am authenticated as "member-2"

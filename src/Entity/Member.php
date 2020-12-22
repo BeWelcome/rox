@@ -8,6 +8,7 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use App\Doctrine\AccommodationType;
@@ -36,22 +37,13 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * @SuppressWarnings(PHPMD)
  *
  * @ApiResource(
- *     normalizationContext={"groups"={"Member:Read"}},
- *     denormalizationContext={"groups"={"Member:Write"}},
+ *     attributes={"identifiers"="username"},
+ *     security="is_granted('ROLE_USER')",
  *     collectionOperations={
  *          "get"={"normalization_context"={"groups"={"Member:List"}}}
  *     },
- *     security="is_granted('ROLE_USER')",
  *     itemOperations={
- *          "get"={
- *              "path"="/members/{username}.{_format}",
- *              "method"="GET",
- *              "openapi_context"={
- *                  "parameters"={
- *                      {"name"="username", "in"="path", "required"=true, "schema"={"type"="string"}}
- *                  }
- *              }
- *          }
+ *          "get"={"normalization_context"={"groups"={"Member:Read"}}}
  *     }
  * )
  */
@@ -106,6 +98,8 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
      *
      * @Groups({"Member:Read", "Member:List"})
      *
+     * @ApiProperty(identifier=true)
+     *
      * @ApiFilter(SearchFilter::class, strategy="exact")
      */
     protected $username;
@@ -141,6 +135,8 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     *
+     * @ApiProperty(identifier=false)
      */
     protected $id;
 

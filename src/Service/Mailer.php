@@ -167,6 +167,7 @@ class Mailer
      */
     private function sendTemplateEmail($sender, $receiver, string $template, $parameters)
     {
+        $currentLocale = $this->translator->getLocale();
         $success = true;
         $locale = 'en';
         if ($receiver instanceof Member) {
@@ -207,9 +208,7 @@ class Mailer
         } catch (TransportExceptionInterface $e) {
             $success = false;
         }
-        if ($sender instanceof Member) {
-            $this->setTranslatorLocale($sender);
-        }
+        $this->translator->setLocale($currentLocale);
 
         return $success;
     }

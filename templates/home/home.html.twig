@@ -17,20 +17,11 @@
     <link rel='manifest' href='{{ asset('manifest.webmanifest') }}'>
 </head>
 <body id="parallax-home">
-{% block content %}{% include 'loginbar.html.twig' %}
+{% block content %}
+{% include 'loginbar.html.twig' %}
 <!-- Section #1 -->
 <!-- first section - Home -->
 <div>
-    <div id="install-pwa" class="container" style="display: none">
-        <div class="row">
-            <div class="col-12 justify-content-center py-2">
-                <button id="install-button" class="btn btn-primary add-button">{{ 'install.as.app'|trans }}</button>
-                <button type="button" class="close" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-        </div>
-    </div>
     <div class="parallax">
         <img class="parallax--img"
             srcset="{{ asset('/images/homepicture-1200px_1-min.jpg') }} 1200w, {{ asset('/images/homepicture-576px_1-min.jpg') }} 576w"

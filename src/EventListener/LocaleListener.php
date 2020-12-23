@@ -7,6 +7,8 @@ namespace App\EventListener;
 use App\Entity\Language;
 use Carbon\Carbon;
 use Doctrine\ORM\EntityManagerInterface;
+use Negotiation\Exception\InvalidLanguage;
+use Negotiation\LanguageNegotiator;
 use PVars;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
@@ -14,8 +16,8 @@ use Symfony\Component\HttpKernel\KernelEvents;
 
 class LocaleListener implements EventSubscriberInterface
 {
-    /** @var string */
-    private $defaultLocale;
+    /** @var array */
+    private $locales;
 
     /**
      * @var EntityManagerInterface
@@ -25,12 +27,12 @@ class LocaleListener implements EventSubscriberInterface
     /**
      * LocaleListener constructor.
      *
-     * @param string $defaultLocale
+     * @param string $locales
      */
-    public function __construct(EntityManagerInterface $em, $defaultLocale = 'en')
+    public function __construct(EntityManagerInterface $em, $locales)
     {
-        $this->defaultLocale = $defaultLocale;
         $this->em = $em;
+        $this->locales = explode(',', $locales);
     }
 
     public static function getSubscribedEvents()
@@ -61,9 +63,18 @@ class LocaleListener implements EventSubscriberInterface
             // if no explicit locale has been set on this request, use one from the session
             $locale = $request->getSession()->get('_locale');
             if (null === $locale) {
-                $locale = 'en';
+                // still no locale, get the ones set in the HTTP_ACCEPT_LANGUAGE header
+                // and check if a translation exists
+                $negotiator = new LanguageNegotiator();
+                try {
+                    $bestLanguage = $negotiator->getBest($request->server->get('HTTP_ACCEPT_LANGUAGE'), $this->locales);
+                    $locale = $bestLanguage->getType();
+                } catch (InvalidLanguage $exception) {
+                    $locale = 'en';
+                }
             }
         }
+
         $request->setLocale($locale);
         Carbon::setLocale($locale);
 

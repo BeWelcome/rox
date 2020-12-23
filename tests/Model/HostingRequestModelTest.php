@@ -125,6 +125,8 @@ class HostingRequestModelTest extends TestCase
         $formRequestMessage = $this->setupRequestMessage($arrival, $departure, false, 1, HostingRequest::REQUEST_OPEN);
 
         $finalRequestMessage = $this->model->getFinalRequest(
+            $this->sender,
+            $this->receiver,
             $hostingRequestMessage,
             $formRequestMessage,
             $clickedButton
@@ -151,6 +153,8 @@ class HostingRequestModelTest extends TestCase
         $formRequestMessage = $this->setupRequestMessage($arrival, $departure, true, 1, HostingRequest::REQUEST_OPEN);
 
         $finalRequestMessage = $this->model->getFinalRequest(
+            $this->sender,
+            $this->receiver,
             $hostingRequestMessage,
             $formRequestMessage,
             'reply'
@@ -194,6 +198,8 @@ class HostingRequestModelTest extends TestCase
         $formRequestMessage = $this->setupRequestMessage($departure, $departure, true, 1, HostingRequest::REQUEST_OPEN);
 
         $finalRequestMessage = $this->model->getFinalRequest(
+            $this->sender,
+            $this->receiver,
             $hostingRequestMessage,
             $formRequestMessage,
             'reply'
@@ -225,6 +231,8 @@ class HostingRequestModelTest extends TestCase
         $formRequestMessage = $this->setupRequestMessage($arrival, $newDeparture, false, 1, HostingRequest::REQUEST_OPEN);
 
         $finalRequestMessage = $this->model->getFinalRequest(
+            $this->sender,
+            $this->receiver,
             $hostingRequestMessage,
             $formRequestMessage,
             'reply'
@@ -251,6 +259,8 @@ class HostingRequestModelTest extends TestCase
         $formRequestMessage = $this->setupRequestMessage($newArrival, $newDeparture, false, 1, HostingRequest::REQUEST_OPEN);
 
         $finalRequestMessage = $this->model->getFinalRequest(
+            $this->sender,
+            $this->receiver,
             $hostingRequestMessage,
             $formRequestMessage,
             'reply'
@@ -276,6 +286,8 @@ class HostingRequestModelTest extends TestCase
         $formRequestMessage = $this->setupRequestMessage($arrival, $departure, false, 5, HostingRequest::REQUEST_OPEN);
 
         $finalRequestMessage = $this->model->getFinalRequest(
+            $this->sender,
+            $this->receiver,
             $hostingRequestMessage,
             $formRequestMessage,
             'reply'
@@ -300,6 +312,8 @@ class HostingRequestModelTest extends TestCase
         $formRequestMessage = $this->setupRequestMessage($arrival, $departure, false, 1, HostingRequest::REQUEST_OPEN, 'Message');
 
         $finalRequestMessage = $this->model->getFinalRequest(
+            $this->sender,
+            $this->receiver,
             $hostingRequestMessage,
             $formRequestMessage,
             'reply'
@@ -327,6 +341,8 @@ class HostingRequestModelTest extends TestCase
         $formRequestMessage = $this->setupRequestMessage($arrival, $departure, false, 1, HostingRequest::REQUEST_OPEN, 'Message');
 
         $finalRequestMessage = $this->model->getFinalRequest(
+            $this->sender,
+            $this->receiver,
             $hostingRequestMessage,
             $formRequestMessage,
             'reply'
@@ -354,6 +370,8 @@ class HostingRequestModelTest extends TestCase
         $formRequestMessage = $this->setupRequestMessage($arrival, $departure, false, 1, HostingRequest::REQUEST_OPEN, 'Message');
 
         $finalRequestMessage = $this->model->getFinalRequest(
+            $this->sender,
+            $this->receiver,
             $hostingRequestMessage,
             $formRequestMessage,
             'reply'
@@ -383,6 +401,8 @@ class HostingRequestModelTest extends TestCase
         $formRequestMessage = $this->setupRequestMessage($arrival, $departure, false, 1, HostingRequest::REQUEST_OPEN, 'Message');
 
         $this->model->getFinalRequest(
+            $this->sender,
+            $this->receiver,
             $hostingRequestMessage,
             $formRequestMessage,
             'new'
@@ -400,6 +420,8 @@ class HostingRequestModelTest extends TestCase
         $formRequestMessage = $this->setupRequestMessage($arrival, null, false, 1, HostingRequest::REQUEST_OPEN, 'Message');
 
         $this->model->getFinalRequest(
+            $this->sender,
+            $this->receiver,
             $hostingRequestMessage,
             $formRequestMessage,
             'new'

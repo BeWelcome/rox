@@ -5,6 +5,7 @@ namespace App\Tests\TranslationLoader;
 use App\Doctrine\TranslationAllowedType;
 use App\Entity\Language;
 use App\Entity\Word;
+use App\Logger\Logger;
 use App\Repository\WordRepository;
 use App\TranslationLoader\DatabaseLoader;
 use DateTime;

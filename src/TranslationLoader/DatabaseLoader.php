@@ -62,7 +62,7 @@ class DatabaseLoader implements LoaderInterface
                 $code = $translation->getCode();
                 if ($originals->has($code, $domain)) {
                     $majorUpdate = $originals->getMetadata($code, $domain)['majorUpdate'];
-                    if ($translation->getUpdated() <= $majorUpdate) {
+                    if ($translation->getUpdated() < $majorUpdate) {
                         $catalogue->set($code, $originals->get($code, $domain), $domain);
                     } else {
                         $translationAllowed = TranslationAllowedType::TRANSLATION_ALLOWED === $originals->getMetadata($code, $domain)['translationAllowed'];

@@ -29,7 +29,7 @@
                     <div class="form-group form-row float-md-right">
                             {% if is_granted('ROLE_ADMIN_WORDS') and hasCurrentLocaleRights %}
                                 <label for="translation_mode" class="col-auto col-form-label">
-                                    {{ 'translation.mode' | trans }}&nbsp;
+                                    {{ 'translation.mode' | trans }}
                                 </label>
                                 <select id="translation_mode" name="translation_mode" class="form-control-sm select2"
                                         data-minimum-results-for-search="-1"
@@ -94,8 +94,6 @@
                             <span class="value">en</span>
                             <span class="label">Fallback Locale</span>
                         </div>
-
-
                     </div>
                 </div>
                 <div class="row">
@@ -215,6 +213,8 @@
             {% for message in messages %}
                 <tr>
                     <td {% if state == constant('Symfony\\Component\\Translation\\DataCollectorTranslator::MESSAGE_DEFINED') %}class="w-25"{% else %}class="w-100"{% endif %}>
+                        {{ dump(message) }}
+
                         <small class="text-muted m-0">{{ message.id }}
                             {% if not state == constant('Symfony\\Component\\Translation\\DataCollectorTranslator::MESSAGE_DEFINED') %}|{{ message.domain }}{% endif %}
                         </small>

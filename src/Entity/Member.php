@@ -8,6 +8,7 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use App\Doctrine\AccommodationType;
@@ -36,23 +37,11 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * @SuppressWarnings(PHPMD)
  *
  * @ApiResource(
- *     normalizationContext={"groups"={"Member:Read"}},
- *     denormalizationContext={"groups"={"Member:Write"}},
- *     collectionOperations={
- *          "get"={"normalization_context"={"groups"={"Member:List"}}}
- *     },
+ *     attributes={"identifiers"="username"},
  *     security="is_granted('ROLE_USER')",
+ *     collectionOperations={},
  *     itemOperations={
- *          "get"={"requirements"={"id"="^\d+$"}},
- *          "get_by_username"={
- *              "path"="/members/{username}.{_format}",
- *              "method"="GET",
- *              "openapi_context"={
- *                  "parameters"={
- *                      {"name"="username", "in"="path", "required"=true, "schema"={"type"="string"}}
- *                  }
- *              }
- *          }
+ *          "get"={"normalization_context"={"groups"={"Member:Read"}}}
  *     }
  * )
  */
@@ -105,7 +94,9 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
      *
      * @ORM\Column(name="Username", type="string", length=32, nullable=false)
      *
-     * @Groups({"Member:Read", "Member:List"})
+     * @Groups({"Member:Read"})
+     *
+     * @ApiProperty(identifier=true)
      *
      * @ApiFilter(SearchFilter::class, strategy="exact")
      */
@@ -125,7 +116,7 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
      *
      * @ORM\Column(name="LastLogin", type="datetime", nullable=true)
      *
-     * @Groups({"Member:Read", "Member:List"})
+     * @Groups({"Member:Read"})
      */
     protected $lastLogin = null;
 
@@ -142,6 +133,8 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     *
+     * @ApiProperty(identifier=false)
      */
     protected $id;
 
@@ -172,7 +165,7 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
      * @ORM\ManyToOne(targetEntity="Location")
      * @ORM\JoinColumn(name="IdCity", referencedColumnName="geonameId")
      *
-     * @Groups({"Member:Read", "Member:List"})
+     * @Groups({"Member:Read"})
      *
      * @ApiFilter(SearchFilter::class, strategy="ipartial", properties={"city.name", "city.country.name"})
      * @ApiFilter(SearchFilter::class, strategy="exact", properties={"city.latitude", "city.longitude"})
@@ -233,7 +226,7 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
      *
      * @ORM\Column(name="FirstName", type="string", nullable=false)
      *
-     * @Groups({"Member:Read", "Member:List"})
+     * @Groups({"Member:Read"})
      */
     private $firstName = '0';
 
@@ -242,7 +235,7 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
      *
      * @ORM\Column(name="SecondName", type="string", nullable=true)
      *
-     * @Groups({"Member:Read", "Member:List"})
+     * @Groups({"Member:Read"})
      */
     private $secondName = null;
 
@@ -251,7 +244,7 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
      *
      * @ORM\Column(name="LastName", type="string", nullable=false)
      *
-     * @Groups({"Member:Read", "Member:List"})
+     * @Groups({"Member:Read"})
      */
     private $lastName = '0';
 
@@ -260,7 +253,7 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
      *
      * @ORM\Column(name="Accomodation", type="accommodation", nullable=false)
      *
-     * @Groups({"Member:Read", "Member:List"})
+     * @Groups({"Member:Read"})
      *
      * @ApiFilter(SearchFilter::class, strategy="exact")
      */
@@ -299,7 +292,7 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
      *
      * @ORM\Column(name="TypicOffer", type="typical_offer", nullable=false)
      *
-     * @Groups({"Member:Read", "Member:List"})
+     * @Groups({"Member:Read"})
      */
     private $typicoffer;
 
@@ -315,7 +308,7 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
      *
      * @ORM\Column(name="MaxGuest", type="integer", nullable=false)
      *
-     * @Groups({"Member:Read", "Member:List"})
+     * @Groups({"Member:Read"})
      *
      * @ApiFilter(SearchFilter::class, strategy="exact")
      */
@@ -340,7 +333,7 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
      *
      * @ORM\Column(name="Restrictions", type="string", nullable=false)
      *
-     * @Groups({"Member:Read", "Member:List"})
+     * @Groups({"Member:Read"})
      */
     private $restrictions;
 
@@ -384,7 +377,7 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
      *
      * @ORM\Column(name="created", type="datetime", nullable=false)
      *
-     * @Groups({"Member:Read", "Member:List"})
+     * @Groups({"Member:Read"})
      */
     private $created;
 
@@ -692,7 +685,7 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
      *
      * @ORM\OneToMany(targetEntity="MembersLanguagesLevel", mappedBy="member")
      *
-     * @Groups({"Member:Read", "Member:List"})
+     * @Groups({"Member:Read"})
      *
      * @ApiFilter(SearchFilter::class, strategy="exact", properties={"languageLevels.level", "languageLevels.language.name", "languageLevels.language.englishname", "languageLevels.language.shortcode"})
      */
@@ -3148,7 +3141,7 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
      *
      * Needs to be called explicitly
      *
-     * @Groups({"Member:Read", "Member:List"})
+     * @Groups({"Member:Read"})
      */
     public function getMemberFields(): array
     {
@@ -3225,7 +3218,7 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
     }
 
     /**
-     * @Groups({"Member:Read", "Member:List"})
+     * @Groups({"Member:Read"})
      */
     public function getMessengers()
     {
@@ -3283,7 +3276,7 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
     }
 
     /**
-     * @Groups({"Member:Read", "Member:List"})
+     * @Groups({"Member:Read"})
      */
     public function getAge(): int
     {
@@ -3293,7 +3286,7 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
     }
 
     /**
-     * @Groups({"Member:Read", "Member:List"})
+     * @Groups({"Member:Read"})
      */
     public function getAvatar(): string
     {

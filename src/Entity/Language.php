@@ -27,7 +27,7 @@ class Language
      *
      * @ORM\Column(name="EnglishName", type="text", length=255, nullable=false)
      *
-     * @Groups({"Member:Read", "Member:List"})
+     * @Groups({"Member:Read"})
      */
     private $englishname;
 
@@ -48,7 +48,7 @@ class Language
      *
      * @ORM\Column(name="ShortCode", type="string", length=16, nullable=false)
      *
-     * @Groups({"Member:Read", "Member:List"})
+     * @Groups({"Member:Read"})
      */
     private $shortcode;
 

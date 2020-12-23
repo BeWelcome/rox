@@ -26,7 +26,7 @@ class Country
      *
      * @ORM\Column(name="geonameId", type="integer", nullable=true)
      *
-     * @Groups({"Member:Read", "Member:List"})
+     * @Groups({"Member:Read"})
      */
     private $geonameId;
 
@@ -35,7 +35,7 @@ class Country
      *
      * @ORM\Column(name="name", type="string", length=200, nullable=true)
      *
-     * @Groups({"Member:Read", "Member:List"})
+     * @Groups({"Member:Read"})
      */
     private $name;
 
@@ -44,7 +44,7 @@ class Country
      *
      * @ORM\Column(name="continent", type="string", length=2, nullable=true)
      *
-     * @Groups({"Member:Read", "Member:List"})
+     * @Groups({"Member:Read"})
      */
     private $continent;
 

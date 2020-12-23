@@ -384,6 +384,7 @@ LIMIT 1
 
     private function getAgeCondition($vars)
     {
+        $minAge = $maxAge = null;
         $condition = "";
         if (isset($vars['search-age-minimum']) && ($vars['search-age-minimum'] != 0)) {
             $minAge = $vars['search-age-minimum'];
@@ -393,7 +394,7 @@ LIMIT 1
             $maxAge = $vars['search-age-maximum'];
             $condition .= ' AND m.BirthDate >= (NOW() - INTERVAL ' . $maxAge . ' YEAR)';
         }
-        if (!empty($condition)) {
+        if (!empty($condition) && !($minAge == 18 && $maxAge == 120)) {
             $condition .= " AND m.HideBirthDate='No'";
         }
 
@@ -1592,7 +1593,7 @@ LIMIT 1
                     FROM
                         membersphotos
                     GROUP BY
-                        IdMember) mp 
+                        IdMember) mp
                     ON
                         mp.IdMember = m.id
             ";

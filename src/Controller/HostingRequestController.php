@@ -53,7 +53,7 @@ class HostingRequestController extends BaseMessageController
      *
      * @throws AccessDeniedException
      */
-    public function replyToHostingRequestAction(Message $message): RedirectResponse
+    public function replyToHostingRequest(Message $message): RedirectResponse
     {
         if (!$this->isMessageOfMember($message)) {
             throw $this->createAccessDeniedException('Not your message/hosting request');
@@ -94,21 +94,18 @@ class HostingRequestController extends BaseMessageController
      *
      * @ParamConverter("parent", class="App\Entity\Message", options={"id": "parentId"})
      *
-     * @return Response
-     *
      * @SuppressWarnings(PHPMD.UnusedLocalVariable)
      */
-    public function hostingRequestGuestReply(Request $request, Message $hostingRequest, Message $parent)
+    public function hostingRequestGuestReply(Request $request, Message $hostingRequest, Message $parent): Response
     {
         if (!$this->isMessageOfMember($hostingRequest)) {
             throw $this->createAccessDeniedException('Not your message/hosting request');
         }
 
-        /** @var Message $first */
         /** @var Message $last */
         /** @var Member $guest */
         /** @var Member $host */
-        list($thread, $first, $last, $guest, $host) =
+        list($thread, , $last, $guest, $host) =
             $this->messageModel->getThreadInformationForMessage($hostingRequest);
 
         if ($this->checkRequestExpired($last)) {
@@ -129,8 +126,7 @@ class HostingRequestController extends BaseMessageController
         if ($requestForm->isSubmitted() && $requestForm->isValid()) {
             $realParent = $this->getParent($parent);
 
-            /** @var Message $newRequest */
-            $newRequest = $this->persistRequest($requestForm, $realParent);
+            $newRequest = $this->persistRequest($requestForm, $realParent, $guest, $host);
 
             $subject = $this->getSubjectForReply($newRequest);
 
@@ -160,17 +156,14 @@ class HostingRequestController extends BaseMessageController
      *
      * @ParamConverter("parent", class="App\Entity\Message", options={"id": "parentId"})
      *
-     * @return Response
-     *
      * @SuppressWarnings(PHPMD.UnusedLocalVariable)
      */
-    public function hostingRequestHostReply(Request $request, Message $hostingRequest, Message $parent)
+    public function hostingRequestHostReply(Request $request, Message $hostingRequest, Message $parent): Response
     {
-        /** @var Message $first */
         /** @var Message $last */
         /** @var Member $guest */
         /** @var Member $host */
-        list($thread, $first, $last, $guest, $host) =
+        list($thread, , $last, $guest, $host) =
             $this->messageModel->getThreadInformationForMessage($hostingRequest);
 
         if ($this->checkRequestExpired($last)) {
@@ -189,8 +182,7 @@ class HostingRequestController extends BaseMessageController
         if ($requestForm->isSubmitted() && $requestForm->isValid()) {
             $realParent = $this->getParent($parent);
 
-            /** @var Message $newRequest */
-            $newRequest = $this->persistRequest($requestForm, $realParent);
+            $newRequest = $this->persistRequest($requestForm, $realParent, $host, $guest);
 
             $subject = $this->getSubjectForReply($newRequest);
 
@@ -413,14 +405,14 @@ class HostingRequestController extends BaseMessageController
         return $newRequest;
     }
 
-    private function persistRequest(Form $requestForm, $currentRequest)
+    private function persistRequest(Form $requestForm, $currentRequest, Member $sender, Member $receiver)
     {
         $data = $requestForm->getData();
         $em = $this->getDoctrine()->getManager();
         $clickedButton = $requestForm->getClickedButton()->getName();
 
         // handle changes in request and subject
-        $newRequest = $this->requestModel->getFinalRequest($currentRequest, $data, $clickedButton);
+        $newRequest = $this->requestModel->getFinalRequest($sender, $receiver, $currentRequest, $data, $clickedButton);
         $em->persist($newRequest);
         $em->flush();
 

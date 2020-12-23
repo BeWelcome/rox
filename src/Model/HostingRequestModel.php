@@ -4,6 +4,7 @@ namespace App\Model;
 
 use App\Doctrine\MessageStatusType;
 use App\Entity\HostingRequest;
+use App\Entity\Member;
 use App\Entity\Message;
 use App\Repository\MessageRepository;
 use App\Utilities\ManagerTrait;
@@ -43,21 +44,21 @@ class HostingRequestModel
      * @param $clickedButton
      *
      * @throws InvalidArgumentException|\Doctrine\DBAL\Exception\InvalidArgumentException
-     *
-     * @return Message
      */
-    public function getFinalRequest(/* Member $sender, Member $receiver, */
+    public function getFinalRequest(
+        Member $sender,
+        Member $receiver,
         Message $hostingRequest,
         Message $data,
         $clickedButton
-    ) {
+    ): Message {
         if (null === $hostingRequest->getRequest()->getDeparture() || null === $data->getRequest()->getDeparture()) {
             throw new InvalidArgumentException();
         }
 
         $finalRequest = new Message();
-        $finalRequest->setSender($hostingRequest->getSender());
-        $finalRequest->setReceiver($hostingRequest->getReceiver());
+        $finalRequest->setSender($sender);
+        $finalRequest->setReceiver($receiver);
         $finalRequest->setParent($hostingRequest);
         $finalRequest->setMessage($data->getMessage());
         $finalRequest->setSubject($hostingRequest->getSubject());

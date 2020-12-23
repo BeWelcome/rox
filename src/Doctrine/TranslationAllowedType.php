@@ -5,8 +5,8 @@ namespace App\Doctrine;
 class TranslationAllowedType extends EnumType
 {
     // This is reversed as the database uses a field named do_not_translate!
-    public const TRANSLATION_NOT_ALLOWED = 'Yes';
-    public const TRANSLATION_ALLOWED = 'No';
+    public const TRANSLATION_NOT_ALLOWED = 'yes';
+    public const TRANSLATION_ALLOWED = 'no';
 
     /** @var string */
     protected $name = 'translation_allowed';

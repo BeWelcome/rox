@@ -25,14 +25,14 @@ class Forums extends RoxModelBase {
 
     const CV_THREADS_PER_PAGE = 15;
     const CV_POSTS_PER_PAGE = 200;
-    const CV_TOPMODE_CATEGORY=1; // Says that the forum topmode is for categories
-    const CV_TOPMODE_LASTPOSTS=2; // Says that the forum topmode is for lastposts
-    const CV_TOPMODE_LANDING=3; // Says that we use the forums landing page for topmode
-    const CV_TOPMODE_FORUM=4; // Says that we use the forums main page for topmode
-    const CV_TOPMODE_GROUPS=5; // Says that we use the group forums overview page for topmode
+    const CV_TOPMODE_CATEGORY = 1; // Says that the forum topmode is for categories
+    const CV_TOPMODE_LASTPOSTS = 2; // Says that the forum topmode is for lastposts
+    const CV_TOPMODE_LANDING = 3; // Says that we use the forums landing page for topmode
+    const CV_TOPMODE_FORUM = 4; // Says that we use the forums main page for topmode
+    const CV_TOPMODE_GROUPS = 5; // Says that we use the group forums overview page for topmode
 
 
-    const NUMBER_LAST_POSTS_PREVIEW = 5; // Number of Posts shown as a help on the "reply" page
+    const NUMBER_LAST_POSTS_PREVIEW = 10; // Number of Posts shown as a help on the "reply" page
 
 	public $THREADS_PER_PAGE ; //Variable because it can change wether the user is logged or no
 	public $POSTS_PER_PAGE ; //Variable because it can change wether the user is logged or no
@@ -278,15 +278,15 @@ function FindAppropriatedLanguage($IdPost=0) {
 		$row = $result->fetch(PDB::FETCH_OBJ) ;
 		if (null === $row) {
 		    $query = "
-                INSERT INTO 
-                    memberspreferences (`created`, `updated`, `IdPreference`, `IdMember`, `Value`) 
+                INSERT INTO
+                    memberspreferences (`created`, `updated`, `IdPreference`, `IdMember`, `Value`)
                 VALUES (NOW(), `created`, " .$idPreference . ", " . $idMember . ", '" . $this->dao->escape($this->ForumOrderList) . "' )
             ";
 		}
 		else {
 		    $query = "
-		        UPDATE 
-		            memberspreferences 
+		        UPDATE
+		            memberspreferences
 		        SET Value='" . $this->dao->escape($this->ForumOrderList) . "' WHERE id= " . $row->id
             ;
 		}
@@ -1448,7 +1448,7 @@ WHERE `id` = '$this->threadid'
 
         $statement = $this->dao->prepare("
             INSERT INTO `forums_threads` (
-                `title`, `first_postid`, `last_postid`, 
+                `title`, `first_postid`, `last_postid`,
                 `IdFirstLanguageUsed`,`IdGroup`,`ThreadVisibility`)
             VALUES (?, ?, ?, ?, ?, ?)
         ");
@@ -1516,7 +1516,7 @@ WHERE `id` = '$this->threadid'
             FROM
                 `forums_threads`
             LEFT JOIN `groups` ON (`forums_threads`.`IdGroup` = `groups`.`id`)
-            WHERE 
+            WHERE
                 `forums_threads`.`id` = '$this->threadid'
                 AND ($this->PublicThreadVisibility)
                 AND ($this->ThreadGroupsRestriction)
@@ -1986,8 +1986,8 @@ AND IdThread=%d
             return(false) ;
         }
         $key=MD5(rand(100000,900000)) ;
-        $query = "INSERT INTO 
-                members_threads_subscribed(IdThread,IdSubscriber,UnSubscribeKey,notificationsEnabled)  
+        $query = "INSERT INTO
+                members_threads_subscribed(IdThread,IdSubscriber,UnSubscribeKey,notificationsEnabled)
                 VALUES(".$IdThread.",".$this->session->get("IdMember").",'".$this->dao->escape($key)."', 1)" ;
         $s = $this->dao->query($query);
         if (!$s) {

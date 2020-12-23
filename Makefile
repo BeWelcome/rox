@@ -67,7 +67,7 @@ mkdocs:
 	mkdocs build
 
 phpcpd:
-	"./vendor/bin/phpcpd" $(SRC_DIR_NO_TESTS) --progress --no-interaction --exclude=Entity --exclude=Repository
+	"./vendor/bin/phpcpd" $(SRC_DIR_NO_TESTS) --exclude=src/Entity
 
 phploc:
 	"./vendor/bin/phploc" --log-xml=phploc.xml $(SRC_DIR)

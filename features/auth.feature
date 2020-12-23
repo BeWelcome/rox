@@ -32,7 +32,7 @@ Feature: Login/logout
     """
     Then the response status code should be 204
     And a refresh-token has been created on user "<username>"
-    When I send a "GET" request to "/api/members"
+    When I send a "GET" request to "/api/members/<username>"
     Then the response status code should be 200
     Examples:
       | username |

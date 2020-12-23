@@ -137,10 +137,11 @@ services:
         tags:
             - { name: translation.loader, alias: db }
 
-    app.locale_listener:
+    App\EventListener\LocaleListener:
         public: true
-        class: App\EventListener\LocaleListener
-        arguments: [ '@doctrine.orm.entity_manager', '%kernel.default_locale%' ]
+        arguments:
+            $em: '@doctrine.orm.entity_manager'
+            $locales: "%locales%"
         tags:
             - { name: kernel.event_subscriber }
 

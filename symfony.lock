@@ -488,6 +488,9 @@
     "phpstan/phpstan-symfony": {
         "version": "0.11.6"
     },
+    "phpunit/php-file-iterator": {
+        "version": "3.0.5"
+    },
     "phpunit/php-timer": {
         "version": "2.1.2"
     },
@@ -521,6 +524,9 @@
     "sanmai/pipeline": {
         "version": "v5.0.1"
     },
+    "sebastian/cli-parser": {
+        "version": "1.0.1"
+    },
     "sebastian/comparator": {
         "version": "3.0.2"
     },
@@ -529,9 +535,6 @@
     },
     "sebastian/exporter": {
         "version": "3.1.2"
-    },
-    "sebastian/finder-facade": {
-        "version": "1.2.3"
     },
     "sebastian/phpcpd": {
         "version": "4.1.0"
@@ -987,9 +990,6 @@
             "version": "1.0",
             "ref": "fe5a50faf580eb58f08ada2abe8afbd2d4941e05"
         }
-    },
-    "theseer/fdomdocument": {
-        "version": "1.6.6"
     },
     "tijsverkoyen/css-to-inline-styles": {
         "version": "2.2.2"

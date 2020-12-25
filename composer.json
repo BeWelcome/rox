@@ -17,6 +17,7 @@
         "ext-session": "*",
         "ext-xsl": "*",
         "ext-zip": "*",
+        "ext-intl": "*",
         "amphp/http-client": "^4.3",
         "anthonymartin/geo-location": "^1.0",
         "anyx/login-gate-bundle": "^2.0",

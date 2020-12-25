@@ -213,8 +213,6 @@
             {% for message in messages %}
                 <tr>
                     <td {% if state == constant('Symfony\\Component\\Translation\\DataCollectorTranslator::MESSAGE_DEFINED') %}class="w-25"{% else %}class="w-100"{% endif %}>
-                        {{ dump(message) }}
-
                         <small class="text-muted m-0">{{ message.id }}
                             {% if not state == constant('Symfony\\Component\\Translation\\DataCollectorTranslator::MESSAGE_DEFINED') %}|{{ message.domain }}{% endif %}
                         </small>

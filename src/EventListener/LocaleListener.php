@@ -7,6 +7,7 @@ namespace App\EventListener;
 use App\Entity\Language;
 use Carbon\Carbon;
 use Doctrine\ORM\EntityManagerInterface;
+use Negotiation\Exception\Exception;
 use Negotiation\Exception\InvalidLanguage;
 use Negotiation\LanguageNegotiator;
 use PVars;
@@ -65,11 +66,14 @@ class LocaleListener implements EventSubscriberInterface
             if (null === $locale) {
                 // still no locale, get the ones set in the HTTP_ACCEPT_LANGUAGE header
                 // and check if a translation exists
+                $locale = 'en';
                 $negotiator = new LanguageNegotiator();
                 try {
                     $bestLanguage = $negotiator->getBest($request->server->get('HTTP_ACCEPT_LANGUAGE'), $this->locales);
-                    $locale = $bestLanguage->getType();
-                } catch (InvalidLanguage $exception) {
+                    if (null !== $bestLanguage) {
+                        $locale = $bestLanguage->getType();
+                    }
+                } catch (Exception $exception) {
                     $locale = 'en';
                 }
             }

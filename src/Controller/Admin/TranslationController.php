@@ -2,6 +2,7 @@
 
 namespace App\Controller\Admin;
 
+use App\Doctrine\TranslationAllowedType;
 use App\Entity\Activity;
 use App\Entity\ForumPost;
 use App\Entity\ForumThread;
@@ -258,8 +259,9 @@ class TranslationController extends AbstractController
                     $translation->setMajorUpdate($translation->getUpdated());
                 }
                 $translation->setIsArchived($data->isArchived);
-                $doNotTranslate = $data->doNotTranslate ? 'Yes' : 'No';
-                $translation->setTranslationAllowed($doNotTranslate);
+                $translationAllowed = $data->translationAllowed
+                    ? TranslationAllowedType::TRANSLATION_ALLOWED : TranslationAllowedType::TRANSLATION_NOT_ALLOWED;
+                $translation->setTranslationAllowed($translationAllowed);
             } else {
                 // No need for a description as the English original has one
                 $translation->setDescription('');
@@ -269,7 +271,11 @@ class TranslationController extends AbstractController
             if ($originalDomain !== $translation->getDomain()) {
                 $this->translationModel->updateDomainOfTranslations($translation);
             }
-            $this->translationModel->refreshTranslationsCacheForLocale($language->getShortCode());
+            if ('en' === $language->getShortcode()) {
+                $this->translationModel->refreshTranslationsCache();
+            } else {
+                $this->translationModel->refreshTranslationsCacheForLocale($language->getShortCode());
+            }
             $this->addTranslatedFlash('notice', 'translation.edit', [
                 'translationId' => $original->getCode(),
                 'locale' => $language->getShortcode(),

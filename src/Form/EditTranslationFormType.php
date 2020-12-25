@@ -55,8 +55,8 @@ class EditTranslationFormType extends AbstractType
                         'label' => 'translation.is.archived',
                         'required' => false,
                     ])
-                    ->add('doNotTranslate', CheckboxType::class, [
-                        'label' => 'translation.do.not.translate',
+                    ->add('translationAllowed', CheckboxType::class, [
+                        'label' => 'translation.allow.translation',
                         'required' => false,
                     ])
                     ->add('description', TextAreaType::class, [

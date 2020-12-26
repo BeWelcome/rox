@@ -166,6 +166,8 @@ class Mailer
     /**
      * Used for all notifications except messages and requests notifications to allow recipients to distinguish between
      * those notifications.
+     *
+     * @param mixed $email
      */
     private function getBewelcomeAddress(Member $sender, $email)
     {

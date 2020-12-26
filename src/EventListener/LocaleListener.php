@@ -8,7 +8,6 @@ use App\Entity\Language;
 use Carbon\Carbon;
 use Doctrine\ORM\EntityManagerInterface;
 use Negotiation\Exception\Exception;
-use Negotiation\Exception\InvalidLanguage;
 use Negotiation\LanguageNegotiator;
 use PVars;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;

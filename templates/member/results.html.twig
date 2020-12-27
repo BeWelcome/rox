@@ -1,12 +1,12 @@
 {% import 'macros.twig' as macros %}
 <div id="searchresults" class="col-12">
     <div id="overlay" class="mt-2">
-        {% if pager.haveToPaginate %}
-            <div class="pull-left"><div style="position: relative;
+        <div class="pull-left"><div style="position: relative;
                                         display: block;
                                         padding: 0.375rem 0;
                                         line-height: 1.25;
                                         ">{% trans with {'%first%': pager.getCurrentPageOffsetStart, '%last%': pager.getCurrentPageOffsetEnd, '%count%': pager.getNbResults} %}search.members.showing{% endtrans %}</div></div>
+        {% if pager.haveToPaginate %}
             <div class="pull-right">{{ pagerfanta( pager, 'twitter_bootstrap4_ajax_translated', { 'routeName': routeName, 'routeParams': routeParams, 'ajaxFunction': 'loadAjax' } ) }}</div>
         {% endif %}
         <div>

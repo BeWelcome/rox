@@ -505,9 +505,9 @@ LIMIT 1
     private function getTypicalOfferCondition($vars)
     {
         $condition = "";
-        if (isset($vars['search-typical-offer'])) {
+        if (isset($vars['search-typical-offers'])) {
             $typicalOffers = array();
-            $typicalOffer = $vars['search-typical-offer'];
+            $typicalOffer = $vars['search-typical-offers'];
             if (is_array($typicalOffer)) {
                 foreach ($typicalOffer as $value) {
                     if ($value == '') {

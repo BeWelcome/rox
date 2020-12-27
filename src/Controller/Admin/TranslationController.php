@@ -818,7 +818,7 @@ class TranslationController extends AbstractController
     {
         /** @var WordRepository $translationRepository */
         $translationRepository = $this->getDoctrine()->getRepository(Word::class);
-        $countAll = $translationRepository->getTranslationIdCount('en');
+        $countAll = $translationRepository->getTranslatableItemsCount('en');
         $translationDetails = $translationRepository->getTranslationDetails();
 
         return $this->render('admin/translations/statistics.html.twig', [

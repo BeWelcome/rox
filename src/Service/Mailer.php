@@ -160,7 +160,7 @@ class Mailer
      */
     private function getDirectBewelcomeAddress(Member $sender, string $email): Address
     {
-        return new Address($email, $sender->getUsername() . ' [Bewelcome]');
+        return new Address($email, $sender->getUsername() . ' [BeWelcome]');
     }
 
     /**

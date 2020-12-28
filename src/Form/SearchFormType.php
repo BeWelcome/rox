@@ -199,6 +199,7 @@ class SearchFormType extends AbstractType
                     'search.filter.last.login.3months' => 3,
                     'search.filter.last.login.6months' => 6,
                     'search.filter.last.login.year' => 12,
+                    'search.filter.last.login.2years' => 24,
                     'search.filter.last.login.all' => 2400,
                 ],
                 'translation_domain' => 'messages',

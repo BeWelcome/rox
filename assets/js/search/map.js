@@ -7,10 +7,6 @@ function Map() {
 
 Map.prototype.showMap = function () {
     if (this.map === undefined) {
-        this.initializing = true;
-        // add the container hosting the map
-
-//        this.mapBox.toggleClass("map-box");
         this.mapBox.append('<div id="map" class="map p-2 framed w-100"></div>');
         this.map = L.map('map', {
             center: [15, 0],
@@ -29,29 +25,11 @@ Map.prototype.showMap = function () {
         this.markerClusterGroup = this.addMarkers(this.map);
 
         if (this.markerClusterGroup.getLayers().length > 0) {
+            const bounds = this.markerClusterGroup.getBounds();
+
             // Check if a rectangle is set if so use this for the bounds else fit the bounds to the markerClusterGroup
-            var query = this.getQueryStrings($(".search_form").serialize());
-
-            this.noRefresh = true;
-            const latitude = document.getElementById("search_map_location_latitude").value;
-            const longitude = document.getElementById("search_map_location_longitude").value;
-            this.map.fitBounds(this.boundingBox(latitude, longitude, 100));
+            this.map.fitBounds(bounds, {zoomSnap: 0.1, padding: [20, 20]});
         }
-        that = this;
-        this.map.on("dragend", function () {
-            if (!that.noRefresh && !that.initializing) {
-                that.refreshMap();
-                that.noRefresh = false;
-            }
-        }); // Avoid refreshing on dragend if the map has just been fit to bounds (infinite loop)
-
-        this.map.on("zoomend", function () {
-            if (!that.noRefresh && !that.initializing) {
-                that.refreshMap();
-                that.noRefresh = false;
-            }
-        }); // Avoid refreshing on zoomend if the map has just been fit to bounds (infinite loop)
-        this.initializing = false;
     }
 };
 
@@ -65,62 +43,9 @@ Map.prototype.hideMap = function () {
     }
 };
 
-Map.prototype.refreshMap = function () {
-    var lat = this.map.getCenter().lat;
-    var lng = this.map.getCenter().lng; // get current form values
-
-    var bounds = this.map.getBounds();
-    var ne = bounds.getNorthEast();
-    var sw = bounds.getSouthWest();
-    var query = this.getQueryStrings($("[name=search]").serialize());
-
-    window.location.href =
-        window.location.protocol + "//" +
-        window.location.host +
-        window.location.pathname + this.createQueryString(query)
-    ;
-}; // http://stackoverflow.com/questions/2907482
-
-Map.prototype.getQueryStrings = function (url) {
-    var assoc = {};
-
-    var decode = function decode(s) {
-        return decodeURIComponent(s.replace(/\+/g, " "));
-    };
-
-    var keyValues = url.split('&');
-
-    for (var i in keyValues) {
-        var key = keyValues[i].split('=');
-
-        if (key.length > 1) {
-            assoc[decode(key[0]).toLowerCase()] = decode(key[1]);
-        }
-    }
-    return assoc;
-};
-
-Map.prototype.createQueryString = function (queryDict) {
-    var queryStringBits = [];
-
-    for (var key in queryDict) {
-        if (queryDict.hasOwnProperty(key)) {
-            queryStringBits.push(key + "=" + queryDict[key]);
-        }
-    }
-
-    return queryStringBits.length > 0 ? "?" + queryStringBits.join("&") : "";
-};
-
 // Check if there are results to add to the map
-
 Map.prototype.addMarkers = function (map) {
-    /* var groups = {
-        anytime: makeGroup('anytime', '#69bb11'),
-        dependonrequest: makeGroup('dependonrequest', '#0099ea'),
-        dontask: makeGroup('dontask', '#666')
-    }; */
-    var markers = new L.markerClusterGroup({
+    const markers = new L.markerClusterGroup({
         iconCreateFunction: function iconCreateFunction(cluster) {
             return new L.DivIcon({
                 iconSize: [40, 40],
@@ -129,15 +54,9 @@ Map.prototype.addMarkers = function (map) {
             });
         }
     });
-    /**
-     * @param value.Accommodation Accommodation status enum
-     * @param value.Username
-     * @param value.latitude
-     * @param value.longitude
-     */
 
     $.each(mapMembers, function (index, value) {
-        var iconFile = 'undefined';
+        let iconFile = 'undefined';
 
         switch (value.Accommodation) {
             case 'anytime':
@@ -163,16 +82,6 @@ Map.prototype.addMarkers = function (map) {
             icon: icon,
             className: 'marker-cluster marker-cluster-unique'
         });
-
-        if (value.Username) {
-            var popupContent = '<div class="d-flex">';
-            popupContent = popupContent + '<div><img src="/members/avatar/' + value.Username + '?size=50" width="50" height="50"></div>';
-            popupContent = popupContent + '<div class="hosticon nowrap"><img src="/images/icons/' + iconFile + '.png"><i class="fa fa-2x fa-bed p-1"></i><span class="h4">' + value.CanHost + '</span></div></div>';
-            popupContent = popupContent + '<div class="d-flex"><h5 class="nowrap"><a href="/members/' + value.Username + '" target="_blank">' + value.Username + '</a></h5></div>';
-
-            marker.bindPopup(popupContent).openPopup(); // groups[accommodation].addLayer(marker);
-        }
-
         markers.addLayer(marker);
     });
 
@@ -181,13 +90,6 @@ Map.prototype.addMarkers = function (map) {
     } catch (err) {}
 
     return markers;
-};
-
-Map.prototype.boundingBox = function(latitude, longitude, distance) {
-    const approx = distance * 1.569612305760477e-2;
-    var ne = L.latLng(parseFloat(latitude) - approx / 2, parseFloat(longitude) - approx);
-    var sw = L.latLng(parseFloat(latitude) + approx / 2, parseFloat(longitude) + approx);
-    return L.latLngBounds( ne, sw);
 };
 
 $(function () {

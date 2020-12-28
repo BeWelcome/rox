@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Form\CustomDataClass\SearchFormRequest;
 use App\Form\LoginFormType;
+use App\Form\MapSearchFormType;
 use App\Form\SearchFormType;
 use App\Model\StatisticsModel;
 use RoxPostHandler;
@@ -33,14 +34,7 @@ class HomeController extends AbstractController
         ]);
 
         // Find all members around 100km of the given location
-        $searchFormRequest = new SearchFormRequest($this->getDoctrine()->getManager());
-        $searchFormRequest->show_map = true;
-        $searchFormRequest->accommodation_neverask = true;
-        $searchFormRequest->inactive = true;
-        $searchFormRequest->distance = 100;
-
-        $formFactory = $this->get('form.factory');
-        $searchForm = $formFactory->createNamed('map', SearchFormType::class, $searchFormRequest, [
+        $searchForm = $this->createForm(MapSearchFormType::class, null, [
             'action' => '/search/map',
         ]);
 

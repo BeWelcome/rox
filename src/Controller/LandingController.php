@@ -206,7 +206,11 @@ class LandingController extends AbstractController
         $searchHomeLocation = $formFactory->createNamed('home', SearchFormType::class, $searchHomeLocationRequest);
 
         // Prepare small search form
-        $searchGotoLocation = $formFactory->createNamed('tiny', SearchFormType::class, new SearchFormRequest($this->getDoctrine()->getManager()));
+        $searchGotoLocation = $formFactory->createNamed(
+            'tiny',
+            SearchFormType::class,
+            new SearchFormRequest($this->getDoctrine()->getManager())
+        );
 
         $preferenceRepository = $this->getDoctrine()->getRepository(Preference::class);
         $preference = $preferenceRepository->findOneBy(['codename' => Preference::MESSAGE_AND_REQUEST_FILTER]);

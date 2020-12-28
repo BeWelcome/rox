@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Member;
 use App\Entity\Preference;
 use App\Form\CustomDataClass\SearchFormRequest;
+use App\Form\MapSearchFormType;
 use App\Form\SearchFormType;
 use App\Pagerfanta\SearchAdapter;
 use App\Repository\MemberRepository;
@@ -12,6 +13,7 @@ use Pagerfanta\Pagerfanta;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -166,25 +168,40 @@ class SearchController extends AbstractController
      *
      * @Route("/search/map", name="search_map")
      *
-     * @return Response
+     * @return Response|RedirectResponse
      *
      * @SuppressWarnings(PHPMD.StaticAccess)
      */
     public function showMapAction(Request $request, TranslatorInterface $translator)
     {
-        $pager = false;
+        // do not allow access to this page when logged in, redirect to /search/locations
+        if (null !== $this->getUser()) {
+            return $this->redirectToRoute('search_locations');
+        }
+
         $results = false;
 
-        $searchFormRequest = SearchFormRequest::fromRequest($request, $this->getDoctrine()->getManager());
-
-        $formFactory = $this->get('form.factory');
-        $form = $formFactory->createNamed('map', SearchFormType::class, $searchFormRequest);
+        $form = $this->createForm(MapSearchFormType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
+            $searchFormRequest = new SearchFormRequest($this->getDoctrine()->getManager());
+            $searchFormRequest->page = 1;
+            $searchFormRequest->location = $data['location'];
+            $searchFormRequest->location_geoname_id = $data['location_geoname_id'];
+            $searchFormRequest->location_latitude = $data['location_latitude'];
+            $searchFormRequest->location_longitude = $data['location_longitude'];
+            $searchFormRequest->accommodation_anytime = true;
+            $searchFormRequest->accommodation_neverask = true;
+            $searchFormRequest->profile_picture = false;
+            $searchFormRequest->about_me = false;
+            $searchFormRequest->has_comments = false;
+            $searchFormRequest->last_login = 2400;
+            $searchFormRequest->distance = 100;
+
             $searchAdapter = new SearchAdapter(
-                $data,
+                $searchFormRequest,
                 $this->get('session'),
                 $this->getParameter('database_host'),
                 $this->getParameter('database_name'),
@@ -195,17 +212,14 @@ class SearchController extends AbstractController
             );
             $results = $searchAdapter->getMapResults();
             $pager = new Pagerfanta($searchAdapter);
-            $pager->setMaxPerPage($data->items);
-            $pager->setCurrentPage($data->page);
+            $pager->setMaxPerPage($searchFormRequest->items);
+            $pager->setCurrentPage($searchFormRequest->page);
         }
 
-        return $this->render('search/searchlocations.html.twig', [
+        return $this->render('search/searchmap.html.twig', [
             'form' => $form->createView(),
-            'pager' => $pager,
-            'routeName' => 'search_members_ajax',
-            'routeParams' => $request->query->all(),
+            'map' => true,
             'results' => $results,
-            'showMemberDetails' => false,
         ]);
     }
 

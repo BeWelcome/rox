@@ -86,7 +86,10 @@ class VolunteerToolController extends AbstractController
                 // check if new username is already taken
                 $newMember = $memberRepository->findOneBy(['username' => $data->newUsername]);
                 if (null === $newMember) {
-                    $logger->write('Changed member username from ' . $data->oldUsername . ' to ' . $data->newUsername . '.', 'adminquery');
+                    $logger->write(
+                        'Changed member username from ' . $data->oldUsername . ' to ' . $data->newUsername . '.',
+                        'adminquery'
+                    );
 
                     $em = $this->getDoctrine()->getManager();
                     $oldMember->setUsername($data->newUsername);

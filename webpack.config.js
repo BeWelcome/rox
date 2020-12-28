@@ -36,7 +36,7 @@ Encore
     .addEntry('search/loadcontent', './assets/js/search/loadajax.js')
     .addEntry('search/locations', './assets/js/search/locations.js')
     .addEntry('search/map', './assets/js/search/map.js')
-    .addEntry('map/map', './assets/js/map/map.js')
+//    .addEntry('map/map', './assets/js/map/map.js')
     .addEntry('tempusdominus', './assets/js/tempusdominus.js')
     .addEntry('requests', './assets/js/requests.js')
     .addEntry('treasurer', './assets/js/treasurer.js')

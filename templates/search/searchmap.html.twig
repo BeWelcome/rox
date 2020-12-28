@@ -27,12 +27,12 @@
 <div class="container-lg" style="z-index:2000">
         {{ form_start(form, {'attr': {'class': 'm-1 search_form', 'onkeypress': 'return event.keyCode != 13;'}}) }}
         {{ form_errors(form) }}
-        <div class="row mb-3">
-            <div class="col-12">
+        <div class="form-row mt-2 align-items-end">
+            <div class="col-8 col-sm-10 mt-1">
                 {{ form_row(form.location, {'attr': {'class': 'search-picker'}, 'required': false }) }}
             </div>
-            <div class="col-sm-12">
-                {{ form_row(form.updateMap) }}
+            <div class="col-4 col-sm-2">
+                {{ form_row(form.updateMap, {'attr': {'class': 'btn-block btn-primary'} }) }}
             </div>
         </div>
         {{ form_rest(form) }}

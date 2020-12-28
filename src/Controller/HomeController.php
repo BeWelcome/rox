@@ -2,10 +2,8 @@
 
 namespace App\Controller;
 
-use App\Form\CustomDataClass\SearchFormRequest;
 use App\Form\LoginFormType;
 use App\Form\MapSearchFormType;
-use App\Form\SearchFormType;
 use App\Model\StatisticsModel;
 use RoxPostHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

@@ -2,19 +2,11 @@
 
 namespace App\Form;
 
-use App\Form\CustomDataClass\SearchFormRequest;
-use SearchModel;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Exception\AlreadySubmittedException;
-use Symfony\Component\Form\Exception\LogicException;
-use Symfony\Component\Form\Exception\UnexpectedTypeException;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormEvent;
-use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class MapSearchFormType extends AbstractType

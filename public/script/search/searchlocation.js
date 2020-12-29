@@ -28,7 +28,7 @@ function enableAutoComplete(addMarker) {
     }).catcomplete({
         source: function (request, response) {
             $.ajax({
-                url: "/search/locations/all",
+                url: "/search/locations/places",
                 dataType: "jsonp",
                 data: {
                     name: request.term

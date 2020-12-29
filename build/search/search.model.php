@@ -1410,31 +1410,33 @@ LIMIT 1
             $result['result'] = 'success';
             $result['places'] = 1;
         }
-        // Get administrative units
-        $resAdminUnits = $this->sphinxSearch( $location, self::SPHINX_ADMINUNITS );
-        if ( $resAdminUnits) {
-            $result = $resAdminUnits->fetchAllAssoc();
-            $ids = array();
-            foreach ( $result as $row) {
-                $ids[] = $row['id'];
+        if ('places' !== $type) {
+            // Get administrative units
+            $resAdminUnits = $this->sphinxSearch( $location, self::SPHINX_ADMINUNITS );
+            if ( $resAdminUnits) {
+                $result = $resAdminUnits->fetchAllAssoc();
+                $ids = array();
+                foreach ( $result as $row) {
+                    $ids[] = $row['id'];
+                }
+                $adminunits= $this->getFromDataBase($ids, $this->getWords()->getSilent('searchadminunits'));
+                $locations = array_merge($locations, $adminunits);
+                $result["status"] = "success";
+                $result['adminunits'] = 1;
             }
-            $adminunits= $this->getFromDataBase($ids, $this->getWords()->getSilent('searchadminunits'));
-            $locations = array_merge($locations, $adminunits);
-            $result["status"] = "success";
-            $result['adminunits'] = 1;
-        }
-        // Get countries
-        $resCountries = $this->sphinxSearch( $location, self::SPHINX_COUNTRIES );
-        if ( $resCountries) {
-            $result = $resCountries->fetchAllAssoc();
-            $ids = array();
-            foreach ( $result as $row) {
-                $ids[] = $row['id'];
+            // Get countries
+            $resCountries = $this->sphinxSearch( $location, self::SPHINX_COUNTRIES );
+            if ( $resCountries) {
+                $result = $resCountries->fetchAllAssoc();
+                $ids = array();
+                foreach ( $result as $row) {
+                    $ids[] = $row['id'];
+                }
+                $countries= $this->getFromDataBase($ids, $this->getWords()->getSilent('searchcountries'));
+                $locations = array_merge($locations, $countries);
+                $result["status"] = "success";
+                $result['countries'] = 1;
             }
-            $countries= $this->getFromDataBase($ids, $this->getWords()->getSilent('searchcountries'));
-            $locations = array_merge($locations, $countries);
-            $result["status"] = "success";
-            $result['countries'] = 1;
         }
         // If nothing was found assume that search daemon isn't running and
         // try to get something from the database

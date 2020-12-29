@@ -145,7 +145,7 @@ class SearchFormRequest
     public $keywords;
 
     /** @var int Last Login in months */
-    public $last_login = 12;
+    public $last_login = 24;
 
     /** @var int */
     public $order = 6;

@@ -27,19 +27,14 @@ Map.prototype.showMap = function () {
         if (this.markerClusterGroup.getLayers().length > 0) {
             const bounds = this.markerClusterGroup.getBounds();
 
-            // Check if a rectangle is set if so use this for the bounds else fit the bounds to the markerClusterGroup
+            const latitude = document.getElementById('search_map_location_latitude').value;
+            const longitude = document.getElementById('search_map_location_longitude').value;
+
             this.map.fitBounds(bounds, {zoomSnap: 0.1, padding: [20, 20]});
+            this.map.flyTo([latitude, longitude]);
+        } else {
+            this.map.fitWorld();
         }
-    }
-};
-
-Map.prototype.hideMap = function () {
-    if (this.map !== undefined) {
-        // remove the container hosting the map
-        this.mapBox.toggleClass("map-box").empty(); // get rid of the map
-
-        this.map.remove();
-        this.map = undefined;
     }
 };
 

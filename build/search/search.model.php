@@ -1545,7 +1545,7 @@ LIMIT 1
                 ORDER BY
                     RAND()
                 LIMIT
-                    2000;
+                    4000;
              ";
 
             $this->membersLowDetails = $this->bulkLookup($query);

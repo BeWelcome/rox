@@ -1542,10 +1542,6 @@ LIMIT 1
                     " . $this->accommodationCondition . "
                     " . $this->typicalOfferCondition . "
                     AND m.IdCity = g.geonameId
-                ORDER BY
-                    RAND()
-                LIMIT
-                    4000;
              ";
 
             $this->membersLowDetails = $this->bulkLookup($query);

@@ -492,3 +492,9 @@ $avatar-sizes: 30, 50, 75, 100, 150, 200, 500;
     width: #{$size}px;
   }
 }
+
+.ui-autocomplete-category {
+  font-weight: bold;
+  padding: .25rem;
+}
+

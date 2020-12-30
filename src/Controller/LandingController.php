@@ -157,7 +157,7 @@ class LandingController extends AbstractController
         $member = $this->getUser();
         $accommodation = $request->request->get('accommodation');
 
-        $valid = (AccommodationType::YES === $accommodation) && (AccommodationType::NO === $accommodation);
+        $valid = (AccommodationType::YES === $accommodation) || (AccommodationType::NO === $accommodation);
         if ($valid) {
             $member = $this->landingModel->updateMemberAccommodation($member, $accommodation);
         }

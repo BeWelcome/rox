@@ -49,4 +49,21 @@ class WikiRepository extends EntityRepository
 
         return $versions;
     }
+
+    /**
+     * Returns the last 300 changes to pages in the wiki.
+     *
+     * @return array
+     */
+    public function getRecentChanges()
+    {
+        $recentChanges = $this->createQueryBuilder('w')
+            ->select(['w.pagename', 'w.version', 'w.author', 'w.created'])
+            ->orderBy('w.created', 'DESC')
+            ->setMaxResults(300)
+            ->getQuery()
+            ->getResult();
+
+        return $recentChanges;
+    }
 }

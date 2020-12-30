@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Entity\Member;
 use App\Entity\Wiki;
 use App\Model\WikiModel;
 use App\Repository\WikiRepository;
@@ -31,6 +30,32 @@ class WikiController extends AbstractController
     public function showWikiFrontPage(WikiModel $wikiModel)
     {
         return $this->showWikiPage('WikiFrontPage', $wikiModel, 0);
+    }
+
+    /**
+     * @Route("/wiki/recent", name="wiki_recent")
+     *
+     * @return Response
+     */
+    public function showRecentChanges(Request $request)
+    {
+        $page = $request->get('page', 1);
+
+        /** @var WikiRepository $wikiRepository */
+        $wikiRepository = $this->getDoctrine()->getRepository(Wiki::class);
+        $recentChanges = $wikiRepository->getRecentChanges();
+        $adapter = new ArrayAdapter($recentChanges);
+        $pagerFanta = new Pagerfanta($adapter);
+        $pagerFanta->setMaxPerPage(20);
+        $pagerFanta->setCurrentPage($page);
+
+        return $this->render('wiki/recent.html.twig', [
+            'submenu' => [
+                'active' => 'recent',
+                'items' => $this->getSubmenuItems(),
+            ],
+            'pager' => $pagerFanta,
+        ]);
     }
 
     /**
@@ -88,6 +113,10 @@ class WikiController extends AbstractController
             'wikipage' => $wikiPage,
             'content' => $content,
             'history' => $pagerFanta,
+            'submenu' => [
+                'active' => 'recent',
+                'items' => $this->getSubmenuItems(),
+            ],
         ]);
     }
 
@@ -174,5 +203,24 @@ class WikiController extends AbstractController
             'title' => $pageTitle,
             'form' => $form->createView(),
         ]);
+    }
+
+    /**
+     * @return array
+     */
+    private function getSubmenuItems(?string $active = null)
+    {
+        $submenuItems = [
+            'startpage' => [
+                'key' => 'startpage',
+                'url' => $this->generateUrl('wiki_front_page'),
+            ],
+            'recent' => [
+                'key' => 'wiki.recent',
+                'url' => $this->generateUrl('wiki_recent'),
+            ],
+        ];
+
+        return $submenuItems;
     }
 }

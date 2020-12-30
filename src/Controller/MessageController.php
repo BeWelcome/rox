@@ -107,44 +107,21 @@ class MessageController extends BaseMessageController
      */
     public function show(Message $message)
     {
-        if (!$this->isMessageOfMember($message)) {
-            throw $this->createAccessDeniedException('Not your message/hosting request');
-        }
+        return $this->showMessageThread($message, false);
+    }
 
-        if ($this->isHostingRequest($message)) {
-            return $this->redirectToHostingRequest($message);
-        }
-
-        if ($this->isPurgedByMember($message)) {
-            return $this->redirectToRoute('messages');
-        }
-
-        $thread = $this->messageModel->getThreadForMessage($message);
-        $current = $thread[0];
-
-        if ($message->getId() !== $current->getId()) {
-            return $this->redirectToRoute('message_show', ['id' => $current->getId()]);
-        }
-
-        // Walk through the thread and mark all messages as read (for current member)
-        $member = $this->getUser();
-        $em = $this->getDoctrine()->getManager();
-        foreach ($thread as $item) {
-            if ($member === $item->getReceiver()) {
-                // Only mark as read if it is a message and when the receiver reads the message,
-                // not when the message is presented to the Sender with url /messages/{id}/sent
-                $item->setFirstRead(new DateTime());
-                $em->persist($item);
-            }
-        }
-        $em->flush();
-
-        $view = (null === $message->getRequest()) ? 'message/view.html.twig' : 'request/view.html.twig';
-
-        return $this->render($view, [
-            'current' => $current,
-            'thread' => $thread,
-        ]);
+    /**
+     * @Route("/message/{id}/deleted", name="message_show_with_deleted",
+     *     requirements={"id": "\d+"})
+     *
+     * @throws Exception
+     * @throws AccessDeniedException
+     *
+     * @return Response
+     */
+    public function showDeleted(Message $message)
+    {
+        return $this->showMessageThread($message, true);
     }
 
     /**
@@ -340,5 +317,48 @@ class MessageController extends BaseMessageController
     private function redirectToHostingRequestReply(Message $message)
     {
         return $this->redirectToRoute('hosting_request_reply', ['id' => $message->getId()]);
+    }
+
+    private function showMessageThread(Message $message, bool $showDeleted)
+    {
+        if (!$this->isMessageOfMember($message)) {
+            throw $this->createAccessDeniedException('Not your message/hosting request');
+        }
+
+        if ($this->isHostingRequest($message)) {
+            return $this->redirectToHostingRequest($message);
+        }
+
+        if ($this->isPurgedByMember($message)) {
+            return $this->redirectToRoute('messages');
+        }
+
+        $thread = $this->messageModel->getThreadForMessage($message);
+        $current = $thread[0];
+
+        if ($message->getId() !== $current->getId()) {
+            return $this->redirectToRoute('message_show', ['id' => $current->getId()]);
+        }
+
+        // Walk through the thread and mark all messages as read (for current member)
+        $member = $this->getUser();
+        $em = $this->getDoctrine()->getManager();
+        foreach ($thread as $item) {
+            if ($member === $item->getReceiver()) {
+                // Only mark as read if it is a message and when the receiver reads the message,
+                // not when the message is presented to the Sender with url /messages/{id}/sent
+                $item->setFirstRead(new DateTime());
+                $em->persist($item);
+            }
+        }
+        $em->flush();
+
+        $view = (null === $message->getRequest()) ? 'message/view.html.twig' : 'request/view.html.twig';
+
+        return $this->render($view, [
+            'show_deleted' => $showDeleted,
+            'current' => $current,
+            'thread' => $thread,
+        ]);
     }
 }

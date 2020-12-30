@@ -95,7 +95,11 @@
                 </td>
                 <td class="text-right">
                     <div class="btn-group-vertical">
-                        <a href="{{ path('message_show', { id: message.id}) }}" class="btn btn-primary btn-sm">{{ 'view' | trans }}</a>
+                        {% if folder == 'deleted' %}
+                            <a href="{{ path('message_show_with_deleted', { id: message.id}) }}" class="btn btn-primary btn-sm">{{ 'view' | trans }}</a>
+                        {% else %}
+                            <a href="{{ path('message_show', { id: message.id}) }}" class="btn btn-primary btn-sm">{{ 'view' | trans }}</a>
+                        {% endif %}
                         {% if folder == 'inbox' %}
                             <a href="{{ path('message_reply', { id: message.id}) }}" class="btn btn-primary btn-sm">{{ 'reply' | trans }}</a>
                         {% endif %}

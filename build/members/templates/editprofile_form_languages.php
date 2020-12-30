@@ -32,7 +32,7 @@
 
                     </div>
                     <div class="col-10 offset-2 col-md-7 offset-md-0">
-                        <select id="mll_<?= $ii ?>" class="mll select2 form-control" name="memberslanguageslevel[]">
+                        <select id="mll_<?= $ii ?>" class="mll select2 form-control" data-minimum-results-for-search="-1" name="memberslanguageslevel[]">
                             <?php
                             for ($jj = 0; $jj < count($vars['language_levels']); $jj++) {
                                 $selected = $vars['language_levels'][$jj] == $vars['languages_selected'][$ii]->Level ? ' selected="selected"' : '';
@@ -83,11 +83,13 @@
                     </select>
                 </div>
                 <div class="col-10 offset-2 col-md-7 offset-md-0">
-                    <select class="mll select2 form-control" name="memberslanguageslevel[]">
+                    <select class="mll select2 form-control" data-minimum-results-for-search="-1" name="memberslanguageslevel[]">
                         <?php
                         for ($jj = 0; $jj < count($vars['language_levels']); $jj++) {
                             ?>
-                            <option value="<?= $vars['language_levels'][$jj] ?>"><?= $words->get("LanguageLevel_" . $vars['language_levels'][$jj]) ?></option>
+                            <option value="<?= $vars['language_levels'][$jj] ?>"
+                                <?php if ($vars['language_levels'][$jj] == 'Beginner') { ?>selected="selected"<?php } ?>
+                            ><?= $words->get("LanguageLevel_" . $vars['language_levels'][$jj]) ?></option>
                             <?php
                         }
                         ?>

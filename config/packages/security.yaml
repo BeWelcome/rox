@@ -95,6 +95,7 @@ security:
         - { path: ^/resetpassword, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/rox/in, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/search/locations/places, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/search/locations/all, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/search/map, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/volunteer, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/communitynews, roles: IS_AUTHENTICATED_ANONYMOUSLY }

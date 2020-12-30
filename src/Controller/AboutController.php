@@ -29,11 +29,11 @@ class AboutController extends AboutBaseController
      *
      * @return Response
      */
-    public function showAboutThePeople()
+    public function showAboutThePeople(Request $request)
     {
         return $this->render('about/thepeople.html.twig', [
             'submenu' => [
-                'items' => $this->getSubMenuItems(),
+                'items' => $this->getSubMenuItems($request->getLocale()),
                 'active' => 'about_people',
             ],
         ]);

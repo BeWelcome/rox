@@ -529,7 +529,7 @@ LIMIT 1
         // Fetch count of public members at/around the given place
         $str = "
             SELECT
-                COUNT(m.id) cnt
+                COUNT(DISTINCT m.id) cnt
             FROM
             " . $this->tables . "
             " . $this->joins . "

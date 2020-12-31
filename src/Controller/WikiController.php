@@ -51,7 +51,7 @@ class WikiController extends AbstractController
 
         return $this->render('wiki/recent.html.twig', [
             'submenu' => [
-                'active' => 'recent',
+                'active' => 'startpage',
                 'items' => $this->getSubmenuItems(),
             ],
             'pager' => $pagerFanta,

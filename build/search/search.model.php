@@ -1521,7 +1521,7 @@ LIMIT 1
     private function _getMembersLowDetails(&$vars) {
         if (!$this->membersLowDetails) {
             $query = "
-                SELECT
+                SELECT DISTINCT
                     m.Accomodation as Accommodation, m.Username, m.latitude, m.longitude, m.maxGuest as CanHost
                 FROM
                     " . $this->tables . "

@@ -43,6 +43,7 @@ class ActivityRepository extends EntityRepository
             ->createQuery('
                 SELECT a
                 FROM App:Activity a
+                WHERE a.status <> 1
                 ORDER BY a.id DESC
             ');
     }

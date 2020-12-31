@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Doctrine\DeleteRequestType;
 use App\Entity\Member;
 use App\Entity\Message;
 use App\Entity\Subject;
@@ -93,7 +94,11 @@ class MessageController extends BaseMessageController
             return $this->redirectToRoute('messages', ['folder' => 'deleted']);
         }
 
-        return $this->redirectToRoute('message_show', ['id' => $redirect->getId()]);
+        $redirectRoute = 'message_show';
+        if ($redirect->isSenderDeleted($member) || $redirect->isReceiverDeleted($member)) {
+            $redirectRoute = 'message_show_with_deleted';
+        }
+        return $this->redirectToRoute($redirectRoute, ['id' => $redirect->getId()]);
     }
 
     /**

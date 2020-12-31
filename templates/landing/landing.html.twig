@@ -31,8 +31,9 @@
                     in
                     {# Provide a way to search in member's location #}
                     {{ form_start( searchLocation, { 'action': path('search_locations'), 'attr' : {'style' : 'display: inline;'}} ) }}
-                    {{ form_widget(searchLocation.updateMap, {'attr' : {'class' : 'searchsubmit ml-1 mb-0 homecity'},
-                        'label': searchLocation.vars.value.location } ) }}
+                    <button type="submit" id="home_updateMap" name="home[updateMap]" class="searchsubmit ml-1 mb-0 homecity btn">
+                        {{ searchLocation.vars.value.location }}</button>
+                    {% do searchLocation.updateMap.setRendered %}
                     <div class="d-none invisible">{{ form_rest(searchLocation) }}</div>
                     {{ form_end(searchLocation) }}
                 </div>
@@ -48,8 +49,8 @@
             <div class="input-group">
                 {{ form_widget( tinySearch.location, { 'attr' : { 'class' : 'search-picker form-control' } } ) }}
                 <span class="input-group-append">
-                                {{ form_widget( tinySearch.updateMap, { 'action': path('search_locations'), 'attr' : { 'class' : 'btn btn-primary' },
-                                    'label': 'Go' } ) }}
+                    <button type="submit" id="tiny_updateMap" name="tiny[updateMap]" class="btn btn-primary">{{ 'go'|trans }}</button>
+                    {% do tinySearch.updateMap.setRendered %}
                 </span>
             </div>
             <div class="d-none invisible">{{ form_rest( tinySearch ) }}</div>

@@ -47,7 +47,8 @@
 
             <label for="search_goto_location_form_search" class="sr-only">{{ 'landing.whereyougo' | trans }}</label>
             <div class="input-group">
-                {{ form_widget( tinySearch.location, { 'attr' : { 'class' : 'search-picker form-control' } } ) }}
+                {{ form_widget( tinySearch.location, { 'attr' : { 'class' : 'search-picker form-control',
+                    'placeholder': 'landing.whereyougo'|trans } } ) }}
                 <span class="input-group-append">
                     <button type="submit" id="tiny_updateMap" name="tiny[updateMap]" class="btn btn-primary">{{ 'go'|trans }}</button>
                     {% do tinySearch.updateMap.setRendered %}

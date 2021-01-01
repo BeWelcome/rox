@@ -19,7 +19,7 @@ class AvatarController extends AbstractController
 
     /**
      * @Route("/members/avatar/{username}/{size}", name="avatar",
-     *     requirements={"username" : "(?i:[a-z][a-z0-9-._]{1,30}[a-z0-9])",
+     *     requirements={"username" : "(?i:[a-z][a-z0-9-._ ]{1,30}[a-z0-9])",
      *          "size" : "\d+|original" },
      *     _defaults={"size": "50"})
      *

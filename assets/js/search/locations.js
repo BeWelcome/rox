@@ -33,17 +33,20 @@ Map.prototype.showMap = function () {
             var query = this.getQueryStrings($(".search_form").serialize());
 
             // Distinguish between /search/members and /search/map
-            if (query["map[distance]"] !== undefined) {
+            if (query["search[distance]"] === -1) {
                 this.noRefresh = true;
-                this.map.fitBounds(this.boundingBox(query["map[location_latitude]"], query["map[location_longitude]"], query["map[distance]"]));
+                this.map.fitBounds([[query["search[ne_latitude]"], query["search[ne_longitude]"]], [query["search[sw_latitude]"], query["search[sw_longitude]"]]]);
             } else {
-                if (query["search[distance]"] === -1) {
-                    this.noRefresh = true;
-                    this.map.fitBounds([[query["search[ne_latitude]"], query["search[ne_longitude]"]], [query["search[sw_latitude]"], query["search[sw_longitude]"]]]);
-                } else {
-                    this.noRefresh = true;
-                    this.map.fitBounds(this.boundingBox(query["search[location_latitude]"], query["search[location_longitude]"], query["search[distance]"]));
-                }
+                const bounds = this.markerClusterGroup.getBounds();
+
+                const latitude = query["search[location_latitude]"];
+                const longitude = query["search[location_longitude]"];;
+
+                console.log(bounds);
+                console.log("[" + latitude + ", " + longitude + "]");
+
+                this.map.fitBounds(bounds, {zoomSnap: 0.25});
+                this.map.flyTo([latitude, longitude]);
             }
         }
         that = this;

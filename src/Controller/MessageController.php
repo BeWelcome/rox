@@ -59,6 +59,7 @@ class MessageController extends BaseMessageController
 
         /** @var Member $member */
         $member = $this->getUser();
+
         return $this->messageReply($request, $member, $thread);
     }
 
@@ -127,7 +128,7 @@ class MessageController extends BaseMessageController
      */
     public function showDeleted(Message $message)
     {
-        return $this->showThread($message, 'message_show',true);
+        return $this->showThread($message, 'message_show', true);
     }
 
     /**
@@ -186,7 +187,20 @@ class MessageController extends BaseMessageController
      */
     public function messages(Request $request, string $folder): Response
     {
-        return $this->handleFolderRequest($request, $folder, 'messages');
+        /** @var Member $member */
+        $member = $this->getUser();
+        list($page, $limit, $sort, $direction) = $this->getOptionsFromRequest($request);
+
+        $messages = $this->messageModel->getFilteredMessages(
+            $member,
+            $folder,
+            $sort,
+            $direction,
+            $page,
+            $limit
+        );
+
+        return $this->handleFolderRequest($request, $folder, 'messages', $messages);
     }
 
     /**

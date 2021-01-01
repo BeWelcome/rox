@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use InvalidArgumentException;
+use App\Entity\Member;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -18,6 +18,19 @@ class RequestAndMessageController extends BaseMessageController
      */
     public function requestsAndMessages(Request $request, string $folder): Response
     {
-        return $this->handleFolderRequest($request, $folder, 'both');
+        /** @var Member $member */
+        $member = $this->getUser();
+        list($page, $limit, $sort, $direction) = $this->getOptionsFromRequest($request);
+
+        $requestsAndMessages = $this->messageModel->getFilteredRequestsAndMessages(
+            $member,
+            $folder,
+            $sort,
+            $direction,
+            $page,
+            $limit
+        );
+
+        return $this->handleFolderRequest($request, $folder, 'both', $requestsAndMessages);
     }
 }

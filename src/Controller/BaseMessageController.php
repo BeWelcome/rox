@@ -6,7 +6,6 @@ use App\Entity\Member;
 use App\Entity\Message;
 use App\Form\CustomDataClass\MessageIndexRequest;
 use App\Form\MessageIndexFormType;
-use App\Model\HostingRequestModel;
 use App\Model\MessageModel;
 use App\Repository\MessageRepository;
 use App\Utilities\TranslatedFlashTrait;
@@ -14,8 +13,6 @@ use App\Utilities\TranslatorTrait;
 use DateTime;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
-use InvalidArgumentException;
-use Pagerfanta\Pagerfanta;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -69,40 +66,19 @@ class BaseMessageController extends AbstractController
     }
 
     /**
+     * @param mixed $messages
+     *
      * @throws ORMException
      * @throws OptimisticLockException
-     * @throws InvalidArgumentException
      */
-    protected function handleFolderRequest(Request $request, string $folder, string $type): Response
-    {
-        list($page, $limit, $sort, $direction) = $this->getOptionsFromRequest($request);
-
-        if (!\in_array($direction, ['asc', 'desc'], true)) {
-            throw new InvalidArgumentException();
-        }
-
+    protected function handleFolderRequest(
+        Request $request,
+        string $folder,
+        string $type,
+        $messages
+    ): Response {
         /** @var Member $member */
         $member = $this->getUser();
-        switch($type)
-        {
-            case 'messages':
-                $messages = $this->messageModel->getFilteredMessages(
-                    $member, $folder, $sort, $direction, $page, $limit
-                );
-                break;
-            case 'requests':
-                $messages = $this->messageModel->getFilteredRequests(
-                    $member, $folder, $sort, $direction, $page, $limit
-                );
-                break;
-            case 'both':
-                $messages = $this->messageModel->getFilteredRequestsAndMessages(
-                    $member, $folder, $sort, $direction, $page, $limit
-                );
-                break;
-            default:
-                throw new InvalidArgumentException();
-        }
 
         $messageIds = [];
         foreach ($messages->getIterator() as $key => $val) {

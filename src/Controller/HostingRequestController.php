@@ -217,7 +217,6 @@ class HostingRequestController extends BaseMessageController
         return $this->showThread($message, 'hosting_request_show', false);
     }
 
-
     /**
      * @Route("/request/{id}/deleted", name="hosting_request_show_with_deleted",
      *     requirements={"id": "\d+"})
@@ -310,7 +309,20 @@ class HostingRequestController extends BaseMessageController
      */
     public function requests(Request $request, string $folder): Response
     {
-        return $this->handleFolderRequest($request, $folder, 'requests');
+        /** @var Member $member */
+        $member = $this->getUser();
+        list($page, $limit, $sort, $direction) = $this->getOptionsFromRequest($request);
+
+        $requests = $this->messageModel->getFilteredRequests(
+            $member,
+            $folder,
+            $sort,
+            $direction,
+            $page,
+            $limit
+        );
+
+        return $this->handleFolderRequest($request, $folder, 'requests', $requests);
     }
 
     /**
@@ -434,11 +446,6 @@ class HostingRequestController extends BaseMessageController
         }
 
         return $subject;
-    }
-
-    private function redirectToMessage(Message $message): RedirectResponse
-    {
-        return $this->redirectToRoute('message_show', ['id' => $message->getId()]);
     }
 
     private function redirectToMessageReply(Message $message): RedirectResponse

@@ -2,13 +2,11 @@
 
 namespace App\Controller;
 
-use App\Doctrine\DeleteRequestType;
 use App\Entity\Member;
 use App\Entity\Message;
 use App\Entity\Subject;
 use App\Form\MessageToMemberType;
 use App\Utilities\ManagerTrait;
-use DateTime;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Exception;
@@ -41,10 +39,8 @@ class MessageController extends BaseMessageController
      *
      * @throws AccessDeniedException
      * @throws Exception
-     *
-     * @return Response
      */
-    public function replyToMessage(Request $request, Message $message)
+    public function replyToMessage(Request $request, Message $message): Response
     {
         if (!$this->isMessageOfMember($message)) {
             throw $this->createAccessDeniedException('Not your message/hosting request');
@@ -61,7 +57,9 @@ class MessageController extends BaseMessageController
             return $this->redirectToRoute('message_reply', ['id' => $current->getId()]);
         }
 
-        return $this->messageReply($request, $this->getUser(), $thread);
+        /** @var Member $member */
+        $member = $this->getUser();
+        return $this->messageReply($request, $member, $thread);
     }
 
     /**
@@ -75,10 +73,8 @@ class MessageController extends BaseMessageController
      *
      * @throws ORMException
      * @throws OptimisticLockException
-     *
-     * @return Response
      */
-    public function deleteMessageOrRequest(Message $message, Message $redirect)
+    public function deleteMessageOrRequest(Message $message, Message $redirect): Response
     {
         if (!$this->isMessageOfMember($message)) {
             throw $this->createAccessDeniedException('Not your message/hosting request');
@@ -95,9 +91,10 @@ class MessageController extends BaseMessageController
         }
 
         $redirectRoute = 'message_show';
-        if ($redirect->isSenderDeleted($member) || $redirect->isReceiverDeleted($member)) {
+        if ($message->isDeletedByMember($member)) {
             $redirectRoute = 'message_show_with_deleted';
         }
+
         return $this->redirectToRoute($redirectRoute, ['id' => $redirect->getId()]);
     }
 
@@ -112,7 +109,11 @@ class MessageController extends BaseMessageController
      */
     public function show(Message $message)
     {
-        return $this->showMessageThread($message, false);
+        if ($this->isHostingRequest($message)) {
+            return $this->redirectToHostingRequest($message);
+        }
+
+        return $this->showThread($message, 'message_show', false);
     }
 
     /**
@@ -126,7 +127,7 @@ class MessageController extends BaseMessageController
      */
     public function showDeleted(Message $message)
     {
-        return $this->showMessageThread($message, true);
+        return $this->showThread($message, 'message_show',true);
     }
 
     /**
@@ -181,35 +182,17 @@ class MessageController extends BaseMessageController
      * @Route("/messages/{folder}", name="messages",
      *     defaults={"folder": "inbox"})
      *
-     * @param string $folder
-     *
      * @throws InvalidArgumentException
-     *
-     * @return Response
      */
-    public function messages(Request $request, $folder)
+    public function messages(Request $request, string $folder): Response
     {
-        $page = $request->query->get('page', 1);
-        $limit = $request->query->get('limit', 10);
-        $sort = $request->query->get('sort', 'dateSent');
-        $sortDir = $request->query->get('dir', 'desc');
-
-        if (!\in_array($sortDir, ['asc', 'desc'], true)) {
-            throw new InvalidArgumentException();
-        }
-
-        $member = $this->getUser();
-        $messages = $this->messageModel->getFilteredMessages($member, $folder, $sort, $sortDir, $page, $limit);
-
-        return $this->handleFolderRequest($request, $folder, $messages, 'messages');
+        return $this->handleFolderRequest($request, $folder, 'messages');
     }
 
     /**
      * @Route("/message/{id}/spam", name="message_mark_spam")
-     *
-     * @return Response
      */
-    public function markAsSpamAction(Message $message)
+    public function markAsSpamAction(Message $message): Response
     {
         $this->messageModel->markAsSpam([$message->getId()]);
 
@@ -220,10 +203,8 @@ class MessageController extends BaseMessageController
 
     /**
      * @Route("/message/{id}/nospam", name="message_mark_nospam")
-     *
-     * @return Response
      */
-    public function unmarkAsSpamAction(Message $message)
+    public function unmarkAsSpamAction(Message $message): Response
     {
         $this->messageModel->unmarkAsSpam([$message->getId()]);
 
@@ -236,10 +217,8 @@ class MessageController extends BaseMessageController
      * @Route("/all/messages/with/{username}", name="all_messages_with")
      *
      * @throws InvalidArgumentException
-     *
-     * @return Response
      */
-    public function allMessagesWithMember(Request $request, Member $other)
+    public function allMessagesWithMember(Request $request, Member $other): Response
     {
         list($page, $limit, $sort, $direction) = $this->getOptionsFromRequest($request);
 
@@ -309,61 +288,13 @@ class MessageController extends BaseMessageController
         ]);
     }
 
-    private function isHostingRequest(Message $message)
-    {
-        return (null !== $message->getRequest()) ? true : false;
-    }
-
-    private function redirectToHostingRequest(Message $message)
+    private function redirectToHostingRequest(Message $message): RedirectResponse
     {
         return $this->redirectToRoute('hosting_request_show', ['id' => $message->getId()]);
     }
 
-    private function redirectToHostingRequestReply(Message $message)
+    private function redirectToHostingRequestReply(Message $message): RedirectResponse
     {
         return $this->redirectToRoute('hosting_request_reply', ['id' => $message->getId()]);
-    }
-
-    private function showMessageThread(Message $message, bool $showDeleted)
-    {
-        if (!$this->isMessageOfMember($message)) {
-            throw $this->createAccessDeniedException('Not your message/hosting request');
-        }
-
-        if ($this->isHostingRequest($message)) {
-            return $this->redirectToHostingRequest($message);
-        }
-
-        if ($this->isPurgedByMember($message)) {
-            return $this->redirectToRoute('messages');
-        }
-
-        $thread = $this->messageModel->getThreadForMessage($message);
-        $current = $thread[0];
-
-        if ($message->getId() !== $current->getId()) {
-            return $this->redirectToRoute('message_show', ['id' => $current->getId()]);
-        }
-
-        // Walk through the thread and mark all messages as read (for current member)
-        $member = $this->getUser();
-        $em = $this->getDoctrine()->getManager();
-        foreach ($thread as $item) {
-            if ($member === $item->getReceiver()) {
-                // Only mark as read if it is a message and when the receiver reads the message,
-                // not when the message is presented to the Sender with url /messages/{id}/sent
-                $item->setFirstRead(new DateTime());
-                $em->persist($item);
-            }
-        }
-        $em->flush();
-
-        $view = (null === $message->getRequest()) ? 'message/view.html.twig' : 'request/view.html.twig';
-
-        return $this->render($view, [
-            'show_deleted' => $showDeleted,
-            'current' => $current,
-            'thread' => $thread,
-        ]);
     }
 }

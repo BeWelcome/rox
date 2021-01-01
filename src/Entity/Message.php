@@ -557,16 +557,27 @@ class Message
     /**
      * @return bool
      */
-    public function isReceiverDeleted(Member $member)
+    public function isDeletedByMember(Member $member)
     {
+        $deleteRequests = array_filter(explode(',', $this->getDeleteRequest()));
+
         if ($member === $this->getReceiver()) {
-            $deleteRequest = $this->getDeleteRequest();
-            $requests = array_filter(explode(',', $deleteRequest));
-            $key = array_search(DeleteRequestType::RECEIVER_DELETED, $requests, true);
+            $key = array_search(DeleteRequestType::RECEIVER_DELETED, $deleteRequests, true);
             if (false !== $key) {
                 return true;
             }
-            $key = array_search(DeleteRequestType::RECEIVER_PURGED, $requests, true);
+            $key = array_search(DeleteRequestType::RECEIVER_PURGED, $deleteRequests, true);
+            if (false !== $key) {
+                return true;
+            }
+        }
+
+        if ($member === $this->getSender()) {
+            $key = array_search(DeleteRequestType::SENDER_DELETED, $deleteRequests, true);
+            if (false !== $key) {
+                return true;
+            }
+            $key = array_search(DeleteRequestType::SENDER_PURGED, $deleteRequests, true);
             if (false !== $key) {
                 return true;
             }
@@ -578,16 +589,18 @@ class Message
     /**
      * @return bool
      */
-    public function isSenderDeleted(Member $member)
+    public function isPurgedByMember(Member $member)
     {
-        if ($member === $this->getSender()) {
-            $deleteRequest = $this->getDeleteRequest();
-            $requests = array_filter(explode(',', $deleteRequest));
-            $key = array_search(DeleteRequestType::SENDER_DELETED, $requests, true);
+        $deleteRequests = array_filter(explode(',', $this->getDeleteRequest()));
+        if ($member === $this->getReceiver()) {
+            $key = array_search(DeleteRequestType::RECEIVER_PURGED, $deleteRequests, true);
             if (false !== $key) {
                 return true;
             }
-            $key = array_search(DeleteRequestType::SENDER_PURGED, $requests, true);
+        }
+
+        if ($member === $this->getSender()) {
+            $key = array_search(DeleteRequestType::SENDER_PURGED, $deleteRequests, true);
             if (false !== $key) {
                 return true;
             }

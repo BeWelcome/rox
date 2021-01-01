@@ -36,13 +36,13 @@ class HostingRequestController extends BaseMessageController
     use ManagerTrait;
     use TranslatorTrait;
 
-    /** HostingRequestModel */
-    private $requestModel;
+    private HostingRequestModel $requestModel;
 
     public function __construct(HostingRequestModel $requestModel, MessageModel $messageModel)
     {
+        parent::__construct($messageModel);
+
         $this->requestModel = $requestModel;
-        $this->messageModel = $messageModel;
     }
 
     /**
@@ -211,57 +211,30 @@ class HostingRequestController extends BaseMessageController
      *     requirements={"id": "\d+"})
      *
      * @throws AccessDeniedException
-     *
-     * @return Response
      */
-    public function show(Message $message)
+    public function show(Message $message): Response
     {
-        if (!$this->isMessageOfMember($message)) {
-            throw $this->createAccessDeniedException('Not your request');
-        }
+        return $this->showThread($message, 'hosting_request_show', false);
+    }
 
-        if ($this->isMessage($message)) {
-            return $this->redirectToMessage($message);
-        }
 
-        if ($this->isPurgedByMember($message)) {
-            return $this->redirectToRoute('requests');
-        }
-
-        $thread = $this->messageModel->getThreadForMessage($message);
-        $current = $thread[0];
-
-        if ($message->getId() !== $current->getId()) {
-            return $this->redirectToRoute('hosting_request_show', ['id' => $current->getId()]);
-        }
-
-        // Walk through the thread and mark all messages as read (for current member)
-        $member = $this->getUser();
-        $em = $this->getDoctrine()->getManager();
-        foreach ($thread as $item) {
-            if ($member === $item->getReceiver()) {
-                // Only mark as read if it is a message and when the receiver reads the message,
-                // not when the message is presented to the Sender with url /messages/{id}/sent
-                $item->setFirstRead(new DateTime());
-                $em->persist($item);
-            }
-        }
-        $em->flush();
-
-        return $this->render('request/view.html.twig', [
-            'current' => $current,
-            'thread' => $thread,
-        ]);
+    /**
+     * @Route("/request/{id}/deleted", name="hosting_request_show_with_deleted",
+     *     requirements={"id": "\d+"})
+     *
+     * @throws AccessDeniedException
+     */
+    public function showDeleted(Message $message): Response
+    {
+        return $this->showThread($message, 'hosting_request_show', true);
     }
 
     /**
      * @Route("/new/request/{username}", name="hosting_request")
      *
      * @throws Exception
-     *
-     * @return Response
      */
-    public function newHostingRequestAction(Request $request, Member $host)
+    public function newHostingRequest(Request $request, Member $host): Response
     {
         /** @var Member $member */
         $member = $this->getUser();
@@ -333,31 +306,33 @@ class HostingRequestController extends BaseMessageController
      * @Route("/requests/{folder}", name="requests",
      *     defaults={"folder": "inbox"})
      *
-     * @param string $folder
-     *
      * @throws InvalidArgumentException
      */
-    public function requests(Request $request, $folder): Response
+    public function requests(Request $request, string $folder): Response
     {
-        list($page, $limit, $sort, $direction) = $this->getOptionsFromRequest($request);
-
-        if (!\in_array($direction, ['asc', 'desc'], true)) {
-            throw new InvalidArgumentException();
-        }
-
-        $member = $this->getUser();
-        $messages = $this->requestModel->getFilteredRequests($member, $folder, $sort, $direction, $page, $limit);
-
-        return $this->handleFolderRequest($request, $folder, $messages, 'requests');
+        return $this->handleFolderRequest($request, $folder, 'requests');
     }
 
     /**
      * @param mixed $subject
      * @param $requestChanged
      */
-    protected function sendGuestReplyNotification(Member $host, Member $guest, Message $request, $subject, $requestChanged)
-    {
-        $this->messageModel->sendRequestNotification($guest, $host, $host, $request, $subject, 'reply_from_guest', $requestChanged);
+    protected function sendGuestReplyNotification(
+        Member $host,
+        Member $guest,
+        Message $request,
+        $subject,
+        $requestChanged
+    ) {
+        $this->messageModel->sendRequestNotification(
+            $guest,
+            $host,
+            $host,
+            $request,
+            $subject,
+            'reply_from_guest',
+            $requestChanged
+        );
     }
 
     protected function checkRequestExpired(Message $hostingRequest): bool
@@ -380,7 +355,15 @@ class HostingRequestController extends BaseMessageController
      */
     private function sendHostReplyNotification(Member $host, Member $guest, Message $request, $subject, $requestChanged)
     {
-        $this->messageModel->sendRequestNotification($host, $guest, $host, $request, $subject, 'reply_from_host', $requestChanged);
+        $this->messageModel->sendRequestNotification(
+            $host,
+            $guest,
+            $host,
+            $request,
+            $subject,
+            'reply_from_host',
+            $requestChanged
+        );
     }
 
     private function addExpiredFlash(Member $receiver)
@@ -453,17 +436,12 @@ class HostingRequestController extends BaseMessageController
         return $subject;
     }
 
-    private function isMessage(Message $message)
-    {
-        return (null === $message->getRequest()) ? true : false;
-    }
-
-    private function redirectToMessage(Message $message)
+    private function redirectToMessage(Message $message): RedirectResponse
     {
         return $this->redirectToRoute('message_show', ['id' => $message->getId()]);
     }
 
-    private function redirectToMessageReply(Message $message)
+    private function redirectToMessageReply(Message $message): RedirectResponse
     {
         return $this->redirectToRoute('message_reply', ['id' => $message->getId()]);
     }

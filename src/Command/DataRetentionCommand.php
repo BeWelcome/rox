@@ -68,6 +68,9 @@ class DataRetentionCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        \define('SCRIPT_BASE', getcwd());
+        \define('DATA_DIR', SCRIPT_BASE . '/data/');
+
         // Setup old environment to be able to use the old code
         $session = $this->session;
         $session->start();

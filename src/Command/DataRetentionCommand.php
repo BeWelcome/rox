@@ -2,18 +2,16 @@
 
 namespace App\Command;
 
-use App\Entity\Member;
-use App\Logger\Logger;
 use App\Utilities\SessionSingleton;
 use App\Utilities\TranslatorSingleton;
 use Doctrine\ORM\EntityManagerInterface;
 use EnvironmentExplorer;
+use MembersModel;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
-use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -25,23 +23,23 @@ class DataRetentionCommand extends Command
     /**
      * @var TranslatorInterface
      */
-    private TranslatorInterface $translator;
+    private $translator;
     /**
      * @var UrlGeneratorInterface
      */
-    private UrlGeneratorInterface $urlGenerator;
+    private $urlGenerator;
     /**
      * @var ParameterBagInterface
      */
-    private ParameterBagInterface $params;
+    private $params;
     /**
      * @var SessionInterface
      */
-    private SessionInterface $session;
+    private $session;
     /**
      * @var EntityManagerInterface
      */
-    private EntityManagerInterface $entityManager;
+    private $entityManager;
 
     public function __construct(
         TranslatorInterface $translator,
@@ -65,6 +63,9 @@ class DataRetentionCommand extends Command
         ;
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.StaticAccess)
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         // Setup old environment to be able to use the old code
@@ -85,7 +86,7 @@ class DataRetentionCommand extends Command
 
         $io = new SymfonyStyle($input, $output);
 
-        $membersModel = new \MembersModel();
+        $membersModel = new MembersModel();
         $connection = $this->entityManager->getConnection();
         $membersModel->set_pdo($connection->getWrappedConnection());
 

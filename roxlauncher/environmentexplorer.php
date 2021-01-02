@@ -27,14 +27,12 @@ class EnvironmentExplorer
     public function initializeGlobalState($db_host, $db_name, $db_user, $db_password)
     {
         if (!defined('SCRIPT_BASE')) {
-            echo getcwd() . PHP_EOL;
             define('SCRIPT_BASE', getcwd() . '/../');
             define('HTDOCS_BASE', SCRIPT_BASE . 'htdocs/');
             define('LIB_DIR', SCRIPT_BASE . 'lib/');
             define('BUILD_DIR', SCRIPT_BASE . 'build/');
             define('TEMPLATE_DIR', SCRIPT_BASE . 'templates/');
             define('DATA_DIR', SCRIPT_BASE . 'data/');
-            echo DATA_DIR;
         }
 
         $dsn = sprintf('mysqli:host=%s;dbname=%s', $db_host, $db_name);

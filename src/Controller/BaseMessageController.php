@@ -100,31 +100,31 @@ class BaseMessageController extends AbstractController
                 $this->messageModel->markPurged($member, $messageIds);
                 $this->addTranslatedFlash('notice', 'flash.purged');
 
-                return $this->redirect($request->getRequestUri());
+                return $this->redirect($this->getRedirectUrl($request));
             }
             if ('delete' === $clickedButton) {
                 if ('deleted' === $folder) {
                     $this->messageModel->unmarkDeleted($member, $messageIds);
                     $this->addTranslatedFlash('notice', 'flash.undeleted');
 
-                    return $this->redirect($request->getRequestUri());
+                    return $this->redirect($this->getRedirectUrl($request));
                 }
                 $this->messageModel->markDeleted($member, $messageIds);
                 $this->addTranslatedFlash('notice', 'flash.deleted');
 
-                return $this->redirect($request->getRequestUri());
+                return $this->redirect($this->getRedirectUrl($request));
             }
             if ('spam' === $clickedButton) {
                 if ('spam' === $folder) {
                     $this->messageModel->unmarkAsSpam($messageIds);
                     $this->addTranslatedFlash('notice', 'flash.marked.nospam');
 
-                    return $this->redirect($request->getRequestUri());
+                    return $this->redirect($this->getRedirectUrl($request));
                 }
                 $this->messageModel->markAsSpam($messageIds);
                 $this->addTranslatedFlash('notice', 'flash.marked.spam');
 
-                return $this->redirect($request->getRequestUri());
+                return $this->redirect($this->getRedirectUrl($request));
             }
         }
 
@@ -175,12 +175,10 @@ class BaseMessageController extends AbstractController
         return [$page, $limit, $sort, $direction];
     }
 
-    protected function showThread(Message $message, string $route, bool $showDeleted)
+    protected function showThread(Message $message, string $template, string $route)
     {
         /** @var Member $member */
         $member = $this->getUser();
-
-        $route = $route . ($showDeleted ? '_with_deleted' : '');
 
         if (!$this->isMessageOfMember($message)) {
             throw $this->createAccessDeniedException('Not your message/hosting request');
@@ -193,28 +191,57 @@ class BaseMessageController extends AbstractController
             return $this->redirectToRoute($route, ['id' => $current->getId()]);
         }
 
-        // At this point message is the first one in the thread. If it is purged we need special handling
-        // in case that we show deleted messages
-        if ($message->isPurgedByMember($member)) {
-            if (!$showDeleted) {
-                return $this->redirectToRoute('messages');
-            }
+        // Now we're at the latest message in the thread. Check that no all items are deleted/purged depending on the
+        // $showDeleted setting
+        $nothingVisible = true;
+        foreach ($thread as $threadMessage) {
+            $nothingVisible = $nothingVisible && ($threadMessage->isPurgedByMember($member)
+                    || $threadMessage->isDeletedByMember($member))
+            ;
+        }
+        if ($nothingVisible) {
+            return $this->redirectToRoute('messages');
         }
 
-        // Walk through the thread and mark all messages as read (for current member)
-        $em = $this->getDoctrine()->getManager();
-        foreach ($thread as $item) {
-            if ($member === $item->getReceiver()) {
-                // Only mark as read if it is a message and when the receiver reads the message,
-                // not when the message is presented to the Sender with url /messages/{id}/sent
-                $item->setFirstRead(new DateTime());
-                $em->persist($item);
-            }
-        }
-        $em->flush();
+        $this->markThreadAsRead($member, $thread);
 
-        return $this->render('message/view.html.twig', [
-            'show_deleted' => $showDeleted,
+        return $this->render($template, [
+            'show_deleted' => false,
+            'current' => $current,
+            'thread' => $thread,
+        ]);
+    }
+
+    protected function showThreadWithDeleted(Message $message, string $template, string $route)
+    {
+        /** @var Member $member */
+        $member = $this->getUser();
+
+        if (!$this->isMessageOfMember($message)) {
+            throw $this->createAccessDeniedException('Not your message/hosting request');
+        }
+
+        $thread = $this->messageModel->getThreadForMessage($message);
+        $current = $thread[0];
+
+        if ($message->getId() !== $current->getId()) {
+            return $this->redirectToRoute($route, ['id' => $current->getId()]);
+        }
+
+        // Now we're at the latest message in the thread. Check that no all items are deleted/purged depending on the
+        // $showDeleted setting
+        $nothingVisible = true;
+        foreach ($thread as $threadMessage) {
+            $nothingVisible = $nothingVisible && $threadMessage->isPurgedByMember($member);
+        }
+        if ($nothingVisible) {
+            return $this->redirectToRoute('both', ['folder' => 'deleted']);
+        }
+
+        $this->markThreadAsRead($member, $thread);
+
+        return $this->render($template, [
+            'show_deleted' => true,
             'current' => $current,
             'thread' => $thread,
         ]);
@@ -228,5 +255,25 @@ class BaseMessageController extends AbstractController
     protected function isMessage(Message $message): bool
     {
         return null === $message->getRequest();
+    }
+
+    private function getRedirectUrl(Request $request)
+    {
+        return $request->getRequestUri();
+    }
+
+    private function markThreadAsRead(Member $member, array $thread)
+    {
+        // Walk through the thread and mark all messages as read (for current member)
+        $em = $this->getDoctrine()->getManager();
+        foreach ($thread as $item) {
+            if ($member === $item->getReceiver()) {
+                // Only mark as read if it is a message and when the receiver reads the message,
+                // not when the message is presented to the Sender with url /messages/{id}/sent
+                $item->setFirstRead(new DateTime());
+                $em->persist($item);
+            }
+        }
+        $em->flush();
     }
 }

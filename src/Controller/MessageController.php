@@ -114,7 +114,7 @@ class MessageController extends BaseMessageController
             return $this->redirectToHostingRequest($message);
         }
 
-        return $this->showThread($message, 'message_show', false);
+        return $this->showThread($message, 'message/view.html.twig', 'message_show');
     }
 
     /**
@@ -128,7 +128,7 @@ class MessageController extends BaseMessageController
      */
     public function showDeleted(Message $message)
     {
-        return $this->showThread($message, 'message_show', true);
+        return $this->showThreadWithDeleted($message, 'message/view.html.twig', 'message_show_with_deleted');
     }
 
     /**

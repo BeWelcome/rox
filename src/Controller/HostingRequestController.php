@@ -36,7 +36,7 @@ class HostingRequestController extends BaseMessageController
     use ManagerTrait;
     use TranslatorTrait;
 
-    private HostingRequestModel $requestModel;
+    private $requestModel;
 
     public function __construct(HostingRequestModel $requestModel, MessageModel $messageModel)
     {
@@ -214,7 +214,7 @@ class HostingRequestController extends BaseMessageController
      */
     public function show(Message $message): Response
     {
-        return $this->showThread($message, 'hosting_request_show', false);
+        return $this->showThread($message, 'request/view.html.twig', 'hosting_request_show');
     }
 
     /**
@@ -225,7 +225,7 @@ class HostingRequestController extends BaseMessageController
      */
     public function showDeleted(Message $message): Response
     {
-        return $this->showThread($message, 'hosting_request_show', true);
+        return $this->showThreadWithDeleted($message, 'request/view.html.twig', 'hosting_request_show_with_deleted');
     }
 
     /**

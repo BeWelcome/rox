@@ -87,10 +87,6 @@ class MessageController extends BaseMessageController
         $this->messageModel->markDeleted($member, [$message->getId()]);
         $this->addTranslatedFlash('notice', 'flash.message.deleted');
 
-        if ($message->getId() === $redirect->getId()) {
-            return $this->redirectToRoute('messages', ['folder' => 'deleted']);
-        }
-
         $redirectRoute = 'message_show';
         if ($message->isDeletedByMember($member)) {
             $redirectRoute = 'message_show_with_deleted';

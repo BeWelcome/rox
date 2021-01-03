@@ -90,12 +90,12 @@ class MemberPage extends PageWithActiveSkin
 
             if ($this instanceof EditMyProfilePage)
             {
-                $tt[] = array('deleteprofile', 'deleteprofile', '<i class="fa fa-fw fa-times"></i> ' . $ww->DeleteProfile, 'deleteprofile');
                 if ($member->Status <> 'ChoiceInactive') {
                     $tt[] = array('setprofileinactive', 'setprofileinactive', '<i class="fa fa-fw fa-edit"></i> ' . $ww->SetProfileInactive, 'setprofileinactive');
                 } else {
                     $tt[] = array('setprofileactive', 'setprofileactive', '<i class="fa fa-fw fa-edit"></i> ' . $ww->SetProfileActive);
                 }
+                $tt[] = array('deleteprofile', 'deleteprofile', '<i class="fa fa-fw fa-times"></i> ' . $ww->DeleteProfile, 'deleteprofile');
             }
 
             $showVisitors = $member->getPreference('PreferenceShowProfileVisits',
@@ -265,20 +265,22 @@ class MemberPage extends PageWithActiveSkin
             $callbackTags = $formkit->setPostCallback('MembersController', 'setStatusCallback');
             $logged_member = $this->model->getLoggedInMember();
             if ($logged_member && $logged_member->hasOldRight(array('Admin' => '', 'SafetyTeam' => '', 'Accepter' => '', 'Profile' => ''))) {
-                $form .= '<div><form method="post" name="member-status" id="member-status">' . $callbackTags;
+                $form .= '<div><form method="post" name="member-status" id="member-status" class="form-inline">' . $callbackTags;
                 $form .= '<input type="hidden" name="member-id" value="' . $member->id . '">';
-                $form .= '<select name="new-status" class="form-control">';
+                $form .= '<select name="new-status" class="form-control-sm select2-sm" data-minimum-results-for-search="-1">';
+                $selected = false;
                 foreach ($this->statuses as $status) {
-
-                    if (strpos($this->words->getSilent('MemberStatus' . $status), 'obsolete') === false) { // remove obsolete statuses
-                        $form .= '<option value="' . $status . '"';
-                        if ($status == $member->Status) {
-                            $form .= ' selected="selected"';
-                        }
-                        $form .= '>' . $this->words->getSilent('MemberStatus' . $status) . '</option>';
+                    $form .= '<option value="' . $status . '"';
+                    if ($status === $member->Status) {
+                        $form .= ' selected="selected"';
+                        $selected = true;
                     }
+                    $form .= '>' . $this->words->getSilent('MemberStatus' . $status) . '</option>';
                 }
-                $form .= '</select>&nbsp;&nbsp;<input type="submit" value="Submit" class="btn btn-primary">';
+                if (!$selected) {
+                    $form .= '<option value="' . $member->status . '" selected="selected">Old unused status. Be careful!</option>';
+                }
+                $form .= '</select>&nbsp;&nbsp;<input type="submit" value="Submit" class="btn btn-primary btn-sm">';
                 $form .= '</form>' . $this->words->FlushBuffer() . '</div>';
             }
         }

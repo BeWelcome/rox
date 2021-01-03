@@ -672,16 +672,19 @@ class MembersController extends RoxControllerBase
             return false;
         }
         $feedback = !empty($args->post['explanation']) ? $args->post['explanation'] : '';
+        $this->model->sendRetiringFeedback($feedback);
         $flashNotice = "";
         if (isset($args->post['cleanup']) && ($args->post['cleanup'])) {
             // Set last login date into the past so that data retention is triggered immediately
             $date = new \DateTime();
-            $date->sub(new \DateInterval('P185D'));
+            $date->sub(new \DateInterval('P366D'));
             $member->LastLogin = $date->format('Y-m-d');
-            $flashNotice .= "All you're data will be deleted in the next 24 hours.";
+            $flashNotice = "flash.delete.profile.data";
+        }
+        if (!empty($flashnotice)) {
+            $this->setFlashNotice($this->getWords()->getSilent($flashNotice));
         }
         $member->removeProfile();
-        $this->model->sendRetiringFeedback($feedback);
 
         return 'logout';
     }

@@ -20,6 +20,7 @@ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 */
 
+
 use Carbon\Carbon;
 
 
@@ -52,25 +53,28 @@ class MembersModel extends RoxModelBase
     }
 
     public function getStatuses() {
-        return array('Active',
+        return [
+            'Active',
             'MailToConfirm',
             'PassedAway',
             'Pending',
-            'DuplicateSigned',
-            'NeedMore',
             'Banned',
             'ChoiceInactive',
             'OutOfRemind',
-            'Rejected',
-            'CompletedPending',
-            'TakenOut',
-            'Sleeper',
-            'Renamed',
             'ActiveHidden',
             'SuspendedBeta',
             'AskToLeave',
-            'StopBoringMe',
-            'Buggy');
+// Removed to avoid clutter of the status dropdown.
+//            'NeedMore',
+//            'Rejected',
+//            'DuplicateSigned',
+//            'CompletedPending',
+//            'TakenOut',
+//            'Sleeper',
+//            'Renamed',
+//            'StopBoringMe',
+//            'Buggy',
+        ];
     }
 
     /**
@@ -1492,7 +1496,7 @@ VALUES
         if (!empty($feedback))
         {
             $feedback_model = new FeedbackModel($this->session);
-            $feedback_model->sendFeedback(array(
+            $feedback_model->sendRetiringFeedback(array(
                 "IdCategory"       => FeedbackModel::DELETE_PROFILE,
                 "FeedbackQuestion" => $feedback,
             ));

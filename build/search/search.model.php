@@ -24,7 +24,7 @@ Boston, MA  02111-1307, USA.
 use App\Doctrine\MemberStatusType;
 use Foolz\SphinxQL\Drivers\Pdo\Connection;
 use Foolz\SphinxQL\SphinxQL;
-use AnthonyMartin\GeoLocation\GeoLocation as GeoLocation;
+use AnthonyMartin\GeoLocation\GeoPoint;
 
 /**
  * Search model
@@ -287,13 +287,14 @@ LIMIT 1
     private function _getRectangle($latitude, $longitude, $distance) {
 
         $result = new stdClass();
-        $edison = GeoLocation::fromDegrees($latitude, $longitude);
+
         try {
-            $coordinates = $edison->boundingCoordinates($distance, 'km');
-            $result->latne = $coordinates[0]->getLatitudeInDegrees();
-            $result->longne = $coordinates[0]->getLongitudeInDegrees();
-            $result->latsw = $coordinates[1]->getLatitudeInDegrees();
-            $result->longsw = $coordinates[1]->getLongitudeInDegrees();
+            $center = new GeoPoint($latitude, $longitude);
+            $boundingBox = $center->boundingBox($distance, 'km');
+            $result->latne = $boundingBox->getMaxLatitude();
+            $result->longne = $boundingBox->getMaxLongitude();
+            $result->latsw = $boundingBox->getMinLatitude();
+            $result->longsw = $boundingBox->getMinLongitude();
         } catch (\Exception $e) {
             // If this really happens the map search area will be rather small :)
             $result->latne = $result->longne = $result->latsw = $result->longsw = 0;
@@ -782,8 +783,9 @@ LIMIT 1
         $query = "
             SELECT
                 g.geonameId AS geonameId, g.name AS name, g.latitude AS latitude, g.longitude AS longitude,
-                a.name AS admin1, c.name AS country, IF(m.id IS NULL, 0, COUNT(g.geonameId)) AS cnt, '"
-            . $this->getWords()->getSilent('SearchPlaces') . "' AS category
+                a.name AS admin1, c.name AS country, 0 AS isAdminUnit,
+                IF(m.id IS NULL, 0, COUNT(g.geonameId)) AS cnt, '"
+                . $this->getWords()->getSilent('SearchPlaces') . "' AS category
             FROM
                 geonames g
             LEFT JOIN
@@ -826,7 +828,9 @@ LIMIT 1
         // get country names for found ids
         $query = "
             SELECT
-                a.geonameId AS geonameId, a.latitude AS latitude, a.longitude AS longitude, a.name AS admin1, c.name AS country, 0 AS cnt, '"
+                a.geonameId AS geonameId, a.latitude AS latitude,
+                a.longitude AS longitude, a.name AS admin1, c.name AS country,
+                IF(a.fClass<>'P', 1, 0) as isAdminUnit, 0 AS cnt, '"
             . $this->dao->escape($category) . "' AS category
             FROM
                 geonames a
@@ -1368,7 +1372,6 @@ LIMIT 1
                 case self::SPHINX_PLACES:
                     $query->where('isplace', '=', 1);
                     $query->limit(0, 5);
-                    $query->orderBy('membercount', 'desc');
                     break;
                 case self::SPHINX_ADMINUNITS:
                     $query->where('isadmin', '=', 1);

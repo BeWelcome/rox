@@ -414,7 +414,7 @@ class GroupController extends AbstractController
         /** @var WikiRepository $wikiRepository */
         $wikiRepository = $em->getRepository(Wiki::class);
 
-        $wikiPage = $wikiRepository->getPageByName($pageName);
+        $wikiPage = $wikiRepository->getPageByName($pageName, 0);
 
         if (null === $wikiPage) {
             $output = null;

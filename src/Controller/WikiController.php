@@ -51,7 +51,7 @@ class WikiController extends AbstractController
 
         return $this->render('wiki/recent.html.twig', [
             'submenu' => [
-                'active' => 'startpage',
+                'active' => 'recent',
                 'items' => $this->getSubmenuItems(),
             ],
             'pager' => $pagerFanta,
@@ -108,14 +108,18 @@ class WikiController extends AbstractController
             }
         }
 
+        $frontPage = 'WikiFrontPage' === $pageTitle;
+        $activePage = $frontPage ? 'startpage' : 'currentpage';
+        $currentPage = $frontPage ? null : $pageTitle;
+
         return $this->render('wiki/wiki.html.twig', [
             'title' => $pageTitle,
             'wikipage' => $wikiPage,
             'content' => $content,
             'history' => $pagerFanta,
             'submenu' => [
-                'active' => 'recent',
-                'items' => $this->getSubmenuItems(),
+                'active' => $activePage,
+                'items' => $this->getSubmenuItems($currentPage),
             ],
         ]);
     }
@@ -159,7 +163,13 @@ class WikiController extends AbstractController
             $em->flush();
             $this->addTranslatedFlash('notice', 'flash.wiki.updated');
 
-            return $this->redirectToRoute('wiki_page', ['pageTitle' => $pageTitle]);
+            return $this->redirectToRoute('wiki_page', [
+                'pageTitle' => $pageTitle,
+                'submenu' => [
+                    'active' => 'edit_create',
+                    'items' => $this->getSubmenuItems($pageTitle),
+                ],
+            ]);
         }
 
         return $this->render('wiki/edit_create.html.twig', [
@@ -205,20 +215,22 @@ class WikiController extends AbstractController
         ]);
     }
 
-    /**
-     * @return array
-     */
-    private function getSubmenuItems(?string $active = null)
+    private function getSubmenuItems(?string $currentPage = null): array
     {
-        $submenuItems = [
-            'startpage' => [
-                'key' => 'startpage',
-                'url' => $this->generateUrl('wiki_front_page'),
-            ],
-            'recent' => [
-                'key' => 'wiki.recent',
-                'url' => $this->generateUrl('wiki_recent'),
-            ],
+        $submenuItems = [];
+        $submenuItems['startpage'] = [
+            'key' => 'startpage',
+            'url' => $this->generateUrl('wiki_front_page'),
+        ];
+        if (null !== $currentPage) {
+            $submenuItems['currentpage'] = [
+                'key' => $currentPage,
+                'url' => $this->generateUrl('wiki_page', ['pageTitle' => $currentPage]),
+            ];
+        }
+        $submenuItems['recent'] = [
+            'key' => 'wiki.recent',
+            'url' => $this->generateUrl('wiki_recent'),
         ];
 
         return $submenuItems;

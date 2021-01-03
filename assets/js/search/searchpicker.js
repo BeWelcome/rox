@@ -25,6 +25,7 @@ $( function() {
         $("#" + this.id + "_geoname_id").val("");
         $("#" + this.id + "_latitude").val("");
         $("#" + this.id + "_longitude").val("");
+        $("#" + this.id + "_admin_unit").val("");
     }).catcomplete({
         source: function (request, response) {
             $.ajax({
@@ -42,7 +43,10 @@ $( function() {
                         $.map(data.locations, function (item) {
                             return {
                                 label: (item.name ? item.name : "") + (item.admin1 ? (item.name ? ", " : "") + item.admin1 : "") + (item.country ? ", " + item.country : ""),
-                                value: item.geonameId, latitude: item.latitude, longitude: item.longitude,
+                                value: item.geonameId,
+                                latitude: item.latitude,
+                                longitude: item.longitude,
+                                isAdminUnit: item.isAdminUnit,
                                 category: item.category
                             };
                         }));
@@ -54,11 +58,13 @@ $( function() {
                 $("#" + this.id + "_geoname_id").val("");
                 $("#" + this.id + "_latitude").val("");
                 $("#" + this.id + "_longitude").val("");
+                $("#" + this.id + "_admin_unit").val("");
             } else {
                 $(this).val(ui.item.label);
                 $("#" + this.id + "_geoname_id").val(ui.item.value);
                 $("#" + this.id + "_latitude").val(ui.item.latitude);
                 $("#" + this.id + "_longitude").val(ui.item.longitude);
+                $("#" + this.id + "_admin_unit").val(ui.item.isAdminUnit);
             }
             return false;
         },
@@ -67,11 +73,13 @@ $( function() {
                 $("#" + this.id + "_geoname_id").val("");
                 $("#" + this.id + "_latitude").val("");
                 $("#" + this.id + "_longitude").val("");
+                $("#" + this.id + "_admin_unit").val("");
             } else {
                 $(this).val(ui.item.label);
                 $("#" + this.id + "_geoname_id").val(ui.item.value);
                 $("#" + this.id + "_latitude").val(ui.item.latitude);
                 $("#" + this.id + "_longitude").val(ui.item.longitude);
+                $("#" + this.id + "_admin_unit").val(ui.item.isAdminUnit);
             }
         },
         select: function (event, ui) {
@@ -86,6 +94,7 @@ $( function() {
             $("#" + this.id + "_geoname_id").val(ui.item.value);
             $("#" + this.id + "_latitude").val(ui.item.latitude);
             $("#" + this.id + "_longitude").val(ui.item.longitude);
+            $("#" + this.id + "_admin_unit").val(ui.item.isAdminUnit);
 
             $(this).val(ui.item.label);
 

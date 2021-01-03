@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d2ef623acf9c9eb33a13cd78e073ac1c",
+    "content-hash": "4619e783b3d41c5855f45442caea866e",
     "packages": [
         {
             "name": "amphp/amp",
@@ -832,20 +832,23 @@
         },
         {
             "name": "anthonymartin/geo-location",
-            "version": "v1.0.3",
+            "version": "v2.0.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/anthonymartin/GeoLocation.php.git",
-                "reference": "45a79ab6666b56e455d4f64ec9a3f66838aa663e"
+                "url": "https://github.com/anthonymartin/GeoLocation-PHP.git",
+                "reference": "e92d153c8ab97116ab1342826b74c64c3302b81d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/anthonymartin/GeoLocation.php/zipball/45a79ab6666b56e455d4f64ec9a3f66838aa663e",
-                "reference": "45a79ab6666b56e455d4f64ec9a3f66838aa663e",
+                "url": "https://api.github.com/repos/anthonymartin/GeoLocation-PHP/zipball/e92d153c8ab97116ab1342826b74c64c3302b81d",
+                "reference": "e92d153c8ab97116ab1342826b74c64c3302b81d",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.0"
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^7"
             },
             "type": "class",
             "autoload": {
@@ -865,15 +868,20 @@
                     "role": "Developer"
                 }
             ],
-            "description": "Retrieve bounding coordinates, distances, longitude and latitude with GeoLocation.class.php",
-            "homepage": "https://github.com/anthonymartin/GeoLocation.php",
+            "description": "Powerful GeoCoding library: Retrieve bounding box coordinates, distances between geopoints, point in polygon, get longitude and latitude from addresses and more with GeoLocation for PHP",
+            "homepage": "https://github.com/anthonymartin/GeoLocation-PHP",
             "keywords": [
+                "bounding box coordinates",
                 "bounding coordinates",
                 "distances",
+                "geocode",
                 "geocoding",
-                "geolocation"
+                "geolocation",
+                "latitude",
+                "longitude",
+                "point in polygon"
             ],
-            "time": "2019-06-14T20:35:09+00:00"
+            "time": "2019-09-18T19:00:37+00:00"
         },
         {
             "name": "anyx/login-gate-bundle",
@@ -15485,6 +15493,7 @@
     "platform": {
         "ext-fileinfo": "*",
         "ext-gd": "*",
+        "ext-intl": "*",
         "ext-json": "*",
         "ext-mbstring": "*",
         "ext-mysqli": "*",

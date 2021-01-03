@@ -93,6 +93,17 @@ class SearchController extends AbstractController
             'languages' => $member->getLanguages(),
         ]);
 
+        // Override the bounding box in case of regular search.
+        // \todo Find a better solution for this.
+        if ($request->query->has('search')) {
+            $parameters = $request->query->get('search');
+            $parameters['ne_latitude'] = $searchFormRequest->ne_latitude;
+            $parameters['ne_longitude'] = $searchFormRequest->ne_longitude;
+            $parameters['sw_latitude'] = $searchFormRequest->sw_latitude;
+            $parameters['sw_longitude'] = $searchFormRequest->sw_longitude;
+            $request->query->set('search', $parameters);
+        }
+
         // Check which form was used to get here
         $tiny->handleRequest($request);
         $tinyIsSubmitted = $tiny->isSubmitted();
@@ -142,7 +153,7 @@ class SearchController extends AbstractController
             $pager->setMaxPerPage($data->items);
             $pager->setCurrentPage($request->get('page', 1));
             if (!$searchIsValid) {
-                // only set data if the form wasn't submitted from search_members
+                // only set data if the form wasn't submitted from search_locations
                 $search->setData($data);
             }
         } elseif ($tinyIsSubmitted) {

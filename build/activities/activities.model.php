@@ -1,6 +1,6 @@
 <?php
 
-use AnthonyMartin\GeoLocation\GeoLocation;
+use AnthonyMartin\GeoLocation\GeoPoint;
 
 /**
  * Activities model class.
@@ -116,13 +116,13 @@ class ActivitiesModel extends RoxModelBase
         $membersModel = new MembersModel();
         $membersModel->set_preference($this->getLoggedInMember()->id, $radiusPref->id, $radius);
     }
-    
+
     public function getRadius() {
         $layoutbits = new MOD_layoutbits();
         $loggedInMember = $this->getLoggedInMember();
         return intval($layoutbits->getPreference("ActivitiesNearMeRadius", $loggedInMember->id));
     }
-    
+
     protected function getNearMeQuery($distance, $count = false) {
         // get latitude and longitude for location of logged in member
         $loggedInMember = $this->getLoggedInMember();
@@ -137,14 +137,14 @@ class ActivitiesModel extends RoxModelBase
         $latitude = $loggedInMember->Latitude;
         $longitude = $loggedInMember->Longitude;
 
-        $edison = GeoLocation::fromDegrees($latitude, $longitude);
-        $coordinates = $edison->boundingCoordinates($distance, 'km');
+        $center = new GeoPoint($latitude, $longitude);
 
-        $longne = $coordinates[0]->getLongitudeInDegrees();
-        $longsw = $coordinates[1]->getLongitudeInDegrees();
+        $coordinates = $center->boundingBox($distance, 'km');
+        $latne = $boundingBox->getMaxLatitude();
+        $longne = $boundingBox->getMaxLongitude();
+        $latsw = $boundingBox->getMinLatitude();
+        $latne = $boundingBox->getMinLongitude();
 
-        $latne = $coordinates[0]->getLatitudeInDegrees();
-        $latsw = $coordinates[1]->getLatitudeInDegrees();
         if ($latne < $latsw) {
             $tmp = $latne;
             $latne = $latsw;

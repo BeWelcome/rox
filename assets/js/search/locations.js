@@ -8,8 +8,8 @@ function Map() {
 Map.prototype.showMap = function () {
     if (this.map === undefined) {
         this.initializing = true;
-        // add the container hosting the map
 
+        // add the container hosting the map
         this.mapBox.toggleClass("map-box");
         this.mapBox.append('<div id="map" class="map p-2 framed w-100"></div>');
         this.map = L.map('map', {
@@ -33,20 +33,33 @@ Map.prototype.showMap = function () {
             var query = this.getQueryStrings($(".search_form").serialize());
 
             // Distinguish between /search/members and /search/map
+            this.noRefresh = true;
             if (query["search[distance]"] === -1) {
-                this.noRefresh = true;
                 this.map.fitBounds([[query["search[ne_latitude]"], query["search[ne_longitude]"]], [query["search[sw_latitude]"], query["search[sw_longitude]"]]]);
             } else {
-                const bounds = this.markerClusterGroup.getBounds();
+                const latitude = document.getElementById('search_location_latitude').value;
+                const longitude = document.getElementById('search_location_longitude').value;
 
-                const latitude = query["search[location_latitude]"];
-                const longitude = query["search[location_longitude]"];;
+                const isAdminUnit = query["search[location_admin_unit]"];
+
+                let bounds = null;
+                if (isAdminUnit) {
+                    bounds = this.markerClusterGroup.getBounds();
+                } else {
+                    // get bounding box from the hidden fields
+                    const sw_latitude = document.getElementById('search_sw_latitude').value;
+                    const sw_longitude = document.getElementById('search_sw_longitude').value;
+                    const ne_latitude = document.getElementById('search_ne_latitude').value;
+                    const ne_longitude = document.getElementById('search_ne_longitude').value;
+                    let sw = L.latLng(sw_latitude, sw_longitude);
+                    let ne = L.latLng(ne_latitude, ne_longitude);
+                    bounds = new L.LatLngBounds(sw, ne);
+                }
+                this.map.fitBounds(bounds, {zoomSnap: 0.25});
+                this.map.flyTo([latitude, longitude]);
 
                 console.log(bounds);
                 console.log("[" + latitude + ", " + longitude + "]");
-
-                this.map.fitBounds(bounds, {zoomSnap: 0.25});
-                this.map.flyTo([latitude, longitude]);
             }
         }
         that = this;

@@ -244,6 +244,7 @@ class SearchFormType extends AbstractType
             ->add('location_geoname_id', HiddenType::class)
             ->add('location_latitude', HiddenType::class)
             ->add('location_longitude', HiddenType::class)
+            ->add('location_admin_unit', HiddenType::class)
             ->add('showOnMap', HiddenType::class)
             ->add('ne_latitude', HiddenType::class)
             ->add('ne_longitude', HiddenType::class)

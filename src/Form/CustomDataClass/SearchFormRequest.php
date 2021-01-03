@@ -2,6 +2,7 @@
 
 namespace App\Form\CustomDataClass;
 
+use AnthonyMartin\GeoLocation\GeoPoint;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\PersistentCollection;
@@ -40,30 +41,27 @@ class SearchFormRequest
     public $location_longitude;
 
     /**
+     * @var bool
+     */
+    public $location_admin_unit;
+
+    /**
      * @var float
-     *
-     * @Assert\NotBlank(groups={"map-search"})
      */
     public $ne_latitude;
 
     /**
      * @var float
-     *
-     * @Assert\NotBlank(groups={"map-search"})
      */
     public $ne_longitude;
 
     /**
      * @var float
-     *
-     * @Assert\NotBlank(groups={"map-search"})
      */
     public $sw_latitude;
 
     /**
      * @var float
-     *
-     * @Assert\NotBlank(groups={"map-search"})
      */
     public $sw_longitude;
 
@@ -238,6 +236,7 @@ class SearchFormRequest
         $formRequest->location_geoname_id = self::get($data, 'location_geoname_id', null);
         $formRequest->location_latitude = self::get($data, 'location_latitude', null);
         $formRequest->location_longitude = self::get($data, 'location_longitude', null);
+        $formRequest->location_admin_unit = self::get($data, 'location_admin_unit', false);
         $formRequest->min_age = self::get($data, 'min_age', null);
         $formRequest->max_age = self::get($data, 'max_age', null);
         $formRequest->gender = self::get($data, 'gender', null);
@@ -256,10 +255,22 @@ class SearchFormRequest
         $formRequest->no_drugs = '1' === self::get($data, 'no_drugs', '0');
         $formRequest->has_comments = '1' === self::get($data, 'has_comments', '0');
 
-        $formRequest->ne_latitude = self::get($data, 'ne-latitude', null);
-        $formRequest->ne_longitude = self::get($data, 'ne-longitude', null);
-        $formRequest->sw_latitude = self::get($data, 'sw-latitude', null);
-        $formRequest->sw_longitude = self::get($data, 'sw-longitude', null);
+        if (null !== $formRequest->location_geoname_id && 1 !== $formRequest->location_admin_unit) {
+            list($neLat, $neLng, $swLat, $swLng) = self::calculateBoundingBox(
+                $formRequest->location_latitude,
+                $formRequest->location_longitude,
+                $formRequest->distance
+            );
+            $formRequest->ne_latitude = $neLat;
+            $formRequest->ne_longitude = $neLng;
+            $formRequest->sw_latitude = $swLat;
+            $formRequest->sw_longitude = $swLng;
+        } else {
+            $formRequest->ne_latitude = self::get($data, 'ne-latitude', null);
+            $formRequest->ne_longitude = self::get($data, 'ne-longitude', null);
+            $formRequest->sw_latitude = self::get($data, 'sw-latitude', null);
+            $formRequest->sw_longitude = self::get($data, 'sw-longitude', null);
+        }
 
         return $formRequest;
     }
@@ -273,6 +284,19 @@ class SearchFormRequest
         }
 
         return ['text-search'];
+    }
+
+    private static function calculateBoundingBox($latitude, $longitude, $distance): array
+    {
+        $center = new GeoPoint($latitude, $longitude);
+        $boundingBox = $center->boundingBox($distance, 'km');
+
+        return [
+            $boundingBox->getMinLatitude(),
+            $boundingBox->getMinLongitude(),
+            $boundingBox->getMaxLatitude(),
+            $boundingBox->getMaxLongitude(),
+        ];
     }
 
     private static function get($data, $index, $default)

@@ -255,7 +255,11 @@ class SearchFormRequest
         $formRequest->no_drugs = '1' === self::get($data, 'no_drugs', '0');
         $formRequest->has_comments = '1' === self::get($data, 'has_comments', '0');
 
-        if (null !== $formRequest->location_geoname_id && 1 !== $formRequest->location_admin_unit) {
+        if (
+            null !== $formRequest->location_geoname_id
+            && 1 !== $formRequest->location_admin_unit
+            && -1 !== $formRequest->distance
+        ) {
             list($neLat, $neLng, $swLat, $swLng) = self::calculateBoundingBox(
                 $formRequest->location_latitude,
                 $formRequest->location_longitude,
@@ -266,10 +270,10 @@ class SearchFormRequest
             $formRequest->sw_latitude = $swLat;
             $formRequest->sw_longitude = $swLng;
         } else {
-            $formRequest->ne_latitude = self::get($data, 'ne-latitude', null);
-            $formRequest->ne_longitude = self::get($data, 'ne-longitude', null);
-            $formRequest->sw_latitude = self::get($data, 'sw-latitude', null);
-            $formRequest->sw_longitude = self::get($data, 'sw-longitude', null);
+            $formRequest->ne_latitude = self::get($data, 'ne_latitude', null);
+            $formRequest->ne_longitude = self::get($data, 'ne_longitude', null);
+            $formRequest->sw_latitude = self::get($data, 'sw_latitude', null);
+            $formRequest->sw_longitude = self::get($data, 'sw_longitude', null);
         }
 
         return $formRequest;
@@ -288,7 +292,7 @@ class SearchFormRequest
 
     private static function calculateBoundingBox($latitude, $longitude, $distance): array
     {
-        $distance = intval($distance);
+        $distance = (int) $distance;
         if (-1 === $distance) {
             $distance = 100;
         }

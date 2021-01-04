@@ -15,6 +15,16 @@
 {% endblock stylesheets %}
 
 {% block content %}
+    {% if results is defined and pager.nbResults == 0 %}
+    <div class="row no-gutters">
+        <div class="col-12">
+            <div class="alert alert-notice">
+                {{ 'search.no.members'|trans }}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
     {{ form_start(form, {'attr': {'class': 'm-1 search_form', 'onkeypress': 'return event.keyCode != 13;'}}) }}
     {{ form_errors(form) }}
     <div class="row mb-3">
@@ -152,11 +162,9 @@
         {% endif %}
     </script>
 
-    {% if showMemberDetails %}
+    {% if results is defined and pager.nbResults > 0 %}
         <div class="row no-gutters">
-            {% if results %}
-                {% include 'member/results.html.twig' %}
-            {% endif %}
+            {% include 'member/results.html.twig' %}
         </div>
     {% endif %}
 {% endblock content %}

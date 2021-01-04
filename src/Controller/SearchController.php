@@ -93,16 +93,7 @@ class SearchController extends AbstractController
             'languages' => $member->getLanguages(),
         ]);
 
-        // Override the bounding box in case of regular search.
-        // \todo Find a better solution for this.
-        if ($request->query->has('search')) {
-            $parameters = $request->query->get('search');
-            $parameters['ne_latitude'] = $searchFormRequest->ne_latitude;
-            $parameters['ne_longitude'] = $searchFormRequest->ne_longitude;
-            $parameters['sw_latitude'] = $searchFormRequest->sw_latitude;
-            $parameters['sw_longitude'] = $searchFormRequest->sw_longitude;
-            $request->query->set('search', $parameters);
-        }
+        $request = $this->overrideRequestParameters($request, $searchFormRequest);
 
         // Check which form was used to get here
         $tiny->handleRequest($request);
@@ -190,7 +181,7 @@ class SearchController extends AbstractController
             return $this->redirectToRoute('search_locations');
         }
 
-        $results = false;
+        $results = null;
 
         $form = $this->createForm(MapSearchFormType::class);
         $form->handleRequest($request);
@@ -270,5 +261,24 @@ class SearchController extends AbstractController
             'routeName' => 'search_members_ajax',
             'routeParams' => $request->query->all(),
         ]);
+    }
+
+    private function overrideRequestParameters(Request $request, SearchFormRequest $searchFormRequest)
+    {
+        // Override the bounding box in case of regular search,
+        // if distance isn't set through Javascript on map.
+        // This provides a bounding box to the JS code to zoom into the map for the results.
+        if ($request->query->has('search')) {
+            $parameters = $request->query->get('search');
+            if ("-1" !== $parameters['distance']) {
+                $parameters['ne_latitude'] = $searchFormRequest->ne_latitude;
+                $parameters['ne_longitude'] = $searchFormRequest->ne_longitude;
+                $parameters['sw_latitude'] = $searchFormRequest->sw_latitude;
+                $parameters['sw_longitude'] = $searchFormRequest->sw_longitude;
+                $request->query->set('search', $parameters);
+            }
+        }
+
+        return $request;
     }
 }

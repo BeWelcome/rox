@@ -39,12 +39,12 @@ Map.prototype.showMap = function () {
             } else {
                 const latitude = document.getElementById('search_location_latitude').value;
                 const longitude = document.getElementById('search_location_longitude').value;
-
-                const isAdminUnit = query["search[location_admin_unit]"];
+                const isAdminUnit = document.getElementById('search_location_admin_unit').value;
 
                 let bounds = null;
-                if (isAdminUnit) {
+                if (1 === isAdminUnit) {
                     bounds = this.markerClusterGroup.getBounds();
+                    this.map.fitBounds(bounds, {zoomSnap: 0.25});
                 } else {
                     // get bounding box from the hidden fields
                     const sw_latitude = document.getElementById('search_sw_latitude').value;
@@ -54,12 +54,10 @@ Map.prototype.showMap = function () {
                     let sw = L.latLng(sw_latitude, sw_longitude);
                     let ne = L.latLng(ne_latitude, ne_longitude);
                     bounds = new L.LatLngBounds(sw, ne);
-                }
-                this.map.fitBounds(bounds, {zoomSnap: 0.25});
-                this.map.flyTo([latitude, longitude]);
 
-                console.log(bounds);
-                console.log("[" + latitude + ", " + longitude + "]");
+                    this.map.fitBounds(bounds, {zoomSnap: 0.25});
+                    this.map.flyTo([latitude, longitude]);
+                }
             }
         }
         that = this;

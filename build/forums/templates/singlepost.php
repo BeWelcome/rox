@@ -180,7 +180,7 @@ if (($post->IdGroup > 0) && ($post->PostVisibility == "GroupOnly")) {
                 <?php
                 $Sentence = preg_replace(
                     '/href="http[s]?:\/\/[^\/]*?bewelcome\.org\//i',
-                    '/',
+                    'href="/',
                     $words->fTrad($post->IdContent)
                 );
 

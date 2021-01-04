@@ -288,6 +288,11 @@ class SearchFormRequest
 
     private static function calculateBoundingBox($latitude, $longitude, $distance): array
     {
+        $distance = intval($distance);
+        if (-1 === $distance) {
+            $distance = 100;
+        }
+
         $center = new GeoPoint($latitude, $longitude);
         $boundingBox = $center->boundingBox($distance, 'km');
 

@@ -28,17 +28,15 @@ Map.prototype.showMap = function () {
         this.noRefresh = false;
         this.markerClusterGroup = this.addMarkers(this.map);
 
+        this.noRefresh = true;
         if (this.markerClusterGroup.getLayers().length > 0) {
             // Check if a rectangle is set if so use this for the bounds else fit the bounds to the markerClusterGroup
             var query = this.getQueryStrings($(".search_form").serialize());
 
             // Distinguish between /search/members and /search/map
-            this.noRefresh = true;
             if (query["search[distance]"] === -1) {
                 this.map.fitBounds([[query["search[ne_latitude]"], query["search[ne_longitude]"]], [query["search[sw_latitude]"], query["search[sw_longitude]"]]]);
             } else {
-                const latitude = document.getElementById('search_location_latitude').value;
-                const longitude = document.getElementById('search_location_longitude').value;
                 const isAdminUnit = document.getElementById('search_location_admin_unit').value;
 
                 let bounds = null;
@@ -46,21 +44,13 @@ Map.prototype.showMap = function () {
                     bounds = this.markerClusterGroup.getBounds();
                     this.map.fitBounds(bounds, {zoomSnap: 0.25});
                 } else {
-                    // get bounding box from the hidden fields
-                    const sw_latitude = document.getElementById('search_sw_latitude').value;
-                    const sw_longitude = document.getElementById('search_sw_longitude').value;
-                    const ne_latitude = document.getElementById('search_ne_latitude').value;
-                    const ne_longitude = document.getElementById('search_ne_longitude').value;
-                    let sw = L.latLng(sw_latitude, sw_longitude);
-                    let ne = L.latLng(ne_latitude, ne_longitude);
-                    bounds = new L.LatLngBounds(sw, ne);
-
-                    this.map.fitBounds(bounds, {zoomSnap: 0.25});
-                    this.map.flyTo([latitude, longitude]);
+                    this.centerMap();
                 }
             }
+        } else {
+            this.centerMap();
         }
-        that = this;
+        let that = this;
         this.map.on("dragend", function () {
             if (!that.noRefresh && !that.initializing) {
                 that.refreshMap();
@@ -77,6 +67,38 @@ Map.prototype.showMap = function () {
         this.initializing = false;
     }
 };
+
+Map.prototype.centerMap = function () {
+    // get bounding box from the hidden fields
+    const latitude = document.getElementById('search_location_latitude').value;
+    const longitude = document.getElementById('search_location_longitude').value;
+    if ("" === latitude) {
+        return;
+    }
+
+    const sw_latitude = document.getElementById('search_sw_latitude').value;
+    const sw_longitude = document.getElementById('search_sw_longitude').value;
+    const ne_latitude = document.getElementById('search_ne_latitude').value;
+    const ne_longitude = document.getElementById('search_ne_longitude').value;
+    const sw = L.latLng(sw_latitude, sw_longitude);
+    const ne = L.latLng(ne_latitude, ne_longitude);
+    const bounds = new L.latLngBounds(sw, ne);
+
+    let mapMarkerIcon = L.icon({
+        iconUrl: '/images/icons/marker_drop.png',
+        iconSize: [29, 24],
+        iconAnchor: [9, 21],
+        popupAnchor: [0, -14]
+    });
+
+    L.marker([latitude, longitude], {
+        icon: mapMarkerIcon,
+        draggable: false
+    }).addTo(this.map);
+
+    this.map.fitBounds(bounds, {zoomSnap: 0.25});
+    this.map.flyTo([latitude, longitude]);
+}
 
 Map.prototype.hideMap = function () {
     if (this.map !== undefined) {

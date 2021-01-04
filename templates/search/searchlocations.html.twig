@@ -15,7 +15,7 @@
 {% endblock stylesheets %}
 
 {% block content %}
-    {% if results is defined and pager.nbResults == 0 %}
+    {% if pager is not null and pager.nbResults == 0 %}
     <div class="row no-gutters">
         <div class="col-12">
             <div class="alert alert-notice">
@@ -155,14 +155,15 @@
 
     <script>
         var mapMembers =
-                {% if results %}
-                {{ results.map | json_encode | raw }};
-        {% else %}
-        null;
-        {% endif %}
+            {% if results %}
+                {{ results.map | json_encode | raw }}
+            {% else %}
+                null
+            {% endif %}
+        ;
     </script>
 
-    {% if results is defined and pager.nbResults > 0 %}
+    {% if pager is not null and pager.nbResults > 0 %}
         <div class="row no-gutters">
             {% include 'member/results.html.twig' %}
         </div>

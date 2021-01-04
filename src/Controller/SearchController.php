@@ -67,8 +67,9 @@ class SearchController extends AbstractController
      */
     public function searchLocations(Request $request, TranslatorInterface $translator)
     {
-        $pager = false;
-        $results = false;
+        $pager = null;
+        $results = null;
+
         /** @var Member $member */
         $member = $this->getUser();
 
@@ -160,7 +161,6 @@ class SearchController extends AbstractController
             'routeName' => 'search_members_ajax',
             'routeParams' => $request->query->all(),
             'results' => $results,
-            'showMemberDetails' => true,
         ]);
     }
 

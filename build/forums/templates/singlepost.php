@@ -178,7 +178,11 @@ if (($post->IdGroup > 0) && ($post->PostVisibility == "GroupOnly")) {
             <div id="d<?= $post->IdContent ?>">
 
                 <?php
-                $Sentence = $words->fTrad($post->IdContent);
+                $Sentence = preg_replace(
+                    '/https:\/\/.*?.bewelcome.org\//i',
+                    '/',
+                    $words->fTrad($post->IdContent)
+                );
 
                 if (($post->PostDeleted == "Deleted")&&($this->BW_Right->HasRight("ForumModerator"))) {
                 echo "<s>", $Sentence, "</s>";

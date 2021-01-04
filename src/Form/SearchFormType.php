@@ -93,6 +93,8 @@ class SearchFormType extends AbstractType
             'search.radius.50km' => 50,
             'search.radius.100km' => 100,
             'search.radius.200km' => 200,
+            'search.radius.500km' => 500,
+            'search.radius.1000km' => 1000,
         ];
         $showOnMap = (bool) ($data->showOnMap);
         if (true === $showOnMap) {

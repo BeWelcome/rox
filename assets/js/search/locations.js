@@ -39,9 +39,8 @@ Map.prototype.showMap = function () {
             } else {
                 const isAdminUnit = document.getElementById('search_location_admin_unit').value;
 
-                let bounds = null;
-                if (1 === isAdminUnit) {
-                    bounds = this.markerClusterGroup.getBounds();
+                if (1 == isAdminUnit) {
+                    const bounds = this.markerClusterGroup.getBounds();
                     this.map.fitBounds(bounds, {zoomSnap: 0.25});
                 } else {
                     this.centerMap();

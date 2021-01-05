@@ -37,7 +37,7 @@ class Geo extends RoxEntityBase
                 return false;
             }
             if ($this->parentGeo) {
-                $this->parentId = $this->parentGeo->geonameid;
+                $this->parentId = $this->parentGeo->geonameId;
             }
         }
         return $this->parentGeo;
@@ -84,7 +84,7 @@ class Geo extends RoxEntityBase
         }
         if ($this->countryId == 0) {
             $this->countryGeo = $this->createEntity('Geo')->findByWhere("((fcode LIKE 'PCL%' AND fcode <> 'PCLH') OR (fcode = 'TERR')) AND country = '{$this->country}'");
-            $this->countryId = $this->countryGeo->geonameid;
+            $this->countryId = $this->countryGeo->geonameId;
         }
         return $this->countryGeo;
     }
@@ -110,7 +110,7 @@ class Geo extends RoxEntityBase
             {
                 $ids[] = $child->geoId;
             }
-            $this->children = $this->findByWhereMany("geonameid IN (" . implode(',', $ids) . ")");
+            $this->children = $this->findByWhereMany("geonameId IN (" . implode(',', $ids) . ")");
         }
         return $this->children;
     }
@@ -136,7 +136,7 @@ class Geo extends RoxEntityBase
             {
                 $ids[] = $parent->geoId;
             }
-            $this->all_parents = $this->findByWhereMany("geonameid IN (" . implode(',', $ids) . ")");
+            $this->all_parents = $this->findByWhereMany("geonameId IN (" . implode(',', $ids) . ")");
         }
         return $this->all_parents;
     }
@@ -400,14 +400,14 @@ class Geo extends RoxEntityBase
         }
         $query = <<<SQL
 SELECT
-    geonameid
+    geonameId
 FROM
     geonames_cache
 WHERE
     name = '{$place_name}'
 UNION
 SELECT
-    geonameid
+    geonameId
 FROM
     geonamesalternatenames
 WHERE
@@ -420,10 +420,10 @@ SQL;
         $ids = array();
         while ($row = $result->fetch(PDB::FETCH_OBJ))
         {
-            $ids[] = $row->geonameid;
+            $ids[] = $row->geonameId;
         }
         if (empty($ids)) return array();
-        return $this->findByWhereMany("geonameid IN (" . implode(',', $ids) . ")");
+        return $this->findByWhereMany("geonameId IN (" . implode(',', $ids) . ")");
     }
 
     /**

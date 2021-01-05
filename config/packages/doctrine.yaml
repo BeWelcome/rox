@@ -32,27 +32,29 @@ doctrine:
         #   3. Uncomment next line:
         #     path:     "%database_path%"
         types:
-            in_folder: App\Doctrine\InFolderType
-            delete_request: App\Doctrine\DeleteRequestType
-            spam_info: App\Doctrine\SpamInfoType
-            message_status: App\Doctrine\MessageStatusType
+            accommodation: App\Doctrine\AccommodationType
+            action_to_watch: App\Doctrine\ActionToWatchType
+            can_still_edit: App\Doctrine\PostCanStillEditType
             comment_admin_action: App\Doctrine\CommentAdminActionType
             comment_quality: App\Doctrine\CommentQualityType
             comment_relations: App\Doctrine\CommentRelationsType
-            language_level: App\Doctrine\LanguageLevelType
-            group_type: App\Doctrine\GroupType
-            group_membership_status: App\Doctrine\GroupMembershipStatusType
-            member_status: App\Doctrine\MemberStatusType
-            accommodation: App\Doctrine\AccommodationType
+            delete_request: App\Doctrine\DeleteRequestType
             domain: App\Doctrine\DomainType
-            forum_visibility: App\Doctrine\ForumVisibilityType
-            thread_reply: App\Doctrine\ThreadReplyType
             forum_delete_status: App\Doctrine\ForumDeleteStatusType
-            can_still_edit: App\Doctrine\PostCanStillEditType
-            action_to_watch: App\Doctrine\ActionToWatchType
+            forum_visibility: App\Doctrine\ForumVisibilityType
+            group_membership_status: App\Doctrine\GroupMembershipStatusType
+            group_type: App\Doctrine\GroupType
+            in_folder: App\Doctrine\InFolderType
+            language_level: App\Doctrine\LanguageLevelType
+            member_status: App\Doctrine\MemberStatusType
+            message_status: App\Doctrine\MessageStatusType
             report_status: App\Doctrine\ReportStatusType
             report_type: App\Doctrine\ReportTypeType
+            spam_info: App\Doctrine\SpamInfoType
+            thread_reply: App\Doctrine\ThreadReplyType
+            typical_offer: App\Doctrine\TypicalOfferType
             who_spoke_last: App\Doctrine\WhoSpokeLastType
+            translation_allowed: App\Doctrine\TranslationAllowedType
 
         mapping_types:
             enum:       string

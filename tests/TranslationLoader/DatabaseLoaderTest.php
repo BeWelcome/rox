@@ -1,10 +1,13 @@
 <?php
 
-namespace App\TranslationLoader;
+namespace App\Tests\TranslationLoader;
 
+use App\Doctrine\TranslationAllowedType;
 use App\Entity\Language;
 use App\Entity\Word;
+use App\Logger\Logger;
 use App\Repository\WordRepository;
+use App\TranslationLoader\DatabaseLoader;
 use DateTime;
 use Doctrine\ORM\EntityManager;
 use PHPUnit\Framework\TestCase;
@@ -15,21 +18,18 @@ use Symfony\Component\Translation\MessageCatalogue;
  */
 class DatabaseLoaderTest extends TestCase
 {
-    /**
-     * @test
-     */
-    public function emptyResult()
+    public function testEmptyResult()
     {
         // Create a stub for the Word repository class.
         $repositoryStub = $this->createStub(WordRepository::class);
         $repositoryStub
             ->method('getTranslationsForLocale')
-            ->willReturn([ ]);
+            ->willReturn([]);
 
         $entityManagerStub = $this->createStub(EntityManager::class);
         $entityManagerStub
             ->method('getRepository')
-            ->willReturn( $repositoryStub)
+            ->willReturn($repositoryStub)
         ;
 
         $loader = new DatabaseLoader($entityManagerStub);
@@ -44,10 +44,7 @@ class DatabaseLoaderTest extends TestCase
         $this->assertSame('english', $translation);
     }
 
-    /**
-     * @test
-     */
-    public function checkReturnedObjectTypeEnglish()
+    public function testCheckReturnedObjectTypeEnglish()
     {
         $english = new Word();
         $english->setCode('english');
@@ -57,12 +54,12 @@ class DatabaseLoaderTest extends TestCase
         $repositoryStub = $this->createStub(WordRepository::class);
         $repositoryStub
             ->method('getTranslationsForLocale')
-            ->willReturn([ $english ]);
+            ->willReturn([$english]);
 
         $entityManagerStub = $this->createStub(EntityManager::class);
         $entityManagerStub
             ->method('getRepository')
-            ->willReturn( $repositoryStub)
+            ->willReturn($repositoryStub)
         ;
 
         $loader = new DatabaseLoader($entityManagerStub);
@@ -76,10 +73,7 @@ class DatabaseLoaderTest extends TestCase
         $this->assertSame('English', $translation);
     }
 
-    /**
-     * @test
-     */
-    public function checkReturnedObjectTypeGerman()
+    public function testCheckReturnedObjectTypeGerman()
     {
         $english = new Word();
         $english->setCode('deutsch');
@@ -89,12 +83,12 @@ class DatabaseLoaderTest extends TestCase
         $repositoryStub = $this->createStub(WordRepository::class);
         $repositoryStub
             ->method('getTranslationsForLocale')
-            ->willReturn([ $english ]);
+            ->willReturn([$english]);
 
         $entityManagerStub = $this->createStub(EntityManager::class);
         $entityManagerStub
             ->method('getRepository')
-            ->willReturn( $repositoryStub)
+            ->willReturn($repositoryStub)
         ;
 
         $loader = new DatabaseLoader($entityManagerStub);
@@ -105,22 +99,23 @@ class DatabaseLoaderTest extends TestCase
         $this->assertSame('de', $result->getLocale());
     }
 
-    /**
-     * @test
-     */
-    public function checkMajorUpdate()
+    public function testCheckMajorUpdate()
     {
-        $englishEn = new Word();
-        $englishEn->setCode('english');
-        $englishEn->setLanguage( (new Language())->setShortcode('en'));
-        $englishEn->setSentence('English');
-        $englishEn->setMajorUpdate(new DateTime('2020-09-01 00:00'));
+        $englishEn = (new Word())
+            ->setCode('english')
+            ->setLanguage((new Language())->setShortcode('en'))
+            ->setSentence('English')
+            ->setTranslationAllowed(TranslationAllowedType::TRANSLATION_ALLOWED)
+            ->setMajorUpdate(new DateTime('2020-09-01 00:00'))
+        ;
 
-        $englishDe = new Word();
-        $englishDe->setCode('english');
-        $englishDe->setLanguage( (new Language())->setShortcode('de'));
-        $englishDe->setSentence('Englisch');
-        $englishDe->setUpdated(new DateTime('2020-08-31 00:00'));
+        $englishDe = (new Word())
+            ->setCode('english')
+            ->setLanguage((new Language())->setShortcode('de'))
+            ->setSentence('Englisch')
+            ->setTranslationAllowed(TranslationAllowedType::TRANSLATION_ALLOWED)
+            ->setUpdated(new DateTime('2020-08-31 00:00'))
+        ;
 
         // Create a stub for the Word repository class.
         $repositoryStub = $this->createStub(WordRepository::class);
@@ -131,7 +126,7 @@ class DatabaseLoaderTest extends TestCase
         $entityManagerStub = $this->createStub(EntityManager::class);
         $entityManagerStub
             ->method('getRepository')
-            ->willReturn( $repositoryStub)
+            ->willReturn($repositoryStub)
         ;
 
         $loader = new DatabaseLoader($entityManagerStub);
@@ -142,22 +137,22 @@ class DatabaseLoaderTest extends TestCase
         $this->assertSame('English', $translation);
     }
 
-    /**
-     * @test
-     */
-    public function checkNoMajorUpdate()
+    public function testCheckNoMajorUpdate()
     {
-        $englishEn = new Word();
-        $englishEn->setCode('english');
-        $englishEn->setLanguage( (new Language())->setShortcode('en'));
-        $englishEn->setSentence('English');
-        $englishEn->setMajorUpdate(new DateTime('2020-09-01 00:00'));
+        $englishEn = (new Word())
+            ->setCode('english')
+            ->setLanguage((new Language())->setShortcode('en'))
+            ->setSentence('English')
+            ->setTranslationAllowed(TranslationAllowedType::TRANSLATION_ALLOWED)
+            ->setMajorUpdate(new DateTime('2020-09-01 00:00'))
+        ;
 
-        $englishDe = new Word();
-        $englishDe->setCode('english');
-        $englishDe->setLanguage( (new Language())->setShortcode('de'));
-        $englishDe->setSentence('Englisch');
-        $englishDe->setUpdated(new DateTime('2020-09-01 00:01'));
+        $englishDe = (new Word())
+            ->setCode('english')
+            ->setLanguage((new Language())->setShortcode('de'))
+            ->setSentence('Englisch')
+            ->setTranslationAllowed(TranslationAllowedType::TRANSLATION_ALLOWED)
+            ->setUpdated(new DateTime('2020-09-01 00:01'));
 
         // Create a stub for the Word repository class.
         $repositoryStub = $this->createStub(WordRepository::class);
@@ -168,7 +163,7 @@ class DatabaseLoaderTest extends TestCase
         $entityManagerStub = $this->createStub(EntityManager::class);
         $entityManagerStub
             ->method('getRepository')
-            ->willReturn( $repositoryStub)
+            ->willReturn($repositoryStub)
         ;
 
         $loader = new DatabaseLoader($entityManagerStub);
@@ -179,32 +174,29 @@ class DatabaseLoaderTest extends TestCase
         $this->assertSame('Englisch', $translation);
     }
 
-    /**
-     * @test
-     */
-    public function checkMajorUpdateComplex()
+    public function testCheckMajorUpdateComplex()
     {
         $englishEn = new Word();
         $englishEn->setCode('english');
-        $englishEn->setLanguage( (new Language())->setShortcode('en'));
+        $englishEn->setLanguage((new Language())->setShortcode('en'));
         $englishEn->setSentence('English');
         $englishEn->setMajorUpdate(new DateTime('2020-09-01 00:00'));
 
         $englishDe = new Word();
         $englishDe->setCode('english');
-        $englishDe->setLanguage( (new Language())->setShortcode('de'));
+        $englishDe->setLanguage((new Language())->setShortcode('de'));
         $englishDe->setSentence('Englisch');
         $englishDe->setUpdated(new DateTime('2020-09-01 00:01'));
 
         $germanEn = new Word();
         $germanEn->setCode('german');
-        $germanEn->setLanguage( (new Language())->setShortcode('en'));
+        $germanEn->setLanguage((new Language())->setShortcode('en'));
         $germanEn->setSentence('German');
         $germanEn->setMajorUpdate(new DateTime('2020-09-01 00:01'));
 
         $germanDe = new Word();
         $germanDe->setCode('german');
-        $germanDe->setLanguage( (new Language())->setShortcode('de'));
+        $germanDe->setLanguage((new Language())->setShortcode('de'));
         $germanDe->setSentence('Deutsch');
         $germanDe->setUpdated(new DateTime('2020-09-00 00:00'));
 
@@ -217,7 +209,7 @@ class DatabaseLoaderTest extends TestCase
         $entityManagerStub = $this->createStub(EntityManager::class);
         $entityManagerStub
             ->method('getRepository')
-            ->willReturn( $repositoryStub)
+            ->willReturn($repositoryStub)
         ;
 
         $loader = new DatabaseLoader($entityManagerStub);
@@ -229,5 +221,80 @@ class DatabaseLoaderTest extends TestCase
 
         $translation = $result->get('german');
         $this->assertSame('German', $translation);
+    }
+
+
+    public function testCheckTranslationAllowed()
+    {
+        $englishEn = (new Word())
+            ->setCode('english')
+            ->setLanguage((new Language())->setShortcode('en'))
+            ->setSentence('English')
+            ->setTranslationAllowed(TranslationAllowedType::TRANSLATION_ALLOWED)
+            ->setMajorUpdate(new DateTime('2020-09-01 00:00'))
+        ;
+
+        $englishDe = (new Word())
+            ->setCode('english')
+            ->setLanguage((new Language())->setShortcode('de'))
+            ->setSentence('Englisch')
+            ->setTranslationAllowed(TranslationAllowedType::TRANSLATION_ALLOWED)
+            ->setUpdated(new DateTime('2020-09-01 00:01'));
+
+        // Create a stub for the Word repository class.
+        $repositoryStub = $this->createStub(WordRepository::class);
+        $repositoryStub
+            ->method('getTranslationsForLocale')
+            ->will($this->onConsecutiveCalls([$englishEn], [$englishDe]));
+
+        $entityManagerStub = $this->createStub(EntityManager::class);
+        $entityManagerStub
+            ->method('getRepository')
+            ->willReturn($repositoryStub)
+        ;
+
+        $loader = new DatabaseLoader($entityManagerStub);
+
+        $result = $loader->load(null, 'de');
+        $translation = $result->get('english');
+
+        $this->assertSame('Englisch', $translation);
+    }
+
+    public function testCheckTranslationNotAllowed()
+    {
+        $englishEn = (new Word())
+            ->setCode('english')
+            ->setLanguage((new Language())->setShortcode('en'))
+            ->setSentence('English')
+            ->setTranslationAllowed(TranslationAllowedType::TRANSLATION_NOT_ALLOWED)
+            ->setMajorUpdate(new DateTime('2020-09-01 00:00'))
+        ;
+
+        $englishDe = (new Word())
+            ->setCode('english')
+            ->setLanguage((new Language())->setShortcode('de'))
+            ->setSentence('Englisch')
+            ->setTranslationAllowed(TranslationAllowedType::TRANSLATION_ALLOWED)
+            ->setUpdated(new DateTime('2020-09-01 00:01'));
+
+        // Create a stub for the Word repository class.
+        $repositoryStub = $this->createStub(WordRepository::class);
+        $repositoryStub
+            ->method('getTranslationsForLocale')
+            ->will($this->onConsecutiveCalls([$englishEn], [$englishDe]));
+
+        $entityManagerStub = $this->createStub(EntityManager::class);
+        $entityManagerStub
+            ->method('getRepository')
+            ->willReturn($repositoryStub)
+        ;
+
+        $loader = new DatabaseLoader($entityManagerStub);
+
+        $result = $loader->load(null, 'de');
+        $translation = $result->get('english');
+
+        $this->assertSame('English', $translation);
     }
 }

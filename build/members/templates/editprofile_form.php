@@ -88,4 +88,3 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
          ?>
     </div>
 </div>
-

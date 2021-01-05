@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{ 'wiki' | trans }}
+{% endblock %}
+
+{% block content %}
+
+    <h5><a href="{{ path('wiki_front_page') }}">Wiki</a></h5>
+    <h1>{{ 'wiki.recent' | trans | title }}</h1>
+
+    {% if pager.haveToPaginate %}
+        <div class="row">
+            <div class="col-12">
+                {{ pagerfanta( pager, 'rox_default') }}
+            </div>
+        </div>
+    {% endif %}
+
+    <div class="row">
+        <div class="col-12">
+        {% for recent in pager.currentPageResults %}
+            <p>
+                <a href="{{ path('wiki_page', { 'pageTitle': recent.pagename, 'version': recent.version }) }}">{{ recent.pagename }}</a>:
+                {{ 'version'| trans| capitalize }}: {{ recent.version }} - {{ 'wiki.page.created.by.on'|trans({
+                        'by': '<a href="' ~ path('members_profile', { 'username': recent.author}) ~ '">' ~ recent.author ~ '</a>',
+                        'on': recent.created|date('U')|format_datetime('short', 'short')
+                    })|raw
+                }}
+            </p>
+        {% endfor %}
+        </div>
+    </div>
+
+    {% if pager.haveToPaginate %}
+        <div class="row">
+            <div class="col-12">
+                {{ pagerfanta( pager, 'rox_default') }}
+            </div>
+        </div>
+    {% endif %}
+
+{% endblock content %}

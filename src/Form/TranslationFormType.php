@@ -56,7 +56,7 @@ class TranslationFormType extends AbstractType
                     ])
                 ;
             }
-            if (null === $translationRequest->domain) {
+            if (null === $translationRequest->domain || 'en' === $translationRequest->locale) {
                 $form
                     ->add('domain', ChoiceType::class, [
                         'label' => 'translation.domain',

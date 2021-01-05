@@ -4,10 +4,10 @@ namespace App\Entity;
 
 use Carbon\Carbon;
 use DateTime;
-use Doctrine\Common\Persistence\ObjectManagerAware;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Persistence\Mapping\ClassMetadata;
 use Doctrine\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManagerAware;
 
 /**
  * PollChoice.

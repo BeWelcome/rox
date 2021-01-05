@@ -1,11 +1,11 @@
 App\Entity\Country:
     Germany:
         name: 'Germany'
-        geonameid: 2921044
+        geonameId: 2921044
         continent: 'EU'
         country: 'DE'
     Indonesia:
         name: 'Indonesia'
-        geonameid: 1643084
+        geonameId: 1643084
         continent: 'EA'
         country: 'ID'

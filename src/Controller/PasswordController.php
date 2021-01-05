@@ -23,8 +23,8 @@ use Symfony\Component\Routing\Annotation\Route;
 class PasswordController extends AbstractController
 {
     use ManagerTrait;
-    use TranslatorTrait;
     use TranslatedFlashTrait;
+    use TranslatorTrait;
 
     /**
      * @Route("/resetpassword", name="member_request_reset_password")

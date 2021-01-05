@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * AlternateLocation.
  *
- * @ORM\Table(name="geonamesalternatenames", indexes={@ORM\Index(name="idx_alternatename", columns={"alternatename"}), @ORM\Index(name="idx_isoLanguage", columns={"isolanguage"}), @ORM\Index(name="idx_ispreferred", columns={"ispreferred"}), @ORM\Index(name="idx_isshort", columns={"isshort"}), @ORM\Index(name="idx_iscolloquial", columns={"iscolloquial"}), @ORM\Index(name="idx_ishistoric", columns={"ishistoric"}), @ORM\Index(name="idx_geonameid", columns={"geonameid"})})
+ * @ORM\Table(name="geonamesalternatenames", indexes={@ORM\Index(name="idx_alternatename", columns={"alternatename"}), @ORM\Index(name="idx_isoLanguage", columns={"isolanguage"}), @ORM\Index(name="idx_ispreferred", columns={"ispreferred"}), @ORM\Index(name="idx_isshort", columns={"isshort"}), @ORM\Index(name="idx_iscolloquial", columns={"iscolloquial"}), @ORM\Index(name="idx_ishistoric", columns={"ishistoric"}), @ORM\Index(name="idx_geonameid", columns={"geonameId"})})
  * @ORM\Entity
  *
  * @SuppressWarnings(PHPMD)
@@ -69,17 +69,15 @@ class AlternateLocation
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $alternatenameid;
+    private $alternatenameId;
 
     /**
      * @var Location
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\Location")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="geonameid", referencedColumnName="geonameid")
-     * })
+     * @ORM\JoinColumn(name="geonameId", referencedColumnName="geonameId")
      */
-    private $geonameid;
+    private $geonameId;
 
     /**
      * Set isolanguage.
@@ -230,32 +228,32 @@ class AlternateLocation
      *
      * @return int
      */
-    public function getAlternatenameid()
+    public function getAlternatenameId()
     {
-        return $this->alternatenameid;
+        return $this->alternatenameId;
     }
 
     /**
-     * Set geonameid.
+     * Set geonameId.
      *
-     * @param Location $geonameid
+     * @param Location $geonameId
      *
      * @return AlternateLocation
      */
-    public function setGeonameid(Location $geonameid = null)
+    public function setGeonameId(Location $geonameId = null)
     {
-        $this->geonameid = $geonameid;
+        $this->geonameId = $geonameId;
 
         return $this;
     }
 
     /**
-     * Get geonameid.
+     * Get geonameId.
      *
      * @return Location
      */
-    public function getGeonameid()
+    public function getGeonameId()
     {
-        return $this->geonameid;
+        return $this->geonameId;
     }
 }

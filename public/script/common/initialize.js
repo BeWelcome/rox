@@ -1,11 +1,8 @@
 $(document).ready(function(){
-    jQuery(".select2").select2({
-        theme: 'bootstrap',
-        containerCssClass: 'form-control'
-    });
-    jQuery(".select2-sm").select2({
-        theme: 'bootstrap',
-        containerCssClass: 'form-control-sm'
+    $(".select2").select2({
+        theme: 'bootstrap4',
+        width: 'auto',
+        dropdownAutoWidth: true
     });
 }); // close out script
 

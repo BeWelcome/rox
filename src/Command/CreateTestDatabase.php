@@ -169,7 +169,7 @@ class CreateTestDatabase extends Command
 
         // Now set id for English to 0 as the old code expects that
         $connection = $this->entityManager->getConnection();
-        $connection->executeUpdate("
+        $connection->executeStatement("
             SET FOREIGN_KEY_CHECKS=0;
             UPDATE languages SET id = 0 WHERE ShortCode = 'en';
             UPDATE words SET IdLanguage = 0 WHERE ShortCode = 'en';

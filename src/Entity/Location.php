@@ -9,6 +9,7 @@ namespace App\Entity;
 
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * Location.
@@ -25,6 +26,8 @@ class Location
      * @var string
      *
      * @ORM\Column(name="name", type="string", length=200, nullable=true)
+     *
+     * @Groups({"Member:Read"})
      */
     private $name;
 
@@ -32,6 +35,8 @@ class Location
      * @var float
      *
      * @ORM\Column(name="latitude", type="decimal", precision=10, scale=7, nullable=true)
+     *
+     * @Groups({"Member:Read"})
      */
     private $latitude;
 
@@ -39,6 +44,8 @@ class Location
      * @var float
      *
      * @ORM\Column(name="longitude", type="decimal", precision=10, scale=7, nullable=true)
+     *
+     * @Groups({"Member:Read"})
      */
     private $longitude;
 
@@ -61,6 +68,8 @@ class Location
      *
      * @ORM\ManyToOne(targetEntity="Country")
      * @ORM\JoinColumn(name="country", referencedColumnName="country")
+     *
+     * @Groups({"Member:Read"})
      */
     private $country;
 
@@ -88,11 +97,13 @@ class Location
     /**
      * @var int
      *
-     * @ORM\Column(name="geonameid", type="integer")
+     * @ORM\Column(name="geonameId", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     *
+     * @Groups({"Member:Read"})
      */
-    private $geonameid;
+    private $geonameId;
 
     /**
      * Set name.
@@ -311,25 +322,25 @@ class Location
     }
 
     /**
-     * Get geonameid.
+     * Get geonameId.
      *
      * @return int
      */
-    public function getGeonameid()
+    public function getGeonameId()
     {
-        return $this->geonameid;
+        return $this->geonameId;
     }
 
     /**
-     * Set geonameid.
+     * Set geonameId.
      *
-     * @param int $geonameid
+     * @param int $geonameId
      *
      * @return Location
      */
-    public function setGeonameId($geonameid)
+    public function setGeonameId($geonameId)
     {
-        $this->geonameid = $geonameid;
+        $this->geonameId = $geonameId;
 
         return $this;
     }

@@ -98,7 +98,7 @@ foreach($comments as $comment) {
 //            echo $c->UsernameFromMember;
     if ($showfrom || $editfrom) {
         $quality = strtolower($c->comQuality);
-        $tt = explode(',', $c->relations); ?>
+        $tt = explode(',', $c->Relations); ?>
 
         <div class="col-12 col-sm-6 card comment-bg-<?=$quality?> mb-3">
             <div>
@@ -144,7 +144,7 @@ foreach($comments as $comment) {
                         <?php
                         for ($jj = 0; $jj < count($tt); $jj++) {
                             // if ($tt[$jj]=="") continue; // Skip blank category comment : todo fix find the reason and fix this anomaly
-                            echo '<p class="small font-italic p-0 mb-1">', $words->get("Comment_" . $tt[$jj]), "</p>\n";
+                            echo '<p class="small font-italic p-0 mb-1">', $words->get("comment_" . $tt[$jj]), "</p>\n";
                         }
                         ?>
 
@@ -172,7 +172,7 @@ foreach($comments as $comment) {
      if ($showto || $editto){
          $cc = $comment['to'];
          $quality = strtolower($cc->comQuality);
-         $tt = explode(',', $cc->relations); ?>
+         $tt = explode(',', $cc->Relations); ?>
         <div class="col-12 col-sm-6 card comment-bg-<?=$quality?> mb-3">
 
             <div>

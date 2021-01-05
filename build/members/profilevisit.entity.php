@@ -96,10 +96,21 @@ class ProfileVisit extends RoxEntityBase
         }
         $return = array();
         if ($result = $this->dao->query(<<<SQL
-SELECT m.*, p.updated FROM members AS m, {$this->getTableName()} AS p WHERE m.id = p.IdVisitor AND p.IdMember = {$member->getPKValue()} AND m.Status NOT IN ('Banned', 'TakenOut', 'Rejected','ActiveHidden', 'Buggy') ORDER BY p.updated DESC LIMIT {$pager->getActiveStart()}, {$pager->getActiveLength()}
+            SELECT 
+                m.*, 
+                p.updated 
+            FROM 
+                members AS m,
+                {$this->getTableName()} AS p 
+            WHERE 
+                m.id = p.IdVisitor 
+                AND p.IdMember = {$member->getPKValue()} 
+                AND m.Status NOT IN ('Banned', 'TakenOut', 'Rejected','ActiveHidden', 'Buggy') 
+            ORDER BY 
+                p.updated DESC 
+            LIMIT {$pager->getActiveStart()}, {$pager->getActiveLength()}
 SQL
-))
-        {
+        )) {
             while ($row = $result->fetch(PDB::FETCH_ASSOC))
             {
                 $m = $this->createEntity('Member')->loadFromArray($row);
@@ -124,6 +135,15 @@ SQL
         {
             return 0;
         }
-        return $this->sqlCount("SELECT COUNT(m.id) FROM members AS m, {$this->getTableName()} AS p WHERE p.IdMember = {$member->getPKValue()} AND p.IdVisitor = m.id");
+        return $this->sqlCount("
+            SELECT 
+                COUNT(m.id) 
+            FROM 
+                members AS m, 
+                {$this->getTableName()} AS p 
+            WHERE 
+                p.IdMember = {$member->getPKValue()} 
+                AND p.IdVisitor = m.id
+        ");
     }
 }

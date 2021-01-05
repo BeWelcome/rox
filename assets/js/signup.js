@@ -2,9 +2,9 @@ $(function () {
     $('[data-toggle="popover"]').popover({ html : true });
 
     $("#mothertongue").select2({
-        theme: 'bootstrap',
-        containerCssClass: 'form-control',
+        theme: 'bootstrap4',
         placeholder: 'Select a language',
-        allowClear: true
+        allowClear: true,
+        width: 'auto'
     });
 });

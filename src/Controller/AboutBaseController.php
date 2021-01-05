@@ -6,10 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class AboutBaseController extends AbstractController
 {
-    /**
-     * @return array
-     */
-    protected function getSubMenuItems()
+    protected function getSubMenuItems(string $locale): array
     {
         return [
             'about' => [
@@ -58,11 +55,15 @@ class AboutBaseController extends AbstractController
             ],
             'about_terms' => [
                 'key' => 'TermsPage',
-                'url' => $this->generateUrl('terms_of_use'),
+                'url' => $this->generateUrl('terms_of_use', [
+                    'locale' => $locale,
+                ]),
             ],
             'about_privacy' => [
                 'key' => 'PrivacyPage',
-                'url' => $this->generateUrl('privacy_policy'),
+                'url' => $this->generateUrl('privacy_policy', [
+                    'locale' => $locale,
+                ]),
             ],
             'about_commentguidelines' => [
                 'key' => 'CommentGuidelinesPage',

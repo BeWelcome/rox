@@ -108,52 +108,18 @@
                 </div>
             <?php } ?>
 
-            <div class="form-row align-items-center mt-2 mb-0">
-                <label for="SignupBirthDate"
+            <div class="form-row">
+                <label for="birth-date"
                        class="col-md-3 col-form-label pb-0"><?= $words->get('SignupBirthDate') ?></label>
-                <div
-                    class="col-12 col-md-7 offset-md-3 small text-muted order-1 order-md-12"><?= $words->get('EmailIsAlwayHidden') ?></div>
-                <div class="col-auto order-2">
-                    <select id="BirthYear" name="BirthYear" class="form-control select2">
-                        <option value="0"><?php echo $words->getSilent('SignupBirthYear'); ?></option>
-                        <?php echo $birthYearOptions; ?>
-                    </select>
+                <div class="col-8 col-md-7">
+                    <input type="text"
+                               id="birth-date"
+                               name="birth-date"
+                               class="form-control datetimepicker-input"
+                               data-toggle="datetimepicker"
+                               data-target="#birth-date" value="<?= $vars['BirthDate'] ?>" >
                 </div>
-                <div class="col-auto order-3">
-                    <select name="BirthMonth" class="form-control select2">
-                        <option value="0"><?php echo $words->getSilent('SignupBirthMonth'); ?></option>
-                        <?php for ($i = 1; $i <= 12; $i++) { ?>
-                            <option value="<?php echo $i; ?>"<?php
-                            if (isset($vars['BirthMonth']) && $vars['BirthMonth'] == $i) {
-                                echo ' selected="selected"';
-                            }
-                            ?>><?php echo $i; ?></option>
-                        <?php } ?>
-                    </select>
-                </div>
-                <div class="col-auto order-4">
-                    <select name="BirthDay" class="form-control select2">
-                        <option value="0"><?php echo $words->getSilent('SignupBirthDay'); ?></option>
-                        <?php for ($i = 1; $i <= 31; $i++) { ?>
-                            <option value="<?php echo $i; ?>"<?php
-                            if (isset($vars['BirthDay']) && $vars['BirthDay'] == $i) {
-                                echo ' selected="selected"';
-                            }
-                            ?>><?php echo $i; ?></option>
-                        <?php } ?>
-                    </select>
-                </div>
-
-                <?php echo $words->flushBuffer(); ?>
-                <?php
-                if (in_array('SignupErrorBirthDate', $vars['errors'])) {
-                    echo '<div class="alert alert-danger">' . $words->get('SignupErrorBirthDate') . '</div>';
-                }
-                if (in_array('SignupErrorBirthDateToLow', $vars['errors'])) {
-                    echo '<div class="alert alert-danger">' . $words->getFormatted('SignupErrorBirthDateToLow', SignupModel::YOUNGEST_MEMBER) . '</div>';
-                }
-                ?>
-
+                <div class="col-12 col-md-7 offset-md-3 small text-muted"><?= $words->get('EmailIsAlwayHidden') ?></div>
             </div>
             <div class="form-row">
                 <div class="col-12 col-md-3">
@@ -234,3 +200,14 @@
         </div>
     </div>
 </div>
+<script>
+    $(function () {
+        let maxDate = moment().subtract(18, "years");
+        $("#birth-date").datetimepicker({
+            format: 'YYYY-MM-DD',
+            maxDate: maxDate,
+            viewMode: 'years',
+            keepInvalid: true
+        });
+    });
+</script>

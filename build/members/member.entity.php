@@ -162,49 +162,6 @@ class Member extends RoxEntityBase
     }
 
     /**
-     * Get all languages where
-     */
-    private function get_all_languages_where($where) {
-        $AllLanguages = array();
-        $str = "
-            SELECT SQL_CACHE
-                l.Name AS Name,
-                l.ShortCode AS ShortCode,
-                l.WordCode AS WordCode,
-                l.id AS id
-            FROM
-                languages AS l ";
-        $str .= $where;
-        $s = $this->dao->query($str);
-        while ($rr = $s->fetch(PDB::FETCH_OBJ)) {
-            //if (isset($rr->Level)) $rr->Level = ("LanguageLevel_".$rr->Level);
-            array_push($AllLanguages, $rr);
-        }
-        return $AllLanguages;
-    }
-
-    /**
-     * Get all available spoken languages
-     */
-    public function get_all_spoken_languages() {
-        return $this->get_all_languages_where ("WHERE (l.IsSignLanguage = 0)");
-    }
-
-    /**
-     * Get all available sign languages
-     */
-    public function get_all_signed_languages() {
-        return $this->get_all_languages_where ("WHERE (l.IsSignLanguage = 1)");
-    }
-
-    /**
-     * Get all translatable languages
-     */
-    public function get_all_translatable_languages() {
-        return $this->get_all_languages_where ("WHERE (l.IsWrittenLanguage = 1)");
-    }
-
-    /**
      * Get language code from preferences.
      * @return string language ShortCode (2 to 5 letters), 'en' if no preference was found.
      */
@@ -2031,4 +1988,28 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
         }
         return true;
     }
+
+    /**
+     * Get all translatable languages
+     */
+    public function get_all_translatable_languages() {
+        $AllLanguages = array();
+        $str = "
+            SELECT SQL_CACHE
+                l.Name AS Name,
+                l.ShortCode AS ShortCode,
+                l.WordCode AS WordCode,
+                l.id AS id
+            FROM
+                languages AS l 
+            WHERE (l.IsWrittenLanguage = 1)
+        ";
+        $s = $this->dao->query($str);
+        while ($rr = $s->fetch(PDB::FETCH_OBJ)) {
+            //if (isset($rr->Level)) $rr->Level = ("LanguageLevel_".$rr->Level);
+            array_push($AllLanguages, $rr);
+        }
+        return $AllLanguages;
+    }
+
 }

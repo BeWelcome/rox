@@ -11,6 +11,7 @@ use Carbon\Carbon;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Trip.
@@ -28,51 +29,51 @@ class Trip
     /**
      * @var string
      *
-     * @ORM\Column(name="summary", type="string", length=150, nullable=true)
+     * @ORM\Column(name="summary", type="string", length=150, nullable=false)
      */
     private $summary;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="description", type="string", length=4096, nullable=true)
+     * @ORM\Column(name="description", type="string", length=4096, nullable=false)
      */
     private $description;
 
     /**
      * @var int
      *
-     * @ORM\Column(name="countOfTravellers", type="integer", nullable=true)
+     * @ORM\Column(name="countOfTravellers", type="integer")
      */
-    private $countoftravellers;
+    private $countOfTravellers = 1;
 
     /**
      * @var Carbon
      *
-     * @ORM\Column(name="created_at", type="datetime", nullable=false)
+     * @ORM\Column(name="created", type="datetime")
      */
-    private $createdAt;
+    private $created;
 
     /**
      * @var Carbon
      *
-     * @ORM\Column(name="updated_at", type="datetime", nullable=true)
+     * @ORM\Column(name="updated", type="datetime", nullable=true)
      */
-    private $updatedAt;
+    private $updated;
 
     /**
      * @var Carbon
      *
-     * @ORM\Column(name="deleted_at", type="datetime", nullable=true)
+     * @ORM\Column(name="deleted", type="datetime", nullable=true)
      */
-    private $deletedAt;
+    private $deleted;
 
     /**
      * @var int
      *
      * @ORM\Column(name="additionalInfo", type="integer", nullable=true)
      */
-    private $additionalinfo;
+    private $additionalInfo;
 
     /**
      * @var int
@@ -85,10 +86,11 @@ class Trip
 
     /**
      * @var ArrayCollection
+     * @Assert\Count(min=1)
      *
      * @ORM\OneToMany(targetEntity="SubTrip", mappedBy="trip", cascade={"persist", "remove"})
      */
-    private $subtrips;
+    private $subTrips;
 
     /**
      * @var Member
@@ -96,240 +98,131 @@ class Trip
      * @ORM\ManyToOne(targetEntity="\App\Entity\Member")
      * @ORM\JoinColumn(name="created_by", referencedColumnName="id")
      */
-    private $createdBy;
+    private $creator;
 
     public function __construct()
     {
-        $this->subtrips = new ArrayCollection();
+        $this->subTrips = new ArrayCollection();
     }
 
-    /**
-     * Set summary.
-     *
-     * @param string $summary
-     *
-     * @return Trip
-     */
-    public function setSummary($summary)
+    public function setSummary(string $summary): self
     {
         $this->summary = $summary;
 
         return $this;
     }
 
-    /**
-     * Get summary.
-     *
-     * @return string
-     */
-    public function getSummary()
+    public function getSummary(): string
     {
         return $this->summary;
     }
 
-    /**
-     * Set description.
-     *
-     * @param string $description
-     *
-     * @return Trip
-     */
-    public function setDescription($description)
+    public function setDescription(string $description): self
     {
         $this->description = $description;
 
         return $this;
     }
 
-    /**
-     * Get description.
-     *
-     * @return string
-     */
-    public function getDescription()
+    public function getDescription(): string
     {
         return $this->description;
     }
 
-    /**
-     * Set countoftravellers.
-     *
-     * @param int $countoftravellers
-     *
-     * @return Trip
-     */
-    public function setCountoftravellers($countoftravellers)
+    public function setCountOfTravellers(int $countOfTravellers): self
     {
-        $this->countoftravellers = $countoftravellers;
+        $this->countOfTravellers = $countOfTravellers;
 
         return $this;
     }
 
-    /**
-     * Get countoftravellers.
-     *
-     * @return int
-     */
-    public function getCountoftravellers()
+    public function getCountOfTravellers(): int
     {
-        return $this->countoftravellers;
+        return $this->countOfTravellers;
     }
 
-    /**
-     * Set createdAt.
-     *
-     * @param \DateTime $createdAt
-     *
-     * @return Trip
-     */
-    public function setCreatedAt($createdAt)
+    public function setCreated(DateTime $created): self
     {
-        $this->createdAt = $createdAt;
+        $this->created = $created;
 
         return $this;
     }
 
-    /**
-     * Get createdAt.
-     *
-     * @return \DateTime
-     */
-    public function getCreatedAt()
+    public function getCreated(): Carbon
     {
-        return $this->createdAt;
+        return Carbon::instance($this->created);
     }
 
-    /**
-     * Set updatedAt.
-     *
-     * @param \DateTime $updatedAt
-     *
-     * @return Trip
-     */
-    public function setUpdatedAt($updatedAt)
+    public function setUpdated(DateTime $updated): self
     {
-        $this->updatedAt = $updatedAt;
+        $this->updated = $updated;
 
         return $this;
     }
 
-    /**
-     * Get updatedAt.
-     *
-     * @return \DateTime
-     */
-    public function getUpdatedAt()
+    public function getUpdated(): Carbon
     {
-        return $this->updatedAt;
+        return Carbon::instance($this->updated);
     }
 
-    /**
-     * Set deletedAt.
-     *
-     * @param \DateTime $deletedAt
-     *
-     * @return Trip
-     */
-    public function setDeletedAt($deletedAt)
+    public function setDeleted(DateTime $deleted): self
     {
-        $this->deletedAt = $deletedAt;
+        $this->deleted = $deleted;
 
         return $this;
     }
 
-    /**
-     * Get deletedAt.
-     *
-     * @return \DateTime
-     */
-    public function getDeletedAt()
+    public function getDeleted(): Carbon
     {
-        return $this->deletedAt;
+        return Carbon::instance($this->deleted);
     }
 
-    /**
-     * Set additionalinfo.
-     *
-     * @param int $additionalinfo
-     *
-     * @return Trip
-     */
-    public function setAdditionalinfo($additionalinfo)
+    public function setAdditionalInfo(int $additionalInfo): self
     {
-        $this->additionalinfo = $additionalinfo;
+        $this->additionalInfo = $additionalInfo;
 
         return $this;
     }
 
-    /**
-     * Get additionalinfo.
-     *
-     * @return int
-     */
-    public function getAdditionalinfo()
+    public function getAdditionalInfo(): int
     {
-        return $this->additionalinfo;
+        return $this->additionalInfo;
     }
 
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * Set createdBy.
-     *
-     * @param Member $createdBy
-     *
-     * @return Trip
-     */
-    public function setCreatedBy(Member $createdBy = null)
+    public function setCreator(Member $creator): self
     {
-        $this->createdBy = $createdBy;
+        $this->creator = $creator;
 
         return $this;
     }
 
-    /**
-     * Get createdBy.
-     *
-     * @return Member
-     */
-    public function getCreatedBy()
+    public function getCreator(): Member
     {
-        return $this->createdBy;
+        return $this->creator;
     }
 
-    public function getSubtrips()
+    public function getSubTrips()
     {
-        return $this->subtrips;
+        return $this->subTrips;
     }
 
-    /**
-     * Add subtrip.
-     *
-     * @return Trip
-     */
-    public function addSubtrip(SubTrip $subtrip)
+    public function addSubtrip(SubTrip $subtrip): self
     {
         $subtrip->setTrip($this);
 
-        $this->subtrips->add($subtrip);
+        $this->subTrips->add($subtrip);
 
         return $this;
     }
 
-    /**
-     * Remove subtrip.
-     */
-    public function removeSubtrip(SubTrip $subtrip)
+    public function removeSubtrip(SubTrip $subtrip): void
     {
-        $this->subtrips->remove($subtrip);
+        $this->subTrips->remove($subtrip);
     }
 
     /**
@@ -339,8 +232,7 @@ class Trip
      */
     public function onPrePersist()
     {
-        $this->createdAt = new DateTime('now');
-        $this->updatedAt = $this->created;
+        $this->created = new DateTime('now');
     }
 
     /**
@@ -350,6 +242,6 @@ class Trip
      */
     public function onPreUpdate()
     {
-        $this->updatedAt = new DateTime('now');
+        $this->updated = new DateTime('now');
     }
 }

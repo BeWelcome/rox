@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -13,11 +14,11 @@ class AboutController extends AboutBaseController
      *
      * @return Response
      */
-    public function showAbout()
+    public function showAbout(Request $request)
     {
         return $this->render('about/about.html.twig', [
             'submenu' => [
-                'items' => $this->getSubMenuItems(),
+                'items' => $this->getSubMenuItems($request->getLocale()),
                 'active' => 'about',
             ],
         ]);
@@ -28,11 +29,11 @@ class AboutController extends AboutBaseController
      *
      * @return Response
      */
-    public function showAboutThePeople()
+    public function showAboutThePeople(Request $request)
     {
         return $this->render('about/thepeople.html.twig', [
             'submenu' => [
-                'items' => $this->getSubMenuItems(),
+                'items' => $this->getSubMenuItems($request->getLocale()),
                 'active' => 'about_people',
             ],
         ]);
@@ -44,11 +45,11 @@ class AboutController extends AboutBaseController
      *
      * @return Response
      */
-    public function showAboutGetActive()
+    public function showAboutGetActive(Request $request)
     {
         return $this->render('about/getactive.html.twig', [
             'submenu' => [
-                'items' => $this->getSubMenuItems(),
+                'items' => $this->getSubMenuItems($request->getLocale()),
                 'active' => 'getactive',
             ],
         ]);
@@ -59,11 +60,11 @@ class AboutController extends AboutBaseController
      *
      * @return Response
      */
-    public function showAboutTheIdea()
+    public function showAboutTheIdea(Request $request)
     {
         return $this->render('about/about.html.twig', [
             'submenu' => [
-                'items' => $this->getSubMenuItems(),
+                'items' => $this->getSubMenuItems($request->getLocale()),
                 'active' => 'about_theidea',
             ],
         ]);
@@ -75,11 +76,11 @@ class AboutController extends AboutBaseController
      *
      * @return Response
      */
-    public function showAboutPressInfo()
+    public function showAboutPressInfo(Request $request)
     {
         return $this->render('about/pressinfo.html.twig', [
             'submenu' => [
-                'items' => $this->getSubMenuItems(),
+                'items' => $this->getSubMenuItems($request->getLocale()),
                 'active' => 'about_press',
             ],
         ]);
@@ -96,7 +97,7 @@ class AboutController extends AboutBaseController
     }
 
     /**
-     * @Route("bv", name="about_bv")
+     * @Route("/bv", name="about_bv")
      *
      * @return RedirectResponse
      */
@@ -110,11 +111,11 @@ class AboutController extends AboutBaseController
      *
      * @return Response
      */
-    public function showAboutCommentGuidelines()
+    public function showAboutCommentGuidelines(Request $request)
     {
         return $this->render('about/commentsguidelines.html.twig', [
             'submenu' => [
-                'items' => $this->getSubMenuItems(),
+                'items' => $this->getSubMenuItems($request->getLocale()),
                 'active' => 'about_commentguidelines',
             ],
         ]);
@@ -125,11 +126,11 @@ class AboutController extends AboutBaseController
      *
      * @return Response
      */
-    public function showAboutCredits()
+    public function showAboutCredits(Request $request)
     {
         return $this->render('about/credits.html.twig', [
             'submenu' => [
-                'items' => $this->getSubMenuItems(),
+                'items' => $this->getSubMenuItems($request->getLocale()),
                 'active' => 'about_credits',
             ],
         ]);
@@ -140,11 +141,11 @@ class AboutController extends AboutBaseController
      *
      * @return Response
      */
-    public function showImpressum()
+    public function showImpressum(Request $request)
     {
         return $this->render('about/impressum.html.twig', [
             'submenu' => [
-                'items' => $this->getSubMenuItems(),
+                'items' => $this->getSubMenuItems($request->getLocale()),
                 'active' => 'about',
             ],
         ]);

@@ -53,8 +53,8 @@ var LocationSuggest = {
  * called when an user clicks on a result in the suggestion list.
  *
  */
-function setLocation(geonameid, latitude, longitude, zoom, geonamename, countryname, countrycode, admincode) {
-    jQuery('#activity-location-id').val(geonameid);
+function setLocation(geonameId, latitude, longitude, zoom, geonamename, countryname, countrycode, admincode) {
+    jQuery('#activity-location-id').val(geonameId);
     jQuery('#activity-location').val(decodeURI(geonamename) + ", " + decodeURI(countryname));
     jQuery('#activity-location-suggestion').hide();
 }

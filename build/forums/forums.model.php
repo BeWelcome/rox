@@ -25,14 +25,14 @@ class Forums extends RoxModelBase {
 
     const CV_THREADS_PER_PAGE = 15;
     const CV_POSTS_PER_PAGE = 200;
-    const CV_TOPMODE_CATEGORY=1; // Says that the forum topmode is for categories
-    const CV_TOPMODE_LASTPOSTS=2; // Says that the forum topmode is for lastposts
-    const CV_TOPMODE_LANDING=3; // Says that we use the forums landing page for topmode
-    const CV_TOPMODE_FORUM=4; // Says that we use the forums main page for topmode
-    const CV_TOPMODE_GROUPS=5; // Says that we use the group forums overview page for topmode
+    const CV_TOPMODE_CATEGORY = 1; // Says that the forum topmode is for categories
+    const CV_TOPMODE_LASTPOSTS = 2; // Says that the forum topmode is for lastposts
+    const CV_TOPMODE_LANDING = 3; // Says that we use the forums landing page for topmode
+    const CV_TOPMODE_FORUM = 4; // Says that we use the forums main page for topmode
+    const CV_TOPMODE_GROUPS = 5; // Says that we use the group forums overview page for topmode
 
 
-    const NUMBER_LAST_POSTS_PREVIEW = 5; // Number of Posts shown as a help on the "reply" page
+    const NUMBER_LAST_POSTS_PREVIEW = 10; // Number of Posts shown as a help on the "reply" page
 
 	public $THREADS_PER_PAGE ; //Variable because it can change wether the user is logged or no
 	public $POSTS_PER_PAGE ; //Variable because it can change wether the user is logged or no
@@ -278,15 +278,15 @@ function FindAppropriatedLanguage($IdPost=0) {
 		$row = $result->fetch(PDB::FETCH_OBJ) ;
 		if (null === $row) {
 		    $query = "
-                INSERT INTO 
-                    memberspreferences (`created`, `updated`, `IdPreference`, `IdMember`, `Value`) 
+                INSERT INTO
+                    memberspreferences (`created`, `updated`, `IdPreference`, `IdMember`, `Value`)
                 VALUES (NOW(), `created`, " .$idPreference . ", " . $idMember . ", '" . $this->dao->escape($this->ForumOrderList) . "' )
             ";
 		}
 		else {
 		    $query = "
-		        UPDATE 
-		            memberspreferences 
+		        UPDATE
+		            memberspreferences
 		        SET Value='" . $this->dao->escape($this->ForumOrderList) . "' WHERE id= " . $row->id
             ;
 		}
@@ -1448,7 +1448,7 @@ WHERE `id` = '$this->threadid'
 
         $statement = $this->dao->prepare("
             INSERT INTO `forums_threads` (
-                `title`, `first_postid`, `last_postid`, 
+                `title`, `first_postid`, `last_postid`,
                 `IdFirstLanguageUsed`,`IdGroup`,`ThreadVisibility`)
             VALUES (?, ?, ?, ?, ?, ?)
         ");
@@ -1516,7 +1516,7 @@ WHERE `id` = '$this->threadid'
             FROM
                 `forums_threads`
             LEFT JOIN `groups` ON (`forums_threads`.`IdGroup` = `groups`.`id`)
-            WHERE 
+            WHERE
                 `forums_threads`.`id` = '$this->threadid'
                 AND ($this->PublicThreadVisibility)
                 AND ($this->ThreadGroupsRestriction)
@@ -1587,7 +1587,7 @@ WHERE `id` = '$this->threadid'
             LEFT JOIN
                 addresses AS a ON a.IdMember = members.id AND a.rank = 0
             LEFT JOIN
-                geonames ON a.IdCity = geonames.geonameid
+                geonames ON a.IdCity = geonames.geonameId
             LEFT JOIN
                 geonamescountries ON geonames.country = geonamescountries.country
             WHERE
@@ -1680,7 +1680,7 @@ SELECT
     `geonamescountries`.`name` as `country`,
     `IdGroup`
 FROM forums_posts, forums_threads, members, addresses
-LEFT JOIN `geonames` ON (addresses.IdCity = `geonames`.`geonameid`)
+LEFT JOIN `geonames` ON (addresses.IdCity = `geonames`.`geonameId`)
 LEFT JOIN `geonamescountries` ON (geonames.country = `geonamescountries`.`country`)
 WHERE `forums_posts`.`threadid` = '%d' AND `forums_posts`.`IdWriter` = `members`.`id`
 AND addresses.IdMember = members.id AND addresses.rank = 0
@@ -1986,8 +1986,8 @@ AND IdThread=%d
             return(false) ;
         }
         $key=MD5(rand(100000,900000)) ;
-        $query = "INSERT INTO 
-                members_threads_subscribed(IdThread,IdSubscriber,UnSubscribeKey,notificationsEnabled)  
+        $query = "INSERT INTO
+                members_threads_subscribed(IdThread,IdSubscriber,UnSubscribeKey,notificationsEnabled)
                 VALUES(".$IdThread.",".$this->session->get("IdMember").",'".$this->dao->escape($key)."', 1)" ;
         $s = $this->dao->query($query);
         if (!$s) {
@@ -2079,7 +2079,7 @@ AND IdThread=%d
     `forums_threads`.`IdTitle`,`forums_threads`.`IdGroup`,   `IdWriter`,   `members`.`Username` AS `OwnerUsername`, `groups`.`Name` AS `GroupName`,    `geonames`.`country`
 		FROM (forums_posts, members, forums_threads, addresses)
 LEFT JOIN `groups` ON (`forums_threads`.`IdGroup` = `groups`.`id`)
-LEFT JOIN `geonames` ON (addresses.IdCity = geonames.geonameid)
+LEFT JOIN `geonames` ON (addresses.IdCity = geonames.geonameId)
 WHERE `forums_posts`.`IdWriter` = %d AND `forums_posts`.`IdWriter` = `members`.`id`
 AND `forums_posts`.`threadid` = `forums_threads`.`id`
 AND addresses.IdMember = members.id AND addresses.rank = 0

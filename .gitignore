@@ -37,6 +37,8 @@ phploc.xml
 /public/main.js.map
 /public/service-worker.js
 /public/service-worker.js.map
+/swagger.json
+/build/logs/
 
 # deployer config
 /config/deployer.yml
@@ -50,18 +52,17 @@ phploc.xml
 /vendor/
 ###< symfony/framework-bundle ###
 
-###> friendsofphp/php-cs-fixer ###
-/.php_cs
-/.php_cs.cache
-###< friendsofphp/php-cs-fixer ###
 ###> symfony/phpunit-bridge ###
 .phpunit
 /phpunit.xml
+.phpunit.result.cache
 ###< symfony/phpunit-bridge ###
 
 ###> symfony/webpack-encore-bundle ###
 /node_modules/
 /public/build/
+/public/main.js*
+/public/service-worker.js*
 npm-debug.log
 yarn-error.log
 ###< symfony/webpack-encore-bundle ###
@@ -70,3 +71,12 @@ yarn-error.log
 /.phpcs-cache
 /phpcs.xml
 ###< squizlabs/php_codesniffer ###
+
+###> lexik/jwt-authentication-bundle ###
+/config/jwt/*.pem
+!/config/jwt/*-test.pem
+###< lexik/jwt-authentication-bundle ###
+
+###> friends-of-behat/symfony-extension ###
+/behat.yml
+###< friends-of-behat/symfony-extension ###

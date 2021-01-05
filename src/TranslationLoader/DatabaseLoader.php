@@ -2,10 +2,9 @@
 
 namespace App\TranslationLoader;
 
-use App\Controller\MessageController;
+use App\Doctrine\TranslationAllowedType;
 use App\Entity\Word;
-use Doctrine\ORM\EntityManager;
-use Exception;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Translation\Loader\LoaderInterface;
 use Symfony\Component\Translation\MessageCatalogue;
 
@@ -16,13 +15,13 @@ use Symfony\Component\Translation\MessageCatalogue;
  */
 class DatabaseLoader implements LoaderInterface
 {
-    /** @var EntityManager */
+    /** @var EntityManagerInterface */
     private $em;
 
     /** @var array MessageCatalogue */
     private $originals = [];
 
-    public function __construct(EntityManager $em)
+    public function __construct(EntityManagerInterface $em)
     {
         $this->em = $em;
     }
@@ -43,13 +42,10 @@ class DatabaseLoader implements LoaderInterface
 
     private function getTranslationsForLocale($locale, $domain)
     {
-        $repository = $this->em->getRepository(Word::class);
-        $translations = $repository->getTranslationsForLocale($locale, $domain);
-
-        return $translations;
+        return $this->em->getRepository(Word::class)->getTranslationsForLocale($locale, $domain);
     }
 
-    private function loadTranslationsForLocale($locale, $domain)
+    private function loadTranslationsForLocale($locale, $domain): MessageCatalogue
     {
         if (!isset($this->originals[$domain])) {
             $this->loadEnglishOriginals($domain);
@@ -65,11 +61,16 @@ class DatabaseLoader implements LoaderInterface
             foreach ($translations as $translation) {
                 $code = $translation->getCode();
                 if ($originals->has($code, $domain)) {
-                    $majorUpdate = $originals->getMetadata($code, $domain);
-                    if ($majorUpdate <= $translation->getUpdated()) {
-                        $catalogue->set($code, $translation->getSentence(), $domain);
+                    $majorUpdate = $originals->getMetadata($code, $domain)['majorUpdate'];
+                    if ($translation->getUpdated() < $majorUpdate) {
+                        $catalogue->set($code, $originals->get($code, $domain), $domain);
                     } else {
-                        $catalogue->set($code, $originals->get($code, $domain));
+                        $translationAllowed = TranslationAllowedType::TRANSLATION_ALLOWED === $originals->getMetadata($code, $domain)['translationAllowed'];
+                        if ($translationAllowed) {
+                            $catalogue->set($code, $translation->getSentence(), $domain);
+                        } else {
+                            $catalogue->set($code, $originals->get($code, $domain), $domain);
+                        }
                     }
                 }
             }
@@ -88,12 +89,16 @@ class DatabaseLoader implements LoaderInterface
         /** @var Word[] $translations */
         $translations = $this->getTranslationsForLocale('en', $domain);
 
-        if (null !== $translations ) {
+        if (null !== $translations) {
             foreach ($translations as $translation) {
                 $code = $translation->getCode();
                 $sentence = $translation->getSentence();
                 $catalogue->set($code, $sentence, $domain);
-                $catalogue->setMetadata($code, $translation->getMajorUpdate(), $domain);
+                $metaData = [
+                    'majorUpdate' => $translation->getMajorUpdate(),
+                    'translationAllowed' => $translation->getTranslationAllowed(),
+                ];
+                $catalogue->setMetadata($code, $metaData, $domain);
             }
         }
 

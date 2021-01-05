@@ -44,7 +44,7 @@ class AdminTreasurerModel extends RoxModelBase {
     public function getGeonameIdForCountryCode($countrycode) {
         $query = "
             SELECT
-                geonameid
+                geonameId
             FROM
                 geonames AS g
             WHERE
@@ -52,7 +52,7 @@ class AdminTreasurerModel extends RoxModelBase {
                 AND g.country = '" . $countrycode . "'";
         $cc = $this->singleLookup($query);
         if ($cc) {
-            return $cc->geonameid;
+            return $cc->geonameId;
         }
         return 0;
     }
@@ -64,7 +64,7 @@ class AdminTreasurerModel extends RoxModelBase {
             FROM
                 geonames AS g
             WHERE
-                g.geonameid = " . $geonameid;
+                g.geonameId = " . $geonameid;
         $cc = $this->singleLookup($query);
         if ($cc) {
             return $cc->fk_countrycode;

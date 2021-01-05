@@ -4,17 +4,6 @@
 {%- set hasCurrentLocaleRights = app.user.hasRightsForLocale(app.request.locale) -%}
 {% endif %}
 <footer>
-    {% set langsel -%}
-        <select id="language" name="language" class="col-auto small select2 combo"
-                onchange="window.location.href=this.value; return false">
-            {% for lang in locales %}
-                <option {% if lang == app.request.locale %}selected="selected"{% endif %}
-                        value="{{ path('language', { locale: lang }) }}">{{ language_name(lang) }}
-                    ({{ language_name_translated(lang, app.request.locale) }})
-                </option>
-            {% endfor %}
-        </select>
-    {%- endset %}
     <div id="footer_content" class="stickyfooter my-0 py-0">
         <div class="container my-1">
             <div class="row align-items-center row justify-content-end">
@@ -24,7 +13,15 @@
                             <label for="language" class="col-auto col-form-label">
                             {{ 'footer.site.language' | trans }}
                             </label>
-                            {{ langsel }}
+                            <select id="language" name="language" class="col-auto form-control-sm select2"
+                                onchange="window.location.href=this.value; return false">
+                                {% for lang in locales %}
+                                    <option {% if lang == app.request.locale %}selected="selected"{% endif %}
+                                            value="{{ path('language', { locale: lang }) }}">{{ language_name(lang) }}
+                                        ({{ language_name_translated(lang, app.request.locale) }})
+                                    </option>
+                                {% endfor %}
+                            </select>
                         </div>
                     </form>
                 </div>
@@ -32,20 +29,20 @@
                     <div class="form-group form-row float-md-right">
                             {% if is_granted('ROLE_ADMIN_WORDS') and hasCurrentLocaleRights %}
                                 <label for="translation_mode" class="col-auto col-form-label">
-                                    {{ 'translation.mode' | trans }}&nbsp;
+                                    {{ 'translation.mode' | trans }}
                                 </label>
-                                    <button type="button" class="col-auto btn btn-sm btn-light dropdown-toggle ml-md-2"
-                                        data-toggle="dropdown"
-                                        aria-haspopup="true" aria-expanded="false">
-                                    {% if app.session.get('translation_mode') == 'on' %}{{ 'on' | trans }}{% else %}{{ 'off' | trans }}{% endif %}
-                                    </button>
-                                <div class="dropdown-menu small">
-                                <a id="off" class="dropdown-item"
-                                   href="{{ url('translation_mode', {mode: 'off'}) }}">{{ 'off' | trans }}</a>
-                                <a id="on"
-                                   class="dropdown-item{% if app.session.get('translation_mode') == 'on' %} active{% endif %}"
-                                   href="{{ url('translation_mode', {mode: 'on'}) }}">{{ 'on' | trans }}</a>
-                                </div>
+                                <select id="translation_mode" name="translation_mode" class="form-control-sm select2"
+                                        data-minimum-results-for-search="-1"
+                                        onchange="window.location.href=this.value; return false">
+                                    <option {% if app.session.get('translation_mode') == 'on' %}selected="selected"{% endif %}
+                                            value="{{ url('translation_mode', {mode: 'on'}) }}">
+                                        {{ 'on' | trans }}
+                                    </option>
+                                    <option {% if app.session.get('translation_mode') != 'on' %}selected="selected"{% endif %}
+                                            value="{{ url('translation_mode', {mode: 'off'}) }}">
+                                        {{ 'off' | trans }}
+                                    </option>
+                                </select>
                             {% else %}
                                 {% if is_granted('ROLE_USER') %}
                                     <a class="btn btn-sm btn-outline-primary pull-right"
@@ -97,8 +94,6 @@
                             <span class="value">en</span>
                             <span class="label">Fallback Locale</span>
                         </div>
-
-
                     </div>
                 </div>
                 <div class="row">

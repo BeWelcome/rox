@@ -6,10 +6,30 @@
 
 {% block content %}
 
+    <h5><a href="{{ path('wiki_front_page') }}">Wiki</a></h5>
     <h1>{{ title | title }}</h1>
 
-    <div id="wiki">{{ wikipage | raw }}</div>
+    {% if wikipage %}
+        <div id="wiki">
+            {{ content | raw }}
+        </div>
 
-    <a class="btn btn-primary mb-3" href="{{ url('wiki_page_edit', { 'pageTitle': title}) }}">{{ 'wiki.page.edit' | trans }}</a>
+        <div class="row">
+            <div class="col-12 col-sm-6">
+                <a class="btn btn-primary mb-3" href="{{ url('wiki_page_edit', { 'pageTitle': title}) }}">{{ 'wiki.page.edit' | trans }}</a>
+            </div>
+            <div class="col-12 col-sm-6 text-right">{{ 'version'| trans| capitalize }}: {{ wikipage.version }} -
+                {{ 'wiki.page.created.by.on'|trans({'by': wikipage.author, 'on': wikipage.created|date('U')|format_datetime('short', 'short')}) }}
+            </div>
+        </div>
 
+        {{ pagerfanta( history, 'rox_default', { 'routeName': 'wiki_page', 'pageParameter': '[version]', 'routeParams': {'pageTitle': title} }) }}
+
+    {% else %}
+       <div class="row">
+           <div class="col-12">
+               {{ 'wiki.version.not.found'|trans }}
+           </div>
+       </div>
+    {% endif %}
 {% endblock content %}

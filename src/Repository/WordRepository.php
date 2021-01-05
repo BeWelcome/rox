@@ -2,7 +2,10 @@
 
 namespace App\Repository;
 
+use App\Doctrine\TranslationAllowedType;
+use App\Entity\Word;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
 
@@ -19,18 +22,15 @@ class WordRepository extends EntityRepository
         return $paginator;
     }
 
-    public function getTranslationIdCount($locale)
+    public function getTranslatableItemsCount($locale)
     {
-        $qb = $this->createQueryBuilder('t');
-        $q = $qb
+        $qb = $this
+            ->getTranslatableItemsForLocaleQuery($locale)
             ->select('count(t.id)')
-            ->where('(t.isArchived = 0 OR t.isArchived IS NULL)')
-            ->andWhere('t.doNotTranslate = :doNotTranslate')
-            ->andWhere('t.shortCode = :locale')
-            ->setParameter(':doNotTranslate', 'no')
-            ->setParameter(':locale', $locale)
-            ->getQuery()
         ;
+
+        $q = $qb->getQuery();
+
         $count = $q->getSingleScalarResult();
 
         return $count;
@@ -38,26 +38,102 @@ class WordRepository extends EntityRepository
 
     public function getTranslationsForLocale(string $locale, string $domain)
     {
-        $qb = $this->createQueryBuilder('t')
+        $translations = $this->createQueryBuilder('t')
             ->where('t.shortCode = :locale')
             ->where('(t.isArchived = 0 OR t.isArchived IS NULL)')
             ->andWhere('t.shortCode = :locale')
             ->andWhere('t.domain = :domain')
             ->setParameter(':locale', $locale)
             ->setParameter(':domain', $domain)
-        ;
-        if ('en' !== $locale) {
-            $qb
-                ->andWhere('t.doNotTranslate = :doNotTranslate')
-                ->setParameter(':doNotTranslate', 'no');
-        }
-        $q = $qb->getQuery();
-
-        $translations = $q->getResult();
+            ->getQuery()
+            ->getResult();
 
         return $translations;
     }
-    private function queryAll($locale, $code = '')
+
+    public function getTranslatableItemsForLocale(string $locale, string $domain)
+    {
+        $translatableItems =
+            $this
+                ->getTranslatableItemsForLocaleQuery($locale, $domain)
+                ->getQuery()
+                ->getResult()
+        ;
+
+        return $translatableItems;
+    }
+
+    public function getTranslationDetails(): array
+    {
+        $translationDetails = [];
+        // \todo: Check for existing locales in Filesystem (allows to enable languages only on certain installs)
+        $locales = explode(
+            ',',
+            'ar,bg,ca,cs,da,de,el,en,eo,es,eu,fa,fi,fr,hi,hr,hu,id,it,ja,lt,lv,nb,'
+            . 'nl,no,pl,pt,pt-BR,rm,ro,ru,sk,sl,sr,su,sw,tr,zh-Hans,zh-Hant'
+        );
+        foreach ($locales as $locale) {
+            $count = $this->getTranslatableItemsCount($locale);
+            $change = $this->getLatestChange($locale);
+            if (null === $change) {
+                $translator = null;
+                $date = null;
+            } else {
+                $translator = $change['translator'];
+                $date = $change['date'];
+            }
+            $translationDetails[$locale] = [
+                'count' => $count,
+                'translator' => $translator,
+                'date' => $date,
+            ];
+            uasort($translationDetails, function ($a, $b) {
+                if ($a['count'] === $b['count']) {
+                    return 0;
+                } elseif ($a['count'] > $b['count']) {
+                    return -1;
+                }
+
+                return 1;
+            });
+        }
+
+        return $translationDetails;
+    }
+
+    private function getLatestChange(string $locale): ?array
+    {
+        $qb = $this->createQueryBuilder('t')
+            ->where('t.shortCode = :locale')
+            ->where('(t.isArchived = 0 OR t.isArchived IS NULL)')
+            ->andWhere('t.translationAllowed = :translationAllowed')
+            ->andWhere('t.shortCode = :locale')
+            ->setParameter(':translationAllowed', TranslationAllowedType::TRANSLATION_ALLOWED)
+            ->setParameter(':locale', $locale)
+            ->orderBy('t.updated', 'DESC')
+            ->setMaxResults(1)
+        ;
+
+        /** @var Word $details */
+        $details = $qb
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+
+        $date = $details->getUpdated();
+        try {
+            $translator = $details->getAuthor();
+        } catch (\Exception $e) {
+            $translator = null;
+        }
+
+        return [
+            'translator' => $translator,
+            'date' => $date,
+        ];
+    }
+
+    private function queryAll($locale, $code = ''): QueryBuilder
     {
         $qb = $this->createQueryBuilder('t')
             ->where('t.shortCode = :locale')
@@ -68,6 +144,30 @@ class WordRepository extends EntityRepository
             $qb
                 ->andWhere('t.code LIKE :code')
                 ->setParameter(':code', '%' . $code . '%');
+        }
+
+        return $qb;
+    }
+
+    private function getTranslatableItemsForLocaleQuery(string $locale, ?string $domain = null): QueryBuilder
+    {
+        $qb = $this->createQueryBuilder('t')
+            ->where('t.shortCode = :locale')
+            ->where('(t.isArchived = 0 OR t.isArchived IS NULL)')
+            ->andWhere('t.shortCode = :locale')
+            ->setParameter(':locale', $locale)
+        ;
+        if (null !== $domain) {
+            $qb
+                ->andWhere('t.domain = :domain')
+                ->setParameter(':domain', $domain)
+            ;
+        }
+        if ('en' !== $locale) {
+            $qb
+                ->andWhere('t.translationAllowed = :translationAllowed')
+                ->setParameter(':translationAllowed', TranslationAllowedType::TRANSLATION_ALLOWED)
+            ;
         }
 
         return $qb;

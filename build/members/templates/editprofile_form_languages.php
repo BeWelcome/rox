@@ -27,12 +27,12 @@
                     <div class="col-10 col-md-4">
                         <input id="lang_<?= $ii ?>_id" type="hidden" name="memberslanguages[]"
                                value="<?= $vars['languages_selected'][$ii]->IdLanguage ?>">
-                        <input id="lang_<?= $ii ?>_name" type="text" disabled value="<?= $vars['languages_selected'][$ii]->Name ?>"
+                        <input id="lang_<?= $ii ?>_name" type="text" disabled value="<?= $words->getSilent('Lang_' . $vars['languages_selected'][$ii]->ShortCode) ?>"
                                title="<?= $words->getSilent('Lang_' . $vars['languages_selected'][$ii]->ShortCode) ?>" class="form-control">
 
                     </div>
                     <div class="col-10 offset-2 col-md-7 offset-md-0">
-                        <select class="mll form-control" name="memberslanguageslevel[]">
+                        <select id="mll_<?= $ii ?>" class="mll select2 form-control" data-minimum-results-for-search="-1" name="memberslanguageslevel[]">
                             <?php
                             for ($jj = 0; $jj < count($vars['language_levels']); $jj++) {
                                 $selected = $vars['language_levels'][$jj] == $vars['languages_selected'][$ii]->Level ? ' selected="selected"' : '';
@@ -41,10 +41,10 @@
                             <?php } ?>
 
                         </select>
-                        <?= $words->flushBuffer() ?>
                     </div>
                 </div>
             <?php } ?>
+            <!-- Language selection template -->
             <div class="row langsel mt-2 d-none">
                 <div class="col-2 col-md-1">
                     <button class="btn btn-outline-danger p-1 px-2 remove_lang invisible"><i
@@ -52,7 +52,7 @@
                             class="sr-only"><?= $words->get('RemoveLanguage') ?></span></button>
                 </div>
                 <div class="col-10 col-md-4">
-                    <select class='lang_selector form-control' name="memberslanguages[]">
+                    <select class='lang_selector select2 form-control' name="memberslanguages[]">
                         <option selected="selected">-<?= $words->get("ChooseNewLanguage") ?>-</option>
                         <optgroup label="<?= $words->getSilent('SpokenLanguages') ?>">
                             <?php
@@ -83,11 +83,13 @@
                     </select>
                 </div>
                 <div class="col-10 offset-2 col-md-7 offset-md-0">
-                    <select class="mll form-control" name="memberslanguageslevel[]">
+                    <select class="mll select2 form-control" data-minimum-results-for-search="-1" name="memberslanguageslevel[]">
                         <?php
                         for ($jj = 0; $jj < count($vars['language_levels']); $jj++) {
                             ?>
-                            <option value="<?= $vars['language_levels'][$jj] ?>"><?= $words->get("LanguageLevel_" . $vars['language_levels'][$jj]) ?></option>
+                            <option value="<?= $vars['language_levels'][$jj] ?>"
+                                <?php if ($vars['language_levels'][$jj] == 'Beginner') { ?>selected="selected"<?php } ?>
+                            ><?= $words->get("LanguageLevel_" . $vars['language_levels'][$jj]) ?></option>
                             <?php
                         }
                         ?>
@@ -109,3 +111,52 @@
         </div>
     </div>
 </div>
+<script type="text/javascript">
+    function initLanguageSelect2s()
+    {
+        $(".mll,.lang_selector").each(function (i, obj) {
+            if (!$(obj).hasClass("select2-hidden-accessible"))
+            {
+                $(obj).select2({
+                    theme: 'bootstrap4',
+                    width: 'auto'
+                });
+            }
+        });
+    }
+
+    function destroyLanguageSelect2s()
+    {
+        $(".mll,.lang_selector").each(function (i, obj) {
+            if ($(obj).hasClass("select2-hidden-accessible"))
+            {
+                $(obj).select2('destroy');
+                $(obj).removeAttr('data-select2-id');
+            }
+        });
+    }
+
+    function insertNewTemplate(e){
+        e.preventDefault();
+        destroyLanguageSelect2s();
+        $("div.langsel:first").clone(true, true).insertAfter("div.langsel:last");
+        $("div.langsel:last").removeClass('d-none');
+        initLanguageSelect2s();
+    }
+
+    function removeLang(e)
+    {
+        e.preventDefault();
+        let id = e.target.id;
+        let languageId = $("#" + id + "_id").val();
+        let languageName = $("#" + id + "_name").val();
+        $('.lang_selector').append($('<option>', {value: languageId, text: languageName}));
+        let row = "#" + id + "_row";
+        $(row).remove();
+    }
+
+    $('#langbutton').click( insertNewTemplate );
+    $('button.remove_lang').click( removeLang );
+    destroyLanguageSelect2s();
+    initLanguageSelect2s();
+</script>

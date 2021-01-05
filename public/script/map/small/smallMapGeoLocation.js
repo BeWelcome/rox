@@ -56,11 +56,11 @@ function removeHighlight() {
  * called when an user click on a result of the list, to update the marker.
  *
  */
-function setMap(geonameid, latitude, longitude, zoom, geonamename, countryname, countrycode, admincode) {
-    setGeonameIdInForm(geonameid, latitude, longitude, geonamename, countryname, countrycode, admincode);
+function setMap(geonameId, latitude, longitude, zoom, geonamename, countryname, countrycode, admincode) {
+    setGeonameIdInForm(geonameId, latitude, longitude, geonamename, countryname, countrycode, admincode);
     changeMarker(latitude, longitude, zoom, decodeURIComponent(geonamename) + ', ' + decodeURIComponent(countryname));
     removeHighlight();
-    Element.setStyle($('li_'+geonameid), {
+    Element.setStyle($('li_'+geonameId), {
         fontWeight: 'bold',
         backgroundColor: '#ffffff',
         backgroundImage: 'url(images/icons/tick.png)'
@@ -76,8 +76,8 @@ function changeMarker(markerLatitude, markerLongitude, zoomLevel, markerDescript
   }
 }
 
-function setGeonameIdInForm(geonameid, latitude, longitude, geonamename, countryname, countrycode, admincode) {
-    $('geonameid').value = geonameid;
+function setGeonameIdInForm(geonameId, latitude, longitude, geonamename, countryname, countrycode, admincode) {
+    $('geonameId').value = geonameId;
     $('latitude').value = latitude;
     $('longitude').value = longitude;
     $('geonamename').value = geonamename;

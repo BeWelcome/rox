@@ -17,6 +17,8 @@ class Preference
     public const SHOW_MAP = 'PreferenceShowMap';
     public const SHOW_SEARCH_OPTIONS = 'PreferenceShowSearchOptions';
     public const SHOW_ONLINE_ACTIVITIES = 'PreferenceOnlineActivities';
+    public const NEWSLETTERS_VIA_EMAIL = 'PreferenceAcceptNewsByMail';
+    public const LOCAL_EVENT_NOTIFICATIONS = 'PreferenceLocalEvent';
     public const LOCALE = 'PreferenceLanguage';
     public const HTML_MAILS = 'PreferenceHtmlMails';
     public const NUMBER_FORUM_POSTS = 'ForumThreadsOnLandingPage';

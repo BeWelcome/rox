@@ -8,6 +8,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * Country.
@@ -24,13 +25,17 @@ class Country
      * @var int
      *
      * @ORM\Column(name="geonameId", type="integer", nullable=true)
+     *
+     * @Groups({"Member:Read"})
      */
-    private $geonameid;
+    private $geonameId;
 
     /**
      * @var string
      *
      * @ORM\Column(name="name", type="string", length=200, nullable=true)
+     *
+     * @Groups({"Member:Read"})
      */
     private $name;
 
@@ -38,6 +43,8 @@ class Country
      * @var string
      *
      * @ORM\Column(name="continent", type="string", length=2, nullable=true)
+     *
+     * @Groups({"Member:Read"})
      */
     private $continent;
 
@@ -50,27 +57,27 @@ class Country
     private $country;
 
     /**
-     * Set geonameid.
+     * Set geonameId.
      *
-     * @param int $geonameid
+     * @param int $geonameId
      *
      * @return Country
      */
-    public function setGeonameid($geonameid)
+    public function setGeonameId($geonameId)
     {
-        $this->geonameid = $geonameid;
+        $this->geonameId = $geonameId;
 
         return $this;
     }
 
     /**
-     * Get geonameid.
+     * Get geonameId.
      *
      * @return int
      */
-    public function getGeonameid()
+    public function getGeonameId()
     {
-        return $this->geonameid;
+        return $this->geonameId;
     }
 
     /**

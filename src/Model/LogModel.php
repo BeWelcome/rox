@@ -59,7 +59,7 @@ class LogModel
             'comments',
             'contactmember',
             'cron_task',
-            'DataRetention',
+            'Data Retention',
             'Debug',
             'delrelation',
             'donation',

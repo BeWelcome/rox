@@ -31,8 +31,8 @@ use Symfony\WebpackEncoreBundle\Asset\EntrypointLookupInterface;
 class MemberController extends AbstractController
 {
     use ManagerTrait;
-    use TranslatorTrait;
     use TranslatedFlashTrait;
+    use TranslatorTrait;
 
     /**
      * @Route("/mydata", name="member_personal_data")

@@ -14,7 +14,7 @@
     $flaglist = new FlaglistModel();
     $languages = $flaglist->getLanguages();
     foreach($languages as &$language) {
-        $language->TranslatedName = $words->getSilent($language->WordCode);
+        $language->TranslatedName = $words->getSilent($language->wordcode);
     }
     usort($languages, "cmpPrefLang");
     $p = $this->member->preferences;

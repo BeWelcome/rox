@@ -47,7 +47,7 @@ $words = new MOD_words();
 		echo "<table align=\"left\"><tr><th>id</th><th>name</th><th>bw geo Type</th><th>Class</th><th>admincode</th><th>usage</th><th>Other names</th></tr>\n" ;
 		foreach ($data as $loc) {
 			echo "<tr>" ;
-			echo "<td>",$loc->geonameid,"</td>" ;
+			echo "<td>",$loc->geonameId,"</td>" ;
 			echo "<td>",$loc->name,"</td>" ;
 			echo "<td>",$loc->TypeLocation,"</td>" ;
 			echo "<td>",$loc->fclass." ".$loc->fcode,"</td>" ;

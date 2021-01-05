@@ -20,6 +20,7 @@ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 */
 
+
 use Carbon\Carbon;
 
 
@@ -52,31 +53,34 @@ class MembersModel extends RoxModelBase
     }
 
     public function getStatuses() {
-        return array('Active',
+        return [
+            'Active',
             'MailToConfirm',
             'PassedAway',
             'Pending',
-            'DuplicateSigned',
-            'NeedMore',
             'Banned',
             'ChoiceInactive',
             'OutOfRemind',
-            'Rejected',
-            'CompletedPending',
-            'TakenOut',
-            'Sleeper',
-            'Renamed',
             'ActiveHidden',
             'SuspendedBeta',
             'AskToLeave',
-            'StopBoringMe',
-            'Buggy');
+// Removed to avoid clutter of the status dropdown.
+//            'NeedMore',
+//            'Rejected',
+//            'DuplicateSigned',
+//            'CompletedPending',
+//            'TakenOut',
+//            'Sleeper',
+//            'Renamed',
+//            'StopBoringMe',
+//            'Buggy',
+        ];
     }
 
     /**
      *
      * @param string unknown $email
-     * @return boolean|Ambiguous <object, mixed>
+     * @return boolean|mixed <object, mixed>
      */
     public function getMemberFromEmail($email)
     {
@@ -907,6 +911,18 @@ ORDER BY
         return false;
     }
 
+    public function getSpokenLanguages()
+    {
+        return $this->get_all_languages_where('(IsSpokenLanguage = 1)');
+    }
+
+    /**
+     * Get all available sign languages
+     */
+    public function getSignedLanguages() {
+        return $this->get_all_languages_where ("(l.IsSignLanguage = 1)");
+    }
+
     /**
      * Check form values of Mandatory form,
      * should always be analog to /build/signup/signup.model.php !!
@@ -918,12 +934,12 @@ ORDER BY
     {
         $errors = array();
 
-        if ($vars['BirthYear'] == 0 || $vars['BirthMonth'] == 0 || $vars['BirthDay'] == 0) {
+        if (empty($vars['birth-date'])) {
             $errors[] = 'SignupErrorInvalidBirthDate';
         }
         else
         {
-            $res=$this->validateBirthdate($vars['BirthYear'] . '-' . $vars['BirthMonth'] . '-' . $vars['BirthDay']);
+            $res=$this->validateBirthdate($vars['birth-date']);
             if ($res === self::DATE_INVALID) {
                 $errors[] = 'SignupErrorInvalidBirthDate';
             }
@@ -1210,13 +1226,13 @@ ORDER BY
     {
         $m = $vars['member'];
 
-        // Prepare $vars
-        // JY fix, the escaping will be done from ReplaceInMTrad so I remove it
-//        $vars['ProfileSummary'] = $this->dao->escape($vars['ProfileSummary']);
-        $birthDate = $vars['BirthYear'] . '-' . $vars['BirthMonth'] . '-' . $vars['BirthDay'];
-        $vars['BirthDate'] = (($date = $this->validateBirthdate($birthDate)) ? $date : $birthDate);
+        $birthDate = $vars['birth-date'];
+
+        $vars['BirthYear'] = substr($birthDate, 0,4);
+        $vars['BirthMonth'] = substr($birthDate, 5,2);
+        $vars['BirthDay'] = substr($birthDate, 8, 2);
+        $vars['BirthDate'] = $birthDate;
         if (!isset($vars['HideBirthDate'])) $vars['HideBirthDate'] = 'No';
-        // $vars['Occupation'] = ($member->Occupation > 0) ? $member->get_trad('ProfileOccupation', $profile_language) : '';
 
         // update $vars for $languages
         if(!isset($vars['languages_selected'])) {
@@ -1480,7 +1496,7 @@ VALUES
         if (!empty($feedback))
         {
             $feedback_model = new FeedbackModel($this->session);
-            $feedback_model->sendFeedback(array(
+            $feedback_model->sendRetiringFeedback(array(
                 "IdCategory"       => FeedbackModel::DELETE_PROFILE,
                 "FeedbackQuestion" => $feedback,
             ));
@@ -1895,4 +1911,27 @@ VALUES
         }
         $this->dao->query($query);
     }
+
+    /**
+     * Get all languages with given condition
+     */
+    private function get_all_languages_where($where) {
+        $AllLanguages = array();
+        $str = "
+            SELECT SQL_CACHE
+                l.Name AS Name,
+                l.ShortCode AS ShortCode,
+                l.WordCode AS WordCode,
+                l.id AS id
+            FROM
+                languages AS l ";
+        $str .= "WHERE " . $where;
+        $s = $this->dao->query($str);
+        while ($rr = $s->fetch(PDB::FETCH_OBJ)) {
+            //if (isset($rr->Level)) $rr->Level = ("LanguageLevel_".$rr->Level);
+            array_push($AllLanguages, $rr);
+        }
+        return $AllLanguages;
+    }
+
 }

@@ -27,7 +27,7 @@ App\Entity\Member:
         ILiveWith: 0
         IdentityCheckLevel: 0
         InformationToGuest: 0
-        TypicOffer: 0
+        TypicOffer: null
         Offer: 0
         MaxGuest: 1
         MaxLenghtOfStay: 0
@@ -77,7 +77,7 @@ App\Entity\Member:
     member_{2..5}:
         Username: 'member-<current()>'
         BirthDate: <DateTime()>
-        email: <email()>
+        email: 'member-<current()>\@bewelcome.org'
         created: <dateTimeBetween("-200 days", "now")>
         updated: <dateTimeBetween($created, "now")>
         LastLogin: <dateTimeBetween($created, "now")>
@@ -97,13 +97,13 @@ App\Entity\Member:
         FirstName: <firstName()>
         SecondName: '70%? <firstName()>'
         LastName: <lastName()>
-        Accommodation: '<randomElement(["neverask", "anytime"])>'
+        Accommodation: '<randomElement(["anytime", "neverask"])>'
         hostingInterest: '<numberBetween(1,10)>'
         AdditionalAccommodationInfo: 0
         ILiveWith: 0
         IdentityCheckLevel: 0
         InformationToGuest: 0
-        TypicOffer: 0
+        TypicOffer: null
         Offer: 0
         MaxGuest: 1
         MaxLenghtOfStay: 2
@@ -153,7 +153,7 @@ App\Entity\Member:
     member_{6..10}:
         Username: 'member-<current()>'
         BirthDate: <DateTime()>
-        email: <email()>
+        email: 'member-<current()>\@bewelcome.org'
         created: <dateTimeBetween("-200 days", "now")>
         updated: <dateTimeBetween($created, "now")>
         LastLogin: <dateTimeBetween($created, "now")>
@@ -178,7 +178,157 @@ App\Entity\Member:
         ILiveWith: 0
         IdentityCheckLevel: 0
         InformationToGuest: 0
-        TypicOffer: 0
+        TypicOffer: null
+        Offer: 0
+        MaxGuest: 1
+        MaxLenghtOfStay: 2
+        Organizations: 0
+        Restrictions: 0
+        OtherRestrictions: 0
+        Bday: 1
+        Bmonth: 1
+        Byear: 1980
+        SecurityFlag: 0
+        Quality: 0
+        ProfileSummary: 0
+        Occupation: 0
+        CounterGuests: 0
+        CounterHosts: 0
+        CounterTrusts: 0
+        Gender: 'male'
+        HideGender: <boolean(75)>
+        GenderOfGuest: 'female'
+        MotivationForHospitality: 0
+        HideBirthDate: <boolean(75)>
+        AdressHidden: <boolean(75)>
+        WebSite: 0
+        ChatSkype: 0
+        ChatICQ: 0
+        ChatAOL: 0
+        ChatMSN: 0
+        ChatYahoo: 0
+        ChatOthers: 0
+        FutureTrips: 0
+        OldTrips: 0
+        LogCount: 0
+        Hobbies: 0
+        Books: 0
+        Music: 0
+        PastTrips: 0
+        Password: 'password'
+        PlannedTrips: 0
+        PleaseBring: 0
+        OfferGuests: 0
+        OfferHosts: 0
+        PublicTransport: 0
+        Movies: 0
+        ChatGoogle: 0
+        bewelcomed: 0
+        registration_key: ''
+    member_banned:
+        Username: 'member-banned'
+        BirthDate: <DateTime()>
+        email: 'member-banned\@bewelcome.org'
+        created: <dateTimeBetween("-200 days", "now")>
+        updated: <dateTimeBetween($created, "now")>
+        LastLogin: <dateTimeBetween($created, "now")>
+        LastSwitchToActive: null
+        ExUserId: 0
+        Status: 'Banned'
+        ChangedId: 0
+        city: '@Jayapura'
+        Latitude: <latitude(@Jayapura->Latitude,@Jayapura->Latitude)>
+        Longitude: <longitude(@Jayapura->Longitude,@Jayapura->Longitude)>
+        NbRemindWithoutLogingIn: 0
+        HomePhoneNumber: 0
+        CellPhoneNumber: 0
+        WorkPhoneNumber: 0
+        SecEmail: 0
+        HideAttribute: 8
+        FirstName: <firstName()>
+        SecondName: '70%? <firstName()>'
+        LastName: <lastName()>
+        Accommodation: '<randomElement(["neverask", "anytime"])>'
+        AdditionalAccommodationInfo: 0
+        ILiveWith: 0
+        IdentityCheckLevel: 0
+        InformationToGuest: 0
+        TypicOffer: null
+        Offer: 0
+        MaxGuest: 1
+        MaxLenghtOfStay: 2
+        Organizations: 0
+        Restrictions: 0
+        OtherRestrictions: 0
+        Bday: 1
+        Bmonth: 1
+        Byear: 1980
+        SecurityFlag: 0
+        Quality: 0
+        ProfileSummary: 0
+        Occupation: 0
+        CounterGuests: 0
+        CounterHosts: 0
+        CounterTrusts: 0
+        Gender: 'male'
+        HideGender: <boolean(75)>
+        GenderOfGuest: 'female'
+        MotivationForHospitality: 0
+        HideBirthDate: <boolean(75)>
+        AdressHidden: <boolean(75)>
+        WebSite: 0
+        ChatSkype: 0
+        ChatICQ: 0
+        ChatAOL: 0
+        ChatMSN: 0
+        ChatYahoo: 0
+        ChatOthers: 0
+        FutureTrips: 0
+        OldTrips: 0
+        LogCount: 0
+        Hobbies: 0
+        Books: 0
+        Music: 0
+        PastTrips: 0
+        Password: 'password'
+        PlannedTrips: 0
+        PleaseBring: 0
+        OfferGuests: 0
+        OfferHosts: 0
+        PublicTransport: 0
+        Movies: 0
+        ChatGoogle: 0
+        bewelcomed: 0
+        registration_key: ''
+    member_taken_out:
+        Username: 'member-taken-out'
+        BirthDate: <DateTime()>
+        email: 'member-taken-out\@bewelcome.org'
+        created: <dateTimeBetween("-200 days", "now")>
+        updated: <dateTimeBetween($created, "now")>
+        LastLogin: <dateTimeBetween($created, "now")>
+        LastSwitchToActive: null
+        ExUserId: 0
+        Status: 'TakenOut'
+        ChangedId: 0
+        city: '@Jayapura'
+        Latitude: <latitude(@Jayapura->Latitude,@Jayapura->Latitude)>
+        Longitude: <longitude(@Jayapura->Longitude,@Jayapura->Longitude)>
+        NbRemindWithoutLogingIn: 0
+        HomePhoneNumber: 0
+        CellPhoneNumber: 0
+        WorkPhoneNumber: 0
+        SecEmail: 0
+        HideAttribute: 8
+        FirstName: <firstName()>
+        SecondName: '70%? <firstName()>'
+        LastName: <lastName()>
+        Accommodation: '<randomElement(["neverask", "anytime"])>'
+        AdditionalAccommodationInfo: 0
+        ILiveWith: 0
+        IdentityCheckLevel: 0
+        InformationToGuest: 0
+        TypicOffer: null
         Offer: 0
         MaxGuest: 1
         MaxLenghtOfStay: 2

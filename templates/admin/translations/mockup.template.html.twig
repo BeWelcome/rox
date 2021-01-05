@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{ 'translations.mockup.title' | trans }}
+{% endblock %}
+
+{% block content %}
+    <h1>{{ 'translations.headline' | trans }}</h1>
+    <p>{{ 'translation.mockup.abstract'|trans }}</p>
+    <p>{{ 'translations.mockup.template'|trans }}: {{ template}}<br>
+        {% if description != '' %}{{ description }}{% endif %}</p>
+    <div id="mockup" class="p-2">{{ block("content", template)|raw }}</div>
+{% endblock content %}

@@ -10,56 +10,10 @@ require_once 'editprofile_form.php';
 ?>
 </form>
 
-<script type="text/javascript"><!--
+<script type="text/javascript">
     var iterator = 1;
 
-    function initLanguageSelect2s()
-    {
-        $(".lang_selector").select2({
-            theme: 'bootstrap',
-            containerCssClass: 'form-control'
-        });
-        $(".mll").select2({
-            theme: 'bootstrap',
-            containerCssClass: 'form-control',
-            minimumResultsForSearch: Infinity
-        });
-    }
-
-    function destroyLanguageSelect2s()
-    {
-        let langSelector = $(".lang_selector");
-        langSelector.select2('destroy');
-        langSelector.removeAttr('data-select2-id');
-        let mll = $(".mll");
-        mll.select2('destroy');
-        mll.removeAttr('data-select2-id');
-    }
-
-    function insertNewTemplate(e){
-        e.preventDefault();
-        destroyLanguageSelect2s();
-        $("div.langsel:first").clone(true, true).insertAfter("div.langsel:last");
-        $("div.langsel:last").removeClass('d-none');
-        initLanguageSelect2s();
-    }
-
-    function removeLang(e)
-    {
-        e.preventDefault();
-        let id = e.target.id;
-        let languageId = $("#" + id + "_id").val();
-        let languageName = $("#" + id + "_name").val();
-        $('.lang_selector').append($('<option>', {value: languageId, text: languageName}));
-        let row = "#" + id + "_row";
-        $(row).remove();
-    }
-
     $(document).ready(function() {
-        $('#langbutton').click( insertNewTemplate );
-        $('button.remove_lang').click( removeLang );
-        initLanguageSelect2s();
-
         $('input[type="range"]').rangeslider({
             polyfill: false,
             onInit: function() {
@@ -103,5 +57,4 @@ require_once 'editprofile_form.php';
             $valueOutput[0].innerHTML = markers[value];
         }
     }
-
 </script>

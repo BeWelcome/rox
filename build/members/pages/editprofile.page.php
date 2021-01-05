@@ -53,8 +53,8 @@ class EditProfilePage extends ProfilePage
         $hesData = $this->model->getHostingEagernessData($member);
 
         $profile_language = $lang->id;
-        $all_spoken_languages = $this->sortLanguages($member->get_all_spoken_languages());
-        $all_signed_languages = $this->sortLanguages($member->get_all_signed_languages());
+        $all_spoken_languages = $this->sortLanguages($this->model->getSpokenLanguages());
+        $all_signed_languages = $this->sortLanguages($this->model->getSignedLanguages());
 
         $layoutkit = $this->layoutkit;
         $formkit = $layoutkit->formkit;
@@ -138,33 +138,29 @@ class EditProfilePage extends ProfilePage
 
         $vars['Relations'] = $member->get_all_relations() ;
         $vars['Groups'] = $member->getGroups() ;
-        if (!$memory = $formkit->getMemFromRedirect()) {
-            // no memory
-            // echo 'no memory';
-        } else {
-            // from previous form
+        if ($memory = $formkit->getMemFromRedirect()) {
             if ($memory->post) {
                 $post = $memory->post;
                 foreach ($post as $key => $value) {
                     $vars[$key] = $value;
                 }
                 // update $vars for messengers
-                if(isset($vars['messengers'])) {
+                if (isset($vars['messengers'])) {
                     $ii = 0;
-                    foreach($vars['messengers'] as $me) {
+                    foreach ($vars['messengers'] as $me) {
                         $val = 'chat_' . $me['network_raw'];
                         $vars['messengers'][$ii++]['address'] = $vars[$val];
                     }
                 }
                 // update $vars for $languages
-                if(!isset($vars['languages_selected'])) {
+                if (!isset($vars['languages_selected'])) {
                     $vars['languages_selected'] = array();
                 }
                 $ii = 0;
                 $ii2 = 0;
                 $lang_used = array();
-                foreach($vars['memberslanguages'] as $lang) {
-                    if (ctype_digit($lang) and !in_array($lang,$lang_used)) { // check $lang is numeric, hence a legal IdLanguage
+                foreach ($vars['memberslanguages'] as $lang) {
+                    if (ctype_digit($lang) and !in_array($lang, $lang_used)) { // check $lang is numeric, hence a legal IdLanguage
                         $vars['languages_selected'][$ii]->IdLanguage = $lang;
                         $vars['languages_selected'][$ii]->Level = $vars['memberslanguageslevel'][$ii2];
                         array_push($lang_used, $vars['languages_selected'][$ii]->IdLanguage);
@@ -177,5 +173,4 @@ class EditProfilePage extends ProfilePage
 
         return $vars;
     }
-
 }

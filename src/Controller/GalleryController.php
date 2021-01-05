@@ -29,8 +29,8 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class GalleryController extends AbstractController
 {
-    use TranslatorTrait;
     use TranslatedFlashTrait;
+    use TranslatorTrait;
     use UniqueFilenameTrait;
 
     private const MAX_PIXELS = 16000000;

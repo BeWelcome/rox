@@ -1,0 +1,88 @@
+{% import 'macros.twig' as macros %}
+<!DOCTYPE html>
+<html lang="{{ app.request.locale }}">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="{{ asset('favicon.ico') }}"/>
+
+    <title>{{ title }} - BeWelcome</title>
+    <meta name="description" content="{{ 'default_meta_description' | trans }}"/>
+    <meta name="keywords" content="{{ 'default_meta_keyword' | trans }}"/>
+
+    {{ encore_entry_link_tags('bewelcome') }}
+    {{ encore_entry_link_tags('floating_labels') }}
+    {{ encore_entry_link_tags('jquery_ui') }}
+    <link rel='manifest' href='{{ asset('manifest.webmanifest') }}'>
+    {% block stylesheets %}
+        {{ encore_entry_link_tags('leaflet') }}
+        {{ encore_entry_link_tags('jquery_ui') }}
+    {% endblock stylesheets %}
+</head>
+<body id="parallax-home">
+    {% include 'loginbar.html.twig' %}
+
+    <div id="map-box" style="top:43px; bottom:0;left:0;right:0; position:absolute;"></div>
+<div class="container-lg" style="z-index:2000">
+        {{ form_start(form, {'attr': {'class': 'm-1 search_form', 'onkeypress': 'return event.keyCode != 13;'}}) }}
+        {{ form_errors(form) }}
+        <div class="form-row mt-2 align-items-end">
+            <div class="col-8 col-sm-10 mt-1">
+                {{ form_row(form.location, {'attr': {'class': 'search-picker'}, 'required': false }) }}
+            </div>
+            <div class="col-4 col-sm-2">
+                {{ form_row(form.updateMap, {'attr': {'class': 'btn-block btn-primary'} }) }}
+            </div>
+        </div>
+        {{ form_rest(form) }}
+        {{ form_end(form) }}
+
+        <script>
+
+            var mapMembers =
+                {% if results %}
+                    {{ results.map | json_encode | raw }};
+                {% else %}
+                    null;
+                {% endif %}
+        </script>
+</div>
+    <div id="footer">
+        <div class="container-lg">
+            <div class="row">
+                <div class="col-12 text-left">
+                    <a href="{{ url('about') }}"><strong>{{ 'aboutuspage' | trans }}</strong></a> •
+                    <a href="{{ url('safety') }}">{{ 'safety' | trans }}</a> •
+                    <a href="{{ url('terms_of_use', {'locale':  locale }) }}" target="new">{{ 'termsofuse' | trans }}</a> •
+                    <a href="{{ url('privacy') }}" target="new">{{ 'privacy' | trans }}</a> •
+                    <a href="{{ url('data_rights') }}" target="new">{{ 'datarights' | trans }}</a> •
+                    <a href="{{ url('imprint') }}">{{ 'impressum' | trans }}</a> •
+                    <a href="{{ url('about_faq') }}">{{ 'faq' | trans }}</a> •
+                    <a href="{{ url('feedback') }}">{{ 'footer.contactus' | trans }}</a> •
+                    <a href="{{ url('feedback', {'IdCategory': 1, 'RequestUri': url('homepage')}) }}">{{ 'footer.reportbug' | trans }}</a><br>
+                    &copy;2007
+                    &mdash; {{ "now" | date("Y") }} {{ 'copyrightbybv' | trans | escape | replace({'%link_start%': '<a href="https://bevolunteer.org">', '%link_end%': '</a>'})| raw }}
+                    - {{ 'runningon' | trans }} BW Rox rev. {{ version }} ({{ version_dt }})
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{ encore_entry_script_tags('bewelcome') }}
+    {{ encore_entry_script_tags('jquery_ui') }}
+    {{ encore_entry_script_tags('leaflet') }}
+    {{ encore_entry_script_tags('search/searchpicker') }}
+    {{ encore_entry_script_tags('search/loadcontent') }}
+    {{ encore_entry_script_tags('search/map') }}
+    <script type="application/javascript">
+        $(".select2").select2({
+            theme: 'bootstrap4',
+            width: 'auto',
+            dropdownAutoWidth: true
+        });
+        $(".toast").toast('show');
+
+    </script>
+</body>
+</html>

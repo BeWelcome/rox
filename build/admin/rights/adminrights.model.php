@@ -123,7 +123,7 @@ class AdminRightsModel extends RoxModelBase {
         $query .= '
                 AND rv.IdMember = m.id
                 AND rv.IdRight = r.id
-                AND m.IdCity = g.geonameid
+                AND m.IdCity = g.geonameId
                 AND g.country = gc.country ';
         $query .= '
             ORDER BY
@@ -193,7 +193,7 @@ class AdminRightsModel extends RoxModelBase {
 				r.Name IN ('" . $rights . "') ";
 		}
         $query .= '
-                AND m.IdCity = g.geonameid
+                AND m.IdCity = g.geonameId
                 AND g.country = gc.country ';
         if (!$includeLevelZero) {
             $query .= ' AND rv.Level <> 0';

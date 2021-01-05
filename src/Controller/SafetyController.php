@@ -19,7 +19,7 @@ class SafetyController extends AbstractController
         return $this->render('safety/safetymain.html.twig', [
             'submenu' => [
                 'items' => $this->getSubMenuItems(),
-                'active' => 'saftey',
+                'active' => 'safety',
             ],
         ]);
     }

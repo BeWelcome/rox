@@ -2,8 +2,9 @@
 
 namespace App\Form\CustomDataClass;
 
-use Doctrine\Common\Persistence\ObjectManager;
+use AnthonyMartin\GeoLocation\GeoPoint;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\PersistentCollection;
 use SearchModel;
 use Symfony\Component\Form\FormInterface;
@@ -40,30 +41,27 @@ class SearchFormRequest
     public $location_longitude;
 
     /**
+     * @var bool
+     */
+    public $location_admin_unit;
+
+    /**
      * @var float
-     *
-     * @Assert\NotBlank(groups={"map-search"})
      */
     public $ne_latitude;
 
     /**
      * @var float
-     *
-     * @Assert\NotBlank(groups={"map-search"})
      */
     public $ne_longitude;
 
     /**
      * @var float
-     *
-     * @Assert\NotBlank(groups={"map-search"})
      */
     public $sw_latitude;
 
     /**
      * @var float
-     *
-     * @Assert\NotBlank(groups={"map-search"})
      */
     public $sw_longitude;
 
@@ -103,7 +101,7 @@ class SearchFormRequest
     /**
      * @var bool
      */
-    public $showOptions = true;
+    public $showOptions = false;
 
     /** @var int */
     public $can_host = 1;
@@ -115,10 +113,10 @@ class SearchFormRequest
     public $languages;
 
     /** @var int */
-    public $min_age;
+    public $min_age = 0;
 
     /** @var int */
-    public $max_age;
+    public $max_age = 120;
 
     /** @var string */
     public $gender;
@@ -130,7 +128,7 @@ class SearchFormRequest
     public $offertour;
 
     /** @var bool */
-    public $accessible;
+    public $accessible = false;
 
     /** @var bool */
     public $profile_picture = true;
@@ -145,7 +143,7 @@ class SearchFormRequest
     public $keywords;
 
     /** @var int Last Login in months */
-    public $last_login = 12;
+    public $last_login = 24;
 
     /** @var int */
     public $order = 6;
@@ -164,13 +162,13 @@ class SearchFormRequest
     /**
      * SearchFormRequest constructor.
      */
-    public function __construct(ObjectManager $em)
+    public function __construct(EntityManagerInterface $em)
     {
         $this->em = $em;
     }
 
     /**
-     * @Assert\IsTrue(message="search.location.invalid")
+     * @Assert\IsTrue(message="search.location.invalid", groups={"text-search"})
      */
     public function isLocationValid()
     {
@@ -197,15 +195,14 @@ class SearchFormRequest
     }
 
     /**
-     * @Assert\IsTrue(message="search.accommodation.invalid")
+     * @Assert\IsTrue(message="search.accommodation.invalid", groups={"text-search"})
      */
     public function isAccommodationValid()
     {
-//        return (false === $this->accommodation_yes && false === $this->accommodation_no);
-        return true;
+        return $this->accommodation_anytime || $this->accommodation_neverask;
     }
 
-    public static function fromRequest(Request $request, ObjectManager $em)
+    public static function fromRequest(Request $request, EntityManagerInterface $em)
     {
         $formRequest = new self($em);
         $data = [];
@@ -239,6 +236,7 @@ class SearchFormRequest
         $formRequest->location_geoname_id = self::get($data, 'location_geoname_id', null);
         $formRequest->location_latitude = self::get($data, 'location_latitude', null);
         $formRequest->location_longitude = self::get($data, 'location_longitude', null);
+        $formRequest->location_admin_unit = self::get($data, 'location_admin_unit', false);
         $formRequest->min_age = self::get($data, 'min_age', null);
         $formRequest->max_age = self::get($data, 'max_age', null);
         $formRequest->gender = self::get($data, 'gender', null);
@@ -251,16 +249,32 @@ class SearchFormRequest
         $formRequest->offertour = '1' === self::get($data, 'offertour', '0');
         $formRequest->accessible = '1' === self::get($data, 'accessible', '0');
         $formRequest->profile_picture = '1' === self::get($data, 'profile_picture', '0');
-        $formRequest->accessible = '1' === self::get($data, 'about_me', '0');
+        $formRequest->about_me = '1' === self::get($data, 'about_me', '0');
         $formRequest->no_smoking = '1' === self::get($data, 'no_smoking', '0');
         $formRequest->no_alcohol = '1' === self::get($data, 'no_alcohol', '0');
         $formRequest->no_drugs = '1' === self::get($data, 'no_drugs', '0');
         $formRequest->has_comments = '1' === self::get($data, 'has_comments', '0');
 
-        $formRequest->ne_latitude = self::get($data, 'ne-latitude', null);
-        $formRequest->ne_longitude = self::get($data, 'ne-longitude', null);
-        $formRequest->sw_latitude = self::get($data, 'sw-latitude', null);
-        $formRequest->sw_longitude = self::get($data, 'sw-longitude', null);
+        if (
+            null !== $formRequest->location_geoname_id
+            && 1 !== $formRequest->location_admin_unit
+            && -1 !== $formRequest->distance
+        ) {
+            list($neLat, $neLng, $swLat, $swLng) = self::calculateBoundingBox(
+                $formRequest->location_latitude,
+                $formRequest->location_longitude,
+                $formRequest->distance
+            );
+            $formRequest->ne_latitude = $neLat;
+            $formRequest->ne_longitude = $neLng;
+            $formRequest->sw_latitude = $swLat;
+            $formRequest->sw_longitude = $swLng;
+        } else {
+            $formRequest->ne_latitude = self::get($data, 'ne_latitude', null);
+            $formRequest->ne_longitude = self::get($data, 'ne_longitude', null);
+            $formRequest->sw_latitude = self::get($data, 'sw_latitude', null);
+            $formRequest->sw_longitude = self::get($data, 'sw_longitude', null);
+        }
 
         return $formRequest;
     }
@@ -274,6 +288,24 @@ class SearchFormRequest
         }
 
         return ['text-search'];
+    }
+
+    private static function calculateBoundingBox($latitude, $longitude, $distance): array
+    {
+        $distance = (int) $distance;
+        if (-1 === $distance) {
+            $distance = 100;
+        }
+
+        $center = new GeoPoint($latitude, $longitude);
+        $boundingBox = $center->boundingBox($distance, 'km');
+
+        return [
+            $boundingBox->getMinLatitude(),
+            $boundingBox->getMinLongitude(),
+            $boundingBox->getMaxLatitude(),
+            $boundingBox->getMaxLongitude(),
+        ];
     }
 
     private static function get($data, $index, $default)

@@ -153,19 +153,11 @@ class LandingController extends AbstractController
      */
     public function setAccommodationAction(Request $request, Environment $twig)
     {
-        $accommodation = $request->request->get('accommodation');
-
-        switch ($accommodation) {
-            case AccommodationType::YES:
-            case AccommodationType::NO:
-                $valid = true;
-                break;
-            default:
-                $valid = false;
-        }
-
         /** @var Member $member */
         $member = $this->getUser();
+        $accommodation = $request->request->get('accommodation');
+
+        $valid = (AccommodationType::YES === $accommodation) || (AccommodationType::NO === $accommodation);
         if ($valid) {
             $member = $this->landingModel->updateMemberAccommodation($member, $accommodation);
         }
@@ -214,7 +206,11 @@ class LandingController extends AbstractController
         $searchHomeLocation = $formFactory->createNamed('home', SearchFormType::class, $searchHomeLocationRequest);
 
         // Prepare small search form
-        $searchGotoLocation = $formFactory->createNamed('tiny', SearchFormType::class, new SearchFormRequest($this->getDoctrine()->getManager()));
+        $searchGotoLocation = $formFactory->createNamed(
+            'tiny',
+            SearchFormType::class,
+            new SearchFormRequest($this->getDoctrine()->getManager())
+        );
 
         $preferenceRepository = $this->getDoctrine()->getRepository(Preference::class);
         $preference = $preferenceRepository->findOneBy(['codename' => Preference::MESSAGE_AND_REQUEST_FILTER]);
@@ -276,7 +272,7 @@ class LandingController extends AbstractController
         $searchHomeRequest = new SearchFormRequest($this->getDoctrine()->getManager());
         $geo = $member->getCity();
         $searchHomeRequest->location = $geo->getName();
-        $searchHomeRequest->location_geoname_id = $geo->getGeonameid();
+        $searchHomeRequest->location_geoname_id = $geo->getGeonameId();
         $searchHomeRequest->location_latitude = $member->getLatitude();
         $searchHomeRequest->location_longitude = $member->getLongitude();
         $searchHomeRequest->accommodation_anytime = true;

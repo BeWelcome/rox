@@ -25,8 +25,8 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
  */
 class CommentController extends AbstractController
 {
-    use TranslatorTrait;
     use TranslatedFlashTrait;
+    use TranslatorTrait;
 
     /** @var CommentModel */
     private $commentModel;

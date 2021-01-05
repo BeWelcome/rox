@@ -233,7 +233,7 @@ class EnvironmentExplorer
         // TODO: remove this when the old bw part is no longer needed.
 
         global $_SYSHCVOL;
-        $syshcvol = $settings['syshcvol'];
+        $syshcvol = $settings['syshcvol'] ?? [];
         $_SYSHCVOL = array();
 
         $_SYSHCVOL['MYSQLServer'] = "localhost";

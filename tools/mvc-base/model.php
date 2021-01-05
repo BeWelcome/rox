@@ -305,7 +305,7 @@ class RoxModelBase extends RoxComponentBase
                     array(
                         PDO::ATTR_EMULATE_PREPARES => false,
                         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-                        PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8mb4'
+                        PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8mb4',
                     )
                 );
             }
@@ -315,6 +315,11 @@ class RoxModelBase extends RoxComponentBase
             }
         }
         return $this->pdo;
+    }
+
+    public function set_pdo($pdo)
+    {
+        $this->pdo = $pdo;
     }
 
     protected function getPDO() {

@@ -58,6 +58,12 @@
     margin-bottom: 0;
   }
 
+  .message_own.deleted, .message_other.deleted {
+    border: 1px solid #bbb;
+    color: #aaa;
+    background-color: #eee;
+  }
+
   blockquote {
     padding: $pagination-padding-x;
     border-radius: $border-radius;

@@ -2,6 +2,7 @@
 
 namespace App\Form\CustomDataClass\Translation;
 
+use App\Doctrine\TranslationAllowedType;
 use App\Entity\Word;
 use InvalidArgumentException;
 
@@ -20,7 +21,7 @@ class EditTranslationRequest extends TranslationRequest
     /**
      * @var bool
      */
-    public $doNotTranslate;
+    public $translationAllowed;
 
     /**
      * @throws InvalidArgumentException
@@ -42,7 +43,7 @@ class EditTranslationRequest extends TranslationRequest
         $editTranslationRequest->translatedText = $translation->getSentence();
         $editTranslationRequest->isMajorUpdate = ($original->getMajorUpdate() > $translation->getUpdated());
         $editTranslationRequest->isArchived = $original->getIsArchived();
-        $editTranslationRequest->doNotTranslate = ('yes' === $original->getDoNotTranslate());
+        $editTranslationRequest->translationAllowed = (TranslationAllowedType::TRANSLATION_ALLOWED === $original->getTranslationAllowed());
 
         return $editTranslationRequest;
     }

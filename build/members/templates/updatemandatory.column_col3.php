@@ -208,7 +208,7 @@ Boston, MA  02111-1307, USA.
             </div> <!-- geoselectorjs -->
 
             <div id="location-suggestion">
-            <?php if (isset($vars['geonamename']) && isset($vars['geonameid']) && $vars['geonameid'] != '') { ?>
+            <?php if (isset($vars['geonamename']) && isset($vars['geonameId']) && $vars['geonameId'] != '') { ?>
                 <p><b><?=$words->get('Geo_choosenLocation')?>:</b></p>
                 <ol class="plain">
                     <li style="background-color: #f5f5f5; font-weight: bold; background-image: url(images/icons/tick.png);"><a id="href_4544349">
@@ -228,7 +228,7 @@ Boston, MA  02111-1307, USA.
         $Geo = new GeoController;
         $Geo->layoutkit = $this->layoutkit;
         $Geo->SelectorInclude();
-        if (isset($vars['geonameid']) && !$this->session->has( 'GeoVars[' . $geonameid . ']' )) { }
+        if (isset($vars['geonameId']) && !$this->session->has( 'GeoVars[' . $geonameid . ']' )) { }
         isset($mem_redirect->location);
     ?>
 
@@ -291,8 +291,8 @@ Boston, MA  02111-1307, USA.
         }
         ?>
 
-    <input type="hidden" name="geonameid" id="geonameid" value="<?php
-            echo isset($vars['geonameid']) ? htmlentities($vars['geonameid'], ENT_COMPAT, 'utf-8') : '';
+    <input type="hidden" name="geonameId" id="geonameId" value="<?php
+            echo isset($vars['geonameId']) ? htmlentities($vars['geonameId'], ENT_COMPAT, 'utf-8') : '';
         ?>" />
     <input type="hidden" name="latitude" id="latitude" value="<?php
             echo isset($vars['latitude']) ? htmlentities($vars['latitude'], ENT_COMPAT, 'utf-8') : '';
@@ -374,8 +374,8 @@ Boston, MA  02111-1307, USA.
         map.addOverlay(createMarker(new GLatLng(lat, lng), descr));
     }
 
-    function setGeonameIdInForm(geonameid, latitude, longitude, geonamename, countryname, countrycode, admincode) {
-        $('geonameid').value = geonameid;
+    function setGeonameIdInForm(geonameId, latitude, longitude, geonamename, countryname, countrycode, admincode) {
+        $('geonameId').value = geonameId;
         $('latitude').value = latitude;
         $('longitude').value = longitude;
         $('geonamename').value = geonamename;
@@ -393,11 +393,11 @@ Boston, MA  02111-1307, USA.
         });
     }
 
-    function setMap(geonameid, latitude, longitude, zoom, geonamename, countryname, countrycode, admincode) {
-        setGeonameIdInForm(geonameid, latitude, longitude, geonamename, countryname, countrycode, admincode);
+    function setMap(geonameId, latitude, longitude, zoom, geonamename, countryname, countrycode, admincode) {
+        setGeonameIdInForm(geonameId, latitude, longitude, geonamename, countryname, countrycode, admincode);
         changeMarker(latitude, longitude, zoom, geonamename+', '+countryname);
         removeHighlight();
-        Element.setStyle($('li_'+geonameid), {fontWeight:'bold',backgroundColor:'#f5f5f5',backgroundImage:'url(images/icons/tick.png)'});
+        Element.setStyle($('li_'+geonameId), {fontWeight:'bold',backgroundColor:'#f5f5f5',backgroundImage:'url(images/icons/tick.png)'});
     }
 
     function init(){

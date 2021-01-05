@@ -32,18 +32,6 @@ Boston, MA  02111-1307, USA.
  */
 class GroupMemberAdministrationPage extends GroupsSubPage
 {
-    private function javascript_escape($str)
-    {
-        $new_str = '';
-
-        $str_len = strlen($str);
-        for ($i = 0; $i < $str_len; $i++) {
-            $new_str .= '\\x' . dechex(ord(substr($str, $i, 1)));
-        }
-
-        return $new_str;
-    }
-
     protected function getSubmenuActiveItem()
     {
         return 'admin';
@@ -59,18 +47,17 @@ class GroupMemberAdministrationPage extends GroupsSubPage
         $members = $this->group->getMembers();
         $need_approval = $this->group->getMembers('WantToBeIn');
         $invited = $this->group->getMembers('Invited');
+        $groupid = $this->group->getPKValue();
 
         ?>
-    <div class="row">
-        <div class="col-12">
-            <?php $this->pager_widget->render(); ?>
-        </div>
+        <div class="row">
+            <div class="col-12">
+                <?php $this->pager_widget->render(); ?>
+            </div>
 
-        <div class="col-12">
-            <h4><?= $words->get('GroupsCurrentMembers'); ?></h4>
-        </div>
-        <div id="current_members" class="col-12">
-            <div class="row align-items-center">
+            <div class="col-12">
+                <h4><?= $words->get('GroupsCurrentMembers'); ?></h4>
+            </div>
             <div class="col-8 col-md-3">
                 <?= $words->get('Username'); ?>
             </div>
@@ -90,13 +77,12 @@ class GroupMemberAdministrationPage extends GroupsSubPage
             foreach ($this->pager_widget->getActiveSubset($this->group->getMembers('In', $this->pager_widget->getActiveStart(), $this->pager_widget->getActiveLength())) as $member) {
                 ?>
                 <div class="col-8 col-md-3 pt-2">
-                    <?= MOD_layoutbits::linkWithPicture($member->Username) ?>
+                    <!--                    <?= MOD_layoutbits::linkWithPicture($member->Username) ?> -->
                     <a href="members/<?= $member->Username; ?>" class="username"><?= $member->Username ?></a>
                 </div>
 
                 <div class="col-4 col-md-3 pt-2">
                     <?php
-                    $groupid = $this->group->getPKValue();
                     $memberid = $member->getPKValue();
                     $BWAdmin = $this->isBWAdmin;
                     if ($this->member->getPKValue() == $memberid && !$BWAdmin) {
@@ -105,14 +91,14 @@ class GroupMemberAdministrationPage extends GroupsSubPage
                         echo "SuperAdminPower!";
                     } else {
                         $isGroupOwner = $this->group->isGroupOwner($member);
-                        if ( $BWAdmin) {
+                        if ($BWAdmin) {
                             echo "<i class='fa fa-user-cog mr-1 mt-3' title='{$words->getSilent('MemberIsAdmin')}'></i>";
                         } elseif ($isGroupOwner) {
-                            echo "<div class='btn-group'><span class='btn btn-sm'><i class='fa fa-user-cog' title='{$words->getSilent('MemberIsAdmin')}'></i></span>";
+                            echo "<div class='btn-group pull-right'><span class='btn btn-sm'><i class='fa fa-user-cog' title='{$words->getSilent('MemberIsAdmin')}'></i></span>";
                             echo "<a class='kick btn btn-sm btn-warning' href='group/{$groupid}/kickmember/{$memberid}'><i class='fa fa-user-times' title='{$words->getSilent('GroupsKickMember')}'></i></a>";
                             echo "<a class='ban btn btn-sm btn-danger' href='group/{$groupid}/banmember/{$memberid}'><i class='fa fa-user-slash' title='{$words->getSilent('GroupsBanMember')}'></i></a></div>";
                         } else {
-                            echo "<div class='btn-group'><a class='addAdmin btn btn-sm btn-info' href='group/{$groupid}/addAdmin/{$memberid}'><i class='fa fa-user-cog' title='{$words->getSilent('GroupsAddAdmin')}'></i></a>";
+                            echo "<div class='btn-group pull-right'><a class='addAdmin btn btn-sm btn-info' href='group/{$groupid}/addAdmin/{$memberid}'><i class='fa fa-user-cog' title='{$words->getSilent('GroupsAddAdmin')}'></i></a>";
                             echo "<a class='kick btn btn-sm btn-warning' href='group/{$groupid}/kickmember/{$memberid}'><i class='fa fa-user-times' title='{$words->getSilent('GroupsKickMember')}'></i></a>";
                             echo "<a class='ban btn btn-sm btn-danger' href='group/{$groupid}/banmember/{$memberid}'><i class='fa fa-user-slash' title='{$words->getSilent('GroupsBanMember')}'></i></a></div>";
                         }
@@ -122,106 +108,72 @@ class GroupMemberAdministrationPage extends GroupsSubPage
                 $count++;
             }
             ?>
-            </div>
-            <div class="col-12">
-                <?php
-                $this->pager_widget->render();
-                ?>
-            </div>
-
-            <script type='text/javascript'>
-                $(function () {
-                    $('#current_members a.ban').click(function (e) {
-                        // code goes here
-                        if (!confirm('<?= $this->javascript_escape($words->getSilent('GroupsConfirmMemberBan'));?>')) {
-                            e.preventDefault();
-                        }
-                    });
-                    $('#current_members a.kick').click(function (e) {
-                        // code goes here
-                        if (!confirm('<?= $this->javascript_escape($words->getSilent('GroupsConfirmMemberKick'));?>')) {
-                            e.preventDefault();
-                        }
-                    });
-                    $('#current_members a.addAdmin').click(function (e) {
-                        // code goes here
-                        if (!confirm('<?= $this->javascript_escape($words->getSilent('GroupsConfirmMemberAsAdmin'));?>')) {
-                            e.preventDefault();
-                        }
-                    });
-                    $('#current_members a.resignAdmin').click(function (e) {
-                        // code goes here
-                        if (!confirm('<?= $this->javascript_escape($words->getSilent('GroupsConfirmResignAsAdmin'));?>')) {
-                            Event.stop(e);
-                        }
-                    });
-                });
-            </script>
-            <?= $words->flushBuffer() ?>
+        <div class="col-12">
+            <?php
+            $this->pager_widget->render();
+            ?>
         </div>
+
+        <?= $words->flushBuffer() ?>
         <?php if ($this->group->Type != 'Public') : ?>
         <?php if (!empty($need_approval)) : ?>
-        <div id="possible_members" class="col-12">
-        <div class="row align-items-center">
-            <div class="col-12">
-                <h4><?= $words->get('GroupsProspectiveMembers'); ?></h4>
-            </div>
-
-            <div class="col-8 col-md-3 pt-2">
-                <?= $words->get('Username'); ?>
-            </div>
-            <div class="col-4 col-md-3">
-                <?= $words->get('Action'); ?>
-            </div>
-            <div class="col-8 col-md-3 d-none d-md-block pt-2">
-                <?= $words->get('Username'); ?>
-            </div>
-            <div class="col-4 col-md-3 d-none d-md-block">
-                <?= $words->get('Action'); ?>
-            </div>
-
-            <?php foreach ($need_approval as $member) : ?>
-                <div class="col-8 col-md-3 pt-2">
-                    <?= MOD_layoutbits::linkWithPicture($member->Username) ?>
-                    <a href="members/<?= $member->Username ?>" class="username"><?= $member->Username ?></a>
+            <div id="possible_members" class="col-12">
+                    <h4><?= $words->get('GroupsProspectiveMembers'); ?></h4>
                 </div>
-                <div class="col-4 col-md-3 pt-2">
-                    <?= (($this->member->getPKValue() == $member->getPKValue()) ? '' :
-                        "<div class='btn-group'><a class='accept btn btn-sm btn-success' href='group/{$this->group->getPKValue()}/acceptmember/{$member->getPKValue()}'><i class='fa fa-user-check' title='" . $words->get('GroupsAcceptMember') . "'></i></a>
+
+                <div class="col-8 col-md-3 pt-2">
+                    <?= $words->get('Username'); ?>
+                </div>
+                <div class="col-4 col-md-3">
+                    <?= $words->get('Action'); ?>
+                </div>
+                <div class="col-8 col-md-3 d-none d-md-block pt-2">
+                    <?= $words->get('Username'); ?>
+                </div>
+                <div class="col-4 col-md-3 d-none d-md-block">
+                    <?= $words->get('Action'); ?>
+                </div>
+
+                <?php foreach ($need_approval as $member) : ?>
+                    <div class="col-8 col-md-3 pt-2">
+                        <!--                    <?= MOD_layoutbits::linkWithPicture($member->Username) ?> -->
+                        <a href="members/<?= $member->Username ?>" class="username"><?= $member->Username ?></a>
+                    </div>
+                    <div class="col-4 col-md-3 pt-2">
+                        <?= (($this->member->getPKValue() == $member->getPKValue()) ? '' :
+                            "<div class='btn-group pull-right'><a class='accept btn btn-sm btn-success' href='group/{$this->group->getPKValue()}/acceptmember/{$member->getPKValue()}'><i class='fa fa-user-check' title='" . $words->get('GroupsAcceptMember') . "'></i></a>
                                   <a class='kick btn btn-sm btn-warning' href='group/{$this->group->getPKValue()}/declinemember/{$member->getPKValue()}'><i class='fa fa-user-times' title='" . $words->get('GroupsDeclineMember') . "'></i></a>
                                   <a class='ban btn btn-sm btn-danger' href='group/{$this->group->getPKValue()}/banmember/{$member->getPKValue()}'><i class='fa fa-user-slash' title='" . $words->get('GroupsBanMember') . "'></i></a></div>"); ?>
-                </div>
-            <?php endforeach;
-            ?>
-            </div>
-        </div>
+                    </div>
+                <?php endforeach;
+                ?>
         <?php endif; ?>
     <?php endif; ?>
-        <div class="col-12">
-            <div class="row">
-                <div class="col-12">
-                    <h4><?= $words->get('GroupsInviteMembers') ?></h4>
+            <div class="col-12">
+                <h4><?= $words->get('GroupsInviteMembers') ?></h4>
+            </div>
+
+            <div class="col-12">
+                <div class="container">
+                    <div id="search_result" class="row d-none"></div>
                 </div>
+            </div>
 
-                <div class="col-12"><div class="container"><div id="search_result" class="row d-none"></div></div></div>
-
-                <div class="col-12">
-                    <form method='get' class="form-inline" autocomplete="off" action='group/<?= $this->group->getPKValue(); ?>/invitemembers/search'
-                          id='invite_form'>
-                        <input type='text' placeholder='<?= $words->getSilent('GroupsEnterUsername'); ?>'
-                               name='username' id='search_username' class="form-control mr-2"/>
-                        <input type='submit' value='<?= $words->getSilent('Search'); ?>'
-                               class="btn btn-primary" id='search_username_submit'/>
-                    </form>
-                    <?= $words->flushBuffer() ?>
-                </div>
-
+            <div class="col-12">
+                <form method='get' class="form-inline" autocomplete="off"
+                      action='group/<?= $this->group->getPKValue(); ?>/invitemembers/search'
+                      id='invite_form'>
+                    <input type='text' placeholder='<?= $words->getSilent('GroupsEnterUsername'); ?>'
+                           name='username' id='search_username' class="form-control mr-2"/>
+                    <input type='submit' value='<?= $words->getSilent('Search'); ?>'
+                           class="btn btn-primary" id='search_username_submit'/>
+                </form>
                 <?= $words->flushBuffer() ?>
             </div>
-        </div>
+
+            <?= $words->flushBuffer() ?>
+
         <div id="invited_members" class="col-12">
-            <div class="row align-items-center">
-                <div class="col-12">
                     <h4><?= $words->get('GroupsInvitedMembers'); ?></h4>
                 </div>
 
@@ -245,15 +197,41 @@ class GroupMemberAdministrationPage extends GroupsSubPage
                             <a href="members/<?= $member->Username ?>" class="username"><?= $member->Username ?></a>
                         </div>
                         <div class="col-4 col-md-3">
-                            <div class='btn-group'><a class='withdraw btn btn-sm btn-warning' href='group/<?= $groupid ?>/withdraw/<?= $member->id ?>'><i class='fa fa-user-slash' title='<?= $words->getSilent('GroupsWithdrawInvitation')?>'></i></a>
+                            <div class='btn-group'><a class='withdraw btn btn-sm btn-warning'
+                                                      href='group/<?= $groupid ?>/withdraw/<?= $member->id ?>'><i
+                                            class='fa fa-user-slash'
+                                            title='<?= $words->getSilent('GroupsWithdrawInvitation') ?>'></i></a>
                             </div>
                         </div>
                     <?php endforeach; ?>
                 <?php endif; ?>
-            </div>
         </div>
         <script type='text/javascript'>
             $(function () {
+                $('#current_members a.ban').click(function (e) {
+                    // code goes here
+                    if (!confirm('<?= $this->javascript_escape($words->getSilent('GroupsConfirmMemberBan'));?>')) {
+                        e.preventDefault();
+                    }
+                });
+                $('#current_members a.kick').click(function (e) {
+                    // code goes here
+                    if (!confirm('<?= $this->javascript_escape($words->getSilent('GroupsConfirmMemberKick'));?>')) {
+                        e.preventDefault();
+                    }
+                });
+                $('#current_members a.addAdmin').click(function (e) {
+                    // code goes here
+                    if (!confirm('<?= $this->javascript_escape($words->getSilent('GroupsConfirmMemberAsAdmin'));?>')) {
+                        e.preventDefault();
+                    }
+                });
+                $('#current_members a.resignAdmin').click(function (e) {
+                    // code goes here
+                    if (!confirm('<?= $this->javascript_escape($words->getSilent('GroupsConfirmResignAsAdmin'));?>')) {
+                        Event.stop(e);
+                    }
+                });
                 var possiblemembers = $('#possible_members');
                 if (possiblemembers.length) {
                     $('#possible_members a.ban').click(function (e) {
@@ -280,30 +258,28 @@ class GroupMemberAdministrationPage extends GroupsSubPage
                 }
             });
             var search_handler = {
-                display_result: function(member_object){
+                display_result: function (member_object) {
                     var search_div = $('#search_result');
                     search_div.empty();
                     search_div.css('border', '1px solid black');
                     var counter = 0;
-                    for (var m in member_object)
-                    {
+                    for (var m in member_object) {
                         search_div.append("<div class='col-12 col-sm-6 col-md-4 col-lg-3'>" +
                             "<a href='' class='btn btn-sm btn-primary' data-username='" + m + "' " +
-                            "id='invite_member_"+ member_object[m] + "' " +
+                            "id='invite_member_" + member_object[m] + "' " +
                             "title='<?= $this->javascript_escape($words->get('GroupsClickToSendInvite'));?>" + m +
                             "'><?= $this->javascript_escape($words->getSilent('GroupsInvite'));?>" + m + "</a></div>");
                         counter++;
                     }
-                    if (counter === 0)
-                    {
+                    if (counter === 0) {
                         search_div.append(
                             "<p><?= $this->javascript_escape($words->getSilent('GroupsCouldNotFindMembers'));?></p>"
                         );
                     }
-                    $('a[id^="invite_member_"]').click( search_handler.add_invite );
+                    $('a[id^="invite_member_"]').click(search_handler.add_invite);
                     search_div.toggleClass('d-none');
                 },
-                add_invite: function(e){
+                add_invite: function (e) {
                     e.preventDefault();
                     var it = e.target;
                     var id = it.id.substr(14);
@@ -311,28 +287,25 @@ class GroupMemberAdministrationPage extends GroupsSubPage
                         url: '/group/<?= $this->group->getPKValue(); ?>/invite/' + id,
                         dataType: 'json',
                         type: 'post',
-                        success: function(data){
-                            if (data.success === true)
-                            {
+                        success: function (data) {
+                            if (data.success === true) {
                                 search_handler.add_invite_callback(it);
-                            }
-                            else
-                            {
+                            } else {
                                 alert('<?= $this->javascript_escape($words->getSilent('GroupsCouldNotInvite'));?>');
                             }
                         },
-                        error: function(transport){
+                        error: function (transport) {
                             alert('<?= $this->javascript_escape($words->getSilent('GroupsInviteFailedTechError'));?>');
                         }
                     });
                 },
-                add_invite_callback: function(it){
+                add_invite_callback: function (it) {
                     alert('<?= $this->javascript_escape($words->getSilent('GroupsInvitedMember'));?>' +
                         $(it).data("username"));
                     $(it).parent().remove();
                 }
             };
-            $('#invite_form').submit( function(e){
+            $('#invite_form').submit(function (e) {
                 e = e || window.event;
                 $.ajax({
                     type: 'get',
@@ -341,15 +314,26 @@ class GroupMemberAdministrationPage extends GroupsSubPage
                     success: function (data) {
                         search_handler.display_result(data);
                     },
-                    error: function(data){
+                    error: function (data) {
                         alert('<?= $this->javascript_escape($words->getSilent('GroupsInviteFailedTechError'));?>');
                     }
                 });
                 e.preventDefault();
             });
         </script>
-    </div>
-<?php
+        <?php
+    }
+
+    private function javascript_escape($str)
+    {
+        $new_str = '';
+
+        $str_len = strlen($str);
+        for ($i = 0; $i < $str_len; $i++) {
+            $new_str .= '\\x' . dechex(ord(substr($str, $i, 1)));
+        }
+
+        return $new_str;
     }
 }
 

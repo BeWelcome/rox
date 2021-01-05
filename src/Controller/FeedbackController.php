@@ -16,6 +16,9 @@ class FeedbackController extends AboutBaseController
 {
     /**
      * @Route("/about/feedback", name="contactus")
+     * @Route("/contact")
+     * @Route("/contactus")
+     * @Route("/support")
      *
      * @return RedirectResponse
      */
@@ -33,12 +36,16 @@ class FeedbackController extends AboutBaseController
     {
         $member = $this->getUser();
         $categories = $aboutModel->getFeedbackCategories();
-        $form = $this->createForm(FeedbackFormType::class, null, [
-            'categories' => $categories,
-            'member' => $member,
-            'csrf_protection' => false,
-            'allow_extra_fields' => true,
-        ]);
+        $form = $this->createForm(
+            FeedbackFormType::class,
+            null,
+            [
+                'categories' => $categories,
+                'member' => $member,
+                'csrf_protection' => false,
+                'allow_extra_fields' => true,
+            ]
+        );
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -46,7 +53,6 @@ class FeedbackController extends AboutBaseController
             $reply = !($data['no_reply_needed']);
             if ($reply && null === $data['FeedbackEmail']) {
                 $form
-                    ->get('FeedbackEmail')
                     ->addError(
                         new FormError(
                             $translator->trans('form.error.feedback.email.needed', [], 'validators')
@@ -74,7 +80,7 @@ class FeedbackController extends AboutBaseController
         return $this->render('about/feedback.html.twig', [
             'form' => $form->createView(),
             'submenu' => [
-                'items' => $this->getSubMenuItems(),
+                'items' => $this->getSubMenuItems($request->getLocale()),
                 'active' => 'about_feedback',
             ],
         ]);
@@ -85,11 +91,11 @@ class FeedbackController extends AboutBaseController
      *
      * @return Response
      */
-    public function feedbackReceived()
+    public function feedbackReceived(Request $request)
     {
         return $this->render('about/feedback.received.html.twig', [
             'submenu' => [
-                'items' => $this->getSubMenuItems(),
+                'items' => $this->getSubMenuItems($request->getLocale()),
                 'active' => 'about_feedback',
             ],
         ]);

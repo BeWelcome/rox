@@ -99,35 +99,35 @@ class SendNotificationsCommand extends Command
             foreach ($scheduledNotifications as $scheduled) {
                 $receiver = $scheduled->getReceiver();
                 $status = $receiver->getStatus();
-                if (!\in_array($status, MemberStatusType::ACTIVE_ALL_ARRAY, true)) {
-                    continue;
+                $notificationStatus = NotificationStatusType::FROZEN;
+                if (\in_array($status, MemberStatusType::ACTIVE_ALL_ARRAY, true)) {
+                    try {
+                        // Force locale for all methods
+                        $this->setTranslatorLocale($receiver);
+                        $sender = $this->determineSender($scheduled->getPost());
+                        $subject = $this->getSubject($scheduled);
+                        $this->mailer->sendNotificationEmail(
+                            $sender,
+                            $receiver,
+                            [
+                                'subject' => $subject,
+                                'notification' => $scheduled,
+                                'datesent' => $scheduled->getCreated(),
+                            ]
+                        );
+                        $notificationStatus = NotificationStatusType::SENT;
+                        ++$sent;
+                    } catch (\Exception $e) {
+                        $io->error($e->getMessage());
+                    }
                 }
-
-                try {
-                    // Force locale for all methods
-                    $this->setTranslatorLocale($receiver);
-                    $sender = $this->determineSender($scheduled->getPost());
-                    $subject = $this->getSubject($scheduled);
-                    $this->mailer->sendNotificationEmail(
-                        $sender,
-                        $receiver,
-                        [
-                            'subject' => $subject,
-                            'notification' => $scheduled,
-                        ]
-                    );
-                    $scheduled->setStatus(NotificationStatusType::SENT);
-                    ++$sent;
-                } catch (\Exception $e) {
-                    $io->error($e->getMessage());
-                    $scheduled->setStatus(NotificationStatusType::FROZEN);
-                }
+                $scheduled->setStatus($notificationStatus);
                 $this->entityManager->persist($scheduled);
             }
             $this->entityManager->flush();
         }
 
-        $io->success(sprintf('Sent %d messages', $sent));
+        $io->success(sprintf('Sent %d messages, skipped %d messages', $sent, $batchSize - $sent));
 
         return 0;
     }

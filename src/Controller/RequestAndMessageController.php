@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use InvalidArgumentException;
+use App\Entity\Member;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -15,27 +15,22 @@ class RequestAndMessageController extends BaseMessageController
     /**
      * @Route("/both/{folder}", name="both",
      *     defaults={"folder": "inbox"})
-     *
-     * @param string $folder
-     *
-     * @throws InvalidArgumentException
-     *
-     * @return Response
      */
-    public function requestsAndMessages(Request $request, $folder)
+    public function requestsAndMessages(Request $request, string $folder): Response
     {
-        $page = $request->query->get('page', 1);
-        $limit = $request->query->get('limit', 10);
-        $sort = $request->query->get('sort', 'dateSent');
-        $sortDir = $request->query->get('dir', 'desc');
-
-        if (!\in_array($sortDir, ['asc', 'desc'], true)) {
-            throw new InvalidArgumentException();
-        }
-
+        /** @var Member $member */
         $member = $this->getUser();
-        $messages = $this->messageModel->getFilteredRequestsAndMessages($member, $folder, $sort, $sortDir, $page, $limit);
+        list($page, $limit, $sort, $direction) = $this->getOptionsFromRequest($request);
 
-        return $this->handleFolderRequest($request, $folder, $messages, 'both');
+        $requestsAndMessages = $this->messageModel->getFilteredRequestsAndMessages(
+            $member,
+            $folder,
+            $sort,
+            $direction,
+            $page,
+            $limit
+        );
+
+        return $this->handleFolderRequest($request, $folder, 'both', $requestsAndMessages);
     }
 }

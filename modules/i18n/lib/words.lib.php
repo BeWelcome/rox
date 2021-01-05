@@ -446,7 +446,7 @@ class MOD_words
 
         $row = $this->_lookup_row($code, $lang);
         // select the English wordcode only if not archived
-        $row_en = $this->_lookup_row($code, 'en','AND (isarchived=0 or isarchived is null)');
+        $row_en = $this->_lookup_row($code, 'en');
         $R = MOD_right::get();
 
         // for normal people no translation stuff

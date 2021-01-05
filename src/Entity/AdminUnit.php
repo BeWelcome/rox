@@ -67,9 +67,9 @@ class AdminUnit
     /**
      * @var int
      *
-     * @ORM\Column(name="geonameid", type="integer")
+     * @ORM\Column(name="geonameId", type="integer")
      */
-    private $geonameid;
+    private $geonameId;
 
     /**
      * Set name.
@@ -216,12 +216,12 @@ class AdminUnit
     }
 
     /**
-     * Get geonameid.
+     * Get geonameId.
      *
      * @return int
      */
-    public function getGeonameid()
+    public function getGeonameId()
     {
-        return $this->geonameid;
+        return $this->geonameId;
     }
 }

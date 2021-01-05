@@ -10,6 +10,7 @@ namespace App\Entity;
 use App\Doctrine\LanguageLevelType;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * Memberslanguageslevel.
@@ -49,6 +50,8 @@ class MembersLanguagesLevel
      *
      * @ORM\ManyToOne(targetEntity="Language", inversedBy="levels")
      * @ORM\JoinColumn(name="IdLanguage", referencedColumnName="id", nullable=FALSE)
+     *
+     * @Groups({"Member:Read"})
      */
     private $language;
 
@@ -56,6 +59,8 @@ class MembersLanguagesLevel
      * @var string
      *
      * @ORM\Column(name="Level", type="language_level", nullable=false)
+     *
+     * @Groups({"Member:Read"})
      */
     private $level = LanguageLevelType::BEGINNER;
 

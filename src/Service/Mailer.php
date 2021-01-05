@@ -48,7 +48,7 @@ class Mailer
         $parameters['sender'] = $sender;
 
         return $this->sendTemplateEmail(
-            $this->getBewelcomeAddress($sender, self::MESSAGE_EMAIL_ADDRESS),
+            $this->getDirectBewelcomeAddress($sender, self::MESSAGE_EMAIL_ADDRESS),
             $receiver,
             $template,
             $parameters
@@ -143,16 +143,32 @@ class Mailer
      */
     public function sendFeedbackEmail($sender, Address $receiver, $parameters)
     {
-        $parameters['subject'] = "Your feedback in '" . str_replace('_', ' ', ($parameters['IdCategory'])->getName()) . "'";
+        $parameters['subject'] = "Your feedback in '"
+            . str_replace('_', ' ', ($parameters['IdCategory'])->getName()) . "'";
 
         return $this->sendTemplateEmail(
             $sender,
-            new Address($receiver),
+            $receiver,
             'feedback',
             $parameters
         );
     }
 
+    /**
+     * Used for messages and requests notifications to allow recipients to distinguish between those
+     * and other notifications.
+     */
+    private function getDirectBewelcomeAddress(Member $sender, string $email): Address
+    {
+        return new Address($email, $sender->getUsername() . ' [BeWelcome]');
+    }
+
+    /**
+     * Used for all notifications except messages and requests notifications to allow recipients to distinguish between
+     * those notifications.
+     *
+     * @param mixed $email
+     */
     private function getBewelcomeAddress(Member $sender, $email)
     {
         return new Address($email, 'Bewelcome - ' . $sender->getUsername());
@@ -167,6 +183,7 @@ class Mailer
      */
     private function sendTemplateEmail($sender, $receiver, string $template, $parameters)
     {
+        $currentLocale = $this->translator->getLocale();
         $success = true;
         $locale = 'en';
         if ($receiver instanceof Member) {
@@ -193,8 +210,12 @@ class Mailer
             ->htmlTemplate('emails/' . $template . '.html.twig')
             ->context($parameters);
 
+        if (isset($parameters['datesent'])) {
+            $email->date($parameters['datesent']);
+        }
+
         if (!\is_string($sender) && !$sender instanceof Address) {
-            $sender = $email->from($this->getBewelcomeAddress($sender, 'message@bewelcome.org'));
+            $sender = $email->from($this->getDirectBewelcomeAddress($sender, self::MESSAGE_EMAIL_ADDRESS));
         }
         $email->from($sender);
 
@@ -203,9 +224,7 @@ class Mailer
         } catch (TransportExceptionInterface $e) {
             $success = false;
         }
-        if ($sender instanceof Member) {
-            $this->setTranslatorLocale($sender);
-        }
+        $this->translator->setLocale($currentLocale);
 
         return $success;
     }

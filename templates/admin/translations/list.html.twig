@@ -17,6 +17,21 @@
     </p>
     {{ form(form) }}
     {% if translations.nbResults == 0  %}
+        {% if code %}
+            <br>
+            {{ 'translation.search.no.results'|trans({
+                'code': code,
+                'link_start': '<a href="' ~ path('translation_create', {
+                    'domain': 'messages',
+                    'locale': 'en',
+                    'translationId': code
+                }) ~ '">',
+                'link_end': '</a>'
+                })|raw
+            }}
+        {% else %}
+            {{ 'translation.no.results'|trans }}
+        {% endif %}
     {% else %}
         {% if translations.haveToPaginate %}
             <div class="row">

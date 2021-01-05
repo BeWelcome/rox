@@ -23,6 +23,7 @@ Boston, MA  02111-1307, USA.
 */
 
 use App\Entity\MemberPreference;
+use App\Entity\Preference;
 use Carbon\Carbon;
 
 /**
@@ -406,9 +407,9 @@ WHERE `ShortCode` = \'' . $this->session->get('lang') . '\'';
             return function ($v) use ($lang) { return $v->id == $lang; };
         };
 
-        $languagePreferenceID = $this->getPreferenceId("PreferenceLanguage");
-        $newsletterPreferenceID = $this->getPreferenceId("PreferenceAcceptNewsByMail");
-        $localNewsPreferenceID = $this->getPreferenceId("PreferenceLocalEvent");
+        $languagePreferenceID = $this->getPreferenceId(Preference::LOCALE);
+        $newsletterPreferenceID = $this->getPreferenceId(Preference::NEWSLETTERS_VIA_EMAIL);
+        $localNewsPreferenceID = $this->getPreferenceId(Preference::LOCAL_EVENT_NOTIFICATIONS);
 
         $update="INSERT INTO memberspreferences (IdMember, IdPreference, Value) VALUES ";
         $filteredLanguages = array_filter($languages, $languageFilter($motherTongue->id));
@@ -477,8 +478,8 @@ VALUES
             $vars['genderhidden'] = self::BW_FALSE;
         }
 
-        if (isset($vars['geonameid'])) {
-            $vars['IdCity'] = $vars['geonameid'];
+        if (isset($vars['geonameId'])) {
+            $vars['IdCity'] = $vars['geonameId'];
         }
 
         $vars['email'] = $this->normalizeEmail($vars['email']);
@@ -596,7 +597,7 @@ VALUES
     private function checkStepThree(&$vars)
     {
         $errors = [];
-        // geonameid
+        // geonameId
         if (empty($vars['location-geoname-id'])) {
             $errors[] = 'SignupErrorProvideLocation';
             unset($vars['location-geoname-id']);

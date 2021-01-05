@@ -7,6 +7,9 @@ use App\Model\WikiModel;
 use App\Repository\WikiRepository;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
+use DateTime;
+use Pagerfanta\Adapter\ArrayAdapter;
+use Pagerfanta\Pagerfanta;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -16,8 +19,8 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class WikiController extends AbstractController
 {
-    use TranslatorTrait;
     use TranslatedFlashTrait;
+    use TranslatorTrait;
 
     /**
      * @Route("/wiki", name="wiki_front_page")
@@ -26,17 +29,45 @@ class WikiController extends AbstractController
      */
     public function showWikiFrontPage(WikiModel $wikiModel)
     {
-        return $this->showWikiPage('WikiFrontPage', $wikiModel);
+        return $this->showWikiPage('WikiFrontPage', $wikiModel, 0);
     }
 
     /**
-     * @Route("/wiki/{pageTitle}", name="wiki_page")
+     * @Route("/wiki/recent", name="wiki_recent")
+     *
+     * @return Response
+     */
+    public function showRecentChanges(Request $request)
+    {
+        $page = $request->get('page', 1);
+
+        /** @var WikiRepository $wikiRepository */
+        $wikiRepository = $this->getDoctrine()->getRepository(Wiki::class);
+        $recentChanges = $wikiRepository->getRecentChanges();
+        $adapter = new ArrayAdapter($recentChanges);
+        $pagerFanta = new Pagerfanta($adapter);
+        $pagerFanta->setMaxPerPage(20);
+        $pagerFanta->setCurrentPage($page);
+
+        return $this->render('wiki/recent.html.twig', [
+            'submenu' => [
+                'active' => 'recent',
+                'items' => $this->getSubmenuItems(),
+            ],
+            'pager' => $pagerFanta,
+        ]);
+    }
+
+    /**
+     * @Route("/wiki/{pageTitle}/{version}", name="wiki_page",
+     *     requirements={"version"="\d+"},
+     *     defaults={"version"=0})
      *
      * @param $pageTitle
      *
      * @return Response
      */
-    public function showWikiPage($pageTitle, WikiModel $wikiModel)
+    public function showWikiPage($pageTitle, WikiModel $wikiModel, int $version)
     {
         $pageName = $wikiModel->getPageName($pageTitle);
 
@@ -44,22 +75,52 @@ class WikiController extends AbstractController
         /** @var WikiRepository $wikiRepository */
         $wikiRepository = $em->getRepository(Wiki::class);
 
-        $wikiPage = $wikiRepository->getPageByName($pageName);
+        $wikiPage = $wikiRepository->getPageByName($pageName, $version);
 
+        $pagerFanta = null;
+        $content = null;
         if (null === $wikiPage) {
-            return $this->redirectToRoute('wiki_page_create', ['pageTitle' => $pageTitle]);
+            // No wiki page found if no version was given create a new page.
+            if (0 === $version) {
+                return $this->redirectToRoute('wiki_page_create', ['pageTitle' => $pageTitle]);
+            }
+
+            // the given version of the wiki page doesn't exist. Just keep going
+            // (show appropriate message in the template)
+        } else {
+            $content = $wikiModel->parseWikiMarkup($wikiPage->getContent());
+            if (null === $content) {
+                $this->addTranslatedFlash('error', 'flash.wiki.markup.invalid');
+
+                return $this->redirectToRoute('wiki_page_edit', ['pageTitle' => $pageTitle]);
+            }
+
+            // Create paginator
+            $history = $wikiModel->getHistory($wikiPage);
+
+            $adapter = new ArrayAdapter($history);
+            $pagerFanta = new Pagerfanta($adapter);
+            $pagerFanta->setMaxPerPage(1);
+            if (0 === $version) {
+                $pagerFanta->setCurrentPage($pagerFanta->getNbResults());
+            } else {
+                $pagerFanta->setCurrentPage($version);
+            }
         }
 
-        $output = $wikiModel->parseWikiMarkup($wikiPage->getContent());
-        if (null === $output) {
-            $this->addTranslatedFlash('error', 'flash.wiki.markup.invalid');
-
-            return $this->redirectToRoute('wiki_page_edit', ['pageTitle' => $pageTitle]);
-        }
+        $frontPage = 'WikiFrontPage' === $pageTitle;
+        $activePage = $frontPage ? 'startpage' : 'currentpage';
+        $currentPage = $frontPage ? null : $pageTitle;
 
         return $this->render('wiki/wiki.html.twig', [
             'title' => $pageTitle,
-            'wikipage' => $output,
+            'wikipage' => $wikiPage,
+            'content' => $content,
+            'history' => $pagerFanta,
+            'submenu' => [
+                'active' => $activePage,
+                'items' => $this->getSubmenuItems($currentPage),
+            ],
         ]);
     }
 
@@ -89,16 +150,26 @@ class WikiController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
+            /** @var Member $member */
+            $member = $this->getUser();
             $newWikiPage = clone $wikiPage;
             $newWikiPage->setContent($data['wiki_markup']);
             // \todo make this safe against multiple edits at the same time
             $newWikiPage->setVersion($wikiPage->getVersion() + 1);
+            $newWikiPage->setAuthor($member->getUsername());
+            $newWikiPage->setCreated((new DateTime())->getTimestamp());
             $em = $this->getDoctrine()->getManager();
             $em->persist($newWikiPage);
             $em->flush();
             $this->addTranslatedFlash('notice', 'flash.wiki.updated');
 
-            return $this->redirectToRoute('wiki_page', ['pageTitle' => $pageTitle]);
+            return $this->redirectToRoute('wiki_page', [
+                'pageTitle' => $pageTitle,
+                'submenu' => [
+                    'active' => 'edit_create',
+                    'items' => $this->getSubmenuItems($pageTitle),
+                ],
+            ]);
         }
 
         return $this->render('wiki/edit_create.html.twig', [
@@ -142,5 +213,26 @@ class WikiController extends AbstractController
             'title' => $pageTitle,
             'form' => $form->createView(),
         ]);
+    }
+
+    private function getSubmenuItems(?string $currentPage = null): array
+    {
+        $submenuItems = [];
+        $submenuItems['startpage'] = [
+            'key' => 'startpage',
+            'url' => $this->generateUrl('wiki_front_page'),
+        ];
+        if (null !== $currentPage) {
+            $submenuItems['currentpage'] = [
+                'key' => $currentPage,
+                'url' => $this->generateUrl('wiki_page', ['pageTitle' => $currentPage]),
+            ];
+        }
+        $submenuItems['recent'] = [
+            'key' => 'wiki.recent',
+            'url' => $this->generateUrl('wiki_recent'),
+        ];
+
+        return $submenuItems;
     }
 }

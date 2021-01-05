@@ -42,13 +42,13 @@
     </select>
 {% endmacro %}
 
-{% macro avatar(username, size, linked = false, addimage = false, addlink = false) %}
+{% macro avatar(username, size, linked = false, addimage = false, addlink = false, newpage = false) %}
     {% import _self as macros %}
     {% set imgclasses %}profileimg{% if addimage %} {{ addimage }}{% endif %}{% endset %}
     {% set linkclasses %}{% if addlink %} {{ addlink }}{% endif %}{% endset %}
     {% set img %}<img class="{{ imgclasses }} avatar-{{ size }}" src="{{ path( 'avatar', { 'username': username , 'size': size }) }}" title="{{ username }}" alt="{{ 'profile' | trans }}: {{ username }}">{% endset %}
     {% if linked %}
-        {{ macros.profilelink(username, img, linkclasses) }}
+        {{ macros.profilelink(username, img, linkclasses, newpage) }}
     {% else %}
         {{ img }}
     {% endif %}

@@ -8,8 +8,8 @@ function Map() {
 Map.prototype.showMap = function () {
     if (this.map === undefined) {
         this.initializing = true;
-        // add the container hosting the map
 
+        // add the container hosting the map
         this.mapBox.toggleClass("map-box");
         this.mapBox.append('<div id="map" class="map p-2 framed w-100"></div>');
         this.map = L.map('map', {
@@ -28,25 +28,28 @@ Map.prototype.showMap = function () {
         this.noRefresh = false;
         this.markerClusterGroup = this.addMarkers(this.map);
 
+        this.noRefresh = true;
         if (this.markerClusterGroup.getLayers().length > 0) {
             // Check if a rectangle is set if so use this for the bounds else fit the bounds to the markerClusterGroup
             var query = this.getQueryStrings($(".search_form").serialize());
 
             // Distinguish between /search/members and /search/map
-            if (query["map[distance]"] !== undefined) {
-                this.noRefresh = true;
-                this.map.fitBounds(this.boundingBox(query["map[location_latitude]"], query["map[location_longitude]"], query["map[distance]"]));
+            if (query["search[distance]"] === -1) {
+                this.map.fitBounds([[query["search[ne_latitude]"], query["search[ne_longitude]"]], [query["search[sw_latitude]"], query["search[sw_longitude]"]]]);
             } else {
-                if (query["search[distance]"] === -1) {
-                    this.noRefresh = true;
-                    this.map.fitBounds([[query["search[ne_latitude]"], query["search[ne_longitude]"]], [query["search[sw_latitude]"], query["search[sw_longitude]"]]]);
+                const isAdminUnit = document.getElementById('search_location_admin_unit').value;
+
+                if (1 == isAdminUnit) {
+                    const bounds = this.markerClusterGroup.getBounds();
+                    this.map.fitBounds(bounds, {zoomSnap: 0.25});
                 } else {
-                    this.noRefresh = true;
-                    this.map.fitBounds(this.boundingBox(query["search[location_latitude]"], query["search[location_longitude]"], query["search[distance]"]));
+                    this.centerMap();
                 }
             }
+        } else {
+            this.centerMap();
         }
-        that = this;
+        let that = this;
         this.map.on("dragend", function () {
             if (!that.noRefresh && !that.initializing) {
                 that.refreshMap();
@@ -63,6 +66,38 @@ Map.prototype.showMap = function () {
         this.initializing = false;
     }
 };
+
+Map.prototype.centerMap = function () {
+    // get bounding box from the hidden fields
+    const latitude = document.getElementById('search_location_latitude').value;
+    const longitude = document.getElementById('search_location_longitude').value;
+    if ("" === latitude) {
+        return;
+    }
+
+    const sw_latitude = document.getElementById('search_sw_latitude').value;
+    const sw_longitude = document.getElementById('search_sw_longitude').value;
+    const ne_latitude = document.getElementById('search_ne_latitude').value;
+    const ne_longitude = document.getElementById('search_ne_longitude').value;
+    const sw = L.latLng(sw_latitude, sw_longitude);
+    const ne = L.latLng(ne_latitude, ne_longitude);
+    const bounds = new L.latLngBounds(sw, ne);
+
+    let mapMarkerIcon = L.icon({
+        iconUrl: '/images/icons/marker_drop.png',
+        iconSize: [29, 24],
+        iconAnchor: [9, 21],
+        popupAnchor: [0, -14]
+    });
+
+    L.marker([latitude, longitude], {
+        icon: mapMarkerIcon,
+        draggable: false
+    }).addTo(this.map);
+
+    this.map.fitBounds(bounds, {zoomSnap: 0.25});
+    this.map.flyTo([latitude, longitude]);
+}
 
 Map.prototype.hideMap = function () {
     if (this.map !== undefined) {

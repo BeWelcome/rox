@@ -23,6 +23,7 @@ Boston, MA  02111-1307, USA.
 */
 
 $words = new MOD_words();
+$uri = $_SERVER['REQUEST_URI'];
 ?>
 
 <div class="col-md-3 offcanvas-collapse mb-2" id="sidebar">
@@ -33,7 +34,7 @@ $words = new MOD_words();
         </button>
     </div>
     <div class="list-group">
-        <a class="list-group-item nav-link active" href="donate"><?php echo $words->getBuffered('DonateLink'); ?></a>
-        <a class="list-group-item nav-link" href="donate/list"><?php echo $words->getBuffered('DonateList'); ?></a>
+        <a class="list-group-item nav-link<?php if($uri === '/donate') echo ' active'; ?>" href="donate"><?php echo $words->getBuffered('DonateLink'); ?></a>
+        <a class="list-group-item nav-link<?php if($uri === '/donate/list') echo ' active'; ?>" href="donate/list"><?php echo $words->getBuffered('DonateList'); ?></a>
     </div>
 </div>

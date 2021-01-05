@@ -52,7 +52,7 @@ if (isset($Data->rPoll->id)) { // Form for update
         <div class="form-group">
             <label for="Status">Polls Status:</label>
             <?php
-            $sChoice = array("Project", "Open", "Close");
+            $sChoice = array("Project", "Open", "Closed");
             if (empty($rr->Status)) $rr->Status = "Project"; // By default a poll will be at Project Status
             echo "<select class='form-control select2' data-minimum-results-for-search=\"Infinity\" id=\"Status\" name=\"Status\">\n";
             for ($ii = 0; $ii < count($sChoice); $ii++) {

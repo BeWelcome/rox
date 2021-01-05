@@ -43,6 +43,7 @@ class ActivityRepository extends EntityRepository
             ->createQuery('
                 SELECT a
                 FROM App:Activity a
+                WHERE a.status <> 1
                 ORDER BY a.id DESC
             ');
     }
@@ -108,12 +109,9 @@ class ActivityRepository extends EntityRepository
     /**
      * Get all activities around a given location.
      *
-     * @param int   $distance
      * @param mixed $online
-     *
-     * @return int
      */
-    public function getUpcomingAroundLocationCount(Member $member, $online)
+    public function getUpcomingAroundLocationCount(Member $member, $online): int
     {
         $qb = $this->getUpcomingAroundLocationQueryBuilder($member, $online);
         $qb
@@ -141,7 +139,6 @@ class ActivityRepository extends EntityRepository
     }
 
     /**
-     * @param int   $distance
      * @param mixed $online
      *
      * @throws Exception
@@ -161,7 +158,7 @@ class ActivityRepository extends EntityRepository
         $coordinates = $edison->boundingCoordinates($distance, 'km');
 
         $qb = $this->createQueryBuilder('a')
-            ->leftJoin('App:Location', 'l', Join::WITH, 'a.location = l.geonameid AND l.latitude BETWEEN :lat_e AND :lat_w AND l.longitude BETWEEN :long_s AND :long_n')
+            ->leftJoin('App:Location', 'l', Join::WITH, 'a.location = l.geonameId AND l.latitude BETWEEN :lat_e AND :lat_w AND l.longitude BETWEEN :long_s AND :long_n')
             ->setParameter('lat_e', $coordinates[0]->getLatitudeInDegrees())
             ->setParameter('lat_w', $coordinates[1]->getLatitudeInDegrees())
             ->setParameter('long_s', $coordinates[0]->getLongitudeInDegrees())
@@ -174,7 +171,7 @@ class ActivityRepository extends EntityRepository
         if ($online) {
             $qb->andWhere($qb->expr()->orX(
                 $qb->expr()->eq('a.online', 1),
-                $qb->expr()->isNotNull('l.geonameid')
+                $qb->expr()->isNotNull('l.geonameId')
             ));
         } else {
             $qb
@@ -182,7 +179,7 @@ class ActivityRepository extends EntityRepository
                     $qb->expr()->isNull('a.online'),
                     $qb->expr()->eq('a.online', 0),
                 ))
-                ->andWhere($qb->expr()->isNotNull('l.geonameid'))
+                ->andWhere($qb->expr()->isNotNull('l.geonameId'))
             ;
         }
 

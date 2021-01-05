@@ -48,7 +48,7 @@ class FaqController extends AbstractController
         $faqs = $this->faqModel->getFaqsForCategory($faqCategory);
         $faqCategories = $this->getSubMenuItems();
 
-        return  $this->render('faq/faq.html.twig', [
+        return $this->render('faq/faq.html.twig', [
             'submenu' => [
                 'items' => $faqCategories,
                 'active' => $faqCategory->getId(),

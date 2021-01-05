@@ -42,8 +42,8 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 class GroupController extends AbstractController
 {
     use ManagerTrait;
-    use TranslatorTrait;
     use TranslatedFlashTrait;
+    use TranslatorTrait;
     use UniqueFilenameTrait;
 
     /**
@@ -276,7 +276,7 @@ class GroupController extends AbstractController
 
         if ($success) {
             $admins = $group->getAdmins();
-            $this->groupModel->sendAdminNotification($group, $member, $admins);
+            $this->groupModel->sendAdminNotificationAccepted($group, $member, $admins);
             $this->addTranslatedFlash('notice', 'flash.invite.accepted');
         } else {
             $this->addTranslatedFlash('error', 'flash.invite.accepted.error');
@@ -299,7 +299,7 @@ class GroupController extends AbstractController
 
         if ($success) {
             $admins = $group->getAdmins();
-            $this->groupModel->sendAdminNotification($group, $member, $admins);
+            $this->groupModel->sendAdminNotificationDeclined($group, $member, $admins);
             $this->addTranslatedFlash('notice', 'flash.invite.declined');
         } else {
             $this->addTranslatedFlash('error', 'flash.invite.declined.error');
@@ -414,7 +414,7 @@ class GroupController extends AbstractController
         /** @var WikiRepository $wikiRepository */
         $wikiRepository = $em->getRepository(Wiki::class);
 
-        $wikiPage = $wikiRepository->getPageByName($pageName);
+        $wikiPage = $wikiRepository->getPageByName($pageName, 0);
 
         if (null === $wikiPage) {
             $output = null;

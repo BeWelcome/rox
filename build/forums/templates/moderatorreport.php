@@ -32,7 +32,7 @@ $words = new MOD_words();
 
 <?php
 if (!empty($DataPost->Error)) {
-    echo '<div class="col-12 alert alert-danger"><h3>'.$DataPost->Error.'</h3></div>';
+    echo '<div class="col-12 alert alert-danger"><h3>' . $DataPost->Error . '</h3></div>';
 }
 
 $request = PRequest::get()->request;
@@ -40,53 +40,77 @@ $uri = implode('/', $request);
 
 ?>
 
-<table class="table table-bordered table-sm">
-    <?php if (isset($DataPost->Thread->title)) ?>
-    <form method="post" action="forums/modeditpost/<?=$DataPost->Post->id;?>" id="modpostforum">
-        <input type="hidden" name="<?=$callbackId;?>"  value="1">
-        <input type="hidden" name="IdThread" value="<?=$DataPost->Thread->id;?>">
-        <input type="hidden" name="IdPost" value="<?=$DataPost->Post->id;?>">
-            <tr><td>
-        <?php
-        if (isset($DataPost->UserNameStarter)) echo "Thread started by ".$DataPost->UserNameStarter;
-        ?>
-        </td>
-        <td>Post by <a href="members/<?= $DataPost->Post->UserNamePoster; ?>"><?= $DataPost->Post->UserNamePoster; ?></a></td>
-                <td><a href="forums/s<?= $DataPost->Thread->id ;?>/#post<?= $DataPost->Post->id; ?>" class="btn btn-primary btn-sm btn-block">go to post</a></td>
+<?php if (isset($DataPost->Thread->title)) ?>
+<form method="post" action="forums/modeditpost/<?= $DataPost->Post->id; ?>" id="modpostforum">
+    <input type="hidden" name="<?= $callbackId; ?>" value="1">
+    <input type="hidden" name="IdThread" value="<?= $DataPost->Thread->id; ?>">
+    <input type="hidden" name="IdPost" value="<?= $DataPost->Post->id; ?>">
+    <table class="table table-bordered table-sm">
+        <tr>
+            <td colspan="2">Post by <a
+                        href="members/<?= $DataPost->Post->UserNamePoster; ?>"><?= $DataPost->Post->UserNamePoster; ?></a>
+            </td>
+            <td>
+                <a href="<?php if ($DataPost->Thread->IdGroup) {
+                    echo 'group/' . $DataPost->Thread->IdGroup . '/';
+                }
+                echo 'forum';
+                if (!($DataPost->Thread->IdGroup)) {
+                    echo 's';
+                }
+                echo '/s' . $DataPost->Thread->id . '/#post' . $DataPost->Post->id;
+
+                ?>" class="btn btn-primary btn-sm btn-block">go to post</a>
+                <?php
+                if (isset($DataPost->Thread->UserNameStarter)) echo "Thread started by " . $DataPost->Thread->UserNameStarter;
+                ?>
+            </td>
         </tr>
-        <tr><td colspan="3" class="h5"><?= $DataPost->Thread->Title[0]->Sentence; ?></td></tr>
-        <tr><td colspan="3" ><?= $DataPost->Post->Content[0]->Sentence; ?></td></tr>
-        <tr><td colspan="3"><label for="PostComment">Your message to the moderators:</label><textarea name="PostComment" class="w-100" rows="5"></textarea></td></tr>
+        <tr>
+            <td colspan="3" class="h5"><?= $DataPost->Thread->Title[0]->Sentence; ?></td>
+        </tr>
+        <tr>
+            <td colspan="3"><?= $DataPost->Post->Content[0]->Sentence; ?></td>
+        </tr>
+        <tr>
+            <td colspan="3"><label for="PostComment">Your message to the moderators:</label><textarea name="PostComment"
+                                                                                                      class="w-100"
+                                                                                                      rows="5"></textarea>
+            </td>
+        </tr>
 
         <tr>
             <td colspan="3"><label for="Status">Status</label>
                 <select Name="Status">
-        <?php
-        $Status = "Open";
-        if (isset($DataPost->Report->Status)) $Status=$DataPost->Report->Status;
-        ?>
-        <option value="Open"<?php if ($Status=='Open') echo ' selected'; ?>>Open</option>
-        <option value="OnDiscussion"<?php if ($Status=='OnDiscussion') echo ' selected'; ?>>In discussion</option>
-        <option value="Closed"<?php if ($Status=='Closed') echo ' selected';?>>Closed</option>
-        </select>
+                    <?php
+                    $Status = "Open";
+                    if (isset($DataPost->Report->Status)) $Status = $DataPost->Report->Status;
+                    ?>
+                    <option value="Open"<?php if ($Status == 'Open') echo ' selected'; ?>>Open</option>
+                    <option value="OnDiscussion"<?php if ($Status == 'OnDiscussion') echo ' selected'; ?>>In
+                        discussion
+                    </option>
+                    <option value="Closed"<?php if ($Status == 'Closed') echo ' selected'; ?>>Closed</option>
+                </select>
             </td>
         </tr>
 
         <tr>
             <td colspan="3">
                 <?php
-                $IdReporter=0 ;
-                if (isset($DataPost->Report->IdReporter)) $IdReporter=$DataPost->Report->IdReporter ;
-                echo "<input type='hidden' name='IdReporter' value='".$IdReporter."'>"; ?>
+                $IdReporter = 0;
+                if (isset($DataPost->Report->IdReporter)) $IdReporter = $DataPost->Report->IdReporter;
+                echo "<input type='hidden' name='IdReporter' value='" . $IdReporter . "'>"; ?>
 
                 <input type="submit" name="submit" value="Add to report" class="btn btn-primary">
             </td>
         </tr>
 
-<?php
-if (isset($DataPost->Report->PostComment))  {
-    echo '<tr><td colspan="3">'.$DataPost->Report->PostComment.'</td></tr>';
-}
-?>
-</form></table>
+        <?php
+        if (isset($DataPost->Report->PostComment)) {
+            echo '<tr><td colspan="3">' . $DataPost->Report->PostComment . '</td></tr>';
+        }
+        ?>
+    </table>
+</form>
 

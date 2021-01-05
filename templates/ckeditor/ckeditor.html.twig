@@ -1,7 +1,9 @@
 {% block ckeditor_widget %}
     <textarea {{ block('widget_attributes') }}>{{ value }}</textarea>
-    {{ block( '_ckeditor_javascript' ) }}
-    {{ block( '_ckeditor_stylesheet' ) }}
+    {% if not async %}
+        {{ block( '_ckeditor_javascript' ) }}
+        {{ block( '_ckeditor_stylesheet' ) }}
+    {% endif %}
 {% endblock %}
 
 {% block _ckeditor_javascript %}

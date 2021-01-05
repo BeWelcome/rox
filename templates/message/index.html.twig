@@ -50,7 +50,11 @@
             {% set directionIn = (member.id == message.receiver.id) %}
             {% set otherMember = directionIn ? message.sender : message.receiver %}
             {% set unread = (message.firstRead == '0000-00-00 00:00.00') or (message.firstRead is null) %}
-
+            {% if folder == 'deleted' %}
+                {% set show_message_route = 'message_show_with_deleted' %}
+            {% else %}
+                {% set show_message_route = 'message_show' %}
+            {% endif %}
             <tr>
                 <td class="select align-middle" id="selectcolumn">
                     {{ form_widget(form.messages[loop.index0], {'attr': {'class': 'checkable'}}) }}
@@ -60,10 +64,10 @@
                     <p class="m-0">{{ macros.profilelink(otherMember.Username) }}</p>
                 </td>
                 <td class="align-middle w-100">
-                    <a href="{{ path('message_show', { id: message.id}) }}"
-                            {%- if unread -%}
-                                {{- ' class="unread"' -}}
-                            {%- endif -%}
+                    <a href="{{ path(show_message_route, { id: message.id}) }}"
+                        {%- if unread -%}
+                            {{- ' class="unread"' -}}
+                        {%- endif -%}
                     >
                         <div>
                             {% if message.subject %}<p class="m-0">
@@ -95,7 +99,7 @@
                 </td>
                 <td class="text-right">
                     <div class="btn-group-vertical">
-                        <a href="{{ path('message_show', { id: message.id}) }}" class="btn btn-primary btn-sm">{{ 'view' | trans }}</a>
+                        <a href="{{ path(show_message_route, { id: message.id}) }}" class="btn btn-primary btn-sm">{{ 'view' | trans }}</a>
                         {% if folder == 'inbox' %}
                             <a href="{{ path('message_reply', { id: message.id}) }}" class="btn btn-primary btn-sm">{{ 'reply' | trans }}</a>
                         {% endif %}

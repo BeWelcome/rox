@@ -22,11 +22,11 @@ final class Version20200522172912 extends AbstractMigration
     public function up(Schema $schema): void
     {
         $this->addSql('
-            CREATE 
-                ALGORITHM = MERGE 
+            CREATE
+                ALGORITHM = MERGE
                 SQL SECURITY DEFINER
             VIEW `forum_trads` AS
-                SELECT 
+                SELECT
                     `translations`.`id` AS `id`,
                     `translations`.`IdLanguage` AS `IdLanguage`,
                     `translations`.`IdOwner` AS `IdOwner`,

@@ -23,14 +23,14 @@ class WikiModel
         $this->roxWikiParserBackend = $wikiParserBackend;
     }
 
-    public function getPage($pageTitle)
+    public function getPage($pageTitle, $version = 0)
     {
         $pageName = $this->getPagename($pageTitle);
 
         /** @var WikiRepository $wikiRepository */
         $wikiRepository = $this->getManager()->getRepository(Wiki::class);
 
-        $wikiPage = $wikiRepository->getPageByName($pageName);
+        $wikiPage = $wikiRepository->getPageByName($pageName, $version);
 
         return $wikiPage;
     }
@@ -94,5 +94,13 @@ class WikiModel
         $em->flush();
 
         return $newWikiPage;
+    }
+
+    public function getHistory(Wiki $wikiPage)
+    {
+        /** @var WikiRepository $wikiRepository */
+        $wikiRepository = $this->getManager()->getRepository(Wiki::class);
+
+        return $wikiRepository->getHistory($wikiPage);
     }
 }

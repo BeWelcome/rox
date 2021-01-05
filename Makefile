@@ -1,4 +1,4 @@
-.PHONY: all build phpcpd phploc phpmd php-cs-fixer php-code-sniffer phpmetrics phpunit version
+.PHONY: all build phpcpd phploc phpmd php-cs-fixer php-code-sniffer phpmetrics phpunit infection behat version
 export COMPOSER_MEMORY_LIMIT := -1
 
 SRC_DIR=src tests
@@ -11,7 +11,7 @@ SRC_DIR_COMMA := $(subst $(SPACE),$(COMMA),$(SRC_DIR))
 
 all: phpci
 
-phpci: phpcpd phploc phpmd php-code-sniffer phpunit version
+phpci: phpcpd phploc phpmd php-code-sniffer phpunit infection behat version
 
 install:
 	git rev-parse --short HEAD > VERSION
@@ -39,54 +39,62 @@ else
 endif
 
 phpcsfix:
-	./vendor/bin/phpcbf $(SRC_DIR)
-	./vendor/bin/php-cs-fixer fix -v
+	"./vendor/bin/phpcbf" $(SRC_DIR)
+	"./vendor/bin/php-cs-fixer" fix -v
 
-deploy: composer npm encore assets
+deploy: composer yarn encore assets
 
 composer:
-	composer install
+	composer install --prefer-dist --no-progress --no-suggest --no-interaction --no-scripts
 
-npm:
-	npm install
+yarn:
+	yarn install
 
 encore:
-	./node_modules/.bin/encore production
+	yarn encore production
 
 assets:
 	php bin/console assets:install --env=prod
 
 build:
-	./node_modules/.bin/encore dev
+	yarn encore dev
 	php bin/console assets:install
 
 phpdox: phploc phpmd php-code-sniffer phpunit
-	./vendor/bin/phpdox
+	"./vendor/bin/phpdox"
 
 mkdocs:
 	mkdocs build
 
 phpcpd:
-	./vendor/bin/phpcpd $(SRC_DIR_NO_TESTS) --progress --no-interaction --exclude=Entity --exclude=Repository
+	"./vendor/bin/phpcpd" $(SRC_DIR_NO_TESTS) --exclude=src/Entity
 
 phploc:
-	./vendor/bin/phploc --log-xml=phploc.xml $(SRC_DIR)
+	"./vendor/bin/phploc" --log-xml=phploc.xml $(SRC_DIR)
 
 phpmd:
-	./vendor/bin/phpmd $(SRC_DIR_COMMA) text phpmd.xml
+	"./vendor/bin/phpmd" $(SRC_DIR_COMMA) text phpmd.xml
 
 php-cs-fixer:
-	./vendor/bin/php-cs-fixer fix -v --diff --dry-run --warning-severity=0
+	"./vendor/bin/php-cs-fixer" fix -v --diff --dry-run
 
 php-code-sniffer:
-	./vendor/bin/phpcs  --colors --warning-severity=Error
+	"./vendor/bin/phpcs"  --colors --warning-severity=Error
 
 phpunit:
-	php bin/phpunit
+	phpdbg -qrr bin/phpunit --coverage-xml=build/logs/phpunit/coverage-xml --coverage-clover=build/logs/phpunit/clover.xml --log-junit=build/logs/phpunit/junit.xml --colors=never
+
+infection: phpunit
+	"./vendor/bin/infection" --only-covered --coverage=build/logs/phpunit --min-covered-msi=85 --threads=30
+
+behat: encore
+	bin/console doctrine:database:create --env=test --if-not-exists
+	bin/console doctrine:schema:create --env=test
+	bin/console hautelook:fixtures:load --env=test --no-interaction
+	vendor/bin/behat --colors --tags='~@wip'
 
 phpmetrics:
-	./vendor/bin/phpmetrics --exclude=src/App/Entity --report-violations=phpmetrics.xml $(SRC_DIR_COMMA)
+	"./vendor/bin/phpmetrics" --exclude=src/App/Entity --report-violations=phpmetrics.xml $(SRC_DIR_COMMA)
 
 version:
 	git rev-parse --short HEAD > VERSION
-

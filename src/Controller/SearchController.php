@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Member;
 use App\Entity\Preference;
 use App\Form\CustomDataClass\SearchFormRequest;
+use App\Form\MapSearchFormType;
 use App\Form\SearchFormType;
 use App\Pagerfanta\SearchAdapter;
 use App\Repository\MemberRepository;
@@ -12,6 +13,7 @@ use Pagerfanta\Pagerfanta;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -65,8 +67,9 @@ class SearchController extends AbstractController
      */
     public function searchLocations(Request $request, TranslatorInterface $translator)
     {
-        $pager = false;
-        $results = false;
+        $pager = null;
+        $results = null;
+
         /** @var Member $member */
         $member = $this->getUser();
 
@@ -90,6 +93,8 @@ class SearchController extends AbstractController
             'groups' => $member->getGroups(),
             'languages' => $member->getLanguages(),
         ]);
+
+        $request = $this->overrideRequestParameters($request, $searchFormRequest);
 
         // Check which form was used to get here
         $tiny->handleRequest($request);
@@ -119,7 +124,7 @@ class SearchController extends AbstractController
             $memberShowMapPreference = $member->getMemberPreference($showMapPreference);
             $memberShowMapPreference->setValue($data->show_map ? 'Yes' : 'No');
             $memberShowOptionsPreference = $member->getMemberPreference($showOptionsPreference);
-            $memberShowOptionsPreference->setValue($data->show_map ? 'Yes' : 'No');
+            $memberShowOptionsPreference->setValue($data->show_options ? 'Yes' : 'No');
             $em = $this->getDoctrine()->getManager();
             $em->persist($memberShowMapPreference);
             $em->persist($memberShowOptionsPreference);
@@ -140,7 +145,7 @@ class SearchController extends AbstractController
             $pager->setMaxPerPage($data->items);
             $pager->setCurrentPage($request->get('page', 1));
             if (!$searchIsValid) {
-                // only set data if the form wasn't submitted from search_members
+                // only set data if the form wasn't submitted from search_locations
                 $search->setData($data);
             }
         } elseif ($tinyIsSubmitted) {
@@ -156,7 +161,6 @@ class SearchController extends AbstractController
             'routeName' => 'search_members_ajax',
             'routeParams' => $request->query->all(),
             'results' => $results,
-            'showMemberDetails' => true,
         ]);
     }
 
@@ -166,25 +170,40 @@ class SearchController extends AbstractController
      *
      * @Route("/search/map", name="search_map")
      *
-     * @return Response
+     * @return Response|RedirectResponse
      *
      * @SuppressWarnings(PHPMD.StaticAccess)
      */
     public function showMapAction(Request $request, TranslatorInterface $translator)
     {
-        $pager = false;
-        $results = false;
+        // do not allow access to this page when logged in, redirect to /search/locations
+        if (null !== $this->getUser()) {
+            return $this->redirectToRoute('search_locations');
+        }
 
-        $searchFormRequest = SearchFormRequest::fromRequest($request, $this->getDoctrine()->getManager());
+        $results = null;
 
-        $formFactory = $this->get('form.factory');
-        $form = $formFactory->createNamed('map', SearchFormType::class, $searchFormRequest);
+        $form = $this->createForm(MapSearchFormType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
+            $searchFormRequest = new SearchFormRequest($this->getDoctrine()->getManager());
+            $searchFormRequest->page = 1;
+            $searchFormRequest->location = $data['location'];
+            $searchFormRequest->location_geoname_id = $data['location_geoname_id'];
+            $searchFormRequest->location_latitude = $data['location_latitude'];
+            $searchFormRequest->location_longitude = $data['location_longitude'];
+            $searchFormRequest->accommodation_anytime = true;
+            $searchFormRequest->accommodation_neverask = true;
+            $searchFormRequest->profile_picture = false;
+            $searchFormRequest->about_me = false;
+            $searchFormRequest->has_comments = false;
+            $searchFormRequest->last_login = 2400;
+            $searchFormRequest->distance = 100;
+
             $searchAdapter = new SearchAdapter(
-                $data,
+                $searchFormRequest,
                 $this->get('session'),
                 $this->getParameter('database_host'),
                 $this->getParameter('database_name'),
@@ -195,22 +214,19 @@ class SearchController extends AbstractController
             );
             $results = $searchAdapter->getMapResults();
             $pager = new Pagerfanta($searchAdapter);
-            $pager->setMaxPerPage($data->items);
-            $pager->setCurrentPage($data->page);
+            $pager->setMaxPerPage($searchFormRequest->items);
+            $pager->setCurrentPage($searchFormRequest->page);
         }
 
-        return $this->render('search/searchlocations.html.twig', [
+        return $this->render('search/searchmap.html.twig', [
             'form' => $form->createView(),
-            'pager' => $pager,
-            'routeName' => 'search_members_ajax',
-            'routeParams' => $request->query->all(),
+            'map' => true,
             'results' => $results,
-            'showMemberDetails' => false,
         ]);
     }
 
     /**
-     * @Route("/search/members/ajax", name="search_members_ajax")
+     * @Route("/search/locations/ajax", name="search_members_ajax")
      *
      * @return Response
      *
@@ -245,5 +261,24 @@ class SearchController extends AbstractController
             'routeName' => 'search_members_ajax',
             'routeParams' => $request->query->all(),
         ]);
+    }
+
+    private function overrideRequestParameters(Request $request, SearchFormRequest $searchFormRequest)
+    {
+        // Override the bounding box in case of regular search,
+        // if distance isn't set through Javascript on map.
+        // This provides a bounding box to the JS code to zoom into the map for the results.
+        if ($request->query->has('search')) {
+            $parameters = $request->query->get('search');
+            if ('-1' !== $parameters['distance']) {
+                $parameters['ne_latitude'] = $searchFormRequest->ne_latitude;
+                $parameters['ne_longitude'] = $searchFormRequest->ne_longitude;
+                $parameters['sw_latitude'] = $searchFormRequest->sw_latitude;
+                $parameters['sw_longitude'] = $searchFormRequest->sw_longitude;
+                $request->query->set('search', $parameters);
+            }
+        }
+
+        return $request;
     }
 }

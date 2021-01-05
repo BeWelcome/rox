@@ -34,8 +34,11 @@ $font-family-bold: Signika;
 
 // select2
 @import "~select2/src/scss/core";
-@import "~select2-theme-bootstrap4/src/select2-bootstrap";
-// @import "~@ttskch/select2-bootstrap4-theme/src/layout";
+// @import "~select2-theme-bootstrap4/src/select2-bootstrap";
+
+@import "~@ttskch/select2-bootstrap4-theme/src/single";
+@import "~@ttskch/select2-bootstrap4-theme/src/multiple";
+@import "~@ttskch/select2-bootstrap4-theme/src/layout";
 
 // Set yaml classes to keep old style alive and consistent
 @import "yaml";
@@ -489,3 +492,9 @@ $avatar-sizes: 30, 50, 75, 100, 150, 200, 500;
     width: #{$size}px;
   }
 }
+
+.ui-autocomplete-category {
+  font-weight: bold;
+  padding: .25rem;
+}
+

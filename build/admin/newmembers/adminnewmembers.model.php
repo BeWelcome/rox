@@ -161,7 +161,7 @@ LIMIT 1
                 m.LastName,
                 m.Email,
                 m.bewelcomed,
-                g.geonameid as geonameid,
+                g.geonameId as geonameId,
                 g.country as country
             FROM
                 members m,
@@ -172,7 +172,7 @@ LIMIT 1
         if (!$safetyTeamOrAdmin) {
             $str .= " AND bewelcomed < 3";
         }
-        $str .= " AND m.IdCity = g.geonameid
+        $str .= " AND m.IdCity = g.geonameId
             ORDER BY m.created ";
         if (!$safetyTeamOrAdmin) {
             $str .= " DESC";
@@ -191,7 +191,7 @@ LIMIT 1
         $countryIds = array();
         $layoutBits = new MOD_layoutbits();
         foreach($rawMembers as $member) {
-            $geonameIds[$member->geonameid] = $member->geonameid;
+            $geonameIds[$member->geonameId] = $member->geonameId;
             $countryIds[$member->country] = $member->country;
             $aboutMe = MOD_layoutbits::truncate_words($this->FindTrad($member->ProfileSummary,true), 70);
             $FirstName = $member->FirstName;
@@ -235,43 +235,43 @@ LIMIT 1
         $inGeonameIds = implode("', '", $geonameIds);
         $query = "
             SELECT
-                g.geonameid geonameid, a.alternatename name, a.ispreferred ispreferred, a.isshort isshort, 'alternate' source
+                g.geonameId geonameId, a.alternatename name, a.ispreferred ispreferred, a.isshort isshort, 'alternate' source
             FROM
                 geonames g, geonamesalternatenames a
             WHERE
-                g.geonameid IN ('" . $inGeonameIds . "') AND g.geonameid = a.geonameid AND a.isoLanguage = '" . $lang . "'
+                g.geonameId IN ('" . $inGeonameIds . "') AND g.geonameId = a.geonameId AND a.isoLanguage = '" . $lang . "'
             UNION SELECT
-                g.geonameid geonameid, g.name name, 0 ispreferred, 0 isshort, 'geoname' source
+                g.geonameId geonameId, g.name name, 0 ispreferred, 0 isshort, 'geoname' source
             FROM
                 geonames g
             WHERE
-                g.geonameid IN ('" . $inGeonameIds . "')
+                g.geonameId IN ('" . $inGeonameIds . "')
             ORDER BY
-                geonameid, source, ispreferred DESC, isshort DESC";
+                geonameId, source, ispreferred DESC, isshort DESC";
         $rawNames = $this->bulkLookup($query);
         $names = array();
         foreach($rawNames as $rawName) {
-            if (!isset($names[$rawName->geonameid])) {
-                $names[$rawName->geonameid] = $rawName->name;
+            if (!isset($names[$rawName->geonameId])) {
+                $names[$rawName->geonameId] = $rawName->name;
             }
         }
         $inCountries = implode("', '", $countryIds);
         // fetch country names, prefer alternate names (preferred, short) over geonames entry
         $query = "
             SELECT
-                c.geonameid geonameid, c.country countryCode, a.alternatename country, a.ispreferred ispreferred, a.isshort isshort, 'alternate' source
+                c.geonameId geonameId, c.country countryCode, a.alternatename country, a.ispreferred ispreferred, a.isshort isshort, 'alternate' source
             FROM
                 geonamescountries c, geonamesalternatenames a
             WHERE
-                c.country IN ('" . $inCountries . "') AND c.geonameid = a.geonameid AND a.isoLanguage = '" . $lang . "'
+                c.country IN ('" . $inCountries . "') AND c.geonameId = a.geonameId AND a.isoLanguage = '" . $lang . "'
             UNION SELECT
-                c.geonameid geonameid, c.country countryCode, c.name country, 0 ispreferred, 0 isshort, 'geoname' source
+                c.geonameId geonameId, c.country countryCode, c.name country, 0 ispreferred, 0 isshort, 'geoname' source
             FROM
                 geonamescountries c
             WHERE
                 c.country IN ('" . $inCountries . "')
             ORDER BY
-                geonameid, source, ispreferred DESC, isshort DESC";
+                geonameId, source, ispreferred DESC, isshort DESC";
         $countryRawNames = $this->bulkLookup($query);
         $countryNames = array();
         foreach($countryRawNames as $countryRawName) {
@@ -280,7 +280,7 @@ LIMIT 1
             }
         }
         foreach($members as &$member) {
-            $member->CityName = $names[$member->geonameid];
+            $member->CityName = $names[$member->geonameId];
             $member->CountryName = $countryNames[$member->country];
         }
         return $members;

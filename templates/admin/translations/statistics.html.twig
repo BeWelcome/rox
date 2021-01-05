@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{ 'translations.title' | trans }}
+{% endblock %}
+
+{% block content %}
+<h1>{{ ('translation.headline.statistics') | trans }}</h1>
+    {{ 'translation.overall.count'|trans({'all': count_all}) }}
+    <div class="table-responsive">
+        <table class="table table-striped table-hover">
+            <tr><th>{{ 'language'|trans }}</th><th>{{ 'translation.ratio'|trans }}</th><th>{{ 'translation.translator'|trans }}<br>{{ 'translation.last.change'|trans }}</th></tr>
+            {% for language, detail in details %}
+                <tr>
+                    <td>{{ ('lang_' ~ language)|lower|trans }} ({{ language }})</td>
+                    <td>{{ (detail.count/count_all*100)|number_format(2) }}</td>
+                    <td>
+                        {% if detail.translator %}
+                            {% if detail.translator.id == 0 %}
+                                {{ 'system'|trans }}<br>
+                            {% elseif detail.translator.status == constant('App\\Doctrine\\MemberStatusType::ACTIVE') or detail.translator.status == constant('App\\Doctrine\\MemberStatusType::OUT_OF_REMIND') %}
+                                <a href="{{ path('members_profile', { 'username': detail.translator.username}) }}">{{ detail.translator.username }}</a><br>
+                            {%  else %}
+                                {{ 'retired'|trans }}
+                            {% endif %}
+                        {% else %}
+                            {{ 'unknown'|trans }}<br>
+                        {% endif %}
+                        {{ detail.date|format_date('medium') }}
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+{% endblock %}

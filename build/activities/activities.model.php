@@ -139,11 +139,11 @@ class ActivitiesModel extends RoxModelBase
 
         $center = new GeoPoint($latitude, $longitude);
 
-        $coordinates = $center->boundingBox($distance, 'km');
+        $boundingBox = $center->boundingBox($distance, 'km');
         $latne = $boundingBox->getMaxLatitude();
         $longne = $boundingBox->getMaxLongitude();
         $latsw = $boundingBox->getMinLatitude();
-        $latne = $boundingBox->getMinLongitude();
+        $longsw = $boundingBox->getMinLongitude();
 
         if ($latne < $latsw) {
             $tmp = $latne;

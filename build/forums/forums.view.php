@@ -127,6 +127,9 @@ class ForumsView extends RoxAppView {
         $notifymecheck = "";
         if ($this->_model->IsThreadSubscribed($topic->IdThread,$this->session->get("IdMember"))) {
             $notifymecheck = 'checked="checked"' ; // This is to tell that the notifyme cell is preticked
+        } else {
+            // Enforce subscription (user needs to deselect intentionally (too many dropped conversations)
+            $notifymecheck = 'checked="checked"' ;
         }
 
          // We are trying to find the more appropriated language according to the current one available for

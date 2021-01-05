@@ -47,6 +47,7 @@ class GroupMemberAdministrationPage extends GroupsSubPage
         $members = $this->group->getMembers();
         $need_approval = $this->group->getMembers('WantToBeIn');
         $invited = $this->group->getMembers('Invited');
+        $groupid = $this->group->getPKValue();
 
         ?>
         <div class="row">
@@ -82,7 +83,6 @@ class GroupMemberAdministrationPage extends GroupsSubPage
 
                 <div class="col-4 col-md-3 pt-2">
                     <?php
-                    $groupid = $this->group->getPKValue();
                     $memberid = $member->getPKValue();
                     $BWAdmin = $this->isBWAdmin;
                     if ($this->member->getPKValue() == $memberid && !$BWAdmin) {

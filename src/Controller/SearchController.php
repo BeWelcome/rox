@@ -270,7 +270,7 @@ class SearchController extends AbstractController
         // This provides a bounding box to the JS code to zoom into the map for the results.
         if ($request->query->has('search')) {
             $parameters = $request->query->get('search');
-            if ("-1" !== $parameters['distance']) {
+            if ('-1' !== $parameters['distance']) {
                 $parameters['ne_latitude'] = $searchFormRequest->ne_latitude;
                 $parameters['ne_longitude'] = $searchFormRequest->ne_longitude;
                 $parameters['sw_latitude'] = $searchFormRequest->sw_latitude;

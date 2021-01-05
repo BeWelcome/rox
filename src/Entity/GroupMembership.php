@@ -25,6 +25,7 @@ use Doctrine\Persistence\ObjectManagerAware;
  *         @ORM\Index(name="IdMember", columns={"IdMember"})
  *     }
  * )
+ * @ORM\Entity
  * @ORM\HasLifecycleCallbacks
  *
  * @SuppressWarnings(PHPMD)

@@ -226,7 +226,7 @@ class SearchController extends AbstractController
     }
 
     /**
-     * @Route("/search/members/ajax", name="search_members_ajax")
+     * @Route("/search/locations/ajax", name="search_members_ajax")
      *
      * @return Response
      *

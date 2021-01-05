@@ -128,7 +128,7 @@ class SearchFormRequest
     public $offertour;
 
     /** @var bool */
-    public $accessible;
+    public $accessible = false;
 
     /** @var bool */
     public $profile_picture = true;
@@ -249,7 +249,7 @@ class SearchFormRequest
         $formRequest->offertour = '1' === self::get($data, 'offertour', '0');
         $formRequest->accessible = '1' === self::get($data, 'accessible', '0');
         $formRequest->profile_picture = '1' === self::get($data, 'profile_picture', '0');
-        $formRequest->accessible = '1' === self::get($data, 'about_me', '0');
+        $formRequest->about_me = '1' === self::get($data, 'about_me', '0');
         $formRequest->no_smoking = '1' === self::get($data, 'no_smoking', '0');
         $formRequest->no_alcohol = '1' === self::get($data, 'no_alcohol', '0');
         $formRequest->no_drugs = '1' === self::get($data, 'no_drugs', '0');

@@ -2,6 +2,6 @@
 
 {% block content %}
     <p>
-        {{ 'group.accepted.invitation'|trans({'%username%': invitee.Username, 'group': '<a href="' ~ url('group_start', {'group_id': group.id}) ~ '">' ~ group.Name ~ '</a>'}) }}
+        {{ 'group.accepted.invitation'|trans({'username': invitee.Username, 'group': '<a href="' ~ url('group_start', {'group_id': group.id}) ~ '">' ~ group.Name ~ '</a>'}) }}
     </p>
 {% endblock content %}

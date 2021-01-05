@@ -25,7 +25,6 @@ use Doctrine\Persistence\ObjectManagerAware;
  *         @ORM\Index(name="IdMember", columns={"IdMember"})
  *     }
  * )
- * @ORM\Entity(repositoryClass="App\Repository\GroupMembershipRepository")
  * @ORM\HasLifecycleCallbacks
  *
  * @SuppressWarnings(PHPMD)

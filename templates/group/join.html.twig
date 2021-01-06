@@ -3,8 +3,9 @@
 
 {% block content %}
     <h1>{{ group.name }}</h1>
-    <p>{{ 'group.join.abstract' | trans }}</p>
+    <h5>{{ 'group.join.abstract' | trans }}</h5>
     {{ form_start(form, { 'attr': { 'novalidate': 'novalidate'}}) }}
+    {{ form_errors(form) }}
     <div class="row">
         <div class="col-12 col-md-6 mb-1">
             {{ form_row(form.reason) }}
@@ -16,7 +17,7 @@
 
                 {% for key, item in form.notifications.children %}
                     <label for="{{ item.vars.id }}"
-                           class="btn btn-primary btn-radio{{ item.vars.checked ? ' active' : '' }}">
+                           class="btn btn-outline-primary {{ item.vars.checked ? ' active' : '' }}">
                         <input
                             type="radio"
                             value="{{ item.vars.value }}"

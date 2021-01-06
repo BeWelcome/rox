@@ -404,11 +404,18 @@ class Group implements ObjectManagerAware
     public function getAdministrators(): array
     {
         // Unfortunately we need to replicate old code here
-        $roleRepo = $this->objectManager->getRepository(Role::class);
+        $privilegeRepository = $this->objectManager->getRepository(Privilege::class);
+        $privilege = $privilegeRepository->findOneBy(['controller' => Privilege::GROUP_CONTROLLER]);
 
-        $role = $roleRepo->findBy(['name' => 'GroupOwner']);
+        $roleRepo = $this->objectManager->getRepository(Role::class);
+        $role = $roleRepo->findBy(['name' => Role::GROUP_OWNER]);
+
         $privilegeScopesRepo = $this->objectManager->getRepository(PrivilegeScope::class);
-        $privilegeScopes = $privilegeScopesRepo->findBy(['role' => $role, 'type' => $this->getId()]);
+        $privilegeScopes = $privilegeScopesRepo->findBy([
+            'privilege' => $privilege,
+            'role' => $role,
+            'type' => $this->getId(),
+        ]);
 
         $admins = [];
         foreach ($privilegeScopes as $privilegeScope) {

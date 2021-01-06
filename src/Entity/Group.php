@@ -367,7 +367,10 @@ class Group implements ObjectManagerAware
         return $this;
     }
 
-    public function getMembers()
+    /**
+     * @return Member[]
+     */
+    public function getMembers(): array
     {
         return array_map(
             function ($groupMembership) {
@@ -377,16 +380,16 @@ class Group implements ObjectManagerAware
         );
     }
 
-    public function isAdmin(Member $admin)
+    public function isAdmin(Member $admin): bool
     {
-        $admins = $this->getAdmins();
+        $admins = $this->getAdministrators();
 
         $isAdmin = \in_array($admin, $admins, true);
 
         return $isAdmin;
     }
 
-    public function isMember(Member $member)
+    public function isMember(Member $member): bool
     {
         $members = $this->getCurrentMembers();
 
@@ -394,9 +397,11 @@ class Group implements ObjectManagerAware
     }
 
     /**
-     * @return array Member
+     * This function returns the actual admins of the group.
+     *
+     * @return Member[]
      */
-    public function getAdmins()
+    public function getAdministrators(): array
     {
         // Unfortunately we need to replicate old code here
         $roleRepo = $this->objectManager->getRepository(Role::class);
@@ -406,17 +411,6 @@ class Group implements ObjectManagerAware
         $privilegeScopes = $privilegeScopesRepo->findBy(['role' => $role, 'type' => $this->getId()]);
 
         $admins = [];
-        foreach ($privilegeScopes as $privilegeScope) {
-            $admin = $privilegeScope->getMember();
-            if (false !== strpos(MemberStatusType::ACTIVE_WITH_MESSAGES, $admin->getStatus())) {
-                $admins[] = $admin;
-            }
-        }
-
-        $role = $roleRepo->findBy(['name' => 'GroupsAdmin']);
-        $privilegeScopesRepo = $this->objectManager->getRepository(PrivilegeScope::class);
-        $privilegeScopes = $privilegeScopesRepo->findBy(['role' => $role, 'type' => '*']);
-
         foreach ($privilegeScopes as $privilegeScope) {
             $admin = $privilegeScope->getMember();
             if (false !== strpos(MemberStatusType::ACTIVE_WITH_MESSAGES, $admin->getStatus())) {

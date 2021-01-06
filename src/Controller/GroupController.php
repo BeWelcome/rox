@@ -275,8 +275,7 @@ class GroupController extends AbstractController
         $success = $this->groupModel->acceptInviteToGroup($group, $member);
 
         if ($success) {
-            $admins = $group->getAdmins();
-            $this->groupModel->sendAdminNotificationAccepted($group, $member, $admins);
+            $this->groupModel->sendAdminNotificationAccepted($group, $member);
             $this->addTranslatedFlash('notice', 'flash.invite.accepted');
         } else {
             $this->addTranslatedFlash('error', 'flash.invite.accepted.error');
@@ -298,8 +297,7 @@ class GroupController extends AbstractController
         $success = $this->groupModel->declineInviteToGroup($group, $member);
 
         if ($success) {
-            $admins = $group->getAdmins();
-            $this->groupModel->sendAdminNotificationDeclined($group, $member, $admins);
+            $this->groupModel->sendAdminNotificationDeclined($group, $member);
             $this->addTranslatedFlash('notice', 'flash.invite.declined');
         } else {
             $this->addTranslatedFlash('error', 'flash.invite.declined.error');

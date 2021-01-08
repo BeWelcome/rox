@@ -68,10 +68,10 @@ class GroupMemberSettingsPage extends GroupsSubPage
                     <label><?= $words->get('GroupsMemberAcceptMail') ;?>:  </label><br>
 
                     <div class="btn-group w-100" data-toggle="buttons">
-                        <label class="btn btn-primary btn-radio <?= (($membershipinfo->IacceptMassMailFromThisGroup == 'yes') ? 'active' : '' ); ?>" for="yes_option">
+                        <label class="btn btn-outline-primary <?= (($membershipinfo->IacceptMassMailFromThisGroup == 'yes') ? 'active' : '' ); ?>" for="yes_option">
                             <input id='yes_option' class="noradio" autocomplete="off" type="radio" value="yes" name="membershipinfo_acceptgroupmail" <?= (($membershipinfo->IacceptMassMailFromThisGroup == 'yes') ? 'checked="checked" ' : '' ); ?>><?= $words->get('yes'); ?>
                         </label>
-                        <label for="no_option" class="btn btn-primary btn-radio <?= (($membershipinfo->IacceptMassMailFromThisGroup == 'no') ? 'active' : '' ); ?>">
+                        <label for="no_option" class="btn btn-outline-primary <?= (($membershipinfo->IacceptMassMailFromThisGroup == 'no') ? 'active' : '' ); ?>">
                             <input id='no_option' class="noradio" autocomplete="off" type="radio" value="no" name="membershipinfo_acceptgroupmail" <?= (($membershipinfo->IacceptMassMailFromThisGroup == 'no' || !$membershipinfo->IacceptMassMailFromThisGroup) ? 'checked="checked" ' : '' ); ?>><?= $words->get('no'); ?>
                         </label>
                     </div>

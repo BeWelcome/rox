@@ -4,6 +4,7 @@ namespace App\Model;
 
 use App\Doctrine\GroupMembershipStatusType;
 use App\Doctrine\GroupType;
+use App\Doctrine\MemberStatusType;
 use App\Entity\Group;
 use App\Entity\GroupMembership;
 use App\Entity\Language;
@@ -207,7 +208,7 @@ class GroupModel
                     'group' => $group,
                     'reason' => $reason,
                 ];
-                $admins = $group->getAdmins();
+                $admins = $group->getAdministrators();
                 foreach ($admins as $admin) {
                     $this->createTemplateMessage($member, $admin, '_partials/group/wantin', $params);
                     $this->mailer->sendGroupNotificationEmail($member, $admin, 'group/wantin', $params);
@@ -376,11 +377,9 @@ class GroupModel
         }
     }
 
-    /**
-     * @param Member[] $admins
-     */
-    public function sendAdminNotificationAccepted(Group $group, Member $member, $admins)
+    public function sendAdminNotificationAccepted(Group $group, Member $member)
     {
+        $admins = $group->getAdministrators();
         foreach ($admins as $admin) {
             $this->mailer->sendGroupEmail($admin, 'group/accepted.invite', [
                 'subject' => 'group.invitation.accepted',
@@ -389,6 +388,33 @@ class GroupModel
                 'admin' => $admin,
             ]);
         }
+    }
+
+    /**
+     * This function returns the members with the right 'Group' who are administrating all groups.
+     *
+     * @return array Member
+     */
+    public function getGroupAdministrators()
+    {
+        // Unfortunately we need to replicate old code here
+        $admins = [];
+        $entityManager = $this->getManager();
+        $roleRepo = $entityManager->getRepository(Role::class);
+
+        $role = $roleRepo->findBy(['name' => 'GroupsAdmin']);
+        $privilegeScopesRepo = $entityManager->getRepository(PrivilegeScope::class);
+        $privilegeScopes = $privilegeScopesRepo->findBy(['role' => $role, 'type' => '*']);
+
+        foreach ($privilegeScopes as $privilegeScope) {
+            /** @var Member $admin */
+            $admin = $privilegeScope->getMember();
+            if (false !== strpos(MemberStatusType::ACTIVE_WITH_MESSAGES, $admin->getStatus())) {
+                $admins[] = $admin;
+            }
+        }
+
+        return $admins;
     }
 
     /**

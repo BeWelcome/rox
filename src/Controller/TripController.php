@@ -25,7 +25,7 @@ class TripController extends AbstractController
      *     requirements={"page": "\d+"})
      *     )
      */
-    public function myTrips(Request $request, TripModel $tripModel, int $page = 1): Response
+    public function myTrips(TripModel $tripModel, int $page = 1): Response
     {
         /** @var Member $member */
         $member = $this->getUser();
@@ -66,7 +66,11 @@ class TripController extends AbstractController
      */
     public function createA(Request $request): Response
     {
-        $createForm = $this->createForm(TripType::class);
+        $trip = new Trip();
+        $leg = new Subtrip();
+        $trip->addSubtrip($leg);
+
+        $createForm = $this->createForm(TripType::class, $trip);
         $createForm->handleRequest($request);
 
         if ($createForm->isSubmitted() && $createForm->isValid()) {

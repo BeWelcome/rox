@@ -86,7 +86,7 @@ class TripController extends AbstractController
             return $this->redirectToRoute('mytrips');
         }
 
-        return $this->render('create_edit_a.html.twig', [
+        return $this->render('trip/create_edit_a.html.twig', [
             'create' => true,
             'form' => $createForm->createView(),
             'submenu' => [

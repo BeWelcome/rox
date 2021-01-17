@@ -59,7 +59,6 @@ class InvitationController extends BaseHostingRequestAndInvitationController
         $hostingRequest->setArrival($leg->getArrival());
         $hostingRequest->setDeparture($leg->getDeparture());
         $hostingRequest->setNumberOfTravellers($leg->getTrip()->getCountOfTravellers());
-        $hostingRequest->setInviteForLeg($leg);
 
         $invitation = new Message();
         $invitation->setRequest($hostingRequest);
@@ -83,7 +82,7 @@ class InvitationController extends BaseHostingRequestAndInvitationController
             $this->sendInvitationNotification(
                 $member,
                 $guest,
-                $hostingRequest
+                $invitation
             );
             $this->addTranslatedFlash('success', 'flash.request.invitation.sent');
 
@@ -187,10 +186,10 @@ class InvitationController extends BaseHostingRequestAndInvitationController
             $newRequest = $this->persistRequest($requestForm, $realParent, $guest, $host);
 
             // In case the potential guest declines the invitation remove the invitedBy from the leg
-            if (HostingRequest::REQUEST_DECLINED === $newRequest->getRequest()->getStatus()) {
+            if (HostingRequest::REQUEST_ACCEPTED === $newRequest->getRequest()->getStatus()) {
                 $em = $this->getDoctrine()->getManager();
 
-                $leg->setInvitedBy(null);
+                $leg->setInvitedBy($host);
                 $em->persist($leg);
                 $em->flush();
             }
@@ -254,14 +253,6 @@ class InvitationController extends BaseHostingRequestAndInvitationController
             $realParent = $this->getParent($parent);
 
             $newRequest = $this->persistRequest($requestForm, $realParent, $host, $guest);
-
-            // If host cancels invitation remove invited by from leg
-            if (HostingRequest::REQUEST_CANCELLED === $newRequest->getRequest()->getStatus()) {
-                $em = $this->getDoctrine()->getManager();
-                $leg->setInvitedBy(null);
-                $em->persist($leg);
-                $em->flush();
-            }
 
             $subject = $this->getSubjectForReply($newRequest);
 

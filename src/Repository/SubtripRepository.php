@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use AnthonyMartin\GeoLocation\GeoPoint;
+use App\Doctrine\SubtripOptionsType;
 use App\Entity\Member;
 use Carbon\CarbonImmutable;
 use DateTime;
@@ -83,6 +84,7 @@ class SubtripRepository extends EntityRepository
                     $qb->expr()->eq('s.invitedBy', $member->getId())
                 )
             )
+            ->andWhere('s.options <> \'\'')
             ->andWhere('s.arrival >= :now')
             ->andWhere('s.arrival <= :threeMonths')
             ->andWhere('l.latitude <= :lat_e')

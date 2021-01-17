@@ -68,14 +68,12 @@ class InvitationController extends BaseHostingRequestAndInvitationController
 
         if ($requestForm->isSubmitted() && $requestForm->isValid()) {
             // Write request to database after doing some checks
-            /** @var Message $hostingRequest */
+            /** @var Message $invitation */
             $invitation = $this->getMessageFromData($requestForm, $member, $guest);
+            $invitation->getRequest()->setInviteForLeg($leg);
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($invitation);
-
-            $leg->setInvitedBy($member);
-            $em->persist($leg);
 
             $em->flush();
 

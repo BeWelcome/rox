@@ -39,6 +39,7 @@ Encore
 //    .addEntry('map/map', './assets/js/map/map.js')
     .addEntry('tempusdominus', './assets/js/tempusdominus.js')
     .addEntry('requests', './assets/js/requests.js')
+    .addEntry('trips', './assets/js/trips.js')
     .addEntry('treasurer', './assets/js/treasurer.js')
     .addEntry('activities', './assets/js/activities/edit_create.js')
     .addEntry('leaflet', './assets/js/leaflet.js')
@@ -55,6 +56,7 @@ Encore
     .addEntry('roxeditor', './assets/js/roxeditor.js')
     .addEntry('rangeslider', './assets/js/rangeslider.js')
     .addEntry('faq', './assets/js/faq.js')
+    .addStyleEntry('tailwind', './assets/css/tailwind.css')
     .autoProvidejQuery()
     //    .addEntry('roxinlineeditor', './assets/js/roxinlineeditor.js')
 
@@ -103,7 +105,12 @@ Encore
     .configureLoaderRule('images', loader => {
         loader.exclude = /ckeditor5-[^/\\]+[/\\]theme[/\\]icons[/\\][^/\\]+\.svg$/;
     })
-
+    .enablePostCssLoader((options) => {
+        options.config = {
+            // directory where the postcss.config.js file is stored
+            path: './postcss.config.js'
+        };
+    })
     // Configure PostCSS loader.
     .addLoader({
         test: /ckeditor5-[^/\\]+[/\\]theme[/\\].+\.css$/,

@@ -7,6 +7,7 @@
 
 namespace App\Entity;
 
+use App\Doctrine\TripAdditionalInfoType;
 use Carbon\Carbon;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -69,11 +70,11 @@ class Trip
     private $deleted;
 
     /**
-     * @var int
+     * @var string
      *
-     * @ORM\Column(name="additionalInfo", type="integer", nullable=true)
+     * @ORM\Column(name="additionalInfo", type="trip_additional_info", nullable=true)
      */
-    private $additionalInfo;
+    private $additionalInfo = TripAdditionalInfoType::NONE;
 
     /**
      * @var int
@@ -88,9 +89,9 @@ class Trip
      * @var ArrayCollection
      * @Assert\Count(min=1)
      *
-     * @ORM\OneToMany(targetEntity="SubTrip", mappedBy="trip", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="Subtrip", mappedBy="trip", cascade={"persist", "remove"})
      */
-    private $subTrips;
+    private $subtrips;
 
     /**
      * @var Member
@@ -102,7 +103,7 @@ class Trip
 
     public function __construct()
     {
-        $this->subTrips = new ArrayCollection();
+        $this->subtrips = new ArrayCollection();
     }
 
     public function setSummary(string $summary): self
@@ -177,14 +178,14 @@ class Trip
         return Carbon::instance($this->deleted);
     }
 
-    public function setAdditionalInfo(int $additionalInfo): self
+    public function setAdditionalInfo(?string $additionalInfo): self
     {
         $this->additionalInfo = $additionalInfo;
 
         return $this;
     }
 
-    public function getAdditionalInfo(): int
+    public function getAdditionalInfo(): string
     {
         return $this->additionalInfo;
     }
@@ -206,23 +207,23 @@ class Trip
         return $this->creator;
     }
 
-    public function getSubTrips()
+    public function getSubtrips()
     {
-        return $this->subTrips;
+        return $this->subtrips;
     }
 
-    public function addSubtrip(SubTrip $subtrip): self
+    public function addSubtrip(Subtrip $subtrip): self
     {
         $subtrip->setTrip($this);
 
-        $this->subTrips->add($subtrip);
+        $this->subtrips->add($subtrip);
 
         return $this;
     }
 
-    public function removeSubtrip(SubTrip $subtrip): void
+    public function removeSubtrip(Subtrip $subtrip): void
     {
-        $this->subTrips->remove($subtrip);
+        $this->subtrips->remove($subtrip);
     }
 
     /**

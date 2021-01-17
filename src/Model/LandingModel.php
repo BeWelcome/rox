@@ -6,6 +6,8 @@ use App\Entity\Activity;
 use App\Entity\Member;
 use App\Entity\Message;
 use App\Entity\Preference;
+use App\Entity\Subtrip;
+use App\Entity\Trip;
 use App\Repository\ActivityRepository;
 use App\Utilities\ManagerTrait;
 use Doctrine\ORM\Query\Expr;
@@ -171,7 +173,10 @@ class LandingModel
      */
     public function getTravellersInAreaOfMember(Member $member)
     {
-        return [$member];
+        $subtripRepository = $this->getManager()->getRepository(Subtrip::class);
+        $legs = $subtripRepository->getLegsInAreaMaxGuests($member, 3, 25);
+
+        return $legs;
     }
 
     /**

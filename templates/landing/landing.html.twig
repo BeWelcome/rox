@@ -154,14 +154,14 @@
                             id="groupsButton">
                             <input type="checkbox"
                                    autocomplete="off"{% if forumFilter == 'GroupsAndForums' or forumFilter == 'Groups' %} checked{% endif %}
-                                   hidden>{{ 'landing.button.groups' | trans }}
+                                   hidden>{{ 'landing.button.groups' | trans | capitalize }}
                         </label>
                         <label
                             class="btn btn-outline-primary{% if forumFilter == 'GroupsAndForums' or forumFilter == 'Forums' %} active{% endif %}"
                             id="forumButton">
                             <input type="checkbox"
                                    autocomplete="off"{% if forumFilter == 'GroupsAndForums' or forumFilter == 'Forums' %} checked{% endif %}
-                                   hidden>{{ 'landing.button.forum' | trans }}
+                                   hidden>{{ 'landing.button.forum' | trans | capitalize }}
                         </label>
                     </div>
 
@@ -221,7 +221,7 @@
     {# 4 widgets #}
     <div class="d-flex row flex-wrap">
 
-        <div class="col-12 col-lg-5 mb-3">
+        <div class="col-12 col-md-3 mb-3">
             <div class="card p-2 mb-3">
                 <h4 class="homehfour">{{ 'landing.beinvolved.title' | trans }}<br/><span
                         class="homesubt">{{ 'landing.beinvolved.donate' | trans }}</span></h4>
@@ -272,7 +272,7 @@
             </div>
         </div>
 
-        <div class="col-12 col-md-6 col-lg-5 mb-3">
+        <div class="col-12 col-md-3 mb-3">
             <div class="card p-2 h-100">
                 <h4 class="homehfour">{{ 'landing.bwnews.title' | trans }}<br/><span
                         class="homesubt">{{ 'landing.bwnews.subtitle' | trans }}</span></h4>
@@ -293,7 +293,21 @@
             </div>
         </div>
 
-        <div class="col-12 col-md-6 col-lg-2 mb-3">
+        <div class="col-12 col-md-4 mb-3">
+            <div class="card p-2 h-100">
+                <h4 class="homehfour">{{ 'landing.bevisited.title' | trans }}<br/><span
+                        class="homesubt">{{ 'landing.bevisited.subtitle' | trans }}</span></h4>
+                <div id="legsdisplay">
+                    <p class="text-center my-3">
+                        <i class="fa fa-4x fa-pulse fa-spinner my-3"></i><br>
+                        {{ 'bevisited.load.legs' | trans }}</p>
+                </div>
+                <a href="{{ url('trip_in_area', {'username': app.user.Username}) }}" class="btn btn-outline-primary btn-homewhite btn-block mt-2"><i
+                        class="far fa-map"></i> {{ 'landing.bevisited.alltrips' | trans }}</a>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-2 mb-3">
             <div class="card p-2 h-100">
                 <h4 class="homehfour">{{ 'landing.beinformed.title' | trans }}<br/><span
                         class="homesubt">{{ 'landing.beinformed.subtitle' | trans }}</span></h4>

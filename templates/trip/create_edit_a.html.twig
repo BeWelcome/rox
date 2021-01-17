@@ -1,0 +1,85 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{ 'trip.create' | trans }}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ encore_entry_link_tags('tailwind') }}
+    {{ encore_entry_link_tags('jquery_ui') }}
+{% endblock stylesheets %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('tempusdominus') }}
+    {{ encore_entry_script_tags('trips')  }}
+{% endblock javascripts %}
+
+{% macro widget_prototype(widget) %}
+    {% if widget.vars.prototype is defined %}
+        {% set form = widget.vars.prototype %}
+        {% set name = widget.vars.name %}
+    {% else %}
+        {% set form = widget %}
+        {% set name = widget.vars.full_name %}
+    {% endif %}
+
+    <div data-content="{{ name }}">
+        <div class="row">
+            <div class="col-11">{{ form_row(form.location.name) }}</div>
+            <div class="col-1">
+                <button class="btn btn-primary btn-remove" data-related="{{ name }}"><i class="fa fa-minus"></i></button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 col-md-6">{{ form_widget(form.arrival) }}</div>
+            <div class="col-12 col-md-6">{{ form_widget(form.departure) }}</div>
+        </div>
+        <div class="row">
+            <div class="col-12 col-md-6">
+                {{ form_widget(form.options[0]) }}
+            </div>
+            <div class="col-12 col-md-6">
+                {{ form_widget(form.options[1]) }}
+            </div>
+        </div>
+        {{ form_rest(form) }}
+    </div>
+{% endmacro %}
+
+{% block content %}
+    {% apply spaceless %}
+        {% set button_text %}
+            {% if create %}{{ 'trip.create' | trans }}{% else %}{{ 'trip.edit' | trans }}{% endif %}
+        {% endset %}
+    {% endapply %}
+    <h1>{% if create %}{{ 'trip.create' | trans }}{% else %}{{ 'trip.edit' | trans }}{% endif %}</h1>
+
+    {{ form_start(form) }}
+    <div class="row no-gutters">
+        <div class="col-12">
+        {{ form_row(form.summary) }}
+        </div>
+        <div class="col-12">
+        {{ form_row(form.description) }}
+        </div>
+        <div class="col-12 col-md-6">
+        {{ form_row(form.countoftravellers) }}
+        </div>
+        <div class="col-12 col-md-6">
+        {{ form_row(form.additionalinfo) }}
+        </div>
+        <div id="subtrips-list"
+             data-prototype="{{ _self.widget_prototype(form.subtrips.vars.prototype)|escape }}" class="col-12">
+            {% for subtrip in form.subtrips %}
+                {{ _self.widget_prototype(subtrip) }}
+            {% endfor %}
+        </div>
+        <div class="d-flex col-12 justify-content-end">
+            <button class="btn btn-primary btn-add" data-target="subtrips-list"><i class="fa fa-plus"></i></button>
+        </div>
+        <div class="d-flex col-12 justify-content-end">
+            <input class="btn btn-primary" type="submit" value="{{ button_text|trans|capitalize }}">
+        </div>
+    </div>
+    {{ form_end(form) }}
+{% endblock content %}

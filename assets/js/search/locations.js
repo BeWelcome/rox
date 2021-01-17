@@ -1,3 +1,7 @@
+import SearchPicker from "./../search/searchpicker";
+
+const searchPicker = new SearchPicker( "/search/locations/all");
+
 function Map() {
     this.map = undefined;
     this.noRefresh = false;
@@ -39,7 +43,7 @@ Map.prototype.showMap = function () {
             } else {
                 const isAdminUnit = document.getElementById('search_location_admin_unit').value;
 
-                if (1 == isAdminUnit) {
+                if ("1" === isAdminUnit) {
                     const bounds = this.markerClusterGroup.getBounds();
                     this.map.fitBounds(bounds, {zoomSnap: 0.25});
                 } else {

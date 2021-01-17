@@ -7,13 +7,14 @@ use App\Entity\Trip;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
-class TripType extends AbstractType
+class TripTypeB extends AbstractType
 {
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
@@ -65,8 +66,20 @@ class TripType extends AbstractType
                 'label' => 'trip.additional.info',
                 'required' => false,
             ])
+            ->add('startdate', DateType::class, [
+                'widget' => 'single_text',
+                'html5' => true,
+                'required' => false,
+            ])
+            ->add('enddate', DateType::class, [
+                'widget' => 'single_text',
+                'html5' => true,
+                'required' => false,
+                'disabled' => true,
+                'mapped' => false,
+            ])
             ->add('subtrips', CollectionType::class, [
-                'entry_type' => SubtripType::class,
+                'entry_type' => SubtripTypeB::class,
                 'entry_options' => [
                     'label' => false,
                 ],
@@ -84,7 +97,7 @@ class TripType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => Trip::class,
+//            'data_class' => TripB::class,
         ]);
     }
 }

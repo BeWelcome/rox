@@ -32,7 +32,7 @@
     "@popperjs/core": "^2.5.2",
     "@symfony/webpack-encore": "^0.31.0",
     "@ttskch/select2-bootstrap4-theme": "^1.4.0",
-    "autoprefixer": "^9.8.6",
+    "autoprefixer": "^9",
     "bootstrap": "^4.5.2",
     "bootstrap-autohidingnavbar": "github:istvan-ujjmeszaros/bootstrap-autohidingnavbar",
     "bootstrap4": "0.0.1-security",
@@ -90,6 +90,10 @@
     "workbox-webpack-plugin": "^5.1.4"
   },
   "dependencies": {
-    "add-to-homescreen": "^3.2.6"
+    "@tailwindcss/postcss7-compat": "^2.0.2",
+    "add-to-homescreen": "^3.2.6",
+    "postcss": "^7",
+    "purgecss": "3",
+    "tailwindcss": "npm:@tailwindcss/postcss7-compat"
   }
 }

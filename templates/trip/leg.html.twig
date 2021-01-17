@@ -1,0 +1,29 @@
+{% import 'macros.twig' as macros %}
+
+<div class="d-flex {% if leg.invitedBy == app.user %}bg-light{% endif %}">
+    <div class="p-2">{{ macros.avatarstack(leg.trip.creator.username, 50, "text-nowrap") }}</div>
+    <div class="p-2 flex-grow-1">
+        {{ leg.location.name }}, {{ leg.trip.countOfTravellers }}
+        {% if constant('App\\Doctrine\\TripAdditionalInfoType::NONE') != leg.trip.additionalInfo %}
+            {{ leg.trip.additionalInfo|trans }}
+        {% endif %}<br>
+        {{ leg.arrival|format_date('medium') }}
+        {% if leg.arrival != leg.departure %} - {{ leg.departure|format_date('medium') }}{% endif %}
+    </div>
+    <div class="p-2">
+        {% if constant('App\\Doctrine\\SubtripOptionsType::MEET_LOCALS') in leg.options %}
+            <a class="btn btn-sm btn-primary mb-1{% if leg.invitedBy == app.user %} disabled{% endif %}"
+               href="{{ path('message_new', { 'username': leg.trip.creator.username }) }}">
+                <i class="fa fa-fw fa-envelope"></i>
+            </a><br>
+        {% endif %}
+        {% if constant('App\\Doctrine\\SubtripOptionsType::LOOKING_FOR_HOST') in leg.options %}
+            <a class="btn btn-sm btn-primary{% if leg.invitedBy == app.user %} disabled{% endif %}"
+                href="{{ path('hosting_invitation', {
+                    'leg': leg.id
+                }) }}">
+                <i class="fa fa-fw fa-house-user"></i>
+            </a>
+        {% endif %}
+    </div>
+</div>

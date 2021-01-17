@@ -1,0 +1,74 @@
+{% extends 'base.html.twig' %}
+{% import 'macros.twig' as macros %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('requests') }}"
+{% endblock javascripts %}
+
+{% block subnav %}
+    {% for filter, menuitem in submenu.items %}
+        <a class="list-group-item nav-link {% if submenu.active == filter %}active{% endif %}"
+           href="{{ path( submenu.route, { filter: filter } ) }}">{{ filter | trans }}</a>
+    {% endfor %}
+{% endblock %}
+
+{% block content %}
+    {% set original = thread | last %}
+    {% set current = thread | first %}
+    {% set receiver =  original.receiver %}
+
+    <div class="row no-gutters bg-white mb-1">
+        {% set myself = app.user %}
+        <div class="pull-left">{{ macros.avatarstack(host.Username, 50, false) }}</div>
+        <div class="col">
+            <h3 id="MessageSubject" class="p-3 text-truncate">{{ current.Subject.Subject }}</h3>
+        </div>
+        <div class="pull-right text-right">{{ macros.avatarstack(guest.Username, 50, true) }}</div>
+    </div>
+
+    {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'autocomplete': 'off'}}) }}
+    <div class="row mb-1">
+        <div class="col-12 col-sm-6 col-md-4">
+            <div class="row">
+                <div class="form-group col-12">
+                    {{ form_label(form.request.arrival) }}
+                    <div class="input-group date" id="arrival" data-target-input="nearest">
+                        <div class="input-group-prepend" data-target="#arrival" data-toggle="datetimepicker">
+                            <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                        </div>
+                        {{ form_widget(form.request.arrival, { 'attr': {'data-target': '#arrival', 'data-toggle': 'datetimepicker'}}) }}
+                    </div>
+                </div>
+
+                <div class="form-group col-12">
+                    {{ form_label(form.request.departure) }}
+                    <div class="input-group date" id="departure" data-target-input="nearest">
+                        <div class="input-group-prepend" data-target="#departure" data-toggle="datetimepicker">
+                            <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                        </div>
+                        {{ form_widget(form.request.departure, { 'attr': {'data-target': '#departure', 'data-toggle': 'datetimepicker'}}) }}
+                    </div>
+                </div>
+                <div class="form-group col-12">
+                    {{ form_widget(form.request.flexible) }}
+                    {{ form_label(form.request.flexible) }}
+                </div>
+                <div class="form-group col-12">
+                    {{ form_label(form.request.numberOfTravellers) }}
+                    {{ form_widget(form.request.numberOfTravellers) }}
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-md-8">
+            {{ form_row(form.message) }}
+            {{ form_widget(form.accept, {'attr': {'class': 'btn-primary ml-1 pull-right'}}) }}
+            {{ form_widget(form.tentatively, {'attr': {'class': 'btn btn-primary ml-1 pull-right'}}) }}
+            {{ form_widget(form.decline, {'attr': {'class': 'btn btn-primary ml-1 pull-right'}}) }}
+            {{ form_widget(form.update, {'attr': {'class': 'btn btn-primary ml-1 pull-right'}}) }}
+        </div>
+        <div class="clearfix"></div>
+    </div>
+    {{ form_rest(form) }}
+    {{ form_end(form) }}
+    {% include 'message/thread.html.twig' with {'show_deleted': false} %}
+{% endblock %}

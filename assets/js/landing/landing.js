@@ -1,3 +1,8 @@
+import SearchPicker from "./../search/searchpicker";
+import "tempusdominus";
+
+const searchPicker = new SearchPicker( "/search/locations/all");
+
 $(document).ready(function() {
     if (!$('#messagesdisplay').length) {
         return;
@@ -5,6 +10,7 @@ $(document).ready(function() {
 
     Home.updateMessages();
     Home.updateThreads();
+    Home.updateTripLegs();
 
     $('a[data-toggle="tab"]').on('show.bs.tab', Home.onTabChange);
 
@@ -110,6 +116,15 @@ var Home = {
             },
             success: function (activities) {
                 $('#activitiesdisplay').replaceWith(activities);
+            }
+        });
+    },
+    updateTripLegs: function () {
+        $.ajax({
+            type: 'GET',
+            url: '/widget/triplegs',
+            success: function(legs) {
+                $('#legsdisplay').replaceWith(legs);
             }
         });
     },

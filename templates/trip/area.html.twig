@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+{% import 'macros.twig' as macros %}
+
+{% block title %}
+    {{ 'trip.in.area' | trans }}
+{% endblock %}
+
+{% block stylesheets %}
+{#
+    {{ encore_entry_link_tags('tailwind') }}
+#}
+{% endblock %}
+
+{% block content %}
+    <h1>{{ 'trip.in.area' | trans }}</h1>
+    {% if legs.nbResults != 0 %}
+        {% set myself = app.user %}
+        {% if legs.haveToPaginate %}
+        <div class="row">
+            <div class="col-12">
+                <div class="pull-right">{{ pagerfanta( legs, 'rox_default', { routeName: 'trip_in_area', routeParams: {'username': app.user.username} }) }}</div>
+            </div>
+        </div>
+        {% endif %}
+
+            {% for leg in legs %}
+                {% include 'trip/leg.html.twig' with {'leg': leg} %}
+            {% endfor %}
+
+        {% if legs.haveToPaginate %}
+        <div class="row">
+            <div class="col-12">
+                <div class="pull-right">{{ pagerfanta( legs, 'rox_default', { routeName: 'trip_in_area', routeParams: {'username': app.user.username} }) }}</div>
+            </div>
+        </div>
+        {% endif %}
+    {% else %}
+        {{ 'trip.in.area.no'|trans }}
+    {% endif %}
+{% endblock content %}

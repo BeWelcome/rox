@@ -88,6 +88,22 @@ class LandingController extends AbstractController
     }
 
     /**
+     * @Route( "/widget/triplegs", name="/widget/triplegs")
+     *
+     * @return Response
+     */
+    public function getTripLegs()
+    {
+        /** @var Member $member */
+        $member = $this->getUser();
+        $tripLegs = $this->landingModel->getTravellersInAreaOfMember($member);
+
+        return $this->render('landing/widget/triplegs.html.twig', [
+            'legs' => $tripLegs,
+        ]);
+    }
+
+    /**
      * @Route( "/widget/threads", name="/widget/threads")
      *
      * @return Response
@@ -196,8 +212,6 @@ class LandingController extends AbstractController
         $member = $this->getUser();
         $campaignDetails = $donateModel->getStatForDonations();
 
-        $travellersInArea = $this->landingModel->getTravellersInAreaOfMember($member);
-
         $latestNews = $communityNewsModel->getLatest();
 
         $formFactory = $this->get('form.factory');
@@ -231,7 +245,6 @@ class LandingController extends AbstractController
                 'yearNeeded' => $campaignDetails->YearNeededAmount,
                 'yearDonated' => $campaignDetails->YearDonation,
             ],
-            'travellers' => $travellersInArea,
             'communityNews' => $latestNews,
             'messageFilter' => $messageFilter,
             'forumFilter' => $forumFilter,

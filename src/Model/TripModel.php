@@ -2,60 +2,50 @@
 
 namespace App\Model;
 
+use App\Entity\Member;
 use App\Entity\Trip;
 use App\Repository\TripRepository;
-use App\Utilities\ManagerTrait;
-use Pagerfanta\Adapter\DoctrineORMAdapter;
+use Doctrine\ORM\EntityManagerInterface;
+use Pagerfanta\Doctrine\ORM\QueryAdapter;
 use Pagerfanta\Pagerfanta;
 
 class TripModel
 {
-    use ManagerTrait;
-
     /**
-     * @param int $page
-     * @param int $items
-     *
-     * @return Pagerfanta
+     * @var EntityManagerInterface
      */
-    public function findLatest($page, $items)
+    private $entityManager;
+
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
+
+    public function paginateTripsOfMember(Member $member, int $page): PagerFanta
     {
         /** @var TripRepository $repository */
-        $repository = $this->getManager()->getRepository(Trip::class);
-        $query = $repository->queryLatest();
+        $repository = $this->entityManager->getRepository(Trip::class);
+        $query = $repository->queryTripsOfMember($member);
 
-        $paginator = new Pagerfanta(new DoctrineORMAdapter($query, false));
-        $paginator->setMaxPerPage($items);
+        $paginator = new Pagerfanta(new QueryAdapter($query, false));
+        $paginator->setMaxPerPage(20);
         $paginator->setCurrentPage($page);
 
         return $paginator;
     }
 
-    /*    public function findInMemberAreaNextThreeMonths(Member $member, $count = 2, $distance = 25)
-        {
-            $location = new LocationModel();
-            $locationIds = $location->getLocationIdsAroundLocation(
-                $member->getLatitude(),
-                $member->getLongitude(),
-                $distance
-            );
-            $geonameIds = array_map(function ($item) {
-                return $item->getGeonameId();
-            }, $locationIds);
-            $geoNameIds = implode(',', $geonameIds);
-            $sql = "
-                select * from trips
-                join members ON members.id = trips.created_by
-                inner join sub_trips st ON st.trip_id = trips.id
-                where
-                  created_by <> {$member->getId()}
-                  AND st.arrival >= CURDATE() AND st.geonameId IN ({$geoNameIds})
-                  AND members.status IN ('Active','OutOfremind')
-                  LIMIT $count
-            ";
-            $trips = $this->execQuery($sql)->fetchAll(\PDO::FETCH_OBJ);
+    public function findInMemberVicinityNextThreeMonths(Member $member, $count = 5)
+    {
+        // \todo: Get distance from preference
+        $distance = 25;
 
-            return [$trips];
-        }
-    */
+        /** @var TripRepository $tripRepository */
+        $tripRepository = $this->entityManager->getRepository(Trip::class);
+
+        // Set to abritrary 3 months
+        $duration = 3;
+        $trips = $tripRepository->findInVicinityOfMemberNextMonths($member, $count, $duration, $distance);
+
+        return $trips;
+    }
 }

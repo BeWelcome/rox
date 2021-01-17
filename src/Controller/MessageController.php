@@ -46,7 +46,7 @@ class MessageController extends BaseMessageController
             throw $this->createAccessDeniedException('Not your message/hosting request');
         }
 
-        if ($this->isHostingRequest($message)) {
+        if (!$this->isMessage($message)) {
             return $this->redirectToHostingRequestReply($message);
         }
 

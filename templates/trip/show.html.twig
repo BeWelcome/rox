@@ -5,7 +5,25 @@
 {% endblock %}
 
 {% block content %}
-
-    <div>This is a test</div>
-
+    <h1>{{ 'trip.show.details'|trans|capitalize }}</h1>
+    <p>Summary: {{ trip.summary }}</p>
+    <p>Description: {{ trip.description }}</p>
+    <p># travellers: {{ trip.countOfTravellers }}</p>
+    <p>Additional Info: {{ trip.additionalInfo|trans }}</p>
+    {% for subtrip in trip.subtrips %}
+        <p>
+            {{ subtrip.location.fullname }}<br>
+            {{ subtrip.arrival|format_date('medium') }}{% if subtrip.arrival != subtrip.departure %} - {{ subtrip.departure|format_date('medium') }}{% endif%}<br>
+            {% if constant('App\\Doctrine\\SubtripOptionsType::MEET_LOCALS') in subtrip.options %}
+                {{ 'trip.option.meet.locals'|trans }}
+            {% endif %}
+            {% if constant('App\\Doctrine\\SubtripOptionsType::MEET_LOCALS') in subtrip.options and constant('App\\Doctrine\\SubtripOptionsType::LOOKING_FOR_HOST') in subtrip.options %}
+                ,
+            {% endif %}
+            {% if constant('App\\Doctrine\\SubtripOptionsType::LOOKING_FOR_HOST') in subtrip.options %}
+                {{ 'trip.option.looking.for.host'|trans }}
+            {% endif %}
+        </p>
+    {% endfor %}
+    <p><a href="{{ path('trip_edit', {'id': trip.id}) }}" class="btn btn-primary pull-right">{{ 'trip.edit'|trans }}</a></p>
 {% endblock content %}

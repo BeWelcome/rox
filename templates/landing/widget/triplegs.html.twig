@@ -1,0 +1,5 @@
+{% for leg in legs  %}
+    {% include 'trip/leg.html.twig' with {'leg': leg} %}
+{% else %}
+    {{ 'landing.bevisited.none' }}
+{% endfor %}

@@ -6,12 +6,15 @@
 
 {% block content %}
     <h1>{{ 'trip.show.details'|trans|capitalize }}</h1>
-    <p>Summary: {{ trip.summary }}</p>
-    <p>Description: {{ trip.description }}</p>
+    <h2>{{ trip.summary }}</h2>
+    <p>
+        Description:<br>
+        {{ trip.description }}
+    </p>
     <p># travellers: {{ trip.countOfTravellers }}</p>
     <p>Additional Info: {{ trip.additionalInfo|trans }}</p>
     {% for subtrip in trip.subtrips %}
-        <p>
+        <span> <span class="h5">{{ 'trip.leg'|trans }}: {{ loop.index }}</span><br>
             {{ subtrip.location.fullname }}<br>
             {{ subtrip.arrival|format_date('medium') }}{% if subtrip.arrival != subtrip.departure %} - {{ subtrip.departure|format_date('medium') }}{% endif%}<br>
             {% if constant('App\\Doctrine\\SubtripOptionsType::MEET_LOCALS') in subtrip.options %}
@@ -25,5 +28,7 @@
             {% endif %}
         </p>
     {% endfor %}
-    <p><a href="{{ path('trip_edit', {'id': trip.id}) }}" class="btn btn-primary pull-right">{{ 'trip.edit'|trans }}</a></p>
+    {% if app.user == trip.creator %}
+        <p><a href="{{ path('trip_edit', {'id': trip.id}) }}" class="btn btn-primary pull-right">{{ 'trip.edit'|trans }}</a></p>
+    {% endif %}
 {% endblock content %}

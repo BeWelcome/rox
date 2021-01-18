@@ -3,6 +3,7 @@
 <div class="d-flex {% if leg.invitedBy == app.user %}bg-light{% endif %}">
     <div class="p-2">{{ macros.avatarstack(leg.trip.creator.username, 50, "text-nowrap") }}</div>
     <div class="p-2 flex-grow-1">
+        <a class="text-truncate" href="{{ path('trip_show', {'id': leg.trip.id}) }}">{{ leg.trip.summary }}</a><br>
         {{ leg.location.name }}, {{ leg.trip.countOfTravellers }}
         {% if constant('App\\Doctrine\\TripAdditionalInfoType::NONE') != leg.trip.additionalInfo %}
             {{ leg.trip.additionalInfo|trans }}

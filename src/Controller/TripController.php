@@ -266,13 +266,10 @@ class TripController extends AbstractController
                 ];
             }
         }
-        $legs = $params['legs'] ?? false;
-        if ($legs) {
-            $submenu['trip_legs'] = [
-                'key' => 'trip.in.area',
-                'url' => $this->generateUrl('trip_in_area', ['username' => $this->getUser()->getUsername()]),
-            ];
-        }
+        $submenu['trip_legs'] = [
+            'key' => 'trip.in.area',
+            'url' => $this->generateUrl('trip_in_area', ['username' => $this->getUser()->getUsername()]),
+        ];
         $submenu['trip_create_a'] = [
             'key' => 'trip.create.a',
             'url' => $this->generateUrl('trip_create_a'),

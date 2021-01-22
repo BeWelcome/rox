@@ -125,17 +125,17 @@ class TranslationController extends AbstractController
                 'description' => 'The page that is shown to unauthenticated visitors.',
             ],
             'Terms of Use' => [
-                'url' => 'terms/{locale}',
+                'url' => 'terms',
                 'template' => 'policies/tou_translated.html.twig',
                 'description' => 'The terms of use. Make sure to translate them fully before asking for publication.',
             ],
             'Privacy Policy' => [
-                'url' => 'privacy/{locale}',
+                'url' => 'privacy_policy',
                 'template' => 'policies/pp_translated.html.twig',
                 'description' => 'The privacy policy. Make sure to translate them fully before asking for publication.',
             ],
             'Data Privacy' => [
-                'url' => 'dataprivacy/{locale}',
+                'url' => 'datarights/',
                 'template' => 'policies/dp_translated.html.twig',
                 'description' => 'The data privacy policy. Make sure to translate them fully before asking for publication.',
             ],

@@ -115,9 +115,14 @@ class TranslationModel
             $this->filesystem->remove($file);
         }
 
+        $memoryLimit = ini_get('memory_limit');
+        ini_set('memory_limit', '512M');
+
         // Build them again
         if ($this->translator instanceof WarmableInterface) {
             $this->translator->warmUp($translationDir);
         }
+
+        ini_set('memory_limit', $memoryLimit);
     }
 }

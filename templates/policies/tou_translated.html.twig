@@ -2,5 +2,10 @@
 
 {% block content %}
     <h1>BeWelcome {{ 'termsofuse'|trans }}</h1>
-    {{ 'termsofuse.text'|trans|raw }}
+
+    <div class="alert alert-notice">{{ 'policy_disclaimer'|trans({'policy_link_start': '<a href="' ~ policy_english ~ '">', 'policy_link_end': '</a>'})|raw }}</div>
+
+    <div class="mt-3">
+        {{ 'termsofuse.text'|trans|raw }}
+    </div>
 {% endblock content %}

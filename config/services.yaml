@@ -17,6 +17,7 @@ parameters:
     massmail_batch_size: "%env(massmail_batch_size)%"
     forum_notification_batch_size: "%env(forum_notification_batch_size)%"
     locales: "%env(LOCALES)%"
+    document_locales: "%env(DOCUMENT_LOCALES)%"
 
 services:
     _defaults:
@@ -281,3 +282,8 @@ services:
             - { lock_mode: LOCK_NONE }
 
     Symfony\Bridge\Doctrine\Security\RememberMe\DoctrineTokenProvider: ~
+
+    App\Controller\PoliciesController:
+        public: true
+        arguments:
+            $locales: "%document_locales%"

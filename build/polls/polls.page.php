@@ -157,7 +157,7 @@ class PollsPage extends PageWithActiveSkin
 
         $words = $this->getWords();
 
-        $items[] = array('wiki', 'https://www.bevolunteer.org/wiki/How_pollsworks', 'Wiki Doc');
+        $items[] = array('wiki', '/wiki/how_pollsworks', 'Wiki Doc');
         $items[] = array('listOpen', 'polls/list/open', $words->getSilent("polls_open"));
         $items[] = array('list_contributed', 'polls/list/contributed', $words->getSilent("polls_contributed"));
         if (MOD_right::get()->HasRight("Poll", "create")) {

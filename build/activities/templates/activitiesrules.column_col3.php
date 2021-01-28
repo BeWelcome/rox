@@ -19,10 +19,13 @@
         <ul>
             <li><?= $this->getWords()->getSilent('activities.rules.noncommercial.community'); ?></li>
             <li><?= $this->getWords()->getSilent('activities.rules.noncommercial.bewelcome'); ?></li>
-            <li><?= $this->getWords()->getSilent('activities.rules.noncommercial.promation'); ?></li>
+            <li><?= $this->getWords()->getSilent('activities.rules.noncommercial.promotion'); ?></li>
             <li><?= $this->getWords()->getSilent('activities.rules.noncommercial.expenses'); ?></li>
         </ul>
         <h3><?= $this->getWords()->getSilent('activities.rules.reporting'); ?></h3>
-        <p><?= $this->getWords()->getSilent('activities.rules.reporting.process'); ?></p>
+        <ul>
+            <li><?= $this->getWords()->getSilent('activities.rules.reporting.process'); ?></li>
+            <li><?= $this->getWords()->getSilent('activities.rules.reporting.removal'); ?></li>
+        </ul>
     </div>
 </div>

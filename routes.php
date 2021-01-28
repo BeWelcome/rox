@@ -194,6 +194,7 @@
     $this->addRoute('activities_edit', 'activities/:id:/edit', 'ActivitiesController', 'editcreate');
     $this->addRoute('activities_show', 'activities/:id:', 'ActivitiesController', 'show');
     $this->addRoute('activities_show_attendees', 'activities/:id:/attendees/page/:page:', 'ActivitiesController', 'show');
+    $this->addRoute('activities_rules', 'activities/rules', 'ActivitiesController', 'rules');
 
     // searchmembers
     $this->addRoute('searchmembers', 'search', 'SearchController', 'searchMembers');

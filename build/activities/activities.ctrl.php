@@ -280,6 +280,18 @@ class ActivitiesController extends RoxControllerBase
         return $page;
     }
 
+    public function rules() {
+        $page = new ActivitiesRulesPage();
+
+        $loggedInMember = $this->_model->getLoggedInMember();
+        if (!$loggedInMember) {
+            $this->redirectAbsolute($this->router->url('activities_upcoming'));
+        }
+        $page->member = $loggedInMember;
+
+        return $page;
+    }
+
     public function searchActivitiesCallback(\stdClass $args, ReadOnlyObject $action,
         ReadWriteObject $mem_redirect, ReadWriteObject $mem_resend)
     {

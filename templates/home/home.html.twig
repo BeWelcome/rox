@@ -7,9 +7,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" href="{{ asset('favicon.ico') }}"/>
 
-    <title>{{ title }} - BeWelcome</title>
+    <title>BeWelcome - {{ 'home.headline.bewelcome.cultural' | trans }}</title>
     <meta name="description" content="{{ 'default_meta_description' | trans }}"/>
     <meta name="keywords" content="{{ 'default_meta_keyword' | trans }}"/>
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ app.request.getSchemeAndHttpHost() }}">
+    <meta property="og:title" content="BeWelcome - {{ 'home.headline.bewelcome.cultural' | trans }}">
+    <meta property="og:description" content="Meet travellers & find hosts worldwide for free. BeWelcome - for better intercultural understanding.">
+    <meta property="og:image" content="">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="{{ app.request.getSchemeAndHttpHost() }}">
+    <meta property="twitter:title" content="BeWelcome - {{ 'home.headline.bewelcome.cultural' | trans }}">
+    <meta property="twitter:description" content="Meet travellers & find hosts worldwide for free. BeWelcome - for better intercultural understanding.">
+    <meta property="twitter:image" content="">
 
     {{ encore_entry_link_tags('bewelcome') }}
     {{ encore_entry_link_tags('floating_labels') }}

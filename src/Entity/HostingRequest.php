@@ -262,7 +262,7 @@ class HostingRequest
         return $this->status;
     }
 
-    public function getInviteForLeg(): Subtrip
+    public function getInviteForLeg(): ?Subtrip
     {
         return $this->inviteForLeg;
     }

@@ -5498,6 +5498,13 @@ levn@~0.3.0:
     prelude-ls "~1.1.2"
     type-check "~0.3.2"
 
+lightpick@^1.6.2:
+  version "1.6.2"
+  resolved "https://registry.yarnpkg.com/lightpick/-/lightpick-1.6.2.tgz#2b1b92c458f032dafffa42dcd460bb0bd9cf3534"
+  integrity sha512-xQmKL6pvtKnLGI8sOgclgc/k6G8FvyjdfQy4nOm0iywD44gkER0ia7SR9cthdUIkkcDBFNHH8SfbPQJ33QF8fQ==
+  dependencies:
+    moment "^2.22.2"
+
 lite-ready@^1.0.4:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/lite-ready/-/lite-ready-1.0.4.tgz#6dfe50f45a5a2840c87c8406a7abf3088bfd255e"
@@ -5949,7 +5956,7 @@ moment-timezone@^0.5.28, moment-timezone@^0.5.31:
   dependencies:
     moment ">= 2.9.0"
 
-"moment@>= 2.9.0", moment@^2.10.2, moment@^2.29.0:
+"moment@>= 2.9.0", moment@^2.10.2, moment@^2.22.2, moment@^2.29.0:
   version "2.29.1"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.29.1.tgz#b2be769fa31940be9eeea6469c075e35006fa3d3"
   integrity sha512-kHmoybcPV8Sqy59DwNDY3Jefr64lK/by/da0ViFcuA4DH0vQg5Q6Ze5VimxkfQNSC+Mls/Kx53s7TjP1RhFEDQ==

@@ -4,7 +4,10 @@ namespace App\Form;
 
 use App\Doctrine\SubtripOptionsType;
 use App\Entity\Subtrip;
+use App\Form\DataTransformer\DateTimeTransformer;
 use App\Form\DataTransformer\SubtripOptionsTypeTransformer;
+use DateTime;
+use Mockery\Matcher\Not;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -17,12 +20,9 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 
 class SubtripType extends AbstractType
 {
-    /**
-     * @var SubtripOptionsTypeTransformer
-     */
-    private SubtripOptionsTypeTransformer $transformer;
+    private DateTimeTransformer $transformer;
 
-    public function __construct(SubtripOptionsTypeTransformer $transformer)
+    public function __construct(DateTimeTransformer $transformer)
     {
         $this->transformer = $transformer;
     }
@@ -34,16 +34,15 @@ class SubtripType extends AbstractType
     {
         $formBuilder
             ->add('location', SearchLocationType::class)
-            ->add('arrival', DateType::class, [
-                'widget' => 'single_text',
-                'html5' => true,
+            ->add('duration', TextType::class, [
                 'required' => false,
+                'mapped' => false,
+                'constraints' => [
+                    new NotBlank(),
+                ],
             ])
-            ->add('departure', DateType::class, [
-                'widget' => 'single_text',
-                'html5' => true,
-                'required' => false,
-            ])
+            ->add('arrival', HiddenType::class)
+            ->add('departure', HiddenType::class)
             ->add('options', ChoiceType::class, [
                 'choices' => [
                     'trip.option.looking.for.host' => SubtripOptionsType::LOOKING_FOR_HOST,
@@ -51,12 +50,17 @@ class SubtripType extends AbstractType
                 ],
                 'multiple' => true,
                 'expanded' => true,
-                'label' => 'Additional Info',
-            ]);
+            ])
+        ;
 
-//        $formBuilder->get('options')
-//            ->addModelTransformer($this->transformer)
-//        ;
+        $formBuilder
+            ->get('arrival')
+            ->addModelTransformer($this->transformer)
+        ;
+        $formBuilder
+            ->get('departure')
+            ->addModelTransformer($this->transformer)
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver)

@@ -30,7 +30,6 @@ class SearchLocationType extends AbstractType
     {
         $builder
             ->add('name', TextType::class, [
-                'label' => 'location',
                 'attr' => [
                     'class' => 'search-picker',
                 ],

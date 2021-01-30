@@ -265,7 +265,7 @@ class HostingRequestController extends BaseHostingRequestAndInvitationController
 
         if ($requestForm->isSubmitted() && $requestForm->isValid()) {
             // Write request to database after doing some checks
-            $hostingRequest = $this->getMessageFromData($requestForm->getData(), $member, $host);
+            $hostingRequest = $this->getMessageFromData($requestForm, $member, $host);
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($hostingRequest);

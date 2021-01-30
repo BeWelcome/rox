@@ -7,6 +7,7 @@
 {% block stylesheets %}
     {{ encore_entry_link_tags('tailwind') }}
     {{ encore_entry_link_tags('jquery_ui') }}
+    {{ encore_entry_link_tags('trips')  }}
 {% endblock stylesheets %}
 
 {% block javascripts %}
@@ -24,25 +25,31 @@
     {% endif %}
 
     <div data-content="{{ name }}">
-        <div class="row">
-            <div class="col-11">{{ form_row(form.location.name) }}</div>
-            <div class="col-1">
+        <div class="form-row">
+            <div class="col-12 col-md-6">
+                <div class="form-group">
+                    {{ form_label(form.location.name) }}
+                    {{ form_widget(form.location.name) }}
+                </div>
+            </div>
+            <div class="col-11 col-md-5">
+                <div class="form-group">
+                    {{ form_label(form.duration) }}
+                    {{ form_widget(form.duration) }}
+                </div>
+            </div>
+            <div class="col-1 text-right">
                 <button class="btn btn-primary btn-remove" data-related="{{ name }}"><i class="fa fa-minus"></i></button>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-12 col-md-6">{{ form_widget(form.arrival) }}</div>
-            <div class="col-12 col-md-6">{{ form_widget(form.departure) }}</div>
-        </div>
-        <div class="row">
             <div class="col-12 col-md-6">
                 {{ form_widget(form.options[0]) }}
             </div>
             <div class="col-12 col-md-6">
                 {{ form_widget(form.options[1]) }}
             </div>
+            {{ form_widget(form.location.geoname_id) }}{{ form_widget(form.location.latitude) }}{{ form_widget(form.location.longitude) }}
+            {{ form_widget(form.arrival) }}{{ form_widget(form.departure) }}
         </div>
-        {{ form_rest(form) }}
     </div>
 {% endmacro %}
 
@@ -55,18 +62,18 @@
     <h1>{% if create %}{{ 'trip.create' | trans }}{% else %}{{ 'trip.edit' | trans }}{% endif %}</h1>
 
     {{ form_start(form) }}
-    <div class="row no-gutters">
+    <div class="form-row">
         <div class="col-12">
-        {{ form_row(form.summary) }}
+            {{ form_row(form.summary) }}
         </div>
         <div class="col-12">
-        {{ form_row(form.description) }}
+            {{ form_row(form.description, { 'attr': { 'rows': 5 }}) }}
         </div>
         <div class="col-12 col-md-6">
-        {{ form_row(form.countoftravellers) }}
+            {{ form_row(form.countoftravellers) }}
         </div>
         <div class="col-12 col-md-6">
-        {{ form_row(form.additionalinfo) }}
+            {{ form_row(form.additionalinfo) }}
         </div>
         <div id="subtrips-list"
              data-prototype="{{ _self.widget_prototype(form.subtrips.vars.prototype)|escape }}" class="col-12">
@@ -74,7 +81,7 @@
                 {{ _self.widget_prototype(subtrip) }}
             {% endfor %}
         </div>
-        <div class="d-flex col-12 justify-content-end">
+        <div class="d-flex col-12 justify-content-end mb-2">
             <button class="btn btn-primary btn-add" data-target="subtrips-list"><i class="fa fa-plus"></i></button>
         </div>
         <div class="d-flex col-12 justify-content-end">

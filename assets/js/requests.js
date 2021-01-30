@@ -1,33 +1,37 @@
-require('./tempusdominus.js');
+import moment from 'moment';
+import Lightpick from 'lightpick';
+
+import '../scss/_daterangepicker.scss';
 
 $(function () {
-    let arrival = $('#arrival');
-    let departure = $('#departure');
-    let lang = document.documentElement.lang;
-    arrival.datetimepicker({
-        locale: lang,
-        keepInvalid: true,
-        format: 'YYYY-MM-DD',
-        minDate: Date.now(),
-    });
-    departure.datetimepicker({
-        locale: lang,
-        keepInvalid: true,
-        useCurrent: false,
-        format: 'YYYY-MM-DD'
-    });
-    arrival.on("change.datetimepicker", function (e) {
-        $('#departure').datetimepicker('minDate', e.date.add(1, 'days'));
-        let original = $('#arrival-original');
-        if (original.length) {
-            original.removeClass('d-none');
+    const input = document.getElementsByClassName('light-picker')[0];
+    console.log("input = ", input);
+    const parent = input.id.replace('_duration', '');
+    console.log("parent = ", parent);
+
+    const picker = new Lightpick({
+        field: input,
+        singleDate: false,
+        minDate: moment().add(1, 'day'),
+        numberOfMonths: 2,
+        lang: document.documentElement.lang,
+        tooltipNights: true,
+        onSelect: function(start, end) {
+            const arrival = document.getElementById(parent + '_arrival');
+            arrival.value = start ? start.format('YYYY-MM-DD') : '';
+            const departure = document.getElementById(parent + '_departure');
+            departure.value = end ? end.format('YYYY-MM-DD') : '';
+
+            let original = document.getElementById('duration-original');
+            if (null !== original) {
+                original.classList.remove("d-none");
+                console.log('showing');
+            }
         }
     });
-    departure.on("change.datetimepicker", function (e) {
-        $('#arrival').datetimepicker('maxDate', e.date.subtract(1, 'days'));
-        let original = $('#departure-original');
-        if (original.length) {
-            original.removeClass('d-none');
-        }
-    });
+
+    const arrival = document.getElementById(parent + '_arrival').value;
+    const departure = document.getElementById(parent + '_departure').value;
+
+    picker.setDateRange(arrival, departure);
 });

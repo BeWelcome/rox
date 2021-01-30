@@ -62,13 +62,13 @@ class TripController extends AbstractController
     /**
      * Create a new trip.
      *
-     * @Route("/trip/create/a", name="trip_create_a")
+     * @Route("/trip/create", name="trip_create")
      */
-    public function createA(Request $request): Response
+    public function create(Request $request): Response
     {
         $trip = new Trip();
-        $leg = new Subtrip();
-        $trip->addSubtrip($leg);
+        $firstLeg = new Subtrip();
+        $trip->addSubtrip($firstLeg);
 
         $createForm = $this->createForm(TripType::class, $trip);
         $createForm->handleRequest($request);
@@ -90,11 +90,11 @@ class TripController extends AbstractController
             return $this->redirectToRoute('mytrips');
         }
 
-        return $this->render('trip/create_edit_a.html.twig', [
+        return $this->render('trip/create_edit.html.twig', [
             'create' => true,
             'form' => $createForm->createView(),
             'submenu' => [
-                'active' => 'trip_create_a',
+                'active' => 'trip_create',
                 'items' => $this->getSubmenuItems([
                     'create' => true,
                 ]),
@@ -189,7 +189,7 @@ class TripController extends AbstractController
             return $this->redirectToRoute('mytrips');
         }
 
-        return $this->render('trip/create_edit_a.html.twig', [
+        return $this->render('trip/create_edit.html.twig', [
             'create' => false,
             'form' => $updateForm->createView(),
             'submenu' => [
@@ -270,13 +270,9 @@ class TripController extends AbstractController
             'key' => 'trip.in.area',
             'url' => $this->generateUrl('trip_in_area', ['username' => $this->getUser()->getUsername()]),
         ];
-        $submenu['trip_create_a'] = [
-            'key' => 'trip.create.a',
-            'url' => $this->generateUrl('trip_create_a'),
-        ];
-        $submenu['trip_create_b'] = [
-            'key' => 'trip.create.b',
-            'url' => $this->generateUrl('trip_create_b'),
+        $submenu['trip_create'] = [
+            'key' => 'trip.create',
+            'url' => $this->generateUrl('trip_create'),
         ];
 
         return $submenu;

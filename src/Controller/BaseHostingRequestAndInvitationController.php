@@ -17,6 +17,7 @@ use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Form;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -116,6 +117,20 @@ class BaseHostingRequestAndInvitationController extends BaseMessageController
     protected function redirectToMessageReply(Message $message): RedirectResponse
     {
         return $this->redirectToRoute('message_reply', ['id' => $message->getId()]);
+    }
+
+
+    protected function getMessageFromData(FormInterface $requestForm, Member $member, Member $guest)
+    {
+        $invitation = $requestForm->getData();
+        $invitation->setSender($member);
+        $invitation->setReceiver($guest);
+        $invitation->setFirstRead(null);
+        $invitation->setStatus('Sent');
+        $invitation->setFolder('Normal');
+        $invitation->setCreated(new DateTime());
+
+        return $invitation;
     }
 
     private function getRedirectUrl(Request $request)

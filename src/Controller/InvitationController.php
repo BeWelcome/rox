@@ -324,17 +324,4 @@ class InvitationController extends BaseHostingRequestAndInvitationController
             $requestChanged
         );
     }
-
-    private function getMessageFromData(FormInterface $requestForm, Member $member, Member $guest)
-    {
-        $invitation = $requestForm->getData();
-        $invitation->setSender($member);
-        $invitation->setReceiver($guest);
-        $invitation->setFirstRead(null);
-        $invitation->setStatus('Sent');
-        $invitation->setFolder('Normal');
-        $invitation->setCreated(new DateTime());
-
-        return $invitation;
-    }
 }

@@ -5,6 +5,10 @@
     {{ encore_entry_script_tags('requests') }}"
 {% endblock javascripts %}
 
+{% block stylesheets %}
+    {{ encore_entry_link_tags('requests')  }}
+{% endblock stylesheets %}
+
 {% block subnav %}
     {% for filter, menuitem in submenu.items %}
         <a class="list-group-item nav-link {% if submenu.active == filter %}active{% endif %}"
@@ -30,29 +34,25 @@
     <div class="row mb-1">
         <div class="col-12 col-sm-6 col-md-4">
             <div class="row">
-                <div class="form-group col-12">
-                    {{ form_label(form.request.arrival) }}
+                <div class="form-group">
+                    {{ form_label(form.request.duration) }}
                     <div class="input-group date" id="arrival" data-target-input="nearest">
                         <div class="input-group-prepend" data-target="#arrival" data-toggle="datetimepicker">
-                            <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                        <span class="input-group-text">
+                            <i class="fa fa-calendar"></i>
+                        </span>
                         </div>
-                        {{ form_widget(form.request.arrival, { 'attr': {'data-target': '#arrival', 'data-toggle': 'datetimepicker'}}) }}
+                        {{ form_widget(form.request.duration, {'attr': { 'class': 'light-picker'}}) }}
                     </div>
+                    {{ form_row(form.request.arrival) }}
+                    {{ form_row(form.request.departure) }}
                 </div>
 
-                <div class="form-group col-12">
-                    {{ form_label(form.request.departure) }}
-                    <div class="input-group date" id="departure" data-target-input="nearest">
-                        <div class="input-group-prepend" data-target="#departure" data-toggle="datetimepicker">
-                            <span class="input-group-text"><i class="fa fa-calendar"></i></span>
-                        </div>
-                        {{ form_widget(form.request.departure, { 'attr': {'data-target': '#departure', 'data-toggle': 'datetimepicker'}}) }}
-                    </div>
-                </div>
                 <div class="form-group col-12">
                     {{ form_widget(form.request.flexible) }}
                     {{ form_label(form.request.flexible) }}
                 </div>
+
                 <div class="form-group col-12">
                     {{ form_label(form.request.numberOfTravellers) }}
                     {{ form_widget(form.request.numberOfTravellers) }}

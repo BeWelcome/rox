@@ -12,11 +12,13 @@ html {
   text-rendering: optimizeLegibility;
 }
 
-html, body {
+html, 
+body {
   background-color: var(--gray-10);
 }
 
-body {
+body,
+main {
   min-height: 100vh;
 }
 

@@ -19,6 +19,9 @@ $font-family-bold: Signika;
 
 @import "~bootstrap";
 
+@import "config";
+@import "generic/generic";
+
 @import "general";
 
 // include page styles

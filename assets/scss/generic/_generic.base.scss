@@ -9,10 +9,15 @@
 html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: auto;
+  text-rendering: optimizeLegibility;
 }
 
 html, body {
-  background-color: var(--white);
+  background-color: var(--gray-10);
+}
+
+body {
+  min-height: 100vh;
 }
 
 address,

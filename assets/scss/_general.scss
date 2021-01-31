@@ -1,26 +1,5 @@
 /* Sticky footer styles
 -------------------------------------------------- */
-html {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-}
-
-body {
-  /* Margin bottom by footer height */
-  text-rendering: optimizeLegibility;
-  background: #f7f7f7; /* For browsers that do not support gradients */
-  background: linear-gradient(#afafaf, #f0f0f0 10em) repeat-x scroll left top #f0f0f0;
-  display: flex;
-  min-height: 100vh;
-  flex-direction: column;
-  width: 100%;
-}
-
-main {
-  flex: 1 0 auto;
-  margin-bottom: 1rem;
-}
 /* Wrapper for the main content, below the menu */
 .container-content {
   @extend .container;

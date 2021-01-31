@@ -113,6 +113,10 @@
                             <i class="fa fa-envelope mr-1"></i>{{ 'landing.button.myinbox' | trans }}{% if messageCount + requestCount %}
                                 <span
                                     class="badge badge-primary">{{ messageCount + requestCount }}</span>{% endif %}</a>
+                        <a href="{{ url( 'conversations' ) }}" class="ml-1 btn btn-outline-primary btn-homewhite">
+                            <i class="fa fa-envelope mr-1"></i>{{ 'landing.conversations' | trans }}{% if messageCount + requestCount %}
+                                <span
+                                    class="badge badge-primary">{{ messageCount + requestCount }}</span>{% endif %}</a>
                     </div>
                 </div>
 

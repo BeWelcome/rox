@@ -42,7 +42,7 @@
                 <div class="form-row mb-1">
                     <label for="FirstName" class="col-md-3 col-form-label"><?= $words->get('FirstName') ?></label>
                     <div class="col-8 col-md-7">
-                        <input class="form-control<?php if (isset($errorFirstName)) { ?> error-input-text<?php } ?>"
+                        <input class="o-input<?php if (isset($errorFirstName)) { ?> error-input-text<?php } ?>"
                                type="text"
                                name="FirstName"
                                value="<?php echo htmlentities($vars['FirstName'], ENT_COMPAT, 'UTF-8'); ?>"/>
@@ -61,7 +61,7 @@
                 <div class="form-row mb-1">
                     <label for="SecondName" class="col-md-3 col-form-label"><?= $words->get('SecondName') ?></label>
                     <div class="col-8 col-md-7">
-                        <input type="text" name="SecondName" class="form-control"
+                        <input type="text" name="SecondName" class="o-input"
                                value="<?php echo htmlentities($vars['SecondName'], ENT_COMPAT, 'UTF-8'); ?>"/>
                     </div>
                     <div class="col-4 col-md-2 form-check">
@@ -76,7 +76,7 @@
                 <div class="form-row mb-1">
                     <label for="LastName" class="col-md-3 col-form-label"><?= $words->get('LastName') ?></label>
                     <div class="col-8 col-md-7">
-                        <input class="form-control <?php if (isset($errorLastName)) { ?>error-input-text<?php } ?>"
+                        <input class="o-input <?php if (isset($errorLastName)) { ?>error-input-text<?php } ?>"
                                type="text"
                                name="LastName"
                                value="<?php echo htmlentities($vars['LastName'], ENT_COMPAT, 'UTF-8'); ?>"/>
@@ -96,7 +96,7 @@
                     <label for="SignupEmail"
                            class="col-12 col-md-3 col-form-label"><?= $words->get('SignupEmail') ?></label>
                     <div class="col-8 col-md-7">
-                        <input class="form-control<?php if (isset($errorEmail)) { ?> error-input-text<?php } ?>"
+                        <input class="o-input<?php if (isset($errorEmail)) { ?> error-input-text<?php } ?>"
                                type="text"
                                name="Email" value="<?= str_replace('%40', '@', $vars['Email']) ?>"/>
                     </div>
@@ -115,7 +115,7 @@
                     <input type="text"
                                id="birth-date"
                                name="birth-date"
-                               class="form-control datetimepicker-input"
+                               class="o-input datetimepicker-input"
                                data-toggle="datetimepicker"
                                data-target="#birth-date" value="<?= $vars['BirthDate'] ?>" >
                 </div>

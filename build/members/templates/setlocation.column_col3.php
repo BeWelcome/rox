@@ -40,7 +40,7 @@ $map_conf = PVars::getObj('map');
                 <div class="col-12">
                     <div class="form-group">
                         <label for="location"
-                               class="form-control-label sr-only"><?= $words->getSilent(
+                               class="o-input-label sr-only"><?= $words->getSilent(
                                 'label_setlocation'
                             ) ?></label><?php echo $words->flushBuffer(); ?>
                         <input type="hidden" name="location-geoname-id" id="location-geoname-id"
@@ -50,7 +50,7 @@ $map_conf = PVars::getObj('map');
                         <input type="hidden" name="location-longitude" id="location-longitude"
                                value="<?= isset($vars['location-longitude']) ? $vars['location-longitude'] : '' ?>"/>
                         <input type="text" name="location"
-                               id="location" class="form-control location-picker"
+                               id="location" class="o-input location-picker"
                                placeholder="<?= $words->get(
                                    'label_setlocation'
                                ) ?>"

@@ -90,7 +90,7 @@
                     </div>
 
                     <button type="submit"
-                            class="form-control btn btn-primary"><?php echo $words->getSilent('signup.submit'); ?> <i
+                            class="o-input btn btn-primary"><?php echo $words->getSilent('signup.submit'); ?> <i
                                 class="fa fa-check-square"></i></button>
                     <?php echo $words->flushBuffer(); ?>
 
@@ -199,7 +199,7 @@
                             </tbody>
                         </table>
                         <button type="submit"
-                                class="form-control btn btn-primary"><?php echo $words->getSilent('signup.submit'); ?>
+                                class="o-input btn btn-primary"><?php echo $words->getSilent('signup.submit'); ?>
                             <i
                                     class="fa fa-check-square"></i></button>
                         <?php echo $words->flushBuffer(); ?>

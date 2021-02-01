@@ -18,11 +18,11 @@
                 <form class="form-inline p-1" method="post" action="{{ url('security_check') }}">
                     <div class="form-group floating-label mr-1">
                         <label for="_username_1" class="sr-only">Username</label>
-                        <input class="form-control m-1" type="text" id="_username_1" name="_username" placeholder="{{ 'username'|trans }}" value="" />
+                        <input class="o-input m-1" type="text" id="_username_1" name="_username" placeholder="{{ 'username'|trans }}" value="" />
                     </div>
                     <div class="form-group floating-label mr-1">
                         <label for="_password_1" class="sr-only"></label>
-                        <input class="form-control m-1" type="password" id="_password_1" name="_password" placeholder="{{ 'password'|trans }}" value="">
+                        <input class="o-input m-1" type="password" id="_password_1" name="_password" placeholder="{{ 'password'|trans }}" value="">
                     </div>
                     <div class="form-check">
                         <input type="checkbox" class="form-check-input" id="login-r-1" value="1"
@@ -39,11 +39,11 @@
                     <li class="nav-item d-none d-md-block">
                         <form class="form-inline p-1" method="post" action="{{ url('security_check') }}">
                             <div class="form-group floating-label mr-1">
-                                <input class="form-control" type="text" id="_username_2" name="_username" placeholder="{{ 'username'|trans }}" autofocus>
+                                <input class="o-input" type="text" id="_username_2" name="_username" placeholder="{{ 'username'|trans }}" autofocus>
                                 <label for="_username_2">{{ 'username'|trans }}</label>
                             </div>
                             <div class="form-group floating-label mr-1">
-                                <input class="form-control" type="password" id="_password_2" name="_password" placeholder="{{ 'password'|trans }}">
+                                <input class="o-input" type="password" id="_password_2" name="_password" placeholder="{{ 'password'|trans }}">
                                 <label for="_password_2">{{ 'password'|trans }}</label>
                             </div>
                             <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">

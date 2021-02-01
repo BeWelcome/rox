@@ -22,7 +22,7 @@
                             value="{{ item.vars.value }}"
                             id="{{ item.vars.id }}"
                             name="{{ item.vars.full_name }}"
-                            class="form-control noradio"
+                            class="o-input noradio"
                             {{ item.vars.checked ? 'checked' : '' }}
                         >{{ item.vars.label | trans }}</label>
                     {% do item.setRendered %}

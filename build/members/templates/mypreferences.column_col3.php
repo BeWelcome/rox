@@ -19,15 +19,15 @@
                         <p><?=$words->get('PreferencesPasswordDescription')?></p>
                         <div class="form-group row">
                             <label for="passwordold" class="col-md-3"><?=$words->get('PreferencesPasswordOld')?></label>
-                            <div class="col-12 col-md-9"><input type="password" name="passwordold" class="form-control" /></div>
+                            <div class="col-12 col-md-9"><input type="password" name="passwordold" class="o-input" /></div>
                         </div>
                         <div class="form-group row">
                             <label for="passwordnew" class="col-md-3"><?=$words->get('PreferencesPasswordNew')?></label>
-                            <div class="col-12 col-md-9"><input type="password" name="passwordnew" class="form-control" /></div>
+                            <div class="col-12 col-md-9"><input type="password" name="passwordnew" class="o-input" /></div>
                         </div>
                         <div class="form-group row">
                             <label for="passwordconfirm" class="col-md-3"><?=$words->get('PreferencesPasswordConfirm')?></label>
-                            <div class="col-12 col-md-9"><input type="password" name="passwordconfirm" class="form-control" /></div>
+                            <div class="col-12 col-md-9"><input type="password" name="passwordconfirm" class="o-input" /></div>
                         </div>
 
                     </div>

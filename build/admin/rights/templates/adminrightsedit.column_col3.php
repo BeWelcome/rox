@@ -36,7 +36,7 @@ $callbackTags = $this->layoutkit->formkit->setPostCallback('AdminRightsControlle
     <input type="hidden" name="rightid" value="<?= $this->vars['right'] ?>" />
     <div class="form-group">
         <label for="username"><?php echo $this->words->get("AdminRightsUserName")?></label>
-        <input type="text" class="form-control" id="username" name="username" readonly="readonly" value="<?= $this->vars['username'] ?>"/>
+        <input type="text" class="o-input" id="username" name="username" readonly="readonly" value="<?= $this->vars['username'] ?>"/>
     </div>
     <div class="form-group">
         <label for="right"><?php echo $words->get("AdminRightsRights")?></label>
@@ -48,11 +48,11 @@ $callbackTags = $this->layoutkit->formkit->setPostCallback('AdminRightsControlle
     </div>
     <div class="form-group">
         <label for="scope"><?php echo $this->words->get("AdminRightsScope") ?></label>
-        <input type="text" class="form-control" id="scope" name="scope" value="<?= htmlentities($this->vars['scope'], ENT_COMPAT, 'utf-8') ?>"/>
+        <input type="text" class="o-input" id="scope" name="scope" value="<?= htmlentities($this->vars['scope'], ENT_COMPAT, 'utf-8') ?>"/>
     </div>
     <div class="form-group">
         <label for="comment"><?php echo $this->words->get("AdminRightsComment") ?></label>
-        <textarea class="form-control" id="comment" name="comment" rows="5"><?= htmlentities($this->vars['comment'], ENT_COMPAT, 'utf-8') ?></textarea>
+        <textarea class="o-input" id="comment" name="comment" rows="5"><?= htmlentities($this->vars['comment'], ENT_COMPAT, 'utf-8') ?></textarea>
     </div>
     <input type="submit" class="btn btn-primary" id="AdminRightsSubmit" name="AdminRightsSubmit" value="<?php echo $this->words->getSilent("AdminRightsSubmit")?>" /><?php echo $words->flushBuffer(); ?>
 </form>

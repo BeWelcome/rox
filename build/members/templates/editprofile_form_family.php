@@ -37,7 +37,7 @@
                            onclick="return confirm('<?php echo $words->getSilent('Relation_delete_confirmation'); ?>');"><i class="fa fa-times" title="<?php echo $words->getFormatted("delrelation", $Relation->Username); ?>"></i><?php echo $words->flushBuffer(); ?></a>
                     </div>
                     <div class="col-12 col-md-9 order-md-3">
-                                    <textarea class="form-control"
+                                    <textarea class="o-input"
                                               name="RelationComment_<?= $Relation->id ?>"><?= $comment ?></textarea>
                     </div>
                 </div>

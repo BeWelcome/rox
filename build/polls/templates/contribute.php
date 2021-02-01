@@ -97,7 +97,7 @@ for ($ii = 0; $ii < $iiMax; $ii++) {
 if ($Data->rPoll->AllowComment=="Yes") {
     ?>
     <div class="form-group"><label for="comment"><?=$words->getFormatted("polls_comment");?></label>
-    <textarea class="form-control" id="comment" name="Comment" cols="60" rows="4"></textarea>
+    <textarea class="o-input" id="comment" name="Comment" cols="60" rows="4"></textarea>
     </div>
     <?php
 }

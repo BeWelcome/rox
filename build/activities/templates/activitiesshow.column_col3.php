@@ -139,7 +139,7 @@ if (empty($vars)) {
                             </div>
                         </div>
 
-                        <input class="form-control mb-1" type="text" maxlength="80" id="activity-comment"
+                        <input class="o-input mb-1" type="text" maxlength="80" id="activity-comment"
                                name="activity-comment"
                                value="<?php echo htmlspecialchars($vars['activity-comment'], ENT_QUOTES); ?>"
                                placeholder="<?php echo $words->get('ActivityYourComment'); ?>"/>

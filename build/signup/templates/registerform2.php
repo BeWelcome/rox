@@ -13,7 +13,7 @@
         <!-- Do we need this DIV? -->
         <div class="row invisible d-none">
             <label for="sweet"><?php echo $words->get('SignupSweet'); ?></label>
-            <input type="text" class="form-control" id="sweet" name="sweet"
+            <input type="text" class="o-input" id="sweet" name="sweet"
                    placeholder="<?php echo $words->get('SignupSweet'); ?>" value="" title=""/>
         </div>
 
@@ -65,7 +65,7 @@
                 <div class="form-group">
                     <label for="register-firstname"><?php echo $words->get('FirstName'); ?></label>
                     <div class="input-group">
-                        <input type="text" required minlength="1" class="form-control <?php if ($fullnameMissing) { echo 'is-invalid'; } ?>" name="firstname"
+                        <input type="text" required minlength="1" class="o-input <?php if ($fullnameMissing) { echo 'is-invalid'; } ?>" name="firstname"
                                id="register-firstname" placeholder="<?php echo $words->get('FirstName'); ?>"
                             <?php
                             echo isset($vars['firstname']) ? 'value="' . htmlentities($vars['firstname'], ENT_COMPAT, 'utf-8') . '" ' : '';
@@ -84,7 +84,7 @@
                 <div class="form-group">
                     <label for="secondname"><?php echo $words->get('SignupSecondNameOptional'); ?></label>
                     <div class="d-flex">
-                        <input type="text" minlength="1" class="form-control" name="secondname" id="secondname"
+                        <input type="text" minlength="1" class="o-input" name="secondname" id="secondname"
                                placeholder="<?php echo $words->get('SignupSecondNameOptional'); ?>"
                             <?php
                             echo isset($vars['secondname']) ? 'value="' . htmlentities($vars['secondname'], ENT_COMPAT, 'utf-8') . '" ' : '';
@@ -96,7 +96,7 @@
                 <div class="form-group">
                     <label for="lastname"><?php echo $words->get('LastName'); ?></label>
                     <div class="input-group">
-                        <input type="text" minlength="1" required class="form-control <?php if ($fullnameMissing) { echo 'is-invalid'; } ?>" name="lastname" id="lastname"
+                        <input type="text" minlength="1" required class="o-input <?php if ($fullnameMissing) { echo 'is-invalid'; } ?>" name="lastname" id="lastname"
                                placeholder="<?php echo $words->get('LastName'); ?>"
                             <?php
                             echo isset($vars['lastname']) ? 'value="' . htmlentities($vars['lastname'], ENT_COMPAT, 'utf-8') . '" ' : '';
@@ -121,7 +121,7 @@
                     ?>
                     <label for="mothertongue"><?php echo $words->get('LanguageLevel_MotherLanguage'); ?></label>
                     <div class="input-group">
-                        <select required class="form-control <?= ($motherTongueError) ? "is-invalid" : "" ?>" name="mothertongue" id="mothertongue"
+                        <select required class="o-input <?= ($motherTongueError) ? "is-invalid" : "" ?>" name="mothertongue" id="mothertongue"
                                 data-placeholder="<?= $words->getBuffered('SignupSelectMotherTongue') ?>">
                             <option></option>
                             <optgroup label="<?= $words->getSilent('SpokenLanguages') ?>">
@@ -148,7 +148,7 @@
                     <div class="input-group date" id="datetimepicker1" data-target-input="nearest">
                         <div class="input-group-prepend" data-target="#datetimepicker1"
                                 data-toggle="datetimepicker"><div class="input-group-text bg-primary white"><i class="far fa-calendar fa-fw"></i></div></div>
-                        <input type="text" class="form-control datetimepicker-input <?php if ($birthdateError) { echo 'is-invalid'; }?>" data-target="#datetimepicker1" id="birthdate"
+                        <input type="text" class="o-input datetimepicker-input <?php if ($birthdateError) { echo 'is-invalid'; }?>" data-target="#datetimepicker1" id="birthdate"
                                name="birthdate" data-toggle="datetimepicker"/>
                         <button type="button" class="input-group-append btn btn-primary" data-trigger="focus" data-container="body"
                                 data-toggle="popover" data-placement="right"
@@ -170,7 +170,7 @@
                 <?php $genderError = in_array('SignupErrorProvideGender', $vars['errors']); ?>
                 <div class="form-group">
                     <span class="d-block form-control-label"><?php echo $words->get('Gender'); ?></span>
-                    <div class="form-control <?php if ($genderError) { echo "is-invalid"; } ?> d-none"></div>
+                    <div class="o-input <?php if ($genderError) { echo "is-invalid"; } ?> d-none"></div>
                     <div class="btn-group btn-group-toggle" data-toggle="buttons">
                     <label class="btn btn-outline-primary" for="female" <?php
                     if (isset($vars['gender']) && $vars['gender'] == 'female') {
@@ -220,7 +220,7 @@
                     <div class="form-group pt-3">
                         <div class="d-flex">
                             <button type="submit"
-                                    class="form-control btn btn-primary"><?php echo $words->getSilent('NextStep'); ?> <i
+                                    class="o-input btn btn-primary"><?php echo $words->getSilent('NextStep'); ?> <i
                                         class="fa fa-angle-double-right"></i></button>
                             <?php echo $words->flushBuffer(); ?>
                         </div>

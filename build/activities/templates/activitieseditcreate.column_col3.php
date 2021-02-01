@@ -61,16 +61,16 @@ if (empty($vars)) {
                 <div class="col-12 col-md-8">
                     <div class="form-group mb-1">
                         <label for="activity-title"
-                               class="form-control-label"><?php echo $words->get('ActivityTitle'); ?>
+                               class="o-input-label"><?php echo $words->get('ActivityTitle'); ?>
                             *</label>
-                        <input type="text" id="activity-title" name="activity-title" maxlength="80" class="form-control"
+                        <input type="text" id="activity-title" name="activity-title" maxlength="80" class="o-input"
                                value="<?php echo $vars['activity-title']; ?>"
                                placeholder="<?php echo $words->get('ActivityTitle'); ?>*">
                     </div>
                     <div class="form-group mb-1">
                         <label for="activity-description"
-                               class="form-control-label"><?php echo $words->get('ActivityDescription'); ?>*</label>
-                        <textarea id="activity-description" name="activity-description" class="form-control editor">
+                               class="o-input-label"><?php echo $words->get('ActivityDescription'); ?>*</label>
+                        <textarea id="activity-description" name="activity-description" class="o-input editor">
                         <?php
                         if (!empty($vars['activity-description'])) {
                             echo $vars['activity-description'];
@@ -99,7 +99,7 @@ if (empty($vars)) {
                             <input type="text"
                                    id="activity-start-date"
                                    name="activity-start-date"
-                                   class="form-control datetimepicker-input"
+                                   class="o-input datetimepicker-input"
                                    data-toggle="datetimepicker"
                                    data-target="#activity-start-date" value="<?= $vars['activity-start-date'] ?>" >
                         </div>
@@ -120,7 +120,7 @@ if (empty($vars)) {
                             <input type="text"
                                    id="activity-end-date"
                                    name="activity-end-date"
-                                   class="form-control datetimepicker-input"
+                                   class="o-input datetimepicker-input"
                                    data-toggle="datetimepicker"
                                    data-target="#activity-end-date" value="<?= $vars['activity-end-date'] ?>" >
                         </div>
@@ -133,14 +133,14 @@ if (empty($vars)) {
                                 <span class="input-group-text bg-primary white"><i class="fa fa-globe"></i></span>
                             </div>
                             <input type="text" id="activity-location" name="activity-location"
-                                   class="form-control search-picker" value="<?= $vars['activity-location'] ?? ''; ?>"
+                                   class="o-input search-picker" value="<?= $vars['activity-location'] ?? ''; ?>"
                                    placeholder="<?php echo $words->get('ActivityLocation'); ?>*">
                         </div>
                     </div>
 
                     <div class="form-group mb-1">
                         <label for="activity-address" class="mb-0"><?php echo $words->get('ActivityAddress'); ?></label>
-                        <textarea id="activity-address" name="activity-address" class="form-control"
+                        <textarea id="activity-address" name="activity-address" class="o-input"
                                   rows="3"><?php echo $vars['activity-address']; ?></textarea>
                     </div>
                     <input type="hidden" id="activity-location_geoname_id" name="activity-location_geoname_id" value="<?= $vars['activity-location_geoname_id'] ?? '' ?>">

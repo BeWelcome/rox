@@ -19,7 +19,7 @@ if (isset($this->keyword)) {
     <form action="/forums/search" method="POST" id="search-box" class="pull-right mb-1">
         <div class="input-group">
             <input type="hidden" name="<?= $this->searchCallbackId ?>" value="1"/>
-            <input type="text" name="fs-keyword" class="form-control"
+            <input type="text" name="fs-keyword" class="o-input"
                    placeholder="<?= $this->_model->words->getFormatted('ForumSearch') ?>" value="<?= $keyword ?>"/>
             <span class="input-group-append">
                         <button type="submit" name="fss" class="btn btn-primary"><i

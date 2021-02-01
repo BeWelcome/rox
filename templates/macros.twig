@@ -1,11 +1,11 @@
 {% macro input(name, placeholder, value, type) %}
     <label for="{{ name }}" class="sr-only">{{ placeholder|trans }}</label>
-    <input class="form-control m-1" type="{{ type|default('text') }}" name="{{ name }}" placeholder="{{ placeholder|trans }}"
+    <input class="o-input m-1" type="{{ type|default('text') }}" name="{{ name }}" placeholder="{{ placeholder|trans }}"
            value="{{ value|e }}" />
 {% endmacro %}
 
 {% macro submit(text, class = false) %}
-    <button class="form-control btn btn-primary{%  if class %}{{ class }}{% endif %}" type="submit">{{ text|trans }}</button>
+    <button class="o-input btn btn-primary{%  if class %}{{ class }}{% endif %}" type="submit">{{ text|trans }}</button>
 {% endmacro %}
 
 {% macro select(name, values, value, class) %}

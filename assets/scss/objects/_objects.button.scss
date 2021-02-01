@@ -1,0 +1,326 @@
+/* ==========================================================================
+   #BUTTON
+   ========================================================================== */
+
+/**
+ * Button with Luckia brand colors
+ */
+
+.o-button {
+  font-family: Signika;
+  display: flex;
+  padding: 0 24px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  color: var(--white);
+  background-color: var(--bewelcome);
+  font-size: 16px;
+  line-height: 20px;
+  font-weight: 700;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  height: 40px;
+  max-width: 192px;
+}
+
+
+
+
+/* Fluid version
+   ========================================================================== */
+
+/**
+ * Resizes relative to viewport width
+ */
+
+.o-button--fluid {
+  padding: 0 calc(24 * var(--width));
+  border-radius: calc(8 * var(--width));
+  font-size: calc(16 * var(--width));
+  line-height: calc(20 * var(--width));
+  height: calc(40 * var(--width));
+  max-width: calc(192 * var(--width));
+}
+
+
+
+/* Large version
+   ========================================================================== */
+
+/**
+ * Used as a CTA
+ */
+
+.o-button--l {
+  height: 56px;
+  font-size: 20px;
+  line-height: 24px;
+  border-radius: 8px;
+}
+
+
+
+
+
+/* Small version
+   ========================================================================== */
+
+/**
+ * Used in navigation menus
+ */
+
+.o-button--s {
+  height: 32px;
+  font-size: 12px;
+  line-height: 16px;
+}
+
+@media (max-width: 600px) {
+  .o-button--s  {
+    padding: 0 16px;
+  }
+}
+
+
+
+
+/* Extra Small version
+   ========================================================================== */
+
+/**
+ * Used in Small Main Menu Bar
+ */
+
+.o-button--xs {
+  height: 20px;
+  font-size: 12px;
+  line-height: 16px;
+  border-radius: 2px;
+}
+
+@media (max-width: 600px) {
+  .o-button--xs  {
+    padding: 0 16px;
+  }
+}
+
+
+
+
+
+
+/* Color versions
+   ========================================================================== */
+
+/**
+ * Secondary Button
+ */
+
+ .o-button--secondary {
+  background-color: var(--magnolia);
+  color: var(--dark);
+}
+
+
+
+
+
+/**
+ * Secondary Waterpolo
+ */
+
+ .o-button--waterpolo {
+  background-color: var(--waterpolo);
+}
+
+
+
+
+
+/**
+ * Outline Button
+ */
+
+.o-button--outline {
+  background-color: var(--luckia);
+  border: 1px solid var(--white);
+  color: var(--white);
+}
+
+.o-button--outline-inverse {
+  background-color: var(--white);
+  border: 1px solid var(--white);
+  color: var(--luckia);
+}
+
+.o-button--outline-ceniza {
+  background-color: var(--white);
+  border: 1px solid var(--ceniza);
+  color: var(--ceniza);
+  height: initial;
+  min-height: 56px;
+  font-size: 14px;
+  line-height: 16px;
+  font-weight: 400;
+  padding: 4px;
+}
+
+.o-button--outline-ceniza-inverse {
+  background-color: var(--ceniza);
+  border: 1px solid var(--ceniza);
+  color: var(--white);
+  height: initial;
+  min-height: 56px;
+  font-size: 14px;
+  line-height: 16px;
+  font-weight: 400;
+  padding: 4px;
+}
+
+
+
+
+
+/**
+ * Link Button
+ */
+
+.o-button--link {
+  font-size: 14px;
+  font-weight: 400;
+  max-width: initial;
+  background: initial;
+  padding: initial;
+  display: initial;
+  height: initial;
+  color: var(--ceniza);
+  text-decoration: underline;
+}
+
+.o-button--link-s {
+  font-size: 12px;
+  font-weight: 400;
+  max-width: initial;
+  background: initial;
+  padding: initial;
+  display: initial;
+  height: initial;
+  color: var(--luckia);
+  text-decoration: underline;
+}
+
+
+
+
+/**
+ * Settings Button
+ */
+
+.o-button--settings {
+  color: var(--antracita);
+  background-color: var(--tenis);
+}
+
+
+
+
+
+/**
+ * Transparent Button
+ */
+
+ .o-button--transparent {
+  background-color: transparent;
+}
+
+
+
+
+
+/* Hovers
+   ========================================================================== */
+
+.o-button:hover {
+  opacity: 0.7;
+}
+
+.o-button--outline:hover {
+  opacity: 1;
+  color: var(--luckia);
+  border: 1px solid var(--white);
+  background-color: var(--white);
+}
+
+.o-button--outline-inverse:hover {
+  opacity: 1;
+  color: var(--white);
+  border: 1px solid var(--white);
+  background-color: var(--transparent);
+}
+
+.o-button--outline-ceniza:hover,
+.o-button--outline-ceniza-inverse:hover {
+  opacity: 1;
+}
+
+
+
+
+
+
+
+
+
+/* Disabled state
+   ========================================================================== */
+
+.o-button--disabled,
+.o-button[disabled] {
+  opacity: 0.3;
+}
+
+
+
+
+
+
+
+
+
+
+/* Utilities
+   ========================================================================== */
+
+/**
+ * Disables max width
+ */
+
+ .o-button--nolimit {
+  max-width: 100%;
+ }
+
+
+
+
+ /**
+ * Makes it full width of div
+ */
+
+ .o-button--full {
+  width: 100%;
+  max-width: 100%;
+ }
+
+
+
+
+ /**
+ * Min width for CTA button
+ */
+
+.o-button--min-width {
+  min-width: 192px;
+ }
+
+

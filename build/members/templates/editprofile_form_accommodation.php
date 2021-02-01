@@ -59,7 +59,7 @@ $hostingInterest = [
                 <div class="col-12 col-md-8">
                 <input
                     type="range"
-                    class="form-control <?php if (in_array('SignupErrorProvideHostingInterest', $vars['errors'])) {
+                    class="o-input <?php if (in_array('SignupErrorProvideHostingInterest', $vars['errors'])) {
                         echo 'is-invalid';
                     } else {
                         echo 'is-valid';
@@ -84,7 +84,7 @@ $hostingInterest = [
                 <label for="MaxGuests"
                        class="col-md-4 col-form-label"><?php echo $words->get('ProfileNumberOfGuests'); ?></label>
                 <div class="col-12 col-md-8">
-                    <input type="number" min="1" max="20" name="MaxGuest" class="form-control"
+                    <input type="number" min="1" max="20" name="MaxGuest" class="o-input"
                            value="<?= $vars['MaxGuest']; ?>">
                 </div>
             </div>
@@ -93,7 +93,7 @@ $hostingInterest = [
                 <label for="MaxLengthOfStay"
                        class="col-md-4 col-form-label"><?= $words->get('ProfileMaxLenghtOfStay') ?></label>
                 <div class="col-12 col-md-8">
-                    <textarea name="MaxLenghtOfStay" class="form-control"
+                    <textarea name="MaxLenghtOfStay" class="o-input"
                               rows="3"><?= $vars['MaxLenghtOfStay'] ?></textarea>
                 </div>
             </div>
@@ -103,7 +103,7 @@ $hostingInterest = [
                     <?= $words->get('ProfileILiveWith') ?>
                 </label>
                 <div class="col-12 col-md-8">
-                    <textarea id="ILiveWith" name="ILiveWith" class="form-control" rows="3"><?= $vars['ILiveWith'] ?></textarea>
+                    <textarea id="ILiveWith" name="ILiveWith" class="o-input" rows="3"><?= $vars['ILiveWith'] ?></textarea>
                 </div>
             </div>
 
@@ -112,7 +112,7 @@ $hostingInterest = [
                     <?= $words->get('ProfilePleaseBring') ?>
                 </label>
                 <div class="col-12 col-md-8">
-                    <textarea id="PleaseBring" name="PleaseBring" class="form-control"
+                    <textarea id="PleaseBring" name="PleaseBring" class="o-input"
                                           rows="3"><?= $vars['PleaseBring'] ?></textarea>
                 </div>
             </div>
@@ -122,7 +122,7 @@ $hostingInterest = [
                     <?= $words->get('ProfileOfferGuests') ?>
                 </label>
                 <div class="col-12 col-md-8">
-                    <textarea id="OfferGuests" name="OfferGuests" class="form-control"
+                    <textarea id="OfferGuests" name="OfferGuests" class="o-input"
                                           rows="3"><?= $vars['OfferGuests'] ?></textarea>
                 </div>
             </div>
@@ -132,7 +132,7 @@ $hostingInterest = [
                     <?= $words->get('ProfileOfferHosts') ?>
                 </label>
                 <div class="col-12 col-md-8">
-                    <textarea id="OfferHosts" name="OfferHosts" class="form-control"
+                    <textarea id="OfferHosts" name="OfferHosts" class="o-input"
                                           rows="3"><?= $vars['OfferHosts'] ?></textarea>
                 </div>
             </div>
@@ -160,7 +160,7 @@ $hostingInterest = [
                     <?= $words->get('ProfilePublicTransport') ?>
                 </label>
                 <div class="col-12 col-md-8">
-                    <textarea id="PublicTransport" name="PublicTransport" class="form-control"
+                    <textarea id="PublicTransport" name="PublicTransport" class="o-input"
                               rows="3"><?= $vars['PublicTransport'] ?></textarea>
                 </div>
 
@@ -188,7 +188,7 @@ $hostingInterest = [
                     <?= $words->get('ProfileHouseRules') ?>
                 </label>
                 <div class="col-12 col-md-8">
-                            <textarea id="OtherRestrictions" name="OtherRestrictions" class="form-control"
+                            <textarea id="OtherRestrictions" name="OtherRestrictions" class="o-input"
                                       rows="3"><?= $vars['OtherRestrictions'] ?></textarea>
                 </div>
             </div>
@@ -198,7 +198,7 @@ $hostingInterest = [
                     <?= $words->get('ProfileAdditionalAccomodationInfo') ?>
                 </label>
                 <div class="col-12 col-md-8">
-                            <textarea id="AdditionalAccomodationInfo" name="AdditionalAccomodationInfo" class="form-control"
+                            <textarea id="AdditionalAccomodationInfo" name="AdditionalAccomodationInfo" class="o-input"
                                       rows="3"><?= $vars['AdditionalAccomodationInfo'] ?></textarea>
                 </div>
             </div>

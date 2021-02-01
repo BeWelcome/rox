@@ -31,7 +31,7 @@
                                 <label for="translation_mode" class="col-auto col-form-label">
                                     {{ 'translation.mode' | trans }}
                                 </label>
-                                <select id="translation_mode" name="translation_mode" class="form-control-sm select2"
+                                <select id="translation_mode" name="translation_mode" class="o-input-sm select2"
                                         data-minimum-results-for-search="-1"
                                         onchange="window.location.href=this.value; return false">
                                     <option {% if app.session.get('translation_mode') == 'on' %}selected="selected"{% endif %}

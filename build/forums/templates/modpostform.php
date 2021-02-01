@@ -56,19 +56,19 @@ if (isset($DataPost->Thread->title))
     <input type="hidden" name="<?= $callbackId; ?>" value="1"/>
     <div class="form-group form-row">
         <label class="col-3 col-form-label" for="stickyvalue">stickyvalue</label>
-        <input type="text" class="col-9 form-control" name="stickyvalue" id="stickyvalue" size="1"
+        <input type="text" class="col-9 o-input" name="stickyvalue" id="stickyvalue" size="1"
                value="<?= $DataPost->Thread->stickyvalue; ?>"/>
         <small class="col-9 offset-3 text-muted">(default 0, the most negative will be the first visible)</small>
     </div>
     <div class="form-group form-row">
         <label class="col-3 col-form-label" for="expiredate">expiration date</label>
-        <input type="text" class="col-9 form-control" id="expiredate" name="expiredate"
+        <input type="text" class="col-9 o-input" id="expiredate" name="expiredate"
                value="<?= $DataPost->Thread->expiredate; ?>"/>
         <small class="col-9 offset-3 text-muted">(close the thread)</small>
     </div>
     <div class="form-group form-row">
         <label class="col-3 col-form-label" for="ThreadVisibility">Thread Visibility</label>
-        <select name="ThreadVisibility" id="ThreadVisibility" class="col-9 form-control">
+        <select name="ThreadVisibility" id="ThreadVisibility" class="col-9 o-input">
             <option value="MembersOnly"
                 <?php
                 if ($DataPost->Thread->ThreadVisibility == "MembersOnly") {
@@ -97,7 +97,7 @@ if (isset($DataPost->Thread->title))
     </div>
     <div class="form-group form-row">
         <label class="col-3 col-form-label" for="IdGroup">Group</label>
-        <select id="IdGroup" name="IdGroup" class="col-9 form-control">
+        <select id="IdGroup" name="IdGroup" class="col-9 o-input">
             <option value="0"> no group</option>
             <?php
             foreach ($DataPost->PossibleGroups as $Group) {
@@ -111,7 +111,7 @@ if (isset($DataPost->Thread->title))
     </div>
     <div class="form-group form-row">
         <label class="col-3 col-form-label" for="WhoCanReply">Who can reply</label>
-        <select name="WhoCanReply" id="WhoCanReply" class="col-9 form-control">
+        <select name="WhoCanReply" id="WhoCanReply" class="col-9 o-input">
             <option value="MembersOnly"
                 <?php
                 if ($DataPost->Thread->WhoCanReply == "MembersOnly") {
@@ -140,7 +140,7 @@ if (isset($DataPost->Thread->title))
     </div>
     <div class="form-group form-row">
         <label class="col-3 col-form-label" for="ThreadDeleted">Thread deleted</label>
-        <select id="ThreadDeleted" name="ThreadDeleted" class="col-9 form-control">
+        <select id="ThreadDeleted" name="ThreadDeleted" class="col-9 o-input">
             <option value="Deleted"
                 <?php
                 if ($DataPost->Thread->ThreadDeleted == "Deleted") {
@@ -187,7 +187,7 @@ foreach ($DataPost->Thread->Title as $Title) { ?>
             </select></div>
         <div class="form-group form-row">
             <label class="col-3 col-form-label" for="Sentence">Title</label>
-            <textarea class="col-9 form-control" id="Sentence" name="Sentence"
+            <textarea class="col-9 o-input" id="Sentence" name="Sentence"
                       rows="1"><?= $Title->Sentence ?></textarea>
             <input type="hidden" name="IdForumTrads" value="<?= $Title->IdForumTrads ?>">
         </div>
@@ -208,7 +208,7 @@ foreach ($DataPost->Thread->Title as $Title) { ?>
     ?>
     <div class="form-group form-row">
         <label class="col-3 col-form-label" for="IdLanguage">Language</label>
-        <select class="form-control col-9 select2" id="IdLanguage" name="IdLanguage">
+        <select class="o-input col-9 select2" id="IdLanguage" name="IdLanguage">
             <?php
             foreach ($ArrayLanguage as $Choices) {
                 if (is_object($Choices)) {
@@ -221,7 +221,7 @@ foreach ($DataPost->Thread->Title as $Title) { ?>
     </div>
     <div class="form-group form-row">
         <label class="col-3 col-form-label" for="NewTranslatedTitle">Title</label>
-        <textarea class="form-control col-9" id="NewTranslatedTitle" name="NewTranslatedTitle" rows="5"></textarea>
+        <textarea class="o-input col-9" id="NewTranslatedTitle" name="NewTranslatedTitle" rows="5"></textarea>
     </div>
     <input type="submit" class="btn btn-sm btn-primary float-right" name="submit" value="add translated title">
 </form>
@@ -233,7 +233,7 @@ foreach ($DataPost->Thread->Title as $Title) { ?>
     <input type="hidden" name="IdPost" value="<?= $DataPost->Post->id ?>">
     <div class="form-group form-row">
         <label class="col-3 col-form-label" for="OwnerCanStillEdit">Can Owner edit:</label>
-        <select class="form-control col-9" id="OwnerCanStillEdit" name="OwnerCanStillEdit">
+        <select class="o-input col-9" id="OwnerCanStillEdit" name="OwnerCanStillEdit">
             <option value="Yes" <?php
             if ($DataPost->Post->OwnerCanStillEdit == "Yes") echo " selected"; ?>
             >Yes
@@ -246,7 +246,7 @@ foreach ($DataPost->Thread->Title as $Title) { ?>
     </div>
     <div class="form-group form-row">
         <label class="col-3 col-form-label" for="PostVisibility">Post Visibility</label>
-        <select class="col-9 form-control" id="PostVisibility" name="PostVisibility">
+        <select class="col-9 o-input" id="PostVisibility" name="PostVisibility">
             <option value="MembersOnly"
                 <?php
                 if ($DataPost->Post->PostVisibility == "MembersOnly") {
@@ -275,7 +275,7 @@ foreach ($DataPost->Thread->Title as $Title) { ?>
     </div>
     <div class="form-group form-row">
         <label class="col-3 col-form-label" for="PostDeleted">Post deleted</label>
-        <select class="form-control col-9" id="PostDeleted" name="PostDeleted">
+        <select class="o-input col-9" id="PostDeleted" name="PostDeleted">
             <option value="Deleted"
                 <?php
                 if ($DataPost->Post->PostDeleted == "Deleted") {
@@ -321,7 +321,7 @@ foreach ($DataPost->Post->Content as $Content) { ?>
         </div>
         <div class="form-group form-row">
             <label class="col-3 col-form-label" for="Sentence">Post</label>
-            <textarea class="col-9 form-control" id="Sentence" name="Sentence"
+            <textarea class="col-9 o-input" id="Sentence" name="Sentence"
                       rows="5"><?= $Content->Sentence ?></textarea>
         </div>
         <input id="IdForumTrads" type="hidden" name="IdForumTrads" value="<?= $Content->IdForumTrads ?>">
@@ -349,7 +349,7 @@ foreach ($DataPost->Post->Content as $Content) { ?>
     </div>
     <div class="form-group form-row">
         <label class="col-3 col-form-label" for="NewTranslatedPost">Translation</label>
-        <textarea class="col-9 form-control" id="NewTranslatedPost" name="NewTranslatedPost" rows="5"></textarea>
+        <textarea class="col-9 o-input" id="NewTranslatedPost" name="NewTranslatedPost" rows="5"></textarea>
     </div>
     <input type="submit" class="btn btn-sm btn-primary float-right" value="add translated post" name="submit">
     <div class="clearfix"></div>

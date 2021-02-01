@@ -37,7 +37,7 @@ $callbackTags = $this->layoutkit->formkit->setPostCallback('AdminRightsControlle
     <div class="col-12 col-md-6">
         <div class="form-group">
             <label for="username" class="mb-0"><?php echo $this->words->get("AdminRightsUserName")?></label>
-            <input type="text" class="form-control member-autocomplete" id="username" name="username" value="<?= $this->vars['username'] ?>"
+            <input type="text" class="o-input member-autocomplete" id="username" name="username" value="<?= $this->vars['username'] ?>"
                 <?= ($this->member ? 'readonly="readonly"' : '') ?>
             />
         </div>
@@ -53,12 +53,12 @@ $callbackTags = $this->layoutkit->formkit->setPostCallback('AdminRightsControlle
     <div class="col-12 col-md-6">
         <div class="form-group">
             <label for="scope" class="mb-0"><?php echo $this->words->get("AdminRightsScope") ?></label>
-            <input type="text" class="form-control" id="scope" name="scope" value="<?= htmlentities($this->vars['scope'], ENT_COMPAT, 'utf-8') ?>">
+            <input type="text" class="o-input" id="scope" name="scope" value="<?= htmlentities($this->vars['scope'], ENT_COMPAT, 'utf-8') ?>">
             <span class="text-muted">Enter the scope. Use ';' as delimiter and &quot; around blocks</span>
         </div>
         <div class="form-group">
             <label for="comment" class="mb-0"><?php echo $this->words->get("AdminRightsComment") ?></label>
-            <textarea class="form-control" id="comment" name="comment" rows="2" placeholder="Enter a comment, so that others know why the right was assigned."><?=
+            <textarea class="o-input" id="comment" name="comment" rows="2" placeholder="Enter a comment, so that others know why the right was assigned."><?=
             htmlentities($this->vars['comment'], ENT_COMPAT, 'utf-8') ?></textarea>
         </div>
     </div>

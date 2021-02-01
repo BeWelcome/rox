@@ -16,7 +16,7 @@
                             <?= $words->get('Street') ?>
                         </label>
 
-                            <input class="form-control<?php if (isset($errorStreet)) { ?> error-input-text<?php } ?>" type="text"
+                            <input class="o-input<?php if (isset($errorStreet)) { ?> error-input-text<?php } ?>" type="text"
                                    name="Street"
                                    id="Street"
                                    value="<?php echo htmlentities($vars['Street'], ENT_COMPAT, 'UTF-8'); ?>"/>
@@ -36,7 +36,7 @@
                             <?= $words->get('HouseNumber') ?>
                         </label>
 
-                            <input class="form-control<?php if (isset($errorHouseNumber)) { ?> error-input-text<?php } ?>"
+                            <input class="o-input<?php if (isset($errorHouseNumber)) { ?> error-input-text<?php } ?>"
                                    type="text"
                                    name="HouseNumber" id="HouseNumber"
                                    value="<?php echo htmlentities($vars['HouseNumber'], ENT_COMPAT, 'UTF-8'); ?>"
@@ -52,7 +52,7 @@
                             <?= $words->get('Post code') ?>
                         </label>
 
-                            <input class="form-control<?php if (isset($errorZip)) { ?> error-input-text<?php } ?>" type="text"
+                            <input class="o-input<?php if (isset($errorZip)) { ?> error-input-text<?php } ?>" type="text"
                                    name="Zip"
                                    value="<?php echo htmlentities($vars['Zip'], ENT_COMPAT, 'UTF-8'); ?>" size="6"/>
                             <input type="checkbox" value="Yes" name="IsHidden_Zip"
@@ -72,7 +72,7 @@
                     <label for="HomePhoneNumber" class="col-form-label">
                         <?= $words->get('ProfileHomePhoneNumber') ?>
                     </label>
-                    <input type="text" name="HomePhoneNumber" class="form-control"
+                    <input type="text" name="HomePhoneNumber" class="o-input"
                            value="<?php echo htmlentities($vars['HomePhoneNumber'], ENT_COMPAT, 'UTF-8'); ?>"/>
                     <input type="checkbox" value="Yes" name="IsHidden_HomePhoneNumber"
                         <?php if ($vars['IsHidden_HomePhoneNumber'])
@@ -85,7 +85,7 @@
                     <label for="CellPhoneNumber" class="col-form-label">
                         <?= $words->get('ProfileCellPhoneNumber') ?>
                     </label>
-                    <input type="text" name="CellPhoneNumber" class="form-control"
+                    <input type="text" name="CellPhoneNumber" class="o-input"
                            value="<?php echo htmlentities($vars['CellPhoneNumber'], ENT_COMPAT, 'UTF-8'); ?>"/>
                     <input type="checkbox" value="Yes" name="IsHidden_CellPhoneNumber"
                         <?php if ($vars['IsHidden_CellPhoneNumber'])
@@ -98,7 +98,7 @@
                     <label for="WorkPhoneNumber" class="col-form-label">
                         <?= $words->get('ProfileWorkPhoneNumber') ?>
                     </label>
-                        <input type="text" name="WorkPhoneNumber" class="form-control"
+                        <input type="text" name="WorkPhoneNumber" class="o-input"
                                value="<?php echo htmlentities($vars['WorkPhoneNumber'], ENT_COMPAT, 'UTF-8'); ?>"/>
                         <input type="checkbox" value="Yes" name="IsHidden_WorkPhoneNumber"
                             <?php if ($vars['IsHidden_WorkPhoneNumber'])
@@ -112,7 +112,7 @@
                 <label for="WebSite" class="col-form-label">
                         <?= $words->get('Website') ?>
                 </label>
-                        <input type="text" class="form-control" name="WebSite"
+                        <input type="text" class="o-input" name="WebSite"
                                value="<?php echo htmlentities($vars['WebSite'], ENT_COMPAT, 'UTF-8'); ?>"/>
             </div>
 
@@ -134,7 +134,7 @@
                                 <label for="<?= $val ?>" class="col-form-label"><?= $me["network"] ?></label>
                             </div>
                             <div class="col-12 col-md-9 mb-2">
-                                <input type="text" name="<?= $val ?>" class="form-control"
+                                <input type="text" name="<?= $val ?>" class="o-input"
                                        value="<?php echo htmlentities($me["address"], ENT_COMPAT, 'UTF-8'); ?>"/>
                             </div>
             </div>

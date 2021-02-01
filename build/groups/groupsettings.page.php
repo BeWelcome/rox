@@ -128,7 +128,7 @@ class GroupSettingsPage extends GroupsSubPage
         <div class="col-12">
             <div class="form-group my-3">
                 <label for="description" class="h5 m-0"><?= $words->get('Description');?></label>
-                <textarea  id="description" name="GroupDesc_" aria-describedby="newgroupdescription" rows="5" class="form-control editor p-2"><?=htmlspecialchars($GroupDesc_, ENT_QUOTES)?></textarea>
+                <textarea  id="description" name="GroupDesc_" aria-describedby="newgroupdescription" rows="5" class="o-input editor p-2"><?=htmlspecialchars($GroupDesc_, ENT_QUOTES)?></textarea>
             </div>
         </div>
 

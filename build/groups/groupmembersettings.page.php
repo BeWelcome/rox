@@ -61,7 +61,7 @@ class GroupMemberSettingsPage extends GroupsSubPage
             <div class="row">
                 <div class="col-12 col-md-6">
                     <div class="form-group"><label for="comment"><?= $words->get('GroupsMemberComments') ;?></label><br>
-                    <textarea class="form-control" id="comment" name="membershipinfo_comment" cols="30" rows="3"><?= (($membershipinfo->Comment != '' ) ? htmlspecialchars($words->mTrad($membershipinfo->Comment)) : '' ); ?></textarea>
+                    <textarea class="o-input" id="comment" name="membershipinfo_comment" cols="30" rows="3"><?= (($membershipinfo->Comment != '' ) ? htmlspecialchars($words->mTrad($membershipinfo->Comment)) : '' ); ?></textarea>
                     </div>
                 </div> <!-- row -->
                 <div class="col-12 col-md-6">

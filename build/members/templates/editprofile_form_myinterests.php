@@ -13,7 +13,7 @@
                     <?= $words->get('ProfileHobbies') ?>
                 </label>
                 <div class="col-12 col-md-10">
-                    <textarea name="Hobbies" class="form-control" rows="3"><?= $vars['Hobbies'] ?></textarea>
+                    <textarea name="Hobbies" class="o-input" rows="3"><?= $vars['Hobbies'] ?></textarea>
                 </div>
             </div>
 
@@ -22,7 +22,7 @@
                         <?= $words->get('ProfileBooks') ?>
                 </label>
                 <div class="col-12 col-md-10">
-                    <textarea name="Books" class="form-control" rows="3"><?= $vars['Books'] ?></textarea>
+                    <textarea name="Books" class="o-input" rows="3"><?= $vars['Books'] ?></textarea>
                 </div>
             </div>
 
@@ -31,7 +31,7 @@
                     <?= $words->get('ProfileMusic') ?>
                 </label>
                 <div class="col-12 col-md-10">
-                    <textarea name="Music" class="form-control" rows="3"><?= $vars['Music'] ?></textarea>
+                    <textarea name="Music" class="o-input" rows="3"><?= $vars['Music'] ?></textarea>
                 </div>
             </div>
 
@@ -40,7 +40,7 @@
                     <?= $words->get('ProfileMovies') ?>
                 </label>
                 <div class="col-12 col-md-10">
-                    <textarea name="Movies" class="form-control" rows="3"><?= $vars['Movies'] ?></textarea>
+                    <textarea name="Movies" class="o-input" rows="3"><?= $vars['Movies'] ?></textarea>
                 </div>
             </div>
 
@@ -49,7 +49,7 @@
                         <?= $words->get('ProfileOrganizations') ?>
                 </label>
                 <div class="col-12 col-md-10">
-                                <textarea name="Organizations" class="form-control"
+                                <textarea name="Organizations" class="o-input"
                                           rows="3"><?= $vars['Organizations'] ?></textarea>
                 </div>
             </div>

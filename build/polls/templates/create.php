@@ -54,7 +54,7 @@ if (isset($Data->rPoll->id)) { // Form for update
             <?php
             $sChoice = array("Project", "Open", "Closed");
             if (empty($rr->Status)) $rr->Status = "Project"; // By default a poll will be at Project Status
-            echo "<select class='form-control select2' data-minimum-results-for-search=\"Infinity\" id=\"Status\" name=\"Status\">\n";
+            echo "<select class='o-input select2' data-minimum-results-for-search=\"Infinity\" id=\"Status\" name=\"Status\">\n";
             for ($ii = 0; $ii < count($sChoice); $ii++) {
                 echo "<option value=\"" . $sChoice[$ii] . "\"";
                 if ($sChoice[$ii] == $rr->Status) {
@@ -70,7 +70,7 @@ if (isset($Data->rPoll->id)) { // Form for update
             <?php
             $sChoice = array('Exclusive', 'Inclusive', 'Ordered');
             if (empty($rr->TypeOfChoice)) $rr->TypeOfChoice = "Exclusive"; // By default a poll will be Exclusive
-            echo "<select class='form-control select2' data-minimum-results-for-search=\"Infinity\" id=\"TypeOfChoice\" name=\"TypeOfChoice\">\n";
+            echo "<select class='o-input select2' data-minimum-results-for-search=\"Infinity\" id=\"TypeOfChoice\" name=\"TypeOfChoice\">\n";
             for ($ii = 0; $ii < count($sChoice); $ii++) {
                 echo "<option value=\"" . $sChoice[$ii] . "\"";
                 if ($sChoice[$ii] == $rr->TypeOfChoice) {
@@ -87,7 +87,7 @@ if (isset($Data->rPoll->id)) { // Form for update
                 <div class="input-group-prepend" data-target="#Ended" data-toggle="datetimepicker">
                     <div class="input-group-text"><i class="far fa-calendar"></i></div>
                 </div>
-                <input type="text" id="Ended" name="Ended" class="form-control datetimepicker-input"
+                <input type="text" id="Ended" name="Ended" class="o-input datetimepicker-input"
                        data-toggle="datetimepicker" data-target="#Ended" autocomplete="off" value="<?= $rr->Ended ?>" >
             </div>
         </div>
@@ -98,7 +98,7 @@ if (isset($Data->rPoll->id)) { // Form for update
             if (empty($rr->CreatorUsername)) {
                 $rr->CreatorUsername = $this->session->get('Username'); // By default a poll is owned by the current member
             }
-            echo "<input class='form-control' id=\"CreatorUsername\" name=\"CreatorUsername\" Value=\"" . $rr->CreatorUsername . "\" type=\"text\" />";
+            echo "<input class='o-input' id=\"CreatorUsername\" name=\"CreatorUsername\" Value=\"" . $rr->CreatorUsername . "\" type=\"text\" />";
             ?>
         </div>
         <div class="form-group">
@@ -106,7 +106,7 @@ if (isset($Data->rPoll->id)) { // Form for update
             <?php
             if (empty($rr->AllowComment)) $rr->AllowComment = "No"; // By default a poll is not aimed to collect comments
             $sChoice = array("Yes", "No");
-            echo "<select class='form-control select2' data-minimum-results-for-search=\"Infinity\" id=\"AllowComment\" name=\"AllowComment\">";
+            echo "<select class='o-input select2' data-minimum-results-for-search=\"Infinity\" id=\"AllowComment\" name=\"AllowComment\">";
             for ($ii = 0; $ii < count($sChoice); $ii++) {
                 echo "<option value=\"" . $sChoice[$ii] . "\"";
                 if ($sChoice[$ii] == $rr->AllowComment) {
@@ -122,7 +122,7 @@ if (isset($Data->rPoll->id)) { // Form for update
             <?php
             if (empty($rr->Anonym)) $rr->Anonym = "No"; // By default a poll is not aimed to collect comments
             $sChoice = array("Yes", "No");
-            echo "<select class='form-control select2' data-minimum-results-for-search=\"Infinity\" id=\"Anonym\"name=\"Anonym\">";
+            echo "<select class='o-input select2' data-minimum-results-for-search=\"Infinity\" id=\"Anonym\"name=\"Anonym\">";
             for ($ii = 0; $ii < count($sChoice); $ii++) {
                 echo "<option value=\"" . $sChoice[$ii] . "\"";
                 if ($sChoice[$ii] == $rr->Anonym) {
@@ -138,7 +138,7 @@ if (isset($Data->rPoll->id)) { // Form for update
             <?php
             if ($rr->ResultsVisibility == "") $rr->ResultsVisibility = "No"; // By default a poll is not aimed to collect comments
             $sChoice = array("Not Visible", "Visible", "VisibleAfterVisit");
-            echo "<select class='form-control select2' data-minimum-results-for-search=\"Infinity\" id=\"ResultVisibiliyt\" name=\"ResultsVisibility\">";
+            echo "<select class='o-input select2' data-minimum-results-for-search=\"Infinity\" id=\"ResultVisibiliyt\" name=\"ResultsVisibility\">";
             for ($ii = 0; $ii < count($sChoice); $ii++) {
                 echo "<option value=\"" . $sChoice[$ii] . "\"";
                 if ($sChoice[$ii] == $rr->ResultsVisibility) {
@@ -151,16 +151,16 @@ if (isset($Data->rPoll->id)) { // Form for update
         </div>
         <div class="form-group">
             <label for="Title">Poll Title:</label>
-            <input class="form-control" type="text" ID="Titile" name="Title" size="60"
+            <input class="o-input" type="text" ID="Titile" name="Title" size="60"
                    value="<?= $words->fTrad($Data->rPoll->Title) ?>"/></div>
         <div class="form-group">
             <label for="Description">Poll Description:</label>
-            <textarea class="form-control editor" id="Description" name="Description" cols="60"
+            <textarea class="o-input editor" id="Description" name="Description" cols="60"
                       rows="5"><?= $words->fTrad($Data->rPoll->Description) ?></textarea>
         </div>
         <div class="form-group">
             <label for="GroupIdLimit">Limited to Group:</label>
-            <select class="form-control select2" readonly="readonly" id="GroupIdLimit" name="GroupIdLimit">
+            <select class="o-input select2" readonly="readonly" id="GroupIdLimit" name="GroupIdLimit">
                 <option value="-1" <?= (null === $Data->rPoll->IdGroupRestricted)?'selected="selected"':''; ?>></option>
                 <?php
                 $groups = $this->member->getGroups();
@@ -196,7 +196,7 @@ if (isset($Data->rPoll->id)) { // Form for update
     <?= $cc->IdChoiceText ?>
     "/>
             <div class="form-group"><label for="Option">Option:</label>
-                <textarea class="form-control editor" id="Option" name="ChoiceText" cols="60"
+                <textarea class="o-input editor" id="Option" name="ChoiceText" cols="60"
                           rows="2"><?= $words->fTrad($cc->IdChoiceText) ?></textarea>
             </div>
                 <input type="submit" class="btn btn-primary" value="update choice"/>
@@ -217,7 +217,7 @@ if (isset($Data->rPoll->id)) { // Form for update
         <input type="hidden" name="IdPoll" value="<?= $Data->rPoll->id ?>"/>
         <div class="form-group">
             <label for="NewOption">New option:</label>
-            <textarea class="form-control editor" id="NewOption" name="ChoiceText" cols="60" rows="2"></textarea>
+            <textarea class="o-input editor" id="NewOption" name="ChoiceText" cols="60" rows="2"></textarea>
         </div>
         <input type="submit" class="btn btn-primary" value="Add"/>
 
@@ -239,15 +239,15 @@ if (isset($Data->rPoll->id)) { // Form for update
         <input name="IdLanguage" value="<?php echo $this->session->get("IdLanguage"); ?>" type="hidden"/>
         <div class="form-group">
             <label for="Title">Poll Title:</label>
-            <input type="text" id="Title" name="Title" size="60" class="form-control">
+            <input type="text" id="Title" name="Title" size="60" class="o-input">
         </div>
         <div class="form-group">
             <label for="Description">Poll Description:</label>
-            <textarea id="Description" name="Description" rows="5" cols="60" class="form-control editor"></textarea>
+            <textarea id="Description" name="Description" rows="5" cols="60" class="o-input editor"></textarea>
         </div>
         <div class="form-group">
             <label for="GroupIdLimit">Limited to Group</label>
-            <select class="form-control select2" id="GroupIdLimit" name="GroupIdLimit" required="required">
+            <select class="o-input select2" id="GroupIdLimit" name="GroupIdLimit" required="required">
                 <option value="-1"></option>
                 <?php
                     $groups = $this->member->getGroups();

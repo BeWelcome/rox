@@ -106,7 +106,7 @@ $vars =& PPostHandler::getVars($callbackId);
                     }
                     ?>
 
-                    <input type="text" class="form-control" name="topic_title" maxlength="200" id="topic_title"
+                    <input type="text" class="o-input" name="topic_title" maxlength="200" id="topic_title"
                            value="<?php echo $topic_titletrad; ?>" aria-describedby="forumaddtitle">
             </div>
 
@@ -116,7 +116,7 @@ $vars =& PPostHandler::getVars($callbackId);
         <div class="form-group">
             <label for="topic_text"><?php echo $words->getFormatted("forum_label_text"); ?></label>
 
-            <textarea name="topic_text" id="topic_text" class="form-control editor" rows="10" style="min-height: 10em;" placeholder="<?= $words->get('forum.post.placeholder'); ?>"><?php
+            <textarea name="topic_text" id="topic_text" class="o-input editor" rows="10" style="min-height: 10em;" placeholder="<?= $words->get('forum.post.placeholder'); ?>"><?php
                 if (isset($void_string)) {
                     echo $void_string;
                 } else {

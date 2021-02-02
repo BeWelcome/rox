@@ -8,7 +8,7 @@
     </div>
     <div id="collapse-myinterests" class="collapse" role="tabpanel" aria-labelledby="heading-myinterests">
         <div class="card-body">
-            <div class="form-group row">
+            <div class="o-form-group row">
                 <label for="Hobbies" class="col-md-2 col-form-label">
                     <?= $words->get('ProfileHobbies') ?>
                 </label>
@@ -17,7 +17,7 @@
                 </div>
             </div>
 
-            <div class="form-group row">
+            <div class="o-form-group row">
                 <label for="Books" class="col-md-2 col-form-label">
                         <?= $words->get('ProfileBooks') ?>
                 </label>
@@ -26,7 +26,7 @@
                 </div>
             </div>
 
-            <div class="form-group row">
+            <div class="o-form-group row">
                 <label for="Music" class="col-md-2 col-form-label">
                     <?= $words->get('ProfileMusic') ?>
                 </label>
@@ -35,7 +35,7 @@
                 </div>
             </div>
 
-            <div class="form-group row">
+            <div class="o-form-group row">
                 <label for="Movies" class="col-md-2 col-form-label">
                     <?= $words->get('ProfileMovies') ?>
                 </label>
@@ -44,7 +44,7 @@
                 </div>
             </div>
 
-            <div class="form-group row">
+            <div class="o-form-group row">
                 <label for="Organizations" class="col-md-2 col-form-label">
                         <?= $words->get('ProfileOrganizations') ?>
                 </label>

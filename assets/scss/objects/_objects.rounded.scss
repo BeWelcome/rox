@@ -1,0 +1,121 @@
+/* ==========================================================================
+   #BOTON REDONDO
+   ========================================================================== */
+
+
+
+/**
+ * Base class
+ */
+
+.o-rounded {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 100%;
+  background-color: var(--bewelcome);
+  flex-shrink: 0;
+  color: var(--white);
+}
+
+
+
+
+
+
+
+
+
+
+/* Hovers
+   ========================================================================== */
+
+.o-rounded:hover{
+  background-color: var(--blue-darkest);
+  transition: background-color 0.2s;
+}
+
+
+
+
+
+
+
+
+
+/* Size variations
+   ========================================================================== */
+
+/**
+ * Large
+ */
+
+
+.o-rounded--l {
+  width: 48px;
+  height: 48px;
+}
+
+
+
+
+
+
+
+
+
+
+/* Color Versions
+   ========================================================================== */
+
+/**
+ * Transparent
+ */
+
+.o-rounded--transparent,
+.o-rounded--transparent:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+
+
+
+
+
+
+
+/**
+ * Gray
+ */
+
+.o-rounded--gray {
+  background-color: #ddd;
+}
+
+.o-rounded--gray:hover {
+  background-color: grey;
+}
+
+
+
+
+
+
+
+
+
+
+/* States
+   ========================================================================== */
+
+/**
+ * Disabled
+ */
+
+.o-rounded--disabled {
+  background-color: #cadef7;
+  cursor: pointer;
+  pointer-events: none;
+}

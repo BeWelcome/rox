@@ -38,7 +38,7 @@ $map_conf = PVars::getObj('map');
             <?= $callback_tag ?>
             <div class="row">
                 <div class="col-12">
-                    <div class="form-group">
+                    <div class="o-form-group">
                         <label for="location"
                                class="o-input-label sr-only"><?= $words->getSilent(
                                 'label_setlocation'

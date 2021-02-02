@@ -1,0 +1,39 @@
+/* ==========================================================================
+   #FORM GROUP
+   ========================================================================== */
+
+/**
+ * Input-label wrapper. To be used when both elements are rendered together.
+ */
+
+
+
+.o-form-group {
+  margin-bottom: 24px;
+}
+
+.o-form-group label {
+  font-weight: 300;
+  margin-bottom: 8px;
+}
+
+
+
+
+
+
+
+
+
+
+/* Color variations
+   ========================================================================== */
+
+/**
+ * White label (not whiskey though)
+ */
+
+.o-form-group--white label {
+  color: var(--white);
+  font-weight: 700;
+}

@@ -35,7 +35,7 @@
 <?php echo $callback_tag; ?>
     <input type="hidden" name="Id" value="<?php echo $id; ?>">
 
-    <div class="form-group">
+    <div class="o-form-group">
         <small id="headerInfo" class="form-text text-muted">Please write in <strong>English</strong></small>
 
         <div class="input-group mb-3">
@@ -81,22 +81,22 @@
         </div>
         <small id="typeHelp" class="form-text text-muted">What kind of MassMail do you want to send?</strong></small>
     </div>
-    <div class="form-group">
+    <div class="o-form-group">
         <label for="Name">WordCode for the newsletter</label>
         <input type="text" class="o-input" id="Name" name="Name" value="<?php echo $name; ?>" <?php if ($id != 0) { echo 'readonly="readonly"'; }?> placeholder="EnterYourWordCode">
         <small id="nameHelp" class="form-text text-muted">Give the code name of the broadcast as a word entry (must not exist in words table previously) like <strong>NewsJuly2019</strong> or <strong>LoginReminder2019</strong> without spaces!</small>
     </div>
-    <div class="form-group">
+    <div class="o-form-group">
         <label for="Subject">Title for the newsletter</label>
         <input type="text" class="o-input" id="Subject" name="Subject" value="<?php echo $subject; ?>" >
         <small id="subjectHelp" class="form-text text-muted">This will be shown as the subject of the e-mail</small>
     </div>
-    <div class="form-group">
+    <div class="o-form-group">
         <label for="Body">Text of the mail</label>
         <textarea class="o-input" id="Body" name="Body" rows="20"><?php echo $body;?></textarea>
         <small id="bodyHelp" class="form-text text-muted">Body of the newsletter (%username%, if any, will be replaced by the username at sending)</small>
     </div>
-    <div class="form-group">
+    <div class="o-form-group">
         <label for="Description">Description of the WordCode</label>
         <textarea class="o-input" id="Description" name="Description" rows="3"
         <?php

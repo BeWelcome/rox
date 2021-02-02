@@ -72,7 +72,7 @@
           ?>
       </h5><!-- location -->
 
-      <div class="form-group form-inline small"><?php echo $this->statusForm($member); ?></div>
+      <div class="o-form-group form-inline small"><?php echo $this->statusForm($member); ?></div>
 
   </div>
       <div class="col-12 col-md-5" style="border-left: 1px solid #ccc;">

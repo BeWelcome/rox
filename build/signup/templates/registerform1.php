@@ -47,7 +47,7 @@
                 </div>
 
                 <!-- Username -->
-                <div class="form-group">
+                <div class="o-form-group">
                     <?php $usernameError = in_array('SignupErrorUsernameAlreadyTaken', $errors); ?>
                     <label for="register-username" ><?php echo $words->get('SignupUsername'); ?></label>
                     <div class="input-group">
@@ -74,7 +74,7 @@
                 </div>
 
                 <!-- Password -->
-                <div class="form-group mb-0">
+                <div class="o-form-group mb-0">
                     <label for="register-password"><?php echo $words->get('SignupPassword'); ?></label>
                     <div class="input-group">
                         <input type="password" required class="o-input" id="register-password" name="password" placeholder="<?php echo $words->get('SignupPassword'); ?>"
@@ -92,7 +92,7 @@
                 </div>
 
                 <!-- Confirm password -->
-                <div class="form-group mt-1">
+                <div class="o-form-group mt-1">
                     <label for="register-passwordcheck"><?php echo $words->get('SignupCheckPassword'); ?></label>
                     <input type="password" class="o-input" id="register-passwordcheck" name="passwordcheck" placeholder="<?php echo $words->get('SignupCheckPassword'); ?>"
                         <?php
@@ -103,7 +103,7 @@
                 </div>
 
                 <!-- E-mail -->
-                <div class="form-group mb-0">
+                <div class="o-form-group mb-0">
                     <label for="register-email"><?php echo $words->get('SignupEmail'); ?></label>
                     <div class="input-group">
                         <input type="email" required class="o-input" id="register-email" name="email" placeholder="<?php echo $words->get('SignupEmail'); ?>"
@@ -120,7 +120,7 @@
                 </div>
 
                 <!-- confirm E-mail -->
-                <div class="form-group mt-1">
+                <div class="o-form-group mt-1">
                     <?php $emailError = in_array('SignupErrorEmailCheck', $errors); ?>
                     <label for="register-emailcheck"><?php echo $words->get('SignupCheckEmail'); ?></label>
                     <input type="email"
@@ -133,7 +133,7 @@
                 </div>
 
                 <!-- Accommodation -->
-                <div class="form-group align-content-center mb-2">
+                <div class="o-form-group align-content-center mb-2">
                     <span class="o-input-label"><?php echo $words->get('Accommodation'); ?></span>
                     <button type="button" class="btn btn-primary float-right" data-trigger="focus" data-container="body" data-toggle="popover" data-placement="right" data-content="<?= $words->get('signup.help.accommodation'); ?>">
                         <i class="fa fa-question"></i>
@@ -168,7 +168,7 @@
                     </div>
                 </div>
 
-                <div id="hi_block" class="form-group mb-2 <?php if (isset($vars['accommodation']) && $vars['accommodation'] == 'anytime') { echo ' d-block'; } else { echo ' d-none'; } ?>">
+                <div id="hi_block" class="o-form-group mb-2 <?php if (isset($vars['accommodation']) && $vars['accommodation'] == 'anytime') { echo ' d-block'; } else { echo ' d-none'; } ?>">
                     <label for="hosting_interest">Hosting Interest</label>
                     <input
                         type="range"
@@ -193,7 +193,7 @@
                     <div class="invalid-feedback"><?php echo $words->get('SignupErrorProvideHostingInterest'); ?></div>
                 </div>
                 <!-- Next button -->
-                <div class="form-group mt-3">
+                <div class="o-form-group mt-3">
                         <button type="submit" class="btn btn-primary w-100"><?php echo $words->getSilent('NextStep'); ?> <i class="fa fa-angle-double-right"></i></button>
                         <?php echo $words->flushBuffer(); ?>
                     </div>

@@ -49,7 +49,7 @@ if (isset($Data->rPoll->id)) { // Form for update
 
         <input type="hidden" name="<?= $callbackId ?>" value="1"/>
         <input type="hidden" name="IdPoll" value="<?= $Data->rPoll->id ?>"/>
-        <div class="form-group">
+        <div class="o-form-group">
             <label for="Status">Polls Status:</label>
             <?php
             $sChoice = array("Project", "Open", "Closed");
@@ -65,7 +65,7 @@ if (isset($Data->rPoll->id)) { // Form for update
             echo "</select>\n";
             ?>
         </div>
-        <div class="form-group">
+        <div class="o-form-group">
             <label for="TypeOfChoice">Type of choice:</label>
             <?php
             $sChoice = array('Exclusive', 'Inclusive', 'Ordered');
@@ -81,7 +81,7 @@ if (isset($Data->rPoll->id)) { // Form for update
             echo "</select>\n";
             ?>
         </div>
-        <div class="form-group">
+        <div class="o-form-group">
             <label for="Ended">Poll will end beginning of (server time/CET):</label>
             <div class="input-group date" id="poll-end-datetimepicker" data-target-input="nearest">
                 <div class="input-group-prepend" data-target="#Ended" data-toggle="datetimepicker">
@@ -91,7 +91,7 @@ if (isset($Data->rPoll->id)) { // Form for update
                        data-toggle="datetimepicker" data-target="#Ended" autocomplete="off" value="<?= $rr->Ended ?>" >
             </div>
         </div>
-        <div class="form-group">
+        <div class="o-form-group">
             <label for="CreatorUsername">Owner:</label>
             <?php
             $ii = 0;
@@ -101,7 +101,7 @@ if (isset($Data->rPoll->id)) { // Form for update
             echo "<input class='o-input' id=\"CreatorUsername\" name=\"CreatorUsername\" Value=\"" . $rr->CreatorUsername . "\" type=\"text\" />";
             ?>
         </div>
-        <div class="form-group">
+        <div class="o-form-group">
             <label for="Allow Comment">Allow Comments</label>
             <?php
             if (empty($rr->AllowComment)) $rr->AllowComment = "No"; // By default a poll is not aimed to collect comments
@@ -117,7 +117,7 @@ if (isset($Data->rPoll->id)) { // Form for update
             echo "</select>";
             ?>
         </div>
-        <div class="form-group">
+        <div class="o-form-group">
             <label for="Anonym">Anonymous Poll</label>
             <?php
             if (empty($rr->Anonym)) $rr->Anonym = "No"; // By default a poll is not aimed to collect comments
@@ -133,7 +133,7 @@ if (isset($Data->rPoll->id)) { // Form for update
             echo "</select>";
             ?>
         </div>
-        <div class="form-group">
+        <div class="o-form-group">
             <label for="ResultVisibility">Result visibility:</label>
             <?php
             if ($rr->ResultsVisibility == "") $rr->ResultsVisibility = "No"; // By default a poll is not aimed to collect comments
@@ -149,16 +149,16 @@ if (isset($Data->rPoll->id)) { // Form for update
             echo "</select>";
             ?>
         </div>
-        <div class="form-group">
+        <div class="o-form-group">
             <label for="Title">Poll Title:</label>
             <input class="o-input" type="text" ID="Titile" name="Title" size="60"
                    value="<?= $words->fTrad($Data->rPoll->Title) ?>"/></div>
-        <div class="form-group">
+        <div class="o-form-group">
             <label for="Description">Poll Description:</label>
             <textarea class="o-input editor" id="Description" name="Description" cols="60"
                       rows="5"><?= $words->fTrad($Data->rPoll->Description) ?></textarea>
         </div>
-        <div class="form-group">
+        <div class="o-form-group">
             <label for="GroupIdLimit">Limited to Group:</label>
             <select class="o-input select2" readonly="readonly" id="GroupIdLimit" name="GroupIdLimit">
                 <option value="-1" <?= (null === $Data->rPoll->IdGroupRestricted)?'selected="selected"':''; ?>></option>
@@ -195,7 +195,7 @@ if (isset($Data->rPoll->id)) { // Form for update
             <input type="hidden" name="IdChoiceText" value="
     <?= $cc->IdChoiceText ?>
     "/>
-            <div class="form-group"><label for="Option">Option:</label>
+            <div class="o-form-group"><label for="Option">Option:</label>
                 <textarea class="o-input editor" id="Option" name="ChoiceText" cols="60"
                           rows="2"><?= $words->fTrad($cc->IdChoiceText) ?></textarea>
             </div>
@@ -215,7 +215,7 @@ if (isset($Data->rPoll->id)) { // Form for update
         <input type="hidden" name="IdLanguage" value="<?php
         $this->session->get("IdLanguage") ?>"/>
         <input type="hidden" name="IdPoll" value="<?= $Data->rPoll->id ?>"/>
-        <div class="form-group">
+        <div class="o-form-group">
             <label for="NewOption">New option:</label>
             <textarea class="o-input editor" id="NewOption" name="ChoiceText" cols="60" rows="2"></textarea>
         </div>
@@ -237,15 +237,15 @@ if (isset($Data->rPoll->id)) { // Form for update
 
         <input type="hidden" name="<?= $callbackId ?>" value="1"/>
         <input name="IdLanguage" value="<?php echo $this->session->get("IdLanguage"); ?>" type="hidden"/>
-        <div class="form-group">
+        <div class="o-form-group">
             <label for="Title">Poll Title:</label>
             <input type="text" id="Title" name="Title" size="60" class="o-input">
         </div>
-        <div class="form-group">
+        <div class="o-form-group">
             <label for="Description">Poll Description:</label>
             <textarea id="Description" name="Description" rows="5" cols="60" class="o-input editor"></textarea>
         </div>
-        <div class="form-group">
+        <div class="o-form-group">
             <label for="GroupIdLimit">Limited to Group</label>
             <select class="o-input select2" id="GroupIdLimit" name="GroupIdLimit" required="required">
                 <option value="-1"></option>

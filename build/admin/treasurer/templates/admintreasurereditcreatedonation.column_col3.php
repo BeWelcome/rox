@@ -57,15 +57,15 @@ if (!empty($errors))
     echo "</div>";
 }
 ?>
-        <div class="form-group">
+        <div class="o-form-group">
             <label for="donate-username"><?php echo $words->get('AdminTreasurerDonor'); ?></label>
             <input type="text" id="donate-username" name="donate-username" class="o-input" value="<?php if (isset($vars['donate-username'])) { echo $vars['donate-username']; };  ?>" />
         </div>
-        <div class="form-group">
+        <div class="o-form-group">
             <label for="donate-amount"><?php echo $words->get('AdminTreasurerDonatedAmount'); ?></label>
             <input type="text" id="donate-amount" name="donate-amount" class="o-input" value="<?php if (isset($vars['donate-amount'])) { echo $vars['donate-amount']; };  ?>" />
         </div>
-        <div class="form-group">
+        <div class="o-form-group">
             <label for="donate-date"><?php echo $words->get('AdminTreasurerDonatedOn'); ?></label>
                     <div class="input-group date" id="donate-date-input" data-target-input="nearest">
                         <div class="input-group-prepend" data-target="#donate-date" data-toggle="datetimepicker">
@@ -77,11 +77,11 @@ if (!empty($errors))
                                value="<?php if (isset($vars['donate-date'])) { echo $vars['donate-date']; };  ?>" />
                     </div>
             </div>
-<div class="form-group">
+<div class="o-form-group">
     <label for="donate-comment"><?php echo $words->get('AdminTreasurerComment'); ?></label>
     <input type="text" id="donate-comment" name="donate-comment" class="o-input" maxlength="100" value="<?php echo $vars['donate-comment'];?>" />
 </div>
-    <div class="form-group">
+    <div class="o-form-group">
     <label for="donate-country"><?php echo $words->get('AdminTreasurerSelectCountry'); ?></label>
     <select id="donate-country" name="donate-country" class="select2 o-input">
     <option value="0"><?php echo $words->getBuffered('AdminTreasurerSelectACountry'); ?></option>

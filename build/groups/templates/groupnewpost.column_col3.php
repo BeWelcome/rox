@@ -31,7 +31,7 @@ $groupOnly = ($this->group->VisiblePosts == 'no');
                 <?= $callback_tag ?>
                 <input type="hidden" name="IdLanguage" id="IdLanguage" value="0">
                 <div class="col-12">
-                    <div class="form-group mb-2">
+                    <div class="o-form-group mb-2">
                         <label class="m-0"
                                for="topic_title"><?php echo $words->getFormatted("forum_label_topicTitle"); ?></label>
                             <input type="text" class="o-input <?= ($error['title']) ? 'is-invalid': ''; ?>" name="topic_title" maxlength="200" id="topic_title"
@@ -43,7 +43,7 @@ $groupOnly = ($this->group->VisiblePosts == 'no');
                     </div>
                 </div>
                 <div class="col-12 mb-2">
-                    <div class="form-group">
+                    <div class="o-form-group">
                         <label for="topic_text"><?php echo $words->getFormatted("forum_label_text"); ?></label>
 
                         <textarea name="topic_text" id="topic_text" class="o-input editor <?= ($error['text']) ? 'is-invalid': ''; ?>" rows="10" style="min-height: 10em;" placeholder="<?= $words->get('forum.post.placeholder'); ?>" >

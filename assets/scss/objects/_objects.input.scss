@@ -101,22 +101,28 @@ textarea.o-input {
 
 
 
-/* Input Elements
+/* Size variations
    ========================================================================== */
+
+/**
+ * Large
+ */
+
+
+.o-input--l {
+  height: 48px;
+}
+
+
 
 
 /**
- * Title (to be used above input)
+ * Xtra-Large
  */
 
-.o-label {
-  font-family: Lato;
-  font-weight: 700;
-  font-size: 14px;
-  line-height: 20px;
-  display: block;
-  margin-bottom: 6px;
-  color: var(--gray-80);
+
+.o-input--xl {
+  height: 56px;
 }
 
 

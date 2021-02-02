@@ -172,7 +172,7 @@ if (empty($vars)) {
             <?php if ($this->member) {
             if ($this->member->organizer == true) { ?>
             <form method="post" id="activity-show-form-admin">
-                <div class="form-group mt-3">
+                <div class="o-form-group mt-3">
                     <span class="h4"><?php echo $words->get('ActivityOrgaStatusHeadline'); ?></span>
                     <?php echo $callbackTagsCancelUncancel; ?>
                     <input type="hidden" name="activity-id"

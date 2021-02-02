@@ -1,0 +1,11 @@
+.c-trips {
+	background-image: url("../../images/trips-road2.jpg");
+	background-size: cover;
+	margin-top: initial;
+	padding:48px 0;
+}
+
+.c-trips__info {
+	display: grid;
+	grid-template-columns: 4fr 4fr 1fr;
+}

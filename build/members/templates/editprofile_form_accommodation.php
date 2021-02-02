@@ -23,7 +23,7 @@ $hostingInterest = [
     </div>
     <div id="collapse-accommodation" class="collapse" role="tabpanel" aria-labelledby="heading-accommodation">
         <div class="card-body">
-            <div class="form-group row align-items-center mb-2">
+            <div class="o-form-group row align-items-center mb-2">
                 <label for="Accommodation" class="col-md-4 col-form-label"><?= $words->get('HostingStatus') ?></label>
                 <div class="btn-group col-md-8 mt-2" data-toggle="buttons">
                     <label for="neverask"
@@ -54,7 +54,7 @@ $hostingInterest = [
                     ?>
                 </div>
             </div>
-            <div id="hi_block" class="form-group row mb-2 <?php if (isset($vars['Accomodation']) && $vars['Accomodation'] == 'neverask') { echo ' d-none'; } ?>">
+            <div id="hi_block" class="o-form-group row mb-2 <?php if (isset($vars['Accomodation']) && $vars['Accomodation'] == 'neverask') { echo ' d-none'; } ?>">
                 <label for="hosting_interest" class="col-md-4 col-form-label">Hosting Interest</label>
                 <div class="col-12 col-md-8">
                 <input
@@ -80,7 +80,7 @@ $hostingInterest = [
                 <div class="invalid-feedback"><?php echo $words->get('SignupErrorProvideHostingInterest'); ?></div>
                 </div>
             </div>
-            <div class="form-group row">
+            <div class="o-form-group row">
                 <label for="MaxGuests"
                        class="col-md-4 col-form-label"><?php echo $words->get('ProfileNumberOfGuests'); ?></label>
                 <div class="col-12 col-md-8">
@@ -89,7 +89,7 @@ $hostingInterest = [
                 </div>
             </div>
 
-            <div class="form-group row">
+            <div class="o-form-group row">
                 <label for="MaxLengthOfStay"
                        class="col-md-4 col-form-label"><?= $words->get('ProfileMaxLenghtOfStay') ?></label>
                 <div class="col-12 col-md-8">
@@ -98,7 +98,7 @@ $hostingInterest = [
                 </div>
             </div>
 
-            <div class="form-group row">
+            <div class="o-form-group row">
                 <label for="ILiveWith" class="col-md-4 col-form-label">
                     <?= $words->get('ProfileILiveWith') ?>
                 </label>
@@ -107,7 +107,7 @@ $hostingInterest = [
                 </div>
             </div>
 
-            <div class="form-group row">
+            <div class="o-form-group row">
                 <label for="PleaseBring" class="col-md-4 col-form-label">
                     <?= $words->get('ProfilePleaseBring') ?>
                 </label>
@@ -117,7 +117,7 @@ $hostingInterest = [
                 </div>
             </div>
 
-            <div class="form-group row">
+            <div class="o-form-group row">
                 <label for="OfferGuests" class="col-md-4 col-form-label">
                     <?= $words->get('ProfileOfferGuests') ?>
                 </label>
@@ -127,7 +127,7 @@ $hostingInterest = [
                 </div>
             </div>
 
-            <div class="form-group row">
+            <div class="o-form-group row">
                 <label for="OfferHosts" class="col-md-4 col-form-label">
                     <?= $words->get('ProfileOfferHosts') ?>
                 </label>
@@ -137,7 +137,7 @@ $hostingInterest = [
                 </div>
             </div>
 
-            <div class="form-group row">
+            <div class="o-form-group row">
 
                 <label for="ICanAlsoOffer" class="col-md-4 col-form-label">
                     <?= $words->get('ICanAlsoOffer') ?>
@@ -155,7 +155,7 @@ $hostingInterest = [
                 </div>
             </div>
 
-            <div class="form-group row">
+            <div class="o-form-group row">
                 <label for="PublicTransport" class="col-md-4 col-form-label">
                     <?= $words->get('ProfilePublicTransport') ?>
                 </label>
@@ -166,7 +166,7 @@ $hostingInterest = [
 
             </div>
 
-            <div class="form-group row">
+            <div class="o-form-group row">
                 <label for="ProfileRestrictionsForGuests" class="col-md-4 col-form-label">
                     <?= $words->get('ProfileRestrictionForGuest') ?>
                 </label>
@@ -183,7 +183,7 @@ $hostingInterest = [
                 </div>
             </div>
 
-            <div class="form-group row">
+            <div class="o-form-group row">
                 <label for="OtherRestrictions" class="col-md-4 col-form-label">
                     <?= $words->get('ProfileHouseRules') ?>
                 </label>
@@ -193,7 +193,7 @@ $hostingInterest = [
                 </div>
             </div>
 
-            <div class="form-group row">
+            <div class="o-form-group row">
                 <label for="AdditionalAccomodationInfo" class="col-md-4 col-form-label">
                     <?= $words->get('ProfileAdditionalAccomodationInfo') ?>
                 </label>

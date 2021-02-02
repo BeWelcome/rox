@@ -30,7 +30,7 @@ Boston, MA  02111-1307, USA.
 <form class="form" method="post" action="">
     <p><?php echo $this->getCallbackOutput('MembersController','retireProfile'); ?></p>
     <p><?php echo $words->getFormatted('ProfileDeleteInfo',$this->member->Username); ?></p>
-    <div class="form-group">
+    <div class="o-form-group">
         <label class="o-input-label" for="explain"><?php echo $words->getFormatted ('retire_membercanexplain'); ?></label>
         <textarea class="o-input" name="explanation" id="explain" cols="65" rows="6"></textarea>
     </div>

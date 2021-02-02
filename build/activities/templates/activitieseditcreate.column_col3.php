@@ -59,7 +59,7 @@ if (empty($vars)) {
 
             <div class="row">
                 <div class="col-12 col-md-8">
-                    <div class="form-group mb-1">
+                    <div class="o-form-group mb-1">
                         <label for="activity-title"
                                class="o-input-label"><?php echo $words->get('ActivityTitle'); ?>
                             *</label>
@@ -67,7 +67,7 @@ if (empty($vars)) {
                                value="<?php echo $vars['activity-title']; ?>"
                                placeholder="<?php echo $words->get('ActivityTitle'); ?>*">
                     </div>
-                    <div class="form-group mb-1">
+                    <div class="o-form-group mb-1">
                         <label for="activity-description"
                                class="o-input-label"><?php echo $words->get('ActivityDescription'); ?>*</label>
                         <textarea id="activity-description" name="activity-description" class="o-input editor">
@@ -84,7 +84,7 @@ if (empty($vars)) {
                     </div>
                 </div>
                 <div class="col-12 col-md-4">
-                    <div class="form-group mb-1">
+                    <div class="o-form-group mb-1">
                         <label for="activity-start-date"><?php echo $words->get('ActivityStart'); ?>*</label>
                         <div class="input-group date"
                              id="activity-start-datepicker"
@@ -105,7 +105,7 @@ if (empty($vars)) {
                         </div>
                     </div>
 
-                    <div class="form-group mb-1">
+                    <div class="o-form-group mb-1">
                         <label for="activity-end-date"><?php echo $words->get('ActivityEnd'); ?>*</label>
                         <div class="input-group date"
                              id="activity-end-datepicker"
@@ -126,7 +126,7 @@ if (empty($vars)) {
                         </div>
                     </div>
 
-                    <div class="form-group mb-1">
+                    <div class="o-form-group mb-1">
                         <label for="activity-location"><?php echo $words->getBuffered('ActivitiesLocationSearch'); ?></label>
                         <div class="input-group">
                             <div class="input-group-prepend">
@@ -138,7 +138,7 @@ if (empty($vars)) {
                         </div>
                     </div>
 
-                    <div class="form-group mb-1">
+                    <div class="o-form-group mb-1">
                         <label for="activity-address" class="mb-0"><?php echo $words->get('ActivityAddress'); ?></label>
                         <textarea id="activity-address" name="activity-address" class="o-input"
                                   rows="3"><?php echo $vars['activity-address']; ?></textarea>

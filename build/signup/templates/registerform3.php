@@ -31,7 +31,7 @@ $map_conf = PVars::getObj('map');
 
                 <div class="col-12 col-md-9">
 
-                    <div class="form-group">
+                    <div class="o-form-group">
                         <label for="location" class="o-input-label"><?= $words->getSilent('label_setlocation') ?></label>
                         <?php echo $words->flushBuffer(); ?>
                         <input type="hidden" name="location-geoname-id" id="location-geoname-id" value="<?= isset($vars['location-geoname-id']) ? $vars['location-geoname-id'] : '' ?>"/>

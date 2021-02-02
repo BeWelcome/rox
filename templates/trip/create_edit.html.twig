@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %}
+{% extends 'trips.html.twig' %}
 
 {% block title %}
   {{ 'trip.create' | trans }}
@@ -24,32 +24,22 @@
     {% set name = widget.vars.full_name %}
   {% endif %}
 
-  <div data-content="{{ name }}">
-    <div class="form-row">
-      <div class="col-12 col-md-6">
-        <div class="form-group">
-          {{ form_label(form.location.name) }}
-          {{ form_widget(form.location.name) }}
-        </div>
-      </div>
-      <div class="col-11 col-md-5">
-        <div class="form-group">
-          {{ form_label(form.duration) }}
-          {{ form_widget(form.duration) }}
-        </div>
-      </div>
-      <div class="col-1 text-right">
-        <button class="btn btn-primary btn-remove" data-related="{{ name }}"><i class="fa fa-minus"></i></button>
-      </div>
-      <div class="col-12 col-md-6">
-        {{ form_widget(form.options[0]) }}
-      </div>
-      <div class="col-12 col-md-6">
-        {{ form_widget(form.options[1]) }}
-      </div>
-      {{ form_widget(form.location.geoname_id) }}{{ form_widget(form.location.latitude) }}{{ form_widget(form.location.longitude) }}
-      {{ form_widget(form.arrival) }}{{ form_widget(form.departure) }}
+  <div data-content="{{ name }}" class="c-trips__info">
+    <div>
+      {{ form_label(form.location.name) }}
+      {{ form_widget(form.location.name, {'attr': { 'class': 'o-input--xl'}}) }}
     </div>
+    <div>
+      {{ form_label(form.duration, null, {'label_attr': { 'class': 'o-label o-label--white'}}) }}
+      {{ form_widget(form.duration, {'attr': { 'class': 'o-input--xl'}}) }}
+    </div>
+    <button class="o-rounded" data-related="{{ name }}">
+      <i class="fa fa-minus"></i>
+    </button>
+    {{ form_widget(form.options[0]) }}
+    {{ form_widget(form.options[1]) }}
+    {{ form_widget(form.location.geoname_id) }}{{ form_widget(form.location.latitude) }}{{ form_widget(form.location.longitude) }}
+    {{ form_widget(form.arrival) }}{{ form_widget(form.departure) }}
   </div>
 {% endmacro %}
 
@@ -59,31 +49,27 @@
       {% if create %}{{ 'trip.create' | trans }}{% else %}{{ 'trip.edit' | trans }}{% endif %}
     {% endset %}
   {% endapply %}
-  <h1 class="u-text-48 u-leading-48 u-font-700 u-mb-24">{% if create %}{{ 'trip.create' | trans }}{% else %}{{ 'trip.edit' | trans }}{% endif %}</h1>
+  <h1 class="u-text-56 u-leading-56 u-font-700 u-mb-24 u-text-white">{% if create %}{{ 'trip.create' | trans }}{% else %}{{ 'trip.edit' | trans }}{% endif %}</h1>
 
   {{ form_start(form) }}
-  <div class="c-trips">
+  <div>
     <div class="c-trips__title">
-      {{ form_row(form.summary) }}
+      {{ form_row(form.summary, {'attr': { 'class': 'o-form-group--white'}}) }}
     </div>
     <div class="c-trips__description">
       {{ form_row(form.description, { 'attr': { 'rows': 5 }}) }}
     </div>
-    <div class="col-12 col-md-6">
+    <div class="u-flex">
       {{ form_row(form.countoftravellers) }}
-    </div>
-    <div class="col-12 col-md-6">
       {{ form_row(form.additionalinfo) }}
     </div>
     <div id="subtrips-list"
-       data-prototype="{{ _self.widget_prototype(form.subtrips.vars.prototype)|escape }}" class="col-12">
+       data-prototype="{{ _self.widget_prototype(form.subtrips.vars.prototype)|escape }}">
       {% for subtrip in form.subtrips %}
         {{ _self.widget_prototype(subtrip) }}
       {% endfor %}
     </div>
-    <div class="d-flex col-12 justify-content-end mb-2">
-      <button class="btn btn-primary btn-add" data-target="subtrips-list"><i class="fa fa-plus"></i></button>
-    </div>
+    <button class="o-rounded" data-target="subtrips-list"><i class="fa fa-plus"></i></button>
     <div class="d-flex col-12 justify-content-end">
       <input class="btn btn-primary" type="submit" value="{{ button_text|trans|capitalize }}">
     </div>

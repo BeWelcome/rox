@@ -25,7 +25,7 @@
                          title="Current picture" alt="Current picture" height="100" width="100">
                 </div>
 
-                <div class="col-8 col-md-9 mt-3 form-group">
+                <div class="col-8 col-md-9 mt-3 o-form-group">
                     <span><?= $words->get('uploadselectpicture'); ?></span>
                     <div class="custom-file">
                         <input type="file" class="custom-file-input" id="profile_picture" name="profile_picture">

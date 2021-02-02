@@ -123,7 +123,7 @@ RUN set -eux; \
 	composer clear-cache
 
 # prevent the reinstallation of node_modules at every changes in the source code
-COPY package.json yarn.lock webpack.config.js ./
+COPY package.json yarn.lock webpack.config.js postcss.config.js tailwind.config.js ./
 RUN set -eux; \
 	yarn install --frozen-lock; \
 	yarn encore production --mode=production

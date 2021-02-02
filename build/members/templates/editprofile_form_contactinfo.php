@@ -11,7 +11,7 @@
 
                 <?php if ($this->adminedit || !$CanTranslate) { // member translator is not allowed to update crypted data ?>
                 <div class="form-row">
-                    <div class="form-group col-12 col-md-5">
+                    <div class="o-form-group col-12 col-md-5">
                         <label for="Street" class="col-form-label">
                             <?= $words->get('Street') ?>
                         </label>
@@ -31,7 +31,7 @@
                     </div>
 
 
-                    <div class="form-group col-12 col-md-2">
+                    <div class="o-form-group col-12 col-md-2">
                         <label for="HouseNumber" class="col-form-label">
                             <?= $words->get('HouseNumber') ?>
                         </label>
@@ -47,7 +47,7 @@
 
                     </div>
 
-                    <div class="form-group col-12 col-md-5">
+                    <div class="o-form-group col-12 col-md-5">
                         <label for="Zip" class="col-form-label">
                             <?= $words->get('Post code') ?>
                         </label>
@@ -68,7 +68,7 @@
 
 
             <div class="form-row">
-                <div class="form-group col-12 col-md-4">
+                <div class="o-form-group col-12 col-md-4">
                     <label for="HomePhoneNumber" class="col-form-label">
                         <?= $words->get('ProfileHomePhoneNumber') ?>
                     </label>
@@ -81,7 +81,7 @@
                     <label for="IsHidden_HomePhoneNumber" class="m-0 ml-1"><?= $words->get('hidden') ?></label>
                 </div>
 
-                <div class="form-group col-12 col-md-4">
+                <div class="o-form-group col-12 col-md-4">
                     <label for="CellPhoneNumber" class="col-form-label">
                         <?= $words->get('ProfileCellPhoneNumber') ?>
                     </label>
@@ -94,7 +94,7 @@
                     <label for="IsHidden_CellPhoneNumber" class="m-0 ml-1"><?= $words->get('hidden') ?></label>
                 </div>
 
-                <div class="form-group col-12 col-md-4">
+                <div class="o-form-group col-12 col-md-4">
                     <label for="WorkPhoneNumber" class="col-form-label">
                         <?= $words->get('ProfileWorkPhoneNumber') ?>
                     </label>

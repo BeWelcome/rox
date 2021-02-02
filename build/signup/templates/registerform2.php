@@ -62,7 +62,7 @@
 
                 <!-- First Name -->
                 <?php $fullnameMissing = in_array('SignupErrorFullNameRequired', $vars['errors']); ?>
-                <div class="form-group">
+                <div class="o-form-group">
                     <label for="register-firstname"><?php echo $words->get('FirstName'); ?></label>
                     <div class="input-group">
                         <input type="text" required minlength="1" class="o-input <?php if ($fullnameMissing) { echo 'is-invalid'; } ?>" name="firstname"
@@ -81,7 +81,7 @@
 
 
                 <!-- Second name -->
-                <div class="form-group">
+                <div class="o-form-group">
                     <label for="secondname"><?php echo $words->get('SignupSecondNameOptional'); ?></label>
                     <div class="d-flex">
                         <input type="text" minlength="1" class="o-input" name="secondname" id="secondname"
@@ -93,7 +93,7 @@
                 </div>
 
                 <!-- Last name -->
-                <div class="form-group">
+                <div class="o-form-group">
                     <label for="lastname"><?php echo $words->get('LastName'); ?></label>
                     <div class="input-group">
                         <input type="text" minlength="1" required class="o-input <?php if ($fullnameMissing) { echo 'is-invalid'; } ?>" name="lastname" id="lastname"
@@ -111,7 +111,7 @@
                 </div>
 
                 <!-- Mother tongues -->
-                <div class="form-group">
+                <div class="o-form-group">
                     <?php
                     $motherTongueError = in_array('SignupErrorNoMotherTongue', $errors);
                     $motherTongue = "";
@@ -143,7 +143,7 @@
                 <!-- Date of birth-->
                 <?php $birthdateError = (in_array('SignupErrorBirthDate', $vars['errors'])) ||
                     (in_array('SignupErrorBirthDateToLow', $vars['errors'])); ?>
-                <div class="form-group">
+                <div class="o-form-group">
                     <label for="birthdate"><?php echo $words->get('SignupBirthDate'); ?></label>
                     <div class="input-group date" id="datetimepicker1" data-target-input="nearest">
                         <div class="input-group-prepend" data-target="#datetimepicker1"
@@ -168,7 +168,7 @@
 
                 <!-- Gender-->
                 <?php $genderError = in_array('SignupErrorProvideGender', $vars['errors']); ?>
-                <div class="form-group">
+                <div class="o-form-group">
                     <span class="d-block form-control-label"><?php echo $words->get('Gender'); ?></span>
                     <div class="o-input <?php if ($genderError) { echo "is-invalid"; } ?> d-none"></div>
                     <div class="btn-group btn-group-toggle" data-toggle="buttons">
@@ -217,7 +217,7 @@
                     ?>
 
                     <!-- Next button -->
-                    <div class="form-group pt-3">
+                    <div class="o-form-group pt-3">
                         <div class="d-flex">
                             <button type="submit"
                                     class="o-input btn btn-primary"><?php echo $words->getSilent('NextStep'); ?> <i

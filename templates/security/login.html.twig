@@ -112,17 +112,17 @@
                               action="{{ path('security_check') }}">
                             <div class="card-body p-2">
                                 <h4 class="card-title">{{ 'login' | trans }}</h4>
-                                <div class="form-group">
+                                <div class="o-form-group">
                                     <label class="m-0" for="login-u">{{ 'username' | trans }}</label>
                                     <input type="text" id="login-u" name="_username" autofocus required
                                            value="{{ last_username }}"
                                            class="o-input">
                                 </div>
-                                <div class="form-group">
+                                <div class="o-form-group">
                                     <label class="m-0" for="login-p">{{ 'password' | trans }}</label>
                                     <input type="password" id="login-p" name="_password" class="o-input">
                                 </div>
-                                <div class="form-group">
+                                <div class="o-form-group">
                                     <label for="login-r">
                                         <input type="checkbox" id="login-r" value="1"
                                                name="_remember_me">&nbsp;{{ 'stayloggedin' | trans }}
@@ -166,7 +166,7 @@
                     <div class="card">
                         <div class="card-body p-2">
                             <h4 class="card-title">{{ 'signupnow' | trans }}</h4>
-                            <div class="form-group">
+                            <div class="o-form-group">
                                 <label>{{ 'login.signup.info'|trans|raw }}</label>
                             </div>
                         </div>

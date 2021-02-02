@@ -126,7 +126,7 @@ class GroupSettingsPage extends GroupsSubPage
         <?= ((!empty($problems['GroupDesc_'])) ? "<div class='alert alert-danger p-2 mt-3'>" . $words->get('GroupsCreationDescriptionMissing') ."</div>" : '' ); ?>
 
         <div class="col-12">
-            <div class="form-group my-3">
+            <div class="o-form-group my-3">
                 <label for="description" class="h5 m-0"><?= $words->get('Description');?></label>
                 <textarea  id="description" name="GroupDesc_" aria-describedby="newgroupdescription" rows="5" class="o-input editor p-2"><?=htmlspecialchars($GroupDesc_, ENT_QUOTES)?></textarea>
             </div>
@@ -136,7 +136,7 @@ class GroupSettingsPage extends GroupsSubPage
 
             <?= ((!empty($problems['Type'])) ? "<div class='alert alert-danger p-2'>" . $words->get('GroupsTypeMissing') . "</div>" : '' ); ?>
 
-            <fieldset class="form-group">
+            <fieldset class="o-form-group">
                 <legend class="m-0">
                     <label class="m-0"><h5><?= $words->get('GroupsPublicStatusHeading'); ?></h5></label>
                 </legend>
@@ -168,7 +168,7 @@ class GroupSettingsPage extends GroupsSubPage
         <div class="col-12 col-lg-6">
 
             <?= ((!empty($problems['Visibility'])) ? "<div class='alert alert-danger p-2 mt-3'>" . $words->get('GroupsVisibilityMissing') . "</div>" : '' ); ?>
-            <fieldset class="form-group">
+            <fieldset class="o-form-group">
                 <legend class="m-0">
                     <label class="m-0"><h5><?= $words->get('GroupsVisiblePostsHeading'); ?></h5></label>
                 </legend>

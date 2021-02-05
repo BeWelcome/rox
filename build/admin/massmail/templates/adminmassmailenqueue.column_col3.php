@@ -105,13 +105,13 @@ $words = new MOD_words();
         <div class="tab-content" id="myTabContent">
             <?php if ($this->canEnqueueMembers) { ?>
             <div class="tab-pane fade show active mt-2" id="members" role="tabpanel" aria-labelledby="members-tab">
-                <div class="form-check">
-                        <input class="form-check-input" type="radio" id="allmembers" name="members-type" value="allmembers"
+                <div class="o-checkbox">
+                        <input class="o-checkbox__input" type="radio" id="allmembers" name="members-type" value="allmembers"
                                 <?php if (isset($vars['members-type']) && ($vars['members-type'] == 'allmembers')) {
                                     echo 'checked="checked"';
                                 }
                                 ?>/>
-                            <label class="form-check-label"
+                            <label class="o-checkbox__label"
                                 for="allmembers"><?php echo $words->get('AdminMassMailEnqueueAllMembers'); ?></label>
                         <div class="o-form-group mt-2"><label for="maxmembers"><?php echo $words->get('AdminMassMailEnqueueMaxMessages'); ?>
                                 :</label>
@@ -121,8 +121,8 @@ $words = new MOD_words();
                                    } ?>"/>
                         </div>
                 </div>
-                <div class="form-check mt-2">
-                <input class="form-check-input" type="radio" id="selectedmembers" name="members-type" value="usernames"
+                <div class="o-checkbox mt-2">
+                <input class="o-checkbox__input" type="radio" id="selectedmembers" name="members-type" value="usernames"
                                 <?php
                                 if (isset($vars['members-type'])) {
                                     if (($vars['members-type'] == 'usernames')) {
@@ -132,7 +132,7 @@ $words = new MOD_words();
                                     echo 'checked="checked"';
                                 }
                                 ?>/>
-                <label class="form-check-label"
+                <label class="o-checkbox__label"
                     for="selectedmembers"><?php echo $words->get('AdminMassMailEnqueueSelectedMembers'); ?></label>
                 <div class="o-form-group mt-2">
                 <label for="Usernames"><?php echo $words->get('AdminMassMailEnqueueUsernames'); ?>:</label>

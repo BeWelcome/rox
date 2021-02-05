@@ -47,7 +47,7 @@
                                name="FirstName"
                                value="<?php echo htmlentities($vars['FirstName'], ENT_COMPAT, 'UTF-8'); ?>"/>
                     </div>
-                    <div class="col-4 col-md-2 form-check">
+                    <div class="col-4 col-md-2 o-checkbox">
                         <input type="checkbox" value="Yes" name="IsHidden_FirstName"
                             <?php if ($vars['IsHidden_FirstName'] === 'Yes')
                                 echo 'checked="checked"';
@@ -64,7 +64,7 @@
                         <input type="text" name="SecondName" class="o-input"
                                value="<?php echo htmlentities($vars['SecondName'], ENT_COMPAT, 'UTF-8'); ?>"/>
                     </div>
-                    <div class="col-4 col-md-2 form-check">
+                    <div class="col-4 col-md-2 o-checkbox">
                         <input type="checkbox" value="Yes" name="IsHidden_SecondName"
                             <?php if ($vars['IsHidden_SecondName'] === 'Yes')
                                 echo 'checked="checked"';
@@ -81,7 +81,7 @@
                                name="LastName"
                                value="<?php echo htmlentities($vars['LastName'], ENT_COMPAT, 'UTF-8'); ?>"/>
                     </div>
-                    <div class="col-4 col-md-2 form-check">
+                    <div class="col-4 col-md-2 o-checkbox">
                         <input type="checkbox" value="Yes" name="IsHidden_LastName"
                             <?php if ($vars['IsHidden_LastName'] === 'Yes')
                                 echo 'checked="checked"';
@@ -126,10 +126,10 @@
                     <label for="HideBirthDate" class="col-form-label"><?= $words->get('ShowAge'); ?></label>
                 </div>
                 <div class="col-12 col-md-9">
-                    <div class="form-check">
-                        <input id="HideBirthDate" name="HideBirthDate" value="Yes" class="form-check-input"
+                    <div class="o-checkbox">
+                        <input id="HideBirthDate" name="HideBirthDate" value="Yes" class="o-checkbox__input"
                                type="checkbox" <?= ($vars['HideBirthDate'] == 'Yes') ? 'checked="checked"' : '' ?> />
-                        <label for="HideBirthDate" class="form-check-label"><?= $words->get('HiddenAgeInfo'); ?></label>
+                        <label for="HideBirthDate" class="o-checkbox__label"><?= $words->get('HiddenAgeInfo'); ?></label>
                     </div>
                 </div>
             </div>
@@ -168,10 +168,10 @@
             </div>
             <div class="form-row">
                 <div class="col-12 col-md-9 offset-md-3">
-                    <div class="form-check">
-                        <input name="HideGender" value="Yes" type="checkbox" class="form-check-input"
+                    <div class="o-checkbox">
+                        <input name="HideGender" value="Yes" type="checkbox" class="o-checkbox__input"
                                id='HideGender' <?= ((isset($vars['HideGender']) && $vars['HideGender'] == "Yes") ? ' checked="checked"' : ''); ?>>
-                        <label for="HideGender" class="form-check-label"><?= $words->get("Hidden"); ?></label>
+                        <label for="HideGender" class="o-checkbox__label"><?= $words->get("Hidden"); ?></label>
                     </div>
                 </div>
             </div>

@@ -77,10 +77,10 @@ if (empty($vars)) {
                         } ?>
                     </textarea>
                     </div>
-                    <div class="form-check mb-1">
-                        <input type="checkbox" class="form-check-input" id="activity-public" name="activity-public" value="1"
+                    <div class="o-checkbox mb-1">
+                        <input type="checkbox" class="o-checkbox__input" id="activity-public" name="activity-public" value="1"
                             <?php if (isset($vars['activity-public']) && $vars['activity-public']) { echo 'checked="checked"'; } ?>>
-                        <label for="activity-public" class="form-check-label"><?php echo $words->get('ActivityOnline'); ?></label>
+                        <label for="activity-public" class="o-checkbox__label"><?php echo $words->get('ActivityOnline'); ?></label>
                     </div>
                 </div>
                 <div class="col-12 col-md-4">

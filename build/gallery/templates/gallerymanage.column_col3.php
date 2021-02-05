@@ -21,8 +21,8 @@ $picture_url = 'members/avatar/'.$member->Username.'/100';
                 else return false;
             }
         </script>
-        <div class="form-check mb-2">
-            <input type="checkbox" name="selectAllRadio" id="selectAllRadio" class="form-check-input checker" onClick="toggle(this);">&nbsp;&nbsp;
+        <div class="o-checkbox mb-2">
+            <input type="checkbox" name="selectAllRadio" id="selectAllRadio" class="o-checkbox__input checker" onClick="toggle(this);">&nbsp;&nbsp;
             <label class=form-label" for="selectAllRadio"><?= $words->get('SelectAll')?></label>
         </div>
         <?php

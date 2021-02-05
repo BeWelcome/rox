@@ -135,9 +135,9 @@ $vars =& PPostHandler::getVars($callbackId);
         </div>
     </div>
     <div class="col-12 col-md-4 order-1 order-md-2 mb-1 px-1">
-        <div class="form-check">
-            <input type="checkbox" name="NotifyMe" id="NotifyMe" class="form-check-input" <?php echo $notifymecheck ?>>
-            <label for="NotifyMe" class="form-check-label"><?php echo $words->getFormatted("forum_NotifyMeForThisThread") ?></label>
+        <div class="o-checkbox">
+            <input type="checkbox" name="NotifyMe" id="NotifyMe" class="o-checkbox__input" <?php echo $notifymecheck ?>>
+            <label for="NotifyMe" class="o-checkbox__label"><?php echo $words->getFormatted("forum_NotifyMeForThisThread") ?></label>
         </div>
     </div>
 

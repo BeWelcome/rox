@@ -60,9 +60,9 @@ $groupOnly = ($this->group->VisiblePosts == 'no');
                     </div>
                 </div>
                 <div class="col-12 col-md-4 order-1 order-md-2 mb-1 px-1">
-                    <div class="form-check">
-                        <input type="checkbox" name="NotifyMe" id="NotifyMe" class="form-check-input" <?= $notifyChecked ?>>
-                        <label for="NotifyMe" class="form-check-label"><?php echo $words->getFormatted("forum_NotifyMeForThisThread") ?></label>
+                    <div class="o-checkbox">
+                        <input type="checkbox" name="NotifyMe" id="NotifyMe" class="o-checkbox__input" <?= $notifyChecked ?>>
+                        <label for="NotifyMe" class="o-checkbox__label"><?php echo $words->getFormatted("forum_NotifyMeForThisThread") ?></label>
                     </div>
                 </div>
 
@@ -70,14 +70,14 @@ $groupOnly = ($this->group->VisiblePosts == 'no');
                     <legend class="sr-only"><?= $words->getFormatted("forum_label_visibility") ?></legend>
 
                     <input type="hidden" id="groupOnly" name="groupOnly" value="<?= $groupOnly ? "1" : "0"; ?>">
-                    <div class="form-check"><input type="checkbox" class="form-check-input" name="ThreadVisibility" id="ThreadVisibility" value="GroupOnly"
+                    <div class="o-checkbox"><input type="checkbox" class="o-checkbox__input" name="ThreadVisibility" id="ThreadVisibility" value="GroupOnly"
                     <?php if ($groupOnly or (isset($vars['ThreadVisibility']))) {
                         echo ' checked="checked" ';
                     }
                     if ($groupOnly) {
                         echo ' disabled="disabled" ';
                     }
-                    ?>/> <label for="ThreadVisibility" class="form-check-label"><?php echo $words->get('ForumVisibilityGroupOnlyThread'); ?></label></div>
+                    ?>/> <label for="ThreadVisibility" class="o-checkbox__label"><?php echo $words->get('ForumVisibilityGroupOnlyThread'); ?></label></div>
                 </div>
 
                 <div class="col-12 col-md-4 order-3 order-md-1 mb-2">

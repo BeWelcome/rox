@@ -142,22 +142,22 @@ class GroupSettingsPage extends GroupsSubPage
                 </legend>
 
                 <?php if (GroupType::INVITE_ONLY !== $Type) { ?>
-                <div class="form-check mb-3">
-                    <input type="radio" class="form-check-input" id="public" name="Type" value="Public"<?= (($Type=='Public') ? ' checked': ''); ?>>
-                    <label for="public" class="form-check-label">
+                <div class="o-checkbox mb-3">
+                    <input type="radio" class="o-checkbox__input" id="public" name="Type" value="Public"<?= (($Type=='Public') ? ' checked': ''); ?>>
+                    <label for="public" class="o-checkbox__label">
                         <?=$words->get('GroupsJoinPublic'); ?>
                     </label>
                 </div>
-                <div class="form-check mb-3">
-                    <input type="radio" class="form-check-input" id="approved" name="Type" value="NeedAcceptance"<?= (($Type=='NeedAcceptance') ? ' checked': ''); ?>>
-                    <label for="approved" class="form-check-label">
+                <div class="o-checkbox mb-3">
+                    <input type="radio" class="o-checkbox__input" id="approved" name="Type" value="NeedAcceptance"<?= (($Type=='NeedAcceptance') ? ' checked': ''); ?>>
+                    <label for="approved" class="o-checkbox__label">
                         <?=$words->get('GroupsJoinApproved'); ?>
                     </label>
                 </div>
                 <?php } else { ?>
-                    <div class="form-check mb-3">
-                        <input type="radio" disabled="disabled" class="form-check-input" id="invitation" name="Type" value="NeedInvitation" checked="checked">
-                        <label for="invitation" class="form-check-label">
+                    <div class="o-checkbox mb-3">
+                        <input type="radio" disabled="disabled" class="o-checkbox__input" id="invitation" name="Type" value="NeedInvitation" checked="checked">
+                        <label for="invitation" class="o-checkbox__label">
                             <?=$words->get('groupsjoininvited'); ?>
                         </label>
                     </div>
@@ -173,15 +173,15 @@ class GroupSettingsPage extends GroupsSubPage
                     <label class="m-0"><h5><?= $words->get('GroupsVisiblePostsHeading'); ?></h5></label>
                 </legend>
 
-                <div class="form-check mb-3">
-                    <input type="radio" class="form-check-input" id="visible" name="VisiblePosts" value="yes"<?= (($VisiblePosts=='yes') ? ' checked="checked"': ''); ?>>
-                    <label for="visible" class="form-check-label">
+                <div class="o-checkbox mb-3">
+                    <input type="radio" class="o-checkbox__input" id="visible" name="VisiblePosts" value="yes"<?= (($VisiblePosts=='yes') ? ' checked="checked"': ''); ?>>
+                    <label for="visible" class="o-checkbox__label">
                         <?=$words->get('GroupsVisiblePosts'); ?>
                     </label>
                 </div>
-                <div class="form-check mb-3">
-                    <input type="radio" class="form-check-input" id="invisible" name="VisiblePosts" value="no"<?= (($VisiblePosts=='no') ? ' checked="checked"': ''); ?>>
-                    <label for="invisible" class="form-check-label">
+                <div class="o-checkbox mb-3">
+                    <input type="radio" class="o-checkbox__input" id="invisible" name="VisiblePosts" value="no"<?= (($VisiblePosts=='no') ? ' checked="checked"': ''); ?>>
+                    <label for="invisible" class="o-checkbox__label">
                         <?=$words->get('GroupsInvisiblePosts'); ?>
                     </label>
                 </div>

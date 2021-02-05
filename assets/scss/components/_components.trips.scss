@@ -1,11 +1,46 @@
 .c-trips {
-	background-image: url("../../images/trips-road2.jpg");
+	background-image: url("../../images/trips-road3.jpg");
 	background-size: cover;
-	margin-top: initial;
-	padding:48px 0;
+	background-color: white;
+	margin: initial; /*Overwrites Bootstrap main margin*/
 }
+
+
+
+
 
 .c-trips__info {
 	display: grid;
 	grid-template-columns: 4fr 4fr 1fr;
+	align-items: center;
+	margin-bottom: 24px;
+}
+
+@media (max-width: 900px) {
+  .c-trips__info {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+
+
+
+
+.c-trips__wrapper {
+	position: relative;
+	z-index: 1;
+	max-width: 1080px;
+	left: 50%;
+	transform: translateX(-50%);
+	padding-top: 48px;
+}
+
+@media (max-width: 900px) {
+  .c-trips__wrapper {
+    max-width: initial;
+	left: inherit;
+	transform: initial;
+	margin: 0 16px;
+  }
 }

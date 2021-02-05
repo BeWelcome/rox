@@ -19,6 +19,14 @@
 textarea.o-input {
   height: initial;
   padding: 16px;
+  font-size: 16px;
+  font-family: Lato;
+  overflow: hidden;
+}
+
+textarea.o-input::placeholder {
+  font-size: 16px;
+  font-family: Lato;
 }
 
 
@@ -90,7 +98,35 @@ textarea.o-input {
    ========================================================================== */
 
 
+.o-input--no-borders {
+  border: none;
+  outline: none;
+}
 
+
+
+
+.o-input--round-left {
+  border-radius: 8px 0 0 8px;
+  border-right: 1px solid var(--gray-15);
+}
+
+.o-input--round-right {
+  border-radius: 0 8px 8px 0;
+}
+
+
+
+
+
+.o-input--no-border-on-hover:hover,
+.o-input--no-border-on-hover:active,
+.o-input--no-border-on-hover:hover,
+.o-input--no-border-on-hover:focus,
+.o-input--no-border-on-hover:focus-visible {
+  border: none;
+  outline: none;
+}
 
 
 
@@ -125,6 +161,33 @@ textarea.o-input {
   height: 56px;
 }
 
+
+
+
+
+
+
+
+
+/* Color variations
+   ========================================================================== */
+
+/**
+ * Translucid
+ */
+
+ .o-input--translucid {
+  background-color: rgba(255, 255, 255, 0.9);
+ }
+
+.o-input--translucid:hover,
+.o-input--translucid:active,
+.o-input--translucid:hover,
+.o-input--translucid:focus,
+.o-input--translucid:focus-visible {
+  border: none;
+  outline: none;
+}
 
 
 
@@ -165,4 +228,55 @@ textarea.o-input {
 .o-input__tip--dotlist:before {
   content: '•';
   padding-right: 4px;
+}
+
+
+
+
+
+.o-input--white,
+.o-input--white::placeholder {
+  background-color: rgba(255, 255, 255, 0.1);
+  border: none;
+  font-size: 56px;
+  font-weight: 700;
+  color: white;
+  opacity: 1;
+  font-family: Signika;
+  height: 78px;
+}
+
+.o-input--white:focus::placeholder {
+  color: var(--gray-20);
+}
+
+.o-input--white:active,
+.o-input--white:hover,
+.o-input--white:focus,
+.o-input--white:focus-visible {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+
+.o-input--select {
+  outline: none;
+  appearance: none;
+  cursor: pointer;
+}
+
+.o-input--select-white {
+  color: var(--white);
+  background-color:rgba(255, 255, 255, 0.2);
+  border: none;
+  font-family: Signika;
+  font-size: 18px;
+  padding: 0 24px 0 8px;
+}
+
+.o-input--select-white:hover {
+  background-color:rgba(255, 255, 255, 0.4);
+}
+
+.o-input--select-short {
+  width: 72px;
 }

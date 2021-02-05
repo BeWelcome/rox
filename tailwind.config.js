@@ -30,6 +30,10 @@ module.exports = {
     },
     spacing: {
       px: '1px',
+      '__16': '-16px',
+      '__8': '-8px',
+      '__4': '-4px',
+      '__2': '-2px',
       '0': '0',
       '4': '4px',
       '6': '6px',
@@ -168,6 +172,9 @@ module.exports = {
     }),
     inset: {
       '0': '0',
+      '8': '8px',
+      '16': '16px',
+      '24': '24px',
       auto: 'auto',
     },
     letterSpacing: {

@@ -24,19 +24,21 @@
     {% set name = widget.vars.full_name %}
   {% endif %}
 
-  <div data-content="{{ name }}" class="c-trips__info">
-    <div class="u-w-full u-mb-24 md:u-width-auto md:u-mb-0">
+  <div data-content="{{ name }}" 
+       class="c-trips__info">
+    <div class="u-w-full u-mb-8 md:u-width-auto md:u-mb-0">
       {{ form_widget(form.location.name, {'attr': { 'class': 'o-input--xl o-input--no-borders o-input--round-left o-input--translucid', 'placeholder': 'Name' }}) }}
     </div>
-    <div class="u-w-full u-mb-24 md:u-width-auto md:u-mb-0">
+    <div class="u-w-full md:u-width-auto">
       {{ form_widget(form.duration, {'attr': { 'class': 'o-input--xl o-input--no-borders o-input--round-right o-input--translucid', 'placeholder': 'Duration' }}) }}
     </div>
-    <button class="o-rounded o-rounded--l u-justify-self-center" data-related="{{ name }}">
+    <button class="btn-remove o-rounded o-rounded--l u-justify-self-center c-trips__info-btn-grid " 
+            data-related="{{ name }}">
       <i class="fa fa-times"></i>
     </button>
-    <div class="u-flex u-mt-16">
+    <div class="u-flex u-flex-col md:u-flex-row md:u-mt-16">
       {{ form_widget(form.options[0], {'attr': { 'class': 'o-checkbox--white o-checkbox--display' }}) }}
-      <div class="u-ml-24">
+      <div class="md:u-ml-24">
         {{ form_widget(form.options[1], {'attr': { 'class': 'o-checkbox--white o-checkbox--display' }}) }}
       </div>
     </div>
@@ -55,23 +57,27 @@
 
   {{ form_start(form) }}
   <div>
-    <div class="u-text-56 u-leading-56 u-font-700 u-mb-24 u-text-white u-flex u-items-center">
-      {{ form_widget(form.summary, {'attr': { 'class': 'o-input--white o-input--no-border-on-hover'}}) }}
-      {% if create %}{{ '<i class="fas fa-edit u-text-white u-opacity-60 u-text-22 u-opacity-70 u-absolute u-right-24"></i>' }}{% else %}{{ '' }}{% endif %}
+    <div class="u-font-700 u-mb-24 u-text-white u-flex u-items-center">
+      {{ form_widget(form.summary, {'attr': { 'class': 'o-input--white o-input--no-border-on-hover o-input--white-xl'}}) }}
+      {% if create %}{{ '<i class="fas fa-edit u-text-white u-opacity-60 u-text-16 u-opacity-70 u-absolute u-right-24 u-hidden md:u-block"></i>' }}{% else %}{{ '' }}{% endif %}
     </div>
-    <div class="u-relative u-mb-24">
+    <div class="u-relative u-mb-8 md:u-mb-24">
       {{ form_widget(form.description, { 'attr': {  'class': 'o-input--white o-input--no-border-on-hover', 'rows': 5 }}) }}
-      {% if create %}{{ '<i class="fas fa-edit u-text-white u-opacity-60 u-text-16 u-opacity-70 u-absolute u-top-16 u-right-24"></i>' }}{% else %}{{ '' }}{% endif %}
+      {% if create %}{{ '<i class="fas fa-edit u-text-white u-opacity-60 u-text-16 u-opacity-70 u-absolute u-top-16 u-right-24 u-hidden md:u-block""></i>' }}{% else %}{{ '' }}{% endif %}
     </div>
     <div class="u-flex u-flex-col md:u-grid md:u-grid-cols-3">
       <div class="u-flex u-flex-col md:u-flex-row u-col-span-2 u-mb-24">
-        <div class="u-flex u-items-center u-mr-24 u-mb-24 md:u-mb-0">
-          {{ form_label(form.countoftravellers, null, {'label_attr': { 'class': 'o-label o-label--white u-mt-8 u-mr-8 u-flex u-items-center'}}) }}
-          {{ form_widget(form.countoftravellers, {'attr': { 'class': 'o-input--select o-input--select-white o-input--no-border-on-hover o-input--select-short u-text-center'}}) }}<i class="fa fa-angle-down u-text-white u-ml-__16 u-mr-16"></i>
+        <div class="u-flex u-flex-col md:u-flex-row u-items-start md:u-items-center md:u-mr-24 u-mb-8 md:u-mb-0">
+          {{ form_label(form.countoftravellers, null, {'label_attr': { 'class': 'o-label o-label--white u-mt-8 u-mr-8 u-flex u-items-center u-whitespace-nowrap'}}) }}
+          <div class="u-relative u-w-full">
+            {{ form_widget(form.countoftravellers, {'attr': { 'class': 'o-input--select o-input--select-white o-input--no-border-on-hover o-input--select-short u-text-center'}}) }}<i class="fa fa-angle-down u-text-white u-ml-__16 u-absolute u-pin-y"></i>
+          </div>
         </div>
-        <div class="u-flex u-items-center">
-          {{ form_label(form.additionalinfo, null, {'label_attr': { 'class': 'o-label o-label--white u-mt-8 u-mr-8 u-flex u-items-center'}}) }}
-          {{ form_widget(form.additionalinfo, {'attr': { 'class': 'o-input--select o-input--select-white o-input--no-border-on-hover'}}) }}<i class="fa fa-angle-down u-text-white u-ml-__16 u-mr-16"></i>
+        <div class="u-flex u-flex-col md:u-flex-row u-items-start md:u-items-center u-mb-16 md:u-mb-0">
+          {{ form_label(form.additionalinfo, null, {'label_attr': { 'class': 'o-label o-label--white u-mt-8 u-mr-8 u-flex u-items-center u-whitespace-nowrap'}}) }}
+          <div class="u-relative u-w-full">
+            {{ form_widget(form.additionalinfo, {'attr': { 'class': 'o-input--select o-input--select-white o-input--no-border-on-hover'}}) }}<i class="fa fa-angle-down u-text-white u-ml-__16 u-absolute u-pin-y"></i>
+          </div>
         </div>
       </div>
     </div>
@@ -81,9 +87,14 @@
         {{ _self.widget_prototype(subtrip) }}
       {% endfor %}
     </div>
-    <button class="o-rounded o-rounded--l" data-target="subtrips-list"><i class="fa fa-plus"></i></button>
-    <div class="d-flex col-12 justify-content-end">
-      <input class="btn btn-primary" type="submit" value="{{ button_text|trans|capitalize }}">
+    <button class="btn-add o-rounded o-rounded--l" 
+            data-target="subtrips-list">
+      <i class="fa fa-plus"></i>
+    </button>
+    <div class="u-flex u-justify-end u-mt-48 md:u-mt-0">
+      <input class="o-button" 
+             type="submit" 
+             value="{{ button_text|trans|capitalize }}">
     </div>
   </div>
   {{ form_end(form) }}

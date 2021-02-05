@@ -103,6 +103,15 @@ textarea.o-input::placeholder {
   outline: none;
 }
 
+.o-input--no-borders-:hover,
+.o-input--no-borders:active,
+.o-input--no-borders:hover,
+.o-input--no-borders:focus,
+.o-input--no-borders:focus-visible {
+  border: none;
+  outline: none;
+}
+
 
 
 
@@ -113,6 +122,14 @@ textarea.o-input::placeholder {
 
 .o-input--round-right {
   border-radius: 0 8px 8px 0;
+}
+
+@media (max-width: 900px) {
+  .o-input--round-left,
+  .o-input--round-right {
+    border-radius: 8px;
+    border-right: inherit;
+  }
 }
 
 
@@ -185,8 +202,7 @@ textarea.o-input::placeholder {
 .o-input--translucid:hover,
 .o-input--translucid:focus,
 .o-input--translucid:focus-visible {
-  border: none;
-  outline: none;
+  background-color: rgba(255, 255, 255, 1);
 }
 
 
@@ -238,12 +254,10 @@ textarea.o-input::placeholder {
 .o-input--white::placeholder {
   background-color: rgba(255, 255, 255, 0.1);
   border: none;
-  font-size: 56px;
   font-weight: 700;
   color: white;
   opacity: 1;
   font-family: Signika;
-  height: 78px;
 }
 
 .o-input--white:focus::placeholder {
@@ -255,6 +269,23 @@ textarea.o-input::placeholder {
 .o-input--white:focus,
 .o-input--white:focus-visible {
   background-color: rgba(255, 255, 255, 0.2);
+}
+
+
+.o-input--white-xl,
+.o-input--white-xl::placeholder {
+  font-size: 56px;
+  line-height: 72px;
+  height: 72px;
+}
+
+@media (max-width: 900px) {
+  .o-input--white-xl,
+  .o-input--white-xl::placeholder {
+    font-size: 32px;
+    line-height: 48px;
+    height: 48px;
+  }
 }
 
 
@@ -279,4 +310,10 @@ textarea.o-input::placeholder {
 
 .o-input--select-short {
   width: 72px;
+}
+
+@media (max-width: 900px) {
+  .o-input--select-short {
+    width: 100%;
+  }
 }

@@ -11,7 +11,6 @@
 {% endblock stylesheets %}
 
 {% block javascripts %}
-  {{ encore_entry_script_tags('tempusdominus') }}
   {{ encore_entry_script_tags('trips')  }}
 {% endblock javascripts %}
 
@@ -24,15 +23,15 @@
     {% set name = widget.vars.full_name %}
   {% endif %}
 
-  <div data-content="{{ name }}" 
+  <div data-content="{{ name }}"
        class="c-trips__info">
     <div class="u-w-full u-mb-8 md:u-width-auto md:u-mb-0">
-      {{ form_widget(form.location.name, {'attr': { 'class': 'o-input--xl o-input--no-borders o-input--round-left o-input--translucid', 'placeholder': 'Name' }}) }}
+      {{ form_widget(form.location.name, {'attr': { 'class': 'o-input--xl o-input--no-borders o-input--round-left o-input--translucid js-search-picker', 'placeholder': 'Name' }}) }}
     </div>
     <div class="u-w-full md:u-width-auto">
-      {{ form_widget(form.duration, {'attr': { 'class': 'o-input--xl o-input--no-borders o-input--round-right o-input--translucid', 'placeholder': 'Duration' }}) }}
+      {{ form_widget(form.duration, {'attr': { 'class': 'o-input--xl o-input--no-borders o-input--round-right o-input--translucid js-duration', 'placeholder': 'Duration' }}) }}
     </div>
-    <button class="btn-remove o-rounded o-rounded--l u-justify-self-center c-trips__info-btn-grid " 
+    <button class="js-btn-remove o-rounded o-rounded--l u-justify-self-center c-trips__info-btn-grid "
             data-related="{{ name }}">
       <i class="fa fa-times"></i>
     </button>
@@ -53,7 +52,7 @@
       {% if create %}{{ 'trip.create' | trans }}{% else %}{{ 'trip.edit' | trans }}{% endif %}
     {% endset %}
   {% endapply %}
-  <!-- <h1 class="u-text-56 u-leading-56 u-font-700 u-mb-24 u-text-white">{% if create %}{{ 'trip.create' | trans }}{% else %}{{ 'trip.edit' | trans }}{% endif %}</h1> -->
+  {# <h1 class="u-text-56 u-leading-56 u-font-700 u-mb-24 u-text-white">{% if create %}{{ 'trip.create' | trans }}{% else %}{{ 'trip.edit' | trans }}{% endif %}</h1> #}
 
   {{ form_start(form) }}
   <div>
@@ -87,13 +86,13 @@
         {{ _self.widget_prototype(subtrip) }}
       {% endfor %}
     </div>
-    <button class="btn-add o-rounded o-rounded--l" 
+    <button class="js-btn-add o-rounded o-rounded--l"
             data-target="subtrips-list">
       <i class="fa fa-plus"></i>
     </button>
     <div class="u-flex u-justify-end u-mt-48 md:u-mt-0">
-      <input class="o-button" 
-             type="submit" 
+      <input class="o-button"
+             type="submit"
              value="{{ button_text|trans|capitalize }}">
     </div>
   </div>

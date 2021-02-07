@@ -84,13 +84,13 @@
     "tar": "^6.0.5",
     "tempusdominus": "github:tonix-tuft/tempusdominus",
     "tempusdominus-bootstrap": "github:tonix-tuft/tempusdominus-bootstrap",
-    "typeface-lato": "0.0.75",
-    "typeface-signika": "0.0.72",
     "uglify-js": "^3.11.1",
     "underscore.string": "^3.3.5",
     "workbox-webpack-plugin": "^5.1.4"
   },
   "dependencies": {
+    "@fontsource/lato": "^4.2.0",
+    "@fontsource/signika": "^4.2.0",
     "@tailwindcss/postcss7-compat": "^2.0.2",
     "add-to-homescreen": "^3.2.6",
     "postcss": "^7",

@@ -26,6 +26,7 @@ class Preference
     public const SHOW_MY_GROUP_POSTS_ONLY = 'ShowMyGroupsTopicsOnly';
     public const ACTIVITIES_NEAR_ME_RADIUS = 'ActivitiesNearMeRadius';
     public const READ_COMMENT_GUIDELINES = 'ReadCommentGuidelines';
+    public const TRIPS_VICINITY_RADIUS = 'TripLegsVicinityRadius';
 
     /**
      * @var int

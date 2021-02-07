@@ -1,5 +1,24 @@
+<div id="legsdisplay">
+    <div class="d-flex justify-content-between">
+        <label for="trips_radius">{{ 'trips.radius' }}</label>
+        <select id="trips_radius"
+                name="trips_radius" class="select2">
+            <option {% if radius == 0 %}selected="selected"{% endif %} value="0">{{ 'trips.legs.exact'|trans }}</option>
+            <option {% if radius == 5 %}selected="selected"{% endif %} value="5">{{ 'search.radius.5km'|trans }}</option>
+            <option {% if radius == 10 %}selected="selected"{% endif %} value="10">{{ 'search.radius.10km'|trans }}</option>
+            <option {% if radius == 20 %}selected="selected"{% endif %} value="20">{{ 'search.radius.20km'|trans }}</option>
+            <option {% if radius == 50 %}selected="selected"{% endif %} value="50">{{ 'search.radius.50km'|trans }}</option>
+            <option {% if radius == 100 %}selected="selected"{% endif %} value="100">{{ 'search.radius.100km'|trans }}</option>
+            <option {% if radius == 200 %}selected="selected"{% endif %} value="200">{{ 'search.radius.200km'|trans }}</option>
+            <option {% if radius == 500 %}selected="selected"{% endif %} value="500">{{ 'search.radius.500km'|trans }}</option>
+            <option {% if radius == 1000 %}selected="selected"{% endif %} value="1000">{{ 'search.radius.1000km'|trans }}</option>
+            <option {% if radius == 2000 %}selected="selected"{% endif %} value="2000">{{ 'search.radius.2000km'|trans }}</option>
+            <option {% if radius == 5000 %}selected="selected"{% endif %} value="5000">{{ 'search.radius.5000km'|trans }}</option>
+        </select>
+    </div>
 {% for leg in legs  %}
     {% include 'trip/leg.html.twig' with {'leg': leg} %}
 {% else %}
     {{ 'landing.bevisited.none' }}
 {% endfor %}
+</div>

@@ -140,7 +140,7 @@ App\Entity\Preference:
         codeDescription: 'ActivitiesRadius'
         description: Radius set by the user for the list of activities around their location
         created: <DateTime()>
-        DefaultValue: ''
+        DefaultValue: 25
         PossibleValues: ''
         Status: 'Inactive'
     READ_COMMENT_GUIDELINES:
@@ -152,3 +152,12 @@ App\Entity\Preference:
         DefaultValue: ''
         PossibleValues: ''
         Status: 'Inactive'
+    TRIPS_VICINITY_RADIUS:
+        position: 60
+        codename: 'TripLegsVicinityRadius'
+        codeDescription: 'trips.vicinity.radius'
+        description: 'Radius set by the user for trip legs shown on landing for visitors'
+        created: <DateTime()>
+        DefaultValue: 25
+        PossibleValues: 0;5;10;25;50;100;200;500;1000
+        Status: 'Normal'

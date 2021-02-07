@@ -3,18 +3,17 @@
 namespace App\Model;
 
 use App\Entity\Member;
+use App\Entity\Preference;
 use App\Entity\Trip;
 use App\Repository\TripRepository;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Pagerfanta\Doctrine\ORM\QueryAdapter;
 use Pagerfanta\Pagerfanta;
 
 class TripModel
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
+    private EntityManagerInterface $entityManager;
 
     public function __construct(EntityManagerInterface $entityManager)
     {
@@ -34,18 +33,26 @@ class TripModel
         return $paginator;
     }
 
-    public function findInMemberVicinityNextThreeMonths(Member $member, $count = 5)
+    public function setTripsRadius($member, $radius)
     {
-        // \todo: Get distance from preference
-        $distance = 25;
+        $preferenceRepository = $this->entityManager->getRepository(Preference::class);
 
-        /** @var TripRepository $tripRepository */
-        $tripRepository = $this->entityManager->getRepository(Trip::class);
+        /** @var Preference $preference */
+        $preference = $preferenceRepository->findOneBy(['codename' => Preference::TRIPS_VICINITY_RADIUS]);
+        $memberPreference = $member->getMemberPreference($preference);
+        $memberPreference->setValue($radius);
+        $this->entityManager->persist($memberPreference);
+        $this->entityManager->flush();
+    }
 
-        // Set to abritrary 3 months
-        $duration = 3;
-        $trips = $tripRepository->findInVicinityOfMemberNextMonths($member, $count, $duration, $distance);
+    public function getTripsRadius(Member $member): int
+    {
+        $preferenceRepository = $this->entityManager->getRepository(Preference::class);
 
-        return $trips;
+        /** @var Preference $preference */
+        $preference = $preferenceRepository->findOneBy(['codename' => Preference::TRIPS_VICINITY_RADIUS]);
+        $memberPreference = $member->getMemberPreference($preference);
+
+        return (int) ($memberPreference->getValue());
     }
 }

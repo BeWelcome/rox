@@ -1155,6 +1155,16 @@
     "@ckeditor/ckeditor5-utils" "^24.0.0"
     lodash-es "^4.17.15"
 
+"@fontsource/lato@^4.2.0":
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/@fontsource/lato/-/lato-4.2.0.tgz#74abc326d146d97591fae7dfe8b57a8c02723125"
+  integrity sha512-A2i1yAnqBEpfHro+0RYG/gYnds+H8LinkxebUdv86GCkDom/i6nnOlgzXuvzBjaM4FgTPvEZRDmz0S5lnO6KQQ==
+
+"@fontsource/signika@^4.2.0":
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/@fontsource/signika/-/signika-4.2.0.tgz#1db7fed297d288c488f362520076c9393174ab05"
+  integrity sha512-ChHAoD+xzx1E0lmwybu6vN9w5GPCCLTGHQZzKsXUnM3HiOrn3kSrzll7qnWf+DOa9kTXkRkxrO6He3KkgY2Vtg==
+
 "@fortawesome/fontawesome-free@~5.14.0":
   version "5.14.0"
   resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-free/-/fontawesome-free-5.14.0.tgz#a371e91029ebf265015e64f81bfbf7d228c9681f"
@@ -8757,16 +8767,6 @@ typedarray@^0.0.6:
   version "0.0.6"
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
-
-typeface-lato@0.0.75:
-  version "0.0.75"
-  resolved "https://registry.yarnpkg.com/typeface-lato/-/typeface-lato-0.0.75.tgz#8aa11c5611dc38416837c089b265a2abd1f7dd31"
-  integrity sha512-iA5uJD4PSTyIE4BDiSOexQeXkDkiJuX4Hu3wh3saJ06EB2TvJayab1Lbbmqq2je/LQv7KCQZHZmC0k4hedd8sw==
-
-typeface-signika@0.0.72:
-  version "0.0.72"
-  resolved "https://registry.yarnpkg.com/typeface-signika/-/typeface-signika-0.0.72.tgz#169761fff93b4f1688b7fd0ad60ffffd3a1c9dee"
-  integrity sha512-fxEQ4lO13tgGroQLnH/xF/SPFKwz3cpTVUoc9NjhoBETlscAPgZuj+6k91outFcwL+OAcmEE8UKkZ8vuzvZoRQ==
 
 uglify-js@^3.11.1:
   version "3.12.2"

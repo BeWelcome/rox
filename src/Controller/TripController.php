@@ -6,10 +6,8 @@ use App\Entity\Member;
 use App\Entity\Subtrip;
 use App\Entity\Trip;
 use App\Form\TripType;
-use App\Form\TripTypeB;
 use App\Model\TripModel;
 use App\Repository\SubtripRepository;
-use Carbon\CarbonImmutable;
 use Pagerfanta\Doctrine\ORM\QueryAdapter;
 use Pagerfanta\Pagerfanta;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -103,66 +101,6 @@ class TripController extends AbstractController
     }
 
     /**
-     * Create a new trip.
-     *
-     * @Route("/trip/create/b", name="trip_create_b")
-     */
-    public function createB(Request $request): Response
-    {
-        $createForm = $this->createForm(TripTypeB::class);
-        $createForm->handleRequest($request);
-
-        if ($createForm->isSubmitted() && $createForm->isValid()) {
-            /** @var Member $creator */
-            $creator = $this->getUser();
-
-            /** @var Trip $data */
-            $data = $createForm->getData();
-
-            $trip = new Trip();
-            $trip->setCreator($creator);
-            $trip->setSummary($data['summary']);
-            $trip->setDescription($data['description']);
-            $trip->setCountOfTravellers($data['countoftravellers']);
-            $trip->setAdditionalInfo('none' /* $data['additionalinfo'] */);
-
-            $departure = CarbonImmutable::instance($data['startdate']);
-            $rawSubtrips = $data['subtrips'];
-            foreach($rawSubtrips as $rawSubtrip)
-            {
-                $subtrip = new Subtrip();
-                $arrival = clone($departure);
-                $subtrip->setArrival($arrival->toDateTime());
-                $departure= $arrival->addDays( $rawSubtrip->days);
-                $subtrip->setDeparture($departure->toDateTime());
-                $subtrip->setOptions($rawSubtrip->options);
-                $subtrip->setLocation($rawSubtrip->location);
-                $trip->addSubtrip($subtrip);
-
-            }
-
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($trip);
-            $entityManager->flush();
-
-            $this->addFlash('success', 'trip.created');
-
-            return $this->redirectToRoute('mytrips');
-        }
-
-        return $this->render('trip/create_edit_b.html.twig', [
-            'create' => true,
-            'form' => $createForm->createView(),
-            'submenu' => [
-                'active' => 'trip_create_a',
-                'items' => $this->getSubmenuItems([
-                    'create' => true,
-                ]),
-            ],
-        ]);
-    }
-
-    /**
      * Edit an existing trip.
      *
      * @Route("/trip/{id}/edit", name="trip_edit",
@@ -214,23 +152,44 @@ class TripController extends AbstractController
     }
 
     /**
-     * Show all trip legs that are in the vicinity of a member
+     * Show all trip legs that are in the vicinity of a member.
      *
      * @Route("/trip/{username}/area/{page}",
      *     requirements={"page"="\d+"},
      *     name="trip_in_area")
+     *
+     * @param mixed $page
      */
-    public function tripsInArea(Member $member, $page = 1): Response
+    public function tripsInArea(TripModel $tripModel, Request $request, Member $member, $page = 1): Response
     {
+        /** @var Member $host */
+        $host = $this->getUser();
+
+        $radius = $request->query->get('radius', -1);
+        $preferredRadius = $tripModel->getTripsRadius($host);
+        if (-1 === $radius || !is_numeric($radius)) {
+            $radius = $preferredRadius;
+        } else {
+            $tripModel->setTripsRadius($host, $radius);
+        }
+
+        if ($radius < $preferredRadius && 1 !== $page) {
+            return $this->redirectToRoute('trip_in_area', [
+                'username' => $member->getUsername(),
+                'page' => 1,
+            ]);
+        }
+
         /** @var SubtripRepository $subtripRepository */
         $subtripRepository = $this->getDoctrine()->getRepository(Subtrip::class);
 
-        $legsQuery = $subtripRepository->getLegsInAreaQuery($member);
+        $legsQuery = $subtripRepository->getLegsInAreaQuery($member, $radius);
         $legsAdapter = new QueryAdapter($legsQuery);
         $tripLegs = new Pagerfanta($legsAdapter);
         $tripLegs->setCurrentPage($page);
 
         return $this->render('trip/area.html.twig', [
+            'radius' => $radius,
             'legs' => $tripLegs,
             'submenu' => [
                 'active' => 'trip_legs',

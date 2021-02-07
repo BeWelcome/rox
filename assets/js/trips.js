@@ -4,11 +4,9 @@ import moment from 'moment';
 
 import '../scss/_daterangepicker.scss';
 
-let searchPicker = new SearchPicker( "/search/locations/places");
+let searchPicker = new SearchPicker( "/search/locations/places", 'js-searchpicker');
 
 let pickers = document.querySelectorAll('*[id*="_duration"]');
-let arrivals = document.querySelectorAll('*[id*="_arrival"]');
-let departures = document.querySelectorAll('*[id*="_departure"]');
 let latestDeparture = moment().add(1, 'day');
 
 pickers.forEach(initializePicker);
@@ -43,7 +41,7 @@ function initializePicker(value) {
     }
 }
 
-$(document).on('click', '.btn-add[data-target]', function (event) {
+$(document).on('click', '.js-btn-add[data-target]', function (event) {
     let collectionHolder = $('#' + $(this).attr('data-target'));
 
     if (!collectionHolder.attr('data-counter')) {
@@ -82,7 +80,7 @@ $(document).on('click', '.btn-add[data-target]', function (event) {
     event && event.preventDefault();
 });
 
-$(document).on('click', '.btn-remove[data-related]', function (event) {
+$(document).on('click', '.js-btn-remove[data-related]', function (event) {
     let name = $(this).attr('data-related');
     $('*[data-content="' + name + '"]').remove();
 

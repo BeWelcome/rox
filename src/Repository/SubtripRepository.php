@@ -51,11 +51,11 @@ class SubtripRepository extends EntityRepository
             ;
     }
 
-    public function getLegsInAreaQuery(Member $member): Query
+    public function getLegsInAreaQuery(Member $member, int $radius): Query
     {
         return
             $this
-                ->getLegsInAreaQueryBuilder($member, 3, 25)
+                ->getLegsInAreaQueryBuilder($member, 3, $radius)
                 ->getQuery();
     }
 

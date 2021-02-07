@@ -92,17 +92,23 @@
       transform: translateX(-50%)
     }
 
-    .form-control {
+    .form-control,
+    .o-input {
       // Affect the main menu
       border: none;
       font-family: Signika;
       font-weight: 300;
     }
 
-    .parallax .form-control {
+    .parallax .form-control,
+    .parallax .o-input {
       // Doesn't affect the main menu
       height: 3rem;
       background-color: rgba(255,255,255,0.98);
+      flex: 1 1 auto;
+      width: 1%;
+      min-width: 0;
+      border-radius: initial;
     }
 
     .input-group {

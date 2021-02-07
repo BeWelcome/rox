@@ -18,7 +18,7 @@
     {% else %}
         {{ form_start(form) }}
             {{ form_row(form.sortOrder) }}
-            <div class="card mb-1">
+            <div class="card o-card mb-1">
                 <div class="card-body">
                     <h5 class="card-title">{{ 'faq' | trans }}</h5>
                     <p class="card-text">{{ 'admin.faq.abstract' | trans }}</p>
@@ -29,7 +29,7 @@
             </div>
             <div id="faqs">
             {% for faqCategory in faqCategories %}
-                <div id="faq_{{ faqCategory.id }}" class="card mb-1">
+                <div id="faq_{{ faqCategory.id }}" class="card o-card mb-1">
                     <div class="card-body">
                         <p class="card-text"><small class="text-muted">{{ faqCategory.description }} (en)</small><br>
                         {{ faqCategory.description | lower | trans({}, 'messages', 'en') }}

@@ -10,7 +10,7 @@
         {% for newsletter in newsletters %}
             {% for translation in newsletter.translations %}
                 {% if translation.author == member %}
-            <div class="card">
+            <div class="card o-card">
                 <div class="card-header text-truncate">
                     {% if translation.title is defined %}{{ translation.title }}{% else %}{{ 'mydata.newsletter.no.title' }}{% endif %}
                 </div>

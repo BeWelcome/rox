@@ -11,7 +11,7 @@
 {% endblock stylesheets %}
 
 {% block content %}
-    <h1>{{ 'search.members'|trans }}</h1>
+    <h1 class="u-text-24">{{ 'search.members'|trans }}</h1>
     <p>{{ 'search.member.abstract'|trans }}</p>
     {{ form(form) }}
     {% if members is defined %}

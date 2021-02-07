@@ -6,6 +6,13 @@
 	border-bottom: 1px solid #a8a8a8;
 }
 
+@media (max-width: 900px) {
+  .c-trip-card {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
 
 
 
@@ -14,6 +21,13 @@
 	display: grid;
 	grid-template-columns: 3fr 1fr;
 	grid-column-gap: 24px;
+}
+
+@media (max-width: 900px) {
+  .c-trip-card__wrapper {
+    display: flex;
+    flex-direction: column;
+  }
 }
 
 

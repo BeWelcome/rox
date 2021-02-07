@@ -9,7 +9,7 @@
         <p>{{ 'mydata.activities.attended'|trans({'attended': activities|length}) }}</p>
         <div class="card-columns">
             {% for activity in activities|keys %}
-                <div class="card">
+                <div class="card o-card">
                     <div class="card-header text-truncate">
                         {{ activities[activity].title }}
                     </div>

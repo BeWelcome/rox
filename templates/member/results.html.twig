@@ -101,7 +101,7 @@
                             </a>
                         </div>
                         <div class="collapse" id="collapse-{{ loop.index }}">
-                            <div class="card card-body">
+                            <div class="card o-card card-body">
                                 {% if member.Occupation|length %}<p class="m-0 mb-1 font-italic">{{ 'occupation' | trans }}: {{ member.Occupation | raw }}</p>{% endif %}
                                 <a href="/members/{{ member.Username }}"
                                    class="profilesummary">{{ member.ProfileSummary | truncate(250) | purify }}</a>

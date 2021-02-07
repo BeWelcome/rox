@@ -7,6 +7,7 @@
  */
 
 .o-input {
+  font-family: Signika;
   width: 100%;
   height: 40px;
   padding-left: 16px;
@@ -20,13 +21,15 @@ textarea.o-input {
   height: initial;
   padding: 16px;
   font-size: 16px;
-  font-family: Lato;
+  font-family: Signika;
+  font-weight: 400;
   overflow: hidden;
 }
 
 textarea.o-input::placeholder {
   font-size: 16px;
-  font-family: Lato;
+  font-family: Signika;
+  font-weight: 400;
 }
 
 

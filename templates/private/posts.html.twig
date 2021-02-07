@@ -14,7 +14,7 @@
         </div>
         <div class="card-columns">
             {% for year in years %}
-                <div class="card">
+                <div class="card o-card">
                     <div class="card-header">{{ year }}</div>
                     <div class="card-body">
                         <p>{{ 'mydata.posts.threads.contributed'|trans({'contributed':threadsPerYear[year]|length}) }}</p>

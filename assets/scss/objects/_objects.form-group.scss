@@ -3,7 +3,7 @@
    ========================================================================== */
 
 /**
- * Input-label wrapper. To be used when both elements are rendered together.
+ * Input-label wrapper. To be used when both elements are rendered together. Transitional classes.
  */
 
 
@@ -11,11 +11,22 @@
 .o-form-group {
 }
 
-.o-form-group label {
-  font-weight: 300;
+.o-form-group > label {
+  font-weight: 400;
   margin-bottom: 8px;
 }
 
+
+.o-form-group > .o-checkbox,
+.o-form-group > .o-input,
+.o-form-group > .form-text {
+	margin-bottom: 8px;
+}
+
+
+.o-form-group > .select2-container {
+	margin-bottom: 10px;
+}
 
 
 

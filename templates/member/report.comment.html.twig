@@ -5,7 +5,7 @@
     <h1>{{ 'comment.report.header' | trans }}</h1>
     <div class="row">
         {% include 'member/comment.html.twig' with {'comment' : comment, 'mute': false } %}
-        <div class="col-12 col-sm-6 card">
+        <div class="col-12 col-sm-6o-card>
             {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
             <div class="row"><div class="col-12 mb-4">{{ 'comment.report.help' }}</div></div>
             {{ form_widget(form) }}

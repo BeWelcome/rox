@@ -1,4 +1,4 @@
-<div class="card">
+<div class="card o-card">
     <div class="card-header text-truncate">{{ news.title }}</div>
     <div class="card-body">{{ news.text|purify|truncate(500) }}</div>
     <div class="card-footer text-right"><a class="btn btn-primary" href="{{ url('communitynews_show', {'id':news.id}) }}">{{ 'showfull'|trans }}</a></div>

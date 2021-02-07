@@ -14,7 +14,7 @@
             {% else %}
                 {% set newsletter = translations|first %}
             {% endif %}
-            <div class="card">
+            <div class="card o-card">
                 <div class="card-header text-truncate">
                     {% if newsletter.title is defined %}{{ newsletter.title }}{% else %}{{ 'mydata.newsletter.no.title' }}{% endif %}
                 </div>

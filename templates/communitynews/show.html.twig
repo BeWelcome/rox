@@ -10,7 +10,7 @@
     <div class="row">
         <div class="col-12">
 
-            <div class="card">
+            <div class="card o-card">
                 <div class="media">
 
                    {{ macros.avatar( communityNews.createdBy.Username, 100, true, 'mr-2') }}
@@ -44,7 +44,7 @@
         <div class="row">
             {% for comment in comments.currentPageResults %}
                 <div class="col-12">
-                    <div class="card p-2 mb-3">
+                    <div class="card o-card mb-3">
                     <div class="card-body">
                         <h5 class="card-title font-weight-bold mb-0">
                             {{ comment.title }}

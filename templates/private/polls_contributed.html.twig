@@ -8,7 +8,7 @@
     {% else %}
         <div class="card-columns">
             {% for contribution in contributions %}
-            <div class="card">
+            <div class="card o-card">
                 <div class="card-header text-truncate">
                     {% if contribution.poll.titles|length %}{{ contribution.poll.titles|first }}{% else %}No Title?{% endif %}
                 </div>

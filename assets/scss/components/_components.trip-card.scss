@@ -1,0 +1,27 @@
+.c-trip-card {
+	display: grid;
+	grid-template-columns: 1fr 104px;
+	margin-bottom: 16px;
+	padding-bottom: 16px;
+	border-bottom: 1px solid #a8a8a8;
+}
+
+
+
+
+
+.c-trip-card__wrapper {
+	display: grid;
+	grid-template-columns: 3fr 1fr;
+	grid-column-gap: 24px;
+}
+
+
+
+
+
+.c-trip-card__icon-grid {
+	display: grid;
+	grid-template-columns: 24px 1fr;
+	grid-gap: 8px;
+}

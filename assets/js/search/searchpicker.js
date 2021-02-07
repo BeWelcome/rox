@@ -3,9 +3,9 @@ import 'jquery-ui/ui/widgets/autocomplete';
 import 'jquery-ui/themes/base/autocomplete.css';
 
 export default class SearchPicker {
-    constructor(url) {
+    constructor(url, cssClass = "searchpicker") {
         let self = this;
-        $(".search-picker").on("focus", function() {
+        $("." + cssClass).on("focus", function() {
             $(this).on("keydown", function (event) {
                 self.resetHiddenInputs(this.id);
             }).catcomplete({

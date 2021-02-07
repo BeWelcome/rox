@@ -28,13 +28,13 @@
 
 
 
-
 /* Hovers
    ========================================================================== */
 
 .o-rounded:hover{
   background-color: var(--bewelcome-dark);
   transition: background-color 0.2s;
+  color: var(--white);
 }
 
 

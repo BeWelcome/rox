@@ -27,10 +27,10 @@
   <div data-content="{{ name }}" 
        class="c-trips__info">
     <div class="u-w-full u-mb-8 md:u-width-auto md:u-mb-0">
-      {{ form_widget(form.location.name, {'attr': { 'class': 'o-input--xl o-input--no-borders o-input--round-left o-input--translucid', 'placeholder': 'Name' }}) }}
+      {{ form_widget(form.location.name, {'attr': { 'class': 'o-input--xl o-input--no-borders o-input--round-left o-input--translucid', 'placeholder': 'Name', 'aria-label':'Name' }}) }}
     </div>
     <div class="u-w-full md:u-width-auto">
-      {{ form_widget(form.duration, {'attr': { 'class': 'o-input--xl o-input--no-borders o-input--round-right o-input--translucid', 'placeholder': 'Duration' }}) }}
+      {{ form_widget(form.duration, {'attr': { 'class': 'o-input--xl o-input--no-borders o-input--round-right o-input--translucid', 'placeholder': 'Duration', 'aria-label':'Duration' }}) }}
     </div>
     <button class="btn-remove o-rounded o-rounded--l u-justify-self-center c-trips__info-btn-grid " 
             data-related="{{ name }}">
@@ -58,11 +58,11 @@
   {{ form_start(form) }}
   <div>
     <div class="u-font-700 u-mb-24 u-text-white u-flex u-items-center">
-      {{ form_widget(form.summary, {'attr': { 'class': 'o-input--white o-input--no-border-on-hover o-input--white-xl'}}) }}
+      {{ form_widget(form.summary, {'attr': { 'class': 'o-input--white o-input--no-border-on-hover o-input--white-xl', 'aria-label':'Title'}}) }}
       {% if create %}{{ '<i class="fas fa-edit u-text-white u-opacity-60 u-text-16 u-opacity-70 u-absolute u-right-24 u-hidden md:u-block"></i>' }}{% else %}{{ '' }}{% endif %}
     </div>
     <div class="u-relative u-mb-8 md:u-mb-24">
-      {{ form_widget(form.description, { 'attr': {  'class': 'o-input--white o-input--no-border-on-hover', 'rows': 5 }}) }}
+      {{ form_widget(form.description, { 'attr': {  'class': 'o-input--white o-input--no-border-on-hover', 'rows': 5, 'aria-label':'Description' }}) }}
       {% if create %}{{ '<i class="fas fa-edit u-text-white u-opacity-60 u-text-16 u-opacity-70 u-absolute u-top-16 u-right-24 u-hidden md:u-block""></i>' }}{% else %}{{ '' }}{% endif %}
     </div>
     <div class="u-flex u-flex-col md:u-grid md:u-grid-cols-3">

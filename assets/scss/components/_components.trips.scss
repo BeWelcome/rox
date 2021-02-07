@@ -88,19 +88,25 @@
 	font-size: 18px;
 	letter-spacing: 0.05rem;
 	color: var(--gray-20);
+	margin-right: 24px;
 }
 
 .c-trips__nav-btn:after {
     content: "•";
-    color: var(--gris-30);
+    color: var(--gray-40);
     margin: 0 8px;
     text-decoration: none !important;
+    position: absolute;
 }
 
 @media (max-width: 900px) {
   .c-trips__nav-btn:after {
     display: none;
 	}
+}
+
+.c-trips__nav-btn:last-child {
+	margin: initial;
 }
 
 .c-trips__nav-btn:last-child::after {

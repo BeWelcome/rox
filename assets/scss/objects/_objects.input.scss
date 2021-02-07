@@ -250,14 +250,20 @@ textarea.o-input::placeholder {
 
 
 
-.o-input--white,
-.o-input--white::placeholder {
-  background-color: rgba(255, 255, 255, 0.1);
+
+.o-input--white {
+  background-color: rgba(255, 255, 255, 0.2);
   border: none;
+}
+
+
+
+.o-input--white,
+.o-input--white::placeholder {  
   font-weight: 700;
-  color: white;
-  opacity: 1;
+  color: var(--white);
   font-family: Signika;
+  opacity: 1;
 }
 
 .o-input--white:focus::placeholder {
@@ -268,7 +274,7 @@ textarea.o-input::placeholder {
 .o-input--white:hover,
 .o-input--white:focus,
 .o-input--white:focus-visible {
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: rgba(255, 255, 255, 0.3);
 }
 
 
@@ -305,7 +311,7 @@ textarea.o-input::placeholder {
 }
 
 .o-input--select-white:hover {
-  background-color:rgba(255, 255, 255, 0.4);
+  background-color:rgba(255, 255, 255, 0.3);
 }
 
 .o-input--select-short {

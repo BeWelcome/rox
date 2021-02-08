@@ -4,7 +4,7 @@ import moment from 'moment';
 
 import '../scss/_daterangepicker.scss';
 
-let searchPicker = new SearchPicker( "/search/locations/places", 'js-searchpicker');
+let searchPicker = new SearchPicker( "/search/locations/places", 'js-search-picker');
 
 let pickers = document.querySelectorAll('*[id*="_duration"]');
 let latestDeparture = moment().add(1, 'day');

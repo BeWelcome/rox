@@ -1,7 +1,11 @@
-{% extends 'base.html.twig' %}
+{% extends 'trips.html.twig' %}
 
 {% block title %}
     {{ 'Trip' | trans }}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ encore_entry_link_tags('tailwind') }}
 {% endblock %}
 
 {% block content %}

@@ -23,8 +23,13 @@ $(document).ready(function() {
     });
 
     $('.hosting').click(Home.setHostingStatus);
+
     $('#show_online').change(function() {
         setTimeout(Home.updateActivities, 500);
+    });
+
+    $('#trips_radius').change(function() {
+        setTimeout(Home.updateTripLegs, 500);
     });
 });
 
@@ -120,12 +125,21 @@ var Home = {
         });
     },
     updateTripLegs: function () {
+        let radius = $('#trips_radius').val();
+
         $.ajax({
             type: 'GET',
             url: '/widget/triplegs',
+            data: {
+                radius: radius
+            },
             success: function(legs) {
                 $('#legsdisplay').replaceWith(legs);
-            }
+                $('#trips_radius').select2();
+                $('#trips_radius').change(function() {
+                    setTimeout(Home.updateTripLegs, 500);
+                });
+            },
         });
     },
     setHostingStatus: function (e) {

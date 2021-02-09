@@ -54,6 +54,24 @@
                     {{ 'unread.only' | trans }}
                 </label>
             </div>
+            <div class="custom-control custom-switch mr-1">
+                <input type="checkbox" id="show_started_by_me"
+                       name="search[show_options]"
+                       class="show_options custom-control-input" value="1"
+                       {% if showStartedByMe %}checked="checked"{% endif %}>
+                <label class="switch-custom custom-control-label" for="show_started_by_me">
+                    {{ 'started.by.me' | trans }}
+                </label>
+            </div>
+            <div class="custom-control custom-switch mr-1">
+                <input type="checkbox" id="show_started_by_someone_else"
+                       name="search[show_options]"
+                       class="show_options custom-control-input" value="1"
+                       {% if showStartedBySomeoneElse %}checked="checked"{% endif %}>
+                <label class="switch-custom custom-control-label" for="show_started_by_someone_else">
+                    {{ 'started.by.someone.else' | trans }}
+                </label>
+            </div>
         </div>
     </div>
     {% if conversations.nbResults == 0 %}
@@ -83,7 +101,7 @@
             {% for message in conversations.currentPageResults %}
                 {% set directionIn = (member.id == message.receiver.id) %}
                 {% set otherMember = directionIn ? message.sender : message.receiver %}
-                {% set unread = (message.firstRead == '0000-00-00 00:00.00') or (message.firstRead is null) %}
+                {% set unread = (message.firstRead is null) or (message.firstRead == '0000-00-00 00:00.00') %}
                 {% set show_message_route = 'message_show' %}
                 <tr>
                     <td class="select align-middle" id="selectcolumn">

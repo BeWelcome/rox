@@ -70,7 +70,7 @@ class LogAdapter implements AdapterInterface
         return $results;
     }
 
-    private function getSqlAndParameters($count)
+    private function getSqlAndParameters($count): array
     {
         $params = [];
         $paramTypes = [];

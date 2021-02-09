@@ -49,7 +49,7 @@
         {% for message in items.currentPageResults %}
             {% set directionIn = (member.id == message.receiver.id) %}
             {% set otherMember = directionIn ? message.sender : message.receiver %}
-            {% set unread = (message.firstRead == '0000-00-00 00:00.00') or (message.firstRead is null) %}
+            {% set unread = (message.firstRead is null) or (message.firstRead == '0000-00-00 00:00.00') %}
             {% if folder == 'deleted' %}
                 {% set show_message_route = 'message_show_with_deleted' %}
             {% else %}

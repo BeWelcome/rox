@@ -1,0 +1,6 @@
+<div id="invitationCount" data-count="{{ requestCount }}">
+    <a href="{{ path('conversations', {'invitations': 1, 'unread_only': 1}) }}" class="nav-link" aria-label="{{ 'invitations.unread' | trans }}">
+        <i class="fa fa-lg fa-door-open pr-1"></i><span
+                class="badge badge-warning d-md-none d-xl-inline-block">{{ requestCount }}</span>
+    </a>
+</div>

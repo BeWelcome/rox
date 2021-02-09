@@ -1,0 +1,98 @@
+{% extends 'trips.html.twig' %}
+
+{% block title %}
+	{{ 'trip.mytrips' | trans }}
+{% endblock %}
+
+{% block stylesheets %}
+	{{ encore_entry_link_tags('tailwind') }}
+{% endblock %}
+
+{% block content %}
+	<!-- <h1>{{ 'trip.mytrips' | trans }}</h1> -->
+	{% if trips.nbResults != 0 %}
+		{% set myself = app.user %}
+		{% if trips.haveToPaginate %}
+		<div class="row">
+			<div class="col-12">
+				<div class="pull-right">{{ pagerfanta( trips, 'rox_default', { routeName: 'mytrips' }) }}</div>
+			</div>
+		</div>
+		{% endif %}
+
+<<<<<<< Updated upstream
+			{% for trip in trips %}
+			<div class="c-trip-card">
+				<div class="c-trip-card__wrapper">
+					<a class="u-text-white hover:u-text-gray-20 u-text-24 u-font-display u-font-700 u-col-span-full u-mb-8" href="{{ path('trip_show', { 'id': trip.id } ) }}">{{ trip.summary }}</a>
+					<div>
+						<p class=" u-font-display u-font-300 u-text-white u-mb-8">{{ trip.description | purify | truncate(200) }}</p>
+						<p class="u-text-white u-font-display"><span class="u-mr-8">{{ trip.subtrips|length }} {{ 'trip.legs'|trans }}</span><strong class="u-text-white">{% for leg in trip.subtrips %}{% if leg.getLocation %} &bull; {{ leg.location.name }}{% endif %}{% endfor %}</strong></p>
+						
+					</div>
+					<div>
+						<div class="c-trip-card__icon-grid">
+							<i class="fa fa-users u-text-white u-text-16 u-justify-self-center u-self-center u-text-gray-20"></i>
+							<p class="u-text-white u-font-display" aria-label="{{ 'trip.count.of.travellers'|trans }}"><strong>{{ trip.countOfTravellers }}</strong> {{ 'trip.count.of.travellers'|trans }}</p>
+						</div>
+						<div class="c-trip-card__icon-grid">
+							<i class="fa fa-info-circle u-text-white u-text-16 u-justify-self-center u-self-center u-text-gray-20"></i>
+							<p class="u-text-white u-font-display" aria-label="{{ 'trip.additional.info'|trans }}">{{ trip.additionalInfo }}</p>
+						</div>
+					</div>
+				</div>
+				<div class="u-flex md:u-justify-between u-items-center u-mt-16 md:u-m-0">
+					<a class="o-rounded o-rounded--l u-text-18 u-mr-16 md:u-m-0" 
+					   href="{{ path('trip_edit', {'id': trip.id}) }}">
+						<i class="far fa-edit"></i>
+					</a>
+					<a class="o-rounded o-rounded--l"
+						 href="{{ path('trip_remove', {'id': trip.id}) }}">
+					  <i class="fa fa-times"></i>
+					</a>
+				</div>
+			</div>
+			{% else %}
+				<div class="col-12">{{ 'trip.no_trips_found'|trans }}</div>
+			{% endfor %}
+=======
+            {% for trip in trips %}
+            <div class="row">
+                <div class="col-12">
+                    <h4><a href="{{ path('trip_show', { 'id': trip.id } ) }}">{{ trip.summary }}</a>
+                        <div class="btn-group pull-right">
+                            <a class="btn btn-sm btn-primary" href="{{ path('trip_remove', {'id': trip.id}) }}"><i class="far fa-trash-alt"></i></a>
+                            <a class="btn btn-sm btn-primary" href="{{ path('trip_edit', {'id': trip.id}) }}"><i class="far fa-edit"></i></a>
+                        </div>
+                    </h4>
+                    {{ trip.description | purify | truncate(200) }}
+                </div>
+                <div class="col-12 col-sm-4">
+                    <p>{{ 'trip.count.of.travellers'|trans }} {{ trip.countOfTravellers }}</p>
+                </div>
+                <div class="col-12 col-sm-4">
+                    <p>{{ 'trip.additional.info'|trans }} {{ trip.additionalInfo }}</p>
+                </div>
+                <div class="col-12 col-sm-4">
+                    <p>{{ 'trip.legs'|trans }} {{ trip.subtrips|length }}
+                        {% for leg in trip.subtrips %}
+                            {% if leg.getLocation %}
+                                &bull; {{ leg.location.name }}{% endif %}{% endfor %}</p>
+                </div>
+            </div>
+            {% else %}
+                <div class="col-12">{{ 'trip.no_trips_found'|trans }}</div>
+            {% endfor %}
+>>>>>>> Stashed changes
+
+		{% if trips.haveToPaginate %}
+		<div class="row">
+			<div class="col-12">
+				<div class="pull-right">{{ pagerfanta( trips, 'rox_default', { routeName: 'mytrips' }) }}</div>
+			</div>
+		</div>
+		{% endif %}
+	{% else %}
+		{{ 'trip.no.trips'|trans }}
+	{% endif %}
+{% endblock content %}

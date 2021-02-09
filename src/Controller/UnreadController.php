@@ -21,28 +21,18 @@ class UnreadController extends AbstractController
     {
         /** @var Member $member */
         $member = $this->getUser();
-        $countWidget = $toastWidget = '';
-        $lastUnreadCount = (int) ($request->request->get('current'));
 
         /** @var MessageRepository $messageRepository */
         $messageRepository = $this->getDoctrine()->getRepository(Message::class);
         $unreadMessageCount = $messageRepository->getUnreadMessagesCount($member);
 
-        if (($unreadMessageCount !== $lastUnreadCount) && ($unreadMessageCount > $lastUnreadCount)) {
-            $countWidget = $this->renderView('widgets/messagescount.hml.twig', [
-                'messageCount' => $unreadMessageCount,
-            ]);
-            $toastWidget = $this->renderView('widgets/messages.toast.html.twig', [
-                'messageCount' => $unreadMessageCount,
-                'lastMessageCount' => $lastUnreadCount,
-            ]);
-        }
+        $countWidget = $this->renderView('widgets/messagescount.hml.twig', [
+            'messageCount' => $unreadMessageCount,
+        ]);
+
         $response = new JsonResponse();
         $response->setData([
-            'oldCount' => $lastUnreadCount,
-            'newCount' => $unreadMessageCount,
             'html' => $countWidget,
-            'toast' => $toastWidget,
         ]);
 
         return $response;
@@ -57,28 +47,44 @@ class UnreadController extends AbstractController
     {
         /** @var Member $member */
         $member = $this->getUser();
-        $countWidget = $toastWidget = '';
-        $lastUnreadCount = (int) ($request->request->get('current'));
 
         /** @var MessageRepository $messageRepository */
         $messageRepository = $this->getDoctrine()->getRepository(Message::class);
         $unreadRequestsCount = $messageRepository->getUnreadRequestsCount($member);
 
-        if (($unreadRequestsCount !== $lastUnreadCount) && ($unreadRequestsCount > $lastUnreadCount)) {
-            $countWidget = $this->renderView('widgets/requestscount.html.twig', [
-                'requestCount' => $unreadRequestsCount,
-            ]);
-            $toastWidget = $this->renderView('widgets/requests.toast.html.twig', [
-                'requestCount' => $unreadRequestsCount,
-                'lastRequestCount' => $lastUnreadCount,
-            ]);
-        }
+        $countWidget = $this->renderView('widgets/requestscount.html.twig', [
+            'requestCount' => $unreadRequestsCount,
+        ]);
+
         $response = new JsonResponse();
         $response->setData([
-            'oldCount' => $lastUnreadCount,
-            'newCount' => $unreadRequestsCount,
             'html' => $countWidget,
-            'toast' => $toastWidget,
+        ]);
+
+        return $response;
+    }
+
+    /**
+     * @Route("/count/invitations/unread", name="count_invitations_unread")
+     *
+     * @return JsonResponse
+     */
+    public function getUnreadInvitationsCount(Request $request)
+    {
+        /** @var Member $member */
+        $member = $this->getUser();
+
+        /** @var MessageRepository $messageRepository */
+        $messageRepository = $this->getDoctrine()->getRepository(Message::class);
+        $unreadInvitationsCount = $messageRepository->getUnreadInvitationsCount($member);
+
+        $countWidget = $this->renderView('widgets/invitationscount.html.twig', [
+            'invitationCount' => $unreadInvitationsCount,
+        ]);
+
+        $response = new JsonResponse();
+        $response->setData([
+            'html' => $countWidget,
         ]);
 
         return $response;

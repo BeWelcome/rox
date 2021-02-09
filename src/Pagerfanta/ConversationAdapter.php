@@ -3,7 +3,6 @@
 namespace App\Pagerfanta;
 
 use App\Entity\Member;
-use App\Entity\Message;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManager;
@@ -16,6 +15,8 @@ class ConversationAdapter implements AdapterInterface
     public const MESSAGES = 1;
     public const REQUESTS = 2;
     public const INVITATIONS = 4;
+    public const STARTED_BY_MEMBER = 8;
+    public const STARTED_BY_OTHER = 16;
 
     private Member $member;
     private Connection $connection;
@@ -40,7 +41,7 @@ class ConversationAdapter implements AdapterInterface
         $count = 0;
         try {
             $sql = $this->getSqlQuery(true);
-            $stmt = $this->connection->executeQuery($sql,[':memberId' => $this->member->getId()], [PDO::PARAM_INT]);
+            $stmt = $this->connection->executeQuery($sql, [':memberId' => $this->member->getId()], [PDO::PARAM_INT]);
             $row = $stmt->fetchAll(PDO::FETCH_OBJ);
             $count = ($row[0])->count;
         } catch (DBALException $e) {
@@ -74,6 +75,7 @@ class ConversationAdapter implements AdapterInterface
         $rsm->addMetaResult('m', 'IdParent', 'idParent');
         $rsm->addMetaResult('m', 'IdReceiver', 'idReceiver');
         $rsm->addMetaResult('m', 'IdSender', 'idSender');
+        $rsm->addMetaResult('m', 'initiator_id', 'initiator_id');
         $rsm->addMetaResult('m', 'subject_id', 'subject_id');
         $rsm->addMetaResult('m', 'request_id', 'request_id');
 
@@ -82,8 +84,6 @@ class ConversationAdapter implements AdapterInterface
         ;
 
         $conversations = $query->getResult();
-        // $stmt = $this->connection->executeQuery($sql, $params, $paramTypes);
-        // $results = $stmt->fetchAll(PDO::FETCH_OBJ);
 
         return $conversations;
     }
@@ -93,6 +93,8 @@ class ConversationAdapter implements AdapterInterface
         $messages = self::MESSAGES === ($this->types & self::MESSAGES);
         $requests = self::REQUESTS === ($this->types & self::REQUESTS);
         $invitations = self::INVITATIONS === ($this->types & self::INVITATIONS);
+        $showStartedByMember = self::STARTED_BY_MEMBER === ($this->types & self::STARTED_BY_MEMBER);
+        $showStartedByOther = self::STARTED_BY_OTHER === ($this->types & self::STARTED_BY_OTHER);
 
         $sql = null;
         if (!$messages && !$requests && !$invitations) {
@@ -120,13 +122,30 @@ class ConversationAdapter implements AdapterInterface
             $sql = $this->getAllConversations();
         }
 
+        $initiatorCondition = '';
+        if (!$showStartedByMember || !$showStartedByOther) {
+            if ($showStartedByMember) {
+                $initiatorCondition = '(m.initiator_id = :memberId)';
+                if ($showStartedByOther) {
+                    $initiatorCondition .= ' AND ';
+                }
+            }
+            if ($showStartedByOther) {
+                $initiatorCondition .= '(m.initiator_id <> :memberId)';
+            }
+            if ($showStartedByMember || $showStartedByOther) {
+                $initiatorCondition .= ' AND ';
+            }
+        }
+        $sql = str_replace('%initiator_condition%', $initiatorCondition, $sql);
+
         if ($this->unreadOnly) {
-            $condition = '(m.IdReceiver = :memberId) '
+            $unreadCondition = '(m.IdReceiver = :memberId) '
                 . 'AND (`m`.WhenFirstRead IS NULL OR `m`.WhenFirstRead = \'0000-00-00 00:00:00\')';
         } else {
-            $condition = '(m.IdReceiver = :memberId OR m.IdSender = :memberId)';
+            $unreadCondition = '(m.IdReceiver = :memberId OR m.IdSender = :memberId)';
         }
-        $sql = str_replace('%unread_condition%', $condition, $sql);
+        $sql = str_replace('%unread_condition%', $unreadCondition, $sql);
 
         if ($count) {
             $sql = str_replace('%select%', 'count(m.id) as count', $sql);
@@ -143,6 +162,7 @@ class ConversationAdapter implements AdapterInterface
             SELECT %select%
             FROM `messages` m
             WHERE
+                %initiator_condition%
                 %unread_condition%
                 AND `m`.`id` IN (
                     SELECT max(`m`.`id`)
@@ -158,6 +178,7 @@ class ConversationAdapter implements AdapterInterface
             SELECT %select%
             FROM `messages` m
             WHERE
+                %initiator_condition%
                 %unread_condition%
                 AND `m`.`request_id` IS NULL
                 AND `m`.`id` IN (
@@ -174,6 +195,7 @@ class ConversationAdapter implements AdapterInterface
             SELECT %select%
             FROM `messages` m, `request` r
             WHERE
+                %initiator_condition%
                 %unread_condition%
                 AND `m`.`request_id` = `r`.`id`
                 AND `r`.`invite_for_leg` IS NULL
@@ -192,6 +214,7 @@ class ConversationAdapter implements AdapterInterface
             FROM `messages` m
             LEFT JOIN `request` r ON `m`.`request_id` = `r`.`id`
             WHERE
+                %initiator_condition%
                 %unread_condition%
                 AND `r`.`invite_for_leg` IS NOT NULL
                 AND `m`.`id` IN (
@@ -209,6 +232,7 @@ class ConversationAdapter implements AdapterInterface
             FROM `messages` m
             LEFT JOIN `request` r ON `m`.`request_id` = `r`.`id`
             WHERE
+                %initiator_condition%
                 %unread_condition%
                 AND `r`.`invite_for_leg` IS NULL
                 AND `m`.`id` IN (
@@ -226,6 +250,7 @@ class ConversationAdapter implements AdapterInterface
             FROM `messages` m
             LEFT JOIN `request` r ON `m`.`request_id` = `r`.`id`
             WHERE
+                %initiator_condition%
                 %unread_condition%
                 AND (`m`.`request_id` IS NULL OR `r`.`invite_for_leg` IS NOT NULL)
                 AND `m`.`id` IN (
@@ -242,6 +267,7 @@ class ConversationAdapter implements AdapterInterface
             SELECT %select%
             FROM `messages` m
             WHERE
+                %initiator_condition%
                 %unread_condition%
                 AND `m`.`request_id` IS NOT NULL
                 AND `m`.`id` IN (
@@ -251,5 +277,4 @@ class ConversationAdapter implements AdapterInterface
                 )
          ';
     }
-
 }

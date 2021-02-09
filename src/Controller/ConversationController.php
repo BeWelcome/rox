@@ -27,6 +27,12 @@ class ConversationController extends AbstractController
         $invitations = '1' === $request->query->get('invitations', '0');
         $unreadOnly = '1' === $request->query->get('unread_only', '0');
 
+        $showStartedByMember = '1' === $request->query->get('startedByMe', '0');
+        $showStartedBySomeoneElse = '1' === $request->query->get('startedBySomeone', '0');
+        if (false === $showStartedByMember && false === $showStartedBySomeoneElse) {
+            $showStartedByMember = $showStartedBySomeoneElse = true;
+        }
+
         $show = 0;
         $showMessages = $showRequests = $showInvitations = false;
         if ($messages) {
@@ -44,6 +50,12 @@ class ConversationController extends AbstractController
         if (0 === $show) {
             $show = ConversationAdapter::MESSAGES + ConversationAdapter::REQUESTS + ConversationAdapter::INVITATIONS;
             $showMessages = $showRequests = $showInvitations = true;
+        }
+        if ($showStartedByMember) {
+            $show += ConversationAdapter::STARTED_BY_MEMBER;
+        }
+        if ($showStartedBySomeoneElse) {
+            $show += ConversationAdapter::STARTED_BY_OTHER;
         }
 
         $conversationsAdapter = new ConversationAdapter(
@@ -76,6 +88,8 @@ class ConversationController extends AbstractController
             'showRequests' => $showRequests,
             'showInvitations' => $showInvitations,
             'showUnreadOnly' => $unreadOnly,
+            'showStartedByMe' => $showStartedByMember,
+            'showStartedBySomeoneElse' => $showStartedBySomeoneElse,
         ]);
     }
 }

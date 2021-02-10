@@ -86,7 +86,6 @@ class HostingRequestType extends AbstractType
 
             $form->add('flexible', CheckboxType::class, $flexibleOptions);
             $form->add('numberOfTravellers', IntegerType::class, $numberOfTravellersOptions);
-
         });
     }
 
@@ -101,6 +100,7 @@ class HostingRequestType extends AbstractType
                 'reply_guest' => false,
                 'reply_host' => false,
                 'new_request' => false,
+                'invitation' => false,
             ])
         ;
     }

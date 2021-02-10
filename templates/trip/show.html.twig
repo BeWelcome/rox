@@ -1,34 +1,62 @@
-{% extends 'base.html.twig' %}
+{% extends 'trips.html.twig' %}
 
 {% block title %}
-    {{ 'Trip' | trans }}
+  {{ 'Trip' | trans }}
+{% endblock %}
+
+{% block stylesheets %}
+  {{ encore_entry_link_tags('tailwind') }}
 {% endblock %}
 
 {% block content %}
-    <h1>{{ 'trip.show.details'|trans|capitalize }}</h1>
-    <h2 class="u-text-56 u-leading-56 u-font-700 u-mb-24">{{ trip.summary }}</h2>
-    <p class="u-font-display">
-        Description:<br>
-        {{ trip.description }}
-    </p>
-    <p># travellers: {{ trip.countOfTravellers }}</p>
-    <p>Additional Info: {{ trip.additionalInfo|trans }}</p>
-    {% for subtrip in trip.subtrips %}
-        <span> <span class="h5">{{ 'trip.leg'|trans }}: {{ loop.index }}</span><br>
-            {{ subtrip.location.fullname }}<br>
-            {{ subtrip.arrival|format_date('medium') }}{% if subtrip.arrival != subtrip.departure %} - {{ subtrip.departure|format_date('medium') }}{% endif%}<br>
+  <section class="u-w-720 u-mt-24">
+    <!-- <h1>{{ 'trip.show.details'|trans|capitalize }}</h1> -->
+    <div class="u-flex u-mb-24">
+      <h1 class="u-text-56 u-leading-56 u-text-white u-font-700">{{ trip.summary }}</h1>
+      {% if app.user == trip.creator %}
+        <a href="{{ path('trip_edit', {'id': trip.id}) }}" class="o-rounded u-ml-24" arial-label="{{ 'trip.edit'|trans }}""title="{{ 'trip.edit'|trans }}">
+          <i class="fa fa-edit"></i>
+        </a>
+      {% endif %}
+    </div>
+    <p class="u-text-white u-font-display u-font-300 u-mb-24">{{ trip.description }}</p>
+    <div class="c-trip-card__icon-grid">
+      <i class="fa fa-users u-text-white u-text-16 u-justify-self-center u-self-center u-text-gray-20"></i>
+       <p class="u-text-white u-font-display" aria-label="{{ 'trip.count.of.travellers'|trans }}"><strong>{{ trip.countOfTravellers }}</strong> {{ 'trip.count.of.travellers'|trans }}</p>
+    </div>
+    <div class="c-trip-card__icon-grid u-mb-24">
+      <i class="fa fa-info-circle u-text-white u-text-16 u-justify-self-center u-self-center u-text-gray-20"></i>
+      <p class="u-text-white u-font-display" aria-label="{{ 'trip.additional.info'|trans }}">{{ trip.additionalInfo|trans }}</p>
+    </div>
+    
+    <ul>
+      {% for subtrip in trip.subtrips %}
+        <li class="l-show-trip"> 
+          <span class="o-number o-number--white u-relative u-ml-__12">{{ loop.index }}</span>
+          <div>
+            <p class="u-text-24 u-text-white u-font-display u-mb-8">{{ subtrip.location.fullname }}</p>
+            <p class="u-text-white u-font-display u-font-300">{{ subtrip.arrival|format_date('medium') }}{% if subtrip.arrival != subtrip.departure %} - {{ subtrip.departure|format_date('medium') }}{% endif%}</p>
+          </div>
+          <div>
             {% if constant('App\\Doctrine\\SubtripOptionsType::MEET_LOCALS') in subtrip.options %}
-                {{ 'trip.option.meet.locals'|trans }}
+              <div class="c-trip-card__icon-grid u-mb-8">
+                <i class="fa fa-check u-text-white u-text-16 u-justify-self-center u-self-center u-text-gray-20"></i>
+                <p class="u-text-white u-font-display" aria-label="{{ 'trip.option.meet.locals'|trans }}">{{ 'trip.option.meet.locals'|trans }}</p>
+              </div>
             {% endif %}
-            {% if constant('App\\Doctrine\\SubtripOptionsType::MEET_LOCALS') in subtrip.options and constant('App\\Doctrine\\SubtripOptionsType::LOOKING_FOR_HOST') in subtrip.options %}
-                ,
-            {% endif %}
+
             {% if constant('App\\Doctrine\\SubtripOptionsType::LOOKING_FOR_HOST') in subtrip.options %}
-                {{ 'trip.option.looking.for.host'|trans }}
+              <div class="c-trip-card__icon-grid">
+                <i class="fa fa-check u-text-white u-text-16 u-justify-self-center u-self-center u-text-gray-20"></i>
+                <p class="u-text-white u-font-display" aria-label="{{ 'trip.option.meet.locals'|trans }}">{{ 'trip.option.looking.for.host'|trans }}</p>
+              </div>
             {% endif %}
-        </p>
+          </div>
+        </li>
     {% endfor %}
-    {% if app.user == trip.creator %}
-        <p><a href="{{ path('trip_edit', {'id': trip.id}) }}" class="btn btn-primary pull-right">{{ 'trip.edit'|trans }}</a></p>
-    {% endif %}
+    </ul>
+
+    
+  </section>
 {% endblock content %}
+

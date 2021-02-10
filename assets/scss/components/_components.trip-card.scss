@@ -3,7 +3,7 @@
 	grid-template-columns: 1fr 104px;
 	margin-bottom: 16px;
 	padding-bottom: 16px;
-	border-bottom: 1px solid #a8a8a8;
+	border-bottom: 1px solid var(--gray-30);
 }
 
 @media (max-width: 900px) {

@@ -1,0 +1,41 @@
+/* ==========================================================================
+   #NUMBER
+   ========================================================================== */
+
+/**
+ * Number in circle. Used for enumerations
+ */
+
+.o-number {
+  width: 24px;
+  height: 24px;
+  background-color: var(--gray-80);
+  border-radius: 100%;
+  color: var(--white);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  mix-blend-mode: multiply;
+  font-size: 18px;
+  font-family: Signika;
+}
+
+
+
+
+
+
+/* Color versions
+   ========================================================================== */
+
+/**
+ * Secondary Button
+ */
+
+ .o-number--white {
+  background-color: var(--white);
+  color: var(--gray-60);
+}
+
+
+

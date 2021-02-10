@@ -1,0 +1,13 @@
+.l-show-trip {
+	display: grid;
+	grid-template-columns: 24px 1fr 1fr;
+	grid-gap: 16px;
+	position: relative;
+	border-left: 1px solid var(--white);
+	margin-left: 12px;
+	padding-bottom: 32px;
+}
+
+.l-show-trip:last-child {
+	border-left: initial;
+}

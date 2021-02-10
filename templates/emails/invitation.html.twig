@@ -10,7 +10,7 @@
 
         <p>{{ 'or' | trans }}</p>
 
-        <button class="expand" href="{{ url('invitation_reply', { 'id': message.id, 'leg': message.request.invitedForLeg.id }) }}">{{ 'reply' | trans }}</button>
+        <button class="expand" href="{{ url('invitation_reply', { 'id': message.id, 'leg': message.request.inviteForLeg.id }) }}">{{ 'reply' | trans }}</button>
     </center>
 {% endblock message %}
 

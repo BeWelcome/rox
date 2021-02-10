@@ -5,10 +5,12 @@ namespace App\Controller;
 use App\Entity\HostingRequest;
 use App\Entity\Member;
 use App\Entity\Message;
+use App\Entity\Subject;
 use App\Entity\Subtrip;
 use App\Form\HostingRequestGuest;
 use App\Form\InvitationGuest;
 use App\Form\InvitationHost;
+use App\Form\InvitationType;
 use DateTime;
 use Exception;
 use InvalidArgumentException;
@@ -18,6 +20,7 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class InvitationController extends BaseHostingRequestAndInvitationController
 {
@@ -26,7 +29,7 @@ class InvitationController extends BaseHostingRequestAndInvitationController
      *
      * @throws Exception
      */
-    public function newInvitationT(Request $request, Subtrip $leg): Response
+    public function newInvitation(Request $request, Subtrip $leg, TranslatorInterface $translator): Response
     {
         /** @var Member $member */
         $member = $this->getUser();
@@ -45,8 +48,8 @@ class InvitationController extends BaseHostingRequestAndInvitationController
         if (
             $this->messageModel->hasRequestLimitExceeded(
                 $member,
-                $this->getParameter('new_members_messages_per_hour'),
-                $this->getParameter('new_members_messages_per_day')
+                $this->getParameter('new_members_requests_per_hour'),
+                $this->getParameter('new_members_requests_per_day')
             )
         ) {
             $this->addTranslatedFlash('error', 'flash.request.limit');
@@ -55,21 +58,33 @@ class InvitationController extends BaseHostingRequestAndInvitationController
             return $this->redirect($referrer);
         }
 
+        $subject = new Subject();
+        $subjectText = $translator->trans(
+            'invitation',
+            [],
+            null,
+            $guest->getPreferredLanguage()->getShortcode()
+        );
+        $subjectText .= ' - ' . $leg->getTrip()->getSummary() . ' - ';
+        $subjectText .= $leg->getLocation()->getName();
+        $subject->setSubject($subjectText);
+
         $hostingRequest = new HostingRequest();
         $hostingRequest->setArrival($leg->getArrival());
         $hostingRequest->setDeparture($leg->getDeparture());
         $hostingRequest->setNumberOfTravellers($leg->getTrip()->getCountOfTravellers());
 
         $invitation = new Message();
+        $invitation->setSubject($subject);
         $invitation->setRequest($hostingRequest);
 
-        $requestForm = $this->createForm(HostingRequestGuest::class, $invitation);
-        $requestForm->handleRequest($request);
+        $invitationForm = $this->createForm(InvitationType::class, $invitation);
+        $invitationForm->handleRequest($request);
 
-        if ($requestForm->isSubmitted() && $requestForm->isValid()) {
+        if ($invitationForm->isSubmitted() && $invitationForm->isValid()) {
             // Write request to database after doing some checks
             /** @var Message $invitation */
-            $invitation = $this->getMessageFromData($requestForm, $member, $guest);
+            $invitation = $this->getMessageFromData($invitationForm, $member, $guest);
             $invitation->getRequest()->setInviteForLeg($leg);
 
             $em = $this->getDoctrine()->getManager();
@@ -88,9 +103,8 @@ class InvitationController extends BaseHostingRequestAndInvitationController
         }
 
         return $this->render('invitation/invite.html.twig', [
-            'guest' => $guest,
-            'host' => $member,
-            'form' => $requestForm->createView(),
+            'leg' => $leg,
+            'form' => $invitationForm->createView(),
         ]);
     }
 
@@ -300,7 +314,7 @@ class InvitationController extends BaseHostingRequestAndInvitationController
     {
         $subject = $request->getSubject()->getSubject();
 
-        $this->messageModel->sendRequestNotification($guest, $host, $host, $request, $subject, 'invitation', false);
+        $this->messageModel->sendRequestNotification($host, $guest, $host, $request, $subject, 'invitation', false);
     }
 
     /**

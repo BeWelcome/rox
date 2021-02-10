@@ -196,6 +196,7 @@ module.exports = {
       '36': '36px',
       '40': '40px',
       '48': '48px',
+      '60': '60px',
     },
     listStyleType: {
       none: 'none',

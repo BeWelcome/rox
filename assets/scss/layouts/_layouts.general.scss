@@ -8,6 +8,21 @@
 	padding-bottom: 32px;
 }
 
+@media (max-width: 900px) {
+  .l-show-trip {
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 16px;
+  }
+}
+
 .l-show-trip:last-child {
 	border-left: initial;
 }
+
+@media (max-width: 900px) {
+  .l-show-trip:last-child {
+		border-left: 1px solid var(--white);
+	}
+}
+

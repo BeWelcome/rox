@@ -215,8 +215,14 @@
                                 class="d-none d-sm-inline">&nbsp;{{ member.Username }}</span></a>
                     <ul id="member_menu" class="dropdown-menu" role="menu">
                         <li class="text-right"><a
-                                    href="{{ path( 'members_profile' , { username: member.Username } ) }}"
-                                    class="dropdown-item">{{ 'profile' | trans }}</a></li>
+                                href="{{ path('conversations') }}"
+                                class="dropdown-item">{{ 'conversations' | trans }}</a></li>
+                        <li class="text-right"><a
+                                href="{{ path('conversations_b') }}"
+                                class="dropdown-item">{{ 'conversations_b' | trans }}</a></li>
+                        <li class="text-right"><a
+                                href="{{ path( 'members_profile' , { username: member.Username } ) }}"
+                                class="dropdown-item">{{ 'profile' | trans }}</a></li>
                         <li class="text-right"><a href="{{ path('edit_my_profile') }}"
                                                   class="dropdown-item">{{ 'editmyprofile' | trans }}</a></li>
                         <li class="text-right"><a href="{{ path('my_preferences') }}"

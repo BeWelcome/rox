@@ -16,6 +16,7 @@ class ConversationController extends AbstractController
 {
     /**
      * @Route("/conversations/{page}", name="conversations")
+     * @Route("/conversations_b/{page}", name="conversations_b")
      */
     public function showConversations(Request $request, $page = 1): Response
     {
@@ -81,7 +82,13 @@ class ConversationController extends AbstractController
         ]);
         $form->handleRequest($request);
 
-        return $this->render('message/conversations.html.twig', [
+        if (false === strpos($request->getPathInfo(), '_b')) {
+            $template = 'message/conversations.html.twig';
+        } else {
+            $template = 'message/conversations_b.html.twig';
+        }
+
+        return $this->render($template, [
             'form' => $form->createView(),
             'conversations' => $conversations,
             'showMessages' => $showMessages,

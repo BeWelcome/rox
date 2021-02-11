@@ -34,40 +34,34 @@
 
     <div class="row mb-1">
         <div class="col-12 col-sm-6 col-md-4">
-            <div class="row">
-
-                <div class="o-form-group">
-                    {{ form_label(form.request.duration) }}
-                    <div class="input-group date" id="arrival" data-target-input="nearest">
-                        <div class="input-group-prepend" data-target="#arrival" data-toggle="datetimepicker">
-                        <span class="input-group-text">
-                            <i class="fa fa-calendar"></i>
-                        </span>
-                        </div>
-                        {{ form_widget(form.request.duration, {'attr': { 'class': 'light-picker'}}) }}
+            <div class="o-form-group">
+                {{ form_label(form.request.duration) }}
+                <div class="input-group date" id="arrival" data-target-input="nearest">
+                    <div class="input-group-prepend" data-target="#arrival" data-toggle="datetimepicker">
+                    <span class="input-group-text">
+                        <i class="fa fa-calendar"></i>
+                    </span>
                     </div>
-                    <small id="duration-original" class="text-muted d-none">
-                        {{ 'original' | trans}}:
-                        {{ form.request.arrival.vars.value| format_date('full') }} -
-                        {{ form.request.departure.vars.value| format_date('full') }}
-                    </small>
-                    {{ form_row(form.request.arrival) }}
-                    {{ form_row(form.request.departure) }}
-                    {% if current.request.flexible %}
-                        <p class="text-muted">{{ 'request.host.suggest.dates'|trans }}</p>
-                    {% else %}
-                        <p class="text-muted">{{ 'request.host.fixed.dates'|trans }}</p>
-                    {% endif %}
+                    {{ form_widget(form.request.duration, {'attr': { 'class': 'light-picker'}}) }}
                 </div>
-                <div class="o-form-group col-12">
-                    {{ form_widget(form.request.flexible) }}
-                    {{ form_label(form.request.flexible) }}
-                </div>
-                <div class="o-form-group col-12">
-                    {{ form_label(form.request.numberOfTravellers) }}
-                    {{ form_widget(form.request.numberOfTravellers) }}
-                </div>
-            </div>
+                <small id="duration-original" class="text-muted d-none">
+                    {{ 'original' | trans}}:
+                    {{ form.request.arrival.vars.value| format_date('full') }} -
+                    {{ form.request.departure.vars.value| format_date('full') }}
+                </small>
+                {{ form_row(form.request.arrival) }}
+                {{ form_row(form.request.departure) }}
+                {% if current.request.flexible %}
+                    <p class="text-muted">{{ 'request.host.suggest.dates'|trans }}</p>
+                {% else %}
+                    <p class="text-muted">{{ 'request.host.fixed.dates'|trans }}</p>
+                {% endif %}
+                {{ form_widget(form.request.flexible) }}
+                {{ form_label(form.request.flexible) }}
+                {{ form_label(form.request.numberOfTravellers) }}
+                {{ form_widget(form.request.numberOfTravellers) }}
+        </div>
+        </div>
         <div class="col-12 col-md-8">
             {{ form_row(form.message) }}
             {% if current.sender.Username == app.user.Username %}

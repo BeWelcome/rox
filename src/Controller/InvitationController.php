@@ -7,16 +7,13 @@ use App\Entity\Member;
 use App\Entity\Message;
 use App\Entity\Subject;
 use App\Entity\Subtrip;
-use App\Form\HostingRequestGuest;
 use App\Form\InvitationGuest;
 use App\Form\InvitationHost;
 use App\Form\InvitationType;
-use DateTime;
 use Exception;
 use InvalidArgumentException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\Form\Form;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -113,21 +110,21 @@ class InvitationController extends BaseHostingRequestAndInvitationController
      *
      * @throws InvalidArgumentException
      */
-    public function replyToInvitation(Message $message, Subtrip $leg): Response
+    public function replyToInvitation(Message $invitation, Subtrip $leg): Response
     {
-        if (!$this->isMessageOfMember($message)) {
+        if (!$this->isMessageOfMember($invitation)) {
             throw $this->createAccessDeniedException('Not your message/hosting request');
         }
 
-        if (!$this->isInvitation($message)) {
-            return $this->redirectToMessageReply($message);
+        if (!$this->isInvitation($invitation)) {
+            return $this->redirectToMessageReply($invitation);
         }
 
-        $thread = $this->messageModel->getThreadForMessage($message);
+        $thread = $this->messageModel->getThreadForMessage($invitation);
         $current = $thread[0];
 
         // Always reply to the last item in the thread
-        if ($message->getId() !== $current->getId()) {
+        if ($invitation->getId() !== $current->getId()) {
             return $this->redirectToRoute('invitation_reply', [
                 'id' => $current->getId(),
                 'leg' => $leg->getId(),
@@ -136,18 +133,17 @@ class InvitationController extends BaseHostingRequestAndInvitationController
 
         // determine if guest or host reply to a request
         $member = $this->getUser();
-        $first = $thread[\count($thread) - 1];
-        $parentId = ($message->getParent()) ? $message->getParent()->getId() : $message->getId();
-        if ($member === $first->getSender()) {
+        $parentId = ($invitation->getParent()) ? $invitation->getParent()->getId() : $invitation->getId();
+        if ($member === $invitation->getInitiator()) {
             return $this->redirectToRoute('invitation_reply_host', [
-                'id' => $message->getId(),
+                'id' => $invitation->getId(),
                 'leg' => $leg->getId(),
                 'parentId' => $parentId,
             ]);
         }
 
         return $this->redirectToRoute('invitation_reply_guest', [
-            'id' => $message->getId(),
+            'id' => $invitation->getId(),
             'leg' => $leg->getId(),
             'parentId' => $parentId,
         ]);
@@ -161,7 +157,7 @@ class InvitationController extends BaseHostingRequestAndInvitationController
      *
      * @SuppressWarnings(PHPMD.UnusedLocalVariable)
      */
-    public function invitationGuestReply(
+    public function guestReplyToInvitation(
         Request $request,
         Message $invitation,
         Subtrip $leg,
@@ -171,20 +167,19 @@ class InvitationController extends BaseHostingRequestAndInvitationController
             throw $this->createAccessDeniedException('Not your message/hosting request');
         }
 
-        /** @var Message $last */
-        /** @var Member $guest */
-        /** @var Member $host */
-        list($thread, , $last, $guest, $host) =
+        $host = $invitation->getInitiator();
+        $guest = ($host === $invitation->getSender()) ? $invitation->getReceiver() : $invitation->getSender();
+        list($thread) =
             $this->messageModel->getThreadInformationForMessage($invitation);
 
-        if ($this->checkRequestExpired($last)) {
+        if ($this->checkRequestExpired($invitation)) {
             $this->addExpiredFlash($host);
 
-            return $this->redirectToRoute('hosting_request_show', ['id' => $last->getId()]);
+            return $this->redirectToRoute('hosting_request_show', ['id' => $invitation->getId()]);
         }
 
         // keep all information from current hosting request except the message text
-        $invitation = $this->getRequestClone($last);
+        $invitation = $this->getRequestClone($invitation);
 
         // A reply consists of a new message and maybe a change of the status of the hosting request
         // Additionally the user might change the dates of the request or cancel the request altogether
@@ -236,7 +231,7 @@ class InvitationController extends BaseHostingRequestAndInvitationController
      *
      * @SuppressWarnings(PHPMD.UnusedLocalVariable)
      */
-    public function invitationHostReply(
+    public function hostReplyToInvitation(
         Request $request,
         Message $invitation,
         Subtrip $leg,
@@ -244,18 +239,18 @@ class InvitationController extends BaseHostingRequestAndInvitationController
     ): Response {
         /** @var Message $last */
         /** @var Member $guest */
-        /** @var Member $host */
-        list($thread, , $last, $guest, $host) =
-            $this->messageModel->getThreadInformationForMessage($invitation);
+        $host = $invitation->getInitiator();
+        $guest = ($host === $invitation->getSender()) ? $invitation->getReceiver() : $invitation->getSender();
+        list($thread) = $this->messageModel->getThreadInformationForMessage($invitation);
 
-        if ($this->checkRequestExpired($last)) {
+        if ($this->checkRequestExpired($invitation)) {
             $this->addExpiredFlash($guest);
 
             return $this->redirectToRoute('hosting_request_show', ['id' => $last->getId()]);
         }
 
         // keep all information from current hosting request except the message text
-        $invitation = $this->getRequestClone($last);
+        $invitation = $this->getRequestClone($invitation);
 
         /** @var Form $requestForm */
         $requestForm = $this->createForm(InvitationHost::class, $invitation);
@@ -264,6 +259,7 @@ class InvitationController extends BaseHostingRequestAndInvitationController
         if ($requestForm->isSubmitted() && $requestForm->isValid()) {
             $realParent = $this->getParent($parent);
 
+            // Switch $guest and $host for persist request as the thread is started by the potential host.
             $newRequest = $this->persistRequest($requestForm, $realParent, $host, $guest);
 
             $subject = $this->getSubjectForReply($newRequest);

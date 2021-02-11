@@ -80,6 +80,66 @@ class CheckerController extends AbstractController
     }
 
     /**
+     * @Route("/admin/spam/messages/processed", name="admin_spam_messages_processed")
+     *
+     * @throws AccessDeniedException
+     *
+     * @return Response
+     */
+    public function showProcessedMessages(Request $request, MessageModel $messageModel)
+    {
+        if (
+            !$this->isGranted(Member::ROLE_ADMIN_CHECKER)
+            && !$this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
+        ) {
+            throw $this->createAccessDeniedException('You need to have Checker right to access this.');
+        }
+
+        $page = $request->query->get('page', 1);
+        $limit = $request->query->get('limit', 10);
+
+        $processedMessages = $messageModel->getProcessedReportedMessages($page, $limit);
+        $messageIds = [];
+        foreach ($processedMessages->getIterator() as $key => $val) {
+            $messageIds[$key] = $val->getId();
+        }
+
+        $form = $this->createForm(SpamMessagesIndexFormType::class, null, [
+            'ids' => $messageIds,
+        ]);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
+            $spamMessageIds = $data['spamMessages'];
+            $noSpamMessageIds = $data['noSpamMessages'];
+            $ids = array_intersect($spamMessageIds, $noSpamMessageIds);
+            if (!empty($ids)) {
+                $form->addError(new FormError('Spam and no spam are mutually exclusive'));
+            } else {
+                if (!empty($spamMessageIds)) {
+                    $messageModel->markAsSpamByChecker($spamMessageIds);
+                }
+                if (!empty($noSpamMessageIds)) {
+                    $messageModel->unmarkAsSpamByChecker($noSpamMessageIds);
+                }
+                $this->addFlash('notice', 'Set spam status');
+
+                return $this->redirectToRoute('admin_spam_messages');
+            }
+        }
+
+        return $this->render('admin/checker/messages.html.twig', [
+            'form' => $form->createView(),
+            'reported' => $processedMessages,
+            'submenu' => [
+                'active' => 'processed_messages',
+                'items' => $this->getSubmenuItems(),
+            ],
+        ]);
+    }
+
+    /**
      * @Route("/admin/spam/activities", name="admin_spam_activities")
      *
      * @throws AccessDeniedException
@@ -189,6 +249,10 @@ class CheckerController extends AbstractController
             'messages' => [
                 'key' => 'reported.messages',
                 'url' => $this->generateUrl('admin_spam_messages'),
+            ],
+            'processed_messages' => [
+                'key' => 'reported.messages.processed',
+                'url' => $this->generateUrl('admin_spam_messages_processed'),
             ],
             'activities' => [
                 'key' => 'activities',

@@ -13,6 +13,7 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
+use Pagerfanta\Doctrine\ORM\QueryAdapter;
 use Pagerfanta\Pagerfanta;
 
 class MessageRepository extends EntityRepository
@@ -98,6 +99,25 @@ class MessageRepository extends EntityRepository
     public function findReportedMessages($page = 1, $items = 10)
     {
         $queryBuilder = $this->queryReportedMessages();
+        $adapter = new DoctrineORMAdapter($queryBuilder);
+        $paginator = new Pagerfanta($adapter);
+        $paginator->setMaxPerPage($items);
+        $paginator->setCurrentPage($page);
+
+        return $paginator;
+    }
+
+    /**
+     * Returns a Pagerfanta object encapsulating the matching paginated activities.
+     *
+     * @param int $page
+     * @param int $items
+     *
+     * @return Pagerfanta
+     */
+    public function findProcessedReportedMessages($page = 1, $items = 10)
+    {
+        $queryBuilder = $this->queryProcessedReportedMessages();
         $adapter = new DoctrineORMAdapter($queryBuilder);
         $paginator = new Pagerfanta($adapter);
         $paginator->setMaxPerPage($items);
@@ -362,7 +382,25 @@ class MessageRepository extends EntityRepository
             ->where('m.status = :status')
             ->setParameter('status', MessageStatusType::CHECK)
             ->andWhere('m.spaminfo LIKE :spaminfo')
-            ->setParameter('spaminfo', SpamInfoType::MEMBER_SAYS_SPAM);
+            ->setParameter('spaminfo', '%' . SpamInfoType::MEMBER_SAYS_SPAM . '%')
+        ;
+
+        return $qb;
+    }
+
+    /**
+     * @return QueryBuilder
+     */
+    private function queryProcessedReportedMessages()
+    {
+        $qb = $this->createQueryBuilder('m');
+        $qb
+            ->where('m.status = :status')
+            ->setParameter('status', MessageStatusType::CHECKED)
+            ->andWhere('m.spaminfo LIKE :spaminfo')
+            ->setParameter('spaminfo', '%' . SpamInfoType::CHECKER_SAYS_SPAM . '%')
+            ->orderBy('m.created', 'DESC')
+        ;
 
         return $qb;
     }

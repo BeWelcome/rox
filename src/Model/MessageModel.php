@@ -243,6 +243,20 @@ class MessageModel
     }
 
     /**
+     * @param int $page
+     * @param int $limit
+     *
+     * @return Pagerfanta
+     */
+    public function getProcessedReportedMessages($page = 1, $limit = 10)
+    {
+        /** @var MessageRepository $repository */
+        $repository = $this->getManager()->getRepository(Message::class);
+
+        return $repository->findProcessedReportedMessages($page, $limit);
+    }
+
+    /**
      * @param $member
      * @param $folder
      * @param $sort

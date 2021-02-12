@@ -11,20 +11,7 @@
     <meta name="description" content="{{ 'default_meta_description' | trans }}"/>
     <meta name="keywords" content="{{ 'default_meta_keyword' | trans }}"/>
 
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website">
-    <meta property="og:site" content="BeWelcome">
-    <meta property="og:url" content="{{ app.request.getSchemeAndHttpHost() }}">
-    <meta property="og:title" content="{{ 'home.headline.bewelcome.cultural' | trans }}">
-    <meta property="og:description" content="{{ 'home.preview.description'|trans|url_encode }}">
-    <meta property="og:image" content="{{ absolute_url(asset('images/webpreview.png')) }}">
-
-    <!-- Twitter -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:url" content="{{ app.request.getSchemeAndHttpHost() }}">
-    <meta name="twitter:title" content="BeWelcome - {{ 'home.headline.bewelcome.cultural' | trans }}">
-    <meta name="twitter:description" content="{{ 'home.preview.description'|trans|url_encode }}">
-    <meta name="twitter:image" content="{{ absolute_url(asset('images/webpreview.png')) }}">
+    {% include 'webpreview.html.twig' %}
 
     {{ encore_entry_link_tags('bewelcome') }}
     {{ encore_entry_link_tags('floating_labels') }}

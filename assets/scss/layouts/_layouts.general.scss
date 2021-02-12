@@ -1,11 +1,11 @@
 .l-show-trip {
-	display: grid;
-	grid-template-columns: 24px 1fr 1fr;
-	grid-gap: 16px;
-	position: relative;
-	border-left: 1px solid var(--white);
-	margin-left: 12px;
-	padding-bottom: 32px;
+  display: grid;
+  grid-template-columns: 24px 1fr 1fr;
+  grid-gap: 16px;
+  position: relative;
+  border-left: 1px solid var(--white);
+  margin-left: 12px;
+  padding-bottom: 32px;
 }
 
 @media (max-width: 900px) {
@@ -17,12 +17,33 @@
 }
 
 .l-show-trip:last-child {
-	border-left: initial;
+  border-left: initial;
 }
 
 @media (max-width: 900px) {
   .l-show-trip:last-child {
-		border-left: 1px solid var(--white);
-	}
+    border-left: 1px solid var(--white);
+  }
 }
 
+
+
+
+.l-trip-legs {
+  display: grid;
+  grid-template-columns: 72px 1fr 104px;
+  width: 840px;
+  grid-gap: 32px;
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--gray-30);
+}
+
+@media (max-width: 900px) {
+  .l-trip-legs {
+    width: initial;
+    grid-gap: initial;
+    display: flex;
+    flex-direction: column;
+  }
+}

@@ -62,6 +62,16 @@
     {% if displayname %}<br><small>{{ macros.profilelink(username) }}</small>{% endif %}
 {% endmacro %}
 
+{# \new avatar for trip pages #}
+{% macro newavatarstack(username, size, right, displayname = true) %}
+    {% import _self as macros %}
+        {% set img %}<img class="o-avatar__img" src="{{ path( 'avatar', { 'username': username , 'size': size }) }}" title="{{ username }}" alt="{{ 'profile' | trans }}: {{ username }}">{% endset %}
+    <div class="o-avatar__img-wrapper">{{ macros.profilelink(username, img) }}</div>
+    {% if displayname %}
+    <p class="o-avatar__name">{{ macros.profilelink(username) }}</p>
+    {% endif %}
+{% endmacro %}
+
 {% macro profilelink(username, displayname = false, classes = false, newpage = false) %}
 <a href="{{ path( 'members_profile', { 'username': username }) }}"
    {% if classes %}class="{{ classes }}" {% endif %}

@@ -27,11 +27,11 @@
        class="c-trips__info">
     <div class="u-w-full u-mb-8 md:u-width-auto md:u-mb-0">
       {{ form_widget(form.location.name, {'attr': { 'class': 'o-input--xl o-input--no-borders o-input--round-left o-input--translucid search-picker js-search-picker', 'placeholder': 'Name', 'aria-label':'Name'  }}) }}
-      {{ form_errors(form.location.name) }}
+      <div class="u-absolute">{{ form_errors(form.location.name) }}</div>
     </div>
     <div class="u-w-full md:u-width-auto">
       {{ form_widget(form.duration, {'attr': { 'class': 'o-input--xl o-input--no-borders o-input--round-right o-input--translucid duration js-duration', 'placeholder': 'Duration', 'aria-label':'Duration' }}) }}
-      {{ form_errors(form.duration) }}
+      <div class="u-absolute">{{ form_errors(form.duration) }}</div>
     </div>
     <button class="btn-remove js-btn-remove o-rounded o-rounded--l u-justify-self-center c-trips__info-btn-grid "
             data-related="{{ name }}">
@@ -60,11 +60,11 @@
   <div>
     <div class="u-mb-24 u-relative">
       {{ form_widget(form.summary, {'attr': { 'class': 'o-input--white o-input--no-border-on-hover o-input--white-xl', 'aria-label':'Title'}}) }}
-      {{ form_errors(form.summary) }}
+      <div class="u-absolute">{{ form_errors(form.summary) }}</div>
     </div>
     <div class="u-relative u-mb-8 md:u-mb-24">
       {{ form_widget(form.description, { 'attr': {  'class': 'o-input--white o-input--no-border-on-hover', 'rows': 5, 'aria-label':'Description' }}) }}
-      {{ form_errors(form.description) }}
+      <div class="u-absolute">{{ form_errors(form.description) }}</div>
     </div>
     <div class="u-flex u-flex-col md:u-grid md:u-grid-cols-3">
       <div class="u-flex u-flex-col md:u-flex-row u-col-span-2 u-mb-24">

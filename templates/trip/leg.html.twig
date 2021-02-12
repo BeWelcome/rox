@@ -1,30 +1,38 @@
 {% import 'macros.twig' as macros %}
 
-<div class="d-flex {% if leg.invitedBy == app.user %}bg-light{% endif %}">
-    <div class="p-2">{{ macros.avatarstack(leg.trip.creator.username, 50, "text-nowrap") }}</div>
-    <div class="p-2 flex-grow-1">
-        <a class="text-truncate" href="{{ path('trip_show', {'id': leg.trip.id}) }}">{{ leg.trip.summary }}</a><br>
-        {{ leg.location.name }}, {{ leg.trip.countOfTravellers }}
-        {% if constant('App\\Doctrine\\TripAdditionalInfoType::NONE') != leg.trip.additionalInfo %}
-            {{ leg.trip.additionalInfo|trans }}
-        {% endif %}<br>
-        {{ leg.arrival|format_date('medium') }}
-        {% if leg.arrival != leg.departure %} - {{ leg.departure|format_date('medium') }}{% endif %}
+<div class="l-trip-legs {% if leg.invitedBy == app.user %}bg-light{% endif %}">
+  <div class="o-avatar o-avatar--white u-mb-16 md:u-mb-0">{{ macros.newavatarstack(leg.trip.creator.username, 72, "o-prueba") }}</div>
+  <div class="u-mb-24 md:u-mb-0">
+    <a class="u-text-24 u-leading-24 u-text-white u-ellipsis u-font-display u-block u-mb-4" href="{{ path('trip_show', {'id': leg.trip.id}) }}">{{ leg.trip.summary }}</a>
+    <p class="u-text-white u-font-display u-font-700">{{ leg.location.name }}, <span class="u-font-300">{{ leg.arrival|format_date('medium') }}{% if leg.arrival != leg.departure %} - {{ leg.departure|format_date('medium') }}{% endif %}</span></p>
+    <p class="u-text-white u-font-display u-italic">{{ leg.trip.description }}</p>
+    <div class="u-flex">
+      <div class="c-trip-card__icon-grid u-mr-16">
+        <i class="fa fa-users u-text-white u-text-16 u-justify-self-center u-self-center u-text-gray-20"></i>
+         <p class="u-text-white u-font-display" aria-label="{{ 'leg.trip.count.of.travellers'|trans }}"><strong>{{ leg.trip.countOfTravellers }}</strong></p>
+      </div>
+      {% if constant('App\\Doctrine\\TripAdditionalInfoType::NONE') != leg.trip.additionalInfo %}
+      <div class="c-trip-card__icon-grid">
+        <i class="fa fa-info-circle u-text-white u-text-16 u-justify-self-center u-self-center u-text-gray-20"></i>
+        <p class="u-text-white u-font-display" aria-label="{{ 'leg.trip.additional.info'|trans }}">{{ leg.trip.additionalInfo|trans }}</p>
+      </div>
+      {% endif %}
     </div>
-    <div class="p-2">
-        {% if constant('App\\Doctrine\\SubtripOptionsType::MEET_LOCALS') in leg.options %}
-            <a class="btn btn-sm btn-primary mb-1{% if leg.invitedBy == app.user %} disabled{% endif %}"
-               href="{{ path('message_new', { 'username': leg.trip.creator.username }) }}">
-                <i class="fa fa-fw fa-envelope"></i>
-            </a><br>
-        {% endif %}
-        {% if constant('App\\Doctrine\\SubtripOptionsType::LOOKING_FOR_HOST') in leg.options %}
-            <a class="btn btn-sm btn-primary{% if leg.invitedBy == app.user %} disabled{% endif %}"
-                href="{{ path('hosting_invitation', {
-                    'leg': leg.id
-                }) }}">
-                <i class="fa fa-fw fa-house-user"></i>
-            </a>
-        {% endif %}
-    </div>
+  </div>
+  <div class="u-flex md:u-justify-between u-items-start md:u-mt-24">
+    {% if constant('App\\Doctrine\\SubtripOptionsType::MEET_LOCALS') in leg.options %}
+      <a class="o-rounded o-rounded--l u-mr-8 md:u-mr-0{% if leg.invitedBy == app.user %} o-rounded--disabled{% endif %}"
+         href="{{ path('message_new', { 'username': leg.trip.creator.username }) }}">
+          <i class="fa fa-fw fa-envelope"></i>
+      </a>
+    {% endif %}
+    {% if constant('App\\Doctrine\\SubtripOptionsType::LOOKING_FOR_HOST') in leg.options %}
+      <a class="o-rounded o-rounded--l{% if leg.invitedBy == app.user %} o-rounded--disabled{% endif %}"
+          href="{{ path('hosting_invitation', {
+              'leg': leg.id
+          }) }}">
+          <i class="fa fa-fw fa-house-user"></i>
+      </a>
+    {% endif %}
+  </div>
 </div>

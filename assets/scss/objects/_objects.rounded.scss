@@ -108,6 +108,27 @@
 
 
 
+/**
+ * Geen
+ */
+
+.o-rounded--geen {
+  background-color: #ddd;
+}
+
+.o-rounded--gray:hover {
+  background-color: grey;
+}
+
+
+
+
+
+
+
+
+
+
 /* States
    ========================================================================== */
 
@@ -116,7 +137,7 @@
  */
 
 .o-rounded--disabled {
-  background-color: #cadef7;
+  opacity: 0.4;
   cursor: pointer;
   pointer-events: none;
 }

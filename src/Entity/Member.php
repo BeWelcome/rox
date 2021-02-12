@@ -1731,7 +1731,7 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
         if ($this->isPrivileged()) {
             $cost = 13;
         }
-        $this->password = password_hash($password, PASSWORD_DEFAULT, ['cost' => $cost]);
+        $this->password = password_hash($password, \PASSWORD_DEFAULT, ['cost' => $cost]);
 
         return $this;
     }

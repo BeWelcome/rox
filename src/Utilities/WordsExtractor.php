@@ -152,7 +152,7 @@ class WordsExtractor extends PhpExtractor
      */
     protected function canBeExtracted(string $file)
     {
-        return $this->isFile($file) && 'php' === pathinfo($file, PATHINFO_EXTENSION);
+        return $this->isFile($file) && 'php' === pathinfo($file, \PATHINFO_EXTENSION);
     }
 
     /**
@@ -172,7 +172,7 @@ class WordsExtractor extends PhpExtractor
     {
         for (; $tokenIterator->valid(); $tokenIterator->next()) {
             $token = $tokenIterator->current();
-            if (T_WHITESPACE !== $token[0]) {
+            if (\T_WHITESPACE !== $token[0]) {
                 break;
             }
         }
@@ -220,23 +220,23 @@ class WordsExtractor extends PhpExtractor
             }
 
             switch ($token[0]) {
-                case T_START_HEREDOC:
+                case \T_START_HEREDOC:
                     $docToken = $token[1];
                     break;
-                case T_ENCAPSED_AND_WHITESPACE:
-                case T_CONSTANT_ENCAPSED_STRING:
+                case \T_ENCAPSED_AND_WHITESPACE:
+                case \T_CONSTANT_ENCAPSED_STRING:
                     if ('' === $docToken) {
                         $message .= PhpStringTokenParser::parse($token[1]);
                     } else {
                         $docPart = $token[1];
                     }
                     break;
-                case T_END_HEREDOC:
+                case \T_END_HEREDOC:
                     $message .= PhpStringTokenParser::parseDocString($docToken, $docPart);
                     $docToken = '';
                     $docPart = '';
                     break;
-                case T_WHITESPACE:
+                case \T_WHITESPACE:
                     break;
                 default:
                     break 2;

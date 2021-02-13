@@ -58,12 +58,12 @@
 {% macro avatarstack(username, size, right, displayname = true) %}
     {% import _self as macros %}
     {% set img %}<img class="profileimg avatar-{{ size }}" src="{{ path( 'avatar', { 'username': username , 'size': size }) }}" title="{{ username }}" alt="{{ 'profile' | trans }}: {{ username }}">{% endset %}
-    {{ macros.profilelink(username, img) }}
+    {{ macros.profilelink(username, img, 'prueba') }}
     {% if displayname %}<br><small>{{ macros.profilelink(username) }}</small>{% endif %}
 {% endmacro %}
 
 {# \new avatar for trip pages #}
-{% macro newavatarstack(username, size, right, displayname = true) %}
+{% macro roundedavatarstack(username, size, right, displayname = true) %}
     {% import _self as macros %}
         {% set img %}<img class="o-avatar__img" src="{{ path( 'avatar', { 'username': username , 'size': size }) }}" title="{{ username }}" alt="{{ 'profile' | trans }}: {{ username }}">{% endset %}
     <div class="o-avatar__img-wrapper">{{ macros.profilelink(username, img) }}</div>

@@ -58,7 +58,7 @@
 {% macro avatarstack(username, size, right, displayname = true) %}
     {% import _self as macros %}
     {% set img %}<img class="profileimg avatar-{{ size }}" src="{{ path( 'avatar', { 'username': username , 'size': size }) }}" title="{{ username }}" alt="{{ 'profile' | trans }}: {{ username }}">{% endset %}
-    {{ macros.profilelink(username, img, 'prueba') }}
+    {{ macros.profilelink(username, img) }}
     {% if displayname %}<br><small>{{ macros.profilelink(username) }}</small>{% endif %}
 {% endmacro %}
 
@@ -66,9 +66,9 @@
 {% macro roundedavatarstack(username, size, right, displayname = true) %}
     {% import _self as macros %}
         {% set img %}<img class="o-avatar__img" src="{{ path( 'avatar', { 'username': username , 'size': size }) }}" title="{{ username }}" alt="{{ 'profile' | trans }}: {{ username }}">{% endset %}
-    <div class="o-avatar__img-wrapper">{{ macros.profilelink(username, img) }}</div>
+    {{ macros.profilelink(username, img, 'o-avatar__img-wrapper') }}
     {% if displayname %}
-    <p class="o-avatar__name">{{ macros.profilelink(username) }}</p>
+    {{ macros.profilelink(username, username, 'o-avatar__name') }}
     {% endif %}
 {% endmacro %}
 

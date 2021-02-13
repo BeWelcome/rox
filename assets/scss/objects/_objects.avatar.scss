@@ -19,6 +19,7 @@
 
 
 .o-avatar__img-wrapper {
+  display: inline-block;
   width: 72px;
   height: 72px;
   overflow: hidden;
@@ -26,10 +27,6 @@
   border: 3px solid var(--white);
 }
 
-.o-avatar__img-wrapper a {
-  width: 100%;
-  height: 100%;
-}
 
 
 
@@ -46,18 +43,13 @@
 
 
 .o-avatar__name {
-  display: flex;
-  justify-content: center;
+  text-align: center;
   margin-top: 4px;
-}
-
-
-
-
-.o-avatar__name a {
   font-family: Signika;
   font-size: 14px;
 }
+
+
 
 
 
@@ -110,7 +102,7 @@
  */
 
 
-.o-avatar--white .o-avatar__name a {
+.o-avatar--white .o-avatar__name {
   color: var(--white);
 }
 

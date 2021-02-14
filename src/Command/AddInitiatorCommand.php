@@ -43,12 +43,12 @@ class AddInitiatorCommand extends Command
 
         $connection = $this->entityManager->getConnection();
 
-        $count = $connection->fetchOne('SELECT count(*) from messages');
+        $count = $connection->fetchOne('SELECT count(*) from messages WHERE initiator_id IS NULL');
 
         $progress = new ProgressBar($output, $count);
         $progress->start();
 
-        $statement = $connection->executeQuery('SELECT * FROM messages');
+        $statement = $connection->executeQuery('SELECT * FROM messages WHERE initiator_id IS NULL');
 
         for ($i = 0; $i < $count; ++$i) {
             $progress->advance();

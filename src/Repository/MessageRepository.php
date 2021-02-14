@@ -103,7 +103,7 @@ class MessageRepository extends EntityRepository
         return $result;
     }
 
-    public function findReportedMessages(int $page = 1, int$items = 10): Pagerfanta
+    public function findReportedMessages(int $page = 1, int $items = 10): Pagerfanta
     {
         $queryBuilder = $this->queryReportedMessages();
         $adapter = new DoctrineORMAdapter($queryBuilder);

@@ -129,6 +129,10 @@ class Subtrip
 
     public function getOptions(): array
     {
+        if (null === $this->options) {
+            return [];
+        }
+
         return explode(',', $this->options);
     }
 

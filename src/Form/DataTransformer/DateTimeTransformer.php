@@ -2,12 +2,8 @@
 
 namespace App\Form\DataTransformer;
 
-use App\Entity\Location;
-use App\Form\CustomDataClass\LocationRequest;
 use DateTime;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\DataTransformerInterface;
-use Symfony\Component\Form\Exception\TransformationFailedException;
 
 class DateTimeTransformer implements DataTransformerInterface
 {

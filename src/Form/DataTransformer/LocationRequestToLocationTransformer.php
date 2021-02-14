@@ -20,7 +20,7 @@ class LocationRequestToLocationTransformer implements DataTransformerInterface
     /**
      * Transforms a location to a location request.
      *
-     * @param Location|null $location
+     * @param mixed $location
      */
     public function transform($location): ?LocationRequest
     {

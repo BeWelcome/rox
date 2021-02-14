@@ -11,10 +11,12 @@ use App\Repository\SubtripRepository;
 use Pagerfanta\Doctrine\ORM\QueryAdapter;
 use Pagerfanta\Pagerfanta;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class TripController extends AbstractController
 {
@@ -62,11 +64,11 @@ class TripController extends AbstractController
      *
      * @Route("/trip/create", name="trip_create")
      */
-    public function create(Request $request): Response
+    public function create(Request $request, TripModel $tripModel, TranslatorInterface $translator): Response
     {
         $trip = new Trip();
-        $firstLeg = new Subtrip();
-        $trip->addSubtrip($firstLeg);
+        $leg = new Subtrip();
+        $trip->addSubtrip($leg);
 
         $createForm = $this->createForm(TripType::class, $trip);
         $createForm->handleRequest($request);
@@ -79,13 +81,30 @@ class TripController extends AbstractController
             $data = $createForm->getData();
             $data->setCreator($creator);
 
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($data);
-            $entityManager->flush();
+            $errors = $tripModel->checkTripCreateOrEditData($data);
+            if (empty($errors)) {
+                $tripModel->orderTripLegs($data);
 
-            $this->addFlash('success', 'trip.created');
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->persist($data);
+                $entityManager->flush();
 
-            return $this->redirectToRoute('mytrips');
+                $this->addFlash('success', 'trip.created');
+
+                return $this->redirectToRoute('trip_show', ['id' => $data->getId()]);
+            }
+
+            foreach ($errors as $error) {
+                if (isset($error['leg'])) {
+                    $createForm->get('subtrips')->get($error['leg'])->get($error['field'])->addError(
+                        new FormError($translator->trans($error['error']))
+                    );
+                } else {
+                    $createForm->addError(
+                        new FormError($translator->trans($error['error']))
+                    );
+                }
+            }
         }
 
         return $this->render('trip/create_edit.html.twig', [

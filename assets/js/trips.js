@@ -57,7 +57,7 @@ $(document).on('click', '.js-btn-add[data-target]', function (event) {
     collectionHolder.append(form);
 
     /* enable a search picker on all location fields (including the newly added one */
-    searchPicker = new SearchPicker( "/search/locations/places");
+    searchPicker = new SearchPicker( "/search/locations/places", 'js-search-picker');
 
     const duration = 'trip_subtrips_' + counter + '_duration';
     console.log("duration = " + duration);

@@ -54,6 +54,9 @@ class AvatarController extends AbstractController
 
     private function getSuffix($size)
     {
+        if ('72' === $size) {
+            $size = '75';
+        }
         $suffix = '';
         switch ($size) {
             case '30':

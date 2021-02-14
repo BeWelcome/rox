@@ -223,7 +223,7 @@ class Trip
 
     public function removeSubtrip(Subtrip $subtrip): void
     {
-        $this->subtrips->remove($subtrip);
+        $this->subtrips->removeElement($subtrip);
     }
 
     /**

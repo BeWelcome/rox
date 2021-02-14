@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use App\Doctrine\TripAdditionalInfoType;
+use App\Entity\Subtrip;
 use App\Entity\Trip;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -56,7 +57,6 @@ class TripType extends AbstractType
             ->add('additionalinfo', ChoiceType::class, [
                 'choices' => [
                     '' => TripAdditionalInfoType::NONE,
-                    'trip.additional.info.single' => TripAdditionalInfoType::SINGLE,
                     'trip.additional.info.couple' => TripAdditionalInfoType::COUPLE,
                     'trip.additional.info.friends.mixed' => TripAdditionalInfoType::FRIENDS_MIXED,
                     'trip.additional.info.friends.same' => TripAdditionalInfoType::FRIENDS_SAME,
@@ -70,10 +70,11 @@ class TripType extends AbstractType
                 'entry_options' => [
                     'label' => false,
                 ],
+                'required' => true,
                 'allow_add' => true,
-                'allow_delete' => true,
                 'by_reference' => false,
                 'prototype' => true,
+//                'error_bubbling' => false,
                 'label' => false,
                 'attr' => [
                     'class' => 'form-collection',

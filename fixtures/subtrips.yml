@@ -1,0 +1,24 @@
+App\Entity\Subtrip:
+    subtrip_member_2_berlin:
+        id: 1
+        location: '@Berlin'
+        arrival: <dateTimeBetween("now", "+10 days")>
+        departure: <dateTimeBetween($arrival, "+13 days")>
+        options: ['<randomElement(["MeetLocals", "LookingForHosts"])>']
+        trip: '@trip_member_2'
+    subtrip_member_2_jayapura:
+        id: 2
+        location: '@Jayapura'
+        arrival: <dateTimeBetween("now", "+10 days")>
+        departure: <dateTimeBetween($arrival, "+13 days")>
+        options: ['<randomElement(["MeetLocals", "LookingForHosts"])>']
+        invitedBy: '@member_3'
+        trip: '@trip_member_2'
+
+    subtrip_member_3_berlin:
+        id: 3
+        location: '@Berlin'
+        arrival: <dateTimeBetween("now", "+10 days")>
+        departure: <dateTimeBetween($arrival, "+13 days")>
+        options: ['<randomElement(["MeetLocals", "LookingForHosts"])>']
+        trip: '@trip_member_3'

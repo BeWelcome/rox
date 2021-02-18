@@ -7,9 +7,13 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
+use App\Validator\Constraints\TripOwner;
 use Carbon\Carbon;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * SubTrip.
@@ -19,6 +23,33 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @SuppressWarnings(PHPMD)
  * Auto generated class do not check mess
+ *
+ * API complete list ("/api/subtrips") has been disabled
+ * Please refer to "/api/members/{username}/trips/{id}" for a trip's subtrips list
+ *
+ * @ApiResource(
+ *     security="is_granted('ROLE_USER')",
+ *     normalizationContext={"groups"={"subtrip:list"}},
+ *     denormalizationContext={"groups"={"subtrip:write"}},
+ *     collectionOperations={
+ *          "post"={
+ *              "normalization_context"={"groups"={"subtrip:read"}},
+ *              "denormalization_context"={"groups"={"subtrip:write", "subtrip:create"}}
+ *          }
+ *     },
+ *     itemOperations={
+ *          "get"={
+ *              "normalization_context"={"groups"={"subtrip:read"}}
+ *          },
+ *          "put"={
+ *              "normalization_context"={"groups"={"subtrip:read"}},
+ *              "security"="is_granted('ROLE_USER') and user === object.getTrip().getCreator()"
+ *          },
+ *          "delete"={
+ *              "security"="is_granted('ROLE_USER') and user === object.getTrip().getCreator()"
+ *          }
+ *     }
+ * )
  */
 class Subtrip
 {
@@ -27,6 +58,8 @@ class Subtrip
      *
      * @ORM\ManyToOne(targetEntity="Location")
      * @ORM\JoinColumn(name="location", referencedColumnName="geonameId", nullable=true)
+     *
+     * @Groups({"trip:read", "trip:write", "subtrip:list", "subtrip:read", "subtrip:write"})
      */
     private $location;
 
@@ -34,6 +67,8 @@ class Subtrip
      * @var DateTime
      *
      * @ORM\Column(name="arrival", type="date", nullable=true)
+     *
+     * @Groups({"trip:read", "trip:write", "subtrip:list", "subtrip:read", "subtrip:write"})
      */
     private $arrival;
 
@@ -41,6 +76,8 @@ class Subtrip
      * @var DateTime
      *
      * @ORM\Column(name="departure", type="date", nullable=true)
+     *
+     * @Groups({"trip:read", "trip:write", "subtrip:list", "subtrip:read", "subtrip:write"})
      */
     private $departure;
 
@@ -48,6 +85,8 @@ class Subtrip
      * @var string
      *
      * @ORM\Column(name="options", type="subtrip_options", nullable=true)
+     *
+     * @Groups({"trip:read", "trip:write", "subtrip:list", "subtrip:read", "subtrip:write"})
      */
     private $options;
 
@@ -70,9 +109,12 @@ class Subtrip
 
     /**
      * @var Trip
+     * @TripOwner
      *
      * @ORM\ManyToOne(targetEntity="Trip", inversedBy="subtrips", cascade={"persist", "remove"})
      * @ORM\JoinColumn(name="trip_id", referencedColumnName="id")
+     *
+     * @Groups({"subtrip:create"})
      */
     private $trip;
 
@@ -139,6 +181,13 @@ class Subtrip
     public function getId(): int
     {
         return $this->id;
+    }
+
+    public function setId(int $id): self
+    {
+        $this->id = $id;
+
+        return $this;
     }
 
     public function setTrip(Trip $trip): self

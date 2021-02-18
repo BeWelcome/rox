@@ -1,0 +1,30 @@
+{
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+        "@context": {
+            "pattern": "^/api/contexts/Subtrip$",
+            "required": true
+        },
+        "@id": {
+            "pattern": "^/api/subtrips/.*$",
+            "required": true
+        },
+        "@type": {
+            "pattern": "^Subtrip$",
+            "required": true
+        },
+        "location": {
+            "required": true
+        },
+        "arrival": {
+            "required": true
+        },
+        "departure": {
+            "required": true
+        },
+        "options": {
+            "required": true
+        }
+    }
+}

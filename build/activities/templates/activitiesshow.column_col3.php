@@ -45,7 +45,9 @@ if (empty($vars)) {
             <a class="btn btn-primary"
                title="<?php echo $words->get('activity.report'); ?>"
                href="/feedback?IdCategory=12&FeedbackQuestion=<?php
-                  echo urlencode('Hi, I think this activity isn\'t in line with the rules.') ?>">
+                  echo urlencode('Hi, I think the activity '
+                      . $this->activity->title . ' (' . $this->activity->id
+                      . ') isn\'t in line with the rules.') ?>">
                 <i class="far fa-flag"></i>
             </a>
         </h2>

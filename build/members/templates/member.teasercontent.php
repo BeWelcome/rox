@@ -47,7 +47,7 @@
         <a class="btn btn-primary"
            title="<?php echo $words->get('profile.report'); ?>"
            href="/feedback?IdCategory=2&FeedbackQuestion=<?php
-           echo urlencode('Hi, I think this member is a spammers/scammer or otherwise weird.') ?>">
+           echo urlencode('Hi, I think this member (' . $member->Username . ') is a spammers/scammer or otherwise weird.') ?>">
             <i class="far fa-flag"></i>
         </a>
         <?php endif; ?>

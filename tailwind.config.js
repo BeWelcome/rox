@@ -27,7 +27,8 @@ module.exports = {
       'gray-60':'#6f6f6f',
       'gray-65':'#595959',
       'gray-70':'#454545',
-      'gray-80':'#3F3F3F'
+      'gray-80':'#3F3F3F',
+      'black-o-30': 'rgba(0, 0, 0, 0.3)'
     },
     spacing: {
       px: '1px',

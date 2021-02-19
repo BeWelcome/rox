@@ -31,17 +31,18 @@
 
 .l-trip-legs {
   display: grid;
-  grid-template-columns: 72px 1fr 104px;
-  width: 840px;
-  grid-gap: 32px;
-  margin-bottom: 16px;
-  padding-bottom: 16px;
-  border-bottom: 1px solid var(--gray-30);
+  grid-template-columns: 104px 1fr 104px;
+  width: 100%;
+  grid-gap: 36px;
+  padding: 24px 36px;
+  margin: 8px 0;
+  border-radius: 8px;
+  background-color: rgba(0, 0, 0, 0.3)
 }
+
 
 @media (max-width: 900px) {
   .l-trip-legs {
-    width: initial;
     grid-gap: initial;
     display: flex;
     flex-direction: column;

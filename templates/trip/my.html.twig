@@ -13,13 +13,13 @@
 	{% if trips.nbResults != 0 %}
 		{% set myself = app.user %}
 		{% if trips.haveToPaginate %}
-		<div class="row">
-			<div class="col-12">
-				<div class="pull-right">{{ pagerfanta( trips, 'rox_default', { routeName: 'mytrips' }) }}</div>
+		<div class="u-flex u-items-center u-justify-end u-mb-24 md:u-mb-16 u-px-8 u-h-48 u-rounded-8">
+      		<div class="o-pagination">
+      			{{ pagerfanta( trips, 'rox_default', { routeName: 'mytrips' }) }}
 			</div>
 		</div>
 		{% endif %}
-
+		<section>
 			{% for trip in trips %}
 			<div class="c-trip-card">
 				<div class="c-trip-card__wrapper">
@@ -52,17 +52,18 @@
 				</div>
 			</div>
 			{% else %}
-				<div class="col-12">{{ 'trip.no_trips_found'|trans }}</div>
+				<p class="u-text-white u-font-display">{{ 'trip.no.trips'|trans }}</p>
 			{% endfor %}
+		</section>
 
 		{% if trips.haveToPaginate %}
-		<div class="row">
-			<div class="col-12">
-				<div class="pull-right">{{ pagerfanta( trips, 'rox_default', { routeName: 'mytrips' }) }}</div>
-			</div>
+		<div class="u-flex u-items-center u-justify-end u-mb-24 md:u-mt-16 u-px-8 u-h-48 u-rounded-8">
+      		<div class="o-pagination">
+      		{{ pagerfanta( trips, 'rox_default', { routeName: 'mytrips' }) }}
+      		</div>
 		</div>
 		{% endif %}
 	{% else %}
-		{{ 'trip.no.trips'|trans }}
+		<p class="u-text-white u-font-display">{{ 'trip.no.trips'|trans }}</p>
 	{% endif %}
 {% endblock content %}

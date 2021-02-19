@@ -1,6 +1,7 @@
 .c-trips {
 	background-image: url("../../images/trips-road3.jpg");
-	background-size: cover;
+	background-repeat: repeat-y;
+	background-size: 100%;
 	background-color: white;
 	margin: initial; /*Overwrites Bootstrap main margin*/
 }
@@ -42,7 +43,7 @@
 .c-trips__wrapper {
 	position: relative;
 	z-index: 1;
-	max-width: 1080px;
+	max-width: 960px;
 	left: 50%;
 	transform: translateX(-50%);
 	padding: 48px 0 96px 0;

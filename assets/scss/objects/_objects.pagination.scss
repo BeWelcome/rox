@@ -1,0 +1,85 @@
+/* ==========================================================================
+   #PAGINATION
+   ========================================================================== */
+
+/**
+/* Overwrites Bootstrap classes. To be replaced when proper component is set up (hopefully)
+/*/
+
+.o-pagination {
+	display: inline-block;
+}
+
+
+
+
+
+.o-pagination .page-item {
+  border-radius: 100%;
+  overflow: hidden;
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--white);
+  margin: 0 2px;
+  cursor: pointer;
+}
+
+.o-pagination .page-item:hover {
+  background-color: var(--bewelcome-dark);
+}
+
+.o-pagination .page-item.active {
+  background-color: var(--bewelcome);
+}
+
+.o-pagination .page-item.disabled {
+  display: none;
+}
+
+
+
+.o-pagination .page-link {
+  color: var(--gray-70);
+  font-family: Signika;
+  padding: initial;
+  line-height: initial;
+  border: none;
+  margin: initial;
+  background-color: initial;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.o-pagination .page-link:hover {
+  background-color: initial;
+}
+
+.o-pagination .page-item.active .page-link {
+  border: initial;
+  background-color: initial;
+}
+
+.o-pagination .page-item.disabled .page-link {
+    color: var(--bewelcome);
+    pointer-events: none;
+    cursor: auto;
+    background-color: initial;
+    border-color: initial;
+}
+
+.o-pagination .page-item:hover .page-link {
+  color: var(--white);
+}
+
+.o-pagination .prev .page-link,
+.o-pagination .next .page-link {
+  font-size: 20px;
+  border-radius: initial;
+}

@@ -3,18 +3,18 @@
    ========================================================================== */
 
 /**
-/* Overwrites Bootstrap classes. To be replaced when proper component is set up (hopefully)
+/* Base classes for pagination
 /*/
 
 .o-pagination {
-  display: inline-block;
+  display: flex;
 }
 
 
 
 
 
-.o-pagination .page-item {
+.o-pagination__item {
   border-radius: 100%;
   overflow: hidden;
   width: 40px;
@@ -28,36 +28,31 @@
   cursor: pointer;
 }
 
-.o-pagination .page-item:hover {
+.o-pagination__item:hover {
   background-color: var(--bewelcome-dark);
 }
 
-.o-pagination .page-item.active {
+.o-pagination__item--active {
   background-color: var(--bewelcome);
 }
 
-.o-pagination .page-item.disabled {
-  background-color: var(--transparent)
-}
-
-.o-pagination .pager-previous.disabled {
+.o-pagination__item--disabled {
   display: none;
 }
 
-.o-pagination .pager-next.disabled {
-  display: none;
+.o-pagination__item--transparent,
+.o-pagination__item--transparent:hover {
+  background-color: transparent;
+  cursor: auto;
 }
 
 
 
-.o-pagination .page-link {
+
+
+.o-pagination__link {
   color: var(--gray-70);
   font-family: Signika;
-  padding: initial;
-  line-height: initial;
-  border: none;
-  margin: initial;
-  background-color: initial;
   width: 100%;
   height: 100%;
   display: flex;
@@ -65,33 +60,32 @@
   align-items: center;
 }
 
-.o-pagination .page-link:hover {
-  background-color: initial;
-}
-
-.o-pagination .page-item.active .page-link {
-  border: initial;
-  background-color: initial;
-}
-
-.o-pagination .page-item.disabled .page-link {
-    pointer-events: none;
-    cursor: auto;
-    background-color: initial;
-    border-color: initial;
-    color: var(--gray-30);
-}
-
-.o-pagination .page-item:hover .page-link {
+.o-pagination__item:hover .o-pagination__link,
+.o-pagination__item--active .o-pagination__link {
   color: var(--white);
 }
 
-o-pagination .page-item.disabled:hover .page-link {
-  color: var(--gray-30);
+
+
+
+
+
+.o-pagination__icon {
+  fill: var(--gray-70);
 }
 
-.o-pagination .prev .page-link,
-.o-pagination .next .page-link {
-  font-size: 20px;
-  border-radius: initial;
+.o-pagination__item:hover .o-pagination__icon {
+  fill: var(--white);
+}
+
+.o-pagination__icon--right,
+.o-pagination__icon--left {
+  height: 10px;
+}
+
+.o-pagination__icon--ellipsis,
+.o-pagination__item:hover .o-pagination__icon--ellipsis {
+  height: 20px;
+  fill: var(--gray-20);
+  cursor: auto;
 }

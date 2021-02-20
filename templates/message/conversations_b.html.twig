@@ -77,10 +77,10 @@
     {% if conversations.nbResults == 0 %}
         <p>{{ 'conversations.none' | trans }}</p>
     {% else %}
+
         {% if conversations.haveToPaginate %}
-            <div class="float-right">
-                {{ pagerfanta( conversations, 'rox_default') }}
-            </div>
+            {{ pagerfanta( conversations, 'rox_default') }}
+            <div class="clearfix mb-1"></div>
         {% endif %}
 
         {{ form_start(form) }}
@@ -99,8 +99,7 @@
                 <th class="align-middle">&nbsp;</th>
             </tr>
             {% for message in conversations.currentPageResults %}
-                {% set directionIn = (member.id == message.receiver.id) %}
-                {% set otherMember = directionIn ? message.sender : message.receiver %}
+                {% set otherMember = message.initiator == message.sender ? message.receiver : message.sender %}
                 {% set unread = (message.firstRead is null) or (message.firstRead == '0000-00-00 00:00.00') %}
                 {% set show_message_route = 'message_show' %}
                 <tr>
@@ -108,8 +107,7 @@
                          {{ form_widget(form.messages[loop.index0], {'attr': {'class': 'checkable'}}) }}
                     </td>
                     <td class="align-middle small">
-                        <p class="m-0">{{ macros.avatar(message.initiator.Username, 50, true) }}</p>
-                        <p class="m-0">{{ macros.profilelink(message.initiator.Username) }}</p>
+                        <p class="m-0">{{ macros.roundedavatarstack(message.initiator.Username, 72, "o-prueba") }}</p>
                     </td>
                     <td class="align-middle w-100">
                         <a href="{{ path(show_message_route, { id: message.id}) }}">
@@ -126,6 +124,13 @@
                                 {% endapply %}
                                 {% if message.request %}
                                     <div class="d-flex alert-light p-2">
+                                        <div class="mr-2 font-weight-bold align-self-center">
+                                            {% if message.request.inviteForLeg is null %}
+                                            <i class="fa fa-2x fa-bed"></i>
+                                            {% else %}
+                                            <i class="fa fa-2x fa-door-open"></i>
+                                            {% endif %}
+                                        </div>
                                         <div class="mr-2 font-weight-bold">
                                             <i class="fa fa-calendar mr-1"></i>{{ 'request.arrival' | trans }}
                                             {%- if message.request.departure %}<br>
@@ -139,13 +144,12 @@
                                     </div>
                                 {% endif %}
 
-                                <span class="text-muted small">{{ 'message.sentdate'|trans({'%sentDate%': message.dateSent | format_date( 'medium')}) }}</span>
+                                <span class="text-muted small">{{ 'message.sentdate'|trans({'%sentDate%': message.dateSent | format_date( 'medium')}) }} {{ 'by'|trans }} {{ message.sender.Username }}</span>
                             </div>
                         </a>
                     </td>
                     <td class="align-middle small">
-                        <p class="m-0">{{ macros.avatar(message.sender.Username, 50, true) }}</p>
-                        <p class="m-0">{{ macros.profilelink(message.sender.Username) }}</p>
+                        <p class="m-0">{{ macros.roundedavatarstack(otherMember.Username, 72, "o-prueba") }}</p>
                     </td>
                     <td class="text-right">
                         <div class="btn-group-vertical">
@@ -167,9 +171,8 @@
         {{ form_rest(form) }}
         {{ form_end(form) }}
         {% if conversations.haveToPaginate %}
-            <div class="float-right">
-                {{ pagerfanta( conversations, 'rox_default') }}
-            </div>
+            {{ pagerfanta( conversations, 'rox_default') }}
+            <div class="clearfix mb-1"></div>
         {% endif %}
 
     {% endif %}

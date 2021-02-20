@@ -7,7 +7,7 @@
 /*/
 
 .o-pagination {
-	display: inline-block;
+  display: inline-block;
 }
 
 
@@ -17,8 +17,8 @@
 .o-pagination .page-item {
   border-radius: 100%;
   overflow: hidden;
-  width: 32px;
-  height: 32px;
+  width: 40px;
+  height: 40px;
   flex-shrink: 0;
   display: flex;
   justify-content: center;
@@ -37,6 +37,14 @@
 }
 
 .o-pagination .page-item.disabled {
+  background-color: var(--transparent)
+}
+
+.o-pagination .pager-previous.disabled {
+  display: none;
+}
+
+.o-pagination .pager-next.disabled {
   display: none;
 }
 
@@ -67,15 +75,19 @@
 }
 
 .o-pagination .page-item.disabled .page-link {
-    color: var(--bewelcome);
     pointer-events: none;
     cursor: auto;
     background-color: initial;
     border-color: initial;
+    color: var(--gray-30);
 }
 
 .o-pagination .page-item:hover .page-link {
   color: var(--white);
+}
+
+o-pagination .page-item.disabled:hover .page-link {
+  color: var(--gray-30);
 }
 
 .o-pagination .prev .page-link,

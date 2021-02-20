@@ -25,6 +25,7 @@ class TripRepository extends EntityRepository
         return $this->createQueryBuilder('t')
             ->where('t.created <= :now')
             ->andWhere('t.creator = :creator')
+            ->andWhere('t.deleted IS NULL')
             ->setParameter(':now', new DateTime())
             ->setParameter(':creator', $member)
             ->orderBy('t.created', 'DESC')

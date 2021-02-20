@@ -30,9 +30,9 @@ class TripModel
         $query = $repository->queryTripsOfMember($member);
 
         $paginator = new Pagerfanta(new QueryAdapter($query, false));
-        $paginator->setCurrentPage($page);
         // \todo: Remove after testing.
         $paginator->setMaxPerPage(1);
+        $paginator->setCurrentPage($page);
 
         return $paginator;
     }

@@ -11,7 +11,10 @@ use App\Repository\SubtripRepository;
 use Pagerfanta\Doctrine\ORM\QueryAdapter;
 use Pagerfanta\Pagerfanta;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormError;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -20,17 +23,27 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class TripController extends AbstractController
 {
+
+    private TripModel $tripModel;
+    private TranslatorInterface $translator;
+
+    public function __construct(TripModel $tripModel, TranslatorInterface $translator)
+    {
+        $this->tripModel = $tripModel;
+        $this->translator = $translator;
+    }
+
     /**
      * @Route("/mytrips/{page}", name="mytrips",
      *     requirements={"page": "\d+"})
      *     )
      */
-    public function myTrips(TripModel $tripModel, int $page = 1): Response
+    public function myTrips(int $page = 1): Response
     {
         /** @var Member $member */
         $member = $this->getUser();
 
-        $trips = $tripModel->paginateTripsOfMember($member, $page);
+        $trips = $this->tripModel->paginateTripsOfMember($member, $page);
 
         return $this->render('trip/my.html.twig', [
             'trips' => $trips,
@@ -64,9 +77,11 @@ class TripController extends AbstractController
      *
      * @Route("/trip/create", name="trip_create")
      */
-    public function create(Request $request, TripModel $tripModel, TranslatorInterface $translator): Response
+    public function create(Request $request): Response
     {
         $trip = new Trip();
+        $trip->setCreator($this->getUser());
+
         $leg = new Subtrip();
         $trip->addSubtrip($leg);
 
@@ -74,37 +89,22 @@ class TripController extends AbstractController
         $createForm->handleRequest($request);
 
         if ($createForm->isSubmitted() && $createForm->isValid()) {
-            /** @var Member $creator */
-            $creator = $this->getUser();
+            $trip = $createForm->getData();
 
-            /** @var Trip $data */
-            $data = $createForm->getData();
-            $data->setCreator($creator);
-
-            $errors = $tripModel->checkTripCreateOrEditData($data);
+            $errors = $this->tripModel->checkTripCreateOrEditData($trip);
             if (empty($errors)) {
-                $tripModel->orderTripLegs($data);
+                $this->tripModel->orderTripLegs($trip);
 
                 $entityManager = $this->getDoctrine()->getManager();
-                $entityManager->persist($data);
+                $entityManager->persist($trip);
                 $entityManager->flush();
 
                 $this->addFlash('success', 'trip.created');
 
-                return $this->redirectToRoute('trip_show', ['id' => $data->getId()]);
+                return $this->redirectToRoute('trip_show', ['id' => $trip->getId()]);
             }
 
-            foreach ($errors as $error) {
-                if (isset($error['leg'])) {
-                    $createForm->get('subtrips')->get($error['leg'])->get($error['field'])->addError(
-                        new FormError($translator->trans($error['error']))
-                    );
-                } else {
-                    $createForm->addError(
-                        new FormError($translator->trans($error['error']))
-                    );
-                }
-            }
+            $this->handleErrors($createForm, $errors);
         }
 
         return $this->render('trip/create_edit.html.twig', [
@@ -132,23 +132,32 @@ class TripController extends AbstractController
             throw new AccessDeniedException();
         }
 
-        $updateForm = $this->createForm(TripType::class, $trip);
+        $this->tripModel->orderTripLegs($trip);
 
-        $updateForm->handleRequest($request);
+        $editForm = $this->createForm(TripType::class, $trip);
 
-        if ($updateForm->isSubmitted() && $updateForm->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($trip);
-            $entityManager->flush();
+        $editForm->handleRequest($request);
 
-            $this->addFlash('success', 'trip.edited');
+        if ($editForm->isSubmitted() && $editForm->isValid()) {
+            $trip = $editForm->getData();
 
-            return $this->redirectToRoute('mytrips');
+            $errors = $this->tripModel->checkTripCreateOrEditData($trip);
+            if (empty($errors)) {
+                $this->tripModel->orderTripLegs($trip);
+
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->persist($trip);
+                $entityManager->flush();
+
+                $this->addFlash('success', 'trip.edited');
+
+                return $this->redirectToRoute('trip_show', ['id' => $trip->getId()]);
+            }
         }
 
         return $this->render('trip/create_edit.html.twig', [
             'create' => false,
-            'form' => $updateForm->createView(),
+            'form' => $editForm->createView(),
             'submenu' => [
                 'active' => 'trip_edit',
                 'items' => $this->getSubmenuItems([
@@ -165,9 +174,16 @@ class TripController extends AbstractController
      * @Route("/trip/{id}/remove", name="trip_remove",
      *     requirements={"id": "\d+"})
      */
-    public function remove(Trip $trip): Response
+    public function remove(Trip $trip): RedirectResponse
     {
-        return new Response('Älabätsch.');
+        $member = $this->getUser();
+        if ($trip->getCreator() !== $member) {
+            throw new AccessDeniedException();
+        }
+
+        $this->tripModel->hideTrip($trip);
+
+        return new RedirectResponse('mytrips');
     }
 
     /**
@@ -179,17 +195,17 @@ class TripController extends AbstractController
      *
      * @param mixed $page
      */
-    public function tripsInArea(TripModel $tripModel, Request $request, Member $member, $page = 1): Response
+    public function tripsInArea(Request $request, Member $member, $page = 1): Response
     {
         /** @var Member $host */
         $host = $this->getUser();
 
-        $radius = $request->query->get('radius', -1);
-        $preferredRadius = $tripModel->getTripsRadius($host);
+        $radius = $this->tripModel->checkTripsRadius($member, $request->query->get('radius', -1));
+        $preferredRadius = $this->tripModel->getTripsRadius($host);
         if (-1 === $radius || !is_numeric($radius)) {
             $radius = $preferredRadius;
         } else {
-            $tripModel->setTripsRadius($host, $radius);
+            $this->tripModel->setTripsRadius($host, $radius);
         }
 
         if ($radius < $preferredRadius && 1 !== $page) {
@@ -205,7 +221,9 @@ class TripController extends AbstractController
         $legsQuery = $subtripRepository->getLegsInAreaQuery($member, $radius);
         $legsAdapter = new QueryAdapter($legsQuery);
         $tripLegs = new Pagerfanta($legsAdapter);
+        $tripLegs->setMaxPerPage(1);
         $tripLegs->setCurrentPage($page);
+        // \todo: Remove after testing.
 
         return $this->render('trip/area.html.twig', [
             'radius' => $radius,
@@ -254,5 +272,20 @@ class TripController extends AbstractController
         ];
 
         return $submenu;
+    }
+
+    private function handleErrors(FormInterface &$form, array $errors)
+    {
+        foreach ($errors as $error) {
+            if (isset($error['leg'])) {
+                $form->get('subtrips')->get($error['leg'])->get($error['field'])->addError(
+                    new FormError($this->translator->trans($error['error']))
+                );
+            } else {
+                $form->addError(
+                    new FormError($this->translator->trans($error['error']))
+                );
+            }
+        }
     }
 }

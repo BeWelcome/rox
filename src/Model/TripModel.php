@@ -6,6 +6,7 @@ use App\Entity\Member;
 use App\Entity\Preference;
 use App\Entity\Trip;
 use App\Repository\TripRepository;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Pagerfanta\Doctrine\ORM\QueryAdapter;
 use Pagerfanta\Pagerfanta;
@@ -13,6 +14,8 @@ use function usort;
 
 class TripModel
 {
+    private const ALLOWED_TRIPS_RADIUS = [0, 5, 10, 20, 50, 100, 200, 500, 1000, 2000, 5000];
+
     private EntityManagerInterface $entityManager;
 
     public function __construct(EntityManagerInterface $entityManager)
@@ -27,10 +30,19 @@ class TripModel
         $query = $repository->queryTripsOfMember($member);
 
         $paginator = new Pagerfanta(new QueryAdapter($query, false));
-        $paginator->setMaxPerPage(20);
         $paginator->setCurrentPage($page);
+        // \todo: Remove after testing.
+        $paginator->setMaxPerPage(1);
 
         return $paginator;
+    }
+
+    public function checkTripsRadius($member, $radius) {
+        if (!in_array($radius, self::ALLOWED_TRIPS_RADIUS)) {
+            return $this->getTripsRadius($member);
+        }
+
+        return $radius;
     }
 
     public function setTripsRadius($member, $radius)
@@ -54,11 +66,6 @@ class TripModel
         $memberPreference = $member->getMemberPreference($preference);
 
         return (int) ($memberPreference->getValue());
-    }
-
-    public function validateTrip(Trip $data): bool
-    {
-        return true;
     }
 
     public function checkTripCreateOrEditData(Trip $data): array
@@ -121,5 +128,13 @@ class TripModel
         foreach ($legs as $leg) {
             $trip->addSubtrip($leg);
         }
+    }
+
+    public function hideTrip(Trip $trip)
+    {
+        $trip->setDeleted(new DateTIme());
+
+        $this->entityManager->persist($trip);
+        $this->entityManager->flush();
     }
 }

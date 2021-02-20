@@ -13,11 +13,7 @@
 	{% if trips.nbResults != 0 %}
 		{% set myself = app.user %}
 		{% if trips.haveToPaginate %}
-		<div class="u-flex u-items-center u-justify-end u-mb-24 md:u-mb-16 u-px-8 u-h-48 u-rounded-8">
-      		<div class="o-pagination">
-      			{{ pagerfanta( trips, 'rox_default', { routeName: 'mytrips' }) }}
-			</div>
-		</div>
+   			{{ pagerfanta( trips, 'rounded_pagination', { routeName: 'mytrips', proximity: 2 }) }}
 		{% endif %}
 		<section>
 			{% for trip in trips %}
@@ -27,7 +23,7 @@
 					<div>
 						<p class=" u-font-display u-italic u-text-white u-mb-8">{{ trip.description | purify | truncate(200) }}</p>
 						<p class="u-text-white u-font-display"><span class="u-mr-8">{{ trip.subtrips|length }} {{ 'trip.legs'|trans }}</span><strong class="u-text-white">{% for leg in trip.subtrips %}{% if leg.getLocation %} &bull; {{ leg.location.name }}{% endif %}{% endfor %}</strong></p>
-						
+
 					</div>
 					<div>
 						<div class="c-trip-card__icon-grid">
@@ -41,7 +37,7 @@
 					</div>
 				</div>
 				<div class="u-flex md:u-justify-between u-items-center u-mt-16 md:u-m-0">
-					<a class="o-rounded o-rounded--l u-text-18 u-mr-16 md:u-m-0" 
+					<a class="o-rounded o-rounded--l u-text-18 u-mr-16 md:u-m-0"
 					   href="{{ path('trip_edit', {'id': trip.id}) }}">
 						<i class="far fa-edit"></i>
 					</a>
@@ -57,11 +53,7 @@
 		</section>
 
 		{% if trips.haveToPaginate %}
-		<div class="u-flex u-items-center u-justify-end u-mb-24 md:u-mt-16 u-px-8 u-h-48 u-rounded-8">
-      		<div class="o-pagination">
-      		{{ pagerfanta( trips, 'rox_default', { routeName: 'mytrips' }) }}
-      		</div>
-		</div>
+      		{{ pagerfanta( trips, 'rounded_pagination', { routeName: 'mytrips' }) }}
 		{% endif %}
 	{% else %}
 		<p class="u-text-white u-font-display">{{ 'trip.no.trips'|trans }}</p>

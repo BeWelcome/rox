@@ -30,7 +30,7 @@
       <i class="fa fa-bullseye u-text-white u-text-24 u-justify-self-center u-self-center u-text-white u-mr-8"></i>
       <label class="u-text-white u-font-700 u-mr-16 u-mb-0" for="trips_radius">{{ 'trips.radius'|trans }}</label>
       <select id="trips_radius"
-              name="trips_radius" 
+              name="trips_radius"
               class="select2">
         <option {% if radius == 0 %}selected="selected"{% endif %} value="0">{{ 'trips.legs.exact'|trans }}</option>
         <option {% if radius == 5 %}selected="selected"{% endif %} value="5">{{ 'search.radius.5km'|trans }}</option>
@@ -46,9 +46,7 @@
       </select>
     </div>
     {% if legs.haveToPaginate %}
-      <div class="o-pagination">
-        {{ pagerfanta( legs, 'rox_default', { routeName: 'trip_in_area', routeParams: {'username': app.user.username} }) }}
-      </div>
+        {{ pagerfanta( legs, 'rounded_pagination', { routeName: 'trip_in_area', routeParams: {'username': app.user.username} }) }}
     {% endif %}
   </div>
   {% if legs.nbResults != 0 %}
@@ -61,10 +59,7 @@
       </div>
 
     {% if legs.haveToPaginate %}
-    <div class="u-flex u-items-center u-justify-end u-mb-24 md:u-mt-16 u-px-8 u-h-48 u-rounded-8">
-      <div class="o-pagination">
-        {{ pagerfanta( legs, 'rox_default', { routeName: 'trip_in_area', routeParams: {'username': app.user.username} }) }}
-      </div>
+        {{ pagerfanta( legs, 'rounded_pagination', { routeName: 'trip_in_area', routeParams: {'username': app.user.username} }) }}
     </div>
     {% endif %}
   {% else %}

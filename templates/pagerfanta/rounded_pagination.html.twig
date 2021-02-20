@@ -1,39 +1,35 @@
 {%- extends '@BabDevPagerfanta/default.html.twig' -%}
 
 {%- block pager_widget -%}
-    <div class="u-flex u-items-center u-justify-end u-mb-24 md:u-mb-16 u-px-8 u-h-48 u-rounded-8">
-        <div class="o-pagination">
-            <div class="pagination float-right">
-                {{- block('pager') -}}
-            </div>
-        </div>>
+    <div class="o-pagination">
+        {{- block('pager') -}}
     </div>
 {%- endblock pager_widget -%}
 
 {%- block page_link -%}
-    <li class="page-item"><a class="page-link" href="{{- path -}}">{{- page -}}</a></li>
+    <li class="o-pagination__item"><a class="o-pagination__link" href="{{- path -}}">{{- page -}}</a></li>
 {%- endblock page_link -%}
 
 {%- block current_page_link -%}
-    <li class="page-item active" aria-current="page"><span class="page-link">{{- page -}}</span></li>
+    <li class="o-pagination__item o-pagination__item--active" aria-current="page"><span class="o-pagination__link">{{- page -}}</span></li>
 {%- endblock current_page_link -%}
 
 {%- block previous_page_link -%}
-    <li class="page-item"><a class="page-link" href="{{- path -}}" rel="prev">«</a></li>
+    <li class="o-pagination__item"><a class="o-pagination__link" href="{{- path -}}" rel="prev"><svg class="o-pagination__icon o-pagination__icon--left" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 399.03308 320.10001"><path d="M199.2671 177.05l136.14511 136c9.41378 9.4 24.6267 9.4 33.93686 0l22.62368-22.6c9.41377-9.4 9.41377-24.6 0-33.9l-96.50373-96.4 96.50373-96.4c9.41377-9.4 9.41377-24.6 0-33.9L369.4488 7.05c-9.41373-9.4-24.62666-9.4-33.93681 0l-136.14512 136c-9.51605 9.4-9.51605 24.6-.0998 34zm-192.2068009-34L143.20671 7.05c9.41373-9.4 24.62666-9.4 33.93681 0l22.62372 22.6c9.41373 9.4 9.41373 24.6 0 33.9l-96.50377 96.4 96.50377 96.4c9.41373 9.4 9.41373 24.6 0 33.9l-22.62372 22.6c-9.41377 9.4-24.6267 9.4-33.93681 0l-136.1464109-136c-9.4137321-9.2-9.4137321-24.4 0-33.8z"/></svg></a></li>
 {%- endblock previous_page_link -%}
 
 {%- block previous_page_link_disabled -%}
-    <li class="page-item disabled"><span class="page-link">«</span></li>
+    <li class="o-pagination__item o-pagination__item--disabled"><svg class="o-pagination__icon o-pagination__icon--left" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 399.03308 320.10001"><path d="M199.2671 177.05l136.14511 136c9.41378 9.4 24.6267 9.4 33.93686 0l22.62368-22.6c9.41377-9.4 9.41377-24.6 0-33.9l-96.50373-96.4 96.50373-96.4c9.41377-9.4 9.41377-24.6 0-33.9L369.4488 7.05c-9.41373-9.4-24.62666-9.4-33.93681 0l-136.14512 136c-9.51605 9.4-9.51605 24.6-.0998 34zm-192.2068009-34L143.20671 7.05c9.41373-9.4 24.62666-9.4 33.93681 0l22.62372 22.6c9.41373 9.4 9.41373 24.6 0 33.9l-96.50377 96.4 96.50377 96.4c9.41373 9.4 9.41373 24.6 0 33.9l-22.62372 22.6c-9.41377 9.4-24.6267 9.4-33.93681 0l-136.1464109-136c-9.4137321-9.2-9.4137321-24.4 0-33.8z"/></svg></li>
 {%- endblock previous_page_link_disabled -%}
 
 {%- block next_page_link -%}
-    <li class="page-item"><a class="page-link" href="{{- path -}}" rel="next">»</a></li>
+    <li class="o-pagination__item"><a class="o-pagination__link" href="{{- path -}}" rel="next"><svg class="o-pagination__icon o-pagination__icon--right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 398.60001 320.10001"><path d="M199.55 177.05l-136 136c-9.4 9.4-24.6 9.4-33.9 0l-22.6-22.6c-9.4-9.4-9.4-24.6 0-33.9l96.4-96.4-96.4-96.4c-9.4-9.4-9.4-24.6 0-33.9l22.5-22.8c9.4-9.4 24.6-9.4 33.9 0l136 136c9.5 9.4 9.5 24.6.1 34zm192-34l-136-136c-9.4-9.4-24.6-9.4-33.9 0l-22.6 22.6c-9.4 9.4-9.4 24.6 0 33.9l96.4 96.4-96.4 96.4c-9.4 9.4-9.4 24.6 0 33.9l22.6 22.6c9.4 9.4 24.6 9.4 33.9 0l136-136c9.4-9.2 9.4-24.4 0-33.8z"/></svg></a></li>
 {%- endblock next_page_link -%}
 
 {%- block next_page_link_disabled -%}
-    <li class="page-item disabled"><span class="page-link">»</span></li>
+    <li class="o-pagination__item o-pagination__item--disabled"><svg class="o-pagination__icon o-pagination__icon--right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M224.3 273l-136 136c-9.4 9.4-24.6 9.4-33.9 0l-22.6-22.6c-9.4-9.4-9.4-24.6 0-33.9l96.4-96.4-96.4-96.4c-9.4-9.4-9.4-24.6 0-33.9L54.3 103c9.4-9.4 24.6-9.4 33.9 0l136 136c9.5 9.4 9.5 24.6.1 34zm192-34l-136-136c-9.4-9.4-24.6-9.4-33.9 0l-22.6 22.6c-9.4 9.4-9.4 24.6 0 33.9l96.4 96.4-96.4 96.4c-9.4 9.4-9.4 24.6 0 33.9l22.6 22.6c9.4 9.4 24.6 9.4 33.9 0l136-136c9.4-9.2 9.4-24.4 0-33.8z"/></svg></li>
 {%- endblock next_page_link_disabled -%}
 
 {%- block ellipsis -%}
-    <li class="page-item disabled"><span class="page-link">&hellip;</span></li>
+    <li class="o-pagination__item o-pagination__item--transparent"><svg class="o-pagination__icon o-pagination__icon--ellipsis" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><circle cx="10" cy="10" r="2"/><circle cx="3" cy="10" r="2"/><circle cx="17" cy="10" r="2"/></svg></li>
 {%- endblock ellipsis -%}

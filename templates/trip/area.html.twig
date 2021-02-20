@@ -25,8 +25,8 @@
 
 {% block content %}
 <section>
-  <div class="u-flex u-items-center u-justify-between u-mb-24 md:u-mb-16 u-px-8 u-h-48 u-rounded-8">
-    <div class="u-flex u-items-center">
+  <div class="u-inline-flex u-w-full u-items-center u-justify-between u-mb-24 md:u-mb-16 u-px-8 md:u-h-48 u-rounded-8 u-flex-col md:u-flex-row">
+    <div class="u-flex u-items-center u-mb-24 md:u-mb-0">
       <i class="fa fa-bullseye u-text-white u-text-24 u-justify-self-center u-self-center u-text-white u-mr-8"></i>
       <label class="u-text-white u-font-700 u-mr-16 u-mb-0" for="trips_radius">{{ 'trips.radius'|trans }}</label>
       <select id="trips_radius"
@@ -59,7 +59,9 @@
       </div>
 
     {% if legs.haveToPaginate %}
+      <div class="u-inline-flex u-w-full u-items-center u-justify-end u-mt-16 u-px-8 md:u-h-48 u-rounded-8 u-flex-col md:u-flex-row">
         {{ pagerfanta( legs, 'rounded_pagination', { routeName: 'trip_in_area', routeParams: {'username': app.user.username} }) }}
+      </div>
     </div>
     {% endif %}
   {% else %}

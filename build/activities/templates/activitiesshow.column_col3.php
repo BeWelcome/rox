@@ -48,7 +48,7 @@ if (empty($vars)) {
                   echo urlencode('Hi, I think the activity '
                       . $this->activity->title . ' (' . $this->activity->id
                       . ') isn\'t in line with the rules.') ?>">
-                <i class="far fa-flag"></i>
+                <i class="fas fa-flag"></i>
             </a>
         </h2>
     </div>

@@ -48,7 +48,7 @@
            title="<?php echo $words->get('profile.report'); ?>"
            href="/feedback?IdCategory=2&FeedbackQuestion=<?php
            echo urlencode('Hi, I think this member (' . $member->Username . ') is a spammers/scammer or otherwise weird.') ?>">
-            <i class="far fa-flag"></i>
+            <i class="fas fa-flag"></i>
         </a>
         <?php endif; ?>
 

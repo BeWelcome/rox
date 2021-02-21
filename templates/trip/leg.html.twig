@@ -34,5 +34,16 @@
       {% endif %}
     </div>
   </div>
-  <div class="o-avatar o-avatar--white u-mb-16 md:u-mb-0 u-justify-self-center">{{ macros.roundedavatarstack(leg.trip.creator.username, 72) }}</div>
+  <div class="o-avatar o-avatar--white u-mb-16 md:u-mb-0 u-justify-self-center">
+    {{ macros.roundedavatarstack(leg.trip.creator.username, 72, 'o-sldfj') }}
+    <p class="o-avatar__languages">Speaks
+    {% for level in leg.trip.creator.languageLevels %}
+      {% apply spaceless %}
+        <b>{{ ('lang_' ~ level.language.shortcode) | lower | trans }}</b>
+        {%- if not loop.last -%}
+            ,
+        {%- endif -%}
+      {% endapply %}
+    {% endfor %}... and <b>5</b> more</p>
+  </div>
 </div>

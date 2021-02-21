@@ -11,7 +11,7 @@
 .o-avatar {
   display: grid;
   grid-template-rows: 72px 1fr;
-  width: 72px
+  width: 96px
 }
 
 
@@ -25,6 +25,7 @@
   overflow: hidden;
   border-radius: 100%;
   border: 3px solid var(--white);
+  justify-self: center;
 }
 
 
@@ -49,6 +50,19 @@
   font-size: 14px;
 }
 
+
+
+
+
+.o-avatar__languages {
+  font-family: Signika;
+  font-size: 12px;
+  line-height: 20px;
+  font-weight: 300;
+  font-style: italic;
+  text-align: center;
+  margin-top: 8px;
+}
 
 
 
@@ -81,6 +95,11 @@
 
 
 .o-avatar--l {
+  width: 120px;
+  height: 120px;
+}
+
+.o-avatar--l .o-avatar__img-wrapper {
   width: 96px;
   height: 96px;
 }
@@ -102,7 +121,8 @@
  */
 
 
-.o-avatar--white .o-avatar__name {
+.o-avatar--white .o-avatar__name,
+.o-avatar--white .o-avatar__languages {
   color: var(--white);
 }
 

@@ -183,7 +183,7 @@ class TripController extends AbstractController
 
         $this->tripModel->hideTrip($trip);
 
-        return new RedirectResponse('mytrips');
+        return $this->redirectToRoute('mytrips');
     }
 
     /**

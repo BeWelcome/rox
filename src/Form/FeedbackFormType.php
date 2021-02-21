@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use App\Entity\FeedbackCategory;
+use Gregwar\CaptchaBundle\Type\CaptchaType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -50,12 +51,14 @@ class FeedbackFormType extends AbstractType
         $member = $options['member'];
         if (null === $member) {
             $formBuilder->add('FeedbackEmail', TextType::class, [
-                'label' => 'feedbackemail',
-                'required' => false,
-                'constraints' => [
-                    new Email(),
-                ],
-            ]);
+                    'label' => 'feedbackemail',
+                    'required' => false,
+                    'constraints' => [
+                        new Email(),
+                    ],
+                ])
+                ->add('captcha', CaptchaType::class)
+            ;
         } else {
             $formBuilder->add('FeedbackEmail', HiddenType::class, [
                 'attr' => ['value' => $member->getEmail()],

@@ -30,6 +30,7 @@
         "ezyang/htmlpurifier": "^4.0",
         "foolz/sphinxql-query-builder": "^1.0",
         "friendsofphp/proxy-manager-lts": "^1.0",
+        "gregwar/captcha-bundle": "^2.1",
         "hidehalo/nanoid-php": "^1.1",
         "html2text/html2text": "*",
         "incenteev/composer-parameter-handler": "^2.0",

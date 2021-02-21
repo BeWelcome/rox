@@ -35,7 +35,7 @@
     </div>
   </div>
   <div class="o-avatar o-avatar--white u-mb-16 md:u-mb-0 u-justify-self-center">
-    {{ macros.roundedavatarstack(leg.trip.creator.username, 72, 'o-sldfj') }}
+    {{ macros.roundedavatarstack(leg.trip.creator.username, 72) }}
     <p class="o-avatar__languages">Speaks
     {% for level in leg.trip.creator.languageLevels %}
       {% apply spaceless %}

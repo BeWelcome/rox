@@ -216,6 +216,38 @@ class GroupsController extends RoxControllerBase
     }
 
     /**
+     * Search the discussions of a group
+     *
+     * @param object $args         contains vars
+     * @param object $action       contains something else
+     * @param object $mem_redirect memory for the page after redirect
+     * @param object $mem_resend   memory for resending the form
+     *
+     * @return string relative request for redirect
+     */
+    public function searchDiscussions()
+    {
+        $group = $this->_getGroupFromRequest();
+        $terms = ($this->args_vars->get['fs-keyword']) ?? '';
+        $currentPage = ($this->args_vars->get['page']) ?? 1;
+
+
+        $params = new \stdClass();
+        $params->strategy = new FullPagePager('right');
+        $params->items_per_page = 5;
+        $results = $this->_model->searchGroupDiscussions($group, $terms, $currentPage, $params->items_per_page);
+        $params->items = $results['count'];
+        $pager = new PagerWidget($params);
+        $page = new GroupSearchDiscussionsPage($group);
+        $page->search_result = $results['threads'];
+        $page->search_terms = $terms;
+        $page->pager = $pager;
+        $page->group = $group;
+        $this->_fillObject($page);
+        return $page;
+    }
+
+    /**
      * fetches the groups for the logged in member and shows them
      *
      * @access public

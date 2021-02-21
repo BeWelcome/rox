@@ -909,4 +909,69 @@ WHERE IdGroup=" . (int)$group->id . " AND IdMember=" . (int)$memberid;
             }
         }
     }
+
+    /**
+     * @param Group $group
+     * @param string $keywords Keywords to search for in the Sphinx index
+     *
+     * @return array
+     */
+    public function searchGroupDiscussions($group, $keywords, $page, $items) {
+        $sphinx = new MOD_sphinx();
+
+        $results = [ 'count' => 0 ];
+        $sphinxClient = $sphinx->getSphinxForums();
+        $sphinxClient->SetFilter('IdGroup', [$group->getPKValue()]);
+        $sphinxClient->SetSortMode(SPH_SORT_ATTR_DESC, 'created' );
+        $resultsThreads = $sphinxClient->Query($sphinxClient->EscapeString($keywords), 'forums');
+
+        if ($resultsThreads) {
+            $results['count'] = $resultsThreads['total'];
+            if ($resultsThreads['total'] <> 0) {
+                $threadIds = array();
+                foreach ($resultsThreads['matches'] as $match) {
+                    $threadIds[] = $match['id'];
+                }
+                $query = 'SELECT count(*) AS count FROM forums_threads WHERE id IN (' . implode(',', $threadIds) . ')';
+                $results['count'] = ($this->singleLookup($query))->count;
+
+		        $query = "
+		        SELECT SQL_CALC_FOUND_ROWS `forums_threads`.`id`,
+		 		  `forums_threads`.`id` as IdThread, `forums_threads`.`title`,
+				  `forums_threads`.`IdTitle`,
+				  `forums_threads`.`IdGroup`,
+				  `forums_threads`.`replies`,
+		          `forums_threads`.`stickyvalue`,
+		          `groups`.`Name` as `GroupName`,
+                  `ThreadVisibility`,
+	              `ThreadDeleted`,
+				  `forums_threads`.`views`,
+				  `first`.`id` AS `first_postid`,
+				  `first`.`idWriter` AS `first_authorid`,
+				  UNIX_TIMESTAMP(`first`.`create_time`) AS `first_create_time`,
+				  UNIX_TIMESTAMP(`last`.`create_time`) AS `last_create_time`,
+				  `last`.`id` AS `last_postid`,
+				  `last`.`idWriter` AS `last_authorid`,
+				  UNIX_TIMESTAMP(`last`.`create_time`) AS `last_create_time`,
+		          `first_member`.`Username` AS `first_author`,`last_member`.`Username` AS `last_author`
+		          FROM `forums_threads` LEFT JOIN `forums_posts` AS `first` ON (`forums_threads`.`first_postid` = `first`.`id`)
+		          LEFT JOIN `groups` ON (`groups`.`id` = `forums_threads`.`IdGroup`)
+		          LEFT JOIN `forums_posts` AS `last` ON (`forums_threads`.`last_postid` = `last`.`id`)
+		          LEFT JOIN `members` AS `first_member` ON (`first`.`IdWriter` = `first_member`.`id`)
+		          LEFT JOIN `members` AS `last_member` ON (`last`.`IdWriter` = `last_member`.`id`)
+                  WHERE `forums_threads`.`id` IN (" . implode(',', $threadIds) . ")
+                  AND `forums_threads`.`ThreadVisibility` <> 'ModeratorOnly'
+                  AND `forums_threads`.`ThreadDeleted` = 'NotDeleted'
+                  ";
+                $query .= ' LIMIT ' . $items . ' OFFSET ' . ($page - 1) * $items;
+                $threads = $this->bulkLookup($query);
+                $results['threads'] = $threads;
+            } else {
+                $results['errors'][] = 'ForumSearchNoResults';
+            }
+        } else {
+            $results['errors'][] = 'ForumSearchNoSphinx';
+        }
+        return $results;
+    }
 }

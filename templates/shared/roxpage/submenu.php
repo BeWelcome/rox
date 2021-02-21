@@ -17,7 +17,11 @@ foreach ($this->getSubmenuItems() as $index => $item) {
     $url = $item[1];
     $label = $item[2];
     $active = ($name === $active_menu_item) ? " active" : "";
-    echo '<a class="list-group-item nav-link' . $active .'" href="' . $url . '">' . $label . '</a>';
+    if (!empty($url)) {
+        echo '<a class="list-group-item nav-link' . $active .'" href="' . $url . '">' . $label . '</a>';
+    } else {
+        echo '<span class="list-group-item nav-link' . $active .'" >' . $label . '</span>';
+    }
 
     ?>
       <?=$words->flushBuffer(); ?>

@@ -11,7 +11,7 @@
         $layoutbits = new MOD_layoutbits();
         foreach ($this->search_result as $thread) {
 
-            $url = "/forums/s" . $thread->IdThread;
+            $url = "/group/" . $this->group->id . "/forums/s" . $thread->IdThread;
 
             $max = $thread->replies + 1;
             $maxPage = ceil($max / 200);

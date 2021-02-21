@@ -13,7 +13,7 @@
   <section class="md:u-w-720 u-mt-8">
     <!-- <h1>{{ 'trip.show.details'|trans|capitalize }}</h1> -->
     <div class="u-flex u-items-center u-mb-24">
-      <div class="o-avatar o-avatar--white u-mr-16">{{ macros.roundedavatarstack(trip.creator.username, 72, "o-prueba") }}</div>
+      <div class="o-avatar o-avatar--white u-mr-16">{{ macros.roundedavatarstack(trip.creator.username, 72) }}</div>
       <h1 class="u-text-32 u-leading-48 md:u-text-56 md:u-leading-60 u-text-white u-font-700">{{ trip.summary }}</h1>
       {% if app.user == trip.creator %}
         <a href="{{ path('trip_edit', {'id': trip.id}) }}" class="o-rounded u-ml-24" arial-label="{{ 'trip.edit'|trans }}""title="{{ 'trip.edit'|trans }}">

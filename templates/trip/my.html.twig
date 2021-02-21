@@ -13,7 +13,7 @@
 	{% if trips.nbResults != 0 %}
 		{% set myself = app.user %}
 		{% if trips.haveToPaginate %}
-		    <div class="u-inline-flex u-w-full u-items-center u-justify-end u-mb-24 md:u-mb-16 u-px-8 md:u-h-48 u-rounded-8 u-flex-col md:u-flex-row">
+		    <div class="u-inline-flex u-w-full u-items-center u-justify-end u-mb-24 md:u-mb-16 md:u-h-48 u-flex-col md:u-flex-row">
    				{{ pagerfanta( trips, 'rounded_pagination', { routeName: 'mytrips' }) }}
    			</div>
 		{% endif %}
@@ -55,7 +55,7 @@
 		</section>
 
 		{% if trips.haveToPaginate %}
-		<div class="u-inline-flex u-w-full u-items-center u-justify-end u-mt-16 u-px-8 md:u-h-48 u-rounded-8 u-flex-col md:u-flex-row">
+		<div class="u-inline-flex u-w-full u-items-center u-justify-end u-mt-16 md:u-h-48 u-flex-col md:u-flex-row">
       		{{ pagerfanta( trips, 'rounded_pagination', { routeName: 'mytrips' }) }}
       	</div>
 		{% endif %}

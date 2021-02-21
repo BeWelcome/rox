@@ -107,7 +107,7 @@
                          {{ form_widget(form.messages[loop.index0], {'attr': {'class': 'checkable'}}) }}
                     </td>
                     <td class="align-middle small">
-                        <p class="m-0">{{ macros.roundedavatarstack(message.initiator.Username, 72, "o-prueba") }}</p>
+                        <p class="m-0">{{ macros.roundedavatarstack(message.initiator.Username, 72) }}</p>
                     </td>
                     <td class="align-middle w-100">
                         <a href="{{ path(show_message_route, { id: message.id}) }}">
@@ -149,7 +149,7 @@
                         </a>
                     </td>
                     <td class="align-middle small">
-                        <p class="m-0">{{ macros.roundedavatarstack(otherMember.Username, 72, "o-prueba") }}</p>
+                        <p class="m-0">{{ macros.roundedavatarstack(otherMember.Username, 72) }}</p>
                     </td>
                     <td class="text-right">
                         <div class="btn-group-vertical">

@@ -36,10 +36,13 @@ $layoutbits = new MOD_layoutbits();
 <table class="table table-striped table-hover" style="table-layout: fixed;">
     <tbody>
 <?php
-$threadsliced = array_slice($threads, 0, 5);
-    foreach ($threadsliced as $cnt =>  $thread) {
+    $shown = 0;
+
+    for ($i = 0; $shown < 5 && $i < count($threads); $i++) {
+        $thread = $threads[$i];
+
         $url = ForumsView::threadURL($thread);
-        if ($url{0}=='s') { // JeanYves Hack/Fix to be sure that forums/ is written in the beginning of the links !
+        if ($url[0] =='s') { // JeanYves Hack/Fix to be sure that forums/ is written in the beginning of the links !
             $url="forums/" . $url ;
         }
 
@@ -48,7 +51,10 @@ $threadsliced = array_slice($threads, 0, 5);
 
         $last_url = $url . ($maxPage != 1 ? '/page'.$maxPage : '') . '/#post' . $thread->last_postid;
 
-
+        if (('NoRestriction' === $thread->ThreadVisibility)
+            || ('MembersOnly' === $thread->ThreadVisibility)
+            || (('GroupsOnly' === $thread->ThreadVisibility) && (true === $isGroupMember))
+        ) {
         ?>
             <tr>
                 <td class="text-truncate"><?php
@@ -78,6 +84,8 @@ $threadsliced = array_slice($threads, 0, 5);
                 </td>
             </tr>
         <?php
+            $shown++;
+        }
     }
 
 

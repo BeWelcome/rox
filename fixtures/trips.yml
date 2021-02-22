@@ -1,6 +1,5 @@
 App\Entity\Trip:
     trip_member_2:
-        id: 1
         creator: '@member_2'
         created: <dateTimeBetween("-10 days", "now")>
         updated: <dateTimeBetween($created, "now")>
@@ -10,7 +9,6 @@ App\Entity\Trip:
         additionalInfo: '<randomElement(["none", "single", "couple", "friends_mixed", "friends_same", "family"])>'
 
     trip_member_3:
-        id: 2
         creator: '@member_3'
         created: <dateTimeBetween("-10 days", "now")>
         updated: <dateTimeBetween($created, "now")>

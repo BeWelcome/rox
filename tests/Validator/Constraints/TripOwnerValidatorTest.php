@@ -27,8 +27,8 @@ final class TripOwnerValidatorTest extends TestCase
     private MockObject $objectMock;
     private MockObject $contextMock;
     private MockObject $userMock;
-    private MockObject $constraintMock;
     private MockObject $violationMock;
+    private TripOwner $constraint;
     private TripOwnerValidator $validator;
 
     protected function setUp(): void
@@ -37,8 +37,8 @@ final class TripOwnerValidatorTest extends TestCase
         $this->objectMock = $this->createMock(Trip::class);
         $this->contextMock = $this->createMock(ExecutionContextInterface::class);
         $this->userMock = $this->createMock(Member::class);
-        $this->constraintMock = $this->createMock(TripOwner::class);
         $this->violationMock = $this->createMock(ConstraintViolationBuilderInterface::class);
+        $this->constraint = new TripOwner();
         $this->validator = new TripOwnerValidator($this->securityMock);
         $this->validator->initialize($this->contextMock);
     }
@@ -47,7 +47,7 @@ final class TripOwnerValidatorTest extends TestCase
     {
         $this->expectException(UnexpectedTypeException::class);
 
-        $this->validator->validate($this->objectMock, $this->createMock(NotBlank::class));
+        $this->validator->validate($this->objectMock, new NotBlank());
     }
 
     public function testItIgnoresInvalidUser(): void
@@ -55,7 +55,7 @@ final class TripOwnerValidatorTest extends TestCase
         $this->securityMock->expects($this->once())->method('getUser')->willReturn(null);
         $this->contextMock->expects($this->never())->method('buildViolation');
 
-        $this->validator->validate($this->objectMock, $this->constraintMock);
+        $this->validator->validate($this->objectMock, $this->constraint);
     }
 
     /**
@@ -66,7 +66,7 @@ final class TripOwnerValidatorTest extends TestCase
         $this->securityMock->expects($this->once())->method('getUser')->willReturn($this->userMock);
         $this->contextMock->expects($this->never())->method('buildViolation');
 
-        $this->validator->validate($value, $this->constraintMock);
+        $this->validator->validate($value, $this->constraint);
     }
 
     public function getInvalidValue(): array
@@ -85,7 +85,7 @@ final class TripOwnerValidatorTest extends TestCase
         $this->objectMock->expects($this->once())->method('getCreator')->willReturn($this->userMock);
         $this->contextMock->expects($this->never())->method('buildViolation');
 
-        $this->validator->validate($this->objectMock, $this->constraintMock);
+        $this->validator->validate($this->objectMock, $this->constraint);
     }
 
     public function testItBuildsAndAddAViolationOnInvalidCreator(): void
@@ -95,6 +95,6 @@ final class TripOwnerValidatorTest extends TestCase
         $this->contextMock->expects($this->once())->method('buildViolation')->with('This value is not valid.')->willReturn($this->violationMock);
         $this->violationMock->expects($this->once())->method('addViolation');
 
-        $this->validator->validate($this->objectMock, $this->constraintMock);
+        $this->validator->validate($this->objectMock, $this->constraint);
     }
 }

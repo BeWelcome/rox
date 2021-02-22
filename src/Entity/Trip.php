@@ -147,8 +147,6 @@ class Trip
     public function __construct()
     {
         $this->subtrips = new ArrayCollection();
-        $this->created = new DateTime();
-        $this->updated = new DateTime();
     }
 
     public function setSummary(string $summary): self
@@ -194,9 +192,9 @@ class Trip
         return $this;
     }
 
-    public function getCreated(): Carbon
+    public function getCreated(): ?Carbon
     {
-        return Carbon::instance($this->created);
+        return null !== $this->created ? Carbon::instance($this->created) : null;
     }
 
     public function setUpdated(DateTime $updated): self
@@ -206,9 +204,9 @@ class Trip
         return $this;
     }
 
-    public function getUpdated(): Carbon
+    public function getUpdated(): ?Carbon
     {
-        return Carbon::instance($this->updated);
+        return null !== $this->updated ? Carbon::instance($this->updated) : null;
     }
 
     public function setDeleted(DateTime $deleted): self
@@ -218,9 +216,9 @@ class Trip
         return $this;
     }
 
-    public function getDeleted(): Carbon
+    public function getDeleted(): ?Carbon
     {
-        return Carbon::instance($this->deleted);
+        return null !== $this->deleted ? Carbon::instance($this->deleted) : null;
     }
 
     public function setAdditionalInfo(?string $additionalInfo): self
@@ -238,13 +236,6 @@ class Trip
     public function getId(): int
     {
         return $this->id;
-    }
-
-    public function setId(int $id): self
-    {
-        $this->id = $id;
-
-        return $this;
     }
 
     public function setCreator(Member $creator): self

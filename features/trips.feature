@@ -1,6 +1,6 @@
 Feature:
   In order to manage my trips,
-  As a member,
+  As an authenticated user,
   I should be able to list, get, create, update and delete my trips
 
   # List
@@ -9,7 +9,7 @@ Feature:
     And I send a "GET" request to "/api/members/member-2/trips"
     Then the response status code should be 401
 
-  Scenario Outline: As a member, I can list any member trips
+  Scenario Outline: As an authenticated user, I can list any member trips
     Given I am authenticated as "member-2"
     When I add "Accept" header equal to "application/ld+json"
     And I send a "GET" request to "<uri>"
@@ -94,7 +94,7 @@ Feature:
     And I send a "GET" request to "/api/trips/1"
     Then the response status code should be 401
 
-  Scenario Outline: As a member, I can get any member's trip
+  Scenario Outline: As an authenticated user, I can get any member's trip
     Given I am authenticated as "member-2"
     When I add "Accept" header equal to "application/ld+json"
     And I send a "GET" request to "<uri>"

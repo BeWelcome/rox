@@ -5,140 +5,61 @@ Feature:
 
   # POST
   Scenario: As anonymous, I cannot create a subtrip
-    When I add "Accept" header equal to "application/ld+json"
-    And I add "Content-Type" header equal to "application/ld+json"
-    And I send a "POST" request to "/api/subtrips" with body:
-    """
-    {
-      "location": "/api/locations/2921044",
-      "arrival": "2021-02-19",
-      "departure": "2021-02-21",
-      "options": ["MeetLocals", "LookingForHosts"],
-      "trip": "/api/trips/1"
-    }
-    """
-    Then the response status code should be 401
+    When I create a subtrip for Berlin in 2 days for 2 days
+    Then I should be unauthorized
 
-  Scenario: As anonymous, I can create a subtrip
+  Scenario: As an authenticated user, I can create a subtrip
     Given I am authenticated as "member-2"
-    When I add "Accept" header equal to "application/ld+json"
-    And I add "Content-Type" header equal to "application/ld+json"
-    And I send a "POST" request to "/api/subtrips" with body:
-    """
-    {
-      "location": "/api/locations/2921044",
-      "arrival": "2021-02-19",
-      "departure": "2021-02-21",
-      "options": ["MeetLocals", "LookingForHosts"],
-      "trip": "/api/trips/1"
-    }
-    """
-    Then the response status code should be 201
-    And the response should be in JSON
-    And the header "Content-Type" should be equal to "application/ld+json; charset=utf-8"
-    And the JSON should be valid according to the schema "tests/Behat/json/subtrip/item/schema.json"
+    When I create a subtrip for Berlin in 2 days for 2 days
+    Then the subtrip should have been successfully created
 
-  Scenario: As anonymous, I cannot create a subtrip on another member's trip
+  Scenario: As an authenticated user, I cannot add a subtrip to another member's trip
     Given I am authenticated as "member-2"
-    When I add "Accept" header equal to "application/ld+json"
-    And I add "Content-Type" header equal to "application/ld+json"
-    And I send a "POST" request to "/api/subtrips" with body:
-    """
-    {
-      "location": "/api/locations/2921044",
-      "arrival": "2021-02-19",
-      "departure": "2021-02-21",
-      "options": ["MeetLocals", "LookingForHosts"],
-      "trip": "/api/trips/2"
-    }
-    """
-    Then the response status code should be 422
-    And the response should be in JSON
-    And the JSON node "hydra:description" should be equal to "trip: This value is not valid."
+    When I create a subtrip for Berlin on another member's trip
+    Then I should see the following errors:
+      | trip: This value is not valid. |
 
   # GET
   Scenario: As anonymous, I cannot get a subtrip
-    When I add "Accept" header equal to "application/ld+json"
-    And I send a "GET" request to "/api/subtrips/1"
-    Then the response status code should be 401
+    When I get a subtrip for Berlin
+    Then I should be unauthorized
 
   Scenario Outline: As a member, I can get any member's subtrip
     Given I am authenticated as "member-2"
-    When I add "Accept" header equal to "application/ld+json"
-    And I send a "GET" request to "<uri>"
-    Then the response status code should be 200
-    And the response should be in JSON
-    And the header "Content-Type" should be equal to "application/ld+json; charset=utf-8"
-    And the JSON should be valid according to the schema "tests/Behat/json/subtrip/item/schema.json"
+    When I get a subtrip for "<city>"
+    Then I should see the subtrip
     Examples:
-      | uri             |
-      | /api/subtrips/1 |
-      | /api/subtrips/2 |
-      | /api/subtrips/3 |
+      | city     |
+      | Berlin   |
+      | Jayapura |
+      | Munich   |
 
   # PUT
   Scenario: As anonymous, I cannot update a subtrip
-    When I add "Accept" header equal to "application/ld+json"
-    And I add "Content-Type" header equal to "application/ld+json"
-    And I send a "PUT" request to "/api/subtrips/1" with body:
-    """
-    {
-      "location": "/api/locations/2921044",
-      "arrival": "2021-02-19",
-      "departure": "2021-02-21",
-      "options": ["MeetLocals", "LookingForHosts"]
-    }
-    """
-    Then the response status code should be 401
+    When I update my subtrip for Berlin
+    Then I should be unauthorized
 
-  Scenario: As anonymous, I can update my trip
+  Scenario: As an authenticated user, I can update my trip
     Given I am authenticated as "member-2"
-    When I add "Accept" header equal to "application/ld+json"
-    And I add "Content-Type" header equal to "application/ld+json"
-    And I send a "PUT" request to "/api/subtrips/1" with body:
-    """
-    {
-      "location": "/api/locations/2921044",
-      "arrival": "2021-02-19",
-      "departure": "2021-02-21",
-      "options": ["MeetLocals", "LookingForHosts"]
-    }
-    """
-    Then the response status code should be 200
-    And the response should be in JSON
-    And the header "Content-Type" should be equal to "application/ld+json; charset=utf-8"
-    And the JSON should be valid according to the schema "tests/Behat/json/subtrip/item/schema.json"
+    When I update my subtrip for Berlin
+    Then I should see the subtrip
 
-  Scenario: As anonymous, I cannot update a subtrip from another member's trip
+  Scenario: As an authenticated user, I cannot update a subtrip from another member's trip
     Given I am authenticated as "member-2"
-    When I add "Accept" header equal to "application/ld+json"
-    And I add "Content-Type" header equal to "application/ld+json"
-    And I send a "PUT" request to "/api/subtrips/3" with body:
-    """
-    {
-      "location": "/api/locations/2921044",
-      "arrival": "2021-02-19",
-      "departure": "2021-02-21",
-      "options": ["MeetLocals", "LookingForHosts"]
-    }
-    """
-    Then the response status code should be 403
+    When I update the subtrip for Munich of another member's trip
+    Then I should be forbidden
 
   # DELETE
   Scenario: As anonymous, I cannot delete a subtrip
-    When I add "Accept" header equal to "application/ld+json"
-    And I send a "DELETE" request to "/api/subtrips/1"
-    Then the response status code should be 401
+    When I delete my subtrip for Berlin
+    Then I should be unauthorized
 
-  Scenario: As anonymous, I can update my trip
+  Scenario: As an authenticated user, I can delete any subtrip that I own
     Given I am authenticated as "member-2"
-    When I add "Accept" header equal to "application/ld+json"
-    And I send a "DELETE" request to "/api/subtrips/1"
-    Then the response status code should be 204
-    And the response should be empty
+    When I delete my subtrip for Berlin
+    Then the subtrip should have been successfully deleted
 
-  Scenario: As anonymous, I cannot update another member's trip
+  Scenario: As an authenticated user, I cannot delete another member's trip
     Given I am authenticated as "member-2"
-    When I add "Accept" header equal to "application/ld+json"
-    And I send a "DELETE" request to "/api/subtrips/3"
-    Then the response status code should be 403
+    When I delete the subtrip for Munich of another member's trip
+    Then I should be forbidden

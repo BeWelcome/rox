@@ -10,6 +10,7 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use App\Doctrine\AccommodationType;
 use App\Doctrine\GroupMembershipStatusType;
@@ -720,6 +721,15 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
      */
     private $addresses;
 
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Trip", mappedBy="creator", fetch="EXTRA_LAZY")
+     *
+     * @ApiSubresource
+     */
+    private $trips;
+
     public function __construct()
     {
         $this->addresses = new ArrayCollection();
@@ -730,6 +740,7 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
         $this->comments = new ArrayCollection();
         $this->relationships = new ArrayCollection();
         $this->preferences = new ArrayCollection();
+        $this->trips = new ArrayCollection();
     }
 
     /**
@@ -3291,5 +3302,32 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
     public function getAvatar(): string
     {
         return '/members/avatar/' . $this->getUsername();
+    }
+
+    /**
+     * @return Collection|Trip[]
+     */
+    public function getTrips(): Collection
+    {
+        return $this->trips;
+    }
+
+    public function addTrip(Trip $trip): self
+    {
+        if (!$this->trips->contains($trip)) {
+            $this->trips[] = $trip;
+            $trip->setCreator($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTrip(Trip $trip): self
+    {
+        if ($this->trips->contains($trip)) {
+            $this->trips->removeElement($trip);
+        }
+
+        return $this;
     }
 }

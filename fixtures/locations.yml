@@ -60,3 +60,14 @@ App\Entity\Location:
         moddate: '<DateTime()>'
         geonameId: 2082600
         country: '@Indonesia'
+    Munich:
+        name: 'Munich'
+        latitude: 48.13743
+        longitude: 11.57549
+        fclass: P
+        fcode: PPLC
+        admin1: '16'
+        population: 1260391
+        moddate: '<DateTime()>'
+        geonameId: 2867714
+        country: '@Germany'

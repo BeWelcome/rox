@@ -1,0 +1,60 @@
+{
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+        "@context": {
+            "pattern": "^/api/contexts/Trip$",
+            "required": true
+        },
+        "@id": {
+            "pattern": "^/api/members/.*/trips$",
+            "required": true
+        },
+        "@type": {
+            "pattern": "^hydra:Collection$",
+            "required": true
+        },
+        "hydra:member": {
+            "type": "array",
+            "required": true,
+            "min-items": 1,
+            "max-items": 1,
+            "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                    "@id": {
+                        "pattern": "^/api/trips/.*$",
+                        "required": true
+                    },
+                    "@type": {
+                        "pattern": "^Trip$",
+                        "required": true
+                    },
+                    "summary": {
+                        "required": true
+                    },
+                    "description": {
+                        "required": true
+                    },
+                    "countOfTravellers": {
+                        "required": true
+                    },
+                    "created": {
+                        "required": true
+                    },
+                    "updated": {
+                        "required": true
+                    },
+                    "additionalInfo": {
+                        "required": true
+                    }
+                }
+            }
+        },
+        "hydra:totalItems": {
+            "type": "integer",
+            "required": true
+        }
+    }
+}

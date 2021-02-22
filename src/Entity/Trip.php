@@ -7,11 +7,13 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Doctrine\TripAdditionalInfoType;
 use Carbon\Carbon;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -24,6 +26,32 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @SuppressWarnings(PHPMD)
  * Auto generated class do not check mess
+ *
+ * API complete list ("/api/trips") has been disabled
+ * Please refer to "/api/members/{username}/trips" for a member's trips list
+ *
+ * @ApiResource(
+ *     security="is_granted('ROLE_USER')",
+ *     normalizationContext={"groups"={"trip:list"}},
+ *     denormalizationContext={"groups"={"trip:write"}},
+ *     collectionOperations={
+ *          "post"={
+ *              "normalization_context"={"groups"={"trip:read"}}
+ *          }
+ *     },
+ *     itemOperations={
+ *          "get"={
+ *              "normalization_context"={"groups"={"trip:read"}}
+ *          },
+ *          "put"={
+ *              "normalization_context"={"groups"={"trip:read"}},
+ *              "security"="is_granted('ROLE_USER') and user === object.getCreator()"
+ *          },
+ *          "delete"={
+ *              "security"="is_granted('ROLE_USER') and user === object.getCreator()"
+ *          }
+ *     }
+ * )
  */
 class Trip
 {
@@ -31,6 +59,8 @@ class Trip
      * @var string
      *
      * @ORM\Column(name="summary", type="string", length=150, nullable=false)
+     *
+     * @Groups({"trip:list", "trip:read", "trip:write"})
      */
     private $summary;
 
@@ -38,6 +68,8 @@ class Trip
      * @var string
      *
      * @ORM\Column(name="description", type="string", length=4096, nullable=false)
+     *
+     * @Groups({"trip:list", "trip:read", "trip:write"})
      */
     private $description;
 
@@ -45,25 +77,31 @@ class Trip
      * @var int
      *
      * @ORM\Column(name="countOfTravellers", type="integer")
+     *
+     * @Groups({"trip:list", "trip:read", "trip:write"})
      */
     private $countOfTravellers = 1;
 
     /**
-     * @var Carbon
+     * @var DateTime
      *
      * @ORM\Column(name="created", type="datetime")
+     *
+     * @Groups({"trip:list", "trip:read"})
      */
     private $created;
 
     /**
-     * @var Carbon
+     * @var DateTime
      *
      * @ORM\Column(name="updated", type="datetime", nullable=true)
+     *
+     * @Groups({"trip:list", "trip:read"})
      */
     private $updated;
 
     /**
-     * @var Carbon
+     * @var DateTime
      *
      * @ORM\Column(name="deleted", type="datetime", nullable=true)
      */
@@ -73,6 +111,8 @@ class Trip
      * @var string
      *
      * @ORM\Column(name="additionalInfo", type="trip_additional_info", nullable=true)
+     *
+     * @Groups({"trip:list", "trip:read", "trip:write"})
      */
     private $additionalInfo = TripAdditionalInfoType::NONE;
 
@@ -89,14 +129,17 @@ class Trip
      * @var ArrayCollection
      * @Assert\Count(min=1)
      *
-     * @ORM\OneToMany(targetEntity="Subtrip", mappedBy="trip", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="Subtrip", mappedBy="trip", cascade={"all"}, fetch="EAGER")
+     *
+     * @Groups({"trip:read", "trip:write"})
      */
     private $subtrips;
 
     /**
      * @var Member
+     * @Assert\NotNull
      *
-     * @ORM\ManyToOne(targetEntity="\App\Entity\Member")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Member", inversedBy="trips")
      * @ORM\JoinColumn(name="created_by", referencedColumnName="id")
      */
     private $creator;
@@ -149,9 +192,9 @@ class Trip
         return $this;
     }
 
-    public function getCreated(): Carbon
+    public function getCreated(): ?Carbon
     {
-        return Carbon::instance($this->created);
+        return null !== $this->created ? Carbon::instance($this->created) : null;
     }
 
     public function setUpdated(DateTime $updated): self
@@ -161,9 +204,9 @@ class Trip
         return $this;
     }
 
-    public function getUpdated(): Carbon
+    public function getUpdated(): ?Carbon
     {
-        return Carbon::instance($this->updated);
+        return null !== $this->updated ? Carbon::instance($this->updated) : null;
     }
 
     public function setDeleted(DateTime $deleted): self
@@ -173,9 +216,9 @@ class Trip
         return $this;
     }
 
-    public function getDeleted(): Carbon
+    public function getDeleted(): ?Carbon
     {
-        return Carbon::instance($this->deleted);
+        return null !== $this->deleted ? Carbon::instance($this->deleted) : null;
     }
 
     public function setAdditionalInfo(?string $additionalInfo): self

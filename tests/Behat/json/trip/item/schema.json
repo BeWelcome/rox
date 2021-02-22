@@ -1,0 +1,68 @@
+{
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+        "@context": {
+            "pattern": "^/api/contexts/Trip$",
+            "required": true
+        },
+        "@id": {
+            "pattern": "^/api/trips/.*$",
+            "required": true
+        },
+        "@type": {
+            "pattern": "^Trip$",
+            "required": true
+        },
+        "summary": {
+            "required": true
+        },
+        "description": {
+            "required": true
+        },
+        "countOfTravellers": {
+            "required": true
+        },
+        "created": {
+            "required": true
+        },
+        "updated": {
+            "required": true
+        },
+        "additionalInfo": {
+            "required": true
+        },
+        "subtrips": {
+            "type": "array",
+            "required": true,
+            "min-items": 1,
+            "max-items": 2,
+            "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                    "@id": {
+                        "pattern": "^/api/subtrips/.*$",
+                        "required": true
+                    },
+                    "@type": {
+                        "pattern": "^Subtrip$",
+                        "required": true
+                    },
+                    "location": {
+                        "required": true
+                    },
+                    "arrival": {
+                        "required": true
+                    },
+                    "departure": {
+                        "required": true
+                    },
+                    "options": {
+                        "required": true
+                    }
+                }
+            }
+        }
+    }
+}

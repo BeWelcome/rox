@@ -43,6 +43,3 @@ if ($User && empty($noForumNewTopicButton)) {
 ?>
 </div>
 <?php
-if (isset($keyword)) { ?>
-<script
-<?php }

@@ -11,6 +11,9 @@
     {# Check if the member deleted the message/request #}
     {% set deleted = message.isDeletedByMember(myself) %}
     {% set purged = message.isPurgedByMember(myself) %}
+    {% if not show_deleted is defined %}
+        {% set show_deleted = false %}
+    {% endif %}
     {% if (show_deleted or not deleted) and not purged %}
         <div class="row no-gutters {% if own %}justify-content-end{% else %}justify-content-start{% endif %}">
             <div class="col-auto{% if own %} order-12 pr-0{% else %} pl-0{% endif %}">
@@ -43,7 +46,7 @@
                     {%- endif -%}
                 </small>
                 <p class="clearfix m-0"></p>
-                {{ message.message|purify }}
+                {{ message.message|purify('custom') }}
             </div>
         </div>
         {% if message.Request %}

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "929046e758bd0cd2f060766984be01e9",
+    "content-hash": "50612ace44928e4bd50d240e3f261400",
     "packages": [
         {
             "name": "amphp/amp",
@@ -1478,16 +1478,16 @@
         },
         {
             "name": "doctrine/annotations",
-            "version": "1.12.0",
+            "version": "1.12.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/annotations.git",
-                "reference": "ebec9b1708c95d7602245c8172773f6b4e0c3be1"
+                "reference": "b17c5014ef81d212ac539f07a1001832df1b6d3b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/annotations/zipball/ebec9b1708c95d7602245c8172773f6b4e0c3be1",
-                "reference": "ebec9b1708c95d7602245c8172773f6b4e0c3be1",
+                "url": "https://api.github.com/repos/doctrine/annotations/zipball/b17c5014ef81d212ac539f07a1001832df1b6d3b",
+                "reference": "b17c5014ef81d212ac539f07a1001832df1b6d3b",
                 "shasum": ""
             },
             "require": {
@@ -1542,9 +1542,9 @@
             ],
             "support": {
                 "issues": "https://github.com/doctrine/annotations/issues",
-                "source": "https://github.com/doctrine/annotations/tree/1.12.0"
+                "source": "https://github.com/doctrine/annotations/tree/1.12.1"
             },
-            "time": "2021-02-14T13:22:18+00:00"
+            "time": "2021-02-21T21:00:45+00:00"
         },
         {
             "name": "doctrine/cache",
@@ -2852,21 +2852,21 @@
         },
         {
             "name": "exercise/htmlpurifier-bundle",
-            "version": "v2.0.6",
+            "version": "v3.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Exercise/HTMLPurifierBundle.git",
-                "reference": "c2266f31b440c6adb8bd26eeca49ac965db57527"
+                "reference": "32f4709006e810efd8a72466a8e9d0672df4bc24"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Exercise/HTMLPurifierBundle/zipball/c2266f31b440c6adb8bd26eeca49ac965db57527",
-                "reference": "c2266f31b440c6adb8bd26eeca49ac965db57527",
+                "url": "https://api.github.com/repos/Exercise/HTMLPurifierBundle/zipball/32f4709006e810efd8a72466a8e9d0672df4bc24",
+                "reference": "32f4709006e810efd8a72466a8e9d0672df4bc24",
                 "shasum": ""
             },
             "require": {
                 "ezyang/htmlpurifier": "~4.0",
-                "php": "^5.5.9|>=7.0.8",
+                "php": "^7.1.3 || ^8.0.0",
                 "symfony/config": "~3.4 || ~4.0 || ^5.0",
                 "symfony/dependency-injection": "~3.4.1 || ^4.0.1 || ^5.0",
                 "symfony/http-kernel": "~3.4.1 || ^4.0.1 || ^5.0"
@@ -2880,7 +2880,7 @@
             "type": "symfony-bundle",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.0.x-dev"
+                    "dev-master": "3.0.x-dev"
                 }
             },
             "autoload": {
@@ -2908,9 +2908,9 @@
             ],
             "support": {
                 "issues": "https://github.com/Exercise/HTMLPurifierBundle/issues",
-                "source": "https://github.com/Exercise/HTMLPurifierBundle/tree/v2.0.6"
+                "source": "https://github.com/Exercise/HTMLPurifierBundle/tree/v3.1.0"
             },
-            "time": "2020-03-10T14:18:56+00:00"
+            "time": "2020-12-28T19:57:39+00:00"
         },
         {
             "name": "ezyang/htmlpurifier",
@@ -4112,24 +4112,26 @@
         },
         {
             "name": "laminas/laminas-zendframework-bridge",
-            "version": "1.1.1",
+            "version": "1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laminas/laminas-zendframework-bridge.git",
-                "reference": "6ede70583e101030bcace4dcddd648f760ddf642"
+                "reference": "6cccbddfcfc742eb02158d6137ca5687d92cee32"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laminas/laminas-zendframework-bridge/zipball/6ede70583e101030bcace4dcddd648f760ddf642",
-                "reference": "6ede70583e101030bcace4dcddd648f760ddf642",
+                "url": "https://api.github.com/repos/laminas/laminas-zendframework-bridge/zipball/6cccbddfcfc742eb02158d6137ca5687d92cee32",
+                "reference": "6cccbddfcfc742eb02158d6137ca5687d92cee32",
                 "shasum": ""
             },
             "require": {
-                "php": "^5.6 || ^7.0 || ^8.0"
+                "php": "^7.3 || ^8.0"
             },
             "require-dev": {
                 "phpunit/phpunit": "^5.7 || ^6.5 || ^7.5 || ^8.1 || ^9.3",
-                "squizlabs/php_codesniffer": "^3.5"
+                "psalm/plugin-phpunit": "^0.15.1",
+                "squizlabs/php_codesniffer": "^3.5",
+                "vimeo/psalm": "^4.6"
             },
             "type": "library",
             "extra": {
@@ -4168,7 +4170,7 @@
                     "type": "community_bridge"
                 }
             ],
-            "time": "2020-09-14T14:23:00+00:00"
+            "time": "2021-02-25T21:54:58+00:00"
         },
         {
             "name": "lcobucci/jwt",
@@ -12887,7 +12889,7 @@
         },
         {
             "name": "cakephp/core",
-            "version": "4.2.3",
+            "version": "4.2.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cakephp/core.git",
@@ -12944,16 +12946,16 @@
         },
         {
             "name": "cakephp/database",
-            "version": "4.2.3",
+            "version": "4.2.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cakephp/database.git",
-                "reference": "8326f272a8e43c38c73c0b4a969f5c142428d8a4"
+                "reference": "548196c180e1085982410bf50ee43c1f2e968efc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cakephp/database/zipball/8326f272a8e43c38c73c0b4a969f5c142428d8a4",
-                "reference": "8326f272a8e43c38c73c0b4a969f5c142428d8a4",
+                "url": "https://api.github.com/repos/cakephp/database/zipball/548196c180e1085982410bf50ee43c1f2e968efc",
+                "reference": "548196c180e1085982410bf50ee43c1f2e968efc",
                 "shasum": ""
             },
             "require": {
@@ -12995,20 +12997,20 @@
                 "issues": "https://github.com/cakephp/cakephp/issues",
                 "source": "https://github.com/cakephp/database"
             },
-            "time": "2021-01-21T15:09:57+00:00"
+            "time": "2021-02-25T11:18:56+00:00"
         },
         {
             "name": "cakephp/datasource",
-            "version": "4.2.3",
+            "version": "4.2.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cakephp/datasource.git",
-                "reference": "e2c8c895254837722a5a00609644b72ef01290a0"
+                "reference": "46b069760f901d43bda94decd3c39ed8a9903175"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cakephp/datasource/zipball/e2c8c895254837722a5a00609644b72ef01290a0",
-                "reference": "e2c8c895254837722a5a00609644b72ef01290a0",
+                "url": "https://api.github.com/repos/cakephp/datasource/zipball/46b069760f901d43bda94decd3c39ed8a9903175",
+                "reference": "46b069760f901d43bda94decd3c39ed8a9903175",
                 "shasum": ""
             },
             "require": {
@@ -13053,11 +13055,11 @@
                 "issues": "https://github.com/cakephp/cakephp/issues",
                 "source": "https://github.com/cakephp/datasource"
             },
-            "time": "2021-01-01T07:34:22+00:00"
+            "time": "2021-02-24T02:04:30+00:00"
         },
         {
             "name": "cakephp/utility",
-            "version": "4.2.3",
+            "version": "4.2.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cakephp/utility.git",
@@ -13907,16 +13909,16 @@
         },
         {
             "name": "hautelook/alice-bundle",
-            "version": "2.8.0",
+            "version": "2.9.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/hautelook/AliceBundle.git",
-                "reference": "fc2f2e58eaab1e8294f3439e3a21801b75de4c46"
+                "reference": "17c5199b2a6efbc1383b0afe1cddfa3c176b7b6f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hautelook/AliceBundle/zipball/fc2f2e58eaab1e8294f3439e3a21801b75de4c46",
-                "reference": "fc2f2e58eaab1e8294f3439e3a21801b75de4c46",
+                "url": "https://api.github.com/repos/hautelook/AliceBundle/zipball/17c5199b2a6efbc1383b0afe1cddfa3c176b7b6f",
+                "reference": "17c5199b2a6efbc1383b0afe1cddfa3c176b7b6f",
                 "shasum": ""
             },
             "require": {
@@ -13924,11 +13926,11 @@
                 "doctrine/doctrine-bundle": "^1.8 || ^2.0",
                 "doctrine/orm": "^2.5.11",
                 "doctrine/persistence": "^1.3.4 || ^2.0",
-                "php": "^7.3",
+                "php": "^7.3 || ^8.0",
                 "psr/log": "^1.0",
                 "symfony/finder": "^3.4 || ^4.0 || ^5.0",
                 "symfony/framework-bundle": "^3.4.24 || ^4.0 || ^5.0",
-                "theofidry/alice-data-fixtures": "^1.3"
+                "theofidry/alice-data-fixtures": "^1.4"
             },
             "require-dev": {
                 "phpspec/prophecy": "^1.7",
@@ -13973,7 +13975,7 @@
             ],
             "support": {
                 "issues": "https://github.com/hautelook/AliceBundle/issues",
-                "source": "https://github.com/hautelook/AliceBundle/tree/2.8.0"
+                "source": "https://github.com/hautelook/AliceBundle/tree/2.9.0"
             },
             "funding": [
                 {
@@ -13981,7 +13983,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2020-10-12T13:48:37+00:00"
+            "time": "2021-02-23T08:45:57+00:00"
         },
         {
             "name": "infection/abstract-testframework-adapter",
@@ -14315,16 +14317,16 @@
         },
         {
             "name": "mockery/mockery",
-            "version": "1.4.2",
+            "version": "1.4.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mockery/mockery.git",
-                "reference": "20cab678faed06fac225193be281ea0fddb43b93"
+                "reference": "d1339f64479af1bee0e82a0413813fe5345a54ea"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mockery/mockery/zipball/20cab678faed06fac225193be281ea0fddb43b93",
-                "reference": "20cab678faed06fac225193be281ea0fddb43b93",
+                "url": "https://api.github.com/repos/mockery/mockery/zipball/d1339f64479af1bee0e82a0413813fe5345a54ea",
+                "reference": "d1339f64479af1bee0e82a0413813fe5345a54ea",
                 "shasum": ""
             },
             "require": {
@@ -14381,9 +14383,9 @@
             ],
             "support": {
                 "issues": "https://github.com/mockery/mockery/issues",
-                "source": "https://github.com/mockery/mockery/tree/master"
+                "source": "https://github.com/mockery/mockery/tree/1.4.3"
             },
-            "time": "2020-08-11T18:10:13+00:00"
+            "time": "2021-02-24T09:51:49+00:00"
         },
         {
             "name": "myclabs/deep-copy",
@@ -14900,16 +14902,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "0.12.78",
+            "version": "0.12.79",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "eecce8d2ee3cac6769f37b4cb1998b2715f82984"
+                "reference": "dd7769915648b704b9bd12925994457f1c2c8442"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/eecce8d2ee3cac6769f37b4cb1998b2715f82984",
-                "reference": "eecce8d2ee3cac6769f37b4cb1998b2715f82984",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/dd7769915648b704b9bd12925994457f1c2c8442",
+                "reference": "dd7769915648b704b9bd12925994457f1c2c8442",
                 "shasum": ""
             },
             "require": {
@@ -14940,7 +14942,7 @@
             "description": "PHPStan - PHP Static Analysis Tool",
             "support": {
                 "issues": "https://github.com/phpstan/phpstan/issues",
-                "source": "https://github.com/phpstan/phpstan/tree/0.12.78"
+                "source": "https://github.com/phpstan/phpstan/tree/0.12.79"
             },
             "funding": [
                 {
@@ -14956,7 +14958,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-02-20T13:24:36+00:00"
+            "time": "2021-02-25T16:44:57+00:00"
         },
         {
             "name": "phpstan/phpstan-doctrine",

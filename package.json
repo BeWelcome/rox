@@ -87,6 +87,7 @@
     "typeface-signika": "0.0.72",
     "uglify-js": "^3.11.1",
     "underscore.string": "^3.3.5",
-    "workbox-webpack-plugin": "^5.1.4"
+    "workbox-webpack-plugin": "^5.1.4",
+    "mark.js": "^8.11.1"
   }
 }

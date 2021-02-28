@@ -1,8 +1,10 @@
+<input type="hidden" id="keyword" name="keyword" value="<?php echo htmlentities($this->keyword) ?>">
 <div class="row no-gutters">
         <div class="col-12">
             <h3><?= $words->get('GroupsSearchDiscussionsGroup', htmlspecialchars($this->search_terms, ENT_QUOTES)); ?></h3>
         </div>
     <div class="col-12">
+
         <?php $this->pager->render(); ?>
         <table class="table table-striped table-hover" style="table-layout: fixed;">
             <tbody>

@@ -234,11 +234,11 @@ class GroupsController extends RoxControllerBase
 
         $params = new \stdClass();
         $params->strategy = new FullPagePager('right');
-        $params->items_per_page = 5;
+        $params->items_per_page = 30;
         $results = $this->_model->searchGroupDiscussions($group, $terms, $currentPage, $params->items_per_page);
         $params->items = $results['count'];
         $pager = new PagerWidget($params);
-        $page = new GroupSearchDiscussionsPage($group);
+        $page = new GroupSearchDiscussionsPage($group, $terms);
         $page->search_result = $results['threads'];
         $page->search_terms = $terms;
         $page->pager = $pager;

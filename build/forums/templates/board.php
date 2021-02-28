@@ -3,6 +3,9 @@
 $User = $this->_model->getLoggedInMember();
 
 $words = new MOD_words();
+if (isset($keyword)) {
+    echo '<input type="hidden" id="keyword" name="keyword" value="' . htmlentities($keyword) . '">';
+}
 ?>
 <div class="row">
 <div class="col-8"><h3>
@@ -39,3 +42,7 @@ if ($User && empty($noForumNewTopicButton)) {
 
 ?>
 </div>
+<?php
+if (isset($keyword)) { ?>
+<script
+<?php }

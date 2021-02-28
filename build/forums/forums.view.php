@@ -450,6 +450,7 @@ class ForumsView extends RoxAppView {
      * @param string $keyword The term to be searched for
      */
     public function showSearchResultPage($keyword) {
+        $this->page->addLateLoadScriptFile('build/highlight.js');
         $result = $this->_model->searchForums($keyword);
         if (isset($result['errors'])) {
             require 'templates/searcherror.php';

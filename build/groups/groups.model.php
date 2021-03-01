@@ -923,49 +923,47 @@ WHERE IdGroup=" . (int)$group->id . " AND IdMember=" . (int)$memberid;
         $sphinxClient = $sphinx->getSphinxForums();
         $sphinxClient->SetFilter('IdGroup', [$group->getPKValue()]);
         $sphinxClient->SetSortMode(SPH_SORT_ATTR_DESC, 'created' );
-        $resultsThreads = $sphinxClient->Query($sphinxClient->EscapeString($keywords), 'forums');
+        $resultsPosts = $sphinxClient->Query($sphinxClient->EscapeString($keywords), 'forums_posts');
 
-        if ($resultsThreads) {
-            $results['count'] = $resultsThreads['total'];
-            if ($resultsThreads['total'] <> 0) {
-                $threadIds = array();
-                foreach ($resultsThreads['matches'] as $match) {
-                    $threadIds[] = $match['id'];
+        if ($resultsPosts) {
+            $languageId = $this->session->get('IdLanguage', 0);
+            $results['count'] = $resultsPosts['total'];
+            if ($resultsPosts['total'] <> 0) {
+                $postIds = [];
+                foreach ($resultsPosts['matches'] as $match) {
+                    $postIds[] = $match['id'];
                 }
-                $query = 'SELECT count(*) AS count FROM forums_threads WHERE id IN (' . implode(',', $threadIds) . ')';
-                $results['count'] = ($this->singleLookup($query))->count;
 
 		        $query = "
-		        SELECT SQL_CALC_FOUND_ROWS `forums_threads`.`id`,
-		 		  `forums_threads`.`id` as IdThread, `forums_threads`.`title`,
-				  `forums_threads`.`IdTitle`,
-				  `forums_threads`.`IdGroup`,
-				  `forums_threads`.`replies`,
-		          `forums_threads`.`stickyvalue`,
-		          `groups`.`Name` as `GroupName`,
-                  `ThreadVisibility`,
-	              `ThreadDeleted`,
-				  `forums_threads`.`views`,
-				  `first`.`id` AS `first_postid`,
-				  `first`.`idWriter` AS `first_authorid`,
-				  UNIX_TIMESTAMP(`first`.`create_time`) AS `first_create_time`,
-				  UNIX_TIMESTAMP(`last`.`create_time`) AS `last_create_time`,
-				  `last`.`id` AS `last_postid`,
-				  `last`.`idWriter` AS `last_authorid`,
-				  UNIX_TIMESTAMP(`last`.`create_time`) AS `last_create_time`,
-		          `first_member`.`Username` AS `first_author`,`last_member`.`Username` AS `last_author`
-		          FROM `forums_threads` LEFT JOIN `forums_posts` AS `first` ON (`forums_threads`.`first_postid` = `first`.`id`)
-		          LEFT JOIN `groups` ON (`groups`.`id` = `forums_threads`.`IdGroup`)
-		          LEFT JOIN `forums_posts` AS `last` ON (`forums_threads`.`last_postid` = `last`.`id`)
-		          LEFT JOIN `members` AS `first_member` ON (`first`.`IdWriter` = `first_member`.`id`)
-		          LEFT JOIN `members` AS `last_member` ON (`last`.`IdWriter` = `last_member`.`id`)
-                  WHERE `forums_threads`.`id` IN (" . implode(',', $threadIds) . ")
-                  AND `forums_threads`.`ThreadVisibility` <> 'ModeratorOnly'
-                  AND `forums_threads`.`ThreadDeleted` = 'NotDeleted'
-                  ";
+                    SELECT SQL_CALC_FOUND_ROWS
+                        `forums_posts`.`id`,
+                        `members`.`Username`,
+                        `forums_posts`.`message`,
+                        `forum_trads`.`Sentence`,
+                        `forums_threads`.`id` AS IdThread,
+                        `forums_threads`.`title`,
+                        `forums_threads`.`IdGroup`,
+                        `groups`.`Name` AS `GroupName`,
+                        `ThreadVisibility`,
+                        `ThreadDeleted`,
+                         UNIX_TIMESTAMP(`forums_posts`.`create_time`) AS `created`
+                    FROM
+                        `forums_posts`
+                            LEFT JOIN
+                        `forums_threads` ON (`forums_posts`.`threadid` = `forums_threads`.`id`)
+                            LEFT JOIN
+                        `groups` ON (`groups`.`id` = `forums_threads`.`IdGroup`)
+                            LEFT JOIN
+                        `forum_trads` ON (`forum_trads`.`IdTrad` = `forums_posts`.`IdContent` AND `forum_trads`.`IdLanguage` = " . $languageId . ")
+                            LEFT JOIN
+                        `members` ON (`forums_posts`.`IdWriter` = `members`.`id`)
+                    WHERE
+                        `forums_posts`.`id` IN (" . implode(',', $postIds) . ")
+                    ORDER BY `created` DESC
+                ";
                 $query .= ' LIMIT ' . $items . ' OFFSET ' . ($page - 1) * $items;
                 $threads = $this->bulkLookup($query);
-                $results['threads'] = $threads;
+                $results['posts'] = $threads;
             } else {
                 $results['errors'][] = 'ForumSearchNoResults';
             }

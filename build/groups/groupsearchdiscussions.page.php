@@ -33,13 +33,10 @@ Boston, MA  02111-1307, USA.
      */
 class GroupSearchDiscussionsPage extends GroupsSubPage
 {
-    private string $keyword;
-
-    public function __construct($group, $keyword)
+    public function __construct($group)
     {
         parent::__construct($group);
         $this->addLateLoadScriptFile('build/highlight.js');
-        $this->keyword = $keyword;
     }
 
     protected function getSubmenuActiveItem() {

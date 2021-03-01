@@ -238,8 +238,9 @@ class GroupsController extends RoxControllerBase
         $results = $this->_model->searchGroupDiscussions($group, $terms, $currentPage, $params->items_per_page);
         $params->items = $results['count'];
         $pager = new PagerWidget($params);
-        $page = new GroupSearchDiscussionsPage($group, $terms);
-        $page->search_result = $results['threads'];
+        $page = new GroupSearchDiscussionsPage($group);
+        $page->search_result = $results['posts'] ?? [];
+        $page->search_errors = $results['errors'] ?? null;
         $page->search_terms = $terms;
         $page->pager = $pager;
         $page->group = $group;

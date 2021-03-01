@@ -183,6 +183,11 @@ if (($post->IdGroup > 0) && ($post->PostVisibility == "GroupOnly")) {
                     'href="/',
                     $words->fTrad($post->IdContent)
                 );
+                $Sentence = preg_replace(
+                    '/src="http[s]?:\/\/[^\/]*?bewelcome\.org\//i',
+                    'src="/',
+                    $words->fTrad($post->IdContent)
+                );
 
                 if (($post->PostDeleted == "Deleted")&&($this->BW_Right->HasRight("ForumModerator"))) {
                 echo "<s>", $Sentence, "</s>";

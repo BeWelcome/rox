@@ -1,55 +1,45 @@
-<input type="hidden" id="keyword" name="keyword" value="<?php echo htmlentities($this->keyword) ?>">
+<input type="hidden" id="keyword" name="keyword" value="<?php echo htmlspecialchars($this->search_terms) ?>">
 <div class="row no-gutters">
         <div class="col-12">
             <h3><?= $words->get('GroupsSearchDiscussionsGroup', htmlspecialchars($this->search_terms, ENT_QUOTES)); ?></h3>
         </div>
-    <div class="col-12">
-
-        <?php $this->pager->render(); ?>
-        <table class="table table-striped table-hover" style="table-layout: fixed;">
-            <tbody>
         <?php
-        $words = new MOD_words();
-        $layoutbits = new MOD_layoutbits();
-        foreach ($this->search_result as $thread) {
+        if (!empty($this->search_errors)) {
+            echo '<div class="col-12"><div class="alert alert-info">' . $words->get('GroupsSearchDiscussionsNoResults') . '</div></div>';
+        } else {
+            $purifierModule = new MOD_htmlpure();
+            $purifier = $purifierModule->getBasicHtmlPurifier();
 
-            $url = "/group/" . $this->group->id . "/forum/s" . $thread->IdThread;
+        $this->pager->render(); ?>
+        <?php
+            $words = new MOD_words();
+            $layoutbits = new MOD_layoutbits();
+            $i = 0;
+            foreach ($this->search_result as $post) {
+                if ($i % 2 === 0) {
+                    $style="background-color: rgba(0, 0, 0, 0.05)";
+                } else {
+                    $style="";
+                }
 
-            $max = $thread->replies + 1;
-            $maxPage = ceil($max / 200);
+                $url = "/group/" . $this->group->id . "/forum/s" . $post->IdThread . "/#post" . $post->id;
 
-            $last_url = $url . ($maxPage != 1 ? '/page'.$maxPage : '') . '/#post' . $thread->last_postid;
-
-                ?>
-                <tr>
-                    <td class="text-truncate"><?php
-                        if ($thread->ThreadDeleted=='Deleted') {
-                            echo "[Deleted]" ;
-                        }
-                        if ($thread->ThreadVisibility=="ModeratorOnly") {
-                            echo "[ModOnly]" ;
-                        }
-                        ?>
-                        <a href="<?php echo $url; ?>">
-                            <?php
-                            echo $words->fTrad($thread->IdTitle);
-                            ?></a>
-                        <div class="w-100">
-                    <span class="small grey"><?php echo $words->getSilent('by');?> <a href="members/<?php echo $thread->last_author; ?>"><?php echo $thread->last_author; ?></a>
-                    <?php
-                        echo $words->getFormatted('in') . ' <a href="group/' . $thread->IdGroup . '/" title="' . $words->getSilent('Group') . ': ' . $thread->GroupName . '">' . $thread->GroupName . '</a></span>';
                     ?>
-                        <?php echo '<span class="small grey pull-right" title="' . date($words->getSilent('DateHHMMShortFormat'), ServerToLocalDateTime($thread->last_create_time, $this->getSession())) . '"><a href="' . $last_url . '" class="grey">' . $layoutbits->ago($thread->last_create_time) . '<i class="fa fa-caret-right ml-1" title="' . $words->getBuffered('to_last') . '"></i></a></span>'; ?>
-                        <?php echo $words->flushBuffer(); ?>
-                        </div>
-                    </td>
-                </tr>
-        <?php
+        <div class="col-12 m-1 p-1" style="<?= $style ?>">
+                                <?php echo $words->get('Thread'); ?> <a href="<?php echo "/group/" . $this->group->id . "/forum/s" . $post->IdThread; ?>"><?= $post->title ?></a><br>
+                                    <?php
+                                    echo $purifier->purify(MOD_layoutbits::truncate_words($post->message, 70));
+                                    ?>
+                                <div class="w-100">
+                            <span><?php echo $words->getSilent('by');?> <a href="members/<?php echo $post->Username; ?>"><?php echo $post->Username; ?></a>
+                                <?php echo '<span class="pull-right" title="' . date($words->getSilent('DateHHMMShortFormat'), ServerToLocalDateTime($post->created, $this->getSession())) . '"><a href="' . $url . '" class="grey">' . $layoutbits->ago($post->created) . '<i class="fa fa-caret-right ml-1" title="' . $words->getBuffered('to_last') . '"></i></a></span>'; ?>
+                                </div>
+        </div>
+            <?php
+                $i++;
+            }
         }
         ?>
-        </tbody>
-        </table>
 
         <?php $this->pager->render(); ?>
-    </div>
 </div>

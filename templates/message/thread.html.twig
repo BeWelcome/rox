@@ -46,7 +46,7 @@
                     {%- endif -%}
                 </small>
                 <p class="clearfix m-0"></p>
-                {{ message.message|purify('custom') }}
+                {{ message.message|purify('custom')|url_update }}
             </div>
         </div>
         {% if message.Request %}

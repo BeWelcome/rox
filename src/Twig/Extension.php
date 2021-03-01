@@ -28,11 +28,6 @@ class Extension extends AbstractExtension implements GlobalsInterface
     protected $translator;
 
     /**
-     * @var string location of the data directory (for purifier output)
-     */
-    private $dataDirectory;
-
-    /**
      * @var array list of all enabled locales
      */
     private $locales;
@@ -59,13 +54,11 @@ class Extension extends AbstractExtension implements GlobalsInterface
         TranslatorInterface $translator,
         EntrypointLookupInterface $entrypointLookup,
         $locales,
-        $dataDirectory,
         $publicDirectory
     ) {
         $this->session = $session;
         $this->translator = $translator;
         $this->locales = explode(',', $locales);
-        $this->dataDirectory = $dataDirectory;
         $this->entrypointLookup = $entrypointLookup;
         $this->publicDirectory = $publicDirectory;
     }
@@ -149,6 +142,13 @@ class Extension extends AbstractExtension implements GlobalsInterface
                     'is_safe' => ['html'],
                 ]
             ),
+            new TwigFilter(
+                'url_update',
+                [$this, 'url_update'],
+                [
+                    'is_safe' => ['html'],
+                ]
+            ),
         ];
     }
 
@@ -172,6 +172,28 @@ class Extension extends AbstractExtension implements GlobalsInterface
         ]);
 
         return $truncated;
+    }
+
+
+    /**
+     * Removes domain name from all bewelcome links (www|beta|api) so that links work on all sub domains.
+     *
+     * @param string $text     string to truncate
+     *
+     * @return string updated string
+     */
+    public function url_update(string $text)
+    {
+        $text = preg_replace(
+            '/src="http[s]?:\/\/[^\/]*?bewelcome\.org\//i',
+            'src="/',
+            $text
+        );
+        return preg_replace(
+            '/href="http[s]?:\/\/[^\/]*?bewelcome\.org\//i',
+            'href="/',
+            $text
+        );
     }
 
     public function dumpIt($variable)

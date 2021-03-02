@@ -53,7 +53,7 @@ $layoutbits = new MOD_layoutbits();
 
         if (('NoRestriction' === $thread->ThreadVisibility)
             || ('MembersOnly' === $thread->ThreadVisibility)
-            || (('GroupsOnly' === $thread->ThreadVisibility) && (true === $isGroupMember))
+            || (('GroupOnly' === $thread->ThreadVisibility) && (true === $isGroupMember))
         ) {
         ?>
             <tr>

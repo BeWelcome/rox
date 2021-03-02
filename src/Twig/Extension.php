@@ -144,7 +144,7 @@ class Extension extends AbstractExtension implements GlobalsInterface
             ),
             new TwigFilter(
                 'url_update',
-                [$this, 'url_update'],
+                [$this, 'urlUpdate'],
                 [
                     'is_safe' => ['html'],
                 ]
@@ -157,7 +157,7 @@ class Extension extends AbstractExtension implements GlobalsInterface
      *
      * @param string $text     string to truncate
      * @param int    $length   length of returned string, including ellipsis
-     * @param string $ellipsis
+     * @param string $ellipsis the used ellipsis defaults to …
      *
      * @throws InvalidHtmlException
      *
@@ -174,21 +174,21 @@ class Extension extends AbstractExtension implements GlobalsInterface
         return $truncated;
     }
 
-
     /**
      * Removes domain name from all bewelcome links (www|beta|api) so that links work on all sub domains.
      *
-     * @param string $text     string to truncate
+     * @param string $text string to update
      *
      * @return string updated string
      */
-    public function url_update(string $text)
+    public function urlUpdate(string $text)
     {
         $text = preg_replace(
             '/src="http[s]?:\/\/[^\/]*?bewelcome\.org\//i',
             'src="/',
             $text
         );
+
         return preg_replace(
             '/href="http[s]?:\/\/[^\/]*?bewelcome\.org\//i',
             'href="/',

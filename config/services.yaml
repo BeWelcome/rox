@@ -70,6 +70,7 @@ services:
             $className: 'App\Entity\Donation'
             $memberRelationName: donor
             $alias: donations
+        tags: [ 'app.member_data_extractor' ]
 
     app.member_data_extractor.broadcasts:
         class: App\Model\MemberDataExtractor\DoctrineExtractor
@@ -78,6 +79,7 @@ services:
             $className: 'App\Entity\BroadcastMessage'
             $memberRelationName: receiver
             $alias: broadcasts
+        tags: [ 'app.member_data_extractor' ]
 
     app.member_data_extractor.community_news:
         class: App\Model\MemberDataExtractor\DoctrineExtractor
@@ -86,6 +88,7 @@ services:
             $className: 'App\Entity\CommunityNews'
             $memberRelationName: createdBy
             $alias: communitynews
+        tags: [ 'app.member_data_extractor' ]
 
     app.member_data_extractor.logs:
         class: App\Model\MemberDataExtractor\DoctrineExtractor
@@ -94,6 +97,7 @@ services:
             $className: 'App\Entity\Log'
             $memberRelationName: member
             $alias: logs
+        tags: [ 'app.member_data_extractor' ]
 
     app.member_data_extractor.newsletters:
         class: App\Model\MemberDataExtractor\DoctrineExtractor
@@ -102,6 +106,7 @@ services:
             $className: 'App\Entity\Newsletter'
             $memberRelationName: createdBy
             $alias: newsletters
+        tags: [ 'app.member_data_extractor' ]
 
     app.member_data_extractor.shouts:
         class: App\Model\MemberDataExtractor\DoctrineExtractor
@@ -110,6 +115,7 @@ services:
             $className: 'App\Entity\Shout'
             $memberRelationName: member
             $alias: shouts
+        tags: [ 'app.member_data_extractor' ]
 
     app.member_data_extractor.subscriptions:
         class: App\Model\MemberDataExtractor\DoctrineExtractor
@@ -118,6 +124,7 @@ services:
             $className: 'App\Entity\MemberThreadSubscription'
             $memberRelationName: subscriber
             $alias: subscriptions
+        tags: [ 'app.member_data_extractor' ]
 
     app.member_data_extractor.translations:
         class: App\Model\MemberDataExtractor\DoctrineExtractor
@@ -126,6 +133,7 @@ services:
             $className: 'App\Entity\Word'
             $memberRelationName: author
             $alias: translations
+        tags: [ 'app.member_data_extractor' ]
 
     App\Model\MemberModel:
         arguments:

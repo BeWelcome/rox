@@ -23,7 +23,6 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Symfony\Component\Security\Core\Security;
-use Symfony\WebpackEncoreBundle\Asset\EntrypointLookupInterface;
 
 /**
  * Class MemberController.
@@ -45,8 +44,7 @@ class MemberController extends AbstractController
         Request $request,
         MemberModel $memberModel,
         Security $security,
-        EncoderFactoryInterface $encoderFactory,
-        EntrypointLookupInterface $entrypointLookup
+        EncoderFactoryInterface $encoderFactory
     ) {
         $passwordForm = $this->createForm(PasswordFormType::class);
         $passwordForm->handleRequest($request);
@@ -65,14 +63,15 @@ class MemberController extends AbstractController
                     // Collect information and store in zip file
                     $zipFilename = $memberModel->collectPersonalData($member);
 
-                    // Entrypoints need to be reset as they will be used during rendering of the sub pages for the data extract
-                    $entrypointLookup->reset();
-
                     $request->getSession()->set('mydata_file', $zipFilename);
 
                     return $this->render('private/download.html.twig', [
                         'username' => $member->getUsername(),
-                        'url' => $this->generateUrl('member_download_data', ['username' => $member->getUsername()], UrlGeneratorInterface::ABSOLUTE_URL),
+                        'url' => $this->generateUrl(
+                            'member_download_data',
+                            ['username' => $member->getUsername()],
+                            UrlGeneratorInterface::ABSOLUTE_URL
+                        ),
                     ]);
                 }
                 $passwordForm->addError(new FormError($this->translator->trans('form.error.password.incorrect')));
@@ -113,7 +112,12 @@ class MemberController extends AbstractController
 
         return $this->render('private/download.html.twig', [
             'username' => $member->getUsername(),
-            'url' => $this->generateUrl('member_download_data', ['username' => $member->getUsername()], UrlGeneratorInterface::ABSOLUTE_URL),
+            'url' => $this->generateUrl(
+                'member_download_data',
+                [
+                    'username' => $member->getUsername(),
+                ],
+                UrlGeneratorInterface::ABSOLUTE_URL),
         ]);
     }
 

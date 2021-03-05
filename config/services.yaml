@@ -63,6 +63,14 @@ services:
         arguments:
             $decorated: '@App\Serializer\MemberContextBuilder.inner'
 
+    app.member_data_extractor.activities:
+        class: App\Model\MemberDataExtractor\ActivitiesExtractor
+        tags: [ 'app.member_data_extractor' ]
+
+    app.member_data_extractor.comments:
+        class: App\Model\MemberDataExtractor\CommentsExtractor
+        tags: [ 'app.member_data_extractor' ]
+
     app.member_data_extractor.donations:
         class: App\Model\MemberDataExtractor\DoctrineExtractor
         factory: [ '@App\Model\MemberDataExtractor\DoctrineExtractorFactory', 'create' ]
@@ -70,6 +78,50 @@ services:
             $className: 'App\Entity\Donation'
             $memberRelationName: donor
             $alias: donations
+        tags: [ 'app.member_data_extractor' ]
+
+    app.member_data_extractor.forums_posts:
+        class: App\Model\MemberDataExtractor\ForumPostsExtractor
+        tags: [ 'app.member_data_extractor' ]
+
+    app.member_data_extractor.gallery_items:
+        class: App\Model\MemberDataExtractor\GalleryItemsExtractor
+        tags: [ 'app.member_data_extractor' ]
+
+    app.member_data_extractor.group_information:
+        class: App\Model\MemberDataExtractor\GroupInformationExtractor
+        tags: [ 'app.member_data_extractor' ]
+
+    app.member_data_extractor.messages:
+        class: App\Model\MemberDataExtractor\MessagesExtractor
+        tags: [ 'app.member_data_extractor' ]
+
+    app.member_data_extractor.member_data:
+        class: App\Model\MemberDataExtractor\MemberDataExtractor
+        tags: [ 'app.member_data_extractor' ]
+
+    app.member_data_extractor.polls:
+        class: App\Model\MemberDataExtractor\PollsExtractor
+        tags: [ 'app.member_data_extractor' ]
+
+    app.member_data_extractor.privileges:
+        class: App\Model\MemberDataExtractor\PrivilegesExtractor
+        tags: [ 'app.member_data_extractor' ]
+
+    app.member_data_extractor.profile_pictures:
+        class: App\Model\MemberDataExtractor\ProfilePicturesExtractor
+        tags: [ 'app.member_data_extractor' ]
+
+    app.member_data_extractor.requests:
+        class: App\Model\MemberDataExtractor\RequestsExtractor
+        tags: [ 'app.member_data_extractor' ]
+
+    app.member_data_extractor.rights:
+        class: App\Model\MemberDataExtractor\RightsExtractor
+        tags: [ 'app.member_data_extractor' ]
+
+    app.member_data_extractor.special_relations:
+        class: App\Model\MemberDataExtractor\SpecialRelationsExtractor
         tags: [ 'app.member_data_extractor' ]
 
     app.member_data_extractor.broadcasts:
@@ -133,6 +185,15 @@ services:
             $className: 'App\Entity\Word'
             $memberRelationName: author
             $alias: translations
+        tags: [ 'app.member_data_extractor' ]
+
+    app.member_data_extractor.gallery:
+        class: App\Model\MemberDataExtractor\GalleryItemsExtractor
+        factory: [ '@App\Model\MemberDataExtractor\DoctrineExtractorFactory', 'create' ]
+        arguments:
+            $className: 'App\Entity\MemberThreadSubscription'
+            $memberRelationName: subscriber
+            $alias: subscriptions
         tags: [ 'app.member_data_extractor' ]
 
     App\Model\MemberModel:

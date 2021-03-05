@@ -157,8 +157,15 @@ class ActivityRepository extends EntityRepository
         $edison = GeoLocation::fromDegrees($latitude, $longitude);
         $coordinates = $edison->boundingCoordinates($distance, 'km');
 
-        $qb = $this->createQueryBuilder('a')
-            ->leftJoin('App:Location', 'l', Join::WITH, 'a.location = l.geonameId AND l.latitude BETWEEN :lat_e AND :lat_w AND l.longitude BETWEEN :long_s AND :long_n')
+        $qb = $this->createQueryBuilder('a');
+        $qb
+            ->leftJoin(
+                'App:Location',
+                'l',
+                Join::WITH,
+                'a.location = l.geonameId '
+                . 'AND l.latitude BETWEEN :lat_e AND :lat_w AND l.longitude BETWEEN :long_s AND :long_n'
+            )
             ->setParameter('lat_e', $coordinates[0]->getLatitudeInDegrees())
             ->setParameter('lat_w', $coordinates[1]->getLatitudeInDegrees())
             ->setParameter('long_s', $coordinates[0]->getLongitudeInDegrees())
@@ -166,6 +173,7 @@ class ActivityRepository extends EntityRepository
             ->where('(a.ends >= :now AND a.ends <= :three_months) OR (a.starts >= :now AND a.starts <= :three_months)')
             ->setParameter('now', new DateTime())
             ->setParameter('three_months', (new DateTime())->modify('+3 months'))
+            ->andWhere($qb->expr()->neq('a.status', 1)) // Do not show activities that were cancelled
             ->orderBy('a.starts', 'asc');
 
         if ($online) {

@@ -117,7 +117,8 @@ class MemberController extends AbstractController
                 [
                     'username' => $member->getUsername(),
                 ],
-                UrlGeneratorInterface::ABSOLUTE_URL),
+                UrlGeneratorInterface::ABSOLUTE_URL
+            ),
         ]);
     }
 

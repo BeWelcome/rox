@@ -25,7 +25,7 @@
                     <div class="text-truncate text">
                         <a href="{{ path(route, { id: message.id } ) }}" class="{%- if unread %}unread{% else %}read{% endif %}">
                             {% if message.subject %}<span class="text-truncate"><em>{{ message.subject.subject|raw }}</em></span>{% endif %}
-                            <span class="text-truncate">{{ message.message|raw }}</span>
+                            <span class="text-truncate">{{ message.message|purify('custom')|url_update }}</span>
                         </a>
                     </div>
                 {% endif %}

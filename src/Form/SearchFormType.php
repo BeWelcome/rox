@@ -167,7 +167,7 @@ class SearchFormType extends AbstractType
                     'any' => null,
                     'male' => 'male',
                     'female' => 'female',
-                    'other' => 'idonttell',
+                    'other' => 'other',
                 ],
                 'label' => 'gender',
                 'required' => true,

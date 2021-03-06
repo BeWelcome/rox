@@ -374,7 +374,7 @@ LIMIT 1
                 case "female":
                     $condition = " AND m.Gender = '" . $gender . "' AND m.HideGender = 'No'";
                     break;
-                case "genderOther":
+                case "other":
                     $condition = " AND m.Gender = 'other' AND m.HideGender = 'No'";
                     break;
             }

@@ -55,7 +55,7 @@ $hostingInterest = [
                 </div>
             </div>
             <div id="hi_block" class="form-group row mb-2 <?php if (isset($vars['Accomodation']) && $vars['Accomodation'] == 'neverask') { echo ' d-none'; } ?>">
-                <label for="hosting_interest" class="col-md-4 col-form-label">Hosting Interest</label>
+                <label for="hosting_interest" class="col-md-4 col-form-label"><?php echo $words->get('hosting.interest'); ?></label>
                 <div class="col-12 col-md-8">
                 <input
                     type="range"

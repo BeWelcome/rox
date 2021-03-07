@@ -1,0 +1,19 @@
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website">
+<meta property="og:site" content="BeWelcome">
+<meta property="og:url" content="{{ app.request.getSchemeAndHttpHost() }}">
+<meta property="og:title" content="BeWelcome - {{ 'home.headline.bewelcome.cultural' | trans }}">
+<meta property="og:description" content="{{ 'home.preview.description'|trans }}">
+<meta property="og:image" content="{{ absolute_url(asset('images/webpreview.png')) }}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image" content="{{ absolute_url(asset('images/webpreview_small.png')) }}">
+<meta property="og:image:width" content="400">
+<meta property="og:image:height" content="400">
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:url" content="{{ app.request.getSchemeAndHttpHost() }}">
+<meta name="twitter:title" content="BeWelcome - {{ 'home.headline.bewelcome.cultural' | trans }}">
+<meta name="twitter:description" content="{{ 'home.preview.description'|trans }}">
+<meta name="twitter:image" content="{{ absolute_url(asset('images/webpreview.png')) }}">

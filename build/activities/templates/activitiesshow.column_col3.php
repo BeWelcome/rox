@@ -41,11 +41,20 @@ if (empty($vars)) {
 }
 ?>
     <div class="col-12 col-md-9 order-1">
-        <h2 class="m-0"><?php echo $this->activity->title; ?></h2>
+        <h2 class="m-0"><?php echo $this->activity->title; ?>
+            <a class="btn btn-primary"
+               title="<?php echo $words->get('activity.report'); ?>"
+               href="/feedback?IdCategory=12&FeedbackQuestion=<?php
+                  echo urlencode('Hi, I think the activity '
+                      . $this->activity->title . ' (' . $this->activity->id
+                      . ') isn\'t in line with the rules.') ?>">
+                <i class="fas fa-flag"></i>
+            </a>
+        </h2>
     </div>
     <div class="col-md-3 d-none d-md-block ml-md-auto mb-2 order-2">
         <div class="d-flex flex-row hidden-md-down pull-right">
-            <div class="pr-2 align-self-center"><?php if ($this->activity->public) { ?><img src="images/online_meeting_noun_3384309.svg" width="32" height="32"><?php } else { ?><i class="fa fa-3x fa-users"></i><?php } ?></div>
+            <div class="pr-2 align-middle"><?php if ($this->activity->public) { ?><img src="images/online_meeting_noun_3384309.svg" width="32" height="32"><?php } else { ?><i class="fa fa-3x fa-users"></i><?php } ?></div>
             <div>
                 <p class="text-nowrap">
                     <?php if ($this->activity->attendeesYes != 0) {

@@ -138,7 +138,8 @@
                     <button type="button" class="btn btn-primary float-right" data-trigger="focus" data-container="body" data-toggle="popover" data-placement="right" data-content="<?= $words->get('signup.help.accommodation'); ?>">
                         <i class="fa fa-question"></i>
                     </button>
-                    <div class="btn-group w-100 mt-2" data-toggle="buttons">
+                    <div class="btn-group w-100 mt-2 <?php if (in_array('SignupErrorProvideAccommodation', $vars['errors'])) {
+                     echo 'is-invalid'; } ?>" data-toggle="buttons">
                         <label for="neverask"
                                class="btn btn-light">
                             <input type="radio" id="neverask" name="accommodation" value="neverask"
@@ -160,16 +161,13 @@
                                     <?php echo $words->get('Accomodation_anytime'); ?></small>
                             </div>
                         </label>
-                    <div class="invalid-feedback">Select one of the above.</div>
-                    <?php if (in_array('SignupErrorProvideAccommodation', $vars['errors'])) {
-                        echo '<div class="error">'.$words->get('SignupErrorProvideAccommodation').'</div>';
-                    }
-                    ?>
+                    <div class="invalid-feedback"><?php echo $words->get('signup.accommodation.error.select.one'); ?></div>
                     </div>
+                    <div class="invalid-feedback"><?= $words->get('SignupErrorProvideAccommodation') ?></div>
                 </div>
 
                 <div id="hi_block" class="form-group mb-2 <?php if (isset($vars['accommodation']) && $vars['accommodation'] == 'anytime') { echo ' d-block'; } else { echo ' d-none'; } ?>">
-                    <label for="hosting_interest">Hosting Interest</label>
+                    <label for="hosting_interest"><?php echo $words->get('hosting.interest'); ?></label>
                     <input
                         type="range"
                         class="form-control my-3 <?php if (in_array('SignupErrorProvideHostingInterest', $vars['errors'])) {
@@ -188,7 +186,7 @@
                         data-orientation="horizontal"
                     >
                     <div class="range text-center">
-                        <p class="rangeslider__value-output">Please set your hosting interest</p>
+                        <p class="rangeslider__value-output"><?php echo $words->get('hosting.interest.set'); ?></p>
                     </div>
                     <div class="invalid-feedback"><?php echo $words->get('SignupErrorProvideHostingInterest'); ?></div>
                 </div>

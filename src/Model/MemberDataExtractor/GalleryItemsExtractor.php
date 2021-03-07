@@ -10,10 +10,14 @@ use Twig\Environment;
 
 final class GalleryItemsExtractor extends AbstractExtractor implements ExtractorInterface
 {
-    private $projectDir;
+    private string $projectDir;
 
-    public function __construct(EntrypointLookupInterface $entrypointLookup, Environment $environment, ManagerRegistry $registry, string $projectDir)
-    {
+    public function __construct(
+        EntrypointLookupInterface $entrypointLookup,
+        Environment $environment,
+        ManagerRegistry $registry,
+        string $projectDir
+    ) {
         parent::__construct($entrypointLookup, $environment, $registry);
         $this->projectDir = $projectDir;
     }
@@ -38,8 +42,11 @@ final class GalleryItemsExtractor extends AbstractExtractor implements Extractor
                 while (false !== ($file = readdir($directoryHandle))) {
                     if (!is_dir($file)) {
                         $ext = $this->imageExtension($galleryPath . $file);
-                        $destination = $galleryDir . pathinfo($file, PATHINFO_FILENAME) . $ext;
-                        $filesystem->copy($galleryPath . $file, $galleryDir . pathinfo($file, PATHINFO_FILENAME) . $ext);
+                        $destination = $galleryDir . pathinfo($file, \PATHINFO_FILENAME) . $ext;
+                        $filesystem->copy(
+                            $galleryPath . $file,
+                            $galleryDir . pathinfo($file, \PATHINFO_FILENAME) . $ext
+                        );
                         $hrefs[] = str_replace($tempDir, '', $destination);
                     }
                 }

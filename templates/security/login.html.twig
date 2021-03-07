@@ -19,6 +19,8 @@
     <meta name="keywords" content="{{ 'default_meta_keyword' | trans }}">
     <meta name="robots" content="{{ 'robots' | trans }}">
 
+    {% include 'webpreview.html.twig' %}
+
     {{ encore_entry_link_tags('bewelcome') }}
     <base id="baseuri" href="{{ app.request.schemeAndHttpHost ~ app.request.baseUrl }}">
 

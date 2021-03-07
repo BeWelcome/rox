@@ -909,4 +909,67 @@ WHERE IdGroup=" . (int)$group->id . " AND IdMember=" . (int)$memberid;
             }
         }
     }
+
+    /**
+     * @param Group $group
+     * @param string $keywords Keywords to search for in the Sphinx index
+     *
+     * @return array
+     */
+    public function searchGroupDiscussions($group, $keywords, $page, $items) {
+        $sphinx = new MOD_sphinx();
+
+        $results = [ 'count' => 0 ];
+        $sphinxClient = $sphinx->getSphinxForums();
+        $sphinxClient->SetFilter('IdGroup', [$group->getPKValue()]);
+        $sphinxClient->SetSortMode(SPH_SORT_ATTR_DESC, 'created' );
+        $resultsPosts = $sphinxClient->Query($sphinxClient->EscapeString($keywords), 'forums_posts');
+
+        if ($resultsPosts) {
+            $languageId = $this->session->get('IdLanguage', 0);
+            $results['count'] = $resultsPosts['total'];
+            if ($resultsPosts['total'] <> 0) {
+                $postIds = [];
+                foreach ($resultsPosts['matches'] as $match) {
+                    $postIds[] = $match['id'];
+                }
+
+		        $query = "
+                    SELECT SQL_CALC_FOUND_ROWS
+                        `forums_posts`.`id`,
+                        `members`.`Username`,
+                        `forums_posts`.`message`,
+                        `forum_trads`.`Sentence`,
+                        `forums_threads`.`id` AS IdThread,
+                        `forums_threads`.`title`,
+                        `forums_threads`.`IdGroup`,
+                        `groups`.`Name` AS `GroupName`,
+                        `ThreadVisibility`,
+                        `ThreadDeleted`,
+                         UNIX_TIMESTAMP(`forums_posts`.`create_time`) AS `created`
+                    FROM
+                        `forums_posts`
+                            LEFT JOIN
+                        `forums_threads` ON (`forums_posts`.`threadid` = `forums_threads`.`id`)
+                            LEFT JOIN
+                        `groups` ON (`groups`.`id` = `forums_threads`.`IdGroup`)
+                            LEFT JOIN
+                        `forum_trads` ON (`forum_trads`.`IdTrad` = `forums_posts`.`IdContent` AND `forum_trads`.`IdLanguage` = " . $languageId . ")
+                            LEFT JOIN
+                        `members` ON (`forums_posts`.`IdWriter` = `members`.`id`)
+                    WHERE
+                        `forums_posts`.`id` IN (" . implode(',', $postIds) . ")
+                    ORDER BY `created` DESC
+                ";
+                $query .= ' LIMIT ' . $items . ' OFFSET ' . ($page - 1) * $items;
+                $threads = $this->bulkLookup($query);
+                $results['posts'] = $threads;
+            } else {
+                $results['errors'][] = 'ForumSearchNoResults';
+            }
+        } else {
+            $results['errors'][] = 'ForumSearchNoSphinx';
+        }
+        return $results;
+    }
 }

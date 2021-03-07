@@ -73,5 +73,5 @@
     </div>
     {{ form_rest(form) }}
     {{ form_end(form) }}
-    {% include 'message/thread.html.twig' %}
+    {% include 'message/thread.html.twig' with {'show_deleted': false} %}
 {% endblock %}

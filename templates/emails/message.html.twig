@@ -2,5 +2,6 @@
 
 {% block content %}
     <p>{{ message.message | raw }}</p>
-    <p><a href="{{ url('message_reply', { 'id': message.id }) }}">{{ 'reply' | trans }}</a></p>
+    <p><a href="{{ url('members_profile', {'username': message.sender.username}) }}">{{ 'message.profile'|trans({'username': sender.username}) }}</a>&nbsp;
+        <a href="{{ url('message_reply', { 'id': message.id }) }}">{{ 'reply' | trans }}</a></p>
 {% endblock %}

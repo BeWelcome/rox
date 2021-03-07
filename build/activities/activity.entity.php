@@ -129,6 +129,7 @@ class Activity extends RoxEntityBase
                     $query = "INSERT INTO activitiesattendees SET activityId = " . $this->id;
                     $query .= ", attendeeId=" . $organizer['attendeeId'];
                     $query .= ", organizer=1, status=1";
+                    $query .= ", comment='" . $this->dao->escape($organizer['comment']) . "'";
                     $this->dao->query($query);
                 }
             }

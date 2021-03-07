@@ -42,9 +42,11 @@
             </tr>
         {% for message in reported.currentPageResults %}
             <tr>
-                <td>{{ macros.avatarstack(message.Sender.Username, 30) }}</td>
+                <td>{{ macros.avatarstack(message.Sender.Username, 30) }}<br>
+                    <small class="text-muted">{{ ('memberstatus' ~ message.Sender.Status)|lower|trans }}</small></td>
                 <td>{{ message.Message|purify }}</td>
-                <td>{{ macros.avatarstack(message.Receiver.Username, 30) }}</td>
+                <td>{{ macros.avatarstack(message.Receiver.Username, 30) }}<br>
+                    <small class="text-muted">{{ ('memberstatus' ~ message.Receiver.Status)|lower|trans }}</small></td>
                 <td>{{ message.created.DiffForHumans }}<br>
                 ({{  message.created | format_datetime('short', 'short') }})</td>
                 <td>{{ form_widget(form.noSpamMessages[loop.index0], {'attr': {'class': 'checkableNoSpam'}}) }}</td>

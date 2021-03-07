@@ -54,6 +54,7 @@ Encore
     .addEntry('email', './assets/scss/email.scss')
     .addEntry('roxeditor', './assets/js/roxeditor.js')
     .addEntry('rangeslider', './assets/js/rangeslider.js')
+    .addEntry('highlight', './assets/js/highlight.js')
     .addEntry('faq', './assets/js/faq.js')
     .autoProvidejQuery()
     //    .addEntry('roxinlineeditor', './assets/js/roxinlineeditor.js')

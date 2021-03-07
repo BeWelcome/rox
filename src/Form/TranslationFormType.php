@@ -61,8 +61,8 @@ class TranslationFormType extends AbstractType
                     ->add('domain', ChoiceType::class, [
                         'label' => 'translation.domain',
                         'choices' => [
-                            DomainType::MESSAGES => DomainType::MESSAGES,
                             DomainType::ICU_MESSAGES => DomainType::ICU_MESSAGES,
+                            DomainType::MESSAGES => DomainType::MESSAGES,
                             DomainType::VALIDATORS => DomainType::VALIDATORS,
                         ],
                         'choice_translation_domain' => false,

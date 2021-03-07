@@ -125,17 +125,17 @@ class TranslationController extends AbstractController
                 'description' => 'The page that is shown to unauthenticated visitors.',
             ],
             'Terms of Use' => [
-                'url' => 'terms/{locale}',
+                'url' => 'terms',
                 'template' => 'policies/tou_translated.html.twig',
                 'description' => 'The terms of use. Make sure to translate them fully before asking for publication.',
             ],
             'Privacy Policy' => [
-                'url' => 'privacy/{locale}',
+                'url' => 'privacy_policy',
                 'template' => 'policies/pp_translated.html.twig',
                 'description' => 'The privacy policy. Make sure to translate them fully before asking for publication.',
             ],
             'Data Privacy' => [
-                'url' => 'dataprivacy/{locale}',
+                'url' => 'datarights/',
                 'template' => 'policies/dp_translated.html.twig',
                 'description' => 'The data privacy policy. Make sure to translate them fully before asking for publication.',
             ],
@@ -302,7 +302,7 @@ class TranslationController extends AbstractController
     }
 
     /**
-     * @Route("/admin/translations/create/{domain}/{locale}/{translationId}", name="translation_create",
+     * @Route("/admin/translations/create/{locale}/{translationId}", name="translation_create",
      *     requirements={"domain"="messages|message+intl-icu|validators", "translationId"=".+"}))
      *
      * Creates an English index and the matching translation (if locale != 'en')
@@ -316,7 +316,6 @@ class TranslationController extends AbstractController
      */
     public function createTranslationForId(
         Request $request,
-        string $domain,
         Language $language,
         $translationId
     ) {
@@ -356,7 +355,6 @@ class TranslationController extends AbstractController
 
         $createTranslationRequest = new TranslationRequest();
         $createTranslationRequest->wordCode = $translationId;
-        $createTranslationRequest->domain = $domain;
         $createTranslationRequest->locale = $language->getShortcode();
         if ('en' === $language->getShortcode()) {
             // to ensure form validates correctly
@@ -884,10 +882,20 @@ class TranslationController extends AbstractController
 
     private function getMockParams($template, $name = null): array
     {
+        // Use the bwAdmin account as counter part for all of this
+        $memberRepository = $this->getDoctrine()->getRepository(Member::class);
+        $bwAdmin = $memberRepository->find(1);
+
+        // Use a public group like Berlin
+        $groupRepository = $this->getDoctrine()->getRepository(Group::class);
+        $group = $groupRepository->find(70);
+
         $mockMessage = Mockery::mock(Message::class, [
             'getId' => 1,
             'getMessage' => 'Message text',
         ]);
+        $mockMessage->shouldReceive('getSender')->andReturn($this->getUser());
+        $mockMessage->shouldReceive('getReceiver')->andReturn($bwAdmin);
 
         $mockRequest = Mockery::mock(HostingRequest::class, [
             'getId' => 1,
@@ -897,14 +905,8 @@ class TranslationController extends AbstractController
             'getFlexible' => true,
             'getStatus' => HostingRequest::REQUEST_DECLINED,
         ]);
-
-        // Use the bwadmin account as counter part for all of this
-        $memberRepository = $this->getDoctrine()->getRepository(Member::class);
-        $bwadmin = $memberRepository->find(1);
-
-        // Use a public group like Berlin
-        $groupRepository = $this->getDoctrine()->getRepository(Group::class);
-        $group = $groupRepository->find(70);
+        $mockMessage->shouldReceive('getSender')->andReturn($this->getUser());
+        $mockMessage->shouldReceive('getReceiver')->andReturn($bwAdmin);
 
         $params = [
             'html_template' => $template,
@@ -947,19 +949,19 @@ class TranslationController extends AbstractController
                 break;
             case 'emails/message.html.twig':
                 $params['sender'] = $this->getUser();
-                $params['receiver'] = $bwadmin;
+                $params['receiver'] = $bwAdmin;
                 break;
             case 'emails/request.html.twig':
             case 'emails/reply_from_guest.html.twig':
-                $params['host'] = $bwadmin;
+                $params['host'] = $bwAdmin;
                 $params['sender'] = $this->getUser();
-                $params['receiver'] = $bwadmin;
+                $params['receiver'] = $bwAdmin;
                 $params['receiverLocale'] = 'en';
                 $params['changed'] = true;
                 break;
             case 'emails/reply_from_host.html.twig':
-                $params['host'] = $bwadmin;
-                $params['sender'] = $bwadmin;
+                $params['host'] = $bwAdmin;
+                $params['sender'] = $bwAdmin;
                 $params['receiver'] = $this->getUser();
                 $params['receiverLocale'] = 'en';
                 $params['changed'] = true;
@@ -971,13 +973,14 @@ class TranslationController extends AbstractController
             case 'emails/group/wantin.html.twig':
             case 'emails/group/join.approved.html.twig':
             case 'emails/group/join.declined.html.twig':
-                $params['sender'] = $bwadmin;
+                $params['sender'] = $bwAdmin;
                 $params['receiver'] = $this->getUser();
                 $params['group'] = $group;
                 $params['subject'] = 'group.invitation';
+                $params['reason'] = 'I just want to be a member of something.';
                 break;
             case 'emails/reset.password.html.twig':
-                $params['sender'] = $bwadmin;
+                $params['sender'] = $bwAdmin;
                 $params['receiver'] = $this->getUser();
                 $params['token'] = '91aeecc7154b8fc9b2855a331e975bc8aafb088b6617d9aefe543e5fee427ae7';
                 break;
@@ -1012,7 +1015,7 @@ class TranslationController extends AbstractController
                 } else {
                     $subscription = 123456;
                 }
-                $params['sender'] = $bwadmin;
+                $params['sender'] = $bwAdmin;
                 $params['receiver'] = $this->getUser();
                 $params['notification'] = [
                     'post' => $mockPost,
@@ -1035,7 +1038,7 @@ class TranslationController extends AbstractController
                 $params['form'] = $this->createForm(ResetPasswordFormType::class)->createView();
                 break;
             default:
-                $params['host'] = $bwadmin;
+                $params['host'] = $bwAdmin;
                 break;
         }
 

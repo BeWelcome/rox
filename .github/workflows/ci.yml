@@ -377,6 +377,7 @@ jobs:
         with:
           php-version: 7.4
           extensions: curl, dom, gd, iconv, intl, json, libxml, mbstring, mysqli, pcntl, pdo_mysql, phar, tokenizer, xml, xmlwriter, xsl, zip
+          tools: symfony
 
       - name: Setup NODE
         uses: actions/setup-node@v2-beta
@@ -398,7 +399,7 @@ jobs:
           yarn install --frozen-lock
 
       - name: Run PHP security checker
-        run: vendor/bin/security-checker security:check
+        run: symfony security:check
 
       - name: Run JS security checker
         run: yarn audit

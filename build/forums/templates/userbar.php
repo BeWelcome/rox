@@ -31,7 +31,7 @@ Boston, MA  02111-1307, USA.
 
     <a href="groups/search" class="list-group-item nav-link" title="<?php echo $this->words->get('GroupsSearchHeading'); ?>"><?php echo $this->words->get('GroupsSearchHeading'); ?></a>
     <a href="forums/rules" class="list-group-item nav-link" title="<?php echo $this->words->get('ForumRulesShort'); ?>"><?php echo $this->words->get('ForumRulesShort'); ?></a>
-    <a href="about/faq/6" class="list-group-item nav-link" title="<?php echo $this->words->get('ForumLinkToDoc'); ?>"><?php echo $this->words->get('ForumLinkToDoc'); ?></a>
+    <a href="/faq/7#question55" class="list-group-item nav-link" title="<?php echo $this->words->get('ForumLinkToDoc'); ?>"><?php echo $this->words->get('ForumLinkToDoc'); ?></a>
     <?php  if ($this->session->has( "IdMember" )) {
         echo '<a href="forums/subscriptions" class="list-group-item nav-link" title="' . $this->words->get('forum_YourSubscription') . '">' . $this->words->get('forum_YourSubscription') . '</a>';
         if ($this->BW_Right->HasRight("ForumModerator")) { ?>

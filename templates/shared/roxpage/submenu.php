@@ -1,7 +1,7 @@
 <div class="col-md-3 offcanvas-collapse mb-2" id="sidebar">
     <div class="w-100 p-1 text-right d-md-none">
         <button type="button" class="btn btn-sm" aria-label="Close" data-toggle="offcanvas">
-            <i class="fa fa-lg fa-times" aria-hidden="true"></i>
+            <i class="fa fa-lg fa-times white" aria-hidden="true"></i>
         </button>
     </div>
     <div class="list-group mb-2">
@@ -17,7 +17,11 @@ foreach ($this->getSubmenuItems() as $index => $item) {
     $url = $item[1];
     $label = $item[2];
     $active = ($name === $active_menu_item) ? " active" : "";
-    echo '<a class="list-group-item nav-link' . $active .'" href="' . $url . '">' . $label . '</a>';
+    if (!empty($url)) {
+        echo '<a class="list-group-item nav-link' . $active .'" href="' . $url . '">' . $label . '</a>';
+    } else {
+        echo '<span class="list-group-item nav-link' . $active .'" >' . $label . '</span>';
+    }
 
     ?>
       <?=$words->flushBuffer(); ?>

@@ -1,6 +1,8 @@
 <?php
 
 use App\Doctrine\NotificationStatusType;
+use Foolz\SphinxQL\Drivers\Pdo\Connection;
+use Foolz\SphinxQL\SphinxQL;
 
 /**
 * Forums model
@@ -2582,7 +2584,7 @@ public function NotAllowedForGroup($IdMember, $rPost) {
 	 * @return array
 	 */
 	public function searchForums($keywords) {
-		$sphinx = new MOD_sphinx();
+        $sphinx = new MOD_sphinx();
 
 		$results = array( 'count' => 0);
 		$member = $this->getLoggedInMember();
@@ -2596,6 +2598,7 @@ public function NotAllowedForGroup($IdMember, $rPost) {
 			}
 
             $sphinxClient = $sphinx->getSphinxForums();
+            $sphinxClient->setSelect('*');
 			$sphinxClient->SetFilter('IdGroup', $groups);
             $sphinxClient->SetSortMode(SPH_SORT_ATTR_DESC, 'created' );
             $resultsThreads = $sphinxClient->Query($sphinxClient->EscapeString($keywords), 'forums');

@@ -54,9 +54,9 @@
                 <div class="col-12 mt-1">
                     <a href="{{ url('about') }}" class="font-weight-bold">{{ 'aboutuspage' | trans }}</a> &bull;
                     <a href="{{ url('donate') }}">{{ 'donate' | trans }}</a> &bull;
-                    <a href="{{ url('terms_of_use', {'locale': app.request.locale}) }}" class="footnav" target="new">{{ 'termsofuse' | trans }}</a> &bull;
-                    <a href="{{ url('privacy_policy', {'locale': app.request.locale}) }}" class="footnav" target="new">{{ 'privacy' | trans }}</a> &bull;
-                    <a href="{{ url('data_rights', {'locale': app.request.locale}) }}" class="footnav" target="new">{{ 'datarights' | trans }}</a> &bull;
+                    <a href="{{ url('terms_of_use') }}" class="footnav" target="new">{{ 'termsofuse' | trans }}</a> &bull;
+                    <a href="{{ url('privacy_policy') }}" class="footnav" target="new">{{ 'privacy' | trans }}</a> &bull;
+                    <a href="{{ url('data_rights') }}" class="footnav" target="new">{{ 'datarights' | trans }}</a> &bull;
                     <a href="{{ url('imprint') }}" class="footnav">{{ 'impressum' | trans }}</a> &bull;
                     <a href="{{ url('about_faq') }}" class="footnav">{{ 'faq' | trans }}</a> &bull;
                     <a href="{{ url('feedback') }}" class="footnav">{{ 'contactus' | trans }}</a> &bull;
@@ -240,7 +240,7 @@
                         {% endif %}
                         {% if message.state == constant('Symfony\\Component\\Translation\\DataCollectorTranslator::MESSAGE_MISSING') and hasEnglishRights %}
                             {% if message.id %}
-                                <a href="{{ url('translation_create', { translationId: message.id, domain: message.domain, locale: locale }) }}" target="_blank"><i class="fa fa-plus"></i></a>
+                                <a href="{{ url('translation_create', { translationId: message.id, locale: locale }) }}" target="_blank"><i class="fa fa-plus"></i></a>
                             {% else %}
                                 message.id not correctly set.
                             {% endif %}

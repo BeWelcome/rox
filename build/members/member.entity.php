@@ -311,7 +311,7 @@ class Member extends RoxEntityBase
      * automatically called by __get('trads'),
      * when someone writes '$member->trads'
      *
-     * @return unknown
+     * @return mixed
      */
     protected function get_trads()
     {
@@ -349,7 +349,7 @@ FROM
             if (!isset($trads_by_tradid[$trad->IdTrad])) {
                 $trads_by_tradid[$trad->IdTrad] = array();
             }
-            $trads_by_tradid[$trad->IdTrad][$trad->IdLanguage] = $trad;
+            $trads_by_tradid[$trad->IdTrad][$trad->IdLanguage] = htmlspecialchars($trad);
             //keeping track of which translations of the profile texts have been encountered
             $language_id = $trad->IdLanguage;
 
@@ -365,7 +365,7 @@ FROM
             } else if (!isset($trads_by_tradid[$trad_id])) {
                 $trads_by_fieldname->$name = array();
             } else {
-                $trads_by_fieldname->$name = $trads_by_tradid[$trad_id];
+                $trads_by_fieldname->$name = htmlspecialchars($trads_by_tradid[$trad_id]);
             }
         }
         return $trads_by_fieldname;
@@ -409,13 +409,13 @@ FROM
         $hideAttribute = $this->HideAttribute;
         $name = "";
         if (!($hideAttribute & self::MEMBER_FIRSTNAME_HIDDEN)) {
-            $name .= $this->FirstName;
+            $name .= htmlspecialchars($this->FirstName);
         }
         if (!($hideAttribute & self::MEMBER_SECONDNAME_HIDDEN)) {
-            $name .= " " . $this->SecondName;
+            $name .= " " . htmlspecialchars($this->SecondName);
         }
         if (!($hideAttribute & self::MEMBER_LASTNAME_HIDDEN)) {
-            $name .= " " . $this->LastName;
+            $name .= " " . htmlspecialchars($this->LastName);
         }
         return trim($name);
     }
@@ -439,8 +439,15 @@ FROM
               $address_id = $this->__get("chat_".$m['network']);
               $address = $this->get_crypted($address_id, "");
               if(isset($address) && $address != "*") {
-                  $r[] = array("network" => $m["nicename"], "network_raw" => $m['network'], "class" => $m['class'],
-                      "image" => $m["image"], "href" => $m["href"], "address" => $address, "address_id" => $address_id);
+                  $r[] = [
+                      "network" => $m["nicename"],
+                      "network_raw" => $m['network'],
+                      "class" => $m['class'],
+                      "image" => $m["image"],
+                      "href" => $m["href"],
+                      "address" => htmlspecialchars($address),
+                      "address_id" => htmlspecialchars($address_id),
+                  ];
               }
           }
           if(sizeof($r) == 0)
@@ -1245,14 +1252,14 @@ ORDER BY
         // check for Admin
         $right = new MOD_right();
         if ($right->hasRight('Admin') || $right->hasRight('SafetyTeam')) {
-            return urldecode(strip_tags($this->_crypt->AdminReadCrypted($crypted_id)));
+            return htmlspecialchars(urldecode(strip_tags($this->_crypt->AdminReadCrypted($crypted_id))));
         }
         // check for Member's own data
         if ($this->edit_mode) {
             if (($mCrypt = $this->_crypt->MemberReadCrypted($crypted_id)) != "cryptedhidden")
-                return urldecode(strip_tags($mCrypt));
+                return htmlspecialchars(urldecode(strip_tags($mCrypt)));
         }
-        return urldecode($this->_crypt->get_crypted($crypted_id, $return_value));
+        return htmlspecialchars(urldecode($this->_crypt->get_crypted($crypted_id, $return_value)));
     }
 
 
@@ -2001,7 +2008,7 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
                 l.WordCode AS WordCode,
                 l.id AS id
             FROM
-                languages AS l 
+                languages AS l
             WHERE (l.IsWrittenLanguage = 1)
         ";
         $s = $this->dao->query($str);

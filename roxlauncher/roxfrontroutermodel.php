@@ -24,24 +24,18 @@ class RoxFrontRouterModel extends RoxModelBase
                         languages.id AS id,
                         languages.ShortCode AS ShortCode
                     FROM
-                        languages,
-                        words
+                        languages
                     WHERE
-                        languages.id = '" . $this->dao->escape($langcode) . "' AND
-                        languages.id = words.Idlanguage AND
-                        words.code = 'welcometosignup'");
+                        languages.id = '" . $this->dao->escape($langcode) . "'");
             } else {
                 return $this->singleLookup("
                     SELECT
                         languages.id AS id,
                         languages.ShortCode AS ShortCode
                     FROM
-                        languages,
-                        words
+                        languages
                     WHERE
-                        languages.ShortCode = '" . $this->dao->escape($langcode) . "' AND
-                        languages.id = words.Idlanguage AND
-                        words.code = 'welcometosignup'");
+                        languages.ShortCode = '" . $this->dao->escape($langcode) . "'");
             }
         }
     }

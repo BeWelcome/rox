@@ -249,7 +249,11 @@ class ForumsView extends RoxAppView {
         require 'templates/topic.php';
         $currentPage = $this->_model->getPage();
         $itemsPerPage = $this->_model->POSTS_PER_PAGE;
-        $max = $topic->topicinfo->replies + 1;
+        if (!isset($topic->topicinfo->replies)) {
+            $max = 1;
+        } else {
+            $max = $topic->topicinfo->replies + 1;
+        }
         $maxPage = ceil($max / $this->_model->POSTS_PER_PAGE);
         $pages = $this->getPageLinks($currentPage, $itemsPerPage, $max);
 
@@ -446,6 +450,7 @@ class ForumsView extends RoxAppView {
      * @param string $keyword The term to be searched for
      */
     public function showSearchResultPage($keyword) {
+        $this->page->addLateLoadScriptFile('build/highlight.js');
         $result = $this->_model->searchForums($keyword);
         if (isset($result['errors'])) {
             require 'templates/searcherror.php';

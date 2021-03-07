@@ -222,6 +222,21 @@ class GroupsBasePage extends PageWithActiveSkin
             {
                 $items[] = array('membersettings', 'group/'.$group_id.'/membersettings', $words->getSilent('GroupMembersettings'));
                 $items[] = array('relatedgroupsettings', 'group/'.$group_id.'/relatedgroupsettings', $words->getSilent('GroupRelatedGroups'));
+
+                $formkit = $this->layoutkit->formkit;
+                $searchTerms = ($this->search_terms) ?? '';
+                $searchForm = <<<SEARCH_FORM
+        <form action="group/{$group_id}/search" method="GET" id="search-box" class="mb-1">
+            <div class="input-group">
+                <label for="fs-keyword" class="sr-only">{$words->get('Search')}</label>
+                <input type="text" name="fs-keyword" class="form-control" placeholder="{$words->getFormatted('ForumSearch')}" value="{$searchTerms}">
+                <span class="input-group-append">
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i></button>
+                </span>
+            </div>
+        </form>
+SEARCH_FORM;
+                $items[] = array('search', '', $searchForm);
             }
             if ($isOwner || ($isAdmin && GroupType::INVITE_ONLY !== $this->group->Type))
             {

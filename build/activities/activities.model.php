@@ -375,8 +375,15 @@ class ActivitiesModel extends RoxModelBase
         $activity->dateTimeEnd = date('Y-m-d H:i:s', $enddate);;
         $activity->description = $args->post['activity-description'];
         $activity->public = isset($args->post['activity-public']);
-        $organizer = array();
-        $organizer[$activity->creator] = array ( "attendeeId" => $activity->creator, "organizer" => "1", "status" => "1");
+        $activity->status = 0;
+        $organizer = [
+            $activity->creator => [
+                "attendeeId" => $activity->creator,
+                "organizer" => "1",
+                "status" => "1",
+                "comment" => ""
+            ],
+        ];
         $activity->organizers = $organizer;
         $activity->insert();
         return $activity;

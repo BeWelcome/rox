@@ -1,5 +1,29 @@
 exercise_html_purifier:
-    # full configuration reference: http://htmlpurifier.org/live/configdoc/plain.html
-    default:
-        # the charset used by the original contents
-        Core.Encoding: 'UTF-8'
+    default_cache_serializer_path: '%kernel.cache_dir%/htmlpurifier'
+
+    html_profiles:
+        default:
+            config:
+                # the charset used by the original contents
+                Core.Encoding: 'UTF-8'
+                # full configuration reference: http://htmlpurifier.org/live/configdoc/plain.html
+        custom:
+            config:
+                Core.Encoding: 'UTF-8'
+                HTML.Allowed: 'p,b,a[href],br,i,u,strong,em,ol,ul,li,dl,dt,dd,img[src|alt|width|height],blockquote,del,figure[class],figcaption'
+                HTML.TargetBlank: true
+                AutoFormat.RemoveEmpty: true
+                AutoFormat.AutoParagraph: true
+                AutoFormat.Linkify: true
+            elements:
+                figure:
+                    - Block
+                    - Flow
+                    - Common
+                    # The 4th and 5th arguments are optional
+                    - src: URI # list of type rules by attributes
+                      class: Text
+                figcaption:
+                    - Block
+                    - Flow
+                    - Common

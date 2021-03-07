@@ -64,6 +64,7 @@ class ActivitiesBasePage extends PageWithActiveSkin
         } else {
             $items[] = array('createactivities', 'activities/create', $words->getSilent('ActivitiesCreate'));
         }
+        $items[] = array('rules', 'activities/rules', $words->getSilent('activities.rules'));
         return $items;
     }
 

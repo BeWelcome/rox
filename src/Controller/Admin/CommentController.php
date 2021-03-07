@@ -52,7 +52,7 @@ class CommentController extends AbstractController
             !$this->isGranted(Member::ROLE_ADMIN_COMMENTS)
             || !$this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
         ) {
-            throw $this->createAccessDeniedException('You need to have Group right to access this.');
+            throw $this->createAccessDeniedException('You need to have Comment right to access this.');
         }
 
         $page = $request->query->get('page', 1);

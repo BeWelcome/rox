@@ -9,8 +9,13 @@ if (empty($vars)) {
     $vars['activity-id'] = $this->activity->id;
     $vars['activity-title'] = $this->activity->title;
     $location = $this->activity->location;
+    if (false === $location->geonameid) {
+        $locationId = $location->geonameId;
+    } else {
+        $locationId = $location->geonameid;
+    }
     $vars['activity-location'] = $location->name;
-    $vars['activity-location-id'] = $vars['activity-location_geoname_id'] = $location->geonameId;
+    $vars['activity-location-id'] = $vars['activity-location_geoname_id'] = $locationId;
     $vars['activity-location_latitude'] = $location->latitude;
     $vars['activity-location_longitude'] = $location->longitude;
     $vars['activity-address'] = $this->activity->address;
@@ -93,7 +98,7 @@ if (empty($vars)) {
                                  data-target="#activity-start-date"
                                  data-toggle="datetimepicker">
                                 <div class="input-group-text bg-primary white">
-                                    <i class="fa fa-calendar"></i>
+                                    <i class="fa fa-fw fa-calendar"></i>
                                 </div>
                             </div>
                             <input type="text"
@@ -114,7 +119,7 @@ if (empty($vars)) {
                                  data-target="#activity-end-date"
                                  data-toggle="datetimepicker">
                                 <div class="input-group-text bg-primary white">
-                                    <i class="fa fa-calendar"></i>
+                                    <i class="fa fa-fw fa-calendar"></i>
                                 </div>
                             </div>
                             <input type="text"
@@ -130,7 +135,7 @@ if (empty($vars)) {
                         <label for="activity-location"><?php echo $words->getBuffered('ActivitiesLocationSearch'); ?></label>
                         <div class="input-group">
                             <div class="input-group-prepend">
-                                <span class="input-group-text bg-primary white"><i class="fa fa-globe"></i></span>
+                                <span class="input-group-text bg-primary white"><i class="fa fa-fw fa-globe"></i></span>
                             </div>
                             <input type="text" id="activity-location" name="activity-location"
                                    class="form-control search-picker" value="<?= $vars['activity-location'] ?? ''; ?>"

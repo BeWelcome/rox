@@ -1,0 +1,313 @@
+/*!*****************************************************
+
+Freak Flags, Copyright ©2021 Michael P. Cohen. Freak flags is licenced under the MIT licence.  
+
+For complete information visit: www.freakflagsprite.com 
+
+******************************************************/
+
+.o-flag {
+    background-image:url("../../images/flags/flagSprite60.png");
+    background-repeat:no-repeat;
+    background-size: 100% 49494%;
+    display: inline-block;
+    overflow: hidden;
+    width: 27px;
+    height: 17px
+}
+
+
+
+
+
+.o-flag-CH,
+.o-flag-NP {box-shadow: none!important}
+.o-flag-DZ {background-position:center 0.2287%}
+.o-flag-AO {background-position:center 0.4524%}
+.o-flag-BJ {background-position:center 0.6721%}
+.o-flag-BW {background-position:center 0.8958%}
+.o-flag-BF {background-position:center 1.1162%}
+.o-flag-BI {background-position:center 1.3379%}
+.o-flag-CM {background-position:center 1.5589%}
+.o-flag-CV {background-position:center 1.7836%}
+.o-flag-CF {background-position:center 2.0047%}
+.o-flag-TD {background-position:center 2.2247%}
+.o-flag-CD {background-position:left 2.4467%}
+.o-flag-DJ {background-position:left 2.6674%}
+.o-flag-EG {background-position:center 2.8931%}
+.o-flag-GQ {background-position:center 3.1125%}
+.o-flag-ER {background-position:left 3.3325%}
+.o-flag-ET {background-position:center 3.5542%}
+.o-flag-GA {background-position:center 3.7759%}
+.o-flag-GM {background-position:center 4.0015%}
+.o-flag-GH {background-position:center 4.2229%}
+.o-flag-GN {background-position:center 4.441%}
+.o-flag-GW {background-position:left 4.66663%}
+.o-flag-CI {background-position:center 4.8844%}
+.o-flag-KE {background-position:center 5.1061%}
+.o-flag-LS {background-position:center 5.3278%}
+.o-flag-LR {background-position:left 5.5495%}
+.o-flag-LY {background-position:center 5.7712%}
+.o-flag-MG {background-position:center 5.994%}
+.o-flag-MW {background-position:center 6.2156%}
+.o-flag-ML {background-position:center 6.4363%}
+.o-flag-MR {background-position:center 6.658%}
+.o-flag-MU {background-position:center 6.8805%}
+.o-flag-YT {background-position:center 7.1038%}
+.o-flag-MA {background-position:center 7.3231%}
+.o-flag-MZ {background-position:left 7.5448%}
+.o-flag-NA {background-position:left 7.7661%}
+.o-flag-NE {background-position:center 7.98937%}
+.o-flag-NG {background-position:center 8.2099%}
+.o-flag-CG {background-position:center 8.4316%}
+.o-flag-RE {background-position:center 8.6533%}
+.o-flag-RW {background-position:right 8.875%}
+.o-flag-SH {background-position:center 9.0967%}
+.o-flag-ST {background-position:center 9.32237%}
+.o-flag-SN {background-position:center 9.5426%}
+.o-flag-SC {background-position:left 9.7628%}
+.o-flag-SL {background-position:center 9.9845%}
+.o-flag-SO {background-position:center 10.2052%}
+.o-flag-ZA {background-position:left 10.4269%}
+.o-flag-SS {background-position:left 10.6486%}
+.o-flag-SD {background-position:center 10.8703%}
+.o-flag-SR {background-position:center 11.0945%}
+.o-flag-SZ {background-position:center 11.3135%}
+.o-flag-TG {background-position:left 11.5354%}
+.o-flag-TN {background-position:center 11.7593%}
+.o-flag-UG {background-position:center 11.9799%}
+.o-flag-TZ {background-position:center 12.2005%}
+.o-flag-EH {background-position:center 12.4222%}
+.o-flag-YE {background-position:center 12.644%}
+.o-flag-ZM {background-position:center 12.8664%}
+.o-flag-ZW {background-position:left 13.0873%}
+.o-flag-AI {background-position:center 13.309%}
+.o-flag-AG {background-position:center 13.5307%}
+.o-flag-AR {background-position:center 13.7524%}
+.o-flag-AW {background-position:left 13.9741%}
+.o-flag-BS {background-position:left 14.1958%}
+.o-flag-BB {background-position:center 14.4175%}
+.o-flag-BQ {background-position:center 14.6415%}
+.o-flag-BZ {background-position:center 14.8609%}
+.o-flag-BM {background-position:center 15.0826%}
+.o-flag-BO {background-position:center 15.306%}
+.o-flag-VG {background-position:center 15.528%}
+.o-flag-BR {background-position:center 15.7496%}
+.o-flag-CA {background-position:center 15.9694%}
+.o-flag-KY {background-position:center 16.1911%}
+.o-flag-CL {background-position:left 16.4128%}
+.o-flag-CO {background-position:left 16.6345%}
+.o-flag-KM {background-position:center 16.8562%}
+.o-flag-CR {background-position:center 17.0779%}
+.o-flag-CU {background-position:left 17.2996%}
+.o-flag-CW {background-position:center 17.5213%}
+.o-flag-DM {background-position:center 17.743%}
+.o-flag-DO {background-position:center 17.968%}
+.o-flag-EC {background-position:center 18.1864%}
+.o-flag-SV {background-position:center 18.4081%}
+.o-flag-FK {background-position:center 18.6298%}
+.o-flag-GF {background-position:center 18.8515%}
+.o-flag-GL {background-position:left 19.0732%}
+.o-flag-GD {background-position:center 19.2987%}
+.o-flag-GP {background-position:center 19.518%}
+.o-flag-GT {background-position:center 19.7383%}
+.o-flag-GY {background-position:center 19.96%}
+.o-flag-HT {background-position:center 20.1817%}
+.o-flag-HN {background-position:center 20.4034%}
+.o-flag-JM {background-position:center 20.6241%}
+.o-flag-MQ {background-position:center 20.8468%}
+.o-flag-MX {background-position:center 21.0685%}
+.o-flag-MS {background-position:center 21.2902%}
+.o-flag-NI {background-position:center 21.5119%}
+.o-flag-PA {background-position:center 21.7336%}
+.o-flag-PY {background-position:center 21.9553%}
+.o-flag-PE {background-position:center 22.177%}
+.o-flag-PR {background-position:left 22.4002%}
+.o-flag-BL {background-position:center 22.6204%}
+.o-flag-KN {background-position:center 22.8421%}
+.o-flag-LC {background-position:center 23.0638%}
+.o-flag-PM {background-position:center 23.2855%}
+.o-flag-VC {background-position:center 23.5072%}
+.o-flag-SX {background-position:left 23.732%}
+.o-flag-TT {background-position:center 23.9506%}
+.o-flag-TC {background-position:center 24.1723%}
+.o-flag-US {background-position:center 24.394%}
+.o-flag-VI {background-position:center 24.6157%}
+.o-flag-UY {background-position:left 24.8374%}
+.o-flag-VE {background-position:center 25.0591%}
+.o-flag-AF {background-position:center 25.2808%}
+.o-flag-AZ {background-position:center 25.5025%}
+.o-flag-BD {background-position:center 25.7242%}
+.o-flag-BT {background-position:center 25.9459%}
+.o-flag-BN {background-position:center 26.1676%}
+.o-flag-KH {background-position:center 26.3885%}
+.o-flag-CN {background-position:left 26.611%}
+.o-flag-GE {background-position:center 26.8327%}
+.o-flag-HK {background-position:center 27.0544%}
+.o-flag-IN {background-position:center 27.2761%}
+.o-flag-ID {background-position:center 27.4978%}
+.o-flag-JP {background-position:center 27.7195%}
+.o-flag-KZ {background-position:center 27.9412%}
+.o-flag-LA {background-position:center 28.1615%}
+.o-flag-MO {background-position:center 28.3846%}
+.o-flag-MY {background-position:center 28.6063%}
+.o-flag-MV {background-position:center 28.829%}
+.o-flag-MN {background-position:left 29.0497%}
+.o-flag-MM {background-position:center 29.2714%}
+.o-flag-NP {background-position:left 29.4931%}
+.o-flag-KP {background-position:left 29.7148%}
+.o-flag-MP {background-position:center 29.9365%}
+.o-flag-PW {background-position:center 30.1582%}
+.o-flag-PG {background-position:center 30.3799%}
+.o-flag-PH {background-position:left 30.6016%}
+.o-flag-SG {background-position:left 30.8233%}
+.o-flag-KR {background-position:center 31.045%}
+.o-flag-LK {background-position:right 31.2667%}
+.o-flag-TW {background-position:left 31.4884%}
+.o-flag-TJ {background-position:center 31.7101%}
+.o-flag-TH {background-position:center 31.9318%}
+.o-flag-TL {background-position:left 32.1535%}
+.o-flag-TM {background-position:center 32.3752%}
+.o-flag-VN {background-position:center 32.5969%}
+.o-flag-AL {background-position:center 32.8186%}
+.o-flag-AD {background-position:center 33.0403%}
+.o-flag-AM {background-position:center 33.258%}
+.o-flag-AT {background-position:center 33.4837%}
+.o-flag-BY {background-position:left 33.7054%}
+.o-flag-BE {background-position:center 33.9271%}
+.o-flag-BA {background-position:center 34.1488%}
+.o-flag-BG {background-position:center 34.3705%}
+.o-flag-HR {background-position:center 34.5922%}
+.o-flag-CY {background-position:center 34.8139%}
+.o-flag-CZ {background-position:left 35.0356%}
+.o-flag-DK {background-position:center 35.2555%}
+.o-flag-EE {background-position:center 35.479%}
+.o-flag-FO {background-position:center 35.7007%}
+.o-flag-FI {background-position:center 35.9224%}
+.o-flag-FR {background-position:center 36.1441%}
+.o-flag-DE {background-position:center 36.3658%}
+.o-flag-GI {background-position:center 36.5875%}
+.o-flag-GR {background-position:left 36.8092%}
+.o-flag-HU {background-position:center 37.0309%}
+.o-flag-IS {background-position:center 37.2526%}
+.o-flag-IE {background-position:center 37.4743%}
+.o-flag-IM {background-position:center 37.696%}
+.o-flag-IT {background-position:center 37.9177%}
+.o-flag-JE {background-position:center 38.1394%}
+.o-flag-XK {background-position:center 38.3611%}
+.o-flag-LV {background-position:center 38.5828%}
+.o-flag-LI {background-position:left 38.8045%}
+.o-flag-LT {background-position:center 39.0262%}
+.o-flag-LU {background-position:center 39.2479%}
+.o-flag-MT {background-position:left 39.4696%}
+.o-flag-MD {background-position:center 39.6913%}
+.o-flag-MC {background-position:center 39.913%}
+.o-flag-ME {background-position:center 40.1347%}
+.o-flag-NL {background-position:center 40.3564%}
+.o-flag-MK {background-position:center 40.5781%}
+.o-flag-NO {background-position:center 40.7998%}
+.o-flag-PL {background-position:center 41.0215%}
+.o-flag-PT {background-position:center 41.2432%}
+.o-flag-RO {background-position:center 41.4649%}
+.o-flag-RU {background-position:center 41.6866%}
+.o-flag-SM {background-position:center 41.9083%}
+.o-flag-RS {background-position:center 42.13%}
+.o-flag-SK {background-position:center 42.3517%}
+.o-flag-SI {background-position:center 42.5734%}
+.o-flag-ES {background-position:left 42.7951%}
+.o-flag-SE {background-position:center 43.0168%}
+.o-flag-CH {background-position:center 43.2385%}
+.o-flag-TR {background-position:center 43.4602%}
+.o-flag-UA {background-position:center 43.6819%}
+.o-flag-GB {background-position:center 43.9036%}
+.o-flag-VA {background-position:right 44.1253%}
+.o-flag-BH {background-position:center 44.347%}
+.o-flag-IR {background-position:center 44.5687%}
+.o-flag-IQ {background-position:center 44.7904%}
+.o-flag-IL {background-position:center 45.0121%}
+.o-flag-KW {background-position:left 45.2338%}
+.o-flag-JO {background-position:left 45.4555%}
+.o-flag-KG {background-position:center 45.6772%}
+.o-flag-LB {background-position:center 45.897%}
+.o-flag-OM {background-position:left 46.1206%}
+.o-flag-PK {background-position:center 46.3423%}
+.o-flag-PS {background-position:center 46.561%}
+.o-flag-QA {background-position:center 46.7857%}
+.o-flag-SA {background-position:center 47.0074%}
+.o-flag-SY {background-position:center 47.2291%}
+.o-flag-AE {background-position:center 47.4508%}
+.o-flag-UZ {background-position:left 47.6725%}
+.o-flag-AS {background-position:right 47.8942%}
+.o-flag-AU {background-position:center 48.1159%}
+.o-flag-CX {background-position:center 48.3376%}
+.o-flag-CC {background-position:center 48.5593%}
+.o-flag-CK {background-position:center 48.781%}
+.o-flag-FJ {background-position:center 49.0027%}
+.o-flag-PF {background-position:center 49.2244%}
+.o-flag-GU {background-position:center 49.4445%}
+.o-flag-KI {background-position:center 49.6678%}
+.o-flag-MH {background-position:left 49.8895%}
+.o-flag-FM {background-position:center 50.1112%}
+.o-flag-NC {background-position:center 50.3329%}
+.o-flag-NZ {background-position:center 50.5546%}
+.o-flag-NR {background-position:left 50.7763%}
+.o-flag-NU {background-position:center 50.998%}
+.o-flag-NF {background-position:center 51.2197%}
+.o-flag-WS {background-position:left 51.4414%}
+.o-flag-SB {background-position:left 51.6631%}
+.o-flag-TK {background-position:center 51.8848%}
+.o-flag-TO {background-position:left 52.1065%}
+.o-flag-TV {background-position:center 52.3282%}
+.o-flag-VU {background-position:left 52.5499%}
+.o-flag-WF {background-position:center 52.7716%}
+.o-flag-EU {background-position:center 52.9933%}
+.o-flag-JR {background-position:center 53.215%}
+.o-flag-OLY {background-position:center 53.4315%}
+.o-flag-UN {background-position:center 53.6584%}
+
+
+
+
+
+.o-flag--s {width: 18px;height: 11px}
+.o-flag--l {width: 42px;height: 27px}
+.o-flag--xl {width: 60px;height: 37px}
+
+
+
+
+
+
+/* o-flag--round = circular icons */
+
+.o-flag--round {
+	background-size: 160%;
+	background-clip: content-box;
+	border-radius: 50%;
+    width: 16px; 
+    height: 16px
+}
+
+
+
+
+
+.o-flag--round-12 {width: 12px; height: 12px}
+.o-flag--round-24 {width: 24px; height: 24px}
+.o-flag--round-32 {width: 32px; height: 32px}
+
+
+
+
+
+.o-flag-TD.o-flag--round,
+.o-flag-GN.o-flag--round,
+.o-flag-CI.o-flag--round,
+.o-flag-ML.o-flag--round,
+.o-flag-NG.o-flag--round,
+.o-flag-BE.o-flag--round,
+.o-flag-FR.o-flag--round,
+.o-flag-IE.o-flag--round,
+.o-flag-IT.o-flag--round,
+.o-flag-RO.o-flag--round {background-size:100%  50000%}
+

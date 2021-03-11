@@ -11,7 +11,6 @@
 
 {% block content %}
   <section class="md:u-w-720 u-mt-8">
-    <!-- <h1>{{ 'trip.show.details'|trans|capitalize }}</h1> -->
     <div class="u-flex u-items-center u-mb-24">
       <div class="o-avatar o-avatar--white u-mr-16">{{ macros.roundedavatarstack(trip.creator.username, 72) }}</div>
       <h1 class="u-text-32 u-leading-48 md:u-text-56 md:u-leading-60 u-text-white u-font-700">{{ trip.summary }}</h1>
@@ -36,7 +35,7 @@
         <li class="l-show-trip"> 
           <span class="o-number o-number--white o-number--l u-relative u-ml-__16">{{ loop.index }}</span>
           <div class="u-ml-16 md:u-ml-0 md:u-mt-4">
-            <p class="u-text-24 u-text-white u-font-display u-mb-8">{{ subtrip.location.fullname }}</p>
+            <p class="u-text-24 u-text-white u-font-display u-mb-8">{{ subtrip.location.fullname }} <i class="o-flag o-flag--round o-flag-{{ subtrip.location.country.country }} u-ml-4"></i></p>
             <p class="u-text-white u-font-display u-font-300">{{ subtrip.arrival|format_date('medium') }}{% if subtrip.arrival != subtrip.departure %} - {{ subtrip.departure|format_date('medium') }}{% endif%}</p>
           </div>
           <div class="u-ml-16 md:u-ml-0 md:u-mt-4">

@@ -49,26 +49,24 @@
       {% set sidebar = (submenu is defined) %}
       {% set contentBlock %}
         {% for label, messages in app.flashes %}
-          <div class="row">
+          <div class="l-trips-wrapper">
             {% for message in messages %}
-              <div class="col-12">
-                <div class="alert alert-{{ label }}">
-                  {{ message | raw }}
-                </div>
+              <div class="alert alert-{{ label }}">
+                {{ message | raw }}
               </div>
             {% endfor %}
           </div>
         {% endfor %}
         {% block content %}{% endblock %}
       {% endset %}
-      <div class="c-trips__wrapper">
+      <div>
         {% if sidebar %}
-          <div id="sidebar">
-            <div class="u-hidden">
+          <div id="sidebar" class="l-trips-wrapper">
+            <!-- <div class="u-hidden">
               <button type="button" class="btn btn-sm" aria-label="Close" data-toggle="offcanvas">
                 <i class="fa fa-lg fa-times white" aria-hidden="true"></i>
               </button>
-            </div>
+            </div> -->
             <div class="c-trips__nav">
               {% for filter,menuItem in submenu.items %}
               {% if (filter is same as ('separator') or filter is same as ('separator2')) %}
@@ -80,12 +78,10 @@
               {% endfor %}
             </div>
           </div>
-          <div>
-            <p class="u-hidden">
-              <button type="button" class="btn btn-primary btn-sm ml-3" data-toggle="offcanvas"><span class="navbar-dark navbar-toggler-icon"></span></button>
-            </p>
-            {{  contentBlock | raw }}
-          </div>
+          <!-- <p class="u-hidden">
+            <button type="button" class="btn btn-primary btn-sm ml-3" data-toggle="offcanvas"><span class="navbar-dark navbar-toggler-icon"></span></button>
+          </p> -->
+          {{  contentBlock | raw }}
         {% else %}
           {{  contentBlock | raw }}
         {% endif %}

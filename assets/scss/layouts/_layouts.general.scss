@@ -48,3 +48,33 @@
     flex-direction: column;
   }
 }
+
+
+
+
+
+.l-trips-wrapper {
+  position: relative;
+  z-index: 1;
+  max-width: 960px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+@media (max-width: 900px) {
+  .l-trips-wrapper {
+    max-width: initial;
+    left: inherit;
+    transform: initial;
+    margin: 0 16px;
+  }
+}
+
+
+
+
+
+.l-trips-overlay-wrapper {
+  padding: 48px 0;
+  background-color: rgba(0, 0, 0, 0.3);
+}

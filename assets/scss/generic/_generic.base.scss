@@ -19,7 +19,7 @@ body {
 
 body,
 main {
-  min-height: 100vh;
+  min-height: calc(100vh - 124px - 46px);
 }
 
 address,

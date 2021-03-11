@@ -50,55 +50,58 @@
 {% endmacro %}
 
 {% block content %}
-  {% apply spaceless %}
-    {% set button_text %}
-      {% if create %}{{ 'trip.create' | trans }}{% else %}{{ 'trip.edit' | trans }}{% endif %}
-    {% endset %}
-  {% endapply %}
-  {# <h1 class="u-text-56 u-leading-56 u-font-700 u-mb-24 u-text-white">{% if create %}{{ 'trip.create' | trans }}{% else %}{{ 'trip.edit' | trans }}{% endif %}</h1> #}
+  <section class="l-trips-wrapper">
 
-  {{ form_start(form, {'attr': {'autocomplete': 'off'} }) }}
-    {{ form_errors(form) }}
-  <div>
-    <div class="u-mb-24 u-relative">
-      {{ form_widget(form.summary, {'attr': { 'class': 'o-input--white o-input--no-border-on-hover o-input--white-xl', 'aria-label':'Title'}}) }}
-      <div class="u-absolute">{{ form_errors(form.summary) }}</div>
-    </div>
-    <div class="u-relative u-mb-8 md:u-mb-24">
-      {{ form_widget(form.description, { 'attr': {  'class': 'o-input--white o-input--no-border-on-hover', 'rows': 5, 'aria-label':'Description' }}) }}
-      <div class="u-absolute">{{ form_errors(form.description) }}</div>
-    </div>
-    <div class="u-flex u-flex-col md:u-grid md:u-grid-cols-3">
-      <div class="u-flex u-flex-col md:u-flex-row u-col-span-2 u-mb-24">
-        <div class="u-flex u-flex-col md:u-flex-row u-items-start md:u-items-center md:u-mr-24 u-mb-8 md:u-mb-0">
-          {{ form_label(form.countoftravellers, null, {'label_attr': { 'class': 'o-label o-label--white u-mt-8 u-mr-8 u-flex u-items-center u-whitespace-nowrap'}}) }}
-          <div class="u-relative u-w-full">
-            {{ form_widget(form.countoftravellers, {'attr': { 'class': 'o-input--select o-input--select-white o-input--no-border-on-hover o-input--select-short u-text-center'}}) }}<i class="fa fa-angle-down u-text-white u-ml-__16 u-absolute u-pin-y"></i>
+    {% apply spaceless %}
+      {% set button_text %}
+        {% if create %}{{ 'trip.create' | trans }}{% else %}{{ 'trip.edit' | trans }}{% endif %}
+      {% endset %}
+    {% endapply %}
+    {# <h1 class="u-text-56 u-leading-56 u-font-700 u-mb-24 u-text-white">{% if create %}{{ 'trip.create' | trans }}{% else %}{{ 'trip.edit' | trans }}{% endif %}</h1> #}
+
+    {{ form_start(form, {'attr': {'autocomplete': 'off'} }) }}
+      {{ form_errors(form) }}
+    <div>
+      <div class="u-mb-24 u-relative">
+        {{ form_widget(form.summary, {'attr': { 'class': 'o-input--white o-input--no-border-on-hover o-input--white-xl', 'aria-label':'Title'}}) }}
+        <div class="u-absolute">{{ form_errors(form.summary) }}</div>
+      </div>
+      <div class="u-relative u-mb-8 md:u-mb-24">
+        {{ form_widget(form.description, { 'attr': {  'class': 'o-input--white o-input--no-border-on-hover', 'rows': 5, 'aria-label':'Description' }}) }}
+        <div class="u-absolute">{{ form_errors(form.description) }}</div>
+      </div>
+      <div class="u-flex u-flex-col md:u-grid md:u-grid-cols-3">
+        <div class="u-flex u-flex-col md:u-flex-row u-col-span-2 u-mb-24">
+          <div class="u-flex u-flex-col md:u-flex-row u-items-start md:u-items-center md:u-mr-24 u-mb-8 md:u-mb-0">
+            {{ form_label(form.countoftravellers, null, {'label_attr': { 'class': 'o-label o-label--white u-mt-8 u-mr-8 u-flex u-items-center u-whitespace-nowrap'}}) }}
+            <div class="u-relative u-w-full">
+              {{ form_widget(form.countoftravellers, {'attr': { 'class': 'o-input--select o-input--select-white o-input--no-border-on-hover o-input--select-short u-text-center'}}) }}<i class="fa fa-angle-down u-text-white u-ml-__16 u-absolute u-pin-y"></i>
+            </div>
           </div>
-        </div>
-        <div class="u-flex u-flex-col md:u-flex-row u-items-start md:u-items-center u-mb-16 md:u-mb-0">
-          {{ form_label(form.additionalinfo, null, {'label_attr': { 'class': 'o-label o-label--white u-mt-8 u-mr-8 u-flex u-items-center u-whitespace-nowrap'}}) }}
-          <div class="u-relative u-w-full">
-            {{ form_widget(form.additionalinfo, {'attr': { 'class': 'o-input--select o-input--select-white o-input--no-border-on-hover'}}) }}<i class="fa fa-angle-down u-text-white u-ml-__16 u-absolute u-pin-y"></i>
+          <div class="u-flex u-flex-col md:u-flex-row u-items-start md:u-items-center u-mb-16 md:u-mb-0">
+            {{ form_label(form.additionalinfo, null, {'label_attr': { 'class': 'o-label o-label--white u-mt-8 u-mr-8 u-flex u-items-center u-whitespace-nowrap'}}) }}
+            <div class="u-relative u-w-full">
+              {{ form_widget(form.additionalinfo, {'attr': { 'class': 'o-input--select o-input--select-white o-input--no-border-on-hover'}}) }}<i class="fa fa-angle-down u-text-white u-ml-__16 u-absolute u-pin-y"></i>
+            </div>
           </div>
         </div>
       </div>
+      <div id="subtrips-list"
+         data-prototype="{{ _self.widget_prototype(form.subtrips.vars.prototype)|escape('html_attr') }}">
+        {% for subtrip in form.subtrips %}
+          {{ _self.widget_prototype(subtrip) }}
+        {% endfor %}
+      </div>
+      <button class="btn-add js-btn-add o-rounded o-rounded--l"
+              data-target="subtrips-list">
+        <i class="fa fa-plus"></i>
+      </button>
+      <div class="u-flex u-justify-end u-mt-48 md:u-mt-0">
+        <input class="o-button"
+               type="submit"
+               value="{{ button_text|trans|capitalize }}">
+      </div>
     </div>
-    <div id="subtrips-list"
-       data-prototype="{{ _self.widget_prototype(form.subtrips.vars.prototype)|escape('html_attr') }}">
-      {% for subtrip in form.subtrips %}
-        {{ _self.widget_prototype(subtrip) }}
-      {% endfor %}
-    </div>
-    <button class="btn-add js-btn-add o-rounded o-rounded--l"
-            data-target="subtrips-list">
-      <i class="fa fa-plus"></i>
-    </button>
-    <div class="u-flex u-justify-end u-mt-48 md:u-mt-0">
-      <input class="o-button"
-             type="submit"
-             value="{{ button_text|trans|capitalize }}">
-    </div>
-  </div>
-  {{ form_end(form) }}
+    {{ form_end(form) }}
+  </section>
 {% endblock content %}

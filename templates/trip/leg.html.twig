@@ -20,7 +20,7 @@
   <div class="u-mb-24 md:u-mb-0">
     <a class="u-text-24 u-leading-24 u-font-700 u-text-white hover:u-text-white hover:u-opacity-70 u-ellipsis u-font-display u-block u-mb-4" href="{{ path('trip_show', {'id': leg.trip.id}) }}">{{ leg.trip.summary }}</a>
     <p class="u-text-white u-font-display u-font-700">{{ leg.location.name }}, <span class="u-font-300">{{ leg.arrival|format_date('medium') }}{% if leg.arrival != leg.departure %} - {{ leg.departure|format_date('medium') }}{% endif %}</span></p>
-    <p class="u-text-white u-font-display u-italic u-my-8">{{ leg.trip.description }}</p>
+    <p class="u-text-white u-font-display u-italic u-my-8">{{ leg.trip.description | purify | truncate(240) }}</p>
     <div class="u-flex">
       <div class="c-trip-card__icon-grid u-mr-16">
         <i class="fa fa-users u-text-white u-text-16 u-justify-self-center u-self-center u-text-gray-20"></i>
@@ -35,7 +35,7 @@
     </div>
   </div>
   <div class="o-avatar o-avatar--white u-mb-16 md:u-mb-0 u-justify-self-center">
-    {{ macros.roundedavatarstack(leg.trip.creator.username, 72) }}
+    {{ macros.roundedavatarstack(leg.trip.creator.username, 96) }}
     <p class="o-avatar__languages">Speaks
     {% for level in leg.trip.creator.languageLevels %}
       {% apply spaceless %}

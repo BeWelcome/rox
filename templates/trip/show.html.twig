@@ -17,7 +17,7 @@
         <div class="u-flex u-items-center u-h-96">
           <h1 class="u-text-32 u-leading-48 md:u-text-56 md:u-leading-60 u-text-white u-font-700">{{ trip.summary }}</h1>
           {% if app.user == trip.creator %}
-            <a href="{{ path('trip_edit', {'id': trip.id}) }}" class="o-rounded u-ml-24" arial-label="{{ 'trip.edit'|trans }}""title="{{ 'trip.edit'|trans }}">
+            <a href="{{ path('trip_edit', {'id': trip.id}) }}" class="o-rounded u-ml-24" aria-label="{{ 'trip.edit'|trans }}" title="{{ 'trip.edit'|trans }}">
               <i class="fa fa-edit"></i>
             </a>
           {% endif %}
@@ -35,10 +35,10 @@
     </div>
   </section>
 
-  <section class="l-trips-overlay-wrapper">   
+  <section class="l-trips-overlay-wrapper">
     <ul class="l-trips-wrapper">
       {% for subtrip in trip.subtrips %}
-        <li class="l-show-trip"> 
+        <li class="l-show-trip">
           <span class="o-number o-number--white o-number--l u-relative u-ml-__16">{{ loop.index }}</span>
           <div class="u-ml-16 md:u-ml-0 md:u-mt-4">
             <p class="u-text-24 u-text-white u-font-display u-mb-8 u-font-300"><span class="u-font-500">{{ subtrip.location.name }}</span>, {{ subtrip.location.country.name }} <i class="o-flag o-flag--round o-flag-{{ subtrip.location.country.country }} u-ml-4"></i></p>
@@ -64,7 +64,7 @@
     </ul>
   </section>
 
-    
+
   </section>
 {% endblock content %}
 

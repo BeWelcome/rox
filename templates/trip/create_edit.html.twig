@@ -33,7 +33,7 @@
       {{ form_widget(form.duration, {'attr': { 'class': 'o-input--xl o-input--no-borders o-input--round-right o-input--translucid duration js-duration', 'placeholder': 'Duration', 'aria-label':'Duration' }}) }}
       <div class="u-absolute">{{ form_errors(form.duration) }}</div>
     </div>
-    <button class="btn-remove js-btn-remove o-rounded o-rounded--l u-justify-self-center c-trips__info-btn-grid "
+    <button class="btn-remove js-btn-remove o-rounded o-rounded--l u-justify-self-end c-trips__info-btn-grid"
             data-related="{{ name }}">
       <i class="fa fa-times"></i>
     </button>
@@ -92,7 +92,7 @@
           {{ _self.widget_prototype(subtrip) }}
         {% endfor %}
       </div>
-      <button class="btn-add js-btn-add o-rounded o-rounded--l"
+      <button class="btn-add js-btn-add o-rounded o-rounded--l u-my-48"
               data-target="subtrips-list">
         <i class="fa fa-plus"></i>
       </button>

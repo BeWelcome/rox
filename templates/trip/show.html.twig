@@ -44,6 +44,13 @@
             <p class="u-text-24 u-text-white u-font-display u-mb-8 u-font-300"><span class="u-font-500">{{ subtrip.location.name }}</span>, {{ subtrip.location.country.name }} <i class="o-flag o-flag--round o-flag-{{ subtrip.location.country.country }} u-ml-4"></i></p>
             <p class="u-text-white u-font-display u-font-300">{{ subtrip.arrival|format_date('medium') }}{% if subtrip.arrival != subtrip.departure %} - {{ subtrip.departure|format_date('medium') }}{% endif%}</p>
           </div>
+
+          <span id="latitude" class="u-text-white">{{ subtrip.location.longitude }}</span>
+          <span id="longitude" class="u-text-white">{{ subtrip.location.latitude }}</span>
+          <input type="hidden" id="zoom" value="{{ subtrip.location.latitude }}">
+          <input type="hidden" id="zoom" value="{{ subtrip.location.longitude }}">
+          <input type="hidden" id="zoom" value="10">
+
           <div class="u-ml-16 md:u-ml-0 md:u-mt-4">
             {% if constant('App\\Doctrine\\SubtripOptionsType::MEET_LOCALS') in subtrip.options %}
               <div class="c-trip-card__icon-grid u-mb-8">
@@ -59,12 +66,30 @@
               </div>
             {% endif %}
           </div>
+          <div id="map"></div>
         </li>
     {% endfor %}
     </ul>
   </section>
 
-    
-  </section>
+  <script type="text/javascript">
+  $(function () {
+    if ($('#map').length) {
+      let latitude = $('#latitude').val();
+      let longitude = $('#longitude').val();
+      let zoom = $('#zoom').val();
+      var map = L.map('map', {
+        center: [latitude, longitude],
+        minZoom: zoom,
+        zoom: zoom
+      });
+
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="/about/credits#OSM">OpenStreetMap contributors</a>',
+        subdomains: ['a', 'b', 'c']
+      }).addTo(map);
+    }
+  });
+</script>
 {% endblock content %}
 

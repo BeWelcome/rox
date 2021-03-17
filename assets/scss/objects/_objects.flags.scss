@@ -7,307 +7,260 @@ For complete information visit: www.freakflagsprite.com
 ******************************************************/
 
 .o-flag {
-    background-image:url("../../images/flags/flagSprite60.png");
     background-repeat:no-repeat;
-    background-size: 100% 49494%;
-    display: inline-block;
+    border-radius: 100%;
     overflow: hidden;
-    width: 27px;
-    height: 17px
+    width: 18px;
+    height: 18px
 }
 
 
 
 
 
-.o-flag-CH,
-.o-flag-NP {box-shadow: none!important}
-.o-flag-DZ {background-position:center 0.2287%}
-.o-flag-AO {background-position:center 0.4524%}
-.o-flag-BJ {background-position:center 0.6721%}
-.o-flag-BW {background-position:center 0.8958%}
-.o-flag-BF {background-position:center 1.1162%}
-.o-flag-BI {background-position:center 1.3379%}
-.o-flag-CM {background-position:center 1.5589%}
-.o-flag-CV {background-position:center 1.7836%}
-.o-flag-CF {background-position:center 2.0047%}
-.o-flag-TD {background-position:center 2.2247%}
-.o-flag-CD {background-position:left 2.4467%}
-.o-flag-DJ {background-position:left 2.6674%}
-.o-flag-EG {background-position:center 2.8931%}
-.o-flag-GQ {background-position:center 3.1125%}
-.o-flag-ER {background-position:left 3.3325%}
-.o-flag-ET {background-position:center 3.5542%}
-.o-flag-GA {background-position:center 3.7759%}
-.o-flag-GM {background-position:center 4.0015%}
-.o-flag-GH {background-position:center 4.2229%}
-.o-flag-GN {background-position:center 4.441%}
-.o-flag-GW {background-position:left 4.66663%}
-.o-flag-CI {background-position:center 4.8844%}
-.o-flag-KE {background-position:center 5.1061%}
-.o-flag-LS {background-position:center 5.3278%}
-.o-flag-LR {background-position:left 5.5495%}
-.o-flag-LY {background-position:center 5.7712%}
-.o-flag-MG {background-position:center 5.994%}
-.o-flag-MW {background-position:center 6.2156%}
-.o-flag-ML {background-position:center 6.4363%}
-.o-flag-MR {background-position:center 6.658%}
-.o-flag-MU {background-position:center 6.8805%}
-.o-flag-YT {background-position:center 7.1038%}
-.o-flag-MA {background-position:center 7.3231%}
-.o-flag-MZ {background-position:left 7.5448%}
-.o-flag-NA {background-position:left 7.7661%}
-.o-flag-NE {background-position:center 7.98937%}
-.o-flag-NG {background-position:center 8.2099%}
-.o-flag-CG {background-position:center 8.4316%}
-.o-flag-RE {background-position:center 8.6533%}
-.o-flag-RW {background-position:right 8.875%}
-.o-flag-SH {background-position:center 9.0967%}
-.o-flag-ST {background-position:center 9.32237%}
-.o-flag-SN {background-position:center 9.5426%}
-.o-flag-SC {background-position:left 9.7628%}
-.o-flag-SL {background-position:center 9.9845%}
-.o-flag-SO {background-position:center 10.2052%}
-.o-flag-ZA {background-position:left 10.4269%}
-.o-flag-SS {background-position:left 10.6486%}
-.o-flag-SD {background-position:center 10.8703%}
-.o-flag-SR {background-position:center 11.0945%}
-.o-flag-SZ {background-position:center 11.3135%}
-.o-flag-TG {background-position:left 11.5354%}
-.o-flag-TN {background-position:center 11.7593%}
-.o-flag-UG {background-position:center 11.9799%}
-.o-flag-TZ {background-position:center 12.2005%}
-.o-flag-EH {background-position:center 12.4222%}
-.o-flag-YE {background-position:center 12.644%}
-.o-flag-ZM {background-position:center 12.8664%}
-.o-flag-ZW {background-position:left 13.0873%}
-.o-flag-AI {background-position:center 13.309%}
-.o-flag-AG {background-position:center 13.5307%}
-.o-flag-AR {background-position:center 13.7524%}
-.o-flag-AW {background-position:left 13.9741%}
-.o-flag-BS {background-position:left 14.1958%}
-.o-flag-BB {background-position:center 14.4175%}
-.o-flag-BQ {background-position:center 14.6415%}
-.o-flag-BZ {background-position:center 14.8609%}
-.o-flag-BM {background-position:center 15.0826%}
-.o-flag-BO {background-position:center 15.306%}
-.o-flag-VG {background-position:center 15.528%}
-.o-flag-BR {background-position:center 15.7496%}
-.o-flag-CA {background-position:center 15.9694%}
-.o-flag-KY {background-position:center 16.1911%}
-.o-flag-CL {background-position:left 16.4128%}
-.o-flag-CO {background-position:left 16.6345%}
-.o-flag-KM {background-position:center 16.8562%}
-.o-flag-CR {background-position:center 17.0779%}
-.o-flag-CU {background-position:left 17.2996%}
-.o-flag-CW {background-position:center 17.5213%}
-.o-flag-DM {background-position:center 17.743%}
-.o-flag-DO {background-position:center 17.968%}
-.o-flag-EC {background-position:center 18.1864%}
-.o-flag-SV {background-position:center 18.4081%}
-.o-flag-FK {background-position:center 18.6298%}
-.o-flag-GF {background-position:center 18.8515%}
-.o-flag-GL {background-position:left 19.0732%}
-.o-flag-GD {background-position:center 19.2987%}
-.o-flag-GP {background-position:center 19.518%}
-.o-flag-GT {background-position:center 19.7383%}
-.o-flag-GY {background-position:center 19.96%}
-.o-flag-HT {background-position:center 20.1817%}
-.o-flag-HN {background-position:center 20.4034%}
-.o-flag-JM {background-position:center 20.6241%}
-.o-flag-MQ {background-position:center 20.8468%}
-.o-flag-MX {background-position:center 21.0685%}
-.o-flag-MS {background-position:center 21.2902%}
-.o-flag-NI {background-position:center 21.5119%}
-.o-flag-PA {background-position:center 21.7336%}
-.o-flag-PY {background-position:center 21.9553%}
-.o-flag-PE {background-position:center 22.177%}
-.o-flag-PR {background-position:left 22.4002%}
-.o-flag-BL {background-position:center 22.6204%}
-.o-flag-KN {background-position:center 22.8421%}
-.o-flag-LC {background-position:center 23.0638%}
-.o-flag-PM {background-position:center 23.2855%}
-.o-flag-VC {background-position:center 23.5072%}
-.o-flag-SX {background-position:left 23.732%}
-.o-flag-TT {background-position:center 23.9506%}
-.o-flag-TC {background-position:center 24.1723%}
-.o-flag-US {background-position:center 24.394%}
-.o-flag-VI {background-position:center 24.6157%}
-.o-flag-UY {background-position:left 24.8374%}
-.o-flag-VE {background-position:center 25.0591%}
-.o-flag-AF {background-position:center 25.2808%}
-.o-flag-AZ {background-position:center 25.5025%}
-.o-flag-BD {background-position:center 25.7242%}
-.o-flag-BT {background-position:center 25.9459%}
-.o-flag-BN {background-position:center 26.1676%}
-.o-flag-KH {background-position:center 26.3885%}
-.o-flag-CN {background-position:left 26.611%}
-.o-flag-GE {background-position:center 26.8327%}
-.o-flag-HK {background-position:center 27.0544%}
-.o-flag-IN {background-position:center 27.2761%}
-.o-flag-ID {background-position:center 27.4978%}
-.o-flag-JP {background-position:center 27.7195%}
-.o-flag-KZ {background-position:center 27.9412%}
-.o-flag-LA {background-position:center 28.1615%}
-.o-flag-MO {background-position:center 28.3846%}
-.o-flag-MY {background-position:center 28.6063%}
-.o-flag-MV {background-position:center 28.829%}
-.o-flag-MN {background-position:left 29.0497%}
-.o-flag-MM {background-position:center 29.2714%}
-.o-flag-NP {background-position:left 29.4931%}
-.o-flag-KP {background-position:left 29.7148%}
-.o-flag-MP {background-position:center 29.9365%}
-.o-flag-PW {background-position:center 30.1582%}
-.o-flag-PG {background-position:center 30.3799%}
-.o-flag-PH {background-position:left 30.6016%}
-.o-flag-SG {background-position:left 30.8233%}
-.o-flag-KR {background-position:center 31.045%}
-.o-flag-LK {background-position:right 31.2667%}
-.o-flag-TW {background-position:left 31.4884%}
-.o-flag-TJ {background-position:center 31.7101%}
-.o-flag-TH {background-position:center 31.9318%}
-.o-flag-TL {background-position:left 32.1535%}
-.o-flag-TM {background-position:center 32.3752%}
-.o-flag-VN {background-position:center 32.5969%}
-.o-flag-AL {background-position:center 32.8186%}
-.o-flag-AD {background-position:center 33.0403%}
-.o-flag-AM {background-position:center 33.258%}
-.o-flag-AT {background-position:center 33.4837%}
-.o-flag-BY {background-position:left 33.7054%}
-.o-flag-BE {background-position:center 33.9271%}
-.o-flag-BA {background-position:center 34.1488%}
-.o-flag-BG {background-position:center 34.3705%}
-.o-flag-HR {background-position:center 34.5922%}
-.o-flag-CY {background-position:center 34.8139%}
-.o-flag-CZ {background-position:left 35.0356%}
-.o-flag-DK {background-position:center 35.2555%}
-.o-flag-EE {background-position:center 35.479%}
-.o-flag-FO {background-position:center 35.7007%}
-.o-flag-FI {background-position:center 35.9224%}
-.o-flag-FR {background-position:center 36.1441%}
-.o-flag-DE {background-position:center 36.3658%}
-.o-flag-GI {background-position:center 36.5875%}
-.o-flag-GR {background-position:left 36.8092%}
-.o-flag-HU {background-position:center 37.0309%}
-.o-flag-IS {background-position:center 37.2526%}
-.o-flag-IE {background-position:center 37.4743%}
-.o-flag-IM {background-position:center 37.696%}
-.o-flag-IT {background-position:center 37.9177%}
-.o-flag-JE {background-position:center 38.1394%}
-.o-flag-XK {background-position:center 38.3611%}
-.o-flag-LV {background-position:center 38.5828%}
-.o-flag-LI {background-position:left 38.8045%}
-.o-flag-LT {background-position:center 39.0262%}
-.o-flag-LU {background-position:center 39.2479%}
-.o-flag-MT {background-position:left 39.4696%}
-.o-flag-MD {background-position:center 39.6913%}
-.o-flag-MC {background-position:center 39.913%}
-.o-flag-ME {background-position:center 40.1347%}
-.o-flag-NL {background-position:center 40.3564%}
-.o-flag-MK {background-position:center 40.5781%}
-.o-flag-NO {background-position:center 40.7998%}
-.o-flag-PL {background-position:center 41.0215%}
-.o-flag-PT {background-position:center 41.2432%}
-.o-flag-RO {background-position:center 41.4649%}
-.o-flag-RU {background-position:center 41.6866%}
-.o-flag-SM {background-position:center 41.9083%}
-.o-flag-RS {background-position:center 42.13%}
-.o-flag-SK {background-position:center 42.3517%}
-.o-flag-SI {background-position:center 42.5734%}
-.o-flag-ES {background-position:left 42.7951%}
-.o-flag-SE {background-position:center 43.0168%}
-.o-flag-CH {background-position:center 43.2385%}
-.o-flag-TR {background-position:center 43.4602%}
-.o-flag-UA {background-position:center 43.6819%}
-.o-flag-GB {background-position:center 43.9036%}
-.o-flag-VA {background-position:right 44.1253%}
-.o-flag-BH {background-position:center 44.347%}
-.o-flag-IR {background-position:center 44.5687%}
-.o-flag-IQ {background-position:center 44.7904%}
-.o-flag-IL {background-position:center 45.0121%}
-.o-flag-KW {background-position:left 45.2338%}
-.o-flag-JO {background-position:left 45.4555%}
-.o-flag-KG {background-position:center 45.6772%}
-.o-flag-LB {background-position:center 45.897%}
-.o-flag-OM {background-position:left 46.1206%}
-.o-flag-PK {background-position:center 46.3423%}
-.o-flag-PS {background-position:center 46.561%}
-.o-flag-QA {background-position:center 46.7857%}
-.o-flag-SA {background-position:center 47.0074%}
-.o-flag-SY {background-position:center 47.2291%}
-.o-flag-AE {background-position:center 47.4508%}
-.o-flag-UZ {background-position:left 47.6725%}
-.o-flag-AS {background-position:right 47.8942%}
-.o-flag-AU {background-position:center 48.1159%}
-.o-flag-CX {background-position:center 48.3376%}
-.o-flag-CC {background-position:center 48.5593%}
-.o-flag-CK {background-position:center 48.781%}
-.o-flag-FJ {background-position:center 49.0027%}
-.o-flag-PF {background-position:center 49.2244%}
-.o-flag-GU {background-position:center 49.4445%}
-.o-flag-KI {background-position:center 49.6678%}
-.o-flag-MH {background-position:left 49.8895%}
-.o-flag-FM {background-position:center 50.1112%}
-.o-flag-NC {background-position:center 50.3329%}
-.o-flag-NZ {background-position:center 50.5546%}
-.o-flag-NR {background-position:left 50.7763%}
-.o-flag-NU {background-position:center 50.998%}
-.o-flag-NF {background-position:center 51.2197%}
-.o-flag-WS {background-position:left 51.4414%}
-.o-flag-SB {background-position:left 51.6631%}
-.o-flag-TK {background-position:center 51.8848%}
-.o-flag-TO {background-position:left 52.1065%}
-.o-flag-TV {background-position:center 52.3282%}
-.o-flag-VU {background-position:left 52.5499%}
-.o-flag-WF {background-position:center 52.7716%}
-.o-flag-EU {background-position:center 52.9933%}
-.o-flag-JR {background-position:center 53.215%}
-.o-flag-OLY {background-position:center 53.4315%}
-.o-flag-UN {background-position:center 53.6584%}
+.o-flag--CH {background-image:url("../../images/flags/ch.svg")}
+.o-flag--NP {background-image:url("../../images/flags/np.svg")}
+.o-flag--DZ {background-image:url("../../images/flags/dz.svg")}
+.o-flag--AO {background-image:url("../../images/flags/ao.svg")}
+.o-flag--BJ {background-image:url("../../images/flags/bj.svg")}
+.o-flag--BW {background-image:url("../../images/flags/bw.svg")}
+.o-flag--BF {background-image:url("../../images/flags/bf.svg")}
+.o-flag--BI {background-image:url("../../images/flags/bi.svg")}
+.o-flag--CM {background-image:url("../../images/flags/cm.svg")}
+.o-flag--CV {background-image:url("../../images/flags/cv.svg")}
+.o-flag--CF {background-image:url("../../images/flags/cf.svg")}
+.o-flag--TD {background-image:url("../../images/flags/td.svg")}
+.o-flag--CD {background-image:url("../../images/flags/cd.svg")}
+.o-flag--DJ {background-image:url("../../images/flags/dj.svg")}
+.o-flag--EG {background-image:url("../../images/flags/eg.svg")}
+.o-flag--GQ {background-image:url("../../images/flags/gq.svg")}
+.o-flag--ER {background-image:url("../../images/flags/er.svg")}
+.o-flag--ET {background-image:url("../../images/flags/et.svg")}
+.o-flag--GA {background-image:url("../../images/flags/ga.svg")}
+.o-flag--GM {background-image:url("../../images/flags/gm.svg")}
+.o-flag--GH {background-image:url("../../images/flags/gh.svg")}
+.o-flag--GN {background-image:url("../../images/flags/gn.svg")}
+.o-flag--GW {background-image:url("../../images/flags/gw.svg")}
+.o-flag--CI {background-image:url("../../images/flags/ci.svg")}
+.o-flag--KE {background-image:url("../../images/flags/ke.svg")}
+.o-flag--LS {background-image:url("../../images/flags/ls.svg")}
+.o-flag--LR {background-image:url("../../images/flags/lr.svg")}
+.o-flag--LY {background-image:url("../../images/flags/ly.svg")}
+.o-flag--MG {background-image:url("../../images/flags/mg.svg")}
+.o-flag--MW {background-image:url("../../images/flags/mw.svg")}
+.o-flag--ML {background-image:url("../../images/flags/ml.svg")}
+.o-flag--MR {background-image:url("../../images/flags/mr.svg")}
+.o-flag--MU {background-image:url("../../images/flags/mu.svg")}
+.o-flag--MA {background-image:url("../../images/flags/ma.svg")}
+.o-flag--MZ {background-image:url("../../images/flags/mz.svg")}
+.o-flag--NA {background-image:url("../../images/flags/na.svg")}
+.o-flag--NE {background-image:url("../../images/flags/ne.svg")}
+.o-flag--NG {background-image:url("../../images/flags/ng.svg")}
+.o-flag--CG {background-image:url("../../images/flags/cg.svg")}
+.o-flag--RW {background-image:url("../../images/flags/rw.svg")}
+.o-flag--ST {background-image:url("../../images/flags/st.svg")}
+.o-flag--SN {background-image:url("../../images/flags/sn.svg")}
+.o-flag--SC {background-image:url("../../images/flags/sc.svg")}
+.o-flag--SL {background-image:url("../../images/flags/sl.svg")}
+.o-flag--SO {background-image:url("../../images/flags/so.svg")}
+.o-flag--ZA {background-image:url("../../images/flags/za.svg")}
+.o-flag--SS {background-image:url("../../images/flags/ss.svg")}
+.o-flag--SD {background-image:url("../../images/flags/sd.svg")}
+.o-flag--SR {background-image:url("../../images/flags/sr.svg")}
+.o-flag--SZ {background-image:url("../../images/flags/sz.svg")}
+.o-flag--TG {background-image:url("../../images/flags/tg.svg")}
+.o-flag--TN {background-image:url("../../images/flags/tn.svg")}
+.o-flag--UG {background-image:url("../../images/flags/ug.svg")}
+.o-flag--TZ {background-image:url("../../images/flags/tz.svg")}
+.o-flag--EH {background-image:url("../../images/flags/eh.svg")}
+.o-flag--YE {background-image:url("../../images/flags/ye.svg")}
+.o-flag--ZM {background-image:url("../../images/flags/zm.svg")}
+.o-flag--ZW {background-image:url("../../images/flags/zw.svg")}
+.o-flag--AI {background-image:url("../../images/flags/ai.svg")}
+.o-flag--AG {background-image:url("../../images/flags/ag.svg")}
+.o-flag--AR {background-image:url("../../images/flags/ar.svg")}
+.o-flag--AW {background-image:url("../../images/flags/aw.svg")}
+.o-flag--BS {background-image:url("../../images/flags/bs.svg")}
+.o-flag--BB {background-image:url("../../images/flags/bb.svg")}
+.o-flag--BQ-BO {background-image:url("../../images/flags/bq-bo.svg")}
+.o-flag--BZ {background-image:url("../../images/flags/bz.svg")}
+.o-flag--BM {background-image:url("../../images/flags/bm.svg")}
+.o-flag--BO {background-image:url("../../images/flags/bo.svg")}
+.o-flag--VG {background-image:url("../../images/flags/vg.svg")}
+.o-flag--BR {background-image:url("../../images/flags/br.svg")}
+.o-flag--CA {background-image:url("../../images/flags/ca.svg")}
+.o-flag--KY {background-image:url("../../images/flags/ky.svg")}
+.o-flag--CL {background-image:url("../../images/flags/cl.svg")}
+.o-flag--CO {background-image:url("../../images/flags/co.svg")}
+.o-flag--KM {background-image:url("../../images/flags/km.svg")}
+.o-flag--CR {background-image:url("../../images/flags/cr.svg")}
+.o-flag--CU {background-image:url("../../images/flags/cu.svg")}
+.o-flag--CW {background-image:url("../../images/flags/cw.svg")}
+.o-flag--DM {background-image:url("../../images/flags/dm.svg")}
+.o-flag--DO {background-image:url("../../images/flags/do.svg")}
+.o-flag--EC {background-image:url("../../images/flags/ec.svg")}
+.o-flag--SV {background-image:url("../../images/flags/sv.svg")}
+.o-flag--FK {background-image:url("../../images/flags/fk.svg")}
+.o-flag--GF {background-image:url("../../images/flags/gf.svg")}
+.o-flag--GL {background-image:url("../../images/flags/gl.svg")}
+.o-flag--GD {background-image:url("../../images/flags/gd.svg")}
+.o-flag--GT {background-image:url("../../images/flags/gt.svg")}
+.o-flag--GY {background-image:url("../../images/flags/gy.svg")}
+.o-flag--HT {background-image:url("../../images/flags/ht.svg")}
+.o-flag--HN {background-image:url("../../images/flags/hn.svg")}
+.o-flag--JM {background-image:url("../../images/flags/jm.svg")}
+.o-flag--MQ {background-image:url("../../images/flags/mq.svg")}
+.o-flag--MX {background-image:url("../../images/flags/mx.svg")}
+.o-flag--MS {background-image:url("../../images/flags/ms.svg")}
+.o-flag--NI {background-image:url("../../images/flags/ni.svg")}
+.o-flag--PA {background-image:url("../../images/flags/pa.svg")}
+.o-flag--PY {background-image:url("../../images/flags/py.svg")}
+.o-flag--PE {background-image:url("../../images/flags/pe.svg")}
+.o-flag--PR {background-image:url("../../images/flags/pr.svg")}
+.o-flag--BL {background-image:url("../../images/flags/bl.svg")}
+.o-flag--KN {background-image:url("../../images/flags/kn.svg")}
+.o-flag--LC {background-image:url("../../images/flags/lc.svg")}
+.o-flag--VC {background-image:url("../../images/flags/vc.svg")}
+.o-flag--SX {background-image:url("../../images/flags/sx.svg")}
+.o-flag--TT {background-image:url("../../images/flags/tt.svg")}
+.o-flag--TC {background-image:url("../../images/flags/tc.svg")}
+.o-flag--US {background-image:url("../../images/flags/us.svg")}
+.o-flag--VI {background-image:url("../../images/flags/vi.svg")}
+.o-flag--UY {background-image:url("../../images/flags/uy.svg")}
+.o-flag--VE {background-image:url("../../images/flags/ve.svg")}
+.o-flag--AF {background-image:url("../../images/flags/af.svg")}
+.o-flag--AZ {background-image:url("../../images/flags/az.svg")}
+.o-flag--BD {background-image:url("../../images/flags/bd.svg")}
+.o-flag--BT {background-image:url("../../images/flags/bt.svg")}
+.o-flag--BN {background-image:url("../../images/flags/bn.svg")}
+.o-flag--KH {background-image:url("../../images/flags/kh.svg")}
+.o-flag--CN {background-image:url("../../images/flags/cn.svg")}
+.o-flag--GE {background-image:url("../../images/flags/ge.svg")}
+.o-flag--HK {background-image:url("../../images/flags/hk.svg")}
+.o-flag--IN {background-image:url("../../images/flags/in.svg")}
+.o-flag--ID {background-image:url("../../images/flags/id.svg")}
+.o-flag--JP {background-image:url("../../images/flags/jp.svg")}
+.o-flag--KZ {background-image:url("../../images/flags/kz.svg")}
+.o-flag--LA {background-image:url("../../images/flags/la.svg")}
+.o-flag--MO {background-image:url("../../images/flags/mo.svg")}
+.o-flag--MY {background-image:url("../../images/flags/my.svg")}
+.o-flag--MV {background-image:url("../../images/flags/mv.svg")}
+.o-flag--MN {background-image:url("../../images/flags/mn.svg")}
+.o-flag--MM {background-image:url("../../images/flags/mm.svg")}
+.o-flag--NP {background-image:url("../../images/flags/np.svg")}
+.o-flag--KP {background-image:url("../../images/flags/kp.svg")}
+.o-flag--MP {background-image:url("../../images/flags/mp.svg")}
+.o-flag--PW {background-image:url("../../images/flags/pw.svg")}
+.o-flag--PG {background-image:url("../../images/flags/pg.svg")}
+.o-flag--PH {background-image:url("../../images/flags/ph.svg")}
+.o-flag--SG {background-image:url("../../images/flags/sg.svg")}
+.o-flag--KR {background-image:url("../../images/flags/kr.svg")}
+.o-flag--LK {background-image:url("../../images/flags/lk.svg")}
+.o-flag--TW {background-image:url("../../images/flags/tw.svg")}
+.o-flag--TJ {background-image:url("../../images/flags/tj.svg")}
+.o-flag--TH {background-image:url("../../images/flags/th.svg")}
+.o-flag--TL {background-image:url("../../images/flags/tl.svg")}
+.o-flag--TM {background-image:url("../../images/flags/tm.svg")}
+.o-flag--VN {background-image:url("../../images/flags/vn.svg")}
+.o-flag--AL {background-image:url("../../images/flags/al.svg")}
+.o-flag--AD {background-image:url("../../images/flags/ad.svg")}
+.o-flag--AM {background-image:url("../../images/flags/am.svg")}
+.o-flag--AT {background-image:url("../../images/flags/at.svg")}
+.o-flag--BY {background-image:url("../../images/flags/by.svg")}
+.o-flag--BE {background-image:url("../../images/flags/be.svg")}
+.o-flag--BA {background-image:url("../../images/flags/ba.svg")}
+.o-flag--BG {background-image:url("../../images/flags/bg.svg")}
+.o-flag--HR {background-image:url("../../images/flags/hr.svg")}
+.o-flag--CY {background-image:url("../../images/flags/cy.svg")}
+.o-flag--CZ {background-image:url("../../images/flags/cz.svg")}
+.o-flag--DK {background-image:url("../../images/flags/dk.svg")}
+.o-flag--EE {background-image:url("../../images/flags/ee.svg")}
+.o-flag--FO {background-image:url("../../images/flags/fo.svg")}
+.o-flag--FI {background-image:url("../../images/flags/fi.svg")}
+.o-flag--FR {background-image:url("../../images/flags/fr.svg")}
+.o-flag--DE {background-image:url("../../images/flags/de.svg")}
+.o-flag--GI {background-image:url("../../images/flags/gi.svg")}
+.o-flag--GR {background-image:url("../../images/flags/gr.svg")}
+.o-flag--HU {background-image:url("../../images/flags/hu.svg")}
+.o-flag--IS {background-image:url("../../images/flags/is.svg")}
+.o-flag--IE {background-image:url("../../images/flags/ie.svg")}
+.o-flag--IM {background-image:url("../../images/flags/im.svg")}
+.o-flag--IT {background-image:url("../../images/flags/it.svg")}
+.o-flag--JE {background-image:url("../../images/flags/je.svg")}
+.o-flag--XK {background-image:url("../../images/flags/xk.svg")}
+.o-flag--LV {background-image:url("../../images/flags/lv.svg")}
+.o-flag--LI {background-image:url("../../images/flags/li.svg")}
+.o-flag--LT {background-image:url("../../images/flags/lt.svg")}
+.o-flag--LU {background-image:url("../../images/flags/lu.svg")}
+.o-flag--MT {background-image:url("../../images/flags/mt.svg")}
+.o-flag--MD {background-image:url("../../images/flags/md.svg")}
+.o-flag--MC {background-image:url("../../images/flags/mc.svg")}
+.o-flag--ME {background-image:url("../../images/flags/me.svg")}
+.o-flag--NL {background-image:url("../../images/flags/nl.svg")}
+.o-flag--MK {background-image:url("../../images/flags/mk.svg")}
+.o-flag--NO {background-image:url("../../images/flags/no.svg")}
+.o-flag--PL {background-image:url("../../images/flags/pl.svg")}
+.o-flag--PT {background-image:url("../../images/flags/pt.svg")}
+.o-flag--RO {background-image:url("../../images/flags/ro.svg")}
+.o-flag--RU {background-image:url("../../images/flags/ru.svg")}
+.o-flag--SM {background-image:url("../../images/flags/sm.svg")}
+.o-flag--RS {background-image:url("../../images/flags/rs.svg")}
+.o-flag--SK {background-image:url("../../images/flags/sk.svg")}
+.o-flag--SI {background-image:url("../../images/flags/si.svg")}
+.o-flag--ES {background-image:url("../../images/flags/es.svg")}
+.o-flag--SE {background-image:url("../../images/flags/se.svg")}
+.o-flag--CH {background-image:url("../../images/flags/ch.svg")}
+.o-flag--TR {background-image:url("../../images/flags/tr.svg")}
+.o-flag--UA {background-image:url("../../images/flags/ua.svg")}
+.o-flag--GB {background-image:url("../../images/flags/gb.svg")}
+.o-flag--VA {background-image:url("../../images/flags/va.svg")}
+.o-flag--BH {background-image:url("../../images/flags/bh.svg")}
+.o-flag--IR {background-image:url("../../images/flags/ir.svg")}
+.o-flag--IQ {background-image:url("../../images/flags/iq.svg")}
+.o-flag--IL {background-image:url("../../images/flags/il.svg")}
+.o-flag--KW {background-image:url("../../images/flags/kw.svg")}
+.o-flag--JO {background-image:url("../../images/flags/jo.svg")}
+.o-flag--KG {background-image:url("../../images/flags/kg.svg")}
+.o-flag--LB {background-image:url("../../images/flags/lb.svg")}
+.o-flag--OM {background-image:url("../../images/flags/om.svg")}
+.o-flag--PK {background-image:url("../../images/flags/pk.svg")}
+.o-flag--PS {background-image:url("../../images/flags/ps.svg")}
+.o-flag--QA {background-image:url("../../images/flags/qa.svg")}
+.o-flag--SA {background-image:url("../../images/flags/sa.svg")}
+.o-flag--SY {background-image:url("../../images/flags/sy.svg")}
+.o-flag--AE {background-image:url("../../images/flags/ae.svg")}
+.o-flag--UZ {background-image:url("../../images/flags/uz.svg")}
+.o-flag--AS {background-image:url("../../images/flags/as.svg")}
+.o-flag--AU {background-image:url("../../images/flags/au.svg")}
+.o-flag--CX {background-image:url("../../images/flags/cx.svg")}
+.o-flag--CC {background-image:url("../../images/flags/cc.svg")}
+.o-flag--CK {background-image:url("../../images/flags/ck.svg")}
+.o-flag--FJ {background-image:url("../../images/flags/fj.svg")}
+.o-flag--PF {background-image:url("../../images/flags/pf.svg")}
+.o-flag--GU {background-image:url("../../images/flags/gu.svg")}
+.o-flag--KI {background-image:url("../../images/flags/ki.svg")}
+.o-flag--MH {background-image:url("../../images/flags/mh.svg")}
+.o-flag--FM {background-image:url("../../images/flags/fm.svg")}
+.o-flag--NZ {background-image:url("../../images/flags/nz.svg")}
+.o-flag--NR {background-image:url("../../images/flags/nr.svg")}
+.o-flag--NU {background-image:url("../../images/flags/nu.svg")}
+.o-flag--NF {background-image:url("../../images/flags/nf.svg")}
+.o-flag--WS {background-image:url("../../images/flags/ws.svg")}
+.o-flag--SB {background-image:url("../../images/flags/sb.svg")}
+.o-flag--TK {background-image:url("../../images/flags/tk.svg")}
+.o-flag--TO {background-image:url("../../images/flags/to.svg")}
+.o-flag--TV {background-image:url("../../images/flags/tv.svg")}
+.o-flag--VU {background-image:url("../../images/flags/vu.svg")}
+.o-flag--EU {background-image:url("../../images/flags/eu.svg")}
+.o-flag--UN {background-image:url("../../images/flags/un.svg")}
 
 
 
 
 
-.o-flag--s {width: 18px;height: 11px}
-.o-flag--l {width: 42px;height: 27px}
-.o-flag--xl {width: 60px;height: 37px}
+.o-flag--s {width: 12px;height: 12px}
+.o-flag--l {width: 24px;height: 24px}
+.o-flag--xl {width: 32px;height: 32px}
 
 
-
-
-
-
-/* o-flag--round = circular icons */
-
-.o-flag--round {
-	background-size: 160%;
-	background-clip: content-box;
-	border-radius: 50%;
-    width: 16px; 
-    height: 16px
-}
-
-
-
-
-
-.o-flag--round-12 {width: 12px; height: 12px}
-.o-flag--round-24 {width: 24px; height: 24px}
-.o-flag--round-32 {width: 32px; height: 32px}
-
-
-
-
-
-.o-flag-TD.o-flag--round,
-.o-flag-GN.o-flag--round,
-.o-flag-CI.o-flag--round,
-.o-flag-ML.o-flag--round,
-.o-flag-NG.o-flag--round,
-.o-flag-BE.o-flag--round,
-.o-flag-FR.o-flag--round,
-.o-flag-IE.o-flag--round,
-.o-flag-IT.o-flag--round,
-.o-flag-RO.o-flag--round {background-size:100%  50000%}
 

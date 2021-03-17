@@ -12,18 +12,35 @@
 
 .c-trips__info {
 	display: grid;
-	grid-template-columns: 4fr 4fr 1fr;
+	grid-template-columns: 4fr 4fr 84px;
 	align-items: center;
-	margin-bottom: 24px;
+	margin-bottom: 48px;
 }
 
 @media (max-width: 900px) {
   .c-trips__info {
-    display: grid;
+    	display: grid;
 		grid-template-columns: 1fr 48px;
 		grid-gap: 16px;
-		margin-bottom: 48px;
   }
+}
+
+
+
+
+.c-trips__info-btn-grid {
+	opacity: 0;
+	transition: opacity 0.3s;
+}
+
+.c-trips__info:only-of-type .c-trips__info-btn-grid {
+	visibility: hidden;
+	pointer-events: auto;
+}
+
+.c-trips__info:hover .c-trips__info-btn-grid {
+	transition: opacity 0.3s;
+	opacity: 1;
 }
 
 
@@ -32,7 +49,8 @@
 @media (max-width: 900px) {
   .c-trips__info-btn-grid {
     grid-row: 1 / 3;
-		grid-column: 2 / 3;
+	grid-column: 2 / 3;
+	opacity: 1;
   }
 }
 

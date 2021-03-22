@@ -59,7 +59,6 @@
     "leaflet": "^1.7.1",
     "leaflet.markercluster": "^1.4.1",
     "leaflet.markercluster.webpack": "^1.0.2",
-    "lightpick": "^1.6.2",
     "masonry-layout": "^4.2.2",
     "minimatch": "^3.0.4",
     "minimist": "^1.2.5",
@@ -91,8 +90,9 @@
   "dependencies": {
     "@fontsource/lato": "^4.2.0",
     "@fontsource/signika": "^4.2.0",
-    "@tailwindcss/postcss7-compat": "^2.0.2",
+    "@tailwindcss/postcss7-compat": "npm:@tailwindcss/postcss7-compat",
     "add-to-homescreen": "^3.2.6",
+    "litepicker": "^2.0.11",
     "postcss": "^7",
     "purgecss": "3",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat"

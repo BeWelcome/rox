@@ -1,5 +1,5 @@
 import SearchPicker from "./search/searchpicker";
-import Lightpick from 'lightpick';
+import Litepicker from 'litepicker';
 import moment from 'moment';
 
 import '../scss/_daterangepicker.scss';
@@ -15,11 +15,13 @@ function initializePicker(value) {
     console.log("value=" , value);
     const parent = value.id.replace('_duration', '');
     console.log("parent = ", parent);
-    const picker = new Lightpick({
-        field: value,
-        singleDate: false,
-        minDate: latestDeparture,
+    const picker = new Litepicker({
+        element: value,
+        singleMode: false,
+        minDate: latestDeparture.format("YYYY-MM-DD"),
         numberOfMonths: 2,
+        numberOfColumns: 2,
+        format: "YYYY-MM-DD",
         lang: document.documentElement.lang,
         onSelect: function(start, end) {
             const arrival = document.getElementById(parent + '_arrival');
@@ -32,7 +34,12 @@ function initializePicker(value) {
     const arrival = document.getElementById(parent + '_arrival').value;
     const departure = document.getElementById(parent + '_departure').value;
 
-    picker.setDateRange(arrival, departure);
+    console.log("Arrival: " + arrival);
+    console.log("Departure: " + departure);
+
+    if (arrival !== "") {
+        picker.setDateRange(arrival, departure);
+    }
 
     const departureMoment =  moment(departure);
 
@@ -51,22 +58,24 @@ $(document).on('click', '.js-btn-add[data-target]', function (event) {
     let prototype = collectionHolder.attr('data-prototype');
     let form = prototype.replace(/__name__/g, collectionHolder.attr('data-counter'));
 
-    let counter = collectionHolder.attr('data-counter');
+    let counter = Number(collectionHolder.attr('data-counter'));
 
-    collectionHolder.attr('data-counter', Number(collectionHolder.attr('data-counter')) + 1);
+    collectionHolder.attr('data-counter', counter + 1);
     collectionHolder.append(form);
 
     /* enable a search picker on all location fields (including the newly added one */
     searchPicker = new SearchPicker( "/search/locations/places", 'js-search-picker');
 
-    const duration = 'trip_subtrips_' + counter + '_duration';
-    console.log("duration = " + duration);
+    const duration = document.getElementById('trip_subtrips_' + counter + '_duration');
+    console.log("duration = ", duration);
 
-    const picker = new Lightpick({
-        field: document.getElementById(duration),
-        singleDate: false,
-        minDate: latestDeparture,
+    const picker = new Litepicker({
+        element: duration,
+        singleMode: false,
+//        minDate: latestDeparture.format("YYYY-MM-DD"),
         numberOfMonths: 2,
+        numberOfColumns: 2,
+        format: "YYYY-MM-DD",
         onSelect: function(start, end){
             const leg = this._opts.field.id.replace('_duration', '');
             console.log(leg);

@@ -11,7 +11,6 @@ use App\Repository\SubtripRepository;
 use Pagerfanta\Doctrine\ORM\QueryAdapter;
 use Pagerfanta\Pagerfanta;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -23,7 +22,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class TripController extends AbstractController
 {
-
     private TripModel $tripModel;
     private TranslatorInterface $translator;
 
@@ -132,7 +130,11 @@ class TripController extends AbstractController
             throw new AccessDeniedException();
         }
 
-        $this->tripModel->orderTripLegs($trip);
+        if ($this->tripModel->hasTripExpired($trip)) {
+            $this->addFlash('notice', $this->translator->trans('trip.flash.expired'));
+
+            return $this->redirectToRoute('trip_show', ['id' => $trip->getId()]);
+        }
 
         $editForm = $this->createForm(TripType::class, $trip);
 
@@ -221,7 +223,7 @@ class TripController extends AbstractController
         $legsQuery = $subtripRepository->getLegsInAreaQuery($member, $radius);
         $legsAdapter = new QueryAdapter($legsQuery);
         $tripLegs = new Pagerfanta($legsAdapter);
-        $tripLegs->setMaxPerPage(1);
+        $tripLegs->setMaxPerPage(10);
         $tripLegs->setCurrentPage($page);
         // \todo: Remove after testing.
 
@@ -239,36 +241,19 @@ class TripController extends AbstractController
 
     private function getSubMenuItems(array $params = null): array
     {
-        $submenu = [];
-        $submenu['trip_mytrips'] = [
-            'key' => 'mytrips',
-            'url' => $this->generateUrl('mytrips'),
-        ];
-        /** @var Trip $trip */
-        $trip = $params['trip'] ?? null;
-        $show = $params['show'] ?? false;
-        $edit = $params['edit'] ?? false;
-        if (null !== $trip) {
-            if ($edit) {
-                $submenu['trip_edit'] = [
-                    'key' => 'trip.edit',
-                    'url' => $this->generateUrl('trip_edit', ['id' => $trip->getId()]),
-                ];
-            }
-            if ($show) {
-                $submenu['trip_show'] = [
-                    'key' => 'trip.show',
-                    'url' => $this->generateUrl('trip_show', ['id' => $trip->getId()]),
-                ];
-            }
-        }
-        $submenu['trip_legs'] = [
-            'key' => 'trip.in.area',
-            'url' => $this->generateUrl('trip_in_area', ['username' => $this->getUser()->getUsername()]),
-        ];
-        $submenu['trip_create'] = [
-            'key' => 'trip.create',
-            'url' => $this->generateUrl('trip_create'),
+        $submenu = [
+            'trip_mytrips' => [
+                'key' => 'mytrips',
+                'url' => $this->generateUrl('mytrips'),
+            ],
+            'trip_legs' => [
+                'key' => 'trip.in.area',
+                'url' => $this->generateUrl('trip_in_area', ['username' => $this->getUser()->getUsername()]),
+            ],
+            'trip_create' => [
+                'key' => 'trip.create',
+                'url' => $this->generateUrl('trip_create'),
+            ],
         ];
 
         return $submenu;

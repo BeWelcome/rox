@@ -1,5 +1,5 @@
 import moment from 'moment';
-import Lightpick from 'lightpick';
+import Litepicker from 'litepicker';
 
 import '../scss/_daterangepicker.scss';
 
@@ -9,11 +9,12 @@ $(function () {
     const parent = input.id.replace('_duration', '');
     console.log("parent = ", parent);
 
-    const picker = new Lightpick({
-        field: input,
-        singleDate: false,
+    const picker = new Litepicker({
+        element: input,
+        singleMode: false,
         minDate: moment().add(1, 'day'),
         numberOfMonths: 2,
+        numberOfColumns: 2,
         lang: document.documentElement.lang,
         tooltipNights: true,
         onSelect: function(start, end) {

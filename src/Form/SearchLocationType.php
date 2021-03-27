@@ -34,6 +34,7 @@ class SearchLocationType extends AbstractType
                     'class' => 'search-picker',
                 ],
                 'required' => false,
+                'label' => 'trip.leg.location',
                 'constraints' => [
                     new NotBlank(),
                 ],

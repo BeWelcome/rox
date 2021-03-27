@@ -22,7 +22,7 @@
         {% set form = widget %}
         {% set name = widget.vars.full_name %}
     {% endif %}
-    {% set expired = date(form.arrival.vars.value) < date('now') %}
+    {% set expired = (form.arrival.vars.value != "") and date(form.arrival.vars.value) < date('now') %}
     <div data-content="{{ name }}"
          class="c-trips__info">
         <div class="u-w-full u-mb-8 md:u-width-auto md:u-mb-0">

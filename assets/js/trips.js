@@ -23,11 +23,18 @@ function initializePicker(value) {
         numberOfColumns: 2,
         format: "YYYY-MM-DD",
         lang: document.documentElement.lang,
-        onSelect: function(start, end) {
-            const arrival = document.getElementById(parent + '_arrival');
-            arrival.value = start ? start.format('YYYY-MM-DD') : '';
-            const departure = document.getElementById(parent + '_departure');
-            departure.value = end ? end.format('YYYY-MM-DD') : '';
+        setup: (picker) => {
+            picker.on('selected', (start, end) => {
+                const leg = picker.options.element.id.replace('_duration', '');
+                console.log(leg);
+                console.log(start, end);
+                const arrival = document.getElementById(leg + '_arrival');
+                arrival.value = start ? start.format('YYYY-MM-DD') : '';
+                console.log(arrival.value);
+                const departure = document.getElementById(leg + '_departure');
+                departure.value = end ? end.format('YYYY-MM-DD') : '';
+                console.log(departure.value);
+            });
         }
     });
 
@@ -67,24 +74,8 @@ $(document).on('click', '.js-btn-add[data-target]', function (event) {
     searchPicker = new SearchPicker( "/search/locations/places", 'js-search-picker');
 
     const duration = document.getElementById('trip_subtrips_' + counter + '_duration');
-    console.log("duration = ", duration);
 
-    const picker = new Litepicker({
-        element: duration,
-        singleMode: false,
-//        minDate: latestDeparture.format("YYYY-MM-DD"),
-        numberOfMonths: 2,
-        numberOfColumns: 2,
-        format: "YYYY-MM-DD",
-        onSelect: function(start, end){
-            const leg = this._opts.field.id.replace('_duration', '');
-            console.log(leg);
-            const arrival = document.getElementById(leg + '_arrival');
-            arrival.value = start ? start.format('YYYY-MM-DD') : '';
-            const departure = document.getElementById(leg + '_departure');
-            departure.value = end ? end.format('YYYY-MM-DD') : '';
-        }
-    });
+    initializePicker(duration);
 
     event && event.preventDefault();
 });

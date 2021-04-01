@@ -90,6 +90,7 @@ class Trip
      * @Assert\Count(min=1)
      *
      * @ORM\OneToMany(targetEntity="Subtrip", mappedBy="trip", cascade={"persist", "remove"})
+     * @ORM\OrderBy({"arrival" = "ASC"})
      */
     private $subtrips;
 

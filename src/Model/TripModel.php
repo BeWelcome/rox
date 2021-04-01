@@ -4,10 +4,12 @@ namespace App\Model;
 
 use App\Entity\Member;
 use App\Entity\Preference;
+use App\Entity\Subtrip;
 use App\Entity\Trip;
 use App\Repository\TripRepository;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use InvalidArgumentException;
 use Pagerfanta\Doctrine\ORM\QueryAdapter;
 use Pagerfanta\Pagerfanta;
 use function usort;
@@ -31,7 +33,7 @@ class TripModel
 
         $paginator = new Pagerfanta(new QueryAdapter($query, false));
         // \todo: Remove after testing.
-        $paginator->setMaxPerPage(1);
+        $paginator->setMaxPerPage(10);
         $paginator->setCurrentPage($page);
 
         return $paginator;
@@ -136,5 +138,26 @@ class TripModel
 
         $this->entityManager->persist($trip);
         $this->entityManager->flush();
+    }
+
+    public function hasTripExpired(Trip $trip)
+    {
+        $legs = $trip->getSubtrips();
+
+        if (0 === $legs->count()) {
+            throw new InvalidArgumentException("No trip legs");
+        }
+
+        $expired = true;
+        $now = new DateTime();
+
+        /** @var Subtrip $leg */
+        foreach ($legs->getIterator() as $leg)
+        {
+            $departure = $leg->getDeparture();
+            $expired = $expired && ($departure < $now);
+        }
+
+        return $expired;
     }
 }

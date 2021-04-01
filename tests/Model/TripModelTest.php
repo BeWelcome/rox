@@ -9,7 +9,6 @@ use App\Model\TripModel;
 use DateTime;
 use Doctrine\ORM\EntityManager;
 use PHPUnit\Framework\TestCase;
-use function count;
 
 /**
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
@@ -18,8 +17,9 @@ class TripModelTest extends TestCase
 {
     public function testConsecutiveDatesReturnNoErrors()
     {
-        list($em, $trip) = $this->getEntityManagerStubAndNewTrip();
+        $em = $this->getEntityManagerStub();
 
+        $trip = new Trip();
         $leg1 = new SubTrip();
         $leg1->setArrival(new DateTime('2021-02-22'));
         $leg1->setDeparture(new DateTime('2021-02-24'));
@@ -43,13 +43,14 @@ class TripModelTest extends TestCase
         $tripModel = new TripModel($em);
         $errors = $tripModel->checkTripCreateOrEditData($trip);
 
-        $this->assertSame(0, count($errors));
+        $this->assertSame(0, \count($errors));
     }
 
     public function testNonConsecutiveDatesReturnNoErrors()
     {
-        list($em, $trip) = $this->getEntityManagerStubAndNewTrip();
+        $em = $this->getEntityManagerStub();
 
+        $trip = new Trip();
         $leg1 = new SubTrip();
         $leg1->setArrival(new DateTime('2021-02-22'));
         $leg1->setDeparture(new DateTime('2021-02-24'));
@@ -73,13 +74,14 @@ class TripModelTest extends TestCase
         $tripModel = new TripModel($em);
         $errors = $tripModel->checkTripCreateOrEditData($trip);
 
-        $this->assertSame(0, count($errors));
+        $this->assertSame(0, \count($errors));
     }
 
     public function testOverlappingDatesTwoLegsReturnErrors()
     {
-        list($em, $trip) = $this->getEntityManagerStubAndNewTrip();
+        $em = $this->getEntityManagerStub();
 
+        $trip = new Trip();
         $leg1 = new SubTrip();
         $leg1->setArrival(new DateTime('2021-02-22'));
         $leg1->setDeparture(new DateTime('2021-02-24'));
@@ -94,7 +96,7 @@ class TripModelTest extends TestCase
         $tripModel = new TripModel($em);
         $errors = $tripModel->checkTripCreateOrEditData($trip);
 
-        $this->assertNotSame(0, count($errors));
+        $this->assertNotSame(0, \count($errors));
         $this->assertTrue(isset($errors[0]['leg']));
         $this->assertSame($errors[0]['field'], 'duration');
         $this->assertTrue(isset($errors[1]['leg']));
@@ -103,8 +105,9 @@ class TripModelTest extends TestCase
 
     public function testOverlappingDatesSeveralLegsReturnErrors()
     {
-        list($em, $trip) = $this->getEntityManagerStubAndNewTrip();
+        $em = $this->getEntityManagerStub();
 
+        $trip = new Trip();
         $leg1 = new SubTrip();
         $leg1->setArrival(new DateTime('2021-02-22'));
         $leg1->setDeparture(new DateTime('2021-02-24'));
@@ -123,7 +126,7 @@ class TripModelTest extends TestCase
         $tripModel = new TripModel($em);
         $errors = $tripModel->checkTripCreateOrEditData($trip);
 
-        $this->assertNotSame(0, count($errors));
+        $this->assertNotSame(0, \count($errors));
         $this->assertTrue(isset($errors[0]['leg']));
         $this->assertSame($errors[0]['field'], 'duration');
         $this->assertTrue(isset($errors[1]['leg']));
@@ -132,8 +135,9 @@ class TripModelTest extends TestCase
 
     public function testSeveralOverlappingLegsReturnErrors()
     {
-        list($em, $trip) = $this->getEntityManagerStubAndNewTrip();
+        $em = $this->getEntityManagerStub();
 
+        $trip = new Trip();
         $leg1 = new SubTrip();
         $leg1->setArrival(new DateTime('2021-02-22'));
         $leg1->setDeparture(new DateTime('2021-02-24'));
@@ -156,7 +160,7 @@ class TripModelTest extends TestCase
         $tripModel = new TripModel($em);
         $errors = $tripModel->checkTripCreateOrEditData($trip);
 
-        $this->assertNotSame(0, count($errors));
+        $this->assertNotSame(0, \count($errors));
         $this->assertTrue(isset($errors[0]['leg']));
         $this->assertSame($errors[0]['field'], 'duration');
         $this->assertTrue(isset($errors[2]['leg']));
@@ -167,8 +171,9 @@ class TripModelTest extends TestCase
 
     public function testSingleLegWithOptionsSelectedReturnsNoError()
     {
-        list($em, $trip) = $this->getEntityManagerStubAndNewTrip();
+        $em = $this->getEntityManagerStub();
 
+        $trip = new Trip();
         $leg1 = new SubTrip();
         $leg1->setOptions([SubtripOptionsType::MEET_LOCALS]);
         $trip
@@ -178,13 +183,14 @@ class TripModelTest extends TestCase
         $tripModel = new TripModel($em);
         $errors = $tripModel->checkTripCreateOrEditData($trip);
 
-        $this->assertSame(0, count($errors));
+        $this->assertSame(0, \count($errors));
     }
 
     public function testSingleLegNoOptionsSelectedReturnsAnError()
     {
-        list($em, $trip) = $this->getEntityManagerStubAndNewTrip();
+        $em = $this->getEntityManagerStub();
 
+        $trip = new Trip();
         $leg1 = new SubTrip();
         $trip
             ->addSubtrip($leg1)
@@ -193,7 +199,7 @@ class TripModelTest extends TestCase
         $tripModel = new TripModel($em);
         $errors = $tripModel->checkTripCreateOrEditData($trip);
 
-        $this->assertNotSame(0, count($errors));
+        $this->assertNotSame(0, \count($errors));
         $this->assertFalse(isset($errors[0]['leg']));
         $this->assertTrue(isset($errors[0]['error']));
         $this->assertSame($errors[0]['error'], 'trip.error.no.options');
@@ -201,8 +207,9 @@ class TripModelTest extends TestCase
 
     public function testMultipleLegNoOptionsSelectedReturnsAnError()
     {
-        list($em, $trip) = $this->getEntityManagerStubAndNewTrip();
+        $em = $this->getEntityManagerStub();
 
+        $trip = new Trip();
         $leg1 = new SubTrip();
         $leg2 = new SubTrip();
         $leg3 = new SubTrip();
@@ -219,7 +226,7 @@ class TripModelTest extends TestCase
         $tripModel = new TripModel($em);
         $errors = $tripModel->checkTripCreateOrEditData($trip);
 
-        $this->assertNotSame(0, count($errors));
+        $this->assertNotSame(0, \count($errors));
         $this->assertFalse(isset($errors[0]['leg']));
         $this->assertTrue(isset($errors[0]['error']));
         $this->assertSame($errors[0]['error'], 'trip.error.no.options');
@@ -227,8 +234,9 @@ class TripModelTest extends TestCase
 
     public function testMultipleLegWithOptionsSelectedReturnsNoError()
     {
-        list($em, $trip) = $this->getEntityManagerStubAndNewTrip();
+        $em = $this->getEntityManagerStub();
 
+        $trip = new Trip();
         $leg1 = new SubTrip();
         $leg1->setOptions([SubtripOptionsType::LOOKING_FOR_HOST]);
         $leg2 = new SubTrip();
@@ -246,13 +254,14 @@ class TripModelTest extends TestCase
         $tripModel = new TripModel($em);
         $errors = $tripModel->checkTripCreateOrEditData($trip);
 
-        $this->assertSame(0, count($errors));
+        $this->assertSame(0, \count($errors));
     }
 
     public function testLegsAreNotReturnedSortedOnCreateIfErrorsWereFound()
     {
-        list($em, $trip) = $this->getEntityManagerStubAndNewTrip();
+        $em = $this->getEntityManagerStub();
 
+        $trip = new Trip();
         $leg1 = new SubTrip();
         $leg1->setArrival(new DateTime('2021-02-22'));
         $leg1->setDeparture(new DateTime('2021-02-24'));
@@ -275,19 +284,20 @@ class TripModelTest extends TestCase
         $tripModel = new TripModel($em);
         $errors = $tripModel->checkTripCreateOrEditData($trip);
 
-        $this->assertNotSame(0, count($errors));
+        $this->assertNotSame(0, \count($errors));
 
         $legs = $trip->getSubtrips();
-        $this->assertEquals(new DateTime('2021-02-22'), $legs[0]->getArrival());
-        $this->assertEquals(new DateTime('2021-02-24'), $legs[1]->getArrival());
-        $this->assertEquals(new DateTime('2021-02-22'), $legs[2]->getArrival());
-        $this->assertEquals(new DateTime('2021-01-22'), $legs[3]->getArrival());
+        $this->assertSame(new DateTime('2021-02-22'), $legs[0]->getArrival());
+        $this->assertSame(new DateTime('2021-02-24'), $legs[1]->getArrival());
+        $this->assertSame(new DateTime('2021-02-22'), $legs[2]->getArrival());
+        $this->assertSame(new DateTime('2021-01-22'), $legs[3]->getArrival());
     }
 
     public function testLegsAreReturnedSorted()
     {
-        list($em, $trip) = $this->getEntityManagerStubAndNewTrip();
+        $em = $this->getEntityManagerStub();
 
+        $trip = new Trip();
         $leg1 = new SubTrip();
         $leg1->setArrival(new DateTime('2021-02-22'));
         $leg1->setDeparture(new DateTime('2021-02-24'));
@@ -317,8 +327,8 @@ class TripModelTest extends TestCase
         $this->assertSame(new DateTIme('2021-02-25'), $legs[3]->getArrival());
     }
 
-    private function getEntityManagerStubAndNewTrip(): array
+    private function getEntityManagerStub(): EntityManager
     {
-        return [$this->createStub(EntityManager::class), new Trip()];
+        return $this->createStub(EntityManager::class);
     }
 }

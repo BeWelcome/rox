@@ -13,13 +13,13 @@
 	{% if trips.nbResults != 0 %}
 		{% set myself = app.user %}
 		{% if trips.haveToPaginate %}
-			<section class="l-trips-wrapper">
+			<section>
 			    <div class="u-inline-flex u-w-full u-items-center u-justify-end u-mb-24 md:u-mb-16 md:u-h-48 u-flex-col md:u-flex-row">
 	   				{{ pagerfanta( trips, 'rounded_pagination', { routeName: 'mytrips' }) }}
 	   			</div>
 	   		</section>
 		{% endif %}
-		<section class="l-trips-wrapper">
+		<section>
 			{% for trip in trips %}
 			<div class="c-trip-card">
 				<div class="c-trip-card__wrapper">
@@ -57,7 +57,7 @@
 		</section>
 
 		{% if trips.haveToPaginate %}
-		<section class="l-trips-wrapper">
+		<section>
 			<div class="u-inline-flex u-w-full u-items-center u-justify-end u-mt-16 md:u-h-48 u-flex-col md:u-flex-row">
 	      		{{ pagerfanta( trips, 'rounded_pagination', { routeName: 'mytrips' }) }}
 	      	</div>

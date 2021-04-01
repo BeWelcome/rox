@@ -10,7 +10,7 @@
 {% endblock %}
 
 {% block content %}
-  <section class="l-trips-wrapper">
+  <section>
     <div class="md:u-w-720 u-mt-8">
       <div class="u-mb-24 u-inline-block">
         <div class="o-avatar o-avatar--white u-mr-16 u-float-left">{{ macros.roundedavatarstack(trip.creator.username, 96) }}</div>
@@ -36,20 +36,20 @@
   </section>
 
   <section class="l-trips-overlay-wrapper">
-    <ul class="l-trips-wrapper">
+    <ul>
       {% for subtrip in trip.subtrips %}
         <li class="l-show-trip">
-          <span class="o-number o-number--white o-number--l u-relative u-ml-__16">{{ loop.index }}</span>
+          <span class="o-number o-number--white o-number--l u-relative u-ml-__18">{{ loop.index }}</span>
           <div class="u-ml-16 md:u-ml-0 md:u-mt-4">
-            <p class="u-text-24 u-text-white u-font-display u-mb-8 u-font-300"><span class="u-font-500">{{ subtrip.location.name }}</span>, {{ subtrip.location.country.name }} <i class="o-flag o-flag--round o-flag-{{ subtrip.location.country.country }} u-ml-4"></i></p>
+            <p class="u-text-24 u-text-white u-font-display u-mb-8 u-font-300"><span class="u-font-500">{{ subtrip.location.name }}</span>, {{ subtrip.location.country.name }} <i class="o-flag  o-flag--{{ subtrip.location.country.country }} u-ml-4"></i></p>
             <p class="u-text-white u-font-display u-font-300">{{ subtrip.arrival|format_date('medium') }}{% if subtrip.arrival != subtrip.departure %} - {{ subtrip.departure|format_date('medium') }}{% endif%}</p>
           </div>
 
-          <span id="latitude" class="u-text-white">{{ subtrip.location.longitude }}</span>
+          <!-- <span id="latitude" class="u-text-white">{{ subtrip.location.longitude }}</span>
           <span id="longitude" class="u-text-white">{{ subtrip.location.latitude }}</span>
           <input type="hidden" id="zoom" value="{{ subtrip.location.latitude }}">
           <input type="hidden" id="zoom" value="{{ subtrip.location.longitude }}">
-          <input type="hidden" id="zoom" value="10">
+          <input type="hidden" id="zoom" value="10"> -->
 
           <div class="u-ml-16 md:u-ml-0 md:u-mt-4">
             {% if constant('App\\Doctrine\\SubtripOptionsType::MEET_LOCALS') in subtrip.options %}
@@ -72,7 +72,7 @@
     </ul>
   </section>
 
-  <script type="text/javascript">
+  <!-- <script type="text/javascript">
     $(function () {
       if ($('#map').length) {
         let latitude = $('#latitude').val();
@@ -90,7 +90,7 @@
         }).addTo(map);
       }
     });
-  </script>
+  </script> -->
 
 {% endblock content %}
 

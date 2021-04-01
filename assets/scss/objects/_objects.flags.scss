@@ -1,17 +1,17 @@
 /*!*****************************************************
 
-Freak Flags, Copyright ©2021 Michael P. Cohen. Freak flags is licenced under the MIT licence.  
-
-For complete information visit: www.freakflagsprite.com 
+https://github.com/HatScripts/circle-flags
 
 ******************************************************/
 
 .o-flag {
+    display: inline-block;
     background-repeat:no-repeat;
     border-radius: 100%;
     overflow: hidden;
     width: 18px;
-    height: 18px
+    height: 18px;
+    box-shadow: 0 0 5px 0px black;
 }
 
 

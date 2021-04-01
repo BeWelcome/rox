@@ -1,11 +1,12 @@
 .l-show-trip {
   display: grid;
-  grid-template-columns: 24px 1fr 1fr;
+  grid-template-columns: 32px 1fr 1fr;
   grid-gap: 16px;
   position: relative;
-  border-left: 1px solid var(--white);
-  margin-left: 12px;
+  border-left: 2px dotted var(--white);
   padding-bottom: 32px;
+  padding-right: 32px;
+  z-index: 1;
 }
 
 @media (max-width: 900px) {
@@ -17,12 +18,12 @@
 }
 
 .l-show-trip:last-child {
-  border-left: initial;
+  border-left: 2px solid transparent;
 }
 
 @media (max-width: 900px) {
   .l-show-trip:last-child {
-    border-left: 1px solid var(--white);
+    border-left: 2px dotted var(--white);
   }
 }
 
@@ -75,6 +76,8 @@
 
 
 .l-trips-overlay-wrapper {
-  padding: 48px 0;
+  padding-top: 48px;
   background-color: rgba(0, 0, 0, 0.3);
+  margin: 0 12px;
+  border-radius: 8px;
 }

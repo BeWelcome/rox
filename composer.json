@@ -97,7 +97,7 @@
         "friends-of-behat/mink-extension": "^2.4",
         "friends-of-behat/symfony-extension": "^2.1",
         "friendsofphp/php-cs-fixer": "^2.16",
-        "fzaninotto/faker": "^1.6",
+        "fakerphp/faker": "^1.0",
         "hautelook/alice-bundle": "^2.0",
         "infection/infection": "^0.18.0",
         "mockery/mockery": "^1.4.0",

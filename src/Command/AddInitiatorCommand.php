@@ -8,6 +8,7 @@ use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use function Safe\ini_set;
 
 class AddInitiatorCommand extends Command
 {
@@ -43,12 +44,12 @@ class AddInitiatorCommand extends Command
 
         $connection = $this->entityManager->getConnection();
 
-        $count = $connection->fetchOne('SELECT count(*) from messages WHERE initiator_id IS NULL');
+        $count = $connection->fetchOne('SELECT count(*) from messages');
 
         $progress = new ProgressBar($output, $count);
         $progress->start();
 
-        $statement = $connection->executeQuery('SELECT * FROM messages WHERE initiator_id IS NULL');
+        $statement = $connection->executeQuery('SELECT * FROM messages');
 
         for ($i = 0; $i < $count; ++$i) {
             $progress->advance();
@@ -58,6 +59,9 @@ class AddInitiatorCommand extends Command
             if (30180 === $messageId) {
                 continue;
             }
+            if (0 !== $row['initiator_id'] or null !== $row['initiator_id']) {
+                $this->parents[$messageId] = $row['IdParent'];
+            }
             if ('0' === $row['IdParent'] || null === $row['IdParent']) {
                 $this->initiators[$messageId] = $row['IdSender'];
                 $initiator = $row['IdSender'];
@@ -66,7 +70,9 @@ class AddInitiatorCommand extends Command
                 $initiator = $this->getinitiator($messageId);
             }
 
-            $connection->executeQuery('UPDATE messages m SET initiator_id = ' . $initiator . ' WHERE m.id = ' . $messageId);
+            if ($initiator != 0) {
+                $connection->executeQuery('UPDATE messages m SET initiator_id = ' . $initiator . ' WHERE m.id = ' . $messageId);
+            }
         }
         $progress->finish();
 

@@ -148,8 +148,7 @@ class MemberTwigExtension extends AbstractExtension implements GlobalsInterface
             'groupsInApprovalQueue' => $this->getGroupsInApprovalQueueCount(),
             'reportedCommentsCount' => $this->getReportedCommentsCount(),
             'reportedMessagesCount' => $this->getReportedMessagesCount(),
-            'messageCount' => $this->getUnreadMessagesCount(),
-            'requestCount' => $this->getUnreadRequestsCount(),
+            'conversationCount' => $this->getUnreadConversationsCount(),
             'teams' => $teams,
         ];
     }
@@ -194,7 +193,7 @@ class MemberTwigExtension extends AbstractExtension implements GlobalsInterface
         return $teams;
     }
 
-    protected function getGroupsInApprovalQueueCount()
+    protected function getGroupsInApprovalQueueCount(): ?int
     {
         $groupsInApprovalCount = null;
         if ($this->security->isGranted(Member::ROLE_ADMIN_GROUP)) {
@@ -204,14 +203,14 @@ class MemberTwigExtension extends AbstractExtension implements GlobalsInterface
                 $groups = $groupsRepository->findBy([
                     'approved' => Group::OPEN,
                 ]);
-                $groupsInApprovalCount = \count($groups);
+                $groupsInApprovalCount = count($groups);
             }
         }
 
         return $groupsInApprovalCount;
     }
 
-    protected function getReportedCommentsCount()
+    protected function getReportedCommentsCount(): int
     {
         $reportedCommentsCount = null;
         if (
@@ -226,7 +225,7 @@ class MemberTwigExtension extends AbstractExtension implements GlobalsInterface
         return $reportedCommentsCount;
     }
 
-    protected function getReportedMessagesCount()
+    protected function getReportedMessagesCount(): int
     {
         $reportedMessagesCount = null;
         if (
@@ -242,26 +241,15 @@ class MemberTwigExtension extends AbstractExtension implements GlobalsInterface
         return $reportedMessagesCount;
     }
 
-    protected function getUnreadMessagesCount()
+    protected function getUnreadConversationsCount(): int
     {
         /** @var MessageRepository $messageRepository */
         $messageRepository = $this->getManager()->getRepository(Message::class);
 
-        return $messageRepository->getUnreadMessagesCount($this->member);
+        return $messageRepository->getUnreadConversationsCount($this->member);
     }
 
-    protected function getUnreadRequestsCount()
-    {
-        /** @var MessageRepository $messageRepository */
-        $messageRepository = $this->getManager()->getRepository(Message::class);
-
-        return $messageRepository->getUnreadRequestsCount($this->member);
-    }
-
-    /**
-     * @return int
-     */
-    protected function getLoginMessages()
+    protected function getLoginMessages(): array
     {
         /** @var LoginMessageRepository $loginMessagsRepository */
         $loginMessageRepository = $this->getManager()->getRepository(LoginMessage::class);

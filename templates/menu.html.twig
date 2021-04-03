@@ -183,9 +183,9 @@
                                                         class="fa fa-users"></i> {{ 'trip.mytrips' | trans }}</a>
                                             </div>
                                             <div>
-                                                <a href="{{ url('messages') }}"
+                                                <a href="{{ url('conversations') }}"
                                                    class="btn btn-block btn-primary-outline py-1 text-left mt-1"><i
-                                                            class="fa fa-envelope"></i> {{ 'mymessages' | trans }}</a>
+                                                            class="fa fa-envelope"></i> {{ 'conversations' | trans }}</a>
                                                 <a href="{{ url('members_show_all_notes') }}"
                                                    class="btn btn-block btn-primary-outline py-1 text-left"><i
                                                             class="fa fa-sticky-note"></i> {{ 'mynotes' | trans }}</a>
@@ -218,9 +218,6 @@
                                 href="{{ path('conversations') }}"
                                 class="dropdown-item">{{ 'conversations' | trans }}</a></li>
                         <li class="text-right"><a
-                                href="{{ path('conversations_b') }}"
-                                class="dropdown-item">{{ 'conversations_b' | trans }}</a></li>
-                        <li class="text-right"><a
                                 href="{{ path( 'members_profile' , { username: member.Username } ) }}"
                                 class="dropdown-item">{{ 'profile' | trans }}</a></li>
                         <li class="text-right"><a href="{{ path('edit_my_profile') }}"
@@ -238,30 +235,14 @@
                     </ul>
                 </li>
 
-                {# messages #}
+                {# conversations #}
                 <li class="nav-item">
-                    <div id="messageCount" data-count="{{ messageCount }}">
-                        <a href="{{ path('conversations', {'messages': 1, 'unread_only': 1}) }}" class="nav-link" aria-label="{{ 'messages.unread' | trans }}">
-                            <i class="fa fa-lg fa-envelope pr-1"></i><span
-                                class="badge badge-warning d-md-none d-xl-inline-block"><i class="fa fa-spinner fa-spin"></i></span>
-                        </a>
-                    </div>
-                </li>
-                {# requests #}
-                <li class="nav-item">
-                    <div id="requestCount" data-count="{{ requestCount }}">
-                        <a href="{{ path('conversations', {'requests': 1, 'unread_only': 1}) }}" class="nav-link" aria-label="{{ 'requests.unread' | trans }}">
-                            <i class="fa fa-lg fa-bed pr-1"></i><span
-                                class="badge badge-warning d-md-none d-xl-inline-block"><i class="fa fa-spinner fa-spin"></i></span>
-                        </a>
-                    </div>
-                </li>
-                {# invitations #}
-                <li class="nav-item">
-                    <div id="invitationCount" data-count="{{ requestCount }}">
-                        <a href="{{ path('conversations', {'invitations': 1, 'unread_only': 1}) }}" class="nav-link" aria-label="{{ 'invitations.unread' | trans }}">
-                            <i class="fa fa-lg fa-door-open pr-1"></i><span
-                                class="badge badge-warning d-md-none d-xl-inline-block"><i class="fa fa-spinner fa-spin"></i></span>
+                    <div id="conversationCount" class="nav-link" data-count="{{ conversationCount }}">
+                        <a href="{{ path('conversations') }}" aria-label="{{ 'conversations' | trans }}"><i class="fa fa-lg fa-envelope pr-1"></i></a>
+                        <a href="{{ path('conversations', {'unread_only': 1}) }}" aria-label="{{ 'conversations.unread' | trans }}">
+                            <span class="badge badge-warning d-md-none d-xl-inline-block">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </span>
                         </a>
                     </div>
                 </li>

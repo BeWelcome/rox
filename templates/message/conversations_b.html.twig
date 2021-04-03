@@ -15,73 +15,38 @@
 
 {% block content %}
     {% set member = app.user %}
-    <h2>{{ 'conversations' | trans }}</h2>
+    <h2>{{ submenu.active | trans }}</h2>
     <div class="row no-gutters">
+        {% if submenu.active != 'spam' and submenu.active != 'deleted' %}
         <div class="col-12 form-inline">
-            <div class="custom-control custom-switch mr-1">
-                <input type="checkbox" id="show_messages"
-                       name="search[show_options]"
-                       class="show_options custom-control-input" value="1"
-                       {% if showMessages %}checked="checked"{% endif %}>
-                <label class="switch-custom custom-control-label" for="show_messages">
-                    {{ 'messages' | trans }}
+            <div class="d-flex mr-1">
+                <label for="initiator" class="mr-1">
+                    {{ 'started.by.me' | trans }}
                 </label>
-            </div>
-            <div class="custom-control custom-switch mr-1">
-                <input type="checkbox" id="show_requests"
-                       name="search[show_options]"
-                       class="show_options custom-control-input" value="1"
-                       {% if showRequests %}checked="checked"{% endif %}>
-                <label class="switch-custom custom-control-label" for="show_requests">
-                    {{ 'requests' | trans }}
+                <input id="initiator" type="range" class="o-slider js-switch-option" min="1" max="3" value="{{ initiator }}">
+                <label for="initiator" class="ml-1">
+                    {{ 'started.by.someone.else' | trans }}
                 </label>
-            </div>
-            <div class="custom-control custom-switch mr-1">
-                <input type="checkbox" id="show_invitations"
-                       name="search[show_options]"
-                       class="show_options custom-control-input" value="1"
-                       {% if showInvitations %}checked="checked"{% endif %}>
-                <label class="switch-custom custom-control-label" for="show_invitations">
-                    {{ 'invitations' | trans }}
-                </label>
-            </div>
             <div class="custom-control custom-switch mr-1">
                 <input type="checkbox" id="show_unread_only"
                        name="search[show_options]"
-                       class="show_options custom-control-input" value="1"
+                       class="show_options custom-control-input js-switch-option" value="1"
                        {% if showUnreadOnly %}checked="checked"{% endif %}>
                 <label class="switch-custom custom-control-label" for="show_unread_only">
                     {{ 'unread.only' | trans }}
                 </label>
             </div>
-            <div class="custom-control custom-switch mr-1">
-                <input type="checkbox" id="show_started_by_me"
-                       name="search[show_options]"
-                       class="show_options custom-control-input" value="1"
-                       {% if showStartedByMe %}checked="checked"{% endif %}>
-                <label class="switch-custom custom-control-label" for="show_started_by_me">
-                    {{ 'started.by.me' | trans }}
-                </label>
-            </div>
-            <div class="custom-control custom-switch mr-1">
-                <input type="checkbox" id="show_started_by_someone_else"
-                       name="search[show_options]"
-                       class="show_options custom-control-input" value="1"
-                       {% if showStartedBySomeoneElse %}checked="checked"{% endif %}>
-                <label class="switch-custom custom-control-label" for="show_started_by_someone_else">
-                    {{ 'started.by.someone.else' | trans }}
-                </label>
+                {% if conversations.haveToPaginate %}
+                    {{ pagerfanta( conversations, 'rounded_pagination') }}
+                    <div class="clearfix mb-1"></div>
+                {% endif %}
             </div>
         </div>
+        {% endif %}
     </div>
     {% if conversations.nbResults == 0 %}
         <p>{{ 'conversations.none' | trans }}</p>
     {% else %}
-
-        {% if conversations.haveToPaginate %}
-            {{ pagerfanta( conversations, 'rox_default') }}
-            <div class="clearfix mb-1"></div>
-        {% endif %}
 
         {{ form_start(form) }}
 
@@ -92,6 +57,7 @@
             <tr>
                 <th class="select align-middle">
                     <input type="checkbox" id="checkAll">
+                    <label for="checkAll" class="sr-only" aria-role="label">{{ 'conversations.check.all'|trans }}</label>
                 </th>
                 <th class="align-middle">{{ 'message.first.by' | trans }}</th>
                 <th class="align-middle">{{ 'messagestext' | trans }}</th>
@@ -107,7 +73,9 @@
                          {{ form_widget(form.messages[loop.index0], {'attr': {'class': 'checkable'}}) }}
                     </td>
                     <td class="align-middle small">
-                        <p class="m-0">{{ macros.roundedavatarstack(message.initiator.Username, 72) }}</p>
+                        <div class="o-avatar u-mb-16 md:u-mb-0 u-justify-self-center">
+                            {{ macros.roundedavatarstack(message.initiator.Username, 72) }}
+                        </div>
                     </td>
                     <td class="align-middle w-100">
                         <a href="{{ path(show_message_route, { id: message.id}) }}">
@@ -149,7 +117,9 @@
                         </a>
                     </td>
                     <td class="align-middle small">
-                        <p class="m-0">{{ macros.roundedavatarstack(otherMember.Username, 72) }}</p>
+                        <div class="o-avatar u-mb-16 md:u-mb-0 u-justify-self-center">
+                            {{ macros.roundedavatarstack(otherMember.Username, 72) }}
+                        </div>
                     </td>
                     <td class="text-right">
                         <div class="btn-group-vertical">
@@ -171,7 +141,7 @@
         {{ form_rest(form) }}
         {{ form_end(form) }}
         {% if conversations.haveToPaginate %}
-            {{ pagerfanta( conversations, 'rox_default') }}
+            {{ pagerfanta( conversations, 'rounded_pagination') }}
             <div class="clearfix mb-1"></div>
         {% endif %}
 

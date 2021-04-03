@@ -129,7 +129,7 @@ const assetsConfig = Encore.getWebpackConfig();
 const WorkboxPlugin = require('workbox-webpack-plugin');
 
 workboxConfig = {
-        mode: Encore.isProduction() ? 'production' : 'development',
+        mode: 'production', /* Encore.isProduction() ? 'production' : 'development', */
         entry: {
             main: "./assets/js/index.js"
         },
@@ -144,7 +144,7 @@ workboxConfig = {
            // and not allow any straggling "old" SWs to hang around
            // clientsClaim: true,
            // skipWaiting: true,
-           swSrc: './assets/js/sw.js',
+            swSrc: './assets/js/sw.js',
             swDest: './service-worker.js'
         }),
         ],

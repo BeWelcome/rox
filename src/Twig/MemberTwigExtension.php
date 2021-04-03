@@ -210,7 +210,7 @@ class MemberTwigExtension extends AbstractExtension implements GlobalsInterface
         return $groupsInApprovalCount;
     }
 
-    protected function getReportedCommentsCount(): int
+    protected function getReportedCommentsCount(): ?int
     {
         $reportedCommentsCount = null;
         if (
@@ -225,7 +225,7 @@ class MemberTwigExtension extends AbstractExtension implements GlobalsInterface
         return $reportedCommentsCount;
     }
 
-    protected function getReportedMessagesCount(): int
+    protected function getReportedMessagesCount(): ?int
     {
         $reportedMessagesCount = null;
         if (

@@ -6,6 +6,7 @@
 {% endblock javascripts %}
 
 {% block stylesheets %}
+    {{ encore_entry_link_tags('tailwind')  }}
     {{ encore_entry_link_tags('requests')  }}
 {% endblock stylesheets %}
 
@@ -21,19 +22,11 @@
     {% set current = thread | first %}
     {% set receiver =  original.receiver %}
 
-    <div class="row no-gutters bg-white mb-1">
-        {% set myself = app.user %}
-        <div class="pull-left">{{ macros.avatarstack(host.Username, 50, false) }}</div>
-        <div class="col">
-            <h3 id="MessageSubject" class="p-3 text-truncate">{{ current.Subject.Subject }}</h3>
-        </div>
-        <div class="pull-right text-right">{{ macros.avatarstack(guest.Username, 50, true) }}</div>
-    </div>
-
+    {{ macros.messageheader(host, guest, current.Subject.Subject) }}
     {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'autocomplete': 'off'}}) }}
     <div class="row mb-1">
-        <div class="col-12 col-sm-6 col-md-4">
-            <div class="row">
+        <div class="col-12">
+            {{ form_row(form.message) }}
                 <div class="o-form-group">
                     {{ form_label(form.request.duration) }}
                     <div class="input-group date" id="arrival" data-target-input="nearest">
@@ -42,10 +35,8 @@
                             <i class="fa fa-calendar"></i>
                         </span>
                         </div>
-                        {{ form_widget(form.request.duration, {'attr': { 'class': 'light-picker'}}) }}
+                        {{ form_widget(form.request.duration, {'attr': { 'class': 'js-litepicker'}}) }}
                     </div>
-                    {{ form_row(form.request.arrival) }}
-                    {{ form_row(form.request.departure) }}
                 </div>
 
                 <div class="o-form-group col-12">
@@ -53,14 +44,9 @@
                     {{ form_label(form.request.flexible) }}
                 </div>
 
-                <div class="o-form-group col-12">
-                    {{ form_label(form.request.numberOfTravellers) }}
-                    {{ form_widget(form.request.numberOfTravellers) }}
-                </div>
-            </div>
-        </div>
-        <div class="col-12 col-md-8">
-            {{ form_row(form.message) }}
+            {{ form_row(form.request.arrival) }}
+            {{ form_row(form.request.departure) }}
+            {{ form_row(form.request.numberOfTravellers) }}
             {{ form_widget(form.accept, {'attr': {'class': 'btn-primary ml-1 pull-right'}}) }}
             {{ form_widget(form.tentatively, {'attr': {'class': 'btn btn-primary ml-1 pull-right'}}) }}
             {{ form_widget(form.decline, {'attr': {'class': 'btn btn-primary ml-1 pull-right'}}) }}

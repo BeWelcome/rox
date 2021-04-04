@@ -16,6 +16,7 @@ class InvitationHost extends HostingRequestAbstractType
     {
         $builder
             ->add('request', HostingRequestType::class, [
+                'invitation' => true,
                 'reply_guest' => true,
             ])
             ->add('message', CkEditorType::class, [

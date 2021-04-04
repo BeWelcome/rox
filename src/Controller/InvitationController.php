@@ -101,6 +101,7 @@ class InvitationController extends BaseHostingRequestAndInvitationController
 
         return $this->render('invitation/invite.html.twig', [
             'leg' => $leg,
+            'subject' => $subjectText,
             'form' => $invitationForm->createView(),
         ]);
     }
@@ -188,9 +189,7 @@ class InvitationController extends BaseHostingRequestAndInvitationController
         $requestForm->handleRequest($request);
 
         if ($requestForm->isSubmitted() && $requestForm->isValid()) {
-            $realParent = $this->getParent($parent);
-
-            $newRequest = $this->persistRequest($requestForm, $realParent, $guest, $host);
+            $newRequest = $this->persistRequest($requestForm, $parent, $guest, $host);
 
             // In case the potential guest declines the invitation remove the invitedBy from the leg
             if (HostingRequest::REQUEST_ACCEPTED === $newRequest->getRequest()->getStatus()) {
@@ -208,7 +207,8 @@ class InvitationController extends BaseHostingRequestAndInvitationController
                 $guest,
                 $newRequest,
                 $subject,
-                ($newRequest->getRequest()->getId() !== $realParent->getRequest()->getId())
+                ($newRequest->getRequest()->getId() !== $parent->getRequest()->getId()),
+                $leg
             );
             $this->addTranslatedFlash('success', 'flash.notification.updated');
 
@@ -269,7 +269,8 @@ class InvitationController extends BaseHostingRequestAndInvitationController
                 $guest,
                 $newRequest,
                 $subject,
-                ($newRequest->getRequest()->getId() !== $realParent->getRequest()->getId())
+                ($newRequest->getRequest()->getId() !== $realParent->getRequest()->getId()),
+                $leg
             );
             $this->addTranslatedFlash('notice', 'flash.notification.updated');
 
@@ -293,16 +294,18 @@ class InvitationController extends BaseHostingRequestAndInvitationController
         Member $guest,
         Message $request,
         $subject,
-        $requestChanged
+        $requestChanged,
+        SubTrip $leg
     ): void {
-        $this->messageModel->sendRequestNotification(
+        $this->messageModel->sendInvitationNotification(
             $guest,
             $host,
             $host,
             $request,
             $subject,
             'invitation_reply_from_guest',
-            $requestChanged
+            $requestChanged,
+            $leg
         );
     }
 
@@ -310,7 +313,16 @@ class InvitationController extends BaseHostingRequestAndInvitationController
     {
         $subject = $request->getSubject()->getSubject();
 
-        $this->messageModel->sendRequestNotification($host, $guest, $host, $request, $subject, 'invitation', false);
+        $this->messageModel->sendInvitationNotification(
+            $host,
+            $guest,
+            $host,
+            $request,
+            $subject,
+            'invitation',
+            false,
+            null
+        );
     }
 
     /**
@@ -322,16 +334,18 @@ class InvitationController extends BaseHostingRequestAndInvitationController
         Member $guest,
         Message $request,
         $subject,
-        $requestChanged
+        $requestChanged,
+        SubTrip $leg
     ): void {
-        $this->messageModel->sendRequestNotification(
+        $this->messageModel->sendInvitationNotification(
             $host,
             $guest,
             $host,
             $request,
             $subject,
             'invitation_reply_from_host',
-            $requestChanged
+            $requestChanged,
+            $leg
         );
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Member;
+use Intervention\Image\ImageManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -44,9 +45,31 @@ class AvatarController extends AbstractController
             return $this->emptyAvatar($size);
         }
 
-        $filename = '../data/user/avatars/' . $member->getId() . $this->getSuffix($size);
-        if (file_exists($filename)) {
+        $suffix = $this->getSuffix($size);
+        $filename = '../data/user/avatars/' . $member->getId();
+
+        if (null === $suffix) {
+            $filename .= '_' . $size . '_' . $size;
+            if (!file_exists($filename)) {
+                // custom size generate image if not yet existing
+                // creates a thumb nail for the current image (if we have an original that is)
+                $original = '../data/user/avatars/' . $member->getId() . "_original";
+                if (!file_exists($original)) {
+                    return $this->emptyAvatar($size);
+                }
+
+                $imageManager = new ImageManager();
+                $img = $imageManager->make($original);
+                $img->resize($size, $size, function ($constraint) {
+                    $constraint->aspectRatio();
+                });
+                $img->save($filename);
+            }
+
             return $this->createCacheableResponse($filename);
+        }
+        if (file_exists($filename . $suffix)) {
+            return $this->createCacheableResponse($filename. $suffix);
         }
 
         return $this->emptyAvatar($size);
@@ -54,10 +77,7 @@ class AvatarController extends AbstractController
 
     private function getSuffix($size)
     {
-        if ('72' === $size) {
-            $size = '75';
-        }
-        $suffix = '';
+        $suffix = null;
         switch ($size) {
             case '30':
             case '75':

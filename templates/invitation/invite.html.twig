@@ -6,6 +6,7 @@
 {% endblock javascripts %}
 
 {% block stylesheets %}
+    {{ encore_entry_link_tags('tailwind')  }}
     {{ encore_entry_link_tags('requests')  }}
 {% endblock stylesheets %}
 
@@ -17,17 +18,11 @@
 {% endblock %}
 
 {% block content %}
-    <div class="row no-gutters bg-white mb-1">
-        {% set host = app.user %}
-        {% set guest = leg.trip.creator %}
-        <div class="pull-left">{{ macros.avatarstack(host.Username, 50, false) }}</div>
-        <div class="col">
-        </div>
-        <div class="pull-right text-right">{{ macros.avatarstack(guest.Username, 50, true) }}</div>
-    </div>
-
-    <div class="row no-gutters mb-1">
-        <div class="col-12 col-md-6">
+    {% set host = app.user %}
+    {% set guest = leg.trip.creator %}
+    {{ macros.messageheader(guest, host, subject) }}
+    <div class="row mb-1">
+        <div class="col-12 col-md-4 pr-1">
             <p><strong>{{ 'trip.summary'|trans }}</strong></p>
             <p>{{ leg.trip.summary }}</p>
             <p><strong>{{ 'trip.description'|trans }}</strong></p>
@@ -35,44 +30,48 @@
         </div>
         <div class="col-12 col-md-6">
             <p><strong>{{ 'profile.summary'|trans }}</strong></p>
-            <p>{% set fields = guest.memberFields %}{% if fields[app.request.locale] is defined %}
-                        {{ fields[app.request.locale]['ProfileSummary']|purify }}
-                    {% else %}
+            {% set fields = guest.memberFields %}
+            <p>
+                {% if fields[app.request.locale] is defined %}
+                    {{ fields[app.request.locale]['ProfileSummary']|purify }}
+                {% else %}
+                    {% if fields['en'] is defined %}
                         {{ fields['en']['ProfileSummary']|purify }}
+                    {% else %}
+                        {{ 'profile.summary.none'|trans }}
+                    {% endif %}
                 {% endif %}
             </p>
+            <p><strong>{{ 'request.number_of_travellers'|trans }}</strong></p>
+            <p>{{ leg.trip.countOfTravellers }}</p>
         </div>
+        <div class="col-12"><hr></div>
     </div>
-
     {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'autocomplete': 'off'}}) }}
+    {{ form_errors(form) }}
 
     <div class="row mb-1">
-        <div class="col-12 col-md-8">
+        <div class="col-12">
             {{ form_row(form.subject.subject) }}
             {{ form_row(form.message) }}
-        </div>
-        <div class="col-12 col-md-4 order-md-first">
-
             <div class="o-form-group">
                 {{ form_label(form.request.duration) }}
-                <div class="input-group date" id="arrival" data-target-input="nearest">
-                    <div class="input-group-prepend" data-target="#arrival" data-toggle="datetimepicker">
+                <div class="input-group date">
+                    <div class="input-group-prepend">
                         <span class="input-group-text">
                             <i class="fa fa-calendar"></i>
                         </span>
                     </div>
-                    {{ form_widget(form.request.duration, {'attr': { 'class': 'light-picker'}}) }}
+                    {{ form_widget(form.request.duration, {'attr': { 'class': 'js-litepicker'}}) }}
                 </div>
             </div>
 
             {{ form_row(form.request.flexible) }}
-            {{ form_row(form.request.numberOfTravellers) }}
             {{ form_row(form.request.arrival) }}
             {{ form_row(form.request.departure) }}
+            {{ form_row(form.request.numberOfTravellers) }}
+            {{ form_rest(form) }}
         </div>
-    </div>
-    <div class="row">
-        <div class="col-12 col-md-8 offset-md-4">{{ form_rest(form) }}</div>
     </div>
     {{ form_end(form) }}
 {% endblock %}

@@ -3,12 +3,12 @@
 namespace App\Command;
 
 use Doctrine\ORM\EntityManagerInterface;
+use function Safe\ini_set;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use function Safe\ini_set;
 
 class AddInitiatorCommand extends Command
 {
@@ -56,10 +56,10 @@ class AddInitiatorCommand extends Command
             $row = $statement->fetch();
 
             $messageId = $row['id'];
-            if (30180 === $messageId) {
+            if ('30180' === $messageId) {
                 continue;
             }
-            if (0 !== $row['initiator_id'] or null !== $row['initiator_id']) {
+            if ('0' !== $row['initiator_id'] || null !== $row['initiator_id']) {
                 $this->parents[$messageId] = $row['IdParent'];
             }
             if ('0' === $row['IdParent'] || null === $row['IdParent']) {
@@ -70,8 +70,12 @@ class AddInitiatorCommand extends Command
                 $initiator = $this->getinitiator($messageId);
             }
 
-            if ($initiator != 0) {
-                $connection->executeQuery('UPDATE messages m SET initiator_id = ' . $initiator . ' WHERE m.id = ' . $messageId);
+            if (0 !== $initiator) {
+                $connection->executeQuery(
+                    'UPDATE messages m SET initiator_id = ' . $initiator . ' WHERE m.id = ' . $messageId
+                );
+            } else {
+                $io->block('Nothing found for ' . $messageId);
             }
         }
         $progress->finish();
@@ -81,13 +85,13 @@ class AddInitiatorCommand extends Command
 
     private function getinitiator($parent)
     {
-        while (isset($this->parents[$parent])) {
+        while (isset($this->parents[$parent]) && '0' !== $this->parents[$parent]) {
             $parent = $this->parents[$parent];
         }
 
         $initiator = 0;
         if (isset($this->initiators[$parent])) {
-            $initiator = $this->initiators[$parent];
+            $initiator = (int) $this->initiators[$parent];
         }
 
         return $initiator;

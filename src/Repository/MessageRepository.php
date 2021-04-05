@@ -17,7 +17,7 @@ use Pagerfanta\Pagerfanta;
 
 class MessageRepository extends EntityRepository
 {
-    public function getUnreadMessagesCount(Member $member): int
+    public function getUnreadConversationsCount(Member $member): int
     {
         $q = $this->createQueryBuilder('m')
             ->select('count(m.id)')
@@ -32,55 +32,6 @@ class MessageRepository extends EntityRepository
             ->andWhere('m.firstRead IS NULL')
             ->andWhere('m.status = :status')
             ->setParameter('status', 'Sent')
-            ->andWhere('m.request IS NULL')
-            ->getQuery();
-
-        $unreadCount = $q->getSingleScalarResult();
-
-        return (int) $unreadCount;
-    }
-
-    public function getUnreadRequestsCount(Member $member): int
-    {
-        $q = $this->createQueryBuilder('m')
-            ->join('m.request', 'r')
-            ->select('count(m.id)')
-            ->where('m.receiver = :member')
-            ->setParameter('member', $member)
-            ->andWhere('m.folder = :folder')
-            ->setParameter('folder', InFolderType::NORMAL)
-            ->andWhere('NOT (m.deleteRequest LIKE :receiverDeleted)')
-            ->setParameter(':receiverDeleted', '%' . DeleteRequestType::RECEIVER_DELETED . '%')
-            ->andWhere('NOT (m.deleteRequest LIKE :receiverPurged)')
-            ->setParameter(':receiverPurged', '%' . DeleteRequestType::RECEIVER_PURGED . '%')
-            ->andWhere('m.firstRead IS NULL')
-            ->andWhere('r.inviteForLeg IS NULL')
-            ->andWhere('m.status = :status')
-            ->setParameter(':status', 'Sent')
-            ->getQuery();
-
-        $unreadCount = $q->getSingleScalarResult();
-
-        return (int) $unreadCount;
-    }
-
-    public function getUnreadInvitationsCount(Member $member): int
-    {
-        $q = $this->createQueryBuilder('m')
-            ->join('m.request', 'r')
-            ->select('count(m.id)')
-            ->where('m.receiver = :member')
-            ->setParameter('member', $member)
-            ->andWhere('m.folder = :folder')
-            ->setParameter('folder', InFolderType::NORMAL)
-            ->andWhere('NOT (m.deleteRequest LIKE :receiverDeleted)')
-            ->setParameter(':receiverDeleted', '%' . DeleteRequestType::RECEIVER_DELETED . '%')
-            ->andWhere('NOT (m.deleteRequest LIKE :receiverPurged)')
-            ->setParameter(':receiverPurged', '%' . DeleteRequestType::RECEIVER_PURGED . '%')
-            ->andWhere('m.firstRead IS NULL')
-            ->andWhere('m.status = :status')
-            ->andWhere('NOT r.inviteForLeg IS NULL')
-            ->setParameter(':status', 'Sent')
             ->getQuery();
 
         $unreadCount = $q->getSingleScalarResult();

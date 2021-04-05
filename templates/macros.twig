@@ -65,7 +65,7 @@
 {# \new avatar for trip pages #}
 {% macro roundedavatarstack(username, size, right, displayname = true) %}
     {% import _self as macros %}
-        {% set img %}<img class="o-avatar__img" src="{{ path( 'avatar', { 'username': username , 'size': size }) }}" title="{{ username }}" alt="{{ 'profile' | trans }}: {{ username }}">{% endset %}
+    {% set img %}<img class="o-avatar__img" src="{{ path( 'avatar', { 'username': username , 'size': size }) }}" title="{{ username }}" alt="{{ 'profile' | trans }}: {{ username }}">{% endset %}
     {{ macros.profilelink(username, img, 'o-avatar__img-wrapper') }}
     {% if displayname %}
     {{ macros.profilelink(username, username, 'o-avatar__name') }}
@@ -84,4 +84,13 @@
         {% set class = 'dropdown-item' %}
     {% endif %}
     <a class="{{ class }}" href="{{ path( route | lower ) }}">{{ route | trans }}</a>
+{% endmacro %}
+
+{% macro messageheader( left, right, subject = '') %}
+    {% import _self as macros %}
+    <div class="u-flex u-justify-between bg-white p-1">
+        <div class="o-avatar">{{ macros.roundedavatarstack(left.Username, 50, false) }}</div>
+        <div class="u-text-32 u-leading-48 md:u-text-56 md:u-leading-60 u-self-center u-text-center u-text-black u-font-700">{{ subject }}</div>
+        <div class="o-avatar">{{ macros.roundedavatarstack(right.Username, 50, true) }}</div>
+    </div>
 {% endmacro %}

@@ -157,6 +157,9 @@
     "doctrine/dbal": {
         "version": "v2.10.1"
     },
+    "doctrine/deprecations": {
+        "version": "v0.5.3"
+    },
     "doctrine/doctrine-bundle": {
         "version": "2.0",
         "recipe": {
@@ -227,6 +230,9 @@
     "ezyang/htmlpurifier": {
         "version": "v4.12.0"
     },
+    "fakerphp/faker": {
+        "version": "v1.14.1"
+    },
     "fig/link-util": {
         "version": "1.1.1"
     },
@@ -271,9 +277,6 @@
     },
     "friendsofphp/proxy-manager-lts": {
         "version": "v1.0.0"
-    },
-    "fzaninotto/faker": {
-        "version": "v1.9.1"
     },
     "guzzlehttp/psr7": {
         "version": "1.6.1"

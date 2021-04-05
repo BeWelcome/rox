@@ -20,6 +20,7 @@ class InvitationGuest extends HostingRequestAbstractType
     {
         $builder
             ->add('request', HostingRequestType::class, [
+                'invitation' => true,
                 'reply_host' => true,
             ])
             ->add('decline', SubmitType::class, [

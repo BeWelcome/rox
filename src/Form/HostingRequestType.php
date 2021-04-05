@@ -85,7 +85,12 @@ class HostingRequestType extends AbstractType
             $form->add('duration', TextType::class, $durationOptions);
 
             $form->add('flexible', CheckboxType::class, $flexibleOptions);
-            $form->add('numberOfTravellers', IntegerType::class, $numberOfTravellersOptions);
+            if (true === $options['invitation'])
+            {
+                $form->add('numberOfTravellers', HiddenType::class);
+            } else {
+                $form->add('numberOfTravellers', IntegerType::class, $numberOfTravellersOptions);
+            }
         });
     }
 

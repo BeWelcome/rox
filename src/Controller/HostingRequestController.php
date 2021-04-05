@@ -289,7 +289,7 @@ class HostingRequestController extends BaseHostingRequestAndInvitationController
     }
 
     /**
-     * @Route("/requests/{folder}", name="requests",
+     * @Route("/requests_b/{folder}", name="requests_b",
      *     defaults={"folder": "inbox"})
      *
      * @throws InvalidArgumentException

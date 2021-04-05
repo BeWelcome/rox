@@ -41,8 +41,8 @@
                         <span class="input-group-text">
                             <i class="fa fa-calendar"></i>
                         </span>
+                    {{ form_widget(form.request.duration, {'attr': { 'class': 'js-litepicker'}}) }}
                     </div>
-                    {{ form_widget(form.request.duration, {'attr': { 'class': 'light-picker'}}) }}
                 </div>
             </div>
 

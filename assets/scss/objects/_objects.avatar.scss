@@ -45,7 +45,7 @@
 
 .o-avatar__name {
   text-align: center;
-  margin-top: 8px;
+  margin-top: 4px;
   font-family: Signika;
   font-size: 14px;
   word-break: break-all;
@@ -62,7 +62,7 @@
   font-weight: 300;
   font-style: italic;
   text-align: center;
-  margin-top: 8px;
+  margin-top: 4px;
 }
 
 
@@ -103,6 +103,24 @@
 .o-avatar--l .o-avatar__img-wrapper {
   width: 120px;
   height: 120px;
+}
+
+
+
+
+/**
+ * Large
+ */
+
+
+.o-avatar--s {
+  width: 72px;
+  grid-template-rows: 72px 1fr;
+}
+
+.o-avatar--s .o-avatar__img-wrapper {
+  width: 72px;
+  height: 72px;
 }
 
 

@@ -176,7 +176,7 @@ class MessageController extends BaseMessageController
     }
 
     /**
-     * @Route("/messages/{folder}", name="messages",
+     * @Route("/messages_b/{folder}", name="messages_b",
      *     defaults={"folder": "inbox"})
      *
      * @throws InvalidArgumentException

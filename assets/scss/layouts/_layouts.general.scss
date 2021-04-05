@@ -1,6 +1,6 @@
-.l-show-trip {
+.l-trip-show {
   display: grid;
-  grid-template-columns: 32px 1fr 1fr;
+  grid-template-columns: 32px 1fr;
   grid-gap: 16px;
   position: relative;
   border-left: 2px dotted var(--white);
@@ -10,19 +10,19 @@
 }
 
 @media (max-width: 900px) {
-  .l-show-trip {
+  .l-trip-show {
     display: flex;
     flex-direction: column;
     padding-bottom: 16px;
   }
 }
 
-.l-show-trip:last-child {
+.l-trip-show:last-child {
   border-left: 2px solid transparent;
 }
 
 @media (max-width: 900px) {
-  .l-show-trip:last-child {
+  .l-trip-show:last-child {
     border-left: 2px dotted var(--white);
   }
 }
@@ -78,6 +78,20 @@
 .l-trips-overlay-wrapper {
   padding-top: 48px;
   background-color: rgba(0, 0, 0, 0.3);
-  margin: 0 12px;
+  margin-left: 12px;
   border-radius: 8px;
+}
+
+
+
+
+
+.l-trips-description {
+  width: 720px;
+}
+
+@media (max-width: 900px) {
+  .l-trips-description {
+    width: initial;
+  }
 }

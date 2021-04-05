@@ -128,9 +128,9 @@
                 <i class="fa fa-plus"></i>
             </button>
             <div class="u-flex u-justify-end u-mt-48 md:u-mt-0">
-                <input class="o-button"
+                <button class="o-button"
                        type="submit"
-                       value="{{ button_text|trans|capitalize }}">
+                       value="{{ button_text|trans|capitalize }}">{{ button_text|trans|capitalize }}</button>
             </div>
         </div>
         {{ form_end(form) }}

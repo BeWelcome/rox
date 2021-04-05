@@ -273,7 +273,7 @@
     </nav>
     {% if is_granted('ROLE_ADMIN_CHECKER') or is_granted('ROLE_ADMIN_COMMENTS') or is_granted('ROLE_ADMIN_SAFETYTEAM')
         or is_granted('ROLE_ADMIN_GROUP')%}
-        <div class="container-lg">
+        <div class="container-lg u-z-10 u-relative">
             <div class="row no-gutters justify-content-end">
                 <div class="py-2">
                     {% if not groupsInApprovalQueue is null %}<a class="btn btn-primary btn-sm"

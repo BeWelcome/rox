@@ -36,22 +36,5 @@
   </div>
   <div class="o-avatar o-avatar--white u-mb-16 md:u-mb-0 u-justify-self-center">
     {{ macros.roundedavatarstack(leg.trip.creator.username, 96) }}
-    <p class="o-avatar__languages">
-        {% apply spaceless %}
-            {{ 'trip.leg.speaks'|trans }}
-            {% set more = 0 %}
-            {% for level in leg.trip.creator.skilledLanguageLevels %}
-                {% if (loop.index <= 2) %}
-                    <b>{{ ('lang_' ~ level.language.shortcode) | lower | trans }}</b>
-                    {%- if loop.index != 2 -%}
-                        ,
-                    {%- endif -%}
-                {% else %}
-                    {% set more = more + 1 %}
-                {% endif %}
-            {% endfor %}
-            {% if more != 0 %}... {{ 'trip.leg.and_more'|trans({'more': more}) }}{% endif %}
-      {% endapply %}
-    </p>
   </div>
 </div>

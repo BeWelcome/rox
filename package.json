@@ -92,6 +92,7 @@
     "@fontsource/signika": "^4.2.0",
     "@tailwindcss/postcss7-compat": "npm:@tailwindcss/postcss7-compat",
     "add-to-homescreen": "^3.2.6",
+    "circle-flags": "https://github.com/HatScripts/circle-flags",
     "litepicker": "^2.0.11",
     "postcss": "^7",
     "purgecss": "3",

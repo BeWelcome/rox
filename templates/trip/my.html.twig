@@ -26,7 +26,7 @@
 					<a class="u-text-white hover:u-text-gray-20 u-text-24 u-font-display u-font-700 u-col-span-full u-mb-8" href="{{ path('trip_show', { 'id': trip.id } ) }}">{{ trip.summary }}</a>
 					<div>
 						<p class=" u-font-display u-italic u-text-white u-mb-8">{{ trip.description | purify | truncate(200) }}</p>
-						<p class="u-text-white u-font-display"><span class="u-mr-8">{{ trip.subtrips|length }} {{ 'trip.legs'|trans }}</span><strong class="u-text-white">{% for leg in trip.subtrips %}{% if leg.getLocation %} &bull; {{ leg.location.name }}{% endif %}{% endfor %}</strong></p>
+						<p class="u-text-white u-font-display"><span class="u-mr-8">{{ trip.subtrips|length }} {{ 'trip.legs'|trans }}</span><strong class="u-text-white">{% for leg in trip.subtrips %}{% if leg.getLocation %} <i class="o-flag o-flag--{{ leg.location.country.country }} u-ml-8 u-mr-4"></i>{{ leg.location.name }}{% endif %}{% endfor %}</strong></p>
 
 					</div>
 					<div>

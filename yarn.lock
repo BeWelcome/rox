@@ -1776,7 +1776,7 @@
     "@ckeditor/ckeditor5-utils" "^25.0.0"
     "@ckeditor/ckeditor5-widget" "^25.0.0"
 
-"@ckeditor/ckeditor5-image@^25.0.0", "@ckeditor/ckeditor5-image@~25.0.0":
+"@ckeditor/ckeditor5-image@^25.0.0":
   version "25.0.0"
   resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-image/-/ckeditor5-image-25.0.0.tgz#e6833bbb9658aaadcf98c16168336babe9350621"
   integrity sha512-CVLgkDtQJd2ySl9ZAeQHva/O5HUadD7xxDwiG0nm+nNvV2NapsIoA4Y47urHXqdhavZrGNMDlyRIMdUpJZ5EMg==
@@ -1789,6 +1789,14 @@
     "@ckeditor/ckeditor5-upload" "^25.0.0"
     "@ckeditor/ckeditor5-utils" "^25.0.0"
     "@ckeditor/ckeditor5-widget" "^25.0.0"
+
+"@ckeditor/ckeditor5-image@~27.0.0":
+  version "27.0.0"
+  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-image/-/ckeditor5-image-27.0.0.tgz#4ee167953225243c9626f5367a4b3e471a53ffcd"
+  integrity sha512-N/t/UrGl4eFIpbgtzGIzZDDl1HDBWYpDRFrpieR34QH2A4ZHCN6pO2688pXQlWVfcIacFmJeaNwE0hj/6TZb2g==
+  dependencies:
+    "@ckeditor/ckeditor5-ui" "^27.0.0"
+    ckeditor5 "^27.0.0"
 
 "@ckeditor/ckeditor5-indent@^25.0.0":
   version "25.0.0"

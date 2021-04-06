@@ -5,6 +5,11 @@
   {{ 'Trip' | trans }}
 {% endblock %}
 
+{% block javascripts %}
+    {{ encore_entry_script_tags('leaflet') }}
+    {{ encore_entry_script_tags('trips') }}
+{% endblock javascripts %}
+
 {% block stylesheets %}
   {{ encore_entry_link_tags('tailwind') }}
 {% endblock %}
@@ -22,7 +27,7 @@
         {% endif %}
       </div>
     </div>
-    <div class="l-trips-description">        
+    <div class="l-trips-description">
       <div class="u-flex u-mb-16">
         <div class="c-trip-card__icon-grid u-mr-24">
           <i class="fa fa-users u-text-white u-text-16 u-justify-self-center u-self-center u-text-gray-20"></i>
@@ -35,9 +40,9 @@
       </div>
       <p class="u-text-white u-font-display u-italic u-mb-24">{{ trip.description }}</p>
     </div>
-    <div class="md:u-grid md:u-grid-cols-2 md:u-gap-24">     
+    <div class="md:u-grid md:u-grid-cols-2 md:u-gap-24">
       <div id="map" class="o-map"></div>
-      <div class="l-trips-overlay-wrapper">         
+      <div class="l-trips-overlay-wrapper">
         <ul>
           {% for subtrip in trip.subtrips %}
             <li class="l-trip-show">
@@ -73,63 +78,13 @@
     </div>
   </section>
 
-  <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js" 
-          integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" 
-          crossorigin="anonymous"></script>
-
-  <script src="https://unpkg.com/leaflet/dist/leaflet-src.js"></script>
-
   <script type="text/javascript">
-    $(function () {
-      if ($('#map').length) {
-
-        var map = L.map('map', {
-            center: [0, 0],
-            zoom: 0,
-            zoomSnap: 0.1
-        });
-
-        let allData = $('.js-data').map((_,el) => [el.value.split(',')]).get()
-
-        let circlesArray = []
-
-        let newCirclesArray = []
-
-        for (let i = 0; i < allData.length; i++) {
-
-          let location = allData[i][0]
-          let latitude = allData[i][1]
-          let longitude = allData[i][2]
-          let countryName = allData[i][3]
-          let tripDate = allData[i][4]
-
-          let marker = L.marker([latitude, longitude]).addTo(map);
-          marker.bindPopup("<strong>" + location + "</strong> (" + countryName + ")<br>" + tripDate).openPopup();
-
-          let circle = L.circle([latitude, longitude], {
-            color: 'rgb(112,0,243)',
-            fillColor: 'rgba(112, 0, 243, 0.1)',
-            fillOpacity: 1,
-            radius: 25000
-          }).addTo(map);
-
-          console.log('circle', L.latLngBounds(circle))
-
-          circlesArray.push(circle)
-        }
-
-        let group = new L.featureGroup(circlesArray);
-
-        map.fitBounds(group.getBounds());
-
-
-
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-          attribution: '&copy; <a href="/about/credits#OSM">OpenStreetMap contributors</a>',
-          subdomains: ['a', 'b', 'c']
-        }).addTo(map);
+      let trip = {
+          own: {% if app.user == trip.creator %}true{% else %}false{% endif %},
+          latitude: {{ trip.creator.latitude }},
+          longitude: {{ trip.creator.longitude }}
       }
-    });
+      console.log(trip);
   </script>
 
 {% endblock content %}

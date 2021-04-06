@@ -24,7 +24,7 @@
     "@ckeditor/ckeditor5-heading": "~25.0.0",
     "@ckeditor/ckeditor5-image": "~25.0.0",
     "@ckeditor/ckeditor5-link": "~25.0.0",
-    "@ckeditor/ckeditor5-list": "~25.0.0",
+    "@ckeditor/ckeditor5-list": "~27.0.0",
     "@ckeditor/ckeditor5-paragraph": "~25.0.0",
     "@ckeditor/ckeditor5-special-characters": "~25.0.0",
     "@ckeditor/ckeditor5-theme-lark": "~25.0.0",

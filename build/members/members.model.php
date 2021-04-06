@@ -22,6 +22,9 @@ Boston, MA  02111-1307, USA.
 
 
 use Carbon\Carbon;
+use Intervention\Image\ImageManager;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Finder\Finder;
 
 
 /**
@@ -1339,125 +1342,25 @@ ORDER BY
             return ("not crypted");
     } // end of ShallICrypt
 
-    /**
-     * Shows a members picture in different sizes
-     *
-     */
-    public function showAvatar($memberId = false, $suffix = null)
+    public function avatarMake($memberid, $img_file)
     {
-        $file = (int)$memberId;
-        if ($suffix == null) {
-            if (isset($_GET)) {
-                if (isset($_GET['xs']) or isset($_GET['50_50']))
-                    $suffix = '_xs';
-                elseif (isset($_GET['30_30']))
-                    $suffix = '_30_30';
-                elseif (isset($_GET['75_75']))
-                    $suffix = '_75_75';
-                elseif (isset($_GET['150']))
-                    $suffix = '_150';
-                elseif (isset($_GET['200']))
-                    $suffix = '_200';
-                elseif (isset($_GET['500']))
-                    $suffix = '_500';
-            }
-            $file .= $suffix;
-        } else {
-            $file = $file . $suffix;
+        $this->writeMemberphoto($memberid);
+        $finder = new Finder();
+        $finder->name($memberid . '_*');
+        foreach ($finder->files()->in($this->avatarDir->dirName()) as $file)
+        {
+            unlink($file->getRealPath());
         }
-
-        $member = $this->createEntity('Member', $memberId);
-        $loggedInMember = $this->getLoggedInMember();
-        $browseable = $member->isBrowsable();
-        if ((!$browseable) || !$this->hasAvatar($memberId, $suffix) || (!$member->publicProfile && !$loggedInMember)) {
-            header('Content-type: image/png');
-            header ("cache-control: must-revalidate");
-            $offset = 48 * 60 * 60;
-            $expire = "Expires: " . gmdate ("D, d M Y H:i:s", time() + $offset) . " GMT";
-            header ($expire);
-            @copy(HTDOCS_BASE.'images/misc/empty_avatar'.(isset($suffix) ? $suffix : '').'.png', 'php://output');
-            PPHP::PExit();
+        $imageManager = new ImageManager();
+        $img = $imageManager->make($img_file);
+        $height = $img->getHeight();
+        $width = $img->getWidth();
+        if ($height !== $width) {
+            $size = min($width, $height);
+            $img->crop($size, $size, ($width - $size) / 2, ($height - $size) / 2);
         }
-        $img = new MOD_images_Image($this->avatarDir->dirName().'/'.$file);
-        if (!$img->isImage()) {
-            header('Content-type: image/png');
-            $expires = new DateTime("now + 11 months");
-            header("Expires:" . $expires->format(DateTime::RFC1123));
-            @copy(HTDOCS_BASE.'images/misc/empty_avatar'.(isset($suffix) ? $suffix : '').'.png', 'php://output');
-            PPHP::PExit();
-        }
-        header('Content-type: '.$img->getMimetype());
-        $this->avatarDir->readFile($file);
-        PPHP::PExit();
-    }
+        $img->save($this->avatarDir->dirName() . '/' . $memberid . '_original');
 
-    public function hasAvatar($memberid, $suffix = '')
-    {
-        if ($this->avatarDir->fileExists((int)$memberid . $suffix))
-            return true;
-        elseif ($this->avatarDir->fileExists((int)$memberid . '_original'))
-            return $this->avatarMake($memberid, $this->avatarDir->dirName() . '/' . (int)$memberid . '_original', true);
-        else {
-            $img_path = $this->getOldPicture($memberid);
-            return $this->avatarMake($memberid,$img_path);
-        }
-    }
-
-
-    public function getOldPicture($memberid) {
-        $s = $this->dao->query('
-SELECT
-    `membersphotos`.`FilePath` as FilePath
-FROM
-    `members`
-LEFT JOIN
-    `membersphotos` on `membersphotos`.`IdMember`=`members`.`id`
-WHERE
-    `members`.`id`=\'' . $memberid . '\' AND
-    `members`.`Status`=\'Active\'
-ORDER BY membersphotos.SortOrder
-');
-        // look if any of the pics exists
-        while ($row = $s->fetch(PDB::FETCH_OBJ)) {
-            $path = str_replace("/bw", "", $row->FilePath);
-            $full_path = getcwd().'/bw'.$path;
-            if (PPHP::os() == 'WIN') {
-                $full_path = str_replace("/", "\\", $full_path);
-            }
-            if(is_file($full_path)) {
-                return $full_path;
-            }
-        }
-        return false;
-    }
-
-    public function avatarMake($memberid, $img_file, $using_original=false)
-    {
-        $img = new MOD_images_Image($img_file);
-        if( !$img->isImage())
-            return false;
-        $size = $img->getImageSize();
-        $type = $size[2];
-        // maybe this should be changed by configuration
-        if( $type != IMAGETYPE_GIF && $type != IMAGETYPE_JPEG && $type != IMAGETYPE_PNG)
-            return false;
-        $max_x = $size[0];
-        $max_y = $size[1];
-        if( $max_x > 150)
-            $max_x = 150;
-
-        if (!$using_original) {
-        	$original_x = min($size[0],PVars::getObj('images')->max_width);
-        	$original_y = min($size[1],PVars::getObj('images')->max_height);
-            $this->writeMemberphoto($memberid);
-            $img->createThumb($this->avatarDir->dirName(), $memberid.'_original', $original_x, $original_y, true, 'ratio');
-        }
-        $img->createThumb($this->avatarDir->dirName(), $memberid, $max_x, $max_y, true, '');
-        $img->createThumb($this->avatarDir->dirName(), $memberid.'_200',200, 266, true, 'ratio');
-        $img->createThumb($this->avatarDir->dirName(), $memberid.'_xs', 50, 50, true, 'square');
-        $img->createThumb($this->avatarDir->dirName(), $memberid.'_150', 150, 150, true, 'square');
-        $img->createThumb($this->avatarDir->dirName(), $memberid.'_30_30', 30, 30, true, 'square');
-        $img->createThumb($this->avatarDir->dirName(), $memberid.'_500', 500, 500, true, 'ratio');
         return true;
     }
 
@@ -1479,7 +1382,7 @@ VALUES
         " . $memberid . ",
         now(),
         -1,
-        ''
+        0
     )
 ");
         return $s;

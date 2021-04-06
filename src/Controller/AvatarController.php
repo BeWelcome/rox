@@ -16,25 +16,23 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class AvatarController extends AbstractController
 {
-    private const EXPIRY = 60 * 60 * 24 * 365; // One year
+    private const EXPIRY = 60 * 60 * 24; // One day
+    private const AVATAR_PATH = '../data/user/avatars/';
+    private const EMPTY_AVATAR_PATH = 'images/';
 
     /**
      * @Route("/members/avatar/{username}/{size}", name="avatar",
-     *     requirements={"username" : "(?i:[a-z][a-z0-9-._ ]{1,30}[a-z0-9])",
+     *     requirements={"username" : "(?i:[a-z][a-z0-9-._ ]{1,30}[a-z0-9-._])",
      *          "size" : "\d+|original" },
      *     _defaults={"size": "50"})
-     *
-     * @param mixed $username
-     * @param mixed $size
-     *
-     * @return BinaryFileResponse|RedirectResponse
      */
-    public function showAvatar($username, $size)
+    public function showAvatar(string $username, string $size): BinaryFileResponse
     {
         if (!$this->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             return $this->emptyAvatar($size);
         }
 
+        /** @var Member $member */
         $member = $this->getDoctrine()->getRepository(Member::class)->findOneBy(['username' => $username]);
         if (!$member) {
             return $this->emptyAvatar($size);
@@ -45,75 +43,84 @@ class AvatarController extends AbstractController
             return $this->emptyAvatar($size);
         }
 
-        $suffix = $this->getSuffix($size);
-        $filename = '../data/user/avatars/' . $member->getId();
-
-        if (null === $suffix) {
-            $filename .= '_' . $size . '_' . $size;
-            if (!file_exists($filename)) {
-                // custom size generate image if not yet existing
-                // creates a thumb nail for the current image (if we have an original that is)
-                $original = '../data/user/avatars/' . $member->getId() . "_original";
-                if (!file_exists($original)) {
-                    return $this->emptyAvatar($size);
-                }
-
-                $imageManager = new ImageManager();
-                $img = $imageManager->make($original);
-                $img->resize($size, $size, function ($constraint) {
-                    $constraint->aspectRatio();
-                });
-                $img->save($filename);
+        if (!$this->avatarImageExists($member, $size)) {
+            try {
+                $this->createAvatarImage($member, $size);
+            } catch (\InvalidArgumentException $e) {
+                return $this->emptyAvatar($size);
             }
-
-            return $this->createCacheableResponse($filename);
-        }
-        if (file_exists($filename . $suffix)) {
-            return $this->createCacheableResponse($filename. $suffix);
         }
 
-        return $this->emptyAvatar($size);
+        $filename = $this->getAvatarImageFilename($member, $size);
+        return $this->createCacheableResponse($filename);
     }
 
-    private function getSuffix($size)
+    private function emptyAvatar($size): BinaryFileResponse
     {
-        $suffix = null;
-        switch ($size) {
-            case '30':
-            case '75':
-                $suffix = '_' . $size . '_' . $size;
-                break;
-            case '50':
-                $suffix = '_xs';
-                break;
-            case '150':
-            case '200':
-            case '500':
-            case 'original':
-                $suffix = '_' . $size;
-                break;
+        $filename = self::EMPTY_AVATAR_PATH . '/empty_avatar_' . $size . '_' . $size . '.png';
+
+        if (!file_exists($filename)) {
+            $filename = $this->createEmptyAvatarImage($size);
         }
-
-        return $suffix;
-    }
-
-    /**
-     * @param mixed $size
-     *
-     * @return BinaryFileResponse
-     */
-    private function emptyAvatar($size)
-    {
-        $filename = 'images/empty_avatar' . $this->getSuffix($size) . '.png';
 
         return $this->createCacheableResponse($filename, self::EXPIRY);
     }
 
-    private function createCacheableResponse(string $filename, $expiry = 86400)
+    private function createCacheableResponse(string $filename, $expiry = self::EXPIRY): BinaryFileResponse
     {
         $response = new BinaryFileResponse($filename);
         $response->setSharedMaxAge($expiry);
 
         return $response;
+    }
+
+    private function getAvatarImageFilename(Member $member, string $size): string
+    {
+        $filename = self::AVATAR_PATH . $member->getId() . '_' . $size;
+        if ($size !== 'original') {
+            $filename .= '_' . $size;
+        }
+
+        return $filename;
+    }
+
+    private function avatarImageExists(Member $member, $size): bool
+    {
+
+        return file_exists($this->getAvatarImageFilename($member, $size));
+    }
+
+    private function createAvatarImage(Member $member, $size)
+    {
+        // creates a thumb nail for the current image (if we have an original that is)
+        $original = self::AVATAR_PATH . $member->getId() . '_original';
+        if (!file_exists($original)) {
+            $message = 'No original avatar image exists for member ' . $member->getUsername();
+            throw new \InvalidArgumentException($message);
+        }
+
+        $filename = self::AVATAR_PATH . $member->getId() . '_' . $size . '_' . $size;
+        $imageManager = new ImageManager();
+        $img = $imageManager->make($original);
+        $img->resize($size, null, function ($constraint) {
+            $constraint->aspectRatio();
+        });
+        $img->save($filename);
+    }
+
+    private function createEmptyAvatarImage(int $size): string
+    {
+        // creates a thumbnail of the empty avatar
+        $original = self::EMPTY_AVATAR_PATH . 'empty_avatar_original.png';
+        $filename = self::AVATAR_PATH . 'empty_avatar_' . $size . '_' . $size;
+
+        $imageManager = new ImageManager();
+        $img = $imageManager->make($original);
+        $img->resize($size, $size, function ($constraint) {
+            $constraint->aspectRatio();
+        });
+        $img->save($filename);
+
+        return $filename;
     }
 }

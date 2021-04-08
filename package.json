@@ -48,7 +48,7 @@
     "foundation-emails": "^2.3.1",
     "fstream": ">=1.0.12",
     "glob-all": "^3.2.1",
-    "gsap": "^3.6.0",
+    "gsap": "3.6.1",
     "imagesloaded": "^4.1.4",
     "inspect-loader": "^1.0.0",
     "jarallax": "^1.12.4",

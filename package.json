@@ -29,7 +29,7 @@
     "@ckeditor/ckeditor5-special-characters": "~25.0.0",
     "@ckeditor/ckeditor5-theme-lark": "~25.0.0",
     "@fortawesome/fontawesome-free": "5.15.3",
-    "@popperjs/core": "^2.5.2",
+    "@popperjs/core": "2.9.2",
     "@symfony/webpack-encore": "^0.33.0",
     "@ttskch/select2-bootstrap4-theme": "^1.4.0",
     "autoprefixer": "^9.8.6",

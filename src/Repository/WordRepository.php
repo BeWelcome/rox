@@ -153,8 +153,7 @@ class WordRepository extends EntityRepository
     {
         $qb = $this->createQueryBuilder('t')
             ->where('t.shortCode = :locale')
-            ->where('(t.isArchived = 0 OR t.isArchived IS NULL)')
-            ->andWhere('t.shortCode = :locale')
+            ->andWhere('(t.isArchived = 0 OR t.isArchived IS NULL)')
             ->setParameter(':locale', $locale)
         ;
         if (null !== $domain) {
@@ -163,12 +162,10 @@ class WordRepository extends EntityRepository
                 ->setParameter(':domain', $domain)
             ;
         }
-        if ('en' !== $locale) {
-            $qb
-                ->andWhere('t.translationAllowed = :translationAllowed')
-                ->setParameter(':translationAllowed', TranslationAllowedType::TRANSLATION_ALLOWED)
-            ;
-        }
+        $qb
+            ->andWhere('t.translationAllowed = :translationAllowed')
+            ->setParameter(':translationAllowed', TranslationAllowedType::TRANSLATION_ALLOWED)
+        ;
 
         return $qb;
     }

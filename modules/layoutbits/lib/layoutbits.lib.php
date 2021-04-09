@@ -259,8 +259,8 @@ class MOD_layoutbits
         $words = new MOD_words();
         $difference = time() - $timestamp;
 
-        $periods = array('second','minute','hour','day','week','month','year','decade');
-        $lengths = array("60","60","24","7","4.35","12","10");
+        $periods = array('second','minute','hour','day','week','month','year');
+        $lengths = array("60","60","24","7","4.35","12");
         for ($j = 0; $j < count($lengths) && $difference >= $lengths[$j]; $j++)
         {
             $difference /= $lengths[$j];

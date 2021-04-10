@@ -53,7 +53,7 @@
     "imagesloaded": "^4.1.4",
     "inspect-loader": "^1.0.0",
     "jarallax": "^1.12.4",
-    "jquery": "^3.5.1",
+    "jquery": "3.6.0",
     "jquery-mousewheel": "^3.1.13",
     "jquery-ui": "^1.12.1",
     "js-yaml": "^3.14.0",

@@ -100,6 +100,9 @@
     "cakephp/utility": {
         "version": "3.8.10"
     },
+    "composer/ca-bundle": {
+        "version": "1.2.9"
+    },
     "composer/package-versions-deprecated": {
         "version": "1.11.99"
     },
@@ -423,6 +426,18 @@
         },
         "files": [
             "./config/packages/nelmio_cors.yaml"
+        ]
+    },
+    "nelmio/security-bundle": {
+        "version": "2.4",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "2.4",
+            "ref": "65726efb67ff51d89de38195bc0d230fa811f64d"
+        },
+        "files": [
+            "./config/packages/nelmio_security.yaml"
         ]
     },
     "nesbot/carbon": {
@@ -1053,6 +1068,9 @@
     },
     "twig/twig": {
         "version": "v2.12.5"
+    },
+    "ua-parser/uap-php": {
+        "version": "v3.9.14"
     },
     "webmozart/assert": {
         "version": "1.9.1"

@@ -42,6 +42,7 @@
         "league/html-to-markdown": "^4.8",
         "lexik/jwt-authentication-bundle": "^2.8",
         "nelmio/cors-bundle": "^2.1",
+        "nelmio/security-bundle": "^2.10",
         "nesbot/carbon": "^2.0",
         "nikic/php-parser": "4.9.1",
         "pagerfanta/doctrine-dbal-adapter": "^2.4",

@@ -56,32 +56,6 @@ class MemberModel
     }
 
     /**
-     * @throws ORMException
-     * @throws OptimisticLockException
-     *
-     * @return string
-     */
-    public function generatePasswordResetToken(Member $member)
-    {
-        try {
-            $token = random_bytes(32);
-        } catch (Exception $e) {
-            $token = openssl_random_pseudo_bytes(32);
-        }
-        $token = bin2hex($token);
-
-        // Persist token into password reset table
-        $passwordReset = new PasswordReset();
-        $passwordReset
-            ->setMember($member)
-            ->setToken($token);
-        $this->getManager()->persist($passwordReset);
-        $this->getManager()->flush();
-
-        return $token;
-    }
-
-    /**
      * @throws Exception
      *
      * @return string

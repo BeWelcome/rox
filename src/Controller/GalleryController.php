@@ -26,6 +26,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Validator\Constraints\Image;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use function count;
 
 class GalleryController extends AbstractController
 {
@@ -41,10 +42,8 @@ class GalleryController extends AbstractController
      * )
      *
      * @throws AccessDeniedException
-     *
-     * @return Response
      */
-    public function editImage(Request $request, GalleryImage $image)
+    public function editImage(Request $request, GalleryImage $image): Response
     {
         $user = $this->getUser();
         if ($user !== $image->getOwner()) {
@@ -75,10 +74,8 @@ class GalleryController extends AbstractController
 
     /**
      * @Route("/new/image/upload", name="gallery_upload_new")
-     *
-     * @return JsonResponse
      */
-    public function handleImageUploadToGallery(Request $request, ValidatorInterface $validator)
+    public function handleImageUploadToGallery(Request $request, ValidatorInterface $validator): JsonResponse
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_REMEMBERED');
 
@@ -103,7 +100,7 @@ class GalleryController extends AbstractController
         $violations = $validator->validate($image, $constraint);
 
         $originalName = $image->getClientOriginalName();
-        if (\count($violations) > 0) {
+        if (count($violations) > 0) {
             $response->setData([
                 'success' => false,
                 'filename' => $originalName,
@@ -223,11 +220,9 @@ class GalleryController extends AbstractController
      *
      * @throws AccessDeniedException
      *
-     * @return JsonResponse
-     *
      * @SuppressWarnings(PHPMD.StaticAccess)
      */
-    public function uploadImageFromCKEditor5(Request $request, ValidatorInterface $validator)
+    public function uploadImageFromCKEditor5(Request $request, ValidatorInterface $validator): JsonResponse
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_REMEMBERED');
 
@@ -242,9 +237,10 @@ class GalleryController extends AbstractController
         ]);
 
         $image = $request->files->get('upload');
+
         $violations = $validator->validate($image, $constraint);
 
-        if (\count($violations) > 0) {
+        if (0 < count($violations)) {
             $response->setData([
                 'uploaded' => false,
                 'error' => [
@@ -254,32 +250,44 @@ class GalleryController extends AbstractController
 
             return $response;
         }
+        // Check if an image with the same content already exists
+        $hash = hash_file('sha256', $image->getPathname());
 
-        list($width, $height) = getimagesize($image);
-        $uploadDirectory = $this->getParameter('upload_directory');
-        $fileName = $this->generateUniqueFileName() . '.' . $image->guessExtension();
-
-        // moves the file to the directory where group images are stored
-        /** @var UploadedFile */
-        $image = $image->move(
-            $uploadDirectory,
-            $fileName
-        );
-
-        $nanoId = new Client();
-        $fileInfo = $nanoId->generateId(16, Client::MODE_DYNAMIC);
-
-        // Write database entry and get id for response
         $em = $this->getDoctrine()->getManager();
-        $uploadedImage = new UploadedImage();
-        $uploadedImage->setFilename($fileName);
-        $uploadedImage->setSize($image->getSize());
-        $uploadedImage->setwidth($width);
-        $uploadedImage->setHeight($height);
-        $uploadedImage->setMimeType($image->getMimeType());
-        $uploadedImage->setFileInfo($fileInfo);
-        $em->persist($uploadedImage);
-        $em->flush();
+        $uploadedImageRepository = $em->getRepository(UploadedImage::class);
+        $existingImages = $uploadedImageRepository->findBy(['fileHash' => $hash]);
+
+        if (0 === count($existingImages)) {
+            list($width, $height) = getimagesize($image);
+            $uploadDirectory = $this->getParameter('upload_directory');
+            $fileName = $this->generateUniqueFileName() . '.' . $image->guessExtension();
+
+            // moves the file to the directory where group images are stored
+            /** @var UploadedFile */
+            $image = $image->move(
+                $uploadDirectory,
+                $fileName
+            );
+
+            $nanoId = new Client();
+            $fileInfo = $nanoId->generateId(16, Client::MODE_DYNAMIC);
+
+            // Write database entry and get id for response
+            $uploadedImage = new UploadedImage();
+            $uploadedImage
+                ->setFilename($fileName)
+                ->setSize($image->getSize())
+                ->setwidth($width)
+                ->setHeight($height)
+                ->setMimeType($image->getMimeType())
+                ->setFileInfo($fileInfo)
+                ->setFileHash($hash)
+            ;
+            $em->persist($uploadedImage);
+            $em->flush();
+        } else {
+            $uploadedImage = $existingImages[0];
+        }
 
         $response->setData([
             'uploaded' => true,

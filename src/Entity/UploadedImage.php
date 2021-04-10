@@ -7,6 +7,7 @@
 
 namespace App\Entity;
 
+use Carbon\Carbon;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -23,53 +24,44 @@ use Doctrine\ORM\Mapping as ORM;
 class UploadedImage
 {
     /**
-     * @var string
-     *
      * @ORM\Column(name="filename", type="string", length=100, nullable=false)
      */
-    private $filename;
+    private string $filename;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="mimetype", type="string", length=100, nullable=false)
      */
-    private $mimeType;
+    private string $mimeType;
 
     /**
-     * @var int
-     *
      * @ORM\Column(name="size", type="integer", nullable=false)
      */
-    private $size = 0;
+    private int $size = 0;
 
     /**
-     * @var int
-     *
      * @ORM\Column(name="width", type="integer", nullable=false)
      */
-    private $width = 0;
+    private int $width = 0;
 
     /**
-     * @var int
-     *
      * @ORM\Column(name="height", type="integer", nullable=false)
      */
-    private $height = 0;
+    private int $height = 0;
 
     /**
-     * @var DateTime
-     *
      * @ORM\Column(name="created", type="datetime", nullable=false)
      */
-    private $created;
+    private DateTime $created;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="fileinfo", type="text", length=32, nullable=false)
      */
-    private $fileInfo;
+    private string $fileInfo;
+
+    /**
+     * @ORM\Column(name="filehash", type="text", length=64, nullable=false)
+     */
+    private string $fileHash;
 
     /**
      * @var int
@@ -80,118 +72,60 @@ class UploadedImage
      */
     private $id;
 
-    /**
-     * Set filename.
-     *
-     * @param string $filename
-     *
-     * @return UploadedImage
-     */
-    public function setFilename($filename)
+    public function setFilename(string $filename): self
     {
         $this->filename = $filename;
 
         return $this;
     }
 
-    /**
-     * Get filename.
-     *
-     * @return string
-     */
-    public function getFilename()
+    public function getFilename(): string
     {
         return $this->filename;
     }
 
-    /**
-     * Set mime type.
-     *
-     * @param string $mimeType
-     *
-     * @return UploadedImage
-     */
-    public function setMimeType($mimeType)
+    public function setMimeType(string $mimeType): self
     {
         $this->mimeType = $mimeType;
 
         return $this;
     }
 
-    /**
-     * Get mime type.
-     *
-     * @return string
-     */
-    public function getMimeType()
+    public function getMimeType(): string
     {
         return $this->mimeType;
     }
 
-    /**
-     * Set width.
-     *
-     * @param int $width
-     *
-     * @return UploadedImage
-     */
-    public function setWidth($width)
+    public function setWidth(int $width): self
     {
         $this->width = $width;
 
         return $this;
     }
 
-    /**
-     * Get width.
-     *
-     * @return int
-     */
-    public function getWidth()
+    public function getWidth(): int
     {
         return $this->width;
     }
 
-    /**
-     * Set height.
-     *
-     * @param int $height
-     *
-     * @return UploadedImage
-     */
-    public function setHeight($height)
+    public function setHeight(int $height): self
     {
         $this->height = $height;
 
         return $this;
     }
 
-    /**
-     * Get height.
-     *
-     * @return int
-     */
-    public function getHeight()
+    public function getHeight(): int
     {
         return $this->height;
     }
 
-    /**
-     * Get created.
-     *
-     * @return DateTime
-     */
-    public function getCreated()
+    public function getCreated(): Carbon
     {
-        return $this->created;
+        return Carbon::instance($this->created);
     }
 
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
@@ -206,21 +140,28 @@ class UploadedImage
         $this->created = new DateTime('now');
     }
 
-    /**
-     * @param string $fileInfo
-     *
-     * @return UploadedImage
-     */
-    public function setFileInfo($fileInfo)
+    public function setFileInfo(string $fileInfo): self
     {
         $this->fileInfo = $fileInfo;
 
         return $this;
     }
 
-    public function getFileInfo(): string
+    public function getFileInfo(): ?string
     {
         return $this->fileInfo;
+    }
+
+    public function setFileHash(string $fileHash): self
+    {
+        $this->fileHash = $fileHash;
+
+        return $this;
+    }
+
+    public function getFileHash(): ?string
+    {
+        return $this->fileHash;
     }
 
     public function getSize(): int
@@ -228,8 +169,10 @@ class UploadedImage
         return $this->size;
     }
 
-    public function setSize(int $size): void
+    public function setSize(int $size): self
     {
         $this->size = $size;
+
+        return $this;
     }
 }

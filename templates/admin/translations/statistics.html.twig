@@ -13,7 +13,7 @@
             {% for language, detail in details %}
                 <tr>
                     <td>{{ ('lang_' ~ language)|lower|trans }} ({{ language }})</td>
-                    <td>{{ (detail.count/count_all*100)|number_format(2) }}</td>
+                    <td>{{ min(100, (detail.count/count_all*100))|number_format(2) }}</td>
                     <td>
                         {% if detail.translator %}
                             {% if detail.translator.id == 0 %}

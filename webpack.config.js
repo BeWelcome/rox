@@ -57,6 +57,14 @@ Encore
     .addEntry('roxeditor', './assets/js/roxeditor.js')
     .addEntry('rangeslider', './assets/js/rangeslider.js')
     .addEntry('faq', './assets/js/faq.js')
+
+    // react
+    .configureBabel(function(babelConfig) {
+        babelConfig.presets = [ "@babel/preset-env", '@babel/preset-react' ]
+        babelConfig.plugins = [ '@babel/plugin-transform-runtime' ]
+    })
+    .addEntry('avatar/change', './assets/js/react/avatar/AvatarChangePage.jsx')
+
     .addStyleEntry('tailwind', './assets/css/tailwind.css')
     .autoProvidejQuery()
     //    .addEntry('roxinlineeditor', './assets/js/roxinlineeditor.js')

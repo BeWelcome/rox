@@ -11,6 +11,9 @@
     "url": "https://github.com/BeWelcome/rox.git"
   },
   "devDependencies": {
+    "@babel/plugin-transform-runtime": "^7.13.15",
+    "@babel/polyfill": "^7.12.1",
+    "@babel/preset-react": "^7.0.0",
     "@ckeditor/ckeditor5-adapter-ckfinder": "~24.0.0",
     "@ckeditor/ckeditor5-autoformat": "~24.0.0",
     "@ckeditor/ckeditor5-basic-styles": "~24.0.0",
@@ -70,6 +73,8 @@
     "purgecss-webpack-plugin": "^3.0.0",
     "rangeslider.js": "^2.3.3",
     "raw-loader": "^4.0.1",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
     "regenerator-runtime": "^0.13.7",
     "respond.js": "^1.4.2",
     "sass": "^1.26.10",
@@ -97,6 +102,7 @@
     "litepicker": "^2.0.11",
     "postcss": "^7",
     "purgecss": "3",
+    "react-avatar-editor": "^11.1.0",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat"
   }
 }

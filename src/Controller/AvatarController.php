@@ -21,6 +21,13 @@ class AvatarController extends AbstractController
     private const EMPTY_AVATAR_PATH = 'images/';
 
     /**
+     * @Route("/members/changeavatar")
+     */
+    public function changeAvatar() {
+        return $this->render('avatar/changeavatar.html.twig');
+    }
+
+    /**
      * @Route("/members/avatar/{username}/{size}", name="avatar",
      *     requirements={"username" : "(?i:[a-z][a-z0-9-._ ]{1,30}[a-z0-9-._])",
      *          "size" : "\d+|original" },

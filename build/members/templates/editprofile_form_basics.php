@@ -18,7 +18,7 @@
                     </div>
                 </div>
             </div>
-            <div class="form-row mb-1">
+            <!-- <div class="form-row mb-1">
                 <div class="col-4 col-md-3">
                     <?= $words->get('ProfilePicture') ?><br>
                     <img src="members/avatar/<?= $member->Username ?>/100"
@@ -37,7 +37,7 @@
                     <input type="submit" class="btn btn-primary float-right my-2" id="submit" name="submit"
                            value="<?= $words->getSilent('upload.profile.picture') ?>"/> <?php echo $words->flushBuffer(); ?>
                 </div>
-            </div>
+            </div> -->
             <?php if ($this->adminedit || !$CanTranslate) { // member translator is not allowed to update crypted data ?>
                 <div class="form-row mb-1">
                     <label for="FirstName" class="col-md-3 col-form-label"><?= $words->get('FirstName') ?></label>

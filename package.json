@@ -90,5 +90,8 @@
     "uglify-js": "3.13.3",
     "underscore.string": "^3.3.5",
     "workbox-webpack-plugin": "^5.1.4"
+  },
+  "dependencies": {
+    "is-svg": "4.3.1"
   }
 }

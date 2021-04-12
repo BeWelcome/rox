@@ -8,6 +8,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Psr\Log\LoggerInterface;
 
 /**
  * Class AvatarController.
@@ -20,12 +23,44 @@ class AvatarController extends AbstractController
     private const AVATAR_PATH = '../data/user/avatars/';
     private const EMPTY_AVATAR_PATH = 'images/';
 
+    /** @var LoggerInterface */
+    private $logger;
+
+    public function __construct(
+        LoggerInterface $logger
+    ) {
+        $this->logger = $logger;
+    }
+
     /**
      * @Route("/members/changeavatar")
      */
-    public function changeAvatar() {
+    public function changeAvatar()
+    {
         return $this->render('avatar/changeavatar.html.twig');
     }
+
+    /**
+     * @Route("/members/uploadavatar", methods={"POST"})
+     */
+    public function uploadAvatar(Request $request): Response
+    {
+        $member = $this->getUser();
+        if (!$member || !$member->getId()) {
+            return new Response('File upload failed', Response::HTTP_UNAUTHORIZED);
+        }
+
+
+        $avatar_file = $request->files->get('avatar');
+        if (! $avatar_file) {
+            return new Response('File upload failed', Response::HTTP_BAD_REQUEST);
+        }
+
+        // $this->avatarMake($member->getId(), ']['tmp_name']);
+
+        return new Response('test: ');
+    }
+
 
     /**
      * @Route("/members/avatar/{username}/{size}", name="avatar",

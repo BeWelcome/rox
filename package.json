@@ -104,5 +104,8 @@
     "purgecss": "3",
     "react-avatar-editor": "^11.1.0",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat"
+  },
+  "scripts": {
+    "encoreWatch": "encore dev --watch"
   }
 }

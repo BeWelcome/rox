@@ -1188,6 +1188,7 @@ ORDER BY
             }
         }
 
+        // TODO rm me
         if (!empty($_FILES['profile_picture']) && !empty($_FILES['profile_picture']['tmp_name']))
         {
             if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['error'] == 0)
@@ -1342,6 +1343,7 @@ ORDER BY
             return ("not crypted");
     } // end of ShallICrypt
 
+    // TODO rm me!
     public function avatarMake($memberid, $img_file)
     {
         $this->writeMemberphoto($memberid);

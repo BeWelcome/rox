@@ -1,5 +1,12 @@
 {% extends 'base.html.twig' %}
 
+{% set globals = {
+    'baseUrl': app.request.getSchemeAndHttpHost(),
+    'texts': {
+        'profile.change.avatar': 'profile.change.avatar' | trans,
+    },
+} %}
+
 {% block javascripts %}
     {{ encore_entry_script_tags('avatar/change') }}
 {% endblock javascripts %}
@@ -9,6 +16,6 @@
 {% endblock %}
 
 {% block content %}
-<div id="main">
+<div id="main" data-globals="{{ globals | json_encode() }}">
 </div>
 {% endblock content %}

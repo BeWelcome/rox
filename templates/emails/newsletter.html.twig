@@ -24,6 +24,12 @@
             <spacer size="16"></spacer>
             <row>
                 <columns>
+                    <p>{{ 'newsletter.receive'|trans }}</p>
+                    {% if unsubscribe_key is defined %}
+                        <p><a href="{{ url('newsletter_unsubscribe', {'username': receiver.username, 'unsubscribeKey': unsubscribe_key }) }}">{{ 'newsletter.unsubscribe'|trans }}</a></p>
+                    {% else %}
+                        <p><a href="{{ url('newsletter_no_unsubscribe') }}">{{ 'newsletter.no.unsubscribe'|trans }}</a></p>
+                    {% endif %}
                     <p>{{ "now" | date("Y") }} - <a href="{{ url('homepage') }}" target="_blank">BeWelcome</a></p>
                 </columns>
             </row>

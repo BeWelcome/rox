@@ -18,6 +18,9 @@ use Doctrine\Persistence\ObjectManagerAware;
  */
 class Newsletter implements ObjectManagerAware
 {
+    public const REGULAR_NEWSLETTER = 'Normal';
+    public const LOCATION_NEWSLETTER = 'Specific';
+
     /**
      * @var Member
      *

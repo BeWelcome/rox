@@ -4,7 +4,7 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
-    router.request_context.host: 'www.bewelcome.org'
+    router.request_context.host: '%env(web_host)%'
     router.request_context.scheme: 'https'
     new_members_messages_per_hour: "%env(new_members_messages_per_hour)%"
     new_members_messages_per_day: "%env(new_members_messages_per_day)%"

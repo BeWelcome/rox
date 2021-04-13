@@ -3,6 +3,8 @@ import ReactDom from 'react-dom';
 import AvatarChangeButton from './AvatarChangeButton'
 import {parseGlobals} from '../../utils/globals'
 
-parseGlobals('main');
+const mountId = 'react_mount';
 
-ReactDom.render(<AvatarChangeButton />, document.getElementById('main'));
+parseGlobals(mountId);
+
+ReactDom.render(<AvatarChangeButton />, document.getElementById(mountId));

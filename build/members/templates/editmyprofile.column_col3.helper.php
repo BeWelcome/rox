@@ -44,6 +44,9 @@ if (is_array($this->statuses)) {
 
 <?=$words->flushBuffer()?>
 <?php
+// We add invisible alert div ready to be used by frontend code if we want to display an alert without a trip to backend
+echo '<div id="js-alert" class="col-12 alert d-none" role="alert"></div>';
+
 // Check for errors and update status and display a message
 if (isset($vars['errors']) and count($vars['errors']) > 0) {
     echo '<div class="row no-gutters">';

@@ -188,6 +188,14 @@ class MemberPage extends PageWithActiveSkin
         $member = $this->member;
         $words = $this->getWords();
         $picture_url = 'members/avatar/'.$member->Username;
+        $globalsJs = json_encode([
+            'baseUrl' => $this->getBaseUrl(),
+            'texts' => [
+                'profile.change.avatar' => $words->get('profile.change.avatar'),
+                'profile.change.avatar.success' => $words->get('profile.change.avatar.success'),
+                'profile.change.avatar.fail' => $words->get('profile.change.avatar.fail'),
+            ],
+            ]);
         ?>
 
             <div class="avatar-box">
@@ -205,8 +213,7 @@ class MemberPage extends PageWithActiveSkin
             if ($this->myself) {
                 // TODO : change language code (en) and wordcode
                 ?>
-        <div>
-            <a href="editmyprofile" class="btn btn-info btn-block"><?= $words->get('profile.change.avatar'); ?></a>
+        <div id="react_mount" data-globals="<?=htmlspecialchars($globalsJs)?>">
         </div>
                 <?php } ?>
 
@@ -246,11 +253,26 @@ class MemberPage extends PageWithActiveSkin
 <?php
     }
 
+    private function getBaseUrl()
+    {
+        if (isset($_SERVER['HTTPS'])) {
+            $protocol = ($_SERVER['HTTPS'] && $_SERVER['HTTPS'] != "off") ? "https" : "http";
+        } else {
+            $protocol = 'http';
+        }
+        return $protocol . "://" . $_SERVER['HTTP_HOST'];
+    }
 
     protected function getStylesheets() {
         $stylesheets = parent::getStylesheets();
         $stylesheets[] = 'build/lightbox.css';
         return $stylesheets;
+    }
+
+    protected function getLateLoadScriptfiles()
+    {
+        $scripts = array_merge(parent::getLateLoadScriptfiles(), ['build/avatar/change']);
+        return $scripts;
     }
 
     /*

@@ -1,5 +1,8 @@
 export const parseGlobals = (dataTagId) => {
     var element = document.getElementById(dataTagId);
 
-    window.globals = JSON.parse(element.dataset.globals);
+    const globalsString = element?.dataset?.globals;
+    if (globalsString) {
+        window.globals = JSON.parse(globalsString);
+    }
 }

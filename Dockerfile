@@ -39,7 +39,7 @@ RUN set -eux; \
 	; \
 	\
 	docker-php-ext-configure zip; \
-	docker-php-ext-configure gd; \
+	docker-php-ext-configure gd --with-freetype --with-jpeg=/usr/include/ --enable-gd; \
 	docker-php-ext-install -j$(nproc) \
 		intl \
 		gd \

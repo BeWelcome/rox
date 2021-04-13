@@ -63,7 +63,7 @@ Encore
         babelConfig.presets = [ "@babel/preset-env", '@babel/preset-react' ]
         babelConfig.plugins = [ '@babel/plugin-transform-runtime' ]
     })
-    .addEntry('avatar/change', './assets/js/react/avatar/AvatarChangePage.jsx')
+    .addEntry('avatar/change', './assets/js/react/avatar/AvatarChangeMount.jsx')
 
     .addStyleEntry('tailwind', './assets/css/tailwind.css')
     .autoProvidejQuery()

@@ -18,26 +18,6 @@
                     </div>
                 </div>
             </div>
-            <div class="form-row mb-1">
-                <div class="col-4 col-md-3">
-                    <?= $words->get('ProfilePicture') ?><br>
-                    <img src="members/avatar/<?= $member->Username ?>/100"
-                         title="Current picture" alt="Current picture" height="100" width="100">
-                </div>
-
-                <div class="col-8 col-md-9 mt-3 o-form-group">
-                    <span><?= $words->get('uploadselectpicture'); ?></span>
-                    <div class="custom-file">
-                        <input type="file" class="custom-file-input" id="profile_picture" name="profile_picture">
-                        <label class="custom-file-label" for="profile_picture"
-                               data-browse="<?php echo $words->get('BrowseFile'); ?>"><?php echo $words->get('ChooseFile'); ?></label>
-                    </div>
-                    <span
-                        class="small text-muted"><?= $words->get('Profile_UploadWarning', sprintf("%.1f MB", PFunctions::returnBytes(ini_get('upload_max_filesize')) / 1048576)); ?></span>
-                    <input type="submit" class="btn btn-primary float-right my-2" id="submit" name="submit"
-                           value="<?= $words->getSilent('upload.profile.picture') ?>"/> <?php echo $words->flushBuffer(); ?>
-                </div>
-            </div>
             <?php if ($this->adminedit || !$CanTranslate) { // member translator is not allowed to update crypted data ?>
                 <div class="form-row mb-1">
                     <label for="FirstName" class="col-md-3 col-form-label"><?= $words->get('FirstName') ?></label>

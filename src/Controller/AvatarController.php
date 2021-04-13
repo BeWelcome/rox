@@ -11,6 +11,8 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Finder\Finder;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * Class AvatarController.
@@ -33,14 +35,6 @@ class AvatarController extends AbstractController
     }
 
     /**
-     * @Route("/members/changeavatar")
-     */
-    public function changeAvatar()
-    {
-        return $this->render('avatar/changeavatar.html.twig');
-    }
-
-    /**
      * @Route("/members/uploadavatar", methods={"POST"})
      */
     public function uploadAvatar(Request $request): Response
@@ -51,14 +45,15 @@ class AvatarController extends AbstractController
         }
 
 
-        $avatar_file = $request->files->get('avatar');
-        if (! $avatar_file) {
+        /** @var UploadedFile */
+        $avatarFile = $request->files->get('avatar');
+        if (! $avatarFile) {
             return new Response('File upload failed', Response::HTTP_BAD_REQUEST);
         }
 
-        // $this->avatarMake($member->getId(), ']['tmp_name']);
+        $this->storeAvatar($member->getId(), $avatarFile->getRealPath());
 
-        return new Response('test: ');
+        return new Response('');
     }
 
 
@@ -95,6 +90,39 @@ class AvatarController extends AbstractController
 
         $filename = $this->getAvatarImageFilename($member, $size);
         return $this->createCacheableResponse($filename);
+    }
+
+    private function storeAvatar($memberId, $tmpFilePath)
+    {
+        // TODO
+        // $this->writeMemberphoto($memberId);
+
+        $this->removeAvatarFile($memberId);
+
+        $imageManager = new ImageManager();
+        $img = $imageManager->make($tmpFilePath);
+        $height = $img->getHeight();
+        $width = $img->getWidth();
+        if ($height !== $width) {
+            $size = min($width, $height);
+            $img->crop($size, $size, ($width - $size) / 2, ($height - $size) / 2);
+        }
+
+        $newFileName = self::AVATAR_PATH . $memberId . '_original';
+        $img->save($newFileName);
+
+        $this->logger->info("New avatar picture was stored: " . $newFileName);
+
+        return true;
+    }
+
+    private function removeAvatarFile($memberId)
+    {
+        $finder = new Finder();
+        $finder->name($memberId . '_*');
+        foreach ($finder->files()->in(self::AVATAR_PATH) as $oldAvatarFile) {
+            unlink($oldAvatarFile->getRealPath());
+        }
     }
 
     private function emptyAvatar($size): BinaryFileResponse

@@ -1,6 +1,7 @@
 import React from 'react';
 import {uploadTemporaryAvatar} from '../../api/avatar'
 import {getText} from '../../utils/texts';
+import {alertError, alertSuccess} from '../../utils/alerts';
 
 const AvatarChangeButton = () => {
     const inputFile = React.useRef(null)
@@ -9,11 +10,17 @@ const AvatarChangeButton = () => {
         event.stopPropagation();
         event.preventDefault();
         var file = event.target.files[0];
-        console.log(file);
 
-        const result = await uploadTemporaryAvatar(file);
+        if (file) {
+            const result = await uploadTemporaryAvatar(file);
 
-        console.log(result);
+            if (result?.status && result.status >= 200 && result.status < 300) {
+                alertSuccess(getText('profile.change.avatar.success'));
+            } else {
+                alertError(getText('profile.change.avatar.fail'));
+            }
+        }
+        inputFile.current.value = null;
     }
 
     const onButtonClick = () => {

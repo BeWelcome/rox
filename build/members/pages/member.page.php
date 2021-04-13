@@ -194,6 +194,7 @@ class MemberPage extends PageWithActiveSkin
                 'profile.change.avatar' => $words->get('profile.change.avatar'),
                 'profile.change.avatar.success' => $words->get('profile.change.avatar.success'),
                 'profile.change.avatar.fail' => $words->get('profile.change.avatar.fail'),
+                'profile.change.avatar.fail.file.to.big' => $words->get('profile.change.avatar.fail.file.to.big'),
             ],
             ]);
         ?>
@@ -271,7 +272,10 @@ class MemberPage extends PageWithActiveSkin
 
     protected function getLateLoadScriptfiles()
     {
-        $scripts = array_merge(parent::getLateLoadScriptfiles(), ['build/avatar/change']);
+        $scripts = parent::getLateLoadScriptfiles();
+        if ($this->myself) {
+            $scripts = array_merge($scripts, ['build/avatar/change']);
+        }
         return $scripts;
     }
 

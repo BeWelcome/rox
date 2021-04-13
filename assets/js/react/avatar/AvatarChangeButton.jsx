@@ -16,6 +16,8 @@ const AvatarChangeButton = () => {
 
             if (result?.status && result.status >= 200 && result.status < 300) {
                 alertSuccess(getText('profile.change.avatar.success'));
+            } else if (result?.status === 413) {
+                alertError(getText('profile.change.avatar.fail.file.to.big'));
             } else {
                 alertError(getText('profile.change.avatar.fail'));
             }

@@ -105,7 +105,9 @@ class AvatarController extends AbstractController
         $width = $img->getWidth();
         if ($height !== $width) {
             $size = min($width, $height);
-            $img->crop($size, $size, ($width - $size) / 2, ($height - $size) / 2);
+            $x = (int) (($width - $size) / 2);
+            $y = (int) (($height - $size) / 2);
+            $img->crop($size, $size, $x, $y);
         }
 
         $newFileName = self::AVATAR_PATH . $memberId . '_original';
@@ -127,7 +129,7 @@ class AvatarController extends AbstractController
 
     private function emptyAvatar($size): BinaryFileResponse
     {
-        $filename = self::EMPTY_AVATAR_PATH . '/empty_avatar_' . $size . '_' . $size . '.png';
+        $filename = self::AVATAR_PATH . 'empty_avatar_' . $size . '_' . $size . '.png';
 
         if (!file_exists($filename)) {
             $filename = $this->createEmptyAvatarImage($size);

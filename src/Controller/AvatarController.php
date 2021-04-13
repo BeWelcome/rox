@@ -105,9 +105,9 @@ class AvatarController extends AbstractController
         $width = $img->getWidth();
         if ($height !== $width) {
             $size = min($width, $height);
-            $x = (int) (($width - $size) / 2);
-            $y = (int) (($height - $size) / 2);
-            $img->crop($size, $size, $x, $y);
+            $startX = (int) (($width - $size) / 2);
+            $startY = (int) (($height - $size) / 2);
+            $img->crop($size, $size, $startX, $startY);
         }
 
         $newFileName = self::AVATAR_PATH . $memberId . '_original';

@@ -40,10 +40,13 @@ class EditTranslationRequest extends TranslationRequest
         $editTranslationRequest->englishText = $original->getSentence();
         $editTranslationRequest->description = $original->getDescription();
         $editTranslationRequest->locale = $translation->getShortCode();
-        $editTranslationRequest->translatedText = $translation->getSentence();
         $editTranslationRequest->isMajorUpdate = ($original->getMajorUpdate() > $translation->getUpdated());
         $editTranslationRequest->isArchived = $original->getIsArchived();
         $editTranslationRequest->translationAllowed = (TranslationAllowedType::TRANSLATION_ALLOWED === $original->getTranslationAllowed());
+        $editTranslationRequest->translatedText = $translation->getSentence();
+        if (null === $translation->getSentence() && 'broadcast_body_' === substr($editTranslationRequest->wordCode, 0, 15)) {
+            $editTranslationRequest->translatedText = $original->getSentence();
+        }
 
         return $editTranslationRequest;
     }

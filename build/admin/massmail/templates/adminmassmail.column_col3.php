@@ -35,7 +35,6 @@ $words = new MOD_words();
 <h3><?php echo $words->get('AdminMassMailListHeader'); ?></h3>
 <?php
 $ii = 0;
-$this->pager->render();
 if ($this->session->has( 'AdminMassMailStatus' )) {
     echo '<div class="alert alert-success">';
     $status = $this->session->get('AdminMassMailStatus');
@@ -59,9 +58,10 @@ if ($this->session->has( 'AdminMassMailStatus' )) {
             echo $words->get('AdminMassMailSuccessUntrigger', $status[1], $status[2]);
             break;
     }
-    echo '</div>';
+    echo '</div><div class="clearfix"></div>';
     $this->session->remove('AdminMassMailStatus');
 }
+$this->pager->render();
 echo '<table class="table table-striped table-hover">';
 echo '<tr><th>' . $words->getBuffered('AdminMassMailName') . '</th>';
 if ($this->canTrigger) {

@@ -25,14 +25,6 @@ class EditTranslationFormType extends AbstractType
                 'disabled' => true,
                 'label' => 'label.admin.translation.wordcode',
             ])
-            ->add('englishText', TextAreaType::class, [
-                'disabled' => false,
-                'attr' => [
-                    'readonly' => true,
-                    'rows' => 10,
-                ],
-                'label' => 'label.admin.translation.englishtext',
-            ])
             ->add('locale', TextType::class, [
                 'disabled' => true,
                 'label' => 'label.admin.translation.locale',
@@ -43,8 +35,24 @@ class EditTranslationFormType extends AbstractType
         ;
         $formBuilder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             $translationRequest = $event->getData();
+            $wordCode = $translationRequest->wordCode;
+            if ('broadcast_body_' === substr($wordCode, 0, 15)) {
+                $fieldType = CkEditorType::class;
+            } else {
+                $fieldType = TextareaType::class;
+            }
             $form = $event->getForm();
             $translatedTextHelp = null;
+            $form
+                ->add('englishText', TextareaType::class, [
+                    'disabled' => false,
+                    'attr' => [
+                        'readonly' => true,
+                        'rows' => 10,
+                    ],
+                    'label' => 'label.admin.translation.englishtext',
+                ])
+            ;
             if ('en' === $translationRequest->locale) {
                 $form
                     ->add('isMajorUpdate', CheckboxType::class, [
@@ -93,9 +101,10 @@ class EditTranslationFormType extends AbstractType
                 }
             }
             $form
-                ->add('translatedText', TextAreaType::class, [
+                ->add('translatedText', $fieldType, [
                     'attr' => [
                         'rows' => 10,
+                        'class' => 'editor',
                     ],
                     'label' => 'label.admin.translation',
                     'required' => true,

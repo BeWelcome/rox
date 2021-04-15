@@ -26,7 +26,13 @@
                 <columns>
                     <p>{{ 'newsletter.receive'|trans }}</p>
                     {% if unsubscribe_key is defined %}
-                        <p><a href="{{ url('newsletter_unsubscribe', {'username': receiver.username, 'unsubscribeKey': unsubscribe_key }) }}">{{ 'newsletter.unsubscribe'|trans }}</a></p>
+                    {% apply spaceless %}<p>
+                        {% if constant('\\App\\Entity\\Newsletter::LOCATION_NEWSLETTER') == newsletter_type  %}
+                            <a href="{{ url('local_newsletter_unsubscribe', {'username': receiver.username, 'unsubscribeKey': unsubscribe_key }) }}">{{ 'newsletter.local.unsubscribe'|trans }}</a>
+                        {% else %}
+                            <a href="{{ url('regular_newsletter_unsubscribe', {'username': receiver.username, 'unsubscribeKey': unsubscribe_key }) }}">{{ 'newsletter.regular.unsubscribe'|trans }}</a>
+                        {% endif %}
+                        </p>{% endapply %}
                     {% else %}
                         <p><a href="{{ url('newsletter_no_unsubscribe') }}">{{ 'newsletter.no.unsubscribe'|trans }}</a></p>
                     {% endif %}

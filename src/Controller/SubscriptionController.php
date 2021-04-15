@@ -13,11 +13,43 @@ use Symfony\Component\Routing\Annotation\Route;
 class SubscriptionController extends AbstractController
 {
     /**
-     * @Route( "/newsletter/unsubscribe/{username}/{unsubscribeKey}", name="newsletter_unsubscribe",
+     * @Route( "/unsubscribe/newsletter/{username}/{unsubscribeKey}", name="regular_newsletter_unsubscribe",
      *     requirements={"unsubscribeKey"="[a-z0-9]{64}"}
      * )
      */
     public function UnsubscribeNewsletter(
+        SubscriptionModel $subscriptionModel,
+        string $username,
+        string $unsubscribeKey
+    ): Response {
+        $broadcastRepository = $this->getDoctrine()->getRepository(BroadcastMessage::class);
+        $memberRepository =  $this->getDoctrine()->getRepository(Member::class);
+        /** @var BroadcastMessage $broadcast */
+        $broadcast = $broadcastRepository->findOneBy(['unsubscribeKey' => $unsubscribeKey]);
+        if (null === $broadcast) {
+            return $this->render('newsletter/unsubscribe_failed.html.twig');
+        }
+
+        /** @var Member $member */
+        $member = $memberRepository->find($broadcast->getReceiver());
+        if ($username !== $member->getUsername()) {
+            return $this->render('newsletter/unsubscribe_failed.html.twig');
+        }
+
+        $subscriptionModel->unsubscribeNewsletter($member, $broadcast->getNewsletter());
+
+        return $this->render('newsletter/unsubscribe_successful.html.twig', [
+            'username' => $username,
+            'broadcast' => $broadcast,
+        ]);
+    }
+
+    /**
+     * @Route( "/unsubscribe/local/{username}/{unsubscribeKey}", name="local_newsletter_unsubscribe",
+     *     requirements={"unsubscribeKey"="[a-z0-9]{64}"}
+     * )
+     */
+    public function UnsubscribeLocalEvents(
         SubscriptionModel $subscriptionModel,
         string $username,
         string $unsubscribeKey

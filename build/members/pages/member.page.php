@@ -188,27 +188,25 @@ class MemberPage extends PageWithActiveSkin
         $member = $this->member;
         $words = $this->getWords();
         $picture_url = 'members/avatar/'.$member->Username;
+        $globalsJs = json_encode([
+            'baseUrl' => $this->getBaseUrl(),
+            'texts' => [
+                'profile.change.avatar' => $words->get('profile.change.avatar'),
+                'profile.change.avatar.success' => $words->get('profile.change.avatar.success'),
+                'profile.change.avatar.fail' => $words->get('profile.change.avatar.fail'),
+                'profile.change.avatar.fail.file.to.big' => $words->get('profile.change.avatar.fail.file.to.big'),
+                'profile.picture.title' => $words->get('profile.picture.title', $member->Username),
+            ],
+            'config' => [
+                'isMyself' => $this->myself,
+                'avatarUseLightbox' => $this->useLightbox,
+                'avatarUrl' => $picture_url,
+                'username' => $member->Username,
+            ]
+            ]);
         ?>
 
-            <div class="avatar-box">
-                <?php if ($this->useLightbox) { ?>
-            <a class="avatar-box-inside" href="<?= $picture_url . '/original' ?>" data-toggle="lightbox" data-type="image" title="<?= $words->get('profile.picture.title', $member->Username); ?>" style="background-image: url('<?= $picture_url . '/500'?>')">
-                <!-- <img src="<?= $picture_url . '/500'?>" class="w-100 h-100" alt="picture of <?= $member->Username ?>"> -->
-            </a>
-                <?php } else { ?>}
-            <a class="avatar-box-inside" href="/members/<?=$member->Username?>" data-toggle="lightbox" data-type="image" title="<?= $words->get('profile.picture.title', $member->Username); ?>" style="background-image: url('<?= $picture_url . '/500'?>')">
-                <!-- <img src="<?= $picture_url . '/500'?>" class="w-100 h-100" alt="picture of <?= $member->Username ?>"> -->
-            </a>
-            <?php } ?>
-            </div>
-        <?php
-            if ($this->myself) {
-                // TODO : change language code (en) and wordcode
-                ?>
-        <div>
-            <a href="editmyprofile" class="btn btn-info btn-block"><?= $words->get('profile.change.avatar'); ?></a>
-        </div>
-                <?php } ?>
+        <div id="react_mount" data-globals="<?=htmlspecialchars($globalsJs)?>" ></div>
 
         <div class="list-group mt-2">
             <?php
@@ -246,11 +244,27 @@ class MemberPage extends PageWithActiveSkin
 <?php
     }
 
+    private function getBaseUrl()
+    {
+        if (isset($_SERVER['HTTPS'])) {
+            $protocol = ($_SERVER['HTTPS'] && $_SERVER['HTTPS'] != "off") ? "https" : "http";
+        } else {
+            $protocol = 'http';
+        }
+        return $protocol . "://" . $_SERVER['HTTP_HOST'];
+    }
 
     protected function getStylesheets() {
         $stylesheets = parent::getStylesheets();
         $stylesheets[] = 'build/lightbox.css';
         return $stylesheets;
+    }
+
+    protected function getLateLoadScriptfiles()
+    {
+        $scripts = parent::getLateLoadScriptfiles();
+        $scripts = array_merge($scripts, ['build/avatar']);
+        return $scripts;
     }
 
     /*

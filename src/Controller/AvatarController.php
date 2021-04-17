@@ -8,6 +8,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\Finder\Finder;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * Class AvatarController.
@@ -19,6 +24,38 @@ class AvatarController extends AbstractController
     private const EXPIRY = 60 * 60 * 24; // One day
     private const AVATAR_PATH = '../data/user/avatars/';
     private const EMPTY_AVATAR_PATH = 'images/';
+
+    /** @var LoggerInterface */
+    private $logger;
+
+    public function __construct(
+        LoggerInterface $logger
+    ) {
+        $this->logger = $logger;
+    }
+
+    /**
+     * @Route("/members/uploadavatar", methods={"POST"})
+     */
+    public function uploadAvatar(Request $request): Response
+    {
+        $member = $this->getUser();
+        if (!$member || !$member->getId()) {
+            return new Response('File upload failed', Response::HTTP_UNAUTHORIZED);
+        }
+
+
+        /** @var UploadedFile */
+        $avatarFile = $request->files->get('avatar');
+        if (! $avatarFile) {
+            return new Response('File upload failed', Response::HTTP_BAD_REQUEST);
+        }
+
+        $this->storeAvatar($member->getId(), $avatarFile->getRealPath());
+
+        return new Response('');
+    }
+
 
     /**
      * @Route("/members/avatar/{username}/{size}", name="avatar",
@@ -55,9 +92,44 @@ class AvatarController extends AbstractController
         return $this->createCacheableResponse($filename);
     }
 
+    private function storeAvatar($memberId, $tmpFilePath)
+    {
+        // TODO
+        // $this->writeMemberphoto($memberId);
+
+        $this->removeAvatarFile($memberId);
+
+        $imageManager = new ImageManager();
+        $img = $imageManager->make($tmpFilePath);
+        $height = $img->getHeight();
+        $width = $img->getWidth();
+        if ($height !== $width) {
+            $size = min($width, $height);
+            $startX = (int) (($width - $size) / 2);
+            $startY = (int) (($height - $size) / 2);
+            $img->crop($size, $size, $startX, $startY);
+        }
+
+        $newFileName = self::AVATAR_PATH . $memberId . '_original';
+        $img->save($newFileName);
+
+        $this->logger->info("New avatar picture was stored: " . $newFileName);
+
+        return true;
+    }
+
+    private function removeAvatarFile($memberId)
+    {
+        $finder = new Finder();
+        $finder->name($memberId . '_*');
+        foreach ($finder->files()->in(self::AVATAR_PATH) as $oldAvatarFile) {
+            unlink($oldAvatarFile->getRealPath());
+        }
+    }
+
     private function emptyAvatar($size): BinaryFileResponse
     {
-        $filename = self::EMPTY_AVATAR_PATH . '/empty_avatar_' . $size . '_' . $size . '.png';
+        $filename = self::AVATAR_PATH . 'empty_avatar_' . $size . '_' . $size . '.png';
 
         if (!file_exists($filename)) {
             $filename = $this->createEmptyAvatarImage($size);

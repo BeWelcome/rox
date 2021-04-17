@@ -32,6 +32,9 @@ You probably want to get started by checking out the code in `src/`.
 
 `build/` is deprecated and the code needs to be rewritten in `src/`.
 
+To make changes in **Javascript** bear in mind that the Webpack needs to process each change before it reflects on the site.
+It is a good idea to run `yarn encore dev --watch` which will keep updating files as you keep saving them.
+
 ## Documentation
 
 Documentation is [in the doc tree](doc/book/) and can be compiled using

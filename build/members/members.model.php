@@ -1188,12 +1188,6 @@ ORDER BY
             }
         }
 
-        if (!empty($_FILES['profile_picture']) && !empty($_FILES['profile_picture']['tmp_name']))
-        {
-            if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['error'] == 0)
-                $this->avatarMake($vars['memberid'],$_FILES['profile_picture']['tmp_name']);
-        }
-
         $cryptModule = new MOD_crypt();
         if ($vars["chat_SKYPE"]!="cryptedhidden") {
             $m->chat_SKYPE = $cryptModule->NewReplaceInCrypted(addslashes(strip_tags($vars['chat_SKYPE'])),"members.chat_SKYPE",$IdMember, $m->chat_SKYPE, $IdMember, $this->ShallICrypt($vars,"chat_SKYPE"));
@@ -1341,52 +1335,6 @@ ORDER BY
         else
             return ("not crypted");
     } // end of ShallICrypt
-
-    public function avatarMake($memberid, $img_file)
-    {
-        $this->writeMemberphoto($memberid);
-        $finder = new Finder();
-        $finder->name($memberid . '_*');
-        foreach ($finder->files()->in($this->avatarDir->dirName()) as $file)
-        {
-            unlink($file->getRealPath());
-        }
-        $imageManager = new ImageManager();
-        $img = $imageManager->make($img_file);
-        $height = $img->getHeight();
-        $width = $img->getWidth();
-        if ($height !== $width) {
-            $size = min($width, $height);
-            $img->crop($size, $size, ($width - $size) / 2, ($height - $size) / 2);
-        }
-        $img->save($this->avatarDir->dirName() . '/' . $memberid . '_original');
-
-        return true;
-    }
-
-    public function writeMemberphoto($memberid)
-    {
-        $s = $this->dao->exec("
-INSERT INTO
-    `membersphotos`
-    (
-        FilePath,
-        IdMember,
-        created,
-        SortOrder,
-        Comment
-    )
-VALUES
-    (
-        '" . $this->avatarDir->dirName() ."/". $memberid . "',
-        " . $memberid . ",
-        now(),
-        -1,
-        0
-    )
-");
-        return $s;
-    }
 
     public function bootstrap()
     {

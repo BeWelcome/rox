@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+    <h1>{{ 'newsletter'|trans }}</h1>
+
+    {% if newsletters.nbResults == 0 %}
+        {{ 'newsletters.nothing'|trans }}
+    {% else %}
+        {% if newsletters.haveToPaginate %}
+            <div class="float-left">
+                {{ pagerfanta( newsletters, 'rox_default') }}
+            </div>
+            <div class="clearfix"></div>
+        {% endif %}
+
+        <div class="row mb-2">
+            <div class="col-12">
+            {% for newsletter in newsletters.currentPageResults %}
+                <p style="line-height: 1.5"><strong>{{ ('broadcast_title_' ~ newsletter.name)|lower|trans }}</strong> (<small>{{ newsletter.created.diffForHumans }}</small>)</br>
+                {% for language in newsletter.languages %}
+                    {% set button_type = 'btn-secondary' %}
+                    {% if app.request.locale == language %}
+                        {% set button_type = 'btn-primary' %}
+                    {% endif %}
+                    <a class="btn btn-sm {{ button_type }} mr-1 mt-1" href="{{ url('newsletter_single', {'id': newsletter.id, 'language': language }) }}" >{{ ('lang_' ~ language)|lower|trans }}</a>
+                 {% endfor %}
+                </p>
+            {% endfor %}
+            </div>
+        </div>
+
+        {% if newsletters.haveToPaginate %}
+            <div class="float-left">
+                {{ pagerfanta( newsletters, 'rox_default') }}
+            </div>
+            <div class="clearfix"></div>
+        {% endif %}
+    {% endif %}
+{% endblock %}

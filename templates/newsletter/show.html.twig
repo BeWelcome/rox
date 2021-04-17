@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+    <h1>{{ 'newsletter'|trans }}</h1>
+    <h2>{{ ('broadcast_title_' ~ newsletter.name)|lower|trans({}, null, language) }} <button class="btn btn-primary">{{ ('lang_' ~ language)|trans }}</button></h2>
+
+    <div class="row mb-2">
+        <div class="col-12">
+            {{ ('broadcast_body_' ~ newsletter.name)|lower|trans({'username': username}, null, language)|prepare_newsletter }}
+        </div>
+    </div>
+{% endblock %}

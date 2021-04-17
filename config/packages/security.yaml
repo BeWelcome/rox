@@ -89,6 +89,7 @@ security:
         - { path: ^/press-information, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/signup, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/newsletter, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/unsubscribe, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/faq, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/bod, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/bv, roles: IS_AUTHENTICATED_ANONYMOUSLY }

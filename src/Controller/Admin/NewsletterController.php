@@ -3,11 +3,13 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Member;
-use App\Entity\UploadedImage;
+use App\Entity\Newsletter;
+use App\Entity\Word;
 use App\Model\GalleryModel;
 use App\Model\TranslationModel;
 use Hidehalo\Nanoid\Client;
-use Intervention\Image\ImageManager;
+use Pagerfanta\Adapter\ArrayAdapter;
+use Pagerfanta\Pagerfanta;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -16,7 +18,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Validator\Constraints\Image;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class NewsletterController extends AbstractController
 {
@@ -90,21 +92,4 @@ class NewsletterController extends AbstractController
 
         return $response;
     }
-
-    /**
-     * This is used to define the route but never reached as the .htaccess loads files it finds directly.
-     *
-     * @Route("/images/newsletter/{id}", name="newsletter_uploaded_image")
-     */
-    public function serveImage(string $id): BinaryFileResponse
-    {
-        $filepath = $this->getParameter('newsletter_image_directory') . '/' . $id;
-
-        // Uploaded images aren't updated; set expiry to 1 year
-        $response = new BinaryFileResponse($filepath);
-        $response->setSharedMaxAge(31536000);
-
-        return $response;
-    }
-
 }

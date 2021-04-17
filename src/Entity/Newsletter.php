@@ -14,7 +14,7 @@ use Doctrine\Persistence\ObjectManagerAware;
  * Broadcast.
  *
  * @ORM\Table(name="broadcast")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\NewsletterRepository")
  */
 class Newsletter implements ObjectManagerAware
 {

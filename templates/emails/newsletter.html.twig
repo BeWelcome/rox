@@ -4,7 +4,7 @@
             <row class="collapse">
                 <columns small="12" valign="middle">
                     <a href="{{ url('homepage') }}"><img
-                                src="{{ email.image('@images/logo_index_top.png') }}"><</a>
+                            src="{{ email.image('@images/logo_index_top.png') }}"></a>
                 </columns>
             </row>
         </container>
@@ -13,6 +13,12 @@
     <container class="secondary">
 
         <spacer size="16"></spacer>
+
+        <row>
+            <columns small="12" valign="middle">
+                <a href="{{ url('newsletter_single', {'id': newsletter.id, 'language': language}) }}">{{ 'newsletter.images.not.shown'|trans }}</a>
+            </columns>
+        </row>
 
         <row>
             <columns>
@@ -27,9 +33,9 @@
                     <p>{{ 'newsletter.receive'|trans }}</p>
                     {% apply spaceless %}
                         <p>
-                        {% if constant('\\App\\Entity\\Newsletter::SPECIFIC_NEWSLETTER') == newsletter_type  %}
+                        {% if constant('\\App\\Entity\\Newsletter::SPECIFIC_NEWSLETTER') == newsletter.type  %}
                             <a href="{{ url('local_newsletter_unsubscribe', {'username': receiver.username, 'unsubscribeKey': unsubscribe_key }) }}">{{ 'newsletter.local.unsubscribe'|trans }}</a>
-                        {% elseif constant('\\App\\Entity\\Newsletter::REGULAR_NEWSLETTER') == newsletter_type %}
+                        {% elseif constant('\\App\\Entity\\Newsletter::REGULAR_NEWSLETTER') == newsletter.type %}
                             <a href="{{ url('regular_newsletter_unsubscribe', {'username': receiver.username, 'unsubscribeKey': unsubscribe_key }) }}">{{ 'newsletter.regular.unsubscribe'|trans }}</a>
                         {% else %}
                             <a href="{{ url('newsletter_no_unsubscribe') }}">{{ 'newsletter.no.unsubscribe'|trans }}</a>

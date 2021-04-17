@@ -100,6 +100,8 @@ class SendMassmailCommand extends Command
                             $unsubscribeKey = openssl_random_pseudo_bytes(32);
                         }
                     }
+                    $parameters['newsletter'] = $scheduled->getNewsletter();
+                    $parameters['language'] = $receiver->getPreferredLanguage()->getShortcode();
                     $parameters['unsubscribe_key'] = bin2hex($unsubscribeKey);
                     $this->mailer->sendNewsletterEmail(
                         $sender,
@@ -113,7 +115,7 @@ class SendMassmailCommand extends Command
                     ++$sent;
                 } catch (Exception $e) {
                     $io->error('Message Frozen: ' . $e->getMessage());
-//                    $scheduled->setStatus('Freeze');
+                    $scheduled->setStatus('Freeze');
                 }
                 $this->entityManager->persist($scheduled);
             }

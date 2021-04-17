@@ -81,7 +81,7 @@ class SendMassmailCommand extends Command
                 $sender = $this->determineSender($scheduled->getNewsletter()->getType());
                 $receiver = $scheduled->getReceiver();
                 try {
-                    $unsubscribeKey = null;
+                    $unsubscribeKey = '';
                     $newsletterType = $scheduled->getNewsletter()->getType();
                     $newsletterName = $scheduled->getNewsletter()->getName();
                     $parameters = [
@@ -91,7 +91,7 @@ class SendMassmailCommand extends Command
                         'wordcode' => strtolower('Broadcast_Body_' . $newsletterName),
                     ];
                     if (
-                        Newsletter::LOCATION_NEWSLETTER === $newsletterType
+                        Newsletter::SPECIFIC_NEWSLETTER === $newsletterType
                         || Newsletter::REGULAR_NEWSLETTER === $newsletterType
                     ) {
                         try {
@@ -99,8 +99,8 @@ class SendMassmailCommand extends Command
                         } catch (Exception $e) {
                             $unsubscribeKey = openssl_random_pseudo_bytes(32);
                         }
-                        $parameters['unsubscribe_key'] = bin2hex($unsubscribeKey);
                     }
+                    $parameters['unsubscribe_key'] = bin2hex($unsubscribeKey);
                     $this->mailer->sendNewsletterEmail(
                         $sender,
                         $receiver,
@@ -108,7 +108,7 @@ class SendMassmailCommand extends Command
                     );
                     $scheduled
                         ->setStatus('Sent')
-                        ->setUnsubscribeKey($unsubscribeKey)
+                        ->setUnsubscribeKey(bin2hex($unsubscribeKey))
                     ;
                     ++$sent;
                 } catch (Exception $e) {

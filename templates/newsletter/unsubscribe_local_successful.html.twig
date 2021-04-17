@@ -1,0 +1,6 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+    <h1>{{ 'newsletter'|trans }}</h1>
+    <p>{{ 'newsletter.unsubscribe.local.successful'|trans({'username': username}) }}</p>
+{% endblock %}

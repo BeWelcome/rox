@@ -2,6 +2,7 @@
 
 namespace App\Model;
 
+use App\Entity\BroadcastMessage;
 use App\Entity\Member;
 use App\Entity\Newsletter;
 use App\Entity\Preference;
@@ -11,19 +12,33 @@ class SubscriptionModel
 {
     use ManagerTrait;
 
-    public function unsubscribeNewsletter(Member $member, Newsletter $newsletter): void
+    public function unsubscribeNewsletter(string $username, string $unsubscribeKey): bool
     {
-        switch ($newsletter->getType()) {
-            case 'Specific':
+        $entityManager = $this->getManager();
+        $broadcastRepository = $entityManager->getRepository(BroadcastMessage::class);
+        $memberRepository = $entityManager->getRepository(Member::class);
+        /** @var BroadcastMessage $broadcast */
+        $broadcast = $broadcastRepository->findOneBy(['unsubscribeKey' => $unsubscribeKey]);
+        if (null === $broadcast) {
+            return false;
+        }
+
+        /** @var Member $member */
+        $member = $memberRepository->find($broadcast->getReceiver());
+        if ($username !== $member->getUsername()) {
+            return false;
+        }
+
+        switch ($broadcast->getNewsletter()->getType()) {
+            case Newsletter::SPECIFIC_NEWSLETTER:
                 $preference = Preference::LOCAL_EVENT_NOTIFICATIONS;
                 break;
-            case 'Normal':
+            case Newsletter::REGULAR_NEWSLETTER:
                 $preference = Preference::NEWSLETTERS_VIA_EMAIL;
                 break;
             default:
-                throw new \InvalidArgumentException('Wrong newsletter type');
+                return false;
         }
-        $entityManager = $this->getManager();
 
         $preferenceRepository = $entityManager->getRepository(Preference::class);
 
@@ -34,5 +49,7 @@ class SubscriptionModel
 
         $entityManager->persist($memberPreference);
         $entityManager->flush();
+
+        return true;
     }
 }

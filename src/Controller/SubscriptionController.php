@@ -5,8 +5,10 @@ namespace App\Controller;
 use App\Entity\BroadcastMessage;
 use App\Entity\Member;
 use App\Entity\Preference;
+use App\Form\NewsletterUnsubscribeType;
 use App\Model\SubscriptionModel;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -18,29 +20,31 @@ class SubscriptionController extends AbstractController
      * )
      */
     public function UnsubscribeNewsletter(
+        Request $request,
         SubscriptionModel $subscriptionModel,
         string $username,
         string $unsubscribeKey
     ): Response {
-        $broadcastRepository = $this->getDoctrine()->getRepository(BroadcastMessage::class);
-        $memberRepository =  $this->getDoctrine()->getRepository(Member::class);
-        /** @var BroadcastMessage $broadcast */
-        $broadcast = $broadcastRepository->findOneBy(['unsubscribeKey' => $unsubscribeKey]);
-        if (null === $broadcast) {
-            return $this->render('newsletter/unsubscribe_failed.html.twig');
+        $form = $this->createForm(NewsletterUnsubscribeType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $success = $subscriptionModel->unsubscribeNewsletter($username, $unsubscribeKey);
+
+            if ($success) {
+                return $this->render('newsletter/unsubscribe_successful.html.twig', [
+                    'username' => $username,
+                ]);
+            } else {
+                return $this->render('newsletter/unsubscribe_failed.html.twig', [
+                    'username' => $username,
+                ]);
+            }
         }
 
-        /** @var Member $member */
-        $member = $memberRepository->find($broadcast->getReceiver());
-        if ($username !== $member->getUsername()) {
-            return $this->render('newsletter/unsubscribe_failed.html.twig');
-        }
-
-        $subscriptionModel->unsubscribeNewsletter($member, $broadcast->getNewsletter());
-
-        return $this->render('newsletter/unsubscribe_successful.html.twig', [
+        return $this->render('newsletter/unsubscribe_confirm.html.twig', [
             'username' => $username,
-            'broadcast' => $broadcast,
+            'form' => $form->createView(),
         ]);
     }
 
@@ -50,29 +54,31 @@ class SubscriptionController extends AbstractController
      * )
      */
     public function UnsubscribeLocalEvents(
+        Request $request,
         SubscriptionModel $subscriptionModel,
         string $username,
         string $unsubscribeKey
     ): Response {
-        $broadcastRepository = $this->getDoctrine()->getRepository(BroadcastMessage::class);
-        $memberRepository =  $this->getDoctrine()->getRepository(Member::class);
-        /** @var BroadcastMessage $broadcast */
-        $broadcast = $broadcastRepository->findOneBy(['unsubscribeKey' => $unsubscribeKey]);
-        if (null === $broadcast) {
-            return $this->render('newsletter/unsubscribe_failed.html.twig');
+        $form = $this->createForm(NewsletterUnsubscribeType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $success = $subscriptionModel->unsubscribeNewsletter($username, $unsubscribeKey);
+
+            if ($success) {
+                return $this->render('newsletter/unsubscribe_local_successful.html.twig', [
+                    'username' => $username,
+                ]);
+            } else {
+                return $this->render('newsletter/unsubscribe_local_failed.html.twig', [
+                    'username' => $username,
+                ]);
+            }
         }
 
-        /** @var Member $member */
-        $member = $memberRepository->find($broadcast->getReceiver());
-        if ($username !== $member->getUsername()) {
-            return $this->render('newsletter/unsubscribe_failed.html.twig');
-        }
-
-        $subscriptionModel->unsubscribeNewsletter($member, $broadcast->getNewsletter());
-
-        return $this->render('newsletter/unsubscribe_successful.html.twig', [
+        return $this->render('newsletter/unsubscribe_local_confirm.html.twig', [
             'username' => $username,
-            'broadcast' => $broadcast,
+            'form' => $form->createView(),
         ]);
     }
 }

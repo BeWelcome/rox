@@ -195,28 +195,18 @@ class MemberPage extends PageWithActiveSkin
                 'profile.change.avatar.success' => $words->get('profile.change.avatar.success'),
                 'profile.change.avatar.fail' => $words->get('profile.change.avatar.fail'),
                 'profile.change.avatar.fail.file.to.big' => $words->get('profile.change.avatar.fail.file.to.big'),
+                'profile.picture.title' => $words->get('profile.picture.title', $member->Username),
             ],
+            'config' => [
+                'isMyself' => $this->myself,
+                'avatarUseLightbox' => $this->useLightbox,
+                'avatarUrl' => $picture_url,
+                'username' => $member->Username,
+            ]
             ]);
         ?>
 
-            <div class="avatar-box">
-                <?php if ($this->useLightbox) { ?>
-            <a class="avatar-box-inside" href="<?= $picture_url . '/original' ?>" data-toggle="lightbox" data-type="image" title="<?= $words->get('profile.picture.title', $member->Username); ?>" style="background-image: url('<?= $picture_url . '/500'?>')">
-                <!-- <img src="<?= $picture_url . '/500'?>" class="w-100 h-100" alt="picture of <?= $member->Username ?>"> -->
-            </a>
-                <?php } else { ?>}
-            <a class="avatar-box-inside" href="/members/<?=$member->Username?>" data-toggle="lightbox" data-type="image" title="<?= $words->get('profile.picture.title', $member->Username); ?>" style="background-image: url('<?= $picture_url . '/500'?>')">
-                <!-- <img src="<?= $picture_url . '/500'?>" class="w-100 h-100" alt="picture of <?= $member->Username ?>"> -->
-            </a>
-            <?php } ?>
-            </div>
-        <?php
-            if ($this->myself) {
-                // TODO : change language code (en) and wordcode
-                ?>
-        <div id="react_mount" data-globals="<?=htmlspecialchars($globalsJs)?>">
-        </div>
-                <?php } ?>
+        <div id="react_mount" data-globals="<?=htmlspecialchars($globalsJs)?>" ></div>
 
         <div class="list-group mt-2">
             <?php
@@ -273,9 +263,7 @@ class MemberPage extends PageWithActiveSkin
     protected function getLateLoadScriptfiles()
     {
         $scripts = parent::getLateLoadScriptfiles();
-        if ($this->myself) {
-            $scripts = array_merge($scripts, ['build/avatar/change']);
-        }
+        $scripts = array_merge($scripts, ['build/avatar']);
         return $scripts;
     }
 

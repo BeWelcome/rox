@@ -3,7 +3,7 @@ import {uploadTemporaryAvatar} from '../../api/avatar'
 import {getText} from '../../utils/texts';
 import {alertError, alertSuccess} from '../../utils/alerts';
 
-const AvatarChangeButton = () => {
+const AvatarChangeButton = (props) => {
     const inputFile = React.useRef(null)
 
     const onChangeFile = async (event) => {
@@ -15,6 +15,7 @@ const AvatarChangeButton = () => {
             const result = await uploadTemporaryAvatar(file);
 
             if (result?.status && result.status >= 200 && result.status < 300) {
+                props.onChange();
                 alertSuccess(getText('profile.change.avatar.success'));
             } else if (result?.status === 413) {
                 alertError(getText('profile.change.avatar.fail.file.to.big'));

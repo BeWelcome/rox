@@ -3,11 +3,20 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Member;
+use App\Entity\UploadedImage;
+use App\Model\GalleryModel;
 use App\Model\TranslationModel;
+use Hidehalo\Nanoid\Client;
+use Intervention\Image\ImageManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Validator\Constraints\Image;
 
 class NewsletterController extends AbstractController
 {
@@ -23,8 +32,79 @@ class NewsletterController extends AbstractController
             throw $this->createAccessDeniedException('You need to have Massmail right to access this.');
         }
 
-        $translationModel->refreshTranslationsCacheForLocale('en');
+        $translationModel->refreshTranslationsCacheForLocale();
 
         return $this->redirectToRoute('admin_massmail');
     }
+
+    /**
+     * Images added to a newsletter need to be publicly accessible; therefore we need a separate upload function.
+     * Uploaded images are stored in /public/images/newsletters. Some checks need to be done to ensure that's safe.
+     *
+     * @Route("/newsletter/add/image", name="newsletter_add_image")
+     */
+    public function uploadImageForNewsletter(Request $request, GalleryModel $galleryModel): JsonResponse
+    {
+        if (!$this->isGranted(Member::ROLE_ADMIN_MASSMAIL)) {
+            throw $this->createAccessDeniedException('You need to have Massmail right to access this.');
+        }
+
+        $response = new JsonResponse();
+
+        $image = $request->files->get('upload');
+        $errors = $galleryModel->checkUploadedImage($image);
+        if (0 < \count($errors)) {
+            $response->setData([
+                'uploaded' => false,
+                'error' => [
+                    'message' => $errors->get(0)->getMessage(),
+                ],
+            ]);
+
+            return $response;
+        }
+
+        $uploadDirectory = $this->getParameter('newsletter_image_directory');
+        $nanoClient = new Client();
+        $nanoId = $nanoClient->generateId(16, Client::MODE_DYNAMIC);
+
+        $filename = $nanoId;
+
+        // moves the file to the directory where group images are stored
+        /** @var UploadedFile */
+        $image = $image->move(
+            $uploadDirectory,
+            $filename
+        );
+
+        $response->setData([
+            'uploaded' => true,
+            'url' => $this->generateUrl(
+                'newsletter_uploaded_image',
+                [
+                    'id' => $nanoId,
+                ],
+                UrlGeneratorInterface::ABSOLUTE_URL
+            ),
+        ]);
+
+        return $response;
+    }
+
+    /**
+     * This is used to define the route but never reached as the .htaccess loads files it finds directly.
+     *
+     * @Route("/images/newsletter/{id}", name="newsletter_uploaded_image")
+     */
+    public function serveImage(string $id): BinaryFileResponse
+    {
+        $filepath = $this->getParameter('newsletter_image_directory') . '/' . $id;
+
+        // Uploaded images aren't updated; set expiry to 1 year
+        $response = new BinaryFileResponse($filepath);
+        $response->setSharedMaxAge(31536000);
+
+        return $response;
+    }
+
 }

@@ -6,6 +6,7 @@ use App\Doctrine\DomainType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -44,7 +45,7 @@ class EditTranslationFormType extends AbstractType
             $form = $event->getForm();
             $translatedTextHelp = null;
             $form
-                ->add('englishText', TextareaType::class, [
+                ->add('englishText', HiddenType::class, [
                     'disabled' => false,
                     'attr' => [
                         'readonly' => true,

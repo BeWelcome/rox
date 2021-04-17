@@ -14,6 +14,7 @@ parameters:
     group_directory: "%kernel.project_dir%/%env(group_directory)%"
     gallery_directory: "%kernel.project_dir%/%env(gallery_directory)%"
     upload_directory: "%kernel.project_dir%/%env(upload_directory)%"
+    newsletter_image_directory: "%kernel.project_dir%/%env(newsletter_image_directory)%"
     massmail_batch_size: "%env(massmail_batch_size)%"
     forum_notification_batch_size: "%env(forum_notification_batch_size)%"
     locales: "%env(LOCALES)%"

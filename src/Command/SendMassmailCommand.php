@@ -82,14 +82,17 @@ class SendMassmailCommand extends Command
                 $receiver = $scheduled->getReceiver();
                 try {
                     $unsubscribeKey = null;
+                    $newsletterType = $scheduled->getNewsletter()->getType();
+                    $newsletterName = $scheduled->getNewsletter()->getName();
                     $parameters = [
                         'receiver' => $receiver,
-                        'subject' => strtolower('Broadcast_Title_' . $scheduled->getNewsletter()->getName()),
-                        'wordcode' => strtolower('Broadcast_Body_' . $scheduled->getNewsletter()->getName()),
+                        'newsletter_type' => $newsletterType,
+                        'subject' => strtolower('Broadcast_Title_' . $newsletterName),
+                        'wordcode' => strtolower('Broadcast_Body_' . $newsletterName),
                     ];
                     if (
-                        Newsletter::LOCATION_NEWSLETTER === $scheduled->getNewsletter()->getType()
-                        || Newsletter::REGULAR_NEWSLETTER === $scheduled->getNewsletter()->getType()
+                        Newsletter::LOCATION_NEWSLETTER === $newsletterType
+                        || Newsletter::REGULAR_NEWSLETTER === $newsletterType
                     ) {
                         try {
                             $unsubscribeKey = random_bytes(32);

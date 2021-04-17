@@ -24,6 +24,12 @@ function SpecialCharactersTextExtended( editor ) {
     ] );
 }
 
+const uploadPath = document.getElementById('upload_path');
+let uploadUrl = "/gallery/upload/image";
+if (null !== uploadPath) {
+    uploadUrl = uploadPath.value;
+}
+
 var allEditors = document.querySelectorAll('.editor');
 for (var i = 0; i < allEditors.length; ++i) {
     ClassicEditor.create(allEditors[i], {
@@ -50,7 +56,7 @@ for (var i = 0; i < allEditors.length; ++i) {
             CloudServicesPlugin
         ],
         ckfinder: {
-            uploadUrl:"/gallery/upload/image"
+            uploadUrl: uploadUrl
         },
         // So is the rest of the default configuration.
         toolbar: [
@@ -69,11 +75,6 @@ for (var i = 0; i < allEditors.length; ++i) {
             'undo',
             'redo'
         ],
-        image: {
-            toolbar: [
-                'imageTextAlternative'
-            ]
-        },
         language: document.documentElement.lang
     } )
         .then( editor => {

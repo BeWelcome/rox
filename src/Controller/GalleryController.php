@@ -10,6 +10,7 @@ use App\Form\CustomDataClass\GalleryImageEditRequest;
 use App\Form\GalleryEditImageFormType;
 use App\Form\GalleryUploadForm;
 use App\Logger\Logger;
+use App\Model\GalleryModel;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
 use App\Utilities\UniqueFilenameTrait;
@@ -26,6 +27,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Validator\Constraints\Image;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+
 use function count;
 
 class GalleryController extends AbstractController
@@ -222,34 +224,25 @@ class GalleryController extends AbstractController
      *
      * @SuppressWarnings(PHPMD.StaticAccess)
      */
-    public function uploadImageFromCKEditor5(Request $request, ValidatorInterface $validator): JsonResponse
+    public function uploadImageFromCKEditor5(Request $request, GalleryModel $galleryModel): JsonResponse
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_REMEMBERED');
 
         $response = new JsonResponse();
 
-        // Create Image constraint to check if uploaded file is an image and not something else
-
-        $constraint = new Image([
-            'maxSize' => UploadedFile::getMaxFilesize(),
-            'mimeTypes' => ['image/jpeg', 'image/png', 'image/gif'],
-            'mimeTypesMessage' => 'upload.error.not_supported',
-        ]);
-
         $image = $request->files->get('upload');
-
-        $violations = $validator->validate($image, $constraint);
-
-        if (0 < count($violations)) {
+        $errors = $galleryModel->checkUploadedImage($image);
+        if (0 < count($errors)) {
             $response->setData([
                 'uploaded' => false,
                 'error' => [
-                    'message' => $violations->get(0)->getMessage(),
+                    'message' => $errors->get(0)->getMessage(),
                 ],
             ]);
 
             return $response;
         }
+
         // Check if an image with the same content already exists
         $hash = hash_file('sha256', $image->getPathname());
 

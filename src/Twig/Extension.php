@@ -3,8 +3,13 @@
 namespace App\Twig;
 
 use Carbon\Carbon;
+use HTMLPurifier;
+use HTMLPurifier_Config;
+use HTMLPurifier_HTML5Config;
+use HTMLPurifier_TagTransform_Simple;
 use HtmlTruncator\InvalidHtmlException;
 use HtmlTruncator\Truncator;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Translation\DataCollector\TranslationDataCollector;
 use Symfony\Component\Translation\DataCollectorTranslator;
@@ -17,30 +22,17 @@ use Twig\TwigFunction;
 
 class Extension extends AbstractExtension implements GlobalsInterface
 {
-    /**
-     * @var SessionInterface
-     */
-    protected $session;
+    protected SessionInterface $session;
 
-    /**
-     * @var DataCollectorTranslator
-     */
-    protected $translator;
+    protected DataCollectorTranslator $translator;
 
-    /**
-     * @var array list of all enabled locales
-     */
+    private string $publicDirectory;
+
+    private EntrypointLookupInterface $entrypointLookup;
+    private LoggerInterface $logger;
+
+    /** @var false|string[] */
     private $locales;
-
-    /**
-     * @var string
-     */
-    private $publicDirectory;
-
-    /**
-     * @var EntrypointLookupInterface
-     */
-    private $entrypointLookup;
 
     /**
      * Extension constructor.
@@ -53,7 +45,8 @@ class Extension extends AbstractExtension implements GlobalsInterface
         SessionInterface $session,
         TranslatorInterface $translator,
         EntrypointLookupInterface $entrypointLookup,
-        $locales,
+        LoggerInterface $logger,
+        string $locales,
         $publicDirectory
     ) {
         $this->session = $session;
@@ -61,14 +54,10 @@ class Extension extends AbstractExtension implements GlobalsInterface
         $this->locales = explode(',', $locales);
         $this->entrypointLookup = $entrypointLookup;
         $this->publicDirectory = $publicDirectory;
+        $this->logger = $logger;
     }
 
-    /**
-     * Returns a list of filters.
-     *
-     * @return array
-     */
-    public function getFunctions()
+    public function getFunctions(): array
     {
         return [
             new TwigFunction('ago', [$this, 'ago']),
@@ -127,12 +116,12 @@ class Extension extends AbstractExtension implements GlobalsInterface
         return $languageName;
     }
 
-    public function ago(Carbon $carbon)
+    public function ago(Carbon $carbon): string
     {
         return $carbon->diffForHumans();
     }
 
-    public function getFilters()
+    public function getFilters(): array
     {
         return [
             new TwigFilter(
@@ -149,6 +138,13 @@ class Extension extends AbstractExtension implements GlobalsInterface
                     'is_safe' => ['html'],
                 ]
             ),
+            new TwigFilter(
+                'prepare_newsletter',
+                [$this, 'prepareNewsletter'],
+                [
+                    'is_safe' => ['html']
+                ]
+            ),
         ];
     }
 
@@ -160,10 +156,8 @@ class Extension extends AbstractExtension implements GlobalsInterface
      * @param string $ellipsis the used ellipsis defaults to …
      *
      * @throws InvalidHtmlException
-     *
-     * @return string truncated string
      */
-    public function truncate(string $text, $length = 100, $ellipsis = '&#8230;')
+    public function truncate(string $text, $length = 100, $ellipsis = '&#8230;'): string
     {
         $truncator = new Truncator();
         $truncated = $truncator->truncate($text, $length, [
@@ -178,10 +172,8 @@ class Extension extends AbstractExtension implements GlobalsInterface
      * Removes domain name from all bewelcome links (www|beta|api) so that links work on all sub domains.
      *
      * @param string $text string to update
-     *
-     * @return string updated string
      */
-    public function urlUpdate(string $text)
+    public function urlUpdate(string $text): string
     {
         $text = preg_replace(
             '/src="http[s]?:\/\/[^\/]*?bewelcome\.org\//i',
@@ -196,7 +188,7 @@ class Extension extends AbstractExtension implements GlobalsInterface
         );
     }
 
-    public function dumpIt($variable)
+    public function dumpIt($variable): string
     {
         return highlight_string(var_export($variable, true), true);
     }
@@ -214,7 +206,7 @@ class Extension extends AbstractExtension implements GlobalsInterface
         return $source;
     }
 
-    public function getTranslations()
+    public function getTranslations(): array
     {
         $collector = new TranslationDataCollector($this->translator);
         $collector->lateCollect();
@@ -224,12 +216,50 @@ class Extension extends AbstractExtension implements GlobalsInterface
         ];
     }
 
+    public function prepareNewsletter(string $text): string
+    {
+        $config = HTMLPurifier_HTML5Config::createDefault();
+        $config->set(
+            'HTML.Allowed',
+            'p,b,a[href],br,i,u,strong,em,ol,ul,li,dl,dt,dd,img[src|alt|width|height],blockquote,del,'
+            . 'figure[class],figcaption'
+        );
+        $config->set('HTML.TargetBlank', true);
+        $config->set('AutoFormat.RemoveEmpty', true);
+        $config->set('Core.Encoding', 'UTF-8');
+        $config->set('AutoFormat.AutoParagraph', true);
+        $config->set('AutoFormat.Linkify', true);
+
+        $purifier = new HTMLPurifier($config);
+        $text = $purifier->purify($text);
+
+        // now turn any figure/figcaption entries into <img>
+        $result = preg_replace(
+            '%<figure.*?><img.*?src="(.*?)".*?><figcaption>(.*?)</figcaption></figure>%',
+            '<img width="480" height="320" src="\1" alt="\2">',
+            $text
+        );
+
+        // Use the string 'embedded image' in case of no figcaption
+        $embeddedImage = $this->translator->trans('newsletter.embedded.image');
+        $result = preg_replace(
+            '%<figure.*?><img.*?src="(.*?)".*?>%',
+            '<img width="480" height="320" src="\1" alt="' . htmlentities($embeddedImage) . '">',
+            $result
+        );
+
+        $this->logger->info($text);
+        $this->logger->info($result);
+
+        return $result;
+    }
+
     /**
      * Name of this extension.
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return 'LayoutKit';
     }

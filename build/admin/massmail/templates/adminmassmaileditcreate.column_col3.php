@@ -34,7 +34,7 @@
 <form method="post">
 <?php echo $callback_tag; ?>
     <input type="hidden" name="Id" value="<?php echo $id; ?>">
-
+    <input type="hidden" id="upload_path" value="/newsletter/add/image">
     <div class="form-group">
         <small id="headerInfo" class="form-text text-muted">Please write in <strong>English</strong></small>
 

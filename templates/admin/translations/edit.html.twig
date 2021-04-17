@@ -7,11 +7,20 @@
 {% block content %}
     <h1>{{ 'translations.headline' | trans }}</h1>
     {{ form_start(form) }}
+    <input type="hidden" id="upload_path" value="{{ url('newsletter_add_image') }}">
     {{ form_row(form.wordCode) }}
     {{ form_row(form.locale) }}
     {{ form_row(form.domain) }}
     {{ form_row(form.description) }}
     {{ form_row(form.englishText) }}
+
+    <div class="form-group">
+        <label>{{ form.englishText.vars.label|trans }}</label>
+        <div style="min-height: 200px; max-height:300px; overflow-y: scroll; background-color: white;">
+            {{ form.englishText.vars.value|prepare_newsletter }}
+        </div>
+    </div>
+
     {{ form_row(form.translatedText, {'attr':{'autofocus':true}}) }}
     {% if form.isMajorUpdate is defined %}
         {{ form_row(form.isMajorUpdate) }}

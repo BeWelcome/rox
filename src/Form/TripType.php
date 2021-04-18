@@ -43,7 +43,7 @@ class TripType extends AbstractType
                 ],
             ])
             ->add('countoftravellers', ChoiceType::class, [
-                 'choices' => [
+                'choices' => [
                     '' => 0,
                     '1' => 1,
                     '2' => 2,
@@ -51,8 +51,20 @@ class TripType extends AbstractType
                     '4' => 4,
                     '5' => 5,
                     '> 5' => 6,
-                 ],
-                 'label' => 'trip.travellers',
+                ],
+                'label' => 'trip.travellers',
+            ])
+            ->add('invitationradius', ChoiceType::class, [
+                'choices' => [
+                    'exact' => 0,
+                    '5km' => 5,
+                    '10km' => 10,
+                    '20km' => 20,
+                    '50km' => 50,
+                    '100km' => 100,
+                    '200km' => 200,
+                ],
+                'label' => 'trip.invitation.radius',
             ])
             ->add('additionalinfo', ChoiceType::class, [
                 'choices' => [

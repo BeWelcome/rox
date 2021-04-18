@@ -155,6 +155,8 @@ class TripController extends AbstractController
 
                 return $this->redirectToRoute('trip_show', ['id' => $trip->getId()]);
             }
+
+            $this->handleErrors($editForm, $errors);
         }
 
         return $this->render('trip/create_edit.html.twig', [

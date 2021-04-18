@@ -70,6 +70,12 @@
             <div class="md:u-ml-24">
                 {{ form_widget(form.options[1], {'attr': attributes }) }}
             </div>
+            <div class="md:u-ml-24">
+                {{ form_widget(form.options[2], {'attr': attributes }) }}
+            </div>
+        </div>
+        <div class="u-w-full md:u-width-auto">
+            <div class="u-absolute">{{ form_errors(form.options) }}</div>
         </div>
         {{ form_widget(form.location.geoname_id) }}{{ form_widget(form.location.latitude) }}{{ form_widget(form.location.longitude) }}
         {{ form_widget(form.arrival) }}{{ form_widget(form.departure) }}
@@ -108,10 +114,17 @@
                             <i class="fa fa-angle-down u-text-white u-ml-__16 u-absolute u-pin-y"></i>
                         </div>
                     </div>
-                    <div class="u-flex u-flex-col md:u-flex-row u-items-start md:u-items-center u-mb-16 md:u-mb-0">
+                    <div class="u-flex u-flex-col md:u-flex-row u-items-start md:u-items-center  md:u-mr-24 u-mb-16 md:u-mb-0">
                         {{ form_label(form.additionalinfo, null, {'label_attr': { 'class': 'o-label o-label--white u-mt-8 u-mr-8 u-flex u-items-center u-whitespace-nowrap'}}) }}
                         <div class="u-relative u-w-full">
                             {{ form_widget(form.additionalinfo, {'attr': { 'class': 'o-input--select o-input--select-white o-input--no-border-on-hover'}}) }}
+                            <i class="fa fa-angle-down u-text-white u-ml-__16 u-absolute u-pin-y"></i>
+                        </div>
+                    </div>
+                    <div class="u-flex u-flex-col md:u-flex-row u-items-start md:u-items-center u-mb-16 md:u-mb-0">
+                        {{ form_label(form.invitationradius, null, {'label_attr': { 'class': 'o-label o-label--white u-mt-8 u-mr-8 u-flex u-items-center u-whitespace-nowrap'}}) }}
+                        <div class="u-relative u-w-full">
+                            {{ form_widget(form.invitationradius, {'attr': { 'class': 'o-input--select o-input--select-white o-input--no-border-on-hover o-input--select-short u-text-center'}}) }}
                             <i class="fa fa-angle-down u-text-white u-ml-__16 u-absolute u-pin-y"></i>
                         </div>
                     </div>
@@ -133,6 +146,7 @@
                        value="{{ button_text|trans|capitalize }}">{{ button_text|trans|capitalize }}</button>
             </div>
         </div>
+        {{ form_errors(form) }}
         {{ form_end(form) }}
     </section>
 {% endblock content %}

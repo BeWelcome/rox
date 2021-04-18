@@ -35,7 +35,7 @@ class SubtripRepository extends EntityRepository
             ->getQuery();
     }
 
-    public function getLegsInAreaMaxGuests(Member $member, int $duration = 3, int $distance = 25): array
+    public function getLegsInAreaMaxGuests(Member $member, int $duration = 3, int $distance = 20): array
     {
         $queryBuilder = $this->getLegsInAreaQueryBuilder($member, $duration, $distance);
         $queryBuilder
@@ -51,11 +51,11 @@ class SubtripRepository extends EntityRepository
             ;
     }
 
-    public function getLegsInAreaQuery(Member $member, int $radius): Query
+    public function getLegsInAreaQuery(Member $member, int $duration = 3, int $radius = 20): Query
     {
         return
             $this
-                ->getLegsInAreaQueryBuilder($member, 3, $radius)
+                ->getLegsInAreaQueryBuilder($member, $duration, $radius)
                 ->getQuery();
     }
 
@@ -84,7 +84,7 @@ class SubtripRepository extends EntityRepository
                     $qb->expr()->eq('s.invitedBy', $member->getId())
                 )
             )
-            ->andWhere('s.options <> \'\'')
+            ->andWhere($qb->expr()->notIn('s.options', [SubtripOptionsType::PRIVATE]))
             ->andWhere('s.arrival >= :now')
             ->andWhere('s.arrival <= :threeMonths')
             ->andWhere('l.latitude <= :lat_e')

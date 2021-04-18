@@ -49,6 +49,13 @@ class Trip
     private $countOfTravellers = 1;
 
     /**
+     * @var int
+     *
+     * @ORM\Column(name="invitation_radius", type="integer")
+     */
+    private $invitationRadius = 20;
+
+    /**
      * @var Carbon
      *
      * @ORM\Column(name="created", type="datetime")
@@ -246,4 +253,17 @@ class Trip
     {
         $this->updated = new DateTime('now');
     }
+
+    public function getInvitationRadius(): int
+    {
+        return $this->invitationRadius;
+    }
+
+    public function setInvitationRadius(int $invitationRadius): Trip
+    {
+        $this->invitationRadius = $invitationRadius;
+
+        return $this;
+    }
+
 }

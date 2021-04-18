@@ -45,6 +45,7 @@ class SubtripType extends AbstractType
             ->add('departure', HiddenType::class)
             ->add('options', ChoiceType::class, [
                 'choices' => [
+                    'trip.option.private' => SubtripOptionsType::PRIVATE,
                     'trip.option.looking.for.host' => SubtripOptionsType::LOOKING_FOR_HOST,
                     'trip.option.meet.locals' => SubtripOptionsType::MEET_LOCALS,
                 ],

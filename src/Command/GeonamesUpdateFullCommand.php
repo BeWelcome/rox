@@ -17,19 +17,16 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use ZipArchive;
 
+/**
+ * @SuppressWarnings(PHPMD)
+ */
 class GeonamesUpdateFullCommand extends Command
 {
     private HttpClientInterface $httpClient;
     private Connection $connection;
     private ObjectRepository $repository;
     private EntityManagerInterface $entityManager;
-    /**
-     * @var OutputInterface
-     */
     private OutputInterface $output;
-    /**
-     * @var InputInterface
-     */
     private InputInterface $input;
 
     public function __construct(HttpClientInterface $httpClient, EntityManagerInterface $entityManager)
@@ -283,7 +280,7 @@ class GeonamesUpdateFullCommand extends Command
         }
 
         $fileHandler = fopen($filename, 'w');
-        foreach ($this->httpClient->stream($response) as $chunk) {
+        foreach($this->httpClient->stream($response) as $chunk) {
             fwrite($fileHandler, $chunk->getContent());
         }
         fclose($fileHandler);
@@ -317,8 +314,7 @@ class GeonamesUpdateFullCommand extends Command
         // Write rows into a file and call external command to import
         // Otherwise we hit memory limites
         $handle = fopen('geonames_rows.csv', 'w');
-        foreach($rows as $row)
-        {
+        foreach($rows as $row) {
             fputcsv($handle, $row);
         }
         fclose($handle);

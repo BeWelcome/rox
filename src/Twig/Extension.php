@@ -216,6 +216,9 @@ class Extension extends AbstractExtension implements GlobalsInterface
         ];
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.StaticAccess)
+     */
     public function prepareNewsletter(string $text): string
     {
         $config = HTMLPurifier_HTML5Config::createDefault();

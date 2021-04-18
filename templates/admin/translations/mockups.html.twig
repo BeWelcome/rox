@@ -6,22 +6,16 @@
 
 {% block content %}
     <h1>{{ 'translations.headline.mockups' | trans }}</h1>
-    <h2>{{ 'pages'|trans|capitalize }}</h2>
-    <div class="row">
-        {% for name, page in mockups.pages %}
-            <div class="col-4 mb-2"><a href="{{url('translation_mockup_page', {'name': name})}}" class="btn btn-primary">{{ name }}</a></div>
+    {% for section, templates in mockups %}
+        <p><strong>{{ section|capitalize }}</strong></p>
+        {% for name, mockup in templates %}
+            {% set route = 'translation_mockup_' ~ mockup.type %}
+            {% set icon %}
+                {% if mockup.type == 'email'%}<i class="far fa-envelope"></i>{% endif %}
+                {% if mockup.type == 'page'%}<i class="fas fa-globe"></i>{% endif %}
+                {% if mockup.type == 'template'%}<i class="far fa-file"></i>{% endif %}
+            {% endset %}
+            <a href="{{url(route, {'name': name})}}" class="btn btn-primary mr-2 mb-2">{{ name }} {{ icon }}</a>
         {% endfor %}
-    </div>
-    <h2>{{ 'emails'|trans|capitalize }}</h2>
-    <div class="row">
-        {% for name, email in mockups.emails %}
-            <div class="col-4 mb-2"><a href="{{url('translation_mockup_email', {'name': name})}}" class="btn btn-primary">{{ name }}</a></div>
-        {% endfor %}
-    </div>
-    <h2>{{ 'templates'|trans|capitalize }}</h2>
-    <div class="row">
-        {% for name, template in mockups.templates %}
-            <div class="col-4 mb-2"><a href="{{url('translation_mockup_template', {'name': name})}}" class="btn btn-primary">{{ name }}</a></div>
-        {% endfor %}
-    </div>
+    {% endfor %}
 {% endblock content %}

@@ -71,7 +71,7 @@ class NewsletterController extends AbstractController
     public function showSingleNewsletter(Newsletter $newsletter, string $language)
     {
         $member = $this->getUser();
-        $username = (null === $member) ? 'anonymous': $member->getUsername();
+        $username = (null === $member) ? 'anonymous' : $member->getUsername();
 
         // \todo check if newsletter was translated into the given language
         return $this->render('newsletter/show.html.twig', [

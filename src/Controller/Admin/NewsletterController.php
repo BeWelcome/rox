@@ -28,7 +28,7 @@ class NewsletterController extends AbstractController
      *
      * @Route("/admin/massmail/create/finish", name="admin_massmail_finish")
      */
-    public function updateTranslations(Request $request, TranslationModel $translationModel): RedirectResponse
+    public function updateTranslations(TranslationModel $translationModel): RedirectResponse
     {
         if (!$this->isGranted(Member::ROLE_ADMIN_MASSMAIL)) {
             throw $this->createAccessDeniedException('You need to have Massmail right to access this.');

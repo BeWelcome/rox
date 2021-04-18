@@ -19,7 +19,7 @@ class SubscriptionController extends AbstractController
      *     requirements={"unsubscribeKey"="[a-z0-9]{64}"}
      * )
      */
-    public function UnsubscribeNewsletter(
+    public function unsubscribeNewsletter(
         Request $request,
         SubscriptionModel $subscriptionModel,
         string $username,
@@ -53,7 +53,7 @@ class SubscriptionController extends AbstractController
      *     requirements={"unsubscribeKey"="[a-z0-9]{64}"}
      * )
      */
-    public function UnsubscribeLocalEvents(
+    public function unsubscribeLocalEvents(
         Request $request,
         SubscriptionModel $subscriptionModel,
         string $username,

@@ -95,6 +95,7 @@ if ($('#map').length) {
         let location = allData[i][0]
         let latitude = allData[i][1]
         let longitude = allData[i][2]
+
         locationsArray.push([latitude, longitude]);
 
         let countryName = allData[i][3]
@@ -108,7 +109,7 @@ if ($('#map').length) {
             color: 'rgb(112,0,243)',
             fillColor: 'rgba(112, 0, 243, 0.1)',
             fillOpacity: 1,
-            radius: 25000
+            radius: trip.radius
         }).addTo(map);
         circlesArray.push(circle)
     }

@@ -19,7 +19,6 @@ class PageWithHTML extends AbstractBasePage
 
     private $_stylesheets = array(
         'build/bewelcome.css',
-        'https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css',
     );
 
     private $_rendered_scripts = array(

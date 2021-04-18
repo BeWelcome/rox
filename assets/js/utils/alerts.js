@@ -16,6 +16,6 @@ const showAlert = (msg, background) => {
         text: msg,
         close: true,
         position: "center",
-        backgroundColor: background,
+        backgroundColor: background
       }).showToast();
 }

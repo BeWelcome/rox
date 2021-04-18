@@ -138,7 +138,7 @@ class ConversationController extends AbstractController
 
         $messageRequest = new MessageIndexRequest();
         $form = $this->createForm(MessageIndexFormType::class, $messageRequest, [
-            'folder' => 'normal',
+            'folder' => $active,
             'ids' => $messageIds,
         ]);
         $form->handleRequest($request);

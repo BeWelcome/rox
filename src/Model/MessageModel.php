@@ -602,7 +602,7 @@ class MessageModel
         $subject,
         string $template,
         bool $requestChanged,
-        Subtrip $leg
+        ?Subtrip $leg
     ) : bool {
         // Send mail notification
         $this->mailer->sendMessageNotificationEmail($sender, $receiver, $template, [

@@ -3,11 +3,6 @@
 namespace App\Pagerfanta;
 
 use App\Doctrine\InFolderType;
-use App\Entity\Member;
-use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\DBALException;
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Query\ResultSetMapping;
 use Pagerfanta\Adapter\AdapterInterface;
 
 class SpamAdapter extends AbstractConversationsAdapter implements AdapterInterface

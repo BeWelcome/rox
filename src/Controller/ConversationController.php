@@ -153,7 +153,7 @@ class ConversationController extends AbstractController
             }
         }
 
-        return $this->render('message/conversations_b.html.twig', [
+        return $this->render('conversations/conversations.html.twig', [
             'form' => $form->createView(),
             'conversations' => $conversations,
             'showUnreadOnly' => $unreadOnly,

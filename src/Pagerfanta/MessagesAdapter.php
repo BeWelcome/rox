@@ -30,9 +30,9 @@ class MessagesAdapter extends AbstractConversationsAdapter implements AdapterInt
                     AND `m`.`id` IN (
                             SELECT max(`m`.`id`)
                             FROM `messages` m
+                            WHERE ' . $this->getNotDeletedOrPurgedCondition() . '
                             GROUP BY `m`.`subject_id`
                         )
-                    AND ' . $this->getNotDeletedOrPurgedCondition() . '
                 UNION
                     SELECT `m`.`id`
                     FROM `messages` m

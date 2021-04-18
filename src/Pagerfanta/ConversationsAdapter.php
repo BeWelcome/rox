@@ -25,9 +25,9 @@ class ConversationsAdapter extends AbstractConversationsAdapter implements Adapt
                     AND `m`.`id` IN (
                             SELECT max(`m`.`id`)
                             FROM `messages` m
+                            WHERE ' . $this->getNotDeletedOrPurgedCondition() . '
                             GROUP BY `m`.`subject_id`
                         )
-                    AND ' . $this->getNotDeletedOrPurgedCondition() . '
                 UNION
                     SELECT `m`.`id`
                     FROM `messages` m
@@ -60,9 +60,9 @@ class ConversationsAdapter extends AbstractConversationsAdapter implements Adapt
                     AND `m`.`id` IN (
                             SELECT max(`m`.`id`)
                             FROM `messages` m
+                            WHERE ' . $this->getNotDeletedOrPurgedCondition() . '
                             GROUP BY `m`.`subject_id`
                         )
-                    AND ' . $this->getNotDeletedOrPurgedCondition() . '
                 UNION
                     SELECT %select%
                     FROM `messages` m

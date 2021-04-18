@@ -18,30 +18,32 @@
     <h2>{{ submenu.active | trans }}</h2>
     <div class="row no-gutters">
         {% if submenu.active != 'spam' and submenu.active != 'deleted' %}
-        <div class="col-12 form-inline">
-            <div class="d-flex mr-1">
-                <label for="initiator" class="mr-1">
-                    {{ 'started.by.me' | trans }}
-                </label>
-                <input id="initiator" type="range" class="o-slider js-switch-option" min="1" max="3" value="{{ initiator }}">
-                <label for="initiator" class="ml-1">
-                    {{ 'started.by.someone.else' | trans }}
-                </label>
-            <div class="custom-control custom-switch mr-1">
-                <input type="checkbox" id="show_unread_only"
-                       name="search[show_options]"
-                       class="show_options custom-control-input js-switch-option" value="1"
-                       {% if showUnreadOnly %}checked="checked"{% endif %}>
-                <label class="switch-custom custom-control-label" for="show_unread_only">
-                    {{ 'unread.only' | trans }}
-                </label>
+            <div class="col-12 form-inline">
+                <div class="d-flex mr-1">
+                    <label for="initiator" class="mr-1">
+                        {{ 'started.by.me' | trans }}
+                    </label>
+                    <input id="initiator" type="range" class="o-slider js-switch-option" min="1" max="3" value="{{ initiator }}">
+                    <label for="initiator" class="ml-1">
+                        {{ 'started.by.someone.else' | trans }}
+                    </label>
+                </div>
+                <div class="custom-control custom-switch mr-1">
+                    <input type="checkbox" id="show_unread_only"
+                           name="search[show_options]"
+                           class="show_options custom-control-input js-switch-option" value="1"
+                           {% if showUnreadOnly %}checked="checked"{% endif %}>
+                    <label class="switch-custom custom-control-label" for="show_unread_only">
+                        {{ 'unread.only' | trans }}
+                    </label>
+                </div>
             </div>
-                {% if conversations.haveToPaginate %}
-                    {{ pagerfanta( conversations, 'rounded_pagination') }}
-                    <div class="clearfix mb-1"></div>
-                {% endif %}
+            <div class="col-12">
+            {% if conversations.haveToPaginate %}
+                {{ pagerfanta( conversations, 'rounded_pagination') }}
+                <div class="clearfix mb-1"></div>
+            {% endif %}
             </div>
-        </div>
         {% endif %}
     </div>
     {% if conversations.nbResults == 0 %}
@@ -57,7 +59,7 @@
             <tr>
                 <th class="select align-middle">
                     <input type="checkbox" id="checkAll">
-                    <label for="checkAll" class="sr-only" aria-role="label">{{ 'conversations.check.all'|trans }}</label>
+                    <label for="checkAll" class="sr-only">{{ 'conversations.check.all'|trans }}</label>
                 </th>
                 <th class="align-middle">{{ 'message.first.by' | trans }}</th>
                 <th class="align-middle">{{ 'messagestext' | trans }}</th>
@@ -67,7 +69,11 @@
             {% for message in conversations.currentPageResults %}
                 {% set otherMember = message.initiator == message.sender ? message.receiver : message.sender %}
                 {% set unread = (message.firstRead is null) or (message.firstRead == '0000-00-00 00:00.00') %}
-                {% set show_message_route = 'message_show' %}
+                {% if submenu.active == 'deleted' %}
+                    {% set show_message_route = 'message_show_deleted' %}
+                {% else %}
+                    {% set show_message_route = 'message_show' %}
+                {% endif %}
                 <tr>
                     <td class="select align-middle" id="selectcolumn">
                          {{ form_widget(form.messages[loop.index0], {'attr': {'class': 'checkable'}}) }}

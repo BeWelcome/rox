@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Newsletter;
 use Doctrine\ORM\EntityRepository;
 
 class NewsletterRepository extends EntityRepository
@@ -10,6 +11,8 @@ class NewsletterRepository extends EntityRepository
     {
         $qb = $this->createQueryBuilder('n')
             ->where("n.status = 'Triggered'")
+            ->andWhere('n.type = :type')
+            ->setParameter(':type', Newsletter::REGULAR_NEWSLETTER)
             ->orderBy('n.created', 'DESC')
         ;
 

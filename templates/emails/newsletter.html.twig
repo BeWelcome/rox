@@ -38,7 +38,7 @@
                         {% elseif constant('\\App\\Entity\\Newsletter::REGULAR_NEWSLETTER') == newsletter.type %}
                             <a href="{{ url('regular_newsletter_unsubscribe', {'username': receiver.username, 'unsubscribeKey': unsubscribe_key }) }}">{{ 'newsletter.regular.unsubscribe'|trans }}</a>
                         {% else %}
-                            {{ 'newsletter.no.unsubscribe'|trans }}</a>
+                            {{ 'newsletter.no.unsubscribe'|trans }}
                         {% endif %}
                         </p>
                     {% endapply %}

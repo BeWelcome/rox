@@ -34,6 +34,7 @@ config/*.local.yml
 phploc.xml
 /tools/testenv/images/lfw/*.jpg
 /public/main.js
+/public/images/newsletters/
 /public/main.js.map
 /public/service-worker.js
 /public/service-worker.js.map

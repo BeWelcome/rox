@@ -9,6 +9,7 @@ use App\Entity\Group;
 use App\Entity\HostingRequest;
 use App\Entity\Member;
 use App\Entity\Message;
+use App\Entity\Newsletter;
 use App\Form\CustomDataClass\SearchFormRequest;
 use App\Form\NewsletterUnsubscribeType;
 use App\Form\ResetPasswordFormType;
@@ -109,6 +110,26 @@ class MockupController extends TranslationController
                 'description' => 'Mail send to the user when a password reset request was done',
             ],
         ],
+        'Newsletter' => [
+            'Newsletter (regular)' => [
+                'type' => 'email',
+                'template' => 'emails/newsletter.html.twig',
+                'description' => 'Email send to users who signed up for newsletters',
+                'setup' => 'getNewsletterParameters',
+            ],
+            'Newsletter (specific)' => [
+                'type' => 'email',
+                'template' => 'emails/newsletter.html.twig',
+                'description' => 'Email send to users who signuped for local event notifications',
+                'setup' => 'getNewsletterParameters',
+            ],
+            'Newsletter (terms of use)' => [
+                'type' => 'email',
+                'template' => 'emails/newsletter.html.twig',
+                'description' => 'Email send to users who signuped for local event notifications',
+                'setup' => 'getNewsletterParameters',
+            ],
+        ],
         'Newsletter unsubscribe' => [
             'Unsubscribe Newsletter' => [
                 'type' => 'page',
@@ -153,14 +174,6 @@ class MockupController extends TranslationController
                 'template' => 'newsletter/unsubscribe_local_failed.html.twig',
                 'description' => 'The page that is shown when a member unsubscribed with issues from a local event newsletter',
                 'setup' => 'getUnsubscribeParameters',
-            ],
-        ],
-        'Newsletter' => [
-            'Unsubscribe Not Possible' => [
-                'type' => 'page',
-                'url' => '/newsletter/nounsubscribe',
-                'template' => 'newsletter/no_unsubscribe.html.twig',
-                'description' => 'The page that is shown when a member follows the link in a ToU or other informational mails giving information why unsubscribe from those isn\'t possible',
             ],
         ],
         'Message' => [
@@ -324,7 +337,8 @@ class MockupController extends TranslationController
 
         $template = $mockup['template'];
         $description = $mockup['description'] ?? '';
-        $parameters = $this->getMockParams($template, $name);
+        $setupFunction = $mockup['setup'] ?? 'getMockParams';
+        $parameters = \call_user_func([$this, $setupFunction], $template, $name);
 
         return $this->render(
             'admin/translations/mockup.email.html.twig',
@@ -332,6 +346,8 @@ class MockupController extends TranslationController
                 $parameters,
                 [
                     'template' => $template,
+                    'language' => $request->getLocale(),
+                    'email' => new MockupExtension(),
                     'description' => $description,
                     'submenu' => [
                         'active' => 'mockups',
@@ -610,6 +626,38 @@ class MockupController extends TranslationController
         return [
             'username' => $this->getUser()->getUsername(),
             'form' => $unsubscribeForm->createView(),
+        ];
+    }
+
+    private function getNewsletterParameters(string $template, string $name)
+    {
+        $indicator = substr($name, strpos($name, '('));
+
+        switch ($indicator) {
+            case '(regular)':
+                $type = Newsletter::REGULAR_NEWSLETTER;
+                break;
+            case '(specific)':
+                $type = Newsletter::SPECIFIC_NEWSLETTER;
+                break;
+            case '(terms of use)':
+                $type = Newsletter::TERMS_OF_USE;
+                break;
+        }
+
+        $newsletterRepository = $this->getDoctrine()->getRepository(Newsletter::class);
+        $newsletters = $newsletterRepository->findBy(['type' => $type], ['created' => 'DESC']);
+
+        if (0 === \count($newsletters)) {
+            throw new \Exception('Sorry, no newsletter of type ' . $type . ' found, please create one.');
+        }
+
+        return [
+            'html_template' => $template,
+            'wordcode' => strtolower('broadcast_body_' . $newsletters[0]->getName()),
+            'unsubscribe_key' => '91aeecc7154b8fc9b2855a331e975bc8aafb088b6617d9aefe543e5fee427ae7',
+            'newsletter' => $newsletters[0],
+            'receiver' => $this->getUser(),
         ];
     }
 

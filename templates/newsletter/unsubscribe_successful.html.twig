@@ -2,5 +2,5 @@
 
 {% block content %}
     <h1>{{ 'newsletter'|trans }}</h1>
-    <p>{{ 'newsletter.unsubscribe.successful'|trans({'username': username}) }}</p>
+    <p>{{ 'newsletter.unsubscribe.successful'|trans({'username': username})|purify }}</p>
 {% endblock %}

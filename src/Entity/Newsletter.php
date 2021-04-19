@@ -20,6 +20,7 @@ class Newsletter implements ObjectManagerAware
 {
     public const REGULAR_NEWSLETTER = 'Normal';
     public const SPECIFIC_NEWSLETTER = 'Specific';
+    public const TERMS_OF_USE = 'TermsOfUse';
 
     /**
      * @var Member

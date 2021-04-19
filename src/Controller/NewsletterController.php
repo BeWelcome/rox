@@ -14,14 +14,6 @@ use Symfony\Component\Routing\Annotation\Route;
 class NewsletterController extends AbstractController
 {
     /**
-     * @Route( "/newsletter/nounsubscribe", name="newsletter_no_unsubscribe")
-     */
-    public function noUnsubscribeFromNewsletter(): Response
-    {
-        return $this->render('newsletter/no_unsubscribe.html.twig');
-    }
-
-    /**
      * Show a page with all newsletters.
      *
      * @Route("/newsletters/{page}", name="newsletters")

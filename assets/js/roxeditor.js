@@ -75,6 +75,11 @@ for (var i = 0; i < allEditors.length; ++i) {
             'undo',
             'redo'
         ],
+        image: {
+            toolbar: [
+                'imageTextAlternative'
+            ]
+        },
         language: document.documentElement.lang
     } )
         .then( editor => {

@@ -23,7 +23,7 @@
                     <p class="small text-muted mb-0">{{ 'mydata.broadcast.sent'|trans({ 'sent':broadcast.updated}) }}</p>
                 </div>
                 <div class="card-footer text-right">
-                    <a class="btn btn-primary" href="{{ url('newsletter_single', {'shortCode':broadcast.newsletter.name, 'language':newsletter.locale}) }}">{{ 'showfull'|trans }}</a>
+                    <a class="btn btn-primary" href="{{ url('newsletter_single', {'shortCode':broadcast.newsletter.id, 'language':newsletter.locale}) }}">{{ 'showfull'|trans }}</a>
                 </div>
             </div>
         {% endfor %}

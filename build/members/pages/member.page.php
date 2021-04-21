@@ -196,6 +196,7 @@ class MemberPage extends PageWithActiveSkin
                 'profile.change.avatar.fail' => $words->get('profile.change.avatar.fail'),
                 'profile.change.avatar.fail.file.to.big' => $words->get('profile.change.avatar.fail.file.to.big'),
                 'profile.picture.title' => $words->get('profile.picture.title', $member->Username),
+                'uploading' => $words->get('uploading'),
             ],
             'config' => [
                 'isMyself' => $this->myself,

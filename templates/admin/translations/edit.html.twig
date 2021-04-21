@@ -4,6 +4,10 @@
     {{ 'translations.edit.title' | trans }}
 {% endblock %}
 
+{% block javascripts %}
+    {{ encore_entry_script_tags('translations') }}
+{% endblock %}
+
 {% block content %}
     <h1>{{ 'translations.headline' | trans }}</h1>
     {{ form_start(form) }}
@@ -15,9 +19,17 @@
     {{ form_row(form.englishText) }}
 
     <div class="form-group">
-        <label>{{ form.englishText.vars.label|trans }}</label>
-        <div style="min-height: 200px; max-height:300px; overflow-y: scroll; background-color: white;">
-            {{ form.englishText.vars.value|prepare_newsletter }}
+        <div class="d-flex justify-content-between">
+            <label>{{ form.englishText.vars.label|trans }}</label>
+            {% if richtext %}<button id="js-toggle" class="btn btn-primary">{{ 'HTML'|trans }}</button>{% endif %}
+        </div>
+        {% if richtext %}
+            <div id="englishTextHTML" class="d-block translated-text">
+                {{ form.englishText.vars.value|purify('custom') }}
+            </div>
+        {% endif %}
+        <div id="englishTextRaw" class="{% if richtext %}d-none{% else %}d-block{% endif %} translated-text" >
+            {{ form.englishText.vars.value|nl2br }}
         </div>
     </div>
 

@@ -56,6 +56,7 @@ Encore
     .addEntry('rangeslider', './assets/js/rangeslider.js')
     .addEntry('highlight', './assets/js/highlight.js')
     .addEntry('faq', './assets/js/faq.js')
+    .addEntry('translations', './assets/js/admin/translations.js')
     .autoProvidejQuery()
     //    .addEntry('roxinlineeditor', './assets/js/roxinlineeditor.js')
 

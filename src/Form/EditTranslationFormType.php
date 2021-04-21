@@ -13,6 +13,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class EditTranslationFormType extends AbstractType
 {
@@ -33,27 +34,26 @@ class EditTranslationFormType extends AbstractType
             ->add('update', SubmitType::class, [
                 'label' => 'label.update',
             ])
+            ->add('englishText', HiddenType::class, [
+                'disabled' => false,
+                'attr' => [
+                    'readonly' => true,
+                    'rows' => 10,
+                ],
+                'label' => 'label.admin.translation.englishtext',
+            ])
         ;
         $formBuilder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+            $form = $event->getForm();
+            $richtext = $form->getConfig()->getOption('richtext');
             $translationRequest = $event->getData();
             $wordCode = $translationRequest->wordCode;
-            if ('broadcast_body_' === substr($wordCode, 0, 15)) {
+            if ($richtext) {
                 $fieldType = CkEditorType::class;
             } else {
                 $fieldType = TextareaType::class;
             }
-            $form = $event->getForm();
             $translatedTextHelp = null;
-            $form
-                ->add('englishText', HiddenType::class, [
-                    'disabled' => false,
-                    'attr' => [
-                        'readonly' => true,
-                        'rows' => 10,
-                    ],
-                    'label' => 'label.admin.translation.englishtext',
-                ])
-            ;
             if ('en' === $translationRequest->locale) {
                 $form
                     ->add('isMajorUpdate', CheckboxType::class, [
@@ -113,5 +113,15 @@ class EditTranslationFormType extends AbstractType
                 ])
             ;
         });
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults([
+            'richtext' => false,
+        ]);
     }
 }

@@ -114,7 +114,10 @@ class TranslationController extends AbstractController
         }
         $translationRequest = EditTranslationRequest::fromTranslations($original, $translation);
 
-        $editForm = $this->createForm(EditTranslationFormType::class, $translationRequest);
+        $richtext = ($original->getSentence() !== strip_tags($original->getSentence()));
+        $editForm = $this->createForm(EditTranslationFormType::class, $translationRequest, [
+            'richtext' => $richtext,
+        ]);
 
         $editForm->handleRequest($request);
         if ($editForm->isSubmitted() && $editForm->isValid()) {
@@ -165,6 +168,7 @@ class TranslationController extends AbstractController
 
         return $this->render('admin/translations/edit.html.twig', [
             'form' => $editForm->createView(),
+            'richtext' => $richtext,
             'isMajorUpdate' => $translationRequest->isMajorUpdate,
             'submenu' => [
                 'active' => 'edit',

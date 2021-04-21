@@ -153,7 +153,7 @@ class MOD_layoutbits
     public static function linkWithPictureVar($username, $height, $width, $style)
     {
         $words = new MOD_words();
-        $thumburl = self::member_pic_url().$username.'/'.$height;
+        $thumburl = self::member_pic_url().$username.'/150';
 
         return
             '<a '.

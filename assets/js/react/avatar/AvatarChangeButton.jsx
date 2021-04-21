@@ -1,5 +1,5 @@
 import React from 'react';
-import { uploadTemporaryAvatar } from '../../api/avatar'
+import { uploadTemporaryAvatar } from '../../api/avatar';
 import { getText } from '../../utils/texts';
 import { alertError, alertSuccess } from '../../utils/alerts';
 

@@ -21,14 +21,16 @@
     <div class="form-group">
         <div class="d-flex justify-content-between">
             <label>{{ form.englishText.vars.label|trans }}</label>
-            {% if richtext %}<button id="js-toggle" class="btn btn-primary">{{ 'HTML'|trans }}</button>{% endif %}
+            {% if richtext %}<button id="js-toggle" class="btn btn-primary"
+                                     data-label-raw="{{ 'raw'|trans }}"
+                                     data-label-html="{{ 'html'|trans }}">{{ 'html'|trans }}</button>{% endif %}
         </div>
         {% if richtext %}
-            <div id="englishTextHTML" class="d-block translated-text">
+            <div id="englishTextHTML" class="d-none translated-text">
                 {{ form.englishText.vars.value|purify('custom') }}
             </div>
         {% endif %}
-        <div id="englishTextRaw" class="{% if richtext %}d-none{% else %}d-block{% endif %} translated-text" >
+        <div id="englishTextRaw" class="d-block translated-text" >
             {{ form.englishText.vars.value|nl2br }}
         </div>
     </div>

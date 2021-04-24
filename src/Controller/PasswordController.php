@@ -121,7 +121,6 @@ class PasswordController extends AbstractController
             return $this->redirectToRoute('member_request_reset_password');
         }
 
-        $this->passwordModel->removePasswordResetTokens($member);
         $diffInDays = $passwordReset->getGenerated()->diffInDays();
         if ($diffInDays > 2) {
             $this->addFlash('error', 'flash.reset.password.invalid');
@@ -140,6 +139,7 @@ class PasswordController extends AbstractController
             $em->persist($member);
             $em->flush();
 
+            $this->passwordModel->removePasswordResetTokens($member);
             $this->addTranslatedFlash('notice', 'flash.password.reset');
 
             return $this->redirectToRoute('security_login');

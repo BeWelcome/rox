@@ -34,7 +34,6 @@ class LegacyController extends AbstractController
         TranslatorInterface $translator,
         UrlGeneratorInterface $urlGenerator,
         ParameterBagInterface $params,
-        SessionInterface $session,
         Security $securityHelper
     ) {
         // Kick-start the Symfony session. This replaces session_start() in the
@@ -70,7 +69,7 @@ class LegacyController extends AbstractController
                 if (null !== $member) {
                     $session->set('IdMember', $member->getId());
                     // \todo Status isn't set correctly. Force for now.
-                    $session->set('MemberStatus', MemberStatusType::ACTIVE);
+                    $session->set('MemberStatus', $member->getStatus());
                     $session->set('Username', $member->getUsername());
                     $connection = $this->getDoctrine()->getConnection();
                     /** @var Statement $stmt */

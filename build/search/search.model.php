@@ -778,14 +778,12 @@ LIMIT 1
         return $members;
     }
 
-    private function getPlacesFromDatabase($ids)
+    private function getPlacesFromDatabase($lang, $ids)
     {
+        // Collect the matching admin units geonameID and countries geonameIDs
         $query = "
             SELECT
-                g.geonameId AS geonameId, g.name AS name, g.latitude AS latitude, g.longitude AS longitude,
-                a.name AS admin1, c.name AS country, 0 AS isAdminUnit,
-                IF(m.id IS NULL, 0, COUNT(g.geonameId)) AS cnt, '"
-                . $this->getWords()->getSilent('SearchPlaces') . "' AS category
+                g.geonameId AS locationId, g.latitude AS latitude, g.longitude AS longitude, a.geonameId AS adminUnitId, c.geonameId AS countryId
             FROM
                 geonames g
             LEFT JOIN
@@ -798,32 +796,53 @@ LIMIT 1
                 g.country = a.country
                 AND g.admin1 = a.admin1
                 AND a.fclass = 'A'
-                AND a.fcode = 'ADM1'
-            LEFT JOIN
-                members m
-            ON
-                g.geonameId = m.IdCity
-                AND m.Status = 'Active'
-                AND m.MaxGuest >= 1
+                AND (a.fcode = 'ADM1')
             WHERE
                 g.geonameId in ('" . implode("','", $ids) . "')
-            GROUP BY
-                g.geonameId
-            ORDER BY
-                cnt DESC, country, admin1";
+        ";
         $sql = $this->dao->query($query);
         if (!$sql) {
             return false;
         }
-        $rows = array();
+        $locations = [];
+        $adminUnitIds = [];
+        $countryIds = [];
         while ($row = $sql->fetch(PDB::FETCH_OBJ)) {
-            $rows[] = $row;
+            $locations[$row->locationId] = [
+                'latitude' => $row->latitude,
+                'longitude' => $row->longitude,
+                'admin1' => $row->adminUnitId,
+                'country' => $row->countryId,
+            ];
+            if (null !== $row->adminUnitId) {
+                $adminUnitIds[] = $row->adminUnitId;
+            }
+            $countryIds[] = $row->countryId;
         }
 
-        return $rows;
+        $locationNames = $this->getLocationNames($locations, $lang);
+        $adminUnitNames = $this->getAdminUnitNames($adminUnitIds, $lang);
+        $countryNames = $this->getCountryNames($countryIds, $lang);
+
+        $locationsResult = [];
+        $searchPlaces = $this->getWords()->getSilent('SearchPlaces');
+        foreach ($ids as $id) {
+            $location = new stdClass();
+            $location->geonameId = $id;
+            $location->name = $locationNames[$id];
+            $location->latitude = $locations[$id]['latitude'];
+            $location->longitude = $locations[$id]['longitude'];
+            $location->admin1 = $adminUnitNames[$locations[$id]['admin1']] ?? '';
+            $location->country = $countryNames[$locations[$id]['country']];
+            $location->cnt = 0;
+            $location->category = $searchPlaces;
+            $locationsResult[] = $location;
+        }
+
+        return $locationsResult;
     }
 
-    private function getFromDataBase($ids, $category = "")
+    private function getFromDataBase($lang, $ids, $category = "")
     {
         // get country names for found ids
         $query = "
@@ -854,6 +873,68 @@ LIMIT 1
         return $rows;
     }
 
+    private function getLocationNames($locations, $lang)
+    {
+        $locationIds = implode("', '", array_keys($locations));
+
+        // fetch country names, prefer alternate names (preferred, short) over geonames entry
+        $query = "
+            SELECT
+                g.geonameId geonameId, a.alternatename AS name, a.ispreferred ispreferred, a.isshort isshort, 'alternate' source
+            FROM
+                geonames g, geonamesalternatenames a
+            WHERE
+                g.geonameId IN ('" . $locationIds . "') AND g.geonameId = a.geonameId AND a.isoLanguage = '" . $lang . "'
+            UNION SELECT
+                g.geonameId geonameId, g.name AS name, 0 ispreferred, 0 isshort, 'geoname' source
+            FROM
+                geonames g
+            WHERE
+                g.geonameId IN ('" . $locationIds . "')
+            ORDER BY
+                geonameId, source, ispreferred DESC, isshort DESC";
+        $locationRawNames = $this->bulkLookup($query);
+        $locationNames = array();
+        foreach ($locationRawNames as $locationRawName) {
+            if (!isset($locationNames[$locationRawName->geonameId])) {
+                $locationNames[$locationRawName->geonameId] = $locationRawName->name;
+            }
+        }
+
+        return $locationNames;
+    }
+
+    private function getAdminUnitNames($admin1Ids, $lang)
+    {
+        // fetch admin units, prefer alternate names (preferred, short) over geonames entry
+        // just fetch all for the given countries sort out which are needed later
+        $inAdminUnits = implode("', '", $admin1Ids);
+        $query = "
+            SELECT
+                a.geonameId geonameId, an.alternatename name, a.admin1 admin1Code, a.country country, an.ispreferred ispreferred, an.isshort isshort, 'alternate' source
+            FROM
+                geonamesadminunits a , geonamesalternatenames an
+            WHERE
+                a.geonameId IN ('" . $inAdminUnits . "') AND a.geonameId = an.geonameId AND an.isoLanguage = '" . $lang . "'
+            UNION SELECT
+                a.geonameId geonameId, a.name name, a.admin1 admin1Code, a.country country, 0 ispreferred, 0 isshort, 'geoname' source
+            FROM
+                geonamesadminunits a
+            WHERE
+                a.geonameId IN ('" . $inAdminUnits . "')
+            ORDER BY
+                geonameId, source, ispreferred DESC, isshort DESC";
+        $admin1Names = [];
+        $admin1RawNames = $this->bulkLookup($query);
+        foreach ($admin1RawNames as $admin1RawName) {
+            if (!isset($admin1Names[$admin1RawName->geonameId])) {
+                $admin1Names[$admin1RawName->geonameId] = $admin1RawName->name;
+            }
+        }
+
+        return $admin1Names;
+    }
+
     private function getCountryNames($countryIds, $lang)
     {
         $inCountries = implode("', '", $countryIds);
@@ -864,65 +945,24 @@ LIMIT 1
             FROM
                 geonamescountries c, geonamesalternatenames a
             WHERE
-                c.country IN ('" . $inCountries . "') AND c.geonameId = a.geonameId AND a.isoLanguage = '" . $lang . "'
+                c.geonameId IN ('" . $inCountries . "') AND c.geonameId = a.geonameId AND a.isoLanguage = '" . $lang . "'
             UNION SELECT
                 c.geonameId geonameId, c.country countryCode, c.name country, 0 ispreferred, 0 isshort, 'geoname' source
             FROM
                 geonamescountries c
             WHERE
-                c.country IN ('" . $inCountries . "')
+                c.geonameId IN ('" . $inCountries . "')
             ORDER BY
                 geonameId, source, ispreferred DESC, isshort DESC";
         $countryRawNames = $this->bulkLookup($query);
         $countryNames = array();
         foreach ($countryRawNames as $countryRawName) {
-            if (!isset($countryNames[$countryRawName->countryCode])) {
-                $data = new stdClass();
-                $data->country = $countryRawName->country;
-                $data->code = $countryRawName->countryCode;
-                $countryNames[$countryRawName->countryCode] = $data;
+            if (!isset($countryNames[$countryRawName->geonameId])) {
+                $countryNames[$countryRawName->geonameId] = $countryRawName->country;
             }
         }
-        asort($countryNames);
 
         return $countryNames;
-    }
-
-    private function getAdminUnitNames($admin1Ids, $countryIds, $lang)
-    {
-        // fetch admin units, prefer alternate names (preferred, short) over geonames entry
-        // just fetch all for the given countries short out which are needed later
-        $inCountries = implode("', '", $countryIds);
-        $inAdminUnits = implode("', '", $admin1Ids);
-        $query = "
-            SELECT
-                a.geonameId geonameId, an.alternatename name, a.admin1 admin1Code, a.country country, an.ispreferred ispreferred, an.isshort isshort, 'alternate' source
-            FROM
-                geonamesadminunits a , geonamesalternatenames an
-            WHERE
-                a.country IN ('" . $inCountries . "') AND a.admin1 IN ('" . $inAdminUnits . "') AND a.fcode = 'ADM1' AND a.geonameId = an.geonameId AND an.isoLanguage = '" . $lang . "'
-            UNION SELECT
-                a.geonameId geonameId, a.name name, a.admin1 admin1Code, a.country country, 0 ispreferred, 0 isshort, 'geoname' source
-            FROM
-                geonamesadminunits a
-            WHERE
-                a.country IN ('" . $inCountries . "') AND a.admin1 IN ('" . $inAdminUnits . "') AND a.fcode = 'ADM1'
-            ORDER BY
-                geonameId, source, ispreferred DESC, isshort DESC";
-        $admin1Names = array();
-        $admin1RawNames = $this->bulkLookup($query);
-        foreach ($admin1RawNames as $admin1RawName) {
-            if (!isset($admin1Names[$admin1RawName->country])) {
-                $admin1Names[$admin1RawName->country] = array();
-            }
-            if (!isset($admin1Names[$admin1RawName->country][$admin1RawName->admin1Code])) {
-                $data = new StdClass;
-                $data->admin1 = $admin1RawName->name;
-                $admin1Names[$admin1RawName->country][$admin1RawName->admin1Code] = $data;
-            }
-        }
-
-        return $admin1Names;
     }
 
     private function getPlaces($place, $admin1 = false, $country = false, $limit = false)
@@ -983,7 +1023,7 @@ LIMIT 1
             $geonameIds[$place->geonameId] = $place->geonameId;
         }
         $countryNames = $this->getCountryNames($countries, $lang);
-        $admin1Names = $this->getAdminUnitNames($adminUnits, $countries, $lang);
+        $admin1Names = $this->getAdminUnitNames($lang, $adminUnits);
 
         // And finally get the place names in the UI language
         $inGeonameIds = implode("', '", $geonameIds);
@@ -1366,7 +1406,9 @@ LIMIT 1
             $query = SphinxQL::create($conn)
                 ->select('*')
                 ->from('geonames')
-                ->match('', "*" . $location . "*");
+                ->match('', "*" . $location . "*")
+                ->orderBy('membercount', 'desc')
+            ;
 
             switch ($type) {
                 case self::SPHINX_PLACES:
@@ -1397,6 +1439,9 @@ LIMIT 1
      */
     public function suggestLocations($location, $type)
     {
+        $langarr = explode('-', $this->session->get('lang'));
+        $lang = $langarr[0];
+
         $result = array();
         $locations = array();
         $result['status'] = 'failed';
@@ -1408,58 +1453,38 @@ LIMIT 1
             foreach ( $result as $row) {
                 $ids[] = $row['id'];
             }
-            $places = $this->getPlacesFromDataBase($ids);
+            $places = $this->getPlacesFromDataBase($lang, $ids);
             $locations = array_merge($locations, $places);
             $result['result'] = 'success';
             $result['places'] = 1;
         }
         if ('places' !== $type) {
             // Get administrative units
-            $resAdminUnits = $this->sphinxSearch( $location, self::SPHINX_ADMINUNITS );
-            if ( $resAdminUnits) {
+            $resAdminUnits = $this->sphinxSearch($location, self::SPHINX_ADMINUNITS);
+            if ($resAdminUnits) {
                 $result = $resAdminUnits->fetchAllAssoc();
                 $ids = array();
-                foreach ( $result as $row) {
+                foreach ($result as $row) {
                     $ids[] = $row['id'];
                 }
-                $adminunits= $this->getFromDataBase($ids, $this->getWords()->getSilent('searchadminunits'));
+                $adminunits= $this->getFromDataBase($lang, $ids, $this->getWords()->getSilent('searchadminunits'));
                 $locations = array_merge($locations, $adminunits);
                 $result["status"] = "success";
                 $result['adminunits'] = 1;
             }
             // Get countries
-            $resCountries = $this->sphinxSearch( $location, self::SPHINX_COUNTRIES );
-            if ( $resCountries) {
+            $resCountries = $this->sphinxSearch($location, self::SPHINX_COUNTRIES);
+            if ($resCountries) {
                 $result = $resCountries->fetchAllAssoc();
                 $ids = array();
-                foreach ( $result as $row) {
+                foreach ($result as $row) {
                     $ids[] = $row['id'];
                 }
-                $countries= $this->getFromDataBase($ids, $this->getWords()->getSilent('searchcountries'));
+                $countries= $this->getFromDataBase($lang, $ids, $this->getWords()->getSilent('searchcountries'));
                 $locations = array_merge($locations, $countries);
                 $result["status"] = "success";
                 $result['countries'] = 1;
             }
-        }
-        // If nothing was found assume that search daemon isn't running and
-        // try to get something from the database
-        if (empty($locations)) {
-            // assume format place[, [admin1,] country
-            $admin1 = $country = "";
-            $locationParts = explode(',', $location);
-            $place = trim($locationParts[0]);
-            switch (count($locationParts)) {
-                case 3:
-                    $admin1 = trim($locationParts[1]);
-                    $country = trim($locationParts[2]);
-                    break;
-                case 2:
-                    $country = trim($locationParts[1]);
-                    break;
-            }
-            list($countryIds, $admin1Ids) = $this->getIdsForCountriesAndAdminUnits($country, $admin1);
-            $locations = $this->getPlaces($place, $admin1Ids, $countryIds, 10);
-            $result['database'] = 1;
         }
         if (!empty($locations)) {
             $result['status'] = 'success';

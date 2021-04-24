@@ -345,10 +345,6 @@ class TranslationController extends AbstractController
     {
         $this->denyAccessUnlessGranted(Member::ROLE_ADMIN_WORDS, null, 'Unable to access this page!');
 
-        if (!$request->getSession()->has('originalReferrer')) {
-            $request->getSession()->set('originalReferrer', $request->headers->get('referer'));
-        }
-
         /** @var Member $translator */
         $translator = $this->getUser();
 
@@ -357,9 +353,15 @@ class TranslationController extends AbstractController
             return $this->redirectToRoute('translations_no_permissions');
         }
 
+        // We want to redirect to the page where the translation was originally missing
+        if (!$request->getSession()->has('originalReferrer')) {
+            $request->getSession()->set('originalReferrer', $request->headers->get('referer'));
+        }
+
         if ('en' === $language->getShortcode()) {
             $this->addTranslatedFlash('notice', 'flash.translation.weird');
-            $this->redirectToRoute('translations');
+
+            return $this->redirectToRoute('translations');
         }
         $translationRepository = $this->getDoctrine()->getRepository(Word::class);
 
@@ -374,7 +376,7 @@ class TranslationController extends AbstractController
         ]);
 
         // Work around a problem in the database
-        // Sometimes the word code do not match between translations
+        // Sometimes the word code do not match (case) between translations
         if (null !== $translation) {
             return $this->redirectToRoute('translation_edit', [
                 'locale' => $language->getShortCode(),
@@ -388,7 +390,10 @@ class TranslationController extends AbstractController
 
         $addTranslationRequest = EditTranslationRequest::fromTranslations($original, $translation);
 
-        $addForm = $this->createForm(EditTranslationFormType::class, $addTranslationRequest);
+        $richtext = ($original->getSentence() === strip_tags($original->getSentence()));
+        $addForm = $this->createForm(EditTranslationFormType::class, $addTranslationRequest, [
+            'richtext' => $richtext,
+        ]);
 
         $addForm->handleRequest($request);
         if ($addForm->isSubmitted() && $addForm->isValid()) {

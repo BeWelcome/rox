@@ -23,6 +23,7 @@ Boston, MA  02111-1307, USA.
 
 use App\Doctrine\MemberStatusType;
 use Foolz\SphinxQL\Drivers\Pdo\Connection;
+use Foolz\SphinxQL\Match;
 use Foolz\SphinxQL\SphinxQL;
 use AnthonyMartin\GeoLocation\GeoPoint;
 
@@ -778,8 +779,14 @@ LIMIT 1
         return $members;
     }
 
-    private function getPlacesFromDatabase($lang, $ids)
+    private function getPlacesFromDatabase($lang, $sphinxResults)
     {
+        $counts = [];
+        foreach ($sphinxResults as $row) {
+            $counts[$row['id']] = $row['membercount'];
+        }
+        $ids = array_keys($counts);
+
         // Collect the matching admin units geonameID and countries geonameIDs
         $query = "
             SELECT
@@ -813,6 +820,7 @@ LIMIT 1
                 'longitude' => $row->longitude,
                 'admin1' => $row->adminUnitId,
                 'country' => $row->countryId,
+                'count' => $counts[$row->locationId],
             ];
             if (null !== $row->adminUnitId) {
                 $adminUnitIds[] = $row->adminUnitId;
@@ -834,7 +842,7 @@ LIMIT 1
             $location->longitude = $locations[$id]['longitude'];
             $location->admin1 = $adminUnitNames[$locations[$id]['admin1']] ?? '';
             $location->country = $countryNames[$locations[$id]['country']];
-            $location->cnt = 0;
+            $location->cnt = $locations[$id]['count'];
             $location->category = $searchPlaces;
             $locationsResult[] = $location;
         }
@@ -1396,19 +1404,26 @@ LIMIT 1
         return $result;
     }
 
-    private function sphinxSearch($location, $type, $count = false)
+    private function sphinxSearch($location, $type, $country = null)
     {
         $conn = new Connection();
         $conn->setParams(array('host' => 'localhost', 'port' => 9306));
 
-        try
-        {
-            $query = SphinxQL::create($conn)
+        try {
+            $sphinxQL = new SphinxQL($conn);
+            $match = new Match($sphinxQL);
+            $match->field('name')->match($location);
+
+            $query = $sphinxQL
                 ->select('*')
                 ->from('geonames')
-                ->match('', "*" . $location . "*")
+                ->match($match)
                 ->orderBy('membercount', 'desc')
             ;
+
+            if (null !== $country) {
+                $query->where('country', '=', $country);
+            }
 
             switch ($type) {
                 case self::SPHINX_PLACES:
@@ -1427,10 +1442,10 @@ LIMIT 1
 
             // Now, you have an array of results stored.
             $result = $query->execute();
-        }
-        catch(Exception $e) {
+        } catch (Exception $e) {
             $result = false;
         }
+
         return $result;
     }
 
@@ -1442,32 +1457,40 @@ LIMIT 1
         $langarr = explode('-', $this->session->get('lang'));
         $lang = $langarr[0];
 
-        $result = array();
-        $locations = array();
+        $result = [];
         $result['status'] = 'failed';
+        $locationParts = explode(',', $location);
+        if (3 <= count($locationParts)) {
+            return $result;
+        }
+
+        $country = null;
+        $location = trim(reset($locationParts));
+        if (2 === count($locationParts)) {
+            // Get the country
+            $country = trim(end($locationParts));
+        }
+
         // First get places from sphinx
-        $resPlaces = $this->sphinxSearch( $location, self::SPHINX_PLACES );
-        if ( $resPlaces) {
-            $result = $resPlaces->fetchAllAssoc();
-            $ids = array();
-            foreach ( $result as $row) {
-                $ids[] = $row['id'];
-            }
-            $places = $this->getPlacesFromDataBase($lang, $ids);
+        $locations = array();
+        $resPlaces = $this->sphinxSearch($location, self::SPHINX_PLACES, $country);
+        if ($resPlaces) {
+            $results = $resPlaces->fetchAllAssoc();
+            $places = $this->getPlacesFromDataBase($lang, $results);
             $locations = array_merge($locations, $places);
             $result['result'] = 'success';
             $result['places'] = 1;
         }
-        if ('places' !== $type) {
+        if ('places' !== $type && null === $country) {
             // Get administrative units
             $resAdminUnits = $this->sphinxSearch($location, self::SPHINX_ADMINUNITS);
             if ($resAdminUnits) {
-                $result = $resAdminUnits->fetchAllAssoc();
+                $results = $resAdminUnits->fetchAllAssoc();
                 $ids = array();
-                foreach ($result as $row) {
+                foreach ($results as $row) {
                     $ids[] = $row['id'];
                 }
-                $adminunits= $this->getFromDataBase($lang, $ids, $this->getWords()->getSilent('searchadminunits'));
+                $adminunits = $this->getFromDataBase($lang, $ids, $this->getWords()->getSilent('searchadminunits'));
                 $locations = array_merge($locations, $adminunits);
                 $result["status"] = "success";
                 $result['adminunits'] = 1;
@@ -1475,12 +1498,12 @@ LIMIT 1
             // Get countries
             $resCountries = $this->sphinxSearch($location, self::SPHINX_COUNTRIES);
             if ($resCountries) {
-                $result = $resCountries->fetchAllAssoc();
+                $results = $resCountries->fetchAllAssoc();
                 $ids = array();
-                foreach ($result as $row) {
+                foreach ($results as $row) {
                     $ids[] = $row['id'];
                 }
-                $countries= $this->getFromDataBase($lang, $ids, $this->getWords()->getSilent('searchcountries'));
+                $countries = $this->getFromDataBase($lang, $ids, $this->getWords()->getSilent('searchcountries'));
                 $locations = array_merge($locations, $countries);
                 $result["status"] = "success";
                 $result['countries'] = 1;

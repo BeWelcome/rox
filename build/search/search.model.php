@@ -1412,7 +1412,7 @@ LIMIT 1
         try {
             $sphinxQL = new SphinxQL($conn);
             $match = new Match($sphinxQL);
-            $match->field('name')->match($location);
+            $match->match($location);
 
             $query = $sphinxQL
                 ->select('*')

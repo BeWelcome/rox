@@ -16,12 +16,12 @@
   background-color: var(--bewelcome);
   font-size: 16px;
   line-height: 20px;
-  font-weight: 700;
+  font-weight: 500;
   justify-content: center;
   align-items: center;
   cursor: pointer;
   height: 40px;
-  max-width: 192px;
+  margin: 0;
 }
 
 
@@ -143,21 +143,23 @@
  */
 
 .o-button--outline {
-  background-color: var(--luckia);
+  background-color: var(--white);
+  border: 1px solid var(--bewelcome);
+  color: var(--bewelcome);
+  font-weight: 400;
+}
+
+.o-button--outline-inverse, {
+  background-color: var(--bewelcome);
   border: 1px solid var(--white);
   color: var(--white);
+  font-weight: 400;
 }
 
-.o-button--outline-inverse {
-  background-color: var(--white);
-  border: 1px solid var(--white);
-  color: var(--luckia);
-}
-
-.o-button--outline-ceniza {
-  background-color: var(--white);
-  border: 1px solid var(--ceniza);
-  color: var(--ceniza);
+.o-button--outline-gray {
+  background-color: var(--gray-60);
+  border: 1px solid var(--gray-60);
+  color: var(--gray-60);
   height: initial;
   min-height: 56px;
   font-size: 14px;
@@ -166,9 +168,9 @@
   padding: 4px;
 }
 
-.o-button--outline-ceniza-inverse {
-  background-color: var(--ceniza);
-  border: 1px solid var(--ceniza);
+.o-button--outline-gray-inverse {
+  background-color: var(--gray-60);
+  border: 1px solid var(--gray-60);
   color: var(--white);
   height: initial;
   min-height: 56px;
@@ -206,7 +208,7 @@
   padding: initial;
   display: initial;
   height: initial;
-  color: var(--luckia);
+  color: var(--bewelcome);
   text-decoration: underline;
 }
 
@@ -243,20 +245,22 @@
 
 .o-button:hover {
   opacity: 0.7;
+  color: var(--white);
 }
 
+.o-button--outline.active,
 .o-button--outline:hover {
+  background-color: var(--bewelcome);
+  border: 1px solid var(--bewelcome);
+  color: var(--white);
   opacity: 1;
-  color: var(--luckia);
-  border: 1px solid var(--white);
-  background-color: var(--white);
 }
 
 .o-button--outline-inverse:hover {
   opacity: 1;
   color: var(--white);
   border: 1px solid var(--white);
-  background-color: var(--transparent);
+  background-color: var(--bewelcome);
 }
 
 .o-button--outline-ceniza:hover,

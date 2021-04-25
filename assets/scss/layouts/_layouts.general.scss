@@ -72,3 +72,22 @@
     width: initial;
   }
 }
+
+
+
+
+
+.l-landing-welcome {
+  display: grid;
+  grid-template-columns: 104px 1fr 288px;
+  grid-gap: 32px;
+  width: 100%;
+}
+
+@media (max-width: 900px) {
+  .l-landing-welcome {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+}

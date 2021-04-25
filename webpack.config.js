@@ -44,7 +44,7 @@ Encore
     .addEntry('leaflet', './assets/js/leaflet.js')
     .addEntry('member/autocomplete', './assets/js/member/autocomplete.js')
     .addEntry('admin/faqs', './assets/js/admin/faqs.js')
-    .addEntry('chartjs', './node_modules/chart.js/dist/Chart.js')
+    .addEntry('chartjs', './node_modules/chart.js/dist/chart.js')
     .addEntry('offcanvas', './assets/js/offcanvas.js')
     .addEntry('profile/profile', './assets/js/profile.js')
     .addEntry('updatecounters', './assets/js/updateCounters.js')

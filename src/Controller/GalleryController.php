@@ -28,8 +28,6 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Validator\Constraints\Image;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-use function count;
-
 class GalleryController extends AbstractController
 {
     use TranslatedFlashTrait;
@@ -102,7 +100,7 @@ class GalleryController extends AbstractController
         $violations = $validator->validate($image, $constraint);
 
         $originalName = $image->getClientOriginalName();
-        if (count($violations) > 0) {
+        if (\count($violations) > 0) {
             $response->setData([
                 'success' => false,
                 'filename' => $originalName,
@@ -232,7 +230,7 @@ class GalleryController extends AbstractController
 
         $image = $request->files->get('upload');
         $errors = $galleryModel->checkUploadedImage($image);
-        if (0 < count($errors)) {
+        if (0 < \count($errors)) {
             $response->setData([
                 'uploaded' => false,
                 'error' => [
@@ -250,7 +248,7 @@ class GalleryController extends AbstractController
         $uploadedImageRepository = $em->getRepository(UploadedImage::class);
         $existingImages = $uploadedImageRepository->findBy(['fileHash' => $hash]);
 
-        if (0 === count($existingImages)) {
+        if (0 === \count($existingImages)) {
             list($width, $height) = getimagesize($image);
             $uploadDirectory = $this->getParameter('upload_directory');
             $fileName = $this->generateUniqueFileName() . '.' . $image->guessExtension();

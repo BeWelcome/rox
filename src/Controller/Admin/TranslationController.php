@@ -3,33 +3,22 @@
 namespace App\Controller\Admin;
 
 use App\Doctrine\TranslationAllowedType;
-use App\Entity\Activity;
-use App\Entity\ForumPost;
-use App\Entity\ForumThread;
-use App\Entity\Group;
-use App\Entity\HostingRequest;
 use App\Entity\Language;
 use App\Entity\Member;
 use App\Entity\Message;
 use App\Entity\RightVolunteer;
 use App\Entity\Word;
-use App\Form\CustomDataClass\SearchFormRequest;
 use App\Form\CustomDataClass\Translation\EditTranslationRequest;
 use App\Form\CustomDataClass\Translation\TranslationRequest;
 use App\Form\EditTranslationFormType;
-use App\Form\ResetPasswordFormType;
-use App\Form\ResetPasswordRequestFormType;
-use App\Form\SearchFormType;
 use App\Form\TranslationFormType;
 use App\Model\TranslationModel;
 use App\Repository\LanguageRepository;
 use App\Repository\WordRepository;
-use App\Twig\MockupExtension;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
 use DateTime;
 use Exception;
-use Mockery;
 use Pagerfanta\Pagerfanta;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -390,7 +379,7 @@ class TranslationController extends AbstractController
 
         $addTranslationRequest = EditTranslationRequest::fromTranslations($original, $translation);
 
-        $richtext = ($original->getSentence() === strip_tags($original->getSentence()));
+        $richtext = ($original->getSentence() !== strip_tags($original->getSentence()));
         $addForm = $this->createForm(EditTranslationFormType::class, $addTranslationRequest, [
             'richtext' => $richtext,
         ]);

@@ -2,9 +2,6 @@
 
 namespace App\Controller;
 
-use App\Entity\BroadcastMessage;
-use App\Entity\Member;
-use App\Entity\Preference;
 use App\Form\NewsletterUnsubscribeType;
 use App\Model\SubscriptionModel;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -35,11 +32,11 @@ class SubscriptionController extends AbstractController
                 return $this->render('newsletter/unsubscribe_successful.html.twig', [
                     'username' => $username,
                 ]);
-            } else {
-                return $this->render('newsletter/unsubscribe_failed.html.twig', [
+            }
+
+            return $this->render('newsletter/unsubscribe_failed.html.twig', [
                     'username' => $username,
                 ]);
-            }
         }
 
         return $this->render('newsletter/unsubscribe_confirm.html.twig', [
@@ -69,11 +66,11 @@ class SubscriptionController extends AbstractController
                 return $this->render('newsletter/unsubscribe_local_successful.html.twig', [
                     'username' => $username,
                 ]);
-            } else {
-                return $this->render('newsletter/unsubscribe_local_failed.html.twig', [
+            }
+
+            return $this->render('newsletter/unsubscribe_local_failed.html.twig', [
                     'username' => $username,
                 ]);
-            }
         }
 
         return $this->render('newsletter/unsubscribe_local_confirm.html.twig', [

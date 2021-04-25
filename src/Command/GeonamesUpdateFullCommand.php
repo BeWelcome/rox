@@ -280,7 +280,7 @@ class GeonamesUpdateFullCommand extends Command
         }
 
         $fileHandler = fopen($filename, 'w');
-        foreach($this->httpClient->stream($response) as $chunk) {
+        foreach ($this->httpClient->stream($response) as $chunk) {
             fwrite($fileHandler, $chunk->getContent());
         }
         fclose($fileHandler);
@@ -314,7 +314,7 @@ class GeonamesUpdateFullCommand extends Command
         // Write rows into a file and call external command to import
         // Otherwise we hit memory limites
         $handle = fopen('geonames_rows.csv', 'w');
-        foreach($rows as $row) {
+        foreach ($rows as $row) {
             fputcsv($handle, $row);
         }
         fclose($handle);

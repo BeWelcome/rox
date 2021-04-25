@@ -47,7 +47,6 @@ class EditTranslationFormType extends AbstractType
             $form = $event->getForm();
             $richtext = $form->getConfig()->getOption('richtext');
             $translationRequest = $event->getData();
-            $wordCode = $translationRequest->wordCode;
             if ($richtext) {
                 $fieldType = CkEditorType::class;
             } else {

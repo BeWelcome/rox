@@ -8,7 +8,6 @@ use Pagerfanta\Adapter\ArrayAdapter;
 use Pagerfanta\Pagerfanta;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class NewsletterController extends AbstractController
@@ -17,6 +16,8 @@ class NewsletterController extends AbstractController
      * Show a page with all newsletters.
      *
      * @Route("/newsletters/{page}", name="newsletters")
+     *
+     * @param mixed $page
      */
     public function showNewslettersOverview($page = 1)
     {

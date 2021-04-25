@@ -3,13 +3,10 @@
 namespace App\Model;
 
 use App\Entity\Member;
-use App\Entity\PasswordReset;
 use App\Model\MemberDataExtractor\ExtractorInterface;
 use App\Utilities\ManagerTrait;
 use App\Utilities\TranslatorTrait;
 use DateTime;
-use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
 use Exception as Exception;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;

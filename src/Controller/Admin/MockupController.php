@@ -675,6 +675,7 @@ class MockupController extends TranslationController
                 break;
             }
         }
+
         return $found;
     }
 }

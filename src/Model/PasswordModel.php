@@ -4,24 +4,11 @@ namespace App\Model;
 
 use App\Entity\Member;
 use App\Entity\PasswordReset;
-use App\Model\MemberDataExtractor\ExtractorInterface;
 use App\Utilities\ManagerTrait;
 use App\Utilities\TranslatorTrait;
-use DateTime;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Exception as Exception;
-use RecursiveDirectoryIterator;
-use RecursiveIteratorIterator;
-use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\WebpackEncoreBundle\Asset\EntrypointLookup;
-use Symfony\WebpackEncoreBundle\Asset\EntrypointLookupInterface;
-use Twig\Environment;
-use Twig\Error\LoaderError;
-use Twig\Error\RuntimeError;
-use Twig\Error\SyntaxError;
-use ZipArchive;
 
 class PasswordModel
 {

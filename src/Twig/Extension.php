@@ -4,9 +4,7 @@ namespace App\Twig;
 
 use Carbon\Carbon;
 use HTMLPurifier;
-use HTMLPurifier_Config;
 use HTMLPurifier_HTML5Config;
-use HTMLPurifier_TagTransform_Simple;
 use HtmlTruncator\InvalidHtmlException;
 use HtmlTruncator\Truncator;
 use Psr\Log\LoggerInterface;
@@ -142,7 +140,7 @@ class Extension extends AbstractExtension implements GlobalsInterface
                 'prepare_newsletter',
                 [$this, 'prepareNewsletter'],
                 [
-                    'is_safe' => ['html']
+                    'is_safe' => ['html'],
                 ]
             ),
         ];
@@ -259,8 +257,6 @@ class Extension extends AbstractExtension implements GlobalsInterface
 
     /**
      * Name of this extension.
-     *
-     * @return string
      */
     public function getName(): string
     {

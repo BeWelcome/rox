@@ -100,20 +100,16 @@ class SearchAdapter implements AdapterInterface
 
     /**
      * Returns the number of results.
-     *
-     * @return int the number of results
      */
-    public function getNbResults()
+    public function getNbResults(): int
     {
         return $this->model->getMembersCount();
     }
 
     /**
-     * Returns map data.
-     *
-     * @return array
+     * Returns full results.
      */
-    public function getFullResults()
+    public function getFullResults(): array
     {
         $results = $this->model->getResultsForLocation($this->modelData);
 
@@ -122,10 +118,8 @@ class SearchAdapter implements AdapterInterface
 
     /**
      * Returns map data.
-     *
-     * @return array
      */
-    public function getMapResults()
+    public function getMapResults(): array
     {
         $results = $this->model->getResultsForLocation($this->modelData);
 
@@ -141,13 +135,8 @@ class SearchAdapter implements AdapterInterface
 
     /**
      * Returns an slice of the results.
-     *
-     * @param int $offset the offset
-     * @param int $length the length
-     *
-     * @return array|\Traversable the slice
      */
-    public function getSlice($offset, $length)
+    public function getSlice(int $offset, int $length): iterable
     {
         $this->modelData['search-number-items'] = $length;
         $this->modelData['search-page'] = ($offset / $length) + 1;
@@ -156,12 +145,7 @@ class SearchAdapter implements AdapterInterface
         return $results['members'];
     }
 
-    /**
-     * @param SearchFormRequest $data
-     *
-     * @return array|string
-     */
-    private function prepareModelData($data)
+    private function prepareModelData(SearchFormRequest $data): array
     {
         $vars = [];
         $vars['search-location'] = $data->location;

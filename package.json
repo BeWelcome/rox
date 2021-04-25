@@ -31,7 +31,7 @@
     "@ckeditor/ckeditor5-theme-lark": "~27.0.0",
     "@fortawesome/fontawesome-free": "5.15.3",
     "@popperjs/core": "2.9.2",
-    "@symfony/webpack-encore": "^0.33.0",
+    "@symfony/webpack-encore": "^1.0.0",
     "@ttskch/select2-bootstrap4-theme": "1.5.2",
     "autoprefixer": "^9.8.6",
     "bootstrap": "4.6.0",
@@ -89,6 +89,9 @@
     "typeface-signika": "0.0.72",
     "uglify-js": "3.13.3",
     "underscore.string": "^3.3.5",
-    "workbox-webpack-plugin": "^5.1.4"
+    "workbox-webpack-plugin": "^6.1.5"
+  },
+  "dependencies": {
+    "@babel/helper-define-map": "^7.13.12"
   }
 }

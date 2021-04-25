@@ -55,10 +55,8 @@ class MissingTranslationAdapter implements AdapterInterface
 
     /**
      * Returns the number of results.
-     *
-     * @return int the number of results
      */
-    public function getNbResults()
+    public function getNbResults(): int
     {
         $query = "
             SELECT
@@ -81,13 +79,8 @@ class MissingTranslationAdapter implements AdapterInterface
 
     /**
      * Returns an slice of the results.
-     *
-     * @param int $offset the offset
-     * @param int $length the length
-     *
-     * @return array|Traversable the slice
      */
-    public function getSlice($offset, $length)
+    public function getSlice(int $offset, int $length): iterable
     {
         $query = $this->query . ' LIMIT ' . $offset . ', ' . $length;
         $statement = $this->connection->query($query);

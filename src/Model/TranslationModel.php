@@ -77,10 +77,10 @@ class TranslationModel
                 $translationAdapter = new TranslationAdapter($connection, $locale, $code);
                 break;
             case 'archived':
-                $translationAdapter = new ArchivedTranslationAdapter($connection, $locale);
+                $translationAdapter = new ArchivedTranslationAdapter($connection);
                 break;
             case 'donottranslate':
-                $translationAdapter = new DoNotTranslateTranslationAdapter($connection, $locale);
+                $translationAdapter = new DoNotTranslateTranslationAdapter($connection);
                 break;
         }
 

@@ -10,29 +10,17 @@ use Traversable;
 
 class DoNotTranslateTranslationAdapter implements AdapterInterface
 {
-    /** @var string */
-    private $locale;
+    private Connection $connection;
 
-    /** @var Connection */
-    private $connection;
-
-    /**
-     * SearchAdapter constructor.
-     *
-     * @SuppressWarnings(PHPMD.StaticAccess)
-     */
-    public function __construct(Connection $connection, string $locale)
+    public function __construct(Connection $connection)
     {
         $this->connection = $connection;
-        $this->locale = $locale;
     }
 
     /**
      * Returns the number of results.
-     *
-     * @return int the number of results
      */
-    public function getNbResults()
+    public function getNbResults(): int
     {
         $statement = $this->connection->prepare("
             SELECT
@@ -51,13 +39,8 @@ class DoNotTranslateTranslationAdapter implements AdapterInterface
 
     /**
      * Returns an slice of the results.
-     *
-     * @param int $offset the offset
-     * @param int $length the length
-     *
-     * @return array|Traversable the slice
      */
-    public function getSlice($offset, $length)
+    public function getSlice(int $offset, int $length): iterable
     {
         $statement = $this->connection->prepare("
             SELECT

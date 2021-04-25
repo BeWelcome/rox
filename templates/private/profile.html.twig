@@ -1,5 +1,9 @@
 {% extends 'private/mydata.html.twig' %}
 
+{% block stylesheets %}
+  {{ encore_entry_link_tags('tailwind') }}
+{% endblock %}
+
 {% block content %}
     {% set fields = member.memberFields %}
     <main role="main">

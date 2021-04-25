@@ -3,7 +3,7 @@ $vars = $this->getRedirectedMem('vars');
 if (empty($vars)) {
     $vars['activity-radius'] = $this->radius;
 }
-$radiusSelect = '<select name="activity-radius" id="activity-radius" class="o-input-sm">';
+$radiusSelect = '<select name="activity-radius" id="activity-radius" class="o-input">';
 $distance = array(
     0 => '0 km/0 mi', 
     5  => '5 km/3 mi', 

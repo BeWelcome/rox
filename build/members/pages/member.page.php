@@ -282,7 +282,7 @@ class MemberPage extends PageWithActiveSkin
             if ($logged_member && $logged_member->hasOldRight(array('Admin' => '', 'SafetyTeam' => '', 'Accepter' => '', 'Profile' => ''))) {
                 $form .= '<div><form method="post" name="member-status" id="member-status" class="form-inline">' . $callbackTags;
                 $form .= '<input type="hidden" name="member-id" value="' . $member->id . '">';
-                $form .= '<select name="new-status" class="o-input-sm select2-sm" data-minimum-results-for-search="-1">';
+                $form .= '<select name="new-status" class="o-input select2-sm" data-minimum-results-for-search="-1">';
                 $selected = false;
                 foreach ($this->statuses as $status) {
                     $form .= '<option value="' . $status . '"';

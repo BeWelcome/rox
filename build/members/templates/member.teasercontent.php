@@ -9,7 +9,7 @@
       ?>
       <div class="p-2 d-md-none"><img src="<?= $picture_url . '/100'?>" alt="profile picture of <?= $member->Username ?>" class="float-left d-md-none"></div>
 
-    <h2 class="m-0 d-inline"><strong>
+    <h2 class="h2 m-0 d-inline"><strong>
       <?php if ($this->passedAway == 'PassedAway') {
            echo $words->get('ProfileInMemoriam', $member->Username);
       } else {

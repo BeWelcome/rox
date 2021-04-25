@@ -23,6 +23,7 @@ function initializePicker(value) {
         numberOfMonths: 2,
         numberOfColumns: 2,
         format: "YYYY-MM-DD",
+        position: 'top left',
         lang: document.documentElement.lang,
         setup: (picker) => {
             picker.on('selected', (start, end) => {

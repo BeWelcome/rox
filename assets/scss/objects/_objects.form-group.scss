@@ -11,6 +11,10 @@
 .o-form-group {
 }
 
+.o-form-group--floating-label {
+	position: relative;
+}
+
 .o-form-group > label {
   font-weight: 400;
   margin-bottom: 8px;
@@ -28,6 +32,9 @@
 	margin-bottom: 10px;
 }
 
+.o-form-group--floating-label > .o-input {
+	margin-bottom: initial;
+}
 
 
 

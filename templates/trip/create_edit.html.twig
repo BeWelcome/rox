@@ -57,20 +57,22 @@
                 data-related="{{ name }}">
             <i class="fa fa-times"></i>
         </button>
-        <div class="u-flex u-flex-col md:u-flex-row md:u-mt-16">
-            {% set attributes = {
-                'class': 'o-checkbox--white o-checkbox--display'
-            } %}
+        <div class="u-flex u-flex-col md:u-flex-row md:u-mt-16 u-flex-wrap">
+            <div class="md:u-mr-24">
+                {% set attributes = {
+                    'class': 'o-checkbox--white o-checkbox--display'
+                } %}
 
-            {% if expired %}
-                {% set attributes = attributes|merge({'disabled':'disabled'}) %}
-            {% endif %}
+                {% if expired %}
+                    {% set attributes = attributes|merge({'disabled':'disabled'}) %}
+                {% endif %}
 
-            {{ form_widget(form.options[0], {'attr': attributes }) }}
-            <div class="md:u-ml-24">
+                {{ form_widget(form.options[0], {'attr': attributes }) }}
+            </div>
+            <div class="md:u-mr-24">
                 {{ form_widget(form.options[1], {'attr': attributes }) }}
             </div>
-            <div class="md:u-ml-24">
+            <div class="md:u-mr-24">
                 {{ form_widget(form.options[2], {'attr': attributes }) }}
             </div>
         </div>
@@ -117,14 +119,14 @@
                     <div class="u-flex u-flex-col md:u-flex-row u-items-start md:u-items-center  md:u-mr-24 u-mb-16 md:u-mb-0">
                         {{ form_label(form.additionalinfo, null, {'label_attr': { 'class': 'o-label o-label--white u-mt-8 u-mr-8 u-flex u-items-center u-whitespace-nowrap'}}) }}
                         <div class="u-relative u-w-full">
-                            {{ form_widget(form.additionalinfo, {'attr': { 'class': 'o-input--select o-input--select-white o-input--no-border-on-hover'}}) }}
+                            {{ form_widget(form.additionalinfo, {'attr': { 'class': 'o-input--select o-input--select-white o-input--no-border-on-hover u-w-auto'}}) }}
                             <i class="fa fa-angle-down u-text-white u-ml-__16 u-absolute u-pin-y"></i>
                         </div>
                     </div>
                     <div class="u-flex u-flex-col md:u-flex-row u-items-start md:u-items-center u-mb-16 md:u-mb-0">
                         {{ form_label(form.invitationradius, null, {'label_attr': { 'class': 'o-label o-label--white u-mt-8 u-mr-8 u-flex u-items-center u-whitespace-nowrap'}}) }}
                         <div class="u-relative u-w-full">
-                            {{ form_widget(form.invitationradius, {'attr': { 'class': 'o-input--select o-input--select-white o-input--no-border-on-hover o-input--select-short u-text-center'}}) }}
+                            {{ form_widget(form.invitationradius, {'attr': { 'class': 'o-input--select o-input--select-white o-input--no-border-on-hover u-w-auto'}}) }}
                             <i class="fa fa-angle-down u-text-white u-ml-__16 u-absolute u-pin-y"></i>
                         </div>
                     </div>

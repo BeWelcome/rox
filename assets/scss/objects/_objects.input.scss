@@ -82,7 +82,8 @@ textarea.o-input::placeholder {
 .o-input--inactive,
 .o-input[disabled] {
   background-color: var(--gray-20);
-  color: var(--gray-60);
+  color: var(--gray-50);
+  pointer-events: none;
 }
 
 .o-input--inactive:hover,

@@ -6,7 +6,6 @@ use Doctrine\DBAL\Driver\Connection;
 use Doctrine\DBAL\ParameterType;
 use Pagerfanta\Adapter\AdapterInterface;
 use PDO;
-use Traversable;
 
 class DoNotTranslateTranslationAdapter implements AdapterInterface
 {

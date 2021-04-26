@@ -82,7 +82,7 @@ class AdminMassmailController extends AdminBaseController
                 $args->post['Type'], $args->post['Subject'], $args->post['Body']);
             $this->session->set(  'AdminMassMailStatus', array( 'Edit', $args->post['Name']) );
         }
-        return $this->router->url('admin_massmail', array(), false);
+        return 'admin/massmail/create/finish';
     }
 
     /**

@@ -156,10 +156,6 @@ class LegacyLoader extends Loader
         $this->addRouteDirectly('messages_with', '/messages/with/{username}');
         $this->addRouteDirectly('check_notification', '/notify/{notificationId}/check');
 
-        // Simple newsletter page
-        $this->addRouteDirectly('newsletters', '/newsletters');
-        $this->addRouteDirectly('newsletter_single', '/newsletter/{shortCode}/{language}');
-
         // Polls
         $this->addRouteDirectly('polls', '/polls');
         $this->addRouteDirectly('polls_create', '/polls/create');

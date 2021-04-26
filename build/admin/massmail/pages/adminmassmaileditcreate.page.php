@@ -60,6 +60,8 @@ class AdminMassmailEditCreatePage extends AdminMassmailBasePage
             $this->type = $entry->Type;
             $this->setCurrent('AdminMassMailEdit');
         }
+        $this->addLateLoadScriptFile('build/roxeditor.js');
+        $this->addStylesheet('build/roxeditor.css');
     }
 
     public function teaserHeadline() {

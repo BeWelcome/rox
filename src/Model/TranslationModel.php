@@ -77,10 +77,10 @@ class TranslationModel
                 $translationAdapter = new TranslationAdapter($connection, $locale, $code);
                 break;
             case 'archived':
-                $translationAdapter = new ArchivedTranslationAdapter($connection, $locale);
+                $translationAdapter = new ArchivedTranslationAdapter($connection);
                 break;
             case 'donottranslate':
-                $translationAdapter = new DoNotTranslateTranslationAdapter($connection, $locale);
+                $translationAdapter = new DoNotTranslateTranslationAdapter($connection);
                 break;
         }
 
@@ -109,14 +109,14 @@ class TranslationModel
         // Make sure the directory exists
         $this->filesystem->mkdir($translationDir);
 
-        // Remove the translations for this locale
+        // Remove the translations for this locale or all if locale is null
         $files = $finder->files()->name($locale ? '*.' . $locale . '.*' : '*')->in($translationDir);
         foreach ($files as $file) {
             $this->filesystem->remove($file);
         }
 
         $memoryLimit = ini_get('memory_limit');
-        ini_set('memory_limit', '512M');
+        ini_set('memory_limit', '1G');
 
         // Build them again
         if ($this->translator instanceof WarmableInterface) {

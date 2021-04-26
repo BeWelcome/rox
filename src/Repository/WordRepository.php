@@ -38,13 +38,20 @@ class WordRepository extends EntityRepository
 
     public function getTranslationsForLocale(string $locale, string $domain)
     {
-        $translations = $this->createQueryBuilder('t')
+        $qb = $this->createQueryBuilder('t');
+        $qb
             ->where('t.shortCode = :locale')
-            ->where('(t.isArchived = 0 OR t.isArchived IS NULL)')
-            ->andWhere('t.shortCode = :locale')
+            ->andWhere(
+                $qb->expr()->orX(
+                    't.isArchived = 0 OR t.isArchived IS NULL',
+                    't.isArchived = 1 AND t.code LIKE \'broadcast%\''
+                )
+            )
             ->andWhere('t.domain = :domain')
             ->setParameter(':locale', $locale)
-            ->setParameter(':domain', $domain)
+            ->setParameter(':domain', $domain);
+
+        $translations = $qb
             ->getQuery()
             ->getResult();
 
@@ -63,13 +70,25 @@ class WordRepository extends EntityRepository
         return $translatableItems;
     }
 
+    public function getLanguagesForTranslatableItem(string $locale, string $domain)
+    {
+        $translatableItems =
+            $this
+                ->getTranslatableItemsForLocaleQuery($locale, $domain)
+                ->getQuery()
+                ->getResult()
+        ;
+
+        return $translatableItems;
+    }
+
     public function getTranslationDetails(): array
     {
         $translationDetails = [];
         // \todo: Check for existing locales in Filesystem (allows to enable languages only on certain installs)
         $locales = explode(
             ',',
-            'ar,bg,ca,cs,da,de,el,en,eo,es,eu,fa,fi,fr,hi,hr,hu,id,it,ja,lt,lv,nb,'
+            'ar,bg,ca,cs,da,de,el,en,eo,es,eu,fa,fi,fr,gl,hi,hr,hu,id,it,ja,lt,lv,nb,'
             . 'nl,no,pl,pt,pt-BR,rm,ro,ru,sk,sl,sr,su,sw,tr,zh-Hans,zh-Hant'
         );
         foreach ($locales as $locale) {
@@ -153,8 +172,7 @@ class WordRepository extends EntityRepository
     {
         $qb = $this->createQueryBuilder('t')
             ->where('t.shortCode = :locale')
-            ->where('(t.isArchived = 0 OR t.isArchived IS NULL)')
-            ->andWhere('t.shortCode = :locale')
+            ->andWhere('(t.isArchived = 0 OR t.isArchived IS NULL)')
             ->setParameter(':locale', $locale)
         ;
         if (null !== $domain) {
@@ -163,12 +181,10 @@ class WordRepository extends EntityRepository
                 ->setParameter(':domain', $domain)
             ;
         }
-        if ('en' !== $locale) {
-            $qb
-                ->andWhere('t.translationAllowed = :translationAllowed')
-                ->setParameter(':translationAllowed', TranslationAllowedType::TRANSLATION_ALLOWED)
-            ;
-        }
+        $qb
+            ->andWhere('t.translationAllowed = :translationAllowed')
+            ->setParameter(':translationAllowed', TranslationAllowedType::TRANSLATION_ALLOWED)
+        ;
 
         return $qb;
     }

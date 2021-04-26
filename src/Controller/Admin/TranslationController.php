@@ -3,33 +3,22 @@
 namespace App\Controller\Admin;
 
 use App\Doctrine\TranslationAllowedType;
-use App\Entity\Activity;
-use App\Entity\ForumPost;
-use App\Entity\ForumThread;
-use App\Entity\Group;
-use App\Entity\HostingRequest;
 use App\Entity\Language;
 use App\Entity\Member;
 use App\Entity\Message;
 use App\Entity\RightVolunteer;
 use App\Entity\Word;
-use App\Form\CustomDataClass\SearchFormRequest;
 use App\Form\CustomDataClass\Translation\EditTranslationRequest;
 use App\Form\CustomDataClass\Translation\TranslationRequest;
 use App\Form\EditTranslationFormType;
-use App\Form\ResetPasswordFormType;
-use App\Form\ResetPasswordRequestFormType;
-use App\Form\SearchFormType;
 use App\Form\TranslationFormType;
 use App\Model\TranslationModel;
 use App\Repository\LanguageRepository;
 use App\Repository\WordRepository;
-use App\Twig\MockupExtension;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
 use DateTime;
 use Exception;
-use Mockery;
 use Pagerfanta\Pagerfanta;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -50,130 +39,6 @@ class TranslationController extends AbstractController
 {
     use TranslatedFlashTrait;
     use TranslatorTrait;
-
-    private const MOCKUPS = [
-        'emails' => [
-            'message' => [
-                'template' => 'emails/message.html.twig',
-            ],
-            'request (initial)' => [
-                'template' => 'emails/request.html.twig',
-            ],
-            'request (guest)' => [
-                'template' => 'emails/reply_from_guest.html.twig',
-            ],
-            'request (host)' => [
-                'template' => 'emails/reply_from_host.html.twig',
-            ],
-            'group invitation' => [
-                'template' => 'emails/group/invitation.html.twig',
-            ],
-            'group want in' => [
-                'template' => 'emails/group/wantin.html.twig',
-            ],
-            'accepted invite' => [
-                'template' => 'emails/group/accepted.invite.html.twig',
-            ],
-            'declined invite' => [
-                'template' => 'emails/group/declined.invite.html.twig',
-            ],
-            'join approved' => [
-                'template' => 'emails/group/join.approved.html.twig',
-            ],
-            'join declined' => [
-                'template' => 'emails/group/join.declined.html.twig',
-            ],
-            'reset password' => [
-                'template' => 'emails/reset.password.html.twig',
-            ],
-            'forum post' => [
-                'template' => 'emails/notifications.html.twig',
-            ],
-            'group post (subscribed)' => [
-                'template' => 'emails/notifications.html.twig',
-            ],
-            'group post (not subscribed)' => [
-                'template' => 'emails/notifications.html.twig',
-            ],
-        ],
-        'pages' => [
-            'signup_finish' => [
-                'url' => 'signup/finish',
-                'template' => 'signup/finish.html.twig',
-                'description' => 'Successful signup.',
-            ],
-            'signup_error' => [
-                'url' => 'signup/finish',
-                'template' => 'signup/error.html.twig',
-                'description' => 'Error during signup.',
-            ],
-            'error 403' => [
-                'template' => 'bundles/TwigBundle/Exception/error403.html.twig',
-                'description' => 'Access to a resource was denied.',
-            ],
-            'error 404' => [
-                'template' => 'bundles/TwigBundle/Exception/error404.html.twig',
-                'description' => 'The page doesn\'t exists.',
-            ],
-            'error 500' => [
-                'template' => 'bundles/TwigBundle/Exception/error500.html.twig',
-                'description' => 'A server problem (something bad happened).',
-            ],
-            'homepage' => [
-                'url' => '/',
-                'template' => 'home/home.html.twig',
-                'description' => 'The page that is shown to unauthenticated visitors.',
-            ],
-            'Terms of Use' => [
-                'url' => 'terms',
-                'template' => 'policies/tou_translated.html.twig',
-                'description' => 'The terms of use. Make sure to translate them fully before asking for publication.',
-            ],
-            'Privacy Policy' => [
-                'url' => 'privacy_policy',
-                'template' => 'policies/pp_translated.html.twig',
-                'description' => 'The privacy policy. Make sure to translate them fully before asking for publication.',
-            ],
-            'Data Privacy' => [
-                'url' => 'datarights/',
-                'template' => 'policies/dp_translated.html.twig',
-                'description' => 'The data privacy policy. Make sure to translate them fully before asking for publication.',
-            ],
-            'Login' => [
-                'url' => '/login',
-                'template' => 'security/login.html.twig',
-                'description' => 'The login page (without error message)',
-            ],
-            'Reset Password Request' => [
-                'url' => '/resetpassword',
-                'template' => 'member/request.password.reset.html.twig',
-                'description' => 'The page that is shown when a member asks for a new password',
-            ],
-            'Reset Password' => [
-                'url' => '/resetpassword/{username}/{token}',
-                'template' => 'member/reset.password.html.twig',
-                'description' => 'The page that is shown when a member really sets a new password',
-            ],
-        ],
-        'templates' => [
-            'mydata (start page)' => [
-                'template' => 'private/index.html.twig',
-                'description' => 'Index page of the data dump created by /mydata (profile)',
-            ],
-            'mydata (activities, none)' => [
-                'template' => 'private/activities.html.twig',
-                'description' => 'Resulting page for the own data export with no activities',
-            ],
-            'mydata (activities, some)' => [
-                'template' => 'private/activities.html.twig',
-                'description' => 'Resulting page for the own data export with some activities',
-            ],
-            'mydata (profile)' => [
-                'template' => 'private/profile.html.twig',
-                'description' => 'Your profile in the data dump',
-            ],
-        ],
-    ];
 
     /** @var TranslationModel */
     private $translationModel;
@@ -238,7 +103,10 @@ class TranslationController extends AbstractController
         }
         $translationRequest = EditTranslationRequest::fromTranslations($original, $translation);
 
-        $editForm = $this->createForm(EditTranslationFormType::class, $translationRequest);
+        $richtext = ($original->getSentence() !== strip_tags($original->getSentence()));
+        $editForm = $this->createForm(EditTranslationFormType::class, $translationRequest, [
+            'richtext' => $richtext,
+        ]);
 
         $editForm->handleRequest($request);
         if ($editForm->isSubmitted() && $editForm->isValid()) {
@@ -289,6 +157,7 @@ class TranslationController extends AbstractController
 
         return $this->render('admin/translations/edit.html.twig', [
             'form' => $editForm->createView(),
+            'richtext' => $richtext,
             'isMajorUpdate' => $translationRequest->isMajorUpdate,
             'submenu' => [
                 'active' => 'edit',
@@ -465,10 +334,6 @@ class TranslationController extends AbstractController
     {
         $this->denyAccessUnlessGranted(Member::ROLE_ADMIN_WORDS, null, 'Unable to access this page!');
 
-        if (!$request->getSession()->has('originalReferrer')) {
-            $request->getSession()->set('originalReferrer', $request->headers->get('referer'));
-        }
-
         /** @var Member $translator */
         $translator = $this->getUser();
 
@@ -477,9 +342,15 @@ class TranslationController extends AbstractController
             return $this->redirectToRoute('translations_no_permissions');
         }
 
+        // We want to redirect to the page where the translation was originally missing
+        if (!$request->getSession()->has('originalReferrer')) {
+            $request->getSession()->set('originalReferrer', $request->headers->get('referer'));
+        }
+
         if ('en' === $language->getShortcode()) {
             $this->addTranslatedFlash('notice', 'flash.translation.weird');
-            $this->redirectToRoute('translations');
+
+            return $this->redirectToRoute('translations');
         }
         $translationRepository = $this->getDoctrine()->getRepository(Word::class);
 
@@ -494,7 +365,7 @@ class TranslationController extends AbstractController
         ]);
 
         // Work around a problem in the database
-        // Sometimes the word code do not match between translations
+        // Sometimes the word code do not match (case) between translations
         if (null !== $translation) {
             return $this->redirectToRoute('translation_edit', [
                 'locale' => $language->getShortCode(),
@@ -508,7 +379,10 @@ class TranslationController extends AbstractController
 
         $addTranslationRequest = EditTranslationRequest::fromTranslations($original, $translation);
 
-        $addForm = $this->createForm(EditTranslationFormType::class, $addTranslationRequest);
+        $richtext = ($original->getSentence() !== strip_tags($original->getSentence()));
+        $addForm = $this->createForm(EditTranslationFormType::class, $addTranslationRequest, [
+            'richtext' => $richtext,
+        ]);
 
         $addForm->handleRequest($request);
         if ($addForm->isSubmitted() && $addForm->isValid()) {
@@ -686,128 +560,6 @@ class TranslationController extends AbstractController
     }
 
     /**
-     * @Route("/admin/translations/mockups", name="translations_mockups")
-     */
-    public function selectMockup(Request $request): Response
-    {
-        $this->denyAccessUnlessGranted(Member::ROLE_ADMIN_WORDS, null, 'Unable to access this page!');
-
-        /** @var Member $translator */
-        $translator = $this->getUser();
-        if (!$translator->hasRightsForLocale($request->getLocale())) {
-            return $this->redirectToRoute('translations_no_permissions');
-        }
-
-        return $this->render('admin/translations/mockups.html.twig', [
-            'mockups' => self::MOCKUPS,
-            'submenu' => [
-                'active' => 'mockups',
-                'items' => $this->getSubmenuItems($request->getLocale()),
-            ],
-        ]);
-    }
-
-    /**
-     * @Route("/admin/translate/mockup/page/{name}", name="translation_mockup_page",
-     *     requirements={"template"=".+"})
-     *
-     * @return Response
-     */
-    public function translateMockupPage(Request $request, string $name)
-    {
-        $this->denyAccessUnlessGranted(Member::ROLE_ADMIN_WORDS, null, 'Unable to access this page!');
-
-        if (!isset(self::MOCKUPS['pages'][$name])) {
-            return $this->redirectToRoute('translations_mockups');
-        }
-
-        $template = self::MOCKUPS['pages'][$name]['template'];
-        $url = self::MOCKUPS['pages'][$name]['url'] ?? '';
-        $description = self::MOCKUPS['pages'][$name]['description'] ?? '';
-
-        return $this->render(
-            'admin/translations/mockup.page.html.twig',
-            array_merge(
-                $this->getMockParams($template, $name),
-                [
-                    'url' => $url,
-                    'description' => $description,
-                    'template' => $template,
-                    'submenu' => [
-                        'active' => 'mockups',
-                        'items' => $this->getSubmenuItems($request->getLocale(), 'mockup', $name),
-                    ],
-                ]
-            ),
-        );
-    }
-
-    /**
-     * @Route("/admin/translate/mockup/email/{name}", name="translation_mockup_email")
-     *
-     * @return Response
-     */
-    public function translateMockupEmail(Request $request, string $name)
-    {
-        $this->denyAccessUnlessGranted(Member::ROLE_ADMIN_WORDS, null, 'Unable to access this page!');
-
-        if (!isset(self::MOCKUPS['emails'][$name])) {
-            return $this->redirectToRoute('translations_mockups');
-        }
-
-        $template = self::MOCKUPS['emails'][$name]['template'];
-        $description = self::MOCKUPS['emails'][$name]['description'] ?? '';
-
-        return $this->render(
-            'admin/translations/mockup.email.html.twig',
-            array_merge(
-                $this->getMockParams($template, $name),
-                [
-                    'template' => $template,
-                    'description' => $description,
-                    'submenu' => [
-                        'active' => 'mockups',
-                        'items' => $this->getSubmenuItems($request->getLocale(), 'mockup', $template),
-                    ],
-                ]
-            ),
-        );
-    }
-
-    /**
-     * @Route("/admin/translate/mockup/template/{name}", name="translation_mockup_template",
-     *     requirements={"template"=".+"})
-     *
-     * @return Response
-     */
-    public function translateMockupTemplate(Request $request, string $name)
-    {
-        $this->denyAccessUnlessGranted(Member::ROLE_ADMIN_WORDS, null, 'Unable to access this page!');
-
-        if (!isset(self::MOCKUPS['templates'][$name])) {
-            return $this->redirectToRoute('translations_mockups');
-        }
-
-        $template = self::MOCKUPS['templates'][$name]['template'];
-        $description = self::MOCKUPS['templates'][$name]['description'] ?? '';
-
-        return $this->render(
-            'admin/translations/mockup.template.html.twig',
-            array_merge(
-                $this->getMockTemplateParams($template, $name),
-                [
-                    'description' => $description,
-                    'template' => $template,
-                    'submenu' => [
-                        'active' => 'mockups',
-                        'items' => $this->getSubmenuItems($request->getLocale(), 'mockup', $name),
-                    ],
-                ]
-            ),
-        );
-    }
-
-    /**
      * @Route("/admin/translate/statistics", name="translation_statistics")
      *
      * @return Response
@@ -829,244 +581,6 @@ class TranslationController extends AbstractController
             ]);
     }
 
-    private function getMockTemplateParams($template, $name = null): array
-    {
-        $params = [
-            'extracted' => [
-                'activities',
-                'broadcasts',
-                'comments',
-                'communitynews',
-                'communitynews_comments',
-                'donations',
-                'gallery',
-                'logs',
-                'messages',
-                'newsletters',
-                'pictures',
-                'polls',
-                'polls_contributed',
-                'polls_created',
-                'polls_voted',
-                'posts',
-                'posts_year',
-                'privileges',
-                'profile',
-                'relations',
-                'requests',
-                'rights',
-                'shouts',
-                'subscriptions',
-                'subscriptions',
-                'translations',
-            ],
-            'member' => $this->getUser(),
-            'profilepicture' => '/members/avatar/' . $this->getUser()->getUsername() . '/50',
-        ];
-
-        if (false === strpos($name, 'some')) {
-            $params['activities'] = [];
-        } else {
-            $mockActivity = Mockery::mock(Activity::class, [
-                'getTitle' => 'Activity Title',
-                'getDescription' => 'Activity Description',
-            ]);
-            $params['activities'] = [
-                0 => $mockActivity,
-                1 => $mockActivity,
-            ];
-        }
-
-        return $params;
-    }
-
-    private function getMockParams($template, $name = null): array
-    {
-        // Use the bwAdmin account as counter part for all of this
-        $memberRepository = $this->getDoctrine()->getRepository(Member::class);
-        $bwAdmin = $memberRepository->find(1);
-
-        // Use a public group like Berlin
-        $groupRepository = $this->getDoctrine()->getRepository(Group::class);
-        $group = $groupRepository->find(70);
-
-        $mockMessage = Mockery::mock(Message::class, [
-            'getId' => 1,
-            'getMessage' => 'Message text',
-        ]);
-        $mockMessage->shouldReceive('getSender')->andReturn($this->getUser());
-        $mockMessage->shouldReceive('getReceiver')->andReturn($bwAdmin);
-
-        $mockRequest = Mockery::mock(HostingRequest::class, [
-            'getId' => 1,
-            'getArrival' => new DateTime(),
-            'getDeparture' => new DateTime(),
-            'getNumberOfTravellers' => 2,
-            'getFlexible' => true,
-            'getStatus' => HostingRequest::REQUEST_DECLINED,
-        ]);
-        $mockMessage->shouldReceive('getSender')->andReturn($this->getUser());
-        $mockMessage->shouldReceive('getReceiver')->andReturn($bwAdmin);
-
-        $params = [
-            'html_template' => $template,
-            'username' => 'username',
-            'email_address' => 'mockup@example.com',
-            'subject' => 'Subject',
-            'email' => new MockupExtension(),
-            'message' => $mockMessage,
-            'request' => $mockRequest,
-        ];
-        switch ($template) {
-            case 'home/home.html.twig':
-                $formFactory = $this->get('form.factory');
-                $searchFormRequest = new SearchFormRequest($this->getDoctrine()->getManager());
-                $searchFormRequest->show_map = true;
-                $searchFormRequest->accommodation_neverask = true;
-                $searchFormRequest->inactive = true;
-                $searchFormRequest->distance = 100;
-                $searchForm = $formFactory->createNamed('map', SearchFormType::class, $searchFormRequest, [
-                    'action' => '/search/map',
-                ]);
-
-                $usernameForm = $this->createFormBuilder()
-                    ->add('username', TextType::class, [
-                        'constraints' => [
-                            new NotBlank(),
-                        ],
-                    ])
-                    ->getForm()
-                ;
-                $params['stats'] = [
-                    'members' => 100000,
-                    'languages' => 210,
-                    'countries' => 192,
-                    'comments' => 50000,
-                    'activities' => 1300,
-                ];
-                $params['username'] = $usernameForm->createView();
-                $params['search'] = $searchForm->createView();
-                break;
-            case 'emails/message.html.twig':
-                $params['sender'] = $this->getUser();
-                $params['receiver'] = $bwAdmin;
-                break;
-            case 'emails/request.html.twig':
-            case 'emails/reply_from_guest.html.twig':
-                $params['host'] = $bwAdmin;
-                $params['sender'] = $this->getUser();
-                $params['receiver'] = $bwAdmin;
-                $params['receiverLocale'] = 'en';
-                $params['changed'] = true;
-                break;
-            case 'emails/reply_from_host.html.twig':
-                $params['host'] = $bwAdmin;
-                $params['sender'] = $bwAdmin;
-                $params['receiver'] = $this->getUser();
-                $params['receiverLocale'] = 'en';
-                $params['changed'] = true;
-                break;
-            case 'emails/group/invitation.html.twig':
-            case 'emails/group/accepted.invite.html.twig':
-            case 'emails/group/approve.join.html.twig':
-            case 'emails/group/declined.invite.html.twig':
-            case 'emails/group/wantin.html.twig':
-            case 'emails/group/join.approved.html.twig':
-            case 'emails/group/join.declined.html.twig':
-                $params['sender'] = $bwAdmin;
-                $params['receiver'] = $this->getUser();
-                $params['group'] = $group;
-                $params['subject'] = 'group.invitation';
-                $params['reason'] = 'I just want to be a member of something.';
-                break;
-            case 'emails/reset.password.html.twig':
-                $params['sender'] = $bwAdmin;
-                $params['receiver'] = $this->getUser();
-                $params['token'] = '91aeecc7154b8fc9b2855a331e975bc8aafb088b6617d9aefe543e5fee427ae7';
-                break;
-            case 'emails/notifications.html.twig':
-                if ('forum post' === substr($name, 0, 10)) {
-                    $mockThread = Mockery::mock(ForumThread::class, [
-                        'getId' => 1,
-                        'getGroup' => null,
-                        'getTitle' => 'Thread title',
-                    ]);
-
-                    $mockPost = Mockery::mock(ForumPost::class, [
-                        'getId' => 1,
-                        'getMessage' => 'Post text',
-                        'getThread' => $mockThread,
-                    ]);
-                } elseif ('group post' === substr($name, 0, 10)) {
-                    $mockThread = Mockery::mock(ForumThread::class, [
-                        'getId' => 1,
-                        'getGroup' => $group,
-                        'getTitle' => 'Thread title',
-                    ]);
-
-                    $mockPost = Mockery::mock(ForumPost::class, [
-                        'getId' => 1,
-                        'getMessage' => 'Post text',
-                        'getThread' => $mockThread,
-                    ]);
-                }
-                if (false !== strpos($name, 'not')) {
-                    $subscription = 0;
-                } else {
-                    $subscription = 123456;
-                }
-                $params['sender'] = $bwAdmin;
-                $params['receiver'] = $this->getUser();
-                $params['notification'] = [
-                    'post' => $mockPost,
-                    'subscription' => $subscription,
-                ];
-                break;
-            case 'security/login.html.twig':
-                $params['error'] = null;
-                $params['last_username'] = $this->getUser()->getUsername();
-                $params['invalid_credentials'] = false;
-                $params['resend_confirmation'] = false;
-                $params['member_banned'] = false;
-                $params['member_expired'] = false;
-                $params['member_not_allowed_to_login'] = false;
-                break;
-            case 'member/request.password.reset.html.twig':
-                $params['form'] = $this->createForm(ResetPasswordRequestFormType::class)->createView();
-                break;
-            case 'member/reset.password.html.twig':
-                $params['form'] = $this->createForm(ResetPasswordFormType::class)->createView();
-                break;
-            default:
-                $params['host'] = $bwAdmin;
-                break;
-        }
-
-        return $params;
-    }
-
-    /**
-     * Returns the locales that the user is allowed to translate.
-     *
-     * @return string[]
-     */
-    private function getTranslatorLocales(): array
-    {
-        $volunteer = $this->getUser();
-
-        /** @var RightVolunteer $wordRight */
-        $wordRight = $volunteer->getVolunteerRights()->filter(function (RightVolunteer $volunteerRight) {
-            return 'Words' === $volunteerRight->getRight()->getName();
-        })->first();
-
-        $scope = preg_split('/[,;]/', str_replace('"', '', $wordRight->getScope()));
-        if (\in_array('All', $scope, true)) {
-            return ['this', 'should', 'never', 'happen'];
-        }
-
-        return $scope;
-    }
-
     /**
      * @param $locale
      * @param mixed|null $action
@@ -1074,7 +588,7 @@ class TranslationController extends AbstractController
      *
      * @return array
      */
-    private function getSubmenuItems($locale, $action = null, $code = null)
+    protected function getSubmenuItems($locale, $action = null, $code = null)
     {
         /** @var Member $translator */
         $translator = $this->getUser();
@@ -1150,6 +664,28 @@ class TranslationController extends AbstractController
         }
 
         return $submenuItems;
+    }
+
+    /**
+     * Returns the locales that the user is allowed to translate.
+     *
+     * @return string[]
+     */
+    private function getTranslatorLocales(): array
+    {
+        $volunteer = $this->getUser();
+
+        /** @var RightVolunteer $wordRight */
+        $wordRight = $volunteer->getVolunteerRights()->filter(function (RightVolunteer $volunteerRight) {
+            return 'Words' === $volunteerRight->getRight()->getName();
+        })->first();
+
+        $scope = preg_split('/[,;]/', str_replace('"', '', $wordRight->getScope()));
+        if (\in_array('All', $scope, true)) {
+            return ['this', 'should', 'never', 'happen'];
+        }
+
+        return $scope;
     }
 
     private function generateTranslatableItem(TranslationRequest $data, Member $translator, Language $english): Word

@@ -10,6 +10,7 @@ use App\Form\CustomDataClass\GalleryImageEditRequest;
 use App\Form\GalleryEditImageFormType;
 use App\Form\GalleryUploadForm;
 use App\Logger\Logger;
+use App\Model\GalleryModel;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
 use App\Utilities\UniqueFilenameTrait;
@@ -41,10 +42,8 @@ class GalleryController extends AbstractController
      * )
      *
      * @throws AccessDeniedException
-     *
-     * @return Response
      */
-    public function editImage(Request $request, GalleryImage $image)
+    public function editImage(Request $request, GalleryImage $image): Response
     {
         $user = $this->getUser();
         if ($user !== $image->getOwner()) {
@@ -75,10 +74,8 @@ class GalleryController extends AbstractController
 
     /**
      * @Route("/new/image/upload", name="gallery_upload_new")
-     *
-     * @return JsonResponse
      */
-    public function handleImageUploadToGallery(Request $request, ValidatorInterface $validator)
+    public function handleImageUploadToGallery(Request $request, ValidatorInterface $validator): JsonResponse
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_REMEMBERED');
 
@@ -223,63 +220,65 @@ class GalleryController extends AbstractController
      *
      * @throws AccessDeniedException
      *
-     * @return JsonResponse
-     *
      * @SuppressWarnings(PHPMD.StaticAccess)
      */
-    public function uploadImageFromCKEditor5(Request $request, ValidatorInterface $validator)
+    public function uploadImageFromCKEditor5(Request $request, GalleryModel $galleryModel): JsonResponse
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_REMEMBERED');
 
         $response = new JsonResponse();
 
-        // Create Image constraint to check if uploaded file is an image and not something else
-
-        $constraint = new Image([
-            'maxSize' => UploadedFile::getMaxFilesize(),
-            'mimeTypes' => ['image/jpeg', 'image/png', 'image/gif'],
-            'mimeTypesMessage' => 'upload.error.not_supported',
-        ]);
-
         $image = $request->files->get('upload');
-        $violations = $validator->validate($image, $constraint);
-
-        if (\count($violations) > 0) {
+        $errors = $galleryModel->checkUploadedImage($image);
+        if (0 < \count($errors)) {
             $response->setData([
                 'uploaded' => false,
                 'error' => [
-                    'message' => $violations->get(0)->getMessage(),
+                    'message' => $errors->get(0)->getMessage(),
                 ],
             ]);
 
             return $response;
         }
 
-        list($width, $height) = getimagesize($image);
-        $uploadDirectory = $this->getParameter('upload_directory');
-        $fileName = $this->generateUniqueFileName() . '.' . $image->guessExtension();
+        // Check if an image with the same content already exists
+        $hash = hash_file('sha256', $image->getPathname());
 
-        // moves the file to the directory where group images are stored
-        /** @var UploadedFile */
-        $image = $image->move(
-            $uploadDirectory,
-            $fileName
-        );
-
-        $nanoId = new Client();
-        $fileInfo = $nanoId->generateId(16, Client::MODE_DYNAMIC);
-
-        // Write database entry and get id for response
         $em = $this->getDoctrine()->getManager();
-        $uploadedImage = new UploadedImage();
-        $uploadedImage->setFilename($fileName);
-        $uploadedImage->setSize($image->getSize());
-        $uploadedImage->setwidth($width);
-        $uploadedImage->setHeight($height);
-        $uploadedImage->setMimeType($image->getMimeType());
-        $uploadedImage->setFileInfo($fileInfo);
-        $em->persist($uploadedImage);
-        $em->flush();
+        $uploadedImageRepository = $em->getRepository(UploadedImage::class);
+        $existingImages = $uploadedImageRepository->findBy(['fileHash' => $hash]);
+
+        if (0 === \count($existingImages)) {
+            list($width, $height) = getimagesize($image);
+            $uploadDirectory = $this->getParameter('upload_directory');
+            $fileName = $this->generateUniqueFileName() . '.' . $image->guessExtension();
+
+            // moves the file to the directory where group images are stored
+            /** @var UploadedFile */
+            $image = $image->move(
+                $uploadDirectory,
+                $fileName
+            );
+
+            $nanoId = new Client();
+            $fileInfo = $nanoId->generateId(16, Client::MODE_DYNAMIC);
+
+            // Write database entry and get id for response
+            $uploadedImage = new UploadedImage();
+            $uploadedImage
+                ->setFilename($fileName)
+                ->setSize($image->getSize())
+                ->setwidth($width)
+                ->setHeight($height)
+                ->setMimeType($image->getMimeType())
+                ->setFileInfo($fileInfo)
+                ->setFileHash($hash)
+            ;
+            $em->persist($uploadedImage);
+            $em->flush();
+        } else {
+            $uploadedImage = $existingImages[0];
+        }
 
         $response->setData([
             'uploaded' => true,

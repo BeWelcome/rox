@@ -14,10 +14,14 @@ use Doctrine\Persistence\ObjectManagerAware;
  * Broadcast.
  *
  * @ORM\Table(name="broadcast")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\NewsletterRepository")
  */
 class Newsletter implements ObjectManagerAware
 {
+    public const REGULAR_NEWSLETTER = 'Normal';
+    public const SPECIFIC_NEWSLETTER = 'Specific';
+    public const TERMS_OF_USE = 'TermsOfUse';
+
     /**
      * @var Member
      *

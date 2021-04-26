@@ -22,7 +22,7 @@
         "anthonymartin/geo-location": "^2.0",
         "anyx/login-gate-bundle": "^2.0",
         "api-platform/core": "^2.6-beta",
-        "babdev/pagerfanta-bundle": "^2.1",
+        "babdev/pagerfanta-bundle": "3.*",
         "doctrine/doctrine-bundle": "^2.0",
         "doctrine/doctrine-migrations-bundle": "^2.0",
         "doctrine/orm": "^2.6",
@@ -42,10 +42,12 @@
         "league/html-to-markdown": "^4.8",
         "lexik/jwt-authentication-bundle": "^2.8",
         "nelmio/cors-bundle": "^2.1",
+        "nelmio/security-bundle": "^2.10",
         "nesbot/carbon": "^2.0",
         "nikic/php-parser": "4.9.1",
-        "pagerfanta/doctrine-dbal-adapter": "^2.4",
-        "pagerfanta/pagerfanta": "^2.0",
+        "pagerfanta/doctrine-dbal-adapter": "3.*",
+        "pagerfanta/doctrine-orm-adapter": "^3.0",
+        "pagerfanta/pagerfanta": "v3.0.0",
         "psr/container": "^1.0",
         "psr/log": "*",
         "ramsey/uuid-doctrine": "^1.6",
@@ -98,7 +100,7 @@
         "friends-of-behat/mink-extension": "^2.4",
         "friends-of-behat/symfony-extension": "^2.1",
         "friendsofphp/php-cs-fixer": "^2.16",
-        "fzaninotto/faker": "^1.6",
+        "fakerphp/faker": "^v1.14.1",
         "hautelook/alice-bundle": "^2.0",
         "infection/infection": "^0.18.0",
         "mockery/mockery": "^1.4.0",
@@ -153,7 +155,7 @@
     "config": {
         "sort-packages": true,
         "platform": {
-            "php": "7.3.1"
+            "php": "7.4"
         }
     },
     "extra": {

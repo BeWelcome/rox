@@ -43,14 +43,6 @@
       <?php endif; ?>
         <br>
         <span class="h4"><?php $name = $member->name(); ?><?=($name == '') ? (($occupation) ? $occupation : "") : $name;?></span>
-        <?php if (!$this->myself) : ?>
-        <a class="btn btn-primary"
-           title="<?php echo $words->get('profile.report'); ?>"
-           href="/feedback?IdCategory=2&FeedbackQuestion=<?php
-           echo urlencode('Hi, I think this member (' . $member->Username . ') is a spammers/scammer or otherwise weird.') ?>">
-            <i class="fas fa-flag"></i>
-        </a>
-        <?php endif; ?>
 
     </h2> <!-- username -->
 

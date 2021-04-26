@@ -17,32 +17,29 @@ use Doctrine\ORM\Mapping as ORM;
 class BroadcastMessage
 {
     /**
-     * @var Member
-     *
      * @ORM\OneToOne(targetEntity="Member")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="IdEnqueuer", referencedColumnName="id")
      * })
      */
-    private $enqueuedBy;
+    private Member $enqueuedBy;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="Status", type="string", nullable=false)
      */
-    private $status = 'ToApprove';
+    private string $status = 'ToApprove';
 
     /**
-     * @var DateTime
-     *
      * @ORM\Column(name="updated", type="datetime", nullable=false)
      */
-    private $updated;
+    private DateTime $updated;
 
     /**
-     * @var Newsletter
-     *
+     * @ORM\Column(name="unsubscribe_key", type="string", length=64, nullable=true)
+     */
+    private ?string $unsubscribeKey;
+
+    /**
      * @ORM\OneToOne(targetEntity="Newsletter")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="IdBroadcast", referencedColumnName="id")
@@ -50,11 +47,9 @@ class BroadcastMessage
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="NONE")
      */
-    private $newsletter;
+    private Newsletter $newsletter;
 
     /**
-     * @var Member
-     *
      * @ORM\OneToOne(targetEntity="Member")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="IdReceiver", referencedColumnName="id")
@@ -62,125 +57,77 @@ class BroadcastMessage
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="NONE")
      */
-    private $receiver;
+    private Member $receiver;
 
-    /**
-     * Set enqueuedBy.
-     *
-     * @param Member $enqueuedBy
-     *
-     * @return BroadcastMessage
-     */
-    public function setEnqueuedBy($enqueuedBy)
+    public function setEnqueuedBy(Member $enqueuedBy): self
     {
         $this->enqueuedBy = $enqueuedBy;
 
         return $this;
     }
 
-    /**
-     * Get enqueuedBy.
-     *
-     * @return Member
-     */
-    public function getEnqueuedBy()
+    public function getEnqueuedBy(): Member
     {
         return $this->enqueuedBy;
     }
 
-    /**
-     * Set status.
-     *
-     * @param string $status
-     *
-     * @return BroadcastMessage
-     */
-    public function setStatus($status)
+    public function setStatus(string $status): self
     {
         $this->status = $status;
 
         return $this;
     }
 
-    /**
-     * Get status.
-     *
-     * @return string
-     */
-    public function getStatus()
+    public function getStatus(): string
     {
         return $this->status;
     }
 
-    /**
-     * Set updated.
-     *
-     * @param DateTime $updated
-     *
-     * @return BroadcastMessage
-     */
-    public function setUpdated($updated)
+    public function setUpdated(DateTime $updated): self
     {
         $this->updated = $updated;
 
         return $this;
     }
 
-    /**
-     * Get updated.
-     *
-     * @return Carbon
-     */
-    public function getUpdated()
+    public function getUpdated(): Carbon
     {
         return Carbon::instance($this->updated);
     }
 
-    /**
-     * Set newsletter.
-     *
-     * @param Newsletter $newsletter
-     *
-     * @return BroadcastMessage
-     */
-    public function setNewsletter($newsletter)
+    public function setNewsletter(Newsletter $newsletter): self
     {
         $this->newsletter = $newsletter;
 
         return $this;
     }
 
-    /**
-     * Get newsletter.
-     *
-     * @return Newsletter
-     */
-    public function getNewsletter()
+    public function getNewsletter(): Newsletter
     {
         return $this->newsletter;
     }
 
-    /**
-     * Set receiver.
-     *
-     * @param Member $receiver
-     *
-     * @return BroadcastMessage
-     */
-    public function setReceiver($receiver)
+    public function setReceiver(Member $receiver)
     {
         $this->receiver = $receiver;
 
         return $this;
     }
 
-    /**
-     * Get receiver.
-     *
-     * @return Member
-     */
-    public function getReceiver()
+    public function getReceiver(): Member
     {
         return $this->receiver;
+    }
+
+    public function getUnsubscribeKey(): string
+    {
+        return $this->unsubscribeKey;
+    }
+
+    public function setUnsubscribeKey(?string $unsubscribeKey): self
+    {
+        $this->unsubscribeKey = $unsubscribeKey;
+
+        return $this;
     }
 }

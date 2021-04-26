@@ -6,12 +6,13 @@ use App\Entity\Member;
 use App\Entity\PasswordReset;
 use App\Form\ResetPasswordFormType;
 use App\Form\ResetPasswordRequestFormType;
-use App\Model\MemberModel;
+use App\Model\PasswordModel;
 use App\Repository\MemberRepository;
 use App\Service\Mailer;
 use App\Utilities\ManagerTrait;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -26,12 +27,19 @@ class PasswordController extends AbstractController
     use TranslatedFlashTrait;
     use TranslatorTrait;
 
+    private PasswordModel $passwordModel;
+    private EntityManagerInterface $entityManager;
+
+    public function __construct(PasswordModel $passwordModel, EntityManagerInterface $entityManager)
+    {
+        $this->passwordModel = $passwordModel;
+        $this->entityManager = $entityManager;
+    }
+
     /**
      * @Route("/resetpassword", name="member_request_reset_password")
-     *
-     * @return Response
      */
-    public function requestResetPasswordAction(Request $request, MemberModel $memberModel, Mailer $mailer)
+    public function requestResetPassword(Request $request, Mailer $mailer): Response
     {
         // Someone obviously lost their way. No sense in resetting your password if you're currently logged in.
         if ($this->isGranted('ROLE_USER')) {
@@ -39,6 +47,7 @@ class PasswordController extends AbstractController
 
             return $this->redirectToRoute('landingpage');
         }
+
         $form = $this->createForm(ResetPasswordRequestFormType::class);
         $form->handleRequest($request);
 
@@ -56,7 +65,7 @@ class PasswordController extends AbstractController
                 $form->addError(new FormError($this->getTranslator()->trans('flash.email.reset.password')));
             } else {
                 try {
-                    $token = $memberModel->generatePasswordResetToken($member);
+                    $token = $this->passwordModel->generatePasswordResetToken($member);
                 } catch (Exception $e) {
                     $token = null;
                 }
@@ -91,13 +100,9 @@ class PasswordController extends AbstractController
 
     /**
      * @Route("/resetpassword/{username}/{token}", name="member_reset_password",
-     *     requirements={"key": "[a-z0-9]{32}"})
-     *
-     * @param $token
-     *
-     * @return Response
+     *     requirements={"token": "[a-z0-9]{64}"})
      */
-    public function resetPasswordAction(Request $request, Member $member, $token)
+    public function resetPassword(Request $request, Member $member, string $token): Response
     {
         // Someone obviously lost their way. No sense in resetting your password if you're currently logged in.
         if ($this->isGranted('ROLE_USER')) {
@@ -131,6 +136,8 @@ class PasswordController extends AbstractController
             $em = $this->getDoctrine()->getManager();
             $em->persist($member);
             $em->flush();
+
+            $this->passwordModel->removePasswordResetTokens($member);
             $this->addTranslatedFlash('notice', 'flash.password.reset');
 
             return $this->redirectToRoute('security_login');

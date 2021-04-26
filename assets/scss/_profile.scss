@@ -50,7 +50,7 @@ body{
 	box-shadow: 0 50px 150px -50px rgba(8,8,8,0.1) inset;
 	height: auto;
 	margin: 0;
-	background-image: url("/images/bw-wallpaper-xs.png");
+	background-image: url("../../public/images/bw-wallpaper-xs.png");
 	background-size: 33%;
 	border: 2px solid white;
 }
@@ -305,11 +305,11 @@ a.grouplist:hover {
         text-rendering: auto;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
-      content: url('/images/chevron.svg');
+      content: url('../../public/images/chevron.svg');
       transform: rotate(270deg) ;
       transition: all linear 0.25s;
       float: right;
-      }   
+      }
 #MyPreferences [data-toggle="collapse"].collapsed:after {
       transform: rotate(0deg) ;
     }

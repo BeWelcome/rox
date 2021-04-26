@@ -12,7 +12,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
-use Pagerfanta\Adapter\DoctrineORMAdapter;
+use Pagerfanta\Doctrine\ORM\QueryAdapter;
 use Pagerfanta\Pagerfanta;
 
 class MessageRepository extends EntityRepository
@@ -98,7 +98,7 @@ class MessageRepository extends EntityRepository
     public function findReportedMessages($page = 1, $items = 10)
     {
         $queryBuilder = $this->queryReportedMessages();
-        $adapter = new DoctrineORMAdapter($queryBuilder);
+        $adapter = new QueryAdapter($queryBuilder);
         $paginator = new Pagerfanta($adapter);
         $paginator->setMaxPerPage($items);
         $paginator->setCurrentPage($page);
@@ -117,7 +117,7 @@ class MessageRepository extends EntityRepository
     public function findProcessedReportedMessages($page = 1, $items = 10)
     {
         $queryBuilder = $this->queryProcessedReportedMessages();
-        $adapter = new DoctrineORMAdapter($queryBuilder);
+        $adapter = new QueryAdapter($queryBuilder);
         $paginator = new Pagerfanta($adapter);
         $paginator->setMaxPerPage($items);
         $paginator->setCurrentPage($page);
@@ -139,7 +139,7 @@ class MessageRepository extends EntityRepository
     public function findLatestMessages(Member $member, $filter, $sort, $sortDirection, $page = 1, $items = 10)
     {
         $queryBuilder = $this->queryLatestMessages($member, $filter, $sort, $sortDirection);
-        $adapter = new DoctrineORMAdapter($queryBuilder);
+        $adapter = new QueryAdapter($queryBuilder);
         $paginator = new Pagerfanta($adapter);
         $paginator->setMaxPerPage($items);
         $paginator->setCurrentPage($page);
@@ -161,7 +161,7 @@ class MessageRepository extends EntityRepository
     public function findLatestRequests(Member $member, $filter, $sort, $sortDirection, $page = 1, $items = 10)
     {
         $paginator = new Pagerfanta(
-            new DoctrineORMAdapter(
+            new QueryAdapter(
                 $this->queryLatestRequests($member, $filter, $sort, $sortDirection),
                 false
             )
@@ -192,7 +192,7 @@ class MessageRepository extends EntityRepository
         $items = 10
     ) {
         $paginator = new Pagerfanta(
-            new DoctrineORMAdapter(
+            new QueryAdapter(
                 $this->queryLatestRequestsAndMessages($member, $folder, $sort, $sortDirection),
                 false
             )
@@ -227,7 +227,7 @@ class MessageRepository extends EntityRepository
     public function findAllMessagesBetween(Member $loggedInUser, Member $member, $sort, $sortDirection, $page = 1, $items = 10)
     {
         $paginator = new Pagerfanta(
-            new DoctrineORMAdapter(
+            new QueryAdapter(
                 $this->queryAllMessagesBetween($loggedInUser, $member, $sort, $sortDirection),
                 false
             )

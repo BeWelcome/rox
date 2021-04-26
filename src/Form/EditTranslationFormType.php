@@ -6,12 +6,14 @@ use App\Doctrine\DomainType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class EditTranslationFormType extends AbstractType
 {
@@ -25,14 +27,6 @@ class EditTranslationFormType extends AbstractType
                 'disabled' => true,
                 'label' => 'label.admin.translation.wordcode',
             ])
-            ->add('englishText', TextAreaType::class, [
-                'disabled' => false,
-                'attr' => [
-                    'readonly' => true,
-                    'rows' => 10,
-                ],
-                'label' => 'label.admin.translation.englishtext',
-            ])
             ->add('locale', TextType::class, [
                 'disabled' => true,
                 'label' => 'label.admin.translation.locale',
@@ -40,10 +34,24 @@ class EditTranslationFormType extends AbstractType
             ->add('update', SubmitType::class, [
                 'label' => 'label.update',
             ])
+            ->add('englishText', HiddenType::class, [
+                'disabled' => false,
+                'attr' => [
+                    'readonly' => true,
+                    'rows' => 10,
+                ],
+                'label' => 'label.admin.translation.englishtext',
+            ])
         ;
         $formBuilder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
-            $translationRequest = $event->getData();
             $form = $event->getForm();
+            $richtext = $form->getConfig()->getOption('richtext');
+            $translationRequest = $event->getData();
+            if ($richtext) {
+                $fieldType = CkEditorType::class;
+            } else {
+                $fieldType = TextareaType::class;
+            }
             $translatedTextHelp = null;
             if ('en' === $translationRequest->locale) {
                 $form
@@ -93,9 +101,10 @@ class EditTranslationFormType extends AbstractType
                 }
             }
             $form
-                ->add('translatedText', TextAreaType::class, [
+                ->add('translatedText', $fieldType, [
                     'attr' => [
                         'rows' => 10,
+                        'class' => 'editor',
                     ],
                     'label' => 'label.admin.translation',
                     'required' => true,
@@ -103,5 +112,15 @@ class EditTranslationFormType extends AbstractType
                 ])
             ;
         });
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults([
+            'richtext' => false,
+        ]);
     }
 }

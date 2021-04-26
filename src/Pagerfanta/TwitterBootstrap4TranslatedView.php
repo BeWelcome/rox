@@ -2,6 +2,7 @@
 
 namespace App\Pagerfanta;
 
+use Pagerfanta\View\Template\Template;
 use Pagerfanta\View\Template\TwitterBootstrap4Template;
 use Pagerfanta\View\TwitterBootstrapView;
 
@@ -17,12 +18,12 @@ class TwitterBootstrap4TranslatedView extends TwitterBootstrapView
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return 'twitter_bootstrap4';
     }
 
-    protected function createDefaultTemplate()
+    protected function createDefaultTemplate(): Template
     {
         return new TwitterBootstrap4Template();
     }

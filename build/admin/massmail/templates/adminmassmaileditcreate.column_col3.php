@@ -34,7 +34,7 @@
 <form method="post">
 <?php echo $callback_tag; ?>
     <input type="hidden" name="Id" value="<?php echo $id; ?>">
-
+    <input type="hidden" id="upload_path" value="/newsletter/add/image">
     <div class="form-group">
         <small id="headerInfo" class="form-text text-muted">Please write in <strong>English</strong></small>
 
@@ -93,7 +93,7 @@
     </div>
     <div class="form-group">
         <label for="Body">Text of the mail</label>
-        <textarea class="form-control" id="Body" name="Body" rows="20"><?php echo $body;?></textarea>
+        <textarea class="form-control editor" id="Body" name="Body"><?php echo $body;?></textarea>
         <small id="bodyHelp" class="form-text text-muted">Body of the newsletter (%username%, if any, will be replaced by the username at sending)</small>
     </div>
     <div class="form-group">

@@ -19,7 +19,7 @@
                     <p class="small text-muted mb-0">{{ 'created'|trans|capitalize }}:{{ newsletter.created|format_date('medium') }}</p>
                 </div>
                 <div class="card-footer text-right">
-                    <a class="btn btn-primary" href="{{ url('newsletter_single', {'shortCode':newsletter.name, 'language':translation.locale}) }}">{{ 'showfull'|trans }}</a>
+                    <a class="btn btn-primary" href="{{ url('newsletter_single', {'id':newsletter.id, 'language':translation.locale}) }}">{{ 'showfull'|trans }}</a>
                 </div>
             </div>
                 {% endif %}

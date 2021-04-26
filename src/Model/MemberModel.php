@@ -3,13 +3,10 @@
 namespace App\Model;
 
 use App\Entity\Member;
-use App\Entity\PasswordReset;
 use App\Model\MemberDataExtractor\ExtractorInterface;
 use App\Utilities\ManagerTrait;
 use App\Utilities\TranslatorTrait;
 use DateTime;
-use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
 use Exception as Exception;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -53,32 +50,6 @@ class MemberModel
         $this->entrypointLookup = $entrypointLookup;
         $this->params = $params;
         $this->extractors = $extractors;
-    }
-
-    /**
-     * @throws ORMException
-     * @throws OptimisticLockException
-     *
-     * @return string
-     */
-    public function generatePasswordResetToken(Member $member)
-    {
-        try {
-            $token = random_bytes(32);
-        } catch (Exception $e) {
-            $token = openssl_random_pseudo_bytes(32);
-        }
-        $token = bin2hex($token);
-
-        // Persist token into password reset table
-        $passwordReset = new PasswordReset();
-        $passwordReset
-            ->setMember($member)
-            ->setToken($token);
-        $this->getManager()->persist($passwordReset);
-        $this->getManager()->flush();
-
-        return $token;
     }
 
     /**

@@ -3,6 +3,7 @@
 namespace App\Command;
 
 use App\Entity\BroadcastMessage;
+use App\Entity\Newsletter;
 use App\Service\Mailer;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
@@ -66,7 +67,12 @@ class SendMassmailCommand extends Command
 
         $massmailRepository = $this->entityManager->getRepository(BroadcastMessage::class);
         /** @var BroadcastMessage[] $scheduled */
-        $scheduledBroadcastMessages = $massmailRepository->findBy(['status' => 'ToSend'], ['updated' => 'ASC'], $batchSize, 0);
+        $scheduledBroadcastMessages = $massmailRepository->findBy(
+            ['status' => 'ToSend'],
+            ['updated' => 'ASC'],
+            $batchSize,
+            0
+        );
 
         $sent = 0;
         if (!empty($scheduledBroadcastMessages)) {
@@ -75,18 +81,40 @@ class SendMassmailCommand extends Command
                 $sender = $this->determineSender($scheduled->getNewsletter()->getType());
                 $receiver = $scheduled->getReceiver();
                 try {
+                    $unsubscribeKey = '';
+                    $newsletterType = $scheduled->getNewsletter()->getType();
+                    $newsletterName = $scheduled->getNewsletter()->getName();
+                    $parameters = [
+                        'receiver' => $receiver,
+                        'newsletter_type' => $newsletterType,
+                        'subject' => strtolower('Broadcast_Title_' . $newsletterName),
+                        'wordcode' => strtolower('Broadcast_Body_' . $newsletterName),
+                    ];
+                    if (
+                        Newsletter::SPECIFIC_NEWSLETTER === $newsletterType
+                        || Newsletter::REGULAR_NEWSLETTER === $newsletterType
+                    ) {
+                        try {
+                            $unsubscribeKey = random_bytes(32);
+                        } catch (Exception $e) {
+                            $unsubscribeKey = openssl_random_pseudo_bytes(32);
+                        }
+                    }
+                    $parameters['newsletter'] = $scheduled->getNewsletter();
+                    $parameters['language'] = $receiver->getPreferredLanguage()->getShortcode();
+                    $parameters['unsubscribe_key'] = bin2hex($unsubscribeKey);
                     $this->mailer->sendNewsletterEmail(
                         $sender,
                         $receiver,
-                        [
-                            'receiver' => $receiver,
-                            'subject' => strtolower('Broadcast_Title_' . $scheduled->getNewsletter()->getName()),
-                            'wordcode' => strtolower('Broadcast_Body_' . $scheduled->getNewsletter()->getName()),
-                        ]
+                        $parameters
                     );
-                    $scheduled->setStatus('Sent');
+                    $scheduled
+                        ->setStatus('Sent')
+                        ->setUnsubscribeKey(bin2hex($unsubscribeKey))
+                    ;
                     ++$sent;
                 } catch (Exception $e) {
+                    $io->error('Message Frozen: ' . $e->getMessage());
                     $scheduled->setStatus('Freeze');
                 }
                 $this->entityManager->persist($scheduled);

@@ -6,7 +6,6 @@ use Doctrine\DBAL\Driver\Connection;
 use Doctrine\DBAL\ParameterType;
 use Pagerfanta\Adapter\AdapterInterface;
 use PDO;
-use Traversable;
 
 class UpdateTranslationAdapter implements AdapterInterface
 {
@@ -29,10 +28,8 @@ class UpdateTranslationAdapter implements AdapterInterface
 
     /**
      * Returns the number of results.
-     *
-     * @return int the number of results
      */
-    public function getNbResults()
+    public function getNbResults(): int
     {
         $statement = $this->connection->prepare("
             SELECT
@@ -57,13 +54,8 @@ class UpdateTranslationAdapter implements AdapterInterface
 
     /**
      * Returns an slice of the results.
-     *
-     * @param int $offset the offset
-     * @param int $length the length
-     *
-     * @return array|Traversable the slice
      */
-    public function getSlice($offset, $length)
+    public function getSlice(int $offset, int $length): iterable
     {
         $statement = $this->connection->prepare("
             SELECT

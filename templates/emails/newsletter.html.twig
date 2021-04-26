@@ -1,10 +1,10 @@
-{% apply inky_to_html|inline_css(encore_entry_css_source('email')) %}
+{% block content %}{% apply inky_to_html|inline_css(encore_entry_css_source('email')) %}
     <wrapper class="header">
         <container>
             <row class="collapse">
                 <columns small="12" valign="middle">
                     <a href="{{ url('homepage') }}"><img
-                                src="{{ email.image('@images/logo_index_top.png') }}"><</a>
+                            src="{{ email.image('@images/logo_index_top.png') }}"></a>
                 </columns>
             </row>
         </container>
@@ -15,8 +15,14 @@
         <spacer size="16"></spacer>
 
         <row>
+            <columns small="12" valign="middle">
+                <a href="{{ url('newsletter_single', {'id': newsletter.id, 'language': language}) }}">{{ 'newsletter.images.not.shown'|trans }}</a>
+            </columns>
+        </row>
+
+        <row>
             <columns>
-                {{ wordcode|trans({'gender': receiver.gender, 'username': receiver.username})|purify }}
+                {{ wordcode|trans({'gender': receiver.gender, 'username': receiver.username})|prepare_newsletter }}
             </columns>
         </row>
 
@@ -24,6 +30,18 @@
             <spacer size="16"></spacer>
             <row>
                 <columns>
+                    <p>{{ 'newsletter.receive'|trans }}</p>
+                    {% apply spaceless %}
+                        <p>
+                        {% if constant('\\App\\Entity\\Newsletter::SPECIFIC_NEWSLETTER') == newsletter.type  %}
+                            <a href="{{ url('local_newsletter_unsubscribe', {'username': receiver.username, 'unsubscribeKey': unsubscribe_key }) }}">{{ 'newsletter.local.unsubscribe'|trans }}</a>
+                        {% elseif constant('\\App\\Entity\\Newsletter::REGULAR_NEWSLETTER') == newsletter.type %}
+                            <a href="{{ url('regular_newsletter_unsubscribe', {'username': receiver.username, 'unsubscribeKey': unsubscribe_key }) }}">{{ 'newsletter.regular.unsubscribe'|trans }}</a>
+                        {% else %}
+                            {{ 'newsletter.no.unsubscribe'|trans }}
+                        {% endif %}
+                        </p>
+                    {% endapply %}
                     <p>{{ "now" | date("Y") }} - <a href="{{ url('homepage') }}" target="_blank">BeWelcome</a></p>
                 </columns>
             </row>
@@ -31,3 +49,4 @@
 
     </container>
 {% endapply %}
+{% endblock %}

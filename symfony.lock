@@ -71,7 +71,7 @@
         ]
     },
     "babdev/pagerfanta-bundle": {
-        "version": "v2.1.0"
+        "version": "v3.0.2"
     },
     "behat/behat": {
         "version": "v3.8.1"
@@ -99,6 +99,9 @@
     },
     "cakephp/utility": {
         "version": "3.8.10"
+    },
+    "composer/ca-bundle": {
+        "version": "1.2.9"
     },
     "composer/package-versions-deprecated": {
         "version": "1.11.99"
@@ -156,6 +159,9 @@
     },
     "doctrine/dbal": {
         "version": "v2.10.1"
+    },
+    "doctrine/deprecations": {
+        "version": "v0.5.3"
     },
     "doctrine/doctrine-bundle": {
         "version": "1.12",
@@ -227,6 +233,9 @@
     "ezyang/htmlpurifier": {
         "version": "v4.12.0"
     },
+    "fakerphp/faker": {
+        "version": "v1.14.1"
+    },
     "fig/link-util": {
         "version": "1.1.1"
     },
@@ -271,9 +280,6 @@
     },
     "friendsofphp/proxy-manager-lts": {
         "version": "v1.0.0"
-    },
-    "fzaninotto/faker": {
-        "version": "v1.9.1"
     },
     "gregwar/captcha": {
         "version": "v1.1.9"
@@ -355,6 +361,9 @@
     "laminas/laminas-zendframework-bridge": {
         "version": "1.0.1"
     },
+    "lcobucci/clock": {
+        "version": "2.0.0"
+    },
     "lcobucci/jwt": {
         "version": "3.4.1"
     },
@@ -425,6 +434,18 @@
             "./config/packages/nelmio_cors.yaml"
         ]
     },
+    "nelmio/security-bundle": {
+        "version": "2.4",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "2.4",
+            "ref": "65726efb67ff51d89de38195bc0d230fa811f64d"
+        },
+        "files": [
+            "./config/packages/nelmio_security.yaml"
+        ]
+    },
     "nesbot/carbon": {
         "version": "2.31.0"
     },
@@ -441,7 +462,7 @@
         "version": "3.5.1"
     },
     "pagerfanta/pagerfanta": {
-        "version": "v2.1.3"
+        "version": "v2.7.1"
     },
     "paragonie/random_compat": {
         "version": "v9.99.99"
@@ -1053,6 +1074,9 @@
     },
     "twig/twig": {
         "version": "v2.12.5"
+    },
+    "ua-parser/uap-php": {
+        "version": "v3.9.14"
     },
     "webmozart/assert": {
         "version": "1.9.1"

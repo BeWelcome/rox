@@ -132,9 +132,4 @@ class BaseHostingRequestAndInvitationController extends BaseMessageController
 
         return $invitation;
     }
-
-    private function getRedirectUrl(Request $request)
-    {
-        return $request->getRequestUri();
-    }
 }

@@ -41,6 +41,7 @@ Boston, MA  02111-1307, USA.
   $user = $this->_model->getLoggedInMember();
   $username = $user->Username;
   $authors = [];
+  echo '<input class="js-mention" type="hidden" value="' . htmlentities('all') . '">';
   foreach ($topic->posts as $post) {
       $cnt = $cntx + 1;
       $postAuthor = $post->OwnerUsername;

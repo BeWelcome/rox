@@ -246,7 +246,6 @@ class ForumsView extends RoxAppView {
         $uri = implode('/', $request);
         $uri = rtrim($uri, '/').'/';
 
-        require 'templates/topic.php';
         $currentPage = $this->_model->getPage();
         $itemsPerPage = $this->_model->POSTS_PER_PAGE;
         if (!isset($topic->topicinfo->replies)) {
@@ -257,6 +256,7 @@ class ForumsView extends RoxAppView {
         $maxPage = ceil($max / $this->_model->POSTS_PER_PAGE);
         $pages = $this->getPageLinks($currentPage, $itemsPerPage, $max);
 
+        require 'templates/topic.php';
 
         require 'templates/pages.php';
 //              die( "<br />after page template".PVars::getObj('page')->title) ;

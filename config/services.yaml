@@ -216,6 +216,14 @@ services:
         tags:
             - { name: kernel.event_subscriber }
 
+    App\Controller\Admin\TranslationController:
+        arguments:
+            $locales: '%locales%'
+
+    App\Controller\Admin\MockupController:
+        arguments:
+            $locales: '%locales%'
+
     app.user_locale_listener:
         public: true
         class: App\EventListener\UserLocaleListener

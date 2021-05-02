@@ -42,12 +42,13 @@ class TranslationController extends AbstractController
     use TranslatedFlashTrait;
     use TranslatorTrait;
 
-    /** @var TranslationModel */
-    private $translationModel;
+    private TranslationModel $translationModel;
+    private string $enabledLocales;
 
-    public function __construct(TranslationModel $translationModel)
+    public function __construct(TranslationModel $translationModel, string $locales)
     {
         $this->translationModel = $translationModel;
+        $this->enabledLocales = $locales;
     }
 
     /**
@@ -589,7 +590,7 @@ class TranslationController extends AbstractController
         /** @var WordRepository $translationRepository */
         $translationRepository = $this->getDoctrine()->getRepository(Word::class);
         $countAll = $translationRepository->getTranslatableItemsCount('en');
-        $translationDetails = $translationRepository->getTranslationDetails();
+        $translationDetails = $translationRepository->getTranslationDetails($this->enabledLocales);
 
         return $this->render('admin/translations/statistics.html.twig', [
                 'count_all' => $countAll,

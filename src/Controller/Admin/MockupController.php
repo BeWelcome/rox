@@ -15,6 +15,7 @@ use App\Form\NewsletterUnsubscribeType;
 use App\Form\ResetPasswordFormType;
 use App\Form\ResetPasswordRequestFormType;
 use App\Form\SearchFormType;
+use App\Model\TranslationModel;
 use App\Twig\MockupExtension;
 use DateTime;
 use Mockery;
@@ -277,6 +278,11 @@ class MockupController extends TranslationController
             ],
         ],
     ];
+
+    public function __construct(TranslationModel $translationModel, string $locales)
+    {
+        parent::__construct($translationModel, $locales);
+    }
 
     /**
      * @Route("/admin/translations/mockups", name="translations_mockups")

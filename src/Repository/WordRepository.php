@@ -82,15 +82,10 @@ class WordRepository extends EntityRepository
         return $translatableItems;
     }
 
-    public function getTranslationDetails(): array
+    public function getTranslationDetails(string $enabledLocales): array
     {
         $translationDetails = [];
-        // \todo: Check for existing locales in Filesystem (allows to enable languages only on certain installs)
-        $locales = explode(
-            ',',
-            'ar,bg,ca,cs,da,de,el,en,eo,es,eu,fa,fi,fr,gl,hi,hr,hu,id,it,ja,lt,lv,nb,'
-            . 'nl,no,pl,pt,pt-BR,rm,ro,ru,sk,sl,sr,su,sw,tr,zh-Hans,zh-Hant'
-        );
+        $locales = explode(',', $enabledLocales);
         foreach ($locales as $locale) {
             $count = $this->getTranslatableItemsCount($locale);
             $change = $this->getLatestChange($locale);

@@ -16,12 +16,12 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program; if not, see <http://www.gnu.org/licenses/> or 
-write to the Free Software Foundation, Inc., 59 Temple PlaceSuite 330, 
+along with this program; if not, see <http://www.gnu.org/licenses/> or
+write to the Free Software Foundation, Inc., 59 Temple PlaceSuite 330,
 Boston, MA  02111-1307, USA.
 
 */
-/** 
+/**
  * @author matthias (globetrotter_tt)
  * @author Fake51
  */
@@ -36,7 +36,7 @@ Boston, MA  02111-1307, USA.
     <?php echo $this->getCallbackOutput('MembersController','setProfileInactiveCallback'); ?>
     <p><br /><?php echo $words->getFormatted('ProfileSetInactiveInfo'); ?></p>
     <p class="center">
-    <input type="submit" class="button" value="<?php echo $words->getBuffered('ProfileSetInactive') ?>" />
+    <input type="submit" class="btn btn-primary" value="<?php echo $words->getBuffered('ProfileSetInactive') ?>" />
         <?php echo $words->flushBuffer(); ?>    </p>
 <?php } ?>
 </form>

@@ -31,12 +31,15 @@ if (null !== uploadPath) {
     uploadUrl = uploadPath.value;
 }
 
-if (typeof mention === 'undefined') {
-    let mention = {};
+const mentions = document.getElementsByClassName('js-mention');
+let feed = [];
+
+for (let i = 0; i < mentions.length; i++) {
+    feed.push('@' + mentions.item(i).value);
 }
 
-var allEditors = document.querySelectorAll('.editor');
-for (var i = 0; i < allEditors.length; ++i) {
+let allEditors = document.querySelectorAll('.editor');
+for (let i = 0; i < allEditors.length; ++i) {
     ClassicEditor.create(allEditors[i], {
         // The plugins are now passed directly to .create().
         plugins: [
@@ -87,7 +90,14 @@ for (var i = 0; i < allEditors.length; ++i) {
             ]
         },
         language: document.documentElement.lang,
-        mention: mention
+        mention: {
+            feeds: [
+                {
+                    marker: '@',
+                    feed: feed
+                }
+            ]
+        }
     } )
         .then( editor => {
         } )

@@ -41,30 +41,16 @@ Boston, MA  02111-1307, USA.
   $user = $this->_model->getLoggedInMember();
   $username = $user->Username;
   $authors = [];
-  $authorsJavaScriptArray = "";
   foreach ($topic->posts as $post) {
       $cnt = $cntx + 1;
       $postAuthor = $post->OwnerUsername;
       if ($postAuthor !== $username && !in_array($postAuthor, $authors)) {
           $authors[] = $postAuthor;
-          $authorsJavaScriptArray .= '\'@' . htmlentities($postAuthor) . '\', ';
+          echo '<input class="js-mention" type="hidden" value="' . htmlentities($postAuthor) . '">';
       }
       require 'singlepost.php';
       $cntx = $cnt;
   }
-  $authorsJavaScriptArray = substr($authorsJavaScriptArray, 0,-2);
 ?>
     </div>
 </div>
-<script type="application/javascript">
-    let mention = {
-        feeds: [
-            {
-                marker: '@',
-                feed: [
-                    <?php echo $authorsJavaScriptArray; ?>
-                ]
-            }
-        ]
-    };
-</script>

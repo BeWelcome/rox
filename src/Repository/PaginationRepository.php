@@ -3,8 +3,9 @@
 namespace App\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
-use Pagerfanta\Adapter\DoctrineORMAdapter;
+use Pagerfanta\Doctrine\ORM\QueryAdapter;
 use Pagerfanta\Pagerfanta;
 
 class PaginationRepository extends EntityRepository
@@ -19,7 +20,7 @@ class PaginationRepository extends EntityRepository
      */
     public function pagePublic($page = 1, $items = 10)
     {
-        $paginator = new Pagerfanta(new DoctrineORMAdapter($this->queryPublic()));
+        $paginator = new Pagerfanta(new QueryAdapter($this->queryPublic()));
         $paginator->setMaxPerPage($items);
         $paginator->setCurrentPage($page);
 
@@ -48,7 +49,7 @@ class PaginationRepository extends EntityRepository
      */
     public function pageAll($page = 1, $items = 10)
     {
-        $paginator = new Pagerfanta(new DoctrineORMAdapter($this->queryAll()));
+        $paginator = new Pagerfanta(new QueryAdapter($this->queryAll()));
         $paginator->setMaxPerPage($items);
         $paginator->setCurrentPage($page);
 
@@ -69,7 +70,7 @@ class PaginationRepository extends EntityRepository
     /**
      * Gets the latest community news (only visible to the public) if any.
      *
-     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws NonUniqueResultException
      *
      * @return mixed
      */

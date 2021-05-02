@@ -2,10 +2,10 @@
 
 namespace App\Controller\Admin;
 
+use App\Doctrine\DomainType;
 use App\Doctrine\TranslationAllowedType;
 use App\Entity\Language;
 use App\Entity\Member;
-use App\Entity\Message;
 use App\Entity\RightVolunteer;
 use App\Entity\Word;
 use App\Form\CustomDataClass\Translation\EditTranslationRequest;
@@ -19,11 +19,13 @@ use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
 use DateTime;
 use Exception;
+use MessageFormatter;
 use Pagerfanta\Pagerfanta;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -112,47 +114,52 @@ class TranslationController extends AbstractController
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             /** @var EditTranslationRequest $data */
             $data = $editForm->getData();
-            $originalDomain = $translation->getDomain();
+            $invalidMessage = $this->checkIfICUFormatIsValid($data);
 
-            $em = $this->getDoctrine()->getManager();
-            // Make sure the ID of the translations match
-            $translation->setCode($original->getCode());
-            $translation->setDomain($data->domain);
-            $translation->setSentence($data->translatedText);
-            $translation->setUpdated(new DateTime());
-            $translation->setAuthor($translator);
-            if ('en' === $language->getShortcode()) {
-                $translation->setDescription($data->description);
-                if ($data->isMajorUpdate) {
-                    $translation->setMajorUpdate($translation->getUpdated());
+            if ('' === $invalidMessage) {
+                $originalDomain = $translation->getDomain();
+
+                $em = $this->getDoctrine()->getManager();
+                // Make sure the ID of the translations match
+                $translation->setCode($original->getCode());
+                $translation->setDomain($data->domain);
+                $translation->setSentence($data->translatedText);
+                $translation->setUpdated(new DateTime());
+                $translation->setAuthor($translator);
+                if ('en' === $language->getShortcode()) {
+                    $translation->setDescription($data->description);
+                    if ($data->isMajorUpdate) {
+                        $translation->setMajorUpdate($translation->getUpdated());
+                    }
+                    $translation->setIsArchived($data->isArchived);
+                    $translationAllowed = $data->translationAllowed
+                        ? TranslationAllowedType::TRANSLATION_ALLOWED : TranslationAllowedType::TRANSLATION_NOT_ALLOWED;
+                    $translation->setTranslationAllowed($translationAllowed);
+                } else {
+                    // No need for a description as the English original has one
+                    $translation->setDescription('');
                 }
-                $translation->setIsArchived($data->isArchived);
-                $translationAllowed = $data->translationAllowed
-                    ? TranslationAllowedType::TRANSLATION_ALLOWED : TranslationAllowedType::TRANSLATION_NOT_ALLOWED;
-                $translation->setTranslationAllowed($translationAllowed);
-            } else {
-                // No need for a description as the English original has one
-                $translation->setDescription('');
-            }
-            $em->persist($translation);
-            $em->flush();
-            if ($originalDomain !== $translation->getDomain()) {
-                $this->translationModel->updateDomainOfTranslations($translation);
-            }
-            if ('en' === $language->getShortcode()) {
-                $this->translationModel->refreshTranslationsCache();
-            } else {
-                $this->translationModel->refreshTranslationsCacheForLocale($language->getShortCode());
-            }
-            $this->addTranslatedFlash('notice', 'translation.edit', [
-                'translationId' => $original->getCode(),
-                'locale' => $language->getShortcode(),
-            ]);
+                $em->persist($translation);
+                $em->flush();
+                if ($originalDomain !== $translation->getDomain()) {
+                    $this->translationModel->updateDomainOfTranslations($translation);
+                }
+                if ('en' === $language->getShortcode()) {
+                    $this->translationModel->refreshTranslationsCache();
+                } else {
+                    $this->translationModel->refreshTranslationsCacheForLocale($language->getShortCode());
+                }
+                $this->addTranslatedFlash('notice', 'translation.edit', [
+                    'translationId' => $original->getCode(),
+                    'locale' => $language->getShortcode(),
+                ]);
 
-            $referrer = $request->getSession()->get('originalReferrer');
-            $request->getSession()->remove('originalReferrer');
+                $referrer = $request->getSession()->get('originalReferrer');
+                $request->getSession()->remove('originalReferrer');
 
-            return $this->redirect($referrer);
+                return $this->redirect($referrer);
+            }
+            $editForm->get('translatedText')->addError(new FormError($invalidMessage));
         }
 
         return $this->render('admin/translations/edit.html.twig', [
@@ -236,17 +243,22 @@ class TranslationController extends AbstractController
             $em = $this->getDoctrine()->getManager();
             /** @var TranslationRequest $data */
             $data = $createForm->getData();
-            $original = $this->generateTranslatableItem($data, $translator, $english);
-            $em->persist($original);
-            if ('en' !== $createTranslationRequest->locale) {
-                $translation = $this->generateTranslatableItem($data, $translator, $language);
-                $em->persist($translation);
-            }
-            $em->flush();
-            $this->translationModel->refreshTranslationsCacheForLocale($language->getShortCode());
-            $this->addTranslatedFlash('notice', 'flash.added.translatable.item', ['%code%' => $translationId]);
+            $invalidMessage = $this->checkIfICUFormatIsValid($data);
+            if ('' === $invalidMessage) {
+                $original = $this->generateTranslatableItem($data, $translator, $english);
+                $em->persist($original);
+                if ('en' !== $createTranslationRequest->locale) {
+                    $translation = $this->generateTranslatableItem($data, $translator, $language);
+                    $em->persist($translation);
+                }
+                $em->flush();
+                $this->translationModel->refreshTranslationsCacheForLocale($language->getShortCode());
+                $this->addTranslatedFlash('notice', 'flash.added.translatable.item', ['%code%' => $translationId]);
 
-            return $this->redirectToRoute('translations');
+                return $this->redirectToRoute('translations');
+            }
+
+            $createForm->get('translatedText')->addError(new FormError($invalidMessage));
         }
 
         $template = ($english === $language) ?
@@ -299,13 +311,17 @@ class TranslationController extends AbstractController
             $em = $this->getDoctrine()->getManager();
             /** @var TranslationRequest $data */
             $data = $createForm->getData();
-            $newTranslatableItem = $this->generateTranslatableItem($data, $translator, $english);
-            $em->persist($newTranslatableItem);
-            $em->flush();
-            $this->translationModel->refreshTranslationsCacheForLocale('en');
-            $this->addTranslatedFlash('notice', 'flash.added.translatable.item', ['%code%' => $data->wordCode]);
+            $invalidMessage = $this->checkIfICUFormatIsValid($data);
+            if ('' !== $invalidMessage) {
+                $newTranslatableItem = $this->generateTranslatableItem($data, $translator, $english);
+                $em->persist($newTranslatableItem);
+                $em->flush();
+                $this->translationModel->refreshTranslationsCacheForLocale('en');
+                $this->addTranslatedFlash('notice', 'flash.added.translatable.item', ['%code%' => $data->wordCode]);
 
-            return $this->redirectToRoute('translations');
+                return $this->redirectToRoute('translations');
+            }
+            $createForm->get('translatedText')->addError(new FormError($invalidMessage));
         }
 
         return $this->render('admin/translations/create.en.html.twig', [
@@ -387,26 +403,30 @@ class TranslationController extends AbstractController
         $addForm->handleRequest($request);
         if ($addForm->isSubmitted() && $addForm->isValid()) {
             $data = $addForm->getData();
-            $em = $this->getDoctrine()->getManager();
-            $translation->setDomain($original->getDomain());
-            $translation->setSentence($data->translatedText);
-            $translation->setLanguage($language);
-            $translation->setCreated(new DateTime());
-            $translation->setAuthor($translator);
-            // No need for a description as the English original has one
-            $translation->setDescription('');
-            $em->persist($translation);
-            $em->flush();
-            $this->translationModel->refreshTranslationsCacheForLocale($language->getShortCode());
-            $this->addTranslatedFlash('notice', 'translation.add', [
-                'translationId' => $original->getCode(),
-                'locale' => $language->getShortcode(),
-            ]);
+            $invalidMessage = $this->checkIfICUFormatIsValid($data);
+            if ('' === $invalidMessage) {
+                $em = $this->getDoctrine()->getManager();
+                $translation->setDomain($original->getDomain());
+                $translation->setSentence($data->translatedText);
+                $translation->setLanguage($language);
+                $translation->setCreated(new DateTime());
+                $translation->setAuthor($translator);
+                // No need for a description as the English original has one
+                $translation->setDescription('');
+                $em->persist($translation);
+                $em->flush();
+                $this->translationModel->refreshTranslationsCacheForLocale($language->getShortCode());
+                $this->addTranslatedFlash('notice', 'translation.add', [
+                    'translationId' => $original->getCode(),
+                    'locale' => $language->getShortcode(),
+                ]);
 
-            $referrer = $request->getSession()->get('originalReferrer');
-            $request->getSession()->remove('originalReferrer');
+                $referrer = $request->getSession()->get('originalReferrer');
+                $request->getSession()->remove('originalReferrer');
 
-            return $this->redirect($referrer);
+                return $this->redirect($referrer);
+            }
+            $addForm->get('translatedText')->addError(new FormError($invalidMessage));
         }
 
         return $this->render('admin/translations/edit.html.twig', [
@@ -700,5 +720,19 @@ class TranslationController extends AbstractController
         $original->setLanguage($english);
 
         return $original;
+    }
+
+    private function checkIfICUFormatIsValid(TranslationRequest $data): string
+    {
+        $invalidMessage = '';
+        try {
+            if (DomainType::ICU_MESSAGES === $data->domain) {
+                new MessageFormatter('en', $data->englishText);
+            }
+        } catch (Exception $exception) {
+            $invalidMessage = $exception->getMessage();
+        }
+
+        return $invalidMessage;
     }
 }

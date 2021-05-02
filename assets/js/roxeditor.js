@@ -13,6 +13,7 @@ import ImageToolbarPlugin from '@ckeditor/ckeditor5-image/src/imagetoolbar';
 import ImageUploadPlugin from '@ckeditor/ckeditor5-image/src/imageupload';
 import LinkPlugin from '@ckeditor/ckeditor5-link/src/link';
 import ListPlugin from '@ckeditor/ckeditor5-list/src/list';
+import Mention from '@ckeditor/ckeditor5-mention/src/mention';
 import ParagraphPlugin from '@ckeditor/ckeditor5-paragraph/src/paragraph';
 import SpecialCharacters from '@ckeditor/ckeditor5-special-characters/src/specialcharacters';
 import SpecialCharactersEssentials from '@ckeditor/ckeditor5-special-characters/src/specialcharactersessentials';
@@ -28,6 +29,10 @@ const uploadPath = document.getElementById('upload_path');
 let uploadUrl = "/gallery/upload/image";
 if (null !== uploadPath) {
     uploadUrl = uploadPath.value;
+}
+
+if (typeof mention === 'undefined') {
+    let mention = {};
 }
 
 var allEditors = document.querySelectorAll('.editor');
@@ -47,6 +52,7 @@ for (var i = 0; i < allEditors.length; ++i) {
             EasyImagePlugin,
             LinkPlugin,
             ListPlugin,
+            Mention,
             ParagraphPlugin,
             UploadAdapterPlugin,
             SpecialCharacters,
@@ -80,7 +86,8 @@ for (var i = 0; i < allEditors.length; ++i) {
                 'imageTextAlternative'
             ]
         },
-        language: document.documentElement.lang
+        language: document.documentElement.lang,
+        mention: mention
     } )
         .then( editor => {
         } )

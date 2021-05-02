@@ -807,15 +807,14 @@ WHERE
     }
 
     /**
-     * Check form values of MyPreferences form,
+     * Check form values of MyPreferences form.
      *
-     * @param unknown_type $vars
-     * @return unknown
+     * @param array $vars
+     * @return array
      */
     public function checkMyPreferences(&$vars)
     {
-        $errors = array();
-        $member = $this->createEntity('Member', $this->session->get('IdMember'));
+        $errors = [];
 
         // Password Check
         if (isset($vars['passwordnew']) && $vars['passwordnew'] != '') {
@@ -870,12 +869,6 @@ ORDER BY
                 $errors[] = 'PreferenceLanguageError';
             }
         }
-
-        // email (e-mail duplicates in BW database allowed)
-        // if (!isset($vars['Email']) || !PFunctions::isEmailAddress($vars['Email'])) {
-            // $errors[] = 'SignupErrorInvalidEmail';
-            // $this->logWrite("Editmyprofile: Invalid Email update with value " .$vars['Email'], "Email Update");
-        // }
 
         return $errors;
     }
@@ -959,7 +952,10 @@ ORDER BY
             $errors[] = 'SignupErrorInvalidLastName';
         }
 
-        if ((empty($vars['Email']) || !PFunctions::isEmailAddress($vars['Email'])) && ($vars['Email']!='cryptedhidden')) {
+        if (
+            (empty($vars['Email']) || !filter_var($vars['Email'], FILTER_VALIDATE_EMAIL))
+            && ($vars['Email']!='cryptedhidden')
+        ) {
             $errors[] = 'SignupErrorInvalidEmail';
         }
 

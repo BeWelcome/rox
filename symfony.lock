@@ -841,9 +841,6 @@
             "./tests/bootstrap.php"
         ]
     },
-    "symfony/polyfill-apcu": {
-        "version": "v1.14.0"
-    },
     "symfony/polyfill-ctype": {
         "version": "v1.14.0"
     },

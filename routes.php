@@ -29,9 +29,10 @@
     $this->addRoute('group_forum','group/:group_id:/forum', 'GroupsController', 'forum');
     $this->addRoute('group_forum_pages','group/:group_id:/forum/page:page_id:', 'GroupsController', 'forum');
     $this->addRoute('group_forum_thread','group/:group_id:/forum/s:thread:', 'GroupsController', 'forum');
+    $this->addRoute('group_forum_thread_pages','group/:group_id:/forum/s:thread:/page:page_id:', 'GroupsController', 'forum');
     $this->addRoute('group_forum_thread_slash','group/:group_id:/forum/:thread:/', 'GroupsController', 'forum');
     $this->addRoute('group_forum_thread_title','group/:group_id:/forum/s:thread:-:title:', 'GroupsController', 'forum');
-    $this->addRoute('group_forum_thread_title_slash','group/:group_id:/forum/:thread::title:/', 'GroupsController', 'forum');
+    $this->addRoute('group_forum_thread_title_slash','group/:group_id:/forum/:thread:-:title:/', 'GroupsController', 'forum');
     $this->addRoute('group_forum_action','group/:group_id:/forum/:thread:/:action:', 'GroupsController', 'forum');
     $this->addRoute('group_groupsettings','group/:group_id:/groupsettings', 'GroupsController', 'groupSettings');
     $this->addRoute('group_kickmember','group/:group_id:/kickmember/:member_id:', 'GroupsController', 'kickMember');

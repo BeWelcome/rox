@@ -26,7 +26,7 @@ function cmpForumLang($a, $b)
 class Forums extends RoxModelBase {
 
     const CV_THREADS_PER_PAGE = 15;
-    const CV_POSTS_PER_PAGE = 200;
+    const CV_POSTS_PER_PAGE = 100;
     const CV_TOPMODE_CATEGORY = 1; // Says that the forum topmode is for categories
     const CV_TOPMODE_LASTPOSTS = 2; // Says that the forum topmode is for lastposts
     const CV_TOPMODE_LANDING = 3; // Says that we use the forums landing page for topmode
@@ -196,7 +196,7 @@ function FindAppropriatedLanguage($IdPost=0) {
 
 		if (!$this->session->has( 'IdMember' )) {
 			$this->THREADS_PER_PAGE = 100; // Variable because it can change wether the user is logged or no
-			$this->POSTS_PER_PAGE = 200; // Variable because it can change wether the user is logged or no
+			$this->POSTS_PER_PAGE = self::CV_POSTS_PER_PAGE; // Variable because it can change wether the user is logged or no
 		}
 
 		$MyGroups = array();
@@ -2673,7 +2673,7 @@ class Board implements Iterator {
 
 		if (!$this->session->has( 'IdMember' )) {
 			$this->THREADS_PER_PAGE=100  ; // Variable because it can change wether the user is logged or no
-			$this->POSTS_PER_PAGE=200 ; // Variable because it can change wether the user is logged or no
+			$this->POSTS_PER_PAGE=self::CV_POSTS_PER_PAGE ; // Variable because it can change wether the user is logged or no
 		}
 
         $this->dao =& $dao;

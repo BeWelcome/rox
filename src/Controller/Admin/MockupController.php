@@ -33,17 +33,35 @@ class MockupController extends TranslationController
 {
     private const MOCKUPS = [
         'signup' => [
-            'signup_finish' => [
+            'Confirm Email Address' => [
+                'type' => 'email',
+                'template' => 'emails/signup.html.twig',
+                'description' => 'Email containing the link to confirm email address.',
+                'setup' => 'getSignupParameters',
+            ],
+            'Finish' => [
                 'type' => 'page',
                 'url' => 'signup/finish',
                 'template' => 'signup/finish.html.twig',
                 'description' => 'Successful signup.',
             ],
-            'signup_error' => [
+            'Error' => [
                 'type' => 'page',
                 'url' => 'signup/finish',
                 'template' => 'signup/error.html.twig',
                 'description' => 'Error during signup.',
+            ],
+            'Confirm Email Address Resent' => [
+                'type' => 'email',
+                'template' => 'emails/resent.html.twig',
+                'description' => 'Email containing the link to confirm email address with some extra text.',
+                'setup' => 'getSignupParameters',
+            ],
+            'Signup Email Resent' => [
+                'type' => 'page',
+                'template' => 'signup/resent.html.twig',
+                'description' => 'Successful signup.',
+                'setup' => 'getSignupParameters',
             ],
         ],
         'error' => [
@@ -346,6 +364,7 @@ class MockupController extends TranslationController
                 $parameters,
                 [
                     'template' => $template,
+                    'html_template' => $template,
                     'language' => $request->getLocale(),
                     'email' => new MockupExtension(),
                     'description' => $description,
@@ -626,6 +645,19 @@ class MockupController extends TranslationController
         return [
             'username' => $this->getUser()->getUsername(),
             'form' => $unsubscribeForm->createView(),
+        ];
+    }
+
+    private function getSignupParameters(string $template, string $name)
+    {
+        /** @var Member $user */
+        $user = $this->getUser();
+
+        return [
+            'username' => $user->getUsername(),
+            'gender' => $user->getGender(),
+            'key' => hash('sha256', $user->getUsername()),
+            'email_address' => $user->getEmail(),
         ];
     }
 

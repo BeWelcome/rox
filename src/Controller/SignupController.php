@@ -81,8 +81,9 @@ class SignupController extends AbstractController
      *
      * @return Response
      */
-    public function resendConfirmationEmail($username, AuthenticationUtils $helper, Mailer $mailer)
+    public function resendConfirmationEmail(Member $member, AuthenticationUtils $helper, Mailer $mailer)
     {
+        $username = $member->getUsername();
         if ($helper->getLastUsername() !== $username) {
             throw $this->createAccessDeniedException();
         }
@@ -98,6 +99,7 @@ class SignupController extends AbstractController
         $parameters = [
             'subject' => $subject,
             'username' => $username,
+            'gender' => $member->getGender(),
             'email_address' => $member->getEmail(),
             'key' => $member->getRegistrationKey(),
         ];

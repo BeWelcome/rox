@@ -1006,28 +1006,31 @@ WHERE
           return $Relations;
       }
 
-      public function get_preferences() {
+      public function get_preferences($activeOnly = true) {
           $sql = "
-SELECT
-    preferences.*,
-    Value
-FROM
-    preferences
-LEFT JOIN
-    memberspreferences ON
-    memberspreferences.IdPreference = preferences.id AND
-    memberspreferences.IdMember = $this->id
-WHERE
-    preferences.Status != 'Inactive'
-ORDER BY preferences.position asc
+            SELECT
+                preferences.*,
+                Value
+            FROM
+                preferences
+            LEFT JOIN
+                memberspreferences ON
+                memberspreferences.IdPreference = preferences.id AND
+                memberspreferences.IdMember = $this->id
           ";
-        $rows = array();
-        if (!$sql_result = $this->dao->query($sql)) {
-            // sql problem
-        } else while ($row = $sql_result->fetch(PDB::FETCH_OBJ)) {
-            $rows[$row->codeName] = $row;
-        }
-        return $rows;
+
+          if ($activeOnly) {
+              $sql .= " WHERE preferences.Status != 'Inactive'";
+          }
+          $sql .= " ORDER BY preferences.position asc";
+          $rows = array();
+          if (!$sql_result = $this->dao->query($sql)) {
+              // sql problem
+          } else while ($row = $sql_result->fetch(PDB::FETCH_OBJ)) {
+              $rows[$row->codeName] = $row;
+          }
+
+          return $rows;
       }
 
     /**
@@ -1039,7 +1042,7 @@ ORDER BY preferences.position asc
      */
     public function getPreference($name, $default = false) {
         $value = $default;
-        $preferences = $this->get_preferences();
+        $preferences = $this->get_preferences(false);
         foreach ($preferences as $preference) {
             if ($preference->codeName == $name) {
                 $value = $preference->Value;

@@ -118,10 +118,16 @@ class LandingController extends AbstractController
         $em = $this->getDoctrine()->getManager();
         $em->persist($memberPreference);
         $em->flush();
+
         $threads = $this->landingModel->getThreads($member, $groups, $forum, $following, 5);
+
+        $preference = $preferenceRepository->findOneBy(['codename' => Preference::FORUM_ORDER_LIST_ASC]);
+        $memberPreference = $member->getMemberPreference($preference);
+        $ascending = ('Yes' === $memberPreference->getValue());
 
         return $this->render('landing/widget/forums.html.twig', [
             'threads' => $threads,
+            'ascending' => $ascending,
         ]);
     }
 

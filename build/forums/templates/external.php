@@ -21,6 +21,7 @@ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
+/** @var Member $User */
 $User = $this->_model->getLoggedInMember();
 
 $words = new MOD_words();
@@ -37,6 +38,12 @@ $layoutbits = new MOD_layoutbits();
     <tbody>
 <?php
     $shown = 0;
+    $ascending = true;
+
+    if ($User) {
+        $setPreference = $User->getPreference('PreferenceForumOrderListAsc', 'Yes');
+        $ascending = 'Yes' == $setPreference;
+    }
 
     for ($i = 0; $shown < 5 && $i < count($threads); $i++) {
         $thread = $threads[$i];
@@ -47,9 +54,13 @@ $layoutbits = new MOD_layoutbits();
         }
 
         $max = $thread->replies + 1;
-        $maxPage = ceil($max / $this->_model->POSTS_PER_PAGE);
+        if ($ascending) {
+            $maxPage = ceil($max / Forums::CV_POSTS_PER_PAGE);
 
-        $last_url = $url . ($maxPage != 1 ? '/page'.$maxPage : '') . '/#post' . $thread->last_postid;
+            $last_url = $url . ($maxPage != 1 ? '/page'.$maxPage : '') . '/#post' . $thread->last_postid;
+        } else {
+            $last_url = $url; // ordering descending means the first shown post is the latest one
+        }
 
         if (('NoRestriction' === $thread->ThreadVisibility)
             || ('MembersOnly' === $thread->ThreadVisibility)

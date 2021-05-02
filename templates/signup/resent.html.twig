@@ -6,5 +6,18 @@ BeWelcome - {{ 'signup' | trans }}
 {% endblock title %}
 
 {% block content %}
-    {% include '_partials/signup/resent.html.twig' %}
+    <div class="row">
+        <div class="col-12 mb-3">
+            <h1 class="m-0">{{ 'signup.resent.confirmation.link'|trans }}</h1>
+            <p>{{ 'email.greeting'|trans({'username': username, 'gender': gender}) }}<br>
+                {{ 'signup.resent.sorry'|trans }}</p>
+            <p>{{ 'signup.resent.link'|trans }}</p>
+            <p>{{ 'signup.resent.spam'|trans }}</p>
+            <p><a href="{{ url('feedback', { 'IdCategory':3}) }}">{{ 'signup.resent.contact.support'|trans }}</a></p>
+        </div>
+
+        <div class="col-12">
+            <a href="{{ url('landingpage') }}" class="btn btn-primary">BeWelcome</a>
+        </div>
+    </div>
 {% endblock content %}

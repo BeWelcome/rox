@@ -66,8 +66,14 @@ if ((!isset($topic->topicinfo->IdTitle)) && (!isset($topic->topicinfo->ThreadDel
 
     echo $words->fTrad($topic->topicinfo->IdTitle);
     if ($User) {
-        echo '<a href="/forums/reverse" class="h6 ml-2" title="' . $words->getSilent('ReverseOrder') . '" ><i class="fa fa-exchange-alt fa-rotate-90" title="'
-            . $words->getSilent('ReverseOrder') . '" /></i></a></h2> ' . $words->flushBuffer();
+        $ascending = 'Yes' == $User->getPreference('PreferenceForumOrderListAsc', 'Yes');
+        if ($ascending) {
+            echo '<a href="/forums/reverse" class="h6 ml-2" title="' . $words->getSilent('ReverseOrder') . '" ><i class="fa fa-2x fa-sort-numeric-down" title="'
+                . $words->getSilent('ReverseOrder') . '" /></i></a></h2> ' . $words->flushBuffer();
+        } else {
+            echo '<a href="/forums/reverse" class="h6 ml-2" title="' . $words->getSilent('ReverseOrder') . '" ><i class="fa fa-2x fa-sort-numeric-down-alt" title="'
+                . $words->getSilent('ReverseOrder') . '" /></i></a></h2> ' . $words->flushBuffer();
+        }
     }
 
     echo "<div class='float-right'>";

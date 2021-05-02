@@ -25,10 +25,26 @@
                 </div>
 
             </div>
-            <div class="ml-auto">{% if thread.group %}
-                    <a href="{{ url('group_forum_thread', {'thread': thread.id, 'group_id': thread.group.id}) }}">
+            {% set page = 1 %}
+            {% if ascending %}
+                {% set lastpost = 'post' ~ thread.lastpost.id %}
+                {% set page = thread.replies // constant('\\Forums::CV_POSTS_PER_PAGE') %}
+            {% else %}
+                {% set lastpost = '' %}
+            {% endif %}
+            <div class="ml-auto">
+                {% if thread.group %}
+                    {% if page == 1 %}
+                        <a href="{{ url('group_forum_thread', {'thread': thread.id, 'group_id': thread.group.id,  '_fragment': lastpost})  }}">
+                    {% else %}
+                        <a href="{{ url('group_forum_thread_pages', {'thread': thread.id, 'group_id': thread.group.id, 'page_id': page, '_fragment': lastpost})  }}">
+                    {% endif %}
                 {% else %}
-                    <a href="{{ url('forum_thread', {'threadId': thread.id}) }}">
+                    {% if page == 1 %}
+                        <a href="{{ url('forum_thread', {'threadId': thread.id, '_fragment': lastpost}) }}">
+                    {% else %}
+                         <a href="{{ url('forum_thread_pages', {'threadId': thread.id, 'page': page, '_fragment': lastpost}) }}">
+                    {% endif %}
                 {% endif %}
                 <i class="fa fa-chevron-right"></i></a></div>
         </div>

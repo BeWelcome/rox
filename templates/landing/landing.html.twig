@@ -101,19 +101,22 @@
 						</label>
 					</div>
 
-					{# received messages #}
-					<div id="messagesdisplay" class="scrollcontent">
-						<p class="u-text-center u-my-24 u-font-300 u-font-display">
-							<i class="fa u-mr-8 fa-4x fa-pulse fa-spinner my-3"></i><br>
-							{{ 'dashboard.load.messages' | trans }}</p>
-					</div>
+					<div class="u-flex u-flex-col u-h-full">
 
-					{# message buttons #}
-					<div class="text-center mt-2">
-						<a href="{{ url( 'conversations' ) }}" class="u-mt-16 o-button btn o-button o-button--outline">
-							<i class="fa u-mr-8 fa-envelope mr-1"></i>{{ 'landing.conversations' | trans }}{% if conversationCount %}
-								<span
-									class="badge badge-primary">{{ conversationCount }}</span>{% endif %}</a>
+						{# received messages #}
+						<div id="messagesdisplay" class="scrollcontent">
+							<p class="u-text-center u-my-24 u-font-300 u-font-display">
+								<i class="fa u-mr-8 fa-4x fa-pulse fa-spinner my-3"></i><br>
+								{{ 'dashboard.load.messages' | trans }}</p>
+						</div>
+
+						{# message buttons #}
+						<div class="u-mt-auto">
+							<a href="{{ url( 'conversations' ) }}" class="u-mt-16 o-button btn o-button o-button--outline">
+								<i class="fa u-mr-8 fa-envelope mr-1"></i>{{ 'landing.conversations' | trans }}{% if conversationCount %}
+									<span
+										class="badge badge-primary">{{ conversationCount }}</span>{% endif %}</a>
+						</div>
 					</div>
 				</div>
 
@@ -167,14 +170,14 @@
 					</div>
 
 					{# received messages #}
-					<div id="threadsdisplay">
-						<p class="text-center">
-							<i class="fa u-mr-8 fa-4x fa-pulse fa-spinner my-5 align-middle"></i><br/>
-							{{ 'dashboard.load.threads' | trans }}</p>
-					</div>
+					<div class="u-flex u-flex-col u-h-full">
+						<div id="threadsdisplay">
+							<p class="text-center">
+								<i class="fa u-mr-8 fa-4x fa-pulse fa-spinner my-5 align-middle"></i><br/>
+								{{ 'dashboard.load.threads' | trans }}</p>
+						</div>
 
-					<div class="u-text-center u-mt-24">
-						<div class="btn-group" role="group" aria-label="...">
+						<div class="u-flex u-justify-between u-mt-auto" role="group" aria-label="...">
 							<a href="/forums" class="o-button btn o-button o-button--outline"><i
 									class="fa u-mr-8 fa-comments mr-1"></i>{{ 'landing.button.discussions' | trans }}</a>
 							<a href="/groups/mygroups" class="o-button btn o-button o-button--outline"><i

@@ -1,5 +1,5 @@
 .welcomeback{
-  background-color: var(--gray-20);
+  background-color: var(--gray-15);
   border-radius: 16px;
   position: relative;
   padding: 16px;
@@ -29,6 +29,7 @@
   box-shadow: 0 10px 30px -3px #d7d7d7;
   border-radius: 0 16px 16px 16px;
   padding: 16px;
+  min-height: 496px;
 }
 
 .shadow{

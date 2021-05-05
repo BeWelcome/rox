@@ -37,11 +37,9 @@ registerRoute(
     }),
 );
 
-// Cache conversations for 30 days
+// Cache messages and requests for 10 days but always load /messages and /requests
 registerRoute(
-    ({url}) =>
-        url.pathname.startsWith('/message') ||
-        url.pathname.startsWith('/request'),
+    new RegExp('/message/.*') || new RegExp('/request/.*'),
     new CacheFirst({
         cacheName: 'conversations',
         plugins: [
@@ -50,13 +48,13 @@ registerRoute(
             }),
             new ExpirationPlugin({
                 maxEntries: 100,
-                maxAgeSeconds: 60 * 60 * 24 * 30,
+                maxAgeSeconds: 60 * 60 * 24 * 10,
             }),
         ],
     }),
 );
 
-// Cache members profiles a Cache First strategy
+// Cache members profiles a Cache First strategy for 10 days
 registerRoute(
     ({url}) => url.pathname.startsWith('/members'),
     new CacheFirst({
@@ -67,7 +65,7 @@ registerRoute(
             }),
             new ExpirationPlugin({
                 maxEntries: 50,
-                maxAgeSeconds: 60 * 60 * 24 * 30, // 30 Days
+                maxAgeSeconds: 60 * 60 * 24 * 10,
             }),
         ],
     }),

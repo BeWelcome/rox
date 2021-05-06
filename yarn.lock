@@ -7633,18 +7633,20 @@ temp-dir@^2.0.0:
   resolved "https://registry.yarnpkg.com/temp-dir/-/temp-dir-2.0.0.tgz#bde92b05bdfeb1516e804c9c00ad45177f31321e"
   integrity sha512-aoBAniQmmwtcKp/7BzsH8Cxzv8OL736p7v1ihGb5e9DJ9kTwGWHrQrVB5+lfVDzfGrdRzXch+ig7LHaY1JTOrg==
 
-"tempusdominus-bootstrap@github:tonix-tuft/tempusdominus-bootstrap":
-  version "5.37.0"
-  resolved "https://codeload.github.com/tonix-tuft/tempusdominus-bootstrap/tar.gz/21b87b866c0f4785bd801750d9115dfb7c2655fc"
+tempusdominus-bootstrap@5.33.0:
+  version "5.33.0"
+  resolved "https://registry.yarnpkg.com/tempusdominus-bootstrap/-/tempusdominus-bootstrap-5.33.0.tgz#0e233602e488f8ba45ea290a98542b809221b734"
+  integrity sha512-IIGP8rLvQ7+IOzSo3hoTEeTJFZIZmMciVl2HEwndICHtrt0YGYxlOSnjCoLmgsFBxJ3hEFxUYODRWMnylDW9lQ==
   dependencies:
     bootstrap "^4.5.2"
     jquery "^3.5.1"
     moment "~2.24.0"
     popper.js "^1.16.1"
 
-"tempusdominus@github:tonix-tuft/tempusdominus":
-  version "5.16.0"
-  resolved "https://codeload.github.com/tonix-tuft/tempusdominus/tar.gz/78e1b0ae275a3b489b6be85bb4192bc2ab66f3c1"
+tempusdominus@5.15.0:
+  version "5.15.0"
+  resolved "https://registry.yarnpkg.com/tempusdominus/-/tempusdominus-5.15.0.tgz#49beb53651df6231bbb5628c57831aac5a9cfb91"
+  integrity sha512-H3ze9lGe7ofZ2W7JukyK6F/FU1Wpxb8B4nj/dZRFuHGQTlQt2ASNKmXYK1syiEVpjRFrNNUjGJjiYlAisokuXA==
   dependencies:
     jquery "^3.5.0"
     moment "~2.24.0"

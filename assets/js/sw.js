@@ -7,8 +7,19 @@ import {
 import { CacheableResponsePlugin } from 'workbox-cacheable-response';
 import {registerRoute} from 'workbox-routing';
 import { ExpirationPlugin } from 'workbox-expiration';
+import {Workbox} from 'workbox-window';
+
+if ('serviceWorker' in navigator) {
+    const wb = new Workbox('/sw.js');
+
+    wb.register();
+}
 
 precacheAndRoute(self.__WB_MANIFEST);
+
+addEventListener('install', event => {
+    skipWaiting();
+});
 
 addEventListener("message", event => {
     if (event.data && event.data.type === "SKIP_WAITING") {
@@ -41,6 +52,23 @@ registerRoute(
 registerRoute(
     new RegExp('/message/.*') || new RegExp('/request/.*'),
     new CacheFirst({
+        cacheName: 'conversations',
+        plugins: [
+            new CacheableResponsePlugin({
+                statuses: [200],
+            }),
+            new ExpirationPlugin({
+                maxEntries: 100,
+                maxAgeSeconds: 60 * 60 * 24 * 10,
+            }),
+        ],
+    }),
+);
+
+// Cache messages and requests for 10 days but always load /messages and /requests
+registerRoute(
+    new RegExp('/messages/.*') || new RegExp('/requests/.*'),
+    new NetworkFirst({
         cacheName: 'conversations',
         plugins: [
             new CacheableResponsePlugin({

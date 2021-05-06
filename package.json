@@ -83,8 +83,8 @@
     "style-loader": "^1.2.1",
     "swagger-cli": "^4.0.4",
     "tar": "6.1.0",
-    "tempusdominus": "github:tonix-tuft/tempusdominus",
-    "tempusdominus-bootstrap": "github:tonix-tuft/tempusdominus-bootstrap",
+    "tempusdominus": "5.15.0",
+    "tempusdominus-bootstrap": "5.33.0",
     "typeface-lato": "0.0.75",
     "typeface-signika": "0.0.72",
     "uglify-js": "3.13.3",
@@ -93,6 +93,7 @@
   },
   "dependencies": {
     "@babel/helper-define-map": "^7.13.12",
-    "@ckeditor/ckeditor5-mention": "^27.1.0"
+    "@ckeditor/ckeditor5-mention": "^27.1.0",
+    "workbox-window": "^6.1.5"
   }
 }

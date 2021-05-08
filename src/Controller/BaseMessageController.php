@@ -282,7 +282,6 @@ class BaseMessageController extends AbstractController
         ]);
     }
 
-
     protected function getRequestClone(Message $hostingRequest)
     {
         // copy only the bare minimum needed

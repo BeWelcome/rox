@@ -355,6 +355,6 @@ class Location
 
     public function getFullname(): string
     {
-        return $this->getName() . ", " . $this->getCountry()->getName();
+        return $this->getName() . ', ' . $this->getCountry()->getName();
     }
 }

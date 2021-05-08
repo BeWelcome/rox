@@ -1732,7 +1732,7 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
         if ($this->isPrivileged()) {
             $cost = 13;
         }
-        $this->password = password_hash($password, PASSWORD_DEFAULT, ['cost' => $cost]);
+        $this->password = password_hash($password, \PASSWORD_DEFAULT, ['cost' => $cost]);
 
         return $this;
     }
@@ -2958,7 +2958,7 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
     {
         $criteria = Criteria::create()->where(Criteria::expr()->orX(
             Criteria::expr()->neq('level', LanguageLevelType::BEGINNER),
-            Criteria::expr()->eq('level',  LanguageLevelType::HELLO_ONLY)
+            Criteria::expr()->eq('level', LanguageLevelType::HELLO_ONLY)
         ));
 
         return $this->languageLevels->matching($criteria)

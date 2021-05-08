@@ -2,12 +2,9 @@
 
 namespace App\Form;
 
-use App\Entity\Location;
 use App\Form\CustomDataClass\LocationRequest;
 use App\Form\DataTransformer\LocationRequestToLocationTransformer;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;

@@ -40,7 +40,7 @@ class TripModel
 
     public function checkTripsRadius($member, $radius)
     {
-        if (!in_array($radius, self::ALLOWED_TRIPS_RADIUS)) {
+        if (!\in_array($radius, self::ALLOWED_TRIPS_RADIUS, true)) {
             return $this->getTripsRadius($member);
         }
 
@@ -109,7 +109,7 @@ class TripModel
     public function orderTripLegs(Trip &$trip): void
     {
         $legs = iterator_to_array($trip->getSubtrips());
-        \usort($legs, function ($a, $b) {
+        usort($legs, function ($a, $b) {
             $arrivalA = $a->getArrival();
             $arrivalB = $b->getArrival();
 
@@ -142,7 +142,7 @@ class TripModel
         $legs = $trip->getSubtrips();
 
         if (0 === $legs->count()) {
-            throw new InvalidArgumentException("No trip legs");
+            throw new InvalidArgumentException('No trip legs');
         }
 
         $expired = true;

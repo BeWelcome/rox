@@ -9,7 +9,6 @@ use App\Doctrine\SpamInfoType;
 use App\Entity\Member;
 use App\Entity\Message;
 use App\Entity\Subject;
-use App\Entity\Subtrip;
 use App\Repository\MessageRepository;
 use App\Service\Mailer;
 use App\Utilities\ManagerTrait;

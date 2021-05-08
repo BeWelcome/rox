@@ -26,15 +26,15 @@ final class ProfilePicturesExtractor extends AbstractExtractor implements Extrac
         foreach ($photos as $photo) {
             if (is_file($photo->getFilepath())) {
                 $filesystem->copy($photo->getFilepath(), $pictureDir
-                    . pathinfo($photo->getFilepath(), PATHINFO_FILENAME)
+                    . pathinfo($photo->getFilepath(), \PATHINFO_FILENAME)
                     . $this->imageExtension($photo->getFilepath()));
                 $pictures[] =
-                    pathinfo($photo->getFilepath(), PATHINFO_FILENAME)
+                    pathinfo($photo->getFilepath(), \PATHINFO_FILENAME)
                     . $this->imageExtension($photo->getFilepath());
             }
             foreach ($variants as $variant) {
                 $filepath = $photo->getFilepath() . $variant;
-                $filename = pathinfo($filepath, PATHINFO_FILENAME);
+                $filename = pathinfo($filepath, \PATHINFO_FILENAME);
                 if (is_file($filepath)) {
                     $filesystem->copy($filepath, $pictureDir
                         . $filename

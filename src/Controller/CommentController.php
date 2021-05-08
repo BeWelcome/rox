@@ -48,7 +48,7 @@ class CommentController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
-            $feedback = trim(str_replace("\xc2\xa0", ' ', strip_tags(html_entity_decode($data->feedback, ENT_HTML5, 'UTF-8'))));
+            $feedback = trim(str_replace("\xc2\xa0", ' ', strip_tags(html_entity_decode($data->feedback, \ENT_HTML5, 'UTF-8'))));
             if (empty($feedback)) {
                 $form->addError(new FormError('Feedback can not be empty.'));
             } else {

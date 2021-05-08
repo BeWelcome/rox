@@ -36,7 +36,7 @@ class AddInitiatorCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        \ini_set('memory_limit', '16G');
+        ini_set('memory_limit', '16G');
 
         $io = new SymfonyStyle($input, $output);
         $io->block('Adding initiator values for conversations');

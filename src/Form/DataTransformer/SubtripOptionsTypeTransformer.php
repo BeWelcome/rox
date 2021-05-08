@@ -7,9 +7,8 @@ use Symfony\Component\Form\DataTransformerInterface;
 
 class SubtripOptionsTypeTransformer implements DataTransformerInterface
 {
-
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      *
      * @param SubtripOptionsType|null
      *
@@ -25,9 +24,7 @@ class SubtripOptionsTypeTransformer implements DataTransformerInterface
     }
 
     /**
-     * @inheritDoc
-     *
-     *
+     * {@inheritDoc}
      */
     public function reverseTransform($value)
     {

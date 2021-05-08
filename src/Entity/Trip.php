@@ -259,11 +259,10 @@ class Trip
         return $this->invitationRadius;
     }
 
-    public function setInvitationRadius(int $invitationRadius): Trip
+    public function setInvitationRadius(int $invitationRadius): self
     {
         $this->invitationRadius = $invitationRadius;
 
         return $this;
     }
-
 }

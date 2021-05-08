@@ -21,9 +21,6 @@ use Doctrine\ORM\QueryBuilder;
  */
 class SubtripRepository extends EntityRepository
 {
-    /**
-     * @return Query
-     */
     public function queryTripsOfMember(Member $member): Query
     {
         return $this->createQueryBuilder('t')

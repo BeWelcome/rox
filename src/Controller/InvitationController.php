@@ -26,8 +26,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class InvitationController extends AbstractController
 {
-    use TranslatorTrait;
     use TranslatedFlashTrait;
+    use TranslatorTrait;
 
     private MessageModel $messageModel;
     private InvitationModel $invitationModel;
@@ -258,7 +258,7 @@ class InvitationController extends AbstractController
         /** @var Member $guest */
         $host = $invitation->getInitiator();
         $guest = ($host === $invitation->getSender()) ? $invitation->getReceiver() : $invitation->getSender();
-        list($thread,,$last) = $this->messageModel->getThreadInformationForMessage($invitation);
+        list($thread, , $last) = $this->messageModel->getThreadInformationForMessage($invitation);
 
         if ($this->checkRequestExpired($invitation)) {
             $this->addExpiredFlash($guest);

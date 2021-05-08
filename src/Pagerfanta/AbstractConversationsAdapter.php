@@ -122,7 +122,6 @@ abstract class AbstractConversationsAdapter
         return $notDeletedOrPurgedCondition;
     }
 
-
     protected function getInitiatorCondition(): string
     {
         $showStartedByMember = 3 !== $this->initiator;

@@ -12,7 +12,6 @@ use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Hidehalo\Nanoid\Client;
-use SplFileInfo;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -33,7 +32,6 @@ class DataRetentionCommand extends Command
         Logger $logger,
         EntityManagerInterface $entityManager,
         string $dataDirectory
-
     ) {
         parent::__construct();
         $this->logger = $logger;
@@ -79,9 +77,9 @@ class DataRetentionCommand extends Command
         $members = $this->memberRepository->loadDataRetentionMembers();
 
         if (null !== $members) {
-            $msg = "Removing private data for " . count($members) . " members.";
+            $msg = 'Removing private data for ' . \count($members) . ' members.';
             $io->info($msg);
-            $this->logger->write($msg, "Data Retention", $this->bwAdmin);
+            $this->logger->write($msg, 'Data Retention', $this->bwAdmin);
 
             /** @var Member $member */
             foreach ($members as $member) {
@@ -116,16 +114,16 @@ class DataRetentionCommand extends Command
                 $entityManager->persist($member);
                 $entityManager->flush();
 
-                $msg = "Removed private data for " . $username . " (retired_" . $member->getId() . ").";
+                $msg = 'Removed private data for ' . $username . ' (retired_' . $member->getId() . ').';
                 $io->info($msg);
-                $this->logger->write($msg, "Data Retention", $this->bwAdmin);
+                $this->logger->write($msg, 'Data Retention', $this->bwAdmin);
             }
-            $msg = "Removed private data for " . count($members) . " members.";
+            $msg = 'Removed private data for ' . \count($members) . ' members.';
             $io->info($msg);
-            $this->logger->write($msg, "Data Retention", $this->bwAdmin);
+            $this->logger->write($msg, 'Data Retention', $this->bwAdmin);
         }
 
-        return count($members);
+        return \count($members);
     }
 
     private function removeMemberInfo(Member $member): Member
@@ -217,7 +215,7 @@ class DataRetentionCommand extends Command
     private function removeUserInfo(Member $member)
     {
         $connection = $this->entityManager->getConnection();
-        $statement = $connection->prepare("
+        $statement = $connection->prepare('
             UPDATE
                 user
             SET
@@ -226,7 +224,7 @@ class DataRetentionCommand extends Command
                 email = :email
             WHERE
                 handle = :handle
-            ");
+            ');
         $statement->bindValue(':handle', $member->getUsername());
         $statement->bindValue(':newHandle', 'retired_' . $member->getId());
         $statement->bindValue(':password', 'password');
@@ -243,13 +241,13 @@ class DataRetentionCommand extends Command
         try {
             $files = $finder->files()->name($member->getId() . '*')->in($memberPath);
 
-            foreach($files as $file) {
+            foreach ($files as $file) {
                 $filesystem->remove($file);
             }
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             $this->logger->write(
-                "Problem during retention run: " . $e->getMessage(),
-                "Data Retention",
+                'Problem during retention run: ' . $e->getMessage(),
+                'Data Retention',
                 $this->bwAdmin
             );
         }

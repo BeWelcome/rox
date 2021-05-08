@@ -59,6 +59,10 @@ services:
         arguments:
             $repository: '@App\Repository\MemberRepository'
 
+    App\Command\DataRetentionCommand:
+        arguments:
+            $dataDirectory: '%data_directory%'
+
     App\Serializer\MemberContextBuilder:
         decorates: api_platform.serializer.context_builder
         arguments:

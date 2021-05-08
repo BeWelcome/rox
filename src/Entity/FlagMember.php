@@ -8,7 +8,9 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Flagsmembers.
  *
- * @ORM\Table(name="flagsmembers", indexes={@ORM\Index(name="IdMember", columns={"IdMember", "IdFlag"})})
+ * @ORM\Table(name="flagsmembers", indexes={
+ *     @ORM\Index(name="flagsmembers_members", columns={"IdMember", "IdFlag"})
+ * })
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks
  */

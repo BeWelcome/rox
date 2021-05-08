@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Member;
 use Intervention\Image\ImageManager;
+use InvalidArgumentException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -83,7 +84,7 @@ class AvatarController extends AbstractController
         if (!$this->avatarImageExists($member, $size)) {
             try {
                 $this->createAvatarImage($member, $size);
-            } catch (\InvalidArgumentException $e) {
+            } catch (InvalidArgumentException $e) {
                 return $this->emptyAvatar($size);
             }
         }
@@ -168,7 +169,7 @@ class AvatarController extends AbstractController
         $original = self::AVATAR_PATH . $member->getId() . '_original';
         if (!file_exists($original)) {
             $message = 'No original avatar image exists for member ' . $member->getUsername();
-            throw new \InvalidArgumentException($message);
+            throw new InvalidArgumentException($message);
         }
 
         $filename = self::AVATAR_PATH . $member->getId() . '_' . $size . '_' . $size;

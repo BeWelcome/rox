@@ -14,7 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Rightsvolunteers.
  *
- * @ORM\Table(name="rightsvolunteers", uniqueConstraints={@ORM\UniqueConstraint(name="IdMember", columns={"IdMember", "IdRight"})})
+ * @ORM\Table(name="rightsvolunteers", uniqueConstraints={@ORM\UniqueConstraint(name="rightsvolunteers_members", columns={"IdMember", "IdRight"})})
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks
  *

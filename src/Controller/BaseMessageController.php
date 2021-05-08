@@ -317,27 +317,19 @@ class BaseMessageController extends AbstractController
         }
 
         if (HostingRequest::REQUEST_CANCELLED === $newRequest->getRequest()->getStatus()) {
-            if (false === strpos('(Cancelled)', $subject)) {
-                $subject = $subject . ' (Cancelled)';
-            }
+            $subject = $this->adjustSubject('(Cancelled)', $subject);
         }
 
         if (HostingRequest::REQUEST_DECLINED === $newRequest->getRequest()->getStatus()) {
-            if (false === strpos('(Declined)', $subject)) {
-                $subject = $subject . ' (Declined)';
-            }
+            $subject = $this->adjustSubject('(Declined)', $subject);
         }
 
         if (HostingRequest::REQUEST_ACCEPTED === $newRequest->getRequest()->getStatus()) {
-            if (false === strpos('(Accepted)', $subject)) {
-                $subject = $subject . ' (Accepted)';
-            }
+            $subject = $this->adjustSubject('(Accepted)', $subject);
         }
 
         if (HostingRequest::REQUEST_TENTATIVELY_ACCEPTED === $newRequest->getRequest()->getStatus()) {
-            if (false === strpos('(Tentatively accepted)', $subject)) {
-                $subject = $subject . ' (Tentatively accepted)';
-            }
+            $subject = $this->adjustSubject('(Tentatively accepted)', $subject);
         }
 
         return $subject;
@@ -361,5 +353,14 @@ class BaseMessageController extends AbstractController
             }
         }
         $em->flush();
+    }
+
+    private function adjustSubject(string $suffix, string $subject): string
+    {
+        if (false === strpos($suffix, $subject)) {
+            $subject .= $suffix;
+        }
+
+        return $subject;
     }
 }

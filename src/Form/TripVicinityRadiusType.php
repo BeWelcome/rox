@@ -7,6 +7,9 @@ use Symfony\Component\Form\FormBuilderInterface;
 
 class TripVicinityRadiusType extends AbstractType
 {
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('distance', Select2Type::class, [

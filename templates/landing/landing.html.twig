@@ -64,7 +64,7 @@
 	<div class="d-flex row align-items-stretch flex-wrap u-pb-24">
 
 		{# messages box #}
-		<div class="col-12 col-lg-5 align-items-stretch u-p-0 u-pr-12"">
+		<div class="col-12 col-lg-5 align-items-stretch u-p-0 u-pr-12">
 
 			<ul class="nav nav-tabs" role="tablist">
 				<li class="nav-item">
@@ -133,7 +133,7 @@
 		</div>
 
 		{# community box #}
-		<div class="col-12 col-lg-7 align-items-stretch mt-sm-5 mt-lg-0 u-p-0 u-pl-12"">
+		<div class="col-12 col-lg-7 align-items-stretch mt-sm-5 mt-lg-0 u-p-0 u-pl-12">
 
 			<ul class="nav nav-tabs" role="tablist">
 				<li class="nav-item">
@@ -178,11 +178,11 @@
 						</div>
 
 						<div class="u-flex u-justify-between u-mt-auto" role="group" aria-label="...">
-							<a href="/forums" class="o-button btn o-button o-button--outline"><i
+							<a href="{{ url('forums') }}" class="o-button btn o-button o-button--outline"><i
 									class="fa u-mr-8 fa-comments mr-1"></i>{{ 'landing.button.discussions' | trans }}</a>
-							<a href="/groups/mygroups" class="o-button btn o-button o-button--outline"><i
+							<a href="{{ url('groups_mygroups') }}" class="o-button btn o-button o-button--outline"><i
 									class="fa u-mr-8 fa-users mr-1"></i>{{ 'landing.button.mygroups' | trans }}</a>
-							<a href="/forums/subscriptions" class="o-button btn o-button o-button--outline"><i
+							<a href="{{ url('subscriptions') }}" class="o-button btn o-button o-button--outline"><i
 									class="fa u-mr-8 fa-check-square mr-1"></i>{{ 'landing.button.subscriptions' | trans }}</a>
 						</div>
 					</div>
@@ -192,11 +192,11 @@
 				{# load activities #}
 				<div role="tabpanel" class="tab-pane u-h-full" id="activities">
 					<div class="u-flex u-items-center" role="group">
-						<a href="/activities" class="o-button btn o-button o-button--outline o-button o-button--full u-mr-8"><i
+						<a href="{{ url('activitities') }}" class="o-button btn o-button o-button--outline o-button o-button--full u-mr-8"><i
 								class="fa u-mr-8 fa-map"></i> {{ 'landing.activities.allactivities' | trans }}</a>
-						<a href="/activities/myactivities" class="o-button btn o-button o-button--outline o-button o-button--full u-mr-8"><i
+						<a href="{{ url('activities_my_activities') }}" class="o-button btn o-button o-button--outline o-button o-button--full u-mr-8"><i
 								class="fa u-mr-8 fa-calendar"></i> {{ 'landing.activities.myactivities' | trans }}</a>
-						<a href="/activities/create" class="o-button btn o-button o-button--outline o-button o-button--full"><i
+						<a href="{{ url('activities_create') }}" class="o-button btn o-button o-button--outline o-button o-button--full"><i
 								class="fa u-mr-8 fa-calendar-plus"></i> {{ 'landing.activities.create' | trans }}</a>
 					</div>
 					<div class="m-1">

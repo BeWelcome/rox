@@ -16,9 +16,6 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 
 class SearchLocationType extends AbstractType
 {
-    /**
-     * @var LocationRequestToLocationTransformer
-     */
     private LocationRequestToLocationTransformer $transformer;
 
     public function __construct(LocationRequestToLocationTransformer $transformer)
@@ -26,6 +23,9 @@ class SearchLocationType extends AbstractType
         $this->transformer = $transformer;
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder

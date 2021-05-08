@@ -33,6 +33,9 @@ class InvitationType extends AbstractType
         return 'app_message';
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder

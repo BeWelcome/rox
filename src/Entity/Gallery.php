@@ -14,7 +14,9 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Gallery.
  *
- * @ORM\Table(name="gallery", indexes={@ORM\Index(name="user_id_foreign", columns={"user_id_foreign"})})
+ * @ORM\Table(name="gallery", indexes={
+ *     @ORM\Index(name="gallery_user_id_foreign", columns={"user_id_foreign"})
+ * })
  * @ORM\Entity
  *
  * @SuppressWarnings(PHPMD)

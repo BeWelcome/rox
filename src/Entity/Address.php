@@ -15,7 +15,11 @@ use Symfony\Component\Serializer\Annotation\Groups;
 /**
  * Addresses.
  *
- * @ORM\Table(name="addresses", indexes={@ORM\Index(name="IdMember", columns={"IdMember"}), @ORM\Index(name="IdCity", columns={"IdCity"}), @ORM\Index(name="CityAndRank", columns={"IdCity", "Rank"})})
+ * @ORM\Table(name="addresses", indexes={
+ *     @ORM\Index(name="address_member", columns={"IdMember"}),
+ *     @ORM\Index(name="address_city", columns={"IdCity"}),
+ *     @ORM\Index(name="CityAndRank", columns={"IdCity", "Rank"})
+ * })
  * @ORM\HasLifecycleCallbacks
  * @ORM\Entity
  *

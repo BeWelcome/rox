@@ -12,7 +12,9 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Cryptedfield.
  *
- * @ORM\Table(name="cryptedfields", indexes={@ORM\Index(name="IdMember", columns={"IdMember"})})
+ * @ORM\Table(name="cryptedfields", indexes={
+ *     @ORM\Index(name="cryptedfields_member", columns={"IdMember"})
+ * })
  * @ORM\Entity
  *
  * @SuppressWarnings(PHPMD)

@@ -10,17 +10,34 @@ use App\Entity\Subtrip;
 use App\Form\InvitationGuest;
 use App\Form\InvitationHost;
 use App\Form\InvitationType;
+use App\Model\InvitationModel;
+use App\Model\MessageModel;
+use App\Utilities\TranslatedFlashTrait;
+use App\Utilities\TranslatorTrait;
 use Exception;
 use InvalidArgumentException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class InvitationController extends BaseHostingRequestAndInvitationController
+class InvitationController extends AbstractController
 {
+    use TranslatorTrait;
+    use TranslatedFlashTrait;
+
+    private MessageModel $messageModel;
+    private InvitationModel $invitationModel;
+
+    public function __construct(MessageModel $messageModel, InvitationModel $invitationModel)
+    {
+        $this->messageModel = $messageModel;
+        $this->invitationModel = $invitationModel;
+    }
+
     /**
      * @Route("/new/invitation/{leg}", name="hosting_invitation")
      *
@@ -241,7 +258,7 @@ class InvitationController extends BaseHostingRequestAndInvitationController
         /** @var Member $guest */
         $host = $invitation->getInitiator();
         $guest = ($host === $invitation->getSender()) ? $invitation->getReceiver() : $invitation->getSender();
-        list($thread) = $this->messageModel->getThreadInformationForMessage($invitation);
+        list($thread,,$last) = $this->messageModel->getThreadInformationForMessage($invitation);
 
         if ($this->checkRequestExpired($invitation)) {
             $this->addExpiredFlash($guest);
@@ -285,19 +302,15 @@ class InvitationController extends BaseHostingRequestAndInvitationController
         ]);
     }
 
-    /**
-     * @param mixed $subject
-     * @param $requestChanged
-     */
     protected function sendInvitationGuestReplyNotification(
         Member $host,
         Member $guest,
         Message $request,
-        $subject,
-        $requestChanged,
+        string $subject,
+        bool $requestChanged,
         SubTrip $leg
     ): void {
-        $this->messageModel->sendInvitationNotification(
+        $this->invitationModel->sendInvitationNotification(
             $guest,
             $host,
             $host,
@@ -313,7 +326,7 @@ class InvitationController extends BaseHostingRequestAndInvitationController
     {
         $subject = $request->getSubject()->getSubject();
 
-        $this->messageModel->sendInvitationNotification(
+        $this->invitationModel->sendInvitationNotification(
             $host,
             $guest,
             $host,
@@ -325,19 +338,15 @@ class InvitationController extends BaseHostingRequestAndInvitationController
         );
     }
 
-    /**
-     * @param mixed $subject
-     * @param mixed $requestChanged
-     */
     private function sendInvitationHostReplyNotification(
         Member $host,
         Member $guest,
         Message $request,
-        $subject,
-        $requestChanged,
+        string $subject,
+        bool $requestChanged,
         SubTrip $leg
     ): void {
-        $this->messageModel->sendInvitationNotification(
+        $this->invitationModel->sendInvitationNotification(
             $host,
             $guest,
             $host,

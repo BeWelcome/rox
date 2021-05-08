@@ -66,9 +66,6 @@ class CreateTestDatabase extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        // We need to take some precautions as SQLite doesn't support some functionality
-        $testEnvironment = 'test' === getenv('APP_ENV');
-
         $nullOutput = new NullOutput();
         $output->writeln([
             'Creating test database',
@@ -102,11 +99,7 @@ class CreateTestDatabase extends Command
         ]);
         $command = $this->getApplication()->find('doctrine:database:create');
 
-        if ($testEnvironment) {
-            $createDatabase = new ArrayInput([]);
-        } else {
-            $createDatabase = new ArrayInput(['--if-not-exists' => true]);
-        }
+        $createDatabase = new ArrayInput(['--if-not-exists' => true]);
 
         $returnCode = $command->run($createDatabase, $output);
         if ($returnCode) {
@@ -136,25 +129,23 @@ class CreateTestDatabase extends Command
             return 1;
         }
 
-        if ('test' !== getenv('APP_ENV')) {
+        $output->writeln([
+            'Adding stored functions',
+            '',
+        ]);
+        $command = $this->getApplication()->find('doctrine:migrations:migrate');
+
+        $addFunctions = new ArrayInput([]);
+        $addFunctions->setInteractive(false);
+
+        $returnCode = $command->run($addFunctions, $output);
+        if ($returnCode) {
             $output->writeln([
-                'Adding stored functions',
+                'Failed adding functions (see above for reasons).',
                 '',
             ]);
-            $command = $this->getApplication()->find('doctrine:migrations:migrate');
 
-            $addFunctions = new ArrayInput([]);
-            $addFunctions->setInteractive(false);
-
-            $returnCode = $command->run($addFunctions, $output);
-            if ($returnCode) {
-                $output->writeln([
-                    'Failed adding functions (see above for reasons).',
-                    '',
-                ]);
-
-                return 1;
-            }
+            return 1;
         }
 
         $output->writeln([
@@ -178,24 +169,16 @@ class CreateTestDatabase extends Command
 
         // Now set id for English to 0 as the old code expects that
         $connection = $this->entityManager->getConnection();
-        $sql = "";
-        if (!$testEnvironment) {
-            $sql .= "SET FOREIGN_KEY_CHECKS=0;";
-        }
-        $sql .= "
+        $connection->executeStatement("
+            SET FOREIGN_KEY_CHECKS=0;
             UPDATE languages SET id = 0 WHERE ShortCode = 'en';
             UPDATE words SET IdLanguage = 0 WHERE ShortCode = 'en';
             UPDATE memberslanguageslevel SET IdLanguage = 0 WHERE IdLanguage = 1;
             UPDATE languages SET id = 1 WHERE ShortCode = 'fr';
             UPDATE words SET IdLanguage = 1 WHERE ShortCode = 'fr';
             UPDATE memberslanguageslevel SET IdLanguage = 1 WHERE IdLanguage = 2;
-        ";
-        if (!$testEnvironment) {
-            $sql .= "
-                SET FOREIGN_KEY_CHECKS=1;
-            ";
-        }
-        $connection->executeStatement($sql);
+            SET FOREIGN_KEY_CHECKS=1;
+        ");
 
         $output->writeln([
             '',

@@ -12,7 +12,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
 use Pagerfanta\Doctrine\ORM\QueryAdapter;
 use Pagerfanta\Pagerfanta;
-use function usort;
 
 class TripModel
 {
@@ -39,7 +38,8 @@ class TripModel
         return $paginator;
     }
 
-    public function checkTripsRadius($member, $radius) {
+    public function checkTripsRadius($member, $radius)
+    {
         if (!in_array($radius, self::ALLOWED_TRIPS_RADIUS)) {
             return $this->getTripsRadius($member);
         }
@@ -109,7 +109,7 @@ class TripModel
     public function orderTripLegs(Trip &$trip): void
     {
         $legs = iterator_to_array($trip->getSubtrips());
-        usort($legs, function ($a, $b) {
+        \usort($legs, function ($a, $b) {
             $arrivalA = $a->getArrival();
             $arrivalB = $b->getArrival();
 
@@ -149,8 +149,7 @@ class TripModel
         $now = new DateTime();
 
         /** @var Subtrip $leg */
-        foreach ($legs->getIterator() as $leg)
-        {
+        foreach ($legs->getIterator() as $leg) {
             $departure = $leg->getDeparture();
             $expired = $expired && ($departure < $now);
         }

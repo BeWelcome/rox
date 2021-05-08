@@ -37,7 +37,7 @@ class SubtripRepository extends EntityRepository
 
     public function getLegsInAreaMaxGuests(Member $member, int $duration = 3, int $distance = 20): array
     {
-        $queryBuilder = $this->getLegsInAreaQueryBuilder($member, $duration, $distance);
+        $queryBuilder = $this->getLegsInAreaQueryBuilder($member, $distance, $duration);
         $queryBuilder
             ->andWhere('t.countOfTravellers <= :maxguest')
             ->setParameter(':maxguest', $member->getMaxguest())
@@ -51,7 +51,7 @@ class SubtripRepository extends EntityRepository
             ;
     }
 
-    public function getLegsInAreaQuery(Member $member, int $duration = 3, int $radius = 20): Query
+    public function getLegsInAreaQuery(Member $member, int $radius = 20, int $duration = 3): Query
     {
         return
             $this

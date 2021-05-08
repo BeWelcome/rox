@@ -1,13 +1,11 @@
 <?php
 
-
 namespace App\Form\DataTransformer;
 
-
 use App\Doctrine\SubtripOptionsType;
-use Symfony\Component\Form\Exception\TransformationFailedException;
+use Symfony\Component\Form\DataTransformerInterface;
 
-class SubtripOptionsTypeTransformer implements \Symfony\Component\Form\DataTransformerInterface
+class SubtripOptionsTypeTransformer implements DataTransformerInterface
 {
 
     /**

@@ -23,7 +23,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *     @ORM\Index(name="geonames_idx_country", columns={"country"}),
  *     @ORM\Index(name="geonames_idx_admin1", columns={"admin1"})
  * })
- * @ORM\Entity(repositoryClass="App\Repository\LocationRepository")
+ * @ORM\Entity
  *
  * @SuppressWarnings(PHPMD)
  * Auto generated class do not check mess

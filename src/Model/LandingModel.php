@@ -173,7 +173,7 @@ class LandingModel
     public function getTravellersInAreaOfMember(Member $member, int $radius)
     {
         $subtripRepository = $this->getManager()->getRepository(Subtrip::class);
-        $legs = $subtripRepository->getLegsInAreaMaxGuests($member, 3, $radius);
+        $legs = $subtripRepository->getLegsInAreaMaxGuests($member, $radius);
 
         return $legs;
     }

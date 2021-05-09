@@ -219,7 +219,6 @@ class TripController extends AbstractController
         $tripLegs = new Pagerfanta($legsAdapter);
         $tripLegs->setMaxPerPage(10);
         $tripLegs->setCurrentPage($page);
-        // \todo: Remove after testing.
 
         return $this->render('trip/area.html.twig', [
             'radius' => $radius,

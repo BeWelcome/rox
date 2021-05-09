@@ -32,7 +32,7 @@ class SubtripRepository extends EntityRepository
             ->getQuery();
     }
 
-    public function getLegsInAreaMaxGuests(Member $member, int $duration = 3, int $distance = 20): array
+    public function getLegsInAreaMaxGuests(Member $member, int $distance = 20,  int $duration = 3): array
     {
         $queryBuilder = $this->getLegsInAreaQueryBuilder($member, $distance, $duration);
         $queryBuilder
@@ -52,11 +52,11 @@ class SubtripRepository extends EntityRepository
     {
         return
             $this
-                ->getLegsInAreaQueryBuilder($member, $duration, $radius)
+                ->getLegsInAreaQueryBuilder($member, $radius, $duration)
                 ->getQuery();
     }
 
-    private function getLegsInAreaQueryBuilder(Member $member, int $duration, int $distance): QueryBuilder
+    private function getLegsInAreaQueryBuilder(Member $member, int $distance, int $duration): QueryBuilder
     {
         $location = $member->getCity();
 

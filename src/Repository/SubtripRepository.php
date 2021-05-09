@@ -32,7 +32,7 @@ class SubtripRepository extends EntityRepository
             ->getQuery();
     }
 
-    public function getLegsInAreaMaxGuests(Member $member, int $distance = 20,  int $duration = 3): array
+    public function getLegsInAreaMaxGuests(Member $member, int $distance = 20, int $duration = 3): array
     {
         $queryBuilder = $this->getLegsInAreaQueryBuilder($member, $distance, $duration);
         $queryBuilder

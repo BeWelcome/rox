@@ -95,7 +95,7 @@
   "dependencies": {
     "@fontsource/lato": "^4.2.0",
     "@fontsource/signika": "^4.2.0",
-    "@tailwindcss/postcss7-compat": "npm:@tailwindcss/postcss7-compat",
+    "@tailwindcss/postcss7-compat": "npm:@tailwindcss/postcss7-compat@^2.1.2",
     "add-to-homescreen": "^3.2.6",
     "circle-flags": "https://github.com/HatScripts/circle-flags",
     "leaflet-polylinedecorator": "^1.6.0",

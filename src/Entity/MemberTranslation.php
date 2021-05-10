@@ -16,9 +16,10 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="memberstrads",
  *     uniqueConstraints={@ORM\UniqueConstraint(name="Unique_entry", columns={"IdTrad", "IdOwner", "IdLanguage"})},
- *     indexes={@ORM\Index(name="IdTrad", columns={"IdTrad"}),
- *          @ORM\Index(name="IdLanguage", columns={"IdLanguage"}),
- *          @ORM\Index(name="TradLanguage", columns={"IdLanguage", "IdTrad"})
+ *     indexes={
+ *         @ORM\Index(name="memberstrads_trads", columns={"IdTrad"}),
+ *         @ORM\Index(name="memberstrads_language", columns={"IdLanguage"}),
+ *         @ORM\Index(name="memberstrads_trad_language", columns={"IdLanguage", "IdTrad"})
  *      }
  *     )
  * @ORM\Entity

@@ -2,12 +2,9 @@
 
 namespace App\Form;
 
-use App\Entity\Location;
 use App\Form\CustomDataClass\LocationRequest;
 use App\Form\DataTransformer\LocationRequestToLocationTransformer;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -16,9 +13,6 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 
 class SearchLocationType extends AbstractType
 {
-    /**
-     * @var LocationRequestToLocationTransformer
-     */
     private LocationRequestToLocationTransformer $transformer;
 
     public function __construct(LocationRequestToLocationTransformer $transformer)
@@ -26,6 +20,9 @@ class SearchLocationType extends AbstractType
         $this->transformer = $transformer;
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder

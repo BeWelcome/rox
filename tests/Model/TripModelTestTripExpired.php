@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Tests\Model;
-
 
 use App\Entity\Subtrip;
 use App\Entity\Trip;

@@ -33,7 +33,7 @@ class AccessDeniedHandler implements AccessDeniedHandlerInterface
             'message' => $accessDeniedException->getMessage(),
         ]);
 
-        return new Response('Hallo' /*$content*/, 403);
+        return new Response($content, 403);
     }
 
     /**

@@ -161,8 +161,6 @@ class MessageRepository extends EntityRepository
      * @param $sortDirection
      * @param int $page
      * @param int $items
-     *
-     * @return Pagerfanta
      */
     public function findAllMessagesBetween(
         Member $loggedInUser,

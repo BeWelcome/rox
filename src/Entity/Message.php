@@ -13,7 +13,6 @@ use App\Doctrine\SpamInfoType;
 use Carbon\Carbon;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
-use Exception;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -230,7 +229,7 @@ class Message
         return $this;
     }
 
-    public function getParent(): ?Message
+    public function getParent(): ?self
     {
         return $this->parent;
     }

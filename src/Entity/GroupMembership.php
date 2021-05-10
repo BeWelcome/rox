@@ -21,8 +21,9 @@ use Doctrine\Persistence\ObjectManagerAware;
  *
  * @ORM\Table(name="membersgroups",
  *     uniqueConstraints={@ORM\UniqueConstraint(name="UniqueIdMemberIdGroup", columns={"IdMember", "IdGroup"})},
- *     indexes={@ORM\Index(name="IdGroup", columns={"IdGroup"}),
- *         @ORM\Index(name="IdMember", columns={"IdMember"})
+ *     indexes={
+ *         @ORM\Index(name="membersgroups_groups", columns={"IdGroup"}),
+ *         @ORM\Index(name="membersgroups_members", columns={"IdMember"})
  *     }
  * )
  * @ORM\Entity

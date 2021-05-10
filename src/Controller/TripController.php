@@ -62,10 +62,7 @@ class TripController extends AbstractController
             'trip' => $trip,
             'submenu' => [
                 'active' => 'trip_show',
-                'items' => $this->getSubmenuItems([
-                    'trip' => $trip,
-                    'show' => true,
-                ]),
+                'items' => $this->getSubmenuItems(),
             ],
         ]);
     }
@@ -110,9 +107,7 @@ class TripController extends AbstractController
             'form' => $createForm->createView(),
             'submenu' => [
                 'active' => 'trip_create',
-                'items' => $this->getSubmenuItems([
-                    'create' => true,
-                ]),
+                'items' => $this->getSubmenuItems(),
             ],
         ]);
     }
@@ -164,10 +159,7 @@ class TripController extends AbstractController
             'form' => $editForm->createView(),
             'submenu' => [
                 'active' => 'trip_edit',
-                'items' => $this->getSubmenuItems([
-                    'trip' => $trip,
-                    'edit' => true,
-                ]),
+                'items' => $this->getSubmenuItems(),
             ],
         ]);
     }
@@ -227,21 +219,18 @@ class TripController extends AbstractController
         $tripLegs = new Pagerfanta($legsAdapter);
         $tripLegs->setMaxPerPage(10);
         $tripLegs->setCurrentPage($page);
-        // \todo: Remove after testing.
 
         return $this->render('trip/area.html.twig', [
             'radius' => $radius,
             'legs' => $tripLegs,
             'submenu' => [
                 'active' => 'trip_legs',
-                'items' => $this->getSubmenuItems([
-                    'legs' => true,
-                ]),
+                'items' => $this->getSubmenuItems(),
             ],
         ]);
     }
 
-    private function getSubMenuItems(array $params = null): array
+    private function getSubMenuItems(): array
     {
         $submenu = [
             'trip_mytrips' => [

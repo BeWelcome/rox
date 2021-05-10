@@ -4,15 +4,15 @@ namespace App\Controller;
 
 use App\Entity\Member;
 use Intervention\Image\ImageManager;
+use InvalidArgumentException;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Psr\Log\LoggerInterface;
-use Symfony\Component\Finder\Finder;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * Class AvatarController.
@@ -44,10 +44,9 @@ class AvatarController extends AbstractController
             return new Response('File upload failed', Response::HTTP_UNAUTHORIZED);
         }
 
-
         /** @var UploadedFile */
         $avatarFile = $request->files->get('avatar');
-        if (! $avatarFile) {
+        if (!$avatarFile) {
             return new Response('File upload failed', Response::HTTP_BAD_REQUEST);
         }
 
@@ -55,7 +54,6 @@ class AvatarController extends AbstractController
 
         return new Response('');
     }
-
 
     /**
      * @Route("/members/avatar/{username}/{size}", name="avatar",
@@ -83,12 +81,13 @@ class AvatarController extends AbstractController
         if (!$this->avatarImageExists($member, $size)) {
             try {
                 $this->createAvatarImage($member, $size);
-            } catch (\InvalidArgumentException $e) {
+            } catch (InvalidArgumentException $e) {
                 return $this->emptyAvatar($size);
             }
         }
 
         $filename = $this->getAvatarImageFilename($member, $size);
+
         return $this->createCacheableResponse($filename);
     }
 
@@ -113,7 +112,7 @@ class AvatarController extends AbstractController
         $newFileName = self::AVATAR_PATH . $memberId . '_original';
         $img->save($newFileName);
 
-        $this->logger->info("New avatar picture was stored: " . $newFileName);
+        $this->logger->info('New avatar picture was stored: ' . $newFileName);
 
         return true;
     }
@@ -149,7 +148,7 @@ class AvatarController extends AbstractController
     private function getAvatarImageFilename(Member $member, string $size): string
     {
         $filename = self::AVATAR_PATH . $member->getId() . '_' . $size;
-        if ($size !== 'original') {
+        if ('original' !== $size) {
             $filename .= '_' . $size;
         }
 
@@ -158,7 +157,6 @@ class AvatarController extends AbstractController
 
     private function avatarImageExists(Member $member, $size): bool
     {
-
         return file_exists($this->getAvatarImageFilename($member, $size));
     }
 
@@ -168,7 +166,7 @@ class AvatarController extends AbstractController
         $original = self::AVATAR_PATH . $member->getId() . '_original';
         if (!file_exists($original)) {
             $message = 'No original avatar image exists for member ' . $member->getUsername();
-            throw new \InvalidArgumentException($message);
+            throw new InvalidArgumentException($message);
         }
 
         $filename = self::AVATAR_PATH . $member->getId() . '_' . $size . '_' . $size;

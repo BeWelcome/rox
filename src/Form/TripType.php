@@ -3,7 +3,6 @@
 namespace App\Form;
 
 use App\Doctrine\TripAdditionalInfoType;
-use App\Entity\Subtrip;
 use App\Entity\Trip;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;

@@ -8,7 +8,9 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * PostNotification.
  *
- * @ORM\Table(name="posts_notificationqueue", indexes={@ORM\Index(name="IdxStatus", columns={"Status"})})
+ * @ORM\Table(name="posts_notificationqueue", indexes={
+ *     @ORM\Index(name="posts_notificationqueue_status", columns={"Status"})
+ * })
  * @ORM\Entity(repositoryClass="App\Repository\PostNotificationRepository")
  * @ORM\HasLifecycleCallbacks
  */

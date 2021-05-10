@@ -107,21 +107,21 @@ class PaypalIPN
 
         // Post the data back to PayPal, using curl. Throw exceptions if errors occur.
         $ch = curl_init($this->getPaypalUri());
-        curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $req);
-        curl_setopt($ch, CURLOPT_SSLVERSION, 6);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
+        curl_setopt($ch, \CURLOPT_HTTP_VERSION, \CURL_HTTP_VERSION_1_1);
+        curl_setopt($ch, \CURLOPT_POST, 1);
+        curl_setopt($ch, \CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, \CURLOPT_POSTFIELDS, $req);
+        curl_setopt($ch, \CURLOPT_SSLVERSION, 6);
+        curl_setopt($ch, \CURLOPT_SSL_VERIFYPEER, 1);
+        curl_setopt($ch, \CURLOPT_SSL_VERIFYHOST, 2);
 
         // This is often required if the server is missing a global cert bundle, or is using an outdated one.
         if ($this->use_local_certs) {
-            curl_setopt($ch, CURLOPT_CAINFO, __DIR__ . '/cert/cacert.pem');
+            curl_setopt($ch, \CURLOPT_CAINFO, __DIR__ . '/cert/cacert.pem');
         }
-        curl_setopt($ch, CURLOPT_FORBID_REUSE, 1);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        curl_setopt($ch, \CURLOPT_FORBID_REUSE, 1);
+        curl_setopt($ch, \CURLOPT_CONNECTTIMEOUT, 30);
+        curl_setopt($ch, \CURLOPT_HTTPHEADER, [
             'User-Agent: PHP-IPN-Verification-Script',
             'Connection: Close',
         ]);

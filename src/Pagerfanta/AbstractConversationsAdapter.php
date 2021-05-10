@@ -8,7 +8,6 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query\ResultSetMapping;
-use \PDO;
 
 abstract class AbstractConversationsAdapter
 {
@@ -39,8 +38,8 @@ abstract class AbstractConversationsAdapter
         $count = 0;
         try {
             $sql = $this->getSqlCountQuery();
-            $stmt = $this->connection->executeQuery($sql, [':memberId' => $this->member->getId()], [PDO::PARAM_INT]);
-            $row = $stmt->fetchAll(PDO::FETCH_OBJ);
+            $stmt = $this->connection->executeQuery($sql, [':memberId' => $this->member->getId()], [\PDO::PARAM_INT]);
+            $row = $stmt->fetchAll(\PDO::FETCH_OBJ);
             $count = ($row[0])->count;
         } catch (DBALException $e) {
             // Return 0
@@ -122,7 +121,6 @@ abstract class AbstractConversationsAdapter
 
         return $notDeletedOrPurgedCondition;
     }
-
 
     protected function getInitiatorCondition(): string
     {

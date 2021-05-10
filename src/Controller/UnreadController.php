@@ -7,7 +7,6 @@ use App\Entity\Message;
 use App\Repository\MessageRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 class UnreadController extends AbstractController

@@ -203,7 +203,7 @@ class MemberTwigExtension extends AbstractExtension implements GlobalsInterface
                 $groups = $groupsRepository->findBy([
                     'approved' => Group::OPEN,
                 ]);
-                $groupsInApprovalCount = count($groups);
+                $groupsInApprovalCount = \count($groups);
             }
         }
 

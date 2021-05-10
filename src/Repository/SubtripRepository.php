@@ -21,9 +21,6 @@ use Doctrine\ORM\QueryBuilder;
  */
 class SubtripRepository extends EntityRepository
 {
-    /**
-     * @return Query
-     */
     public function queryTripsOfMember(Member $member): Query
     {
         return $this->createQueryBuilder('t')
@@ -35,9 +32,9 @@ class SubtripRepository extends EntityRepository
             ->getQuery();
     }
 
-    public function getLegsInAreaMaxGuests(Member $member, int $duration = 3, int $distance = 20): array
+    public function getLegsInAreaMaxGuests(Member $member, int $distance = 20, int $duration = 3): array
     {
-        $queryBuilder = $this->getLegsInAreaQueryBuilder($member, $duration, $distance);
+        $queryBuilder = $this->getLegsInAreaQueryBuilder($member, $distance, $duration);
         $queryBuilder
             ->andWhere('t.countOfTravellers <= :maxguest')
             ->setParameter(':maxguest', $member->getMaxguest())
@@ -51,15 +48,15 @@ class SubtripRepository extends EntityRepository
             ;
     }
 
-    public function getLegsInAreaQuery(Member $member, int $duration = 3, int $radius = 20): Query
+    public function getLegsInAreaQuery(Member $member, int $radius = 20, int $duration = 3): Query
     {
         return
             $this
-                ->getLegsInAreaQueryBuilder($member, $duration, $radius)
+                ->getLegsInAreaQueryBuilder($member, $radius, $duration)
                 ->getQuery();
     }
 
-    private function getLegsInAreaQueryBuilder(Member $member, int $duration, int $distance): QueryBuilder
+    private function getLegsInAreaQueryBuilder(Member $member, int $distance, int $duration): QueryBuilder
     {
         $location = $member->getCity();
 

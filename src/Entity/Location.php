@@ -14,8 +14,16 @@ use Symfony\Component\Serializer\Annotation\Groups;
 /**
  * Location.
  *
- * @ORM\Table(name="geonames", indexes={@ORM\Index(name="idx_name", columns={"name"}), @ORM\Index(name="idx_latitude", columns={"latitude"}), @ORM\Index(name="idx_longitude", columns={"longitude"}), @ORM\Index(name="idx_fclass", columns={"fclass"}), @ORM\Index(name="idx_fcode", columns={"fcode"}), @ORM\Index(name="idx_country", columns={"country"}), @ORM\Index(name="idx_admin1", columns={"admin1"})})
- * @ORM\Entity(repositoryClass="App\Repository\LocationRepository")
+ * @ORM\Table(name="geonames", indexes={
+ *     @ORM\Index(name="geonames_idx_name", columns={"name"}),
+ *     @ORM\Index(name="geonames_idx_latitude", columns={"latitude"}),
+ *     @ORM\Index(name="geonames_idx_longitude", columns={"longitude"}),
+ *     @ORM\Index(name="geonames_idx_fclass", columns={"fclass"}),
+ *     @ORM\Index(name="geonames_idx_fcode", columns={"fcode"}),
+ *     @ORM\Index(name="geonames_idx_country", columns={"country"}),
+ *     @ORM\Index(name="geonames_idx_admin1", columns={"admin1"})
+ * })
+ * @ORM\Entity
  *
  * @SuppressWarnings(PHPMD)
  * Auto generated class do not check mess
@@ -347,6 +355,6 @@ class Location
 
     public function getFullname(): string
     {
-        return $this->getName() . ", " . $this->getCountry()->getName();
+        return $this->getName() . ', ' . $this->getCountry()->getName();
     }
 }

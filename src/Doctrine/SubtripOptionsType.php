@@ -4,8 +4,8 @@ namespace App\Doctrine;
 
 class SubtripOptionsType extends SetType
 {
-    public const PRIVATE  = 'Private';
-    public const MEET_LOCALS  = 'MeetLocals';
+    public const PRIVATE = 'Private';
+    public const MEET_LOCALS = 'MeetLocals';
     public const LOOKING_FOR_HOST = 'LookingForHosts';
 
     /** @var string */

@@ -8,7 +8,7 @@ use App\Logger\Logger;
 use App\Service\Mailer;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
-use Pagerfanta\Adapter\DoctrineORMAdapter;
+use Pagerfanta\Doctrine\ORM\QueryAdapter;
 use Pagerfanta\Pagerfanta;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -101,7 +101,7 @@ class GroupController extends AbstractController
             ->from('App:Group', 'g')
             ->where("g.name NOT LIKE '[Archived] %'")
         ;
-        $adapter = new DoctrineORMAdapter($queryBuilder);
+        $adapter = new QueryAdapter($queryBuilder);
         $pagerfanta = new Pagerfanta($adapter);
 
         $pagerfanta->setMaxPerPage(30); // 10 by default
@@ -143,7 +143,7 @@ class GroupController extends AbstractController
             ->from('App:Group', 'g')
             ->where("g.name LIKE '[Archived] %'")
         ;
-        $adapter = new DoctrineORMAdapter($queryBuilder);
+        $adapter = new QueryAdapter($queryBuilder);
         $pagerfanta = new Pagerfanta($adapter);
 
         $pagerfanta->setMaxPerPage(30); // 10 by default

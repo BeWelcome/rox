@@ -45,6 +45,7 @@
         "nelmio/security-bundle": "^2.10",
         "nesbot/carbon": "^2.0",
         "nikic/php-parser": "4.9.1",
+        "pagerfanta/doctrine-collections-adapter": "^3.0",
         "pagerfanta/doctrine-dbal-adapter": "3.*",
         "pagerfanta/doctrine-orm-adapter": "^3.0",
         "pagerfanta/pagerfanta": "v3.0.0",

@@ -4,7 +4,7 @@ namespace App\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
-use Pagerfanta\Adapter\DoctrineORMAdapter;
+use Pagerfanta\Doctrine\ORM\QueryAdapter;
 use Pagerfanta\Pagerfanta;
 
 /**
@@ -24,7 +24,7 @@ class CommunityNewsCommentRepository extends EntityRepository
      */
     public function findLatestCommunityNewsComments($page = 1, $items = 10)
     {
-        $paginator = new Pagerfanta(new DoctrineORMAdapter($this->queryLatestCommunityNewsComments(), false));
+        $paginator = new Pagerfanta(new QueryAdapter($this->queryLatestCommunityNewsComments(), false));
         $paginator->setMaxPerPage($items);
         $paginator->setCurrentPage($page);
 

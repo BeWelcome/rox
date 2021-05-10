@@ -6,7 +6,7 @@ use App\Doctrine\TranslationAllowedType;
 use App\Entity\Word;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
-use Pagerfanta\Adapter\DoctrineORMAdapter;
+use Pagerfanta\Doctrine\ORM\QueryAdapter;
 use Pagerfanta\Pagerfanta;
 
 class WordRepository extends EntityRepository
@@ -14,7 +14,7 @@ class WordRepository extends EntityRepository
     public function paginateTranslations($locale, $code = '', $page = 1, $items = 20)
     {
         $queryBuilder = $this->queryAll($locale, $code);
-        $adapter = new DoctrineORMAdapter($queryBuilder);
+        $adapter = new QueryAdapter($queryBuilder);
         $paginator = new Pagerfanta($adapter);
         $paginator->setMaxPerPage($items);
         $paginator->setCurrentPage($page);

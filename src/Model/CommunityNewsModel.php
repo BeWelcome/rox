@@ -14,7 +14,7 @@ use App\Entity\CommunityNewsComment;
 use App\Repository\CommunityNewsCommentRepository;
 use App\Repository\NotificationRepository;
 use App\Utilities\ManagerTrait;
-use Pagerfanta\Adapter\DoctrineCollectionAdapter;
+use Pagerfanta\Doctrine\Collections\CollectionAdapter;
 use Pagerfanta\Pagerfanta;
 
 /**
@@ -62,7 +62,7 @@ class CommunityNewsModel
 
     public function getCommentsPaginator(CommunityNews $communityNews, $page, $limit)
     {
-        $adapter = new DoctrineCollectionAdapter($communityNews->getComments());
+        $adapter = new CollectionAdapter($communityNews->getComments());
         $pagerfanta = new Pagerfanta($adapter);
         $pagerfanta
             ->setMaxPerPage($limit)

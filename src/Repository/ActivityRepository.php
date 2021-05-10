@@ -12,7 +12,7 @@ use Doctrine\ORM\Query;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 use Exception;
-use Pagerfanta\Adapter\DoctrineORMAdapter;
+use Pagerfanta\Doctrine\ORM\QueryAdapter;
 use Pagerfanta\Pagerfanta;
 
 class ActivityRepository extends EntityRepository
@@ -27,7 +27,7 @@ class ActivityRepository extends EntityRepository
      */
     public function findLatest($page = 1, $items = 10)
     {
-        $paginator = new Pagerfanta(new DoctrineORMAdapter($this->queryLatest(), false));
+        $paginator = new Pagerfanta(new QueryAdapter($this->queryLatest(), false));
         $paginator->setMaxPerPage($items);
         $paginator->setCurrentPage($page);
 
@@ -60,7 +60,7 @@ class ActivityRepository extends EntityRepository
      */
     public function findProblematicActivities($page = 1, $items = 10)
     {
-        $paginator = new Pagerfanta(new DoctrineORMAdapter($this->queryProblematicActivities(), false));
+        $paginator = new Pagerfanta(new QueryAdapter($this->queryProblematicActivities(), false));
         $paginator->setMaxPerPage($items);
         $paginator->setCurrentPage($page);
 

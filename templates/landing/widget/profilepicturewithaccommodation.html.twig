@@ -1,9 +1,9 @@
 {% import 'macros.twig' as macros %}
-<div class="u-block u-mr-24" id="welcomeavatar">
-    <div>
-        {{ macros.roundedavatarstack( member.Username, 96, true) }}
-        <div class="hoststatus">
-            <img src="/images/icons/{{ member.Accommodation }}.png">
+<div class="u-relative u-flex u-items-center" id="welcomeavatar">
+    <div class="o-avatar o-avatar--l o-avatar--noname">
+        {{ macros.roundedavatarstack( member.Username, 120, true) }}
+        <div class="o-avatar__host-status">
+            <img class="o-avatar__host-img" src="/images/icons/{{ member.Accommodation }}.png">
         </div>
     </div>
 </div>

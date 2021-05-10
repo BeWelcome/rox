@@ -1,0 +1,23 @@
+.c-dashboard,
+.c-dashboard p {
+	font-family: Signika;
+}
+
+
+
+
+
+.c-dashboard__item {
+	display: flex;
+	align-items: center;
+	background-color: var(--gray-5);
+	padding: 0 16px;
+	border-radius: 8px;
+	margin-bottom: 8px;
+	height: 96px;
+	overflow: hidden;
+}
+
+
+
+

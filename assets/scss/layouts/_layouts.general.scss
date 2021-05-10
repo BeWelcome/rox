@@ -79,13 +79,36 @@
 
 .l-landing-welcome {
   display: grid;
-  grid-template-columns: 104px 1fr 288px;
+  grid-template-columns: 120px 1fr;
   grid-gap: 32px;
   width: 100%;
 }
 
 @media (max-width: 900px) {
   .l-landing-welcome {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+.l-landing-welcome a {
+  color: var(--bewelcome);
+}
+
+
+
+
+.l-welcome-card {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px -3px #d7d7d7;
+  background-color: var(--white);
+}
+
+@media (max-width: 900px) {
+  .l-welcome-card {
     display: flex;
     flex-direction: column;
     align-items: center;

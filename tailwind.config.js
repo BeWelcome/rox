@@ -14,10 +14,12 @@ module.exports = {
       lg: '1200px',
     },
     colors: {
-      'orange': '#f37000',
+      'bewelcome': '#f37000',
+      'bewelcome-dark': '#cd5e00',
       'black': '#000',
       'white': '#fff',
       'green': '#00f370',
+      'gray-5': '#f9f9f9', 
       'gray-10': '#eee',
       'gray-15': '#ddd',
       'gray-20': '#ccc',
@@ -85,6 +87,7 @@ module.exports = {
       '4': '4px',
       '6': '6px',
       '8': '8px',
+      '16': '16px',
       'full': '100%',
     },
     borderWidth: {

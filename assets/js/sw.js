@@ -85,7 +85,7 @@ registerRoute(
 // Cache members profiles a Cache First strategy for 10 days
 registerRoute(
     ({url}) => url.pathname.startsWith('/members'),
-    new CacheFirst({
+    new StaleWhileRevalidate({
         cacheName: 'members',
         plugins: [
             new CacheableResponsePlugin({

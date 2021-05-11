@@ -70,5 +70,8 @@
     "typeface-lato": "0.0.75",
     "typeface-signika": "0.0.72",
     "workbox-webpack-plugin": "^6.1.5"
+  },
+  "dependencies": {
+    "postcss": "8.2.10"
   }
 }

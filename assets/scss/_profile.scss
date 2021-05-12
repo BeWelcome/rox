@@ -313,3 +313,6 @@ a.grouplist:hover {
 #MyPreferences [data-toggle="collapse"].collapsed:after {
       transform: rotate(0deg) ;
     }
+.modal {
+        z-index: 9999;
+    }

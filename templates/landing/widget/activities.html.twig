@@ -10,7 +10,7 @@
                 <p class="u-text-14 u-font-300"><span class="u-font-400">{{ activity.starts | date("m") }}</span>/{{ activity.starts | date("Y") }}</p>
             </div>
 
-            <div class="u-flex u-items-center u-mx-16">
+            <div class="u-flex u-items-center u-mx-16 u-overflow-hidden">
                 {% if activity.online %}<img class="u-w-32 u-h-32 u-mr-16 u-text-gray-70" src="images/online_meeting_noun_3384309.svg">{% else %}<i class="fa fa-2x fa-map-marker-alt"></i>{% endif %}
                 <div class="u-flex u-flex-col">
                     <p class="u-ellipsis"><strong><a href="activities/{{ activity.id }}">{{ activity.title }}</a></strong></p>
@@ -23,12 +23,12 @@
                     <i class="fa fa-user u-text-gray-70 u-text-22"></i>
                 </div>
                 {% if activity.attendeesYes.count != 0 %}
-                    <p class="u-font-300 u-text-14 u-leading-20">
+                    <p class="u-font-300 u-text-14 u-leading-20 u-whitespace-nowrap">
                     {{ activity.attendeesYes.count }}&nbsp;{{ 'activitiesnumbattendeesyes' | trans }}
                     </p>
                 {% endif %}
                 {% if activity.attendeesMaybe.count != 0 %}
-                    <p class="u-font-300 u-text-14 u-leading-20">
+                    <p class="u-font-300 u-text-14 u-leading-20 u-whitespace-nowrap">
                         {{ activity.attendeesMaybe.count }}&nbsp;{{ 'activitiesnumbattendeesmaybe' | trans }}
                     </p>
                 {% endif %}       

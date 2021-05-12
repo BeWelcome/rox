@@ -5,10 +5,10 @@
 		{% set unread = (message.firstRead is null) or (message.firstRead == '0000-00-00 00:00.00') %}
 		<div class="c-dashboard__item">
 			<div class="o-avatar o-avatar--m o-avatar--noname u-mr-16">{{ macros.roundedavatarstack(message.sender.username, 72, true) }}</div>
-			<div class="w-100 u-flex u-h-full u-min-w-0">
+			<div class="u-flex u-min-w-0 u-h-full">
 				{% if message.request %}
-					<div class="u-flex u-flex-col u-bg-gray-10 u-px-8 u-mr-8 u-items-center u-justify-center u-h-full">
-						<div class="u-w-40 u-h-40 u-rounded-full u-bg-gray-15 u-flex u-items-center u-justify-center u-mb-4">
+					<div class="u-flex u-flex-col u-bg-gray-10 u-px-8 u-mr-8 u-items-center u-justify-start u-h-48 u-relative u-pin-y u-overflow-hidden">
+						<div class="u-w-40 u-h-40 u-rounded-full u-bg-gray-15 u-flex u-items-center u-justify-center u-mb-4 u-flex-shrink-0">
 							<i class="fa fa-lg fa-bed u-text-gray-70"></i>
 						</div>
 						<p class="u-font-300 u-text-14 u-leading-20">{{ message.request.arrival | format_date( 'medium') }}</p>
@@ -17,7 +17,7 @@
 					</div>
 					
 				{% endif %}
-				<div class="u-flex u-flex-col u-h-full u-justify-center u-overflow-hidden">
+				<div class="u-flex u-flex-col u-h-48 u-relative u-pin-y u-justify-start u-overflow-hidden">
 					<a class="u-flex u-flex-col" href="{{ path(route, { id: message.id } ) }}" class="{%- if unread %}unread{% else %}read{% endif %}">
 						{% if message.subject %}<p class="u-ellipsis">{{ message.subject.subject|raw }}</p>{% endif %}
 						<p class="u-ellipsis">{{ message.message|raw }}</p>

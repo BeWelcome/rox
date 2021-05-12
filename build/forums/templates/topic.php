@@ -30,7 +30,7 @@ This File display a topic and the messages which are inside it
 */
 
 ?>
-    <div class="row">
+    <div class="row no-gutters mb-1">
 <?php
 $words = new MOD_words();
 

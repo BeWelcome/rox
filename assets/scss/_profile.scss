@@ -316,7 +316,7 @@ a.grouplist:hover {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   content: url('../../public/images/chevron.svg');
-  transform: rotate(270deg);
+  transform: rotate(-90deg);
   transition: all linear 0.25s;
   float: right;
 }

@@ -1,7 +1,7 @@
 <div class="card">
     <div class="card-header" id="heading-basics">
         <a data-toggle="collapse" href="#collapse-home" aria-expanded="true"
-           aria-controls="collapse-home" class="mb-0 d-block collapsed">
+           aria-controls="collapse-home" class="mb-0 d-block">
             <?= $words->get('profile.basics') ?>
         </a>
     </div>

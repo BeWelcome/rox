@@ -329,3 +329,13 @@ a.grouplist:hover {
 .modal {
   z-index: 9999;
 }
+
+.teaser-border {
+    border-left: 1px solid #ccc;
+}
+
+@media (max-width:767px) {
+    .teaser-border {
+        border-left: 0px solid !important;
+        }  
+    }

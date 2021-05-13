@@ -1,12 +1,11 @@
-<div class="tab-pane fade card" id="travel" role="tabpanel" aria-labelledby="travel-tab">
-    <div class="card-header" role="tab" id="heading-travel">
-        <h5 class="mb-0">
-            <a data-toggle="collapse" href="#collapse-travel" data-parent="#content" aria-expanded="true" aria-controls="collapse-travel">
-                <?= $words->get('ProfileTravelExperience') ?>
-            </a>
-        </h5>
+<div class="card">
+    <div class="card-header" id="heading-travel">
+        <a data-toggle="collapse" href="#collapse-travel" aria-expanded="false"
+           aria-controls="collapse-travel" class="mb-0 d-block collapsed">
+            <?= $words->get('ProfileTravelExperience') ?>
+        </a>
     </div>
-    <div id="collapse-travel" class="collapse" role="tabpanel" aria-labelledby="heading-travel">
+    <div id="collapse-travel" class="collapse" data-parent="#editProfile" aria-labelledby="heading-travel">
         <div class="card-body">
             <div class="form-row">
                 <label for="PastTrips" class="col-md-3 col-form-label">
@@ -24,12 +23,6 @@
                 <div class="col-12 col-md-9">
                                 <textarea name="PlannedTrips" class="form-control"
                                           rows="3"><?= $vars['PlannedTrips'] ?></textarea>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-12">
-                    <input type="submit" class="btn btn-primary float-right m-2" name="submit"
-                           value="<?= $words->getSilent('Save Profile') ?>"/> <?php echo $words->flushBuffer(); ?>
                 </div>
             </div>
         </div>

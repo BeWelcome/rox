@@ -1,13 +1,11 @@
-<div class="tab-pane fade show card active" id="basics" role="tabpanel" aria-labelledby="home-tab">
-    <div class="card-header" role="tab" id="heading-home">
-        <h5 class="mb-0">
-            <a data-toggle="collapse" href="#collapse-home" data-parent="#content" aria-expanded="true"
-               aria-controls="collapse-home">
-                <?= $words->get('Home') ?>
-            </a>
-        </h5>
+<div class="card">
+    <div class="card-header" id="heading-basics">
+        <a data-toggle="collapse" href="#collapse-home" aria-expanded="true"
+           aria-controls="collapse-home" class="mb-0 d-block collapsed">
+            <?= $words->get('profile.basics') ?>
+        </a>
     </div>
-    <div id="collapse-home" class="collapse show" role="tabpanel" aria-labelledby="heading-home">
+    <div id="collapse-home" class="show" data-parent="#editProfile" aria-labelledby="heading-basics">
         <div class="card-body">
             <div class="form-row mb-1">
                 <label for="SignupUsername" class="col-12 col-md-3"><?= $words->get('SignupUsername') ?></label>
@@ -113,11 +111,11 @@
                        class="col-md-3 col-form-label pb-0"><?= $words->get('SignupBirthDate') ?></label>
                 <div class="col-8 col-md-7">
                     <input type="text"
-                               id="birth-date"
-                               name="birth-date"
-                               class="form-control datetimepicker-input"
-                               data-toggle="datetimepicker"
-                               data-target="#birth-date" value="<?= $vars['BirthDate'] ?>" >
+                           id="birth-date"
+                           name="birth-date"
+                           class="form-control datetimepicker-input"
+                           data-toggle="datetimepicker"
+                           data-target="#birth-date" value="<?= $vars['BirthDate'] ?>">
                 </div>
                 <div class="col-12 col-md-7 offset-md-3 small text-muted"><?= $words->get('EmailIsAlwayHidden') ?></div>
             </div>
@@ -190,24 +188,6 @@
                     </div>
                 </div>
             </div>
-
-            <div class="form-row mt-1">
-                <div class="col-12">
-                    <input type="submit" class="btn btn-primary float-right" name="submit"
-                           value="<?= $words->getSilent('Save Profile') ?>"/> <?php echo $words->flushBuffer(); ?>
-                </div>
-            </div>
         </div>
     </div>
 </div>
-<script>
-    $(function () {
-        let maxDate = moment().subtract(18, "years");
-        $("#birth-date").datetimepicker({
-            format: 'YYYY-MM-DD',
-            maxDate: maxDate,
-            viewMode: 'years',
-            keepInvalid: true
-        });
-    });
-</script>

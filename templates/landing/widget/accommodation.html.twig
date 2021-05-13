@@ -1,10 +1,10 @@
-<div id="accommodation" class="btn-group mx-1">
-    <button type="button" class="btn o-button o-button--br-16 dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+<div id="accommodation" class="btn-group u-mr-4">
+    <button type="button" class="btn o-button o-button--br-16 dropdown-toggle u-font-700 u-capitalize {% if member.Accommodation == 'anytime' %}u-bg-green-dark{% elseif member.Accommodation == 'neverask' %}u-bg-red{% endif %}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         {%  if member.Accommodation == 'anytime' %}{{ 'hosting' | trans }}{% endif %}
         {%  if member.Accommodation == 'neverask' %}{{ 'not hosting' | trans }}{% endif %}
     </button>
     <div class="dropdown-menu hoststatusdropdown">
-        <a id="anytime" class="hosting dropdown-item" href="#">{{ 'dashboard.hosting.yes' | trans }}</a>
-        <a id="neverask" class="hosting dropdown-item" href="#">{{ 'dashboard.hosting.no' | trans }}</a>
+        <a id="anytime" class="hosting dropdown-item u-font-700 u-capitalize" href="#">{{ 'dashboard.hosting.yes' | trans }}</a>
+        <a id="neverask" class="hosting dropdown-item u-font-700 u-capitalize" href="#">{{ 'dashboard.hosting.no' | trans }}</a>
     </div>
 </div>

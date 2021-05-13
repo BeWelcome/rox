@@ -5,7 +5,8 @@
 .navbar {
 
   .navbar-brand {
-    padding-right: $spacer;
+    display: inline-block;
+    padding: 0 16px 0 0;
   }
 
   .nav-link {

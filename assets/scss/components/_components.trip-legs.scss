@@ -28,10 +28,33 @@
 }
 
 .c-trip-legs--landing .c-trip-legs__item {
+  background-image: url("../../images/trips-infinite.jpg");
 	display: flex;
 	flex-direction: column-reverse;
-	background-color: var(--gray-40);
+  position: relative;
 }
+
+.c-trip-legs--landing .c-trip-legs__item::after {
+  background-color: rgba(0, 0, 0, 0.40);
+  content: '';
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  border-radius: 8px;
+}
+
+.c-trip-legs--landing .c-trip-legs__icons-wrapper,
+.c-trip-legs--landing .c-trip-legs__text-wrapper,
+.c-trip-legs--landing .o-avatar {
+  z-index: 1;
+}
+
+
+
+
 
 .c-trip-legs__item--invited {
 	background-color: rgba(255, 255, 255, 0.3);

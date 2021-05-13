@@ -25,7 +25,6 @@
       <div class="u-flex u-flex-col u-justify-center u-py-16 u-px-24">
         <p class="u-text-26 u-leading-32 u-font-400 u-font-display u-mb-8">{{ 'landing.welcomeback' | trans }}&nbsp;<span class="u-font-300">{{ macros.profilelink(app.user.Username) }}</span></p>
         <div class="u-flex u-items-center">
-          <p class="u-text-20 u-leading-26 u-gray-60 u-font-display u-font-300 u-mr-4 u-hidden md:u-inline-block">{{ 'landing.yourhostingstatus' | trans }}</p>
           {% include 'landing/widget/accommodation.html.twig' with {
             member: app.user
           } only %}

@@ -3,7 +3,7 @@
         <?php
         $picture_url = 'members/avatar/' . $member->Username;
         ?>
-        <div class="text-center">
+        <div class="text-center text-md-left">
             <?php if ($this->useLightbox) { ?>
                 <a class="d-md-none" href="<?= $picture_url . '/original' ?>" data-toggle="lightbox" alwaysShowClose="true" data-type="image" data-title="<?= $words->getbuffered('profile.picture.title'); ?>">
                     <img class="img-thumbnail d-md-none" src="<?= $picture_url . '/100' ?>" alt="<?= $words->get('profile.picture.title'); ?>">
@@ -82,7 +82,7 @@
         </div>
 
     </div>
-    <div class="col-12 col-md-5 teaser-border text-center">
+    <div class="col-12 col-md-5 teaser-border text-center text-md-left align-self-end">
 
         <?php if ($occupation != null) {
             echo '<p class="h5">' . $occupation . '</p>';

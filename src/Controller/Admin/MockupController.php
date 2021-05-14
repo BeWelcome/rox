@@ -28,8 +28,7 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 /**
  * Class TranslationController.
  *
- * @SuppressWarnings(PHPMD.StaticAccess)
- * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+ * @SuppressWarnings(PHPMD)
  */
 class MockupController extends TranslationController
 {

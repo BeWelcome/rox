@@ -10,7 +10,7 @@
     <h1>{{ 'mydata.pictures.headline' | trans }}</h1>
     <p>{{ 'mydata.pictures.abstract' | trans }}</p>
     {% if pictures|length == 0 %}
-        <p>{{ 'mydata.pictures.no.image' }}</p>
+        <p>{{ 'mydata.pictures.no.images'|trans }}</p>
     {% else %}
         <div id="masonry-grid" class="row mb-2" data-masonry='{"percentPosition": true }'>
         {% for picture in pictures %}

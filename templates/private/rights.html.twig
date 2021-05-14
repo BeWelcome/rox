@@ -4,7 +4,7 @@
     <h1>{{ 'mydata.rights.headline' | trans }}</h1>
     <p>{{ 'mydata.rights.abstract' | trans }}</p>
     {% if volunteerrights|length == 0 %}
-        <p>{{ 'mydata.rights.no.right' }}</p>
+        <p>{{ 'mydata.rights.no.rights'|trans }}</p>
     {% else %}
         <div class="card-columns">
         {% for volunteerright in volunteerrights %}

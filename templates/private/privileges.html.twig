@@ -4,7 +4,7 @@
     <h1>{{ 'mydata.privileges.headline' | trans }}</h1>
     <p>{{ 'mydata.privileges.abstract' | trans }}</p>
     {% if privileges|length == 0 %}
-        <p>{{ 'mydata.privileges.no.privilege' }}</p>
+        <p>{{ 'mydata.privileges.no.privileges'|trans }}</p>
     {% else %}
         <div class="card-columns">
         {% for privilege in privileges %}

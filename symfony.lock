@@ -88,18 +88,6 @@
     "brick/math": {
         "version": "0.9.1"
     },
-    "cakephp/core": {
-        "version": "3.8.10"
-    },
-    "cakephp/database": {
-        "version": "3.8.10"
-    },
-    "cakephp/datasource": {
-        "version": "3.8.10"
-    },
-    "cakephp/utility": {
-        "version": "3.8.10"
-    },
     "composer/ca-bundle": {
         "version": "1.2.9"
     },
@@ -542,9 +530,6 @@
     "psr/log": {
         "version": "1.1.2"
     },
-    "psr/simple-cache": {
-        "version": "1.0.1"
-    },
     "ralouphie/getallheaders": {
         "version": "3.0.3"
     },
@@ -565,9 +550,6 @@
         "files": [
             "./config/packages/ramsey_uuid_doctrine.yaml"
         ]
-    },
-    "robmorgan/phinx": {
-        "version": "0.11.4"
     },
     "sanmai/pipeline": {
         "version": "v5.0.1"

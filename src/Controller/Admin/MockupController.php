@@ -265,7 +265,7 @@ class MockupController extends TranslationController
                 'type' => 'template',
                 'template' => 'private/footer.html.twig',
                 'description' => 'Footer included on every page of the generated data including the date and time the generation happened.',
-                'setup' => 'getGeneratedDate'
+                'setup' => 'getGeneratedDate',
             ],
             'activities, none' => [
                 'type' => 'template',

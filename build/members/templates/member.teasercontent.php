@@ -1,4 +1,36 @@
 <div class="row">
+    <div class="col-12 text-center text-md-left">
+        <h2 class="pb-1"><strong>
+            <?php if ($this->passedAway == 'PassedAway') {
+                echo $words->get('ProfileInMemoriam', $member->Username);
+            } else {
+                echo $member->Username;
+            } ?>
+        </strong>
+
+        <?php if (!$this->passedAway) : ?>
+            <?php
+            $icons = array();
+            if (strstr($member->TypicOffer, "CanHostWeelChair")) {
+                $icons[] = '<img src="images/icons/wheelchairblue.png" ' .
+                    'class="mb-2" ' .
+                    'alt="' . $words->getSilent('wheelchair') . '" ' .
+                    'title="' . $words->getSilent('CanHostWheelChairYes') . '" />';
+            }
+
+            $icons[] = '<img src="images/icons/' . $member->Accomodation . '.png"' .
+                ' class="mb-2"' .
+                ' alt="' . $words->getSilent($member->Accomodation) . '"' .
+                ' title="' . $words->getSilent('CanOffer' . $member->Accomodation) . '" />';
+
+            for ($ii = 0; $ii < count($icons); $ii++) {
+                echo $icons[$ii];
+            }
+            ?>
+            <?= $words->flushBuffer() ?>
+        <?php endif; ?>
+        </h2>
+    </div>
     <div class="col-12 col-md-7">
         <?php
         $picture_url = 'members/avatar/' . $member->Username;
@@ -14,39 +46,7 @@
                 </a>
             <?php } ?>
 
-            <h2 class="pt-2"><strong>
-                    <?php if ($this->passedAway == 'PassedAway') {
-                        echo $words->get('ProfileInMemoriam', $member->Username);
-                    } else {
-                        echo $member->Username;
-                    } ?>
-                </strong>
-
-                <?php if (!$this->passedAway) : ?>
-                    <?php
-                    $icons = array();
-                    if (strstr($member->TypicOffer, "CanHostWeelChair")) {
-                        $icons[] = '<img src="images/icons/wheelchairblue.png" ' .
-                            'class="mb-2" ' .
-                            'alt="' . $words->getSilent('wheelchair') . '" ' .
-                            'title="' . $words->getSilent('CanHostWheelChairYes') . '" />';
-                    }
-
-                    $icons[] = '<img src="images/icons/' . $member->Accomodation . '.png"' .
-                        ' class="mb-2"' .
-                        ' alt="' . $words->getSilent($member->Accomodation) . '"' .
-                        ' title="' . $words->getSilent('CanOffer' . $member->Accomodation) . '" />';
-
-                    for ($ii = 0; $ii < count($icons); $ii++) {
-                        echo $icons[$ii];
-                    }
-                    ?>
-                    <?= $words->flushBuffer() ?>
-                <?php endif; ?>
-                <br>
-                <?php $name = $member->name(); ($name == '') ? ('') : '<span class="h4">' . $name. '</span>'; ?>
-                
-            </h2> <!-- username -->
+            <?php if ($member->name() != '') { echo "<h3>" . $member->name() . "</h3>"; } ?> <!-- user's name -->
 
             <h5>
                 <?php
@@ -74,15 +74,15 @@
                 endif;
                 ?>
             </h5><!-- location -->
-            
+
             <?php if ($this->statusForm($member) != null) { ?>
             <div class="form-group form-inline small"><?php echo $this->statusForm($member); ?></div>
             <?php } ?>
-            
+
         </div>
 
     </div>
-    <div class="col-12 col-md-5 teaser-border text-center text-md-left align-self-end">
+    <div class="col-12 col-md-5 teaser-border text-center text-md-left">
 
         <?php if ($occupation != null) {
             echo '<p class="h5">' . $occupation . '</p>';

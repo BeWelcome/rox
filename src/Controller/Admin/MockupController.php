@@ -28,7 +28,8 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 /**
  * Class TranslationController.
  *
- * @SuppressWarnings(PHPMD)
+ * @SuppressWarnings(PHPMD.StaticAccess)
+ * @SuppressWarnings(PHPMD.UnusedFormalParameter)
  */
 class MockupController extends TranslationController
 {
@@ -261,6 +262,12 @@ class MockupController extends TranslationController
                 'template' => 'private/index.html.twig',
                 'description' => 'Index page of the data dump created by /mydata (profile)',
             ],
+            'footer' => [
+                'type' => 'template',
+                'template' => 'private/footer.html.twig',
+                'description' => 'Footer included on every page of the generated data including the date and time the generation happened.',
+                'setup' => 'getGeneratedDate'
+            ],
             'activities, none' => [
                 'type' => 'template',
                 'template' => 'private/activities.html.twig',
@@ -400,7 +407,8 @@ class MockupController extends TranslationController
 
         $template = $mockup['template'];
         $description = $mockup['description'] ?? '';
-        $parameters = $this->getMockTemplateParams($template, $name);
+        $setupFunction = $mockup['setup'] ?? 'getMockTemplateParams';
+        $parameters = \call_user_func([$this, $setupFunction], $template, $name);
 
         return $this->render(
             'admin/translations/mockup.template.html.twig',
@@ -681,6 +689,8 @@ class MockupController extends TranslationController
             case '(terms of use)':
                 $type = Newsletter::TERMS_OF_USE;
                 break;
+            default:
+                $type = Newsletter::TERMS_OF_USE;
         }
 
         $newsletterRepository = $this->getDoctrine()->getRepository(Newsletter::class);
@@ -696,6 +706,13 @@ class MockupController extends TranslationController
             'unsubscribe_key' => '91aeecc7154b8fc9b2855a331e975bc8aafb088b6617d9aefe543e5fee427ae7',
             'newsletter' => $newsletters[0],
             'receiver' => $this->getUser(),
+        ];
+    }
+
+    private function getGeneratedDate(string $template, string $name)
+    {
+        return [
+            'date_generated' => new DateTime(),
         ];
     }
 

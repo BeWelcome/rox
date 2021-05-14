@@ -44,8 +44,8 @@
                     <?= $words->flushBuffer() ?>
                 <?php endif; ?>
                 <br>
-                <span class="h4"><?php $name = $member->name(); ?><?= ($name == '') ? (($occupation) ? $occupation : "") : $name; ?></span>
-
+                <?php $name = $member->name(); ($name == '') ? ('') : '<span class="h4">' . $name. '</span>'; ?>
+                
             </h2> <!-- username -->
 
             <h5>

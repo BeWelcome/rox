@@ -4,7 +4,7 @@
     <h1>{{ 'mydata.comments.headline' | trans }}</h1>
     <p>{{ 'mydata.comments.abstract' | trans }}</p>
     {% if comments|length == 0 %}
-        <p>{{ 'mydata.comments.no.comment' }}</p>
+        <p>{{ 'mydata.comments.no.comment'|trans }}</p>
     {% else %}
         {% for comment in comments %}
         <div class="row mb-2">

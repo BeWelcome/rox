@@ -4,7 +4,7 @@
     <h1>{{ 'mydata.relations.headline' | trans }}</h1>
     <p>{{ 'mydata.relations.abstract' | trans }}</p>
     {% if relations|length == 0 %}
-        <p>{{ 'mydata.relations.no.comment' }}</p>
+        <p>{{ 'mydata.relations.no.comments'|trans }}</p>
     {% else %}
         {% for relation in relations %}
             <div class="row mb-2">

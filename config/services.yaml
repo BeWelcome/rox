@@ -59,6 +59,10 @@ services:
         arguments:
             $repository: '@App\Repository\MemberRepository'
 
+    App\Command\DataRetentionCommand:
+        arguments:
+            $dataDirectory: '%data_directory%'
+
     App\Serializer\MemberContextBuilder:
         decorates: api_platform.serializer.context_builder
         arguments:
@@ -215,6 +219,14 @@ services:
             $locales: "%locales%"
         tags:
             - { name: kernel.event_subscriber }
+
+    App\Controller\Admin\TranslationController:
+        arguments:
+            $locales: '%locales%'
+
+    App\Controller\Admin\MockupController:
+        arguments:
+            $locales: '%locales%'
 
     app.user_locale_listener:
         public: true

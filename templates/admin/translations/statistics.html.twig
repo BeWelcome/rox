@@ -12,7 +12,8 @@
             <tr><th>{{ 'language'|trans }}</th><th>{{ 'translation.ratio'|trans }}</th><th>{{ 'translation.translator'|trans }}<br>{{ 'translation.last.change'|trans }}</th></tr>
             {% for language, detail in details %}
                 <tr>
-                    <td>{{ ('lang_' ~ language)|lower|trans }} ({{ language }})</td>
+                    <td>{{ ('lang_' ~ language)|lower|trans }}<br>
+                        {{ ('lang_' ~ language)|lower|trans({}, null, language)|raw }} ({{ language }})</td>
                     <td>{{ min(100, (detail.count/count_all*100))|number_format(2) }}</td>
                     <td>
                         {% if detail.translator %}
@@ -21,10 +22,10 @@
                             {% elseif detail.translator.status == constant('App\\Doctrine\\MemberStatusType::ACTIVE') or detail.translator.status == constant('App\\Doctrine\\MemberStatusType::OUT_OF_REMIND') %}
                                 <a href="{{ path('members_profile', { 'username': detail.translator.username}) }}">{{ detail.translator.username }}</a><br>
                             {%  else %}
-                                {{ 'retired'|trans }}
+                                {{ 'translation.retired.member'|trans }}<br>
                             {% endif %}
                         {% else %}
-                            {{ 'unknown'|trans }}<br>
+                            {{ 'translation.unknown.member'|trans }}<br>
                         {% endif %}
                         {{ detail.date|format_date('medium') }}
                     </td>

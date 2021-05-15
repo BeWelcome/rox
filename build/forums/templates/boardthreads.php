@@ -24,6 +24,13 @@ Boston, MA  02111-1307, USA.
 */
 $words = new MOD_words();
 $layoutbits = new MOD_layoutbits();
+
+$ascending = true;
+
+if ($User) {
+    $setPreference = $User->getPreference('PreferenceForumOrderListAsc', 'Yes');
+    $ascending = 'Yes' == $setPreference;
+}
 ?>
 
 <div class="col-12 table-responsive">
@@ -60,10 +67,16 @@ $layoutbits = new MOD_layoutbits();
         else {
             $url = ForumsView::threadURL($thread);
         }
-        $max = $thread->replies + 1;
-        $maxPage = ceil($max / $this->_model->POSTS_PER_PAGE);
 
-        $last_url = $url.($maxPage != 1 ? '/page'.$maxPage : '').'/#post'.$thread->last_postid;
+        $max = $thread->replies + 1;
+        if ($ascending) {
+            $maxPage = ceil($max / Forums::CV_POSTS_PER_PAGE);
+
+            $last_url = $url . ($maxPage != 1 ? '/page'.$maxPage : '') . '/#post' . $thread->last_postid;
+        } else {
+            $last_url = $url; // ordering descending means the first shown post is the latest one
+        }
+
     ?>
     <tr>
         <th class="middle p-1">

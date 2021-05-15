@@ -4,7 +4,7 @@ namespace App\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
-use Pagerfanta\Adapter\DoctrineORMAdapter;
+use Pagerfanta\Doctrine\ORM\QueryAdapter;
 use Pagerfanta\Pagerfanta;
 
 class FaqRepository extends EntityRepository
@@ -19,7 +19,7 @@ class FaqRepository extends EntityRepository
      */
     public function findLatest($page, $limit)
     {
-        $paginator = new Pagerfanta(new DoctrineORMAdapter($this->queryLatest()));
+        $paginator = new Pagerfanta(new QueryAdapter($this->queryLatest()));
         $paginator->setMaxPerPage($limit);
         $paginator->setCurrentPage($page);
 

@@ -4,7 +4,7 @@
     <h1>{{ 'mydata.activities.headline' | trans }}</h1>
     <p>{{ 'mydata.activities.abstract' | trans }}</p>
     {% if activities|length == 0 %}
-        <p>{{ 'mydata.activities.no.activity' }}</p>
+        <p>{{ 'mydata.activities.no.activity'|trans }}</p>
     {% else %}
         <p>{{ 'mydata.activities.attended'|trans({'attended': activities|length}) }}</p>
         <div class="card-columns">

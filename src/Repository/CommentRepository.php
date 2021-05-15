@@ -7,7 +7,7 @@ use App\Entity\Member;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
-use Pagerfanta\Adapter\DoctrineORMAdapter;
+use Pagerfanta\Doctrine\ORM\QueryAdapter;
 use Pagerfanta\Pagerfanta;
 
 class CommentRepository extends EntityRepository
@@ -22,7 +22,7 @@ class CommentRepository extends EntityRepository
      */
     public function pageAll($page = 1, $items = 10)
     {
-        $paginator = new Pagerfanta(new DoctrineORMAdapter($this->queryAll()));
+        $paginator = new Pagerfanta(new QueryAdapter($this->queryAll()));
         $paginator->setMaxPerPage($items);
         $paginator->setCurrentPage($page);
 
@@ -50,7 +50,7 @@ class CommentRepository extends EntityRepository
      */
     public function pageAllForMember(Member $member, $page = 1, $items = 10)
     {
-        $paginator = new Pagerfanta(new DoctrineORMAdapter($this->queryAllForMember($member)));
+        $paginator = new Pagerfanta(new QueryAdapter($this->queryAllForMember($member)));
         $paginator->setMaxPerPage($items);
         $paginator->setCurrentPage($page);
 
@@ -79,7 +79,7 @@ class CommentRepository extends EntityRepository
      */
     public function pageAllFromMember(Member $member, $page = 1, $items = 10)
     {
-        $paginator = new Pagerfanta(new DoctrineORMAdapter($this->queryAllFromMember($member)));
+        $paginator = new Pagerfanta(new QueryAdapter($this->queryAllFromMember($member)));
         $paginator->setMaxPerPage($items);
         $paginator->setCurrentPage($page);
 
@@ -109,7 +109,7 @@ class CommentRepository extends EntityRepository
      */
     public function pageAllByQuality($quality, $page = 1, $items = 10)
     {
-        $paginator = new Pagerfanta(new DoctrineORMAdapter($this->queryAllByQuality($quality)));
+        $paginator = new Pagerfanta(new QueryAdapter($this->queryAllByQuality($quality)));
         $paginator->setMaxPerPage($items);
         $paginator->setCurrentPage($page);
 
@@ -141,7 +141,7 @@ class CommentRepository extends EntityRepository
      */
     public function pageAllByAdminAction($action, $page = 1, $items = 10)
     {
-        $paginator = new Pagerfanta(new DoctrineORMAdapter($this->queryAllByAdminAction($action)));
+        $paginator = new Pagerfanta(new QueryAdapter($this->queryAllByAdminAction($action)));
         $paginator->setMaxPerPage($items);
         $paginator->setCurrentPage($page);
 

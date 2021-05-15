@@ -4,7 +4,7 @@
     <h1>{{ 'mydata.communitynewscomments.headline' | trans }}</h1>
     <p>{{ 'mydata.communitynewscomments.abstract' | trans }}</p>
     {% if newsAndComments|length == 0 %}
-        <p>{{ 'mydata.communitynews.no.comments' }}</p>
+        <p>{{ 'mydata.communitynews.no.comments'|trans }}</p>
     {% else %}
         <div class="card-columns">
             {% for commentsAndNews in newsAndComments %}

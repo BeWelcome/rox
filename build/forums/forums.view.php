@@ -125,11 +125,17 @@ class ForumsView extends RoxAppView {
         $allow_title = false;
         $edit = false;
         $notifymecheck = "";
+        $IdGroup = 0;
+        if (isset($topic->topicinfo->IdGroup)) {
+            $IdGroup = $topic->topicinfo->IdGroup;
+        }
         if ($this->_model->IsThreadSubscribed($topic->IdThread,$this->session->get("IdMember"))) {
             $notifymecheck = 'checked="checked"' ; // This is to tell that the notifyme cell is preticked
         } else {
             // Enforce subscription (user needs to deselect intentionally (too many dropped conversations)
-            $notifymecheck = 'checked="checked"' ;
+            if ($IdGroup === 0) {
+                $notifymecheck = 'checked="checked"' ;
+            }
         }
 
          // We are trying to find the more appropriated language according to the current one available for
@@ -147,10 +153,6 @@ class ForumsView extends RoxAppView {
 
         // Get current visibility of thread and set $visibilitiesDropdown
         // for editcreateform
-        $IdGroup = 0;
-        if (isset($topic->topicinfo->IdGroup)) {
-            $IdGroup = $topic->topicinfo->IdGroup;
-        }
 
         $visibility = $this->_model->getThreadVisibility($topic->IdThread);
         $visibilityCheckbox = $this->getVisibilityCheckbox($visibility, $visibility, $IdGroup, false);
@@ -246,7 +248,6 @@ class ForumsView extends RoxAppView {
         $uri = implode('/', $request);
         $uri = rtrim($uri, '/').'/';
 
-        require 'templates/topic.php';
         $currentPage = $this->_model->getPage();
         $itemsPerPage = $this->_model->POSTS_PER_PAGE;
         if (!isset($topic->topicinfo->replies)) {
@@ -257,6 +258,7 @@ class ForumsView extends RoxAppView {
         $maxPage = ceil($max / $this->_model->POSTS_PER_PAGE);
         $pages = $this->getPageLinks($currentPage, $itemsPerPage, $max);
 
+        require 'templates/topic.php';
 
         require 'templates/pages.php';
 //              die( "<br />after page template".PVars::getObj('page')->title) ;

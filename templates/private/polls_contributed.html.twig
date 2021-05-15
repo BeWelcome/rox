@@ -4,7 +4,7 @@
     <h1>{{ 'mydata.polls.contributed.headline'|trans }}</h1>
     <p>{{ 'mydata.polls.contributed.abstract'|trans }}</p>
     {% if contributions|length == 0 %}
-    <p><strong>{{ 'mydata.polls.contributed.no.polls.'|trans }}</strong></p>
+    <p><strong>{{ 'mydata.polls.contributed.no.polls'|trans }}</strong></p>
     {% else %}
         <div class="card-columns">
             {% for contribution in contributions %}

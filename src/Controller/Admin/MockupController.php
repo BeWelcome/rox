@@ -15,6 +15,7 @@ use App\Form\NewsletterUnsubscribeType;
 use App\Form\ResetPasswordFormType;
 use App\Form\ResetPasswordRequestFormType;
 use App\Form\SearchFormType;
+use App\Model\TranslationModel;
 use App\Twig\MockupExtension;
 use DateTime;
 use Mockery;
@@ -33,17 +34,35 @@ class MockupController extends TranslationController
 {
     private const MOCKUPS = [
         'signup' => [
-            'signup_finish' => [
+            'Confirm Email Address' => [
+                'type' => 'email',
+                'template' => 'emails/signup.html.twig',
+                'description' => 'Email containing the link to confirm email address.',
+                'setup' => 'getSignupParameters',
+            ],
+            'Finish' => [
                 'type' => 'page',
                 'url' => 'signup/finish',
                 'template' => 'signup/finish.html.twig',
                 'description' => 'Successful signup.',
             ],
-            'signup_error' => [
+            'Error' => [
                 'type' => 'page',
                 'url' => 'signup/finish',
                 'template' => 'signup/error.html.twig',
                 'description' => 'Error during signup.',
+            ],
+            'Confirm Email Address Resent' => [
+                'type' => 'email',
+                'template' => 'emails/resent.html.twig',
+                'description' => 'Email containing the link to confirm email address with some extra text.',
+                'setup' => 'getSignupParameters',
+            ],
+            'Signup Email Resent' => [
+                'type' => 'page',
+                'template' => 'signup/resent.html.twig',
+                'description' => 'Successful signup.',
+                'setup' => 'getSignupParameters',
             ],
         ],
         'error' => [
@@ -242,6 +261,12 @@ class MockupController extends TranslationController
                 'template' => 'private/index.html.twig',
                 'description' => 'Index page of the data dump created by /mydata (profile)',
             ],
+            'footer' => [
+                'type' => 'template',
+                'template' => 'private/footer.html.twig',
+                'description' => 'Footer included on every page of the generated data including the date and time the generation happened.',
+                'setup' => 'getGeneratedDate',
+            ],
             'activities, none' => [
                 'type' => 'template',
                 'template' => 'private/activities.html.twig',
@@ -259,6 +284,11 @@ class MockupController extends TranslationController
             ],
         ],
     ];
+
+    public function __construct(TranslationModel $translationModel, string $locales)
+    {
+        parent::__construct($translationModel, $locales);
+    }
 
     /**
      * @Route("/admin/translations/mockups", name="translations_mockups")
@@ -346,6 +376,7 @@ class MockupController extends TranslationController
                 $parameters,
                 [
                     'template' => $template,
+                    'html_template' => $template,
                     'language' => $request->getLocale(),
                     'email' => new MockupExtension(),
                     'description' => $description,
@@ -375,7 +406,8 @@ class MockupController extends TranslationController
 
         $template = $mockup['template'];
         $description = $mockup['description'] ?? '';
-        $parameters = $this->getMockTemplateParams($template, $name);
+        $setupFunction = $mockup['setup'] ?? 'getMockTemplateParams';
+        $parameters = \call_user_func([$this, $setupFunction], $template, $name);
 
         return $this->render(
             'admin/translations/mockup.template.html.twig',
@@ -629,6 +661,19 @@ class MockupController extends TranslationController
         ];
     }
 
+    private function getSignupParameters(string $template, string $name)
+    {
+        /** @var Member $user */
+        $user = $this->getUser();
+
+        return [
+            'username' => $user->getUsername(),
+            'gender' => $user->getGender(),
+            'key' => hash('sha256', $user->getUsername()),
+            'email_address' => $user->getEmail(),
+        ];
+    }
+
     private function getNewsletterParameters(string $template, string $name)
     {
         $indicator = substr($name, strpos($name, '('));
@@ -643,6 +688,8 @@ class MockupController extends TranslationController
             case '(terms of use)':
                 $type = Newsletter::TERMS_OF_USE;
                 break;
+            default:
+                $type = Newsletter::TERMS_OF_USE;
         }
 
         $newsletterRepository = $this->getDoctrine()->getRepository(Newsletter::class);
@@ -658,6 +705,13 @@ class MockupController extends TranslationController
             'unsubscribe_key' => '91aeecc7154b8fc9b2855a331e975bc8aafb088b6617d9aefe543e5fee427ae7',
             'newsletter' => $newsletters[0],
             'receiver' => $this->getUser(),
+        ];
+    }
+
+    private function getGeneratedDate(string $template, string $name)
+    {
+        return [
+            'date_generated' => new DateTime(),
         ];
     }
 

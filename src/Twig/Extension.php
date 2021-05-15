@@ -10,7 +10,6 @@ use HtmlTruncator\Truncator;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Translation\DataCollector\TranslationDataCollector;
-use Symfony\Component\Translation\DataCollectorTranslator;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\WebpackEncoreBundle\Asset\EntrypointLookupInterface;
 use Twig\Extension\AbstractExtension;
@@ -22,7 +21,7 @@ class Extension extends AbstractExtension implements GlobalsInterface
 {
     protected SessionInterface $session;
 
-    protected DataCollectorTranslator $translator;
+    protected TranslatorInterface $translator;
 
     private string $publicDirectory;
 
@@ -35,9 +34,7 @@ class Extension extends AbstractExtension implements GlobalsInterface
     /**
      * Extension constructor.
      *
-     * @param $locales
-     * @param $dataDirectory
-     * @param $publicDirectory
+     * @param string $publicDirectory
      */
     public function __construct(
         SessionInterface $session,
@@ -96,22 +93,12 @@ class Extension extends AbstractExtension implements GlobalsInterface
 
     public function languageName(string $locale): string
     {
-        $current = $this->translator->getLocale();
-        $this->translator->setLocale($locale);
-        $languageName = $this->translator->trans(strtolower('lang_' . $locale));
-        $this->translator->setLocale($current);
-
-        return $languageName;
+        return $this->translator->trans(strtolower('lang_' . $locale), [], null, $locale);
     }
 
     public function languageNameTranslated(string $locale, string $display): string
     {
-        $current = $this->translator->getLocale();
-        $this->translator->setLocale($display);
-        $languageName = $this->translator->trans(strtolower('lang_' . $locale));
-        $this->translator->setLocale($current);
-
-        return $languageName;
+        return $this->translator->trans(strtolower('lang_' . $locale), [], null, $display);
     }
 
     public function ago(Carbon $carbon): string
@@ -149,13 +136,9 @@ class Extension extends AbstractExtension implements GlobalsInterface
     /**
      * Truncates a string up to a number of characters while preserving whole words and HTML tags.
      *
-     * @param string $text     string to truncate
-     * @param int    $length   length of returned string, including ellipsis
-     * @param string $ellipsis the used ellipsis defaults to …
-     *
      * @throws InvalidHtmlException
      */
-    public function truncate(string $text, $length = 100, $ellipsis = '&#8230;'): string
+    public function truncate(string $text, int $length = 100, string $ellipsis = '&#8230;'): string
     {
         $truncator = new Truncator();
         $truncated = $truncator->truncate($text, $length, [

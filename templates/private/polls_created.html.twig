@@ -4,7 +4,7 @@
     <h1>{{ 'mydata.polls.created.headline'|trans }}</h1>
     <p>{{ 'mydata.polls.created.abstract'|trans }}</p>
     {% if polls|length == 0 %}
-    <p><strong>{{ 'mydata.polls.created.no.polls.'|trans }}</strong></p>
+    <p><strong>{{ 'mydata.polls.created.no.polls'|trans }}</strong></p>
     {% else %}
         <div class="card-columns">
             {% for poll in polls %}

@@ -55,7 +55,7 @@
 {% endmacro %}
 
 {# \todo align left/right depending on right parameter #}
-{% macro avatarstack(username, size, right, displayname = true) %}
+{% macro avatarstack(username, size = 50, right, displayname = true) %}
     {% import _self as macros %}
     {% set img %}<img class="profileimg avatar-{{ size }}" src="{{ path( 'avatar', { 'username': username , 'size': size }) }}" title="{{ username }}" alt="{{ 'profile' | trans }}: {{ username }}">{% endset %}
     {{ macros.profilelink(username, img) }}

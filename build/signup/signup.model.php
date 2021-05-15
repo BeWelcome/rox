@@ -516,7 +516,7 @@ VALUES
         }
 
         // email (e-mail duplicates in BW database *not* allowed (as of 1st May 2013, ticket ))
-        if (!isset($vars['email']) || !PFunctions::isEmailAddress($vars['email'])) {
+        if (!isset($vars['email']) || !filter_var($vars['email'], FILTER_VALIDATE_EMAIL)) {
             $errors[] = 'SignupErrorInvalidEmail';
         }
 

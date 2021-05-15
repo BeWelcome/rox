@@ -4,7 +4,7 @@
     <h1>{{ 'mydata.requests.headline'|trans }}</h1>
     <p>{{ 'mydata.requests.abstract'|trans }}</p>
     {% if requestsSent == 0 or requestsReceived == 0%}
-    <p><strong>{{ 'mydata.requests.no.requests.'|trans }}</strong></p>
+    <p><strong>{{ 'mydata.requests.no.requests'|trans }}</strong></p>
     {% else %}
         <p>{{ 'mydata.requests.sent'|trans({'sent': requestsSent }) }}</p>
         <p>{{ 'mydata.requests.received'|trans({'received': requestsReceived }) }}</p>

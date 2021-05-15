@@ -7,6 +7,7 @@ use App\Entity\Member;
 use App\Entity\Message;
 use App\Entity\Preference;
 use App\Repository\ActivityRepository;
+use App\Repository\MessageRepository;
 use App\Utilities\ManagerTrait;
 use Doctrine\ORM\Query\Expr;
 use Exception;
@@ -33,6 +34,7 @@ class LandingModel
      */
     public function getMessagesAndRequests(Member $member, $unread, $limit = 5)
     {
+        /** @var MessageRepository $messageRepository */
         $messageRepository = $this->getManager()->getRepository(Message::class);
 
         $messagesAndRequests = $messageRepository->getLatestMessagesAndRequests($member, $unread, $limit);
@@ -61,10 +63,10 @@ class LandingModel
             ->where('n.member = :member')
             ->setParameter('member', $member)
             ->andWhere('n.checked = 0')
+            ->orderBy('n.created', 'DESC')
             ->setMaxResults($limit);
 
         return $queryBuilder
-            ->orderBy('n.created', 'DESC')
             ->getQuery()
             ->getResult();
     }
@@ -72,18 +74,11 @@ class LandingModel
     /**
      * Generates threads for display on home page.
      *
-     * Depends on checkboxes shown above the display
-     *
-     * @param bool     $groups
-     * @param bool     $forum
-     * @param bool     $following
-     * @param int|bool $limit
-     *
-     * @return array
+     * Depends on checkboxes shown above the display.
      */
-    public function getThreads(Member $member, $groups, $forum, $following, $limit = 0)
+    public function getThreads(Member $member, bool $groups, bool $forum, bool $following, int $limit = 0): array
     {
-        if (0 === $groups + $forum + $following) {
+        if (!$groups && !$forum && !$following) {
             // Member decided not to show anything
             return [];
         }
@@ -94,9 +89,6 @@ class LandingModel
             ->select('ft')
             ->from('App:ForumThread', 'ft')
             ->join('App:ForumPost', 'fp', Expr\Join::WITH, 'ft.lastPost = fp.id')
-//            ->addSelect('fp.created')
-            ->where("ft.deleted = 'NotDeleted'")
-            ->andWhere("fp.deleted = 'NotDeleted'")
             ->orderBy('fp.created', 'desc')
         ;
 
@@ -106,6 +98,7 @@ class LandingModel
                 return $group->getId();
             }, $member->getGroups());
         }
+
         $queryBuilder
             ->andWhere('ft.group IN (:groups)')
             ->setParameter('groups', $groupIds);
@@ -117,6 +110,11 @@ class LandingModel
         if ($following) {
             // \todo: Add subscriptions?
         }
+
+        // Only show posts that aren't deleted and that aren't in a deleted thread
+        $queryBuilder
+            ->andwhere("ft.deleted = 'NotDeleted'")
+            ->andWhere("fp.deleted = 'NotDeleted'");
 
         if ($limit) {
             $queryBuilder->setMaxResults($limit);

@@ -94,8 +94,13 @@ final class ForumPostsExtractor extends AbstractExtractor implements ExtractorIn
         }
         if (null !== $thread) {
             $group = $thread->getGroup();
-            if ($group) {
-                $group->getName();
+            try {
+                // Some threads do not have an valid group id. We check by trying to access the group's name
+                if ($group) {
+                    $group->getName();
+                }
+            } catch (\Exception $e) {
+                $group = null;
             }
         }
 

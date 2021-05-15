@@ -13,6 +13,7 @@ import ImageToolbarPlugin from '@ckeditor/ckeditor5-image/src/imagetoolbar';
 import ImageUploadPlugin from '@ckeditor/ckeditor5-image/src/imageupload';
 import LinkPlugin from '@ckeditor/ckeditor5-link/src/link';
 import ListPlugin from '@ckeditor/ckeditor5-list/src/list';
+import Mention from '@ckeditor/ckeditor5-mention/src/mention';
 import ParagraphPlugin from '@ckeditor/ckeditor5-paragraph/src/paragraph';
 import SpecialCharacters from '@ckeditor/ckeditor5-special-characters/src/specialcharacters';
 import SpecialCharactersEssentials from '@ckeditor/ckeditor5-special-characters/src/specialcharactersessentials';
@@ -30,8 +31,15 @@ if (null !== uploadPath) {
     uploadUrl = uploadPath.value;
 }
 
-var allEditors = document.querySelectorAll('.editor');
-for (var i = 0; i < allEditors.length; ++i) {
+const mentions = document.getElementsByClassName('js-mention');
+let feed = [];
+
+for (let i = 0; i < mentions.length; i++) {
+    feed.push('@' + mentions.item(i).value);
+}
+
+let allEditors = document.querySelectorAll('.editor');
+for (let i = 0; i < allEditors.length; ++i) {
     ClassicEditor.create(allEditors[i], {
         // The plugins are now passed directly to .create().
         plugins: [
@@ -47,6 +55,7 @@ for (var i = 0; i < allEditors.length; ++i) {
             EasyImagePlugin,
             LinkPlugin,
             ListPlugin,
+            Mention,
             ParagraphPlugin,
             UploadAdapterPlugin,
             SpecialCharacters,
@@ -80,7 +89,15 @@ for (var i = 0; i < allEditors.length; ++i) {
                 'imageTextAlternative'
             ]
         },
-        language: document.documentElement.lang
+        language: document.documentElement.lang,
+        mention: {
+            feeds: [
+                {
+                    marker: '@',
+                    feed: feed
+                }
+            ]
+        }
     } )
         .then( editor => {
         } )

@@ -10,12 +10,12 @@
 
                 <div class="item">
                     <div class="card-header">
-                    <a data-toggle="collapse" data-parent="#MyPreferences" href="#MyPreferences1" aria-expanded="true"
+                    <a data-toggle="collapse" href="#MyPreferences1" aria-expanded="true"
                        aria-controls="MyPreferences1" class="mb-0 d-block">
                         <?=$words->get('PreferencesPassword')?>
                     </a>
                     </div>
-                    <div id="MyPreferences1" class="show editprofilebox" role="tabpanel">
+                    <div id="MyPreferences1" data-parent="#MyPreferences" class="show editprofilebox" role="tabpanel">
                         <p><?=$words->get('PreferencesPasswordDescription')?></p>
                         <div class="form-group row">
                             <label for="passwordold" class="col-md-3"><?=$words->get('PreferencesPasswordOld')?></label>
@@ -35,12 +35,12 @@
 
                 <div class="item">
                     <div class="card-header">
-                    <a data-toggle="collapse" data-parent="#MyPreferences" href="#MyPreferences2" aria-expanded="false"
+                    <a data-toggle="collapse" href="#MyPreferences2" aria-expanded="false"
                        aria-controls="MyPreferences2" class="mb-0 d-block collapsed">
                         <?=$words->get('PreferenceLanguage')?>
                     </a>
                     </div>
-                    <div id="MyPreferences2" class="collapse editprofilebox" role="tabpanel">
+                    <div id="MyPreferences2" data-parent="#MyPreferences" class="collapse editprofilebox" role="tabpanel">
                         <div class="form-row">
                             <label for="PreferenceLanguage" class="col-md-3"><?=$words->get('PreferenceLanguageDesc')?></label>
                             <div class="col-12 col-md-9">
@@ -56,12 +56,12 @@
 
                 <div class="item">
                     <div class="card-header">
-                    <a data-toggle="collapse" data-parent="#MyPreferences" href="#MyPreferences3" aria-expanded="true"
+                    <a data-toggle="collapse" href="#MyPreferences3" aria-expanded="true"
                        aria-controls="MyPreferences3" class="mb-0 d-block collapsed">
                         <?=$words->get('Website')?>
                     </a>
                     </div>
-                    <div id="MyPreferences3" class="collapse editprofilebox" role="tabpanel">
+                    <div id="MyPreferences3" data-parent="#MyPreferences" class="collapse editprofilebox" role="tabpanel">
 
                             <?php
                             $doNotShow = array('PreferenceLanguage');

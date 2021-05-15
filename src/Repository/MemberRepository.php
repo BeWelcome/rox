@@ -87,7 +87,7 @@ class MemberRepository extends ServiceEntityRepository implements UserLoaderInte
             ->getResult();
     }
 
-    public function loadDataRetentionMembers()
+    public function loadDataRetentionMembers(): array
     {
         $query = $this->createQueryBuilder('m')
             ->where('m.status = :askToLeave')
@@ -96,7 +96,6 @@ class MemberRepository extends ServiceEntityRepository implements UserLoaderInte
             ->setParameter(':askToLeave', MemberStatusType::ASKED_TO_LEAVE)
             ->setParameter(':retired', 'Retired\_%')
             ->setParameter(':now', new DateTime())
-            ->setMaxResults(20)
             ->getQuery()
         ;
 

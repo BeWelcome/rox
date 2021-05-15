@@ -2,8 +2,6 @@ let Encore = require('@symfony/webpack-encore');
 
 const CKEditorWebpackPlugin = require('@ckeditor/ckeditor5-dev-webpack-plugin');
 const {styles} = require('@ckeditor/ckeditor5-dev-utils');
-const PurgeCssPlugin = require('purgecss-webpack-plugin');
-const glob = require('glob-all');
 const path = require('path');
 
 // Manually configure the runtime environment if not already configured yet by the "encore" command.
@@ -78,17 +76,6 @@ Encore
         'animation.gsap': 'scrollmagic/scrollmagic/minified/plugins/animation.gsap.min.js',
         'debug.addIndicators': 'scrollmagic/scrollmagic/minified/plugins/debug.addIndicators.min.js'
     })
-    // .addPlugin(new PurgeCssPlugin({
-    //    paths: glob.sync([
-    //        path.join(__dirname, 'templates/**/*.html.twig'),
-    //         path.join(__dirname, 'assets/js/*.js'),
-    //         path.join(__dirname, 'build/**/*.php'),
-    //     ]),
-    //     content: ["**/*.twig", "**/*.js", "**/*.php"],
-    //     defaultExtractor: (content) => {
-    //        return content.match(/[\w-/:]+(?<!:)/g) || [];
-    //     }
-    //}))
     .addLoader({
         test: require.resolve('select2'),
         use: "imports-loader?define=>false"

@@ -4,7 +4,7 @@ namespace App\Model;
 
 use App\Entity\FeedbackCategory;
 use App\Utilities\ManagerTrait;
-use Pagerfanta\Adapter\DoctrineORMAdapter;
+use Pagerfanta\Doctrine\ORM\QueryAdapter;
 use Pagerfanta\Pagerfanta;
 
 class FeedbackModel
@@ -32,7 +32,7 @@ class FeedbackModel
         $qb
             ->orderBy('f.created', 'DESC');
 
-        $adapter = new DoctrineORMAdapter($qb, true);
+        $adapter = new QueryAdapter($qb, true);
         $pagerfanta = new Pagerfanta($adapter);
         $pagerfanta->setMaxPerPage($limit);
         $pagerfanta->setCurrentPage($page);

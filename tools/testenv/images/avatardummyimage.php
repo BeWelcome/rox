@@ -3,7 +3,7 @@ class AvatarDummyImage extends DummyImage
 {
     const IMAGE_DIR = '../../../data/user/avatars';
     const BASEIMAGE = 'avatarbase.png';
-    
+
     /**
      * Construction of an imageresource to serve as a blueprint
      *
@@ -14,25 +14,25 @@ class AvatarDummyImage extends DummyImage
     {
         srand();
         echo "Generate images for user " . $data['name'] . PHP_EOL;
-        $this->id = $data['picid'];
-        $this->name = $data['name'];
-        $this->setImageDir();
-        $count = 1;
-        $blue = false;
-        while (($count < 10) && (!$blue)) {
-            $image = rand(0, 99);
-            $this->size = getimagesize('lfw/image'.$image.'.png');
-            $this->blueprint = imagecreatefrompng('lfw/image'.$image.'.png');
-            $blue = $this->blueprint;
-            $count++;
-        }
-        if($count == 10) {
-            throw new Exception();
-        }
+        $imageManager = new \Intervention\Image\ImageManager();
+        $original = 'lfw/image'.rand(0,99).'.png';
 
-//        list($backclr,$puppet) = $this->getColor(14,12,11,1,2);
-//         imagefill($this->blueprint,75,75,$puppet);
-//        imagefill($this->blueprint,1,1,$backclr);
+        $img = $imageManager->make($original);
+        switch(rand(0,3)) {
+            case 0:
+                $img->blur(rand(0, 100));
+                break;
+            case 1:
+                $img->colorize(rand(0,200) - 100,rand(0,200) - 100, rand(0,200) - 100);
+                break;
+            case 2:
+                $img->greyscale();
+                break;
+            case 3:
+                $img->contrast(rand(0,100));
+                break;
+        }
+        $img->save(self::IMAGE_DIR . '/' . $data['name'] . '_original' );
     }
 
     /**
@@ -47,7 +47,7 @@ class AvatarDummyImage extends DummyImage
         $max_y = $this->size[1];
         $original_x = $this->getDimension(3);
         $original_y = $this->getDimension(5);
-        
+
         $thumbData = array();
         $thumbData['_original']=array(0,0,0,0,$original_x, $original_y, $this->size[0],$this->size[1]);
         $thumbData['_200']    = $this->getThumbSize(200, 266, 'ratio' , $this->size);

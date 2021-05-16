@@ -1,0 +1,157 @@
+.c-trips {
+	background-image: url("../../images/trips-infinite.jpg");
+	background-repeat: repeat-y;
+	background-size: 100%;
+	background-color: white;
+	margin: initial; /*Overwrites Bootstrap main margin*/
+	padding-bottom: 120px;
+}
+
+
+
+
+.c-trips__wrapper {
+  position: relative;
+  z-index: 1;
+  max-width: 960px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+@media (max-width: 900px) {
+  .c-trips__wrapper {
+    max-width: initial;
+    left: inherit;
+    transform: initial;
+    margin: 0 16px;
+  }
+}
+
+
+
+
+
+
+.c-trips__info {
+	display: grid;
+	grid-template-columns: 4fr 4fr 84px;
+	align-items: center;
+	margin-bottom: 48px;
+}
+
+@media (max-width: 900px) {
+  .c-trips__info {
+    	display: grid;
+		grid-template-columns: 1fr 48px;
+		grid-gap: 16px;
+  }
+}
+
+
+
+
+.c-trips__info-btn-grid {
+	opacity: 0;
+	transition: opacity 0.3s;
+}
+
+.c-trips__info:only-of-type .c-trips__info-btn-grid {
+	visibility: hidden;
+	pointer-events: auto;
+}
+
+.c-trips__info:hover .c-trips__info-btn-grid {
+	transition: opacity 0.3s;
+	opacity: 1;
+}
+
+
+
+
+@media (max-width: 900px) {
+  .c-trips__info-btn-grid {
+    grid-row: 1 / 3;
+	grid-column: 2 / 3;
+	opacity: 1;
+  }
+}
+
+
+
+
+
+.c-trips__nav {
+	position: relative;
+	display: flex;
+	width: 50%;
+	position: relative;
+	padding: 24px 0;
+	flex-wrap: wrap;
+}
+
+@media (max-width: 900px) {
+  .c-trips__nav {
+    justify-content: space-between;
+    width: initial;
+	}
+}
+
+
+
+
+
+.c-trips__nav-btn {
+	position: relative;
+	padding: 8px 0;
+	font-family: Signika;
+	text-transform: uppercase;
+	font-size: 18px;
+	letter-spacing: 0.05rem;
+	color: var(--gray-20);
+	margin-right: 24px;
+}
+
+.c-trips__nav-btn:after {
+    content: "•";
+    color: var(--gray-40);
+    margin: 0 8px;
+    text-decoration: none !important;
+    position: absolute;
+}
+
+@media (max-width: 900px) {
+  .c-trips__nav-btn:after {
+    display: none;
+	}
+}
+
+.c-trips__nav-btn:last-child {
+	margin: initial;
+}
+
+.c-trips__nav-btn:last-child::after {
+    content: "";
+    margin: initial;
+}
+
+.c-trips__nav-btn--active,
+.c-trips__nav-btn:hover {
+  color: var(--white);
+}
+
+
+
+
+.c-trips__nav-line {
+	border: 1px solid var(--white);
+	opacity: 0;
+	position: absolute;
+	width: 100%;
+	left: 50%;
+	transform: translateX(-50%);
+}
+
+.c-trips__nav-btn--active .c-trips__nav-line,
+.c-trips__nav-btn:hover .c-trips__nav-line{
+  opacity: 1;
+}

@@ -134,7 +134,7 @@ if (isset($TCom->comQuality) && $TCom->comQuality == "Bad" && $TCom->AllowEdit !
                 <i class="fa fa-question"></i>
             </a>
 
-            <select class="form-control select2 mb-2 mr-sm-2 mb-sm-0" name="Quality" id="Quality">
+            <select class="o-input select2 mb-2 mr-sm-2 mb-sm-0" name="Quality" id="Quality">
                 <option value=""><?=$words->getSilent("CommentQuality_SelectOne")?></option>
                 <option value="Good"
                     <?=(isset($TCom->comQuality) && $TCom->comQuality == "Good") ? " selected " : ""?>
@@ -160,9 +160,9 @@ if (isset($TCom->comQuality) && $TCom->comQuality == "Bad" && $TCom->AllowEdit !
             for ($ii = 0; $ii < $max; $ii++) {
                 $chkName = "Comment_" . $ttc[$ii];
                 ?>
-                <div class="form-check my-2">
-                    <label class="form-check-label">
-                        <input class="form-check-input" type="checkbox" id="<?= $chkName; ?>" name="<?= $chkName; ?>"<?php if (in_array($ttc[$ii], $ttRelation)) echo ' checked'; ?>>
+                <div class="o-checkbox my-2">
+                    <label class="o-checkbox__label">
+                        <input class="o-checkbox__input" type="checkbox" id="<?= $chkName; ?>" name="<?= $chkName; ?>"<?php if (in_array($ttc[$ii], $ttRelation)) echo ' checked'; ?>>
                         <?= $words->get($chkName); ?>
                     </label>
                 </div>
@@ -179,13 +179,13 @@ if (isset($TCom->comQuality) && $TCom->comQuality == "Bad" && $TCom->AllowEdit !
                 <i class="fa fa-question"></i>
             </a>
 
-            <textarea name="TextFree" id="TextFree" class="w-100 form-control" rows="10"><?php echo $textFreeWashed; ?></textarea>
+            <textarea name="TextFree" id="TextFree" class="w-100 o-input" rows="10"><?php echo $textFreeWashed; ?></textarea>
         </div>
 
         <div class="col-12">
-            <div class="form-check alertwarning">
-                <label class="form-check-label mb-2">
-                    <input type="checkbox" name="CommentGuidelines" class="form-check-input"
+            <div class="o-checkbox alertwarning">
+                <label class="o-checkbox__label mb-2">
+                    <input type="checkbox" name="CommentGuidelines" class="o-checkbox__input"
                         <?php
                         if (isset ($vars["CommentGuidelines"]))
                             echo ' checked="checked"';

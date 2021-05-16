@@ -1,42 +1,36 @@
 {% import 'macros.twig' as macros %}
-<div id="messagesdisplay" class="scrollcontent">
-    {% for message in messages %}
-        {% if message.request %}{% set route = 'hosting_request_show' %}{% else %}{% set route = 'message_show' %}{% endif %}
-        {% set unread = (message.firstRead == '0000-00-00 00:00.00') or (message.firstRead is null) %}
-        <div class="d-flex flex-row justify-content-start align-items-center p-2">
-            <div class="pr-2">{{ macros.avatar( message.sender.username, 50, true) }}</div>
-            <div class="dashentry w-100">
-
-                {% if message.request %}
-                    <div class="d-flex justify-content-start align-items-center">
-                        <div><i class="fa fa-lg fa-bed"></i></div>
-                        <div class="small mx-2 alert alert-dark my-0 px-1 py-0 text-nowrap">
-                            {{ message.request.arrival | format_date( 'medium') }}<br>
-                            {{ message.request.departure | format_date( 'medium') }}
-                        </div>
-                        <div class="text-truncate text">
-                            <a href="{{ path(route, { id: message.id } ) }}" {% if unread %}class="unread"{% endif %}>
-                                <span class="text-truncate"><em>{{ message.subject.subject|raw }}</em></span>
-                                <span class="text-truncate">{{ message.message|raw }}</span>
-                            </a>
-                        </div>
-                    </div>
-                {% else %}
-                    <div class="text-truncate text">
-                        <a href="{{ path(route, { id: message.id } ) }}" class="{%- if unread %}unread{% else %}read{% endif %}">
-                            {% if message.subject %}<span class="text-truncate"><em>{{ message.subject.subject|raw }}</em></span>{% endif %}
-                            <span class="text-truncate">{{ message.message|purify('custom')|url_update }}</span>
-                        </a>
-                    </div>
-                {% endif %}
-                    <div class="small">
-                        {{ 'from' | trans}} {% if message.sender %}{{ macros.profilelink(message.sender.username) }}{% else %} BeWelcome {% endif %}<span title="{{ message.created.toDateTimeString }}">{{ message.created.DiffForHumans }}</span>
-                    </div>
-            </div>
-            <div class="ml-auto"><a href="{{ path(route, { id: message.id } ) }}"><i
-                            class="fa fa-chevron-right"></i></a></div>
-        </div>
-    {% else %}
-        <em>{{ 'dashboard.messages.none' | trans }}</em>
-    {% endfor %}
+<div id="messagesdisplay" class="c-dashboard">
+	{% for message in messages %}
+		{% if message.request %}{% set route = 'hosting_request_show' %}{% else %}{% set route = 'message_show' %}{% endif %}
+		{% set unread = (message.firstRead is null) or (message.firstRead == '0000-00-00 00:00.00') %}
+		<div class="c-dashboard__item">
+			<div class="o-avatar o-avatar--m o-avatar--noname u-mr-16">{{ macros.roundedavatarstack(message.sender.username, 72, true) }}</div>
+			<div class="u-flex u-min-w-0 u-h-full">
+				{% if message.request %}
+					<div class="u-flex u-flex-col u-bg-gray-10 u-px-8 u-mr-8 u-items-center u-justify-start u-h-48 u-relative u-pin-y u-overflow-hidden">
+						<div class="u-w-40 u-h-40 u-rounded-full u-bg-gray-15 u-flex u-items-center u-justify-center u-mb-4 u-flex-shrink-0">
+							<i class="fa fa-lg fa-bed u-text-gray-70"></i>
+						</div>
+						<p class="u-font-300 u-text-14 u-leading-20">{{ message.request.arrival | format_date( 'medium') }}</p>
+						<p class="u-font-300 u-text-14 u-leading-20">{{ message.request.departure | format_date( 'medium') }}</p>
+						</p>
+					</div>
+					
+				{% endif %}
+				<div class="u-flex u-flex-col u-h-48 u-relative u-pin-y u-justify-start u-overflow-hidden">
+					<a class="u-flex u-flex-col" href="{{ path(route, { id: message.id } ) }}" class="{%- if unread %}unread{% else %}read{% endif %}">
+						{% if message.subject %}<p class="u-ellipsis">{{ message.subject.subject|raw }}</p>{% endif %}
+						<p class="u-ellipsis">{{ message.message|raw }}</p>
+					</a>
+					<p class="u-font-300 u-text-14">
+						{{ 'from' | trans}} {% if message.sender %}{{ macros.profilelink(message.sender.username) }}{% else %} BeWelcome {% endif %}<span title="{{ message.created.toDateTimeString }}">{{ message.created.DiffForHumans }}</span>
+					</p>
+				</div>
+			</div>
+			<div class="ml-auto"><a href="{{ path(route, { id: message.id } ) }}"><i
+							class="fa fa-chevron-right"></i></a></div>
+		</div>
+	{% else %}
+		<p class="u-my-24 u-font-display u-text-center">{{ 'dashboard.messages.none' | trans }}</p>
+	{% endfor %}
 </div>

@@ -22,6 +22,9 @@ Boston, MA  02111-1307, USA.
 
 
 use Carbon\Carbon;
+use Intervention\Image\ImageManager;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Finder\Finder;
 
 
 /**
@@ -1181,12 +1184,6 @@ ORDER BY
             }
         }
 
-        if (!empty($_FILES['profile_picture']) && !empty($_FILES['profile_picture']['tmp_name']))
-        {
-            if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['error'] == 0)
-                $this->avatarMake($vars['memberid'],$_FILES['profile_picture']['tmp_name']);
-        }
-
         $cryptModule = new MOD_crypt();
         if ($vars["chat_SKYPE"]!="cryptedhidden") {
             $m->chat_SKYPE = $cryptModule->NewReplaceInCrypted(addslashes(strip_tags($vars['chat_SKYPE'])),"members.chat_SKYPE",$IdMember, $m->chat_SKYPE, $IdMember, $this->ShallICrypt($vars,"chat_SKYPE"));
@@ -1334,152 +1331,6 @@ ORDER BY
         else
             return ("not crypted");
     } // end of ShallICrypt
-
-    /**
-     * Shows a members picture in different sizes
-     *
-     */
-    public function showAvatar($memberId = false, $suffix = null)
-    {
-        $file = (int)$memberId;
-        if ($suffix == null) {
-            if (isset($_GET)) {
-                if (isset($_GET['xs']) or isset($_GET['50_50']))
-                    $suffix = '_xs';
-                elseif (isset($_GET['30_30']))
-                    $suffix = '_30_30';
-                elseif (isset($_GET['75_75']))
-                    $suffix = '_75_75';
-                elseif (isset($_GET['150']))
-                    $suffix = '_150';
-                elseif (isset($_GET['200']))
-                    $suffix = '_200';
-                elseif (isset($_GET['500']))
-                    $suffix = '_500';
-            }
-            $file .= $suffix;
-        } else {
-            $file = $file . $suffix;
-        }
-
-        $member = $this->createEntity('Member', $memberId);
-        $loggedInMember = $this->getLoggedInMember();
-        $browseable = $member->isBrowsable();
-        if ((!$browseable) || !$this->hasAvatar($memberId, $suffix) || (!$member->publicProfile && !$loggedInMember)) {
-            header('Content-type: image/png');
-            header ("cache-control: must-revalidate");
-            $offset = 48 * 60 * 60;
-            $expire = "Expires: " . gmdate ("D, d M Y H:i:s", time() + $offset) . " GMT";
-            header ($expire);
-            @copy(HTDOCS_BASE.'images/misc/empty_avatar'.(isset($suffix) ? $suffix : '').'.png', 'php://output');
-            PPHP::PExit();
-        }
-        $img = new MOD_images_Image($this->avatarDir->dirName().'/'.$file);
-        if (!$img->isImage()) {
-            header('Content-type: image/png');
-            $expires = new DateTime("now + 11 months");
-            header("Expires:" . $expires->format(DateTime::RFC1123));
-            @copy(HTDOCS_BASE.'images/misc/empty_avatar'.(isset($suffix) ? $suffix : '').'.png', 'php://output');
-            PPHP::PExit();
-        }
-        header('Content-type: '.$img->getMimetype());
-        $this->avatarDir->readFile($file);
-        PPHP::PExit();
-    }
-
-    public function hasAvatar($memberid, $suffix = '')
-    {
-        if ($this->avatarDir->fileExists((int)$memberid . $suffix))
-            return true;
-        elseif ($this->avatarDir->fileExists((int)$memberid . '_original'))
-            return $this->avatarMake($memberid, $this->avatarDir->dirName() . '/' . (int)$memberid . '_original', true);
-        else {
-            $img_path = $this->getOldPicture($memberid);
-            return $this->avatarMake($memberid,$img_path);
-        }
-    }
-
-
-    public function getOldPicture($memberid) {
-        $s = $this->dao->query('
-SELECT
-    `membersphotos`.`FilePath` as FilePath
-FROM
-    `members`
-LEFT JOIN
-    `membersphotos` on `membersphotos`.`IdMember`=`members`.`id`
-WHERE
-    `members`.`id`=\'' . $memberid . '\' AND
-    `members`.`Status`=\'Active\'
-ORDER BY membersphotos.SortOrder
-');
-        // look if any of the pics exists
-        while ($row = $s->fetch(PDB::FETCH_OBJ)) {
-            $path = str_replace("/bw", "", $row->FilePath);
-            $full_path = getcwd().'/bw'.$path;
-            if (PPHP::os() == 'WIN') {
-                $full_path = str_replace("/", "\\", $full_path);
-            }
-            if(is_file($full_path)) {
-                return $full_path;
-            }
-        }
-        return false;
-    }
-
-    public function avatarMake($memberid, $img_file, $using_original=false)
-    {
-        $img = new MOD_images_Image($img_file);
-        if( !$img->isImage())
-            return false;
-        $size = $img->getImageSize();
-        $type = $size[2];
-        // maybe this should be changed by configuration
-        if( $type != IMAGETYPE_GIF && $type != IMAGETYPE_JPEG && $type != IMAGETYPE_PNG)
-            return false;
-        $max_x = $size[0];
-        $max_y = $size[1];
-        if( $max_x > 150)
-            $max_x = 150;
-
-        if (!$using_original) {
-        	$original_x = min($size[0],PVars::getObj('images')->max_width);
-        	$original_y = min($size[1],PVars::getObj('images')->max_height);
-            $this->writeMemberphoto($memberid);
-            $img->createThumb($this->avatarDir->dirName(), $memberid.'_original', $original_x, $original_y, true, 'ratio');
-        }
-        $img->createThumb($this->avatarDir->dirName(), $memberid, $max_x, $max_y, true, '');
-        $img->createThumb($this->avatarDir->dirName(), $memberid.'_200',200, 266, true, 'ratio');
-        $img->createThumb($this->avatarDir->dirName(), $memberid.'_xs', 50, 50, true, 'square');
-        $img->createThumb($this->avatarDir->dirName(), $memberid.'_150', 150, 150, true, 'square');
-        $img->createThumb($this->avatarDir->dirName(), $memberid.'_30_30', 30, 30, true, 'square');
-        $img->createThumb($this->avatarDir->dirName(), $memberid.'_500', 500, 500, true, 'ratio');
-        return true;
-    }
-
-    public function writeMemberphoto($memberid)
-    {
-        $s = $this->dao->exec("
-INSERT INTO
-    `membersphotos`
-    (
-        FilePath,
-        IdMember,
-        created,
-        SortOrder,
-        Comment
-    )
-VALUES
-    (
-        '" . $this->avatarDir->dirName() ."/". $memberid . "',
-        " . $memberid . ",
-        now(),
-        -1,
-        ''
-    )
-");
-        return $s;
-    }
 
     public function bootstrap()
     {

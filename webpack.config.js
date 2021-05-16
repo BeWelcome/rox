@@ -37,6 +37,7 @@ Encore
 //    .addEntry('map/map', './assets/js/map/map.js')
     .addEntry('tempusdominus', './assets/js/tempusdominus.js')
     .addEntry('requests', './assets/js/requests.js')
+    .addEntry('trips', './assets/js/trips.js')
     .addEntry('treasurer', './assets/js/treasurer.js')
     .addEntry('activities', './assets/js/activities/edit_create.js')
     .addEntry('leaflet', './assets/js/leaflet.js')
@@ -48,6 +49,7 @@ Encore
     .addEntry('updatecounters', './assets/js/updateCounters.js')
     .addEntry('lightbox', './assets/js/lightbox.js')
     .addEntry('gallery', './assets/js/gallery.js')
+    .addEntry('conversations', './assets/js/conversations.js')
     .addEntry('bsfileselect', './assets/js/bsfileselect.js')
     .addEntry('email', './assets/scss/email.scss')
     .addEntry('roxeditor', './assets/js/roxeditor.js')
@@ -55,6 +57,14 @@ Encore
     .addEntry('highlight', './assets/js/highlight.js')
     .addEntry('faq', './assets/js/faq.js')
     .addEntry('translations', './assets/js/admin/translations.js')
+    // react
+    .configureBabel(function(babelConfig) {
+        babelConfig.presets = [ "@babel/preset-env", '@babel/preset-react' ]
+        babelConfig.plugins = [ '@babel/plugin-transform-runtime' ]
+    })
+    .addEntry('avatar', './assets/js/react/avatar/AvatarMount.jsx')
+
+    .addStyleEntry('tailwind', './assets/css/tailwind.css')
     .autoProvidejQuery()
     //    .addEntry('roxinlineeditor', './assets/js/roxinlineeditor.js')
 
@@ -92,7 +102,12 @@ Encore
     .configureLoaderRule('images', loader => {
         loader.exclude = /ckeditor5-[^/\\]+[/\\]theme[/\\]icons[/\\][^/\\]+\.svg$/;
     })
-
+    .enablePostCssLoader((options) => {
+        options.config = {
+            // directory where the postcss.config.js file is stored
+            path: './postcss.config.js'
+        };
+    })
     // Configure PostCSS loader.
     .addLoader({
         test: /ckeditor5-[^/\\]+[/\\]theme[/\\].+\.css$/,
@@ -110,7 +125,7 @@ const assetsConfig = Encore.getWebpackConfig();
 const WorkboxPlugin = require('workbox-webpack-plugin');
 
 workboxConfig = {
-        mode: Encore.isProduction() ? 'production' : 'development',
+        mode: 'production', /* Encore.isProduction() ? 'production' : 'development', */
         entry: {
             main: "./assets/js/index.js"
         },
@@ -125,7 +140,7 @@ workboxConfig = {
            // and not allow any straggling "old" SWs to hang around
            // clientsClaim: true,
            // skipWaiting: true,
-           swSrc: './assets/js/sw.js',
+            swSrc: './assets/js/sw.js',
             swDest: './service-worker.js'
         }),
         ],

@@ -66,7 +66,7 @@ class MemberPage extends PageWithActiveSkin
 
         $galleryItemsCount = $member->getGalleryItemsCount();
 
-        $viewForumPosts = $words->get("ViewForumPosts",'<span class="badge badge-primary pull-right">' . $member->forums_posts_count() . '</span>');
+        $viewForumPosts = $words->get("ViewForumPosts",'<span class="badge badge-primary u-rounded-full u-w-20 u-h-20 u-inline-flex u-items-center u-justify-center pull-right">' . $member->forums_posts_count() . '</span>');
         $membersForumPostsPagePublic = $member->getPreference("MyForumPostsPagePublic", $default = "No");
         $linkMembersForumPosts = false;
         if ($membersForumPostsPagePublic == "Yes") {
@@ -85,7 +85,7 @@ class MemberPage extends PageWithActiveSkin
                 array('editmyprofile', 'editmyprofile/' . $profile_language_code, '<i class="fa fa-fw fa-edit"></i> ' . $ww->EditMyProfile, 'editmyprofile'),
                 array('mypreferences', 'mypreferences', '<i class="fa fa-fw fa-cogs"></i> ' . $ww->MyPreferences, 'mypreferences'),
                 array('mydata', 'mydata', '<i class="fa fa-fw fa-database"></i> ' . $ww->MyData, 'mydata'),
-                array('mynotes', 'mynotes', '<i class="fa fa-fw fa-sticky-note"></i> ' . $words->get('MyNotes', '<span class="badge badge-primary pull-right">' . $mynotes_count . '</span>'), 'mynotes')
+                array('mynotes', 'mynotes', '<i class="fa fa-fw fa-sticky-note"></i> ' . $words->get('MyNotes', '<span class="badge badge-primary u-rounded-full u-w-20 u-h-20 u-inline-flex u-items-center u-justify-center pull-right">' . $mynotes_count . '</span>'), 'mynotes')
                 );
 
             if ($this instanceof EditMyProfilePage)
@@ -106,11 +106,11 @@ class MemberPage extends PageWithActiveSkin
             $tt[] = array('space', '', '', 'space');
 
             $tt[] = array('profile', "members/$username", '<i class="fa fa-fw fa-user"></i> ' . $ww->MemberPage);
-            $tt[] = array('comments', "members/$username/comments", '<i class="fa fa-fw fa-comments"></i> ' . $ww->ViewComments.' <span class="badge badge-primary pull-right">'.$comments_count['all'].'</span>');
+            $tt[] = array('comments', "members/$username/comments", '<i class="fa fa-fw fa-comments"></i> ' . $ww->ViewComments.' <span class="badge badge-primary u-rounded-full u-w-20 u-h-20 u-inline-flex u-items-center u-justify-center pull-right">'.$comments_count['all'].'</span>');
             if ($this->myself) {
-                $tt[] = array('gallery', "gallery/manage", '<i class="fa fa-fw fa-image"></i> ' . $ww->Gallery . ' <span class="badge badge-primary pull-right">' . $galleryItemsCount . '</span>');
+                $tt[] = array('gallery', "gallery/manage", '<i class="fa fa-fw fa-image"></i> ' . $ww->Gallery . ' <span class="badge badge-primary u-rounded-full u-w-20 u-h-20 u-inline-flex u-items-center u-justify-center pull-right">' . $galleryItemsCount . '</span>');
             } else {
-                $tt[] = array('gallery', "gallery/show/user/$username/pictures", '<i class="fa fa-fw fa-image"></i> ' . $ww->Gallery . ' <span class="badge badge-primary pull-right">' . $galleryItemsCount . '</span>');
+                $tt[] = array('gallery', "gallery/show/user/$username/pictures", '<i class="fa fa-fw fa-image"></i> ' . $ww->Gallery . ' <span class="badge badge-primary u-rounded-full u-w-20 u-h-20 u-inline-flex u-items-center u-justify-center pull-right">' . $galleryItemsCount . '</span>');
             }
             $tt[] = array('forum', "forums/member/$username", '<i class="far fa-fw fa-comment"></i> ' . $viewForumPosts);
         } else {
@@ -128,11 +128,10 @@ class MemberPage extends PageWithActiveSkin
                 (isset($TCom[0])) ? array('commmentsadd', "members/$username/comments/edit", '<i class="fa fa-fw fa-comment"></i> ' . $ww->EditComments, 'commentsadd') : array('commmentsadd', "members/$username/comments/add", '<i class="fa fa-fw fa-comment"></i> ' . $ww->AddComments, 'commentsadd'),
                 array('relationsadd', "members/$username/relations/add", '<i class="fa fa-fw fa-handshake"></i> ' . $ww->addRelation, 'relationsadd'),
                 array('notes', $mynotelinkname, '<i class="fa fa-fw fa-pencil-alt"></i> ' . $mynotewordsname, 'mynotes'),
-                array('report', "/feedback?IdCategory=2&FeedbackQuestion=" . urlencode( $words->get('profile.report.text', $username)), '<i class="fas fa-fw fa-flag"></i> ' . $words->getSilent('profile.report')),
                 array('space', '', '', 'space'),
                 array('profile', "members/$username", '<i class="fa fa-fw fa-user"></i> '  . $ww->MemberPage),
-                array('comments', "members/$username/comments", '<i class="fa fa-fw fa-comments"></i> ' . $ww->ViewComments.' <span class="badge badge-primary pull-right">'.$comments_count['all'].'</span>'),
-                array('gallery', "gallery/show/user/$username/pictures", '<i class="fa fa-fw fa-image"></i> ' . $ww->Gallery . ' <span class="badge badge-primary pull-right">' . $galleryItemsCount . '</span>'),
+                array('comments', "members/$username/comments", '<i class="fa fa-fw fa-comments"></i> ' . $ww->ViewComments.' <span class="badge badge-primary u-rounded-full u-w-20 u-h-20 u-inline-flex u-items-center u-justify-center pull-right">'.$comments_count['all'].'</span>'),
+                array('gallery', "gallery/show/user/$username/pictures", '<i class="fa fa-fw fa-image"></i> ' . $ww->Gallery . ' <span class="badge badge-primary u-rounded-full u-w-20 u-h-20 u-inline-flex u-items-center u-justify-center pull-right">' . $galleryItemsCount . '</span>'),
             );
             if ($accommodation != \App\Doctrine\AccommodationType::NO)
             {
@@ -189,27 +188,26 @@ class MemberPage extends PageWithActiveSkin
         $member = $this->member;
         $words = $this->getWords();
         $picture_url = 'members/avatar/'.$member->Username;
+        $globalsJs = json_encode([
+            'baseUrl' => $this->getBaseUrl(),
+            'texts' => [
+                'profile.change.avatar' => $words->get('profile.change.avatar'),
+                'profile.change.avatar.success' => $words->get('profile.change.avatar.success'),
+                'profile.change.avatar.fail' => $words->get('profile.change.avatar.fail'),
+                'profile.change.avatar.fail.file.to.big' => $words->get('profile.change.avatar.fail.file.to.big'),
+                'profile.picture.title' => $words->get('profile.picture.title', $member->Username),
+                'uploading' => $words->get('uploading'),
+            ],
+            'config' => [
+                'isMyself' => $this->myself,
+                'avatarUseLightbox' => $this->useLightbox,
+                'avatarUrl' => $picture_url,
+                'username' => $member->Username,
+            ]
+            ]);
         ?>
 
-            <div class="avatar-box">
-                <?php if ($this->useLightbox) { ?>
-            <a class="avatar-box-inside" href="<?= $picture_url . '/original' ?>" data-toggle="lightbox" alwaysShowClose="true" data-type="image" data-title="<?= $words->getbuffered('profile.picture.title'); ?>" title="<?= $words->get('profile.picture.title'); ?>" style="background-image: url('<?= $picture_url . '/500'?>')">
-                <!-- <img src="<?= $picture_url . '/500'?>" class="w-100 h-100" alt="picture of <?= $member->Username ?>"> -->
-            </a>
-                <?php } else { ?>
-            <a class="avatar-box-inside" href="/members/<?=$member->Username?>" data-toggle="lightbox"  alwaysShowClose="true" data-type="image" data-title="<?= $words->getbuffered('profile.picture.title'); ?>" title="<?= $words->get('profile.picture.title'); ?>" style="background-image: url('<?= $picture_url . '/500'?>')">
-                <!-- <img src="<?= $picture_url . '/500'?>" class="w-100 h-100" alt="picture of <?= $member->Username ?>"> -->
-            </a>
-            <?php } ?>
-            </div>
-        <?php
-            if ($this->myself) {
-                // TODO : change language code (en) and wordcode
-                ?>
-        <div>
-            <a href="editmyprofile" class="btn btn-info btn-block"><?= $words->get('profile.change.avatar'); ?></a>
-        </div>
-                <?php } ?>
+        <div id="react_mount" data-globals="<?=htmlspecialchars($globalsJs)?>" ></div>
 
         <div class="list-group mt-2">
             <?php
@@ -247,11 +245,27 @@ class MemberPage extends PageWithActiveSkin
 <?php
     }
 
+    private function getBaseUrl()
+    {
+        if (isset($_SERVER['HTTPS'])) {
+            $protocol = ($_SERVER['HTTPS'] && $_SERVER['HTTPS'] != "off") ? "https" : "http";
+        } else {
+            $protocol = 'http';
+        }
+        return $protocol . "://" . $_SERVER['HTTP_HOST'];
+    }
 
     protected function getStylesheets() {
         $stylesheets = parent::getStylesheets();
         $stylesheets[] = 'build/lightbox.css';
         return $stylesheets;
+    }
+
+    protected function getLateLoadScriptfiles()
+    {
+        $scripts = parent::getLateLoadScriptfiles();
+        $scripts = array_merge($scripts, ['build/avatar']);
+        return $scripts;
     }
 
     /*
@@ -268,7 +282,7 @@ class MemberPage extends PageWithActiveSkin
             if ($logged_member && $logged_member->hasOldRight(array('Admin' => '', 'SafetyTeam' => '', 'Accepter' => '', 'Profile' => ''))) {
                 $form .= '<div><form method="post" name="member-status" id="member-status" class="form-inline">' . $callbackTags;
                 $form .= '<input type="hidden" name="member-id" value="' . $member->id . '">';
-                $form .= '<select name="new-status" class="form-control-sm select2-sm" data-minimum-results-for-search="-1">';
+                $form .= '<select name="new-status" class="o-input select2-sm" data-minimum-results-for-search="-1">';
                 $selected = false;
                 foreach ($this->statuses as $status) {
                     $form .= '<option value="' . $status . '"';

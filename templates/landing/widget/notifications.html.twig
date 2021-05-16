@@ -1,9 +1,9 @@
 {% import 'macros.twig' as macros %}
-<div id="notificationsdisplay" class="scrollcontent">
+<div id="notificationsdisplay" class="c-dashboard">
     {% for notification in notifications %}
-        <div class="d-flex flex-row justify-content-start align-items-center p-2">
-            <div class="pr-2">{{ macros.avatar( notification.relMember.Username, 50, true ) }}</div>
-            <div class="pr-2">
+        <div class="c-dashboard__item">
+            <div class="o-avatar o-avatar--m o-avatar--noname u-mr-16">{{ macros.roundedavatarstack(notification.relMember.Username, 72, true) }}</div>
+            <div class="u-flex u-flex-col u-h-full u-justify-center">
                 {% if notification.Type == "message" %}
                     {% set notificationText %}{{ notification.translationcode|lower|trans|raw|format(notification.TranslationParameters)|raw }}{% endset %}
                 {% elseif notification.Type == "profile_comment" %}
@@ -11,13 +11,13 @@
                 {% else %}
                     {% set notificationText %}{{ notification.translationcode|lower|trans|raw|format(notification.relMember.Username)|raw }}{% endset %}
                 {% endif %}
-                <p class="m-0 p-0"><a href="{{ notification.link }}" title="{{ notificationText }}">{{ notificationText }}</a><br>
-                <small title="{{ notification.created|format_date('medium') }}">{{ notification.created.DiffForHumans }}</small></p>
+                <p  class="u-ellipsis"><a href="{{ notification.link }}" title="{{ notificationText }}">{{ notificationText }}</a><br>
+                <p class="u-font-300 u-text-14" title="{{ notification.created|format_date('medium') }}">{{ notification.created.DiffForHumans }}</p></p>
             </div>
             <div class="ml-auto"><a class="notify" id="notify-{{ notification.id }}" href="#"><i class="fas fa-times"></i></a></div>
         </div>
     {% else %}
-        <em>{{ 'dashboard.notifications.none' | trans }}</em>
+        <p class="u-my-24 u-font-display u-text-center">{{ 'dashboard.notifications.none' | trans }}</p>
     {% endfor %}
 
 </div>

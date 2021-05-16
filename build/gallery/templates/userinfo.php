@@ -44,7 +44,7 @@
             }
             ?>
 
-            <div class="form-group">
+            <div class="o-form-group">
                 <input name="g-user" type="hidden" value="<?=$this->loggedInMember->id?>">
                 <input name="g-title" id="g-title" type="text" size="20" maxlength="30" onclick="$('newGallery').checked = true; $('#deleteonly').val(0);">
 

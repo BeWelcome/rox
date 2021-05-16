@@ -1,5 +1,5 @@
 <div id="requestCount" data-count="{{ requestCount }}">
-    <a href="{{ path('requests') }}" class="nav-link" aria-label="{{ 'myrequests' | trans }}">
+    <a href="{{ path('conversations', {'requests': 1, 'unread_only': 1}) }}" class="nav-link" aria-label="{{ 'requests.unread' | trans }}">
         <i class="fa fa-lg fa-bed pr-1"></i><span
                 class="badge badge-warning d-md-none d-xl-inline-block">{{ requestCount }}</span>
     </a>

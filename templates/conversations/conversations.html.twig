@@ -1,0 +1,156 @@
+{% extends 'base.html.twig' %}
+{% import 'macros.twig' as macros %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('conversations') }}
+    <script>
+        $(window).on('load', function () {
+            $('#checkAll').click(function () {
+                $('input:checkbox.checkable').prop('checked', this.checked);
+            });
+        });
+    </script>
+{% endblock %}
+
+
+{% block content %}
+    {% set member = app.user %}
+    <h2>{{ submenu.active | trans }}</h2>
+    <div class="row no-gutters">
+        {% if submenu.active != 'spam' and submenu.active != 'deleted' %}
+            <div class="col-12 form-inline">
+                <div class="d-flex mr-1">
+                    <label for="initiator" class="mr-1">
+                        {{ 'started.by.me' | trans }}
+                    </label>
+                    <input id="initiator" type="range" class="o-slider js-switch-option" min="1" max="3" value="{{ initiator }}">
+                    <label for="initiator" class="ml-1">
+                        {{ 'started.by.someone.else' | trans }}
+                    </label>
+                </div>
+                <div class="custom-control custom-switch mr-1">
+                    <input type="checkbox" id="show_unread_only"
+                           name="search[show_options]"
+                           class="show_options custom-control-input js-switch-option" value="1"
+                           {% if showUnreadOnly %}checked="checked"{% endif %}>
+                    <label class="switch-custom custom-control-label" for="show_unread_only">
+                        {{ 'unread.only' | trans }}
+                    </label>
+                </div>
+            </div>
+            <div class="col-12">
+            {% if conversations.haveToPaginate %}
+                {{ pagerfanta( conversations, 'rounded_pagination') }}
+                <div class="clearfix mb-1"></div>
+            {% endif %}
+            </div>
+        {% endif %}
+    </div>
+    {% if conversations.nbResults == 0 %}
+        <p>{{ 'conversations.none' | trans }}</p>
+    {% else %}
+
+        {{ form_start(form) }}
+
+        {% set correspondent %}receiver{% endset %}
+        {% set _route = app.request.attributes.get('_route') %}
+
+        <table class="table table-responsive table-striped table-hover">
+            <tr>
+                <th class="select align-middle">
+                    <input type="checkbox" id="checkAll">
+                    <label for="checkAll" class="sr-only">{{ 'conversations.check.all'|trans }}</label>
+                </th>
+                <th class="align-middle">{{ 'message.first.by' | trans }}</th>
+                <th class="align-middle">{{ 'messagestext' | trans }}</th>
+                <th class="align-middle">{{ 'message.last.by' | trans }}</th>
+                <th class="align-middle">&nbsp;</th>
+            </tr>
+            {% for message in conversations.currentPageResults %}
+                {% set otherMember = message.initiator == message.sender ? message.receiver : message.sender %}
+                {% set unread = (message.firstRead is null) or (message.firstRead == '0000-00-00 00:00.00') %}
+                {% if submenu.active == 'deleted' %}
+                    {% set show_message_route = 'message_show_with_deleted' %}
+                {% else %}
+                    {% set show_message_route = 'message_show' %}
+                {% endif %}
+                <tr>
+                    <td class="select align-middle" id="selectcolumn">
+                         {{ form_widget(form.messages[loop.index0], {'attr': {'class': 'checkable'}}) }}
+                    </td>
+                    <td class="align-middle small">
+                        <div class="o-avatar o-avatar--m u-mb-16 md:u-mb-0 u-justify-self-center">
+                            {{ macros.roundedavatarstack(message.initiator.Username, 72) }}
+                        </div>
+                    </td>
+                    <td class="align-middle w-100">
+                        <a href="{{ path(show_message_route, { id: message.id}) }}">
+                            <div>
+                                {% if message.subject %}<p class="m-0">
+                                    <em{%- if unread -%}
+                                        {{- ' class="unread" style="font-weight:bold;"' -}}
+                                    {%- endif -%}>{% if message.parent %}Re: {% endif %}{{- message.subject.subject | striptags -}}</em>
+                                    </p>{% endif %}
+                                {% set messageText = message.Message | replace({'\n': ' ', '<br />': ' '}) | striptags %}
+
+                                {% apply spaceless %}
+                                    <p class="m-0 mb-1">{{- messageText | truncate(150) | raw -}}</p>
+                                {% endapply %}
+                                {% if message.request %}
+                                    <div class="d-flex alert-light p-2">
+                                        <div class="mr-2 font-weight-bold">
+                                            {% if message.request.inviteForLeg is null %}
+                                                {{ 'conversations.request'|trans }}
+                                            {% else %}
+                                                {{ 'conversations.invitation'|trans }}
+                                            {% endif %}<br>
+                                            <i class="fa fa-fw fa-calendar mr-1"></i>{{ 'request.arrival' | trans }}: {{ message.request.arrival | format_date( 'medium') }}
+                                            {%- if message.request.departure %}<br>
+                                                <i class="fa fa-fw fa-calendar mr-1"></i>{{ 'request.departure' | trans }}: {{ message.request.departure | format_date( 'medium') }}
+                                            {%- endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                                <span class="text-muted small">{{ 'message.sentdate'|trans({'%sentDate%': message.dateSent | format_date( 'medium')}) }} {{ 'by'|trans }} {{ message.sender.Username }}</span>
+                            </div>
+                        </a>
+                    </td>
+                    <td class="align-middle small">
+                        <div class="o-avatar o-avatar--m u-mb-16 md:u-mb-0 u-justify-self-center">
+                            {{ macros.roundedavatarstack(otherMember.Username, 72) }}
+                        </div>
+                    </td>
+                    <td class="text-right">
+                        <div class="btn-group-vertical">
+                            <a href="{{ path(show_message_route, { id: message.id}) }}" class="btn btn-primary btn-sm">{{ 'view' | trans }}</a>
+                            <a href="{{ path('message_reply', { id: message.id}) }}" class="btn btn-primary btn-sm">{{ 'reply' | trans }}</a>
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+        <tr>
+            <td colspan="4">
+                <div class="btn-group mb-2" aria-label="{{ 'conversations.label.delete_or_spam'|trans }}">
+                    {% if submenu.active == 'deleted' %}
+                        {{ form_widget(form.delete, { 'attr': { 'class': 'btn btn-light'} }) }}
+                    {% else %}
+                        {{ form_widget(form.delete, { 'attr': { 'class': 'btn btn-danger'} }) }}
+                    {% endif %}
+                    {{ form_widget(form.spam, { 'attr': { 'class': 'btn btn-light' } }) }}
+                    {% if submenu.active == 'deleted' %}
+                        {{ form_widget(form.purge, { 'attr': { 'class': 'btn btn-danger'} }) }}
+                    {% endif %}
+                </div>
+            </td>
+        </tr>
+        {{ form_rest(form) }}
+        {{ form_end(form) }}
+        {% if conversations.haveToPaginate %}
+            {{ pagerfanta( conversations, 'rounded_pagination') }}
+            <div class="clearfix mb-1"></div>
+        {% endif %}
+
+    {% endif %}
+{% endblock %}

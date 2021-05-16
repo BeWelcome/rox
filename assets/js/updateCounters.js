@@ -1,45 +1,13 @@
-function updateCounts() {
-    let messageCount = $('#messageCount');
-    let mcount = messageCount.data('count');
+function updateCount() {
     $.ajax({
         type: 'POST',
-        url: '/count/messages/unread',
-        data: {
-            current: mcount
-        },
+        url: '/count/conversations/unread',
         dataType: 'json',
         success: function (data) {
-            if (data.oldCount !== data.newCount) {
-                $('#messageCount').replaceWith(data.html);
-                $('#toasts').append(data.toast);
-                $('[data-toggle="toast"]').toast('show');
-            } else {
-            }
-        }});
-    let requestCount = $('#requestCount');
-    let rcount = requestCount.data('count');
-    $.ajax({
-        type: 'POST',
-        url: '/count/requests/unread',
-        data: {
-            current: rcount
-        },
-        dataType: 'json',
-        success: function (data) {
-            if (data.oldCount !== data.newCount) {
-                $('#requestCount').replaceWith(data.html);
-                $('#toasts').append(data.toast);
-                $('[data-toggle="toast"]').toast('show');
-            } else {
-            }
+            $('#conversationCount').replaceWith(data.html);
         }});
 }
 
-let interval = setInterval(function () { updateCounts(); }, 600 * 1000);
+let interval = setInterval(function () { updateCount(); }, 600 * 1000);
 
-$(function () {
-    $('[data-toggle="toast"]').toast({
-        autohide: false
-    })
-});
-
+updateCount();

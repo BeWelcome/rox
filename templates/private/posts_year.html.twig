@@ -14,7 +14,7 @@
     </div>
     <div class="card-columns">
         {% for info in threads %}
-            <div class="card">
+            <div class="card o-card">
                 <div class="card-body p-2">{% if info.thread %}{{ info.thread.title|purify }}{% else %}{{ 'mydata.posts.no.thread'|trans }}{% endif %}<br>
                 {{ 'mydata.posts.thread.count'|trans({'count':info.posts|length}) }}</div>
                 <div class="card-footer text-right p-2">

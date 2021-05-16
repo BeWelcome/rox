@@ -105,24 +105,24 @@ $words = new MOD_words();
         <div class="tab-content" id="myTabContent">
             <?php if ($this->canEnqueueMembers) { ?>
             <div class="tab-pane fade show active mt-2" id="members" role="tabpanel" aria-labelledby="members-tab">
-                <div class="form-check">
-                        <input class="form-check-input" type="radio" id="allmembers" name="members-type" value="allmembers"
+                <div class="o-checkbox">
+                        <input class="o-checkbox__input" type="radio" id="allmembers" name="members-type" value="allmembers"
                                 <?php if (isset($vars['members-type']) && ($vars['members-type'] == 'allmembers')) {
                                     echo 'checked="checked"';
                                 }
                                 ?>/>
-                            <label class="form-check-label"
+                            <label class="o-checkbox__label"
                                 for="allmembers"><?php echo $words->get('AdminMassMailEnqueueAllMembers'); ?></label>
-                        <div class="form-group mt-2"><label for="maxmembers"><?php echo $words->get('AdminMassMailEnqueueMaxMessages'); ?>
+                        <div class="o-form-group mt-2"><label for="maxmembers"><?php echo $words->get('AdminMassMailEnqueueMaxMessages'); ?>
                                 :</label>
-                        <input class="form-control" type="text" id="max-messages" name="max-messages" size="60"
+                        <input class="o-input" type="text" id="max-messages" name="max-messages" size="60"
                                    value="<?php if (isset($vars['max-messages'])) {
                                         echo $vars['max-messages'];
                                    } ?>"/>
                         </div>
                 </div>
-                <div class="form-check mt-2">
-                <input class="form-check-input" type="radio" id="selectedmembers" name="members-type" value="usernames"
+                <div class="o-checkbox mt-2">
+                <input class="o-checkbox__input" type="radio" id="selectedmembers" name="members-type" value="usernames"
                                 <?php
                                 if (isset($vars['members-type'])) {
                                     if (($vars['members-type'] == 'usernames')) {
@@ -132,11 +132,11 @@ $words = new MOD_words();
                                     echo 'checked="checked"';
                                 }
                                 ?>/>
-                <label class="form-check-label"
+                <label class="o-checkbox__label"
                     for="selectedmembers"><?php echo $words->get('AdminMassMailEnqueueSelectedMembers'); ?></label>
-                <div class="form-group mt-2">
+                <div class="o-form-group mt-2">
                 <label for="Usernames"><?php echo $words->get('AdminMassMailEnqueueUsernames'); ?>:</label>
-                <input class="form-control" type="text" id="usernames" name="usernames" size="60"
+                <input class="o-input" type="text" id="usernames" name="usernames" size="60"
                                    value="<?php if (isset($vars['usernames'])) {
                                        echo $vars['usernames'];
                                    } ?>"/>
@@ -150,9 +150,9 @@ $words = new MOD_words();
         <?php } ?>
         <?php if ($this->canEnqueueLocation) { ?>
             <div class="tab-pane fade show mt-2" id="location" role="tabpanel" aria-labelledby="location-tab">
-                <div class="form-group">
-                    <label class="form-control-label" for="CountryIsoCode">Choose a country</label><br>
-                    <select id="CountryIsoCode" name="CountryIsoCode" class="form-control select2">
+                <div class="o-form-group">
+                    <label class="o-input-label" for="CountryIsoCode">Choose a country</label><br>
+                    <select id="CountryIsoCode" name="CountryIsoCode" class="o-input select2">
                         <option value="0">Select a country</option>
                         <?php
                         foreach ($countries as $country) {
@@ -161,15 +161,15 @@ $words = new MOD_words();
                         ?>
                     </select>
                 </div>
-                <div class="form-group">
-                    <label class="form-control-label"AdminUnits">Choose an administrative unit</label>
-                    <select id="AdminUnits" name="AdminUnits" class="form-control select2" disabled="disabled">
+                <div class="o-form-group">
+                    <label class="o-input-label"AdminUnits">Choose an administrative unit</label>
+                    <select id="AdminUnits" name="AdminUnits" class="o-input select2" disabled="disabled">
                         <option value="0">All administrative units</option>
                     </select>
                 </div>
-                <div class="form-group">
-                    <label class="form-control-label" for="Places">Choose a place:</label>
-                    <select id="Places" name="Places" class="form-control select2" disabled="disabled">
+                <div class="o-form-group">
+                    <label class="o-input-label" for="Places">Choose a place:</label>
+                    <select id="Places" name="Places" class="o-input select2" disabled="disabled">
                         <option value="0">All places</option>
                     </select>
                 </div>
@@ -182,9 +182,9 @@ $words = new MOD_words();
         <?php } ?>
         <?php if ($this->canEnqueueGroup) { ?>
             <div class="tab-pane fade show mt-2" role="tabpanel" aria-labelledby="group-tab" id="group">
-                <div class="form-group">
-                    <label class="form-control-label" for="IdGroup">Choose a group</label>
-                    <select id="IdGroup" name="IdGroup" class="form-control select2" ;>
+                <div class="o-form-group">
+                    <label class="o-input-label" for="IdGroup">Choose a group</label>
+                    <select id="IdGroup" name="IdGroup" class="o-input select2" ;>
                         <option value="0">Select a group</option>
                         <?php
                         foreach ($groups as $group) {
@@ -257,7 +257,7 @@ $words = new MOD_words();
                         adminUnits.append(html);
                         adminUnits.select2({
                             theme: 'bootstrap4',
-                            containerCssClass: 'form-control'
+                            containerCssClass: 'o-input'
                         });
                     });
                     adminUnits.removeAttr('disabled');
@@ -281,7 +281,7 @@ $words = new MOD_words();
                         places.append(html);
                         places.select2({
                             theme: 'bootstrap4',
-                            containerCssClass: 'form-control'
+                            containerCssClass: 'o-input'
                         });
                     });
                     places.removeAttr('disabled');

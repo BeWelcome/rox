@@ -30,12 +30,12 @@ Boston, MA  02111-1307, USA.
 <form class="form" method="post" action="">
     <p><?php echo $this->getCallbackOutput('MembersController','retireProfile'); ?></p>
     <p><?php echo $words->getFormatted('ProfileDeleteInfo',$this->member->Username); ?></p>
-    <div class="form-group">
-        <label class="form-control-label" for="explain"><?php echo $words->getFormatted ('retire_membercanexplain'); ?></label>
-        <textarea class="form-control" name="explanation" id="explain" cols="65" rows="6"></textarea>
+    <div class="o-form-group">
+        <label class="o-input-label" for="explain"><?php echo $words->getFormatted ('retire_membercanexplain'); ?></label>
+        <textarea class="o-input" name="explanation" id="explain" cols="65" rows="6"></textarea>
     </div>
-    <div class="form-check">
-        <input type="checkbox" class="form-check-input" id="cleanup" name="cleanup"><label class="form-check-label" for="cleanup"><?php echo $words->getFormatted ('profile.delete.cleanup'); ?></label>
+    <div class="o-checkbox">
+        <input type="checkbox" class="o-checkbox__input" id="cleanup" name="cleanup"><label class="o-checkbox__label" for="cleanup"><?php echo $words->getFormatted ('profile.delete.cleanup'); ?></label>
     </div>
     <p class="text-center mt-2">
     <input type="submit" class="btn btn-primary" value="<?php echo $words->getBuffered('DeleteProfile') ?>"

@@ -44,7 +44,7 @@ $myself = $this->myself;
 if (count($languages) > 1 || $myself) {
 ?>
 
-    <div class="profile_translations form-inline mt-1">
+    <div class="profile_translations form-inline mt-1 d-flex">
         <strong><?=$words->get('ProfileTranslations')?></strong>
         <div class="btn-group btn-group-sm ml-1"><?php
             $ii = 0;
@@ -64,7 +64,7 @@ if (count($languages) > 1 || $myself) {
             }
             ?><?php echo $words->flushBuffer(); ?></div>&nbsp;
             <?php if ($myself) { ?>
-            <select class="form-control-sm my-1 select2-sm" id="add_language">
+            <select class="o-input o-input--nofull my-1 select2-sm" id="add_language">
                 <option>- <?=$wwsilent->AddLanguage?> -</option>
                   <?php
                   $ownLanguages = "";

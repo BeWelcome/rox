@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col-12 text-center text-md-left">
-        <h2 class="pb-1"><strong>
+    <h2 class="m-0 d-inline"><strong>
             <?php if ($this->passedAway == 'PassedAway') {
                 echo $words->get('ProfileInMemoriam', $member->Username);
             } else {
@@ -75,12 +75,8 @@
                 ?>
             </h5><!-- location -->
 
-            <?php if ($this->statusForm($member) != null) { ?>
-            <div class="form-group form-inline small"><?php echo $this->statusForm($member); ?></div>
-            <?php } ?>
-
-        </div>
-
+      <div class="o-form-group form-inline small"><?php echo $this->statusForm($member); ?></div>
+    </div>
     </div>
     <div class="col-12 col-md-5 teaser-border text-center text-md-left">
 

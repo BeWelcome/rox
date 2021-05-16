@@ -164,7 +164,7 @@ class GroupMemberAdministrationPage extends GroupsSubPage
                       action='group/<?= $this->group->getPKValue(); ?>/invitemembers/search'
                       id='invite_form'>
                     <input type='text' placeholder='<?= $words->getSilent('GroupsEnterUsername'); ?>'
-                           name='username' id='search_username' class="form-control mr-2"/>
+                           name='username' id='search_username' class="o-input mr-2"/>
                     <input type='submit' value='<?= $words->getSilent('Search'); ?>'
                            class="btn btn-primary" id='search_username_submit'/>
                 </form>

@@ -17,10 +17,7 @@ use Pagerfanta\Pagerfanta;
 
 class MessageRepository extends EntityRepository
 {
-    /**
-     * @return int
-     */
-    public function getUnreadMessagesCount(Member $member)
+    public function getUnreadConversationsCount(Member $member): int
     {
         $q = $this->createQueryBuilder('m')
             ->select('count(m.id)')
@@ -35,7 +32,6 @@ class MessageRepository extends EntityRepository
             ->andWhere('m.firstRead IS NULL')
             ->andWhere('m.status = :status')
             ->setParameter('status', 'Sent')
-            ->andWhere('m.request IS NULL')
             ->getQuery();
 
         $unreadCount = $q->getSingleScalarResult();
@@ -43,36 +39,7 @@ class MessageRepository extends EntityRepository
         return (int) $unreadCount;
     }
 
-    /**
-     * @return int
-     */
-    public function getUnreadRequestsCount(Member $member)
-    {
-        $q = $this->createQueryBuilder('m')
-            ->join('m.request', 'r')
-            ->select('count(m.id)')
-            ->where('m.receiver = :member')
-            ->setParameter('member', $member)
-            ->andWhere('m.folder = :folder')
-            ->setParameter('folder', InFolderType::NORMAL)
-            ->andWhere('NOT (m.deleteRequest LIKE :receiverDeleted)')
-            ->setParameter(':receiverDeleted', '%' . DeleteRequestType::RECEIVER_DELETED . '%')
-            ->andWhere('NOT (m.deleteRequest LIKE :receiverPurged)')
-            ->setParameter(':receiverPurged', '%' . DeleteRequestType::RECEIVER_PURGED . '%')
-            ->andWhere('m.firstRead IS NULL')
-            ->andWhere('m.status = :status')
-            ->setParameter(':status', 'Sent')
-            ->getQuery();
-
-        $unreadCount = $q->getSingleScalarResult();
-
-        return (int) $unreadCount;
-    }
-
-    /**
-     * @return int
-     */
-    public function getReportedMessagesCount()
+    public function getReportedMessagesCount(): int
     {
         $q = $this->createQueryBuilder('m')
             ->select('count(m.id)')
@@ -87,15 +54,7 @@ class MessageRepository extends EntityRepository
         return $result;
     }
 
-    /**
-     * Returns a Pagerfanta object encapsulating the matching paginated activities.
-     *
-     * @param int $page
-     * @param int $items
-     *
-     * @return Pagerfanta
-     */
-    public function findReportedMessages($page = 1, $items = 10)
+    public function findReportedMessages(int $page = 1, int $items = 10): Pagerfanta
     {
         $queryBuilder = $this->queryReportedMessages();
         $adapter = new QueryAdapter($queryBuilder);
@@ -221,11 +180,15 @@ class MessageRepository extends EntityRepository
      * @param $sortDirection
      * @param int $page
      * @param int $items
-     *
-     * @return Pagerfanta
      */
-    public function findAllMessagesBetween(Member $loggedInUser, Member $member, $sort, $sortDirection, $page = 1, $items = 10)
-    {
+    public function findAllMessagesBetween(
+        Member $loggedInUser,
+        Member $member,
+        $sort,
+        $sortDirection,
+        $page = 1,
+        $items = 10
+    ): Pagerfanta {
         $paginator = new Pagerfanta(
             new QueryAdapter(
                 $this->queryAllMessagesBetween($loggedInUser, $member, $sort, $sortDirection),
@@ -241,7 +204,7 @@ class MessageRepository extends EntityRepository
     /**
      * @return Message[]
      */
-    public function findAllMessagesWithMember(Member $member)
+    public function findAllMessagesWithMember(Member $member): array
     {
         $qb = $this->createQueryBuilder('m');
         $qb

@@ -38,7 +38,7 @@ Boston, MA  02111-1307, USA.
             </div>
             <h3>Moderation actions</h3>
             <div class="list-group mb-3">
-                <a href="forums/reporttomod/AllActiveReports" class="list-group-item nav-link">All pending reports <span class="badge badge-primary"><?php echo $this->_model->countReportList(0,"('Open','OnDiscussion')"); ?></span></a>
+                <a href="forums/reporttomod/AllActiveReports" class="list-group-item nav-link">All pending reports <span class="badge badge-primary u-rounded-full u-w-20 u-h-20 u-inline-flex u-items-center u-justify-center"><?php echo $this->_model->countReportList(0,"('Open','OnDiscussion')"); ?></span></a>
             </div>
        <?php }
        if ($this->BW_Right->HasRight("ForumModerator")) { ?>

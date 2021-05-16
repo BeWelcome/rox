@@ -190,14 +190,6 @@ class MembersController extends RoxControllerBase
                         $this->redirect('');
                     }
                 }
-                else if ($request[1] == 'avatar')
-                {
-                    if (!isset($request[2]) || !$member = $this->getMember($request[2]))
-                        PPHP::PExit();
-                    PRequest::ignoreCurrentRequest();
-                    $this->model->showAvatar($member->id);
-                    break;
-                }
                 else if (!($member = $this->getMember($request[1])))
                 {
                     // did not find such a member
@@ -1026,15 +1018,5 @@ class MembersController extends RoxControllerBase
         }
         ob_end_clean();
         exit(0);
-    }
-
-    /**
-     * @return Response
-     */
-    public function avatar($username, $size) {
-        $member = $this->getMember($username);
-        ob_start();
-        $this->model->showAvatar($member->id, $size);
-        return new Response(ob_end_clean());
     }
 }

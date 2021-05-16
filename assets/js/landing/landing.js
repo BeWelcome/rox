@@ -1,3 +1,8 @@
+import SearchPicker from "./../search/searchpicker";
+import "tempusdominus";
+
+const searchPicker = new SearchPicker( "/search/locations/all");
+
 $(document).ready(function() {
     if (!$('#messagesdisplay').length) {
         return;
@@ -5,6 +10,7 @@ $(document).ready(function() {
 
     Home.updateMessages();
     Home.updateThreads();
+    Home.updateTripLegs();
 
     $('a[data-toggle="tab"]').on('show.bs.tab', Home.onTabChange);
 
@@ -17,8 +23,13 @@ $(document).ready(function() {
     });
 
     $('.hosting').click(Home.setHostingStatus);
+
     $('#show_online').change(function() {
         setTimeout(Home.updateActivities, 500);
+    });
+
+    $('#trips_radius').change(function() {
+        setTimeout(Home.updateTripLegs, 500);
     });
 });
 
@@ -111,6 +122,24 @@ var Home = {
             success: function (activities) {
                 $('#activitiesdisplay').replaceWith(activities);
             }
+        });
+    },
+    updateTripLegs: function () {
+        let radius = $('#trips_radius').val();
+
+        $.ajax({
+            type: 'GET',
+            url: '/widget/triplegs',
+            data: {
+                radius: radius
+            },
+            success: function(legs) {
+                $('#legsdisplay').replaceWith(legs);
+                $('#trips_radius').select2();
+                $('#trips_radius').change(function() {
+                    setTimeout(Home.updateTripLegs, 500);
+                });
+            },
         });
     },
     setHostingStatus: function (e) {

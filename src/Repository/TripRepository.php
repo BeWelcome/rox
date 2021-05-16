@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Member;
 use DateTime;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
@@ -19,12 +20,15 @@ class TripRepository extends EntityRepository
     /**
      * @return Query
      */
-    public function queryLatest()
+    public function queryTripsOfMember(Member $member)
     {
         return $this->createQueryBuilder('t')
-            ->where('t.createdAt <= :now')
-            ->setParameter('now', new DateTime())
-            ->orderBy('t.createdAt', 'DESC')
+            ->where('t.created <= :now')
+            ->andWhere('t.creator = :creator')
+            ->andWhere('t.deleted IS NULL')
+            ->setParameter(':now', new DateTime())
+            ->setParameter(':creator', $member)
+            ->orderBy('t.created', 'DESC')
             ->getQuery();
     }
 }

@@ -39,7 +39,7 @@
                         </a>
                     </div>
                     <div class="col-12 col-md-9 order-md-3">
-                                    <textarea class="form-control"
+                                    <textarea class="o-input"
                                               name="RelationComment_<?= $Relation->id ?>"><?= $comment ?></textarea>
                     </div>
                 </div>

@@ -1,11 +1,11 @@
 {% macro input(name, placeholder, value, type) %}
     <label for="{{ name }}" class="sr-only">{{ placeholder|trans }}</label>
-    <input class="form-control m-1" type="{{ type|default('text') }}" name="{{ name }}" placeholder="{{ placeholder|trans }}"
+    <input class="o-input m-1" type="{{ type|default('text') }}" name="{{ name }}" placeholder="{{ placeholder|trans }}"
            value="{{ value|e }}" />
 {% endmacro %}
 
 {% macro submit(text, class = false) %}
-    <button class="form-control btn btn-primary{%  if class %}{{ class }}{% endif %}" type="submit">{{ text|trans }}</button>
+    <button class="o-input btn btn-primary{%  if class %}{{ class }}{% endif %}" type="submit">{{ text|trans }}</button>
 {% endmacro %}
 
 {% macro select(name, values, value, class) %}
@@ -62,6 +62,16 @@
     {% if displayname %}<br><small>{{ macros.profilelink(username) }}</small>{% endif %}
 {% endmacro %}
 
+{# \new avatar for trip pages #}
+{% macro roundedavatarstack(username, size, right, displayname = true) %}
+    {% import _self as macros %}
+    {% set img %}<img class="o-avatar__img" src="{{ path( 'avatar', { 'username': username , 'size': size }) }}" title="{{ username }}" alt="{{ 'profile' | trans }}: {{ username }}">{% endset %}
+    {{ macros.profilelink(username, img, 'o-avatar__img-wrapper') }}
+    {% if displayname %}
+    {{ macros.profilelink(username, username, 'o-avatar__name') }}
+    {% endif %}
+{% endmacro %}
+
 {% macro profilelink(username, displayname = false, classes = false, newpage = false) %}
 <a href="{{ path( 'members_profile', { 'username': username }) }}"
    {% if classes %}class="{{ classes }}" {% endif %}
@@ -74,4 +84,13 @@
         {% set class = 'dropdown-item' %}
     {% endif %}
     <a class="{{ class }}" href="{{ path( route | lower ) }}">{{ route | trans }}</a>
+{% endmacro %}
+
+{% macro messageheader( left, right, subject = '') %}
+    {% import _self as macros %}
+    <div class="u-flex u-justify-between bg-white p-1">
+        <div class="o-avatar">{{ macros.roundedavatarstack(left.Username, 50, false) }}</div>
+        <div class="u-text-32 u-leading-48 md:u-text-56 md:u-leading-60 u-self-center u-text-center u-text-black u-font-700">{{ subject }}</div>
+        <div class="o-avatar">{{ macros.roundedavatarstack(right.Username, 50, true) }}</div>
+    </div>
 {% endmacro %}

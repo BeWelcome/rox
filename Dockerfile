@@ -39,7 +39,7 @@ RUN set -eux; \
 	; \
 	\
 	docker-php-ext-configure zip; \
-	docker-php-ext-configure gd; \
+	docker-php-ext-configure gd --with-freetype --with-jpeg=/usr/include/ --enable-gd; \
 	docker-php-ext-install -j$(nproc) \
 		intl \
 		gd \
@@ -123,7 +123,7 @@ RUN set -eux; \
 	composer clear-cache
 
 # prevent the reinstallation of node_modules at every changes in the source code
-COPY package.json yarn.lock webpack.config.js ./
+COPY package.json yarn.lock webpack.config.js postcss.config.js tailwind.config.js ./
 RUN set -eux; \
 	yarn install --frozen-lock; \
 	yarn encore production --mode=production

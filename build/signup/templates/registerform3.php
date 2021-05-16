@@ -31,13 +31,13 @@ $map_conf = PVars::getObj('map');
 
                 <div class="col-12 col-md-9">
 
-                    <div class="form-group">
-                        <label for="location" class="form-control-label"><?= $words->getSilent('label_setlocation') ?></label>
+                    <div class="o-form-group">
+                        <label for="location" class="o-input-label"><?= $words->getSilent('label_setlocation') ?></label>
                         <?php echo $words->flushBuffer(); ?>
                         <input type="hidden" name="location-geoname-id" id="location-geoname-id" value="<?= isset($vars['location-geoname-id']) ? $vars['location-geoname-id'] : '' ?>"/>
                         <input type="hidden" name="location-latitude" id="location-latitude" value="<?= isset($vars['location-latitude']) ? $vars['location-latitude'] : '' ?>"/>
                         <input type="hidden" name="location-longitude" id="location-longitude" value="<?= isset($vars['location-longitude']) ? $vars['location-longitude'] : '' ?>"/>
-                        <input type="text" name="location" id="location" class="form-control location-picker <?php if ($locationError) { echo 'is-invalid'; } ?>" placeholder="<?= $words->get('label_setlocation') ?>"
+                        <input type="text" name="location" id="location" class="o-input location-picker <?php if ($locationError) { echo 'is-invalid'; } ?>" placeholder="<?= $words->get('label_setlocation') ?>"
                             <?php
                             echo isset($vars['location']) ? 'value="'. htmlentities($vars['location'],ENT_COMPAT, 'utf-8') . '" ' : '';
                             ?>
@@ -49,7 +49,7 @@ $map_conf = PVars::getObj('map');
                         </div>
                     </div>
 
-                    <button type="submit" class="form-control btn btn-primary"><?php echo $words->getSilent('NextStep'); ?> <i class="fa fa-angle-double-right"></i></button>
+                    <button type="submit" class="o-input btn btn-primary"><?php echo $words->getSilent('NextStep'); ?> <i class="fa fa-angle-double-right"></i></button>
                     <?php echo $words->flushBuffer(); ?>
 
                 </div>

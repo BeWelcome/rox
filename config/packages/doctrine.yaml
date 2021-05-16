@@ -55,6 +55,8 @@ doctrine:
             typical_offer: App\Doctrine\TypicalOfferType
             who_spoke_last: App\Doctrine\WhoSpokeLastType
             translation_allowed: App\Doctrine\TranslationAllowedType
+            subtrip_options: App\Doctrine\SubtripOptionsType
+            trip_additional_info: App\Doctrine\TripAdditionalInfoType
 
         mapping_types:
             enum:       string

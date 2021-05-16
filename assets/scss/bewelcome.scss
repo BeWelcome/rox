@@ -1,23 +1,23 @@
-// Include fonts
-
 @import "mixins";
 
-@import "~typeface-signika";
-@import '~typeface-lato';
-
-/* Use SVG font
-$fa-font-path: '~@fortawesome/fontawesome-free/webfonts';
-@import '~@fortawesome/fontawesome-free/scss/fontawesome';
-@import '~@fortawesome/fontawesome-free/scss/solid';
-@import '~@fortawesome/fontawesome-free/scss/regular';
-@import '~@fortawesome/fontawesome-free/scss/brands';
-*/
+@import "~@fontsource/lato/index.css";
+@import "~@fontsource/signika/index.css";
+@import "~@fontsource/signika/300.css";
+@import "~@fontsource/signika/700.css";
+@import "~toastify-js/src/toastify.css";
 
 // Core variables and mixins
 @import "custom";
 $font-family-bold: Signika;
 
 @import "~bootstrap";
+
+@import "config";
+@import "generic/generic";
+@import "objects/objects";
+@import "layouts/layouts";
+@import "components/components";
+@import "utilities/utilities";
 
 @import "general";
 

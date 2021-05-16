@@ -1,0 +1,87 @@
+input[type=range].o-slider {
+  width: 48px;
+  background-color: transparent;
+  -webkit-appearance: none;
+}
+input[type=range].o-slider:focus {
+  outline: none;
+}
+input[type=range].o-slider::-webkit-slider-runnable-track {
+  background: #f37000;
+  border: 0;
+  width: 100%;
+  height: 16px;
+  border-radius:16px;
+  cursor: pointer;
+}
+input[type=range].o-slider::-webkit-slider-thumb {
+  width: 16px;
+  height: 16px;
+  background: #ffffff;
+  border: 2px solid #f37000;
+  border-radius: 16px;
+  cursor: pointer;
+  -webkit-appearance: none;
+}
+input[type=range].o-slider:focus::-webkit-slider-runnable-track {
+  background: #ff7d0e;
+}
+input[type=range].o-slider::-moz-range-track {
+  background: #f37000;
+  border: 0;
+  width: 100%;
+  height: 16px;
+  border-radius:16px;
+  cursor: pointer;
+}
+input[type=range].o-slider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  background: #ffffff;
+  border: 2px solid  #f37000;
+  border-radius: 16px;
+  cursor: pointer;
+}
+input[type=range].o-slider::-ms-track {
+  background: transparent;
+  border-color: transparent;
+  border-width: 0 0;
+  color: transparent;
+  width: 100%;
+  height: 16px;
+  border-radius: 16px;
+  cursor: pointer;
+}
+input[type=range].o-slider::-ms-fill-lower {
+  background: #f37000;
+  border: 0;
+}
+input[type=range].o-slider::-ms-fill-upper {
+  background: #f37000;
+  border: 0;
+}
+input[type=range].o-slider::-ms-thumb {
+  width: 16px;
+  height: 16px;
+  background: #ffffff;
+  border: 2px solid #f37000;
+  border-radius: 16px;
+  cursor: pointer;
+  margin-top: 0px;
+  /*Needed to keep the Edge thumb centred*/
+}
+input[type=range].o-slider:focus::-ms-fill-lower {
+  background: #f37000;
+}
+input[type=range].o-slider:focus::-ms-fill-upper {
+  background: #ff7d0e;
+}
+/*TODO: Use one of the selectors from https://stackoverflow.com/a/20541859/7077589 and figure out
+how to remove the virtical space around the range input in IE*/
+@supports (-ms-ime-align:auto) {
+  /* Pre-Chromium Edge only styles, selector taken from hhttps://stackoverflow.com/a/32202953/7077589 */
+  input[type=range].o-slider {
+    margin: 0;
+    /*Edge starts the margin from the thumb, not the track as other browsers do*/
+  }
+}

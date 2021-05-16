@@ -16,10 +16,10 @@
         <?=$callbacktag?>
         <fieldset id="location">
                 <!-- Content of left block -->
-                <div class="form-group">
+                <div class="o-form-group">
                     <div class="input-group">
                         <label for="geo-search" class="control-label sr-only"><?=$words->get('label_setlocation')?>:</label>
-                        <input type="text" name="geo-search" class="form-control" id="geo-search" placeholder="<?=$words->get('label_setlocation')?>"
+                        <input type="text" name="geo-search" class="o-input" id="geo-search" placeholder="<?=$words->get('label_setlocation')?>"
                         <?php
                         echo isset($mem_redirect->location) ? 'value="'.htmlentities($mem_redirect->location, ENT_COMPAT, 'utf-8').'" ' : '';
                         ?>

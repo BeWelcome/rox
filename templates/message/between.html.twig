@@ -36,7 +36,7 @@
             </th>
         </tr>
         {% for message in items.currentPageResults %}
-            {% set unread = (message.firstRead == '0000-00-00 00:00.00') or (message.firstRead is null) %}
+            {% set unread = (message.firstRead is null) or (message.firstRead == '0000-00-00 00:00.00') %}
 
             <tr>
                 <td class="align-middle small">

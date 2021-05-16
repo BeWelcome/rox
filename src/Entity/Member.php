@@ -13,6 +13,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use App\Doctrine\AccommodationType;
 use App\Doctrine\GroupMembershipStatusType;
+use App\Doctrine\LanguageLevelType;
 use App\Doctrine\MemberStatusType;
 use App\Encoder\LegacyPasswordEncoder;
 use Carbon\Carbon;
@@ -2581,7 +2582,7 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
         }
 
         if (!preg_match('/^\$2y\$[0-9]{2}\$.{53}$/', $this->getPassWord())) {
-            throw new RuntimeException('Password is neither bcrypt or legacy sha1.');
+            throw RuntimeException('Password is neither bcrypt or legacy sha1.');
         }
 
         if ($this->isPrivileged()) {
@@ -2948,6 +2949,20 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
     public function getLanguageLevels()
     {
         return $this->languageLevels->toArray();
+    }
+
+    /**
+     * @return array
+     */
+    public function getSkilledLanguageLevels()
+    {
+        $criteria = Criteria::create()->where(Criteria::expr()->orX(
+            Criteria::expr()->neq('level', LanguageLevelType::BEGINNER),
+            Criteria::expr()->eq('level', LanguageLevelType::HELLO_ONLY)
+        ));
+
+        return $this->languageLevels->matching($criteria)
+            ->toArray();
     }
 
     /**

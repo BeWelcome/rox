@@ -15,7 +15,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
 /**
  * Memberslanguageslevel.
  *
- * @ORM\Table(name="memberslanguageslevel", indexes={@ORM\Index(name="IdMember", columns={"IdMember", "IdLanguage"})})
+ * @ORM\Table(name="memberslanguageslevel", indexes={
+ *     @ORM\Index(name="members_languages", columns={"IdMember", "IdLanguage"})
+ * })
  * @ORM\Entity
  *
  * @SuppressWarnings(PHPMD)

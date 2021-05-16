@@ -192,7 +192,8 @@ class Mailer
             $parameters['receiver'] = $receiver;
             $receiver = new Address($receiver->getEmail(), $receiver->getUsername());
         } elseif (!$receiver instanceof Address) {
-            throw new InvalidArgumentException(sprintf('$receiver must be an instance of %s or %s.', Member::class, Address::class));
+            $message = sprintf('$receiver must be an instance of %s or %s.', Member::class, Address::class);
+            throw new InvalidArgumentException($message);
         }
 
         $parameters['template'] = $template;

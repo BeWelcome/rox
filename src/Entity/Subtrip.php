@@ -15,39 +15,39 @@ use Doctrine\ORM\Mapping as ORM;
  * SubTrip.
  *
  * @ORM\Table(name="sub_trips")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\SubtripRepository")
  *
  * @SuppressWarnings(PHPMD)
  * Auto generated class do not check mess
  */
-class SubTrip
+class Subtrip
 {
     /**
      * @var Location
      *
      * @ORM\ManyToOne(targetEntity="Location")
-     * @ORM\JoinColumn(name="location", referencedColumnName="geonameId")
+     * @ORM\JoinColumn(name="location", referencedColumnName="geonameId", nullable=true)
      */
     private $location;
 
     /**
      * @var DateTime
      *
-     * @ORM\Column(name="arrival", type="date")
+     * @ORM\Column(name="arrival", type="date", nullable=true)
      */
     private $arrival;
 
     /**
      * @var DateTime
      *
-     * @ORM\Column(name="departure", type="date")
+     * @ORM\Column(name="departure", type="date", nullable=true)
      */
     private $departure;
 
     /**
-     * @var int
+     * @var string
      *
-     * @ORM\Column(name="options", type="integer", nullable=true)
+     * @ORM\Column(name="options", type="subtrip_options", nullable=true)
      */
     private $options;
 
@@ -61,63 +61,79 @@ class SubTrip
     private $id;
 
     /**
+     * @var Member
+     *
+     * @ORM\ManyToOne(targetEntity="\App\Entity\Member")
+     * @ORM\JoinColumn(name="invited_by", referencedColumnName="id", nullable=true)
+     */
+    private $invitedBy;
+
+    /**
      * @var Trip
      *
-     * @ORM\ManyToOne(targetEntity="Trip", inversedBy="subTrips", cascade={"persist", "remove"})
+     * @ORM\ManyToOne(targetEntity="Trip", inversedBy="subtrips", cascade={"persist", "remove"})
      * @ORM\JoinColumn(name="trip_id", referencedColumnName="id")
      */
     private $trip;
 
-    public function setLocation(Location $location): self
+    public function setLocation(?Location $location): self
     {
         $this->location = $location;
 
         return $this;
     }
 
-    public function getLocation(): Location
+    public function getLocation(): ?Location
     {
         return $this->location;
     }
 
-    public function setArrival(DateTime $arrival): self
+    public function setArrival(?DateTime $arrival): self
     {
         $this->arrival = $arrival;
 
         return $this;
     }
 
-    public function getArrival(): Carbon
+    public function getArrival(): ?Carbon
     {
+        if (null === $this->arrival) {
+            return null;
+        }
+
         return Carbon::instance($this->arrival);
     }
 
-    public function setDeparture(DateTime $departure): self
+    public function setDeparture(?DateTime $departure): self
     {
         $this->departure = $departure;
 
         return $this;
     }
 
-    public function getDeparture(): Carbon
+    public function getDeparture(): ?Carbon
     {
+        if (null === $this->departure) {
+            return null;
+        }
+
         return Carbon::instance($this->departure);
     }
 
     public function setOptions(array $options): self
     {
-        $optionsValue = 0;
-        foreach ($options as $key => $value) {
-            $optionsValue += $value;
-        }
-        $this->options = $optionsValue;
+        $this->options = implode(',', $options);
 
         return $this;
     }
 
-    public function getOptions(): int
+    public function getOptions(): array
     {
-        return $this->options;
+        if (null === $this->options) {
+            return [];
+        }
+
+        return explode(',', $this->options);
     }
 
     public function getId(): int
@@ -135,5 +151,17 @@ class SubTrip
     public function getTrip(): Trip
     {
         return $this->trip;
+    }
+
+    public function getInvitedBy(): ?Member
+    {
+        return $this->invitedBy;
+    }
+
+    public function setInvitedBy(?Member $invitedBy): self
+    {
+        $this->invitedBy = $invitedBy;
+
+        return $this;
     }
 }

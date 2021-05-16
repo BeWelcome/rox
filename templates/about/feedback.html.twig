@@ -5,19 +5,21 @@
 {% endblock %}
 
 {% block content %}
-<h1>{{ 'contactus' | trans }}</h1>
-<div class="row">
-	<div class="col-12 col-md-6">
-		<p>{{ 'feedbackdisclaimer' | trans | purify | nl2br }}</p>
-	</div>
-	<div class="col-12 col-md-6">
-		{{ form_start(form) }}
-		{{ form_rest(form) }}
-		<div class="form-group">
-			<button type="submit" id="submit" name="submit" class="btn-primary btn">{{ 'submit'|trans }}</button>
+<div class="o-text">
+	<h1>{{ 'contactus' | trans }}</h1>
+	<div class="row">
+		<div class="col-12 col-md-6">
+			<p>{{ 'feedbackdisclaimer' | trans | purify | nl2br }}</p>
 		</div>
-		{{ form_end(form) }}
-    </div>
+		<div class="col-12 col-md-6">
+			{{ form_start(form) }}
+			{{ form_rest(form) }}
+			<div class="o-form-group">
+				<button type="submit" id="submit" name="submit" class="btn-primary btn">{{ 'submit'|trans }}</button>
+			</div>
+			{{ form_end(form) }}
+	    </div>
+	</div>
 </div>
 
 {% endblock content %}

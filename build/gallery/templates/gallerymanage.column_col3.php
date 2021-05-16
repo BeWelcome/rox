@@ -21,8 +21,8 @@ $picture_url = 'members/avatar/'.$member->Username.'/100';
                 else return false;
             }
         </script>
-        <div class="form-check mb-2">
-            <input type="checkbox" name="selectAllRadio" id="selectAllRadio" class="form-check-input checker" onClick="toggle(this);">&nbsp;&nbsp;
+        <div class="o-checkbox mb-2">
+            <input type="checkbox" name="selectAllRadio" id="selectAllRadio" class="o-checkbox__input checker" onClick="toggle(this);">&nbsp;&nbsp;
             <label class=form-label" for="selectAllRadio"><?= $words->get('SelectAll')?></label>
         </div>
         <?php
@@ -35,7 +35,7 @@ $picture_url = 'members/avatar/'.$member->Username.'/100';
                         <input type="radio" id="oldGallery" name="new" value="0" aria-label="<?= $words->get('GalleryAddToPhotoset') ?>">
                     </div>
                 </div>
-                <select name="gallery" size="1" onchange="$('oldGallery').checked = true;" class="form-control">
+                <select name="gallery" size="1" onchange="$('oldGallery').checked = true;" class="o-input">
                     <option value="">- <?= $words->get('GalleryAddToPhotoset') ?> -</option>
                     <?php
                     foreach ($galleries as $d) {
@@ -54,7 +54,7 @@ $picture_url = 'members/avatar/'.$member->Username.'/100';
                     <input type="radio" id="newGallery" name="new" value="1" aria-label="Create a new album">
                 </div>
             </div>
-            <input class="form-control" name="g-title" id="g-title" maxlength="30" aria-label="Enter the name of the new album" placeholder="<?= $words->get('GalleryCreateNewPhotoset') ?>" onclick="$('newGallery').checked = true;  $('#deleteOnly').val(0);">
+            <input class="o-input" name="g-title" id="g-title" maxlength="30" aria-label="Enter the name of the new album" placeholder="<?= $words->get('GalleryCreateNewPhotoset') ?>" onclick="$('newGallery').checked = true;  $('#deleteOnly').val(0);">
         </div>
         <input name="deleteOnly" id="deleteOnly" type="hidden" value="0">
         <input name="g-user" type="hidden" value="<?= $member->id ?>">

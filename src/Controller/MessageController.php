@@ -46,11 +46,11 @@ class MessageController extends BaseMessageController
             throw $this->createAccessDeniedException('Not your message/hosting request');
         }
 
-        if ($this->isHostingRequest($message)) {
+        if (!$this->isMessage($message)) {
             return $this->redirectToHostingRequestReply($message);
         }
 
-        $thread = $this->messageModel->getThreadForMessage($message);
+        $thread = $this->requestModel->getThreadForMessage($message);
         $current = $thread[0];
 
         if ($message->getId() !== $current->getId()) {
@@ -84,7 +84,7 @@ class MessageController extends BaseMessageController
         /** @var Member $member */
         $member = $this->getUser();
 
-        $this->messageModel->markDeleted($member, [$message->getId()]);
+        $this->requestModel->markDeleted($member, [$message->getId()]);
         $this->addTranslatedFlash('notice', 'flash.message.deleted');
 
         $redirectRoute = 'message_show';
@@ -144,7 +144,7 @@ class MessageController extends BaseMessageController
         }
 
         if (
-            $this->messageModel->hasMessageLimitExceeded(
+            $this->requestModel->hasMessageLimitExceeded(
                 $sender,
                 $this->getParameter('new_members_messages_per_hour'),
                 $this->getParameter('new_members_messages_per_day')
@@ -163,7 +163,7 @@ class MessageController extends BaseMessageController
             $subject = $messageForm->get('subject')->get('subject')->getData();
             $body = $messageForm->get('message')->getData();
 
-            $this->messageModel->addMessage($sender, $receiver, null, $subject, $body);
+            $this->requestModel->addMessage($sender, $receiver, null, $subject, $body);
             $this->addTranslatedFlash('success', 'flash.message.sent');
 
             return $this->redirectToRoute('members_profile', ['username' => $receiver->getUsername()]);
@@ -176,7 +176,7 @@ class MessageController extends BaseMessageController
     }
 
     /**
-     * @Route("/messages/{folder}", name="messages",
+     * @Route("/messages_b/{folder}", name="messages_b",
      *     defaults={"folder": "inbox"})
      *
      * @throws InvalidArgumentException
@@ -187,7 +187,7 @@ class MessageController extends BaseMessageController
         $member = $this->getUser();
         list($page, $limit, $sort, $direction) = $this->getOptionsFromRequest($request);
 
-        $messages = $this->messageModel->getFilteredMessages(
+        $messages = $this->requestModel->getFilteredMessages(
             $member,
             $folder,
             $sort,
@@ -204,7 +204,7 @@ class MessageController extends BaseMessageController
      */
     public function markAsSpamAction(Message $message): Response
     {
-        $this->messageModel->markAsSpam([$message->getId()]);
+        $this->requestModel->markAsSpam([$message->getId()]);
 
         $this->addTranslatedFlash('notice', 'flash.marked.spam');
 
@@ -216,7 +216,7 @@ class MessageController extends BaseMessageController
      */
     public function unmarkAsSpamAction(Message $message): Response
     {
-        $this->messageModel->unmarkAsSpam([$message->getId()]);
+        $this->requestModel->unmarkAsSpam([$message->getId()]);
 
         $this->addTranslatedFlash('notice', 'flash.marked.nospam');
 
@@ -238,7 +238,7 @@ class MessageController extends BaseMessageController
 
         /** @var Member $member */
         $member = $this->getUser();
-        $messages = $this->messageModel->getMessagesBetween($member, $other, $sort, $direction, $page, $limit);
+        $messages = $this->requestModel->getMessagesBetween($member, $other, $sort, $direction, $page, $limit);
 
         return $this->render('message/between.html.twig', [
             'items' => $messages,
@@ -285,7 +285,7 @@ class MessageController extends BaseMessageController
             }
 
             $messageText = $messageForm->get('message')->getData();
-            $message = $this->messageModel->addMessage($sender, $receiver, $message, $replySubject, $messageText);
+            $message = $this->requestModel->addMessage($sender, $receiver, $message, $replySubject, $messageText);
             $this->addTranslatedFlash('success', 'flash.reply.sent');
 
             return $this->redirectToRoute('message_show', ['id' => $message->getId()]);

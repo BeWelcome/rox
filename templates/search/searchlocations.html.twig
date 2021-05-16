@@ -4,9 +4,16 @@
 {% block javascripts %}
     {{ encore_entry_script_tags('jquery_ui') }}
     {{ encore_entry_script_tags('leaflet') }}
-    {{ encore_entry_script_tags('search/searchpicker') }}
     {{ encore_entry_script_tags('search/loadcontent') }}
     {{ encore_entry_script_tags('search/locations') }}
+    <script>
+        let url = $("#search-url").val();
+        if (url === undefined) {
+            url = "/search/locations/all";
+        }
+        let searchPicker = new SearchPicker();
+        searchPicker.initializeSearchPickerByClass('search-picker');
+    </script>
 {% endblock javascripts %}
 
 {% block stylesheets %}

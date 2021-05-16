@@ -3,7 +3,7 @@
             <label class="h3" for="GroupsSearchInput"><?= $words->get('GroupsSearchHeading'); ?></label>
             <form action="groups/search" method="get">
                 <div class="input-group">
-                    <input type="text" class="form-control" name="GroupsSearchInput" value="<?= $this->search_terms ?>" id="GroupsSearchInput"/>
+                    <input type="text" class="o-input" name="GroupsSearchInput" value="<?= $this->search_terms ?>" id="GroupsSearchInput"/>
                     <span class="input-group-append">
                             <button class="btn btn-primary"
                                     type="submit"><?= $words->getSilent('GroupsSearchSubmit'); ?></button>

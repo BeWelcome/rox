@@ -16,36 +16,16 @@
                     </div>
                 </div>
             </div>
-            <div class="form-row mb-1">
-                <div class="col-4 col-md-3">
-                    <?= $words->get('ProfilePicture') ?><br>
-                    <img src="members/avatar/<?= $member->Username ?>/100"
-                         title="Current picture" alt="Current picture" height="100" width="100">
-                </div>
-
-                <div class="col-8 col-md-9 mt-3 form-group">
-                    <span><?= $words->get('uploadselectpicture'); ?></span>
-                    <div class="custom-file">
-                        <input type="file" class="custom-file-input" id="profile_picture" name="profile_picture">
-                        <label class="custom-file-label" for="profile_picture"
-                               data-browse="<?php echo $words->get('BrowseFile'); ?>"><?php echo $words->get('ChooseFile'); ?></label>
-                    </div>
-                    <span
-                        class="small text-muted"><?= $words->get('Profile_UploadWarning', sprintf("%.1f MB", PFunctions::returnBytes(ini_get('upload_max_filesize')) / 1048576)); ?></span>
-                    <input type="submit" class="btn btn-primary float-right my-2" id="submit" name="submit"
-                           value="<?= $words->getSilent('upload.profile.picture') ?>"/> <?php echo $words->flushBuffer(); ?>
-                </div>
-            </div>
             <?php if ($this->adminedit || !$CanTranslate) { // member translator is not allowed to update crypted data ?>
                 <div class="form-row mb-1">
                     <label for="FirstName" class="col-md-3 col-form-label"><?= $words->get('FirstName') ?></label>
                     <div class="col-8 col-md-7">
-                        <input class="form-control<?php if (isset($errorFirstName)) { ?> error-input-text<?php } ?>"
+                        <input class="o-input<?php if (isset($errorFirstName)) { ?> error-input-text<?php } ?>"
                                type="text"
                                name="FirstName"
                                value="<?php echo htmlentities($vars['FirstName'], ENT_COMPAT, 'UTF-8'); ?>"/>
                     </div>
-                    <div class="col-4 col-md-2 form-check">
+                    <div class="col-4 col-md-2 o-checkbox">
                         <input type="checkbox" value="Yes" name="IsHidden_FirstName"
                             <?php if ($vars['IsHidden_FirstName'] === 'Yes')
                                 echo 'checked="checked"';
@@ -59,10 +39,10 @@
                 <div class="form-row mb-1">
                     <label for="SecondName" class="col-md-3 col-form-label"><?= $words->get('SecondName') ?></label>
                     <div class="col-8 col-md-7">
-                        <input type="text" name="SecondName" class="form-control"
+                        <input type="text" name="SecondName" class="o-input"
                                value="<?php echo htmlentities($vars['SecondName'], ENT_COMPAT, 'UTF-8'); ?>"/>
                     </div>
-                    <div class="col-4 col-md-2 form-check">
+                    <div class="col-4 col-md-2 o-checkbox">
                         <input type="checkbox" value="Yes" name="IsHidden_SecondName"
                             <?php if ($vars['IsHidden_SecondName'] === 'Yes')
                                 echo 'checked="checked"';
@@ -74,12 +54,12 @@
                 <div class="form-row mb-1">
                     <label for="LastName" class="col-md-3 col-form-label"><?= $words->get('LastName') ?></label>
                     <div class="col-8 col-md-7">
-                        <input class="form-control <?php if (isset($errorLastName)) { ?>error-input-text<?php } ?>"
+                        <input class="o-input <?php if (isset($errorLastName)) { ?>error-input-text<?php } ?>"
                                type="text"
                                name="LastName"
                                value="<?php echo htmlentities($vars['LastName'], ENT_COMPAT, 'UTF-8'); ?>"/>
                     </div>
-                    <div class="col-4 col-md-2 form-check">
+                    <div class="col-4 col-md-2 o-checkbox">
                         <input type="checkbox" value="Yes" name="IsHidden_LastName"
                             <?php if ($vars['IsHidden_LastName'] === 'Yes')
                                 echo 'checked="checked"';
@@ -94,7 +74,7 @@
                     <label for="SignupEmail"
                            class="col-12 col-md-3 col-form-label"><?= $words->get('SignupEmail') ?></label>
                     <div class="col-8 col-md-7">
-                        <input class="form-control<?php if (isset($errorEmail)) { ?> error-input-text<?php } ?>"
+                        <input class="o-input<?php if (isset($errorEmail)) { ?> error-input-text<?php } ?>"
                                type="text"
                                name="Email" value="<?= str_replace('%40', '@', $vars['Email']) ?>"/>
                     </div>
@@ -113,7 +93,7 @@
                     <input type="text"
                            id="birth-date"
                            name="birth-date"
-                           class="form-control datetimepicker-input"
+                               class="o-input datetimepicker-input"
                            data-toggle="datetimepicker"
                            data-target="#birth-date" value="<?= $vars['BirthDate'] ?>">
                 </div>
@@ -124,10 +104,10 @@
                     <label for="HideBirthDate" class="col-form-label"><?= $words->get('ShowAge'); ?></label>
                 </div>
                 <div class="col-12 col-md-9">
-                    <div class="form-check">
-                        <input id="HideBirthDate" name="HideBirthDate" value="Yes" class="form-check-input"
+                    <div class="o-checkbox">
+                        <input id="HideBirthDate" name="HideBirthDate" value="Yes" class="o-checkbox__input"
                                type="checkbox" <?= ($vars['HideBirthDate'] == 'Yes') ? 'checked="checked"' : '' ?> />
-                        <label for="HideBirthDate" class="form-check-label"><?= $words->get('HiddenAgeInfo'); ?></label>
+                        <label for="HideBirthDate" class="o-checkbox__label"><?= $words->get('HiddenAgeInfo'); ?></label>
                     </div>
                 </div>
             </div>
@@ -166,10 +146,10 @@
             </div>
             <div class="form-row">
                 <div class="col-12 col-md-9 offset-md-3">
-                    <div class="form-check">
-                        <input name="HideGender" value="Yes" type="checkbox" class="form-check-input"
+                    <div class="o-checkbox">
+                        <input name="HideGender" value="Yes" type="checkbox" class="o-checkbox__input"
                                id='HideGender' <?= ((isset($vars['HideGender']) && $vars['HideGender'] == "Yes") ? ' checked="checked"' : ''); ?>>
-                        <label for="HideGender" class="form-check-label"><?= $words->get("Hidden"); ?></label>
+                        <label for="HideGender" class="o-checkbox__label"><?= $words->get("Hidden"); ?></label>
                     </div>
                 </div>
             </div>

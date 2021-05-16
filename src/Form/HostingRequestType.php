@@ -3,10 +3,12 @@
 namespace App\Form;
 
 use App\Entity\HostingRequest;
+use App\Form\DataTransformer\DateTimeTransformer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -17,50 +19,33 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 
 class HostingRequestType extends AbstractType
 {
+    private DateTimeTransformer $transformer;
+
+    public function __construct(DateTimeTransformer $transformer)
+    {
+        $this->transformer = $transformer;
+    }
+
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $formBuilder, array $options)
     {
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+        $formBuilder
+            ->add('arrival', HiddenType::class)
+            ->add('departure', HiddenType::class);
+        $formBuilder
+            ->get('arrival')
+            ->addModelTransformer($this->transformer);
+        $formBuilder
+            ->get('departure')
+            ->addModelTransformer($this->transformer)
+        ;
+
+        $formBuilder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             $flexibleOptions = [
                 'label' => 'label.flexible',
                 'required' => false,
-            ];
-            $arrivalOptions = [
-                'label' => 'request.arrival',
-                'widget' => 'single_text',
-                'html5' => false,
-                'format' => 'yyyy-MM-dd',
-                'attr' => [
-                    'class' => 'datepicker',
-                    'placeholder' => 'placeholder.arrival',
-                ],
-                'invalid_message' => 'request.error.arrival.no_date',
-                'constraints' => [
-                    new NotBlank([
-                        'message' => 'request.error.arrival.empty',
-                    ]),
-                    new LessThanOrEqual([
-                        'propertyPath' => '[departure][data]',
-                        'message' => 'request.error.arrival.after.departure',
-                    ]),
-                ],
-            ];
-            $departureOptions = [
-                'label' => 'request.departure',
-                'widget' => 'single_text',
-                'html5' => false,
-                'format' => 'yyyy-MM-dd',
-                'attr' => [
-                    'class' => 'datepicker',
-                    'placeholder' => 'placeholder.departure',
-                ],
-                'constraints' => [
-                    new NotBlank([
-                        'message' => 'request.error.departure.empty',
-                    ]),
-                ],
             ];
             $numberOfTravellersOptions = [
                 'label' => 'request.number_of_travellers',
@@ -78,21 +63,33 @@ class HostingRequestType extends AbstractType
                     new GreaterThanOrEqual(1),
                 ],
             ];
+            $durationOptions = [
+                'required' => false,
+                'mapped' => false,
+                'invalid_message' => 'request.error.duration',
+                'constraints' => [
+                    new NotBlank(),
+                ],
+            ];
+
             $form = $event->getForm();
             $options = $form->getConfig()->getOptions();
             $data = $event->getData();
             if (null !== $data) {
                 if ($options['reply_host'] && !$data->getFlexible()) {
-                    $arrivalOptions['disabled'] = true;
-                    $departureOptions['disabled'] = true;
+                    $durationOptions['disabled'] = true;
                     $flexibleOptions['disabled'] = true;
                     $numberOfTravellersOptions['disabled'] = true;
                 }
             }
-            $form->add('arrival', DateType::class, $arrivalOptions);
-            $form->add('departure', DateType::class, $departureOptions);
+            $form->add('duration', TextType::class, $durationOptions);
+
             $form->add('flexible', CheckboxType::class, $flexibleOptions);
-            $form->add('numberOfTravellers', IntegerType::class, $numberOfTravellersOptions);
+            if (true === $options['invitation']) {
+                $form->add('numberOfTravellers', HiddenType::class);
+            } else {
+                $form->add('numberOfTravellers', IntegerType::class, $numberOfTravellersOptions);
+            }
         });
     }
 
@@ -107,6 +104,7 @@ class HostingRequestType extends AbstractType
                 'reply_guest' => false,
                 'reply_host' => false,
                 'new_request' => false,
+                'invitation' => false,
             ])
         ;
     }

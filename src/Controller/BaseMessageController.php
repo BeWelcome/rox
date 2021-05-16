@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\HostingRequest;
 use App\Entity\Member;
 use App\Entity\Message;
 use App\Form\CustomDataClass\MessageIndexRequest;
@@ -23,7 +24,6 @@ class BaseMessageController extends AbstractController
     use TranslatedFlashTrait;
     use TranslatorTrait;
 
-    /** @var MessageModel */
     protected $messageModel;
 
     public function __construct(MessageModel $messageModel)
@@ -31,7 +31,7 @@ class BaseMessageController extends AbstractController
         $this->messageModel = $messageModel;
     }
 
-    protected function getSubMenuItems()
+    protected function getSubMenuItems(): array
     {
         return [
             'both_inbox' => [
@@ -75,7 +75,7 @@ class BaseMessageController extends AbstractController
         Request $request,
         string $folder,
         string $type,
-        $messages
+        iterable $messages
     ): Response {
         /** @var Member $member */
         $member = $this->getUser();
@@ -97,31 +97,31 @@ class BaseMessageController extends AbstractController
 
             $clickedButton = $form->getClickedButton()->getName();
             if ('purge' === $clickedButton) {
-                $this->messageModel->markPurged($member, $messageIds);
+                $this->requestModel->markPurged($member, $messageIds);
                 $this->addTranslatedFlash('notice', 'flash.purged');
 
                 return $this->redirect($this->getRedirectUrl($request));
             }
             if ('delete' === $clickedButton) {
                 if ('deleted' === $folder) {
-                    $this->messageModel->unmarkDeleted($member, $messageIds);
+                    $this->requestModel->unmarkDeleted($member, $messageIds);
                     $this->addTranslatedFlash('notice', 'flash.undeleted');
 
                     return $this->redirect($this->getRedirectUrl($request));
                 }
-                $this->messageModel->markDeleted($member, $messageIds);
+                $this->requestModel->markDeleted($member, $messageIds);
                 $this->addTranslatedFlash('notice', 'flash.deleted');
 
                 return $this->redirect($this->getRedirectUrl($request));
             }
             if ('spam' === $clickedButton) {
                 if ('spam' === $folder) {
-                    $this->messageModel->unmarkAsSpam($messageIds);
+                    $this->requestModel->unmarkAsSpam($messageIds);
                     $this->addTranslatedFlash('notice', 'flash.marked.nospam');
 
                     return $this->redirect($this->getRedirectUrl($request));
                 }
-                $this->messageModel->markAsSpam($messageIds);
+                $this->requestModel->markAsSpam($messageIds);
                 $this->addTranslatedFlash('notice', 'flash.marked.spam');
 
                 return $this->redirect($this->getRedirectUrl($request));
@@ -158,9 +158,9 @@ class BaseMessageController extends AbstractController
         // Check if there is already a newer message than the one used for the request
         // as there might be a clash of replies
         /** @var MessageRepository */
-        $hostingRequestRepository = $this->getDoctrine()->getRepository(Message::class);
+        $messageRepository = $this->getDoctrine()->getRepository(Message::class);
         /** @var Message[] $messages */
-        $messages = $hostingRequestRepository->findBy(['subject' => $probableParent->getSubject()]);
+        $messages = $messageRepository->findBy(['subject' => $probableParent->getSubject()]);
 
         return $messages[\count($messages) - 1];
     }
@@ -191,7 +191,7 @@ class BaseMessageController extends AbstractController
             return $this->redirectToRoute($route, ['id' => $current->getId()]);
         }
 
-        // Now we're at the latest message in the thread. Check that no all items are deleted/purged depending on the
+        // Now we're at the latest message in the thread. Check that not all items are deleted/purged depending on the
         // $showDeleted setting
         $nothingVisible = true;
         foreach ($thread as $threadMessage) {
@@ -200,7 +200,7 @@ class BaseMessageController extends AbstractController
             ;
         }
         if ($nothingVisible) {
-            return $this->redirectToRoute('messages');
+            return $this->redirectToRoute('conversations');
         }
 
         $this->markThreadAsRead($member, $thread);
@@ -235,7 +235,7 @@ class BaseMessageController extends AbstractController
             $nothingVisible = $nothingVisible && $threadMessage->isPurgedByMember($member);
         }
         if ($nothingVisible) {
-            return $this->redirectToRoute('both', ['folder' => 'deleted']);
+            return $this->redirectToRoute('conversations', ['folder' => 'deleted']);
         }
 
         $this->markThreadAsRead($member, $thread);
@@ -247,14 +247,45 @@ class BaseMessageController extends AbstractController
         ]);
     }
 
+    protected function isMessage(Message $message): bool
+    {
+        return null === $message->getRequest();
+    }
+
     protected function isHostingRequest(Message $message): bool
     {
         return null !== $message->getRequest();
     }
 
-    protected function isMessage(Message $message): bool
+    protected function isInvitation(Message $message)
     {
-        return null === $message->getRequest();
+        return null !== $message->getRequest()->getInviteForLeg();
+    }
+
+    protected function getSubjectForReply(Message $newRequest)
+    {
+        $subject = $newRequest->getSubject()->getSubject();
+        if ('Re:' !== substr($subject, 0, 3)) {
+            $subject = 'Re: ' . $subject;
+        }
+
+        if (HostingRequest::REQUEST_CANCELLED === $newRequest->getRequest()->getStatus()) {
+            $subject = $this->adjustSubject('(Cancelled)', $subject);
+        }
+
+        if (HostingRequest::REQUEST_DECLINED === $newRequest->getRequest()->getStatus()) {
+            $subject = $this->adjustSubject('(Declined)', $subject);
+        }
+
+        if (HostingRequest::REQUEST_ACCEPTED === $newRequest->getRequest()->getStatus()) {
+            $subject = $this->adjustSubject('(Accepted)', $subject);
+        }
+
+        if (HostingRequest::REQUEST_TENTATIVELY_ACCEPTED === $newRequest->getRequest()->getStatus()) {
+            $subject = $this->adjustSubject('(Tentatively accepted)', $subject);
+        }
+
+        return $subject;
     }
 
     private function getRedirectUrl(Request $request)
@@ -275,5 +306,14 @@ class BaseMessageController extends AbstractController
             }
         }
         $em->flush();
+    }
+
+    private function adjustSubject(string $suffix, string $subject): string
+    {
+        if (false === strpos($suffix, $subject)) {
+            $subject .= $suffix;
+        }
+
+        return $subject;
     }
 }

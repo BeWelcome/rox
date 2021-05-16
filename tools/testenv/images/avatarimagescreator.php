@@ -10,14 +10,14 @@ class AvatarImagesCreator extends ImagesCreator
      **/
     protected function getImageRecords($limit, $startId = null)
     {
-        $sSql = '
+        $sSql = "
 SELECT id picid,id name
 FROM members
-WHERE id IN (
+WHERE status in ('Active', 'OutOfRemind') AND id IN (
     SELECT DISTINCT idmember
-    FROM membersphotos ' .
-    $this->getStartingPointText($startId) .')
-ORDER BY picid ' . $this->getLimitText($limit);
+    FROM membersphotos " .
+    $this->getStartingPointText($startId) .")
+ORDER BY picid " . $this->getLimitText($limit);
         return $this->db->selectQuery($sSql);
     }
 
@@ -30,7 +30,7 @@ ORDER BY picid ' . $this->getLimitText($limit);
     protected function getDummyImage($pic)
     {
         $dummy = new AvatarDummyImage($pic);
-        $this->imgCount += $dummy->filesMake();
+        $this->imgCount += 1;
     }
 
     /**
@@ -60,6 +60,6 @@ ORDER BY picid ' . $this->getLimitText($limit);
         return 'avatar';
     }
 
-    
+
 
 }

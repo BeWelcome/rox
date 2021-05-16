@@ -18,7 +18,7 @@
     {% else %}
         {{ form_start(form) }}
             {{ form_row(form.sortOrder) }}
-            <div class="card mb-1">
+            <div class="card o-card mb-1">
                 <div class="card-body">
                     <h5 class="card-title">FAQ</h5>
                     <p class="card-text">This shows the list of all FAQ in the above category. You can drag the cards to change the sort order.</p>
@@ -30,7 +30,7 @@
             </div>
             <div id="faqs">
             {% for faq in faqs %}
-                <div id="faq_{{ faq.id }}" class="card mb-1 {% if faq.Active == "Not Active" %}bg-secondary{% endif %}">
+                <div id="faq_{{ faq.id }}" class="card o-card mb-1 {% if faq.Active == "Not Active" %}bg-secondary{% endif %}">
                     <div class="card-body">
                         <small {% if faq.Active == "Active" %}class="text-muted card-title"{% endif %}>{{ faq.QandA }}</small>
                         <div class="card-text"><em>Q: </em>{{ ('faqq_' ~ faq.QandA)|lower|trans|truncate(50)|purify }}</div>

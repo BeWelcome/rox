@@ -1,0 +1,8 @@
+<div id="conversationCount" class="nav-link" data-count="{{ conversationCount }}">
+    <a href="{{ path('conversations') }}" aria-label="{{ 'conversations' | trans }}">
+        <i class="fa fa-lg fa-envelope pr-1"></i>
+    </a>
+    <a href="{{ path('conversations', {'unread_only': 1}) }}" aria-label="{{ 'conversations.unread' | trans }}">
+        <span class="badge badge-warning d-md-none d-xl-inline-block">{{ conversationCount }}</span>
+    </a>
+</div>

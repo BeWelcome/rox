@@ -1,0 +1,444 @@
+/* ==========================================================================
+   #TEXT
+   ========================================================================== */
+
+/**
+/* Text editor-friendly pieces of text.
+/*/
+
+.o-text--wrapper {
+	width: 100%;
+  max-width: 650px;
+  margin: 0 24px;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  line-height: 24px;
+  font-size: 14px;
+}
+
+@media (max-width: 600px) {
+  .o-text--wrapper {
+    width: initial;
+    margin: 0 16px;
+    left: initial;
+    transform: initial;
+  }
+}
+
+
+
+
+.o-text li,
+.o-text h1,
+.o-text h2,
+.o-text h3,
+.o-text h4,
+.o-text h5,
+.o-text p {
+  font-size: 16px;
+  line-height: 24px;
+}
+
+.o-text h1 {
+  font-size: 32px;
+  line-height: 40px;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+.o-text h2 {
+  font-size: 28px;
+  line-height: 40px;
+  font-weight: 500;
+  margin-bottom: 16px;
+}
+
+@media (max-width: 900px) {
+  .o-text h2 {
+    font-size: 20px;
+    line-height: 24px;
+  }
+}
+
+.o-text h3 {
+  font-size: 24px;
+  line-height: 32px;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+@media (max-width: 900px) {
+  .o-text h3 {
+    font-size: 18px;
+    line-height: 24px;
+  }
+}
+
+.o-text h4,
+.o-text h5,
+.o-text h6 {
+  font-style: italic;
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 24px;
+  margin-bottom: 16px;
+}
+
+@media (max-width: 900px) {
+  .o-text h4,
+  .o-text h5,
+  .o-text h6 {
+    font-size: 18px;
+  }
+}
+
+
+.o-text p {
+  margin-bottom: 16px;
+}
+
+.o-text hr {
+  border: none;
+  border-bottom: 1px solid var(--gray-20);
+  margin-bottom: 24px;
+}
+
+
+
+
+
+
+
+
+
+
+/* List Styles
+   ========================================================================== */
+
+
+.o-text ul,
+.o-text ol {
+  padding: 0;
+  margin: 0;
+  counter-reset: item;
+}
+
+.o-text ul {
+  list-style-type: disc;
+}
+
+.o-text ul ul {
+  list-style-type: '- ';
+}
+
+.o-text ol {
+  list-style-type: decimal;
+  margin: 16px 0;
+}
+
+.o-text li {
+  margin-bottom: 8px;
+  list-style-position: inside;
+  counter-increment: item;
+}
+
+.o-text ol li,
+.o-text ul li {
+  margin-bottom: 8px;
+}
+
+.o-text ol > li {
+  margin-bottom: 24px;
+}
+
+.o-text li::marker {
+  color: var(--gray-60);
+  font-size: 16px;
+}
+
+.o-text ol li::marker {
+  font-weight: 700;
+  content: counters(item, ".")". ";
+}
+
+.o-text ul li::marker {
+  font-weight: 700;
+  content: initial;
+}
+
+
+
+
+
+
+
+
+
+
+/* Table Styles
+   ========================================================================== */
+
+
+.o-text table {
+  width: 100%;
+  max-width: 1200px;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  line-height: 24px;
+  font-size: 14px;
+  border: 1px solid #d6d6d6;
+  border-collapse: separate;
+  border-spacing: 0;
+  overflow: hidden;
+  border-radius: 4px;
+  margin: 16px 0;
+}
+
+.o-text table ul {
+  margin: 16px 0;
+}
+
+.o-text th {
+  text-align: center;
+  height: 40px;
+  background-color: #d6d6d6;
+  border-right: 1px solid var(--greyjoy-dark);
+  border-bottom: 1px solid var(--greyjoy-dark);
+}
+
+.o-text th:first-child {
+  border-bottom: initial;
+}
+
+.o-text th:last-child {
+  border-right: initial;
+}
+
+.o-text tr:last-child th {
+  border-bottom: initial;
+}
+
+.o-text th.u-text-center {
+  text-align: center;
+}
+
+.o-text th,
+.o-text td {
+  padding: 0 16px;
+}
+
+.o-text td {
+  height: 40px;
+  border-bottom: 1px solid #d6d6d6;
+  text-align: center;
+  border-right: 1px solid var(--greyjoy);
+}
+
+.o-text tr:last-child td {
+  border-bottom: initial;
+}
+
+.o-text td:last-child {
+  border-right: initial;
+}
+
+.o-text table svg,
+.o-text table img {
+  height: 24px;
+}
+
+
+
+
+
+
+
+
+
+
+/* Big numbers in lists
+   ========================================================================== */
+
+.o-text--big-numbers ol li::marker {
+  font-size: 28px;
+  line-height: 40px;
+  font-weight: 700;
+  content: counters(item, ".")". ";
+}
+
+.o-text--big-numbers ol li li::marker  {
+  font-size: 24px;
+  line-height: 32px;
+  font-weight: 600;
+}
+
+.o-text--big-numbers ol li li li::marker  {
+  font-size: 20px;
+  line-height: 28px;
+  font-weight: 600;
+}
+
+.o-text--big-numbers ul li::marker {
+  color: var(--bewelcome);
+  content: initial;
+  font-size: 14px !important;
+}
+
+.o-text--big-numbers ol h1,
+.o-text--big-numbers ol h2,
+.o-text--big-numbers ol h3,
+.o-text--big-numbers ol h4 {
+  display: inline;
+}
+
+.o-text--big-numbers h2 + ol,
+.o-text--big-numbers h2 + ul,
+.o-text--big-numbers h3 + ol,
+.o-text--big-numbers h3 + ul,
+.o-text--big-numbers h4 + ol,
+.o-text--big-numbers h4 + ul {
+  margin-top: 16px;
+}
+
+.o-text--big-numbers ul + h2,
+.o-text--big-numbers ul + h2,
+.o-text--big-numbers ul + h3,
+.o-text--big-numbers ul + h3,
+.o-text--big-numbers ul + h4,
+.o-text--big-numbers ul + h4 {
+  display: block;
+}
+
+.o-text--big-numbers ol h2 + p,
+.o-text--big-numbers ol h3 + p,
+.o-text--big-numbers ol h4 + p {
+  margin-top: 16px;
+}
+
+
+
+
+
+
+
+
+
+
+/* Brand color numbers in lists
+   ========================================================================== */
+
+
+.o-text--bewelcome-numbers ol li li::marker,
+.o-text--bewelcome-numbers ol li li li::marker {
+  color: var(--bewelcome);
+  font-size: 14px;
+}
+
+.o-text--bewelcome-numbers > ol > li {
+  border-bottom: 1px dotted var(--greyjoy);
+}
+
+
+
+
+
+
+
+
+
+
+/* Small text version for TOS
+   ========================================================================== */
+
+
+
+.o-text--small-text li,
+.o-text--small-text h1,
+.o-text--small-text h2,
+.o-text--small-text h3,
+.o-text--small-text h4,
+.o-text--small-text h5,
+.o-text--small-text p {
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--gray-60);
+}
+
+.o-text--small-text h1 {
+  font-size: 30px;
+  line-height: 40px;
+  font-weight: 700;
+  margin-bottom: 32px;
+}
+
+.o-text--small-text h2 {
+  font-size: 26px;
+  line-height: 40px;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+@media (max-width: 900px) {
+  .o-text--small-text h2 {
+    font-size: 18px;
+    line-height: 24px;
+  }
+}
+
+.o-text--small-text h3 {
+  font-size: 22px;
+  line-height: 32px;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+@media (max-width: 900px) {
+  .o-text--small-text h3 {
+    font-size: 16px;
+    line-height: 24px;
+  }
+}
+
+.o-text--small-text h4,
+.o-text--small-text h5,
+.o-text--small-text h6 {
+  font-style: italic;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 24px;
+  margin-bottom: 16px;
+}
+
+@media (max-width: 900px) {
+  .o-text--small-text h4,
+  .o-text--small-text h5,
+  .o-text--small-text h6 {
+    font-size: 16px;
+  }
+}
+
+.o-text--small-text li::marker {
+  color: var(--gray-60);
+  font-size: 12px;
+}
+
+.o-text--small-text ol > li {
+  margin-bottom: 16px;
+}
+
+
+
+
+
+.o-text--big-list li {
+  line-height: 24px;
+  font-size: 14px;
+}
+
+.o-text--big-list li::marker {
+  line-height: 24px;
+  font-size: 14px;
+  color: var(--bewelcome);
+}

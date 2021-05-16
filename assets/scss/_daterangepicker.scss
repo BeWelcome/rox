@@ -1,0 +1,33 @@
+:root {
+  --litepicker-container-months-color-bg: #fff;
+  --litepicker-container-months-box-shadow-color: #ddd;
+  --litepicker-footer-color-bg: #fafafa;
+  --litepicker-footer-box-shadow-color: #ddd;
+  --litepicker-tooltip-color-bg: #fff;
+  --litepicker-month-header-color: #333;
+  --litepicker-button-prev-month-color: #9e9e9e;
+  --litepicker-button-next-month-color: #9e9e9e;
+  --litepicker-button-prev-month-color-hover: #2196f3;
+  --litepicker-button-next-month-color-hover: #2196f3;
+  --litepicker-month-width: calc(var(--litepicker-day-width) * 7); // 7 days
+  --litepicker-month-weekday-color: #9e9e9e;
+  --litepicker-month-week-number-color: #9e9e9e;
+  --litepicker-day-width: 38px;
+  --litepicker-day-color: #333;
+  --litepicker-day-color-hover: #2196f3;
+  --litepicker-is-today-color: #f44336;
+  --litepicker-is-in-range-color: #ffc594;
+  --litepicker-is-locked-color: #9e9e9e;
+  --litepicker-is-start-color: #fff;
+  --litepicker-is-start-color-bg: #f37000;
+  --litepicker-is-end-color: #fff;
+  --litepicker-is-end-color-bg: #f37000;
+  --litepicker-button-cancel-color: #fff;
+  --litepicker-button-cancel-color-bg: #9e9e9e;
+  --litepicker-button-apply-color: #fff;
+  --litepicker-button-apply-color-bg: #2196f3;
+  --litepicker-button-reset-color: #909090;
+  --litepicker-button-reset-color-hover: #2196f3;
+  --litepicker-highlighted-day-color: #333;
+  --litepicker-highlighted-day-color-bg: #ffeb3b;
+}

@@ -1,0 +1,72 @@
+{% extends 'trips.html.twig' %}
+{% import 'macros.twig' as macros %}
+
+{% block title %}
+  {{ 'trip.in.area' | trans }}
+{% endblock %}
+
+{% block stylesheets %}
+  {{ encore_entry_link_tags('tailwind') }}
+{% endblock stylesheets %}
+
+{% block javascripts %}
+  <script>
+    $('#trips_radius').change(function() {
+      setTimeout(updateTripsInArea, 500);
+    });
+
+    function updateTripsInArea() {
+      let radius = $('#trips_radius').val();
+
+      window.location.search = "?radius=" + radius;
+    }
+  </script>
+{% endblock javascripts %}
+
+{% block content %}
+<section>
+  <div class="u-inline-flex u-w-full u-items-center u-justify-between u-mb-24 md:u-mb-16 md:u-h-48 u-flex-col md:u-flex-row">
+    <div class="u-flex u-items-center u-mb-24 md:u-mb-0">
+      <i class="fa fa-bullseye u-text-white u-text-24 u-justify-self-center u-self-center u-text-white u-mr-8"></i>
+      <label class="u-text-white u-font-700 u-mr-16 u-mb-0" for="trips_radius">{{ 'trips.radius'|trans }}</label>
+      <select id="trips_radius"
+              name="trips_radius"
+              class="select2">
+        <option {% if radius == 0 %}selected="selected"{% endif %} value="0">{{ 'trips.legs.exact'|trans }}</option>
+        <option {% if radius == 5 %}selected="selected"{% endif %} value="5">{{ 'search.radius.5km'|trans }}</option>
+        <option {% if radius == 10 %}selected="selected"{% endif %} value="10">{{ 'search.radius.10km'|trans }}</option>
+        <option {% if radius == 20 %}selected="selected"{% endif %} value="20">{{ 'search.radius.20km'|trans }}</option>
+        <option {% if radius == 50 %}selected="selected"{% endif %} value="50">{{ 'search.radius.50km'|trans }}</option>
+        <option {% if radius == 100 %}selected="selected"{% endif %} value="100">{{ 'search.radius.100km'|trans }}</option>
+        <option {% if radius == 200 %}selected="selected"{% endif %} value="200">{{ 'search.radius.200km'|trans }}</option>
+        <option {% if radius == 500 %}selected="selected"{% endif %} value="500">{{ 'search.radius.500km'|trans }}</option>
+        <option {% if radius == 1000 %}selected="selected"{% endif %} value="1000">{{ 'search.radius.1000km'|trans }}</option>
+        <option {% if radius == 2000 %}selected="selected"{% endif %} value="2000">{{ 'search.radius.2000km'|trans }}</option>
+        <option {% if radius == 5000 %}selected="selected"{% endif %} value="5000">{{ 'search.radius.5000km'|trans }}</option>
+      </select>
+    </div>
+    {% if legs.haveToPaginate %}
+        {{ pagerfanta( legs, 'rounded_pagination', { routeName: 'trip_in_area', routeParams: {'username': app.user.username} }) }}
+    {% endif %}
+  </div>
+  {% if legs.nbResults != 0 %}
+    {% set myself = app.user %}
+
+      <div class="u-flex u-flex-col u-items-center">
+      {% for leg in legs %}
+        {% include 'trip/leg.html.twig' with {'leg': leg} %}
+      {% endfor %}
+      </div>
+
+    {% if legs.haveToPaginate %}
+      <section class="u-pb-72">
+        <div class="u-inline-flex u-w-full u-items-center u-justify-end u-mt-16 md:u-h-48 u-flex-col md:u-flex-row">
+          {{ pagerfanta( legs, 'rounded_pagination', { routeName: 'trip_in_area', routeParams: {'username': app.user.username} }) }}
+        </div>
+      </section>
+    {% endif %}
+  {% else %}
+    <h1 class="u-text-white u-font-display">{{ 'trip.in.area.no'|trans }}</h1>
+  {% endif %}
+</section>
+{% endblock content %}

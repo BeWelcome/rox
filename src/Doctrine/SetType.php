@@ -41,7 +41,7 @@ abstract class SetType extends Type
 
     public function convertToDatabaseValue($value, AbstractPlatform $platform)
     {
-        if (null !== $value && '' !== $value) {
+        if (null !== $value && !empty($value)) {
             // Split given value
             $values = explode(',', $value);
             $valueCount = \count($values);

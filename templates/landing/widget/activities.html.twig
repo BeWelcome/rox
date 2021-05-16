@@ -1,32 +1,42 @@
-<div id="activitiesdisplay" class="scrollcontent">
+<div id="activitiesdisplay" class="c-dashboard">
     {% for activity in activities %}
-        <div class="d-flex flex-row justify-content-between align-items-center p-2">
+        <div class="c-dashboard__item u-p-0">
 
-            <div class="relative pr-2">
-                <span class="fa-layers fa-fw fa-2x">
+            <div class="u-flex u-flex-col u-items-center u-justify-center u-px-16 u-bg-gray-10 u-h-full">
+                <span class="fa-layers fa-fw fa-2x u-mb-8">
                     <i class="fas fa-calendar"></i>
                     <span class="fa-layers-text fa-inverse" data-fa-transform="shrink-8 down-3" style="font-weight:900">{{ activity.starts | date("d") }}</span>
                 </span>
-                <div class="d-block"><small>{{ activity.starts | date("m") }} {{ activity.starts | date("Y") }}</small></div>
+                <p class="u-text-14 u-font-300"><span class="u-font-400">{{ activity.starts | date("m") }}</span>/{{ activity.starts | date("Y") }}</p>
             </div>
 
-            <div class="text-truncate mr-2 ml-5" style="white-space: normal;">
-                <p class="m-0 p-0 dashentry"><strong><a href="activities/{{ activity.id }}">{{ activity.title }}</a></strong></p>
-                <p class="p-0 m-0"><small>{% if activity.online %}<img src="images/online_meeting_noun_3384309.svg" width="32" height="32">{% else %}<i class="fa fa-2x fa-map-marker-alt"></i>{% endif %} {{ activity.location.name }}, {{ activity.location.country.name }}</small></p>
+            <div class="u-flex u-items-center u-mx-16 u-overflow-hidden">
+                {% if activity.online %}<img class="u-w-32 u-h-32 u-mr-16 u-text-gray-70" src="images/online_meeting_noun_3384309.svg">{% else %}<i class="fa fa-2x fa-map-marker-alt"></i>{% endif %}
+                <div class="u-flex u-flex-col">
+                    <p class="u-ellipsis"><strong><a href="activities/{{ activity.id }}">{{ activity.title }}</a></strong></p>
+                    <p class="u-ellipsis u-text-14 u-font-300"> {{ activity.location.name }}, {{ activity.location.country.name }}</p>
+                </div>
             </div>
 
-            <div class="ml-auto relative">
-                <div class="mr-5rem"><i class="fa fa-2x fa-user"></i></div>
-                <div class="absolute attendees">
-                    <small>
-                        {% if activity.attendeesYes.count != 0 %}{{ activity.attendeesYes.count }}&nbsp;{{ 'activitiesnumbattendeesyes' | trans }}{% endif %} <br>
-                        {% if activity.attendeesMaybe.count != 0 %}{{ activity.attendeesMaybe.count }}&nbsp;{{ 'activitiesnumbattendeesmaybe' | trans }}{% endif %}<br>        
-                    </small>
+            <div class="u-ml-auto u-px-24 u-flex u-flex-col u-justify-center u-items-center u-bg-gray-10 u-h-full">
+                <div class="u-w-40 u-h-40 u-rounded-full u-bg-gray-15 u-flex u-items-center u-justify-center">
+                    <i class="fa fa-user u-text-gray-70 u-text-22"></i>
+                </div>
+                {% if activity.attendeesYes.count != 0 %}
+                    <p class="u-font-300 u-text-14 u-leading-20 u-whitespace-nowrap">
+                    {{ activity.attendeesYes.count }}&nbsp;{{ 'activitiesnumbattendeesyes' | trans }}
+                    </p>
+                {% endif %}
+                {% if activity.attendeesMaybe.count != 0 %}
+                    <p class="u-font-300 u-text-14 u-leading-20 u-whitespace-nowrap">
+                        {{ activity.attendeesMaybe.count }}&nbsp;{{ 'activitiesnumbattendeesmaybe' | trans }}
+                    </p>
+                {% endif %}       
                 </div>
             </div>
         </div>
 
     {% else %}
-        <p>{{ 'dashboard.activities.none' | trans }}</p>
+        <p class="u-my-24 u-font-display u-text-center">{{ 'dashboard.activities.none' | trans }}</p>
     {% endfor %}
 </div>

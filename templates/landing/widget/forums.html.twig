@@ -1,28 +1,26 @@
 {% import 'macros.twig' as macros %}
-<div id="threadsdisplay" class="scrollcontent">
+<div id="threadsdisplay" class="c-dashboard">
 
     {# 5 most recent forum messages #}
     {% for thread in threads %}
-        <div class="d-flex flex-row justify-content-start align-items-center p-2">
-            <div class="pr-2">{{ macros.avatar(thread.firstPost.author.Username, 50, true) }}</div>
-            <div class="dashentry">
-                <div class="text-truncate text">
+        <div class="c-dashboard__item">
+            <div class="o-avatar o-avatar--m o-avatar--noname u-mr-16  u-min-w-0">{{ macros.roundedavatarstack(thread.firstPost.author.Username, 72, true) }}</div>
+            <div class="u-flex u-flex-col u-h-full u-justify-center u-px-8 u-w-min-0 u-overflow-hidden">
+                <p class="u-ellipsis">
                     {% if thread.group %}
                         <a href="{{ url('group_forum_thread', {'thread': thread.id, 'group_id': thread.group.id}) }}">
                     {% else %}
                         <a href="{{ url('forum_thread', {'threadId': thread.id}) }}">
                     {% endif %}
                     {{ thread.title|striptags }}</a>
-                </div>
-                <div>
-                    <small>in
+                </p>
+                <p class="u-ellipsis u-font-300 u-text-14">in
                     {%- if thread.group %}
                         <a href="{{ url('group_start', {'group_id': thread.group.id}) }}">{{ thread.group.name }}</a>
                     {% else %}
                         <a href="{{ url('bwforum') }}">{{ 'dashboard.bwforum' | trans }}</a>
                     {% endif %} {{ 'thread.lastpostby' | trans }} {{ macros.profilelink(thread.lastpost.author.Username) }} <span title="{{ thread.lastpost.updated.toDateTimeString }}">{{ thread.lastpost.updated.diffForHumans }}</span>
-                    </small>
-                </div>
+                </p>
 
             </div>
             {% set page = 1 %}
@@ -32,7 +30,7 @@
             {% else %}
                 {% set lastpost = '' %}
             {% endif %}
-            <div class="ml-auto">
+            <div class="u-ml-auto u-flex-shrink-0">
                 {% if thread.group %}
                     {% if page == 1 %}
                         <a href="{{ url('group_forum_thread', {'thread': thread.id, 'group_id': thread.group.id,  '_fragment': lastpost})  }}">

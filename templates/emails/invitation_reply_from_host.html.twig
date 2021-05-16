@@ -1,0 +1,32 @@
+{% extends 'emails/request.template.html.twig' %}
+
+{% block message %}
+    <p>{% trans with {'%username%': sender.Username} %}email.invitation.reply.host{% endtrans %}</p>
+    <p></p>
+    <callout class="secondary">
+        {{ message.message | raw }}
+    </callout>
+    <center>
+    <button class="expand" href="{{ url('members_profile', { 'username': sender.Username}) }}">{% trans with {'%username%': sender.Username} %}visit.profile{% endtrans %}</button>
+
+    {{ 'or' | trans }}
+
+    <button class="expand" href="{{ url('invitation_reply', { 'id': message.id, 'leg': message.request.inviteForLeg.id }) }}">{{ 'reply' | trans }}</button>
+    </center>
+{% endblock message %}
+
+{% block request%}
+    {% if changed %}<callout class="warning"><p>{{ 'request.details.changed'|trans }}</p></callout>{% endif %}
+    {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_OPEN') %}{% trans with {'%username%': sender.Username} %}email.invitation.reply.host.open{% endtrans %}<br>{% endif %}
+    {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_CANCELLED') %}{% trans with {'%username%': sender.Username} %}email.invitation.reply.host.cancelled{% endtrans %}<br>{% endif %}
+    {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_DECLINED') %}{% trans with {'%username%': sender.Username} %}email.invitation.reply.host.declined{% endtrans %}<br>{% endif %}
+    {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_ACCEPTED') %}{% trans with {'%username%': sender.Username} %}email.invitation.reply.host.accepted{% endtrans %}<br>{% endif %}
+    {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_TENTATIVELY_ACCEPTED') %}{% trans with {'%username%': sender.Username} %}email.invitation.reply.host.tentatively{% endtrans %}<br>{% endif %}
+    <br>
+    {{ 'request.arrival' | trans }}:<br>
+    {{ request.arrival|format_date('full', locale=receiverLocale) }}<br>
+    {% if request.departure %}{{ 'request.departure' | trans }}:<br>
+        {{ request.departure|format_date('full', locale=receiverLocale) }}<br>{% endif %}
+    {% if request.flexible %}{{ 'request.flexible' | trans }}<br>{% endif %}
+    {{ 'request.number_of_travellers' | trans}}: {{ request.numberOfTravellers }}<br>
+{% endblock request %}

@@ -1,0 +1,302 @@
+/* ==========================================================================
+   #BUTTON
+   ========================================================================== */
+
+/**
+ * Button with Bewelcome brand colors
+ */
+
+.o-button {
+  font-family: Signika;
+  display: flex;
+  padding: 0 24px;
+  border: 1px solid transparent;
+  border-radius: 24px;
+  color: var(--white);
+  background-color: var(--bewelcome);
+  font-size: 16px;
+  line-height: 20px;
+  font-weight: 500;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  height: 40px;
+  margin: 0;
+}
+
+
+
+
+/* Fluid version
+   ========================================================================== */
+
+/**
+ * Resizes relative to viewport width
+ */
+
+.o-button--fluid {
+  padding: 0 calc(24 * var(--width));
+  border-radius: calc(8 * var(--width));
+  font-size: calc(16 * var(--width));
+  line-height: calc(20 * var(--width));
+  height: calc(40 * var(--width));
+  max-width: calc(192 * var(--width));
+}
+
+
+
+/* Large version
+   ========================================================================== */
+
+/**
+ * Used as a CTA
+ */
+
+.o-button--l {
+  height: 56px;
+  font-size: 20px;
+  line-height: 24px;
+  border-radius: 8px;
+}
+
+
+
+
+
+/* Small version
+   ========================================================================== */
+
+/**
+ * Used in navigation menus
+ */
+
+.o-button--s {
+  height: 32px;
+  font-size: 12px;
+  line-height: 16px;
+}
+
+@media (max-width: 900px) {
+  .o-button--s  {
+    padding: 0 16px;
+  }
+}
+
+
+
+
+/* Extra Small version
+   ========================================================================== */
+
+/**
+ * Used in Small Main Menu Bar
+ */
+
+.o-button--xs {
+  height: 20px;
+  font-size: 12px;
+  line-height: 16px;
+  border-radius: 2px;
+}
+
+@media (max-width: 900px) {
+  .o-button--xs  {
+    padding: 0 16px;
+  }
+}
+
+
+
+
+
+
+/* Color versions
+   ========================================================================== */
+
+/**
+ * Secondary Button
+ */
+
+ .o-button--secondary {
+  background-color: var(--magnolia);
+  color: var(--dark);
+}
+
+
+
+
+
+/**
+ * Secondary Waterpolo
+ */
+
+ .o-button--waterpolo {
+  background-color: var(--waterpolo);
+}
+
+
+
+
+
+/**
+ * Outline Button
+ */
+
+.o-button--outline {
+  background-color: var(--white);
+  border: 1px solid var(--bewelcome);
+  color: var(--bewelcome);
+  font-weight: 400;
+}
+
+.o-button--outline-inverse, {
+  background-color: var(--bewelcome);
+  border: 1px solid var(--white);
+  color: var(--white);
+  font-weight: 400;
+}
+
+.o-button--outline-gray {
+  background-color: var(--gray-60);
+  border: 1px solid var(--gray-60);
+  color: var(--gray-60);
+  height: initial;
+  min-height: 56px;
+  font-size: 14px;
+  line-height: 16px;
+  font-weight: 400;
+  padding: 4px;
+}
+
+.o-button--outline-gray-inverse {
+  background-color: var(--gray-60);
+  border: 1px solid var(--gray-60);
+  color: var(--white);
+  height: initial;
+  min-height: 56px;
+  font-size: 14px;
+  line-height: 16px;
+  font-weight: 400;
+  padding: 4px;
+}
+
+
+
+
+
+
+
+
+
+
+/**
+ * Transparent Button
+ */
+
+ .o-button--transparent {
+  background-color: transparent;
+}
+
+
+
+
+
+/* Hovers
+   ========================================================================== */
+
+.o-button:hover {
+  opacity: 0.7;
+  color: var(--white);
+}
+
+.o-button--outline.active,
+.o-button--outline:hover {
+  background-color: var(--bewelcome);
+  border: 1px solid var(--bewelcome);
+  color: var(--white);
+  opacity: 1;
+}
+
+.o-button--outline-inverse:hover {
+  opacity: 1;
+  color: var(--white);
+  border: 1px solid var(--white);
+  background-color: var(--bewelcome);
+}
+
+.o-button--outline-ceniza:hover,
+.o-button--outline-ceniza-inverse:hover {
+  opacity: 1;
+}
+
+
+
+
+
+
+
+
+
+/* Disabled state
+   ========================================================================== */
+
+.o-button--disabled,
+.o-button[disabled] {
+  opacity: 0.3;
+}
+
+
+
+
+
+
+
+
+
+
+/* Utilities
+   ========================================================================== */
+
+/**
+ * Disables max width
+ */
+
+ .o-button--nolimit {
+  max-width: 100%;
+ }
+
+
+
+
+ /**
+ * Makes it full width of div
+ */
+
+ .o-button--full {
+  width: 100%;
+  max-width: 100%;
+ }
+
+
+
+
+ /**
+ * Min width for CTA button
+ */
+
+.o-button--min-width {
+  min-width: 192px;
+ }
+
+
+
+
+
+ /**
+ * Border-radius reduced
+ */
+
+ .o-button--br-16 {
+  border-radius: 16px;
+ }
+

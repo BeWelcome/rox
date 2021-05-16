@@ -21,7 +21,7 @@ $hostingInterest = [
     </div>
     <div id="collapse-accommodation" class="collapse" data-parent="#editProfile" aria-labelledby="heading-accommodation">
         <div class="card-body">
-        <div class="form-group row align-items-center mb-2">
+            <div class="o-form-group row align-items-center mb-2">
             <label for="Accommodation" class="col-md-4 col-form-label"><?= $words->get('HostingStatus') ?></label>
             <div class="btn-group col-md-8 mt-2" data-toggle="buttons">
                 <label for="neverask"
@@ -70,7 +70,7 @@ $hostingInterest = [
             <div class="col-12 col-md-8">
                 <input
                     type="range"
-                    class="form-control <?php if (in_array('SignupErrorProvideHostingInterest', $vars['errors'])) {
+                    class="o-input <?php if (in_array('SignupErrorProvideHostingInterest', $vars['errors'])) {
                         echo 'is-invalid';
                     } else {
                         echo 'is-valid';
@@ -100,56 +100,55 @@ $hostingInterest = [
             </div>
         </div>
 
-        <div class="form-group row">
-            <label for="MaxLengthOfStay"
+            <div class="o-form-group row">
+            <label for="MaxLenghtOfStay"
                    class="col-md-4 col-form-label"><?= $words->get('ProfileMaxLenghtOfStay') ?></label>
             <div class="col-12 col-md-8">
-                    <textarea name="MaxLenghtOfStay" class="form-control"
+                    <textarea id="MaxLenghtOfStay" name="MaxLenghtOfStay" class="o-input"
                               rows="3"><?= $vars['MaxLenghtOfStay'] ?></textarea>
             </div>
         </div>
 
-        <div class="form-group row">
+            <div class="o-form-group row">
             <label for="ILiveWith" class="col-md-4 col-form-label">
                 <?= $words->get('ProfileILiveWith') ?>
             </label>
             <div class="col-12 col-md-8">
-                <textarea id="ILiveWith" name="ILiveWith" class="form-control"
-                          rows="3"><?= $vars['ILiveWith'] ?></textarea>
+                    <textarea id="ILiveWith" name="ILiveWith" class="o-input" rows="3"><?= $vars['ILiveWith'] ?></textarea>
             </div>
         </div>
 
-        <div class="form-group row">
+            <div class="o-form-group row">
             <label for="PleaseBring" class="col-md-4 col-form-label">
                 <?= $words->get('ProfilePleaseBring') ?>
             </label>
             <div class="col-12 col-md-8">
-                    <textarea id="PleaseBring" name="PleaseBring" class="form-control"
+                    <textarea id="PleaseBring" name="PleaseBring" class="o-input"
                               rows="3"><?= $vars['PleaseBring'] ?></textarea>
             </div>
         </div>
 
-        <div class="form-group row">
+            <div class="o-form-group row">
             <label for="OfferGuests" class="col-md-4 col-form-label">
                 <?= $words->get('ProfileOfferGuests') ?>
             </label>
             <div class="col-12 col-md-8">
-                    <textarea id="OfferGuests" name="OfferGuests" class="form-control"
+                    <textarea id="OfferGuests" name="OfferGuests" class="o-input"
                               rows="3"><?= $vars['OfferGuests'] ?></textarea>
             </div>
         </div>
 
-        <div class="form-group row">
+            <div class="o-form-group row">
             <label for="OfferHosts" class="col-md-4 col-form-label">
                 <?= $words->get('ProfileOfferHosts') ?>
             </label>
             <div class="col-12 col-md-8">
-                    <textarea id="OfferHosts" name="OfferHosts" class="form-control"
+                    <textarea id="OfferHosts" name="OfferHosts" class="o-input"
                               rows="3"><?= $vars['OfferHosts'] ?></textarea>
             </div>
         </div>
 
-        <div class="form-group row">
+            <div class="o-form-group row">
 
             <label for="ICanAlsoOffer" class="col-md-4 col-form-label">
                 <?= $words->get('ICanAlsoOffer') ?>
@@ -167,18 +166,18 @@ $hostingInterest = [
             </div>
         </div>
 
-        <div class="form-group row">
+            <div class="o-form-group row">
             <label for="PublicTransport" class="col-md-4 col-form-label">
                 <?= $words->get('ProfilePublicTransport') ?>
             </label>
             <div class="col-12 col-md-8">
-                    <textarea id="PublicTransport" name="PublicTransport" class="form-control"
+                    <textarea id="PublicTransport" name="PublicTransport" class="o-input"
                               rows="3"><?= $vars['PublicTransport'] ?></textarea>
             </div>
 
         </div>
 
-        <div class="form-group row">
+            <div class="o-form-group row">
             <label for="ProfileRestrictionsForGuests" class="col-md-4 col-form-label">
                 <?= $words->get('ProfileRestrictionForGuest') ?>
             </label>
@@ -195,22 +194,22 @@ $hostingInterest = [
             </div>
         </div>
 
-        <div class="form-group row">
+            <div class="o-form-group row">
             <label for="OtherRestrictions" class="col-md-4 col-form-label">
                 <?= $words->get('ProfileHouseRules') ?>
             </label>
             <div class="col-12 col-md-8">
-                            <textarea id="OtherRestrictions" name="OtherRestrictions" class="form-control"
+                            <textarea id="OtherRestrictions" name="OtherRestrictions" class="o-input"
                                       rows="3"><?= $vars['OtherRestrictions'] ?></textarea>
             </div>
         </div>
 
-        <div class="form-group row">
+            <div class="o-form-group row">
             <label for="AdditionalAccomodationInfo" class="col-md-4 col-form-label">
                 <?= $words->get('ProfileAdditionalAccomodationInfo') ?>
             </label>
             <div class="col-12 col-md-8">
-                            <textarea id="AdditionalAccomodationInfo" name="AdditionalAccomodationInfo"
+                            <textarea id="AdditionalAccomodationInfo" name="AdditionalAccomodationInfo" class="o-input"
                                       class="form-control"
                                       rows="3"><?= $vars['AdditionalAccomodationInfo'] ?></textarea>
             </div>

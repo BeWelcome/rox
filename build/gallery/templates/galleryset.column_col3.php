@@ -28,7 +28,7 @@ foreach ($statement as $d) { ?>
             <?php if ($this->myself) { ?>
              <a href="gallery/img?id=<?= $d->id ?>" class="btn btn-sm btn-primary"><i class="fa fa-edit mr-1"></i><?= $words->get('Edit'); ?></a>
                 <input type="submit" class="btn btn-sm btn-danger" name="button" value="<?= $words->getBuffered('GalleryRemoveImagesFromPhotoset') ?>">
-                <input type="checkbox" class="form-check-input d-none" name="imageId[]" value="<?= $d->id ?>" checked>
+                <input type="checkbox" class="o-checkbox__input d-none" name="imageId[]" value="<?= $d->id ?>" checked>
                 <input name="gallery" type="hidden" value="<?= $g->id ?>">
                 <input name="removeOnly" type="hidden" value="1">
             </form>

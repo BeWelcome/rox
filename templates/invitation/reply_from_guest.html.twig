@@ -1,0 +1,60 @@
+{% extends 'base.html.twig' %}
+{% import 'macros.twig' as macros %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('requests') }}"
+{% endblock javascripts %}
+
+{% block stylesheets %}
+    {{ encore_entry_link_tags('tailwind')  }}
+    {{ encore_entry_link_tags('requests')  }}
+{% endblock stylesheets %}
+
+{% block subnav %}
+    {% for filter, menuitem in submenu.items %}
+        <a class="list-group-item nav-link {% if submenu.active == filter %}active{% endif %}"
+           href="{{ path( submenu.route, { filter: filter } ) }}">{{ filter | trans }}</a>
+    {% endfor %}
+{% endblock %}
+
+{% block content %}
+    {% set original = thread | last %}
+    {% set current = thread | first %}
+    {% set receiver =  original.receiver %}
+
+    {{ macros.messageheader(host, guest, current.Subject.Subject) }}
+    {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'autocomplete': 'off'}}) }}
+    <div class="row mb-1">
+        <div class="col-12">
+            {{ form_row(form.message) }}
+                <div class="o-form-group">
+                    {{ form_label(form.request.duration) }}
+                    <div class="input-group date" id="arrival" data-target-input="nearest">
+                        <div class="input-group-prepend" data-target="#arrival" data-toggle="datetimepicker">
+                        <span class="input-group-text">
+                            <i class="fa fa-calendar"></i>
+                        </span>
+                        </div>
+                        {{ form_widget(form.request.duration, {'attr': { 'class': 'js-litepicker'}}) }}
+                    </div>
+                </div>
+
+                <div class="o-form-group col-12">
+                    {{ form_widget(form.request.flexible) }}
+                    {{ form_label(form.request.flexible) }}
+                </div>
+
+            {{ form_row(form.request.arrival) }}
+            {{ form_row(form.request.departure) }}
+            {{ form_row(form.request.numberOfTravellers) }}
+            {{ form_widget(form.accept, {'attr': {'class': 'btn-primary ml-1 pull-right'}}) }}
+            {{ form_widget(form.tentatively, {'attr': {'class': 'btn btn-primary ml-1 pull-right'}}) }}
+            {{ form_widget(form.decline, {'attr': {'class': 'btn btn-primary ml-1 pull-right'}}) }}
+            {{ form_widget(form.update, {'attr': {'class': 'btn btn-primary ml-1 pull-right'}}) }}
+        </div>
+        <div class="clearfix"></div>
+    </div>
+    {{ form_rest(form) }}
+    {{ form_end(form) }}
+    {% include 'message/thread.html.twig' with {'show_deleted': false} %}
+{% endblock %}

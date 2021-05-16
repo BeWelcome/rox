@@ -1,4 +1,8 @@
 {% import 'macros.twig' as macros %}
+{% block stylesheets %}
+  {{ encore_entry_link_tags('tailwind') }}
+{% endblock %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -57,7 +61,7 @@
      while the background image is loading */
   background-color: #464646;
 ">
-<nav class="navbar navbar-sticky-top navbar-expand-md navbar-dark bg-primary navbar-shadow bordert-1 borderb-1">
+<nav class="navbar navbar-sticky-top navbar-expand-md navbar-dark bg-primary bordert-1 borderb-1">
     <div class="container-lg">
         <a class="navbar-brand mr-3 float-left" href="{{ url('homepage') }}"><img
                     src="{{ asset('images/logo_index_top.png') }}" alt="BeWelcome"/></a>
@@ -85,8 +89,8 @@
         {% endfor %}
     </div>
     <div class="container-lg">
-        <div class="row">
-            <div class="col-10 offset-1 col-md-6 offset-md-3 col-sm-8 offset-sm-2 mb-3">
+        <div class="u-flex u-flex-col">
+            <div class="u-w-1/2 u-pin-x u-relative">
                 {% for flash_message in app.session.flashBag.get('error') %}
                     <div class="flash error">
                         {{ flash_message | trans }}
@@ -97,7 +101,7 @@
                         {{ flash_message | trans }}
                     </div>
                 {% endfor %}
-                <h1 class="text-center white">BeWelcome - {{ 'indexpageteaseropendoor' | trans }}</h1>
+                <h1 class="u-text-32 u-leading-40 u-text-white u-text-center u-my-16 u-font-700">BeWelcome - {{ 'indexpageteaseropendoor' | trans }}</h1>
             </div>
             {% if error %}
                 <div class="col-12">
@@ -109,26 +113,31 @@
 
             <div class="col-10 offset-1 col-sm-8 offset-sm-2">
                 <div class="card-deck">
-                    <div class="card">
-                        <form id="main-login-form" role="form" method="post"
+                    <div class="card o-card">
+                        <form id="main-login-form"
+                              class="u-m-0" 
+                              role="form" 
+                              method="post"
                               action="{{ path('security_check') }}">
                             <div class="card-body p-2">
                                 <h4 class="card-title">{{ 'login' | trans }}</h4>
-                                <div class="form-group">
-                                    <label class="m-0" for="login-u">{{ 'username' | trans }}</label>
+                                <div class="o-form-group">
+                                    <label for="login-u">{{ 'username' | trans }}</label>
                                     <input type="text" id="login-u" name="_username" autofocus required
                                            value="{{ last_username }}"
-                                           class="form-control">
+                                           class="o-input">
                                 </div>
-                                <div class="form-group">
-                                    <label class="m-0" for="login-p">{{ 'password' | trans }}</label>
-                                    <input type="password" id="login-p" name="_password" class="form-control">
+                                <div class="o-form-group">
+                                    <label for="login-p">{{ 'password' | trans }}</label>
+                                    <input type="password" id="login-p" name="_password" class="o-input">
                                 </div>
-                                <div class="form-group">
-                                    <label for="login-r">
-                                        <input type="checkbox" id="login-r" value="1"
-                                               name="_remember_me">&nbsp;{{ 'stayloggedin' | trans }}
-                                    </label>
+                                <div class="u-flex u-items-center u-my-8">
+                                    <input type="checkbox" 
+                                           id="login-r"
+                                           class="u-mr-8"
+                                           value="1"
+                                           name="_remember_me">
+                                    <label class="u-m-0" for="login-r">{{ 'stayloggedin' | trans }}</label>
                                 </div>
                                 <input type="hidden" name="_csrf_token"
                                        value="{{ csrf_token('authenticate') }}"
@@ -159,20 +168,18 @@
                                     </p>
                                 {% endif %}
                             </div>
-                            <div class="card-footer">
+                            <div class="u-flex u-justify-center u-items-center">
                                 <button type="submit"
-                                        class="btn btn-primary btn-block">{{ 'indexpageloginsubmit' | trans }}</button>
+                                        class="o-button o-button--full">{{ 'indexpageloginsubmit' | trans }}</button>
                             </div>
                         </form>
                     </div>
-                    <div class="card">
+                    <div class="card o-card">
                         <div class="card-body p-2">
                             <h4 class="card-title">{{ 'signupnow' | trans }}</h4>
-                            <div class="form-group">
-                                <label>{{ 'login.signup.info'|trans|raw }}</label>
-                            </div>
+                            <p class="u-text-18 u-mt-24">{{ 'login.signup.info'|trans|raw }}</p>
                         </div>
-                        <div class="card-footer"><a href="{{ url('signup_1') }}" class="btn btn-primary btn-block" role="button">
+                        <div class="u-flex u-justify-center u-items-center"><a href="{{ url('signup_1') }}" class="o-button o-button--full" role="button">
                                 {{ 'signup'|trans }}</a>
                         </div>
                     </div>

@@ -1,16 +1,18 @@
 .welcomeback{
-  background-color: #eee;
-  border: 3px solid #fff;
-  border-radius: 0.15rem;
-  box-shadow: 0 3px 8px -2px RGBA(153, 150, 150, 0.67);
+  background-color: var(--gray-15);
+  border-radius: 16px;
   position: relative;
-  top: -1rem;
+  padding: 16px;
+}
+
+.welcomeback .o-avatar__name {
+  display: none;
 }
 
 .hoststatus{
   position:absolute;
-  left: 90px;
-  top: 70px;
+  right: 0;
+  bottom: 0;
 }
 
 .hoststatusdropdown{
@@ -19,15 +21,6 @@
 
 .homecity{
   font-size: 1.5rem !important;
-}
-
-.dashbox{
-  overflow: hidden;
-  background: #fff;
-  box-shadow: 0 3px 8px -2px #999696;
-  border-radius: 0 0.25rem 0.25rem 0.25rem;
-  border: 1px solid #e1e1e1;
-  border-top: none;
 }
 
 .shadow{
@@ -68,13 +61,6 @@
   }
 }
 
-.scrollcontent .flex-row:nth-of-type(odd){
-  background-color: #f0f0f0;
-}
-
-.scrollcontent .flex-row:nth-of-type(even){
-  background-color: #fff;
-}
 
 .relative{
   position: relative;
@@ -128,8 +114,9 @@
   border-bottom: 1px solid #c3c3c3;
 }
 .homesubt{
-  font-size: 1rem;
-  color:gray;
+  font-size: 16px;
+  color: var(--gray-50);
+  font-weight: 300;
 }
 
 .potentialguestinfo{
@@ -156,4 +143,17 @@
   background-color: transparent;
   color: $link-color;
   text-decoration: $link-decoration;
+}
+
+.nav-tabs .nav-link.active {
+  border-color: transparent;
+}
+
+.nav-tabs .nav-item > .active {
+    box-shadow: 0px -2px 4px -2px #CFCFCF;
+    border-radius: 8px 8px 0 0;
+}
+
+.nav-tabs .nav-link {
+  font-family: "Signika", sans-serif;
 }

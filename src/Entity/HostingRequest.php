@@ -96,6 +96,14 @@ class HostingRequest
     private $status = self::REQUEST_OPEN;
 
     /**
+     * @var Subtrip
+     *
+     * @ORM\ManyToOne(targetEntity="\App\Entity\Subtrip")
+     * @ORM\JoinColumn(name="invite_for_leg", referencedColumnName="id", nullable=true)
+     */
+    private $inviteForLeg;
+
+    /**
      * @var Message[]
      * @ORM\OneToMany(targetEntity="Message", mappedBy="request")
      */
@@ -252,5 +260,17 @@ class HostingRequest
     public function getStatus()
     {
         return $this->status;
+    }
+
+    public function getInviteForLeg(): ?Subtrip
+    {
+        return $this->inviteForLeg;
+    }
+
+    public function setInviteForLeg(?Subtrip $inviteForLeg): self
+    {
+        $this->inviteForLeg = $inviteForLeg;
+
+        return $this;
     }
 }

@@ -24,11 +24,11 @@ class BaseMessageController extends AbstractController
     use TranslatedFlashTrait;
     use TranslatorTrait;
 
-    protected $requestModel;
+    protected $messageModel;
 
-    public function __construct(MessageModel $requestModel)
+    public function __construct(MessageModel $messageModel)
     {
-        $this->requestModel = $requestModel;
+        $this->messageModel = $messageModel;
     }
 
     protected function getSubMenuItems(): array
@@ -184,7 +184,7 @@ class BaseMessageController extends AbstractController
             throw $this->createAccessDeniedException('Not your message/hosting request');
         }
 
-        $thread = $this->requestModel->getThreadForMessage($message);
+        $thread = $this->messageModel->getThreadForMessage($message);
         $current = $thread[0];
 
         if ($message->getId() !== $current->getId()) {
@@ -221,7 +221,7 @@ class BaseMessageController extends AbstractController
             throw $this->createAccessDeniedException('Not your message/hosting request');
         }
 
-        $thread = $this->requestModel->getThreadForMessage($message);
+        $thread = $this->messageModel->getThreadForMessage($message);
         $current = $thread[0];
 
         if ($message->getId() !== $current->getId()) {

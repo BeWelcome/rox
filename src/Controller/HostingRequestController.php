@@ -56,7 +56,7 @@ class HostingRequestController extends BaseHostingRequestAndInvitationController
             ]);
         }
 
-        $thread = $this->messageModel->getThreadForMessage($message);
+        $thread = $this->requestModel->getThreadForMessage($message);
         $current = $thread[0];
 
         // Always reply to the last item in the thread
@@ -99,7 +99,7 @@ class HostingRequestController extends BaseHostingRequestAndInvitationController
         /** @var Member $guest */
         /** @var Member $host */
         list($thread, , $last, $guest, $host) =
-            $this->messageModel->getThreadInformationForMessage($hostingRequest);
+            $this->requestModel->getThreadInformationForMessage($hostingRequest);
 
         if ($this->checkRequestExpired($last)) {
             $this->addExpiredFlash($host);
@@ -157,7 +157,7 @@ class HostingRequestController extends BaseHostingRequestAndInvitationController
         /** @var Member $guest */
         /** @var Member $host */
         list($thread, , $last, $guest, $host) =
-            $this->messageModel->getThreadInformationForMessage($hostingRequest);
+            $this->requestModel->getThreadInformationForMessage($hostingRequest);
 
         if ($this->checkRequestExpired($last)) {
             $this->addExpiredFlash($guest);
@@ -241,7 +241,7 @@ class HostingRequestController extends BaseHostingRequestAndInvitationController
         }
 
         if (
-            $this->messageModel->hasRequestLimitExceeded(
+            $this->requestModel->hasRequestLimitExceeded(
                 $member,
                 $this->getParameter('new_members_messages_per_hour'),
                 $this->getParameter('new_members_messages_per_day')
@@ -299,7 +299,7 @@ class HostingRequestController extends BaseHostingRequestAndInvitationController
         $member = $this->getUser();
         list($page, $limit, $sort, $direction) = $this->getOptionsFromRequest($request);
 
-        $requests = $this->messageModel->getFilteredRequests(
+        $requests = $this->requestModel->getFilteredRequests(
             $member,
             $folder,
             $sort,
@@ -322,7 +322,7 @@ class HostingRequestController extends BaseHostingRequestAndInvitationController
         $subject,
         $requestChanged
     ): void {
-        $this->messageModel->sendRequestNotification(
+        $this->requestModel->sendRequestNotification(
             $guest,
             $host,
             $host,
@@ -337,7 +337,7 @@ class HostingRequestController extends BaseHostingRequestAndInvitationController
     {
         $subject = $request->getSubject()->getSubject();
 
-        $this->messageModel->sendRequestNotification($host, $guest, $host, $request, $subject, 'request', false);
+        $this->requestModel->sendRequestNotification($host, $guest, $host, $request, $subject, 'request', false);
     }
 
     /**
@@ -351,7 +351,7 @@ class HostingRequestController extends BaseHostingRequestAndInvitationController
         $subject,
         $requestChanged
     ): void {
-        $this->messageModel->sendRequestNotification(
+        $this->requestModel->sendRequestNotification(
             $host,
             $guest,
             $host,

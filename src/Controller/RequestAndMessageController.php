@@ -22,7 +22,7 @@ class RequestAndMessageController extends BaseMessageController
         $member = $this->getUser();
         list($page, $limit, $sort, $direction) = $this->getOptionsFromRequest($request);
 
-        $requestsAndMessages = $this->messageModel->getFilteredRequestsAndMessages(
+        $requestsAndMessages = $this->requestModel->getFilteredRequestsAndMessages(
             $member,
             $folder,
             $sort,

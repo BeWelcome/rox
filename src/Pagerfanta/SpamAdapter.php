@@ -16,6 +16,7 @@ class SpamAdapter extends AbstractConversationsAdapter implements AdapterInterfa
             . $this->getInitiatorCondition() . '
             AND ' . $this->getUnreadCondition() . '
             AND `m`.`infolder` = \'' . InFolderType::SPAM . '\'
+            AND ' . $this->getNotDeletedOrPurgedCondition() . '
          ';
 
         return $sql;

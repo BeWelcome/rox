@@ -12,6 +12,7 @@
 	padding: 24px;
 	border-radius: 16px;
 	box-shadow: 0 10px 30px -3px #d7d7d7;
+	background-color: var(--white);
 }
 
 .o-card h1,
@@ -23,3 +24,21 @@
 	font-size: 24px;
 	margin-bottom: 16px;
 }
+
+
+
+
+
+
+
+
+
+
+/**
+ * Variations
+ */
+
+ .o-card--tabbed {
+ 	border-radius: 0 8px 8px 8px;
+ 	min-height: 496px;
+ }

@@ -11,7 +11,9 @@
 .o-avatar {
   display: grid;
   grid-template-rows: 96px 1fr;
-  width: 96px
+  width: 96px;
+  position: relative;
+  flex-shrink: 0;
 }
 
 
@@ -69,6 +71,30 @@
 
 
 
+.o-avatar__host-status {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  border-radius: 100%;
+  overflow: hidden;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+
+
+
+.o-avatar__host-img {
+  width: 20px;
+  height: 20px;
+  fill: var(--white);
+}
+
+
 
 
 
@@ -109,18 +135,43 @@
 
 
 /**
- * Large
+ * Medium
  */
 
 
-.o-avatar--s {
+.o-avatar--m {
   width: 72px;
   grid-template-rows: 72px 1fr;
 }
 
-.o-avatar--s .o-avatar__img-wrapper {
+.o-avatar--m .o-avatar__img-wrapper {
   width: 72px;
   height: 72px;
+}
+
+.o-avatar--m .o-avatar__name,
+.o-avatar--m .o-avatar__languages {
+  margin: initial;
+}
+
+
+
+
+
+
+/**
+ * Small
+ */
+
+
+.o-avatar--s {
+  width: 48px;
+  grid-template-rows: 48px 1fr;
+}
+
+.o-avatar--s .o-avatar__img-wrapper {
+  width: 48px;
+  height: 48px;
 }
 
 .o-avatar--s .o-avatar__name,
@@ -159,6 +210,37 @@
 
 
 
+
+
+/* Variations
+   ========================================================================== */
+
+/**
+ * No name
+ */
+
+.o-avatar--noname {
+  display: flex;
+  flex-direction: column;
+}
+
+
+
+
+
+.o-avatar--noname .o-avatar__name,
+.o-avatar--noname .o-avatar__languages {
+  display: none;
+}
+
+
+
+
+
+.o-avatar--noname .o-avatar__img-wrapper {
+  box-shadow: 0 10px 30px 0px #d7d7d7;
+  border: 5px solid var(--white);
+}
 
 
 /* States

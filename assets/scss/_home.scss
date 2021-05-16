@@ -11,8 +11,8 @@
 
 .hoststatus{
   position:absolute;
-  left: 90px;
-  top: 70px;
+  right: 0;
+  bottom: 0;
 }
 
 .hoststatusdropdown{
@@ -21,15 +21,6 @@
 
 .homecity{
   font-size: 1.5rem !important;
-}
-
-.dashbox{
-  overflow: hidden;
-  background: #fff;
-  box-shadow: 0 10px 30px -3px #d7d7d7;
-  border-radius: 0 16px 16px 16px;
-  padding: 16px;
-  min-height: 496px;
 }
 
 .shadow{
@@ -70,13 +61,6 @@
   }
 }
 
-.scrollcontent .flex-row:nth-of-type(odd){
-  background-color: #f0f0f0;
-}
-
-.scrollcontent .flex-row:nth-of-type(even){
-  background-color: #fff;
-}
 
 .relative{
   position: relative;

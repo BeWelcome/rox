@@ -184,45 +184,6 @@
 
 
 
-/**
- * Link Button
- */
-
-.o-button--link {
-  font-size: 14px;
-  font-weight: 400;
-  max-width: initial;
-  background: initial;
-  padding: initial;
-  display: initial;
-  height: initial;
-  color: var(--ceniza);
-  text-decoration: underline;
-}
-
-.o-button--link-s {
-  font-size: 12px;
-  font-weight: 400;
-  max-width: initial;
-  background: initial;
-  padding: initial;
-  display: initial;
-  height: initial;
-  color: var(--bewelcome);
-  text-decoration: underline;
-}
-
-
-
-
-/**
- * Settings Button
- */
-
-.o-button--settings {
-  color: var(--antracita);
-  background-color: var(--tenis);
-}
 
 
 
@@ -327,4 +288,15 @@
   min-width: 192px;
  }
 
+
+
+
+
+ /**
+ * Border-radius reduced
+ */
+
+ .o-button--br-16 {
+  border-radius: 16px;
+ }
 

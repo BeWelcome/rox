@@ -2,7 +2,7 @@
 <div id="notificationsdisplay" class="c-dashboard">
     {% for notification in notifications %}
         <div class="c-dashboard__item">
-            <div class="o-avatar o-avatar--m o-avatar--noname u-mr-16">{{ macros.roundedavatarstack(notification.relMember.Username, 72, true) }}</div>
+            <div class="o-avatar o-avatar--m o-avatar--noname  o-avatar--shadow-s u-mr-16">{{ macros.roundedavatarstack(notification.relMember.Username, 72, true) }}</div>
             <div class="u-flex u-flex-col u-h-full u-justify-center">
                 {% if notification.Type == "message" %}
                     {% set notificationText %}{{ notification.translationcode|lower|trans|raw|format(notification.TranslationParameters)|raw }}{% endset %}

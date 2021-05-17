@@ -4,7 +4,7 @@
 		{% if message.request %}{% set route = 'hosting_request_show' %}{% else %}{% set route = 'message_show' %}{% endif %}
 		{% set unread = (message.firstRead is null) or (message.firstRead == '0000-00-00 00:00.00') %}
 		<div class="c-dashboard__item">
-			<div class="o-avatar o-avatar--m o-avatar--noname u-mr-16">{{ macros.roundedavatarstack(message.sender.username, 72, true) }}</div>
+			<div class="o-avatar o-avatar--m o-avatar--noname o-avatar--shadow-s u-mr-16">{{ macros.roundedavatarstack(message.sender.username, 72, true) }}</div>
 			<div class="u-flex u-min-w-0 u-h-full">
 				{% if message.request %}
 					<div class="u-flex u-flex-col u-bg-gray-10 u-px-8 u-mr-8 u-items-center u-justify-start u-h-48 u-relative u-pin-y u-overflow-hidden">
@@ -18,7 +18,7 @@
 					
 				{% endif %}
 				<div class="u-flex u-flex-col u-h-48 u-relative u-pin-y u-justify-start u-overflow-hidden">
-					<a class="u-flex u-flex-col" href="{{ path(route, { id: message.id } ) }}" class="{%- if unread %}unread{% else %}read{% endif %}">
+					<a href="{{ path(route, { id: message.id } ) }}" class="u-flex u-flex-col {%- if unread %}unread{% else %}read{% endif %}">
 						{% if message.subject %}<p class="u-ellipsis">{{ message.subject.subject|raw }}</p>{% endif %}
 						<p class="u-ellipsis">{{ message.message|raw }}</p>
 					</a>

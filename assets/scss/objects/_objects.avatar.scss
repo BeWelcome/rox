@@ -238,8 +238,26 @@
 
 
 .o-avatar--noname .o-avatar__img-wrapper {
-  box-shadow: 0 10px 30px 0px #d7d7d7;
   border: 5px solid var(--white);
+}
+
+
+
+
+
+
+
+
+
+.o-avatar--shadow {
+  box-shadow: 0 10px 30px 0px #d7d7d7;
+}
+
+
+
+
+.o-avatar--shadow-s {
+  box-shadow: 0 0px 20px 0 #e6e6e6;
 }
 
 

@@ -2,7 +2,7 @@
 <div class="u-relative u-flex u-items-center" id="welcomeavatar">
     <div class="o-avatar o-avatar--l o-avatar--noname o-avatar--shadow">
         {{ macros.roundedavatarstack( member.Username, 120, true) }}
-        <div class="o-avatar__host-status {% if member.Accommodation == 'anytime' %}u-bg-green-dark{% elseif member.Accommodation == 'neverask' %}u-bg-red{% endif %}">
+        <div class="o-avatar__host-status {% if member.Accommodation == 'anytime' %}u-bg-green-dark{% elseif member.Accommodation == 'neverask' %}u-bg-bewelcome{% endif %}">
         	{% if member.Accommodation == 'anytime' %}
         	<svg class="o-avatar__host-img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18.400146 16.655001">
 			  	<path d="M7.197852 15.655v-5h4v5c0 .55.45 1 1 1h3c.55 0 1-.45 1-1v-7h1.7c.46 0 .68-.57.33-.87l-8.36-7.53c-.38-.34-.96-.34-1.34 0L.16785197 7.785c-.34.3-.13.87.33.87H2.197852v7c0 .55.45 1 1 1h3c.55 0 1-.45 1-1z"/>

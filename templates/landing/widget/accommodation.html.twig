@@ -1,5 +1,5 @@
 <div id="accommodation" class="btn-group u-mr-4">
-    <button type="button" class="btn o-button o-button--br-16 dropdown-toggle u-font-700 u-capitalize {% if member.Accommodation == 'anytime' %}u-bg-green-dark{% elseif member.Accommodation == 'neverask' %}u-bg-red{% endif %}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    <button type="button" class="btn o-button o-button--br-16 dropdown-toggle u-font-700 u-capitalize {% if member.Accommodation == 'anytime' %}u-bg-green-dark{% elseif member.Accommodation == 'neverask' %}u-bg-bewelcome{% endif %}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         {%  if member.Accommodation == 'anytime' %}{{ 'hosting' | trans }}{% endif %}
         {%  if member.Accommodation == 'neverask' %}{{ 'not hosting' | trans }}{% endif %}
     </button>

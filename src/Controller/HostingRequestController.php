@@ -7,6 +7,8 @@ use App\Entity\Member;
 use App\Entity\Message;
 use App\Form\HostingRequestGuest;
 use App\Form\HostingRequestHost;
+use App\Model\HostingRequestModel;
+use App\Model\MessageModel;
 use App\Utilities\ManagerTrait;
 use App\Utilities\TranslatorTrait;
 use Exception;
@@ -31,6 +33,11 @@ class HostingRequestController extends BaseHostingRequestAndInvitationController
     use ManagerTrait;
     use TranslatorTrait;
 
+    public function __construct(HostingRequestModel $requestModel, MessageModel $messageModel)
+    {
+        parent::__construct($requestModel, $messageModel);
+    }
+
     /**
      * Deals with replies to messages and hosting requests.
      *
@@ -46,7 +53,10 @@ class HostingRequestController extends BaseHostingRequestAndInvitationController
         }
 
         if (!$this->isHostingRequest($message)) {
-            return $this->redirectToMessageReply($message);
+            return $this->redirectToRoute('message_reply', [
+                'id' => $message->getId(),
+                'leg' => $message->getRequest()->getInviteForLeg()->getId(),
+            ]);
         }
 
         if ($this->isInvitation($message)) {
@@ -56,7 +66,7 @@ class HostingRequestController extends BaseHostingRequestAndInvitationController
             ]);
         }
 
-        $thread = $this->requestModel->getThreadForMessage($message);
+        $thread = $this->messageModel->getThreadForMessage($message);
         $current = $thread[0];
 
         // Always reply to the last item in the thread
@@ -99,7 +109,7 @@ class HostingRequestController extends BaseHostingRequestAndInvitationController
         /** @var Member $guest */
         /** @var Member $host */
         list($thread, , $last, $guest, $host) =
-            $this->requestModel->getThreadInformationForMessage($hostingRequest);
+            $this->messageModel->getThreadInformationForMessage($hostingRequest);
 
         if ($this->checkRequestExpired($last)) {
             $this->addExpiredFlash($host);
@@ -157,7 +167,7 @@ class HostingRequestController extends BaseHostingRequestAndInvitationController
         /** @var Member $guest */
         /** @var Member $host */
         list($thread, , $last, $guest, $host) =
-            $this->requestModel->getThreadInformationForMessage($hostingRequest);
+            $this->messageModel->getThreadInformationForMessage($hostingRequest);
 
         if ($this->checkRequestExpired($last)) {
             $this->addExpiredFlash($guest);
@@ -241,7 +251,7 @@ class HostingRequestController extends BaseHostingRequestAndInvitationController
         }
 
         if (
-            $this->requestModel->hasRequestLimitExceeded(
+            $this->messageModel->hasRequestLimitExceeded(
                 $member,
                 $this->getParameter('new_members_messages_per_hour'),
                 $this->getParameter('new_members_messages_per_day')
@@ -264,7 +274,7 @@ class HostingRequestController extends BaseHostingRequestAndInvitationController
 
         if ($requestForm->isSubmitted() && $requestForm->isValid()) {
             // Write request to database after doing some checks
-            $hostingRequest = $this->getMessageFromData($requestForm, $member, $host);
+            $hostingRequest = $requestForm->getData();
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($hostingRequest);

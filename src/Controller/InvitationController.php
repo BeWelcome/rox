@@ -24,17 +24,17 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class InvitationController extends AbstractController
+class InvitationController extends BaseMessageController
 {
     use TranslatedFlashTrait;
     use TranslatorTrait;
 
-    private MessageModel $messageModel;
     private InvitationModel $invitationModel;
 
     public function __construct(MessageModel $messageModel, InvitationModel $invitationModel)
     {
-        $this->messageModel = $messageModel;
+        parent::__construct($messageModel);
+
         $this->invitationModel = $invitationModel;
     }
 
@@ -98,7 +98,7 @@ class InvitationController extends AbstractController
         if ($invitationForm->isSubmitted() && $invitationForm->isValid()) {
             // Write request to database after doing some checks
             /** @var Message $invitation */
-            $invitation = $this->getMessageFromData($invitationForm, $member, $guest);
+            $invitation = $this->$invitationForm->getData();
             $invitation->getRequest()->setInviteForLeg($leg);
 
             $em = $this->getDoctrine()->getManager();
@@ -135,7 +135,7 @@ class InvitationController extends AbstractController
         }
 
         if (!$this->isInvitation($invitation)) {
-            return $this->redirectToMessageReply($invitation);
+            return $this->redirectToRoute('message_reply', ['id' => $invitation->getId()]);
         }
 
         $thread = $this->messageModel->getThreadForMessage($invitation);
@@ -190,7 +190,7 @@ class InvitationController extends AbstractController
         list($thread) =
             $this->messageModel->getThreadInformationForMessage($invitation);
 
-        if ($this->checkRequestExpired($invitation)) {
+        if ($this->invitationModel->checkInvitationExpired($invitation)) {
             $this->addExpiredFlash($host);
 
             return $this->redirectToRoute('hosting_request_show', ['id' => $invitation->getId()]);

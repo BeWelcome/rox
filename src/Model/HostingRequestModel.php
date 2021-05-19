@@ -37,12 +37,10 @@ class HostingRequestModel
             $departure = (clone $today)->modify('+2days');
         }
 
-        return ($today < $departure) ? false : true;
+        return !($today < $departure);
     }
 
     /**
-     * @param $clickedButton
-     *
      * @throws InvalidArgumentException|\Doctrine\DBAL\Exception\InvalidArgumentException
      */
     public function getFinalRequest(
@@ -50,7 +48,7 @@ class HostingRequestModel
         Member $receiver,
         Message $hostingRequest,
         Message $data,
-        $clickedButton
+        string $clickedButton
     ): Message {
         if (null === $hostingRequest->getRequest()->getDeparture() || null === $data->getRequest()->getDeparture()) {
             throw new InvalidArgumentException();
@@ -121,6 +119,36 @@ class HostingRequestModel
         }
 
         return $finalRequest;
+    }
+
+    /**
+     * The requestChanged parameter triggers a PHPMD warning which is out of place in this case.
+     *
+     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
+     *
+     * @param mixed $subject
+     * @param mixed $template
+     * @param mixed $requestChanged
+     */
+    public function sendRequestNotification(
+        Member $sender,
+        Member $receiver,
+        Member $host,
+        Message $request,
+        $subject,
+        $template,
+        $requestChanged
+    ) {
+        // Send mail notification
+        $this->mailer->sendMessageNotificationEmail($sender, $receiver, $template, [
+            'host' => $host,
+            'subject' => $subject,
+            'message' => $request,
+            'request' => $request->getRequest(),
+            'changed' => $requestChanged,
+        ]);
+
+        return true;
     }
 
     /**

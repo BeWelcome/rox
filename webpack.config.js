@@ -103,20 +103,23 @@ Encore
         loader.exclude = /ckeditor5-[^/\\]+[/\\]theme[/\\]icons[/\\][^/\\]+\.svg$/;
     })
     .enablePostCssLoader((options) => {
-        options.config = {
+        options.postcssOptions = {
             // directory where the postcss.config.js file is stored
-            path: './postcss.config.js'
+            config: './postcss.config.js'
         };
     })
     // Configure PostCSS loader.
     .addLoader({
         test: /ckeditor5-[^/\\]+[/\\]theme[/\\].+\.css$/,
         loader: 'postcss-loader',
-        options: styles.getPostCssConfig({
-            themeImporter: {
-                themePath: require.resolve('@ckeditor/ckeditor5-theme-lark')
-            }
-        })
+        options: {
+            postcssOptions: styles.getPostCssConfig( {
+                themeImporter: {
+                    themePath: require.resolve( '@ckeditor/ckeditor5-theme-lark' )
+                },
+                minify: true
+            } )
+        }
     })
 ;
 

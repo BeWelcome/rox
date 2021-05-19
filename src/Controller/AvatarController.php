@@ -79,7 +79,7 @@ class AvatarController extends AbstractController
     /**
      * @Route("/members/avatar/{username}/{size}", name="avatar",
      *     requirements={"username" : "(?i:[a-z][a-z0-9-._ ]{1,30}[a-z0-9-._])",
-     *          "size" : "\d+|original" },
+     *          "size" : "\d+|original|tmp" },
      *     _defaults={"size": "50"})
      */
     public function showAvatar(string $username, string $size): BinaryFileResponse
@@ -108,6 +108,7 @@ class AvatarController extends AbstractController
         }
 
         $filename = $this->getAvatarImageFilename($member, $size);
+        $this->logger->info('Getting avatar file ' . $filename);
 
         return $this->createCacheableResponse($filename);
     }
@@ -188,9 +189,14 @@ class AvatarController extends AbstractController
     private function getAvatarImageFilename(Member $member, string $size): string
     {
         $filename = self::AVATAR_PATH . $member->getId() . '_' . $size;
-        if ('original' !== $size) {
-            $filename .= '_' . $size;
+
+        if (in_array($size, ['original', 'tmp'])) {
+            # returned named files
+            return $filename;
         }
+
+        # Add the size again to provide both hight and width - e.g. 2_500_500
+        $filename .= '_' . $size;
 
         return $filename;
     }

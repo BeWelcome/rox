@@ -60,6 +60,23 @@ class AvatarController extends AbstractController
     }
 
     /**
+     * @Route("/members/persisttmpavatar", methods={"POST"})
+     */
+    public function persistTmpAvatar(): Response
+    {
+        $member = $this->getUser();
+        if (!$member || !$member->getId()) {
+            return new Response('Avatar persistence failed', Response::HTTP_UNAUTHORIZED);
+        }
+
+        if (!$this->moveAvatarFromTmp($member->getId())) {
+            return new Response('Avatar persistence failed - No temporary file found', Response::HTTP_BAD_REQUEST );
+        }
+
+        return new Response('');
+    }
+
+    /**
      * @Route("/members/avatar/{username}/{size}", name="avatar",
      *     requirements={"username" : "(?i:[a-z][a-z0-9-._ ]{1,30}[a-z0-9-._])",
      *          "size" : "\d+|original" },
@@ -98,7 +115,7 @@ class AvatarController extends AbstractController
     private function storeAvatar($memberId, $tmpFilePath, $isTemporary)
     {
         if (! $isTemporary) {
-            $this->removeAvatarFiles($memberId, $isTemporary);
+            $this->removeAvatarFiles($memberId);
         }
 
         $imageManager = new ImageManager();
@@ -120,10 +137,30 @@ class AvatarController extends AbstractController
         return true;
     }
 
+    private function moveAvatarFromTmp($memberId)
+    {
+        $tmpFileName = self::AVATAR_PATH . $memberId . self::AVATAR_TMP_SUFIX;
+        $newFileName = self::AVATAR_PATH . $memberId . self::AVATAR_SUFIX;
+        $tmpFileExists = file_exists($tmpFileName);
+        if (!$tmpFileExists) {
+            return false;
+        }
+
+        $this->removeAvatarFiles($memberId);
+        rename($tmpFileName, $newFileName);
+
+        $this->logger->info('Avatar moved from ' . $tmpFileName . ' to ' . $newFileName);
+
+        return true;
+    }
+
     private function removeAvatarFiles($memberId)
     {
+        $patern = $memberId . self::AVATAR_SUFIX . '*';
+        $this->logger->info('Removing all avatar files matching "' . $patern . '" in ' . self::AVATAR_PATH);
+
         $finder = new Finder();
-        $finder->name($memberId . '_*');
+        $finder->name($patern);
         foreach ($finder->files()->in(self::AVATAR_PATH) as $oldAvatarFile) {
             unlink($oldAvatarFile->getRealPath());
         }

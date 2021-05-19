@@ -1,5 +1,5 @@
 import React from 'react';
-import { uploadTemporaryAvatar } from '../../api/avatar';
+import { persistAvatar, uploadTemporaryAvatar } from '../../api/avatar';
 import { getText } from '../../utils/texts';
 import { alertError, alertSuccess } from '../../utils/alerts';
 
@@ -17,6 +17,7 @@ const AvatarChangeButton = (props) => {
 
         if (file) {
             const result = await uploadTemporaryAvatar(file);
+            await persistAvatar();
 
             setUploading(false);
 

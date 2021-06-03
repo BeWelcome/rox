@@ -2,9 +2,14 @@ export const uploadTemporaryAvatar = async (file) => {
     var form = new FormData();
     form.append("avatar", file);
 
-    const endpoint = `${window.globals.baseUrl}/members/uploadavatar`;
+    const endpoint = `${window.globals.baseUrl}/members/uploadavatar?tmp=true`;
 
-    const response = fetch(endpoint, { method: 'POST', body: form });
+    return await fetch(endpoint, { method: 'POST', body: form });
+}
 
-    return response;
+export const persistAvatar = async () => {
+
+    const endpoint = `${window.globals.baseUrl}/members/persisttmpavatar`;
+
+    return await fetch(endpoint, { method: 'POST' });
 }

@@ -164,6 +164,10 @@ Please read [Useful hints](#useful-hints) section below.
 
 * Production OS is Debian GNU/Linux Strech.
 
+* Logs can be followed by `docker-compose exec php tail -f var/log/dev.log`
+
+* To change log level change [monolog config](./config/packages/dev/monolog.yaml)
+
 ## Create documentation
 
 If you need documentation check out [MKDocs](https://www.mkdocs.org/).

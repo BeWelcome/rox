@@ -24,6 +24,8 @@ class AvatarController extends AbstractController
     private const EXPIRY = 60 * 60 * 24; // One day
     private const AVATAR_PATH = '../data/user/avatars/';
     private const EMPTY_AVATAR_PATH = 'images/';
+    private const AVATAR_TMP_SUFIX = "_tmp";
+    private const AVATAR_SUFIX = "_original";
 
     /** @var LoggerInterface */
     private $logger;
@@ -50,7 +52,26 @@ class AvatarController extends AbstractController
             return new Response('File upload failed', Response::HTTP_BAD_REQUEST);
         }
 
-        $this->storeAvatar($member->getId(), $avatarFile->getRealPath());
+
+        $isTemporary = !! $request->query->get('tmp');
+        $this->storeAvatar($member->getId(), $avatarFile->getRealPath(), $isTemporary);
+
+        return new Response('');
+    }
+
+    /**
+     * @Route("/members/persisttmpavatar", methods={"POST"})
+     */
+    public function persistTmpAvatar(): Response
+    {
+        $member = $this->getUser();
+        if (!$member || !$member->getId()) {
+            return new Response('Avatar persistence failed', Response::HTTP_UNAUTHORIZED);
+        }
+
+        if (!$this->moveAvatarFromTmp($member->getId())) {
+            return new Response('Avatar persistence failed - No temporary file found', Response::HTTP_BAD_REQUEST );
+        }
 
         return new Response('');
     }
@@ -58,7 +79,7 @@ class AvatarController extends AbstractController
     /**
      * @Route("/members/avatar/{username}/{size}", name="avatar",
      *     requirements={"username" : "(?i:[a-z][a-z0-9-._ ]{1,30}[a-z0-9-._])",
-     *          "size" : "\d+|original" },
+     *          "size" : "\d+|original|tmp" },
      *     _defaults={"size": "50"})
      */
     public function showAvatar(string $username, string $size): BinaryFileResponse
@@ -87,16 +108,16 @@ class AvatarController extends AbstractController
         }
 
         $filename = $this->getAvatarImageFilename($member, $size);
+        $this->logger->info('Getting avatar file ' . $filename);
 
         return $this->createCacheableResponse($filename);
     }
 
-    private function storeAvatar($memberId, $tmpFilePath)
+    private function storeAvatar($memberId, $tmpFilePath, $isTemporary)
     {
-        // TODO
-        // $this->writeMemberphoto($memberId);
-
-        $this->removeAvatarFile($memberId);
+        if (! $isTemporary) {
+            $this->removeAvatarFiles($memberId);
+        }
 
         $imageManager = new ImageManager();
         $img = $imageManager->make($tmpFilePath);
@@ -109,7 +130,7 @@ class AvatarController extends AbstractController
             $img->crop($size, $size, $startX, $startY);
         }
 
-        $newFileName = self::AVATAR_PATH . $memberId . '_original';
+        $newFileName = self::AVATAR_PATH . $memberId . ($isTemporary ? self::AVATAR_TMP_SUFIX : self::AVATAR_SUFIX);
         $img->save($newFileName);
 
         $this->logger->info('New avatar picture was stored: ' . $newFileName);
@@ -117,10 +138,30 @@ class AvatarController extends AbstractController
         return true;
     }
 
-    private function removeAvatarFile($memberId)
+    private function moveAvatarFromTmp($memberId)
     {
+        $tmpFileName = self::AVATAR_PATH . $memberId . self::AVATAR_TMP_SUFIX;
+        $newFileName = self::AVATAR_PATH . $memberId . self::AVATAR_SUFIX;
+        $tmpFileExists = file_exists($tmpFileName);
+        if (!$tmpFileExists) {
+            return false;
+        }
+
+        $this->removeAvatarFiles($memberId);
+        rename($tmpFileName, $newFileName);
+
+        $this->logger->info('Avatar moved from ' . $tmpFileName . ' to ' . $newFileName);
+
+        return true;
+    }
+
+    private function removeAvatarFiles($memberId)
+    {
+        $patern = $memberId . self::AVATAR_SUFIX . '*';
+        $this->logger->info('Removing all avatar files matching "' . $patern . '" in ' . self::AVATAR_PATH);
+
         $finder = new Finder();
-        $finder->name($memberId . '_*');
+        $finder->name($patern);
         foreach ($finder->files()->in(self::AVATAR_PATH) as $oldAvatarFile) {
             unlink($oldAvatarFile->getRealPath());
         }
@@ -148,9 +189,14 @@ class AvatarController extends AbstractController
     private function getAvatarImageFilename(Member $member, string $size): string
     {
         $filename = self::AVATAR_PATH . $member->getId() . '_' . $size;
-        if ('original' !== $size) {
-            $filename .= '_' . $size;
+
+        if (in_array($size, ['original', 'tmp'])) {
+            # returned named files
+            return $filename;
         }
+
+        # Add the size again to provide both hight and width - e.g. 2_500_500
+        $filename .= '_' . $size;
 
         return $filename;
     }
@@ -163,7 +209,7 @@ class AvatarController extends AbstractController
     private function createAvatarImage(Member $member, $size)
     {
         // creates a thumb nail for the current image (if we have an original that is)
-        $original = self::AVATAR_PATH . $member->getId() . '_original';
+        $original = self::AVATAR_PATH . $member->getId() . self::AVATAR_SUFIX;
         if (!file_exists($original)) {
             $message = 'No original avatar image exists for member ' . $member->getUsername();
             throw new InvalidArgumentException($message);
@@ -181,7 +227,7 @@ class AvatarController extends AbstractController
     private function createEmptyAvatarImage(int $size): string
     {
         // creates a thumbnail of the empty avatar
-        $original = self::EMPTY_AVATAR_PATH . 'empty_avatar_original.png';
+        $original = self::EMPTY_AVATAR_PATH . 'empty_avatar' . self::AVATAR_SUFIX . '.png';
         $filename = self::AVATAR_PATH . 'empty_avatar_' . $size . '_' . $size;
 
         $imageManager = new ImageManager();

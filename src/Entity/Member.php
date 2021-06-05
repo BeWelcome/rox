@@ -25,6 +25,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Persistence\Mapping\ClassMetadata;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Persistence\ObjectManagerAware;
+use Symfony\Component\PasswordHasher\Hasher\PasswordHasherAwareInterface;
 use Symfony\Component\Security\Core\Encoder\EncoderAwareInterface;
 use Symfony\Component\Security\Core\Exception\RuntimeException;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -46,7 +47,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *     }
  * )
  */
-class Member implements UserInterface, \Serializable, EncoderAwareInterface, ObjectManagerAware
+class Member implements UserInterface, \Serializable, PasswordHasherAwareInterface, ObjectManagerAware
 {
     public const ROLE_ADMIN_ACCEPTER = 'ROLE_ADMIN_ACCEPTER';
     public const ROLE_ADMIN_ADMIN = 'ROLE_ADMIN_ADMIN';
@@ -777,6 +778,11 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
      * @return string
      */
     public function getUsername()
+    {
+        return $this->username;
+    }
+
+    public function getUserIdentifier()
     {
         return $this->username;
     }
@@ -2575,7 +2581,7 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
      *
      * @return string
      */
-    public function getEncoderName()
+    public function getPasswordHasherName(): string
     {
         if (preg_match('/^\*[0-9A-F]{40}$/', $this->getPassWord())) {
             return LegacyPasswordEncoder::class;

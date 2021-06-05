@@ -70,23 +70,21 @@
     "tar": "6.1.0",
     "tempusdominus": "github:tonix-tuft/tempusdominus",
     "tempusdominus-bootstrap": "github:tonix-tuft/tempusdominus-bootstrap",
-    "workbox-webpack-plugin": "^6.1.5"
-  },
-  "dependencies": {
-    "@babel/core": "^7.14.2",
-    "@babel/preset-react": "^7.13.13",
-    "@fontsource/lato": "^4.2.0",
-    "@fontsource/signika": "^4.2.0",
-    "add-to-homescreen": "^3.2.6",
-    "circle-flags": "https://github.com/HatScripts/circle-flags",
-    "leaflet-polylinedecorator": "^1.6.0",
-    "litepicker": "^2.0.11",
-    "postcss": "^8.2.15",
-    "postcss-loader": "5.3.0",
-    "purgecss": "3",
-    "react-avatar-editor": "^11.1.0",
-    "tailwindcss": "^2.1.2",
-    "toastify-js": "^1.10.0"
+    "workbox-webpack-plugin": "^6.1.5",
+      "@babel/core": "^7.14.2",
+      "@babel/preset-react": "^7.13.13",
+      "@fontsource/lato": "^4.2.0",
+      "@fontsource/signika": "^4.2.0",
+      "add-to-homescreen": "^3.2.6",
+      "circle-flags": "https://github.com/HatScripts/circle-flags",
+      "leaflet-polylinedecorator": "^1.6.0",
+      "litepicker": "^2.0.11",
+      "postcss": "^8.2.15",
+      "postcss-loader": "5.3.0",
+      "purgecss": "3",
+      "react-avatar-editor": "^11.1.0",
+      "tailwindcss": "^2.1.2",
+      "toastify-js": "^1.10.0"
   },
   "scripts": {
     "encoreWatch": "encore dev --watch"

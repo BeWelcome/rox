@@ -10,9 +10,13 @@
 	<div class="row">
 		<div class="col-12 col-md-6">
 			<p>{{ 'feedbackdisclaimer' | trans | purify | nl2br }}</p>
+            {# Special notice for profile reports #}
 		</div>
 		<div class="col-12 col-md-6">
 			{{ form_start(form) }}
+            {% if form.IdCategory.vars.value == 2 %}
+                <div class="alert alert-notice">{{ 'feedbackreportprofileaddinfo' | trans | purify | nl2br }}</div>
+            {% endif %}
 			{{ form_rest(form) }}
 			<div class="o-form-group">
 				<button type="submit" id="submit" name="submit" class="btn-primary btn">{{ 'submit'|trans }}</button>

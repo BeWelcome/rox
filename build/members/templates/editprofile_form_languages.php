@@ -58,7 +58,7 @@
                             class="sr-only"><?= $words->get('RemoveLanguage') ?></span></button>
                 </div>
                 <div class="col-10 col-md-4">
-                    <select class='lang_selector select2 form-control' name="memberslanguages[]">
+                    <select class='lang_selector select2 o-input' name="memberslanguages[]">
                         <option selected="selected">-<?= $words->get("ChooseNewLanguage") ?>-</option>
                         <optgroup label="<?= $words->getSilent('SpokenLanguages') ?>">
                             <?php

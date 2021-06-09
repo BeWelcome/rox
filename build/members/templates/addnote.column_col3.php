@@ -3,7 +3,7 @@
     $vars = array();
     $words = $this->words;
     $layoutbits = new MOD_layoutbits();
-    
+
     $member = $this->member;
     $Username = $member->Username;
     $edit_mode = false;
@@ -26,7 +26,7 @@
         $note->Comment = $vars['ProfileNoteComment'];
     }
 
-    // Display errors from last submit	
+    // Display errors from last submit
     if (isset($vars['errors']))
     {
         foreach ($vars['errors'] as $error)
@@ -46,7 +46,7 @@
     $formkit = $this->layoutkit->formkit;
     $callback_tag = $formkit->setPostCallback('MembersController', 'addnoteCallback');
     ?>
-    
+
             <div class="col-12">
                 <h3><?php
                 if (!$edit_mode) {

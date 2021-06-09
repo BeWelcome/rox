@@ -23,7 +23,7 @@
                         <?php
                         echo isset($mem_redirect->location) ? 'value="'.htmlentities($mem_redirect->location, ENT_COMPAT, 'utf-8').'" ' : '';
                         ?>
-                         > 
+                         >
                          <span class="input-group-append">
                              <button type="submit" class="button" id="btn-geo-search"><?=$words->get('label_search_location')?></button>
                          </span>
@@ -32,7 +32,7 @@
                 </div>
         </fieldset>
     </form>
-        
+
     <fieldset id="location_selection_nonjs" class="location_selection">
         <?php echo $locations_print; ?>
     </fieldset>

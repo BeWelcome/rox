@@ -15,17 +15,17 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program; if not, see <http://www.gnu.org/licenses/> or 
-write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+along with this program; if not, see <http://www.gnu.org/licenses/> or
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 */
-/** 
+/**
  * @author shevek
  */
 
-/** 
+/**
  * Tresasurer management overview template
- * 
+ *
  * @package Apps
  * @subpackage Admin
  */
@@ -46,7 +46,7 @@ if (empty($vars)) {
 $words = new MOD_words();
 ?>
 <form method="post">
-<?php echo $callback_tag; 
+<?php echo $callback_tag;
 echo '<input type="hidden" id="id" name="id" value="' . $vars['id'] . '" />';
 if (!empty($errors))
 {

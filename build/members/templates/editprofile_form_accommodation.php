@@ -95,7 +95,7 @@ $hostingInterest = [
             <label for="MaxGuests"
                    class="col-md-4 col-form-label"><?php echo $words->get('ProfileNumberOfGuests'); ?></label>
             <div class="col-12 col-md-8">
-                <input type="number" min="1" max="20" name="MaxGuest" class="form-control"
+                <input type="number" min="1" max="20" name="MaxGuest" class="o-input"
                        value="<?= $vars['MaxGuest']; ?>">
             </div>
         </div>
@@ -210,7 +210,7 @@ $hostingInterest = [
             </label>
             <div class="col-12 col-md-8">
                             <textarea id="AdditionalAccomodationInfo" name="AdditionalAccomodationInfo" class="o-input"
-                                      class="form-control"
+                                      class="o-input"
                                       rows="3"><?= $vars['AdditionalAccomodationInfo'] ?></textarea>
             </div>
         </div>

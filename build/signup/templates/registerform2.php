@@ -169,7 +169,7 @@
                 <!-- Gender-->
                 <?php $genderError = in_array('SignupErrorProvideGender', $vars['errors']); ?>
                 <div class="o-form-group">
-                    <span class="d-block form-control-label"><?php echo $words->get('Gender'); ?></span>
+                    <span class="d-block o-input-label"><?php echo $words->get('Gender'); ?></span>
                     <div class="o-input <?php if ($genderError) { echo "is-invalid"; } ?> d-none"></div>
                     <div class="btn-group btn-group-toggle" data-toggle="buttons">
                     <label class="btn btn-outline-primary" for="female" <?php

@@ -15,8 +15,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program; if not, see <http://www.gnu.org/licenses/> or 
-write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+along with this program; if not, see <http://www.gnu.org/licenses/> or
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 */
 
@@ -40,10 +40,14 @@ class ActivitiesShowPage extends ActivitiesBasePage
         $words = $layoutkit->getWords();
         // add details item to end of normal list like search results
         $items[] = array('activitiesdetails', 'activities/'. $activity_id, $words->getSilent('ActivitiesDetails'));
+        $reportUrl = '/feedback?IdCategory=12&FeedbackQuestion=' . urlencode('Hi, I think the activity '
+                . $this->activity->title . ' (' . $this->activity->id
+                . ') isn\'t in line with the rules.');
+        $items[] = array('report', $reportUrl, '<i class=\'fa fa-flag\'></i> ' . $words->getSilent('activity.report'));
         return $items;
     }
-    
-    protected function getSubmenuActiveItem() 
+
+    protected function getSubmenuActiveItem()
     {
         return 'activitiesdetails';
     }

@@ -59,7 +59,8 @@ use Symfony\Component\Asset\VersionStrategy\JsonManifestVersionStrategy;
         $side_column_names = $this->getColumnNames();
         $mid_column_name = array_pop($side_column_names);
 
-        if ($this->getSubmenuItems()) { ?>
+        $submenuItems = $this->getSubmenuItems();
+        if ($submenuItems) { ?>
         <div class="row row-offcanvas row-offcanvas-right">
             <div class="col-12 col-md-9">
     <?php } else { ?>
@@ -68,7 +69,7 @@ use Symfony\Component\Asset\VersionStrategy\JsonManifestVersionStrategy;
     <?php } ?>
 
             <?php
-            if ($this->getSubmenuItems()) { ?>
+            if ($submenuItems) { ?>
                 <p class="float-right d-md-none">
                     <button type="button" class="btn btn-primary btn-sm ml-3" data-toggle="offcanvas"><i class="navbar-toggler-icon"></i></button>
                 </p>
@@ -84,7 +85,7 @@ use Symfony\Component\Asset\VersionStrategy\JsonManifestVersionStrategy;
             <!-- col-12 -->
             </div>
         <?php
-        if ($this->getSubmenuItems()) {
+        if ($submenuItems) {
             $this->submenu();
         }
         ?>

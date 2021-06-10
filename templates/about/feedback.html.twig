@@ -4,6 +4,12 @@
 	{{ 'contactus' | trans }}
 {% endblock %}
 
+{% block javascripts %}
+<script type="application/javascript">
+    $('#reportMessages').modal();
+</script>
+{% endblock javascripts %}
+
 {% block content %}
 <div class="o-text">
 	<h1>{{ 'contactus' | trans }}</h1>
@@ -15,7 +21,24 @@
 		<div class="col-12 col-md-6">
 			{{ form_start(form) }}
             {% if form.IdCategory.vars.value == 2 %}
-                <div class="alert alert-notice">{{ 'feedbackreportprofileaddinfo' | trans | purify | nl2br }}</div>
+                <div class="modal fade" id="reportMessages" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="staticBackdropLabel">{{ 'feedback.title'|trans }}</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                {{ 'feedbackreportprofileaddinfo' | trans | purify | nl2br }}
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" data-dismiss="modal">{{ 'feedback.understood'|trans }}</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             {% endif %}
 			{{ form_rest(form) }}
 			<div class="o-form-group">

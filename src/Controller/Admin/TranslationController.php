@@ -253,6 +253,11 @@ class TranslationController extends AbstractController
                     $em->persist($translation);
                 }
                 $em->flush();
+                if ('en' === $createTranslationRequest->locale) {
+                    $this->translationModel->refreshTranslationsCache();
+                } else {
+                    $this->translationModel->refreshTranslationsCacheForLocale($createTranslationRequest->locale);
+                }
                 $this->translationModel->refreshTranslationsCacheForLocale($language->getShortCode());
                 $this->addTranslatedFlash('notice', 'flash.added.translatable.item', ['%code%' => $translationId]);
 
@@ -313,16 +318,16 @@ class TranslationController extends AbstractController
             /** @var TranslationRequest $data */
             $data = $createForm->getData();
             $invalidMessage = $this->checkIfICUFormatIsValid($data, $data->englishText);
-            if ('' !== $invalidMessage) {
+            if ('' === $invalidMessage) {
                 $newTranslatableItem = $this->generateTranslatableItem($data, $translator, $english);
                 $em->persist($newTranslatableItem);
                 $em->flush();
-                $this->translationModel->refreshTranslationsCacheForLocale('en');
+                $this->translationModel->refreshTranslationsCache();
                 $this->addTranslatedFlash('notice', 'flash.added.translatable.item', ['%code%' => $data->wordCode]);
 
                 return $this->redirectToRoute('translations');
             }
-            $createForm->get('translatedText')->addError(new FormError($invalidMessage));
+            $createForm->get('englishText')->addError(new FormError($invalidMessage));
         }
 
         return $this->render('admin/translations/create.en.html.twig', [

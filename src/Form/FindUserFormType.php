@@ -12,9 +12,9 @@ class FindUserFormType extends AbstractType
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function buildForm(FormBuilderInterface $formBuilder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $formBuilder
+        $builder
             ->add('term', TextType::class, [
                 'label' => 'label.username.part',
                 'attr' => [

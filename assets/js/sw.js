@@ -48,10 +48,9 @@ registerRoute(
     }),
 );
 
-// Cache messages and requests for 10 days but always load /messages and /requests
 registerRoute(
-    new RegExp('/message/.*') || new RegExp('/request/.*'),
-    new CacheFirst({
+    new RegExp('/message/.*') || new RegExp('/request/.*') || new RegExp('/invitation/.*'),
+    new NetworkFirst({
         cacheName: 'conversations',
         plugins: [
             new CacheableResponsePlugin({
@@ -65,9 +64,8 @@ registerRoute(
     }),
 );
 
-// Cache messages and requests for 10 days but always load /messages and /requests
 registerRoute(
-    new RegExp('/messages/.*') || new RegExp('/requests/.*') || new RegExp('/both/.*'),
+    new RegExp('/conversations/.*'),
     new NetworkFirst({
         cacheName: 'conversations',
         plugins: [

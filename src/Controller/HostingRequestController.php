@@ -52,18 +52,8 @@ class HostingRequestController extends BaseHostingRequestAndInvitationController
             throw $this->createAccessDeniedException('Not your message/hosting request');
         }
 
-        if (!$this->isHostingRequest($message)) {
-            return $this->redirectToRoute('message_reply', [
-                'id' => $message->getId(),
-                'leg' => $message->getRequest()->getInviteForLeg()->getId(),
-            ]);
-        }
-
-        if ($this->isInvitation($message)) {
-            return $this->redirectToRoute('invitation_reply', [
-                'id' => $message->getId(),
-                'leg' => $message->getRequest()->getInviteForLeg()->getId(),
-            ]);
+        if ($this->needsRedirect($message, self::HOSTING_REQUEST)) {
+            return $this->redirectReplyTo($message);
         }
 
         $thread = $this->messageModel->getThreadForMessage($message);
@@ -217,7 +207,11 @@ class HostingRequestController extends BaseHostingRequestAndInvitationController
      */
     public function show(Message $message): Response
     {
-        return $this->showThread($message, 'request/view.html.twig', 'hosting_request_show');
+        if ($this->needsRedirect($message, self::HOSTING_REQUEST)) {
+            return $this->redirectShow($message, false);
+        }
+
+        return $this->showThread($message, 'request/view.html.twig', 'hosting_request_show', false);
     }
 
     /**
@@ -228,7 +222,11 @@ class HostingRequestController extends BaseHostingRequestAndInvitationController
      */
     public function showDeleted(Message $message): Response
     {
-        return $this->showThreadWithDeleted($message, 'request/view.html.twig', 'hosting_request_show_with_deleted');
+        if ($this->needsRedirect($message, self::HOSTING_REQUEST)) {
+            return $this->redirectShow($message, true);
+        }
+
+        return $this->showThread($message, 'request/view.html.twig', 'hosting_request_show', true);
     }
 
     /**
@@ -274,7 +272,7 @@ class HostingRequestController extends BaseHostingRequestAndInvitationController
 
         if ($requestForm->isSubmitted() && $requestForm->isValid()) {
             // Write request to database after doing some checks
-            $hostingRequest = $requestForm->getData();
+            $hostingRequest = $this->getMessageFromData($requestForm->getData(), $member, $host);
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($hostingRequest);
@@ -297,40 +295,12 @@ class HostingRequestController extends BaseHostingRequestAndInvitationController
         ]);
     }
 
-    /**
-     * @Route("/requests_b/{folder}", name="requests_b",
-     *     defaults={"folder": "inbox"})
-     *
-     * @throws InvalidArgumentException
-     */
-    public function requests(Request $request, string $folder): Response
-    {
-        /** @var Member $member */
-        $member = $this->getUser();
-        list($page, $limit, $sort, $direction) = $this->getOptionsFromRequest($request);
-
-        $requests = $this->requestModel->getFilteredRequests(
-            $member,
-            $folder,
-            $sort,
-            $direction,
-            $page,
-            $limit
-        );
-
-        return $this->handleFolderRequest($request, $folder, 'requests', $requests);
-    }
-
-    /**
-     * @param mixed $subject
-     * @param $requestChanged
-     */
     protected function sendGuestReplyNotification(
         Member $host,
         Member $guest,
         Message $request,
-        $subject,
-        $requestChanged
+        string $subject,
+        bool $requestChanged
     ): void {
         $this->requestModel->sendRequestNotification(
             $guest,
@@ -350,16 +320,12 @@ class HostingRequestController extends BaseHostingRequestAndInvitationController
         $this->requestModel->sendRequestNotification($host, $guest, $host, $request, $subject, 'request', false);
     }
 
-    /**
-     * @param mixed $subject
-     * @param mixed $requestChanged
-     */
     private function sendHostReplyNotification(
         Member $host,
         Member $guest,
         Message $request,
-        $subject,
-        $requestChanged
+        string $subject,
+        bool $requestChanged
     ): void {
         $this->requestModel->sendRequestNotification(
             $host,

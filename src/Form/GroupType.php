@@ -15,9 +15,9 @@ class GroupType extends AbstractType
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function buildForm(FormBuilderInterface $formBuilder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $formBuilder
+        $builder
             ->add('name', TextType::class, [
                 'label' => 'label.group.name',
                 'help' => 'group.create.name.hint',
@@ -35,7 +35,7 @@ class GroupType extends AbstractType
             ]);
         // \todo check if there is a better way to do this without compromising translation extraction
         if ($options['allowInvitationOnly']) {
-            $formBuilder
+            $builder
                 ->add('type', ChoiceType::class, [
                     'choices' => [
                         'groupsjoinpublic' => 'Public',
@@ -47,7 +47,7 @@ class GroupType extends AbstractType
                     'label' => 'groupspublicstatusheading',
                 ]);
         } else {
-            $formBuilder
+            $builder
                 ->add('type', ChoiceType::class, [
                     'choices' => [
                         'groupsjoinpublic' => 'Public',
@@ -58,7 +58,7 @@ class GroupType extends AbstractType
                     'label' => 'groupspublicstatusheading',
                 ]);
         }
-        $formBuilder
+        $builder
             ->add('membersOnly', ChoiceType::class, [
                 'choices' => [
                     'groupsvisibleposts' => 'Yes',

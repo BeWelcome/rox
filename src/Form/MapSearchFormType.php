@@ -14,9 +14,9 @@ class MapSearchFormType extends AbstractType
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function buildForm(FormBuilderInterface $formBuilder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $formBuilder
+        $builder
             ->add('location', TextType::class, [
                 'label' => 'landing.whereyougo',
                 'error_bubbling' => true,

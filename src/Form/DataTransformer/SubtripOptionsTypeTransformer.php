@@ -10,7 +10,7 @@ class SubtripOptionsTypeTransformer implements DataTransformerInterface
     /**
      * {@inheritDoc}
      *
-     * @param SubtripOptionsType|null
+     * @param ?SubtripOptionsType $value
      *
      * @return array
      */

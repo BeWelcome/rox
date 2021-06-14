@@ -15,6 +15,7 @@ use DateTime;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -24,120 +25,15 @@ class BaseMessageController extends AbstractController
     use TranslatedFlashTrait;
     use TranslatorTrait;
 
-    protected $messageModel;
+    protected const MESSAGE = 'message';
+    protected const HOSTING_REQUEST = 'hosting_request';
+    protected const INVITATION = 'invitation';
+
+    protected MessageModel $messageModel;
 
     public function __construct(MessageModel $messageModel)
     {
         $this->messageModel = $messageModel;
-    }
-
-    protected function getSubMenuItems(): array
-    {
-        return [
-            'both_inbox' => [
-                'key' => 'MessagesRequestsReceived',
-                'url' => $this->generateUrl('both', ['folder' => 'inbox']),
-            ],
-            'messages_inbox' => [
-                'key' => 'MessagesReceived',
-                'url' => $this->generateUrl('messages', ['folder' => 'inbox']),
-            ],
-            'requests_inbox' => [
-                'key' => 'RequestsReceived',
-                'url' => $this->generateUrl('requests', ['folder' => 'inbox']),
-            ],
-            'requests_sent' => [
-                'key' => 'RequestsSent',
-                'url' => $this->generateUrl('requests', ['folder' => 'sent']),
-            ],
-            'messages_sent' => [
-                'key' => 'MessagesSent',
-                'url' => $this->generateUrl('messages', ['folder' => 'sent']),
-            ],
-            'messages_spam' => [
-                'key' => 'MessagesSpam',
-                'url' => $this->generateUrl('messages', ['folder' => 'spam']),
-            ],
-            'both_deleted' => [
-                'key' => 'MessagesDeleted',
-                'url' => $this->generateUrl('both', ['folder' => 'deleted']),
-            ],
-        ];
-    }
-
-    /**
-     * @param mixed $messages
-     *
-     * @throws ORMException
-     * @throws OptimisticLockException
-     */
-    protected function handleFolderRequest(
-        Request $request,
-        string $folder,
-        string $type,
-        iterable $messages
-    ): Response {
-        /** @var Member $member */
-        $member = $this->getUser();
-
-        $messageIds = [];
-        foreach ($messages->getIterator() as $key => $val) {
-            $messageIds[$key] = $val->getId();
-        }
-        $messageRequest = new MessageIndexRequest();
-        $form = $this->createForm(MessageIndexFormType::class, $messageRequest, [
-            'folder' => $folder,
-            'ids' => $messageIds,
-        ]);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $data = $form->getData();
-            $messageIds = $data->getMessages();
-
-            $clickedButton = $form->getClickedButton()->getName();
-            if ('purge' === $clickedButton) {
-                $this->requestModel->markPurged($member, $messageIds);
-                $this->addTranslatedFlash('notice', 'flash.purged');
-
-                return $this->redirect($this->getRedirectUrl($request));
-            }
-            if ('delete' === $clickedButton) {
-                if ('deleted' === $folder) {
-                    $this->requestModel->unmarkDeleted($member, $messageIds);
-                    $this->addTranslatedFlash('notice', 'flash.undeleted');
-
-                    return $this->redirect($this->getRedirectUrl($request));
-                }
-                $this->requestModel->markDeleted($member, $messageIds);
-                $this->addTranslatedFlash('notice', 'flash.deleted');
-
-                return $this->redirect($this->getRedirectUrl($request));
-            }
-            if ('spam' === $clickedButton) {
-                if ('spam' === $folder) {
-                    $this->requestModel->unmarkAsSpam($messageIds);
-                    $this->addTranslatedFlash('notice', 'flash.marked.nospam');
-
-                    return $this->redirect($this->getRedirectUrl($request));
-                }
-                $this->requestModel->markAsSpam($messageIds);
-                $this->addTranslatedFlash('notice', 'flash.marked.spam');
-
-                return $this->redirect($this->getRedirectUrl($request));
-            }
-        }
-
-        return $this->render('message/index.html.twig', [
-            'form' => $form->createView(),
-            'items' => $messages,
-            'folder' => $folder,
-            'filter' => $request->query->all(),
-            'submenu' => [
-                'active' => $type . '_' . $folder,
-                'items' => $this->getSubMenuItems(),
-            ],
-        ]);
     }
 
     /**
@@ -175,7 +71,7 @@ class BaseMessageController extends AbstractController
         return [$page, $limit, $sort, $direction];
     }
 
-    protected function showThread(Message $message, string $template, string $route)
+    protected function showThread(Message $message, string $template, string $route, bool $includeDeleted)
     {
         /** @var Member $member */
         $member = $this->getUser();
@@ -188,6 +84,10 @@ class BaseMessageController extends AbstractController
         $current = $thread[0];
 
         if ($message->getId() !== $current->getId()) {
+            if ($includeDeleted) {
+                $route .= '_with_deleted';
+            }
+
             return $this->redirectToRoute($route, ['id' => $current->getId()]);
         }
 
@@ -206,42 +106,7 @@ class BaseMessageController extends AbstractController
         $this->markThreadAsRead($member, $thread);
 
         return $this->render($template, [
-            'show_deleted' => false,
-            'current' => $current,
-            'thread' => $thread,
-        ]);
-    }
-
-    protected function showThreadWithDeleted(Message $message, string $template, string $route)
-    {
-        /** @var Member $member */
-        $member = $this->getUser();
-
-        if (!$this->isMessageOfMember($message)) {
-            throw $this->createAccessDeniedException('Not your message/hosting request');
-        }
-
-        $thread = $this->messageModel->getThreadForMessage($message);
-        $current = $thread[0];
-
-        if ($message->getId() !== $current->getId()) {
-            return $this->redirectToRoute($route, ['id' => $current->getId()]);
-        }
-
-        // Now we're at the latest message in the thread. Check that no all items are deleted/purged depending on the
-        // $showDeleted setting
-        $nothingVisible = true;
-        foreach ($thread as $threadMessage) {
-            $nothingVisible = $nothingVisible && $threadMessage->isPurgedByMember($member);
-        }
-        if ($nothingVisible) {
-            return $this->redirectToRoute('conversations', ['folder' => 'deleted']);
-        }
-
-        $this->markThreadAsRead($member, $thread);
-
-        return $this->render($template, [
-            'show_deleted' => true,
+            'show_deleted' => $includeDeleted,
             'current' => $current,
             'thread' => $thread,
         ]);
@@ -254,43 +119,106 @@ class BaseMessageController extends AbstractController
 
     protected function isHostingRequest(Message $message): bool
     {
-        return null !== $message->getRequest();
+        return null !== $message->getRequest() && null === $message->getRequest()->getInviteForLeg();
     }
 
     protected function isInvitation(Message $message)
     {
-        return null !== $message->getRequest()->getInviteForLeg();
+        return null !== $message->getRequest() && null !== $message->getRequest()->getInviteForLeg();
     }
 
-    protected function getSubjectForReply(Message $newRequest)
+    protected function needsRedirect(Message $message, string $classname): bool
     {
-        $subject = $newRequest->getSubject()->getSubject();
-        if ('Re:' !== substr($subject, 0, 3)) {
-            $subject = 'Re: ' . $subject;
+        $redirectNeeded = false;
+        if (self::MESSAGE == $classname && !$this->isMessage($message)) {
+            $redirectNeeded = true;
+        } elseif (self::INVITATION == $classname && !$this->isInvitation($message)) {
+            $redirectNeeded = true;
+        } elseif (self::HOSTING_REQUEST == $classname && !$this->isHostingRequest($message)) {
+            $redirectNeeded = true;
         }
 
-        if (HostingRequest::REQUEST_CANCELLED === $newRequest->getRequest()->getStatus()) {
-            $subject = $this->adjustSubject('(Cancelled)', $subject);
-        }
-
-        if (HostingRequest::REQUEST_DECLINED === $newRequest->getRequest()->getStatus()) {
-            $subject = $this->adjustSubject('(Declined)', $subject);
-        }
-
-        if (HostingRequest::REQUEST_ACCEPTED === $newRequest->getRequest()->getStatus()) {
-            $subject = $this->adjustSubject('(Accepted)', $subject);
-        }
-
-        if (HostingRequest::REQUEST_TENTATIVELY_ACCEPTED === $newRequest->getRequest()->getStatus()) {
-            $subject = $this->adjustSubject('(Tentatively accepted)', $subject);
-        }
-
-        return $subject;
+        return $redirectNeeded;
     }
 
-    private function getRedirectUrl(Request $request)
+    protected function redirectShow(Message $message, bool $showDeleted): RedirectResponse
     {
-        return $request->getRequestUri();
+        if ($this->isMessage($message)) {
+            $redirectResponse = $this->showMessageRedirect($message, $showDeleted);
+        } elseif ($this->isHostingRequest($message)) {
+            $redirectResponse  = $this->showHostingRequestRedirect($message, $showDeleted);
+        } else {
+            $redirectResponse = $this->showInvitationRedirect($message, $showDeleted);
+        }
+
+        return $redirectResponse;
+    }
+
+    protected function showMessageRedirect(Message $message, bool $showDeleted): RedirectResponse
+    {
+        $route = 'message_show';
+        if ($showDeleted) {
+            $route .= '_with_deleted';
+        }
+        return $this->redirectToRoute($route, [ 'id' => $message->getId()]);
+    }
+
+    protected function showHostingRequestRedirect(Message $hostingRequest, bool $showDeleted): RedirectResponse
+    {
+        $route = 'hosting_request_show';
+        if ($showDeleted) {
+            $route .= '_with_deleted';
+        }
+        return $this->redirectToRoute($route, [ 'id' => $hostingRequest->getId()]);
+    }
+
+    protected function showInvitationRedirect(Message $invitation, bool $showDeleted): RedirectResponse
+    {
+        $route = 'invitation_show';
+        if ($showDeleted) {
+            $route .= '_with_deleted';
+        }
+        return $this->redirectToRoute(
+            $route,
+            [
+                'id' => $invitation->getId(),
+                'leg' => $invitation->getRequest()->getInviteForLeg()
+            ]
+        );
+    }
+
+    protected function redirectReplyTo(Message $message): RedirectResponse
+    {
+        if ($this->isMessage($message)) {
+            $redirectResponse = $this->replyToMessageRedirect($message);
+        } elseif ($this->isHostingRequest($message)) {
+            $redirectResponse  = $this->replyToHostingRequestRedirect($message);
+        } else {
+            $redirectResponse = $this->replyToInvitationRedirect($message);
+        }
+
+        return $redirectResponse;
+    }
+
+    protected function replyToMessageRedirect(Message $message): RedirectResponse
+    {
+        return $this->redirectToRoute('message_reply', [ 'id' => $message->getId()]);
+    }
+
+    protected function replyToHostingRequestRedirect(Message $hostingRequest): RedirectResponse
+    {
+        return $this->redirectToRoute('hosting_request_reply', [ 'id' => $hostingRequest->getId()]);
+    }
+
+    protected function replyToInvitationRedirect(Message $invitation): RedirectResponse
+    {
+        return $this->redirectToRoute(
+            'invitation_reply',
+            [
+                'id' => $invitation->getId(),
+                'leg' => $invitation->getRequest()->getInviteForLeg()
+            ]
+        );
     }
 
     private function markThreadAsRead(Member $member, array $thread)
@@ -306,14 +234,5 @@ class BaseMessageController extends AbstractController
             }
         }
         $em->flush();
-    }
-
-    private function adjustSubject(string $suffix, string $subject): string
-    {
-        if (false === strpos($suffix, $subject)) {
-            $subject .= $suffix;
-        }
-
-        return $subject;
     }
 }

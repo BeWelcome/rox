@@ -12,9 +12,9 @@ class WikiCreateForm extends AbstractType
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function buildForm(FormBuilderInterface $formBuilder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $formBuilder
+        $builder
             ->add('wiki_markup', TextAreaType::class, [
                 'attr' => [
                     'rows' => 20,

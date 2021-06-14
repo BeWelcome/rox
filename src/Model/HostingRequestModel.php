@@ -7,18 +7,21 @@ use App\Entity\HostingRequest;
 use App\Entity\Member;
 use App\Entity\Message;
 use App\Repository\MessageRepository;
+use App\Service\Mailer;
 use App\Utilities\ManagerTrait;
 use DateTime;
 use InvalidArgumentException;
 
-/**
- * Ignore complexity warning. \todo fix this.
- *
- * @SuppressWarnings(PHPMD.CyclomaticComplexity)
- */
 class HostingRequestModel
 {
     use ManagerTrait;
+
+    private Mailer $mailer;
+
+    public function __construct(Mailer $mailer)
+    {
+        $this->mailer = $mailer;
+    }
 
     public function getFilteredRequests($member, $folder, $sort, $sortDir, $page = 1, $limit = 10)
     {
@@ -63,32 +66,17 @@ class HostingRequestModel
         $finalRequest->setStatus(MessageStatusType::SENT);
 
         $oldState = $hostingRequest->getRequest()->getStatus();
-        $newState = $oldState;
-        switch ($clickedButton) {
-            case 'cancel':
-                $newState = HostingRequest::REQUEST_CANCELLED;
-                break;
-            case 'decline':
-                $newState = HostingRequest::REQUEST_DECLINED;
-                break;
-            case 'tentatively':
-                $newState = HostingRequest::REQUEST_TENTATIVELY_ACCEPTED;
-                break;
-            case 'accept':
-                $newState = HostingRequest::REQUEST_ACCEPTED;
-                break;
-        }
+        $newState = $this->getNewState($clickedButton, $oldState);
 
         $newStateSet = ($oldState !== $newState);
 
         // check if request was altered
         $originalRequest = $hostingRequest->getRequest();
         $currentRequest = $data->getRequest();
-        $arrivalDiff = date_diff($originalRequest->getArrival(), $currentRequest->getArrival());
-        $newArrival = !(0 === $arrivalDiff->y && 0 === $arrivalDiff->m && 0 === $arrivalDiff->d);
 
-        $departureDiff = date_diff($originalRequest->getDeparture(), $currentRequest->getDeparture());
-        $newDeparture = !(0 === $departureDiff->y && 0 === $departureDiff->m && 0 === $departureDiff->d);
+        $newArrival = $this->hasArrivalChanged($originalRequest, $currentRequest);
+
+        $newDeparture = $this->hasDepartureChanged($originalRequest, $currentRequest);
 
         $newFlexible = ($originalRequest->getFlexible() !== $currentRequest->getFlexible());
 
@@ -96,6 +84,7 @@ class HostingRequestModel
             ($originalRequest->getNumberOfTravellers() !== $currentRequest->getNumberOfTravellers());
 
         $newHostingRequest = new HostingRequest();
+        $newHostingRequest->setInviteForLeg($hostingRequest->getRequest()->getInviteForLeg());
         $newHostingRequest->setArrival(
             $this->getFinal($originalRequest->getArrival(), $currentRequest->getArrival())
         );
@@ -160,5 +149,39 @@ class HostingRequestModel
     private function getFinal($original, $current)
     {
         return ($original !== $current) ? $current : $original;
+    }
+
+    private function hasArrivalChanged(HostingRequest $original, HostingRequest $current): bool
+    {
+        $arrivalDiff = date_diff($original->getArrival(), $current->getArrival());
+
+        return !(0 === $arrivalDiff->y && 0 === $arrivalDiff->m && 0 === $arrivalDiff->d);
+    }
+
+    private function hasDepartureChanged(HostingRequest $original, HostingRequest $current): bool
+    {
+        $departureDiff = date_diff($original->getDeparture(), $current->getDeparture());
+
+        return !(0 === $departureDiff->y && 0 === $departureDiff->m && 0 === $departureDiff->d);
+    }
+
+    private function getNewState(string $clickedButton, int $oldState): int
+    {
+        $newState = $oldState;
+        switch ($clickedButton) {
+            case 'cancel':
+                $newState = HostingRequest::REQUEST_CANCELLED;
+                break;
+            case 'decline':
+                $newState = HostingRequest::REQUEST_DECLINED;
+                break;
+            case 'tentatively':
+                $newState = HostingRequest::REQUEST_TENTATIVELY_ACCEPTED;
+                break;
+            case 'accept':
+                $newState = HostingRequest::REQUEST_ACCEPTED;
+                break;
+        }
+        return $newState;
     }
 }

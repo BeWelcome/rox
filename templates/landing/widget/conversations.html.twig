@@ -1,7 +1,6 @@
 {% import 'macros.twig' as macros %}
 <div id="messagesdisplay" class="c-dashboard">
 	{% for message in messages %}
-		{% if message.request %}{% set route = 'hosting_request_show' %}{% else %}{% set route = 'message_show' %}{% endif %}
 		{% set unread = (message.firstRead is null) or (message.firstRead == '0000-00-00 00:00.00') %}
 		<div class="c-dashboard__item">
 			<div class="o-avatar o-avatar--m o-avatar--noname o-avatar--shadow-s u-mr-16">{{ macros.roundedavatarstack(message.sender.username, 72, true) }}</div>
@@ -15,10 +14,10 @@
 						<p class="u-font-300 u-text-14 u-leading-20">{{ message.request.departure | format_date( 'medium') }}</p>
 						</p>
 					</div>
-					
+
 				{% endif %}
 				<div class="u-flex u-flex-col u-h-48 u-relative u-pin-y u-justify-start u-overflow-hidden">
-					<a href="{{ path(route, { id: message.id } ) }}" class="u-flex u-flex-col {%- if unread %}unread{% else %}read{% endif %}">
+					<a href="{{ path('conversation_show', { id: message.id } ) }}" class="u-flex u-flex-col {%- if unread %}unread{% else %}read{% endif %}">
 						{% if message.subject %}<p class="u-ellipsis">{{ message.subject.subject|raw }}</p>{% endif %}
 						<p class="u-ellipsis">{{ message.message|raw }}</p>
 					</a>
@@ -27,7 +26,7 @@
 					</p>
 				</div>
 			</div>
-			<div class="ml-auto"><a href="{{ path(route, { id: message.id } ) }}"><i
+			<div class="ml-auto"><a href="{{ path('conversation_show', { id: message.id } ) }}"><i
 							class="fa fa-chevron-right"></i></a></div>
 		</div>
 	{% else %}

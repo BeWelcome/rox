@@ -13,9 +13,9 @@ class ResetPasswordRequestFormType extends AbstractType
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function buildForm(FormBuilderInterface $formBuilder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $formBuilder
+        $builder
             ->add('username', TextType::class, [
                 'constraints' => [
                     new NotBlank(),

@@ -14,9 +14,9 @@ class AdminCommentFormType extends AbstractType
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function buildForm(FormBuilderInterface $formBuilder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $formBuilder
+        $builder
             ->add('markAsChecked', SubmitType::class, [
                 'attr' => [
                     'class' => 'btn-sm btn-primary mb-2 mr-sm-2',
@@ -42,7 +42,7 @@ class AdminCommentFormType extends AbstractType
                 'label' => 'label.admin.comment.delete',
             ])
         ;
-        $formBuilder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             /** @var Comment $comment */
             $comment = $event->getData();
             $form = $event->getForm();

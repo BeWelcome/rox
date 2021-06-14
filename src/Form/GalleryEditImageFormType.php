@@ -13,9 +13,9 @@ class GalleryEditImageFormType extends AbstractType
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function buildForm(FormBuilderInterface $formBuilder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $formBuilder
+        $builder
             ->add('title', TextType::class, [
                 'label' => 'label.gallery.title',
                 'attr' => [

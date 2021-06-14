@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\HostingRequest;
 use App\Form\DataTransformer\DateTimeTransformer;
+use App\Form\DataTransformer\LegTransformer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -19,30 +20,36 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 
 class HostingRequestType extends AbstractType
 {
-    private DateTimeTransformer $transformer;
+    private DateTimeTransformer $dateTimeTransformer;
+    private LegTransformer $legTransformer;
 
-    public function __construct(DateTimeTransformer $transformer)
+    public function __construct(DateTimeTransformer $dateTimeTransformer, LegTransformer $legTransformer)
     {
-        $this->transformer = $transformer;
+        $this->dateTimeTransformer = $dateTimeTransformer;
+        $this->legTransformer = $legTransformer;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $formBuilder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $formBuilder
+        $builder
             ->add('arrival', HiddenType::class)
-            ->add('departure', HiddenType::class);
-        $formBuilder
-            ->get('arrival')
-            ->addModelTransformer($this->transformer);
-        $formBuilder
-            ->get('departure')
-            ->addModelTransformer($this->transformer)
+            ->add('departure', HiddenType::class)
+            ->add('inviteForLeg', HiddenType::class)
         ;
+        $builder
+            ->get('arrival')
+            ->addModelTransformer($this->dateTimeTransformer);
+        $builder
+            ->get('departure')
+            ->addModelTransformer($this->dateTimeTransformer);
+        $builder
+            ->get('inviteForLeg')
+            ->addModelTransformer($this->legTransformer);
 
-        $formBuilder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             $flexibleOptions = [
                 'label' => 'label.flexible',
                 'required' => false,

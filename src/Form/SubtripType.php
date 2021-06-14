@@ -25,9 +25,9 @@ class SubtripType extends AbstractType
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function buildForm(FormBuilderInterface $formBuilder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $formBuilder
+        $builder
             ->add('location', SearchLocationType::class)
             ->add('duration', TextType::class, [
                 'required' => false,
@@ -49,11 +49,11 @@ class SubtripType extends AbstractType
             ])
         ;
 
-        $formBuilder
+        $builder
             ->get('arrival')
             ->addModelTransformer($this->transformer)
         ;
-        $formBuilder
+        $builder
             ->get('departure')
             ->addModelTransformer($this->transformer)
         ;

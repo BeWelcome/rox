@@ -15,9 +15,9 @@ class FaqFormType extends AbstractType
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function buildForm(FormBuilderInterface $formBuilder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $formBuilder
+        $builder
             ->add('faqCategory', TextType::class, [
                 'label' => 'label.admin.faq.category',
                 'attr' => [
@@ -39,7 +39,7 @@ class FaqFormType extends AbstractType
                 'required' => false,
             ])
         ;
-        $formBuilder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             $faq = $event->getData();
             $form = $event->getForm();
             if (empty($faq->wordCode)) {

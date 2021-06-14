@@ -11,9 +11,9 @@ class MinimalSearchFormType extends AbstractType
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function buildForm(FormBuilderInterface $formBuilder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $formBuilder
+        $builder
             ->setAction('search/members')
             ->add('search_geoname_id', HiddenType::class)
             ->add('search_latitude', HiddenType::class)

@@ -11,6 +11,9 @@
 
         {{ 'or' | trans }}
 
+        {% set id = message.id %}
+        {% set leg = message.request.inviteForLeg.id %}
+
         <button class="expand text-center" href="{{ url('invitation_reply', { 'id': message.id, 'leg': message.request.inviteForLeg.id }) }}">{{ 'reply' | trans }}</button>
     </center>
 {% endblock message %}

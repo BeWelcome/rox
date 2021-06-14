@@ -60,7 +60,7 @@ class LandingController extends AbstractController
 
         $messages = $this->landingModel->getMessagesAndRequests($member, $unread, 5);
 
-        $content = $this->render('landing/widget/messages.html.twig', [
+        $content = $this->render('landing/widget/conversations.html.twig', [
             'messages' => $messages,
         ]);
 

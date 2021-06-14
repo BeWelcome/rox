@@ -12,9 +12,9 @@ class LogFormType extends AbstractType
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function buildForm(FormBuilderInterface $formBuilder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $formBuilder
+        $builder
             ->setMethod('GET')
             ->add('types', ChoiceType::class, [
                 'choices' => $options['data']['logTypes'],

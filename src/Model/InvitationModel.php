@@ -2,10 +2,12 @@
 
 namespace App\Model;
 
+use App\Entity\HostingRequest;
 use App\Entity\Member;
 use App\Entity\Message;
 use App\Entity\Subtrip;
 use App\Service\Mailer;
+use DateTime;
 
 class InvitationModel
 {
@@ -16,14 +18,22 @@ class InvitationModel
         $this->mailer = $mailer;
     }
 
+    public function isInvitationExpired(HostingRequest $invitation): bool
+    {
+        $today = new DateTime('today');
+        $arrival = $invitation->getArrival();
+        if (null === $arrival) {
+            // No departure date given assume an interval of two days max
+            $arrival = (clone $today)->modify('+2days');
+        }
+
+        return !($today < $arrival);
+    }
+
     /**
-     * The requestChanged parameter triggers a PHPMD warning which is out of place in this case.
-     *
      * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
      *
      * @param mixed $subject
-     * @param mixed $template
-     * @param mixed $requestChanged
      */
     public function sendInvitationNotification(
         Member $sender,

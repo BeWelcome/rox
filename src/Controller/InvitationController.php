@@ -10,6 +10,7 @@ use App\Entity\Subtrip;
 use App\Form\InvitationGuest;
 use App\Form\InvitationHost;
 use App\Form\InvitationType;
+use App\Model\HostingRequestModel;
 use App\Model\InvitationModel;
 use App\Model\MessageModel;
 use App\Utilities\TranslatedFlashTrait;
@@ -22,18 +23,22 @@ use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class InvitationController extends BaseMessageController
+class InvitationController extends BaseHostingRequestAndInvitationController
 {
     use TranslatedFlashTrait;
     use TranslatorTrait;
 
     private InvitationModel $invitationModel;
 
-    public function __construct(MessageModel $messageModel, InvitationModel $invitationModel)
-    {
-        parent::__construct($messageModel);
+    public function __construct(
+        MessageModel $messageModel,
+        HostingRequestModel $requestModel,
+        InvitationModel $invitationModel
+    ) {
+        parent::__construct($requestModel, $messageModel);
 
         $this->invitationModel = $invitationModel;
     }
@@ -96,14 +101,11 @@ class InvitationController extends BaseMessageController
         $invitationForm->handleRequest($request);
 
         if ($invitationForm->isSubmitted() && $invitationForm->isValid()) {
-            // Write request to database after doing some checks
-            /** @var Message $invitation */
-            $invitation = $this->$invitationForm->getData();
+            $invitation = $this->getMessageFromData($invitationForm->getData(), $guest, $member);
             $invitation->getRequest()->setInviteForLeg($leg);
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($invitation);
-
             $em->flush();
 
             $this->sendInvitationNotification(
@@ -134,8 +136,8 @@ class InvitationController extends BaseMessageController
             throw $this->createAccessDeniedException('Not your message/hosting request');
         }
 
-        if (!$this->isInvitation($invitation)) {
-            return $this->redirectToRoute('message_reply', ['id' => $invitation->getId()]);
+        if ($this->needsRedirect($invitation, self::INVITATION)) {
+            return $this->redirectReplyTo($invitation);
         }
 
         $thread = $this->messageModel->getThreadForMessage($invitation);
@@ -190,7 +192,7 @@ class InvitationController extends BaseMessageController
         list($thread) =
             $this->messageModel->getThreadInformationForMessage($invitation);
 
-        if ($this->invitationModel->checkInvitationExpired($invitation)) {
+        if ($this->checkInvitationExpired($invitation)) {
             $this->addExpiredFlash($host);
 
             return $this->redirectToRoute('hosting_request_show', ['id' => $invitation->getId()]);
@@ -254,9 +256,8 @@ class InvitationController extends BaseMessageController
         Subtrip $leg,
         Message $parent
     ): Response {
-        /** @var Message $last */
-        /** @var Member $guest */
         $host = $invitation->getInitiator();
+
         $guest = ($host === $invitation->getSender()) ? $invitation->getReceiver() : $invitation->getSender();
         list($thread, , $last) = $this->messageModel->getThreadInformationForMessage($invitation);
 
@@ -300,6 +301,41 @@ class InvitationController extends BaseMessageController
             'form' => $requestForm->createView(),
             'thread' => $thread,
         ]);
+    }
+
+    /**
+     * @Route("/invitation/{id}", name="invitation_show",
+     *     requirements={"id": "\d+"})
+     *
+     * @throws AccessDeniedException
+     */
+    public function show(Message $message): Response
+    {
+        if ($this->needsRedirect($message, self::INVITATION)) {
+            return $this->redirectShow($message, false);
+        }
+
+        return $this->showThread($message, 'invitation/view.html.twig', 'invitation_show', false);
+    }
+
+    /**
+     * @Route("/invitation/{id}/deleted", name="invitation_show_with_deleted",
+     *     requirements={"id": "\d+"})
+     *
+     * @throws AccessDeniedException
+     */
+    public function showDeleted(Message $message): Response
+    {
+        if ($this->needsRedirect($message, self::INVITATION)) {
+            return $this->redirectShow($message, true);
+        }
+
+        return $this->showThread($message, 'invitation/view.html.twig', 'invitation_show', true);
+    }
+
+    protected function checkInvitationExpired(Message $hostingRequest): bool
+    {
+        return $this->invitationModel->isInvitationExpired($hostingRequest->getRequest());
     }
 
     protected function sendInvitationGuestReplyNotification(

@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Member;
+use App\Entity\Message;
 use App\Form\CustomDataClass\MessageIndexRequest;
 use App\Form\MessageIndexFormType;
 use App\Model\MessageModel;
@@ -63,6 +64,30 @@ class ConversationController extends AbstractController
     public function showInvitations(Request $request): Response
     {
         return $this->handleRequest($request, 'invitations', InvitationsAdapter::class);
+    }
+
+    /**
+     * @Route("/conversation/{id}", name="conversation_show",
+     *     requirements={"id": "\d+"}
+     * )
+     */
+    public function showSingleConversation(Message $message): Response
+    {
+        if ($this->isMessage($message)) {
+            return $this->forward('App\\Controller\\MessageController::show', [
+                'message' => $message
+            ]);
+        } elseif ($this->isHostingRequest($message)) {
+            return $this->forward('App\\Controller\\HostingRequestController::show', [
+                'message' => $message
+            ]);
+        } elseif ($this->isInvitation($message)) {
+            return $this->forward('App\\Controller\\InvitationController::show', [
+                'message' => $message
+            ]);
+        }
+
+        return new Response('error');
     }
 
     /**
@@ -213,5 +238,20 @@ class ConversationController extends AbstractController
     private function getRedirectUrl(Request $request)
     {
         return $request->getRequestUri();
+    }
+
+    private function isMessage(Message $message): bool
+    {
+        return null === $message->getRequest();
+    }
+
+    private function isHostingRequest(Message $message): bool
+    {
+        return null !== $message->getRequest() && null === $message->getRequest()->getInviteForLeg();
+    }
+
+    private function isInvitation(Message $message)
+    {
+        return null !== $message->getRequest() && null !== $message->getRequest()->getInviteForLeg();
     }
 }

@@ -46,8 +46,8 @@ class MessageController extends BaseMessageController
             throw $this->createAccessDeniedException('Not your message/hosting request');
         }
 
-        if (!$this->isMessage($message)) {
-            return $this->redirectToHostingRequestReply($message);
+        if ($this->needsRedirect($message, self::MESSAGE)) {
+            return $this->redirectReplyTo($message);
         }
 
         $thread = $this->messageModel->getThreadForMessage($message);
@@ -89,7 +89,7 @@ class MessageController extends BaseMessageController
 
         $redirectRoute = 'message_show';
         if ($message->isDeletedByMember($member)) {
-            $redirectRoute = 'message_show_with_deleted';
+            $redirectRoute .= '_with_deleted';
         }
 
         return $this->redirectToRoute($redirectRoute, ['id' => $redirect->getId()]);
@@ -106,11 +106,11 @@ class MessageController extends BaseMessageController
      */
     public function show(Message $message)
     {
-        if ($this->isHostingRequest($message)) {
-            return $this->redirectToHostingRequest($message);
+        if ($this->needsRedirect($message, self::MESSAGE)) {
+            return $this->redirectShow($message, false);
         }
 
-        return $this->showThread($message, 'message/view.html.twig', 'message_show');
+        return $this->showThread($message, 'message/view.html.twig', 'message_show', false);
     }
 
     /**
@@ -124,7 +124,11 @@ class MessageController extends BaseMessageController
      */
     public function showDeleted(Message $message)
     {
-        return $this->showThreadWithDeleted($message, 'message/view.html.twig', 'message_show_with_deleted');
+        if ($this->needsRedirect($message, self::MESSAGE)) {
+            return $this->redirectShow($message, true);
+        }
+
+        return $this->showThread($message, 'message/view.html.twig', 'message_show', true);
     }
 
     /**
@@ -174,31 +178,6 @@ class MessageController extends BaseMessageController
             'form' => $messageForm->createView(),
         ]);
     }
-
-    /**
-     * @Route("/messages_b/{folder}", name="messages_b",
-     *     defaults={"folder": "inbox"})
-     *
-     * @throws InvalidArgumentException
-     */
-    public function messages(Request $request, string $folder): Response
-    {
-        /** @var Member $member */
-        $member = $this->getUser();
-        list($page, $limit, $sort, $direction) = $this->getOptionsFromRequest($request);
-
-        $messages = $this->messageModel->getFilteredMessages(
-            $member,
-            $folder,
-            $sort,
-            $direction,
-            $page,
-            $limit
-        );
-
-        return $this->handleFolderRequest($request, $folder, 'messages', $messages);
-    }
-
     /**
      * @Route("/message/{id}/spam", name="message_mark_spam")
      */
@@ -296,15 +275,5 @@ class MessageController extends BaseMessageController
             'current' => $message,
             'thread' => $thread,
         ]);
-    }
-
-    private function redirectToHostingRequest(Message $message): RedirectResponse
-    {
-        return $this->redirectToRoute('hosting_request_show', ['id' => $message->getId()]);
-    }
-
-    private function redirectToHostingRequestReply(Message $message): RedirectResponse
-    {
-        return $this->redirectToRoute('hosting_request_reply', ['id' => $message->getId()]);
     }
 }

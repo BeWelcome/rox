@@ -46,7 +46,7 @@ class LocationRequestToLocationTransformer implements DataTransformerInterface
             return null;
         }
 
-        if (null === $locationRequest->geonameId) {
+        if (null === $locationRequest->geoname_id) {
             return null;
         }
 
@@ -54,7 +54,7 @@ class LocationRequestToLocationTransformer implements DataTransformerInterface
         $location = $this->entityManager
             ->getRepository(Location::class)
             // query for the issue with this id
-            ->findOneBy(['geonameId' => $locationRequest->geonameId]);
+            ->findOneBy(['geonameId' => $locationRequest->geoname_id]);
 
         if (null === $location) {
             // causes a validation error
@@ -62,7 +62,7 @@ class LocationRequestToLocationTransformer implements DataTransformerInterface
             // see the invalid_message option
             $message = sprintf(
                 'A location with geonameId "%d" for %s does not exist!',
-                $locationRequest->geonameId,
+                $locationRequest->geoname_id,
                 $locationRequest->name
             );
             throw new TransformationFailedException($message);

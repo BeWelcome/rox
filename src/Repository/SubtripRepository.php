@@ -58,15 +58,6 @@ class SubtripRepository extends EntityRepository
 
     private function getLegsInAreaQueryBuilder(Member $member, int $distance, int $duration): QueryBuilder
     {
-        $location = $member->getCity();
-
-        // Fetch latitude and longitude of member's location
-        $latitude = $location->getLatitude();
-        $longitude = $location->getLongitude();
-
-        $geoPoint = new GeoPoint($latitude, $longitude);
-        $boundingBox = $geoPoint->boundingBox($distance, 'km');
-
         $now = new CarbonImmutable();
         $threeMonths = $now->addMonths($duration);
 

@@ -7,7 +7,7 @@ use App\Entity\Location;
 class LocationRequest
 {
     public $name;
-    public $geonameId;
+    public $geoname_id;
     public $latitude;
     public $longitude;
 
@@ -19,7 +19,7 @@ class LocationRequest
 //            $this->location .= ', ' . $location->getAdmin1()->getName();
 //        }
             $this->name .= ', ' . $location->getCountry()->getName();
-            $this->geonameId = $location->getGeonameId();
+            $this->geoname_id = $location->getGeonameId();
             $this->latitude = $location->getLatitude();
             $this->longitude = $location->getLongitude();
         }

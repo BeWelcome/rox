@@ -17,9 +17,9 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 final class JWTTokenManager implements JWTTokenManagerInterface
 {
-    private $decorated;
-    private $userProvider;
-    private $storage;
+    private JWTTokenManagerInterface $decorated;
+    private UserProviderInterface $userProvider;
+    private RefreshTokenStorageInterface $storage;
 
     public function __construct(JWTTokenManagerInterface $decorated, UserProviderInterface $userProvider, RefreshTokenStorageInterface $storage)
     {
@@ -112,5 +112,10 @@ final class JWTTokenManager implements JWTTokenManagerInterface
     public function createFromPayload(UserInterface $user, array $payload): string
     {
         return $this->decorated->createFromPayload($user, $payload);
+    }
+
+    public function decodeFromJsonWebToken(string $jwtToken)
+    {
+        return $this->decorated->decodeFromJsonWebToken($jwtToken);
     }
 }

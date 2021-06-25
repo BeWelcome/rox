@@ -6,6 +6,7 @@ use Doctrine\ORM\Query\AST\Functions\FunctionNode;
 use Doctrine\ORM\Query\AST\Node;
 use Doctrine\ORM\Query\Lexer;
 use Doctrine\ORM\Query\Parser;
+use Doctrine\ORM\Query\SqlWalker;
 
 /**
  * DateDiffFunction ::= "DATEDIFF" "(" ArithmeticPrimary "," ArithmeticPrimary ")".
@@ -32,7 +33,7 @@ class DateDiff extends FunctionNode
         $parser->match(Lexer::T_CLOSE_PARENTHESIS); // (3)
     }
 
-    public function getSql(\Doctrine\ORM\Query\SqlWalker $sqlWalker)
+    public function getSql(SqlWalker $sqlWalker)
     {
         return 'DATEDIFF(' .
             $this->firstDateExpression->dispatch($sqlWalker) . ', ' .

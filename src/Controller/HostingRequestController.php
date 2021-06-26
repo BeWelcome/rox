@@ -251,8 +251,8 @@ class HostingRequestController extends BaseHostingRequestAndInvitationController
         if (
             $this->messageModel->hasRequestLimitExceeded(
                 $member,
-                $this->getParameter('new_requests_messages_per_hour'),
-                $this->getParameter('new_requests_messages_per_day')
+                $this->getParameter('new_members_requests_per_hour'),
+                $this->getParameter('new_members_requests_per_day')
             )
         ) {
             $this->addTranslatedFlash('error', 'flash.request.limit');

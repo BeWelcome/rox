@@ -44,11 +44,10 @@
                 {% if invitation.status == constant('App\\Entity\\HostingRequest::REQUEST_TENTATIVELY_ACCEPTED') %}<i
                     class="fa fa-question mr-1"></i> {{ 'invitation.host.tentatively'|trans }}{% endif %}
             {% endif %}</div>
-        <div class="col-12 mb-2">
+        <div class="col-12 mb-2 d-flex justify-content-between">
             {% if original.Sender.Username != myself.Username %}<a class="btn btn-sm btn-primary ml-1"
                href="{{ path( 'message_mark_spam', { id: thread[0].id }) }}">{{ 'markspam' | trans }}</a>{% endif %}
-            <a class="btn btn-sm btn-primary pull-right mr-1"
-               href="{{ path( 'hosting_request_reply', { id: thread[0].id }) }}">{{ label | trans }}</a>
+            <a class="btn btn-sm btn-primary mr-1" href="{{ path( 'invitation_reply', { id: current.id, leg: current.request.inviteForLeg.id }) }}">{{ label | trans }}</a>
         </div>
     </div>
     <div class="row no-gutters bg-white my-2">
@@ -86,7 +85,7 @@
     {% include 'message/thread.html.twig' %}
     <div class="row no-gutters justify-content-end">
         <div class="col-auto">
-            <a class="btn btn-sm btn-primary mb-1" href="{{ path( 'hosting_request_reply', { id: current.id }) }}">{{ label | trans }}</a>
+            <a class="btn btn-sm btn-primary mr-1 mb-1" href="{{ path( 'invitation_reply', { id: current.id, leg: current.request.inviteForLeg.id }) }}">{{ label | trans }}</a>
         </div>
     </div>
     </div>

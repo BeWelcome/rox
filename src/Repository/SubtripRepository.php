@@ -59,7 +59,7 @@ class SubtripRepository extends EntityRepository
     private function getLegsInAreaQueryBuilder(Member $member, int $distance, int $duration): QueryBuilder
     {
         $now = new CarbonImmutable();
-        $threeMonths = $now->addMonths($duration);
+        $durationMonthsAhead = $now->addMonths($duration);
 
         $qb = $this->createQueryBuilder('s');
         $qb
@@ -74,10 +74,10 @@ class SubtripRepository extends EntityRepository
             )
             ->andWhere($qb->expr()->notIn('s.options', [SubtripOptionsType::PRIVATE]))
             ->andWhere('GeoDistance(:latitude, :longitude, l.latitude, l.longitude) < :distance')
-//            ->andWhere('GeoDistance(m.latitude, m.longitude, l.latitude, l.longitude) < t.invitationRadius')
+            ->andWhere('GeoDistance(:latitude, :longitude, l.latitude, l.longitude) < t.invitationRadius')
             ->setParameter(':distance', $distance)
             ->andWhere('s.arrival >= :now')
-            ->andWhere('s.arrival <= :threeMonths')
+            ->andWhere('s.arrival <= :durationMonthsAhead')
             ->andWhere($qb->expr()->in('m.status', ['Active', 'OutOfRemind']))
             ->andWhere('t.creator <> :member')
             ->andWhere($qb->expr()->isNull('t.deleted'))
@@ -85,7 +85,7 @@ class SubtripRepository extends EntityRepository
             ->setParameter(':latitude', $member->getLatitude())
             ->setParameter(':longitude', $member->getLongitude())
             ->setParameter(':now', $now)
-            ->setParameter(':threeMonths', $threeMonths)
+            ->setParameter(':durationMonthsAhead', $durationMonthsAhead)
             ->addSelect('t');
 
         return $qb;

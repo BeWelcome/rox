@@ -125,7 +125,8 @@ var Home = {
         });
     },
     updateTripLegs: function () {
-        let radius = $('#trips_radius').val();
+        const tripsRadius = $('#trips_radius');
+        let radius = tripsRadius.val();
 
         $.ajax({
             type: 'GET',
@@ -135,10 +136,6 @@ var Home = {
             },
             success: function(legs) {
                 $('#legsdisplay').replaceWith(legs);
-                $('#trips_radius').select2();
-                $('#trips_radius').change(function() {
-                    setTimeout(Home.updateTripLegs, 500);
-                });
             },
         });
     },

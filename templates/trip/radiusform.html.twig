@@ -1,0 +1,8 @@
+{{ form_start(radiusForm)}}
+<div class="u-flex u-items-center u-mx-8 u-mb-8">
+    <i class="fa fa-bullseye fa-w-16 u-text-white u-text-24 u-justify-self-center u-self-center u-mr-8"></i>
+    {{ form_label(radiusForm.radius, null, {'label_attr': {'class': 'u-text-white u-font-700 u-mr-16 u-mb-0'}}) }}
+    {{ form_widget(radiusForm.radius) }}
+</div>
+{{ form_rest(radiusForm)}}
+{{ form_end(radiusForm)}}

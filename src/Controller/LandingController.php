@@ -9,6 +9,7 @@ use App\Entity\Notification;
 use App\Entity\Preference;
 use App\Form\CustomDataClass\SearchFormRequest;
 use App\Form\SearchFormType;
+use App\Form\TripRadiusType;
 use App\Model\CommunityNewsModel;
 use App\Model\DonateModel;
 use App\Model\LandingModel;
@@ -210,8 +211,12 @@ class LandingController extends AbstractController
      *
      * @throws AccessDeniedException
      */
-    public function indexAction(CommunityNewsModel $communityNewsModel, DonateModel $donateModel): Response
-    {
+    public function show(
+        Request $request,
+        CommunityNewsModel $communityNewsModel,
+        DonateModel $donateModel,
+        TripModel $tripModel
+    ): Response {
         if (!$this->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             throw $this->createAccessDeniedException();
         }
@@ -234,6 +239,9 @@ class LandingController extends AbstractController
             new SearchFormRequest($this->getDoctrine()->getManager())
         );
 
+        $radius = $tripModel->getTripsRadius($member);
+        $radiusForm = $this->createForm(TripRadiusType::class, [ 'radius' => $radius ]);
+
         $preferenceRepository = $this->getDoctrine()->getRepository(Preference::class);
         $preference = $preferenceRepository->findOneBy(['codename' => Preference::MESSAGE_AND_REQUEST_FILTER]);
         $messageFilter = $member->getMemberPreferenceValue($preference);
@@ -253,6 +261,7 @@ class LandingController extends AbstractController
                 'yearNeeded' => $campaignDetails->YearNeededAmount,
                 'yearDonated' => $campaignDetails->YearDonation,
             ],
+            'radiusForm' => $radiusForm->createView(),
             'communityNews' => $latestNews,
             'messageFilter' => $messageFilter,
             'forumFilter' => $forumFilter,

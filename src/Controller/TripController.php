@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Member;
 use App\Entity\Subtrip;
 use App\Entity\Trip;
+use App\Form\TripRadiusType;
 use App\Form\TripType;
 use App\Model\TripModel;
 use App\Repository\SubtripRepository;
@@ -196,19 +197,19 @@ class TripController extends AbstractController
         /** @var Member $host */
         $host = $this->getUser();
 
-        $radius = $this->tripModel->checkTripsRadius($member, $request->query->get('radius', -1));
-        $preferredRadius = $this->tripModel->getTripsRadius($host);
-        if (-1 === $radius || !is_numeric($radius)) {
-            $radius = $preferredRadius;
-        } else {
-            $this->tripModel->setTripsRadius($host, $radius);
-        }
+        $radius = $this->tripModel->getTripsRadius($host);
+        $radiusForm = $this->createForm(TripRadiusType::class, [
+            'radius' => $radius,
+        ]);
+        $radiusForm->handleRequest($request);
 
-        if ($radius < $preferredRadius && 1 !== $page) {
-            return $this->redirectToRoute('trip_in_area', [
-                'username' => $member->getUsername(),
-                'page' => 1,
-            ]);
+        if ($radiusForm->isSubmitted() && $radiusForm->isValid()) {
+            $data = $radiusForm->getData();
+            $newRadius = $data['radius'];
+            if ($radius != $newRadius) {
+                $this->tripModel->setTripsRadius($host, $newRadius);
+                $radius = $newRadius;
+            }
         }
 
         /** @var SubtripRepository $subtripRepository */
@@ -221,7 +222,7 @@ class TripController extends AbstractController
         $tripLegs->setCurrentPage($page);
 
         return $this->render('trip/area.html.twig', [
-            'radius' => $radius,
+            'radiusForm' => $radiusForm->createView(),
             'legs' => $tripLegs,
             'submenu' => [
                 'active' => 'trip_legs',

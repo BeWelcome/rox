@@ -517,7 +517,7 @@ FROM `gallery_items` AS i,
 members as m
 WHERE i.`id` = ". (int)$itemId . "
 AND m.id = i.user_id_foreign
-AND m.Status IN ('Active', 'Pending', 'OutOfRemind')
+AND m.Status IN ('Active', 'ChoiceInactive', 'Pending', 'OutOfRemind')
         ";
 
         $s = $this->dao->query($query);

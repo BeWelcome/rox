@@ -43,7 +43,7 @@
       </div>
       {# where do you want to go? #}
       <div class="u-flex u-items-center u-justify-center u-bg-gray-5 u-py-16 u-px-24 u-rounded-r-16">
-        {{ form_start( tinySearch, { 'action': path('search_locations') } ) }}
+        {{ form_start( tinySearch, { 'action': path('search_locations'), 'attr': {'class': 'u-w-full'} } ) }}
 
         <label for="search_goto_location_form_search" class="sr-only">{{ 'landing.whereyougo' | trans }}</label>
         <div class="input-group">
@@ -63,15 +63,17 @@
 
   <div class="u-flex u-flex-wrap md:u-grid md:u-grid-cols-2 u-gap-24 u-pb-24">
 
-    {# messages box #}
+    {# conversations box #}
     <div class="u-w-full u-flex u-flex-col">
 
       <ul class="nav nav-tabs" role="tablist">
         <li class="nav-item">
           <a class="nav-link active" aria-controls="messages" href="#messages" role="tab"
-             data-toggle="tab">{{ 'landing.tab.messagesreceived' | trans }}{% if conversationCount %}
-              <span
-                class="badge badge-primary u-rounded-full u-w-20 u-h-20 u-inline-flex u-items-center u-justify-center">{{ conversationCount }}</span>{% endif %}</a>
+             data-toggle="tab">{{ 'landing.tab.messagesreceived' | trans }}
+              {% if conversationCount %}
+              <span class="badge badge-primary u-rounded-full u-w-20 u-h-20 u-inline-flex u-items-center u-justify-center">{{ conversationCount }}</span>
+              {% endif %}
+          </a>
         </li>
         <li class="nav-item">
           <a class="nav-link" aria-controls="notifications" href="#notifications" role="tab"
@@ -83,7 +85,7 @@
       <div class="o-card o-card--tabbed tab-content u-p-16">
 
         {# messages #}
-        <div role="tabpanel" class="tab-pane u-h-full active" id="messages">
+        <div role="tabpanel" class="o-tab tab-pane u-h-full active" id="messages">
           {# all / unread messages toggle #}
           <div class="u-flex u-flex-col u-h-full">
             <div class="u-flex u-items-center u-mb-16" data-toggle="buttons" role="radiogroup">
@@ -102,10 +104,13 @@
             </div>
 
             {# received messages #}
-            <div id="messagesdisplay" class="scrollcontent">
-              <p class="u-text-center u-my-24 u-font-300 u-font-display">
-                <i class="fa u-mr-8 fa-4x fa-pulse fa-spinner my-3"></i><br>
-                {{ 'dashboard.load.messages' | trans }}</p>
+            <div id="messagesdisplay" class="c-dashboard">
+                <div class="u-flex u-h-full u-items-center u-justify-center">
+                <p class="u-text-center u-my-24 u-font-300 u-font-display">
+                    <i class="fa u-mr-8 fa-4x fa-pulse fa-spinner my-3"></i><br>
+                    {{ 'dashboard.load.messages' | trans }}
+                </p>
+                </div>
             </div>
 
             {# message buttons #}
@@ -119,11 +124,14 @@
         </div>
 
         {# notifications #}
-        <div role="tabpanel" class="tab-pane u-h-full p-2" id="notifications">
-          <div id="notificationsdisplay">
-            <p class="text-center my-3">
-              <i class="fa u-mr-8 fa-4x fa-pulse fa-spinner my-3"></i><br/>
-              {{ 'dashboard.load.notifications' | trans }}</p>
+        <div role="tabpanel" class="o-tab tab-pane u-h-full p-2" id="notifications">
+          <div id="notificationsdisplay" class="c-dashboard">
+              <div class="u-flex u-h-full u-items-center u-justify-center">
+                  <p class="u-text-center u-my-24 u-font-300 u-font-display">
+                      <i class="fa u-mr-8 fa-4x fa-pulse fa-spinner my-3"></i><br>
+                      {{ 'dashboard.load.notifications' | trans }}
+                  </p>
+              </div>
           </div>
         </div>
 
@@ -147,7 +155,7 @@
 
       <div class="o-card o-card--tabbed tab-content u-p-16">
         {# forum discussions #}
-        <div role="tabpanel" class="tab-pane u-h-full active" id="threads">
+        <div role="tabpanel" class="o-tab tab-pane u-h-full active" id="threads">
 
           {# display settings #}
           <div class="u-flex u-flex-col u-h-full">
@@ -168,11 +176,14 @@
               </label>
             </div>
 
-            {# received messages #}
-            <div id="threadsdisplay">
-              <p class="text-center">
-                <i class="fa u-mr-8 fa-4x fa-pulse fa-spinner my-5 align-middle"></i><br/>
-                {{ 'dashboard.load.threads' | trans }}</p>
+            {# forums threads #}
+            <div id="threadsdisplay" class="c-dashboard">
+                <div class="u-flex u-h-full u-items-center u-justify-center">
+                    <p class="u-text-center u-my-24 u-font-300 u-font-display">
+                        <i class="fa u-mr-8 fa-4x fa-pulse fa-spinner my-3"></i><br>
+                        {{ 'dashboard.load.threads' | trans }}
+                    </p>
+                </div>
             </div>
 
             <div class="u-flex u-justify-between u-mt-auto u-py-16" role="group" aria-label="...">
@@ -188,7 +199,7 @@
         </div>
 
         {# load activities #}
-        <div role="tabpanel" class="tab-pane u-h-full" id="activities">
+        <div role="tabpanel" class="o-tab tab-pane u-h-full" id="activities">
           <div class="u-flex u-items-center" role="group">
             <a href="/activities" class="o-button btn o-button o-button--full u-mr-8"><i
                 class="fa u-mr-8 fa-map"></i> {{ 'landing.activities.allactivities' | trans }}</a>
@@ -205,15 +216,17 @@
                    for="show_online">{{ 'landing.activities.show.online'|trans }}</label>
             </div>
           </div>
-          <div id="activitiesdisplay" class="col-12">
-            <p class="text-center my-3">
-              <i class="fa u-mr-8 fa-4x fa-pulse fa-spinner my-3"></i><br/>
-              {{ 'dashboard.load.activities' | trans }}</p>
+          <div id="activitiesdisplay" class="c-dashboard">
+              <div class="u-flex u-h-full u-items-center u-justify-center">
+                  <p class="u-text-center u-my-24 u-font-300 u-font-display">
+                      <i class="fa u-mr-8 fa-4x fa-pulse fa-spinner my-3"></i><br>
+                      {{ 'dashboard.load.activities' | trans }}
+                  </p>
           </div>
         </div>
       </div>
     </div>
-
+    </div>
   </div>
 
   {# 4 widgets #}

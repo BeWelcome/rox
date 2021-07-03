@@ -14,15 +14,7 @@
     <div class="message_thread">
     <div class="row no-gutters bg-white">
 
-        <div class="col-12 d-inline-block">
-            <div class="pull-left">
-                {{ macros.avatarstack(otherUser.Username, 50, true) }}
-            </div>
-            <div class="pull-right">{{ macros.avatar(myself.Username, 50, true) }}</div>
-            <div>
-                <h3 id="MessageSubject" class="p-1 text-truncate">{{ current.Subject.Subject | raw }}</h3>
-            </div>
-        </div>
+        {% include 'message/header.html.twig' with {'otherUser': otherUser, 'myself': myself} %}
             <div class="col-12 alert alert-warning mb-2">{% if original.Sender.Username == myself.Username %}
                 {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_OPEN') %}<i
                     class="fa fa-question mr-1"></i>{% endif %}

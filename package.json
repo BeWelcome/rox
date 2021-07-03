@@ -90,6 +90,7 @@
     "encoreWatch": "encore dev --watch"
   },
   "dependencies": {
-    "improved-yarn-audit": "^2.3.3"
+    "improved-yarn-audit": "^2.3.3",
+    "inuitcss": "^6.0.0"
   }
 }

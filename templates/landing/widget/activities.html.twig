@@ -31,11 +31,9 @@
                     <p class="u-font-300 u-text-14 u-leading-20 u-whitespace-nowrap">
                         {{ activity.attendeesMaybe.count }}&nbsp;{{ 'activitiesnumbattendeesmaybe' | trans }}
                     </p>
-                {% endif %}       
+                {% endif %}
                 </div>
             </div>
-        </div>
-
     {% else %}
         <p class="u-my-24 u-font-display u-text-center">{{ 'dashboard.activities.none' | trans }}</p>
     {% endfor %}

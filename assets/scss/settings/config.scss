@@ -1,0 +1,50 @@
+/* ========================================================================
+ * #VARIABLES
+ * ======================================================================== */
+
+
+/* Colors */
+
+
+:root {
+  --bewelcome: #f37000;
+  --bewelcome-dark: #cd5e00;
+  --transparent: transparent;
+  --red: #f3000a;
+  --yellow: #f3ea00;
+  --green: #00f370;
+  --green-dark: #00b855;
+  --blue: #7000f3;
+  --black: #000;
+  --white: #fff;
+  --gray-5: #f9f9f9;
+  --gray-10: #eee;
+  --gray-15: #ddd;
+  --gray-20: #ccc;
+  --gray-30: #bbb;
+  --gray-40: #999;
+  --gray-50: #808080;
+  --gray-60: #6f6f6f;
+  --gray-65: #595959;
+  --gray-70: #454545;
+  --gray-80: #3F3F3F;
+}
+
+/* Screen width */
+@media screen and (max-width: 600px) {
+   :root {
+    --width: 1px;
+  }
+}
+
+@media screen and (min-width: 601px) and (max-width: 1200px) {
+   :root {
+    --width: calc(100vw / 1440);
+  }
+}
+
+@media screen and (min-width: 1201px) {
+    :root {
+      --width: 1px;
+    }
+}

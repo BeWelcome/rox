@@ -1,19 +1,15 @@
-.c-dashboard,
-.c-dashboard p {
-	font-family: Signika;
+.c-dashboard {
+  height: 440px;
+  font-family: Signika;
 }
 
-
-
-
+.c-dashboard p {
+  font-family: Signika;
+}
 
 .c-dashboard .unread p {
-	font-weight: 700;
+	font-weight: bold;
 }
-
-
-
-
 
 .c-dashboard__item {
 	display: flex;
@@ -22,7 +18,7 @@
 	padding: 0 16px;
 	border-radius: 8px;
 	margin-bottom: 8px;
-	height: 96px;
+	height: 80px;
 	overflow: hidden;
 }
 

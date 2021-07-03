@@ -6,14 +6,6 @@
     {{ encore_entry_script_tags('leaflet') }}
     {{ encore_entry_script_tags('search/loadcontent') }}
     {{ encore_entry_script_tags('search/locations') }}
-    <script>
-        let url = $("#search-url").val();
-        if (url === undefined) {
-            url = "/search/locations/all";
-        }
-        let searchPicker = new SearchPicker();
-        searchPicker.initializeSearchPickerByClass('search-picker');
-    </script>
 {% endblock javascripts %}
 
 {% block stylesheets %}
@@ -36,7 +28,7 @@
     {{ form_errors(form) }}
     <div class="row mb-3">
         <div class="col-12">
-            {{ form_row(form.location, {'attr': {'class': 'search-picker'}, 'required': false }) }}
+            {{ form_row(form.location, {'attr': {'class': 'js-search-picker'}, 'required': false }) }}
         </div>
         <div class="col-6 col-sm-4">
             {{ form_row(form.show_options, {'label_attr': {'class':'switch-custom'}, 'attr': {'class':'show_options'}}) }}

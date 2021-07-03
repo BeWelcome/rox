@@ -12,12 +12,12 @@ $font-family-bold: Signika;
 
 @import "~bootstrap";
 
-@import "config";
-@import "generic/generic";
-@import "objects/objects";
-@import "layouts/layouts";
-@import "components/components";
-@import "utilities/utilities";
+// @import "config";
+// @import "generic/generic";
+// @import "objects/objects";
+// @import "layouts/layouts";
+// @import "components/components";
+// @import "utilities/utilities";
 
 @import "general";
 
@@ -76,7 +76,7 @@ $font-family-bold: Signika;
     z-index: 2000!important;
 }
 
-.ck-content blockquote, blockquote {
+.ck.ck-content blockquote, blockquote {
   color: #444 !important;
   background: transparent !important;
   border: 1px #ddd solid !important;
@@ -505,4 +505,20 @@ $avatar-sizes: 30, 50, 75, 100, 150, 200, 500;
   background-color: #eee;
   border: 1px solid black;
   padding: 1rem;
+}
+
+.o-input {
+  @extend .form-control;
+}
+
+.o-checkbox {
+  @extend .form-check;
+}
+
+.o-checkbox__input {
+  @extend .form-check-input
+}
+
+.o-checkbox__label {
+  @extend .form-check-label
 }

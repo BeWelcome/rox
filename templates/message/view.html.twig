@@ -2,17 +2,11 @@
 {% extends 'base.html.twig' %}
 
 {% block content %}
-    <div class="row no-gutters sticky-top py-1 bg-white messageheader mb-1 px-1 justify-content-between">
-        {% set original = thread | last %}{% set request = original.Request %}
-        {% set myself = app.user %}
-        {% if original.Sender.Username == myself.Username %}{% set otherUser = original.Receiver %}{% else %}{% set otherUser = original.Sender %}{% endif %}
-        {% if current.subject %}{% set currentSubject = current.Subject.Subject %}{% else %}{% set currentSubject = 'Conversation with ' ~ otherUser.Username %}{% endif %}
-            <div>{{ macros.avatarstack(otherUser.Username, 50, false) }}</div>
-            <div>
-                <h3 id="MessageSubject" class="px-3 pt-1 text-truncate">{{ currentSubject }}</h3>
-            </div>
-        <div class="text-right">{{ macros.avatarstack(myself.Username, 50, true) }}</div>
-    </div>
+    {% set original = thread | last %}{% set request = original.Request %}
+    {% set myself = app.user %}
+    {% if original.Sender.Username == myself.Username %}{% set otherUser = original.Receiver %}{% else %}{% set otherUser = original.Sender %}{% endif %}
+    {% if current.subject %}{% set currentSubject = current.Subject.Subject %}{% else %}{% set currentSubject = 'Conversation with ' ~ otherUser.Username %}{% endif %}
+    {% include 'message/header.html.twig' with {'otherUser': otherUser, 'myself': myself} %}
     <div class="row no-gutters justify-content-between mb-1">
         <div>{# Always add <div> so that the reply button is on the right hand side for larger displays #}
             {% if current.Sender == myself %}

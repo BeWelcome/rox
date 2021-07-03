@@ -214,8 +214,8 @@ class TripController extends AbstractController
 
         /** @var SubtripRepository $subtripRepository */
         $subtripRepository = $this->getDoctrine()->getRepository(Subtrip::class);
-
         $legsQuery = $subtripRepository->getLegsInAreaQuery($member, $radius);
+
         $legsAdapter = new QueryAdapter($legsQuery);
         $tripLegs = new Pagerfanta($legsAdapter);
         $tripLegs->setMaxPerPage(10);

@@ -1,0 +1,60 @@
+/* SETTINGS */
+@import "../scss/settings/config.scss";
+@import "~inuitcss/settings/settings.core";
+/*
+@import "../scss/settings/settings.global";
+@import "../scss/settings/settings.colors";
+ */
+
+/* TOOLS */
+/*
+@import "~inuitcss/tools/tools.font-size";
+@import "~inuitcss/tools/tools.clearfix";
+@import "~sass-mq/_mq.scss";
+@import "../scss/tools/tools.aliases";
+ */
+
+/* GENERIC */
+/*
+@import "~inuitcss/generic/generic.box-sizing";
+@import "~inuitcss/generic/generic.normalize";
+@import "~inuitcss/generic/generic.shared";
+ */
+@import "../scss/generic/generic";
+
+/* ELEMENTS */
+/*
+@import "~inuitcss/elements/elements.page";
+@import "~inuitcss/elements/elements.headings";
+@import "../scss/elements/elements.links";
+@import "../scss/elements/elements.quotes";
+ */
+
+/* OBJECTS */
+/*
+@import "~inuitcss/objects/objects.layout";
+@import "~inuitcss/objects/objects.media";
+@import "~inuitcss/objects/objects.flag";
+@import "~inuitcss/objects/objects.list-bare";
+@import "~inuitcss/objects/objects.list-inline";
+@import "~inuitcss/objects/objects.box";
+@import "~inuitcss/objects/objects.block";
+@import "~inuitcss/objects/objects.table";
+*/
+@import "../scss/objects/objects";
+
+/* COMPONENTS */
+@import "../scss/components/components";
+
+/* UTILITIES */
+/*
+@import "~inuitcss/utilities/utilities.widths";
+@import "~inuitcss/utilities/utilities.headings";
+@import "~inuitcss/utilities/utilities.spacings";
+ */
+@import "../scss/utilities/utilities";
+
+/* LAYOUTS */
+@import "../scss/layouts/layouts";
+
+@tailwind utilities;

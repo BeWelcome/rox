@@ -3,7 +3,7 @@ import 'jquery-ui/ui/widgets/autocomplete';
 import 'jquery-ui/themes/base/autocomplete.css';
 
 export default class SearchPicker {
-    constructor(url, cssClass = "searchpicker") {
+    constructor(url, cssClass = "js-search-picker") {
         let self = this;
         $("." + cssClass).on("focus", function() {
             $(this).on("keydown", function (event) {

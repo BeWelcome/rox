@@ -64,7 +64,7 @@ Encore
     })
     .addEntry('avatar', './assets/js/react/avatar/AvatarMount.jsx')
 
-    .addStyleEntry('tailwind', './assets/css/tailwind.css')
+    .addStyleEntry('tailwind', './assets/scss/tailwind.scss')
     .autoProvidejQuery()
     //    .addEntry('roxinlineeditor', './assets/js/roxinlineeditor.js')
 

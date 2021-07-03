@@ -179,6 +179,21 @@
   margin: initial;
 }
 
+.o-avatar--xs {
+  width: 32px;
+  grid-template-rows: 48px 1fr;
+}
+
+.o-avatar--xs .o-avatar__img-wrapper {
+  width: 32px;
+  height: 32px;
+}
+
+.o-avatar--xs .o-avatar__name,
+.o-avatar--xs .o-avatar__languages {
+  margin: initial;
+}
+
 
 
 
@@ -250,14 +265,16 @@
 
 
 .o-avatar--shadow {
-  box-shadow: 0 10px 30px 0px #d7d7d7;
+  box-shadow: 0 0 30px 0 #d7d7d7;
+  border-radius: 100%;
 }
 
 
 
 
 .o-avatar--shadow-s {
-  box-shadow: 0 0px 20px 0 #e6e6e6;
+  box-shadow: 0 0 20px 0 #e6e6e6;
+  border-radius: 100%;
 }
 
 

@@ -216,7 +216,7 @@ class BaseMessageController extends AbstractController
             'invitation_reply',
             [
                 'id' => $invitation->getId(),
-                'leg' => $invitation->getRequest()->getInviteForLeg()
+                'leg' => $invitation->getRequest()->getInviteForLeg()->getId(),
             ]
         );
     }

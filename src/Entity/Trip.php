@@ -53,7 +53,7 @@ class Trip
      *
      * @ORM\Column(name="invitation_radius", type="integer")
      */
-    private $invitationRadius = 20;
+    private $invitationRadius = 0;
 
     /**
      * @var Carbon

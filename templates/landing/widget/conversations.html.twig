@@ -2,30 +2,28 @@
 <div id="messagesdisplay" class="c-dashboard">
 	{% for message in messages %}
 		{% set unread = (message.firstRead is null) or (message.firstRead == '0000-00-00 00:00.00') %}
-		<div class="c-dashboard__item">
-			<div class="o-avatar o-avatar--m o-avatar--noname o-avatar--shadow-s u-mr-16">{{ macros.roundedavatarstack(message.sender.username, 72, true) }}</div>
-			<div class="u-flex u-min-w-0 u-h-full{% if unread %} unread{% endif %}">
-				{% if message.request %}
-					<div class="u-flex u-flex-col u-bg-gray-10 u-px-8 u-mr-8 u-items-center u-justify-start u-h-48 u-relative u-pin-y u-overflow-hidden">
-						<div class="u-w-40 u-h-40 u-rounded-full u-bg-gray-15 u-flex u-items-center u-justify-center u-mb-4 u-flex-shrink-0">
-							<i class="fa fa-lg fa-bed u-text-gray-70"></i>
-						</div>
-						<p class="u-font-300 u-text-14 u-leading-20">{{ message.request.arrival | format_date( 'medium') }}</p>
-						<p class="u-font-300 u-text-14 u-leading-20">{{ message.request.departure | format_date( 'medium') }}</p>
-					</div>
-
-				{% endif %}
-				<div class="u-flex u-flex-col u-h-48 u-relative u-pin-y u-justify-start u-overflow-hidden">
-					<a href="{{ path('conversation_show', { id: message.id } ) }}" class="u-flex u-flex-col {%- if unread %}unread{% else %}read{% endif %}">
-						{% if message.subject %}<p class="u-ellipsis">{{ message.subject.subject|raw }}</p>{% endif %}
-						<p class="u-ellipsis">{{ message.message|raw }}</p>
-					</a>
-					<p class="u-font-300 u-text-14">
-						{{ 'from' | trans}} {% if message.sender %}{{ macros.profilelink(message.sender.username) }}{% else %} BeWelcome {% endif %}<span title="{{ message.created.toDateTimeString }}">{{ message.created.DiffForHumans }}</span>
-					</p>
-				</div>
-			</div>
-			<div class="ml-auto"><a href="{{ path('conversation_show', { id: message.id } ) }}"><i
+		<div class="c-dashboard__message-item">
+			<div class="o-avatar o-avatar--m o-avatar--noname o-avatar--shadow-s u-mr-8">{{ macros.roundedavatarstack(message.sender.username, 72, true) }}</div>
+            <div class="d-flex d-flex-row">
+                {% if message.request %}
+                    <div class="u-h-full u-py-4 u-pr-8">
+                        {% if message.request.inviteForLeg is null %}
+                            {{ 'conversations.request'|trans }}
+                        {% else %}
+                            {{ 'conversations.invitation'|trans }}
+                        {% endif %}
+                            <p class="u-font-300 u-text-14 u-leading-20">{{ message.request.arrival | format_date( 'medium') }}</p>
+                            <p class="u-font-300 u-text-14 u-leading-20">{{ message.request.departure | format_date( 'medium') }}</p>
+                    </div>
+                {% endif %}
+                <div class="u-h-full u-py-4 u-w-full u-overflow-hidden {% if unread %}unread{% endif %}">
+                    <p class="u-ellipsis">{% if message.subject %}{{ message.subject.subject|raw }}<br>{% endif %}
+                    {{ message.message|striptags|truncate(50) }}<br>
+                    {{ 'from' | trans}} {% if message.sender %}{{ macros.profilelink(message.sender.username) }}{% else %} BeWelcome {% endif %}<span title="{{ message.created.toDateTimeString }}">{{ message.created.DiffForHumans }}</span>
+                    </p>
+                </div>
+            </div>
+			<div class="u-pl-4"><a href="{{ path('conversation_show', { id: message.id } ) }}"><i
 							class="fa fa-chevron-right"></i></a></div>
 		</div>
 	{% else %}

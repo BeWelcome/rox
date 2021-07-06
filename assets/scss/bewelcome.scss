@@ -354,10 +354,10 @@ figure > figcaption {
 
 .rangeslider__fill {
   background: $brand-primary;
-  background: -webkit-linear-gradient(left, #fff , $brand-primary);
-  background: -o-linear-gradient(left, #fff , $brand-primary);
-  background: -moz-linear-gradient(left, #fff , $brand-primary);
-  background: linear-gradient(left, #fff , $brand-primary);
+  background: -webkit-linear-gradient(to right, #fff , $brand-primary);
+  background: -o-linear-gradient(to right, #fff , $brand-primary);
+  background: -moz-linear-gradient(to right, #fff , $brand-primary);
+  background: linear-gradient(to right, #fff , $brand-primary);
 
   position: absolute;
 }

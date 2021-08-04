@@ -80,7 +80,7 @@
     "select2": "4.0.13",
     "swagger-cli": "^4.0.4",
     "tailwindcss": "^2.1.2",
-    "tar": "6.1.0",
+    "tar": "6.1.2",
     "tempusdominus": "github:tonix-tuft/tempusdominus",
     "tempusdominus-bootstrap": "github:tonix-tuft/tempusdominus-bootstrap",
     "toastify-js": "^1.10.0",

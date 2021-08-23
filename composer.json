@@ -80,7 +80,8 @@
         "twig/intl-extra": "^3.0",
         "twig/markdown-extra": "^3.0",
         "twig/twig": "^3.0",
-        "xemlock/htmlpurifier-html5": "^0.1.10"
+        "xemlock/htmlpurifier-html5": "^0.1.10",
+      "ext-exif": "*"
     },
     "conflict": {
         "symfony/symfony": "*"

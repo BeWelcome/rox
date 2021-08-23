@@ -99,7 +99,7 @@ class AvatarController extends AbstractController
         $this->removeAvatarFile($memberId);
 
         $imageManager = new ImageManager();
-        $img = $imageManager->make($tmpFilePath);
+        $img = $imageManager->make($tmpFilePath)->orientate();
         $height = $img->getHeight();
         $width = $img->getWidth();
         if ($height !== $width) {

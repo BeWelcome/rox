@@ -23,6 +23,9 @@
             "./config/packages/nelmio_security.yaml"
         ]
     },
+    "psr/http-factory": {
+        "version": "1.0.1"
+    },
     "sensio/framework-extra-bundle": {
         "version": "5.2",
         "recipe": {

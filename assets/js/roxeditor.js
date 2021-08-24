@@ -11,6 +11,8 @@ import { Mention } from '@ckeditor/ckeditor5-mention/src/index';
 import { Paragraph } from '@ckeditor/ckeditor5-paragraph/src/index';
 import { SpecialCharacters, SpecialCharactersEssentials }  from '@ckeditor/ckeditor5-special-characters/src/index';
 import { CloudServices } from '@ckeditor/ckeditor5-cloud-services/src/index';
+import { Autosave } from "@ckeditor/ckeditor5-autosave/src/index";
+import PendingActions from "@ckeditor/ckeditor5-core/src/pendingactions";
 
 function SpecialCharactersTextExtended( editor ) {
     editor.plugins.get( 'SpecialCharacters' ).addItems( 'Text', [
@@ -36,6 +38,8 @@ for (let i = 0; i < allEditors.length; ++i) {
     ClassicEditor.create(allEditors[i], {
         // The plugins are now passed directly to .create().
         plugins: [
+            Autosave,
+            PendingActions,
             Essentials,
             Bold,
             Underline,
@@ -90,11 +94,50 @@ for (let i = 0; i < allEditors.length; ++i) {
                     feed: feed
                 }
             ]
+        },
+        autosave: {
+            save( editor ) {
+                return saveData( editor.getData() );
+            }
         }
     } )
         .then( editor => {
+            const form = editor.sourceElement.form;
+            registerSubmitHandler(form);
+
+            const storedData = JSON.parse(window.sessionStorage.getItem(window.location.href));
+            if (storedData !== null) {
+                console.log(storedData.lastChange);
+
+                const diff = new Date() - new Date(storedData.lastChange);
+
+                console.log(diff);
+
+                if (diff < 1000 * 60 * 60 * 24) {
+                    console.log('Restoring data');
+                    editor.setData(storedData.editorData);
+                }
+            }
+
         } )
         .catch( error => {
             console.error( error );
         } );
 }
+
+function registerSubmitHandler( form ) {
+    console.log('register submit handler for ', form);
+    form.addEventListener('submit', function() {
+        console.log('removing data');
+        window.sessionStorage.removeItem(window.location.href);
+    });
+}
+
+function saveData( data ) {
+    const lastChange = new Date();
+    window.sessionStorage.setItem(window.location.href, JSON.stringify({
+        lastChange: lastChange,
+        editorData: data
+    }));
+}
+

@@ -105,7 +105,7 @@ for (let i = 0; i < allEditors.length; ++i) {
             const form = editor.sourceElement.form;
             registerSubmitHandler(form);
 
-            const storedData = JSON.parse(window.sessionStorage.getItem(window.location.href));
+            const storedData = JSON.parse(window.localStorage.getItem(window.location.href));
             if (storedData !== null) {
                 console.log(storedData.lastChange);
 
@@ -116,9 +116,10 @@ for (let i = 0; i < allEditors.length; ++i) {
                 if (diff < 1000 * 60 * 60 * 24) {
                     console.log('Restoring data');
                     editor.setData(storedData.editorData);
+                } else {
+                    window.localStorage.removeItem(window.location.href);
                 }
             }
-
         } )
         .catch( error => {
             console.error( error );
@@ -129,13 +130,13 @@ function registerSubmitHandler( form ) {
     console.log('register submit handler for ', form);
     form.addEventListener('submit', function() {
         console.log('removing data');
-        window.sessionStorage.removeItem(window.location.href);
+        window.localStorage.removeItem(window.location.href);
     });
 }
 
 function saveData( data ) {
     const lastChange = new Date();
-    window.sessionStorage.setItem(window.location.href, JSON.stringify({
+    window.localStorage.setItem(window.location.href, JSON.stringify({
         lastChange: lastChange,
         editorData: data
     }));

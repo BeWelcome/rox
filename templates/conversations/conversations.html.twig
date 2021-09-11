@@ -108,7 +108,8 @@
                                                 {{ 'conversations.request'|trans }}
                                             {% else %}
                                                 {{ 'conversations.invitation'|trans }}
-                                            {% endif %}<br>
+                                            {% endif %} {% if isInitiator %} &lArr;{% else %} &rArr;{% endif %} ({{ 'message.initiated.by'|trans( {'username':
+                                                isInitiator ? message.initiator.Username :  otherMember.Username }) }})<br>
                                             <i class="fa fa-fw fa-calendar mr-1"></i>{{ 'request.arrival' | trans }}: {{ message.request.arrival | format_date( 'medium') }}
                                             {%- if message.request.departure %}<br>
                                                 <i class="fa fa-fw fa-calendar mr-1"></i>{{ 'request.departure' | trans }}: {{ message.request.departure | format_date( 'medium') }}

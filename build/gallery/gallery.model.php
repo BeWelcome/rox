@@ -356,7 +356,7 @@ SQL;
     {
     	$query = '
 SELECT
-    i.`id`,
+    DISTINCT i.`id`,
     i.`user_id_foreign`,
     m.`username` AS `user_handle`,
     i.`file`,

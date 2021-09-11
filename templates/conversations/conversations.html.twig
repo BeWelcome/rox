@@ -65,13 +65,14 @@
                     <input type="checkbox" id="checkAll">
                     <label for="checkAll" class="sr-only">{{ 'conversations.check.all'|trans }}</label>
                 </th>
-                <th class="align-middle">{{ 'message.first.by' | trans }}</th>
+                <th class="align-middle"></th>
                 <th class="align-middle">{{ 'messagestext' | trans }}</th>
-                <th class="align-middle">{{ 'message.last.by' | trans }}</th>
                 <th class="align-middle">&nbsp;</th>
             </tr>
             {% for message in conversations.currentPageResults %}
-                {% set otherMember = message.initiator == message.sender ? message.receiver : message.sender %}
+                {% set otherMember = (message.sender == member) ? message.receiver : message.sender %}
+                {% set lastMessageByMember = (member == message.sender) %}
+                {% set isInitiator = (member == message.initiator) %}
                 {% set unread = (message.firstRead is null) or (message.firstRead == '0000-00-00 00:00.00') %}
                 {% if submenu.active == 'deleted' %}
                     {% set show_message_route = 'message_show_with_deleted' %}
@@ -84,14 +85,14 @@
                     </td>
                     <td class="align-middle small">
                         <div class="o-avatar o-avatar--m u-mb-16 md:u-mb-0 u-justify-self-center">
-                            {{ macros.roundedavatarstack(message.initiator.Username, 72) }}
+                            {{ macros.roundedavatarstack(otherMember.Username, 72) }}
                         </div>
                     </td>
                     <td class="align-middle w-100">
                         <a href="{{ path(show_message_route, { id: message.id}) }}">
                             <div>
                                 {% if message.subject %}<p class="m-0">
-                                    <em{%- if unread -%}
+                                    <span style="font-weight:bold">{% if lastMessageByMember %}&lArr;{% else %}&rArr;{% endif %}</span> <em{%- if unread -%}
                                         {{- ' class="unread" style="font-weight:bold;"' -}}
                                     {%- endif -%}>{% if message.parent %}Re: {% endif %}{{- message.subject.subject | striptags -}}</em>
                                     </p>{% endif %}
@@ -119,11 +120,6 @@
                                 <span class="text-muted small">{{ 'message.sentdate'|trans({'%sentDate%': message.dateSent | format_date( 'medium')}) }} {{ 'by'|trans }} {{ message.sender.Username }}</span>
                             </div>
                         </a>
-                    </td>
-                    <td class="align-middle small">
-                        <div class="o-avatar o-avatar--m u-mb-16 md:u-mb-0 u-justify-self-center">
-                            {{ macros.roundedavatarstack(otherMember.Username, 72) }}
-                        </div>
                     </td>
                     <td class="text-right">
                         <div class="btn-group-vertical">

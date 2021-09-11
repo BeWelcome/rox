@@ -49,6 +49,7 @@ RUN set -eux; \
 		xmlrpc \
 		xsl \
 		zip \
+        exif \
 	; \
 	pecl install \
 		apcu-${APCU_VERSION} \

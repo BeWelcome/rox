@@ -212,7 +212,6 @@ class LandingController extends AbstractController
      * @throws AccessDeniedException
      */
     public function show(
-        Request $request,
         CommunityNewsModel $communityNewsModel,
         DonateModel $donateModel,
         TripModel $tripModel

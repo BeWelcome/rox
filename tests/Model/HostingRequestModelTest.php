@@ -398,16 +398,16 @@ class HostingRequestModelTest extends TestCase
 
     public function testDepartureNotNullOriginal()
     {
-        $this->expectException(InvalidArgumentException::class);
-
         $arrival = new DateTime();
         $departure = null;
 
         $hostingRequestMessage = $this->setupRequestMessage($arrival, $departure, false, 1, HostingRequest::REQUEST_OPEN, 'Message');
         $formRequestMessage = $this->setupRequestMessage($arrival, $departure, false, 1, HostingRequest::REQUEST_OPEN, 'Message');
 
+        $this->expectException(InvalidArgumentException::class);
+
         $requestModel = new HostingRequestModel($this->mailer);
-        $finalRequestMessage = $requestModel->getFinalRequest(
+        $requestModel->getFinalRequest(
             $this->sender,
             $this->receiver,
             $hostingRequestMessage,
@@ -418,16 +418,16 @@ class HostingRequestModelTest extends TestCase
 
     public function testDepartureNotNullForm()
     {
-        $this->expectException(InvalidArgumentException::class);
-
         $arrival = new DateTime();
         $departure = new DateTime();
 
         $hostingRequestMessage = $this->setupRequestMessage($arrival, $departure, false, 1, HostingRequest::REQUEST_OPEN, 'Message');
         $formRequestMessage = $this->setupRequestMessage($arrival, null, false, 1, HostingRequest::REQUEST_OPEN, 'Message');
 
+        $this->expectException(InvalidArgumentException::class);
+
         $requestModel = new HostingRequestModel($this->mailer);
-        $finalRequestMessage = $requestModel->getFinalRequest(
+        $requestModel->getFinalRequest(
             $this->sender,
             $this->receiver,
             $hostingRequestMessage,

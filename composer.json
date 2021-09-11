@@ -6,6 +6,7 @@
     "license": "GPL",
     "minimum-stability": "RC",
     "require": {
+        "ext-exif": "*",
         "ext-fileinfo": "*",
         "ext-gd": "*",
         "ext-intl": "*",
@@ -23,6 +24,7 @@
         "anyx/login-gate-bundle": "^2.0",
         "api-platform/core": "^2.6-beta",
         "babdev/pagerfanta-bundle": "3.*",
+        "composer/package-versions-deprecated": "1.11.99.3",
         "doctrine/doctrine-bundle": "^2.0",
         "doctrine/doctrine-migrations-bundle": "^2.0",
         "doctrine/orm": "^2.8.4",
@@ -57,7 +59,7 @@
         "symfony/apache-pack": "^1.0",
         "symfony/asset": "^5.3.0",
         "symfony/cache": "^5.3.0",
-        "symfony/debug-pack": "*",
+        "symfony/debug-bundle": "^5.3.0",
         "symfony/dotenv": "^5.3.0",
         "symfony/expression-language": "^5.3.0",
         "symfony/flex": "^1.1",
@@ -65,14 +67,15 @@
         "symfony/http-client": "^5.3.0",
         "symfony/mailer": "^5.3.0",
         "symfony/monolog-bundle": "^3.3",
-        "symfony/orm-pack": "^1.0",
         "symfony/phpunit-bridge": "^5.3.0",
         "symfony/security-bundle": "^5.3.0",
+        "symfony/stopwatch": "5.3.*",
         "symfony/templating": "^5.3.0",
         "symfony/translation": "^5.3.0",
         "symfony/twig-bundle": "^5.3.0",
         "symfony/validator": "^5.3.0",
         "symfony/var-dumper": "^5.3.0",
+        "symfony/web-profiler-bundle": "^5.3.0",
         "symfony/webpack-encore-bundle": "^1.6",
         "twig/cssinliner-extra": "^3.0",
         "twig/extra-bundle": "^3.0",
@@ -80,8 +83,7 @@
         "twig/intl-extra": "^3.0",
         "twig/markdown-extra": "^3.0",
         "twig/twig": "^3.0",
-        "xemlock/htmlpurifier-html5": "^0.1.10",
-      "ext-exif": "*"
+        "xemlock/htmlpurifier-html5": "^0.1.10"
     },
     "conflict": {
         "symfony/symfony": "*"
@@ -113,9 +115,7 @@
         "squizlabs/php_codesniffer": "^3.5",
         "symfony/browser-kit": "^5.3.0",
         "symfony/css-selector": "^5.3.0",
-        "symfony/debug-bundle": "^5.3.0",
-        "symfony/maker-bundle": "^1.8",
-        "symfony/web-profiler-bundle": "^5.3.0"
+        "symfony/maker-bundle": "^1.8"
     },
     "autoload": {
         "psr-4": {

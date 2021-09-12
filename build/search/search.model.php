@@ -1457,6 +1457,10 @@ LIMIT 1
 
     private function findCountryId($country)
     {
+        if (null === $country) {
+            return null;
+        }
+
         $conn = new Connection();
         $conn->setParams(array('host' => 'localhost', 'port' => 9306));
 
@@ -1485,6 +1489,10 @@ LIMIT 1
 
     private function findAdminUnitId($countryId, $adminUnit)
     {
+        if (null === $adminUnit) {
+            return null;
+        }
+
         $conn = new Connection();
         $conn->setParams(array('host' => 'localhost', 'port' => 9306));
 

@@ -43,10 +43,15 @@ services:
         resource: '../src/Controller'
         tags: [ 'controller.service_arguments' ]
 
-    App\Swagger\SwaggerDecorator:
-        decorates: 'api_platform.swagger.normalizer.documentation'
-        arguments: ['@App\Swagger\SwaggerDecorator.inner']
-        autoconfigure: false
+
+    App\ApiPlatform\JWTAuthorizationDecorator:
+        decorates: 'api_platform.openapi.factory'
+        arguments: ['@.inner']
+
+#    App\Swagger\SwaggerDecorator:
+#        decorates: 'api_platform.swagger.normalizer.documentation'
+#        arguments: ['@App\Swagger\SwaggerDecorator.inner']
+#        autoconfigure: false
 
     App\Security\RefreshToken\RefreshTokenStorageInterface: '@App\Security\RefreshToken\DoctrineRefreshTokenStorage'
 

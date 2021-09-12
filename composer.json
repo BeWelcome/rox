@@ -22,7 +22,7 @@
         "amphp/http-client": "^4.3",
         "anthonymartin/geo-location": "^2.0",
         "anyx/login-gate-bundle": "^2.0",
-        "api-platform/core": "^2.6-beta",
+        "api-platform/core": "2.*",
         "babdev/pagerfanta-bundle": "3.*",
         "composer/package-versions-deprecated": "1.11.99.3",
         "doctrine/doctrine-bundle": "^2.0",

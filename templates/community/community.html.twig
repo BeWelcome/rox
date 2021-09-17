@@ -1,5 +1,9 @@
 {% extends 'base.html.twig' %}
 
+{% block stylesheets %}
+    {{ encore_entry_link_tags('tailwind') }}
+{% endblock %}
+
 {% block title %}
 	{{ 'communitytitle' | trans }}
 {% endblock %}

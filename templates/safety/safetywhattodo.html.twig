@@ -1,5 +1,9 @@
 {% extends 'base.html.twig' %}
 
+{% block stylesheets %}
+  {{ encore_entry_link_tags('tailwind') }}
+{% endblock stylesheets %}
+
 {% block title %}
     {{ 'safety' | trans }}
 {% endblock %}
@@ -7,20 +11,39 @@
 
 
 {% block content %}
-<h1><a href="{{ url('safety') }}">{{ 'safety' | trans }}</a></h1>
-<div class="row">
-    <div class="col-12 col-md-6">
-        <a id="emergency"></a>
-        <h3>{{ 'safety_emergency' | trans | purify }}</h3>
-        <p>{{'safety_emergencytext'|trans 
-            ({ 'safety.emergency.contact.us' : '<a href="' ~ url('safety_contact') ~ '">' ~ 'safety.emergency.contact.us'|trans ~ '</a>' })
-            | purify }}
-        </p>
-    </div>
-    <div class="col-12 col-lg-6">
-        <a id="uncomfortable"></a>
-        <h3>{{ 'safety_uncomfortablesituation' | trans | purify }}</h3>
-        <p>{{ 'safety_uncomfortablesituationtext' | trans | purify }}</p>
+<div class="o-text">
+    <h1><a href="{{ url('safety') }}">{{ 'safety' | trans }}</a></h1>
+    <span class="clearfix"></span>
+    <div class="row">
+        <div class="col-12 col-md-6">
+            <a id="emergency"></a>
+            <h3>{{ 'safety_emergency' | trans | purify }}</h3>
+            <p>{{'safety_emergencytext'|trans 
+                ({ 'safety.emergency.contact.us' : '<a href="' ~ url('safety_contact') ~ '">' ~ 'safety.emergency.contact.us'|trans ~ '</a>' })
+                | purify }}
+            </p>
+        </div>
+        <div class="col-12 col-lg-6">
+            <a id="uncomfortable"></a>
+            <h3>{{ 'safety_uncomfortablesituation' | trans | purify }}    <h1><a href="{{ url('safety') }}">{{ 'safety' | trans }}</a></h1>
+    <span class="clearfix"></span>
+    <div class="row">
+        <div class="col-12 col-md-6">
+            <a id="emergency"></a>
+            <h3>{{ 'safety_emergency' | trans | purify }}</h3>
+            <p>{{'safety_emergencytext'|trans 
+                ({ 'safety.emergency.contact.us' : '<a href="' ~ url('safety_contact') ~ '">' ~ 'safety.emergency.contact.us'|trans ~ '</a>' })
+                | purify }}
+            </p>
+        </div>
+        <div class="col-12 col-lg-6">
+            <a id="uncomfortable"></a>
+            <h3>{{ 'safety_uncomfortablesituation' | trans | purify }}</h3>
+            <p>{{ 'safety_uncomfortablesituationtext' | trans | purify }}</p>
+        </div>
+    </div></h3>
+            <p>{{ 'safety_uncomfortablesituationtext' | trans | purify }}</p>
+        </div>
     </div>
 </div>
 {% endblock content %}

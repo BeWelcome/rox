@@ -140,6 +140,8 @@
 .o-text li {
   margin-bottom: 8px;
   list-style-position: inside;
+  text-indent: -1em;
+  margin-left: 1em;
   counter-increment: item;
 }
 

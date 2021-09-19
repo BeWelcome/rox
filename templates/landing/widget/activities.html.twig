@@ -11,14 +11,14 @@
             </div>
 
             <div class="u-flex u-items-center u-mx-16 u-overflow-hidden">
-                {% if activity.online %}<img class="u-w-32 u-h-32 u-mr-16 u-text-gray-70" src="images/online_meeting_noun_3384309.svg">{% else %}<i class="fa fa-2x fa-map-marker-alt"></i>{% endif %}
+                {% if activity.online %}<img class="u-w-32 u-h-32 u-mr-16 u-text-gray-70" src="images/online_meeting_noun_3384309.svg">{% else %}<i class="fa fa-2x fa-map-marker-alt u-mr-16"></i>{% endif %}
                 <div class="u-flex u-flex-col">
                     <p class="u-ellipsis"><strong><a href="activities/{{ activity.id }}">{{ activity.title }}</a></strong></p>
                     <p class="u-ellipsis u-text-14 u-font-300"> {{ activity.location.name }}, {{ activity.location.country.name }}</p>
                 </div>
             </div>
 
-            <div class="u-ml-auto u-px-24 u-flex u-flex-col u-justify-center u-items-center u-bg-gray-10 u-h-full">
+            <div class="u-ml-auto u-px-12 u-flex u-flex-col u-justify-center u-items-center u-bg-gray-10 u-h-full">
                 <div class="u-w-40 u-h-40 u-rounded-full u-bg-gray-15 u-flex u-items-center u-justify-center">
                     <i class="fa fa-user u-text-gray-70 u-text-22"></i>
                 </div>

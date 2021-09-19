@@ -90,7 +90,7 @@
     </div>
     <div class="container-lg">
         <div class="u-flex u-flex-col">
-            <div class="u-w-1/2 u-pin-x u-relative">
+            <div class="col-10 offset-1 col-sm-8 offset-sm-2">
                 {% for flash_message in app.session.flashBag.get('error') %}
                     <div class="flash error">
                         {{ flash_message | trans }}
@@ -104,7 +104,7 @@
                 <h1 class="u-text-32 u-leading-40 u-text-white u-text-center u-my-16 u-font-700">BeWelcome - {{ 'indexpageteaseropendoor' | trans }}</h1>
             </div>
             {% if error %}
-                <div class="col-12">
+                <div class="col-10 offset-1 col-sm-8 offset-sm-2">
                     <div class="alert alert-danger">
                         {{ error.messageKey|trans(error.messageData, 'security') }}
                     </div>

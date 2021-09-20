@@ -1,12 +1,7 @@
 .navbar {
-  min-height: 56px;
-}
-
-.navbar {
 
   .navbar-brand {
-    display: inline-block;
-    padding: 0 16px 0 0;
+    padding-right: $spacer;
   }
 
   .nav-link {

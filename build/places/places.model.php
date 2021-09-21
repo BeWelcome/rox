@@ -94,6 +94,7 @@ class Places extends RoxModelBase {
                 m.status = 'Active'
                 AND m.MaxGuest >= 1
                 AND m.IdCity = g.geonameId
+                AND g.fClass = 'P'
                 AND g.country = '%s'", $this->dao->escape($country));
         $row = $this->singleLookup($countQuery);
         return $row->cnt;
@@ -114,6 +115,7 @@ class Places extends RoxModelBase {
                 m.status = 'Active'
                 AND m.MaxGuest >= 1
                 AND m.IdCity = g.geonameId
+                AND g.fClass = 'P'
                 AND g.country = '%s'
                 AND g.admin1 = '%s'", $this->dao->escape($country), $this->dao->escape($admin1));
         $row = $this->singleLookup($countQuery);
@@ -162,6 +164,7 @@ class Places extends RoxModelBase {
                 AND m.MaxGuest >= 1
                 AND g.geonameId = m.idCity
                 AND g.country = '%s'
+                AND g.fClass = 'P'
             ORDER BY
                 m.Accomodation ASC, HasProfileSummary DESC, m.LastLogin DESC",
             $this->dao->escape($countrycode));
@@ -216,6 +219,7 @@ class Places extends RoxModelBase {
                 AND m.MaxGuest >= 1
                 AND m.IdCity = g.geonameId
                 AND g.geonameId = '%s'
+                AND g.fClass = 'P'
             ORDER BY
                 m.Accomodation ASC, HasProfileSummary DESC, m.LastLogin DESC",
             $this->dao->escape($cityCode));

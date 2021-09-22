@@ -955,6 +955,10 @@ ORDER BY
             $errors[] = 'SignupErrorInvalidLastName';
         }
 
+        if (empty($vars['MaxGuest']) || intval($vars['MaxGuest']) < 1 || intval($vars['MaxGuest']) > 20)  {
+            $errors[] = 'SignupErrorInvalidMaxGuest';
+        }
+
         if (
             (empty($vars['Email']) || !filter_var($vars['Email'], FILTER_VALIDATE_EMAIL))
             && ($vars['Email']!='cryptedhidden')

@@ -199,17 +199,16 @@
 
 			{# load activities #}
 			<div role="tabpanel" class="o-tab tab-pane u-h-full" id="activities">
-				<div class="u-flex u-justify-center" role="group">
-					<a href="/activities/create" class="o-button btn">
+				<div class="u-flex u-items-center u-mb-16" role="group">
+					<a href="/activities/create" class="o-button btn u-mr-16">
 						<i class="fa u-mr-8 fa-calendar-plus"></i>
-						{{ 'landing.activities.create' | trans }}</a>
-				</div>
-				<div class="u-flex u-justify-center u-mt-16 u-mb-8">
-					<div class="custom-control custom-switch">
-              <input type="checkbox" class="custom-control-input" id="show_online"
-                   name="show_online" {% if onlineActivities %}checked{% endif %}>
-              <label class="custom-control-label u-font-display u-font-300 u-leading-24"
-                   for="show_online">{{ 'landing.activities.show.online'|trans }}</label>
+						{{ 'landing.activities.create' | trans }}
+                    </a>
+                    <div class="custom-control custom-switch">
+                        <input type="checkbox" class="custom-control-input" id="show_online"
+                        name="show_online" {% if onlineActivities %}checked{% endif %}>
+                        <label class="custom-control-label u-font-display u-font-300 u-leading-24"
+                        for="show_online">{{ 'landing.activities.show.online'|trans }}</label>
 					</div>
 				</div>
 				<div id="activitiesdisplay" class="c-dashboard">
@@ -221,10 +220,10 @@
 					</div>
                 </div>   
                 <div class="u-mt-auto u-mb-16 u-flex u-items-center" role="group">
-                    <a href="/activities" class="o-button btn o-button o-button--full u-mr-8">
+                    <a href="/activities" class="o-button btn o-button o-button--full u-mr-8 u-mt-16">
                         <i class="fa u-mr-8 fa-map"></i>
                         {{ 'landing.activities.allactivities' | trans }}</a>
-                    <a href="/activities/myactivities" class="o-button btn o-button--full">
+                    <a href="/activities/myactivities" class="o-button btn o-button--full u-mt-16">
                         <i class="fa u-mr-8 fa-calendar"></i>
                         {{ 'landing.activities.myactivities' | trans }}</a>
                 </div>

@@ -1,9 +1,11 @@
+{% block content %}
 <div id="legsdisplay">
     <div class="c-trip-legs--landing">
         {% for leg in legs  %}
             {% include 'trip/leg.html.twig' with {'leg': leg} %}
         {% else %}
-                {{ 'landing.bevisited.none' }}
+                {{ 'landing.bevisited.none'|trans }}
         {% endfor %}
     </div>
 </div>
+{% endblock %}

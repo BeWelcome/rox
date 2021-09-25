@@ -1,5 +1,5 @@
 {% import 'macros.twig' as macros %}
-<div id="messagesdisplay" class="c-dashboard">
+<div id="conversationsdisplay" class="c-dashboard">
 	{% for message in messages %}
 		{% set unread = (message.firstRead is null) or (message.firstRead == '0000-00-00 00:00.00') %}
 		<div class="c-dashboard__message-item">

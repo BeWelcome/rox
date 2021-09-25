@@ -18,7 +18,7 @@ class LandingModel
     use ManagerTrait;
 
     /**
-     * Generates messages for display on home page.
+     * Generates conversations for display on home page.
      *
      * Returns either all messages or only unread ones depending on checkbox state
      *
@@ -33,14 +33,14 @@ class LandingModel
      *
      * @return array
      */
-    public function getMessagesAndRequests(Member $member, $unread, $limit = 5)
+    public function getConversations(Member $member, $unread, $limit = 5)
     {
         /** @var MessageRepository $messageRepository */
         $messageRepository = $this->getManager()->getRepository(Message::class);
 
-        $messagesAndRequests = $messageRepository->getLatestMessagesAndRequests($member, $unread, $limit);
+        $conversations = $messageRepository->getConversations($member, $unread, $limit);
 
-        return $messagesAndRequests;
+        return $conversations;
     }
 
     /**

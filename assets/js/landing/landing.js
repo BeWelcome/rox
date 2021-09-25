@@ -4,7 +4,7 @@ import "tempusdominus";
 const searchPicker = new SearchPicker( "/search/locations/all");
 
 $(document).ready(function() {
-    if (!$('#messagesdisplay').length) {
+    if (!$('#conversationsdisplay').length) {
         return;
     }
 
@@ -55,13 +55,13 @@ var Home = {
 
         $.ajax({
             type: 'GET',
-            url: '/widget/messages',
+            url: '/widget/conversations',
             data: {
                 all: all,
                 unread: unread
             },
             success: function(messages) {
-                $('#messagesdisplay').replaceWith(messages);
+                $('#conversationsdisplay').replaceWith(messages);
             }
         });
     },

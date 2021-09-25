@@ -3,6 +3,7 @@
 namespace App\Pagerfanta;
 
 use App\Doctrine\DeleteRequestType;
+use App\Doctrine\MessageResultSetMapping;
 use App\Entity\Member;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;
@@ -55,23 +56,8 @@ abstract class AbstractConversationsAdapter
     {
         $sql = $this->getSqlQuery();
         $sql .= ' ORDER BY `m`.`created` DESC LIMIT ' . $length . ' OFFSET ' . $offset;
-        $rsm = new ResultSetMapping();
-        $rsm->addEntityResult('App:Message', 'm');
-        $rsm->addFieldResult('m', 'id', 'id');
-        $rsm->addFieldResult('m', 'Message', 'message');
-        $rsm->addFieldResult('m', 'created', 'created');
-        $rsm->addFieldResult('m', 'updated', 'updated');
-        $rsm->addFieldResult('m', 'DateSent', 'dateSent');
-        $rsm->addFieldResult('m', 'WhenFirstRead', 'firstRead');
-        $rsm->addFieldResult('m', 'DeleteRequest', 'deleteRequest');
-        $rsm->addMetaResult('m', 'IdParent', 'idParent');
-        $rsm->addMetaResult('m', 'IdReceiver', 'idReceiver');
-        $rsm->addMetaResult('m', 'IdSender', 'idSender');
-        $rsm->addMetaResult('m', 'initiator_id', 'initiator_id');
-        $rsm->addMetaResult('m', 'subject_id', 'subject_id');
-        $rsm->addMetaResult('m', 'request_id', 'request_id');
 
-        $query = $this->entityManager->createNativeQuery($sql, $rsm)
+        $query = $this->entityManager->createNativeQuery($sql, new MessageResultSetMapping())
             ->setParameter(':memberId', $this->member->getId())
         ;
 

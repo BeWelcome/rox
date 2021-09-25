@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Doctrine\DeleteRequestType;
 use App\Doctrine\InFolderType;
+use App\Doctrine\MessageResultSetMapping;
 use App\Doctrine\MessageStatusType;
 use App\Doctrine\SpamInfoType;
 use App\Entity\Member;
@@ -11,6 +12,7 @@ use App\Entity\Message;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
+use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\ORM\QueryBuilder;
 use Pagerfanta\Doctrine\ORM\QueryAdapter;
 use Pagerfanta\Pagerfanta;
@@ -37,6 +39,50 @@ class MessageRepository extends EntityRepository
         $unreadCount = $q->getSingleScalarResult();
 
         return (int) $unreadCount;
+    }
+
+    public function getConversations(Member $member, bool $unreadOnly, int $limit = 5)
+    {
+        if ($unreadOnly) {
+            $unreadCondition = '(m.IdReceiver = :memberId) '
+                . 'AND (`m`.WhenFirstRead IS NULL OR `m`.WhenFirstRead = \'0000-00-00 00:00:00\')';
+        } else {
+            $unreadCondition = '(m.IdReceiver = :memberId OR m.IdSender = :memberId)';
+        }
+
+        $sql = '
+            SELECT * FROM (
+                    SELECT *
+                    FROM `messages` m
+                    WHERE ' . $unreadCondition . '
+                    AND `m`.`id` IN (
+                        SELECT max(`m`.`id`)
+                        FROM `messages` m
+                        WHERE (
+                            m.DeleteRequest NOT LIKE \'%' . DeleteRequestType::RECEIVER_DELETED . '%\'
+                            AND m.DeleteRequest NOT LIKE \'%' . DeleteRequestType::RECEIVER_PURGED . '%\'
+                        )
+                    )
+                    GROUP BY `m`.`subject_id`
+                UNION
+                    SELECT *
+                    FROM `messages` m
+                    WHERE ' . $unreadCondition . '
+                    AND `m`.`subject_id` IS NULL
+                    AND (
+                            m.DeleteRequest NOT LIKE \'%' . DeleteRequestType::RECEIVER_DELETED . '%\'
+                            AND m.DeleteRequest NOT LIKE \'%' . DeleteRequestType::RECEIVER_PURGED . '%\'
+                        )
+             ) m
+         ';
+
+        $sql .= ' ORDER BY `m`.`created` DESC LIMIT ' . $limit . ' OFFSET 0';
+
+        $query = $this->getEntityManager()->createNativeQuery($sql, new MessageResultSetMapping())
+            ->setParameter(':memberId', $member->getId())
+        ;
+
+        return $query->getResult();
     }
 
     public function getReportedMessagesCount(): int

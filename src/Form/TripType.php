@@ -85,6 +85,7 @@ class TripType extends AbstractType
                 ],
                 'required' => true,
                 'allow_add' => true,
+                'allow_delete' => true,
                 'by_reference' => false,
                 'prototype' => true,
 //                'error_bubbling' => false,

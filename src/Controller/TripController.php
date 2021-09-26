@@ -137,14 +137,12 @@ class TripController extends AbstractController
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
-            $trip = $editForm->getData();
+            $editedTrip = $editForm->getData();
 
-            $errors = $this->tripModel->checkTripCreateOrEditData($trip);
+            $errors = $this->tripModel->checkTripCreateOrEditData($editedTrip);
             if (empty($errors)) {
-                $this->tripModel->orderTripLegs($trip);
-
                 $entityManager = $this->getDoctrine()->getManager();
-                $entityManager->persist($trip);
+                $entityManager->persist($editedTrip);
                 $entityManager->flush();
 
                 $this->addFlash('success', 'trip.edited');

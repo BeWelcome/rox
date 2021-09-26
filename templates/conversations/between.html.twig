@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+{% import 'macros.twig' as macros %}
+
+{% block stylesheets %}
+    {{ encore_entry_link_tags('tailwind') }}
+{% endblock %}
+
+{% block javascripts %}
+{% endblock %}
+
+{% block content %}
+    {%  set member = app.user %}
+    <h2>{% trans with {'%username%': otherMember.Username} %}messages.with.heading{% endtrans %}</h2>
+
+    {% if items.nbResults == 0 %}
+        <p>{{ 'messages.none' | trans }}</p>
+    {% else %}
+        {% if items.haveToPaginate %}
+        <div class="float-left">
+            {{ pagerfanta( items, 'rox_default') }}
+        </div>
+        {% endif %}
+
+        {# set sorting header based on current folder. Outside of sent sort by sender #}
+        <table class="table table-responsive table-striped table-hover">
+            <tr>
+                <th class="align-middle"></th>
+                <th class="align-middle">{{ 'messagestext' | trans }}</th>
+                <th class="align-middle">&nbsp;</th>
+            </tr>
+            {% for message in items.currentPageResults %}
+                {% include 'conversations/message.html.twig' with { 'message': message } %}
+            {% endfor %}
+        </table>
+        {% if items.haveToPaginate %}
+            <div class="float-left">
+                {{ pagerfanta( items, 'rox_default') }}
+            </div>
+        {% endif %}
+
+    {% endif %}
+{% endblock %}

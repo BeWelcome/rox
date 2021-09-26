@@ -224,7 +224,14 @@ class MessageController extends BaseMessageController
             'otherMember' => $other,
             'submenu' => [
                 'active' => 'between',
-                'items' => $this->getSubMenuItems(),
+                'items' => [
+                    'conversations' => [
+                        'key' => 'messages.back.profile',
+                        'url' => $this->generateUrl('members_profile', [
+                            'username' => $other->getUsername()
+                        ]),
+                    ],
+                ],
             ],
         ]);
     }

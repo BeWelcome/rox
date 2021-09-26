@@ -4,6 +4,10 @@
     {{ 'translations.mockup.title' | trans }}
 {% endblock %}
 
+{% block stylesheets %}
+    {{ encore_entry_link_tags('tailwind') }}
+{% endblock %}
+
 {% block content %}
     <h1>{{ 'translations.headline' | trans }}</h1>
     <p>{{ 'translation.mockup.abstract'|trans }}</p>

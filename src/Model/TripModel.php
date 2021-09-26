@@ -74,11 +74,12 @@ class TripModel
     {
         $errors = [];
         $legs = $data->getSubtrips();
+        $keys = $legs->getKeys();
 
-        for ($i = 0; $i < \count($legs); ++$i) {
-            for ($j = $i + 1; $j < \count($legs); ++$j) {
-                $a = $legs[$i];
-                $b = $legs[$j];
+        for ($i = 0; $i < \count($keys); ++$i) {
+            for ($j = $i + 1; $j < \count($keys); ++$j) {
+                $a = $legs[$keys[$i]];
+                $b = $legs[$keys[$j]];
                 // (StartA <= EndB) and (EndA >= StartB)
                 if ($a->getArrival() < $b->getDeparture() && $a->getDeparture() > $b->getArrival()) {
                     $errors[] = [
@@ -94,7 +95,7 @@ class TripModel
                 }
             }
 
-            if (empty($legs[$i]->getOptions())) {
+            if (empty($legs[$keys[$i]]->getOptions())) {
                 $errors[] = [
                     'leg' => $i,
                     'field' => 'options',

@@ -141,7 +141,7 @@ class Subtrip
         return $this->id;
     }
 
-    public function setTrip(Trip $trip): self
+    public function setTrip(?Trip $trip): self
     {
         $this->trip = $trip;
 

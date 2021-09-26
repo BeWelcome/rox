@@ -38,9 +38,9 @@ class LandingController extends AbstractController
     }
 
     /**
-     * @Route( "/widget/messages", name="/widget/messages")
+     * @Route( "/widget/conversations", name="/widget/conversations")
      */
-    public function getMessages(Request $request): Response
+    public function getConversations(Request $request): Response
     {
         /** @var Member $member */
         $member = $this->getUser();
@@ -59,7 +59,7 @@ class LandingController extends AbstractController
         $em->persist($memberPreference);
         $em->flush();
 
-        $messages = $this->landingModel->getMessagesAndRequests($member, $unread, 5);
+        $messages = $this->landingModel->getConversations($member, $unread, 5);
 
         $content = $this->render('landing/widget/conversations.html.twig', [
             'messages' => $messages,

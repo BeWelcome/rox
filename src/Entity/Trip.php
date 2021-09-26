@@ -56,21 +56,21 @@ class Trip
     private $invitationRadius = 0;
 
     /**
-     * @var Carbon
+     * @var DateTime
      *
      * @ORM\Column(name="created", type="datetime")
      */
     private $created;
 
     /**
-     * @var Carbon
+     * @var DateTime
      *
      * @ORM\Column(name="updated", type="datetime", nullable=true)
      */
     private $updated;
 
     /**
-     * @var Carbon
+     * @var DateTime
      *
      * @ORM\Column(name="deleted", type="datetime", nullable=true)
      */
@@ -96,7 +96,7 @@ class Trip
      * @var ArrayCollection
      * @Assert\Count(min=1)
      *
-     * @ORM\OneToMany(targetEntity="Subtrip", mappedBy="trip", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="Subtrip", mappedBy="trip", cascade={"persist", "remove"}, orphanRemoval=true)
      * @ORM\OrderBy({"arrival" = "ASC"})
      */
     private $subtrips;
@@ -222,16 +222,20 @@ class Trip
 
     public function addSubtrip(Subtrip $subtrip): self
     {
-        $subtrip->setTrip($this);
-
         $this->subtrips->add($subtrip);
+        $subtrip->setTrip($this);
 
         return $this;
     }
 
     public function removeSubtrip(Subtrip $subtrip): void
     {
+        if (!$this->subtrips->contains($subtrip)) {
+            return;
+        }
+
         $this->subtrips->removeElement($subtrip);
+        $subtrip->setTrip(null);
     }
 
     /**

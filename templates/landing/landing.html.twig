@@ -84,9 +84,9 @@
 
 		<div class="o-card o-card--tabbed tab-content u-p-16">
 
-			{# messages #}
-			<div role="tabpanel" class="o-tab tab-pane u-h-full active" id="messages">
-				{# all / unread messages toggle #}
+			{# conversations #}
+			<div role="tabpanel" class="o-tab tab-pane u-h-full active" id="conversations">
+				{# all / unread conversations toggle #}
 				<div class="u-flex u-flex-col u-h-full">
 					<div class="u-flex u-items-center u-mb-16" data-toggle="buttons" role="radiogroup">
 						<label class="o-button o-button--outline btn o-button--full u-mr-8{% if messageFilter == 'All' %} active{% endif %}" id="all" role="radio">
@@ -104,11 +104,11 @@
 					</div>
 
 					{# received messages #}
-					<div id="messagesdisplay" class="c-dashboard">
+					<div id="conversationsdisplay" class="c-dashboard">
 						<div class="u-flex u-h-full u-items-center u-justify-center">
 							<p class="u-text-center u-my-24 u-font-300 u-font-display">
 								<i class="fa u-mr-8 fa-4x fa-pulse fa-spinner my-3"></i><br>
-								{{ 'dashboard.load.messages' | trans }}
+								{{ 'dashboard.load.conversations' | trans }}
 							</p>
 						</div>
 					</div>
@@ -217,7 +217,7 @@
 							{{ 'dashboard.load.activities' | trans }}
 						</p>
 					</div>
-                </div>   
+                </div>
                 <div class="u-mt-auto u-mb-16 u-flex u-items-center" role="group">
                     <a href="/activities" class="o-button btn o-button o-button--full u-mr-8 u-mt-16">
                         <i class="fa u-mr-8 fa-map"></i>
@@ -348,12 +348,12 @@
 		<div class="o-card u-h-full">
         <h4 class="homehfour">{{ 'landing.bevisited.title' | trans }}<br/><span
             class="homesubt">{{ 'landing.bevisited.subtitle' | trans }}</span></h4>
-			<div class="u-flex u-items-center u-mx-8 u-mb-8">
-				{{ form_start(radiusForm)}}
-				<div class="u-flex u-items-center u-mx-8 u-mb-8">
-					<i class="fa fa-bullseye u-text-16 u-text-gray-50 u-mr-4"></i>
+			<div class="u-flex u-items-center u-mb-8 u-w-full">
+				{{ form_start(radiusForm, {'attr': {'class': 'u-w-full'}})}}
+				<div class="u-flex u-items-center u-mb-8 u-w-full">
+					<i class="fa fa-fw fa-bullseye u-text-16 u-text-gray-50 u-mr-4"></i>
 					{{ form_label(radiusForm.radius, null, {'label_attr': {'class': 'u-mb-0 u-mr-16'}}) }}
-					{{ form_widget(radiusForm.radius) }}
+					{{ form_widget(radiusForm.radius, {'attr': {'class': 'u-w-full'}}) }}
 				</div>
 				{{ form_rest(radiusForm)}}
 				{{ form_end(radiusForm)}}

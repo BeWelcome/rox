@@ -2,14 +2,19 @@
 
 namespace App\Controller\Admin;
 
+use App\Doctrine\SubtripOptionsType;
+use App\Doctrine\TripAdditionalInfoType;
 use App\Entity\Activity;
 use App\Entity\ForumPost;
 use App\Entity\ForumThread;
 use App\Entity\Group;
 use App\Entity\HostingRequest;
+use App\Entity\Location;
 use App\Entity\Member;
 use App\Entity\Message;
 use App\Entity\Newsletter;
+use App\Entity\Subtrip;
+use App\Entity\Trip;
 use App\Form\CustomDataClass\SearchFormRequest;
 use App\Form\NewsletterUnsubscribeType;
 use App\Form\ResetPasswordFormType;
@@ -17,6 +22,7 @@ use App\Form\ResetPasswordRequestFormType;
 use App\Form\SearchFormType;
 use App\Model\TranslationModel;
 use App\Twig\MockupExtension;
+use Carbon\Carbon;
 use DateTime;
 use Mockery;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -253,6 +259,18 @@ class MockupController extends TranslationController
             'forum post' => [
                 'type' => 'email',
                 'template' => 'emails/notifications.html.twig',
+            ],
+        ],
+        'Landing' => [
+            'be visited|none' => [
+                'type' => 'template',
+                'template' => 'landing/widget/triplegs.html.twig',
+                'setup' => 'getTripsWidgetEmpty',
+            ],
+            'be visited|two legs' => [
+                'type' => 'template',
+                'template' => 'landing/widget/triplegs.html.twig',
+                'setup' => 'getTripsWidgetTwoLegs',
             ],
         ],
         'My data' => [
@@ -712,6 +730,57 @@ class MockupController extends TranslationController
     {
         return [
             'date_generated' => new DateTime(),
+        ];
+    }
+
+    private function getTripsWidgetEmpty(string $template, string $name)
+    {
+        return [
+            'legs' => null,
+            'radius' => 10,
+        ];
+    }
+
+    private function getTripsWidgetTwoLegs(string $template, string $name)
+    {
+        $trip = Mockery::mock(Trip::class, [
+            'getId' => 1,
+            'getCreator' => $this->getUser(),
+            'getSummary' => 'Mocking Bird',
+            'getDescription' => 'Mocking description',
+            'getCountOfTravellers' => 2,
+            'getAdditionalInfo' => TripAdditionalInfoType::NONE,
+            'getCreated' => new DateTime(),
+        ]);
+        $location = Mockery::mock(Location::class, [
+            'getId' => 1,
+            'getName' => 'Mock',
+        ]);
+        $leg1 = Mockery::mock(SubTrip::class, [
+            'getId' => 1,
+            'getArrival' => Carbon::instance(new DateTime('2021-02-22')),
+            'getDeparture' => Carbon::instance(new DateTime('2021-02-24')),
+            'getOptions' => [SubtripOptionsType::MEET_LOCALS],
+            'getLocation' => $location,
+            'getTrip' => $trip,
+            'getInvitedBy' => $this->getUser(),
+        ]);
+        $leg2 = Mockery::mock(SubTrip::class, [
+            'getId' => 2,
+            'getArrival' => Carbon::instance(new DateTime('2021-03-23')),
+            'getDeparture' => Carbon::instance(new DateTime('2021-03-24')),
+            'getOptions' => [SubtripOptionsType::LOOKING_FOR_HOST],
+            'getLocation' => $location,
+            'getTrip' => $trip,
+            'getInvitedBy' => $this->getUser(),
+        ]);
+
+        return [
+            'legs' => [
+                $leg1,
+                $leg2,
+            ],
+            'radius' => 10,
         ];
     }
 

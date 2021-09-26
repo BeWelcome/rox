@@ -1,0 +1,69 @@
+{% import 'macros.twig' as macros %}
+
+{% if between is defined %}
+    {% set otherMember = message.sender %}
+{% else %}
+    {% set otherMember = (message.sender == member) ? message.receiver : message.sender %}
+{% endif %}
+{% set lastMessageByMember = (member == message.sender) %}
+{% set isInitiator = (member == message.initiator) %}
+{% set unread = (message.firstRead is null) or (message.firstRead == '0000-00-00 00:00.00') %}
+{% if submenu.active == 'deleted' %}
+    {% set show_message_route = 'message_show_with_deleted' %}
+{% else %}
+    {% set show_message_route = 'message_show' %}
+{% endif %}
+<tr>
+    {% if form is defined %}
+    <td class="select align-middle" id="selectcolumn">
+        {{ form_widget(form.messages[loop.index0], {'attr': {'class': 'checkable'}}) }}
+    </td>
+    {% endif %}
+    <td class="align-middle small">
+        <div class="o-avatar o-avatar--m u-mb-16 md:u-mb-0 u-justify-self-center">
+            {{ macros.roundedavatarstack(otherMember.Username, 72) }}
+        </div>
+    </td>
+    <td class="align-middle w-100">
+        <a href="{{ path(show_message_route, { id: message.id}) }}">
+            <div>
+                {% if message.subject %}<p class="m-0">
+                    {% if between is not defined %}
+                    <span style="font-weight:bold">{% if lastMessageByMember %}&lArr;{% else %}&rArr;{% endif %}</span>
+                    {% endif %} <em{%- if unread -%}
+                        {{- ' class="unread" style="font-weight:bold;"' -}}
+                    {%- endif -%}>{% if message.parent %}Re: {% endif %}{{- message.subject.subject | striptags -}}</em>
+                    </p>{% endif %}
+                {% set messageText = message.Message | replace({'\n': ' ', '<br />': ' '}) | striptags %}
+
+                {% apply spaceless %}
+                    <p class="m-0 mb-1">{{- messageText | truncate(150) | raw -}}</p>
+                {% endapply %}
+                {% if message.request %}
+                <div class="d-flex alert-light p-2">
+                    <div class="mr-2 font-weight-bold">
+                        {% if message.request.inviteForLeg is null %}
+                            {{ 'conversations.request'|trans }}
+                        {% else %}
+                            {{ 'conversations.invitation'|trans }}
+                        {% endif %} {% if isInitiator %} &lArr;{% else %} &rArr;{% endif %} ({{ 'message.initiated.by'|trans( {'username':
+                            isInitiator ? message.initiator.Username :  otherMember.Username }) }})<br>
+                        <i class="fa fa-fw fa-calendar mr-1"></i>{{ 'request.arrival' | trans }}: {{ message.request.arrival | format_date( 'medium') }}
+                        {%- if message.request.departure %}<br>
+                            <i class="fa fa-fw fa-calendar mr-1"></i>{{ 'request.departure' | trans }}: {{ message.request.departure | format_date( 'medium') }}
+                        {%- endif %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            <span class="text-muted small">{{ 'message.sentdate'|trans({'%sentDate%': message.dateSent | format_date( 'medium')}) }} {{ 'by'|trans }} {{ message.sender.Username }}</span>
+            </div>
+        </a>
+    </td>
+    <td class="text-right">
+        <div class="btn-group-vertical">
+            <a href="{{ path(show_message_route, { id: message.id}) }}" class="btn btn-primary btn-sm">{{ 'view' | trans }}</a>
+            <a href="{{ path('message_reply', { id: message.id}) }}" class="btn btn-primary btn-sm">{{ 'reply' | trans }}</a>
+        </div>
+    </td>
+</tr>

@@ -39,7 +39,7 @@ class FaqCategoryFormType extends AbstractType
                         throw new TransformationFailedException('error.admin.faq.transform.invalid');
                     }
 
-                    return str_replace('faq_cat_', '', $wordCode);
+                    return strtolower(str_ireplace('faq_cat_', '', $wordCode));
                 },
                 function ($strippedWordCode) {
                     if (true === stripos($strippedWordCode, 'faq_cat_')) {

@@ -219,12 +219,19 @@ class MessageController extends BaseMessageController
         $member = $this->getUser();
         $messages = $this->messageModel->getMessagesBetween($member, $other, $sort, $direction, $page, $limit);
 
-        return $this->render('message/between.html.twig', [
+        return $this->render('conversations/between.html.twig', [
             'items' => $messages,
             'otherMember' => $other,
             'submenu' => [
                 'active' => 'between',
-                'items' => $this->getSubMenuItems(),
+                'items' => [
+                    'conversations' => [
+                        'key' => 'messages.back.profile',
+                        'url' => $this->generateUrl('members_profile', [
+                            'username' => $other->getUsername()
+                        ]),
+                    ],
+                ],
             ],
         ]);
     }

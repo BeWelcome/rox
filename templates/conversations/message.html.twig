@@ -1,6 +1,10 @@
 {% import 'macros.twig' as macros %}
 
-{% set otherMember = (message.sender == member) ? message.receiver : message.sender %}
+{% if between is defined %}
+    {% set otherMember = message.sender %}
+{% else %}
+    {% set otherMember = (message.sender == member) ? message.receiver : message.sender %}
+{% endif %}
 {% set lastMessageByMember = (member == message.sender) %}
 {% set isInitiator = (member == message.initiator) %}
 {% set unread = (message.firstRead is null) or (message.firstRead == '0000-00-00 00:00.00') %}
@@ -24,7 +28,9 @@
         <a href="{{ path(show_message_route, { id: message.id}) }}">
             <div>
                 {% if message.subject %}<p class="m-0">
-                    <span style="font-weight:bold">{% if lastMessageByMember %}&lArr;{% else %}&rArr;{% endif %}</span> <em{%- if unread -%}
+                    {% if between is not defined %}
+                    <span style="font-weight:bold">{% if lastMessageByMember %}&lArr;{% else %}&rArr;{% endif %}</span>
+                    {% endif %} <em{%- if unread -%}
                         {{- ' class="unread" style="font-weight:bold;"' -}}
                     {%- endif -%}>{% if message.parent %}Re: {% endif %}{{- message.subject.subject | striptags -}}</em>
                     </p>{% endif %}

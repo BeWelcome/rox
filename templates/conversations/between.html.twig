@@ -17,7 +17,8 @@
     {% else %}
         {% if items.haveToPaginate %}
         <div class="float-left">
-            {{ pagerfanta( items, 'rox_default') }}
+            {{ pagerfanta( items, 'rounded_pagination') }}
+            <div class="clearfix mb-1"></div>
         </div>
         {% endif %}
 
@@ -29,12 +30,13 @@
                 <th class="align-middle">&nbsp;</th>
             </tr>
             {% for message in items.currentPageResults %}
-                {% include 'conversations/message.html.twig' with { 'message': message } %}
+                {% include 'conversations/message.html.twig' with { 'message': message, 'between': true } %}
             {% endfor %}
         </table>
         {% if items.haveToPaginate %}
             <div class="float-left">
-                {{ pagerfanta( items, 'rox_default') }}
+                {{ pagerfanta( items, 'rounded_pagination') }}
+                <div class="clearfix mb-1"></div>
             </div>
         {% endif %}
 

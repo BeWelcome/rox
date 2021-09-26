@@ -23,5 +23,4 @@ class MessageResultSetMapping extends ResultSetMapping
         $this->addMetaResult('m', 'subject_id', 'subject_id');
         $this->addMetaResult('m', 'request_id', 'request_id');
     }
-
 }

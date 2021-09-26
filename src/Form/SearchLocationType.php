@@ -36,7 +36,9 @@ class SearchLocationType extends AbstractType
                     new NotBlank(),
                 ],
             ])
-            ->add('geoname_id', HiddenType::class)
+            ->add('geoname_id', HiddenType::class, [
+                'property_path' => 'geonameId',
+            ])
             ->add('latitude', HiddenType::class)
             ->add('longitude', HiddenType::class)
         ;

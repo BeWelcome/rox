@@ -756,7 +756,7 @@ class MockupController extends TranslationController
             'getId' => 1,
             'getName' => 'Mock',
         ]);
-        $leg1 = Mockery::mock( SubTrip::class, [
+        $leg1 = Mockery::mock(SubTrip::class, [
             'getId' => 1,
             'getArrival' => Carbon::instance(new DateTime('2021-02-22')),
             'getDeparture' => Carbon::instance(new DateTime('2021-02-24')),
@@ -765,7 +765,7 @@ class MockupController extends TranslationController
             'getTrip' => $trip,
             'getInvitedBy' => $this->getUser(),
         ]);
-        $leg2 = Mockery::mock( SubTrip::class, [
+        $leg2 = Mockery::mock(SubTrip::class, [
             'getId' => 2,
             'getArrival' => Carbon::instance(new DateTime('2021-03-23')),
             'getDeparture' => Carbon::instance(new DateTime('2021-03-24')),

@@ -28,7 +28,7 @@ class FaqFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('faqCategory',  EntityType::class, [
+            ->add('faqCategory', EntityType::class, [
                 'class' => FaqCategory::class,
                 'attr' => [
                     'class' => 'select2',

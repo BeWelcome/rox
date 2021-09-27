@@ -47,7 +47,7 @@ class MessageRepository extends EntityRepository
             $unreadCondition = '(m.IdReceiver = :memberId) '
                 . 'AND (`m`.WhenFirstRead IS NULL OR `m`.WhenFirstRead = \'0000-00-00 00:00:00\')';
         } else {
-            $unreadCondition = '(m.IdReceiver = :memberId OR m.IdSender = :memberId)';
+            $unreadCondition = '(m.IdReceiver = :memberId)';
         }
 
         $sql = '

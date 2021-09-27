@@ -62,8 +62,8 @@ class MessageRepository extends EntityRepository
                             m.DeleteRequest NOT LIKE \'%' . DeleteRequestType::RECEIVER_DELETED . '%\'
                             AND m.DeleteRequest NOT LIKE \'%' . DeleteRequestType::RECEIVER_PURGED . '%\'
                         )
-                    )
                     GROUP BY `m`.`subject_id`
+                    )
                 UNION
                     SELECT *
                     FROM `messages` m

@@ -3,7 +3,8 @@ import 'jquery-ui/ui/widgets/autocomplete';
 import 'jquery-ui/themes/base/autocomplete.css';
 
 export default class SearchPicker {
-    constructor(url, cssClass = "js-search-picker") {
+    constructor(url, cssClass = "js-search-picker", identifier = "_name") {
+        this.identifier = identifier;
         let self = this;
         $("." + cssClass).on("focus", function() {
             $(this).on("keydown", function (event) {
@@ -74,7 +75,7 @@ export default class SearchPicker {
     }
 
     resetHiddenInputs(id) {
-        id = id.replace('_name', '');
+        id = id.replace(this.identifier, '');
         $("#" + id + "_geoname_id").val("");
         $("#" + id + "_latitude").val("");
         $("#" + id + "_longitude").val("");
@@ -82,7 +83,9 @@ export default class SearchPicker {
     }
 
     setHiddenInputs(id, item) {
-        id = id.replace('_name', '');
+        console.log('before ' + id);
+        id = id.replace(this.identifier, '');
+        console.log('after ' + id);
         $("#" + id + "_geoname_id").val(item.value);
         $("#" + id + "_latitude").val(item.latitude);
         $("#" + id + "_longitude").val(item.longitude);

@@ -8,6 +8,7 @@ use App\Entity\Subtrip;
 use App\Entity\Trip;
 use App\Repository\TripRepository;
 use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
 use Pagerfanta\Doctrine\ORM\QueryAdapter;
@@ -151,8 +152,8 @@ class TripModel
 
         /** @var Subtrip $leg */
         foreach ($legs->getIterator() as $leg) {
-            $departure = $leg->getDeparture();
-            $expired = $expired && ($departure < $now);
+            $arrival = $leg->getArrival();
+            $expired = $expired && ($arrival < $now);
         }
 
         return $expired;

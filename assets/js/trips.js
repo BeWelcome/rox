@@ -7,7 +7,7 @@ var L = require('leaflet');
 
 require('leaflet-polylinedecorator');
 
-let searchPicker = new SearchPicker( "/search/locations/places", 'js-search-picker');
+let searchPicker = new SearchPicker( "/search/locations/places", 'js-search-picker', '_fullname');
 
 let pickers = document.querySelectorAll('*[id*="_duration"]');
 let latestDeparture = moment().add(1, 'day');

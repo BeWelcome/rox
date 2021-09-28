@@ -22,7 +22,6 @@
         {% set form = widget %}
         {% set name = widget.vars.full_name %}
     {% endif %}
-    {% set expired = (form.arrival.vars.value != "") and date(form.arrival.vars.value) < date('now') %}
     <div data-content="{{ name }}"
          class="c-trips__info">
         <div class="u-w-full u-mb-8 md:u-width-auto md:u-mb-0">
@@ -32,12 +31,8 @@
                 'aria-label': 'trip.leg.location'|trans,
             } %}
 
-            {% if expired %}
-                {% set attributes = attributes|merge({'disabled':'disabled'}) %}
-            {% endif %}
-
-            {{ form_widget(form.location.name, {'attr': attributes}) }}
-            <div class="u-absolute">{{ form_errors(form.location.name) }}</div>
+            {{ form_widget(form.location.fullname, {'attr': attributes}) }}
+            <div class="u-absolute">{{ form_errors(form.location.fullname) }}</div>
         </div>
         <div class="u-w-full md:u-width-auto">
             {% set attributes = {
@@ -45,10 +40,6 @@
                 'placeholder': 'trip.leg.duration'|trans,
                 'aria-label': 'trip.leg.duration'|trans,
             } %}
-
-            {% if expired %}
-                {% set attributes = attributes|merge({'disabled':'disabled'}) %}
-            {% endif %}
 
             {{ form_widget(form.duration, {'attr': attributes}) }}
             <div class="u-absolute">{{ form_errors(form.duration) }}</div>
@@ -63,10 +54,6 @@
                     'class': 'o-checkbox--white o-checkbox--display'
                 } %}
 
-                {% if expired %}
-                    {% set attributes = attributes|merge({'disabled':'disabled'}) %}
-                {% endif %}
-
                 {{ form_widget(form.options[0], {'attr': attributes }) }}
             </div>
             <div class="md:u-mr-24">
@@ -79,7 +66,7 @@
         <div class="u-w-full md:u-width-auto">
             <div class="u-absolute">{{ form_errors(form.options) }}</div>
         </div>
-        {{ form_widget(form.location.geoname_id) }}{{ form_widget(form.location.latitude) }}{{ form_widget(form.location.longitude) }}
+        {{ form_widget(form.location.name) }}{{ form_widget(form.location.geoname_id) }}{{ form_widget(form.location.latitude) }}{{ form_widget(form.location.longitude) }}
         {{ form_widget(form.arrival) }}{{ form_widget(form.departure) }}
         {{ form_errors(form) }}
     </div>

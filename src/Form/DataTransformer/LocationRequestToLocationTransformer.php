@@ -53,7 +53,6 @@ class LocationRequestToLocationTransformer implements DataTransformerInterface
         /** @var Location $location */
         $location = $this->entityManager
             ->getRepository(Location::class)
-            // query for the issue with this id
             ->findOneBy(['geonameId' => $locationRequest->geonameId]);
 
         if (null === $location) {

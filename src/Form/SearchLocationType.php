@@ -26,16 +26,16 @@ class SearchLocationType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('name', TextType::class, [
+            ->add('fullname', TextType::class, [
                 'attr' => [
                     'class' => 'search-picker',
                 ],
                 'required' => false,
+                'disabled' => $options['expired'],
+                'property_path' => 'name',
                 'label' => 'trip.leg.location',
-                'constraints' => [
-                    new NotBlank(),
-                ],
             ])
+            ->add('name', HiddenType::class)
             ->add('geoname_id', HiddenType::class, [
                 'property_path' => 'geonameId',
             ])
@@ -52,6 +52,7 @@ class SearchLocationType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => LocationRequest::class,
+            'expired' => false,
         ]);
     }
 

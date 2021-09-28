@@ -279,6 +279,7 @@ textarea.o-input::placeholder {
 .o-input--white:focus,
 .o-input--white:focus-visible {
   background-color: rgba(255, 255, 255, 0.3);
+  color: var(--white);
 }
 
 
@@ -314,8 +315,13 @@ textarea.o-input::placeholder {
   padding: 0 24px 0 8px;
 }
 
-.o-input--select-white:hover {
+.o-input--select-white:hover,
+.o-input--select-white:hover,
+.o-input--select-white:focus,
+.o-input--select-white:focus-visible  {
   background-color:rgba(255, 255, 255, 0.3);
+  color: var(--white);
+
 }
 
 .o-input--select-short {

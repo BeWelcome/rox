@@ -57,10 +57,11 @@ class TripController extends AbstractController
      * @Route("/trip/{id}/show", name="trip_show",
      *     requirements={"id": "\d+"})
      */
-    public function show(Trip $trip): Response
+    public function show(Trip $trip, TripModel $tripModel): Response
     {
         return $this->render('trip/show.html.twig', [
             'trip' => $trip,
+            'expired' => $tripModel->hasTripExpired($trip),
             'submenu' => [
                 'active' => 'trip_show',
                 'items' => $this->getSubmenuItems(),

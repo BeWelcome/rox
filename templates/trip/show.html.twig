@@ -20,7 +20,7 @@
       <div class="o-avatar o-avatar--white u-mr-24 u-float-left">{{ macros.roundedavatarstack(trip.creator.username, 96) }}</div>
       <div class="u-flex u-items-center u-h-96">
         <h1 class="u-text-32 u-leading-48 md:u-text-56 md:u-leading-60 u-text-white u-font-700">{{ trip.summary }}</h1>
-        {% if app.user == trip.creator %}
+        {% if app.user == trip.creator and expired == false %}
           <a href="{{ path('trip_edit', {'id': trip.id}) }}" class="o-rounded u-ml-24" aria-label="{{ 'trip.edit'|trans }}" title="{{ 'trip.edit'|trans }}">
             <i class="fa fa-edit"></i>
           </a>

@@ -231,9 +231,33 @@
 	</div>
 </div>
 
-{# 4 widgets #}
+{# 3 columns #}
 <div class="u-flex u-flex-wrap md:u-grid md:u-grid-cols-3 u-gap-24 u-pb-24">
 
+	<div class="u-w-full">
+		<div class="o-card u-h-full">
+        <h4 class="homehfour">{{ 'landing.bevisited.title' | trans }}<br/><span
+            class="homesubt">{{ 'landing.bevisited.subtitle' | trans }}</span></h4>
+			<div class="u-flex u-items-center u-mb-8 u-w-full">
+				{{ form_start(radiusForm, {'attr': {'class': 'u-w-full'}})}}
+				<div class="u-flex u-items-center u-mb-8 u-w-full">
+					<i class="fa fa-fw fa-bullseye u-text-16 u-text-gray-50 u-mr-4"></i>
+					{{ form_label(radiusForm.radius, null, {'label_attr': {'class': 'u-mb-0 u-mr-16'}}) }}
+					{{ form_widget(radiusForm.radius, {'attr': {'class': 'u-w-full'}}) }}
+				</div>
+				{{ form_rest(radiusForm)}}
+				{{ form_end(radiusForm)}}
+			</div>
+			<div id="legsdisplay">
+				<p class="text-center my-3">
+					<i class="fa u-mr-8 fa-4x fa-pulse fa-spinner my-3"></i><br>
+					{{ 'bevisited.load.legs' | trans }}</p>
+			</div>
+        <a href="{{ url('trip_in_area', {'username': app.user.Username}) }}" class="o-button o-button--full btn u-mt-16"><i
+            class="far fa-map u-mr-8"></i> {{ 'landing.bevisited.alltrips' | trans }}</a>
+		</div>
+	</div>
+    
 	<div class="u-w-full">
 		<div class="o-card u-mb-24">
         <h4 class="homehfour">{{ 'landing.beinvolved.title' | trans }}<br/><span
@@ -341,30 +365,6 @@
 			</div>
         <a href="{{ url('communitynews') }}" class="o-button btn u-mt-24"><i
             class="far fa-newspaper u-mr-8"></i> {{ 'landing.bwnews.allnews' | trans }}</a>
-		</div>
-	</div>
-
-	<div class="u-w-full">
-		<div class="o-card u-h-full">
-        <h4 class="homehfour">{{ 'landing.bevisited.title' | trans }}<br/><span
-            class="homesubt">{{ 'landing.bevisited.subtitle' | trans }}</span></h4>
-			<div class="u-flex u-items-center u-mb-8 u-w-full">
-				{{ form_start(radiusForm, {'attr': {'class': 'u-w-full'}})}}
-				<div class="u-flex u-items-center u-mb-8 u-w-full">
-					<i class="fa fa-fw fa-bullseye u-text-16 u-text-gray-50 u-mr-4"></i>
-					{{ form_label(radiusForm.radius, null, {'label_attr': {'class': 'u-mb-0 u-mr-16'}}) }}
-					{{ form_widget(radiusForm.radius, {'attr': {'class': 'u-w-full'}}) }}
-				</div>
-				{{ form_rest(radiusForm)}}
-				{{ form_end(radiusForm)}}
-			</div>
-			<div id="legsdisplay">
-				<p class="text-center my-3">
-					<i class="fa u-mr-8 fa-4x fa-pulse fa-spinner my-3"></i><br>
-					{{ 'bevisited.load.legs' | trans }}</p>
-			</div>
-        <a href="{{ url('trip_in_area', {'username': app.user.Username}) }}" class="o-button o-button--full btn u-mt-16"><i
-            class="far fa-map u-mr-8"></i> {{ 'landing.bevisited.alltrips' | trans }}</a>
 		</div>
 	</div>
 

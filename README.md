@@ -62,7 +62,7 @@ The result can then be accessed via `doc/phpdox/` in your cloned repository.
 If you see an updated ```composer.json``` or ```composer.lock``` make sure to run
 
 ```bash
-composer install --prefer-dist --no-progress --no-suggest --no-interaction --no-scripts
+composer install --prefer-dist --no-progress --no-interaction --no-scripts
 ```
 
 Also run
@@ -71,7 +71,7 @@ Also run
 yarn install --frozen-lock
 ```
 
-everytime you see a change in either ```package.json``` or ```package-lock.json```.
+everytime you see a change in either ```package.json```, ```package-lock.json``` or ```yarn.lock```.
 
 If any ```.scss``` file or a file in ```assets/``` changed a ```make build``` is necessary.
 

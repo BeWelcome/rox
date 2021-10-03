@@ -301,8 +301,6 @@ textarea.o-input::placeholder {
 
 
 .o-input--select {
-  outline: none;
-  appearance: none;
   cursor: pointer;
 }
 
@@ -322,10 +320,6 @@ textarea.o-input::placeholder {
   background-color:rgba(255, 255, 255, 0.3);
   color: var(--white);
 
-}
-
-.o-input--select-short {
-  width: 72px;
 }
 
 @media (max-width: 900px) {

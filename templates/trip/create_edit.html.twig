@@ -44,11 +44,11 @@
             {{ form_widget(form.duration, {'attr': attributes}) }}
             <div class="u-absolute">{{ form_errors(form.duration) }}</div>
         </div>
-        <button class="btn-remove js-btn-remove o-rounded o-rounded--l u-justify-self-center c-trips__info-btn-grid "
+        <button class="btn-remove js-btn-remove o-rounded o-rounded--l u-justify-self-center c-trips__info-btn-grid"
                 data-related="{{ name }}">
             <i class="fa fa-times"></i>
         </button>
-        <div class="u-flex u-flex-col md:u-flex-row md:u-mt-16 u-flex-wrap c-trips__info__trip-option">
+        <div class="u-flex u-flex-col md:u-flex-row md:u-mt-16 u-flex-wrap u-col-span-2">
             <div class="md:u-mr-24">
                 {% set attributes = {
                     'class': 'o-checkbox--white o-checkbox--display'

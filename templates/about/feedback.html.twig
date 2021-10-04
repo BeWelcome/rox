@@ -4,6 +4,10 @@
 	{{ 'contactus' | trans }}
 {% endblock %}
 
+{% block stylesheets %}
+  {{ encore_entry_link_tags('tailwind') }}
+{% endblock stylesheets %}
+
 {% block javascripts %}
 <script type="application/javascript">
     $('#reportMessages').modal();
@@ -42,7 +46,7 @@
             {% endif %}
 			{{ form_rest(form) }}
 			<div class="o-form-group">
-				<button type="submit" id="submit" name="submit" class="btn-primary btn">{{ 'submit'|trans }}</button>
+				<button type="submit" id="submit" name="submit" class="o-button">{{ 'submit'|trans }}</button>
 			</div>
 			{{ form_end(form) }}
 	    </div>

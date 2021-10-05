@@ -4,6 +4,10 @@
     {{ 'statistics.title' | trans }}
 {% endblock %}
 
+{% block stylesheets %}
+  {{ encore_entry_link_tags('tailwind') }}
+{% endblock stylesheets %}
+
 {% block javascripts %}
     {{ encore_entry_script_tags('chartjs') }}
     <script type="application/javascript">
@@ -169,66 +173,36 @@
     <div class="o-text">
         <h1>{{ 'bw statistics'|trans }}</h1>
         <p>{{ 'statshead' | trans }}</p>
-        {% for key,current in statistics %}
-            <div class="row mb-1">
-                <div class="col-12 mt-3">
-                    <h3>{{ current.headline|trans }}</h3>
+        <div class="u-grid u-grid-cols-1 md:u-grid-cols-2 u-gap-16">         
+            {% for key,current in statistics %}    
+                <div class="u-col-span-1 md:u-col-span-2 u-mt-16">
+                    <h3><i class="fa fa-signal u-mr-8"></i>{{ current.headline|trans }}</h3>
                 </div>
-            </div>
-            <div class="row mb-1">
-                <div class="col-12 col-md-6">
-                    <div class="card o-card">
-                        <div class="card-header">{{ 'statsheadcol1'|trans }}</div>
-                        <div class="card-body">
-                            <canvas id="{{ key }}-weekly"></canvas>
-                        </div>
-                    </div>
+                <div class="o-card">
+                    <h3>{{ 'statsheadcol1'|trans }}</h3>
+                    <canvas id="{{ key }}-weekly"></canvas>
                 </div>
-                <div class="col-12 col-md-6">
-                    <div class="card o-card">
-                        <div class="card-header">{{ 'statsheadcol2'|trans }}</div>
-                        <div class="card-body">
-                            <canvas id="{{ key }}-daily"></canvas>
-                        </div>
-                    </div>
+                <div class="o-card">
+                    <h3>{{ 'statsheadcol2'|trans }}</h3>
+                    <canvas id="{{ key }}-daily"></canvas>
                 </div>
-            </div>
-        {% endfor %}
-        <div class="row mb-1">
-            <div class="col-12 col-md-6">
-                <div class="card o-card">
-                    <div class="card-header">{{ 'statslastlogin'|trans }}</div>
-                    <div class="card-body">
-                        <canvas id="logins" width="100" height="130"></canvas>
-                    </div>
+            {% endfor %}
+                <div class="o-card">
+                    <h3>{{ 'statslastlogin'|trans }}</h3>
+                    <canvas id="logins" width="100" height="130"></canvas>
                 </div>
-            </div>
-            <div class="col-12 col-md-6">
-                <div class="card o-card">
-                    <div class="card-header">{{ 'statsmembercountry'|trans }}</h4></div>
-                    <div class="card-body">
-                        <canvas id="countries" width="100" height="130"></canvas>
-                    </div>
+                <div class="o-card">
+                    <h3>{{ 'statsmembercountry'|trans }}</h3>
+                    <canvas id="countries" width="100" height="130"></canvas>
                 </div>
-            </div>
-        </div>
-        <div class="row mb-1">
-            <div class="col-12 col-md-6">
-                <div class="card o-card">
-                    <div class="card-header">{{ 'statslanguages'|trans }}</div>
-                    <div class="card-body">
-                        <canvas id="languages" width="100" height="130"></canvas>
-                    </div>
+                <div class="o-card">
+                    <h3>{{ 'statslanguages'|trans }}</h3>
+                    <canvas id="languages" width="100" height="130"></canvas>
                 </div>
-            </div>
-            <div class="col-12 col-md-6">
-                <div class="card o-card">
-                    <div class="card-header">{{ 'statspreferredlanguages'|trans }}</h4></div>
-                    <div class="card-body">
-                        <canvas id="preferred" width="100" height="130"></canvas>
-                    </div>
+                <div class="o-card">
+                    <h3>{{ 'statspreferredlanguages'|trans }}</h3>
+                    <canvas id="preferred" width="100" height="130"></canvas>
                 </div>
-            </div>
         </div>
     </div>
 {% endblock content %}

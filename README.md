@@ -71,7 +71,7 @@ Also run
 yarn install --frozen-lock
 ```
 
-everytime you see a change in either ```package.json```, ```package-lock.json``` or ```yarn.lock```.
+everytime you see a change in either ```package.json``` or ```yarn.lock```.
 
 If any ```.scss``` file or a file in ```assets/``` changed a ```make build``` is necessary.
 

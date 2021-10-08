@@ -13,5 +13,3 @@ jobs:
         token: ${{ secrets.TRIGGER_TOKEN }}
         project_id: 17
         ref: master
-        debug: true
-

@@ -69,14 +69,14 @@ class TripType extends AbstractType
             ])
             ->add('additionalinfo', ChoiceType::class, [
                 'choices' => [
-                    '' => TripAdditionalInfoType::NONE,
+                    'trip.additional.info.none' => TripAdditionalInfoType::NONE,
                     'trip.additional.info.couple' => TripAdditionalInfoType::COUPLE,
                     'trip.additional.info.friends.mixed' => TripAdditionalInfoType::FRIENDS_MIXED,
                     'trip.additional.info.friends.same' => TripAdditionalInfoType::FRIENDS_SAME,
                     'trip.additional.info.family' => TripAdditionalInfoType::FAMILY,
                 ],
                 'label' => 'trip.additional.info',
-                'required' => false,
+                'required' => true,
             ])
             ->add('subtrips', CollectionType::class, [
                 'entry_type' => SubtripType::class,

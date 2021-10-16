@@ -154,10 +154,10 @@ class CreateTestDatabase extends Command
         ]);
         $command = $this->getApplication()->find('hautelook:fixtures:load');
 
-        $loadFixtures = new ArrayInput([]);
-        $loadFixtures->setInteractive(false);
+        $addMissingTranslations = new ArrayInput([]);
+        $addMissingTranslations->setInteractive(false);
 
-        $returnCode = $command->run($loadFixtures, $output);
+        $returnCode = $command->run($addMissingTranslations, $output);
         if ($returnCode) {
             $output->writeln([
                 'Failed seeding the database.',
@@ -179,6 +179,25 @@ class CreateTestDatabase extends Command
             UPDATE memberslanguageslevel SET IdLanguage = 1 WHERE IdLanguage = 2;
             SET FOREIGN_KEY_CHECKS=1;
         ");
+
+        $output->writeln([
+            'Importing missing translations',
+            '',
+        ]);
+        $command = $this->getApplication()->find('translations:add:missing');
+
+        $addMissingTranslations = new ArrayInput([]);
+        $addMissingTranslations->setInteractive(false);
+
+        $returnCode = $command->run($addMissingTranslations, $output);
+        if ($returnCode) {
+            $output->writeln([
+                'Failed seeding the database.',
+                '',
+            ]);
+
+            return 1;
+        }
 
         $output->writeln([
             '',

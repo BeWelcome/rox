@@ -1,0 +1,14 @@
+credits.geonames:
+    - We use the data from geonames.org to help you find your way around the world.
+credits.osm:
+    - Without OpenStreetMap and its contributors our website would be pretty dull. We rely on the database for locations and tiles for the maps.
+credits.symfony:
+    - The PHP framework that makes sure the website is blazingly fast and secure.
+credits.ckeditor:
+    - The wysywig editor that we can customize to our needs; and which runs smoothly on mobile as well.
+credits.jetbrains:
+    - Jetbrains gave us a few OpenSource licenses for <a href="https://www.jetbrains.com/phpstorm">PHPStorm</a> which makes developing with PHP and symfony a joy.
+credits.browserstack:
+    - We use Browserstack for testing on as many browsers as we possibly can.
+credits.htmlpurifier:
+    - HTML Purifier to ensure everyone stays safe when using the site.

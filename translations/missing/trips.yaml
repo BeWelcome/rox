@@ -1,0 +1,83 @@
+trip.flash.expired:
+    - All the legs of this trip are in the past. Editing the trip is no longer possible.
+    - Shown as flash the trip the user tried to edit was expired
+trip.summary:
+    - Summary
+    - Label for the trip's title/summary
+trip.description:
+    - Description
+    - Label for the trip's description
+dashboard.load.conversations:
+    - Please wait while the conversations are loaded.
+    - Text shown while the conversations are downloaded
+landing.conversations:
+    - Conversations
+    - Label for conversations
+landing.bevisited.title:
+    - Be Visited
+    - Header for the trips section on the landing page
+landing.bevisited.subtitle:
+    - Invite visitors to your area
+    - Subheading  for the trips section on the landing page
+bevisited.load.legs:
+    - Please wait while we load the members wanting to visit your area
+    - Text shown while the possible visitors to the area are loaded (on landing)
+landing.bevisited.alltrips:
+    - Show all visitors
+    - Button label on landing. Links to all trips in the area.
+landing.bevisited.none:
+    - No visitors in the next three months.
+    - Text shown when no visitors to the area are found
+conversations:
+    - Conversations
+    - Header on the conversations page
+conversations.unread:
+    - Unread
+    - Button label
+trip.in.area:
+    - Visitors
+trip.in.area.no:
+    - No one's planning to visit your area.
+trip.create:
+    - Create
+trip.edit:
+    - Edit
+trip.leg.location:
+    - Location
+trip.leg.duration:
+    - Duration
+trip.count.of.travellers:
+    - '# of travellers'
+trip.additional.info:
+    - Additional information
+trip.legs:
+    - Legs
+trip.no.trips:
+    - No trips to be displayed.
+trip:
+    - Trip
+trip.invitation.radius:
+    - Invitation radius
+trip.option.private:
+    - This leg is private (hidden from other members)
+trip.option.meet.locals:
+    - Meet locals
+trip.option.looking.for.host:
+    - Looking for a host
+trip.option.not.looking.for.host:
+    - Looking for a host
+trip.additional.info.none:
+    - 'No additional info'
+    - Item in the dropdown for additional info for the trip
+trip.additional.info.couple:
+    - 'Travelling as a couple'
+    - Item in the dropdown for additional info for the trip
+trip.additional.info.friends.mixed:
+    - 'Friends travelling (several genders)'
+    - Item in the dropdown for additional info for the trip
+trip.additional.info.friends.same:
+    - 'Friends travelling (same gender)'
+    - Item in the dropdown for additional info for the trip
+trip.additional.info.family:
+    - 'Travelling family'
+    - Item in the dropdown for additional info for the trip

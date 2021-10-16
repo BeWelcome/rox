@@ -17,7 +17,8 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="words", uniqueConstraints={@ORM\UniqueConstraint(name="code", columns={"code", "IdLanguage"}), @ORM\UniqueConstraint(name="code_2", columns={"code", "ShortCode"})})
  * @ORM\Entity(repositoryClass="App\Repository\WordRepository")
-
+ * @ORM\HasLifecycleCallbacks
+ *
  * @SuppressWarnings(PHPMD)
  * Auto generated class do not check mess
  */
@@ -426,5 +427,27 @@ class Word
         $this->domain = $domain;
 
         return $this;
+    }
+
+    /**
+     * Triggered on insert.
+     *
+     * @ORM\PrePersist
+     */
+    public function onPrePersist()
+    {
+        $this->created = new DateTime('now');
+        $this->updated = $this->created;
+        $this->majorUpdate = $this->created;
+    }
+
+    /**
+     * Triggered on update.
+     *
+     * @ORM\PreUpdate
+     */
+    public function onPreUpdate()
+    {
+        $this->updated = new DateTime('now');
     }
 }

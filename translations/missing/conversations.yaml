@@ -1,0 +1,21 @@
+unread.only:
+    - Unread only
+    - Switch label on the conversations page
+conversations.none:
+    - No conversations found.
+    - Shown on the dashboard
+conversations.check.all:
+    - Select all conversations
+    - Checkbox label on /conversations
+conversations.label.delete_or_spam:
+    - Delete or mark messages as spam
+    - Aria label (for screen reader user)
+conversations.request:
+    - Hosting Request
+    - Text label used in conversations
+conversations.invitation:
+    - Invitation to stay
+    - Text label used in conversations
+message.initiated.by:
+    - Initiated by {username}
+    - Distinction used on the conversations pages

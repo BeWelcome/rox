@@ -11,8 +11,8 @@
                 {% else %}
                     {% set notificationText %}{{ notification.translationcode|lower|trans|raw|format(notification.relMember.Username)|raw }}{% endset %}
                 {% endif %}
-                <p  class="u-line-clamp-1"><a href="{{ notification.link }}" title="{{ notificationText }}">{{ notificationText }}</a><br>
-                <p class="u-line-clamp-1 u-font-300 u-text-14" title="{{ notification.created|format_date('medium') }}">{{ notification.created.DiffForHumans }}</p></p>
+                <p  class="u-ellipsis"><a href="{{ notification.link }}" title="{{ notificationText }}">{{ notificationText }}</a><br>
+                <p class="u-ellipsis u-font-300 u-text-14" title="{{ notification.created|format_date('medium') }}">{{ notification.created.DiffForHumans }}</p></p>
             </div>
             <div class="ml-auto"><a class="notify" id="notify-{{ notification.id }}" href="#"><i class="fas fa-times"></i></a></div>
         </div>

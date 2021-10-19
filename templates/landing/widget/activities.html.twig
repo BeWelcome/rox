@@ -13,8 +13,8 @@
             <div class="u-flex u-items-center u-mx-16 u-overflow-hidden">
                 {% if activity.online %}<img class="u-w-32 u-h-32 u-mr-16 u-text-gray-70" src="images/online_meeting_noun_3384309.svg">{% else %}<i class="fa fa-2x fa-map-marker-alt u-mr-16"></i>{% endif %}
                 <div class="u-flex u-flex-col">
-                    <p class="u-line-clamp-1"><strong><a href="activities/{{ activity.id }}">{{ activity.title }}</a></strong></p>
-                    <p class="u-line-clamp-1 u-text-14 u-font-300"> {{ activity.location.name }}, {{ activity.location.country.name }}</p>
+                    <p class="u-ellipsis"><strong><a href="activities/{{ activity.id }}">{{ activity.title }}</a></strong></p>
+                    <p class="u-ellipsis u-text-14 u-font-300"> {{ activity.location.name }}, {{ activity.location.country.name }}</p>
                 </div>
             </div>
 

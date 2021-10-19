@@ -6,7 +6,7 @@
         <div class="c-dashboard__item">
             <div class="o-avatar o-avatar--m o-avatar--noname  o-avatar--shadow-s u-mr-16  u-min-w-0">{{ macros.roundedavatarstack(thread.firstPost.author.Username, 72, true) }}</div>
             <div class="u-flex u-flex-col u-h-full u-justify-center u-px-8 u-w-min-0 u-overflow-hidden">
-                <p class="u-line-clamp-1">
+                <p class="u-ellipsis">
                     {% if thread.group %}
                         <a href="{{ url('group_forum_thread', {'thread': thread.id, 'group_id': thread.group.id}) }}">
                     {% else %}
@@ -14,7 +14,7 @@
                     {% endif %}
                     {{ thread.title|striptags }}</a>
                 </p>
-                <p class="u-line-clamp-1 u-font-300 u-text-14">in
+                <p class="u-ellipsis u-font-300 u-text-14">in
                     {%- if thread.group %}
                         <a href="{{ url('group_start', {'group_id': thread.group.id}) }}">{{ thread.group.name }}</a>
                     {% else %}

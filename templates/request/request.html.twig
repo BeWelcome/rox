@@ -6,6 +6,7 @@
 {% endblock javascripts %}
 
 {% block stylesheets %}
+    {{ encore_entry_link_tags('tailwind')  }}
     {{ encore_entry_link_tags('requests')  }}
 {% endblock stylesheets %}
 
@@ -17,23 +18,20 @@
 {% endblock %}
 
 {% block content %}
-    <div class="row no-gutters bg-white mb-1">
-        {% set myself = app.user %}
-        <div class="pull-left">{{ macros.avatarstack(host.Username, 50, false) }}</div>
-        <div class="col">
-        </div>
-        <div class="pull-right text-right">{{ macros.avatarstack(guest.Username, 50, true) }}</div>
-    </div>
+    {{ macros.messageheader(host, guest, "Request") }}
 
     {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'autocomplete': 'off'}}) }}
 
-    <div class="row mb-1">
+    <div class="row mb-2">
         <div class="col-12 col-md-8">
             {{ form_row(form.subject.subject) }}
             {{ form_row(form.message) }}
+            <div class="u-flex u-justify-end mt-2">
+                <button type="submit" class="btn btn-primary">{{ 'label.message.button.send' | trans }}</button>
+            </div>
         </div>
-        <div class="col-12 col-md-4 order-md-first">
 
+        <div class="col-12 col-md-4 order-md-first">
             <div class="o-form-group">
                 {{ form_label(form.request.duration) }}
                 <div class="input-group date" id="arrival" data-target-input="nearest">
@@ -41,8 +39,8 @@
                         <span class="input-group-text">
                             <i class="fa fa-calendar"></i>
                         </span>
-                    {{ form_widget(form.request.duration, {'attr': { 'class': 'js-litepicker'}}) }}
                     </div>
+                    {{ form_widget(form.request.duration, {'attr': { 'class': 'js-litepicker'}}) }}
                 </div>
             </div>
 
@@ -50,9 +48,11 @@
             {{ form_row(form.request.numberOfTravellers) }}
             {{ form_row(form.request.arrival) }}
             {{ form_row(form.request.departure) }}
+            {% do form.request.setRendered %}
+            {% do form.send.setRendered %}
         </div>
     </div>
-    <div class="row">
+    <div class="row mb-2">
         <div class="col-12 col-md-8 offset-md-4">
             {{ form_rest(form) }}
         </div>

@@ -88,9 +88,9 @@
 
 {% macro messageheader( left, right, subject = '') %}
     {% import _self as macros %}
-    <div class="u-flex u-justify-between bg-white p-1">
+    <div class="u-flex u-justify-between bg-white p-1 mb-2">
         <div class="o-avatar">{{ macros.roundedavatarstack(left.Username, 50, false) }}</div>
-        <div class="u-text-32 u-leading-48 md:u-text-56 md:u-leading-60 u-self-center u-text-center u-text-black u-font-700">{{ subject }}</div>
+        <div class="u-text-32 u-leading-48 u-self-center u-text-center u-text-black u-font-700 u-lineclamp-3">{{ subject }}</div>
         <div class="o-avatar">{{ macros.roundedavatarstack(right.Username, 50, true) }}</div>
     </div>
 {% endmacro %}

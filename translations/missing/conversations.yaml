@@ -19,3 +19,6 @@ conversations.invitation:
 message.initiated.by:
     - Initiated by {username}
     - Distinction used on the conversations pages
+lives.and.speaks:
+    - Lives in {city} and speaks {languages}
+    - Part of the header on a new message to let member know some details about the member

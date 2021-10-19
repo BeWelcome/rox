@@ -1,13 +1,17 @@
 {% import 'macros.twig' as macros %}
 {% extends 'base.html.twig' %}
 
+{% block stylesheets %}
+    {{ encore_entry_link_tags('tailwind') }}
+{% endblock stylesheets %}
+
 {% block content %}
     {% set original = thread | last %}{% set request = original.Request %}
     {% set myself = app.user %}
     {% if original.Sender.Username == myself.Username %}{% set otherUser = original.Receiver %}{% else %}{% set otherUser = original.Sender %}{% endif %}
     {% if current.subject %}{% set currentSubject = current.Subject.Subject %}{% else %}{% set currentSubject = 'Conversation with ' ~ otherUser.Username %}{% endif %}
-    {% include 'message/header.html.twig' with {'otherUser': otherUser, 'myself': myself} %}
-    <div class="row no-gutters justify-content-between mb-1">
+    {{ macros.messageheader(myself, otherUser, currentSubject) }}
+    <div class="row no-gutters justify-content-between mb-2">
         <div>{# Always add <div> so that the reply button is on the right hand side for larger displays #}
             {% if current.Sender == myself %}
                 {% if thread|length > 1 %}
@@ -29,15 +33,9 @@
                 {% endif %}
             {%  endif %}
         </div>
-        <div><a class="btn btn-sm btn-primary ml-auto" href="{{ path('message_reply', { id: thread[0].id }) }}">{{ 'message.button.reply' | trans }}</a></div>
+        <div><a class="btn btn-sm btn-primary ml-auto" href="{{ path('conversation_reply', { id: thread[0].id }) }}">{{ 'message.button.reply' | trans }}</a></div>
     </div>
 
     {% include 'message/thread.html.twig' %}
-
-    <div class="row no-gutters justify-content-between mb-1">
-        <div>{# Always add <div> so that the reply button is on the right hand side for larger displays #}
-        </div>
-        <div><a class="btn btn-sm btn-primary ml-auto" href="{{ path('message_reply', { id: thread[0].id }) }}">{{ 'message.button.reply' | trans }}</a></div>
-    </div>
 
 {% endblock content %}

@@ -1,95 +1,96 @@
 {% import 'macros.twig' as macros %}
-    {% set current = thread|first %}
-    {% set myself = app.user %}
-    {% set requestChanged = false %}
-    {% if current.Sender.Username == myself.Username %}{% set otherUser = current.Receiver %}{% else %}{% set otherUser = current.Sender %}{% endif %}
-    {% if current.Subject %}{% set currentSubject = current.Subject.Subject %}{% else %}{% set currentSubject = 'message.conversation_with' | trans | format(otherUser.Username)  %} {% endif %}
-    {% if current.Request %}{% set currentArrival = current.Request.Arrival %}{% set currentDeparture = current.Request.Departure %}{% endif %}
-<div id="message_thread" class="mb-1">
-{% for message in thread %}
-    {% set own = (myself.Username == message.Sender.Username) %}
-    {# Check if the member deleted the message/request #}
-    {% set deleted = message.isDeletedByMember(myself) %}
-    {% set purged = message.isPurgedByMember(myself) %}
-    {% if not show_deleted is defined %}
-        {% set show_deleted = false %}
-    {% endif %}
-    {% if (show_deleted or not deleted) and not purged %}
-        <div class="row no-gutters {% if own %}justify-content-end{% else %}justify-content-start{% endif %}">
-            <div class="col-auto{% if own %} order-12 pr-0{% else %} pl-0{% endif %}">
-                {% if own %}
-                    {{ macros.avatarstack(myself.Username, 50, false, false) }}
-                {% else %}
-                    {{ macros.avatarstack(otherUser.Username, 50, false, false) }}
-                {% endif %}
-            </div>
-            <div class="col-auto message_{% if own %}own{% else %}other{% endif %} {% if deleted %}deleted{% endif %}">
-                <small class="{% if own %}pull-right{% endif %} text-muted m-0">
-                    {%- if own -%}
-                        {{ 'message.you' | trans }}
-                    {%- else -%}
-                        {{ macros.profilelink(message.sender.Username) }}
-                    {%- endif %}
-                    <span title="{{ message.created.toDateTimeString }}">{{ message.created.DiffForHumans }}</span>
-                    {% if not deleted %}
-                        <a class="ml-2 pull-right" href="{{ url('message_delete', {'id': message.id, 'redirect': current.id}) }}"><i class="fa fa-trash" title="{{ 'delete'|trans }}"></i></a>
+{% set current = thread|first %}
+{% set myself = app.user %}
+{% set requestChanged = false %}
+{% if current.Sender.Username == myself.Username %}{% set otherUser = current.Receiver %}{% else %}{% set otherUser = current.Sender %}{% endif %}
+{% if current.Subject %}{% set currentSubject = current.Subject.Subject %}{% else %}{% set currentSubject = 'message.conversation_with' | trans | format(otherUser.Username)  %} {% endif %}
+{% if current.Request %}{% set currentArrival = current.Request.Arrival %}{% set currentDeparture = current.Request.Departure %}{% endif %}
+
+<div id="message_thread" class="mb-2">
+    {% for message in thread %}
+        {% set own = (myself.Username == message.Sender.Username) %}
+        {# Check if the member deleted the message/request #}
+        {% set deleted = message.isDeletedByMember(myself) %}
+        {% set purged = message.isPurgedByMember(myself) %}
+        {% if not show_deleted is defined %}
+            {% set show_deleted = false %}
+        {% endif %}
+        {% if (show_deleted or not deleted) and not purged %}
+            <div class="row no-gutters {% if own %}justify-content-end{% else %}justify-content-start{% endif %}">
+                <div class="col-auto{% if own %} order-12 pr-0{% else %} pl-0{% endif %}">
+                    {% if own %}
+                        <div class="o-avatar--s ml-1">{{ macros.roundedavatarstack(myself.Username, 32, false) }}</div>
+                    {% else %}
+                        <div class="o-avatar--s mr-1">{{ macros.roundedavatarstack(otherUser.Username, 32, false) }}</div>
                     {% endif %}
-                    {%- if not own -%}
-                        {% if not deleted %}
-                            {% if message.folder == "Spam" %}
-                                <span class="ml-1">{{ 'markededspam' | trans }}</span>
-                                <a class="ml-1" href="{{ path('message_mark_nospam', { id: message.id }) }}"><i class="far fa-flag" title="{{ 'marknospam' | trans }}"></i></a>
-                            {% else %}
-                                <a class="ml-2 pull-right" href="{{ path('message_mark_spam', { id: message.id }) }}"><i class="fas fa-flag" title="{{ 'markspam' | trans }}"></i></a>
-                            {% endif %}
-                        {% endif %}
-                    {%- endif -%}
-                </small>
-                <p class="clearfix m-0"></p>
-                {{ message.message|purify('custom')|url_update }}
-            </div>
-        </div>
-        {% if message.Request %}
-            {% if message.Request.Arrival != currentArrival or message.Request.Departure != currentDeparture or (loop.last == true and requestChanged == true) %}
-                {% set request = message.Request %}
-                <div class="row no-gutters bg-white border-1 mb-1">
-                    <div class="col-12 mb-1">{% if loop.last == true %}{{ 'original.request.details'|trans }}{% else %}{{ 'former.request.details'|trans }}{% endif %}</div>
-                    <div class="col-12 col-md-4 mb-1">
-                        {% if original.Sender.Username == myself.Username %}
-                            {% if request.flexible %}
-                                <div>{{ 'I\'m flexible with arrival and departure' }}</div>{% endif %}
-                            {% if request.numberOfTravellers != 1 %}
-                            <div><i
-                                class="fa fa-users mr-1"></i>{{ 'Request for %s guest(s)' | format(request.numberOfTravellers) }}
-                            </div>{% endif %}
-                        {% else %}
-                            {% if request.flexible %}
-                                <div>{{ 'Flexible with arrival and departure' }}</div>{% endif %}
-                            {% if request.numberOfTravellers != 1 %}
-                                <div><i
-                                class="fa fa-users mr-1"></i>{{ 'Travelling in a group of %s' | format(request.numberOfTravellers) }}
-                                </div>
-                            {% endif %}
-                        {% endif %}
-                    </div>
-
-                    <div class="col-12 col-sm-6 col-md-4 mb-1">
-                        <div><i class="fa fa-calendar mr-1"></i>{{ 'request.arrival' | trans }}</div>
-                        <div>{{ request.arrival|format_date('full') }}</div>
-                    </div>
-
-                    {% if  request.Departure -%}
-                        <div class="col-12 col-sm-6 col-md-4 mb-1">
-                            <div><i class="fa fa-calendar mr-1"></i>{{ 'request.departure' | trans }}</div>
-                            <div>{{ request.departure|format_date('full') }}</div>
-                        </div>
-                    {%- endif %}
-                    {% set currentArrival = message.Request.Arrival%}
-                    {% set currentDeparture = message.Request.Departure %}
-                    {% set requestChanged = true %}
                 </div>
+                <div class="col-auto message_{% if own %}own{% else %}other{% endif %} {% if deleted %}deleted{% endif %}">
+                    <small class="{% if own %}pull-right{% endif %} text-muted m-0">
+                        {%- if own -%}
+                            {{ 'message.you' | trans }}
+                        {%- else -%}
+                            {{ macros.profilelink(message.sender.Username) }}
+                        {%- endif %}
+                        <span title="{{ message.created.toDateTimeString }}">{{ message.created.DiffForHumans }}</span>
+                        {% if not deleted %}
+                            <a class="ml-2 pull-right" href="{{ url('message_delete', {'id': message.id, 'redirect': current.id}) }}"><i class="fa fa-trash" title="{{ 'delete'|trans }}"></i></a>
+                        {% endif %}
+                        {%- if not own -%}
+                            {% if not deleted %}
+                                {% if message.folder == "Spam" %}
+                                    <span class="ml-1">{{ 'markededspam' | trans }}</span>
+                                    <a class="ml-1" href="{{ path('message_mark_nospam', { id: message.id }) }}"><i class="far fa-flag" title="{{ 'marknospam' | trans }}"></i></a>
+                                {% else %}
+                                    <a class="ml-2 pull-right" href="{{ path('message_mark_spam', { id: message.id }) }}"><i class="fas fa-flag" title="{{ 'markspam' | trans }}"></i></a>
+                                {% endif %}
+                            {% endif %}
+                        {%- endif -%}
+                    </small>
+                    <p class="clearfix m-0"></p>
+                    {{ message.message|purify('custom')|url_update }}
+                </div>
+            </div>
+            {% if message.Request %}
+                {% if message.Request.Arrival != currentArrival or message.Request.Departure != currentDeparture or (loop.last == true and requestChanged == true) %}
+                    {% set request = message.Request %}
+                    <div class="row no-gutters bg-white border-1 mb-1">
+                        <div class="col-12 mb-1">{% if loop.last == true %}{{ 'original.request.details'|trans }}{% else %}{{ 'former.request.details'|trans }}{% endif %}</div>
+                        <div class="col-12 col-md-4 mb-1">
+                            {% if original.Sender.Username == myself.Username %}
+                                {% if request.flexible %}
+                                    <div>{{ 'I\'m flexible with arrival and departure' }}</div>{% endif %}
+                                {% if request.numberOfTravellers != 1 %}
+                                <div><i
+                                    class="fa fa-users mr-1"></i>{{ 'Request for %s guest(s)' | format(request.numberOfTravellers) }}
+                                </div>{% endif %}
+                            {% else %}
+                                {% if request.flexible %}
+                                    <div>{{ 'Flexible with arrival and departure' }}</div>{% endif %}
+                                {% if request.numberOfTravellers != 1 %}
+                                    <div><i
+                                    class="fa fa-users mr-1"></i>{{ 'Travelling in a group of %s' | format(request.numberOfTravellers) }}
+                                    </div>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+
+                        <div class="col-12 col-sm-6 col-md-4 mb-1">
+                            <div><i class="fa fa-calendar mr-1"></i>{{ 'request.arrival' | trans }}</div>
+                            <div>{{ request.arrival|format_date('full') }}</div>
+                        </div>
+
+                        {% if  request.Departure -%}
+                            <div class="col-12 col-sm-6 col-md-4 mb-1">
+                                <div><i class="fa fa-calendar mr-1"></i>{{ 'request.departure' | trans }}</div>
+                                <div>{{ request.departure|format_date('full') }}</div>
+                            </div>
+                        {%- endif %}
+                        {% set currentArrival = message.Request.Arrival%}
+                        {% set currentDeparture = message.Request.Departure %}
+                        {% set requestChanged = true %}
+                    </div>
+                {% endif %}
             {% endif %}
         {% endif %}
-    {% endif %}
-{% endfor %}
+    {% endfor %}
 </div>

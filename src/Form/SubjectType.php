@@ -20,6 +20,7 @@ class SubjectType extends AbstractType
             'attr' => [
                 'placeholder' => 'placeholder.subject',
             ],
+            'required' => false,
             'constraints' => [
                 new NotBlank([
                     'message' => 'error.subject.blank',

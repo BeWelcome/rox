@@ -21,6 +21,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class ConversationController extends AbstractController
 {
@@ -40,6 +41,22 @@ class ConversationController extends AbstractController
     public function showConversations(Request $request): Response
     {
         return $this->handleRequest($request, 'conversations', ConversationsAdapter::class);
+    }
+
+    /**
+     * @Route("/conversations/spam/", name="spam")
+     */
+    public function showSpamConversations(Request $request): Response
+    {
+        return $this->handleRequest($request, 'spam', SpamAdapter::class);
+    }
+
+    /**
+     * @Route("/conversations/deleted/", name="deleted")
+     */
+    public function showDeletedConversations(Request $request): Response
+    {
+        return $this->handleRequest($request, 'deleted', DeletedAdapter::class);
     }
 
     /**
@@ -77,11 +94,13 @@ class ConversationController extends AbstractController
             return $this->forward('App\\Controller\\MessageController::show', [
                 'message' => $message
             ]);
-        } elseif ($this->isHostingRequest($message)) {
+        }
+        if ($this->isHostingRequest($message)) {
             return $this->forward('App\\Controller\\HostingRequestController::show', [
                 'message' => $message
             ]);
-        } elseif ($this->isInvitation($message)) {
+        }
+        if ($this->isInvitation($message)) {
             return $this->forward('App\\Controller\\InvitationController::show', [
                 'message' => $message
             ]);
@@ -91,19 +110,57 @@ class ConversationController extends AbstractController
     }
 
     /**
-     * @Route("/conversations/spam/", name="spam")
+     * @Route("/conversation/{id}/deleted", name="conversation_show_with_deleted",
+     *     requirements={"id": "\d+"})
+     *
+     * @throws AccessDeniedException
+     *
+     * @return Response
      */
-    public function showSpamConversations(Request $request): Response
+    public function showSingleConversationWithDeletedMessages(Message $message)
     {
-        return $this->handleRequest($request, 'spam', SpamAdapter::class);
+        if ($this->isMessage($message)) {
+            return $this->forward('App\\Controller\\MessageController::showDeleted', [
+                'message' => $message
+            ]);
+        }
+        if ($this->isHostingRequest($message)) {
+            return $this->forward('App\\Controller\\HostingRequestController::showDeleted', [
+                'message' => $message
+            ]);
+        }
+        if ($this->isInvitation($message)) {
+            return $this->forward('App\\Controller\\InvitationController::showDeleted', [
+                'message' => $message
+            ]);
+        }
+
+        return new Response('error');
     }
 
+
     /**
-     * @Route("/conversations/deleted/", name="deleted")
+     * @Route("/conversation/{id}/reply", name="conversation_reply",
+     *     requirements={"id": "\d+"}
+     * )
      */
-    public function showDeletedConversations(Request $request): Response
+    public function replyToConversation(Message $message): Response
     {
-        return $this->handleRequest($request, 'deleted', DeletedAdapter::class);
+        if ($this->isMessage($message)) {
+            return $this->forward('App\\Controller\\MessageController::replyToMessage', [
+                'message' => $message,
+            ]);
+        } elseif ($this->isHostingRequest($message)) {
+            return $this->forward('App\\Controller\\HostingRequestController::replyToHostingRequest', [
+                'hostingRequest' => $message,
+            ]);
+        } elseif ($this->isInvitation($message)) {
+            return $this->forward('App\\Controller\\InvitationController::replyToInvitation', [
+                'invitation' => $message,
+            ]);
+        }
+
+        return new Response('error');
     }
 
     protected function getSubMenuItems()
@@ -136,7 +193,7 @@ class ConversationController extends AbstractController
         ];
     }
 
-    private function handleRequest(Request $request, string $active, $adapter): Response
+    private function handleRequest(Request $request, string $active, string $adapter): Response
     {
         /** @var Member $member */
         $member = $this->getUser();

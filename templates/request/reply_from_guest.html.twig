@@ -6,6 +6,7 @@
 {% endblock javascripts %}
 
 {% block stylesheets %}
+    {{ encore_entry_link_tags('tailwind')  }}
     {{ encore_entry_link_tags('requests')  }}
 {% endblock stylesheets %}
 
@@ -21,17 +22,10 @@
     {% set current = thread | first %}
     {% set receiver =  original.receiver %}
 
-    <div class="row no-gutters bg-white mb-1">
-        {% set myself = app.user %}
-        <div class="pull-left">{{ macros.avatarstack(host.Username, 50, false) }}</div>
-        <div class="col">
-            <h3 id="MessageSubject" class="p-3 text-truncate">{{ current.Subject.Subject }}</h3>
-        </div>
-        <div class="pull-right text-right">{{ macros.avatarstack(guest.Username, 50, true) }}</div>
-    </div>
+    {{ macros.messageheader(host, guest, current.Subject.Subject) }}
 
     {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'autocomplete': 'off'}}) }}
-    <div class="row mb-1">
+    <div class="row mb-2">
         <div class="col-12 col-sm-6 col-md-4 order-md-first">
             <div class="o-form-group">
                 {{ form_label(form.request.duration) }}
@@ -52,17 +46,19 @@
         </div>
         <div class="col-12 col-md-8">
             {{ form_row(form.message) }}
+            <div class="u-flex u-justify-end mt-2">
             {% if current.sender.Username == app.user.Username %}
                 {% set label = 'update' %}
             {% else %}
                 {% set label = 'reply' %}
             {% endif %}
-            {{ form_widget(form.cancel, {'attr': {'class': 'btn btn-primary mr-1',
+            {{ form_widget(form.cancel, {'attr': {'class': 'btn btn-primary',
                 'onclick': 'return confirm(\'' ~ ('request.confirm.cancel'|trans) ~ '\');'}})
             }}
 
-            {{ form_widget(form.update, {'attr': {'class': 'btn btn-primary mr-1'},
+            {{ form_widget(form.update, {'attr': {'class': 'btn btn-primary ml-1'},
                 'label' : label}) }}
+            </div>
         </div>
     </div>
     {{ form_rest(form) }}

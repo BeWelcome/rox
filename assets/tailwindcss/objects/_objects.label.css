@@ -31,7 +31,7 @@
  */
 
 .o-label--white {
-  color: var(--white);
+  color: theme('colors.white');
   font-family: Signika;
   font-weight: 400;
 }

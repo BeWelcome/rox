@@ -55,7 +55,7 @@ class TranslationsAddMissingCommand extends Command
             foreach ($missing as $translationId => $missingTranslation) {
                 $sentence = $missingTranslation[0];
                 $description = $missingTranslation[1] ?? 'No description given.';
-                $domain = $missingTranslation[2] ?? 'messages';
+                $domain = $missingTranslation[2] ?? 'messages+intl-icu';
 
                 $translation = $translationRepository->findOneBy(['code' => $translationId]);
                 if (null === $translation) {

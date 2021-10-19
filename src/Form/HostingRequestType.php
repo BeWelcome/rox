@@ -62,6 +62,7 @@ class HostingRequestType extends AbstractType
                     'max' => 20,
                 ],
                 'invalid_message' => 'request.error.number_of_travellers',
+                'required' => false,
                 'constraints' => [
                     new NotBlank([
                         'message' => 'request.error.numberoftravellers.empty',

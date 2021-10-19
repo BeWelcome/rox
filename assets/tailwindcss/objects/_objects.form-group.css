@@ -51,6 +51,6 @@
  */
 
 .o-form-group--white label {
-  color: var(--white);
+  color: theme('colors.white');
   font-weight: 700;
 }

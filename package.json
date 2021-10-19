@@ -85,13 +85,13 @@
     "tempusdominus": "github:tonix-tuft/tempusdominus",
     "tempusdominus-bootstrap": "github:tonix-tuft/tempusdominus-bootstrap",
     "toastify-js": "^1.10.0",
-    "workbox-webpack-plugin": "^6.1.5"
+    "workbox-webpack-plugin": "^6.1.5",
+    "@tailwindcss/line-clamp": "^0.2.2",
+    "improved-yarn-audit": "^2.3.3"
   },
   "scripts": {
     "encoreWatch": "encore dev --watch"
   },
   "dependencies": {
-    "improved-yarn-audit": "^2.3.3",
-    "inuitcss": "^6.0.0"
   }
 }

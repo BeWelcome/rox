@@ -12,9 +12,9 @@ html {
   text-rendering: optimizeLegibility;
 }
 
-html, 
+html,
 body {
-  background-color: var(--gray-10);
+  background-color: theme('colors.gray-10');
 }
 
 body,

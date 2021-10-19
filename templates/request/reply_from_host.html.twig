@@ -6,6 +6,7 @@
 {% endblock javascripts %}
 
 {% block stylesheets %}
+    {{ encore_entry_link_tags('tailwind')  }}
     {{ encore_entry_link_tags('requests')  }}
 {% endblock stylesheets %}
 
@@ -21,20 +22,12 @@
     {% set current = thread | first %}
     {% set sender =  original.sender %}
 
-    <div class="row no-gutters bg-white mb-1">
-        {% set myself = app.user %}
-        <div class="pull-left">{{ macros.avatarstack(guest.Username, 50, false) }}</div>
-        <div class="col">
-            <h3 id="MessageSubject" class="p-3 text-truncate">{{ current.Subject.Subject }}</h3>
-        </div>
-        <div class="pull-right text-right">{{ macros.avatarstack(host.Username, 50, true) }}</div>
-    </div>
+    {{ macros.messageheader(guest, host, current.Subject.Subject) }}
 
     {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'autocomplete': 'off'}}) }}
 
-    <div class="row mb-1">
+    <div class="row mb-2">
         <div class="col-12 col-sm-6 col-md-4">
-
             <div class="o-form-group">
                 {{ form_label(form.request.duration) }}
                 <div class="input-group date" id="arrival" data-target-input="nearest">
@@ -65,14 +58,18 @@
         </div>
         <div class="col-12 col-md-8">
             {{ form_row(form.message) }}
-            {{ form_widget(form.accept, {'attr': {'class': 'btn btn-primary mr-1'}}) }}
-            {{ form_widget(form.tentatively, {'attr': {'class': 'btn btn-primary mr-1'}}) }}
-            {{ form_widget(form.decline, {'attr': {'class': 'btn btn-primary mr-1'}}) }}
-            {{ form_widget(form.update, {'attr': {'class': 'btn btn-primary'}}) }}
+            <div class="u-flex u-justify-end mt-2">
+                {{ form_widget(form.accept, {'attr': {'class': 'btn btn-primary ml-1'}}) }}
+                {{ form_widget(form.tentatively, {'attr': {'class': 'btn btn-primary ml-1'}}) }}
+                {{ form_widget(form.decline, {'attr': {'class': 'btn btn-primary ml-1'}}) }}
+                {{ form_widget(form.update, {'attr': {'class': 'btn btn-primary ml-1'}}) }}
+            </div>
         </div>
     </div>
 
     {{ form_rest(form) }}
     {{ form_end(form) }}
+
     {% include 'message/thread.html.twig' with {'show_deleted': false} %}
+
 {% endblock %}

@@ -95,16 +95,7 @@ class MessageController extends BaseMessageController
         return $this->redirectToRoute($redirectRoute, ['id' => $redirect->getId()]);
     }
 
-    /**
-     * @Route("/message/{id}", name="message_show",
-     *     requirements={"id": "\d+"})
-     *
-     * @throws Exception
-     * @throws AccessDeniedException
-     *
-     * @return Response
-     */
-    public function show(Message $message)
+    public function show(Message $message): Response
     {
         if ($this->needsRedirect($message, self::MESSAGE)) {
             return $this->redirectShow($message, false);
@@ -113,16 +104,7 @@ class MessageController extends BaseMessageController
         return $this->showThread($message, 'message/view.html.twig', 'message_show', false);
     }
 
-    /**
-     * @Route("/message/{id}/deleted", name="message_show_with_deleted",
-     *     requirements={"id": "\d+"})
-     *
-     * @throws Exception
-     * @throws AccessDeniedException
-     *
-     * @return Response
-     */
-    public function showDeleted(Message $message)
+    public function showDeleted(Message $message): Response
     {
         if ($this->needsRedirect($message, self::MESSAGE)) {
             return $this->redirectShow($message, true);
@@ -178,6 +160,7 @@ class MessageController extends BaseMessageController
             'form' => $messageForm->createView(),
         ]);
     }
+
     /**
      * @Route("/message/{id}/spam", name="message_mark_spam")
      */
@@ -274,11 +257,13 @@ class MessageController extends BaseMessageController
             $message = $this->messageModel->addMessage($sender, $receiver, $message, $replySubject, $messageText);
             $this->addTranslatedFlash('success', 'flash.reply.sent');
 
-            return $this->redirectToRoute('message_show', ['id' => $message->getId()]);
+            return $this->redirectToRoute('conversation_show', ['id' => $message->getId()]);
         }
 
         return $this->render('message/reply.html.twig', [
             'form' => $messageForm->createView(),
+            'subject' => $subjectText,
+            'receiver' => $receiver,
             'current' => $message,
             'thread' => $thread,
         ]);

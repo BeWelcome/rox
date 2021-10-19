@@ -1,6 +1,6 @@
 module.exports = {
   purge: [
-      './templates/trip/*.html.twig',
+      './templates/**/*.html.twig',
       './templates/jsx/trip/*.html.twig',
   ],
   darkMode: false,
@@ -23,8 +23,7 @@ module.exports = {
       'blue': '#7000f3',
       'black': '#000',
       'white': '#fff',
-      'green': '#00f370',
-      'gray-5': '#f9f9f9', 
+      'gray-5': '#f9f9f9',
       'gray-10': '#eee',
       'gray-15': '#ddd',
       'gray-20': '#ccc',
@@ -203,7 +202,7 @@ module.exports = {
       '20': '20px',
       '24': '24px',
       '28': '28px',
-      '30': '30px',   
+      '30': '30px',
       '32': '32px',
       '36': '36px',
       '40': '40px',
@@ -396,5 +395,7 @@ module.exports = {
     wordBreak: ['responsive'],
     zIndex: ['responsive'],
   },
-  plugins: [],
+  plugins: [
+      require('@tailwindcss/line-clamp'),
+  ],
 }

@@ -26,7 +26,7 @@
   height: 96px;
   overflow: hidden;
   border-radius: 100%;
-  border: 4px solid var(--white);
+  border: 4px solid theme('colors.white');
   justify-self: center;
 }
 
@@ -91,7 +91,7 @@
 .o-avatar__host-img {
   width: 20px;
   height: 20px;
-  fill: var(--white);
+  fill: theme('colors.white');
 }
 
 
@@ -213,7 +213,7 @@
 
 .o-avatar--white .o-avatar__name,
 .o-avatar--white .o-avatar__languages {
-  color: var(--white);
+  color: theme('colors.white');
 }
 
 
@@ -253,7 +253,7 @@
 
 
 .o-avatar--noname .o-avatar__img-wrapper {
-  border: 5px solid var(--white);
+  border: 5px solid theme('colors.white');
 }
 
 

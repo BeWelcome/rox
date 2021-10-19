@@ -522,3 +522,8 @@ $avatar-sizes: 30, 50, 75, 100, 150, 200, 500;
 .o-checkbox__label {
   @extend .form-check-label
 }
+
+.input-group > .input-group-prepend > .input-group-text {
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+}

@@ -57,6 +57,7 @@ Encore
     .addEntry('highlight', './assets/js/highlight.js')
     .addEntry('faq', './assets/js/faq.js')
     .addEntry('translations', './assets/js/admin/translations.js')
+    .addEntry('tailwind', './assets/tailwindcss/tailwind.css')
     // react
     .configureBabel(function(babelConfig) {
         babelConfig.presets = [ "@babel/preset-env", '@babel/preset-react' ]
@@ -64,7 +65,6 @@ Encore
     })
     .addEntry('avatar', './assets/js/react/avatar/AvatarMount.jsx')
 
-    .addStyleEntry('tailwind', './assets/scss/tailwind.scss')
     .autoProvidejQuery()
     //    .addEntry('roxinlineeditor', './assets/js/roxinlineeditor.js')
 

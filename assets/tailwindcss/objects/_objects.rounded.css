@@ -15,9 +15,9 @@
   width: 32px;
   height: 32px;
   border-radius: 100%;
-  background-color: var(--bewelcome);
+  background-color: theme('colors.bewelcome');
   flex-shrink: 0;
-  color: var(--white);
+  color: theme('colors.white');
 }
 
 
@@ -34,7 +34,7 @@
 .o-rounded:hover{
   background-color: var(--bewelcome-dark);
   transition: background-color 0.2s;
-  color: var(--white);
+  color: theme('colors.white');
 }
 
 

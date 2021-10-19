@@ -1,7 +1,7 @@
 {% extends 'emails/request.template.html.twig' %}
 
 {% block message %}
-    <p>{% trans with {'%username%': sender.Username} %}email.invitation.to.stay{% endtrans %}</p>
+    <p>{{ 'email.invitation.to.stay'|trans({'username': sender.Username} ) }}</p>
     <callout class="secondary">
         {{ message.message | raw }}
     </callout>
@@ -10,7 +10,7 @@
 
         <p>{{ 'or' | trans }}</p>
 
-        <button class="expand" href="{{ url('invitation_reply', { 'id': message.id, 'leg': message.request.inviteForLeg.id }) }}">{{ 'reply' | trans }}</button>
+        <button class="expand" href="{{ url('conversation_reply', { 'id': message.id }) }}">{{ 'reply' | trans }}</button>
     </center>
 {% endblock message %}
 

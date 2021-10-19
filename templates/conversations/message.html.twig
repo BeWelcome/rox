@@ -9,9 +9,9 @@
 {% set isInitiator = (member == message.initiator) %}
 {% set unread = (message.firstRead is null) or (message.firstRead == '0000-00-00 00:00.00') %}
 {% if submenu.active == 'deleted' %}
-    {% set show_message_route = 'message_show_with_deleted' %}
+    {% set show_message_route = 'conversation_show_with_deleted' %}
 {% else %}
-    {% set show_message_route = 'message_show' %}
+    {% set show_message_route = 'conversation_show' %}
 {% endif %}
 <tr>
     {% if form is defined %}
@@ -54,7 +54,6 @@
                         {%- endif %}
                     </div>
                 </div>
-            </div>
             {% endif %}
             <span class="text-muted small">{{ 'message.sentdate'|trans({'%sentDate%': message.dateSent | format_date( 'medium')}) }} {{ 'by'|trans }} {{ message.sender.Username }}</span>
             </div>
@@ -63,7 +62,7 @@
     <td class="text-right">
         <div class="btn-group-vertical">
             <a href="{{ path(show_message_route, { id: message.id}) }}" class="btn btn-primary btn-sm">{{ 'view' | trans }}</a>
-            <a href="{{ path('message_reply', { id: message.id}) }}" class="btn btn-primary btn-sm">{{ 'reply' | trans }}</a>
+            <a href="{{ path('conversation_reply', { id: message.id}) }}" class="btn btn-primary btn-sm">{{ 'reply' | trans }}</a>
         </div>
     </td>
 </tr>

@@ -12,7 +12,7 @@
 	padding: 24px;
 	border-radius: 16px;
 	box-shadow: 0 30px 40px -19px #d7d7d7;
-	background-color: var(--white);
+	background-color: theme('colors.white');
 }
 
 .o-card h1,

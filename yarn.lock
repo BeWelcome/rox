@@ -1422,6 +1422,11 @@
     webpack-dev-server "^4.0.0"
     yargs-parser "^20.2.4"
 
+"@tailwindcss/line-clamp@^0.2.2":
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/@tailwindcss/line-clamp/-/line-clamp-0.2.2.tgz#05843c004bf069353a0c43f9df8cc3a6016252b8"
+  integrity sha512-NgA4Ds+/eCiO+6O3SooRsfJ8m7M2+QvNvHwOjBQq7FIYoWwAV4I4Wu4fjHeuO9Yi6p47ceHUKEGGEBh0ozQodg==
+
 "@trysound/sax@0.1.1":
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/@trysound/sax/-/sax-0.1.1.tgz#3348564048e7a2d7398c935d466c0414ebb6a669"
@@ -4279,13 +4284,6 @@ interpret@^2.2.0:
   resolved "https://registry.yarnpkg.com/interpret/-/interpret-2.2.0.tgz#1a78a0b5965c40a5416d007ad6f50ad27c417df9"
   integrity sha512-Ju0Bz/cEia55xDwUWEa8+olFpCiQoypjnQySseKtmjNrnps3P+xfpUmGr90T7yjlVJmOtybRvPXhKMbHr+fWnw==
 
-inuitcss@^6.0.0:
-  version "6.0.0"
-  resolved "https://registry.yarnpkg.com/inuitcss/-/inuitcss-6.0.0.tgz#164a2557736a29a9874f99c6165174d996ea6a53"
-  integrity sha512-FnyXNy2WSzSli4INmgtrsFwkzDljabK583AoC7KZutB6m8bVrAzjZ7jadro4N4RcqQRpMlW88NwgHIWgD7CDrg==
-  dependencies:
-    sass-mq "^3.3.2"
-
 ip-regex@^4.0.0:
   version "4.3.0"
   resolved "https://registry.yarnpkg.com/ip-regex/-/ip-regex-4.3.0.tgz#687275ab0f57fa76978ff8f4dddc8a23d5990db5"
@@ -6887,11 +6885,6 @@ sass-loader@^12.1.0:
   dependencies:
     klona "^2.0.4"
     neo-async "^2.6.2"
-
-sass-mq@^3.3.2:
-  version "3.3.2"
-  resolved "https://registry.yarnpkg.com/sass-mq/-/sass-mq-3.3.2.tgz#3472e04c31a432bcd55b3b604edc72ae9a4def1a"
-  integrity sha1-NHLgTDGkMrzVWztgTtxyrppN7xo=
 
 sass@^1.32.12:
   version "1.39.2"

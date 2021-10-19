@@ -55,7 +55,7 @@
  */
 
    .o-checkbox--white ~ .o-checkbox__label {
-   	color: var(--white);
+   	color: theme('colors.white');
    }
 
 

@@ -1,0 +1,51 @@
+.c-trip-card {
+	display: grid;
+	grid-template-columns: 1fr 104px;
+	margin-bottom: 16px;
+	padding-bottom: 16px;
+	background-color: rgba(0, 0, 0, 0.3);
+	padding: 24px 36px;
+	margin: 8px 0;
+	border-radius: 8px;
+}
+
+.c-trip-card:last-of-type {
+	border-bottom: none;
+}
+
+@media (max-width: 900px) {
+  .c-trip-card {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+
+
+
+
+.c-trip-card__wrapper {
+	display: grid;
+	grid-template-columns: 4fr 2fr;
+	grid-column-gap: 24px;
+	margin-right: 24px;
+
+}
+
+@media (max-width: 900px) {
+  .c-trip-card__wrapper {
+    display: flex;
+    flex-direction: column;
+    margin: initial;
+  }
+}
+
+
+
+
+
+.c-trip-card__icon-grid {
+	display: grid;
+	grid-template-columns: 16px 1fr;
+	grid-gap: 8px;
+}

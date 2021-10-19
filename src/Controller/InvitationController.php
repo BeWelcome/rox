@@ -125,12 +125,7 @@ class InvitationController extends BaseHostingRequestAndInvitationController
         ]);
     }
 
-    /**
-     * @Route("/invitation/{id}/reply/{leg}", name="invitation_reply")
-     *
-     * @throws InvalidArgumentException
-     */
-    public function replyToInvitation(Message $invitation, Subtrip $leg): Response
+    public function replyToInvitation(Message $invitation): Response
     {
         if (!$this->isMessageOfMember($invitation)) {
             throw $this->createAccessDeniedException('Not your message/hosting request');
@@ -142,6 +137,8 @@ class InvitationController extends BaseHostingRequestAndInvitationController
 
         $thread = $this->messageModel->getThreadForMessage($invitation);
         $current = $thread[0];
+
+        $leg = $invitation->getRequest()->getInviteForLeg();
 
         // Always reply to the last item in the thread
         if ($invitation->getId() !== $current->getId()) {

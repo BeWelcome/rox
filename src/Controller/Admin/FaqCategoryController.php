@@ -79,7 +79,7 @@ class FaqCategoryController extends FaqBaseController
 
                 $word = new Word();
                 $word->setAuthor($author);
-                $word->setCode($data->wordCode);
+                $word->setCode(strtolower($data->wordCode));
                 $word->setSentence($data->description);
                 $word->setDomain(DomainType::MESSAGES);
                 $word->setlanguage($english);

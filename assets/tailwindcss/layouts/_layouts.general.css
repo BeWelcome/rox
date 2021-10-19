@@ -3,7 +3,7 @@
   grid-template-columns: 32px 1fr;
   grid-gap: 16px;
   position: relative;
-  border-left: 2px dotted var(--white);
+  border-left: 2px dotted theme('colors.white');
   padding-bottom: 32px;
   padding-right: 32px;
   z-index: 1;
@@ -23,7 +23,7 @@
 
 @media (max-width: 900px) {
   .l-trip-show:last-child {
-    border-left: 2px dotted var(--white);
+    border-left: 2px dotted theme('colors.white');
   }
 }
 
@@ -93,7 +93,7 @@
 }
 
 .l-landing-welcome a {
-  color: var(--bewelcome);
+  color: theme('colors.bewelcome');
 }
 
 
@@ -104,7 +104,7 @@
   grid-template-columns: 1fr 1fr;
   border-radius: 16px;
   box-shadow: 0 10px 30px -3px #d7d7d7;
-  background-color: var(--white);
+  background-color: theme('colors.white');
 }
 
 @media (max-width: 900px) {

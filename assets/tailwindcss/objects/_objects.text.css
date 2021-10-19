@@ -100,7 +100,7 @@
 
 .o-text hr {
   border: none;
-  border-bottom: 1px solid var(--gray-20);
+  border-bottom: 1px solid theme('colors.gray-20');
   margin-bottom: 24px;
 }
 
@@ -155,7 +155,7 @@
 }
 
 .o-text li::marker {
-  color: var(--gray-60);
+  color: theme('colors.gray-60');
   font-size: 16px;
 }
 
@@ -283,7 +283,7 @@
 }
 
 .o-text--big-numbers ul li::marker {
-  color: var(--bewelcome);
+  color: theme('colors.bewelcome');
   content: initial;
   font-size: 14px !important;
 }
@@ -334,7 +334,7 @@
 
 .o-text--bewelcome-numbers ol li li::marker,
 .o-text--bewelcome-numbers ol li li li::marker {
-  color: var(--bewelcome);
+  color: theme('colors.bewelcome');
   font-size: 14px;
 }
 
@@ -365,7 +365,7 @@
 .o-text--small-text p {
   font-size: 12px;
   line-height: 16px;
-  color: var(--gray-60);
+  color: theme('colors.gray-60');
 }
 
 .o-text--small-text h1 {
@@ -422,7 +422,7 @@
 }
 
 .o-text--small-text li::marker {
-  color: var(--gray-60);
+  color: theme('colors.gray-60');
   font-size: 12px;
 }
 
@@ -442,5 +442,5 @@
 .o-text--big-list li::marker {
   line-height: 24px;
   font-size: 14px;
-  color: var(--bewelcome);
+  color: theme('colors.bewelcome');
 }

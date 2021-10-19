@@ -39,44 +39,41 @@ class HostingRequestController extends BaseHostingRequestAndInvitationController
     }
 
     /**
-     * Deals with replies to messages and hosting requests.
-     *
-     * @Route("/request/{id}/reply", name="hosting_request_reply",
-     *     requirements={"id": "\d+"})
+     * Deals with replies to  hosting requests.
      *
      * @throws AccessDeniedException
      */
-    public function replyToHostingRequest(Message $message): Response
+    public function replyToHostingRequest(Message $hostingRequest): Response
     {
-        if (!$this->isMessageOfMember($message)) {
+        if (!$this->isMessageOfMember($hostingRequest)) {
             throw $this->createAccessDeniedException('Not your message/hosting request');
         }
 
-        if ($this->needsRedirect($message, self::HOSTING_REQUEST)) {
-            return $this->redirectReplyTo($message);
+        if ($this->needsRedirect($hostingRequest, self::HOSTING_REQUEST)) {
+            return $this->redirectReplyTo($hostingRequest);
         }
 
-        $thread = $this->messageModel->getThreadForMessage($message);
+        $thread = $this->messageModel->getThreadForMessage($hostingRequest);
         $current = $thread[0];
 
         // Always reply to the last item in the thread
-        if ($message->getId() !== $current->getId()) {
+        if ($hostingRequest->getId() !== $current->getId()) {
             return $this->redirectToRoute('hosting_request_reply', ['id' => $current->getId()]);
         }
 
         // determine if guest or host reply to a request
         $member = $this->getUser();
         $first = $thread[\count($thread) - 1];
-        $parentId = ($message->getParent()) ? $message->getParent()->getId() : $message->getId();
+        $parentId = ($hostingRequest->getParent()) ? $hostingRequest->getParent()->getId() : $hostingRequest->getId();
         if ($member === $first->getSender()) {
             return $this->redirectToRoute('hosting_request_reply_guest', [
-                'id' => $message->getId(),
+                'id' => $hostingRequest->getId(),
                 'parentId' => $parentId,
             ]);
         }
 
         return $this->redirectToRoute('hosting_request_reply_host', [
-            'id' => $message->getId(),
+            'id' => $hostingRequest->getId(),
             'parentId' => $parentId,
         ]);
     }
@@ -132,7 +129,7 @@ class HostingRequestController extends BaseHostingRequestAndInvitationController
             );
             $this->addTranslatedFlash('success', 'flash.notification.updated');
 
-            return $this->redirectToRoute('hosting_request_show', ['id' => $newRequest->getId()]);
+            return $this->redirectToRoute('conversation_show', ['id' => $newRequest->getId()]);
         }
 
         return $this->render('request/reply_from_guest.html.twig', [
@@ -188,7 +185,7 @@ class HostingRequestController extends BaseHostingRequestAndInvitationController
             );
             $this->addTranslatedFlash('notice', 'flash.notification.updated');
 
-            return $this->redirectToRoute('hosting_request_show', ['id' => $newRequest->getId()]);
+            return $this->redirectToRoute('conversation_show', ['id' => $newRequest->getId()]);
         }
 
         return $this->render('request/reply_from_host.html.twig', [
@@ -211,7 +208,7 @@ class HostingRequestController extends BaseHostingRequestAndInvitationController
             return $this->redirectShow($message, false);
         }
 
-        return $this->showThread($message, 'request/view.html.twig', 'hosting_request_show', false);
+        return $this->showThread($message, 'request/view.html.twig', 'conversation_show', false);
     }
 
     /**
@@ -226,7 +223,7 @@ class HostingRequestController extends BaseHostingRequestAndInvitationController
             return $this->redirectShow($message, true);
         }
 
-        return $this->showThread($message, 'request/view.html.twig', 'hosting_request_show', true);
+        return $this->showThread($message, 'request/view.html.twig', 'conversation_show', true);
     }
 
     /**

@@ -1,5 +1,5 @@
-{% extends 'base.html.twig' %}
 {% import 'macros.twig' as macros %}
+{% extends 'base.html.twig' %}
 
 {% block subnav %}
     {% for filter, menuitem in submenu.items %}
@@ -8,42 +8,38 @@
     {% endfor %}
 {% endblock %}
 
-{% block javascripts %}
-{% endblock %}
+{% block stylesheets %}
+    {{ encore_entry_link_tags('tailwind') }}
+{% endblock stylesheets %}
 
 {% block content %}
-    <div class="row">
-        <div class="col-12 mb-2">
-            <div class="row bg-white p-1 no-gutters">
-                {% set myself = app.user %}
-                <div class="d-none d-md-block mr-1">{{ macros.avatar(receiver.Username, 50, true) }}
-                    <br/><small>{{ receiver.city.name }},<br>{{ receiver.city.country.name }}</small>
+    {% set myself = app.user %}
+
+        <div class="u-flex u-justify-between bg-white p-1 mb-2">
+            <div class="o-avatar">{{ macros.roundedavatarstack(receiver.Username, 50, false) }}</div>
+            <div class="u-items-between">
+                <div class="u-text-32  u-text-center u-leading-48 u-text-black u-font-700 u-lineclamp-1">{{ 'message.write_to' | trans | format(receiver.Username) }}
+                    <a class="u-text-16 u-align-top" href="{{ url('all_messages_with', {'username': receiver.Username}) }}">
+                        <i class="fas fa-mail-bulk"
+                           title="{{ 'messages_allmessageswith' | trans | format(receiver.Username) }}"></i>
+                    </a>
                 </div>
-                <div class="col">
-                    <h2>{{ 'message.write_to' | trans | format(receiver.Username) }}
-                        <a class="small" href="{{ url('all_messages_with', {'username': receiver.Username}) }}">
-                            <i class="far fa-envelope-open"
-                               title="{{ 'messages_allmessageswith' | trans | format(receiver.Username) }}"></i>
-                        </a>
-                    </h2>
-                    <small class="text-muted">{{ 'speaks' | trans | capitalize }}
-                        {% for level in receiver.languageLevels %}
-                            {% apply spaceless %}
-                                {{ ('lang_' ~ level.language.shortcode) | trans }}<span class="d-none d-md-inline">
-                                - {{ ('languagelevel_' ~ level.level) | lower | trans }}</span>
-                                {%- if not loop.last -%}
-                                    ,
-                                {%- endif -%}
-                            {% endapply %}
-                        {% endfor %}
-                    </small>
-                </div>
+                {% set languages %}{% for level in receiver.languageLevels %}
+                    {% apply spaceless %}
+                        {{ ('lang_' ~ level.language.shortcode) | trans }}<span class="d-none d-md-inline">
+                         ({{ ('languagelevel_' ~ level.level) | lower | trans }})</span>
+                        {%- if not loop.last -%}
+                            ,
+                        {%- endif -%}
+                    {% endapply %}
+                {% endfor %}{% endset %}
+                <div class="u-text-16 u-lineclamp-2">{{ 'lives.and.speaks' | trans({'city': receiver.city.name ~ ', ' ~ receiver.city.country.name | capitalize, 'languages': languages }) | raw }}</div>
             </div>
-            <div class="col text-right">
-            </div>
+            <div class="o-avatar">{{ macros.roundedavatarstack(myself.Username, 50, true) }}</div>
         </div>
 
-        <div class="col-12">
+    <div class="row no-gutters">
+        <div class="col-12 mb-2">
             {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
             {{ form_errors(form) }}
             {{ form_row(form.subject.subject) }}
@@ -51,8 +47,10 @@
             {{ form_rest(form) }}
         </div>
 
-        <div class="col-12">
-            <button type="submit" class="btn btn-primary">{{ 'message.send' | trans }}</button>
+        <div class="col-12 mb-2">
+            <div class="u-flex u-justify-end">
+                <button type="submit" class="btn btn-primary">{{ 'message.send' | trans }}</button>
+            </div>
         </div>
         {{ form_end(form) }}
     </div>

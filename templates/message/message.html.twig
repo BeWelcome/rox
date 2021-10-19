@@ -18,7 +18,7 @@
         <div class="u-flex u-justify-between bg-white p-1 mb-2">
             <div class="o-avatar">{{ macros.roundedavatarstack(receiver.Username, 50, false) }}</div>
             <div class="u-items-between">
-                <div class="u-text-32  u-text-center u-leading-48 u-text-black u-font-700 u-lineclamp-1">{{ 'message.write_to' | trans | format(receiver.Username) }}
+                <div class="u-text-32  u-text-center u-leading-48 u-text-black u-font-700 u-line-clamp-1">{{ 'message.write_to' | trans | format(receiver.Username) }}
                     <a class="u-text-16 u-align-top" href="{{ url('all_messages_with', {'username': receiver.Username}) }}">
                         <i class="fas fa-mail-bulk"
                            title="{{ 'messages_allmessageswith' | trans | format(receiver.Username) }}"></i>
@@ -33,7 +33,7 @@
                         {%- endif -%}
                     {% endapply %}
                 {% endfor %}{% endset %}
-                <div class="u-text-16 u-lineclamp-2">{{ 'lives.and.speaks' | trans({'city': receiver.city.name ~ ', ' ~ receiver.city.country.name | capitalize, 'languages': languages }) | raw }}</div>
+                <div class="u-text-16 u-line-clamp-2">{{ 'lives.and.speaks' | trans({'city': receiver.city.name ~ ', ' ~ receiver.city.country.name | capitalize, 'languages': languages }) | raw }}</div>
             </div>
             <div class="o-avatar">{{ macros.roundedavatarstack(myself.Username, 50, true) }}</div>
         </div>

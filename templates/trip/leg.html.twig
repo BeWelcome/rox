@@ -18,7 +18,7 @@
     {% endif %}
   </div>
   <div class="c-trip-legs__text-wrapper">
-    <a class="u-text-24 u-leading-24 u-font-700 u-text-white hover:u-text-white hover:u-opacity-70 u-ellipsis u-font-display u-block u-mb-4" href="{{ path('trip_show', {'id': leg.trip.id}) }}">{{ leg.trip.summary }}</a>
+    <a class="u-text-24 u-leading-24 u-font-700 u-text-white hover:u-text-white hover:u-opacity-70 u-line-clamp-1 u-font-display u-block u-mb-4" href="{{ path('trip_show', {'id': leg.trip.id}) }}">{{ leg.trip.summary }}</a>
     <p class="u-text-white u-font-display u-font-700">{{ leg.location.name }}, <span class="u-font-300">{{ leg.arrival|format_date('medium') }}{% if leg.arrival != leg.departure %} - {{ leg.departure|format_date('medium') }}{% endif %}</span></p>
     <p class="u-text-white u-font-display u-italic u-my-8">{{ leg.trip.description | purify | truncate(240) }}</p>
     <div class="u-flex">

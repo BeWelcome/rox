@@ -19,7 +19,7 @@
 						</p>
 					</div>
 				{% else %}
-					<p class="u-ellipsis {% if unread %}unread{% endif %}">
+					<p class="u-line-clamp-1 {% if unread %}unread{% endif %}">
 						<a href="{{ path('conversation_show', { id: message.id } ) }}">
 							{% if message.subject %}
 								{{ message.subject.subject|raw }}
@@ -27,7 +27,7 @@
 						</a>
 					</p>
 				{% endif %}
-				<p class="u-ellipsis {% if unread %}unread{% endif %}">
+				<p class="u-line-clamp-1 {% if unread %}unread{% endif %}">
 					<a href="{{ path('conversation_show', { id: message.id } ) }}">{{ message.message|striptags|truncate(70) }}</a>
 				</p>
 				<p class="u-font-300 u-text-14">

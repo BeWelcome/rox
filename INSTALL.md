@@ -106,7 +106,7 @@ using a browser or use curl _url_ > _filename_.
 
 2. Build sphinx indices and run search daemon
 
-   Adapt setup/sphinx/sphinx-3.conf to match your needs (DB credentials and <path to indices>).
+   Adapt setup/sphinx/sphinx-3.conf to match your needs (DB credentials and replace <path to indices> with your preferred folder path).
 
    Run the indexer to create indices:
    ```bash

@@ -2,6 +2,7 @@
 
 namespace App\Utilities;
 
+use App\Doctrine\MessageStatusType;
 use App\Entity\Member;
 use App\Entity\Message;
 use App\Entity\Subject;
@@ -61,6 +62,7 @@ trait MessageTrait
         $message->setSender($sender);
         $message->setReceiver($receiver);
         $message->setSubject($subject);
+        $message->setStatus(MessageStatusType::SENT);
 
         $body = $this->getEnvironment()->render($template . '.html.twig', $parameters);
         $message->setMessage($body);

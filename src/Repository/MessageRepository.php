@@ -21,60 +21,23 @@ class MessageRepository extends EntityRepository
 {
     public function getUnreadConversationsCount(Member $member): int
     {
-        $q = $this->createQueryBuilder('m')
-            ->select('count(m.id)')
-            ->where('m.receiver = :member')
-            ->setParameter('member', $member)
-            ->andWhere('m.folder = :folder')
-            ->setParameter('folder', InFolderType::NORMAL)
-            ->andWhere('NOT (m.deleteRequest LIKE :receiverDeleted)')
-            ->setParameter(':receiverDeleted', '%' . DeleteRequestType::RECEIVER_DELETED . '%')
-            ->andWhere('NOT (m.deleteRequest LIKE :receiverPurged)')
-            ->setParameter(':receiverPurged', '%' . DeleteRequestType::RECEIVER_PURGED . '%')
-            ->andWhere('m.firstRead IS NULL')
-            ->andWhere('m.status = :status')
-            ->setParameter('status', 'Sent')
-            ->getQuery();
+        $sql = $this->getSql(true);
 
-        $unreadCount = $q->getSingleScalarResult();
+        $sql = str_replace('SELECT * FROM (', 'SELECT count(*) AS count FROM (', $sql);
 
-        return (int) $unreadCount;
+        $result = $this->getEntityManager()->getConnection()->executeQuery($sql, [
+            ':memberId' => $member->getId(),
+        ]);
+
+        $unread = $result->fetchAllAssociative();
+
+        // Hack to get the count result.
+        return (int) $unread[0]['count'];
     }
 
     public function getConversations(Member $member, bool $unreadOnly, int $limit = 5)
     {
-        if ($unreadOnly) {
-            $unreadCondition = '(m.IdReceiver = :memberId) '
-                . 'AND (`m`.WhenFirstRead IS NULL OR `m`.WhenFirstRead = \'0000-00-00 00:00:00\')';
-        } else {
-            $unreadCondition = '(m.IdReceiver = :memberId)';
-        }
-
-        $sql = '
-            SELECT * FROM (
-                    SELECT *
-                    FROM `messages` m
-                    WHERE ' . $unreadCondition . '
-                    AND `m`.`id` IN (
-                        SELECT max(`m`.`id`)
-                        FROM `messages` m
-                        WHERE (
-                            m.DeleteRequest NOT LIKE \'%' . DeleteRequestType::RECEIVER_DELETED . '%\'
-                            AND m.DeleteRequest NOT LIKE \'%' . DeleteRequestType::RECEIVER_PURGED . '%\'
-                        )
-                    GROUP BY `m`.`subject_id`
-                    )
-                UNION
-                    SELECT *
-                    FROM `messages` m
-                    WHERE ' . $unreadCondition . '
-                    AND `m`.`subject_id` IS NULL
-                    AND (
-                            m.DeleteRequest NOT LIKE \'%' . DeleteRequestType::RECEIVER_DELETED . '%\'
-                            AND m.DeleteRequest NOT LIKE \'%' . DeleteRequestType::RECEIVER_PURGED . '%\'
-                        )
-             ) m
-         ';
+        $sql = $this->getSql($unreadOnly);
 
         $sql .= ' ORDER BY `m`.`created` DESC LIMIT ' . $limit . ' OFFSET 0';
 
@@ -606,5 +569,47 @@ class MessageRepository extends EntityRepository
             ->orderBy('m.' . $sort, $sortDirection);
 
         return $qb;
+    }
+
+    /**
+     * @param bool $unreadOnly
+     * @return string
+     */
+    private function getSql(bool $unreadOnly): string
+    {
+        if ($unreadOnly) {
+            $unreadCondition = '(m.IdReceiver = :memberId) '
+                . 'AND (`m`.WhenFirstRead IS NULL OR `m`.WhenFirstRead = \'0000-00-00 00:00:00\')';
+        } else {
+            $unreadCondition = '(m.IdReceiver = :memberId)';
+        }
+
+        $sql = '
+            SELECT * FROM (
+                    SELECT *
+                    FROM `messages` m
+                    WHERE ' . $unreadCondition . '
+                    AND `m`.`id` IN (
+                        SELECT max(`m`.`id`)
+                        FROM `messages` m
+                        WHERE (
+                            m.DeleteRequest NOT LIKE \'%' . DeleteRequestType::RECEIVER_DELETED . '%\'
+                            AND m.DeleteRequest NOT LIKE \'%' . DeleteRequestType::RECEIVER_PURGED . '%\'
+                        )
+                    GROUP BY `m`.`subject_id`
+                    )
+                UNION
+                    SELECT *
+                    FROM `messages` m
+                    WHERE ' . $unreadCondition . '
+                    AND `m`.`subject_id` IS NULL
+                    AND (
+                            m.DeleteRequest NOT LIKE \'%' . DeleteRequestType::RECEIVER_DELETED . '%\'
+                            AND m.DeleteRequest NOT LIKE \'%' . DeleteRequestType::RECEIVER_PURGED . '%\'
+                        )
+             ) m
+         ';
+
+        return $sql;
     }
 }

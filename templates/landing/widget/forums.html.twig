@@ -19,9 +19,11 @@
                         <a href="{{ url('group_start', {'group_id': thread.group.id}) }}">{{ thread.group.name }}</a>
                     {% else %}
                         <a href="{{ url('bwforum') }}">{{ 'dashboard.bwforum' | trans }}</a>
-                    {% endif %} {{ 'thread.lastpostby' | trans }} {{ macros.profilelink(thread.lastpost.author.Username) }} <span title="{{ thread.lastpost.updated.toDateTimeString }}">{{ thread.lastpost.updated.diffForHumans }}</span>
+                    {% endif %}
                 </p>
-
+                <p class="u-ellipsis u-font-300 u-text-14">
+                    {{ 'thread.lastpostby' | trans }} {{ macros.profilelink(thread.lastpost.author.Username) }} <span title="{{ thread.lastpost.updated.toDateTimeString }}">{{ thread.lastpost.updated.diffForHumans }}</span>
+                </p>
             </div>
             {% set page = 1 %}
             {% if ascending %}

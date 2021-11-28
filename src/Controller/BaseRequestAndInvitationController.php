@@ -5,26 +5,23 @@ namespace App\Controller;
 use App\Entity\HostingRequest;
 use App\Entity\Member;
 use App\Entity\Message;
+use App\Model\AbstractRequestModel;
 use App\Model\ConversationModel;
 use App\Utilities\TranslatedFlashTrait;
 use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Form;
 
-class BaseHostingRequestAndInvitationController extends AbstractController
+class BaseRequestAndInvitationController extends AbstractController
 {
     use TranslatedFlashTrait;
 
+    protected AbstractRequestModel $model;
     protected ConversationModel $conversationModel;
 
-    public function __construct(ConversationModel $conversationModel)
+    public function __construct(AbstractRequestModel $model)
     {
-        $this->conversationModel = $conversationModel;
-    }
-
-    protected function checkRequestExpired(Message $hostingRequest): bool
-    {
-        return $this->conversationModel->isRequestExpired($hostingRequest->getRequest());
+        $this->model = $model;
     }
 
     protected function addExpiredFlash(Member $receiver)
@@ -37,7 +34,7 @@ class BaseHostingRequestAndInvitationController extends AbstractController
         ]);
     }
 
-    protected function getRequestClone(Message $hostingRequest)
+    protected function getRequestClone(Message $hostingRequest): Message
     {
         // copy only the bare minimum needed
         $newRequest = new Message();
@@ -49,14 +46,14 @@ class BaseHostingRequestAndInvitationController extends AbstractController
         return $newRequest;
     }
 
-    protected function persistRequest(Form $requestForm, $currentRequest, Member $sender, Member $receiver)
+    protected function persistRequest(Form $requestForm, $currentRequest, Member $sender, Member $receiver): Message
     {
         $data = $requestForm->getData();
         $em = $this->getDoctrine()->getManager();
         $clickedButton = $requestForm->getClickedButton()->getName();
 
         // handle changes in request and subject
-        $newRequest = $this->conversationModel->getFinalRequest($sender, $receiver, $currentRequest, $data, $clickedButton);
+        $newRequest = $this->model->getFinalRequest($sender, $receiver, $currentRequest, $data, $clickedButton);
         $em->persist($newRequest);
         $em->flush();
 

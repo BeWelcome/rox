@@ -38,15 +38,9 @@ class Subject
     private $subject;
 
     /**
-     * @var Message[]
      * @ORM\OneToMany(targetEntity="Message", mappedBy="subject")
      */
     private $messages;
-
-    public function __construct()
-    {
-        $this->messages = new ArrayCollection();
-    }
 
     /**
      * Get id.

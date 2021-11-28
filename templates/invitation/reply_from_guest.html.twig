@@ -22,10 +22,13 @@
     {% set current = thread | first %}
     {% set receiver =  original.receiver %}
 
-    {{ macros.messageheader(host, guest, current.Subject.Subject) }}
+    {{ macros.messageheader_no_buttons(thread) }}
+
+    {% include 'invitation/trip.summary.html.twig' %}
+
     {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'autocomplete': 'off'}}) }}
     <div class="row mb-1">
-        <div class="col-12">
+        <div class="col-12 mb-2">
             {{ form_row(form.message) }}
                 <div class="o-form-group">
                     {{ form_label(form.request.duration) }}
@@ -38,19 +41,17 @@
                         {{ form_widget(form.request.duration, {'attr': { 'class': 'js-litepicker'}}) }}
                     </div>
                 </div>
-
-                <div class="o-form-group col-12">
-                    {{ form_widget(form.request.flexible) }}
-                    {{ form_label(form.request.flexible) }}
-                </div>
-
+        </div>
+        <div class="col-12 u-justiy-end">
             {{ form_row(form.request.arrival) }}
             {{ form_row(form.request.departure) }}
             {{ form_row(form.request.numberOfTravellers) }}
-            {{ form_widget(form.accept, {'attr': {'class': 'btn-primary ml-1 pull-right'}}) }}
-            {{ form_widget(form.tentatively, {'attr': {'class': 'btn btn-primary ml-1 pull-right'}}) }}
-            {{ form_widget(form.decline, {'attr': {'class': 'btn btn-primary ml-1 pull-right'}}) }}
-            {{ form_widget(form.update, {'attr': {'class': 'btn btn-primary ml-1 pull-right'}}) }}
+            {{ form_row(form.request.inviteForLeg) }}
+            {{ form_widget(form.accept, {'attr': {'class': 'btn-primary ml-1 pull-right mb-2'}}) }}
+            {{ form_widget(form.tentatively, {'attr': {'class': 'btn btn-primary ml-1 pull-right mb-2'}}) }}
+            {{ form_widget(form.decline, {'attr': {'class': 'btn btn-primary ml-1 pull-right mb-2'}}) }}
+            {{ form_widget(form.update, {'attr': {'class': 'btn btn-primary ml-1 pull-right mb-2'}}) }}
+            {% do form.request.setRendered %}
         </div>
         <div class="clearfix"></div>
     </div>

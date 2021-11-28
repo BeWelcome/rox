@@ -7,8 +7,8 @@ use App\Form\SpamActivitiesIndexFormType;
 use App\Form\SpamCommunityNewsCommentsIndexFormType;
 use App\Form\SpamMessagesIndexFormType;
 use App\Model\ActivityModel;
+use App\Model\Admin\CheckerModel;
 use App\Model\CommunityNewsModel;
-use App\Model\MessageModel;
 use InvalidArgumentException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
@@ -23,11 +23,11 @@ class CheckerController extends AbstractController
     private const MESSAGES_REPORTED = 1;
     private const MESSAGES_PROCESSED = 2;
 
-    private MessageModel $messageModel;
+    private CheckerModel $checkerModel;
 
-    public function __construct(MessageModel $messageModel)
+    public function __construct(CheckerModel $checkerModel)
     {
-        $this->messageModel = $messageModel;
+        $this->checkerModel = $checkerModel;
     }
 
     /**
@@ -195,12 +195,12 @@ class CheckerController extends AbstractController
         $messages = null;
         switch ($type) {
             case self::MESSAGES_REPORTED:
-                $messages = $this->messageModel->getReportedMessages($page, $limit);
                 $active = 'messages';
+                $messages = $this->checkerModel->getReportedMessages($page, $limit);
                 break;
             case self::MESSAGES_PROCESSED:
                 $active = 'processed_messages';
-                $messages = $this->messageModel->getProcessedReportedMessages($page, $limit);
+                $messages = $this->checkerModel->getProcessedReportedMessages($page, $limit);
                 break;
             default:
                 throw new InvalidArgumentException();
@@ -224,8 +224,8 @@ class CheckerController extends AbstractController
             if (!empty($ids)) {
                 $form->addError(new FormError('Spam and no spam are mutually exclusive'));
             } else {
-                $this->messageModel->markAsSpamByChecker($spamMessageIds);
-                $this->messageModel->unmarkAsSpamByChecker($noSpamMessageIds);
+                $this->checkerModel->markAsSpamByChecker($spamMessageIds);
+                $this->checkerModel->unmarkAsSpamByChecker($noSpamMessageIds);
                 $this->addFlash('notice', 'Set spam status');
 
                 return $this->redirectToRoute('admin_spam_messages');

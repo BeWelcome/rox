@@ -10,39 +10,35 @@
     {{ encore_entry_link_tags('requests')  }}
 {% endblock stylesheets %}
 
-{% block subnav %}
-    {% for filter, menuitem in submenu.items %}
-        <a class="list-group-item nav-link {% if submenu.active == filter %}active{% endif %}"
-           href="{{ path( submenu.route, { filter: filter } ) }}">{{ filter | trans }}</a>
-    {% endfor %}
-{% endblock %}
-
 {% block content %}
     {% set original = thread | last %}
     {% set current = thread | first %}
     {% set receiver =  original.receiver %}
 
-    {{ macros.messageheader(host, guest, current.Subject.Subject) }}
+    {{ macros.messageheader_no_buttons(thread) }}
 
     {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'autocomplete': 'off'}}) }}
     <div class="row mb-2">
         <div class="col-12 col-sm-6 col-md-4 order-md-first">
             <div class="o-form-group">
                 {{ form_label(form.request.duration) }}
-                <div class="input-group date" id="arrival" data-target-input="nearest">
-                    <div class="input-group-prepend" data-target="#arrival" data-toggle="datetimepicker">
+                <div class="input-group date">
+                    <div class="input-group-prepend">
                         <span class="input-group-text">
                             <i class="fa fa-calendar"></i>
                         </span>
                     </div>
-                    {{ form_widget(form.request.duration, {'attr': { 'class': 'light-picker'}}) }}
+                    {{ form_widget(form.request.duration, {'attr': { 'class': 'js-litepicker'}}) }}
                 </div>
                 {{ form_row(form.request.arrival) }}
                 {{ form_row(form.request.departure) }}
             </div>
+            {% if form.request.flexible is defined %}
+                {{ form_row(form.request.flexible) }}
+            {% endif %}
 
-            {{ form_row(form.request.flexible) }}
             {{ form_row(form.request.numberOfTravellers) }}
+            {% do form.request.setRendered %}
         </div>
         <div class="col-12 col-md-8">
             {{ form_row(form.message) }}

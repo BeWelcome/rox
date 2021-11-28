@@ -20,33 +20,11 @@
 {% block content %}
     {% set host = app.user %}
     {% set guest = leg.trip.creator %}
-    {{ macros.messageheader(guest, host, subject) }}
-    <div class="row mb-1">
-        <div class="col-12 col-md-4 pr-1">
-            <p><strong>{{ 'trip.summary'|trans }}</strong></p>
-            <p>{{ leg.trip.summary }}</p>
-            <p><strong>{{ 'trip.description'|trans }}</strong></p>
-            <p>{{ leg.trip.description|purify }}</p>
-        </div>
-        <div class="col-12 col-md-6">
-            <p><strong>{{ 'profile.summary'|trans }}</strong></p>
-            {% set fields = guest.memberFields %}
-            <p>
-                {% if fields[app.request.locale] is defined %}
-                    {{ fields[app.request.locale]['ProfileSummary']|purify }}
-                {% else %}
-                    {% if fields['en'] is defined %}
-                        {{ fields['en']['ProfileSummary']|purify }}
-                    {% else %}
-                        {{ 'profile.summary.none'|trans }}
-                    {% endif %}
-                {% endif %}
-            </p>
-            <p><strong>{{ 'request.number_of_travellers'|trans }}</strong></p>
-            <p>{{ leg.trip.countOfTravellers }}</p>
-        </div>
-        <div class="col-12"><hr></div>
-    </div>
+
+    {{ macros.new_conversation_header(host, guest, 'invite.username') }}
+
+    {% include 'invitation/trip.summary.html.twig' %}
+
     {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'autocomplete': 'off'}}) }}
     {{ form_errors(form) }}
 
@@ -66,7 +44,6 @@
                 </div>
             </div>
 
-            {{ form_row(form.request.flexible) }}
             {{ form_row(form.request.arrival) }}
             {{ form_row(form.request.departure) }}
             {{ form_row(form.request.numberOfTravellers) }}

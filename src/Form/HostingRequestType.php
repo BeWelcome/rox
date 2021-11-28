@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\HostingRequest;
 use App\Form\DataTransformer\DateTimeTransformer;
+use App\Form\DataTransformer\FlexibleTransformer;
 use App\Form\DataTransformer\LegTransformer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -23,8 +24,10 @@ class HostingRequestType extends AbstractType
     private DateTimeTransformer $dateTimeTransformer;
     private LegTransformer $legTransformer;
 
-    public function __construct(DateTimeTransformer $dateTimeTransformer, LegTransformer $legTransformer)
-    {
+    public function __construct(
+        DateTimeTransformer $dateTimeTransformer,
+        LegTransformer $legTransformer
+    ) {
         $this->dateTimeTransformer = $dateTimeTransformer;
         $this->legTransformer = $legTransformer;
     }
@@ -38,6 +41,10 @@ class HostingRequestType extends AbstractType
             ->add('arrival', HiddenType::class)
             ->add('departure', HiddenType::class)
             ->add('inviteForLeg', HiddenType::class)
+            ->add('flexible', CheckboxType::class, [
+                'label' => 'label.flexible',
+                'required' => false,
+            ])
         ;
         $builder
             ->get('arrival')
@@ -50,10 +57,6 @@ class HostingRequestType extends AbstractType
             ->addModelTransformer($this->legTransformer);
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
-            $flexibleOptions = [
-                'label' => 'label.flexible',
-                'required' => false,
-            ];
             $numberOfTravellersOptions = [
                 'label' => 'request.number_of_travellers',
                 'attr' => [
@@ -84,17 +87,18 @@ class HostingRequestType extends AbstractType
             $options = $form->getConfig()->getOptions();
             $data = $event->getData();
             if (null !== $data) {
-                if ($options['reply_host'] && !$data->getFlexible()) {
-                    $durationOptions['disabled'] = true;
-                    $flexibleOptions['disabled'] = true;
-                    $numberOfTravellersOptions['disabled'] = true;
+                if ($options['reply_host']) {
+                    if (!$data->getFlexible()) {
+                        $durationOptions['disabled'] = true;
+                    }
+                    $form->remove('flexible');
                 }
             }
             $form->add('duration', TextType::class, $durationOptions);
 
-            $form->add('flexible', CheckboxType::class, $flexibleOptions);
             if (true === $options['invitation']) {
                 $form->add('numberOfTravellers', HiddenType::class);
+                $form->remove('flexible');
             } else {
                 $form->add('numberOfTravellers', IntegerType::class, $numberOfTravellersOptions);
             }

@@ -1,21 +1,21 @@
 {% extends 'emails/request.template.html.twig' %}
 
 {% block message %}
-    <p>{{ 'email.invitation.to.stay'|trans({'username': sender.Username} ) }}</p>
+    <p>{{ 'email.invitation.to.stay'|trans({'username': sender.Username, 'gender': sender.Gender} ) }}</p>
     <callout class="secondary">
         {{ message.message | raw }}
     </callout>
     <center>
-        <button class="expand" href="{{ url('members_profile', { 'username': sender.Username}) }}">{% trans with {'%username%': sender.Username} %}visit.profile{% endtrans %}</button>
+        <button class="expand" href="{{ url('members_profile', { 'username': sender.Username}) }}">{% trans with {'%username%': sender.Username, 'gender': sender.Gender} %}visit.profile{% endtrans %}</button>
 
         <p>{{ 'or' | trans }}</p>
 
-        <button class="expand" href="{{ url('conversation_reply', { 'id': message.id }) }}">{{ 'reply' | trans }}</button>
+        <button class="expand" href="{{ url('conversation_reply', { id: message.id }) }}">{{ 'reply' | trans }}</button>
     </center>
 {% endblock message %}
 
 {% block request%}
-    {{ 'email.invitation.reply.guest.open'|trans({'%username%': sender.Username}) }}<br>
+    {{ 'email.invitation.reply.guest.open'|trans({'%username%': sender.Username, 'gender': sender.Gender}) }}<br>
     <br>
     {{ 'request.arrival' | trans }}:<br>
     {{ request.arrival|format_date('full', locale=receiverLocale) }}<br>

@@ -122,7 +122,7 @@
         // Alerts every time the hash changes!
         let hash = location.hash;
         if ($(hash).length) {
-            $('.[id^=collapse-]').removeClass('show').addClass('collapse');
+            $('[id^=collapse-]').removeClass('show').addClass('collapse');
             $(hash).addClass('show');
             $(document).scrollTop($(hash).offset().top);
         }

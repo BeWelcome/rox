@@ -7,10 +7,10 @@ use Pagerfanta\Adapter\AdapterInterface;
 
 class SpamAdapter extends AbstractConversationsAdapter implements AdapterInterface
 {
-    protected function getSqlQueryTemplate(): string
+    protected function getConversationsQuery(): string
     {
         $sql = '
-            SELECT %select%
+            SELECT `m`.*
             FROM `messages` m
             WHERE '
             . $this->getInitiatorCondition() . '

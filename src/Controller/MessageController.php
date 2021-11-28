@@ -6,12 +6,17 @@ use App\Entity\Member;
 use App\Entity\Message;
 use App\Entity\Subject;
 use App\Form\MessageToMemberType;
+use App\Model\ConversationModel;
+use App\Service\Mailer;
+use App\Utilities\ConversationThread;
 use App\Utilities\ManagerTrait;
+use App\Utilities\TranslatedFlashTrait;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Exception;
 use InvalidArgumentException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -27,90 +32,22 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
  * @SuppressWarnings(PHPMD.CyclomaticComplexity)
  * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  */
-class MessageController extends BaseMessageController
+class MessageController extends AbstractController
 {
-    use ManagerTrait;
+    use TranslatedFlashTrait;
 
-    /**
-     * Deals with replies to messages and hosting requests.
-     *
-     * @Route("/message/{id}/reply", name="message_reply",
-     *     requirements={"id": "\d+"})
-     *
-     * @throws AccessDeniedException
-     * @throws Exception
-     */
-    public function replyToMessage(Request $request, Message $message): Response
-    {
-        if (!$this->isMessageOfMember($message)) {
-            throw $this->createAccessDeniedException('Not your message/hosting request');
-        }
+    private Mailer $mailer;
+    private ConversationModel $conversationModel;
+    private ConversationThread $conversationThread;
 
-        if ($this->needsRedirect($message, self::MESSAGE)) {
-            return $this->redirectReplyTo($message);
-        }
-
-        $thread = $this->messageModel->getThreadForMessage($message);
-        $current = $thread[0];
-
-        if ($message->getId() !== $current->getId()) {
-            return $this->redirectToRoute('message_reply', ['id' => $current->getId()]);
-        }
-
-        /** @var Member $member */
-        $member = $this->getUser();
-
-        return $this->messageReply($request, $member, $thread);
-    }
-
-    /**
-     * Deals with deletion of messages and hosting requests.
-     *
-     * @Route("/message/{id}/delete/{redirect}", name="message_delete",
-     *     requirements={"id": "\d+"})
-     *
-     * @ParamConverter("redirect", class="App\Entity\Message", options={"id": "redirect"})
-
-     *
-     * @throws ORMException
-     * @throws OptimisticLockException
-     */
-    public function deleteMessageOrRequest(Message $message, Message $redirect): Response
-    {
-        if (!$this->isMessageOfMember($message)) {
-            throw $this->createAccessDeniedException('Not your message/hosting request');
-        }
-
-        /** @var Member $member */
-        $member = $this->getUser();
-
-        $this->messageModel->markDeleted($member, [$message->getId()]);
-        $this->addTranslatedFlash('notice', 'flash.message.deleted');
-
-        $redirectRoute = 'message_show';
-        if ($message->isDeletedByMember($member)) {
-            $redirectRoute .= '_with_deleted';
-        }
-
-        return $this->redirectToRoute($redirectRoute, ['id' => $redirect->getId()]);
-    }
-
-    public function show(Message $message): Response
-    {
-        if ($this->needsRedirect($message, self::MESSAGE)) {
-            return $this->redirectShow($message, false);
-        }
-
-        return $this->showThread($message, 'message/view.html.twig', 'message_show', false);
-    }
-
-    public function showDeleted(Message $message): Response
-    {
-        if ($this->needsRedirect($message, self::MESSAGE)) {
-            return $this->redirectShow($message, true);
-        }
-
-        return $this->showThread($message, 'message/view.html.twig', 'message_show', true);
+    public function __construct(
+        Mailer $mailer,
+        ConversationModel $conversationModel,
+        ConversationThread $conversationThread
+    ) {
+        $this->mailer = $mailer;
+        $this->conversationModel = $conversationModel;
+        $this->conversationThread = $conversationThread;
     }
 
     /**
@@ -118,7 +55,7 @@ class MessageController extends BaseMessageController
      *
      * @throws Exception
      */
-    public function newMessageAction(Request $request, Member $receiver): Response
+    public function newMessage(Request $request, Member $receiver): Response
     {
         /** @var Member $sender */
         $sender = $this->getUser();
@@ -130,7 +67,7 @@ class MessageController extends BaseMessageController
         }
 
         if (
-            $this->messageModel->hasMessageLimitExceeded(
+            $this->conversationModel->hasMessageLimitExceeded(
                 $sender,
                 $this->getParameter('new_members_messages_per_hour'),
                 $this->getParameter('new_members_messages_per_day')
@@ -149,7 +86,7 @@ class MessageController extends BaseMessageController
             $subject = $messageForm->get('subject')->get('subject')->getData();
             $body = $messageForm->get('message')->getData();
 
-            $this->messageModel->addMessage($sender, $receiver, null, $subject, $body);
+            $this->addMessageAndSendNotification($sender, $receiver, null, $subject, $body);
             $this->addTranslatedFlash('success', 'flash.message.sent');
 
             return $this->redirectToRoute('members_profile', ['username' => $receiver->getUsername()]);
@@ -161,111 +98,86 @@ class MessageController extends BaseMessageController
         ]);
     }
 
-    /**
-     * @Route("/message/{id}/spam", name="message_mark_spam")
-     */
-    public function markAsSpamAction(Message $message): Response
+    public function reply(Request $request, Message $message): Response
     {
-        $this->messageModel->markAsSpam([$message->getId()]);
+        /** @var Member $sender */
+        $sender = $this->getUser();
 
-        $this->addTranslatedFlash('notice', 'flash.marked.spam');
-
-        return $this->redirectToRoute('message_show', ['id' => $message->getId()]);
-    }
-
-    /**
-     * @Route("/message/{id}/nospam", name="message_mark_nospam")
-     */
-    public function unmarkAsSpamAction(Message $message): Response
-    {
-        $this->messageModel->unmarkAsSpam([$message->getId()]);
-
-        $this->addTranslatedFlash('notice', 'flash.marked.nospam');
-
-        return $this->redirectToRoute('message_show', ['id' => $message->getId()]);
-    }
-
-    /**
-     * @Route("/all/messages/with/{username}", name="all_messages_with")
-     *
-     * @throws InvalidArgumentException
-     */
-    public function allMessagesWithMember(Request $request, Member $other): Response
-    {
-        list($page, $limit, $sort, $direction) = $this->getOptionsFromRequest($request);
-
-        if (!\in_array($direction, ['asc', 'desc'], true)) {
-            throw new InvalidArgumentException();
+        $thread = $this->conversationThread->getThread($message);
+        if ($message !== $thread[0]) {
+            $message = $thread[\count($thread) - 1];
         }
 
-        /** @var Member $member */
-        $member = $this->getUser();
-        $messages = $this->messageModel->getMessagesBetween($member, $other, $sort, $direction, $page, $limit);
-
-        return $this->render('conversations/between.html.twig', [
-            'items' => $messages,
-            'otherMember' => $other,
-            'submenu' => [
-                'active' => 'between',
-                'items' => [
-                    'conversations' => [
-                        'key' => 'messages.back.profile',
-                        'url' => $this->generateUrl('members_profile', [
-                            'username' => $other->getUsername()
-                        ]),
-                    ],
-                ],
-            ],
-        ]);
-    }
-
-    /**
-     * Takes care of the reply to a message.
-     *
-     * @param Message[] $thread
-     *
-     * @throws Exception
-     *
-     * @return RedirectResponse|Response
-     */
-    private function messageReply(Request $request, Member $sender, array $thread)
-    {
-        $message = $thread[0];
         $receiver = ($message->getReceiver() === $sender) ? $message->getSender() : $message->getReceiver();
 
         $replyMessage = new Message();
-        $subject = $message->getSubject();
-        if (null !== $subject) {
-            $subjectText = $subject->getSubject();
-            if ('Re:' !== substr($subjectText, 0, 3)) {
-                $subjectText = 'Re: ' . $subjectText;
-            }
-            $replyMessage->setSubject(new Subject());
-            $replyMessage->getSubject()->setSubject($subjectText);
-        }
+        $replyMessage->setSubject($message->getSubject());
 
-        $messageForm = $this->createForm(MessageToMemberType::class, $replyMessage);
-        $messageForm->handleRequest($request);
+        $replyForm = $this->createForm(MessageToMemberType::class, $replyMessage);
+        $replyForm->handleRequest($request);
 
-        if ($messageForm->isSubmitted() && $messageForm->isValid()) {
-            $replySubject = $messageForm->get('subject')->get('subject')->getData();
+        if ($replyForm->isSubmitted() && $replyForm->isValid()) {
+            /** @var Message $data */
+            $data = $replyForm->getData();
+            $replySubject = $data->getSubject()->getSubject();
             if ('Re:' !== substr($replySubject, 0, 3)) {
                 $replySubject = 'Re: ' . $replySubject;
             }
 
-            $messageText = $messageForm->get('message')->getData();
-            $message = $this->messageModel->addMessage($sender, $receiver, $message, $replySubject, $messageText);
+            $messageText = $data->getMessage();
+            $message = $this->addMessageAndSendNotification($sender, $receiver, $message, $replySubject, $messageText);
             $this->addTranslatedFlash('success', 'flash.reply.sent');
 
-            return $this->redirectToRoute('conversation_show', ['id' => $message->getId()]);
+            return $this->redirectToRoute('conversation_view', ['id' => $message->getId()]);
         }
 
         return $this->render('message/reply.html.twig', [
-            'form' => $messageForm->createView(),
-            'subject' => $subjectText,
+            'form' => $replyForm->createView(),
             'receiver' => $receiver,
             'current' => $message,
             'thread' => $thread,
         ]);
+    }
+
+    /**
+     * Creates a new message and stores it into the database afterwards sends a notification to the receiver
+     * Only used for messages therefore request is set to null!
+     */
+    private function addMessageAndSendNotification(
+        Member $sender,
+        Member $receiver,
+        ?Message $parent,
+        string $subjectText,
+        string $body
+    ): Message {
+        $em = $this->getDoctrine()->getManager();
+        $message = new Message();
+        if (null === $parent) {
+            $subject = new Subject();
+            $subject->setSubject($subjectText);
+            $em->persist($subject);
+            $em->flush();
+        } else {
+            $subject = $parent->getSubject();
+        }
+
+        $message->setSubject($subject);
+        $message->setSender($sender);
+        $message->setRequest(null);
+        $message->setParent($parent);
+        $message->setSender($sender);
+        $message->setReceiver($receiver);
+        $message->setMessage($body);
+        $message->setStatus('Sent');
+        $em->persist($message);
+        $em->flush();
+
+        $this->mailer->sendMessageNotificationEmail($sender, $receiver, 'message', [
+            'message' => $message,
+            'subject' => $subjectText,
+            'body' => $body,
+        ]);
+
+        return $message;
     }
 }

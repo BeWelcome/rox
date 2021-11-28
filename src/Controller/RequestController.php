@@ -8,6 +8,8 @@ use App\Entity\Message;
 use App\Form\HostingRequestGuest;
 use App\Form\HostingRequestHost;
 use App\Model\ConversationModel;
+use App\Model\HostingRequestModel;
+use App\Service\Mailer;
 use App\Utilities\ManagerTrait;
 use App\Utilities\TranslatorTrait;
 use Exception;
@@ -27,14 +29,19 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
  * @SuppressWarnings(PHPMD.CyclomaticComplexity)
  * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  */
-class HostingRequestController extends BaseHostingRequestAndInvitationController
+class RequestController extends BaseRequestAndInvitationController
 {
     use ManagerTrait;
     use TranslatorTrait;
 
-    public function __construct(ConversationModel $conversationModel)
+    private Mailer $mailer;
+
+    public function __construct(ConversationModel $conversationModel, HostingRequestModel $requestModel, Mailer $mailer)
     {
-        parent::__construct($conversationModel);
+        parent::__construct($requestModel);
+
+        $this->mailer = $mailer;
+        $this->conversationModel = $conversationModel;
     }
 
     /**
@@ -43,31 +50,30 @@ class HostingRequestController extends BaseHostingRequestAndInvitationController
     public function reply(Request $request, Message $message): Response
     {
         // determine if guest or host reply to a request
-        $member = $this->getUser();
+        $guest = $message->getInitiator();
+        $host = $message->getReceiver() === $guest ? $message->getSender() : $message->getReceiver();
 
-        if ($member !== $message->getInitiator()) {
-            return $this->guestReply($request, $message);
+        $member = $this->getUser();
+        if ($member === $guest) {
+            return $this->guestReply($request, $message, $guest, $host);
         }
 
-        return $this->hostReply($request, $message);
+        return $this->hostReply($request, $message, $guest, $host);
     }
 
-    public function guestReply(Request $request, Message $hostingRequest): Response
+    public function guestReply(Request $request, Message $hostingRequest, Member $guest, Member $host): Response
     {
-        /** @var Message $last */
-        /** @var Member $guest */
-        /** @var Member $host */
-        list($thread, , $last, $guest, $host) =
-            $this->conversationModel->getThreadInformationForMessage($hostingRequest);
 
-        if ($this->checkRequestExpired($last)) {
+        if ($this->model->hasExpired($hostingRequest)) {
             $this->addExpiredFlash($host);
 
-            return $this->redirectToRoute('conversation_view', ['id' => $last->getId()]);
+            return $this->redirectToRoute('conversation_view', ['id' => $hostingRequest->getId()]);
         }
 
+        list($thread) = $this->conversationModel->getThreadInformationForMessage($hostingRequest);
+
         // keep all information from current hosting request except the message text
-        $hostingRequest = $this->getRequestClone($last);
+        $hostingRequest = $this->getRequestClone($hostingRequest);
 
         // A reply consists of a new message and maybe a change of the status of the hosting request
         // Additionally the user might change the dates of the request or cancel the request altogether
@@ -76,7 +82,7 @@ class HostingRequestController extends BaseHostingRequestAndInvitationController
         $requestForm->handleRequest($request);
 
         if ($requestForm->isSubmitted() && $requestForm->isValid()) {
-            $realParent = $this->getParent($parent);
+            $realParent = $this->conversationModel->getLastMessageInConversation($hostingRequest);
 
             $newRequest = $this->persistRequest($requestForm, $realParent, $guest, $host);
 
@@ -102,29 +108,25 @@ class HostingRequestController extends BaseHostingRequestAndInvitationController
         ]);
     }
 
-    public function hostReply(Request $request, Message $hostingRequest): Response
+    public function hostReply(Request $request, Message $hostingRequest, Member $guest, Member $host): Response
     {
-        /** @var Message $last */
-        /** @var Member $guest */
-        /** @var Member $host */
-        list($thread, , $last, $guest, $host) =
-            $this->conversationModel->getThreadInformationForMessage($hostingRequest);
-
-        if ($this->checkRequestExpired($last)) {
+        if ($this->model->hasExpired($hostingRequest)) {
             $this->addExpiredFlash($guest);
 
-            return $this->redirectToRoute('conversation_view', ['id' => $last->getId()]);
+            return $this->redirectToRoute('conversation_view', ['id' => $hostingRequest->getId()]);
         }
 
+        list($thread) = $this->conversationModel->getThreadInformationForMessage($hostingRequest);
+
         // keep all information from current hosting request except the message text
-        $hostingRequest = $this->getRequestClone($last);
+        $hostingRequest = $this->getRequestClone($hostingRequest);
 
         /** @var Form $requestForm */
         $requestForm = $this->createForm(HostingRequestHost::class, $hostingRequest);
         $requestForm->handleRequest($request);
 
         if ($requestForm->isSubmitted() && $requestForm->isValid()) {
-            $realParent = $this->getParent($parent);
+            $realParent = $this->conversationModel->getLastMessageInConversation($hostingRequest);
 
             $newRequest = $this->persistRequest($requestForm, $realParent, $host, $guest);
 
@@ -170,7 +172,7 @@ class HostingRequestController extends BaseHostingRequestAndInvitationController
         }
 
         if (
-            $this->conversationModel->hasRequestLimitExceeded(
+            $this->model->hasRequestLimitExceeded(
                 $member,
                 $this->getParameter('new_members_requests_per_hour'),
                 $this->getParameter('new_members_requests_per_day')
@@ -223,7 +225,7 @@ class HostingRequestController extends BaseHostingRequestAndInvitationController
         string $subject,
         bool $requestChanged
     ): void {
-        $this->conversationModel->sendRequestNotification(
+        $this->sendRequestNotification(
             $guest,
             $host,
             $host,
@@ -238,7 +240,7 @@ class HostingRequestController extends BaseHostingRequestAndInvitationController
     {
         $subject = $request->getSubject()->getSubject();
 
-        $this->conversationModel->sendRequestNotification($host, $guest, $host, $request, $subject, 'request', false);
+        $this->sendRequestNotification($host, $guest, $host, $request, $subject, 'request', false);
     }
 
     private function sendHostReplyNotification(
@@ -248,7 +250,7 @@ class HostingRequestController extends BaseHostingRequestAndInvitationController
         string $subject,
         bool $requestChanged
     ): void {
-        $this->conversationModel->sendRequestNotification(
+        $this->sendRequestNotification(
             $host,
             $guest,
             $host,
@@ -257,5 +259,35 @@ class HostingRequestController extends BaseHostingRequestAndInvitationController
             'reply_from_host',
             $requestChanged
         );
+    }
+
+    /**
+     * The requestChanged parameter triggers a PHPMD warning which is out of place in this case.
+     *
+     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
+     *
+     * @param mixed $subject
+     * @param mixed $template
+     * @param mixed $requestChanged
+     */
+    public function sendRequestNotification(
+        Member $sender,
+        Member $receiver,
+        Member $host,
+        Message $request,
+        $subject,
+        $template,
+        $requestChanged
+    ) {
+        // Send mail notification
+        $this->mailer->sendMessageNotificationEmail($sender, $receiver, $template, [
+            'host' => $host,
+            'subject' => $subject,
+            'message' => $request,
+            'request' => $request->getRequest(),
+            'changed' => $requestChanged,
+        ]);
+
+        return true;
     }
 }

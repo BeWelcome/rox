@@ -36,7 +36,7 @@ final class GalleryItemsExtractor extends AbstractExtractor implements Extractor
         if (is_dir($galleryPath)) {
             // create gallery sub directory
             $galleryDir = $tempDir . 'gallery/';
-            @mkdir($galleryDir);
+            $filesystem->mkdir($galleryDir);
             $directoryHandle = opendir($galleryPath);
             if ($directoryHandle) {
                 while (false !== ($file = readdir($directoryHandle))) {

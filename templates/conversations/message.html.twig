@@ -9,9 +9,9 @@
 {% set isInitiator = (member == message.initiator) %}
 {% set unread = (message.firstRead is null) or (message.firstRead == '0000-00-00 00:00.00') %}
 {% if submenu.active == 'deleted' %}
-    {% set show_message_route = 'conversation_show_with_deleted' %}
+    {% set show_message_route = 'conversation_view_with_deleted' %}
 {% else %}
-    {% set show_message_route = 'conversation_show' %}
+    {% set show_message_route = 'conversation_view' %}
 {% endif %}
 <tr>
     {% if form is defined %}
@@ -20,11 +20,11 @@
     </td>
     {% endif %}
     <td class="align-middle small">
-        <div class="o-avatar o-avatar--m u-mb-16 md:u-mb-0 u-justify-self-center">
+        <div class="o-avatar u-mb-16 md:u-mb-0 u-justify-self-center">
             {{ macros.roundedavatarstack(otherMember.Username, 72) }}
         </div>
     </td>
-    <td class="align-middle w-100">
+    <td class="align-middle">
         <a href="{{ path(show_message_route, { id: message.id}) }}">
             <div>
                 {% if message.subject %}<p class="m-0">
@@ -61,8 +61,8 @@
     </td>
     <td class="text-right">
         <div class="btn-group-vertical">
-            <a href="{{ path(show_message_route, { id: message.id}) }}" class="btn btn-primary btn-sm">{{ 'view' | trans }}</a>
-            <a href="{{ path('conversation_reply', { id: message.id}) }}" class="btn btn-primary btn-sm">{{ 'reply' | trans }}</a>
+            <a href="{{ path(show_message_route, { id: message.id }) }}" class="btn btn-primary btn-sm">{{ 'view' | trans }}</a>
+            <a href="{{ path('conversation_reply', { id: message.id }) }}" class="btn btn-primary btn-sm">{{ 'reply' | trans }}</a>
         </div>
     </td>
 </tr>

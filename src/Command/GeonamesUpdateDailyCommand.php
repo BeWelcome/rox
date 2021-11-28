@@ -32,7 +32,7 @@ class GeonamesUpdateDailyCommand extends Command
     public function fetchFile($url)
     {
         $content = [];
-        $handle = @fopen($url, 'r');
+        $handle = fopen($url, 'r');
         if (!$handle) {
             return $content;
         }

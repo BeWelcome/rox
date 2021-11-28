@@ -17,7 +17,7 @@ $edit_mode = $TCom;
 // values from previous form submit
 if (!$mem_redirect = $this->layoutkit->formkit->getMemFromRedirect()) {
     // this is a fresh form
-    $ttRelation = ($TCom) ? explode(',',$TCom->relations) : array();
+    $ttRelation = ($TCom) ? explode(',',$TCom->Relations) : array();
     if ($this->commentGuidelinesRead) {
         $vars["CommentGuidelines"] = 'checked';
     }

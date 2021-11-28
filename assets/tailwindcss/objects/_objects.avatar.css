@@ -1,39 +1,24 @@
-/* ==========================================================================
-   #BOTON REDONDO
-   ========================================================================== */
-
-
-
 /**
- * Base classes
+ * Avatar classes
  */
 
 .o-avatar {
   display: grid;
-  grid-template-rows: 96px 1fr;
-  width: 96px;
+  grid-template-rows: 32px 1fr;
+  width: 32px;
   position: relative;
   flex-shrink: 0;
 }
 
-
-
-
-
 .o-avatar__img-wrapper {
   display: inline-block;
-  width: 96px;
-  height: 96px;
+  width: 32px;
+  height: 32px;
   overflow: hidden;
   border-radius: 100%;
-  border: 4px solid theme('colors.white');
+  border: 1px solid theme('colors.white');
   justify-self: center;
 }
-
-
-
-
-
 
 .o-avatar__img {
   width: 100%;
@@ -41,21 +26,115 @@
   object-fit: cover;
 }
 
-
-
-
-
 .o-avatar__name {
   text-align: center;
-  margin-top: 4px;
+  margin-top: 1px;
   font-family: Signika;
-  font-size: 14px;
+  font-size: 10px;
   word-break: break-all;
 }
 
+@screen sm {
+  .o-avatar {
+    display: grid;
+    grid-template-rows: 48px 1fr;
+    width: 48px;
+    position: relative;
+    flex-shrink: 0;
+  }
 
+  .o-avatar__img-wrapper {
+    display: inline-block;
+    width: 48px;
+    height: 48px;
+    overflow: hidden;
+    border-radius: 100%;
+    border: 2px solid theme('colors.white');
+    justify-self: center;
+  }
 
+  .o-avatar__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
 
+  .o-avatar__name {
+    text-align: center;
+    margin-top: 1px;
+    font-family: Signika;
+    font-size: 12px;
+    word-break: break-all;
+  }
+}
+
+@screen md {
+  .o-avatar {
+    display: grid;
+    grid-template-rows: 72px 1fr;
+    width: 72px;
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  .o-avatar__img-wrapper {
+    display: inline-block;
+    width: 72px;
+    height: 72px;
+    overflow: hidden;
+    border-radius: 100%;
+    border: 3px solid theme('colors.white');
+    justify-self: center;
+  }
+
+  .o-avatar__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .o-avatar__name {
+    text-align: center;
+    margin-top: 3px;
+    font-family: Signika;
+    font-size: 13px;
+    word-break: break-all;
+  }
+}
+
+@screen lg {
+  .o-avatar {
+    display: grid;
+    grid-template-rows: 96px 1fr;
+    width: 96px;
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  .o-avatar__img-wrapper {
+    display: inline-block;
+    width: 96px;
+    height: 96px;
+    overflow: hidden;
+    border-radius: 100%;
+    border: 4px solid theme('colors.white');
+    justify-self: center;
+  }
+
+  .o-avatar__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .o-avatar__name {
+    text-align: center;
+    margin-top: 4px;
+    font-family: Signika;
+    font-size: 14px;
+    word-break: break-all;
+  }
+}
 
 .o-avatar__languages {
   font-family: Signika;
@@ -66,9 +145,6 @@
   text-align: center;
   margin-top: 4px;
 }
-
-
-
 
 
 .o-avatar__host-status {
@@ -85,9 +161,6 @@
 }
 
 
-
-
-
 .o-avatar__host-img {
   width: 20px;
   height: 20px;
@@ -95,32 +168,18 @@
 }
 
 
-
-
-
 /* Hovers
    ========================================================================== */
-
-.o-avatar:hover{
+.o-avatar:hover {
   opacity: 0.7;
 }
 
 
-
-
-
-
-
-
-
 /* Size variations
    ========================================================================== */
-
 /**
  * Large
  */
-
-
 .o-avatar--l {
   width: 120px;
   grid-template-rows: 120px 1fr;
@@ -132,13 +191,9 @@
 }
 
 
-
-
 /**
  * Medium
  */
-
-
 .o-avatar--m {
   width: 72px;
   grid-template-rows: 72px 1fr;
@@ -155,15 +210,9 @@
 }
 
 
-
-
-
-
 /**
  * Small
  */
-
-
 .o-avatar--s {
   width: 48px;
   grid-template-rows: 48px 1fr;
@@ -195,52 +244,26 @@
 }
 
 
-
-
-
-
-
-
-
-
 /* Color variations
    ========================================================================== */
-
 /**
  * White
  */
-
-
 .o-avatar--white .o-avatar__name,
 .o-avatar--white .o-avatar__languages {
   color: theme('colors.white');
 }
 
 
-
-
-
-
-
-
-
-
-
-
 /* Variations
    ========================================================================== */
-
 /**
  * No name
  */
-
 .o-avatar--noname {
   display: flex;
   flex-direction: column;
 }
-
-
-
 
 
 .o-avatar--noname .o-avatar__name,
@@ -249,27 +272,15 @@
 }
 
 
-
-
-
 .o-avatar--noname .o-avatar__img-wrapper {
   border: 5px solid theme('colors.white');
 }
-
-
-
-
-
-
-
 
 
 .o-avatar--shadow {
   box-shadow: 0 0 30px 0 #d7d7d7;
   border-radius: 100%;
 }
-
-
 
 
 .o-avatar--shadow-s {
@@ -280,11 +291,9 @@
 
 /* States
    ========================================================================== */
-
 /**
  * Disabled
  */
-
 .o-avatar--disabled {
   opacity: 0.4;
   cursor: pointer;

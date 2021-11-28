@@ -15,7 +15,7 @@ final class PollsExtractor extends AbstractExtractor implements ExtractorInterfa
     public function extract(Member $member, string $tempDir): string
     {
         $pollsDir = $tempDir . 'polls/';
-        @mkdir($pollsDir);
+        mkdir($pollsDir);
 
         $pollsRepository = $this->getRepository(Poll::class);
         $polls = $pollsRepository->findBy(['creator' => $member]);

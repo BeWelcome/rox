@@ -20,9 +20,10 @@
 {% block content %}
     {% set original = thread | last %}
     {% set current = thread | first %}
-    {% set sender =  original.sender %}
 
-    {{ macros.messageheader(guest, host, current.Subject.Subject) }}
+    {{ macros.messageheader_no_buttons(thread) }}
+
+    {% include 'invitation/trip.summary.html.twig' %}
 
     {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'autocomplete': 'off'}}) }}
 
@@ -38,22 +39,9 @@
                     </div>
                     {{ form_widget(form.request.duration, {'attr': { 'class': 'js-litepicker'}}) }}
                 </div>
-                <small id="duration-original" class="text-muted d-none">
-                    {{ 'original' | trans}}:
-                    {{ form.request.arrival.vars.value| format_date('full') }} -
-                    {{ form.request.departure.vars.value| format_date('full') }}
-                </small>
                 {{ form_row(form.request.arrival) }}
                 {{ form_row(form.request.departure) }}
-                {% if current.request.flexible %}
-                    <p class="text-muted">{{ 'request.host.suggest.dates'|trans }}</p>
-                {% else %}
-                    <p class="text-muted">{{ 'request.host.fixed.dates'|trans }}</p>
-                {% endif %}
-                {{ form_widget(form.request.flexible) }}
-                {{ form_label(form.request.flexible) }}
-                {{ form_label(form.request.numberOfTravellers) }}
-                {{ form_widget(form.request.numberOfTravellers) }}
+                {% do form.request.setRendered %}
         </div>
         </div>
         <div class="col-12 col-md-8">
@@ -63,12 +51,14 @@
             {% else %}
                 {% set label = 'reply' %}
             {% endif %}
-            {{ form_widget(form.cancel, {'attr': {'class': 'btn-primary mr-1 pull-right',
-                'onclick': 'return confirm(\'' ~ ('invitation.confirm.cancel'|trans) ~ '\');'}})
-            }}
+            <div class="u-flex u-justify-end mt-2">
+                {{ form_widget(form.cancel, {'attr': {'class': 'btn-primary mr-1 pull-right',
+                    'onclick': 'return confirm(\'' ~ ('invitation.confirm.cancel'|trans) ~ '\');'}})
+                }}
 
-            {{ form_widget(form.update, {'attr': {'class': 'btn-primary mr-1 pull-right'},
-                'label' : label}) }}
+                {{ form_widget(form.update, {'attr': {'class': 'btn-primary mr-1 pull-right'},
+                    'label' : label}) }}
+            </div>
             <div class="clearfix"></div>
         </div>
     </div>

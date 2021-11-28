@@ -24,7 +24,6 @@
         "anyx/login-gate-bundle": "^2.0",
         "api-platform/core": "2.*",
         "babdev/pagerfanta-bundle": "3.*",
-        "composer/package-versions-deprecated": "1.11.99.3",
         "doctrine/doctrine-bundle": "^2.0",
         "doctrine/doctrine-migrations-bundle": "^2.0",
         "doctrine/orm": "^2.8.4",
@@ -46,11 +45,7 @@
         "nelmio/cors-bundle": "^2.1",
         "nelmio/security-bundle": "^2.10",
         "nesbot/carbon": "^2.0",
-        "nikic/php-parser": "4.9.1",
-        "pagerfanta/doctrine-collections-adapter": "^v3.1.0",
-        "pagerfanta/doctrine-dbal-adapter": "^v3.1.0",
-        "pagerfanta/doctrine-orm-adapter": "^v3.1.0",
-        "pagerfanta/pagerfanta": "^v3.1.0",
+        "pagerfanta/pagerfanta": "^v3.4.0",
         "psr/container": "^1.0",
         "psr/log": "*",
         "ramsey/uuid-doctrine": "^1.6",
@@ -95,18 +90,18 @@
         "dama/doctrine-test-bundle": "^6.3",
         "deployer/dist": "^6.4",
         "doctrine/data-fixtures": "^1.3",
+        "fakerphp/faker": "^v1.14.1",
         "friends-of-behat/mink": "^1.8",
         "friends-of-behat/mink-browserkit-driver": "^1.4",
         "friends-of-behat/mink-extension": "^2.4",
         "friends-of-behat/symfony-extension": "^2.1",
         "friendsofphp/php-cs-fixer": "^2.16",
-        "fakerphp/faker": "^v1.14.1",
         "hautelook/alice-bundle": "^2.0",
-        "infection/infection": "^0.18.0",
+        "infection/infection": "0.25",
         "mockery/mockery": "^1.4.0",
         "nelmio/alice": "^3.0",
         "phploc/phploc": "^7.0",
-        "phpmd/phpmd": "^2.6 <2.9.0",
+        "phpmd/phpmd": "^2.6",
         "phpstan/extension-installer": "*",
         "phpstan/phpstan": "*",
         "phpstan/phpstan-doctrine": "*",
@@ -158,13 +153,13 @@
     "config": {
         "sort-packages": true,
         "platform": {
-            "php": "7.4"
+            "php": "7.4.14"
         }
     },
     "extra": {
         "symfony": {
             "allow-contrib": true,
-            "require": "5.3.*"
+            "require": "5.4.*"
         }
     }
 }

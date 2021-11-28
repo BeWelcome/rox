@@ -5,30 +5,31 @@ namespace App\Controller;
 use App\Entity\HostingRequest;
 use App\Entity\Member;
 use App\Entity\Message;
-use App\Model\HostingRequestModel;
-use App\Model\MessageModel;
+use App\Model\ConversationModel;
+use App\Utilities\TranslatedFlashTrait;
 use DateTime;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Form;
 
-class BaseHostingRequestAndInvitationController extends BaseMessageController
+class BaseHostingRequestAndInvitationController extends AbstractController
 {
-    protected $requestModel;
+    use TranslatedFlashTrait;
 
-    public function __construct(HostingRequestModel $requestModel, MessageModel $messageModel)
+    protected ConversationModel $conversationModel;
+
+    public function __construct(ConversationModel $conversationModel)
     {
-        parent::__construct($messageModel);
-
-        $this->requestModel = $requestModel;
+        $this->conversationModel = $conversationModel;
     }
 
     protected function checkRequestExpired(Message $hostingRequest): bool
     {
-        return $this->requestModel->isRequestExpired($hostingRequest->getRequest());
+        return $this->conversationModel->isRequestExpired($hostingRequest->getRequest());
     }
 
     protected function addExpiredFlash(Member $receiver)
     {
-        $this->addTranslatedFlash('notice', 'flash.request.expired', [
+        $this->addTranslatedFlash('notice', 'flash.invitation.expired', [
             '%link_start%' => '<a href="' . $this->generateUrl('message_new', [
                     'username' => $receiver->getUsername(),
                 ]) . '" class="text-primary">',
@@ -55,7 +56,7 @@ class BaseHostingRequestAndInvitationController extends BaseMessageController
         $clickedButton = $requestForm->getClickedButton()->getName();
 
         // handle changes in request and subject
-        $newRequest = $this->requestModel->getFinalRequest($sender, $receiver, $currentRequest, $data, $clickedButton);
+        $newRequest = $this->conversationModel->getFinalRequest($sender, $receiver, $currentRequest, $data, $clickedButton);
         $em->persist($newRequest);
         $em->flush();
 

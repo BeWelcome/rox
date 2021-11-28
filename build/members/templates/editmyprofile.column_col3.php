@@ -24,6 +24,11 @@
                 updateValueOutput(value);
             }
         });
+
+        window.addEventListener('hashchange', openHash);
+
+        // Trigger the event (useful on page load).
+        openHash();
     });
 
     $("input:radio[name='Accomodation']").change(function () {
@@ -111,4 +116,13 @@
             keepInvalid: true
         });
     });
+
+    function openHash()
+    {
+        // Alerts every time the hash changes!
+        let hash = location.hash;
+        $('[id^=collapse-]').removeClass('show').addClass('collapse');
+        $(hash).addClass('show');
+        $(document).scrollTop($(hash).offset().top);
+    }
 </script>

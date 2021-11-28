@@ -7,8 +7,7 @@ use App\Entity\Member;
 use App\Entity\Message;
 use App\Form\HostingRequestGuest;
 use App\Form\HostingRequestHost;
-use App\Model\HostingRequestModel;
-use App\Model\MessageModel;
+use App\Model\ConversationModel;
 use App\Utilities\ManagerTrait;
 use App\Utilities\TranslatorTrait;
 use Exception;
@@ -33,75 +32,38 @@ class HostingRequestController extends BaseHostingRequestAndInvitationController
     use ManagerTrait;
     use TranslatorTrait;
 
-    public function __construct(HostingRequestModel $requestModel, MessageModel $messageModel)
+    public function __construct(ConversationModel $conversationModel)
     {
-        parent::__construct($requestModel, $messageModel);
+        parent::__construct($conversationModel);
     }
 
     /**
-     * Deals with replies to  hosting requests.
-     *
-     * @throws AccessDeniedException
+     * Deals with replies to hosting requests.
      */
-    public function replyToHostingRequest(Message $hostingRequest): Response
+    public function reply(Request $request, Message $message): Response
     {
-        if (!$this->isMessageOfMember($hostingRequest)) {
-            throw $this->createAccessDeniedException('Not your message/hosting request');
-        }
-
-        if ($this->needsRedirect($hostingRequest, self::HOSTING_REQUEST)) {
-            return $this->redirectReplyTo($hostingRequest);
-        }
-
-        $thread = $this->messageModel->getThreadForMessage($hostingRequest);
-        $current = $thread[0];
-
-        // Always reply to the last item in the thread
-        if ($hostingRequest->getId() !== $current->getId()) {
-            return $this->redirectToRoute('hosting_request_reply', ['id' => $current->getId()]);
-        }
-
         // determine if guest or host reply to a request
         $member = $this->getUser();
-        $first = $thread[\count($thread) - 1];
-        $parentId = ($hostingRequest->getParent()) ? $hostingRequest->getParent()->getId() : $hostingRequest->getId();
-        if ($member === $first->getSender()) {
-            return $this->redirectToRoute('hosting_request_reply_guest', [
-                'id' => $hostingRequest->getId(),
-                'parentId' => $parentId,
-            ]);
+
+        if ($member !== $message->getInitiator()) {
+            return $this->guestReply($request, $message);
         }
 
-        return $this->redirectToRoute('hosting_request_reply_host', [
-            'id' => $hostingRequest->getId(),
-            'parentId' => $parentId,
-        ]);
+        return $this->hostReply($request, $message);
     }
 
-    /**
-     * @Route("/request/{id}/reply/guest/{parentId}", name="hosting_request_reply_guest",
-     *     requirements={"id": "\d+"})
-     *
-     * @ParamConverter("parent", class="App\Entity\Message", options={"id": "parentId"})
-     *
-     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
-     */
-    public function hostingRequestGuestReply(Request $request, Message $hostingRequest, Message $parent): Response
+    public function guestReply(Request $request, Message $hostingRequest): Response
     {
-        if (!$this->isMessageOfMember($hostingRequest)) {
-            throw $this->createAccessDeniedException('Not your message/hosting request');
-        }
-
         /** @var Message $last */
         /** @var Member $guest */
         /** @var Member $host */
         list($thread, , $last, $guest, $host) =
-            $this->messageModel->getThreadInformationForMessage($hostingRequest);
+            $this->conversationModel->getThreadInformationForMessage($hostingRequest);
 
         if ($this->checkRequestExpired($last)) {
             $this->addExpiredFlash($host);
 
-            return $this->redirectToRoute('hosting_request_show', ['id' => $last->getId()]);
+            return $this->redirectToRoute('conversation_view', ['id' => $last->getId()]);
         }
 
         // keep all information from current hosting request except the message text
@@ -129,7 +91,7 @@ class HostingRequestController extends BaseHostingRequestAndInvitationController
             );
             $this->addTranslatedFlash('success', 'flash.notification.updated');
 
-            return $this->redirectToRoute('conversation_show', ['id' => $newRequest->getId()]);
+            return $this->redirectToRoute('conversation_view', ['id' => $newRequest->getId()]);
         }
 
         return $this->render('request/reply_from_guest.html.twig', [
@@ -140,26 +102,18 @@ class HostingRequestController extends BaseHostingRequestAndInvitationController
         ]);
     }
 
-    /**
-     * @Route("/request/{id}/reply/host/{parentId}", name="hosting_request_reply_host",
-     *     requirements={"id": "\d+"})
-     *
-     * @ParamConverter("parent", class="App\Entity\Message", options={"id": "parentId"})
-     *
-     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
-     */
-    public function hostingRequestHostReply(Request $request, Message $hostingRequest, Message $parent): Response
+    public function hostReply(Request $request, Message $hostingRequest): Response
     {
         /** @var Message $last */
         /** @var Member $guest */
         /** @var Member $host */
         list($thread, , $last, $guest, $host) =
-            $this->messageModel->getThreadInformationForMessage($hostingRequest);
+            $this->conversationModel->getThreadInformationForMessage($hostingRequest);
 
         if ($this->checkRequestExpired($last)) {
             $this->addExpiredFlash($guest);
 
-            return $this->redirectToRoute('hosting_request_show', ['id' => $last->getId()]);
+            return $this->redirectToRoute('conversation_view', ['id' => $last->getId()]);
         }
 
         // keep all information from current hosting request except the message text
@@ -185,7 +139,7 @@ class HostingRequestController extends BaseHostingRequestAndInvitationController
             );
             $this->addTranslatedFlash('notice', 'flash.notification.updated');
 
-            return $this->redirectToRoute('conversation_show', ['id' => $newRequest->getId()]);
+            return $this->redirectToRoute('conversation_view', ['id' => $newRequest->getId()]);
         }
 
         return $this->render('request/reply_from_host.html.twig', [
@@ -194,36 +148,6 @@ class HostingRequestController extends BaseHostingRequestAndInvitationController
             'form' => $requestForm->createView(),
             'thread' => $thread,
         ]);
-    }
-
-    /**
-     * @Route("/request/{id}", name="hosting_request_show",
-     *     requirements={"id": "\d+"})
-     *
-     * @throws AccessDeniedException
-     */
-    public function show(Message $message): Response
-    {
-        if ($this->needsRedirect($message, self::HOSTING_REQUEST)) {
-            return $this->redirectShow($message, false);
-        }
-
-        return $this->showThread($message, 'request/view.html.twig', 'conversation_show', false);
-    }
-
-    /**
-     * @Route("/request/{id}/deleted", name="hosting_request_show_with_deleted",
-     *     requirements={"id": "\d+"})
-     *
-     * @throws AccessDeniedException
-     */
-    public function showDeleted(Message $message): Response
-    {
-        if ($this->needsRedirect($message, self::HOSTING_REQUEST)) {
-            return $this->redirectShow($message, true);
-        }
-
-        return $this->showThread($message, 'request/view.html.twig', 'conversation_show', true);
     }
 
     /**
@@ -246,7 +170,7 @@ class HostingRequestController extends BaseHostingRequestAndInvitationController
         }
 
         if (
-            $this->messageModel->hasRequestLimitExceeded(
+            $this->conversationModel->hasRequestLimitExceeded(
                 $member,
                 $this->getParameter('new_members_requests_per_hour'),
                 $this->getParameter('new_members_requests_per_day')
@@ -299,7 +223,7 @@ class HostingRequestController extends BaseHostingRequestAndInvitationController
         string $subject,
         bool $requestChanged
     ): void {
-        $this->requestModel->sendRequestNotification(
+        $this->conversationModel->sendRequestNotification(
             $guest,
             $host,
             $host,
@@ -314,7 +238,7 @@ class HostingRequestController extends BaseHostingRequestAndInvitationController
     {
         $subject = $request->getSubject()->getSubject();
 
-        $this->requestModel->sendRequestNotification($host, $guest, $host, $request, $subject, 'request', false);
+        $this->conversationModel->sendRequestNotification($host, $guest, $host, $request, $subject, 'request', false);
     }
 
     private function sendHostReplyNotification(
@@ -324,7 +248,7 @@ class HostingRequestController extends BaseHostingRequestAndInvitationController
         string $subject,
         bool $requestChanged
     ): void {
-        $this->requestModel->sendRequestNotification(
+        $this->conversationModel->sendRequestNotification(
             $host,
             $guest,
             $host,

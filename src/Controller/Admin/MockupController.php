@@ -513,8 +513,8 @@ class MockupController extends TranslationController
 
         $mockRequest = Mockery::mock(HostingRequest::class, [
             'getId' => 1,
-            'getArrival' => new DateTime(),
-            'getDeparture' => new DateTime(),
+            'getArrival' => new Carbon(),
+            'getDeparture' => new Carbon(),
             'getNumberOfTravellers' => 2,
             'getFlexible' => true,
             'getStatus' => HostingRequest::REQUEST_DECLINED,

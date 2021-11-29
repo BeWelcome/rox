@@ -7,7 +7,7 @@
 {% endblock stylesheets %}
 
 {% block content %}
-    {{ macros.messageheader(receiver, app.user, subject) }}
+    {{ macros.messageheader(thread) }}
 
     {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
     {{ form_errors(form) }}

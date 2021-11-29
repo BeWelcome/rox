@@ -3,6 +3,7 @@
 namespace App\Pagerfanta;
 
 use App\Doctrine\DeleteRequestType;
+use App\Doctrine\InFolderType;
 use App\Doctrine\MessageResultSetMapping;
 use App\Entity\Member;
 use Doctrine\DBAL\Connection;
@@ -38,10 +39,13 @@ abstract class AbstractConversationsAdapter
     {
         $count = 0;
         try {
-            $sql = $this->getSqlCountQuery();
-            $stmt = $this->connection->executeQuery($sql, [':memberId' => $this->member->getId()], [\PDO::PARAM_INT]);
-            $row = $stmt->fetchAll(\PDO::FETCH_OBJ);
-            $count = ($row[0])->count;
+            $countQuery = 'SELECT count(*) FROM (' . $this->getConversationsQuery() . ') m';
+            $result = $this->connection->executeQuery(
+                $countQuery,
+                [':memberId' => $this->member->getId()],
+                [\PDO::PARAM_INT]
+            );
+            $count = $result->fetchOne();
         } catch (DBALException $e) {
             // Return 0
         }
@@ -50,11 +54,11 @@ abstract class AbstractConversationsAdapter
     }
 
     /**
-     * Returns an slice of the results.
+     * Returns a slice of the results.
      */
     public function getSlice(int $offset, int $length): iterable
     {
-        $sql = $this->getSqlQuery();
+        $sql = 'SELECT * FROM (' . $this->getConversationsQuery() . ') m';
         $sql .= ' ORDER BY `m`.`created` DESC LIMIT ' . $length . ' OFFSET ' . $offset;
 
         $query = $this->entityManager->createNativeQuery($sql, new MessageResultSetMapping())
@@ -64,20 +68,6 @@ abstract class AbstractConversationsAdapter
         $conversations = $query->getResult();
 
         return $conversations;
-    }
-
-    protected function getSqlCountQuery(): string
-    {
-        $sql = str_replace('%select%', 'count(m.id) as count', $this->getSqlQueryTemplate());
-
-        return $sql;
-    }
-
-    protected function getSqlQuery(): string
-    {
-        $sql = str_replace('%select%', '`m`.*', $this->getSqlQueryTemplate());
-
-        return $sql;
     }
 
     protected function getUnreadCondition(): string
@@ -125,5 +115,10 @@ abstract class AbstractConversationsAdapter
         return $initiatorCondition;
     }
 
-    abstract protected function getSqlQueryTemplate(): string;
+    protected function getNotSpamCondition(): string
+    {
+        return 'InFolder <> \'' . InFolderType::SPAM . '\'';
+    }
+
+    abstract protected function getConversationsQuery(): string;
 }

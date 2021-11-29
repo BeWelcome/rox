@@ -2,186 +2,296 @@
 
 namespace App\Model;
 
+use App\Doctrine\DeleteRequestType;
+use App\Doctrine\InFolderType;
 use App\Doctrine\MessageStatusType;
+use App\Doctrine\SpamInfoType;
 use App\Entity\HostingRequest;
 use App\Entity\Member;
 use App\Entity\Message;
 use App\Repository\MessageRepository;
 use App\Service\Mailer;
-use App\Utilities\ManagerTrait;
+use App\Utilities\ConversationThread;
 use DateTime;
+use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use InvalidArgumentException;
 
-class HostingRequestModel
+class ConversationModel
 {
-    use ManagerTrait;
-
     private Mailer $mailer;
+    private EntityManagerInterface $entityManager;
+    private ConversationThread $conversationThread;
 
-    public function __construct(Mailer $mailer)
+    public function __construct(Mailer $mailer, EntityManagerInterface $entityManager)
     {
         $this->mailer = $mailer;
-    }
-
-    public function getFilteredRequests($member, $folder, $sort, $sortDir, $page = 1, $limit = 10)
-    {
-        /** @var MessageRepository $repository */
-        $repository = $this->getManager()->getRepository(Message::class);
-
-        return $repository->findLatestRequests($member, 'requests_' . $folder, $sort, $sortDir, $page, $limit);
-    }
-
-    public function isRequestExpired(HostingRequest $request): bool
-    {
-        $today = new DateTime('today');
-        $departure = $request->getDeparture();
-        if (null === $departure) {
-            // No departure date given assume an interval of two days max
-            $departure = (clone $today)->modify('+2days');
-        }
-
-        return !($today < $departure);
+        $this->entityManager = $entityManager;
+        $this->conversationThread = new ConversationThread($entityManager);
     }
 
     /**
-     * @throws InvalidArgumentException|\Doctrine\DBAL\Exception\InvalidArgumentException
+     * Mark a conversation as purged (can not be unmarked).
+     *
+     * @SuppressWarnings(PHPMD.StaticAccess)
      */
-    public function getFinalRequest(
-        Member $sender,
-        Member $receiver,
-        Message $hostingRequest,
-        Message $data,
-        string $clickedButton
-    ): Message {
-        if (null === $hostingRequest->getRequest()->getDeparture() || null === $data->getRequest()->getDeparture()) {
-            throw new InvalidArgumentException();
+    public function markConversationPurged(Member $member, array $conversation): void
+    {
+        /** @var Message $message */
+        foreach ($conversation as $message) {
+            $deleteRequest = $message->getDeleteRequest();
+            if ($message->getReceiver() === $member) {
+                $deleteRequest = DeleteRequestType::addReceiverPurged($deleteRequest);
+            } elseif ($message->getSender() === $member) {
+                $deleteRequest = DeleteRequestType::addSenderPurged($deleteRequest);
+            }
+            $message->setDeleteRequest($deleteRequest);
+            $this->entityManager->persist($message);
         }
-
-        $finalRequest = new Message();
-        $finalRequest->setSender($sender);
-        $finalRequest->setReceiver($receiver);
-        $finalRequest->setParent($hostingRequest);
-        $finalRequest->setMessage($data->getMessage());
-        $finalRequest->setSubject($hostingRequest->getSubject());
-        $finalRequest->setStatus(MessageStatusType::SENT);
-
-        $oldState = $hostingRequest->getRequest()->getStatus();
-        $newState = $this->getNewState($clickedButton, $oldState);
-
-        $newStateSet = ($oldState !== $newState);
-
-        // check if request was altered
-        $originalRequest = $hostingRequest->getRequest();
-        $currentRequest = $data->getRequest();
-
-        $newArrival = $this->hasArrivalChanged($originalRequest, $currentRequest);
-
-        $newDeparture = $this->hasDepartureChanged($originalRequest, $currentRequest);
-
-        $newFlexible = ($originalRequest->getFlexible() !== $currentRequest->getFlexible());
-
-        $newNumberOfTravellers =
-            ($originalRequest->getNumberOfTravellers() !== $currentRequest->getNumberOfTravellers());
-
-        $newHostingRequest = new HostingRequest();
-        $newHostingRequest->setInviteForLeg($hostingRequest->getRequest()->getInviteForLeg());
-        $newHostingRequest->setArrival(
-            $this->getFinal($originalRequest->getArrival(), $currentRequest->getArrival())
-        );
-        $newHostingRequest->setDeparture(
-            $this->getFinal($originalRequest->getDeparture(), $currentRequest->getDeparture())
-        );
-        $newHostingRequest->setFlexible(
-            $this->getFinal($originalRequest->getFlexible(), $currentRequest->getFlexible())
-        );
-        $newHostingRequest->setNumberOfTravellers(
-            $this->getFinal($originalRequest->getNumberOfTravellers(), $currentRequest->getNumberOfTravellers())
-        );
-        if ($newArrival || $newDeparture || $newFlexible || $newNumberOfTravellers) {
-            $finalRequest->setRequest($newHostingRequest);
-        } else {
-            $finalRequest->setRequest($hostingRequest->getRequest());
-        }
-
-        if ($newStateSet) {
-            $finalRequest->getRequest()->setStatus($newState);
-        }
-
-        return $finalRequest;
+        $this->entityManager->flush();
     }
 
     /**
-     * The requestChanged parameter triggers a PHPMD warning which is out of place in this case.
+     * Mark a conversation as deleted for this member.
      *
-     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
-     *
-     * @param mixed $subject
-     * @param mixed $template
-     * @param mixed $requestChanged
+     * @SuppressWarnings(PHPMD.StaticAccess)
      */
-    public function sendRequestNotification(
-        Member $sender,
-        Member $receiver,
-        Member $host,
-        Message $request,
-        $subject,
-        $template,
-        $requestChanged
-    ) {
-        // Send mail notification
-        $this->mailer->sendMessageNotificationEmail($sender, $receiver, $template, [
-            'host' => $host,
-            'subject' => $subject,
-            'message' => $request,
-            'request' => $request->getRequest(),
-            'changed' => $requestChanged,
-        ]);
-
-        return true;
+    public function markConversationDeleted(Member $member, array $conversation): void
+    {
+        /** @var Message $message */
+        foreach ($conversation as $message) {
+            $deleteRequest = $message->getDeleteRequest();
+            if ($message->getReceiver() === $member) {
+                $deleteRequest = DeleteRequestType::addReceiverDeleted($deleteRequest);
+            } elseif ($message->getSender() === $member) {
+                $deleteRequest = DeleteRequestType::addSenderDeleted($deleteRequest);
+            }
+            $message->setDeleteRequest($deleteRequest);
+            $this->entityManager->persist($message);
+        }
+        $this->entityManager->flush();
     }
 
     /**
-     * @param $original
-     * @param $current
-     *
-     * @return mixed
+     * @SuppressWarnings(PHPMD.StaticAccess)
      */
-    private function getFinal($original, $current)
+    public function unmarkConversationDeleted(Member $member, array $conversation): void
     {
-        return ($original !== $current) ? $current : $original;
-    }
-
-    private function hasArrivalChanged(HostingRequest $original, HostingRequest $current): bool
-    {
-        $arrivalDiff = date_diff($original->getArrival(), $current->getArrival());
-
-        return !(0 === $arrivalDiff->y && 0 === $arrivalDiff->m && 0 === $arrivalDiff->d);
-    }
-
-    private function hasDepartureChanged(HostingRequest $original, HostingRequest $current): bool
-    {
-        $departureDiff = date_diff($original->getDeparture(), $current->getDeparture());
-
-        return !(0 === $departureDiff->y && 0 === $departureDiff->m && 0 === $departureDiff->d);
-    }
-
-    private function getNewState(string $clickedButton, int $oldState): int
-    {
-        $newState = $oldState;
-        switch ($clickedButton) {
-            case 'cancel':
-                $newState = HostingRequest::REQUEST_CANCELLED;
-                break;
-            case 'decline':
-                $newState = HostingRequest::REQUEST_DECLINED;
-                break;
-            case 'tentatively':
-                $newState = HostingRequest::REQUEST_TENTATIVELY_ACCEPTED;
-                break;
-            case 'accept':
-                $newState = HostingRequest::REQUEST_ACCEPTED;
-                break;
+        foreach ($conversation as $message) {
+            $deleteRequest = $message->getDeleteRequest();
+            if ($message->getReceiver() === $member) {
+                $deleteRequest = DeleteRequestType::removeReceiverDeleted($deleteRequest);
+            } elseif ($message->getSender() === $member) {
+                $deleteRequest = DeleteRequestType::removeSenderDeleted($deleteRequest);
+            }
+            $message->setDeleteRequest($deleteRequest);
+            $this->entityManager->persist($message);
         }
-        return $newState;
+        $this->entityManager->flush();
+    }
+
+    public function markConversationAsSpam(array $conversation): void
+    {
+        /** @var Message $message */
+        foreach ($conversation as $message) {
+            $message
+                ->setFolder(InFolderType::SPAM)
+                ->setStatus(MessageStatusType::CHECK)
+                ->addToSpamInfo(SpamInfoType::MEMBER_SAYS_SPAM)
+            ;
+            $this->entityManager->persist($message);
+        }
+        $this->entityManager->flush();
+    }
+
+    public function unmarkConversationAsSpam(array $conversation): void
+    {
+        /** @var Message $message */
+        foreach ($conversation as $message) {
+            $message
+                ->setFolder(InFolderType::NORMAL)
+                ->setStatus(MessageStatusType::CHECKED)
+                ->removeFromSpaminfo(SpamInfoType::MEMBER_SAYS_SPAM)
+            ;
+            $this->entityManager->persist($message);
+        }
+        $this->entityManager->flush();
+    }
+
+    /**
+     * Tests if a member has exceeded their limit for sending messages.
+     */
+    public function hasMessageLimitExceeded($member, $perHour, $perDay)
+    {
+        $sql = "
+            SELECT
+                (
+                SELECT
+                    COUNT(*)
+                FROM
+                    comments
+                WHERE
+                    comments.IdToMember = :id
+                    AND
+                    comments.Quality = 'Good'
+                ) AS numberOfComments,
+                (
+                SELECT
+                    COUNT(*)
+                FROM
+                    messages
+                WHERE
+                    messages.IdSender = :id
+                    AND messages.request_id IS NULL
+                    AND
+                    (
+                        Status = 'ToSend'
+                        OR
+                        Status = 'Sent'
+                    )
+                    AND
+                    DateSent > DATE_SUB(NOW(), INTERVAL 1 HOUR)
+                ) AS numberOfMessagesLastHour,
+                (
+                SELECT
+                    COUNT(*)
+                FROM
+                    messages
+                WHERE
+                    messages.IdSender = :id
+                    AND messages.request_id IS NULL
+                    AND
+                    (
+                        Status = 'ToSend'
+                        OR
+                        Status = 'Sent'
+                    )
+                    AND
+                    DateSent > DATE_SUB(NOW(), INTERVAL 1 DAY)
+                ) AS numberOfMessagesLastDay
+            ";
+
+        return $this->hasLimitExceeded($member, $sql, $perHour, $perDay);
+    }
+
+    /**
+     * Tests if a member has exceeded their limit for sending requests.
+     */
+    public function hasRequestLimitExceeded($member, $perHour, $perDay): bool
+    {
+        $sql = "
+            SELECT
+                (
+                SELECT
+                    COUNT(*)
+                FROM
+                    comments
+                WHERE
+                    comments.IdToMember = :id
+                    AND
+                    comments.Quality = 'Good'
+                ) AS numberOfComments,
+                (
+                SELECT
+                    COUNT(*)
+                FROM
+                    messages
+                WHERE
+                    messages.IdSender = :id
+                    AND NOT messages.request_id IS NULL
+                    AND
+                    (
+                        Status = 'ToSend'
+                        OR
+                        Status = 'Sent'
+                    )
+                    AND
+                    DateSent > DATE_SUB(NOW(), INTERVAL 1 HOUR)
+                ) AS numberOfMessagesLastHour,
+                (
+                SELECT
+                    COUNT(*)
+                FROM
+                    messages
+                WHERE
+                    messages.IdSender = :id
+                    AND NOT messages.request_id IS NULL
+                    AND
+                    (
+                        Status = 'ToSend'
+                        OR
+                        Status = 'Sent'
+                    )
+                    AND
+                    DateSent > DATE_SUB(NOW(), INTERVAL 1 DAY)
+                ) AS numberOfMessagesLastDay
+            ";
+
+        return $this->hasLimitExceeded($member, $sql, $perHour, $perDay);
+    }
+
+    public function getThreadInformationForMessage(Message $message): array
+    {
+        $thread = $this->conversationThread->getThread($message);
+        $first = $thread[\count($thread) - 1];
+        $last = $thread[0];
+        $guest = $first->getSender();
+        $host = $first->getReceiver();
+
+        return [$thread, $first, $last, $guest, $host];
+    }
+
+    public function getLastMessageInConversation(Message $probableParent): Message
+    {
+        // Check if there is already a newer message than the one used for the request
+        // as there might be a clash of replies
+        /** @var MessageRepository */
+        $messageRepository = $this->entityManager->getRepository(Message::class);
+        /** @var Message[] $messages */
+        $messages = $messageRepository->findBy(['subject' => $probableParent->getSubject()]);
+
+        return $messages[\count($messages) - 1];
+    }
+
+    public function markConversationAsRead(Member $member, array $thread)
+    {
+        // Walk through the thread and mark all messages as read (for current member)
+        $em = $this->entityManager;
+        foreach ($thread as $item) {
+            if ($member === $item->getReceiver()) {
+                // Only mark as read if it is a message and when the receiver reads the message,
+                // not when the message is presented to the Sender with url /messages/{id}/sent
+                $item->setFirstRead(new DateTime());
+                $em->persist($item);
+            }
+        }
+        $em->flush();
+    }
+
+    private function hasLimitExceeded(Member $member, string $sql, int $perHour, int $perDay): bool
+    {
+        $id = $member->getId();
+
+        $connection = $this->entityManager->getConnection();
+
+        try {
+            $statement = $connection->prepare($sql);
+            $statement->bindValue(':id', $id);
+
+            $result = $statement->executeQuery();
+            $row = $result->fetchAssociative();
+        } catch (Exception $e) {
+            return false;
+        }
+
+        $comments = $row['numberOfComments'];
+        $lastHour = $row['numberOfMessagesLastHour'];
+        $lastDay = $row['numberOfMessagesLastDay'];
+
+        if ($comments < 1 && ($lastHour >= $perHour || $lastDay >= $perDay)) {
+            return true;
+        }
+
+        return false;
     }
 }

@@ -15,12 +15,12 @@
         {% set label = 'reply' %}
     {% endif %}
 
-    {{ macros.messageheader(otherUser, myself, current.Subject.Subject) }}
+    {{ macros.messageheader(thread, show_deleted) }}
 
     <div class="row no-gutters bg-white mb-2 p-1">
         <div class="col-12 p-1 mb-2">
             <div class="alert alert-info mb-0 p-2">
-            {% if original.Sender.Username == myself.Username %}
+            {% if original.Initiator == myself %}
                 {% if invitation.status == constant('App\\Entity\\HostingRequest::REQUEST_OPEN') %}<i
                     class="fa fa-question mr-1"></i> {{ 'invitation.guest.open'|trans }}{% endif %}
                 {% if invitation.status == constant('App\\Entity\\HostingRequest::REQUEST_CANCELLED') %}<i
@@ -44,39 +44,25 @@
             </div>
         </div>
         <div class="col-12 col-md-4 mb-2 p-1">
-            {% if original.Sender.Username == myself.Username %}
-                {% if invitation.numberOfTravellers != 1 %}
-                    <div><i
-                    class="fa fa-users mr-1"></i>{{ 'Request for %s guest(s)' | format(invitation.numberOfTravellers) }}
-                    </div>{% endif %}
-                {% if invitation.flexible %}
-                    <div>{{ 'I\'m flexible with arrival and departure' }}</div>{% endif %}
-            {% else %}
-                {% if invitation.numberOfTravellers != 1 %}
-                    <div><i
-                    class="fa fa-users mr-1"></i>{{ 'Travelling in a group of %s' | format(invitation.numberOfTravellers) }}
-                    </div>{% endif %}
-                {% if invitation.flexible %}
-                    <div>{{ 'Flexible with arrival and departure' }}</div>{% endif %}
+            {% set numberOfTravellers = 'request.number.of.travellers' %}
+            {% if original.Initiator == myself %}
+                {% set numberOfTravellers = 'request.number.of.travellers.host' %}
+            {% endif %}
+            {% if invitation.numberOfTravellers != 1 %}
+                <div>
+                    <i class="fa fa-users mr-1"></i>{{ numberOfTravellers | trans({'numberOfTravellers': invitation.numberOfTravellers}) }}
+                </div>
             {% endif %}
         </div>
 
         <div class="col-12 col-sm-6 col-md-4 mb-2 p-1">
-            <div><i class="fa fa-calendar mr-1"></i>{{ 'invitation.arrival' | trans }}</div>
+            <div><i class="fa fa-calendar mr-1"></i>{{ 'request.arrival' | trans }}</div>
             <div>{{ invitation.arrival|format_date('full') }}</div>
         </div>
 
-        {% if  invitation.Departure -%}
-            <div class="col-12 col-sm-6 col-md-4 mb-2 p-1">
-                <div><i class="fa fa-calendar mr-1"></i>{{ 'invitation.departure' | trans }}</div>
-                <div>{{ invitation.departure|format_date('full') }}</div>
-            </div>
-        {%- endif %}
-
-        <div class="col-12 d-flex justify-content-between p-1">
-            <div>{% if original.Sender.Username != myself.Username %}<a class="btn btn-sm btn-primary"
-               href="{{ path( 'message_mark_spam', { id: thread[0].id }) }}">{{ 'markspam' | trans }}</a>{% endif %}</div>
-            <div><a class="btn btn-sm btn-primary" href="{{ path( 'conversation_reply', { id: current.id }) }}">{{ label | trans }}</a></div>
+        <div class="col-12 col-sm-6 col-md-4 mb-2 p-1">
+            <div><i class="fa fa-calendar mr-1"></i>{{ 'request.departure' | trans }}</div>
+            <div>{{ invitation.departure|format_date('full') }}</div>
         </div>
     </div>
 

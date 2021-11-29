@@ -9,52 +9,16 @@ use App\Entity\Subtrip;
 use App\Service\Mailer;
 use DateTime;
 
-class InvitationModel
+class InvitationModel extends AbstractRequestModel
 {
-    private Mailer $mailer;
-
-    public function __construct(Mailer $mailer)
-    {
-        $this->mailer = $mailer;
-    }
-
-    public function isInvitationExpired(HostingRequest $invitation): bool
+    /**
+     * An invitation expires on the day it starts.
+     */
+    public function hasExpired(Message $message): bool
     {
         $today = new DateTime('today');
-        $arrival = $invitation->getArrival();
-        if (null === $arrival) {
-            // No departure date given assume an interval of two days max
-            $arrival = (clone $today)->modify('+2days');
-        }
+        $arrival = $message->getRequest()->getArrival();
 
-        return !($today < $arrival);
-    }
-
-    /**
-     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
-     *
-     * @param mixed $subject
-     */
-    public function sendInvitationNotification(
-        Member $sender,
-        Member $receiver,
-        Member $host,
-        Message $request,
-        $subject,
-        string $template,
-        bool $requestChanged,
-        ?Subtrip $leg
-    ): bool {
-        // Send mail notification
-        $this->mailer->sendMessageNotificationEmail($sender, $receiver, $template, [
-            'host' => $host,
-            'subject' => $subject,
-            'message' => $request,
-            'request' => $request->getRequest(),
-            'changed' => $requestChanged,
-            'leg' => $leg,
-        ]);
-
-        return true;
+        return ($today > $arrival);
     }
 }

@@ -9,11 +9,11 @@
 {% set isInitiator = (member == message.initiator) %}
 {% set unread = (message.firstRead is null) or (message.firstRead == '0000-00-00 00:00.00') %}
 {% if submenu.active == 'deleted' %}
-    {% set show_message_route = 'conversation_show_with_deleted' %}
+    {% set show_message_route = 'conversation_view_with_deleted' %}
 {% else %}
-    {% set show_message_route = 'conversation_show' %}
+    {% set show_message_route = 'conversation_view' %}
 {% endif %}
-            <div class="c-conversation__item">
+<div class="c-conversation__item">
 <div class="u-flex u-flex-col u-justify-center">
     <div class="o-avatar o-avatar--m o-avatar--noname  o-avatar--shadow-s u-mr-16 u-mb-16">
         {{ macros.roundedavatarstack(otherMember.Username, 72, true) }}
@@ -41,7 +41,6 @@
 				</span>
 			{% endif %}
 			{% set messageText = message.Message | replace({'\n': ' ', '<br />': ' '}) | striptags %}
-
 			{% apply spaceless %}
 			<p class="m-0 mb-1">{{ message.sender.Username }}: {{ messageText | truncate(150) | raw -}}</p>
 			{% endapply %}
@@ -88,6 +87,5 @@
     </span>
     <a href="{{ path(show_message_route, { id: message.id}) }}" title="{{ 'view' | trans }}"><i class="fa fa-chevron-right"></i></a>
  </div>
-
  </div>
  

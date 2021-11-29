@@ -10,9 +10,9 @@ namespace App\Entity;
 use App\Utilities\LifecycleCallbacksTrait;
 use Carbon\Carbon;
 use DateTime;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\DBAL\Exception\InvalidArgumentException;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\PersistentCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -37,17 +37,13 @@ class HostingRequest
     const REQUEST_ACCEPTED = 8;
 
     /**
-     * @var int
-     *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $id;
+    private int $id;
 
     /**
-     * @var DateTime
-     *
      * @ORM\Column(name="arrival", type="datetime")
      *
      * @Assert\NotBlank()
@@ -55,29 +51,23 @@ class HostingRequest
      * @Assert\LessThanOrEqual(
      *     propertyPath="departure")
      */
-    private $arrival;
+    private DateTime $arrival;
 
     /**
-     * @var DateTime
-     *
-     * @ORM\Column(name="departure", type="datetime", nullable=true)
+     * @ORM\Column(name="departure", type="datetime", nullable=false)
      *
      * @Assert\Type("\DateTime")
      * @Assert\GreaterThanOrEqual(
      *     propertyPath="arrival")
      */
-    private $departure = null;
+    private DateTime $departure;
 
     /**
-     * @var bool
-     *
      * @ORM\Column(name="flexible", type="boolean", nullable=true)
      */
-    private $flexible = false;
+    private bool $flexible = false;
 
     /**
-     * @var int
-     *
      * @ORM\Column(name="number_of_travellers", type="integer")
      *
      * @Assert\Range(
@@ -86,158 +76,84 @@ class HostingRequest
      *      minMessage = "At least one person must travel",
      *      maxMessage = "Hosting more than 20 people is asking for too much"
      * )     */
-    private $numberOfTravellers = 1;
+    private int $numberOfTravellers = 1;
 
     /**
-     * @var int
-     *
      * @ORM\Column(name="status", type="integer")
      */
-    private $status = self::REQUEST_OPEN;
+    private int $status = self::REQUEST_OPEN;
 
     /**
-     * @var Subtrip
-     *
-     * @ORM\ManyToOne(targetEntity="\App\Entity\Subtrip")
+     * @ORM\OneToOne(targetEntity="\App\Entity\Subtrip")
      * @ORM\JoinColumn(name="invite_for_leg", referencedColumnName="id", nullable=true)
      */
-    private $inviteForLeg;
+    private ?Subtrip $inviteForLeg;
 
     /**
-     * @var Message[]
      * @ORM\OneToMany(targetEntity="Message", mappedBy="request")
      */
     private $messages;
 
-    public function __construct()
-    {
-        $this->messages = new ArrayCollection();
-    }
-
     /**
      * Get id.
-     *
-     * @return int
      */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
     /**
      * Set arrival.
-     *
-     * @param string $arrival
-     *
-     * @return HostingRequest
      */
-    public function setArrival($arrival)
+    public function setArrival(DateTime $arrival): self
     {
         $this->arrival = $arrival;
 
         return $this;
     }
 
-    /**
-     * Get arrival.
-     *
-     * @return Carbon|null
-     */
-    public function getArrival()
+    public function getArrival(): Carbon
     {
-        if ($this->arrival) {
-            return Carbon::instance($this->arrival);
-        }
-
-        return null;
+        return Carbon::instance($this->arrival);
     }
 
-    /**
-     * Set departure.
-     *
-     * @param string $departure
-     *
-     * @return HostingRequest
-     */
-    public function setDeparture($departure)
+    public function setDeparture(DateTime $departure): self
     {
         $this->departure = $departure;
 
         return $this;
     }
 
-    /**
-     * Get departure.
-     *
-     * @return Carbon|null
-     */
-    public function getDeparture()
+    public function getDeparture(): Carbon
     {
-        if ($this->departure) {
-            return Carbon::instance($this->departure);
-        }
-
-        return null;
+        return Carbon::instance($this->departure);
     }
 
-    /**
-     * Set estimate.
-     *
-     * @param bool $flexible
-     *
-     * @return HostingRequest
-     */
-    public function setFlexible($flexible)
+    public function setFlexible(bool $flexible): self
     {
         $this->flexible = $flexible;
 
         return $this;
     }
 
-    /**
-     * Get estimate.
-     *
-     * @return bool
-     */
-    public function getFlexible()
+    public function getFlexible(): bool
     {
         return $this->flexible;
     }
 
-    /**
-     * Set numberOfTravellers.
-     *
-     * @param int $numberOfTravellers
-     *
-     * @return HostingRequest
-     */
-    public function setNumberOfTravellers($numberOfTravellers)
+    public function setNumberOfTravellers(int $numberOfTravellers): self
     {
         $this->numberOfTravellers = $numberOfTravellers;
 
         return $this;
     }
 
-    /**
-     * Get numberOfTravellers.
-     *
-     * @return int
-     */
-    public function getNumberOfTravellers()
+    public function getNumberOfTravellers(): int
     {
         return $this->numberOfTravellers;
     }
 
-    /**
-     * Set status.
-     *
-     * @param int $status
-     *
-     * @throws InvalidArgumentException
-     *
-     * @return HostingRequest
-     */
-    public function setStatus($status)
+    public function setStatus(int $status): self
     {
         if (self::REQUEST_OPEN !== $status &&
             self::REQUEST_CANCELLED !== $status &&
@@ -252,12 +168,7 @@ class HostingRequest
         return $this;
     }
 
-    /**
-     * Get status.
-     *
-     * @return int
-     */
-    public function getStatus()
+    public function getStatus(): int
     {
         return $this->status;
     }

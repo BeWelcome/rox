@@ -8,6 +8,6 @@ function updateCount() {
         }});
 }
 
-let interval = setInterval(function () { updateCount(); }, 600 * 1000);
+let interval = setInterval(function () { updateCount(); }, 60000 * 1000);
 
 updateCount();

@@ -1,8 +1,6 @@
 import {precacheAndRoute} from 'workbox-precaching';
 import {
     NetworkFirst,
-    StaleWhileRevalidate,
-    CacheFirst,
 } from 'workbox-strategies';
 import { CacheableResponsePlugin } from 'workbox-cacheable-response';
 import {registerRoute} from 'workbox-routing';
@@ -38,7 +36,7 @@ registerRoute(
         url.destination === 'style' ||
         url.destination === 'script' ||
         url.destination === 'worker',
-    new StaleWhileRevalidate({
+    new NetworkFirst({
         cacheName: 'assets',
         plugins: [
             new CacheableResponsePlugin({
@@ -49,7 +47,7 @@ registerRoute(
 );
 
 registerRoute(
-    new RegExp('/message/.*') || new RegExp('/request/.*') || new RegExp('/invitation/.*'),
+    new RegExp('/conversation/.*'),
     new NetworkFirst({
         cacheName: 'conversations',
         plugins: [
@@ -83,7 +81,7 @@ registerRoute(
 // Cache members profiles a Cache First strategy for 10 days
 registerRoute(
     ({url}) => url.pathname.startsWith('/members'),
-    new StaleWhileRevalidate({
+    new NetworkFirst({
         cacheName: 'members',
         plugins: [
             new CacheableResponsePlugin({

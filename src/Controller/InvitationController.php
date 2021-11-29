@@ -10,11 +10,12 @@ use App\Entity\Subtrip;
 use App\Form\InvitationGuest;
 use App\Form\InvitationHost;
 use App\Form\InvitationType;
-use App\Model\HostingRequestModel;
+use App\Model\ConversationModel;
 use App\Model\InvitationModel;
-use App\Model\MessageModel;
+use App\Service\Mailer;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
+use DateTime;
 use Exception;
 use InvalidArgumentException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -26,21 +27,21 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class InvitationController extends BaseHostingRequestAndInvitationController
+class InvitationController extends BaseRequestAndInvitationController
 {
     use TranslatedFlashTrait;
     use TranslatorTrait;
 
-    private InvitationModel $invitationModel;
+    private Mailer $mailer;
 
     public function __construct(
-        MessageModel $messageModel,
-        HostingRequestModel $requestModel,
-        InvitationModel $invitationModel
+        ConversationModel $conversationModel,
+        InvitationModel $invitationModel,
+        Mailer $mailer
     ) {
-        parent::__construct($requestModel, $messageModel);
-
-        $this->invitationModel = $invitationModel;
+        parent::__construct($invitationModel);
+        $this->mailer = $mailer;
+        $this->conversationModel = $conversationModel;
     }
 
     /**
@@ -50,13 +51,13 @@ class InvitationController extends BaseHostingRequestAndInvitationController
      */
     public function newInvitation(Request $request, Subtrip $leg, TranslatorInterface $translator): Response
     {
-        /** @var Member $member */
-        $member = $this->getUser();
+        /** @var Member $host */
+        $host = $this->getUser();
         $guest = $leg->getTrip()->getCreator();
-        if ($member === $guest) {
+        if ($host === $guest) {
             $this->addTranslatedFlash('notice', 'flash.request.invitation.self');
 
-            return $this->redirectToRoute('members_profile', ['username' => $member->getUsername()]);
+            return $this->redirectToRoute('members_profile', ['username' => $host->getUsername()]);
         }
 
         if (!$guest->isBrowseable()) {
@@ -65,8 +66,8 @@ class InvitationController extends BaseHostingRequestAndInvitationController
 
         // \todo Decide if this should be removed in this case
         if (
-            $this->messageModel->hasRequestLimitExceeded(
-                $member,
+            $this->conversationModel->hasRequestLimitExceeded(
+                $host,
                 $this->getParameter('new_members_requests_per_hour'),
                 $this->getParameter('new_members_requests_per_day')
             )
@@ -101,7 +102,7 @@ class InvitationController extends BaseHostingRequestAndInvitationController
         $invitationForm->handleRequest($request);
 
         if ($invitationForm->isSubmitted() && $invitationForm->isValid()) {
-            $invitation = $this->getMessageFromData($invitationForm->getData(), $member, $guest);
+            $invitation = $this->getMessageFromData($invitationForm->getData(), $host, $guest);
             $invitation->getRequest()->setInviteForLeg($leg);
 
             $em = $this->getDoctrine()->getManager();
@@ -109,10 +110,16 @@ class InvitationController extends BaseHostingRequestAndInvitationController
             $em->flush();
 
             $this->sendInvitationNotification(
-                $member,
+                $host,
                 $guest,
-                $invitation
+                $host,
+                $invitation,
+                $invitation->getSubject()->getSubject(),
+                'invitation',
+                false,
+                null
             );
+
             $this->addTranslatedFlash('success', 'flash.request.invitation.sent');
 
             return $this->redirectToRoute('members_profile', ['username' => $guest->getUsername()]);
@@ -125,78 +132,37 @@ class InvitationController extends BaseHostingRequestAndInvitationController
         ]);
     }
 
-    public function replyToInvitation(Message $invitation): Response
+    public function reply(Request $request, Message $message): Response
     {
-        if (!$this->isMessageOfMember($invitation)) {
-            throw $this->createAccessDeniedException('Not your message/hosting request');
-        }
-
-        if ($this->needsRedirect($invitation, self::INVITATION)) {
-            return $this->redirectReplyTo($invitation);
-        }
-
-        $thread = $this->messageModel->getThreadForMessage($invitation);
-        $current = $thread[0];
-
-        $leg = $invitation->getRequest()->getInviteForLeg();
-
-        // Always reply to the last item in the thread
-        if ($invitation->getId() !== $current->getId()) {
-            return $this->redirectToRoute('invitation_reply', [
-                'id' => $current->getId(),
-                'leg' => $leg->getId(),
-            ]);
-        }
-
         // determine if guest or host reply to a request
+        $host = $message->getInitiator();
+        $guest = $message->getReceiver() === $host ? $message->getSender() : $message->getReceiver();
+
         $member = $this->getUser();
-        $parentId = ($invitation->getParent()) ? $invitation->getParent()->getId() : $invitation->getId();
-        if ($member === $invitation->getInitiator()) {
-            return $this->redirectToRoute('invitation_reply_host', [
-                'id' => $invitation->getId(),
-                'leg' => $leg->getId(),
-                'parentId' => $parentId,
-            ]);
+        if ($member === $guest) {
+            return $this->guestReply($request, $message, $guest, $host);
         }
 
-        return $this->redirectToRoute('invitation_reply_guest', [
-            'id' => $invitation->getId(),
-            'leg' => $leg->getId(),
-            'parentId' => $parentId,
-        ]);
+        return $this->hostReply($request, $message, $guest, $host);
     }
 
-    /**
-     * @Route("/invitation/{id}/reply/{leg}/guest/{parentId}", name="invitation_reply_guest",
-     *     requirements={"id": "\d+"})
-     *
-     * @ParamConverter("parent", class="App\Entity\Message", options={"id": "parentId"})
-     *
-     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
-     */
-    public function guestReplyToInvitation(
+    public function guestReply(
         Request $request,
         Message $invitation,
-        Subtrip $leg,
-        Message $parent
+        Member $guest,
+        Member $host
     ): Response {
-        if (!$this->isMessageOfMember($invitation)) {
-            throw $this->createAccessDeniedException('Not your message/hosting request');
-        }
-
-        $host = $invitation->getInitiator();
-        $guest = ($host === $invitation->getSender()) ? $invitation->getReceiver() : $invitation->getSender();
-        list($thread) =
-            $this->messageModel->getThreadInformationForMessage($invitation);
-
-        if ($this->checkInvitationExpired($invitation)) {
+        if ($this->model->hasExpired($invitation)) {
             $this->addExpiredFlash($host);
 
-            return $this->redirectToRoute('hosting_request_show', ['id' => $invitation->getId()]);
+            return $this->redirectToRoute('conversation_view', ['id' => $invitation->getId()]);
         }
+
+        list($thread) = $this->conversationModel->getThreadInformationForMessage($invitation);
 
         // keep all information from current hosting request except the message text
         $invitation = $this->getRequestClone($invitation);
+        $leg = $invitation->getRequest()->getInviteForLeg();
 
         // A reply consists of a new message and maybe a change of the status of the hosting request
         // Additionally the user might change the dates of the request or cancel the request altogether
@@ -205,16 +171,20 @@ class InvitationController extends BaseHostingRequestAndInvitationController
         $requestForm->handleRequest($request);
 
         if ($requestForm->isSubmitted() && $requestForm->isValid()) {
-            $newRequest = $this->persistRequest($requestForm, $parent, $guest, $host);
+            $realParent = $this->conversationModel->getLastMessageInConversation($invitation);
+            $newRequest = $this->persistRequest($requestForm, $realParent, $guest, $host);
 
             // In case the potential guest declines the invitation remove the invitedBy from the leg
+            $em = $this->getDoctrine()->getManager();
             if (HostingRequest::REQUEST_ACCEPTED === $newRequest->getRequest()->getStatus()) {
-                $em = $this->getDoctrine()->getManager();
-
                 $leg->setInvitedBy($host);
                 $em->persist($leg);
-                $em->flush();
             }
+            if (HostingRequest::REQUEST_DECLINED === $newRequest->getRequest()->getStatus()) {
+                $leg->setInvitedBy(null);
+                $em->persist($leg);
+            }
+            $em->flush();
 
             $subject = $this->getSubjectForReply($newRequest);
 
@@ -223,12 +193,12 @@ class InvitationController extends BaseHostingRequestAndInvitationController
                 $guest,
                 $newRequest,
                 $subject,
-                ($newRequest->getRequest()->getId() !== $parent->getRequest()->getId()),
+                ($newRequest->getRequest()->getId() !== $realParent->getRequest()->getId()),
                 $leg
             );
             $this->addTranslatedFlash('success', 'flash.notification.updated');
 
-            return $this->redirectToRoute('hosting_request_show', ['id' => $newRequest->getId()]);
+            return $this->redirectToRoute('conversation_view', ['id' => $newRequest->getId()]);
         }
 
         return $this->render('invitation/reply_from_guest.html.twig', [
@@ -236,43 +206,30 @@ class InvitationController extends BaseHostingRequestAndInvitationController
             'host' => $host,
             'form' => $requestForm->createView(),
             'thread' => $thread,
+            'leg' => $leg,
         ]);
     }
 
-    /**
-     * @Route("/invitation/{id}/reply/{leg}/host/{parentId}", name="invitation_reply_host",
-     *     requirements={"id": "\d+"})
-     *
-     * @ParamConverter("parent", class="App\Entity\Message", options={"id": "parentId"})
-     *
-     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
-     */
-    public function hostReplyToInvitation(
-        Request $request,
-        Message $invitation,
-        Subtrip $leg,
-        Message $parent
-    ): Response {
-        $host = $invitation->getInitiator();
-
-        $guest = ($host === $invitation->getSender()) ? $invitation->getReceiver() : $invitation->getSender();
-        list($thread, , $last) = $this->messageModel->getThreadInformationForMessage($invitation);
-
-        if ($this->checkRequestExpired($invitation)) {
+    public function hostReply(Request $request, Message $invitation, Member $guest, Member $host): Response
+    {
+        if ($this->model->hasExpired($invitation)) {
             $this->addExpiredFlash($guest);
 
-            return $this->redirectToRoute('hosting_request_show', ['id' => $last->getId()]);
+            return $this->redirectToRoute('conversation_view', ['id' => $invitation->getId()]);
         }
 
-        // keep all information from current hosting request except the message text
+        list($thread) = $this->conversationModel->getThreadInformationForMessage($invitation);
+
+        // keep all information from current invitation except the message text
         $invitation = $this->getRequestClone($invitation);
+        $leg = $invitation->getRequest()->getInviteForLeg();
 
         /** @var Form $requestForm */
         $requestForm = $this->createForm(InvitationHost::class, $invitation);
         $requestForm->handleRequest($request);
 
         if ($requestForm->isSubmitted() && $requestForm->isValid()) {
-            $realParent = $this->getParent($parent);
+            $realParent = $this->conversationModel->getLastMessageInConversation($invitation);
 
             // Switch $guest and $host for persist request as the thread is started by the potential host.
             $newRequest = $this->persistRequest($requestForm, $realParent, $host, $guest);
@@ -289,7 +246,7 @@ class InvitationController extends BaseHostingRequestAndInvitationController
             );
             $this->addTranslatedFlash('notice', 'flash.notification.updated');
 
-            return $this->redirectToRoute('hosting_request_show', ['id' => $newRequest->getId()]);
+            return $this->redirectToRoute('conversation_view', ['id' => $newRequest->getId()]);
         }
 
         return $this->render('invitation/reply_from_host.html.twig', [
@@ -297,42 +254,8 @@ class InvitationController extends BaseHostingRequestAndInvitationController
             'host' => $host,
             'form' => $requestForm->createView(),
             'thread' => $thread,
+            'leg' => $leg,
         ]);
-    }
-
-    /**
-     * @Route("/invitation/{id}", name="invitation_show",
-     *     requirements={"id": "\d+"})
-     *
-     * @throws AccessDeniedException
-     */
-    public function show(Message $message): Response
-    {
-        if ($this->needsRedirect($message, self::INVITATION)) {
-            return $this->redirectShow($message, false);
-        }
-
-        return $this->showThread($message, 'invitation/view.html.twig', 'invitation_show', false);
-    }
-
-    /**
-     * @Route("/invitation/{id}/deleted", name="invitation_show_with_deleted",
-     *     requirements={"id": "\d+"})
-     *
-     * @throws AccessDeniedException
-     */
-    public function showDeleted(Message $message): Response
-    {
-        if ($this->needsRedirect($message, self::INVITATION)) {
-            return $this->redirectShow($message, true);
-        }
-
-        return $this->showThread($message, 'invitation/view.html.twig', 'invitation_show', true);
-    }
-
-    protected function checkInvitationExpired(Message $hostingRequest): bool
-    {
-        return $this->invitationModel->isInvitationExpired($hostingRequest->getRequest());
     }
 
     protected function sendInvitationGuestReplyNotification(
@@ -343,7 +266,7 @@ class InvitationController extends BaseHostingRequestAndInvitationController
         bool $requestChanged,
         SubTrip $leg
     ): void {
-        $this->invitationModel->sendInvitationNotification(
+        $this->sendInvitationNotification(
             $guest,
             $host,
             $host,
@@ -355,22 +278,6 @@ class InvitationController extends BaseHostingRequestAndInvitationController
         );
     }
 
-    private function sendInvitationNotification(Member $host, Member $guest, Message $request)
-    {
-        $subject = $request->getSubject()->getSubject();
-
-        $this->invitationModel->sendInvitationNotification(
-            $host,
-            $guest,
-            $host,
-            $request,
-            $subject,
-            'invitation',
-            false,
-            null
-        );
-    }
-
     private function sendInvitationHostReplyNotification(
         Member $host,
         Member $guest,
@@ -379,7 +286,7 @@ class InvitationController extends BaseHostingRequestAndInvitationController
         bool $requestChanged,
         SubTrip $leg
     ): void {
-        $this->invitationModel->sendInvitationNotification(
+        $this->sendInvitationNotification(
             $host,
             $guest,
             $host,
@@ -389,5 +296,33 @@ class InvitationController extends BaseHostingRequestAndInvitationController
             $requestChanged,
             $leg
         );
+    }
+
+    /**
+     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
+     *
+     * @param mixed $subject
+     */
+    public function sendInvitationNotification(
+        Member $sender,
+        Member $receiver,
+        Member $host,
+        Message $request,
+        $subject,
+        string $template,
+        bool $requestChanged,
+        ?Subtrip $leg
+    ): bool {
+        // Send mail notification
+        $this->mailer->sendMessageNotificationEmail($sender, $receiver, $template, [
+            'host' => $host,
+            'subject' => $subject,
+            'message' => $request,
+            'request' => $request->getRequest(),
+            'changed' => $requestChanged,
+            'leg' => $leg,
+        ]);
+
+        return true;
     }
 }

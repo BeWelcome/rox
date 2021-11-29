@@ -6,35 +6,7 @@
 {% endblock stylesheets %}
 
 {% block content %}
-    {% set original = thread | last %}{% set request = original.Request %}
-    {% set myself = app.user %}
-    {% if original.Sender.Username == myself.Username %}{% set otherUser = original.Receiver %}{% else %}{% set otherUser = original.Sender %}{% endif %}
-    {% if current.subject %}{% set currentSubject = current.Subject.Subject %}{% else %}{% set currentSubject = 'Conversation with ' ~ otherUser.Username %}{% endif %}
-    {{ macros.messageheader(myself, otherUser, currentSubject) }}
-    <div class="row no-gutters justify-content-between mb-2">
-        <div>{# Always add <div> so that the reply button is on the right hand side for larger displays #}
-            {% if current.Sender == myself %}
-                {% if thread|length > 1 %}
-                    {% if current.folder == constant('App\\Doctrine\\InFolderType::SPAM') %}
-                        <a class="btn btn-sm btn-primary" href="{{ path('message_mark_nospam', { id: thread[1].id }) }}">
-                            <span class="fa-stack fa-1x">
-                                <i class="fa fa-flag fa-stack-1x"></i>
-                                <i class="fa fa-slash fa-stack-1x" style="color: #f37000"></i>
-                            </span>{{ 'marknospam' | trans }}</a>
-                    {% else %}
-                        <a class="btn btn-sm btn-primary" href="{{ path('message_mark_spam', { id: thread[1].id }) }}"><i class="fas fa-flag"></i> {{ 'markspam' | trans }}</a>
-                    {% endif %}
-                {% endif %}
-            {% else %}
-                {% if current.folder == constant('App\\Doctrine\\InFolderType::SPAM') %}
-                    <a class="btn btn-sm btn-primary" href="{{ path('message_mark_nospam', { id: thread[0].id }) }}">{{ 'marknospam' | trans }}</a>
-                {% else %}
-                    <a class="btn btn-sm btn-primary" href="{{ path('message_mark_spam', { id: thread[0].id }) }}"><i class="fas fa-flag"></i> {{ 'markspam' | trans }}</a>
-                {% endif %}
-            {%  endif %}
-        </div>
-        <div><a class="btn btn-sm btn-primary ml-auto" href="{{ path('conversation_reply', { id: thread[0].id }) }}">{{ 'message.button.reply' | trans }}</a></div>
-    </div>
+    {{ macros.messageheader(thread, show_deleted) }}
 
     {% include 'message/thread.html.twig' %}
 

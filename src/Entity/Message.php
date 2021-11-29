@@ -37,124 +37,93 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Message
 {
     /**
-     * @var string
-     *
      * @ORM\Column(name="MessageType", type="string", nullable=false)
      */
-    private $messageType = 'MemberToMember';
+    private string $messageType = 'MemberToMember';
 
     /**
-     * @var DateTime
-     *
      * @ORM\Column(name="updated", type="datetime", nullable=true)
      */
-    private $updated;
+    private ?DateTime $updated;
 
     /**
-     * @var DateTime
-     *
      * @ORM\Column(name="created", type="datetime", nullable=false)
      */
-    private $created;
+    private DateTime $created;
 
     /**
-     * @var DateTime
-     *
      * @ORM\Column(name="DateSent", type="datetime", nullable=false)
      */
-    private $dateSent;
+    private DateTime $dateSent;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="DeleteRequest", type="delete_request", nullable=true)
      */
-    private $deleteRequest;
+    private string $deleteRequest;
 
     /**
-     * @var Message
-     *
      * @ORM\OneToOne(targetEntity="App\Entity\Message", fetch="LAZY")
      * @ORM\JoinColumn(name="idParent", referencedColumnName="id", nullable=true)
      */
-    private $parent;
+    private ?Message $parent = null;
 
     /**
-     * @var Member
-     *
      * @ORM\ManyToOne(targetEntity="App\Entity\Member", fetch="LAZY")
      */
-    private $initiator;
+    private Member $initiator;
 
     /**
-     * @var Member
-     *
      * @ORM\ManyToOne(targetEntity="App\Entity\Member", fetch="EAGER")
      * @ORM\JoinColumn(name="idReceiver", referencedColumnName="id")
      */
-    private $receiver;
+    private Member $receiver;
 
     /**
-     * @var Member
-     *
      * @ORM\ManyToOne(targetEntity="App\Entity\Member", fetch="EAGER")
      * @ORM\JoinColumn(name="idSender", referencedColumnName="id")
      */
-    private $sender;
+    private Member $sender;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="SpamInfo", type="spam_info", nullable=false)
      */
-    private $spaminfo = SpamInfoType::NO_SPAM;
+    private string $spaminfo = SpamInfoType::NO_SPAM;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="Status", type="message_status", nullable=false)
      */
-    private $status = 'ToSend';
+    private string $status = 'ToSend';
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="Message", type="text", length=65535, nullable=false)
      *
      * @Assert\NotBlank()
      */
-    private $message;
+    private string $message;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="InFolder", type="in_folder", nullable=false)
      */
-    private $folder = InFolderType::NORMAL;
+    private string $folder = InFolderType::NORMAL;
 
     /**
-     * @var Carbon
-     *
      * @ORM\Column(name="WhenFirstRead", type="datetime", nullable=true)
      */
-    private $firstRead;
+    private ?DateTime $firstRead;
 
     /**
-     * @var Subject
-     *
      * @ORM\ManyToOne(targetEntity="Subject", cascade={"persist"}, inversedBy="messages")
+     * @ORM\JoinColumn(nullable=true)
      *
      * @Assert\NotBlank()
      */
-    private $subject;
+    private ?Subject $subject = null;
 
     /**
-     * @var HostingRequest
-     *
      * @ORM\ManyToOne(targetEntity="HostingRequest", cascade={"persist"}, fetch="EAGER", inversedBy="messages")
      * @ORM\JoinColumn(nullable=true)
      */
-    private $request;
+    private ?HostingRequest $request = null;
 
     /**
      * @var int
@@ -217,7 +186,7 @@ class Message
         return $this;
     }
 
-    public function getDeleteRequest(): string
+    public function getDeleteRequest(): ?string
     {
         return $this->deleteRequest;
     }
@@ -268,13 +237,6 @@ class Message
     public function getSender(): Member
     {
         return $this->sender;
-    }
-
-    public function setSpamInfo($spaminfo): self
-    {
-        $this->spaminfo = $spaminfo;
-
-        return $this;
     }
 
     public function removeFromSpaminfo(string $spamInfo): self

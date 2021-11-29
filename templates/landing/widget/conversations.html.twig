@@ -20,7 +20,7 @@
 					</div>
 				{% else %}
 					<p class="u-ellipsis {% if unread %}unread{% endif %}">
-						<a href="{{ path('conversation_show', { id: message.id } ) }}">
+						<a href="{{ path('conversation_view', { id: message.id } ) }}">
 							{% if message.subject %}
 								{{ message.subject.subject|raw }}
 							{% endif %}
@@ -28,7 +28,7 @@
 					</p>
 				{% endif %}
 				<p class="u-ellipsis {% if unread %}unread{% endif %}">
-					<a href="{{ path('conversation_show', { id: message.id } ) }}">{{ message.message|striptags|truncate(70) }}</a>
+					<a href="{{ path('conversation_view', { id: message.id } ) }}">{{ message.message|striptags|truncate(70) }}</a>
 				</p>
 				<p class="u-font-300 u-text-14">
 					{% if message.sender %}
@@ -40,7 +40,7 @@
 				</p>
 			</div>
 			<div class="u-ml-auto u-flex-shrink-0">
-				<a href="{{ path('conversation_show', { id: message.id } ) }}">
+				<a href="{{ path('conversation_view', { id: message.id } ) }}">
 					<i class="fa fa-chevron-right"></i>
 				</a>
 			</div>

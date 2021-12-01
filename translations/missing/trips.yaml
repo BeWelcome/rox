@@ -81,3 +81,28 @@ trip.additional.info.friends.same:
 trip.additional.info.family:
     - 'Travelling family'
     - Item in the dropdown for additional info for the trip
+trip.summary.placeholder:
+    - 'Provide a summary for your trip.'
+    - Placeholder shown as long as no text is entered in the trip summary field
+trip.description.placeholder:
+    - Describe your trip so that other have an idea why you're travelling.
+    - Placeholder shown as long as no text is entered in the trip description field
+trip.travellers:
+    - '# travellers'
+    - Label for the number of travellers dropdown
+mytrips:
+    - 'My trips'
+    - Item in the submenu of the trips module
+location:
+    - 'Location'
+    - Label for the field that gets the leg's location
+duration:
+    - 'Duration'
+    - Label for the field that gets the leg's duration
+create:
+    - 'Create (1)'
+    - Label for the create button on the trip creation page
+location.none.given:
+    - 'You need to select a location'
+    - Error text shown if no location was selected
+    - validators

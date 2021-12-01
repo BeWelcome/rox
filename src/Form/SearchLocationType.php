@@ -53,6 +53,9 @@ class SearchLocationType extends AbstractType
         $resolver->setDefaults([
             'data_class' => LocationRequest::class,
             'expired' => false,
+            'error_mapping' => [
+                '.' => 'fullname',
+            ]
         ]);
     }
 

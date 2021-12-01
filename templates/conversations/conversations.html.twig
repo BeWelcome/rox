@@ -18,7 +18,7 @@
 
 {% block content %}
 {% set member = app.user %}
-<div class="o-text u-font-display u-text">
+<div class="u-font-display u-text">
 	<h1>{{ submenu.active | trans }}</h1>
 	<div class="u-flex u-flex-col md:u-flex-row">
 		{% if submenu.active != 'spam' and submenu.active != 'deleted' %}
@@ -86,6 +86,6 @@
 
 	{% endif %}
 
-</div></div>
+</div>
 
 {% endblock %}

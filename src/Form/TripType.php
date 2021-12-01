@@ -52,6 +52,7 @@ class TripType extends AbstractType
                     '> 5' => 6,
                 ],
                 'label' => 'trip.travellers',
+                'choice_translation_domain' => false,
             ])
             ->add('invitationradius', ChoiceType::class, [
                 'choices' => [
@@ -66,6 +67,7 @@ class TripType extends AbstractType
                 ],
                 'required' => false,
                 'label' => 'trip.invitation.radius',
+                'choice_translation_domain' => false,
             ])
             ->add('additionalinfo', ChoiceType::class, [
                 'choices' => [
@@ -88,7 +90,7 @@ class TripType extends AbstractType
                 'allow_delete' => true,
                 'by_reference' => false,
                 'prototype' => true,
-//                'error_bubbling' => false,
+                'error_bubbling' => false,
                 'label' => false,
                 'attr' => [
                     'class' => 'form-collection',

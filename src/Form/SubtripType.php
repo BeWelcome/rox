@@ -64,11 +64,13 @@ class SubtripType extends AbstractType
             }
             $form->add('location', SearchLocationType::class, [
                     'expired' => $expired,
+                'label' => 'location',
                 ])
                 ->add('duration', TextType::class, [
                     'required' => false,
                     'mapped' => false,
                     'disabled' => $expired,
+                    'label' => 'duration',
                 ])
                 ->add('options', ChoiceType::class, [
                     'choices' => [
@@ -79,7 +81,7 @@ class SubtripType extends AbstractType
                     'multiple' => true,
                     'expanded' => true,
                     'disabled' => $expired,
-                ])            ;
+                ]);
         });
     }
 

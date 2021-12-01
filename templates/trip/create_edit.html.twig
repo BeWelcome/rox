@@ -68,7 +68,7 @@
         </div>
         {{ form_widget(form.location.name) }}{{ form_widget(form.location.geoname_id) }}{{ form_widget(form.location.latitude) }}{{ form_widget(form.location.longitude) }}
         {{ form_widget(form.arrival) }}{{ form_widget(form.departure) }}
-        {{ form_errors(form) }}
+        {{ form_errors(form.location.fullname) }}
     </div>
 {% endmacro %}
 
@@ -83,7 +83,6 @@
         {# <h1 class="u-text-56 u-leading-56 u-font-700 u-mb-24 u-text-white">{% if create %}{{ 'trip.create' | trans }}{% else %}{{ 'trip.edit' | trans }}{% endif %}</h1> #}
 
         {{ form_start(form, {'attr': {'autocomplete': 'off'} }) }}
-        {{ form_errors(form) }}
         <div>
             <div class="u-mb-24 u-relative">
                 {{ form_widget(form.summary, {'attr': { 'class': 'o-input--white o-input--no-border-on-hover o-input--white-xl', 'aria-label':'Title'}}) }}

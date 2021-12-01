@@ -20,7 +20,7 @@ export default class SearchPicker {
                         success: function (data) {
                             if (data.status !== "success") {
                                 // TODO i18n for name property
-                                data.locations = [{name: 'No matches found.', category: "Information", cnt: 0}];
+                                data.locations = [{name: 'No matches found.', category: "Information", admin1: "", country: "", geonameId: -1, latitude: 0, longitude: 0, isAdminUnit: false}];
                             }
                             response(
                                 $.map(data.locations, function (item) {
@@ -110,6 +110,9 @@ $.widget("custom.catcomplete", $.ui.autocomplete, {
             li = that._renderItemData(ul, item);
             if (item.category) {
                 li.attr("aria-label", item.category + " : " + item.label);
+            }
+            if(item.value === -1){
+                li.addClass("ui-state-disabled");
             }
         });
     }

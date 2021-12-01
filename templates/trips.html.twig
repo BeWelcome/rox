@@ -42,10 +42,9 @@
   </head>
   <body>
     {% include 'menu.html.twig' %}
-    <main role="main" 
+    <main role="main"
           class="c-trips">
       <div id="toasts" class="position-fixed w-100 d-flex flex-column px-2" style="z-index:1000"></div>
-      <div class="o-shadow"></div>
       {% set sidebar = (submenu is defined) %}
       {% set contentBlock %}
         {% for label, messages in app.flashes %}

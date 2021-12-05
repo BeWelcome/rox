@@ -42,7 +42,7 @@
 			{% endif %}
 			{% set messageText = message.Message | replace({'\n': ' ', '<br />': ' '}) | striptags %}
 			{% apply spaceless %}
-			<p class="m-0 mb-1">{{ message.sender.Username }}: {{ messageText | truncate(150) | raw -}}</p>
+			<p class="u-ellipsis m-0 mb-1">{{ message.sender.Username }}: {{ messageText | truncate(150) | raw -}}</p>
 			{% endapply %}
 			{% if message.request %}
 				<div class="d-flex alert-light p-2">

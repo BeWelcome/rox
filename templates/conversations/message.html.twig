@@ -71,11 +71,7 @@
 				</div>
             {% endif %}
 		</div>
-    </a>
-	<span class="text-muted small">{{ 'message.sentdate'|trans({'%sentDate%': message.dateSent | format_date( 'medium')}) }}
-		{{ 'by'|trans }}
-		{{ message.sender.Username }}
-    </span> 
+    </a> 
      <div class="u-flex u-justify-start">
      <a href="{{ path('conversation_reply', { id: message.id}) }}" class="o-button o-button-xs">{{ 'reply' | trans }}</a>
     </div>  

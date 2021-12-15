@@ -62,7 +62,7 @@ class PasswordController extends AbstractController
                 $member = null;
             }
             if (null === $member) {
-                $form->addError(new FormError($this->getTranslator()->trans('flash.email.reset.password')));
+                $form->addError(new FormError($this->getTranslator()->trans('resetpassworderror')));
             } else {
                 try {
                     $token = $this->passwordModel->generatePasswordResetToken($member);

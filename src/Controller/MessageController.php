@@ -11,6 +11,7 @@ use App\Service\Mailer;
 use App\Utilities\ConversationThread;
 use App\Utilities\ManagerTrait;
 use App\Utilities\TranslatedFlashTrait;
+use App\Utilities\TranslatorTrait;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Exception;
@@ -35,6 +36,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 class MessageController extends AbstractController
 {
     use TranslatedFlashTrait;
+    use TranslatorTrait;
 
     private Mailer $mailer;
     private ConversationModel $conversationModel;

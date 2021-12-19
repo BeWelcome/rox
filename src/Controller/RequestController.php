@@ -172,7 +172,7 @@ class RequestController extends BaseRequestAndInvitationController
         }
 
         if (
-            $this->model->hasRequestLimitExceeded(
+            $this->conversationModel->hasRequestLimitExceeded(
                 $member,
                 $this->getParameter('new_members_requests_per_hour'),
                 $this->getParameter('new_members_requests_per_day')

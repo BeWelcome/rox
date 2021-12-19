@@ -37,16 +37,16 @@
 					{{ 'unread.only' | trans }}
 				</label>
 			</div>
-			<div class="w-full">
-				{% if conversations.haveToPaginate %}
-					{{ pagerfanta( conversations, 'rounded_pagination') }}
-				{% endif %}
-			</div>
 		{% endif %}
 	</div>
 	{% if conversations.nbResults == 0 %}
 		<p>{{ 'conversations.none' | trans }}</p>
 	{% else %}
+    	<div class="w-full">
+		    {% if conversations.haveToPaginate %}
+				{{ pagerfanta( conversations, 'rounded_pagination') }}
+			{% endif %}
+			</div>
 		<div class="c-conversations">
 			{{ form_start(form) }}
 

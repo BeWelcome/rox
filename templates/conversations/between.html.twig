@@ -16,27 +16,16 @@
         <p>{{ 'messages.none' | trans }}</p>
     {% else %}
         {% if items.haveToPaginate %}
-        <div class="float-left">
+        <div class="u-mb-8">
             {{ pagerfanta( items, 'rounded_pagination') }}
-            <div class="clearfix mb-1"></div>
         </div>
         {% endif %}
-
-        {# set sorting header based on current folder. Outside of sent sort by sender #}
-        <table class="table table-responsive table-striped table-hover">
-            <tr>
-                <th class="align-middle"></th>
-                <th class="align-middle">{{ 'messagestext' | trans }}</th>
-                <th class="align-middle">&nbsp;</th>
-            </tr>
-            {% for message in items.currentPageResults %}
-                {% include 'conversations/message.html.twig' with { 'message': message, 'between': true } %}
-            {% endfor %}
-        </table>
+        {% for message in items.currentPageResults %}
+            {% include 'conversations/message.html.twig' with { 'message': message, 'between': true } %}
+        {% endfor %}
         {% if items.haveToPaginate %}
-            <div class="float-left">
+            <div class="u-mt-8">
                 {{ pagerfanta( items, 'rounded_pagination') }}
-                <div class="clearfix mb-1"></div>
             </div>
         {% endif %}
 

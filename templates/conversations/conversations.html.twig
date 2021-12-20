@@ -19,72 +19,72 @@
 {% block content %}
 {% set member = app.user %}
 <div class="u-font-display u-text">
-	<h1>{{ submenu.active | trans }}</h1>
-	<div class="u-flex u-flex-col md:u-flex-row">
-		{% if submenu.active != 'spam' and submenu.active != 'deleted' %}
-			<div class="u-flex u-flex-row u-mr-2 u-flex-initial u-items-start">
-				<label for="initiator" class="u-mr-4">
-					{{ 'started.by.me' | trans }}
-				</label>
-				<input id="initiator" type="range" class="o-slider js-switch-option" min="1" max="3" value="{{ initiator }}">
-				<label for="initiator" class="u-ml-4">
-					{{ 'started.by.someone.else' | trans }}
-				</label>
-			</div>
-			<div class="custom-control custom-switch md:u-ml-12">
-				<input type="checkbox" id="show_unread_only" name="search[show_options]" class="show_options custom-control-input js-switch-option" value="1" {% if showUnreadOnly %} checked="checked" {% endif %}>
-				<label class="switch-custom custom-control-label" for="show_unread_only">
-					{{ 'unread.only' | trans }}
-				</label>
-			</div>
-		{% endif %}
-	</div>
-	{% if conversations.nbResults == 0 %}
-		<p>{{ 'conversations.none' | trans }}</p>
-	{% else %}
-    	<div class="w-full">
-		    {% if conversations.haveToPaginate %}
-				{{ pagerfanta( conversations, 'rounded_pagination') }}
-			{% endif %}
-			</div>
-		<div class="c-conversations">
-			{{ form_start(form) }}
+    <h1>{{ submenu.active | trans }}</h1>
+    <div class="u-flex u-flex-col md:u-flex-row">
+        {% if submenu.active != 'spam' and submenu.active != 'deleted' %}
+            <div class="u-flex u-flex-row u-mr-2 u-flex-initial u-items-start">
+                <label for="initiator" class="u-mr-4">
+                    {{ 'started.by.me' | trans }}
+                </label>
+                <input id="initiator" type="range" class="o-slider js-switch-option" min="1" max="3" value="{{ initiator }}">
+                <label for="initiator" class="u-ml-4">
+                    {{ 'started.by.someone.else' | trans }}
+                </label>
+            </div>
+            <div class="custom-control custom-switch md:u-ml-12">
+                <input type="checkbox" id="show_unread_only" name="search[show_options]" class="show_options custom-control-input js-switch-option" value="1" {% if showUnreadOnly %} checked="checked" {% endif %}>
+                <label class="switch-custom custom-control-label" for="show_unread_only">
+                    {{ 'unread.only' | trans }}
+                </label>
+            </div>
+        {% endif %}
+    </div>
+    {% if conversations.nbResults == 0 %}
+        <p>{{ 'conversations.none' | trans }}</p>
+    {% else %}
+        {% if conversations.haveToPaginate %}
+            <div class="u-flex u-justify-end u-my-8">            
+                {{ pagerfanta( conversations, 'rounded_pagination') }}
+            </div>
+        {% endif %}
+        
+        <div class="c-conversations">
+            {{ form_start(form) }}
 
-			{% set correspondent %}receiver{% endset %}
-			{% set _route = app.request.attributes.get('_route') %}
+            {% set correspondent %}receiver{% endset %}
+            {% set _route = app.request.attributes.get('_route') %}
             {% for message in conversations.currentPageResults %}
-				{% include 'conversations/message.html.twig' with { 'message': message } %}
-			{% endfor %}
-		</div>
-        <div class="u-flex u-flex-col md:u-flex-row">
-            <div class="u-mt-16 u-mb-16 u-flex u-justify-self-start">
+                {% include 'conversations/message.html.twig' with { 'message': message } %}
+            {% endfor %}
+        </div>
+        <div class="u-flex u-justify-between u-my-8">
+            <div>
                 <input class="u-sr-only" type="checkbox" id="checkAll">
                 <label for="checkAll" class="o-button o-button--outline">{{ 'conversations.check.all'|trans }}</label>
-            </div>
-
-
-            <div class="u-flex u-flex-col md:u-flex-row" aria-label="{{ 'conversations.label.delete_or_spam'|trans }}">
+            </div>            
+            {% if conversations.haveToPaginate %}
+                <div>
+                    {{ pagerfanta( conversations, 'rounded_pagination') }}
+                </div>
+            {% endif %}
+        </div>
+        <div class="u-flex u-justify-start aria-label="{{ 'conversations.label.delete_or_spam'|trans }}"">
+                {{ form_widget(form.spam, { 'attr': { 'class': 'o-button o-button--outline u-mr-8' } }) }}
+                {% if submenu.active == 'deleted' %}
+                    {{ form_widget(form.purge, { 'attr': { 'class': 'o-button u-mr-8'} }) }}
+                {% endif %}
                 {% if submenu.active == 'deleted' %}
                     {{ form_widget(form.delete, { 'attr': { 'class': 'o-button o-button--outline'} }) }}
                 {% else %}
                     {{ form_widget(form.delete, { 'attr': { 'class': 'o-button '} }) }}
                 {% endif %}
-                {{ form_widget(form.spam, { 'attr': { 'class': 'o-button o-button--outline' } }) }}
-                {% if submenu.active == 'deleted' %}
-                    {{ form_widget(form.purge, { 'attr': { 'class': 'o-button '} }) }}
-                {% endif %}
-            </div>
+
         </div>
+        {{ form_rest(form) }}
+        {{ form_end(form) }}
+        
 
-		{{ form_rest(form) }}
-		{{ form_end(form) }}
-		<div class="w-full">
-			{% if conversations.haveToPaginate %}
-				{{ pagerfanta( conversations, 'rounded_pagination') }}
-			</div>
-		{% endif %}
-
-	{% endif %}
+    {% endif %}
 
 </div>
 

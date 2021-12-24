@@ -134,7 +134,7 @@ class MessageRepository extends EntityRepository
             )
             ->setParameter('member', $member)
             ->orderBy('m.created', 'DESC')
-            ->setMaxResults(250)
+            ->setMaxResults(500)
         ;
 
         return $qb->getQuery()->getResult();

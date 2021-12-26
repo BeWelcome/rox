@@ -116,7 +116,7 @@
 					{# message buttons #}
 					<div class="u-mt-auto u-mb-16 u-flex u-justify-center">
 						<a href="{{ url( 'conversations', { 'conversationsType': 'conversations' } ) }}" class="u-mt-16 o-button u-w-50 btn">
-                            <i class="fa u-mr-8 fa-envelope mr-1"></i>{{ 'landing.conversations' | trans }}
+                            <i class="fa u-mr-8 fa-envelope"></i>{{ 'landing.conversations' | trans }}
                         </a>
 					</div>
 				</div>
@@ -357,7 +357,7 @@
 			</h5>
 			<p class="u-font-display u-font-300">{{ communityNews.text | truncate(200) | raw }}</p>
         <a href="{{ url('communitynews_show', { id: communityNews.id} ) }}"
-           class="o-button u-my-16">{{ 'label.read.more' | trans }}</a>
+           class="o-button u-my-16"><i class="fas fa-angle-double-right u-mr-8"></i>{{ 'label.read.more' | trans }}</a>
 			<div>
 				<small>{{ communityNews.createdAt.diffForHumans }}</small>
           {% set commentsCount = communityNews.comments | length %}<small

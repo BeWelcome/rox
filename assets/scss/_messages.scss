@@ -31,12 +31,11 @@
 
 #message_thread {
   .message_own {
-    min-width: 50%;
-    max-width: 80%;
+    min-width: 40%;
+    max-width: 90%;
     padding: $pagination-padding-x;
     margin-bottom: .5rem;
-    border-radius: $border-radius;
-    border: 1px solid #bbb;
+    border-radius: 8px;
     background-color: #df9;
   }
 
@@ -45,12 +44,11 @@
   }
 
   .message_other {
-    min-width: 50%;
-    max-width: 80%;
+    min-width: 40%;
+    max-width: 90%;
     padding: $pagination-padding-x;
     margin-bottom: .5rem;
-    border-radius: $border-radius;
-    border: 1px solid #bbb;
+    border-radius: 8px;
     background-color: #ddd;
   }
 

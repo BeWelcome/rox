@@ -29,7 +29,7 @@
 }
 
 .o-pagination__item:hover {
-  background-color: var(--bewelcome-dark);
+  background-color: theme('colors.bewelcome-dark');
 }
 
 .o-pagination__item--active {

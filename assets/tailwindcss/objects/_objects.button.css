@@ -117,27 +117,17 @@
 }
 
 .o-button--outline-gray {
-  background-color: theme('colors.gray-60');
+  background-color: theme('colors.white');
   border: 1px solid theme('colors.gray-60');
   color: theme('colors.gray-60');
-  height: initial;
-  min-height: 56px;
-  font-size: 14px;
-  line-height: 16px;
   font-weight: 400;
-  padding: 4px;
 }
 
 .o-button--outline-gray-inverse {
   background-color: theme('colors.gray-60');
   border: 1px solid theme('colors.gray-60');
   color: theme('colors.white');
-  height: initial;
-  min-height: 56px;
-  font-size: 14px;
-  line-height: 16px;
   font-weight: 400;
-  padding: 4px;
 }
 
 
@@ -166,6 +156,13 @@
   opacity: 1;
 }
 
+.o-button--outline-gray.active,
+.o-button--outline-gray:hover {
+  background-color: theme('colors.gray-60');
+  border: 1px solid theme('colors.gray-60');
+  color: theme('colors.white');
+  opacity: 1;
+}
 .o-button--outline-inverse:hover {
   opacity: 1;
   color: theme('colors.white');

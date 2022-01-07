@@ -89,7 +89,7 @@ class MessageController extends AbstractController
             $body = $messageForm->get('message')->getData();
 
             $this->addMessageAndSendNotification($sender, $receiver, null, $subject, $body);
-            $this->addTranslatedFlash('success', 'flash.message.sent');
+            $this->addTranslatedFlash('notice', 'flash.message.sent');
 
             return $this->redirectToRoute('members_profile', ['username' => $receiver->getUsername()]);
         }
@@ -128,7 +128,7 @@ class MessageController extends AbstractController
 
             $messageText = $data->getMessage();
             $message = $this->addMessageAndSendNotification($sender, $receiver, $message, $replySubject, $messageText);
-            $this->addTranslatedFlash('success', 'flash.reply.sent');
+            $this->addTranslatedFlash('notice', 'flash.reply.sent');
 
             return $this->redirectToRoute('conversation_view', ['id' => $message->getId()]);
         }

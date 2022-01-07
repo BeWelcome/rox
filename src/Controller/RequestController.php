@@ -95,7 +95,7 @@ class RequestController extends BaseRequestAndInvitationController
                 $subject,
                 ($newRequest->getRequest()->getId() !== $realParent->getRequest()->getId())
             );
-            $this->addTranslatedFlash('success', 'flash.notification.updated');
+            $this->addTranslatedFlash('notice', 'flash.notification.updated');
 
             return $this->redirectToRoute('conversation_view', ['id' => $newRequest->getId()]);
         }
@@ -206,7 +206,7 @@ class RequestController extends BaseRequestAndInvitationController
                 $member,
                 $hostingRequest
             );
-            $this->addTranslatedFlash('success', 'flash.request.sent');
+            $this->addTranslatedFlash('notice', 'flash.request.sent');
 
             return $this->redirectToRoute('members_profile', ['username' => $host->getUsername()]);
         }

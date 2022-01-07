@@ -16,6 +16,7 @@ module.exports = {
     colors: {
       'bewelcome': '#f37000',
       'bewelcome-dark': '#cd5e00',
+      'notice' : '#cce6fd',
       'red': '#f3000a',
       'yellow': '#f3ea00',
       'green': '#00f370',

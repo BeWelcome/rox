@@ -66,7 +66,7 @@
 {% macro roundedavatarstack(username, size, right, displayname = true) %}
     {% import _self as macros %}
     {% set img %}<img class="o-avatar__img" src="{{ path( 'avatar', { 'username': username , 'size': size }) }}" title="{{ username }}" alt="{{ 'profile' | trans }}: {{ username }}">{% endset %}
-    {{ macros.profilelink(username, img, 'o-avatar__img-wrapper') }}
+    {{ macros.profilelink(username, img, 'o-avatar__img-wrapper o-avatar--shadow-s') }}
     {% if displayname %}
         {{ macros.profilelink(username, username, 'o-avatar__name') }}
     {% endif %}
@@ -92,48 +92,52 @@
     {% set current = thread|first %}
     {% set correspondent = (current.sender == myself) ? current.receiver : current.sender %}
     {% if current.subject %}{% set subject = current.Subject.Subject %}{% else %}{% set subject = 'conversation.with'|trans({'username':correspondent.Username}) %}{% endif %}
-    <div class="u-flex u-justify-between bg-white p-1 u-rounded-4 mb-1">
-        <div class="o-avatar">{{ macros.roundedavatarstack(correspondent.Username, 48, false) }}</div>
-        <div class="u-text-32 u-leading-48 u-self-center u-text-center u-text-black u-font-700 u-line-clamp-3">{{ subject }}</div>
-        <div class="o-avatar">{{ macros.roundedavatarstack(myself.Username, 48, true) }}</div>
+    <div class="u-flex u-justify-start u-bg-gray-5 u-p-8 u-rounded-8 u-mb-8 u-items-center">
+        <div class="u-ml-auto u-flex-shrink-0 u-mr-24">
+            <a href="{{ url( 'conversations', { 'conversationsType': 'conversations' } ) }}">
+                <i class="fa fa-chevron-left"></i>
+            </a>
+        </div>
+        <div class="o-avatar u-mt-8">{{ macros.roundedavatarstack(correspondent.Username, 100, false) }}</div>
+        <div class="md:u-text-32 md:u-leading-48 u-self-center u-text-center u-text-black u-font-700 u-line-clamp-3 u-place-self-center u-w-full">{{ subject }}</div>
     </div>
     {% if show_buttons %}
-    <div class="u-flex u-justify-between bg-white p-1 mb-1 u-rounded-4">
-        <div>{# Always add <div> so that the reply button is on the right hand side for larger displays #}
+    <div class="u-flex u-justify-between u-bg-gray-5 u-p-8 u-rounded-8 u-mb-8">
+        <div class="u-flex u-flex-row">{# Always add <div> so that the reply button is on the right hand side for larger displays #}
             {% if not show_deleted %}
-                <a class="btn btn-sm btn-outline-secondary mr-1" href="{{ url('conversation_delete', {'id': current.id}) }}"><i class="fa fa-trash"></i> {{ 'delete'|trans }}</a>
+                <a class="o-button o-button o-button--outline-gray u-mr-8" href="{{ url('conversation_delete', {'id': current.id}) }}"><i class="fa fa-trash u-mr-8"></i> {{ 'delete'|trans }}</a>
             {% else %}
-                <a class="btn btn-sm btn-outline-secondary mr-1" href="{{ url('conversation_recover', {'id': current.id}) }}">
-                    <span class="fa-layers fa-fw">
+                <a class="o-button" href="{{ url('conversation_recover', {'id': current.id}) }}">
+                    <span class="fa-layers fa-fw u-mr-8">
                         <i class="fas fa-trash"></i>
-                        <i class="fas fa-slash" style="color:red"></i>
+                        <i class="fas fa-slash u-text-red"></i>
                     </span> {{ 'recover'|trans }}</a>
             {% endif %}
             {% if current.Sender == myself %}
                 {% if thread|length > 1 %}
                     {% if current.folder == constant('App\\Doctrine\\InFolderType::SPAM') %}
-                        <a class="btn btn-sm btn-outline-secondary" href="{{ path('conversation_mark_nospam', { id: thread[1].id }) }}">
-                        <span class="fa-layers fa-fw">
+                        <a class="o-button" href="{{ path('conversation_mark_nospam', { id: thread[1].id }) }}">
+                        <span class="fa-layers fa-fw u-mr-8">
                             <i class="fas fa-flag"></i>
-                            <i class="fas fa-slash" style="color:red"></i>
+                            <i class="fas fa-slash u-text-red"></i>
                         </span> {{ 'marknospam' | trans }}</a>
                     {% else %}
-                        <a class="btn btn-sm btn-outline-secondary" href="{{ path('conversation_mark_spam', { id: thread[1].id }) }}"><i class="fas fa-flag"></i> {{ 'markspam' | trans }}</a>
+                        <a class="o-button" href="{{ path('conversation_mark_spam', { id: thread[1].id }) }}"><i class="fas fa-flag u-mr-8"></i> {{ 'markspam' | trans }}</a>
                     {% endif %}
                 {% endif %}
             {% else %}
                 {% if current.folder == constant('App\\Doctrine\\InFolderType::SPAM') %}
-                    <a class="btn btn-sm btn-outline-secondary" href="{{ path('conversation_mark_nospam', { id: thread[0].id }) }}">
-                        <span class="fa-layers fa-fw">
+                    <a class="o-button" href="{{ path('conversation_mark_nospam', { id: thread[0].id }) }}">
+                        <span class="fa-layers fa-fw u-mr-8">
                             <i class="fas fa-flag"></i>
-                            <i class="fas fa-slash" style="color:red"></i>
+                            <i class="fas fa-slash u-text-red"></i>
                         </span> {{ 'marknospam' | trans }}</a>
                 {% else %}
-                    <a class="btn btn-sm btn-outline-secondary" href="{{ path('conversation_mark_spam', { id: thread[0].id }) }}"><i class="fas fa-flag"></i> {{ 'markspam' | trans }}</a>
+                    <a class="o-button o-button--outline" href="{{ path('conversation_mark_spam', { id: thread[0].id }) }}"><i class="fas fa-flag u-mr-8"></i> {{ 'markspam' | trans }}</a>
                 {% endif %}
             {%  endif %}
         </div>
-        <div><a class="btn btn-sm btn-primary ml-1" href="{{ path('conversation_reply', { id: thread[0].id }) }}">{{ 'message.button.reply' | trans }}</a></div>
+        <div><a class="o-button u-ml-8" href="{{ path('conversation_reply', { id: thread[0].id }) }}"><i class="fas fa-reply u-mr-8"></i>{{ 'message.button.reply' | trans }}</a></div>
     </div>
     {% endif %}
 {% endmacro %}

@@ -5,7 +5,6 @@
 .o-avatar {
   display: grid;
   grid-template-rows: 32px 1fr;
-  width: 32px;
   position: relative;
   flex-shrink: 0;
 }
@@ -31,14 +30,12 @@
   margin-top: 1px;
   font-family: Signika;
   font-size: 10px;
-  word-break: break-all;
 }
 
 @screen sm {
   .o-avatar {
     display: grid;
     grid-template-rows: 48px 1fr;
-    width: 48px;
     position: relative;
     flex-shrink: 0;
   }
@@ -64,7 +61,7 @@
     margin-top: 1px;
     font-family: Signika;
     font-size: 12px;
-    word-break: break-all;
+
   }
 }
 
@@ -72,7 +69,6 @@
   .o-avatar {
     display: grid;
     grid-template-rows: 72px 1fr;
-    width: 72px;
     position: relative;
     flex-shrink: 0;
   }
@@ -98,7 +94,6 @@
     margin-top: 3px;
     font-family: Signika;
     font-size: 13px;
-    word-break: break-all;
   }
 }
 
@@ -106,7 +101,6 @@
   .o-avatar {
     display: grid;
     grid-template-rows: 96px 1fr;
-    width: 96px;
     position: relative;
     flex-shrink: 0;
   }
@@ -132,7 +126,6 @@
     margin-top: 4px;
     font-family: Signika;
     font-size: 14px;
-    word-break: break-all;
   }
 }
 
@@ -276,6 +269,9 @@
   border: 5px solid theme('colors.white');
 }
 
+.o-avatar--noname_s .o-avatar__img-wrapper {
+  border: 2px solid theme('colors.white');
+}
 
 .o-avatar--shadow {
   box-shadow: 0 0 30px 0 #d7d7d7;

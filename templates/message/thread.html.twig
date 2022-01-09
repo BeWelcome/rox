@@ -2,11 +2,22 @@
 {% set current = thread|first %}
 {% set myself = app.user %}
 {% set requestChanged = false %}
-{% if current.Sender.Username == myself.Username %}{% set otherUser = current.Receiver %}{% else %}{% set otherUser = current.Sender %}{% endif %}
-{% if current.Subject %}{% set currentSubject = current.Subject.Subject %}{% else %}{% set currentSubject = 'message.conversation_with' | trans | format(otherUser.Username)  %} {% endif %}
-{% if current.Request %}{% set currentArrival = current.Request.Arrival %}{% set currentDeparture = current.Request.Departure %}{% endif %}
+{% if current.Sender.Username == myself.Username %}
+    {% set otherUser = current.Receiver %}
+{% else %}
+    {% set otherUser = current.Sender %}
+{% endif %}
+{% if current.Subject %}
+    {% set currentSubject = current.Subject.Subject %}
+{% else %}
+    {% set currentSubject = 'message.conversation_with' | trans | format(otherUser.Username)  %}
+{% endif %}
+{% if current.Request %}
+    {% set currentArrival = current.Request.Arrival %}{% set currentDeparture = current.Request.Departure %}
+    {% set currentFlexible = current.Request.Flexible %}{% set currentTravelers = current.Request.NumberOfTravellers %}
+{% endif %}
 
-<div id="message_thread" class="mb-2">
+<div id="message_thread" class="u-mb-4">
     {% for message in thread %}
         {% set own = (myself.Username == message.Sender.Username) %}
         {# Check if the member deleted the message/request #}
@@ -16,64 +27,68 @@
             {% set show_deleted = false %}
         {% endif %}
         {% if (show_deleted or not deleted) and not purged %}
-            <div class="row no-gutters {% if own %}justify-content-end{% else %}justify-content-start{% endif %}">
-                <div class="col-auto{% if own %} order-12 pr-0{% else %} pl-0{% endif %}">
-                    {% if own %}
-                        <div class="o-avatar--s ml-1">{{ macros.roundedavatarstack(myself.Username, 32, false) }}</div>
-                    {% else %}
-                        <div class="o-avatar--s mr-1">{{ macros.roundedavatarstack(otherUser.Username, 32, false) }}</div>
-                    {% endif %}
-                </div>
-                <div class="col-auto message_{% if own %}own{% else %}other{% endif %} {% if deleted %}deleted{% endif %}">
-                    <small class="{% if own %}pull-right{% endif %} text-muted m-0">
+            <div class="u-flex {% if own %}u-justify-end{% else %}u-justify-start{% endif %}">
+                <div class="u-flex u-flex-col message_{% if own %}own u-justify-end{% else %}other u-justify-start{% endif %} {% if deleted %}deleted{% endif %}">
+                    <small class="u-flex {% if own %}u-justify-end {% else %}u-justify-start {% endif %} text-muted u-m-0">
                         {%- if own -%}
-                            {{ 'message.you' | trans }}
+                            <div class="u-flex u-flex-col u-justify-center u-items-end">
+                                <span>{{ 'message.you' | trans }}</span>
+                                <span title="{{ message.created.toDateTimeString }}">{{ message.created.DiffForHumans }}</span>
+                            </div>
+                            <div class="o-avatar--xs o-avatar--noname o-avatar--noname_s u-ml-8">{{ macros.roundedavatarstack(myself.Username, 50, true) }}</div>
                         {%- else -%}
-                            {{ macros.profilelink(message.sender.Username) }}
+                            <div class="o-avatar--xs o-avatar--noname o-avatar--noname_s u--ml-4 u-mr-8">{{ macros.roundedavatarstack(otherUser.Username, 50, true) }}</div>
+                            <div class="u-flex u-flex-col u-justify-center">
+                                <span>{{ macros.profilelink(message.sender.Username) }}</span>
+                                <span title="{{ message.created.toDateTimeString }}">{{ message.created.DiffForHumans }}</span>
+                            </div>
                         {%- endif %}
-                        <span title="{{ message.created.toDateTimeString }}">{{ message.created.DiffForHumans }}</span>
+
                     </small>
-                    <p class="clearfix m-0"></p>
                     {{ message.message|purify('custom')|url_update }}
                 </div>
             </div>
             {% if message.Request %}
-                {% if message.Request.Arrival != currentArrival or message.Request.Departure != currentDeparture or (loop.last == true and requestChanged == true) %}
+                {% if message.Request.Arrival != currentArrival or message.Request.Departure != currentDeparture or message.Request.Flexible != currentFlexible or message.Request.NumberOfTravellers != currentTravelers or (loop.last == true and requestChanged == true) %}
                     {% set request = message.Request %}
-                    <div class="row no-gutters bg-white border-1 mb-1">
-                        <div class="col-12 mb-1">{% if loop.last == true %}{{ 'original.request.details'|trans }}{% else %}{{ 'former.request.details'|trans }}{% endif %}</div>
-                        <div class="col-12 col-md-4 mb-1">
-                            {% if original.Sender.Username == myself.Username %}
-                                {% if request.flexible %}
-                                    <div>{{ 'I\'m flexible with arrival and departure' }}</div>{% endif %}
-                                {% if request.numberOfTravellers != 1 %}
-                                <div><i
-                                    class="fa fa-users mr-1"></i>{{ 'Request for %s guest(s)' | format(request.numberOfTravellers) }}
-                                </div>{% endif %}
+                    <div class="u-rounded-8 u-p-8 u-w-full u-mb-8 u-bg-gray-5">
+                        <h6 class="u-p-4">
+                            {% if loop.last == true %}
+                                {{ 'original.request.details'|trans }}
                             {% else %}
-                                {% if request.flexible %}
-                                    <div>{{ 'Flexible with arrival and departure' }}</div>{% endif %}
-                                {% if request.numberOfTravellers != 1 %}
-                                    <div><i
-                                    class="fa fa-users mr-1"></i>{{ 'Travelling in a group of %s' | format(request.numberOfTravellers) }}
-                                    </div>
-                                {% endif %}
+                                {{ 'former.request.details'|trans }}
                             {% endif %}
-                        </div>
-
-                        <div class="col-12 col-sm-6 col-md-4 mb-1">
-                            <div><i class="fa fa-calendar mr-1"></i>{{ 'request.arrival' | trans }}</div>
-                            <div>{{ request.arrival|format_date('full') }}</div>
-                        </div>
-
-                        {% if  request.Departure -%}
-                            <div class="col-12 col-sm-6 col-md-4 mb-1">
-                                <div><i class="fa fa-calendar mr-1"></i>{{ 'request.departure' | trans }}</div>
-                                <div>{{ request.departure|format_date('full') }}</div>
+                        </h6>
+                        <div class="u-flex u-flex-col md:u-flex-row u-justify-between">
+                            <div>
+                                <div class="u-p-4">
+                                    <i class="fa fa-calendar u-mr-8"></i>
+                                    {{ request.arrival|format_date(pattern="EEEE, MMM d") }}
+                                    -
+                                    {{ request.departure|format_date(pattern="EEEE, MMM d, yyyy") }}
+                                </div>
                             </div>
-                        {%- endif %}
-                        {% set currentArrival = message.Request.Arrival%}
+                            <div>
+                                <div class="u-p-4">
+                                    <i class="fa fa-users u-mr-4"></i>
+                                    {{ 'request.number.persons'|trans ({'numberpersons': request.numberOfTravellers}) }}
+                                </div>
+                            </div>
+                            <div>
+                                <div class="u-p-4">
+                                    <i class="fas fa-sync u-mr-8"></i>
+                                    {% if request.flexible %}
+                                        {{ 'request.flexible.with.arrival.departure'|trans }}
+                                    {% else %}
+                                        {{ 'request.not.flexible.with.arrival.departure'|trans }}
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        {% set currentArrival = message.Request.Arrival %}
                         {% set currentDeparture = message.Request.Departure %}
+                        {% set currentFlexible = message.Request.Flexible %}
+                        {% set currentTraveler = message.Request.NumberOfTravellers %}
                         {% set requestChanged = true %}
                     </div>
                 {% endif %}

@@ -3,8 +3,7 @@
 
 {% block subnav %}
     {% for filter, menuitem in submenu.items %}
-        <a class="list-group-item nav-link {% if submenu.active == filter %}active{% endif %}"
-           href="{{ path( submenu.route, { filter: filter } ) }}">{{ filter | trans }}</a>
+        <a class="list-group-item nav-link {% if submenu.active == filter %}active{% endif %}" href="{{ path( submenu.route, { filter: filter } ) }}">{{ filter | trans }}</a>
     {% endfor %}
 {% endblock %}
 
@@ -15,10 +14,10 @@
 {% block content %}
     {% set myself = app.user %}
 
-    {{ macros.new_conversation_header(receiver, myself, 'message.write_to') }}
+    {{ macros.new_conversation_header(receiver, 'message.write_to') }}
 
-    <div class="row no-gutters">
-        <div class="col-12 mb-2">
+    <div class="u-grid u-col-1">
+        <div class="u-mb-4">
             {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
             {{ form_errors(form) }}
             {{ form_row(form.subject.subject) }}
@@ -26,9 +25,9 @@
             {{ form_rest(form) }}
         </div>
 
-        <div class="col-12 mb-2">
+        <div class="u-mb-4">
             <div class="u-flex u-justify-end">
-                <button type="submit" class="btn btn-primary">{{ 'message.send' | trans }}</button>
+                <button type="submit" class="o-button u-mt-8">{{ 'message.send' | trans }}</button>
             </div>
         </div>
         {{ form_end(form) }}

@@ -1,7 +1,6 @@
 {% macro input(name, placeholder, value, type) %}
     <label for="{{ name }}" class="sr-only">{{ placeholder|trans }}</label>
-    <input class="o-input m-1" type="{{ type|default('text') }}" name="{{ name }}" placeholder="{{ placeholder|trans }}"
-           value="{{ value|e }}" />
+    <input class="o-input m-1" type="{{ type|default('text') }}" name="{{ name }}" placeholder="{{ placeholder|trans }}" value="{{ value|e }}"/>
 {% endmacro %}
 
 {% macro submit(text, class = false) %}
@@ -10,33 +9,27 @@
 
 {% macro select(name, values, value, class) %}
     {# Source: https://github.com/joomla/jissues/blob/master/templates/fields.twig #}
-    <select name="{{ name }}" {% if class %} class="{{ class }}"{% endif %}>
+    <select name="{{ name }}" {% if class %} class="{{ class }}" {% endif %}>
         {% for key, name in values %}
-            <option value="{{ key }}"{% if value == key %} selected="selected"{% endif %}>{{ name }}</option>
+            <option value="{{ key }}" {% if value == key %} selected="selected" {% endif %}>{{ name }}</option>
         {% endfor %}
     </select>
 {% endmacro %}
 
 {% macro select2(name, class, placeholder, values, value, allowClear, noSearchBox, width) %}
-    <select name="{{ name }}" class="{% if class %}{{ class }} {% endif %}select2"
-            {% if placeholder %}data-placeholder="{{ placeholder }}"{% endif %}
-            {% if allowClear %}data-allow-clear="{{ allowClear }}"{% endif %}
-            {% if noSearchBox %}data-minimum-results-for-search="-1"{% endif %}
-            {% if width %}style="width: {{ width }}em;"{% endif %}>
+    <select name="{{ name }}" class="{% if class %}{{ class }} {% endif %}select2" {% if placeholder %} data-placeholder="{{ placeholder }}" {% endif %} {% if allowClear %} data-allow-clear="{{ allowClear }}" {% endif %} {% if noSearchBox %} data-minimum-results-for-search="-1" {% endif %} {% if width %} style="width: {{ width }}em;" {% endif %}>
         {% for key, name in values %}
             {% if key == -1 %}
                 <option></option>
             {% else %}
-                <option value="{{ key }}"{% if value == key %} selected="selected"{% endif %}>{{ name }}</option>
+                <option value="{{ key }}" {% if value == key %} selected="selected" {% endif %}>{{ name }}</option>
             {% endif %}
         {% endfor %}
     </select>
 {% endmacro %}
 
 {% macro select2ajax(name, class, placeholder, value, text) %}
-    <select name="{{ name }}" class="{% if class %}{{ class }} {% endif %}" style="width: 100%"
-            {% if placeholder %}data-placeholder="{{ placeholder }}"{% endif %}
-        >
+    <select name="{{ name }}" class="{% if class %}{{ class }} {% endif %}" style="width: 100%" {% if placeholder %} data-placeholder="{{ placeholder }}" {% endif %}>
 
         <option value="{{ value }}" selected="selected">{{ text }}</option>
     </select>
@@ -44,8 +37,16 @@
 
 {% macro avatar(username, size, linked = false, addimage = false, addlink = false, newpage = false) %}
     {% import _self as macros %}
-    {% set imgclasses %}profileimg{% if addimage %} {{ addimage }}{% endif %}{% endset %}
-    {% set linkclasses %}{% if addlink %} {{ addlink }}{% endif %}{% endset %}
+    {% set imgclasses %}profileimg
+    {% if addimage %}
+        {{ addimage }}
+    {% endif %}
+    {% endset %}
+    {% set linkclasses %}
+    {% if addlink %}
+        {{ addlink }}
+    {% endif %}
+    {% endset %}
     {% set img %}<img class="{{ imgclasses }} avatar-{{ size }}" src="{{ path( 'avatar', { 'username': username , 'size': size }) }}" title="{{ username }}" alt="{{ 'profile' | trans }}: {{ username }}">{% endset %}
     {% if linked %}
         {{ macros.profilelink(username, img, linkclasses, newpage) }}
@@ -59,7 +60,8 @@
     {% import _self as macros %}
     {% set img %}<img class="profileimg avatar-{{ size }}" src="{{ path( 'avatar', { 'username': username , 'size': size }) }}" title="{{ username }}" alt="{{ 'profile' | trans }}: {{ username }}">{% endset %}
     {{ macros.profilelink(username, img) }}
-    {% if displayname %}<br><small>{{ macros.profilelink(username) }}</small>{% endif %}
+    {% if displayname %}<br><small>{{ macros.profilelink(username) }}</small>
+    {% endif %}
 {% endmacro %}
 
 {# \new avatar for trip pages #}
@@ -73,9 +75,13 @@
 {% endmacro %}
 
 {% macro profilelink(username, displayname = false, classes = false, newpage = false) %}
-<a href="{{ path( 'members_profile', { 'username': username }) }}"
-   {% if classes %}class="{{ classes }}" {% endif %}
-   {% if newpage %}target="_blank"{% endif %}>{% if displayname %}{{ displayname }}{% else %}{{ username }}{% endif %}</a>
+    <a href="{{ path( 'members_profile', { 'username': username }) }}" {% if classes %} class="{{ classes }}" {% endif %} {% if newpage %} target="_blank" {% endif %}>
+        {% if displayname %}
+            {{ displayname }}
+        {% else %}
+            {{ username }}
+        {% endif %}
+    </a>
 {% endmacro %}
 
 {% macro link( route, type ) %}
@@ -91,7 +97,11 @@
     {% set myself = app.user %}
     {% set current = thread|first %}
     {% set correspondent = (current.sender == myself) ? current.receiver : current.sender %}
-    {% if current.subject %}{% set subject = current.Subject.Subject %}{% else %}{% set subject = 'conversation.with'|trans({'username':correspondent.Username}) %}{% endif %}
+    {% if current.subject %}
+        {% set subject = current.Subject.Subject %}
+    {% else %}
+        {% set subject = 'conversation.with'|trans({'username':correspondent.Username}) %}
+    {% endif %}
     <div class="u-flex u-justify-start u-bg-gray-5 u-p-8 u-rounded-8 u-mb-8 u-items-center">
         <div class="u-ml-auto u-flex-shrink-0 u-mr-24">
             <a href="{{ url( 'conversations', { 'conversationsType': 'conversations' } ) }}">
@@ -102,43 +112,58 @@
         <div class="md:u-text-32 md:u-leading-48 u-self-center u-text-center u-text-black u-font-700 u-line-clamp-3 u-place-self-center u-w-full">{{ subject }}</div>
     </div>
     {% if show_buttons %}
-    <div class="u-flex u-justify-between u-bg-gray-5 u-p-8 u-rounded-8 u-mb-8">
-        <div class="u-flex u-flex-row">{# Always add <div> so that the reply button is on the right hand side for larger displays #}
-            {% if not show_deleted %}
-                <a class="o-button o-button o-button--outline-gray u-mr-8" href="{{ url('conversation_delete', {'id': current.id}) }}"><i class="fa fa-trash u-mr-8"></i> {{ 'delete'|trans }}</a>
-            {% else %}
-                <a class="o-button" href="{{ url('conversation_recover', {'id': current.id}) }}">
-                    <span class="fa-layers fa-fw u-mr-8">
-                        <i class="fas fa-trash"></i>
-                        <i class="fas fa-slash u-text-red"></i>
-                    </span> {{ 'recover'|trans }}</a>
-            {% endif %}
-            {% if current.Sender == myself %}
-                {% if thread|length > 1 %}
-                    {% if current.folder == constant('App\\Doctrine\\InFolderType::SPAM') %}
-                        <a class="o-button" href="{{ path('conversation_mark_nospam', { id: thread[1].id }) }}">
-                        <span class="fa-layers fa-fw u-mr-8">
-                            <i class="fas fa-flag"></i>
-                            <i class="fas fa-slash u-text-red"></i>
-                        </span> {{ 'marknospam' | trans }}</a>
-                    {% else %}
-                        <a class="o-button" href="{{ path('conversation_mark_spam', { id: thread[1].id }) }}"><i class="fas fa-flag u-mr-8"></i> {{ 'markspam' | trans }}</a>
-                    {% endif %}
-                {% endif %}
-            {% else %}
-                {% if current.folder == constant('App\\Doctrine\\InFolderType::SPAM') %}
-                    <a class="o-button" href="{{ path('conversation_mark_nospam', { id: thread[0].id }) }}">
-                        <span class="fa-layers fa-fw u-mr-8">
-                            <i class="fas fa-flag"></i>
-                            <i class="fas fa-slash u-text-red"></i>
-                        </span> {{ 'marknospam' | trans }}</a>
+        <div class="u-flex u-justify-between u-bg-gray-5 u-p-8 u-rounded-8 u-mb-8">
+            <div
+                class="u-flex u-flex-row">
+                {# Always add <div> so that the reply button is on the right hand side for larger displays #}
+                {% if not show_deleted %}
+                    <a class="o-button o-button o-button--outline-gray u-mr-8" href="{{ url('conversation_delete', {'id': current.id}) }}">
+                        <i class="fa fa-trash u-mr-8"></i>
+                        {{ 'delete'|trans }}</a>
                 {% else %}
-                    <a class="o-button o-button--outline" href="{{ path('conversation_mark_spam', { id: thread[0].id }) }}"><i class="fas fa-flag u-mr-8"></i> {{ 'markspam' | trans }}</a>
+                    <a class="o-button" href="{{ url('conversation_recover', {'id': current.id}) }}">
+                        <span class="fa-layers fa-fw u-mr-8">
+                            <i class="fas fa-trash"></i>
+                            <i class="fas fa-slash u-text-red"></i>
+                        </span>
+                        {{ 'recover'|trans }}</a>
                 {% endif %}
-            {%  endif %}
+                {% if current.Sender == myself %}
+                    {% if thread|length > 1 %}
+                        {% if current.folder == constant('App\\Doctrine\\InFolderType::SPAM') %}
+                            <a class="o-button" href="{{ path('conversation_mark_nospam', { id: thread[1].id }) }}">
+                                <span class="fa-layers fa-fw u-mr-8">
+                                    <i class="fas fa-flag"></i>
+                                    <i class="fas fa-slash u-text-red"></i>
+                                </span>
+                                {{ 'marknospam' | trans }}</a>
+                        {% else %}
+                            <a class="o-button" href="{{ path('conversation_mark_spam', { id: thread[1].id }) }}">
+                                <i class="fas fa-flag u-mr-8"></i>
+                                {{ 'markspam' | trans }}</a>
+                        {% endif %}
+                    {% endif %}
+                {% else %}
+                    {% if current.folder == constant('App\\Doctrine\\InFolderType::SPAM') %}
+                        <a class="o-button" href="{{ path('conversation_mark_nospam', { id: thread[0].id }) }}">
+                            <span class="fa-layers fa-fw u-mr-8">
+                                <i class="fas fa-flag"></i>
+                                <i class="fas fa-slash u-text-red"></i>
+                            </span>
+                            {{ 'marknospam' | trans }}</a>
+                    {% else %}
+                        <a class="o-button o-button--outline" href="{{ path('conversation_mark_spam', { id: thread[0].id }) }}">
+                            <i class="fas fa-flag u-mr-8"></i>
+                            {{ 'markspam' | trans }}</a>
+                    {% endif %}
+                {%  endif %}
+            </div>
+            <div>
+                <a class="o-button u-ml-8" href="{{ path('conversation_reply', { id: thread[0].id }) }}">
+                    <i class="fas fa-reply u-mr-8"></i>
+                    {{ 'message.button.reply' | trans }}</a>
+            </div>
         </div>
-        <div><a class="o-button u-ml-8" href="{{ path('conversation_reply', { id: thread[0].id }) }}"><i class="fas fa-reply u-mr-8"></i>{{ 'message.button.reply' | trans }}</a></div>
-    </div>
     {% endif %}
 {% endmacro %}
 
@@ -147,28 +172,34 @@
     {{ macros.messageheader(thread, false, false) }}
 {% endmacro %}
 
-{% macro new_conversation_header(sender, receiver, headline) %}
+{% macro new_conversation_header(receiver, headline, displayplacelang = true ) %}
     {% import _self as macros %}
-    <div class="u-flex u-justify-between bg-white p-1 mb-2">
-        <div class="o-avatar">{{ macros.roundedavatarstack(receiver.Username, 50, false) }}</div>
-        <div class="u-items-between">
-            <div class="u-text-32  u-text-center u-leading-48 u-text-black u-font-700 u-ellipsis">{{ headline | trans | format(receiver.Username) }}
-                <a class="u-text-16 u-align-top" href="{{ url('all_conversations_with', {'username': receiver.Username}) }}">
-                    <i class="fas fa-mail-bulk"
-                       title="{{ 'messages_allmessageswith' | trans | format(receiver.Username) }}"></i>
-                </a>
-            </div>
-            {% set languages %}{% for level in receiver.languageLevels %}
-                {% apply spaceless %}
+    <div class="u-flex u-justify-start u-bg-gray-5 u-p-8 u-rounded-8 u-mb-8 u-items-center">
+        <div class="u-ml-auto u-flex-shrink-0 u-mr-24">
+            <a href="{{ url( 'members_profile', {'username': receiver.Username}) }}">
+                <i class="fa fa-chevron-left"></i>
+            </a>
+        </div>
+        <div class="md:u-text-32 md:u-leading-48 u-self-center u-text-center u-text-black u-font-700 u-line-clamp-3 u-place-self-center u-w-full">
+            {{ headline | trans | format(receiver.Username) }}
+            <a class="u-text-16 u-align-top" href="{{ url('all_conversations_with', {'username': receiver.Username}) }}">
+                <i class="fas fa-mail-bulk" title="{{ 'messages_allmessageswith' | trans | format(receiver.Username) }}"></i>
+            </a>
+            {% if displayplacelang %}
+                {% set languages %}
+                {% for level in receiver.languageLevels %}
+                    {% apply spaceless %}
                     {{ ('lang_' ~ level.language.shortcode) | trans }}<span class="d-none d-md-inline">
-                    ({{ ('languagelevel_' ~ level.level) | lower | trans }})</span>
+                        ({{ ('languagelevel_' ~ level.level) | lower | trans }})</span>
                     {%- if not loop.last -%}
                         ,
                     {%- endif -%}
-                {% endapply %}
-            {% endfor %}{% endset %}
-            <div class="u-text-16 u-line-clamp-2">{{ 'lives.and.speaks' | trans({'city': receiver.city.name ~ ', ' ~ receiver.city.country.name | capitalize, 'languages': languages }) | raw }}</div>
+                    {% endapply %}
+                {% endfor %}
+                {% endset %}
+                <div class="sm:u-text-14 md:u-text-16 u-font-400 u-line-clamp-2">{{ 'lives.and.speaks' | trans({'city': receiver.city.name ~ ', ' ~ receiver.city.country.name | capitalize, 'languages': languages }) | raw }}</div>
+            {% endif %}
         </div>
-        <div class="o-avatar">{{ macros.roundedavatarstack(sender.Username, 50, true) }}</div>
+        <div class="o-avatar u-mt-8">{{ macros.roundedavatarstack(receiver.Username, 100, false) }}</div>
     </div>
 {% endmacro %}

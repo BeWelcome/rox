@@ -12,8 +12,7 @@
 
 {% block subnav %}
     {% for filter, menuitem in submenu.items %}
-        <a class="list-group-item nav-link {% if submenu.active == filter %}active{% endif %}"
-           href="{{ path( submenu.route, { filter: filter } ) }}">{{ filter | trans }}</a>
+        <a class="list-group-item nav-link {% if submenu.active == filter %}active{% endif %}" href="{{ path( submenu.route, { filter: filter } ) }}">{{ filter | trans }}</a>
     {% endfor %}
 {% endblock %}
 
@@ -21,7 +20,7 @@
     {% set host = app.user %}
     {% set guest = leg.trip.creator %}
 
-    {{ macros.new_conversation_header(host, guest, 'invite.username') }}
+    {{ macros.new_conversation_header(guest, 'invite.username') }}
 
     {% include 'invitation/trip.summary.html.twig' %}
 

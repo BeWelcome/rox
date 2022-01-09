@@ -11,20 +11,15 @@
 {% endblock stylesheets %}
 
 {% block content %}
-    {{ macros.new_conversation_header(host, guest, 'request.write_to') }}
+    {{ macros.new_conversation_header(host, 'request.write_to') }}
 
     {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'autocomplete': 'off'}}) }}
 
-    <div class="row mb-2">
-        <div class="col-12 col-md-8">
+    <div class="u-grid u-grid-cols-3 u-gap-x-12">
+        <div class="u-col-span-3">
             {{ form_row(form.subject.subject) }}
-            {{ form_row(form.message) }}
-            <div class="u-flex u-justify-end mt-2">
-                <button type="submit" class="btn btn-primary">{{ 'label.message.button.send' | trans }}</button>
-            </div>
         </div>
-
-        <div class="col-12 col-md-4 order-md-first">
+        <div class="md:u-col-span-1 u-col-span-3">
             <div class="o-form-group">
                 {{ form_label(form.request.duration) }}
                 <div class="input-group date">
@@ -44,10 +39,17 @@
             {% do form.request.setRendered %}
             {% do form.send.setRendered %}
         </div>
+
+        <div class="md:u-col-span-2 u-col-span-3">
+            {{ form_row(form.message) }}
+            <div class="u-flex u-justify-end u-mt-4">
+                <button type="submit" class="o-button u-mt-8">{{ 'label.message.button.send' | trans }}</button>
+            </div>
+        </div>
     </div>
 
-    <div class="row mb-2">
-        <div class="col-12 col-md-8 offset-md-4">
+    <div class="u-grid">
+        <div class="u-col-span-1">
             {{ form_rest(form) }}
         </div>
     </div>

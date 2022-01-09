@@ -5,26 +5,24 @@
     {{ encore_entry_link_tags('tailwind') }}
 {% endblock %}
 
-{% block javascripts %}
-{% endblock %}
-
 {% block content %}
     {%  set member = app.user %}
-    <h2>{% trans with {'%username%': otherMember.Username} %}messages.with.heading{% endtrans %}</h2>
+    {%  set displayplacelang = false %}
+    {{ macros.new_conversation_header(otherMember, 'messages.with.member.headline', displayplacelang) }}
 
     {% if items.nbResults == 0 %}
         <p>{{ 'messages.none' | trans }}</p>
     {% else %}
         {% if items.haveToPaginate %}
-        <div class="u-mb-8">
-            {{ pagerfanta( items, 'rounded_pagination') }}
-        </div>
+            <div class="u-flex u-justify-end u-my-8">
+                {{ pagerfanta( items, 'rounded_pagination') }}
+            </div>
         {% endif %}
         {% for message in items.currentPageResults %}
             {% include 'conversations/message.html.twig' with { 'message': message, 'between': true } %}
         {% endfor %}
         {% if items.haveToPaginate %}
-            <div class="u-mt-8">
+            <div class="u-flex u-justify-end u-my-8">
                 {{ pagerfanta( items, 'rounded_pagination') }}
             </div>
         {% endif %}

@@ -8,65 +8,97 @@
 {% block content %}
     {% set original = thread | last %}{% set request = (thread | first).request %}
     {% set myself = app.user %}
-
     {{ macros.messageheader(thread, show_deleted) }}
-
-    <div class="row no-gutters bg-white mb-2 p-1">
-        <div class="col-12 p-1 mb-2">
-            <div class="alert alert-info mb-0 p-2">
-                {%- if original.Initiator.Username == myself.Username %}
-                    {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_OPEN') %}<i
-                        class="fa fa-question mr-1"></i> {{ 'request.guest.open'|trans }}{% endif %}
-                    {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_CANCELLED') %}<i
-                        class="fa fa-times mr-1"></i> {{ 'request.guest.cancelled'|trans }}{% endif %}
-                    {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_DECLINED') %}<i
-                        class="fa fa-times mr-1"></i> {{ 'request.guest.declined'|trans }}{% endif %}
-                    {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_ACCEPTED') %}<i
-                        class="far fa-handshake mr-1"></i> {{ 'request.guest.accepted'|trans }}{% endif %}
-                    {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_TENTATIVELY_ACCEPTED') %}<i
-                        class="fa fa-question mr-1"></i> {{ 'request.guest.tentatively'|trans }}{% endif %}
-                {% else %}
-                    {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_OPEN') %}<i
-                        class="fa fa-question mr-1"></i> {{ 'request.host.open'|trans }}{% endif %}
-                    {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_CANCELLED') %}<i
-                        class="fa fa-times mr-1"></i> {{ 'request.host.cancelled'|trans }}{% endif %}
-                    {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_DECLINED') %}<i
-                        class="fa fa-times mr-1"></i> {{ 'request.host.declined'|trans }}{% endif %}
-                    {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_ACCEPTED') %}<i
-                        class="far fa-handshake mr-1"></i> {{ 'request.host.accepted'|trans }}{% endif %}
-                    {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_TENTATIVELY_ACCEPTED') %}<i
-                        class="fa fa-question mr-1"></i> {{ 'request.host.tentatively'|trans }}{% endif %}
-                {% endif -%}
+    <div class="u-rounded-8 u-p-8 u-w-full u-mb-8 u-bg-gray-5">
+        <h6 class="u-p-4">{{ 'newest.request.details'|trans }}</h6>
+        <div class="u-flex u-flex-col md:u-flex-row u-justify-between">
+            <div>
+                <div class="u-p-4">
+                    {%- if original.Initiator.Username == myself.Username %}
+                        {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_OPEN') %}
+                            <span class="u-p-4 u-rounded-8 u-bg-notice">
+                                <i class="fas fa-exclamation u-mr-12"></i>
+                                {{ 'request.guest.open'|trans }}</span>
+                        {% endif %}
+                        {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_CANCELLED') %}
+                            <span class="u-p-4 u-rounded-8 u-bg-red">
+                                <i class="fa fa-times u-mr-12"></i>
+                                {{ 'request.guest.cancelled'|trans }}</span>
+                        {% endif %}
+                        {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_DECLINED') %}
+                            <span class="u-p-4 u-rounded-8 u-bg-red">
+                                <i class="fa fa-times u-mr-12"></i>
+                                {{ 'request.guest.declined'|trans }}</span>
+                        {% endif %}
+                        {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_ACCEPTED') %}
+                            <span class=" u--ml-4 u-p-4 u-rounded-8 u-bg-green">
+                                <i class="far fa-handshake u-mr-4"></i>
+                                {{ 'request.guest.accepted'|trans }}</span>
+                        {% endif %}
+                        {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_TENTATIVELY_ACCEPTED') %}
+                            <span class="u-p-4 u-rounded-8 u-bg-notice">
+                                <i class="fas fa-exclamation u-mr-12"></i>
+                                {{ 'request.guest.tentatively'|trans }}</span>
+                        {% endif %}
+                    {% else %}
+                        {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_OPEN') %}
+                            <span class="u-p-4 u-rounded-8 u-bg-notice">
+                                <i class="fas fa-exclamation u-mr-12"></i>
+                                {{ 'request.host.open'|trans }}</span>
+                        {% endif %}
+                        {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_CANCELLED') %}
+                            <span class="u-p-4 u-rounded-8 u-bg-red">
+                                <i class="fa fa-times u-mr-12"></i>
+                                {{ 'request.host.cancelled'|trans }}</span>
+                        {% endif %}
+                        {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_DECLINED') %}
+                            <span class="u-p-4 u-rounded-8 u-bg-red">
+                                <i class="fa fa-times u-mr-12"></i>
+                                {{ 'request.host.declined'|trans }}</span>
+                        {% endif %}
+                        {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_ACCEPTED') %}
+                            <span class=" u--ml-4 u-p-4 u-rounded-8 u-bg-green">
+                                <i class="far fa-handshake u-mr-4"></i>
+                                {{ 'request.host.accepted'|trans }}</span>
+                        {% endif %}
+                        {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_TENTATIVELY_ACCEPTED') %}
+                            <span class="u-p-4 u-rounded-8 u-bg-notice">
+                                <i class="fas fa-exclamation u-mr-12"></i>
+                                {{ 'request.host.tentatively'|trans }}</span>
+                        {% endif %}
+                    {% endif -%}
+                </div>
+                <div class="u-p-4">
+                    <i class="fa fa-calendar u-mr-8"></i>
+                    {{ request.arrival|format_date(pattern="EEEE, MMM d") }}
+                    -
+                    {{ request.departure|format_date(pattern="EEEE, MMM d, yyyy") }}
+                </div>
+            </div>
+            <div>
+                <div class="u-p-4">
+                    <i class="fa fa-moon u-mr-8"></i>
+                    {% set difference = date(request.arrival|date('Y/m/d')).diff(date(request.arrival|date('Y/m/d'))) %}
+                    {% set nights = difference.days %}
+                    {{nights}}
+                    {{ 'request.night.stay'|trans }}
+                </div>
+            </div>
+            <div>
+                <div class="u-p-4">
+                    <i class="fa fa-users u-mr-4"></i>
+                    {{ 'request.number.persons'|trans ({'numberpersons': request.numberOfTravellers}) }}
+                </div>
+                <div class="u-p-4">
+                    <i class="fas fa-sync u-mr-8"></i>
+                    {% if request.flexible %}
+                        {{ 'request.flexible.with.arrival.departure'|trans }}
+                    {% else %}
+                        {{ 'request.not.flexible.with.arrival.departure'|trans }}
+                    {% endif %}
+                </div>
             </div>
         </div>
-        <div class="col-12 col-md-4 mb-2 p-1">
-            {% if original.Sender.Username == myself.Username %}
-                {% if request.numberOfTravellers != 1 %}
-                    <div><i
-                    class="fa fa-users mr-1"></i>{{ 'Request for %s guest(s)' | format(request.numberOfTravellers) }}
-                    </div>{% endif %}
-                {% if request.flexible %}
-                    <div>{{ 'request.flexible.guest'|trans }}</div>{% endif %}
-            {% else %}
-                {% if request.numberOfTravellers != 1 %}
-                    <div><i
-                    class="fa fa-users mr-1"></i>{{ 'Travelling in a group of %s' | format(request.numberOfTravellers) }}
-                    </div>{% endif %}
-                {% if request.flexible %}
-                    <div>{{ 'request.flexible'|trans }}</div>{% endif %}
-            {% endif %}
-        </div>
-
-        <div class="col-12 col-sm-6 col-md-4 mb-2 p-1">
-            <div><i class="fa fa-calendar mr-1"></i>{{ 'request.arrival' | trans }}</div>
-            <div>{{ request.arrival|format_date('full') }}</div>
-        </div>
-
-        <div class="col-12 col-sm-6 col-md-4 mb-2 p-1">
-            <div><i class="fa fa-calendar mr-1"></i>{{ 'request.departure' | trans }}</div>
-            <div>{{ request.departure|format_date('full') }}</div>
-        </div>
     </div>
-
     {% include 'message/thread.html.twig' %}
 {% endblock content %}

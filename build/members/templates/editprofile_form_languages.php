@@ -21,7 +21,7 @@
                 <div id="lang_<?= $ii ?>_row" class="o-form-group row">
                     <div class="col-2 col-md-1">
                         <button class="btn btn-outline-danger p-1 px-2 remove_lang" id="lang_<?= $ii ?>"
-                                title="<?= $words->get('RemoveLanguage') ?>"><i class="fa fa-times-circle"></i><span
+                                title="<?= $words->get('RemoveLanguage') ?>"><i class="fa fa-times-circle" id="lang_<?= $ii ?>"></i><span
                                 class="sr-only"><?= $words->get('RemoveLanguage') ?></span></button>
                     </div>
 

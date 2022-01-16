@@ -185,7 +185,11 @@
                             if ($phones = $member->phone) {
                                 echo '<dt class="h5">' . $words->get('ProfilePhone') .'</dt>';
                                 foreach ($phones as $phone => $value) {
-                                    echo '<dd>' . $words->get('Profile' . $phone) . ': ' . $value . '</dd>';
+                                    echo '<dd>' . $words->get('Profile' . $phone) . ': ';
+                                    if ($value[0] === ' ') {
+                                        echo '+';
+                                    }
+                                    echo trim($value) . '</dd>';
                                 }
                             }
 
@@ -193,8 +197,8 @@
                                 $sites = explode(" ", str_replace(array("\r\n", "\r", "\n"), " ", $member->WebSite));
                                 echo '<dt class="h5">' . $words->get('Website') . '</dt>';
                                 foreach ($sites as $site) {
-                                    $site = str_replace(array('http://', 'https://'), '', $site);
-                                    echo '<dd><a href="http://' . $site . '">' . $site . '</a></dd>';
+                                    $schemeLessURI = str_replace(array('http://', 'https://'), '', $site);
+                                    echo '<dd><a href="' . $site . '">' . $schemeLessURI . '</a></dd>';
                                 }
                             }
                             if ($member->hasMessengers()) {

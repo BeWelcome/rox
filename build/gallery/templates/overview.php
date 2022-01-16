@@ -28,7 +28,7 @@ if ($statement) {
         foreach ($statement as $d) {
         echo '<div class="col-sm-6 col-lg-4 mb-4">';
         echo '<div class="card">';
-        echo '<a href="gallery/img?id='. $d->id .'" class="p-1" title="'. $d->title .'" data-toggle="lightbox" data-type="image">';
+        echo '<a href="gallery/img?id='. $d->id .'" class="p-1" title="'. $d->title .'" data-toggle="lightbox" data-type="image" data-title="' . $d->title . '">';
         echo '<img class="mx-auto d-block img-fluid img-thumbnail" src="gallery/thumbimg?id='.$d->id.
             ($thumbsize ? '&t='.$thumbsize : '' ) . '" alt="' . $d->title . '">';
         echo '</a>';

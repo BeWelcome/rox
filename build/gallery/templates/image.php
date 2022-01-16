@@ -50,19 +50,19 @@ HTML;
 <form method="post" action="gallery/img?id={$d->id}/edit" class="def-form">
     <fieldset id="image-edit" class="inline NotDisplayed">
     <legend>{$words->getFormatted('GalleryTitleEdit')}</legend>
-    
+
         <div class="row">
             <label for="image-edit-t">{$words->getFormatted('GalleryLabelTitle')}</label>
             <input type="text" id="image-edit-t" name="t" class="short" value="{$title}" />
-           
+
             <label for="image-edit-txt">{$words->getFormatted('GalleryLabelText')}</label><br/>
             <textarea id="image-edit-txt" name="txt" cols="30" rows="4">{$description}</textarea>
-            
+
 	        <input type="hidden" name="{$callbackId}" value="1"/>
 	        <input type="hidden" name="id" value="{$d->id}"/>
             <p class="desc">{$words->getFormatted('GalleryDescTitle')}</p>
             <input type="submit" class="button" name="button" value="{$words->getFormatted('SubmitForm')}" id="button" />
-        </div>  
+        </div>
 </fieldset>
 </form>
     <script type="text/javascript">
@@ -97,7 +97,7 @@ echo <<<HTML
 <div class="img">
 HTML;
 
-echo '<a id="link_'.$d->id.'" href="gallery/img?id='.$d->id.'" title="'.$d->title.' :: '.$d->description.'" data-toggle="lightbox"  data-type="image" rel="image">
+echo '<a id="link_'.$d->id.'" href="gallery/img?id='.$d->id.'" title="'.$d->title.' :: '.$d->description.'" data-toggle="lightbox" data-type="image"  data-title="<?= $d->title ?>" rel="image">
     <img id="thumb_'.$d->id.'" src="gallery/thumbimg?id='.$d->id.'&amp;t=2" class="framed big" alt="image"/>
 </a>';
 ?>
@@ -106,7 +106,7 @@ echo '<a id="link_'.$d->id.'" href="gallery/img?id='.$d->id.'" title="'.$d->titl
 
 <div id="comments" style="padding: 10px 0px">
     <h3><?php echo $words->getFormatted('CommentsTitle'); ?></h3>
-    
+
 <?php
 $comments = $this->model->getComments($image->id);
 if (!$comments) {
@@ -130,8 +130,8 @@ if ($member) {
 <form method="post" action="gallery/show/image/<?=$d->id?>/comment" class="def-form" id="gallery-comment-form">
     <div class="bw-row">
     <label for="comment-title"><?php echo $words->getFormatted('CommentsLabel'); ?>:</label><br/>
-        <input type="text" id="comment-title" name="ctit" class="long" <?php 
-echo isset($varsCom['ctit']) ? 'value="'.htmlentities($varsCom['ctit'], ENT_COMPAT, 'utf-8').'" ' : ''; 
+        <input type="text" id="comment-title" name="ctit" class="long" <?php
+echo isset($varsCom['ctit']) ? 'value="'.htmlentities($varsCom['ctit'], ENT_COMPAT, 'utf-8').'" ' : '';
 ?>/>
         <div id="bcomment-title" class="statbtn"></div>
 <?php
@@ -143,8 +143,8 @@ if (in_array('title', $vars['errors'])) {
     </div>
     <div class="bw-row">
         <label for="comment-text"><?php echo $words->getFormatted('CommentsTextLabel'); ?>:</label><br />
-        <textarea id="comment-text" name="ctxt" cols="40" rows="5"><?php 
-echo isset($varsCom['ctxt']) ? htmlentities($varsCom['ctxt'], ENT_COMPAT, 'utf-8') : ''; 
+        <textarea id="comment-text" name="ctxt" cols="40" rows="5"><?php
+echo isset($varsCom['ctxt']) ? htmlentities($varsCom['ctxt'], ENT_COMPAT, 'utf-8') : '';
       ?></textarea>
         <div id="bcomment-text" class="statbtn"></div>
 <?php
@@ -157,7 +157,7 @@ if (in_array('textlen', $vars['errors'])) {
     <p>
         <input type="submit" class="button" value="<?php echo $words->getFormatted('SubmitForm'); ?>" class="submit" />
         <input type="hidden" name="<?php
-// IMPORTANT: callback ID for post data 
+// IMPORTANT: callback ID for post data
 echo $callbackIdCom; ?>" value="1"/>
     </p>
 </form>
@@ -171,7 +171,7 @@ else
     echo "</div>";
 
 if ($this->model->getLoggedInMember())
-{ 
-    PPostHandler::clearVars($callbackId); 
-    PPostHandler::clearVars($callbackIdCom); 
+{
+    PPostHandler::clearVars($callbackId);
+    PPostHandler::clearVars($callbackIdCom);
 }

@@ -44,30 +44,12 @@ class RequestController extends BaseRequestAndInvitationController
         $this->conversationModel = $conversationModel;
     }
 
-    /**
-     * Deals with replies to hosting requests.
-     */
-    public function reply(Request $request, Message $message): Response
-    {
-        // determine if guest or host reply to a request
-        $guest = $message->getInitiator();
-        $host = $message->getReceiver() === $guest ? $message->getSender() : $message->getReceiver();
-
-        $member = $this->getUser();
-        if ($member === $guest) {
-            return $this->guestReply($request, $message, $guest, $host);
-        }
-
-        return $this->hostReply($request, $message, $guest, $host);
-    }
-
     public function guestReply(Request $request, Message $hostingRequest, Member $guest, Member $host): Response
     {
-
         if ($this->model->hasExpired($hostingRequest)) {
-            $this->addExpiredFlash($host);
+            $this->addExpiredFlash($guest);
 
-            return $this->redirectToRoute('conversation_view', ['id' => $hostingRequest->getId()]);
+            return $this->forward(MessageController::class . '::reply', ['message' => $hostingRequest]);
         }
 
         list($thread) = $this->conversationModel->getThreadInformationForMessage($hostingRequest);
@@ -113,7 +95,7 @@ class RequestController extends BaseRequestAndInvitationController
         if ($this->model->hasExpired($hostingRequest)) {
             $this->addExpiredFlash($guest);
 
-            return $this->redirectToRoute('conversation_view', ['id' => $hostingRequest->getId()]);
+            return $this->forward(MessageController::class . '::reply', ['message' => $hostingRequest]);
         }
 
         list($thread) = $this->conversationModel->getThreadInformationForMessage($hostingRequest);
@@ -218,7 +200,17 @@ class RequestController extends BaseRequestAndInvitationController
         ]);
     }
 
-    protected function sendGuestReplyNotification(
+    protected function addExpiredFlash(Member $receiver)
+    {
+        $this->addTranslatedFlash('notice', 'flash.request.expired', [
+            '%link_start%' => '<a href="' . $this->generateUrl('message_new', [
+                    'username' => $receiver->getUsername(),
+                ]) . '" class="text-primary">',
+            '%link_end%' => '</a>',
+        ]);
+    }
+
+    private function sendGuestReplyNotification(
         Member $host,
         Member $guest,
         Message $request,
@@ -270,7 +262,7 @@ class RequestController extends BaseRequestAndInvitationController
      * @param mixed $template
      * @param mixed $requestChanged
      */
-    public function sendRequestNotification(
+    private function sendRequestNotification(
         Member $sender,
         Member $receiver,
         Member $host,

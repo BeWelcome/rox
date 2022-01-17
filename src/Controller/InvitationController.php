@@ -57,7 +57,7 @@ class InvitationController extends BaseRequestAndInvitationController
         if ($host === $guest) {
             $this->addTranslatedFlash('notice', 'flash.request.invitation.self');
 
-            return $this->redirectToRoute('members_profile', ['username' => $host->getUsername()]);
+            return $this->forward('MessageController::reply', ['message' => $invitation]);
         }
 
         if (!$guest->isBrowseable()) {
@@ -132,20 +132,6 @@ class InvitationController extends BaseRequestAndInvitationController
         ]);
     }
 
-    public function reply(Request $request, Message $message): Response
-    {
-        // determine if guest or host reply to a request
-        $host = $message->getInitiator();
-        $guest = $message->getReceiver() === $host ? $message->getSender() : $message->getReceiver();
-
-        $member = $this->getUser();
-        if ($member === $guest) {
-            return $this->guestReply($request, $message, $guest, $host);
-        }
-
-        return $this->hostReply($request, $message, $guest, $host);
-    }
-
     public function guestReply(
         Request $request,
         Message $invitation,
@@ -155,7 +141,7 @@ class InvitationController extends BaseRequestAndInvitationController
         if ($this->model->hasExpired($invitation)) {
             $this->addExpiredFlash($host);
 
-            return $this->redirectToRoute('conversation_view', ['id' => $invitation->getId()]);
+            return $this->forward(MessageController::class . ':reply', ['message' => $invitation]);
         }
 
         list($thread) = $this->conversationModel->getThreadInformationForMessage($invitation);
@@ -215,7 +201,7 @@ class InvitationController extends BaseRequestAndInvitationController
         if ($this->model->hasExpired($invitation)) {
             $this->addExpiredFlash($guest);
 
-            return $this->redirectToRoute('conversation_view', ['id' => $invitation->getId()]);
+            return $this->forward(MessageController::class . '::reply', ['message' => $invitation]);
         }
 
         list($thread) = $this->conversationModel->getThreadInformationForMessage($invitation);
@@ -258,7 +244,17 @@ class InvitationController extends BaseRequestAndInvitationController
         ]);
     }
 
-    protected function sendInvitationGuestReplyNotification(
+    protected function addExpiredFlash(Member $receiver)
+    {
+        $this->addTranslatedFlash('notice', 'flash.invitation.expired', [
+            '%link_start%' => '<a href="' . $this->generateUrl('message_new', [
+                    'username' => $receiver->getUsername(),
+                ]) . '" class="text-primary">',
+            '%link_end%' => '</a>',
+        ]);
+    }
+
+    private function sendInvitationGuestReplyNotification(
         Member $host,
         Member $guest,
         Message $request,
@@ -303,7 +299,7 @@ class InvitationController extends BaseRequestAndInvitationController
      *
      * @param mixed $subject
      */
-    public function sendInvitationNotification(
+    private function sendInvitationNotification(
         Member $sender,
         Member $receiver,
         Member $host,

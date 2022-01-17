@@ -20,6 +20,7 @@
       <div class="o-avatar o-avatar--white u-mr-24 u-float-left">{{ macros.roundedavatarstack(trip.creator.username, 96) }}</div>
       <div class="u-flex u-items-center u-h-96">
         <h1 class="u-text-32 u-leading-48 md:u-text-56 md:u-leading-60 u-text-white u-font-700">{{ trip.summary }}</h1>
+          *{{ expired }}*
         {% if app.user == trip.creator and expired == false %}
           <a href="{{ path('trip_edit', {'id': trip.id}) }}" class="o-rounded u-ml-24" aria-label="{{ 'trip.edit'|trans }}" title="{{ 'trip.edit'|trans }}">
             <i class="fa fa-edit"></i>
@@ -31,12 +32,15 @@
       <div class="u-flex u-mb-16">
         <div class="c-trip-card__icon-grid u-mr-24">
           <i class="fa fa-users u-text-white u-text-16 u-justify-self-center u-self-center u-text-gray-20"></i>
-           <p class="u-text-white u-font-display" aria-label="{{ 'trip.count.of.travellers'|trans }}"><strong>{{ trip.countOfTravellers }}</strong> {{ 'trip.count.of.travellers'|trans }}</p>
+           <p class="u-text-white u-font-display" aria-label="{{ 'trip.count.of.travellers'|trans }}">{{ 'trip.count.of.travellers'|trans({'countOfTravellers':trip.countOfTravellers}) }}</p>
         </div>
+          *{{ trip.additionalInfo }}*
+          {% if trip.additionalInfo != constant('App\\Doctrine\\TripAdditionalInfoType::NONE') %}
         <div class="c-trip-card__icon-grid u-mr-24">
           <i class="fa fa-info-circle u-text-white u-text-16 u-justify-self-center u-self-center u-text-gray-20"></i>
           <p class="u-text-white u-font-display" aria-label="{{ 'trip.additional.info'|trans }}">{{ trip.additionalInfo|trans }}</p>
         </div>
+          {% endif %}
         <div class="c-trip-card__icon-grid">
           <i class="fa fa-bullseye u-text-white u-text-16 u-justify-self-center u-self-center u-text-gray-20"></i>
           <p class="u-text-white u-font-display" aria-label="{{ 'trip.invitation.radius'|trans }}">{{ trip.invitationRadius|trans }}</p>

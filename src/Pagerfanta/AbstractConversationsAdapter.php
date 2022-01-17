@@ -85,7 +85,7 @@ abstract class AbstractConversationsAdapter
     protected function getNotDeletedOrPurgedCondition(): string
     {
         $notDeletedOrPurgedCondition =
-            '(' .
+            '(m.IdReceiver = :memberId) AND (' .
                 'm.DeleteRequest NOT LIKE \'%' . DeleteRequestType::RECEIVER_DELETED . '%\'' .
                 ' AND m.DeleteRequest NOT LIKE \'%' . DeleteRequestType::RECEIVER_PURGED . '%\'' .
             ')';

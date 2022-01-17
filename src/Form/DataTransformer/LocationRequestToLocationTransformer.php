@@ -20,15 +20,15 @@ class LocationRequestToLocationTransformer implements DataTransformerInterface
     /**
      * Transforms a location to a location request.
      *
-     * @param mixed $location
+     * @param mixed $value
      */
-    public function transform($location): ?LocationRequest
+    public function transform($value): ?LocationRequest
     {
-        if (null === $location) {
+        if (null === $value) {
             return null;
         }
 
-        $locationRequest = new LocationRequest($location);
+        $locationRequest = new LocationRequest($value);
 
         return $locationRequest;
     }
@@ -36,26 +36,26 @@ class LocationRequestToLocationTransformer implements DataTransformerInterface
     /**
      * Transforms a location request to a location.
      *
-     * @param LocationRequest $locationRequest
+     * @param LocationRequest $value
      *
      * @throws TransformationFailedException if location is not found
      */
-    public function reverseTransform($locationRequest): ?Location
+    public function reverseTransform($value): ?Location
     {
-        if (null === $locationRequest) {
+        if (null === $value) {
             return null;
         }
 
-        if (null === $locationRequest->geonameId) {
-            $failure = new TransformationFailedException("location.none.given");
-            $failure->setInvalidMessage("location.none.given");
+        if (null === $value->geonameId) {
+            $failure = new TransformationFailedException("location.none.given - test");
+            $failure->setInvalidMessage("location.none.given - test");
             throw $failure;
         }
 
         /** @var Location $location */
         $location = $this->entityManager
             ->getRepository(Location::class)
-            ->findOneBy(['geonameId' => $locationRequest->geonameId]);
+            ->findOneBy(['geonameId' => $value->geonameId]);
 
         if (null === $location) {
             // causes a validation error
@@ -63,8 +63,8 @@ class LocationRequestToLocationTransformer implements DataTransformerInterface
             // see the invalid_message option
             $message = sprintf(
                 'A location with geonameId "%d" for %s does not exist!',
-                $locationRequest->geonameId,
-                $locationRequest->name
+                $value->geonameId,
+                $value->name
             );
             throw new TransformationFailedException($message);
         }

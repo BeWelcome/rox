@@ -9,9 +9,8 @@ use App\Entity\Message;
 use Exception;
 use InvalidArgumentException;
 
-class AbstractRequestModel
+abstract class AbstractRequestModel
 {
-
     /**
      * @throws InvalidArgumentException|\Doctrine\DBAL\Exception\InvalidArgumentException
      */
@@ -79,6 +78,8 @@ class AbstractRequestModel
         return $finalRequest;
     }
 
+    abstract public function hasExpired(Message $message): bool;
+
     /**
      * @param $original
      * @param $current
@@ -118,10 +119,5 @@ class AbstractRequestModel
         }
 
         return $newState;
-    }
-
-    public function hasExpired(Message $message): bool
-    {
-        throw new Exception("What just happened?");
     }
 }

@@ -11,8 +11,10 @@ use App\Utilities\TranslatedFlashTrait;
 use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Form;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
-class BaseRequestAndInvitationController extends AbstractController
+abstract class BaseRequestAndInvitationController extends AbstractController
 {
     use TranslatedFlashTrait;
 
@@ -24,15 +26,24 @@ class BaseRequestAndInvitationController extends AbstractController
         $this->model = $model;
     }
 
-    protected function addExpiredFlash(Member $receiver)
+    /**
+     * Deals with replies to hosting requests.
+     */
+    public function reply(Request $request, Message $message): Response
     {
-        $this->addTranslatedFlash('notice', 'flash.invitation.expired', [
-            '%link_start%' => '<a href="' . $this->generateUrl('message_new', [
-                    'username' => $receiver->getUsername(),
-                ]) . '" class="text-primary">',
-            '%link_end%' => '</a>',
-        ]);
+        // determine if guest or host reply to a request
+        $guest = $message->getInitiator();
+        $host = $message->getReceiver() === $guest ? $message->getSender() : $message->getReceiver();
+
+        $member = $this->getUser();
+        if ($member === $guest) {
+            return $this->guestReply($request, $message, $guest, $host);
+        }
+
+        return $this->hostReply($request, $message, $guest, $host);
     }
+
+    abstract protected function addExpiredFlash(Member $receiver);
 
     protected function getRequestClone(Message $hostingRequest): Message
     {

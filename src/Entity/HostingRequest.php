@@ -76,7 +76,7 @@ class HostingRequest
      *      minMessage = "At least one person must travel",
      *      maxMessage = "Hosting more than 20 people is asking for too much"
      * )     */
-    private int $numberOfTravellers = 1;
+    private ?int $numberOfTravellers = 1;
 
     /**
      * @ORM\Column(name="status", type="integer")
@@ -87,7 +87,7 @@ class HostingRequest
      * @ORM\OneToOne(targetEntity="\App\Entity\Subtrip")
      * @ORM\JoinColumn(name="invite_for_leg", referencedColumnName="id", nullable=true)
      */
-    private ?Subtrip $inviteForLeg;
+    private ?Subtrip $inviteForLeg = null;
 
     /**
      * @ORM\OneToMany(targetEntity="Message", mappedBy="request")
@@ -141,14 +141,14 @@ class HostingRequest
         return $this->flexible;
     }
 
-    public function setNumberOfTravellers(int $numberOfTravellers): self
+    public function setNumberOfTravellers(?int $numberOfTravellers): self
     {
         $this->numberOfTravellers = $numberOfTravellers;
 
         return $this;
     }
 
-    public function getNumberOfTravellers(): int
+    public function getNumberOfTravellers(): ?int
     {
         return $this->numberOfTravellers;
     }

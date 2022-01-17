@@ -15,6 +15,7 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\NotNull;
 
 class SubtripType extends AbstractType
 {
@@ -64,7 +65,7 @@ class SubtripType extends AbstractType
             }
             $form->add('location', SearchLocationType::class, [
                     'expired' => $expired,
-                'label' => 'location',
+                    'label' => 'location',
                 ])
                 ->add('duration', TextType::class, [
                     'required' => false,
@@ -81,6 +82,10 @@ class SubtripType extends AbstractType
                     'multiple' => true,
                     'expanded' => true,
                     'disabled' => $expired,
+                    'constraints' => [
+                        new NotBlank(),
+                        new NotNull(),
+                    ]
                 ]);
         });
     }
@@ -89,6 +94,11 @@ class SubtripType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Subtrip::class,
+            'error_bubbling' => false,
+            'error_mapping' => [
+                'arrival' => 'duration',
+                'departure' => 'duration',
+            ]
         ]);
     }
 }

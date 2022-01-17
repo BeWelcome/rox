@@ -16,6 +16,8 @@ pickers.forEach(initializePicker);
 
 function initializePicker(value) {
     const parent = value.id.replace('_duration', '');
+    console.log(value);
+    console.log(parent);
     const picker = new Litepicker({
         element: value,
         singleMode: false,
@@ -60,7 +62,7 @@ $(document).on('click', '.js-btn-add[data-target]', function (event) {
     collectionHolder.append(form);
 
     /* enable a search picker on all location fields (including the newly added one */
-    searchPicker = new SearchPicker( "/search/locations/places", 'js-search-picker');
+    searchPicker = new SearchPicker( "/search/locations/places", 'js-search-picker', '_fullname');
 
     const duration = document.getElementById('trip_subtrips_' + counter + '_duration');
 

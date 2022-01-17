@@ -84,13 +84,13 @@ class TripType extends AbstractType
                 'entry_type' => SubtripType::class,
                 'entry_options' => [
                     'label' => false,
+                    'error_bubbling' => false,
                 ],
                 'required' => true,
                 'allow_add' => true,
                 'allow_delete' => true,
                 'by_reference' => false,
                 'prototype' => true,
-                'error_bubbling' => false,
                 'label' => false,
                 'attr' => [
                     'class' => 'form-collection',

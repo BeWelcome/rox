@@ -22,6 +22,12 @@ class DateTimeTransformer implements DataTransformerInterface
             return null;
         }
 
-        return new DateTime($value);
+        $setDate = DateTime::createFromFormat('Y-m-d', $value);
+
+        if (false === $setDate) {
+            return null;
+        }
+
+        return $setDate;
     }
 }

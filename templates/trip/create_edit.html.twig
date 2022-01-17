@@ -32,7 +32,7 @@
             } %}
 
             {{ form_widget(form.location.fullname, {'attr': attributes}) }}
-            <div class="u-absolute">{{ form_errors(form.location.fullname) }}</div>
+            <div class="u-absolute">{{ form_errors(form.location) }}</div>
         </div>
         <div class="u-w-full md:u-width-auto">
             {% set attributes = {
@@ -62,18 +62,17 @@
             <div class="md:u-mr-24">
                 {{ form_widget(form.options[2], {'attr': attributes }) }}
             </div>
-        </div>
-        <div class="u-w-full md:u-width-auto">
             <div class="u-absolute">{{ form_errors(form.options) }}</div>
         </div>
-        {{ form_widget(form.location.name) }}{{ form_widget(form.location.geoname_id) }}{{ form_widget(form.location.latitude) }}{{ form_widget(form.location.longitude) }}
-        {{ form_widget(form.arrival) }}{{ form_widget(form.departure) }}
+        {{ form_widget(form.location.name) }} {{ form_widget(form.location.geoname_id) }}
+        {{ form_widget(form.location.latitude) }} {{ form_widget(form.location.longitude) }}
         {{ form_errors(form.location.fullname) }}
+        {{ form_widget(form.arrival) }}
+        {{ form_widget(form.departure) }}
     </div>
 {% endmacro %}
 
 {% block content %}
-
     <section class="l-trips-wrapper">
         {% apply spaceless %}
             {% set button_text %}

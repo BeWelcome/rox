@@ -297,7 +297,7 @@ class MessageRepository extends EntityRepository
                     AND `m`.`id` IN (
                         SELECT max(`m`.`id`)
                         FROM `messages` m
-                        WHERE (
+                        WHERE m.IdReceiver = :memberId AND (
                             m.DeleteRequest NOT LIKE \'%' . DeleteRequestType::RECEIVER_DELETED . '%\'
                             AND m.DeleteRequest NOT LIKE \'%' . DeleteRequestType::RECEIVER_PURGED . '%\'
                         )

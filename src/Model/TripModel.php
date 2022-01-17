@@ -7,6 +7,7 @@ use App\Entity\Preference;
 use App\Entity\Subtrip;
 use App\Entity\Trip;
 use App\Repository\TripRepository;
+use Carbon\Carbon;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
@@ -148,7 +149,7 @@ class TripModel
         }
 
         $expired = true;
-        $now = new DateTime();
+        $now = new Carbon();
 
         /** @var Subtrip $leg */
         foreach ($legs->getIterator() as $leg) {

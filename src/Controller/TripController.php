@@ -72,7 +72,7 @@ class TripController extends AbstractController
     /**
      * Create a new trip.
      *
-     * @Route("/trip/create", name="trip_create")
+     * @Route("/new/trip", name="new_trip")
      */
     public function create(Request $request): Response
     {
@@ -108,7 +108,7 @@ class TripController extends AbstractController
             'create' => true,
             'form' => $createForm->createView(),
             'submenu' => [
-                'active' => 'trip_create',
+                'active' => 'new_trip',
                 'items' => $this->getSubmenuItems(),
             ],
         ]);
@@ -241,9 +241,9 @@ class TripController extends AbstractController
                 'key' => 'trip.in.area',
                 'url' => $this->generateUrl('trip_in_area', ['username' => $this->getUser()->getUsername()]),
             ],
-            'trip_create' => [
+            'new_trip' => [
                 'key' => 'trip.create',
-                'url' => $this->generateUrl('trip_create'),
+                'url' => $this->generateUrl('new_trip'),
             ],
         ];
 

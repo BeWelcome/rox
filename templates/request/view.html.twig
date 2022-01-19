@@ -78,10 +78,9 @@
             <div>
                 <div class="u-p-4">
                     <i class="fa fa-moon u-mr-8"></i>
-                    {% set difference = date(request.arrival|date('Y/m/d')).diff(date(request.arrival|date('Y/m/d'))) %}
+                    {% set difference = date(request.departure).diff(date(request.arrival)) %}
                     {% set nights = difference.days %}
-                    {{nights}}
-                    {{ 'request.night.stay'|trans }}
+                    {{ 'request.night.stay'|trans ({'numbernights': nights}) }}
                 </div>
             </div>
             <div>

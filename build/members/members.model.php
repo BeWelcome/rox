@@ -239,13 +239,15 @@ SQL
             $member->Latitude = $latitude;
             $member->Longitude = $longitude;
             $member->update();
-            $this->logWrite(
-                "The Member with the Id: ". $member->id
+
+            $logMessage = "The Member with the Id: ". $member->id
                 . " changed his location to Geo-Id ". $geonameid
-                . " and set exact position to (" . ($latitude <> null) ? $latitude : 'NULL'
-                . ", " . ($longitude <> null) ? $longitude : 'NULL' . ")",
-                "Members"
-            );
+                . " and set exact position to (";
+            $logMessage .= ($latitude <> null) ? $latitude : 'NULL';
+            $logMessage .= ", ";
+            $logMessage .= ($longitude <> null) ? $longitude : 'NULL';
+            $logMessage .= ")";
+            $this->logWrite($logMessage,"Members");
         }
 
         return array(

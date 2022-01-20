@@ -26,23 +26,6 @@ abstract class BaseRequestAndInvitationController extends AbstractController
         $this->model = $model;
     }
 
-    /**
-     * Deals with replies to hosting requests.
-     */
-    public function reply(Request $request, Message $message): Response
-    {
-        // determine if guest or host reply to a request
-        $guest = $message->getInitiator();
-        $host = $message->getReceiver() === $guest ? $message->getSender() : $message->getReceiver();
-
-        $member = $this->getUser();
-        if ($member === $guest) {
-            return $this->guestReply($request, $message, $guest, $host);
-        }
-
-        return $this->hostReply($request, $message, $guest, $host);
-    }
-
     abstract protected function addExpiredFlash(Member $receiver);
 
     protected function getRequestClone(Message $hostingRequest): Message

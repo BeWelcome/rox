@@ -1,17 +1,20 @@
 <div class="u-flex u-justify-between bg-white p-1 mb-1 u-rounded-4">
-    <div>{{ 'invitation.trip.summary'|trans }}</div>
+    <div class="u-align-center">{{ 'invitation.trip.summary'|trans }}</div>
     <div>
-        <button class="btn btn-sm btn-primary" type="button" data-toggle="collapse" data-target="#tripSummary" aria-expanded="false" aria-controls="#tripSummary">
+        <button class="o-button" type="button" data-toggle="collapse" data-target="#tripSummary" aria-expanded="false" aria-controls="#tripSummary">
             {{ 'invitation.trip.summary.show.hide'|trans }}
         </button>
     </div>
 </div>
 <div class="row no-gutters mb-1 bg-white collapse p-1" id="tripSummary">
     <div class="col-12 col-md-4 pr-1">
+        <p><strong>Trip of: {{ guest.username }}</strong></p>
         <p><strong>{{ 'trip.summary'|trans }}</strong></p>
         <p>{{ leg.trip.summary }}</p>
         <p><strong>{{ 'trip.description'|trans }}</strong></p>
         <p>{{ leg.trip.description|purify }}</p>
+        <p><strong>{{ 'request.number_of_travellers'|trans }}</strong></p>
+        <p>{{ leg.trip.countOfTravellers }}</p>
     </div>
     <div class="col-12 col-md-6">
         <p><strong>{{ 'profile.summary'|trans }}</strong></p>
@@ -27,7 +30,5 @@
                 {% endif %}
             {% endif %}
         </p>
-        <p><strong>{{ 'request.number_of_travellers'|trans }}</strong></p>
-        <p>{{ leg.trip.countOfTravellers }}</p>
     </div>
 </div>

@@ -132,6 +132,23 @@ class InvitationController extends BaseRequestAndInvitationController
         ]);
     }
 
+    /**
+     * Deals with replies to invitations.
+     */
+    public function reply(Request $request, Message $message): Response
+    {
+        // determine if guest or host reply to a request
+        $guest = $message->getInitiator();
+        $host = $message->getReceiver() === $guest ? $message->getSender() : $message->getReceiver();
+
+        $member = $this->getUser();
+        if ($member === $guest) {
+            return $this->guestReply($request, $message, $guest, $host);
+        }
+
+        return $this->hostReply($request, $message, $guest, $host);
+    }
+
     public function guestReply(
         Request $request,
         Message $invitation,

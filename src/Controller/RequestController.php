@@ -44,7 +44,24 @@ class RequestController extends BaseRequestAndInvitationController
         $this->conversationModel = $conversationModel;
     }
 
-    public function guestReply(Request $request, Message $hostingRequest, Member $guest, Member $host): Response
+    /**
+     * Deals with replies to hosting requests.
+     */
+    public function reply(Request $request, Message $message): Response
+    {
+        // determine if guest or host reply to a request
+        $guest = $message->getInitiator();
+        $host = $message->getReceiver() === $guest ? $message->getSender() : $message->getReceiver();
+
+        $member = $this->getUser();
+        if ($member === $guest) {
+            return $this->guestReply($request, $message, $guest, $host);
+        }
+
+        return $this->hostReply($request, $message, $guest, $host);
+    }
+
+    private function guestReply(Request $request, Message $hostingRequest, Member $guest, Member $host): Response
     {
         if ($this->model->hasExpired($hostingRequest)) {
             $this->addExpiredFlash($guest);
@@ -90,7 +107,7 @@ class RequestController extends BaseRequestAndInvitationController
         ]);
     }
 
-    public function hostReply(Request $request, Message $hostingRequest, Member $guest, Member $host): Response
+    private function hostReply(Request $request, Message $hostingRequest, Member $guest, Member $host): Response
     {
         if ($this->model->hasExpired($hostingRequest)) {
             $this->addExpiredFlash($guest);

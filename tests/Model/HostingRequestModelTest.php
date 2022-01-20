@@ -8,6 +8,7 @@ use App\Entity\Member;
 use App\Entity\Message;
 use App\Entity\Subject;
 use App\Model\ConversationModel;
+use App\Model\HostingRequestModel;
 use App\Service\Mailer;
 use DateInterval;
 use DateTime;
@@ -49,8 +50,11 @@ class HostingRequestModelTest extends TestCase
         $request->setArrival($arrival);
         $request->setDeparture($departure);
 
-        $requestModel = new ConversationModel($this->mailer, $this->entityManager);
-        $expired = $requestModel->isRequestExpired($request);
+        $message = new Message();
+        $message->setRequest($request);
+
+        $requestModel = new HostingRequestModel();
+        $expired = $requestModel->hasExpired($message);
 
         $this->assertTrue($expired);
     }
@@ -64,8 +68,11 @@ class HostingRequestModelTest extends TestCase
         $request->setArrival($arrival);
         $request->setDeparture($departure);
 
-        $requestModel = new ConversationModel($this->mailer, $this->entityManager);
-        $expired = $requestModel->isRequestExpired($request);
+        $message = new Message();
+        $message->setRequest($request);
+
+        $requestModel = new HostingRequestModel();
+        $expired = $requestModel->hasExpired($message);
 
         $this->assertFalse($expired);
     }
@@ -79,22 +86,11 @@ class HostingRequestModelTest extends TestCase
         $request->setArrival($arrival);
         $request->setDeparture($departure);
 
-        $requestModel = new ConversationModel($this->mailer, $this->entityManager);
-        $expired = $requestModel->isRequestExpired($request);
+        $message = new Message();
+        $message->setRequest($request);
 
-        $this->assertFalse($expired);
-    }
-
-    public function testRequestExpiresNoDeparture()
-    {
-        $arrival = new DateTime('yesterday');
-
-        $request = new HostingRequest();
-        $request->setArrival($arrival);
-        $request->setDeparture(null);
-
-        $requestModel = new ConversationModel($this->mailer, $this->entityManager);
-        $expired = $requestModel->isRequestExpired($request);
+        $requestModel = new HostingRequestModel();
+        $expired = $requestModel->hasExpired($message);
 
         $this->assertFalse($expired);
     }
@@ -123,7 +119,7 @@ class HostingRequestModelTest extends TestCase
         $hostingRequestMessage = $this->setupRequestMessage($arrival, $departure, false, 1, HostingRequest::REQUEST_OPEN);
         $formRequestMessage = $this->setupRequestMessage($arrival, $departure, false, 1, HostingRequest::REQUEST_OPEN);
 
-        $requestModel = new ConversationModel($this->mailer, $this->entityManager);
+        $requestModel = new HostingRequestModel();
         $finalRequestMessage = $requestModel->getFinalRequest(
             $this->sender,
             $this->receiver,
@@ -152,7 +148,7 @@ class HostingRequestModelTest extends TestCase
         $hostingRequestMessage = $this->setupRequestMessage($arrival, $departure, false, 1, HostingRequest::REQUEST_OPEN);
         $formRequestMessage = $this->setupRequestMessage($arrival, $departure, true, 1, HostingRequest::REQUEST_OPEN);
 
-        $requestModel = new ConversationModel($this->mailer, $this->entityManager);
+        $requestModel = new HostingRequestModel();
         $finalRequestMessage = $requestModel->getFinalRequest(
             $this->sender,
             $this->receiver,
@@ -198,7 +194,7 @@ class HostingRequestModelTest extends TestCase
         $hostingRequestMessage = $this->setupRequestMessage($arrival, $departure, true, 1, HostingRequest::REQUEST_OPEN);
         $formRequestMessage = $this->setupRequestMessage($departure, $departure, true, 1, HostingRequest::REQUEST_OPEN);
 
-        $requestModel = new ConversationModel($this->mailer, $this->entityManager);
+        $requestModel = new HostingRequestModel();
         $finalRequestMessage = $requestModel->getFinalRequest(
             $this->sender,
             $this->receiver,
@@ -232,7 +228,7 @@ class HostingRequestModelTest extends TestCase
         $hostingRequestMessage = $this->setupRequestMessage($arrival, $departure, false, 1, HostingRequest::REQUEST_OPEN);
         $formRequestMessage = $this->setupRequestMessage($arrival, $newDeparture, false, 1, HostingRequest::REQUEST_OPEN);
 
-        $requestModel = new ConversationModel($this->mailer, $this->entityManager);
+        $requestModel = new HostingRequestModel();
         $finalRequestMessage = $requestModel->getFinalRequest(
             $this->sender,
             $this->receiver,
@@ -261,7 +257,7 @@ class HostingRequestModelTest extends TestCase
         $hostingRequestMessage = $this->setupRequestMessage($arrival, $departure, false, 1, HostingRequest::REQUEST_OPEN);
         $formRequestMessage = $this->setupRequestMessage($newArrival, $newDeparture, false, 1, HostingRequest::REQUEST_OPEN);
 
-        $requestModel = new ConversationModel($this->mailer, $this->entityManager);
+        $requestModel = new HostingRequestModel();
         $finalRequestMessage = $requestModel->getFinalRequest(
             $this->sender,
             $this->receiver,
@@ -289,7 +285,7 @@ class HostingRequestModelTest extends TestCase
         $hostingRequestMessage = $this->setupRequestMessage($arrival, $departure, false, 1, HostingRequest::REQUEST_OPEN);
         $formRequestMessage = $this->setupRequestMessage($arrival, $departure, false, 5, HostingRequest::REQUEST_OPEN);
 
-        $requestModel = new ConversationModel($this->mailer, $this->entityManager);
+        $requestModel = new HostingRequestModel();
         $finalRequestMessage = $requestModel->getFinalRequest(
             $this->sender,
             $this->receiver,
@@ -316,7 +312,7 @@ class HostingRequestModelTest extends TestCase
         $hostingRequestMessage = $this->setupRequestMessage($arrival, $departure, false, 1, HostingRequest::REQUEST_OPEN, 'No Message');
         $formRequestMessage = $this->setupRequestMessage($arrival, $departure, false, 1, HostingRequest::REQUEST_OPEN, 'Message');
 
-        $requestModel = new ConversationModel($this->mailer, $this->entityManager);
+        $requestModel = new HostingRequestModel();
         $finalRequestMessage = $requestModel->getFinalRequest(
             $this->sender,
             $this->receiver,
@@ -346,7 +342,7 @@ class HostingRequestModelTest extends TestCase
         $hostingRequestMessage = $this->setupRequestMessage($arrival, $departure, false, 1, HostingRequest::REQUEST_OPEN, 'Message');
         $formRequestMessage = $this->setupRequestMessage($arrival, $departure, false, 1, HostingRequest::REQUEST_OPEN, 'Message');
 
-        $requestModel = new ConversationModel($this->mailer, $this->entityManager);
+        $requestModel = new HostingRequestModel();
         $finalRequestMessage = $requestModel->getFinalRequest(
             $this->sender,
             $this->receiver,
@@ -376,7 +372,7 @@ class HostingRequestModelTest extends TestCase
         $hostingRequestMessage = $this->setupRequestMessage($arrival, $departure, false, 1, HostingRequest::REQUEST_OPEN, 'Message');
         $formRequestMessage = $this->setupRequestMessage($arrival, $departure, false, 1, HostingRequest::REQUEST_OPEN, 'Message');
 
-        $requestModel = new ConversationModel($this->mailer, $this->entityManager);
+        $requestModel = new HostingRequestModel();
         $finalRequestMessage = $requestModel->getFinalRequest(
             $this->sender,
             $this->receiver,
@@ -396,46 +392,6 @@ class HostingRequestModelTest extends TestCase
         $this->assertEquals($finalRequestMessage->getRequest()->getArrival(), $hostingRequestMessage->getRequest()->getArrival());
         $this->assertEquals($finalRequestMessage->getRequest()->getDeparture(), $hostingRequestMessage->getRequest()->getDeparture());
         $this->assertSame($finalRequestMessage->getRequest()->getNumberOfTravellers(), $hostingRequestMessage->getRequest()->getNumberOfTravellers());
-    }
-
-    public function testDepartureNotNullOriginal()
-    {
-        $arrival = new DateTime();
-        $departure = null;
-
-        $hostingRequestMessage = $this->setupRequestMessage($arrival, $departure, false, 1, HostingRequest::REQUEST_OPEN, 'Message');
-        $formRequestMessage = $this->setupRequestMessage($arrival, $departure, false, 1, HostingRequest::REQUEST_OPEN, 'Message');
-
-        $this->expectException(InvalidArgumentException::class);
-
-        $requestModel = new ConversationModel($this->mailer, $this->entityManager);
-        $requestModel->getFinalRequest(
-            $this->sender,
-            $this->receiver,
-            $hostingRequestMessage,
-            $formRequestMessage,
-            'new'
-        );
-    }
-
-    public function testDepartureNotNullForm()
-    {
-        $arrival = new DateTime();
-        $departure = new DateTime();
-
-        $hostingRequestMessage = $this->setupRequestMessage($arrival, $departure, false, 1, HostingRequest::REQUEST_OPEN, 'Message');
-        $formRequestMessage = $this->setupRequestMessage($arrival, null, false, 1, HostingRequest::REQUEST_OPEN, 'Message');
-
-        $this->expectException(InvalidArgumentException::class);
-
-        $requestModel = new ConversationModel($this->mailer, $this->entityManager);
-        $requestModel->getFinalRequest(
-            $this->sender,
-            $this->receiver,
-            $hostingRequestMessage,
-            $formRequestMessage,
-            'new'
-        );
     }
 
     /**

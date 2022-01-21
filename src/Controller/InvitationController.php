@@ -57,7 +57,7 @@ class InvitationController extends BaseRequestAndInvitationController
         if ($host === $guest) {
             $this->addTranslatedFlash('notice', 'flash.request.invitation.self');
 
-            return $this->forward('MessageController::reply', ['message' => $invitation]);
+            return $this->redirectToRoute('home');
         }
 
         if (!$guest->isBrowseable()) {
@@ -138,8 +138,8 @@ class InvitationController extends BaseRequestAndInvitationController
     public function reply(Request $request, Message $message): Response
     {
         // determine if guest or host reply to a request
-        $guest = $message->getInitiator();
-        $host = $message->getReceiver() === $guest ? $message->getSender() : $message->getReceiver();
+        $host = $message->getInitiator();
+        $guest = $message->getReceiver() === $host ? $message->getSender() : $message->getReceiver();
 
         $member = $this->getUser();
         if ($member === $guest) {

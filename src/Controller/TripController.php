@@ -54,7 +54,7 @@ class TripController extends AbstractController
     }
 
     /**
-     * @Route("/trip/{id}/show", name="trip_show",
+     * @Route("/trip/{id}", name="trip_show",
      *     requirements={"id": "\d+"})
      */
     public function show(Trip $trip, TripModel $tripModel): Response
@@ -118,7 +118,8 @@ class TripController extends AbstractController
      * Edit an existing trip.
      *
      * @Route("/trip/{id}/edit", name="trip_edit",
-     *     requirements={"id": "\d+"})
+     *     requirements={"id": "\d+"}
+     * )
      */
     public function edit(Request $request, Trip $trip): Response
     {
@@ -168,7 +169,8 @@ class TripController extends AbstractController
      * Remove an existing trip.
      *
      * @Route("/trip/{id}/remove", name="trip_remove",
-     *     requirements={"id": "\d+"})
+     *     requirements={"id": "\d+"}
+     * )
      */
     public function remove(Trip $trip): RedirectResponse
     {
@@ -180,6 +182,20 @@ class TripController extends AbstractController
         $this->tripModel->hideTrip($trip);
 
         return $this->redirectToRoute('mytrips');
+    }
+
+    /**
+     * Copies an existing trip (keeping all locations and sets dates in the future).
+     *
+     * @Route("/trip/{id}/copy", name="trip_copy",
+     *     requirements={"id": "\d+"}
+     * )
+     */
+    public function copy(Trip $trip): Response
+    {
+        $newTrip = $this->tripModel->copyTrip($trip);
+
+        return $this->redirectToRoute('trip_edit', [ 'id' => $newTrip->getId()]);
     }
 
     /**

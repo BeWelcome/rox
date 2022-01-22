@@ -8,7 +8,9 @@ use App\Entity\Subtrip;
 use App\Entity\Trip;
 use App\Repository\TripRepository;
 use Carbon\Carbon;
+use DateInterval;
 use DateTime;
+use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
@@ -158,5 +160,35 @@ class TripModel
         }
 
         return $expired;
+    }
+
+    public function copyTrip(Trip $trip)
+    {
+        $em = $this->entityManager;
+
+        $newTrip = clone $trip;
+        $newTrip->setSummary($trip->getSummary() . " - copy");
+        $newTrip->setUpdated(new DateTime());
+
+        // Move legs arrival and departure consistently +1month
+        $nextMonth = (new DateTime())->modify('+1month');
+        $firstArrival = $trip->getSubtrips()->first()->getArrival();
+        $adjust = $firstArrival->diff($nextMonth);
+
+        foreach($trip->getSubTrips() as $leg)
+        {
+            $newLeg = clone $leg;
+            $newLeg->setArrival($leg->getArrival()->add($adjust));
+            $newLeg->setDeparture($leg->getDeparture()->add($adjust));
+            $newLeg->setInvitedBy(null);
+            $newTrip->addSubTrip($newLeg);
+            $em->persist($newLeg);
+            $em->flush();
+        }
+
+        $em->persist($newTrip);
+        $em->flush();
+
+        return $newTrip;
     }
 }

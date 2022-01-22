@@ -159,7 +159,7 @@ class Member implements UserInterface, \Serializable, PasswordHasherAwareInterfa
      *
      * @ORM\Column(name="ChangedId", type="integer", nullable=false)
      */
-    private $changedid = '0';
+    private $changedid = 0;
 
     /**
      * @var Location
@@ -189,11 +189,9 @@ class Member implements UserInterface, \Serializable, PasswordHasherAwareInterfa
     private $longitude;
 
     /**
-     * @var int
-     *
      * @ORM\Column(name="NbRemindWithoutLogingIn", type="integer", nullable=false)
      */
-    private $nbremindwithoutlogingin;
+    private int $remindersWithOutLogin = 0;
 
     /**
      * @var int
@@ -930,27 +928,21 @@ class Member implements UserInterface, \Serializable, PasswordHasherAwareInterfa
     }
 
     /**
-     * Set nbremindwithoutlogingin.
-     *
-     * @param int $nbremindwithoutlogingin
-     *
-     * @return Member
+     * Set count of reminders without login.
      */
-    public function setNbremindwithoutlogingin($nbremindwithoutlogingin)
+    public function setRemindersWithOutLogin($remindersWithOutLogin): self
     {
-        $this->nbremindwithoutlogingin = $nbremindwithoutlogingin;
+        $this->remindersWithOutLogin = $remindersWithOutLogin;
 
         return $this;
     }
 
     /**
-     * Get nbremindwithoutlogingin.
-     *
-     * @return int
+     * Get count of reminders without login.
      */
-    public function getNbremindwithoutlogingin()
+    public function getRemindersWithOutLogin(): int
     {
-        return $this->nbremindwithoutlogingin;
+        return $this->remindersWithOutLogin;
     }
 
     /**

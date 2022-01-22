@@ -92,16 +92,20 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
     {
         /** @var Member $member */
         $member = $token->getUser();
-        if (MemberStatusType::ACTIVE !== $member->getStatus() && MemberStatusType::CHOICE_INACTIVE !== $member->getStatus()) {
+        $status = $member->getStatus();
+        if (MemberStatusType::ACTIVE !== $status && MemberStatusType::CHOICE_INACTIVE !== $status) {
             $member->setStatus(MemberStatusType::ACTIVE);
         }
         $firstLogin = null === $member->getLastLogin();
         if ($firstLogin) {
             $url = $this->urlGenerator->generate('editmyprofile');
         } else {
-            $url = $this->getTargetPath($request->getSession(), $providerKey) ?? $this->urlGenerator->generate('homepage');
+            $url = $this->getTargetPath($request->getSession(), $providerKey)
+                ?? $this->urlGenerator->generate('homepage');
         }
         $member->setLastLogin(new DateTime());
+        $member->setRemindersWithOutLogin(0);
+
         $this->entityManager->persist($member);
         $this->entityManager->flush();
 

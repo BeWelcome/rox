@@ -7,8 +7,7 @@
 
 {% block content %}
     {%  set member = app.user %}
-    {%  set displayplacelang = false %}
-    {{ macros.new_conversation_header(otherMember, 'messages.with.member.headline', displayplacelang) }}
+    {{ macros.new_conversation_header(otherMember, 'messages.with.member.headline', false) }}
 
     {% if items.nbResults == 0 %}
         <p>{{ 'messages.none' | trans }}</p>

@@ -92,7 +92,7 @@
     <a class="{{ class }}" href="{{ path( route | lower ) }}">{{ route | trans }}</a>
 {% endmacro %}
 
-{% macro messageheader(thread, show_deleted = false, show_buttons = true) %}
+{% macro messageheader(thread, show_deleted = false, show_buttons = true, show_reply = true) %}
     {% import _self as macros %}
     {% set myself = app.user %}
     {% set current = thread|first %}
@@ -113,15 +113,14 @@
     </div>
     {% if show_buttons %}
         <div class="u-flex u-justify-between u-bg-gray-5 u-p-8 u-rounded-8 u-mb-8">
-            <div
-                class="u-flex u-flex-row">
+            <div class="u-flex u-flex-row">
                 {# Always add <div> so that the reply button is on the right hand side for larger displays #}
                 {% if not show_deleted %}
-                    <a class="o-button o-button o-button--outline-gray u-mr-8" href="{{ url('conversation_delete', {'id': current.id}) }}">
+                    <a class="o-button--s md:o-button o-button--outline-gray md:o-button--outline-gray u-mr-8" href="{{ url('conversation_delete', {'id': current.id}) }}">
                         <i class="fa fa-trash u-mr-8"></i>
                         {{ 'delete'|trans }}</a>
                 {% else %}
-                    <a class="o-button" href="{{ url('conversation_recover', {'id': current.id}) }}">
+                    <a class="o-button--s md:o-button" href="{{ url('conversation_recover', {'id': current.id}) }}">
                         <span class="fa-layers fa-fw u-mr-8">
                             <i class="fas fa-trash"></i>
                             <i class="fas fa-slash u-text-red"></i>
@@ -131,38 +130,40 @@
                 {% if current.Sender == myself %}
                     {% if thread|length > 1 %}
                         {% if current.folder == constant('App\\Doctrine\\InFolderType::SPAM') %}
-                            <a class="o-button" href="{{ path('conversation_mark_nospam', { id: thread[1].id }) }}">
+                            <a class="o-button--s md:o-button" href="{{ path('conversation_mark_nospam', { id: thread[1].id }) }}">
                                 <span class="fa-layers fa-fw u-mr-8">
                                     <i class="fas fa-flag"></i>
                                     <i class="fas fa-slash u-text-red"></i>
                                 </span>
                                 {{ 'marknospam' | trans }}</a>
                         {% else %}
-                            <a class="o-button" href="{{ path('conversation_mark_spam', { id: thread[1].id }) }}">
+                            <a class="o-button--s md:o-button" href="{{ path('conversation_mark_spam', { id: thread[1].id }) }}">
                                 <i class="fas fa-flag u-mr-8"></i>
                                 {{ 'markspam' | trans }}</a>
                         {% endif %}
                     {% endif %}
                 {% else %}
                     {% if current.folder == constant('App\\Doctrine\\InFolderType::SPAM') %}
-                        <a class="o-button" href="{{ path('conversation_mark_nospam', { id: thread[0].id }) }}">
+                        <a class="o-button--s md:o-button" href="{{ path('conversation_mark_nospam', { id: thread[0].id }) }}">
                             <span class="fa-layers fa-fw u-mr-8">
                                 <i class="fas fa-flag"></i>
                                 <i class="fas fa-slash u-text-red"></i>
                             </span>
                             {{ 'marknospam' | trans }}</a>
                     {% else %}
-                        <a class="o-button o-button--outline" href="{{ path('conversation_mark_spam', { id: thread[0].id }) }}">
+                        <a class="o-button--s md:o-button o-button--outline md:o-button--outline" href="{{ path('conversation_mark_spam', { id: thread[0].id }) }}">
                             <i class="fas fa-flag u-mr-8"></i>
                             {{ 'markspam' | trans }}</a>
                     {% endif %}
                 {%  endif %}
             </div>
+            {% if show_reply %}
             <div>
-                <a class="o-button u-ml-8" href="{{ path('conversation_reply', { id: thread[0].id }) }}">
+                <a class="o-button--s md:o-button u-ml-8" href="{{ path('conversation_reply', { id: thread[0].id }) }}">
                     <i class="fas fa-reply u-mr-8"></i>
                     {{ 'message.button.reply' | trans }}</a>
             </div>
+            {%  endif %}
         </div>
     {% endif %}
 {% endmacro %}

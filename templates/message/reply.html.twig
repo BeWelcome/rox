@@ -7,21 +7,21 @@
 {% endblock stylesheets %}
 
 {% block content %}
-    {{ macros.messageheader(thread) }}
+    {{ macros.messageheader(thread, false, true, false) }}
 
     {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
     {{ form_errors(form) }}
-    <div class="row mb-2">
-        <div class="col-12">
+    <div class="u-grid u-grid-cols-1">
+        <div class="u-mb-4">
             {{ form_row(form.message) }}
             {% do form.subject.setRendered %}
             {{ form_rest(form) }}
         </div>
     </div>
 
-    <div class="row mb-2">
-        <div class="col-12 u-flex u-justify-end">
-            <button type="submit" class="btn btn-primary">{{ 'label.message.button.send' | trans }}</button>
+    <div class="u-mb-4">
+        <div class="u-flex u-justify-end">
+            <button type="submit" class="o-button u-mt-8">{{ 'label.message.button.send' | trans }}</button>
         </div>
     </div>
 

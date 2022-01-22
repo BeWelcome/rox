@@ -92,5 +92,7 @@
   "scripts": {
     "encoreWatch": "encore dev --watch"
   },
-  "dependencies": {}
+  "dependencies": {
+    "leaflet.fullscreen": "^2.2.0"
+  }
 }

@@ -4,6 +4,8 @@ import moment from 'moment';
 import '../scss/_daterangepicker.scss';
 
 var L = require('leaflet');
+import 'leaflet.fullscreen';
+import 'leaflet.fullscreen/Control.FullScreen.css';
 
 require('leaflet-polylinedecorator');
 
@@ -16,8 +18,6 @@ pickers.forEach(initializePicker);
 
 function initializePicker(value) {
     const parent = value.id.replace('_duration', '');
-    console.log(value);
-    console.log(parent);
     const picker = new Litepicker({
         element: value,
         singleMode: false,
@@ -84,7 +84,11 @@ if ($('#map').length) {
     var map = L.map('map', {
         center: [0, 0],
         zoom: 0,
-        zoomSnap: 0.1
+        zoomSnap: 0.1,
+        fullscreenControl: true,
+        fullscreenControlOptions: {
+            position: 'topleft'
+        }
     });
 
     let allData = $('.js-data').map((_, el) => [el.value.split(',')]).get()
@@ -105,7 +109,7 @@ if ($('#map').length) {
         let tripDate = allData[i][4]
 
         let marker = L.marker([latitude, longitude]).addTo(map);
-        marker.bindPopup("<strong>" + location + "</strong> (" + countryName + ")<br>" + tripDate).openPopup();
+        marker.bindPopup("<strong>" + location + "</strong> (" + countryName + ")<br>" + tripDate);
 
         let circle = null;
         circle = L.circle([latitude, longitude], {
@@ -117,10 +121,27 @@ if ($('#map').length) {
         circlesArray.push(circle)
     }
 
-    let group = new L.featureGroup(circlesArray);
+    // if not own trip add circle with search radius of current member
+    if (trip.own === false) {
+        var tripIcon = L.icon({
+            iconUrl: '../images/trip_marker.png',
+            iconRetinaUrl: "../images/trip_marker-2x.png",
+            iconSize: [25, 41],
+            iconAnchor: [12, 41],
+            popupAnchor: [1, -34],
+        });
+        const marker = L.marker([memberInfo.latitude, memberInfo.longitude], { icon: tripIcon}).addTo(map);
+        marker.bindPopup("<strong>Your location</strong><br>...and search radius");
 
-    // \todo In case of trip of someone else check if own circle intersects with travel
-    // if so show on map as well.
+
+        L.circle([memberInfo.latitude, memberInfo.longitude], {
+            color: 'rgb(0, 184, 85)',
+            fillColor: 'rgba(0, 184, 85, 0.1)',
+            fillOpacity: 1,
+            radius: memberInfo.searchRadius * 1000
+        }).addTo(map);
+    }
+    let group = new L.featureGroup(circlesArray);
     map.fitBounds(group.getBounds());
 
     let journey = L.polyline(locationsArray).addTo(map);
@@ -134,4 +155,12 @@ if ($('#map').length) {
         attribution: '&copy; <a href="/about/credits#OSM">OpenStreetMap contributors</a>',
         subdomains: ['a', 'b', 'c']
     }).addTo(map);
+
+    // detect fullscreen toggling
+    map.on('enterFullscreen', function(){
+        map.fitBounds(group.getBounds());
+    });
+    map.on('exitFullscreen', function(){
+        map.fitBounds(group.getBounds());
+    });
 }});

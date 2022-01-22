@@ -59,8 +59,11 @@ class TripController extends AbstractController
      */
     public function show(Trip $trip, TripModel $tripModel): Response
     {
+        $member = $this->getUser();
+        $searchRadius = $tripModel->getTripsRadius($member);
         return $this->render('trip/show.html.twig', [
             'trip' => $trip,
+            'searchRadius' => $searchRadius,
             'expired' => $tripModel->hasTripExpired($trip),
             'submenu' => [
                 'active' => 'trip_show',

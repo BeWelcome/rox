@@ -11,7 +11,8 @@
 {% endblock javascripts %}
 
 {% block stylesheets %}
-  {{ encore_entry_link_tags('tailwind') }}
+    {{ encore_entry_link_tags('tailwind') }}
+    {{ encore_entry_link_tags('trips') }}
 {% endblock %}
 
 {% block content %}
@@ -106,8 +107,11 @@
       let trip = {
           own: {% if app.user == trip.creator %}true{% else %}false{% endif %},
           radius: {% if trip.invitationRadius == 5000 %}0{% else %}{{ trip.invitationRadius * 1000 }}{% endif %},
-          latitude: {{ trip.creator.latitude }},
-          longitude: {{ trip.creator.longitude }}
+      }
+      let memberInfo = {
+          latitude: {{ app.user.latitude }},
+          longitude: {{ app.user.longitude }},
+          searchRadius: {{ searchRadius }}
       }
   </script>
 

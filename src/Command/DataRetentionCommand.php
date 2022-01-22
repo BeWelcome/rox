@@ -184,7 +184,7 @@ class DataRetentionCommand extends Command
             ->setMotivationforhospitality(0)
             ->setMovies(0)
             ->setMusic(0)
-            ->setNbremindwithoutlogingin(0)
+            ->setRemindersWithOutLogin(0)
             ->setOccupation(0)
             ->setOffer(0)
             ->setOfferguests(0)

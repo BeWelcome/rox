@@ -2,28 +2,235 @@
    #BUTTON
    ========================================================================== */
 
-/**
- * Button with Bewelcome brand colors
- */
+@layer components {
+  @variants responsive {
 
-.o-button {
-  font-family: Signika;
-  display: flex;
-  padding: 0 24px;
-  border: 1px solid transparent;
-  border-radius: 24px;
-  color: theme('colors.white');
-  background-color: theme('colors.bewelcome');
-  font-size: 16px;
-  line-height: 20px;
-  font-weight: 500;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  height: 40px;
-  margin: 0;
+    /**
+     * Button with Bewelcome brand colors, regular size
+    */
+
+    .o-button {
+      font-family: Signika;
+      display: flex;
+      padding: 0 24px;
+      border: 1px solid transparent;
+      border-radius: 24px;
+      color: theme('colors.white');
+      background-color: theme('colors.bewelcome');
+      font-size: 16px;
+      line-height: 20px;
+      font-weight: 500;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      height: 40px;
+      margin: 0;
+    }
+
+
+    /* Large version
+    ========================================================================== */
+
+    /**
+    * Used as a CTA
+    */
+
+    .o-button--l {
+      font-family: Signika;
+      display: flex;
+      padding: 0 16px;
+      border: 1px solid transparent;
+      border-radius: 8px;
+      color: theme('colors.white');
+      background-color: theme('colors.bewelcome');
+      font-size: 20px;
+      line-height: 24px;
+      font-weight: 500;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      height: 56px;
+      margin: 0;
+    }
+
+    /* Small version
+    ========================================================================== */
+
+    /**
+    * Used in navigation menus
+    */
+    .o-button--s {
+      font-family: Signika;
+      display: flex;
+      padding: 0 16px;
+      border: 1px solid transparent;
+      border-radius: 24px;
+      color: theme('colors.white');
+      background-color: theme('colors.bewelcome');
+      font-size: 12px;
+      line-height: 16px;
+      font-weight: 500;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      height: 32px;
+      margin: 0;
+    }
+
+
+
+    /* Extra Small version
+    ========================================================================== */
+
+    /**
+    * Used in Small Main Menu Bar
+    */
+
+    .o-button--xs {
+      font-family: Signika;
+      display: flex;
+      padding: 0 16px;
+      border: 1px solid transparent;
+      border-radius: 2px;
+      color: theme('colors.white');
+      background-color: theme('colors.bewelcome');
+      font-size: 12px;
+      line-height: 16px;
+      font-weight: 500;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      height: 20px;
+      margin: 0;
+    }
+
+    /**
+    * Outline Button
+    */
+    .o-button--outline {
+      background-color: theme('colors.white');
+      border: 1px solid theme('colors.bewelcome');
+      color: theme('colors.bewelcome');
+      font-weight: 400;
+    }
+
+    .o-button--outline-inverse {
+      background-color: theme('colors.bewelcome');
+      border: 1px solid theme('colors.white');
+      color: theme('colors.white');
+      font-weight: 400;
+    }
+
+    .o-button--outline-gray {
+      background-color: theme('colors.white');
+      border: 1px solid theme('colors.gray-60');
+      color: theme('colors.gray-60');
+      font-weight: 400;
+    }
+
+    .o-button--outline-gray-inverse {
+      background-color: theme('colors.gray-60');
+      border: 1px solid theme('colors.gray-60');
+      color: theme('colors.white');
+      font-weight: 400;
+    }
+
+
+    /**
+    * Transparent Button
+    */
+
+    .o-button--transparent {
+      background-color: transparent;
+    }
+
+
+    /* Hovers
+    ========================================================================== */
+
+    .o-button:hover {
+      opacity: 0.7;
+      color: theme('colors.white');
+    }
+
+    .o-button--outline.active,
+    .o-button--outline:hover {
+      background-color: theme('colors.bewelcome');
+      border: 1px solid theme('colors.bewelcome');
+      color: theme('colors.white');
+      opacity: 1;
+    }
+
+    .o-button--outline-gray.active,
+    .o-button--outline-gray:hover {
+      background-color: theme('colors.gray-60');
+      border: 1px solid theme('colors.gray-60');
+      color: theme('colors.white');
+      opacity: 1;
+    }
+
+    .o-button--outline-inverse:hover {
+      opacity: 1;
+      color: theme('colors.white');
+      border: 1px solid theme('colors.white');
+      background-color: theme('colors.bewelcome');
+    }
+
+    .o-button--outline-ceniza:hover,
+    .o-button--outline-ceniza-inverse:hover {
+      opacity: 1;
+    }
+
+
+    /* Disabled state
+    ========================================================================== */
+
+    .o-button--disabled,
+    .o-button[disabled] {
+      opacity: 0.3;
+    }
+
+
+    /* Utilities
+    ========================================================================== */
+
+    /**
+    * Disables max width
+    */
+
+    .o-button--nolimit {
+      max-width: 100%;
+    }
+
+
+    /**
+    * Makes it full width of div
+    */
+
+    .o-button--full {
+      width: 100%;
+      max-width: 100%;
+    }
+
+
+    /**
+    * Min width for CTA button
+    */
+
+    .o-button--min-width {
+      min-width: 192px;
+    }
+
+
+    /**
+    * Border-radius reduced
+    */
+
+    .o-button--br-16 {
+      border-radius: 16px;
+    }
+  }
 }
-
 
 /* Fluid version
    ========================================================================== */
@@ -40,187 +247,3 @@
   height: calc(40 * var(--width));
   max-width: calc(192 * var(--width));
 }
-
-
-/* Large version
-   ========================================================================== */
-
-/**
- * Used as a CTA
- */
-
-.o-button--l {
-  height: 56px;
-  font-size: 20px;
-  line-height: 24px;
-  border-radius: 8px;
-}
-
-
-/* Small version
-   ========================================================================== */
-
-/**
- * Used in navigation menus
- */
-
-.o-button--s {
-  height: 32px;
-  font-size: 12px;
-  line-height: 16px;
-}
-
-@media (max-width: 900px) {
-  .o-button--s {
-    padding: 0 16px;
-  }
-}
-
-
-/* Extra Small version
-   ========================================================================== */
-
-/**
- * Used in Small Main Menu Bar
- */
-
-.o-button--xs {
-  height: 20px;
-  font-size: 12px;
-  line-height: 16px;
-  border-radius: 2px;
-}
-
-@media (max-width: 900px) {
-  .o-button--xs {
-    padding: 0 16px;
-  }
-}
-
-
-/**
- * Outline Button
- */
-
-.o-button--outline {
-  background-color: theme('colors.white');
-  border: 1px solid theme('colors.bewelcome');
-  color: theme('colors.bewelcome');
-  font-weight: 400;
-}
-
-.o-button--outline-inverse {
-  background-color: theme('colors.bewelcome');
-  border: 1px solid theme('colors.white');
-  color: theme('colors.white');
-  font-weight: 400;
-}
-
-.o-button--outline-gray {
-  background-color: theme('colors.white');
-  border: 1px solid theme('colors.gray-60');
-  color: theme('colors.gray-60');
-  font-weight: 400;
-}
-
-.o-button--outline-gray-inverse {
-  background-color: theme('colors.gray-60');
-  border: 1px solid theme('colors.gray-60');
-  color: theme('colors.white');
-  font-weight: 400;
-}
-
-
-/**
- * Transparent Button
- */
-
-.o-button--transparent {
-  background-color: transparent;
-}
-
-
-/* Hovers
-   ========================================================================== */
-
-.o-button:hover {
-  opacity: 0.7;
-  color: theme('colors.white');
-}
-
-.o-button--outline.active,
-.o-button--outline:hover {
-  background-color: theme('colors.bewelcome');
-  border: 1px solid theme('colors.bewelcome');
-  color: theme('colors.white');
-  opacity: 1;
-}
-
-.o-button--outline-gray.active,
-.o-button--outline-gray:hover {
-  background-color: theme('colors.gray-60');
-  border: 1px solid theme('colors.gray-60');
-  color: theme('colors.white');
-  opacity: 1;
-}
-.o-button--outline-inverse:hover {
-  opacity: 1;
-  color: theme('colors.white');
-  border: 1px solid theme('colors.white');
-  background-color: theme('colors.bewelcome');
-}
-
-.o-button--outline-ceniza:hover,
-.o-button--outline-ceniza-inverse:hover {
-  opacity: 1;
-}
-
-
-/* Disabled state
-   ========================================================================== */
-
-.o-button--disabled,
-.o-button[disabled] {
-  opacity: 0.3;
-}
-
-
-/* Utilities
-   ========================================================================== */
-
-/**
- * Disables max width
- */
-
-.o-button--nolimit {
-  max-width: 100%;
-}
-
-
-/**
-* Makes it full width of div
-*/
-
-.o-button--full {
-  width: 100%;
-  max-width: 100%;
-}
-
-
-/**
-* Min width for CTA button
-*/
-
-.o-button--min-width {
-  min-width: 192px;
-}
-
-
-/**
-* Border-radius reduced
-*/
-
-.o-button--br-16 {
-  border-radius: 16px;
-}
-

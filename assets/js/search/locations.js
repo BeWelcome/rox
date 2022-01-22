@@ -1,4 +1,6 @@
 import SearchPicker from "./../search/searchpicker";
+import 'leaflet.fullscreen';
+import 'leaflet.fullscreen/Control.FullScreen.css';
 
 const searchPicker = new SearchPicker( "/search/locations/all");
 
@@ -22,7 +24,11 @@ Map.prototype.showMap = function () {
             zoomDelta: 0.25,
             maxZoom: 18,
             minZoom: 1,
-            zoom: 2
+            zoom: 2,
+            fullscreenControl: true,
+            fullscreenControlOptions: {
+                position: 'topleft'
+            }
         });
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap contributors</a>',
@@ -248,7 +254,15 @@ Map.prototype.boundingBox = function(latitude, longitude, distance) {
 };
 
 $(function () {
-    var map = new Map();
+    var map = new Map({
+        center: [0, 0],
+        zoom: 0,
+        zoomSnap: 0.1,
+        fullscreenControl: true,
+        fullscreenControlOptions: {
+            position: 'topleft'
+        }
+    });
     $(".show_options").click(function(){
         $("#search_options").toggleClass("d-block").toggleClass("d-none");
         $(".search").toggleClass("d-block").toggleClass("d-none");

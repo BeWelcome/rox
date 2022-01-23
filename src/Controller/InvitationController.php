@@ -57,7 +57,7 @@ class InvitationController extends BaseRequestAndInvitationController
         if ($host === $guest) {
             $this->addTranslatedFlash('notice', 'flash.request.invitation.self');
 
-            return $this->redirectToRoute('home');
+            return $this->redirectToRoute('homepage');
         }
 
         if (!$guest->isBrowseable()) {

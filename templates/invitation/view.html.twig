@@ -14,8 +14,7 @@
     {% else %}
         {% set label = 'reply' %}
     {% endif %}
-
-    {{ macros.messageheader(thread, show_deleted) }}
+    {{ macros.messageheader(thread, {show_deleted: show_deleted, is_spam: is_spam}) }}
 
     <div class="row no-gutters bg-white mb-2 p-1">
         <div class="col-12 p-1 mb-2">

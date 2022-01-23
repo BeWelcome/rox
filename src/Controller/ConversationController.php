@@ -176,9 +176,12 @@ class ConversationController extends AbstractController
      */
     public function markAsSpam(Message $message): Response
     {
+        /** @var Member $member */
+        $member = $this->getUser();
+
         $conversationThread = new ConversationThread($this->entityManager);
         $conversation = $conversationThread->getThread($message);
-        $this->conversationModel->markConversationAsSpam($conversation);
+        $this->conversationModel->markConversationAsSpam($member, $conversation);
 
         $this->addTranslatedFlash('notice', 'flash.marked.spam');
 
@@ -190,9 +193,11 @@ class ConversationController extends AbstractController
      */
     public function unmarkAsSpam(Message $message): Response
     {
+        /** @var Member $member */
+        $member = $this->getUser();
         $conversationThread = new ConversationThread($this->entityManager);
         $conversation = $conversationThread->getThread($message);
-        $this->conversationModel->unmarkConversationAsSpam($conversation);
+        $this->conversationModel->unmarkConversationAsSpam($member, $conversation);
 
         $this->addTranslatedFlash('notice', 'flash.marked.nospam');
 

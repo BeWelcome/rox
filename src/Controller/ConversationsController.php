@@ -217,12 +217,12 @@ class ConversationsController extends AbstractController
         }
         if ('spam' === $clickedButton) {
             if ('spam' === $active) {
-                $this->conversationsModel->unmarkConversationsAsSpam($conversationIds);
+                $this->conversationsModel->unmarkConversationsAsSpam($member, $conversationIds);
                 $this->addTranslatedFlash('notice', 'flash.marked.nospam');
 
                 return $this->redirect($request->getRequestUri());
             }
-            $this->conversationsModel->markConversationsAsSpam($conversationIds);
+            $this->conversationsModel->markConversationsAsSpam($member, $conversationIds);
             $this->addTranslatedFlash('notice', 'flash.marked.spam');
 
             return $this->redirect($request->getRequestUri());

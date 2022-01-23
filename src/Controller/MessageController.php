@@ -157,15 +157,17 @@ class MessageController extends AbstractController
         if (null === $parent) {
             $subject = new Subject();
             $subject->setSubject($subjectText);
+            $request = null;
             $em->persist($subject);
             $em->flush();
         } else {
             $subject = $parent->getSubject();
+            $request = $parent->getRequest();
         }
 
         $message->setSubject($subject);
         $message->setSender($sender);
-        $message->setRequest(null);
+        $message->setRequest($request);
         $message->setParent($parent);
         $message->setSender($sender);
         $message->setReceiver($receiver);

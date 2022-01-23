@@ -37,35 +37,47 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Message
 {
     /**
+     * @var string
+     *
      * @ORM\Column(name="MessageType", type="string", nullable=false)
      */
     private string $messageType = 'MemberToMember';
 
     /**
+     * @var DateTime
+     *
      * @ORM\Column(name="updated", type="datetime", nullable=true)
      */
-    private ?DateTime $updated;
+    private $updated;
 
     /**
+     * @var DateTime
+     *
      * @ORM\Column(name="created", type="datetime", nullable=false)
      */
     private DateTime $created;
 
     /**
+     * @var DateTime
+     *
      * @ORM\Column(name="DateSent", type="datetime", nullable=false)
      */
     private DateTime $dateSent;
 
     /**
+     * @var string
+     *
      * @ORM\Column(name="DeleteRequest", type="delete_request", nullable=true)
      */
-    private string $deleteRequest;
+    private $deleteRequest;
 
     /**
+     * @var Message
+     *
      * @ORM\OneToOne(targetEntity="App\Entity\Message", fetch="LAZY")
      * @ORM\JoinColumn(name="idParent", referencedColumnName="id", nullable=true)
      */
-    private ?Message $parent = null;
+    private $parent = null;
 
     /**
      * @var Member
@@ -91,45 +103,59 @@ class Message
     private $sender;
 
     /**
+     * @var string
+     *
      * @ORM\Column(name="SpamInfo", type="spam_info", nullable=false)
      */
-    private string $spaminfo = SpamInfoType::NO_SPAM;
+    private $spamInfo;
 
     /**
+     * @var string
+     *
      * @ORM\Column(name="Status", type="message_status", nullable=false)
      */
-    private string $status = 'ToSend';
+    private $status = 'ToSend';
 
     /**
+     * @var string
+     *
      * @ORM\Column(name="Message", type="text", length=65535, nullable=false)
      *
      * @Assert\NotBlank()
      */
-    private string $message;
+    private $message;
 
     /**
+     * @var string
+     *
      * @ORM\Column(name="InFolder", type="in_folder", nullable=false)
      */
-    private string $folder = InFolderType::NORMAL;
+    private $folder = InFolderType::NORMAL;
 
     /**
+     * @var DateTime
+     *
      * @ORM\Column(name="WhenFirstRead", type="datetime", nullable=true)
      */
-    private ?DateTime $firstRead;
+    private $firstRead;
 
     /**
+     * @var Subject
+     *
      * @ORM\ManyToOne(targetEntity="Subject", cascade={"persist"}, inversedBy="messages")
      * @ORM\JoinColumn(nullable=true)
      *
      * @Assert\NotBlank()
      */
-    private ?Subject $subject = null;
+    private $subject = null;
 
     /**
+     * @var HostingRequest
+     *
      * @ORM\ManyToOne(targetEntity="HostingRequest", cascade={"persist"}, fetch="EAGER", inversedBy="messages")
      * @ORM\JoinColumn(nullable=true)
      */
-    private ?HostingRequest $request = null;
+    private $request = null;
 
     /**
      * @var int
@@ -247,14 +273,14 @@ class Message
 
     public function removeFromSpaminfo(string $spamInfo): self
     {
-        $info = array_filter(explode(',', $this->spaminfo));
+        $info = array_filter(explode(',', $this->spamInfo));
         $key = array_search($spamInfo, $info, true);
         if (false !== $key) {
             unset($info[$key]);
         }
-        $this->spaminfo = implode(',', $info);
-        if (empty($this->spaminfo)) {
-            $this->spaminfo = SpamInfoType::NO_SPAM;
+        $this->spamInfo = implode(',', $info);
+        if (empty($this->spamInfo)) {
+            $this->spamInfo = SpamInfoType::NO_SPAM;
         }
 
         return $this;
@@ -262,22 +288,30 @@ class Message
 
     public function addToSpamInfo(string $spamInfo): self
     {
-        if (SpamInfoType::NO_SPAM === $this->spaminfo) {
-            $this->spaminfo = '';
+        if (empty($spamInfo)) {
+            return $this;
         }
-        $info = array_filter(explode(',', $this->spaminfo));
+
+        $info = array_filter(explode(',', $this->spamInfo));
         $key = array_search($spamInfo, $info, true);
         if (false === $key) {
             $info[] = $spamInfo;
         }
-        $this->spaminfo = implode(',', $info);
+        sort($info);
+        if (1 < count($info)) {
+            $info = array_diff($info, [SpamInfoType::NO_SPAM]);
+        }
+        $this->spamInfo = implode(',', $info);
 
+        if (empty($this->spamInfo)) {
+            $this->spamInfo = SpamInfoType::NO_SPAM;
+        }
         return $this;
     }
 
     public function getSpamInfo(): string
     {
-        return $this->spaminfo;
+        return $this->spamInfo;
     }
 
     public function setStatus(string $status): self

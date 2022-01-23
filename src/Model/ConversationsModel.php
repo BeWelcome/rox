@@ -69,21 +69,21 @@ class ConversationsModel
         }
     }
 
-    public function markConversationsAsSpam(array $conversationIds): void
+    public function markConversationsAsSpam(Member $member, array $conversationIds): void
     {
         $threads = $this->getThreadsForConversationIds($conversationIds);
 
         foreach ($threads as $thread) {
-            $this->conversationModel->markConversationAsSpam($thread);
+            $this->conversationModel->markConversationAsSpam($member, $thread);
         }
     }
 
-    public function unmarkConversationsAsSpam(array $conversationIds): void
+    public function unmarkConversationsAsSpam(Member $member, array $conversationIds): void
     {
         $threads = $this->getThreadsForConversationIds($conversationIds);
 
         foreach ($threads as $thread) {
-            $this->conversationModel->unmarkConversationAsSpam($thread);
+            $this->conversationModel->unmarkConversationAsSpam($member, $thread);
         }
     }
 

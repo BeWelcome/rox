@@ -90,30 +90,33 @@ class ConversationModel
         $this->entityManager->flush();
     }
 
-    public function markConversationAsSpam(array $conversation): void
+    public function markConversationAsSpam(Member $member, array $conversation): void
     {
         /** @var Message $message */
         foreach ($conversation as $message) {
-            $message
-                ->setFolder(InFolderType::SPAM)
-                ->setStatus(MessageStatusType::CHECK)
-                ->addToSpamInfo(SpamInfoType::MEMBER_SAYS_SPAM)
-            ;
-            $this->entityManager->persist($message);
+            if ($member === $message->getReceiver()) {
+                $message
+                    ->setFolder(InFolderType::SPAM)
+                    ->setStatus(MessageStatusType::CHECK)
+                    ->addToSpamInfo(SpamInfoType::MEMBER_SAYS_SPAM);
+                $this->entityManager->persist($message);
+            }
         }
         $this->entityManager->flush();
     }
 
-    public function unmarkConversationAsSpam(array $conversation): void
+    public function unmarkConversationAsSpam(Member $member, array $conversation): void
     {
         /** @var Message $message */
         foreach ($conversation as $message) {
-            $message
-                ->setFolder(InFolderType::NORMAL)
-                ->setStatus(MessageStatusType::CHECKED)
-                ->removeFromSpaminfo(SpamInfoType::MEMBER_SAYS_SPAM)
-            ;
-            $this->entityManager->persist($message);
+            if ($member === $message->getReceiver()) {
+                $message
+                    ->setFolder(InFolderType::NORMAL)
+                    ->setStatus(MessageStatusType::CHECKED)
+                    ->removeFromSpaminfo(SpamInfoType::MEMBER_SAYS_SPAM)
+                ;
+                $this->entityManager->persist($message);
+            }
         }
         $this->entityManager->flush();
     }

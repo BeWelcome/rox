@@ -8,7 +8,7 @@
 {% block content %}
     {% set original = thread | last %}{% set request = (thread | first).request %}
     {% set myself = app.user %}
-    {{ macros.messageheader(thread, show_deleted) }}
+    {{ macros.messageheader(thread, {show_deleted: show_deleted, is_spam: is_spam}) }}
     <div class="u-rounded-8 u-p-8 u-w-full u-mb-8 u-bg-gray-5">
         <h6 class="u-p-4">{{ 'newest.request.details'|trans }}</h6>
         <div class="u-flex u-flex-col md:u-flex-row u-justify-between">

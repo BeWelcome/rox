@@ -15,6 +15,8 @@
 {% if current.Request %}
     {% set currentArrival = current.Request.Arrival %}{% set currentDeparture = current.Request.Departure %}
     {% set currentFlexible = current.Request.Flexible %}{% set currentTravelers = current.Request.NumberOfTravellers %}
+{% else %}
+    {% set curentArrival = null %}
 {% endif %}
 
 <div id="message_thread" class="u-mb-4">

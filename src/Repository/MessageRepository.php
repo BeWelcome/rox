@@ -53,7 +53,7 @@ class MessageRepository extends EntityRepository
             ->select('count(m.id)')
             ->where('m.status = :status')
             ->setParameter('status', MessageStatusType::CHECK)
-            ->andWhere('m.spaminfo LIKE :spamInfo')
+            ->andWhere('m.spamInfo LIKE :spamInfo')
             ->setParameter('spamInfo', SpamInfoType::MEMBER_SAYS_SPAM)
             ->getQuery();
 
@@ -220,8 +220,8 @@ class MessageRepository extends EntityRepository
         $qb
             ->where('m.status = :status')
             ->setParameter('status', MessageStatusType::CHECK)
-            ->andWhere('m.spaminfo LIKE :spaminfo')
-            ->setParameter('spaminfo', '%' . SpamInfoType::MEMBER_SAYS_SPAM . '%')
+            ->andWhere('m.spamInfo LIKE :spamInfo')
+            ->setParameter('spamInfo', '%' . SpamInfoType::MEMBER_SAYS_SPAM . '%')
         ;
 
         return $qb;
@@ -233,8 +233,8 @@ class MessageRepository extends EntityRepository
         $qb
             ->where('m.status = :status')
             ->setParameter('status', MessageStatusType::CHECKED)
-            ->andWhere('m.spaminfo LIKE :spaminfo')
-            ->setParameter('spaminfo', '%' . SpamInfoType::CHECKER_SAYS_SPAM . '%')
+            ->andWhere('m.spamInfo LIKE :spamInfo')
+            ->setParameter('spamInfo', '%' . SpamInfoType::CHECKER_SAYS_SPAM . '%')
             ->orderBy('m.created', 'DESC')
         ;
 

@@ -35,8 +35,12 @@ class DeletedAdapter extends AbstractConversationsAdapter implements AdapterInte
     private function getDeletedCondition(): string
     {
         $deletedCondition =
-            '((IdReceiver = :memberId AND (m.DeleteRequest LIKE \'%' . DeleteRequestType::RECEIVER_DELETED . '%\'))
-                OR (IdSender = :memberId AND (m.DeleteRequest LIKE \'%' . DeleteRequestType::SENDER_DELETED . '%\')))';
+            '(' .
+                '(IdReceiver = :memberId AND (m.DeleteRequest LIKE \'%' . DeleteRequestType::RECEIVER_DELETED . '%\'' .
+                ' AND m.DeleteRequest NOT LIKE \'%' . DeleteRequestType::RECEIVER_PURGED . '%\'))' .
+            ' OR (IdSender = :memberId AND (m.DeleteRequest LIKE \'%' . DeleteRequestType::SENDER_DELETED . '%\''.
+                ' AND m.DeleteRequest NOT LIKE \'%' . DeleteRequestType::SENDER_PURGED . '%\'))' .
+            ')';
 
         return $deletedCondition;
     }

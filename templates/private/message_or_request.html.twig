@@ -3,7 +3,7 @@
 {% block content %}
 {% set myself = app.user %}
 {% if message.Sender.Username == myself.Username %}{% set otherUser = message.Receiver %}{% else %}{% set otherUser = message.Sender %}{% endif %}
-<h3>{% if message.subject %}<a href="{{ url('message_show', { id: message.id}) }}">{{ message.subject.subject }}</a>{% else %}{{ 'mydata.message.conversation.other'|trans({'other':otherUser.Username}) }}{% endif %}</h3>
+<h3>{% if message.subject %}<a href="{{ url('conversation_view', { id: message.id}) }}">{{ message.subject.subject }}</a>{% else %}{{ 'mydata.message.conversation.other'|trans({'other':otherUser.Username}) }}{% endif %}</h3>
 <p>
     {{ 'sender' | trans }}: <a href="{{ url('members_profile', { username: message.sender.username }) }}">{{ message.sender.username }}</a><br>
     {{ 'receiver' | trans }}: <a href="{{ url('members_profile', { username: message.receiver.username }) }}">{{ message.receiver.username }}</a>

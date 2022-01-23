@@ -75,10 +75,12 @@
                     {{ messageText | truncate(150) | raw -}}</p>
                 {% endapply %}
             </a>
-        
+
+        {% if folder != 'spam' and folder != 'deleted' %}
         <div class="u-flex u-justify-start">
             <a href="{{ path('conversation_reply', { id: message.id}) }}" class="o-button--s md:o-button"><i class="fa fa-reply u-mr-8"></i>{{ 'reply' | trans }}</a>
         </div>
+        {% endif %}
     </div>
 
 

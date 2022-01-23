@@ -93,16 +93,20 @@ trip.travellers:
 mytrips:
     - 'My trips'
     - Item in the submenu of the trips module
-location:
+Location:
     - 'Location'
     - Label for the field that gets the leg's location
-duration:
+Duration:
     - 'Duration'
     - Label for the field that gets the leg's duration
-create:
+Create:
     - 'Create (1)'
     - Label for the create button on the trip creation page
 location.none.given:
     - 'You need to select a location'
     - Error text shown if no location was selected
+    - validators
+duration.select:
+    - 'You need to select a duration from the calendar'
+    - Error message shown when the duration field is empty
     - validators

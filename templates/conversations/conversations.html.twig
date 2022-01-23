@@ -43,25 +43,25 @@
         <p>{{ 'conversations.none' | trans }}</p>
     {% else %}
         {% if conversations.haveToPaginate %}
-            <div class="u-flex u-justify-end u-my-8">            
+            <div class="u-flex u-justify-end u-my-8">
                 {{ pagerfanta( conversations, 'rounded_pagination') }}
             </div>
         {% endif %}
-        
+
         <div class="c-conversations">
             {{ form_start(form) }}
 
             {% set correspondent %}receiver{% endset %}
             {% set _route = app.request.attributes.get('_route') %}
             {% for message in conversations.currentPageResults %}
-                {% include 'conversations/message.html.twig' with { 'message': message } %}
+                {% include 'conversations/message.html.twig' with { 'message': message, 'folder': submenu.active } %}
             {% endfor %}
         </div>
         <div class="u-flex u-justify-between u-my-8">
             <div>
                 <input class="u-sr-only" type="checkbox" id="checkAll">
                 <label for="checkAll" class="o-button o-button--outline">{{ 'conversations.check.all'|trans }}</label>
-            </div>            
+            </div>
             {% if conversations.haveToPaginate %}
                 <div>
                     {{ pagerfanta( conversations, 'rounded_pagination') }}
@@ -82,7 +82,7 @@
         </div>
         {{ form_rest(form) }}
         {{ form_end(form) }}
-        
+
 
     {% endif %}
 

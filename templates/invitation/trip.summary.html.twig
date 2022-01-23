@@ -8,27 +8,31 @@
 </div>
 <div class="row no-gutters mb-1 bg-white collapse p-1" id="tripSummary">
     <div class="col-12 col-md-4 pr-1">
-        <p><strong>Trip of: {{ guest.username }}</strong></p>
         <p><strong>{{ 'trip.summary'|trans }}</strong></p>
         <p>{{ leg.trip.summary }}</p>
         <p><strong>{{ 'trip.description'|trans }}</strong></p>
         <p>{{ leg.trip.description|purify }}</p>
         <p><strong>{{ 'request.number_of_travellers'|trans }}</strong></p>
         <p>{{ leg.trip.countOfTravellers }}</p>
+        <p><strong>{{ 'location'|trans }}</strong></p>
+        <p>{{ leg.location.name }}</p>
     </div>
     <div class="col-12 col-md-6">
-        <p><strong>{{ 'profile.summary'|trans }}</strong></p>
-        {% set fields = guest.memberFields %}
-        <p>
-            {% if fields[app.request.locale] is defined %}
-                {{ fields[app.request.locale]['ProfileSummary']|purify }}
-            {% else %}
-                {% if fields['en'] is defined %}
-                    {{ fields['en']['ProfileSummary']|purify }}
+        {% if app.user != guest %}
+            {# Show profile summary only to potential hosts #}
+            <p><strong>{{ 'profile.summary'|trans }}</strong></p>
+            {% set fields = guest.memberFields %}
+            <p>
+                {% if fields[app.request.locale] is defined %}
+                    {{ fields[app.request.locale]['ProfileSummary']|purify }}
                 {% else %}
-                    {{ 'profile.summary.none'|trans }}
+                    {% if fields['en'] is defined %}
+                        {{ fields['en']['ProfileSummary']|purify }}
+                    {% else %}
+                        {{ 'profile.summary.none'|trans }}
+                    {% endif %}
                 {% endif %}
-            {% endif %}
-        </p>
+            </p>
+        {% endif %}
     </div>
 </div>

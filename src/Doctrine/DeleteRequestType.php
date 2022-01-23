@@ -80,6 +80,6 @@ class DeleteRequestType extends SetType
         }
         $requests = implode(',', $requests);
 
-        return ('' === $requests) ? null : $requests;
+        return $requests;
     }
 }

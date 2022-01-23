@@ -85,10 +85,10 @@ class ConversationController extends AbstractController
      *
      * @IsGranted("CONVERSATION_REPLY", subject="message")
      */
-    public function reply(Message $message, EntityManagerInterface $entityManager): Response
+    public function reply(Message $message): Response
     {
         // Always reply to the last item in the thread
-        $conversationThread = new ConversationThread($entityManager);
+        $conversationThread = new ConversationThread($this->entityManager);
         $thread = $conversationThread->getThread($message);
         $current = $thread[0];
 
@@ -102,7 +102,7 @@ class ConversationController extends AbstractController
         /** @var Member $member */
         $member = $this->getUser();
         if ($member !== $message->getSender() && $member !== $message->getReceiver()) {
-            return $this->redirectToRoute('conversations', [ 'conversationType' => 'conversations']);
+            return $this->redirectToRoute('conversations', [ 'conversationsType' => 'conversations']);
         }
         $controllerAndMethod = $this->getControllerAndMethod($message, 'reply');
 
@@ -120,9 +120,35 @@ class ConversationController extends AbstractController
      */
     public function deleteConversation(Message $message): Response
     {
-        $template = $this->getViewTemplate($message);
+        /** @var Member $member */
+        $member = $this->getUser();
+        $conversationThread = new ConversationThread($this->entityManager);
+        $conversation = $conversationThread->getThread($message);
+        $this->conversationModel->markConversationDeleted($member, $conversation);
 
-        return $this->viewThread($message, $template, false);
+        $this->addTranslatedFlash('notice', 'flash.marked.deleted');
+
+        return $this->redirectToRoute('conversations_deleted');
+    }
+
+    /**
+     * @Route("/conversation/{id}/purge", name="conversation_purge",
+     *     requirements={"id": "\d+"}
+     * )
+     *
+     * @IsGranted("CONVERSATION_VIEW", subject="message")
+     */
+    public function purgeConversation(Message $message): Response
+    {
+        /** @var Member $member */
+        $member = $this->getUser();
+        $conversationThread = new ConversationThread($this->entityManager);
+        $conversation = $conversationThread->getThread($message);
+        $this->conversationModel->markConversationPurged($member, $conversation);
+
+        $this->addTranslatedFlash('notice', 'flash.marked.purged');
+
+        return $this->redirectToRoute('conversations_deleted');
     }
 
     /**
@@ -134,25 +160,29 @@ class ConversationController extends AbstractController
      */
     public function recoverConversation(Message $message): Response
     {
-        $template = $this->getViewTemplate($message);
+        /** @var Member $member */
+        $member = $this->getUser();
+        $conversationThread = new ConversationThread($this->entityManager);
+        $conversation = $conversationThread->getThread($message);
+        $this->conversationModel->unmarkConversationDeleted($member, $conversation);
 
-        return $this->viewThread($message, $template, false);
+        $this->addTranslatedFlash('notice', 'flash.recovered');
+
+        return $this->redirectToRoute('conversation_view', ['id' => $message->getId()]);
     }
-
 
     /**
      * @Route("/conversation/{id}/spam", name="conversation_mark_spam")
      */
     public function markAsSpam(Message $message): Response
     {
-        $em = $this->getDoctrine()->getManager();
-        $conversationThread = new ConversationThread($em);
+        $conversationThread = new ConversationThread($this->entityManager);
         $conversation = $conversationThread->getThread($message);
         $this->conversationModel->markConversationAsSpam($conversation);
 
         $this->addTranslatedFlash('notice', 'flash.marked.spam');
 
-        return $this->redirectToRoute('message_show', ['id' => $message->getId()]);
+        return $this->redirectToRoute('conversation_view', ['id' => $message->getId()]);
     }
 
     /**
@@ -166,7 +196,7 @@ class ConversationController extends AbstractController
 
         $this->addTranslatedFlash('notice', 'flash.marked.nospam');
 
-        return $this->redirectToRoute('message_show', ['id' => $message->getId()]);
+        return $this->redirectToRoute('conversation_view', ['id' => $message->getId()]);
     }
 
     private function isMessage(Message $message): bool

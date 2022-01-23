@@ -7,7 +7,7 @@
 {% endblock stylesheets %}
 
 {% block content %}
-    {{ macros.messageheader(thread, false, true, false) }}
+    {{ macros.messageheader_no_buttons(thread) }}
 
     {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
     {{ form_errors(form) }}

@@ -68,21 +68,27 @@ class Message
     private ?Message $parent = null;
 
     /**
+     * @var Member
+     *
      * @ORM\ManyToOne(targetEntity="App\Entity\Member", fetch="LAZY")
      */
-    private Member $initiator;
+    private $initiator;
 
     /**
+     * @var Member
+     *
      * @ORM\ManyToOne(targetEntity="App\Entity\Member", fetch="EAGER")
      * @ORM\JoinColumn(name="idReceiver", referencedColumnName="id")
      */
-    private Member $receiver;
+    private $receiver;
 
     /**
+     * @var Member
+     *
      * @ORM\ManyToOne(targetEntity="App\Entity\Member", fetch="EAGER")
      * @ORM\JoinColumn(name="idSender", referencedColumnName="id")
      */
-    private Member $sender;
+    private $sender;
 
     /**
      * @ORM\Column(name="SpamInfo", type="spam_info", nullable=false)

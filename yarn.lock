@@ -4868,6 +4868,11 @@ leaflet-rotatedmarker@^0.2.0:
   resolved "https://registry.yarnpkg.com/leaflet-rotatedmarker/-/leaflet-rotatedmarker-0.2.0.tgz#4467f49f98d1bfd56959bd9c6705203dd2601277"
   integrity sha1-RGf0n5jRv9VpWb2cZwUgPdJgEnc=
 
+leaflet.fullscreen@^2.2.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/leaflet.fullscreen/-/leaflet.fullscreen-2.2.0.tgz#6843a0347c4212e9c5081ea9362843f4df2342ad"
+  integrity sha512-qfL+vE6wRJX85aWNBag1Je5+W7niTtraFu4EkLIO6XSgN2pEsL/XefjOSIh/CFM00aaxbOpN6Rr2vZpvnpWWDQ==
+
 leaflet.markercluster.webpack@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/leaflet.markercluster.webpack/-/leaflet.markercluster.webpack-1.0.2.tgz#6433be8af51070d6d63fdd417c467b08b8582c8f"

@@ -18,7 +18,7 @@
             </div>
         {% endif %}
         {% for message in items.currentPageResults %}
-            {% include 'conversations/message.html.twig' with { 'message': message, 'between': true } %}
+            {% include 'conversations/message.html.twig' with { 'message': message, 'between': true, 'folder': 'none' } %}
         {% endfor %}
         {% if items.haveToPaginate %}
             <div class="u-flex u-justify-end u-my-8">

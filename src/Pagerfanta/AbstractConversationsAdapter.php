@@ -85,14 +85,14 @@ abstract class AbstractConversationsAdapter
     protected function getNotDeletedOrPurgedCondition(): string
     {
         $notDeletedOrPurgedCondition =
-            'NOT (' .
-                '((m.IdReceiver = :memberId) AND (' .
-                    'm.DeleteRequest LIKE \'%' . DeleteRequestType::RECEIVER_DELETED . '%\'' .
-                    ' OR m.DeleteRequest LIKE \'%' . DeleteRequestType::RECEIVER_PURGED . '%\'' .
-                ')) OR ((m.IdSender = :memberId) AND (' .
-                    'm.DeleteRequest LIKE \'%' . DeleteRequestType::SENDER_DELETED . '%\'' .
-                    ' OR m.DeleteRequest LIKE \'%' . DeleteRequestType::SENDER_PURGED . '%\'' .
-                '))' .
+            '((m.IdReceiver = :memberId) OR (m.IdSender = :memberId)) AND (' .
+                '((m.IdReceiver = :memberId) AND ' .
+                    'm.DeleteRequest NOT LIKE \'%' . DeleteRequestType::RECEIVER_DELETED . '%\'' .
+                    ' AND m.DeleteRequest NOT LIKE \'%' . DeleteRequestType::RECEIVER_PURGED . '%\'' .
+                ') OR ((m.IdSender = :memberId) AND ' .
+                    'm.DeleteRequest NOT LIKE \'%' . DeleteRequestType::SENDER_DELETED . '%\'' .
+                    ' AND m.DeleteRequest NOT LIKE \'%' . DeleteRequestType::SENDER_PURGED . '%\'' .
+                ')' .
             ')';
 
         return $notDeletedOrPurgedCondition;

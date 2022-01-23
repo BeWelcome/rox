@@ -46,6 +46,7 @@ class ConversationModel
                 $deleteRequest = DeleteRequestType::addSenderPurged($deleteRequest);
             }
             $message->setDeleteRequest($deleteRequest);
+            $message->setFolder('Normal');
             $this->entityManager->persist($message);
         }
         $this->entityManager->flush();
@@ -67,6 +68,7 @@ class ConversationModel
                 $deleteRequest = DeleteRequestType::addSenderDeleted($deleteRequest);
             }
             $message->setDeleteRequest($deleteRequest);
+            $message->setFolder('Normal');
             $this->entityManager->persist($message);
         }
         $this->entityManager->flush();
@@ -85,6 +87,7 @@ class ConversationModel
                 $deleteRequest = DeleteRequestType::removeSenderDeleted($deleteRequest);
             }
             $message->setDeleteRequest($deleteRequest);
+            $message->setFolder('Normal');
             $this->entityManager->persist($message);
         }
         $this->entityManager->flush();

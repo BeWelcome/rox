@@ -13,7 +13,7 @@ App\Entity\Member:
         city: '@Berlin'
         Latitude: <latitude(@Berlin->Latitude,@Berlin->Latitude)>
         Longitude: <longitude(@Berlin->Longitude,@Berlin->Longitude)>
-        NbRemindWithoutLogingIn: 0
+        remindersWithoutLogin: 0
         HomePhoneNumber: 0
         CellPhoneNumber: 0
         WorkPhoneNumber: 0
@@ -88,7 +88,7 @@ App\Entity\Member:
         city: '@Berlin'
         Latitude: <latitude(@Berlin->Latitude,@Berlin->Latitude)>
         Longitude: <longitude(@Berlin->Longitude,@Berlin->Longitude)>
-        NbRemindWithoutLogingIn: 0
+        remindersWithoutLogin: 0
         HomePhoneNumber: 0
         CellPhoneNumber: 0
         WorkPhoneNumber: 0
@@ -164,7 +164,7 @@ App\Entity\Member:
         city: '@Jayapura'
         Latitude: <latitude(@Jayapura->Latitude,@Jayapura->Latitude)>
         Longitude: <longitude(@Jayapura->Longitude,@Jayapura->Longitude)>
-        NbRemindWithoutLogingIn: 0
+        remindersWithoutLogin: 0
         HomePhoneNumber: 0
         CellPhoneNumber: 0
         WorkPhoneNumber: 0
@@ -239,7 +239,7 @@ App\Entity\Member:
         city: '@Jayapura'
         Latitude: <latitude(@Jayapura->Latitude,@Jayapura->Latitude)>
         Longitude: <longitude(@Jayapura->Longitude,@Jayapura->Longitude)>
-        NbRemindWithoutLogingIn: 0
+        remindersWithoutLogin: 0
         HomePhoneNumber: 0
         CellPhoneNumber: 0
         WorkPhoneNumber: 0
@@ -314,7 +314,7 @@ App\Entity\Member:
         city: '@Jayapura'
         Latitude: <latitude(@Jayapura->Latitude,@Jayapura->Latitude)>
         Longitude: <longitude(@Jayapura->Longitude,@Jayapura->Longitude)>
-        NbRemindWithoutLogingIn: 0
+        remindersWithoutLogin: 0
         HomePhoneNumber: 0
         CellPhoneNumber: 0
         WorkPhoneNumber: 0

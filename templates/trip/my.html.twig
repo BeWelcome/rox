@@ -32,7 +32,7 @@
 					<div>
 						<div class="c-trip-card__icon-grid">
 							<i class="fa fa-users u-text-white u-text-16 u-justify-self-center u-self-center u-text-gray-20"></i>
-							<p class="u-text-white u-font-display" aria-label="{{ 'trip.count.of.travellers'|trans }}"><strong>{{ trip.countOfTravellers }}</strong> {{ 'trip.count.of.travellers'|trans }}</p>
+							<p class="u-text-white u-font-display" aria-label="{{ 'trip.count.of.travellers'| trans ({'countOfTravellers' : trip.countOfTravellers}) }}"><strong>{{ 'trip.count.of.travellers'| trans ({'countOfTravellers' : trip.countOfTravellers}) }}</strong></p>
 						</div>
 						<div class="c-trip-card__icon-grid">
 							<i class="fa fa-info-circle u-text-white u-text-16 u-justify-self-center u-self-center u-text-gray-20"></i>

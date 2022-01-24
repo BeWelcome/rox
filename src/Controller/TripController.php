@@ -263,7 +263,7 @@ class TripController extends AbstractController
     {
         $submenu = [
             'trip_mytrips' => [
-                'key' => 'mytrips',
+                'key' => 'trips',
                 'url' => $this->generateUrl('trips'),
             ],
             'trip_legs' => [

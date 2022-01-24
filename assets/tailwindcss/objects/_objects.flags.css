@@ -12,6 +12,7 @@ https://github.com/HatScripts/circle-flags
     width: 18px;
     height: 18px;
     box-shadow: 0 0 5px 0px black;
+    background-size: contain;
 }
 
 

@@ -50,7 +50,7 @@ class TripVoter extends Voter
         throw new LogicException('This code should not be reached!');
     }
 
-    private function canReply(Trip $trip, Member $member): bool
+    private function canEdit(Trip $trip, Member $member): bool
     {
         // this assumes that the Post object has a `getOwner()` method
         return $member === $trip->getCreator();

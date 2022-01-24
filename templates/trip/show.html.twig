@@ -2,7 +2,7 @@
 {% import 'macros.twig' as macros %}
 
 {% block title %}
-  {{ 'trip' | trans | capitalize }}
+  {{ 'trip.show' | trans | capitalize }}
 {% endblock %}
 
 {% block javascripts %}
@@ -40,13 +40,12 @@
           <i class="fa fa-users u-text-white u-text-16 u-justify-self-center u-self-center u-text-gray-20"></i>
            <p class="u-text-white u-font-display" aria-label="{{ 'trip.count.of.travellers'|trans }}">{{ 'trip.count.of.travellers'|trans({'countOfTravellers':trip.countOfTravellers}) }}</p>
         </div>
-          *{{ trip.additionalInfo }}*
-          {% if trip.additionalInfo != constant('App\\Doctrine\\TripAdditionalInfoType::NONE') %}
-        <div class="c-trip-card__icon-grid u-mr-24">
-          <i class="fa fa-info-circle u-text-white u-text-16 u-justify-self-center u-self-center u-text-gray-20"></i>
-          <p class="u-text-white u-font-display" aria-label="{{ 'trip.additional.info'|trans }}">{{ trip.additionalInfo|trans }}</p>
-        </div>
-          {% endif %}
+        {% if trip.additionalInfo != constant('App\\Doctrine\\TripAdditionalInfoType::NONE') %}
+            <div class="c-trip-card__icon-grid u-mr-24">
+              <i class="fa fa-info-circle u-text-white u-text-16 u-justify-self-center u-self-center u-text-gray-20"></i>
+              <p class="u-text-white u-font-display" aria-label="{{ 'trip.additional.info'|trans }}">{{ trip.additionalInfo|trans }}</p>
+            </div>
+        {% endif %}
         <div class="c-trip-card__icon-grid">
           <i class="fa fa-bullseye u-text-white u-text-16 u-justify-self-center u-self-center u-text-gray-20"></i>
           <p class="u-text-white u-font-display" aria-label="{{ 'trip.invitation.radius'|trans }}">{{ trip.invitationRadius|trans }}</p>
@@ -90,6 +89,16 @@
                           <p class="u-text-white u-font-display" aria-label="{{ 'trip.option.meet.locals'|trans }}">{{ 'trip.option.looking.for.host'|trans }}</p>
                         </div>
                       {% endif %}
+
+                      {% if app.user == trip.creator and subtrip.invitedBy %}
+                          {% set username = subtrip.invitedBy.Username %}
+                          <div class="o-avatar__img-wrapper o-avatar--shadow-s">
+                          <a href="{{ path('conversation_reply', {id: subtrip.invitation.messages[0].id}) }}">
+                                <img class="o-avatar__img" src="{{ path( 'avatar', { username: username , size: 48 }) }}"
+                                     title="{{ username }}" alt="{{ 'profile' | trans }}: {{ username }}">
+                          </a>
+                          </div>
+                      {% endif %}
                     </div>
                   </div>
 
@@ -111,7 +120,7 @@
       let memberInfo = {
           latitude: {{ app.user.latitude }},
           longitude: {{ app.user.longitude }},
-          searchRadius: {{ searchRadius }}
+          searchRadius: {{ searchRadius }},
       }
   </script>
 

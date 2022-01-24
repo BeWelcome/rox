@@ -76,6 +76,13 @@ class Subtrip
      */
     private $trip;
 
+    /**
+     * @var HostingRequest
+     *
+     * @ORM\OneToOne(targetEntity="HostingRequest", mappedBy="inviteForLeg")
+     */
+    private $invitation = null;
+
     public function setLocation(?Location $location): self
     {
         $this->location = $location;
@@ -163,5 +170,21 @@ class Subtrip
         $this->invitedBy = $invitedBy;
 
         return $this;
+    }
+
+    /**
+     * @return HostingRequest|null
+     */
+    public function getInvitation(): ?HostingRequest
+    {
+        return $this->invitation;
+    }
+
+    /**
+     * @param HostingRequest|null $invitation
+     */
+    public function setInvitation(?HostingRequest $invitation): void
+    {
+        $this->invitation = $invitation;
     }
 }

@@ -9,6 +9,7 @@ use App\Form\TripRadiusType;
 use App\Form\TripType;
 use App\Model\TripModel;
 use App\Repository\SubtripRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Pagerfanta\Doctrine\ORM\QueryAdapter;
 use Pagerfanta\Pagerfanta;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -20,6 +21,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 class TripController extends AbstractController
 {
@@ -33,7 +35,7 @@ class TripController extends AbstractController
     }
 
     /**
-     * @Route("/mytrips/{page}", name="mytrips",
+     * @Route("/trips/{page}", name="trips",
      *     requirements={"page": "\d+"})
      *     )
      */
@@ -56,9 +58,12 @@ class TripController extends AbstractController
     /**
      * @Route("/trip/{id}", name="trip_show",
      *     requirements={"id": "\d+"})
+     *
+     * @IsGranted("TRIP_VIEW", subject="trip")
      */
     public function show(Trip $trip, TripModel $tripModel): Response
     {
+        /** @var Member $member */
         $member = $this->getUser();
         $searchRadius = $tripModel->getTripsRadius($member);
         return $this->render('trip/show.html.twig', [
@@ -79,8 +84,11 @@ class TripController extends AbstractController
      */
     public function create(Request $request): Response
     {
+        /** @var Member $member */
+        $member = $this->getUser();
+
         $trip = new Trip();
-        $trip->setCreator($this->getUser());
+        $trip->setCreator($member);
 
         $leg = new Subtrip();
         $trip->addSubtrip($leg);
@@ -123,14 +131,11 @@ class TripController extends AbstractController
      * @Route("/trip/{id}/edit", name="trip_edit",
      *     requirements={"id": "\d+"}
      * )
+     *
+     * @IsGranted("TRIP_EDIT", subject="trip")
      */
-    public function edit(Request $request, Trip $trip): Response
+    public function edit(Request $request, Trip $trip, EntityManagerInterface $entityManager): Response
     {
-        $member = $this->getUser();
-        if ($trip->getCreator() !== $member) {
-            throw new AccessDeniedException();
-        }
-
         if ($this->tripModel->hasTripExpired($trip)) {
             $this->addFlash('notice', $this->translator->trans('trip.flash.expired'));
 
@@ -146,7 +151,6 @@ class TripController extends AbstractController
 
             $errors = $this->tripModel->checkTripCreateOrEditData($editedTrip);
             if (empty($errors)) {
-                $entityManager = $this->getDoctrine()->getManager();
                 $entityManager->persist($editedTrip);
                 $entityManager->flush();
 
@@ -174,14 +178,11 @@ class TripController extends AbstractController
      * @Route("/trip/{id}/remove", name="trip_remove",
      *     requirements={"id": "\d+"}
      * )
+     *
+     * @IsGranted("TRIP_EDIT", subject="trip")
      */
     public function remove(Trip $trip): RedirectResponse
     {
-        $member = $this->getUser();
-        if ($trip->getCreator() !== $member) {
-            throw new AccessDeniedException();
-        }
-
         $this->tripModel->hideTrip($trip);
 
         return $this->redirectToRoute('mytrips');
@@ -193,9 +194,16 @@ class TripController extends AbstractController
      * @Route("/trip/{id}/copy", name="trip_copy",
      *     requirements={"id": "\d+"}
      * )
+     *
+     * @IsGranted("TRIP_EDIT", subject="trip")
      */
     public function copy(Trip $trip): Response
     {
+        $member = $this->getUser();
+        if ($trip->getCreator() !== $member) {
+            throw new AccessDeniedException();
+        }
+
         $newTrip = $this->tripModel->copyTrip($trip);
 
         return $this->redirectToRoute('trip_edit', [ 'id' => $newTrip->getId()]);
@@ -207,11 +215,13 @@ class TripController extends AbstractController
      * @Route("/trip/{username}/area/{page}",
      *     requirements={"page"="\d+"},
      *     name="trip_in_area")
-     *
-     * @param mixed $page
      */
-    public function tripsInArea(Request $request, Member $member, $page = 1): Response
-    {
+    public function tripsInArea(
+        Request $request,
+        Member $member,
+        EntityManagerInterface $entityManager,
+        int $page = 1
+    ): Response {
         /** @var Member $host */
         $host = $this->getUser();
 
@@ -231,7 +241,7 @@ class TripController extends AbstractController
         }
 
         /** @var SubtripRepository $subtripRepository */
-        $subtripRepository = $this->getDoctrine()->getRepository(Subtrip::class);
+        $subtripRepository = $entityManager->getRepository(Subtrip::class);
         $legsQuery = $subtripRepository->getLegsInAreaQuery($member, $radius);
 
         $legsAdapter = new QueryAdapter($legsQuery);
@@ -254,7 +264,7 @@ class TripController extends AbstractController
         $submenu = [
             'trip_mytrips' => [
                 'key' => 'mytrips',
-                'url' => $this->generateUrl('mytrips'),
+                'url' => $this->generateUrl('trips'),
             ],
             'trip_legs' => [
                 'key' => 'trip.in.area',

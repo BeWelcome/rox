@@ -84,7 +84,7 @@ class HostingRequest
     private int $status = self::REQUEST_OPEN;
 
     /**
-     * @ORM\OneToOne(targetEntity="\App\Entity\Subtrip")
+     * @ORM\OneToOne(targetEntity="\App\Entity\Subtrip", inversedBy="invitation")
      * @ORM\JoinColumn(name="invite_for_leg", referencedColumnName="id", nullable=true)
      */
     private ?Subtrip $inviteForLeg = null;
@@ -183,5 +183,21 @@ class HostingRequest
         $this->inviteForLeg = $inviteForLeg;
 
         return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMessages()
+    {
+        return $this->messages;
+    }
+
+    /**
+     * @param mixed $messages
+     */
+    public function setMessages($messages): void
+    {
+        $this->messages = $messages;
     }
 }

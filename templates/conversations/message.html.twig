@@ -8,7 +8,7 @@
 {% set lastMessageByMember = (member == message.sender) %}
 {% set isInitiator = (member == message.initiator) %}
 {% set unread = (message.firstRead is null) or (message.firstRead == '0000-00-00 00:00.00') %}
-{% if submenu.active == 'deleted' %}
+{% if submenu is defined and submenu.active == 'deleted' %}
     {% set show_message_route = 'conversation_view_with_deleted' %}
 {% else %}
     {% set show_message_route = 'conversation_view' %}

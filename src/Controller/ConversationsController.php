@@ -8,6 +8,7 @@ use App\Form\CustomDataClass\MessageIndexRequest;
 use App\Form\MessageIndexFormType;
 use App\Model\ConversationsModel;
 use App\Pagerfanta\ConversationsAdapter;
+use App\Pagerfanta\ConversationsWithAdapter;
 use App\Pagerfanta\DeletedAdapter;
 use App\Pagerfanta\InvitationsAdapter;
 use App\Pagerfanta\MessagesAdapter;
@@ -18,6 +19,7 @@ use App\Utilities\ConversationSubmenu;
 use App\Utilities\ConversationThread;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
+use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
 use Pagerfanta\Adapter\AdapterInterface;
 use Pagerfanta\Doctrine\ORM\QueryAdapter;
@@ -71,36 +73,23 @@ class ConversationsController extends AbstractController
     }
 
     /**
-     * @Route("/conversations/with/{username}", name="all_conversations_with")
+     * @Route("/conversations/with/{username}", name="conversations_with")
      *
      * @throws InvalidArgumentException
      */
-    public function allMessagesWithMember(Request $request, Member $other): Response
+    public function allConversationsWithMember(Request $request, Member $other, EntityManagerInterface $entityManager): Response
     {
-        list($page, $limit, $sort, $direction) = $this->getOptions($request);
-
-        if (!\in_array($direction, ['asc', 'desc'], true)) {
-            throw new InvalidArgumentException();
-        }
-
         /** @var Member $member */
         $member = $this->getUser();
-        $messages = $this->conversationsModel->getMessagesBetween($member, $other, $sort, $direction, $page, $limit);
+        $page = $request->query->get('page', '1');
+
+        $messages = new PagerFanta(new ConversationsWithAdapter($entityManager, $member, $other));
+        $messages->setMaxPerPage(15);
+        $messages->setCurrentPage($page);
 
         return $this->render('conversations/between.html.twig', [
             'items' => $messages,
             'otherMember' => $other,
-            'submenu' => [
-                'active' => 'between',
-                'items' => [
-                    'conversations' => [
-                        'key' => 'messages.back.profile',
-                        'url' => $this->generateUrl('members_profile', [
-                            'username' => $other->getUsername()
-                        ]),
-                    ],
-                ],
-            ],
         ]);
     }
 

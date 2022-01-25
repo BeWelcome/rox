@@ -167,7 +167,7 @@
         </div>
         <div class="md:u-text-32 md:u-leading-48 u-self-center u-text-center u-text-black u-font-700 u-line-clamp-3 u-place-self-center u-w-full">
             {{ headline | trans | format(receiver.Username) }}
-            <a class="u-text-16 u-align-top" href="{{ url('all_conversations_with', {'username': receiver.Username}) }}">
+            <a class="u-text-16 u-align-top" href="{{ url('conversations_with', {'username': receiver.Username}) }}">
                 <i class="fas fa-mail-bulk" title="{{ 'messages_allmessageswith' | trans | format(receiver.Username) }}"></i>
             </a>
             {% if displayplacelang %}

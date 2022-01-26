@@ -39,7 +39,7 @@ class TripController extends AbstractController
      *     requirements={"page": "\d+"})
      *     )
      */
-    public function myTrips(int $page = 1): Response
+    public function trips(int $page = 1): Response
     {
         /** @var Member $member */
         $member = $this->getUser();
@@ -185,7 +185,7 @@ class TripController extends AbstractController
     {
         $this->tripModel->hideTrip($trip);
 
-        return $this->redirectToRoute('mytrips');
+        return $this->redirectToRoute('trips');
     }
 
     /**

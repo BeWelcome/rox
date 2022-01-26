@@ -1,69 +1,70 @@
 {% extends 'trips.html.twig' %}
 
 {% block title %}
-	{{ 'trip.mytrips' | trans }}
+    {{ 'trip.mytrips' | trans }}
 {% endblock %}
 
 {% block stylesheets %}
-	{{ encore_entry_link_tags('tailwind') }}
+    {{ encore_entry_link_tags('tailwind') }}
 {% endblock %}
 
 {% block content %}
-	<!-- <h1>{{ 'trip.mytrips' | trans }}</h1> -->
-	{% if trips.nbResults != 0 %}
-		{% set myself = app.user %}
-		{% if trips.haveToPaginate %}
-			<section>
-			    <div class="u-inline-flex u-w-full u-items-center u-justify-end u-mb-24 md:u-mb-16 md:u-h-48 u-flex-col md:u-flex-row">
-	   				{{ pagerfanta( trips, 'rounded_pagination', { routeName: 'trips' }) }}
-	   			</div>
-	   		</section>
-		{% endif %}
-		<section>
-			{% for trip in trips %}
-			<div class="c-trip-card">
-				<div class="c-trip-card__wrapper">
-					<a class="u-text-white hover:u-text-gray-20 u-text-24 u-font-display u-font-700 u-col-span-full u-mb-8" href="{{ path('trip_show', { 'id': trip.id } ) }}">{{ trip.summary }}</a>
-					<div>
-						<p class=" u-font-display u-italic u-text-white u-mb-8">{{ trip.description | purify | truncate(200) }}</p>
-						<p class="u-text-white u-font-display u-mt-8 u-mb-16 md:u-m-0"><span class="u-mr-8">{{ trip.subtrips|length }} {{ 'trip.legs'|trans }}</span><strong class="u-text-white">{% for leg in trip.subtrips %}{% if leg.getLocation %} <i class="o-flag o-flag--{{ leg.location.country.country }} u-ml-8 u-mr-4"></i>{{ leg.location.name }}{% endif %}{% endfor %}</strong></p>
+    <!-- <h1>{{ 'trip.mytrips' | trans }}</h1> -->
+    {% if trips.nbResults != 0 %}
+        {% set myself = app.user %}
+        {% if trips.haveToPaginate %}
+            <section>
+                <div class="u-inline-flex u-w-full u-items-center u-justify-end u-mb-24 md:u-mb-16 md:u-h-48 u-flex-col md:u-flex-row">
+                       {{ pagerfanta( trips, 'rounded_pagination', { routeName: 'trips' }) }}
+                   </div>
+               </section>
+        {% endif %}
+        <section>
+            {% for trip in trips %}
+            <div class="c-trip-card">
+                <div class="c-trip-card__wrapper">
+                    <a class="u-text-white hover:u-text-gray-20 u-text-24 u-font-display u-font-700 u-col-span-full u-mb-8" href="{{ path('trip_show', { 'id': trip.id } ) }}">{{ trip.summary }}</a>
+                    <div>
+                        <p class=" u-font-display u-italic u-text-white u-mb-8">{{ trip.description | purify | truncate(200) }}</p>
+                        <p class="u-text-white u-font-display u-mt-8 u-mb-16 md:u-m-0"><span class="u-mr-8">{{ trip.subtrips|length }} {{ 'trip.legs'|trans }}</span><strong class="u-text-white">{% for leg in trip.subtrips %}{% if leg.getLocation %} <i class="o-flag o-flag--{{ leg.location.country.country }} u-ml-8 u-mr-4 u--mb-4"></i>{{ leg.location.name }}{% endif %}{% endfor %}</strong></p>
+                    </div>
+                    <div>
+                        <div class="c-trip-card__icon-grid">
+                            <i class="fa fa-users u-text-white u-text-16 u-justify-self-center u-self-center"></i>
+                            <p class="u-text-white u-font-display" aria-label="{{ 'trip.count.of.travellers'| trans ({'countOfTravellers' : trip.countOfTravellers}) }}"><strong>{{ 'trip.count.of.travellers'| trans ({'countOfTravellers' : trip.countOfTravellers}) }}</strong></p>
+                        </div>
+                        {% if trip.additionalInfo != constant('App\\Doctrine\\TripAdditionalInfoType::NONE') %}
+                            <div class="c-trip-card__icon-grid">
+                                <i class="fa fa-info-circle u-text-white u-text-16 u-justify-self-center u-self-center"></i>
+                                <p class="u-text-white u-font-display" aria-label="{{ ('trip.additional.info.' ~ trip.additionalInfo)| lower | trans }}">{{ ('trip.additional.info.' ~ trip.additionalInfo)| lower | trans}}</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="u-flex md:u-justify-between u-items-center u-mt-16 md:u-m-0">
+                    <a class="o-rounded o-rounded--l u-text-18 u-mr-16 md:u-m-0"
+                       href="{{ path('trip_edit', {'id': trip.id}) }}">
+                        <i class="far fa-edit"></i>
+                    </a>
+                    <a class="o-rounded o-rounded--l"
+                         href="{{ path('trip_remove', {'id': trip.id}) }}">
+                      <i class="fa fa-times"></i>
+                    </a>
+                </div>
+            </div>
+            {% else %}
+                <p class="u-text-white u-font-display">{{ 'trip.no.trips'|trans }}</p>
+            {% endfor %}
+        </section>
 
-					</div>
-					<div>
-						<div class="c-trip-card__icon-grid">
-							<i class="fa fa-users u-text-white u-text-16 u-justify-self-center u-self-center u-text-gray-20"></i>
-							<p class="u-text-white u-font-display" aria-label="{{ 'trip.count.of.travellers'| trans ({'countOfTravellers' : trip.countOfTravellers}) }}"><strong>{{ 'trip.count.of.travellers'| trans ({'countOfTravellers' : trip.countOfTravellers}) }}</strong></p>
-						</div>
-						<div class="c-trip-card__icon-grid">
-							<i class="fa fa-info-circle u-text-white u-text-16 u-justify-self-center u-self-center u-text-gray-20"></i>
-							<p class="u-text-white u-font-display" aria-label="{{ 'trip.additional.info'|trans }}">{{ trip.additionalInfo }}</p>
-						</div>
-					</div>
-				</div>
-				<div class="u-flex md:u-justify-between u-items-center u-mt-16 md:u-m-0">
-					<a class="o-rounded o-rounded--l u-text-18 u-mr-16 md:u-m-0"
-					   href="{{ path('trip_edit', {'id': trip.id}) }}">
-						<i class="far fa-edit"></i>
-					</a>
-					<a class="o-rounded o-rounded--l"
-						 href="{{ path('trip_remove', {'id': trip.id}) }}">
-					  <i class="fa fa-times"></i>
-					</a>
-				</div>
-			</div>
-			{% else %}
-				<p class="u-text-white u-font-display">{{ 'trip.no.trips'|trans }}</p>
-			{% endfor %}
-		</section>
-
-		{% if trips.haveToPaginate %}
-		<section>
-			<div class="u-inline-flex u-w-full u-items-center u-justify-end u-mt-16 md:u-h-48 u-flex-col md:u-flex-row">
-	      		{{ pagerfanta( trips, 'rounded_pagination', { routeName: 'trips' }) }}
-	      	</div>
-	    </section>
-		{% endif %}
-	{% else %}
-		<p class="u-text-white u-font-display">{{ 'trip.no.trips'|trans }}</p>
-	{% endif %}
+        {% if trips.haveToPaginate %}
+        <section>
+            <div class="u-inline-flex u-w-full u-items-center u-justify-end u-mt-16 md:u-h-48 u-flex-col md:u-flex-row">
+                  {{ pagerfanta( trips, 'rounded_pagination', { routeName: 'trips' }) }}
+              </div>
+        </section>
+        {% endif %}
+    {% else %}
+        <p class="u-text-white u-font-display">{{ 'trip.no.trips'|trans }}</p>
+    {% endif %}
 {% endblock content %}

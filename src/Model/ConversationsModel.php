@@ -87,7 +87,7 @@ class ConversationsModel
         }
     }
 
-    public function getMessagesBetween(
+    public function getConversationsWith(
         Member $member,
         Member $other,
         string $sort,

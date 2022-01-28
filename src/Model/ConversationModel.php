@@ -116,7 +116,7 @@ class ConversationModel
                 $message
                     ->setFolder(InFolderType::NORMAL)
                     ->setStatus(MessageStatusType::CHECKED)
-                    ->removeFromSpaminfo(SpamInfoType::MEMBER_SAYS_SPAM)
+                    ->setSpamInfo(SpamInfoType::NO_SPAM)
                 ;
                 $this->entityManager->persist($message);
             }
@@ -264,7 +264,7 @@ class ConversationModel
         // Walk through the thread and mark all messages as read (for current member)
         $em = $this->entityManager;
         foreach ($thread as $item) {
-            if ($member === $item->getReceiver()) {
+            if ($member === $item->getReceiver() && null === $item->getFirstRead()) {
                 // Only mark as read if it is a message and when the receiver reads the message,
                 // not when the message is presented to the Sender with url /messages/{id}/sent
                 $item->setFirstRead(new DateTime());

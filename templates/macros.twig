@@ -128,7 +128,7 @@
                         </span>
                         {{ 'recover'|trans }}</a>
                 {% endif %}
-                {% if current.Sender == myself %}
+                {% if current.Sender != myself %}
                      {% if options.is_spam %}
                             <a class="o-button--s md:o-button" href="{{ path('conversation_mark_nospam', { id: current.id }) }}">
                                 <span class="fa-layers fa-fw u-mr-8">

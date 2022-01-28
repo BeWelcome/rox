@@ -140,7 +140,10 @@ class MessageRepository extends EntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    public function getMessagesSentBy(Member $member): Collection
+    /**
+     * @return Message[]
+     */
+    public function getMessagesSentBy(Member $member): array
     {
         return $this->createQueryBuilder('m')
             ->where('NOT(m.deleteRequest LIKE :deleted)')
@@ -157,7 +160,10 @@ class MessageRepository extends EntityRepository
             ->getResult();
     }
 
-    public function getMessagesReceivedBy(Member $member): Collection
+    /**
+     * @return Message[]
+     */
+    public function getMessagesReceivedBy(Member $member): array
     {
         return $this->createQueryBuilder('m')
             ->where('NOT(m.deleteRequest LIKE :deleted)')
@@ -175,9 +181,9 @@ class MessageRepository extends EntityRepository
     }
 
     /**
-     * @return Collection
+     * @return Message[]
      */
-    public function getRequestsSentBy(Member $member)
+    public function getRequestsSentBy(Member $member): array
     {
         return $this->createQueryBuilder('m')
             ->where('NOT(m.deleteRequest LIKE :deleted)')
@@ -195,9 +201,9 @@ class MessageRepository extends EntityRepository
     }
 
     /**
-     * @return Collection
+     * @return Message[]
      */
-    public function getRequestsReceivedBy(Member $member)
+    public function getRequestsReceivedBy(Member $member): array
     {
         return $this->createQueryBuilder('m')
             ->where('NOT(m.deleteRequest LIKE :deleted)')

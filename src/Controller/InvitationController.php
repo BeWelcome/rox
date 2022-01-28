@@ -155,7 +155,10 @@ class InvitationController extends BaseRequestAndInvitationController
         Member $guest,
         Member $host
     ): Response {
-        if ($this->model->hasExpired($invitation)) {
+        if (
+            $this->model->hasExpired($invitation)
+            || HostingRequest::REQUEST_CANCELLED === $invitation->getRequest()->getStatus()
+        ) {
             $this->addExpiredFlash($host);
 
             return $this->forward(MessageController::class . ':reply', ['message' => $invitation]);

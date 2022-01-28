@@ -37,13 +37,17 @@ class HostingRequest
     const REQUEST_ACCEPTED = 8;
 
     /**
+     * @var int
+     *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private int $id;
+    private $id;
 
     /**
+     * @var DateTime
+     *
      * @ORM\Column(name="arrival", type="datetime")
      *
      * @Assert\NotBlank()
@@ -51,23 +55,29 @@ class HostingRequest
      * @Assert\LessThanOrEqual(
      *     propertyPath="departure")
      */
-    private DateTime $arrival;
+    private $arrival;
 
     /**
+     * @var DateTime
+     *
      * @ORM\Column(name="departure", type="datetime", nullable=false)
      *
      * @Assert\Type("\DateTime")
      * @Assert\GreaterThanOrEqual(
      *     propertyPath="arrival")
      */
-    private DateTime $departure;
+    private $departure;
 
     /**
+     * @var bool
+     *
      * @ORM\Column(name="flexible", type="boolean", nullable=true)
      */
-    private bool $flexible = false;
+    private $flexible = false;
 
     /**
+     * @var int
+     *
      * @ORM\Column(name="number_of_travellers", type="integer")
      *
      * @Assert\Range(
@@ -76,7 +86,7 @@ class HostingRequest
      *      minMessage = "At least one person must travel",
      *      maxMessage = "Hosting more than 20 people is asking for too much"
      * )     */
-    private ?int $numberOfTravellers = 1;
+    private $numberOfTravellers = 1;
 
     /**
      * @ORM\Column(name="status", type="integer")
@@ -84,10 +94,12 @@ class HostingRequest
     private int $status = self::REQUEST_OPEN;
 
     /**
+     * @var SubTrips
+     *
      * @ORM\OneToOne(targetEntity="\App\Entity\Subtrip", inversedBy="invitation")
      * @ORM\JoinColumn(name="invite_for_leg", referencedColumnName="id", nullable=true)
      */
-    private ?Subtrip $inviteForLeg = null;
+    private $inviteForLeg = null;
 
     /**
      * @ORM\OneToMany(targetEntity="Message", mappedBy="request")

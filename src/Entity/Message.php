@@ -107,7 +107,7 @@ class Message
      *
      * @ORM\Column(name="SpamInfo", type="spam_info", nullable=false)
      */
-    private $spamInfo;
+    private $spamInfo = 'Humbug';
 
     /**
      * @var string
@@ -271,7 +271,7 @@ class Message
         return $this->sender;
     }
 
-    public function removeFromSpaminfo(string $spamInfo): self
+    public function removeFromSpamInfo(string $spamInfo): self
     {
         $info = array_filter(explode(',', $this->spamInfo));
         $key = array_search($spamInfo, $info, true);
@@ -312,6 +312,13 @@ class Message
     public function getSpamInfo(): string
     {
         return $this->spamInfo;
+    }
+
+    public function setSpamInfo(string $spamInfo): self
+    {
+        $this->spamInfo = $spamInfo;
+
+        return $this;
     }
 
     public function setStatus(string $status): self

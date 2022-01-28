@@ -107,7 +107,7 @@ class Message
      *
      * @ORM\Column(name="SpamInfo", type="spam_info", nullable=false)
      */
-    private $spamInfo = 'Humbug';
+    private $spamInfo;
 
     /**
      * @var string

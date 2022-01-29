@@ -10,19 +10,13 @@
     {{ encore_entry_link_tags('requests')  }}
 {% endblock stylesheets %}
 
-{% block subnav %}
-    {% for filter, menuitem in submenu.items %}
-        <a class="list-group-item nav-link {% if submenu.active == filter %}active{% endif %}" href="{{ path( submenu.route, { filter: filter } ) }}">{{ filter | trans }}</a>
-    {% endfor %}
-{% endblock %}
-
 {% block content %}
     {% set host = app.user %}
     {% set guest = leg.trip.creator %}
 
     {{ macros.new_conversation_header(guest, 'invite.username') }}
 
-    {% include 'invitation/trip.summary.html.twig' %}
+    {% include 'invitation/trip.summary.html.twig' with {'open': true} %}
 
     {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'autocomplete': 'off'}}) }}
     {{ form_errors(form) }}

@@ -155,8 +155,8 @@ class TripModel
 
         /** @var Subtrip $leg */
         foreach ($legs->getIterator() as $leg) {
-            $arrival = $leg->getArrival();
-            $expired = $expired && ($arrival < $now);
+            $departure = $leg->getDeparture();
+            $expired = $expired && ($departure < $now);
         }
 
         return $expired;

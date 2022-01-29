@@ -12,6 +12,7 @@ use App\Entity\Message;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\ORM\QueryBuilder;
 use Pagerfanta\Doctrine\ORM\QueryAdapter;
@@ -185,7 +186,9 @@ class MessageRepository extends EntityRepository
      */
     public function getRequestsSentBy(Member $member): array
     {
-        return $this->createQueryBuilder('m')
+        $qb = $this->createQueryBuilder('m');
+
+        return $qb
             ->where('NOT(m.deleteRequest LIKE :deleted)')
             ->setParameter('deleted', '%' . DeleteRequestType::SENDER_DELETED . '%')
             ->andWhere('NOT(m.deleteRequest LIKE :purged)')
@@ -194,7 +197,7 @@ class MessageRepository extends EntityRepository
             ->setParameter('member', $member)
             ->andWhere('m.folder = :folder')
             ->setParameter('folder', InFolderType::NORMAL)
-            ->join('m.request', 'r')
+            ->join('m.request', 'r', Join::WITH, $qb->expr()->isNull('r.inviteForLeg'))
             ->orderBy('m.created', 'ASC')
             ->getQuery()
             ->getResult();
@@ -205,7 +208,9 @@ class MessageRepository extends EntityRepository
      */
     public function getRequestsReceivedBy(Member $member): array
     {
-        return $this->createQueryBuilder('m')
+        $qb = $this->createQueryBuilder('m');
+
+        return $qb
             ->where('NOT(m.deleteRequest LIKE :deleted)')
             ->setParameter('deleted', '%' . DeleteRequestType::RECEIVER_DELETED . '%')
             ->andWhere('NOT(m.deleteRequest LIKE :purged)')
@@ -214,7 +219,51 @@ class MessageRepository extends EntityRepository
             ->setParameter('member', $member)
             ->andWhere('m.folder = :folder')
             ->setParameter('folder', InFolderType::NORMAL)
-            ->join('m.request', 'r')
+            ->join('m.request', 'r', Join::WITH, $qb->expr()->isNull('r.inviteForLeg'))
+            ->orderBy('m.created', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @return Message[]
+     */
+    public function getInvitationsSentBy(Member $member): array
+    {
+        $qb = $this->createQueryBuilder('m');
+
+        return $qb
+            ->where('NOT(m.deleteRequest LIKE :deleted)')
+            ->setParameter('deleted', '%' . DeleteRequestType::SENDER_DELETED . '%')
+            ->andWhere('NOT(m.deleteRequest LIKE :purged)')
+            ->setParameter('purged', '%' . DeleteRequestType::SENDER_PURGED . '%')
+            ->andWhere('m.sender = :member')
+            ->setParameter('member', $member)
+            ->andWhere('m.folder = :folder')
+            ->setParameter('folder', InFolderType::NORMAL)
+            ->join('m.request', 'r', Join::WITH, $qb->expr()->isNotNull('r.inviteForLeg'))
+            ->orderBy('m.created', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @return Message[]
+     */
+    public function getInvitationsReceivedBy(Member $member): array
+    {
+        $qb = $this->createQueryBuilder('m');
+
+        return $qb
+            ->where('NOT(m.deleteRequest LIKE :deleted)')
+            ->setParameter('deleted', '%' . DeleteRequestType::RECEIVER_DELETED . '%')
+            ->andWhere('NOT(m.deleteRequest LIKE :purged)')
+            ->setParameter('purged', '%' . DeleteRequestType::RECEIVER_PURGED . '%')
+            ->andWhere('m.receiver = :member')
+            ->setParameter('member', $member)
+            ->andWhere('m.folder = :folder')
+            ->setParameter('folder', InFolderType::NORMAL)
+            ->join('m.request', 'r', Join::WITH, $qb->expr()->isNotNull('r.inviteForLeg'))
             ->orderBy('m.created', 'ASC')
             ->getQuery()
             ->getResult();

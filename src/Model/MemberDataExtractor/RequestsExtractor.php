@@ -18,8 +18,8 @@ final class RequestsExtractor extends MessagesExtractor
 
         $requestsSentBy = $messageRepository->getRequestsSentBy($member);
         $requestsReceivedBy = $messageRepository->getRequestsReceivedBy($member);
-        $this->processMessagesOrRequests($requestsSentBy, $tempDir . 'requests', true);
-        $this->processMessagesOrRequests($requestsReceivedBy, $tempDir . 'requests', false);
+        $this->process($requestsSentBy, $tempDir . 'requests', 'request',true);
+        $this->process($requestsReceivedBy, $tempDir . 'requests', 'request',false);
 
         return $this->writePersonalDataFile(
             [

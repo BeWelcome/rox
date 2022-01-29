@@ -488,4 +488,19 @@ class Message
 
         return $this;
     }
+
+    public function isMessage(): bool
+    {
+        return null === $this->request;
+    }
+
+    public function isHostingRequest(): bool
+    {
+        return null !== $this->request && null === $this->request->getInviteForLeg();
+    }
+
+    public function isInvitation()
+    {
+        return null !== $this->request && null !== $this->request->getInviteForLeg();
+    }
 }

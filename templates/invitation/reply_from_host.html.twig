@@ -23,7 +23,7 @@
 
     {{ macros.messageheader_no_buttons(thread) }}
 
-    {% include 'invitation/trip.summary.html.twig' %}
+    {% include 'invitation/trip.summary.html.twig' with {'open': true} %}
 
     {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'autocomplete': 'off'}}) }}
 

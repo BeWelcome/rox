@@ -6,7 +6,7 @@
         </button>
     </div>
 </div>
-<div class="row no-gutters mb-1 bg-white collapse p-1" id="tripSummary">
+<div class="row no-gutters mb-1 bg-white {% if open %}show{% else %}collapse{% endif %} p-1" id="tripSummary">
     <div class="col-12 col-md-4 pr-1">
         <p><strong>{{ 'trip.summary'|trans }}</strong></p>
         <p>{{ leg.trip.summary }}</p>

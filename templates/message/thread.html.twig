@@ -45,7 +45,6 @@
                                 <span title="{{ message.created.toDateTimeString }}">{{ message.created.DiffForHumans }}</span>
                             </div>
                         {%- endif %}
-
                     </small>
                     {{ message.message|purify('custom')|url_update }}
                 </div>

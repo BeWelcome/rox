@@ -126,6 +126,10 @@ services:
         class: App\Model\MemberDataExtractor\RequestsExtractor
         tags: [ 'app.member_data_extractor' ]
 
+    app.member_data_extractor.invitations:
+        class: App\Model\MemberDataExtractor\InvitationsExtractor
+        tags: [ 'app.member_data_extractor' ]
+
     app.member_data_extractor.rights:
         class: App\Model\MemberDataExtractor\RightsExtractor
         tags: [ 'app.member_data_extractor' ]
@@ -141,6 +145,15 @@ services:
             $className: 'App\Entity\BroadcastMessage'
             $memberRelationName: receiver
             $alias: broadcasts
+        tags: [ 'app.member_data_extractor' ]
+
+    app.member_data_extractor.newsletters:
+        class: App\Model\MemberDataExtractor\DoctrineExtractor
+        factory: [ '@App\Model\MemberDataExtractor\DoctrineExtractorFactory', 'create' ]
+        arguments:
+            $className: 'App\Entity\Newsletter'
+            $memberRelationName: createdBy
+            $alias: newsletters
         tags: [ 'app.member_data_extractor' ]
 
     app.member_data_extractor.community_news:
@@ -159,15 +172,6 @@ services:
             $className: 'App\Entity\Log'
             $memberRelationName: member
             $alias: logs
-        tags: [ 'app.member_data_extractor' ]
-
-    app.member_data_extractor.newsletters:
-        class: App\Model\MemberDataExtractor\DoctrineExtractor
-        factory: [ '@App\Model\MemberDataExtractor\DoctrineExtractorFactory', 'create' ]
-        arguments:
-            $className: 'App\Entity\Newsletter'
-            $memberRelationName: createdBy
-            $alias: newsletters
         tags: [ 'app.member_data_extractor' ]
 
     app.member_data_extractor.shouts:
@@ -204,6 +208,15 @@ services:
             $className: 'App\Entity\MemberThreadSubscription'
             $memberRelationName: subscriber
             $alias: subscriptions
+        tags: [ 'app.member_data_extractor' ]
+
+    app.member_data_extractor.trips:
+        class: App\Model\MemberDataExtractor\DoctrineExtractor
+        factory: [ '@App\Model\MemberDataExtractor\DoctrineExtractorFactory', 'create' ]
+        arguments:
+            $className: 'App\Entity\Trip'
+            $memberRelationName: creator
+            $alias: trips
         tags: [ 'app.member_data_extractor' ]
 
     App\Model\MemberModel:

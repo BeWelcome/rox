@@ -10,13 +10,6 @@
     {{ encore_entry_link_tags('requests')  }}
 {% endblock stylesheets %}
 
-{% block subnav %}
-    {% for filter, menuitem in submenu.items %}
-        <a class="list-group-item nav-link {% if submenu.active == filter %}active{% endif %}"
-           href="{{ path( submenu.route, { filter: filter } ) }}">{{ filter | trans }}</a>
-    {% endfor %}
-{% endblock %}
-
 {% block content %}
     {% set original = thread | last %}
     {% set current = thread | first %}
@@ -24,7 +17,7 @@
 
     {{ macros.messageheader_no_buttons(thread) }}
 
-    {% include 'invitation/trip.summary.html.twig' %}
+    {% include 'invitation/trip.summary.html.twig' with {'open': false} %}
 
     {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'autocomplete': 'off'}}) }}
     <div class="row mb-1">

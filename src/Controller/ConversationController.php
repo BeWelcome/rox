@@ -203,29 +203,14 @@ class ConversationController extends AbstractController
         return $this->redirectToRoute('conversation_view', ['id' => $message->getId()]);
     }
 
-    private function isMessage(Message $message): bool
-    {
-        return null === $message->getRequest();
-    }
-
-    private function isHostingRequest(Message $message): bool
-    {
-        return null !== $message->getRequest() && null === $message->getRequest()->getInviteForLeg();
-    }
-
-    private function isInvitation(Message $message)
-    {
-        return null !== $message->getRequest() && null !== $message->getRequest()->getInviteForLeg();
-    }
-
     private function getControllerAndMethod(Message $message, string $method): string
     {
         $controller = '';
-        if ($this->isMessage($message)) {
+        if ($message->isMessage()) {
             $controller = MessageController::class;
-        } elseif ($this->isHostingRequest($message)) {
+        } elseif ($message->isHostingRequest()) {
             $controller = RequestController::class;
-        } elseif ($this->isInvitation($message)) {
+        } elseif ($message->isInvitation()) {
             $controller = InvitationController::class;
         }
 
@@ -235,11 +220,11 @@ class ConversationController extends AbstractController
     private function getViewTemplate(Message $message): string
     {
         $template = '';
-        if ($this->isMessage($message)) {
+        if ($message->isMessage()) {
             $template = 'message';
-        } elseif ($this->isHostingRequest($message)) {
+        } elseif ($message->isHostingRequest()) {
             $template = 'request';
-        } elseif ($this->isInvitation($message)) {
+        } elseif ($message->isInvitation()) {
             $template = 'invitation';
         }
 

@@ -21,7 +21,18 @@
             <div class="alert alert-info mb-0 p-2">
             {% if original.Initiator == myself %}
                 {% if invitation.status == constant('App\\Entity\\HostingRequest::REQUEST_OPEN') %}<i
-                    class="fa fa-question mr-1"></i> {{ 'invitation.guest.open'|trans }}{% endif %}
+                    class="fa fa-question mr-1"></i> {{ 'invitation.host.open'|trans }}{% endif %}
+                {% if invitation.status == constant('App\\Entity\\HostingRequest::REQUEST_CANCELLED') %}<i
+                    class="fa fa-times mr-1"></i> {{ 'invitation.host.cancelled'|trans }}{% endif %}
+                {% if invitation.status == constant('App\\Entity\\HostingRequest::REQUEST_DECLINED') %}<i
+                    class="fa fa-times mr-1"></i> {{ 'invitation.host.declined'|trans }}{% endif %}
+                {% if invitation.status == constant('App\\Entity\\HostingRequest::REQUEST_ACCEPTED') %}<i
+                    class="far fa-handshake mr-1"></i> {{ 'invitation.host.accepted'|trans }}{% endif %}
+                {% if invitation.status == constant('App\\Entity\\HostingRequest::REQUEST_TENTATIVELY_ACCEPTED') %}<i
+                    class="fa fa-question mr-1"></i> {{ 'invitation.host.tentatively'|trans }}{% endif %}
+            {% else %}
+                {% if invitation.status == constant('App\\Entity\\HostingRequest::REQUEST_OPEN') %}<i
+                    class="fa fa-question  mr-1"></i> {{ 'invitation.guest.open'|trans }}{% endif %}
                 {% if invitation.status == constant('App\\Entity\\HostingRequest::REQUEST_CANCELLED') %}<i
                     class="fa fa-times mr-1"></i> {{ 'invitation.guest.cancelled'|trans }}{% endif %}
                 {% if invitation.status == constant('App\\Entity\\HostingRequest::REQUEST_DECLINED') %}<i
@@ -30,15 +41,6 @@
                     class="far fa-handshake mr-1"></i> {{ 'invitation.guest.accepted'|trans }}{% endif %}
                 {% if invitation.status == constant('App\\Entity\\HostingRequest::REQUEST_TENTATIVELY_ACCEPTED') %}<i
                     class="fa fa-question mr-1"></i> {{ 'invitation.guest.tentatively'|trans }}{% endif %}
-            {% else %}
-                {% if invitation.status == constant('App\\Entity\\HostingRequest::REQUEST_OPEN') %}<i
-                    class="fa fa-question  mr-1"></i> {{ 'invitation.host.open'|trans }}{% endif %}
-                {% if invitation.status == constant('App\\Entity\\HostingRequest::REQUEST_DECLINED') %}<i
-                    class="fa fa-times mr-1"></i> {{ 'invitation.host.declined'|trans }}{% endif %}
-                {% if invitation.status == constant('App\\Entity\\HostingRequest::REQUEST_ACCEPTED') %}<i
-                    class="far fa-handshake mr-1"></i> {{ 'invitation.host.accepted'|trans }}{% endif %}
-                {% if invitation.status == constant('App\\Entity\\HostingRequest::REQUEST_TENTATIVELY_ACCEPTED') %}<i
-                    class="fa fa-question mr-1"></i> {{ 'invitation.host.tentatively'|trans }}{% endif %}
             {% endif %}
             </div>
         </div>

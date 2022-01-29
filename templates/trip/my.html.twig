@@ -30,13 +30,17 @@
                     </div>
                     <div>
                         <div class="c-trip-card__icon-grid">
+                            <i class="far fa-calendar-alt u-text-white u-text-16 u-justify-self-center u-self-center"></i>
+                            <p class="u-text-white u-font-display">{{ (trip.subtrips|first).arrival|format_date('short') }} - {{ (trip.subtrips|last).departure|format_date('short') }}</p>
+                        </div>
+                        <div class="c-trip-card__icon-grid">
                             <i class="fa fa-users u-text-white u-text-16 u-justify-self-center u-self-center"></i>
-                            <p class="u-text-white u-font-display" aria-label="{{ 'trip.count.of.travellers'| trans ({'countOfTravellers' : trip.countOfTravellers}) }}"><strong>{{ 'trip.count.of.travellers'| trans ({'countOfTravellers' : trip.countOfTravellers}) }}</strong></p>
+                            <p class="u-text-white u-font-display">{{ 'trip.count.of.travellers'| trans ({'countOfTravellers' : trip.countOfTravellers}) }}</p>
                         </div>
                         {% if trip.additionalInfo != constant('App\\Doctrine\\TripAdditionalInfoType::NONE') %}
                             <div class="c-trip-card__icon-grid">
                                 <i class="fa fa-info-circle u-text-white u-text-16 u-justify-self-center u-self-center"></i>
-                                <p class="u-text-white u-font-display" aria-label="{{ ('trip.additional.info.' ~ trip.additionalInfo)| lower | trans }}">{{ ('trip.additional.info.' ~ trip.additionalInfo)| lower | trans}}</p>
+                                <p class="u-text-white u-font-display">{{ ('trip.additional.info.' ~ trip.additionalInfo)| lower | trans}}</p>
                             </div>
                         {% endif %}
                     </div>

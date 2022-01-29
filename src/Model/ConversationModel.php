@@ -97,13 +97,14 @@ class ConversationModel
     {
         /** @var Message $message */
         foreach ($conversation as $message) {
+            $message
+                ->setFolder(InFolderType::SPAM);
             if ($member === $message->getReceiver()) {
                 $message
-                    ->setFolder(InFolderType::SPAM)
                     ->setStatus(MessageStatusType::CHECK)
                     ->addToSpamInfo(SpamInfoType::MEMBER_SAYS_SPAM);
-                $this->entityManager->persist($message);
             }
+            $this->entityManager->persist($message);
         }
         $this->entityManager->flush();
     }
@@ -112,14 +113,15 @@ class ConversationModel
     {
         /** @var Message $message */
         foreach ($conversation as $message) {
+            $message
+                ->setFolder(InFolderType::NORMAL);
             if ($member === $message->getReceiver()) {
                 $message
-                    ->setFolder(InFolderType::NORMAL)
                     ->setStatus(MessageStatusType::CHECKED)
                     ->setSpamInfo(SpamInfoType::NO_SPAM)
                 ;
-                $this->entityManager->persist($message);
             }
+            $this->entityManager->persist($message);
         }
         $this->entityManager->flush();
     }

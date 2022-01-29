@@ -21,7 +21,7 @@ use Doctrine\ORM\QueryBuilder;
  */
 class SubtripRepository extends EntityRepository
 {
-    public function queryTripsOfMember(Member $member): Query
+/*    public function queryTripsOfMember(Member $member): Query
     {
         return $this->createQueryBuilder('t')
             ->where('t.created <= :now')
@@ -31,14 +31,14 @@ class SubtripRepository extends EntityRepository
             ->orderBy('t.created', 'DESC')
             ->getQuery();
     }
-
+*/
     public function getLegsInAreaMaxGuests(Member $member, int $distance = 20, int $duration = 3): array
     {
         $queryBuilder = $this->getLegsInAreaQueryBuilder($member, $distance, $duration);
         $queryBuilder
             ->andWhere('t.countOfTravellers <= :maxguest')
             ->setParameter(':maxguest', $member->getMaxguest())
-            ->setMaxResults(5)
+            ->setMaxResults(6)
         ;
 
         return
@@ -69,7 +69,8 @@ class SubtripRepository extends EntityRepository
             ->where(
                 $qb->expr()->orX(
                     $qb->expr()->isNull('s.invitedBy'),
-                    $qb->expr()->eq('s.invitedBy', $member->getId())
+                    $qb->expr()->eq('s.invitedBy', $member->getId()),
+                    $qb->expr()->in('s.options', [SubtripOptionsType::MEET_LOCALS])
                 )
             )
             ->andWhere($qb->expr()->notIn('s.options', [SubtripOptionsType::PRIVATE]))

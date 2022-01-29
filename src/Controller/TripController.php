@@ -151,6 +151,8 @@ class TripController extends AbstractController
 
             $errors = $this->tripModel->checkTripCreateOrEditData($editedTrip);
             if (empty($errors)) {
+                // \todo Check for deleted legs and take care to remove link to invitation
+
                 $entityManager->persist($editedTrip);
                 $entityManager->flush();
 

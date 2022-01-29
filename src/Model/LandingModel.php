@@ -9,13 +9,20 @@ use App\Entity\Preference;
 use App\Entity\Subtrip;
 use App\Repository\ActivityRepository;
 use App\Repository\MessageRepository;
+use App\Repository\SubtripRepository;
 use App\Utilities\ManagerTrait;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\Expr;
 use Exception;
 
 class LandingModel
 {
-    use ManagerTrait;
+    private EntityManagerInterface $entityManager;
+
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
 
     /**
      * Generates conversations for display on home page.
@@ -27,16 +34,11 @@ class LandingModel
      *   'user': 'Member-102',
      *   'time': '10 minutes ago',
      *   'read': true
-     *
-     * @param $unread
-     * @param int|bool $limit
-     *
-     * @return array
      */
-    public function getConversations(Member $member, $unread, $limit = 5)
+    public function getConversations(Member $member, bool $unread, $limit = 5): array
     {
         /** @var MessageRepository $messageRepository */
-        $messageRepository = $this->getManager()->getRepository(Message::class);
+        $messageRepository = $this->entityManager->getRepository(Message::class);
 
         $conversations = $messageRepository->getConversations($member, $unread, $limit);
 
@@ -50,14 +52,10 @@ class LandingModel
      *   'link': Depending on type of notification,
      *   'user': 'Member-102',
      *   'time': '10 minutes ago',.
-     *
-     * @param int|bool $limit
-     *
-     * @return array
      */
-    public function getNotifications(Member $member, $limit = 0)
+    public function getNotifications(Member $member, $limit = 0): array
     {
-        $queryBuilder = $this->getManager()->createQueryBuilder();
+        $queryBuilder = $this->entityManager->createQueryBuilder();
         $queryBuilder
             ->select('n')
             ->from('App:Notification', 'n')
@@ -84,7 +82,7 @@ class LandingModel
             return [];
         }
 
-        $queryBuilder = $this->getManager()->createQueryBuilder();
+        $queryBuilder = $this->entityManager->createQueryBuilder();
 
         $queryBuilder
             ->select('ft')
@@ -123,9 +121,7 @@ class LandingModel
 
         $query = $queryBuilder->getQuery();
 
-        $posts = $query->getResult();
-
-        return $posts;
+        return $query->getResult();
     }
 
     /**
@@ -139,7 +135,7 @@ class LandingModel
      */
     public function getUpcomingActivities(Member $member, $online)
     {
-        $em = $this->getManager();
+        $em = $this->entityManager;
         $preferenceRepository = $em->getRepository(Preference::class);
 
         /** @var Preference $preference */
@@ -151,10 +147,9 @@ class LandingModel
         $em->flush();
 
         /** @var ActivityRepository $repository */
-        $repository = $this->getManager()->getRepository(Activity::class);
-        $activities = $repository->findUpcomingAroundLocation($member, $online);
+        $repository = $this->entityManager->getRepository(Activity::class);
 
-        return $activities;
+        return $repository->findUpcomingAroundLocation($member, $online);
     }
 
     public function getMemberDetails()
@@ -165,28 +160,20 @@ class LandingModel
     {
     }
 
-    /**
-     * @return array
-     */
-    public function getTravellersInAreaOfMember(Member $member, int $radius)
+    public function getTravellersInAreaOfMember(Member $member, int $radius): array
     {
-        $subtripRepository = $this->getManager()->getRepository(Subtrip::class);
-        $legs = $subtripRepository->getLegsInAreaMaxGuests($member, $radius);
+        /** @var SubtripRepository $subTripRepository */
+        $subTripRepository = $this->entityManager->getRepository(Subtrip::class);
 
-        return $legs;
+        return $subTripRepository->getLegsInAreaMaxGuests($member, $radius);
     }
 
-    /**
-     * @param $accommodation
-     *
-     * @return Member
-     */
-    public function updateMemberAccommodation(Member $member, $accommodation)
+    public function updateMemberAccommodation(Member $member, string $accommodation): Member
     {
         $member->setAccommodation($accommodation);
-        $em = $this->getManager();
+        $em = $this->entityManager;
         $em->persist($member);
-        $em->flush($member);
+        $em->flush();
 
         return $member;
     }

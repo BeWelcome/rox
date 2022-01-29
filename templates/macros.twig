@@ -128,19 +128,17 @@
                         </span>
                         {{ 'recover'|trans }}</a>
                 {% endif %}
-                {% if current.Sender != myself %}
-                     {% if options.is_spam %}
-                            <a class="o-button--s md:o-button" href="{{ path('conversation_mark_nospam', { id: current.id }) }}">
-                                <span class="fa-layers fa-fw u-mr-8">
-                                    <i class="fas fa-flag"></i>
-                                    <i class="fas fa-slash u-text-red"></i>
-                                </span>
-                                {{ 'marknospam' | trans }}</a>
-                        {% else %}
-                            <a class="o-button--s md:o-button" href="{{ path('conversation_mark_spam', { id: current.id }) }}">
-                                <i class="fas fa-flag u-mr-8"></i>
-                                {{ 'markspam' | trans }}</a>
-                        {% endif %}
+                {% if options.is_spam %}
+                    <a class="o-button--s md:o-button" href="{{ path('conversation_mark_nospam', { id: current.id }) }}">
+                        <span class="fa-layers fa-fw u-mr-8">
+                            <i class="fas fa-flag"></i>
+                            <i class="fas fa-slash u-text-red"></i>
+                        </span>
+                        {{ 'marknospam' | trans }}</a>
+                {% else %}
+                    <a class="o-button--s md:o-button" href="{{ path('conversation_mark_spam', { id: current.id }) }}">
+                        <i class="fas fa-flag u-mr-8"></i>
+                        {{ 'markspam' | trans }}</a>
                 {% endif %}
             </div>
             <div>

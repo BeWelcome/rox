@@ -16,6 +16,7 @@ use App\Service\Mailer;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
 use DateTime;
+use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use InvalidArgumentException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -33,15 +34,18 @@ class InvitationController extends BaseRequestAndInvitationController
     use TranslatorTrait;
 
     private Mailer $mailer;
+    private EntityManagerInterface $entityManager;
 
     public function __construct(
         ConversationModel $conversationModel,
         InvitationModel $invitationModel,
+        EntityManagerInterface $entityManager,
         Mailer $mailer
     ) {
         parent::__construct($invitationModel);
         $this->mailer = $mailer;
         $this->conversationModel = $conversationModel;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -64,7 +68,6 @@ class InvitationController extends BaseRequestAndInvitationController
             $this->addTranslatedFlash('note', 'flash.member.invalid');
         }
 
-        // \todo Decide if this should be removed in this case
         if (
             $this->conversationModel->hasRequestLimitExceeded(
                 $host,
@@ -181,16 +184,15 @@ class InvitationController extends BaseRequestAndInvitationController
             $newRequest = $this->persistRequest($requestForm, $realParent, $guest, $host);
 
             // In case the potential guest declines the invitation remove the invitedBy from the leg
-            $em = $this->getDoctrine()->getManager();
             if (HostingRequest::REQUEST_ACCEPTED === $newRequest->getRequest()->getStatus()) {
                 $leg->setInvitedBy($host);
-                $em->persist($leg);
+                $this->entityManager->persist($leg);
             }
             if (HostingRequest::REQUEST_DECLINED === $newRequest->getRequest()->getStatus()) {
                 $leg->setInvitedBy(null);
-                $em->persist($leg);
+                $this->entityManager->persist($leg);
             }
-            $em->flush();
+            $this->entityManager->flush();
 
             $subject = $this->getSubjectForReply($newRequest);
 
@@ -218,7 +220,10 @@ class InvitationController extends BaseRequestAndInvitationController
 
     public function hostReply(Request $request, Message $invitation, Member $guest, Member $host): Response
     {
-        if ($this->model->hasExpired($invitation)) {
+        if (
+            $this->model->hasExpired($invitation)
+            || HostingRequest::REQUEST_CANCELLED === $invitation->getRequest()->getStatus()
+        ) {
             $this->addExpiredFlash($guest);
 
             return $this->forward(MessageController::class . '::reply', ['message' => $invitation]);
@@ -239,6 +244,12 @@ class InvitationController extends BaseRequestAndInvitationController
 
             // Switch $guest and $host for persist request as the thread is started by the potential host.
             $newRequest = $this->persistRequest($requestForm, $realParent, $host, $guest);
+
+            if (HostingRequest::REQUEST_CANCELLED === $newRequest->getRequest()->getStatus()) {
+                $leg->setInvitedBy(null);
+                $this->entityManager->persist($leg);
+                $this->entityManager->flush();
+            }
 
             $subject = $this->getSubjectForReply($newRequest);
 

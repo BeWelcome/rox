@@ -19,6 +19,10 @@
   justify-self: center;
 }
 
+.o-avatar__img-wrapper-s {
+}
+
+
 .o-avatar__img {
   width: 100%;
   height: 100%;
@@ -48,6 +52,11 @@
     border-radius: 100%;
     border: 2px solid theme('colors.white');
     justify-self: center;
+  }
+
+  .o-avatar__img-wrapper-s {
+    width: 32px;
+    height: 32px;
   }
 
   .o-avatar__img {
@@ -83,6 +92,11 @@
     justify-self: center;
   }
 
+  .o-avatar__img-wrapper-s {
+    width: 48px;
+    height: 48px;
+  }
+
   .o-avatar__img {
     width: 100%;
     height: 100%;
@@ -113,6 +127,11 @@
     border-radius: 100%;
     border: 4px solid theme('colors.white');
     justify-self: center;
+  }
+
+  .o-avatar__img-wrapper-s {
+    width: 78px;
+    height: 78px;
   }
 
   .o-avatar__img {
@@ -207,7 +226,6 @@
  * Small
  */
 .o-avatar--s {
-  width: 48px;
   grid-template-rows: 48px 1fr;
 }
 

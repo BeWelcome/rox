@@ -18,6 +18,18 @@
   background-color: rgba(0, 0, 0, 0.3)
 }
 
+.c-trip-legs__item--small {
+  display: grid;
+  grid-template-columns: 1fr;
+  width: 100%;
+  max-width: 100%;
+  grid-gap: 8px;
+  padding: 8px 12px;
+  margin: 8px 0;
+  border-radius: 8px;
+  background-color: rgba(0, 0, 0, 0.3)
+}
+
 
 @media (max-width: 900px) {
   .c-trip-legs__item {

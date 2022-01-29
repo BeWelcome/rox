@@ -25,8 +25,11 @@
                 <div class="c-trip-card__wrapper">
                     <a class="u-text-white hover:u-text-gray-20 u-text-24 u-font-display u-font-700 u-col-span-full u-mb-8" href="{{ path('trip_show', { 'id': trip.id } ) }}">{{ trip.summary }}</a>
                     <div>
-                        <p class=" u-font-display u-italic u-text-white u-mb-8">{{ trip.description | purify | truncate(200) }}</p>
-                        <p class="u-text-white u-font-display u-mt-8 u-mb-16 md:u-m-0"><span class="u-mr-8">{{ trip.subtrips|length }} {{ 'trip.legs'|trans }}</span><strong class="u-text-white">{% for leg in trip.subtrips %}{% if leg.getLocation %} <i class="o-flag o-flag--{{ leg.location.country.country }} u-ml-8 u-mr-4 u--mb-4"></i>{{ leg.location.name }}{% endif %}{% endfor %}</strong></p>
+                        <div class=" u-font-display u-italic u-text-white u-mb-8">{{ trip.description | purify | truncate(200) }}</div>
+                        <div class="u-text-white u-font-display u-mt-8 u-mb-16 md:u-m-0 u-flex u-flex-column">
+                            <div class="u-mr-8 u-whitespace-nowrap">{{ trip.subtrips|length }} {{ 'trip.legs'|trans }}</div>
+                            <div class="u-text-white">{% for leg in trip.subtrips %}{% if leg.location is defined %}<span class="u-whitespace-nowrap u-mr-8"><i class="o-flag o-flag--{{ leg.location.country.country }} u--mb-4"></i>{{ leg.location.name }}</span>{% endif %}{% endfor %}</div>
+                        </div>
                     </div>
                     <div>
                         <div class="c-trip-card__icon-grid">

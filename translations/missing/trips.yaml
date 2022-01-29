@@ -47,7 +47,7 @@ trip.leg.location:
 trip.leg.duration:
     - Duration
 trip.count.of.travellers:
-    - '# of travellers'
+    - '{countOfTravellers, plural, one {# traveler} other {# travelers}}'
 trip.additional.info:
     - Additional information
 trip.legs:
@@ -72,10 +72,10 @@ trip.additional.info.none:
 trip.additional.info.couple:
     - 'Travelling as a couple'
     - Item in the dropdown for additional info for the trip
-trip.additional.info.friends.mixed:
+trip.additional.info.friends_mixed:
     - 'Friends travelling (several genders)'
     - Item in the dropdown for additional info for the trip
-trip.additional.info.friends.same:
+trip.additional.info.friends_same:
     - 'Friends travelling (same gender)'
     - Item in the dropdown for additional info for the trip
 trip.additional.info.family:
@@ -90,9 +90,9 @@ trip.description.placeholder:
 trip.travellers:
     - '# travellers'
     - Label for the number of travellers dropdown
-mytrips:
+trips.mytrips:
     - 'My trips'
-    - Item in the submenu of the trips module
+    - Item in the large menu (reused in the submenu of the trips module)
 Location:
     - 'Location'
     - Label for the field that gets the leg's location
@@ -110,3 +110,6 @@ duration.select:
     - 'You need to select a duration from the calendar'
     - Error message shown when the duration field is empty
     - validators
+trips.visitors:
+    - Visitors
+    - Menu item in the large menu (pointing to visitors to my area)

@@ -1,5 +1,5 @@
 <div id="conversationCount" class="nav-link" data-count="{{ conversationCount }}">
-    <a href="{{ path('conversations', {'conversationsType': 'conversations'}) }}" aria-label="{{ 'conversations' | trans }}">
+    <a href="{{ path('conversations', {'conversationsType': 'conversations'}) }}" aria-label="{{ 'conversations' | trans }}" class="text-white">
         <i class="fa fa-lg fa-envelope pr-1"></i>
     </a>
     <a href="{{ path('conversations', {'conversationsType': 'conversations', 'unread_only': 1}) }}" aria-label="{{ 'conversations.unread' | trans }}">

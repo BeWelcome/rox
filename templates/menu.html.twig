@@ -126,7 +126,9 @@
                                         <a href="{{ url('activities') }}"
                                            class="btn btn-block py-1 text-left">{{ 'activities' | trans }}</a>
                                         <a href="{{ url('trip_in_area', {'username': member.Username }) }}"
-                                           class="btn btn-block py-1 text-left">{{ 'trips' | trans }}</a>
+                                           class="btn btn-block py-1 text-left">{{ 'trips.visitors' | trans }}</a>
+                                        <a href="{{ url('trip_in_area', {'username': member.Username }) }}"
+                                           class="btn btn-block py-1 text-left">{{ 'trips.mytrips' | trans }}</a>
                                         <a href="{{ url('newsletters') }}"
                                            class="btn btn-block py-1 text-left">{{ 'newsletters' | trans }}</a>
                                         <a href="{{ url('communitynews') }}"
@@ -184,7 +186,7 @@
                                                         class="fa fa-users"></i> {{ 'mygroups' | trans }}</a>
                                                 <a href="{{ url('trips') }}"
                                                    class="btn btn-block btn-primary-outline py-1 text-left"><i
-                                                        class="fa fa-users"></i> {{ 'trip.mytrips' | trans }}</a>
+                                                        class="fa fa-users"></i> {{ 'trips.mytrips' | trans }}</a>
                                             </div>
                                             <div>
                                                 <a href="{{ url('conversations', {'conversationsType': 'conversations'}) }}"
@@ -242,7 +244,7 @@
                 {# conversations #}
                 <li class="nav-item">
                     <div id="conversationCount" class="nav-link" data-count="{{ conversationCount }}">
-                        <a href="{{ path('conversations', {'conversationsType': 'conversations'}) }}" aria-label="{{ 'conversations' | trans }}"><i class="fa fa-lg fa-envelope pr-1"></i></a>
+                        <a href="{{ path('conversations', {'conversationsType': 'conversations'}) }}" aria-label="{{ 'conversations' | trans }}" class="text-white"><i class="fa fa-lg fa-envelope pr-1"></i></a>
                         <a href="{{ path('conversations', {'conversationsType': 'conversations', 'unread_only': 1}) }}" aria-label="{{ 'conversations.unread' | trans }}">
                             <span class="badge badge-warning d-md-none d-xl-inline-block">
                                 <i class="fa fa-spinner fa-spin"></i>

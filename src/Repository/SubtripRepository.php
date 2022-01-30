@@ -9,6 +9,7 @@ use Carbon\CarbonImmutable;
 use DateTime;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
+use Doctrine\ORM\Query\Expr\OrderBy;
 use Doctrine\ORM\QueryBuilder;
 
 /**
@@ -87,6 +88,7 @@ class SubtripRepository extends EntityRepository
             ->setParameter(':longitude', $member->getLongitude())
             ->setParameter(':now', $now)
             ->setParameter(':durationMonthsAhead', $durationMonthsAhead)
+            ->orderBy('s.arrival','ASC')
             ->addSelect('t');
 
         return $qb;

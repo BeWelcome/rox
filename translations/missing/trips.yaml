@@ -113,3 +113,28 @@ duration.select:
 trips.visitors:
     - Visitors
     - Menu item in the large menu (pointing to visitors to my area)
+trip.copy:
+    - 'Copy'
+    - Tool tip/aria label for the icon to copy a trip.
+trip.leg.warning.too.many.travellers:
+    - 'There are more travellers in this group than you prefer to host.'
+    - Tool tip/aria label shown for the exclamation mark if the maxguest set by a member is lower than the number of travellers of a trip shown on the visitors page
+trip.location.none:
+    - 'No location'
+    - Used for extracted trips that do not have a location set for a leg.
+trip.show:
+    - 'Show'
+    - Tool tip/aria label for the icon to show a trip.
+trip.created:
+    - 'Trip has been created.'
+    - Flash message shown after trip creation (on top of the full list of own trips).
+trip.edited:
+    - 'Trip has been updated.'
+    - Flash message shown after trip update (on top of the full list of own trips).
+trip.update:
+    - 'Update'
+    - Label for the submit button in the trip edit form
+trip.error.date.overlap:
+    - 'Dates are overlapping.'
+    - Shown if a trip contains legs that overlap.
+    - validators

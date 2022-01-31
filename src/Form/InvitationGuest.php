@@ -38,7 +38,7 @@ class InvitationGuest extends HostingRequestAbstractType
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             $form = $event->getForm();
-            $this->addMessageTextArea($form, 'enter.message.for.host');
+            $this->addMessageTextArea($form, 'invitation.enter.message.for.host');
 //            $form->add('subject', SubjectType::class, ['disabled' => true]);
         });
     }

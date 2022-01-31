@@ -9,6 +9,8 @@ use App\Form\TripRadiusType;
 use App\Form\TripType;
 use App\Model\TripModel;
 use App\Repository\SubtripRepository;
+use App\Utilities\TranslatedFlashTrait;
+use App\Utilities\TranslatorTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Pagerfanta\Doctrine\ORM\QueryAdapter;
 use Pagerfanta\Pagerfanta;
@@ -25,13 +27,14 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 class TripController extends AbstractController
 {
-    private TripModel $tripModel;
-    private TranslatorInterface $translator;
+    use TranslatorTrait;
+    use TranslatedFlashTrait;
 
-    public function __construct(TripModel $tripModel, TranslatorInterface $translator)
+    private TripModel $tripModel;
+
+    public function __construct(TripModel $tripModel)
     {
         $this->tripModel = $tripModel;
-        $this->translator = $translator;
     }
 
     /**
@@ -107,7 +110,7 @@ class TripController extends AbstractController
                 $entityManager->persist($trip);
                 $entityManager->flush();
 
-                $this->addFlash('success', 'trip.created');
+                $this->addTranslatedFlash('success', 'trip.created');
 
                 return $this->redirectToRoute('trip_show', ['id' => $trip->getId()]);
             }
@@ -137,7 +140,7 @@ class TripController extends AbstractController
     public function edit(Request $request, Trip $trip, EntityManagerInterface $entityManager): Response
     {
         if ($this->tripModel->hasTripExpired($trip)) {
-            $this->addFlash('notice', $this->translator->trans('trip.flash.expired'));
+            $this->addTranslatedFlash('notice', 'trip.flash.expired');
 
             return $this->redirectToRoute('trip_show', ['id' => $trip->getId()]);
         }
@@ -156,7 +159,7 @@ class TripController extends AbstractController
                 $entityManager->persist($editedTrip);
                 $entityManager->flush();
 
-                $this->addFlash('success', 'trip.edited');
+                $this->addTranslatedFlash('success', 'trip.edited');
 
                 return $this->redirectToRoute('trip_show', ['id' => $trip->getId()]);
             }
@@ -286,11 +289,11 @@ class TripController extends AbstractController
         foreach ($errors as $error) {
             if (isset($error['leg'])) {
                 $form->get('subtrips')->get($error['leg'])->get($error['field'])->addError(
-                    new FormError($this->translator->trans($error['error']))
+                    new FormError($this->getTranslator()->trans($error['error']))
                 );
             } else {
                 $form->addError(
-                    new FormError($this->translator->trans($error['error']))
+                    new FormError($this->getTranslator()->trans($error['error']))
                 );
             }
         }

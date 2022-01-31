@@ -88,7 +88,7 @@ class SubtripRepository extends EntityRepository
             ->setParameter(':longitude', $member->getLongitude())
             ->setParameter(':now', $now)
             ->setParameter(':durationMonthsAhead', $durationMonthsAhead)
-            ->orderBy('s.arrival','ASC')
+            ->orderBy('s.arrival', 'ASC')
             ->addSelect('t');
 
         return $qb;

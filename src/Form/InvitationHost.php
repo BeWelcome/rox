@@ -23,7 +23,7 @@ class InvitationHost extends HostingRequestAbstractType
                 'label' => 'label.message',
                 'invalid_message' => 'request.message.empty',
                 'attr' => [
-                    'placeholder' => 'enter.message.for.guest',
+                    'placeholder' => 'invitation.enter.message.for.guest',
                     'class' => 'editor form-control',
                 ],
             ])

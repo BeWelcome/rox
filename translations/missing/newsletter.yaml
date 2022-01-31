@@ -1,0 +1,6 @@
+newsletter:
+    - 'Newsletter'
+    - Headline for all pages dealing with newsletters
+newsletter.embedded.image:
+    - 'Embedded image'
+    - Alt text if someone can't see the image in their mail program

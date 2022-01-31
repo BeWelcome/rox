@@ -1,0 +1,63 @@
+mydata.activities.no.activity:
+    - 'No activities found.'
+    - Information when a user has not attended nor created any activities.
+mydata.activity.maybe.attend:
+    - 'You said ›I might attend this activity‹.'
+    - Information about the attendance for an activity.
+mydata.comments.no.comment:
+    - 'No comments found.'
+    - Information when a user has not left any comments.
+mydata.communitynews.no.comments:
+    - 'No comments found.'
+    - Information when a user has not left any comments for a communitynews.
+mydata.communitynews.no.communitynews:
+    - 'You did not create any community news.'
+    - Information when a user has not created any communitynews.
+mydata.gallery.no.images:
+    - 'Your gallery is empty.'
+    - Information when a user has not uploaded any image to the gallery.
+mydata.logs.no.logs:
+    - 'Oddly there are no logs about your ways on BeWelcome.'
+    - Should never be shown to anyone.
+mydata.pictures.no.images:
+    - 'You never uploaded any profile pictures.'
+    - Shown to the user if their profile still shows a beaver :)
+mydata.polls.contributed.no.polls:
+    - 'You never took part in any poll.'
+    - Shown to the user, who never contributed in a poll (most of the members).
+mydata.polls.created.no.polls:
+    - 'You never created a poll.'
+    - Shown to the user, who never created a poll (nearly all of the members).
+mydata.polls.voted.no.polls:
+    - 'You never took part in any poll.'
+    - Shown to the user, who never voted in a poll (most of the members). (Same as mydata.polls.contributed.no.polls)
+mydata.posts.no.posts:
+    - 'You never posted into a group or the forum.'
+    - Text in the posts section of the extracted data if no posts have been found.
+mydata.privileges.no.privileges:
+    - 'You do not have any additional privileges (regular user, not volunteering).'
+    - Shown if the user does not have additional privileges (like group owner).
+mydata.relations.no.comments:
+    - 'You have no special relations.'
+    - Text in the special relations section (family and friends) of the extracted data if no relations have been found.
+mydata.requests.no.requests:
+    - 'You have not gotten or written any request.'
+    - Text in the requests section of the extracted data if no requests have been found.
+mydata.rights.no.rights:
+    - 'You do not have any additional rights (regular user, not volunteering).'
+    - Shown if the user does not have additional rights (like translation rights).
+mydata.subscriptions.abstract:
+    - 'This lists all subscriptions you have active.'
+    - Abstract for the subscription section (see /forums/subscriptions).
+mydata.subscriptions.no.subscriptions:
+    - 'You did not subscribe to any posts or threads in the forum or to any group.'
+    - Text in the subscriptions section of the extracted data if no subscriptionss have been found.
+mydata.trips.headline:
+    - 'Trips'
+    - Headline for the extracted data about trips created by the user.
+mydata.trips.abstract:
+    - 'This lists all trips you created.'
+    - Short paragraph giving an explaining for the trips section of the extracted data.
+mydata.trips.no.trips:
+    - 'You have not created any trip.'
+    - Text in the trips section of the extracted data.

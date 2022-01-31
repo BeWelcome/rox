@@ -1,0 +1,10 @@
+translation.retired.member:
+    - 'Retired member'
+    - Shown in the translation statistics if the last member to translate for that language left BeWelcome
+translation.unknown.member:
+    - 'Unknown member'
+    - Shown in the translation statistics if the last member to translate for that language can't be determined
+translations.create.title:
+    - 'Create a translation'
+    - Title tag for the create a translation page
+

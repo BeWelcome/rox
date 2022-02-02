@@ -28,7 +28,7 @@
                         <div class=" u-font-display u-italic u-text-white u-mb-8">{{ trip.description | purify | truncate(200) }}</div>
                         <div class="u-text-white u-font-display u-mt-8 u-mb-16 md:u-m-0 u-flex u-flex-column">
                             <div class="u-mr-8 u-whitespace-nowrap">{{ trip.subtrips|length }} {{ 'trip.legs'|trans }}</div>
-                            <div class="u-text-white">{% for leg in trip.subtrips %}{% if leg.location is defined %}<span class="u-whitespace-nowrap u-mr-8"><i class="o-flag o-flag--{{ leg.location.country.country }} u--mb-4"></i>{{ leg.location.name }}</span>{% endif %}{% endfor %}</div>
+                             <div class="u-text-white">{% for leg in trip.subtrips %}{% if leg.location is defined %}<span class="u-whitespace-nowrap u-mr-8"><i class="o-flag o-flag--{{ leg.location.country.country }} u--mb-4"></i>{{ leg.location.name }}</span>{% endif %}{% endfor %}</div>
                         </div>
                     </div>
                     <div>

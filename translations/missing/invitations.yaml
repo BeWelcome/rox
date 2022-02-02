@@ -1,17 +1,20 @@
 invitation.confirm.cancel:
     - Do you really want to cancel this invitation?
     - Shown in a modal when the host clicks 'cancel' in the reply page
+invitation.guest.open:
+    - You still need to decide what to do with this invitation
+    - Shown as state on the invitation page (to the guest)
 invitation.guest.cancelled:
-    - Your guest cancelled this invitation
-    - Shown as state on the reply form for an invitation
+    - You cancelled this invitation
+    - Shown as state on the invitation page (to the guest)
 invitation.guest.declined:
-    - Your guest declined your invitation
+    - You declined this invitation
     - Shown as state on the reply form for an invitation
 invitation.guest.accepted:
-    - Your guest accepted your invitation
+    - You accepted this invitation
     - Shown as state on the reply form for an invitation
 invitation.guest.tentatively:
-    - Your guest is currently deciding if they stay with you
+    - You're currently deciding if you accept this invitation
     - Shown as state on the reply form for an invitation
 invitation.host.open:
     - This invitation is still open

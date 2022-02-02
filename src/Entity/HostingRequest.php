@@ -94,9 +94,9 @@ class HostingRequest
     private int $status = self::REQUEST_OPEN;
 
     /**
-     * @var SubTrips
+     * @var SubTrip
      *
-     * @ORM\OneToOne(targetEntity="\App\Entity\Subtrip", inversedBy="invitation")
+     * @ORM\ManyToOne(targetEntity="\App\Entity\Subtrip", inversedBy="invitations")
      * @ORM\JoinColumn(name="invite_for_leg", referencedColumnName="id", nullable=true)
      */
     private $inviteForLeg = null;

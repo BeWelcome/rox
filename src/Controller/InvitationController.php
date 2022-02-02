@@ -199,6 +199,7 @@ class InvitationController extends BaseRequestAndInvitationController
                 // In case the potential guest declines the invitation remove the invitedBy from the leg
                 if (HostingRequest::REQUEST_DECLINED === $newRequest->getRequest()->getStatus()) {
                     $leg->setInvitedBy(null);
+                    $newRequest->getRequest()->setInviteForLeg(null);
                     $this->entityManager->persist($leg);
                 }
                 $this->entityManager->flush();

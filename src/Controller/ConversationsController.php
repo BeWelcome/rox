@@ -258,14 +258,4 @@ class ConversationsController extends AbstractController
 
         return $this->generateUrl('conversations', [ 'conversationsType' => $conversationsType ]);
     }
-
-    private function getOptions(Request $request): array
-    {
-        $page = $request->query->get('page', 1);
-        $limit = $request->query->get('limit', 10);
-        $sort = $request->query->get('sort', 'dateSent');
-        $direction = $request->query->get('dir', 'desc');
-
-        return [$page, $limit, $sort, $direction];
-    }
 }

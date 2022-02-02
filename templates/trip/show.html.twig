@@ -90,14 +90,44 @@
                         </div>
                       {% endif %}
 
-                      {% if app.user == trip.creator and subtrip.invitedBy %}
-                          {% set username = subtrip.invitedBy.Username %}
-                          <div class="o-avatar__img-wrapper o-avatar--shadow-s">
-                          <a href="{{ path('conversation_reply', {id: subtrip.invitation.messages[0].id}) }}">
-                                <img class="o-avatar__img" src="{{ path( 'avatar', { username: username , size: 48 }) }}"
+                      {% if app.user == trip.creator %}
+                          {% set invitations = subtrip.invitations %}
+                          {% for invitation in invitations|slice(1,5) %}
+                              {% set username = invitation.messages[0].initiator.Username %}
+                              <div class="o-avatar__img-wrapper o-avatar--shadow-s" style="width:48px; height:48px;">
+                                  <a href="{{ path('conversation_reply', {id: invitation.messages[0].id}) }}">
+                                  <img class="o-avatar__img" src="{{ path( 'avatar', { username: username , size: 48 }) }}"
                                      title="{{ username }}" alt="{{ 'profile' | trans }}: {{ username }}">
-                          </a>
-                          </div>
+                               </a>
+                            </div>
+                          {% endfor %}
+                          {% if invitations|length > 5 %}...{% endif %}
+                      {% else %}
+                          {% if leg is defined and subtrip == leg %}
+                              <div class="u-flex ">
+                              {% if constant('App\\Doctrine\\SubtripOptionsType::MEET_LOCALS') in subtrip.options %}
+                                  <a class="o-rounded o-rounded--l u-mx-4"
+                                     href="{{ path('message_new', { 'username': leg.trip.creator.username }) }}">
+                                      <i class="fa fa-fw fa-envelope"></i>
+                                  </a>
+                              {% endif %}
+                              {% if constant('App\\Doctrine\\SubtripOptionsType::LOOKING_FOR_HOST') in subtrip.options %}
+                                  {% if leg.invitedBy == app.user %}
+                                      <a class="o-rounded o-rounded--l u-mx-4 u-bg-green-dark"
+                                         href="{{ path('conversation_reply', {id: leg.invitation.messages[0].id}) }}">
+                                          <i class="fa fa-fw fa-house-user"></i>
+                                      </a>
+                                  {% else %}
+                                      <a class="o-rounded o-rounded--l u-mx-4"
+                                         href="{{ path('hosting_invitation', {
+                                             'leg': leg.id
+                                         }) }}">
+                                          <i class="fa fa-fw fa-house-user"></i>
+                                      </a>
+                                  {% endif %}
+                              {% endif %}
+                              </div>
+                          {% endif %}
                       {% endif %}
                     </div>
                   </div>

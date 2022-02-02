@@ -81,6 +81,31 @@ class TripController extends AbstractController
     }
 
     /**
+     * @Route("/trip/{id}/{leg}", name="trip_show_from_leg",
+     *     requirements={"id": "\d+", "leg": "\d+"})
+     *
+     * Shows a trip as show does but decorates a leg with the buttons (only used from the visitors page)
+     *
+     * @IsGranted("TRIP_VIEW", subject="trip")
+     */
+    public function showFromLeg(Trip $trip, Subtrip $leg, TripModel $tripModel): Response
+    {
+        /** @var Member $member */
+        $member = $this->getUser();
+        $searchRadius = $tripModel->getTripsRadius($member);
+        return $this->render('trip/show.html.twig', [
+            'trip' => $trip,
+            'leg' => $leg,
+            'searchRadius' => $searchRadius,
+            'expired' => $tripModel->hasTripExpired($trip),
+            'submenu' => [
+                'active' => 'trip_show',
+                'items' => $this->getSubmenuItems(),
+            ],
+        ]);
+    }
+
+    /**
      * Create a new trip.
      *
      * @Route("/new/trip", name="new_trip")

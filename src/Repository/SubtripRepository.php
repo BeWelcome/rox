@@ -39,7 +39,7 @@ class SubtripRepository extends EntityRepository
         $queryBuilder
             ->andWhere('t.countOfTravellers <= :maxguest')
             ->setParameter(':maxguest', $member->getMaxguest())
-            ->setMaxResults(6)
+            ->setMaxResults(5)
         ;
 
         return

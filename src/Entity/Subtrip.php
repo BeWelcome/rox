@@ -10,6 +10,7 @@ namespace App\Entity;
 use Carbon\Carbon;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\PersistentCollection;
 
@@ -79,7 +80,7 @@ class Subtrip
     private $trip;
 
     /**
-     * @var PersistentCollection
+     * @var Collection
      *
      * @ORM\OneToMany(targetEntity="HostingRequest", mappedBy="inviteForLeg")
      */
@@ -87,7 +88,7 @@ class Subtrip
 
     public function __construct()
     {
-        $this->invitations = new PersistentCollection();
+        $this->invitations = new ArrayCollection();
     }
 
     public function setLocation(?Location $location): self
@@ -179,8 +180,15 @@ class Subtrip
         return $this;
     }
 
-    public function getInvitations(): PersistentCollection
+    public function getInvitations(): Collection
     {
         return $this->invitations;
+    }
+
+    public function setInvitations(Collection $invitations): self
+    {
+        $this->invitations = $invitations;
+
+        return $this;
     }
 }

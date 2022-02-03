@@ -11,6 +11,7 @@ use App\Doctrine\TripAdditionalInfoType;
 use Carbon\Carbon;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -93,7 +94,7 @@ class Trip
     private $id;
 
     /**
-     * @var ArrayCollection
+     * @var Collection
      * @Assert\Count(min=1)
      *
      * @ORM\OneToMany(targetEntity="Subtrip", mappedBy="trip", cascade={"persist", "remove"}, orphanRemoval=true)
@@ -215,9 +216,16 @@ class Trip
         return $this->creator;
     }
 
-    public function getSubtrips()
+    public function getSubtrips(): Collection
     {
         return $this->subtrips;
+    }
+
+    public function setSubtrips(Collection $subtrips): self
+    {
+        $this->subtrips = $subtrips;
+
+        return $this;
     }
 
     public function addSubtrip(Subtrip $subtrip): self

@@ -13,9 +13,9 @@
 							{% else %}
 								{{ 'conversations.invitation'|trans }}
 							{% endif %}
-							{{ message.request.arrival | format_date( 'medium') }}
+							{{ message.request.arrival | format_date(pattern="MMM d") }}
 							-
-							{{ message.request.departure | format_date( 'medium') }}
+							{{ message.request.departure | format_date(pattern="MMM d yyy") }}
 						</p>
 					</div>
 				{% else %}

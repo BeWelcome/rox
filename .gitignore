@@ -41,6 +41,11 @@ phploc.xml
 /swagger.json
 /build/logs/
 
+# geonames files (created by geonames:update command)
+admin1CodesASCII.txt
+countryInfo.txt
+allCountries.zip
+
 # deployer config
 /config/deployer.yml
 

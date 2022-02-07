@@ -7,10 +7,12 @@
 
 namespace App\Entity;
 
+use App\Doctrine\StatusType;
 use Carbon\Carbon;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\PersistentCollection;
 
@@ -180,14 +182,45 @@ class Subtrip
         return $this;
     }
 
+    public function getAcceptedInvitation(): ?HostingRequest
+    {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->eq('status', HostingRequest::REQUEST_ACCEPTED))
+        ;
+        $accepted = $this->invitations->matching($criteria);
+        return $accepted->isEmpty() ? null : $accepted->first();
+    }
+
     public function getInvitations(): Collection
     {
-        return $this->invitations;
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->andX(
+                Criteria::expr()->neq('status', HostingRequest::REQUEST_CANCELLED),
+                Criteria::expr()->neq('status', HostingRequest::REQUEST_DECLINED)
+            ))
+        ;
+        return $this->invitations->matching($criteria);
     }
 
     public function setInvitations(Collection $invitations): self
     {
         $this->invitations = $invitations;
+
+        return $this;
+    }
+
+    public function addInvitation(HostingRequest $invitation): self
+    {
+        $this->invitations->add($invitation);
+
+        return $this;
+    }
+
+    public function removeInvitation(HostingRequest $invitation): self
+    {
+        if ($this->invitations->contains($invitation)) {
+            $this->invitations->removeElement($invitation);
+        }
 
         return $this;
     }

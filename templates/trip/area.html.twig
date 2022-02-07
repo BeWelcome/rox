@@ -35,7 +35,7 @@
     {{ form_end(radiusForm)}}
       </div>
     {% if legs.haveToPaginate %}
-        {{ pagerfanta( legs, 'rounded_pagination', { routeName: 'trip_in_area', routeParams: {'username': app.user.username} }) }}
+        {{ pagerfanta( legs, 'rounded_pagination', { routeName: 'visitors' }) }}
     {% endif %}
   </div>
 
@@ -51,7 +51,7 @@
     {% if legs.haveToPaginate %}
       <section class="u-pb-72">
         <div class="u-inline-flex u-w-full u-items-center u-justify-end u-mt-16 md:u-h-48 u-flex-col md:u-flex-row">
-          {{ pagerfanta( legs, 'rounded_pagination', { routeName: 'trip_in_area', routeParams: {'username': app.user.username} }) }}
+          {{ pagerfanta( legs, 'rounded_pagination', { routeName: 'visitors' }) }}
         </div>
       </section>
     {% endif %}

@@ -108,6 +108,7 @@ class InvitationController extends BaseRequestAndInvitationController
         if ($invitationForm->isSubmitted() && $invitationForm->isValid()) {
             $invitation = $this->getMessageFromData($invitationForm->getData(), $host, $guest);
             $invitation->getRequest()->setInviteForLeg($leg);
+            $leg->addInvitation($invitation->getRequest());
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($invitation);
@@ -198,8 +199,9 @@ class InvitationController extends BaseRequestAndInvitationController
             if (!$alreadyAccepted) {
                 // In case the potential guest declines the invitation remove the invitedBy from the leg
                 if (HostingRequest::REQUEST_DECLINED === $newRequest->getRequest()->getStatus()) {
-                    $leg->setInvitedBy(null);
-                    $newRequest->getRequest()->setInviteForLeg(null);
+                    if ($leg->getInvitedBy() === $host) {
+                        $leg->setInvitedBy(null);
+                    }
                     $this->entityManager->persist($leg);
                 }
                 $this->entityManager->flush();
@@ -257,7 +259,9 @@ class InvitationController extends BaseRequestAndInvitationController
             $newRequest = $this->persistRequest($requestForm, $realParent, $host, $guest);
 
             if (HostingRequest::REQUEST_CANCELLED === $newRequest->getRequest()->getStatus()) {
-                $leg->setInvitedBy(null);
+                if ($leg->getInvitedBy() === $host) {
+                    $leg->setInvitedBy(null);
+                }
                 $this->entityManager->persist($leg);
                 $this->entityManager->flush();
             }

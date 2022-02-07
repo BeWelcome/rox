@@ -242,13 +242,12 @@ class TripController extends AbstractController
     /**
      * Show all trip legs that are in the vicinity of a member.
      *
-     * @Route("/trip/{username}/area/{page}",
+     * @Route("/visitors",
      *     requirements={"page"="\d+"},
-     *     name="trip_in_area")
+     *     name="visitors")
      */
     public function tripsInArea(
         Request $request,
-        Member $member,
         EntityManagerInterface $entityManager,
         int $page = 1
     ): Response {
@@ -272,7 +271,7 @@ class TripController extends AbstractController
 
         /** @var SubtripRepository $subtripRepository */
         $subtripRepository = $entityManager->getRepository(Subtrip::class);
-        $legsQuery = $subtripRepository->getLegsInAreaQuery($member, $radius);
+        $legsQuery = $subtripRepository->getLegsInAreaQuery($host, $radius);
 
         $legsAdapter = new QueryAdapter($legsQuery);
         $tripLegs = new Pagerfanta($legsAdapter);
@@ -298,7 +297,7 @@ class TripController extends AbstractController
             ],
             'trip_legs' => [
                 'key' => 'trips.visitors',
-                'url' => $this->generateUrl('trip_in_area', ['username' => $this->getUser()->getUsername()]),
+                'url' => $this->generateUrl('visitors'),
             ],
             'new_trip' => [
                 'key' => 'trip.create',

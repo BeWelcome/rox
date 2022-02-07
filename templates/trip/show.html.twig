@@ -91,17 +91,30 @@
                       {% endif %}
 
                       {% if app.user == trip.creator %}
-                          {% set invitations = subtrip.invitations %}
-                          {% for invitation in invitations|slice(1,5) %}
-                              {% set username = invitation.messages[0].initiator.Username %}
+                          {% if subtrip.acceptedInvitation %}
+                              {% set accepted = subtrip.acceptedInvitation %}
+                              {% set username = accepted.messages[0].initiator.Username %}
                               <div class="o-avatar__img-wrapper o-avatar--shadow-s" style="width:48px; height:48px;">
-                                  <a href="{{ path('conversation_reply', {id: invitation.messages[0].id}) }}">
-                                  <img class="o-avatar__img" src="{{ path( 'avatar', { username: username , size: 48 }) }}"
-                                     title="{{ username }}" alt="{{ 'profile' | trans }}: {{ username }}">
-                               </a>
-                            </div>
-                          {% endfor %}
-                          {% if invitations|length > 5 %}...{% endif %}
+                                  <a href="{{ path('conversation_reply', {id: accepted.messages[0].id}) }}">
+                                      <img class="o-avatar__img" src="{{ path( 'avatar', { username: username , size: 48 }) }}"
+                                           title="{{ username }}" alt="{{ 'profile' | trans }}: {{ username }}">
+                                  </a>
+                              </div>
+                          {% else %}
+                              {% set invitations = subtrip.invitations %}
+                              {% for invitation in invitations|slice(0,4) %}
+                                  {% if invitation != subtrip.acceptedInvitation %}
+                                      {% set username = invitation.messages[0].initiator.Username %}
+                                      <div class="o-avatar__img-wrapper o-avatar--shadow-s" style="width:48px; height:48px;">
+                                          <a href="{{ path('conversation_reply', {id: invitation.messages[0].id}) }}">
+                                          <img class="o-avatar__img" src="{{ path( 'avatar', { username: username , size: 48 }) }}"
+                                             title="{{ username }}" alt="{{ 'profile' | trans }}: {{ username }}">
+                                       </a>
+                                    </div>
+                                  {% endif %}
+                              {% endfor %}
+                              {% if invitations|length > 5 %}...{% endif %}
+                          {% endif %}
                       {% else %}
                           {% if leg is defined and subtrip == leg %}
                               <div class="u-flex ">
@@ -112,7 +125,7 @@
                                   </a>
                               {% endif %}
                               {% if constant('App\\Doctrine\\SubtripOptionsType::LOOKING_FOR_HOST') in subtrip.options %}
-                                  {% if leg.invitedBy == app.user %}
+                                  {% if leg.acceptedInvitation.message[0].initiator == app.user %}
                                       <a class="o-rounded o-rounded--l u-mx-4 u-bg-green-dark"
                                          href="{{ path('conversation_reply', {id: leg.invitation.messages[0].id}) }}">
                                           <i class="fa fa-fw fa-house-user"></i>
@@ -132,7 +145,7 @@
                     </div>
                   </div>
 
-                  <input type="hidden" class="js-data" value="{{ subtrip.location.name }}, {{ subtrip.location.latitude }}, {{ subtrip.location.longitude }},{{ subtrip.location.country.name }}, {{ subtrip.arrival|format_date('short') }}{% if subtrip.arrival != subtrip.departure %} - {{ subtrip.departure|format_date('short') }}{% endif%}">
+                  <input type="hidden" class="js-data" value="{{ subtrip.location.name }}, {{ subtrip.location.latitude }}, {{ subtrip.location.longitude }}, {{ subtrip.location.country.name}}}}, {{ subtrip.arrival|format_date('short') }}{% if subtrip.arrival != subtrip.departure %} - {{ subtrip.departure|format_date('short') }}{% endif%}">
                 </li>
                 {% set current = current + 1 %}
             {% endif %}

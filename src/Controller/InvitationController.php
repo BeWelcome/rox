@@ -190,7 +190,7 @@ class InvitationController extends BaseRequestAndInvitationController
                 if (null === $leg->getInvitedBy()) {
                     $leg->setInvitedBy($host);
                     $this->entityManager->persist($leg);
-                } else {
+                } elseif ($host !== $leg->getInvitedBy()) {
                     $alreadyAccepted = true;
                     $this->addTranslatedFlash('error', 'flash.invitation.error.already.accepted.other');
                 }

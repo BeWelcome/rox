@@ -2,7 +2,7 @@
 {% import 'macros.twig' as macros %}
 
 {% block title %}
-  {{ 'trip.show' | trans | capitalize }}
+    {{ 'trip.show' | trans | capitalize }}
 {% endblock %}
 
 {% block javascripts %}
@@ -16,156 +16,176 @@
 {% endblock %}
 
 {% block content %}
-  <section class="u-mb-48">
-    <div class="u-mt-8 u-mb-24 u-inline-block">
-      <div class="o-avatar o-avatar--white u-mr-24 u-float-left">{{ macros.roundedavatarstack(trip.creator.username, 96) }}</div>
-      <div class="u-flex u-items-center u-h-96">
-        <h1 class="u-text-32 u-leading-48 md:u-text-56 md:u-leading-60 u-text-white u-font-700">{{ trip.summary }}</h1>
-          *{{ expired }}*
-          {% if app.user == trip.creator and expired == false %}
-              <a href="{{ path('trip_edit', {'id': trip.id}) }}" class="o-rounded u-ml-24" aria-label="{{ 'trip.edit'|trans }}" title="{{ 'trip.edit'|trans }}">
-                  <i class="fa fa-edit"></i>
-              </a>
-          {% endif %}
-          {% if app.user == trip.creator %}
-              <a href="{{ path('trip_copy', {'id': trip.id}) }}" class="o-rounded u-ml-24" aria-label="{{ 'trip.copy'|trans }}" title="{{ 'trip.copy'|trans }}">
-                  <i class="fa fa-copy"></i>
-              </a>
-          {% endif %}
-      </div>
-    </div>
-    <div class="l-trips-description">
-      <div class="u-flex u-mb-16">
-        <div class="c-trip-card__icon-grid u-mr-24">
-          <i class="fa fa-users u-text-white u-text-16 u-justify-self-center u-self-center"></i>
-           <p class="u-text-white u-font-display" aria-label="{{ 'trip.count.of.travellers'| trans ({'countOfTravellers' : trip.countOfTravellers})  }}">{{ 'trip.count.of.travellers'| trans ({ 'countOfTravellers' : trip.countOfTravellers}) }}</p>
-        </div>
-        {% if trip.additionalInfo != constant('App\\Doctrine\\TripAdditionalInfoType::NONE') %}
-            <div class="c-trip-card__icon-grid u-mr-24">
-              <i class="fa fa-info-circle u-text-white u-text-16 u-justify-self-center u-self-center"></i>
-              <p class="u-text-white u-font-display" aria-label="{{ ('trip.additional.info.' ~ trip.additionalInfo)| lower | trans }}">{{ ('trip.additional.info.' ~ trip.additionalInfo)| lower | trans}}</p>
+    <section class="u-mb-48">
+        <div class="u-mt-8 u-mb-24 u-inline-block">
+            <div
+                class="o-avatar o-avatar--white u-mr-24 u-float-left">{{ macros.roundedavatarstack(trip.creator.username, 96) }}</div>
+            <div class="u-flex u-items-center u-h-96">
+                <h1 class="u-text-32 u-leading-48 md:u-text-56 md:u-leading-60 u-text-white u-font-700">{{ trip.summary }}</h1>
+                *{{ expired }}*
+                {% if app.user == trip.creator and expired == false %}
+                    <a href="{{ path('trip_edit', {'id': trip.id}) }}" class="o-rounded u-ml-24"
+                       aria-label="{{ 'trip.edit'|trans }}" title="{{ 'trip.edit'|trans }}">
+                        <i class="fa fa-edit"></i>
+                    </a>
+                {% endif %}
+                {% if app.user == trip.creator %}
+                    <a href="{{ path('trip_copy', {'id': trip.id}) }}" class="o-rounded u-ml-24"
+                       aria-label="{{ 'trip.copy'|trans }}" title="{{ 'trip.copy'|trans }}">
+                        <i class="fa fa-copy"></i>
+                    </a>
+                {% endif %}
             </div>
-        {% endif %}
-        <div class="c-trip-card__icon-grid">
-          <i class="fa fa-bullseye u-text-white u-text-16 u-justify-self-center u-self-center"></i>
-          <p class="u-text-white u-font-display" aria-label="{{ 'trip.invitation.radius'|trans }}">{{ trip.invitationRadius|trans }}</p>
         </div>
-      </div>
-      <p class="u-text-white u-font-display u-italic u-mb-24">{{ trip.description }}</p>
-    </div>
-    <div class="md:u-grid md:u-grid-cols-2 md:u-gap-24">
-      <div id="map" class="o-map"></div>
-      <div class="l-trips-overlay-wrapper">
-        <ul>
-          {% set current = 1 %}
-          {% for subtrip in trip.subtrips %}
-            {% if not(constant('App\\Doctrine\\SubtripOptionsType::PRIVATE') in subtrip.options) or (app.user == trip.creator) %}
-              <li class="l-trip-show">
-                  <span class="o-number o-number--white o-number--l u-relative u-ml-__18">{{ current }}</span>
-                  <div>
-                    <div class="u-ml-16 md:u-ml-0 md:u-mt-4">
-                      <p class="u-text-24 u-text-white u-font-display u-mb-8 u-font-300"><span class="u-font-500">{{ subtrip.location.name }}</span>, {{ subtrip.location.country.name }} <i class="o-flag o-flag--{{ subtrip.location.country.country }} u-ml-4"></i></p>
-                      <p class="u-text-white u-font-display u-font-300">{{ subtrip.arrival|format_date('medium') }}{% if subtrip.arrival != subtrip.departure %} - {{ subtrip.departure|format_date('medium') }}{% endif%}</p>
+        <div class="l-trips-description">
+            <div class="u-flex u-mb-16">
+                <div class="c-trip-card__icon-grid u-mr-24">
+                    <i class="fa fa-users u-text-white u-text-16 u-justify-self-center u-self-center"></i>
+                    <p class="u-text-white u-font-display"
+                       aria-label="{{ 'trip.count.of.travellers'| trans ({'countOfTravellers' : trip.countOfTravellers}) }}">{{ 'trip.count.of.travellers'| trans ({ 'countOfTravellers' : trip.countOfTravellers}) }}</p>
+                </div>
+                {% if trip.additionalInfo != constant('App\\Doctrine\\TripAdditionalInfoType::NONE') %}
+                    <div class="c-trip-card__icon-grid u-mr-24">
+                        <i class="fa fa-info-circle u-text-white u-text-16 u-justify-self-center u-self-center"></i>
+                        <p class="u-text-white u-font-display"
+                           aria-label="{{ ('trip.additional.info.' ~ trip.additionalInfo)| lower | trans }}">{{ ('trip.additional.info.' ~ trip.additionalInfo)| lower | trans }}</p>
                     </div>
-
-                    <div class="u-ml-16 md:u-ml-0 md:u-mt-8">
-                        {% if constant('App\\Doctrine\\SubtripOptionsType::PRIVATE') in subtrip.options %}
-                            <div class="c-trip-card__icon-grid u-mb-8">
-                                <i class="fa fa-check u-text-white u-text-16 u-justify-self-center u-self-center"></i>
-                                <p class="u-text-white u-font-display" aria-label="{{ 'trip.option.private'|trans }}">{{ 'trip.option.private'|trans }}</p>
-                            </div>
-                        {% endif %}
-
-                        {% if constant('App\\Doctrine\\SubtripOptionsType::MEET_LOCALS') in subtrip.options %}
-                            <div class="c-trip-card__icon-grid u-mb-8">
-                                <i class="fa fa-check u-text-white u-text-16 u-justify-self-center u-self-center"></i>
-                                <p class="u-text-white u-font-display" aria-label="{{ 'trip.option.meet.locals'|trans }}">{{ 'trip.option.meet.locals'|trans }}</p>
-                            </div>
-                        {% endif %}
-
-                      {% if constant('App\\Doctrine\\SubtripOptionsType::LOOKING_FOR_HOST') in subtrip.options %}
-                        <div class="c-trip-card__icon-grid">
-                          <i class="fa fa-check u-text-white u-text-16 u-justify-self-center u-self-center"></i>
-                          <p class="u-text-white u-font-display" aria-label="{{ 'trip.option.meet.locals'|trans }}">{{ 'trip.option.looking.for.host'|trans }}</p>
-                        </div>
-                      {% endif %}
-
-                      {% if app.user == trip.creator %}
-                          {% if subtrip.acceptedInvitation %}
-                              {% set accepted = subtrip.acceptedInvitation %}
-                              {% set username = accepted.messages[0].initiator.Username %}
-                              <div class="o-avatar__img-wrapper o-avatar--shadow-s" style="width:48px; height:48px;">
-                                  <a href="{{ path('conversation_reply', {id: accepted.messages[0].id}) }}">
-                                      <img class="o-avatar__img" src="{{ path( 'avatar', { username: username , size: 48 }) }}"
-                                           title="{{ username }}" alt="{{ 'profile' | trans }}: {{ username }}">
-                                  </a>
-                              </div>
-                          {% else %}
-                              {% set invitations = subtrip.invitations %}
-                              {% for invitation in invitations|slice(0,4) %}
-                                  {% if invitation != subtrip.acceptedInvitation %}
-                                      {% set username = invitation.messages[0].initiator.Username %}
-                                      <div class="o-avatar__img-wrapper o-avatar--shadow-s" style="width:48px; height:48px;">
-                                          <a href="{{ path('conversation_reply', {id: invitation.messages[0].id}) }}">
-                                          <img class="o-avatar__img" src="{{ path( 'avatar', { username: username , size: 48 }) }}"
-                                             title="{{ username }}" alt="{{ 'profile' | trans }}: {{ username }}">
-                                       </a>
+                {% endif %}
+                <div class="c-trip-card__icon-grid">
+                    <i class="fa fa-bullseye u-text-white u-text-16 u-justify-self-center u-self-center"></i>
+                    <p class="u-text-white u-font-display"
+                       aria-label="{{ 'trip.invitation.radius'|trans }}">{{ trip.invitationRadius|trans }}</p>
+                </div>
+            </div>
+            <p class="u-text-white u-font-display u-italic u-mb-24">{{ trip.description }}</p>
+        </div>
+        <div class="md:u-grid md:u-grid-cols-2 md:u-gap-24">
+            <div id="map" class="o-map"></div>
+            <div class="l-trips-overlay-wrapper">
+                <ul>
+                    {% set current = 1 %}
+                    {% for subtrip in trip.subtrips %}
+                        {% if not(constant('App\\Doctrine\\SubtripOptionsType::PRIVATE') in subtrip.options) or (app.user == trip.creator) %}
+                            <li class="l-trip-show">
+                                <span
+                                    class="o-number o-number--white o-number--l u-relative u-ml-__18">{{ current }}</span>
+                                <div>
+                                    <div class="u-ml-16 md:u-ml-0 md:u-mt-4">
+                                        <p class="u-text-24 u-text-white u-font-display u-mb-8 u-font-300"><span
+                                                class="u-font-500">{{ subtrip.location.name }}</span>, {{ subtrip.location.country.name }}
+                                            <i class="o-flag o-flag--{{ subtrip.location.country.country }} u-ml-4"></i>
+                                        </p>
+                                        <p class="u-text-white u-font-display u-font-300">{{ subtrip.arrival|format_date('medium') }}{% if subtrip.arrival != subtrip.departure %} - {{ subtrip.departure|format_date('medium') }}{% endif %}</p>
                                     </div>
-                                  {% endif %}
-                              {% endfor %}
-                              {% if invitations|length > 5 %}...{% endif %}
-                          {% endif %}
-                      {% else %}
-                          {% if leg is defined and subtrip == leg %}
-                              <div class="u-flex ">
-                              {% if constant('App\\Doctrine\\SubtripOptionsType::MEET_LOCALS') in subtrip.options %}
-                                  <a class="o-rounded o-rounded--l u-mx-4"
-                                     href="{{ path('message_new', { 'username': leg.trip.creator.username }) }}">
-                                      <i class="fa fa-fw fa-envelope"></i>
-                                  </a>
-                              {% endif %}
-                              {% if constant('App\\Doctrine\\SubtripOptionsType::LOOKING_FOR_HOST') in subtrip.options %}
-                                  {% if leg.acceptedInvitation.message[0].initiator == app.user %}
-                                      <a class="o-rounded o-rounded--l u-mx-4 u-bg-green-dark"
-                                         href="{{ path('conversation_reply', {id: leg.invitation.messages[0].id}) }}">
-                                          <i class="fa fa-fw fa-house-user"></i>
-                                      </a>
-                                  {% else %}
-                                      <a class="o-rounded o-rounded--l u-mx-4"
-                                         href="{{ path('hosting_invitation', {
-                                             'leg': leg.id
-                                         }) }}">
-                                          <i class="fa fa-fw fa-house-user"></i>
-                                      </a>
-                                  {% endif %}
-                              {% endif %}
-                              </div>
-                          {% endif %}
-                      {% endif %}
-                    </div>
-                  </div>
 
-                  <input type="hidden" class="js-data" value="{{ subtrip.location.name }}, {{ subtrip.location.latitude }}, {{ subtrip.location.longitude }}, {{ subtrip.location.country.name}}}}, {{ subtrip.arrival|format_date('short') }}{% if subtrip.arrival != subtrip.departure %} - {{ subtrip.departure|format_date('short') }}{% endif%}">
-                </li>
-                {% set current = current + 1 %}
-            {% endif %}
-          {% endfor %}
-        </ul>
-      </div>
-    </div>
-  </section>
+                                    <div class="u-ml-16 md:u-ml-0 md:u-mt-8">
+                                        {% if constant('App\\Doctrine\\SubtripOptionsType::PRIVATE') in subtrip.options %}
+                                            <div class="c-trip-card__icon-grid u-mb-8">
+                                                <i class="fa fa-check u-text-white u-text-16 u-justify-self-center u-self-center"></i>
+                                                <p class="u-text-white u-font-display"
+                                                   aria-label="{{ 'trip.option.private'|trans }}">{{ 'trip.option.private'|trans }}</p>
+                                            </div>
+                                        {% endif %}
 
-  <script type="text/javascript">
-      let trip = {
-          own: {% if app.user == trip.creator %}true{% else %}false{% endif %},
-          radius: {% if trip.invitationRadius == 5000 %}0{% else %}{{ trip.invitationRadius * 1000 }}{% endif %},
-      }
-      let memberInfo = {
-          latitude: {{ app.user.latitude }},
-          longitude: {{ app.user.longitude }},
-          searchRadius: {{ searchRadius }},
-      }
-  </script>
+                                        {% if constant('App\\Doctrine\\SubtripOptionsType::MEET_LOCALS') in subtrip.options %}
+                                            <div class="c-trip-card__icon-grid u-mb-8">
+                                                <i class="fa fa-check u-text-white u-text-16 u-justify-self-center u-self-center"></i>
+                                                <p class="u-text-white u-font-display"
+                                                   aria-label="{{ 'trip.option.meet.locals'|trans }}">{{ 'trip.option.meet.locals'|trans }}</p>
+                                            </div>
+                                        {% endif %}
+
+                                        {% if constant('App\\Doctrine\\SubtripOptionsType::LOOKING_FOR_HOST') in subtrip.options %}
+                                            <div class="c-trip-card__icon-grid">
+                                                <i class="fa fa-check u-text-white u-text-16 u-justify-self-center u-self-center"></i>
+                                                <p class="u-text-white u-font-display"
+                                                   aria-label="{{ 'trip.option.meet.locals'|trans }}">{{ 'trip.option.looking.for.host'|trans }}</p>
+                                            </div>
+                                        {% endif %}
+
+                                        {% if app.user == trip.creator %}
+                                            {% if subtrip.invitationBy(app.user) %}
+                                                {% set invitation = subtrip.invitationBy(app.user) %}
+                                                {% set username = invitation.messages[0].initiator.Username %}
+                                                <div class="o-avatar__img-wrapper o-avatar--shadow-s"
+                                                     style="width:48px; height:48px;">
+                                                    <a href="{{ path('conversation_reply', {id: invitation.messages[0].id}) }}">
+                                                        <img class="o-avatar__img"
+                                                             src="{{ path( 'avatar', { username: username , size: 48 }) }}"
+                                                             title="{{ username }}"
+                                                             alt="{{ 'profile' | trans }}: {{ username }}">
+                                                    </a>
+                                                </div>
+                                            {% else %}
+                                                {% set invitations = subtrip.openInvitations %}
+                                                {% for invitation in invitations|slice(0,4) %}
+                                                    {% set username = invitation.messages[0].initiator.Username %}
+                                                    <div class="o-avatar__img-wrapper o-avatar--shadow-s"
+                                                         style="width:48px; height:48px;">
+                                                        <a href="{{ path('conversation_reply', {id: invitation.messages[0].id}) }}">
+                                                            <img class="o-avatar__img"
+                                                                 src="{{ path( 'avatar', { username: username , size: 48 }) }}"
+                                                                 title="{{ username }}"
+                                                                 alt="{{ 'profile' | trans }}: {{ username }}">
+                                                        </a>
+                                                    </div>
+                                                {% endfor %}
+                                                {% if invitations|length > 5 %}...{% endif %}
+                                            {% endif %}
+                                        {% else %}
+                                            {% if distance(subtrip.location.latitude, subtrip.location.longitude, app.user.latitude, app.user.longitude) <= trip.invitationRadius %}
+                                                <div class="u-flex">
+                                                    {% if constant('App\\Doctrine\\SubtripOptionsType::MEET_LOCALS') in subtrip.options %}
+                                                        <a class="o-rounded o-rounded--l u-mx-4"
+                                                           href="{{ path('message_new', { 'username': trip.creator.username }) }}">
+                                                            <i class="fa fa-fw fa-envelope"></i>
+                                                        </a>
+                                                    {% endif %}
+                                                    {% if constant('App\\Doctrine\\SubtripOptionsType::LOOKING_FOR_HOST') in subtrip.options %}
+                                                        {% set invitation = subtrip.invitationBy(app.user) %}
+                                                        {% if invitation %}
+                                                            {% set invited = invitation.status == constant('App\\Entity\\HostingRequest::REQUEST_ACCEPTED') %}
+                                                           <a class="o-rounded o-rounded--l u-mx-4 {% if invited %}u-bg-green-dark{% endif %}"
+                                                                href="{{ path('conversation_reply', {id: invitation.messages[0].id}) }}">
+                                                              <i class="fa fa-fw fa-house-user"></i>
+                                                          </a>
+                                                        {% else %}
+                                                                <a class="o-rounded o-rounded--l u-mx-4"
+                                                                    href="{{ path('hosting_invitation', {
+                                                                        'leg': subtrip.id
+                                                                    }) }}">
+                                                                    <i class="fa fa-fw fa-house-user"></i>
+                                                                </a>
+                                                            {% endif %}
+                                                    {% endif %}
+                                                </div>
+                                            {% endif %}
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                                <input type="hidden" class="js-data"
+                                       value="{{ subtrip.location.name }}, {{ subtrip.location.latitude }}, {{ subtrip.location.longitude }}, {{ subtrip.location.country.name }}}}, {{ subtrip.arrival|format_date('short') }}{% if subtrip.arrival != subtrip.departure %} - {{ subtrip.departure|format_date('short') }}{% endif %}">
+                            </li>
+                            {% set current = current + 1 %}
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <script type="text/javascript">
+        let trip = {
+            own: {% if app.user == trip.creator %}true{% else %}false{% endif %},
+            radius: {% if trip.invitationRadius == 5000 %}0{% else %}{{ trip.invitationRadius * 1000 }}{% endif %},
+        }
+        let memberInfo = {
+            latitude: {{ app.user.latitude }},
+            longitude: {{ app.user.longitude }},
+            searchRadius: {{ searchRadius }},
+        }
+    </script>
 
 {% endblock content %}
 

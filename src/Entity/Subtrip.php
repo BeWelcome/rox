@@ -182,6 +182,19 @@ class Subtrip
         return $this;
     }
 
+    public function getInvitationBy(Member $member): ?HostingRequest
+    {
+        $request = null;
+        foreach($this->invitations as $invitation)
+        {
+            $message = $invitation->getMessages()->first();
+            if ($message && $message->getInitiator() === $member) {
+                $request = $invitation;
+            }
+        }
+        return $request;
+    }
+
     public function getAcceptedInvitation(): ?HostingRequest
     {
         $criteria = Criteria::create()
@@ -191,7 +204,7 @@ class Subtrip
         return $accepted->isEmpty() ? null : $accepted->first();
     }
 
-    public function getInvitations(): Collection
+    public function getOpenInvitations(): Collection
     {
         $criteria = Criteria::create()
             ->where(Criteria::expr()->andX(
@@ -200,6 +213,11 @@ class Subtrip
             ))
         ;
         return $this->invitations->matching($criteria);
+    }
+
+    public function getInvitations(): Collection
+    {
+        return $this->invitations;
     }
 
     public function setInvitations(Collection $invitations): self

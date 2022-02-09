@@ -9,9 +9,9 @@
       </a>
     {% endif %}
     {% if constant('App\\Doctrine\\SubtripOptionsType::LOOKING_FOR_HOST') in leg.options %}
-        {% if leg.invitedBy ==app.user %}
+        {% if leg.invitedBy == app.user %}
             <a class="o-rounded u-mx-4 u-bg-green-dark"
-               href="{{ path('conversation_reply', {id: leg.invitation.messages[0].id}) }}">
+               href="{{ path('conversation_reply', {id: leg.acceptedInvitation.messages[0].id}) }}">
                 <i class="fa fa-fw fa-house-user"></i>
             </a>
         {% else %}

@@ -16,6 +16,7 @@ use Twig\Extension\AbstractExtension;
 use Twig\Extension\GlobalsInterface;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
+use AnthonyMartin\GeoLocation\GeoLocation;
 
 class Extension extends AbstractExtension implements GlobalsInterface
 {
@@ -88,6 +89,7 @@ class Extension extends AbstractExtension implements GlobalsInterface
                 ]
             ),
             new TwigFunction('encore_entry_css_source', [$this, 'getEncoreEntryCssSource']),
+            new TwigFunction('distance', [$this, 'distance']),
         ];
     }
 
@@ -236,6 +238,18 @@ class Extension extends AbstractExtension implements GlobalsInterface
         $this->logger->info($result);
 
         return $result;
+    }
+
+    /**
+     * Distance between two points on the earth
+     */
+    public function distance(float $lat1, float $lng1, float $lat2, float $lng2): float
+    {
+        $radiantLat = deg2rad($lat2 - $lat1);
+        $radiantLng = deg2rad($lng2 - $lng1);
+
+        $a = sin($radiantLat / 2) ** 2 + cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * sin($radiantLng / 2) ** 2;
+        return 12742 * asin(sqrt($a));
     }
 
     /**

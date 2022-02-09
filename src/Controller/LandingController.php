@@ -88,9 +88,9 @@ class LandingController extends AbstractController
     }
 
     /**
-     * @Route( "/widget/triplegs", name="/widget/triplegs")
+     * @Route( "/widget/visitors", name="/widget/visitors")
      */
-    public function getTripLegs(Request $request, TripModel $tripModel): Response
+    public function getVisitors(Request $request, TripModel $tripModel): Response
     {
         /** @var Member $member */
         $member = $this->getUser();

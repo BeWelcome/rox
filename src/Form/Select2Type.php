@@ -25,10 +25,12 @@ class Select2Type extends AbstractType
             ->setDefaults([
                 'error_bubbling' => false,
                 'inline' => false,
+                'multiple' => false,
                 'searchbox' => false,
                 'allow_clear' => false,
             ])
             ->addAllowedTypes('inline', 'bool')
+            ->addAllowedTypes('multiple', 'bool')
             ->addAllowedTypes('searchbox', 'bool')
             ->addAllowedTypes('allow_clear', 'bool')
         ;

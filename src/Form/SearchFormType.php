@@ -166,9 +166,9 @@ class SearchFormType extends AbstractType
             ->add('gender', Select2Type::class, [
                 'choices' => [
                     'any' => null,
-                    'male' => 'male',
-                    'female' => 'female',
-                    'other' => 'other',
+                    'male' => 1,
+                    'female' => 2,
+                    'other' => 4,
                 ],
                 'label' => 'gender',
                 'required' => true,

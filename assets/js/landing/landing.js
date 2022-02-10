@@ -130,7 +130,7 @@ var Home = {
 
         $.ajax({
             type: 'GET',
-            url: '/widget/triplegs',
+            url: '/widget/visitors',
             data: {
                 radius: radius
             },

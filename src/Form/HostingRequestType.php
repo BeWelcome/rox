@@ -78,6 +78,7 @@ class HostingRequestType extends AbstractType
             ];
             $durationOptions = [
                 'required' => false,
+                'label' => 'duration',
                 'mapped' => false,
                 'invalid_message' => 'request.error.duration',
                 'constraints' => [

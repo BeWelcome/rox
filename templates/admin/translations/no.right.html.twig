@@ -10,7 +10,7 @@
     <p>{{ 'admin.translations.select.locale' | trans }}<br>
         <br>
         {%- for locale in locales -%}
-            <a href="{{ path('translations_locale_code', { 'locale' : locale}) }}" class="btn btn-primary mr-2">{{ ('lang_' ~ locale) | trans }} ({{ locale }})</a>&nbsp;
+            <a href="{{ path('translations_locale_code', { 'locale' : locale, 'type': 'all'}) }}" class="btn btn-primary mr-2">{{ ('lang_' ~ locale) | trans }} ({{ locale }})</a>&nbsp;
         {%- endfor -%}
     </p>
 {% endblock content %}

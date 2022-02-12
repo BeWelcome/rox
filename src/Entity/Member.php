@@ -249,6 +249,13 @@ class Member implements UserInterface, \Serializable, PasswordHasherAwareInterfa
     private $lastName = '0';
 
     /**
+     * @var int
+     *
+     * @ORM\Column(name="HideAttribute", type="integer", nullable=false)
+     */
+    private $hideAttribute = self::MEMBER_FIRSTNAME_HIDDEN | self::MEMBER_SECONDNAME_HIDDEN | self::MEMBER_LASTNAME_HIDDEN;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="Accomodation", type="accommodation", nullable=false)
@@ -639,13 +646,6 @@ class Member implements UserInterface, \Serializable, PasswordHasherAwareInterfa
      * @ORM\Column(name="bewelcomed", type="integer", nullable=false)
      */
     private $bewelcomed;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="HideAttribute", type="integer", nullable=false)
-     */
-    private $hideAttribute;
 
     /**
      * @var string
@@ -2943,6 +2943,11 @@ class Member implements UserInterface, \Serializable, PasswordHasherAwareInterfa
     public function isNotConfirmedYet(): bool
     {
         return (MemberStatusType::AWAITING_MAIL_CONFIRMATION === $this->status) ? true : false;
+    }
+
+    public function isFirstnameShown(): bool
+    {
+        return ($this->hideAttribute & self::MEMBER_FIRSTNAME_HIDDEN) !== self::MEMBER_FIRSTNAME_HIDDEN;
     }
 
     /**

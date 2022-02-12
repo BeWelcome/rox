@@ -2913,30 +2913,34 @@ class Member implements UserInterface, \Serializable, PasswordHasherAwareInterfa
         return true;
     }
 
-    public function isExpired()
+    public function isSuspended(): bool
     {
         $suspended = (MemberStatusType::SUSPENDED === $this->status) ? true : false;
-        $askedToLeave = (MemberStatusType::ASKED_TO_LEAVE === $this->status) ? true : false;
 
-        return $suspended || $askedToLeave;
+        return $suspended;
     }
 
-    public function isBanned()
+    public function isExpired(): bool
+    {
+        $askedToLeave = (MemberStatusType::ASKED_TO_LEAVE === $this->status) ? true : false;
+
+        return $askedToLeave;
+    }
+
+    public function isBanned(): bool
     {
         return (MemberStatusType::BANNED === $this->status) ? true : false;
     }
 
     /**
-     * This is returns !isBrowseable.
-     *
-     * @return bool
+     * This returns !isBrowseable.
      */
-    public function isDeniedAccess()
+    public function isDeniedAccess(): bool
     {
         return !$this->isBrowseable();
     }
 
-    public function isNotConfirmedYet()
+    public function isNotConfirmedYet(): bool
     {
         return (MemberStatusType::AWAITING_MAIL_CONFIRMATION === $this->status) ? true : false;
     }

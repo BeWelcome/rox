@@ -23,13 +23,14 @@ class UserChecker implements UserCheckerInterface
             throw new AccountBannedException();
         }
 
-        if ($user->isDeniedAccess()) {
+        if ($user->isDeniedAccess() && !$user->isSuspended()) {
             throw new AccountDeniedLoginException();
         }
     }
 
     /**
      * @throws AccountExpiredException
+     * @throws AccountSuspendedException
      * @throws AccountMailNotConfirmedException
      */
     public function checkPostAuth(UserInterface $user)
@@ -40,6 +41,10 @@ class UserChecker implements UserCheckerInterface
 
         if ($user->isExpired()) {
             throw new AccountExpiredException();
+        }
+
+        if ($user->isSuspended()) {
+            throw new AccountSuspendedException();
         }
 
         if ($user->isNotConfirmedYet()) {

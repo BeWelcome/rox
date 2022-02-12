@@ -106,7 +106,7 @@
             {% if error %}
                 <div class="col-10 offset-1 col-sm-8 offset-sm-2">
                     <div class="alert alert-danger">
-                        {{ error.messageKey|trans(error.messageData, 'security') }}
+                        {{ error.messageKey|trans(error.messageData, 'messages')|raw }}
                     </div>
                 </div>
             {% endif %}
@@ -115,8 +115,8 @@
                 <div class="card-deck">
                     <div class="card o-card">
                         <form id="main-login-form"
-                              class="u-m-0" 
-                              role="form" 
+                              class="u-m-0"
+                              role="form"
                               method="post"
                               action="{{ path('security_check') }}">
                             <div class="card-body p-2">
@@ -132,7 +132,7 @@
                                     <input type="password" id="login-p" name="_password" class="o-input">
                                 </div>
                                 <div class="u-flex u-items-center u-my-8">
-                                    <input type="checkbox" 
+                                    <input type="checkbox"
                                            id="login-r"
                                            class="u-mr-8"
                                            value="1"

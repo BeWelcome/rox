@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Security\AccountBannedException;
 use App\Security\AccountDeniedLoginException;
 use App\Security\AccountMailNotConfirmedException;
+use App\Security\AccountSuspendedException;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -39,11 +40,15 @@ class SecurityController extends AbstractController
         $showResendConfirmationLink = false;
         $showBannedHint = false;
         $showExpiredHint = false;
+        $showSuspendedMemberHint = false;
         $showNotAllowedToLogin = false;
         if (\is_object($error)) {
             switch (\get_class($error)) {
                 case AccountMailNotConfirmedException::class:
                     $showResendConfirmationLink = ($lastUsername) ? true : false;
+                    break;
+                case AccountSuspendedException::class:
+                    $showSuspendedMemberHint = true;
                     break;
                 case BadCredentialsException::class:
                     $showInvalidCredentialsHint = true;
@@ -71,6 +76,7 @@ class SecurityController extends AbstractController
                 'invalid_credentials' => $showInvalidCredentialsHint,
                 'member_banned' => $showBannedHint,
                 'member_expired' => $showExpiredHint,
+                'member_suspended' => $showSuspendedMemberHint,
                 'member_not_allowed_to_login' => $showNotAllowedToLogin,
             ]
         );

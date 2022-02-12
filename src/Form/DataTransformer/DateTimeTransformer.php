@@ -28,6 +28,9 @@ class DateTimeTransformer implements DataTransformerInterface
             return null;
         }
 
+        // Set time of day to a fixed value (instead of the current one) for comparison later on
+        $setDate->setTime(0, 0, 1);
+
         return $setDate;
     }
 }

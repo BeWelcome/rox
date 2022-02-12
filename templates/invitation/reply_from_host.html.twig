@@ -53,11 +53,11 @@
                 {% set label = 'reply' %}
             {% endif %}
             <div class="u-flex u-justify-end mt-2">
-                {{ form_widget(form.cancel, {'attr': {'class': 'btn-primary mr-1 pull-right',
+                {{ form_widget(form.cancel, {'attr': {'class': 'o-button mr-1',
                     'onclick': 'return confirm(\'' ~ ('invitation.confirm.cancel'|trans) ~ '\');'}})
                 }}
 
-                {{ form_widget(form.update, {'attr': {'class': 'btn-primary mr-1 pull-right'},
+                {{ form_widget(form.update, {'attr': {'class': 'o-button mr-1'},
                     'label' : label}) }}
             </div>
             <div class="clearfix"></div>

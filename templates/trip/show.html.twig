@@ -130,7 +130,7 @@
                                                         </a>
                                                     </div>
                                                 {% endfor %}
-                                                {% if invitations|length > 5 %}...{% endif %}
+                                                {% if invitations|length > 5 %}<a href="{{ url('conversations', {conversationsType: 'invitations'}) }}">...</a>{% endif %}
                                             {% endif %}
                                         {% else %}
                                             {% if distance(subtrip.location.latitude, subtrip.location.longitude, app.user.latitude, app.user.longitude) <= trip.invitationRadius %}

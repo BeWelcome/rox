@@ -83,7 +83,7 @@ class RequestController extends BaseRequestAndInvitationController
         if ($requestForm->isSubmitted() && $requestForm->isValid()) {
             $realParent = $this->conversationModel->getLastMessageInConversation($hostingRequest);
 
-            $newRequest = $this->persistRequest($requestForm, $realParent, $guest, $host);
+            $newRequest = $this->persistFinalRequest($requestForm, $realParent, $guest, $host);
 
             $subject = $this->getSubjectForReply($newRequest);
 
@@ -127,7 +127,7 @@ class RequestController extends BaseRequestAndInvitationController
         if ($requestForm->isSubmitted() && $requestForm->isValid()) {
             $realParent = $this->conversationModel->getLastMessageInConversation($hostingRequest);
 
-            $newRequest = $this->persistRequest($requestForm, $realParent, $host, $guest);
+            $newRequest = $this->persistFinalRequest($requestForm, $realParent, $host, $guest);
 
             $subject = $this->getSubjectForReply($newRequest);
 

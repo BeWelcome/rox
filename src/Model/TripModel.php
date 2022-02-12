@@ -19,7 +19,7 @@ use Pagerfanta\Pagerfanta;
 
 class TripModel
 {
-    private const ALLOWED_TRIPS_RADIUS = [0, 5, 10, 20, 50, 100, 200, 500, 1000, 2000, 5000];
+    private const ALLOWED_TRIPS_RADIUS = [0, 5, 10, 20, 50, 100];
 
     private EntityManagerInterface $entityManager;
 

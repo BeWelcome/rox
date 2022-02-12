@@ -40,10 +40,10 @@
             {{ form_row(form.request.departure) }}
             {{ form_row(form.request.numberOfTravellers) }}
             {{ form_row(form.request.inviteForLeg) }}
-            {{ form_widget(form.accept, {'attr': {'class': 'btn-primary ml-1 pull-right mb-2'}}) }}
-            {{ form_widget(form.tentatively, {'attr': {'class': 'btn btn-primary ml-1 pull-right mb-2'}}) }}
-            {{ form_widget(form.decline, {'attr': {'class': 'btn btn-primary ml-1 pull-right mb-2'}}) }}
-            {{ form_widget(form.update, {'attr': {'class': 'btn btn-primary ml-1 pull-right mb-2'}}) }}
+            {{ form_widget(form.accept, {'attr': {'class': 'o-button ml-1 pull-right mb-2'}}) }}
+            {{ form_widget(form.tentatively, {'attr': {'class': 'o-button ml-1 pull-right mb-2'}}) }}
+            {{ form_widget(form.decline, {'attr': {'class': 'o-button ml-1 pull-right mb-2'}}) }}
+            {{ form_widget(form.update, {'attr': {'class': 'o-button ml-1 pull-right mb-2'}}) }}
             {% do form.request.setRendered %}
         </div>
         <div class="clearfix"></div>

@@ -183,7 +183,7 @@ class InvitationController extends BaseRequestAndInvitationController
 
         if ($requestForm->isSubmitted() && $requestForm->isValid()) {
             $realParent = $this->conversationModel->getLastMessageInConversation($invitation);
-            $newRequest = $this->persistRequest($requestForm, $realParent, $guest, $host);
+            $newRequest = $this->persistFinalInvitation($requestForm, $realParent, $guest, $host);
 
             $alreadyAccepted = false;
             if (HostingRequest::REQUEST_ACCEPTED === $newRequest->getRequest()->getStatus()) {
@@ -208,12 +208,20 @@ class InvitationController extends BaseRequestAndInvitationController
 
                 $subject = $this->getSubjectForReply($newRequest);
 
+                $requestUpdated = $newRequest->getRequest()->getId() !== $realParent->getRequest()->getId();
+
+                if ($requestUpdated) {
+                    $invitation->getRequest()->setInviteForLeg(null);
+                    $this->entityManager->persist($invitation);
+                    $this->entityManager->flush();
+                }
+
                 $this->sendInvitationGuestReplyNotification(
                     $host,
                     $guest,
                     $newRequest,
                     $subject,
-                    ($newRequest->getRequest()->getId() !== $realParent->getRequest()->getId()),
+                    $requestUpdated,
                     $leg
                 );
                 $this->addTranslatedFlash('notice', 'flash.notification.updated');
@@ -256,7 +264,7 @@ class InvitationController extends BaseRequestAndInvitationController
             $realParent = $this->conversationModel->getLastMessageInConversation($invitation);
 
             // Switch $guest and $host for persist request as the thread is started by the potential host.
-            $newRequest = $this->persistRequest($requestForm, $realParent, $host, $guest);
+            $newRequest = $this->persistFinalInvitation($requestForm, $realParent, $host, $guest);
 
             if (HostingRequest::REQUEST_CANCELLED === $newRequest->getRequest()->getStatus()) {
                 if ($leg->getInvitedBy() === $host) {

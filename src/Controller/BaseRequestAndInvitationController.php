@@ -40,14 +40,44 @@ abstract class BaseRequestAndInvitationController extends AbstractController
         return $newRequest;
     }
 
-    protected function persistRequest(Form $requestForm, $currentRequest, Member $sender, Member $receiver): Message
-    {
+    protected function persistFinalRequest(
+        Form $requestForm,
+        $currentRequest,
+        Member $sender,
+        Member $receiver
+    ): Message {
         $data = $requestForm->getData();
         $em = $this->getDoctrine()->getManager();
         $clickedButton = $requestForm->getClickedButton()->getName();
 
         // handle changes in request and subject
         $newRequest = $this->model->getFinalRequest($sender, $receiver, $currentRequest, $data, $clickedButton);
+        $em->persist($newRequest);
+        $em->flush();
+
+        return $newRequest;
+    }
+
+    protected function persistFinalInvitation(
+        Form $requestForm,
+        $currentRequest,
+        Member $sender,
+        Member $receiver
+    ): Message {
+        $data = $requestForm->getData();
+        $em = $this->getDoctrine()->getManager();
+        $clickedButton = $requestForm->getClickedButton()->getName();
+
+        // handle changes in invitation
+        $newRequest = $this->model->getFinalRequest($sender, $receiver, $currentRequest, $data, $clickedButton);
+
+        $requestUpdated = $newRequest->getRequest() !== $currentRequest->getRequest();
+
+        if ($requestUpdated) {
+            $currentRequest->getRequest()->setInviteForLeg(null);
+            $em->persist($currentRequest);
+        }
+
         $em->persist($newRequest);
         $em->flush();
 

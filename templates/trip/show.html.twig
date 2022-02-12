@@ -104,10 +104,10 @@
                                         {% endif %}
 
                                         {% if app.user == trip.creator %}
-                                            {% if subtrip.invitationBy(app.user) %}
-                                                {% set invitation = subtrip.invitationBy(app.user) %}
+                                            {% if subtrip.acceptedInvitation %}
+                                                {% set invitation = subtrip.acceptedInvitation %}
                                                 {% set username = invitation.messages[0].initiator.Username %}
-                                                <div class="o-avatar__img-wrapper o-avatar--shadow-s"
+                                                <div class="o-avatar__img-wrapper o-avatar--shadow-s o-avatar--shadow-green"
                                                      style="width:48px; height:48px;">
                                                     <a href="{{ path('conversation_reply', {id: invitation.messages[0].id}) }}">
                                                         <img class="o-avatar__img"

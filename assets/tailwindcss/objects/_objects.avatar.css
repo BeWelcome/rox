@@ -292,14 +292,18 @@
 }
 
 .o-avatar--shadow {
-  box-shadow: 0 0 30px 0 #d7d7d7;
+  box-shadow: 0 0 16px 0 #d7d7d7;
   border-radius: 100%;
 }
 
 
 .o-avatar--shadow-s {
-  box-shadow: 0 0 20px 0 #e6e6e6;
+  box-shadow: 0 0 8px 0 #e6e6e6;
   border-radius: 100%;
+}
+
+.o-avatar--shadow-green {
+  border-color: green;
 }
 
 

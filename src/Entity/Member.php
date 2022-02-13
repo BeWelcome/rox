@@ -2950,6 +2950,15 @@ class Member implements UserInterface, \Serializable, PasswordHasherAwareInterfa
         return ($this->hideAttribute & self::MEMBER_FIRSTNAME_HIDDEN) !== self::MEMBER_FIRSTNAME_HIDDEN;
     }
 
+    public function getFirstnameOrUsername(): string
+    {
+        if ($this->isFirstnameShown()) {
+            return $this->getFirstname();
+        }
+
+        return $this->username;
+    }
+
     /**
      * @return array
      */

@@ -18,7 +18,6 @@
 use App\Kernel;
 
 set_time_limit(0);
-ini_set('memory_limit', '256M');
 
 /* Make sure we start in the subdirectory */
 

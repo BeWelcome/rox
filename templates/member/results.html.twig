@@ -42,7 +42,7 @@
                                     {% endif -%}
                                     {%- if (member.HideGender == 'No') %}
                                         {%- if member.Age %}, {% endif %}
-                                        {{- member.Gender }}
+                                        {{- member.Gender|trans }}
                                     {% endif %}
                                 </p>
                                 <div class="m-0 mb-2 d-flex">

@@ -37,14 +37,6 @@ class DataRetentionCommand extends Command
         $this->logger = $logger;
         $this->entityManager = $entityManager;
         $this->dataDirectory = $dataDirectory;
-
-        /** @var MemberRepository $memberRepository */
-        $memberRepository = $entityManager->getRepository(Member::class);
-        $this->memberRepository = $memberRepository;
-
-        /** @var Member $bwAdmin */
-        $bwAdmin = $memberRepository->find(1);
-        $this->bwAdmin = $bwAdmin;
     }
 
     protected function configure()
@@ -59,6 +51,14 @@ class DataRetentionCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        /** @var MemberRepository $memberRepository */
+        $memberRepository = $this->entityManager->getRepository(Member::class);
+        $this->memberRepository = $memberRepository;
+
+        /** @var Member $bwAdmin */
+        $bwAdmin = $memberRepository->find(1);
+        $this->bwAdmin = $bwAdmin;
+
         $io = new SymfonyStyle($input, $output);
 
         $io->title('Running Data Retention');

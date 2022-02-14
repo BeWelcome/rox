@@ -1,3 +1,6 @@
+import 'leaflet.fullscreen';
+import 'leaflet.fullscreen/Control.FullScreen.css';
+
 function Map() {
     this.map = undefined;
     this.noRefresh = false;
@@ -88,6 +91,14 @@ Map.prototype.addMarkers = function (map) {
 };
 
 $(function () {
-    var map = new Map();
+    var map = new Map({
+        center: [0, 0],
+        zoom: 0,
+        zoomSnap: 0.1,
+        fullscreenControl: true,
+        fullscreenControlOptions: {
+            position: 'topleft'
+        }
+    });
     map.showMap();
 });

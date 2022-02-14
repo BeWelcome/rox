@@ -51,9 +51,7 @@ class HostingRequest
      * @ORM\Column(name="arrival", type="datetime")
      *
      * @Assert\NotBlank()
-     * @Assert\Type("\DateTime")
-     * @Assert\LessThanOrEqual(
-     *     propertyPath="departure")
+     * @Assert\LessThanOrEqual(propertyPath="departure")
      */
     private $arrival;
 
@@ -62,9 +60,7 @@ class HostingRequest
      *
      * @ORM\Column(name="departure", type="datetime", nullable=false)
      *
-     * @Assert\Type("\DateTime")
-     * @Assert\GreaterThanOrEqual(
-     *     propertyPath="arrival")
+     * @Assert\GreaterThanOrEqual(propertyPath="arrival")
      */
     private $departure;
 

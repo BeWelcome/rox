@@ -53,7 +53,7 @@ class WordsExtractor extends AbstractFileExtractor implements ExtractorInterface
             self::MESSAGE_TOKEN,
         ],
         [
-            '$this->',
+            'this->',
             'addTranslatedFlash',
             '(',
             self::METHOD_ARGUMENTS_TOKEN,

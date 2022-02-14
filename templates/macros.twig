@@ -172,7 +172,7 @@
                 {% set languages %}
                 {% for level in receiver.languageLevels %}
                     {% apply spaceless %}
-                    {{ ('lang_' ~ level.language.shortcode) | trans }}<span class="d-none d-md-inline">
+                    {{ ('lang_' ~ level.language.shortcode) | lower | trans }}<span class="d-none d-md-inline">
                         ({{ ('languagelevel_' ~ level.level) | lower | trans }})</span>
                     {%- if not loop.last -%}
                         ,

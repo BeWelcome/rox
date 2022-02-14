@@ -19,8 +19,16 @@ class Places extends RoxModelBase {
 
     public function __construct() {
         parent::__construct();
-        $langarr = explode('-', $this->session->get('_locale'));
-        $this->lang = $langarr[0];
+        $this->lang = $this->session->get('_locale');
+        if ($this->lang == 'zh-hant') {
+            $this->lang = 'zh-TW';
+        }
+        if ($this->lang == 'pt-br') {
+            $this->lang = 'pt';
+        }
+        if ($this->lang == 'zh-hans') {
+            $this->lang = 'zh-CN';
+        }
     }
 
     /**

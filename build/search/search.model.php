@@ -1421,6 +1421,7 @@ LIMIT 1
                 ->select('*')
                 ->from('geonames')
                 ->match($match)
+                ->where('admin1', '<>', '')
                 ->orderBy('membercount', 'desc')
             ;
 
@@ -1490,6 +1491,10 @@ LIMIT 1
     private function findAdminUnitId($countryId, $adminUnit)
     {
         if (null === $adminUnit) {
+            return null;
+        }
+
+        if ('' === $adminUnit) {
             return null;
         }
 

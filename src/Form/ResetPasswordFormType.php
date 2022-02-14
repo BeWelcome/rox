@@ -16,6 +16,7 @@ class ResetPasswordFormType extends AbstractType
     {
         $builder
             ->add('password', RepeatedType::class, [
+                'label' => 'password',
                 'type' => PasswordType::class,
                 'invalid_message' => 'password.must.match',
                 'required' => true,

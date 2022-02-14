@@ -2,12 +2,19 @@
 
 namespace App\Command;
 
+use App\Entity\AdminCode;
+use App\Entity\AdminUnit;
+use App\Entity\AlternateLocation;
+use App\Entity\Country;
 use App\Entity\Location;
+use DateTime;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Query;
 use Doctrine\Persistence\ObjectRepository;
 use Exception;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -23,27 +30,39 @@ use ZipArchive;
 class GeonamesUpdateFullCommand extends Command
 {
     private HttpClientInterface $httpClient;
-    private Connection $connection;
-    private ObjectRepository $repository;
     private EntityManagerInterface $entityManager;
-    private OutputInterface $output;
-    private InputInterface $input;
 
     public function __construct(HttpClientInterface $httpClient, EntityManagerInterface $entityManager)
     {
-        parent::__construct('geonames:update:full');
+        parent::__construct('geonames:update');
 
         $this->httpClient = $httpClient;
         $this->entityManager = $entityManager;
-        $this->connection = $entityManager->getConnection();
-
-        $this->repository = $entityManager->getRepository(Location::class);
     }
 
     protected function configure()
     {
         $this
-            ->setDescription('Downloads geonames and/or alternatenames data dump and imports it')
+            ->setDescription('Downloads geonames data dump and imports them')
+            ->addOption(
+                'full',
+                null,
+                InputOption::VALUE_NONE,
+                'Fetches all data; truncates the database tables and imports the data. Sets all options ' .
+                '(except --continue-on-errors and --country). Does download the files if not explicitly forbidden.'
+            )
+            ->addOption(
+                'countries',
+                null,
+                InputOption::VALUE_NONE,
+                'Fetch country info and import.'
+            )
+            ->addOption(
+                'admin-units',
+                null,
+                InputOption::VALUE_NONE,
+                'Fetch admin unit info and import.'
+            )
             ->addOption(
                 'geonames',
                 null,
@@ -54,69 +73,224 @@ class GeonamesUpdateFullCommand extends Command
                 'alternate',
                 null,
                 InputOption::VALUE_NONE,
-                'Will drop the database if one already exist. Needs to be used with --force.'
+                'Downloads alternatenames data dump and imports them'
             )
             ->addOption(
-                'no-downloads',
+                'country',
+                null,
+                InputOption::VALUE_REQUIRED,
+                'Imports only the entries for the given country (2 letter code like US, GB, IN, ...).' . PHP_EOL .
+                'Can be combined with --full.'
+            )
+            ->addOption(
+                'download',
                 null,
                 InputOption::VALUE_NONE,
-                'Will not download the latest files but use the ones already there.'
+                'If not set the command assumes the files have already been downloaded and will access them.'
             )
-            ->setHelp('Downloads geonames and/or alternatenames data dump and imports it')
+            ->addOption(
+                'continue-on-errors',
+                null,
+                InputOption::VALUE_NONE,
+                'Continue importing the alternate names even if an error happened while importing geonames.'
+            )
+            ->setHelp('Downloads geonames or alternatenames data dump and imports them')
         ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->input = $input;
-        $this->output = $output;
+        gc_disable();
 
         $io = new SymfonyStyle($input, $output);
 
         $returnCode = 0;
 
-        $noDownloads = $input->getOption('no-downloads');
-        $downloadFiles = (null === $noDownloads) || !(true === $noDownloads);
-        if ($input->getOption('geonames')) {
-            $returnCode = $this->updateGeonames($io, $downloadFiles);
+        $downloadFiles = ($input->getOption('download'));
+
+        $continueOnErrors = $input->getOption('continue-on-errors');
+        $geonames = $input->getOption('geonames');
+        $alternateNames = $input->getOption('alternate');
+        $countries = $input->getOption('countries');
+        $adminUnits = $input->getOption('admin-units');
+
+        if ($input->getOption('full')) {
+            $geonames = true;
+            $alternateNames = true;
+            $countries = true;
+            $adminUnits = true;
+
+            $this->truncateTables();
         }
 
-        if ($input->getOption('alternate')) {
-            if (0 === $returnCode || $input->getOption('continue-on-errors')) {
-                $returnCode = $this->updateAlternatenames($io, $downloadFiles);
+        if ($countries) {
+            $returnCode = $this->updateCountries($io, $downloadFiles);
+            if (0 !== $returnCode && !$continueOnErrors) {
+                return $returnCode;
             }
         }
 
-        gc_disable();
+        if ($adminUnits) {
+            $returnCode = $this->updateAdminUnits($io, $downloadFiles);
+            if (0 !== $returnCode && !$continueOnErrors) {
+                return $returnCode;
+            }
+        }
+
+        if ($geonames) {
+            $returnCode = $this->updateGeonames($io, $downloadFiles);
+            if (0 !== $returnCode && !$continueOnErrors) {
+                return $returnCode;
+            }
+        }
+
+        if ($alternateNames) {
+            $returnCode = $this->updateAlternatenames($io, $downloadFiles);
+            if (0 !== $returnCode && !$continueOnErrors) {
+                return $returnCode;
+            }
+        }
+
+        gc_enable();
 
         return $returnCode;
+    }
+
+    protected function updateCountries(SymfonyStyle $io, bool $download): int
+    {
+        $io->note('Updating the countries list');
+
+        $filename = $this->getFile(
+            $io,
+            'countryInfo.txt',
+            $download
+        );
+
+        if (null === $filename) {
+            return -1;
+        }
+
+        /** @var ObjectRepository $countryRepository */
+        $countryRepository = $this->entityManager->getRepository(Country::class);
+
+        $lines = $this->getLines($filename);
+
+        $progressbar = $io->createProgressBar();
+
+        $progressbar->start($lines);
+
+        $handle = fopen($filename, 'r');
+
+        while (($row = fgetcsv($handle, 0, "\t")) !== false) {
+            $progressbar->advance();
+            if ($row[0][0] != '#' && !empty($row[4])) {
+                // Check if country already exists, if so update
+                $country = $countryRepository->find(['country' => $row[0]]);
+                if (null === $country) {
+                    $country = new Country();
+                }
+
+                $country->setCountry($row[0]);
+                $country->setName($row[4]);
+                $continent = $row[8];
+                if ('EU' == $continent || 'AS' == $continent) {
+                    // Use Eurasia instead of Europe and Asia
+                    $continent = 'EA';
+                }
+                $country->setContinent($continent);
+                $country->setGeonameId($row[16]);
+                $this->entityManager->persist($country);
+            }
+        }
+        $this->entityManager->flush();
+        $this->entityManager->clear();
+
+        return 0;
+    }
+
+    private function updateAdminUnits(SymfonyStyle $io, bool $download)
+    {
+        $io->note('Updating the admin units');
+
+        $filename = $this->getFile(
+            $io,
+            'admin1CodesASCII.txt',
+            $download
+        );
+
+        if (null === $filename) {
+            return -1;
+        }
+
+        $adminCodeRepository = $this->entityManager->getRepository(AdminCode::class);
+
+        $lines = $this->getLines($filename);
+
+        $progressbar = $io->createProgressBar();
+
+        $progressbar->start($lines);
+
+        $handle = fopen($filename, 'r');
+
+        while (($row = fgetcsv($handle, 0, "\t")) !== false) {
+            $progressbar->advance();
+            if ($row[0][0] != '#') {
+                // Split admin unit into country and identifier
+                $countryAndAdmin1 = explode('.', $row[0]);
+                $country = $countryAndAdmin1[0];
+                $admin1 = $countryAndAdmin1[1];
+                    // Check if admin unit already exists if so update.
+                $adminUnit = $adminCodeRepository->findOneBy([
+                    'country' => $country,
+                    'admin1' => $admin1
+                ]);
+                if (null === $adminUnit) {
+                    $adminUnit = new AdminCode();
+                    $adminUnit->setCountry($country);
+                    $adminUnit->setAdmin1($admin1);
+                }
+                $adminUnit->setName($row[1]);
+                $adminUnit->setGeonameId($row[3]);
+                $this->entityManager->persist($adminUnit);
+            }
+        }
+        $this->entityManager->flush();
+        $this->entityManager->clear();
+
+        return 0;
     }
 
     protected function updateGeonames(SymfonyStyle $io, bool $download): int
     {
         $io->note('Updating the geonames database');
 
-        $dir = sys_get_temp_dir() . '/allcountries';
-        if ($download) {
-            $filename = $this->downloadFile(
-                $io,
-                'https://download.geonames.org/export/dump/allCountries.zip'
-            );
+        $filename = $this->getFile(
+            $io,
+            'allCountries.zip',
+            $download
+        );
 
-            if (null === $filename) {
-                return -1;
-            }
-
-            $zip = new ZipArchive();
-            if (true === $zip->open($filename)) {
-                $zip->extractTo($dir);
-                $zip->close();
-            } else {
-                $io->error('Couldn\'t extract geoname database.');
-
-                return -1;
-            }
+        if (null === $filename) {
+            return -1;
         }
+
+        $zip = new ZipArchive();
+        $dir = sys_get_temp_dir() . '/allcountries';
+        if (true === $zip->open($filename)) {
+            $zip->extractTo($dir);
+            $zip->close();
+        } else {
+            $io->error('Couldn\'t extract geoname database extract.');
+
+            return -1;
+        }
+
+        $query = $this->entityManager
+            ->getRepository(Country::class)
+            ->createQueryBuilder('c')
+            ->indexBy('c', 'c.country')
+            ->getQuery();
+        $countries = $query->getResult();
 
         $lines = $this->getLines($dir . '/allCountries.txt');
 
@@ -130,8 +304,8 @@ class GeonamesUpdateFullCommand extends Command
             if (is_numeric($row[0]) && ('A' === $row[6] || 'P' === $row[6])) {
                 $rows[] = $row;
 
-                if (10000 === \count($rows)) {
-                    $this->updateGeonamesInDatabase($rows);
+                if (5000 === \count($rows)) {
+                    $this->updateGeonamesInDatabase($io, $rows, $countries);
 
                     unset($rows);
                     $rows = [];
@@ -143,7 +317,7 @@ class GeonamesUpdateFullCommand extends Command
         }
 
         // Also write the remaining entries to the database
-        $this->updateGeonamesInDatabase($rows);
+        $this->updateGeonamesInDatabase($io, $rows, $countries);
 
         fclose($handle);
 
@@ -164,34 +338,30 @@ class GeonamesUpdateFullCommand extends Command
     {
         $io->title('Updating the alternate names database.');
 
-        $dir = sys_get_temp_dir() . '/alternatenames';
-        if ($download) {
-            $io->writeln('Downloading necessary file.');
+        $filename = $this->getFile(
+            $io,
+            'alternateNamesV2.zip',
+            $download
+        );
 
-            $filename = $this->downloadFile(
-                $io,
-                'https://download.geonames.org/export/dump/alternateNamesV2.zip'
-            );
-
-            if (null === $filename) {
-                return -1;
-            }
-
-            $io->writeln('Extracting downlaoded file.');
-
-            $zip = new ZipArchive();
-
-            if (true === $zip->open($filename)) {
-                $zip->extractTo($dir);
-                $zip->close();
-            } else {
-                $io->error('Couldn\'t extract geoname alternate name database.');
-
-                return -1;
-            }
-
-            $io->writeln('Import alternate names into database');
+        if (null === $filename) {
+            return -1;
         }
+
+        $io->writeln('Extracting downloaded file.');
+
+        $zip = new ZipArchive();
+        $dir = sys_get_temp_dir() . '/alternatenames';
+        if (true === $zip->open($filename)) {
+            $zip->extractTo($dir);
+            $zip->close();
+        } else {
+            $io->error('Couldn\'t extract geoname alternate name database.');
+
+            return -1;
+        }
+
+        $io->writeln('Import alternate names into database');
 
         $statement = $this->connection->executeQuery(
             'SELECT geonameId from geonames'
@@ -245,14 +415,19 @@ class GeonamesUpdateFullCommand extends Command
         return 0;
     }
 
-    private function downloadFile(SymfonyStyle $io, string $url): ?string
+    private function getFile(SymfonyStyle $io, string $filename, bool $download): ?string
     {
-        $filesystem = new Filesystem();
-        $filename = $filesystem->tempnam('.', 'rox-geonames');
+        $localFilename = getcwd() . '/' . $filename;
+
+        if (!$download && file_exists($localFilename)) {
+            $io->note('File already exists and no download was requested.');
+
+            return $localFilename;
+        }
 
         $progressbar = null;
 
-        $response = $this->httpClient->request('GET', $url, [
+        $response = $this->httpClient->request('GET', 'https://download.geonames.org/export/dump/' . $filename, [
             'on_progress' => function (int $dlNow, int $dlSize, array $info) use ($io, &$progressbar): void {
                 // $dlNow is the number of bytes downloaded so far
                 // $dlSize is the total size to be downloaded or -1 if it is unknown
@@ -274,21 +449,21 @@ class GeonamesUpdateFullCommand extends Command
         ]);
 
         if (200 !== $response->getStatusCode()) {
-            $io->error('Couldn\'t download and extract geoname database.');
+            $io->error('Couldn\'t download requested file ' . $filename . ' from genames.org');
 
             return null;
         }
 
-        $fileHandler = fopen($filename, 'w');
+        $fileHandler = fopen($localFilename, 'w');
         foreach ($this->httpClient->stream($response) as $chunk) {
             fwrite($fileHandler, $chunk->getContent());
         }
         fclose($fileHandler);
 
-        return $filename;
+        return $localFilename;
     }
 
-    private function updateGeonamesInDatabase(array $rows): int
+    private function updateGeonamesInDatabase(SymfonyStyle $io, array $rows, array $countries): int
     {
         /*          geonameid         : integer id of record in geonames database
                     name              : name of geographical point (utf8) varchar(200)
@@ -310,30 +485,59 @@ class GeonamesUpdateFullCommand extends Command
                     timezone          : the iana timezone id (see file timeZone.txt) varchar(40)
                     modification date : date of last modification in yyyy-MM-dd format
         */
-
-        // Write rows into a file and call external command to import
-        // Otherwise we hit memory limites
-        $handle = fopen('geonames_rows.csv', 'w');
+        $em = $this->entityManager;
+        $connection = $em->getConnection();
+        $connection->executeQuery('SET FOREIGN_KEY_CHECKS=0');
+        $queries = [];
+        $lastCountry = '';
+        $adminCodes = [];
         foreach ($rows as $row) {
-            fputcsv($handle, $row);
+            if ($row[6] != 'A' && $row[6] != 'P') continue;
+
+            try {
+                $country = $countries[$row[8]] ?? null;
+                if (null === $country) {
+                    $io->note('Skipped ' . $row[1] . ' (' . $row[8] . ', ' . $row[10] . ' - ' . $row[0] . ') -- No country found');
+                    continue;
+                }
+                if ($lastCountry != $country->getCountry()) {
+                    $lastCountry = $country->getCountry();
+                    $adminUnitsQuery = $this->entityManager
+                        ->getRepository(AdminCode::class)
+                        ->createQueryBuilder('a')
+                        ->indexBy('a', 'a.admin1')
+                        ->where('a.country = :country')
+                        ->setParameter(':country', $lastCountry)
+                        ->getQuery();
+                    $adminCodes = $adminUnitsQuery->getResult();
+                }
+                $adminCode = $adminCodes[$row[10]] ?? null;
+                if (null === $adminCode) {
+                    $admin1 = 'null';
+                } else {
+                    $admin1 = $adminCode->getGeonameId();
+                }
+                $queries[] = sprintf(
+                    'INSERT IGNORE INTO geonames (geonameId, name, country, admin1, latitude, longitude, fClass, fCode, moddate) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)',
+                    $connection->quote($row[0]),
+                    $connection->quote($row[1]),
+                    $country->getGeonameId(),
+                    $admin1,
+                    $connection->quote($row[4]),
+                    $connection->quote($row[5]),
+                    $connection->quote($row[6]),
+                    $connection->quote($row[7]),
+                    $connection->quote($row[18])
+                );
+            }
+            catch(Exception $e)
+            {
+                $io->note('Skipped ' . $row[1] . ' (' . $row[8] . ', ' . $row[10] . ' - ' . $row[0] . ') -- ' . $e->getMessage());
+            }
         }
-        fclose($handle);
-
-        $io = new SymfonyStyle($this->input, $this->output);
-
-        $io->block('Running external command');
-
-        /** @var Command $command */
-        $command = $this->getApplication()->find('geonames:import:file');
-
-        $arguments = [
-            'file' => 'geonames_rows.csv',
-        ];
-
-        $import = new ArrayInput($arguments);
-        $returnCode = $command->run($import, $this->output);
-
-        return $returnCode;
+        $connection->executeQuery(implode("; ", $queries));
+        $connection->executeQuery('SET FOREIGN_KEY_CHECKS=1');
+        return 0;
     }
 
     private function updateAlternatenamesRow(array $row): void
@@ -400,5 +604,30 @@ class GeonamesUpdateFullCommand extends Command
         fclose($f);
 
         return $lines;
+    }
+
+    private function truncateTables(): void
+    {
+        $connection = $this->entityManager->getConnection();
+        $dbPlatform = $connection->getDatabasePlatform();
+        $connection->executeQuery('SET FOREIGN_KEY_CHECKS=0');
+
+        $classMetadata = $this->entityManager->getClassMetadata(Country::class);
+        $q = $dbPlatform->getTruncateTableSql($classMetadata->getTableName());
+        $connection->executeQuery($q);
+
+        $classMetadata = $this->entityManager->getClassMetadata(AdminCode::class);
+        $q = $dbPlatform->getTruncateTableSql($classMetadata->getTableName());
+        $connection->executeQuery($q);
+
+        $classMetadata = $this->entityManager->getClassMetadata(AlternateLocation::class);
+        $q = $dbPlatform->getTruncateTableSql($classMetadata->getTableName());
+        $connection->executeQuery($q);
+
+        $classMetadata = $this->entityManager->getClassMetadata(Location::class);
+        $q = $dbPlatform->getTruncateTableSql($classMetadata->getTableName());
+        $connection->executeQuery($q);
+
+        $connection->executeQuery('SET FOREIGN_KEY_CHECKS=1');
     }
 }

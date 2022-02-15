@@ -48,7 +48,7 @@ class HostingRequest
     /**
      * @var DateTime
      *
-     * @ORM\Column(name="arrival", type="datetime")
+     * @ORM\Column(name="arrival", type="datetime", nullable=false)
      *
      * @Assert\NotBlank()
      * @Assert\LessThanOrEqual(propertyPath="departure")
@@ -60,6 +60,7 @@ class HostingRequest
      *
      * @ORM\Column(name="departure", type="datetime", nullable=false)
      *
+     * @Assert\NotBlank()
      * @Assert\GreaterThanOrEqual(propertyPath="arrival")
      */
     private $departure;
@@ -120,8 +121,12 @@ class HostingRequest
         return $this;
     }
 
-    public function getArrival(): Carbon
+    public function getArrival(): ?Carbon
     {
+        if (null === $this->arrival) {
+            return null;
+        }
+
         return Carbon::instance($this->arrival);
     }
 
@@ -132,8 +137,12 @@ class HostingRequest
         return $this;
     }
 
-    public function getDeparture(): Carbon
+    public function getDeparture(): ?Carbon
     {
+        if (null === $this->departure) {
+            return null;
+        }
+
         return Carbon::instance($this->departure);
     }
 

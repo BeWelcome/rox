@@ -159,6 +159,7 @@ if (empty($vars)) {
                                 echo '<button type="submit" id="activity-join" name="activity-join" class="btn btn-primary btn-block" title="' . $words->getSilent('ActivityJoinTheFun') . '">' . $words->getSilent('ActivityJoinTheFun') . '</button>';
                             } else {
                                 echo '<button type="submit" id="activity-update" name="activity-edit" class="btn btn-primary btn-block" title="' . $words->getSilent('ActivityUpdate') . '">' . $words->getSilent('ActivityUpdate') . '</button>';
+                                echo '<a class="btn btn-primary btn-block" title="' . $words->getSilent('activity.download') . '" href="activity/' . $this->activity->id . '/download">' . $words->getSilent('activity.download') . '</a>';
 
                                 if (!$this->member->organizer) {
                                     echo '<button type="submit" id="activity-leave" name="activity-leave" class="btn btn-primary btn-block" title="' . $words->getSilent('ActivityLeave') . '" >' . $words->getSilent('ActivityLeave') . '</button>';

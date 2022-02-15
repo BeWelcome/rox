@@ -207,6 +207,9 @@
     "egulias/email-validator": {
         "version": "3.1.1"
     },
+    "eluceo/ical": {
+        "version": "2.5.0"
+    },
     "exercise/htmlpurifier-bundle": {
         "version": "3.0",
         "recipe": {

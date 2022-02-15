@@ -27,6 +27,7 @@
         "doctrine/doctrine-bundle": "^2.0",
         "doctrine/doctrine-migrations-bundle": "^2.0",
         "doctrine/orm": "^2.8.4",
+        "eluceo/ical": "^2.5",
         "exercise/htmlpurifier-bundle": "^3.0",
         "ezyang/htmlpurifier": "^4.0",
         "foolz/sphinxql-query-builder": "^1.0",

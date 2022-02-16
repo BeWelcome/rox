@@ -58,8 +58,8 @@ class SubtripType extends AbstractType
 
             $expired = false;
             if (null !== $locationRequest) {
-                $arrival = $locationRequest->getArrival();
-                if (null !== $arrival && $arrival <= new DateTime()) {
+                $departure = $locationRequest->getDeparture();
+                if (null !== $departure && $departure <= new DateTime()) {
                     $expired = true;
                 }
             }

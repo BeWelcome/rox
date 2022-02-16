@@ -3,7 +3,7 @@
 <div class="c-trip-legs__item c-trip-legs__item--small {% if leg.invitedBy == app.user %}c-trip-legs__item--invited{% endif %}">
     <div class="c-trip-legs__icons-wrapper">
         {% if constant('App\\Doctrine\\SubtripOptionsType::MEET_LOCALS') in leg.options %}
-            <a class="o-rounded u-mx-4" href="{{ path('message_new', { 'username': leg.trip.creator.username }) }}" aria-label="{{ 'message.write_to' | trans | format(trip.creator.username) }}" title="{{ 'message.write_to' | trans | format(trip.creator.username) }}">
+            <a class="o-rounded u-mx-4" href="{{ path('message_new', { 'username': leg.trip.creator.username }) }}" aria-label="{{ 'message.write_to' | trans | format(leg.trip.creator.username) }}" title="{{ 'message.write_to' | trans | format(leg.trip.creator.username) }}">
                 <i class="fa fa-fw fa-envelope"></i>
             </a>
         {% endif %}
@@ -11,7 +11,7 @@
             {% if leg.invitationBy(app.user) %}
                 {% set invitation = leg.invitationBy(app.user) %}
                 {% set username = invitation.messages[0].initiator.Username %}
-                <a class="o-rounded u-mx-4{% if leg.invitedBy == app.user %} u-bg-green-dark {% endif %}" href="{{ path('conversation_reply', {id: invitation.messages[0].id}) }}" aria-label="{{ 'invitation.reply' | trans | format(trip.creator.username) }}" title="{{ 'invitation.reply' | trans | format(trip.creator.username) }}">
+                <a class="o-rounded u-mx-4{% if leg.invitedBy == app.user %} u-bg-green-dark {% endif %}" href="{{ path('conversation_reply', {id: invitation.messages[0].id}) }}" aria-label="{{ 'invitation.reply' | trans | format(leg.trip.creator.username) }}" title="{{ 'invitation.reply' | trans | format(leg.trip.creator.username) }}">
                     <i class="fa fa-fw fa-house-user"></i>
                 </a>
             {% else %}

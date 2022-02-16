@@ -58,11 +58,11 @@
                 </div>
                 <div class="u-flex u-justify-center md:u-justify-between u-items-center u-mt-16 md:u-m-0">
                     <a class="o-rounded o-rounded--l u-text-18 u-mr-20 md:u-m-0"
-                       href="{{ path('trip_edit', {'id': trip.id}) }}">
+                       href="{{ path('trip_edit', {'id': trip.id}) }}" aria-label="{{ 'trip.edit'|trans }}" title="{{ 'trip.edit'|trans }}">
                         <i class="far fa-edit"></i>
                     </a>
                     <a class="o-rounded o-rounded--l"
-                         href="{{ path('trip_remove', {'id': trip.id}) }}">
+                         href="{{ path('trip_remove', {'id': trip.id}) }}" aria-label="{{ 'trip.remove'|trans }}" title="{{ 'trip.remove'|trans }}">
                       <i class="fa fa-times"></i>
                     </a>
                 </div>

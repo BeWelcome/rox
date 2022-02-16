@@ -1,47 +1,52 @@
 {% import 'macros.twig' as macros %}
 
 <div class="c-trip-legs__item c-trip-legs__item--small {% if leg.invitedBy == app.user %}c-trip-legs__item--invited{% endif %}">
-  <div class="c-trip-legs__icons-wrapper">
-    {% if constant('App\\Doctrine\\SubtripOptionsType::MEET_LOCALS') in leg.options %}
-      <a class="o-rounded u-mx-4"
-         href="{{ path('message_new', { 'username': leg.trip.creator.username }) }}">
-          <i class="fa fa-fw fa-envelope"></i>
-      </a>
-    {% endif %}
-    {% if constant('App\\Doctrine\\SubtripOptionsType::LOOKING_FOR_HOST') in leg.options %}
-      {% if leg.invitationBy(app.user) %}
-          {% set invitation = leg.invitationBy(app.user) %}
-          {% set username = invitation.messages[0].initiator.Username %}
-              <a class="o-rounded u-mx-4{% if leg.invitedBy == app.user %} u-bg-green-dark {% endif %}"
-                 href="{{ path('conversation_reply', {id: invitation.messages[0].id}) }}">
-                  <i class="fa fa-fw fa-house-user"></i>
-              </a>
-      {% else %}
-            <a class="o-rounded u-mx-4"
-               href="{{ path('hosting_invitation', {
-                   'leg': leg.id
-               }) }}">
-                <i class="fa fa-fw fa-house-user"></i>
+    <div class="c-trip-legs__icons-wrapper">
+        {% if constant('App\\Doctrine\\SubtripOptionsType::MEET_LOCALS') in leg.options %}
+            <a class="o-rounded u-mx-4" href="{{ path('message_new', { 'username': leg.trip.creator.username }) }}" aria-label="{{ 'message.write_to' | trans | format(trip.creator.username) }}" title="{{ 'message.write_to' | trans | format(trip.creator.username) }}">
+                <i class="fa fa-fw fa-envelope"></i>
             </a>
-      {% endif %}
-    {% endif %}
-  </div>
-  <div class="c-trip-legs__text-wrapper">
-    <p class="u-text-white u-font-display u-font-700">{{ leg.location.name }}, <span class="u-font-300">{{ leg.arrival|format_date('medium') }}{% if leg.arrival != leg.departure %} - {{ leg.departure|format_date('medium') }}{% endif %}</span></p>
-    <div class="u-flex">
-      <div class="c-trip-card__icon-grid u-mr-16">
-        <i class="fa fa-users u-text-white u-text-16 u-justify-self-center u-self-center"></i>
-         <p class="u-text-white u-font-display"><strong>{{ 'trip.count.of.travellers'| trans ({'countOfTravellers' : leg.trip.countOfTravellers}) }}</strong></p>
-      </div>
-      {% if constant('App\\Doctrine\\TripAdditionalInfoType::NONE') != leg.trip.additionalInfo %}
-      <div class="c-trip-card__icon-grid">
-        <i class="fa fa-info-circle u-text-white u-text-16 u-justify-self-center u-self-center"></i>
-        <p class="u-text-white u-font-display">{{ ('trip.additional.info.' ~ leg.trip.additionalInfo)| lower | trans}}</p>
-      </div>
-      {% endif %}
+        {% endif %}
+        {% if constant('App\\Doctrine\\SubtripOptionsType::LOOKING_FOR_HOST') in leg.options %}
+            {% if leg.invitationBy(app.user) %}
+                {% set invitation = leg.invitationBy(app.user) %}
+                {% set username = invitation.messages[0].initiator.Username %}
+                <a class="o-rounded u-mx-4{% if leg.invitedBy == app.user %} u-bg-green-dark {% endif %}" href="{{ path('conversation_reply', {id: invitation.messages[0].id}) }}" aria-label="{{ 'invitation.reply' | trans | format(trip.creator.username) }}" title="{{ 'invitation.reply' | trans | format(trip.creator.username) }}">
+                    <i class="fa fa-fw fa-house-user"></i>
+                </a>
+            {% else %}
+                <a class="o-rounded u-mx-4" href="{{ path('hosting_invitation', { 'leg': leg.id }) }}">
+                    <i class="fa fa-fw fa-house-user"></i>
+                </a>
+            {% endif %}
+        {% endif %}
     </div>
-  </div>
-  <div class="o-avatar o-avatar--s o-avatar--white">
-    {{ macros.roundedavatarstack(leg.trip.creator.username, 48) }}
-  </div>
+    <div class="c-trip-legs__text-wrapper">
+        <p class="u-text-white u-font-display u-font-700">{{ leg.location.name }},
+            <span class="u-font-300">{{ leg.arrival|format_date('medium') }}
+                {% if leg.arrival != leg.departure %}
+                    -
+                    {{ leg.departure|format_date('medium') }}
+                {% endif %}
+            </span>
+        </p>
+        <div class="u-flex">
+            <div class="c-trip-card__icon-grid u-mr-16">
+                <i class="fa fa-users u-text-white u-text-16 u-justify-self-center u-self-center"></i>
+                <p class="u-text-white u-font-display">
+                    <strong>{{ 'trip.count.of.travellers'| trans ({'countOfTravellers' : leg.trip.countOfTravellers}) }}</strong>
+                </p>
+            </div>
+            {% if constant('App\\Doctrine\\TripAdditionalInfoType::NONE') != leg.trip.additionalInfo %}
+                <div class="c-trip-card__icon-grid">
+                    <i class="fa fa-info-circle u-text-white u-text-16 u-justify-self-center u-self-center"></i>
+                    <p class="u-text-white u-font-display">{{ ('trip.additional.info.' ~ leg.trip.additionalInfo)| lower | trans}}</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    <div class="o-avatar o-avatar--s o-avatar--white">
+        {{ macros.roundedavatarstack(leg.trip.creator.username, 48) }}
+    </div>
 </div>
+

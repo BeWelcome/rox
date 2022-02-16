@@ -137,7 +137,8 @@
                                                 <div class="u-flex">
                                                     {% if constant('App\\Doctrine\\SubtripOptionsType::MEET_LOCALS') in subtrip.options %}
                                                         <a class="o-rounded o-rounded--l u-mx-4"
-                                                           href="{{ path('message_new', { 'username': trip.creator.username }) }}">
+                                                           href="{{ path('message_new', { 'username': trip.creator.username }) }}"
+                                                           aria-label="{{ 'message.write_to' | trans | format(trip.creator.username) }}" title="{{ 'message.write_to' | trans | format(trip.creator.username) }}">
                                                             <i class="fa fa-fw fa-envelope"></i>
                                                         </a>
                                                     {% endif %}
@@ -146,14 +147,16 @@
                                                         {% if invitation %}
                                                             {% set invited = invitation.status == constant('App\\Entity\\HostingRequest::REQUEST_ACCEPTED') %}
                                                            <a class="o-rounded o-rounded--l u-mx-4 {% if invited %}u-bg-green-dark{% endif %}"
-                                                                href="{{ path('conversation_reply', {id: invitation.messages[0].id}) }}">
+                                                                href="{{ path('conversation_reply', {id: invitation.messages[0].id}) }}"
+                                                           aria-label="{{ 'invitation.reply' | trans | format(trip.creator.username) }}" title="{{ 'invitation.reply' | trans | format(trip.creator.username) }}">
                                                               <i class="fa fa-fw fa-house-user"></i>
                                                           </a>
                                                         {% else %}
                                                                 <a class="o-rounded o-rounded--l u-mx-4"
                                                                     href="{{ path('hosting_invitation', {
                                                                         'leg': subtrip.id
-                                                                    }) }}">
+                                                                    }) }}"
+                                                                    aria-label="{{ 'invite.username' | trans | format(trip.creator.username) }}" title="{{ 'invite.username' | trans | format(trip.creator.username) }}">
                                                                     <i class="fa fa-fw fa-house-user"></i>
                                                                 </a>
                                                             {% endif %}
@@ -163,7 +166,6 @@
                                         {% endif %}
                                     </div>
                                 </div>
-
                                 <input type="hidden" class="js-data"
                                        value="{{ subtrip.location.name }}, {{ subtrip.location.latitude }}, {{ subtrip.location.longitude }}, {{ subtrip.location.country.name }}}}, {{ subtrip.arrival|format_date('short') }}{% if subtrip.arrival != subtrip.departure %} - {{ subtrip.departure|format_date('short') }}{% endif %}">
                             </li>

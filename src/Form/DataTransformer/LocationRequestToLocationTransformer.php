@@ -47,8 +47,8 @@ class LocationRequestToLocationTransformer implements DataTransformerInterface
         }
 
         if (null === $value->geonameId) {
-            $failure = new TransformationFailedException("location.none.given - test");
-            $failure->setInvalidMessage("location.none.given - test");
+            $failure = new TransformationFailedException("trip.error.location.none.given");
+            $failure->setInvalidMessage("trip.error.location.none.given");
             throw $failure;
         }
 

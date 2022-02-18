@@ -23,7 +23,7 @@
         {% set name = widget.vars.full_name %}
     {% endif %}
     <div data-content="{{ name }}"
-         class="c-trips__info">
+         class="c-trips__info u-items-start">
         <div class="u-w-full u-mb-8 md:u-width-auto md:u-mb-0">
             {% set attributes = {
                 'class': 'o-input--xl o-input--no-borders o-input--round-left o-input--translucid search-picker js-search-picker',
@@ -32,7 +32,7 @@
             } %}
 
             {{ form_widget(form.location.fullname, {'attr': attributes}) }}
-            <div class="u-absolute">{{ form_errors(form.location) }}</div>
+            <div class="u-block">{{ form_errors(form.location) }}</div>
         </div>
         <div class="u-w-full md:u-width-auto">
             {% set attributes = {
@@ -42,29 +42,29 @@
             } %}
 
             {{ form_widget(form.duration, {'attr': attributes}) }}
-            <div class="u-absolute">{{ form_errors(form.duration) }}</div>
+            <div class="u-block">{{ form_errors(form.duration) }}</div>
         </div>
         {% if not form.location.fullname.vars.disabled %}
-        <button class="btn-remove js-btn-remove o-rounded o-rounded--l u-justify-self-center c-trips__info-btn-grid"
+        <button class="btn-remove js-btn-remove o-rounded o-rounded--l u-justify-self-center u-self-center c-trips__info-btn-grid"
                 data-related="{{ name }}">
             <i class="fa fa-times"></i>
         </button>
         {% endif %}
         <div class="u-flex u-flex-col md:u-flex-row md:u-mt-16 u-flex-wrap u-col-span-2">
-            <div class="md:u-mr-24">
+            <div class="u-mb-8 md:u-mr-24">
                 {% set attributes = {
                     'class': 'o-checkbox--white o-checkbox--display'
                 } %}
 
                 {{ form_widget(form.options[0], {'attr': attributes }) }}
             </div>
-            <div class="md:u-mr-24">
+            <div class="u-mb-8 md:u-mr-24">
                 {{ form_widget(form.options[1], {'attr': attributes }) }}
             </div>
-            <div class="md:u-mr-24">
+            <div class="u-mb-4 md:u-mr-24">
                 {{ form_widget(form.options[2], {'attr': attributes }) }}
             </div>
-            <div class="u-absolute u-pt-16">{{ form_errors(form.options) }}</div>
+            <div class="md:u-mr-24">{{ form_errors(form.options) }}</div>
         </div>
         {{ form_widget(form.location.name) }} {{ form_widget(form.location.geoname_id) }}
         {{ form_widget(form.location.latitude) }} {{ form_widget(form.location.longitude) }}
@@ -87,11 +87,11 @@
         <div>
             <div class="u-mb-24 u-relative">
                 {{ form_widget(form.summary, {'attr': { 'class': 'o-input--white o-input--no-border-on-hover o-input--white-xl', 'aria-label':'Title'}}) }}
-                <div class="u-absolute">{{ form_errors(form.summary) }}</div>
+                <div class="u-block">{{ form_errors(form.summary) }}</div>
             </div>
             <div class="u-relative u-mb-8 md:u-mb-24">
                 {{ form_widget(form.description, { 'attr': {  'class': 'o-input--white o-input--no-border-on-hover', 'rows': 5, 'aria-label':'Description' }}) }}
-                <div class="u-absolute">{{ form_errors(form.description) }}</div>
+                <div class="u-block">{{ form_errors(form.description) }}</div>
             </div>
             <div class="u-flex u-flex-col md:u-grid md:u-grid-cols-3">
                 <div class="u-flex u-flex-col md:u-flex-row u-col-span-2 u-mb-24">

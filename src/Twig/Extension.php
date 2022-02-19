@@ -202,12 +202,12 @@ class Extension extends AbstractExtension implements GlobalsInterface
     /**
      * @SuppressWarnings(PHPMD.StaticAccess)
      */
-    public function prepareNewsletter(string $text): string
+    public function prepareNewsletter(string $text, bool $website = false): string
     {
         $config = HTMLPurifier_HTML5Config::createDefault();
         $config->set(
             'HTML.Allowed',
-            'p,b,a[href],br,i,u,strong,em,ol,ul,li,dl,dt,dd,img[src|alt|width|height],blockquote,del,'
+            'p,b,a[href],br,hr,i,u,strong,em,ol,ul,li,dl,dt,dd,img[src|alt|width|height],blockquote,del,'
             . 'figure[class],figcaption'
         );
         $config->set('HTML.TargetBlank', true);
@@ -220,9 +220,15 @@ class Extension extends AbstractExtension implements GlobalsInterface
         $text = $purifier->purify($text);
 
         // now turn any figure/figcaption entries into <img>
+        $style = '';
+        $width = 'width="480';
+        if ($website) {
+            $width = '';
+            $style = ' style="display: block; margin-left: auto; margin-right: auto; width: 80%;"';
+        }
         $result = preg_replace(
             '%<figure.*?><img.*?src="(.*?)".*?><figcaption>(.*?)</figcaption></figure>%',
-            '<img width="480" height="320" src="\1" alt="\2">',
+            '<img ' . $width . ' src="\1" alt="\2"' . $style . '>',
             $text
         );
 
@@ -230,7 +236,7 @@ class Extension extends AbstractExtension implements GlobalsInterface
         $embeddedImage = $this->translator->trans('newsletter.embedded.image');
         $result = preg_replace(
             '%<figure.*?><img.*?src="(.*?)".*?>%',
-            '<img width="480" height="320" src="\1" alt="' . htmlentities($embeddedImage) . '">',
+            '<img ' . $width . ' src="\1" alt="' . htmlentities($embeddedImage) . '"' . $style . '>',
             $result
         );
 

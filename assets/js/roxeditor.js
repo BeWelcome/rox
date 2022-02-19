@@ -12,6 +12,7 @@ import { Paragraph } from '@ckeditor/ckeditor5-paragraph/src/index';
 import { SpecialCharacters, SpecialCharactersEssentials }  from '@ckeditor/ckeditor5-special-characters/src/index';
 import { CloudServices } from '@ckeditor/ckeditor5-cloud-services/src/index';
 import { Autosave } from "@ckeditor/ckeditor5-autosave/src/index";
+import HorizontalLine from '@ckeditor/ckeditor5-horizontal-line/src/horizontalline';
 import PendingActions from "@ckeditor/ckeditor5-core/src/pendingactions";
 
 function SpecialCharactersTextExtended( editor ) {
@@ -44,6 +45,7 @@ for (let i = 0; i < allEditors.length; ++i) {
             Bold,
             Underline,
             Italic,
+            HorizontalLine,
             BlockQuote,
             Image,
             ImageCaption,
@@ -74,6 +76,8 @@ for (let i = 0; i < allEditors.length; ++i) {
             'bulletedList',
             'numberedList',
             'specialCharacters',
+            '|',
+            'horizontalLine',
             '|',
             'imageUpload',
             'blockQuote',

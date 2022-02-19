@@ -180,7 +180,7 @@
                     {% endapply %}
                 {% endfor %}
                 {% endset %}
-                <div class="sm:u-text-14 md:u-text-16 u-font-400 u-line-clamp-2">{{ 'lives.and.speaks' | trans({'city': receiver.city.name ~ ', ' ~ receiver.city.country.name | capitalize, 'languages': languages }) | raw }}</div>
+                <div class="u-leading-20 sm:u-text-14 md:u-text-16 u-font-400 u-line-clamp-2">{{ 'lives.and.speaks' | trans({'city': receiver.city.name ~ ', ' ~ receiver.city.country.name | capitalize, 'languages': languages }) | raw }}</div>
             {% endif %}
         </div>
         <div class="o-avatar u-mt-8">{{ macros.roundedavatarstack(receiver.Username, 100, false) }}</div>

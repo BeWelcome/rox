@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1c96fe081aaf9d84c216fe632dad2783",
+    "content-hash": "3c6402b676d8ab3f6beb83a3fbe301ff",
     "packages": [
         {
             "name": "amphp/amp",
@@ -3176,26 +3176,26 @@
         },
         {
             "name": "foolz/sphinxql-query-builder",
-            "version": "1.2.0",
+            "version": "3.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/FoolCode/SphinxQL-Query-Builder.git",
-                "reference": "ca6e6836b5f1bc5077e0d179874aa252440ea4dc"
+                "reference": "61986ac6cca698e9ff7091b8c391a1802ef9aa99"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FoolCode/SphinxQL-Query-Builder/zipball/ca6e6836b5f1bc5077e0d179874aa252440ea4dc",
-                "reference": "ca6e6836b5f1bc5077e0d179874aa252440ea4dc",
+                "url": "https://api.github.com/repos/FoolCode/SphinxQL-Query-Builder/zipball/61986ac6cca698e9ff7091b8c391a1802ef9aa99",
+                "reference": "61986ac6cca698e9ff7091b8c391a1802ef9aa99",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.0"
+                "php": "^7.1 || ^8"
             },
             "replace": {
                 "foolz/sphinxql": "self.version"
             },
             "require-dev": {
-                "phpunit/phpunit": "6.3.*"
+                "phpunit/phpunit": "^7 || ^8 || ^9"
             },
             "type": "library",
             "autoload": {
@@ -3227,9 +3227,9 @@
                 "email": "support@foolz.us",
                 "irc": "irc://irc.irchighway.net/fooldriver",
                 "issues": "https://github.com/FoolCode/SphinxQL-Query-Builder/issues",
-                "source": "https://github.com/FoolCode/SphinxQL-Query-Builder/tree/master"
+                "source": "https://github.com/FoolCode/SphinxQL-Query-Builder/tree/3.0.1"
             },
-            "time": "2017-11-07T14:00:57+00:00"
+            "time": "2021-08-12T13:29:44+00:00"
         },
         {
             "name": "friendsofphp/proxy-manager-lts",
@@ -4786,12 +4786,12 @@
                 }
             },
             "autoload": {
-                "psr-4": {
-                    "League\\Uri\\": "src"
-                },
                 "files": [
                     "src/functions_include.php"
-                ]
+                ],
+                "psr-4": {
+                    "League\\Uri\\": "src"
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -7882,16 +7882,16 @@
         },
         {
             "name": "symfony/flex",
-            "version": "v1.18.4",
+            "version": "v1.18.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/flex.git",
-                "reference": "910a5c5ac35b58c9faddc992f56ad7a931d1e064"
+                "reference": "10e438f53a972439675dc720706f0cd5c0ed94f1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/flex/zipball/910a5c5ac35b58c9faddc992f56ad7a931d1e064",
-                "reference": "910a5c5ac35b58c9faddc992f56ad7a931d1e064",
+                "url": "https://api.github.com/repos/symfony/flex/zipball/10e438f53a972439675dc720706f0cd5c0ed94f1",
+                "reference": "10e438f53a972439675dc720706f0cd5c0ed94f1",
                 "shasum": ""
             },
             "require": {
@@ -7927,7 +7927,7 @@
             "description": "Composer plugin for Symfony",
             "support": {
                 "issues": "https://github.com/symfony/flex/issues",
-                "source": "https://github.com/symfony/flex/tree/v1.18.4"
+                "source": "https://github.com/symfony/flex/tree/v1.18.5"
             },
             "funding": [
                 {
@@ -7943,7 +7943,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-02-15T08:56:54+00:00"
+            "time": "2022-02-16T17:26:46+00:00"
         },
         {
             "name": "symfony/form",
@@ -12885,23 +12885,23 @@
     "packages-dev": [
         {
             "name": "alexandresalome/mailcatcher",
-            "version": "v1.3.1",
+            "version": "v1.3.2",
             "target-dir": "Alex/MailCatcher",
             "source": {
                 "type": "git",
                 "url": "https://github.com/alexandresalome/mailcatcher.git",
-                "reference": "4be48c2540c6db0ebf0c00bc642cf7e3a67224c9"
+                "reference": "08a9c55ebee5f0f82083c0102ff1192216cf19de"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/alexandresalome/mailcatcher/zipball/4be48c2540c6db0ebf0c00bc642cf7e3a67224c9",
-                "reference": "4be48c2540c6db0ebf0c00bc642cf7e3a67224c9",
+                "url": "https://api.github.com/repos/alexandresalome/mailcatcher/zipball/08a9c55ebee5f0f82083c0102ff1192216cf19de",
+                "reference": "08a9c55ebee5f0f82083c0102ff1192216cf19de",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
                 "php": ">=5.3.3",
-                "symfony/dom-crawler": "~2.3 || ~3.0 || ~4.0 || ~5.0"
+                "symfony/dom-crawler": "~2.3 || ~3.0 || ~4.0 || ~5.0 || ~6.0"
             },
             "require-dev": {
                 "behat/behat": "~3.0",
@@ -12921,9 +12921,9 @@
             "description": "A library to access MailCatcher",
             "support": {
                 "issues": "https://github.com/alexandresalome/mailcatcher/issues",
-                "source": "https://github.com/alexandresalome/mailcatcher/tree/v1.3.1"
+                "source": "https://github.com/alexandresalome/mailcatcher/tree/v1.3.2"
             },
-            "time": "2021-07-15T13:26:04+00:00"
+            "time": "2022-02-16T17:26:49+00:00"
         },
         {
             "name": "behat/behat",
@@ -16348,16 +16348,16 @@
         },
         {
             "name": "symfony/maker-bundle",
-            "version": "v1.36.4",
+            "version": "v1.37.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/maker-bundle.git",
-                "reference": "716eee9c8b10b33e682df1b7d80b9061887e9691"
+                "reference": "411863a63c495c68852215518bb5665965c61a2d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/maker-bundle/zipball/716eee9c8b10b33e682df1b7d80b9061887e9691",
-                "reference": "716eee9c8b10b33e682df1b7d80b9061887e9691",
+                "url": "https://api.github.com/repos/symfony/maker-bundle/zipball/411863a63c495c68852215518bb5665965c61a2d",
+                "reference": "411863a63c495c68852215518bb5665965c61a2d",
                 "shasum": ""
             },
             "require": {
@@ -16416,7 +16416,7 @@
             ],
             "support": {
                 "issues": "https://github.com/symfony/maker-bundle/issues",
-                "source": "https://github.com/symfony/maker-bundle/tree/v1.36.4"
+                "source": "https://github.com/symfony/maker-bundle/tree/v1.37.0"
             },
             "funding": [
                 {
@@ -16432,7 +16432,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-12-01T00:27:38+00:00"
+            "time": "2022-02-16T15:29:59+00:00"
         },
         {
             "name": "symfony/polyfill-php70",

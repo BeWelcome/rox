@@ -23,7 +23,6 @@ Boston, MA  02111-1307, USA.
 
 use App\Doctrine\MemberStatusType;
 use Foolz\SphinxQL\Drivers\Pdo\Connection;
-use Foolz\SphinxQL\Match;
 use Foolz\SphinxQL\SphinxQL;
 use AnthonyMartin\GeoLocation\GeoPoint;
 
@@ -1414,13 +1413,11 @@ LIMIT 1
             $conn->setParams(array('host' => 'localhost', 'port' => 9306));
 
             $sphinxQL = new SphinxQL($conn);
-            $match = new Match($sphinxQL);
-            $match->match($location);
 
             $query = $sphinxQL
                 ->select('*')
                 ->from('geonames')
-                ->match($match)
+                ->match('name', $location)
                 ->where('admin1', '<>', '')
                 ->orderBy('membercount', 'desc')
             ;
@@ -1466,13 +1463,11 @@ LIMIT 1
         $conn->setParams(array('host' => 'localhost', 'port' => 9306));
 
         $sphinxQL = new SphinxQL($conn);
-        $match = new Match($sphinxQL);
-        $match->match($country);
 
         $query = $sphinxQL
             ->select('*')
             ->from('geonames')
-            ->match($match)
+            ->match('name', $country)
             ->where('iscountry', '=', 1)
         ;
 
@@ -1502,13 +1497,11 @@ LIMIT 1
         $conn->setParams(array('host' => 'localhost', 'port' => 9306));
 
         $sphinxQL = new SphinxQL($conn);
-        $match = new Match($sphinxQL);
-        $match->match($adminUnit);
 
         $query = $sphinxQL
             ->select('*')
             ->from('geonames')
-            ->match($match)
+            ->match('name', $adminUnit)
             ->where('isadmin', '=', 1)
             ->where('country', '=', $countryId)
         ;

@@ -87,12 +87,13 @@
     "tempusdominus": "github:tonix-tuft/tempusdominus",
     "tempusdominus-bootstrap": "github:tonix-tuft/tempusdominus-bootstrap",
     "toastify-js": "^1.10.0",
-    "workbox-webpack-plugin": "^6.1.5"
+    "workbox-webpack-plugin": "^6.1.5",
+      "@trevoreyre/autocomplete-js": "^2.2.0",
+      "leaflet.fullscreen": "^2.2.0"
   },
   "scripts": {
     "encoreWatch": "encore dev --watch"
   },
   "dependencies": {
-    "leaflet.fullscreen": "^2.2.0"
   }
 }

@@ -20,13 +20,24 @@ class SuggestLocationController extends AbstractController
     }
 
     /**
-     * @Route("/suggest/locations/all", name="suggest_locations")
+     * @Route("/suggest/locations/places/{ranker}", name="suggest_locations")
      */
-    public function suggestPlaces(Request $request, SuggestLocationModel $model): JsonResponse
+    public function suggestPlaces(Request $request, string $ranker, SuggestLocationModel $model): JsonResponse
     {
         $response = new JsonResponse();
         $searchTerm = $request->query->get('term', '');
-        $result = $model->getSuggestionsForPlaces($searchTerm);
+        switch ($ranker) {
+            case 'ranker1':
+                $expr = 'sum((min_hit_pos==1)*2+exact_hit*3)';
+                break;
+            case 'ranker2':
+                $expr = 'sum((min_hit_pos==1)*2+exact_hit*3)+membercount';
+                break;
+            case 'ranker3':
+                $expr = 'membercount';
+                break;
+        }
+        $result = $model->getSuggestionsForPlaces($searchTerm, $expr);
         $response->setData($result);
 
         return $response;

@@ -7,139 +7,6 @@
     {{ encore_entry_link_tags('leaflet') }}
     {{ encore_entry_link_tags('jquery_ui') }}
     {{ encore_entry_link_tags('suggest_location') }}
-    <style>
-        .autocomplete-input {
-            border: 1px solid #eee;
-            border-radius: 8px;
-            width: 100%;
-            padding: 12px;
-            box-sizing: border-box;
-            position: relative;
-            font-size: 16px;
-            line-height: 1.5;
-            flex: 1;
-            background-color: #eee;
-        }
-
-        .autocomplete-input:focus, .autocomplete-input[aria-expanded=true] {
-            border-color: rgba(0, 0, 0, .12);
-            background-color: #fff;
-            outline: none;
-            box-shadow: 0 2px 2px rgba(0, 0, 0, .16)
-        }
-
-        [data-position=below] .autocomplete-input[aria-expanded=true] {
-            border-bottom-color: transparent;
-            border-radius: 8px 8px 0 0
-        }
-
-        [data-position=above] .autocomplete-input[aria-expanded=true] {
-            border-top-color: transparent;
-            border-radius: 0 0 8px 8px;
-            z-index: 2
-        }
-
-        .autocomplete[data-loading=true]:after {
-            content: "";
-            border: 3px solid rgba(0, 0, 0, .12);
-            border-right-color: rgba(0, 0, 0, .48);
-            border-radius: 100%;
-            width: 20px;
-            height: 20px;
-            position: absolute;
-            right: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            animation: rotate 1s linear infinite
-        }
-
-        .autocomplete-result-list {
-            margin: 0;
-            border: 1px solid rgba(0, 0, 0, .12);
-            padding: 0;
-            box-sizing: border-box;
-            max-height: 296px;
-            overflow-y: auto;
-            background: #fff;
-            list-style: none;
-            box-shadow: 0 2px 2px rgba(0, 0, 0, .16)
-        }
-
-        [data-position=below] .autocomplete-result-list {
-            margin-top: -1px;
-            border-top-color: transparent;
-            border-radius: 0 0 8px 8px;
-            padding-bottom: 8px
-        }
-
-        [data-position=above] .autocomplete-result-list {
-            margin-bottom: -1px;
-            border-bottom-color: transparent;
-            border-radius: 8px 8px 0 0;
-            padding-top: 8px
-        }
-
-        .autocomplete-result {
-            cursor: default;
-            padding: 12px;
-        }
-
-        .autocomplete-result:hover, .autocomplete-result[aria-selected=true] {
-            background-color: rgba(0, 0, 0, .06)
-        }
-
-        @keyframes rotate {
-            0% {
-                transform: translateY(-50%) rotate(0deg)
-            }
-            to {
-                transform: translateY(-50%) rotate(359deg)
-            }
-        }
-
-        .suggest-group {
-            padding: 16px;
-            text-transform: uppercase;
-            font-size: 14px;
-            background: rgba(0, 0, 0, 0.06);
-        }
-
-        .suggest-name {
-            font-size: 20px;
-            margin-bottom: 8px;
-        }
-
-        .suggest-country {
-            font-size: 14px;
-            color: rgba(0, 0, 0, 0.54);
-        }
-
-        .suggest-map {
-            width:120px;
-            height:60px;
-        }
-
-        #no-results {
-            display: none;
-            position: absolute;
-            z-index: 1;
-            width: 100%;
-            top: 100%;
-        }
-
-        .no-results #no-results {
-            display: block;
-        }
-
-        .no-results .autocomplete-input.focused {
-            border-bottom-color: transparent;
-            border-radius: 8px 8px 0 0;
-        }
-
-        .no-results .autocomplete-input:not(.focused) ~ #no-results {
-            display: none;
-        }
-    </style>
 {% endblock stylesheets %}
 
 {% block javascripts %}
@@ -151,12 +18,10 @@
     <div class="row">
         <div class="col-12 col-md-6 mb-3">
             <input type="text" id="old_suggest_name" name="old_suggest_name" class="o-input o-input--xl js-search-picker ui-autocomplete-input" placeholder="Location (old)" aria-label="Location (old)" autocomplete="off">
-            <input type="text" id="old_suggest_geoname_id" class="o-input u-mt-8">
-            <input type="text" id="old_suggest_latitude" class="o-input u-mt-8">
-            <input type="text" id="old_suggest_longitude" class="o-input u-mt-8">
+            The old suggestion method
         </div>
         <div class="col-12 col-md-6 mb-3">
-            <div id="autocomplete" class="autocomplete">
+            <div id="autocomplete1" class="autocomplete">
                 <input class="autocomplete-input o-input o-input--xl js-search-picker-new ui-autocomplete-input"
                        placeholder="Search places"
                        aria-label="Search places"
@@ -166,10 +31,39 @@
                     <li class="autocomplete-result">
                         {{ 'suggest.no.results'|trans }}
                     </li>
-                </ul>            </div>
-            <input type="text" id="new_suggest_geoname_id" class="o-input u-mt-8">
-            <input type="text" id="new_suggest_latitude" class="o-input u-mt-8">
-            <input type="text" id="new_suggest_longitude" class="o-input u-mt-8">
+                </ul>
+            </div>
+            Exact match has priority
+        </div>
+        <div class="col-12 col-md-6 mb-3">
+            <div id="autocomplete2" class="autocomplete">
+                <input class="autocomplete-input o-input o-input--xl js-search-picker-new ui-autocomplete-input"
+                       placeholder="Search places"
+                       aria-label="Search places"
+                >
+                <ul class="autocomplete-result-list"></ul>
+                <ul id="no-results" class="autocomplete-result-list" visible="false">
+                    <li class="autocomplete-result">
+                        {{ 'suggest.no.results'|trans }}
+                    </li>
+                </ul>
+            </div>
+            Exact match + member count
+        </div>
+        <div class="col-12 col-md-6 mb-3">
+            <div id="autocomplete3" class="autocomplete">
+                <input class="autocomplete-input o-input o-input--xl js-search-picker-new ui-autocomplete-input"
+                       placeholder="Search places"
+                       aria-label="Search places"
+                >
+                <ul class="autocomplete-result-list"></ul>
+                <ul id="no-results" class="autocomplete-result-list" visible="false">
+                    <li class="autocomplete-result">
+                        {{ 'suggest.no.results'|trans }}
+                    </li>
+                </ul>
+            </div>
+            Highest member count wins
         </div>
     </div>
 {% endblock %}

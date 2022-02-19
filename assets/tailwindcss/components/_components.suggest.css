@@ -1,5 +1,5 @@
 .autocomplete-input {
-  border: 1px solid #eee;
+  border: 1px solid black;
   border-radius: 8px;
   width: 100%;
   padding: 12px;
@@ -8,7 +8,7 @@
   font-size: 16px;
   line-height: 1.5;
   flex: 1;
-  background-color: #eee;
+  background-color: white;
 }
 
 .autocomplete-input:focus, .autocomplete-input[aria-expanded=true] {
@@ -85,4 +85,47 @@
   to {
     transform: translateY(-50%) rotate(359deg)
   }
+}
+
+.suggest-group {
+  padding: 16px;
+  text-transform: uppercase;
+  font-size: 14px;
+  background: rgba(0, 0, 0, 0.06);
+}
+
+.suggest-name {
+  font-size: 20px;
+  margin-bottom: 8px;
+}
+
+.suggest-country {
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.54);
+}
+
+.suggest-map {
+  width:120px;
+  height:60px;
+}
+
+#no-results {
+  display: none;
+  position: absolute;
+  z-index: 1;
+  width: 100%;
+  top: 100%;
+}
+
+.no-results #no-results {
+  display: block;
+}
+
+.no-results .autocomplete-input.focused {
+  border-bottom-color: transparent;
+  border-radius: 8px 8px 0 0;
+}
+
+.no-results .autocomplete-input:not(.focused) ~ #no-results {
+  display: none;
 }

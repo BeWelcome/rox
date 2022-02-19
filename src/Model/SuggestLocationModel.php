@@ -4,8 +4,10 @@ namespace App\Model;
 
 use App\Entity\AdminUnit;
 use App\Entity\Location;
+use App\Repository\LocationRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Foolz\SphinxQL\Helper;
+use Foolz\SphinxQL\MatchBuilder;
 use Foolz\SphinxQL\SphinxQL;
 use Foolz\SphinxQL\Drivers\Pdo\Connection;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -32,7 +34,7 @@ class SuggestLocationModel
      *
      * place[[, admin unit], admin unit|country]
      */
-    public function getSuggestionsForPlaces(string $term): array
+    public function getSuggestionsForPlaces(string $term, string $ranker): array
     {
         $placeAdminOrCountry = explode(',', $term);
         if (count($placeAdminOrCountry) > 3) {
@@ -60,9 +62,9 @@ class SuggestLocationModel
 
         $query = $this->sphinxQL->select('id', 'admin1', 'country')
             ->from('geonames')
-            ->match(['name', 'alternate'], '"^' . $place . '$"')
+            ->match('name', SphinxQL::expr($place))
             ->where('isPlace', '=', 1)
-            ->option('ranker', SphinxQL::expr('expr(\'sum(exact_hit*1000)\')'))
+            ->option('ranker', SphinxQL::expr('expr(\'' . $ranker . '\')'))
             ->option('max_matches', 25)
         ;
 
@@ -73,6 +75,8 @@ class SuggestLocationModel
         if (null !== $adminId) {
             $query->where('admin1', '=', $adminId);
         }
+
+        $compiled = $query->compile()->getCompiled();
 
         $results = $query
             ->enqueue((new Helper($this->connection))->showMeta())
@@ -89,17 +93,14 @@ class SuggestLocationModel
             $ids[] = $result['id'];
         }
 
+        /** @var LocationRepository $locationRepository */
         $locationRepository = $this->entityManager->getRepository(Location::class);
-        $adminUnitRepository = $this->entityManager->getRepository(AdminUnit::class);
 
         $locations = [];
         $place = $this->translator->trans('suggest.places');
         foreach ($ids as $id) {
             $details = $locationRepository->find($id);
-            $adminUnit = $adminUnitRepository->find([
-                'admin1' => $details->getAdmin1(),
-                'country' => $details->getCountry(),
-            ]);
+            $adminUnit = $locationRepository->findAdminUnit($details->getAdmin1(), $details->getCountry()->getCountry());
             $locations[] = [
                 'type' => $place,
                 'id' => $details->getGeonameId(),
@@ -136,7 +137,7 @@ class SuggestLocationModel
         $query = $this->sphinxQL
             ->select('*')
             ->from('geonames')
-            ->match(['name', 'alternate'], $country)
+            ->match(['name'], $country)
             ->where('isCountry', '=', 1)
             ->option('ranker', SphinxQL::expr('expr(\'sum(exact_hit*1000)\')'))
         ;
@@ -162,7 +163,7 @@ class SuggestLocationModel
         $query = $this->sphinxQL
             ->select('*')
             ->from('geonames')
-            ->match(['name', 'alternate'], $countryOrAdmin)
+            ->match(['name'], $countryOrAdmin)
             ->where('isAdmin', '=', 1)
             ->option('ranker', SphinxQL::expr('expr(\'sum(exact_hit*1000)\')'))
         ;

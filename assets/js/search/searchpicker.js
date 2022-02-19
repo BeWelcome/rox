@@ -83,10 +83,7 @@ export default class SearchPicker {
     }
 
     setHiddenInputs(id, item) {
-        console.log('identifier ' + this.identifier);
-        console.log('before ' + id);
         id = id.replace(this.identifier, '');
-        console.log('after ' + id);
         $("#" + id + "_geoname_id").val(item.value);
         $("#" + id + "_latitude").val(item.latitude);
         $("#" + id + "_longitude").val(item.longitude);

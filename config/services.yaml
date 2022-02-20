@@ -426,34 +426,34 @@ services:
         class: App\Model\MockupProvider\NewsletterUnsubscribeMockups
         tags: [ 'app.mockup_provider' ]
 
-#    app.mockup_provider.unsubscribe_newsletter:
-#        class: App\Model\MockupProvider\NewsletterUnsubscribeMockups
-#        tags: [ 'app.mockup_provider' ]
-#
-#    app.mockup_provider.newsletters:
-#        class: App\Model\MockupProvider\NewslettersMockups
-#        tags: [ 'app.mockup_provider' ]
-#
-#    app.mockup_provider.errors:
-#        class: App\Model\MockupProvider\ErrorMockups
-#        tags: [ 'app.mockup_provider' ]
-#
-#    app.mockup_provider.invitations:
-#        class: App\Model\MockupProvider\InvitationMockups
-#        tags: [ 'app.mockup_provider' ]
-#
-#    app.mockup_provider.signups:
-#        class: App\Model\MockupProvider\SignupMockups
-#        tags: [ 'app.mockup_provider' ]
-#
-#    app.mockup_provider.home_and_login:
-#        class: App\Model\MockupProvider\HomeAndLoginMockups
-#        tags: [ 'app.mockup_provider' ]
-#
-#    app.mockup_provider.policies:
-#        class: App\Model\MockupProvider\PoliciesMockups
-#        tags: [ 'app.mockup_provider' ]
-#
-#    app.mockup_provider.passwords:
-#        class: App\Model\MockupProvider\PasswordMockups
-#        tags: [ 'app.mockup_provider' ]
+    app.mockup_provider.unsubscribe_newsletter:
+        class: App\Model\MockupProvider\NewsletterUnsubscribeMockups
+        tags: [ 'app.mockup_provider' ]
+
+    app.mockup_provider.newsletters:
+        class: App\Model\MockupProvider\NewslettersMockups
+        tags: [ 'app.mockup_provider' ]
+
+    app.mockup_provider.errors:
+        class: App\Model\MockupProvider\ErrorMockups
+        tags: [ 'app.mockup_provider' ]
+
+    app.mockup_provider.invitations:
+        class: App\Model\MockupProvider\InvitationMockups
+        tags: [ 'app.mockup_provider' ]
+
+    app.mockup_provider.signups:
+        class: App\Model\MockupProvider\SignupMockups
+        tags: [ 'app.mockup_provider' ]
+
+    app.mockup_provider.home_and_login:
+        class: App\Model\MockupProvider\HomeAndLoginMockups
+        tags: [ 'app.mockup_provider' ]
+
+    app.mockup_provider.policies:
+        class: App\Model\MockupProvider\PoliciesMockups
+        tags: [ 'app.mockup_provider' ]
+
+    app.mockup_provider.passwords:
+        class: App\Model\MockupProvider\PasswordMockups
+        tags: [ 'app.mockup_provider' ]

@@ -426,10 +426,6 @@ services:
         class: App\Model\MockupProvider\NewsletterUnsubscribeMockups
         tags: [ 'app.mockup_provider' ]
 
-    app.mockup_provider.unsubscribe_newsletter:
-        class: App\Model\MockupProvider\NewsletterUnsubscribeMockups
-        tags: [ 'app.mockup_provider' ]
-
     app.mockup_provider.newsletters:
         class: App\Model\MockupProvider\NewslettersMockups
         tags: [ 'app.mockup_provider' ]

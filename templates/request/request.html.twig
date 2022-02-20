@@ -1,5 +1,4 @@
 {% extends 'base.html.twig' %}
-{% import 'macros.twig' as macros %}
 
 {% block javascripts %}
     {{ encore_entry_script_tags('requests') }}
@@ -11,6 +10,7 @@
 {% endblock stylesheets %}
 
 {% block content %}
+    {% import 'macros.twig' as macros %}
     {{ macros.new_conversation_header(host, 'request.write_to') }}
 
     {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'autocomplete': 'off'}}) }}

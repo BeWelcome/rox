@@ -1,4 +1,3 @@
-{% import 'macros.twig' as macros %}
 {% extends 'base.html.twig' %}
 
 {% block stylesheets %}
@@ -6,6 +5,7 @@
 {% endblock stylesheets %}
 
 {% block content %}
+    {% import 'macros.twig' as macros %}
     {% set original = thread | last %}{% set invitation = (thread | first).request %}
     {% set myself = app.user %}
     {% set otherUser = (myself == original.Sender) ? original.Receiver : original.Sender %}

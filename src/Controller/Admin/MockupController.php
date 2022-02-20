@@ -20,16 +20,20 @@ use App\Form\NewsletterUnsubscribeType;
 use App\Form\ResetPasswordFormType;
 use App\Form\ResetPasswordRequestFormType;
 use App\Form\SearchFormType;
+use App\Model\MockupProvider\MockupProviderInterface;
 use App\Model\TranslationModel;
 use App\Twig\MockupExtension;
 use Carbon\Carbon;
 use DateTime;
 use Mockery;
+use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\WebpackEncoreBundle\Asset\EntrypointLookupInterface;
+use Twig\Environment;
 
 /**
  * Class TranslationController.
@@ -38,241 +42,8 @@ use Symfony\Component\Validator\Constraints\NotBlank;
  */
 class MockupController extends TranslationController
 {
-    private const MOCKUPS = [
-        'signup' => [
-            'Confirm Email Address' => [
-                'type' => 'email',
-                'template' => 'emails/signup.html.twig',
-                'description' => 'Email containing the link to confirm email address.',
-                'setup' => 'getSignupParameters',
-            ],
-            'Finish' => [
-                'type' => 'page',
-                'url' => 'signup/finish',
-                'template' => 'signup/finish.html.twig',
-                'description' => 'Successful signup.',
-            ],
-            'Error' => [
-                'type' => 'page',
-                'url' => 'signup/finish',
-                'template' => 'signup/error.html.twig',
-                'description' => 'Error during signup.',
-            ],
-            'Confirm Email Address Resent' => [
-                'type' => 'email',
-                'template' => 'emails/resent.html.twig',
-                'description' => 'Email containing the link to confirm email address with some extra text.',
-                'setup' => 'getSignupParameters',
-            ],
-            'Signup Email Resent' => [
-                'type' => 'page',
-                'template' => 'signup/resent.html.twig',
-                'description' => 'Successful signup.',
-                'setup' => 'getSignupParameters',
-            ],
-        ],
-        'error' => [
-            'error 403' => [
-                'type' => 'page',
-                'template' => 'bundles/TwigBundle/Exception/error403.html.twig',
-                'description' => 'Access to a resource was denied.',
-            ],
-            'error 404' => [
-                'type' => 'page',
-                'template' => 'bundles/TwigBundle/Exception/error404.html.twig',
-                'description' => 'The page doesn\'t exists.',
-            ],
-            'error 500' => [
-                'type' => 'page',
-                'template' => 'bundles/TwigBundle/Exception/error500.html.twig',
-                'description' => 'A server problem (something bad happened).',
-            ],
-        ],
-        'home and login' => [
-            'homepage' => [
-                'type' => 'page',
-                'url' => '/',
-                'template' => 'home/home.html.twig',
-                'description' => 'The page that is shown to unauthenticated visitors.',
-            ],
-            'Login' => [
-                'type' => 'page',
-                'url' => '/login',
-                'template' => 'security/login.html.twig',
-                'description' => 'The login page (without error message)',
-            ],
-        ],
-        'policies' => [
-            'Terms of Use' => [
-                'type' => 'page',
-                'url' => 'terms',
-                'template' => 'policies/tou_translated.html.twig',
-                'description' => 'The terms of use. Make sure to translate them fully before asking for publication.',
-            ],
-            'Privacy Policy' => [
-                'type' => 'page',
-                'url' => 'privacy_policy',
-                'template' => 'policies/pp_translated.html.twig',
-                'description' => 'The privacy policy. Make sure to translate them fully before asking for publication.',
-            ],
-            'Data Privacy' => [
-                'type' => 'page',
-                'url' => 'datarights/',
-                'template' => 'policies/dp_translated.html.twig',
-                'description' => 'The data privacy policy. Make sure to translate them fully before asking for publication.',
-            ],
-        ],
-        'password' => [
-            'Reset Password Request' => [
-                'type' => 'page',
-                'url' => '/resetpassword',
-                'template' => 'member/request.password.reset.html.twig',
-                'description' => 'The page that is shown when a member asks for a new password',
-            ],
-            'Reset Password Email' => [
-                'type' => 'email',
-                'template' => 'emails/reset.password.html.twig',
-                'description' => 'Mail send to the user when a password reset request was done',
-            ],
-        ],
-        'Newsletter' => [
-            'Newsletter (regular)' => [
-                'type' => 'email',
-                'template' => 'emails/newsletter.html.twig',
-                'description' => 'Email send to users who signed up for newsletters',
-                'setup' => 'getNewsletterParameters',
-            ],
-            'Newsletter (specific)' => [
-                'type' => 'email',
-                'template' => 'emails/newsletter.html.twig',
-                'description' => 'Email send to users who signuped for local event notifications',
-                'setup' => 'getNewsletterParameters',
-            ],
-            'Newsletter (terms of use)' => [
-                'type' => 'email',
-                'template' => 'emails/newsletter.html.twig',
-                'description' => 'Email send to users who signuped for local event notifications',
-                'setup' => 'getNewsletterParameters',
-            ],
-        ],
-        'Newsletter unsubscribe' => [
-            'Unsubscribe Newsletter' => [
-                'type' => 'page',
-                'url' => '/unsubscribe/newsletter/{username}/{token}',
-                'template' => 'newsletter/unsubscribe_confirm.html.twig',
-                'description' => 'Shown to a user when following the link in a regular newsletter',
-                'setup' => 'getUnsubscribeParameters',
-            ],
-            'Unsubscribe Newsletter Success' => [
-                'type' => 'page',
-                'url' => '/unsubscribe/local/{username}/{token}',
-                'template' => 'newsletter/unsubscribe_local_successful.html.twig',
-                'description' => 'The page that is shown when a member unsubscribed without issues from a local event newsletter',
-                'setup' => 'getUnsubscribeParameters',
-            ],
-            'Unsubscribe Newsletter Failed' => [
-                'type' => 'page',
-                'url' => '/unsubscribe/local/{username}/{token}',
-                'template' => 'newsletter/unsubscribe_local_failed.html.twig',
-                'description' => 'The page that is shown when a member unsubscribed with issues from a local event newsletter',
-                'setup' => 'getUnsubscribeParameters',
-            ],
-        ],
-        'Specific Newsletter Unsubscribe' => [
-            'Unsubscribe Local Event' => [
-                'type' => 'page',
-                'url' => '/unsubscribe/local/{username}/{token}',
-                'template' => 'newsletter/unsubscribe_local_confirm.html.twig',
-                'description' => 'Shown to a user when following the link in a local events newsletter',
-                'setup' => 'getUnsubscribeParameters',
-            ],
-            'Unsubscribe Local Success' => [
-                'type' => 'page',
-                'url' => '/unsubscribe/local/{username}/{token}',
-                'template' => 'newsletter/unsubscribe_local_successful.html.twig',
-                'description' => 'The page that is shown when a member unsubscribed without issues from a local event newsletter',
-                'setup' => 'getUnsubscribeParameters',
-            ],
-            'Unsubscribe Local Failed' => [
-                'type' => 'page',
-                'url' => '/unsubscribe/local/{username}/{token}',
-                'template' => 'newsletter/unsubscribe_local_failed.html.twig',
-                'description' => 'The page that is shown when a member unsubscribed with issues from a local event newsletter',
-                'setup' => 'getUnsubscribeParameters',
-            ],
-        ],
-        'Message' => [
-            'message' => [
-                'type' => 'email',
-                'template' => 'emails/message.html.twig',
-            ],
-        ],
-        'Requests' => [
-            'request (initial)' => [
-                'type' => 'email',
-                'template' => 'emails/request.html.twig',
-            ],
-            'request (guest)' => [
-                'type' => 'email',
-                'template' => 'emails/reply_from_guest.html.twig',
-            ],
-            'request (host)' => [
-                'type' => 'email',
-                'template' => 'emails/reply_from_host.html.twig',
-            ],
-        ],
-        'Groups' => [
-            'group invitation' => [
-                'type' => 'email',
-                'template' => 'emails/group/invitation.html.twig',
-            ],
-            'group want in' => [
-                'type' => 'email',
-                'template' => 'emails/group/wantin.html.twig',
-            ],
-            'accepted invite' => [
-                'type' => 'email',
-                'template' => 'emails/group/accepted.invite.html.twig',
-            ],
-            'declined invite' => [
-                'type' => 'email',
-                'template' => 'emails/group/declined.invite.html.twig',
-            ],
-            'join approved' => [
-                'type' => 'email',
-                'template' => 'emails/group/join.approved.html.twig',
-            ],
-            'join declined' => [
-                'type' => 'email',
-                'template' => 'emails/group/join.declined.html.twig',
-            ],
-            'group post (subscribed)' => [
-                'type' => 'email',
-                'template' => 'emails/notifications.html.twig',
-            ],
-            'group post (not subscribed)' => [
-                'type' => 'email',
-                'template' => 'emails/notifications.html.twig',
-            ],
-        ],
-        'Forums' => [
-            'forum post' => [
-                'type' => 'email',
-                'template' => 'emails/notifications.html.twig',
-            ],
-        ],
-        'Landing' => [
-            'be visited|none' => [
-                'type' => 'template',
-                'template' => 'landing/widget/triplegs.html.twig',
-                'setup' => 'getTripsWidgetEmpty',
-            ],
-            'be visited|two legs' => [
-                'type' => 'template',
-                'template' => 'landing/widget/triplegs.html.twig',
-                'setup' => 'getTripsWidgetTwoLegs',
-            ],
-        ],
+    private $mockups = [];
+/*
         'My data' => [
             'start page' => [
                 'type' => 'template',
@@ -302,10 +73,19 @@ class MockupController extends TranslationController
             ],
         ],
     ];
+*/
+    /** @var iterable|MockupProviderInterface[] */
+    private $providers;
 
-    public function __construct(TranslationModel $translationModel, string $locales)
+    public function __construct(TranslationModel $translationModel, string $locales, iterable $providers)
     {
         parent::__construct($translationModel, $locales);
+
+        foreach ($providers as $provider) {
+            $feature = $provider->getFeature();
+            $this->providers[$feature] = $provider;
+            $this->mockups = array_merge([ $feature => $provider->getMockups()], $this->mockups);
+        }
     }
 
     /**
@@ -322,7 +102,7 @@ class MockupController extends TranslationController
         }
 
         return $this->render('admin/translations/mockups.html.twig', [
-            'mockups' => self::MOCKUPS,
+            'features' => array_keys($this->mockups),
             'submenu' => [
                 'active' => 'mockups',
                 'items' => $this->getSubmenuItems($request->getLocale()),
@@ -331,116 +111,66 @@ class MockupController extends TranslationController
     }
 
     /**
-     * @Route("/admin/translate/mockup/page/{name}", name="translation_mockup_page",
+     * @Route("/admin/translations/mockups/{feature}", name="translations_mockups_feature")
+     */
+    public function selectMockupsFeature(Request $request, string $feature): Response
+    {
+        $this->denyAccessUnlessGranted(Member::ROLE_ADMIN_WORDS, null, 'Unable to access this page!');
+
+        if (!array_key_exists($feature, $this->providers)) {
+            return $this->redirectToRoute('translations_mockups');
+        }
+
+        /** @var Member $translator */
+        $translator = $this->getUser();
+        if (!$translator->hasRightsForLocale($request->getLocale())) {
+            return $this->redirectToRoute('translations_no_permissions');
+        }
+
+        return $this->render('admin/translations/feature.html.twig', [
+            'feature' => $feature,
+            'mockups' => $this->mockups[$feature],
+            'parameters' => $this->providers[$feature]->getMockupParameter(),
+            'submenu' => [
+                'active' => 'mockups',
+                'items' => $this->getSubmenuItems($request->getLocale()),
+            ],
+        ]);
+    }
+
+    /**
+     * @Route("/admin/translate/mockup/{feature}/{name}", name="translation_mockup",
      *     requirements={"template"=".+"})
      *
      * @return Response
      */
-    public function translateMockupPage(Request $request, string $name)
+    public function translateMockup(Request $request, string $feature, string $name)
     {
         $this->denyAccessUnlessGranted(Member::ROLE_ADMIN_WORDS, null, 'Unable to access this page!');
 
-        $mockup = $this->findMockup($name, 'page');
-        if (null === $mockup) {
-            return $this->redirectToRoute('translations_mockups');
-        }
-
-        $url = $mockup['url'] ?? '';
-        $template = $mockup['template'];
-        $description = $mockup['description'] ?? '';
-        $setupFunction = $mockup['setup'] ?? 'getMockParams';
-        $parameters = \call_user_func([$this, $setupFunction], $template, $name);
-
-        return $this->render(
-            'admin/translations/mockup.page.html.twig',
-            array_merge(
-                $parameters,
-                [
-                    'url' => $url,
-                    'description' => $description,
-                    'template' => $template,
-                    'html_template' => $template,
-                    'submenu' => [
-                        'active' => 'mockups',
-                        'items' => $this->getSubmenuItems($request->getLocale(), 'mockup', $name),
-                    ],
-                ]
-            ),
-        );
+        return $this->renderMockup($feature, $name, $request->getLocale(), [ 'name' => $name ]);
     }
 
     /**
-     * @Route("/admin/translate/mockup/email/{name}", name="translation_mockup_email")
+     * @Route("/admin/translate/mockup/{feature}/with_params", name="translation_mockup_with_parameters",
+     *     methods={"POST"},
+     *     priority=1
+     * )
      *
      * @return Response
      */
-    public function translateMockupEmail(Request $request, string $name)
+    public function translateMockupWithParameters(Request $request, string $feature)
     {
         $this->denyAccessUnlessGranted(Member::ROLE_ADMIN_WORDS, null, 'Unable to access this page!');
 
-        $mockup = $this->findMockup($name, 'email');
-        if (null === $mockup) {
-            return $this->redirectToRoute('translations_mockups');
+        $name = $request->request->get('name');
+        if (null === $name) {
+            $this->redirectToRoute('translations_mockups');
         }
 
-        $template = $mockup['template'];
-        $description = $mockup['description'] ?? '';
-        $setupFunction = $mockup['setup'] ?? 'getMockParams';
-        $parameters = \call_user_func([$this, $setupFunction], $template, $name);
+        $parameters = $request->request->all();
 
-        return $this->render(
-            'admin/translations/mockup.email.html.twig',
-            array_merge(
-                $parameters,
-                [
-                    'template' => $template,
-                    'html_template' => $template,
-                    'language' => $request->getLocale(),
-                    'email' => new MockupExtension(),
-                    'description' => $description,
-                    'submenu' => [
-                        'active' => 'mockups',
-                        'items' => $this->getSubmenuItems($request->getLocale(), 'mockup', $template),
-                    ],
-                ]
-            ),
-        );
-    }
-
-    /**
-     * @Route("/admin/translate/mockup/template/{name}", name="translation_mockup_template",
-     *     requirements={"template"=".+"})
-     *
-     * @return Response
-     */
-    public function translateMockupTemplate(Request $request, string $name)
-    {
-        $this->denyAccessUnlessGranted(Member::ROLE_ADMIN_WORDS, null, 'Unable to access this page!');
-
-        $mockup = $this->findMockup($name, 'template');
-        if (null === $mockup) {
-            return $this->redirectToRoute('translations_mockups');
-        }
-
-        $template = $mockup['template'];
-        $description = $mockup['description'] ?? '';
-        $setupFunction = $mockup['setup'] ?? 'getMockTemplateParams';
-        $parameters = \call_user_func([$this, $setupFunction], $template, $name);
-
-        return $this->render(
-            'admin/translations/mockup.template.html.twig',
-            array_merge(
-                $parameters,
-                [
-                    'description' => $description,
-                    'template' => $template,
-                    'submenu' => [
-                        'active' => 'mockups',
-                        'items' => $this->getSubmenuItems($request->getLocale(), 'mockup', $name),
-                    ],
-                ]
-            ),
-        );
+        return $this->renderMockup($feature, $name, $request->getLocale(), $parameters);
     }
 
     private function getMockTemplateParams($template, $name = null): array
@@ -787,10 +517,10 @@ class MockupController extends TranslationController
     private function findMockup(string $name, string $type): ?array
     {
         $found = null;
-        foreach (self::MOCKUPS as $key => $mockups) {
+        foreach ($this->mockups as $key => $mockups) {
             foreach (array_keys($mockups) as $mockupName) {
-                if ($name === $mockupName && self::MOCKUPS[$key][$mockupName]['type'] === $type) {
-                    $found = self::MOCKUPS[$key][$mockupName];
+                if ($name === $mockupName) {
+                    $found = $this->mockups[$key][$mockupName];
                     break;
                 }
             }
@@ -800,5 +530,52 @@ class MockupController extends TranslationController
         }
 
         return $found;
+    }
+
+    private function getGeneralMockupParameters(): array
+    {
+        // Use the bwAdmin account as counterpart
+        $memberRepository = $this->getDoctrine()->getRepository(Member::class);
+        $bwAdmin = $memberRepository->find(1);
+
+        return [
+            'admin' => $bwAdmin,
+            'user' => $this->getUser(),
+        ];
+    }
+
+    private function renderMockup(string $feature, string $name, string $language, array $parameters): Response
+    {
+        $mockup = $this->mockups[$feature][$name] ?? null;
+        if (null === $mockup) {
+            return $this->redirectToRoute('translations_mockups');
+        }
+
+        $url = $mockup['url'] ?? '';
+        $template = $mockup['template'];
+        $description = $mockup['description'] ?? '';
+
+        $parameters = array_merge($parameters, $this->getGeneralMockupParameters());
+        $variables = $this->providers[$feature]->getMockupVariables($parameters);
+
+        return $this->render(
+            'admin/translations/mockup.page_with_parameters.html.twig',
+            array_merge(
+                $variables,
+                [
+                    'url' => $url,
+                    'feature' => $feature,
+                    'description' => $description,
+                    'template' => $template,
+                    'html_template' => $template,
+                    'email' => new MockupExtension(),
+                    'language' => $language,
+                    'submenu' => [
+                        'active' => 'mockups',
+                        'items' => $this->getSubmenuItems($language, 'mockup', $name),
+                    ],
+                ]
+            )
+        );
     }
 }

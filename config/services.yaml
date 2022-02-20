@@ -245,6 +245,7 @@ services:
     App\Controller\Admin\MockupController:
         arguments:
             $locales: '%locales%'
+            $providers: !tagged_iterator app.mockup_provider
 
     app.user_locale_listener:
         public: true
@@ -396,3 +397,63 @@ services:
         public: true
         arguments:
             $locales: "%document_locales%"
+
+    app.mockup_provider.my_data:
+        class: App\Model\MockupProvider\MyDataMockups
+        tags: [ 'app.mockup_provider' ]
+
+    app.mockup_provider.landing:
+        class: App\Model\MockupProvider\LandingMockups
+        tags: [ 'app.mockup_provider' ]
+
+    app.mockup_provider.forums:
+        class: App\Model\MockupProvider\ForumMockups
+        tags: [ 'app.mockup_provider' ]
+
+    app.mockup_provider.groups:
+        class: App\Model\MockupProvider\GroupMockups
+        tags: [ 'app.mockup_provider' ]
+
+    app.mockup_provider.requests:
+        class: App\Model\MockupProvider\RequestMockups
+        tags: [ 'app.mockup_provider' ]
+
+    app.mockup_provider.message:
+        class: App\Model\MockupProvider\MessageMockups
+        tags: [ 'app.mockup_provider' ]
+
+    app.mockup_provider.unsubscribe_newsletter:
+        class: App\Model\MockupProvider\NewsletterUnsubscribeMockups
+        tags: [ 'app.mockup_provider' ]
+
+#    app.mockup_provider.unsubscribe_newsletter:
+#        class: App\Model\MockupProvider\NewsletterUnsubscribeMockups
+#        tags: [ 'app.mockup_provider' ]
+#
+#    app.mockup_provider.newsletters:
+#        class: App\Model\MockupProvider\NewslettersMockups
+#        tags: [ 'app.mockup_provider' ]
+#
+#    app.mockup_provider.errors:
+#        class: App\Model\MockupProvider\ErrorMockups
+#        tags: [ 'app.mockup_provider' ]
+#
+#    app.mockup_provider.invitations:
+#        class: App\Model\MockupProvider\InvitationMockups
+#        tags: [ 'app.mockup_provider' ]
+#
+#    app.mockup_provider.signups:
+#        class: App\Model\MockupProvider\SignupMockups
+#        tags: [ 'app.mockup_provider' ]
+#
+#    app.mockup_provider.home_and_login:
+#        class: App\Model\MockupProvider\HomeAndLoginMockups
+#        tags: [ 'app.mockup_provider' ]
+#
+#    app.mockup_provider.policies:
+#        class: App\Model\MockupProvider\PoliciesMockups
+#        tags: [ 'app.mockup_provider' ]
+#
+#    app.mockup_provider.passwords:
+#        class: App\Model\MockupProvider\PasswordMockups
+#        tags: [ 'app.mockup_provider' ]

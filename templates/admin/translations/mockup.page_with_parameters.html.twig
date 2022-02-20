@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block stylesheets %}
-    {{ encore_entry_link_tags('tailwind')  }}
+    {{ encore_entry_link_tags('tailwind') }}
 {% endblock stylesheets %}
 
 {% block content %}
@@ -15,5 +15,5 @@
     <p>{{ 'translations.mockup.template'|trans }}: {{ template}}</p>
     {% if description != '' %}<p>{{ description }}</p>{% endif %}
     <div id="mockup" class="u-my-8 u-p-8">{{ block("content", html_template)|raw }}</div>
-    <div class="u-flex u-justify-end"><a class="o-button" href="{{ url('translations_mockups_feature', { feature: feature }) }}">{{ 'mockup.back.feature'|trans}}</a></div>
+    <div class="u-flex u-justify-end"><a class="o-button" href="{{ url('translations_mockups_feature', { feature: feature }) }}">{{ 'mockup.back.feature'|trans({ feature: feature })}}</a></div>
 {% endblock content %}

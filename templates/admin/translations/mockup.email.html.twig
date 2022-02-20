@@ -9,5 +9,5 @@
     <p>{{ 'translation.mockup.abstract'|trans }}</p>
     <p>{{ 'translations.mockup.template'|trans }}: {{ html_template }}<br>
     {% if description != '' %}{{ description }}{% endif %}</p>
-    <div class="p-2" style="background-color:#ccc; color:black;">{{ block("content", html_template)|raw }}</div>
+    <div class="u-my-8 u-p-8" style="background-color:#ccc; color:black;">{{ block("content", html_template)|raw }}</div>
 {% endblock content %}

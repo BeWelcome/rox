@@ -2,9 +2,15 @@
 {% extends 'error.html.twig' %}
 
 {% block content %}
-<p>
-    {{ 'error.403'|trans }}<br>
+    <h1>{{ 'error.page.access.denied'|trans }}</h1>
 
-    <a href="{{ url('homepage') }}">{{ 'error.return.home'|trans }}</a>
-</p>
+    {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+        <p>Hi {{ app.user.Username }}!<p>
+        <p>{{ 'error.403'|trans }}</p>
+    {% else %}
+        <p>{{ 'error.403'|trans }}</p>
+    {% endif %}
+    <p>
+        <br><a href="{{ url('homepage') }}">{{ 'error.return.home'|trans }}</a>
+    </p>
 {% endblock %}

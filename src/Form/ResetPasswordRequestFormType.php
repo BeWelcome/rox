@@ -24,6 +24,9 @@ class ResetPasswordRequestFormType extends AbstractType
             ])
             ->add('reset_password', SubmitType::class, [
                 'label' => 'label.reset.password',
+                'attr' => [
+                    'class' => 'o-button u-float-right',
+                ],
             ])
             ->setMethod('POST')
         ;

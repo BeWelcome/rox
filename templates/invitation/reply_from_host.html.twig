@@ -1,5 +1,4 @@
 {% extends 'base.html.twig' %}
-{% import 'macros.twig' as macros %}
 
 {% block javascripts %}
     {{ encore_entry_script_tags('requests') }}
@@ -18,6 +17,8 @@
 {% endblock %}
 
 {% block content %}
+    {% import 'macros.twig' as macros %}
+
     {% set original = thread | last %}
     {% set current = thread | first %}
 

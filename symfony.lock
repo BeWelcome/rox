@@ -311,6 +311,9 @@
     "infection/abstract-testframework-adapter": {
         "version": "0.3.1"
     },
+    "infection/extension-installer": {
+        "version": "0.1.2"
+    },
     "infection/include-interceptor": {
         "version": "0.2.5"
     },

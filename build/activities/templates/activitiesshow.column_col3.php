@@ -77,7 +77,7 @@ if (empty($vars)) {
         <input type="hidden" id="longitude" value="<?= $this->activity->location->longitude ?>">
         <input type="hidden" id="zoom" value="10">
         <div id="map" class="mappreview m-2 w-100 postleftcolumn" style="height:10rem;"></div>
-        <p class="ml-2">
+        <p class="ml-2" style="overflow-wrap: break-word">
             <?php echo $this->activity->address ?><br>
             <span class="mt-1 font-weight-bold"><?php echo $this->activity->location->name . '<br>' . $this->activity->location->getCountry()->name; ?></span></p>
     </div>

@@ -18,6 +18,7 @@ use App\Form\InvitationType;
 use Carbon\Carbon;
 use DateTime;
 use Mockery;
+use Mockery\MockInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 
 class InvitationMockups implements MockupProviderInterface
@@ -125,7 +126,7 @@ class InvitationMockups implements MockupProviderInterface
 
     private function getVariablesForInitialInvitation(array $parameters): array
     {
-        $host = $parameters['admin'];
+        $host = $parameters['user'];
         $form = $this->formFactory->create(InvitationType::class);
 
         $leg = $this->getLeg($host);
@@ -138,11 +139,11 @@ class InvitationMockups implements MockupProviderInterface
 
     private function getVariablesForReplyGuest(array $parameters): array
     {
-        $host = $parameters['admin'];
-        $guest = $parameters['user'];
+        $host = $parameters['user'];
+        $guest = $parameters['admin'];
 
         $leg = $this->getLeg($parameters);
-        $thread = $this->getThread($host, $guest, $leg, $parameters['status']);
+        $thread = $this->getThread($host, $guest, $leg, $parameters['status'], 4);
 
         $form = $this->formFactory->create(InvitationGuest::class, $thread[1]);
 
@@ -161,7 +162,7 @@ class InvitationMockups implements MockupProviderInterface
         $guest = $parameters['admin'];
 
         $leg = $this->getLeg($parameters);
-        $thread = $this->getThread($host, $guest, $leg, $parameters['status']);
+        $thread = $this->getThread($host, $guest, $leg, $parameters['status'], 3);
 
         $form = $this->formFactory->create(InvitationHost::class, $thread[1]);
 
@@ -176,11 +177,11 @@ class InvitationMockups implements MockupProviderInterface
 
     private function getVariablesForViewGuest(array $parameters): array
     {
-        $host = $parameters['user'];
-        $guest = $parameters['admin'];
+        $host = $parameters['admin'];
+        $guest = $parameters['user'];
 
         $leg = $this->getLeg($parameters);
-        $thread = $this->getThread($host, $guest, $leg, $parameters['status']);
+        $thread = $this->getThread($host, $guest, $leg, $parameters['status'], 3);
 
         return [
             'leg' => $leg,
@@ -194,11 +195,11 @@ class InvitationMockups implements MockupProviderInterface
 
     private function getVariablesForViewHost(array $parameters): array
     {
-        $host = $parameters['admin'];
-        $guest = $parameters['user'];
+        $host = $parameters['user'];
+        $guest = $parameters['admin'];
 
         $leg = $this->getLeg($parameters);
-        $thread = $this->getThread($host, $guest, $leg, $parameters['status']);
+        $thread = $this->getThread($host, $guest, $leg, $parameters['status'], 4);
 
         return [
             'leg' => $leg,
@@ -210,12 +211,12 @@ class InvitationMockups implements MockupProviderInterface
         ];
     }
 
-    private function getThread(Member $host, Member $guest, Subtrip $leg, int $status): array
+    private function getThread(Member $host, Member $guest, Subtrip $leg, int $status, int $replies): array
     {
-        $mockSubject = Mockery::mock(Subject::class, [
+        $subject = Mockery::mock(Subject::class, [
             'getSubject' => 'Subject'
         ]);
-        $mockRequest = Mockery::mock(HostingRequest::class, [
+        $request = Mockery::mock(HostingRequest::class, [
             'getId' => 1,
             'getArrival' => new Carbon(),
             'getDeparture' => new Carbon(),
@@ -225,37 +226,29 @@ class InvitationMockups implements MockupProviderInterface
             'getInviteForLeg' => $leg,
         ]);
 
-        $mockMessageParent = Mockery::mock(Message::class, [
+        $parent = Mockery::mock(Message::class, [
             'getId' => 1,
             'getMessage' => 'Initial invitation',
         ]);
-        $mockMessageParent->shouldReceive('getSubject')->andReturn($mockSubject);
-        $mockMessageParent->shouldReceive('getCreated')->andReturn(new Carbon());
-        $mockMessageParent->shouldReceive('getSender')->andReturn($host);
-        $mockMessageParent->shouldReceive('getInitiator')->andReturn($host);
-        $mockMessageParent->shouldReceive('getReceiver')->andReturn($guest);
-        $mockMessageParent->shouldReceive('getRequest')->andReturn($mockRequest);
-        $mockMessageParent->shouldReceive('isDeletedByMember')->andReturn(false);
-        $mockMessageParent->shouldReceive('isPurgedByMember')->andReturn(false);
+        $parent->shouldReceive('getSubject')->andReturn($subject);
+        $parent->shouldReceive('getCreated')->andReturn(new Carbon());
+        $parent->shouldReceive('getSender')->andReturn($host);
+        $parent->shouldReceive('getInitiator')->andReturn($host);
+        $parent->shouldReceive('getReceiver')->andReturn($guest);
+        $parent->shouldReceive('getRequest')->andReturn($request);
+        $parent->shouldReceive('isDeletedByMember')->andReturn(false);
+        $parent->shouldReceive('isPurgedByMember')->andReturn(false);
 
-        $mockMessageReply = Mockery::mock(Message::class, [
-            'getId' => 1,
-            'getMessage' => 'Reply',
-            'getParent' => $mockMessageParent,
-        ]);
+        $thread = [];
+        $thread[] = $parent;
+        $lastMessage = $parent;
+        for ($i = 1;$i < $replies; $i++) {
+            $lastMessage = $this->getReply($lastMessage, $subject, $request, $guest, $host);
+            $temp = $host; $host = $guest; $guest = $temp;
+            $thread[] = $lastMessage;
+        }
 
-        $mockMessageReply->shouldReceive('getSubject')->andReturn($mockSubject);
-        $mockMessageReply->shouldReceive('getCreated')->andReturn(new Carbon());
-        $mockMessageReply->shouldReceive('getSender')->andReturn($guest);
-        $mockMessageReply->shouldReceive('getInitiator')->andReturn($host);
-        $mockMessageReply->shouldReceive('getReceiver')->andReturn($host);
-        $mockMessageReply->shouldReceive('getRequest')->andReturn($mockRequest);
-        $mockMessageReply->shouldReceive('isDeletedByMember')->andReturn(false);
-        $mockMessageReply->shouldReceive('isPurgedByMember')->andReturn(false);
-
-        $mockThread = [ $mockMessageReply, $mockMessageParent];
-
-        return $mockThread;
+        return array_reverse($thread);
     }
 
     private function getLeg($host): Subtrip
@@ -284,5 +277,30 @@ class InvitationMockups implements MockupProviderInterface
         ]);
 
         return $leg;
+    }
+
+    private function getReply(
+        Message $parent,
+        Subject $subject,
+        HostingRequest $request,
+        Member $guest,
+        Member $host
+    ): Message {
+        $reply = Mockery::mock(Message::class, [
+            'getId' => 1,
+            'getMessage' => 'Reply',
+            'getParent' => $parent,
+        ]);
+
+        $reply->shouldReceive('getSubject')->andReturn($subject);
+        $reply->shouldReceive('getCreated')->andReturn(new Carbon());
+        $reply->shouldReceive('getSender')->andReturn($guest);
+        $reply->shouldReceive('getInitiator')->andReturn($parent->getInitiator());
+        $reply->shouldReceive('getReceiver')->andReturn($host);
+        $reply->shouldReceive('getRequest')->andReturn($request);
+        $reply->shouldReceive('isDeletedByMember')->andReturn(false);
+        $reply->shouldReceive('isPurgedByMember')->andReturn(false);
+
+        return $reply;
     }
 }

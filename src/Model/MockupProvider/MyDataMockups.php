@@ -23,6 +23,7 @@ use App\Entity\MemberThreadSubscription;
 use App\Entity\Message;
 use App\Entity\Newsletter;
 use App\Entity\Poll;
+use App\Entity\PollChoice;
 use App\Entity\Privilege;
 use App\Entity\Right;
 use App\Entity\Shout;
@@ -55,10 +56,30 @@ class MyDataMockups implements MockupProviderInterface
             'description' =>
                 'Footer included on every page of the generated data including the date and time.',
         ],
-        'mydata (profile)' => [
+        'profile' => [
             'type' => 'template',
             'template' => 'private/profile.html.twig',
             'description' => 'Your profile in the data dump',
+        ],
+        'messages' => [
+            'type' => 'template',
+            'template' => 'private/messages.html.twig',
+            'description' => 'Statistics for messages in the data dump',
+        ],
+        'requests' => [
+            'type' => 'template',
+            'template' => 'private/requests.html.twig',
+            'description' => 'Statistics for requests in the data dump',
+        ],
+        'invitations' => [
+            'type' => 'template',
+            'template' => 'private/invitations.html.twig',
+            'description' => 'Statistics for invitations in the data dump',
+        ],
+        'polls' => [
+            'type' => 'template',
+            'template' => 'private/polls.html.twig',
+            'description' => 'Overview page for polls',
         ],
     ];
 
@@ -76,7 +97,7 @@ class MyDataMockups implements MockupProviderInterface
                 'type' => 'template',
                 'with_parameters' => true,
                 'template' => 'private/' . $key . '.html.twig',
-                'description' => 'Resulting page for the own data export with no ' . $key,
+                'description' => 'Resulting page for the own data export',
             ];
         }
 
@@ -98,6 +119,12 @@ class MyDataMockups implements MockupProviderInterface
             'member' => $member,
             'date_generated' => new DateTime(),
             'profilepicture' => '/members/avatar/' . $member->getUsername() . '/50',
+            'messagesSent' => 2,
+            'messagesReceived' => 3,
+            'requestsSent' => 4,
+            'requestsReceived' => 5,
+            'invitationsSent' => 6,
+            'invitationsReceived' => 7,
         ];
     }
 
@@ -108,7 +135,7 @@ class MyDataMockups implements MockupProviderInterface
                 'none' => 0,
                 'one' => 1,
                 'two' => 2,
-                'some' => 3,
+                'some' => random_int(3, 5),
             ]
         ];
     }
@@ -124,20 +151,15 @@ class MyDataMockups implements MockupProviderInterface
             'donations' => Donations::class,
             'gallery' => Gallery::class,
             'logs' => Log::class,
-            'messages' => Message::class,
             'newsletters' => BroadcastMessage::class,
             'pictures' => null,
-            'polls' => Poll::class,
             'polls_contributed' => Poll::class,
             'polls_created' => Poll::class,
             'polls_voted' => Poll::class,
             'posts' => ForumPost::class,
             'posts_year' => ForumPost::class,
             'privileges' => Privilege::class,
-            'profile' => Member::class,
             'relations' => null,
-            'requests' => Message::class,
-            'invitations' => Message::class,
             'rights' => Right::class,
             'trips' => Trip::class,
             'shouts' => Shout::class,
@@ -185,6 +207,101 @@ class MyDataMockups implements MockupProviderInterface
                     'from' => $mockComment,
                 ];
                 break;
+            case 'communitynews':
+                $mockEntity = Mockery::mock(CommunityNews::class, [
+                    'getId' => 1,
+                    'getTitle' => 'Community News',
+                    'getText' => 'Community News text',
+                ]);
+                break;
+            case 'communitynews_comments':
+                $key = 'newsAndComments';
+                $news = Mockery::mock(CommunityNews::class, [
+                    'getId' => 1,
+                    'getTitle' => 'Community News',
+                    'getText' => 'Community News text',
+                ]);
+                $mockEntity = Mockery::mock(CommunityNews::class, [
+                    'getId' => 1,
+                    'getTitle' => 'Community News',
+                    'getText' => 'Community News text',
+                    'getCommunityNews' => $news,
+                ]);
+                break;
+            case 'donations':
+                $mockEntity = Mockery::mock(Donations::class, [
+                    'money' => '€',
+                    'amount' => 100.00,
+                    'namegiven' => 'donor',
+                    'referencepaypal' => 'paypal',
+                    'systemcomment' => 'system comment',
+                    'membercomment' => 'member comment',
+                    'statusprivate' => ($parameters['count'] % 2 == 1),
+                ]);
+                break;
+            case 'gallery':
+                $key = 'hrefs';
+                $mockEntity = 'https://source.unsplash.com/random/300×300';
+                break;
+            case 'logs':
+                $mockEntity = Mockery::mock(Log::class, [
+                    'getType' => 'log',
+                    'getLogMessage' => 'logged message',
+                    'getCreated' => new Carbon(),
+                ]);
+                break;
+            case 'newsletters':
+                $mockEntity = Mockery::mock(Newsletter::class, [
+                    'getTitle' => 'Newsletter Title',
+                    'getText' => 'Newsletter text',
+                    'getId' => 1,
+                    'getCreated' => new Carbon(),
+                    'getTranslations' => [
+                        [
+                            'locale' => 'en',
+                            'author' => $parameters['user'],
+                            'title' => 'Title - en',
+                            'body' => 'Body - en',
+                        ],
+                        [
+                            'locale' => 'zh-hant',
+                            'author' => $parameters['user'],
+                            'title' => 'Title - zh-hant'
+                        ],
+                        [
+                            'locale' => 'de',
+                            'author' => $parameters['user'],
+                            'body' => 'Body - de',
+                        ],
+                    ],
+                ]);
+                break;
+            case 'pictures':
+                // Nothing to do here; included twig template will show the needed amount of
+                // profile pictures as broken images
+                break;
+            case 'polls_created':
+                $key = 'polls';
+                $mockEntity = $this->getPoll();
+                break;
+            case 'polls_contributed':
+                $key = 'contributions';
+                $poll = $this->getPoll();
+                $mockEntity = [
+                    'poll' => $poll,
+                    'comment' => 'comment',
+                ];
+                break;
+            case 'polls_voted':
+                $key = 'votes';
+                $poll = $this->getPoll();
+                $mockEntity = [
+                    'poll' => $poll,
+                    'pollChoice' => [
+                        'texts' => [ 'one', 'two' ],
+                    ],
+                ];
+                break;
             case 'rights':
                 // overwrite key as index is different
                 $key = 'volunteerrights';
@@ -210,6 +327,7 @@ class MyDataMockups implements MockupProviderInterface
 
         return [
             $key => $entities,
+            'member' => $parameters['user'],
         ];
     }
 
@@ -256,5 +374,30 @@ class MyDataMockups implements MockupProviderInterface
 
 
         return $mockTrip;
+    }
+
+    private function getPoll(): Poll
+    {
+        return Mockery::mock(Poll::class, [
+            'getId' => 1,
+            'getTitles' => [ 'title' ],
+            'getDescriptions' => [
+                'en' => 'description',
+                'fr' => 'description',
+            ],
+            'getGroups' => [
+                Mockery::mock(Group::class, [
+                    'getName' => 'group',
+                ]),
+            ],
+            'getChoices' => [
+                Mockery::mock(PollChoice::class, [
+                    'getTexts' => [
+                        'en' => 'English',
+                        'fr' => 'French',
+                    ],
+                ]),
+            ]
+        ]);
     }
 }

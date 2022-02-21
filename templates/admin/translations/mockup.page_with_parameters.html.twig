@@ -10,10 +10,11 @@
 
 {% block content %}
     <h1>{{ 'translations.headline' | trans }}</h1>
-    <p>{{ 'translation.mockup.abstract'|trans }}</p>
-    <p>{{ 'translations.mockup.url'|trans }}: {{ url }}</p>
-    <p>{{ 'translations.mockup.template'|trans }}: {{ template}}</p>
-    {% if description != '' %}<p>{{ description }}</p>{% endif %}
+    <p class="u-mb-8">{{ 'translation.mockup.abstract'|trans }}</p>
+    <p class="u-mb-8 u-text-24">{{ name }}</p>
+    <p class="u-mb-8">{{ 'translations.mockup.url'|trans }}: {{ url }}</p>
+    <p class="u-mb-8">{{ 'translations.mockup.template'|trans }}: {{ template}}</p>
+    {% if description != '' %}<p class="u-mb-8">{{ description }}</p>{% endif %}
     <div id="mockup" class="u-my-8 u-p-8">{{ block("content", html_template)|raw }}</div>
     <div class="u-flex u-justify-end"><a class="o-button" href="{{ url('translations_mockups_feature', { feature: feature }) }}">{{ 'mockup.back.feature'|trans({ feature: feature })}}</a></div>
 {% endblock content %}

@@ -564,6 +564,7 @@ class MockupController extends TranslationController
                 $variables,
                 [
                     'url' => $url,
+                    'name' => $parameters['fullname'] ?? $name,
                     'feature' => $feature,
                     'description' => $description,
                     'template' => $template,

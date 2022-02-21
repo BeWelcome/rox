@@ -14,6 +14,7 @@
     <p>{{ 'translations.mockup.url'|trans }}: {{ url }}</p>
     <p>{{ 'translations.mockup.template'|trans }}: {{ template}}</p>
     {% if description != '' %}<p>{{ description }}</p>{% endif %}
+    <p class="u-py-4 u-text-24">{{ name }}</p>
     <div id="mockup" class="u-my-8 u-p-8">{{ block("content", html_template)|raw }}</div>
     <div class="u-flex u-justify-end"><a class="o-button" href="{{ url('translations_mockups_feature', { feature: feature }) }}">{{ 'mockup.back.feature'|trans}}</a></div>
 {% endblock content %}

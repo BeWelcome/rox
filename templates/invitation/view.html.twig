@@ -52,7 +52,7 @@
             {% endif %}
             {% if invitation.numberOfTravellers != 1 %}
                 <div>
-                    <i class="fa fa-users mr-1"></i>{{ numberOfTravellers | trans({'numberOfTravellers': invitation.numberOfTravellers}) }}
+                    <i class="fa fa-users mr-1"></i>{{ numberOfTravellers | trans({'countOfTravellers': invitation.numberOfTravellers}) }}
                 </div>
             {% endif %}
         </div>

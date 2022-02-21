@@ -31,6 +31,7 @@
                 {% for key, value in parameter %}
                         <form class="form form-inline u-w-full" action="{{ url('translation_mockup_with_parameters', {feature: feature}) }}" method="post">
                             <input type="hidden" name="name" value="{{ name }}">
+                            <input type="hidden" name="fullname" value="{{ name|capitalize }}: {{ parameter_name|capitalize }} - {{ key }}">
                             <input type="hidden" name="{{ parameter_name }}" value="{{ value }}">
                             <button type="submit" class="o-button u-w-full u-mr-4 u-mb-4">
                                 {{ icon }}&nbsp;{{ name|capitalize }}:&nbsp;{{ parameter_name|capitalize }}&nbsp;-&nbsp;{{ key }}

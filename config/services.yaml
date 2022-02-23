@@ -414,10 +414,6 @@ services:
         class: App\Model\MockupProvider\GroupMockups
         tags: [ 'app.mockup_provider' ]
 
-    app.mockup_provider.requests:
-        class: App\Model\MockupProvider\RequestMockups
-        tags: [ 'app.mockup_provider' ]
-
     app.mockup_provider.message:
         class: App\Model\MockupProvider\MessageMockups
         tags: [ 'app.mockup_provider' ]
@@ -432,6 +428,10 @@ services:
 
     app.mockup_provider.errors:
         class: App\Model\MockupProvider\ErrorMockups
+        tags: [ 'app.mockup_provider' ]
+
+    app.mockup_provider.requests:
+        class: App\Model\MockupProvider\RequestMockups
         tags: [ 'app.mockup_provider' ]
 
     app.mockup_provider.invitations:

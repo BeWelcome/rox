@@ -56,30 +56,57 @@ class MyDataMockups implements MockupProviderInterface
             'description' =>
                 'Footer included on every page of the generated data including the date and time.',
         ],
-        'profile' => [
+        'message' => [
             'type' => 'template',
-            'template' => 'private/profile.html.twig',
-            'description' => 'Your profile in the data dump',
+            'template' => 'private/message.html.twig',
+            'description' => 'Statistics for messages in the data dump',
         ],
         'messages' => [
             'type' => 'template',
-            'template' => 'private/messages.html.twig',
+            'template' => 'private/message.html.twig',
             'description' => 'Statistics for messages in the data dump',
+        ],
+        'request' => [
+            'type' => 'template',
+            'template' => 'private/request.html.twig',
+            'description' => 'Statistics for requests in the data dump',
         ],
         'requests' => [
             'type' => 'template',
             'template' => 'private/requests.html.twig',
             'description' => 'Statistics for requests in the data dump',
         ],
+        'invitation' => [
+            'type' => 'template',
+            'template' => 'private/invitation.html.twig',
+            'description' => 'Statistics for invitations in the data dump',
+        ],
         'invitations' => [
             'type' => 'template',
             'template' => 'private/invitations.html.twig',
             'description' => 'Statistics for invitations in the data dump',
         ],
+        'profile' => [
+            'type' => 'template',
+            'template' => 'private/profile.html.twig',
+            'description' => 'Your profile in the data dump',
+        ],
         'polls' => [
             'type' => 'template',
             'template' => 'private/polls.html.twig',
             'description' => 'Overview page for polls',
+        ],
+        'post (thread)' => [
+            'type' => 'template',
+            'with_parameters' => true,
+            'template' => 'private/post.html.twig',
+            'description' => 'Shows a single post to groups or forum',
+        ],
+        'post (group)' => [
+            'type' => 'template',
+            'with_parameters' => true,
+            'template' => 'private/post.html.twig',
+            'description' => 'Shows a single post to groups or forum',
         ],
     ];
 
@@ -91,8 +118,7 @@ class MyDataMockups implements MockupProviderInterface
     public function getMockups(): array
     {
         $mockups = self::MOCKUPS;
-        $extracted = array_keys($this->getExtractedEntities());
-        foreach ($extracted as $key) {
+        foreach ($this->getExtractedEntities() as $key) {
             $mockups[$key] = [
                 'type' => 'template',
                 'with_parameters' => true,
@@ -106,6 +132,17 @@ class MyDataMockups implements MockupProviderInterface
 
     public function getMockupVariables(array $parameters): array
     {
+        $name = $parameters['name'];
+        if ('post (thread)' === $name) {
+            return $this->getPostInForum($parameters);
+        }
+        if ('post (group)' === $name) {
+            return $this->getPostInGroup($parameters);
+        }
+        if ('message' === $name || 'request' === $name || 'invitation' === $name) {
+            return $this->getMessage($parameters);
+        }
+
         if (isset($parameters['count'])) {
             return $this->getMockEntities($parameters);
         }
@@ -128,14 +165,65 @@ class MyDataMockups implements MockupProviderInterface
         ];
     }
 
-    public function getMockupParameter(): array
+    public function getMockupParameter(?string $locale = null, ?string $feature = null): array
     {
+        switch ($feature) {
+            case 'post (thread)':
+            case 'post (group)':
+                return [ 'deleted' => [ 'yes' => 'yes', 'no' => 'no'] ];
+            case 'broadcasts':
+            case 'comments':
+            case 'communitynews':
+            case 'communitynews_comments':
+            case 'donations':
+            case 'gallery':
+            case 'logs':
+            case 'newsletters':
+            case 'pictures':
+            case 'polls_contributed':
+            case 'polls_created':
+            case 'polls_voted':
+            case 'relations':
+            case 'rights':
+            case 'privileges':
+            case 'trips':
+            case 'shouts':
+            case 'subscriptions':
+            case 'translations':
+                return [ 'count' => [ 'none' => '0', 'some' => '2'] ];
+        }
+
+        switch ($locale) {
+            case 'en':
+            case 'de':
+            case 'fr':
+            case 'es':
+            case 'pt':
+            case 'pt-br':
+            case 'gl':
+                return [
+                    'count' => [
+                        'none' => 0,
+                        'one' => 1,
+                        'some' => 3,
+                    ]
+                ];
+            case 'pl':
+                return [
+                    'count' => [
+                        'none' => 0,
+                        'one' => 1,
+                        'few' => 2,
+                        'other' => 5,
+                    ],
+                ];
+        }
         return [
             'count' => [
                 'none' => 0,
                 'one' => 1,
-                'two' => 2,
-                'some' => random_int(3, 5),
+                'few' => 2,
+                'other' => 5,
             ]
         ];
     }
@@ -143,28 +231,28 @@ class MyDataMockups implements MockupProviderInterface
     private function getExtractedEntities(): array
     {
         return [
-            'activities' => Activity::class,
-            'broadcasts' => BroadcastMessage::class,
-            'comments' => Comment::class,
-            'communitynews' => CommunityNews::class,
-            'communitynews_comments' => CommunityNewsComment::class,
-            'donations' => Donations::class,
-            'gallery' => Gallery::class,
-            'logs' => Log::class,
-            'newsletters' => BroadcastMessage::class,
-            'pictures' => null,
-            'polls_contributed' => Poll::class,
-            'polls_created' => Poll::class,
-            'polls_voted' => Poll::class,
-            'posts' => ForumPost::class,
-            'posts_year' => ForumPost::class,
-            'privileges' => Privilege::class,
-            'relations' => null,
-            'rights' => Right::class,
-            'trips' => Trip::class,
-            'shouts' => Shout::class,
-            'subscriptions' => MemberThreadSubscription::class,
-            'translations' => Word::class,
+            'activities',
+            'broadcasts',
+            'comments',
+            'communitynews',
+            'communitynews_comments',
+            'donations',
+            'gallery',
+            'logs',
+            'newsletters',
+            'pictures',
+            'polls_contributed',
+            'polls_created',
+            'polls_voted',
+            'posts',
+            'posts_year',
+            'privileges',
+            'relations',
+            'rights',
+            'trips',
+            'shouts',
+            'subscriptions',
+            'translations',
         ];
     }
 
@@ -172,6 +260,7 @@ class MyDataMockups implements MockupProviderInterface
     {
         $mockEntity = null;
         $key = $parameters['name'];
+        $count = $parameters['count'] ?? -1;
         switch ($key) {
             case 'activities':
                 $mockEntity = Mockery::mock(Activity::class, [
@@ -221,12 +310,15 @@ class MyDataMockups implements MockupProviderInterface
                     'getTitle' => 'Community News',
                     'getText' => 'Community News text',
                 ]);
-                $mockEntity = Mockery::mock(CommunityNews::class, [
-                    'getId' => 1,
-                    'getTitle' => 'Community News',
-                    'getText' => 'Community News text',
-                    'getCommunityNews' => $news,
-                ]);
+                $mockEntity = [
+                    'news' => $news,
+                    'comments' => [
+                        [
+                            'title' => 'Comment title',
+                            'text' => 'Comment text',
+                        ],
+                    ],
+                ];
                 break;
             case 'donations':
                 $mockEntity = Mockery::mock(Donations::class, [
@@ -302,6 +394,16 @@ class MyDataMockups implements MockupProviderInterface
                     ],
                 ];
                 break;
+            case 'posts':
+                return $this->postsData($parameters['count']);
+            case 'posts_year':
+                return $this->postsYearData($parameters['count']);
+            case 'privileges':
+                $mockEntity = $this->getPrivilege();
+                break;
+            case 'relations':
+                $mockEntity = $this->getSpecialRelation();
+                break;
             case 'rights':
                 // overwrite key as index is different
                 $key = 'volunteerrights';
@@ -315,13 +417,19 @@ class MyDataMockups implements MockupProviderInterface
                     'getDescription' => 'Right Description',
                 ]);
                 break;
+            case 'shouts':
+                return $this->getShouts($count);
+            case 'subscriptions':
+                return $this->getSubscriptions($count);
+            case 'translations':
+                return $this->getTranslations($count);
             case 'trips':
                 $mockEntity = $this->getTrip($parameters['admin']);
                 break;
         }
 
         $entities = [];
-        for ($i = 0;$i < $parameters['count']; $i++) {
+        for ($i = 0; $i < $parameters['count']; $i++) {
             $entities[] = $mockEntity;
         }
 
@@ -372,7 +480,6 @@ class MyDataMockups implements MockupProviderInterface
             ->andReturn(new ArrayCollection([$leg]))
         ;
 
-
         return $mockTrip;
     }
 
@@ -399,5 +506,325 @@ class MyDataMockups implements MockupProviderInterface
                 ]),
             ]
         ]);
+    }
+
+    private function postsData($count): array
+    {
+        if (0 == $count) {
+            return ['years' => []];
+        };
+        return [
+            'posts_written' => $count,
+            'threads_contributed' => $count,
+            'years' => [2021],
+            'threadsPerYear' => [
+                2021 => $count,
+            ],
+            'postsPerYear' => [
+                2021 => $count,
+            ],
+        ];
+    }
+
+    private function postsYearData($count)
+    {
+        if (0 == $count) {
+            return ['year' => 2010 ];
+        };
+        $posts = [];
+        for ($i = 0; $i < $count; $i++) {
+            $posts[$i] = [
+                'created' => 12345,
+            ];
+        }
+        $threads = [];
+        for ($i = 0; $i < $count; $i++) {
+            $threads[] = [
+                'thread' => [
+                    'title' => 'Thread title ' . $i,
+                ],
+                'posts' => $posts,
+            ];
+        }
+
+        return [
+            'year' => (new DateTime())->format('Y'),
+            'post_count' => $count,
+            'threads' => $threads,
+        ];
+    }
+
+    private function getPostInForum(array $parameters): array
+    {
+        return [
+            'thread' => [
+                'title' => 'Thread Title',
+                'id' => 8,
+            ],
+            'group' => 0,
+            'post' => [
+                'id' => 123,
+                'created' => 123456,
+                'deleted' => $parameters['deleted'] == 'yes' ? 'Deleted' : 'NotDeleted',
+                'language' => [
+                    'wordcode' => 'lang_zh-hant',
+                    'shortcode' => 'zh-hant',
+                ],
+                'message' => 'Post text',
+                'messageTranslations' => [
+                    'fr' => [
+                        'message' => 'Post Text (fr)',
+                        'language' => [
+                            'wordcode' => 'lang_fr',
+                            'shortcode' => 'fr',
+                        ],
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    private function getPostInGroup(array $parameters): array
+    {
+        $result = $this->getPostInForum($parameters);
+        $result['group'] = [
+            'id' => 70,
+            'name' => 'Group name',
+        ];
+
+        return $result;
+    }
+
+    private function getMessage(array $parameters): array
+    {
+        $host = $parameters['user'];
+        $guest = $parameters['admin'];
+
+        $leg = $this->getLeg($parameters);
+        $thread = $this->getThread($host, $guest, $leg, HostingRequest::REQUEST_TENTATIVELY_ACCEPTED, 4);
+
+        return [
+            $parameters['name'] => $thread[0],
+            'leg' => $leg,
+            'host' => $host,
+            'guest' => $guest,
+            'thread' => $thread,
+            'is_spam' => false,
+            'show_deleted' => false,
+        ];
+    }
+
+    private function getThread(Member $host, Member $guest, Subtrip $leg, int $status, int $replies): array
+    {
+        $subject = Mockery::mock(Subject::class, [
+            'getSubject' => 'Subject'
+        ]);
+        $request = Mockery::mock(HostingRequest::class, [
+            'getId' => 1,
+            'getArrival' => new Carbon(),
+            'getDeparture' => new Carbon(),
+            'getNumberOfTravellers' => 2,
+            'getFlexible' => true,
+            'getStatus' => $status,
+            'getInviteForLeg' => $leg,
+        ]);
+
+        $parent = Mockery::mock(Message::class, [
+            'getId' => 1,
+            'getMessage' => 'Initial invitation',
+        ]);
+        $parent->shouldReceive('getSubject')->andReturn($subject);
+        $parent->shouldReceive('getCreated')->andReturn(new Carbon());
+        $parent->shouldReceive('getSender')->andReturn($host);
+        $parent->shouldReceive('getInitiator')->andReturn($host);
+        $parent->shouldReceive('getReceiver')->andReturn($guest);
+        $parent->shouldReceive('getRequest')->andReturn($request);
+        $parent->shouldReceive('isDeletedByMember')->andReturn(false);
+        $parent->shouldReceive('isPurgedByMember')->andReturn(false);
+
+        $thread = [];
+        $thread[] = $parent;
+        $lastMessage = $parent;
+        for ($i = 1;$i < $replies; $i++) {
+            $lastMessage = $this->getReply($lastMessage, $subject, $request, $guest, $host);
+            $temp = $host; $host = $guest; $guest = $temp;
+            $thread[] = $lastMessage;
+        }
+
+        return array_reverse($thread);
+    }
+
+    private function getLeg($host): Subtrip
+    {
+        $trip = Mockery::mock(Trip::class, [
+            'getId' => 1,
+            'getCreator' => $host,
+            'getSummary' => 'Mocking Bird',
+            'getDescription' => 'Mocking description',
+            'getCountOfTravellers' => 2,
+            'getAdditionalInfo' => TripAdditionalInfoType::NONE,
+            'getCreated' => new DateTime(),
+        ]);
+        $location = Mockery::mock(Location::class, [
+            'getId' => 1,
+            'getName' => 'Mock',
+        ]);
+        $leg = Mockery::mock(SubTrip::class, [
+            'getId' => 1,
+            'getArrival' => Carbon::instance(new DateTime('2021-02-22')),
+            'getDeparture' => Carbon::instance(new DateTime('2021-02-24')),
+            'getOptions' => [SubtripOptionsType::MEET_LOCALS],
+            'getLocation' => $location,
+            'getTrip' => $trip,
+            'getInvitedBy' => $host,
+        ]);
+
+        return $leg;
+    }
+
+    private function getReply(
+        Message $parent,
+        Subject $subject,
+        HostingRequest $request,
+        Member $guest,
+        Member $host
+    ): Message {
+        $reply = Mockery::mock(Message::class, [
+            'getId' => 1,
+            'getMessage' => 'Reply',
+            'getParent' => $parent,
+        ]);
+
+        $reply->shouldReceive('getSubject')->andReturn($subject);
+        $reply->shouldReceive('getCreated')->andReturn(new Carbon());
+        $reply->shouldReceive('getSender')->andReturn($guest);
+        $reply->shouldReceive('getInitiator')->andReturn($parent->getInitiator());
+        $reply->shouldReceive('getReceiver')->andReturn($host);
+        $reply->shouldReceive('getRequest')->andReturn($request);
+        $reply->shouldReceive('isDeletedByMember')->andReturn(false);
+        $reply->shouldReceive('isPurgedByMember')->andReturn(false);
+
+        return $reply;
+    }
+
+    private function getPrivilege(): array
+    {
+        return [
+            'privilege' => 'Privilege',
+            'scope' => 'All',
+            'role' => 'Role',
+            'assigned' => new DateTime(),
+        ];
+    }
+
+    private function getSpecialRelation(): array
+    {
+        $relation = [
+            'owner' => [
+                'username' => 'admin',
+            ],
+            'relation' => [
+                'username' => 'user',
+            ],
+            'type' => 'family',
+            'confirmed' => 'yes',
+            'comments' => [
+                [
+                    'language' => [ 'wordcode' => 'lang_el' ],
+                    'sentence' => 'Comment text',
+                ]
+            ]
+        ];
+        return [
+            'left' => $relation,
+            'right' => $relation,
+        ];
+    }
+
+    private function getShouts($count): array
+    {
+        if ($count = 0) {
+            return ['shouts' => []];
+        }
+
+        return [
+            'shouts' => [
+                [
+                    'title' => 'Shout Title',
+                    'text' => 'Image',
+                    'table' => Shout::GALLERY_ITEM,
+                    'tableId' => 'Image',
+                ],
+                [
+                    'text' => 'Gallery',
+                    'table' => Shout::GALLERY,
+                    'tableId' => 'Gallery',
+                ],
+                [
+                    'text' => 'Group',
+                    'table' => Shout::GROUP,
+                    'tableId' => 'Group',
+                ],
+                [
+                    'text' => 'Trip',
+                    'table' => Shout::TRIP,
+                    'tableId' => 'Trip',
+                ],
+            ],
+        ];
+    }
+
+    private function getSubscriptions($count): array
+    {
+        if ($count == 0) {
+            return [ 'subscriptions' => []];
+        }
+
+        return [
+            'subscriptions' => [
+                [
+                    'thread' => [
+                        'id' => 1,
+                        'title' => 'Thread title',
+                    ],
+                    'subscribed' => new DateTime(),
+                    'notificationsEnabled' => true,
+                ],
+                [
+                    'thread' => [
+                        'id' => 2,
+                        'title' => 'Thread title',
+                    ],
+                    'subscribed' => new DateTime(),
+                    'notificationsEnabled' => false,
+                ],
+            ],
+        ];
+    }
+
+    private function getTranslations($count): array
+    {
+        if ($count == 0) {
+            return [ 'translations' => []];
+        }
+
+        return [
+            'translations' => [
+                [
+                    'code' => 'mydata.translations.headline',
+                    'sentence' => 'Translations',
+                    'shortCode' => 'en',
+                    'language' => [ 'wordCode' => 'lang_pt' ],
+                    'created' => (new DateTime())->format('Y-m-d'),
+                ],
+                [
+                    'code' => 'mydata.translations.abstract',
+                    'sentence' => 'Traducions',
+                    'shortCode' => 'en',
+                    'language' => [ 'wordCode' => 'lang_es' ],
+                    'created' => (new DateTime())->format('Y-m-d'),
+                ],
+            ],
+        ];
     }
 }

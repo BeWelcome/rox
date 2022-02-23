@@ -3,7 +3,7 @@
 {% block content %}
     <h1>{{ 'mydata.invitations.headline'|trans }}</h1>
     <p>{{ 'mydata.invitations.abstract'|trans }}</p>
-    {% if invitationsSent == 0 or invitationsReceived == 0%}
+    {% if invitationsSent == 0 and invitationsReceived == 0%}
     <p><strong>{{ 'mydata.invitations.no.invitations'|trans }}</strong></p>
     {% else %}
         <p>{{ 'mydata.invitations.sent'|trans({'sent': invitationsSent }) }}</p>

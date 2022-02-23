@@ -41,13 +41,13 @@ class RequestMockups implements MockupProviderInterface
             'type' => 'page',
             'with_parameters' => true,
             'url' => '/conversation/{id}',
-            'template' => 'invitation/view.html.twig',
+            'template' => 'request/view.html.twig',
         ],
         'view request (host)' => [
             'type' => 'page',
             'with_parameters' => true,
             'url' => '/conversation/{id}',
-            'template' => 'invitation/view.html.twig',
+            'template' => 'request/view.html.twig',
         ],
     ];
 
@@ -68,7 +68,7 @@ class RequestMockups implements MockupProviderInterface
         return self::MOCKUPS;
     }
 
-    public function getMockupParameter(): array
+    public function getMockupParameter(?string $locale = null, ?string $feature = null): array
     {
         return [
             'status' => [

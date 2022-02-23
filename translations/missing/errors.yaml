@@ -1,0 +1,9 @@
+error.page.access.denied:
+    - 'Access denied'
+    - Headline on the page that tells the user there has been an access issue with their request
+error.page.not.found:
+    - 'Page Not Found'
+    - Headline on the page that tells the user there has been an issue with the URL
+error.page.server.error:
+    - 'Server Error'
+    - Headline on the page that tells the user there has been an issue on the server

@@ -23,7 +23,7 @@ use Symfony\Component\Form\FormFactoryInterface;
 class MessageMockups implements MockupProviderInterface
 {
     private const MOCKUPS = [
-        'message' => [
+        'message (email)' => [
             'type' => 'email',
             'template' => 'emails/message.html.twig',
         ],
@@ -39,7 +39,7 @@ class MessageMockups implements MockupProviderInterface
         return self::MOCKUPS;
     }
 
-    public function getMockupParameter(): array
+    public function getMockupParameter(?string $locale = null, ?string $feature = null): array
     {
         return [];
     }

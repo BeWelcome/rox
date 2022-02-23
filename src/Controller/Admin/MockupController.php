@@ -129,8 +129,7 @@ class MockupController extends TranslationController
 
         return $this->render('admin/translations/feature.html.twig', [
             'feature' => $feature,
-            'mockups' => $this->mockups[$feature],
-            'parameters' => $this->providers[$feature]->getMockupParameter(),
+            'provider' => $this->providers[$feature],
             'submenu' => [
                 'active' => 'mockups',
                 'items' => $this->getSubmenuItems($request->getLocale()),

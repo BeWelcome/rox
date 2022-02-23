@@ -14,7 +14,7 @@
     <div class="u-grid u-grid-cols-2 u-gap-8">
     {% set first = true %}
     {% set last_mockup_type = '' %}
-    {% for name, mockup in mockups %}
+    {% for name, mockup in provider.mockups %}
         {% set icon %}
             {% if mockup.type == 'email' %}<i class="far fa-envelope"></i>{% endif %}
             {% if mockup.type == 'template' %}<i class="far fa-file"></i>{% endif %}
@@ -26,6 +26,7 @@
             {% set last_mockup_type = mockup.type %}
         {% endif %}
         {% if mockup.with_parameters is defined and mockup.with_parameters == true %}
+            {% set parameters = provider.mockupParameter(app.request.locale, name) %}
             {% for parameter_name, parameter in parameters %}
                 </div><hr><div class="u-grid u-grid-cols-2 u-gap-8">
                 {% for key, value in parameter %}

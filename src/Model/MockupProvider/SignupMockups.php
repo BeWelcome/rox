@@ -77,7 +77,7 @@ class SignupMockups implements MockupProviderInterface
         ];
     }
 
-    public function getMockupParameter(): array
+    public function getMockupParameter(?string $locale = null, ?string $feature = null): array
     {
         return [];
     }

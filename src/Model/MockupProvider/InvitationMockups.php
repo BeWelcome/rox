@@ -92,7 +92,7 @@ class InvitationMockups implements MockupProviderInterface
         return self::MOCKUPS;
     }
 
-    public function getMockupParameter(): array
+    public function getMockupParameter(?string $locale = null, ?string $feature = null): array
     {
         return [
             'status' => [

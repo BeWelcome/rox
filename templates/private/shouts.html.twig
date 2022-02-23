@@ -9,7 +9,7 @@
         <div class="card-columns">
             {% for shout in shouts %}
                 <div class="card o-card">
-                    {% if shout.title|length %}
+                    {% if shout.title is defined %}
                     <div class="card-header text-truncate">
                         {{ shout.title }}
                     </div>

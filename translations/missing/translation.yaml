@@ -7,4 +7,12 @@ translation.unknown.member:
 translations.create.title:
     - 'Create a translation'
     - Title tag for the create a translation page
-
+translations.headline.feature.mockups:
+    - 'Feature mockups'
+    - Headline for the page collecting mockup for a feature
+mockups.back:
+    - 'Back to overview'
+    - Button label below the listed of mocked features
+mockup.back.feature:
+    - 'Back to {feature}'
+    - Button label below the mockups for a feature

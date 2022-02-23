@@ -8,7 +8,7 @@ interface MockupProviderInterface
 
     public function getMockups(): array;
 
-    public function getMockupParameter(): array;
+    public function getMockupParameter(?string $locale = null, ?string $feature = null): array;
 
     public function getMockupVariables(array $parameters): array;
 }

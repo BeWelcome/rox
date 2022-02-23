@@ -60,9 +60,13 @@ class SuggestLocationModel
             return ['locations' => []];
         }
 
+        $match = (new MatchBuilder($this->sphinxQL))
+            ->field('name')
+            ->exact(SphinxQL::expr($place));
+
         $query = $this->sphinxQL->select('id', 'admin1', 'country')
             ->from('geonames')
-            ->match('name', SphinxQL::expr($place))
+            ->match($match)
             ->where('isPlace', '=', 1)
             ->option('ranker', SphinxQL::expr('expr(\'' . $ranker . '\')'))
             ->option('max_matches', 25)

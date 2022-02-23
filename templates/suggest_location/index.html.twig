@@ -33,7 +33,7 @@
                     </li>
                 </ul>
             </div>
-            Exact match has priority
+            Exact match has priority (sum((min_hit_pos==1)*1000+exact_hit*500))
         </div>
         <div class="col-12 col-md-6 mb-3">
             <div id="autocomplete2" class="autocomplete">
@@ -48,7 +48,7 @@
                     </li>
                 </ul>
             </div>
-            Exact match + member count
+            Exact match + member count (sum((min_hit_pos==1)*1000+exact_hit*500)+membercount)
         </div>
         <div class="col-12 col-md-6 mb-3">
             <div id="autocomplete3" class="autocomplete">
@@ -63,7 +63,7 @@
                     </li>
                 </ul>
             </div>
-            Highest member count wins
+            Exact match + population + membercount (sum((min_hit_pos==1)*1000+exact_hit*500) + population/1000 + membercount)
         </div>
     </div>
 {% endblock %}

@@ -28,13 +28,13 @@ class SuggestLocationController extends AbstractController
         $searchTerm = $request->query->get('term', '');
         switch ($ranker) {
             case 'ranker1':
-                $expr = 'sum((min_hit_pos==1)*2+exact_hit*3)';
+                $expr = 'sum((min_hit_pos==1)*1000+exact_hit*500)';
                 break;
             case 'ranker2':
-                $expr = 'sum((min_hit_pos==1)*2+exact_hit*3)+membercount';
+                $expr = 'sum((min_hit_pos==1)*1000+exact_hit*500)+membercount';
                 break;
             case 'ranker3':
-                $expr = 'membercount';
+                $expr = 'sum((min_hit_pos==1)*1000+exact_hit*500)+population/1000';
                 break;
         }
         $result = $model->getSuggestionsForPlaces($searchTerm, $expr);

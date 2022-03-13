@@ -220,15 +220,18 @@ class Extension extends AbstractExtension implements GlobalsInterface
         $text = $purifier->purify($text);
 
         // now turn any figure/figcaption entries into <img>
-        $style = '';
-        $width = 'width="480';
         if ($website) {
-            $width = '';
-            $style = ' style="display: block; margin-left: auto; margin-right: auto; width: 80%;"';
+            $centerOpen = '';
+            $centerClose = '';
+            $style = ' style="display: block; margin-left: auto; margin-right: auto; width: 60%;"';
+        } else {
+            $centerOpen = '<center>';
+            $centerClose = '</center>';
+            $style = '';
         }
         $result = preg_replace(
             '%<figure.*?><img.*?src="(.*?)".*?><figcaption>(.*?)</figcaption></figure>%',
-            '<img ' . $width . ' src="\1" alt="\2"' . $style . '>',
+            $centerOpen . '<img src="\1" alt="\2"' . $style . '>' . $centerClose,
             $text
         );
 
@@ -236,7 +239,7 @@ class Extension extends AbstractExtension implements GlobalsInterface
         $embeddedImage = $this->translator->trans('newsletter.embedded.image');
         $result = preg_replace(
             '%<figure.*?><img.*?src="(.*?)".*?>%',
-            '<img ' . $width . ' src="\1" alt="' . htmlentities($embeddedImage) . '"' . $style . '>',
+            $centerOpen . '<img src="\1" alt="' . htmlentities($embeddedImage) . '"' . $style . '>' . $centerClose,
             $result
         );
 

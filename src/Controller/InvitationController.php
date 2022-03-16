@@ -82,22 +82,12 @@ class InvitationController extends BaseRequestAndInvitationController
             return $this->redirect($referrer);
         }
 
-        $subject = new Subject();
-        $subjectText = $translator->trans(
-            'invitation',
-            [],
-            null,
-            $guest->getPreferredLanguage()->getShortcode()
-        );
-        $subjectText .= ' - ' . $leg->getTrip()->getSummary() . ' - ';
-        $subjectText .= $leg->getLocation()->getName();
-        $subject->setSubject($subjectText);
-
         $hostingRequest = new HostingRequest();
         $hostingRequest->setArrival($leg->getArrival());
         $hostingRequest->setDeparture($leg->getDeparture());
         $hostingRequest->setNumberOfTravellers($leg->getTrip()->getCountOfTravellers());
 
+        $subject = new Subject();
         $invitation = new Message();
         $invitation->setSubject($subject);
         $invitation->setRequest($hostingRequest);
@@ -132,7 +122,7 @@ class InvitationController extends BaseRequestAndInvitationController
 
         return $this->render('invitation/invite.html.twig', [
             'leg' => $leg,
-            'subject' => $subjectText,
+            'subject' => '',
             'form' => $invitationForm->createView(),
         ]);
     }

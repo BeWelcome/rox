@@ -1,4 +1,5 @@
 .autocomplete-input {
+/*
   border: 1px solid black;
   border-radius: 8px;
   width: 100%;
@@ -9,24 +10,28 @@
   line-height: 1.5;
   flex: 1;
   background-color: white;
+*/
 }
 
 .autocomplete-input:focus, .autocomplete-input[aria-expanded=true] {
+/*
   border-color: rgba(0, 0, 0, .12);
   background-color: #fff;
   outline: none;
   box-shadow: 0 2px 2px rgba(0, 0, 0, .16)
+*/
 }
 
 [data-position=below] .autocomplete-input[aria-expanded=true] {
   border-bottom-color: transparent;
-  border-radius: 8px 8px 0 0
+  border-radius: 8px 0px 0 0;
 }
 
 [data-position=above] .autocomplete-input[aria-expanded=true] {
   border-top-color: transparent;
-  border-radius: 0 0 8px 8px;
+/*  border-radius: 0 0 8px 8px;
   z-index: 2
+ */
 }
 
 .autocomplete[data-loading=true]:after {
@@ -71,7 +76,7 @@
 
 .autocomplete-result {
   cursor: default;
-  padding: 12px;
+  padding: 4px;
 }
 
 .autocomplete-result:hover, .autocomplete-result[aria-selected=true] {
@@ -88,7 +93,7 @@
 }
 
 .suggest-group {
-  padding: 16px;
+  padding: 8px;
   text-transform: uppercase;
   font-size: 14px;
   background: rgba(0, 0, 0, 0.06);
@@ -96,7 +101,7 @@
 
 .suggest-name {
   font-size: 20px;
-  margin-bottom: 8px;
+  margin-bottom: 4px;
 }
 
 .suggest-country {
@@ -105,8 +110,8 @@
 }
 
 .suggest-map {
-  width:120px;
-  height:60px;
+  width:192px;
+  height:84px;
 }
 
 #no-results {

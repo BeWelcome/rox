@@ -1,4 +1,3 @@
-import SearchPicker from "./search/searchpicker";
 import Litepicker from 'litepicker';
 import moment from 'moment';
 import '../scss/_daterangepicker.scss';
@@ -8,8 +7,9 @@ import 'leaflet.fullscreen';
 import 'leaflet.fullscreen/Control.FullScreen.css';
 
 require('leaflet-polylinedecorator');
+import {initializeMultipleAutoCompletes} from './suggest/locations';
 
-let searchPicker = new SearchPicker( "/search/locations/places", 'js-search-picker', '_fullname');
+initializeMultipleAutoCompletes("/suggest/locations/places", 'js-search-picker', '_autocomplete');
 
 let pickers = document.querySelectorAll('*[id*="_duration"]');
 let latestDeparture = moment().add(1, 'day');
@@ -62,7 +62,7 @@ $(document).on('click', '.js-btn-add[data-target]', function (event) {
     collectionHolder.append(form);
 
     /* enable a search picker on all location fields (including the newly added one */
-    searchPicker = new SearchPicker( "/search/locations/places", 'js-search-picker', '_fullname');
+    initializeMultipleAutoCompletes( "/suggest/locations/places", 'js-search-picker', '_autocomplete');
 
     const duration = document.getElementById('trip_subtrips_' + counter + '_duration');
 
@@ -92,7 +92,7 @@ if ($('#map').length) {
     });
 
     let allData = $('.js-data').map((_, el) => [el.value.split(',')]).get()
-
+    console.log(allData);
     let circlesArray = []
 
     let locationsArray = []
@@ -110,14 +110,16 @@ if ($('#map').length) {
 
         let marker = L.marker([latitude, longitude]).addTo(map);
         marker.bindPopup("<strong>" + location + "</strong> (" + countryName + ")<br>" + tripDate);
+        console.log("marker.bindPopup");
 
         let circle = null;
         circle = L.circle([latitude, longitude], {
             color: 'rgb(112,0,243)',
             fillColor: 'rgba(112, 0, 243, 0.1)',
             fillOpacity: 1,
-            radius: trip.radius
+            radius: trip.radius +.1
         }).addTo(map);
+        console.log("circle");
         circlesArray.push(circle)
     }
 
@@ -132,7 +134,7 @@ if ($('#map').length) {
         });
         const marker = L.marker([memberInfo.latitude, memberInfo.longitude], { icon: tripIcon}).addTo(map);
         marker.bindPopup("<strong>Your location</strong><br>...and search radius");
-
+        console.log("marker.bindPopup");
 
         L.circle([memberInfo.latitude, memberInfo.longitude], {
             color: 'rgb(0, 184, 85)',
@@ -140,9 +142,17 @@ if ($('#map').length) {
             fillOpacity: 1,
             radius: memberInfo.searchRadius * 1000
         }).addTo(map);
+        console.log("circle");
     }
     let group = new L.featureGroup(circlesArray);
-    map.fitBounds(group.getBounds());
+    console.log(group.getBounds());
+    if (circlesArray.length > 1) {
+        map.fitBounds(group.getBounds());
+    } else {
+        map.setView([allData[0][1], allData[0][2]], 12)
+    }
+
+    console.log("map.fitBounds");
 
     let journey = L.polyline(locationsArray).addTo(map);
     var arrows = L.polylineDecorator(journey, {
@@ -150,11 +160,13 @@ if ($('#map').length) {
             {offset: 25, repeat: 50, symbol: L.Symbol.arrowHead({pixelSize: 15, pathOptions: {fillOpacity: 1, weight: 0}})}
         ]
     }).addTo(map);
+    console.log("arrows");
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="/about/credits#OSM">OpenStreetMap contributors</a>',
         subdomains: ['a', 'b', 'c']
     }).addTo(map);
+    console.log("attribution");
 
     // detect fullscreen toggling
     map.on('enterFullscreen', function(){

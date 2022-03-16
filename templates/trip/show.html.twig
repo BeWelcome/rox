@@ -165,7 +165,7 @@
                                     </div>
                                 </div>
                                 <input type="hidden" class="js-data"
-                                       value="{{ subtrip.location.name }}, {{ subtrip.location.latitude }}, {{ subtrip.location.longitude }}, {{ subtrip.location.country.name }}}}, {{ subtrip.arrival|format_date('short') }}{% if subtrip.arrival != subtrip.departure %} - {{ subtrip.departure|format_date('short') }}{% endif %}">
+                                       value="{{ subtrip.location.name }},{{ subtrip.location.latitude }},{{ subtrip.location.longitude }},{{ subtrip.location.country.name }},{{ subtrip.arrival|format_date('short') }}{% if subtrip.arrival != subtrip.departure %} - {{ subtrip.departure|format_date('short') }}{% endif %}">
                             </li>
                             {% set current = current + 1 %}
                         {% endif %}
@@ -178,7 +178,7 @@
     <script type="text/javascript">
         let trip = {
             own: {% if app.user == trip.creator %}true{% else %}false{% endif %},
-            radius: {% if trip.invitationRadius == 5000 %}0{% else %}{{ trip.invitationRadius * 1000 }}{% endif %},
+            radius: {{ trip.invitationRadius * 1000 }},
         }
         let memberInfo = {
             latitude: {{ app.user.latitude }},

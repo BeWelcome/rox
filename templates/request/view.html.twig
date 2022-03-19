@@ -16,53 +16,53 @@
                 <div class="u-p-4">
                     {%- if original.Initiator.Username == myself.Username %}
                         {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_OPEN') %}
-                            <span class="u-p-4 u-rounded-8 u-bg-notice">
+                            <span class="u-p-4 u-rounded-8 u-leading-24 u-bg-notice">
                                 <i class="fas fa-exclamation u-mr-12"></i>
                                 {{ 'request.guest.open'|trans }}</span>
                         {% endif %}
                         {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_CANCELLED') %}
-                            <span class="u-p-4 u-rounded-8 u-bg-red">
+                            <span class="u-p-4 u-rounded-8 u-leading-24 u-bg-red">
                                 <i class="fa fa-times u-mr-12"></i>
                                 {{ 'request.guest.cancelled'|trans }}</span>
                         {% endif %}
                         {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_DECLINED') %}
-                            <span class="u-p-4 u-rounded-8 u-bg-red">
+                            <span class="u-p-4 u-rounded-8 u-leading-24 u-bg-red">
                                 <i class="fa fa-times u-mr-12"></i>
                                 {{ 'request.guest.declined'|trans }}</span>
                         {% endif %}
                         {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_ACCEPTED') %}
-                            <span class=" u--ml-4 u-p-4 u-rounded-8 u-bg-green">
+                            <span class=" u--ml-4 u-p-4 u-rounded-8 u-leading-24 u-bg-green">
                                 <i class="far fa-handshake u-mr-4"></i>
                                 {{ 'request.guest.accepted'|trans }}</span>
                         {% endif %}
                         {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_TENTATIVELY_ACCEPTED') %}
-                            <span class="u-p-4 u-rounded-8 u-bg-notice">
+                            <span class="u-p-4 u-rounded-8 u-leading-24 u-bg-notice">
                                 <i class="fas fa-exclamation u-mr-12"></i>
                                 {{ 'request.guest.tentatively'|trans }}</span>
                         {% endif %}
                     {% else %}
                         {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_OPEN') %}
-                            <span class="u-p-4 u-rounded-8 u-bg-notice">
+                            <span class="u-p-4 u-rounded-8 u-leading-24 u-bg-notice">
                                 <i class="fas fa-exclamation u-mr-12"></i>
                                 {{ 'request.host.open'|trans }}</span>
                         {% endif %}
                         {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_CANCELLED') %}
-                            <span class="u-p-4 u-rounded-8 u-bg-red">
+                            <span class="u-p-4 u-rounded-8 u-leading-24 u-bg-red">
                                 <i class="fa fa-times u-mr-12"></i>
                                 {{ 'request.host.cancelled'|trans }}</span>
                         {% endif %}
                         {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_DECLINED') %}
-                            <span class="u-p-4 u-rounded-8 u-bg-red">
+                            <span class="u-p-4 u-rounded-8 u-leading-24 u-bg-red">
                                 <i class="fa fa-times u-mr-12"></i>
                                 {{ 'request.host.declined'|trans }}</span>
                         {% endif %}
                         {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_ACCEPTED') %}
-                            <span class=" u--ml-4 u-p-4 u-rounded-8 u-bg-green">
+                            <span class=" u--ml-4 u-p-4 u-rounded-8 u-leading-24 u-bg-green">
                                 <i class="far fa-handshake u-mr-4"></i>
                                 {{ 'request.host.accepted'|trans }}</span>
                         {% endif %}
                         {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_TENTATIVELY_ACCEPTED') %}
-                            <span class="u-p-4 u-rounded-8 u-bg-notice">
+                            <span class="u-p-4 u-rounded-8 u-leading-24 u-bg-notice">
                                 <i class="fas fa-exclamation u-mr-12"></i>
                                 {{ 'request.host.tentatively'|trans }}</span>
                         {% endif %}

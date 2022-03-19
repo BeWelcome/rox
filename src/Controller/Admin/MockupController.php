@@ -43,37 +43,6 @@ use Twig\Environment;
 class MockupController extends TranslationController
 {
     private $mockups = [];
-/*
-        'My data' => [
-            'start page' => [
-                'type' => 'template',
-                'template' => 'private/index.html.twig',
-                'description' => 'Index page of the data dump created by /mydata (profile)',
-            ],
-            'footer' => [
-                'type' => 'template',
-                'template' => 'private/footer.html.twig',
-                'description' => 'Footer included on every page of the generated data including the date and time the generation happened.',
-                'setup' => 'getGeneratedDate',
-            ],
-            'activities, none' => [
-                'type' => 'template',
-                'template' => 'private/activities.html.twig',
-                'description' => 'Resulting page for the own data export with no activities',
-            ],
-            'mydata (activities, some)' => [
-                'type' => 'template',
-                'template' => 'private/activities.html.twig',
-                'description' => 'Resulting page for the own data export with some activities',
-            ],
-            'mydata (profile)' => [
-                'type' => 'template',
-                'template' => 'private/profile.html.twig',
-                'description' => 'Your profile in the data dump',
-            ],
-        ],
-    ];
-*/
     /** @var iterable|MockupProviderInterface[] */
     private $providers;
 

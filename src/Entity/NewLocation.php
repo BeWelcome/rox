@@ -9,38 +9,54 @@ namespace App\Entity;
 
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+use Gedmo\Translatable\Translatable;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * Location.
+ * NewLocation.
  *
  * @ORM\Table(name="geo__names", indexes={
  *     @ORM\Index(name="geonames_idx_name", columns={"name"}),
  *     @ORM\Index(name="geonames_idx_latitude", columns={"latitude"}),
  *     @ORM\Index(name="geonames_idx_longitude", columns={"longitude"}),
- *     @ORM\Index(name="geonames_idx_fclass", columns={"fclass"}),
- *     @ORM\Index(name="geonames_idx_fcode", columns={"fcode"}),
- *     @ORM\Index(name="geonames_idx_countryId", columns={"countryId"}),
- *     @ORM\Index(name="geonames_idx_admin1Id", columns={"admin1Id"}),
- *     @ORM\Index(name="geonames_idx_admin2Id", columns={"admin2Id"}),
- *     @ORM\Index(name="geonames_idx_admin3Id", columns={"admin3Id"}),
- *     @ORM\Index(name="geonames_idx_admin4Id", columns={"admin4Id"})
+ *     @ORM\Index(name="geonames_idx_fclass", columns={"feature_class"}),
+ *     @ORM\Index(name="geonames_idx_fcode", columns={"feature_code"}),
+ *     @ORM\Index(name="geonames_idx_country", columns={"country"}),
+ *     @ORM\Index(name="geonames_idx_admin1", columns={"admin1"}),
+ *     @ORM\Index(name="geonames_idx_admin2", columns={"admin2"}),
+ *     @ORM\Index(name="geonames_idx_admin3", columns={"admin3"}),
+ *     @ORM\Index(name="geonames_idx_admin4", columns={"admin4"}),
+ *     @ORM\Index(name="geonames_idx_country_id", columns={"country_id"}),
+ *     @ORM\Index(name="geonames_idx_admin1_id", columns={"admin_1_id"}),
+ *     @ORM\Index(name="geonames_idx_admin2_id", columns={"admin_2_id"}),
+ *     @ORM\Index(name="geonames_idx_admin3_id", columns={"admin_3_id"}),
+ *     @ORM\Index(name="geonames_idx_admin4_id", columns={"admin_4_id"})
  * })
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\NewLocationRepository")
+ * @Gedmo\TranslationEntity(class="App\Entity\Translation\NewLocationTranslation")
  *
  * @SuppressWarnings(PHPMD)
  * Auto generated class do not check mess
  */
-class NewLocation
+class NewLocation implements Translatable
 {
     /**
      * @var string
      *
+     * @Gedmo\Translatable
      * @ORM\Column(name="name", type="string", length=200, nullable=true)
      *
      * @Groups({"Member:Read"})
      */
     private $name;
+
+    /**
+     * @Gedmo\Locale
+     * Used locale to override Translation listener`s locale
+     * this is not a mapped field of entity metadata, just a simple property
+     */
+    private $locale;
 
     /**
      * @var float
@@ -63,21 +79,66 @@ class NewLocation
     /**
      * @var string
      *
-     * @ORM\Column(name="fclass", type="string", length=1, nullable=true)
+     * @ORM\Column(name="feature_class", type="string", length=1, nullable=true)
      */
-    private $fclass;
+    private $featureClass;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="fcode", type="string", length=10, nullable=true)
+     * @ORM\Column(name="feature_code", type="string", length=10, nullable=true)
      */
-    private $fcode;
+    private $featureCode;
 
     /**
-     * @var Location
+     * @var string
      *
-     * @ORM\ManyToOne(targetEntity="Location")
+     * @ORM\Column(name="country_id", type="string", nullable=true)
+     *
+     * @Groups({"Member:Read"})
+     */
+    private $countryId;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="admin_1_id", type="string", nullable=true)
+     *
+     * @Groups({"Member:Read"})
+     */
+    private $admin1Id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="admin_2_id", type="string", nullable=true)
+     *
+     * @Groups({"Member:Read"})
+     */
+    private $admin2Id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="admin_3_id", type="string", nullable=true)
+     *
+     * @Groups({"Member:Read"})
+     */
+    private $admin3Id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="admin_4_id", type="string", nullable=true)
+     *
+     * @Groups({"Member:Read"})
+     */
+    private $admin4Id;
+
+    /**
+     * @var NewLocation
+     *
+     * @ORM\ManyToOne(targetEntity="NewLocation", fetch="EAGER")
      * @ORM\JoinColumn(name="country", referencedColumnName="geonameId", nullable=true)
      *
      * @Groups({"Member:Read"})
@@ -85,37 +146,37 @@ class NewLocation
     private $country;
 
     /**
-     * @var Location
+     * @var NewLocation
      *
-     * @ORM\ManyToOne(targetEntity="Location")
-     * @ORM\JoinColumn(name="admin1Id", referencedColumnName="geonameId", nullable=true)
+     * @ORM\ManyToOne(targetEntity="NewLocation", fetch="EAGER")
+     * @ORM\JoinColumn(name="admin1", referencedColumnName="geonameId", nullable=true)
      *
      */
     private $admin1;
 
     /**
-     * @var Location
+     * @var NewLocation
      *
-     * @ORM\ManyToOne(targetEntity="Location")
-     * @ORM\JoinColumn(name="admin2Id", referencedColumnName="geonameId", nullable=true)
+     * @ORM\ManyToOne(targetEntity="NewLocation")
+     * @ORM\JoinColumn(name="admin2", referencedColumnName="geonameId", nullable=true)
      *
      */
     private $admin2;
 
     /**
-     * @var Location
+     * @var NewLocation
      *
-     * @ORM\ManyToOne(targetEntity="Location")
-     * @ORM\JoinColumn(name="admin3Id", referencedColumnName="geonameId", nullable=true)
+     * @ORM\ManyToOne(targetEntity="NewLocation")
+     * @ORM\JoinColumn(name="admin3", referencedColumnName="geonameId", nullable=true)
      *
      */
     private $admin3;
 
     /**
-     * @var Location
+     * @var NewLocation
      *
-     * @ORM\ManyToOne(targetEntity="Location")
-     * @ORM\JoinColumn(name="admin4Id", referencedColumnName="geonameId", nullable=true)
+     * @ORM\ManyToOne(targetEntity="NewLocation")
+     * @ORM\JoinColumn(name="admin4", referencedColumnName="geonameId", nullable=true)
      *
      */
     private $admin4;
@@ -132,7 +193,7 @@ class NewLocation
      *
      * @ORM\Column(name="moddate", type="date", nullable=true)
      */
-    private $moddate;
+    private $modificationDate;
 
     /**
      * @var int
@@ -144,192 +205,103 @@ class NewLocation
      */
     private $geonameId;
 
-    /**
-     * Set name.
-     *
-     * @param string $name
-     *
-     * @return Location
-     */
-    public function setName($name)
+    public function setName(string $name): self
     {
         $this->name = $name;
 
         return $this;
     }
 
-    /**
-     * Get name.
-     *
-     * @return string
-     */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * Set latitude.
-     *
-     * @param string $latitude
-     *
-     * @return Location
-     */
-    public function setLatitude($latitude)
+    public function setLatitude(float $latitude): self
     {
         $this->latitude = $latitude;
 
         return $this;
     }
 
-    /**
-     * Get latitude.
-     *
-     * @return string
-     */
-    public function getLatitude()
+    public function getLatitude(): float
     {
         return $this->latitude;
     }
 
-    /**
-     * Set longitude.
-     *
-     * @param float $longitude
-     *
-     * @return Location
-     */
-    public function setLongitude($longitude)
+    public function setLongitude($longitude): self
     {
         $this->longitude = $longitude;
 
         return $this;
     }
 
-    /**
-     * Get longitude.
-     *
-     * @return float
-     */
-    public function getLongitude()
+    public function getLongitude(): float
     {
         return $this->longitude;
     }
 
-    /**
-     * Set fclass.
-     *
-     * @param string $fclass
-     *
-     * @return Location
-     */
-    public function setFclass($fclass)
+    public function setFeatureClass(string $featureClass): self
     {
-        $this->fclass = $fclass;
+        $this->featureClass = $featureClass;
 
         return $this;
     }
 
-    /**
-     * Get fclass.
-     *
-     * @return string
-     */
-    public function getFclass()
+    public function getFeatureClass(): string
     {
-        return $this->fclass;
+        return $this->featureClass;
     }
 
-    /**
-     * Set fcode.
-     *
-     * @param string $fcode
-     *
-     * @return Location
-     */
-    public function setFcode($fcode)
+    public function setFeatureCode(string $featureCode): self
     {
-        $this->fcode = $fcode;
+        $this->featureCode = $featureCode;
 
         return $this;
     }
 
-    /**
-     * Get fcode.
-     *
-     * @return string
-     */
-    public function getFcode()
+    public function getFeatureCode(): string
     {
-        return $this->fcode;
+        return $this->featureCode;
     }
 
-    public function setCountry(?Location $country): self
+    public function setCountry(NewLocation $country): self
     {
         $this->country = $country;
 
         return $this;
     }
 
-    public function getCountry(): ?Location
+    public function getCountry(): NewLocation
     {
         return $this->country;
     }
 
-    /**
-     * Set population.
-     *
-     * @param int $population
-     *
-     * @return Location
-     */
-    public function setPopulation($population)
+    public function setPopulation(int $population): self
     {
         $this->population = $population;
 
         return $this;
     }
 
-    /**
-     * Get population.
-     *
-     * @return int
-     */
-    public function getPopulation()
+    public function getPopulation(): int
     {
         return $this->population;
     }
 
-    /**
-     * Set moddate.
-     *
-     * @param DateTime $moddate
-     *
-     * @return Location
-     */
-    public function setModdate(DateTime $moddate): self
+    public function setModificationDate(DateTime $modificationDate): self
     {
-        $this->moddate = $moddate;
+        $this->modificationDate = $modificationDate;
 
         return $this;
     }
 
-    /**
-     * Get moddate.
-     *
-     * @return DateTime
-     */
-    public function getModdate()
+    public function getModificationDate(): DateTime
     {
-        return $this->moddate;
+        return $this->modificationDate;
     }
 
-    /**
-     * Get geonameId.
-     *
-     * @return int
-     */
-    public function getGeonameId()
+    public function getGeonameId(): int
     {
         return $this->geonameId;
     }
@@ -341,52 +313,100 @@ class NewLocation
         return $this;
     }
 
-    public function setAdmin1(?Location $admin1): self
+    public function getAdmin1(): ?NewLocation
+    {
+        return $this->admin1;
+    }
+
+    public function setAdmin1(?NewLocation $admin1): self
     {
         $this->admin1 = $admin1;
 
         return $this;
     }
 
-    public function getAdmin1(): ?Location
+    public function getAdmin2(): ?NewLocation
     {
-        return $this->admin1;
+        return $this->admin2;
     }
 
-    public function setAdmin2(?Location $admin2): self
+    public function setAdmin2(?NewLocation $admin2): self
     {
         $this->admin2 = $admin2;
 
         return $this;
     }
 
-    public function getAdmin2(): ?Location
+    public function getAdmin3(): ?NewLocation
     {
-        return $this->admin2;
+        return $this->admin3;
     }
 
-    public function setAdmin3(?Location $admin3): self
+    public function setAdmin3(?NewLocation $admin3): self
     {
         $this->admin3 = $admin3;
 
         return $this;
     }
 
-    public function getAdmin3(): ?Location
+    public function getAdmin4(): ?NewLocation
     {
-        return $this->admin3;
+        return $this->admin4;
     }
 
-    public function setAdmin4(?Location $admin4): self
+    public function setAdmin4(?NewLocation $admin4): self
     {
         $this->admin4 = $admin4;
 
         return $this;
     }
 
-    public function getAdmin4(): ?Location
+    public function setAdmin1Id(?string $admin1Id): self
     {
-        return $this->admin4;
+        $this->admin1Id = $admin1Id;
+
+        return $this;
+    }
+
+    public function getAdmin1Id(): ?string
+    {
+        return $this->admin1Id;
+    }
+
+    public function setAdmin2Id(?string $admin2Id): self
+    {
+        $this->admin2Id = $admin2Id;
+
+        return $this;
+    }
+
+    public function getAdmin2Id(): ?string
+    {
+        return $this->admin2Id;
+    }
+
+    public function setAdmin3Id(?string $admin3Id): self
+    {
+        $this->admin3Id = $admin3Id;
+
+        return $this;
+    }
+
+    public function getAdmin3Id(): ?string
+    {
+        return $this->admin3Id;
+    }
+
+    public function setAdmin4Id(?string $admin4Id): self
+    {
+        $this->admin4Id = $admin4Id;
+
+        return $this;
+    }
+
+    public function getAdmin4Id(): ?string
+    {
+        return $this->admin4Id;
     }
 
     public function getFullname(): string
@@ -394,5 +414,22 @@ class NewLocation
         $nameOfAdmin1 = (null === $this->admin1) ? '' : ', ' . $this->getAdmin1()->getName();
 
         return $this->getName() . $nameOfAdmin1  . ', ' . $this->getCountry()->getName();
+    }
+
+    public function getCountryId(): string
+    {
+        return $this->countryId;
+    }
+
+    public function setCountryId(string $countryId): self
+    {
+        $this->countryId = $countryId;
+
+        return $this;
+    }
+
+    public function setTranslatableLocale($locale)
+    {
+        $this->locale = $locale;
     }
 }

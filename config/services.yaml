@@ -68,6 +68,10 @@ services:
         arguments:
             $dataDirectory: '%data_directory%'
 
+    App\Command\GeonamesUpdateFullCommand:
+        arguments:
+            $locales: "%locales%"
+
     App\Serializer\MemberContextBuilder:
         decorates: api_platform.serializer.context_builder
         arguments:

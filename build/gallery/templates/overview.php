@@ -22,6 +22,7 @@ if ($statement) {
     $currentPage = $page;
     $request = $requestStr.'/=page%d';
     require 'pages.php';
+    $words = $this->words;
     ?>
     <div id="masonry-grid" class="row" data-masonry='{"percentPosition": true }'>
         <?php
@@ -37,9 +38,13 @@ if ($statement) {
         $edit = ($loggedmember && $loggedmember->Username == $d->user_handle);
         echo '<div class="card-body p-1"><h6 class="card-title text-truncate">';
         if ($edit) {
-            echo '<input type="checkbox" class="form-check-inline mr-0" name="imageId[]" value="' . $d->id . '">';
+            echo '<input type="checkbox" class="form-check-inline mr-0" name="imageId[]" value="' . $d->id . '"> ';
         }
-        echo '<a href="gallery/img?id='. $d->id .'" title="'. $d->title .'">'. $title_short . '</a></h6>';
+        echo '<a href="gallery/img?id='. $d->id .'" alt="'. $d->title .'">'. $title_short . '</a>';
+        if (null !== $d->albumId) {
+            echo '<br>' . $words->getSilent('album') . '<a href="gallery/show/sets/' . $d->albumId . '" alt="' . $d->album . '">' . $d->album . '</a>';
+        }
+        echo '</h6>';
 
         if ($edit) {
             echo '<div class="card-text"><small class="text-muted">'.$layoutbits->ago(strtotime($d->created)).'</small>';

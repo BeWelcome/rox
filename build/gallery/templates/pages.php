@@ -1,5 +1,5 @@
 <?php
-  /* what is this supposed to do?   It should probably become a widget. 
+  /* what is this supposed to do?   It should probably become a widget.
    * This seems to be a pager template and is used in build/places and somewhere else?
    *
    * */
@@ -20,7 +20,7 @@ if (!is_array($pages) || count($pages) == 0) {
             if (!isset($page['current'])) {
                 echo '<li class="page-item"><a href="'.sprintf($request, $page['pageno']).'" class="page-link">'.$page['pageno'].'</a></li>';
             } else {
-                echo '<li class="page-item active""><a class="page-link">'. $page['pageno'] .'</a></li>';
+                echo '<li class="page-item active"><a class="page-link">'. $page['pageno'] .'</a></li>';
             }
           } ?>
         <li class="page-item <?php if ($currentPage == $maxPage) { echo ' disabled'; } ?>"><a href="<?=sprintf($request, ($currentPage + 1))?>" class="page-link">&gt;&gt;</a></li>

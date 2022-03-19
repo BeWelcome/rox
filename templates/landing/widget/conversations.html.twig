@@ -6,18 +6,20 @@
 			<div class="o-avatar o-avatar--m o-avatar--noname o-avatar--shadow-s u-mr-8">{{ macros.roundedavatarstack(message.sender.username, 72, true) }}</div>
 			<div class="u-flex u-flex-col u-h-full u-justify-center u-px-8 u-w-min-0 u-overflow-hidden">
 				{% if message.request %}
-					<div class="u-py-4 u-pr-8">
-						<p class="badge u-bg-green-dark u-text-white u-font-500 u-text-14 u-leading-10">
-							{% if message.request.inviteForLeg is null %}
-								{{ 'conversations.request'|trans }}
-							{% else %}
-								{{ 'conversations.invitation'|trans }}
-							{% endif %}
-							{{ message.request.arrival | format_date(pattern="MMM d") }}
-							-
-							{{ message.request.departure | format_date(pattern="MMM d yyy") }}
-						</p>
-					</div>
+					<a href="{{ path('conversation_view', { id: message.id } ) }}">
+						<div class="u-py-4 u-pr-8">
+							<p class="badge u-bg-green-dark u-text-white u-font-500 u-text-14 u-leading-10">
+								{% if message.request.inviteForLeg is null %}
+									{{ 'conversations.request'|trans }}
+								{% else %}
+									{{ 'conversations.invitation'|trans }}
+								{% endif %}
+								{{ message.request.arrival | format_date(pattern="MMM d") }}
+								-
+								{{ message.request.departure | format_date(pattern="MMM d yyy") }}
+							</p>
+						</div>
+					</a>
 				{% else %}
 					<p class="u-ellipsis {% if unread %}unread{% endif %}">
 						<a href="{{ path('conversation_view', { id: message.id } ) }}">

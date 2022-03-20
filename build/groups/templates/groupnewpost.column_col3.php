@@ -6,7 +6,9 @@ if (empty($vars))
 {
     $vars['topic_text'] = '';
     $vars['topic_title'] = '';
-    $vars['ThreadVisibility'] = 'GroupOnly';
+    if ($this->group->Type !== 'Public') {
+        $vars['ThreadVisibility'] = 'GroupOnly';
+    }
     $vars['NotifyMe'] = false;
     $error['text'] = false;
     $error['title'] = false;

@@ -47,7 +47,7 @@ function initializeAutoComplete(element, searchUrl) {
             let group = ''
             if (result.type === "refine") {
                 return `
-                <li class="suggest-group">${result.type}</li>
+                <li class="suggest-group">${result.title}</li>
                     <li ${props}>
                         <div class="wiki-title">
                             ${result.text}

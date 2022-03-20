@@ -37,7 +37,7 @@ class SuggestLocationModel
     public function getSuggestionsForPlaces(string $term): array
     {
         $term = trim($term, ' ,');
-        list($place, $adminId, $countryId) = $this->getPlaceInformation($term);
+        list($place, $countryId, $adminId) = $this->getPlaceInformation($term);
 
         if ($place !== trim($term) && null === $adminId && null === $countryId) {
             return ['locations' => []];
@@ -63,29 +63,9 @@ class SuggestLocationModel
 
         $locale = $this->translator->getLocale();
         $place = $this->translator->trans('suggest.places');
-        $qb = $this->entityManager->createQueryBuilder();
-        $query = $qb
-            ->select('l')
-            ->from('App\Entity\NewLocation', 'l')
-            ->where($qb->expr()->in('l.geonameId', $ids))
-            ->getQuery()
-        ;
-        $query->setHint(
-            \Doctrine\ORM\Query::HINT_CUSTOM_OUTPUT_WALKER,
-            'Gedmo\\Translatable\\Query\\TreeWalker\\TranslationWalker'
-        );
-        $query->setHint(
-            TranslatableListener::HINT_TRANSLATABLE_LOCALE,
-            $locale,
-        );
-        // fallback
-        $query->setHint(
-            TranslatableListener::HINT_FALLBACK,
-            1 // fallback to default values in case if record is not translated
-        );
-        $locations = $query->getResult();
         $result = [];
-        foreach ($locations as $location) {
+        foreach ($ids as $id) {
+            $location = $this->getDetailsForId($id);
             $admin1 = $location->getAdmin1();
             if (null !== $admin1) {
                 $admin1->setTranslatableLocale($locale);
@@ -106,8 +86,9 @@ class SuggestLocationModel
         }
 
         if ($totalFound > 20) {
-            $locations[] = [
-                'type' => $this->translator->trans('suggest.refine'),
+            $result[] = [
+                'type' => 'refine',
+                'title' => $this->translator->trans('suggest.refine'),
                 'text' => $this->translator->trans('suggest.more.results'),
             ];
         }
@@ -174,7 +155,7 @@ class SuggestLocationModel
         }
 
         // Return the first result including the country
-        return [$result['admin1'], $result['country']];
+        return [$result['country'], $result['admin1']];
     }
 
     /**
@@ -223,12 +204,12 @@ class SuggestLocationModel
 
     private function searchForPlaceWithLocale(string $place, ?string $countryId, ?string $adminId): array
     {
-        return $this->executeSphinxQLQuery($place, $adminId, $countryId, $this->translator->getLocale());
+        return $this->executeSphinxQLQuery($place, $countryId, $adminId, $this->translator->getLocale());
     }
 
     private function searchForPlace(string $place, ?string $countryId, ?string $adminId): array
     {
-        list(, $sphinxResults) = $this->executeSphinxQLQuery($place, $adminId, $countryId);
+        list(, $sphinxResults) = $this->executeSphinxQLQuery($place, $countryId, $adminId);
 
         // remove duplicates and set $totalFound to the remaining hits.
         $geonameIds = [];
@@ -251,16 +232,14 @@ class SuggestLocationModel
      */
     private function executeSphinxQLQuery(
         string $place,
-        ?string $adminId,
         ?string $countryId,
+        ?string $adminId,
         ?string $locale = null
     ): array {
         $match = (new MatchBuilder($this->sphinxQL))
-            ->match(SphinxQL::expr('^' . $place . '$'))
+            ->exact(SphinxQL::expr($place))
             ->orMatch(SphinxQL::expr($place))
-            ->orMatch(SphinxQL::expr('*' . $place))
-            ->orMatch(SphinxQL::expr('^' . $place . '*'))
-            ->orMatch(SphinxQL::expr('^*' . $place . '*'))
+            ->orMatch(SphinxQL::expr($place.'*'))
         ;
 
         $query = $this->sphinxQL->select('geonameid', 'admin1', 'country')
@@ -316,7 +295,7 @@ class SuggestLocationModel
         $place = trim($placeAdminOrCountry[0]);
         if (2 == count($placeAdminOrCountry)) {
             $countryOrAdmin = trim($placeAdminOrCountry[1]);
-            list($adminId, $countryId) = $this->findCountryOrAdminId($countryOrAdmin);
+            list($countryId, $adminId) = $this->findCountryOrAdminId($countryOrAdmin);
         }
 
         if (3 == count($placeAdminOrCountry)) {
@@ -328,8 +307,33 @@ class SuggestLocationModel
 
         return [
             count($placeAdminOrCountry) > 1 ? $place : $term,
-            $adminId,
             $countryId,
+            $adminId,
         ];
+    }
+
+    private function getDetailsForId($id)
+    {
+        $qb = $this->entityManager->createQueryBuilder();
+        $query = $qb
+            ->select('l')
+            ->from('App\Entity\NewLocation', 'l')
+            ->where($qb->expr()->in('l.geonameId', $id))
+            ->getQuery()
+        ;
+        $query->setHint(
+            \Doctrine\ORM\Query::HINT_CUSTOM_OUTPUT_WALKER,
+            'Gedmo\\Translatable\\Query\\TreeWalker\\TranslationWalker'
+        );
+        $query->setHint(
+            TranslatableListener::HINT_TRANSLATABLE_LOCALE,
+            $this->translator->getLocale(),
+        );
+        // fallback
+        $query->setHint(
+            TranslatableListener::HINT_FALLBACK,
+            1 // fallback to default values in case if record is not translated
+        );
+        return $query->getOneOrNullResult();
     }
 }

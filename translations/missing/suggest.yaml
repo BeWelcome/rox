@@ -1,0 +1,6 @@
+suggest.refine:
+    - 'Refine your search'
+    - Headline for the section of the search results if there are more than 20 hits
+suggest.more.results:
+    - 'More than 20 results please refine your search'
+    - Shown if the search parameters aren't limiting enough.

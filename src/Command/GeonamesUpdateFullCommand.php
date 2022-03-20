@@ -425,11 +425,11 @@ class GeonamesUpdateFullCommand extends Command
         fclose($handle);
 
         $connection = $this->entityManager->getConnection();
-        $io->writeln('Setting translations (preferred, short)');
+        $io->note('Setting translations (preferred, short)');
 
         $connection->executeQuery("
             INSERT INTO geo__names_translations (locale, object_class, field, foreign_key, content)
-	            SELECT isolanguage as locale, 'App\\Entity\\NewLocation', 'name', geonameid, alternatename
+	            SELECT isolanguage as locale, 'App\\\\Entity\\\\NewLocation', 'name', geonameid, alternatename
 	                FROM geonamesalternatenames
 	                WHERE ispreferred = 1 AND isshort = 1 AND ishistoric = 0 AND isolanguage <> '' and length(isolanguage) <> 4;
         ");
@@ -437,7 +437,7 @@ class GeonamesUpdateFullCommand extends Command
         $io->note('Setting translations (preferred)');
         $connection->executeQuery("
             INSERT INTO geo__names_translations (locale, object_class, field, foreign_key, content)
-	            SELECT isolanguage as locale, 'App\\Entity\\NewLocation', 'name', geonameid, alternatename
+	            SELECT isolanguage as locale, 'App\\\\Entity\\\\NewLocation', 'name', geonameid, alternatename
 	                FROM geonamesalternatenames
 	                WHERE ispreferred = 1 AND isshort = 0 AND ishistoric = 0 AND isolanguage <> '' and length(isolanguage) <> 4;
         ");
@@ -445,9 +445,17 @@ class GeonamesUpdateFullCommand extends Command
         $io->note('Setting translations (short)');
         $connection->executeQuery("
             INSERT INTO geo__names_translations (locale, object_class, field, foreign_key, content)
-	            SELECT isolanguage as locale, 'App\\Entity\\NewLocation', 'name', geonameid, alternatename
+	            SELECT isolanguage as locale, 'App\\\\Entity\\\\NewLocation', 'name', geonameid, alternatename
 	                FROM geonamesalternatenames
 	                WHERE ispreferred = 0 AND isshort = 1 AND ishistoric = 0 AND isolanguage <> '' and length(isolanguage) <> 4;
+        ");
+
+        $io->note('Setting translations (any)');
+        $connection->executeQuery("
+            INSERT INTO geo__names_translations (locale, object_class, field, foreign_key, content)
+	            SELECT isolanguage as locale, 'App\\\\Entity\\\\NewLocation', 'name', geonameid, alternatename
+	                FROM geonamesalternatenames
+	                WHERE ispreferred = 0 AND isshort = 0 AND ishistoric = 0 AND isolanguage <> '' and length(isolanguage) <> 4;
         ");
 
         $progressBar->finish();

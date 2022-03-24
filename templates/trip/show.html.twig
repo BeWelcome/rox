@@ -55,7 +55,7 @@
                        aria-label="{{ 'trip.invitation.radius'|trans }}">{{ trip.invitationRadius|trans }}</p>
                 </div>
             </div>
-            <p class="u-text-white u-font-display u-italic u-mb-24">{{ trip.description }}</p>
+            <p class="u-text-white u-font-display u-italic u-mb-24">{{ trip.description|nl2br }}</p>
         </div>
         <div class="md:u-grid md:u-grid-cols-2 md:u-gap-24">
             <div id="map" class="o-map"></div>

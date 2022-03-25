@@ -43,12 +43,7 @@ class SuggestLocationModel
             return ['locations' => []];
         }
 
-        list($totalFound, $sphinxResult) = $this->searchForPlaceWithLocale($place, $countryId, $adminId);
-
-        if (0 === $totalFound) {
-            // No matching places found with this locale
-            list($totalFound, $sphinxResult) = $this->searchForPlace($place, $countryId, $adminId);
-        }
+        list($totalFound, $sphinxResult) = $this->searchForPlace($place, $countryId, $adminId);
 
         if (0 === $totalFound) {
             return ['locations' => []];
@@ -202,28 +197,39 @@ class SuggestLocationModel
         return $totalFound;
     }
 
-    private function searchForPlaceWithLocale(string $place, ?string $countryId, ?string $adminId): array
-    {
-        return $this->executeSphinxQLQuery($place, $countryId, $adminId, $this->translator->getLocale());
-    }
-
     private function searchForPlace(string $place, ?string $countryId, ?string $adminId): array
     {
-        list(, $sphinxResults) = $this->executeSphinxQLQuery($place, $countryId, $adminId);
+        list($localeFound, $resultsForLocale) = $this->executeSphinxQLQuery(
+            $place,
+            $countryId,
+            $adminId,
+            $this->translator->getLocale()
+        );
+
+        list($found, $results) = $this->executeSphinxQLQuery($place, $countryId, $adminId);
 
         // remove duplicates and set $totalFound to the remaining hits.
         $geonameIds = [];
-        $results = [];
-        foreach ($sphinxResults as $result) {
+        $places = [];
+        foreach ($resultsForLocale as $result) {
             if (!in_array($result['geonameid'], $geonameIds)) {
                 $geonameIds[] = $result['geonameid'];
-                $results[] = $result;
+                $places[] = $result;
+            }
+        }
+
+        if (0 !== $found) {
+            foreach ($results as $result) {
+                if (!in_array($result['geonameid'], $geonameIds)) {
+                    $geonameIds[] = $result['geonameid'];
+                    $places[] = $result;
+                }
             }
         }
 
         return [
-            count($results),
-            $results,
+            count($places),
+            $places,
         ];
     }
 

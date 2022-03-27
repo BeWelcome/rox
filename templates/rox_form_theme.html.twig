@@ -333,10 +333,10 @@
 
 {% block form_errors -%}
     {%- if errors|length > 0 -%}
-        <span class="{% if form is not rootform %}invalid-feedback{% else %}alert alert-danger{% endif %} d-block">
+        <span class="{% if form is not rootform %}invalid-feedback u-flex u-rounded-4{% else %}alert alert-danger{% endif %}" style="background-color: rgba(255, 255, 255, 0.9);">
             {%- for error in errors -%}
-                <span class="d-block">
-                    <span class="form-error-icon badge badge-danger text-uppercase">{{ 'Error'|trans({}, 'validators') }}</span> <span class="form-error-message">{{ error.message }}</span>
+                <span class="u-flex u-h-20 u-place-items-center">
+                    <span class="form-error-icon badge badge-danger text-uppercase u-ml-4">{{ 'Error'|trans({}, 'validators') }}</span> <span class="form-error-message">{{ error.message }}</span>
                 </span>
             {%- endfor -%}
         </span>

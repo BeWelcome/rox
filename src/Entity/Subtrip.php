@@ -28,9 +28,9 @@ use Doctrine\ORM\PersistentCollection;
 class Subtrip
 {
     /**
-     * @var Location
+     * @var NewLocation
      *
-     * @ORM\ManyToOne(targetEntity="Location")
+     * @ORM\ManyToOne(targetEntity="NewLocation")
      * @ORM\JoinColumn(name="location", referencedColumnName="geonameId", nullable=true)
      */
     private $location;
@@ -93,14 +93,14 @@ class Subtrip
         $this->invitations = new ArrayCollection();
     }
 
-    public function setLocation(?Location $location): self
+    public function setLocation(?NewLocation $location): self
     {
         $this->location = $location;
 
         return $this;
     }
 
-    public function getLocation(): ?Location
+    public function getLocation(): ?NewLocation
     {
         return $this->location;
     }
@@ -200,6 +200,7 @@ class Subtrip
         $criteria = Criteria::create()
             ->where(Criteria::expr()->eq('status', HostingRequest::REQUEST_ACCEPTED))
         ;
+
         $accepted = $this->invitations->matching($criteria);
         return $accepted->isEmpty() ? null : $accepted->first();
     }

@@ -199,7 +199,7 @@ class SuggestLocationModel
 
     private function searchForPlace(string $place, ?string $countryId, ?string $adminId): array
     {
-        list($localeFound, $resultsForLocale) = $this->executeSphinxQLQuery(
+        list(, $resultsForLocale) = $this->executeSphinxQLQuery(
             $place,
             $countryId,
             $adminId,
@@ -227,8 +227,11 @@ class SuggestLocationModel
             }
         }
 
+        // return the first 20
+        $found = count($places);
+        $places = array_slice($places, 0, 20);
         return [
-            count($places),
+            $found,
             $places,
         ];
     }
@@ -245,7 +248,7 @@ class SuggestLocationModel
         $match = (new MatchBuilder($this->sphinxQL))
             ->exact(SphinxQL::expr($place))
             ->orMatch(SphinxQL::expr($place))
-            ->orMatch(SphinxQL::expr($place.'*'))
+            ->orMatch(SphinxQL::expr($place . '*'))
         ;
 
         $query = $this->sphinxQL->select('geonameid', 'admin1', 'country')
@@ -254,7 +257,7 @@ class SuggestLocationModel
             ->where('isPlace', '=', 1)
             ->option(
                 'ranker',
-                SphinxQL::expr('expr(\'sum((min_hit_pos==1)*50+exact_hit*100)+population/1000+membercount\')')
+                SphinxQL::expr('expr(\'sum((min_hit_pos==1)*50+exact_hit*100)+membercount\')')
             )
             ->limit(0, 20)
         ;

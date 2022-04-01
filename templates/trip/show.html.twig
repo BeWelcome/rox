@@ -70,8 +70,8 @@
                                 <div>
                                     <div class="u-ml-16 md:u-ml-0 md:u-mt-4">
                                         <p class="u-text-24 u-text-white u-font-display u-mb-8 u-font-300"><span
-                                                class="u-font-500">{{ subtrip.location.name }}</span>, <span class="u-whitespace-nowrap">{{ subtrip.location.country.name }}
-                                            <i class="o-flag o-flag--{{ subtrip.location.country.country }} u-ml-4"></i></span>
+                                                class="u-font-500">{{ subtrip.location.fullname }}</span>
+                                            <i class="o-flag o-flag--{{ subtrip.location.country.countryId }} u-ml-4" title="{{ subtrip.location.country.name }}"></i>
                                         </p>
                                         <p class="u-text-white u-font-display u-font-300">{{ subtrip.arrival|format_date('medium') }}{% if subtrip.arrival != subtrip.departure %} - {{ subtrip.departure|format_date('medium') }}{% endif %}</p>
                                     </div>

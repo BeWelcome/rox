@@ -31,7 +31,7 @@
                              {% for leg in trip.subtrips %}
                                 {% if leg.location %}<span class="u-whitespace-nowrap u-mr-8">
                                     {% if leg.location.country %}
-                                        <i class="o-flag o-flag--{{ leg.location.country.country }} u--mb-4"></i>
+                                        <i class="o-flag o-flag--{{ leg.location.country.countryId }} u--mb-4" title="{{ leg.location.country.country.name }}"></i>
                                     {% endif %}
                                     {{ leg.location.name }}</span>
                                 {% endif %}

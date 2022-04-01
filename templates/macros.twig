@@ -70,7 +70,7 @@
     {% set img %}<img class="o-avatar__img" src="{{ path( 'avatar', { 'username': username , 'size': size }) }}" title="{{ username }}" alt="{{ 'profile' | trans }}: {{ username }}">{% endset %}
     {{ macros.profilelink(username, img, 'o-avatar__img-wrapper o-avatar--shadow-s') }}
     {% if displayname %}
-        {{ macros.profilelink(username, username, 'o-avatar__name') }}
+        {{ macros.profilelink(username, username, 'o-avatar__name u-break-all') }}
     {% endif %}
 {% endmacro %}
 

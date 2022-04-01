@@ -14,20 +14,20 @@
     {% set show_message_route = 'conversation_view' %}
 {% endif %}
 <div class="c-conversation__item">
-    <div class="u-flex u-flex-col u-justify-center">
-        <span class="text-muted small u-mb-4">
+    {% if form is defined %}
+        <div class="u-flex u-justify-center u-mr-12" id="selectcolumn">
+            {{ form_widget(form.messages[loop.index0], {'attr': {'class': 'checkable'}}) }}
+        </div>
+    {% endif %}
+    <div class="u-flex u-flex-col u-justify-between">
+        <div class="text-muted small u-mb-4">
             {{  message.dateSent | format_date( 'medium') }}
-        </span>
-        <div class="o-avatar o-avatar--m o-avatar--noname  o-avatar--shadow-s u-mr-16 u-mb-12">
+        </div>
+        <div class="o-avatar o-avatar--m u-mr-16">
             {{ macros.roundedavatarstack(otherMember.Username, 72, true) }}
         </div>
-        {% if form is defined %}
-            <div class="u-flex u-justify-center u-mr-12 u-mb-8" id="selectcolumn">
-                {{ form_widget(form.messages[loop.index0], {'attr': {'class': 'checkable'}}) }}
-            </div>
-        {% endif %}
     </div>
-    <div class="u-flex u-flex-col u-h-full u-justify-center u-px-8 u-w-min-0 u-overflow-hidden">
+    <div class="u-flex u-flex-col u-h-full u-justify-between u-py-8 u-px-8 u-w-min-0 u-overflow-hidden">
             <a href="{{ path(show_message_route, { id: message.id}) }}">
                 {% if message.request %}
 						<p class="badge u-bg-green-dark u-text-white u-font-500 u-text-14 u-leading-10">

@@ -54,7 +54,7 @@ class Trip
      *
      * @ORM\Column(name="invitation_radius", type="integer")
      */
-    private $invitationRadius = 0;
+    private $invitationRadius = 20;
 
     /**
      * @var DateTime

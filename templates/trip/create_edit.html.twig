@@ -73,9 +73,6 @@
             </div>
             <div class="md:u-mr-24">{{ form_errors(form.options) }}</div>
         </div>
-        <div class="u-w-full u-mb-8 md:u-width-auto md:u-mb-0 u-col-span-2">
-            <textarea class="o-input o-input--no-borders o-input--translucid" placeholder="leg.description"></textarea>
-        </div>
         {{ form_widget(form.location.name) }} {{ form_widget(form.location.geoname_id) }}
         {{ form_widget(form.location.latitude) }} {{ form_widget(form.location.longitude) }}
         {{ form_errors(form.location.fullname) }}

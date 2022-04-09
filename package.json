@@ -67,7 +67,7 @@
     "litepicker": "^2.0.11",
     "mark.js": "^8.11.1",
     "masonry-layout": "^4.2.2",
-    "moment": "^2.29.0",
+    "moment": "^2.29.2",
     "moment-timezone": "^0.5.31",
     "path": "^0.12.7",
     "postcss": "^8.2.15",

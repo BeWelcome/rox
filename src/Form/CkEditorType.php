@@ -15,13 +15,6 @@ class CkEditorType extends TextAreaType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         parent::buildForm($builder, $options);
-        $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
-            // check if data is only <p>&nbsp;</p> and if so trim to empty string
-            $data = $event->getData();
-            if ('<p>&nbsp;</p>' === $data) {
-                $event->setData('');
-            }
-        });
         $builder->setAttribute('async', $options['async']);
     }
 

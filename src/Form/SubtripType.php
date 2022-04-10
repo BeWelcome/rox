@@ -85,7 +85,7 @@ class SubtripType extends AbstractType
                     'constraints' => [
                         new NotBlank(),
                         new NotNull(),
-                    ]
+                    ],
                 ]);
         });
     }
@@ -98,7 +98,7 @@ class SubtripType extends AbstractType
             'error_mapping' => [
                 'arrival' => 'duration',
                 'departure' => 'duration',
-            ]
+            ],
         ]);
     }
 }

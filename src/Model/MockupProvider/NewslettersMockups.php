@@ -2,27 +2,9 @@
 
 namespace App\Model\MockupProvider;
 
-use App\Doctrine\SubtripOptionsType;
-use App\Doctrine\TripAdditionalInfoType;
-use App\Entity\HostingRequest;
-use App\Entity\Location;
-use App\Entity\Member;
-use App\Entity\Message;
 use App\Entity\Newsletter;
-use App\Entity\Subject;
-use App\Entity\Subtrip;
-use App\Entity\Trip;
-use App\Form\DataTransformer\DateTimeTransformer;
-use App\Form\InvitationGuest;
-use App\Form\InvitationHost;
-use App\Form\InvitationType;
-use App\Form\NewsletterUnsubscribeType;
-use App\Form\ResetPasswordFormType;
-use App\Form\ResetPasswordRequestFormType;
-use Carbon\Carbon;
-use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
-use Mockery;
+use Exception;
 use Symfony\Component\Form\FormFactoryInterface;
 
 class NewslettersMockups implements MockupProviderInterface
@@ -62,7 +44,7 @@ class NewslettersMockups implements MockupProviderInterface
         $newsletters = $newsletterRepository->findBy(['type' => $parameters['type']], ['created' => 'DESC']);
 
         if (0 === \count($newsletters)) {
-            throw new \Exception('Sorry, no newsletter of type ' . $parameters['type'] . ' found, please create one.');
+            throw new Exception('Sorry, no newsletter of type ' . $parameters['type'] . ' found, please create one.');
         }
 
         return [
@@ -80,7 +62,7 @@ class NewslettersMockups implements MockupProviderInterface
                 'regular' => Newsletter::REGULAR_NEWSLETTER,
                 'local' => Newsletter::SPECIFIC_NEWSLETTER,
                 'terms' => Newsletter::TERMS_OF_USE,
-            ]
+            ],
         ];
     }
 }

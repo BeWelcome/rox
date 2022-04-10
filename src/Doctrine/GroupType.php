@@ -4,9 +4,9 @@ namespace App\Doctrine;
 
 class GroupType extends EnumType
 {
-    const PUBLIC = 'Public';
-    const NEED_ACCEPTANCE = 'NeedAcceptance';
-    const INVITE_ONLY = 'NeedInvitation';
+    public const PUBLIC = 'Public';
+    public const NEED_ACCEPTANCE = 'NeedAcceptance';
+    public const INVITE_ONLY = 'NeedInvitation';
 
     /** @var string */
     protected $name = 'group_type';

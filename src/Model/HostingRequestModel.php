@@ -2,12 +2,8 @@
 
 namespace App\Model;
 
-use App\Doctrine\MessageStatusType;
-use App\Entity\HostingRequest;
-use App\Entity\Member;
 use App\Entity\Message;
 use DateTime;
-use InvalidArgumentException;
 
 class HostingRequestModel extends AbstractRequestModel
 {

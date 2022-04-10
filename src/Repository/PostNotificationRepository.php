@@ -4,7 +4,6 @@ namespace App\Repository;
 
 use App\Doctrine\NotificationStatusType;
 use DateTime;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityRepository;
 
 /**

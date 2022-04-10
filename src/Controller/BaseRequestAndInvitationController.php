@@ -12,7 +12,6 @@ use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 abstract class BaseRequestAndInvitationController extends AbstractController
 {
@@ -28,16 +27,29 @@ abstract class BaseRequestAndInvitationController extends AbstractController
 
     abstract protected function addExpiredFlash(Member $receiver);
 
-    protected function getRequestClone(Message $hostingRequest): Message
+    protected function getMessageClone(Message $message): Message
     {
         // copy only the bare minimum needed
-        $newRequest = new Message();
-        $newRequest->setSubject($hostingRequest->getSubject());
-        $newHostingRequest = clone $hostingRequest->getRequest();
-        $newRequest->setRequest($newHostingRequest);
-        $newRequest->setMessage('');
+        $newMessage = new Message();
+        $newMessage->setSubject($message->getSubject());
+        $newMessage->setRequest($message->getRequest());
+        $newMessage->setMessage('');
+        $newMessage->setInitiator($message->getInitiator());
 
-        return $newRequest;
+        return $newMessage;
+    }
+
+    protected function getMessageAndRequestClone(Message $message): Message
+    {
+        // copy only the bare minimum needed
+        $newMessage = new Message();
+        $newMessage->setSubject($message->getSubject());
+        $newRequest = clone $message->getRequest();
+        $newMessage->setRequest($newRequest);
+        $newMessage->setMessage('');
+        $newMessage->setInitiator($message->getInitiator());
+
+        return $newMessage;
     }
 
     protected function persistFinalRequest(
@@ -52,32 +64,6 @@ abstract class BaseRequestAndInvitationController extends AbstractController
 
         // handle changes in request and subject
         $newRequest = $this->model->getFinalRequest($sender, $receiver, $currentRequest, $data, $clickedButton);
-        $em->persist($newRequest);
-        $em->flush();
-
-        return $newRequest;
-    }
-
-    protected function persistFinalInvitation(
-        Form $requestForm,
-        $currentRequest,
-        Member $sender,
-        Member $receiver
-    ): Message {
-        $data = $requestForm->getData();
-        $em = $this->getDoctrine()->getManager();
-        $clickedButton = $requestForm->getClickedButton()->getName();
-
-        // handle changes in invitation
-        $newRequest = $this->model->getFinalRequest($sender, $receiver, $currentRequest, $data, $clickedButton);
-
-        $requestUpdated = $newRequest->getRequest() !== $currentRequest->getRequest();
-
-        if ($requestUpdated) {
-            $currentRequest->getRequest()->setInviteForLeg(null);
-            $em->persist($currentRequest);
-        }
-
         $em->persist($newRequest);
         $em->flush();
 

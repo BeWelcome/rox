@@ -51,7 +51,7 @@ class SuggestLocationModel
 
         $ids = [];
         foreach ($sphinxResult as $result) {
-            if (!in_array($result['geonameid'], $ids, true)) {
+            if (!\in_array($result['geonameid'], $ids, true)) {
                 $ids[] = $result['geonameid'];
             }
         }
@@ -102,7 +102,7 @@ class SuggestLocationModel
             return null;
         }
 
-        if (2 === strlen($country)) {
+        if (2 === \strlen($country)) {
             return $country;
         }
 
@@ -189,7 +189,7 @@ class SuggestLocationModel
     {
         $totalFound = 0;
         foreach ($metaData as $meta) {
-            if ('total_found' == $meta['Variable_name']) {
+            if ('total_found' === $meta['Variable_name']) {
                 $totalFound = $meta['Value'];
             }
         }
@@ -212,7 +212,7 @@ class SuggestLocationModel
         $geonameIds = [];
         $places = [];
         foreach ($resultsForLocale as $result) {
-            if (!in_array($result['geonameid'], $geonameIds)) {
+            if (!\in_array($result['geonameid'], $geonameIds, true)) {
                 $geonameIds[] = $result['geonameid'];
                 $places[] = $result;
             }
@@ -220,7 +220,7 @@ class SuggestLocationModel
 
         if (0 !== $found) {
             foreach ($results as $result) {
-                if (!in_array($result['geonameid'], $geonameIds)) {
+                if (!\in_array($result['geonameid'], $geonameIds, true)) {
                     $geonameIds[] = $result['geonameid'];
                     $places[] = $result;
                 }
@@ -228,8 +228,9 @@ class SuggestLocationModel
         }
 
         // return the first 20
-        $found = count($places);
-        $places = array_slice($places, 0, 20);
+        $found = \count($places);
+        $places = \array_slice($places, 0, 20);
+
         return [
             $found,
             $places,
@@ -287,7 +288,7 @@ class SuggestLocationModel
         $totalFound = $this->getTotalFoundFromMeta($results->getNext()->fetchAllAssoc());
 
         return [
-            intval($totalFound),
+            (int) $totalFound,
             $sphinxResult,
         ];
     }
@@ -295,19 +296,19 @@ class SuggestLocationModel
     private function getPlaceInformation(string $term): array
     {
         $placeAdminOrCountry = explode(',', $term);
-        if (count($placeAdminOrCountry) > 3) {
+        if (\count($placeAdminOrCountry) > 3) {
             return ['locations' => []];
         }
 
         $adminId = null;
         $countryId = null;
         $place = trim($placeAdminOrCountry[0]);
-        if (2 == count($placeAdminOrCountry)) {
+        if (2 === \count($placeAdminOrCountry)) {
             $countryOrAdmin = trim($placeAdminOrCountry[1]);
             list($countryId, $adminId) = $this->findCountryOrAdminId($countryOrAdmin);
         }
 
-        if (3 == count($placeAdminOrCountry)) {
+        if (3 === \count($placeAdminOrCountry)) {
             $admin = trim($placeAdminOrCountry[1]);
             $country = trim($placeAdminOrCountry[2]);
             $countryId = $this->findCountryId($country);
@@ -315,7 +316,7 @@ class SuggestLocationModel
         }
 
         return [
-            count($placeAdminOrCountry) > 1 ? $place : $term,
+            \count($placeAdminOrCountry) > 1 ? $place : $term,
             $countryId,
             $adminId,
         ];
@@ -343,6 +344,7 @@ class SuggestLocationModel
             TranslatableListener::HINT_FALLBACK,
             1 // fallback to default values in case if record is not translated
         );
+
         return $query->getOneOrNullResult();
     }
 }

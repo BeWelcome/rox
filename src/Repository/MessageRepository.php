@@ -9,11 +9,9 @@ use App\Doctrine\MessageStatusType;
 use App\Doctrine\SpamInfoType;
 use App\Entity\Member;
 use App\Entity\Message;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\Query\Expr\Join;
-use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\ORM\QueryBuilder;
 use Pagerfanta\Doctrine\ORM\QueryAdapter;
 use Pagerfanta\Pagerfanta;
@@ -76,6 +74,9 @@ class MessageRepository extends EntityRepository
 
     /**
      * Returns a Pagerfanta object encapsulating the matching paginated processed reported messages.
+     *
+     * @param mixed $page
+     * @param mixed $items
      */
     public function findProcessedReportedMessages($page = 1, $items = 10): Pagerfanta
     {
@@ -331,10 +332,6 @@ class MessageRepository extends EntityRepository
         return $qb;
     }
 
-    /**
-     * @param bool $unreadOnly
-     * @return string
-     */
     private function getSql(bool $unreadOnly): string
     {
         if ($unreadOnly) {

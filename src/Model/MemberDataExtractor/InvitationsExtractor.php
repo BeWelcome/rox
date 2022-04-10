@@ -18,8 +18,8 @@ final class InvitationsExtractor extends MessagesExtractor
 
         $invitationsSentBy = $messageRepository->getInvitationsSentBy($member);
         $invitationsReceivedBy = $messageRepository->getInvitationsReceivedBy($member);
-        $this->process($invitationsSentBy, $tempDir . 'invitations', 'invitation',true);
-        $this->process($invitationsReceivedBy, $tempDir . 'invitations', 'invitation',false);
+        $this->process($invitationsSentBy, $tempDir . 'invitations', 'invitation', true);
+        $this->process($invitationsReceivedBy, $tempDir . 'invitations', 'invitation', false);
 
         return $this->writePersonalDataFile(
             [

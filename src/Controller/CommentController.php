@@ -104,6 +104,7 @@ class CommentController extends AbstractController
 
             return $this->redirectToRoute('profile_all_comments', ['username' => $member->getUsername()]);
         }
+
         return $this->render('/comments/add.html.twig', [
             'form' => $form->createView(),
         ]);
@@ -129,6 +130,7 @@ class CommentController extends AbstractController
 
             return $this->redirectToRoute('profile_all_comments', ['username' => $member->getUsername()]);
         }
+
         return $this->render('/comments/add.html.twig', [
             'form' => $form->createView(),
         ]);

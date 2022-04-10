@@ -59,8 +59,8 @@ class TranslationsAddMissingCommand extends Command
 
                 $translation = $translationRepository->findOneBy(['code' => $translationId]);
                 if (null === $translation) {
-                    $count++;
-                    $io->note(sprintf("Adding %s: %s", $translationId, $sentence));
+                    ++$count;
+                    $io->note(sprintf('Adding %s: %s', $translationId, $sentence));
 
                     $translation = new Word();
                     $translation->setCode($translationId);
@@ -77,7 +77,7 @@ class TranslationsAddMissingCommand extends Command
             }
         }
 
-        if ($count == 0) {
+        if (0 === $count) {
             $io->success('All translations in \'translation/missing\' were already imported.');
 
             return Command::SUCCESS;

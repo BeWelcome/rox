@@ -10,7 +10,7 @@ use Doctrine\ORM\Query\SqlWalker;
 
 /**
  * Usage: GEO_DISTANCE(latOrigin, lngOrigin, latDestination, lngDestination)
- * Returns: distance in km
+ * Returns: distance in km.
  *
  * @author Christian Raue <christian.raue@gmail.com>
  * @copyright 2011-2021 Christian Raue

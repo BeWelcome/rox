@@ -578,11 +578,12 @@ ORDER BY count(msg.id) DESC')->fetchAll();
     {
         if (null === $message->getRequest()) {
             $type = 1;
-        } else if (null !== $message->getRequest()->getInviteForLeg()) {
+        } elseif (null !== $message->getRequest()->getInviteForLeg()) {
             $type = 2; // Invitation
         } else {
             $type = 4;
         }
+
         return $type;
     }
 }

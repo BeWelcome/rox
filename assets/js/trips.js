@@ -1,8 +1,9 @@
 import Litepicker from 'litepicker';
-import moment from 'moment';
+
+import dayjs from 'dayjs';
 import '../scss/_daterangepicker.scss';
 
-var L = require('leaflet');
+import L from 'leaflet';
 import 'leaflet.fullscreen';
 import 'leaflet.fullscreen/Control.FullScreen.css';
 
@@ -12,7 +13,7 @@ import {initializeMultipleAutoCompletes} from './suggest/locations';
 initializeMultipleAutoCompletes("/suggest/locations/places", 'js-search-picker', '_autocomplete');
 
 let pickers = document.querySelectorAll('*[id*="_duration"]');
-let latestDeparture = moment().add(1, 'day');
+let lastEndDateSet = null;
 
 pickers.forEach(initializePicker);
 
@@ -21,7 +22,8 @@ function initializePicker(value) {
     const picker = new Litepicker({
         element: value,
         singleMode: false,
-        minDate: moment().format('YYYY-MM-DD'),
+        allowRepick: true,
+        minDate: dayjs(),
         numberOfMonths: 2,
         numberOfColumns: 2,
         format: "YYYY-MM-DD",
@@ -29,6 +31,7 @@ function initializePicker(value) {
         lang: document.documentElement.lang,
         setup: (picker) => {
             picker.on('selected', (start, end) => {
+                lastEndDateSet = end.format('YYYY-MM-DD');
                 const leg = picker.options.element.id.replace('_duration', '');
                 const arrival = document.getElementById(leg + '_arrival');
                 arrival.value = start ? start.format('YYYY-MM-DD') : '';
@@ -65,6 +68,13 @@ $(document).on('click', '.js-btn-add[data-target]', function (event) {
     initializeMultipleAutoCompletes( "/suggest/locations/places", 'js-search-picker', '_autocomplete');
 
     const duration = document.getElementById('trip_subtrips_' + counter + '_duration');
+    if (lastEndDateSet != null) {
+        const arrival = document.getElementById('trip_subtrips_' + counter + '_arrival');
+        arrival.value = lastEndDateSet;
+        const nextDay = dayjs(lastEndDateSet).add(1, 'day');
+        const departure = document.getElementById('trip_subtrips_' + counter + '_departure');
+        departure.value = nextDay.format('YYYY-MM-DD');
+    }
 
     initializePicker(duration);
 

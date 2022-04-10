@@ -7,14 +7,12 @@
 
 namespace App\Entity;
 
-use App\Doctrine\StatusType;
 use Carbon\Carbon;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\ORM\PersistentCollection;
 
 /**
  * SubTrip.
@@ -185,13 +183,13 @@ class Subtrip
     public function getInvitationBy(Member $member): ?HostingRequest
     {
         $request = null;
-        foreach($this->invitations as $invitation)
-        {
+        foreach ($this->invitations as $invitation) {
             $message = $invitation->getMessages()->first();
             if ($message && $message->getInitiator() === $member) {
                 $request = $invitation;
             }
         }
+
         return $request;
     }
 
@@ -202,6 +200,7 @@ class Subtrip
         ;
 
         $accepted = $this->invitations->matching($criteria);
+
         return $accepted->isEmpty() ? null : $accepted->first();
     }
 
@@ -213,6 +212,7 @@ class Subtrip
                 Criteria::expr()->neq('status', HostingRequest::REQUEST_DECLINED)
             ))
         ;
+
         return $this->invitations->matching($criteria);
     }
 

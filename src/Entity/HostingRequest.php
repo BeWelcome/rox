@@ -12,7 +12,6 @@ use Carbon\Carbon;
 use DateTime;
 use Doctrine\DBAL\Exception\InvalidArgumentException;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\ORM\PersistentCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -30,11 +29,11 @@ class HostingRequest
     // Add created and updated
     use LifecycleCallbacksTrait;
 
-    const REQUEST_OPEN = 0;
-    const REQUEST_CANCELLED = 1;
-    const REQUEST_DECLINED = 2;
-    const REQUEST_TENTATIVELY_ACCEPTED = 4;
-    const REQUEST_ACCEPTED = 8;
+    public const REQUEST_OPEN = 0;
+    public const REQUEST_CANCELLED = 1;
+    public const REQUEST_DECLINED = 2;
+    public const REQUEST_TENTATIVELY_ACCEPTED = 4;
+    public const REQUEST_ACCEPTED = 8;
 
     /**
      * @var int

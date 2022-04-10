@@ -16,7 +16,6 @@ use Twig\Extension\AbstractExtension;
 use Twig\Extension\GlobalsInterface;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
-use AnthonyMartin\GeoLocation\GeoLocation;
 
 class Extension extends AbstractExtension implements GlobalsInterface
 {
@@ -34,8 +33,6 @@ class Extension extends AbstractExtension implements GlobalsInterface
 
     /**
      * Extension constructor.
-     *
-     * @param string $publicDirectory
      */
     public function __construct(
         SessionInterface $session,
@@ -43,7 +40,7 @@ class Extension extends AbstractExtension implements GlobalsInterface
         EntrypointLookupInterface $entrypointLookup,
         LoggerInterface $logger,
         string $locales,
-        $publicDirectory
+        string $publicDirectory
     ) {
         $this->session = $session;
         $this->translator = $translator;
@@ -201,6 +198,7 @@ class Extension extends AbstractExtension implements GlobalsInterface
 
     /**
      * @SuppressWarnings(PHPMD.StaticAccess)
+     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
      */
     public function prepareNewsletter(string $text, bool $website = false): string
     {
@@ -250,7 +248,7 @@ class Extension extends AbstractExtension implements GlobalsInterface
     }
 
     /**
-     * Distance between two points on the earth
+     * Distance between two points on the earth.
      */
     public function distance(float $lat1, float $lng1, float $lat2, float $lng2): float
     {
@@ -258,6 +256,7 @@ class Extension extends AbstractExtension implements GlobalsInterface
         $radiantLng = deg2rad($lng2 - $lng1);
 
         $a = sin($radiantLat / 2) ** 2 + cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * sin($radiantLng / 2) ** 2;
+
         return 12742 * asin(sqrt($a));
     }
 

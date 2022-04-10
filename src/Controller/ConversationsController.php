@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\Member;
-use App\Entity\Message;
 use App\Form\CustomDataClass\MessageIndexRequest;
 use App\Form\MessageIndexFormType;
 use App\Model\ConversationsModel;
@@ -14,23 +13,16 @@ use App\Pagerfanta\InvitationsAdapter;
 use App\Pagerfanta\MessagesAdapter;
 use App\Pagerfanta\RequestsAdapter;
 use App\Pagerfanta\SpamAdapter;
-use App\Security\ConversationVoter;
-use App\Utilities\ConversationSubmenu;
-use App\Utilities\ConversationThread;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
-use Pagerfanta\Adapter\AdapterInterface;
-use Pagerfanta\Doctrine\ORM\QueryAdapter;
 use Pagerfanta\Pagerfanta;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * This controller handles all requests regarding lists of conversations (messages, hosting requests and invitations).
@@ -256,6 +248,6 @@ class ConversationsController extends AbstractController
             return $this->generateUrl('conversations_' . $conversationsType);
         }
 
-        return $this->generateUrl('conversations', [ 'conversationsType' => $conversationsType ]);
+        return $this->generateUrl('conversations', ['conversationsType' => $conversationsType]);
     }
 }

@@ -19,41 +19,38 @@
 
     {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'autocomplete': 'off'}}) }}
 
-    <div class="u-grid u-grid-cols-3 u-gap-x-12 u-my-4">
-        <div class="md:u-col-span-1 u-col-span-3">
-            <div class="o-form-group">
-                {{ form_label(form.request.duration) }}
-                <div class="input-group date">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text">
-                            <i class="fa fa-calendar"></i>
-                        </span>
-                    </div>
-                    {{ form_widget(form.request.duration, {'attr': { 'class': 'js-litepicker'}}) }}
+    <div class="u-flex u-flex-col">
+        {{ form_row(form.message) }}
+        <div class="o-form-group">
+            {{ form_label(form.request.duration) }}
+            <div class="input-group date">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">
+                        <i class="fa fa-calendar"></i>
+                    </span>
                 </div>
-                {% if form.request.flexible is defined %}
-                    {{ form_row(form.request.flexible) }}
-                    <p class="text-muted">{{ 'request.host.suggest.dates'|trans }}</p>
-                {% else %}
-                    <p class="text-muted">{{ 'request.host.fixed.dates'|trans }}</p>
-                {% endif %}
+                {{ form_widget(form.request.duration, {'attr': { 'class': 'js-litepicker'}}) }}
+                {{ form_errors(form.request.duration) }}
             </div>
-
-            {{ form_row(form.request.numberOfTravellers) }}
-
-            {{ form_row(form.request.arrival) }}
-            {{ form_row(form.request.departure) }}
-            {% do form.request.setRendered %}
-
+            {% if form.request.flexible is defined %}
+                {{ form_row(form.request.flexible) }}
+                <p class="text-muted">{{ 'request.host.suggest.dates'|trans }}</p>
+            {% else %}
+                <p class="text-muted">{{ 'request.host.fixed.dates'|trans }}</p>
+            {% endif %}
         </div>
-        <div class="md:u-col-span-2 u-col-span-3">
-            {{ form_row(form.message) }}
-            <div class="u-flex u-justify-end u-mt-8 u-mb-16">
-                {{ form_widget(form.accept, {'attr': {'class': 'o-button--s md:o-button u-ml-4'}}) }}
-                {{ form_widget(form.tentatively, {'attr': {'class': 'o-button--s md:o-button u-ml-4'}}) }}
-                {{ form_widget(form.decline, {'attr': {'class': 'o-button--s md:o-button u-ml-4'}}) }}
-                {{ form_widget(form.update, {'attr': {'class': 'o-button--s md:o-button u-ml-4'}}) }}
-            </div>
+
+        {{ form_row(form.request.numberOfTravellers) }}
+
+        {{ form_row(form.request.arrival) }}
+        {{ form_row(form.request.departure) }}
+        {% do form.request.setRendered %}
+
+        <div class="u-flex u-justify-end u-mt-8 u-mb-16">
+            {{ form_widget(form.accept, {'attr': {'class': 'o-button--s md:o-button u-ml-4'}}) }}
+            {{ form_widget(form.tentatively, {'attr': {'class': 'o-button--s md:o-button u-ml-4'}}) }}
+            {{ form_widget(form.decline, {'attr': {'class': 'o-button--s md:o-button u-ml-4'}}) }}
+            {{ form_widget(form.update, {'attr': {'class': 'o-button--s md:o-button u-ml-4'}}) }}
         </div>
     </div>
 

@@ -97,7 +97,7 @@
         "friends-of-behat/mink-browserkit-driver": "^1.4",
         "friends-of-behat/mink-extension": "^2.4",
         "friends-of-behat/symfony-extension": "^2.1",
-        "friendsofphp/php-cs-fixer": "^2.16",
+        "friendsofphp/php-cs-fixer": "^3.0",
         "hautelook/alice-bundle": "^2.0",
         "infection/infection": "0.25",
         "mockery/mockery": "^1.4.0",

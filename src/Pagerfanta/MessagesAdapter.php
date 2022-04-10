@@ -2,9 +2,7 @@
 
 namespace App\Pagerfanta;
 
-use Doctrine\DBAL\DBALException;
 use Pagerfanta\Adapter\AdapterInterface;
-use PDO;
 
 class MessagesAdapter extends AbstractConversationsAdapter implements AdapterInterface
 {

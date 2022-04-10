@@ -2,7 +2,6 @@
 
 namespace App\Repository;
 
-use AnthonyMartin\GeoLocation\GeoPoint;
 use App\Doctrine\SubtripOptionsType;
 use App\Entity\Member;
 use Carbon\CarbonImmutable;
@@ -22,17 +21,17 @@ use Doctrine\ORM\QueryBuilder;
  */
 class SubtripRepository extends EntityRepository
 {
-/*    public function queryTripsOfMember(Member $member): Query
-    {
-        return $this->createQueryBuilder('t')
-            ->where('t.created <= :now')
-            ->andWhere('t.creator = :creator')
-            ->setParameter(':now', new DateTime())
-            ->setParameter(':creator', $member)
-            ->orderBy('t.created', 'DESC')
-            ->getQuery();
-    }
-*/
+    /*    public function queryTripsOfMember(Member $member): Query
+        {
+            return $this->createQueryBuilder('t')
+                ->where('t.created <= :now')
+                ->andWhere('t.creator = :creator')
+                ->setParameter(':now', new DateTime())
+                ->setParameter(':creator', $member)
+                ->orderBy('t.created', 'DESC')
+                ->getQuery();
+        }
+    */
     public function getLegsInAreaMaxGuests(Member $member, int $distance = 20, int $duration = 3): array
     {
         $queryBuilder = $this->getLegsInAreaQueryBuilder($member, $distance, $duration);
@@ -75,21 +74,28 @@ class SubtripRepository extends EntityRepository
                 )
             )
             ->andWhere($qb->expr()->notIn('s.options', [SubtripOptionsType::PRIVATE]))
-            ->andWhere('GeoDistance(:latitude, :longitude, l.latitude, l.longitude) <= :distance')
-            ->andWhere('GeoDistance(:latitude, :longitude, l.latitude, l.longitude) <= t.invitationRadius')
-            ->setParameter(':distance', $distance)
             ->andWhere('s.arrival >= :now')
             ->andWhere('s.arrival <= :durationMonthsAhead')
             ->andWhere($qb->expr()->in('m.status', ['Active', 'OutOfRemind']))
             ->andWhere('t.creator <> :member')
             ->andWhere($qb->expr()->isNull('t.deleted'))
+            ->andWhere('GeoDistance(:latitude, :longitude, l.latitude, l.longitude) <= :distance')
+            ->andWhere(
+                $qb->expr()->orX(
+                    $qb->expr()->lte('GeoDistance(:latitude, :longitude, l.latitude, l.longitude)', 't.invitationRadius'),
+                    $qb->expr()->eq('s.location', ':city')
+                )
+            )
+            ->setParameter(':distance', $distance)
             ->setParameter(':member', $member)
+            ->setParameter(':city', $member->getCity())
             ->setParameter(':latitude', $member->getLatitude())
             ->setParameter(':longitude', $member->getLongitude())
             ->setParameter(':now', $now)
             ->setParameter(':durationMonthsAhead', $durationMonthsAhead)
             ->orderBy('s.arrival', 'ASC')
-            ->addSelect('t');
+            ->addSelect('t')
+        ;
 
         return $qb;
     }

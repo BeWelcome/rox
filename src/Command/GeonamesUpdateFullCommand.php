@@ -3,7 +3,7 @@
 namespace App\Command;
 
 use App\Entity\Country;
-use App\Entity\NewLocation;
+use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query;
 use Exception;
@@ -54,7 +54,7 @@ class GeonamesUpdateFullCommand extends Command
                 'full',
                 null,
                 InputOption::VALUE_NONE,
-                'Fetches all data; truncates the database tables and imports the data. Sets all options '.
+                'Fetches all data; truncates the database tables and imports the data. Sets all options ' .
                 '(except --continue-on-errors and --country). Does download the files if not explicitly forbidden.'
             )
             ->addOption(
@@ -146,112 +146,6 @@ class GeonamesUpdateFullCommand extends Command
         return $returnCode;
     }
 
-    private function updateAdmin1Units(SymfonyStyle $io, bool $download)
-    {
-        $io->note('Setting admin units');
-
-        $filename = $this->getFile(
-            $io,
-            'admin1CodesASCII.txt',
-            $download
-        );
-
-        if (null === $filename) {
-            return -1;
-        }
-
-        $lines = $this->getLines($filename);
-
-        $progressBar = new ProgressBar($this->output, $lines);
-        $progressBar->setFormat(
-            "<fg=white;bg=cyan> %status:-45s%</>\n%current%/%max% [%bar%] %percent:3s%%\n?  %estimated:-20s%  %memory:20s%"
-        );
-        $progressBar->setRedrawFrequency(10000);
-        $progressBar->start();
-
-        $handle = fopen($filename, 'r');
-
-        while (($row = fgetcsv($handle, 0, "\t")) !== false) {
-            $progressBar->advance();
-            if ('#' != $row[0][0]) {
-                $progressBar->setMessage('Executing query', 'status');
-                // Split admin unit into country and identifier
-                $countryAndAdmin1 = explode('.', $row[0]);
-                $country = $countryAndAdmin1[0];
-                $admin1 = $countryAndAdmin1[1];
-                // Check if admin unit already exists if so update.
-                $connection = $this->entityManager->getConnection();
-                $connection->executeQuery(
-                    'UPDATE geo__names SET admin1 = :geonameid WHERE country_id = :country AND admin_1_id = :admin1',
-                    [
-                        ':geonameid' => $row[3],
-                        ':country' => $country,
-                        ':admin1' => $admin1,
-                    ],
-                    ['int', 'string', 'string'],
-                );
-                $progressBar->setMessage('finished', 'status');
-            }
-        }
-        $progressBar->finish();
-
-        return 0;
-    }
-
-    private function updateAdmin2Units(SymfonyStyle $io, bool $download)
-    {
-        $io->note('Setting admin units (second level)');
-
-        $filename = $this->getFile(
-            $io,
-            'admin2Codes.txt',
-            $download
-        );
-
-        if (null === $filename) {
-            return -1;
-        }
-
-        $lines = $this->getLines($filename);
-
-        $progressBar = new ProgressBar($this->output, $lines);
-        $progressBar->setFormat(
-            "<fg=white;bg=cyan> %status:-45s%</>\n%current%/%max% [%bar%] %percent:3s%%\n?  %estimated:-20s%  %memory:20s%"
-        );
-        $progressBar->setRedrawFrequency(1000);
-        $progressBar->start();
-
-        $handle = fopen($filename, 'r');
-
-        while (($row = fgetcsv($handle, 0, "\t")) !== false) {
-            $progressBar->advance();
-            if ('#' != $row[0][0]) {
-                $progressBar->setMessage('Executing query', 'status');
-                // Split admin unit into country and identifier
-                $countryAndAdmin1AndAdmin2 = explode('.', $row[0]);
-                $country = $countryAndAdmin1AndAdmin2[0];
-                $admin1 = $countryAndAdmin1AndAdmin2[1];
-                $admin2 = $countryAndAdmin1AndAdmin2[2];
-                // Check if admin unit already exists if so update.
-                $connection = $this->entityManager->getConnection();
-                $connection->executeQuery(
-                    'UPDATE geo__names SET admin2 = :geonameid WHERE country_id = :country AND admin_1_id = :admin1 AND admin_2_id = :admin2',
-                    [
-                        ':geonameid' => $row[3],
-                        ':country' => $country,
-                        ':admin1' => $admin1,
-                        ':admin2' => $admin2,
-                    ],
-                    ['int', 'string', 'string', 'string'],
-                );
-                $progressBar->setMessage('finished', 'status');
-            }
-        }
-        $progressBar->finish();
-
-        return 0;
-    }
-
     protected function updateGeonames(SymfonyStyle $io, bool $download): int
     {
         $io->note('Updating the geonames database');
@@ -267,7 +161,7 @@ class GeonamesUpdateFullCommand extends Command
         }
 
         $zip = new ZipArchive();
-        $dir = sys_get_temp_dir().'/allcountries';
+        $dir = sys_get_temp_dir() . '/allcountries';
         if (true === $zip->open($filename)) {
             $zip->extractTo($dir);
             $zip->close();
@@ -277,7 +171,7 @@ class GeonamesUpdateFullCommand extends Command
             return -1;
         }
 
-        $lines = $this->getLines($dir.'/allCountries.txt');
+        $lines = $this->getLines($dir . '/allCountries.txt');
 
         $progressBar = new ProgressBar($this->output, $lines);
         $progressBar->setFormat(
@@ -286,7 +180,7 @@ class GeonamesUpdateFullCommand extends Command
         $progressBar->setRedrawFrequency(10000);
         $progressBar->start();
 
-        $handle = fopen($dir.'/allCountries.txt', 'r');
+        $handle = fopen($dir . '/allCountries.txt', 'r');
         $rows = [];
 
         $progressBar->setMessage('Loading data...', 'status');
@@ -329,7 +223,7 @@ class GeonamesUpdateFullCommand extends Command
 
         $filesystem = new Filesystem();
         $filesystem->remove([
-            $dir.'/allCountries.txt',
+            $dir . '/allCountries.txt',
             $dir,
         ]);
 
@@ -362,7 +256,7 @@ class GeonamesUpdateFullCommand extends Command
         $io->writeln('Extracting downloaded file.');
 
         $zip = new ZipArchive();
-        $dir = sys_get_temp_dir().'/alternatenames';
+        $dir = sys_get_temp_dir() . '/alternatenames';
         if (true === $zip->open($filename)) {
             $zip->extractTo($dir);
             $zip->close();
@@ -376,7 +270,7 @@ class GeonamesUpdateFullCommand extends Command
 
         $io->writeln('Getting number of rows to import');
 
-        $lines = $this->getLines($dir.'/alternateNamesV2.txt');
+        $lines = $this->getLines($dir . '/alternateNamesV2.txt');
 
         $io->newLine();
 
@@ -389,10 +283,10 @@ class GeonamesUpdateFullCommand extends Command
         $progressBar->start();
 
         $query = $this->entityManager->createQuery('SELECT l.geonameId FROM App\Entity\NewLocation l');
-        $geonameIds = $query->getResult(Query::HYDRATE_SCALAR_COLUMN);
+        $geonameIds = $query->getResult(AbstractQuery::HYDRATE_SCALAR_COLUMN);
         $geonameIds = array_flip($geonameIds);
 
-        $handle = fopen($dir.'/alternateNamesV2.txt', 'r');
+        $handle = fopen($dir . '/alternateNamesV2.txt', 'r');
         $rows = [];
 
         $progressBar->setMessage('Loading data...', 'status');
@@ -400,7 +294,7 @@ class GeonamesUpdateFullCommand extends Command
             if (
                 is_numeric($row[0])
                 && isset($geonameIds[$row[0]])
-                && in_array(strtolower($row[2]), $this->allowedLocales)
+//                && in_array(strtolower($row[2]), $this->allowedLocales)
             ) {
                 $rows[] = $row;
 
@@ -464,8 +358,8 @@ class GeonamesUpdateFullCommand extends Command
 
         $filesystem = new Filesystem();
         $filesystem->remove([
-            $dir.'/alternateNamesV2.txt',
-            $dir.'/isoLanguages.txt',
+            $dir . '/alternateNamesV2.txt',
+            $dir . '/isoLanguages.txt',
             $dir,
         ]);
 
@@ -474,9 +368,115 @@ class GeonamesUpdateFullCommand extends Command
         return 0;
     }
 
+    private function updateAdmin1Units(SymfonyStyle $io, bool $download)
+    {
+        $io->note('Setting admin units');
+
+        $filename = $this->getFile(
+            $io,
+            'admin1CodesASCII.txt',
+            $download
+        );
+
+        if (null === $filename) {
+            return -1;
+        }
+
+        $lines = $this->getLines($filename);
+
+        $progressBar = new ProgressBar($this->output, $lines);
+        $progressBar->setFormat(
+            "<fg=white;bg=cyan> %status:-45s%</>\n%current%/%max% [%bar%] %percent:3s%%\n?  %estimated:-20s%  %memory:20s%"
+        );
+        $progressBar->setRedrawFrequency(10000);
+        $progressBar->start();
+
+        $handle = fopen($filename, 'r');
+
+        while (($row = fgetcsv($handle, 0, "\t")) !== false) {
+            $progressBar->advance();
+            if ('#' !== $row[0][0]) {
+                $progressBar->setMessage('Executing query', 'status');
+                // Split admin unit into country and identifier
+                $countryAndAdmin1 = explode('.', $row[0]);
+                $country = $countryAndAdmin1[0];
+                $admin1 = $countryAndAdmin1[1];
+                // Check if admin unit already exists if so update.
+                $connection = $this->entityManager->getConnection();
+                $connection->executeQuery(
+                    'UPDATE geo__names SET admin1 = :geonameid WHERE country_id = :country AND admin_1_id = :admin1',
+                    [
+                        ':geonameid' => $row[3],
+                        ':country' => $country,
+                        ':admin1' => $admin1,
+                    ],
+                    ['int', 'string', 'string'],
+                );
+                $progressBar->setMessage('finished', 'status');
+            }
+        }
+        $progressBar->finish();
+
+        return 0;
+    }
+
+    private function updateAdmin2Units(SymfonyStyle $io, bool $download)
+    {
+        $io->note('Setting admin units (second level)');
+
+        $filename = $this->getFile(
+            $io,
+            'admin2Codes.txt',
+            $download
+        );
+
+        if (null === $filename) {
+            return -1;
+        }
+
+        $lines = $this->getLines($filename);
+
+        $progressBar = new ProgressBar($this->output, $lines);
+        $progressBar->setFormat(
+            "<fg=white;bg=cyan> %status:-45s%</>\n%current%/%max% [%bar%] %percent:3s%%\n?  %estimated:-20s%  %memory:20s%"
+        );
+        $progressBar->setRedrawFrequency(1000);
+        $progressBar->start();
+
+        $handle = fopen($filename, 'r');
+
+        while (($row = fgetcsv($handle, 0, "\t")) !== false) {
+            $progressBar->advance();
+            if ('#' !== $row[0][0]) {
+                $progressBar->setMessage('Executing query', 'status');
+                // Split admin unit into country and identifier
+                $countryAndAdmin1AndAdmin2 = explode('.', $row[0]);
+                $country = $countryAndAdmin1AndAdmin2[0];
+                $admin1 = $countryAndAdmin1AndAdmin2[1];
+                $admin2 = $countryAndAdmin1AndAdmin2[2];
+                // Check if admin unit already exists if so update.
+                $connection = $this->entityManager->getConnection();
+                $connection->executeQuery(
+                    'UPDATE geo__names SET admin2 = :geonameid WHERE country_id = :country AND admin_1_id = :admin1 AND admin_2_id = :admin2',
+                    [
+                        ':geonameid' => $row[3],
+                        ':country' => $country,
+                        ':admin1' => $admin1,
+                        ':admin2' => $admin2,
+                    ],
+                    ['int', 'string', 'string', 'string'],
+                );
+                $progressBar->setMessage('finished', 'status');
+            }
+        }
+        $progressBar->finish();
+
+        return 0;
+    }
+
     private function getFile(SymfonyStyle $io, string $filename, bool $download): ?string
     {
-        $localFilename = getcwd().'/'.$filename;
+        $localFilename = getcwd() . '/' . $filename;
 
         if (!$download && file_exists($localFilename)) {
             $io->note('File already exists and no download was requested.');
@@ -486,7 +486,7 @@ class GeonamesUpdateFullCommand extends Command
 
         $progressbar = null;
 
-        $response = $this->httpClient->request('GET', 'https://download.geonames.org/export/dump/'.$filename, [
+        $response = $this->httpClient->request('GET', 'https://download.geonames.org/export/dump/' . $filename, [
             'on_progress' => function (int $dlNow, int $dlSize, array $info) use ($io, &$progressbar): void {
                 // $dlNow is the number of bytes downloaded so far
                 // $dlSize is the total size to be downloaded or -1 if it is unknown
@@ -508,7 +508,7 @@ class GeonamesUpdateFullCommand extends Command
         ]);
 
         if (200 !== $response->getStatusCode()) {
-            $io->error('Couldn\'t download requested file '.$filename.' from genames.org');
+            $io->error('Couldn\'t download requested file ' . $filename . ' from genames.org');
 
             return null;
         }
@@ -550,11 +550,11 @@ class GeonamesUpdateFullCommand extends Command
         // Build the query from scratch
         $query =
             'INSERT IGNORE INTO geo__names (`geonameId`, `name`, `latitude`, `longitude`, `feature_class`, `feature_code`,'
-            .'`country_id`, `admin_1_id`, `admin_2_id`, `admin_3_id`, `admin_4_id`, `population`, `moddate`) '
-            .'VALUES '
+            . '`country_id`, `admin_1_id`, `admin_2_id`, `admin_3_id`, `admin_4_id`, `population`, `moddate`) '
+            . 'VALUES '
         ;
         foreach ($rows as $row) {
-            if ('A' != $row[6] && 'P' != $row[6]) {
+            if ('A' !== $row[6] && 'P' !== $row[6]) {
                 continue;
             }
 
@@ -577,8 +577,8 @@ class GeonamesUpdateFullCommand extends Command
                 );
             } catch (Exception $e) {
                 $io->note(
-                    'Skipped '.$row[1].' ('.$row[8].', '.$row[10].' - '.$row[0]
-                    .') -- '.$e->getMessage()
+                    'Skipped ' . $row[1] . ' (' . $row[8] . ', ' . $row[10] . ' - ' . $row[0]
+                    . ') -- ' . $e->getMessage()
                 );
             }
         }
@@ -608,7 +608,7 @@ class GeonamesUpdateFullCommand extends Command
 
         $query = 'INSERT IGNORE INTO geonamesalternatenames (`alternatenameId`, `geonameId`, `isolanguage`, `alternatename`, `ispreferred`, `isshort`, `iscolloquial`, `ishistoric`)
  '
-            .'VALUES ';
+            . 'VALUES ';
         foreach ($rows as $row) {
             try {
                 // use Rox locales for the chinese scripts
@@ -635,7 +635,7 @@ class GeonamesUpdateFullCommand extends Command
                 );
             } catch (Exception $e) {
                 $io->note(
-                    'Skipped '.$row[1].' ('.$row[8].', '.$row[10].' - '.$row[0].') -- '.$e->getMessage()
+                    'Skipped ' . $row[1] . ' (' . $row[8] . ', ' . $row[10] . ' - ' . $row[0] . ') -- ' . $e->getMessage()
                 );
             }
         }

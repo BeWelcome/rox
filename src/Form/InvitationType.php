@@ -8,28 +8,13 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
-class InvitationType extends AbstractType
+class InvitationType extends HostingRequestAbstractType
 {
-    private DateTimeTransformer $transformer;
-
-    public function __construct(DateTimeTransformer $transformer)
-    {
-        $this->transformer = $transformer;
-    }
-
-    public function configureOptions(OptionsResolver $resolver): void
-    {
-        $resolver
-            ->setDefaults([
-                'data_class' => Message::class,
-            ])
-        ;
-    }
-
     public function getBlockPrefix(): string
     {
-        return 'app_message';
+        return 'invitation';
     }
 
     /**
@@ -44,10 +29,14 @@ class InvitationType extends AbstractType
             ])
             ->add('message', CkEditorType::class, [
                 'label' => 'label.message',
-                'invalid_message' => 'request.message.empty',
                 'attr' => [
                     'placeholder' => 'invitation.message.placeholder',
                     'class' => 'editor',
+                ],
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'please.enter.a.message.text',
+                    ]),
                 ],
             ])
             ->add('send', SubmitType::class, [

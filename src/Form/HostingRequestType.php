@@ -4,22 +4,20 @@ namespace App\Form;
 
 use App\Entity\HostingRequest;
 use App\Form\DataTransformer\DateTimeTransformer;
-use App\Form\DataTransformer\FlexibleTransformer;
 use App\Form\DataTransformer\LegTransformer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
-use Symfony\Component\Form\Extension\Core\Type\RangeType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
 use Symfony\Component\Validator\Constraints\LessThanOrEqual;
 use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Constraints\NotNull;
 
 class HostingRequestType extends AbstractType
 {
@@ -59,51 +57,15 @@ class HostingRequestType extends AbstractType
             ->addModelTransformer($this->legTransformer);
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
-            $numberOfTravellersOptions = [
-                'label' => 'request.number_of_travellers',
-                'attr' => [
-                    'placeholder' => 'placeholder.request.nbtravellers',
-                    'min' => 1,
-                    'max' => 20,
-                ],
-                'invalid_message' => 'request.error.number_of_travellers',
-                'required' => false,
-                'constraints' => [
-                    new NotBlank([
-                        'message' => 'request.error.numberoftravellers.empty',
-                    ]),
-                    new LessThanOrEqual(20),
-                    new GreaterThanOrEqual(1),
-                ],
-            ];
-            $durationOptions = [
-                'required' => false,
-                'label' => 'duration',
-                'mapped' => false,
-                'invalid_message' => 'request.error.duration',
-                'constraints' => [
-                    new NotBlank(),
-                ],
-            ];
-
             $form = $event->getForm();
             $options = $form->getConfig()->getOptions();
             $data = $event->getData();
-            if (null !== $data) {
-                if ($options['reply_host']) {
-                    if (!$data->getFlexible()) {
-                        $durationOptions['disabled'] = true;
-                    }
-                    $form->remove('flexible');
-                }
-            }
-            $form->add('duration', TextType::class, $durationOptions);
 
-            if (true === $options['invitation']) {
-                $form->add('numberOfTravellers', HiddenType::class);
-                $form->remove('flexible');
-            } else {
-                $form->add('numberOfTravellers', IntegerType::class, $numberOfTravellersOptions);
+            if ($options['invitation']) {
+                $this->addFieldsForInvitation($form, $options, $data);
+            }
+            if ($options['request']) {
+                $this->addFieldsForRequest($form, $options, $data);
             }
         });
     }
@@ -118,7 +80,7 @@ class HostingRequestType extends AbstractType
                 'data_class' => HostingRequest::class,
                 'reply_guest' => false,
                 'reply_host' => false,
-                'new_request' => false,
+                'request' => false,
                 'invitation' => false,
             ])
         ;
@@ -130,5 +92,69 @@ class HostingRequestType extends AbstractType
     public function getBlockPrefix()
     {
         return 'request';
+    }
+
+    /**
+     * @param mixed $data
+     */
+    private function addFieldsForInvitation(FormInterface $form, array $options, $data): void
+    {
+        if (null === $data) {
+            $form->add('duration', TextType::class, [
+                'required' => false,
+                'label' => 'duration',
+                'mapped' => false,
+                'invalid_message' => 'request.error.duration',
+                'constraints' => [
+                    new NotBlank(),
+                ],
+            ]);
+        }
+        $form->remove('flexible');
+
+        $form->add('numberOfTravellers', HiddenType::class);
+    }
+
+    private function addFieldsForRequest(FormInterface $form, array $options, $data)
+    {
+        $numberOfTravellersOptions =  [
+            'label' => 'request.number_of_travellers',
+            'attr' => [
+                'placeholder' => 'placeholder.request.nbtravellers',
+                'min' => 1,
+                'max' => 20,
+            ],
+            'invalid_message' => 'request.error.number_of_travellers',
+            'required' => false,
+            'constraints' => [
+                new NotBlank([
+                    'message' => 'request.error.numberoftravellers.empty',
+                ]),
+                new LessThanOrEqual(20),
+                new GreaterThanOrEqual(1),
+            ],
+        ];
+
+        $durationOptions = [
+            'required' => false,
+            'label' => 'duration',
+            'mapped' => false,
+            'invalid_message' => 'request.error.duration',
+        ];
+
+        $numberOfTravellersType = TextType::class;
+        if (null === $data) {
+        } else {
+            if ($options['reply_host']) {
+                $numberOfTravellersType = HiddenType::class;
+                if (!$data->getFlexible()) {
+                    $durationOptions['disabled'] = true;
+                    $form->remove('flexible');
+                }
+            }
+        }
+        $form->add('duration', TextType::class, $durationOptions);
+
+        $form->add('numberOfTravellers', $numberOfTravellersType, $numberOfTravellersOptions);
     }
 }

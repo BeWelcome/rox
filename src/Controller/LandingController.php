@@ -239,7 +239,7 @@ class LandingController extends AbstractController
         );
 
         $radius = $tripModel->getTripsRadius($member);
-        $radiusForm = $this->createForm(TripRadiusType::class, [ 'radius' => $radius ]);
+        $radiusForm = $this->createForm(TripRadiusType::class, ['radius' => $radius]);
 
         $preferenceRepository = $this->getDoctrine()->getRepository(Preference::class);
         $preference = $preferenceRepository->findOneBy(['codename' => Preference::MESSAGE_AND_REQUEST_FILTER]);

@@ -24,7 +24,9 @@
     <div class="row mb-1">
         <div class="col-12">
             {{ form_row(form.subject.subject) }}
-            {{ form_row(form.message) }}
+            {{ form_label(form.message) }}
+            {{ form_widget(form.message) }}
+            {{ form_errors(form.message) }}
             <div class="o-form-group">
                 {{ form_label(form.request.duration) }}
                 <div class="input-group date">

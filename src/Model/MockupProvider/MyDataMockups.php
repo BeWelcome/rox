@@ -2,46 +2,36 @@
 
 namespace App\Model\MockupProvider;
 
-use App\Doctrine\GroupType;
 use App\Doctrine\SubtripOptionsType;
 use App\Doctrine\TripAdditionalInfoType;
 use App\Entity\Activity;
 use App\Entity\BroadcastMessage;
 use App\Entity\Comment;
 use App\Entity\CommunityNews;
-use App\Entity\CommunityNewsComment;
 use App\Entity\Donations;
-use App\Entity\ForumPost;
-use App\Entity\ForumThread;
-use App\Entity\Gallery;
 use App\Entity\Group;
 use App\Entity\HostingRequest;
 use App\Entity\Location;
 use App\Entity\Log;
-use App\Entity\Member;
-use App\Entity\MemberThreadSubscription;
-use App\Entity\Message;
 use App\Entity\Newsletter;
 use App\Entity\Poll;
 use App\Entity\PollChoice;
-use App\Entity\Privilege;
 use App\Entity\Right;
 use App\Entity\Shout;
-use App\Entity\Subject;
 use App\Entity\Subtrip;
 use App\Entity\Trip;
-use App\Entity\Word;
-use App\Form\DataTransformer\DateTimeTransformer;
-use App\Form\InvitationGuest;
-use App\Form\InvitationHost;
-use App\Form\InvitationType;
 use Carbon\Carbon;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\EntityManagerInterface;
 use Mockery;
-use Symfony\Component\Form\FormFactoryInterface;
 
+/**
+ * Utility class for the translation interface mockup section.
+ *
+ * Rather complicated but understandable. No mess detection needed.
+ *
+ * @SuppressWarnings(PHPMD)
+ */
 class MyDataMockups implements MockupProviderInterface
 {
     private const MOCKUPS = [
@@ -53,8 +43,7 @@ class MyDataMockups implements MockupProviderInterface
         'footer' => [
             'type' => 'template',
             'template' => 'private/footer.html.twig',
-            'description' =>
-                'Footer included on every page of the generated data including the date and time.',
+            'description' => 'Footer included on every page of the generated data including the date and time.',
         ],
         'message' => [
             'type' => 'template',
@@ -109,6 +98,12 @@ class MyDataMockups implements MockupProviderInterface
             'description' => 'Shows a single post to groups or forum',
         ],
     ];
+    private InvitationUtility $invitationUtility;
+
+    public function __construct()
+    {
+        $this->invitationUtility = new InvitationUtility();
+    }
 
     public function getFeature(): string
     {
@@ -165,12 +160,15 @@ class MyDataMockups implements MockupProviderInterface
         ];
     }
 
+    /**
+     * SuppressWarnings(PHPMD.CyclomaticComplexity).
+     */
     public function getMockupParameter(?string $locale = null, ?string $feature = null): array
     {
         switch ($feature) {
             case 'post (thread)':
             case 'post (group)':
-                return [ 'deleted' => [ 'yes' => 'yes', 'no' => 'no'] ];
+                return ['deleted' => ['yes' => 'yes', 'no' => 'no']];
             case 'broadcasts':
             case 'comments':
             case 'communitynews':
@@ -190,7 +188,7 @@ class MyDataMockups implements MockupProviderInterface
             case 'shouts':
             case 'subscriptions':
             case 'translations':
-                return [ 'count' => [ 'none' => '0', 'some' => '2'] ];
+                return ['count' => ['none' => '0', 'some' => '2']];
         }
 
         switch ($locale) {
@@ -206,7 +204,7 @@ class MyDataMockups implements MockupProviderInterface
                         'none' => 0,
                         'one' => 1,
                         'some' => 3,
-                    ]
+                    ],
                 ];
             case 'pl':
                 return [
@@ -218,13 +216,14 @@ class MyDataMockups implements MockupProviderInterface
                     ],
                 ];
         }
+
         return [
             'count' => [
                 'none' => 0,
                 'one' => 1,
                 'few' => 2,
                 'other' => 5,
-            ]
+            ],
         ];
     }
 
@@ -272,7 +271,7 @@ class MyDataMockups implements MockupProviderInterface
                 $mockNewsletter = Mockery::mock(Newsletter::class, [
                     'getTitle' => 'Newsletter Title',
                     'getText' => 'Newsletter text',
-                    'getTranslations' => [ 'en', 'de', 'zh-hant'],
+                    'getTranslations' => ['en', 'de', 'zh-hant'],
                 ]);
                 $mockEntity = Mockery::mock(BroadcastMessage::class, [
                     'getNewsletter' => $mockNewsletter,
@@ -328,7 +327,7 @@ class MyDataMockups implements MockupProviderInterface
                     'referencepaypal' => 'paypal',
                     'systemcomment' => 'system comment',
                     'membercomment' => 'member comment',
-                    'statusprivate' => ($parameters['count'] % 2 == 1),
+                    'statusprivate' => ($parameters['count'] % 2 === 1),
                 ]);
                 break;
             case 'gallery':
@@ -358,7 +357,7 @@ class MyDataMockups implements MockupProviderInterface
                         [
                             'locale' => 'zh-hant',
                             'author' => $parameters['user'],
-                            'title' => 'Title - zh-hant'
+                            'title' => 'Title - zh-hant',
                         ],
                         [
                             'locale' => 'de',
@@ -390,7 +389,7 @@ class MyDataMockups implements MockupProviderInterface
                 $mockEntity = [
                     'poll' => $poll,
                     'pollChoice' => [
-                        'texts' => [ 'one', 'two' ],
+                        'texts' => ['one', 'two'],
                     ],
                 ];
                 break;
@@ -409,7 +408,7 @@ class MyDataMockups implements MockupProviderInterface
                 $key = 'volunteerrights';
                 $mockEntity = Mockery::mock(Right::class, [
                     'right' => [
-                        'name' => 'right'
+                        'name' => 'right',
                     ],
                     'scope' => 'All',
                     'level' => '10',
@@ -429,7 +428,7 @@ class MyDataMockups implements MockupProviderInterface
         }
 
         $entities = [];
-        for ($i = 0; $i < $parameters['count']; $i++) {
+        for ($i = 0; $i < $parameters['count']; ++$i) {
             $entities[] = $mockEntity;
         }
 
@@ -487,7 +486,7 @@ class MyDataMockups implements MockupProviderInterface
     {
         return Mockery::mock(Poll::class, [
             'getId' => 1,
-            'getTitles' => [ 'title' ],
+            'getTitles' => ['title'],
             'getDescriptions' => [
                 'en' => 'description',
                 'fr' => 'description',
@@ -504,15 +503,16 @@ class MyDataMockups implements MockupProviderInterface
                         'fr' => 'French',
                     ],
                 ]),
-            ]
+            ],
         ]);
     }
 
     private function postsData($count): array
     {
-        if (0 == $count) {
+        if (0 === $count) {
             return ['years' => []];
-        };
+        }
+
         return [
             'posts_written' => $count,
             'threads_contributed' => $count,
@@ -528,17 +528,17 @@ class MyDataMockups implements MockupProviderInterface
 
     private function postsYearData($count)
     {
-        if (0 == $count) {
-            return ['year' => 2010 ];
-        };
+        if (0 === $count) {
+            return ['year' => 2010];
+        }
         $posts = [];
-        for ($i = 0; $i < $count; $i++) {
+        for ($i = 0; $i < $count; ++$i) {
             $posts[$i] = [
                 'created' => 12345,
             ];
         }
         $threads = [];
-        for ($i = 0; $i < $count; $i++) {
+        for ($i = 0; $i < $count; ++$i) {
             $threads[] = [
                 'thread' => [
                     'title' => 'Thread title ' . $i,
@@ -565,7 +565,7 @@ class MyDataMockups implements MockupProviderInterface
             'post' => [
                 'id' => 123,
                 'created' => 123456,
-                'deleted' => $parameters['deleted'] == 'yes' ? 'Deleted' : 'NotDeleted',
+                'deleted' => 'yes' === $parameters['deleted'] ? 'Deleted' : 'NotDeleted',
                 'language' => [
                     'wordcode' => 'lang_zh-hant',
                     'shortcode' => 'zh-hant',
@@ -600,8 +600,8 @@ class MyDataMockups implements MockupProviderInterface
         $host = $parameters['user'];
         $guest = $parameters['admin'];
 
-        $leg = $this->getLeg($parameters);
-        $thread = $this->getThread($host, $guest, $leg, HostingRequest::REQUEST_TENTATIVELY_ACCEPTED, 4);
+        $leg = $this->invitationUtility->getLeg($parameters);
+        $thread = $this->invitationUtility->getThread($host, $guest, $leg, HostingRequest::REQUEST_TENTATIVELY_ACCEPTED, 4);
 
         return [
             $parameters['name'] => $thread[0],
@@ -612,99 +612,6 @@ class MyDataMockups implements MockupProviderInterface
             'is_spam' => false,
             'show_deleted' => false,
         ];
-    }
-
-    private function getThread(Member $host, Member $guest, Subtrip $leg, int $status, int $replies): array
-    {
-        $subject = Mockery::mock(Subject::class, [
-            'getSubject' => 'Subject'
-        ]);
-        $request = Mockery::mock(HostingRequest::class, [
-            'getId' => 1,
-            'getArrival' => new Carbon(),
-            'getDeparture' => new Carbon(),
-            'getNumberOfTravellers' => 2,
-            'getFlexible' => true,
-            'getStatus' => $status,
-            'getInviteForLeg' => $leg,
-        ]);
-
-        $parent = Mockery::mock(Message::class, [
-            'getId' => 1,
-            'getMessage' => 'Initial invitation',
-        ]);
-        $parent->shouldReceive('getSubject')->andReturn($subject);
-        $parent->shouldReceive('getCreated')->andReturn(new Carbon());
-        $parent->shouldReceive('getSender')->andReturn($host);
-        $parent->shouldReceive('getInitiator')->andReturn($host);
-        $parent->shouldReceive('getReceiver')->andReturn($guest);
-        $parent->shouldReceive('getRequest')->andReturn($request);
-        $parent->shouldReceive('isDeletedByMember')->andReturn(false);
-        $parent->shouldReceive('isPurgedByMember')->andReturn(false);
-
-        $thread = [];
-        $thread[] = $parent;
-        $lastMessage = $parent;
-        for ($i = 1;$i < $replies; $i++) {
-            $lastMessage = $this->getReply($lastMessage, $subject, $request, $guest, $host);
-            $temp = $host; $host = $guest; $guest = $temp;
-            $thread[] = $lastMessage;
-        }
-
-        return array_reverse($thread);
-    }
-
-    private function getLeg($host): Subtrip
-    {
-        $trip = Mockery::mock(Trip::class, [
-            'getId' => 1,
-            'getCreator' => $host,
-            'getSummary' => 'Mocking Bird',
-            'getDescription' => 'Mocking description',
-            'getCountOfTravellers' => 2,
-            'getAdditionalInfo' => TripAdditionalInfoType::NONE,
-            'getCreated' => new DateTime(),
-        ]);
-        $location = Mockery::mock(Location::class, [
-            'getId' => 1,
-            'getName' => 'Mock',
-        ]);
-        $leg = Mockery::mock(SubTrip::class, [
-            'getId' => 1,
-            'getArrival' => Carbon::instance(new DateTime('2021-02-22')),
-            'getDeparture' => Carbon::instance(new DateTime('2021-02-24')),
-            'getOptions' => [SubtripOptionsType::MEET_LOCALS],
-            'getLocation' => $location,
-            'getTrip' => $trip,
-            'getInvitedBy' => $host,
-        ]);
-
-        return $leg;
-    }
-
-    private function getReply(
-        Message $parent,
-        Subject $subject,
-        HostingRequest $request,
-        Member $guest,
-        Member $host
-    ): Message {
-        $reply = Mockery::mock(Message::class, [
-            'getId' => 1,
-            'getMessage' => 'Reply',
-            'getParent' => $parent,
-        ]);
-
-        $reply->shouldReceive('getSubject')->andReturn($subject);
-        $reply->shouldReceive('getCreated')->andReturn(new Carbon());
-        $reply->shouldReceive('getSender')->andReturn($guest);
-        $reply->shouldReceive('getInitiator')->andReturn($parent->getInitiator());
-        $reply->shouldReceive('getReceiver')->andReturn($host);
-        $reply->shouldReceive('getRequest')->andReturn($request);
-        $reply->shouldReceive('isDeletedByMember')->andReturn(false);
-        $reply->shouldReceive('isPurgedByMember')->andReturn(false);
-
-        return $reply;
     }
 
     private function getPrivilege(): array
@@ -730,11 +637,12 @@ class MyDataMockups implements MockupProviderInterface
             'confirmed' => 'yes',
             'comments' => [
                 [
-                    'language' => [ 'wordcode' => 'lang_el' ],
+                    'language' => ['wordcode' => 'lang_el'],
                     'sentence' => 'Comment text',
-                ]
-            ]
+                ],
+            ],
         ];
+
         return [
             'left' => $relation,
             'right' => $relation,
@@ -743,7 +651,7 @@ class MyDataMockups implements MockupProviderInterface
 
     private function getShouts($count): array
     {
-        if ($count = 0) {
+        if (0 === $count) {
             return ['shouts' => []];
         }
 
@@ -776,8 +684,8 @@ class MyDataMockups implements MockupProviderInterface
 
     private function getSubscriptions($count): array
     {
-        if ($count == 0) {
-            return [ 'subscriptions' => []];
+        if (0 === $count) {
+            return ['subscriptions' => []];
         }
 
         return [
@@ -804,8 +712,8 @@ class MyDataMockups implements MockupProviderInterface
 
     private function getTranslations($count): array
     {
-        if ($count == 0) {
-            return [ 'translations' => []];
+        if (0 === $count) {
+            return ['translations' => []];
         }
 
         return [
@@ -814,14 +722,14 @@ class MyDataMockups implements MockupProviderInterface
                     'code' => 'mydata.translations.headline',
                     'sentence' => 'Translations',
                     'shortCode' => 'en',
-                    'language' => [ 'wordCode' => 'lang_pt' ],
+                    'language' => ['wordCode' => 'lang_pt'],
                     'created' => (new DateTime())->format('Y-m-d'),
                 ],
                 [
                     'code' => 'mydata.translations.abstract',
                     'sentence' => 'Traducions',
                     'shortCode' => 'en',
-                    'language' => [ 'wordCode' => 'lang_es' ],
+                    'language' => ['wordCode' => 'lang_es'],
                     'created' => (new DateTime())->format('Y-m-d'),
                 ],
             ],

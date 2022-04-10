@@ -4,12 +4,12 @@ namespace App\Doctrine;
 
 class MessageStatusType extends EnumType
 {
-    const DRAFT = 'Draft';
-    const CHECK = 'ToCheck';
-    const CHECKED = 'Checked';
-    const SEND = 'ToSend';
-    const SENT = 'Sent';
-    const FROZEN = 'Freeze';
+    public const DRAFT = 'Draft';
+    public const CHECK = 'ToCheck';
+    public const CHECKED = 'Checked';
+    public const SEND = 'ToSend';
+    public const SENT = 'Sent';
+    public const FROZEN = 'Freeze';
 
     /** @var string */
     protected $name = 'message_status';

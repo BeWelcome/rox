@@ -13,13 +13,10 @@ use App\Service\Mailer;
 use App\Utilities\ManagerTrait;
 use App\Utilities\TranslatorTrait;
 use Exception;
-use InvalidArgumentException;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * Class HostingRequestController.
@@ -59,96 +56,6 @@ class RequestController extends BaseRequestAndInvitationController
         }
 
         return $this->hostReply($request, $message, $guest, $host);
-    }
-
-    private function guestReply(Request $request, Message $hostingRequest, Member $guest, Member $host): Response
-    {
-        if ($this->model->hasExpired($hostingRequest)) {
-            $this->addExpiredFlash($guest);
-
-            return $this->forward(MessageController::class . '::reply', ['message' => $hostingRequest]);
-        }
-
-        list($thread) = $this->conversationModel->getThreadInformationForMessage($hostingRequest);
-
-        // keep all information from current hosting request except the message text
-        $hostingRequest = $this->getRequestClone($hostingRequest);
-
-        // A reply consists of a new message and maybe a change of the status of the hosting request
-        // Additionally the user might change the dates of the request or cancel the request altogether
-        /** @var Form $requestForm */
-        $requestForm = $this->createForm(HostingRequestGuest::class, $hostingRequest);
-        $requestForm->handleRequest($request);
-
-        if ($requestForm->isSubmitted() && $requestForm->isValid()) {
-            $realParent = $this->conversationModel->getLastMessageInConversation($hostingRequest);
-
-            $newRequest = $this->persistFinalRequest($requestForm, $realParent, $guest, $host);
-
-            $subject = $this->getSubjectForReply($newRequest);
-
-            $this->sendGuestReplyNotification(
-                $host,
-                $guest,
-                $newRequest,
-                $subject,
-                ($newRequest->getRequest()->getId() !== $realParent->getRequest()->getId())
-            );
-            $this->addTranslatedFlash('notice', 'flash.notification.updated');
-
-            return $this->redirectToRoute('conversation_view', ['id' => $newRequest->getId()]);
-        }
-
-        return $this->render('request/reply_from_guest.html.twig', [
-            'guest' => $guest,
-            'host' => $host,
-            'form' => $requestForm->createView(),
-            'thread' => $thread,
-        ]);
-    }
-
-    private function hostReply(Request $request, Message $hostingRequest, Member $guest, Member $host): Response
-    {
-        if ($this->model->hasExpired($hostingRequest)) {
-            $this->addExpiredFlash($guest);
-
-            return $this->forward(MessageController::class . '::reply', ['message' => $hostingRequest]);
-        }
-
-        list($thread) = $this->conversationModel->getThreadInformationForMessage($hostingRequest);
-
-        // keep all information from current hosting request except the message text
-        $hostingRequest = $this->getRequestClone($hostingRequest);
-
-        /** @var Form $requestForm */
-        $requestForm = $this->createForm(HostingRequestHost::class, $hostingRequest);
-        $requestForm->handleRequest($request);
-
-        if ($requestForm->isSubmitted() && $requestForm->isValid()) {
-            $realParent = $this->conversationModel->getLastMessageInConversation($hostingRequest);
-
-            $newRequest = $this->persistFinalRequest($requestForm, $realParent, $host, $guest);
-
-            $subject = $this->getSubjectForReply($newRequest);
-
-            $this->sendHostReplyNotification(
-                $host,
-                $guest,
-                $newRequest,
-                $subject,
-                ($newRequest->getRequest()->getId() !== $realParent->getRequest()->getId())
-            );
-            $this->addTranslatedFlash('notice', 'flash.notification.updated');
-
-            return $this->redirectToRoute('conversation_view', ['id' => $newRequest->getId()]);
-        }
-
-        return $this->render('request/reply_from_host.html.twig', [
-            'guest' => $guest,
-            'host' => $host,
-            'form' => $requestForm->createView(),
-            'thread' => $thread,
-        ]);
     }
 
     /**
@@ -224,6 +131,96 @@ class RequestController extends BaseRequestAndInvitationController
                     'username' => $receiver->getUsername(),
                 ]) . '" class="text-primary">',
             '%link_end%' => '</a>',
+        ]);
+    }
+
+    private function guestReply(Request $request, Message $hostingRequest, Member $guest, Member $host): Response
+    {
+        if ($this->model->hasExpired($hostingRequest)) {
+            $this->addExpiredFlash($guest);
+
+            return $this->forward(MessageController::class . '::reply', ['message' => $hostingRequest]);
+        }
+
+        list($thread) = $this->conversationModel->getThreadInformationForMessage($hostingRequest);
+
+        // keep all information from current hosting request except the message text
+        $hostingRequest = $this->getMessageAndRequestClone($hostingRequest);
+
+        // A reply consists of a new message and maybe a change of the status of the hosting request
+        // Additionally the user might change the dates of the request or cancel the request altogether
+        /** @var Form $requestForm */
+        $requestForm = $this->createForm(HostingRequestGuest::class, $hostingRequest);
+        $requestForm->handleRequest($request);
+
+        if ($requestForm->isSubmitted() && $requestForm->isValid()) {
+            $realParent = $this->conversationModel->getLastMessageInConversation($hostingRequest);
+
+            $newRequest = $this->persistFinalRequest($requestForm, $realParent, $guest, $host);
+
+            $subject = $this->getSubjectForReply($newRequest);
+
+            $this->sendGuestReplyNotification(
+                $host,
+                $guest,
+                $newRequest,
+                $subject,
+                ($newRequest->getRequest()->getId() !== $realParent->getRequest()->getId())
+            );
+            $this->addTranslatedFlash('notice', 'flash.notification.updated');
+
+            return $this->redirectToRoute('conversation_view', ['id' => $newRequest->getId()]);
+        }
+
+        return $this->render('request/reply_from_guest.html.twig', [
+            'guest' => $guest,
+            'host' => $host,
+            'form' => $requestForm->createView(),
+            'thread' => $thread,
+        ]);
+    }
+
+    private function hostReply(Request $request, Message $hostingRequest, Member $guest, Member $host): Response
+    {
+        if ($this->model->hasExpired($hostingRequest)) {
+            $this->addExpiredFlash($guest);
+
+            return $this->forward(MessageController::class . '::reply', ['message' => $hostingRequest]);
+        }
+
+        list($thread) = $this->conversationModel->getThreadInformationForMessage($hostingRequest);
+
+        // keep all information from current hosting request except the message text
+        $hostingRequest = $this->getMessageClone($hostingRequest);
+
+        /** @var Form $requestForm */
+        $requestForm = $this->createForm(HostingRequestHost::class, $hostingRequest);
+        $requestForm->handleRequest($request);
+
+        if ($requestForm->isSubmitted() && $requestForm->isValid()) {
+            $realParent = $this->conversationModel->getLastMessageInConversation($hostingRequest);
+
+            $newRequest = $this->persistFinalRequest($requestForm, $realParent, $host, $guest);
+
+            $subject = $this->getSubjectForReply($newRequest);
+
+            $this->sendHostReplyNotification(
+                $host,
+                $guest,
+                $newRequest,
+                $subject,
+                ($newRequest->getRequest()->getId() !== $realParent->getRequest()->getId())
+            );
+            $this->addTranslatedFlash('notice', 'flash.notification.updated');
+
+            return $this->redirectToRoute('conversation_view', ['id' => $newRequest->getId()]);
+        }
+
+        return $this->render('request/reply_from_host.html.twig', [
+            'guest' => $guest,
+            'host' => $host,
+            'form' => $requestForm->createView(),
+            'thread' => $thread,
         ]);
     }
 

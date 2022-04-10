@@ -26,7 +26,6 @@ use Doctrine\Persistence\Mapping\ClassMetadata;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Persistence\ObjectManagerAware;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherAwareInterface;
-use Symfony\Component\Security\Core\Encoder\EncoderAwareInterface;
 use Symfony\Component\Security\Core\Exception\RuntimeException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -780,6 +779,9 @@ class Member implements UserInterface, \Serializable, PasswordHasherAwareInterfa
         return $this->username;
     }
 
+    /**
+     * @return string
+     */
     public function getUserIdentifier()
     {
         return $this->username;
@@ -929,6 +931,8 @@ class Member implements UserInterface, \Serializable, PasswordHasherAwareInterfa
 
     /**
      * Set count of reminders without login.
+     *
+     * @param mixed $remindersWithOutLogin
      */
     public function setRemindersWithOutLogin($remindersWithOutLogin): self
     {
@@ -2550,6 +2554,8 @@ class Member implements UserInterface, \Serializable, PasswordHasherAwareInterfa
      * Returns the salt that was originally used to encode the password.
      *
      * Return null as we use BCrypt for password hashing
+     *
+     * @return ?string
      */
     public function getSalt()
     {
@@ -2570,8 +2576,6 @@ class Member implements UserInterface, \Serializable, PasswordHasherAwareInterfa
      * Gets the name of the encoder used to encode the password.
      *
      * @throws RuntimeException password not supported
-     *
-     * @return string
      */
     public function getPasswordHasherName(): string
     {
@@ -3266,6 +3270,8 @@ class Member implements UserInterface, \Serializable, PasswordHasherAwareInterfa
      * Injects responsible ObjectManager and the ClassMetadata into this persistent object.
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
+     * @return void
      */
     public function injectObjectManager(ObjectManager $objectManager, ClassMetadata $classMetadata)
     {

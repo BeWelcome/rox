@@ -6,7 +6,6 @@ use App\Doctrine\MessageStatusType;
 use App\Entity\HostingRequest;
 use App\Entity\Member;
 use App\Entity\Message;
-use Exception;
 use InvalidArgumentException;
 
 abstract class AbstractRequestModel

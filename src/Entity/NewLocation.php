@@ -150,7 +150,6 @@ class NewLocation implements Translatable
      *
      * @ORM\ManyToOne(targetEntity="NewLocation", fetch="EAGER")
      * @ORM\JoinColumn(name="admin1", referencedColumnName="geonameId", nullable=true)
-     *
      */
     private $admin1;
 
@@ -159,7 +158,6 @@ class NewLocation implements Translatable
      *
      * @ORM\ManyToOne(targetEntity="NewLocation")
      * @ORM\JoinColumn(name="admin2", referencedColumnName="geonameId", nullable=true)
-     *
      */
     private $admin2;
 
@@ -168,7 +166,6 @@ class NewLocation implements Translatable
      *
      * @ORM\ManyToOne(targetEntity="NewLocation")
      * @ORM\JoinColumn(name="admin3", referencedColumnName="geonameId", nullable=true)
-     *
      */
     private $admin3;
 
@@ -177,7 +174,6 @@ class NewLocation implements Translatable
      *
      * @ORM\ManyToOne(targetEntity="NewLocation")
      * @ORM\JoinColumn(name="admin4", referencedColumnName="geonameId", nullable=true)
-     *
      */
     private $admin4;
 
@@ -265,14 +261,14 @@ class NewLocation implements Translatable
         return $this->featureCode;
     }
 
-    public function setCountry(NewLocation $country): self
+    public function setCountry(self $country): self
     {
         $this->country = $country;
 
         return $this;
     }
 
-    public function getCountry(): NewLocation
+    public function getCountry(): self
     {
         return $this->country;
     }
@@ -313,48 +309,48 @@ class NewLocation implements Translatable
         return $this;
     }
 
-    public function getAdmin1(): ?NewLocation
+    public function getAdmin1(): ?self
     {
         return $this->admin1;
     }
 
-    public function setAdmin1(?NewLocation $admin1): self
+    public function setAdmin1(?self $admin1): self
     {
         $this->admin1 = $admin1;
 
         return $this;
     }
 
-    public function getAdmin2(): ?NewLocation
+    public function getAdmin2(): ?self
     {
         return $this->admin2;
     }
 
-    public function setAdmin2(?NewLocation $admin2): self
+    public function setAdmin2(?self $admin2): self
     {
         $this->admin2 = $admin2;
 
         return $this;
     }
 
-    public function getAdmin3(): ?NewLocation
+    public function getAdmin3(): ?self
     {
         return $this->admin3;
     }
 
-    public function setAdmin3(?NewLocation $admin3): self
+    public function setAdmin3(?self $admin3): self
     {
         $this->admin3 = $admin3;
 
         return $this;
     }
 
-    public function getAdmin4(): ?NewLocation
+    public function getAdmin4(): ?self
     {
         return $this->admin4;
     }
 
-    public function setAdmin4(?NewLocation $admin4): self
+    public function setAdmin4(?self $admin4): self
     {
         $this->admin4 = $admin4;
 
@@ -413,7 +409,7 @@ class NewLocation implements Translatable
     {
         $nameOfAdmin1 = (null === $this->admin1) ? '' : ', ' . $this->getAdmin1()->getName();
 
-        return $this->getName() . $nameOfAdmin1  . ', ' . $this->getCountry()->getName();
+        return $this->getName() . $nameOfAdmin1 . ', ' . $this->getCountry()->getName();
     }
 
     public function getCountryId(): string

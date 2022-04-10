@@ -3,27 +3,12 @@
 namespace App\Model\MockupProvider;
 
 use App\Doctrine\GroupType;
-use App\Doctrine\SubtripOptionsType;
-use App\Doctrine\TripAdditionalInfoType;
 use App\Entity\ForumPost;
 use App\Entity\ForumThread;
 use App\Entity\Group;
-use App\Entity\HostingRequest;
-use App\Entity\Location;
 use App\Entity\Member;
-use App\Entity\Message;
-use App\Entity\Subject;
-use App\Entity\Subtrip;
-use App\Entity\Trip;
-use App\Form\DataTransformer\DateTimeTransformer;
-use App\Form\InvitationGuest;
-use App\Form\InvitationHost;
-use App\Form\InvitationType;
-use Carbon\Carbon;
-use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Mockery;
-use Symfony\Component\Form\FormFactoryInterface;
 
 class GroupMockups implements MockupProviderInterface
 {
@@ -86,7 +71,7 @@ class GroupMockups implements MockupProviderInterface
         $group = $groupRepository->findOneBy(
             [
                 'type' => GroupType::PUBLIC,
-                'approved' => Group::APPROVED
+                'approved' => Group::APPROVED,
             ],
             ['created' => 'DESC']
         );
@@ -105,7 +90,7 @@ class GroupMockups implements MockupProviderInterface
             'getThread' => $mockThread,
         ]);
 
-        if ($parameters['name'] === 'group post (subscribed)') {
+        if ('group post (subscribed)' === $parameters['name']) {
             $subscription = 123456;
         } else {
             $subscription = 0;

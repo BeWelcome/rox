@@ -4,11 +4,11 @@ namespace App\Doctrine;
 
 class InFolderType extends EnumType
 {
-    const NORMAL = 'Normal';
-    const JUNK = 'junk';
-    const SPAM = 'Spam';
-    const DRAFT = 'Draft';
-    const REQUESTS = 'requests';
+    public const NORMAL = 'Normal';
+    public const JUNK = 'junk';
+    public const SPAM = 'Spam';
+    public const DRAFT = 'Draft';
+    public const REQUESTS = 'requests';
 
     /** @var string */
     protected $name = 'in_folder';

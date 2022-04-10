@@ -4,7 +4,6 @@ namespace App\Security;
 
 use App\Entity\Member;
 use App\Entity\Message;
-use App\Entity\User;
 use LogicException;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
@@ -16,7 +15,7 @@ class ConversationVoter extends Voter
 
     protected function supports(string $attribute, $subject): bool
     {
-        if (!in_array($attribute, [self::CONVERSATION_VIEW, self::CONVERSATION_REPLY])) {
+        if (!\in_array($attribute, [self::CONVERSATION_VIEW, self::CONVERSATION_REPLY], true)) {
             return false;
         }
 

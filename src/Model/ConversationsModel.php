@@ -2,26 +2,11 @@
 
 namespace App\Model;
 
-use App\Doctrine\DeleteRequestType;
-use App\Doctrine\InFolderType;
-use App\Doctrine\MessageStatusType;
-use App\Doctrine\SpamInfoType;
-use App\Entity\HostingRequest;
 use App\Entity\Member;
 use App\Entity\Message;
-use App\Entity\Subject;
 use App\Repository\MessageRepository;
-use App\Service\Mailer;
 use App\Utilities\ConversationThread;
-use DateTime;
-use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
-use Doctrine\ORM\Query;
-use Doctrine\ORM\Query\ResultSetMappingBuilder;
-use Exception;
-use InvalidArgumentException;
 use Pagerfanta\Pagerfanta;
 
 class ConversationsModel

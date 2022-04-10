@@ -6,7 +6,6 @@ use App\Doctrine\DeleteRequestType;
 use App\Doctrine\InFolderType;
 use App\Doctrine\MessageStatusType;
 use App\Doctrine\SpamInfoType;
-use App\Entity\HostingRequest;
 use App\Entity\Member;
 use App\Entity\Message;
 use App\Repository\MessageRepository;
@@ -15,7 +14,6 @@ use App\Utilities\ConversationThread;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
-use InvalidArgumentException;
 
 class ConversationModel
 {
@@ -128,6 +126,10 @@ class ConversationModel
 
     /**
      * Tests if a member has exceeded their limit for sending messages.
+     *
+     * @param mixed $member
+     * @param mixed $perHour
+     * @param mixed $perDay
      */
     public function hasMessageLimitExceeded($member, $perHour, $perDay)
     {
@@ -184,6 +186,10 @@ class ConversationModel
 
     /**
      * Tests if a member has exceeded their limit for sending requests.
+     *
+     * @param mixed $member
+     * @param mixed $perHour
+     * @param mixed $perDay
      */
     public function hasRequestLimitExceeded($member, $perHour, $perDay): bool
     {

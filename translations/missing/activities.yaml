@@ -1,2 +1,19 @@
 activity.download:
     - Get Calendar Entry
+    - Button label on the activity page. Allows to get an ics file to add to your calendar
+activity.creation.checklist:
+    - "<p>Creating an activity on BeWelcome is easy, but a successful activity needs more than creation and luck.</p>
+        <ul>
+        <li>Make sure the date, time and location details are accurate.</li>
+        <li>Describe the activity (meetup, BBQ, cooking event) etc.</li>
+        <li>Indicate if it's a physical (face to face) or online event.</li>
+        <li>Indicate if there is a fixed start and/or end (or schedule).</li>
+        <li>Communicate regularly with those who wish to attend.</li>
+        <li>Describe & link the activity URL on your social media channels!</li>
+        <li>Tell your friends online and offline.</li>
+        <li>Contact our Communications Team to publicise the activity.</li>
+        <li>If there is a relevant interest or geographic group on BeWelcome, it's a good idea to create a discussion thread about your activity there and link to that thread in your activity's description. By doing this you reach people who may be interested, and give them a place to ask questions.</li>
+        </ul>
+        </p>
+      "
+    - Added on the 'create an activity' page to guide members

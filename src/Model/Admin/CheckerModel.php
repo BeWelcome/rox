@@ -6,7 +6,6 @@ use App\Doctrine\MessageStatusType;
 use App\Doctrine\SpamInfoType;
 use App\Entity\Message;
 use App\Repository\MessageRepository;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Pagerfanta\Pagerfanta;
 

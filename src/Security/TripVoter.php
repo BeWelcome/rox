@@ -15,7 +15,7 @@ class TripVoter extends Voter
 
     protected function supports(string $attribute, $subject): bool
     {
-        if (!in_array($attribute, [self::TRIP_VIEW, self::TRIP_EDIT])) {
+        if (!\in_array($attribute, [self::TRIP_VIEW, self::TRIP_EDIT], true)) {
             return false;
         }
 

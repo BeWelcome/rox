@@ -9,7 +9,6 @@ use App\Entity\PostNotification;
 use App\Repository\PostNotificationRepository;
 use App\Service\Mailer;
 use App\Utilities\TranslatorTrait;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
@@ -110,7 +109,7 @@ class SendNotificationsCommand extends Command
                 sprintf(
                     'Sent %d messages, skipped %d messages',
                     $sent,
-                    count($scheduledNotifications) - $sent
+                    \count($scheduledNotifications) - $sent
                 )
             );
         } else {

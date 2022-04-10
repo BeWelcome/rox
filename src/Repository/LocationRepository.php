@@ -2,10 +2,7 @@
 
 namespace App\Repository;
 
-use App\Doctrine\MemberStatusType;
-use App\Entity\Member;
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\Query\ResultSetMapping;
 
 class LocationRepository extends EntityRepository
 {

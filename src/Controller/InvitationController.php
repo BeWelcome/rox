@@ -15,19 +15,13 @@ use App\Model\InvitationModel;
 use App\Service\Mailer;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
-use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use InvalidArgumentException;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Form;
-use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class InvitationController extends BaseRequestAndInvitationController
 {
@@ -54,7 +48,7 @@ class InvitationController extends BaseRequestAndInvitationController
      *
      * @throws Exception
      */
-    public function newInvitation(Request $request, Subtrip $leg, TranslatorInterface $translator): Response
+    public function newInvitation(Request $request, Subtrip $leg): Response
     {
         /** @var Member $host */
         $host = $this->getUser();
@@ -162,61 +156,63 @@ class InvitationController extends BaseRequestAndInvitationController
         list($thread) = $this->conversationModel->getThreadInformationForMessage($invitation);
 
         // keep all information from current hosting request except the message text
-        $invitation = $this->getRequestClone($invitation);
+        $invitation = $this->getMessageClone($invitation);
         $leg = $invitation->getRequest()->getInviteForLeg();
+        $alreadyAccepted = (null !== $leg->getInvitedBy());
 
         // A reply consists of a new message and maybe a change of the status of the hosting request
         // Additionally the user might change the dates of the request or cancel the request altogether
         /** @var Form $requestForm */
-        $requestForm = $this->createForm(InvitationGuest::class, $invitation);
+        $requestForm = $this->createForm(InvitationGuest::class, $invitation, [
+            'already_accepted' => $alreadyAccepted,
+        ]);
         $requestForm->handleRequest($request);
 
         if ($requestForm->isSubmitted() && $requestForm->isValid()) {
             $realParent = $this->conversationModel->getLastMessageInConversation($invitation);
-            $newRequest = $this->persistFinalInvitation($requestForm, $realParent, $guest, $host);
+            $finalInvitation = $this->getFinalInvitation($requestForm, $realParent, $guest, $host);
 
             $alreadyAccepted = false;
-            if (HostingRequest::REQUEST_ACCEPTED === $newRequest->getRequest()->getStatus()) {
+            if (HostingRequest::REQUEST_ACCEPTED === $finalInvitation->getRequest()->getStatus()) {
                 if (null === $leg->getInvitedBy()) {
                     $leg->setInvitedBy($host);
                     $this->entityManager->persist($leg);
                 } elseif ($host !== $leg->getInvitedBy()) {
-                    $alreadyAccepted = true;
                     $this->addTranslatedFlash('error', 'flash.invitation.error.already.accepted.other');
                 }
             }
 
             if (!$alreadyAccepted) {
                 // In case the potential guest declines the invitation remove the invitedBy from the leg
-                if (HostingRequest::REQUEST_DECLINED === $newRequest->getRequest()->getStatus()) {
+                if (HostingRequest::REQUEST_DECLINED === $finalInvitation->getRequest()->getStatus()) {
                     if ($leg->getInvitedBy() === $host) {
                         $leg->setInvitedBy(null);
                     }
                     $this->entityManager->persist($leg);
                 }
+                $this->entityManager->persist($finalInvitation);
                 $this->entityManager->flush();
 
-                $subject = $this->getSubjectForReply($newRequest);
+                $subject = $this->getSubjectForReply($finalInvitation);
 
-                $requestUpdated = $newRequest->getRequest()->getId() !== $realParent->getRequest()->getId();
+                $requestUpdated = $finalInvitation->getRequest()->getId() !== $realParent->getRequest()->getId();
 
                 if ($requestUpdated) {
                     $invitation->getRequest()->setInviteForLeg(null);
-                    $this->entityManager->persist($invitation);
-                    $this->entityManager->flush();
                 }
+                $this->entityManager->flush();
 
                 $this->sendInvitationGuestReplyNotification(
                     $host,
                     $guest,
-                    $newRequest,
+                    $finalInvitation,
                     $subject,
                     $requestUpdated,
                     $leg
                 );
                 $this->addTranslatedFlash('notice', 'flash.notification.updated');
 
-                return $this->redirectToRoute('conversation_view', ['id' => $newRequest->getId()]);
+                return $this->redirectToRoute('conversation_view', ['id' => $finalInvitation->getId()]);
             }
         }
 
@@ -224,6 +220,8 @@ class InvitationController extends BaseRequestAndInvitationController
             'guest' => $guest,
             'host' => $host,
             'form' => $requestForm->createView(),
+            'invitation' => $invitation->getRequest(),
+            'already_accepted' => $alreadyAccepted,
             'thread' => $thread,
             'leg' => $leg,
         ]);
@@ -243,46 +241,52 @@ class InvitationController extends BaseRequestAndInvitationController
         list($thread) = $this->conversationModel->getThreadInformationForMessage($invitation);
 
         // keep all information from current invitation except the message text
-        $invitation = $this->getRequestClone($invitation);
+        $invitation = $this->getMessageClone($invitation);
         $leg = $invitation->getRequest()->getInviteForLeg();
 
-        /** @var Form $requestForm */
-        $requestForm = $this->createForm(InvitationHost::class, $invitation);
-        $requestForm->handleRequest($request);
+        /** @var Form $invitationForm */
+        $invitationForm = $this->createForm(InvitationHost::class, $invitation);
+        $invitationForm->handleRequest($request);
 
-        if ($requestForm->isSubmitted() && $requestForm->isValid()) {
+        if ($invitationForm->isSubmitted() && $invitationForm->isValid()) {
             $realParent = $this->conversationModel->getLastMessageInConversation($invitation);
+            $invitation->setParent($realParent);
+            $invitation->setSender($host);
+            $invitation->setReceiver($guest);
 
-            // Switch $guest and $host for persist request as the thread is started by the potential host.
-            $newRequest = $this->persistFinalInvitation($requestForm, $realParent, $host, $guest);
+            $clickedButton = $invitationForm->getClickedButton()->getName();
 
-            if (HostingRequest::REQUEST_CANCELLED === $newRequest->getRequest()->getStatus()) {
+            if ('cancel' === $clickedButton) {
+                $invitation->getRequest()->setStatus(HostingRequest::REQUEST_CANCELLED);
                 if ($leg->getInvitedBy() === $host) {
                     $leg->setInvitedBy(null);
                 }
                 $this->entityManager->persist($leg);
-                $this->entityManager->flush();
+                $this->entityManager->persist($invitation->getRequest());
             }
+            $this->entityManager->persist($invitation);
+            $this->entityManager->flush();
 
-            $subject = $this->getSubjectForReply($newRequest);
+            $subject = $this->getSubjectForReply($invitation);
 
             $this->sendInvitationHostReplyNotification(
                 $host,
                 $guest,
-                $newRequest,
+                $invitation,
                 $subject,
-                ($newRequest->getRequest()->getId() !== $realParent->getRequest()->getId()),
+                false,
                 $leg
             );
             $this->addTranslatedFlash('notice', 'flash.notification.updated');
 
-            return $this->redirectToRoute('conversation_view', ['id' => $newRequest->getId()]);
+            return $this->redirectToRoute('conversation_view', ['id' => $invitation->getId()]);
         }
 
         return $this->render('invitation/reply_from_host.html.twig', [
             'guest' => $guest,
             'host' => $host,
-            'form' => $requestForm->createView(),
+            'form' => $invitationForm->createView(),
+            'invitation' => $invitation->getRequest(),
             'thread' => $thread,
             'leg' => $leg,
         ]);
@@ -296,6 +300,22 @@ class InvitationController extends BaseRequestAndInvitationController
                 ]) . '" class="text-primary">',
             '%link_end%' => '</a>',
         ]);
+    }
+
+    private function getFinalInvitation(
+        Form $requestForm,
+        Message $currentRequest,
+        Member $sender,
+        Member $receiver
+    ): Message {
+        $data = $requestForm->getData();
+        $em = $this->getDoctrine()->getManager();
+        $clickedButton = $requestForm->getClickedButton()->getName();
+
+        // handle changes in invitation
+        $newRequest = $this->model->getFinalRequest($sender, $receiver, $currentRequest, $data, $clickedButton);
+
+        return $newRequest;
     }
 
     private function sendInvitationGuestReplyNotification(

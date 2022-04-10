@@ -3,9 +3,7 @@
 namespace App\Pagerfanta;
 
 use App\Doctrine\DeleteRequestType;
-use Doctrine\DBAL\DBALException;
 use Pagerfanta\Adapter\AdapterInterface;
-use PDO;
 
 class DeletedAdapter extends AbstractConversationsAdapter implements AdapterInterface
 {
@@ -38,7 +36,7 @@ class DeletedAdapter extends AbstractConversationsAdapter implements AdapterInte
             '(' .
                 '(IdReceiver = :memberId AND (m.DeleteRequest LIKE \'%' . DeleteRequestType::RECEIVER_DELETED . '%\'' .
                 ' AND m.DeleteRequest NOT LIKE \'%' . DeleteRequestType::RECEIVER_PURGED . '%\'))' .
-            ' OR (IdSender = :memberId AND (m.DeleteRequest LIKE \'%' . DeleteRequestType::SENDER_DELETED . '%\''.
+            ' OR (IdSender = :memberId AND (m.DeleteRequest LIKE \'%' . DeleteRequestType::SENDER_DELETED . '%\'' .
                 ' AND m.DeleteRequest NOT LIKE \'%' . DeleteRequestType::SENDER_PURGED . '%\'))' .
             ')';
 

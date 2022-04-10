@@ -34,7 +34,7 @@ class FaqRequest
         $this->faqCategory = $faqCategory;
     }
 
-    public static function fromFaq(EntityManager $em, Faq $faq): FaqRequest
+    public static function fromFaq(EntityManager $em, Faq $faq): self
     {
         $faqRequest = new self($faq->getCategory());
         $faqRequest->wordCode = $faq->getQAndA();

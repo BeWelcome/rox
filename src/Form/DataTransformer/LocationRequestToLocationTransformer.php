@@ -3,6 +3,7 @@
 namespace App\Form\DataTransformer;
 
 use App\Entity\Location;
+use App\Entity\NewLocation;
 use App\Form\CustomDataClass\LocationRequest;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\DataTransformerInterface;
@@ -40,21 +41,21 @@ class LocationRequestToLocationTransformer implements DataTransformerInterface
      *
      * @throws TransformationFailedException if location is not found
      */
-    public function reverseTransform($value): ?Location
+    public function reverseTransform($value): ?NewLocation
     {
         if (null === $value) {
             return null;
         }
 
         if (null === $value->geonameId) {
-            $failure = new TransformationFailedException("trip.error.location.none.given");
-            $failure->setInvalidMessage("trip.error.location.none.given");
+            $failure = new TransformationFailedException('trip.error.location.none.given');
+            $failure->setInvalidMessage('trip.error.location.none.given');
             throw $failure;
         }
 
         /** @var Location $location */
         $location = $this->entityManager
-            ->getRepository(Location::class)
+            ->getRepository(NewLocation::class)
             ->findOneBy(['geonameId' => $value->geonameId]);
 
         if (null === $location) {

@@ -5,26 +5,13 @@ namespace App\Controller;
 use App\Doctrine\SpamInfoType;
 use App\Entity\Member;
 use App\Entity\Message;
-use App\Form\CustomDataClass\MessageIndexRequest;
-use App\Form\MessageIndexFormType;
 use App\Model\ConversationModel;
-use App\Model\ConversationsModel;
-use App\Pagerfanta\ConversationsAdapter;
-use App\Pagerfanta\DeletedAdapter;
-use App\Pagerfanta\InvitationsAdapter;
-use App\Pagerfanta\MessagesAdapter;
-use App\Pagerfanta\RequestsAdapter;
-use App\Pagerfanta\SpamAdapter;
 use App\Utilities\ConversationThread;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
 use Doctrine\ORM\EntityManagerInterface;
-use InvalidArgumentException;
-use Pagerfanta\Pagerfanta;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -32,7 +19,6 @@ use Symfony\Component\Routing\Annotation\Route;
  * This controller handles all requests regarding single conversations (messages, hosting requests and invitations) like
  * viewing, replying, etc.
  */
-
 class ConversationController extends AbstractController
 {
     use TranslatedFlashTrait;
@@ -101,12 +87,12 @@ class ConversationController extends AbstractController
         /** @var Member $member */
         $member = $this->getUser();
         if ($member !== $message->getSender() && $member !== $message->getReceiver()) {
-            return $this->redirectToRoute('conversations', [ 'conversationsType' => 'conversations']);
+            return $this->redirectToRoute('conversations', ['conversationsType' => 'conversations']);
         }
         $controllerAndMethod = $this->getControllerAndMethod($message, 'reply');
 
         return $this->forward($controllerAndMethod, [
-            'message' => $message
+            'message' => $message,
         ]);
     }
 

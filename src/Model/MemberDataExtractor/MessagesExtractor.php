@@ -59,6 +59,7 @@ class MessagesExtractor extends AbstractExtractor implements ExtractorInterface
         if ($message->isInvitation()) {
             return 'invitation';
         }
+
         return 'unknown';
     }
 }

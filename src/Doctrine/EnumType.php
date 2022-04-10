@@ -22,6 +22,9 @@ abstract class EnumType extends Type
     /** @var array */
     protected $values = [];
 
+    /**
+     * @return string
+     */
     public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
     {
         $values = array_map(function ($val) {
@@ -31,11 +34,17 @@ abstract class EnumType extends Type
         return 'ENUM(' . implode(', ', $values) . ')';
     }
 
+    /**
+     * @return mixed
+     */
     public function convertToPHPValue($value, AbstractPlatform $platform)
     {
         return $value;
     }
 
+    /**
+     * @return mixed
+     */
     public function convertToDatabaseValue($value, AbstractPlatform $platform)
     {
         if (!\in_array($value, $this->values, true)) {
@@ -45,11 +54,17 @@ abstract class EnumType extends Type
         return $value;
     }
 
+    /**
+     * @return string
+     */
     public function getName()
     {
         return $this->name;
     }
 
+    /**
+     * @return bool
+     */
     public function requiresSQLCommentHint(AbstractPlatform $platform)
     {
         return true;

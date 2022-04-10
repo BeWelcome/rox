@@ -2,27 +2,7 @@
 
 namespace App\Model\MockupProvider;
 
-use App\Doctrine\SubtripOptionsType;
-use App\Doctrine\TripAdditionalInfoType;
-use App\Entity\HostingRequest;
-use App\Entity\Location;
-use App\Entity\Member;
-use App\Entity\Message;
-use App\Entity\Newsletter;
-use App\Entity\Subject;
-use App\Entity\Subtrip;
-use App\Entity\Trip;
-use App\Form\DataTransformer\DateTimeTransformer;
-use App\Form\InvitationGuest;
-use App\Form\InvitationHost;
-use App\Form\InvitationType;
 use App\Form\NewsletterUnsubscribeType;
-use App\Form\ResetPasswordFormType;
-use App\Form\ResetPasswordRequestFormType;
-use Carbon\Carbon;
-use DateTime;
-use Doctrine\ORM\EntityManagerInterface;
-use Mockery;
 use Symfony\Component\Form\FormFactoryInterface;
 
 class NewsletterUnsubscribeMockups implements MockupProviderInterface
@@ -45,16 +25,14 @@ class NewsletterUnsubscribeMockups implements MockupProviderInterface
             'type' => 'page',
             'url' => '/unsubscribe/local/{username}/{token}',
             'template' => 'newsletter/unsubscribe_local_successful.html.twig',
-            'description' =>
-                'The page that is shown when a member unsubscribed without issues from a local event newsletter',
+            'description' => 'The page that is shown when a member unsubscribed without issues from a local event newsletter',
             'setup' => 'getUnsubscribeParameters',
         ],
         'Unsubscribe Newsletter Failed' => [
             'type' => 'page',
             'url' => '/unsubscribe/local/{username}/{token}',
             'template' => 'newsletter/unsubscribe_local_failed.html.twig',
-            'description' =>
-                'The page that is shown when a member unsubscribed with issues from a local event newsletter',
+            'description' => 'The page that is shown when a member unsubscribed with issues from a local event newsletter',
             'setup' => 'getUnsubscribeParameters',
         ],
         'Unsubscribe Local Event' => [
@@ -68,16 +46,14 @@ class NewsletterUnsubscribeMockups implements MockupProviderInterface
             'type' => 'page',
             'url' => '/unsubscribe/local/{username}/{token}',
             'template' => 'newsletter/unsubscribe_local_successful.html.twig',
-            'description' =>
-                'The page that is shown when a member unsubscribed without issues from a local event newsletter',
+            'description' => 'The page that is shown when a member unsubscribed without issues from a local event newsletter',
             'setup' => 'getUnsubscribeParameters',
         ],
         'Unsubscribe Local Failed' => [
             'type' => 'page',
             'url' => '/unsubscribe/local/{username}/{token}',
             'template' => 'newsletter/unsubscribe_local_failed.html.twig',
-            'description' =>
-                'The page that is shown when a member unsubscribed with issues from a local event newsletter',
+            'description' => 'The page that is shown when a member unsubscribed with issues from a local event newsletter',
             'setup' => 'getUnsubscribeParameters',
         ],
     ];

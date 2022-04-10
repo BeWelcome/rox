@@ -159,6 +159,7 @@ if (empty($vars)) {
                         $activitieseditcreatebutton = $words->getSilent('ActivitiesEditCreateUpdate');
                     } else {
                         $activitieseditcreatebutton = $words->getSilent('ActivitiesSubmit');
+                        echo $words->get('activity.creation.checklist');
                     }
                     ?>
                     <button type="submit" class="btn btn-primary" id="activity-submit"

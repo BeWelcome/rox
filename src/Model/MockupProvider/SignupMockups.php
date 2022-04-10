@@ -2,23 +2,7 @@
 
 namespace App\Model\MockupProvider;
 
-use App\Doctrine\SubtripOptionsType;
-use App\Doctrine\TripAdditionalInfoType;
-use App\Entity\HostingRequest;
-use App\Entity\Location;
 use App\Entity\Member;
-use App\Entity\Message;
-use App\Entity\Subject;
-use App\Entity\Subtrip;
-use App\Entity\Trip;
-use App\Form\DataTransformer\DateTimeTransformer;
-use App\Form\InvitationGuest;
-use App\Form\InvitationHost;
-use App\Form\InvitationType;
-use Carbon\Carbon;
-use DateTime;
-use Mockery;
-use Symfony\Component\Form\FormFactoryInterface;
 
 class SignupMockups implements MockupProviderInterface
 {

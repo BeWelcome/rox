@@ -2,11 +2,7 @@
 
 namespace App\Model;
 
-use App\Entity\HostingRequest;
-use App\Entity\Member;
 use App\Entity\Message;
-use App\Entity\Subtrip;
-use App\Service\Mailer;
 use DateTime;
 
 class InvitationModel extends AbstractRequestModel
@@ -19,6 +15,6 @@ class InvitationModel extends AbstractRequestModel
         $today = new DateTime('today');
         $arrival = $message->getRequest()->getArrival();
 
-        return ($today > $arrival);
+        return $today > $arrival;
     }
 }

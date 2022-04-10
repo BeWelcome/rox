@@ -20,6 +20,7 @@ class HostingRequestHost extends HostingRequestAbstractType
     {
         $builder
             ->add('request', HostingRequestType::class, [
+                'request' => true,
                 'reply_host' => true,
             ])
             ->add('decline', SubmitType::class, [

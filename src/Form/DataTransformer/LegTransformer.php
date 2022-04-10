@@ -2,7 +2,6 @@
 
 namespace App\Form\DataTransformer;
 
-use App\Entity\Location;
 use App\Entity\Subtrip;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\DataTransformerInterface;

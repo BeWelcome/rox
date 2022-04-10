@@ -3,7 +3,6 @@
 namespace App\Form;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 class TripRadiusType extends AbstractType
@@ -29,7 +28,7 @@ class TripRadiusType extends AbstractType
                     'search.radius.1000km' => 1000,
                     'search.radius.2000km' => 2000,
                     'search.radius.5000km' => 5000,
-*/                ],
+*/],
                 'attr' => [
                     'id' => 'trips_radius',
                 ],

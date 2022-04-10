@@ -26,14 +26,11 @@ use App\Twig\MockupExtension;
 use Carbon\Carbon;
 use DateTime;
 use Mockery;
-use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\WebpackEncoreBundle\Asset\EntrypointLookupInterface;
-use Twig\Environment;
 
 /**
  * Class TranslationController.
@@ -53,7 +50,7 @@ class MockupController extends TranslationController
         foreach ($providers as $provider) {
             $feature = $provider->getFeature();
             $this->providers[$feature] = $provider;
-            $this->mockups = array_merge([ $feature => $provider->getMockups()], $this->mockups);
+            $this->mockups = array_merge([$feature => $provider->getMockups()], $this->mockups);
         }
     }
 
@@ -86,7 +83,7 @@ class MockupController extends TranslationController
     {
         $this->denyAccessUnlessGranted(Member::ROLE_ADMIN_WORDS, null, 'Unable to access this page!');
 
-        if (!array_key_exists($feature, $this->providers)) {
+        if (!\array_key_exists($feature, $this->providers)) {
             return $this->redirectToRoute('translations_mockups');
         }
 
@@ -116,7 +113,7 @@ class MockupController extends TranslationController
     {
         $this->denyAccessUnlessGranted(Member::ROLE_ADMIN_WORDS, null, 'Unable to access this page!');
 
-        return $this->renderMockup($feature, $name, $request->getLocale(), [ 'name' => $name ]);
+        return $this->renderMockup($feature, $name, $request->getLocale(), ['name' => $name]);
     }
 
     /**

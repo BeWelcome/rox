@@ -8,10 +8,7 @@ use App\Entity\Subtrip;
 use App\Entity\Trip;
 use App\Repository\TripRepository;
 use Carbon\Carbon;
-use DateInterval;
 use DateTime;
-use DateTimeImmutable;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
 use Pagerfanta\Doctrine\ORM\QueryAdapter;
@@ -167,7 +164,7 @@ class TripModel
         $em = $this->entityManager;
 
         $newTrip = clone $trip;
-        $newTrip->setSummary($trip->getSummary() . " - copy");
+        $newTrip->setSummary($trip->getSummary() . ' - copy');
         $newTrip->setUpdated(new DateTime());
 
         // Move legs arrival and departure consistently +1month
@@ -175,8 +172,7 @@ class TripModel
         $firstArrival = $trip->getSubtrips()->first()->getArrival();
         $adjust = $firstArrival->diff($nextMonth);
 
-        foreach($trip->getSubTrips() as $leg)
-        {
+        foreach ($trip->getSubTrips() as $leg) {
             $newLeg = clone $leg;
             $newLeg->setArrival($leg->getArrival()->add($adjust));
             $newLeg->setDeparture($leg->getDeparture()->add($adjust));

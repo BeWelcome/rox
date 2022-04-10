@@ -20,8 +20,12 @@
         <div class="u-mb-4">
             {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
             {{ form_errors(form) }}
-            {{ form_row(form.subject.subject) }}
-            {{ form_row(form.message) }}
+            {{ form_label(form.subject.subject) }}
+            {{ form_widget(form.subject.subject) }}
+            {{ form_errors(form.subject.subject) }}
+            {{ form_label(form.message) }}
+            {{ form_widget(form.message) }}
+            {{ form_errors(form.message) }}
             {{ form_rest(form) }}
         </div>
 

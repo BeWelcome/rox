@@ -4,9 +4,9 @@ namespace App\Doctrine;
 
 class CommentQualityType extends EnumType
 {
-    const POSITIVE = 'Good';
-    const NEUTRAL = 'Neutral';
-    const NEGATIVE = 'Bad';
+    public const POSITIVE = 'Good';
+    public const NEUTRAL = 'Neutral';
+    public const NEGATIVE = 'Bad';
 
     /** @var string */
     protected $name = 'comment_quality';

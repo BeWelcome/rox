@@ -2,29 +2,9 @@
 
 namespace App\Model\MockupProvider;
 
-use App\Doctrine\SubtripOptionsType;
-use App\Doctrine\TripAdditionalInfoType;
-use App\Entity\ForumPost;
-use App\Entity\ForumThread;
-use App\Entity\HostingRequest;
-use App\Entity\Location;
-use App\Entity\Member;
-use App\Entity\Message;
-use App\Entity\Subject;
-use App\Entity\Subtrip;
-use App\Entity\Trip;
 use App\Form\CustomDataClass\SearchFormRequest;
-use App\Form\DataTransformer\DateTimeTransformer;
-use App\Form\InvitationGuest;
-use App\Form\InvitationHost;
-use App\Form\InvitationType;
-use App\Form\ResetPasswordFormType;
-use App\Form\ResetPasswordRequestFormType;
 use App\Form\SearchFormType;
-use Carbon\Carbon;
-use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
-use Mockery;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -87,6 +67,7 @@ class HomeAndLoginMockups implements MockupProviderInterface
                     ])
                     ->getForm()
                 ;
+
                 return [
                     'stats' => [
                         'members' => 100000,

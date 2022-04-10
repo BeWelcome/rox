@@ -1,9 +1,9 @@
 <?php
+
 namespace App\Entity\Translation;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Translatable\Entity\MappedSuperclass\AbstractTranslation;
-use Gedmo\Translatable\Entity\Repository\TranslationRepository;
 
 /**
  * @ORM\Table(name="geo__names_translations", indexes={
@@ -13,7 +13,7 @@ use Gedmo\Translatable\Entity\Repository\TranslationRepository;
  */
 class NewLocationTranslation extends AbstractTranslation
 {
-    /**
+    /*
      * All required columns are mapped through inherited superclass
      */
 }

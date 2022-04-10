@@ -44,5 +44,4 @@ class SpamAdapter extends AbstractConversationsAdapter implements AdapterInterfa
     {
         return 'SpamInfo LIKE \'%' . SpamInfoType::MEMBER_SAYS_SPAM . '%\' AND InFolder = \'' . InFolderType::SPAM . '\'';
     }
-
 }

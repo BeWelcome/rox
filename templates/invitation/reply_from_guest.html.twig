@@ -15,15 +15,21 @@
     {% set original = thread | last %}
     {% set current = thread | first %}
     {% set receiver =  original.receiver %}
+    {% set myself =  app.user %}
 
     {{ macros.messageheader_no_buttons(thread) }}
 
     {% include 'invitation/trip.summary.html.twig' with {'open': false} %}
 
+    {% include 'invitation/header.html.twig' %}
+
     {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'autocomplete': 'off'}}) }}
-    <div class="row mb-1">
+    <div class="row">
         <div class="col-12 mb-2">
-            {{ form_row(form.message) }}
+            {{ form_label(form.message) }}
+            {{ form_widget(form.message) }}
+            {{ form_errors(form.message) }}
+{#
                 <div class="o-form-group">
                     {{ form_label(form.request.duration) }}
                     <div class="input-group date" id="arrival" data-target-input="nearest">
@@ -35,19 +41,22 @@
                         {{ form_widget(form.request.duration, {'attr': { 'class': 'js-litepicker'}}) }}
                     </div>
                 </div>
+#}
         </div>
-        <div class="col-12 u-justiy-end">
+        <div class="col-12 u-flex u-justify-end mb-2">
             {{ form_row(form.request.arrival) }}
             {{ form_row(form.request.departure) }}
             {{ form_row(form.request.numberOfTravellers) }}
             {{ form_row(form.request.inviteForLeg) }}
-            {{ form_widget(form.accept, {'attr': {'class': 'o-button ml-1 pull-right mb-2'}}) }}
-            {{ form_widget(form.tentatively, {'attr': {'class': 'o-button ml-1 pull-right mb-2'}}) }}
-            {{ form_widget(form.decline, {'attr': {'class': 'o-button ml-1 pull-right mb-2'}}) }}
-            {{ form_widget(form.update, {'attr': {'class': 'o-button ml-1 pull-right mb-2'}}) }}
-            {% do form.request.setRendered %}
+            {{ form_widget(form.update, {'attr': {'class': 'o-button mb-2'}}) }}
+            {{ form_widget(form.decline, {'attr': {'class': 'o-button ml-1 mb-2'}}) }}
+            {% if form.tentatively is defined %}
+                {{ form_widget(form.tentatively, {'attr': {'class': 'o-button ml-1 mb-2'}}) }}
+            {% endif %}
+            {% if form.accept is defined %}
+                {{ form_widget(form.accept, {'attr': {'class': 'o-button ml-1 mb-2'}}) }}
+            {% endif %}
         </div>
-        <div class="clearfix"></div>
     </div>
     {{ form_rest(form) }}
     {{ form_end(form) }}

@@ -2,19 +2,13 @@
 
 namespace App\Model\MockupProvider;
 
-use App\Doctrine\SubtripOptionsType;
-use App\Doctrine\TripAdditionalInfoType;
 use App\Entity\HostingRequest;
-use App\Entity\Location;
 use App\Entity\Member;
 use App\Entity\Message;
 use App\Entity\Subject;
-use App\Entity\Subtrip;
-use App\Entity\Trip;
 use App\Form\HostingRequestGuest;
 use App\Form\HostingRequestHost;
 use Carbon\Carbon;
-use DateTime;
 use Mockery;
 use Symfony\Component\Form\FormFactoryInterface;
 
@@ -83,8 +77,7 @@ class RequestMockups implements MockupProviderInterface
 
     public function getMockupVariables(array $parameters): array
     {
-        switch ($parameters['name'])
-        {
+        switch ($parameters['name']) {
             case 'intial request (guest)':
                 return $this->getVariablesForInitialRequest($parameters);
             case 'request reply (guest)':
@@ -180,7 +173,7 @@ class RequestMockups implements MockupProviderInterface
     private function getThread(Member $host, Member $guest, int $status): array
     {
         $mockSubject = Mockery::mock(Subject::class, [
-            'getSubject' => 'Subject'
+            'getSubject' => 'Subject',
         ]);
         $mockRequest = Mockery::mock(HostingRequest::class, [
             'getId' => 1,
@@ -220,7 +213,7 @@ class RequestMockups implements MockupProviderInterface
         $mockMessageReply->shouldReceive('isDeletedByMember')->andReturn(false);
         $mockMessageReply->shouldReceive('isPurgedByMember')->andReturn(false);
 
-        $mockThread = [ $mockMessageReply, $mockMessageParent];
+        $mockThread = [$mockMessageReply, $mockMessageParent];
 
         return $mockThread;
     }

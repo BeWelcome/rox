@@ -18,12 +18,12 @@
     {{ encore_entry_link_tags('jquery_ui') }}
     <link rel='manifest' href='{{ asset('manifest.webmanifest') }}'>
 </head>
-<body id="parallax-home">
+<body>
 {% block content %}
 {% include 'loginbar.html.twig' %}
 <!-- Section #1 -->
 <!-- first section - Home -->
-<div>
+<div id="parallax-home">
     <div class="parallax">
         <img class="parallax--img"
             srcset="{{ asset('/images/homepicture-1200px_1-min.jpg') }} 1200w, {{ asset('/images/homepicture-576px_1-min.jpg') }} 576w"
@@ -195,7 +195,6 @@
             </div>
         </div>
     </div>
-</div>
 <div id="footer">
     <div class="container-lg">
         <div class="row">
@@ -215,6 +214,7 @@
             </div>
         </div>
     </div>
+</div>
 </div>
 {{ encore_entry_script_tags('bewelcome') }}
 {{ encore_entry_script_tags('jquery_ui') }}

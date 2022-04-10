@@ -37,8 +37,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Message
 {
     /**
-     * @var string
-     *
      * @ORM\Column(name="MessageType", type="string", nullable=false)
      */
     private string $messageType = 'MemberToMember';
@@ -51,15 +49,11 @@ class Message
     private $updated;
 
     /**
-     * @var DateTime
-     *
      * @ORM\Column(name="created", type="datetime", nullable=false)
      */
     private DateTime $created;
 
     /**
-     * @var DateTime
-     *
      * @ORM\Column(name="DateSent", type="datetime", nullable=false)
      */
     private DateTime $dateSent;
@@ -107,7 +101,7 @@ class Message
      *
      * @ORM\Column(name="SpamInfo", type="spam_info", nullable=false)
      */
-    private $spamInfo;
+    private $spamInfo = SpamInfoType::NO_SPAM;
 
     /**
      * @var string
@@ -120,8 +114,6 @@ class Message
      * @var string
      *
      * @ORM\Column(name="Message", type="text", length=65535, nullable=false)
-     *
-     * @Assert\NotBlank()
      */
     private $message;
 
@@ -298,7 +290,7 @@ class Message
             $info[] = $spamInfo;
         }
         sort($info);
-        if (1 < count($info)) {
+        if (1 < \count($info)) {
             $info = array_diff($info, [SpamInfoType::NO_SPAM]);
         }
         $this->spamInfo = implode(',', $info);
@@ -306,6 +298,7 @@ class Message
         if (empty($this->spamInfo)) {
             $this->spamInfo = SpamInfoType::NO_SPAM;
         }
+
         return $this;
     }
 

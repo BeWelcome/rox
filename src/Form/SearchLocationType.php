@@ -2,7 +2,6 @@
 
 namespace App\Form;
 
-use App\Entity\Location;
 use App\Form\CustomDataClass\LocationRequest;
 use App\Form\DataTransformer\LocationRequestToLocationTransformer;
 use Symfony\Component\Form\AbstractType;
@@ -97,7 +96,7 @@ class SearchLocationType extends AbstractType implements DataMapperInterface
                 'geoname_id' => 'fullname',
                 'latitude' => 'fullname',
                 'longitude' => 'fullname',
-            ]
+            ],
         ]);
     }
 

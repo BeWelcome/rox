@@ -14,6 +14,7 @@ use App\Utilities\TranslatorTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Pagerfanta\Doctrine\ORM\QueryAdapter;
 use Pagerfanta\Pagerfanta;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
@@ -22,13 +23,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Contracts\Translation\TranslatorInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 class TripController extends AbstractController
 {
-    use TranslatorTrait;
     use TranslatedFlashTrait;
+    use TranslatorTrait;
 
     private TripModel $tripModel;
 
@@ -69,6 +68,7 @@ class TripController extends AbstractController
         /** @var Member $member */
         $member = $this->getUser();
         $searchRadius = $tripModel->getTripsRadius($member);
+
         return $this->render('trip/show.html.twig', [
             'trip' => $trip,
             'searchRadius' => $searchRadius,
@@ -211,7 +211,7 @@ class TripController extends AbstractController
 
         $newTrip = $this->tripModel->copyTrip($trip);
 
-        return $this->redirectToRoute('trip_edit', [ 'id' => $newTrip->getId()]);
+        return $this->redirectToRoute('trip_edit', ['id' => $newTrip->getId()]);
     }
 
     /**
@@ -238,7 +238,7 @@ class TripController extends AbstractController
         if ($radiusForm->isSubmitted() && $radiusForm->isValid()) {
             $data = $radiusForm->getData();
             $newRadius = $data['radius'];
-            if ($radius != $newRadius) {
+            if ($radius !== $newRadius) {
                 $this->tripModel->setTripsRadius($host, $newRadius);
                 $radius = $newRadius;
             }

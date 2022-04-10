@@ -9,7 +9,6 @@ use App\Entity\Member;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Query\ResultSetMapping;
 
 abstract class AbstractConversationsAdapter
 {

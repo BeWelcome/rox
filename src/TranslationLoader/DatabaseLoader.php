@@ -26,12 +26,7 @@ class DatabaseLoader implements LoaderInterface
         $this->em = $em;
     }
 
-    /**
-     * {@inheritdoc}
-     *
-     * @api
-     */
-    public function load($resource, $locale, $domain = 'messages')
+    public function load($resource, $locale, $domain = 'messages'): MessageCatalogue
     {
         if ('en' === $locale) {
             return $this->loadEnglishOriginals($domain);

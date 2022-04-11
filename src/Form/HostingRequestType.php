@@ -82,6 +82,7 @@ class HostingRequestType extends AbstractType
                 'reply_host' => false,
                 'request' => false,
                 'invitation' => false,
+                'new' => false,
             ])
         ;
     }
@@ -99,7 +100,7 @@ class HostingRequestType extends AbstractType
      */
     private function addFieldsForInvitation(FormInterface $form, array $options, $data): void
     {
-        if (null === $data) {
+        if ($options['new']) {
             $form->add('duration', TextType::class, [
                 'required' => false,
                 'label' => 'duration',

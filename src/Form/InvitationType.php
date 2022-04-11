@@ -26,6 +26,7 @@ class InvitationType extends HostingRequestAbstractType
             ->add('subject', SubjectType::class)
             ->add('request', HostingRequestType::class, [
                 'invitation' => true,
+                'new' => true,
             ])
             ->add('message', CkEditorType::class, [
                 'label' => 'label.message',

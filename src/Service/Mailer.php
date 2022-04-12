@@ -81,11 +81,12 @@ class Mailer
     public function sendCommentReportedFeedbackEmail(Member $member, $parameters)
     {
         $parameters['sender'] = $member;
+        $parameters['receiver'] = $member;
         $feedbackCategoryRepository = $this->entityManager->getRepository(FeedbackCategory::class);
         $feedbackCategory = $feedbackCategoryRepository->findOneBy(['name' => 'Comment_issue']);
 
         return $this->sendTemplateEmail(
-            $member,
+            new Address($member->getEmail()),
             new Address($feedbackCategory->getEmailToNotify(), 'Comment Issue'),
             'comment.feedback',
             $parameters

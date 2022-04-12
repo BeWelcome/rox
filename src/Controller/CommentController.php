@@ -16,6 +16,7 @@ use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class CommentController extends AbstractController
 {
@@ -34,6 +35,7 @@ class CommentController extends AbstractController
         Request $request,
         Member $member,
         Comment $comment,
+        TranslatorInterface $translator,
         Mailer $mailer
     ) {
 //        \todo Should we only allow the receiver of a comment to report it?
@@ -68,7 +70,7 @@ class CommentController extends AbstractController
                     $em->persist($comment);
                     $em->flush();
 
-                    $this->addTranslatedFlash('notice', 'flash.feedback.safetyteam');
+                    $this->addFlash('notice', $translator->trans('flash.feedback.safetyteam'));
 
                     return $this->redirectToRoute('profile_all_comments', ['username' => $member->getUsername()]);
                 }

@@ -26,6 +26,9 @@ class DatabaseLoader implements LoaderInterface
         $this->em = $em;
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
     public function load($resource, $locale, $domain = 'messages'): MessageCatalogue
     {
         if ('en' === $locale) {

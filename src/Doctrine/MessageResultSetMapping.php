@@ -21,8 +21,8 @@ class MessageResultSetMapping extends ResultSetMapping
         $this->addFieldResult('m', 'Status', 'status');
         $this->addFieldResult('m', 'InFolder', 'folder');
         $this->addMetaResult('m', 'IdParent', 'idParent');
-        $this->addMetaResult('m', 'IdReceiver', 'idReceiver');
-        $this->addMetaResult('m', 'IdSender', 'idSender');
+        $this->addMetaResult('m', 'idReceiver', 'idReceiver');
+        $this->addMetaResult('m', 'idSender', 'idSender');
         $this->addMetaResult('m', 'initiator_id', 'initiator_id');
         $this->addMetaResult('m', 'subject_id', 'subject_id');
         $this->addMetaResult('m', 'request_id', 'request_id');

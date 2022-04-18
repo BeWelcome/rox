@@ -33,6 +33,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *     @ORM\Index(name="geonames_idx_admin3_id", columns={"admin_3_id"}),
  *     @ORM\Index(name="geonames_idx_admin4_id", columns={"admin_4_id"})
  * })
+ * @ORM\Entity
  * @Gedmo\TranslationEntity(class="App\Entity\Translation\NewLocationTranslation")
  *
  * @SuppressWarnings(PHPMD)

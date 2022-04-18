@@ -309,7 +309,7 @@ class InvitationController extends BaseRequestAndInvitationController
         Member $receiver
     ): Message {
         $data = $requestForm->getData();
-        $em = $this->getDoctrine()->getManager();
+
         $clickedButton = $requestForm->getClickedButton()->getName();
 
         // handle changes in invitation

@@ -62,7 +62,7 @@ class HostingRequestType extends AbstractType
             $data = $event->getData();
 
             if ($options['invitation']) {
-                $this->addFieldsForInvitation($form, $options, $data);
+                $this->addFieldsForInvitation($form, $options);
             }
             if ($options['request']) {
                 $this->addFieldsForRequest($form, $options, $data);
@@ -98,7 +98,7 @@ class HostingRequestType extends AbstractType
     /**
      * @param mixed $data
      */
-    private function addFieldsForInvitation(FormInterface $form, array $options, $data): void
+    private function addFieldsForInvitation(FormInterface $form, array $options): void
     {
         if ($options['new']) {
             $form->add('duration', TextType::class, [
@@ -144,8 +144,7 @@ class HostingRequestType extends AbstractType
         ];
 
         $numberOfTravellersType = TextType::class;
-        if (null === $data) {
-        } else {
+        if (null !== $data) {
             if ($options['reply_host']) {
                 $numberOfTravellersType = HiddenType::class;
                 if (!$data->getFlexible()) {

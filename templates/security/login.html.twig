@@ -142,25 +142,25 @@
                                 <input type="hidden" name="_csrf_token"
                                        value="{{ csrf_token('authenticate') }}"
                                 >
-                                {% if invalid_credentials or resend_confirmation or member_banned or member_expired or member_not_allowed_to_login %}
+                                {% if not error is null %}
                                     <p class="col-12 mt-3">
-                                        {% if invalid_credentials %}
+                                        {% if error.messageKey == 'Invalid credentials.' %}
                                             {{ 'login.forgot.password' | trans }}<br>
                                             <a href="{{ url('member_request_reset_password') }}">{{ 'login.password.getnew' | trans }}</a>
                                             <br>
                                             {{ 'login.forgot.username' | trans }}
                                         {% endif %}
-                                        {% if resend_confirmation %}
+                                        {% if error.messageKey == 'login.mail.not_confirmed' %}
                                             {{ 'login.mail.not_confirmed' | trans }}<br>
                                             <a href="{{ url('resend_confirmation_email', { 'username': last_username}) }}">{{ 'login.resend.confirmation' | trans }}</a>
                                         {% endif %}
-                                        {% if member_banned %}
+                                        {% if error.messageKey == 'member_banned' %}
                                             {{ 'login.account.banned' | trans }}
                                         {% endif %}
-                                        {% if member_expired %}
+                                        {% if error.messageKey == 'member_expired' %}
                                             {{ 'login.account.expired' | trans }}
                                         {% endif %}
-                                        {% if member_not_allowed_to_login %}
+                                        {% if error.messageKey == 'member_not_allowed_to_login' %}
                                             {{ 'login.account.no_login' | trans }}
                                         {% endif %}
                                         <br>

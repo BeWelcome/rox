@@ -275,8 +275,6 @@ class SuggestLocationModel
             $query->where('country', '=', $countryId);
         }
 
-        $compiled = $query->compile()->getCompiled();
-
         $results = $query
             ->enqueue((new Helper($this->connection))->showMeta())
             ->executeBatch()

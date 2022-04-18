@@ -19,7 +19,6 @@
         "ext-session": "*",
         "ext-xsl": "*",
         "ext-zip": "*",
-        "amphp/http-client": "^4.3",
         "anthonymartin/geo-location": "^2.0",
         "anyx/login-gate-bundle": "^2.0",
         "api-platform/core": "2.*",
@@ -156,6 +155,11 @@
         "sort-packages": true,
         "platform": {
             "php": "7.4.14"
+        },
+        "allow-plugins": {
+            "infection/extension-installer": true,
+            "phpstan/extension-installer": true,
+            "symfony/flex": true
         }
     },
     "extra": {

@@ -2,45 +2,6 @@
     "alexandresalome/mailcatcher": {
         "version": "v1.3.1"
     },
-    "amphp/amp": {
-        "version": "v2.6.1"
-    },
-    "amphp/byte-stream": {
-        "version": "v1.8.1"
-    },
-    "amphp/cache": {
-        "version": "v1.5.0"
-    },
-    "amphp/dns": {
-        "version": "v1.2.3"
-    },
-    "amphp/hpack": {
-        "version": "v3.1.1"
-    },
-    "amphp/http": {
-        "version": "v1.6.3"
-    },
-    "amphp/http-client": {
-        "version": "v4.6.1"
-    },
-    "amphp/parser": {
-        "version": "v1.0.0"
-    },
-    "amphp/process": {
-        "version": "v1.1.1"
-    },
-    "amphp/serialization": {
-        "version": "v1.0.0"
-    },
-    "amphp/socket": {
-        "version": "v1.2.0"
-    },
-    "amphp/sync": {
-        "version": "v1.4.0"
-    },
-    "amphp/windows-registry": {
-        "version": "v0.3.3"
-    },
     "anthonymartin/geo-location": {
         "version": "v2.0.1"
     },
@@ -114,9 +75,6 @@
         "files": [
             "./config/packages/test/dama_doctrine_test_bundle.yaml"
         ]
-    },
-    "daverandom/libdns": {
-        "version": "v2.0.2"
     },
     "deployer/dist": {
         "version": "v6.8.0"
@@ -332,9 +290,6 @@
     "justinrainbow/json-schema": {
         "version": "5.2.11"
     },
-    "kelunik/certificate": {
-        "version": "v1.1.2"
-    },
     "laminas/laminas-code": {
         "version": "3.4.1"
     },
@@ -364,15 +319,6 @@
     },
     "league/html-to-markdown": {
         "version": "4.10.0"
-    },
-    "league/uri": {
-        "version": "6.5.0"
-    },
-    "league/uri-interfaces": {
-        "version": "2.3.0"
-    },
-    "league/uri-parser": {
-        "version": "1.4.1"
     },
     "lexik/jwt-authentication-bundle": {
         "version": "2.5",

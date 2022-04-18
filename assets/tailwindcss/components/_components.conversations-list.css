@@ -7,15 +7,15 @@
 }
 
 .c-conversations .unread a {
-	font-weight: bold; 
+	font-weight: bold;
 }
 
 .c-conversation__item {
 	display: flex;
 	align-items: center;
 	background-color: theme('colors.gray-5');
-	padding: 0 16px;
-	border-radius: 8px;
+	padding: 0 4px;
+	border-radius: 4px;
 	margin-bottom: 8px;
 	height: 130px;
 	overflow: hidden;

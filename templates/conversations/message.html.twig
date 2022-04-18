@@ -69,10 +69,8 @@
 
                 {% set messageText = message.Message | replace({'\n': ' ', '<br />': ' '}) | striptags %}
                 {% apply spaceless %}
-                <p class="u-hidden md:u-block  m-0 mb-1">{{ message.sender.Username }}:
-                    {{ messageText | truncate(150) | raw -}}</p>
-                <p class="md:u-hidden u-ellipsis m-0 mb-1">{{ message.sender.Username }}:
-                    {{ messageText | truncate(150) | raw -}}</p>
+                <p class="u-line-clamp-3 m-0 mb-1">{{ message.sender.Username }}:
+                    {{ messageText | truncate(250) | raw -}}</p>
                 {% endapply %}
             </a>
 

@@ -129,7 +129,6 @@
                                                 {% if invitations|length > 5 %}<a href="{{ url('conversations', {conversationsType: 'invitations'}) }}">...</a>{% endif %}
                                             {% endif %}
                                         {% else %}
-                                            {{ subtrip.location.geonameId }} - {{ app.user.city.geonameId }}
                                             {% if distance(subtrip.location.latitude, subtrip.location.longitude, app.user.latitude, app.user.longitude) <= trip.invitationRadius or subtrip.location.geonameId == app.user.city.geonameId %}
                                                 <div class="u-flex">
                                                     {% if constant('App\\Doctrine\\SubtripOptionsType::MEET_LOCALS') in subtrip.options %}

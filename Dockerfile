@@ -4,12 +4,12 @@
 
 
 # https://docs.docker.com/engine/reference/builder/#understand-how-arg-and-from-interact
-ARG PHP_VERSION=7.4.12
+ARG PHP_VERSION=7.4.28
 ARG NGINX_VERSION=1.17
 
 
 # "php" stage
-FROM php:${PHP_VERSION}-fpm-alpine AS bewelcome_php
+FROM php:${PHP_VERSION}-fpm-alpine3.15 AS bewelcome_php
 
 # persistent / runtime deps
 RUN apk add --no-cache \

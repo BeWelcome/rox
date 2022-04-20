@@ -12,6 +12,7 @@
         {{ 'or' | trans }}
 
         <button class="expand" href="{{ url('conversation_reply', { id: message.id }) }}">{{ 'reply' | trans }}</button>
+        <p><a href="{{ url('conversation_mark_spam', { 'id': message.id }) }}">{{ 'message.report'|trans }}</a></p>
     </center>
 {% endblock message %}
 

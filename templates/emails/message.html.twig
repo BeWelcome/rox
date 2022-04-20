@@ -4,4 +4,5 @@
     <p>{{ message.message | raw }}</p>
     <p><a href="{{ url('members_profile', {'username': message.sender.username}) }}">{{ 'message.profile'|trans({'username': sender.username}) }}</a>&nbsp;&bull;
         <a href="{{ url('conversation_reply', { 'id': message.id }) }}">{{ 'reply' | trans }}</a></p>
+    <p><a href="{{ url('conversation_mark_spam', { 'id': message.id }) }}">{{ 'message.report'|trans }}</a></p>
 {% endblock %}

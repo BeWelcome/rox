@@ -7,11 +7,12 @@
         {{ message.message | raw }}
     </callout>
     <center>
-    <button class="expand" href="{{ url('members_profile', { 'username': sender.Username}) }}">{% trans with {'%username%': sender.Username, 'gender': sender.Gender} %}visit.profile{% endtrans %}</button>
+        <button class="expand" href="{{ url('members_profile', { 'username': sender.Username}) }}">{% trans with {'%username%': sender.Username, 'gender': sender.Gender} %}visit.profile{% endtrans %}</button>
 
-    {{ 'or' | trans }}
+        {{ 'or' | trans }}
 
-    <button class="expand" href="{{ url('conversation_reply', { id: message.id }) }}">{{ 'reply' | trans }}</button>
+        <button class="expand" href="{{ url('conversation_reply', { id: message.id }) }}">{{ 'reply' | trans }}</button>
+        <p><a href="{{ url('conversation_mark_spam', { 'id': message.id }) }}">{{ 'message.report'|trans }}</a></p>
     </center>
 {% endblock message %}
 

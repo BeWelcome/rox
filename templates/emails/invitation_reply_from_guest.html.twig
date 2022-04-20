@@ -15,6 +15,7 @@
         {% set leg = message.request.inviteForLeg.id %}
 
         <button class="expand text-center" href="{{ url('conversation_reply', { id: message.id }) }}">{{ 'reply' | trans }}</button>
+        <p><a href="{{ url('conversation_mark_spam', { 'id': message.id }) }}">{{ 'message.report'|trans }}</a></p>
     </center>
 {% endblock message %}
 

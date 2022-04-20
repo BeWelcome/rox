@@ -205,21 +205,21 @@ class SearchAdapter implements AdapterInterface
 
         $vars['search-gender'] = $gender[$data->gender] ?? '';
 
-/*        switch ($data->gender) {
-            case 1:
-                $vars['search-gender'] = 'male';
-                break;
-            case 2:
-                $vars['search-gender'] = 'female';
-                break;
-            case 4:
-                $vars['search-gender'] = 'other';
-                break;
-            default:
-                $vars['search-gender'] = '';
-                break;
-        }
-*/
+        /*        switch ($data->gender) {
+                    case 1:
+                        $vars['search-gender'] = 'male';
+                        break;
+                    case 2:
+                        $vars['search-gender'] = 'female';
+                        break;
+                    case 4:
+                        $vars['search-gender'] = 'other';
+                        break;
+                    default:
+                        $vars['search-gender'] = '';
+                        break;
+                }
+        */
         $vars['search-age-minimum'] = $data->min_age;
         $vars['search-age-maximum'] = $data->max_age;
         $vars['search-groups'] = $data->groups;

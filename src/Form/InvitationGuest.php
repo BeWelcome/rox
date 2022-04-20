@@ -2,12 +2,9 @@
 
 namespace App\Form;
 
-use App\Entity\HostingRequest;
 use App\Entity\Message;
 use App\Form\DataTransformer\DateTimeTransformer;
 use App\Form\DataTransformer\LegTransformer;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;

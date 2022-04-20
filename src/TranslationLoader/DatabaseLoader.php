@@ -28,6 +28,10 @@ class DatabaseLoader implements LoaderInterface
 
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
+     * @param mixed $resource
+     * @param mixed $locale
+     * @param mixed $domain
      */
     public function load($resource, $locale, $domain = 'messages'): MessageCatalogue
     {

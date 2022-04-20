@@ -38,6 +38,8 @@ abstract class SetType extends Type
     }
 
     /**
+     * @param mixed $value
+     *
      * @return mixed
      */
     public function convertToPHPValue($value, AbstractPlatform $platform)
@@ -46,6 +48,8 @@ abstract class SetType extends Type
     }
 
     /**
+     * @param mixed $value
+     *
      * @return mixed
      */
     public function convertToDatabaseValue($value, AbstractPlatform $platform)

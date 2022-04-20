@@ -17,7 +17,6 @@ use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
-use InvalidArgumentException;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -172,48 +171,41 @@ class InvitationController extends BaseRequestAndInvitationController
             $realParent = $this->conversationModel->getLastMessageInConversation($invitation);
             $finalInvitation = $this->getFinalInvitation($requestForm, $realParent, $guest, $host);
 
-            $alreadyAccepted = false;
             if (HostingRequest::REQUEST_ACCEPTED === $finalInvitation->getRequest()->getStatus()) {
-                if (null === $leg->getInvitedBy()) {
-                    $leg->setInvitedBy($host);
-                    $this->entityManager->persist($leg);
-                } elseif ($host !== $leg->getInvitedBy()) {
-                    $this->addTranslatedFlash('error', 'flash.invitation.error.already.accepted.other');
-                }
+                $leg->setInvitedBy($host);
+                $this->entityManager->persist($leg);
             }
 
-            if (!$alreadyAccepted) {
-                // In case the potential guest declines the invitation remove the invitedBy from the leg
-                if (HostingRequest::REQUEST_DECLINED === $finalInvitation->getRequest()->getStatus()) {
-                    if ($leg->getInvitedBy() === $host) {
-                        $leg->setInvitedBy(null);
-                    }
-                    $this->entityManager->persist($leg);
+            // In case the potential guest declines the invitation remove the invitedBy from the leg
+            if (HostingRequest::REQUEST_DECLINED === $finalInvitation->getRequest()->getStatus()) {
+                if ($leg->getInvitedBy() === $host) {
+                    $leg->setInvitedBy(null);
                 }
-                $this->entityManager->persist($finalInvitation);
-                $this->entityManager->flush();
-
-                $subject = $this->getSubjectForReply($finalInvitation);
-
-                $requestUpdated = $finalInvitation->getRequest()->getId() !== $realParent->getRequest()->getId();
-
-                if ($requestUpdated) {
-                    $invitation->getRequest()->setInviteForLeg(null);
-                }
-                $this->entityManager->flush();
-
-                $this->sendInvitationGuestReplyNotification(
-                    $host,
-                    $guest,
-                    $finalInvitation,
-                    $subject,
-                    $requestUpdated,
-                    $leg
-                );
-                $this->addTranslatedFlash('notice', 'flash.notification.updated');
-
-                return $this->redirectToRoute('conversation_view', ['id' => $finalInvitation->getId()]);
+                $this->entityManager->persist($leg);
             }
+            $this->entityManager->persist($finalInvitation);
+            $this->entityManager->flush();
+
+            $subject = $this->getSubjectForReply($finalInvitation);
+
+            $requestUpdated = $finalInvitation->getRequest()->getId() !== $realParent->getRequest()->getId();
+
+            if ($requestUpdated) {
+                $invitation->getRequest()->setInviteForLeg(null);
+            }
+            $this->entityManager->flush();
+
+            $this->sendInvitationGuestReplyNotification(
+                $host,
+                $guest,
+                $finalInvitation,
+                $subject,
+                $requestUpdated,
+                $leg
+            );
+            $this->addTranslatedFlash('notice', 'flash.notification.updated');
+
+            return $this->redirectToRoute('conversation_view', ['id' => $finalInvitation->getId()]);
         }
 
         return $this->render('invitation/reply_from_guest.html.twig', [

@@ -49,12 +49,7 @@ class SuggestLocationModel
             return ['locations' => []];
         }
 
-        $ids = [];
-        foreach ($sphinxResult as $result) {
-            if (!\in_array($result['geonameid'], $ids, true)) {
-                $ids[] = $result['geonameid'];
-            }
-        }
+        $ids = $this->filterForUniqueIds($sphinxResult);
 
         $locale = $this->translator->getLocale();
         $place = $this->translator->trans('suggest.places');
@@ -344,5 +339,17 @@ class SuggestLocationModel
         );
 
         return $query->getOneOrNullResult();
+    }
+
+    private function filterForUniqueIds($sphinxResult): array
+    {
+        $ids = [];
+        foreach ($sphinxResult as $result) {
+            if (!\in_array($result['geonameid'], $ids, true)) {
+                $ids[] = $result['geonameid'];
+            }
+        }
+
+        return $ids;
     }
 }

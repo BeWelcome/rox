@@ -8,7 +8,6 @@ use App\Form\DataTransformer\LegTransformer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
-use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
@@ -118,7 +117,7 @@ class HostingRequestType extends AbstractType
 
     private function addFieldsForRequest(FormInterface $form, array $options, $data)
     {
-        $numberOfTravellersOptions =  [
+        $numberOfTravellersOptions = [
             'label' => 'request.number_of_travellers',
             'attr' => [
                 'placeholder' => 'placeholder.request.nbtravellers',

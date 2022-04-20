@@ -72,12 +72,12 @@ class SecurityController extends AbstractController
             [
                 'last_username' => $lastUsername,
                 'error' => $error,
-//                'resend_confirmation' => $showResendConfirmationLink,
-//                'invalid_credentials' => $showInvalidCredentialsHint,
-//                'member_banned' => $showBannedHint,
-//                'member_expired' => $showExpiredHint,
-//                'member_suspended' => $showSuspendedMemberHint,
-//                'member_not_allowed_to_login' => $showNotAllowedToLogin,
+            //                'resend_confirmation' => $showResendConfirmationLink,
+            //                'invalid_credentials' => $showInvalidCredentialsHint,
+            //                'member_banned' => $showBannedHint,
+            //                'member_expired' => $showExpiredHint,
+            //                'member_suspended' => $showSuspendedMemberHint,
+            //                'member_not_allowed_to_login' => $showNotAllowedToLogin,
             ]
         );
 

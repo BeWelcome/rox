@@ -138,7 +138,7 @@ if (empty($vars)) {
                                 <span class="input-group-text bg-primary white"><i class="fa fa-fw fa-globe"></i></span>
                             </div>
                             <input type="text" id="activity-location" name="activity-location"
-                                   class="o-input search-picker" value="<?= $vars['activity-location'] ?? ''; ?>"
+                                   class="o-input js-search-picker" value="<?= $vars['activity-location'] ?? ''; ?>"
                                    placeholder="<?php echo $words->get('ActivityLocation'); ?>*">
                         </div>
                     </div>
@@ -194,5 +194,4 @@ if (empty($vars)) {
         });
     });
 </script>
-<script src="build/cktranslations/<?= $this->session->get('lang', 'en');?>.js"></script>
 

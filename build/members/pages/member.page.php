@@ -317,4 +317,19 @@ class MemberPage extends PageWithActiveSkin
 
         return $dateSince;
     }
+
+    public function lastLoginDate($member)
+    {
+        $lastLogin = '';
+        $logged_member = $this->model->getLoggedInMember();
+        if ($logged_member
+            && $logged_member->hasOldRight(
+                array('SafetyTeam' => '')
+            )
+        ) {
+            $lastLogin = ' ('.$member->LastLogin.')';
+        }
+
+        return $lastLogin;
+    }
 }

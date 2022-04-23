@@ -108,6 +108,7 @@
                 } else {
                     echo $layoutbits->ago(strtotime($member->LastLogin));
                 }
+                echo  $this->lastLoginDate($member);
                 ?>
             <?php endif; ?>
         </p>

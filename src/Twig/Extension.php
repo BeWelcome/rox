@@ -87,6 +87,7 @@ class Extension extends AbstractExtension implements GlobalsInterface
             ),
             new TwigFunction('encore_entry_css_source', [$this, 'getEncoreEntryCssSource']),
             new TwigFunction('distance', [$this, 'distance']),
+            new TwigFunction('sgn', [$this, 'sgn']),
         ];
     }
 
@@ -258,6 +259,14 @@ class Extension extends AbstractExtension implements GlobalsInterface
         $a = sin($radiantLat / 2) ** 2 + cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * sin($radiantLng / 2) ** 2;
 
         return 12742 * asin(sqrt($a));
+    }
+
+    /**
+     * signum of the given (float) number
+     */
+    public function sgn(float $number): int
+    {
+        return ($number > 0) ? 1 : (($number < 0) ? -1 : 0);
     }
 
     /**

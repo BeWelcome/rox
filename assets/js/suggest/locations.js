@@ -183,7 +183,6 @@ class LocationSuggest {
 
             onSubmit: (result) => {
                 const id = this.id.replace(this.identifier, '');
-                console.log("onSubmit: " + id);
                 document.getElementById(id + "_fullname").value = result.name + ', ' + (result.admin1 ? result.admin1 + ', ' : '') + result.country;
                 document.getElementById(id + "_name").value = result.name + ', ' + (result.admin1 ? result.admin1 + ', ' : '') + result.country;
                 document.getElementById(id + "_geoname_id").value = result.id;
@@ -205,7 +204,6 @@ function initializeSuggestionMaps() {
         const geonameId = value.id.replace('suggest-map-', '');
         const latitude = document.getElementById('latitude-' + geonameId).value;
         const longitude = document.getElementById('longitude-' + geonameId).value;
-        console.log(value);
         const map = L.map(value.id, {
             zoomControl: false,
             boxZoom: false

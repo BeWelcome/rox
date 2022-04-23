@@ -111,14 +111,9 @@ for (let i = 0; i < allEditors.length; ++i) {
 
             const storedData = JSON.parse(window.localStorage.getItem(window.location.href));
             if (storedData !== null) {
-                console.log(storedData.lastChange);
-
                 const diff = new Date() - new Date(storedData.lastChange);
 
-                console.log(diff);
-
                 if (diff < 1000 * 60 * 60 * 24) {
-                    console.log('Restoring data');
                     editor.setData(storedData.editorData);
                 } else {
                     window.localStorage.removeItem(window.location.href);
@@ -131,9 +126,7 @@ for (let i = 0; i < allEditors.length; ++i) {
 }
 
 function registerSubmitHandler( form ) {
-    console.log('register submit handler for ', form);
     form.addEventListener('submit', function() {
-        console.log('removing data');
         window.localStorage.removeItem(window.location.href);
     });
 }

@@ -62,6 +62,7 @@
             <div class="l-trips-overlay-wrapper">
                 <ul>
                     {% set current = 1 %}
+                    {% set lastLongitude = ((trip.subtrips)|first).location.longitude %}
                     {% for subtrip in trip.subtrips %}
                         {% if not(constant('App\\Doctrine\\SubtripOptionsType::PRIVATE') in subtrip.options) or (app.user == trip.creator) %}
                             <li class="l-trip-show">
@@ -162,8 +163,16 @@
                                         {% endif %}
                                     </div>
                                 </div>
+                                {% set calculatedLongitude = subtrip.location.longitude %}
+                                {% if lastLongitude != subtrip.location.longitude %}
+                                    {% if sgn(lastLongitude) != sgn(subtrip.location.longitude) %}
+                                        {% if lastLongitude|abs > 170 or subtrip.location.longitude|abs > 170 %}
+                                            {% set calculatedLongitude = subtrip.location.longitude + 360.0 %}
+                                        {% endif %}
+                                    {% endif %}
+                                {% endif %}
                                 <input type="hidden" class="js-data"
-                                       value="{{ subtrip.location.name }},{{ subtrip.location.latitude }},{{ subtrip.location.longitude }},{{ subtrip.location.country.name }},{{ subtrip.arrival|format_date('short') }}{% if subtrip.arrival != subtrip.departure %} - {{ subtrip.departure|format_date('short') }}{% endif %}">
+                                       value="{{ subtrip.location.name }},{{ subtrip.location.latitude }},{{ calculatedLongitude }},{{ subtrip.location.country.name }},{{ subtrip.arrival|format_date('short') }}{% if subtrip.arrival != subtrip.departure %} - {{ subtrip.departure|format_date('short') }}{% endif %}">
                             </li>
                             {% set current = current + 1 %}
                         {% endif %}

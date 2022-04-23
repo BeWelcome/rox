@@ -23,6 +23,5 @@ function updateConversations()
     parameters += '&initiator=' + initiator;
 
     parameters = parameters.replace('?&', '?');
-    console.log(parameters);
     window.location.search = parameters;
 }

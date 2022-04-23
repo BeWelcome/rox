@@ -2,6 +2,7 @@
 
 namespace App\Security;
 
+use App\Doctrine\SubtripOptionsType;
 use App\Entity\Member;
 use App\Entity\Trip;
 use LogicException;
@@ -41,8 +42,12 @@ class TripVoter extends Voter
 
         switch ($attribute) {
             case self::TRIP_VIEW:
-                // Currently everyone can view any trip
-                return true;
+                // Currently everyone can view any trip as long as not all legs are private
+                $view = $this->canEdit($trip, $member);
+                foreach ($trip->getSubtrips() as $leg) {
+                    $view = $view || !in_array(SubtripOptionsType::PRIVATE, $leg->getOptions());
+                }
+                return $view;
             case self::TRIP_EDIT:
                 return $this->canEdit($trip, $member);
         }
@@ -52,7 +57,6 @@ class TripVoter extends Voter
 
     private function canEdit(Trip $trip, Member $member): bool
     {
-        // this assumes that the Post object has a `getOwner()` method
         return $member === $trip->getCreator();
     }
 }

@@ -14,6 +14,7 @@
     {% else %}
         {% set label = 'reply' %}
     {% endif %}
+    {% set leg = invitation.inviteForLeg %}
 
     {{ macros.messageheader(thread, {show_deleted: show_deleted, is_spam: is_spam}) }}
 

@@ -103,6 +103,7 @@ class LogModel
             'StopBoringMe',
             'suggestions',
             'SwitchLanguage',
+            'Trips',
             'UpdateFaq',
             'UpdatePreference',
             'updateprofile',

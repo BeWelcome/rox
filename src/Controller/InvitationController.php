@@ -10,6 +10,7 @@ use App\Entity\Subtrip;
 use App\Form\InvitationGuest;
 use App\Form\InvitationHost;
 use App\Form\InvitationType;
+use App\Logger\Logger;
 use App\Model\ConversationModel;
 use App\Model\InvitationModel;
 use App\Service\Mailer;
@@ -29,17 +30,21 @@ class InvitationController extends BaseRequestAndInvitationController
 
     private Mailer $mailer;
     private EntityManagerInterface $entityManager;
+    private Logger $logger;
 
     public function __construct(
         ConversationModel $conversationModel,
         InvitationModel $invitationModel,
         EntityManagerInterface $entityManager,
-        Mailer $mailer
+        Mailer $mailer,
+        Logger $logger
     ) {
         parent::__construct($invitationModel);
         $this->mailer = $mailer;
         $this->conversationModel = $conversationModel;
         $this->entityManager = $entityManager;
+        $this->invitationModel = $invitationModel;
+        $this->logger = $logger;
     }
 
     /**
@@ -172,16 +177,12 @@ class InvitationController extends BaseRequestAndInvitationController
             $finalInvitation = $this->getFinalInvitation($requestForm, $realParent, $guest, $host);
 
             if (HostingRequest::REQUEST_ACCEPTED === $finalInvitation->getRequest()->getStatus()) {
-                $leg->setInvitedBy($host);
-                $this->entityManager->persist($leg);
+                $this->handleAcceptOfInvitation($leg, $host, $finalInvitation);
             }
 
             // In case the potential guest declines the invitation remove the invitedBy from the leg
             if (HostingRequest::REQUEST_DECLINED === $finalInvitation->getRequest()->getStatus()) {
-                if ($leg->getInvitedBy() === $host) {
-                    $leg->setInvitedBy(null);
-                }
-                $this->entityManager->persist($leg);
+                $this->handleDeclineOfInvitation($leg, $host);
             }
             $this->entityManager->persist($finalInvitation);
             $this->entityManager->flush();
@@ -376,5 +377,35 @@ class InvitationController extends BaseRequestAndInvitationController
         ]);
 
         return true;
+    }
+
+    private function handleAcceptOfInvitation(
+        ?Subtrip $leg,
+        Member $host,
+        Message $finalInvitation
+    ): void {
+        $leg->setInvitedBy($host);
+        $this->entityManager->persist($leg);
+        if (
+            $leg->getArrival()->format('Y-m-d') != $finalInvitation->getRequest()->getArrival()->format('Y-m-d') ||
+            $leg->getDeparture()->format('Y-m-d') != $finalInvitation->getRequest()->getDeparture()->format('Y-m-d')
+        ) {
+            $this->addTranslatedFlash('notice', 'trip.incomplete.leg', [
+                'location' => $leg->getLocation()->getFullname(),
+                'arrival' => $leg->getArrival(),
+                'departure' => $leg->getDeparture(),
+            ]);
+            $this->logger->write('Invitation accepted (incomplete)', 'Trips');
+        } else {
+            $this->logger->write('Invitation accepted (complete)', 'Trips');
+        }
+    }
+
+    private function handleDeclineOfInvitation(?Subtrip $leg, Member $host): void
+    {
+        if ($leg->getInvitedBy() === $host) {
+            $leg->setInvitedBy(null);
+        }
+        $this->entityManager->persist($leg);
     }
 }

@@ -8,7 +8,7 @@
 				{% if message.request %}
 					<a href="{{ path('conversation_view', { id: message.id } ) }}">
 						<div class="u-py-4 u-pr-8">
-							<p class="badge u-bg-green-dark u-text-white u-font-500 u-text-14 u-leading-10">
+							<p class="badge u-bg-blue-dark u-text-white u-font-500 u-text-14 u-leading-10">
 								{% if message.request.inviteForLeg is null %}
 									{{ 'conversations.request'|trans }}
 								{% else %}

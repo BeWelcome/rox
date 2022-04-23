@@ -138,3 +138,9 @@ trip.error.date.overlap:
     - 'Dates are overlapping.'
     - Shown if a trip contains legs that overlap.
     - validators
+trip.leg.not.matched:
+    - "The leg's duration and the invitation's duration do not match."
+    - Alert message shown to the guest in their reply form (invitation).
+trip.incomplete.leg:
+    - 'You just accepted an invitation that is shorter than your stay in {location} ({arrival, date, medium} - {departure, date, medium}). Consider updating your trip as this will hide the leg from others.'
+    - Additional flash notice shown when a user accepts an invitation that didn\'t cover the full leg duration

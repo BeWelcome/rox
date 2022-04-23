@@ -30,7 +30,7 @@
     <div class="u-flex u-flex-col u-h-full u-justify-between u-py-8 u-px-8 u-w-min-0 u-overflow-hidden">
             <a href="{{ path(show_message_route, { id: message.id}) }}">
                 {% if message.request %}
-						<p class="badge u-bg-green-dark u-text-white u-font-500 u-text-14 u-leading-10">
+						<p class="badge u-bg-blue-dark u-text-white u-font-500 u-text-14 u-leading-10">
 							{% if message.request.inviteForLeg is null %}
 								{{ 'conversations.request'|trans }}
 							{% else %}

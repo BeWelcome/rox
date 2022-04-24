@@ -37,6 +37,7 @@ Encore
     .addEntry('tempusdominus', './assets/js/tempusdominus.js')
     .addEntry('requests', './assets/js/requests.js')
     .addEntry('trips', './assets/js/trips.js')
+    .addEntry('micromodal', './assets/js/micromodal.js')
     .addEntry('treasurer', './assets/js/treasurer.js')
     .addEntry('activities', './assets/js/activities/edit_create.js')
     .addEntry('leaflet', './assets/js/leaflet.js')

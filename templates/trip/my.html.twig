@@ -6,11 +6,10 @@
 
 {% block stylesheets %}
     {{ encore_entry_link_tags('tailwind') }}
-    {{ encore_entry_link_tags('bewelcome') }}
 {% endblock %}
 
-{% block javascript %}
-    {{ encore_entry_script_tags('bewelcome') }}
+{% block javascripts %}
+    {{ encore_entry_script_tags('micromodal') }}
 {% endblock %}
 
 {% block content %}
@@ -65,30 +64,33 @@
                        href="{{ path('trip_edit', {'id': trip.id}) }}" aria-label="{{ 'trip.edit'|trans }}" title="{{ 'trip.edit'|trans }}">
                         <i class="far fa-edit"></i>
                     </a>
-                    <a class="o-rounded o-rounded--l" data-toggle="modal" data-target="#removeTrip-{{ trip.id }}" data-backdrop="false">
+                    <a class="o-rounded o-rounded--l" data-micromodal-trigger="removeTrip-{{ trip.id }}">
                       <i class="fa fa-times"></i>
                     </a>
                 </div>
             </div>
-                <div class="modal fade m-t-5" id="removeTrip-{{ trip.id }}" tabindex="-1" role="dialog" aria-labelledby="removeTripLabel-{{ trip.id }}" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="removeTripLabel-{{ trip.id }}">{{trip.summary}}</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
+            <div class="modal micromodal-slide" id="removeTrip-{{ trip.id }}" aria-hidden="true">
+                <div class="modal__overlay" tabindex="-1" data-micromodal-close>
+                    <div id="modal-container" class="modal__container" role="dialog" aria-modal="true" aria-labelledby="modal-1-title">
+                        <header id="modal-header" class="modal__header">
+                            <h2 class="modal__title">
+                                {{ trip.summary|truncate(50) }}
+                            </h2>
+                            <button class="modal__close" aria-label="{{ 'trip.remove.close'|trans }}" data-micromodal-close></button>
+                        </header>
+                        <div id="modal-content-content" class="modal-content-content">
+                            <div id="modal-content" class="modal__content">
                                 {{ 'trip.remove.body'|trans|raw }}
                             </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ 'trip.remove.close'|trans }}</button>
-                                <a class="btn btn-primary" role="button" href="{{ path('trip_remove', {'id': trip.id}) }}" aria-label="{{ 'trip.remove'|trans }}">{{ 'trip.remove'|trans }}</a>
-                            </div>
+                            <footer id="modal-footer" class="modal__footer u-flex u-flex-row u-justify-between">
+                                <a class="btn btn-primary-outline u-border-black" role="button" href="{{ path('trip_remove', {'id': trip.id}) }}" aria-label="{{ 'trip.remove'|trans }}">{{ 'trip.remove.label'|trans }}</a>
+                                <button class="btn btn-primary" data-micromodal-close aria-label="{{ 'trip.remove.close'|trans }}">
+                                    {{ 'trip.remove.close'|trans }}</button>
+                            </footer>
                         </div>
                     </div>
                 </div>
+            </div>
             {% else %}
                 <p class="u-text-white u-font-display">{{ 'trip.no.trips'|trans }}</p>
             {% endfor %}
@@ -104,5 +106,25 @@
     {% else %}
         <p class="u-text-white u-font-display">{{ 'trip.no.trips'|trans }}</p>
     {% endif %}
-
+    <div class="modal micromodal-slide" id="modal-1" aria-hidden="true">
+        <div class="modal__overlay" tabindex="-1" data-micromodal-close>
+            <div class="modal__container" role="dialog" aria-modal="true" aria-labelledby="modal-1-title">
+                <header class="modal__header">
+                    <h2 class="modal__title" id="modal-1-title">
+                        Micromodal
+                    </h2>
+                    <button class="modal__close" aria-label="Close modal" data-micromodal-close></button>
+                </header>
+                <main class="modal__content" id="modal-1-content">
+                    <p>
+                        Try hitting the <code>tab</code> key and notice how the focus stays within the modal itself. Also, <code>esc</code> to close modal.
+                    </p>
+                </main>
+                <footer class="modal__footer">
+                    <button class="modal__btn modal__btn-primary">Continue</button>
+                    <button class="modal__btn" data-micromodal-close aria-label="Close this dialog window">Close</button>
+                </footer>
+            </div>
+        </div>
+    </div>
 {% endblock content %}

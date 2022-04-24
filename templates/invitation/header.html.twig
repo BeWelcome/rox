@@ -1,7 +1,8 @@
-<div class="row no-gutters bg-white mb-2 p-1">
-    <div class="col-12 p-1 mb-2">
-        <div class="alert alert-info mb-0 p-2">
-            {% if original.Initiator == myself %}
+<div class="u-rounded-8 u-p-8 u-w-full u-mb-8 u-bg-gray-5">
+    <div class="u-flex u-flex-col md:u-flex-row u-justify-between">
+        <div>
+            <div class="u-p-4">
+                {% if original.Initiator == myself %}
                 {% if invitation.status == constant('App\\Entity\\HostingRequest::REQUEST_OPEN') %}<i
                     class="fa fa-question mr-1"></i> {{ 'invitation.host.open'|trans }}{% endif %}
                 {% if invitation.status == constant('App\\Entity\\HostingRequest::REQUEST_CANCELLED') %}<i
@@ -24,26 +25,36 @@
                 {% if invitation.status == constant('App\\Entity\\HostingRequest::REQUEST_TENTATIVELY_ACCEPTED') %}<i
                     class="fa fa-question mr-1"></i> {{ 'invitation.guest.tentatively'|trans }}{% endif %}
             {% endif %}
-        </div>
-    </div>
-    <div class="col-12 col-md-4 mb-2 p-1">
-        {% set numberOfTravellers = 'request.number.of.travellers' %}
-        {% if original.Initiator == myself %}
-            {% set numberOfTravellers = 'request.number.of.travellers.host' %}
-        {% endif %}
-        {% if invitation.numberOfTravellers != 1 %}
-            <div>
-                <i class="fa fa-users mr-1"></i>{{ numberOfTravellers | trans({'countOfTravellers': invitation.numberOfTravellers}) }}
             </div>
-        {% endif %}
-    </div>
-    <div class="col-12 col-sm-6 col-md-4 mb-2 p-1">
-        <div><i class="fa fa-calendar mr-1"></i>{{ 'request.arrival' | trans }}</div>
-        <div>{{ invitation.arrival|format_date('full') }}</div>
-    </div>
-    <div class="col-12 col-sm-6 col-md-4 mb-2 p-1">
-        <div><i class="fa fa-calendar mr-1"></i>{{ 'request.departure' | trans }}</div>
-        <div>{{ invitation.departure|format_date('full') }}</div>
+            <div class="u-p-4">
+                <i class="fa fa-calendar u-mr-8"></i>
+                {{ invitation.arrival|format_date('full') }}
+                -
+                {{ invitation.departure|format_date('full') }}
+            </div>
+        </div>
+        <div>
+            <div class="u-p-4">
+                <i class="fa fa-moon u-mr-8"></i>
+                {% set difference = date(invitation.departure).diff(date(invitation.arrival)) %}
+                {% set nights = difference.days %}
+                {{ 'request.night.stay'|trans ({'numbernights': nights}) }}
+            </div>
+        </div>
+        <div>
+            <div class="u-p-4">
+                <i class="fa fa-users u-mr-4"></i>
+                {{ 'request.number.persons'|trans ({'numberpersons': invitation.numberOfTravellers}) }}
+            </div>
+            <div class="u-p-4">
+                <i class="fas fa-sync u-mr-8"></i>
+                {% if invitation.flexible %}
+                    {{ 'request.flexible.with.arrival.departure'|trans }}
+                {% else %}
+                    {{ 'request.not.flexible.with.arrival.departure'|trans }}
+                {% endif %}
+            </div>
+        </div>
     </div>
     {% if invitation.status != constant('App\\Entity\\HostingRequest::REQUEST_ACCEPTED') and (invitation.arrival|date('Y-m-d') != leg.arrival|date('Y-m-d') or invitation.departure|date('Y-m-d') != leg.departure|date('Y-m-d')) %}
         <div class="col-12 p-1">

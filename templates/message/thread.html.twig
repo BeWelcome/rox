@@ -20,7 +20,17 @@
 {% endif %}
 
 <div id="message_thread" class="u-mb-4">
+    {% set currentDate = current.created %}
+    <div class="u-flex u-flex-col u-justify-center u-my-4">
+        <div class="u-bg-gray-20 u-text-12 u-m-auto u-p-4 u-rounded-8">{{ currentDate|format_date('long') }}</div>
+    </div>
     {% for message in thread %}
+        {% if currentDate.format('Y-m-d') != message.created.format('Y-m-d') %}
+            {% set currentDate = message.created %}
+            <div class="u-flex u-flex-col u-justify-center u-my-4">
+                <div class="u-bg-gray-20 u-text-12 u-m-auto u-p-4 u-rounded-8">{{ message.created|format_date('long') }}</div>
+            </div>
+        {% endif %}
         {% set own = (myself.Username == message.Sender.Username) %}
         {# Check if the member deleted the message/request #}
         {% set deleted = message.isDeletedByMember(myself) %}
@@ -30,23 +40,19 @@
         {% endif %}
         {% if (show_deleted or not deleted) and not purged %}
             <div class="u-flex {% if own %}u-justify-end{% else %}u-justify-start{% endif %}">
-                <div class="u-flex u-flex-col message_{% if own %}own u-justify-end{% else %}other u-justify-start{% endif %} {% if deleted %}deleted{% endif %}">
-                    <small class="u-flex {% if own %}u-justify-end {% else %}u-justify-start {% endif %} text-muted u-m-0">
+                <div class="u-flex u-flex-col {% if own %}message_own u-justify-end{% else %}message_other u-justify-start{% endif %} {% if deleted %}deleted{% endif %}">
+                    {{ message.message|purify('custom')|url_update }}
+                    <small class="u-flex {% if own %}u-justify-end{% else %}u-justify-start{% endif %} u-text-10 text-muted u-m-0">
                         {%- if own -%}
                             <div class="u-flex u-flex-col u-justify-center u-items-end">
-                                <span>{{ 'message.you' | trans }}</span>
-                                <span title="{{ message.created.toDateTimeString }}">{{ message.created.DiffForHumans }}</span>
+                                {{ message.created|format_time('short') }}
                             </div>
-                            <div class="o-avatar--xs o-avatar--noname o-avatar--noname_s u-ml-8">{{ macros.roundedavatarstack(myself.Username, 50, true) }}</div>
                         {%- else -%}
-                            <div class="o-avatar--xs o-avatar--noname o-avatar--noname_s u--ml-4 u-mr-8">{{ macros.roundedavatarstack(otherUser.Username, 50, true) }}</div>
                             <div class="u-flex u-flex-col u-justify-center">
-                                <span>{{ macros.profilelink(message.sender.Username) }}</span>
-                                <span title="{{ message.created.toDateTimeString }}">{{ message.created.DiffForHumans }}</span>
+                                {{ message.created|format_time('short') }}
                             </div>
                         {%- endif %}
                     </small>
-                    {{ message.message|purify('custom')|url_update }}
                 </div>
             </div>
             {% if message.Request %}
@@ -64,9 +70,9 @@
                             <div>
                                 <div class="u-p-4">
                                     <i class="fa fa-calendar u-mr-8"></i>
-                                    {{ request.arrival|format_date(pattern="EEEE, MMM d") }}
+                                    {{ request.arrival|format_date('full') }}
                                     -
-                                    {{ request.departure|format_date(pattern="EEEE, MMM d, yyyy") }}
+                                    {{ request.departure|format_date('full') }}
                                 </div>
                             </div>
                             <div>

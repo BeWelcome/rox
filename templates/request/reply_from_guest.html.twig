@@ -13,9 +13,13 @@
     {% import 'macros.twig' as macros %}
     {% set original = thread | last %}
     {% set current = thread | first %}
+    {% set request = current.request %}
+    {% set myself = app.user %}
     {% set receiver =  original.receiver %}
 
     {{ macros.messageheader_no_buttons(thread) }}
+
+    {% include 'request/header.html.twig' %}
 
     {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'autocomplete': 'off'}}) }}
     <div class="u-grid u-grid-cols-3 u-gap-x-12 u-my-4">

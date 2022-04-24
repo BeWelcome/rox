@@ -31,8 +31,6 @@
 
 #message_thread {
   .message_own {
-    min-width: 40%;
-    max-width: 90%;
     padding: $pagination-padding-x;
     margin-bottom: .5rem;
     border-radius: 8px;
@@ -44,7 +42,7 @@
   }
 
   .message_other {
-    min-width: 40%;
+    min-width: 60%;
     max-width: 90%;
     padding: $pagination-padding-x;
     margin-bottom: .5rem;
@@ -60,6 +58,21 @@
     border: 1px solid #bbb;
     color: #aaa;
     background-color: #eee;
+  }
+
+  @media (max-width: 978px) {
+    .message_own, .message_other {
+      width: 90%;
+      min-width: 90%;
+      max-width: 90%;
+    }
+  }
+
+  @media (min-width: 979px) {
+    .message_own, .message_other {
+      min-width: 60%;
+      max-width: 90%;
+    }
   }
 
   blockquote {

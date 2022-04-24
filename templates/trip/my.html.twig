@@ -45,8 +45,8 @@
                     </div>
                     <div>
                         <div class="c-trip-card__icon-grid">
-                            <i class="far fa-calendar-alt u-text-white u-text-16 u-justify-self-center u-self-center"></i>
-                            <p class="u-text-white u-font-display">{{ (trip.subtrips|first).arrival|format_date('short') }} - {{ (trip.subtrips|last).departure|format_date('short') }}</p>
+                            <div><i class="far fa-calendar-alt u-text-white u-text-16 u-justify-self-center u-self-center"></i></div>
+                            <div><p class="u-text-white u-font-display">{{ (trip.subtrips|first).arrival|format_date('full') }} –<br>{{ (trip.subtrips|last).departure|format_date('full') }}</p></div>
                         </div>
                         <div class="c-trip-card__icon-grid u-leading-24">
                             <i class="fa fa-users u-text-white u-text-16 u-justify-self-center u-self-center"></i>

@@ -74,7 +74,7 @@
                                                 class="u-font-500">{{ subtrip.location.fullname }}</span>
                                             <i class="o-flag o-flag--{{ subtrip.location.country.countryId }} u-ml-4" title="{{ subtrip.location.country.name }}"></i>
                                         </p>
-                                        <p class="u-text-white u-font-display u-font-300">{{ subtrip.arrival|format_date('medium') }}{% if subtrip.arrival != subtrip.departure %} - {{ subtrip.departure|format_date('medium') }}{% endif %}</p>
+                                        <p class="u-text-white u-font-display u-font-300">{{ subtrip.arrival|format_date('full') }}{% if subtrip.arrival != subtrip.departure %} - <br>{{ subtrip.departure|format_date('full') }}{% endif %}</p>
                                     </div>
                                     <div class="u-ml-16 md:u-ml-0 u-mt-8">
                                         {% if app.user == trip.creator %}

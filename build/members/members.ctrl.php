@@ -287,8 +287,13 @@ class MembersController extends RoxControllerBase
                             $page->my_groups = $my_groups;
                             $page->pager = $pager;
                             break;
-                        case 'redesign':
-                            $page = new ProfileRedesignPage();
+                        case 'leg':
+                            $page = new ProfilePage();
+                            $page->enableLightBox();
+                            $page->statuses = $this->model->getStatuses();
+                            if (isset($request[3])) {
+                                $page->leg = $request[3];
+                            }
                             break;
                         case 'adminedit':
                             $rights = new MOD_right();

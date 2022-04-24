@@ -22,20 +22,23 @@
         {% endif %}
     </div>
     <div class="c-trip-legs__text-wrapper">
-        <p class="u-text-white u-font-display u-font-700">{{ leg.location.name }},
+        <p class="u-text-white u-font-display u-font-700"><a class="u-text-white hover:u-text-white" href="{{ url('trip_show', {id: leg.trip.id}) }}">{{ leg.location.name }},
             <span class="u-font-300">{{ leg.arrival|format_date('medium') }}
                 {% if leg.arrival != leg.departure %}
                     -
                     {{ leg.departure|format_date('medium') }}
                 {% endif %}
             </span>
+            </a>
         </p>
-        <div class="u-flex">
-            <div class="c-trip-card__icon-grid u-mr-16">
-                <i class="fa fa-users u-text-white u-text-16 u-justify-self-center u-self-center"></i>
-                <p class="u-text-white u-font-display">
-                    <strong>{{ 'trip.count.of.travellers'| trans ({'countOfTravellers' : leg.trip.countOfTravellers}) }}</strong>
-                </p>
+        <div class="u-flex u-flex-col">
+            <div>
+                <a class="u-text-white hover:u-text-white" href="{{ url('trip_show', {id: leg.trip.id}) }}">
+                    <i class="fa fa-users u-text-white u-text-16 u-justify-self-center u-self-center"></i>
+                    <span class="u-text-white u-font-display">
+                        <strong>{{ 'trip.count.of.travellers'| trans ({'countOfTravellers' : leg.trip.countOfTravellers}) }}</strong>
+                    </span>
+                </a>
             </div>
             {% if constant('App\\Doctrine\\TripAdditionalInfoType::NONE') != leg.trip.additionalInfo %}
                 <div class="c-trip-card__icon-grid">
@@ -46,7 +49,20 @@
         </div>
     </div>
     <div class="o-avatar o-avatar--s o-avatar--white">
-        {{ macros.roundedavatarstack(leg.trip.creator.username, 48) }}
+        {% if leg.invitationBy(app.user) %}
+            {% set invitation = leg.invitationBy(app.user) %}
+            {% set username = invitation.messages[0].initiator.Username %}
+            {% set url = path('conversation_reply', {id: invitation.messages[0].id}) %}
+        {% else %}
+            {% set url = path( 'members_profile_invite', { username: leg.trip.creator.username, id: leg.id }) %}
+        {% endif %}
+        <a href="{{ url }}" class="o-avatar__img-wrapper o-avatar--shadow-s">
+            <img class="o-avatar__img" src="{{ url('avatar', { username: leg.trip.creator.username, size: 48 })}}" title="{{ leg.trip.creator.username}}" alt="Profile: {{ leg.trip.creator.username }}">
+        </a>
+
+        <a href="{{ url }}" class="o-avatar__name u-break-all">
+            {{ leg.trip.creator.username }}
+        </a>
     </div>
 </div>
 

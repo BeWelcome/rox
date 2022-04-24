@@ -4,7 +4,7 @@
     {# 5 most recent forum messages #}
     {% for thread in threads %}
         <div class="c-dashboard__item">
-            <div class="o-avatar o-avatar--m o-avatar--noname  o-avatar--shadow-s u-mr-16  u-min-w-0">{{ macros.roundedavatarstack(thread.firstPost.author.Username, 72, true) }}</div>
+            <div class="o-avatar o-avatar--m o-avatar--noname  o-avatar--shadow-s u-mr-16  u-min-w-0">{{ macros.roundedavatarstack(thread.firstPost.author.Username, 72, false) }}</div>
             <div class="u-flex u-flex-col u-h-full u-justify-center u-px-8 u-w-min-0 u-overflow-hidden">
                 <p class="u-ellipsis">
                     {% if thread.group %}

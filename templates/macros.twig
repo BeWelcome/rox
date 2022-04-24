@@ -65,7 +65,7 @@
 {% endmacro %}
 
 {# \new avatar for trip pages #}
-{% macro roundedavatarstack(username, size, right, displayname = true) %}
+{% macro roundedavatarstack(username, size, displayname = true, link = false) %}
     {% import _self as macros %}
     {% set img %}<img class="o-avatar__img" src="{{ path( 'avatar', { 'username': username , 'size': size }) }}" title="{{ username }}" alt="{{ 'profile' | trans }}: {{ username }}">{% endset %}
     {{ macros.profilelink(username, img, 'o-avatar__img-wrapper o-avatar--shadow-s') }}
@@ -109,7 +109,7 @@
                 <i class="fa fa-chevron-left"></i>
             </a>
         </div>
-        <div class="o-avatar u-mt-8">{{ macros.roundedavatarstack(correspondent.Username, 100, false) }}</div>
+        <div class="o-avatar u-mt-8">{{ macros.roundedavatarstack(correspondent.Username, 100) }}</div>
         <div class="md:u-text-32 md:u-leading-48 u-self-center u-text-center u-text-black u-font-700 u-line-clamp-3 u-place-self-center u-w-full">{{ subject }}</div>
     </div>
     {% if options.show_buttons %}
@@ -183,6 +183,6 @@
                 <div class="u-leading-20 sm:u-text-14 md:u-text-16 u-font-400 u-line-clamp-2">{{ 'lives.and.speaks' | trans({'city': receiver.city.name ~ ', ' ~ receiver.city.country.name | capitalize, 'languages': languages }) | raw }}</div>
             {% endif %}
         </div>
-        <div class="o-avatar u-mt-8">{{ macros.roundedavatarstack(receiver.Username, 100, false) }}</div>
+        <div class="o-avatar u-mt-8">{{ macros.roundedavatarstack(receiver.Username, 100) }}</div>
     </div>
 {% endmacro %}

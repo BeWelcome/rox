@@ -134,7 +134,9 @@ class MemberPage extends PageWithActiveSkin
                 array('comments', "members/$username/comments", '<i class="fa fa-fw fa-comments"></i> ' . $ww->ViewComments.' <span class="badge badge-primary u-rounded-full u-w-20 u-h-20 u-inline-flex u-items-center u-justify-center pull-right">'.$comments_count['all'].'</span>'),
                 array('gallery', "gallery/show/user/$username/pictures", '<i class="fa fa-fw fa-image"></i> ' . $ww->Gallery . ' <span class="badge badge-primary u-rounded-full u-w-20 u-h-20 u-inline-flex u-items-center u-justify-center pull-right">' . $galleryItemsCount . '</span>'),
             );
-            if ($accommodation != \App\Doctrine\AccommodationType::NO)
+            if ($this->leg) {
+                array_unshift($tt, array('sendinvite', "new/invitation/$this->leg", '<i class="fa fa-fw fa-bed"></i> ' . $words->get('profile.invite.guest'), 'sendinvite'));
+            } else if ($accommodation != \App\Doctrine\AccommodationType::NO)
             {
                 array_unshift($tt, array('sendrequest', "new/request/$username", '<i class="fa fa-fw fa-bed"></i> ' . $words->get('profile.request.hosting'), 'sendrequest'));
             }

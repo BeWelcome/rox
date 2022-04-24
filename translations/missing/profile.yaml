@@ -1,0 +1,3 @@
+profile.invite.guest:
+    - 'Invite'
+    - Submenu item on the profile page if a member followed the link /members/<username>/leg/<id> instead of the request stay item

@@ -22,7 +22,7 @@
         {% endif %}
     </div>
     <div class="c-trip-legs__text-wrapper">
-        <p class="u-text-white u-font-display u-font-700"><a class="u-text-white hover:u-text-white" href="{{ url('trip_show', {id: leg.trip.id}) }}">{{ leg.location.name }},
+        <p class="u-text-white u-font-display u-font-700"><a class="u-text-white hover:u-text-white" href="{{ url('trip_show', {id: leg.trip.id, _fragment: 'leg' ~ leg.id}) }}">{{ leg.location.name }},
             <span class="u-font-300">{{ leg.arrival|format_date('medium') }}
                 {% if leg.arrival != leg.departure %}
                     -

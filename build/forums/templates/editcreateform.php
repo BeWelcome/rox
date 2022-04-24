@@ -107,7 +107,7 @@ $vars =& PPostHandler::getVars($callbackId);
                     ?>
 
                     <input type="text" class="o-input" name="topic_title" maxlength="200" id="topic_title"
-                           value="<?php echo $topic_titletrad; ?>" aria-describedby="forumaddtitle">
+                           value="<?php echo htmlspecialchars($topic_titletrad); ?>" aria-describedby="forumaddtitle">
             </div>
 
         <?php } ?>

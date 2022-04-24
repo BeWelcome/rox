@@ -39,7 +39,7 @@
                     </li>
                 </ul>
             </div>
-            <div class="u-block">{{ form_errors(form.location) }}</div>
+            <div class="u-block">{{ form_errors(form.location) }}{{ form_errors(form.location.fullname) }}{{ form_errors(form.location.geoname_id) }}</div>
         </div>
         <div class="u-w-full md:u-width-auto">
             {% set attributes = {
@@ -75,7 +75,6 @@
         </div>
         {{ form_widget(form.location.name) }} {{ form_widget(form.location.geoname_id) }}
         {{ form_widget(form.location.latitude) }} {{ form_widget(form.location.longitude) }}
-        {{ form_errors(form.location.fullname) }}
         {{ form_widget(form.arrival) }}
         {{ form_widget(form.departure) }}
         {% do form.location.setRendered()%}

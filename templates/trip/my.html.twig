@@ -6,10 +6,14 @@
 
 {% block stylesheets %}
     {{ encore_entry_link_tags('tailwind') }}
+    {{ encore_entry_link_tags('bewelcome') }}
+{% endblock %}
+
+{% block javascript %}
+    {{ encore_entry_script_tags('bewelcome') }}
 {% endblock %}
 
 {% block content %}
-    <!-- <h1>{{ 'trip.mytrips' | trans }}</h1> -->
     {% if trips.nbResults != 0 %}
         {% set myself = app.user %}
         {% if trips.haveToPaginate %}
@@ -61,12 +65,30 @@
                        href="{{ path('trip_edit', {'id': trip.id}) }}" aria-label="{{ 'trip.edit'|trans }}" title="{{ 'trip.edit'|trans }}">
                         <i class="far fa-edit"></i>
                     </a>
-                    <a class="o-rounded o-rounded--l"
-                         href="{{ path('trip_remove', {'id': trip.id}) }}" aria-label="{{ 'trip.remove'|trans }}" title="{{ 'trip.remove'|trans }}">
+                    <a class="o-rounded o-rounded--l" data-toggle="modal" data-target="#removeTrip-{{ trip.id }}" data-backdrop="false">
                       <i class="fa fa-times"></i>
                     </a>
                 </div>
             </div>
+                <div class="modal fade m-t-5" id="removeTrip-{{ trip.id }}" tabindex="-1" role="dialog" aria-labelledby="removeTripLabel-{{ trip.id }}" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="removeTripLabel-{{ trip.id }}">{{trip.summary}}</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                {{ 'trip.remove.body'|trans|raw }}
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ 'trip.remove.close'|trans }}</button>
+                                <a class="btn btn-primary" role="button" href="{{ path('trip_remove', {'id': trip.id}) }}" aria-label="{{ 'trip.remove'|trans }}">{{ 'trip.remove'|trans }}</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             {% else %}
                 <p class="u-text-white u-font-display">{{ 'trip.no.trips'|trans }}</p>
             {% endfor %}
@@ -82,4 +104,5 @@
     {% else %}
         <p class="u-text-white u-font-display">{{ 'trip.no.trips'|trans }}</p>
     {% endif %}
+
 {% endblock content %}

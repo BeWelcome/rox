@@ -36,7 +36,11 @@ class SearchLocationType extends AbstractType implements DataMapperInterface
                 ],
             ])
             ->add('name', HiddenType::class)
-            ->add('geoname_id', HiddenType::class)
+            ->add('geoname_id', HiddenType::class, [
+                'constraints' => [
+                    new NotBlank(null, 'location.none.given'),
+                ],
+            ])
             ->add('latitude', HiddenType::class)
             ->add('longitude', HiddenType::class)
             ->setDataMapper($this)
@@ -77,11 +81,13 @@ class SearchLocationType extends AbstractType implements DataMapperInterface
         // as data is passed by reference, overriding it will change it in
         // the form object as well
         // beware of type inconsistency, see caution below
-        $viewData = new LocationRequest();
-        $viewData->geonameId = $forms['geoname_id']->getData();
-        $viewData->latitude = $forms['latitude']->getData();
-        $viewData->longitude = $forms['longitude']->getData();
-        $viewData->name = $forms['name']->getData();
+        if (null !== $forms['geoname_id']->getData()) {
+            $viewData = new LocationRequest();
+            $viewData->geonameId = $forms['geoname_id']->getData();
+            $viewData->latitude = $forms['latitude']->getData();
+            $viewData->longitude = $forms['longitude']->getData();
+            $viewData->name = $forms['name']->getData();
+        }
     }
 
     public function configureOptions(OptionsResolver $resolver): void

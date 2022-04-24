@@ -97,7 +97,6 @@ class SubtripType extends AbstractType
             'error_bubbling' => false,
             'error_mapping' => [
                 'arrival' => 'duration',
-                'departure' => 'duration',
             ],
         ]);
     }

@@ -144,3 +144,13 @@ trip.leg.not.matched:
 trip.incomplete.leg:
     - 'You just accepted an invitation that is shorter than your stay in {location} ({arrival, date, medium} - {departure, date, medium}). Consider updating your trip as this will hide the leg from others.'
     - Additional flash notice shown when a user accepts an invitation that didn\'t cover the full leg duration
+trip.remove:
+    - "Remove trip"
+    - Title of the remove trip modal (shown when the x button is clicked on my trips)
+trip.remove.close:
+    - "Close (leave trip)"
+    - Button label in the remove trip modal
+trip.remove.body:
+    - "<p>You're about to remove this trip from display.</p>
+       <p>Please note this can't be reverted. The trip itself will be hidden for everyone but not deleted as it might have been used for invitations.</p>
+      "

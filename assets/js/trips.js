@@ -6,6 +6,7 @@ import '../scss/_daterangepicker.scss';
 import L from 'leaflet';
 import 'leaflet.fullscreen';
 import 'leaflet.fullscreen/Control.FullScreen.css';
+import 'leaflet/dist/leaflet.css';
 
 require('leaflet-polylinedecorator');
 import {initializeMultipleAutoCompletes} from './suggest/locations';
@@ -106,6 +107,13 @@ if ($('#map').length) {
 
     let locationsArray = []
 
+    const tripIcon = L.icon({
+        iconUrl: '../images/marker.png',
+        iconRetinaUrl: "../images/marker-2x.png",
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+    });
     for (let i = 0; i < allData.length; i++) {
 
         let location = allData[i][0]
@@ -117,7 +125,7 @@ if ($('#map').length) {
         let countryName = allData[i][3]
         let tripDate = allData[i][4]
 
-        let marker = L.marker([latitude, longitude]).addTo(map);
+        let marker = L.marker([latitude, longitude], { icon: tripIcon}).addTo(map);
         marker.bindPopup("<strong>" + location + "</strong> (" + countryName + ")<br>" + tripDate);
 
         let circle = null;
@@ -132,14 +140,14 @@ if ($('#map').length) {
 
     // if not own trip add circle with search radius of current member
     if (trip.own === false) {
-        var tripIcon = L.icon({
+        const ownIcon = L.icon({
             iconUrl: '../images/trip_marker.png',
             iconRetinaUrl: "../images/trip_marker-2x.png",
             iconSize: [25, 41],
             iconAnchor: [12, 41],
             popupAnchor: [1, -34],
         });
-        const marker = L.marker([memberInfo.latitude, memberInfo.longitude], { icon: tripIcon}).addTo(map);
+        const marker = L.marker([memberInfo.latitude, memberInfo.longitude], { icon: ownIcon}).addTo(map);
         marker.bindPopup("<strong>Your location</strong><br>...and search radius");
 
         L.circle([memberInfo.latitude, memberInfo.longitude], {

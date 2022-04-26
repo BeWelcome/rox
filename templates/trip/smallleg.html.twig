@@ -33,7 +33,7 @@
         </p>
         <div class="u-flex u-flex-col">
             <div>
-                <a class="u-text-white hover:u-text-white" href="{{ url('trip_show', {id: leg.trip.id}) }}">
+                <a class="u-text-white hover:u-text-white" href="{{ url('trip_show', {id: leg.trip.id, _fragment: 'leg' ~ leg.id}) }}">
                     <i class="fa fa-users u-text-white u-text-16 u-justify-self-center u-self-center"></i>
                     <span class="u-text-white u-font-display">
                         <strong>{{ 'trip.count.of.travellers'| trans ({'countOfTravellers' : leg.trip.countOfTravellers}) }}</strong>
@@ -42,8 +42,8 @@
             </div>
             {% if constant('App\\Doctrine\\TripAdditionalInfoType::NONE') != leg.trip.additionalInfo %}
                 <div class="c-trip-card__icon-grid">
-                    <i class="fa fa-info-circle u-text-white u-text-16 u-justify-self-center u-self-center"></i>
-                    <p class="u-text-white u-font-display">{{ ('trip.additional.info.' ~ leg.trip.additionalInfo)| lower | trans}}</p>
+                    <a class="u-text-white hover:u-text-white" href="{{ url('trip_show', {id: leg.trip.id, _fragment: 'leg' ~ leg.id}) }}"><i class="fa fa-info-circle u-text-16 u-justify-self-center u-self-center"></i></a>
+                    <a class="u-text-white hover:u-text-white" href="{{ url('trip_show', {id: leg.trip.id, _fragment: 'leg' ~ leg.id}) }}"><p class="u-font-display">{{ ('trip.additional.info.' ~ leg.trip.additionalInfo)| lower | trans}}</p></a>
                 </div>
             {% endif %}
         </div>

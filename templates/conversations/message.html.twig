@@ -15,7 +15,7 @@
 {% endif %}
 <div class="c-conversation__item">
     {% if form is defined %}
-        <div class="u-flex u-justify-center u-mr-12" id="selectcolumn">
+        <div class="u-flex u-justify-center u-mr-8" id="selectcolumn">
             {{ form_widget(form.messages[loop.index0], {'attr': {'class': 'checkable'}}) }}
         </div>
     {% endif %}
@@ -27,52 +27,52 @@
             {{ macros.roundedavatarstack(otherMember.Username, 72) }}
         </div>
     </div>
-    <div class="u-flex u-flex-col u-h-full u-justify-between u-py-8 u-px-8 u-w-min-0 u-overflow-hidden">
-            <a href="{{ path(show_message_route, { id: message.id}) }}">
-                {% if message.request %}
-						<p class="badge u-bg-blue-dark u-text-white u-font-500 u-text-14 u-leading-10">
-							{% if message.request.inviteForLeg is null %}
-								{{ 'conversations.request'|trans }}
-							{% else %}
-								{{ 'conversations.invitation'|trans }}
-							{% endif %}
-                            <span class="u-hidden md:u-inline">
-                            {% if isInitiator %}
-                                &lArr;
-                            {% else %}
-                                &rArr;
-                            {% endif %}
-                                ({{ 'message.initiated.by'|trans( {'username':
-                                isInitiator ? message.initiator.Username :  otherMember.Username }) }})
-							</span>
-                            {{ message.request.arrival | format_date(pattern="MMM d") }}
-                            {%- if message.request.departure %}
-                            -
-                            {{ message.request.departure | format_date(pattern="MMM d yyy") }}
-                            {%- endif %}
-						</p>
+    <div class="u-flex u-flex-col u-h-full u-justify-between u-py-4 u-px-8 u-w-min-0 u-overflow-x-auto">
+        <a href="{{ path(show_message_route, { id: message.id}) }}">
+        {% if message.request %}
+            <p class="badge u-bg-blue-dark u-text-white u-font-500 u-text-14 u-leading-10">
+                {% if message.request.inviteForLeg is null %}
+                    {{ 'conversations.request'|trans }}
                 {% else %}
-                    {% if message.subject %}
-                        <span class="u-ellipsis {% if unread %}unread{% endif %} u-py-4 u-pr-8 u-mb-0">
-                            {% if between is not defined %}
-                                <span style="font-weight:bold">
-                                    {% if lastMessageByMember %}&lArr;{% else %}&rArr;
-                                    {% endif %}
-                                </span>
-                            {% endif %}
-                            {% if message.parent %}Re:
-                            {% endif %}
-                            {{- message.subject.subject | striptags -}}
-                        </span>
-                    {% endif %}
+                    {{ 'conversations.invitation'|trans }}
                 {% endif %}
+                <span class="u-hidden md:u-inline">
+                {% if isInitiator %}
+                    &lArr;
+                {% else %}
+                    &rArr;
+                {% endif %}
+                    ({{ 'message.initiated.by'|trans( {'username':
+                    isInitiator ? message.initiator.Username :  otherMember.Username }) }})
+                </span>
+                {{ message.request.arrival | format_date(pattern="MMM d") }}
+                {%- if message.request.departure %}
+                -
+                {{ message.request.departure | format_date(pattern="MMM d yyy") }}
+                {%- endif %}
+            </p>
+        {% endif %}
+        {% if message.subject %}
+            <p><span class="u-ellipsis {% if unread %}unread{% endif %} u-py-4 u-pr-8 u-mb-0">
+                {% if between is not defined %}
+                    <span style="font-weight:bold">
+                        {% if lastMessageByMember %}&lArr;{% else %}&rArr;
+                        {% endif %}
+                    </span>
+                {% endif %}
+                {% if message.parent %}Re:
+                {% endif %}
+                {{- message.subject.subject | striptags -}}
+            </span></p>
+        {% endif %}
 
-                {% set messageText = message.Message | replace({'\n': ' ', '<br />': ' '}) | striptags %}
-                {% apply spaceless %}
-                <p class="u-line-clamp-3 m-0 mb-1">{{ message.sender.Username }}:
-                    {{ messageText | truncate(250) | raw -}}</p>
-                {% endapply %}
-            </a>
+        {% set messageText = message.Message | replace({'\n': ' ', '<br />': ' '}) | striptags %}
+        {% apply spaceless %}
+        <p class="u-line-clamp-{% if message.subject %}2{% else%}3{%endif%} m-0 mb-1">
+            {% if lastMessageByMember %}{{ 'you'|trans|capitalize }}:{% endif %}
+            {{ messageText | truncate(250) | raw -}}</p>
+        {% endapply %}
+        </a>
 
         {% if folder != 'spam' and folder != 'deleted' %}
         <div class="u-flex u-justify-start">

@@ -58,12 +58,12 @@
             {% endfor %}
         </div>
         <div class="u-flex u-justify-between u-my-8">
-            <div>
+            <div class="u-order-2 md:u-order-1">
                 <input class="u-sr-only" type="checkbox" id="checkAll">
                 <label for="checkAll" class="o-button o-button--outline">{{ 'conversations.check.all'|trans }}</label>
             </div>
             {% if conversations.haveToPaginate %}
-                <div>
+                <div  class="u-order-1 md:u-order-2">
                     {{ pagerfanta( conversations, 'rounded_pagination') }}
                 </div>
             {% endif %}

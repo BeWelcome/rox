@@ -19,7 +19,10 @@ along with this program; if not, see <http://www.gnu.org/licenses/> or
 write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 */
-    /**
+
+use App\Doctrine\AccommodationType;
+
+/**
      * members base page
      *
      * @author Micha
@@ -57,11 +60,14 @@ class MemberPage extends PageWithActiveSkin
         $ww = $this->ww;
         $wwsilent = $this->wwsilent;
         $comments_count = $member->count_comments();
+        $conversations_with_count = 0;
+        $comments_count = $member->count_comments();
         $logged_user = $this->model->getLoggedInMember();
         if ($logged_user)
         {
             $TCom = $member->get_comments_commenter($logged_user->id);
             $note = $logged_user->getNote($member);
+            $conversations_with_count = $member->count_conversations_with($logged_user);
         }
 
         $galleryItemsCount = $member->getGalleryItemsCount();
@@ -122,9 +128,14 @@ class MemberPage extends PageWithActiveSkin
                 $mynotewordsname=$words->get('NoteAddToMyNotes') ;
                 $mynotelinkname= "members/$username/note/add" ;
             }
-            $tt= array(
+            $tt= [
                 array('messagesadd', "new/message/$username", '<i class="fa fa-fw fa-envelope"></i> ' . $ww->ContactMember, 'messagesadd'),
-                array('allmessages', "conversations/with/$username", '<i class="fas fa-fw fa-mail-bulk"></i> ' . $words->getSilent('profile.all.messages.with'), 'allmessages'),
+            ];
+            if (0 < $conversations_with_count) {
+                $tt = array_merge($tt, [['allmessages', "conversations/with/$username", '<i class="fas fa-fw fa-mail-bulk"></i> ' . $words->getSilent('profile.all.messages.with') .
+                    '<span class="badge badge-primary u-rounded-full u-w-20 u-h-20 u-inline-flex u-items-center u-justify-center pull-right">'.$conversations_with_count.'</span>', 'allmessages']]);
+            }
+            $tt = array_merge($tt, [
                 (isset($TCom[0])) ? array('commmentsadd', "members/$username/comments/edit", '<i class="fa fa-fw fa-comment"></i> ' . $ww->EditComments, 'commentsadd') : array('commmentsadd', "members/$username/comments/add", '<i class="fa fa-fw fa-comment"></i> ' . $ww->AddComments, 'commentsadd'),
                 array('relationsadd', "members/$username/relations/add", '<i class="fa fa-fw fa-handshake"></i> ' . $ww->addRelation, 'relationsadd'),
                 array('notes', $mynotelinkname, '<i class="fa fa-fw fa-pencil-alt"></i> ' . $mynotewordsname, 'mynotes'),
@@ -133,10 +144,10 @@ class MemberPage extends PageWithActiveSkin
                 array('profile', "members/$username", '<i class="fa fa-fw fa-user"></i> '  . $ww->MemberPage),
                 array('comments', "members/$username/comments", '<i class="fa fa-fw fa-comments"></i> ' . $ww->ViewComments.' <span class="badge badge-primary u-rounded-full u-w-20 u-h-20 u-inline-flex u-items-center u-justify-center pull-right">'.$comments_count['all'].'</span>'),
                 array('gallery', "gallery/show/user/$username/pictures", '<i class="fa fa-fw fa-image"></i> ' . $ww->Gallery . ' <span class="badge badge-primary u-rounded-full u-w-20 u-h-20 u-inline-flex u-items-center u-justify-center pull-right">' . $galleryItemsCount . '</span>'),
-            );
+            ]);
             if ($this->leg) {
                 array_unshift($tt, array('sendinvite', "new/invitation/$this->leg", '<i class="fa fa-fw fa-bed"></i> ' . $words->get('profile.invite.guest'), 'sendinvite'));
-            } else if ($accommodation != \App\Doctrine\AccommodationType::NO)
+            } else if ($accommodation != AccommodationType::NO)
             {
                 array_unshift($tt, array('sendrequest', "new/request/$username", '<i class="fa fa-fw fa-bed"></i> ' . $words->get('profile.request.hosting'), 'sendrequest'));
             }

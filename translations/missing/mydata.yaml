@@ -46,6 +46,12 @@ mydata.requests.no.requests:
 mydata.rights.no.rights:
     - 'You do not have any additional rights (regular user, not volunteering).'
     - Shown if the user does not have additional rights (like translation rights).
+mydata.subscriptions.thread.name:
+    - Thread Name
+    - Table header for the listed threads with their subscriptions
+mydata.subscriptions.subscription:
+    - Subscriptions
+    - Table header for the listed threads with their subscriptions
 mydata.subscriptions.abstract:
     - 'This lists all subscriptions you have active.'
     - Abstract for the subscription section (see /forums/subscriptions).

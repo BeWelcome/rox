@@ -6,7 +6,7 @@
     {% if activities|length == 0 %}
         <p>{{ 'mydata.activities.no.activity'|trans }}</p>
     {% else %}
-        <p>{{ 'mydata.activities.attended'|trans({'attended': activities|length}) }}</p>
+        <p>{{ 'mydata.activities.attended'|trans({'count': activities|length}) }}</p>
         <div class="card-columns">
             {% for activity in activities|keys %}
                 <div class="card o-card">

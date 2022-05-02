@@ -52,7 +52,7 @@ class MyDataMockups implements MockupProviderInterface
         ],
         'messages' => [
             'type' => 'template',
-            'template' => 'private/message.html.twig',
+            'template' => 'private/messages.html.twig',
             'description' => 'Statistics for messages in the data dump',
         ],
         'request' => [
@@ -142,7 +142,7 @@ class MyDataMockups implements MockupProviderInterface
             return $this->getMockEntities($parameters);
         }
 
-        $extracted = array_keys($this->getExtractedEntities());
+        $extracted = $this->getExtractedEntities();
 
         $member = $parameters['user'];
 
@@ -408,7 +408,7 @@ class MyDataMockups implements MockupProviderInterface
                 $key = 'volunteerrights';
                 $mockEntity = Mockery::mock(Right::class, [
                     'right' => [
-                        'name' => 'right',
+                        'name' => 'distinct right',
                     ],
                     'scope' => 'All',
                     'level' => '10',
@@ -579,6 +579,13 @@ class MyDataMockups implements MockupProviderInterface
                             'shortcode' => 'fr',
                         ],
                     ],
+                    'zh-hant' => [
+                        'message' => 'Post Text (zh-hant)',
+                        'language' => [
+                            'wordcode' => 'lang_zh-hant',
+                            'shortcode' => 'zh-hant',
+                        ],
+                    ],
                 ],
             ],
         ];
@@ -604,6 +611,7 @@ class MyDataMockups implements MockupProviderInterface
         $thread = $this->invitationUtility->getThread($host, $guest, $leg, HostingRequest::REQUEST_TENTATIVELY_ACCEPTED, 4);
 
         return [
+            'message' => $thread[0],
             $parameters['name'] => $thread[0],
             'leg' => $leg,
             'host' => $host,
@@ -617,7 +625,7 @@ class MyDataMockups implements MockupProviderInterface
     private function getPrivilege(): array
     {
         return [
-            'privilege' => 'Privilege',
+            'privilege' => 'Very big privilege',
             'scope' => 'All',
             'role' => 'Role',
             'assigned' => new DateTime(),

@@ -11,7 +11,7 @@
 {% block content %}
     <h1>{{ 'translations.headline' | trans }}</h1>
     <p>{{ 'translation.mockup.abstract'|trans }}</p>
-    <p>{{ 'translations.mockup.url'|trans }}: {{ url }}</p>
+    {% if url != '' %}<p>{{ 'translations.mockup.url'|trans }}: {{ url }}</p>{% endif %}
     <p>{{ 'translations.mockup.template'|trans }}: {{ template}}</p>
     {% if description != '' %}<p>{{ description }}</p>{% endif %}
     <p class="u-py-4 u-text-24">{{ name }}</p>

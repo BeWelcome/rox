@@ -1,0 +1,158 @@
+{% import 'macros.twig' as macros %}
+{% set member = app.user %}
+<nav class="navbar sticky-top navbar-dark navbar-expand-sm bg-primary bordert-1 borderb-1" style="margin-bottom:200px">
+    <div class="container-lg">
+        <a class="navbar-brand d-none d-md-inline" href="{{ url('homepage') }}">
+            <img class="navbar-img"
+                src="{{ asset('images/logo_index_top.png') }}"
+                alt="BeWelcome"/>
+        </a>
+        <a class="navbar-brand d-inline d-md-none" href="{{ url('homepage') }}"><img
+                    src="{{ asset('images/logo_no_text.png') }}"
+                    alt="BeWelcome"/></a>
+
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mainNavBar1"
+                aria-controls="mainNavBar1" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>&nbsp;<i class="fas fa-caret-down"></i>
+        </button>
+
+        <div class="collapse navbar-expand-sm" id="mainNavBar1">
+            <ul class="navbar-nav navbar-nav-scroll">
+                <li class="nav-item dropdown d-none d-xs-block">
+                    <a href="#search_menu" class="nav-link dropdown-toggle"
+                       data-target="search_menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label="{{ 'findmembers' | trans }}">
+                        &nbsp;{{ 'findmembers'|trans }}
+                    </a>
+                    <ul id="search_menu" class="dropdown-menu" role="menu">
+                        <li><a href="{{ url( 'search_locations' ) }}" class="dropdown-item"><i class="fa fa-globe mr-1"></i>{{ 'search.locations' | trans }}</a></li>
+                        <li><a href="{{ path('search_members') }}" class="dropdown-item"><i class="fa fa-users mr-1"></i>{{ 'search.members' | trans }}</a></li>
+                        <li><a href="{{ url('places') }}" class="dropdown-item"><i class="fa fa-globe mr-1"></i>{{ 'browsecountries' | trans }}</a></li>
+                        <li><a href="{{ url('visitors') }}" class="dropdown-item">{{ 'trips.visitors' | trans }}</a></li>
+                        <li><a href="{{ url('trips') }}" class="dropdown-item">{{ 'trips.mytrips' | trans }}</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown d-none d-sm-block">
+                    <a href="#community_menu" class="nav-link dropdown-toggle"
+                       data-target="community_menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label="{{ 'communitymenu' | trans }}">
+                        {{ 'communitymenu'|trans }}
+                    </a>
+                    <ul id="community_menu" class="dropdown-menu" role="menu">
+                        <li>
+                            <a href="{{ path('forums')}}" class="dropdown-item">
+                                <i class="fa fa-comment mr-1"></i>{{ 'communitydiscussions' | trans }}
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ path('groups_mygroups')}}" class="dropdown-item">
+                                <i class="fa fa-users mr-1"></i>{{ 'groups' | trans }}
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ path('wiki_front_page')}}" class="dropdown-item">
+                                <i class="fab fa-wikipedia-w mr-1"></i>{{ 'wiki' | trans }}
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ path('activities')}}" class="dropdown-item">
+                                <i class="fa fa-calendar mr-1"></i>{{ 'activities' | trans }}
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ path('newsletters')}}" class="dropdown-item">
+                                <i class="fa fa-newspaper mr-1"></i>{{ 'newsletters' | trans }}
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ path('communitynews')}}" class="dropdown-item">
+                                <i class="fa fa-newspaper mr-1"></i>{{ 'communitynews' | trans }}
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item d-none d-lg-block">
+                    <a href="{{ url('safety') }}" class="nav-link">{{ 'safety' | trans }}</a>
+                </li>
+                <li class="nav-item {% if teams|length %}dropdown{% endif %} d-none d-xl-block">
+                    {% if teams|length %}
+                        <a href="#volunteer_menu" class="nav-link dropdown-toggle"
+                           data-target="volunteer_menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label="{{ 'volunteer' | trans }}">
+                            {{ 'volunteer' | trans }}
+                        </a>
+                        <ul id="volunteer_menu" class="dropdown-menu" role="menu">
+                        {% for team in teams %}
+                            <li>
+                            {% if team.route starts with '/' %}
+                                <a href="{{ team.route }}" class="dropdown-item">{{ team.trans | trans }}</a>
+                            {% else %}
+                                <a href="{{ path(team.route) }}" class="dropdown-item">{{ team.trans | trans }}</a>
+                            {% endif %}
+                            </li>
+                        {% endfor %}
+                        </ul>
+                    {% else %}
+                        <a href="{{ url('volunteer') }}" class="nav-link">{{ 'volunteer' | trans }}</a>
+                    {% endif %}
+                </li>
+                <li class="nav-item dropdown d-sm-none">
+                    <a href="#about_menu" class="nav-link dropdown-toggle" id="subNavBarToggle"
+                       data-target="about_menu"
+                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        {{ 'getanswers'|trans }}
+                    </a>
+                    <ul id="about_menu" class="dropdown-menu" role="menu">
+                        <li><a href="{{ url('about') }}" class="dropdown-item">{{ 'getanswers' | trans }}</a></li>
+                        <li><a href="{{ url('about_faq') }}" class="dropdown-item">{{ 'menu.faq' | trans }}</a></li>
+                        <li><a href="{{ url('feedback') }}" class="dropdown-item">{{ 'contactus' | trans }}</a></li>
+                        <li><a href="{{ url('stats') }}" class="dropdown-item">{{ 'statspage' | trans }}</a></li>
+                        <li><a href="{{ url('terms_of_use', {'locale': locale }) }}" class="dropdown-item">{{ 'termsofuse'  | trans }}</a></li>
+                        <li><a href="{{ url('getactive') }}" class="dropdown-item">{{ 'about_getactive' | trans }}</a></li>
+                        <li><a href="{{ url('donate') }}" class="dropdown-item">{{ 'donatelink'  | trans }}</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <ul class="nav mr-0">
+            <li class="nav-item dropdown">
+                <a href="#member_menu" class="nav-link dropdown-toggle u-px-16"
+                   data-target="member_menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label="{{ 'profile' | trans }}"><i
+                            class="fa fa-user"></i><span
+                            class="d-none d-sm-inline">&nbsp;{{ member.Username }}</span></a>
+                <ul id="member_menu" class="dropdown-menu" role="menu">
+                    <li class="text-right"><a
+                            href="{{ path('conversations', {'conversationsType': 'conversations'}) }}"
+                            class="dropdown-item">{{ 'conversations' | trans }}</a></li>
+                    <li class="text-right"><a
+                            href="{{ path( 'members_profile' , { username: member.Username } ) }}"
+                            class="dropdown-item">{{ 'profile' | trans }}</a></li>
+                    <li class="text-right"><a href="{{ path('edit_my_profile') }}"
+                                              class="dropdown-item">{{ 'editmyprofile' | trans }}</a></li>
+                    <li class="text-right"><a href="{{ path('my_preferences') }}"
+                                              class="dropdown-item">{{ 'mypreferences' | trans }}</a></li>
+                    <li class="text-right"><a href="{{ path('members_show_all_notes') }}"
+                                              class="dropdown-item">{{ 'mynotes' | trans }}</a></li>
+                    <li class="text-right"><a href="{{ path('groups_mygroups') }}"
+                                              class="dropdown-item">{{ 'mygroups' | trans }}</a></li>
+                    <li class="text-right"><a href="{{ path('trips') }}"
+                                              class="dropdown-item">{{ 'trips.mytrips' | trans }}</a></li>
+                    <li class="text-right"><a href="{{ url( 'security_logout' ) }}"
+                                              class="dropdown-item">{{ 'logout' | trans }}</a></li>
+                </ul>
+            </li>
+
+            {# conversations #}
+            <li class="nav-item">
+                <div id="conversationCount" class="nav-link" data-count="{{ conversationCount }}">
+                    <a href="{{ path('conversations', {'conversationsType': 'conversations'}) }}" aria-label="{{ 'conversations' | trans }}" class="text-white"><i class="fa fa-lg fa-envelope pr-1"></i></a>
+                    <a href="{{ path('conversations', {'conversationsType': 'conversations', 'unread_only': 1}) }}" aria-label="{{ 'conversations.unread' | trans }}">
+                        <span class="badge badge-warning d-md-none d-xl-inline-block">
+                            <i class="fa fa-spinner fa-spin"></i>
+                        </span>
+                    </a>
+                </div>
+            </li>
+            {# logout #}
+            <li class="nav-item"><a href="{{ url( 'security_logout' ) }}" class="nav-link px-1" aria-label="{{ 'logout' | trans }}"><i
+                            class="fa fa-lg fa-sign-out-alt"></i></a></li>
+        </ul>
+    </div>
+</nav>

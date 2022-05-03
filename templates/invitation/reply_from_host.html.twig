@@ -21,6 +21,7 @@
 
     {% set original = thread | last %}
     {% set current = thread | first %}
+    {% set invitation = current.request %}
     {% set myself = app.user %}
 
     {{ macros.messageheader_no_buttons(thread) }}

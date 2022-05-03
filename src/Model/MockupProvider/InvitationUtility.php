@@ -8,6 +8,7 @@ use App\Entity\HostingRequest;
 use App\Entity\Location;
 use App\Entity\Member;
 use App\Entity\Message;
+use App\Entity\NewLocation;
 use App\Entity\Subject;
 use App\Entity\Subtrip;
 use App\Entity\Trip;
@@ -34,6 +35,7 @@ class InvitationUtility
             'getStatus' => $status,
             'getInviteForLeg' => $leg,
         ]);
+        $request->shouldReceive('getStatus')->andReturn($status);
 
         $parent = Mockery::mock(Message::class, [
             'getId' => 1,
@@ -51,8 +53,8 @@ class InvitationUtility
         $thread = [];
         $thread[] = $parent;
         $lastMessage = $parent;
-        for ($i = 1; $i < $replies; ++$i) {
-            $lastMessage = $this->getReply($lastMessage, $subject, $request, $guest, $host);
+        for ($i = 1; $i <= $replies; ++$i) {
+            $lastMessage = $this->getReply($lastMessage, $subject, $request, $guest, $host, $i);
             $temp = $host;
             $host = $guest;
             $guest = $temp;
@@ -70,11 +72,12 @@ class InvitationUtility
         Subject $subject,
         HostingRequest $request,
         Member $guest,
-        Member $host
+        Member $host,
+        int $number
     ): Message {
         $reply = Mockery::mock(Message::class, [
             'getId' => 1,
-            'getMessage' => 'Reply',
+            'getMessage' => 'Reply ' . $number,
             'getParent' => $parent,
         ]);
 
@@ -106,10 +109,8 @@ class InvitationUtility
             'getAdditionalInfo' => TripAdditionalInfoType::NONE,
             'getCreated' => new DateTime(),
         ]);
-        $location = Mockery::mock(Location::class, [
-            'getId' => 1,
-            'getName' => 'Mock',
-        ]);
+        $location = new NewLocation();
+        $location->setName('Mock');
         $leg = Mockery::mock(SubTrip::class, [
             'getId' => 1,
             'getArrival' => Carbon::instance(new DateTime('2021-02-22')),

@@ -14,6 +14,7 @@
 
     {% set original = thread | last %}
     {% set current = thread | first %}
+    {% set invitation = current.request %}
     {% set receiver =  original.receiver %}
     {% set myself =  app.user %}
 

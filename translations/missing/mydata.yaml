@@ -67,3 +67,9 @@ mydata.trips.abstract:
 mydata.trips.no.trips:
     - 'You have not created any trip.'
     - Text in the trips section of the extracted data.
+mydata.polls.choices:
+    - 'Options for this poll'
+    - Text shown in the extracted data for the options offered for a poll
+mydata.polls.groups:
+    - 'Groups involved'
+    - This is shown if the poll is limited to a group

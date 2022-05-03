@@ -136,7 +136,7 @@ class InvitationMockups implements MockupProviderInterface
         $leg = $this->invitationUtility->getLeg($parameters);
         $thread = $this->invitationUtility->getThread($host, $guest, $leg, $parameters['status'], 4);
 
-        $form = $this->formFactory->create(InvitationGuest::class, $thread[1]);
+        $form = $this->formFactory->create(InvitationGuest::class, $thread[4]);
 
         return [
             'leg' => $leg,
@@ -153,15 +153,16 @@ class InvitationMockups implements MockupProviderInterface
         $guest = $parameters['admin'];
 
         $leg = $this->invitationUtility->getLeg($parameters);
-        $thread = $this->invitationUtility->getThread($host, $guest, $leg, $parameters['status'], 3);
+        $thread = $this->invitationUtility->getThread($host, $guest, $leg, $parameters['status'], 4);
 
-        $form = $this->formFactory->create(InvitationHost::class, $thread[1]);
+        $form = $this->formFactory->create(InvitationHost::class, $thread[4]);
 
         return [
             'leg' => $leg,
             'host' => $host,
             'guest' => $guest,
             'thread' => $thread,
+            'invitation' => $thread[0],
             'form' => $form->createView(),
         ];
     }
@@ -172,7 +173,7 @@ class InvitationMockups implements MockupProviderInterface
         $guest = $parameters['user'];
 
         $leg = $this->invitationUtility->getLeg($parameters);
-        $thread = $this->invitationUtility->getThread($host, $guest, $leg, $parameters['status'], 3);
+        $thread = $this->invitationUtility->getThread($host, $guest, $leg, $parameters['status'], 4);
 
         return [
             'leg' => $leg,

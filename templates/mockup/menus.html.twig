@@ -40,12 +40,8 @@
     </script>
 </head>
 <body>
-{% include 'mockup/menu0.html.twig' %}
-{% include 'mockup/menu1.html.twig' %}
-{% include 'mockup/menu2.html.twig' %}
+{% include template %}
 <main role="main">
-    <div id="toasts" class="position-fixed w-100 d-flex flex-column px-2" style="z-index:1000">
-    </div>
     {% set sidebar = (submenu is defined) %}
     {% set contentBlock %}
         {% for label, messages in app.flashes %}
@@ -59,7 +55,7 @@
                 {% endfor %}
             </div>
         {% endfor %}
-        {% block content %}{% endblock %}
+        {{ block("content", 'about/getactive.html.twig')|raw }}
     {% endset %}
     <div class="container-lg">
         {% if sidebar %}
@@ -89,7 +85,9 @@
                 </div>
             </div>
         {% else %}
-            {{  contentBlock | raw }}
+            <div class="pull-right"><a href="{{ url(menu_url, { number: next })}}" style="font-size:20px;">Switch to number {{ next }}</a></div>
+            <div class="clearfix"></div>
+            {{ block("content", 'about/getactive.html.twig')|raw }}
         {% endif %}
     </div>
 </main>

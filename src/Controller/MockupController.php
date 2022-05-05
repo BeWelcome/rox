@@ -30,10 +30,16 @@ use Symfony\Component\Security\Core\Security;
 class MockupController extends AbstractController
 {
     /**
-     * @Route("/mockup/menus", name="mockup_menus")
+     * @Route("/mockup/menus/{number}", name="mockup_menus")
      */
-    public function menuTest(): Response
+    public function menuTest(int $number = 1): Response
     {
-        return $this->render('mockup/menus.html.twig');
+        $next = $number + 1;
+        if ($next == 4) $next = 1;
+        return $this->render('mockup/menus.html.twig', [
+            'template' => 'mockup/menu' . $number . '.html.twig',
+            'menu_url' => 'mockup_menus',
+            'next' => $next,
+        ]);
     }
 }

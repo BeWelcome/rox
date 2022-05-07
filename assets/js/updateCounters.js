@@ -5,6 +5,9 @@ function updateCount() {
         dataType: 'json',
         success: function (data) {
             $('#conversationCount').replaceWith(data.html);
+            if (typeof autocollapse_menu === "function") {
+                autocollapse_menu(true);
+            }
         }});
 }
 

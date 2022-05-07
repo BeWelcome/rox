@@ -2245,6 +2245,11 @@ boolbase@^1.0.0, boolbase@~1.0.0:
   version "4.0.0"
   resolved "https://codeload.github.com/istvan-ujjmeszaros/bootstrap-autohidingnavbar/tar.gz/0077987a05d68625d9198856a5eb0a83e361b34b"
 
+bootstrap-dropdown-hover@^4.2.0:
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/bootstrap-dropdown-hover/-/bootstrap-dropdown-hover-4.2.0.tgz#bfb94b1fb8187dd63f0dfc4ac926e4daf06f2895"
+  integrity sha512-WxbA48jLNSHk6sJAkSnwA5FE+0yE32fkW/Jk7arTSlkstI+ffyAbYrTcBZ18l3nFD0fcAoGHBnMjFmkbQBRFyQ==
+
 bootstrap4@0.0.1-security:
   version "0.0.1-security"
   resolved "https://registry.yarnpkg.com/bootstrap4/-/bootstrap4-0.0.1-security.tgz#598920d54afcb2ae3ad7351acabc57e3942d9c49"

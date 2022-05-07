@@ -104,7 +104,101 @@
         dropdownAutoWidth: true
     });
     $(".toast").toast('show');
+    $('[data-toggle="dropdown"]').bootstrapDropdownHover();
 
+    const gapSize = 20;
+
+    var autocollapse_menu = function (resizing) {
+        console.log('Resizing: ', resizing);
+        const hamburger = document.getElementById('hamburger');
+        const hamburgerMenu = document.getElementById('hamburger_menu');
+        const collapsingMenu = document.getElementById('collapsing_menu');
+
+        // if resizing move all menu items back into the collapsing menu and start from there
+        // This also takes care of vanishing elements due to smaller viewports (like username and text on logo)
+        let hiddenItems = hamburgerMenu.childNodes;
+        if (hiddenItems.length !== 0) {
+            for(let i = 0; i < hiddenItems.length; i++)
+            {
+                collapsingMenu.appendChild(hiddenItems[i]);
+            }
+        }
+
+        let dimensionsCollapse = document.getElementById('collapsing_menu').getBoundingClientRect();
+        let dimensionsStatic = document.getElementById('static_menu').getBoundingClientRect();
+        console.log(dimensionsStatic.left - dimensionsCollapse.right);
+        if (dimensionsStatic.left - dimensionsCollapse.right < gapSize) {
+            hamburger.classList.remove('d-none');
+            hamburger.classList.add('d-block');
+
+            while (dimensionsStatic.left - dimensionsCollapse.right < gapSize) {
+                console.log('Crowded: ', dimensionsStatic.left - dimensionsCollapse.right);
+
+                //  add child to dropdown
+                const menuItems = document.querySelectorAll('#collapsing_menu > li:not(:first-child)');
+                const count = menuItems.length;
+
+                // insert in front of the first item in the hamburger menu
+                hamburgerMenu.insertBefore(menuItems[count - 1], hamburgerMenu.firstChild);
+
+                dimensionsCollapse = document.getElementById('collapsing_menu').getBoundingClientRect();
+                dimensionsStatic = document.getElementById('static_menu').getBoundingClientRect();
+
+                console.log('Menu entries: ' + count);
+            }
+        }
+        else {
+            console.log('Spacious: ', dimensionsStatic.left - dimensionsCollapse.right);
+            console.log(dimensionsCollapse.right);
+            console.log(dimensionsStatic.left);
+
+            hiddenItems = hamburgerMenu.childNodes;
+
+            if (hiddenItems.length === 0) {
+                console.log('Spacious: Hiding menu');
+                hamburger.classList.remove('d-block');
+                hamburger.classList.add('d-none');
+            }
+
+            while (dimensionsStatic.left - dimensionsCollapse.right >= gapSize && hiddenItems.length !== 0) {
+                const menuItems = hamburgerMenu.childNodes;
+                const count = menuItems.length;
+                collapsingMenu.appendChild(menuItems[count - 1]);
+
+                dimensionsCollapse = document.getElementById('collapsing_menu').getBoundingClientRect();
+                dimensionsStatic = document.getElementById('static_menu').getBoundingClientRect();
+
+                hiddenItems = document.querySelectorAll('#hamburger_menu > li');
+                console.log('Menu entries: ' + count);
+            }
+/*
+            while (navHeight < maxHeight && hiddenItems.length > 0) {
+                console.log('Smaller: ', navHeight, maxHeight);
+                console.log(hiddenItems.length);
+                //  remove child from dropdown
+                collapsed = $('#hamburger_menu li');
+                $(collapsed[0]).insertAfter(nav.children('li:last-child'));
+                navHeight = nav.innerHeight();
+                break;
+            }
+
+            if (navHeight > maxHeight) {
+                console.log('Smaller: Autocollapse');
+                autocollapse_menu();
+            }
+*/
+        }
+    }
+
+    $(document).ready(function () {
+        // when the page has loaded
+        autocollapse_menu(false);
+
+        // when the window is resized
+        $(window).on('resize', function () {
+            autocollapse_menu(true);
+        });
+    });
 </script>
 {% block javascripts %}{% endblock javascripts %}
 </body>

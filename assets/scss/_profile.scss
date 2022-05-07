@@ -32,7 +32,7 @@ body {
 }
 
 .profileimg {
-  border-radius: 3px;
+  border-radius: 100%;
   border: 3px solid white;
 }
 
@@ -337,5 +337,5 @@ a.grouplist:hover {
 @media (max-width:767px) {
     .teaser-border {
         border-left: 0px solid !important;
-        }  
+        }
     }

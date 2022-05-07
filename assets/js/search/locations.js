@@ -228,12 +228,19 @@ Map.prototype.addMarkers = function (map) {
         });
 
         if (value.Username) {
-            var popupContent = '<div class="d-flex">';
-            popupContent = popupContent + '<div><img src="/members/avatar/' + value.Username + '?size=50" width="50" height="50"></div>';
-            popupContent = popupContent + '<div class="hosticon nowrap"><img src="/images/icons/' + iconFile + '.png"><i class="fa fa-2x fa-bed p-1"></i><span class="h4">' + value.CanHost + '</span></div></div>';
-            popupContent = popupContent + '<div class="d-flex"><h5 class="nowrap"><a href="/members/' + value.Username + '" target="_blank">' + value.Username + '</a></h5></div>';
-
-            marker.bindPopup(popupContent).openPopup(); // groups[accommodation].addLayer(marker);
+            var popupContent = '<div class="d-flex flex-column">';
+            popupContent += '<div class="d-flex flex-row">'
+            popupContent += '<div><img src="/members/avatar/' + value.Username + '/72" width="48" height="48" style="border-radius: 100%"></div>';
+            popupContent += '<div class="d-flex flex-column justify-content-between">';
+            popupContent += '<div><img src="/images/icons/' + iconFile + '.png" width="22"></div>';
+            popupContent += '<div class="text-nowrap" style="font-size: 16px">';
+            popupContent += '<i class="fa fa-bed fa-lg p-1"></i>' + value.CanHost + '';
+            popupContent += '</div>';
+            popupContent += '</div>';
+            popupContent += '</div>';
+            popupContent += '<div class="d-flex"><strong><a href="/members/' + value.Username + '" target="_blank" class="mt-1">' + value.Username + '</a></strong></div>';
+            popupContent += '</div>';
+            marker.bindPopup(popupContent); // groups[accommodation].addLayer(marker);
         }
 
         markers.addLayer(marker);

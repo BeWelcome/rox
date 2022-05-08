@@ -230,7 +230,7 @@ Map.prototype.addMarkers = function (map) {
         if (value.Username) {
             var popupContent = '<div class="d-flex flex-column">';
             popupContent += '<div class="d-flex flex-row">'
-            popupContent += '<div><img class="profileimg" src="/members/avatar/' + value.Username + '/48" width="48" height="48"></div>';
+            popupContent += '<div><img class="profileimg avatar-48" src="/members/avatar/' + value.Username + '/48" width="48" height="48"></div>';
             popupContent += '<div class="d-flex flex-column justify-content-between">';
             popupContent += '<div><img src="/images/icons/' + iconFile + '.png" width="22"></div>';
             popupContent += '<div class="text-nowrap" style="font-size: 16px">';

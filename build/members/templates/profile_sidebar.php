@@ -19,7 +19,7 @@
 
   <li>
     <a href="<?=PVars::getObj('env')->baseuri."members/".$rel->Username?>"  title="See profile <?=$rel->Username?>" >
-      <img class="profileimg"  src="members/avatar/<?=$rel->Username?>/48"  height="48"  width="48"  alt="Profile" >
+      <img class="profileimg avatar-48"  src="members/avatar/<?=$rel->Username?>/48" alt="Profile" >
     </a>
     <br />
     <a href="<?=PVars::getObj('env')->baseuri."members/".$rel->Username?>" ><?=$rel->Username?></a>

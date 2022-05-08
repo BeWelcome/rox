@@ -62,7 +62,7 @@ foreach ($this->pager->getActiveSubset($this->comments) as $comment)
             <br/>
             <div style="display:inline-block;">
                 <a href="members/{$from}">
-                    <img class="profileimg" src="members/avatar/{$from}/96" height="96" width="96" alt="Profile" />
+                    <img class="profileimg avatar-96" src="members/avatar/{$from}/96" alt="Profile" />
                 </a><br>
                 <a href="{$this->router->url('admin_comments_list_from', array('id' => $comment->getFromMember()->id))}">my comments</a><br>
                 <a href="messages/compose/{$from}">contact me</a>
@@ -71,7 +71,7 @@ foreach ($this->pager->getActiveSubset($this->comments) as $comment)
             <img class="commentto" src="images/icons/tango/22x22/go-next.png" alt="comment to" />
             <div style="display:inline-block;">
                 <a href="members/{$to}">
-                    <img class="profileimg"  src="members/avatar/{$to}/96"  height="96"  width="96"  alt="Profile" />
+                    <img class="profileimg avatar-96"  src="members/avatar/{$to}/96" alt="Profile" />
                 </a><br>
                 <a href="{$this->router->url('admin_comments_list_to', array('id' => $comment->getToMember()->id))}">comments about me</a><br>
                 <a href="messages/compose/{$to}">contact me</a>

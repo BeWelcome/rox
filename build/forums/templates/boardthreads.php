@@ -80,7 +80,7 @@ if ($User) {
     ?>
     <tr>
         <th class="middle p-1">
-            <a href="members/<?php echo $thread->first_author; ?>"><img class="profileimg avatar-50" src="members/avatar/<?php echo $thread->first_author; ?>/50" alt="<?php echo $thread->first_author; ?>" title="<?php echo $thread->first_author; ?>" /><br>
+            <a href="members/<?php echo $thread->first_author; ?>"><img class="profileimg avatar-48" src="members/avatar/<?php echo $thread->first_author; ?>/48" alt="<?php echo $thread->first_author; ?>" title="<?php echo $thread->first_author; ?>" /><br>
                 <small><?php echo $thread->first_author; ?></small>
             </a>
         </th>
@@ -109,7 +109,7 @@ if ($User) {
         <td class="middle p-1 d-none d-md-table-cell"><?php echo number_format($thread->views); ?></td>
         <td class="middle text-nowrap p-1 d-none d-md-table-cell">
             <div class="d-flex flex-row mr-2">
-                <div class="align-self-center"><a href="members/<?php echo $thread->last_author; ?>"><img class="profileimg avatar-50" src="members/avatar/<?php echo $thread->last_author; ?>/50" alt="<?php echo $thread->last_author; ?>" title="<?php echo $thread->last_author; ?>" /></a></div>
+                <div class="align-self-center"><a href="members/<?php echo $thread->last_author; ?>"><img class="profileimg avatar-48" src="members/avatar/<?php echo $thread->last_author; ?>/48" alt="<?php echo $thread->last_author; ?>" title="<?php echo $thread->last_author; ?>" /></a></div>
                 <div class="pl-2 align-self-center text-left">
                     <small><a href="members/<?php echo $thread->last_author; ?>"><?php echo $thread->last_author; ?></a></small><br>
                     <span class="small gray" title="<?php echo date($words->getSilent('DateHHMMShortFormat'), ServerToLocalDateTime($thread->last_create_time, $this->getSession())); ?>"><a href="<?php echo $last_url; ?>"><?php echo $layoutbits->ago($thread->last_create_time); ?></a></span>

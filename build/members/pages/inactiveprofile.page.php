@@ -49,7 +49,7 @@ class InactiveProfilePage extends MemberPage
         ?>
 
         <div id="profile_pic" >
-            <a href="<?=$picture_url?>" id="profile_image"><img class="profileimg" src="<?=$thumbnail_url?>" alt="Picture of <?=$member->Username?>"  height="160" width="160"/></a>
+            <a href="<?=$picture_url?>" id="profile_image"><img class="profileimg avatar-160" src="<?=$thumbnail_url?>" alt="Picture of <?=$member->Username?>"/></a>
             <div id="profile_image_zoom_content" class="hidden">
                 <img class="profileimg" src="<?=$picture_url?>" alt="Picture of <?=$member->Username?>" />
             </div>

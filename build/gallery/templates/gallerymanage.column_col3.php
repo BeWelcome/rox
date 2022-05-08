@@ -2,13 +2,13 @@
 
 
 $member = $this->member;
-$picture_url = 'members/avatar/'.$member->Username.'/100';
+$picture_url = 'members/avatar/'.$member->Username.'/96';
 ?>
 
 <form method="POST" action="" class="mt-3">
 <div class="row">
     <div class="col-12 order-sm-12 col-lg-3 order-lg-1 postleftcolumn">
-        <div class="w-100 d-none d-lg-block"><a href="members/<?=$member->Username?>"><img src="<?=$picture_url?>" alt="Picture of <?=$member->Username?>" height="100%" width="100%"/></a></div>
+        <div class="w-100 d-none d-lg-block"><a href="members/<?=$member->Username?>"><img class="profileimg" src="<?=$picture_url?>" alt="Picture of <?=$member->Username?>" height="96" width="96"/></a></div>
         <a class="btn btn-primary btn-sm btn-block mb-2" href="members/<?=$member->Username ?>"><?=$member->Username ?></a>
 
         <?= $callback_tag; ?>

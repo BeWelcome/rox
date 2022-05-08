@@ -15,18 +15,18 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program; if not, see <http://www.gnu.org/licenses/> or 
-write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+along with this program; if not, see <http://www.gnu.org/licenses/> or
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 */
-    /** 
+    /**
      * @author Micha
      * @author Globetrotter_tt
      */
 
-    /** 
+    /**
      * members base page
-     * 
+     *
      * @package    Apps
      * @subpackage Members
      * @author     Micha
@@ -44,14 +44,14 @@ class InactiveProfilePage extends MemberPage
         // TODO: move HTML to a template
         $member = $this->member;
         $words = $this->getWords();
-        $thumbnail_url = 'members/avatar/'.$member->Username.'?150';
-        $picture_url = 'members/avatar/'.$member->Username.'/500';
+        $thumbnail_url = 'members/avatar/'.$member->Username.'?160';
+        $picture_url = 'members/avatar/'.$member->Username.'/496';
         ?>
 
         <div id="profile_pic" >
-            <a href="<?=$picture_url?>" id="profile_image"><img src="<?=$thumbnail_url?>" alt="Picture of <?=$member->Username?>" class="framed" height="150" width="150"/></a>
+            <a href="<?=$picture_url?>" id="profile_image"><img class="profileimg" src="<?=$thumbnail_url?>" alt="Picture of <?=$member->Username?>"  height="160" width="160"/></a>
             <div id="profile_image_zoom_content" class="hidden">
-                <img src="<?=$picture_url?>" alt="Picture of <?=$member->Username?>" />
+                <img class="profileimg" src="<?=$picture_url?>" alt="Picture of <?=$member->Username?>" />
             </div>
             <script type="text/javascript">
                 // Activate FancyZoom for profile picture

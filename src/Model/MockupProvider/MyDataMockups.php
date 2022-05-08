@@ -150,7 +150,7 @@ class MyDataMockups implements MockupProviderInterface
             'extracted' => $extracted,
             'member' => $member,
             'date_generated' => new DateTime(),
-            'profilepicture' => '/members/avatar/' . $member->getUsername() . '/50',
+            'profilepicture' => '/members/avatar/' . $member->getUsername() . '/48',
             'messagesSent' => 2,
             'messagesReceived' => 3,
             'requestsSent' => 4,

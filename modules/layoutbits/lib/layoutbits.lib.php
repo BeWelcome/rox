@@ -41,22 +41,22 @@ class MOD_layoutbits
      * Quasi-constant functions for userthumbnails
      *
      */
-    public static function PIC_100_100($username,$picfile='',$style="framed") {
+    public static function PIC_100_100($username,$picfile='',$style="profileimg") {
         return self::linkWithPictureVar($username, $height = 100, $width = 100, $style);
     }
-    public static function PIC_75_75($username,$picfile='',$style="framed") {
+    public static function PIC_75_75($username,$picfile='',$style="profileimg") {
         return self::linkWithPictureVar($username, $height = 75, $width = 75, $style);
     }
-    public static function PIC_50_50($username,$picfile='',$style="framed memberpic") {
+    public static function PIC_50_50($username,$picfile='',$style="profileimg memberpic") {
         return self::linkWithPictureVar($username, $height = 50, $width = 50, $style);
     }
-    public static function PIC_40_40($username,$picfile='',$style="framed") {
+    public static function PIC_40_40($username,$picfile='',$style="profileimg") {
         return self::linkWithPictureVar($username, $height = 40, $width = 40, $style);
     }
-    public static function PIC_30_30($username,$picfile='',$style="framed") {
+    public static function PIC_30_30($username,$picfile='',$style="profileimg") {
         return self::linkWithPictureVar($username, $height = 30, $width = 30, $style);
     }
-    public static function PIC_15_15($username,$picfile='',$style="framed") {
+    public static function PIC_15_15($username,$picfile='',$style="profileimg") {
         return self::linkWithPictureVar($username, $height = 15, $width = 15, $style);
     }
 
@@ -124,7 +124,7 @@ class MOD_layoutbits
                 'href="/members/'.$username.'" '.
                 'title="'.$words->getBuffered('SeeProfileOf', $username).'" '.
             '><img '.
-                'class="framed" '.
+                'class="profileimg" '.
                 'src="'.$thumburl.'" '.
                 'height="50" '.
                 'width="50" '.

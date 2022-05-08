@@ -98,7 +98,7 @@ echo <<<HTML
 HTML;
 
 echo '<a id="link_'.$d->id.'" href="gallery/img?id='.$d->id.'" title="'.$d->title.' :: '.$d->description.'" data-toggle="lightbox" data-type="image"  data-title="<?= $d->title ?>" rel="image">
-    <img id="thumb_'.$d->id.'" src="gallery/thumbimg?id='.$d->id.'&amp;t=2" class="framed big" alt="image"/>
+    <img id="thumb_'.$d->id.'" src="gallery/thumbimg?id='.$d->id.'&amp;t=2" class="border-2 big" alt="image"/>
 </a>';
 ?>
 </div>

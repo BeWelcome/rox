@@ -2,14 +2,14 @@
 
 
 class MyVisitorsPage extends ProfilePage
-{   
-    
+{
+
     protected function getSubmenuActiveItem()
     {
         return 'visitors';
     }
-    
-    
+
+
     protected function column_col3()
     {
         $words = $this->getWords();
@@ -40,7 +40,7 @@ class MyVisitorsPage extends ProfilePage
 
         foreach ($member->getVisitorsSubset($pager) as $m)
         {
-            $image = MOD_layoutbits::PIC_50_50($m->Username,'',$style='float_left framed');
+            $image = MOD_layoutbits::PIC_50_50($m->Username,'',$style='float_left profileimg');
             $aboutMe = MOD_layoutbits::truncate_words(stripslashes($words->mInTrad($m->ProfileSummary, $language_id=0, true)), 70);
 
             if ($m->HideBirthDate=="No") $m->age = floor($layoutbits->fage_value($m->BirthDate));

@@ -19,8 +19,9 @@
 
                     <div class="col-10 col-md-2 order-md-2">
                         <a href="members/<?= $Relation->Username ?>"><img
-                                src="members/avatar/<?= $Relation->Username ?>/50"
-                                height="50" width="50"
+                                class="profileimg"
+                                src="members/avatar/<?= $Relation->Username ?>/48"
+                                height="48" width="48"
                                 alt="Profile"/></a><br>
                         <span class="small
                         <?php

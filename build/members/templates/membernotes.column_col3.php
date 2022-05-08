@@ -34,7 +34,7 @@
 
                     <tr>
                         <td>
-                            <?php echo $layoutbits->PIC_50_50($m->Username,'',$style='float_left framed')?><br>
+                            <?php echo $layoutbits->PIC_50_50($m->Username,'',$style='float_left profileimg')?><br>
                             <a href="members/<?php echo $m->Username ?>" class="small"><?php echo $m->Username ?></a>
                         </td>
                         <td>

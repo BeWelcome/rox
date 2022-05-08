@@ -15,15 +15,15 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program; if not, see <http://www.gnu.org/licenses/> or 
-write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+along with this program; if not, see <http://www.gnu.org/licenses/> or
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 */
-/** 
+/**
  *
  * comments management overview template
- * 
- * @author crumbking  
+ *
+ * @author crumbking
  * @author Felix <fvanhove@gmx.de>
  * @package Apps
  * @subpackage Admin
@@ -62,16 +62,16 @@ foreach ($this->pager->getActiveSubset($this->comments) as $comment)
             <br/>
             <div style="display:inline-block;">
                 <a href="members/{$from}">
-                    <img class="framed" src="members/avatar/{$from}/50" height="100" width="100" alt="Profile" />
+                    <img class="profileimg" src="members/avatar/{$from}/96" height="96" width="96" alt="Profile" />
                 </a><br>
                 <a href="{$this->router->url('admin_comments_list_from', array('id' => $comment->getFromMember()->id))}">my comments</a><br>
                 <a href="messages/compose/{$from}">contact me</a>
             </div>
-            
+
             <img class="commentto" src="images/icons/tango/22x22/go-next.png" alt="comment to" />
             <div style="display:inline-block;">
                 <a href="members/{$to}">
-                    <img class="framed"  src="members/avatar/{$to}/50"  height="100"  width="100"  alt="Profile" />
+                    <img class="profileimg"  src="members/avatar/{$to}/96"  height="96"  width="96"  alt="Profile" />
                 </a><br>
                 <a href="{$this->router->url('admin_comments_list_to', array('id' => $comment->getToMember()->id))}">comments about me</a><br>
                 <a href="messages/compose/{$to}">contact me</a>
@@ -83,13 +83,13 @@ foreach ($this->pager->getActiveSubset($this->comments) as $comment)
             </p>
             <h4>Meeting type:</h4>
             <p>{$proximityBlock}</p>
-        </div>    
-     
+        </div>
+
     <p style="clear: both;">
-    
+
     <h4>Meeting place:</h4>
-    <textarea rows="5" cols="70" name="TextWhere">{$comment->TextWhere}</textarea>   
-       
+    <textarea rows="5" cols="70" name="TextWhere">{$comment->TextWhere}</textarea>
+
     <h4>Comment text:</h4>
     <textarea rows="8" cols="70" name="TextFree">{$comment->TextFree}</textarea>
 
@@ -112,7 +112,7 @@ HTML;
         <a href="<?php echo $url; ?>?toggleHide=<?=$comment->id ?>&nameFrom=<?= $comment->getFromMember()->Username ?>&nameTo=<?= $comment->getToMember()->Username ?>" class="button">
             <?= $displayInPublic ?>
         </a>
-        <br/>    
+        <br/>
         <a href="<?php echo $url ?>?markChecked=<?=$comment->id ?>&nameFrom=<?= $comment->getFromMember()->Username ?>&nameTo=<?= $comment->getToMember()->Username ?>" class="button">
             Mark As Checked
         </a>&nbsp;&nbsp;
@@ -122,7 +122,7 @@ HTML;
             { ?>
         <a href="<?php echo $url ?>?markAdminAbuserMustCheck=<?=$comment->id ?>&nameFrom=<?= $comment->getFromMember()->Username ?>&nameTo=<?= $comment->getToMember()->Username ?>" class="button">
             Mark As Abuse
-        </a>&nbsp;&nbsp;    
+        </a>&nbsp;&nbsp;
             <?php }
 
             if($this->scope=="AdminComment"||$this->scope=="\"All\"")

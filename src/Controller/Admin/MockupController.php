@@ -170,7 +170,7 @@ class MockupController extends TranslationController
                 'translations',
             ],
             'member' => $this->getUser(),
-            'profilepicture' => '/members/avatar/' . $this->getUser()->getUsername() . '/50',
+            'profilepicture' => '/members/avatar/' . $this->getUser()->getUsername() . '/48',
         ];
 
         if (false === strpos($name, 'some')) {

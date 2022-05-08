@@ -82,7 +82,7 @@ Boston, MA  02111-1307, USA.
                         <div class="d-flex flex-row justify-content-start">
                             <div class="mr-2">
                                 <a href="members/<?php echo $value->member->Username; ?>">
-                                    <img class="framed" src="members/avatar/<?php echo $value->member->Username; ?>?50"/>
+                                    <img class="profileimg" src="members/avatar/<?php echo $value->member->Username; ?>?48" width="48" height="48"/>
                                 </a>
                             </div>
                             <div>

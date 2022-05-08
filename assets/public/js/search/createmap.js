@@ -158,7 +158,7 @@ function addMarkers(map) {
 
         if (value.Username) {
             var popupContent = '<div class="d-flex">';
-            popupContent = popupContent + '<div><img src="/members/avatar/' + value.Username + '?size=50" width="50" height="50"></div>';
+            popupContent = popupContent + '<div><img class="profileimg" src="/members/avatar/' + value.Username + '/48" width="48" height="48"></div>';
             popupContent = popupContent + '<div><i class="fa fa-2x fa-bed p-1"></i><span class="h4">' + value.CanHost + '</span></div></div>';
             popupContent = popupContent + '<div class="d-flex"><h5 class="nowrap"><a href="/members/' + value.Username + '" target="_blank">' + value.Username + '</a></h5></div>';
 

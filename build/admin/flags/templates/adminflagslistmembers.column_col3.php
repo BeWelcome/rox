@@ -44,7 +44,7 @@ $layoutbits = new MOD_layoutbits();
     foreach($this->membersWithFlags as $username => $details){
     ?>
     <tr><td rowspan="<?= count($details->Flags) ?>"><?php
-		echo $layoutbits->PIC_50_50($username, 'class="framed"'); ?><br>
+		echo $layoutbits->PIC_50_50($username, 'class="profileimg"'); ?><br>
             <a href="members/<?= $username; ?>"
                target="_blank"><?= $username; ?></a><br>
             <span class="small"><?= $details->Status ?></span><br>

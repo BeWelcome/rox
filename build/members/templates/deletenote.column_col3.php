@@ -3,7 +3,7 @@
         $vars = array();
         $words = $this->words;
         $layoutbits = new MOD_layoutbits();
-        
+
         $member = $this->member;
         $Username = $member->Username;
         $edit_mode = false;
@@ -21,8 +21,8 @@
             $note->CategoryFree = $vars['ProfileNoteCategoryFree'];
             $note->Comment = $vars['ProfileNoteComment'];
         }
-    
-        // Display errors from last submit	
+
+        // Display errors from last submit
         if (isset($vars['errors']))
         {
             foreach ($vars['errors'] as $error)
@@ -62,7 +62,7 @@
                 <tbody>
                 <tr>
                     <td>
-                        <?php echo $layoutbits->PIC_50_50($m->Username,'',$style='float_left framed')?><br>
+                        <?php echo $layoutbits->PIC_50_50($m->Username,'',$style='float_left profileimg')?><br>
                         <a href="members/<?php echo $m->Username ?>" class="small"><?php echo $m->Username ?></a>
                     </td>
                     <td><?php echo $note->Category ?></td>

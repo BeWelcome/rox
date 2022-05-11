@@ -538,14 +538,13 @@ $avatar-sizes: 30, 50, 75, 100, 150, 200, 500;
  * Multilevel dropdown for bootstrap 4
  */
 .dropdown-submenu {
-  position: relative;
+  display: block;
 }
 
-.dropdown-submenu>.dropdown-menu {
-  top: 0;
-  left: 100%;
+.dropdown-submenu.show>.dropdown-menu{
   margin-top: 0px;
   margin-left: 0px;
+  display: flex;
 }
 
 .avatar-48 {

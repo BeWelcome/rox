@@ -170,6 +170,7 @@
                 const menuItemToMove = menuItems[count - 1];
                 menuItemToMove.classList.remove('dropdown');
                 menuItemToMove.classList.add('dropdown-submenu');
+                menuItemToMove.classList.add('dropdown-menu-right');
 
                 // insert in front of the first item in the hamburger menu
                 hamburgerMenu.insertBefore(menuItemToMove, hamburgerMenu.firstChild);
@@ -189,6 +190,7 @@
                 const menuItems = hamburgerMenu.childNodes;
                 const menuItemToMove = menuItems[0];
                 menuItemToMove.classList.remove('dropdown-submenu');
+                menuItemToMove.classList.remove('dropdown-menu-right');
                 menuItemToMove.classList.add('dropdown');
 
                 collapsingMenu.appendChild(menuItems[0]);

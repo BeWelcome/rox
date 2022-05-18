@@ -36,8 +36,7 @@ class MockupController extends AbstractController
     {
         $next = $number + 1;
         if ($next == 4) $next = 1;
-        return $this->render('mockup/menus.html.twig', [
-            'template' => 'mockup/menu' . $number . '.html.twig',
+        return $this->render('mockup/menu' . $number . '.html.twig', [
             'menu_url' => 'mockup_menus',
             'next' => $next,
         ]);

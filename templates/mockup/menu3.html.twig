@@ -68,12 +68,7 @@
                 </a>
                 <ul id="safety_menu" class="dropdown-menu" role="menu">
                     <li><a href="{{ url('safety') }}" class="dropdown-item">{{ 'safety'| trans }}</a></li>
-                    <li><a href="{{ url('safety_basics') }}" class="dropdown-item">{{ 'safetybasics'| trans }}</a></li>
-                    <li><a href="{{ url('safety_what_to_do') }}" class="dropdown-item">{{ 'safetywhattodo'| trans }}</a></li>
-                    <li><a href="{{ url('safety_tips') }}" class="dropdown-item">{{ 'safetytips'| trans }}</a></li>
-                    <li><a href="{{ url('safety_faq') }}" class="dropdown-item">{{ 'safetyfaq'| trans }}</a></li>
-                    <li><a href="{{ url('safety_team') }}" class="dropdown-item">{{ 'safetyteam'| trans }}</a></li>
-                    <li><a href="{{ url('safety_contact') }}" class="dropdown-item">{{ 'safetycontact'| trans }}</a></li>
+                    <li><a href="{{ url('safety_contact_no_modal') }}" class="dropdown-item">{{ 'safetycontact'| trans }}</a></li>
                 </ul>
             </li>
             {% if teams|length != 0 %}
@@ -288,3 +283,4 @@
         });
     });
 </script>
+{% endblock javascripts %}

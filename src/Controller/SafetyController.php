@@ -113,6 +113,16 @@ class SafetyController extends AbstractController
     }
 
     /**
+     * @Route("/feedback?IdCategory=2&no", name="safety_contact_no_modal")
+     *
+     * @return Response
+     */
+    public function showSafetyContactNoModal()
+    {
+        return $this->redirectToRoute('feedback', ['IdCategory' => 2, 'no' => 1]);
+    }
+
+    /**
      * @return array
      */
     private function getSubMenuItems()

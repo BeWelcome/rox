@@ -24,7 +24,7 @@
 		</div>
 		<div class="col-12 col-md-6">
 			{{ form_start(form) }}
-            {% if form.IdCategory.vars.value == 2 %}
+            {% if form.IdCategory.vars.value == 2 and no_modal == false %}
                 <div class="modal fade" id="reportMessages" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">

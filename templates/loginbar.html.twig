@@ -1,89 +1,53 @@
 {% import 'macros.twig' as macros %}
 <!-- #nav: main navigation -->
 
-<nav class="navbar navbar-expand-md navbar-light bg-primary bordert-1 borderb-1">
-    <div class="container">
-
-        <a class="navbar-brand" href="{{ path('homepage') }}"><img src="{{ asset('images/logo_index_top.png') }}"
-                                                                        alt="{{ 'bewelcome' | trans }}"></a>
-
-        <button class="navbar-toggler btn btn-primary mr-3" type="button" data-toggle="collapse"
-                data-target="#navbarToggler" aria-controls="navbarToggler" aria-expanded="false"
-                aria-label="Toggle navigation">
-            <span><i class="fa fa-sign-in-alt pr-1"></i>{{ 'login' | trans }}</span>
-        </button>
-
-        <div class="collapse navbar-collapse my-1" id="navbarToggler">
-            <div class="d-sm-block d-md-none">
-                <form class="form-inline p-1" method="post" action="{{ url('security_check') }}">
-                    <div class="form-group floating-label mr-1">
-                        <label for="_username_1" class="sr-only">Username</label>
-                        <input class="form-control m-1" type="text" id="_username_1" name="_username" placeholder="{{ 'username'|trans }}" value="" />
-                    </div>
-                    <div class="form-group floating-label mr-1">
-                        <label for="_password_1" class="sr-only"></label>
-                        <input class="form-control m-1" type="password" id="_password_1" name="_password" placeholder="{{ 'password'|trans }}" value="">
-                    </div>
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" id="login-r-1" value="1"
-                               name="_remember_me"><label for="login-r-1" class="form-check-label">
-                            &nbsp;{{ 'stayloggedin' | trans }}
-                        </label>
-                    </div>
-                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-                    {{ macros.submit('Login') }}
-                </form>
-            </div>
-            <div>
-                <ul class="nav navbar-nav mr-auto ml-md-3">
-                    <li class="nav-item d-none d-md-block">
-                        <form class="form-inline p-1" method="post" action="{{ url('security_check') }}">
-                            <div class="form-group floating-label mr-1">
-                                <input class="form-control" type="text" id="_username_2" name="_username" placeholder="{{ 'username'|trans }}" autofocus>
-                                <label for="_username_2">{{ 'username'|trans }}</label>
-                            </div>
-                            <div class="form-group floating-label mr-1">
-                                <input class="form-control" type="password" id="_password_2" name="_password" placeholder="{{ 'password'|trans }}">
-                                <label for="_password_2">{{ 'password'|trans }}</label>
-                            </div>
-                            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-                            <div class="btn-group">
-                                <button type="submit" class="btn btn-primary border-white" id="loginDropdownButton">{{ 'indexpageloginsubmit' | trans }}</button>
-                                <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split border-white" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <span class="sr-only">Toggle Dropdown</span>
-                                </button>
-                                <div class="dropdown-menu white">
-                                    <div class="form-check">
-                                        <input type="checkbox" class="form-check-input" id="login-r-2" value="1"
-                                               name="_remember_me"><label for="login-r-2" class="form-check-label">
-                                            &nbsp;{{ 'stayloggedin' | trans }}
-                                    </label>
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
-                    </li>
-                    <li class="d-none d-md-inline-block p-1"><span class="mx-2">{{ 'or' | trans }}</span><a
-                                href="{{ url('signup') }}" class="btn btn-primary border-white">{{ 'navbar.button.signup'|trans }}</a></li>
-                    <li class="d-block d-md-none mx-1"><a href="{{ url('signup') }}"
-                                                          class="btn btn-block btn-outline-light">{{ 'navbar.button.signup'|trans }}</a>
-                    </li>
-                </ul>
-            </div>
-            <div class="ml-auto float-right">
-                {% set langsel -%}
-                    <select id="language" name="language" class="col-auto small select2 combo"
-                            onchange="window.location.href=this.value; return false">
-                        {% for lang in locales %}
-                            <option {% if lang == app.request.locale %}selected="selected"{% endif %}
-                                    value="{{ path('language', { locale: lang }) }}">{{ language_name(lang) }}
-                                ({{ language_name_translated(lang, app.request.locale) }})
-                            </option>
-                        {% endfor %}
-                    </select>
-                {%- endset %}
-                {{ langsel }}
-            </div>
-        </div>
+<nav id="main_menu" class="navbar sticky-top navbar-dark navbar-expand bg-primary justify-content-between">
+    <div class="container-lg">
+        <ul id="collapsing_menu" class="navbar navbar-nav">
+            <li class="nav-item">
+                <a id="brand_image" class="navbar-brand" href="{{ url('homepage') }}">
+                    <img class="d-none d-md-block" src="{{ asset('images/logo_index_top.png') }}" alt="BeWelcome"/>
+                    <img class="pl-1 d-block d-md-none" src="{{ asset('images/logo_no_text.png') }}" alt="BeWelcome"/>
+                </a>
+            </li>
+        </ul>
+    <ul id="static_menu" class="navbar navbar-nav">
+        <li class="nav-item dropdown mr-2">
+            <a class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label="{{ 'menu.login.toggle'|trans }}">{{ 'login'|trans }}</a>
+            <ul id="login_dropdown" class="dropdown-menu dropdown-menu-right" style="min-width:200px">
+                <li class="p-2">
+                    <form class="form-inline" method="post" action="{{ url('security_check') }}">
+                        <div class="form-label-group mb-2">
+                            <input class="form-control" type="text" id="_username_2" name="_username" placeholder="{{ 'username'|trans }}" autofocus="">
+                            <label for="_username_2">{{ 'username'|trans }}</label>
+                        </div>
+                        <div class="form-label-group mb-2">
+                            <input class="form-control" type="password" id="_password_2" name="_password" placeholder="Passwort">
+                            <label for="_password_2">{{ 'password'|trans }}</label>
+                        </div>
+                        <div class="form-check mb-2 text-white">
+                            <input type="checkbox" class="form-check-input mr-2" id="login-r" value="1" name="_remember_me"><label for="login-r" class="form-check-label">
+                                {{ 'stayloggedin' | trans }}
+                            </label>
+                        </div>
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                        <button type="submit" class="ml-auto o-button" id="loginDropdownButton">{{ 'indexpageloginsubmit' | trans }}</button>
+                        <span class="navbar-text">{{ 'menu.not.a.member.yet'|trans }}</span>
+                        <a class="ml-auto o-button" href="{{ url('signup') }}">{{ 'navbar.button.signup'|trans }}</a>
+                    </form>
+                </li>
+            </ul>
+        </li>
+        <li class="nav-item dropdown">
+            <button class="btn btn-primary border text-nowrap dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label="{{ 'menu.language.toggle'|trans }}">{{ language_name(app.request.locale) }}</button>
+            <ul id="language_dropdown" class="dropdown-menu dropdown-menu-right" style="max-height:100vh; overflow-y: auto; column-count: 2">
+                {% for lang in locales %}
+                    <li><a class="dropdown-item {% if lang == app.request.locale %}bg-primary{% endif %} m-1" href="{{ path('language', { locale: lang }) }}">
+                            {{ language_name(lang) }}
+                        </a></li>
+                {% endfor %}
+            </ul>
+        </li>
+    </ul>
     </div>
 </nav>

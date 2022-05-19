@@ -1,0 +1,6 @@
+menu.not.a.member.yet:
+    - 'Not a member yet?'
+    - Shown in the menu to point website user to the possibility to sign-up for BeWelcome
+menu.login.toggle:
+    - 'Open/close the menu'
+    - Aria label; not visible on the page but useful for people using a screen reader

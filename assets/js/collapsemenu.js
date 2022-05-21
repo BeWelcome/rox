@@ -12,7 +12,6 @@ $(function () {
 // ------------------------------------------------------ //
 function registerOnClickEvent() {
     $("ul.dropdown-menu [data-toggle='dropdown']").on("click", function (event) {
-        console.log('clicked', event);
 
         $(this).siblings().toggleClass("show");
 
@@ -39,12 +38,11 @@ var autocollapse_menu = function (resizing) {
     // This also takes care of vanishing elements due to smaller viewports (like username and text on logo)
     let hiddenItems = hamburgerMenu.childNodes;
     if (hiddenItems.length !== 0) {
-        for (let i = 0; i < hiddenItems.length; i++) {
-            const menuItemToMove = hiddenItems[i];
+        while(hamburgerMenu.childNodes.length !== 0) {
+            const menuItemToMove = hamburgerMenu.childNodes[0];
+            collapsingMenu.appendChild(menuItemToMove);
             menuItemToMove.classList.remove('dropdown-submenu');
             menuItemToMove.classList.add('dropdown');
-
-            collapsingMenu.appendChild(menuItemToMove);
         }
     }
 
@@ -83,7 +81,7 @@ var autocollapse_menu = function (resizing) {
             menuItemToMove.classList.remove('dropdown-menu-right');
             menuItemToMove.classList.add('dropdown');
 
-            collapsingMenu.appendChild(menuItems[0]);
+            collapsingMenu.appendChild(menuItemToMove);
 
             dimensionsStatic = staticMenu.getBoundingClientRect();
             dimensionsCollapse = collapsingMenu.getBoundingClientRect();

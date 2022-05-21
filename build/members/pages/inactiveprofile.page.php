@@ -44,7 +44,7 @@ class InactiveProfilePage extends MemberPage
         // TODO: move HTML to a template
         $member = $this->member;
         $words = $this->getWords();
-        $thumbnail_url = 'members/avatar/'.$member->Username.'?160';
+        $thumbnail_url = 'members/avatar/'.$member->Username.'/160';
         $picture_url = 'members/avatar/'.$member->Username.'/496';
         ?>
 

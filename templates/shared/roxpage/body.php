@@ -70,9 +70,9 @@ use Symfony\Component\Asset\VersionStrategy\JsonManifestVersionStrategy;
 
             <?php
             if ($submenuItems) { ?>
-                <p class="float-right d-md-none">
+                <div class="float-right d-md-none">
                     <button type="button" class="btn btn-primary btn-sm ml-3" data-toggle="offcanvas"><i class="navbar-toggler-icon"></i></button>
-                </p>
+                </div>
                 <?php
             }
             ?>

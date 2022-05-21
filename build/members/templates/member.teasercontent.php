@@ -1,4 +1,4 @@
-<div class="row">
+<div>
     <div class="col-12 text-center text-md-left">
     <h2 class="m-0 d-inline"><strong>
             <?php if ($this->passedAway == 'PassedAway') {
@@ -31,18 +31,18 @@
         <?php endif; ?>
         </h2>
     </div>
-    <div class="col-12 col-md-7">
+    <div class="col-12 col-sm-6">
         <?php
         $picture_url = 'members/avatar/' . $member->Username;
         ?>
         <div class="text-center text-md-left">
             <?php if ($this->useLightbox) { ?>
                 <a class="d-md-none" href="<?= $picture_url . '/original' ?>" data-toggle="lightbox" alwaysShowClose="true" data-type="image" data-title="<?= $words->getbuffered('profile.picture.title'); ?>">
-                    <img class="img-thumbnail d-md-none" src="<?= $picture_url . '/100' ?>" alt="<?= $words->get('profile.picture.title'); ?>">
+                    <img class="profileimg avatar-160 d-md-none" src="<?= $picture_url . '/160' ?>" alt="<?= $words->get('profile.picture.title'); ?>">
                 </a>
             <?php } else { ?>
                 <a href="members/<?= $member->Username; ?>">
-                    <img class="img-thumbnail d-md-none" src="<?= $picture_url . '/100' ?>" alt="<?= $words->getbuffered('profile.picture.title'), $member->Username; ?>">
+                    <img class="profileimg avatar-160 d-md-none" src="<?= $picture_url . '/160' ?>" alt="<?= $words->getbuffered('profile.picture.title'), $member->Username; ?>">
                 </a>
             <?php } ?>
 
@@ -78,7 +78,7 @@
       <div class="o-form-group form-inline small"><?php echo $this->statusForm($member); ?></div>
     </div>
     </div>
-    <div class="col-12 col-md-5 teaser-border text-center text-md-left">
+    <div class="col-12 col-sm-6 teaser-border text-center text-md-left">
 
         <?php if ($occupation != null) {
             echo '<p class="h5">' . $occupation . '</p>';

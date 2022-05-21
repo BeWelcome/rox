@@ -124,10 +124,8 @@ class MOD_layoutbits
                 'href="/members/'.$username.'" '.
                 'title="'.$words->getBuffered('SeeProfileOf', $username).'" '.
             '><img '.
-                'class="profileimg" '.
+                'class="profileimg avatar-48" '.
                 'src="'.$thumburl.'" '.
-                'height="50" '.
-                'width="50" '.
                 'alt="Profile" '.
             '/></a>'
         ;

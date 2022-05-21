@@ -41,11 +41,12 @@
     </script>
   </head>
   <body>
+    {% set sidebar = (submenu is defined) %}
     {% include 'menu.html.twig' %}
+    {% block main %}
     <main role="main">
       <div id="toasts" class="position-fixed w-100 d-flex flex-column px-2" style="z-index:1000">
       </div>
-      {% set sidebar = (submenu is defined) %}
       {% set contentBlock %}
         {% for label, messages in app.flashes %}
           <div class="row">
@@ -92,6 +93,7 @@
         {% endif %}
       </div>
     </main>
+    {% endblock main %}
     {% include 'footer.html.twig' %}
       {{ encore_entry_script_tags('bewelcome') }}
       {{ encore_entry_script_tags('updatecounters') }}
@@ -202,7 +204,6 @@
                     }
 
                     if (dimensionsStatic.left - dimensionsCollapse.right < gapSize) {
-                        console.log('Smaller: Autocollapse');
                         autocollapse_menu();
                     }
                 }

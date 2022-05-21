@@ -4,3 +4,13 @@ menu.not.a.member.yet:
 menu.login.toggle:
     - 'Open/close the menu'
     - Aria label; not visible on the page but useful for people using a screen reader
+menu.visitors:
+    - 'Visitors near me'
+    - Menu item linking to the visitors page of the trips feature
+menu.safety.information:
+    - 'Safety Information'
+    - Menu item linking to the general safety page
+menu.safety.report:
+    - 'Report problem with a member'
+    - Menu item pointing to the contact us form for abuse
+

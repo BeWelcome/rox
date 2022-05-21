@@ -229,6 +229,11 @@
     });
 </script>
 <script>
+    $('[data-toggle="dropdown"]').bootstrapDropdownHover({
+        clickBehavior: 'sticky',
+        hideTimeout: 1000
+    });
+
     window.addEventListener("load", function () {
         let locale = document.getElementsByTagName('html')[0].getAttribute('lang');
         let privacyUrl = "/privacy";

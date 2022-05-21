@@ -17,32 +17,13 @@
                     &nbsp;{{ 'findmembers'|trans }}
                 </a>
                 <ul id="search_menu" class="dropdown-menu" role="menu">
-                    <li><a href="{{ url( 'search_locations' ) }}" class="dropdown-item"><i class="fa fa-globe mr-1"></i>{{ 'search.locations' | trans }}</a></li>
-                    <li><a href="{{ path('search_members') }}" class="dropdown-item"><i class="fa fa-users mr-1"></i>{{ 'search.members' | trans }}</a></li>
-                    <li><a href="{{ url('places') }}" class="dropdown-item"><i class="fa fa-globe mr-1"></i>{{ 'browsecountries' | trans }}</a></li>
-                    <li><a href="{{ url('visitors') }}" class="dropdown-item"><i class="fa fa-users mr-1"></i>{{ 'trips.visitors' | trans }}</a></li>
-                    <li><a href="{{ url('trips') }}" class="dropdown-item"><i class="fa fa-map mr-1"></i>{{ 'trips.mytrips' | trans }}</a></li>
-                    <li class="dropdown-submenu">
-                        <a id="dropdownMenu2" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-item dropdown-toggle">Hover for action</a>
-                        <ul aria-labelledby="dropdownMenu2" class="dropdown-menu border-0 shadow">
-                            <li>
-                                <a tabindex="-1" href="#" class="dropdown-item">level 2</a>
-                            </li>
-
-                            <!-- Level three dropdown-->
-                            <li class="dropdown-submenu">
-                                <a id="dropdownMenu3" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-item dropdown-toggle">level 2</a>
-                                <ul aria-labelledby="dropdownMenu3" class="dropdown-menu border-0 shadow">
-                                    <li><a href="#" class="dropdown-item">3rd level</a></li>
-                                    <li><a href="#" class="dropdown-item">3rd level</a></li>
-                                </ul>
-                            </li>
-                            <!-- End Level three -->
-
-                            <li><a href="#" class="dropdown-item">level 2</a></li>
-                            <li><a href="#" class="dropdown-item">level 2</a></li>
-                        </ul>
-                    </li>
+                    <li><a href="{{ url( 'search_locations' ) }}" class="dropdown-item"><i class="fa fa-fw fa-globe mr-1"></i>{{ 'search.locations' | trans }}</a></li>
+                    <li><a href="{{ path('search_members') }}" class="dropdown-item"><i class="fa fa-fw fa-users mr-1"></i>{{ 'search.members' | trans }}</a></li>
+                    <li class="dropdown-divider"></li>
+                    <li><a href="{{ url('places') }}" class="dropdown-item"><i class="fa fa-fw fa-globe mr-1"></i>{{ 'browsecountries' | trans }}</a></li>
+                    <li class="dropdown-divider"></li>
+                    <li><a href="{{ url('visitors') }}" class="dropdown-item"><i class="fa fa-fw fa-users mr-1"></i>{{ 'menu.visitors' | trans }}</a></li>
+                    <li><a href="{{ url('trips') }}" class="dropdown-item"><i class="fa fa-fw fa-map mr-1"></i>{{ 'trips.mytrips' | trans }}</a></li>
                 </ul>
             </li>
             <li class="nav-item dropdown">
@@ -51,13 +32,13 @@
                     {{ 'communitymenu'|trans }}
                 </a>
                 <ul id="community_menu" class="dropdown-menu" role="menu">
-                    <li><a href="{{ path('forums')}}" class="dropdown-item"><i class="fa fa-comment mr-1"></i>{{ 'communitydiscussions' | trans }}</a></li>
-                    <li><a href="{{ path('groups_mygroups')}}" class="dropdown-item"><i class="fa fa-users mr-1"></i>{{ 'groups' | trans }}</a></li>
-                    <li><a href="{{ path('activities')}}" class="dropdown-item"><i class="fa fa-calendar mr-1"></i>{{ 'activities' | trans }}</a></li>
+                    <li><a href="{{ path('forums')}}" class="dropdown-item"><i class="fa fa-fw fa-comment mr-1"></i>{{ 'communitydiscussions' | trans }}</a></li>
+                    <li><a href="{{ path('groups_mygroups')}}" class="dropdown-item"><i class="fa fa-fw fa-users mr-1"></i>{{ 'groups' | trans }}</a></li>
+                    <li><a href="{{ path('activities')}}" class="dropdown-item"><i class="fa fa-fw fa-calendar mr-1"></i>{{ 'activities' | trans }}</a></li>
                     <li class="dropdown-divider"></li>
                     <li><a href="{{ path('wiki_front_page')}}" class="dropdown-item"><i class="fab fa-wikipedia-w mr-1"></i>{{ 'wiki' | trans }}</a></li>
-                    <li><a href="{{ path('newsletters')}}" class="dropdown-item"><i class="fa fa-newspaper mr-1"></i>{{ 'newsletters' | trans }}</a></li>
-                    <li><a href="{{ path('communitynews')}}" class="dropdown-item"><i class="fa fa-newspaper mr-1"></i>{{ 'communitynews' | trans }}</a></li>
+                    <li><a href="{{ path('newsletters')}}" class="dropdown-item"><i class="fa fa-fw fa-newspaper mr-1"></i>{{ 'newsletters' | trans }}</a></li>
+                    <li><a href="{{ path('communitynews')}}" class="dropdown-item"><i class="fa fa-fw fa-newspaper mr-1"></i>{{ 'communitynews' | trans }}</a></li>
                 </ul>
             </li>
             {% endif %}
@@ -67,8 +48,8 @@
                     {{ 'safety' | trans }}
                 </a>
                 <ul id="safety_menu" class="dropdown-menu" role="menu">
-                    <li><a href="{{ url('safety') }}" class="dropdown-item">{{ 'safety'| trans }}</a></li>
-                    <li><a href="{{ url('safety_contact_no_modal') }}" class="dropdown-item">{{ 'safetycontact'| trans }}</a></li>
+                    <li><a href="{{ url('safety') }}" class="dropdown-item"><i class="fa fa-fw fa-info mr-1"></i>{{ 'menu.safety.information'| trans }}</a></li>
+                    <li><a href="{{ url('safety_contact_no_modal') }}" class="dropdown-item"><i class="fa fa-fw fa-flag mr-1"></i>{{ 'menu.safety.report'| trans }}</a></li>
                 </ul>
             </li>
             {% if member and teams|length != 0 %}
@@ -123,7 +104,7 @@
                 <div id="conversationCount" class="nav-link" data-count="-1">
                     <a href="{{ path('conversations', {'conversationsType': 'conversations'}) }}" aria-label="{{ 'conversations' | trans }}" class="text-white align-items-center">
                         <i class="fas fa-envelope"></i>
-                        <span class="badge badge-warning"><i class="fa fa-spinner"></i></span>
+                        <span class="badge badge-warning"><i class="fa fa-fw fa-spinner"></i></span>
                     </a>
                 </div>
             </li>
@@ -186,7 +167,7 @@
             </li>
             {% endif %}
             <li class="nav-item">
-                <button class="border bg-primary mr-1" id="hamburger" type="button" data-toggle="collapse" data-target="#hamburger_collapse" aria-controls="hamburger_collapse" aria-expanded="false" aria-label="Toggle navigation">
+                <button class="border bg-primary mr-1 d-none" id="hamburger" type="button" data-toggle="collapse" data-target="#hamburger_collapse" aria-controls="hamburger_collapse" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
             </li>

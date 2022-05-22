@@ -67,13 +67,19 @@ var autocollapse_menu = function (resizing) {
             dimensionsStatic = staticMenu.getBoundingClientRect();
             dimensionsCollapse = collapsingMenu.getBoundingClientRect();
         }
+        let visible = true;
+        for (let i = 0; i < hiddenItems.length; i++) {
+            visible = visible && (hiddenItems[i].id !== 'login_signup');
+        }
+        if (!visible) {
+            hamburger.classList.add('d-none');
+        }
     } else {
         hiddenItems = hamburgerMenu.childNodes;
 
         if (hiddenItems.length === 0) {
             hamburger.classList.add('d-none');
         }
-
         while (dimensionsStatic.left - dimensionsCollapse.right >= gapSize && hiddenItems.length !== 0) {
             const menuItems = hamburgerMenu.childNodes;
             const menuItemToMove = menuItems[0];
@@ -93,6 +99,7 @@ var autocollapse_menu = function (resizing) {
             autocollapse_menu();
         }
     }
+
     registerOnClickEvent();
 }
 

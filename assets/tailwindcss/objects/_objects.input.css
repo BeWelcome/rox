@@ -42,14 +42,14 @@ textarea.o-input::placeholder {
 
 
 /* HTML Validation
-   ========================================================================== */
+   ==========================================================================
 
 .o-input:invalid {
   border: 1px solid theme('colors.red');
   box-shadow: none;
 }
 
-
+ */
 
 
 

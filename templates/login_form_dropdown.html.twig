@@ -1,0 +1,26 @@
+<li class="nav-item dropdown d-block d-md-none mr-2">
+    <a class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label="{{ 'menu.login.toggle'|trans }}">{{ 'login'|trans }}</a>
+    <ul id="login_dropdown" class="dropdown-menu dropdown-menu-right" style="min-width:200px">
+        <li class="p-2">
+            <form class="form-inline" method="post" action="{{ url('security_check') }}">
+                <div class="form-label-group mb-2">
+                    <input class="form-control" type="text" id="_username_2" name="_username" placeholder="{{ 'username'|trans }}" autofocus="">
+                    <label for="_username_2">{{ 'username'|trans }}</label>
+                </div>
+                <div class="form-label-group mb-2">
+                    <input class="form-control" type="password" id="_password_2" name="_password" placeholder="Passwort">
+                    <label for="_password_2">{{ 'password'|trans }}</label>
+                </div>
+                <div class="form-check mb-2 text-white">
+                    <input type="checkbox" class="form-check-input mr-2" id="login-r" value="1" name="_remember_me"><label for="login-r" class="form-check-label">
+                        {{ 'stayloggedin' | trans }}
+                    </label>
+                </div>
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                <button type="submit" class="ml-auto o-button" id="loginDropdownButton">{{ 'indexpageloginsubmit' | trans }}</button>
+                <span class="navbar-text">{{ 'menu.not.a.member.yet'|trans }}</span>
+                <a class="ml-auto o-button" href="{{ url('signup') }}">{{ 'navbar.button.signup'|trans }}</a>
+            </form>
+        </li>
+    </ul>
+</li>

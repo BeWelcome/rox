@@ -1,3 +1,6 @@
 profile.invite.guest:
     - 'Invite'
     - Submenu item on the profile page if a member followed the link /members/<username>/leg/<id> instead of the request stay item
+login.first.time:
+    - 'Welcome {username}, as it is the first time you login please fill out your profile.'
+    - Flash notice shown to a user who logins for the first time ever.

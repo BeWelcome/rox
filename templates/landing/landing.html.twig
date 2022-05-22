@@ -291,7 +291,7 @@
 				{{ '€ ' ~ campaign.yearDonated ~ '' }}
           <span class="u-ml-8">{{ 'dashboard.donation.received' | trans }}</span></p>
 			{% if campaign.yearDonated >= campaign.yearNeeded %}
-				<p class="u-font-display u-font-300 u-my-16 u-text-center">{{ 'donation.thank.you'|trans({'amount':'€' ~ campaign.yearNeeded}) }}</p>
+				<p class="u-font-display u-font-300 u-my-16 u-text-center">{{ 'donation.thank.you'|trans({'amount':'€' ~ campaign.yearNeeded})|raw }}</p>
 			{% endif %}
         <a href="{{ url('donate') }}"
             class="btn o-button {% if campaign.yearDonated < campaign.yearNeeded %}o-button--full{% else %}o-button--outline{% endif %} u-my-16"><i

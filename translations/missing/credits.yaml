@@ -12,3 +12,9 @@ credits.browserstack:
     - We use Browserstack for testing on as many browsers as we possibly can.
 credits.htmlpurifier:
     - HTML Purifier to ensure everyone stays safe when using the site.
+credits.framasoft:
+    - A set of opensource tools (framapad, framadate, etc) for online collaboration, helping our volunteers work together!
+credits.jitsi.meet:
+    - An open source videoconferencing platform, letting volunteers from every part of the world meet each other.
+credits.debian:
+    - A linux operating system variant used to host the web site and several other things.

@@ -542,10 +542,12 @@ $avatar-sizes: 30, 50, 75, 100, 150, 200, 500;
 }
 
 .dropdown-submenu.show>.dropdown-menu.show{
-  margin-top: 0px;
-  margin-left: 0px;
+  margin-top: 0;
+  margin-left: auto;
   transform: none !important;
-  position: static !important;
+  position: relative !important;
+  width: max-content;
+  margin-bottom: .5rem;
 }
 
 .avatar-48 {

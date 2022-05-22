@@ -1,7 +1,7 @@
 {% import 'macros.twig' as macros %}
 
 {% set member = app.user %}
-<nav id="main_menu" class="navbar sticky-top navbar-dark navbar-expand bg-primary justify-content-between">
+<nav id="main_menu" class="navbar navbar-dark navbar-expand bg-primary justify-content-between">
     <div class="container-lg">
         <ul id="collapsing_menu" class="navbar navbar-nav">
             <li class="nav-item">
@@ -145,8 +145,8 @@
                 {% include 'login_form_dropdown.html.twig' %}
             {% endif %}
             <li class="nav-item">
-                <button class="border bg-primary mr-1 d-none" id="hamburger" type="button" data-toggle="collapse" data-target="#hamburger_collapse" aria-controls="hamburger_collapse" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
+                <button class="btn btn-primary border px-2 py-1 mr-1 d-none" id="hamburger" type="button" data-toggle="collapse" data-target="#hamburger_collapse" aria-controls="hamburger_collapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <i class="fas fa-bars white"></i>
                 </button>
             </li>
         </ul>

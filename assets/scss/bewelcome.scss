@@ -688,3 +688,7 @@ $avatar-sizes: 30, 50, 75, 100, 150, 200, 500;
 {
   display: none;
 }
+
+:focus-visible {
+  outline: 0;
+}

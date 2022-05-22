@@ -240,7 +240,11 @@ Map.prototype.addMarkers = function (map) {
             popupContent += '</div>';
             popupContent += '<div class="d-flex"><strong><a href="/members/' + value.Username + '" target="_blank" class="mt-1">' + value.Username + '</a></strong></div>';
             popupContent += '</div>';
-            marker.bindPopup(popupContent); // groups[accommodation].addLayer(marker);
+            marker.bindPopup(popupContent, {
+                'closeButton': false,
+                'maxWidth': 200,
+                'minWidth': 90,
+            }); // groups[accommodation].addLayer(marker);
         }
 
         markers.addLayer(marker);

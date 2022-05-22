@@ -387,15 +387,15 @@ LIMIT 1
     {
         $minAge = $maxAge = null;
         $condition = "";
-        if (isset($vars['search-age-minimum']) && ($vars['search-age-minimum'] != 0)) {
+        if (isset($vars['search-age-minimum']) && ($vars['search-age-minimum'] != 0) && ($vars['search-age-minimum'] != 18)) {
             $minAge = $vars['search-age-minimum'];
             $condition .= ' AND m.BirthDate <= (NOW() - INTERVAL ' . $minAge . ' YEAR)';
         }
-        if (isset($vars['search-age-maximum']) && ($vars['search-age-maximum'] != 0)) {
+        if (isset($vars['search-age-maximum']) && ($vars['search-age-maximum'] != 0) && ($vars['search-age-maximum'] != 120)) {
             $maxAge = $vars['search-age-maximum'];
             $condition .= ' AND m.BirthDate >= (NOW() - INTERVAL ' . $maxAge . ' YEAR)';
         }
-        if (!empty($condition) && !($minAge == 18 && $maxAge == 120)) {
+        if (!empty($condition)) {
             $condition .= " AND m.HideBirthDate='No'";
         }
 

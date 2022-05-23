@@ -142,14 +142,17 @@
 
                 <!-- Date of birth-->
                 <?php $birthdateError = (in_array('SignupErrorBirthDate', $vars['errors'])) ||
-                    (in_array('SignupErrorBirthDateToLow', $vars['errors'])); ?>
+                    (in_array('SignupErrorBirthDateToLow', $vars['errors'])) ||
+                    (in_array('SignupErrorBirthDateToHigh', $vars['errors'])); ?>
                 <div class="o-form-group">
                     <label for="birthdate"><?php echo $words->get('SignupBirthDate'); ?></label>
                     <div class="input-group date" id="datetimepicker1" data-target-input="nearest">
                         <div class="input-group-prepend" data-target="#datetimepicker1"
                                 data-toggle="datetimepicker"><div class="input-group-text bg-primary white"><i class="far fa-calendar fa-fw"></i></div></div>
                         <input type="text" class="o-input datetimepicker-input <?php if ($birthdateError) { echo 'is-invalid'; }?>" data-target="#datetimepicker1" id="birthdate"
-                               name="birthdate" data-toggle="datetimepicker"/>
+                               name="birthdate" data-toggle="datetimepicker" <?php
+                        echo isset($vars['birthdate']) ? 'value="' . htmlentities($vars['birthdate'], ENT_COMPAT, 'utf-8') . '" ' : '';
+                        ?>/>
                         <button type="button" class="input-group-append btn btn-primary" data-trigger="focus" data-container="body"
                                 data-toggle="popover" data-placement="right"
                                 data-content="<?= htmlentities($words->get('signup.help.birthdate')); ?>">
@@ -161,6 +164,9 @@
                     }
                     if (in_array('SignupErrorBirthDateToLow', $vars['errors'])) {
                         echo '<div class="invalid-feedback">' . $words->getFormatted('SignupErrorBirthDateToLow', SignupModel::YOUNGEST_MEMBER) . '</div>';
+                    }
+                    if (in_array('SignupErrorBirthDateToHigh', $vars['errors'])) {
+                        echo '<div class="invalid-feedback">' . $words->getFormatted('SignupErrorBirthDateToHigh'), SignupModel::OLDEST_MEMBER . '</div>';
                     }
                     ?>
                     </div>
@@ -237,14 +243,3 @@
             </div>
     </form>
 </div>
-<script>
-    $( document ).ready(function() {
-        let maxDate = moment().subtract(18, "years");
-        $("#datetimepicker1").datetimepicker({
-            format: 'YYYY-MM-DD',
-            maxDate: maxDate,
-            viewMode: 'years',
-            keepInvalid: true
-        });
-    });
-</script>

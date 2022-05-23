@@ -20,7 +20,7 @@ class SignupPage extends SignupBasePage
         $this->model = new MembersModel();
         $this->_step = $step;
         if ($step == 2) {
-            $this->addLateLoadScriptFile('build/tempusdominus.js');
+//            $this->addLateLoadScriptFile('build/signup.js');
         }
         if ($step == 3) {
             $this->addLateLoadScriptFile('build/jquery_ui.js');

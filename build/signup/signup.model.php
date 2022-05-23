@@ -36,20 +36,13 @@ class SignupModel extends RoxModelBase
 {
     /**
      * PERL regular expression for handles
+     * Allow usernames with up to 20 chars for new signup. Allow ., - and _. Don't allow consecutive special chars.
      */
-
-    /**
-     * user
-     * TODO: should get a more specific name - refactoring needed!
-     */
-    // Allow usernames with up to 20 chars for new signup. Allow ., - and _. Don't allow consecutive special chars.
     const PATTERN_USERNAME = '[A-Za-z](?!.*[-_.][-_.])[A-Za-z0-9-._]{2,18}[A-Za-z0-9]';
     const HANDLE_PREGEXP = '/^[A-Za-z](?!.*[-_.][-_.])[A-Za-z0-9-._]{2,18}[A-Za-z0-9]$/';
 
-    /**
-     * FIXME: use BW constant from config file instead of this one
-     */
     const YOUNGEST_MEMBER = 18;
+    const OLDEST_MEMBER = 120;
 
     const BW_TRUE = 'Yes';
     const BW_FALSE = 'No';
@@ -590,6 +583,9 @@ VALUES
             if ($this->ageValue($vars['iso_date']) < self::YOUNGEST_MEMBER) {
                 $errors[] = 'SignupErrorBirthDateToLow';
             }
+            if ($this->ageValue($vars['iso_date']) > 120) {
+                $errors[] = 'SignupErrorBirthDateToHigh';
+            }
         }
         return $errors;
     }
@@ -674,7 +670,11 @@ VALUES
 	public function ageValue($dd)
 	{
 		$iDate = strtotime($dd);
-		$age = (time() - $iDate) / (365 * 24 * 60 * 60);
+        if ($iDate) {
+            $age = (time() - $iDate) / (365 * 24 * 60 * 60);
+        } else {
+            $age = 2000;
+        }
 		return ($age);
 	}
 

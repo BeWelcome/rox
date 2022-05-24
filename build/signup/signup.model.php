@@ -42,7 +42,7 @@ class SignupModel extends RoxModelBase
     const HANDLE_PREGEXP = '/^[A-Za-z](?!.*[-_.][-_.])[A-Za-z0-9-._]{2,18}[A-Za-z0-9]$/';
 
     const YOUNGEST_MEMBER = 18;
-    const OLDEST_MEMBER = 120;
+    const OLDEST_MEMBER = 130;
 
     const BW_TRUE = 'Yes';
     const BW_FALSE = 'No';

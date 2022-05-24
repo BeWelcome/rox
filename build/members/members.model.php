@@ -944,6 +944,9 @@ ORDER BY
             if ($res === self::TOO_YOUNG) {
                 $errors[] = 'MembersErrorTooYoung';
             }
+            if ($res === self::TOO_OLD) {
+                $errors[] = 'MembersErrorTooOld';
+            }
         }
         if (empty($vars['gender']) || !in_array($vars['gender'], array('male','female','other'))) {
             $errors[] = 'SignupErrorInvalidGender';
@@ -993,12 +996,15 @@ ORDER BY
   	public function ageValue($dd)
 	{
 		$iDate = strtotime($dd);
-		$age = (time() - $iDate) / (365 * 24 * 60 * 60);
-		return ($age);
+        if ($iDate) {
+            return (time() - $iDate) / (365 * 24 * 60 * 60);
+        }
+		return 2000;
 	}
 
     const TOO_YOUNG = -1;
-    const DATE_INVALID = -2;
+    const TOO_OLD = -2;
+    const DATE_INVALID = -3;
 
     public function validateBirthdate($birthdate)
     {
@@ -1030,14 +1036,17 @@ ORDER BY
             }
 
             $iso_date =  $year . "-" . $month . "-" . $day;
-            if (($this->ageValue($iso_date) < SignupModel::YOUNGEST_MEMBER))
-                {
+            $age = $this->ageValue($iso_date);
+            if ($age < SignupModel::YOUNGEST_MEMBER)
+            {
                 return self::TOO_YOUNG;
-                }
-                else
-                {
-                return $iso_date;
             }
+            if ($age < SignupModel::OLDEST_MEMBER)
+            {
+                return self::TOO_OLD;
+            }
+
+            return $iso_date;
         }
         else
         {

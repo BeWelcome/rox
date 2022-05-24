@@ -3,6 +3,12 @@
 if (in_array('SignupErrorInvalidBirthDate', $vars['errors'])) {
     $errorBirthDate = true;
 }
+if (in_array('SignupErrorBirthDateToLow', $vars['errors'])) {
+    $errorBirthDate = true;
+}
+if (in_array('SignupErrorBirthDateTooHigh', $vars['errors'])) {
+    $errorBirthDate = true;
+}
 if (in_array('SignupErrorInvalidFirstName', $vars['errors'])) {
     $errorFirstName = true;
 }

@@ -9,7 +9,7 @@ class EditProfilePage extends ProfilePage
         parent::__construct();
         $this->addLateLoadScriptFile('build/bsfileselect.js');
         $this->addLateLoadScriptFile('build/rangeslider.js');
-        $this->addLateLoadScriptFile('build/tempusdominus.js');
+        $this->addLateLoadScriptFile('build/members/editmyprofile.js');
     }
 
     // Utility function to sort the languages

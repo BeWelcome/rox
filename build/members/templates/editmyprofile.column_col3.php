@@ -107,16 +107,6 @@
     destroyLanguageSelect2s();
     initLanguageSelect2s();
 
-    $(function () {
-        let maxDate = moment().subtract(18, "years");
-        $("#birth-date").datetimepicker({
-            format: 'YYYY-MM-DD',
-            maxDate: maxDate,
-            viewMode: 'years',
-            keepInvalid: true
-        });
-    });
-
     function openHash()
     {
         // Alerts every time the hash changes!

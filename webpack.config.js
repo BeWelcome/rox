@@ -28,6 +28,7 @@ Encore
     .addEntry('floating_labels', './assets/scss/floating_labels.scss')
     .addEntry('jquery_ui', './assets/js/jquery_ui.js')
     .addEntry('signup/signup', './assets/js/signup.js')
+    .addEntry('members/editmyprofile', './assets/js/editmyprofile.js')
     .addEntry('landing', './assets/js/landing/landing.js')
     .addEntry('scrollmagic', './assets/js/scrollmagic.js')
     .addEntry('search/loadpicker', './assets/js/search/loadpicker.js')

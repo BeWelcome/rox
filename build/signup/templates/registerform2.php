@@ -143,7 +143,7 @@
                 <!-- Date of birth-->
                 <?php $birthdateError = (in_array('SignupErrorBirthDate', $vars['errors'])) ||
                     (in_array('SignupErrorBirthDateToLow', $vars['errors'])) ||
-                    (in_array('SignupErrorBirthDateToHigh', $vars['errors'])); ?>
+                    (in_array('SignupErrorBirthDateTooHigh', $vars['errors'])); ?>
                 <div class="o-form-group">
                     <label for="birthdate"><?php echo $words->get('SignupBirthDate'); ?></label>
                     <div class="input-group date" id="datetimepicker1" data-target-input="nearest">

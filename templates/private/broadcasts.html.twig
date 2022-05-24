@@ -14,7 +14,7 @@
             {% else %}
                 {% set newsletter = translations|first %}
             {% endif %}
-            <div class="card">
+            <div class="card o-card">
                 <div class="card-header text-truncate">
                     {% if newsletter.title is defined %}{{ newsletter.title }}{% else %}{{ 'mydata.newsletter.no.title' }}{% endif %}
                 </div>
@@ -22,9 +22,11 @@
                     {% if newsletter.body is defined %}{{ newsletter.body|purify|truncate(100) }}{% else %}{{ 'mydata.newsletter.no.body' }}{% endif %}
                     <p class="small text-muted mb-0">{{ 'mydata.broadcast.sent'|trans({ 'sent':broadcast.updated}) }}</p>
                 </div>
+                {% if newsletter.locale is defined %}
                 <div class="card-footer text-right">
                     <a class="btn btn-primary" href="{{ url('newsletter_single', {'id':broadcast.newsletter.id, 'language':newsletter.locale}) }}">{{ 'showfull'|trans }}</a>
                 </div>
+                {% endif %}
             </div>
         {% endfor %}
     </div>

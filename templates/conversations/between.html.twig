@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+{% import 'macros.twig' as macros %}
+
+{% block stylesheets %}
+    {{ encore_entry_link_tags('tailwind') }}
+{% endblock %}
+
+{% block content %}
+    {%  set member = app.user %}
+    {{ macros.new_conversation_header(otherMember, 'messages.with.member.headline', false) }}
+
+    {% if items.nbResults == 0 %}
+        <p>{{ 'messages.none' | trans }}</p>
+    {% else %}
+        {% if items.haveToPaginate %}
+            <div class="u-flex u-justify-end u-my-8">
+                {{ pagerfanta( items, 'rounded_pagination') }}
+            </div>
+        {% endif %}
+        {% for message in items.currentPageResults %}
+            {% include 'conversations/message.html.twig' with { 'message': message, 'between': false, 'folder': 'none' } %}
+        {% endfor %}
+        {% if items.haveToPaginate %}
+            <div class="u-flex u-justify-end u-my-8">
+                {{ pagerfanta( items, 'rounded_pagination') }}
+            </div>
+        {% endif %}
+
+    {% endif %}
+{% endblock %}

@@ -10,9 +10,9 @@ use Doctrine\ORM\Mapping as ORM;
  * PollsContributions.
  *
  * @ORM\Table(name="polls_contributions",
- *     uniqueConstraints={@ORM\UniqueConstraint(name="IdMember", columns={"IdMember", "IdPoll"})},
- *     indexes={@ORM\Index(name="idEmail", columns={"Email"}),
- *     @ORM\Index(name="IdPoll", columns={"IdPoll"}),
+ *     uniqueConstraints={@ORM\UniqueConstraint(name="polls_contributions_members", columns={"IdMember", "IdPoll"})},
+ *     indexes={@ORM\Index(name="polls_contributions_email", columns={"Email"}),
+ *     @ORM\Index(name="polls_contributions_Poll", columns={"IdPoll"}),
  *     @ORM\Index(name="IDX_D41FF2B3EA8330B4", columns={"IdMember"})})
  * @ORM\HasLifecycleCallbacks
  * @ORM\Entity

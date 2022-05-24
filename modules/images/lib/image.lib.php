@@ -8,14 +8,14 @@ class MOD_images_Image {
     protected $imageSize;
     protected $hash;
     protected $mimetype;
-    
+
     public function __construct($file) {
         if (file_exists($file) && is_file($file) && is_readable($file)) {
             $this->file = $file;
             $this->_loadImage();
         }
     }
-    
+
     private function _loadImage() {
         if (!$this->file)
             return false;
@@ -27,7 +27,7 @@ class MOD_images_Image {
         $this->hash = sha1_file($this->file);
         return true;
     }
-    
+
     public function createThumb($dir, $prefix, $max_x = false, $max_y = false, $prefixIsRealName = false, $mode = 'square') {
         if (!isset ($this->hash))
             return FALSE;
@@ -41,7 +41,7 @@ class MOD_images_Image {
             throw new PException('Neither thumbnail max-width nor max-height provided!');
         $size_x = $this->imageSize[0];
         $size_y = $this->imageSize[1];
-        
+
         // old school
         if (!$max_x || !$max_y) {
             if ($max_x && intval($max_x) > 0 && $size_x) {
@@ -98,7 +98,7 @@ class MOD_images_Image {
                 $oldImage = ImageCreateFromGIF($this->file);
                 break;
             case IMAGETYPE_JPEG:
-                $oldImage = ImageCreateFromJPEG($this->file);
+                $oldImage = $this->imageCreateFromJpegExif($this->file);
                 break;
             case IMAGETYPE_PNG:
                 $oldImage = ImageCreateFromPNG($this->file);
@@ -145,27 +145,47 @@ class MOD_images_Image {
         unlink ($newFile);
         return true;
     }
-    
+
     public function getHash() {
         return $this->hash;
     }
-    
+
     public function getMimetype() {
         if (!isset($this->mimetype))
             return false;
         return $this->mimetype;
     }
-    
+
     public function getImageSize() {
         if (!isset($this->imageSize))
             return false;
         return $this->imageSize;
     }
-    
+
     public function isImage() {
         if (!isset($this->file) || !isset($this->imageSize))
             return false;
         return true;
-    }    
+    }
+
+    private function imageCreateFromJpegExif($filename)
+    {
+        $img = imagecreatefromjpeg($filename);
+        $exif = exif_read_data($filename);
+        if ($img && $exif && isset($exif['Orientation']))
+        {
+            $ort = $exif['Orientation'];
+
+            if ($ort == 6 || $ort == 5)
+                $img = imagerotate($img, 270, null);
+            if ($ort == 3 || $ort == 4)
+                $img = imagerotate($img, 180, null);
+            if ($ort == 8 || $ort == 7)
+                $img = imagerotate($img, 90, null);
+
+            if ($ort == 5 || $ort == 4 || $ort == 7)
+                imageflip($img, IMG_FLIP_HORIZONTAL);
+        }
+        return $img;
+    }
 }
-?>

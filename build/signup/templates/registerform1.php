@@ -47,11 +47,11 @@
                 </div>
 
                 <!-- Username -->
-                <div class="form-group">
+                <div class="o-form-group">
                     <?php $usernameError = in_array('SignupErrorUsernameAlreadyTaken', $errors); ?>
                     <label for="register-username" ><?php echo $words->get('SignupUsername'); ?></label>
                     <div class="input-group">
-                        <input type="text" required class="form-control <?php if ($usernameError) { echo 'is-invalid'; }?>" name="username"
+                        <input type="text" required class="o-input <?php if ($usernameError) { echo 'is-invalid'; }?>" name="username"
                                minlength="4"
                                maxlength="20"
                                pattern="[A-Za-z](?!.*[-_.][-_.])[A-Za-z0-9-._]{2,18}[A-Za-z0-9]"
@@ -74,10 +74,10 @@
                 </div>
 
                 <!-- Password -->
-                <div class="form-group mb-0">
+                <div class="o-form-group mb-0">
                     <label for="register-password"><?php echo $words->get('SignupPassword'); ?></label>
                     <div class="input-group">
-                        <input type="password" required class="form-control" id="register-password" name="password" placeholder="<?php echo $words->get('SignupPassword'); ?>"
+                        <input type="password" required class="o-input" id="register-password" name="password" placeholder="<?php echo $words->get('SignupPassword'); ?>"
                                minlength="6"
                                maxlength="4096"
                             <?php
@@ -92,9 +92,9 @@
                 </div>
 
                 <!-- Confirm password -->
-                <div class="form-group mt-1">
+                <div class="o-form-group mt-1">
                     <label for="register-passwordcheck"><?php echo $words->get('SignupCheckPassword'); ?></label>
-                    <input type="password" class="form-control" id="register-passwordcheck" name="passwordcheck" placeholder="<?php echo $words->get('SignupCheckPassword'); ?>"
+                    <input type="password" class="o-input" id="register-passwordcheck" name="passwordcheck" placeholder="<?php echo $words->get('SignupCheckPassword'); ?>"
                         <?php
                         echo isset($vars['passwordcheck']) ? 'value="'.$vars['passwordcheck'].'" ' : '';
                         ?> >
@@ -103,10 +103,10 @@
                 </div>
 
                 <!-- E-mail -->
-                <div class="form-group mb-0">
+                <div class="o-form-group mb-0">
                     <label for="register-email"><?php echo $words->get('SignupEmail'); ?></label>
                     <div class="input-group">
-                        <input type="email" required class="form-control" id="register-email" name="email" placeholder="<?php echo $words->get('SignupEmail'); ?>"
+                        <input type="email" required class="o-input" id="register-email" name="email" placeholder="<?php echo $words->get('SignupEmail'); ?>"
                                data-validation-ajax-ajax="/signup/checkemail"
                             <?php
                             echo isset($vars['email']) ? 'value="'.htmlentities($vars['email'], ENT_COMPAT, 'utf-8').'" ' : '';
@@ -120,11 +120,11 @@
                 </div>
 
                 <!-- confirm E-mail -->
-                <div class="form-group mt-1">
+                <div class="o-form-group mt-1">
                     <?php $emailError = in_array('SignupErrorEmailCheck', $errors); ?>
                     <label for="register-emailcheck"><?php echo $words->get('SignupCheckEmail'); ?></label>
                     <input type="email"
-                           class="form-control <?php if ($emailError) { echo 'is-invalid'; }?>" id="register-emailcheck" name="emailcheck" placeholder="<?php echo $words->get('SignupCheckEmail'); ?>"
+                           class="o-input <?php if ($emailError) { echo 'is-invalid'; }?>" id="register-emailcheck" name="emailcheck" placeholder="<?php echo $words->get('SignupCheckEmail'); ?>"
                         <?php
                         echo isset($vars['emailcheck']) ? 'value="'.$vars['emailcheck'].'" ' : '';
                         ?> />
@@ -133,8 +133,8 @@
                 </div>
 
                 <!-- Accommodation -->
-                <div class="form-group align-content-center mb-2">
-                    <span class="form-control-label"><?php echo $words->get('Accommodation'); ?></span>
+                <div class="o-form-group align-content-center mb-2">
+                    <span class="o-input-label"><?php echo $words->get('Accommodation'); ?></span>
                     <button type="button" class="btn btn-primary float-right" data-trigger="focus" data-container="body" data-toggle="popover" data-placement="right" data-content="<?= $words->get('signup.help.accommodation'); ?>">
                         <i class="fa fa-question"></i>
                     </button>
@@ -166,11 +166,11 @@
                     <div class="invalid-feedback"><?= $words->get('SignupErrorProvideAccommodation') ?></div>
                 </div>
 
-                <div id="hi_block" class="form-group mb-2 <?php if (isset($vars['accommodation']) && $vars['accommodation'] == 'anytime') { echo ' d-block'; } else { echo ' d-none'; } ?>">
+                <div id="hi_block" class="o-form-group mb-2 <?php if (isset($vars['accommodation']) && $vars['accommodation'] == 'anytime') { echo ' d-block'; } else { echo ' d-none'; } ?>">
                     <label for="hosting_interest"><?php echo $words->get('hosting.interest'); ?></label>
                     <input
                         type="range"
-                        class="form-control my-3 <?php if (in_array('SignupErrorProvideHostingInterest', $vars['errors'])) {
+                        class="o-input my-3 <?php if (in_array('SignupErrorProvideHostingInterest', $vars['errors'])) {
                             echo 'is-invalid';
                         } else {
                             echo 'is-valid';
@@ -191,7 +191,7 @@
                     <div class="invalid-feedback"><?php echo $words->get('SignupErrorProvideHostingInterest'); ?></div>
                 </div>
                 <!-- Next button -->
-                <div class="form-group mt-3">
+                <div class="o-form-group mt-3">
                         <button type="submit" class="btn btn-primary w-100"><?php echo $words->getSilent('NextStep'); ?> <i class="fa fa-angle-double-right"></i></button>
                         <?php echo $words->flushBuffer(); ?>
                     </div>

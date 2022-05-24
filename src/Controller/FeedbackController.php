@@ -34,6 +34,8 @@ class FeedbackController extends AboutBaseController
      */
     public function feedback(Request $request, AboutModel $aboutModel, TranslatorInterface $translator)
     {
+        $noModal = $request->query->get('no', false);
+
         $member = $this->getUser();
         $categories = $aboutModel->getFeedbackCategories();
         $form = $this->createForm(
@@ -79,6 +81,7 @@ class FeedbackController extends AboutBaseController
 
         return $this->render('about/feedback.html.twig', [
             'form' => $form->createView(),
+            'no_modal' => $noModal,
             'submenu' => [
                 'items' => $this->getSubMenuItems($request->getLocale()),
                 'active' => 'about_feedback',

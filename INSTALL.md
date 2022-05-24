@@ -60,33 +60,35 @@ using a browser or use curl _url_ > _filename_.
 ### Requirements
 
 * Apache with mod_rewrite enabled
-* PHP version >= 7.4
+* PHP version >= 7.4 < 8.0
 * PHP GD lib enabled
 * PHP magic quotes gpc disabled
-* PHP extensions: mbstring, xml, fileinfo, intl, xsl, xmlrpc,
+* PHP extensions: mbstring, xml, fileinfo, intl, xsl, xmlrpc, (see composer.json)
 * MariaDB >=10.1
 * [symfony command line interface](https://symfony.com/download) (download/setup)
 * SMTP server for email features
-* [Composer](https://www.getcomposer.org) Latest version (installed globally)
+* [Composer](https://www.getcomposer.org) Version 2 (installed globally)
 * [Node.js](https://nodejs.org/) Latest version (installed globally)
 * [Yarn](https://classic.yarnpkg.com/en/docs/install/) Latest version
-* [Sphinxsearch](http://sphinxsearch.com/) (can be omitted but member search will be slow and forum search won't work)
+* [Sphinxsearch](http://sphinxsearch.com/) Version 3
 * wget (if you want to follow the instructions word to word) otherwise curl and the -o parameter should be your friend
 
 ### Initialize installation
 
-1. Install the rox dependencies using composer and npm
+1. Install the rox dependencies using composer and yarn
 
     ```bash
     $ composer install
-    $ yarn
+    $ yarn install --frozen-lock
     ```
 
-2.  Initialize the database.
+2. Initialize the database.
 
-	Create a new global user `bewelcome` with password `bewelcome`.
+    Copy .env into a .env.local file and edit the DB_HOST to point to localhost (assuming MariaDB runs locally).
 
-    This generates a new database as given in the ```.env``` file and presets some data.
+    In mysql create a new global user `bewelcome` with password `bewelcome`.
+
+    This generates a new database as given in the ```.env.local``` file and presets some data.
 
     ```bash
     $ php bin/console test:database:create --drop --force
@@ -102,7 +104,21 @@ using a browser or use curl _url_ > _filename_.
 
    to build the CSS and JS files. The version creates a file referenced in the footer.
 
-2. Start the server
+2. Build sphinx indices and run search daemon
+
+   Adapt setup/sphinx/sphinx-3.conf to match your needs (DB credentials and replace <path to indices> with your preferred folder path).
+
+   Run the indexer to create indices:
+   ```bash
+   $ indexer --config indices-3.conf --all
+   ```
+
+   Serve the indices using the search daemon:
+   ```bash
+   $ searchd --config indices-3.conf
+   ```
+
+3. Start the server
 
    ```bash
     $ symfony serve
@@ -126,17 +142,23 @@ Please read [Useful hints](#useful-hints) section below.
 
     ```bash
     $ wget http://download.geonames.org/export/dump/allCountries.zip > docker/db/allCountries.zip
-	$ wget http://download.geonames.org/export/dump/alternateNames.zip > docker/db/alternateNames.zip
-	$ wget http://download.geonames.org/export/dump/countryInfo.txt > docker/db/countryInfo.txt
-	$ unzip docker/db/allCountries.zip -d docker/db/
-	$ unzip docker/db/alternateNames.zip -d docker/db/
-	$ rm docker/db/*.zip
+    $ wget http://download.geonames.org/export/dump/alternateNames.zip > docker/db/alternateNames.zip
+    $ wget http://download.geonames.org/export/dump/countryInfo.txt > docker/db/countryInfo.txt
+    $ unzip docker/db/allCountries.zip -d docker/db/
+    $ unzip docker/db/alternateNames.zip -d docker/db/
+    $ rm docker/db/*.zip
     $ mysql bewelcome -u bewelcome -pbewelcome < import.sql
     ```
 
+    After this you should rebuilt the indices for sphinx:
+   ```bash
+   $ /usr/bin/indexer --config indices-3.conf --rotate --quiet --all
+   ```
+
+
 ## Useful hints
 
-* Log in as user `member-2` and password `password`.  on password usage. There is also a user bwadmin which has some rights assigned (and uses the same password).
+* Log in as user `member-2` and password `password`.  There is also a user bwadmin which has some rights assigned (and uses the same password).
 
 * Click around the site a bit and check if all CSS and images are loaded.
    Refer to var/log/dev.log if errors appear or something looks broken. Also make use of the Symfony debug toolbar.

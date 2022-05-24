@@ -1,0 +1,143 @@
+/* ==========================================================================
+   #BOTON REDONDO
+   ========================================================================== */
+
+
+
+/**
+ * Base class
+ */
+
+.o-rounded {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 100%;
+  background-color: theme('colors.bewelcome');
+  flex-shrink: 0;
+  color: theme('colors.white');
+}
+
+
+
+
+
+
+
+
+
+/* Hovers
+   ========================================================================== */
+
+.o-rounded:hover{
+  background-color: theme('colors.bewelcome-dark');
+  transition: background-color 0.2s;
+  color: theme('colors.white');
+}
+
+
+
+
+
+
+
+
+
+/* Size variations
+   ========================================================================== */
+
+/**
+ * Large
+ */
+
+
+.o-rounded--l {
+  width: 48px;
+  height: 48px;
+  font-size: 24px;
+}
+
+
+
+
+
+
+
+
+
+
+/* Color Versions
+   ========================================================================== */
+
+/**
+ * Transparent
+ */
+
+.o-rounded--transparent,
+.o-rounded--transparent:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+
+
+
+
+
+
+
+/**
+ * Gray
+ */
+
+.o-rounded--gray {
+  background-color: #ddd;
+}
+
+.o-rounded--gray:hover {
+  background-color: grey;
+}
+
+
+
+
+
+
+
+
+
+
+/**
+ * Geen
+ */
+
+.o-rounded--geen {
+  background-color: #ddd;
+}
+
+.o-rounded--gray:hover {
+  background-color: grey;
+}
+
+
+
+
+
+
+
+
+
+
+/* States
+   ========================================================================== */
+
+/**
+ * Disabled
+ */
+
+.o-rounded--disabled {
+  opacity: 0.4;
+  cursor: pointer;
+  pointer-events: none;
+}

@@ -6,6 +6,8 @@ use App\Entity\Message;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\NotNull;
 
 class HostingRequestAbstractType extends AbstractType
 {
@@ -29,16 +31,24 @@ class HostingRequestAbstractType extends AbstractType
         return 'app_message';
     }
 
-    protected function addMessageTextArea(FormInterface $form, $placeholder)
+    protected function addMessageTextArea(FormInterface $form, string $placeholder)
     {
         $form
             ->add('message', CkEditorType::class, [
                 'label' => 'label.message',
-                'invalid_message' => 'request.message.empty',
                 'attr' => [
                     'placeholder' => $placeholder,
                     'class' => 'editor form-control',
                 ],
+                'constraints' => [
+                    new NotNull([
+                        'message' => 'please.enter.a.message.text',
+                    ]),
+                    new NotBlank([
+                        'message' => 'please.enter.a.message.text',
+                    ]),
+                ],
+                'empty_data' => '',
             ])
         ;
     }

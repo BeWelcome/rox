@@ -1,0 +1,156 @@
+trip.flash.expired:
+    - All the legs of this trip are in the past. Editing the trip is no longer possible.
+    - Shown as flash the trip the user tried to edit was expired
+trip.summary:
+    - Summary
+    - Label for the trip's title/summary
+trip.description:
+    - Description
+    - Label for the trip's description
+dashboard.load.conversations:
+    - Please wait while the conversations are loaded.
+    - Text shown while the conversations are downloaded
+landing.conversations:
+    - Conversations
+    - Label for conversations
+landing.bevisited.title:
+    - Be Visited
+    - Header for the trips section on the landing page
+landing.bevisited.subtitle:
+    - Invite visitors to your area
+    - Subheading  for the trips section on the landing page
+bevisited.load.legs:
+    - Please wait while we load the members wanting to visit your area
+    - Text shown while the possible visitors to the area are loaded (on landing)
+landing.bevisited.alltrips:
+    - Show all visitors
+    - Button label on landing. Links to all trips in the area.
+landing.bevisited.none:
+    - No visitors in the next three months.
+    - Text shown when no visitors to the area are found
+conversations:
+    - Conversations
+    - Header on the conversations page
+conversations.unread:
+    - Unread
+    - Button label
+trip.in.area:
+    - Visitors
+trip.in.area.no:
+    - No one's planning to visit your area.
+trip.create:
+    - Create
+trip.edit:
+    - Edit
+trip.leg.location:
+    - Location
+trip.leg.duration:
+    - Duration
+trip.count.of.travellers:
+    - '{countOfTravellers, plural, one {# traveler} other {# travelers}}'
+trip.additional.info:
+    - Additional information
+trip.legs:
+    - Legs
+trip.no.trips:
+    - No trips to be displayed.
+trip:
+    - Trip
+trip.invitation.radius:
+    - Invitation radius
+trip.option.private:
+    - This leg is private (hidden from other members)
+trip.option.meet.locals:
+    - Meet locals
+trip.option.looking.for.host:
+    - Looking for a host
+trip.option.not.looking.for.host:
+    - Looking for a host
+trip.additional.info.none:
+    - 'No additional info'
+    - Item in the dropdown for additional info for the trip
+trip.additional.info.couple:
+    - 'Travelling as a couple'
+    - Item in the dropdown for additional info for the trip
+trip.additional.info.friends_mixed:
+    - 'Friends travelling (several genders)'
+    - Item in the dropdown for additional info for the trip
+trip.additional.info.friends_same:
+    - 'Friends travelling (same gender)'
+    - Item in the dropdown for additional info for the trip
+trip.additional.info.family:
+    - 'Travelling family'
+    - Item in the dropdown for additional info for the trip
+trip.summary.placeholder:
+    - 'Provide a summary for your trip.'
+    - Placeholder shown as long as no text is entered in the trip summary field
+trip.description.placeholder:
+    - Describe your trip so that other have an idea why you're travelling.
+    - Placeholder shown as long as no text is entered in the trip description field
+trip.travellers:
+    - '# travellers'
+    - Label for the number of travellers dropdown
+trips.mytrips:
+    - 'My trips'
+    - Item in the large menu (reused in the submenu of the trips module)
+Location:
+    - 'Location'
+    - Label for the field that gets the leg's location
+Duration:
+    - 'Duration'
+    - Label for the field that gets the leg's duration
+Create:
+    - 'Create (1)'
+    - Label for the create button on the trip creation page
+location.none.given:
+    - 'You need to select a location'
+    - Error text shown if no location was selected
+    - validators
+duration.select:
+    - 'You need to select a duration from the calendar'
+    - Error message shown when the duration field is empty
+    - validators
+trips.visitors:
+    - Visitors
+    - Menu item in the large menu (pointing to visitors to my area)
+trip.copy:
+    - 'Copy'
+    - Tool tip/aria label for the icon to copy a trip.
+trip.leg.warning.too.many.travellers:
+    - 'There are more travellers in this group than you prefer to host.'
+    - Tool tip/aria label shown for the exclamation mark if the maxguest set by a member is lower than the number of travellers of a trip shown on the visitors page
+trip.location.none:
+    - 'No location'
+    - Used for extracted trips that do not have a location set for a leg.
+trip.show:
+    - 'Show'
+    - Tool tip/aria label for the icon to show a trip.
+trip.created:
+    - 'Trip has been created.'
+    - Flash message shown after trip creation (on top of the full list of own trips).
+trip.edited:
+    - 'Trip has been updated.'
+    - Flash message shown after trip update (on top of the full list of own trips).
+trip.update:
+    - 'Update'
+    - Label for the submit button in the trip edit form
+trip.error.date.overlap:
+    - 'Dates are overlapping.'
+    - Shown if a trip contains legs that overlap.
+    - validators
+trip.leg.not.matched:
+    - "The leg's duration and the invitation's duration do not match."
+    - Alert message shown to the guest in their reply form (invitation).
+trip.incomplete.leg:
+    - 'You just accepted an invitation that is shorter than your stay in {location} ({arrival, date, medium} - {departure, date, medium}). Consider updating your trip as this will hide the leg from others.'
+    - Additional flash notice shown when a user accepts an invitation that didn\'t cover the full leg duration
+trip.remove:
+    - "Remove trip"
+    - Title of the remove trip modal (shown when the x button is clicked on my trips)
+trip.remove.close:
+    - "Close (leave trip)"
+    - Button label in the remove trip modal
+trip.remove.body:
+    - "<p>You're about to remove this trip from display.</p>
+       <p>Please note this can't be reverted. The trip itself will be hidden for everyone but not deleted as it might have been used for invitations.</p>
+      "

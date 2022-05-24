@@ -36,7 +36,7 @@
             </th>
         </tr>
         {% for message in items.currentPageResults %}
-            {% set unread = (message.firstRead == '0000-00-00 00:00.00') or (message.firstRead is null) %}
+            {% set unread = (message.firstRead is null) or (message.firstRead == '0000-00-00 00:00.00') %}
 
             <tr>
                 <td class="align-middle small">
@@ -44,7 +44,7 @@
                     <p class="m-0">{{ macros.profilelink(message.sender.Username) }}</p>
                 </td>
                 <td class="align-middle w-100">
-                    <a href="{{ path('message_show', { id: message.id}) }}"
+                    <a href="{{ path('conversation_view', { id: message.id}) }}"
                             {%- if unread -%}
                                 {{- ' class="unread"' -}}
                             {%- endif -%}
@@ -78,7 +78,7 @@
                     </a>
                 </td>
                 <td class="text-right">
-                    <a href="{{ path('message_show', { id: message.id}) }}" class="btn btn-primary btn-sm">{{ 'view' | trans }}</a>
+                    <a href="{{ path('conversation_view', { id: message.id}) }}" class="btn btn-primary btn-sm">{{ 'view' | trans }}</a>
                     {% if message.sender.Username == otherMember.Username %}<br>
                     <a href="{{ path('message_reply', { id: message.id}) }}" class="btn btn-primary btn-sm mt-1">{{ 'reply' | trans }}</a>
                     {% endif %}

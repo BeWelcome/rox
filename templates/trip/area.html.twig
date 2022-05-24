@@ -1,0 +1,62 @@
+{% extends 'trips.html.twig' %}
+{% import 'macros.twig' as macros %}
+
+{% block title %}
+  {{ 'trip.in.area' | trans }}
+{% endblock %}
+
+{% block stylesheets %}
+  {{ encore_entry_link_tags('tailwind') }}
+{% endblock stylesheets %}
+
+{% block javascripts %}
+  <script>
+      $('#trips_radius').change(function() {
+      setTimeout(updateTripsInArea, 500);
+    });
+
+    function updateTripsInArea() {
+        $('#trips').submit();
+    }
+  </script>
+{% endblock javascripts %}
+
+{% block content %}
+<section>
+  <div class="u-inline-flex u-w-full u-items-center u-justify-between u-mb-24 md:u-mb-16 md:u-h-48 u-flex-col md:u-flex-row">
+      <div class="u-flex u-items-center u-mb-24 md:u-mb-0">
+    {{ form_start(radiusForm, {'attr': {'id': 'trips'}})}}
+    <div class="u-flex u-items-center u-mx-8 u-mb-8">
+      <i class="fa fa-bullseye fa-w-16 u-text-white u-text-24 u-justify-self-center u-self-center u-mr-8"></i>
+      {{ form_label(radiusForm.radius, null, {'label_attr': {'class': 'u-text-white u-font-700 u-mr-16 u-mb-0'}}) }}
+      {{ form_widget(radiusForm.radius) }}
+    </div>
+    {{ form_rest(radiusForm)}}
+    {{ form_end(radiusForm)}}
+      </div>
+    {% if legs.haveToPaginate %}
+        {{ pagerfanta( legs, 'rounded_pagination', { routeName: 'visitors' }) }}
+    {% endif %}
+  </div>
+
+    {% if legs.nbResults != 0 %}
+    {% set myself = app.user %}
+
+      <div class="u-flex u-flex-col u-items-center">
+      {% for leg in legs %}
+        {% include 'trip/leg.html.twig' with {'leg': leg} %}
+      {% endfor %}
+      </div>
+
+    {% if legs.haveToPaginate %}
+      <section class="u-pb-72">
+        <div class="u-inline-flex u-w-full u-items-center u-justify-end u-mt-16 md:u-h-48 u-flex-col md:u-flex-row">
+          {{ pagerfanta( legs, 'rounded_pagination', { routeName: 'visitors' }) }}
+        </div>
+      </section>
+    {% endif %}
+  {% else %}
+    <h1 class="u-text-white u-font-display">{{ 'trip.in.area.no'|trans }}</h1>
+  {% endif %}
+</section>
+{% endblock content %}

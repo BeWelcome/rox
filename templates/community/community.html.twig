@@ -1,53 +1,47 @@
 {% extends 'base.html.twig' %}
 
+{% block stylesheets %}
+    {{ encore_entry_link_tags('tailwind') }}
+{% endblock %}
+
 {% block title %}
 	{{ 'communitytitle' | trans }}
 {% endblock %}
 
 {% block content %}
-<h1>{{ 'communitypage' | trans }}</h1>
+<header class="o-text">
+    <h1>{{ 'communitypage' | trans }}</h1>
+</header>
 <div class="row">
     <div class="col-12 col-md-6">
-        <div class="card mb-3">
-            <a href="{{ path('forums')}}" class="list-group-item list-group-item-action">
-                <h5 class="list-group-item-heading"><i class="fa fa-comment mr-1"></i>{{ 'communitydiscussions' | trans }}</h5>
-                <p class="list-group-item-text">{{ 'exploreforumdescription' | trans | purify }}</p>
-            </a>
-        </div>
-        <div class="card mb-3">
-            <a href="{{ path('groups_mygroups')}}" class="list-group-item list-group-item-action">
-                <h5 class="list-group-item-heading"><i class="fa fa-users mr-1"></i>{{ 'groups' | trans }}</h5>
-                <p class="list-group-item-text">{{ 'exploregroupsdescription' | trans | purify }}</p>
-            </a>
-        </div>
-        <div class="card mb-3">
-            <a href="{{ path('wiki_front_page')}}" class="list-group-item list-group-item-action">
-                <h5 class="list-group-item-heading"><i class="fab fa-wikipedia-w mr-1"></i>{{ 'wiki' | trans }}</h5>
-                <p class="list-group-item-text">{{ 'explorewikidescription' | trans | purify }}</p>
-            </a>
-        </div>
+        <a href="{{ path('forums')}}" class="card o-card mb-3">
+            <h5 class="list-group-item-heading"><i class="fa fa-comment mr-1"></i>{{ 'communitydiscussions' | trans }}</h5>
+            <p class="list-group-item-text">{{ 'exploreforumdescription' | trans | purify }}</p>
+        </a>
+        <a href="{{ path('groups_mygroups')}}" class="card o-card mb-3">
+            <h5 class="list-group-item-heading"><i class="fa fa-users mr-1"></i>{{ 'groups' | trans }}</h5>
+            <p class="list-group-item-text">{{ 'exploregroupsdescription' | trans | purify }}</p>
+        </a>
+        <a href="{{ path('wiki_front_page')}}" class="card o-card mb-3">
+            <h5 class="list-group-item-heading"><i class="fab fa-wikipedia-w mr-1"></i>{{ 'wiki' | trans }}</h5>
+            <p class="list-group-item-text">{{ 'explorewikidescription' | trans | purify }}</p>
+        </a>
     </div>
 
     <div class="col-12 col-md-6">
-        <div class="card mb-3">
-            <a href="{{ path('activities')}}" class="list-group-item list-group-item-action">
-                <h5 class="list-group-item-heading"><i class="fa fa-calendar mr-1"></i>{{ 'activities' | trans }}</h5>
-                <p class="list-group-item-text">{{ 'exploreactivitiesdescription' | trans | purify }}</p>
-            </a>
-        </div>
+        <a href="{{ path('activities')}}" class="card o-card mb-3">
+            <h5 class="list-group-item-heading"><i class="fa fa-calendar mr-1"></i>{{ 'activities' | trans }}</h5>
+            <p class="list-group-item-text">{{ 'exploreactivitiesdescription' | trans | purify }}</p>
+        </a>
 
-        <div class="card mb-3">
-            <a href="{{ path('newsletters')}}" class="list-group-item list-group-item-action">
-                <h5 class="list-group-item-heading"><i class="fa fa-newspaper mr-1"></i>{{ 'newsletters' | trans }}</h5>
-                <p class="list-group-item-text">{{ 'explorenewslettersdescription' | trans | purify }}</p>
-            </a>
-        </div>
-        <div class="card mb-3">
-            <a href="{{ path('communitynews')}}" class="list-group-item list-group-item-action">
-                <h5 class="list-group-item-heading"><i class="fa fa-newspaper mr-1"></i>{{ 'communitynews' | trans }}</h5>
-                <p class="list-group-item-text">{{ 'explorecommunitynewsdescription' | trans | purify }}</p>
-            </a>
-        </div>
+        <a href="{{ path('newsletters')}}" class="card o-card mb-3">
+            <h5 class="list-group-item-heading"><i class="fa fa-newspaper mr-1"></i>{{ 'newsletters' | trans }}</h5>
+            <p class="list-group-item-text">{{ 'explorenewslettersdescription' | trans | purify }}</p>
+        </a>
+        <a href="{{ path('communitynews')}}" class="card o-card mb-3">
+            <h5 class="list-group-item-heading"><i class="fa fa-newspaper mr-1"></i>{{ 'communitynews' | trans }}</h5>
+            <p class="list-group-item-text">{{ 'explorecommunitynewsdescription' | trans | purify }}</p>
+        </a>
     </div>
 </div>
 {% endblock content %}

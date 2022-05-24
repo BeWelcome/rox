@@ -4,4 +4,4 @@
 
 {{ message.message|striptags }}
 
-[Reply]({{ url('message_reply', { 'id': message.id }) }})
+[Reply]({{ url('conversation_reply', { 'id': message.id }) }})

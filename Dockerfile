@@ -4,12 +4,12 @@
 
 
 # https://docs.docker.com/engine/reference/builder/#understand-how-arg-and-from-interact
-ARG PHP_VERSION=7.4.12
+ARG PHP_VERSION=7.4.28
 ARG NGINX_VERSION=1.17
 
 
 # "php" stage
-FROM php:${PHP_VERSION}-fpm-alpine AS bewelcome_php
+FROM php:${PHP_VERSION}-fpm-alpine3.15 AS bewelcome_php
 
 # persistent / runtime deps
 RUN apk add --no-cache \
@@ -39,7 +39,7 @@ RUN set -eux; \
 	; \
 	\
 	docker-php-ext-configure zip; \
-	docker-php-ext-configure gd; \
+	docker-php-ext-configure gd --with-freetype --with-jpeg=/usr/include/ --enable-gd; \
 	docker-php-ext-install -j$(nproc) \
 		intl \
 		gd \
@@ -49,6 +49,7 @@ RUN set -eux; \
 		xmlrpc \
 		xsl \
 		zip \
+        exif \
 	; \
 	pecl install \
 		apcu-${APCU_VERSION} \
@@ -74,7 +75,7 @@ RUN set -eux; \
 	echo "@edge http://nl.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories; \
 	apk add --no-cache yarn@edge
 
-COPY --from=composer:1 /usr/bin/composer /usr/bin/composer
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 RUN ln -s $PHP_INI_DIR/php.ini-production $PHP_INI_DIR/php.ini
 COPY docker/php/conf.d/bewelcome.prod.ini $PHP_INI_DIR/conf.d/bewelcome.ini
@@ -123,7 +124,7 @@ RUN set -eux; \
 	composer clear-cache
 
 # prevent the reinstallation of node_modules at every changes in the source code
-COPY package.json yarn.lock webpack.config.js ./
+COPY package.json yarn.lock webpack.config.js postcss.config.js tailwind.config.js ./
 RUN set -eux; \
 	yarn install --frozen-lock; \
 	yarn encore production --mode=production

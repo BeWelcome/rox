@@ -19,8 +19,16 @@ class Places extends RoxModelBase {
 
     public function __construct() {
         parent::__construct();
-        $langarr = explode('-', $this->session->get('_locale'));
-        $this->lang = $langarr[0];
+        $this->lang = $this->session->get('_locale');
+        if ($this->lang == 'zh-hant') {
+            $this->lang = 'zh-TW';
+        }
+        if ($this->lang == 'pt-br') {
+            $this->lang = 'pt';
+        }
+        if ($this->lang == 'zh-hans') {
+            $this->lang = 'zh-CN';
+        }
     }
 
     /**
@@ -94,6 +102,7 @@ class Places extends RoxModelBase {
                 m.status = 'Active'
                 AND m.MaxGuest >= 1
                 AND m.IdCity = g.geonameId
+                AND g.fClass = 'P'
                 AND g.country = '%s'", $this->dao->escape($country));
         $row = $this->singleLookup($countQuery);
         return $row->cnt;
@@ -114,6 +123,7 @@ class Places extends RoxModelBase {
                 m.status = 'Active'
                 AND m.MaxGuest >= 1
                 AND m.IdCity = g.geonameId
+                AND g.fClass = 'P'
                 AND g.country = '%s'
                 AND g.admin1 = '%s'", $this->dao->escape($country), $this->dao->escape($admin1));
         $row = $this->singleLookup($countQuery);
@@ -162,6 +172,7 @@ class Places extends RoxModelBase {
                 AND m.MaxGuest >= 1
                 AND g.geonameId = m.idCity
                 AND g.country = '%s'
+                AND g.fClass = 'P'
             ORDER BY
                 m.Accomodation ASC, HasProfileSummary DESC, m.LastLogin DESC",
             $this->dao->escape($countrycode));
@@ -216,6 +227,7 @@ class Places extends RoxModelBase {
                 AND m.MaxGuest >= 1
                 AND m.IdCity = g.geonameId
                 AND g.geonameId = '%s'
+                AND g.fClass = 'P'
             ORDER BY
                 m.Accomodation ASC, HasProfileSummary DESC, m.LastLogin DESC",
             $this->dao->escape($cityCode));

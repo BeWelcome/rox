@@ -1,0 +1,12 @@
+request.not.flexible.with.arrival.departure:
+    - 'Not flexible'
+    - Shown in the details of a request or invitation if the initiator of said conversation isn't flexible with the dates
+request.flexible.with.arrival.departure:
+    - 'flexible'
+    - Shown in the details of a request or invitation if the initiator of said conversation is flexible with the dates
+request.number.of.travellers:
+    - '{countOfTravellers, plural, one {# traveler} other {# travelers}}'
+    - Copy/Paste the English version. Please translate only "traveler" and "travelers" (plural).
+request.number.of.travellers.host:
+    - '{countOfTravellers, plural, one {# traveler} other {# travelers}}'
+    - Copy/Paste the English version. Please translate only "traveler" and "travelers" (plural); use same text as for request.number.of.travellers

@@ -17,9 +17,9 @@ use Symfony\Component\Validator\Constraints\NotNull;
 
 class FeedbackFormType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $formBuilder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $formBuilder
+        $builder
             ->setMethod('GET')
             ->add('IdCategory', ChoiceType::class, [
                 'label' => 'feedbackchooseyourcategory',
@@ -50,7 +50,7 @@ class FeedbackFormType extends AbstractType
         ;
         $member = $options['member'];
         if (null === $member) {
-            $formBuilder->add('FeedbackEmail', TextType::class, [
+            $builder->add('FeedbackEmail', TextType::class, [
                     'label' => 'feedbackemail',
                     'required' => false,
                     'constraints' => [
@@ -60,11 +60,11 @@ class FeedbackFormType extends AbstractType
                 ->add('captcha', CaptchaType::class)
             ;
         } else {
-            $formBuilder->add('FeedbackEmail', HiddenType::class, [
+            $builder->add('FeedbackEmail', HiddenType::class, [
                 'attr' => ['value' => $member->getEmail()],
             ]);
         }
-        $formBuilder
+        $builder
             ->add('no_reply_needed', CheckboxType::class, [
                 'label' => 'feedbackidonotwantananswer',
                 'required' => false,

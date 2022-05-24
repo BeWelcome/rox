@@ -19,7 +19,7 @@ final class ProfilePicturesExtractor extends AbstractExtractor implements Extrac
         // Copy all profile pictures
         $filesystem = new Filesystem();
         $pictureDir = $tempDir . 'pictures/';
-        @mkdir($pictureDir);
+        $filesystem->mkdir($pictureDir);
         $photoRepository = $this->getRepository(MembersPhoto::class);
         /** @var MembersPhoto[] $photos */
         $photos = $photoRepository->findBy(['member' => $member]);

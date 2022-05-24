@@ -24,6 +24,11 @@
                 updateValueOutput(value);
             }
         });
+
+        window.addEventListener('hashchange', openHash);
+
+        // Trigger the event (useful on page load).
+        openHash();
     });
 
     $("input:radio[name='Accomodation']").change(function () {
@@ -102,13 +107,14 @@
     destroyLanguageSelect2s();
     initLanguageSelect2s();
 
-    $(function () {
-        let maxDate = moment().subtract(18, "years");
-        $("#birth-date").datetimepicker({
-            format: 'YYYY-MM-DD',
-            maxDate: maxDate,
-            viewMode: 'years',
-            keepInvalid: true
-        });
-    });
+    function openHash()
+    {
+        // Alerts every time the hash changes!
+        let hash = location.hash;
+        if ($(hash).length) {
+            $('[id^=collapse-]').removeClass('show').addClass('collapse');
+            $(hash).addClass('show');
+            $(document).scrollTop($(hash).offset().top);
+        }
+    }
 </script>

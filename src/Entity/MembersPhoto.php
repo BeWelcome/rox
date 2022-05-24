@@ -13,7 +13,9 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * MembersPhoto.
  *
- * @ORM\Table(name="membersphotos", indexes={@ORM\Index(name="IdMember", columns={"IdMember"})})
+ * @ORM\Table(name="membersphotos", indexes={
+ *     @ORM\Index(name="membersphotos_members", columns={"IdMember"})
+ * })
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks
  *

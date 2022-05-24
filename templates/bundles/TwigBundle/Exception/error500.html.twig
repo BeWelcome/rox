@@ -2,9 +2,15 @@
 {% extends 'error.html.twig' %}
 
 {% block content %}
-    <p>
-        {{ 'error.500'|trans }}<br>
+    <h1>{{ 'error.page.server.error'|trans }}</h1>
 
-        <a href="{{ url('homepage') }}">{{ 'error.return.home'|trans }}</a>
+    {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+        <p>Hi {{ app.user.Username }}!<p>
+        <p>{{ 'error.500'|trans }}</p>
+    {% else %}
+        <p>{{ 'error.500'|trans }}</p>
+    {% endif %}
+    <p>
+        <br><a href="{{ url('homepage') }}">{{ 'error.return.home'|trans }}</a>
     </p>
 {% endblock %}

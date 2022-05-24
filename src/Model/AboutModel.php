@@ -44,9 +44,6 @@ class AboutModel
             $feedbackEmail = 'feedback@bewelcome.org';
         }
 
-        $needAnswer = isset($data['noanswerneeded']) ? false : true;
-        $data['noanswerneeded'] = $needAnswer;
-
         $this->mailer->sendFeedbackEmail($feedbackEmail, $notifyEmail, $data);
     }
 

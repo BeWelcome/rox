@@ -132,8 +132,7 @@ class GroupsModel extends  RoxModelBase
         {
             $strings[] = "Name LIKE '%" . $this->dao->escape($term) . "%'";
         }
-        return $group->countWhere(implode(' OR ',$strings));
-
+        return $group->countWhere('approved = 1 AND (' . implode(' OR ',$strings) . ')');
     }
 
     /**

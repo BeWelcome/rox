@@ -98,7 +98,7 @@
 
     <div class="site-search repo-scope js-site-search" role="search">
       <!-- </textarea> --><!-- '"` --><form accept-charset="UTF-8" action="/Leaflet/Leaflet.markercluster/search" class="js-site-search-form" data-global-search-url="/search" data-repo-search-url="/Leaflet/Leaflet.markercluster/search" method="get"><div style="margin:0;padding:0;display:inline"><input name="utf8" type="hidden" value="&#x2713;" /></div>
-  <label class="js-chromeless-input-container form-control">
+  <label class="js-chromeless-input-container o-input">
     <div class="scope-badge">This repository</div>
     <input type="text"
       class="js-site-search-focus js-site-search-field is-clearable chromeless-input"

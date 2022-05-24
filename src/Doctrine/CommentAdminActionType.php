@@ -4,10 +4,10 @@ namespace App\Doctrine;
 
 class CommentAdminActionType extends EnumType
 {
-    const NOTHING_NEEDED = 'NothingNeeded';
-    const ADMIN_CHECK = 'AdminCommentMustCheck';
-    const SAFETY_TEAM_CHECK = 'AdminAbuserMustCheck';
-    const ADMIN_CHECKED = 'Checked';
+    public const NOTHING_NEEDED = 'NothingNeeded';
+    public const ADMIN_CHECK = 'AdminCommentMustCheck';
+    public const SAFETY_TEAM_CHECK = 'AdminAbuserMustCheck';
+    public const ADMIN_CHECKED = 'Checked';
 
     /** @var string */
     protected $name = 'comment_admin_action';

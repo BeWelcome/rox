@@ -1,5 +1,9 @@
 {% extends 'private/mydata.html.twig' %}
 
+{% block stylesheets %}
+  {{ encore_entry_link_tags('tailwind') }}
+{% endblock %}
+
 {% block content %}
     {% set fields = member.memberFields %}
     <main role="main">
@@ -10,7 +14,7 @@
                                           alt="{{ 'mydata.profile.picture'|trans }}"
                                           class="float-left img-thumbnail"></div>
 
-                    <h2 class="m-0 d-inline"><strong>{{ member.username }}</strong><br>
+                    <h2 class="u-text-32 m-0 d-inline"><strong>{{ member.username }}</strong><br>
                         <span class="h5">{{ member.accommodation|trans }}</span><br>
                         <span class="h4">{{ member.firstname }} {{ member.secondname }} {{ member.lastname }}</span>
                     </h2>
@@ -22,7 +26,7 @@
                         <a href="{{ url('places_country', {'countryname': member.country.name, 'countrycode': member.country.country }) }}">{{ member.country.name }}</a>
                     </h5><!-- city -->
 
-                    <div class="form-group form-inline small">{{ member.status|trans }}</div>
+                    <div class="o-form-group form-inline small">{{ member.status|trans }}</div>
 
                 </div>
                 <div class="col-12 col-md-6" style="border-left: 1px solid #ccc;">
@@ -52,21 +56,21 @@
                         <div class="row mt-2">
                         <div class="col-12 col-md-6">
 
-                            <div id="profilesummary" class="card mb-3">
+                            <div id="profilesummary" class="card o-card mb-3">
                                 <h3 class="card-header bg-secondary">{{ 'profilesummary'|trans({}, "messages", locale) }}</h3>
 
                                 <div class="p-2">
                                     {{ fields[locale]['ProfileSummary']|purify }}
                                 </div>
                             </div>
-                            <div id="occupation" class="card mb-3">
+                            <div id="occupation" class="card o-card mb-3">
                                 <h3 class="card-header bg-secondary">{{ 'occupation'|trans({}, "messages", locale) }}</h3>
                                 <div class="p-2">
                                     {{ fields[locale]['Occupation'] }}
                                 </div>
                             </div>
 
-                            <div id="languages" class="card mb-3">
+                            <div id="languages" class="card o-card mb-3">
                                 <h3 class="card-header bg-secondary">{{ 'profilelanguagesspoken'|trans({}, "messages", locale) }}</h3>
 
                                 <div class="p-2">
@@ -76,7 +80,7 @@
                                 </div>
                             </div>
 
-                            <div id="interests" class="card mb-3">
+                            <div id="interests" class="card o-card mb-3">
                                 <h3 class="card-header bg-secondary">{{ 'profileinterests'|trans({}, "messages", locale) }}</h3>
                                 <div class="p-2">
                                     <div class="h5 mb-0">{{ 'profilehobbies'|trans({}, "messages", locale) }}</div>
@@ -95,7 +99,7 @@
                                     <div>{{ fields[locale]['Organizations'] }}</div>
                                 </div>
                             </div>
-                            <div id="travel" class="card mb-3">
+                            <div id="travel" class="card o-card mb-3">
                                 <h3 class="card-header bg-secondary">{{ 'profiletravelexperience'|trans({}, "messages", locale) }}</h3>
                                 <div class="p-2">
                                     <dl>
@@ -109,7 +113,7 @@
 
                         </div>
                         <div class="col-12 col-md-6">
-                            <div id="accommodationinfo" class="card mb-3">
+                            <div id="accommodationinfo" class="card o-card mb-3">
                                 <h3 class="card-header {% if member.accommodation == 'neverask' %}bg-secondary{% endif %}">{{ 'profileaccommodation'|trans({}, "messages", locale) }}</h3>
                                 <div class="card-block p-2">
                                     <div class="card-text m-0">
@@ -173,7 +177,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="card mb-3">
+                            <div class="card o-card mb-3">
                                 <h3 class="card-header bg-secondary">{{ 'contactinfo'|trans({}, "messages", locale) }}</h3>
                                 <div class="p-2">
                                     <dl id="address">

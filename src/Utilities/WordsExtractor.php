@@ -6,7 +6,8 @@ use ArrayIterator;
 use InvalidArgumentException;
 use Iterator;
 use Symfony\Component\Finder\Finder;
-use Symfony\Component\Translation\Extractor\PhpExtractor;
+use Symfony\Component\Translation\Extractor\AbstractFileExtractor;
+use Symfony\Component\Translation\Extractor\ExtractorInterface;
 use Symfony\Component\Translation\Extractor\PhpStringTokenParser;
 use Symfony\Component\Translation\MessageCatalogue;
 
@@ -15,8 +16,12 @@ use Symfony\Component\Translation\MessageCatalogue;
  *
  * This is based on an example from the Symfony documentation.
  */
-class WordsExtractor extends PhpExtractor
+class WordsExtractor extends AbstractFileExtractor implements ExtractorInterface
 {
+    public const MESSAGE_TOKEN = 300;
+    public const METHOD_ARGUMENTS_TOKEN = 1000;
+    public const DOMAIN_TOKEN = 1001;
+
     /**
      * The sequence that captures translation messages.
      *
@@ -47,7 +52,14 @@ class WordsExtractor extends PhpExtractor
             '(',
             self::MESSAGE_TOKEN,
         ],
-    ];
+        [
+            'this->',
+            'addTranslatedFlash',
+            '(',
+            self::METHOD_ARGUMENTS_TOKEN,
+            ',',
+            self::MESSAGE_TOKEN,
+        ],    ];
 
     /**
      * Prefix for new found message.
@@ -56,9 +68,6 @@ class WordsExtractor extends PhpExtractor
      */
     private $prefix = '';
 
-    /**
-     * {@inheritdoc}
-     */
     public function extract($resource, MessageCatalogue $catalog)
     {
         $files = $this->extractFiles($resource);
@@ -69,9 +78,6 @@ class WordsExtractor extends PhpExtractor
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setPrefix(string $prefix)
     {
         $this->prefix = $prefix;

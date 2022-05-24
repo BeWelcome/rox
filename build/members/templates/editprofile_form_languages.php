@@ -18,10 +18,10 @@
                 </label>
             </div>
             <?php for ($ii = 0; $ii < count($vars['languages_selected']); $ii++) { ?>
-                <div id="lang_<?= $ii ?>_row" class="form-group row">
+                <div id="lang_<?= $ii ?>_row" class="o-form-group row">
                     <div class="col-2 col-md-1">
                         <button class="btn btn-outline-danger p-1 px-2 remove_lang" id="lang_<?= $ii ?>"
-                                title="<?= $words->get('RemoveLanguage') ?>"><i class="fa fa-times-circle"></i><span
+                                title="<?= $words->get('RemoveLanguage') ?>"><i class="fa fa-times-circle" id="lang_<?= $ii ?>"></i><span
                                 class="sr-only"><?= $words->get('RemoveLanguage') ?></span></button>
                     </div>
 
@@ -31,11 +31,11 @@
                         <input id="lang_<?= $ii ?>_name" type="text" disabled
                                value="<?= $words->getSilent('Lang_' . $vars['languages_selected'][$ii]->ShortCode) ?>"
                                title="<?= $words->getSilent('Lang_' . $vars['languages_selected'][$ii]->ShortCode) ?>"
-                               class="form-control">
+                               class="o-input">
 
                     </div>
                     <div class="col-10 offset-2 col-md-7 offset-md-0">
-                        <select id="mll_<?= $ii ?>" class="mll select2 form-control"
+                        <select id="mll_<?= $ii ?>" class="mll select2 o-input" data-minimum-results-for-search="-1" name="memberslanguageslevel[]">
                                 data-minimum-results-for-search="-1"
                                 name="memberslanguageslevel[]">
                             <?php
@@ -58,7 +58,7 @@
                             class="sr-only"><?= $words->get('RemoveLanguage') ?></span></button>
                 </div>
                 <div class="col-10 col-md-4">
-                    <select class='lang_selector select2 form-control' name="memberslanguages[]">
+                    <select class='lang_selector select2 o-input' name="memberslanguages[]">
                         <option selected="selected">-<?= $words->get("ChooseNewLanguage") ?>-</option>
                         <optgroup label="<?= $words->getSilent('SpokenLanguages') ?>">
                             <?php
@@ -91,7 +91,7 @@
                     </select>
                 </div>
                 <div class="col-10 offset-2 col-md-7 offset-md-0">
-                    <select class="mll select2 form-control" data-minimum-results-for-search="-1"
+                    <select class="mll select2 o-input" data-minimum-results-for-search="-1" name="memberslanguageslevel[]">
                             name="memberslanguageslevel[]">
                         <?php
                         for ($jj = 0; $jj < count($vars['language_levels']); $jj++) {

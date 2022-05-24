@@ -1,10 +1,16 @@
+import SearchPicker from "./../search/searchpicker";
+import "tempusdominus";
+
+const searchPicker = new SearchPicker( "/search/locations/all");
+
 $(document).ready(function() {
-    if (!$('#messagesdisplay').length) {
+    if (!$('#conversationsdisplay').length) {
         return;
     }
 
     Home.updateMessages();
     Home.updateThreads();
+    Home.updateTripLegs();
 
     $('a[data-toggle="tab"]').on('show.bs.tab', Home.onTabChange);
 
@@ -17,8 +23,13 @@ $(document).ready(function() {
     });
 
     $('.hosting').click(Home.setHostingStatus);
+
     $('#show_online').change(function() {
         setTimeout(Home.updateActivities, 500);
+    });
+
+    $('#trips_radius').change(function() {
+        setTimeout(Home.updateTripLegs, 500);
     });
 });
 
@@ -44,13 +55,13 @@ var Home = {
 
         $.ajax({
             type: 'GET',
-            url: '/widget/messages',
+            url: '/widget/conversations',
             data: {
                 all: all,
                 unread: unread
             },
             success: function(messages) {
-                $('#messagesdisplay').replaceWith(messages);
+                $('#conversationsdisplay').replaceWith(messages);
             }
         });
     },
@@ -111,6 +122,21 @@ var Home = {
             success: function (activities) {
                 $('#activitiesdisplay').replaceWith(activities);
             }
+        });
+    },
+    updateTripLegs: function () {
+        const tripsRadius = $('#trips_radius');
+        let radius = tripsRadius.val();
+
+        $.ajax({
+            type: 'GET',
+            url: '/widget/visitors',
+            data: {
+                radius: radius
+            },
+            success: function(legs) {
+                $('#legsdisplay').replaceWith(legs);
+            },
         });
     },
     setHostingStatus: function (e) {

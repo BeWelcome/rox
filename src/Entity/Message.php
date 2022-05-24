@@ -13,7 +13,6 @@ use App\Doctrine\SpamInfoType;
 use Carbon\Carbon;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
-use Exception;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -38,11 +37,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Message
 {
     /**
-     * @var string
-     *
      * @ORM\Column(name="MessageType", type="string", nullable=false)
      */
-    private $messageType = 'MemberToMember';
+    private string $messageType = 'MemberToMember';
 
     /**
      * @var DateTime
@@ -52,18 +49,14 @@ class Message
     private $updated;
 
     /**
-     * @var DateTime
-     *
      * @ORM\Column(name="created", type="datetime", nullable=false)
      */
-    private $created;
+    private DateTime $created;
 
     /**
-     * @var DateTime
-     *
      * @ORM\Column(name="DateSent", type="datetime", nullable=false)
      */
-    private $dateSent;
+    private DateTime $dateSent;
 
     /**
      * @var string
@@ -78,7 +71,14 @@ class Message
      * @ORM\OneToOne(targetEntity="App\Entity\Message", fetch="LAZY")
      * @ORM\JoinColumn(name="idParent", referencedColumnName="id", nullable=true)
      */
-    private $parent;
+    private $parent = null;
+
+    /**
+     * @var Member
+     *
+     * @ORM\ManyToOne(targetEntity="App\Entity\Member", fetch="LAZY")
+     */
+    private $initiator;
 
     /**
      * @var Member
@@ -101,7 +101,7 @@ class Message
      *
      * @ORM\Column(name="SpamInfo", type="spam_info", nullable=false)
      */
-    private $spaminfo = SpamInfoType::NO_SPAM;
+    private $spamInfo = SpamInfoType::NO_SPAM;
 
     /**
      * @var string
@@ -114,8 +114,6 @@ class Message
      * @var string
      *
      * @ORM\Column(name="Message", type="text", length=65535, nullable=false)
-     *
-     * @Assert\NotBlank()
      */
     private $message;
 
@@ -127,7 +125,7 @@ class Message
     private $folder = InFolderType::NORMAL;
 
     /**
-     * @var Carbon
+     * @var DateTime
      *
      * @ORM\Column(name="WhenFirstRead", type="datetime", nullable=true)
      */
@@ -137,10 +135,11 @@ class Message
      * @var Subject
      *
      * @ORM\ManyToOne(targetEntity="Subject", cascade={"persist"}, inversedBy="messages")
+     * @ORM\JoinColumn(nullable=true)
      *
      * @Assert\NotBlank()
      */
-    private $subject;
+    private $subject = null;
 
     /**
      * @var HostingRequest
@@ -148,7 +147,7 @@ class Message
      * @ORM\ManyToOne(targetEntity="HostingRequest", cascade={"persist"}, fetch="EAGER", inversedBy="messages")
      * @ORM\JoinColumn(nullable=true)
      */
-    private $request;
+    private $request = null;
 
     /**
      * @var int
@@ -159,405 +158,249 @@ class Message
      */
     private $id;
 
-    /**
-     * Get messagetype.
-     *
-     * @return string
-     */
-    public function getMessageType()
+    public function getMessageType(): string
     {
         return $this->messageType;
     }
 
-    /**
-     * Set updated.
-     *
-     * @param DateTime $updated
-     *
-     * @return Message
-     */
-    public function setUpdated($updated)
+    public function setUpdated($updated): self
     {
         $this->updated = $updated;
 
         return $this;
     }
 
-    /**
-     * Get updated.
-     *
-     * @return Carbon
-     */
-    public function getUpdated()
+    public function getUpdated(): ?Carbon
     {
+        if (null === $this->updated) {
+            return null;
+        }
+
         return Carbon::instance($this->updated);
     }
 
-    /**
-     * Set created.
-     *
-     * @param DateTime $created
-     *
-     * @return Message
-     */
-    public function setCreated($created)
+    public function setCreated($created): self
     {
         $this->created = $created;
 
         return $this;
     }
 
-    /**
-     * Get created.
-     *
-     * @return Carbon
-     */
-    public function getCreated()
+    public function getCreated(): Carbon
     {
         return Carbon::instance($this->created);
     }
 
-    /**
-     * Set datesent.
-     *
-     * @return Message
-     */
-    public function setDateSent(DateTime $dateSent)
+    public function setDateSent(DateTime $dateSent): self
     {
         $this->dateSent = $dateSent;
 
         return $this;
     }
 
-    /**
-     * Get dateSent.
-     *
-     * @return Carbon
-     */
-    public function getDateSent()
+    public function getDateSent(): Carbon
     {
         return Carbon::instance($this->dateSent);
     }
 
-    /**
-     * Set deleteRequest.
-     *
-     * @param string $deleteRequest
-     *
-     * @return Message
-     */
-    public function setDeleteRequest($deleteRequest)
+    public function setDeleteRequest($deleteRequest): self
     {
         $this->deleteRequest = $deleteRequest;
 
         return $this;
     }
 
-    /**
-     * Get deleterequest.
-     *
-     * @return string
-     */
-    public function getDeleteRequest()
+    public function getDeleteRequest(): ?string
     {
         return $this->deleteRequest;
     }
 
-    /**
-     * Set parent.
-     *
-     * @param Message $parent
-     *
-     * @return Message
-     */
-    public function setParent(?self $parent)
+    public function setParent(?self $parent): self
     {
         $this->parent = $parent;
 
         return $this;
     }
 
-    /**
-     * Get parent.
-     *
-     * @return Message|null
-     */
-    public function getParent()
+    public function getParent(): ?self
     {
         return $this->parent;
     }
 
-    /**
-     * Set Receiver.
-     *
-     * @return Message
-     */
-    public function setReceiver(Member $receiver)
+    public function setInitiator(Member $initiator): self
+    {
+        $this->initiator = $initiator;
+
+        return $this;
+    }
+
+    public function getInitiator(): Member
+    {
+        return $this->initiator;
+    }
+
+    public function setReceiver(Member $receiver): self
     {
         $this->receiver = $receiver;
 
         return $this;
     }
 
-    /**
-     * Get Receiver.
-     *
-     * @return Member
-     */
-    public function getReceiver()
+    public function getReceiver(): Member
     {
         return $this->receiver;
     }
 
-    /**
-     * Set Sender.
-     *
-     * @return Message
-     */
-    public function setSender(Member $sender)
+    public function setSender(Member $sender): self
     {
         $this->sender = $sender;
 
         return $this;
     }
 
-    /**
-     * Get Sender.
-     *
-     * @return Member
-     */
-    public function getSender()
+    public function getSender(): Member
     {
         return $this->sender;
     }
 
-    /**
-     * Set spaminfo.
-     *
-     * @param string $spaminfo
-     *
-     * @return Message
-     */
-    public function setSpaminfo($spaminfo)
+    public function removeFromSpamInfo(string $spamInfo): self
     {
-        $this->spaminfo = $spaminfo;
-
-        return $this;
-    }
-
-    /**
-     * Update spaminfo.
-     *
-     * @param string $spaminfo
-     *
-     * @return Message
-     */
-    public function removeFromSpaminfo($spaminfo)
-    {
-        $info = array_filter(explode(',', $this->spaminfo));
-        $key = array_search($spaminfo, $info, true);
+        $info = array_filter(explode(',', $this->spamInfo));
+        $key = array_search($spamInfo, $info, true);
         if (false !== $key) {
             unset($info[$key]);
         }
-        $this->spaminfo = implode(',', $info);
-        if (empty($this->spaminfo)) {
-            $this->spaminfo = SpamInfoType::NO_SPAM;
+        $this->spamInfo = implode(',', $info);
+        if (empty($this->spamInfo)) {
+            $this->spamInfo = SpamInfoType::NO_SPAM;
         }
 
         return $this;
     }
 
-    /**
-     * Update spaminfo.
-     *
-     * @param string $spaminfo
-     *
-     * @return Message
-     */
-    public function addToSpamInfo($spaminfo)
+    public function addToSpamInfo(string $spamInfo): self
     {
-        if (SpamInfoType::NO_SPAM === $this->spaminfo) {
-            $this->spaminfo = '';
+        if (empty($spamInfo)) {
+            return $this;
         }
-        $info = array_filter(explode(',', $this->spaminfo));
-        $key = array_search($spaminfo, $info, true);
+
+        $info = array_filter(explode(',', $this->spamInfo));
+        $key = array_search($spamInfo, $info, true);
         if (false === $key) {
-            $info[] = $spaminfo;
+            $info[] = $spamInfo;
         }
-        $this->spaminfo = implode(',', $info);
+        sort($info);
+        if (1 < \count($info)) {
+            $info = array_diff($info, [SpamInfoType::NO_SPAM]);
+        }
+        $this->spamInfo = implode(',', $info);
+
+        if (empty($this->spamInfo)) {
+            $this->spamInfo = SpamInfoType::NO_SPAM;
+        }
 
         return $this;
     }
 
-    /**
-     * Get spaminfo.
-     *
-     * @return string
-     */
-    public function getSpaminfo()
+    public function getSpamInfo(): string
     {
-        return $this->spaminfo;
+        return $this->spamInfo;
     }
 
-    /**
-     * Set status.
-     *
-     * @param string $status
-     *
-     * @return Message
-     */
-    public function setStatus($status)
+    public function setSpamInfo(string $spamInfo): self
+    {
+        $this->spamInfo = $spamInfo;
+
+        return $this;
+    }
+
+    public function setStatus(string $status): self
     {
         $this->status = $status;
 
         return $this;
     }
 
-    /**
-     * Get status.
-     *
-     * @return string
-     */
-    public function getStatus()
+    public function getStatus(): string
     {
         return $this->status;
     }
 
-    /**
-     * Set message.
-     *
-     * @param string $message
-     *
-     * @return Message
-     */
-    public function setMessage($message)
+    public function setMessage(string $message): self
     {
         $this->message = $message;
 
         return $this;
     }
 
-    /**
-     * Get message.
-     *
-     * @return string
-     */
-    public function getMessage()
+    public function getMessage(): string
     {
         return $this->message;
     }
 
-    /**
-     * Set infolder.
-     *
-     * @param string $folder
-     *
-     * @return Message
-     */
-    public function setFolder($folder)
+    public function setFolder($folder): self
     {
         $this->folder = $folder;
 
         return $this;
     }
 
-    /**
-     * Get infolder.
-     *
-     * @return string
-     */
-    public function getFolder()
+    public function getFolder(): string
     {
         return $this->folder;
     }
 
-    /**
-     * Set firstRead.
-     *
-     * @param DateTime $firstRead
-     *
-     * @return Message
-     */
-    public function setFirstRead($firstRead)
+    public function setFirstRead(?DateTime $firstRead): self
     {
         $this->firstRead = $firstRead;
 
         return $this;
     }
 
-    /**
-     * Get firstRead.
-     *
-     * @throws Exception
-     *
-     * @return Carbon
-     */
-    public function getFirstRead()
+    public function getFirstRead(): ?Carbon
     {
-        if ($this->firstRead === new DateTime('0000-00-00 00:00:00')) {
+        if (null === $this->firstRead) {
             return null;
         }
 
-        return $this->firstRead;
+        return Carbon::instance($this->firstRead);
     }
 
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function isUnread()
+    public function isUnread(): bool
     {
         return null === $this->firstRead;
     }
 
-    /**
-     * Set subject.
-     *
-     * @param Subject $subject
-     *
-     * @return Message
-     */
-    public function setSubject(Subject $subject = null)
+    public function setSubject(Subject $subject = null): self
     {
         $this->subject = $subject;
 
         return $this;
     }
 
-    /**
-     * Get subject.
-     *
-     * @return Subject
-     */
-    public function getSubject()
+    public function getSubject(): ?Subject
     {
         return $this->subject;
     }
 
-    /**
-     * Set request.
-     *
-     * @param HostingRequest $request
-     *
-     * @return Message
-     */
-    public function setRequest(HostingRequest $request = null)
+    public function setRequest(HostingRequest $request = null): self
     {
         $this->request = $request;
 
         return $this;
     }
 
-    /**
-     * @return bool
-     */
-    public function isDeletedByMember(Member $member)
+    public function getRequest(): ?HostingRequest
+    {
+        return $this->request;
+    }
+
+    public function isDeletedByMember(Member $member): bool
     {
         $deleteRequests = array_filter(explode(',', $this->getDeleteRequest()));
 
@@ -586,10 +429,7 @@ class Message
         return false;
     }
 
-    /**
-     * @return bool
-     */
-    public function isPurgedByMember(Member $member)
+    public function isPurgedByMember(Member $member): bool
     {
         $deleteRequests = array_filter(explode(',', $this->getDeleteRequest()));
         if ($member === $this->getReceiver()) {
@@ -610,16 +450,6 @@ class Message
     }
 
     /**
-     * Get request.
-     *
-     * @return HostingRequest
-     */
-    public function getRequest()
-    {
-        return $this->request;
-    }
-
-    /**
      * Triggered on insert.
      *
      * @ORM\PrePersist
@@ -627,6 +457,11 @@ class Message
     public function onPrePersist()
     {
         $this->created = new \DateTime('now');
+        if (null === $this->parent) {
+            $this->initiator = $this->sender;
+        } else {
+            $this->initiator = $this->parent->getInitiator();
+        }
         $this->dateSent = $this->created;
     }
 
@@ -645,5 +480,20 @@ class Message
         $this->messageType = $messageType;
 
         return $this;
+    }
+
+    public function isMessage(): bool
+    {
+        return null === $this->request;
+    }
+
+    public function isHostingRequest(): bool
+    {
+        return null !== $this->request && null === $this->request->getInviteForLeg();
+    }
+
+    public function isInvitation()
+    {
+        return null !== $this->request && null !== $this->request->getInviteForLeg();
     }
 }

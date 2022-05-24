@@ -17,9 +17,9 @@ class TranslationFormType extends AbstractType
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function buildForm(FormBuilderInterface $formBuilder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $formBuilder
+        $builder
             ->add('description', TextAreaType::class, [
                 'label' => 'translation.description',
             ])
@@ -27,7 +27,7 @@ class TranslationFormType extends AbstractType
                 'label' => 'label.admin.translation.englishtext',
             ])
         ;
-        $formBuilder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             $translationRequest = $event->getData();
             $form = $event->getForm();
             if ('en' !== $translationRequest->locale) {

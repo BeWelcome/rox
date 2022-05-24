@@ -79,7 +79,7 @@ class FaqCategoryController extends FaqBaseController
 
                 $word = new Word();
                 $word->setAuthor($author);
-                $word->setCode($data->wordCode);
+                $word->setCode(strtolower($data->wordCode));
                 $word->setSentence($data->description);
                 $word->setDomain(DomainType::MESSAGES);
                 $word->setlanguage($english);
@@ -139,6 +139,7 @@ class FaqCategoryController extends FaqBaseController
             $wordRepository = $em->getRepository(Word::class);
             $description = $wordRepository->findOneBy(['code' => $faqCategoryRequest->wordCode, 'shortCode' => 'en']);
             $description->setSentence($data->description);
+            $description->setMajorUpdate(new DateTime());
             $em->persist($description);
             $em->flush();
             $this->translationModel->refreshTranslationsCacheForLocale('en');

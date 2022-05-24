@@ -30,23 +30,23 @@ use Doctrine\Persistence\ObjectManagerAware;
  */
 class Group implements ObjectManagerAware
 {
-    const NOT_APPROVED = 0;
-    const APPROVED = 1;
-    const DISMISSED = 2;
-    const IN_DISCUSSION = 3;
-    const APPROVED_CLOSED = 4;
-    const DISMISSED_CLOSED = 5;
-    const IN_DISCUSSION_CLOSED = 6;
+    public const NOT_APPROVED = 0;
+    public const APPROVED = 1;
+    public const DISMISSED = 2;
+    public const IN_DISCUSSION = 3;
+    public const APPROVED_CLOSED = 4;
+    public const DISMISSED_CLOSED = 5;
+    public const IN_DISCUSSION_CLOSED = 6;
 
-    const OPEN = [
+    public const OPEN = [
         self::NOT_APPROVED, self::IN_DISCUSSION,
     ];
 
-    const HANDLED = [
+    public const HANDLED = [
         self::APPROVED, self::DISMISSED,
     ];
 
-    const CLOSED = [
+    public const CLOSED = [
         self::APPROVED_CLOSED, self::DISMISSED_CLOSED, self::IN_DISCUSSION_CLOSED,
     ];
 

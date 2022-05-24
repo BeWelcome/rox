@@ -13,9 +13,9 @@ class GalleryUploadForm extends AbstractType
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function buildForm(FormBuilderInterface $formBuilder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $formBuilder
+        $builder
             ->add('albums', Select2Type::class, [
                 'label' => 'gallery.upload_to_album',
                 'choices' => $options['albums'],

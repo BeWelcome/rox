@@ -16,6 +16,7 @@ class HostingRequestGuest extends HostingRequestAbstractType
     {
         $builder
             ->add('request', HostingRequestType::class, [
+                'request' => true,
                 'reply_guest' => true,
             ])
         ;

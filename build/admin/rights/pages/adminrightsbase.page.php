@@ -69,7 +69,7 @@ class AdminRightsBasePage extends AdminBasePage
 
     protected function rightsSelect($rights, $current, $disabled = false)
     {
-        $select = '<select id="rightid" name="rightid"' . ($disabled ? ' disabled="disabled"' : '') . ' class="form-control">';
+        $select = '<select id="rightid" name="rightid"' . ($disabled ? ' disabled="disabled"' : '') . ' class="o-input">';
         $select .= '<option value="0"></option>';
         foreach ($rights as $right) {
             $select .= '<option value="' . $right->id . '"';
@@ -84,7 +84,7 @@ class AdminRightsBasePage extends AdminBasePage
 
     function levelSelect($current, $disabled = false, $showEmpty = true)
     {
-        $select = '<select id="level" name="level"' . ($disabled ? ' disabled="disabled"' : '') . ' class="form-control">';
+        $select = '<select id="level" name="level"' . ($disabled ? ' disabled="disabled"' : '') . ' class="o-input">';
         if ($showEmpty) {
             $select .= '<option value="0"></option>';
         }

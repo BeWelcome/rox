@@ -13,18 +13,18 @@ class SearchGotoLocationFormType extends AbstractType
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function buildForm(FormBuilderInterface $formBuilder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $formBuilder->add('search', TextType::class, [
+        $builder->add('search', TextType::class, [
             'attr' => [
                 'placeholder' => 'Where are you going?',
             ],
             'label' => false,
         ]);
 
-        $formBuilder->setAction('search/members');
-        $this->addHiddenFields($formBuilder);
-        $this->addButtons($formBuilder);
+        $builder->setAction('search/members');
+        $this->addHiddenFields($builder);
+        $this->addButtons($builder);
     }
 
     private function addHiddenFields(FormBuilderInterface $formBuilder)

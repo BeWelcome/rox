@@ -81,11 +81,12 @@ class Mailer
     public function sendCommentReportedFeedbackEmail(Member $member, $parameters)
     {
         $parameters['sender'] = $member;
+        $parameters['receiver'] = $member;
         $feedbackCategoryRepository = $this->entityManager->getRepository(FeedbackCategory::class);
         $feedbackCategory = $feedbackCategoryRepository->findOneBy(['name' => 'Comment_issue']);
 
         return $this->sendTemplateEmail(
-            $member,
+            new Address($member->getEmail()),
             new Address($feedbackCategory->getEmailToNotify(), 'Comment Issue'),
             'comment.feedback',
             $parameters
@@ -192,7 +193,8 @@ class Mailer
             $parameters['receiver'] = $receiver;
             $receiver = new Address($receiver->getEmail(), $receiver->getUsername());
         } elseif (!$receiver instanceof Address) {
-            throw new InvalidArgumentException(sprintf('$receiver must be an instance of %s or %s.', Member::class, Address::class));
+            $message = sprintf('$receiver must be an instance of %s or %s.', Member::class, Address::class);
+            throw new InvalidArgumentException($message);
         }
 
         $parameters['template'] = $template;

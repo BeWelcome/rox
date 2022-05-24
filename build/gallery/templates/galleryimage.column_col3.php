@@ -1,6 +1,6 @@
         <div class="card">
             <a id="link_<?= $d->id ?>" href="gallery/img?id=<?= $d->id ?>" class="p-1" title="<?= $d->title ?>" rel="image"
-               data-toggle="lightbox" data-type="image">
+               data-toggle="lightbox" data-type="image" data-title="<?= $d->title ?>">
                 <img src="gallery/img?id=<?= $d->id ?>"
                      class="card-img-top" alt="<?= $d->title ?>">
             </a>
@@ -8,7 +8,7 @@
             <div class="card-body"
             <h6 class="card-title">
                 <a href="gallery/img?id=<?= $d->id ?>" title="<?= $d->title ?>" data-toggle="lightbox"
-                   data-type="image"><?= $title_short ?></a>
+                   data-type="image" data-title="<?= $d->title ?>"><?= $title_short ?></a>
             </h6>
             <p class="card-text"><?= $d->description ?></p>
         </div>

@@ -6,6 +6,7 @@ use App\Entity\MemberPreference;
 use App\Entity\Preference;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 class ForumsController extends AbstractController
@@ -115,7 +116,7 @@ class ForumsController extends AbstractController
      *
      * @return RedirectResponse
      */
-    public function showOnlyPostsInMyGroupsAction()
+    public function showOnlyPostsInMyGroups(Request $request)
     {
         $member = $this->getUser();
 
@@ -128,8 +129,9 @@ class ForumsController extends AbstractController
         $em = $this->getDoctrine()->getManager();
         $em->persist($memberPreference);
         $em->flush();
+        $referrer = $request->headers->get('referer');
 
-        return $this->redirectToRoute('forums');
+        return $this->redirect($referrer);
     }
 
     /**
@@ -137,7 +139,7 @@ class ForumsController extends AbstractController
      *
      * @return RedirectResponse
      */
-    public function showPostsInAllGroupsAction()
+    public function showPostsInAllGroups(Request $request)
     {
         $member = $this->getUser();
 
@@ -151,6 +153,8 @@ class ForumsController extends AbstractController
         $em->persist($memberPreference);
         $em->flush();
 
-        return $this->redirectToRoute('forums');
+        $referrer = $request->headers->get('referer');
+
+        return $this->redirect($referrer);
     }
 }

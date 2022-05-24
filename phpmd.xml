@@ -26,7 +26,8 @@
                 \Symfony\Component\Debug\Debug,
                 Doctrine\Common\Collections\Criteria,
                 \AnthonyMartin\GeoLocation\GeoLocation,
-                \Symfony\Component\HttpFoundation\File\UploadedFile
+                \Symfony\Component\HttpFoundation\File\UploadedFile,
+                \Mockery
             " />
         </properties>
     </rule>

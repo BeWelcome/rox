@@ -11,7 +11,10 @@ use Doctrine\ORM\EntityRepository;
  */
 class PostNotificationRepository extends EntityRepository
 {
-    public function getScheduledNotifications($batchSize)
+    /**
+     * @return int|mixed|string
+     */
+    public function getScheduledNotifications(int $batchSize)
     {
         $date = new DateTime();
         $date->modify('-5 minutes');

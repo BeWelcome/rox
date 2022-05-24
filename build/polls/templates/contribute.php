@@ -74,18 +74,18 @@ $rPoll=$Data->rPoll ;
 for ($ii = 0; $ii < $iiMax; $ii++) {
     $p = $list[$ii];
     ?>
-        <div class="form-check">
+        <div class="o-checkbox">
             <?php
             if ($Data->rPoll->TypeOfChoice=="Exclusive") {
                 ?>
-                <input class="form-check-input" type="radio" id="choice<?=$ii;?>" name="ExclusiveChoice" value="<?php echo $p->id; ?>" />
-                <label class="form-check-label" for="choice<?=$ii;?>"><?php echo $words->fTrad($p->IdChoiceText); ?></label>
+                <input class="o-checkbox__input" type="radio" id="choice<?=$ii;?>" name="ExclusiveChoice" value="<?php echo $p->id; ?>" />
+                <label class="o-checkbox__label" for="choice<?=$ii;?>"><?php echo $words->fTrad($p->IdChoiceText); ?></label>
                 <?php
             }
             if ($Data->rPoll->TypeOfChoice=="Inclusive") {
                 ?>
-                <input class="form-check-input" type="checkbox" id="choice<?=$ii;?>" name="choice_<?=$p->id;?>" />
-                <label class="form-check-label" for="choice<?=$ii;?>"><?php echo $words->fTrad($p->IdChoiceText); ?></label>
+                <input class="o-checkbox__input" type="checkbox" id="choice<?=$ii;?>" name="choice_<?=$p->id;?>" />
+                <label class="o-checkbox__label" for="choice<?=$ii;?>"><?php echo $words->fTrad($p->IdChoiceText); ?></label>
                 <?php
             }
             ?>
@@ -96,8 +96,8 @@ for ($ii = 0; $ii < $iiMax; $ii++) {
 <?php
 if ($Data->rPoll->AllowComment=="Yes") {
     ?>
-    <div class="form-group"><label for="comment"><?=$words->getFormatted("polls_comment");?></label>
-    <textarea class="form-control" id="comment" name="Comment" cols="60" rows="4"></textarea>
+    <div class="o-form-group"><label for="comment"><?=$words->getFormatted("polls_comment");?></label>
+    <textarea class="o-input" id="comment" name="Comment" cols="60" rows="4"></textarea>
     </div>
     <?php
 }

@@ -8,22 +8,22 @@
 class NotifyMemberWidget extends ItemlistWithPagination
 {
     private $_note;
-    
+
     public function render() {
-        parent::render(); 
+        parent::render();
     }
-    
-    
+
+
     //-----------------------------------------------------------------
     // getting the items
-    
+
     protected function getAllItems()
     {
         $notes = $this->model->getMemberNotes();
         return $notes;
     }
-    
-    
+
+
     protected function showItems()
     {
         $words = new MOD_words();
@@ -32,7 +32,7 @@ class NotifyMemberWidget extends ItemlistWithPagination
         echo $words->flushBuffer();
         ?>
         <script type="text/javascript">
-                    
+
     var DynamicExtensions = {
         dynamicize: function(element){
             element.dHref = element.href;
@@ -68,10 +68,10 @@ class NotifyMemberWidget extends ItemlistWithPagination
     Event.observe(window, 'load', setLinks);
 
         </script>
-        
+
         <?php
     }
-    
+
     protected function showListItem($item, $i_row)
     {
         $words = new MOD_words();
@@ -91,13 +91,13 @@ class NotifyMemberWidget extends ItemlistWithPagination
             <div class="float-right small grey" title="{$item->created}">{$created}</div>
             <div class="float-left">
 HTML;
-            if ($item->IdRelMember != '') { 
+            if ($item->IdRelMember != '') {
                 echo "<a href='members/{$member->Username}'>";
-                echo MOD_layoutbits::PIC_50_50($member->Username,'',"framed");
+                echo MOD_layoutbits::PIC_50_50($member->Username,'',"profileimg");
                 echo '</a>';
             }
             echo "</div>";
-            if ($item->Link != '') { 
+            if ($item->Link != '') {
                 echo "<a href='{$item->Link}'>";
             }
             echo <<<HTML
@@ -105,18 +105,18 @@ HTML;
                 {$text}
             </p>
 HTML;
-            if ($item->Link != '') { 
+            if ($item->Link != '') {
                 echo '</a>';
             }
             echo "</div>";
     }
-    
-    
+
+
     protected function showBetweenListItems($prev_item, $item, $i_row)
     {
         echo '<hr />';
     }
-    
+
     protected function showItems_list()
     {
         // table rows with items
@@ -133,7 +133,7 @@ HTML;
                 echo '
                 <div id="notify-'.$item->id.'" class="itemlist_element '.($i_row%2 ? 'odd' : 'even').'">';
                 $this->showListItem($item, $i_row);
-                
+
                 echo '
                 </div>';
                 $i_row = 1;
@@ -153,7 +153,7 @@ HTML;
             </div>';
         }
     }
-    
+
     protected function showDefaultText()
     {
         $words = $this->getWords();
@@ -168,35 +168,35 @@ HTML;
 class NotifyAdminWidget extends ItemlistWithPagination
 {
     public function render() {
-        parent::render(); 
+        parent::render();
     }
-    
+
     // pagination
-    
+
     protected function hrefPage($i_page) {
         return 'notify/admin/'.$i_page;
     }
-    
-    
+
+
     //-----------------------------------------------------------------
     // getting the items
-    
+
     protected function getAllItems()
     {
         $notes = $this->model->getNotes();
         return $notes;
     }
-    
+
     protected function getItems()
     {
         $this->prepare();
         return $this->getItemsForPage($this->active_page);
     }
-    
-    
+
+
     //-----------------------------------------------------------------
     // table layout
-    
+
     /**
      * Columns for notes table.
      * The $key of a column is used as a suffix for method tableCell_$key
@@ -211,7 +211,7 @@ class NotifyAdminWidget extends ItemlistWithPagination
         }
         return $result;
     }
-    
+
     /**
      * Table cell in column 'select', for the given $note
      *
@@ -234,7 +234,7 @@ class NotifyAdminWidget extends ItemlistWithPagination
     {
         echo $note->IdMember;
     }
-    
+
     protected function tableCell_idrelmember($note)
     {
         ?>
@@ -286,5 +286,5 @@ class NotifyAdminWidget extends ItemlistWithPagination
     {
         echo $note->created;
     }
-    
+
 }

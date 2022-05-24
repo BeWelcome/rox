@@ -8,7 +8,7 @@
     {% else %}
         <div class="card-columns">
             {% for vote in votes %}
-            <div class="card">
+            <div class="card o-card">
                 <div class="card-header text-truncate">
                     {% if vote.poll.titles|length %}
                         {{ vote.poll.titles|first }}

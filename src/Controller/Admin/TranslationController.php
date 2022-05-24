@@ -115,7 +115,7 @@ class TranslationController extends AbstractController
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             /** @var EditTranslationRequest $data */
             $data = $editForm->getData();
-            $invalidMessage = $this->checkIfICUFormatIsValid($data);
+            $invalidMessage = $this->checkIfICUFormatIsValid($data, $data->translatedText);
 
             if ('' === $invalidMessage) {
                 $originalDomain = $translation->getDomain();
@@ -244,7 +244,7 @@ class TranslationController extends AbstractController
             $em = $this->getDoctrine()->getManager();
             /** @var TranslationRequest $data */
             $data = $createForm->getData();
-            $invalidMessage = $this->checkIfICUFormatIsValid($data);
+            $invalidMessage = $this->checkIfICUFormatIsValid($data, $data->englishText);
             if ('' === $invalidMessage) {
                 $original = $this->generateTranslatableItem($data, $translator, $english);
                 $em->persist($original);
@@ -253,6 +253,11 @@ class TranslationController extends AbstractController
                     $em->persist($translation);
                 }
                 $em->flush();
+                if ('en' === $createTranslationRequest->locale) {
+                    $this->translationModel->refreshTranslationsCache();
+                } else {
+                    $this->translationModel->refreshTranslationsCacheForLocale($createTranslationRequest->locale);
+                }
                 $this->translationModel->refreshTranslationsCacheForLocale($language->getShortCode());
                 $this->addTranslatedFlash('notice', 'flash.added.translatable.item', ['%code%' => $translationId]);
 
@@ -312,17 +317,17 @@ class TranslationController extends AbstractController
             $em = $this->getDoctrine()->getManager();
             /** @var TranslationRequest $data */
             $data = $createForm->getData();
-            $invalidMessage = $this->checkIfICUFormatIsValid($data);
-            if ('' !== $invalidMessage) {
+            $invalidMessage = $this->checkIfICUFormatIsValid($data, $data->englishText);
+            if ('' === $invalidMessage) {
                 $newTranslatableItem = $this->generateTranslatableItem($data, $translator, $english);
                 $em->persist($newTranslatableItem);
                 $em->flush();
-                $this->translationModel->refreshTranslationsCacheForLocale('en');
+                $this->translationModel->refreshTranslationsCache();
                 $this->addTranslatedFlash('notice', 'flash.added.translatable.item', ['%code%' => $data->wordCode]);
 
                 return $this->redirectToRoute('translations');
             }
-            $createForm->get('translatedText')->addError(new FormError($invalidMessage));
+            $createForm->get('englishText')->addError(new FormError($invalidMessage));
         }
 
         return $this->render('admin/translations/create.en.html.twig', [
@@ -403,8 +408,9 @@ class TranslationController extends AbstractController
 
         $addForm->handleRequest($request);
         if ($addForm->isSubmitted() && $addForm->isValid()) {
+            /** @var TranslationRequest $data */
             $data = $addForm->getData();
-            $invalidMessage = $this->checkIfICUFormatIsValid($data);
+            $invalidMessage = $this->checkIfICUFormatIsValid($data, $data->translatedText);
             if ('' === $invalidMessage) {
                 $em = $this->getDoctrine()->getManager();
                 $translation->setDomain($original->getDomain());
@@ -432,6 +438,7 @@ class TranslationController extends AbstractController
 
         return $this->render('admin/translations/edit.html.twig', [
             'form' => $addForm->createView(),
+            'richtext' => $richtext,
             'submenu' => [
                 'active' => 'add',
                 'items' => $this->getSubmenuItems(
@@ -723,15 +730,15 @@ class TranslationController extends AbstractController
         return $original;
     }
 
-    private function checkIfICUFormatIsValid(TranslationRequest $data): string
+    private function checkIfICUFormatIsValid(TranslationRequest $data, $message): string
     {
         $invalidMessage = '';
-        try {
-            if (DomainType::ICU_MESSAGES === $data->domain) {
-                new MessageFormatter('en', $data->englishText);
+        if (DomainType::ICU_MESSAGES === $data->domain) {
+            try {
+                new MessageFormatter('en', $message);
+            } catch (Exception $exception) {
+                $invalidMessage = $exception->getMessage();
             }
-        } catch (Exception $exception) {
-            $invalidMessage = $exception->getMessage();
         }
 
         return $invalidMessage;

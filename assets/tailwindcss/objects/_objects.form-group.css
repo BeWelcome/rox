@@ -1,0 +1,56 @@
+/* ==========================================================================
+   #FORM GROUP
+   ========================================================================== */
+
+/**
+ * Input-label wrapper. To be used when both elements are rendered together. Transitional classes.
+ */
+
+
+
+.o-form-group {
+}
+
+.o-form-group--floating-label {
+	position: relative;
+}
+
+.o-form-group > label {
+  font-weight: 400;
+  margin-bottom: 8px;
+}
+
+
+.o-form-group > .o-checkbox,
+.o-form-group > .o-input,
+.o-form-group > .form-text {
+	margin-bottom: 8px;
+}
+
+
+.o-form-group > .select2-container {
+	margin-bottom: 10px;
+}
+
+.o-form-group--floating-label > .o-input {
+	margin-bottom: initial;
+}
+
+
+
+
+
+
+
+
+/* Color variations
+   ========================================================================== */
+
+/**
+ * White label (not whiskey though)
+ */
+
+.o-form-group--white label {
+  color: theme('colors.white');
+  font-weight: 700;
+}

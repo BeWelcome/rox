@@ -11,9 +11,9 @@ class NewsletterUnsubscribeType extends AbstractType
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function buildForm(FormBuilderInterface $formBuilder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $formBuilder
+        $builder
             ->add('confirm', SubmitType::class, [
                 'attr' => [
                     'class' => 'btn btn-primary',

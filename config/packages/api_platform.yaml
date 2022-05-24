@@ -1,6 +1,6 @@
 api_platform:
     title: BeWelcome API
-    version: 1.0.0
+    version: 0.0.1
     mapping:
         paths: ['%kernel.project_dir%/src/Entity']
     patch_formats:

@@ -25,6 +25,9 @@ abstract class SetType extends Type
     /** @var array */
     protected $values = [];
 
+    /**
+     * @return string
+     */
     public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
     {
         $values = array_map(function ($val) {
@@ -34,14 +37,24 @@ abstract class SetType extends Type
         return 'SET(' . implode(', ', $values) . ')';
     }
 
+    /**
+     * @param mixed $value
+     *
+     * @return mixed
+     */
     public function convertToPHPValue($value, AbstractPlatform $platform)
     {
         return $value;
     }
 
+    /**
+     * @param mixed $value
+     *
+     * @return mixed
+     */
     public function convertToDatabaseValue($value, AbstractPlatform $platform)
     {
-        if (null !== $value && '' !== $value) {
+        if (null !== $value && !empty($value)) {
             // Split given value
             $values = explode(',', $value);
             $valueCount = \count($values);
@@ -56,11 +69,17 @@ abstract class SetType extends Type
         return $value;
     }
 
+    /**
+     * @return string
+     */
     public function getName()
     {
         return $this->name;
     }
 
+    /**
+     * @return bool
+     */
     public function requiresSQLCommentHint(AbstractPlatform $platform)
     {
         return true;

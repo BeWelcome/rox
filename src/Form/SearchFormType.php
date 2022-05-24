@@ -22,12 +22,11 @@ class SearchFormType extends AbstractType
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function buildForm(FormBuilderInterface $formBuilder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $formBuilder
+        $builder
             ->add('location', TextType::class, [
                 'label' => 'landing.whereyougo',
-                'help' => 'search.locations.help',
                 'error_bubbling' => true,
             ])
             ->setMethod('GET')
@@ -41,12 +40,12 @@ class SearchFormType extends AbstractType
             )
         ;
 
-        $this->addHiddenFields($formBuilder);
-        $this->addCheckboxes($formBuilder);
-        $this->addVariableSelects($formBuilder, $options);
-        $this->addAgeAndGenderSelects($formBuilder);
-        $this->addSelects($formBuilder);
-        $this->addButtons($formBuilder);
+        $this->addHiddenFields($builder);
+        $this->addCheckboxes($builder);
+        $this->addVariableSelects($builder, $options);
+        $this->addAgeAndGenderSelects($builder);
+        $this->addSelects($builder);
+        $this->addButtons($builder);
     }
 
     /**
@@ -166,9 +165,9 @@ class SearchFormType extends AbstractType
             ->add('gender', Select2Type::class, [
                 'choices' => [
                     'any' => null,
-                    'male' => 'male',
-                    'female' => 'female',
-                    'other' => 'other',
+                    'male' => 1,
+                    'female' => 2,
+                    'other' => 4,
                 ],
                 'label' => 'gender',
                 'required' => true,

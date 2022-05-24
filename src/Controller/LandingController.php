@@ -9,9 +9,11 @@ use App\Entity\Notification;
 use App\Entity\Preference;
 use App\Form\CustomDataClass\SearchFormRequest;
 use App\Form\SearchFormType;
+use App\Form\TripRadiusType;
 use App\Model\CommunityNewsModel;
 use App\Model\DonateModel;
 use App\Model\LandingModel;
+use App\Model\TripModel;
 use App\Repository\ActivityRepository;
 use App\Repository\NotificationRepository;
 use Exception;
@@ -36,11 +38,9 @@ class LandingController extends AbstractController
     }
 
     /**
-     * @Route( "/widget/messages", name="/widget/messages")
-     *
-     * @return Response
+     * @Route( "/widget/conversations", name="/widget/conversations")
      */
-    public function getMessages(Request $request)
+    public function getConversations(Request $request): Response
     {
         /** @var Member $member */
         $member = $this->getUser();
@@ -59,9 +59,9 @@ class LandingController extends AbstractController
         $em->persist($memberPreference);
         $em->flush();
 
-        $messages = $this->landingModel->getMessagesAndRequests($member, $unread, 5);
+        $messages = $this->landingModel->getConversations($member, $unread, 5);
 
-        $content = $this->render('landing/widget/messages.html.twig', [
+        $content = $this->render('landing/widget/conversations.html.twig', [
             'messages' => $messages,
         ]);
 
@@ -88,11 +88,32 @@ class LandingController extends AbstractController
     }
 
     /**
-     * @Route( "/widget/threads", name="/widget/threads")
-     *
-     * @return Response
+     * @Route( "/widget/visitors", name="/widget/visitors")
      */
-    public function getThreads(Request $request)
+    public function getVisitors(Request $request, TripModel $tripModel): Response
+    {
+        /** @var Member $member */
+        $member = $this->getUser();
+
+        $radius = $request->query->get('radius', -1);
+        if (-1 === $radius || !is_numeric($radius)) {
+            $radius = $tripModel->getTripsRadius($member);
+        } else {
+            $tripModel->setTripsRadius($member, $radius);
+        }
+
+        $tripLegs = $this->landingModel->getTravellersInAreaOfMember($member, $radius);
+
+        return $this->render('landing/widget/triplegs.html.twig', [
+            'legs' => $tripLegs,
+            'radius' => $radius,
+        ]);
+    }
+
+    /**
+     * @Route( "/widget/threads", name="/widget/threads")
+     */
+    public function getThreads(Request $request): Response
     {
         $groups = $request->query->get('groups', '0');
         $forum = $request->query->get('forum', '0');
@@ -189,11 +210,12 @@ class LandingController extends AbstractController
      * @Route("/", name="landingpage")
      *
      * @throws AccessDeniedException
-     *
-     * @return Response
      */
-    public function indexAction(CommunityNewsModel $communityNewsModel, DonateModel $donateModel)
-    {
+    public function show(
+        CommunityNewsModel $communityNewsModel,
+        DonateModel $donateModel,
+        TripModel $tripModel
+    ): Response {
         if (!$this->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             throw $this->createAccessDeniedException();
         }
@@ -201,8 +223,6 @@ class LandingController extends AbstractController
         /** @var Member $member */
         $member = $this->getUser();
         $campaignDetails = $donateModel->getStatForDonations();
-
-        $travellersInArea = $this->landingModel->getTravellersInAreaOfMember($member);
 
         $latestNews = $communityNewsModel->getLatest();
 
@@ -217,6 +237,9 @@ class LandingController extends AbstractController
             SearchFormType::class,
             new SearchFormRequest($this->getDoctrine()->getManager())
         );
+
+        $radius = $tripModel->getTripsRadius($member);
+        $radiusForm = $this->createForm(TripRadiusType::class, ['radius' => $radius]);
 
         $preferenceRepository = $this->getDoctrine()->getRepository(Preference::class);
         $preference = $preferenceRepository->findOneBy(['codename' => Preference::MESSAGE_AND_REQUEST_FILTER]);
@@ -237,7 +260,7 @@ class LandingController extends AbstractController
                 'yearNeeded' => $campaignDetails->YearNeededAmount,
                 'yearDonated' => $campaignDetails->YearDonation,
             ],
-            'travellers' => $travellersInArea,
+            'radiusForm' => $radiusForm->createView(),
             'communityNews' => $latestNews,
             'messageFilter' => $messageFilter,
             'forumFilter' => $forumFilter,
@@ -249,7 +272,7 @@ class LandingController extends AbstractController
         return $content;
     }
 
-    protected function getUncheckedNotificationsCount(Member $member)
+    protected function getUncheckedNotificationsCount(Member $member): int
     {
         /** @var NotificationRepository $notificationRepository */
         $notificationRepository = $this->getDoctrine()->getRepository(Notification::class);
@@ -257,12 +280,7 @@ class LandingController extends AbstractController
         return $notificationRepository->getUncheckedNotificationsCount($member);
     }
 
-    /**
-     * @param mixed $showOnlineActivities
-     *
-     * @return int
-     */
-    private function getUpcomingAroundLocationCount(Member $member, $showOnlineActivities)
+    private function getUpcomingAroundLocationCount(Member $member, bool $showOnlineActivities): int
     {
         /** @var ActivityRepository $activityRepository */
         $activityRepository = $this->getDoctrine()->getRepository(Activity::class);
@@ -270,10 +288,7 @@ class LandingController extends AbstractController
         return $activityRepository->getUpcomingAroundLocationCount($member, $showOnlineActivities);
     }
 
-    /**
-     * @return SearchFormRequest
-     */
-    private function getSearchHomeLocationRequest(Member $member)
+    private function getSearchHomeLocationRequest(Member $member): SearchFormRequest
     {
         $searchHomeRequest = new SearchFormRequest($this->getDoctrine()->getManager());
         $geo = $member->getCity();
@@ -282,7 +297,6 @@ class LandingController extends AbstractController
         $searchHomeRequest->location_latitude = $member->getLatitude();
         $searchHomeRequest->location_longitude = $member->getLongitude();
         $searchHomeRequest->accommodation_anytime = true;
-        $searchHomeRequest->accommodation_dependonrequest = true;
         $searchHomeRequest->accommodation_neverask = true;
 
         return $searchHomeRequest;

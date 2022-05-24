@@ -3,59 +3,70 @@
 namespace App\Controller;
 
 use App\Entity\Activity;
-use App\Model\ActivityModel;
+use DateTimeImmutable;
+use Eluceo\iCal\Domain\Entity\Calendar;
+use Eluceo\iCal\Domain\Entity\Event;
+use Eluceo\iCal\Domain\ValueObject\DateTime;
+use Eluceo\iCal\Domain\ValueObject\Location;
+use Eluceo\iCal\Domain\ValueObject\TimeSpan;
+use Eluceo\iCal\Presentation\Factory\CalendarFactory;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\HeaderUtils;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class ActivityController extends AbstractController
 {
     /**
-     * @Route("/activity", name="activity")
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @Route("/activity/{id}/created", name="activity_created",
+     *     requirements={"id": "\d+"})
      */
-    public function listAction(Request $request, ActivityModel $activityModel)
+    public function created(Activity $activity): Response
     {
-        $page = $request->query->get('page', 1);
-        $limit = $request->query->get('limit', 15);
-
-        $activities = $activityModel->getLatest($page, $limit);
-
-        return $this->render('activity/list.html.twig', [
-            'active' => 'ActivitiesNearMe',
-            'activities' => $activities,
+        return $this->render('activity/created.html.twig', [
+            'activity' => $activity,
         ]);
     }
 
     /**
-     * @Route("/activity/{id}", name="activity_show",
+     * @Route("/activity/{id}/download", name="activity_download",
      *     requirements={"id": "\d+"})
      *
-     * @return Response
+     * @SuppressWarnings(PHPMD.StaticAccess)
      */
-    public function showAction(Activity $activity)
+    public function download(Activity $activity): Response
     {
-        $content = $this->render('activity/show.html.twig', [
-            'activity' => $activity,
-        ]);
+        $start = new DateTime(DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $activity->getStarts()), false);
+        $end = new DateTime(DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $activity->getEnds()), false);
+        $occurrence = new TimeSpan($start, $end);
+        $location = new Location($activity->getAddress());
+        $strippedDescription = strip_tags(str_replace('<br>', "\r\n", $activity->getDescription()));
+        $description = str_replace("\r\n", "\n", $strippedDescription);
+        $event = new Event();
+        $event
+            ->setOccurrence($occurrence)
+            ->setSummary($activity->getTitle())
+            ->setDescription($description)
+            ->setLocation($location)
+        ;
 
-        return new Response($content);
-    }
+        // 2. Create Calendar domain entity
+        $calendar = new Calendar([$event]);
 
-    /**
-     * @Route("/activity/{id}/edit", name="activity_edit",
-     *     requirements={"id": "\d+"})
-     *
-     * @return Response
-     */
-    public function editAction(Activity $activity)
-    {
-        $content = $this->render('activity/show.html.twig', [
-            'activity' => $activity,
-        ]);
+        // 3. Transform domain entity into an iCalendar component
+        $componentFactory = new CalendarFactory();
+        $calendarComponent = $componentFactory->createCalendar($calendar);
 
-        return new Response($content);
+        // 5. Output
+        $response = new Response($calendarComponent);
+        $response->headers->set('Content-Type', 'text/calendar; charset=utf-8');
+        $disposition = HeaderUtils::makeDisposition(
+            HeaderUtils::DISPOSITION_ATTACHMENT,
+            'activity.ics'
+        );
+
+        $response->headers->set('Content-Disposition', $disposition);
+
+        return $response;
     }
 }

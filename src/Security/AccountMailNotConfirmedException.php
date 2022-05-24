@@ -9,9 +9,9 @@
 
 namespace App\Security;
 
-use Symfony\Component\Security\Core\Exception\AccountStatusException;
+use Symfony\Component\Security\Core\Exception\CustomUserMessageAccountStatusException;
 
-class AccountMailNotConfirmedException extends AccountStatusException
+class AccountMailNotConfirmedException extends CustomUserMessageAccountStatusException
 {
     /**
      * {@inheritdoc}

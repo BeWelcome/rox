@@ -19,8 +19,8 @@
 
                     <div class="col-10 col-md-2 order-md-2">
                         <a href="members/<?= $Relation->Username ?>"><img
-                                src="members/avatar/<?= $Relation->Username ?>/50"
-                                height="50" width="50"
+                                class="profileimg avatar-48"
+                                src="members/avatar/<?= $Relation->Username ?>/48"
                                 alt="Profile"/></a><br>
                         <span class="small
                         <?php
@@ -39,7 +39,7 @@
                         </a>
                     </div>
                     <div class="col-12 col-md-9 order-md-3">
-                                    <textarea class="form-control"
+                                    <textarea class="o-input"
                                               name="RelationComment_<?= $Relation->id ?>"><?= $comment ?></textarea>
                     </div>
                 </div>

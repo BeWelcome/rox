@@ -10,43 +10,31 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class FaqRequest
 {
-    /**
-     * @var string
-     */
-    public $faqCategory;
+    public FaqCategory $faqCategory;
 
     /**
-     * @var string
      * @Assert\NotBlank()
      */
-    public $wordCode;
+    public string $wordCode;
 
     /**
-     * @var string
      * @Assert\NotBlank()
      */
-    public $question;
+    public string $question;
 
     /**
-     * @var string
      * @Assert\NotBlank()
      */
-    public $answer;
+    public string $answer;
 
-    /**
-     * @var bool
-     */
-    public $active = true;
+    public bool $active = true;
 
     public function __construct(FaqCategory $faqCategory)
     {
-        $this->faqCategory = $faqCategory->getDescription();
+        $this->faqCategory = $faqCategory;
     }
 
-    /**
-     * @return FaqRequest
-     */
-    public static function fromFaq(EntityManager $em, Faq $faq)
+    public static function fromFaq(EntityManager $em, Faq $faq): self
     {
         $faqRequest = new self($faq->getCategory());
         $faqRequest->wordCode = $faq->getQAndA();

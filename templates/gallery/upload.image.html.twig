@@ -43,7 +43,7 @@
 
             //Fügt dem formData Objekt unser File Objekt hinzu
             formData.append("file", file);
-            formData.append("album", $('#form_albums').val());
+            formData.append("album", $('#gallery_upload_form_albums').val());
 
             client.onerror = function(e) {
                 alert("onError");

@@ -125,7 +125,7 @@ class GalleryController extends AbstractController
 
         // creates a thumb nail for the current image
         $imageManager = new ImageManager();
-        $img = $imageManager->make($image->getRealPath());
+        $img = $imageManager->make($image->getRealPath())->orientate();
         if ($width > 240 || $height > 240) {
             $img->resize(240, 240, function ($constraint) {
                 $constraint->aspectRatio();

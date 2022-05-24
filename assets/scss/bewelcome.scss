@@ -1,23 +1,23 @@
-// Include fonts
-
 @import "mixins";
 
-@import "~typeface-signika";
-@import '~typeface-lato';
-
-/* Use SVG font
-$fa-font-path: '~@fortawesome/fontawesome-free/webfonts';
-@import '~@fortawesome/fontawesome-free/scss/fontawesome';
-@import '~@fortawesome/fontawesome-free/scss/solid';
-@import '~@fortawesome/fontawesome-free/scss/regular';
-@import '~@fortawesome/fontawesome-free/scss/brands';
-*/
+@import "~@fontsource/lato/index.css";
+@import "~@fontsource/signika/index.css";
+@import "~@fontsource/signika/300.css";
+@import "~@fontsource/signika/700.css";
+@import "~toastify-js/src/toastify.css";
 
 // Core variables and mixins
 @import "custom";
 $font-family-bold: Signika;
 
 @import "~bootstrap";
+
+// @import "config";
+// @import "generic/generic";
+// @import "objects/objects";
+// @import "layouts/layouts";
+// @import "components/components";
+// @import "utilities/utilities";
 
 @import "general";
 
@@ -76,7 +76,7 @@ $font-family-bold: Signika;
     z-index: 2000!important;
 }
 
-.ck-content blockquote, blockquote {
+.ck.ck-content blockquote, blockquote {
   color: #444 !important;
   background: transparent !important;
   border: 1px #ddd solid !important;
@@ -354,10 +354,10 @@ figure > figcaption {
 
 .rangeslider__fill {
   background: $brand-primary;
-  background: -webkit-linear-gradient(left, #fff , $brand-primary);
-  background: -o-linear-gradient(left, #fff , $brand-primary);
-  background: -moz-linear-gradient(left, #fff , $brand-primary);
-  background: linear-gradient(left, #fff , $brand-primary);
+  background: -webkit-linear-gradient(to right, #fff , $brand-primary);
+  background: -o-linear-gradient(to right, #fff , $brand-primary);
+  background: -moz-linear-gradient(to right, #fff , $brand-primary);
+  background: linear-gradient(to right, #fff , $brand-primary);
 
   position: absolute;
 }
@@ -505,4 +505,190 @@ $avatar-sizes: 30, 50, 75, 100, 150, 200, 500;
   background-color: #eee;
   border: 1px solid black;
   padding: 1rem;
+}
+
+.o-input {
+  @extend .form-control;
+}
+
+.o-checkbox {
+  @extend .form-check;
+}
+
+.o-checkbox__input {
+  @extend .form-check-input
+}
+
+.o-checkbox__label {
+  @extend .form-check-label
+}
+
+.input-group > .input-group-prepend > .input-group-text {
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+}
+
+.u-ellipsis {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+/*
+ * Multilevel dropdown for bootstrap 4
+ */
+.dropdown-submenu {
+  display: block;
+}
+
+.dropdown-submenu.show>.dropdown-menu.show{
+  margin-top: 0;
+  margin-left: auto;
+  transform: none !important;
+  position: relative !important;
+  width: max-content;
+  margin-bottom: .5rem;
+}
+
+.avatar-48 {
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+}
+
+.avatar-96 {
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+}
+
+.avatar-160 {
+  width: 160px;
+  height: 160px;
+  object-fit: cover;
+}
+
+.form-signin {
+  width: 100%;
+  max-width: 420px;
+  padding: 15px;
+  margin: auto;
+}
+
+.form-label-group {
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+.form-label-group input,
+.form-label-group label {
+  height: 3.125rem;
+  padding: .75rem;
+}
+
+.form-label-group label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  width: 100%;
+  margin-bottom: 0; /* Override default `<label>` margin */
+  line-height: 1.5;
+  color: #495057;
+  pointer-events: none;
+  cursor: text; /* Match the input under the label */
+  border: 1px solid transparent;
+  border-radius: .25rem;
+  transition: all .1s ease-in-out;
+}
+
+.form-label-group input::-webkit-input-placeholder {
+  color: transparent;
+}
+
+.form-label-group input::-moz-placeholder {
+  color: transparent;
+}
+
+.form-label-group input:-ms-input-placeholder {
+  color: transparent;
+}
+
+.form-label-group input::-ms-input-placeholder {
+  color: transparent;
+}
+
+.form-label-group input::placeholder {
+  color: transparent;
+}
+
+.form-label-group input:not(:-moz-placeholder-shown) {
+  padding-top: 1.25rem;
+  padding-bottom: .25rem;
+}
+
+.form-label-group input:not(:-ms-input-placeholder) {
+  padding-top: 1.25rem;
+  padding-bottom: .25rem;
+}
+
+.form-label-group input:not(:placeholder-shown) {
+  padding-top: 1.25rem;
+  padding-bottom: .25rem;
+}
+
+.form-label-group input:not(:-moz-placeholder-shown) ~ label {
+  padding-top: .25rem;
+  padding-bottom: .25rem;
+  font-size: 12px;
+  color: #777;
+}
+
+.form-label-group input:not(:-ms-input-placeholder) ~ label {
+  padding-top: .25rem;
+  padding-bottom: .25rem;
+  font-size: 12px;
+  color: #777;
+}
+
+.form-label-group input:not(:placeholder-shown) ~ label {
+  padding-top: .25rem;
+  padding-bottom: .25rem;
+  font-size: 12px;
+  color: #777;
+}
+
+.form-label-group input:-webkit-autofill ~ label {
+  padding-top: .25rem;
+  padding-bottom: .25rem;
+  font-size: 12px;
+  color: #777;
+}
+
+/* Fallback for Edge
+-------------------------------------------------- */
+@supports (-ms-ime-align: auto) {
+  .form-label-group {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-direction: column-reverse;
+    flex-direction: column-reverse;
+  }
+
+  .form-label-group label {
+    position: static;
+  }
+
+  .form-label-group input::-ms-input-placeholder {
+    color: #777;
+  }
+}
+
+#hamburger_collapse #login_signup
+{
+  display: none;
+}
+
+:focus-visible {
+  outline: 0;
 }

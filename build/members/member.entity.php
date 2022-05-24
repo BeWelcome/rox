@@ -649,6 +649,39 @@ FROM
         return($rr->cnt) ;
     } // end of count_mynotes
 
+    public function count_conversations_with($partner)
+    {
+        $partnerId = $partner->id;
+        $memberId = $this->id;
+        $sql = sprintf('SELECT count(*) AS cnt FROM (SELECT `m`.*
+            FROM `messages` m
+            WHERE
+				NOT m.subject_id IS NULL
+				AND m.id IN (
+					SELECT max(m.id)
+					FROM messages m
+                    WHERE
+						((m.IdReceiver = %1$d AND m.IdSender = %2$d) OR
+						(m.IdReceiver = %2$d AND m.IdSender = %1$d))
+					GROUP BY m.subject_id
+				)
+			UNION
+            SELECT `m`.*
+            FROM `messages` m
+            WHERE
+				m.subject_id is null
+				AND	((m.IdReceiver = %1$d AND m.IdSender = %2$d) OR
+					 (m.IdReceiver = %2$d AND m.IdSender = %1$d))) AS a', $memberId, $partnerId);
+        $stmt = $this->dao->query($sql);
+
+        $count = 0;
+        if (is_object($stmt)) {
+            $row = $stmt->fetch(PDB::FETCH_OBJ);
+            $count = $row->cnt;
+        }
+        return $count;
+    } // end of count_mynotes
+
     public function count_comments() {
         if (!$this->isLoaded()) {
             return array(

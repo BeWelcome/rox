@@ -41,6 +41,11 @@ phploc.xml
 /swagger.json
 /build/logs/
 
+# geonames files (created by geonames:update command)
+admin1CodesASCII.txt
+countryInfo.txt
+allCountries.zip
+
 # deployer config
 /config/deployer.yml
 
@@ -83,3 +88,8 @@ yarn-error.log
 ###< friends-of-behat/symfony-extension ###
 
 /infection.log
+
+###> friendsofphp/php-cs-fixer ###
+/.php-cs-fixer.php
+/.php-cs-fixer.cache
+###< friendsofphp/php-cs-fixer ###

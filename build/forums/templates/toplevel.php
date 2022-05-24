@@ -29,15 +29,14 @@ $multipages = null;
 if ($ownGroupsButtonCallbackId) {
     if ($boards->owngroupsonly == "No") {
         $buttonText = $this->words->getBuffered('SwitchShowOnlyMyGroupsTopics');
+        $href = '/forums/show/groups/only-mine';
     } else {
         $buttonText = $this->words->getBuffered('SwitchShowAllGroupsTopics');
+        $href = '/forums/show/groups/all';
     }
     ?>
-    <div class="row"><div class="col-12">
-        <form method="post" action="<?php echo rtrim(implode('/', $request), '/').'/';?>">
-            <input type="hidden" name="<?php echo $ownGroupsButtonCallbackId; ?>"  value="1">
-            <input type="submit" class="btn btn-primary float-right" name="submit" value="<?php echo $buttonText; ?>">
-        </form>
+    <div class="row">
+        <div class="col-12"><a href="<?php echo $href; ?>" class="btn btn-primary float-right"><?php echo $buttonText; ?></a>
     </div>
     </div>
     <?php
@@ -75,12 +74,8 @@ require 'boardthreads.php';
     $buttonText = $this->words->getBuffered('SwitchShowAllGroupsTopics');
     }
     ?>
-    <div class="row"><div class="col-12">
-            <form method="post" action="<?php echo rtrim(implode('/', $request), '/').'/';?>">
-                <input type="hidden" name="<?php echo $ownGroupsButtonCallbackId; ?>"  value="1">
-                <input type="submit" class="btn btn-primary float-right" name="submit" value="<?php echo $buttonText; ?>">
-            </form>
-        </div>
+    <div class="row">
+        <div class="col-12"><a href="<?php echo $href; ?>" class="btn btn-primary float-right"><?php echo $buttonText; ?></a></div>
     </div>
 <?php
 echo $this->words->flushBuffer();

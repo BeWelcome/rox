@@ -1,3 +1,9 @@
+import SearchPicker from "./../search/searchpicker";
+import 'leaflet.fullscreen';
+import 'leaflet.fullscreen/Control.FullScreen.css';
+
+const searchPicker = new SearchPicker( "/search/locations/all");
+
 function Map() {
     this.map = undefined;
     this.noRefresh = false;
@@ -18,7 +24,11 @@ Map.prototype.showMap = function () {
             zoomDelta: 0.25,
             maxZoom: 18,
             minZoom: 1,
-            zoom: 2
+            zoom: 2,
+            fullscreenControl: true,
+            fullscreenControlOptions: {
+                position: 'topleft'
+            }
         });
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap contributors</a>',
@@ -39,7 +49,7 @@ Map.prototype.showMap = function () {
             } else {
                 const isAdminUnit = document.getElementById('search_location_admin_unit').value;
 
-                if (1 == isAdminUnit) {
+                if ("1" === isAdminUnit) {
                     const bounds = this.markerClusterGroup.getBounds();
                     this.map.fitBounds(bounds, {zoomSnap: 0.25});
                 } else {
@@ -218,12 +228,23 @@ Map.prototype.addMarkers = function (map) {
         });
 
         if (value.Username) {
-            var popupContent = '<div class="d-flex">';
-            popupContent = popupContent + '<div><img src="/members/avatar/' + value.Username + '?size=50" width="50" height="50"></div>';
-            popupContent = popupContent + '<div class="hosticon nowrap"><img src="/images/icons/' + iconFile + '.png"><i class="fa fa-2x fa-bed p-1"></i><span class="h4">' + value.CanHost + '</span></div></div>';
-            popupContent = popupContent + '<div class="d-flex"><h5 class="nowrap"><a href="/members/' + value.Username + '" target="_blank">' + value.Username + '</a></h5></div>';
-
-            marker.bindPopup(popupContent).openPopup(); // groups[accommodation].addLayer(marker);
+            var popupContent = '<div class="d-flex flex-column">';
+            popupContent += '<div class="d-flex flex-row">'
+            popupContent += '<div><img class="profileimg avatar-48" src="/members/avatar/' + value.Username + '/48" width="48" height="48"></div>';
+            popupContent += '<div class="d-flex flex-column justify-content-between">';
+            popupContent += '<div><img src="/images/icons/' + iconFile + '.png" width="22"></div>';
+            popupContent += '<div class="text-nowrap" style="font-size: 16px">';
+            popupContent += '<i class="fa fa-bed fa-lg p-1"></i>' + value.CanHost + '';
+            popupContent += '</div>';
+            popupContent += '</div>';
+            popupContent += '</div>';
+            popupContent += '<div class="d-flex"><strong><a href="/members/' + value.Username + '" target="_blank" class="mt-1">' + value.Username + '</a></strong></div>';
+            popupContent += '</div>';
+            marker.bindPopup(popupContent, {
+                'closeButton': false,
+                'maxWidth': 200,
+                'minWidth': 90,
+            }); // groups[accommodation].addLayer(marker);
         }
 
         markers.addLayer(marker);
@@ -244,7 +265,15 @@ Map.prototype.boundingBox = function(latitude, longitude, distance) {
 };
 
 $(function () {
-    var map = new Map();
+    var map = new Map({
+        center: [0, 0],
+        zoom: 0,
+        zoomSnap: 0.1,
+        fullscreenControl: true,
+        fullscreenControlOptions: {
+            position: 'topleft'
+        }
+    });
     $(".show_options").click(function(){
         $("#search_options").toggleClass("d-block").toggleClass("d-none");
         $(".search").toggleClass("d-block").toggleClass("d-none");

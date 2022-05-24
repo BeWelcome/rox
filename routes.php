@@ -63,6 +63,7 @@
 
     // member app routes
     $this->addRoute('members_profile', '/members/:username:', 'MembersController', 'index');
+    $this->addRoute('members_profile_invite', '/members/:username:/leg/:id:', 'MembersController', 'index');
     $this->addRoute('edit_my_profile', '/editmyprofile', 'MembersController', 'index');
     $this->addRoute('my_preferences', '/mypreferences', 'MembersController', 'index');
 

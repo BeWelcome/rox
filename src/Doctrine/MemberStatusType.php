@@ -5,34 +5,34 @@ namespace App\Doctrine;
 class MemberStatusType extends EnumType
 {
     // Possible member statuses
-    const AWAITING_MAIL_CONFIRMATION = 'MailToConfirm';
-    const PENDING = 'Pending';
-    const DUPLICATE_SIGNED = 'DuplicateSigned';
-    const NEED_MORE = 'NeedMore';
-    const REJECTED = 'Rejected';
-    const COMPLETED_PENDING = 'CompletedPending';
-    const ACTIVE = 'Active';
-    const TAKEN_OUT = 'TakenOut';
-    const BANNED = 'Banned';
-    const SLEEPER = 'Sleeper';
-    const CHOICE_INACTIVE = 'ChoiceInactive';
-    const OUT_OF_REMIND = 'OutOfRemind';
-    const RENAMED = 'Renamed';
-    const ACTIVE_HIDDEN = 'ActiveHidden';
-    const SUSPENDED = 'SuspendedBeta';
-    const ASKED_TO_LEAVE = 'AskToLeave';
-    const STOP_BORING_ME = 'StopBoringMe';
-    const PASSED_AWAY = 'PassedAway';
-    const BUGGY = 'Buggy';
+    public const AWAITING_MAIL_CONFIRMATION = 'MailToConfirm';
+    public const PENDING = 'Pending';
+    public const DUPLICATE_SIGNED = 'DuplicateSigned';
+    public const NEED_MORE = 'NeedMore';
+    public const REJECTED = 'Rejected';
+    public const COMPLETED_PENDING = 'CompletedPending';
+    public const ACTIVE = 'Active';
+    public const TAKEN_OUT = 'TakenOut';
+    public const BANNED = 'Banned';
+    public const SLEEPER = 'Sleeper';
+    public const CHOICE_INACTIVE = 'ChoiceInactive';
+    public const OUT_OF_REMIND = 'OutOfRemind';
+    public const RENAMED = 'Renamed';
+    public const ACTIVE_HIDDEN = 'ActiveHidden';
+    public const SUSPENDED = 'SuspendedBeta';
+    public const ASKED_TO_LEAVE = 'AskToLeave';
+    public const STOP_BORING_ME = 'StopBoringMe';
+    public const PASSED_AWAY = 'PassedAway';
+    public const BUGGY = 'Buggy';
 
-    const ACTIVE_ALL = "'" .
+    public const ACTIVE_ALL = "'" .
         self::ACTIVE . "', '" .
         self::ACTIVE_HIDDEN . "', '" .
         self::CHOICE_INACTIVE . "', '" .
         self::OUT_OF_REMIND . "', '" .
         self::PENDING . "'";
 
-    const ACTIVE_ALL_ARRAY = [
+    public const ACTIVE_ALL_ARRAY = [
         self::ACTIVE_HIDDEN,
         self::ACTIVE,
         self::CHOICE_INACTIVE,
@@ -40,18 +40,18 @@ class MemberStatusType extends EnumType
         self::PENDING,
     ];
 
-    const ACTIVE_SEARCH = "'" .
+    public const ACTIVE_SEARCH = "'" .
         self::ACTIVE . "', '" .
         self::ACTIVE_HIDDEN . "', '" .
         self::OUT_OF_REMIND . "', '" .
         self::PENDING . "'";
 
-    const ACTIVE_WITH_MESSAGES = "'" .
+    public const ACTIVE_WITH_MESSAGES = "'" .
         self::ACTIVE . "', '" .
         self::OUT_OF_REMIND . "', '" .
         self::PENDING . "'";
 
-    const MEMBER_COMMENTS = "'" .
+    public const MEMBER_COMMENTS = "'" .
         self::ACTIVE . "', '" .
         self::ACTIVE_HIDDEN . "', '" .
         self::ASKED_TO_LEAVE . "', '" .

@@ -356,7 +356,7 @@ SQL;
     {
     	$query = '
 SELECT
-    i.`id`,
+    DISTINCT i.`id`,
     i.`user_id_foreign`,
     m.`username` AS `user_handle`,
     i.`file`,
@@ -366,17 +366,22 @@ SELECT
     i.`width`,
     i.`height`,
     i.`title`,
-    i.`created`
+    i.`created`,
+    a.`title` AS album,
+    a.`id` AS albumId
 FROM `gallery_items` AS i
 LEFT JOIN `members` AS `m` ON
     m.`id` = i.`user_id_foreign`
 LEFT JOIN `gallery_items_to_gallery` AS `g` ON
-    g.`item_id_foreign` = i.`id` ';
+    g.`item_id_foreign` = i.`id`
+LEFT JOIN `gallery` AS `a` ON
+    a.`id` = g.`gallery_id_foreign`
+    ';
         $query .= '
 WHERE ';
         if ($userId) {
         	$query .= '
-    `user_id_foreign` = '.(int)$userId.'
+    i.`user_id_foreign` = '.(int)$userId.'
 AND ';
         }
         if ($galleryId) {
@@ -517,7 +522,7 @@ FROM `gallery_items` AS i,
 members as m
 WHERE i.`id` = ". (int)$itemId . "
 AND m.id = i.user_id_foreign
-AND m.Status IN ('Active', 'Pending', 'OutOfRemind')
+AND m.Status IN ('Active', 'ChoiceInactive', 'Pending', 'OutOfRemind')
         ";
 
         $s = $this->dao->query($query);

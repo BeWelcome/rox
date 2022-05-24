@@ -386,8 +386,10 @@ ORDER BY count(msg.id) DESC')->fetchAll();
                 $receiver = $message->getReceiver();
                 $correspondent = ($sender === $member) ? $receiver : $sender;
                 $username = $correspondent->getUsername();
+                $type = $this->getConversationType($message);
                 if (!\array_key_exists($username, $results)) {
                     $results[$username] = [
+                        'type' => $type,
                         'username' => $username,
                         'direction' => 0,
                         'last_sent' => DateTime::createFromFormat('Y-m-d H:i:s', '1900-01-01 00:00:00'),
@@ -395,6 +397,7 @@ ORDER BY count(msg.id) DESC')->fetchAll();
                     ];
                 }
                 $result = $results[$username];
+                $result['type'] |= $type;
                 if ($sender !== $member) {
                     $result['direction'] = $result['direction'] | 1;
                     if ($message->getCreated() > $result['last_received']) {
@@ -569,5 +572,18 @@ ORDER BY count(msg.id) DESC')->fetchAll();
         }
 
         return $subMenuItems;
+    }
+
+    private function getConversationType(Message $message)
+    {
+        if (null === $message->getRequest()) {
+            $type = 1;
+        } elseif (null !== $message->getRequest()->getInviteForLeg()) {
+            $type = 2; // Invitation
+        } else {
+            $type = 4;
+        }
+
+        return $type;
     }
 }

@@ -9,7 +9,12 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * PollsRecordOfChoices.
  *
- * @ORM\Table(name="polls_record_of_choices", indexes={@ORM\Index(name="IdMember", columns={"IdMember"}), @ORM\Index(name="idEmail", columns={"Email"}), @ORM\Index(name="IdPoll", columns={"IdPoll"}), @ORM\Index(name="IdPollChoice", columns={"IdPollChoice"})})
+ * @ORM\Table(name="polls_record_of_choices", indexes={
+ *     @ORM\Index(name="polls_record_of_choices_members", columns={"IdMember"}),
+ *     @ORM\Index(name="polls_record_of_choices_email", columns={"Email"}),
+ *     @ORM\Index(name="polls_record_of_choices_poll", columns={"IdPoll"}),
+ *     @ORM\Index(name="polls_record_of_choices_poll_choice", columns={"IdPollChoice"})
+ * })
  * @ORM\HasLifecycleCallbacks
  * @ORM\Entity
  *

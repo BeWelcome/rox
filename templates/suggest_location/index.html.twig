@@ -1,0 +1,69 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Suggestions Mockup{% endblock %}
+
+{% block stylesheets %}
+    {{ encore_entry_link_tags('tailwind') }}
+    {{ encore_entry_link_tags('leaflet') }}
+    {{ encore_entry_link_tags('jquery_ui') }}
+    {{ encore_entry_link_tags('suggest_location') }}
+{% endblock stylesheets %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('suggest_location') }}
+{% endblock javascripts %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-12 col-md-6 mb-3">
+            <input type="text" id="old_suggest_name" name="old_suggest_name" class="o-input o-input--xl js-search-picker ui-autocomplete-input" placeholder="Location (old)" aria-label="Location (old)" autocomplete="off">
+            The old suggestion method
+        </div>
+        <div class="col-12 col-md-6 mb-3">
+            <div id="autocomplete1" class="autocomplete">
+                <input class="autocomplete-input o-input o-input--xl js-search-picker-new ui-autocomplete-input"
+                       placeholder="Search places"
+                       aria-label="Search places"
+                >
+                <ul class="autocomplete-result-list"></ul>
+                <ul id="no-results" class="autocomplete-result-list" visible="false">
+                    <li class="autocomplete-result">
+                        {{ 'suggest.no.results'|trans }}
+                    </li>
+                </ul>
+            </div>
+            Exact match has priority (sum((min_hit_pos==1)*1000+exact_hit*500))
+        </div>
+        <div class="col-12 col-md-6 mb-3">
+            <div id="autocomplete2" class="autocomplete">
+                <input class="autocomplete-input o-input o-input--xl js-search-picker-new ui-autocomplete-input"
+                       placeholder="Search places"
+                       aria-label="Search places"
+                >
+                <ul class="autocomplete-result-list"></ul>
+                <ul id="no-results" class="autocomplete-result-list" visible="false">
+                    <li class="autocomplete-result">
+                        {{ 'suggest.no.results'|trans }}
+                    </li>
+                </ul>
+            </div>
+            Exact match + member count (sum((min_hit_pos==1)*1000+exact_hit*500)+membercount)
+        </div>
+        <div class="col-12 col-md-6 mb-3">
+            <div id="autocomplete3" class="autocomplete">
+                <input class="autocomplete-input o-input o-input--xl js-search-picker-new ui-autocomplete-input"
+                       placeholder="Search places"
+                       aria-label="Search places"
+                >
+                <ul class="autocomplete-result-list"></ul>
+                <ul id="no-results" class="autocomplete-result-list" visible="false">
+                    <li class="autocomplete-result">
+                        {{ 'suggest.no.results'|trans }}
+                    </li>
+                </ul>
+            </div>
+            Exact match + population + membercount (sum((min_hit_pos==1)*1000+exact_hit*500) + population/1000 + membercount)
+        </div>
+    </div>
+{% endblock %}

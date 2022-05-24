@@ -14,16 +14,17 @@
     {% include 'webpreview.html.twig' %}
 
     {{ encore_entry_link_tags('bewelcome') }}
+    {{ encore_entry_link_tags('tailwind') }}
     {{ encore_entry_link_tags('floating_labels') }}
     {{ encore_entry_link_tags('jquery_ui') }}
     <link rel='manifest' href='{{ asset('manifest.webmanifest') }}'>
 </head>
-<body id="parallax-home">
+<body>
 {% block content %}
 {% include 'loginbar.html.twig' %}
 <!-- Section #1 -->
 <!-- first section - Home -->
-<div>
+<div id="parallax-home">
     <div class="parallax">
         <img class="parallax--img"
             srcset="{{ asset('/images/homepicture-1200px_1-min.jpg') }} 1200w, {{ asset('/images/homepicture-576px_1-min.jpg') }} 576w"
@@ -141,7 +142,7 @@
                 <div class="col-12 col-md-6 col-lg-5">
                     {{ form_start(username) }}
                     {# {{ postHandler.registerCallbackMethod('SignupController', 'signupFormCallback')|raw }} #}
-                    <div class="form-group">
+                    <div class="o-form-group">
                         <p class="parallax--numsubh text-uppercase text-md-left">{{ 'indexpageword_share' | trans }}</p>
                     </div>
                     <label for="{{ username.username.vars.id }}"
@@ -150,7 +151,7 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text text-primary">
                                 <i class="fa fa-lg fa-user" aria-hidden="true"></i></span></div>
-                        <input type="text" class="form-control" name="{{ username.username.vars.name }}"
+                        <input type="text" class="o-input" name="{{ username.username.vars.name }}"
                                id="{{ username.username.vars.id }}"
                                placeholder="{{ 'home.username' | trans }}"
                                value="{{ username.username.vars.value }}"/>
@@ -168,7 +169,7 @@
 
                 <div class="col-12 col-md-6 col-lg-5">
                     {{ form_start( search ) }}
-                    <div class="form-group">
+                    <div class="o-form-group">
                         <p class="parallax--numsubh text-uppercase text-md-left">{{ 'home.searchplace' | trans }}</p>
                     </div>
                     <label for="location" class="sr-only">{{ 'home.searchplace.question' | trans }}</label>
@@ -178,7 +179,7 @@
                                 <i class="fas fa-lg fa-map-marker-alt" aria-hidden="true"></i>
                             </span>
                         </div>
-                        {{ form_widget( search.location, { 'attr' : { 'class' : 'search-picker form-control' } } ) }}
+                        {{ form_widget( search.location, { 'attr' : { 'class' : 'js-search-picker form-control' } } ) }}
                         <span class="input-group-append p-0">
                             <button id="{{ search.updateMap.vars.id }}" name="updateMap" type="submit"
                                     class="btn btn-primary border-0">
@@ -195,7 +196,6 @@
             </div>
         </div>
     </div>
-</div>
 <div id="footer">
     <div class="container-lg">
         <div class="row">
@@ -216,9 +216,10 @@
         </div>
     </div>
 </div>
+</div>
 {{ encore_entry_script_tags('bewelcome') }}
 {{ encore_entry_script_tags('jquery_ui') }}
-{{ encore_entry_script_tags('search/searchpicker') }}
+{{ encore_entry_script_tags('search/loadpicker') }}
 {{ encore_entry_script_tags('scrollmagic') }}
 <script type="application/javascript">
     $(".select2").select2({
@@ -228,6 +229,11 @@
     });
 </script>
 <script>
+    $('[data-toggle="dropdown"]').bootstrapDropdownHover({
+        clickBehavior: 'sticky',
+        hideTimeout: 1000
+    });
+
     window.addEventListener("load", function () {
         let locale = document.getElementsByTagName('html')[0].getAttribute('lang');
         let privacyUrl = "/privacy";

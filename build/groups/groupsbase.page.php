@@ -229,7 +229,7 @@ class GroupsBasePage extends PageWithActiveSkin
         <form action="group/{$group_id}/search" method="GET" id="search-box" class="mb-1">
             <div class="input-group">
                 <label for="fs-keyword" class="sr-only">{$words->get('Search')}</label>
-                <input type="text" name="fs-keyword" class="form-control" placeholder="{$words->getFormatted('ForumSearch')}" value="{$searchTerms}">
+                <input type="text" name="fs-keyword" class="o-input" placeholder="{$words->getFormatted('ForumSearch')}" value="{$searchTerms}">
                 <span class="input-group-append">
                     <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i></button>
                 </span>
@@ -262,7 +262,7 @@ SEARCH_FORM;
             $items[] = [
                 'allactivereports',
                 'forums/reporttomod/AllActiveReports',
-                'All pending reports <span class="badge badge-primary">'
+                'All pending reports <span class="badge badge-primary u-rounded-full u-w-20 u-h-20 u-inline-flex u-items-center u-justify-center">'
                 . $forumsModel->countReportList(0, "('Open','OnDiscussion')")
                 . '</span>'
             ];

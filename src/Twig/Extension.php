@@ -33,8 +33,6 @@ class Extension extends AbstractExtension implements GlobalsInterface
 
     /**
      * Extension constructor.
-     *
-     * @param string $publicDirectory
      */
     public function __construct(
         SessionInterface $session,
@@ -42,7 +40,7 @@ class Extension extends AbstractExtension implements GlobalsInterface
         EntrypointLookupInterface $entrypointLookup,
         LoggerInterface $logger,
         string $locales,
-        $publicDirectory
+        string $publicDirectory
     ) {
         $this->session = $session;
         $this->translator = $translator;
@@ -88,6 +86,8 @@ class Extension extends AbstractExtension implements GlobalsInterface
                 ]
             ),
             new TwigFunction('encore_entry_css_source', [$this, 'getEncoreEntryCssSource']),
+            new TwigFunction('distance', [$this, 'distance']),
+            new TwigFunction('sgn', [$this, 'sgn']),
         ];
     }
 
@@ -199,13 +199,14 @@ class Extension extends AbstractExtension implements GlobalsInterface
 
     /**
      * @SuppressWarnings(PHPMD.StaticAccess)
+     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
      */
-    public function prepareNewsletter(string $text): string
+    public function prepareNewsletter(string $text, bool $website = false): string
     {
         $config = HTMLPurifier_HTML5Config::createDefault();
         $config->set(
             'HTML.Allowed',
-            'p,b,a[href],br,i,u,strong,em,ol,ul,li,dl,dt,dd,img[src|alt|width|height],blockquote,del,'
+            'p,b,a[href],br,hr,i,u,strong,em,ol,ul,li,dl,dt,dd,img[src|alt|width|height],blockquote,del,'
             . 'figure[class],figcaption'
         );
         $config->set('HTML.TargetBlank', true);
@@ -218,9 +219,18 @@ class Extension extends AbstractExtension implements GlobalsInterface
         $text = $purifier->purify($text);
 
         // now turn any figure/figcaption entries into <img>
+        if ($website) {
+            $centerOpen = '';
+            $centerClose = '';
+            $style = ' style="display: block; margin-left: auto; margin-right: auto; width: 60%;"';
+        } else {
+            $centerOpen = '<center>';
+            $centerClose = '</center>';
+            $style = '';
+        }
         $result = preg_replace(
             '%<figure.*?><img.*?src="(.*?)".*?><figcaption>(.*?)</figcaption></figure>%',
-            '<img width="480" height="320" src="\1" alt="\2">',
+            $centerOpen . '<img src="\1" alt="\2"' . $style . '>' . $centerClose,
             $text
         );
 
@@ -228,7 +238,7 @@ class Extension extends AbstractExtension implements GlobalsInterface
         $embeddedImage = $this->translator->trans('newsletter.embedded.image');
         $result = preg_replace(
             '%<figure.*?><img.*?src="(.*?)".*?>%',
-            '<img width="480" height="320" src="\1" alt="' . htmlentities($embeddedImage) . '">',
+            $centerOpen . '<img src="\1" alt="' . htmlentities($embeddedImage) . '"' . $style . '>' . $centerClose,
             $result
         );
 
@@ -236,6 +246,27 @@ class Extension extends AbstractExtension implements GlobalsInterface
         $this->logger->info($result);
 
         return $result;
+    }
+
+    /**
+     * Distance between two points on the earth.
+     */
+    public function distance(float $lat1, float $lng1, float $lat2, float $lng2): float
+    {
+        $radiantLat = deg2rad($lat2 - $lat1);
+        $radiantLng = deg2rad($lng2 - $lng1);
+
+        $a = sin($radiantLat / 2) ** 2 + cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * sin($radiantLng / 2) ** 2;
+
+        return 12742 * asin(sqrt($a));
+    }
+
+    /**
+     * signum of the given (float) number
+     */
+    public function sgn(float $number): int
+    {
+        return ($number > 0) ? 1 : (($number < 0) ? -1 : 0);
     }
 
     /**

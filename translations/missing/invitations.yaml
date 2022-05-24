@@ -1,0 +1,93 @@
+invitation.confirm.cancel:
+    - Do you really want to cancel this invitation?
+    - Shown in a modal when the host clicks 'cancel' in the reply page
+invitation.guest.open:
+    - You still need to decide what to do with this invitation
+    - Shown as state on the invitation page (to the guest)
+invitation.guest.cancelled:
+    - You cancelled this invitation
+    - Shown as state on the invitation page (to the guest)
+invitation.guest.declined:
+    - You declined this invitation
+    - Shown as state on the reply form for an invitation
+invitation.guest.accepted:
+    - You accepted this invitation
+    - Shown as state on the reply form for an invitation
+invitation.guest.tentatively:
+    - You're currently deciding if you accept this invitation
+    - Shown as state on the reply form for an invitation
+invitation.host.open:
+    - This invitation is still open
+    - Shown as state on the reply form for an invitation
+invitation.host.declined:
+    - This invitation has been declined.
+    - Shown as state on the reply form for an invitation
+invitation.host.accepted:
+    - This invitation has been accepted
+    - Shown as state on the reply form for an invitation
+invitation.host.tentatively:
+    - You replied 'Maybe' to this invitation
+    - Shown as state on the reply form for an invitation
+invitation.message.placeholder:
+    - 'Please, give a message to your potential guest.'
+    - Placeholder in the message editor of an invitation
+invitation.open:
+    - 'Invitation is still open'
+    - State of an invitation shown in the extracted data
+invitation.cancelled:
+    - 'Invitation has been cancelled'
+    - State of an invitation shown in the extracted data
+invitation.declined:
+    - 'Invitation has been declined'
+    - State of an invitation shown in the extracted data
+invitation.accepted:
+    - 'Invitation has been accepted'
+    - State of an invitation shown in the extracted data
+invitation.tentatively_accepted:
+    - 'Invitation has been tentatively accepted'
+    - State of an invitation shown in the extracted data
+mydata.invitations.headline:
+    - 'Invitations'
+    - Headline for the invitations in extracted data
+mydata.invitations.abstract:
+    - 'Here you find statistics related to invitations.'
+    - Abstract for the invitations in extracted data
+mydata.invitations.no.invitations:
+    - You haven't participated in any invitations.
+    - Shown if no invitations are found for this member
+mydata.invitations.sent:
+    - 'You have sent {sent} invitations.'
+    - Information about sent invitations in extracted data
+mydata.invitations.received:
+    - 'You have received {received} invitations.'
+    - Information about received invitations in extracted data
+mydata.invitations.check.invitations:
+    - Details can be found in the directory 'invitations'.
+    - Please do not translate 'invitations' here.
+invitation.enter.message.for.host:
+    - 'Please, give a message to your potential host.'
+    - Placeholder in the message editor of an invitation (reply by guest)
+invitation.enter.message.for.guest:
+    - 'Please, add a message to your potential host.'
+    - Placeholder in the message editor of an invitation (reply by host)
+invitation.trip.summary:
+    - 'Trip details'
+    - Text shown next to the button to show/hide the details of a trip and the traveller
+invitation.trip.summary.show.hide:
+    - 'Show/hide'
+    - Label of the button to show/hide the details of a trip and the traveller
+label.invitation.cancel:
+    - 'Cancel'
+    - Label of the cancel button (shown only to hosts in invitations workflow).
+flash.request.invitation.self:
+    - You can't invite yourself.
+    - Flash message shown if someone manages to invite themselves (should rarely happen).
+flash.request.invitation.sent:
+    - 'Your invitation has been send.'
+    - Flash message shown on the profile of the invited member when someone reacted on a shown trip.
+flash.invitation.expired:
+    - 'This invitation has expired, was cancelled or declined. You can continue the conversation, though.'
+    - Flash message shown when trying to reply to an invitation that has either expired or is no longer active.
+flash.invitation.error.already.accepted.other:
+    - 'You already accepted an invitation for this leg.'
+    - Flash message shown when trying to accept an invitation for a leg that has already been accepted.

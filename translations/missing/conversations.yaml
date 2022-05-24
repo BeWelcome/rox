@@ -1,0 +1,34 @@
+unread.only:
+    - Unread only
+    - Switch label on the conversations page
+conversations.none:
+    - No conversations found.
+    - Shown on the dashboard
+conversations.check.all:
+    - Select all conversations
+    - Checkbox label on /conversations
+conversations.label.delete_or_spam:
+    - Delete or mark messages as spam
+    - Aria label (for screen reader user)
+conversations.request:
+    - Hosting Request
+    - Text label used in conversations
+conversations.invitation:
+    - Invitation to stay
+    - Text label used in conversations
+message.initiated.by:
+    - Initiated by {username}
+    - Distinction used on the conversations pages
+lives.and.speaks:
+    - Lives in {city} and speaks {languages}
+    - Part of the header on a new message to let member know some details about the member
+flash.marked.deleted:
+    - 'The conversations have been marked as deleted.'
+    - Flash message shown when the user marks one or more conversation as deleted.
+flash.marked.purged:
+    - 'The conversations have been marked as purged (irrevocably deleted).'
+    - Flash message shown when the user marks one or more conversation as purged.
+flash.recovered:
+    - 'The conversations have been recovered and moved back in the regular folders.'
+    - Flash message shown when the user decided to move deleted conversations back.
+

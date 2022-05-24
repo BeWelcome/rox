@@ -7,9 +7,11 @@
 
 namespace App\Entity;
 
+use App\Doctrine\TripAdditionalInfoType;
 use Carbon\Carbon;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -48,32 +50,39 @@ class Trip
     private $countOfTravellers = 1;
 
     /**
-     * @var Carbon
+     * @var int
+     *
+     * @ORM\Column(name="invitation_radius", type="integer")
+     */
+    private $invitationRadius = 20;
+
+    /**
+     * @var DateTime
      *
      * @ORM\Column(name="created", type="datetime")
      */
     private $created;
 
     /**
-     * @var Carbon
+     * @var DateTime
      *
      * @ORM\Column(name="updated", type="datetime", nullable=true)
      */
     private $updated;
 
     /**
-     * @var Carbon
+     * @var DateTime
      *
      * @ORM\Column(name="deleted", type="datetime", nullable=true)
      */
     private $deleted;
 
     /**
-     * @var int
+     * @var string
      *
-     * @ORM\Column(name="additionalInfo", type="integer", nullable=true)
+     * @ORM\Column(name="additionalInfo", type="trip_additional_info", nullable=true)
      */
-    private $additionalInfo;
+    private $additionalInfo = TripAdditionalInfoType::NONE;
 
     /**
      * @var int
@@ -85,12 +94,13 @@ class Trip
     private $id;
 
     /**
-     * @var ArrayCollection
+     * @var Collection
      * @Assert\Count(min=1)
      *
-     * @ORM\OneToMany(targetEntity="SubTrip", mappedBy="trip", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="Subtrip", mappedBy="trip", cascade={"persist", "remove"}, orphanRemoval=true)
+     * @ORM\OrderBy({"arrival" = "ASC"})
      */
-    private $subTrips;
+    private $subtrips;
 
     /**
      * @var Member
@@ -102,7 +112,7 @@ class Trip
 
     public function __construct()
     {
-        $this->subTrips = new ArrayCollection();
+        $this->subtrips = new ArrayCollection();
     }
 
     public function setSummary(string $summary): self
@@ -177,14 +187,14 @@ class Trip
         return Carbon::instance($this->deleted);
     }
 
-    public function setAdditionalInfo(int $additionalInfo): self
+    public function setAdditionalInfo(?string $additionalInfo): self
     {
         $this->additionalInfo = $additionalInfo;
 
         return $this;
     }
 
-    public function getAdditionalInfo(): int
+    public function getAdditionalInfo(): string
     {
         return $this->additionalInfo;
     }
@@ -206,23 +216,34 @@ class Trip
         return $this->creator;
     }
 
-    public function getSubTrips()
+    public function getSubtrips(): Collection
     {
-        return $this->subTrips;
+        return $this->subtrips;
     }
 
-    public function addSubtrip(SubTrip $subtrip): self
+    public function setSubtrips(Collection $subtrips): self
     {
-        $subtrip->setTrip($this);
-
-        $this->subTrips->add($subtrip);
+        $this->subtrips = $subtrips;
 
         return $this;
     }
 
-    public function removeSubtrip(SubTrip $subtrip): void
+    public function addSubtrip(Subtrip $subtrip): self
     {
-        $this->subTrips->remove($subtrip);
+        $this->subtrips->add($subtrip);
+        $subtrip->setTrip($this);
+
+        return $this;
+    }
+
+    public function removeSubtrip(Subtrip $subtrip): void
+    {
+        if (!$this->subtrips->contains($subtrip)) {
+            return;
+        }
+
+        $this->subtrips->removeElement($subtrip);
+        $subtrip->setTrip(null);
     }
 
     /**
@@ -243,5 +264,17 @@ class Trip
     public function onPreUpdate()
     {
         $this->updated = new DateTime('now');
+    }
+
+    public function getInvitationRadius(): int
+    {
+        return $this->invitationRadius;
+    }
+
+    public function setInvitationRadius(int $invitationRadius): self
+    {
+        $this->invitationRadius = $invitationRadius;
+
+        return $this;
     }
 }

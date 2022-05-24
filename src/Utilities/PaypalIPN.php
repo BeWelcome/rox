@@ -11,14 +11,14 @@ use Exception;
 class PaypalIPN
 {
     /** Production Postback URL */
-    const VERIFY_URI = 'https://ipnpb.paypal.com/cgi-bin/webscr';
+    public const VERIFY_URI = 'https://ipnpb.paypal.com/cgi-bin/webscr';
     /** Sandbox Postback URL */
-    const SANDBOX_VERIFY_URI = 'https://ipnpb.sandbox.paypal.com/cgi-bin/webscr';
+    public const SANDBOX_VERIFY_URI = 'https://ipnpb.sandbox.paypal.com/cgi-bin/webscr';
 
     /** Response from PayPal indicating validation was successful */
-    const VALID = 'VERIFIED';
+    public const VALID = 'VERIFIED';
     /** Response from PayPal indicating validation failed */
-    const INVALID = 'INVALID';
+    public const INVALID = 'INVALID';
     /** @var bool Indicates if the sandbox endpoint is used. */
     private $use_sandbox = false;
     /** @var bool Indicates if the local certificates are used. */

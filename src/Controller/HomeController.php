@@ -19,11 +19,11 @@ class HomeController extends AbstractController
      *
      * @return Response
      */
-    public function indexAction(StatisticsModel $statisticsModel)
+    public function show(StatisticsModel $statisticsModel)
     {
         $member = $this->getUser();
         if ($member) {
-            return $this->forward(LandingController::class . '::indexAction');
+            return $this->forward(LandingController::class . '::show');
         }
 
         $loginForm = $this->createForm(LoginFormType::class, null, [

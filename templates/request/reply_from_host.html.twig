@@ -1,84 +1,66 @@
 {% extends 'base.html.twig' %}
-{% import 'macros.twig' as macros %}
 
 {% block javascripts %}
     {{ encore_entry_script_tags('requests') }}
 {% endblock javascripts %}
 
-{% block subnav %}
-    {% for filter, menuitem in submenu.items %}
-        <a class="list-group-item nav-link {% if submenu.active == filter %}active{% endif %}"
-           href="{{ path( submenu.route, { filter: filter } ) }}">{{ filter | trans }}</a>
-    {% endfor %}
-{% endblock %}
+{% block stylesheets %}
+    {{ encore_entry_link_tags('tailwind')  }}
+    {{ encore_entry_link_tags('requests')  }}
+{% endblock stylesheets %}
 
 {% block content %}
+    {% import 'macros.twig' as macros %}
     {% set original = thread | last %}
     {% set current = thread | first %}
+    {% set request = current.request %}
+    {% set myself = app.user %}
     {% set sender =  original.sender %}
 
-    <div class="row no-gutters bg-white mb-1">
-        {% set myself = app.user %}
-        <div class="pull-left">{{ macros.avatarstack(guest.Username, 50, false) }}</div>
-        <div class="col">
-            <h3 id="MessageSubject" class="p-3 text-truncate">{{ current.Subject.Subject }}</h3>
-        </div>
-        <div class="pull-right text-right">{{ macros.avatarstack(host.Username, 50, true) }}</div>
-    </div>
+    {{ macros.messageheader_no_buttons(thread) }}
+
+    {% include 'request/header.html.twig' %}
 
     {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'autocomplete': 'off'}}) }}
 
-    <div class="row mb-1">
-        <div class="col-12 col-sm-6 col-md-4">
-
-            <div class="form-group">
-                {{ form_label(form.request.arrival) }}
-                <div class="input-group date" id="arrival" data-target-input="nearest">
-                    <div class="input-group-prepend" data-target="#arrival" data-toggle="datetimepicker">
-                        <span class="input-group-text">
-                            <i class="fa fa-calendar"></i>
-                        </span>
-                    </div>
-                    {{ form_widget(form.request.arrival, { 'attr': {'data-target': '#arrival', 'data-toggle': 'datetimepicker'}}) }}
+    <div class="u-flex u-flex-col">
+        {{ form_row(form.message) }}
+        <div class="o-form-group">
+            {{ form_label(form.request.duration) }}
+            <div class="input-group date">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">
+                        <i class="fa fa-calendar"></i>
+                    </span>
                 </div>
-                <small id="arrival-original" class="text-muted d-none">{{ 'original' | trans}}: {{ form.request.arrival.vars.value| format_date('full') }}</small>
+                {{ form_widget(form.request.duration, {'attr': { 'class': 'js-litepicker'}}) }}
+                {{ form_errors(form.request.duration) }}
             </div>
-
-            <div class="form-group">
-                {{ form_label(form.request.departure) }}
-                <div class="input-group date" id="departure" data-target-input="nearest">
-                    <div class="input-group-prepend" data-target="#departure" data-toggle="datetimepicker">
-                        <span class="input-group-text">
-                            <i class="fa fa-calendar"></i>
-                        </span>
-                    </div>
-                    {{ form_widget(form.request.departure, { 'attr': {'data-target': '#departure', 'data-toggle': 'datetimepicker'}}) }}
-                </div>
-                <small id="departure-original" class="text-muted d-none">{{ 'original' | trans}}: {{ form.request.departure.vars.value| format_date('full') }}</small>
-            </div>
-
-            {{ form_row(form.request.flexible) }}
-            {{ form_row(form.request.numberOfTravellers) }}
-            {% if current.request.flexible %}
+            {% if form.request.flexible is defined %}
+                {{ form_row(form.request.flexible) }}
                 <p class="text-muted">{{ 'request.host.suggest.dates'|trans }}</p>
             {% else %}
                 <p class="text-muted">{{ 'request.host.fixed.dates'|trans }}</p>
             {% endif %}
         </div>
-        <div class="col-12 col-md-8">
-            {{ form_row(form.message) }}
-        </div>
-        <div class="col-12 col-md-8 offset-md-4">
-            <div class="btn-group-sm mt-2" role="group" aria-label="Reply to request">
-                {{ form_widget(form.accept, {'attr': {'class': 'btn btn-primary'}}) }}
-                {{ form_widget(form.tentatively, {'attr': {'class': 'btn btn-primary'}}) }}
-                {{ form_widget(form.decline, {'attr': {'class': 'btn btn-primary'}}) }}
-                {{ form_widget(form.update, {'attr': {'class': 'btn btn-primary'}}) }}
-            </div>
+
+        {{ form_row(form.request.numberOfTravellers) }}
+
+        {{ form_row(form.request.arrival) }}
+        {{ form_row(form.request.departure) }}
+        {% do form.request.setRendered %}
+
+        <div class="u-flex u-justify-end u-mt-8 u-mb-16">
+            {{ form_widget(form.accept, {'attr': {'class': 'o-button--s md:o-button u-ml-4'}}) }}
+            {{ form_widget(form.tentatively, {'attr': {'class': 'o-button--s md:o-button u-ml-4'}}) }}
+            {{ form_widget(form.decline, {'attr': {'class': 'o-button--s md:o-button u-ml-4'}}) }}
+            {{ form_widget(form.update, {'attr': {'class': 'o-button--s md:o-button u-ml-4'}}) }}
         </div>
     </div>
 
     {{ form_rest(form) }}
     {{ form_end(form) }}
+
     {% include 'message/thread.html.twig' with {'show_deleted': false} %}
+
 {% endblock %}

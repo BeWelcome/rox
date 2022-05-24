@@ -43,10 +43,15 @@ services:
         resource: '../src/Controller'
         tags: [ 'controller.service_arguments' ]
 
-    App\Swagger\SwaggerDecorator:
-        decorates: 'api_platform.swagger.normalizer.documentation'
-        arguments: ['@App\Swagger\SwaggerDecorator.inner']
-        autoconfigure: false
+
+    App\ApiPlatform\JWTAuthorizationDecorator:
+        decorates: 'api_platform.openapi.factory'
+        arguments: ['@.inner']
+
+#    App\Swagger\SwaggerDecorator:
+#        decorates: 'api_platform.swagger.normalizer.documentation'
+#        arguments: ['@App\Swagger\SwaggerDecorator.inner']
+#        autoconfigure: false
 
     App\Security\RefreshToken\RefreshTokenStorageInterface: '@App\Security\RefreshToken\DoctrineRefreshTokenStorage'
 
@@ -62,6 +67,10 @@ services:
     App\Command\DataRetentionCommand:
         arguments:
             $dataDirectory: '%data_directory%'
+
+    App\Command\GeonamesUpdateFullCommand:
+        arguments:
+            $locales: "%locales%"
 
     App\Serializer\MemberContextBuilder:
         decorates: api_platform.serializer.context_builder
@@ -121,6 +130,10 @@ services:
         class: App\Model\MemberDataExtractor\RequestsExtractor
         tags: [ 'app.member_data_extractor' ]
 
+    app.member_data_extractor.invitations:
+        class: App\Model\MemberDataExtractor\InvitationsExtractor
+        tags: [ 'app.member_data_extractor' ]
+
     app.member_data_extractor.rights:
         class: App\Model\MemberDataExtractor\RightsExtractor
         tags: [ 'app.member_data_extractor' ]
@@ -136,6 +149,15 @@ services:
             $className: 'App\Entity\BroadcastMessage'
             $memberRelationName: receiver
             $alias: broadcasts
+        tags: [ 'app.member_data_extractor' ]
+
+    app.member_data_extractor.newsletters:
+        class: App\Model\MemberDataExtractor\DoctrineExtractor
+        factory: [ '@App\Model\MemberDataExtractor\DoctrineExtractorFactory', 'create' ]
+        arguments:
+            $className: 'App\Entity\Newsletter'
+            $memberRelationName: createdBy
+            $alias: newsletters
         tags: [ 'app.member_data_extractor' ]
 
     app.member_data_extractor.community_news:
@@ -154,15 +176,6 @@ services:
             $className: 'App\Entity\Log'
             $memberRelationName: member
             $alias: logs
-        tags: [ 'app.member_data_extractor' ]
-
-    app.member_data_extractor.newsletters:
-        class: App\Model\MemberDataExtractor\DoctrineExtractor
-        factory: [ '@App\Model\MemberDataExtractor\DoctrineExtractorFactory', 'create' ]
-        arguments:
-            $className: 'App\Entity\Newsletter'
-            $memberRelationName: createdBy
-            $alias: newsletters
         tags: [ 'app.member_data_extractor' ]
 
     app.member_data_extractor.shouts:
@@ -201,6 +214,15 @@ services:
             $alias: subscriptions
         tags: [ 'app.member_data_extractor' ]
 
+    app.member_data_extractor.trips:
+        class: App\Model\MemberDataExtractor\DoctrineExtractor
+        factory: [ '@App\Model\MemberDataExtractor\DoctrineExtractorFactory', 'create' ]
+        arguments:
+            $className: 'App\Entity\Trip'
+            $memberRelationName: creator
+            $alias: trips
+        tags: [ 'app.member_data_extractor' ]
+
     App\Model\MemberModel:
         arguments:
             $extractors: !tagged_iterator app.member_data_extractor
@@ -227,6 +249,7 @@ services:
     App\Controller\Admin\MockupController:
         arguments:
             $locales: '%locales%'
+            $providers: !tagged_iterator app.mockup_provider
 
     app.user_locale_listener:
         public: true
@@ -318,6 +341,22 @@ services:
         public: false
         tags: [ { name: pagerfanta.view, alias: rox_default } ]
 
+    rounded_pagination.pagerfanta.view:
+        class: Pagerfanta\Twig\View\TwigView
+        arguments:
+            - '@twig'
+            - 'pagerfanta/rounded_pagination.html.twig'
+        public: false
+        tags: [ { name: pagerfanta.view } ]
+
+    rounded_pagination.pagerfanta:
+        class: Pagerfanta\View\OptionableView
+        arguments:
+            - '@rounded_pagination.pagerfanta.view'
+            - { proximity: 1 }
+        public: false
+        tags: [ { name: pagerfanta.view, alias: rounded_pagination } ]
+
     #  doctrine.filter.configurator:
     #    public: true
     #    class: App\Doctrine\Filter\Configurator
@@ -362,3 +401,59 @@ services:
         public: true
         arguments:
             $locales: "%document_locales%"
+
+    app.mockup_provider.my_data:
+        class: App\Model\MockupProvider\MyDataMockups
+        tags: [ 'app.mockup_provider' ]
+
+    app.mockup_provider.landing:
+        class: App\Model\MockupProvider\LandingMockups
+        tags: [ 'app.mockup_provider' ]
+
+    app.mockup_provider.forums:
+        class: App\Model\MockupProvider\ForumMockups
+        tags: [ 'app.mockup_provider' ]
+
+    app.mockup_provider.groups:
+        class: App\Model\MockupProvider\GroupMockups
+        tags: [ 'app.mockup_provider' ]
+
+    app.mockup_provider.message:
+        class: App\Model\MockupProvider\MessageMockups
+        tags: [ 'app.mockup_provider' ]
+
+    app.mockup_provider.unsubscribe_newsletter:
+        class: App\Model\MockupProvider\NewsletterUnsubscribeMockups
+        tags: [ 'app.mockup_provider' ]
+
+    app.mockup_provider.newsletters:
+        class: App\Model\MockupProvider\NewslettersMockups
+        tags: [ 'app.mockup_provider' ]
+
+    app.mockup_provider.errors:
+        class: App\Model\MockupProvider\ErrorMockups
+        tags: [ 'app.mockup_provider' ]
+
+    app.mockup_provider.requests:
+        class: App\Model\MockupProvider\RequestMockups
+        tags: [ 'app.mockup_provider' ]
+
+    app.mockup_provider.invitations:
+        class: App\Model\MockupProvider\InvitationMockups
+        tags: [ 'app.mockup_provider' ]
+
+    app.mockup_provider.signups:
+        class: App\Model\MockupProvider\SignupMockups
+        tags: [ 'app.mockup_provider' ]
+
+    app.mockup_provider.home_and_login:
+        class: App\Model\MockupProvider\HomeAndLoginMockups
+        tags: [ 'app.mockup_provider' ]
+
+    app.mockup_provider.policies:
+        class: App\Model\MockupProvider\PoliciesMockups
+        tags: [ 'app.mockup_provider' ]
+
+    app.mockup_provider.passwords:
+        class: App\Model\MockupProvider\PasswordMockups
+        tags: [ 'app.mockup_provider' ]

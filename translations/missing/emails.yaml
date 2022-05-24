@@ -1,0 +1,42 @@
+email.invitation.reply.guest.open:
+    - This invitation hasn't been accepted or declined yet.
+    - Used in the email template for invitations
+email.invitation.reply.guest:
+    - "%username% replied to your invitation"
+    - Used in the email template for invitations
+email.invitation.reply.guest.cancelled:
+    - Your guest cancelled the invitation
+    - Used in the email template for invitations
+email.invitation.reply.guest.declined:
+    - Declined
+    - Used in the email template for invitations
+email.invitation.reply.guest.accepted:
+    - Accepted
+    - Used in the email template for invitations
+email.invitation.reply.guest.tentatively:
+    - Maybe
+    - Used in the email template for invitations
+email.invitation.reply.host:
+    - "%username% replied to your conversations about their invitation"
+    - Used in the email template for invitations
+email.invitation.reply.host.open:
+    - This invitation hasn't beem accepted or declined yet
+    - Used in the email template for invitations
+email.invitation.reply.host.cancelled:
+    - Cancelled
+    - Used in the email template for invitations
+email.invitation.reply.host.declined:
+    - Declined
+    - Used in the email template for invitations
+email.invitation.reply.host.accepted:
+    - Accepted
+    - Used in the email template for invitations
+email.invitation.reply.host.tentatively:
+    - Maybe
+    - Used in the email template for invitations
+email.invitation.to.stay:
+    - '{username} invites you to stay with them'
+    - Text in the email send if someone is invited
+or:
+    - or
+    - The text between the buttons in the email text for invitiations and requests

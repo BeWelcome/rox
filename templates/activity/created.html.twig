@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ encore_entry_link_tags('tailwind') }}
+{% endblock %}
+
+{% block title %}
+    {{ 'activity.created' | trans }}
+{% endblock %}
+
+{% block content %}
+    <header class="o-text">
+        <h1>{{ 'activity' | trans }}</h1>
+    </header>
+    <div class="u-flex u-flex-col">
+       {{ 'activity.creation.checklist'| trans | raw }}
+    </div>
+{% endblock content %}

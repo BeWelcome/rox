@@ -1,0 +1,112 @@
+{% extends 'trips.html.twig' %}
+
+{% block title %}
+    {{ 'trips.mytrips' | trans }}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ encore_entry_link_tags('tailwind') }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('micromodal') }}
+{% endblock %}
+
+{% block content %}
+    {% if trips.nbResults != 0 %}
+        {% set myself = app.user %}
+        {% if trips.haveToPaginate %}
+            <section>
+                <div class="u-inline-flex u-w-full u-items-center u-justify-end u-mb-24 md:u-mb-16 md:u-h-48 u-flex-col md:u-flex-row">
+                       {{ pagerfanta( trips, 'rounded_pagination', { routeName: 'trips' }) }}
+                   </div>
+               </section>
+        {% endif %}
+        <section>
+            {% for trip in trips %}
+            <div class="c-trip-card">
+                <div class="c-trip-card__wrapper">
+                    <a class="u-text-white hover:u-text-gray-20 u-text-24 u-font-display u-font-700 u-col-span-full u-mb-8" href="{{ path('trip_show', { 'id': trip.id } ) }}">{{ trip.summary }}</a>
+                    <div>
+                        <div class=" u-font-display u-italic u-text-white u-mb-8">{{ trip.description | nl2br | purify | truncate(200) }}</div>
+                        <div class="u-text-white u-font-display u-mt-8 u-mb-16 md:u-m-0 u-flex u-flex-column">
+                            <div class="u-mr-8">{{ trip.subtrips|length }} {{ 'trip.legs'|trans }}
+                             {% for leg in trip.subtrips %}
+                                {% if leg.location %}<span class="u-whitespace-nowrap u-mr-8">
+                                    {% if leg.location.country %}
+                                        <i class="o-flag o-flag--{{ leg.location.country.countryId }} u--mb-4" title="{{ leg.location.country.country.name }}"></i>
+                                    {% endif %}
+                                    {{ leg.location.name }}</span>
+                                {% endif %}
+                            {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="c-trip-card__icon-grid">
+                            <div><i class="far fa-calendar-alt u-text-white u-text-16 u-justify-self-center u-self-center"></i></div>
+                            <div><p class="u-text-white u-font-display">{{ (trip.subtrips|first).arrival|format_date('full') }} –<br>{{ (trip.subtrips|last).departure|format_date('full') }}</p></div>
+                        </div>
+                        <div class="c-trip-card__icon-grid u-leading-24">
+                            <i class="fa fa-users u-text-white u-text-16 u-justify-self-center u-self-center"></i>
+                            <p class="u-text-white u-font-display">{{ 'trip.count.of.travellers'| trans ({'countOfTravellers' : trip.countOfTravellers}) }}</p>
+                        </div>
+                        {% if trip.additionalInfo != constant('App\\Doctrine\\TripAdditionalInfoType::NONE') %}
+                            <div class="c-trip-card__icon-grid u-leading-24">
+                                <i class="fa fa-info-circle u-text-white u-text-16 u-justify-self-center u-self-center"></i>
+                                <p class="u-text-white u-font-display">{{ ('trip.additional.info.' ~ trip.additionalInfo)| lower | trans}}</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="u-flex u-justify-center md:u-justify-between u-items-center u-mt-16 md:u-m-0">
+                    <a class="o-rounded o-rounded--l u-text-18 u-mr-20 md:u-m-0"
+                       href="{{ path('trip_edit', {'id': trip.id}) }}" aria-label="{{ 'trip.edit'|trans }}" title="{{ 'trip.edit'|trans }}">
+                        <i class="far fa-edit"></i>
+                    </a>
+                    <a class="o-rounded o-rounded--l" data-micromodal-trigger="removeTrip-{{ trip.id }}">
+                      <i class="fa fa-times"></i>
+                    </a>
+                </div>
+            </div>
+            {% else %}
+                <p class="u-text-white u-font-display">{{ 'trip.no.trips'|trans }}</p>
+            {% endfor %}
+        </section>
+
+        {% if trips.haveToPaginate %}
+        <section>
+            <div class="u-inline-flex u-w-full u-items-center u-justify-end u-mt-16 md:u-h-48 u-flex-col md:u-flex-row">
+                  {{ pagerfanta( trips, 'rounded_pagination', { routeName: 'trips' }) }}
+              </div>
+        </section>
+        {% endif %}
+    {% else %}
+        <p class="u-text-white u-font-display">{{ 'trip.no.trips'|trans }}</p>
+    {% endif %}
+    {# add modal later for full screen overlay #}
+    {% for trip in trips %}
+        <div class="modal micromodal-slide" id="removeTrip-{{ trip.id }}" aria-hidden="true">
+            <div class="modal__overlay" tabindex="-1" data-micromodal-close>
+                <div id="modal-container" class="modal__container" role="dialog" aria-modal="true" aria-labelledby="modal-1-title">
+                    <header id="modal-header" class="modal__header">
+                        <h2 class="modal__title">
+                            {{ trip.summary|truncate(50) }}
+                        </h2>
+                        <button class="modal__close" aria-label="{{ 'trip.remove.close'|trans }}" data-micromodal-close></button>
+                    </header>
+                    <div id="modal-content-content" class="modal-content-content">
+                        <div id="modal-content" class="modal__content">
+                            {{ 'trip.remove.body'|trans|raw }}
+                        </div>
+                        <footer id="modal-footer" class="modal__footer u-flex u-flex-row u-justify-between">
+                            <a class="btn btn-primary-outline u-border-black" role="button" href="{{ path('trip_remove', {'id': trip.id}) }}" aria-label="{{ 'trip.remove'|trans }}">{{ 'trip.remove.label'|trans }}</a>
+                            <button class="btn btn-primary" data-micromodal-close aria-label="{{ 'trip.remove.close'|trans }}">
+                                {{ 'trip.remove.close'|trans }}</button>
+                        </footer>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+{% endblock content %}

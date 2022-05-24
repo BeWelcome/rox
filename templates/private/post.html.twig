@@ -7,7 +7,7 @@
     {% set posted_in %}{% if group %}<a
         href="{{ url('group_start', {'group_id': group.id}) }}">{{ group.name }}</a>{% else %}the forum{% endif %}{% endset %}
     <p>{{ 'mydata.forums.posted'|trans({'in': posted_in}) }}<br>
-        {{ 'mydata.forums.created'|trans({'created':post.created}) }}{% if post.deleted == 'Deleted' %}<br>
+        {{ 'mydata.forums.created'|trans({'posted':post.created}) }}{% if post.deleted == 'Deleted' %}<br>
         {{ 'mydata.forums.status'|trans }}: {{ 'mydata.post.deleted'|trans }}{% endif %}</p>
     <div class="post">
         <small class="text-muted">{{ post.language.wordcode|lower|trans|raw }} ({{ post.language.shortcode }})</small><br>

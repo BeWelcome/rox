@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ encore_entry_link_tags('tailwind') }}
+{% endblock stylesheets %}
+
+{% block content %}
+    {% import 'macros.twig' as macros %}
+    {% set original = thread | last %}{% set invitation = (thread | first).request %}
+    {% set myself = app.user %}
+    {% set otherUser = (myself == original.Sender) ? original.Receiver : original.Sender %}
+    {% if (thread | first).Sender.Username == myself.Username %}
+        {% set label = 'update' %}
+    {% else %}
+        {% set label = 'reply' %}
+    {% endif %}
+    {% set leg = invitation.inviteForLeg %}
+
+    {{ macros.messageheader(thread, {show_deleted: show_deleted, is_spam: is_spam}) }}
+
+    {% include 'invitation/header.html.twig' %}
+
+    {% include 'message/thread.html.twig' %}
+{% endblock content %}

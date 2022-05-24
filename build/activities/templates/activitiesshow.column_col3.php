@@ -77,7 +77,7 @@ if (empty($vars)) {
         <input type="hidden" id="longitude" value="<?= $this->activity->location->longitude ?>">
         <input type="hidden" id="zoom" value="10">
         <div id="map" class="mappreview m-2 w-100 postleftcolumn" style="height:10rem;"></div>
-        <p class="ml-2">
+        <p class="ml-2" style="overflow-wrap: break-word">
             <?php echo $this->activity->address ?><br>
             <span class="mt-1 font-weight-bold"><?php echo $this->activity->location->name . '<br>' . $this->activity->location->getCountry()->name; ?></span></p>
     </div>
@@ -148,7 +148,7 @@ if (empty($vars)) {
                             </div>
                         </div>
 
-                        <input class="form-control mb-1" type="text" maxlength="80" id="activity-comment"
+                        <input class="o-input mb-1" type="text" maxlength="80" id="activity-comment"
                                name="activity-comment"
                                value="<?php echo htmlspecialchars($vars['activity-comment'], ENT_QUOTES); ?>"
                                placeholder="<?php echo $words->get('ActivityYourComment'); ?>"/>
@@ -159,6 +159,7 @@ if (empty($vars)) {
                                 echo '<button type="submit" id="activity-join" name="activity-join" class="btn btn-primary btn-block" title="' . $words->getSilent('ActivityJoinTheFun') . '">' . $words->getSilent('ActivityJoinTheFun') . '</button>';
                             } else {
                                 echo '<button type="submit" id="activity-update" name="activity-edit" class="btn btn-primary btn-block" title="' . $words->getSilent('ActivityUpdate') . '">' . $words->getSilent('ActivityUpdate') . '</button>';
+                                echo '<a class="btn btn-primary btn-block" title="' . $words->getSilent('activity.download') . '" href="activity/' . $this->activity->id . '/download">' . $words->getSilent('activity.download') . '</a>';
 
                                 if (!$this->member->organizer) {
                                     echo '<button type="submit" id="activity-leave" name="activity-leave" class="btn btn-primary btn-block" title="' . $words->getSilent('ActivityLeave') . '" >' . $words->getSilent('ActivityLeave') . '</button>';
@@ -181,7 +182,7 @@ if (empty($vars)) {
             <?php if ($this->member) {
             if ($this->member->organizer == true) { ?>
             <form method="post" id="activity-show-form-admin">
-                <div class="form-group mt-3">
+                <div class="o-form-group mt-3">
                     <span class="h4"><?php echo $words->get('ActivityOrgaStatusHeadline'); ?></span>
                     <?php echo $callbackTagsCancelUncancel; ?>
                     <input type="hidden" name="activity-id"
@@ -212,7 +213,7 @@ if (empty($vars)) {
                 foreach ($this->activity->organizers as $organizer) { ?>
                     <div class="d-flex mr-2">
                         <div class="mr-2"><a href="members/<?php $organizer->Username; ?>"><img
-                                        src="members/avatar/<?php echo $organizer->Username; ?>/50" width="50" height="50"></a></div>
+                                    class="profileimg avatar-48" src="members/avatar/<?php echo $organizer->Username; ?>/48"></a></div>
                         <div>
                             <a href="members/<?php echo $organizer->Username; ?>"><?php echo $organizer->Username; ?></a>
                             <br><a href="new/message/<?php echo $organizer->Username; ?>"><i class="fa fa-envelope mt-3" title="Write organiser"></i></a>
@@ -257,7 +258,7 @@ if (empty($vars)) {
 ">
                 <div class="d-flex flex-row">
                     <div class="mr-2"><a href="members/<?php echo $attendee->Username; ?>"><img
-                                    src="members/avatar/<?php echo $attendee->Username; ?>/50" width="50" height="50"></a></div>
+                                class="profileimg avatar-48" src="members/avatar/<?php echo $attendee->Username; ?>/48"></a></div>
                     <div><a href="members/<?php echo $attendee->Username; ?>"><?php echo $attendee->Username; ?></a><br>
                         <small>
                             <?php

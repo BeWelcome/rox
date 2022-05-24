@@ -39,7 +39,7 @@ class ActivitiesEditCreatePage extends ActivitiesBasePage
         $this->addStylesheet('build/roxeditor.css');
         $this->addLateLoadScriptFile('build/tempusdominus.js');
         $this->addLateLoadScriptFile('build/jquery_ui.js');
-        $this->addLateLoadScriptFile('build/search/searchpicker.js');
+        $this->addLateLoadScriptFile('build/search/loadpicker.js');
         $this->addLateLoadScriptFile('build/roxeditor.js');
         $this->addLateLoadScriptFile('build/cktranslations/'.$this->getSession()->get('lang', 'en').'.js');
     }

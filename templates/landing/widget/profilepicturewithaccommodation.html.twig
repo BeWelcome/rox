@@ -1,9 +1,17 @@
 {% import 'macros.twig' as macros %}
-<div class="col-12 col-lg-2 align-self-center d-none d-md-block" id="welcomeavatar">
-    <div>
-        {{ macros.avatar( member.Username, 100, true) }}
-        <div class="hoststatus">
-            <img src="/images/icons/{{ member.Accommodation }}.png">
+<div class="u-relative u-flex u-items-center" id="welcomeavatar">
+    <div class="o-avatar o-avatar--l o-avatar--noname o-avatar--shadow">
+        {{ macros.roundedavatarstack( member.Username, 120) }}
+        <div class="o-avatar__host-status {% if member.Accommodation == 'anytime' %}u-bg-green-dark{% elseif member.Accommodation == 'neverask' %}u-bg-bewelcome{% endif %}">
+        	{% if member.Accommodation == 'anytime' %}
+        	<svg class="o-avatar__host-img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18.400146 16.655001">
+			  	<path d="M7.197852 15.655v-5h4v5c0 .55.45 1 1 1h3c.55 0 1-.45 1-1v-7h1.7c.46 0 .68-.57.33-.87l-8.36-7.53c-.38-.34-.96-.34-1.34 0L.16785197 7.785c-.34.3-.13.87.33.87H2.197852v7c0 .55.45 1 1 1h3c.55 0 1-.45 1-1z"/>
+			</svg>
+			{% elseif member.Accommodation == 'neverask' %}
+			<svg class="o-avatar__host-img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18.398699 16.687908">
+			  	<path d="M9.1971279 0c-.24 0-.479922.083906-.669922.2539063L.16783095 7.7851559c-.34.3-.1299219.869141.3300781.869141H2.1971279v7.0000001c0 .55.45 1 1 1h3c1.515668.06853-.4810393.01321 6.0000001 0h3c.55 0 1-.45 1-1V8.6542969h1.699219c.46 0 .680078-.569141.330078-.869141L9.8670499.2539063C9.6770499.0839063 9.4371279 0 9.1971279 0zM5.6912685 6.375c.1646284 0 .3291861.063561.4550782.1894531l3.1562502 3.1562498L12.4608 6.5703125c.251785-.251785.658371-.251785.910156 0 .245328.2453284.245328.6589684 0 .9042964l-3.158203 3.1562501 3.158203 3.158204c.251784.251785.251784.658371 0 .910156-.251785.251784-.658371.251784-.910156 0l-3.1582031-3.158203-3.1562502 3.158203c-.2517841.251784-.6583713.251784-.9101563 0-.2517847-.251785-.2517847-.658371 0-.910156l3.1562495-3.158204-3.1562495-3.1562501c-.2517847-.251783-.2517847-.658371 0-.9101558.1258925-.1258925.2904498-.1894531.4550781-.1894531z"/>
+			</svg>
+			{% endif %}
         </div>
     </div>
 </div>

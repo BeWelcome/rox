@@ -14,15 +14,16 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class EditTranslationFormType extends AbstractType
 {
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function buildForm(FormBuilderInterface $formBuilder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $formBuilder
+        $builder
             ->add('wordCode', TextType::class, [
                 'disabled' => true,
                 'label' => 'label.admin.translation.wordcode',
@@ -43,7 +44,7 @@ class EditTranslationFormType extends AbstractType
                 'label' => 'label.admin.translation.englishtext',
             ])
         ;
-        $formBuilder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             $form = $event->getForm();
             $richtext = $form->getConfig()->getOption('richtext');
             $translationRequest = $event->getData();
@@ -107,8 +108,11 @@ class EditTranslationFormType extends AbstractType
                         'class' => 'editor',
                     ],
                     'label' => 'label.admin.translation',
-                    'required' => true,
+                    'required' => false,
                     'help' => $translatedTextHelp,
+                    'constraints' => [
+                        new NotBlank(),
+                    ],
                 ])
             ;
         });

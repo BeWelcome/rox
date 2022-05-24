@@ -16,9 +16,9 @@ class FaqCategoryFormType extends AbstractType
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function buildForm(FormBuilderInterface $formBuilder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $formBuilder
+        $builder
             ->add('wordCode', TextType::class, [
                 'label' => 'label.admin.faq.category.translation.id',
                 'help' => 'help.admin.faq.category.translation.id',
@@ -29,7 +29,7 @@ class FaqCategoryFormType extends AbstractType
             ])
 
         ;
-        $formBuilder->get('wordCode')
+        $builder->get('wordCode')
             ->addModelTransformer(new CallbackTransformer(
                 function ($wordCode) {
                     if (null === $wordCode) {
@@ -39,7 +39,7 @@ class FaqCategoryFormType extends AbstractType
                         throw new TransformationFailedException('error.admin.faq.transform.invalid');
                     }
 
-                    return str_replace('faq_cat_', '', $wordCode);
+                    return strtolower(str_ireplace('faq_cat_', '', $wordCode));
                 },
                 function ($strippedWordCode) {
                     if (true === stripos($strippedWordCode, 'faq_cat_')) {
@@ -49,7 +49,7 @@ class FaqCategoryFormType extends AbstractType
                     return 'faq_cat_' . $strippedWordCode;
                 }
             ));
-        $formBuilder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             $faqCategory = $event->getData();
             $form = $event->getForm();
             if (!$faqCategory) {

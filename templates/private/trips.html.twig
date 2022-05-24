@@ -1,0 +1,44 @@
+{% extends 'private/mydata.html.twig' %}
+
+{% block content %}
+    <h1>{{ 'mydata.trips.headline' | trans }}</h1>
+    <p>{{ 'mydata.trips.abstract' | trans }}</p>
+    {% if trips|length == 0 %}
+        <p>{{ 'mydata.trips.no.trips'|trans }}</p>
+    {% else %}
+        <div class="card-columns">
+            {% for trip in trips %}
+                <div class="card o-card">
+                    <div class="card-header text-truncate">
+                        {{ trip.summary }}
+                    </div>
+                    <div class="card-body">
+                        <p>{{ trip.description }}</p>
+                        <p>{{ 'trip.count.of.travellers'|trans({'countOfTravellers':trip.countOfTravellers}) }}</p>
+                        <p>{{ ('trip.additional.info.' ~ trip.additionalInfo)| lower | trans}}</p>
+                        {% for leg in trip.subtrips %}
+                            <p>
+                                {% if leg.location %}
+                                    {{ leg.location.name }}, {{ leg.location.country.name }}
+                                {% else %}
+                                    {{ 'trip.location.none'|trans }}
+                                {% endif %}
+                            </p>
+                            {% if constant('App\\Doctrine\\SubtripOptionsType::PRIVATE') in leg.options %}
+                                <p>{{ 'trip.option.private'|trans }}</p>
+                            {% endif %}
+
+                            {% if constant('App\\Doctrine\\SubtripOptionsType::MEET_LOCALS') in leg.options %}
+                                <p>{{ 'trip.option.meet.locals'|trans }}</p>
+                            {% endif %}
+
+                            {% if constant('App\\Doctrine\\SubtripOptionsType::LOOKING_FOR_HOST') in leg.options %}
+                                <p>{{ 'trip.option.looking.for.host'|trans }}</p>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endblock content %}

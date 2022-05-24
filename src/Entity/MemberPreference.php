@@ -8,7 +8,10 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Memberspreferences.
  *
- * @ORM\Table(name="memberspreferences", indexes={@ORM\Index(name="IdMember", columns={"IdMember", "IdPreference"}), @ORM\Index(name="IdPreference", columns={"IdPreference"})})
+ * @ORM\Table(name="memberspreferences", indexes={
+ *     @ORM\Index(name="memberspreferences_members", columns={"IdMember", "IdPreference"}),
+ *     @ORM\Index(name="memberspreferences_preferences", columns={"IdPreference"})
+ * })
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks
  */

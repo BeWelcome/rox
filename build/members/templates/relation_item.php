@@ -1,7 +1,7 @@
 <li class="clearfix">
   <span class="float-left">
     <a href="<?php echo PVars::getObj('env')->baseuri . "members/" . $rel->Username; ?>" title="See profile <?php echo $rel->Username; ?>">
-      <img class="framed" src="members/avatar/<?php echo $rel->Username; ?>/50" height="50" width="50" alt="Profile">
+      <img class="profileimg avatar-48" src="members/avatar/<?php echo $rel->Username; ?>/48" alt="Profile">
     </a>
   </span>
 <?php if ($myself): ?>

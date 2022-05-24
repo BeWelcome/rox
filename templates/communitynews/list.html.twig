@@ -13,7 +13,7 @@
     <div class="row">
         {% for news in communityNews %}
         <div class="col-12 mb-3">
-            <div class="card p-3">
+            <div class="card o-card p-3">
                 <h1><a href="{{ url('communitynews_show', { id: news.id} ) }}">{{ news.title }}</a></h1>
                 <small>{{ 'bewelcome_news.writtenby' | trans }} {{ macros.avatar( news.createdBy.Username , 30, true) }}
                     ({{ news.createdAt.DiffForHumans }})

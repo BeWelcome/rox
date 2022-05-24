@@ -109,9 +109,9 @@ class LoginFormWidget extends RoxWidget
 
                             <?php if ($ItIsNotASubDomain) {  // Added because this is hidden for subdomain ?>
                                             <label class="sr-only" for="login-u"><?=$ww->Username ?></label>
-                                            <input type="text" id="login-u" name="u" autofocus="" required="" placeholder="<?=$ww->Username ?>" class="form-control">
+                                            <input type="text" id="login-u" name="u" autofocus="" required="" placeholder="<?=$ww->Username ?>" class="o-input">
                                             <label class="sr-only" for="login-p"><?=$ww->Password ?></label>
-                                            <input type="password" id="login-p" name="p" placeholder="<?=$ww->Password ?>" class="form-control">
+                                            <input type="password" id="login-p" name="p" placeholder="<?=$ww->Password ?>" class="o-input">
                                             <label for="login-r">
                                             <input type="checkbox" id="login-r" value="<?=$ww->StayLoggedIn ?>" name="r">&nbsp;<?=$ww->StayLoggedIn ?>
                                             </label>

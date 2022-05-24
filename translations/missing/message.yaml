@@ -1,0 +1,4 @@
+message.report:
+    - Report as spam
+    - Link text in the mail notifications sent for messages, requests and invitations
+

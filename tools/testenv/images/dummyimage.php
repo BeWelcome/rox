@@ -32,14 +32,14 @@ class DummyImage
         $c3 = $mod % 256;
         // get related color, based on the other color
         if (($c1+$c2+$c3)/3 < 128){
-            $c4 = min(256,round($c1 * $factor));
-            $c5 = min(256,round($c2 * $factor));
-            $c6 = min(256,round($c3 * $factor));
+            $c4 = min(255,round($c1 * $factor));
+            $c5 = min(255,round($c2 * $factor));
+            $c6 = min(255,round($c3 * $factor));
         } else {
             $c4 = floor($c1 / $factor);
             $c5 = floor($c2 / $factor);
             $c6 = floor($c3 / $factor);
-        }    
+        }
         return array(imagecolorallocate($this->blueprint,$c1,$c2,$c3),
                      imagecolorallocate($this->blueprint,$c4,$c5,$c6));
     }
@@ -58,7 +58,7 @@ class DummyImage
     {
         $size_x = $size[0];
         $size_y = $size[1];
-        
+
         // old school
         if (!$max_x || !$max_y) {
             if ($max_x && intval($max_x) > 0 && $size_x) {
@@ -96,7 +96,7 @@ class DummyImage
                         $startx = 0;
                         $size_y = $size_x;
                     }
-    
+
                     if ($max_x >= $max_y){
                         $ratio = $max_y / $size_y;
                     } else {
@@ -117,7 +117,7 @@ class DummyImage
      * @param string $imgDir
      * @param array $thumbData
      * @return integer Number of created files
-     * 
+     *
      **/
     protected function createFiles($thumbData)
     {
@@ -152,7 +152,7 @@ class DummyImage
         echo " ...done" . PHP_EOL;
         return $imgCount;
     }
-    
+
     /**
      * Get working directory for created images
      *

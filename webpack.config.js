@@ -28,15 +28,17 @@ Encore
     .addEntry('floating_labels', './assets/scss/floating_labels.scss')
     .addEntry('jquery_ui', './assets/js/jquery_ui.js')
     .addEntry('signup/signup', './assets/js/signup.js')
+    .addEntry('members/editmyprofile', './assets/js/editmyprofile.js')
     .addEntry('landing', './assets/js/landing/landing.js')
     .addEntry('scrollmagic', './assets/js/scrollmagic.js')
-    .addEntry('search/searchpicker', './assets/js/search/searchpicker.js')
+    .addEntry('search/loadpicker', './assets/js/search/loadpicker.js')
     .addEntry('search/loadcontent', './assets/js/search/loadajax.js')
     .addEntry('search/locations', './assets/js/search/locations.js')
     .addEntry('search/map', './assets/js/search/map.js')
-//    .addEntry('map/map', './assets/js/map/map.js')
     .addEntry('tempusdominus', './assets/js/tempusdominus.js')
     .addEntry('requests', './assets/js/requests.js')
+    .addEntry('trips', './assets/js/trips.js')
+    .addEntry('micromodal', './assets/js/micromodal.js')
     .addEntry('treasurer', './assets/js/treasurer.js')
     .addEntry('activities', './assets/js/activities/edit_create.js')
     .addEntry('leaflet', './assets/js/leaflet.js')
@@ -48,6 +50,7 @@ Encore
     .addEntry('updatecounters', './assets/js/updateCounters.js')
     .addEntry('lightbox', './assets/js/lightbox.js')
     .addEntry('gallery', './assets/js/gallery.js')
+    .addEntry('conversations', './assets/js/conversations.js')
     .addEntry('bsfileselect', './assets/js/bsfileselect.js')
     .addEntry('email', './assets/scss/email.scss')
     .addEntry('roxeditor', './assets/js/roxeditor.js')
@@ -55,6 +58,14 @@ Encore
     .addEntry('highlight', './assets/js/highlight.js')
     .addEntry('faq', './assets/js/faq.js')
     .addEntry('translations', './assets/js/admin/translations.js')
+    .addEntry('tailwind', './assets/tailwindcss/tailwind.css')
+    // react
+    .configureBabel(function(babelConfig) {
+        babelConfig.presets = [ "@babel/preset-env", '@babel/preset-react' ]
+        babelConfig.plugins = [ '@babel/plugin-transform-runtime' ]
+    })
+    .addEntry('avatar', './assets/js/react/avatar/AvatarMount.jsx')
+
     .autoProvidejQuery()
     //    .addEntry('roxinlineeditor', './assets/js/roxinlineeditor.js')
 
@@ -92,16 +103,24 @@ Encore
     .configureLoaderRule('images', loader => {
         loader.exclude = /ckeditor5-[^/\\]+[/\\]theme[/\\]icons[/\\][^/\\]+\.svg$/;
     })
-
+    .enablePostCssLoader((options) => {
+        options.postcssOptions = {
+            // directory where the postcss.config.js file is stored
+            config: './postcss.config.js'
+        };
+    })
     // Configure PostCSS loader.
     .addLoader({
         test: /ckeditor5-[^/\\]+[/\\]theme[/\\].+\.css$/,
         loader: 'postcss-loader',
-        options: styles.getPostCssConfig({
-            themeImporter: {
-                themePath: require.resolve('@ckeditor/ckeditor5-theme-lark')
-            }
-        })
+        options: {
+            postcssOptions: styles.getPostCssConfig( {
+                themeImporter: {
+                    themePath: require.resolve( '@ckeditor/ckeditor5-theme-lark' )
+                },
+                minify: true
+            } )
+        }
     })
 ;
 
@@ -110,7 +129,7 @@ const assetsConfig = Encore.getWebpackConfig();
 const WorkboxPlugin = require('workbox-webpack-plugin');
 
 workboxConfig = {
-        mode: Encore.isProduction() ? 'production' : 'development',
+        mode: 'production', /* Encore.isProduction() ? 'production' : 'development', */
         entry: {
             main: "./assets/js/index.js"
         },
@@ -125,7 +144,7 @@ workboxConfig = {
            // and not allow any straggling "old" SWs to hang around
            // clientsClaim: true,
            // skipWaiting: true,
-           swSrc: './assets/js/sw.js',
+            swSrc: './assets/js/sw.js',
             swDest: './service-worker.js'
         }),
         ],

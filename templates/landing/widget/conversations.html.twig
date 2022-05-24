@@ -1,0 +1,54 @@
+{% import 'macros.twig' as macros %}
+<div id="conversationsdisplay" class="c-dashboard">
+	{% for message in messages %}
+		{% set unread = (message.firstRead is null) or (message.firstRead == '0000-00-00 00:00.00') %}
+		<div class="c-dashboard__item">
+			<div class="o-avatar o-avatar--m o-avatar--noname o-avatar--shadow-s u-mr-8">{{ macros.roundedavatarstack(message.sender.username, 72, false) }}</div>
+			<div class="u-flex u-flex-col u-h-full u-justify-center u-px-8 u-w-min-0 u-overflow-hidden">
+				{% if message.request %}
+					<a href="{{ path('conversation_view', { id: message.id } ) }}">
+						<div class="u-py-4 u-pr-8">
+							<p class="badge u-bg-blue-dark u-text-white u-font-500 u-text-14 u-leading-10">
+								{% if message.request.inviteForLeg is null %}
+									{{ 'conversations.request'|trans }}
+								{% else %}
+									{{ 'conversations.invitation'|trans }}
+								{% endif %}
+								{{ message.request.arrival | format_date(pattern="MMM d") }}
+								-
+								{{ message.request.departure | format_date(pattern="MMM d yyy") }}
+							</p>
+						</div>
+					</a>
+				{% else %}
+					<p class="u-ellipsis {% if unread %}unread{% endif %}">
+						<a href="{{ path('conversation_view', { id: message.id } ) }}">
+							{% if message.subject %}
+								{{ message.subject.subject|raw }}
+							{% endif %}
+						</a>
+					</p>
+				{% endif %}
+				<p class="u-ellipsis {% if unread %}unread{% endif %}">
+					<a href="{{ path('conversation_view', { id: message.id } ) }}">{{ message.message|striptags|truncate(70) }}</a>
+				</p>
+				<p class="u-font-300 u-text-14">
+					{% if message.sender %}
+						{{ macros.profilelink(message.sender.username) }}
+					{% else %}
+						BeWelcome
+					{% endif %}
+					<span title="{{ message.created.toDateTimeString }}">{{ message.created.DiffForHumans }}</span>
+				</p>
+			</div>
+			<div class="u-ml-auto u-flex-shrink-0">
+				<a href="{{ path('conversation_view', { id: message.id } ) }}">
+					<i class="fa fa-chevron-right"></i>
+				</a>
+			</div>
+		</div>
+	{% else %}
+		<p class="u-my-24 u-font-display u-text-center">{{ 'dashboard.messages.none' | trans }}</p>
+	{% endfor %}
+</div>
+

@@ -9,7 +9,10 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * GalleryComments.
  *
- * @ORM\Table(name="gallery_comments", indexes={@ORM\Index(name="blog_id_foreign", columns={"gallery_items_id_foreign"}), @ORM\Index(name="user_id_foreign", columns={"user_id_foreign"})})
+ * @ORM\Table(name="gallery_comments", indexes={
+ *     @ORM\Index(name="gallery_comments_blog_id_foreign", columns={"gallery_items_id_foreign"}),
+ *     @ORM\Index(name="gallery_comments_user_id_foreign", columns={"user_id_foreign"})
+ * })
  * @ORM\HasLifecycleCallbacks
  * @ORM\Entity
  *

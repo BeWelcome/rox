@@ -115,7 +115,7 @@ foreach($comments as $comment) {
             <div class="d-flex flex-row justify-content-center">
                 <div class="mr-lg-3 text-center">
                     <a href="members/<?= $c->UsernameFromMember ?>">
-                        <img src="members/avatar/<?= $c->UsernameFromMember ?>/50" alt="Profile">
+                        <img class="profileimg avatar-48" src="members/avatar/<?= $c->UsernameFromMember ?>/48" alt="Profile">
                         <p class="username m-0"><?= $c->UsernameFromMember ?></p></a>
                 </div>
                 <div class="text-center">
@@ -128,7 +128,7 @@ foreach($comments as $comment) {
                 </div>
                 <div class="ml-lg-3 text-center">
                     <a href="members/<?= $c->UsernameToMember ?>">
-                        <img src="members/avatar/<?= $c->UsernameToMember ?>/50" alt="Profile">
+                        <img class="profileimg avatar-48" src="members/avatar/<?= $c->UsernameToMember ?>/48" alt="Profile">
                         <p class="username m-0"><?= $c->UsernameToMember ?></p></a>
                 </div>
             </div>
@@ -197,7 +197,7 @@ foreach($comments as $comment) {
             <div class="d-flex flex-row justify-content-center">
                 <div class="mr-lg-3 text-center">
                     <a href="members/<?= $cc->UsernameFromMember ?>">
-                        <img src="members/avatar/<?= $cc->UsernameFromMember ?>/50" alt="Profile">
+                        <img class="profileimg avatar-48" src="members/avatar/<?= $cc->UsernameFromMember ?>/48" alt="Profile">
                         <p class="username m-0"><?= $cc->UsernameFromMember ?></p></a>
                 </div>
                 <div class="text-center">
@@ -210,7 +210,7 @@ foreach($comments as $comment) {
                 </div>
                 <div class="ml-lg-3 text-center">
                     <a href="members/<?= $cc->UsernameToMember ?>">
-                        <img src="members/avatar/<?= $cc->UsernameToMember ?>/50" alt="Profile">
+                        <img class="profileimg avatar-48" src="members/avatar/<?= $cc->UsernameToMember ?>/48" alt="Profile">
                         <p class="username m-0"><?= $cc->UsernameToMember ?></p></a>
                 </div>
             </div>

@@ -1,0 +1,89 @@
+<div class="u-rounded-8 u-p-8 u-w-full u-mb-8 u-bg-gray-5">
+    <div class="u-flex u-flex-col md:u-flex-row u-justify-between">
+        <div>
+            <div class="u-p-4">
+                {%- if original.Initiator.Username == myself.Username %}
+                    {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_OPEN') %}
+                        <span class="u-p-4 u-rounded-8 u-leading-24 u-bg-notice">
+                                <i class="fas fa-exclamation u-mr-12"></i>
+                                {{ 'request.guest.open'|trans }}</span>
+                    {% endif %}
+                    {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_CANCELLED') %}
+                        <span class="u-p-4 u-rounded-8 u-leading-24 u-bg-red">
+                                <i class="fa fa-times u-mr-12"></i>
+                                {{ 'request.guest.cancelled'|trans }}</span>
+                    {% endif %}
+                    {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_DECLINED') %}
+                        <span class="u-p-4 u-rounded-8 u-leading-24 u-bg-red">
+                                <i class="fa fa-times u-mr-12"></i>
+                                {{ 'request.guest.declined'|trans }}</span>
+                    {% endif %}
+                    {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_ACCEPTED') %}
+                        <span class=" u--ml-4 u-p-4 u-rounded-8 u-leading-24 u-bg-green">
+                                <i class="far fa-handshake u-mr-4"></i>
+                                {{ 'request.guest.accepted'|trans }}</span>
+                    {% endif %}
+                    {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_TENTATIVELY_ACCEPTED') %}
+                        <span class="u-p-4 u-rounded-8 u-leading-24 u-bg-notice">
+                                <i class="fas fa-exclamation u-mr-12"></i>
+                                {{ 'request.guest.tentatively'|trans }}</span>
+                    {% endif %}
+                {% else %}
+                    {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_OPEN') %}
+                        <span class="u-p-4 u-rounded-8 u-leading-24 u-bg-notice">
+                                <i class="fas fa-exclamation u-mr-12"></i>
+                                {{ 'request.host.open'|trans }}</span>
+                    {% endif %}
+                    {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_CANCELLED') %}
+                        <span class="u-p-4 u-rounded-8 u-leading-24 u-bg-red">
+                                <i class="fa fa-times u-mr-12"></i>
+                                {{ 'request.host.cancelled'|trans }}</span>
+                    {% endif %}
+                    {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_DECLINED') %}
+                        <span class="u-p-4 u-rounded-8 u-leading-24 u-bg-red">
+                                <i class="fa fa-times u-mr-12"></i>
+                                {{ 'request.host.declined'|trans }}</span>
+                    {% endif %}
+                    {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_ACCEPTED') %}
+                        <span class=" u--ml-4 u-p-4 u-rounded-8 u-leading-24 u-bg-green">
+                                <i class="far fa-handshake u-mr-4"></i>
+                                {{ 'request.host.accepted'|trans }}</span>
+                    {% endif %}
+                    {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_TENTATIVELY_ACCEPTED') %}
+                        <span class="u-p-4 u-rounded-8 u-leading-24 u-bg-notice">
+                                <i class="fas fa-exclamation u-mr-12"></i>
+                                {{ 'request.host.tentatively'|trans }}</span>
+                    {% endif %}
+                {% endif -%}
+            </div>
+            <div class="u-p-4">
+                <i class="fa fa-calendar u-mr-8"></i>
+                {{ request.arrival|format_date('full') }}
+                -
+                {{ request.departure|format_date('full') }}
+            </div>
+        </div>
+        <div>
+            <div class="u-p-4">
+                <i class="fa fa-moon u-mr-8"></i>
+                {% set difference = date(request.departure).diff(date(request.arrival)) %}
+                {% set nights = difference.days %}
+                {{ 'request.night.stay'|trans ({'numbernights': nights}) }}
+            </div>
+        </div>
+        <div>
+            <div class="u-p-4">
+                <i class="fa fa-users u-mr-4"></i>
+                {{ 'request.number.persons'|trans ({'numberpersons': request.numberOfTravellers}) }}
+            </div>
+            <div class="u-p-4">
+                <i class="fas fa-sync u-mr-8"></i>
+                {% if request.flexible %}
+                    {{ 'request.flexible.with.arrival.departure'|trans }}
+                {% else %}
+                    {{ 'request.not.flexible.with.arrival.departure'|trans }}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>

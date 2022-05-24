@@ -9,7 +9,7 @@
             <div class="row align-items-center row justify-content-end">
                 <div class="col-sm-8">
                     <form method="post">
-                        <div class="form-group form-row">
+                        <div class="o-form-group form-row">
                             <label for="language" class="col-auto col-form-label">
                             {{ 'footer.site.language' | trans }}
                             </label>
@@ -26,12 +26,12 @@
                     </form>
                 </div>
                 <div class="col-sm-4">
-                    <div class="form-group form-row float-md-right">
+                    <div class="o-form-group form-row float-md-right">
                             {% if is_granted('ROLE_ADMIN_WORDS') and hasCurrentLocaleRights %}
                                 <label for="translation_mode" class="col-auto col-form-label">
                                     {{ 'translation.mode' | trans }}
                                 </label>
-                                <select id="translation_mode" name="translation_mode" class="form-control-sm select2"
+                                <select id="translation_mode" name="translation_mode" class="o-input select2"
                                         data-minimum-results-for-search="-1"
                                         onchange="window.location.href=this.value; return false">
                                     <option {% if app.session.get('translation_mode') == 'on' %}selected="selected"{% endif %}

@@ -15,8 +15,12 @@ class PasswordFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('password', PasswordType::class)
-            ->add('submit', SubmitType::class)
+            ->add('password', PasswordType::class, [
+                'label' => 'password',
+            ])
+            ->add('submit', SubmitType::class, [
+                'label' => 'submit',
+            ])
         ;
     }
 }

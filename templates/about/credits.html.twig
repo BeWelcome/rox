@@ -24,21 +24,26 @@
     <h1>{{ 'credits.headline' | trans }}</h1>
     <p>{{ 'credits.abstract' | trans }}</p>
     <dl>
-        <dt><a href="https://geonames.org">Geonames</a></dt>
-        <dd>{{ 'We use the data from geonames.org to help you find your way around the world.'|trans }}</dd>
+        <dt><a id="geonames" href="https://geonames.org">Geonames</a></dt>
+        <dd>{{ 'credits.geonames'|trans }}</dd>
         <dt><a id="OSM"></a><a href="https://openstreetmap.org">Open Street Map</a></dt>
-        <dd>{{ 'Without OpenStreetMap and its contributors our website would be pretty dull. We rely on the database for locations and tiles for the maps.'|trans }}</dd>
+        <dd>{{ 'credits.osm'|trans }}</dd>
         <dt><a id="Jetbrains"></a><a href="https://www.jetbrains.com/?from=bewelcome"><img src="{{ asset('images/phpstorm-text.svg') }}" height="24" alt="PHPStorm logo" title="PHPStorm"></a></dt>
-        <dd>{{ 'Jetbrains gave us a few OpenSource licenses for <a href="https://www.jetbrains.com/phpstorm">PHPStorm</a> which makes developing with PHP and symfony a joy.'|trans|purify }}</dd>
+        <dd>{{ 'credits.jetbrains'|trans|purify }}</dd>
         <dt><a id="Browserstack"></a><a href="https://browserstack.com"><img src="{{ asset('images/Browserstack-logo.svg') }}" height="24" alt="Browserstack logo" title="Browserstack"></a></dt>
-        <dd>{{ 'We use Browserstack for testing on as many browsers as we possibly can.'|trans }}</dd>
+        <dd>{{ 'credits.browserstack'|trans }}</dd>
         <dt><a id="Symfony"></a><a href="https://symfony.com"><img src="{{ asset('images/symfony_black_02.png') }}" height="24" alt="symfony logo" title="symfony"></a></dt>
-        <dd>{{ 'The PHP framework that makes sure the website is blazingly fast and secure.'|trans }}</dd>
+        <dd>{{ 'credits.symfony'|trans }}</dd>
         <dt><a id="ckeditor"></a><a href="https://ckeditor.com/ckeditor-5/">CKEditor 5</a></dt>
-        <dd>{{ 'The wysywig editor that we can customize to our needs; and which runs smoothly on mobile as well.'|trans }}</dd>
-        <dt><a href="http://htmlpurifier.org/"><img
-                src="http://htmlpurifier.org/live/art/powered.png"
-                alt="Powered by HTML Purifier"></a></dt>
-        <dd>{{ 'HTML Purifier to ensure everyone stays safe when using the site.'|trans }}</dd>
+        <dd>{{ 'credits.ckeditor'|trans }}</dd>
+        <dt><a href="https://htmlpurifier.org/"><img
+                    src="https://htmlpurifier.org/live/art/powered.png"
+                    alt="Powered by HTML Purifier"></a></dt>
+        <dd>{{ 'credits.htmlpurifier'|trans }}</dd>
+        <dt><a href="https://meet.jitsi.org"><img
+                    src="https://jitsi.org/wp-content/themes/jitsi/images/logo-web-2020.png" height="24"></a></dt>
+        <dd>{{ 'credits.jitsi.meet'|trans }}</dd>
+        <dt><a href="https://framasoft.org">Framasoft</a></dt>
+        <dd>{{ 'credits.framasoft'|trans }}</dd>
     </dl>
 {% endblock content %}

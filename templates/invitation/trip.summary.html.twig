@@ -1,0 +1,38 @@
+<div class="u-flex u-justify-between u-items-center bg-white p-1 mb-1 u-rounded-4">
+    <div><strong>{{ 'invitation.trip.summary'|trans }}</strong></div>
+    <div>
+        <button class="o-button" type="button" data-toggle="collapse" data-target="#tripSummary" aria-expanded="false" aria-controls="#tripSummary">
+            {{ 'invitation.trip.summary.show.hide'|trans }}
+        </button>
+    </div>
+</div>
+<div class="row no-gutters mb-1 bg-white {% if open %}show{% else %}collapse{% endif %} p-1" id="tripSummary">
+    <div class="col-12 col-md-4 pr-1">
+        <p><strong><a href="{{ url('trip_show', { id: leg.trip.id }) }}">{{ 'trip.summary'|trans }}</a></strong></p>
+        <p>{{ leg.trip.summary }}</p>
+        <p><strong>{{ 'trip.description'|trans }}</strong></p>
+        <p>{{ leg.trip.description|purify }}</p>
+        <p><strong>{{ 'request.number_of_travellers'|trans }}</strong></p>
+        <p>{{ leg.trip.countOfTravellers }}</p>
+        <p><strong>{{ 'location'|trans }}</strong></p>
+        <p>{{ leg.location.name }}</p>
+    </div>
+    <div class="col-12 col-md-6">
+        {% if app.user != guest %}
+            {# Show profile summary only to potential hosts #}
+            <p><strong>{{ 'profile.summary'|trans }}</strong></p>
+            {% set fields = guest.memberFields %}
+            <p>
+                {% if fields[app.request.locale] is defined %}
+                    {{ fields[app.request.locale]['ProfileSummary']|purify }}
+                {% else %}
+                    {% if fields['en'] is defined %}
+                        {{ fields['en']['ProfileSummary']|purify }}
+                    {% else %}
+                        {{ 'profile.summary.none'|trans }}
+                    {% endif %}
+                {% endif %}
+            </p>
+        {% endif %}
+    </div>
+</div>

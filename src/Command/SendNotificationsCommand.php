@@ -9,7 +9,6 @@ use App\Entity\PostNotification;
 use App\Repository\PostNotificationRepository;
 use App\Service\Mailer;
 use App\Utilities\TranslatorTrait;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
@@ -28,29 +27,15 @@ class SendNotificationsCommand extends Command
 {
     use TranslatorTrait;
 
-    /**
-     * @var string
-     */
     protected static $defaultName = 'send:notifications';
 
-    /**
-     * @var ParameterBagInterface
-     */
-    private $params;
+    private ParameterBagInterface $params;
 
-    /**
-     * @var EntityManager
-     */
-    private $entityManager;
+    private EntityManagerInterface $entityManager;
 
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-    /**
-     * @var Mailer
-     */
-    private $mailer;
+    private LoggerInterface $logger;
+
+    private Mailer $mailer;
 
     public function __construct(
         EntityManagerInterface $entityManager,
@@ -65,7 +50,7 @@ class SendNotificationsCommand extends Command
         $this->mailer = $mailer;
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setDescription('Send a batch of notification email every time the command is called')
@@ -73,10 +58,6 @@ class SendNotificationsCommand extends Command
         ;
     }
 
-    /**
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->logger->notice('Started the export');
@@ -90,7 +71,6 @@ class SendNotificationsCommand extends Command
 
         /** @var PostNotificationRepository $notificationQueue */
         $notificationQueue = $this->entityManager->getRepository(PostNotification::class);
-        /** @var PostNotification[] $scheduled */
         $scheduledNotifications = $notificationQueue->getScheduledNotifications($batchSize);
 
         $sent = 0;
@@ -125,14 +105,21 @@ class SendNotificationsCommand extends Command
                 $this->entityManager->persist($scheduled);
             }
             $this->entityManager->flush();
+            $io->success(
+                sprintf(
+                    'Sent %d messages, skipped %d messages',
+                    $sent,
+                    \count($scheduledNotifications) - $sent
+                )
+            );
+        } else {
+            $io->success('No messages to be sent');
         }
-
-        $io->success(sprintf('Sent %d messages, skipped %d messages', $sent, $batchSize - $sent));
 
         return 0;
     }
 
-    private function determineSender(ForumPost $post)
+    private function determineSender(ForumPost $post): Address
     {
         $thread = $post->getThread();
         if ($thread->getGroup()) {
@@ -144,7 +131,7 @@ class SendNotificationsCommand extends Command
         return $from;
     }
 
-    private function getSubject(PostNotification $notification)
+    private function getSubject(PostNotification $notification): string
     {
         $prefix = '';
         switch ($notification->getType()) {

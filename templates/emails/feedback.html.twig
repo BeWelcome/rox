@@ -4,8 +4,9 @@
 {% endif %}
 {{ FeedbackQuestion|raw }}
 <br>
-{% if not no_reply_needed is defined %}
+{% if not no_reply_needed %}
     Please reply to this feedback<br>
+    <br>
 {% endif %}
 Browser: {{ browser }}<br>
 Host: {{ host }}<br>

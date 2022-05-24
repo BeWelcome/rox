@@ -90,7 +90,7 @@ $vars =& PPostHandler::getVars($callbackId);
 
             ?>
             <!-- input title -->
-                <div class="form-group mb-2">
+                <div class="o-form-group mb-2">
                         <label class="m-0"
                                                              for="topic_title"><?php echo $words->getFormatted("forum_label_topicTitle"); ?></label>
 
@@ -106,17 +106,17 @@ $vars =& PPostHandler::getVars($callbackId);
                     }
                     ?>
 
-                    <input type="text" class="form-control" name="topic_title" maxlength="200" id="topic_title"
-                           value="<?php echo $topic_titletrad; ?>" aria-describedby="forumaddtitle">
+                    <input type="text" class="o-input" name="topic_title" maxlength="200" id="topic_title"
+                           value="<?php echo htmlspecialchars($topic_titletrad); ?>" aria-describedby="forumaddtitle">
             </div>
 
         <?php } ?>
     </div>
     <div class="col-12 mb-2">
-        <div class="form-group">
+        <div class="o-form-group">
             <label for="topic_text"><?php echo $words->getFormatted("forum_label_text"); ?></label>
 
-            <textarea name="topic_text" id="topic_text" class="form-control editor" rows="10" style="min-height: 10em;" placeholder="<?= $words->get('forum.post.placeholder'); ?>"><?php
+            <textarea name="topic_text" id="topic_text" class="o-input editor" rows="10" style="min-height: 10em;" placeholder="<?= $words->get('forum.post.placeholder'); ?>"><?php
                 if (isset($void_string)) {
                     echo $void_string;
                 } else {
@@ -135,9 +135,9 @@ $vars =& PPostHandler::getVars($callbackId);
         </div>
     </div>
     <div class="col-12 col-md-4 order-1 order-md-2 mb-1 px-1">
-        <div class="form-check">
-            <input type="checkbox" name="NotifyMe" id="NotifyMe" class="form-check-input" <?php echo $notifymecheck ?>>
-            <label for="NotifyMe" class="form-check-label"><?php echo $words->getFormatted("forum_NotifyMeForThisThread") ?></label>
+        <div class="o-checkbox">
+            <input type="checkbox" name="NotifyMe" id="NotifyMe" class="o-checkbox__input" <?php echo $notifymecheck ?>>
+            <label for="NotifyMe" class="o-checkbox__label"><?php echo $words->getFormatted("forum_NotifyMeForThisThread") ?></label>
         </div>
     </div>
 

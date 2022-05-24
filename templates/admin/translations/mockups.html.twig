@@ -4,18 +4,15 @@
     {{ 'translations.mockups.title' | trans }}
 {% endblock %}
 
+{% block stylesheets %}
+    {{ encore_entry_link_tags('tailwind')  }}
+{% endblock stylesheets %}
+
 {% block content %}
     <h1>{{ 'translations.headline.mockups' | trans }}</h1>
-    {% for section, templates in mockups %}
-        <p><strong>{{ section|capitalize }}</strong></p>
-        {% for name, mockup in templates %}
-            {% set route = 'translation_mockup_' ~ mockup.type %}
-            {% set icon %}
-                {% if mockup.type == 'email'%}<i class="far fa-envelope"></i>{% endif %}
-                {% if mockup.type == 'page'%}<i class="fas fa-globe"></i>{% endif %}
-                {% if mockup.type == 'template'%}<i class="far fa-file"></i>{% endif %}
-            {% endset %}
-            <a href="{{url(route, {'name': name})}}" class="btn btn-primary mr-2 mb-2">{{ name }} {{ icon }}</a>
-        {% endfor %}
+    <div class="u-grid u-grid-cols-2 u-gap-8">
+    {% for feature in features %}
+        <a class="o-button" href="{{url('translations_mockups_feature', {'feature': feature})}}"><i class="fas fa-folder"></i>&nbsp;{{ feature|humanize }}</a>
     {% endfor %}
+    </div>
 {% endblock content %}

@@ -1,25 +1,30 @@
+{% import 'macros.twig' as macros %}
 {% extends 'base.html.twig' %}
 
-{% block javascripts %}
-{% endblock javascripts %}
+{% block stylesheets %}
+    {{ encore_entry_link_tags('tailwind')  }}
+    {{ encore_entry_link_tags('requests')  }}
+{% endblock stylesheets %}
 
 {% block content %}
+    {{ macros.messageheader_no_buttons(thread) }}
+
     {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
     {{ form_errors(form) }}
-    <div class="row">
-        <div class="col-12">
-            {{ form_row(form.subject.subject) }}
-            {{ form_errors(form.subject) }}
+    <div class="u-grid u-grid-cols-1">
+        <div class="u-mb-4">
             {{ form_row(form.message) }}
+            {% do form.subject.setRendered %}
             {{ form_rest(form) }}
         </div>
     </div>
 
-    <div class="row mb-3">
-        <div class="col-12">
-            <button type="submit" class="btn btn-primary">{{ 'label.message.button.send' | trans }}</button>
+    <div class="u-mb-4">
+        <div class="u-flex u-justify-end">
+            <button type="submit" class="o-button u-mt-8">{{ 'label.message.button.send' | trans }}</button>
         </div>
     </div>
+
     {{ form_end(form) }}
 
     {% include 'message/thread.html.twig' %}

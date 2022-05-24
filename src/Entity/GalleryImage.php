@@ -13,7 +13,10 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Gallery images.
  *
- * @ORM\Table(name="gallery_items", indexes={@ORM\Index(name="file", columns={"file"}), @ORM\Index(name="user_id_foreign", columns={"user_id_foreign"})})
+ * @ORM\Table(name="gallery_items", indexes={
+ *     @ORM\Index(name="gallery_items_file", columns={"file"}),
+ *     @ORM\Index(name="gallery_items_user_id_foreign", columns={"user_id_foreign"})
+ * })
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks
  *

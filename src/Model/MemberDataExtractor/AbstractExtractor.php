@@ -56,7 +56,7 @@ abstract class AbstractExtractor
     protected function writePersonalDataFileSubDirectory($parameters, $template, $subDirectory, $filename = null)
     {
         if (!is_dir($subDirectory)) {
-            @mkdir($subDirectory);
+            mkdir($subDirectory);
         }
 
         $filename = (null === $filename) ? $template : $filename;

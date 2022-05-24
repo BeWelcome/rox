@@ -1,7 +1,7 @@
 {% extends 'emails/request.template.html.twig' %}
 
 {% block message %}
-    <p>{% trans with {'%username%': sender.Username} %}email.request.reply.host{% endtrans %}</p>
+    <p>{% trans with {'%username%': sender.Username, 'gender': sender.Gender} %}email.request.reply.host{% endtrans %}</p>
     <p></p>
     <callout class="secondary">
         {{ message.message | raw }}
@@ -11,17 +11,18 @@
 
     {{ 'or' | trans }}
 
-    <button class="expand" href="{{ url('hosting_request_reply', { 'id': message.id }) }}">{{ 'reply' | trans }}</button>
+    <button class="expand" href="{{ url('conversation_reply', { id: message.id }) }}">{{ 'reply' | trans }}</button>
+    <p><a href="{{ url('conversation_mark_spam', { 'id': message.id }) }}">{{ 'message.report'|trans }}</a></p>
     </center>
 {% endblock message %}
 
 {% block request%}
     {% if changed %}<callout class="warning"><p>{{ 'request.details.changed'|trans }}</p></callout>{% endif %}
-    {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_OPEN') %}{% trans with {'%username%': sender.Username} %}email.request.reply.host.open{% endtrans %}<br>{% endif %}
-    {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_CANCELLED') %}{% trans with {'%username%': sender.Username} %}email.request.reply.host.cancelled{% endtrans %}<br>{% endif %}
-    {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_DECLINED') %}{% trans with {'%username%': sender.Username} %}email.request.reply.host.declined{% endtrans %}<br>{% endif %}
-    {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_ACCEPTED') %}{% trans with {'%username%': sender.Username} %}email.request.reply.host.accepted{% endtrans %}<br>{% endif %}
-    {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_TENTATIVELY_ACCEPTED') %}{% trans with {'%username%': sender.Username} %}email.request.reply.host.tentatively{% endtrans %}<br>{% endif %}
+    {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_OPEN') %}{% trans with {'%username%': sender.Username, 'gender': sender.Gender} %}email.request.reply.host.open{% endtrans %}<br>{% endif %}
+    {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_CANCELLED') %}{% trans with {'%username%': sender.Username, 'gender': sender.Gender} %}email.request.reply.host.cancelled{% endtrans %}<br>{% endif %}
+    {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_DECLINED') %}{% trans with {'%username%': sender.Username, 'gender': sender.Gender} %}email.request.reply.host.declined{% endtrans %}<br>{% endif %}
+    {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_ACCEPTED') %}{% trans with {'%username%': sender.Username, 'gender': sender.Gender} %}email.request.reply.host.accepted{% endtrans %}<br>{% endif %}
+    {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_TENTATIVELY_ACCEPTED') %}{% trans with {'%username%': sender.Username, 'gender': sender.Gender} %}email.request.reply.host.tentatively{% endtrans %}<br>{% endif %}
     <br>
     {{ 'request.arrival' | trans }}:<br>
     {{ request.arrival|format_date('full', locale=receiverLocale) }}<br>

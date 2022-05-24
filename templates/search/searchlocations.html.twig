@@ -4,7 +4,6 @@
 {% block javascripts %}
     {{ encore_entry_script_tags('jquery_ui') }}
     {{ encore_entry_script_tags('leaflet') }}
-    {{ encore_entry_script_tags('search/searchpicker') }}
     {{ encore_entry_script_tags('search/loadcontent') }}
     {{ encore_entry_script_tags('search/locations') }}
 {% endblock javascripts %}
@@ -12,6 +11,7 @@
 {% block stylesheets %}
     {{ encore_entry_link_tags('leaflet') }}
     {{ encore_entry_link_tags('jquery_ui') }}
+    {{ encore_entry_link_tags('search/locations') }}
 {% endblock stylesheets %}
 
 {% block content %}
@@ -29,7 +29,9 @@
     {{ form_errors(form) }}
     <div class="row mb-3">
         <div class="col-12">
-            {{ form_row(form.location, {'attr': {'class': 'search-picker'}, 'required': false }) }}
+            {{ form_label(form.location) }}
+            {{ form_widget(form.location, {'attr': {'class': 'js-search-picker'}, 'required': false }) }}
+            <span class="form-text mb-2 bg-notice">{{ 'search.locations.help' | trans }}</span>
         </div>
         <div class="col-6 col-sm-4">
             {{ form_row(form.show_options, {'label_attr': {'class':'switch-custom'}, 'attr': {'class':'show_options'}}) }}

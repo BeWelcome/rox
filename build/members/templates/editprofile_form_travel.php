@@ -12,7 +12,7 @@
                     <?= $words->get('ProfilePastTrips') ?>
                 </label>
                 <div class="col-12 col-md-9">
-                    <textarea name="PastTrips" class="form-control" rows="3"><?= $vars['PastTrips'] ?></textarea>
+                    <textarea name="PastTrips" class="o-input" rows="3"><?= $vars['PastTrips'] ?></textarea>
                 </div>
             </div>
 
@@ -21,7 +21,7 @@
                     <?= $words->get('ProfilePlannedTrips') ?>
                 </label>
                 <div class="col-12 col-md-9">
-                                <textarea name="PlannedTrips" class="form-control"
+                                <textarea name="PlannedTrips" class="o-input"
                                           rows="3"><?= $vars['PlannedTrips'] ?></textarea>
                 </div>
             </div>

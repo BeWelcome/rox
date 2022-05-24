@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Doctrine\CommentAdminActionType;
 use App\Entity\Comment;
 use App\Entity\Member;
+use App\Form\AddCommentType;
 use App\Form\CustomDataClass\ReportCommentRequest;
 use App\Form\ReportCommentType;
 use App\Service\Mailer;
@@ -15,6 +16,7 @@ use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class CommentController extends AbstractController
 {
@@ -33,6 +35,7 @@ class CommentController extends AbstractController
         Request $request,
         Member $member,
         Comment $comment,
+        TranslatorInterface $translator,
         Mailer $mailer
     ) {
 //        \todo Should we only allow the receiver of a comment to report it?
@@ -67,7 +70,7 @@ class CommentController extends AbstractController
                     $em->persist($comment);
                     $em->flush();
 
-                    $this->addTranslatedFlash('notice', 'flash.feedback.safetyteam');
+                    $this->addFlash('notice', $translator->trans('flash.feedback.safetyteam'));
 
                     return $this->redirectToRoute('profile_all_comments', ['username' => $member->getUsername()]);
                 }
@@ -80,6 +83,58 @@ class CommentController extends AbstractController
             'form' => $form->createView(),
             'comment' => $comment,
             'member' => $member,
+        ]);
+    }
+
+    /**
+     * @Route("/members/{username}/comment/add", name="add_comment",
+     *     requirements={"username" = "(?i:[a-z](?!.*[-_.][-_.])[a-z0-9-._]{2,18}[a-z0-9])"}))
+     */
+    public function addComment(Request $request, Member $member): Response
+    {
+        $form = $this->createForm(AddCommentType::class);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->addTranslatedFlash(
+                'notice',
+                'flash.comment.added',
+                [
+                    'username' => $member->getUsername(),
+                ]
+            );
+
+            return $this->redirectToRoute('profile_all_comments', ['username' => $member->getUsername()]);
+        }
+
+        return $this->render('/comments/add.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/members/{username}/comment/edit", name="edit_comment",
+     *     requirements={"username" = "(?i:[a-z](?!.*[-_.][-_.])[a-z0-9-._]{2,18}[a-z0-9])"}))
+     */
+    public function editComment(Request $request, Member $member): Response
+    {
+        $form = $this->createForm(AddCommentType::class);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->addTranslatedFlash(
+                'notice',
+                'flash.comment.added',
+                [
+                    'username' => $member->getUsername(),
+                ]
+            );
+
+            return $this->redirectToRoute('profile_all_comments', ['username' => $member->getUsername()]);
+        }
+
+        return $this->render('/comments/add.html.twig', [
+            'form' => $form->createView(),
         ]);
     }
 }

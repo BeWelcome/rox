@@ -32,7 +32,7 @@ if ($galleries) {
         <div class="col-12 col-sm-6 col-md-3">
             <div class="gallery_container">
                 <a href="gallery/show/sets/<?=$g->id?>">
-                    <img class="mb-3 framed" src="<?=($d) ? 'gallery/thumbimg?id='.$d : 'images/lightview/blank.gif'?>" alt="image"/>
+                    <img class="mb-3 border-2" src="<?=($d) ? 'gallery/thumbimg?id='.$d : 'images/lightview/blank.gif'?>" alt="image"/>
                     <span class="alert alert-info p-1" style="position: absolute;"><i class="fa fa-image mr-1"></i><?=$num_rows?></span>
                 </a>
             <h4 class="mb-0"><a href="gallery/show/sets/<?=$g->id?>"><?= htmlspecialchars($g->title)?></a></h4>

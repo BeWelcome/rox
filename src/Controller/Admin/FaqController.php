@@ -238,6 +238,11 @@ class FaqController extends FaqBaseController
              * Changes in an FAQ are always considered major updates.
              */
 
+            if ($faq->getCategory() !== $data->faqCategory) {
+                $faq->setCategory($data->faqCategory);
+                $em->persist($faq);
+            }
+
             if ($faq->getQAndA() !== $data->wordCode) {
                 // \todo Update things...
             }
@@ -267,7 +272,7 @@ class FaqController extends FaqBaseController
             $em->flush();
 
             $this->addFlash('notice', 'Update FAQ ' . $faq->getQAndA());
-            $this->translationModel->refreshTranslationsCache();
+            // $this->translationModel->refreshTranslationsCache();
 
             return $this->redirectToRoute('admin_faqs_overview', ['categoryId' => $faq->getCategory()->getId()]);
         }

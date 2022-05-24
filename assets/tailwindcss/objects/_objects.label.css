@@ -1,0 +1,37 @@
+/* ==========================================================================
+   #LABEL
+   ========================================================================== */
+
+/**
+ * Base styles for label.
+ */
+
+
+
+.o-label {
+  margin-bottom: 8px;
+  font-weight: 300;
+}
+
+
+
+
+
+
+
+
+
+
+
+/* Color variations
+   ========================================================================== */
+
+/**
+ * White label (not whiskey though)
+ */
+
+.o-label--white {
+  color: theme('colors.white');
+  font-family: Signika;
+  font-weight: 400;
+}

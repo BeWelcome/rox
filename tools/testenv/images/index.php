@@ -15,14 +15,15 @@
  * you want to do it in stages.
  **/
 
+use App\Kernel;
+
 set_time_limit(0);
-ini_set('memory_limit', '256M');
 
 /* Make sure we start in the subdirectory */
 
-$loader = require 'app/autoload.php';
+$loader = require 'config/bootstrap.php';
 
-$kernel = new AppKernel('dev', true);
+$kernel = new Kernel('dev', true);
 $kernel->boot();
 $container = $kernel->getContainer();
 
@@ -39,11 +40,11 @@ $dbPassword = $container->getParameter('database_password');
 
 $dbController = new DatabaseController($dbHost, $dbName, $dbUser, $dbPassword);
 
-$group = new GroupImagesCreator($dbController);
-$group->getImages();
+// $group = new GroupImagesCreator($dbController);
+// $group->getImages();
 
 $avatar = new AvatarImagesCreator($dbController);
 $avatar->getImages();
 
-$gallery = new GalleryImagesCreator($dbController);
-$gallery->getImages();
+// $gallery = new GalleryImagesCreator($dbController);
+// $gallery->getImages();

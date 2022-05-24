@@ -1,0 +1,116 @@
+.c-trip-legs--landing {
+	display: flex;
+	flex-direction: column;
+}
+
+.c-trip-legs__item {
+  display: grid;
+  grid-template-columns: 104px 1fr 104px;
+  width: 100%;
+  grid-gap: 36px;
+  padding: 24px 36px;
+  margin: 8px 0;
+  border-radius: 8px;
+  background-color: rgba(0, 0, 0, 0.3)
+}
+
+.c-trip-legs__item--small {
+  display: grid;
+  grid-template-columns: 1fr;
+  width: 100%;
+  max-width: 100%;
+  grid-gap: 8px;
+  padding: 8px 12px;
+  margin: 8px 0;
+  border-radius: 8px;
+  background-color: rgba(0, 0, 0, 0.3)
+}
+
+
+@media (max-width: 900px) {
+  .c-trip-legs__item {
+    grid-gap: initial;
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.c-trip-legs--landing .c-trip-legs__item {
+  background-image: url("../../images/trips-infinite.jpg");
+	display: flex;
+	flex-direction: column-reverse;
+  position: relative;
+}
+
+.c-trip-legs--landing .c-trip-legs__item::after {
+  background-color: rgba(0, 0, 0, 0.40);
+  content: '';
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  border-radius: 8px;
+}
+
+.c-trip-legs--landing .c-trip-legs__icons-wrapper,
+.c-trip-legs--landing .c-trip-legs__text-wrapper,
+.c-trip-legs--landing .o-avatar {
+  z-index: 1;
+}
+
+.c-trip-legs__item--invited {
+	background-color: rgba(255, 255, 255, 0.3);
+}
+
+.c-trip-legs__icons-wrapper {
+	display: flex;
+	justify-content: center;
+	align-items: flex-start;
+}
+
+@media (max-width: 900px) {
+  .c-trip-legs__icons-wrapper {
+    justify-content: initial;
+    margin-bottom: 16px;
+  }
+}
+
+
+
+
+
+@media (max-width: 900px) {
+  .c-trip-legs__text-wrapper {
+    margin-bottom: 24px;
+  }
+}
+
+
+
+
+
+.c-trip-legs__o-avatar {
+	justify-self: center;
+}
+
+
+@media (max-width: 900px) {
+  .c-trip-legs__o-avatar {
+    margin-bottom: 16px;
+  }
+}
+
+.c-trip-legs--landing .c-trip-legs__o-avatar {
+	position: relative;
+	left: 50%;
+	transform: translateX(-50%);
+}
+
+a.anchor {
+  display: block;
+  position: relative;
+  top: -50px;
+  visibility: hidden;
+}

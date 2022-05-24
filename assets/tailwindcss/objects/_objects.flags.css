@@ -1,0 +1,266 @@
+/*!*****************************************************
+
+https://github.com/HatScripts/circle-flags
+
+******************************************************/
+
+.o-flag {
+    display: inline-block;
+    background-repeat:no-repeat;
+    border-radius: 100%;
+    overflow: hidden;
+    width: 18px;
+    height: 18px;
+    box-shadow: 0 0 5px 0px black;
+    background-size: contain;
+}
+
+
+
+
+.o-flag--CH {background-image:url("../../../node_modules/circle-flags/flags/ch.svg")}
+.o-flag--NP {background-image:url("../../../node_modules/circle-flags/flags/np.svg")}
+.o-flag--DZ {background-image:url("../../../node_modules/circle-flags/flags/dz.svg")}
+.o-flag--AO {background-image:url("../../../node_modules/circle-flags/flags/ao.svg")}
+.o-flag--BJ {background-image:url("../../../node_modules/circle-flags/flags/bj.svg")}
+.o-flag--BW {background-image:url("../../../node_modules/circle-flags/flags/bw.svg")}
+.o-flag--BF {background-image:url("../../../node_modules/circle-flags/flags/bf.svg")}
+.o-flag--BI {background-image:url("../../../node_modules/circle-flags/flags/bi.svg")}
+.o-flag--CM {background-image:url("../../../node_modules/circle-flags/flags/cm.svg")}
+.o-flag--CV {background-image:url("../../../node_modules/circle-flags/flags/cv.svg")}
+.o-flag--CF {background-image:url("../../../node_modules/circle-flags/flags/cf.svg")}
+.o-flag--TD {background-image:url("../../../node_modules/circle-flags/flags/td.svg")}
+.o-flag--CD {background-image:url("../../../node_modules/circle-flags/flags/cd.svg")}
+.o-flag--DJ {background-image:url("../../../node_modules/circle-flags/flags/dj.svg")}
+.o-flag--EG {background-image:url("../../../node_modules/circle-flags/flags/eg.svg")}
+.o-flag--GQ {background-image:url("../../../node_modules/circle-flags/flags/gq.svg")}
+.o-flag--ER {background-image:url("../../../node_modules/circle-flags/flags/er.svg")}
+.o-flag--ET {background-image:url("../../../node_modules/circle-flags/flags/et.svg")}
+.o-flag--GA {background-image:url("../../../node_modules/circle-flags/flags/ga.svg")}
+.o-flag--GM {background-image:url("../../../node_modules/circle-flags/flags/gm.svg")}
+.o-flag--GH {background-image:url("../../../node_modules/circle-flags/flags/gh.svg")}
+.o-flag--GN {background-image:url("../../../node_modules/circle-flags/flags/gn.svg")}
+.o-flag--GW {background-image:url("../../../node_modules/circle-flags/flags/gw.svg")}
+.o-flag--CI {background-image:url("../../../node_modules/circle-flags/flags/ci.svg")}
+.o-flag--KE {background-image:url("../../../node_modules/circle-flags/flags/ke.svg")}
+.o-flag--LS {background-image:url("../../../node_modules/circle-flags/flags/ls.svg")}
+.o-flag--LR {background-image:url("../../../node_modules/circle-flags/flags/lr.svg")}
+.o-flag--LY {background-image:url("../../../node_modules/circle-flags/flags/ly.svg")}
+.o-flag--MG {background-image:url("../../../node_modules/circle-flags/flags/mg.svg")}
+.o-flag--MW {background-image:url("../../../node_modules/circle-flags/flags/mw.svg")}
+.o-flag--ML {background-image:url("../../../node_modules/circle-flags/flags/ml.svg")}
+.o-flag--MR {background-image:url("../../../node_modules/circle-flags/flags/mr.svg")}
+.o-flag--MU {background-image:url("../../../node_modules/circle-flags/flags/mu.svg")}
+.o-flag--MA {background-image:url("../../../node_modules/circle-flags/flags/ma.svg")}
+.o-flag--MZ {background-image:url("../../../node_modules/circle-flags/flags/mz.svg")}
+.o-flag--NA {background-image:url("../../../node_modules/circle-flags/flags/na.svg")}
+.o-flag--NE {background-image:url("../../../node_modules/circle-flags/flags/ne.svg")}
+.o-flag--NG {background-image:url("../../../node_modules/circle-flags/flags/ng.svg")}
+.o-flag--CG {background-image:url("../../../node_modules/circle-flags/flags/cg.svg")}
+.o-flag--RW {background-image:url("../../../node_modules/circle-flags/flags/rw.svg")}
+.o-flag--ST {background-image:url("../../../node_modules/circle-flags/flags/st.svg")}
+.o-flag--SN {background-image:url("../../../node_modules/circle-flags/flags/sn.svg")}
+.o-flag--SC {background-image:url("../../../node_modules/circle-flags/flags/sc.svg")}
+.o-flag--SL {background-image:url("../../../node_modules/circle-flags/flags/sl.svg")}
+.o-flag--SO {background-image:url("../../../node_modules/circle-flags/flags/so.svg")}
+.o-flag--ZA {background-image:url("../../../node_modules/circle-flags/flags/za.svg")}
+.o-flag--SS {background-image:url("../../../node_modules/circle-flags/flags/ss.svg")}
+.o-flag--SD {background-image:url("../../../node_modules/circle-flags/flags/sd.svg")}
+.o-flag--SR {background-image:url("../../../node_modules/circle-flags/flags/sr.svg")}
+.o-flag--SZ {background-image:url("../../../node_modules/circle-flags/flags/sz.svg")}
+.o-flag--TG {background-image:url("../../../node_modules/circle-flags/flags/tg.svg")}
+.o-flag--TN {background-image:url("../../../node_modules/circle-flags/flags/tn.svg")}
+.o-flag--UG {background-image:url("../../../node_modules/circle-flags/flags/ug.svg")}
+.o-flag--TZ {background-image:url("../../../node_modules/circle-flags/flags/tz.svg")}
+.o-flag--EH {background-image:url("../../../node_modules/circle-flags/flags/eh.svg")}
+.o-flag--YE {background-image:url("../../../node_modules/circle-flags/flags/ye.svg")}
+.o-flag--ZM {background-image:url("../../../node_modules/circle-flags/flags/zm.svg")}
+.o-flag--ZW {background-image:url("../../../node_modules/circle-flags/flags/zw.svg")}
+.o-flag--AI {background-image:url("../../../node_modules/circle-flags/flags/ai.svg")}
+.o-flag--AG {background-image:url("../../../node_modules/circle-flags/flags/ag.svg")}
+.o-flag--AR {background-image:url("../../../node_modules/circle-flags/flags/ar.svg")}
+.o-flag--AW {background-image:url("../../../node_modules/circle-flags/flags/aw.svg")}
+.o-flag--BS {background-image:url("../../../node_modules/circle-flags/flags/bs.svg")}
+.o-flag--BB {background-image:url("../../../node_modules/circle-flags/flags/bb.svg")}
+.o-flag--BQ-BO {background-image:url("../../../node_modules/circle-flags/flags/bq-bo.svg")}
+.o-flag--BZ {background-image:url("../../../node_modules/circle-flags/flags/bz.svg")}
+.o-flag--BM {background-image:url("../../../node_modules/circle-flags/flags/bm.svg")}
+.o-flag--BO {background-image:url("../../../node_modules/circle-flags/flags/bo.svg")}
+.o-flag--VG {background-image:url("../../../node_modules/circle-flags/flags/vg.svg")}
+.o-flag--BR {background-image:url("../../../node_modules/circle-flags/flags/br.svg")}
+.o-flag--CA {background-image:url("../../../node_modules/circle-flags/flags/ca.svg")}
+.o-flag--KY {background-image:url("../../../node_modules/circle-flags/flags/ky.svg")}
+.o-flag--CL {background-image:url("../../../node_modules/circle-flags/flags/cl.svg")}
+.o-flag--CO {background-image:url("../../../node_modules/circle-flags/flags/co.svg")}
+.o-flag--KM {background-image:url("../../../node_modules/circle-flags/flags/km.svg")}
+.o-flag--CR {background-image:url("../../../node_modules/circle-flags/flags/cr.svg")}
+.o-flag--CU {background-image:url("../../../node_modules/circle-flags/flags/cu.svg")}
+.o-flag--CW {background-image:url("../../../node_modules/circle-flags/flags/cw.svg")}
+.o-flag--DM {background-image:url("../../../node_modules/circle-flags/flags/dm.svg")}
+.o-flag--DO {background-image:url("../../../node_modules/circle-flags/flags/do.svg")}
+.o-flag--EC {background-image:url("../../../node_modules/circle-flags/flags/ec.svg")}
+.o-flag--SV {background-image:url("../../../node_modules/circle-flags/flags/sv.svg")}
+.o-flag--FK {background-image:url("../../../node_modules/circle-flags/flags/fk.svg")}
+.o-flag--GF {background-image:url("../../../node_modules/circle-flags/flags/gf.svg")}
+.o-flag--GL {background-image:url("../../../node_modules/circle-flags/flags/gl.svg")}
+.o-flag--GD {background-image:url("../../../node_modules/circle-flags/flags/gd.svg")}
+.o-flag--GT {background-image:url("../../../node_modules/circle-flags/flags/gt.svg")}
+.o-flag--GY {background-image:url("../../../node_modules/circle-flags/flags/gy.svg")}
+.o-flag--HT {background-image:url("../../../node_modules/circle-flags/flags/ht.svg")}
+.o-flag--HN {background-image:url("../../../node_modules/circle-flags/flags/hn.svg")}
+.o-flag--JM {background-image:url("../../../node_modules/circle-flags/flags/jm.svg")}
+.o-flag--MQ {background-image:url("../../../node_modules/circle-flags/flags/mq.svg")}
+.o-flag--MX {background-image:url("../../../node_modules/circle-flags/flags/mx.svg")}
+.o-flag--MS {background-image:url("../../../node_modules/circle-flags/flags/ms.svg")}
+.o-flag--NI {background-image:url("../../../node_modules/circle-flags/flags/ni.svg")}
+.o-flag--PA {background-image:url("../../../node_modules/circle-flags/flags/pa.svg")}
+.o-flag--PY {background-image:url("../../../node_modules/circle-flags/flags/py.svg")}
+.o-flag--PE {background-image:url("../../../node_modules/circle-flags/flags/pe.svg")}
+.o-flag--PR {background-image:url("../../../node_modules/circle-flags/flags/pr.svg")}
+.o-flag--BL {background-image:url("../../../node_modules/circle-flags/flags/bl.svg")}
+.o-flag--KN {background-image:url("../../../node_modules/circle-flags/flags/kn.svg")}
+.o-flag--LC {background-image:url("../../../node_modules/circle-flags/flags/lc.svg")}
+.o-flag--VC {background-image:url("../../../node_modules/circle-flags/flags/vc.svg")}
+.o-flag--SX {background-image:url("../../../node_modules/circle-flags/flags/sx.svg")}
+.o-flag--TT {background-image:url("../../../node_modules/circle-flags/flags/tt.svg")}
+.o-flag--TC {background-image:url("../../../node_modules/circle-flags/flags/tc.svg")}
+.o-flag--US {background-image:url("../../../node_modules/circle-flags/flags/us.svg")}
+.o-flag--VI {background-image:url("../../../node_modules/circle-flags/flags/vi.svg")}
+.o-flag--UY {background-image:url("../../../node_modules/circle-flags/flags/uy.svg")}
+.o-flag--VE {background-image:url("../../../node_modules/circle-flags/flags/ve.svg")}
+.o-flag--AF {background-image:url("../../../node_modules/circle-flags/flags/af.svg")}
+.o-flag--AZ {background-image:url("../../../node_modules/circle-flags/flags/az.svg")}
+.o-flag--BD {background-image:url("../../../node_modules/circle-flags/flags/bd.svg")}
+.o-flag--BT {background-image:url("../../../node_modules/circle-flags/flags/bt.svg")}
+.o-flag--BN {background-image:url("../../../node_modules/circle-flags/flags/bn.svg")}
+.o-flag--KH {background-image:url("../../../node_modules/circle-flags/flags/kh.svg")}
+.o-flag--CN {background-image:url("../../../node_modules/circle-flags/flags/cn.svg")}
+.o-flag--GE {background-image:url("../../../node_modules/circle-flags/flags/ge.svg")}
+.o-flag--HK {background-image:url("../../../node_modules/circle-flags/flags/hk.svg")}
+.o-flag--IN {background-image:url("../../../node_modules/circle-flags/flags/in.svg")}
+.o-flag--ID {background-image:url("../../../node_modules/circle-flags/flags/id.svg")}
+.o-flag--JP {background-image:url("../../../node_modules/circle-flags/flags/jp.svg")}
+.o-flag--KZ {background-image:url("../../../node_modules/circle-flags/flags/kz.svg")}
+.o-flag--LA {background-image:url("../../../node_modules/circle-flags/flags/la.svg")}
+.o-flag--MO {background-image:url("../../../node_modules/circle-flags/flags/mo.svg")}
+.o-flag--MY {background-image:url("../../../node_modules/circle-flags/flags/my.svg")}
+.o-flag--MV {background-image:url("../../../node_modules/circle-flags/flags/mv.svg")}
+.o-flag--MN {background-image:url("../../../node_modules/circle-flags/flags/mn.svg")}
+.o-flag--MM {background-image:url("../../../node_modules/circle-flags/flags/mm.svg")}
+.o-flag--NP {background-image:url("../../../node_modules/circle-flags/flags/np.svg")}
+.o-flag--KP {background-image:url("../../../node_modules/circle-flags/flags/kp.svg")}
+.o-flag--MP {background-image:url("../../../node_modules/circle-flags/flags/mp.svg")}
+.o-flag--PW {background-image:url("../../../node_modules/circle-flags/flags/pw.svg")}
+.o-flag--PG {background-image:url("../../../node_modules/circle-flags/flags/pg.svg")}
+.o-flag--PH {background-image:url("../../../node_modules/circle-flags/flags/ph.svg")}
+.o-flag--SG {background-image:url("../../../node_modules/circle-flags/flags/sg.svg")}
+.o-flag--KR {background-image:url("../../../node_modules/circle-flags/flags/kr.svg")}
+.o-flag--LK {background-image:url("../../../node_modules/circle-flags/flags/lk.svg")}
+.o-flag--TW {background-image:url("../../../node_modules/circle-flags/flags/tw.svg")}
+.o-flag--TJ {background-image:url("../../../node_modules/circle-flags/flags/tj.svg")}
+.o-flag--TH {background-image:url("../../../node_modules/circle-flags/flags/th.svg")}
+.o-flag--TL {background-image:url("../../../node_modules/circle-flags/flags/tl.svg")}
+.o-flag--TM {background-image:url("../../../node_modules/circle-flags/flags/tm.svg")}
+.o-flag--VN {background-image:url("../../../node_modules/circle-flags/flags/vn.svg")}
+.o-flag--AL {background-image:url("../../../node_modules/circle-flags/flags/al.svg")}
+.o-flag--AD {background-image:url("../../../node_modules/circle-flags/flags/ad.svg")}
+.o-flag--AM {background-image:url("../../../node_modules/circle-flags/flags/am.svg")}
+.o-flag--AT {background-image:url("../../../node_modules/circle-flags/flags/at.svg")}
+.o-flag--BY {background-image:url("../../../node_modules/circle-flags/flags/by.svg")}
+.o-flag--BE {background-image:url("../../../node_modules/circle-flags/flags/be.svg")}
+.o-flag--BA {background-image:url("../../../node_modules/circle-flags/flags/ba.svg")}
+.o-flag--BG {background-image:url("../../../node_modules/circle-flags/flags/bg.svg")}
+.o-flag--HR {background-image:url("../../../node_modules/circle-flags/flags/hr.svg")}
+.o-flag--CY {background-image:url("../../../node_modules/circle-flags/flags/cy.svg")}
+.o-flag--CZ {background-image:url("../../../node_modules/circle-flags/flags/cz.svg")}
+.o-flag--DK {background-image:url("../../../node_modules/circle-flags/flags/dk.svg")}
+.o-flag--EE {background-image:url("../../../node_modules/circle-flags/flags/ee.svg")}
+.o-flag--FO {background-image:url("../../../node_modules/circle-flags/flags/fo.svg")}
+.o-flag--FI {background-image:url("../../../node_modules/circle-flags/flags/fi.svg")}
+.o-flag--FR {background-image:url("../../../node_modules/circle-flags/flags/fr.svg")}
+.o-flag--DE {background-image:url("../../../node_modules/circle-flags/flags/de.svg")}
+.o-flag--GI {background-image:url("../../../node_modules/circle-flags/flags/gi.svg")}
+.o-flag--GR {background-image:url("../../../node_modules/circle-flags/flags/gr.svg")}
+.o-flag--HU {background-image:url("../../../node_modules/circle-flags/flags/hu.svg")}
+.o-flag--IS {background-image:url("../../../node_modules/circle-flags/flags/is.svg")}
+.o-flag--IE {background-image:url("../../../node_modules/circle-flags/flags/ie.svg")}
+.o-flag--IM {background-image:url("../../../node_modules/circle-flags/flags/im.svg")}
+.o-flag--IT {background-image:url("../../../node_modules/circle-flags/flags/it.svg")}
+.o-flag--JE {background-image:url("../../../node_modules/circle-flags/flags/je.svg")}
+.o-flag--XK {background-image:url("../../../node_modules/circle-flags/flags/xk.svg")}
+.o-flag--LV {background-image:url("../../../node_modules/circle-flags/flags/lv.svg")}
+.o-flag--LI {background-image:url("../../../node_modules/circle-flags/flags/li.svg")}
+.o-flag--LT {background-image:url("../../../node_modules/circle-flags/flags/lt.svg")}
+.o-flag--LU {background-image:url("../../../node_modules/circle-flags/flags/lu.svg")}
+.o-flag--MT {background-image:url("../../../node_modules/circle-flags/flags/mt.svg")}
+.o-flag--MD {background-image:url("../../../node_modules/circle-flags/flags/md.svg")}
+.o-flag--MC {background-image:url("../../../node_modules/circle-flags/flags/mc.svg")}
+.o-flag--ME {background-image:url("../../../node_modules/circle-flags/flags/me.svg")}
+.o-flag--NL {background-image:url("../../../node_modules/circle-flags/flags/nl.svg")}
+.o-flag--MK {background-image:url("../../../node_modules/circle-flags/flags/mk.svg")}
+.o-flag--NO {background-image:url("../../../node_modules/circle-flags/flags/no.svg")}
+.o-flag--PL {background-image:url("../../../node_modules/circle-flags/flags/pl.svg")}
+.o-flag--PT {background-image:url("../../../node_modules/circle-flags/flags/pt.svg")}
+.o-flag--RO {background-image:url("../../../node_modules/circle-flags/flags/ro.svg")}
+.o-flag--RU {background-image:url("../../../node_modules/circle-flags/flags/ru.svg")}
+.o-flag--SM {background-image:url("../../../node_modules/circle-flags/flags/sm.svg")}
+.o-flag--RS {background-image:url("../../../node_modules/circle-flags/flags/rs.svg")}
+.o-flag--SK {background-image:url("../../../node_modules/circle-flags/flags/sk.svg")}
+.o-flag--SI {background-image:url("../../../node_modules/circle-flags/flags/si.svg")}
+.o-flag--ES {background-image:url("../../../node_modules/circle-flags/flags/es.svg")}
+.o-flag--SE {background-image:url("../../../node_modules/circle-flags/flags/se.svg")}
+.o-flag--CH {background-image:url("../../../node_modules/circle-flags/flags/ch.svg")}
+.o-flag--TR {background-image:url("../../../node_modules/circle-flags/flags/tr.svg")}
+.o-flag--UA {background-image:url("../../../node_modules/circle-flags/flags/ua.svg")}
+.o-flag--GB {background-image:url("../../../node_modules/circle-flags/flags/gb.svg")}
+.o-flag--VA {background-image:url("../../../node_modules/circle-flags/flags/va.svg")}
+.o-flag--BH {background-image:url("../../../node_modules/circle-flags/flags/bh.svg")}
+.o-flag--IR {background-image:url("../../../node_modules/circle-flags/flags/ir.svg")}
+.o-flag--IQ {background-image:url("../../../node_modules/circle-flags/flags/iq.svg")}
+.o-flag--IL {background-image:url("../../../node_modules/circle-flags/flags/il.svg")}
+.o-flag--KW {background-image:url("../../../node_modules/circle-flags/flags/kw.svg")}
+.o-flag--JO {background-image:url("../../../node_modules/circle-flags/flags/jo.svg")}
+.o-flag--KG {background-image:url("../../../node_modules/circle-flags/flags/kg.svg")}
+.o-flag--LB {background-image:url("../../../node_modules/circle-flags/flags/lb.svg")}
+.o-flag--OM {background-image:url("../../../node_modules/circle-flags/flags/om.svg")}
+.o-flag--PK {background-image:url("../../../node_modules/circle-flags/flags/pk.svg")}
+.o-flag--PS {background-image:url("../../../node_modules/circle-flags/flags/ps.svg")}
+.o-flag--QA {background-image:url("../../../node_modules/circle-flags/flags/qa.svg")}
+.o-flag--SA {background-image:url("../../../node_modules/circle-flags/flags/sa.svg")}
+.o-flag--SY {background-image:url("../../../node_modules/circle-flags/flags/sy.svg")}
+.o-flag--AE {background-image:url("../../../node_modules/circle-flags/flags/ae.svg")}
+.o-flag--UZ {background-image:url("../../../node_modules/circle-flags/flags/uz.svg")}
+.o-flag--AS {background-image:url("../../../node_modules/circle-flags/flags/as.svg")}
+.o-flag--AU {background-image:url("../../../node_modules/circle-flags/flags/au.svg")}
+.o-flag--CX {background-image:url("../../../node_modules/circle-flags/flags/cx.svg")}
+.o-flag--CC {background-image:url("../../../node_modules/circle-flags/flags/cc.svg")}
+.o-flag--CK {background-image:url("../../../node_modules/circle-flags/flags/ck.svg")}
+.o-flag--FJ {background-image:url("../../../node_modules/circle-flags/flags/fj.svg")}
+.o-flag--PF {background-image:url("../../../node_modules/circle-flags/flags/pf.svg")}
+.o-flag--GU {background-image:url("../../../node_modules/circle-flags/flags/gu.svg")}
+.o-flag--KI {background-image:url("../../../node_modules/circle-flags/flags/ki.svg")}
+.o-flag--MH {background-image:url("../../../node_modules/circle-flags/flags/mh.svg")}
+.o-flag--FM {background-image:url("../../../node_modules/circle-flags/flags/fm.svg")}
+.o-flag--NZ {background-image:url("../../../node_modules/circle-flags/flags/nz.svg")}
+.o-flag--NR {background-image:url("../../../node_modules/circle-flags/flags/nr.svg")}
+.o-flag--NU {background-image:url("../../../node_modules/circle-flags/flags/nu.svg")}
+.o-flag--NF {background-image:url("../../../node_modules/circle-flags/flags/nf.svg")}
+.o-flag--WS {background-image:url("../../../node_modules/circle-flags/flags/ws.svg")}
+.o-flag--SB {background-image:url("../../../node_modules/circle-flags/flags/sb.svg")}
+.o-flag--TK {background-image:url("../../../node_modules/circle-flags/flags/tk.svg")}
+.o-flag--TO {background-image:url("../../../node_modules/circle-flags/flags/to.svg")}
+.o-flag--TV {background-image:url("../../../node_modules/circle-flags/flags/tv.svg")}
+.o-flag--VU {background-image:url("../../../node_modules/circle-flags/flags/vu.svg")}
+.o-flag--EU {background-image:url("../../../node_modules/circle-flags/flags/european_union.svg")}
+.o-flag--UN {background-image:url("../../../node_modules/circle-flags/flags/united_nations.svg")}
+
+
+
+
+
+.o-flag--s {width: 12px;height: 12px}
+.o-flag--l {width: 24px;height: 24px}
+.o-flag--xl {width: 32px;height: 32px}
+
+
+

@@ -3,7 +3,7 @@
     $vars = array();
     $words = $this->words;
     $layoutbits = new MOD_layoutbits();
-    
+
     $member = $this->member;
     $Username = $member->Username;
     $edit_mode = false;
@@ -26,7 +26,7 @@
         $note->Comment = $vars['ProfileNoteComment'];
     }
 
-    // Display errors from last submit	
+    // Display errors from last submit
     if (isset($vars['errors']))
     {
         foreach ($vars['errors'] as $error)
@@ -46,7 +46,7 @@
     $formkit = $this->layoutkit->formkit;
     $callback_tag = $formkit->setPostCallback('MembersController', 'addnoteCallback');
     ?>
-    
+
             <div class="col-12">
                 <h3><?php
                 if (!$edit_mode) {
@@ -62,9 +62,9 @@
                 <?=$callback_tag ?>
             <input name="IdMember" value="<?=$member->id?>" type="hidden" />
 
-            <div class="form-group row">
+            <div class="o-form-group row">
                 <label class="col-12 col-sm-4 col-lg-2 col-form-label" for="ProfileNoteCategory"><?=$words->get("Category")?></label>
-                <select id="ProfileNoteCategory" name="ProfileNoteCategory" class="form-control select2 col-12 col-sm-8 col-lg-10 mb-2">
+                <select id="ProfileNoteCategory" name="ProfileNoteCategory" class="o-input select2 col-12 col-sm-8 col-lg-10 mb-2">
                     <option value="">-<?php echo $words->getBuffered('ProfileNoteCategory');?>-</option>
                         <?php foreach($categories as $category) {
                                 $catoption = '<option value="' . $category . '"';
@@ -77,20 +77,20 @@
                             ?>
                 </select><?php echo $words->flushBuffer(); ?>
             </div>
-            <div class="form-group row ProfileCategory">
+            <div class="o-form-group row ProfileCategory">
                 <label class="col-12 col-sm-4 col-lg-2 col-form-label" for="ProfileNoteCategoryFree"><?=$words->get("ProfileNoteCategoryFree")?></label>
-                <?php echo '<input name="ProfileNoteCategoryFree" id="ProfileNoteCategoryFree" class="col-12 col-sm-8 col-lg-10 form-control" value="';
+                <?php echo '<input name="ProfileNoteCategoryFree" id="ProfileNoteCategoryFree" class="col-12 col-sm-8 col-lg-10 o-input" value="';
                     if (!in_array($note->CategoryFree, $categories)) {
                         echo $note->CategoryFree;
                     };
                     echo '" />';
                 ?>
             </div>
-            <div class="form-group row">
+            <div class="o-form-group row">
                 <label class="col-12 col-sm-4 col-lg-2 col-form-label" for="ProfileNoteComment"><?php echo $words->get("ProfileNoteCommentInfo") ?></label>
-                <textarea name="ProfileNoteComment" id="ProfileNoteComment" rows="4" class="col-12 col-sm-8 col-lg-10 mb-2 form-control"><?php echo $note->Comment; ?></textarea>
+                <textarea name="ProfileNoteComment" id="ProfileNoteComment" rows="4" class="col-12 col-sm-8 col-lg-10 mb-2 o-input"><?php echo $note->Comment; ?></textarea>
             </div>
-                <div class="form-group row">
+                <div class="o-form-group row">
                     <div class="offset-sm-4 offset-lg-2">
                     <?php
                     if ($edit_mode || isset($vars['success']) || isset($vars['errors'])) { ?>

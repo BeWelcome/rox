@@ -55,7 +55,7 @@
                     <div class="comment-bg-<?=$quality?> p-2">
                        <div class="my-1 clearfix">
                            <a href="members/<?=$c->UsernameFromMember?>">
-                               <img class="float-left mr-2"  src="members/avatar/<?=$c->UsernameFromMember?>/50"  height="50"  width="50"  alt="<?=$c->UsernameFromMember?>" />
+                               <img class="float-left mr-2 profileimg avatar-48"  src="members/avatar/<?=$c->UsernameFromMember?>/48" alt="<?=$c->UsernameFromMember?>" />
                            </a>
                            <div>
                                <p class="m-0" style="line-height: 1.0;">
@@ -134,7 +134,7 @@ if (count($relations) > 0) { ?>
                             <div class="d-flex d-column w-100">
                                 <div>
                                     <a href="<?=PVars::getObj('env')->baseuri."members/".$rel->Username?>"  title="See profile <?=$rel->Username?>">
-                                        <img class="framed float-left"  src="members/avatar/<?=$rel->Username?>/50"  height="50"  width="50"  alt="Profile" />
+                                        <img class="float-left profileimg avatar-48"  src="members/avatar/<?=$rel->Username?>/48" alt="Profile" />
                                     </a>
                                 </div>
                                 <div>

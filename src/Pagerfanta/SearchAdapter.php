@@ -196,14 +196,35 @@ class SearchAdapter implements AdapterInterface
 
         $vars['search-distance'] = $data->distance;
         $vars['search-can-host'] = $data->can_host;
-        $vars['search-gender'] = $data->gender;
+
+        $gender = [
+            1 => 'male',
+            2 => 'female',
+            3 => 'other',
+        ];
+
+        $vars['search-gender'] = $gender[$data->gender] ?? '';
+
+        /*        switch ($data->gender) {
+                    case 1:
+                        $vars['search-gender'] = 'male';
+                        break;
+                    case 2:
+                        $vars['search-gender'] = 'female';
+                        break;
+                    case 4:
+                        $vars['search-gender'] = 'other';
+                        break;
+                    default:
+                        $vars['search-gender'] = '';
+                        break;
+                }
+        */
         $vars['search-age-minimum'] = $data->min_age;
         $vars['search-age-maximum'] = $data->max_age;
         $vars['search-groups'] = $data->groups;
         $vars['search-languages'] = $data->languages;
         $vars['search-text'] = $data->keywords;
-        $vars['search-number-items'] = 20;
-        $vars['search-sort-order'] = 6;
         $vars['search-last-login'] = $data->last_login;
         $vars['search-page'] = $data->page;
         $vars['search-sort-order'] = $data->order;

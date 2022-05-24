@@ -1,0 +1,57 @@
+{% import 'macros.twig' as macros %}
+
+<div class="c-trip-legs__item {% if leg.invitedBy == app.user %}c-trip-legs__item--invited{% endif %}">
+    <div class="c-trip-legs__icons-wrapper">
+        {% if constant('App\\Doctrine\\SubtripOptionsType::MEET_LOCALS') in leg.options %}
+            <a class="o-rounded o-rounded--l u-mx-4" href="{{ path('message_new', { 'username': leg.trip.creator.username }) }}" aria-label="{{ 'message.write_to' | trans | format(leg.trip.creator.username) }}" title="{{ 'message.write_to' | trans | format(leg.trip.creator.username) }}">
+                <i class="fa fa-fw fa-envelope"></i>
+            </a>
+        {% endif %}
+        {% if constant('App\\Doctrine\\SubtripOptionsType::LOOKING_FOR_HOST') in leg.options %}
+            {% if leg.invitationBy(app.user) %}
+                {% set invitation = leg.invitationBy(app.user) %}
+                {% set username = invitation.messages[0].initiator.Username %}
+                <a class="o-rounded o-rounded--l u-mx-4{% if leg.invitedBy == app.user %} u-bg-green-dark {% endif %}" href="{{ path('conversation_reply', {id: invitation.messages[0].id}) }}" aria-label="{{ 'invitation.reply' | trans | format(leg.trip.creator.username) }}" title="{{ 'invitation.reply' | trans | format(leg.trip.creator.username) }}">
+                    <i class="fa fa-fw fa-house-user"></i>
+                </a>
+            {% else %}
+                <a class="o-rounded o-rounded--l u-mx-4" href="{{ path('hosting_invitation', { 'leg': leg.id }) }}" aria-label="{{ 'invite.username' | trans | format(leg.trip.creator.username) }}" title="{{ 'invite.username' | trans | format(leg.trip.creator.username) }}">
+                    <i class="fa fa-fw fa-house-user"></i>
+                </a>
+            {% endif %}
+        {% endif %}
+    </div>
+    <div class="c-trip-legs__text-wrapper">
+        <a class="u-text-24 u-leading-24 u-font-700 u-text-white hover:u-text-white hover:u-opacity-70 u-ellipsis u-font-display u-block u-mb-4" href="{{ path('trip_show', {'id': leg.trip.id }) }}">{{ leg.trip.summary }}</a>
+        <p class="u-text-white u-font-display u-font-700">{{ leg.location.name }},
+            <span class="u-font-300">{{ leg.arrival|format_date('full') }}
+                {% if leg.arrival != leg.departure %}
+                    –
+                    {{ leg.departure|format_date('full') }}
+                {% endif %}
+            </span>
+        </p>
+        <p class="u-text-white u-font-display u-italic u-my-8">{{ leg.trip.description | purify | truncate(240) }}</p>
+        <div class="u-flex">
+            <div class="c-trip-card__icon-grid u-mr-16">
+                <i class="fa fa-users u-text-white u-text-16 u-justify-self-center u-self-center"></i>
+                <p class="u-text-white u-font-display" aria-label="{{ 'trip.count.of.travellers'| trans ({'countOfTravellers' : leg.trip.countOfTravellers}) }}">
+                    <strong>{{ 'trip.count.of.travellers'| trans ({'countOfTravellers' : leg.trip.countOfTravellers}) }}</strong>
+                    {% if leg.trip.countOfTravellers > app.user.maxGuest %}
+                        <i class="fas fa-exclamation-triangle u-text-yellow" title="{{ 'trip.leg.warning.too.many.travellers'|trans }}"></i>
+                    {% endif %}
+                </p>
+            </div>
+            {% if constant('App\\Doctrine\\TripAdditionalInfoType::NONE') != leg.trip.additionalInfo %}
+                <div class="c-trip-card__icon-grid">
+                    <i class="fa fa-info-circle u-text-white u-text-16 u-justify-self-center u-self-center"></i>
+                    <p class="u-text-white u-font-display" aria-label="{{ ('trip.additional.info.' ~ leg.trip.additionalInfo)| lower | trans }}">{{ ('trip.additional.info.' ~ leg.trip.additionalInfo)| lower | trans}}</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    <div class="o-avatar o-avatar--white c-trip-legs__o-avatar">
+        {{ macros.roundedavatarstack(leg.trip.creator.username, 96) }}
+    </div>
+</div>
+

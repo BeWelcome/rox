@@ -13,6 +13,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use App\Doctrine\AccommodationType;
 use App\Doctrine\GroupMembershipStatusType;
+use App\Doctrine\LanguageLevelType;
 use App\Doctrine\MemberStatusType;
 use App\Encoder\LegacyPasswordEncoder;
 use Carbon\Carbon;
@@ -24,7 +25,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Persistence\Mapping\ClassMetadata;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Persistence\ObjectManagerAware;
-use Symfony\Component\Security\Core\Encoder\EncoderAwareInterface;
+use Symfony\Component\PasswordHasher\Hasher\PasswordHasherAwareInterface;
 use Symfony\Component\Security\Core\Exception\RuntimeException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -45,7 +46,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *     }
  * )
  */
-class Member implements UserInterface, \Serializable, EncoderAwareInterface, ObjectManagerAware
+class Member implements UserInterface, \Serializable, PasswordHasherAwareInterface, ObjectManagerAware
 {
     public const ROLE_ADMIN_ACCEPTER = 'ROLE_ADMIN_ACCEPTER';
     public const ROLE_ADMIN_ADMIN = 'ROLE_ADMIN_ADMIN';
@@ -157,7 +158,7 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
      *
      * @ORM\Column(name="ChangedId", type="integer", nullable=false)
      */
-    private $changedid = '0';
+    private $changedid = 0;
 
     /**
      * @var Location
@@ -187,11 +188,9 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
     private $longitude;
 
     /**
-     * @var int
-     *
      * @ORM\Column(name="NbRemindWithoutLogingIn", type="integer", nullable=false)
      */
-    private $nbremindwithoutlogingin;
+    private int $remindersWithOutLogin = 0;
 
     /**
      * @var int
@@ -247,6 +246,13 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
      * @Groups({"Member:Read"})
      */
     private $lastName = '0';
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="HideAttribute", type="integer", nullable=false)
+     */
+    private $hideAttribute = self::MEMBER_FIRSTNAME_HIDDEN | self::MEMBER_SECONDNAME_HIDDEN | self::MEMBER_LASTNAME_HIDDEN;
 
     /**
      * @var string
@@ -641,13 +647,6 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
     private $bewelcomed;
 
     /**
-     * @var int
-     *
-     * @ORM\Column(name="HideAttribute", type="integer", nullable=false)
-     */
-    private $hideAttribute;
-
-    /**
      * @var string
      *
      * @ORM\Column(name="registration_key", type="string", nullable=false)
@@ -776,6 +775,14 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
      * @return string
      */
     public function getUsername()
+    {
+        return $this->username;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUserIdentifier()
     {
         return $this->username;
     }
@@ -923,27 +930,23 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
     }
 
     /**
-     * Set nbremindwithoutlogingin.
+     * Set count of reminders without login.
      *
-     * @param int $nbremindwithoutlogingin
-     *
-     * @return Member
+     * @param mixed $remindersWithOutLogin
      */
-    public function setNbremindwithoutlogingin($nbremindwithoutlogingin)
+    public function setRemindersWithOutLogin($remindersWithOutLogin): self
     {
-        $this->nbremindwithoutlogingin = $nbremindwithoutlogingin;
+        $this->remindersWithOutLogin = $remindersWithOutLogin;
 
         return $this;
     }
 
     /**
-     * Get nbremindwithoutlogingin.
-     *
-     * @return int
+     * Get count of reminders without login.
      */
-    public function getNbremindwithoutlogingin()
+    public function getRemindersWithOutLogin(): int
     {
-        return $this->nbremindwithoutlogingin;
+        return $this->remindersWithOutLogin;
     }
 
     /**
@@ -2551,6 +2554,8 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
      * Returns the salt that was originally used to encode the password.
      *
      * Return null as we use BCrypt for password hashing
+     *
+     * @return ?string
      */
     public function getSalt()
     {
@@ -2571,17 +2576,15 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
      * Gets the name of the encoder used to encode the password.
      *
      * @throws RuntimeException password not supported
-     *
-     * @return string
      */
-    public function getEncoderName()
+    public function getPasswordHasherName(): string
     {
         if (preg_match('/^\*[0-9A-F]{40}$/', $this->getPassWord())) {
             return LegacyPasswordEncoder::class;
         }
 
         if (!preg_match('/^\$2y\$[0-9]{2}\$.{53}$/', $this->getPassWord())) {
-            throw new RuntimeException('Password is neither bcrypt or legacy sha1.');
+            throw RuntimeException('Password is neither bcrypt or legacy sha1.');
         }
 
         if ($this->isPrivileged()) {
@@ -2914,32 +2917,50 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
         return true;
     }
 
-    public function isExpired()
+    public function isSuspended(): bool
     {
         $suspended = (MemberStatusType::SUSPENDED === $this->status) ? true : false;
-        $askedToLeave = (MemberStatusType::ASKED_TO_LEAVE === $this->status) ? true : false;
 
-        return $suspended || $askedToLeave;
+        return $suspended;
     }
 
-    public function isBanned()
+    public function isExpired(): bool
+    {
+        $askedToLeave = (MemberStatusType::ASKED_TO_LEAVE === $this->status) ? true : false;
+
+        return $askedToLeave;
+    }
+
+    public function isBanned(): bool
     {
         return (MemberStatusType::BANNED === $this->status) ? true : false;
     }
 
     /**
-     * This is returns !isBrowseable.
-     *
-     * @return bool
+     * This returns !isBrowseable.
      */
-    public function isDeniedAccess()
+    public function isDeniedAccess(): bool
     {
         return !$this->isBrowseable();
     }
 
-    public function isNotConfirmedYet()
+    public function isNotConfirmedYet(): bool
     {
         return (MemberStatusType::AWAITING_MAIL_CONFIRMATION === $this->status) ? true : false;
+    }
+
+    public function isFirstnameShown(): bool
+    {
+        return ($this->hideAttribute & self::MEMBER_FIRSTNAME_HIDDEN) !== self::MEMBER_FIRSTNAME_HIDDEN;
+    }
+
+    public function getFirstnameOrUsername(): string
+    {
+        if ($this->isFirstnameShown()) {
+            return $this->getFirstname();
+        }
+
+        return $this->username;
     }
 
     /**
@@ -2948,6 +2969,20 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
     public function getLanguageLevels()
     {
         return $this->languageLevels->toArray();
+    }
+
+    /**
+     * @return array
+     */
+    public function getSkilledLanguageLevels()
+    {
+        $criteria = Criteria::create()->where(Criteria::expr()->orX(
+            Criteria::expr()->neq('level', LanguageLevelType::BEGINNER),
+            Criteria::expr()->eq('level', LanguageLevelType::HELLO_ONLY)
+        ));
+
+        return $this->languageLevels->matching($criteria)
+            ->toArray();
     }
 
     /**
@@ -3235,6 +3270,8 @@ class Member implements UserInterface, \Serializable, EncoderAwareInterface, Obj
      * Injects responsible ObjectManager and the ClassMetadata into this persistent object.
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
+     * @return void
      */
     public function injectObjectManager(ObjectManager $objectManager, ClassMetadata $classMetadata)
     {

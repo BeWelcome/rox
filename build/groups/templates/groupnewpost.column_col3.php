@@ -6,7 +6,9 @@ if (empty($vars))
 {
     $vars['topic_text'] = '';
     $vars['topic_title'] = '';
-    $vars['ThreadVisibility'] = 'GroupOnly';
+    if ($this->group->Type !== 'Public') {
+        $vars['ThreadVisibility'] = 'GroupOnly';
+    }
     $vars['NotifyMe'] = false;
     $error['text'] = false;
     $error['title'] = false;
@@ -31,10 +33,10 @@ $groupOnly = ($this->group->VisiblePosts == 'no');
                 <?= $callback_tag ?>
                 <input type="hidden" name="IdLanguage" id="IdLanguage" value="0">
                 <div class="col-12">
-                    <div class="form-group mb-2">
+                    <div class="o-form-group mb-2">
                         <label class="m-0"
                                for="topic_title"><?php echo $words->getFormatted("forum_label_topicTitle"); ?></label>
-                            <input type="text" class="form-control <?= ($error['title']) ? 'is-invalid': ''; ?>" name="topic_title" maxlength="200" id="topic_title"
+                            <input type="text" class="o-input <?= ($error['title']) ? 'is-invalid': ''; ?>" name="topic_title" maxlength="200" id="topic_title"
                                    value="<?= $vars['topic_title']; ?>" aria-describedby="forumaddtitle">
                         <div class="invalid-feedback">
                             <span class="form-error-icon badge badge-danger text-uppercase"><?= $words->get('Error'); ?></span>
@@ -43,10 +45,10 @@ $groupOnly = ($this->group->VisiblePosts == 'no');
                     </div>
                 </div>
                 <div class="col-12 mb-2">
-                    <div class="form-group">
+                    <div class="o-form-group">
                         <label for="topic_text"><?php echo $words->getFormatted("forum_label_text"); ?></label>
 
-                        <textarea name="topic_text" id="topic_text" class="form-control editor <?= ($error['text']) ? 'is-invalid': ''; ?>" rows="10" style="min-height: 10em;" placeholder="<?= $words->get('forum.post.placeholder'); ?>" >
+                        <textarea name="topic_text" id="topic_text" class="o-input editor <?= ($error['text']) ? 'is-invalid': ''; ?>" rows="10" style="min-height: 10em;" placeholder="<?= $words->get('forum.post.placeholder'); ?>" >
                             <?= $vars['topic_text']; ?>
                         </textarea>
 
@@ -60,9 +62,9 @@ $groupOnly = ($this->group->VisiblePosts == 'no');
                     </div>
                 </div>
                 <div class="col-12 col-md-4 order-1 order-md-2 mb-1 px-1">
-                    <div class="form-check">
-                        <input type="checkbox" name="NotifyMe" id="NotifyMe" class="form-check-input" <?= $notifyChecked ?>>
-                        <label for="NotifyMe" class="form-check-label"><?php echo $words->getFormatted("forum_NotifyMeForThisThread") ?></label>
+                    <div class="o-checkbox">
+                        <input type="checkbox" name="NotifyMe" id="NotifyMe" class="o-checkbox__input" <?= $notifyChecked ?>>
+                        <label for="NotifyMe" class="o-checkbox__label"><?php echo $words->getFormatted("forum_NotifyMeForThisThread") ?></label>
                     </div>
                 </div>
 
@@ -70,14 +72,14 @@ $groupOnly = ($this->group->VisiblePosts == 'no');
                     <legend class="sr-only"><?= $words->getFormatted("forum_label_visibility") ?></legend>
 
                     <input type="hidden" id="groupOnly" name="groupOnly" value="<?= $groupOnly ? "1" : "0"; ?>">
-                    <div class="form-check"><input type="checkbox" class="form-check-input" name="ThreadVisibility" id="ThreadVisibility" value="GroupOnly"
+                    <div class="o-checkbox"><input type="checkbox" class="o-checkbox__input" name="ThreadVisibility" id="ThreadVisibility" value="GroupOnly"
                     <?php if ($groupOnly or (isset($vars['ThreadVisibility']))) {
                         echo ' checked="checked" ';
                     }
                     if ($groupOnly) {
                         echo ' disabled="disabled" ';
                     }
-                    ?>/> <label for="ThreadVisibility" class="form-check-label"><?php echo $words->get('ForumVisibilityGroupOnlyThread'); ?></label></div>
+                    ?>/> <label for="ThreadVisibility" class="o-checkbox__label"><?php echo $words->get('ForumVisibilityGroupOnlyThread'); ?></label></div>
                 </div>
 
                 <div class="col-12 col-md-4 order-3 order-md-1 mb-2">

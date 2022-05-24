@@ -6,7 +6,7 @@ class ActionToWatchType extends EnumType
 {
     public const REPLIES = 'replies';
     public const UPDATES = 'updates';
-    const NO = 'neverask';
+    public const NO = 'neverask';
 
     /** @var string */
     protected $name = 'action_to_watch';

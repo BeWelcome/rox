@@ -18,8 +18,8 @@ class MessagesExtractor extends AbstractExtractor implements ExtractorInterface
 
         $messagesSentBy = $messageRepository->getMessagesSentBy($member);
         $messagesReceivedBy = $messageRepository->getMessagesReceivedBy($member);
-        $this->processMessagesOrRequests($messagesSentBy, $tempDir . 'messages', true);
-        $this->processMessagesOrRequests($messagesReceivedBy, $tempDir . 'messages', false);
+        $this->process($messagesSentBy, $tempDir . 'messages', 'message', true);
+        $this->process($messagesReceivedBy, $tempDir . 'messages', 'message', false);
 
         return $this->writePersonalDataFile(
             [
@@ -31,21 +31,35 @@ class MessagesExtractor extends AbstractExtractor implements ExtractorInterface
         );
     }
 
-    protected function processMessagesOrRequests($items, $directory, $sent)
+    protected function process($items, $directory, $template, $sent)
     {
         $i = 1;
         foreach ($items as $message) {
-            $isRequest = (null !== $message->getRequest());
-            $filename = ($isRequest) ? 'request' : 'message';
+            $templateName = $this->getTemplateName($message);
             $this->writePersonalDataFileSubDirectory(
                 [
                     'message' => $message,
                 ],
-                'message_or_request',
+                $template,
                 $directory,
-                $filename . '-' . $message->getCreated()->toDateString() . '-' . $i . ($sent ? '-sent' : '-received') . '.html'
+                $templateName . '-' . $message->getCreated()->toDateString() . '-' . $i . ($sent ? '-sent' : '-received') . '.html'
             );
             ++$i;
         }
+    }
+
+    private function getTemplateName($message): string
+    {
+        if ($message->isMessage()) {
+            return 'message';
+        }
+        if ($message->isHostingRequest()) {
+            return 'request';
+        }
+        if ($message->isInvitation()) {
+            return 'invitation';
+        }
+
+        return 'unknown';
     }
 }

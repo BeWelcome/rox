@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Security\AccountBannedException;
 use App\Security\AccountDeniedLoginException;
 use App\Security\AccountMailNotConfirmedException;
+use App\Security\AccountSuspendedException;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -35,43 +36,48 @@ class SecurityController extends AbstractController
         $error = $helper->getLastAuthenticationError();
         $lastUsername = $helper->getLastUsername();
 
-        $showInvalidCredentialsHint = false;
-        $showResendConfirmationLink = false;
-        $showBannedHint = false;
-        $showExpiredHint = false;
-        $showNotAllowedToLogin = false;
-        if (\is_object($error)) {
-            switch (\get_class($error)) {
-                case AccountMailNotConfirmedException::class:
-                    $showResendConfirmationLink = ($lastUsername) ? true : false;
-                    break;
-                case BadCredentialsException::class:
-                    $showInvalidCredentialsHint = true;
-                    break;
-                case AccountBannedException::class:
-                    $showBannedHint = true;
-                    break;
-                case AccountDeniedLoginException::class:
-                    $showNotAllowedToLogin = true;
-                    break;
-                case AccountExpiredException::class:
-                    $showExpiredHint = true;
-                    break;
-                default:
-                    ;
-            }
-        }
+//        $showInvalidCredentialsHint = false;
+//        $showResendConfirmationLink = false;
+//        $showBannedHint = false;
+//        $showExpiredHint = false;
+//        $showSuspendedMemberHint = false;
+//        $showNotAllowedToLogin = false;
+//        if (\is_object($error)) {
+//            switch (\get_class($error)) {
+//                case AccountMailNotConfirmedException::class:
+//                    $showResendConfirmationLink = ($lastUsername) ? true : false;
+//                    break;
+//                case AccountSuspendedException::class:
+//                    $showSuspendedMemberHint = true;
+//                    break;
+//                case BadCredentialsException::class:
+//                    $showInvalidCredentialsHint = true;
+//                    break;
+//                case AccountBannedException::class:
+//                    $showBannedHint = true;
+//                    break;
+//                case AccountDeniedLoginException::class:
+//                    $showNotAllowedToLogin = true;
+//                    break;
+//                case AccountExpiredException::class:
+//                    $showExpiredHint = true;
+//                    break;
+//                default:
+//                    ;
+//            }
+//        }
 
         $content = $this->render(
             'security/login.html.twig',
             [
                 'last_username' => $lastUsername,
                 'error' => $error,
-                'resend_confirmation' => $showResendConfirmationLink,
-                'invalid_credentials' => $showInvalidCredentialsHint,
-                'member_banned' => $showBannedHint,
-                'member_expired' => $showExpiredHint,
-                'member_not_allowed_to_login' => $showNotAllowedToLogin,
+            //                'resend_confirmation' => $showResendConfirmationLink,
+            //                'invalid_credentials' => $showInvalidCredentialsHint,
+            //                'member_banned' => $showBannedHint,
+            //                'member_expired' => $showExpiredHint,
+            //                'member_suspended' => $showSuspendedMemberHint,
+            //                'member_not_allowed_to_login' => $showNotAllowedToLogin,
             ]
         );
 

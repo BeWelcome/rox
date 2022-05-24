@@ -29,7 +29,7 @@ class NewsletterController extends AbstractController
             throw $this->createAccessDeniedException('You need to have Massmail right to access this.');
         }
 
-        $translationModel->refreshTranslationsCacheForLocale();
+        $translationModel->refreshTranslationsCache();
 
         return $this->redirectToRoute('admin_massmail');
     }

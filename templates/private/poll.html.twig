@@ -9,11 +9,11 @@
 {% endif %}
 </p>
 {% if poll.groups|length %}
-    <p>{{ 'mydata.polls.groups' }}:{% for group in poll.groups %}
+    <p>{{ 'mydata.polls.groups'|trans }}:{% for group in poll.groups %}
         {{ group.name }}{% if not loop.last %}, {% endif %}
         {% endfor %}</p>
 {% endif %}
-<p><strong>{{ 'mydata.polls.choices' }}</strong><br>
+<p><strong>{{ 'mydata.polls.choices'|trans }}</strong><br>
 {% if poll.choices|length %}
     {% for choice in poll.choices %}
         <small class="text-muted mt-0 pt-0">{{ 'mydata.polls.choice'|trans({'choice':loop.index}) }}</small><br>

@@ -32,6 +32,9 @@ You probably want to get started by checking out the code in `src/`.
 
 `build/` is deprecated and the code needs to be rewritten in `src/`.
 
+To make changes in **Javascript** bear in mind that the Webpack needs to process each change before it reflects on the site.
+It is a good idea to run `yarn encore dev --watch` which will keep updating files as you keep saving them.
+
 ## Documentation
 
 Documentation is [in the doc tree](doc/book/) and can be compiled using
@@ -59,7 +62,7 @@ The result can then be accessed via `doc/phpdox/` in your cloned repository.
 If you see an updated ```composer.json``` or ```composer.lock``` make sure to run
 
 ```bash
-composer install --prefer-dist --no-progress --no-suggest --no-interaction --no-scripts
+composer install --prefer-dist --no-progress --no-interaction --no-scripts
 ```
 
 Also run
@@ -68,7 +71,7 @@ Also run
 yarn install --frozen-lock
 ```
 
-everytime you see a change in either ```package.json``` or ```package-lock.json```.
+everytime you see a change in either ```package.json``` or ```yarn.lock```.
 
 If any ```.scss``` file or a file in ```assets/``` changed a ```make build``` is necessary.
 

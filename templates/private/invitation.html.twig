@@ -1,0 +1,29 @@
+{% extends 'private/mydata.html.twig' %}
+
+{% block content %}
+{% set myself = app.user %}
+{% if message.Sender.Username == myself.Username %}{% set otherUser = message.Receiver %}{% else %}{% set otherUser = message.Sender %}{% endif %}
+<h3>{% if message.subject %}<a href="{{ url('conversation_view', { id: message.id}) }}">{{ message.subject.subject }}</a>{% else %}{{ 'mydata.message.conversation.other'|trans({'other':otherUser.Username}) }}{% endif %}</h3>
+<p>
+    {{ 'sender' | trans }}: <a href="{{ url('members_profile', { username: message.sender.username }) }}">{{ message.sender.username }}</a><br>
+    {{ 'receiver' | trans }}: <a href="{{ url('members_profile', { username: message.receiver.username }) }}">{{ message.receiver.username }}</a>
+</p>
+<p>
+    {% if message.request.status == constant('App\\Entity\\HostingRequest::REQUEST_OPEN') %}{{ 'invitation.open' | trans }}{% endif %}
+    {% if message.request.status == constant('App\\Entity\\HostingRequest::REQUEST_CANCELLED') %}{{ 'invitation.cancelled' | trans }}{% endif %}
+    {% if message.request.status == constant('App\\Entity\\HostingRequest::REQUEST_DECLINED') %}{{ 'invitation.declined' | trans }}{% endif %}
+    {% if message.request.status == constant('App\\Entity\\HostingRequest::REQUEST_ACCEPTED') %}{{ 'invitation.accepted' | trans }}{% endif %}
+    {% if message.request.status == constant('App\\Entity\\HostingRequest::REQUEST_TENTATIVELY_ACCEPTED') %}{{ 'invitation.tentatively_accepted' | trans }}{% endif %}
+    <br>
+    {{ 'request.arrival' | trans }}: {{ message.request.arrival | format_date( 'medium') }}<br>
+    {%- if message.request.departure %}
+        {{ 'request.departure' | trans }}: {{ message.request.departure | format_date( 'medium') }}<br>
+    {%- endif %}
+    {% if message.request.flexible %}{{ 'request.flexible' | trans }}<br>{% endif %}
+    {{ 'request.number_of_travellers' | trans}}: {{ message.request.numberOfTravellers }}<br>
+</p>
+<p>
+    {{ message.message | purify }}
+</p>
+<p>{{ 'mydata.message.sent'|trans({'sent':message.created}) }}</p>
+{% endblock content %}

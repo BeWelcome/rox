@@ -45,9 +45,9 @@ class TranslationModel
     /**
      * Remove the cache file corresponding to the given locale.
      */
-    public function refreshTranslationsCacheForLocale(?string $locale = null): void
+    public function refreshTranslationsCacheForLocale(string $locale): void
     {
-        $this->removeAndWarmupCacheForLocale($locale);
+        $this->removeAndWarmupCache($locale);
     }
 
     /**
@@ -57,7 +57,7 @@ class TranslationModel
     {
         $locales = explode(',', $this->locales);
         foreach ($locales as $locale) {
-            $this->removeAndWarmupCacheForLocale($locale);
+            $this->removeAndWarmupCache($locale);
         }
     }
 
@@ -100,7 +100,7 @@ class TranslationModel
         $em->flush();
     }
 
-    private function removeAndWarmupCacheForLocale(?string $locale): void
+    private function removeAndWarmupCache(string $locale): void
     {
         $translationDir = sprintf('%s/translations', $this->cacheDirectory);
 
@@ -110,7 +110,7 @@ class TranslationModel
         $this->filesystem->mkdir($translationDir);
 
         // Remove the translations for this locale or all if locale is null
-        $files = $finder->files()->name($locale ? '*.' . $locale . '.*' : '*')->in($translationDir);
+        $files = $finder->files()->name('*.' . $locale . '.*')->in($translationDir);
         foreach ($files as $file) {
             $this->filesystem->remove($file);
         }

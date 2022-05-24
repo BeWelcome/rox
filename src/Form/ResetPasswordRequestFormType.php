@@ -13,16 +13,20 @@ class ResetPasswordRequestFormType extends AbstractType
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function buildForm(FormBuilderInterface $formBuilder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $formBuilder
+        $builder
             ->add('username', TextType::class, [
+                'label' => 'username',
                 'constraints' => [
                     new NotBlank(),
                 ],
             ])
             ->add('reset_password', SubmitType::class, [
                 'label' => 'label.reset.password',
+                'attr' => [
+                    'class' => 'o-button u-float-right',
+                ],
             ])
             ->setMethod('POST')
         ;

@@ -6,7 +6,7 @@
 
     <div class="row mb-2">
         <div class="col-12">
-            {{ ('broadcast_body_' ~ newsletter.name)|lower|trans({'username': username}, null, language)|prepare_newsletter }}
+            {{ ('broadcast_body_' ~ newsletter.name)|lower|trans({'username': username}, null, language)|prepare_newsletter(true) }}
         </div>
     </div>
 {% endblock %}

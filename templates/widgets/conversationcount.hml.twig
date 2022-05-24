@@ -1,0 +1,6 @@
+<div id="conversationCount" class="nav-link" data-count="{{ conversationCount }}">
+    <a href="{{ path('conversations', {'conversationsType': 'conversations'}) }}" aria-label="{{ 'conversations' | trans }}" class="text-white align-items-center">
+      <i class="fas fa-envelope"></i>
+      <span class="badge badge-warning">{{ conversationCount }}</span>
+    </a>
+</div>

@@ -70,7 +70,7 @@ class AdminFlagsBasePage extends AdminBasePage
 
     protected function flagsSelect($flags, $current, $disabled = false)
     {
-        $select = '<select class="form-control" id="flagid" name="flagid"' . ($disabled ? ' disabled="disabled"' : '') . '>';
+        $select = '<select class="o-input" id="flagid" name="flagid"' . ($disabled ? ' disabled="disabled"' : '') . '>';
         $select .= '<option value="0"></option>';
         foreach ($flags as $flag) {
             $select .= '<option value="' . $flag->id . '"';
@@ -85,7 +85,7 @@ class AdminFlagsBasePage extends AdminBasePage
 
     function levelSelect($current, $disabled = false, $showEmpty = true)
     {
-        $select = '<select class="form-control" id="level" name="level"' . ($disabled ? ' disabled="disabled"' : '') . '>';
+        $select = '<select class="o-input" id="level" name="level"' . ($disabled ? ' disabled="disabled"' : '') . '>';
         if ($showEmpty) {
             $select .= '<option value="0"></option>';
         }

@@ -1,316 +1,177 @@
 {% import 'macros.twig' as macros %}
+
 {% set member = app.user %}
-{% if member %}
-    <nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-primary navbar-shadow bordert-1 borderb-1">
-        <div class="container-lg">
-            <a class="navbar-brand d-none d-lg-inline" href="{{ url('homepage') }}"><img
-                        src="{{ asset('images/logo_index_top.png') }}"
-                        alt="BeWelcome"/></a>
-            <a class="navbar-brand d-inline d-lg-none" href="{{ url('homepage') }}"><img
-                        src="{{ asset('images/logo_no_text.png') }}"
-                        alt="BeWelcome"/></a>
-
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#smallNavBar"
-                    aria-controls="smallNavBar" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>&nbsp;<i class="fas fa-caret-down"></i>
-            </button>
-
-            {# Navbar small screens #}
-            <div class="collapse d-lg-none px-0 w-100" id="smallNavBar">
-                <ul class="navbar-nav mr-auto mt-2 pl-1">
-                    <li class="nav-item dropdown">
-                        <a href="#search_menu_small" class="nav-link dropdown-toggle px-1"
-                           data-target="search_menu_small" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label="{{ 'findmembers' | trans }}">
-                            &nbsp;{{ 'findmembers'|trans }}</span></a>
-                        <ul id="search_menu_small_menu" class="dropdown-menu" role="menu">
-                            <li><a href="{{ url( 'search_locations' ) }}" class="dropdown-item"><i class="fa fa-globe mr-1"></i>{{ 'search.locations' | trans }}</a></li>
-                            <li><a href="{{ path('search_members') }}" class="dropdown-item"><i class="fa fa-users mr-1"></i>{{ 'search.members' | trans }}</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{{ url('community') }}" class="nav-link"><i
-                                    class="fa fa-users"></i>&nbsp;{{ 'communitymenu' | trans }}</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{{ url('safety') }}" class="nav-link"><i
-                                    class="fa fa-shield-alt"></i>&nbsp;{{ 'safety' | trans }}</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{{ url('about') }}" class="nav-link"><i
-                                    class="fa fa-info-circle"></i>&nbsp;{{ 'getanswers' | trans }}</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#vol_menu" class="nav-link dropdown-toggle" data-target="vol_menu"
-                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i
-                                    class="fa fa-hands-helping"></i>&nbsp;{{ 'volunteer' | trans }}</a>
-                        <ul id="vol_member_menu" class="dropdown-menu" role="menu">
-                            <li class="nav-item"><a href="{{ url('getactive') }}"
-                                                    class="nav-link">{{ 'about_getactive' | trans }}</a></li>
-                            <li class="nav-item"><a href="{{ url('donate') }}"
-                                                    class="nav-link">{{ 'donatelink'  | trans }}</a></li>
-                            {% for team in teams %}
-                                {% if team.route starts with '/' %}
-                                    <li class="nav-item">
-                                        <a href="{{ team.route }}" class="nav-link">&nbsp;<i
-                                                    class="fa fa-angle-double-right"></i>&nbsp;{{ team.trans | trans }}
-                                        </a>
-                                    </li>
-                                {% else %}
-                                    <li class="nav-item">
-                                        <a href="{{ path(team.route) }}" class="nav-link">&nbsp;<i
-                                                    class="fa fa-angle-double-right"></i>&nbsp;{{ team.trans | trans }}
-                                        </a>
-                                    </li>
-                                {% endif %}
-                            {% endfor %}
-                        </ul>
-                    </li>
-
-                    <li class="nav-item">
-                        <a href="{{ url( 'security_logout') }}" class="nav-link"><i
-                                    class="fa fa-sign-out-alt"></i>&nbsp;{{ 'logout' | trans }}</a>
-                    </li>
+<nav id="main_menu" class="navbar sticky-top navbar-dark navbar-expand bg-primary justify-content-between">
+    <div class="container-lg">
+        <ul id="collapsing_menu" class="navbar navbar-nav">
+            <li class="nav-item">
+                <a id="brand_image" class="navbar-brand" href="{{ url('homepage') }}">
+                    <img class="d-none d-lg-block" src="{{ asset('images/logo_index_top.png') }}" alt="BeWelcome"/>
+                    <img class="pl-1 d-block d-lg-none" src="{{ asset('images/logo_no_text.png') }}" alt="BeWelcome"/>
+                </a>
+            </li>
+            {% if member %}
+            <li class="nav-item dropdown">
+                <a href="#search_menu" class="nav-link dropdown-toggle"
+                   data-target="search_menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label="{{ 'findmembers' | trans }}">
+                    &nbsp;{{ 'findmembers'|trans }}
+                </a>
+                <ul id="search_menu" class="dropdown-menu" role="menu">
+                    <li><a href="{{ url( 'search_locations' ) }}" class="dropdown-item"><i class="fa fa-fw fa-globe mr-1"></i>{{ 'search.locations' | trans }}</a></li>
+                    <li><a href="{{ path('search_members') }}" class="dropdown-item"><i class="fa fa-fw fa-users mr-1"></i>{{ 'search.members' | trans }}</a></li>
+                    <li class="dropdown-divider"></li>
+                    <li><a href="{{ url('places') }}" class="dropdown-item"><i class="fa fa-fw fa-globe mr-1"></i>{{ 'browsecountries' | trans }}</a></li>
+                    <li class="dropdown-divider"></li>
+                    <li><a href="{{ url('visitors') }}" class="dropdown-item"><i class="fa fa-fw fa-users mr-1"></i>{{ 'menu.visitors' | trans }}</a></li>
+                    <li><a href="{{ url('trips') }}" class="dropdown-item"><i class="fa fa-fw fa-map mr-1"></i>{{ 'trips.mytrips' | trans }}</a></li>
                 </ul>
-            </div>
-
-            {# Navbar big screens #}
-            <div class="collapse navbar-collapse d-none d-lg-block" id="mainNavBar">
-                <ul class="navbar-nav mr-auto">
-                    <li class="nav-item dropdown">
-                        <a href="#search_menu" class="nav-link dropdown-toggle px-1"
-                           data-target="search_menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label="{{ 'findmembers' | trans }}">
-                            &nbsp;{{ 'findmembers'|trans }}</span></a>
-                        <ul id="search_menu" class="dropdown-menu" role="menu">
-                            <li><a href="{{ url( 'search_locations' ) }}" class="dropdown-item"><i class="fa fa-globe mr-1"></i>{{ 'search.locations' | trans }}</a></li>
-                            <li><a href="{{ path('search_members') }}" class="dropdown-item"><i class="fa fa-users mr-1"></i>{{ 'search.members' | trans }}</a></li>
-                        </ul>
-                    </li>
-                    <li class="menuborder">
-                        <a href="{{ url('community') }}" class="nav-link">{{ 'communitymenu' | trans }}</a>
-                    </li>
-                    <li class="menuborder">
-                        <a href="{{ url('safety') }}" class="nav-link">{{ 'safety' | trans }}</a>
-                    </li>
-                    <li class="menuborder">
-                        <a href="{{ url('volunteer') }}" class="nav-link">{{ 'volunteer' | trans }}</a>
-                    </li>
-                    <li class="menuborder dropdown d-none d-md-flex">
-                        <a href="#subNavBar" class="nav-link btn-outline-secondary hamburgerbutton" id="subNavBarToggle"
-                           data-target="subNavBar"
-                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <span class="navbar-toggler-icon hamburger"></span>&nbsp;<i class="fas fa-caret-down menucaret"></i>
-                        </a>
-
-                        <div id="subNavBar" class="dropdown-menu subnav py-1 bordert-1 borderb-1"
-                             aria-labelledby="subNavBarToggle">
-
-                            <div class="container-lg">
-
-                                <div class="d-flex flex-row justify-content-between">
-                                    <div class="py-3 pr-3">
-                                        <a href="{{ url('search_members') }}" class="h4">{{ 'findmembers' | trans }}</a>
-
-                                        <a href="{{ url('search_locations') }}"
-                                           class="btn btn-block py-1 text-left">{{ 'mapsearch' | trans }}</a>
-                                        <a href="{{ url('places') }}"
-                                           class="btn btn-block py-1 text-left">{{ 'browsecountries' | trans }}</a>
-                                    </div>
-                                    <div class="py-3 pr-3">
-                                        <a href="{{ url('community') }}" class="h4">{{ 'communitymenu' | trans }}</a>
-                                        <a href="{{ url('forums') }}"
-                                           class="btn btn-block py-1 text-left mt-1">{{ 'communitydiscussions' | trans }}</a>
-                                        <a href="{{ url('groups_redirect') }}"
-                                           class="btn btn-block py-1 text-left">{{ 'groups' | trans }}</a>
-                                        <a href="{{ url('activities') }}"
-                                           class="btn btn-block py-1 text-left">{{ 'activities' | trans }}</a>
-                                        <a href="{{ url('newsletters') }}"
-                                           class="btn btn-block py-1 text-left">{{ 'newsletters' | trans }}</a>
-                                        <a href="{{ url('communitynews') }}"
-                                           class="btn btn-block py-1 text-left">{{ 'communitynews' | trans }}</a>
-                                        <a href="{{ url('polls') }}"
-                                           class="btn btn-block py-1 text-left">{{ 'polls' | trans }}</a>
-                                        <a href="{{ url('wiki_front_page') }}"
-                                           class="btn btn-block py-1 text-left">Wiki</a>
-                                    </div>
-                                    <div class="py-3 pr-3">
-                                        <a href="{{ url('about') }}" class="h4">{{ 'getanswers' | trans }}</a>
-
-                                        <a href="{{ url('about_faq') }}"
-                                           class="btn btn-block py-1 text-left mt-1">{{ 'menu.faq' | trans }}</a>
-                                        <a href="{{ url('feedback') }}"
-                                           class="btn btn-block py-1 text-left">{{ 'contactus' | trans }}</a>
-                                        <a href="{{ url('stats') }}"
-                                           class="btn btn-block py-1 text-left">{{ 'statspage' | trans }}</a>
-                                        <a href="{{ url('terms_of_use', {'locale': locale }) }}"
-                                           class="btn btn-block py-1 text-left">{{ 'termsofuse'  | trans }}</a>
-                                    </div>
-                                    <div class="py-3 pr-3 border-right border-white">
-                                        <a href="{{ url('volunteer') }}" class="h4">{{ 'volunteer' | trans }}</a>
-
-                                        <a href="{{ url('getactive') }}"
-                                           class="btn btn-block py-1 text-left mt-1">{{ 'about_getactive' | trans }}</a>
-                                        <a href="{{ url('donate') }}"
-                                           class="btn btn-block py-1 text-left">{{ 'donatelink'  | trans }}</a>
-                                        {% for team in teams %}
-                                            {% if team.route starts with '/' %}
-                                                <a href="{{ team.route }}"
-                                                   class="btn btn-block py-1 text-left">{{ team.trans | trans }}</a>
-                                            {% else %}
-                                                <a href="{{ path(team.route) }}"
-                                                   class="btn btn-block py-1 text-left">{{ team.trans | trans }}</a>
-                                            {% endif %}
-                                        {% endfor %}
-
-                                    </div>
-                                    <div class="py-3 pl-3">
-                                        <div>
-                                            {{ macros.avatar( member.Username, 50, true) }} <span
-                                                    class="h4">{{ member.Username }}</span>
-                                        </div>
-                                        <div class="d-flex flex-row justify-content-between">
-                                            <div>
-                                                <a href="{{ url('edit_my_profile') }}"
-                                                   class="btn btn-block btn-primary-outline py-1 text-left mt-1"><i
-                                                            class="fa fa-edit"></i> {{ 'editmyprofile' | trans }}</a>
-                                                <a href="{{ url('mypreferences') }}"
-                                                   class="btn btn-block btn-primary-outline py-1 text-left"><i
-                                                            class="fa fa-cogs"></i> {{ 'mypreferences' | trans }}</a>
-                                                <a href="{{ url('groups_mygroups') }}"
-                                                   class="btn btn-block btn-primary-outline py-1 text-left"><i
-                                                            class="fa fa-users"></i> {{ 'mygroups' | trans }}</a>
-                                            </div>
-                                            <div>
-                                                <a href="{{ url('messages') }}"
-                                                   class="btn btn-block btn-primary-outline py-1 text-left mt-1"><i
-                                                            class="fa fa-envelope"></i> {{ 'mymessages' | trans }}</a>
-                                                <a href="{{ url('members_show_all_notes') }}"
-                                                   class="btn btn-block btn-primary-outline py-1 text-left"><i
-                                                            class="fa fa-sticky-note"></i> {{ 'mynotes' | trans }}</a>
-                                                <a href="{{ url( 'security_logout' ) }}"
-                                                   class="btn btn-block btn-primary-outline py-1 text-left"><i
-                                                            class="fa fa-power-off"></i> {{ 'logout' | trans }}</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="pt-1">
-                                        <button type="button" class="close pull-right float-md-right" aria-label="Close"
-                                                data-toggle="collapse" data-target="#mainNavBar2">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
+            </li>
+            <li class="nav-item dropdown">
+                <a href="#community_menu" class="nav-link dropdown-toggle"
+                   data-target="community_menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label="{{ 'communitymenu' | trans }}">
+                    {{ 'communitymenu'|trans }}
+                </a>
+                <ul id="community_menu" class="dropdown-menu" role="menu">
+                    <li><a href="{{ path('forums')}}" class="dropdown-item"><i class="fa fa-fw fa-comment mr-1"></i>{{ 'communitydiscussions' | trans }}</a></li>
+                    <li><a href="{{ path('groups_mygroups')}}" class="dropdown-item"><i class="fa fa-fw fa-users mr-1"></i>{{ 'groups' | trans }}</a></li>
+                    <li><a href="{{ path('activities')}}" class="dropdown-item"><i class="fa fa-fw fa-calendar mr-1"></i>{{ 'activities' | trans }}</a></li>
+                    <li class="dropdown-divider"></li>
+                    <li><a href="{{ path('wiki_front_page')}}" class="dropdown-item"><i class="fab fa-wikipedia-w mr-1"></i>{{ 'wiki' | trans }}</a></li>
+                    <li><a href="{{ path('newsletters')}}" class="dropdown-item"><i class="fa fa-fw fa-newspaper mr-1"></i>{{ 'newsletters' | trans }}</a></li>
+                    <li><a href="{{ path('communitynews')}}" class="dropdown-item"><i class="fa fa-fw fa-newspaper mr-1"></i>{{ 'communitynews' | trans }}</a></li>
                 </ul>
-            </div>
-            <ul class="nav mr-0">
+            </li>
+            {% endif %}
+            <li class="nav-item dropdown">
+                <a href="#safety_menu" class="nav-link dropdown-toggle"
+                   data-target="safety_menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label="{{ 'safety' | trans }}">
+                    {{ 'safety' | trans }}
+                </a>
+                <ul id="safety_menu" class="dropdown-menu" role="menu">
+                    <li><a href="{{ url('safety') }}" class="dropdown-item"><i class="fa fa-fw fa-info mr-1"></i>{{ 'menu.safety.information'| trans }}</a></li>
+                    <li><a href="{{ url('safety_contact_no_modal') }}" class="dropdown-item"><i class="fa fa-fw fa-flag mr-1"></i>{{ 'menu.safety.report'| trans }}</a></li>
+                </ul>
+            </li>
+            {% if member and teams|length != 0 %}
                 <li class="nav-item dropdown">
-                    <a href="#member_menu" class="nav-link dropdown-toggle px-1"
-                       data-target="member_menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label="{{ 'profile' | trans }}"><i
-                                class="fa fa-user"></i><span
-                                class="d-none d-sm-inline">&nbsp;{{ member.Username }}</span></a>
-                    <ul id="member_menu" class="dropdown-menu" role="menu">
-                        <li class="text-right"><a
-                                    href="{{ path( 'members_profile' , { username: member.Username } ) }}"
-                                    class="dropdown-item">{{ 'profile' | trans }}</a></li>
-                        <li class="text-right"><a href="{{ path('edit_my_profile') }}"
-                                                  class="dropdown-item">{{ 'editmyprofile' | trans }}</a></li>
-                        <li class="text-right"><a href="{{ path('my_preferences') }}"
-                                                  class="dropdown-item">{{ 'mypreferences' | trans }}</a></li>
-                        <li class="text-right"><a href="{{ path('members_show_all_notes') }}"
-                                                  class="dropdown-item">{{ 'mynotes' | trans }}</a></li>
-                        <li class="text-right"><a href="{{ path('groups_mygroups') }}"
-                                                  class="dropdown-item">{{ 'mygroups' | trans }}</a></li>
-                        {# <li class="text-right"><a href="/trips" class="dropdown-item">{{ 'TripsShowMy' | trans }}</a></li> #}
-                        <li class="text-right"><a href="{{ url( 'security_logout' ) }}"
-                                                  class="dropdown-item">{{ 'logout' | trans }}</a></li>
+                    <a href="#volunteer_menu" class="nav-link dropdown-toggle"
+                       data-target="volunteer_menu" data-toggle="dropdown" aria-haspopup="true"
+                       aria-expanded="false" aria-label="{{ 'volunteer' | trans }}">
+                        {{ 'volunteer' | trans }}
+                    </a>
+                    <ul id="volunteer_menu" class="dropdown-menu" role="menu">
+                        {% for team in teams %}
+                            <li>
+                                {% if team.route starts with '/' %}
+                                    <a href="{{ team.route }}" class="dropdown-item">{{ team.trans | trans }}</a>
+                                {% else %}
+                                    <a href="{{ path(team.route) }}" class="dropdown-item">{{ team.trans | trans }}</a>
+                                {% endif %}
+                            </li>
+                        {% endfor %}
+                        <li>
+                            <a href="{{ url('getactive') }}" class="dropdown-item">{{ 'about_getactive' | trans }}</a>
+                        </li>
                     </ul>
                 </li>
-
-                {# messages #}
+            {% endif %}
+            <li class="nav-item dropdown">
+                <a href="#about_menu" class="nav-link dropdown-toggle" id="subNavBarToggle"
+                   data-target="about_menu"
+                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    {{ 'getanswers'|trans }}
+                </a>
+                <ul id="about_menu" class="dropdown-menu" role="menu">
+                    <li><a href="{{ url('about') }}" class="dropdown-item">{{ 'getanswers' | trans }}</a></li>
+                    <li><a href="{{ url('about_faq') }}" class="dropdown-item">{{ 'menu.faq' | trans }}</a></li>
+                    <li><a href="{{ url('feedback') }}" class="dropdown-item">{{ 'contactus' | trans }}</a></li>
+                    <li><a href="{{ url('stats') }}" class="dropdown-item">{{ 'statspage' | trans }}</a></li>
+                    <li><a href="{{ url('terms_of_use', {'locale': locale }) }}" class="dropdown-item">{{ 'termsofuse'  | trans }}</a></li>
+                    <li><a href="{{ url('getactive') }}" class="dropdown-item">{{ 'about_getactive' | trans }}</a></li>
+                    <li><a href="{{ url('donate') }}" class="dropdown-item">{{ 'donatelink'  | trans }}</a></li>
+                </ul>
+            </li>
+            {% if member and teams|length == 0 %}
                 <li class="nav-item">
-                    {% include 'widgets/messagescount.hml.twig' %}
+                    <a href="{{ url('getactive') }}" class="nav-link">{{ 'volunteer' | trans }}</a>
                 </li>
-                {# requests #}
-                <li class="nav-item">
-                    {% include 'widgets/requestscount.html.twig' %}
-                </li>
-                {# logout #}
-                <li class="nav-item"><a href="{{ url( 'security_logout' ) }}" class="nav-link px-1" aria-label="{{ 'logout' | trans }}"><i
-                                class="fa fa-lg fa-sign-out-alt"></i></a></li>
-            </ul>
-        </div>
-    </nav>
-    {% if is_granted('ROLE_ADMIN_CHECKER') or is_granted('ROLE_ADMIN_COMMENTS') or is_granted('ROLE_ADMIN_SAFETYTEAM')
-        or is_granted('ROLE_ADMIN_GROUP')%}
-        <div class="container-lg">
-            <div class="row no-gutters justify-content-end">
-                <div class="py-2">
-                    {% if not groupsInApprovalQueue is null %}<a class="btn btn-primary btn-sm"
-                                                              href="{{ path('admin_groups_approval') }}">{{ 'label.admin.groups.awaiting.approval' | trans({'groups':groupsInApprovalQueue}) }}</a>{% endif %}
-                    {% if not reportedCommentsCount is null %}<a class="btn btn-primary btn-sm"
-                        href="{{ path('admin_comment_reported_overview') }}">{{ 'label.admin.comments.reported'|trans({'comments':reportedCommentsCount}) }}</a>{% endif %}
-                    {% if not reportedMessagesCount is null %}<a class="btn btn-primary btn-sm"
-                        href="{{ path('admin_spam_messages') }}">{{ 'label.admin.messages.reported'|trans({'messages': reportedMessagesCount}) }}</a>{% endif %}
+            {% endif %}
+            {% if not member %}
+                {% include 'login_form_navbar.html.twig' %}
+            {% endif %}
+        </ul>
+        <ul id="static_menu" class="navbar navbar-nav">
+            {% if member %}
+            {# conversations #}
+            <li class="nav-item">
+                <div id="conversationCount" class="nav-link" data-count="-1">
+                    <a href="{{ path('conversations', {'conversationsType': 'conversations'}) }}" aria-label="{{ 'conversations' | trans }}" class="text-white align-items-center">
+                        <i class="fas fa-envelope"></i>
+                        <span class="badge badge-warning"><i class="fa fa-fw fa-spinner"></i></span>
+                    </a>
                 </div>
+            </li>
+
+            <li class="nav-item dropdown">
+                <a href="#member_menu" class="nav-link dropdown-toggle"
+                   data-target="member_menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label="{{ 'profile' | trans }}">
+                    <span class="d-none d-md-inline">{{ member.Username }}&nbsp;</span>
+                    <img class="profileimg d-none d-md-inline" src="{{ url('avatar', { username: member.username, size: 36 })}}" width="36" height="36" alt="{{ 'profile.picture' }}">
+                    <i class="fa fa-fw fa-user d-inline d-md-none"></i>
+                </a>
+                <ul id="member_menu" class="dropdown-menu dropdown-menu-right" role="menu">
+                    <li class="text-right"><a
+                            href="{{ path('conversations', {'conversationsType': 'conversations'}) }}"
+                            class="dropdown-item">{{ 'conversations' | trans }}</a></li>
+                    <li class="text-right"><a
+                            href="{{ path( 'members_profile' , { username: member.Username } ) }}"
+                            class="dropdown-item">{{ 'profile' | trans }}</a></li>
+                    <li class="text-right"><a href="{{ path('edit_my_profile') }}"
+                                              class="dropdown-item">{{ 'editmyprofile' | trans }}</a></li>
+                    <li class="text-right"><a href="{{ path('my_preferences') }}"
+                                              class="dropdown-item">{{ 'mypreferences' | trans }}</a></li>
+                    <li class="text-right"><a href="{{ path('members_show_all_notes') }}"
+                                              class="dropdown-item">{{ 'mynotes' | trans }}</a></li>
+                    <li class="text-right"><a href="{{ path('groups_mygroups') }}"
+                                              class="dropdown-item">{{ 'mygroups' | trans }}</a></li>
+                    <li class="text-right"><a href="{{ path('trips') }}"
+                                              class="dropdown-item">{{ 'trips.mytrips' | trans }}</a></li>
+                    <li class="text-right"><a href="{{ url( 'security_logout' ) }}"
+                                              class="dropdown-item">{{ 'logout' | trans }}</a></li>
+                </ul>
+            </li>
+            {% endif %}
+            {% if not member %}
+                {% include 'login_form_dropdown.html.twig' %}
+            {% endif %}
+            <li class="nav-item">
+                <button class="btn btn-primary border px-2 py-1 mr-1 d-none" id="hamburger" type="button" data-toggle="collapse" data-target="#hamburger_collapse" aria-controls="hamburger_collapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <i class="fas fa-bars white"></i>
+                </button>
+            </li>
+        </ul>
+    </div>
+</nav>
+<div class="collapse navbar-dark bg-primary" id="hamburger_collapse" style="position:sticky; top: 46px; z-index: 1020;">
+    <div class="container-lg">
+        <ul id="hamburger_menu" class="navbar-nav text-right"></ul>
+    </div>
+</div>
+{% if member %}
+{% if is_granted('ROLE_ADMIN_CHECKER') or is_granted('ROLE_ADMIN_COMMENTS') or is_granted('ROLE_ADMIN_SAFETYTEAM')
+    or is_granted('ROLE_ADMIN_GROUP')%}
+    <div class="container-lg u-z-10 u-relative">
+        <div class="row no-gutters justify-content-end">
+            <div class="py-2">
+                {% if not groupsInApprovalQueue is null %}<a class="btn btn-primary btn-sm"
+                                                             href="{{ path('admin_groups_approval') }}">{{ 'label.admin.groups.awaiting.approval' | trans({'groups':groupsInApprovalQueue}) }}</a>{% endif %}
+                {% if not reportedCommentsCount is null %}<a class="btn btn-primary btn-sm"
+                                                             href="{{ path('admin_comment_reported_overview') }}">{{ 'label.admin.comments.reported'|trans({'comments':reportedCommentsCount}) }}</a>{% endif %}
+                {% if not reportedMessagesCount is null %}<a class="btn btn-primary btn-sm"
+                                                             href="{{ path('admin_spam_messages') }}">{{ 'label.admin.messages.reported'|trans({'messages': reportedMessagesCount}) }}</a>{% endif %}
             </div>
         </div>
-    {% endif %}
-{% else %}
-    {# navbar not logged in, showing main links #}
-    <nav class="navbar navbar-sticky-top navbar-expand-lg navbar-dark bg-primary navbar-shadow bordert-1 borderb-1">
-        <div class="container-lg">
-            <a class="navbar-brand mr-3 pl-3 pl-md-0 float-left" href="{{ url('homepage') }}"><img
-                        src="{{ asset('images/logo_index_top.png') }}" alt="BeWelcome"/></a>
-
-            <button class="navbar-toggler collapsed" type="button" data-toggle="collapse"
-                    data-target="#NavbarNotLoggedIn" aria-controls="NavbarNotLoggedIn" aria-expanded="false"
-                    aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <div class="navbar-collapse collapse" id="NavbarNotLoggedIn" aria-expanded="false">
-                <ul class="navbar-nav mr-auto">
-                    <li class="about">
-                        <a href="{{ url('about') }}" class="nav-link px-3 menuborder">{{ 'menu.about' | trans }}</a>
-                    </li>
-                    <li class="menuborder">
-                        <a href="{{ url('safety') }}" class="nav-link px-3 menuborder-r">{{ 'safety' | trans }}</a>
-                    </li>
-                </ul>
-            </div>
-            <div>
-                <ul class="nav navbar-nav mr-auto ml-md-3">
-                    <li class="nav-item float-left d-none d-md-block">
-                        <form class="form-inline p-0" method="post" action="{{ url('security_check') }}">
-                            {{ macros.input('_username', 'Username') }}
-                            {{ macros.input('_password', 'Password', '', 'password') }}
-                            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-                            <div class="btn-group">
-                                <button type="submit" class="btn btn-primary border-white" id="loginDropdownButton">{{ 'indexpageloginsubmit' | trans }}</button>
-                                <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split border-white" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <span class="sr-only">Toggle Dropdown</span>
-                                </button>
-                                <div class="dropdown-menu white">
-                                    <div class="form-check">
-                                        <input type="checkbox" class="form-check-input" id="login-r" value="1"
-                                               name="_remember_me"><label for="login-r" class="form-check-label">
-                                            &nbsp;{{ 'stayloggedin' | trans }}
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div><span class="mt-1 mx-2">{{ 'or' | trans }}</span><a
-                                href="/signup" class="btn btn-primary border-white">{{ 'navbar.button.signup'|trans }}</a>
-                            </div>
-                        </form>
-
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+    </div>
 {% endif %}
 <noscript><div class="container-lg"><div class="alert alert-danger"><p class="h5">You need to activate Javascript for bewelcome.org</p><small>Without it some function won't work.</small></div></div></noscript>
 {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
@@ -323,8 +184,5 @@
         </div>
     {% endfor %}
 </div>
-    <script type="text/javascript">
-
-    </script>
 {% endif %}
-
+{% endif %}

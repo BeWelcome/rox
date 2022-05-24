@@ -23,7 +23,6 @@ Boston, MA  02111-1307, USA.
 
 use App\Doctrine\MemberStatusType;
 use Foolz\SphinxQL\Drivers\Pdo\Connection;
-use Foolz\SphinxQL\Match;
 use Foolz\SphinxQL\SphinxQL;
 use AnthonyMartin\GeoLocation\GeoPoint;
 
@@ -1404,25 +1403,30 @@ LIMIT 1
         return $result;
     }
 
-    private function sphinxSearch($location, $type, $country = null)
+    private function sphinxSearch($location, $type, $country = null, $adminUnit = null)
     {
-        $conn = new Connection();
-        $conn->setParams(array('host' => 'localhost', 'port' => 9306));
+        $countryId = $this->findCountryId($country);
+        $adminUnitId = $this->findAdminUnitId($countryId, $adminUnit);
 
         try {
+            $conn = new Connection();
+            $conn->setParams(array('host' => 'localhost', 'port' => 9306));
+
             $sphinxQL = new SphinxQL($conn);
-            $match = new Match($sphinxQL);
-            $match->match($location);
 
             $query = $sphinxQL
                 ->select('*')
                 ->from('geonames')
-                ->match($match)
+                ->match('name', $location)
+                ->where('admin1', '<>', '')
                 ->orderBy('membercount', 'desc')
             ;
 
-            if (null !== $country) {
-                $query->where('country', '=', $country);
+            if (null !== $countryId) {
+                $query->where('country', '=', $countryId);
+            }
+            if (null !== $adminUnitId) {
+                $query->where('admin1', '=', $adminUnitId);
             }
 
             switch ($type) {
@@ -1449,6 +1453,71 @@ LIMIT 1
         return $result;
     }
 
+    private function findCountryId($country)
+    {
+        if (null === $country) {
+            return null;
+        }
+
+        $conn = new Connection();
+        $conn->setParams(array('host' => 'localhost', 'port' => 9306));
+
+        $sphinxQL = new SphinxQL($conn);
+
+        $query = $sphinxQL
+            ->select('*')
+            ->from('geonames')
+            ->match('name', $country)
+            ->where('iscountry', '=', 1)
+        ;
+
+        $result = $query->execute();
+
+        $countries = $result->fetchAllAssoc();
+
+        if (0 === count($countries)) {
+            return null;
+        }
+
+        // Return the first result
+        return $countries[0]['country'];
+    }
+
+    private function findAdminUnitId($countryId, $adminUnit)
+    {
+        if (null === $adminUnit) {
+            return null;
+        }
+
+        if ('' === $adminUnit) {
+            return null;
+        }
+
+        $conn = new Connection();
+        $conn->setParams(array('host' => 'localhost', 'port' => 9306));
+
+        $sphinxQL = new SphinxQL($conn);
+
+        $query = $sphinxQL
+            ->select('*')
+            ->from('geonames')
+            ->match('name', $adminUnit)
+            ->where('isadmin', '=', 1)
+            ->where('country', '=', $countryId)
+        ;
+
+        $result = $query->execute();
+
+        $adminUnits = $result->fetchAllAssoc();
+
+        if (0 === count($adminUnits)) {
+            return null;
+        }
+
+        // Return the first result
+        return $adminUnits[0]['admin1'];
+    }
+
     /**
      * Used as AJAX source by the autosuggest on the search form
      */
@@ -1459,21 +1528,25 @@ LIMIT 1
 
         $result = [];
         $result['status'] = 'failed';
-        $locationParts = explode(',', $location);
-        if (3 <= count($locationParts)) {
+        $locationParts = array_map('trim', explode(',', $location));
+        if (3 < count($locationParts)) {
             return $result;
         }
 
         $country = null;
-        $location = trim(reset($locationParts));
-        if (2 === count($locationParts)) {
-            // Get the country
-            $country = trim(end($locationParts));
+        $adminUnit = null;
+        $location = $locationParts[0];
+        if (2 <= count($locationParts)) {
+            $country = $locationParts[count($locationParts) - 1];
+
+            if (3 === count($locationParts)) {
+                $adminUnit =  $locationParts[1];
+            }
         }
 
         // First get places from sphinx
         $locations = array();
-        $resPlaces = $this->sphinxSearch($location, self::SPHINX_PLACES, $country);
+        $resPlaces = $this->sphinxSearch($location, self::SPHINX_PLACES, $country, $adminUnit);
         if ($resPlaces) {
             $results = $resPlaces->fetchAllAssoc();
             $places = $this->getPlacesFromDataBase($lang, $results);

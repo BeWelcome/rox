@@ -1,0 +1,288 @@
+/* ==========================================================================
+   #INPUT
+   ========================================================================== */
+
+/**
+ * Basic Input for formularies
+ */
+
+.o-input {
+  font-family: Signika;
+  width: 100%;
+  height: 40px;
+  padding-left: 16px;
+  border: 1px solid theme('colors.gray-15');
+  border-radius: 8px;
+  box-shadow: none;
+  background-color: theme('colors.white');
+}
+
+textarea.o-input {
+  height: initial;
+  padding: 16px;
+  font-size: 16px;
+  font-family: Signika;
+  font-weight: 400;
+  overflow: hidden;
+}
+
+textarea.o-input::placeholder {
+  font-size: 16px;
+  font-family: Signika;
+  font-weight: 400;
+}
+
+
+
+
+
+
+
+
+
+
+/* HTML Validation
+   ==========================================================================
+
+.o-input:invalid {
+  border: 1px solid theme('colors.red');
+  box-shadow: none;
+}
+
+ */
+
+
+
+
+
+
+
+
+/* Hovers
+   ========================================================================== */
+
+.o-input:hover,
+.o-input:focus {
+  border: 1px solid theme('colors.gray-50');
+  box-shadow: none;
+}
+
+
+
+
+
+
+
+
+
+
+/* Inactive state
+   ========================================================================== */
+
+.o-input--inactive,
+.o-input[disabled] {
+  background-color: theme('colors.gray-20');
+  color: theme('colors.gray-50');
+  pointer-events: none;
+}
+
+.o-input--inactive:hover,
+.o-input[disabled]:hover {
+  border: 1px solid theme('colors.gray-60');
+}
+
+
+
+
+
+
+
+
+/* Variations
+   ========================================================================== */
+
+
+.o-input--no-borders {
+  border: none;
+  outline: none;
+}
+
+.o-input--no-borders-:hover,
+.o-input--no-borders:active,
+.o-input--no-borders:hover,
+.o-input--no-borders:focus,
+.o-input--no-borders:focus-visible {
+  border: none;
+  outline: none;
+}
+
+
+
+
+.o-input--round-left {
+  border-radius: 8px 0 0 8px;
+  border-right: 1px solid theme('colors.gray-15');
+}
+
+.o-input--round-right {
+  border-radius: 0 8px 8px 0;
+}
+
+@media (max-width: 900px) {
+  .o-input--round-left,
+  .o-input--round-right {
+    border-radius: 8px;
+    border-right: inherit;
+  }
+}
+
+
+
+
+
+.o-input--no-border-on-hover:hover,
+.o-input--no-border-on-hover:active,
+.o-input--no-border-on-hover:hover,
+.o-input--no-border-on-hover:focus,
+.o-input--no-border-on-hover:focus-visible {
+  border: none;
+  outline: none;
+}
+
+
+
+
+
+
+
+
+
+
+/* Size variations
+   ========================================================================== */
+
+/**
+ * Large
+ */
+
+
+.o-input--l {
+  height: 48px;
+}
+
+
+
+
+/**
+ * Xtra-Large
+ */
+
+
+.o-input--xl {
+  height: 56px;
+}
+
+
+
+
+
+
+
+
+
+/* Color variations
+   ========================================================================== */
+
+/**
+ * Translucid
+ */
+
+ .o-input--translucid {
+  background-color: rgba(255, 255, 255, 0.9);
+ }
+
+.o-input--translucid:hover,
+.o-input--translucid:active,
+.o-input--translucid:hover,
+.o-input--translucid:focus,
+.o-input--translucid:focus-visible {
+  background-color: rgba(255, 255, 255, 1);
+}
+
+.o-input--white {
+  background-color: rgba(255, 255, 255, 0.2);
+  border: none;
+}
+
+.o-input--white,
+.o-input--white::placeholder {
+  font-weight: 700;
+  color: theme('colors.white');
+  font-family: Signika;
+  opacity: 1;
+}
+
+.o-input--white:focus::placeholder {
+  color: theme('colors.gray-20');
+}
+
+.o-input--white:active,
+.o-input--white:hover,
+.o-input--white:focus,
+.o-input--white:focus-visible {
+  background-color: rgba(255, 255, 255, 0.3);
+  color: theme('colors.white');
+}
+
+
+.o-input--white-xl,
+.o-input--white-xl::placeholder {
+  font-size: 56px;
+  line-height: 72px;
+  height: 72px;
+}
+
+@media (max-width: 900px) {
+  .o-input--white-xl,
+  .o-input--white-xl::placeholder {
+    font-size: 32px;
+    line-height: 48px;
+    height: 48px;
+  }
+}
+
+
+.o-input--select {
+  cursor: pointer;
+}
+
+.o-input--select-white {
+  color: theme('colors.white');
+  background-color:rgba(255, 255, 255, 0.2);
+  border: none;
+  font-family: Signika;
+  font-size: 18px;
+  padding: 0 24px 0 8px;
+}
+
+.o-input--select-white:hover,
+.o-input--select-white:hover,
+.o-input--select-white:focus,
+.o-input--select-white:focus-visible  {
+  background-color:rgba(255, 255, 255, 0.3);
+  color: theme('colors.white');
+
+}
+
+@media (max-width: 900px) {
+  .o-input--select-short {
+    width: 100%;
+  }
+}
+
+
+
+
+.o-input--nofull {
+  width: initial
+}

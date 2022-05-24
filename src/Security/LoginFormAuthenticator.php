@@ -17,6 +17,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Guard\Authenticator\AbstractFormLoginAuthenticator;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
 {
@@ -44,17 +45,20 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
      * @var UrlGeneratorInterface
      */
     private $urlGenerator;
+    private TranslatorInterface $translator;
 
     public function __construct(
         MemberRepository $memberRepository,
         UrlGeneratorInterface $urlGenerator,
         EntityManagerInterface $entityManager,
-        UserPasswordEncoderInterface $passwordEncoder
+        UserPasswordEncoderInterface $passwordEncoder,
+        TranslatorInterface $translator
     ) {
         $this->memberRepository = $memberRepository;
         $this->urlGenerator = $urlGenerator;
         $this->entityManager = $entityManager;
         $this->passwordEncoder = $passwordEncoder;
+        $this->translator = $translator;
     }
 
     public function supports(Request $request)
@@ -92,16 +96,24 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
     {
         /** @var Member $member */
         $member = $token->getUser();
-        if (MemberStatusType::ACTIVE !== $member->getStatus() && MemberStatusType::CHOICE_INACTIVE !== $member->getStatus()) {
+        $status = $member->getStatus();
+        if (MemberStatusType::ACTIVE !== $status && MemberStatusType::CHOICE_INACTIVE !== $status) {
             $member->setStatus(MemberStatusType::ACTIVE);
         }
         $firstLogin = null === $member->getLastLogin();
         if ($firstLogin) {
             $url = $this->urlGenerator->generate('editmyprofile');
+            $session = $request->getSession();
+            $session->getFlashBag()->add('notice',
+                $this->translator->trans('login.first.time', [ 'username' => $member->getUsername() ])
+            );
         } else {
-            $url = $this->getTargetPath($request->getSession(), $providerKey) ?? $this->urlGenerator->generate('homepage');
+            $url = $this->getTargetPath($request->getSession(), $providerKey)
+                ?? $this->urlGenerator->generate('homepage');
         }
         $member->setLastLogin(new DateTime());
+        $member->setRemindersWithOutLogin(0);
+
         $this->entityManager->persist($member);
         $this->entityManager->flush();
 

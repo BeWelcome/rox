@@ -1,0 +1,112 @@
+/* ========================================================================
+//   #BASE
+//   ======================================================================== */
+
+/**
+ * Basic typographic styles.
+ */
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: auto;
+  text-rendering: optimizeLegibility;
+}
+
+html,
+body {
+  background-color: theme('colors.gray-10');
+}
+
+body,
+main {
+  min-height: calc(100vh - 124px - 46px);
+}
+
+address,
+h1, h2, h3, h4, h5, h6,
+blockquote, p, pre,
+dl, ol, ul,
+figure,
+button,
+hr,
+table,
+input,
+fieldset, legend {
+  font-family: "Lato", "Lato Light";
+  font-size: 16px;
+  line-height: 24px;
+  color: var(--gris-80);
+}
+
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Signika";
+  font-weight: 500;
+}
+
+p, a {
+  font-weight: 400;
+}
+
+em {
+  font-style: italic;
+}
+
+iframe {
+  border: none;
+}
+
+strong {
+  font-weight: 700;
+}
+
+b {
+  font-weight: 500;
+}
+
+
+
+/**
+ * Remove bullets in lists.
+ */
+
+dd, ol, ul {
+  list-style-type: none;
+}
+
+
+
+/**
+ * Links not underlined by default
+ */
+
+a {
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/**
+ * Visited and active links not outlined by default
+ */
+
+a:active,
+a:focus {
+  outline-style: none;
+}
+
+/**
+ * Remove Button styles
+ */
+
+button {
+    background: none;
+    border: 0;
+    cursor: pointer;
+    line-height: normal;
+    overflow: visible;
+    padding: 0;
+    -webkit-appearance: button; /* for input */
+    -webkit-user-select: none; /* for button */
+       -moz-user-select: none;
+        -ms-user-select: none;
+}

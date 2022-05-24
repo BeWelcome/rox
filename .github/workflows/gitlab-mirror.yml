@@ -1,0 +1,15 @@
+name: trigger mirror to gitlab
+
+on: [push]
+
+jobs:
+  trigger:
+    runs-on: "ubuntu-latest"
+    steps:
+    - name: trigger
+      uses: appleboy/gitlab-ci-action@v0.0.2
+      with:
+        host: "https://gitlab.bewelcome.org"
+        token: ${{ secrets.TRIGGER_TOKEN }}
+        project_id: 17
+        ref: master

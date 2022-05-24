@@ -1,5 +1,9 @@
 {% extends 'base.html.twig' %}
 
+{% block stylesheets %}
+  {{ encore_entry_link_tags('tailwind') }}
+{% endblock stylesheets %}
+
 {% block title %}
     {{ 'safety' | trans }}
 {% endblock %}
@@ -7,7 +11,9 @@
 
 
 {% block content %}
+<div class="o-text">
 <h1><a href="{{ url('safety') }}">{{ 'safety' | trans }}</a></h1>
+<span class="clearfix"></span>
 <div class="row">
     <div class="col-12 col-lg-6">
         <h3>{{ 'safety_tipsgeneral' | trans | purify }}</h3>
@@ -26,5 +32,6 @@
         </p>
         <p><a class="btn btn-outline-primary" href="{{ path('safety')}}"><i class="fa fa-user-shield mr-1"></i>{{'safety_learnaboutsafety' | trans }}</a></p>
     </div>
+</div>
 </div>
 {% endblock content %}

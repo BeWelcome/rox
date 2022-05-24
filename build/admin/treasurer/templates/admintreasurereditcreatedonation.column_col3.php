@@ -15,17 +15,17 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program; if not, see <http://www.gnu.org/licenses/> or 
-write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+along with this program; if not, see <http://www.gnu.org/licenses/> or
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 */
-/** 
+/**
  * @author shevek
  */
 
-/** 
+/**
  * Tresasurer management overview template
- * 
+ *
  * @package Apps
  * @subpackage Admin
  */
@@ -46,7 +46,7 @@ if (empty($vars)) {
 $words = new MOD_words();
 ?>
 <form method="post">
-<?php echo $callback_tag; 
+<?php echo $callback_tag;
 echo '<input type="hidden" id="id" name="id" value="' . $vars['id'] . '" />';
 if (!empty($errors))
 {
@@ -57,15 +57,15 @@ if (!empty($errors))
     echo "</div>";
 }
 ?>
-        <div class="form-group">
+        <div class="o-form-group">
             <label for="donate-username"><?php echo $words->get('AdminTreasurerDonor'); ?></label>
-            <input type="text" id="donate-username" name="donate-username" class="form-control" value="<?php if (isset($vars['donate-username'])) { echo $vars['donate-username']; };  ?>" />
+            <input type="text" id="donate-username" name="donate-username" class="o-input" value="<?php if (isset($vars['donate-username'])) { echo $vars['donate-username']; };  ?>" />
         </div>
-        <div class="form-group">
+        <div class="o-form-group">
             <label for="donate-amount"><?php echo $words->get('AdminTreasurerDonatedAmount'); ?></label>
-            <input type="text" id="donate-amount" name="donate-amount" class="form-control" value="<?php if (isset($vars['donate-amount'])) { echo $vars['donate-amount']; };  ?>" />
+            <input type="text" id="donate-amount" name="donate-amount" class="o-input" value="<?php if (isset($vars['donate-amount'])) { echo $vars['donate-amount']; };  ?>" />
         </div>
-        <div class="form-group">
+        <div class="o-form-group">
             <label for="donate-date"><?php echo $words->get('AdminTreasurerDonatedOn'); ?></label>
                     <div class="input-group date" id="donate-date-input" data-target-input="nearest">
                         <div class="input-group-prepend" data-target="#donate-date" data-toggle="datetimepicker">
@@ -73,17 +73,17 @@ if (!empty($errors))
                                 <i class="fa fa-calendar mt-2 mr-1"></i>
                             </span>
                         </div>
-                        <input type="text" id="donate-date" name="donate-date" class="form-control datepicker" data-target="#donate-date" data-toggle="datetimepicker"
+                        <input type="text" id="donate-date" name="donate-date" class="o-input datepicker" data-target="#donate-date" data-toggle="datetimepicker"
                                value="<?php if (isset($vars['donate-date'])) { echo $vars['donate-date']; };  ?>" />
                     </div>
             </div>
-<div class="form-group">
+<div class="o-form-group">
     <label for="donate-comment"><?php echo $words->get('AdminTreasurerComment'); ?></label>
-    <input type="text" id="donate-comment" name="donate-comment" class="form-control" maxlength="100" value="<?php echo $vars['donate-comment'];?>" />
+    <input type="text" id="donate-comment" name="donate-comment" class="o-input" maxlength="100" value="<?php echo $vars['donate-comment'];?>" />
 </div>
-    <div class="form-group">
+    <div class="o-form-group">
     <label for="donate-country"><?php echo $words->get('AdminTreasurerSelectCountry'); ?></label>
-    <select id="donate-country" name="donate-country" class="select2 form-control">
+    <select id="donate-country" name="donate-country" class="select2 o-input">
     <option value="0"><?php echo $words->getBuffered('AdminTreasurerSelectACountry'); ?></option>
     <?php
     foreach($countries as $country) {

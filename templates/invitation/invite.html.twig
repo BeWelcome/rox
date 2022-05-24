@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('requests') }}
+{% endblock javascripts %}
+
+{% block stylesheets %}
+    {{ encore_entry_link_tags('tailwind')  }}
+    {{ encore_entry_link_tags('requests')  }}
+{% endblock stylesheets %}
+
+{% block content %}
+    {% import 'macros.twig' as macros %}
+    {% set host = app.user %}
+    {% set guest = leg.trip.creator %}
+
+    {{ macros.new_conversation_header(guest, 'invite.username') }}
+
+    {% include 'invitation/trip.summary.html.twig' with {'open': true} %}
+
+    {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'autocomplete': 'off'}}) }}
+    {{ form_errors(form) }}
+
+    <div class="row mb-1">
+        <div class="col-12">
+            {{ form_row(form.subject.subject) }}
+            {{ form_label(form.message) }}
+            {{ form_widget(form.message) }}
+            {{ form_errors(form.message) }}
+            <div class="o-form-group">
+                {{ form_label(form.request.duration) }}
+                <div class="input-group date">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                            <i class="fa fa-calendar"></i>
+                        </span>
+                    </div>
+                    {{ form_widget(form.request.duration, {'attr': { 'class': 'js-litepicker'}}) }}
+                </div>
+            </div>
+
+            {{ form_row(form.request.arrival) }}
+            {{ form_row(form.request.departure) }}
+            {{ form_row(form.request.numberOfTravellers) }}
+            {% do form.request.setRendered %}
+        </div>
+    </div>
+
+    <div class="u-mb-4">
+        <div class="u-flex u-justify-end">
+            {{ form_row(form.send, {attr: {class: 'o-button u-mt-8'}}) }}
+        </div>
+    </div>
+    {{ form_end(form) }}
+{% endblock %}

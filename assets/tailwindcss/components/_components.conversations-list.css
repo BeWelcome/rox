@@ -1,0 +1,36 @@
+.c-conversations {
+  font-family: Signika;
+}
+
+.c-conversations p {
+  font-family: Signika;
+}
+
+.c-conversations .unread a {
+	font-weight: bold;
+}
+
+.c-conversation__item {
+	display: flex;
+	align-items: center;
+	background-color: theme('colors.gray-5');
+	padding: 0 4px;
+	border-radius: 4px;
+	margin-bottom: 8px;
+	height: 130px;
+	overflow: hidden;
+}
+
+.c-conversation__message-item {
+  display: grid;
+  align-items: center;
+  background-color: var(--gray-5);
+  padding: 0 4px;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  height: 80px;
+  overflow: hidden;
+  grid-template-columns: 80px auto 16px;
+}
+
+

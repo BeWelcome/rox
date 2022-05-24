@@ -44,7 +44,7 @@
                     var warningsFound = 0;
                     // Get all inputs
                     var $allInputs = $form.find("input,textarea,select,checkbox").not("[type=submit],[type=image]").filter(settings.options.filter);
-                    var $allControlGroups = $form.find(".form-group");
+                    var $allControlGroups = $form.find(".o-form-group");
                     
                     // Only trigger validation on the ones that actually _have_ validation
                     var $inputsWithValidators = $allInputs.filter(function () {
@@ -89,7 +89,7 @@
 
                     // Get references to everything we're interested in
                     var $this = $(this),
-                        $controlGroup = $this.parents(".form-group").first(),
+                        $controlGroup = $this.parents(".o-form-group").first(),
                         $helpBlock = $controlGroup.find(".text-muted").first(),
                         $form = $this.parents("form").first(),
                         validatorNames = [];
@@ -604,7 +604,7 @@
 
                         var
                             $this = $(this),
-                            $controlGroup = $this.parents(".form-group").first(),
+                            $controlGroup = $this.parents(".o-form-group").first(),
                             $helpBlock = $controlGroup.find(".text-muted").first(),
                             $form = $this.parents("form").first();
 
@@ -868,7 +868,7 @@
                     var $label = null;
                     if (($label = $form.find("label[for=\"" + elementName + "\"]")).length) {
                         message += " '" + $label.text() + "'";
-                    } else if (($label = $element.parents(".form-group").first().find("label")).length) {
+                    } else if (($label = $element.parents(".o-form-group").first().find("label")).length) {
                         message += " '" + $label.first().text() + "'";
                     }
 
@@ -1150,7 +1150,7 @@
         var type = $this.attr("type");
         if (type === "checkbox") {
             value = ($this.is(":checked") ? value : "");
-            var checkboxParent = $this.parents("form").first() || $this.parents(".form-group").first();
+            var checkboxParent = $this.parents("form").first() || $this.parents(".o-form-group").first();
             if (checkboxParent) {
                 value = checkboxParent.find("input[name='" + $this.attr("name") + "']:checked").map(function (i, el) {
                     return $(el).val();
@@ -1159,7 +1159,7 @@
         }
         else if (type === "radio") {
             value = ($('input[name="' + $this.attr("name") + '"]:checked').length > 0 ? $this.val() : "");
-            var radioParent = $this.parents("form").first() || $this.parents(".form-group").first();
+            var radioParent = $this.parents("form").first() || $this.parents(".o-form-group").first();
             if (radioParent) {
                 value = radioParent.find("input[name='" + $this.attr("name") + "']:checked").map(function (i, el) {
                     return $(el).val();

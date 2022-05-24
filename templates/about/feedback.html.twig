@@ -4,20 +4,53 @@
 	{{ 'contactus' | trans }}
 {% endblock %}
 
+{% block stylesheets %}
+  {{ encore_entry_link_tags('tailwind') }}
+{% endblock stylesheets %}
+
+{% block javascripts %}
+<script type="application/javascript">
+    $('#reportMessages').modal();
+</script>
+{% endblock javascripts %}
+
 {% block content %}
-<h1>{{ 'contactus' | trans }}</h1>
-<div class="row">
-	<div class="col-12 col-md-6">
-		<p>{{ 'feedbackdisclaimer' | trans | purify | nl2br }}</p>
-	</div>
-	<div class="col-12 col-md-6">
-		{{ form_start(form) }}
-		{{ form_rest(form) }}
-		<div class="form-group">
-			<button type="submit" id="submit" name="submit" class="btn-primary btn">{{ 'submit'|trans }}</button>
+<div class="o-text">
+	<h1>{{ 'contactus' | trans }}</h1>
+	<div class="row">
+		<div class="col-12 col-md-6">
+			<p>{{ 'feedbackdisclaimer' | trans | purify | nl2br }}</p>
+            {# Special notice for profile reports #}
 		</div>
-		{{ form_end(form) }}
-    </div>
+		<div class="col-12 col-md-6">
+			{{ form_start(form) }}
+            {% if form.IdCategory.vars.value == 2 and no_modal == false %}
+                <div class="modal fade" id="reportMessages" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="staticBackdropLabel">{{ 'feedback.profile.title'|trans }}</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                {{ 'feedback.profile.report.addinfo' | trans | purify | nl2br }}
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" data-dismiss="modal">{{ 'feedback.understood'|trans }}</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+			{{ form_rest(form) }}
+			<div class="o-form-group">
+				<button type="submit" id="submit" name="submit" class="o-button">{{ 'submit'|trans }}</button>
+			</div>
+			{{ form_end(form) }}
+	    </div>
+	</div>
 </div>
 
 {% endblock content %}

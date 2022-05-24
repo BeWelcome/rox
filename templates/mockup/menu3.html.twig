@@ -1,0 +1,286 @@
+{% extends 'mockup/menus.html.twig' %}
+{% import 'macros.twig' as macros %}
+
+{% block menu %}
+{% set member = app.user %}
+<nav id="main_menu" class="navbar sticky-top navbar-dark navbar-expand bg-primary justify-content-between">
+    <div class="container-lg">
+        <ul id="collapsing_menu" class="navbar navbar-nav">
+            <li class="nav-item">
+                <a id="brand_image" class="navbar-brand" href="{{ url('homepage') }}">
+                    <img class="d-none d-md-block" src="{{ asset('images/logo_index_top.png') }}" alt="BeWelcome"/>
+                    <img class="pl-1 d-block d-md-none" src="{{ asset('images/logo_no_text.png') }}" alt="BeWelcome"/>
+                </a>
+            </li>
+            <li class="nav-item dropdown">
+                <a href="#search_menu" class="nav-link dropdown-toggle"
+                   data-target="search_menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label="{{ 'findmembers' | trans }}">
+                    &nbsp;{{ 'findmembers'|trans }}
+                </a>
+                <ul id="search_menu" class="dropdown-menu" role="menu">
+                    <li><a href="{{ url( 'search_locations' ) }}" class="dropdown-item"><i class="fa fa-globe mr-1"></i>{{ 'search.locations' | trans }}</a></li>
+                    <li><a href="{{ path('search_members') }}" class="dropdown-item"><i class="fa fa-users mr-1"></i>{{ 'search.members' | trans }}</a></li>
+                    <li><a href="{{ url('places') }}" class="dropdown-item"><i class="fa fa-globe mr-1"></i>{{ 'browsecountries' | trans }}</a></li>
+                    <li><a href="{{ url('visitors') }}" class="dropdown-item"><i class="fa fa-users mr-1"></i>{{ 'trips.visitors' | trans }}</a></li>
+                    <li><a href="{{ url('trips') }}" class="dropdown-item"><i class="fa fa-map mr-1"></i>{{ 'trips.mytrips' | trans }}</a></li>
+                    <li class="dropdown-submenu">
+                        <a id="dropdownMenu2" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-item dropdown-toggle">Hover for action</a>
+                        <ul aria-labelledby="dropdownMenu2" class="dropdown-menu border-0 shadow">
+                            <li>
+                                <a tabindex="-1" href="#" class="dropdown-item">level 2</a>
+                            </li>
+
+                            <!-- Level three dropdown-->
+                            <li class="dropdown-submenu">
+                                <a id="dropdownMenu3" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-item dropdown-toggle">level 2</a>
+                                <ul aria-labelledby="dropdownMenu3" class="dropdown-menu border-0 shadow">
+                                    <li><a href="#" class="dropdown-item">3rd level</a></li>
+                                    <li><a href="#" class="dropdown-item">3rd level</a></li>
+                                </ul>
+                            </li>
+                            <!-- End Level three -->
+
+                            <li><a href="#" class="dropdown-item">level 2</a></li>
+                            <li><a href="#" class="dropdown-item">level 2</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            <li class="nav-item dropdown">
+                <a href="#community_menu" class="nav-link dropdown-toggle"
+                   data-target="community_menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label="{{ 'communitymenu' | trans }}">
+                    {{ 'communitymenu'|trans }}
+                </a>
+                <ul id="community_menu" class="dropdown-menu" role="menu">
+                    <li><a href="{{ path('forums')}}" class="dropdown-item"><i class="fa fa-comment mr-1"></i>{{ 'communitydiscussions' | trans }}</a></li>
+                    <li><a href="{{ path('groups_mygroups')}}" class="dropdown-item"><i class="fa fa-users mr-1"></i>{{ 'groups' | trans }}</a></li>
+                    <li><a href="{{ path('activities')}}" class="dropdown-item"><i class="fa fa-calendar mr-1"></i>{{ 'activities' | trans }}</a></li>
+                    <li class="dropdown-divider"></li>
+                    <li><a href="{{ path('wiki_front_page')}}" class="dropdown-item"><i class="fab fa-wikipedia-w mr-1"></i>{{ 'wiki' | trans }}</a></li>
+                    <li><a href="{{ path('newsletters')}}" class="dropdown-item"><i class="fa fa-newspaper mr-1"></i>{{ 'newsletters' | trans }}</a></li>
+                    <li><a href="{{ path('communitynews')}}" class="dropdown-item"><i class="fa fa-newspaper mr-1"></i>{{ 'communitynews' | trans }}</a></li>
+                </ul>
+            </li>
+            <li class="nav-item dropdown">
+                <a href="#safety_menu" class="nav-link dropdown-toggle"
+                   data-target="safety_menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label="{{ 'safety' | trans }}">
+                    {{ 'safety' | trans }}
+                </a>
+                <ul id="safety_menu" class="dropdown-menu" role="menu">
+                    <li><a href="{{ url('safety') }}" class="dropdown-item">{{ 'safety'| trans }}</a></li>
+                    <li><a href="{{ url('safety_contact_no_modal') }}" class="dropdown-item">{{ 'safetycontact'| trans }}</a></li>
+                </ul>
+            </li>
+            {% if teams|length != 0 %}
+            <li class="nav-item dropdown">
+                <a href="#volunteer_menu" class="nav-link dropdown-toggle"
+                   data-target="volunteer_menu" data-toggle="dropdown" aria-haspopup="true"
+                   aria-expanded="false" aria-label="{{ 'volunteer' | trans }}">
+                    {{ 'volunteer' | trans }}
+                </a>
+                <ul id="volunteer_menu" class="dropdown-menu" role="menu">
+                    {% for team in teams %}
+                        <li>
+                            {% if team.route starts with '/' %}
+                                <a href="{{ team.route }}" class="dropdown-item">{{ team.trans | trans }}</a>
+                            {% else %}
+                                <a href="{{ path(team.route) }}" class="dropdown-item">{{ team.trans | trans }}</a>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                    <li>
+                        <a href="{{ url('getactive') }}" class="dropdown-item">{{ 'about_getactive' | trans }}</a>
+                    </li>
+                </ul>
+            </li>
+            {% endif %}
+            <li class="nav-item dropdown">
+                <a href="#about_menu" class="nav-link dropdown-toggle" id="subNavBarToggle"
+                   data-target="about_menu"
+                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    {{ 'getanswers'|trans }}
+                </a>
+                <ul id="about_menu" class="dropdown-menu" role="menu">
+                    <li><a href="{{ url('about') }}" class="dropdown-item">{{ 'getanswers' | trans }}</a></li>
+                    <li><a href="{{ url('about_faq') }}" class="dropdown-item">{{ 'menu.faq' | trans }}</a></li>
+                    <li><a href="{{ url('feedback') }}" class="dropdown-item">{{ 'contactus' | trans }}</a></li>
+                    <li><a href="{{ url('stats') }}" class="dropdown-item">{{ 'statspage' | trans }}</a></li>
+                    <li><a href="{{ url('terms_of_use', {'locale': locale }) }}" class="dropdown-item">{{ 'termsofuse'  | trans }}</a></li>
+                    <li><a href="{{ url('getactive') }}" class="dropdown-item">{{ 'about_getactive' | trans }}</a></li>
+                    <li><a href="{{ url('donate') }}" class="dropdown-item">{{ 'donatelink'  | trans }}</a></li>
+                </ul>
+            </li>
+            {% if teams|length == 0 %}
+                <li class="nav-item">
+                    <a href="{{ url('getactive') }}" class="nav-link">{{ 'volunteer' | trans }}</a>
+                </li>
+            {% endif %}
+        </ul>
+        <ul id="static_menu" class="navbar navbar-nav">
+            {# conversations #}
+            <li class="nav-item">
+                <div id="conversationCount" class="nav-link" data-count="-1">
+                    <a href="{{ path('conversations', {'conversationsType': 'conversations'}) }}" aria-label="{{ 'conversations' | trans }}" class="text-white align-items-center">
+                        <i class="fas fa-envelope"></i>
+                        <span class="badge badge-warning"><i class="fa fa-spinner"></i></span>
+                    </a>
+                </div>
+            </li>
+
+            <li class="nav-item dropdown">
+                <a href="#member_menu" class="nav-link dropdown-toggle"
+                   data-target="member_menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label="{{ 'profile' | trans }}">
+                    <span class="d-none d-md-inline">{{ member.Username }}&nbsp;</span>
+                    <img class="profileimg d-none d-md-inline" src="{{ url('avatar', { username: member.username, size: 36 })}}" width="36" height="36" alt="{{ 'profile.picture' }}">
+                    <i class="fa fa-fw fa-user d-inline d-md-none"></i>
+                </a>
+                <ul id="member_menu" class="dropdown-menu dropdown-menu-right" role="menu">
+                    <li class="text-right"><a
+                            href="{{ path('conversations', {'conversationsType': 'conversations'}) }}"
+                            class="dropdown-item">{{ 'conversations' | trans }}</a></li>
+                    <li class="text-right"><a
+                            href="{{ path( 'members_profile' , { username: member.Username } ) }}"
+                            class="dropdown-item">{{ 'profile' | trans }}</a></li>
+                    <li class="text-right"><a href="{{ path('edit_my_profile') }}"
+                                              class="dropdown-item">{{ 'editmyprofile' | trans }}</a></li>
+                    <li class="text-right"><a href="{{ path('my_preferences') }}"
+                                              class="dropdown-item">{{ 'mypreferences' | trans }}</a></li>
+                    <li class="text-right"><a href="{{ path('members_show_all_notes') }}"
+                                              class="dropdown-item">{{ 'mynotes' | trans }}</a></li>
+                    <li class="text-right"><a href="{{ path('groups_mygroups') }}"
+                                              class="dropdown-item">{{ 'mygroups' | trans }}</a></li>
+                    <li class="text-right"><a href="{{ path('trips') }}"
+                                              class="dropdown-item">{{ 'trips.mytrips' | trans }}</a></li>
+                    <li class="text-right"><a href="{{ url( 'security_logout' ) }}"
+                                              class="dropdown-item">{{ 'logout' | trans }}</a></li>
+                </ul>
+            </li>
+            <li class="nav-item">
+                <button class="border bg-primary mr-1" id="hamburger" type="button" data-toggle="collapse" data-target="#hamburger_collapse" aria-controls="hamburger_collapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+            </li>
+        </ul>
+    </div>
+</nav>
+<div class="collapse navbar-dark bg-primary" id="hamburger_collapse">{#  style="position:relative; top: 100%; right: 0" #}
+    <div class="container-lg">
+        <ul id="hamburger_menu" class="navbar-nav text-right"></ul>
+    </div>
+</div>
+{% endblock menu %}
+
+{% block javascripts %}
+<script type="application/javascript">
+    $('[data-toggle="dropdown"]').bootstrapDropdownHover({
+        clickBehavior: 'sticky',
+        hideTimeout: 1000
+    });
+
+    $(function () {
+        registerOnClickEvent();
+    });
+
+    // ------------------------------------------------------- //
+    // Multi Level dropdowns
+    // ------------------------------------------------------ //
+    function registerOnClickEvent() {
+        $("ul.dropdown-menu [data-toggle='dropdown']").on("click", function (event) {
+            console.log('clicked', event);
+
+            $(this).siblings().toggleClass("show");
+
+            if (!$(this).next().hasClass('show')) {
+                $(this).parents('.dropdown-menu').first().find('.show').removeClass("show");
+            }
+            $(this).parents('li.nav-item.dropdown.show').on('hidden.bs.dropdown', function (e) {
+                $('.dropdown-submenu .show').removeClass("show");
+            });
+
+        });
+
+    }
+
+    const gapSize = 20;
+
+    var autocollapse_menu = function (resizing) {
+        const hamburger = document.getElementById('hamburger');
+        const hamburgerMenu = document.getElementById('hamburger_menu');
+        const staticMenu = document.getElementById('static_menu');
+        const collapsingMenu = document.getElementById('collapsing_menu');
+
+        // if resizing move all menu items back into the collapsing menu and start from there
+        // This also takes care of vanishing elements due to smaller viewports (like username and text on logo)
+        let hiddenItems = hamburgerMenu.childNodes;
+        if (hiddenItems.length !== 0) {
+            for (let i = 0; i < hiddenItems.length; i++) {
+                const menuItemToMove = hiddenItems[i];
+                menuItemToMove.classList.remove('dropdown-submenu');
+                menuItemToMove.classList.add('dropdown');
+
+                collapsingMenu.appendChild(menuItemToMove);
+            }
+        }
+
+        let dimensionsStatic = staticMenu.getBoundingClientRect();
+        let dimensionsCollapse = collapsingMenu.getBoundingClientRect();
+
+        if (dimensionsStatic.left - dimensionsCollapse.right < gapSize) {
+            hamburger.classList.remove('d-none');
+
+            while (dimensionsStatic.left - dimensionsCollapse.right < gapSize) {
+                //  add child to dropdown
+                const menuItems = document.querySelectorAll('#collapsing_menu > li:not(:first-child)');
+                const count = menuItems.length;
+                const menuItemToMove = menuItems[count - 1];
+                menuItemToMove.classList.remove('dropdown');
+                menuItemToMove.classList.add('dropdown-submenu');
+                menuItemToMove.classList.add('dropdown-menu-right');
+
+                // insert in front of the first item in the hamburger menu
+                hamburgerMenu.insertBefore(menuItemToMove, hamburgerMenu.firstChild);
+
+                dimensionsStatic = staticMenu.getBoundingClientRect();
+                dimensionsCollapse = collapsingMenu.getBoundingClientRect();
+            }
+        } else {
+            hiddenItems = hamburgerMenu.childNodes;
+
+            if (hiddenItems.length === 0) {
+                hamburger.classList.add('d-none');
+            }
+
+            while (dimensionsStatic.left - dimensionsCollapse.right >= gapSize && hiddenItems.length !== 0) {
+                const menuItems = hamburgerMenu.childNodes;
+                const menuItemToMove = menuItems[0];
+                menuItemToMove.classList.remove('dropdown-submenu');
+                menuItemToMove.classList.remove('dropdown-menu-right');
+                menuItemToMove.classList.add('dropdown');
+
+                collapsingMenu.appendChild(menuItems[0]);
+
+                dimensionsStatic = staticMenu.getBoundingClientRect();
+                dimensionsCollapse = collapsingMenu.getBoundingClientRect();
+
+                hiddenItems = document.querySelectorAll('#hamburger_menu > li');
+            }
+
+            if (dimensionsStatic.left - dimensionsCollapse.right < gapSize) {
+                console.log('Smaller: Autocollapse');
+                autocollapse_menu();
+            }
+        }
+        registerOnClickEvent();
+    }
+
+    $(document).ready(function () {
+        // when the page has loaded
+        autocollapse_menu(false);
+
+        // when the window is resized
+        $(window).on('resize', function () {
+            autocollapse_menu(true);
+        });
+    });
+</script>
+{% endblock javascripts %}

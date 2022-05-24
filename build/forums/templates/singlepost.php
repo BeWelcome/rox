@@ -41,7 +41,7 @@ if (($post->IdGroup > 0) && ($post->PostVisibility == "GroupOnly")) {
     <div class="col-4 col-md-3 postleftcolumn">
         <div class="d-flex flex-column align-self-start">
             <div class="media credentials p-1">
-                <img class="avatar-50 mr-1" src="/members/avatar/<?php echo($post->OwnerUsername); ?>/50">
+                <img class="profileimg avatar-48 mr-1" src="/members/avatar/<?php echo($post->OwnerUsername); ?>/48">
                 <div class="media-body">
                     <p class="small">
                     <a href="members/<?php echo $post->OwnerUsername; ?>"><?php echo $post->OwnerUsername; ?></a>

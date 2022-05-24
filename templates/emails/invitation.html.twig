@@ -1,0 +1,27 @@
+{% extends 'emails/request.template.html.twig' %}
+
+{% block message %}
+    <p>{{ 'email.invitation.to.stay'|trans({'username': sender.Username, 'gender': sender.Gender} ) }}</p>
+    <callout class="secondary">
+        {{ message.message | raw }}
+    </callout>
+    <center>
+        <button class="expand" href="{{ url('members_profile', { 'username': sender.Username}) }}">{% trans with {'%username%': sender.Username, 'gender': sender.Gender} %}visit.profile{% endtrans %}</button>
+
+        <p>{{ 'or' | trans }}</p>
+
+        <button class="expand" href="{{ url('conversation_reply', { id: message.id }) }}">{{ 'reply' | trans }}</button>
+        <p><a href="{{ url('conversation_mark_spam', { 'id': message.id }) }}">{{ 'message.report'|trans }}</a></p>
+    </center>
+{% endblock message %}
+
+{% block request%}
+    {{ 'email.invitation.reply.guest.open'|trans({'%username%': sender.Username, 'gender': sender.Gender}) }}<br>
+    <br>
+    {{ 'request.arrival' | trans }}:<br>
+    {{ request.arrival|format_date('full', locale=receiverLocale) }}<br>
+    {% if request.departure %}{{ 'request.departure' | trans }}:<br>
+        {{ request.departure|format_date('full', locale=receiverLocale) }}<br>{% endif %}
+    {% if request.flexible %}{{ 'request.flexible' | trans }}<br>{% endif %}
+    {{ 'request.number_of_travellers' | trans}}: {{ request.numberOfTravellers }}<br>
+{% endblock request %}

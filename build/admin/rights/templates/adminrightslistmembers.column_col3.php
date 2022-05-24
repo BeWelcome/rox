@@ -44,7 +44,7 @@ $layoutbits = new MOD_layoutbits();
     ?>
     <tr style="border-top: 2px solid #666;">
         <td rowspan="<?= count($details->Rights) ?>"><?php
-		echo $layoutbits->PIC_50_50($username, 'class="framed"') . '<br>';
+		echo $layoutbits->PIC_50_50($username, 'class="profileimg"') . '<br>';
 		echo $username; ?><br/>
             <span class="small"><?= $details->Status ?></span><br>
             <span class="smaller">Last login: <?= $details->LastLogin ?></span><br>

@@ -190,14 +190,6 @@ class MembersController extends RoxControllerBase
                         $this->redirect('');
                     }
                 }
-                else if ($request[1] == 'avatar')
-                {
-                    if (!isset($request[2]) || !$member = $this->getMember($request[2]))
-                        PPHP::PExit();
-                    PRequest::ignoreCurrentRequest();
-                    $this->model->showAvatar($member->id);
-                    break;
-                }
                 else if (!($member = $this->getMember($request[1])))
                 {
                     // did not find such a member
@@ -295,8 +287,13 @@ class MembersController extends RoxControllerBase
                             $page->my_groups = $my_groups;
                             $page->pager = $pager;
                             break;
-                        case 'redesign':
-                            $page = new ProfileRedesignPage();
+                        case 'leg':
+                            $page = new ProfilePage();
+                            $page->enableLightBox();
+                            $page->statuses = $this->model->getStatuses();
+                            if (isset($request[3])) {
+                                $page->leg = $request[3];
+                            }
                             break;
                         case 'adminedit':
                             $rights = new MOD_right();
@@ -1026,15 +1023,5 @@ class MembersController extends RoxControllerBase
         }
         ob_end_clean();
         exit(0);
-    }
-
-    /**
-     * @return Response
-     */
-    public function avatar($username, $size) {
-        $member = $this->getMember($username);
-        ob_start();
-        $this->model->showAvatar($member->id, $size);
-        return new Response(ob_end_clean());
     }
 }

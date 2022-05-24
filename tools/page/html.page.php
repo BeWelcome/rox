@@ -195,6 +195,12 @@ class PageWithHTML extends AbstractBasePage
             $this->footer();
             $this->includeLateScriptfiles();
         ?>
+        <script type="application/javascript">
+            $('[data-toggle="dropdown"]').bootstrapDropdownHover({
+                clickBehavior: 'sticky',
+                hideTimeout: 1000
+            });
+        </script>
         </body>
         </html><?php
     }

@@ -4,10 +4,10 @@ namespace App\Doctrine;
 
 class DeleteRequestType extends SetType
 {
-    const SENDER_DELETED = 'senderdeleted';
-    const RECEIVER_DELETED = 'receiverdeleted';
-    const SENDER_PURGED = 'senderpurged';
-    const RECEIVER_PURGED = 'receiverpurged';
+    public const SENDER_DELETED = 'senderdeleted';
+    public const RECEIVER_DELETED = 'receiverdeleted';
+    public const SENDER_PURGED = 'senderpurged';
+    public const RECEIVER_PURGED = 'receiverpurged';
 
     /** @var string */
     protected $name = 'delete_request';
@@ -80,6 +80,6 @@ class DeleteRequestType extends SetType
         }
         $requests = implode(',', $requests);
 
-        return ('' === $requests) ? null : $requests;
+        return $requests;
     }
 }

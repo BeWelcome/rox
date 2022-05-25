@@ -1041,7 +1041,7 @@ ORDER BY
             {
                 return self::TOO_YOUNG;
             }
-            if ($age < SignupModel::OLDEST_MEMBER)
+            if ($age > SignupModel::OLDEST_MEMBER)
             {
                 return self::TOO_OLD;
             }

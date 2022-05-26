@@ -246,7 +246,7 @@ class RequestController extends BaseRequestAndInvitationController
     {
         $subject = $request->getSubject()->getSubject();
 
-        $this->sendRequestNotification($host, $guest, $host, $request, $subject, 'request', false);
+        $this->sendRequestNotification($guest, $host, $host, $request, $subject, 'request', false);
     }
 
     private function sendHostReplyNotification(

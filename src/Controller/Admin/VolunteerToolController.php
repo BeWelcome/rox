@@ -392,8 +392,8 @@ ORDER BY count(msg.id) DESC')->fetchAll();
                         'type' => $type,
                         'username' => $username,
                         'direction' => 0,
-                        'last_sent' => DateTime::createFromFormat('Y-m-d H:i:s', '1900-01-01 00:00:00'),
-                        'last_received' => DateTime::createFromFormat('Y-m-d H:i:s', '1900-01-01 00:00:00'),
+                        'last_sent' => null,
+                        'last_received' => null,
                     ];
                 }
                 $result = $results[$username];
@@ -404,7 +404,7 @@ ORDER BY count(msg.id) DESC')->fetchAll();
                         $result['last_received'] = $message->getCreated();
                     }
                 } else {
-                    $result['direction'] |= $result['direction'] | 2;
+                    $result['direction'] = $result['direction'] | 2;
                     if ($message->getCreated() > $result['last_sent']) {
                         $result['last_sent'] = $message->getCreated();
                     }

@@ -21,6 +21,8 @@
     {{ form(form) }}
 
     {% if results|length %}
+        {{ dump(results)}}
+
         <div class="table-responsive">
             <table class="table table-striped table-hover">
                 <tr>
@@ -34,7 +36,7 @@
                         <td>{% if (result.type b-and 1) == 1 %}<i class="fa fa-envelope"></i>{% endif %}{% if (result.type b-and 2) == 2 %}<i class="fa fa-home"></i>{% endif %}{% if (result.type b-and 4) == 4 %}<i class="fa fa-house-user"></i>{% endif %}</td>
                         <td>{{ macros.avatar(member.Username, 50) }}</td>
                         <td>{{ macros.profilelink(member.Username) }}
-                            <br>{% if (result.direction b-and 1 == 1) %}{{ result.last_received|format_datetime('medium', 'medium') }}{% endif %}
+                            <br>{% if (result.direction b-and 1) == 1 %}{% if not result.last_received is null %}{{ result.last_received|format_datetime('medium', 'medium') }}{% endif %}{% endif %}
                         </td>
                         <td>
                             <i class="fas fa-fw fa-arrow-left {% if (result.direction == 2) %}invisible{% endif %}"></i>
@@ -42,7 +44,7 @@
                         </td>
                         <td>{{ macros.avatar(result.username, 50) }}</td>
                         <td>{{ macros.profilelink(result.username) }}
-                            <br>{% if (result.direction b-and 2 == 2) %}{{ result.last_sent|format_datetime('medium', 'medium') }}{% endif %}
+                            <br>{% if (result.direction b-and 2) == 2 %}{% if not result.last_sent is null %}{{ result.last_sent|format_datetime('medium', 'medium') }}{% endif %}{% endif %}
                         </td>
                     </tr>
                 {% endfor %}

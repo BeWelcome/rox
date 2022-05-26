@@ -5,13 +5,11 @@
 {% endblock %}
 
 {% block content %}
-  <div class="o-text">
-
     <h5><a href="{{ path('wiki_front_page') }}">Wiki</a></h5>
     <h1>{{ title | title }}</h1>
 
     {% if wikipage %}
-        <div id="wiki">
+        <div id="wiki" class="o-text">
             {{ content | raw }}
         </div>
 
@@ -24,7 +22,9 @@
             </div>
         </div>
 
-        {{ pagerfanta( history, 'rox_default', { 'routeName': 'wiki_page', 'pageParameter': '[version]', 'routeParams': {'pageTitle': title} }) }}
+      <div class="u-flex u-justify-end u-my-8">
+          {{ pagerfanta( history, 'rounded_pagination', { 'routeName': 'wiki_page', 'pageParameter': '[version]', 'routeParams': {'pageTitle': title} }) }}
+      </div>
 
     {% else %}
        <div class="row">
@@ -33,5 +33,4 @@
            </div>
        </div>
     {% endif %}
-  </div>
 {% endblock content %}

@@ -10,15 +10,13 @@
     <h1>{{ 'wiki.recent' | trans | title }}</h1>
 
     {% if pager.haveToPaginate %}
-        <div class="row">
-            <div class="col-12">
-                {{ pagerfanta( pager, 'rox_default') }}
-            </div>
+        <div class="u-flex u-justify-end u-my-8">
+                {{ pagerfanta( pager, 'rounded_pagination') }}
         </div>
     {% endif %}
 
     <div class="row">
-        <div class="col-12">
+        <div class="col-12 u-leading-24">
         {% for recent in pager.currentPageResults %}
             <p>
                 <a href="{{ path('wiki_page', { 'pageTitle': recent.pagename, 'version': recent.version }) }}">{{ recent.pagename }}</a>:
@@ -33,10 +31,8 @@
     </div>
 
     {% if pager.haveToPaginate %}
-        <div class="row">
-            <div class="col-12">
-                {{ pagerfanta( pager, 'rox_default') }}
-            </div>
+        <div class="u-flex u-justify-end u-my-8">
+                {{ pagerfanta( pager, 'rounded_pagination') }}
         </div>
     {% endif %}
 

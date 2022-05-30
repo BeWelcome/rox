@@ -2,6 +2,6 @@
 
 {% block content %}
     <p>
-        {{ 'group.join.approve'| trans({'admin': admin.Username, 'group': '<a href="' ~ url('group_start', {'groupId': group.id}) ~ '">' ~ group.Name ~ '</a>'} %}) }}
+        {{ 'group.join.approve'| trans({'admin': admin.Username, 'group': '<a href="' ~ url('group_start', {'groupId': group.id}) ~ '">' ~ group.Name ~ '</a>'} %})|raw }}
     </p>
 {% endblock content %}

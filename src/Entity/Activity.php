@@ -27,10 +27,8 @@ class Activity
     /**
      * @var Member
      *
-     * @ORM\OneToOne(targetEntity="\App\Entity\Member")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="creator", referencedColumnName="id")
-     * })
+     * @ORM\ManyToOne(targetEntity="\App\Entity\Member")
+     * @ORM\JoinColumn(name="creator", referencedColumnName="id")
      */
     private $createdBy;
 
@@ -51,10 +49,8 @@ class Activity
     /**
      * @var Location
      *
-     * @ORM\OneToOne(targetEntity="\App\Entity\Location")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="locationId", referencedColumnName="geonameId")
-     * })
+     * @ORM\ManyToOne(targetEntity="\App\Entity\Location")
+     * @ORM\JoinColumn(name="locationId", referencedColumnName="geonameId")
      */
     private $location;
 

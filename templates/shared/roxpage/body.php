@@ -6,8 +6,7 @@ use Symfony\Component\Asset\VersionStrategy\JsonManifestVersionStrategy;
     <?php $this->topnav() ?>
     <div id="toasts" class="position-absolute w-100 d-flex flex-column px-2" style="z-index:1000">
     </div>
-    <?php $this->statusMessage() ?>
-    <?php $loginMessages = $this->_getLoginMessages();
+    <?php /* $loginMessages = $this->_getLoginMessages();
     if (!empty($loginMessages)) :
         foreach($loginMessages as $id => $loginMessage) : ?>
             <div class="loginmessage">
@@ -16,7 +15,7 @@ use Symfony\Component\Asset\VersionStrategy\JsonManifestVersionStrategy;
             </div>
             <?php
         endforeach;
-    endif; ?>
+    endif; */?>
 
 <div class="container-lg">
     <?php $flashError = $this->getFlashError(true);

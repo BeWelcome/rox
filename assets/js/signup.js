@@ -31,6 +31,7 @@ $(function () {
             numberOfColumns: 1,
             format: "YYYY-MM-DD",
             position: 'top left',
+            showTooltip: false,
             lang: document.documentElement.lang,
             setup: (picker) => {
                 picker.on('selected', (start, end) => {

@@ -15,7 +15,7 @@ $(function () {
             numberOfMonths: 2,
             numberOfColumns: 2,
             lang: document.documentElement.lang,
-            tooltipNights: true,
+            showTooltip: false,
             setup: (picker) => {
                 picker.on('selected', (start, end) => {
                     const arrival = document.getElementById(parent + '_arrival');

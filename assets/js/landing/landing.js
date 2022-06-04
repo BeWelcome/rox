@@ -1,5 +1,4 @@
 import SearchPicker from "./../search/searchpicker";
-import "tempusdominus";
 
 const searchPicker = new SearchPicker( "/search/locations/all");
 
@@ -139,6 +138,7 @@ var Home = {
             },
         });
     },
+
     setHostingStatus: function (e) {
         e.preventDefault();
         // Get parameters

@@ -6,12 +6,14 @@ use App\Doctrine\MessageStatusType;
 use App\Entity\HostingRequest;
 use App\Entity\Member;
 use App\Entity\Message;
+use DateTime;
+use Doctrine\DBAL\Exception\InvalidArgumentException as DBALInvalidArgumentException;
 use InvalidArgumentException;
 
-abstract class AbstractRequestModel
+class BaseRequestModel
 {
     /**
-     * @throws InvalidArgumentException|\Doctrine\DBAL\Exception\InvalidArgumentException
+     * @throws InvalidArgumentException|DBALInvalidArgumentException
      */
     public function getFinalRequest(
         Member $sender,
@@ -77,7 +79,16 @@ abstract class AbstractRequestModel
         return $finalRequest;
     }
 
-    abstract public function hasExpired(Message $message): bool;
+    /**
+     * An invitation and requests expire on the day they start.
+     */
+    public function hasExpired(Message $message): bool
+    {
+        $today = new DateTime('today');
+        $arrival = $message->getRequest()->getArrival();
+
+        return $today > $arrival;
+    }
 
     /**
      * @param $original

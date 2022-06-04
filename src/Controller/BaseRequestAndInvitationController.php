@@ -5,7 +5,7 @@ namespace App\Controller;
 use App\Entity\HostingRequest;
 use App\Entity\Member;
 use App\Entity\Message;
-use App\Model\AbstractRequestModel;
+use App\Model\BaseRequestModel;
 use App\Model\ConversationModel;
 use App\Utilities\TranslatedFlashTrait;
 use DateTime;
@@ -17,10 +17,10 @@ abstract class BaseRequestAndInvitationController extends AbstractController
 {
     use TranslatedFlashTrait;
 
-    protected AbstractRequestModel $model;
+    protected BaseRequestModel $model;
     protected ConversationModel $conversationModel;
 
-    public function __construct(AbstractRequestModel $model)
+    public function __construct(BaseRequestModel $model)
     {
         $this->model = $model;
     }

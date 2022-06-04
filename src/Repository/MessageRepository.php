@@ -278,6 +278,7 @@ class MessageRepository extends EntityRepository
             ->setParameter('status', MessageStatusType::CHECK)
             ->andWhere('m.spamInfo LIKE :spamInfo')
             ->setParameter('spamInfo', '%' . SpamInfoType::MEMBER_SAYS_SPAM . '%')
+            ->orderBy('m.created', 'DESC')
         ;
 
         return $qb;

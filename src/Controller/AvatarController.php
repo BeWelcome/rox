@@ -3,6 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\Member;
+use App\Entity\MembersPhoto;
+use DateTime;
+use Doctrine\ORM\EntityManagerInterface;
 use Intervention\Image\ImageManager;
 use InvalidArgumentException;
 use Psr\Log\LoggerInterface;
@@ -37,7 +40,7 @@ class AvatarController extends AbstractController
     /**
      * @Route("/members/uploadavatar", methods={"POST"})
      */
-    public function uploadAvatar(Request $request): Response
+    public function uploadAvatar(Request $request, EntityManagerInterface $entityManager): Response
     {
         $member = $this->getUser();
         if (!$member || !$member->getId()) {
@@ -50,7 +53,7 @@ class AvatarController extends AbstractController
             return new Response('File upload failed', Response::HTTP_BAD_REQUEST);
         }
 
-        $this->storeAvatar($member->getId(), $avatarFile->getRealPath());
+        $this->storeAvatar($entityManager, $member, $avatarFile->getRealPath());
 
         return new Response('');
     }
@@ -91,11 +94,11 @@ class AvatarController extends AbstractController
         return $this->createCacheableResponse($filename);
     }
 
-    private function storeAvatar($memberId, $tmpFilePath)
+    private function storeAvatar($entityManager, $member, $tmpFilePath)
     {
         // TODO
         // $this->writeMemberphoto($memberId);
-
+        $memberId = $member->getId();
         $this->removeAvatarFile($memberId);
 
         $imageManager = new ImageManager();
@@ -111,6 +114,19 @@ class AvatarController extends AbstractController
 
         $newFileName = self::AVATAR_PATH . $memberId . '_original';
         $img->save($newFileName);
+
+        $memberPhotoRepository = $entityManager->getRepository(MembersPhoto::class);
+        $memberPhoto = $memberPhotoRepository->findOneBy(['member' => $memberId], ['created' => 'DESC']);
+        if (null === $memberPhoto) {
+            $memberPhoto = new MembersPhoto();
+        }
+        $memberPhoto->setMember($member);
+        $memberPhoto->setFilepath($newFileName);
+        $memberPhoto->setCreated(new DateTime());
+        $memberPhoto->setComment('Uploaded new avatar');
+
+        $entityManager->persist($memberPhoto);
+        $entityManager->flush();
 
         $this->logger->info('New avatar picture was stored: ' . $newFileName);
 

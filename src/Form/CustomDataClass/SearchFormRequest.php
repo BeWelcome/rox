@@ -131,10 +131,10 @@ class SearchFormRequest
     public $accessible = false;
 
     /** @var bool */
-    public $profile_picture = true;
+    public $profile_picture = false;
 
     /** @var bool */
-    public $about_me = true;
+    public $about_me = false;
 
     /** @var bool */
     public $has_comments;
@@ -241,6 +241,7 @@ class SearchFormRequest
         $formRequest->max_age = self::get($data, 'max_age', null);
         $formRequest->gender = self::get($data, 'gender', null);
         $formRequest->order = self::get($data, 'order', SearchModel::ORDER_ACCOM);
+        $formRequest->direction = self::get($data, 'direction', SearchModel::DIRECTION_ASCENDING);
         $formRequest->items = self::get($data, 'items', 10);
         $formRequest->show_map = self::get($data, 'show_map', '0') ? true : false;
         $formRequest->showOnMap = self::get($data, 'showOnMap', false);

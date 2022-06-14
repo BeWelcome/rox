@@ -105,13 +105,12 @@ class SearchModel extends RoxModelBase
                 $order .= ', LastLogin DESC, Distance ASC';
                 break;
             case self::ORDER_DISTANCE:
-                $order = $order.', hosting_interest DESC, LastLogin DESC';
+                $order .= ', hosting_interest DESC, LastLogin DESC';
                 break;
         }
 
         // if descending order is requested switch all ASC to DESC and vice versa
-        if (self::DIRECTION_DESCENDING === $direction)
-        {
+        if (self::DIRECTION_DESCENDING == $direction) {
             $order = str_replace('ASC', 'BSC', $order);
             $order = str_replace('DESC', 'ASC', $order);
             $order = str_replace('BSC', 'DESC', $order);

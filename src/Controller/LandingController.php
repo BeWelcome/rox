@@ -7,6 +7,7 @@ use App\Entity\Activity;
 use App\Entity\Member;
 use App\Entity\Notification;
 use App\Entity\Preference;
+use App\Entity\Subtrip;
 use App\Form\CustomDataClass\SearchFormRequest;
 use App\Form\SearchFormType;
 use App\Form\TripRadiusType;
@@ -16,6 +17,7 @@ use App\Model\LandingModel;
 use App\Model\TripModel;
 use App\Repository\ActivityRepository;
 use App\Repository\NotificationRepository;
+use App\Repository\SubtripRepository;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -265,19 +267,23 @@ class LandingController extends AbstractController
             'messageFilter' => $messageFilter,
             'forumFilter' => $forumFilter,
             'onlineActivities' => $onlineActivities,
-            'notificationCount' => $this->getUncheckedNotificationsCount($member),
+            'visitorsCount' => $this->getVisitorsCount($tripModel, $member),
             'activityCount' => $this->getUpcomingAroundLocationCount($member, $onlineActivities),
         ]);
 
         return $content;
     }
 
-    protected function getUncheckedNotificationsCount(Member $member): int
+    protected function getVisitorsCount(TripModel $tripModel, Member $member): int
     {
-        /** @var NotificationRepository $notificationRepository */
-        $notificationRepository = $this->getDoctrine()->getRepository(Notification::class);
+        $radius = $tripModel->getTripsRadius($member);
 
-        return $notificationRepository->getUncheckedNotificationsCount($member);
+        /** @var SubtripRepository $subtripRepository */
+        $subtripRepository = $this->getDoctrine()->getRepository(SubTrip::class);
+
+        $visitorsCount = $subtripRepository->getVisitorsCount($member, $radius);
+
+        return $visitorsCount;
     }
 
     private function getUpcomingAroundLocationCount(Member $member, bool $showOnlineActivities): int

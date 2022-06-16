@@ -21,17 +21,22 @@ use Doctrine\ORM\QueryBuilder;
  */
 class SubtripRepository extends EntityRepository
 {
-    /*    public function queryTripsOfMember(Member $member): Query
-        {
-            return $this->createQueryBuilder('t')
-                ->where('t.created <= :now')
-                ->andWhere('t.creator = :creator')
-                ->setParameter(':now', new DateTime())
-                ->setParameter(':creator', $member)
-                ->orderBy('t.created', 'DESC')
-                ->getQuery();
-        }
-    */
+    public function getVisitorsCount(Member $member, int $distance = 20, int $duration = 3): int
+    {
+        $queryBuilder = $this->getLegsInAreaQueryBuilder($member, $distance, $duration);
+        $queryBuilder
+            ->select('count(s.id)')
+            ->andWhere('t.countOfTravellers <= :maxguest')
+            ->setParameter(':maxguest', $member->getMaxguest())
+        ;
+
+        return
+            $queryBuilder
+                ->getQuery()
+                ->getSingleScalarResult()
+            ;
+    }
+
     public function getLegsInAreaMaxGuests(Member $member, int $distance = 20, int $duration = 3): array
     {
         $queryBuilder = $this->getLegsInAreaQueryBuilder($member, $distance, $duration);

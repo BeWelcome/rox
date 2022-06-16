@@ -66,23 +66,27 @@
 	{# conversations box #}
 	<div class="u-w-full u-flex u-flex-col">
 
-		<ul class="nav nav-tabs" role="tablist">
-			<li class="nav-item">
-          <a class="nav-link active" aria-controls="conversations" href="#conversations" role="tab"
-             data-toggle="tab">{{ 'landing.tab.messagesreceived' | trans }}
-					{% if conversationCount %}
-						<span class="badge badge-primary u-rounded-full u-w-20 u-h-20 u-inline-flex u-items-center u-justify-center">{{ conversationCount }}</span>
-					{% endif %}
-				</a>
-			</li>
-			<li class="nav-item">
-          <a class="nav-link" aria-controls="notifications" href="#notifications" role="tab"
-             data-toggle="tab">{{ 'landing.tab.notifications' | trans }}{% if notificationCount %} <span
-              class="badge badge-primary u-rounded-full u-w-20 u-h-20 u-inline-flex u-items-center u-justify-center">{{ notificationCount }}</span>{% endif %}</a>
-			</li>
-		</ul>
+        <ul class="nav nav-tabs" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" aria-controls="conversations" href="#conversations" role="tab"
+                   data-toggle="tab">{{ 'landing.tab.messagesreceived' | trans }}
+                    {% if conversationCount %}
+                        <span
+                            class="badge badge-primary u-rounded-full u-w-20 u-h-20 u-inline-flex u-items-center u-justify-center">{{ conversationCount }}</span>
+                    {% endif %}
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" aria-controls="visitors" href="#visitors" role="tab"
+                   data-toggle="tab">{{ 'landing.tab.visitors' | trans }}
+                    {% if visitorsCount %}
+                        <span class="badge badge-primary u-rounded-full u-w-20 u-h-20 u-inline-flex u-items-center u-justify-center">{{ visitorsCount }}</span>
+                    {% endif %}
+                </a>
+            </li>
+        </ul>
 
-		<div class="o-card o-card--tabbed tab-content u-p-16">
+        <div class="o-card o-card--tabbed tab-content u-p-16">
 
 			{# conversations #}
 			<div role="tabpanel" class="o-tab tab-pane u-h-full active" id="conversations">
@@ -122,17 +126,30 @@
 				</div>
 			</div>
 
-			{# notifications #}
-			<div role="tabpanel" class="o-tab tab-pane u-h-full p-2" id="notifications">
-				<div id="notificationsdisplay" class="c-dashboard">
-					<div class="u-flex u-h-full u-items-center u-justify-center">
-						<p class="u-text-center u-my-24 u-font-300 u-font-display">
-							<i class="fa u-mr-8 fa-4x fa-pulse fa-spinner my-3"></i><br>
-							{{ 'dashboard.load.notifications' | trans }}
-						</p>
-					</div>
-				</div>
-			</div>
+			{# visitors #}
+			<div role="tabpanel" class="o-tab tab-pane u-h-full" id="visitors">
+				<div id="visitorsdisplay">
+                    <div class="u-flex u-items-center u-mb-8 u-w-full">
+                        {{ form_start(radiusForm, {'attr': {'class': 'u-w-full'}})}}
+                        <div class="u-flex u-items-center u-mb-8 u-w-full">
+                            <i class="fa fa-fw fa-bullseye u-text-16 u-text-gray-50 u-mr-4"></i>
+                            {{ form_label(radiusForm.radius, null, {'label_attr': {'class': 'u-mb-0 u-mr-16'}}) }}
+                            {{ form_widget(radiusForm.radius, {'attr': {'class': 'u-w-full'}}) }}
+                        </div>
+                        {{ form_rest(radiusForm)}}
+                        {{ form_end(radiusForm)}}
+                    </div>
+                    <div id="legsdisplay" class="c-dashboard">
+                        <p class="text-center u-my-8">
+                            <i class="fa fa-4x fa-pulse fa-spinner u-my-8"></i><br>
+                            {{ 'bevisited.load.legs' | trans }}</p>
+                    </div>
+                    <div class="u-flex u-flex-col u-mt-auto u-space-y-8">
+                        <a href="{{ url('visitors') }}" class="o-button o-button--full btn u-mt-16"><i
+                            class="far fa-map u-mr-8"></i> {{ 'landing.bevisited.alltrips' | trans }}</a>
+                    </div>
+                </div>
+            </div>
 		</div>
 	</div>
 
@@ -232,31 +249,7 @@
 </div>
 
 {# 3 columns #}
-<div class="u-flex u-flex-wrap md:u-grid md:u-grid-cols-3 u-gap-24 u-pb-24">
-
-	<div class="u-w-full">
-		<div class="o-card u-h-full">
-        <h4 class="homehfour">{{ 'landing.bevisited.title' | trans }}<br/><span
-            class="homesubt">{{ 'landing.bevisited.subtitle' | trans }}</span></h4>
-			<div class="u-flex u-items-center u-mb-8 u-w-full">
-				{{ form_start(radiusForm, {'attr': {'class': 'u-w-full'}})}}
-				<div class="u-flex u-items-center u-mb-8 u-w-full">
-					<i class="fa fa-fw fa-bullseye u-text-16 u-text-gray-50 u-mr-4"></i>
-					{{ form_label(radiusForm.radius, null, {'label_attr': {'class': 'u-mb-0 u-mr-16'}}) }}
-					{{ form_widget(radiusForm.radius, {'attr': {'class': 'u-w-full'}}) }}
-				</div>
-				{{ form_rest(radiusForm)}}
-				{{ form_end(radiusForm)}}
-			</div>
-			<div id="legsdisplay">
-				<p class="text-center my-3">
-					<i class="fa u-mr-8 fa-4x fa-pulse fa-spinner my-3"></i><br>
-					{{ 'bevisited.load.legs' | trans }}</p>
-			</div>
-        <a href="{{ url('visitors') }}" class="o-button o-button--full btn u-mt-16"><i
-            class="far fa-map u-mr-8"></i> {{ 'landing.bevisited.alltrips' | trans }}</a>
-		</div>
-	</div>
+<div class="u-flex u-flex-wrap md:u-grid md:u-grid-cols-2 u-gap-24 u-pb-24">
 
 	<div class="u-w-full">
 		<div class="o-card u-mb-24">
@@ -351,19 +344,24 @@
 		<div class="o-card u-h-full">
         <h4 class="homehfour">{{ 'landing.bwnews.title' | trans }}<br/><span
             class="homesubt">{{ 'landing.bwnews.subtitle' | trans }}</span></h4>
+        {% for news in communityNews %}
 
 			<h5>
-				<a href="{{ url('communitynews_show', { id: communityNews.id} ) }}">{{ communityNews.title }}</a>
+				<a href="{{ url('communitynews_show', { id: news.id} ) }}">{{ news.title }}</a>
 			</h5>
-			<p class="u-font-display u-font-300">{{ communityNews.text | truncate(200) | raw }}</p>
-        <a href="{{ url('communitynews_show', { id: communityNews.id} ) }}"
-           class="o-button u-my-16"><i class="fas fa-angle-double-right u-mr-8"></i>{{ 'label.read.more' | trans }}</a>
-			<div>
-				<small>{{ communityNews.createdAt.diffForHumans }}</small>
-          {% set commentsCount = communityNews.comments | length %}<small
-            class="float-right">{% trans with {'%commentsCount%': commentsCount} %}bewelcome_news.nrcomments{% endtrans %}</small>
+			<p class="u-font-display u-font-300 u-mb-8">{{ news.text | truncate(200) | raw }}</p>
+
+			<div class="u-flex u-flex-row u-justify-between">
+				<small>{{ news.createdAt.diffForHumans }}</small>
+                {% set commentsCount = news.comments | length %}
+                <small>{{ 'bewelcome_news.nrcomments'|trans({'%commentsCount%': commentsCount}) }}</small>
 			</div>
-        <a href="{{ url('communitynews') }}" class="o-button btn u-mt-24"><i
+            <a href="{{ url('communitynews_show', { id: news.id} ) }}"
+               class="o-button u-my-16"><i class="fas fa-angle-double-right u-mr-8"></i>{{ 'label.read.more' | trans }}
+            </a>
+            <div class="u-mb-16">&nbsp;</div>
+        {% endfor %}
+            <a href="{{ url('communitynews') }}" class="o-button btn u-mt-24"><i
             class="far fa-newspaper u-mr-8"></i> {{ 'landing.bwnews.allnews' | trans }}</a>
 		</div>
 	</div>

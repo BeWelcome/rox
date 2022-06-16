@@ -155,14 +155,6 @@ class LandingModel
         return $repository->findUpcomingAroundLocation($member, $online);
     }
 
-    public function getMemberDetails()
-    {
-    }
-
-    public function getDonationCampaignDetails()
-    {
-    }
-
     public function getTravellersInAreaOfMember(Member $member, int $radius): array
     {
         /** @var SubtripRepository $subTripRepository */

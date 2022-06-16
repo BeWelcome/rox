@@ -2,7 +2,7 @@
 <div id="legsdisplay">
     <div class="c-trip-legs--landing">
         {% for leg in legs  %}
-            {% include 'trip/smallleg.html.twig' with {'leg': leg} %}
+            {% include 'trip/landing.html.twig' with {'leg': leg} %}
         {% else %}
                 {{ 'landing.bevisited.none'|trans }}
         {% endfor %}

@@ -69,7 +69,7 @@ class SearchFormRequest
     public $accommodation_anytime = true;
 
     /** @var bool */
-    public $accommodation_neverask = false;
+    public $accommodation_neverask = true;
 
     /** @var bool */
     public $no_smoking = false;

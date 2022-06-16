@@ -77,7 +77,7 @@ class SearchModel extends RoxModelBase
 
     private const ORDER_BY = [
         self::ORDER_USERNAME => ['WordCode' => 'SearchOrderUsername', 'Column' => 'm.Username'],
-        self::ORDER_ACCOM => ['WordCode' => 'SearchOrderAccommodation', 'Column' => 'hosting_interest'],
+        self::ORDER_ACCOM => ['WordCode' => 'SearchOrderAccommodation', 'Column' => 'accomodation'],
         self::ORDER_DISTANCE => ['WordCode' => 'SearchOrderDistance', 'Column' => 'Distance'],
         self::ORDER_LOGIN => ['WordCode' => 'SearchOrderLogin', 'Column' => 'LastLogin'],
         self::ORDER_MEMBERSHIP => ['WordCode' => 'SearchOrderMembership', 'Column' => 'm.created'],
@@ -98,11 +98,14 @@ class SearchModel extends RoxModelBase
     private function getOrderBy($orderBy, $direction)
     {
         $orderType = $orderBy - ($orderBy % 2);
-        $order = self::ORDER_BY[$orderType]['Column'] . " ASC, (IF(mp.photoCount IS NULL, 0, 1) + IF(m.ProfileSummary != 0, 2, 0)) ASC";
+        $order = self::ORDER_BY[$orderType]['Column'] . " ASC";
         switch ($orderType) {
             case self::ORDER_ACCOM:
+                $order .= ', (IF(mp.photoCount IS NULL, 0, 1) + IF(m.ProfileSummary != 0, 2, 0)) ASC'
+                    . ', hosting_interest ASC, LastLogin DESC, Distance ASC';
+                break;
             case self::ORDER_COMMENTS:
-                $order .= ', LastLogin DESC, Distance ASC';
+                $order .= ', (IF(mp.photoCount IS NULL, 0, 1) + IF(m.ProfileSummary != 0, 2, 0)) ASC, LastLogin DESC, Distance ASC';
                 break;
             case self::ORDER_DISTANCE:
                 $order .= ', hosting_interest DESC, LastLogin DESC';

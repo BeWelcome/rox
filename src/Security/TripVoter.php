@@ -39,11 +39,15 @@ class TripVoter extends Voter
 
         /** @var Trip */
         $trip = $subject;
+        if (null !== $trip->getDeleted()) {
+            // A deleted trip can't be viewed or edited.
+            return false;
+        }
 
         switch ($attribute) {
             case self::TRIP_VIEW:
-                // Currently everyone can view any trip as long as not all legs are private
-                $view = $this->canEdit($trip, $member);
+                // A trip that hasn't expired can be viewed by everyone as long as not all legs are private
+                $view = !$trip->isExpired() || $this->canEdit($trip, $member);
                 foreach ($trip->getSubtrips() as $leg) {
                     $view = $view || !in_array(SubtripOptionsType::PRIVATE, $leg->getOptions());
                 }

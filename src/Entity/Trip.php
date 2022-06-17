@@ -13,6 +13,7 @@ use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use InvalidArgumentException;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -182,8 +183,12 @@ class Trip
         return $this;
     }
 
-    public function getDeleted(): Carbon
+    public function getDeleted(): ?Carbon
     {
+        if (null === $this->deleted) {
+            return null;
+        }
+        
         return Carbon::instance($this->deleted);
     }
 
@@ -244,6 +249,26 @@ class Trip
 
         $this->subtrips->removeElement($subtrip);
         $subtrip->setTrip(null);
+    }
+
+    public function isExpired(): bool
+    {
+        $legs = $this->getSubtrips();
+
+        if (0 === $legs->count()) {
+            throw new InvalidArgumentException('No trip legs');
+        }
+
+        $expired = true;
+        $now = new Carbon();
+
+        /** @var Subtrip $leg */
+        foreach ($legs->getIterator() as $leg) {
+            $departure = $leg->getDeparture();
+            $expired = $expired && ($departure < $now);
+        }
+
+        return $expired;
     }
 
     /**

@@ -1,0 +1,24 @@
+.l-search-result {
+  display: grid;
+  grid-template-areas:
+          "avatar member details"
+          "about_me about_me about_me";
+  grid-template-columns: 72px 1fr min-content;
+  grid-gap: 10px;
+  padding: 2px;
+}
+
+.l-search-result__dark {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+@screen md {
+  .l-search-result {
+    display: grid;
+    grid-template-areas: "avatar member about_me details";
+    grid-template-columns: 100px 150px 1fr min-content;
+    grid-gap: 20px;
+    padding: 4px;
+  }
+}
+

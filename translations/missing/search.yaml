@@ -1,0 +1,6 @@
+search.last.login:
+    - 'Last login:'
+    - Text shown in the search results followed by the last login date
+search.member.since:
+    - 'Member since:'
+    - Text shown in the search results followed by the member since date

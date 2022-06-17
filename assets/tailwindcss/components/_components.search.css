@@ -1,0 +1,30 @@
+/**
+ Components to structure the search results grid
+ */
+.c-search-avatar {
+  grid-area: avatar;
+  overflow: hidden;
+}
+
+@media(max-width:500px) {
+  .c-search-avatar .o-avatar {
+    grid-template-rows: 72px 1fr;
+  }
+
+  .c-search-avatar .o-avatar__img-wrapper {
+    width: 72px;
+    height: 72px;
+  }
+}
+
+.c-search-member {
+  grid-area: member;
+}
+
+.c-search-about_me {
+  grid-area: about_me;
+}
+
+.c-search-details {
+  grid-area: details;
+}

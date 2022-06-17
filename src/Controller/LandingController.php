@@ -267,11 +267,20 @@ class LandingController extends AbstractController
             'messageFilter' => $messageFilter,
             'forumFilter' => $forumFilter,
             'onlineActivities' => $onlineActivities,
+            'notificationCount' => $this->getUncheckedNotificationsCount($member),
             'visitorsCount' => $this->getVisitorsCount($tripModel, $member),
             'activityCount' => $this->getUpcomingAroundLocationCount($member, $onlineActivities),
         ]);
 
         return $content;
+    }
+
+    protected function getUncheckedNotificationsCount(Member $member): int
+    {
+        /** @var NotificationRepository $notificationRepository */
+        $notificationRepository = $this->getDoctrine()->getRepository(Notification::class);
+
+        return $notificationRepository->getUncheckedNotificationsCount($member);
     }
 
     protected function getVisitorsCount(TripModel $tripModel, Member $member): int

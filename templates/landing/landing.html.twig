@@ -140,9 +140,12 @@
                         {{ form_end(radiusForm)}}
                     </div>
                     <div id="legsdisplay" class="c-dashboard">
-                        <p class="text-center u-my-8">
-                            <i class="fa fa-4x fa-pulse fa-spinner u-my-8"></i><br>
-                            {{ 'bevisited.load.legs' | trans }}</p>
+                        <div class="u-flex u-h-full u-items-center u-justify-center">
+                            <p class="u-text-center u-my-24 u-font-300 u-font-display">
+                                <i class="fa u-mr-8 fa-4x fa-pulse fa-spinner my-3"></i><br>
+                                {{ 'bevisited.load.legs' | trans }}
+                            </p>
+                        </div>
                     </div>
                     <div class="u-flex u-flex-col u-mt-auto u-space-y-8">
                         <a href="{{ url('visitors') }}" class="o-button o-button--full btn u-mt-16"><i
@@ -161,11 +164,16 @@
           <a href="#threads" class="nav-link active" aria-controls="threads" role="tab"
              data-toggle="tab">{{ 'landing.tab.forum' | trans }}</a>
 			</li>
-			<li class="nav-item">
-          <a href="#activities" class="nav-link" aria-controls="activities" role="tab"
-             data-toggle="tab">{{ 'landing.tab.activities' | trans }}{% if activityCount %} <span
-              class="badge badge-primary u-rounded-full u-w-20 u-h-20 u-inline-flex u-items-center u-justify-center">{{ activityCount }}</span>{% endif %}</a>
-			</li>
+            <li class="nav-item">
+                <a href="#activities" class="nav-link" aria-controls="activities" role="tab"
+                   data-toggle="tab">{{ 'landing.tab.activities' | trans }}{% if activityCount %} <span
+                        class="badge badge-primary u-rounded-full u-w-20 u-h-20 u-inline-flex u-items-center u-justify-center">{{ activityCount }}</span>{% endif %}</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" aria-controls="notifications" href="#notifications" role="tab"
+                   data-toggle="tab">{{ 'landing.tab.notifications' | trans }}{% if notificationCount %} <span
+                        class="badge badge-primary u-rounded-full u-w-20 u-h-20 u-inline-flex u-items-center u-justify-center">{{ notificationCount }}</span>{% endif %}</a>
+            </li>
 		</ul>
 
 		<div class="o-card o-card--tabbed tab-content u-p-16">
@@ -244,6 +252,18 @@
                         {{ 'landing.activities.myactivities' | trans }}</a>
                 </div>
 			</div>
+
+            {# notifications #}
+            <div role="tabpanel" class="o-tab tab-pane u-h-full p-2" id="notifications">
+                <div id="notificationsdisplay" class="c-dashboard">
+                    <div class="u-flex u-h-full u-items-center u-justify-center">
+                        <p class="u-text-center u-my-24 u-font-300 u-font-display">
+                            <i class="fa u-mr-8 fa-4x fa-pulse fa-spinner my-3"></i><br>
+                            {{ 'dashboard.load.notifications' | trans }}
+                        </p>
+                    </div>
+                </div>
+            </div>
 		</div>
 	</div>
 </div>
@@ -359,9 +379,11 @@
             <a href="{{ url('communitynews_show', { id: news.id} ) }}"
                class="o-button u-my-16"><i class="fas fa-angle-double-right u-mr-8"></i>{{ 'label.read.more' | trans }}
             </a>
+            {% if not loop.last %}
             <div class="u-mb-16">&nbsp;</div>
+            {% endif %}
         {% endfor %}
-            <a href="{{ url('communitynews') }}" class="o-button btn u-mt-24"><i
+            <a href="{{ url('communitynews') }}" class="o-button btn u-mt-16"><i
             class="far fa-newspaper u-mr-8"></i> {{ 'landing.bwnews.allnews' | trans }}</a>
 		</div>
 	</div>

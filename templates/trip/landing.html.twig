@@ -3,13 +3,12 @@
 <div class="c-dashboard__item">
     <div class="o-avatar o-avatar--m o-avatar--noname o-avatar--shadow-s u-mr-16 u-min-w-0">{{ macros.roundedavatarstack(leg.trip.creator.username, 72, false) }}</div>
     <div class="u-flex u-flex-col u-h-full u-justify-center u-px-8 u-w-min-0 u-overflow-hidden">
-        <p class="u-font-display u-font-700"><a href="{{ url('trip_show', {id: leg.trip.id, _fragment: 'leg' ~ leg.id}) }}">{{ leg.location.name }},</a>
-            <span class="u-font-300">{{ leg.arrival|format_date('medium') }}
+        <p class="u-font-display"><a href="{{ url('trip_show', {id: leg.trip.id, _fragment: 'leg' ~ leg.id}) }}"><strong>{{ leg.location.name }}</strong>,</a>
+            {{ leg.arrival|format_date('medium') }}
                 {% if leg.arrival != leg.departure %}
                     -
                     {{ leg.departure|format_date('medium') }}
                 {% endif %}
-            </span>
         <span class="d-none d-sm-block">
             <i class="fa fa-users u-text-16 u-justify-self-center u-self-center"></i>
             {{ 'trip.count.of.travellers'| trans ({'countOfTravellers' : leg.trip.countOfTravellers}) }}

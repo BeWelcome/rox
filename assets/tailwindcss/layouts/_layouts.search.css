@@ -43,10 +43,9 @@
   .l-search-result {
     display: grid;
     grid-template-areas:
-      "avatar member about_me"
-      "avatar hosting about_me"
-      "avatar extra_info about_me";
-    grid-template-columns: 100px 180px 1fr;
+      "avatar member about_me hosting"
+      "avatar memebr about_me extra_info";
+    grid-template-columns: 100px 180px 1fr min-content;
   }
 }
 

@@ -188,7 +188,7 @@ class Trip
         if (null === $this->deleted) {
             return null;
         }
-        
+
         return Carbon::instance($this->deleted);
     }
 

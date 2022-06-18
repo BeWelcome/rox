@@ -39,36 +39,40 @@
                 </div>
             </div>
             <div class="c-search-about_me">
-                <div class="d-sm-none">
-                    <a class="btn btn-block btn-outline-secondary" data-toggle="collapse" href="#collapse-{{ loop.index }}" role="button" aria-expanded="false" aria-controls="collapse-{{ loop.index }}">
+                <div class="d-block d-md-none">
+                    <a class="btn btn-block btn-secondary" data-toggle="collapse" href="#collapse-{{ loop.index }}" role="button" aria-expanded="false" aria-controls="collapse-{{ loop.index }}">
                         <strong>{{ 'profilesummary' | trans | capitalize }}</strong>
                     </a>
-                    <div class="collapse" id="collapse-{{ loop.index }}">
+                    <div class="collapse bg-white u-p-4" id="collapse-{{ loop.index }}">
                         <a href="/members/{{ member.Username }}"
-                           class="profilesummary">{{ member.ProfileSummary | truncate(250) | purify }}</a>
-                        {% if member.Occupation|length %}<p class="m-0 mb-1 font-italic">{{ 'occupation' | trans }}: {{ member.Occupation | raw }}</p>{% endif %}
+                           class="profilesummary">{{ member.ProfileSummary | truncate(150) | purify }}</a>
+                        {% if member.Occupation|length %}<p class="font-italic">{{ 'occupation' | trans | capitalize }}: {{ member.Occupation | raw }}</p>{% endif %}
                     </div>
                 </div>
                 <div class="d-none d-md-block">
                     <a href="/members/{{ member.Username }}"
                        class="profilesummary">{{ member.ProfileSummary | truncate(250) | purify }}</a>
-                    {% if member.Occupation|length %}<p class="m-0 mb-1 font-italic">{{ 'occupation' | trans }}: {{ member.Occupation | raw }}</p>{% endif %}
+                    {% if member.Occupation|length %}<p class="font-italic">{{ 'occupation' | trans | capitalize }}: {{ member.Occupation | raw }}</p>{% endif %}
                 </div>
             </div>
-            <div class="c-search-details">
-                <div class="u-flex u-flex-row">
-                    <div><img src="/images/icons/{{ member.Accommodation }}.png"
+            <div class="c-search-hosting">
+                <div class="u-flex u-flex-row u-gap-4">
+                    <div class="u-self-center"><img src="/images/icons/{{ member.Accommodation }}.png"
                                                  alt="{{ member.Accommodation | trans }}"></div>
-                    <div class="ml-2"><i class="fa fa-bed fa-2x p-1"></i></div>
-                    <div><span
-                            class="h4">{{ member.MaxGuest }}</span></div>
+                    <div class="u-self-center"><i class="fa fa-2x fa-bed "></i></div>
+                    <div class="u-self-center u-text-24">{{ member.MaxGuest }}</div>
+                    <div class="d-block d-sm-none u-self-center d-block d-sm-none"><i class="fa fa-2x fa-comments m-1"></i></div>
+                    <div class="d-block d-sm-none u-self-center u-text-24 d-block d-sm-none">
+                        <a href="/members/{{ member.Username }}/comments">{{ member.CommentCount }}</a>
+                    </div>
                 </div>
-                <div class="u-w-full u-font-400 text-nowrap">
-                    <a href="/members/{{ member.Username }}/comments"><i
-                            class="fa fa-comments mr-1"></i>{{ 'searchcommentsinfo' | trans | format( member.CommentCount) | raw }}
+                <div class="d-none d-sm-block u-w-full u-font-400 text-nowrap">
+                    <i class="fa fa-comments mr-1"></i><a href="/members/{{ member.Username }}/comments">{{ 'searchcommentsinfo' | trans | format( member.CommentCount) | raw }}
                     </a>
                 </div>
-                <div class="u-flex u-flex-col mt-2">
+            </div>
+            <div class="c-search-extra_info">
+                <div class="d-flex flex-col flex-md-row u-gap-4">
                     <small>{{ 'search.last.login' | trans }}<br><strong>{{ member.LastLogin }}</strong></small>
                     <small>{{ 'search.member.since' | trans }}<br><strong>{{ member.created  }}</strong></small>
                 </div>

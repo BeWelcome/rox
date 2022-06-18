@@ -3,18 +3,20 @@
  */
 .c-search-avatar {
   grid-area: avatar;
-  overflow: hidden;
 }
 
-@media(max-width:500px) {
-  .c-search-avatar .o-avatar {
-    grid-template-rows: 72px 1fr;
-  }
+.c-search-avatar .o-avatar {
+  grid-template-rows: 104px 1fr;
+  align-self: center;
+}
 
-  .c-search-avatar .o-avatar__img-wrapper {
-    width: 72px;
-    height: 72px;
-  }
+.c-search-avatar .o-avatar__img-wrapper {
+  width: 100px;
+  height: 100px;
+}
+
+.c-search-avatar .o-avatar__name {
+  font-size: 16px;
 }
 
 .c-search-member {
@@ -25,6 +27,20 @@
   grid-area: about_me;
 }
 
-.c-search-details {
-  grid-area: details;
+.c-search-hosting {
+  grid-area: hosting;
 }
+
+.c-search-extra_info {
+  display: none;
+  grid-area: extra_info;
+}
+
+/* Small+ */
+@media (min-width: 576px) {
+  .c-search-extra_info {
+    display: block;
+    grid-area: extra_info;
+  }
+}
+

@@ -27,7 +27,7 @@ JeanYves notes : every display of a forum post content  goes trhu this template
 */
 
 $words = new MOD_words();
-$styles = array('highlight', 'blank');
+$styles = array('l-forum-single-post--dark', '');
 
 $hideGroupOnlyPost = false;
 
@@ -36,61 +36,52 @@ if (($post->IdGroup > 0) && ($post->PostVisibility == "GroupOnly")) {
 }
 ?>
 
-<div class="row no-gutters border border-white <?php echo $styles[$cnt % 2]; ?> mb-2">
+<div class="l-forum-single-post <?php echo $styles[$cnt % 2]; ?>">
     <!-- left column -->
-    <div class="col-4 col-md-3 postleftcolumn">
-        <div class="d-flex flex-column align-self-start">
-            <div class="media credentials p-1">
-                <img class="profileimg avatar-48 mr-1" src="/members/avatar/<?php echo($post->OwnerUsername); ?>/48">
-                <div class="media-body">
-                    <p class="small">
-                    <a href="members/<?php echo $post->OwnerUsername; ?>"><?php echo $post->OwnerUsername; ?></a>
-                    <br>
-                    <?php
-                        if ($this->session->has("IdMember")) {
-                            if (isset($post->city) && isset($post->country)) {
-                                echo $post->city . '<br>' .$post->country;
-                            }
-                        }
-                    ?>
-                    </p>
-                </div>
-            </div>
-
-            <!-- permalink, bans, reports -->
-            <div class="p-1">
+    <div class="c-single-post-user_info">
+        <div class="d-flex flex-row">
+            <img class="profileimg avatar-48 mr-1" src="/members/avatar/<?php echo($post->OwnerUsername); ?>/48">
+            <div class="small">
+                <a href="members/<?php echo $post->OwnerUsername; ?>"><?php echo $post->OwnerUsername; ?></a>
                 <?php
-
-                if ($this->session->has("IdMember")) {
-                    if ($this->BW_Right->HasRight("ForumModerator")) {
-                        $TheReports = $this->_model->GetReports($post->postid);
-                        $max = count($TheReports);
-                        foreach ($TheReports as $report) {
-                            echo "<small class='text-muted'>{$report->Status} report from ", $report->Username, "</small><br>";
-                            echo "<small class='text-muted'><a href='forums/reporttomod/", $report->IdPost, "/" . $report->IdReporter . "'>view report</a></small><br>";
-                        }
+                    if (isset($post->city) && isset($post->country)) {
+                        echo '<br>' . $post->city . '<br>' .$post->country;
                     }
-
-                    echo '<small class="text-muted">';
-                    if (isset($TheReports[0]->IdReporter) && ($TheReports[0]->IdReporter == $this->session->get("IdMember"))) {
-                        echo "<a href='forums/reporttomod/", $post->postid, "'>", $words->getBuffered('ForumViewMyReportToMod'), "</a>";
-                    } else {
-                        echo "<a href='forums/reporttomod/", $post->postid, "'><i class=\"fa fa-flag\"></i> ", $words->getBuffered('ForumMyReportToMod'), "</a>";
-                    }
-                    echo '</small><br>';
-
-                    echo '<small class="text-muted"><a href="forums/s' . $post->threadid . '/#post' . $post->postid . '"><i class="fa fa-link"></i> ' . $words->get('ForumPermalink') . '</a></small><br>';
-                    $TheReports = $this->_model->GetReports($post->postid, $this->session->get("IdMember")); // Check if there is a pending report for this member
-
-                }
                 ?>
             </div>
-            <!-- end permalink -->
         </div>
+    </div>
+    <div class="c-single-post-report">
+        <?php
+            echo '<small class="text-muted">';
+            if (isset($TheReports[0]->IdReporter) && ($TheReports[0]->IdReporter == $this->session->get("IdMember"))) {
+                echo "<a href='forums/reporttomod/", $post->postid, "'>", $words->getBuffered('ForumViewMyReportToMod'), "</a>";
+            } else {
+                echo "<a href='forums/reporttomod/", $post->postid, "'><i class=\"fa fa-flag\"></i> ", $words->getBuffered('ForumMyReportToMod'), "</a>";
+            }
+            echo '</small>';
+        ?>
+    </div>
+    <div class="c-single-post-moderate">
+        <?php
+            if ($this->BW_Right->HasRight("ForumModerator")) {
+                $TheReports = $this->_model->GetReports($post->postid);
+                $max = count($TheReports);
+                foreach ($TheReports as $report) {
+                    echo "<small class='text-muted'>{$report->Status} report from ", $report->Username, "</small><br>";
+                    echo "<small class='text-muted'><a href='forums/reporttomod/", $report->IdPost, "/" . $report->IdReporter . "'>view report</a></small><br>";
+                }
+            }
+        ?>
+    </div>
+    <div class="c-single-post-permalink">
+            <?php
+                echo '<small class="text-muted"><a href="forums/s' . $post->threadid . '/#post' . $post->postid . '"><i class="fa fa-link"></i> ' . $words->get('ForumPermalink') . '</a></small>';
+            ?>
     </div>
 
     <!-- message -->
-    <div class="col-8 col-md-9 p-1">
+    <div class="c-single-post-post_info">
         <div class="d-flex flex-column align-content-stretch">
             <div class="d-flex flex-row justify-content-between mb-1">
                 <div>
@@ -113,31 +104,39 @@ if (($post->IdGroup > 0) && ($post->PostVisibility == "GroupOnly")) {
                         ?>
                     </small>
                 </div>
-                <div>
-                    <?php
-                    if ($can_edit_own && $post->OwnerCanStillEdit == "Yes" && $User && $post->IdWriter == $this->session->get("IdMember")) {
-                        echo '<a href="forums/edit/m' . $post->postid . '" class="btn btn-sm btn-outline-primary ml-1"><i class="fa fa-edit" title="edit" /></i> ' . $words->getFormatted('forum_EditUser') . '</a>';
-                    }
-                    if (($this->BW_Right->HasRight("ForumModerator", "Edit")) || ($this->BW_Right->HasRight("ForumModerator", "All"))) {
-        //                 echo ' [<a href="forums/modedit/m'.$post->postid.'">Mod Edit</a>]';
-                        echo '<a href="forums/modfulleditpost/' . $post->postid . '" class="btn btn-sm btn-outline-primary ml-1"><i class="fa fa-edit" title="adminedit"></i> Admin Edit</a>';
-                    }
-
-                    if ($can_del) {
-                        if ($post->postid == $topic->topicinfo->first_postid) {
-                            $title = $words->getFormatted('del_topic_href');
-                            $warning = $words->getFormatted('del_topic_warning');
-                        } else {
-                            $title = $words->getFormatted('del_post_href');
-                            $warning = $words->getFormatted('del_post_warning');
-                        }
-                        echo ' [<a href="forums/delete/m' . $post->postid . '" mouseover="return confirm(\'' . $warning . '\');">' . $title . '</a>]';
-                    }
-
-                    ?>
-                </div>
             </div>
-
+        </div>
+    </div>
+    <div class="c-single-post-edit">
+        <div class="d-flex justify-content-end text-nowrap">
+                    <?php
+//                    if ($can_edit_own && $post->OwnerCanStillEdit == "Yes" && $User && $post->IdWriter == $this->session->get("IdMember")) {
+                        echo '<a href="forums/edit/m' . $post->postid . '" class="btn btn-sm btn-outline-primary ml-1"><i class="fa fa-edit" title="edit" /></i> ' . $words->getFormatted('forum_EditUser') . '</a>';
+//                    }
+                    ?>
+        </div>
+    </div>
+    <div class="c-single-post-admin_edit">
+        <div class="d-flex justify-content-end text-nowrap">
+        <?php
+        if (($this->BW_Right->HasRight("ForumModerator", "Edit")) || ($this->BW_Right->HasRight("ForumModerator", "All"))) {
+            //                 echo ' [<a href="forums/modedit/m'.$post->postid.'">Mod Edit</a>]';
+            echo '<a href="forums/modfulleditpost/' . $post->postid . '" class="btn btn-sm btn-outline-primary ml-1"><i class="fa fa-edit" title="adminedit"></i> Admin Edit</a>';
+        }
+        if ($can_del) {
+            if ($post->postid == $topic->topicinfo->first_postid) {
+                $title = $words->getFormatted('del_topic_href');
+                $warning = $words->getFormatted('del_topic_warning');
+            } else {
+                $title = $words->getFormatted('del_post_href');
+                $warning = $words->getFormatted('del_post_warning');
+            }
+            echo ' [<a href="forums/delete/m' . $post->postid . '" mouseover="return confirm(\'' . $warning . '\');">' . $title . '</a>]';
+        }
+        ?>
+        </div>
+    </div>
+        <div class="c-single-post-content text-break">
             <?php
             // Todo : find a way to land here with a $topic variable well initialized
             if ($topic->WithDetail) { // If the details of trads are available, we will display them
@@ -223,4 +222,3 @@ if (($post->IdGroup > 0) && ($post->PostVisibility == "GroupOnly")) {
         </div>
     </div>
     <!-- end message -->
-</div>

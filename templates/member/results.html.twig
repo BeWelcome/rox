@@ -46,7 +46,7 @@
                     </a>
                     <div class="collapse bg-white u-p-4" id="collapse-{{ loop.index }}">
                         <a href="/members/{{ member.Username }}"
-                           class="profilesummary">{{ member.ProfileSummary | truncate(150) | purify }}</a>
+                           class="profilesummary">{{ member.ProfileSummary | truncate(250) | purify }}</a>
                         {% if member.Occupation|length %}<p class="font-italic">{{ 'occupation' | trans | capitalize }}: {{ member.Occupation | raw }}</p>{% endif %}
                     </div>
                 </div>

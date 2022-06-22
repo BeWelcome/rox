@@ -35,6 +35,9 @@ if (!empty($action)) {
         case 'enqueueMailToConfirmReminder' :
             $activefieldset = 'mailtoconfirm';
             break;
+        case 'enqueueCorrectBirthDate' :
+            $activefieldset = 'correctbirthdate';
+            break;
         case 'enqueueTermsOfUse' :
             $activefieldset = 'termsofuse';
             break;
@@ -50,6 +53,8 @@ if (!empty($action)) {
         $defaultfieldset = 'reminder';
     } elseif ($this->canEnqueueTermsOfUse) {
         $defaultfieldset = 'termsofuse';
+    } elseif ($this->canEnqueueCorrectBirthDate) {
+        $defaultfieldset = 'correctbirthdate';
     }
 }
 
@@ -86,12 +91,20 @@ $words = new MOD_words();
                 </li>
             <?php } ?>
             <?php if ($this->type == 'RemindToLog' && $this->canEnqueueReminder) { ?>
-            <li class="nav-item">
-                <a class="nav-link" id="reminder-tab" data-toggle="tab" href="#reminder" role="tab"
-                   aria-controls="reminder" aria-selected="true">
-                    <?php echo $words->getBuffered('AdminMassMailEnqueueMailToConfirmReminder'); ?>
-                </a>
-            </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="reminder-tab" data-toggle="tab" href="#reminder" role="tab"
+                       aria-controls="reminder" aria-selected="true">
+                        <?php echo $words->getBuffered('AdminMassMailEnqueueMailToConfirmReminder'); ?>
+                    </a>
+                </li>
+            <?php } ?>
+            <?php if ($this->type == 'CorrectBirthDate' && $this->canEnqueueCorrectBirthDate) { ?>
+                <li class="nav-item">
+                    <a class="nav-link" id="reminder-tab" data-toggle="tab" href="#correctbday" role="tab"
+                       aria-controls="correctbday" aria-selected="true">
+                        <?php echo $words->getBuffered('massmail.correct.birth.date'); ?>
+                    </a>
+                </li>
             <?php } ?>
             <?php if ($this->type == 'TermsOfUse' && $this->canEnqueueTermsOfUse) { ?>
                 <li class="nav-item">
@@ -143,7 +156,7 @@ $words = new MOD_words();
                             <small class="text-muted"><?php echo $words->get('AdminMassMailEnqueueUsernamesInfo'); ?></small>
                 </div>
                 </div>
-                <div><input class="btn btn-primary float-right" type="submit" name="enqueuemembers"
+                <div><input class="mt-2 btn btn-primary float-right" type="submit" name="enqueuemembers"
                                                      value="<?php echo $words->getBuffered('AdminMassMailEnqueueSubmitMembers'); ?>"/><?php echo $words->flushBuffer(); ?>
                 </div>
             </div>
@@ -174,7 +187,7 @@ $words = new MOD_words();
                     </select>
                 </div>
                 <div>
-                    <input class="btn btn-primary float-right" type="submit" name="enqueuelocation"
+                    <input class="mt-2 btn btn-primary float-right" type="submit" name="enqueuelocation"
                         value="<?php echo $words->getBuffered('AdminMassMailEnqueueSubmitLocation'); ?>"/>
                     <?php echo $words->flushBuffer(); ?>
                 </div>
@@ -193,8 +206,28 @@ $words = new MOD_words();
                         ?>
                     </select>
                 </div>
-                <div class="float_right"><br/><input class="button" type="submit" name="enqueuegroup"
+                <div class="float_right"><br/><input class="mt-2 btn btn-primary pull-right" type="submit" name="enqueuegroup"
                                                      value="<?php echo $words->getBuffered('AdminMassMailEnqueueSubmitGroup'); ?>"/><?php echo $words->flushBuffer(); ?>
+                </div>
+            </div>
+        <?php } ?>
+            <?php if ($this->type == 'RemindToLog' && $this->canEnqueueReminder) { ?>
+                <div  class="tab-pane fade show" role="tabpanel" aria-labelledby="reminder-tab" id="reminder">
+                    <div class="type-text">
+                        <?php echo $words->get('AdminMassMailEnqueueReminderInfo'); ?>
+                    </div>
+                    <div class="float_right"><br/><input class="mt-2 btn btn-primary pull-right" type="submit" name="enqueuereminder"
+                                                         value="<?php echo $words->getBuffered('AdminMassMailEnqueueSubmitReminder'); ?>"/><?php echo $words->flushBuffer(); ?>
+                    </div>
+                </div>
+            <?php } ?>
+        <?php if ($this->type == 'MailToConfirmReminder' && $this->canEnqueueMailToConfirmReminder) { ?>
+            <div class="tab-pane fade show" role="tabpanel" aria-labelledby="mailtoconfirm-tab" id="mailtoconfirm">
+                <div class="type-text">
+                    <?php echo $words->get('AdminMassMailEnqueueMailToConfirmReminderInfo', $this->mailToConfirmCount); ?>
+                </div>
+                <div class="float_right"><br/><input class="mt-2 btn btn-primary pull-right" type="submit" name="enqueuemailtoconfirmreminder"
+                                                     value="<?php echo $words->getBuffered('AdminMassMailEnqueueSubmitMailToConfirmReminder'); ?>"/><?php echo $words->flushBuffer(); ?>
                 </div>
             </div>
         <?php } ?>
@@ -203,18 +236,18 @@ $words = new MOD_words();
                 <div class="type-text">
                     <?php echo $words->get('AdminMassMailEnqueueReminderInfo'); ?>
                 </div>
-                <div class="float_right"><br/><input class="button" type="submit" name="enqueuereminder"
+                <div class="float_right"><br/><input class="mt-2 btn btn-primary pull-right" type="submit" name="enqueuereminder"
                                                      value="<?php echo $words->getBuffered('AdminMassMailEnqueueSubmitReminder'); ?>"/><?php echo $words->flushBuffer(); ?>
                 </div>
             </div>
         <?php } ?>
-        <?php if ($this->type == 'MailToConfirmReminder' && $this->canEnqueueMailToConfirmReminder) { ?>
-            <div class="tab-pane fade show" role="tabpanel" aria-labelledby="mailtoconfirm-tab" id="mailtoconfirm">
+        <?php if ($this->type == 'CorrectBirthDate' && $this->canEnqueueCorrectBirthDate) { ?>
+            <div  class="tab-pane fade show" role="tabpanel" aria-labelledby="correctbday-tab" id="correctbday">
                 <div class="type-text">
-                    <?php echo $words->get('AdminMassMailEnqueueMailToConfirmReminderInfo', $this->mailToConfirmCount); ?>
+                    Send notification to correct birth date to <?php echo $this->incorrectBirthDateCount; ?> members.
                 </div>
-                <div class="float_right"><br/><input class="button" type="submit" name="enqueuemailtoconfirmreminder"
-                                                     value="<?php echo $words->getBuffered('AdminMassMailEnqueueSubmitMailToConfirmReminder'); ?>"/><?php echo $words->flushBuffer(); ?>
+                <div class="float_right"><br/><input class="mt-2 btn btn-primary pull-right" type="submit" name="enqueuecorrectbday"
+                                                     value="Submit"/>
                 </div>
             </div>
         <?php } ?>
@@ -223,7 +256,7 @@ $words = new MOD_words();
                 <div class="type-text">
                     <?php echo $words->get('AdminMassMailEnqueueTermsOfUseInfo'); ?>
                 </div>
-                <div class="float_right"><br/><input class="button" type="submit" name="enqueuetermsofuse"
+                <div class="float_right"><br/><input class="mt-2 btn btn-primary pull-right" type="submit" name="enqueuetermsofuse"
                                                      value="<?php echo $words->getBuffered('AdminMassMailEnqueueSubmitTermsOfUse'); ?>"/><?php echo $words->flushBuffer(); ?>
                 </div>
             </div>

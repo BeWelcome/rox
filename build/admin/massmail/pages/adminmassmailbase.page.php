@@ -44,7 +44,8 @@ class AdminMassmailBasePage extends AdminBasePage
     const LOGINREMINDER = 4;
     const VOTINGREMINDER = 8;
     const TERMSOFUSE = 16;
-    const NEWSLETTERALL = 31;
+    const CORRECTBIRTHDATE = 32;
+    const NEWSLETTERALL = 63;
 
     public function __construct($model) {
         parent::__construct($model);
@@ -60,16 +61,18 @@ class AdminMassmailBasePage extends AdminBasePage
         $this->loginReminder = (stripos($scope, '"remindtologin"') !== false);
         $this->suggestionsReminder = (stripos($scope, '"suggestionsreminder"') !== false);
         $this->mailToConfirmReminder = (stripos($scope, '"mailtoconfirmreminder"') !== false);
+        $this->correctBirthDate = (stripos($scope, '"correctbirthdate"') !== false);
         $this->termsOfUse = (stripos($scope, '"termsofuse"') !== false);
 
         // if no type is set assume all
         if (!($this->newsletterSpecific || $this->newsletterGeneral || $this->loginReminder ||
-            $this->suggestionsReminder || $this->mailToConfirmReminder || $this->termsOfUse)) {
+            $this->suggestionsReminder || $this->mailToConfirmReminder || $this->termsOfUse || $this->correctBirthDate)) {
             $this->newsletterSpecific = true;
             $this->newsletterGeneral = true;
             $this->loginReminder = true;
             $this->suggestionsReminder = true;
             $this->mailToConfirmReminder = true;
+            $this->correctBirthDate = true;
             $this->termsOfUse = true;
         }
         $this->enqueueGroups = array();
@@ -115,6 +118,7 @@ class AdminMassmailBasePage extends AdminBasePage
             $this->canEnqueueLocation = true;
             $this->canEnqueueGroup = true;
             $this->canEnqueueReminder = true;
+            $this->canEnqueueCorrectBirthDate = true;
             $this->canEnqueueSuggestionsReminder = true;
             $this->canEnqueueMailToConfirmReminder = true;
             $this->canEnqueueTermsOfUse = true;
@@ -136,6 +140,7 @@ class AdminMassmailBasePage extends AdminBasePage
             $this->canEnqueueSuggestionsReminder = true;
             $this->canEnqueueMailToConfirmReminder = true;
             $this->canEnqueueTermsOfUse = true;
+            $this->canEnqueueCorrectBirthDate = true;
             $this->canChangeType = true;
             $this->canTrigger = true;
             $this->specificNewsletter = true;
@@ -143,6 +148,7 @@ class AdminMassmailBasePage extends AdminBasePage
             $this->loginReminder = true;
             $this->suggestionsReminder = true;
             $this->mailToConfirmReminder = true;
+            $this->correctBirthDate = true;
             $this->termsOfUse = true;
         }
     }

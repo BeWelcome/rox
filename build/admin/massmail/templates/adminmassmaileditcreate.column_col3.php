@@ -61,6 +61,9 @@
             if ($this->termsOfUse) {
                 $options["TermsOfUse"] = $this->words->getSilent('AdminMassMailEditTypeTermsOfUse');
             }
+            if ($this->correctBirthDate) {
+                $options["CorrectBirthDate"] = $this->words->getSilent('massmail.correct.birth.date');
+            }
             if ($this->mailToConfirmReminder) {
                 $options["MailToConfirmReminder"] = $this->words->getSilent('AdminMassMailEditTypeMailToConfirmReminder');
             }

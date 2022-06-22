@@ -62,18 +62,6 @@ if (($post->IdGroup > 0) && ($post->PostVisibility == "GroupOnly")) {
             echo '</small>';
         ?>
     </div>
-    <div class="c-single-post-moderate">
-        <?php
-            if ($this->BW_Right->HasRight("ForumModerator")) {
-                $TheReports = $this->_model->GetReports($post->postid);
-                $max = count($TheReports);
-                foreach ($TheReports as $report) {
-                    echo "<small class='text-muted'>{$report->Status} report from ", $report->Username, "</small><br>";
-                    echo "<small class='text-muted'><a href='forums/reporttomod/", $report->IdPost, "/" . $report->IdReporter . "'>view report</a></small><br>";
-                }
-            }
-        ?>
-    </div>
     <div class="c-single-post-permalink">
             <?php
                 echo '<small class="text-muted"><a href="forums/s' . $post->threadid . '/#post' . $post->postid . '"><i class="fa fa-link"></i> ' . $words->get('ForumPermalink') . '</a></small>';
@@ -110,32 +98,28 @@ if (($post->IdGroup > 0) && ($post->PostVisibility == "GroupOnly")) {
     <div class="c-single-post-edit">
         <div class="d-flex justify-content-end text-nowrap">
                     <?php
-//                    if ($can_edit_own && $post->OwnerCanStillEdit == "Yes" && $User && $post->IdWriter == $this->session->get("IdMember")) {
+                    if ($can_edit_own && $post->OwnerCanStillEdit == "Yes" && $User && $post->IdWriter == $this->session->get("IdMember")) {
                         echo '<a href="forums/edit/m' . $post->postid . '" class="btn btn-sm btn-outline-primary ml-1"><i class="fa fa-edit" title="edit" /></i> ' . $words->getFormatted('forum_EditUser') . '</a>';
-//                    }
+                    }
                     ?>
         </div>
     </div>
-    <div class="c-single-post-admin_edit">
-        <div class="d-flex justify-content-end text-nowrap">
-        <?php
-        if (($this->BW_Right->HasRight("ForumModerator", "Edit")) || ($this->BW_Right->HasRight("ForumModerator", "All"))) {
-            //                 echo ' [<a href="forums/modedit/m'.$post->postid.'">Mod Edit</a>]';
-            echo '<a href="forums/modfulleditpost/' . $post->postid . '" class="btn btn-sm btn-outline-primary ml-1"><i class="fa fa-edit" title="adminedit"></i> Admin Edit</a>';
-        }
-        if ($can_del) {
-            if ($post->postid == $topic->topicinfo->first_postid) {
-                $title = $words->getFormatted('del_topic_href');
-                $warning = $words->getFormatted('del_topic_warning');
-            } else {
-                $title = $words->getFormatted('del_post_href');
-                $warning = $words->getFormatted('del_post_warning');
+    <div class="c-single-post-moderate"><?php
+        if ($this->BW_Right->HasRight("ForumModerator")) {
+            $TheReports = $this->_model->GetReports($post->postid);
+            $max = count($TheReports);
+            foreach ($TheReports as $report) {
+                echo "<small class='text-muted'>{$report->Status} report from ", $report->Username, "</small><br>";
+                echo "<small class='text-muted'><a href='forums/reporttomod/", $report->IdPost, "/" . $report->IdReporter . "'>view report</a></small><br>";
             }
-            echo ' [<a href="forums/delete/m' . $post->postid . '" mouseover="return confirm(\'' . $warning . '\');">' . $title . '</a>]';
-        }
-        ?>
-        </div>
-    </div>
+            echo '<span></span>';
+        } ?></div>
+    <div class="c-single-post-admin_edit"><?php
+        if (($this->BW_Right->HasRight("ForumModerator", "Edit")) || ($this->BW_Right->HasRight("ForumModerator", "All"))) {
+            echo '<div class="d-flex justify-content-end text-nowrap">';
+            echo '<a href="forums/modfulleditpost/' . $post->postid . '" class="btn btn-sm btn-outline-primary ml-1"><i class="fa fa-edit" title="adminedit"></i> Admin Edit</a>';
+            echo '</div>';
+        } ?></div>
         <div class="c-single-post-content text-break">
             <?php
             // Todo : find a way to land here with a $topic variable well initialized

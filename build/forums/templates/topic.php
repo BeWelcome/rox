@@ -48,7 +48,6 @@ if ((!isset($topic->topicinfo->IdTitle)) && (!isset($topic->topicinfo->ThreadDel
     }
 
     $User = $this->_model->getLoggedInMember();
-    $can_del = $User && $User->hasRight('delete@forums'); // Not to use anymore (JeanYves)
     $can_edit_own = $User;
     //    $can_edit_own = $User && $User->hasRight('edit_own@forums');
     $can_edit_foreign = $User && $User->hasRight('edit_foreign@forums');

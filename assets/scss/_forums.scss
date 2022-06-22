@@ -76,7 +76,7 @@
   grid-template-columns: 1fr 1fr 1fr 1fr;
   margin-bottom: 4px;
   border: 1px solid #aaa;
-  background-color: rgba(0, 0, 0, 0.02);
+  background-color: rgba(0, 0, 0, 0.01);
 }
 
 .l-forum-single-post--dark {
@@ -140,28 +140,37 @@
 
 .c-single-post-report {
   grid-area: report;
+  border-top: 1px solid #aaa;
   padding: 4px;
 }
 
 .c-single-post-moderate {
   grid-area: moderate;
-  border-bottom: 1px solid #aaa;
   padding: 4px;
+}
+
+.c-single-post-moderate:empty {
+  padding: 0;
 }
 
 .c-single-post-admin_edit {
   grid-area: admin_edit;
-  border-bottom: 1px solid #aaa;
   padding: 4px;
+}
+
+.c-single-post-admin_edit:empty {
+  padding: 0;
 }
 
 .c-single-post-permalink {
   grid-area: permalink;
+  border-top: 1px solid #aaa;
   padding: 4px;
 }
 
 .c-single-post-edit {
   grid-area: edit;
+  border-top: 1px solid #aaa;
   padding: 4px;
 }
 

@@ -39,7 +39,7 @@ if (($post->IdGroup > 0) && ($post->PostVisibility == "GroupOnly")) {
 <div class="l-forum-single-post <?php echo $styles[$cnt % 2]; ?>">
     <!-- left column -->
     <div class="c-single-post-user_info">
-        <div class="d-flex flex-row">
+        <div class="d-flex flex-row text-break">
             <img class="profileimg avatar-48 mr-1" src="/members/avatar/<?php echo($post->OwnerUsername); ?>/48">
             <div class="small">
                 <a href="members/<?php echo $post->OwnerUsername; ?>"><?php echo $post->OwnerUsername; ?></a>

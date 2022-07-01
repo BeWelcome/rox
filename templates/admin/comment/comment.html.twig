@@ -16,7 +16,7 @@
         {% if reply %}
             {% include 'member/comment.html.twig' with { 'comment': reply, 'mute': true } %}
         {% endif %}
-        <div class="col-12 {% if not reply %}col-sm-6{% endif %} p-2o-card>
+        <div class="col-12 {% if not reply %}col-sm-6{% endif %} p-2 card">
             {{ form_start(form, { 'attr': { 'class': 'form-inline'}}) }}
             {% if form.showComment is defined %}{{ form_widget(form.showComment) }}{% else %}{{ form_widget(form.hideComment) }}{% endif %}
             {% if form.disableEditing is defined %}{{ form_widget(form.disableEditing) }}{% else %}{{ form_widget(form.allowEditing) }}{% endif %}

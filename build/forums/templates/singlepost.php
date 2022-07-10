@@ -38,19 +38,19 @@ if (($post->IdGroup > 0) && ($post->PostVisibility == "GroupOnly")) {
 
 <div class="l-forum-single-post <?php echo $styles[$cnt % 2]; ?>">
     <!-- left column -->
-    <div class="c-single-post-user_info">
-        <div class="d-flex flex-row text-break">
-            <img class="profileimg avatar-48 mr-1" src="/members/avatar/<?php echo($post->OwnerUsername); ?>/48">
-            <div class="small">
-                <a href="members/<?php echo $post->OwnerUsername; ?>"><?php echo $post->OwnerUsername; ?></a>
-                <?php
-                    if (isset($post->city) && isset($post->country)) {
-                        echo '<br>' . $post->city . '<br>' .$post->country;
-                    }
-                ?>
+        <div class="c-single-post-user_info">
+            <div class="d-flex flex-row text-break">
+                <img class="profileimg avatar-48 mr-1" src="/members/avatar/<?php echo($post->OwnerUsername); ?>/48">
+                <div class="small">
+                    <a href="members/<?php echo $post->OwnerUsername; ?>"><?php echo $post->OwnerUsername; ?></a>
+                    <?php
+                        if (isset($post->city) && isset($post->country)) {
+                            echo '<br>' . $post->city . '<br>' .$post->country;
+                        }
+                    ?>
+                </div>
             </div>
         </div>
-    </div>
     <div class="c-single-post-report">
         <?php
             echo '<small class="text-muted">';
@@ -69,58 +69,8 @@ if (($post->IdGroup > 0) && ($post->PostVisibility == "GroupOnly")) {
     </div>
 
     <!-- message -->
-    <div class="c-single-post-post_info">
-        <div class="d-flex flex-column align-content-stretch">
-            <div class="d-flex flex-row justify-content-between mb-1">
-                <div>
-                    <a id="post<?php echo $post->postid; ?>" class="text-truncate" style="position: relative;top: -50px;"></a>
-                    <small class="gray">
-                        <?php
-                        echo '<span><i class="fa fa-comment mr-1" title="' . $words->getFormatted('posted'); ?>"></i><?php echo date($words->getBuffered('DateHHMMShortFormat'), ServerToLocalDateTime($post->posttime, $this->getSession())) . '</span>';
-                        echo $words->flushBuffer() . '<i class="fa fa-eye mx-1" title="' . $words->getFormatted("forum_label_visibility") . '"></i>' . $words->getFormatted("forum_edit_vis_" . $post->PostVisibility) . '';
-                        $max = 0;
-                        if (!empty($post->Trad)) {
-                            $max = count($post->Trad);
-                        }
-                        for ($jj = 0; (($jj < $max) and ($topic->WithDetail)); $jj++) { // Not optimized, it is a bit stupid to look in all the trads here
-                            if (($post->Trad[$jj]->trad_created != $post->Trad[$jj]->trad_updated)) { // If one of the trads have been updated
-                                if ($post->Trad[$jj]->IdLanguage == $this->session->get("IdLanguage")) {
-                                    echo '<br><em><i class="fa fa-edit mr-1" title="edited"></i>' . date($words->getFormatted('DateHHMMShortFormat'), ServerToLocalDateTime($post->Trad[$jj]->trad_updated, $this->getSession())), ' by ', $post->Trad[$jj]->TranslatorUsername . '</em>';
-                                }
-                            }
-                        }
-                        ?>
-                    </small>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="c-single-post-edit">
-        <div class="d-flex justify-content-end text-nowrap">
-                    <?php
-                    if ($can_edit_own && $post->OwnerCanStillEdit == "Yes" && $User && $post->IdWriter == $this->session->get("IdMember")) {
-                        echo '<a href="forums/edit/m' . $post->postid . '" class="btn btn-sm btn-outline-primary ml-1"><i class="fa fa-edit" title="edit" /></i> ' . $words->getFormatted('forum_EditUser') . '</a>';
-                    }
-                    ?>
-        </div>
-    </div>
-    <div class="c-single-post-moderate"><?php
-        if ($this->BW_Right->HasRight("ForumModerator")) {
-            $TheReports = $this->_model->GetReports($post->postid);
-            $max = count($TheReports);
-            foreach ($TheReports as $report) {
-                echo "<small class='text-muted'>{$report->Status} report from ", $report->Username, "</small><br>";
-                echo "<small class='text-muted'><a href='forums/reporttomod/", $report->IdPost, "/" . $report->IdReporter . "'>view report</a></small><br>";
-            }
-            echo '<span></span>';
-        } ?></div>
-    <div class="c-single-post-admin_edit"><?php
-        if (($this->BW_Right->HasRight("ForumModerator", "Edit")) || ($this->BW_Right->HasRight("ForumModerator", "All"))) {
-            echo '<div class="d-flex justify-content-end text-nowrap">';
-            echo '<a href="forums/modfulleditpost/' . $post->postid . '" class="btn btn-sm btn-outline-primary ml-1"><i class="fa fa-edit" title="adminedit"></i> Admin Edit</a>';
-            echo '</div>';
-        } ?></div>
-        <div class="c-single-post-content text-break">
+    <div class="c-single-post-content">
+        <div class="c-single-post-content_text text-break">
             <?php
             // Todo : find a way to land here with a $topic variable well initialized
             if ($topic->WithDetail) { // If the details of trads are available, we will display them
@@ -173,36 +123,85 @@ if (($post->IdGroup > 0) && ($post->PostVisibility == "GroupOnly")) {
                 );
 
                 if (($post->PostDeleted == "Deleted")&&($this->BW_Right->HasRight("ForumModerator"))) {
-                echo "<s>", $Sentence, "</s>";
+                    echo "<s>", $Sentence, "</s>";
                 }
 
                 if ($post->PostDeleted != "Deleted") {
 
-                // hide the post if the current member is not a member of this post and
-                // not a forum moderator
-                        if ($hideGroupOnlyPost && !($this->BW_Right->HasRight("ForumModerator"))) {
-                            echo $this->words->get('GroupOnlyPostHidden');
-                        } else {
-                            echo $Sentence;
-                        }
+                    // hide the post if the current member is not a member of this post and
+                    // not a forum moderator
+                    if ($hideGroupOnlyPost && !($this->BW_Right->HasRight("ForumModerator"))) {
+                        echo $this->words->get('GroupOnlyPostHidden');
+                    } else {
+                        echo $Sentence;
                     }
-                    ?>
-                </div>
-
-                <?php
-
-                if (isset($post->title) && $post->title) { // This is set if it's a SEARCH
-                    echo '<div class="d-flex justify-content-end"><small>';
-                    if (isset($post->GroupName) && $post->GroupName) {
-                        echo '<span class="gray">'.$words->getFormatted('group') . ":</span> ";
-                        echo '<a href="' . ForumsView::groupURL($post) . '">' . $post->GroupName . '</a> ';
-                    }
-                    echo '<span class="gray">'.$words->getFormatted('search_topic_text').'</span>';
-                    echo ' <a href="' . ForumsView::postURL($post) . '">' . $words->fTrad($post->IdTitle) . '</a>';
-                    echo '</small></div>';
                 }
+                ?>
+            </div>
+
+            <?php
+
+            if (isset($post->title) && $post->title) { // This is set if it's a SEARCH
+                echo '<div class="d-flex justify-content-end"><small>';
+                if (isset($post->GroupName) && $post->GroupName) {
+                    echo '<span class="gray">'.$words->getFormatted('group') . ":</span> ";
+                    echo '<a href="' . ForumsView::groupURL($post) . '">' . $post->GroupName . '</a> ';
+                }
+                echo '<span class="gray">'.$words->getFormatted('search_topic_text').'</span>';
+                echo ' <a href="' . ForumsView::postURL($post) . '">' . $words->fTrad($post->IdTitle) . '</a>';
+                echo '</small></div>';
+            }
 
             ?>
         </div>
+        <div class="c-single-post-content_info">
+            <div class="d-flex flex-column align-content-stretch">
+                <div class="d-flex flex-row justify-content-between mb-1">
+                    <div>
+                        <a id="post<?php echo $post->postid; ?>" class="text-truncate" style="position: relative;top: -50px;"></a>
+                        <small class="gray">
+                            <?php
+                            echo '<span><i class="fa fa-comment mr-1" title="' . $words->getFormatted('posted'); ?>"></i><?php echo date($words->getBuffered('DateHHMMShortFormat'), ServerToLocalDateTime($post->posttime, $this->getSession())) . '</span>';
+                            echo $words->flushBuffer() . '<i class="fa fa-eye mx-1" title="' . $words->getFormatted("forum_label_visibility") . '"></i>' . $words->getFormatted("forum_edit_vis_" . $post->PostVisibility) . '';
+                            $max = 0;
+                            if (!empty($post->Trad)) {
+                                $max = count($post->Trad);
+                            }
+                            for ($jj = 0; (($jj < $max) and ($topic->WithDetail)); $jj++) { // Not optimized, it is a bit stupid to look in all the trads here
+                                if (($post->Trad[$jj]->trad_created != $post->Trad[$jj]->trad_updated)) { // If one of the trads have been updated
+                                    if ($post->Trad[$jj]->IdLanguage == $this->session->get("IdLanguage")) {
+                                        echo '<br><em><i class="fa fa-edit mr-1" title="edited"></i>' . date($words->getFormatted('DateHHMMShortFormat'), ServerToLocalDateTime($post->Trad[$jj]->trad_updated, $this->getSession())), ' by ', $post->Trad[$jj]->TranslatorUsername . '</em>';
+                                    }
+                                }
+                            }
+                            ?>
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="c-single-post-edit"><?php // No whitespace allowed here for CSS to work
+            if ($can_edit_own && $post->OwnerCanStillEdit == "Yes" && $User && $post->IdWriter == $this->session->get("IdMember")) { ?>
+            <div class="d-flex justify-content-end text-nowrap">
+                        <a href="forums/edit/m<?= $post->postid ?>" class="btn btn-sm btn-outline-primary ml-1"><i class="fa fa-edit" title="edit" /></i><?= $words->getFormatted('forum_EditUser') ?></a>
+            </div>
+        <?php } ?></div>
+    <div class="c-single-post-moderate"><?php
+        if ($this->BW_Right->HasRight("ForumModerator")) {
+            $TheReports = $this->_model->GetReports($post->postid);
+            $max = count($TheReports);
+            foreach ($TheReports as $report) {
+                echo "<small class='text-muted'>{$report->Status} report from ", $report->Username, "</small><br>";
+                echo "<small class='text-muted'><a href='forums/reporttomod/", $report->IdPost, "/" . $report->IdReporter . "'>view report</a></small><br>";
+            }
+            echo '<span></span>';
+        } ?></div>
+    <div class="c-single-post-admin_edit"><?php
+        if (($this->BW_Right->HasRight("ForumModerator", "Edit")) || ($this->BW_Right->HasRight("ForumModerator", "All"))) {
+            echo '<div class="d-flex justify-content-end text-nowrap">';
+            echo '<a href="forums/modfulleditpost/' . $post->postid . '" class="btn btn-sm btn-outline-primary ml-1"><i class="fa fa-edit" title="adminedit"></i> Admin Edit</a>';
+            echo '</div>';
+        } ?></div>
     </div>
     <!-- end message -->

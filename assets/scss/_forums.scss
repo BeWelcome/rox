@@ -97,8 +97,21 @@
 
 .c-single-post-content {
   grid-area: content;
+  display: grid;
+  grid-template-areas:
+      "text"
+      "info"
+  ;
+  grid-template-rows: min-content 1fr;
   background-color: white;
   padding: 4px;
+}
+
+.c-single-post-content_info {
+  grid-area: info;
+}
+.c-single-post-content_text {
+  grid-area: text;
 }
 
 .l-forum-single-post--dark > .c-single-post-content{
@@ -112,21 +125,21 @@
     display: grid;
     grid-template-areas:
         "user_info content"
-        "user_info content"
         "report content"
         "permalink content"
         "edit content"
         "moderate content"
-        "admin_edit post_info";
+        "admin_edit content";
     grid-template-columns: 150px 1fr;
-    grid-template-rows: min-content min-content min-content min-content min-content min-content 1fr;
+    grid-template-rows: min-content min-content min-content min-content min-content 1fr;
   }
 
   .c-single-post-content {
-    grid-area: content;
-    padding: 4px;
+    grid-template-areas:
+      "info"
+      "text"
+    ;
   }
-
 }
 
 /**
@@ -140,6 +153,7 @@
 
 .c-single-post-report {
   grid-area: report;
+  align-self: center;
   padding: 4px;
 }
 
@@ -159,10 +173,12 @@
 
 .c-single-post-admin_edit:empty {
   padding: 0;
+  height: 0;
 }
 
 .c-single-post-permalink {
   grid-area: permalink;
+  align-self: center;
   padding: 4px;
 }
 
@@ -173,6 +189,7 @@
 
 .c-single-post-edit:empty {
   padding: 0;
+  height: 0;
 }
 
 

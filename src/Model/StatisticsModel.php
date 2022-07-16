@@ -11,19 +11,30 @@ use DatePeriod;
 use DateTime;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use PDO;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class StatisticsModel
 {
     use ManagerTrait;
 
+    private TranslatorInterface $translator;
+    private EntityManagerInterface $entityManager;
+
+    public function __construct(TranslatorInterface $translator, EntityManagerInterface $entityManager)
+    {
+        $this->translator = $translator;
+        $this->entityManager = $entityManager;
+    }
+
     public function getStatisticsHomepage()
     {
-        $connection = $this->getManager()->getConnection();
+        $connection = $this->entityManager->getConnection();
 
         $members = $connection->executeQuery('
             SELECT
@@ -144,6 +155,8 @@ class StatisticsModel
             }
             $this->setMessagesSentAndRead($connection, $current, $next, $statistics);
             $this->setRequestsSentAndAccepted($connection, $current, $next, $statistics);
+            $this->setLegsCreated($connection, $current, $next, $statistics);
+            $this->setInvititationsSentAndAccepted($connection, $current, $next, $statistics);
 
             $em->persist($statistics);
         }
@@ -160,7 +173,7 @@ class StatisticsModel
     public function getMembersData($period): array
     {
         /** @var StatisticsRepository $statisticsRepository */
-        $statisticsRepository = $this->getManager()->getRepository(Statistic::class);
+        $statisticsRepository = $this->entityManager->getRepository(Statistic::class);
         if ('weekly' === $period) {
             return $this->prepareWeeklyData($statisticsRepository->getMembersDataWeekly());
         }
@@ -171,7 +184,7 @@ class StatisticsModel
     public function getSentMessagesData($period): array
     {
         /** @var StatisticsRepository $statisticsRepository */
-        $statisticsRepository = $this->getManager()->getRepository(Statistic::class);
+        $statisticsRepository = $this->entityManager->getRepository(Statistic::class);
 
         if ('weekly' === $period) {
             return $this->prepareWeeklyData($statisticsRepository->getSentMessagesDataWeekly());
@@ -183,7 +196,7 @@ class StatisticsModel
     public function getReadMessagesData($period): array
     {
         /** @var StatisticsRepository $statisticsRepository */
-        $statisticsRepository = $this->getManager()->getRepository(Statistic::class);
+        $statisticsRepository = $this->entityManager->getRepository(Statistic::class);
 
         if ('weekly' === $period) {
             return $this->prepareWeeklyData($statisticsRepository->getReadMessagesDataWeekly());
@@ -195,7 +208,7 @@ class StatisticsModel
     public function getSentRequestsData($period): array
     {
         /** @var StatisticsRepository $statisticsRepository */
-        $statisticsRepository = $this->getManager()->getRepository(Statistic::class);
+        $statisticsRepository = $this->entityManager->getRepository(Statistic::class);
 
         if ('weekly' === $period) {
             return $this->prepareWeeklyData($statisticsRepository->getSentRequestsDataWeekly());
@@ -207,13 +220,204 @@ class StatisticsModel
     public function getAcceptedRequestsData($period): array
     {
         /** @var StatisticsRepository $statisticsRepository */
-        $statisticsRepository = $this->getManager()->getRepository(Statistic::class);
+        $statisticsRepository = $this->entityManager->getRepository(Statistic::class);
 
         if ('weekly' === $period) {
             return $this->prepareWeeklyData($statisticsRepository->getAcceptedRequestsDataWeekly());
         }
 
         return $this->prepareDailyData($statisticsRepository->getAcceptedRequestsDataDaily());
+    }
+
+    public function getSentInvitationsData($period): array
+    {
+        /** @var StatisticsRepository $statisticsRepository */
+        $statisticsRepository = $this->entityManager->getRepository(Statistic::class);
+
+        if ('weekly' === $period) {
+            return $this->prepareWeeklyData($statisticsRepository->getSentInvitationsDataWeekly());
+        }
+
+        return $this->prepareDailyData($statisticsRepository->getSentInvitationsDataDaily());
+    }
+
+    public function getAcceptedInvitationsData($period): array
+    {
+        /** @var StatisticsRepository $statisticsRepository */
+        $statisticsRepository = $this->entityManager->getRepository(Statistic::class);
+
+        if ('weekly' === $period) {
+            return $this->prepareWeeklyData($statisticsRepository->getAcceptedInvitationsDataWeekly());
+        }
+
+        return $this->prepareDailyData($statisticsRepository->getAcceptedInvitationsDataDaily());
+    }
+
+    public function getLegsCreatedData($period): array
+    {
+        /** @var StatisticsRepository $statisticsRepository */
+        $statisticsRepository = $this->entityManager->getRepository(Statistic::class);
+
+        if ('weekly' === $period) {
+            return $this->prepareWeeklyData($statisticsRepository->getCreatedLegsDataWeekly());
+        }
+
+        return $this->prepareDailyData($statisticsRepository->getCreatedLegsDataDaily());
+    }
+
+    public function getLanguagesData(): array
+    {
+        $connection = $this->entityManager->getConnection();
+        $result = $connection->executeQuery("
+            SELECT
+                l.englishname language,
+                COUNT(m.id) cnt
+            FROM
+                memberslanguageslevel mll,
+                languages l,
+                members m
+            WHERE
+                l.id = mll.IdLanguage
+                AND mll.idMember = m.id
+                AND m.Status IN (" . MemberStatusType::ACTIVE_ALL . ")
+            GROUP BY
+                l.name
+            ORDER BY
+                cnt DESC
+        ");
+
+        return $this->reduceResultSet(10, $result->fetchAllKeyValue());
+    }
+
+    public function getPreferredLanguagesData(): array
+    {
+        $connection = $this->entityManager->getConnection();
+        $result = $connection->executeQuery("
+            SELECT
+                l.englishname language,
+                COUNT(m.id) cnt
+            FROM
+                languages l, `members` m
+            LEFT JOIN
+                memberspreferences mp
+            ON
+                m.id = mp.idmember
+                AND mp.idpreference = 1
+            WHERE
+                m.status IN (" . MemberStatusType::ACTIVE_ALL . ")
+                AND l.id = IFNULL(mp.value, 0)
+            GROUP BY
+                language
+            ORDER BY
+                cnt DESC
+        ");
+
+        return $this->reduceResultSet(14, $result->fetchAllKeyValue());
+    }
+
+    public function getMembersPerCountryData(): array
+    {
+        $connection = $this->entityManager->getConnection();
+        $result = $connection->executeQuery("
+            SELECT
+                gc.name AS countryname,
+                count(*) AS cnt
+            FROM
+                members m,
+                geonamescountries gc,
+                geonames g
+            WHERE
+                m.Status IN (" . MemberStatusType::ACTIVE_ALL . ")
+                AND
+                m.IdCity = g.geonameId
+                AND
+                g.country = gc.country
+            GROUP BY
+                gc.country
+            ORDER BY
+                cnt DESC
+        ");
+
+        return $this->reduceResultSet(14, $result->fetchAllKeyValue());
+    }
+
+    public function getMembersPerLoginData(): array
+    {
+        $connection = $this->entityManager->getConnection();
+        $executionResult = $connection->executeQuery("
+            SELECT
+                TIMESTAMPDIFF(DAY,members.LastLogin,NOW()) AS logindiff,
+                COUNT(*) AS cnt
+            FROM members
+            WHERE TIMESTAMPDIFF(DAY,members.LastLogin,NOW()) >= 0
+            AND status IN (" . MemberStatusType::ACTIVE_ALL . ")
+            GROUP BY logindiff
+            ORDER BY logindiff ASC
+        ");
+
+        $resultSet = $executionResult->fetchAllKeyValue();
+
+        $translator = $this->translator;
+        $translatedPeriods = [
+            '1 day' => $translator->trans('statistics.1day'),
+            '1 week' => $translator->trans('statistics.1week'),
+            '1-2 weeks' => $translator->trans('statistics.2weeks'),
+            '2-4 weeks' => $translator->trans('statistics.4weeks'),
+            '1-3 months' => $translator->trans('statistics.3months'),
+            '3-6 months' => $translator->trans('statistics.6months'),
+            '6-12 months' => $translator->trans('statistics.12months'),
+            'longer' => $translator->trans('statistics.longer'),
+        ];
+        $result = [];
+        $result['1 day'] = 0;
+        $result['1 week'] = 0;
+        $result['1-2 weeks'] = 0;
+        $result['2-4 weeks'] = 0;
+        $result['1-3 months'] = 0;
+        $result['3-6 months'] = 0;
+        $result['6-12 months'] = 0;
+        $result['longer'] = 0;
+
+        foreach ($resultSet as $diff => $count) {
+            if ($diff == 1) {
+                $result['1 day'] += $count;
+            } elseif ($diff <= 7) {
+                $result['1 week'] += $count;
+            } elseif ($diff <= 14) {
+                $result['1-2 weeks'] += $count;
+            } elseif ($diff <= 28) {
+                $result['2-4 weeks'] += $count;
+            } elseif ($diff <= 91) {
+                $result['1-3 months'] += $count;
+            } elseif ($diff <= 182) {
+                $result['3-6 months'] += $count;
+            } elseif ($diff <= 365) {
+                $result['6-12 months'] += $count;
+            } else {
+                $result['longer'] += $count;
+            }
+        }
+        $translatedResult = [];
+        foreach ($result as $key => $count) {
+            $translatedResult[$translatedPeriods[$key]] = $count;
+        }
+        return $translatedResult;
+    }
+
+    private function reduceResultSet(int $count, array $resultSet): array
+    {
+        $other = $this->translator->trans('statistics.other', [ 'count' => count($resultSet) - $count + 1]);
+        $result = array_slice($resultSet, 0, $count);
+        $keys = array_keys($resultSet);
+        for($i = $count; $i < count($keys); $i++) {
+           if (!isset($result[$other])) {
+               $result[$other] = 0;
+           }
+           $result[$other] += $resultSet[$keys[$i]];
+        }
+
+        return $result;
+
     }
 
     /**
@@ -344,8 +548,12 @@ class StatisticsModel
      *
      * @throws DBALException
      */
-    private function setRequestsSentAndAccepted(Connection $connection, string $current, string $next, $statistics): void
-    {
+    private function setRequestsSentAndAccepted(
+        Connection $connection,
+        string $current,
+        string $next,
+        $statistics
+    ): void {
         // Number of requests created from one member to another during the current date
         $result = $connection->executeQuery(
             '
@@ -356,6 +564,7 @@ class StatisticsModel
                     WHERE
                       r.created >= :current
                       AND r.created < :next
+                      AND r.invite_for_leg IS NULL
                       ',
             [
                 ':current' => $current,
@@ -376,6 +585,7 @@ class StatisticsModel
                       r.updated >= :current
                       AND r.updated < :next
                       AND r.`status` = :status
+                      AND r.invite_for_leg IS NULL
                       ',
             [
                 ':current' => $current,
@@ -385,6 +595,89 @@ class StatisticsModel
         )
             ->fetch(PDO::FETCH_ASSOC);
         $statistics->setRequestsAccepted($result['cnt']);
+    }
+
+    /**
+     * @throws DBALException
+     */
+    private function setLegsCreated(
+        Connection $connection,
+        string $current,
+        string $next,
+        Statistic $statistics
+    ): void {
+        // Number of requests created from one member to another during the current date
+        $result = $connection->executeQuery(
+            '
+                    SELECT
+                      COUNT(s.id) AS cnt
+                    FROM
+                      sub_trips s
+                    JOIN
+                        trips t ON s.trip_id = t.id
+                    WHERE
+                      t.created >= :current
+                      AND t.created < :next
+                      ',
+            [
+                ':current' => $current,
+                ':next' => $next,
+            ]
+        )
+            ->fetch(PDO::FETCH_ASSOC);
+        $statistics->setLegsCreated($result['cnt']);
+    }
+
+    /**
+     * @throws DBALException
+     */
+    private function setInvititationsSentAndAccepted(
+        Connection $connection,
+        string $current,
+        string $next,
+        Statistic $statistics
+    ): void {
+        // Number of requests created from one member to another during the current date
+        $result = $connection->executeQuery(
+            '
+                    SELECT
+                      COUNT(r.id) AS cnt
+                    FROM
+                      request r
+                    WHERE
+                      r.created >= :current
+                      AND r.created < :next
+                      AND NOT r.invite_for_leg IS NULL
+                      ',
+            [
+                ':current' => $current,
+                ':next' => $next,
+            ]
+        )
+            ->fetch(PDO::FETCH_ASSOC);
+        $statistics->setInvitationsSent($result['cnt']);
+
+        // Number of requests accepted during the current date
+        $result = $connection->executeQuery(
+            '
+                    SELECT
+                      COUNT(r.id) AS cnt
+                    FROM
+                      request r
+                    WHERE
+                      r.updated >= :current
+                      AND r.updated < :next
+                      AND r.`status` = :status
+                      AND NOT r.invite_for_leg IS NULL
+                      ',
+            [
+                ':current' => $current,
+                ':next' => $next,
+                ':status' => HostingRequest::REQUEST_ACCEPTED,
+            ]
+        )
+            ->fetch(PDO::FETCH_ASSOC);
+        $statistics->setInvitationsAccepted($result['cnt']);
     }
 
     private function prepareDailyData($data): array

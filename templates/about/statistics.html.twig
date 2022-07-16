@@ -1,4 +1,38 @@
 {% extends 'base.html.twig' %}
+{% set statistics = {
+    'members': {
+        'headline': 'members',
+        'route': 'stats_members'
+    },
+    'sent_messages': {
+        'headline': 'sent_messages',
+        'route': 'stats_messages_sent',
+    },
+    'read_messages': {
+        'headline': 'read_messages',
+        'route': 'stats_messages_read'
+    },
+    'sent_requests': {
+        'headline': 'sent_requests',
+        'route': 'stats_requests_sent',
+    },
+    'accepted_requests': {
+        'headline': 'accepted_requests',
+        'route': 'stats_requests_accepted',
+    },
+    'created_legs': {
+        'headline': 'statistics.legs.created',
+        'route': 'stats_legs_created',
+    },
+    'sent_invitations': {
+        'headline': 'statistics.invitations.sent',
+        'route': 'stats_invitations_sent',
+    },
+    'accepted_invitations': {
+        'headline': 'statistics.invitations.sent',
+        'route': 'stats_invitations_accepted',
+    }
+} %}
 
 {% block title %}
     {{ 'statistics.title' | trans }}
@@ -156,13 +190,24 @@
                     }
                 );
             {% endfor %}
-
-            $.post("/stats/data/other",
+            $.post("/stats/members/logins",
                 function (data) {
-                    createLanguageChart(data.languages);
-                    createPieChart(data.preferred, 'preferred');
-                    createPieChart(data.logins, 'logins');
-                    createPieChart(data.countries, 'countries');
+                    createPieChart(data, 'logins');
+                }
+            );
+            $.post("/stats/members/countries",
+                function (data) {
+                    createPieChart(data, 'countries');
+                }
+            );
+            $.post("/stats/languages/spoken",
+                function (data) {
+                    createLanguageChart(data);
+                }
+            );
+            $.post("/stats/languages/preferred",
+                function (data) {
+                    createPieChart(data, 'preferred');
                 }
             );
         });
@@ -173,8 +218,8 @@
     <div class="o-text">
         <h1>{{ 'bw statistics'|trans }}</h1>
         <p>{{ 'statshead' | trans }}</p>
-        <div class="u-grid u-grid-cols-1 md:u-grid-cols-2 u-gap-16">         
-            {% for key,current in statistics %}    
+        <div class="u-grid u-grid-cols-1 md:u-grid-cols-2 u-gap-16">
+            {% for key,current in statistics %}
                 <div class="u-col-span-1 md:u-col-span-2 u-mt-16">
                     <h3><i class="fa fa-signal u-mr-8"></i>{{ current.headline|trans }}</h3>
                 </div>
@@ -187,22 +232,22 @@
                     <canvas id="{{ key }}-daily"></canvas>
                 </div>
             {% endfor %}
-                <div class="o-card">
-                    <h3>{{ 'statslastlogin'|trans }}</h3>
-                    <canvas id="logins" width="100" height="130"></canvas>
-                </div>
-                <div class="o-card">
-                    <h3>{{ 'statsmembercountry'|trans }}</h3>
-                    <canvas id="countries" width="100" height="130"></canvas>
-                </div>
-                <div class="o-card">
-                    <h3>{{ 'statslanguages'|trans }}</h3>
-                    <canvas id="languages" width="100" height="130"></canvas>
-                </div>
-                <div class="o-card">
-                    <h3>{{ 'statspreferredlanguages'|trans }}</h3>
-                    <canvas id="preferred" width="100" height="130"></canvas>
-                </div>
+            <div class="o-card">
+                <h3>{{ 'statslastlogin'|trans }}</h3>
+                <canvas id="logins" width="100" height="130"></canvas>
+            </div>
+            <div class="o-card">
+                <h3>{{ 'statsmembercountry'|trans }}</h3>
+                <canvas id="countries" width="100" height="130"></canvas>
+            </div>
+            <div class="o-card">
+                <h3>{{ 'statslanguages'|trans }}</h3>
+                <canvas id="languages" width="100" height="130"></canvas>
+            </div>
+            <div class="o-card">
+                <h3>{{ 'statspreferredlanguages'|trans }}</h3>
+                <canvas id="preferred" width="100" height="130"></canvas>
+            </div>
         </div>
     </div>
 {% endblock content %}

@@ -8,8 +8,10 @@ use App\Logger\Logger;
 use App\Service\Mailer;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
+use Doctrine\ORM\EntityRepository;
 use Pagerfanta\Doctrine\ORM\QueryAdapter;
 use Pagerfanta\Pagerfanta;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -363,7 +365,17 @@ class GroupController extends AbstractController
         }
 
         $groupForm = $this->createFormBuilder()
-            ->add('old_name', TextType::class, [
+            ->add('group', EntityType::class, [
+                'attr' => [
+                    'class' => 'select2',
+                ],
+                'class' => Group::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('g')
+                        ->where('g.approved = 1')
+                        ->orderBy('g.name', 'ASC');
+                },
+                'choice_label' => 'name',
                 'label' => 'admin.group.old.name',
                 'required' => false,
                 'constraints' => [
@@ -383,21 +395,20 @@ class GroupController extends AbstractController
         if ($groupForm->isSubmitted() && $groupForm->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $data = $groupForm->getData();
-            $groupRepository = $em->getRepository(Group::class);
-            /** @var Group $group */
-            $group = $groupRepository->findOneBy(['name' => $data['old_name']]);
+            $group = $data['group'];
             if (null === $group) {
                 $groupForm->addError(new FormError($this->getTranslator()->trans('admin.group.not.found')));
             } else {
+                $oldName = $group->getName();
                 $group->setName($data['new_name']);
                 $em->persist($group);
                 $em->flush($group);
                 $this->addTranslatedFlash('notice', 'admin.group.renamed', [
-                    'oldName' => $data['old_name'],
+                    'oldName' => $oldName,
                     'newName' => $data['new_name'],
                 ]);
 
-                $logger->write('Group ' . $data['old_name'] . ' renamed to ' . $this->getGroupLinkTag($group)
+                $logger->write('Group ' . $oldName . ' renamed to ' . $this->getGroupLinkTag($group)
                     . ' by ' . $this->getUser()->getUsername() . '.', 'Group');
 
                 return $this->redirectToRoute('admin_groups_approval');

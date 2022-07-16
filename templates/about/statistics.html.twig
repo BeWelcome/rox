@@ -29,7 +29,7 @@
         'route': 'stats_invitations_sent',
     },
     'accepted_invitations': {
-        'headline': 'statistics.invitations.sent',
+        'headline': 'statistics.invitations.accepted',
         'route': 'stats_invitations_accepted',
     }
 } %}
@@ -74,38 +74,6 @@
                 });
             }
 
-            function createLineChartOld(data, duration) {
-                let stats = data.statistics;
-                Object.keys(stats).forEach(
-                    function (key) {
-                        let ctx = document.getElementById(key + "-" + duration).getContext('2d');
-                        let barChartData = {
-                            labels: data.labels,
-                            datasets: [{
-                                label: 'Data',
-                                backgroundColor: '#999',
-                                borderColor: '#888',
-                                pointRadius: .5,
-                                data: stats[key]
-                            }]
-                        };
-                        new Chart(ctx, {
-                            type: 'line',
-                            data: barChartData,
-                            options: {
-                                title: {
-                                    display: false,
-                                },
-                                legend: {
-                                    display: false
-                                }
-
-                            }
-                        });
-                    }
-                );
-            }
-
             function createLanguageChart(data) {
                 let labels = [];
                 let counts = [];
@@ -131,12 +99,14 @@
                     data: barChartData,
                     options: {
                         responsive: true,
-                        title: {
-                            display: false,
-                        },
-                        legend: {
-                            display: false,
-                            position: 'bottom'
+                        plugins: {
+                            title: {
+                                display: false,
+                            },
+                            legend: {
+                                display: false,
+                                position: 'bottom'
+                            }
                         }
                     }
                 });

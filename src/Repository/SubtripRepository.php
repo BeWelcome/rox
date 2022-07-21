@@ -71,14 +71,14 @@ class SubtripRepository extends EntityRepository
             ->join('s.location', 'l')
             ->join('s.trip', 't')
             ->join('t.creator', 'm')
-            ->where(
+            ->where($qb->expr()->notLike('s.options', $qb->expr()->literal('%' . SubtripOptionsType::PRIVATE . '%')))
+            ->andWhere(
                 $qb->expr()->orX(
                     $qb->expr()->isNull('s.invitedBy'),
                     $qb->expr()->eq('s.invitedBy', $member->getId()),
                     $qb->expr()->in('s.options', [SubtripOptionsType::MEET_LOCALS])
                 )
             )
-            ->andWhere($qb->expr()->notIn('s.options', [SubtripOptionsType::PRIVATE]))
             ->andWhere('s.arrival >= :now')
             ->andWhere('s.arrival <= :durationMonthsAhead')
             ->andWhere($qb->expr()->in('m.status', ['Active', 'OutOfRemind']))

@@ -29,11 +29,13 @@
                         </span>
                     </div>
                     {{ form_widget(form.request.duration, {'attr': { 'class': 'js-litepicker'}}) }}
+                    {{ form_errors(form.request.duration) }}
                 </div>
             </div>
 
             {{ form_row(form.request.flexible) }}
             {{ form_row(form.request.numberOfTravellers) }}
+            {{ form_errors(form.request.numberOfTravellers) }}
             {{ form_row(form.request.arrival) }}
             {{ form_row(form.request.departure) }}
             {% do form.request.setRendered %}

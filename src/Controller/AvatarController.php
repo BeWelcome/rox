@@ -194,18 +194,22 @@ class AvatarController extends AbstractController
         $img->save($filename);
     }
 
-    private function createEmptyAvatarImage(int $size): string
+    private function createEmptyAvatarImage($size): string
     {
         // creates a thumbnail of the empty avatar
         $original = self::EMPTY_AVATAR_PATH . 'empty_avatar_original.png';
-        $filename = self::AVATAR_PATH . 'empty_avatar_' . $size . '_' . $size;
 
         $imageManager = new ImageManager();
         $img = $imageManager->make($original);
-        $img->resize($size, $size, function ($constraint) {
-            $constraint->aspectRatio();
-        });
-        $img->save($filename);
+        if (is_int($size)) {
+            $filename = self::AVATAR_PATH . 'empty_avatar_' . $size . '_' . $size;
+            $img->resize($size, $size, function ($constraint) {
+                $constraint->aspectRatio();
+            });
+            $img->save($filename);
+        } else {
+            $filename = $original;
+        }
 
         return $filename;
     }

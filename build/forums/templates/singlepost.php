@@ -39,6 +39,7 @@ if (($post->IdGroup > 0) && ($post->PostVisibility == "GroupOnly")) {
 <div class="l-forum-single-post <?php echo $styles[$cnt % 2]; ?>">
     <!-- left column -->
         <div class="c-single-post-user_info">
+            <a id="post<?php echo $post->postid; ?>" style="position: relative; top:-50px;"></a>
             <div class="d-flex flex-row text-break">
                 <img class="profileimg avatar-48 mr-1" src="/members/avatar/<?php echo($post->OwnerUsername); ?>/48">
                 <div class="small">
@@ -162,7 +163,6 @@ if (($post->IdGroup > 0) && ($post->PostVisibility == "GroupOnly")) {
             <div class="d-flex flex-column align-content-stretch">
                 <div class="d-flex flex-row justify-content-between mb-1">
                     <div>
-                        <a id="post<?php echo $post->postid; ?>" class="text-truncate" style="position: relative;top: -50px;"></a>
                         <small class="gray">
                             <?php
                             echo '<span><i class="fa fa-comment mr-1" title="' . $words->getFormatted('posted'); ?>"></i><?php echo date($words->getBuffered('DateHHMMShortFormat'), ServerToLocalDateTime($post->posttime, $this->getSession())) . '</span>';

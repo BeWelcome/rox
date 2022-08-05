@@ -64,7 +64,11 @@ if (($post->IdGroup > 0) && ($post->PostVisibility == "GroupOnly")) {
     </div>
     <div class="c-single-post-permalink">
             <?php
-                echo '<small class="text-muted"><a href="forums/s' . $post->threadid . '/#post' . $post->postid . '"><i class="fa fa-link"></i> ' . $words->get('ForumPermalink') . '</a></small>';
+                if (isset($post->IdGroup) && $post->IdGroup != 0) {
+                    echo '<small class="text-muted"><a href="group/' .$post->IdGroup . '/forum/s' . $post->threadid . '/#post' . $post->postid . '"><i class="fa fa-link"></i> ' . $words->get('ForumPermalink') . '</a></small>';
+                } else {
+                    echo '<small class="text-muted"><a href="forums/s' . $post->threadid . '/#post' . $post->postid . '"><i class="fa fa-link"></i> ' . $words->get('ForumPermalink') . '</a></small>';
+                }
             ?>
     </div>
 

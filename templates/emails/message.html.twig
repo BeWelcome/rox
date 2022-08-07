@@ -8,7 +8,7 @@
 <row>
     <columns>
         <center>
-            <button class="small" href="{{ url('members_profile', { 'username': message.sender.username, 'message': message.id }) }}">{{ 'message.profile'|trans({'username': sender.username}) }}</button>
+            <button class="small" href="{{ url('members_profile_notification', { 'username': message.sender.username, 'message': message.id }) }}">{{ 'message.profile'|trans({'username': sender.username}) }}</button>
         </center>
     </columns>
     <columns>

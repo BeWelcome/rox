@@ -14,6 +14,7 @@ use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+use Gedmo\Translatable\TranslatableListener;
 use PDO;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -270,7 +271,7 @@ class StatisticsModel
         $connection = $this->entityManager->getConnection();
         $result = $connection->executeQuery("
             SELECT
-                l.englishname language,
+                l.shortCode language,
                 COUNT(m.id) cnt
             FROM
                 memberslanguageslevel mll,
@@ -286,7 +287,9 @@ class StatisticsModel
                 cnt DESC
         ");
 
-        return $this->reduceResultSet(10, $result->fetchAllKeyValue());
+        $resultSet = $this->reduceResultSet(10, $result->fetchAllKeyValue());
+
+        return $this->translateLanguages($resultSet);
     }
 
     public function getPreferredLanguagesData(): array
@@ -294,7 +297,7 @@ class StatisticsModel
         $connection = $this->entityManager->getConnection();
         $result = $connection->executeQuery("
             SELECT
-                l.englishname language,
+                l.shortCode language,
                 COUNT(m.id) cnt
             FROM
                 languages l, `members` m
@@ -312,7 +315,9 @@ class StatisticsModel
                 cnt DESC
         ");
 
-        return $this->reduceResultSet(14, $result->fetchAllKeyValue());
+        $resultSet = $this->reduceResultSet(14, $result->fetchAllKeyValue());
+
+        return $this->translateLanguages($resultSet);
     }
 
     public function getMembersPerCountryData(): array
@@ -320,7 +325,7 @@ class StatisticsModel
         $connection = $this->entityManager->getConnection();
         $result = $connection->executeQuery("
             SELECT
-                gc.name AS countryname,
+                gc.country AS country,
                 count(*) AS cnt
             FROM
                 members m,
@@ -338,9 +343,14 @@ class StatisticsModel
                 cnt DESC
         ");
 
-        return $this->reduceResultSet(14, $result->fetchAllKeyValue());
+        $resultSet = $this->reduceResultSet(14, $result->fetchAllKeyValue());
+
+        return $this->translateCountries($resultSet);
     }
 
+    /**
+     * @SuppressWarnings(PHPMD)
+     */
     public function getMembersPerLoginData(): array
     {
         $connection = $this->entityManager->getConnection();
@@ -409,7 +419,7 @@ class StatisticsModel
         $other = $this->translator->trans('statistics.other', [ 'count' => count($resultSet) - $count + 1]);
         $result = array_slice($resultSet, 0, $count);
         $keys = array_keys($resultSet);
-        for($i = $count; $i < count($keys); $i++) {
+        for ($i = $count; $i < count($keys); $i++) {
            if (!isset($result[$other])) {
                $result[$other] = 0;
            }
@@ -713,5 +723,63 @@ class StatisticsModel
         }
 
         return $preparedData;
+    }
+
+    private function translateCountries(array $resultSet): array
+    {
+        $countryCodes = array_keys($resultSet);
+        $qb = $this->entityManager->createQueryBuilder();
+        $countriesQuery = $qb
+            ->select('c')
+            ->from('App\Entity\NewLocation', 'c', 'c.countryId')
+            ->where($qb->expr()->in('c.countryId ', $countryCodes))
+            ->andWhere($qb->expr()->eq('c.featureClass', $qb->expr()->literal('A')))
+            ->andWhere($qb->expr()->eq('c.featureCode', $qb->expr()->literal('PCLI')))
+            ->getQuery()
+        ;
+        $countriesQuery->setHint(
+            \Doctrine\ORM\Query::HINT_CUSTOM_OUTPUT_WALKER,
+            'Gedmo\\Translatable\\Query\\TreeWalker\\TranslationWalker'
+        );
+        $countriesQuery->setHint(
+            TranslatableListener::HINT_TRANSLATABLE_LOCALE,
+            $this->translator->getLocale(),
+        );
+        // fallback
+        $countriesQuery->setHint(
+            TranslatableListener::HINT_FALLBACK,
+            1 // fallback to default values in case if record is not translated
+        );
+
+        $countriesQuery->setMaxResults(50);
+        $countries = $countriesQuery->getResult();
+
+        $translatedCountries = [];
+        foreach ($countryCodes as $key) {
+            if (2 === strlen($key) && isset($countries[$key])) {
+                $translatedCountries[$countries[$key]->getName()] = $resultSet[$key];
+            } else {
+                $translatedCountries[$key] = $resultSet[$key];
+            }
+        }
+
+        return $translatedCountries;
+    }
+
+    private function translateLanguages(array $resultSet): array
+    {
+        $translatedLanguages = [];
+        $languageCodes = array_keys($resultSet);
+        foreach ($languageCodes as $key) {
+            $translationId = 'lang_' . strtolower($key);
+            $languageName = $this->translator->trans($translationId);
+            if ($translationId === $languageName) {
+                $translatedLanguages[$key] = $resultSet[$key];
+            } else {
+                $translatedLanguages[$languageName] = $resultSet[$key];
+            }
+        }
+
+        return $translatedLanguages;
     }
 }

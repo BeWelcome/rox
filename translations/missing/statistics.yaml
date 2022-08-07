@@ -25,7 +25,7 @@ statistics.3months:
 statistics.6months:
     - '3-6 months'
     - Legend for login statistics
-statistics:12months:
+statistics.12months:
     - '6-12 months'
     - Legend for login statistics
 statistics.longer:

@@ -1,58 +1,48 @@
 # Project Structure
 
-* cache
+The project is organized following the Symfony guidelines for 4.x (which are still valid for 5+).
 
-    All Rox filesystem caches. The cache segregated by environment, so
-    you will find a sub-directory called `development`.
+* assets
 
-    Symfony has native caching, as defined in `Symfony\Component\HttpKernel\Kernel::getCacheDir()`
+  SCSS, Javascript, etc. files needed to style and work with the site.
 
-    Rox application caching through the Rox cache service (DoctrineCache
-    implementation) is stored in `cache/%environment%/doctrine/`. See
-    `config/cache.yml` for config.
+* src
+
+    All new code goes here. Subdirectories should have a clear name and point to the stuff in there.
+
+* templates
+
+    Stores the Twig templates for all pages, email notifications etc.
+
+* tests
+
+    Unit and integration tests. Executed on pull request on Github.
+* translations
+
+    Holds placeholder for all supported languages. Real translations are stored in the database. A copy can be obtained from downloads.bewelcome.org.
 
 * config
 
     Application-wide config.
 
-    If you would like to define custom config here for development
-    without committing it to the project repository, you can create a
-    file ending in `local.yml`, such as `twig.local.yml`.
+* var/log
 
-* htdocs
-
-    Public web directory.
-
-* logs
-
-    As defined in `Symfony\Component\HttpKernel\Kernel::getLogDir`
+    Logfiles
 
 * migrations
 
-    MySQL schema migrations.
+    Old MySQL schema migrations. Not really needed anymore. Doctrine migrations go to src/Migrations.
 
-* module
+* docker
 
-    Rox system modules. All new code using Symfony3 goes here.
+    Files needed to create a docker setup.
 
-    Each module has a common structure:
+* features
 
-    * assets
+    Behat test files. Addressing API behavior. Run with make behat.
 
-        CSS, JS, images specific to the module
+* fixtures
 
-    * config
+    Allows to seed a test database in case the docker image isn't used.
 
-        YAML config
-
-    * src
-
-        PHP source files (PSR-4)
-
-    * templates
-
-        Twig templates
-
-    * tests
-
-        PHPUnit tests
+Most other directories contain old code that needs to be removed or migrated to the new code base.

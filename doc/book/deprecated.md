@@ -1,9 +1,12 @@
 # Deprecated
 
-roxlauncher/roxlauncher.php
+All code in build/ needs to be replaced as it blocks the migration to PHP 8.x.
 
-This file was the bootstrap for the legacy app. It called
-EnvironmentExplorer to load config and called RoxFrontRouter to dispatch
-requests. This was wrapped in a try/catch and had it own exception
-handler. The exception handler now used is in Symfony, and the
-RoxFrontRouter is called from LegacyDispatch.
+Unfortunately the features implemented aren't very well documented.
+
+Next planned rewrites:
+
+- Profile pages
+- Groups and Forums
+- Gallery
+

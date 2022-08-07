@@ -2,7 +2,7 @@
 
 ## Error pages
 
-Error page templates can be found in `module/Core/templates/twig/Exception`.
+Error page templates can be found in `templates/bundles/TwigBundle/Exception`.
 
 Which template is used and how errors are displayed to end users depend on the
 exception type.
@@ -29,5 +29,5 @@ inline or in the `<head>` tag, and images embedded using the
 
 ### Debug mode
 
-In both cases, debug mode will show stack traces using `exception_full.html.twig`
-and `exception.html.twig` with the full website theme.
+In a dev environment or with debug mode active Symfony error pages are shown
+instead of customized BeWelcome pages.

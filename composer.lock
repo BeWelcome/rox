@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "11514644abce99a563c1c6f60b0988f1",
+    "content-hash": "73501275e2aea9f0823613798dbb6fac",
     "packages": [
         {
             "name": "anthonymartin/geo-location",
@@ -13097,14 +13097,7 @@
                     "Hautelook\\AliceBundle\\": "src"
                 }
             },
-            "autoload-dev": {
-                "psr-4": {
-                    "Hautelook\\AliceBundle\\": [
-                        "fixtures",
-                        "tests"
-                    ]
-                }
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -13121,15 +13114,15 @@
             ],
             "description": "Symfony bundle to manage fixtures with Alice and Faker.",
             "keywords": [
-                "Alice",
-                "Faker",
                 "Fixture",
-                "ORM",
-                "Symfony"
+                "alice",
+                "faker",
+                "orm",
+                "symfony"
             ],
             "support": {
-                "source": "https://github.com/theofidry/AliceBundle/tree/2.10.0",
-                "issues": "https://github.com/theofidry/AliceBundle/issues"
+                "issues": "https://github.com/theofidry/AliceBundle/issues",
+                "source": "https://github.com/theofidry/AliceBundle/tree/2.10.0"
             },
             "time": "2022-01-01T18:24:08+00:00"
         },
@@ -14410,65 +14403,6 @@
                 }
             ],
             "time": "2021-12-02T12:48:52+00:00"
-        },
-        {
-            "name": "phpunit/php-timer",
-            "version": "5.0.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/sebastianbergmann/php-timer.git",
-                "reference": "5a63ce20ed1b5bf577850e2c4e87f4aa902afbd2"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-timer/zipball/5a63ce20ed1b5bf577850e2c4e87f4aa902afbd2",
-                "reference": "5a63ce20ed1b5bf577850e2c4e87f4aa902afbd2",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.3"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^9.3"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "5.0-dev"
-                }
-            },
-            "autoload": {
-                "classmap": [
-                    "src/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "authors": [
-                {
-                    "name": "Sebastian Bergmann",
-                    "email": "sebastian@phpunit.de",
-                    "role": "lead"
-                }
-            ],
-            "description": "Utility class for timing",
-            "homepage": "https://github.com/sebastianbergmann/php-timer/",
-            "keywords": [
-                "timer"
-            ],
-            "support": {
-                "issues": "https://github.com/sebastianbergmann/php-timer/issues",
-                "source": "https://github.com/sebastianbergmann/php-timer/tree/5.0.3"
-            },
-            "funding": [
-                {
-                    "url": "https://github.com/sebastianbergmann",
-                    "type": "github"
-                }
-            ],
-            "time": "2020-10-26T13:16:10+00:00"
         },
         {
             "name": "sanmai/later",

@@ -1,3 +1,3 @@
 group.got.invited.by:
-    - 'Invited by group admin {admin].'
+    - 'Invited by group admin {admin}.'
     - Text added to the why I've joined when a user accepts an invitation to a group

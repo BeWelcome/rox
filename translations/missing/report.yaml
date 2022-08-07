@@ -1,0 +1,15 @@
+conversation.report.close:
+    - 'Close'
+    - Button and aria label on the report conversation modal
+conversation.report.body:
+    - 'Reporting a conversation will allow the Safety team to access these messages to be able to check if any abuse happened.'
+    - Info text on the report conversation modal
+conversation.report.comment:
+    - 'Comment (optional)'
+    - Label for the report comment field on the report conversation modal
+conversation.report.placeholder:
+    - 'Give details to the SafetyTeam in necessary.'
+    - Label for the report comment field on the report conversation modal
+conversation.report:
+    - 'Report'
+    - Button label on the report conversation modal

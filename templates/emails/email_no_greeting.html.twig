@@ -15,19 +15,19 @@
         <spacer size="16"></spacer>
 
         <row>
-            <columns>
+            <columns small="12">
                 {%- block content -%}{%- endblock content -%}
             </columns>
         </row>
 
-        <wrapper>
-            <spacer size="16"></spacer>
-            <row>
-                <columns>
-                    <p>{{ "now" | date("Y") }} - <a href="{{ url('homepage') }}" target="_blank">BeWelcome</a></p>
-                </columns>
-            </row>
-        </wrapper>
+        {%- block buttons -%}{%- endblock buttons -%}
+
+        <spacer size="16"></spacer>
+        <row>
+            <columns small="12">
+                <p>{{ "now" | date("Y") }} - <a href="{{ url('homepage') }}" target="_blank">BeWelcome</a></p>
+            </columns>
+        </row>
 
     </container>
 {% endapply %}

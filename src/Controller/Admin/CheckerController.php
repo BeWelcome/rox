@@ -192,7 +192,6 @@ class CheckerController extends AbstractController
         $page = $request->query->get('page', 1);
         $limit = $request->query->get('limit', 10);
 
-        $messages = null;
         switch ($type) {
             case self::MESSAGES_REPORTED:
                 $active = 'messages';

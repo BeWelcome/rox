@@ -32,11 +32,12 @@
                 <th>Message</th>
                 <th>Receiver</th>
                 <th>Created</th>
+                <th>Comment</th>
                 <th>{{ 'ok' | trans }}</th>
                 <th>{{ 'spam' | trans }}</th>
             </tr>
             <tr>
-                <th colspan="4"></th>
+                <th colspan="5"></th>
                 <th><input type="checkbox" id="checkAllNoSpam"></th>
                 <th><input type="checkbox" id="checkAllSpam"></th>
             </tr>
@@ -49,6 +50,7 @@
                     <small class="text-muted">{{ ('memberstatus' ~ message.Receiver.Status)|lower|trans }}</small></td>
                 <td>{{ message.created.DiffForHumans }}<br>
                 ({{  message.created | format_datetime('short', 'short') }})</td>
+                <td>{{ message.checkerComment }}</td>
                 <td>{{ form_widget(form.noSpamMessages[loop.index0], {'attr': {'class': 'checkableNoSpam'}}) }}</td>
                 <td>{{ form_widget(form.spamMessages[loop.index0], {'attr': {'class': 'checkableSpam'}}) }}</td>
             </tr>

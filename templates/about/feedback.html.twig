@@ -5,52 +5,85 @@
 {% endblock %}
 
 {% block stylesheets %}
-  {{ encore_entry_link_tags('tailwind') }}
+    {{ encore_entry_link_tags('tailwind') }}
 {% endblock stylesheets %}
 
 {% block javascripts %}
-<script type="application/javascript">
-    $('#reportMessages').modal();
-</script>
+    {{ encore_entry_script_tags('micromodal') }}
+    <script type="application/javascript">
+        {% if no_modal == false%}
+            MicroModal.show('report-modal');
+        {% endif %}
+    </script>
 {% endblock javascripts %}
 
 {% block content %}
-<div class="o-text">
-	<h1>{{ 'contactus' | trans }}</h1>
-	<div class="row">
-		<div class="col-12 col-md-6">
-			<p>{{ 'feedbackdisclaimer' | trans | purify | nl2br }}</p>
-            {# Special notice for profile reports #}
-		</div>
-		<div class="col-12 col-md-6">
-			{{ form_start(form) }}
-            {% if form.IdCategory.vars.value == 2 and no_modal == false %}
-                <div class="modal fade" id="reportMessages" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="staticBackdropLabel">{{ 'feedback.profile.title'|trans }}</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
+    {# Modal block needs to come before o-text due to css specificity of o-text h2 #}
+    {% if form.vars.valid and form.IdCategory.vars.value == 2 and no_modal == false %}
+        {% if messageId != null %}
+            <div class="modal micromodal-slide" id="report-modal" aria-hidden="false">
+                <div class="modal__overlay" tabindex="-1" data-micromodal-close>
+                    <div id="modal-container" class="modal__container" role="dialog" aria-modal="true" aria-labelledby="modal-1-title">
+                        <header id="modal-header" class="modal__header">
+                            <h2 class="modal__title">
+                                {{ 'feedback.profile.title'|trans }}
+                            </h2>
+                            <button class="modal__close" aria-label="{{ 'modal.close'|trans }}" data-micromodal-close></button>
+                        </header>
+                        <div id="modal-content-content" class="modal-content-content">
+                            <div id="modal-content" class="modal__content">
+                                {{ 'feedback.profile.report.message' | trans | purify | nl2br }}
                             </div>
-                            <div class="modal-body">
-                                {{ 'feedback.profile.report.addinfo' | trans | purify | nl2br }}
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-primary" data-dismiss="modal">{{ 'feedback.understood'|trans }}</button>
-                            </div>
+                            <footer id="modal-footer" class="modal__footer u-flex u-flex-row u-justify-between">
+                                <button class="o-button" data-micromodal-close aria-label="{{ 'modal.continue'|trans }}">
+                                    {{ 'modal.continue'|trans }}</button>
+                                <a href="{{ url('conversation_report_spam', {'id': messageId }) }}" class="o-button" data-dismiss="modal">{{ 'conversation.report.message'|trans }}</a>
+                            </footer>
                         </div>
                     </div>
                 </div>
-            {% endif %}
-			{{ form_rest(form) }}
-			<div class="o-form-group">
-				<button type="submit" id="submit" name="submit" class="o-button">{{ 'submit'|trans }}</button>
-			</div>
-			{{ form_end(form) }}
-	    </div>
-	</div>
-</div>
-
+            </div>
+        {% else %}
+            <div class="modal micromodal-slide" id="report-modal" aria-hidden="false">
+                <div class="modal__overlay" tabindex="-1" data-micromodal-close>
+                    <div id="modal-container" class="modal__container" role="dialog" aria-modal="true" aria-labelledby="modal-1-title">
+                        <header id="modal-header" class="modal__header">
+                            <h2 class="modal__title">
+                                {{ 'feedback.profile.title'|trans }}
+                            </h2>
+                            <button class="modal__close" aria-label="{{ 'modal.close'|trans }}" data-micromodal-close></button>
+                        </header>
+                        <div id="modal-content-content" class="modal-content-content">
+                            <div id="modal-content" class="modal__content">
+                                {{ 'feedback.profile.report.addinfo' | trans | purify | nl2br }}
+                            </div>
+                            <footer id="modal-footer" class="modal__footer u-flex u-flex-row u-justify-end">
+                                <button type="button" class="o-button" data-dismiss="modal">{{ 'feedback.understood'|trans }}</button>
+                            </footer>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    {% endif %}
+    <div class="o-text">
+        <h1>{{ 'contactus' | trans }}</h1>
+        <div class="row">
+            <div class="col-12 col-md-6">
+                <p>{{ 'feedbackdisclaimer' | trans | purify | nl2br }}</p>
+                {# Special notice for profile reports #}
+            </div>
+            <div class="col-12 col-md-6">
+                {{ form_start(form) }}
+                {{ form_row(form.IdCategory) }}
+                {{ form_row(form.FeedbackQuestion) }}
+                {{ form_errors(form.FeedbackQuestion) }}
+                {{ form_rest(form) }}
+                <div class="o-form-group">
+                    <button type="submit" id="submit" name="submit" class="o-button">{{ 'submit'|trans }}</button>
+                </div>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
 {% endblock content %}

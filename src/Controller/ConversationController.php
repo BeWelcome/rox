@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Doctrine\SpamInfoType;
 use App\Entity\Member;
 use App\Entity\Message;
+use App\Form\ReportSpamType;
 use App\Model\ConversationModel;
 use App\Utilities\ConversationThread;
 use App\Utilities\TranslatedFlashTrait;
@@ -12,6 +13,7 @@ use App\Utilities\TranslatorTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -42,11 +44,9 @@ class ConversationController extends AbstractController
      *
      * @IsGranted("CONVERSATION_VIEW", subject="message")
      */
-    public function viewConversation(Message $message): Response
+    public function viewConversation(Request $request, Message $message, $openReportModal = false): Response
     {
-        $template = $this->getViewTemplate($message);
-
-        return $this->viewThread($message, $template, false);
+        return $this->viewThread($request, $message, false, $openReportModal);
     }
 
     /**
@@ -56,11 +56,9 @@ class ConversationController extends AbstractController
      *
      * @IsGranted("CONVERSATION_VIEW", subject="message")
      */
-    public function viewConversationWithDeletedMessages(Message $message): Response
+    public function viewConversationWithDeletedMessages(Request $request, Message $message): Response
     {
-        $template = $this->getViewTemplate($message);
-
-        return $this->viewThread($message, $template, true);
+        return $this->viewThread($request, $message, true, false);
     }
 
     /**
@@ -156,21 +154,26 @@ class ConversationController extends AbstractController
         return $this->redirectToRoute('conversation_view', ['id' => $message->getId()]);
     }
 
-    /**
-     * @Route("/conversation/{id}/spam", name="conversation_mark_spam")
-     */
-    public function markAsSpam(Message $message): Response
+    private function markAsSpam(Message $message, ?string $comment): Response
     {
         /** @var Member $member */
         $member = $this->getUser();
 
         $conversationThread = new ConversationThread($this->entityManager);
         $conversation = $conversationThread->getThread($message);
-        $this->conversationModel->markConversationAsSpam($member, $conversation);
+        $this->conversationModel->markConversationAsSpam($member, $conversation, $comment);
 
         $this->addTranslatedFlash('notice', 'flash.marked.spam');
 
         return $this->redirectToRoute('conversation_view', ['id' => $message->getId()]);
+    }
+
+    /**
+     * @Route("/conversation/{id}/report", name="conversation_report_spam")
+     */
+    public function reportAsSpam(Request $request, Message $message): Response
+    {
+        return $this->viewThread($request, $message, false, true);
     }
 
     /**
@@ -217,26 +220,25 @@ class ConversationController extends AbstractController
         return $template . '/view.html.twig';
     }
 
-    private function viewThread(Message $message, string $template, bool $includeDeleted): Response
-    {
-        /** @var Member $member */
-        $member = $this->getUser();
-
+    private function viewThread(
+        Request $request,
+        Message $message,
+        bool $includeDeleted,
+        bool $openReportModal
+    ): Response {
         $conversationThread = new ConversationThread($this->entityManager);
         $thread = $conversationThread->getThread($message);
         $current = $thread[0];
 
-        $route = 'conversation_view';
         if ($message->getId() !== $current->getId()) {
-            if ($includeDeleted) {
-                $route .= '_with_deleted';
-            }
-
-            return $this->redirectToRoute($route, ['id' => $current->getId()]);
+            return $this->viewThread($request, $current, $includeDeleted, $openReportModal);
         }
-
         // Now we're at the latest message in the thread. Check that not all items are deleted/purged depending on the
         // $showDeleted setting
+
+        /** @var Member $member */
+        $member = $this->getUser();
+
         $spam = $this->checkConversationIsSpam($thread, $member);
         $nothingVisible = $this->checkConversationIsAllDeleted($thread, $member, $includeDeleted);
         if ($nothingVisible) {
@@ -245,8 +247,19 @@ class ConversationController extends AbstractController
 
         $this->conversationModel->markConversationAsRead($member, $thread);
 
+        $reportForm = $this->createForm(ReportSpamType::class);
+        $reportForm->handleRequest($request);
+        if ($reportForm->isSubmitted() && $reportForm->isValid()) {
+            $data = $reportForm->getData();
+            return $this->markAsSpam($message, $data['comment']);
+        }
+
+        $template = $this->getViewTemplate($message);
+
         return $this->render($template, [
             'show_deleted' => $includeDeleted,
+            'show_report_modal' => $openReportModal,
+            'form' => $reportForm->createView(),
             'is_spam' => $spam,
             'current' => $current,
             'thread' => $thread,

@@ -28,10 +28,17 @@ class AboutModel
 
     public function getFeedbackCategories()
     {
-        $repository = $this->entityManager->getRepository(FeedbackCategory::class);
-        $categories = $repository->findBy(['visible' => 1], ['sortorder' => 'ASC']);
+        $qb = $this->entityManager->createQueryBuilder('c');
+        $qb
+            ->select('c')
+            ->from(FeedbackCategory::class, 'c')
+            ->where('c.visible = 1')
+            ->orderBy('c.sortorder', 'ASC')
+            ->indexBy('c', 'c.id')
+        ;
 
-        return $categories;
+
+        return $qb->getQuery()->getResult();
     }
 
     public function sendFeedbackEmail($data)

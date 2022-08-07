@@ -94,7 +94,7 @@
 
 {% macro messageheader(thread, options) %}
     {% import _self as macros %}
-    {% set options = { show_deleted:false, show_buttons:true, is_spam:false }|merge(options) %}
+    {% set options = { show_deleted:false, show_buttons:true, is_spam:false, show_report_modal:false }|merge(options) %}
     {% set myself = app.user %}
     {% set current = thread|first %}
     {% set correspondent = (current.sender == myself) ? current.receiver : current.sender %}
@@ -136,7 +136,7 @@
                         </span>
                         {{ 'marknospam' | trans }}</a>
                 {% else %}
-                    <a class="o-button--s md:o-button" href="{{ path('conversation_mark_spam', { id: current.id }) }}">
+                    <a class="o-button--s md:o-button js-modal-trigger" data-micromodal-trigger="report-modal" href="javascript:this;">
                         <i class="fas fa-flag u-mr-8"></i>
                         {{ 'markspam' | trans }}</a>
                 {% endif %}

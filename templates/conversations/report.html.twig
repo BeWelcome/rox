@@ -1,0 +1,26 @@
+<div class="modal micromodal-slide" id="report-modal" aria-hidden="false">
+    <div class="modal__overlay" tabindex="-1" data-micromodal-close>
+        <div id="modal-container" class="modal__container" role="dialog" aria-modal="true" aria-labelledby="modal-1-title">
+            <header id="modal-header" class="modal__header">
+                <h2 class="modal__title">
+                    {{ message.subject.subject|truncate(50) }}
+                </h2>
+                <button class="modal__close" aria-label="{{ 'conversation.report.close'|trans }}" data-micromodal-close></button>
+            </header>
+            <div id="modal-content-content" class="modal-content-content">
+                {{ form_start(form) }}
+                <div id="modal-content" class="modal__content">
+                    <p class="u-pb-8">{{ 'conversation.report.body'|trans|raw }}</p>
+                    {{ form_row(form.comment) }}
+                    {{ form_errors(form.comment) }}
+                </div>
+                <footer id="modal-footer" class="modal__footer u-flex u-flex-row u-justify-between">
+                    <button class="o-button" data-micromodal-close aria-label="{{ 'conversation.report.close'|trans }}">
+                        {{ 'conversation.report.close'|trans }}</button>
+                    {{ form_widget(form.report, {'attr':{'class': 'o-button'}}) }}
+                </footer>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+</div>

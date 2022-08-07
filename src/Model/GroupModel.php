@@ -63,17 +63,17 @@ class GroupModel
         $membership->setMember($member);
 
         $translator = $this->getTranslator();
-        $translator->setLocale($member->getPreferredLanguage()->getShortcode());
+        $translator->setLocale($member->getPreferredLanguage()->getShortCode());
         $comment = (new MemberTranslation())
             ->setLanguage($language)
-            ->setSentence($translator->trans('group.got.invited.by'))
+            ->setSentence($translator->trans('group.got.invited.by', ['by' => $admin->getUsername()]))
             ->setOwner($member->getId())
             ->setTranslator($member->getId())
         ;
         $em->persist($comment);
         $em->flush();
 
-        $translator->setLocale($admin->getPreferredLanguage()->getShortcode());
+        $translator->setLocale($admin->getPreferredLanguage()->getShortCode());
 
         $membership->addComment($comment);
         $membership->setStatus(GroupMembershipStatusType::INVITED_INTO_GROUP);
@@ -90,7 +90,6 @@ class GroupModel
                 'id' => $group->getId(),
             ],
         ];
-        $this->createTemplateMessage($admin, $member, '_partials/group/invitation', $params);
         $this->mailer->sendGroupNotificationEmail($admin, $member, 'group/invitation', $params);
 
         $url = $this->urlGenerator->generate('group_start', ['group_id' => $group->getId()]);
@@ -210,7 +209,6 @@ class GroupModel
                 ];
                 $admins = $group->getAdministrators();
                 foreach ($admins as $admin) {
-                    $this->createTemplateMessage($member, $admin, '_partials/group/wantin', $params);
                     $this->mailer->sendGroupNotificationEmail($member, $admin, 'group/wantin', $params);
                 }
             } else {

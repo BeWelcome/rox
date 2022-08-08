@@ -1,0 +1,17 @@
+<row>
+    <columns>
+        <center>
+            <button class="rounded" href="{{ url('members_profile', { 'username': message.sender.username, 'message': message.id }) }}">{{ 'message.profile'|trans({'username': sender.username}) }}</button>
+        </center>
+    </columns>
+    <columns>
+        <center>
+            <button class="rounded" href="{{ url('conversation_reply', { 'id': message.id }) }}">{{ 'reply' | trans }}</button>
+        </center>
+    </columns>
+    <columns>
+        <center>
+            <button class="rounded" href="{{ url('conversation_report_spam', { 'id': message.id }) }}">{{ 'message.report'|trans }}</button>
+        </center>
+    </columns>
+</row>

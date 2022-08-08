@@ -2,24 +2,7 @@
 
 {% block content %}
     <p>{{ message.message | raw }}</p>
-{% endblock %}
 
-{% block buttons %}
-<row>
-    <columns>
-        <center>
-            <button class="small" href="{{ url('members_profile_notification', { 'username': message.sender.username, 'message': message.id }) }}">{{ 'message.profile'|trans({'username': sender.username}) }}</button>
-        </center>
-    </columns>
-    <columns>
-        <center>
-            <button class="small" href="{{ url('conversation_reply', { 'id': message.id }) }}">{{ 'reply' | trans }}</button>
-        </center>
-    </columns>
-    <columns>
-        <center>
-            <button class="small" href="{{ url('conversation_report_spam', { 'id': message.id }) }}">{{ 'message.report'|trans }}</button></columns>
-        </center>
-    </columns>
-</row>
+    {% include 'emails/_buttons.html.twig' with {'message': message} %}
+
 {% endblock %}

@@ -10,13 +10,13 @@
     <script type="application/javascript">
         MicroModal.init('js-modal-trigger');
         {% if show_report_modal %}
-        MicroModal.show('report-modal');
+            MicroModal.show('report-modal');
         {% endif %}
     </script>
 {% endblock javascripts %}
 
 {% block content %}
-    {{ macros.messageheader(thread, {show_deleted: show_deleted, is_spam:is_spam, show_report_modal:show_report_modal} ) }}
+    {{ macros.messageheader(thread, {show_deleted: show_deleted, is_spam:is_spam} ) }}
 
     {% block additional %}{% endblock additional %}
 

@@ -1,15 +1,21 @@
+{% if not initial is defined %}{% set initial = false %}{% endif %}
 <row>
-    <columns>
+    <columns large="7">
         <center>
             <button class="rounded" href="{{ url('members_profile', { 'username': message.sender.username, 'message': message.id }) }}">{{ 'message.profile'|trans({'username': sender.username}) }}</button>
         </center>
-    </columns>
-    <columns>
+        <center>{{ 'or'|trans }}</center>
         <center>
             <button class="rounded" href="{{ url('conversation_reply', { 'id': message.id }) }}">{{ 'reply' | trans }}</button>
         </center>
+        {% if initial %}
+            <center>{{ 'or'|trans }}</center>
+            <center>
+                <button class="rounded" href="{{ url('conversation_decline', { 'id': message.id }) }}">{{ 'decline' | trans }}</button>
+            </center>
+        {% endif %}
     </columns>
-    <columns>
+    <columns large="5">
         <center>
             <button class="rounded" href="{{ url('conversation_report_spam', { 'id': message.id }) }}">{{ 'message.report'|trans }}</button>
         </center>

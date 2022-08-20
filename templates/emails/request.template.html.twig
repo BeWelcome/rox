@@ -4,7 +4,6 @@
             {{ encore_entry_css_source('email') }}
         </style>
         {% apply inky_to_html %}
-            {% if not initial is defined %}{% set initial = false %}{% endif %}
             <wrapper class="header" bgcolor="#f37000">
                 <container>
                     <row class="collapse">
@@ -21,18 +20,18 @@
                 <spacer size="16"></spacer>
 
                 <row>
-                    <columns small="12" large="7" class="first">
+                    <columns small="12" large="7">
                         <h4>{{ 'email.greeting'|trans({ 'username': receiver.Username, 'gender': receiver.gender}) }}</h4>
                         {% block message %}{% endblock %}
                     </columns>
-                    <columns small="12" large="5" class="last">
+                    <columns small="12" large="5" class="sidebar">
                         <callout class="secondary">
                             <h5>{{ 'request.details'|trans }}</h5>
                             {% block request %}{% endblock %}
                         </callout>
                     </columns>
                 </row>
-                {% include 'emails/_buttons.html.twig' with {message: message, initial: initial} %}
+                {% include 'emails/_buttons.html.twig' with {'message': message} %}
                 <row>
                     <columns>
                         <center>

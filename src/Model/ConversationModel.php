@@ -91,7 +91,7 @@ class ConversationModel
         $this->entityManager->flush();
     }
 
-    public function markConversationAsSpam(Member $member, array $conversation, ?string $comment = null): void
+    public function markConversationAsSpam(Member $member, array $conversation, ?string $comment): void
     {
         /** @var Message $message */
         foreach ($conversation as $message) {

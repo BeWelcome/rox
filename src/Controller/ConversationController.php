@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Doctrine\SpamInfoType;
-use App\Entity\HostingRequest;
 use App\Entity\Member;
 use App\Entity\Message;
 use App\Form\ReportSpamType;
@@ -151,33 +150,6 @@ class ConversationController extends AbstractController
         $this->conversationModel->unmarkConversationDeleted($member, $conversation);
 
         $this->addTranslatedFlash('notice', 'flash.recovered');
-
-        return $this->redirectToRoute('conversation_view', ['id' => $message->getId()]);
-    }
-
-    /**
-     * @Route("/conversation/{id}/decline", name="conversation_decline",
-     *     requirements={"id": "\d+"}
-     * )
-     *
-     * @IsGranted("CONVERSATION_VIEW", subject="message")
-     */
-    public function declineRequestOrInvitation(Message $message): Response
-    {
-        if ($message->isMessage()) {
-            return $this->redirectToRoute('conversation_view', [ 'id' => $message->getId()]);
-        }
-
-        $conversationThread = new ConversationThread($this->entityManager);
-        $conversation = $conversationThread->getThread($message);
-        $current = $conversation[0];
-        $request = $current->getRequest();
-        $request->setStatus(HostingRequest::REQUEST_DECLINED);
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($request);
-        $em->flush();
-
-        $this->addTranslatedFlash('notice', 'flash.declined');
 
         return $this->redirectToRoute('conversation_view', ['id' => $message->getId()]);
     }

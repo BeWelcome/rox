@@ -28,6 +28,8 @@ class Preference
     public const READ_COMMENT_GUIDELINES = 'ReadCommentGuidelines';
     public const FORUM_ORDER_LIST_ASC = 'PreferenceForumOrderListAsc';
     public const TRIPS_VICINITY_RADIUS = 'TripLegsVicinityRadius';
+    public const SEARCH_OPTIONS = 'SearchOptions';
+
     /**
      * @var int
      *

@@ -246,7 +246,7 @@ class RequestController extends BaseRequestAndInvitationController
     {
         $subject = $request->getSubject()->getSubject();
 
-        $this->sendRequestNotification($guest, $host, $host, $request, $subject, 'request', false, true);
+        $this->sendRequestNotification($guest, $host, $host, $request, $subject, 'request', false);
     }
 
     private function sendHostReplyNotification(
@@ -283,8 +283,7 @@ class RequestController extends BaseRequestAndInvitationController
         Message $request,
         $subject,
         $template,
-        $requestChanged,
-        $initial = false
+        $requestChanged
     ) {
         // Send mail notification
         $this->mailer->sendMessageNotificationEmail($sender, $receiver, $template, [
@@ -293,7 +292,6 @@ class RequestController extends BaseRequestAndInvitationController
             'message' => $request,
             'request' => $request->getRequest(),
             'changed' => $requestChanged,
-            'initial' => $initial,
         ]);
 
         return true;

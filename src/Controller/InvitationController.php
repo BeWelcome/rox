@@ -110,7 +110,6 @@ class InvitationController extends BaseRequestAndInvitationController
                 $invitation->getSubject()->getSubject(),
                 'invitation',
                 false,
-                true,
                 null
             );
 
@@ -328,7 +327,6 @@ class InvitationController extends BaseRequestAndInvitationController
             $subject,
             'invitation_reply_from_guest',
             $requestChanged,
-            false,
             $leg
         );
     }
@@ -349,7 +347,6 @@ class InvitationController extends BaseRequestAndInvitationController
             $subject,
             'invitation_reply_from_host',
             $requestChanged,
-            false,
             $leg
         );
     }
@@ -367,7 +364,6 @@ class InvitationController extends BaseRequestAndInvitationController
         $subject,
         string $template,
         bool $requestChanged,
-        bool $initial,
         ?Subtrip $leg
     ): bool {
         // Send mail notification
@@ -377,7 +373,6 @@ class InvitationController extends BaseRequestAndInvitationController
             'message' => $request,
             'request' => $request->getRequest(),
             'changed' => $requestChanged,
-            'initial' => $initial,
             'leg' => $leg,
         ]);
 

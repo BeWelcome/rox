@@ -24,7 +24,9 @@
     {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'autocomplete': 'off'}}) }}
 
     <div class="u-flex u-flex-col">
-        {{ form_row(form.message) }}
+        {{ form_label(form.message) }}
+        {{ form_widget(form.message) }}
+        {{ form_errors(form.message) }}
         <div class="o-form-group">
             {{ form_label(form.request.duration) }}
             <div class="input-group date">

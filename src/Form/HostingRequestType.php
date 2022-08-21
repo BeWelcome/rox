@@ -142,9 +142,6 @@ class HostingRequestType extends AbstractType
             'label' => 'duration',
             'mapped' => false,
             'invalid_message' => 'request.error.duration',
-            'constraints' => [
-                new NotBlank(),
-            ],
         ];
 
         $numberOfTravellersType = TextType::class;

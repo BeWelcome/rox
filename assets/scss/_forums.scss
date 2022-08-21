@@ -72,15 +72,13 @@
       "user_info post_info"
       "content content"
       "edit edit"
+      "report permalink"
       "moderate admin_edit"
-      "report permalink";
+  ;
   grid-template-columns: 150px 1fr;
   margin-bottom: 8px;
   border: 1px solid #fff;
   background-color: #ddd;
-}
-
-.l-forum-single-post--dark {
 }
 
 .c-single-post-post_info {
@@ -95,14 +93,8 @@
   padding: 4px;
 }
 
-.c-single-post-content {
-  grid-area: content;
-}
-
-.l-forum-single-post--dark > .c-single-post-content{
-  grid-area: content;
+.l-forum-single-post--dark > .c-single-post-content {
   background-color: #eee;
-  padding: 4px;
 }
 
 /**
@@ -117,12 +109,6 @@
 .c-single-post-post_info {
   grid-area: post_info;
   background-color: #ccc;
-  padding: 4px;
-}
-
-.c-single-post-report {
-  grid-area: report;
-  align-self: center;
   padding: 4px;
 }
 
@@ -146,7 +132,15 @@
 }
 
 .c-single-post-permalink {
+  background-color: white;
   grid-area: permalink;
+  align-self: center;
+  padding: 4px;
+}
+
+.c-single-post-report {
+  background-color: white;
+  grid-area: report;
   align-self: center;
   padding: 4px;
 }
@@ -160,6 +154,17 @@
 .c-single-post-edit:empty {
   padding: 0;
   height: 0;
+}
+
+/**
+ * Color changes for alternating posts
+ */
+.l-forum-single-post--dark > .c-single-post-report {
+  background-color: #eee;
+}
+
+.l-forum-single-post--dark > .c-single-post-permalink {
+  background-color: #eee;
 }
 
 .l-forum-single-post--dark > .c-single-post-edit {
@@ -181,11 +186,32 @@
     grid-template-rows: min-content min-content min-content min-content min-content 1fr;
   }
 
+  .c-single-post-edit {
+    background-color: #ddd;
+  }
+
+  .c-single-post-post_info {
+    background-color: white;
+  }
+
+  .c-single-post-report,
+  .c-single-post-permalink {
+  background-color: #ddd;
+  }
+
+  .l-forum-single-post--dark > .c-single-post-edit {
+    background-color: #ddd;
+  }
+
   .l-forum-single-post--dark > .c-single-post-post_info {
     background-color: #eee;
   }
 
-  .c-single-post-edit {
+  .l-forum-single-post--dark > .c-single-post-permalink {
+    background-color: #ddd;
+  }
+
+  .l-forum-single-post--dark > .c-single-post-report {
     background-color: #ddd;
   }
 
@@ -193,7 +219,4 @@
     background-color: #ddd;
   }
 
-  .c-single-post-post_info {
-    background-color: white;
-  }
 }

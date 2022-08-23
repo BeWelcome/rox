@@ -25,6 +25,7 @@ class SearchFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->setMethod('GET')
             ->add('location', TextType::class, [
                 'label' => 'landing.whereyougo',
                 'error_bubbling' => true,

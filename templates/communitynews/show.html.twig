@@ -1,72 +1,92 @@
 {% import 'macros.twig' as macros %}
 {% extends 'base.html.twig' %}
 
+{% block stylesheets %}
+    {{ encore_entry_link_tags('tailwind') }}
+{% endblock stylesheets %}
+
 {% block title %}
     {{ 'bewelcome_news.header' | trans }}
 {% endblock %}
 
 {% block content %}
-
-    <div class="row">
-        <div class="col-12">
-
-            <div class="card o-card">
-                <div class="media">
-
-                   {{ macros.avatar( communityNews.createdBy.Username, 100, true, 'mr-2') }}
-
-                    <div class="media-body">
-                        <h1 class="my-0">{{ communityNews.title }}</h1>
-                        <small class="text-muted">{{ 'bewelcome_news.writtenby' | trans }} {{ macros.profilelink( communityNews.createdBy.Username ) }} {{ communityNews.createdAt.DiffForHumans }}
-                        {% if communityNews.updatedBy and communityNews.updatedBy.Username != communityNews.createdBy.Username %}{{ 'bewelcome_news.lastupdater' | trans}}{{ macros.avatar( communityNews.updatedBy.Username, 30, true) }} {{ communityNews.updatedAt.DiffForHumans }}{% endif %}</small>
-
-                        {{ communityNews.text| raw }}
-
-                        <p><a class="btn btn-primary" href="{{ url('communitynews_comment_add', { id: communityNews.id }) }}">{{ 'bewelcome_news.addcomment' | trans }}</a></p>
-                    </div>
-                </div>
+    <div class="u-bg-gray-5 u-p-8 u-rounded-8 u-my-16">
+        <div class="u-flex u-justify-start u-items-center">
+            <div class="u-ml-auto u-flex-shrink-0 u-mr-16">
+                <a href="{{ url( 'communitynews' ) }}">
+                    <i class="fa fa-chevron-left"></i>
+                </a>
             </div>
+
+            <div class="o-avatar o-avatar--m u-mt-8 u-mr-16">
+                {{ macros.roundedavatarstack( communityNews.createdBy.Username, 72) }}
+            </div>
+            <div class="u-line-clamp-3 u-place-self-center u-w-full">
+                <p class="u-text-24 md:u-text-32 u-font-700">{{ communityNews.title }}</p>
+                <small class="u-mb-8 u-text-gray-65">
+                    <i class="fa fa-fw fa-clock u-mr-2"></i>
+                    {{ communityNews.createdAt.DiffForHumans }}
+                    {% if communityNews.updatedBy and communityNews.updatedBy.Username != communityNews.createdBy.Username %}<br>
+                        <i class="fa fa-fw fa-pen u-mr-2"></i>
+                        {{ 'bewelcome_news.lastupdater' | trans}}
+                        {{ macros.profilelink( communityNews.updatedBy.Username ) }}
+                        {{ communityNews.updatedAt.DiffForHumans }}
+                    {% endif %}
+                </small>
+            </div>
+        </div>
+
+        <div class="u-ml-24 u-my-16 u-mr-16">
+            {{ communityNews.text| raw }}
+        </div>
+        <div class="u-ml-24 u-mr-16">
+            <h4 class="font-weight-bold">{% set commentsCount = communityNews.comments | length %}{% trans %}%commentsCount% comments{% endtrans %}</h4>
         </div>
     </div>
+
+
     {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
-        <div class="row">
-            <div class="col-12">
-                <h4 class="font-weight-bold mt-4">{% set commentsCount = communityNews.comments | length %}{% trans %}%commentsCount% comments{% endtrans %}</h4>
-            </div>
+        <div>
+            {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+            {{ form_widget(form) }}
+            {{ form_end(form) }}
         </div>
+
         {% if comments.haveToPaginate %}
-            <div class="row">
-                <div class="col-12">
-                    <div class="float-right">{{ pagerfanta( comments, 'rox_default') }}</div>
-                </div>
+            <div class="u-flex u-justify-end u-my-8">
+                {{ pagerfanta( comments, 'rounded_pagination') }}
             </div>
         {% endif %}
-        <div class="row">
-            {% for comment in comments.currentPageResults %}
-                <div class="col-12">
-                    <div class="card o-card mb-3">
-                    <div class="card-body">
-                        <h5 class="card-title font-weight-bold mb-0">
-                            {{ comment.title }}
-                        </h5>
-                        <h6 class="card-subtitle mb-2 text-muted">{{ macros.profilelink( comment.author.Username ) }}, {{ comment.created.DiffForHumans | trans }}</h6>
-                        {{ comment.text | raw }}
+
+        {% for comment in comments.currentPageResults %}
+            <div class="u-bg-gray-5 u-p-24 u-rounded-8 u-my-24">
+                <div class="u-flex u-justify-start u-items-center">
+                    <div class="o-avatar o-avatar--s o-avatar--noname u-mr-16">
+                        {{ macros.roundedavatarstack( comment.author.Username, 50) }}
                     </div>
+                    <div class="u-line-clamp-3 u-place-self-center u-w-full">
+                        <p class="u-text-20 md:u-text-28 u-font-700">{{ comment.title }}</p>
+                        <small class="u-mb-8 u-text-gray-65">
+                            {{ macros.profilelink( comment.author.Username ) }}
+                            <i class="fa fa-fw fa-clock u-mr-2"></i>
+                            {{ comment.created.DiffForHumans | trans }}
+
+                        </small>
                     </div>
                 </div>
-            {% endfor %}
-        </div>
-        <div class="row">
-            <div class="col-12">
-                <p><a class="btn btn-primary" href="{{ url('communitynews_comment_add', { id: communityNews.id }) }}">{{ 'bewelcome_news.addcomment' | trans }}</a></p>
+                <div class="u-my-16 u-mr-16 u-ml-4">
+                    {{ comment.text | raw }}
+                </div>
             </div>
-        </div>
+        {% endfor %}
+
         {% if comments.haveToPaginate %}
-            <div class="row">
-                <div class="col-12">
-                    <div class="float-right">{{ pagerfanta( comments, 'rox_default') }}</div>
-                </div>
+            <div class="u-flex u-justify-end u-my-8">
+                {{ pagerfanta( comments, 'rounded_pagination') }}
             </div>
         {% endif %}
+        
     {% endif %}
 {% endblock content %}
+
+

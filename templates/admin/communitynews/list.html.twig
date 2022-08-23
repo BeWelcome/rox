@@ -7,43 +7,63 @@
 
 {% block content %}
     <h1>{{ 'bewelcome_news.header' | trans }}</h1>
-    <div class="row">
-        <div class="col-12 pull-right">{{ pagerfanta( communityNews, 'rox_default', { routeName: 'admin_communitynews_overview' }) }}</div>
+
+    <div class="u-flex u-justify-end u-mb-24 u-mr-16">
+        <a class="o-button" href="{{ path('admin_communitynews_create') }}">{{ 'create' | trans }}</a>
     </div>
-    <div class="row no-gutters">
-        <table class="table table-striped table-bordered">
-            <thead class="thead-default">
-            <tr>
-                <th>{{ 'bewelcome_news.header' | trans }}<a class="btn btn-primary pull-right" href="{{ path('admin_communitynews_create') }}">{{ 'create' | trans }}</a></th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for news in communityNews %}
-                <tr>
-                    <td class="w-100">
-                        <div class="pull-right"><a class="ml-1 btn btn-primary" href="{{ path('admin_communitynews_edit', { id: news.id }) }}"><i class="fa fa-pencil-alt" title="{{ 'button.edit' | trans }}"></i></a>
-                            {%- if news.public == true -%}
-                                <a class="ml-1 btn btn-primary" href="{{ path('admin_communitynews_hide', { id: news.id }) }}"><i class="fa fa-ban" title="{{ 'admin.checker.communitynews.hide' | trans }}"></i></a>
-                            {%- else -%}
-                                <a class="ml-1 btn btn-outline-secondary" href="{{ path('admin_communitynews_unhide', { id: news.id }) }}"><i class="fa fa-ban" title="{{ 'admin.checker.communitynews.show' | trans }}"></i></a>
-                            {%- endif -%}</div>
-                        <p class="h1">{{ news.title }}</p>
-                        <p class="m-0"><small>{{ 'bewelcome_news.writtenby' | trans }}
-                                {{ macros.avatar( news.createdBy.Username , 30, true) }}
-                                ({{ news.createdAt.DiffForHumans }})
-                                {% if news.createdAt != news.updatedAt %} {{ 'bewelcome_news.lastupdater' | trans }}
-                                    {{ macros.avatar( news.updatedBy.Username , 30, true) }}
-                                    ({{ news.updatedAt.DiffForHumans }})
-                                {% endif %}</small></p>
-                        <p class="m-0">{{ news.text | truncate(50) | raw }}</p>
-                        <p class="m-0"><a href="{{ url('communitynews_show', { id: news.id} ) }}">{{ 'label.read.more' | trans }}</a></p>
-                    </td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+
+    {% if communityNews.haveToPaginate %}
+        <div class="u-flex u-justify-end u-my-8">
+            {{ pagerfanta( communityNews, 'rounded_pagination', { routeName: 'admin_communitynews_overview' }) }}
+        </div>
+    {% endif %}
+
+
+    {% for news in communityNews %}
+    <div class="u-flex u-justify-between u-bg-gray-5 u-p-16 u-rounded-8 u-my-16">
+        <div>
+            <div class="u-flex u-justify-start u-items-center">
+                <div class="o-avatar o-avatar--m u-mt-8 u-mr-16">
+                    {{ macros.roundedavatarstack( news.createdBy.Username, 72) }}
+                </div>
+                <div class="u-line-clamp-3 u-place-self-center u-w-full">
+                    <p class="u-text-24 md:u-text-32 u-font-700"><a href="{{ url('communitynews_show', { id: news.id} ) }}">{{ news.title }}</a></p>
+                    <small class="u-mb-8 u-text-gray-65">
+                        <i class="fa fa-fw fa-clock u-mr-2"></i>
+                        {{ news.createdAt.DiffForHumans }}
+                        {% if news.updatedBy and news.updatedBy.Username != news.createdBy.Username %}
+                            <br><i class="fa fa-fw fa-pen u-mr-2"></i>{{ 'bewelcome_news.lastupdater' | trans}}
+                            {{ macros.profilelink( news.updatedBy.Username ) }}
+                            {{ news.updatedAt.DiffForHumans }}
+                        {% endif %}
+                    </small>
+                </div>
+            </div>    
+            <div class="u-ml-8 u-my-16 u-mr-16">
+                {{ news.text | truncate(50) | raw }}
+            </div>        
+            <p class="u-ml-8 u-my-16 u-mr-16"><a href="{{ url('communitynews_show', { id: news.id} ) }}">{{ 'label.read.more' | trans }}</a> (<span class="text-muted">{% trans with {'%commentsCount%': news.comments|length} %}bewelcome_news.nrcomments{% endtrans %}</span>)
+            </p>
+        </div>
+        <div>
+            <div class="u-flex u-justify-end">
+                <a class="o-button u-mr-8" href="{{ path('admin_communitynews_edit', { id: news.id }) }}"><i class="fa fa-pencil-alt" title="{{ 'button.edit' | trans }}"></i>
+                </a>
+                {%- if news.public == true -%}
+                    <a class="o-button" href="{{ path('admin_communitynews_hide', { id: news.id }) }}"><i class="fa fa-check" title="{{ 'admin.checker.communitynews.hide' | trans }}"></i>
+                    </a>
+                {%- else -%}
+                    <a class="o-button o-button--outline" href="{{ path('admin_communitynews_unhide', { id: news.id }) }}"><i class="fa fa-ban" title="{{ 'admin.checker.communitynews.show' | trans }}"></i>
+                    </a>
+                {%- endif -%}
+            </div>
+        </div>
     </div>
-    <div class="row">
-        <div class="col-12 pull-right">{{ pagerfanta( communityNews, 'rox_default', { routeName: 'admin_communitynews_overview' }) }}</div>
-    </div>
+    {% endfor %}
+
+    {% if communityNews.haveToPaginate %}
+        <div class="u-flex u-justify-end u-my-8">
+            {{ pagerfanta( communityNews, 'rounded_pagination', { routeName: 'admin_communitynews_overview' }) }}
+        </div>
+    {% endif %}
 {% endblock content %}

@@ -141,7 +141,6 @@ class HostingRequestType extends AbstractType
             'required' => false,
             'label' => 'duration',
             'mapped' => false,
-            'invalid_message' => 'request.error.duration',
         ];
 
         $numberOfTravellersType = TextType::class;
@@ -153,6 +152,13 @@ class HostingRequestType extends AbstractType
                     $form->remove('flexible');
                 }
             }
+        } else {
+            $durationOptions['invalid_message'] = 'request.error.duration';
+            $durationOptions['constraints'] = [
+                new NotBlank([
+                    'message' => 'request.error.duration',
+                ]),
+            ];
         }
         $form->add('duration', TextType::class, $durationOptions);
 

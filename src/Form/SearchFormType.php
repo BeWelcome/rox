@@ -25,11 +25,11 @@ class SearchFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->setMethod('GET')
             ->add('location', TextType::class, [
                 'label' => 'landing.whereyougo',
                 'error_bubbling' => true,
             ])
-            ->setMethod('GET')
             ->add('keywords', TextType::class, [
                 'label' => 'texttofind',
                 'required' => false,
@@ -45,7 +45,7 @@ class SearchFormType extends AbstractType
         $this->addVariableSelects($builder, $options);
         $this->addAgeAndGenderSelects($builder);
         $this->addSelects($builder);
-        $this->addButtons($builder);
+        $this->addButtons($builder, $options);
     }
 
     /**
@@ -56,6 +56,7 @@ class SearchFormType extends AbstractType
         $resolver->setDefaults([
             'groups' => null,
             'languages' => null,
+            'search_options' => null,
             'validation_groups' => [
                 SearchFormRequest::class,
                 'determineValidationGroups',
@@ -254,15 +255,20 @@ class SearchFormType extends AbstractType
             ->add('sw_longitude', HiddenType::class);
     }
 
-    private function addButtons(FormBuilderInterface $formBuilder)
+    private function addButtons(FormBuilderInterface $formBuilder, array $options)
     {
         $formBuilder
             ->add('updateMap', SubmitType::class, [
-                'attr' => [
-                    'class' => 'btn btn-primary float-right',
-                ],
                 'label' => 'search.find.members',
-            ]);
+            ])
+        ;
+        if (null !== $options['search_options'] && '' !== $options['search_options']) {
+            $formBuilder
+                ->add('reset', SubmitType::class, [
+                    'label' => 'search.options.reset',
+                ])
+            ;
+        }
     }
 
     private function addCheckboxes(FormBuilderInterface $formBuilder)

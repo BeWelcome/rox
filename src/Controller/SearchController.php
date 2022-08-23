@@ -102,6 +102,7 @@ class SearchController extends AbstractController
         $search = $formFactory->createNamed('search', SearchFormType::class, $searchFormRequest, [
             'groups' => $member->getGroups(),
             'languages' => $member->getLanguages(),
+            'search_options' => $options,
         ]);
 
         $request = $this->overrideRequestParameters($request, $searchFormRequest);
@@ -131,6 +132,12 @@ class SearchController extends AbstractController
             }
             if ($searchIsValid) {
                 $data = $search->getData();
+                if ($search->has('reset') && $search->get('reset')->isClicked()) {
+                    $memberSearchOptionsPreference->setValue('');
+                    $em->persist($memberSearchOptionsPreference);
+                    $em->flush();
+                    return $this->redirectToRoute('search_locations');
+                }
 
                 // serialize the search options and store them in the preference
                 $searchOptions = serialize($searchFormRequest);

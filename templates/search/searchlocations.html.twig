@@ -33,19 +33,9 @@
             {{ form_widget(form.location, {'attr': {'class': 'js-search-picker'}, 'required': false }) }}
             <span class="form-text mb-2 bg-notice">{{ 'search.locations.help' | trans }}</span>
         </div>
-        <div class="col-6 col-sm-4">
+        <div class="u-flex u-justify-start ml-3">
             {{ form_row(form.show_options, {'label_attr': {'class':'switch-custom'}, 'attr': {'class':'show_options'}}) }}
-        </div>
-        <div class="col-6 col-sm-4">
             {{ form_row(form.show_map, {'label_attr': {'class':'switch-custom'}, 'attr': {'class':'show_map'}}) }}
-        </div>
-        <div class="col-sm-4">
-            {% if form.show_options.vars.checked %}
-                {% set class = 'search btn-primary float-right d-none'  %}
-            {% else %}
-                {% set class = 'search btn-primary float-right d-block'  %}
-            {% endif %}
-            {{ form_widget(form.updateMap, { 'attr': { 'class': class }}) }}
         </div>
         <div id="search_options"
              class="col-12 {% if form.show_options.vars.checked %}d-block{% else %}d-none{% endif %}">
@@ -145,9 +135,13 @@
                 </div>
             </div>
         </div>
-        <div class="col-sm-12">
-            <button type="submit" id="search_updateMap_second" name="search[updateMap]" class="btn btn-primary float-right search
-                {% if form.show_options.vars.checked %}d-block{% else %}d-none{% endif %}">{{ 'search.find.members'|trans }}</button>
+        <div class="col-12">
+            <div class="u-flex u-justify-end">
+                {% if form.reset is defined %}
+                    {{ form_widget(form.reset) }}<span class="mr-1"></span>
+                {% endif %}
+                {{ form_widget(form.updateMap) }}
+            </div>
         </div>
     </div>
     {{ form_rest(form) }}

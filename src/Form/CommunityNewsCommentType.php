@@ -26,9 +26,6 @@ class CommunityNewsCommentType extends AbstractType
                     'aria-label' => 'label.commnunitynews.comment.title',
                     'placeholder' => 'label.commnunitynews.comment.title',
                 ],
-                'constraints' => [
-                    new NotBlank(),
-                ],
             ])
             ->add('text', CkEditorType::class, [
                 'label' => 'label.communitynews.comment.text',
@@ -39,9 +36,6 @@ class CommunityNewsCommentType extends AbstractType
                     'class' => 'editor form-control',
                     'aria-label' => 'label.communitynews.comment.text',
                     'placeholder' => 'label.communitynews.comment.text',
-                ],
-                'constraints' => [
-                    new NotBlank(),
                 ],
             ])
             ->add('CommunityNewsCommentCreate', SubmitType::class, [

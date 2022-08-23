@@ -43,33 +43,21 @@ class CommunityNewsController extends AbstractController
 
     /**
      * @Route("/communitynews/{id}", name="communitynews_show")
+     * 
+     * @throws \Exception
      *
      * @return Response
      */
     public function showAction(Request $request, CommunityNews $communityNews)
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_REMEMBERED', null, "Can't access this page");
+
         $page = $request->query->get('page', 1);
         $limit = $request->query->get('limit', 10);
 
         $comments = $this->communityNewsModel->getCommentsPaginator($communityNews, $page, $limit);
-
-        return $this->render('communitynews/show.html.twig', [
-            'communityNews' => $communityNews,
-            'comments' => $comments,
-        ]);
-    }
-
-    /**
-     * @Route("/communitynews/{id}/comment/add", name="communitynews_comment_add")
-     *
-     * @throws \Exception
-     *
-     * @return Response
-     */
-    public function addCommentAction(Request $request, CommunityNews $communityNews)
-    {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_REMEMBERED', null, "Can't access this page");
-
+    
+        
         $communityNewsCommentRequest = new CommunityNewsCommentRequest();
         $form = $this->createForm(CommunityNewsCommentType::class, $communityNewsCommentRequest);
         $form->handleRequest($request);
@@ -88,8 +76,9 @@ class CommunityNewsController extends AbstractController
             return $this->redirectToRoute('communitynews_show', ['id' => $communityNews->getId()]);
         }
 
-        return $this->render('communitynews/addcomment.html.twig', [
+        return $this->render('communitynews/show.html.twig', [
             'communityNews' => $communityNews,
+            'comments' => $comments,
             'form' => $form->createView(),
         ]);
     }

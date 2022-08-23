@@ -25,6 +25,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Persistence\Mapping\ClassMetadata;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Persistence\ObjectManagerAware;
+use Exception;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherAwareInterface;
 use Symfony\Component\Security\Core\Exception\RuntimeException;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -686,7 +687,7 @@ class Member implements UserInterface, \Serializable, PasswordHasherAwareInterfa
      *
      * @Groups({"Member:Read"})
      *
-     * @ApiFilter(SearchFilter::class, strategy="exact", properties={"languageLevels.level", "languageLevels.language.name", "languageLevels.language.englishname", "languageLevels.language.shortcode"})
+     * @ApiFilter(SearchFilter::class, strategy="exact", properties={"languageLevels.level", "languageLevels.language.name", "languageLevels.language.englishname", "languageLevels.language.shortCode"})
      */
     private $languageLevels;
 
@@ -2968,7 +2969,19 @@ class Member implements UserInterface, \Serializable, PasswordHasherAwareInterfa
      */
     public function getLanguageLevels()
     {
-        return $this->languageLevels->toArray();
+        return array_filter(
+            $this->languageLevels->toArray(),
+            function (/** @var MembersLanguagesLevel */ $k) {
+                try {
+                    // Make sure language exists in database
+                    $language = $k->getLanguage();
+                    $language->getName();
+                } catch(Exception $e) {
+                    return false;
+                }
+                return true;
+            }
+        );
     }
 
     /**
@@ -3103,7 +3116,7 @@ class Member implements UserInterface, \Serializable, PasswordHasherAwareInterfa
             // Language doesn't exist but should!
             // Return English in this case
             $language = $languageRepository->findOneBy([
-                'shortcode' => 'en',
+                'shortCode' => 'en',
             ]);
         }
 
@@ -3193,7 +3206,7 @@ class Member implements UserInterface, \Serializable, PasswordHasherAwareInterfa
                 }
                 $tableColumn = str_ireplace('members.', '', $tableColumn);
 
-                $memberFields[$memberTranslation->getLanguage()->getShortcode()][$tableColumn] = $memberTranslation->getSentence();
+                $memberFields[$memberTranslation->getLanguage()->getShortCode()][$tableColumn] = $memberTranslation->getSentence();
             }
 
             // Normalize array: make sure for all locales all fields are set, use first locale as fallback for the other

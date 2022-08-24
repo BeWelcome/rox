@@ -137,8 +137,8 @@
         </div>
         <div class="col-12">
             <div class="u-flex u-justify-end">
-                {% if form.reset is defined %}
-                    {{ form_widget(form.reset) }}<span class="mr-1"></span>
+                {% if form.resetOptions is defined %}
+                    {{ form_widget(form.resetOptions) }}
                 {% endif %}
                 {{ form_widget(form.updateMap) }}
             </div>

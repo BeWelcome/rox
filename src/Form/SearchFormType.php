@@ -260,12 +260,18 @@ class SearchFormType extends AbstractType
         $formBuilder
             ->add('updateMap', SubmitType::class, [
                 'label' => 'search.find.members',
+                'attr' => [
+                    'class' => 'o-button',
+                ]
             ])
         ;
         if (null !== $options['search_options'] && '' !== $options['search_options']) {
             $formBuilder
-                ->add('reset', SubmitType::class, [
+                ->add('resetOptions', SubmitType::class, [
                     'label' => 'search.options.reset',
+                    'attr' => [
+                        'class' => 'o-button o-button--outline mr-1',
+                    ]
                 ])
             ;
         }

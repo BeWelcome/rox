@@ -1,6 +1,10 @@
 {% extends 'base.html.twig' %}
 {% import 'macros.twig' as macros %}
 
+{% block stylesheets %}
+  {{ encore_entry_link_tags('tailwind') }}
+{% endblock stylesheets %}
+
 {% block javascripts %}
 <script type="text/javascript">
     $(window).on('load', function () {
@@ -26,7 +30,7 @@
 
             <tr>
                 <th>Title</th>
-                <th>Admin</th>
+                <th>Author</th>
                 <th>Created</th>
                 <th>{{ 'delete' | trans }}</th>
             </tr>
@@ -37,7 +41,7 @@
         {% for comment in reported.currentPageResults %}
             <tr>
                 <td><a href="{{ url('communitynews_show', {'id': comment.id}) }}">{{ comment.title|purify }}</a><br><small>{{ comment.text|truncate(50) }}</small></td>
-                <td>{{ macros.avatarstack(comment.author.username) }}</td>
+                <td class="u-flex u-flex-col u-place-items-center">{{ macros.roundedavatarstack(comment.author.username) }}</td>
                 <td>{{ comment.created | format_datetime('short', 'short') }}</td>
                 <td>{{ form_widget(form.spamComments[loop.index0], {'attr': {'class': 'checkableDelete'}}) }}</td>
             </tr>

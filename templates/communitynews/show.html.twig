@@ -10,7 +10,7 @@
 {% endblock %}
 
 {% block content %}
-    <div class="u-bg-gray-5 u-p-8 u-rounded-8 u-my-16">
+    <div class="u-bg-gray-5 u-p-16 u-rounded-8 u-my-16">
         <div class="u-flex u-justify-start u-items-center">
             <div class="u-ml-auto u-flex-shrink-0 u-mr-16">
                 <a href="{{ url( 'communitynews' ) }}">
@@ -48,7 +48,14 @@
     {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
         <div>
             {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
-            {{ form_widget(form) }}
+            <div class="u-mb-24 u-relative">
+                {{ form_widget(form.title) }}
+                <div class="u-block">{{ form_errors(form.title) }}</div>
+            </div>
+            <div class="u-mb-24 u-relative">
+                {{ form_widget(form.text) }}
+                <div class="u-block">{{ form_errors(form.text) }}</div>
+            </div>
             {{ form_end(form) }}
         </div>
 
@@ -59,7 +66,7 @@
         {% endif %}
 
         {% for comment in comments.currentPageResults %}
-            <div class="u-bg-gray-5 u-p-24 u-rounded-8 u-my-24">
+            <div class="u-bg-gray-5 u-p-16 u-rounded-8 u-my-24">
                 <div class="u-flex u-justify-start u-items-center">
                     <div class="o-avatar o-avatar--s o-avatar--noname u-mr-16">
                         {{ macros.roundedavatarstack( comment.author.Username, 50) }}

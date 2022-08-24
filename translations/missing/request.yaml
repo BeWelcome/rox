@@ -1,0 +1,3 @@
+label.decline.no.message:
+    - 'Decline without message'
+    - Button label in case someone wants to decline a request/invitation without giving a reason

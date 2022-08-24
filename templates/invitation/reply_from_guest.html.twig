@@ -49,13 +49,24 @@
             {{ form_row(form.request.departure) }}
             {{ form_row(form.request.numberOfTravellers) }}
             {{ form_row(form.request.inviteForLeg) }}
-            {{ form_widget(form.update, {'attr': {'class': 'o-button mb-2'}}) }}
-            {{ form_widget(form.decline, {'attr': {'class': 'o-button ml-1 mb-2'}}) }}
+            {{ form_widget(form.update, {'attr': {'class': 'o-button--s md:o-button mb-2'}}) }}
+            <div class="btn-group u-ml-4">
+                <button type="submit" class="o-button--s md:o-button o-button--cut-right md:o-button--cut-right">
+                    {{ form.decline.vars.label|trans }}
+                </button>
+                <button type="button" class="o-button--s md:o-button dropdown-toggle dropdown-toggle-split o-button--cut-left md:o-button--cut-left" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <span class="sr-only">Toggle Dropdown</span>
+                </button>
+                <div class="dropdown-menu dropdown-menu-right">
+                    <a class="dropdown-item" href="{{ url('conversation_decline', {id: current.id}) }}">{{ 'label.decline.no.message'|trans }}</a>
+                </div>
+                {% do form.decline.setRendered %}
+            </div>
             {% if form.tentatively is defined %}
-                {{ form_widget(form.tentatively, {'attr': {'class': 'o-button ml-1 mb-2'}}) }}
+                {{ form_widget(form.tentatively, {'attr': {'class': 'o-button--s md:o-button ml-1 mb-2'}}) }}
             {% endif %}
             {% if form.accept is defined %}
-                {{ form_widget(form.accept, {'attr': {'class': 'o-button ml-1 mb-2'}}) }}
+                {{ form_widget(form.accept, {'attr': {'class': 'o-button--s md:o-button ml-1 mb-2'}}) }}
             {% endif %}
         </div>
     </div>

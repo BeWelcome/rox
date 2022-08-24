@@ -56,17 +56,17 @@
             {{ form_widget(form.accept, {'attr': {'class': 'o-button--s md:o-button u-ml-4'}}) }}
             {{ form_widget(form.tentatively, {'attr': {'class': 'o-button--s md:o-button u-ml-4'}}) }}
             <div class="btn-group u-ml-4">
-                <button type="button" class="btn btn-primary u-rounded-24">
+                <button type="submit" class="o-button--s md:o-button o-button--cut-right md:o-button--cut-right">
                     {{ form.decline.vars.label|trans }}
                 </button>
-                <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split u-rounded-24" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <button type="button" class="o-button--s md:o-button dropdown-toggle dropdown-toggle-split o-button--cut-left md:o-button--cut-left" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <span class="sr-only">Toggle Dropdown</span>
                 </button>
-                <div class="dropdown-menu dropdown-right">
-                    <a href="{{ url('conversation_decline', {id: current.id}) }}">{{ 'label.decline.no.message'|trans }}</a>
+                <div class="dropdown-menu dropdown-menu-right">
+                    <a class="dropdown-item" href="{{ url('conversation_decline', {id: current.id}) }}">{{ 'label.decline.no.message'|trans }}</a>
                 </div>
+                {% do form.decline.setRendered %}
             </div>
-
             {{ form_widget(form.update, {'attr': {'class': 'o-button--s md:o-button u-ml-4'}}) }}
         </div>
     </div>

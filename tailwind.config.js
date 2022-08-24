@@ -94,6 +94,7 @@ module.exports = {
       '6': '6px',
       '8': '8px',
       '16': '16px',
+      '24': '24px',
       'full': '100%',
     },
     borderWidth: {

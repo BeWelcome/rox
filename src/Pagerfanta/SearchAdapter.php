@@ -211,7 +211,7 @@ class SearchAdapter implements AdapterInterface
         $vars['search-languages'] = $data->languages;
         $vars['search-text'] = $data->keywords;
         $vars['search-last-login'] = $data->last_login;
-        $vars['search-page'] = $data->page;
+        $vars['search-page'] = $data->page ?? 1;
         $vars['search-sort-order'] = $data->order;
         $vars['search-sort-direction'] = $data->direction;
         $vars['search-number-items'] = $data->items;

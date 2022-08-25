@@ -22,8 +22,8 @@
                 <div class="o-avatar o-avatar--m u-mt-8 u-mr-16">
                     {{ macros.roundedavatarstack( news.createdBy.Username, 72) }}
                 </div>
-                <div class="u-line-clamp-3 u-place-self-center u-w-full">
-                    <p class="u-text-24 md:u-text-32 u-font-700"><a href="{{ url('communitynews_show', { id: news.id} ) }}">{{ news.title }}</a></p>
+                <div class="u-line-clamp-4 u-place-self-center u-w-full">
+                    <p class="u-text-20 md:u-text-28 u-font-700"><a href="{{ url('communitynews_show', { id: news.id} ) }}">{{ news.title }}</a></p>
                     <small class="u-mb-8 u-text-gray-65">
                         <i class="fa fa-fw fa-clock u-mr-2"></i>
                         {{ news.createdAt.DiffForHumans }}

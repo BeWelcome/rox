@@ -56,7 +56,7 @@ class GroupModel
         // We need a comment on the GroupMembership, so let's create one in English
         $languageRepository = $em->getRepository(Language::class);
         /** @var Language $language */
-        $language = $languageRepository->findOneBy(['shortcode' => 'en']);
+        $language = $languageRepository->findOneBy(['shortCode' => 'en']);
 
         $membership = new GroupMembership();
         $membership->setGroup($group);
@@ -176,7 +176,7 @@ class GroupModel
             $em = $this->getManager();
             $languageRepository = $em->getRepository(Language::class);
             /** @var Language $language */
-            $language = $languageRepository->findOneBy(['shortcode' => $locale]);
+            $language = $languageRepository->findOneBy(['shortCode' => $locale]);
 
             $comment = new MemberTranslation();
             $comment->setLanguage($language);
@@ -249,9 +249,9 @@ class GroupModel
         // We need the current locale for the MemberTranslation entity
         $languageRepository = $em->getRepository(Language::class);
         /** @var Language $language */
-        $language = $languageRepository->findOneBy(['shortcode' => $locale]);
+        $language = $languageRepository->findOneBy(['shortCode' => $locale]);
         /** @var Language $english */
-        $english = $languageRepository->findOneBy(['shortcode' => 'en']);
+        $english = $languageRepository->findOneBy(['shortCode' => 'en']);
 
         // We create the group entity and add the first member
         $group = new Group();

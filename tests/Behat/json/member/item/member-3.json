@@ -239,7 +239,7 @@
                         "englishname": {
                             "required": true
                         },
-                        "shortcode": {
+                        "shortCode": {
                             "required": true
                         }
                     }

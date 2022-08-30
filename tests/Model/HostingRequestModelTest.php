@@ -59,7 +59,7 @@ class HostingRequestModelTest extends TestCase
         $this->assertTrue($expired);
     }
 
-    public function testRequestExpiresToday()
+    public function testRequestDoesNotExpireToday()
     {
         $arrival = new DateTime('yesterday');
         $departure = (new DateTime('today'))->setTime(23, 59);

@@ -246,7 +246,7 @@ class Word
     public function setLanguage(Language $language): self
     {
         $this->language = $language;
-        $this->setShortCode($language->getShortcode());
+        $this->setShortCode($language->getShortCode());
 
         return $this;
     }

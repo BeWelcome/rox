@@ -101,7 +101,7 @@ class SendMassmailCommand extends Command
                         }
                     }
                     $parameters['newsletter'] = $scheduled->getNewsletter();
-                    $parameters['language'] = $receiver->getPreferredLanguage()->getShortcode();
+                    $parameters['language'] = $receiver->getPreferredLanguage()->getShortCode();
                     $parameters['unsubscribe_key'] = bin2hex($unsubscribeKey);
                     $this->mailer->sendNewsletterEmail(
                         $sender,

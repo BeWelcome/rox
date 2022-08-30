@@ -189,7 +189,7 @@ class Mailer
         $locale = 'en';
         if ($receiver instanceof Member) {
             $this->setTranslatorLocale($receiver);
-            $locale = $receiver->getPreferredLanguage()->getShortcode();
+            $locale = $receiver->getPreferredLanguage()->getShortCode();
             $parameters['receiver'] = $receiver;
             $receiver = new Address($receiver->getEmail(), $receiver->getUsername());
         } elseif (!$receiver instanceof Address) {
@@ -237,6 +237,6 @@ class Mailer
     private function setTranslatorLocale(Member $receiver)
     {
         $language = $receiver->getPreferredLanguage();
-        $this->translator->setLocale($language->getShortcode());
+        $this->translator->setLocale($language->getShortCode());
     }
 }

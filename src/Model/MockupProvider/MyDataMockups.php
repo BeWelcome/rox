@@ -568,7 +568,7 @@ class MyDataMockups implements MockupProviderInterface
                 'deleted' => 'yes' === $parameters['deleted'] ? 'Deleted' : 'NotDeleted',
                 'language' => [
                     'wordcode' => 'lang_zh-hant',
-                    'shortcode' => 'zh-hant',
+                    'shortCode' => 'zh-hant',
                 ],
                 'message' => 'Post text',
                 'messageTranslations' => [
@@ -576,14 +576,14 @@ class MyDataMockups implements MockupProviderInterface
                         'message' => 'Post Text (fr)',
                         'language' => [
                             'wordcode' => 'lang_fr',
-                            'shortcode' => 'fr',
+                            'shortCode' => 'fr',
                         ],
                     ],
                     'zh-hant' => [
                         'message' => 'Post Text (zh-hant)',
                         'language' => [
                             'wordcode' => 'lang_zh-hant',
-                            'shortcode' => 'zh-hant',
+                            'shortCode' => 'zh-hant',
                         ],
                     ],
                 ],

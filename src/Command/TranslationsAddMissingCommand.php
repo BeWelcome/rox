@@ -46,7 +46,7 @@ class TranslationsAddMissingCommand extends Command
             $admin = $memberRepository->find(1);
 
             $languageRepository = $this->entityManager->getRepository(Language::class);
-            $english = $languageRepository->findOneBy(['shortcode' => 'en']);
+            $english = $languageRepository->findOneBy(['shortCode' => 'en']);
 
             $translationRepository = $this->entityManager->getRepository(Word::class);
 
@@ -56,6 +56,9 @@ class TranslationsAddMissingCommand extends Command
                 $sentence = $missingTranslation[0];
                 $description = $missingTranslation[1] ?? 'No description given.';
                 $domain = $missingTranslation[2] ?? 'messages+intl-icu';
+                // This matches up with the do not translated column;
+                // So logic is reversed.
+                $allowTranslation = $missingTranslation[3] ?? 'no';
 
                 $translation = $translationRepository->findOneBy(['code' => $translationId]);
                 if (null === $translation) {
@@ -68,6 +71,7 @@ class TranslationsAddMissingCommand extends Command
                     $translation->setSentence($sentence);
                     $translation->setDomain($domain);
                     $translation->setLanguage($english);
+                    $translation->setTranslationAllowed($allowTranslation);
                     $translation->setAuthor($admin);
 
                     $this->entityManager->persist($translation);

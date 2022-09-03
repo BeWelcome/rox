@@ -155,6 +155,11 @@ Please read [Useful hints](#useful-hints) section below.
    $ /usr/bin/indexer --config indices-3.conf --rotate --quiet --all
    ```
 
+## C) Installation step by step of BW-Rox (Windows)
+
+In general the Docker setup works on Windows as well, but unfortunately the files of the repository
+need to be put into the WSL file share and not below your user directory or someplace else easily accessible
+by Windows.
 
 ## Useful hints
 

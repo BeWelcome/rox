@@ -46,17 +46,6 @@ $ mkdocs build
 
 The result can then be accessed via `doc/html/` in your cloned repository.
 
-PHP API documentation can also be generated using
-[phpDox.](https://github.com/theseer/phpdox) phpDox integrates with numerous
-continuous integration tools, so we recommend using the following `make` task to
-get the full output:
-
-```bash
-make phpdox
-```
-
-The result can then be accessed via `doc/phpdox/` in your cloned repository.
-
 ## Procedure
 
 If you see an updated ```composer.json``` or ```composer.lock``` make sure to run

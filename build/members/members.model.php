@@ -1325,10 +1325,12 @@ ORDER BY
 
             // Prepare email content
             $subject = $words->getRaw($subjectWordCode, array(), $languageCode);
-            $body = $words->getRaw($messageWordCode,
+            $quality = $words->getRaw('CommentQuality'.$note['Quality'].'InSentence', [], $languageCode);
+
+           $body = $words->getRaw($messageWordCode,
                                    array($toMember->Username,
                                          $fromMember->Username,
-                                         $words->get('CommentQuality'.$note['Quality'].'InSentence'),
+                                         $quality,
                                          $note['commentText'],
                                          $commentsUrl,
                                          $replyUrl,

@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+{% import 'macros.twig' as macros %}
+
+{% block title %}
+    {{ 'admin.tools.title' | trans }}
+{% endblock %}
+
+{% block content %}
+    <h1>{{ 'admin.tools.headline' | trans }}</h1>
+    <h2>{{ 'admin.tools.uploaded_images' | trans }}</h2>
+
+    {% if results.haveToPaginate %}
+        <div class="u-flex u-justify-end u-my-8">
+            {{ pagerfanta( results, 'rounded_pagination') }}
+        </div>
+
+        <div class="row">
+            {% for result in results %}
+                <div class="col-12 mt-2">
+                    <img width="{{ min(result.width, 1024) }}"
+                         alt="{{ result.Id ~ ' - ' ~ result.fileInfo}}"
+                         title="{{ result.Id ~ ' - ' ~ result.fileInfo}}"
+                         src="{{ url('gallery_uploaded_ckeditor', {id:result.Id, fileInfo: result.fileInfo}) }}"
+                    >
+                    <p>Created: {{ result.created|format_datetime() }} Resolution: {{ result.width }} x {{ result.height }}</p>
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="u-flex u-justify-end u-my-8">
+            {{ pagerfanta( results, 'rounded_pagination') }}
+        </div>
+    {% else %}
+        <div class="row"><div class="col-12">
+            {{ 'admin.tools.nothing' | trans }}
+        </div></div>
+    {% endif %}
+
+{% endblock content %}

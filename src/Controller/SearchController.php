@@ -132,7 +132,7 @@ class SearchController extends AbstractController
             }
             if ($searchIsValid) {
                 $data = $search->getData();
-                if ($search->has('reset') && $search->get('reset')->isClicked()) {
+                if ($search->has('resetOptions') && $search->get('resetOptions')->isClicked()) {
                     $memberSearchOptionsPreference->setValue('');
                     $em->persist($memberSearchOptionsPreference);
                     $em->flush();

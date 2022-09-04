@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Doctrine\AccommodationType;
+use App\Entity\HostingRequest;
 use App\Entity\Member;
 use App\Entity\Message;
 use App\Form\HostingRequestGuest;
@@ -10,6 +11,7 @@ use App\Form\HostingRequestHost;
 use App\Model\ConversationModel;
 use App\Model\HostingRequestModel;
 use App\Service\Mailer;
+use App\Utilities\ConversationThread;
 use App\Utilities\ManagerTrait;
 use App\Utilities\TranslatorTrait;
 use Exception;
@@ -39,6 +41,31 @@ class RequestController extends BaseRequestAndInvitationController
 
         $this->mailer = $mailer;
         $this->conversationModel = $conversationModel;
+    }
+
+    /**
+     * Deals with declines
+     */
+    public function decline(Request $request, Message $message): Response
+    {
+        $conversationThread = new ConversationThread($this->getManager());
+        $conversation = $conversationThread->getThread($message);
+        $current = $conversation[0];
+        $request = $current->getRequest();
+        $request->setStatus(HostingRequest::REQUEST_DECLINED);
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($request);
+        $em->flush();
+
+        $guest = $message->getInitiator();
+        $host = $message->getReceiver() === $guest ? $message->getSender() : $message->getReceiver();
+
+        $subject = $this->getSubjectForReply($message);
+        $this->sendHostDeclineNotification($host, $guest, $message, $subject);
+
+        $this->addTranslatedFlash('notice', 'flash.declined');
+
+        return $this->redirectToRoute('conversation_view', ['id' => $message->getId()]);
     }
 
     /**
@@ -264,6 +291,23 @@ class RequestController extends BaseRequestAndInvitationController
             $subject,
             'reply_from_host',
             $requestChanged
+        );
+    }
+
+    private function sendHostDeclineNotification(
+        Member $host,
+        Member $guest,
+        Message $request,
+        string $subject
+    ): void {
+        $this->sendRequestNotification(
+            $host,
+            $guest,
+            $host,
+            $request,
+            $subject,
+            'decline_from_host',
+            false
         );
     }
 

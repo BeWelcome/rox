@@ -14,6 +14,7 @@ use App\Logger\Logger;
 use App\Model\ConversationModel;
 use App\Model\InvitationModel;
 use App\Service\Mailer;
+use App\Utilities\ConversationThread;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
 use Doctrine\ORM\EntityManagerInterface;
@@ -123,6 +124,32 @@ class InvitationController extends BaseRequestAndInvitationController
             'subject' => '',
             'form' => $invitationForm->createView(),
         ]);
+    }
+
+
+    /**
+     * Deals with declines
+     */
+    public function decline(Request $request, Message $message): Response
+    {
+        $conversationThread = new ConversationThread($this->getManager());
+        $conversation = $conversationThread->getThread($message);
+        $current = $conversation[0];
+        $request = $current->getRequest();
+        $request->setStatus(HostingRequest::REQUEST_DECLINED);
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($request);
+        $em->flush();
+
+        $host = $message->getInitiator();
+        $guest = $message->getReceiver() === $host ? $message->getSender() : $message->getReceiver();
+
+        $subject = $this->getSubjectForReply($message);
+        $this->sendInvitationGuestDeclineNotification($host, $guest, $message, $subject, $request->getInviteForLeg());
+
+        $this->addTranslatedFlash('notice', 'flash.declined');
+
+        return $this->redirectToRoute('conversation_view', ['id' => $message->getId()]);
     }
 
     /**
@@ -347,6 +374,25 @@ class InvitationController extends BaseRequestAndInvitationController
             $subject,
             'invitation_reply_from_host',
             $requestChanged,
+            $leg
+        );
+    }
+
+    private function sendInvitationGuestDeclineNotification(
+        Member $host,
+        Member $guest,
+        Message $request,
+        string $subject,
+        SubTrip $leg
+    ): void {
+        $this->sendInvitationNotification(
+            $host,
+            $guest,
+            $host,
+            $request,
+            $subject,
+            'invitation_decline_from_host',
+            false,
             $leg
         );
     }

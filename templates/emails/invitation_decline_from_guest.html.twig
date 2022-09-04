@@ -1,0 +1,14 @@
+{% extends 'emails/request.template.html.twig' %}
+
+{% block message %}
+    <p>{% trans with {'%username%': sender.Username, 'gender': sender.Gender} %}email.invitation.reply.guest.declined{% endtrans %}</p>
+{% endblock message %}
+
+{% block request%}
+    {{ 'request.arrival' | trans }}:<br>
+    {{ request.arrival|format_date('full', locale=receiverLocale) }}<br>
+    {% if request.departure %}{{ 'request.departure' | trans }}:<br>
+        {{ request.departure|format_date('full', locale=receiverLocale) }}<br>{% endif %}
+    {% if request.flexible %}{{ 'request.flexible' | trans }}<br>{% endif %}
+    {{ 'request.number_of_travellers' | trans}}: {{ request.numberOfTravellers }}<br>
+{% endblock request %}

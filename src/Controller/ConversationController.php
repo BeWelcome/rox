@@ -184,24 +184,17 @@ class ConversationController extends AbstractController
      *
      * @IsGranted("CONVERSATION_VIEW", subject="message")
      */
-    public function declineRequestOrInvitation(Message $message): Response
+    public function decline(Message $message): Response
     {
         if ($message->isMessage()) {
             return $this->redirectToRoute('conversation_view', [ 'id' => $message->getId()]);
         }
 
-        $conversationThread = new ConversationThread($this->entityManager);
-        $conversation = $conversationThread->getThread($message);
-        $current = $conversation[0];
-        $request = $current->getRequest();
-        $request->setStatus(HostingRequest::REQUEST_DECLINED);
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($request);
-        $em->flush();
+        $controllerAndMethod = $this->getControllerAndMethod($message, 'decline');
 
-        $this->addTranslatedFlash('notice', 'flash.declined');
-
-        return $this->redirectToRoute('conversation_view', ['id' => $message->getId()]);
+        return $this->forward($controllerAndMethod, [
+            'message' => $message,
+        ]);
     }
 
     /**
@@ -220,7 +213,7 @@ class ConversationController extends AbstractController
         return $this->redirectToRoute('conversation_view', ['id' => $message->getId()]);
     }
 
-    private function getControllerAndMethod(Message $message, string $method): string
+    private function getController(Message $message): string
     {
         $controller = '';
         if ($message->isMessage()) {
@@ -230,6 +223,13 @@ class ConversationController extends AbstractController
         } elseif ($message->isInvitation()) {
             $controller = InvitationController::class;
         }
+
+        return $controller;
+    }
+
+    private function getControllerAndMethod(Message $message, string $method): string
+    {
+        $controller = $this->getController($message);
 
         return $controller . '::' . $method;
     }

@@ -1,3 +1,7 @@
+<?php
+$purifier = MOD_htmlpure::getBasicHtmlPurifier();
+?>
+
 <div class="d-lg-block d-none mb-sm-3 mb-lg-0">
     <?php
 
@@ -78,8 +82,7 @@
                            <div class="w-100 pt-2">
                                <p class="mb-1">
                                    <?php
-                                   $textStripped = strip_tags($c->TextFree, '<font>');
-                                   echo $textStripped;
+                                        echo htmlentities($c->TextFree);
                                    ?>
                                </p>
                            </div>
@@ -103,7 +106,6 @@
  ** Profile Relations **
  **********************/
 
-$purifier = MOD_htmlpure::getBasicHtmlPurifier();
 $relations = $member->relations;
 if (count($relations) > 0) { ?>
 
@@ -129,7 +131,7 @@ if (count($relations) > 0) { ?>
                                 $comment = '';
                             }
 
-                            $rel->Comment = $purifier->purify($comment);
+                            $rel->Comment = $purifier->purify(stripslashes($comment));
                             ?>
                             <div class="d-flex d-column w-100">
                                 <div>

@@ -40,7 +40,7 @@
         <div class="text-center text-md-left">
             <?php if ($this->useLightbox) { ?>
                 <a class="d-md-none" href="<?= $picture_url . '/original' ?>" data-toggle="lightbox"
-                   alwaysShowClose="true" data-type="image"
+                   data-always-show-close="true" data-type="image"
                    data-title="<?= $words->getbuffered('profile.picture.title'); ?>">
                     <img class="profileimg avatar-160 d-md-none" src="<?= $picture_url . '/160' ?>"
                          alt="<?= $words->get('profile.picture.title'); ?>">
@@ -76,8 +76,7 @@
                     <strong><a
                         href="places/<?php echo urlencode($member->country()) . "/" . urlencode($member->countrycode())
                             . "/" . urlencode($member->region()) . "/" . urlencode($member->regioncode()) . "/"
-                            . urlencode($member->city) . "/" . $member->IdCity; ?>"><?php echo $member->city(); ?></a>
-                    </strong><?php if ($member->region() != $member->city()) : ?>,
+                            . urlencode($member->city) . "/" . $member->IdCity; ?>"><?php echo $member->city(); ?></a></strong><?php if ($member->region() != $member->city()) : ?>,
                     <a
                     href="places/<?php echo urlencode($member->country()) . "/" . urlencode($member->countryCode()) . "/"
                         . urlencode($member->region()) . "/" . urlencode($member->regioncode()); ?>"><?php echo $member->region(); ?></a><?php endif; ?>,

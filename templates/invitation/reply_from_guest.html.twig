@@ -50,6 +50,7 @@
             {{ form_row(form.request.numberOfTravellers) }}
             {{ form_row(form.request.inviteForLeg) }}
             {{ form_widget(form.update, {'attr': {'class': 'o-button--s md:o-button mb-2'}}) }}
+            {% if request.status != constant('App\\Entity\\HostingRequest::REQUEST_DECLINED') %}
             <div class="btn-group u-ml-4">
                 <button type="submit" class="o-button--s md:o-button o-button--cut-right md:o-button--cut-right">
                     {{ form.decline.vars.label|trans }}
@@ -64,10 +65,11 @@
                     <div class="dropdown-menu dropdown-menu-right">
                         <a class="dropdown-item" href="{{ url('conversation_decline', {id: current.id}) }}">{{ 'label.decline.no.message'|trans }}</a>
                     </div>
-                    {% do form.decline.setRendered %}
                 </div>
-                {% do form.decline.setRendered %}
             </div>
+            {% endif %}
+            {% do form.decline.setRendered %}
+
             {% if form.tentatively is defined %}
                 {{ form_widget(form.tentatively, {'attr': {'class': 'o-button--s md:o-button ml-1 mb-2'}}) }}
             {% endif %}

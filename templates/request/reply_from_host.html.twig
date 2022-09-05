@@ -53,8 +53,17 @@
         {% do form.request.setRendered %}
 
         <div class="u-flex u-justify-end u-mt-8 u-mb-16">
-            {{ form_widget(form.accept, {'attr': {'class': 'o-button--s md:o-button u-ml-4'}}) }}
-            {{ form_widget(form.tentatively, {'attr': {'class': 'o-button--s md:o-button u-ml-4'}}) }}
+            {% if request.status != constant('App\\Entity\\HostingRequest::REQUEST_ACCEPTED') %}
+                {{ form_widget(form.accept, {'attr': {'class': 'o-button--s md:o-button u-ml-4'}}) }}
+            {% else %}
+                {% do form.accept.setRendered %}
+            {% endif %}
+            {% if request.status != constant('App\\Entity\\HostingRequest::REQUEST_TENTATIVELY_ACCEPTED') %}
+                {{ form_widget(form.tentatively, {'attr': {'class': 'o-button--s md:o-button u-ml-4'}}) }}
+            {% else %}
+                {% do form.tentatively.setRendered %}
+            {% endif %}
+            {% if request.status != constant('App\\Entity\\HostingRequest::REQUEST_DECLINED') %}
             <div class="btn-group u-ml-4">
                 <button type="submit" id="{{ form.decline.vars.id }}" name="{{ form.decline.vars.full_name }}" class="o-button--s md:o-button o-button--cut-right md:o-button--cut-right">
                     {{ form.decline.vars.label|trans }}
@@ -65,8 +74,9 @@
                 <div class="dropdown-menu dropdown-menu-right">
                     <a class="dropdown-item" href="{{ url('conversation_decline', {id: current.id}) }}">{{ 'label.decline.no.message'|trans }}</a>
                 </div>
-                {% do form.decline.setRendered %}
             </div>
+            {% endif %}
+            {% do form.decline.setRendered %}
             {{ form_widget(form.update, {'attr': {'class': 'o-button--s md:o-button u-ml-4'}}) }}
         </div>
     </div>

@@ -148,6 +148,7 @@ class InvitationController extends BaseRequestAndInvitationController
         $this->sendInvitationGuestDeclineNotification($host, $guest, $message, $subject, $request->getInviteForLeg());
 
         $this->addTranslatedFlash('notice', 'flash.declined');
+        $this->logger->write('Directly declined', 'Invitation');
 
         return $this->redirectToRoute('conversation_view', ['id' => $message->getId()]);
     }
@@ -210,6 +211,7 @@ class InvitationController extends BaseRequestAndInvitationController
             // In case the potential guest declines the invitation remove the invitedBy from the leg
             if (HostingRequest::REQUEST_DECLINED === $finalInvitation->getRequest()->getStatus()) {
                 $this->handleDeclineOfInvitation($leg, $host);
+                $this->logger->write('Regular decline', 'Invitation');
             }
             $this->entityManager->persist($finalInvitation);
             $this->entityManager->flush();

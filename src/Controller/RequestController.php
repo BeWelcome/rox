@@ -8,6 +8,8 @@ use App\Entity\Member;
 use App\Entity\Message;
 use App\Form\HostingRequestGuest;
 use App\Form\HostingRequestHost;
+use App\Form\HostingRequestType;
+use App\Logger\Logger;
 use App\Model\ConversationModel;
 use App\Model\HostingRequestModel;
 use App\Service\Mailer;
@@ -34,19 +36,25 @@ class RequestController extends BaseRequestAndInvitationController
     use TranslatorTrait;
 
     private Mailer $mailer;
+    private Logger $logger;
 
-    public function __construct(ConversationModel $conversationModel, HostingRequestModel $requestModel, Mailer $mailer)
-    {
+    public function __construct(
+        ConversationModel $conversationModel,
+        HostingRequestModel $requestModel,
+        Mailer $mailer,
+        Logger $logger
+    ) {
         parent::__construct($requestModel);
 
-        $this->mailer = $mailer;
         $this->conversationModel = $conversationModel;
+        $this->mailer = $mailer;
+        $this->logger = $logger;
     }
 
     /**
      * Deals with declines
      */
-    public function decline(Request $request, Message $message): Response
+    public function decline(Message $message): Response
     {
         $conversationThread = new ConversationThread($this->getManager());
         $conversation = $conversationThread->getThread($message);
@@ -64,6 +72,7 @@ class RequestController extends BaseRequestAndInvitationController
         $this->sendHostDeclineNotification($host, $guest, $message, $subject);
 
         $this->addTranslatedFlash('notice', 'flash.declined');
+        $this->logger->write('Directly declined', 'Request');
 
         return $this->redirectToRoute('conversation_view', ['id' => $message->getId()]);
     }
@@ -230,14 +239,19 @@ class RequestController extends BaseRequestAndInvitationController
             $newRequest = $this->persistFinalRequest($requestForm, $realParent, $host, $guest);
 
             $subject = $this->getSubjectForReply($newRequest);
-
+            $requestChanged = $newRequest->getRequest()->getId() !== $realParent->getRequest()->getId();
             $this->sendHostReplyNotification(
                 $host,
                 $guest,
                 $newRequest,
                 $subject,
-                ($newRequest->getRequest()->getId() !== $realParent->getRequest()->getId())
+                $requestChanged
             );
+
+            if (HostingRequest::REQUEST_DECLINED === $newRequest->getRequest()->getStatus()) {
+                $this->logger->write('Regular decline', 'Request');
+            }
+
             $this->addTranslatedFlash('notice', 'flash.notification.updated');
 
             return $this->redirectToRoute('conversation_view', ['id' => $newRequest->getId()]);

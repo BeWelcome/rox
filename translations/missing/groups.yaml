@@ -1,3 +1,15 @@
 group.got.invited.by:
     - 'Invited by group admin {admin}.'
     - Text added to the why I've joined when a user accepts an invitation to a group
+group.approved.join:
+    - 'Your request to join the group {group} has been approved'
+    - Subject of the approval notification to join a group
+group.declined.join:
+    - 'Your request to join the group {group} has been declined'
+    - Subject of the declination notification to join a group
+group.invitation.accepted:
+    - 'Your invitation to join the group {group} has been accepted'
+    - Subject of the notification that a group invitation has been accepted
+group.invitation.declined:
+    - 'Your invitation to join the group {group} has been declined'
+    - Subject of the notification that a group invitation has been declined

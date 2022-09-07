@@ -82,8 +82,13 @@ class GroupModel
 
         // Send email to invitee
         $params = [
-            'subject' => 'group.invitation',
-            'receiver' => $member,
+            'subject' => [
+                'translationId' => 'group.invitation',
+                'parameters' => [
+                    'username' => $member->getUsername(),
+                    'group' => $group->getName(),
+                ],
+            ],            'receiver' => $member,
             'sender' => $admin,
             'group' => [
                 'name' => $group->getName(),
@@ -335,7 +340,13 @@ class GroupModel
 
         $this->updateMembership($group, $member, GroupMembershipStatusType::CURRENT_MEMBER);
         $this->mailer->sendGroupNotificationEmail($admin, $member, 'group/join.approved', [
-            'subject' => 'group.approved.join',
+            'subject' => [
+                'translationId' => 'group.approved.join',
+                'parameters' => [
+                    'username' => $member->getUsername(),
+                    'group' => $group->getName(),
+                ],
+            ],
             'group' => $group,
             'member' => $member,
             'admin' => $admin,
@@ -351,7 +362,13 @@ class GroupModel
         }
         $this->updateMembership($group, $member, GroupMembershipStatusType::KICKED_FROM_GROUP);
         $this->mailer->sendGroupNotificationEmail($admin, $member, 'group/join.declined', [
-            'subject' => 'group.declined.join',
+            'subject' => [
+                'translationId' => 'group.declined.join',
+                'parameters' => [
+                    'username' => $member->getUsername(),
+                    'group' => $group->getName(),
+                ],
+            ],
             'group' => $group,
             'member' => $member,
             'admin' => $admin,
@@ -367,7 +384,10 @@ class GroupModel
     {
         foreach ($admins as $admin) {
             $this->mailer->sendGroupEmail($admin, 'group/declined.invite', [
-                'subject' => 'group.invitation.declined',
+                'subject' => [
+                    'subject' => 'group.invitation.declined',
+                    'group' => $group,
+                ],
                 'group' => $group,
                 'invitee' => $member,
                 'admin' => $admin,
@@ -380,7 +400,10 @@ class GroupModel
         $admins = $group->getAdministrators();
         foreach ($admins as $admin) {
             $this->mailer->sendGroupEmail($admin, 'group/accepted.invite', [
-                'subject' => 'group.invitation.accepted',
+                'subject' => [
+                    'subject' => 'group.invitation.accepted',
+                    'group' => $group,
+                ],
                 'group' => $group,
                 'invitee' => $member,
                 'admin' => $admin,

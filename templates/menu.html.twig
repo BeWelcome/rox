@@ -116,8 +116,7 @@
                 <a href="#member_menu" class="nav-link dropdown-toggle"
                    data-target="member_menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label="{{ 'profile' | trans }}">
                     <span class="d-none d-md-inline">{{ member.Username }}&nbsp;</span>
-                    <img class="profileimg d-none d-md-inline" src="{{ url('avatar', { username: member.username, size: 36 })}}" width="36" height="36" alt="{{ 'profile.picture' }}">
-                    <i class="fa fa-fw fa-user d-inline d-md-none"></i>
+                    <img class="profileimg px-0" src="{{ url('avatar', { username: member.username, size: 36 })}}" width="36" height="36" alt="{{ 'profile.picture' }}">
                 </a>
                 <ul id="member_menu" class="dropdown-menu dropdown-menu-right" role="menu">
                     <li class="text-right"><a
@@ -185,4 +184,14 @@
     {% endfor %}
 </div>
 {% endif %}
+    {% if member.username == 'SafetyTeam' %}
+        <div class="container-lg">
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                Be careful, you're using the SafetyTeam's profile.
+                <button class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        </div>
+    {% endif %}
 {% endif %}

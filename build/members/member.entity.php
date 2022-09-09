@@ -1140,7 +1140,7 @@ ORDER BY
 
           //echo $sql;
           //print_r($r);
-          return $this->bulkLookup($sql);
+          return $this->bulkLookup($sql, ['UsernameFromMember']);
 
       }
 
@@ -1198,7 +1198,7 @@ WHERE
   comments.IdToMember = members2.Id
 ORDER BY
     comments.updated DESC        ";
-        return $this->bulkLookup($sql);
+        return $this->bulkLookup($sql, ['UsernameToMember']);
     }
 
 

@@ -101,6 +101,8 @@
     "micromodal": "^0.4.10",
     "moment": "^2.29.4",
     "moment-timezone": "^0.5.37",
+    "show-more": "^1.0.1",
+    "show-more-read": "tomik23/show-more",
     "tom-select": "^2.1.0"
   }
 }

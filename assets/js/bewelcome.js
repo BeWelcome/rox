@@ -16,6 +16,7 @@ import 'select2/dist/js/select2.full.js';
 import './loginmessages.js';
 import '@fortawesome/fontawesome-free/js/all.js';
 import './collapsemenu.js';
+import './readmore.js';
 
 $(".select2").select2({
     theme: 'bootstrap4',

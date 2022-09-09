@@ -6006,6 +6006,10 @@ shelljs@^0.8.1:
     interpret "^1.0.0"
     rechoir "^0.6.2"
 
+show-more-read@tomik23/show-more:
+  version "1.1.5"
+  resolved "https://codeload.github.com/tomik23/show-more/tar.gz/349ae27f70b1cd87538621d5c711f569b4cdda09"
+
 side-channel@^1.0.4:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/side-channel/-/side-channel-1.0.4.tgz#efce5c8fdc104ee751b25c58d4290011fa5ea2cf"

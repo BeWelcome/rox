@@ -104,7 +104,7 @@
             {% if member %}
             {# conversations #}
             <li class="nav-item">
-                <div id="conversationCount" class="nav-link" data-count="-1">
+                <div id="conversationCount" class="nav-link pl-0 pl-md-1" data-count="-1">
                     <a href="{{ path('conversations', {'conversationsType': 'conversations'}) }}" aria-label="{{ 'conversations' | trans }}" class="text-white align-items-center">
                         <i class="fas fa-envelope"></i>
                         <span class="badge badge-warning"><i class="fa fa-fw fa-spinner"></i></span>
@@ -113,7 +113,7 @@
             </li>
 
             <li class="nav-item dropdown">
-                <a href="#member_menu" class="nav-link dropdown-toggle"
+                <a href="#member_menu" class="nav-link dropdown-toggle pl-0 pl-md-1"
                    data-target="member_menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label="{{ 'profile' | trans }}">
                     <span class="d-none d-md-inline">{{ member.Username }}&nbsp;</span>
                     <img class="profileimg px-0" src="{{ url('avatar', { username: member.username, size: 36 })}}" width="36" height="36" alt="{{ 'profile.picture' }}">
@@ -187,7 +187,7 @@
     {% if member.username == 'SafetyTeam' %}
         <div class="container-lg">
             <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                Be careful, you're using the SafetyTeam's profile.
+                Be careful, you're using the SafetyTeam profile.
                 <button class="close" data-dismiss="alert" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>

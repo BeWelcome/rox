@@ -704,6 +704,8 @@ FROM
                 members.id = comments.IdFromMember
                 AND
                 members.status IN (" . MemberStatusType::MEMBER_COMMENTS . ")
+                AND
+                DisplayInPublic = 1
             "
         );
 
@@ -1113,7 +1115,7 @@ WHERE
         return $this->createEntity('ProfileVisit')->getVisitingMembersSubset($this, $pager);
     }
 
-      public function get_comments() {
+      public function get_comments($count = 0) {
           $sql = "
 SELECT comments.*,
     comments.Quality AS comQuality,
@@ -1134,13 +1136,15 @@ WHERE
     comments.IdToMember = members2.Id
     AND members.Status IN (" . MemberStatusType::MEMBER_COMMENTS . ")
 ORDER BY
-    comments.updated DESC
+    comments.created DESC
           ";
-
+          if (0 !== $count) {
+              $sql .= " LIMIT 0, " . $count;
+          }
 
           //echo $sql;
           //print_r($r);
-          return $this->bulkLookup($sql, ['UsernameFromMember']);
+          return $this->bulkLookup($sql);
 
       }
 
@@ -1176,7 +1180,7 @@ WHERE
      * @return array of objects
      *
      */
-    public function get_comments_written() {
+    public function get_comments_written($count = 0) {
         $sql = "
 SELECT
   comments.*,
@@ -1197,8 +1201,12 @@ WHERE
   comments.IdFromMember = members.Id AND
   comments.IdToMember = members2.Id
 ORDER BY
-    comments.updated DESC        ";
-        return $this->bulkLookup($sql, ['UsernameToMember']);
+    comments.created DESC        ";
+        if (0 !== $count) {
+            $sql .= " LIMIT 0, " . $count;
+        }
+
+        return $this->bulkLookup($sql);
     }
 
 

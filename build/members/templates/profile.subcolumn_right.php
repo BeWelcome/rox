@@ -1,5 +1,11 @@
 <?php
 $purifier = MOD_htmlpure::getBasicHtmlPurifier();
+
+function wasGuestOrHost(string $relations) {
+    $hosted = strpos($relations, 'hewasmyguest') !== false;
+    $stayed = strpos($relations, 'hehostedme') !== false;
+    return $hosted || $stayed;
+}
 ?>
 
 <div class="d-lg-block d-none mb-sm-3 mb-lg-0">
@@ -13,26 +19,48 @@ $purifier = MOD_htmlpure::getBasicHtmlPurifier();
 }
 
 ?>
+    <input type="hidden" id="read.more" value="<?= $words->get('comment.read.more'); ?>">
+    <input type="hidden" id="show.less" value="<?= $words->get('comment.show.less'); ?>">
 </div>
 <?php
 
     // build array with combined comments
     $comments = [];
-    $commentsReceived = $this->member->comments;
-    $commentsWritten = $this->member->comments_written;
+    $commentsReceived = $this->member->get_comments(5);
+    $commentsWritten = $this->member->get_comments_written(5);
 
-    foreach ($commentsReceived as $key => $value) {
+    $commentCount = $this->member->count_comments();
+
+    foreach ($commentsReceived as $value) {
+        $key = $value->UsernameFromMember;
         $comments[$key] = [
             'from' => $value,
         ];
     }
-    foreach ($commentsWritten as $key => $value) {
+    foreach ($commentsWritten as $value) {
+        $key = $value->UsernameToMember;
         if (isset($comments[$key])) {
             $comments[$key] = array_merge($comments[$key], [
                 'to' => $value,
             ]);
+        } else {
+            $comments[$key] = [
+                'to' => $value,
+            ];
         }
     }
+    usort($comments,
+        function ($a, $b) {
+            // get latest updates on to and from part of comments and order desc
+            $updatedATo = isset($a['to']) ? new DateTime($a['to']->updated) : new DateTime('01-01-1900');
+            $updatedAFrom = isset($a['from']) ? new DateTime($a['from']->updated) : new DateTime('01-01-1900');
+            $updatedA = max($updatedATo, $updatedAFrom);
+            $updatedBTo = isset($b['to']) ? new DateTime($b['to']->updated) : new DateTime('01-01-1900');
+            $updatedBFrom = isset($b['from']) ? new DateTime($b['from']->updated) : new DateTime('01-01-1900');
+            $updatedB = max($updatedBTo, $updatedBFrom);
+            return (-1)*($updatedA <=> $updatedB);
+        }
+    );
 
     // \todo: do something here
     $username = $this->member->Username;
@@ -77,34 +105,37 @@ $purifier = MOD_htmlpure::getBasicHtmlPurifier();
                                $quality = "bad";
                            }                            ?>
                        <div class="comment-bg-<?=$quality?> p-2 mt-1 <?= (!isset($c['to'])) ? 'mb-2' : '' ?> ">
-                           <div class="my-1 clearfix">
-                               <a href="members/<?=$comment->UsernameFromMember?>">
-                                   <img class="float-left mr-2 profileimg avatar-48"  src="members/avatar/<?=$comment->UsernameFromMember?>/48" alt="<?=$comment->UsernameFromMember?>" />
-                               </a>
-                               <div>
-                                   <p class="m-0" style="line-height: 1.0;">
-                                       <?php if (!$this->passedAway) { ?>
-                                           <span class="commenttitle <?=$quality?>"><?= $words->get('CommentQuality_'.$comment->comQuality.''); ?></span>
-                                           <span class="float-right">
-                                       <?php if ($this->loggedInMember){ ?>
-                                           <a href="/members/<?= $this->member->Username;?>/comment/<?php echo $comment->id;?>/report" title="<?=$words->getSilent('ReportCommentProblem') ?>" class="gray"><i class="fa fa-flag" alt="<?=$words->getSilent('ReportCommentProblem') ?>"></i></a>
+                           <div class="d-flex flex-column">
+                               <div class="d-flex flex-row">
+                                   <a class="mr-2" href="members/<?=$comment->UsernameFromMember?>">
+                                       <img class="profileimg avatar-48"  src="members/avatar/<?=$comment->UsernameFromMember?>/48" alt="<?=$comment->UsernameFromMember?>" />
+                                   </a>
+                                   <div>
+                                       <p class="m-0" style="line-height: 1.0;">
+                                           <?php if (!$this->passedAway) { ?>
+                                               <span class="commenttitle <?=$quality?>"><?= $words->get('CommentQuality_'.$comment->comQuality.''); ?></span>
+                                           <?php }?>
+                                           <br><small><?=$words->get('CommentFrom','<a href="members/'.$comment->UsernameFromMember.'">'.$comment->UsernameFromMember.'</a>')?></small>
+                                           <br><small><span title="<?=$comment->created?>"><?php
+                                                   $created = Carbon::createFromFormat('Y-m-d H:i:s', $comment->created);
+                                                   echo $created->diffForHumans();
+                                                   ?></span></small>
+                                       </p>
+                                   </div>
+                                   <div class="ml-auto align-self-center">
+                                       <a href="/members/<?= $this->member->Username;?>/comment/<?php echo $comment->id;?>/report" title="<?=$words->getSilent('ReportCommentProblem') ?>" class="ml-auto gray align-self-center"><i class="fa fa-flag" alt="<?=$words->getSilent('ReportCommentProblem') ?>"></i></a>
+                                       <?php if (wasGuestOrHost($comment->Relations)) { ?>
+                                           <i class="fas fa-2x fa-home"></i>
                                        <?php } ?>
-                                   </span>
-                                       <?php }?>
-                                       <br><small><?=$words->get('CommentFrom','<a href="members/'.$comment->UsernameFromMember.'">'.$comment->UsernameFromMember.'</a>')?></small>
-                                       <br><small><span title="<?=$comment->created?>"><?php
-                                               $created = Carbon::createFromFormat('Y-m-d H:i:s', $comment->created);
-                                               echo $created->diffForHumans();
-                                               ?></span></small>
+                                   </div>
+                               </div>
+                               <div class="w-100 py-2">
+                                   <p class="js-read-more-received">
+                                       <?php
+                                       echo htmlentities($comment->TextFree);
+                                       ?>
                                    </p>
                                </div>
-                           </div>
-                           <div class="w-100 pt-2">
-                               <p class="mb-1 js-read-more">
-                                   <?php
-                                   echo htmlentities($comment->TextFree);
-                                   ?>
-                               </p>
                            </div>
                        </div>
                        <?php }
@@ -122,10 +153,16 @@ $purifier = MOD_htmlpure::getBasicHtmlPurifier();
                            }                           ?>
 
                        <div class="comment-bg-<?=$quality?> p-2 mt-1 <?= !(isset($c['from'])) ? 'mt-1' : '' ?> "">
-                           <div class="d-flex flex-row justify-content-end">
-                               <div class="mr-2">
+                           <div class="d-flex flex-row">
+                               <div class="mr-auto  align-self-center">
+                                   <?php if (wasGuestOrHost($comment->Relations)) { ?>
+                                       <i class="fas fa-2x fa-home"></i>
+                                   <?php } ?>
+                                   <a href="/members/<?= $this->member->Username;?>/comment/<?php echo $comment->id;?>/report" title="<?=$words->getSilent('ReportCommentProblem') ?>" class="gray align-self-center"><i class="fa fa-flag" alt="<?=$words->getSilent('ReportCommentProblem') ?>"></i></a>
+                               </div>
+                               <div>
                                    <p class="m-0 text-right" style="line-height: 1.0;">
-                                           <span class="commenttitle <?=$quality?>"><?= $words->get('CommentQuality_'.$comment->comQuality.''); ?></span>
+                                       <span class="commenttitle <?=$quality?>"><?= $words->get('CommentQuality_'.$comment->comQuality.''); ?></span>
                                        <br><small><?= $words->get('CommentTo'); ?> <a href="members/<?= $comment->UsernameToMember ?>"><?= $comment->UsernameToMember; ?></a></small>
                                        <br><small><span title="<?=$comment->created?>"><?php
                                                $created = Carbon::createFromFormat('Y-m-d H:i:s', $comment->created);
@@ -133,14 +170,12 @@ $purifier = MOD_htmlpure::getBasicHtmlPurifier();
                                                ?></span></small>
                                    </p>
                                </div>
-                               <div>
-                                   <a href="members/<?=$comment->UsernameToMember?>">
+                               <a class="ml-2" href="members/<?=$comment->UsernameToMember?>">
                                     <img class="mr-2 profileimg avatar-48"  src="members/avatar/<?=$comment->UsernameToMember?>/48" alt="<?=$comment->UsernameToMember?>" />
                                 </a>
-                               </div>
                            </div>
-                           <div class="w-100 pt-2">
-                               <p class="mb-1 js-read-more">
+                           <div class="w-100 py-2">
+                               <p class="js-read-more-written">
                                    <?php
                                    echo htmlentities($comment->TextFree);
                                    ?>
@@ -154,7 +189,9 @@ $purifier = MOD_htmlpure::getBasicHtmlPurifier();
                    }
                  ?>
             </div>
-            <a href="members/<?=$member->Username?>/comments/" class="btn btn-block btn-sm btn-outline-primary"><?=$words->get('ShowAllComments')?><span class="badge badge-primary"><?php echo count($comments) - 1; ?></span></a>
+            <?php if (count($comments) != $commentCount['all']) { ?>
+                <a href="members/<?=$member->Username?>/comments/" class="btn btn-block btn-sm btn-outline-primary"><?=$words->get('ShowAllComments')?> <span class="badge badge-primary"><?php echo $commentCount['all']; ?></span></a>
+            <?php } ?>
         </div>
 <?php }
 

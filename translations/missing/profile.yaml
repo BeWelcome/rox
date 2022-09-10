@@ -4,3 +4,9 @@ profile.invite.guest:
 login.first.time:
     - 'Welcome {username}, as it is the first time you login please fill out your profile.'
     - Flash notice shown to a user who logins for the first time ever.
+comment.read.more:
+    - '→ read more'
+    - Shown if the text of a comment is truncated on a profile page
+comment.show.less:
+    - '← show less'
+    - Shown if truncated text of a comment is shown on a profile page

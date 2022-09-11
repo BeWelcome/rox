@@ -26,8 +26,8 @@ function wasGuestOrHost(string $relations) {
 
     // build array with combined comments
     $comments = [];
-    $commentsReceived = $this->member->get_comments(5);
-    $commentsWritten = $this->member->get_comments_written(5);
+    $commentsReceived = $this->member->get_comments();
+    $commentsWritten = $this->member->get_comments_written();
 
     $commentCount = $this->member->count_comments();
 
@@ -114,6 +114,7 @@ function wasGuestOrHost(string $relations) {
                                        <p class="m-0" style="line-height: 1.0;">
                                            <?php if (!$this->passedAway) { ?>
                                                <span class="commenttitle <?=$quality?>"><?= $words->get('CommentQuality_'.$comment->comQuality.''); ?></span>
+                                               <a href="/members/<?= $this->member->Username;?>/comment/<?php echo $comment->id;?>/report" title="<?=$words->getSilent('ReportCommentProblem') ?>" class="ml-auto gray align-self-center"><i class="fa fa-flag" alt="<?=$words->getSilent('ReportCommentProblem') ?>"></i></a>
                                            <?php }?>
                                            <br><small><?=$words->get('CommentFrom','<a href="members/'.$comment->UsernameFromMember.'">'.$comment->UsernameFromMember.'</a>')?></small>
                                            <br><small><span title="<?=$comment->created?>"><?php
@@ -123,7 +124,6 @@ function wasGuestOrHost(string $relations) {
                                        </p>
                                    </div>
                                    <div class="ml-auto align-self-center">
-                                       <a href="/members/<?= $this->member->Username;?>/comment/<?php echo $comment->id;?>/report" title="<?=$words->getSilent('ReportCommentProblem') ?>" class="ml-auto gray align-self-center"><i class="fa fa-flag" alt="<?=$words->getSilent('ReportCommentProblem') ?>"></i></a>
                                        <?php if (wasGuestOrHost($comment->Relations)) { ?>
                                            <i class="fas fa-2x fa-home"></i>
                                        <?php } ?>
@@ -158,11 +158,10 @@ function wasGuestOrHost(string $relations) {
                                    <?php if (wasGuestOrHost($comment->Relations)) { ?>
                                        <i class="fas fa-2x fa-home"></i>
                                    <?php } ?>
-                                   <a href="/members/<?= $this->member->Username;?>/comment/<?php echo $comment->id;?>/report" title="<?=$words->getSilent('ReportCommentProblem') ?>" class="gray align-self-center"><i class="fa fa-flag" alt="<?=$words->getSilent('ReportCommentProblem') ?>"></i></a>
                                </div>
                                <div>
                                    <p class="m-0 text-right" style="line-height: 1.0;">
-                                       <span class="commenttitle <?=$quality?>"><?= $words->get('CommentQuality_'.$comment->comQuality.''); ?></span>
+                                       <span class="commenttitle <?=$quality?>"><?= $words->get('CommentQuality_'.$comment->comQuality.''); ?></span> <a href="/members/<?= $this->member->Username;?>/comment/<?php echo $comment->id;?>/report" title="<?=$words->getSilent('ReportCommentProblem') ?>" class="gray align-self-center"><i class="fa fa-flag" alt="<?=$words->getSilent('ReportCommentProblem') ?>"></i></a>
                                        <br><small><?= $words->get('CommentTo'); ?> <a href="members/<?= $comment->UsernameToMember ?>"><?= $comment->UsernameToMember; ?></a></small>
                                        <br><small><span title="<?=$comment->created?>"><?php
                                                $created = Carbon::createFromFormat('Y-m-d H:i:s', $comment->created);
@@ -226,17 +225,15 @@ if (count($relations) > 0) { ?>
 
                             $rel->Comment = $purifier->purify(stripslashes($comment));
                             ?>
-                            <div class="d-flex d-column w-100">
-                                <div>
+                            <div class="w-100">
+                                <div class="float-left mr-2">
                                     <a href="<?=PVars::getObj('env')->baseuri."members/".$rel->Username?>"  title="See profile <?=$rel->Username?>">
-                                        <img class="float-left profileimg avatar-48"  src="members/avatar/<?=$rel->Username?>/48" alt="Profile" />
+                                        <img class="profileimg avatar-48"  src="members/avatar/<?=$rel->Username?>/48" width="48" height="48" alt="Profile" />
                                     </a>
                                 </div>
-                                <div>
-                                    <a class="float-left" href="<?=PVars::getObj('env')->baseuri."members/".$rel->Username?>" ><?=$rel->Username?></a>
-                                    <br>
-                                    <?php echo $rel->Comment; ?>
-                                </div>
+                                <a href="<?=PVars::getObj('env')->baseuri."members/".$rel->Username?>" ><?=$rel->Username?></a>
+                                <br>
+                                <?php echo $rel->Comment; ?>
                             </div>
                         <?php } ?>
                 <?php } else {

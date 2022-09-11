@@ -235,6 +235,7 @@ if (count($relations) > 0) { ?>
                                 <br>
                                 <?php echo $rel->Comment; ?>
                             </div>
+                            <div class="clearfix"></div>
                         <?php } ?>
                 <?php } else {
                     echo $this->getLoginLink('/members/' . $member->Username,'ProfileShowRelations');

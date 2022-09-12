@@ -16,6 +16,7 @@
 
 * [Docker](https://docs.docker.com/get-docker/)
 * [Docker Compose](https://docs.docker.com/compose/install/)
+* If running on Windows, we recommend installing WSL in order to execute the following linux commands. Note that the files of the repository should be put into the WSL file share and not below your user directory or someplace else easily accessible by Windows.
 
 ### Initialize installation
 
@@ -30,6 +31,14 @@
     ```bash
     $ make install root=1
     ```
+    
+    <details>
+    <summary><strong>Troubleshooting</strong></summary>
+     Windows users may run into a build error concerning `composer clear-cache`. If you see this error, please try the following:
+    - If you receive the error when running `make install`, try running `make install root=1`. Make sure to run the command with `root=1` after trying each of the following steps as well
+    - Ensure that you are using WSL version 2 for your linux distro. See the following doc for [how to upgrade from WSL 1 to WSL 2](https://docs.microsoft.com/en-us/windows/wsl/install#upgrade-version-from-wsl-1-to-wsl-2)
+    - Use Ubuntu 22.04 LTS as your linux distro - the error has been observed on earlier versions of Ubuntu, e.g. on 18.04 LTS
+    </details>
 
 Wait a few minutes for containers to build and start (it might take awhile). Project is running at
 [http://localhost:8080](http://localhost:8080).
@@ -154,12 +163,6 @@ Please read [Useful hints](#useful-hints) section below.
    ```bash
    $ /usr/bin/indexer --config indices-3.conf --rotate --quiet --all
    ```
-
-## C) Installation step by step of BW-Rox (Windows)
-
-In general the Docker setup works on Windows as well, but unfortunately the files of the repository
-need to be put into the WSL file share and not below your user directory or someplace else easily accessible
-by Windows.
 
 ## Useful hints
 

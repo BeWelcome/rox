@@ -79,7 +79,7 @@ class SubtripRepository extends EntityRepository
                     $qb->expr()->in('s.options', [SubtripOptionsType::MEET_LOCALS])
                 )
             )
-            ->andWhere('s.arrival >= :now')
+            ->andWhere('s.departure >= :now')
             ->andWhere('s.arrival <= :durationMonthsAhead')
             ->andWhere($qb->expr()->in('m.status', ['Active', 'OutOfRemind']))
             ->andWhere('t.creator <> :member')

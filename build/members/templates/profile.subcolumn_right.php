@@ -52,13 +52,13 @@ function wasGuestOrHost(string $relations) {
     usort($comments,
         function ($a, $b) {
             // get latest updates on to and from part of comments and order desc
-            $updatedATo = isset($a['to']) ? new DateTime($a['to']->updated) : new DateTime('01-01-1900');
-            $updatedAFrom = isset($a['from']) ? new DateTime($a['from']->updated) : new DateTime('01-01-1900');
-            $updatedA = max($updatedATo, $updatedAFrom);
-            $updatedBTo = isset($b['to']) ? new DateTime($b['to']->updated) : new DateTime('01-01-1900');
-            $updatedBFrom = isset($b['from']) ? new DateTime($b['from']->updated) : new DateTime('01-01-1900');
-            $updatedB = max($updatedBTo, $updatedBFrom);
-            return (-1)*($updatedA <=> $updatedB);
+            $createdATo = isset($a['to']) ? new DateTime($a['to']->created) : new DateTime('01-01-1900');
+            $createdAFrom = isset($a['from']) ? new DateTime($a['from']->created) : new DateTime('01-01-1900');
+            $createdA = max($createdATo, $createdAFrom);
+            $createdBTo = isset($b['to']) ? new DateTime($b['to']->created) : new DateTime('01-01-1900');
+            $createdBFrom = isset($b['from']) ? new DateTime($b['from']->created) : new DateTime('01-01-1900');
+            $createdB = max($createdBTo, $createdBFrom);
+            return (-1)*($createdA <=> $createdB);
         }
     );
 

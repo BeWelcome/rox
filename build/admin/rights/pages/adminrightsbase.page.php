@@ -84,7 +84,7 @@ class AdminRightsBasePage extends AdminBasePage
 
     function levelSelect($current, $disabled = false, $showEmpty = true)
     {
-        $select = '<select id="level" name="level"' . ($disabled ? ' disabled="disabled"' : '') . ' class="o-input">';
+        $select = '<select id="level" name="level"' . ($disabled ? ' disabled="disabled"' : '') . ' class="o-input select2">';
         if ($showEmpty) {
             $select .= '<option value="0"></option>';
         }

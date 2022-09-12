@@ -16,8 +16,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program; if not, see <http://www.gnu.org/licenses/> or 
-write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+along with this program; if not, see <http://www.gnu.org/licenses/> or
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
@@ -37,7 +37,7 @@ $callbackTags = $this->layoutkit->formkit->setPostCallback('AdminFlagsController
     <input type="hidden" id="flagid" name="flagid" value="<?= $this->vars['flag'] ?>" />
     <div class="type-text">
         <label for="username"><?php echo $this->words->get("AdminFlagsUserName")?></label>
-        <input type="text" id="username" name="username" readonly="readonly" value="<?= $this->vars['username'] ?>"/>
+        <input class="o-input" type="text" id="username" name="username" readonly="readonly" value="<?= $this->vars['username'] ?>"/>
     </div>
     <div class="type-select">
         <label for="flag"><?php echo $words->get("AdminFlagsFlags")?></label>
@@ -49,13 +49,13 @@ $callbackTags = $this->layoutkit->formkit->setPostCallback('AdminFlagsController
     </div>
     <div class="type-text">
         <label for="scope"><?php echo $this->words->get("AdminFlagsScope") ?></label>
-        <input type="text" id="scope" name="scope" readonly="readonly" value="<?= htmlentities($this->vars['scope'], ENT_COMPAT, 'utf-8') ?>"/>
+        <input class="o-input" type="text" id="scope" name="scope" readonly="readonly" value="<?= htmlentities($this->vars['scope'], ENT_COMPAT, 'utf-8') ?>"/>
     </div>
     <div class="type-text">
         <label for="comment"><?php echo $this->words->get("AdminFlagsComment") ?></label>
-        <textarea id="comment" name="comment" readonly="readonly"><?= htmlentities($this->vars['comment'], ENT_COMPAT, 'utf-8') ?></textarea>
+        <textarea class="o-input" id="comment" name="comment" readonly="readonly"><?= htmlentities($this->vars['comment'], ENT_COMPAT, 'utf-8') ?></textarea>
     </div>
     <div class="type-button">
-        <input type="submit" id="AdminFlagsRemove" name="AdminFlagsRemove" value="<?php echo $this->words->getSilent("AdminFlagsRemove")?>" /><?php echo $words->flushBuffer(); ?>
+        <input type="submit" class="btn btn-primary" id="AdminFlagsRemove" name="AdminFlagsRemove" value="<?php echo $this->words->getSilent("AdminFlagsRemove")?>" /><?php echo $words->flushBuffer(); ?>
     </div>
 </form>

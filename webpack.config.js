@@ -58,6 +58,7 @@ Encore
     .addEntry('highlight', './assets/js/highlight.js')
     .addEntry('faq', './assets/js/faq.js')
     .addEntry('translations', './assets/js/admin/translations.js')
+    .addEntry('readmore', './assets/js/readmore.js')
     .addEntry('tailwind', './assets/tailwindcss/tailwind.css')
     // react
     .configureBabel(function(babelConfig) {

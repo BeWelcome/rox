@@ -46,6 +46,7 @@ class ProfilePage extends MemberPage
     {
         $this->useLightbox = true;
         $this->addLateLoadScriptFile('build/lightbox.js');
+        $this->addLateLoadScriptFile('build/readmore.js');
     }
 
     public function setMessage(int $messageId)

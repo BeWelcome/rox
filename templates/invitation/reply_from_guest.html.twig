@@ -14,6 +14,7 @@
 
     {% set original = thread | last %}
     {% set current = thread | first %}
+    {% set request = current.request %}
     {% set invitation = current.request %}
     {% set receiver =  original.receiver %}
     {% set myself =  app.user %}
@@ -30,19 +31,6 @@
             {{ form_label(form.message) }}
             {{ form_widget(form.message) }}
             {{ form_errors(form.message) }}
-{#
-                <div class="o-form-group">
-                    {{ form_label(form.request.duration) }}
-                    <div class="input-group date" id="arrival" data-target-input="nearest">
-                        <div class="input-group-prepend" data-target="#arrival" data-toggle="datetimepicker">
-                        <span class="input-group-text">
-                            <i class="fa fa-calendar"></i>
-                        </span>
-                        </div>
-                        {{ form_widget(form.request.duration, {'attr': { 'class': 'js-litepicker'}}) }}
-                    </div>
-                </div>
-#}
         </div>
         <div class="col-12 u-flex u-justify-end mb-2">
             {{ form_row(form.request.arrival) }}
@@ -52,9 +40,6 @@
             {{ form_widget(form.update, {'attr': {'class': 'o-button--s md:o-button mb-2'}}) }}
             {% if request.status != constant('App\\Entity\\HostingRequest::REQUEST_DECLINED') %}
             <div class="btn-group u-ml-4">
-                <button type="submit" class="o-button--s md:o-button o-button--cut-right md:o-button--cut-right">
-                    {{ form.decline.vars.label|trans }}
-                </button>
                 <div class="btn-group u-ml-4">
                     <button type="submit" id="{{ form.decline.vars.id }}" name="{{ form.decline.vars.full_name }}" class="o-button--s md:o-button o-button--cut-right md:o-button--cut-right">
                         {{ form.decline.vars.label|trans }}

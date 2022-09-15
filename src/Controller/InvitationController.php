@@ -132,7 +132,7 @@ class InvitationController extends BaseRequestAndInvitationController
      */
     public function decline(Request $request, Message $message): Response
     {
-        $conversationThread = new ConversationThread($this->getManager());
+        $conversationThread = new ConversationThread($this->entityManager);
         $conversation = $conversationThread->getThread($message);
         $current = $conversation[0];
         $request = $current->getRequest();
@@ -393,7 +393,7 @@ class InvitationController extends BaseRequestAndInvitationController
             $host,
             $request,
             $subject,
-            'invitation_decline_from_host',
+            'invitation_decline_from_guest',
             false,
             $leg
         );

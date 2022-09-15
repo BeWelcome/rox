@@ -62,8 +62,10 @@ function wasGuestOrHost(string $relations) {
         }
     );
 
-    // \todo: do something here
     $username = $this->member->Username;
+    $loggedIn = $this->model->getLoggedInMember()->Username;
+
+    // \todo: do something here
     $layoutbits = new MOD_layoutbits();
 
     $max = 5;
@@ -104,7 +106,7 @@ function wasGuestOrHost(string $relations) {
                            if ($comment->comQuality == "Bad") {
                                $quality = "bad";
                            }                            ?>
-                       <div class="comment-bg-<?=$quality?> p-2 mt-1 <?= (!isset($c['to'])) ? 'mb-2' : '' ?> ">
+                       <div class="comment-bg-<?=$quality?> p-2 mt-1 <?= (!isset($c['to'])) ? 'mb-2' : '' ?> clearfix">
                            <div class="d-flex flex-column">
                                <div class="d-flex flex-row">
                                    <a class="mr-2" href="members/<?=$comment->UsernameFromMember?>">
@@ -114,7 +116,6 @@ function wasGuestOrHost(string $relations) {
                                        <p class="m-0" style="line-height: 1.0;">
                                            <?php if (!$this->passedAway) { ?>
                                                <span class="commenttitle <?=$quality?>"><?= $words->get('CommentQuality_'.$comment->comQuality.''); ?></span>
-                                               <a href="/members/<?= $this->member->Username;?>/comment/<?php echo $comment->id;?>/report" title="<?=$words->getSilent('ReportCommentProblem') ?>" class="ml-auto gray align-self-center"><i class="fa fa-flag" alt="<?=$words->getSilent('ReportCommentProblem') ?>"></i></a>
                                            <?php }?>
                                            <br><small><?=$words->get('CommentFrom','<a href="members/'.$comment->UsernameFromMember.'">'.$comment->UsernameFromMember.'</a>')?></small>
                                            <br><small><span title="<?=$comment->created?>"><?php
@@ -130,11 +131,17 @@ function wasGuestOrHost(string $relations) {
                                    </div>
                                </div>
                                <div class="w-100 py-2">
-                                   <p class="js-read-more-received">
+                                   <p class="js-read-more-received mb-1">
                                        <?php
                                        echo htmlentities($comment->TextFree);
                                        ?>
                                    </p>
+                                   <?php if (!$this->passedAway) { ?>
+                                       <?php if ($loggedIn === $comment->UsernameToMember) { ?>
+                                           <a href="/members/<?= $this->member->Username;?>/comment/<?php echo $comment->id;?>/report" title="<?=$words->getSilent('ReportCommentProblem') ?>"
+                                              class="float-right gray align-self-center"><i class="fa fa-flag" alt="<?=$words->getSilent('ReportCommentProblem') ?>"></i></a>
+                                       <?php } ?>
+                                   <?php }?>
                                </div>
                            </div>
                        </div>
@@ -152,7 +159,7 @@ function wasGuestOrHost(string $relations) {
                                $quality = "bad";
                            }                           ?>
 
-                       <div class="comment-bg-<?=$quality?> p-2 mt-1 <?= !(isset($c['from'])) ? 'mt-1' : '' ?> "">
+                       <div class="comment-bg-<?=$quality?> p-2 mt-1 <?= !(isset($c['from'])) ? 'mt-1' : '' ?> clearfix">
                            <div class="d-flex flex-row">
                                <div class="mr-auto  align-self-center">
                                    <?php if (wasGuestOrHost($comment->Relations)) { ?>
@@ -161,7 +168,7 @@ function wasGuestOrHost(string $relations) {
                                </div>
                                <div>
                                    <p class="m-0 text-right" style="line-height: 1.0;">
-                                       <span class="commenttitle <?=$quality?>"><?= $words->get('CommentQuality_'.$comment->comQuality.''); ?></span> <a href="/members/<?= $this->member->Username;?>/comment/<?php echo $comment->id;?>/report" title="<?=$words->getSilent('ReportCommentProblem') ?>" class="gray align-self-center"><i class="fa fa-flag" alt="<?=$words->getSilent('ReportCommentProblem') ?>"></i></a>
+                                       <span class="commenttitle <?=$quality?>"><?= $words->get('CommentQuality_'.$comment->comQuality.''); ?></span>
                                        <br><small><?= $words->get('CommentTo'); ?> <a href="members/<?= $comment->UsernameToMember ?>"><?= $comment->UsernameToMember; ?></a></small>
                                        <br><small><span title="<?=$comment->created?>"><?php
                                                $created = Carbon::createFromFormat('Y-m-d H:i:s', $comment->created);
@@ -174,11 +181,15 @@ function wasGuestOrHost(string $relations) {
                                 </a>
                            </div>
                            <div class="w-100 py-2">
-                               <p class="js-read-more-written">
+                               <p class="js-read-more-written mb-1">
                                    <?php
                                    echo htmlentities($comment->TextFree);
                                    ?>
                                </p>
+                               <?php if ($loggedIn === $comment->UsernameToMember) { ?>
+                                   <a href="/members/<?= $this->member->Username;?>/comment/<?php echo $comment->id;?>/report" title="<?=$words->getSilent('ReportCommentProblem') ?>" class="float-right gray align-self-center">
+                                       <i class="fa fa-flag" alt="<?=$words->getSilent('ReportCommentProblem') ?>"></i></a>
+                               <?php } ?>
                            </div>
                        </div>
 

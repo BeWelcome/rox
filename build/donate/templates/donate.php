@@ -39,11 +39,11 @@ if ($error) {?>
 				<p><?=$words->get('Donate_Account2')?></p>
 				<p class="alert-primary p-2"><?=$words->get('Donate_Account')?></p>
 			</div>
-			<div class="tab-pane card p-2" id="bitcoin" role="tabpanel">
+			<!-- <div class="tab-pane card p-2" id="bitcoin" role="tabpanel">
                 <h3><?php echo $words->get('Donate_Bitcoins');?><i class="fa fa3x fa-bitcoin ml-2"></i></h3>
                 <a href="https://bitpay.com/528203/donate" target="_blank" class="btn btn-primary btn-block"><i class="fa fa-bitcoin mr-1"></i><?php echo $words->get('Donate_Bitcoins');?></a>
 				<p><?php echo $words->get('Donate_Bitcoins_Text');?></p>
-			</div>
+			</div> -->
 			<div class="tab-pane card p-2" id="paypal" role="tabpanel">
 				<form action="<?= $_ENV['PaypalUrl'] ?>" method="post">
 					<h3><?=$words->get('Donate_Paypal_Legend')?></h3>

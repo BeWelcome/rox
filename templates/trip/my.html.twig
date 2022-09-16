@@ -84,6 +84,9 @@
     {% else %}
         <p class="u-text-white u-font-display">{{ 'trip.no.trips'|trans }}</p>
     {% endif %}
+{% endblock content %}
+
+{% block modals %}
     {# add modal later for full screen overlay #}
     {% for trip in trips %}
         <div class="modal micromodal-slide" id="removeTrip-{{ trip.id }}" aria-hidden="true">
@@ -109,4 +112,4 @@
             </div>
         </div>
     {% endfor %}
-{% endblock content %}
+{% endblock modals %}

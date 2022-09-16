@@ -147,7 +147,7 @@ class InvitationController extends BaseRequestAndInvitationController
         $subject = $this->getSubjectForReply($message);
         $this->sendInvitationGuestDeclineNotification($host, $guest, $message, $subject, $request->getInviteForLeg());
 
-        $this->addTranslatedFlash('notice', 'flash.declined');
+        $this->addTranslatedFlash('notice', 'flash.invitation.declined');
         $this->logger->write('Directly declined', 'Invitation');
 
         return $this->redirectToRoute('conversation_view', ['id' => $message->getId()]);
@@ -388,8 +388,8 @@ class InvitationController extends BaseRequestAndInvitationController
         SubTrip $leg
     ): void {
         $this->sendInvitationNotification(
-            $host,
             $guest,
+            $host,
             $host,
             $request,
             $subject,

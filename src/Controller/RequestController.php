@@ -71,7 +71,7 @@ class RequestController extends BaseRequestAndInvitationController
         $subject = $this->getSubjectForReply($message);
         $this->sendHostDeclineNotification($host, $guest, $message, $subject);
 
-        $this->addTranslatedFlash('notice', 'flash.declined');
+        $this->addTranslatedFlash('notice', 'flash.request.declined');
         $this->logger->write('Directly declined', 'Request');
 
         return $this->redirectToRoute('conversation_view', ['id' => $message->getId()]);

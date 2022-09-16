@@ -13,3 +13,6 @@ group.invitation.accepted:
 group.invitation.declined:
     - 'Your invitation to join the group {group} has been declined'
     - Subject of the notification that a group invitation has been declined
+group.admin.approved:
+    - 'Your request to join the {group} has been approved by {admin}.'
+    - Text in the email notification if a request to join a group is accepted.

@@ -17,3 +17,6 @@ activity.creation.checklist:
         </p>
       "
     - Added on the 'create an activity' page to guide members
+activityendbeforestart:
+    - 'The activity ends before it starts.'
+    - Error message shown if the user selects an end date for an activity that lies before the start date.

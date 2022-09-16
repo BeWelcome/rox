@@ -91,3 +91,9 @@ flash.invitation.expired:
 flash.invitation.error.already.accepted.other:
     - 'You already accepted an invitation for this leg.'
     - Flash message shown when trying to accept an invitation for a leg that has already been accepted.
+flash.invitation.declined:
+    - 'You declined this invitation.'
+    - Flash shown when clicking the decline without message link in the request form
+profile.summary.none:
+    - 'No about me given.'
+    - Shown in the trip summary section for an invitation

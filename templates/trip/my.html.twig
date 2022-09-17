@@ -26,7 +26,7 @@
             {% for trip in trips %}
             <div class="c-trip-card">
                 <div class="c-trip-card__wrapper">
-                    <a class="u-text-white hover:u-text-gray-20 u-text-24 u-font-display u-font-700 u-col-span-full u-mb-8" href="{{ path('trip_show', { 'id': trip.id } ) }}">{{ trip.summary }}</a>
+                    <a class="u-text-white hover:u-text-gray-20 u-text-24 u-font-display u-font-700 u-col-span-full u-ellipsis u-mb-8" href="{{ path('trip_show', { 'id': trip.id } ) }}">{{ trip.summary }}</a>
                     <div>
                         <div class=" u-font-display u-italic u-text-white u-mb-8">{{ trip.description | nl2br | purify | truncate(200) }}</div>
                         <div class="u-text-white u-font-display u-mt-8 u-mb-16 md:u-m-0 u-flex u-flex-column">

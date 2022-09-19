@@ -68,7 +68,7 @@ function wasGuestOrHost(string $relations) {
     // \todo: do something here
     $layoutbits = new MOD_layoutbits();
 
-    $max = 5;
+    $max = 10;
     if (count($comments) > 0) {
 
         ?>
@@ -92,10 +92,11 @@ function wasGuestOrHost(string $relations) {
                    $commentLoopCount = 0;
                    foreach ($comments as $key => $c) {
                        // stop looping when maximum has been reached
-                       if (++$commentLoopCount>$max){break;}
+                       if ($commentLoopCount>$max){break;}
 ?>
 
                        <?php if (isset($c['from'])) {
+                           $commentLoopCount++;
                            $comment = $c['from'];
                            // skip items that are hidden for public
                            if ($comment->DisplayInPublic == 0) {continue;}
@@ -148,6 +149,7 @@ function wasGuestOrHost(string $relations) {
                        <?php }
 
                        if (isset($c['to'])) {
+                           $commentLoopCount++;
                            $comment = $c['to'];
                            // skip items that are hidden for public
                            if ($comment->DisplayInPublic == 0) {continue;}
@@ -199,9 +201,7 @@ function wasGuestOrHost(string $relations) {
                    }
                  ?>
             </div>
-            <?php if (count($comments) != $commentCount['all']) { ?>
-                <a href="members/<?=$member->Username?>/comments/" class="btn btn-block btn-sm btn-outline-primary"><?=$words->get('ShowAllComments')?> <span class="badge badge-primary"><?php echo $commentCount['all']; ?></span></a>
-            <?php } ?>
+            <a href="members/<?=$member->Username?>/comments/" class="btn btn-block btn-sm btn-outline-primary"><?=$words->get('ShowAllComments')?> <span class="badge badge-primary"><?php echo $commentCount['all']; ?></span></a>
         </div>
 <?php }
 

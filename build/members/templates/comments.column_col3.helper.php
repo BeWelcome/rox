@@ -44,17 +44,17 @@
             $ts_from = $ts_to = 0;
             if (isset($comments_from[$id])) {
                 $comment['from'] = $comments_from[$id];
-                $ts_from = $comments_from[$id]->unix_updated;
+                $ts_from = $comments_from[$id]->unix_created;
             }
             if (isset($comments_to[$id])) {
                 $comment['to'] = $comments_to[$id];
-                $ts_to = $comments_to[$id]->unix_updated;
+                $ts_to = $comments_to[$id]->unix_created;
             }
-            
+
             // Add comments to list if it isn't for the current visitor
             // or if the visitor left a comment him-/herself
             if (!$comment_to_self || isset($comment['from'])) {
-                $comment['timestamp'] = max($ts_from, $ts_to);
+                $comment['timestamp'] = min($ts_from, $ts_to);
                 $comments[] = $comment;
             }
         }
@@ -70,7 +70,7 @@
 
         usort($comments, "cmp");
 
-        // if current visitor didn't leave a comment add entry to the beginning 
+        // if current visitor didn't leave a comment add entry to the beginning
         // of the comment list
 
         if ($comment_to_self_exists && (!isset($comments_from[$visitor->id]))) {

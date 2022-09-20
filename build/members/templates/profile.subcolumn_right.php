@@ -49,16 +49,17 @@ function wasGuestOrHost(string $relations) {
             ];
         }
     }
+    $farFuture = new DateTimeImmutable('01-01-3000');
     usort($comments,
-        function ($a, $b) {
+        function ($a, $b) use ($farFuture) {
             // get latest updates on to and from part of comments and order desc
-            $createdATo = isset($a['to']) ? new DateTime($a['to']->created) : new DateTime('01-01-1900');
-            $createdAFrom = isset($a['from']) ? new DateTime($a['from']->created) : new DateTime('01-01-1900');
-            $createdA = max($createdATo, $createdAFrom);
-            $createdBTo = isset($b['to']) ? new DateTime($b['to']->created) : new DateTime('01-01-1900');
-            $createdBFrom = isset($b['from']) ? new DateTime($b['from']->created) : new DateTime('01-01-1900');
-            $createdB = max($createdBTo, $createdBFrom);
-            return (-1)*($createdA <=> $createdB);
+            $createdATo = isset($a['to']) ? new DateTime($a['to']->created) : $farFuture;
+            $createdAFrom = isset($a['from']) ? new DateTime($a['from']->created) : $farFuture;
+            $createdA = min($createdATo, $createdAFrom);
+            $createdBTo = isset($b['to']) ? new DateTime($b['to']->created) : $farFuture;
+            $createdBFrom = isset($b['from']) ? new DateTime($b['from']->created) : $farFuture;
+            $createdB = min($createdBTo, $createdBFrom);
+            return -1*($createdA <=> $createdB);
         }
     );
 

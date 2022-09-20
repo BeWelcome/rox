@@ -12,6 +12,8 @@
 
 ## A) Install using Docker and Docker Compose
 
+The docker configuration is still in-progress, and is currently missing the setup of the sphinx search functionality (essential for using all of the search functionality in the app). Until configuration is complete, local installation is recommended. 
+
 ### Requirements
 
 * [Docker](https://docs.docker.com/get-docker/)
@@ -74,7 +76,7 @@ using a browser or use curl _url_ > _filename_.
 * Apache with mod_rewrite enabled
 * PHP version >= 7.4 < 8.0
 * PHP GD lib enabled
-* PHP magic quotes gpc disabled
+* PHP magic quotes gpc disabled   
 * PHP extensions: mbstring, xml, fileinfo, intl, xsl, xmlrpc, (see composer.json)
 * MariaDB >=10.1
 * [symfony command line interface](https://symfony.com/download) (download/setup)

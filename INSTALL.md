@@ -34,10 +34,13 @@
     
     <details>
     <summary><strong>Troubleshooting</strong></summary>
-     Windows users may run into a build error concerning `composer clear-cache`. If you see this error, please try the following:
-    - If you receive the error when running `make install`, try running `make install root=1`. Make sure to run the command with `root=1` after trying each of the following steps as well
-    - Ensure that you are using WSL version 2 for your linux distro. See the following doc for [how to upgrade from WSL 1 to WSL 2](https://docs.microsoft.com/en-us/windows/wsl/install#upgrade-version-from-wsl-1-to-wsl-2)
-    - Use Ubuntu 22.04 LTS as your linux distro - the error has been observed on earlier versions of Ubuntu, e.g. on 18.04 LTS
+
+      Windows users may run into a build error concerning `composer clear-cache`. If you see this error, please try the following:
+      
+      * If you receive the error when running `make install`, try running `make install root=1`. Make sure to run the command with `root=1` after trying each of the following steps as well
+      * Ensure that you are using WSL version 2 for your linux distro ([how to upgrade from WSL 1 to WSL 2](https://docs.microsoft.com/en-us/windows/wsl/install#upgrade-version-from-wsl-1-to-wsl-2))
+      * Use Ubuntu 22.04 LTS as your linux distro - the error has been observed on earlier versions of Ubuntu, e.g. on 18.04 LTS
+
     </details>
 
 Wait a few minutes for containers to build and start (it might take awhile). Project is running at

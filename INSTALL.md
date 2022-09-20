@@ -38,15 +38,14 @@ The docker configuration is still in-progress, and is currently missing the setu
     <summary><strong>Troubleshooting</strong></summary>
 
       Windows users may run into a build error concerning `composer clear-cache`. If you see this error, please try the following:
-      
-      * If you receive the error when running `make install`, try running `make install root=1`. Make sure to run the command with `root=1` after trying each of the following steps as well
-      * Ensure that you are using WSL version 2 for your linux distro ([how to upgrade from WSL 1 to WSL 2](https://docs.microsoft.com/en-us/windows/wsl/install#upgrade-version-from-wsl-1-to-wsl-2))
-      * Use Ubuntu 22.04 LTS as your linux distro - the error has been observed on earlier versions of Ubuntu, e.g. on 18.04 LTS
+        * If you receive the error when running `make install`, try running `make install root=1`. Make sure to run the command with `root=1` after trying each of the following steps as well
+        * Ensure that you are using WSL version 2 for your linux distro ([how to upgrade from WSL 1 to WSL 2](https://docs.microsoft.com/en-us/windows/wsl/install#upgrade-version-from-wsl-1-to-wsl-2))
+        * Use Ubuntu 22.04 LTS as your linux distro - the error has been observed on earlier versions of Ubuntu, e.g. on 18.04 LTS
 
     </details>
 
 Wait a few minutes for containers to build and start (it might take awhile). Project is running at
-[http://localhost:8080](http://localhost:8080).
+[http://localhost:8080](http://localhost:8080). If you see a "502 Bad Gateway" error in your browser, the app is still being built, and should serve the page without error once all processes finish.
 
 2. If you want to import geonames data, run the following (this operation takes awhile!):
 
@@ -75,9 +74,9 @@ using a browser or use curl _url_ > _filename_.
 
 * Apache with mod_rewrite enabled
 * PHP version >= 7.4 < 8.0
-* PHP GD lib enabled
-* PHP magic quotes gpc disabled   
-* PHP extensions: mbstring, xml, fileinfo, intl, xsl, xmlrpc, (see composer.json)
+* [PHP GD lib enabled](https://www.php.net/manual/en/image.installation.php)
+* PHP extensions: mbstring, xml, fileinfo, intl, xsl, xmlrpc (see composer.json)
+  * note that the xml extension does not need to be installed on Windows as it is [installed by default](https://www.php.net/manual/en/xml.installation.php)
 * MariaDB >=10.1
 * [symfony command line interface](https://symfony.com/download) (download/setup)
 * SMTP server for email features
@@ -120,7 +119,7 @@ using a browser or use curl _url_ > _filename_.
 
 2. Build sphinx indices and run search daemon
 
-   Adapt setup/sphinx/sphinx-3.conf to match your needs (DB credentials and replace <path to indices> with your preferred folder path).
+   Adapt setup/sphinx/sphinx-3.conf to match your needs: update DB credentials and replace all occurences of <path to indices> with the path to your sphinx indexes folder (or other folder of your preference), e.g. `C:/Program Files/Sphinx/sphinxdata/indexes`
 
    Run the indexer to create indices:
    ```bash

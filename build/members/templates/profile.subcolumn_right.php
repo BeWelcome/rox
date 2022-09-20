@@ -69,9 +69,9 @@ function wasGuestOrHost(string $relations) {
     // \todo: do something here
     $layoutbits = new MOD_layoutbits();
 
-    $max = 10;
+    $shownPairs = 0;
     if (count($comments) > 0) {
-
+        $max = 10;
         ?>
         <div id="comments" class="card mb-3">
             <h3 class="card-header bg-secondary">
@@ -92,8 +92,11 @@ function wasGuestOrHost(string $relations) {
                    $tt = array ();
                    $commentLoopCount = 0;
                    foreach ($comments as $key => $c) {
+                       $shownPairs++;
                        // stop looping when maximum has been reached
-                       if ($commentLoopCount>$max){break;}
+                       if ($commentLoopCount>$max) {
+                           break;
+                       }
 ?>
 
                        <?php if (isset($c['from'])) {
@@ -202,7 +205,11 @@ function wasGuestOrHost(string $relations) {
                    }
                  ?>
             </div>
-            <a href="members/<?=$member->Username?>/comments/" class="btn btn-block btn-sm btn-outline-primary"><?=$words->get('ShowAllComments')?> <span class="badge badge-primary"><?php echo $commentCount['all']; ?></span></a>
+            <a href="members/<?=$member->Username?>/comments/" class="btn btn-block btn-sm btn-outline-primary"><?=$words->get('ShowAllComments')?>
+                <?php if ($shownPairs < $commentCount['all']) { ?>
+                    <span class="badge badge-primary"><?php echo $commentCount['all']; ?></span>
+                <?php } ?>
+            </a>
         </div>
 <?php }
 

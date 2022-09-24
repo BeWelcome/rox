@@ -7,6 +7,7 @@ use App\Entity\Member;
 use App\Entity\Message;
 use App\Model\BaseRequestModel;
 use App\Model\ConversationModel;
+use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
 use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -15,6 +16,7 @@ use Symfony\Component\Form\Form;
 abstract class BaseRequestAndInvitationController extends AbstractController
 {
     use TranslatorTrait;
+    use TranslatedFlashTrait;
 
     protected BaseRequestModel $model;
     protected ConversationModel $conversationModel;

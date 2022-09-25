@@ -97,6 +97,9 @@ function wasGuestOrHost(string $relations) {
                        if ($commentLoopCount>$max) {
                            break;
                        }
+                       if ($commentLoopCount != 0) {
+                           echo '<hr class="my-2" style="border-top:2px dashed black;">';
+                       }
 ?>
 
                        <?php if (isset($c['from'])) {
@@ -201,7 +204,6 @@ function wasGuestOrHost(string $relations) {
 
                       <?php
                       }
-                      echo '<hr class="my-2">';
                    }
                  ?>
             </div>

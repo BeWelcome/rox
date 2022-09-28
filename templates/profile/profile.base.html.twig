@@ -1,0 +1,129 @@
+{% import 'macros.twig' as macros %}
+<!DOCTYPE html>
+<html lang="{{ app.request.locale }}">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="shortcut icon" href="{{ asset('favicon.ico') }}">
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}"/>
+
+    <title>
+        {% apply spaceless %}
+            {% if block('title') is defined %}
+                {{ block('title') | trim }} |
+            {% endif %} BeWelcome
+        {% endapply %}
+    </title>
+
+    <meta name="description" content="{{ 'default_meta_description' | trans }}">
+    <meta name="keywords" content="{{ 'default_meta_keyword' | trans }}">
+    <meta name="robots" content="{{ robots }}">
+    {% block redirect %}{% endblock %}
+
+    {{ encore_entry_link_tags('bewelcome') }}
+    {{ encore_entry_link_tags('tailwind') }}
+
+    {% block stylesheets %}{% endblock %}
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}"/>
+    {% block matomo %}{% endblock %}
+    <base id="baseuri" href="{{ app.request.schemeAndHttpHost ~ app.request.baseUrl }}">
+
+    <link rel="manifest" href="{{ asset('manifest.webmanifest') }}">
+    <script>
+        // Check that service workers are supported
+        if ('serviceWorker' in navigator) {
+            // Use the window load event to keep the page load performant
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('{{ asset('service-worker.js') }}');
+            });
+        }
+    </script>
+</head>
+<body>
+{% set sidebar = (submenu is defined) %}
+{% include 'menu.html.twig' %}
+{% block main %}
+    <main role="main">
+        <div id="toasts" class="position-fixed w-100 d-flex flex-column px-2" style="z-index:1000">
+        </div>
+        {% set contentBlock %}
+            {% for label, messages in app.flashes %}
+                <div class="row">
+                    {% for message in messages %}
+                        <div class="col-12">
+                            <div class="alert alert-{{ label }}">
+                                {{ message | raw }}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+            {% include 'profile/header.html.twig' with {member: member} %}
+            {% block content %}{% endblock %}
+        {% endset %}
+        <div class="container-lg">
+            {% if sidebar %}
+                <div class="row mt-2">
+                    <div class="col-12 col-md-9">
+                        <p class="float-right d-md-none">
+                            <button type="button" class="btn btn-primary btn-sm ml-3" data-toggle="offcanvas"><span
+                                    class="navbar-dark navbar-toggler-icon"></span></button>
+                        </p>
+                        {{ contentBlock | raw }}
+                    </div>
+                    <div class="col-md-3 offcanvas-collapse mb-2" id="sidebar">
+                        <div class="w-100 p-1 text-right d-md-none">
+                            <button type="button" class="btn btn-sm" aria-label="Close" data-toggle="offcanvas">
+                                <i class="fa fa-lg fa-times white" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                        <div class="list-group mb-2">
+                            {% for filter,menuItem in submenu.items %}
+                            {% if 'separator' in filter %}
+                        </div>
+                        {% if menuItem.key is defined %}<h3
+                            class="mt-3 h3-canvas-color">{{ menuItem.key | lower | trans }}</h3>{% endif %}
+                        <div class="list-group mb-2">
+                            {% elseif 'profile_picture' in filter %}
+                                <div class="avatar-box">
+                                    <a class="avatar-box-inside profileimg"
+                                       href="{{ url('avatar', {username: menuItem.username, size: 'original'}) }}"
+                                       data-toggle="lightbox" data-type="image"
+                                       data-title="{{ 'profile.picture'|trans }}"
+                                       title="{{ 'profile.picture'|trans }}"
+                                       style="background-image: url(&quot;{{ url('avatar', {username: menuItem.username, size: 500}) }}&quot;);">
+                                    </a>
+                                </div>
+                                {% if menuItem.is_owner %}
+                                    <button type="button" class="btn btn-info btn-block"
+                                            style="cursor: pointer;">{{ 'profile.change.avatar'|trans }}</button>
+                                {% else %}
+                                {% endif %}
+                            {% else %}
+                                <a class="list-group-item nav-link{% if submenu.active == filter %} active{% endif %}"
+                                   href="{{ menuItem.url }}">{% if menuItem.icon is defined %}<i
+                                        class="fas fa-fw fa-{{ menuItem.icon }}"></i> {% endif %}{{ menuItem.key | lower | trans }}
+                                    {% if menuItem.count is defined %} <span
+                                        class="badge {% if submenu.active == filter %}bg-white text-primary{% else %}badge-primary{% endif %} u-rounded-10 u-h-20 u-inline-flex u-items-center u-justify-center pull-right">{{ menuItem.count }}</span>{% endif %}
+                                </a>
+                            {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                {{ contentBlock | raw }}
+            {% endif %}
+        </div>
+    </main>
+{% endblock main %}
+{% include 'footer.html.twig' %}
+{{ encore_entry_script_tags('bewelcome') }}
+{{ encore_entry_script_tags('updatecounters') }}
+{% if sidebar %}
+    {{ encore_entry_script_tags('offcanvas') }}
+{% endif %}
+{% block javascripts %}{% endblock javascripts %}
+</body>
+</html>

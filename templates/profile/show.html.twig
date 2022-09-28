@@ -1,0 +1,9 @@
+{% extends 'profile.html.twig' %}
+
+{% block content %}
+    {% if own %}
+        Your own profile
+    {% else %}
+        {{ member.Username }}'s profile
+    {% endif %}
+{% endblock %}

@@ -161,9 +161,9 @@ class Member implements UserInterface, \Serializable, PasswordHasherAwareInterfa
     private $changedid = 0;
 
     /**
-     * @var Location
+     * @var NewLocation
      *
-     * @ORM\ManyToOne(targetEntity="Location")
+     * @ORM\ManyToOne(targetEntity="NewLocation")
      * @ORM\JoinColumn(name="IdCity", referencedColumnName="geonameId")
      *
      * @Groups({"Member:Read"})
@@ -1515,14 +1515,13 @@ class Member implements UserInterface, \Serializable, PasswordHasherAwareInterfa
         return $this;
     }
 
-    /**
-     * Get created.
-     *
-     * @return DateTime
-     */
-    public function getCreated()
+    public function getCreated(): ?Carbon
     {
-        return $this->created;
+        if (null !== $this->created) {
+            return Carbon::instance($this->created);
+        }
+
+        return null;
     }
 
     /**
@@ -2824,6 +2823,25 @@ class Member implements UserInterface, \Serializable, PasswordHasherAwareInterfa
         return $this->hostingInterest;
     }
 
+    public function hasRight($rightName)
+    {
+        $hasRight = false;
+        $volunteerRights = $this->getVolunteerRights();
+        if (null !== $volunteerRights) {
+            $right = $this->em->getRepository(Right::class)->findOneBy(['name' => $rightName]);
+
+            /** @var RightVolunteer $volunteerRight */
+            foreach ($volunteerRights->getIterator() as $volunteerRight) {
+                if ($volunteerRight->getRight() === $right) {
+                   $hasRight = true;
+                   break;
+                }
+            }
+        }
+
+        return $hasRight;
+    }
+
     public function hasRightsForLocale($locale)
     {
         $hasRight = false;
@@ -2856,7 +2874,6 @@ class Member implements UserInterface, \Serializable, PasswordHasherAwareInterfa
         $level = false;
         $volunteerRights = $this->getVolunteerRights();
         if (null !== $volunteerRights) {
-            // first check if member has the word right
             $right = $this->em->getRepository(Right::class)->findOneBy(['name' => $rightName]);
 
             /** @var RightVolunteer $volunteerRight */
@@ -3293,21 +3310,12 @@ class Member implements UserInterface, \Serializable, PasswordHasherAwareInterfa
         return $this;
     }
 
-    public function getRegion(): AdminUnit
+    public function getRegion(): NewLocation
     {
-        /** @var $adminUnitRepository */
-        $adminUnitRepository = $this->em->getRepository(AdminUnit::class);
-
-        /** @var AdminUnit $adminUnit */
-        $adminUnit = $adminUnitRepository->findOneBy([
-            'admin1' => $this->city->getAdmin1(),
-            'country' => $this->city->getCountry(),
-        ]);
-
-        return $adminUnit;
+        return $this->city->getAdmin1();
     }
 
-    public function getCountry(): Country
+    public function getCountry(): NewLocation
     {
         return $this->city->getCountry();
     }
@@ -3328,5 +3336,24 @@ class Member implements UserInterface, \Serializable, PasswordHasherAwareInterfa
     public function getAvatar(): string
     {
         return '/members/avatar/' . $this->getUsername();
+    }
+
+    /**
+     * @Groups({"Member:Read"})
+     */
+    public function getName(): string
+    {
+        $name = '';
+        if (!($this->hideAttribute & self::MEMBER_FIRSTNAME_HIDDEN)) {
+            $name .= $this->firstName . ' ';
+        }
+        if (!($this->hideAttribute & self::MEMBER_SECONDNAME_HIDDEN)) {
+            $name .= $this->secondName. ' ';
+        }
+        if (!($this->hideAttribute & self::MEMBER_LASTNAME_HIDDEN)) {
+            $name .= $this->lastName;
+        }
+
+        return $name;
     }
 }

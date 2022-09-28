@@ -84,7 +84,7 @@ class Comment
      *
      * @ORM\Column(name="DisplayInPublic", type="boolean", nullable=false)
      */
-    private $displayinpublic = '1';
+    private $displayInPublic = '1';
 
     /**
      * @var bool
@@ -317,13 +317,13 @@ class Comment
     /**
      * Set displayinpublic.
      *
-     * @param bool $displayinpublic
+     * @param bool $displayInPublic
      *
      * @return Comment
      */
-    public function setDisplayinpublic($displayinpublic)
+    public function setDisplayInPublic($displayInPublic)
     {
-        $this->displayinpublic = $displayinpublic;
+        $this->displayInPublic = $displayInPublic;
 
         return $this;
     }
@@ -333,9 +333,9 @@ class Comment
      *
      * @return bool
      */
-    public function getDisplayinpublic()
+    public function getDisplayInPublic()
     {
-        return $this->displayinpublic;
+        return $this->displayInPublic;
     }
 
     /**

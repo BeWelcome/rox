@@ -1,0 +1,89 @@
+{% if member.memberfields[locale] is defined %}
+    {% set memberfields = member.memberfields[locale] %}
+{% elseif member.memberfields['en'] is defined%}
+    {% set memberfields = member.memberfields['en'] %}
+{% else %}
+    {% set memberfields = member.memberfields|first %}
+{% endif %}
+<div class="row">
+    <div class="col-12 text-center text-md-left">
+        <h2 class="m-0 d-inline"><strong>
+                {% if member.status == 'PassedAway' %}{{ 'profileinmemoriam'|format(member.Username) }}{% else %}{{ member.Username }}{% endif %}
+            </strong>
+
+            {% if member.status != 'PassedAway' %}
+                {% if 'CanHostWeelChair' in member.TypicOffer %}
+                    <img src="images/icons/wheelchairblue.png" class="mb-2" alt="{{ 'wheelchair'|trans }}'
+                        title="{{ 'canhostwheelchairyes'|trans }}" >
+                {% endif %}
+                <img src="images/icons/{{ member.Accommodation }}.png" class="mb-2" alt="{{ member.Accommodation|trans }}'
+                        title="{{ ('canoffer' ~ member.Accommodation|lower)|trans }}">
+            {% endif %}
+        </h2>
+    </div>
+</div>
+<div class="row align-items-center">
+    <div class="col-12 col-sm-6">
+        <div class="text-center text-md-left">
+            {% if use_lightbox %}
+                <a class="d-md-none" href="{{ url('avatar', { username: member.Username, size: 'original'}) }}" data-toggle="lightbox"
+                   data-always-show-close="true" data-type="image"
+                   data-title="{{ 'profile.picture.title'| trans }}">
+                    <img class="profileimg avatar-160 d-md-none" src="{{ url('avatar', { username: member.Username, size: 160}) }}"
+                         alt="{{ 'profile.picture.title'| trans }}">
+                </a>
+            {% else %}
+                <a href="{{ url('members_profile', {username: member.username}) }}">
+                    <img class="profileimg avatar-160 d-md-none" src="{{ url('avatar', { username: member.Username, size: 160}) }}"
+                         alt="{{ 'profile.picture.title'| trans }}">
+                </a>
+            {% endif %}
+
+            {% if member.Name != ''%}<h3>{{ member.Name }}</h3>{% endif %}
+
+            {% set city = member.city %}
+            <h5><a href="{{ url('places_city', {countryname: city.country.name, countrycode: city.countryId, regionname: city.admin1.name, regioncode: city.admin1id, cityname: city.name, citycode: city.geonameId}) }}">{{ member.city.name }}</a>
+                {%- if city.admin1 != null -%}
+                    , <a href="{{ url('places_region', {countryname: city.country.name, countrycode: city.countryId, regionname: city.admin1.name, regioncode: city.admin1id}) }}">{{ city.admin1.name }}</a>
+                {%- endif -%}
+                , <a href="{{ url('places_country', {countryname: city.country.name, countrycode: city.countryId}) }}">{{ city.country.name }}</a>
+            </h5>
+            {% if status_form %}
+                {{ form_start(status_form, {'attr': {'class': 'u-grid u-grid-cols-2 u-gap-8'}}) }}
+                {{ form_widget(status_form.status) }}
+                <button type="submit" class="o-button o-button--s u-self-center" value="{{ 'submit'|trans }}">{{ 'submit'|trans }}</button>
+                {{ form_end(status_form) }}
+            {% endif %}
+        </div>
+    </div>
+    <div class="col-12 col-sm-6 teaser-border text-center text-md-left">
+        {% if memberfields.Occupation != null %}
+            <p class="h5">{{ memberfields.Occupation }}</p>
+        {% endif %}
+
+        <p class="mb-2">
+            {% if member.HideBirthDate == 'No' %}
+            <strong>{{ 'age'|trans }}: </strong> {{ member.age }},
+            {% endif %}
+            {% if member.HideGender == 'No' %}
+                {{ member.gender|trans }}
+            {% endif %}
+            <br><strong>{{ 'membersince'|trans }}: </strong>
+            {% set difference = date(member.created).diff(date()) %}
+            {% if difference.days <= 7 %}
+                {{ 'lastloginprivacy'| trans }}
+            {% else %}
+                {{ member.created.diffForHumans }}
+            {% endif %}
+            {% if member.hasRight('SafetyTeam') %} ({{ member.created|format_datetime() }}){% endif %}
+            <br><strong>{{ 'lastlogin'|trans }}: </strong>
+            {% set difference = date(member.lastLogin).diff(date()) %}
+            {% if difference.days <= 7 %}
+                {{ 'lastloginprivacy'| trans }}
+            {% else %}
+                {{ member.lastLogin.diffForHumans }}
+            {% endif %}
+            {% if member.hasRight('SafetyTeam') %} ({{ member.lastLogin|format_datetime() }}){% endif %}
+        </p>
+    </div>
+</div>

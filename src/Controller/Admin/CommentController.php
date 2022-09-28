@@ -323,7 +323,7 @@ class CommentController extends AbstractController
         }
 
         $em = $this->getDoctrine()->getManager();
-        $comment->setDisplayinpublic(false);
+        $comment->setDisplayInPublic(false);
         $em->persist($comment);
         $em->flush();
 
@@ -351,7 +351,7 @@ class CommentController extends AbstractController
         }
 
         $em = $this->getDoctrine()->getManager();
-        $comment->setDisplayinpublic(true);
+        $comment->setDisplayInPublic(true);
         $em->persist($comment);
         $em->flush();
 

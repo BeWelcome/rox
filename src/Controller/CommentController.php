@@ -8,8 +8,11 @@ use App\Entity\Member;
 use App\Form\AddCommentType;
 use App\Form\CustomDataClass\ReportCommentRequest;
 use App\Form\ReportCommentType;
+use App\Model\ProfileModel;
 use App\Service\Mailer;
+use App\Utilities\ProfileSubmenu;
 use App\Utilities\TranslatedFlashTrait;
+use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
@@ -135,6 +138,32 @@ class CommentController extends AbstractController
 
         return $this->render('/comments/add.html.twig', [
             'form' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/members/{username}/comments/new", name="profile_comments",
+     *     requirements={"username" = "(?i:[a-z](?!.*[-_.][-_.])[a-z0-9-._]{2,18}[a-z0-9])"}))
+     */
+    public function showCommentsForMember(
+        Member $member,
+        ProfileSubmenu $profileSubmenu,
+        ProfileModel $profileModel,
+        EntityManagerInterface $entityManager
+    ): Response {
+        /** @var Member $loggedInMember */
+        $loggedInMember = $this->getUser();
+        $statusForm = $profileModel->getStatusForm($loggedInMember, $member);
+
+        $commentRepository = $entityManager->getRepository(Comment::class);
+        $comments = $commentRepository->getCommentsMember($member);
+
+        return $this->render('profile/comments.html.twig', [
+            'use_lightbox' => false,
+            'status_form' => $statusForm->createView(),
+            'member' => $member,
+            'comments' => $comments,
+            'submenu' => $profileSubmenu->getSubmenu($member, $loggedInMember, [ 'active' => 'comments']),
         ]);
     }
 }

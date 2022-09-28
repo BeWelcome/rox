@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Doctrine\CommentAdminActionType;
+use App\Doctrine\MemberStatusType;
 use App\Entity\Member;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityRepository;
@@ -162,10 +163,7 @@ class CommentRepository extends EntityRepository
         return $qb;
     }
 
-    /**
-     * @return int
-     */
-    public function getReportedCommentsCount()
+    public function getReportedCommentsCount(): int
     {
         $q = $this->createQueryBuilder('c')
             ->select('count(c.id)')
@@ -178,24 +176,40 @@ class CommentRepository extends EntityRepository
         return $results;
     }
 
-    /**
-     * @return Collection
-     */
-    public function getCommentsForMember(Member $member)
+    public function getCommentsMember(Member $member): array
     {
-        return $this->createQueryBuilder('c')
-            ->where('c.toMember = :member')
-            ->setParameter('member', $member)
-            ->orderBy('c.created', 'ASC')
+        $commentsForMember = $this->getVisibleCommentsForMember($member);
+        $commentsByMember = $this->getVisibleCommentsByMember($member);
+
+        return [];
+    }
+
+    public function getVisibleCommentsForMemberCount(Member $member): int
+    {
+        return $this->getVisibleCommentsForMemberQueryBuilder($member)
+            ->select('count(c.id)')
+            ->getQuery()
+            ->getSingleScalarResult()
+            ;
+    }
+
+    public function getVisibleCommentsForMember(Member $member): array
+    {
+        return $this->getVisibleCommentsForMemberQueryBuilder($member)
             ->getQuery()
             ->getResult()
             ;
     }
 
-    /**
-     * @return Collection
-     */
-    public function getCommentsFromMember(Member $member)
+    public function getVisibleCommentsByMember(Member $member): array
+    {
+        return $this->getVisibleCommentsByMemberQueryBuilder($member)
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
+    public function getCommentsFromMember(Member $member): Collection
     {
         return $this->createQueryBuilder('c')
             ->where('c.fromMember = :member')
@@ -204,5 +218,37 @@ class CommentRepository extends EntityRepository
             ->getQuery()
             ->getResult()
             ;
+    }
+
+    private function getVisibleCommentsByMemberQueryBuilder(Member $member): QueryBuilder
+    {
+        $qb = $this->createQueryBuilder('c');
+        $qb
+            ->innerJoin('App:Member', 'm', 'WITH', $qb->expr()->andX(
+                $qb->expr()->eq('m.id', 'c.toMember'),
+                $qb->expr()->in('m.status', MemberStatusType::MEMBER_COMMENTS_ARRAY)
+            ))
+            ->where('c.fromMember = :member')
+            ->andWhere('c.displayInPublic = 1')
+            ->setParameter('member', $member)
+        ;
+
+        return $qb;
+    }
+
+    private function getVisibleCommentsForMemberQueryBuilder(Member $member): QueryBuilder
+    {
+        $qb = $this->createQueryBuilder('c');
+        $qb
+            ->innerJoin('App:Member', 'm', 'WITH', $qb->expr()->andX(
+                $qb->expr()->eq('m.id', 'c.fromMember'),
+                $qb->expr()->in('m.status', MemberStatusType::MEMBER_COMMENTS_ARRAY)
+            ))
+            ->where('c.toMember = :member')
+            ->andWhere('c.displayInPublic = 1')
+            ->setParameter('member', $member)
+        ;
+
+        return $qb;
     }
 }

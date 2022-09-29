@@ -1,5 +1,32 @@
 {% extends 'profile/profile.html.twig' %}
 
 {% block page_content %}
-    Comments!
+    {% for comment in comments %}
+        <div class="u-grid u-grid-cols-1 md:u-grid-cols-2 u-mb-8 p-p-4">
+        {% if comment['to'] is defined %}
+            {% include 'profile/comment.html.twig' with { comment: comment['to'] } %}
+        {% else %}
+            <div class="card comment-bg-neutral u-p-4">
+                {% if member != app.user and comment['from'].fromMember == app.user %}
+                    <a href="members/{{ comment['from'].toMember.Username }}/comments/add"
+                       class="btn btn-primary mt-3">{{ 'addcomments'|trans }}</a>
+                {% else %}
+                    <p class="text-center mt-3">{{ 'commentnocomment'|trans }}</p>
+                {% endif %}
+            </div>
+        {% endif %}
+        {% if comment['from'] is defined %}
+            {% include 'profile/comment.html.twig' with { comment: comment['from'] } %}
+        {% else %}
+            <div class="card comment-bg-neutral u-p-4">
+                {% if member != app.user and comment['to'].toMember == app.user %}
+                    <a href="members/{{ comment['to'].fromMember.Username }}/comments/add"
+                       class="btn btn-primary mt-3">{{ 'addcomments'|trans }}</a>
+                {% else %}
+                    <p class="text-center mt-3">{{ 'commentnocomment'|trans }}</p>
+                {% endif %}
+            </div>
+        {% endif %}
+        </div>
+    {% endfor %}
 {% endblock page_content %}

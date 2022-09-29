@@ -4,7 +4,10 @@ namespace App\Repository;
 
 use App\Doctrine\CommentAdminActionType;
 use App\Doctrine\MemberStatusType;
+use App\Entity\Comment;
 use App\Entity\Member;
+use DateTime;
+use DateTimeImmutable;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
@@ -180,8 +183,42 @@ class CommentRepository extends EntityRepository
     {
         $commentsForMember = $this->getVisibleCommentsForMember($member);
         $commentsByMember = $this->getVisibleCommentsByMember($member);
+        /** @var Comment $value */
+        foreach ($commentsForMember as $value) {
+            $key = $value->getFromMember()->getUsername();
+            $comments[$key] = [
+                'from' => $value,
+            ];
+        }
+        foreach ($commentsByMember as $value) {
+            $key = $value->getToMember()->getUsername();
+            if (isset($comments[$key])) {
+                $comments[$key] = array_merge($comments[$key], [
+                    'to' => $value,
+                ]);
+            } else {
+                $comments[$key] = [
+                    'to' => $value,
+                ];
+            }
+        }
 
-        return [];
+        $farFuture = new DateTimeImmutable('01-01-3000');
+        usort(
+            $comments,
+            function ($a, $b) use ($farFuture) {
+                // get latest updates on to and from part of comments and order desc
+                $createdATo = isset($a['to']) ? $a['to']->getCreated() : $farFuture;
+                $createdAFrom = isset($a['from']) ? $a['from']->getCreated() : $farFuture;
+                $createdA = min($createdATo, $createdAFrom);
+                $createdBTo = isset($b['to']) ? $b['to']->getCreated() : $farFuture;
+                $createdBFrom = isset($b['from']) ? $b['from']->getCreated() : $farFuture;
+                $createdB = min($createdBTo, $createdBFrom);
+                return -1*($createdA <=> $createdB);
+            }
+        );
+
+        return $comments;
     }
 
     public function getVisibleCommentsForMemberCount(Member $member): int

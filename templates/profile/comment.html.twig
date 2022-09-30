@@ -8,7 +8,7 @@
 {% endif %}
 {% set show = comment.showCondition(loggedInMember) %}
 {% set quality = comment.quality|lower %}
-<div class="card comment-bg-{{ quality }} u-p-4">
+<div class="card comment-bg-{{ quality }} u-p-16">
     {% if (show > 1) %}<div>
         <strong>{{ 'commenthiddenedit'|trans }}</strong>
     </div>{% endif %}
@@ -36,7 +36,7 @@
                 {{ 'about'|trans }}
             </p>
             {% if comment.editCondition(loggedInMember) %}
-                <a class="btn btn-sm btn-primary" href="members/{{ member.Username }}/comments/add" title="Edit">{{ 'edit'|trans }}</a>
+                <a class="btn btn-sm btn-primary" href="members/{{ member.Username }}/comments/edit" title="Edit">{{ 'edit'|trans }}</a>
             {% endif %}
         </div>
         <div class="ml-lg-3 text-center">
@@ -48,14 +48,14 @@
     </div>
 
     <div>
-        {% for relation in comment.relations %}
+        {% for relation in comment.relations|split(',') %}
             <p class="small font-italic p-0 mb-1">{{  ('comment_' ~ relation)|lower|trans }}</p>
         {% endfor %}
 
         {{ comment.TextFree|nl2br|purify }}
 
         {% if show == 2 %}
-            <a href="/admin/comment/<?php echo $c->id; ?>"><?=$words->get('EditComment')?></a>
+            <a href="/admin/comment/{{ comment.id }}">{{ 'editcomment'|trans }}</a>
         {% endif %}
         {% if comment.created != comment.updated %}
             <p class="small">{{ 'commentlastupdated'|trans }}: <span title="{{ comment.updated|format_datetime() }}">{{ comment.updated.diffForHumans }}</span></p>

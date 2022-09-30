@@ -57,7 +57,7 @@
         </div>
     </div>
     <div class="col-12 col-sm-6 teaser-border text-center text-md-left">
-        {% if memberfields.Occupation != null %}
+        {% if memberfields.Occupation is defined and memberfields.Occupation != null %}
             <p class="h5">{{ memberfields.Occupation }}</p>
         {% endif %}
 

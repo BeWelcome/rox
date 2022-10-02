@@ -75,8 +75,8 @@
             </div>
             <div class="c-search-extra_info">
                 <div class="d-flex flex-column flex-md-row flex-lg-column u-gap-4">
-                    <small>{{ 'search.last.login' | trans }}<br><strong>{{ member.LastLogin }}</strong></small>
-                    <small>{{ 'search.member.since' | trans }}<br><strong>{{ member.created  }}</strong></small>
+                    <small>{{ 'search.last.login' | trans }}<br><strong>{{ member.LastLogin|privacy }}</strong></small>
+                    <small>{{ 'search.member.since' | trans }}<br><strong>{{ member.created|privacy }}</strong></small>
                 </div>
             </div>
         </div>

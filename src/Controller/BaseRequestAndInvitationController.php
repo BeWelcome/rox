@@ -117,7 +117,7 @@ abstract class BaseRequestAndInvitationController extends AbstractController
         if (!empty($suffix)) {
             $suffix = $this->getTranslator()->trans($suffix);
             if (false === strpos($suffix, $subject)) {
-                $subject .= $suffix;
+                $subject .= ' ' . $suffix;
             }
         }
 

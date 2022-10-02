@@ -49,16 +49,17 @@ function wasGuestOrHost(string $relations) {
             ];
         }
     }
+    $farFuture = new DateTimeImmutable('01-01-3000');
     usort($comments,
-        function ($a, $b) {
+        function ($a, $b) use ($farFuture) {
             // get latest updates on to and from part of comments and order desc
-            $createdATo = isset($a['to']) ? new DateTime($a['to']->created) : new DateTime('01-01-1900');
-            $createdAFrom = isset($a['from']) ? new DateTime($a['from']->created) : new DateTime('01-01-1900');
-            $createdA = max($createdATo, $createdAFrom);
-            $createdBTo = isset($b['to']) ? new DateTime($b['to']->created) : new DateTime('01-01-1900');
-            $createdBFrom = isset($b['from']) ? new DateTime($b['from']->created) : new DateTime('01-01-1900');
-            $createdB = max($createdBTo, $createdBFrom);
-            return (-1)*($createdA <=> $createdB);
+            $createdATo = isset($a['to']) ? new DateTime($a['to']->created) : $farFuture;
+            $createdAFrom = isset($a['from']) ? new DateTime($a['from']->created) : $farFuture;
+            $createdA = min($createdATo, $createdAFrom);
+            $createdBTo = isset($b['to']) ? new DateTime($b['to']->created) : $farFuture;
+            $createdBFrom = isset($b['from']) ? new DateTime($b['from']->created) : $farFuture;
+            $createdB = min($createdBTo, $createdBFrom);
+            return -1*($createdA <=> $createdB);
         }
     );
 
@@ -68,9 +69,9 @@ function wasGuestOrHost(string $relations) {
     // \todo: do something here
     $layoutbits = new MOD_layoutbits();
 
-    $max = 5;
+    $shownPairs = 0;
     if (count($comments) > 0) {
-
+        $max = 10;
         ?>
         <div id="comments" class="card mb-3">
             <h3 class="card-header bg-secondary">
@@ -91,11 +92,18 @@ function wasGuestOrHost(string $relations) {
                    $tt = array ();
                    $commentLoopCount = 0;
                    foreach ($comments as $key => $c) {
+                       $shownPairs++;
                        // stop looping when maximum has been reached
-                       if (++$commentLoopCount>$max){break;}
+                       if ($commentLoopCount>=$max) {
+                           break;
+                       }
+                       if ($commentLoopCount != 0) {
+                           echo '<hr class="my-3" style="border-top:1px solid gray;">';
+                       }
 ?>
 
                        <?php if (isset($c['from'])) {
+                           $commentLoopCount++;
                            $comment = $c['from'];
                            // skip items that are hidden for public
                            if ($comment->DisplayInPublic == 0) {continue;}
@@ -148,6 +156,7 @@ function wasGuestOrHost(string $relations) {
                        <?php }
 
                        if (isset($c['to'])) {
+                           $commentLoopCount++;
                            $comment = $c['to'];
                            // skip items that are hidden for public
                            if ($comment->DisplayInPublic == 0) {continue;}
@@ -160,48 +169,51 @@ function wasGuestOrHost(string $relations) {
                            }                           ?>
 
                        <div class="comment-bg-<?=$quality?> p-2 mt-1 <?= !(isset($c['from'])) ? 'mt-1' : '' ?> clearfix">
-                           <div class="d-flex flex-row">
-                               <div class="mr-auto  align-self-center">
-                                   <?php if (wasGuestOrHost($comment->Relations)) { ?>
-                                       <i class="fas fa-2x fa-home"></i>
+                           <div class="d-flex flex-column">
+                               <div class="d-flex flex-row">
+                                   <div class="mr-auto  align-self-center">
+                                       <?php if (wasGuestOrHost($comment->Relations)) { ?>
+                                           <i class="fas fa-2x fa-home"></i>
+                                       <?php } ?>
+                                   </div>
+                                   <div>
+                                       <p class="m-0 text-right" style="line-height: 1.0;">
+                                           <span class="commenttitle <?=$quality?>"><?= $words->get('CommentQuality_'.$comment->comQuality.''); ?></span>
+                                           <br><small><?= $words->get('CommentTo'); ?> <a href="members/<?= $comment->UsernameToMember ?>"><?= $comment->UsernameToMember; ?></a></small>
+                                           <br><small><span title="<?=$comment->created?>"><?php
+                                                   $created = Carbon::createFromFormat('Y-m-d H:i:s', $comment->created);
+                                                   echo $created->diffForHumans();
+                                                   ?></span></small>
+                                       </p>
+                                   </div>
+                                   <a class="ml-2" href="members/<?=$comment->UsernameToMember?>">
+                                        <img class="mr-2 profileimg avatar-48"  src="members/avatar/<?=$comment->UsernameToMember?>/48" alt="<?=$comment->UsernameToMember?>" />
+                                    </a>
+                               </div>
+                               <div class="w-100 py-2">
+                                   <p class="js-read-more-written mb-1">
+                                       <?php
+                                       echo htmlentities($comment->TextFree);
+                                       ?>
+                                   </p>
+                                   <?php if ($loggedIn === $comment->UsernameToMember) { ?>
+                                       <a href="/members/<?= $this->member->Username;?>/comment/<?php echo $comment->id;?>/report" title="<?=$words->getSilent('ReportCommentProblem') ?>" class="float-right gray align-self-center">
+                                           <i class="fa fa-flag" alt="<?=$words->getSilent('ReportCommentProblem') ?>"></i></a>
                                    <?php } ?>
                                </div>
-                               <div>
-                                   <p class="m-0 text-right" style="line-height: 1.0;">
-                                       <span class="commenttitle <?=$quality?>"><?= $words->get('CommentQuality_'.$comment->comQuality.''); ?></span>
-                                       <br><small><?= $words->get('CommentTo'); ?> <a href="members/<?= $comment->UsernameToMember ?>"><?= $comment->UsernameToMember; ?></a></small>
-                                       <br><small><span title="<?=$comment->created?>"><?php
-                                               $created = Carbon::createFromFormat('Y-m-d H:i:s', $comment->created);
-                                               echo $created->diffForHumans();
-                                               ?></span></small>
-                                   </p>
-                               </div>
-                               <a class="ml-2" href="members/<?=$comment->UsernameToMember?>">
-                                    <img class="mr-2 profileimg avatar-48"  src="members/avatar/<?=$comment->UsernameToMember?>/48" alt="<?=$comment->UsernameToMember?>" />
-                                </a>
-                           </div>
-                           <div class="w-100 py-2">
-                               <p class="js-read-more-written mb-1">
-                                   <?php
-                                   echo htmlentities($comment->TextFree);
-                                   ?>
-                               </p>
-                               <?php if ($loggedIn === $comment->UsernameToMember) { ?>
-                                   <a href="/members/<?= $this->member->Username;?>/comment/<?php echo $comment->id;?>/report" title="<?=$words->getSilent('ReportCommentProblem') ?>" class="float-right gray align-self-center">
-                                       <i class="fa fa-flag" alt="<?=$words->getSilent('ReportCommentProblem') ?>"></i></a>
-                               <?php } ?>
                            </div>
                        </div>
 
                       <?php
                       }
-                      echo '<hr class="my-2">';
                    }
                  ?>
             </div>
-            <?php if (count($comments) != $commentCount['all']) { ?>
-                <a href="members/<?=$member->Username?>/comments/" class="btn btn-block btn-sm btn-outline-primary"><?=$words->get('ShowAllComments')?> <span class="badge badge-primary"><?php echo $commentCount['all']; ?></span></a>
-            <?php } ?>
+            <a href="members/<?=$member->Username?>/comments/" class="btn btn-block btn-sm btn-outline-primary"><?=$words->get('ShowAllComments')?>
+                <?php if ($shownPairs < $commentCount['all']) { ?>
+                    <span class="badge badge-primary"><?php echo $commentCount['all']; ?></span>
+                <?php } ?>
+            </a>
         </div>
 <?php }
 

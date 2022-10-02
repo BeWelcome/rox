@@ -60,10 +60,12 @@
                     </div>
                 </div>
                 <div class="u-flex u-justify-center md:u-justify-between u-items-center u-mt-16 md:u-m-0">
+                    {% if not trip.isExpired %}
                     <a class="o-rounded o-rounded--l u-text-18 u-mr-20 md:u-m-0"
                        href="{{ path('trip_edit', {'id': trip.id}) }}" aria-label="{{ 'trip.edit'|trans }}" title="{{ 'trip.edit'|trans }}">
                         <i class="far fa-edit"></i>
                     </a>
+                    {% endif %}
                     <a class="o-rounded o-rounded--l" data-micromodal-trigger="removeTrip-{{ trip.id }}">
                       <i class="fa fa-times"></i>
                     </a>

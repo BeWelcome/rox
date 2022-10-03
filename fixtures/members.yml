@@ -115,8 +115,8 @@ App\Entity\Member:
         Byear: 1980
         SecurityFlag: 0
         Quality: 0
-        ProfileSummary: 0
-        Occupation: 0
+        ProfileSummary: 1
+        Occupation: 1
         CounterGuests: 0
         CounterHosts: 0
         CounterTrusts: 0
@@ -126,15 +126,15 @@ App\Entity\Member:
         MotivationForHospitality: 0
         HideBirthDate: <boolean(75)>
         AdressHidden: <boolean(75)>
-        WebSite: 0
-        ChatSkype: 0
-        ChatICQ: 0
-        ChatAOL: 0
+        WebSite: 1
+        ChatSkype: 1
+        ChatICQ: 1
+        ChatAOL: 1
         ChatMSN: 0
         ChatYahoo: 0
         ChatOthers: 0
-        FutureTrips: 0
-        OldTrips: 0
+        FutureTrips: 1
+        OldTrips: 1
         LogCount: 0
         Hobbies: 0
         Books: 0

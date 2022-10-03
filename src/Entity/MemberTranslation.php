@@ -33,7 +33,8 @@ class MemberTranslation
     /**
      * @var int
      *
-     * @ORM\Column(name="IdOwner", type="integer", nullable=false)
+     * @ORM\ManyToOne(targetEntity="Member", fetch="EAGER")
+     * @ORM\JoinColumn(name="IdOwner", referencedColumnName="id")
      */
     private $owner;
 
@@ -47,7 +48,8 @@ class MemberTranslation
     /**
      * @var Member
      *
-     * @ORM\Column(name="IdTranslator", type="integer", nullable=false)
+     * @ORM\ManyToOne(targetEntity="Member", fetch="EAGER")
+     * @ORM\JoinColumn(name="IdTranslator", referencedColumnName="id")
      */
     private $translator;
 
@@ -115,11 +117,11 @@ class MemberTranslation
     /**
      * Set owner.
      *
-     * @param int $owner
+     * @param Member $owner
      *
      * @return MemberTranslation
      */
-    public function setOwner($owner)
+    public function setOwner(Member $owner):self
     {
         $this->owner = $owner;
 
@@ -167,7 +169,7 @@ class MemberTranslation
      *
      * @return MemberTranslation
      */
-    public function setTranslator($translator)
+    public function setTranslator(Member $translator):self
     {
         $this->translator = $translator;
 
@@ -179,7 +181,7 @@ class MemberTranslation
      *
      * @return Member
      */
-    public function getTranslator()
+    public function getTranslator(): Member
     {
         return $this->translator;
     }

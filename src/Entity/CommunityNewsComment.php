@@ -32,9 +32,11 @@ class CommunityNewsComment
 
     /**
      * @var Member
-     *             A comment has one author
      *
-     * @ORM\OneToOne(targetEntity="Member")
+     * A comment has one author
+     *
+     * @ORM\ManyToOne(targetEntity="\App\Entity\Member")
+     * @ORM\JoinColumn(nullable=false)
      */
     private $author;
 

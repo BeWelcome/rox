@@ -25,10 +25,8 @@ class Newsletter implements ObjectManagerAware
     /**
      * @var Member
      *
-     * @ORM\OneToOne(targetEntity="Member")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="IdCreator", referencedColumnName="id")
-     * })
+     * @ORM\ManyToOne(targetEntity="Member")
+     * @ORM\JoinColumn(name="IdCreator", referencedColumnName="id")
      */
     private $createdBy;
 

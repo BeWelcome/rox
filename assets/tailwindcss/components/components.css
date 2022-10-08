@@ -4,4 +4,5 @@
 @import '_components.trip-card';
 @import '_components.trip-legs';
 @import '_components.conversations-list';
+@import '_components.search';
 @import '_components.modals';

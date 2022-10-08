@@ -24,7 +24,7 @@ class AdminFlagsBasePage extends AdminBasePage
         parent::__construct(new AdminFlagsModel());
         $member = $this->model->getLoggedInMember();
         $flags = $member->getOldFlags();
-        $scope = $flags['Flags']['Scope'];
+        $scope = $flags['Flags']['Scope'] ?? null;
         $this->create = stripos($scope, '"create"') !== false;
         $this->create |= stripos($scope, '"all"') !== false;
     }
@@ -70,7 +70,7 @@ class AdminFlagsBasePage extends AdminBasePage
 
     protected function flagsSelect($flags, $current, $disabled = false)
     {
-        $select = '<select class="o-input" id="flagid" name="flagid"' . ($disabled ? ' disabled="disabled"' : '') . '>';
+        $select = '<select class="o-input select2" id="flagid" name="flagid"' . ($disabled ? ' disabled="disabled"' : '') . '>';
         $select .= '<option value="0"></option>';
         foreach ($flags as $flag) {
             $select .= '<option value="' . $flag->id . '"';

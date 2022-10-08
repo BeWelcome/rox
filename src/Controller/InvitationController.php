@@ -14,6 +14,7 @@ use App\Logger\Logger;
 use App\Model\ConversationModel;
 use App\Model\InvitationModel;
 use App\Service\Mailer;
+use App\Utilities\ConversationThread;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
 use Doctrine\ORM\EntityManagerInterface;
@@ -125,6 +126,33 @@ class InvitationController extends BaseRequestAndInvitationController
         ]);
     }
 
+
+    /**
+     * Deals with declines
+     */
+    public function decline(Request $request, Message $message): Response
+    {
+        $conversationThread = new ConversationThread($this->entityManager);
+        $conversation = $conversationThread->getThread($message);
+        $current = $conversation[0];
+        $request = $current->getRequest();
+        $request->setStatus(HostingRequest::REQUEST_DECLINED);
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($request);
+        $em->flush();
+
+        $host = $message->getInitiator();
+        $guest = $message->getReceiver() === $host ? $message->getSender() : $message->getReceiver();
+
+        $subject = $this->getSubjectForReply($message);
+        $this->sendInvitationGuestDeclineNotification($host, $guest, $message, $subject, $request->getInviteForLeg());
+
+        $this->addTranslatedFlash('notice', 'flash.invitation.declined');
+        $this->logger->write('Directly declined', 'Invitation');
+
+        return $this->redirectToRoute('conversation_view', ['id' => $message->getId()]);
+    }
+
     /**
      * Deals with replies to invitations.
      */
@@ -183,6 +211,7 @@ class InvitationController extends BaseRequestAndInvitationController
             // In case the potential guest declines the invitation remove the invitedBy from the leg
             if (HostingRequest::REQUEST_DECLINED === $finalInvitation->getRequest()->getStatus()) {
                 $this->handleDeclineOfInvitation($leg, $host);
+                $this->logger->write('Regular decline', 'Invitation');
             }
             $this->entityManager->persist($finalInvitation);
             $this->entityManager->flush();
@@ -347,6 +376,25 @@ class InvitationController extends BaseRequestAndInvitationController
             $subject,
             'invitation_reply_from_host',
             $requestChanged,
+            $leg
+        );
+    }
+
+    private function sendInvitationGuestDeclineNotification(
+        Member $host,
+        Member $guest,
+        Message $request,
+        string $subject,
+        SubTrip $leg
+    ): void {
+        $this->sendInvitationNotification(
+            $guest,
+            $host,
+            $host,
+            $request,
+            $subject,
+            'invitation_decline_from_guest',
+            false,
             $leg
         );
     }

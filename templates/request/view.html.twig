@@ -1,17 +1,11 @@
-{% extends 'base.html.twig' %}
+{% import 'macros.twig' as macros %}
+{% extends 'conversations/view.html.twig' %}
 
-{% block stylesheets %}
-    {{ encore_entry_link_tags('tailwind') }}
-{% endblock stylesheets %}
-
-{% block content %}
+{% block additional %}
     {% import 'macros.twig' as macros %}
     {% set original = thread | last %}
     {% set request = (thread | first).request %}
     {% set myself = app.user %}
-    {{ macros.messageheader(thread, {show_deleted: show_deleted, is_spam: is_spam}) }}
 
     {% include 'request/header.html.twig'%}
-
-    {% include 'message/thread.html.twig' %}
-{% endblock content %}
+{% endblock additional %}

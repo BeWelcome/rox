@@ -278,6 +278,7 @@ class MessageRepository extends EntityRepository
             ->setParameter('status', MessageStatusType::CHECK)
             ->andWhere('m.spamInfo LIKE :spamInfo')
             ->setParameter('spamInfo', '%' . SpamInfoType::MEMBER_SAYS_SPAM . '%')
+            ->orderBy('m.created', 'DESC')
         ;
 
         return $qb;
@@ -349,7 +350,7 @@ class MessageRepository extends EntityRepository
                     AND `m`.`id` IN (
                         SELECT max(`m`.`id`)
                         FROM `messages` m
-                        WHERE m.IdReceiver = :memberId AND (
+                        WHERE m.IdReceiver = :memberId AND m.InFolder = \'Normal\' AND (
                             m.DeleteRequest NOT LIKE \'%' . DeleteRequestType::RECEIVER_DELETED . '%\'
                             AND m.DeleteRequest NOT LIKE \'%' . DeleteRequestType::RECEIVER_PURGED . '%\'
                         )
@@ -358,7 +359,7 @@ class MessageRepository extends EntityRepository
                 UNION
                     SELECT *
                     FROM `messages` m
-                    WHERE ' . $unreadCondition . '
+                    WHERE ' . $unreadCondition . ' AND m.InFolder = \'Normal\'
                     AND `m`.`subject_id` IS NULL
                     AND (
                             m.DeleteRequest NOT LIKE \'%' . DeleteRequestType::RECEIVER_DELETED . '%\'

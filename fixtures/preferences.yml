@@ -161,3 +161,12 @@ App\Entity\Preference:
         DefaultValue: 25
         PossibleValues: 0;5;10;25;50;100;200;500;1000
         Status: 'Normal'
+    SEARCH_OPTIONS:
+        position: 61
+        codename: 'SearchOptions'
+        codeDescription: 'preference.search.options'
+        description: 'Search options storage'
+        created: <DateTime()>
+        DefaultValue: ''
+        PossibleValues: ''
+        Status: 'Normal'

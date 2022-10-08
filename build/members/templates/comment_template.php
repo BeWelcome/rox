@@ -105,7 +105,7 @@ foreach($comments as $comment) {
                 <?php if ($showfrom > 1){echo '<strong>'.$words->get('CommentHiddenEdit').'</strong>'; } ?>
             </div>
             <div class="d-flex flex-row justify-content-between">
-                <?php if ($this->loggedInMember){ ?>
+                <?php if ($this->loggedInMember->Username === $c->UsernameToMember){ ?>
                     <div><a href="/members/<?= $this->member->Username;?>/comment/<?php echo $c->id;?>/report" title="<?=$words->getSilent('ReportCommentProblem') ?>" class="gray"><i class="fa fa-flag" alt="<?=$words->getSilent('ReportCommentProblem') ?>"></i></a></div>
                 <?php } ?>
                 <div><?php if (!$this->passedAway) { ?><p class="h4 m-0 ml-lg-5 <?=$quality?>"><?= $words->get('CommentQuality_'.$c->comQuality.''); ?></p><?php } ?></div>
@@ -189,7 +189,7 @@ foreach($comments as $comment) {
 
                 <div><?php if (!$this->passedAway) { ?><p class="h4 m-0 mr-lg-5 <?=$quality?>"><?= $words->get('CommentQuality_'.$cc->comQuality.''); ?></p><?php } ?></div>
 
-                <?php if ($this->loggedInMember) :?>
+                <?php if ($this->loggedInMember->Usenrname === $cc->UsernameToMember) :?>
                     <div><a href="members/<?php echo $cc->UsernameToMember;?>/comment/<?php echo $cc->id;?>/report" title="<?=$words->getSilent('ReportCommentProblem') ?>"><i class="fa fa-flag" title="<?=$words->getSilent('ReportCommentProblem') ?>"></i></a></div>
                 <?php endif;?>
             </div>

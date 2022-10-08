@@ -427,6 +427,8 @@ class AdminMassmailModel extends RoxModelBase
             $action = 'enqueueSuggestionsReminder';
         } elseif (array_key_exists('enqueuemailtoconfirmreminder', $vars)) {
             $action = 'enqueueMailToConfirmReminder';
+        } elseif (array_key_exists('enqueuecorrectbday', $vars)) {
+            $action = 'enqueueCorrectBirthDate';
         } elseif (array_key_exists('enqueuetermsofuse', $vars)) {
             $action = 'enqueueTermsOfUse';
         }
@@ -468,11 +470,9 @@ class AdminMassmailModel extends RoxModelBase
                 break;
             case 'enqueueReminder':
                 break;
-            case 'enqueueSuggestionsReminder':
-                break;
             case 'enqueueMailToConfirmReminder':
-                break;
             case 'enqueueTermsOfUse':
+            case 'enqueueCorrectBirthDate':
                 break;
             default:
                 $errors[] = 'AdminMassMailEnqueueWrongAction';
@@ -654,6 +654,23 @@ class AdminMassmailModel extends RoxModelBase
         return $count;
     }
 
+    private function enqueueMassmailCorrectBirthDate($id) {
+        $IdEnqueuer = $this->getLoggedInMember()->id;
+        $query = "
+            REPLACE
+                broadcastmessages (IdBroadcast, IdReceiver, IdEnqueuer, Status, updated)
+            SELECT
+                " . $id . ", m.id, " . $IdEnqueuer . ", 'ToApprove', NOW()
+            FROM
+                members AS m
+            WHERE
+                m.Status IN ('Active', 'OutOfRemind')
+                AND BirthDate < '1922-06-22'";
+        $r = $this->dao->query($query);
+        $count = $r->affectedRows();
+        return $count;
+    }
+
     private function enqueueMassmailTermsOfUse($id) {
         $pref_id = $this->getPreferenceIdForMassmail($id);
         $IdEnqueuer = $this->getLoggedInMember()->id;
@@ -713,6 +730,9 @@ class AdminMassmailModel extends RoxModelBase
                 break;
             case 'enqueueMailToConfirmReminder':
                 $count = $this->enqueueMassmailMailToConfirmReminder($id);
+                break;
+            case 'enqueueCorrectBirthDate':
+                $count = $this->enqueueMassmailCorrectBirthDate($id);
                 break;
             case 'enqueueTermsOfUse':
                 $count = $this->enqueueMassmailTermsOfUse($id);
@@ -829,5 +849,29 @@ class AdminMassmailModel extends RoxModelBase
             return 0;
         }
         return $row->mailToConfirmCount;
+    }
+
+    /**
+     * Get the count of members with obviously wrong birth dates
+     */
+    public function getIncorrectBirthDateCount() {
+        $query = "
+            SELECT
+                count(*) as incorrectBirthDateCount
+            FROM
+                members
+            WHERE
+                status IN ('Active', 'OutOfRemind')
+                AND BirthDate < '1922-06-22'
+                 ";
+        $r = $this->dao->query($query);
+        if (!$r) {
+            return 0;
+        }
+        $row = $r->fetch(PDB::FETCH_OBJ);
+        if (!isset($row->incorrectBirthDateCount)) {
+            return 0;
+        }
+        return $row->incorrectBirthDateCount;
     }
 }

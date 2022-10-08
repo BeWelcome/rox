@@ -38,9 +38,20 @@ class FeedbackController extends AboutBaseController
 
         $member = $this->getUser();
         $categories = $aboutModel->getFeedbackCategories();
+        $categoryId = $request->get('IdCategory', null);
+        $category = (null !== $categoryId) ? $categories[$categoryId] : null;
+        $messageId = $request->get('messageId', null);
+        $username = $request->get('username', null);
+        if (null !== $username) {
+            $feedbackQuestion = $translator->trans('profile.report.text');
+            $feedbackQuestion = sprintf($feedbackQuestion, $username);
+        }
         $form = $this->createForm(
             FeedbackFormType::class,
-            null,
+            [
+                'IdCategory' => $category,
+                'FeedbackQuestion' => $feedbackQuestion,
+            ],
             [
                 'categories' => $categories,
                 'member' => $member,
@@ -52,6 +63,14 @@ class FeedbackController extends AboutBaseController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
+            if ($data['FeedbackQuestion'] === $feedbackQuestion) {
+                $form->get('FeedbackQuestion')->addError(
+                    new FormError(
+                        $translator->trans('feedback.missing.info', [], 'validators')
+                    )
+                );
+            }
+
             $reply = !($data['no_reply_needed']);
             if ($reply && null === $data['FeedbackEmail']) {
                 $form
@@ -61,7 +80,9 @@ class FeedbackController extends AboutBaseController
                         )
                     )
                 ;
-            } else {
+            }
+            // Recheck validity as we might have set an error before.
+            if ($form->isValid()) {
                 $data['member'] = $member;
                 $data['browser'] = $request->headers->get('User-Agent');
                 $data['version'] = 'no version set';
@@ -82,6 +103,7 @@ class FeedbackController extends AboutBaseController
         return $this->render('about/feedback.html.twig', [
             'form' => $form->createView(),
             'no_modal' => $noModal,
+            'messageId' => $messageId,
             'submenu' => [
                 'items' => $this->getSubMenuItems($request->getLocale()),
                 'active' => 'about_feedback',

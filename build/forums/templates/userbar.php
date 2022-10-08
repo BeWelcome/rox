@@ -44,7 +44,7 @@ Boston, MA  02111-1307, USA.
        if ($this->BW_Right->HasRight("ForumModerator")) { ?>
         <div class="list-group">
             <a href="admin/groups/approval" class="list-group-item nav-link">Group Administration</a>
-            <a href="admin/logs/group" class="list-group-item nav-link">Group Log</a>
+            <a href="admin/logs/groups" class="list-group-item nav-link">Group Log</a>
         <?php }
     } ?>
 </div>

@@ -91,11 +91,12 @@ class ConversationModel
         $this->entityManager->flush();
     }
 
-    public function markConversationAsSpam(Member $member, array $conversation): void
+    public function markConversationAsSpam(Member $member, array $conversation, ?string $comment): void
     {
         /** @var Message $message */
         foreach ($conversation as $message) {
             $message
+                ->setCheckerComment($comment)
                 ->setFolder(InFolderType::SPAM);
             if ($member === $message->getReceiver()) {
                 $message

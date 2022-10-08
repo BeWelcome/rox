@@ -1,0 +1,7 @@
+feedback.profile.report.message:
+    - 'It seems your reporting a members profile after receiving a message from them. If so please report the message instead.'
+    - Info text shown in the modal on feedback if the member followed the link inthe email notification and then clicked report profile.
+feedback.missing.info:
+    - 'Please add a reason why you report this profile.'
+    - Error message shown when no additional info is provided why the profile is reported.
+    - validators

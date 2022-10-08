@@ -1,3 +1,13 @@
+<?php
+$purifier = MOD_htmlpure::getBasicHtmlPurifier();
+
+function wasGuestOrHost(string $relations) {
+    $hosted = strpos($relations, 'hewasmyguest') !== false;
+    $stayed = strpos($relations, 'hehostedme') !== false;
+    return $hosted || $stayed;
+}
+?>
+
 <div class="d-lg-block d-none mb-sm-3 mb-lg-0">
     <?php
 
@@ -9,16 +19,60 @@
 }
 
 ?>
+    <input type="hidden" id="read.more" value="<?= $words->get('comment.read.more'); ?>">
+    <input type="hidden" id="show.less" value="<?= $words->get('comment.show.less'); ?>">
 </div>
 <?php
 
-    $comments = $this->member->comments;
+    // build array with combined comments
+    $comments = [];
+    $commentsReceived = $this->member->get_comments();
+    $commentsWritten = $this->member->get_comments_written();
+
+    $commentCount = $this->member->count_comments();
+
+    foreach ($commentsReceived as $value) {
+        $key = $value->UsernameFromMember;
+        $comments[$key] = [
+            'from' => $value,
+        ];
+    }
+    foreach ($commentsWritten as $value) {
+        $key = $value->UsernameToMember;
+        if (isset($comments[$key])) {
+            $comments[$key] = array_merge($comments[$key], [
+                'to' => $value,
+            ]);
+        } else {
+            $comments[$key] = [
+                'to' => $value,
+            ];
+        }
+    }
+    $farFuture = new DateTimeImmutable('01-01-3000');
+    usort($comments,
+        function ($a, $b) use ($farFuture) {
+            // get latest updates on to and from part of comments and order desc
+            $createdATo = isset($a['to']) ? new DateTime($a['to']->created) : $farFuture;
+            $createdAFrom = isset($a['from']) ? new DateTime($a['from']->created) : $farFuture;
+            $createdA = min($createdATo, $createdAFrom);
+            $createdBTo = isset($b['to']) ? new DateTime($b['to']->created) : $farFuture;
+            $createdBFrom = isset($b['from']) ? new DateTime($b['from']->created) : $farFuture;
+            $createdB = min($createdBTo, $createdBFrom);
+            return -1*($createdA <=> $createdB);
+        }
+    );
+
     $username = $this->member->Username;
+    $loggedIn = $this->model->getLoggedInMember()->Username;
+
+    // \todo: do something here
     $layoutbits = new MOD_layoutbits();
 
-    $max = 3;
-    if (count($comments) > 0) { ?>
-
+    $shownPairs = 0;
+    if (count($comments) > 0) {
+        $max = 10;
+        ?>
         <div id="comments" class="card mb-3">
             <h3 class="card-header bg-secondary">
                 <?php if ($this->passedAway) {
@@ -35,75 +89,138 @@
             <div class="p-2">
 
                 <?php
-                  if ($this->model->getLoggedInMember()){
                    $tt = array ();
                    $commentLoopCount = 0;
-                   foreach ($comments as $c) {
-                   // skip items that are hidden for public
-                   if ($c->DisplayInPublic == 0) {continue;}
-                   // stop looping when maximum has been reached
-                   if (++$commentLoopCount>$max){break;}
-                   $quality = "neutral";
-                   if ($c->comQuality == "Good") {
-                   $quality = "good";
-                   }
-                   if ($c->comQuality == "Bad") {
-                   $quality = "bad";
-                   } ?>
+                   foreach ($comments as $key => $c) {
+                       $shownPairs++;
+                       // stop looping when maximum has been reached
+                       if ($commentLoopCount>=$max) {
+                           break;
+                       }
+                       if ($commentLoopCount != 0) {
+                           echo '<hr class="my-3" style="border-top:1px solid gray;">';
+                       }
+?>
 
-                       <?php if ($commentLoopCount > 1){ ?><hr class="m-1"><?php } ?>
-                    <div class="comment-bg-<?=$quality?> p-2">
-                       <div class="my-1 clearfix">
-                           <a href="members/<?=$c->UsernameFromMember?>">
-                               <img class="float-left mr-2 profileimg avatar-48"  src="members/avatar/<?=$c->UsernameFromMember?>/48" alt="<?=$c->UsernameFromMember?>" />
-                           </a>
-                           <div>
-                               <p class="m-0" style="line-height: 1.0;">
-                                   <?php if (!$this->passedAway) { ?>
-                                       <span class="commenttitle <?=$quality?>"><?= $words->get('CommentQuality_'.$c->comQuality.''); ?></span>
-                                       <span class="float-right">
-                                       <?php if ($this->loggedInMember){ ?>
-                                           <a href="/members/<?= $this->member->Username;?>/comment/<?php echo $c->id;?>/report" title="<?=$words->getSilent('ReportCommentProblem') ?>" class="gray"><i class="fa fa-flag" alt="<?=$words->getSilent('ReportCommentProblem') ?>"></i></a>
+                       <?php if (isset($c['from'])) {
+                           $commentLoopCount++;
+                           $comment = $c['from'];
+                           // skip items that are hidden for public
+                           if ($comment->DisplayInPublic == 0) {continue;}
+                           $quality = "neutral";
+                           if ($comment->comQuality == "Good") {
+                               $quality = "good";
+                           }
+                           if ($comment->comQuality == "Bad") {
+                               $quality = "bad";
+                           }                            ?>
+                       <div class="comment-bg-<?=$quality?> p-2 mt-1 <?= (!isset($c['to'])) ? 'mb-2' : '' ?> clearfix">
+                           <div class="d-flex flex-column">
+                               <div class="d-flex flex-row">
+                                   <a class="mr-2" href="members/<?=$comment->UsernameFromMember?>">
+                                       <img class="profileimg avatar-48"  src="members/avatar/<?=$comment->UsernameFromMember?>/48" alt="<?=$comment->UsernameFromMember?>" />
+                                   </a>
+                                   <div>
+                                       <p class="m-0" style="line-height: 1.0;">
+                                           <?php if (!$this->passedAway) { ?>
+                                               <span class="commenttitle <?=$quality?>"><?= $words->get('CommentQuality_'.$comment->comQuality.''); ?></span>
+                                           <?php }?>
+                                           <br><small><?=$words->get('CommentFrom','<a href="members/'.$comment->UsernameFromMember.'">'.$comment->UsernameFromMember.'</a>')?></small>
+                                           <br><small><span title="<?=$comment->created?>"><?php
+                                                   $created = Carbon::createFromFormat('Y-m-d H:i:s', $comment->created);
+                                                   echo $created->diffForHumans();
+                                                   ?></span></small>
+                                       </p>
+                                   </div>
+                                   <div class="ml-auto align-self-center">
+                                       <?php if (wasGuestOrHost($comment->Relations)) { ?>
+                                           <i class="fas fa-2x fa-home"></i>
                                        <?php } ?>
-                                   </span>
+                                   </div>
+                               </div>
+                               <div class="w-100 py-2">
+                                   <p class="js-read-more-received mb-1">
+                                       <?php
+                                       echo htmlentities($comment->TextFree);
+                                       ?>
+                                   </p>
+                                   <?php if (!$this->passedAway) { ?>
+                                       <?php if ($loggedIn === $comment->UsernameToMember) { ?>
+                                           <a href="/members/<?= $this->member->Username;?>/comment/<?php echo $comment->id;?>/report" title="<?=$words->getSilent('ReportCommentProblem') ?>"
+                                              class="float-right gray align-self-center"><i class="fa fa-flag" alt="<?=$words->getSilent('ReportCommentProblem') ?>"></i></a>
+                                       <?php } ?>
                                    <?php }?>
-                                   <br><small><?=$words->get('CommentFrom','<a href="members/'.$c->UsernameFromMember.'">'.$c->UsernameFromMember.'</a>')?></small>
-                                   <br><small><span title="<?=$c->created?>"><?php
-                                           $created = Carbon::createFromFormat('Y-m-d H:i:s', $c->created);
-                                           echo $created->diffForHumans();
-                                           ?></span></small>
-                               </p>
+                               </div>
                            </div>
                        </div>
-                           <div class="w-100 pt-2">
-                               <p class="mb-1">
-                                   <?php
-                                   $textStripped = strip_tags($c->TextFree, '<font>');
-                                   echo $textStripped;
-                                   ?>
-                               </p>
+                       <?php }
+
+                       if (isset($c['to'])) {
+                           $commentLoopCount++;
+                           $comment = $c['to'];
+                           // skip items that are hidden for public
+                           if ($comment->DisplayInPublic == 0) {continue;}
+                           $quality = "neutral";
+                           if ($comment->comQuality == "Good") {
+                               $quality = "good";
+                           }
+                           if ($comment->comQuality == "Bad") {
+                               $quality = "bad";
+                           }                           ?>
+
+                       <div class="comment-bg-<?=$quality?> p-2 mt-1 <?= !(isset($c['from'])) ? 'mt-1' : '' ?> clearfix">
+                           <div class="d-flex flex-column">
+                               <div class="d-flex flex-row">
+                                   <div class="mr-auto  align-self-center">
+                                       <?php if (wasGuestOrHost($comment->Relations)) { ?>
+                                           <i class="fas fa-2x fa-home"></i>
+                                       <?php } ?>
+                                   </div>
+                                   <div>
+                                       <p class="m-0 text-right" style="line-height: 1.0;">
+                                           <span class="commenttitle <?=$quality?>"><?= $words->get('CommentQuality_'.$comment->comQuality.''); ?></span>
+                                           <br><small><?= $words->get('CommentTo'); ?> <a href="members/<?= $comment->UsernameToMember ?>"><?= $comment->UsernameToMember; ?></a></small>
+                                           <br><small><span title="<?=$comment->created?>"><?php
+                                                   $created = Carbon::createFromFormat('Y-m-d H:i:s', $comment->created);
+                                                   echo $created->diffForHumans();
+                                                   ?></span></small>
+                                       </p>
+                                   </div>
+                                   <a class="ml-2" href="members/<?=$comment->UsernameToMember?>">
+                                        <img class="mr-2 profileimg avatar-48"  src="members/avatar/<?=$comment->UsernameToMember?>/48" alt="<?=$comment->UsernameToMember?>" />
+                                    </a>
+                               </div>
+                               <div class="w-100 py-2">
+                                   <p class="js-read-more-written mb-1">
+                                       <?php
+                                       echo htmlentities($comment->TextFree);
+                                       ?>
+                                   </p>
+                                   <?php if ($loggedIn === $comment->UsernameToMember) { ?>
+                                       <a href="/members/<?= $this->member->Username;?>/comment/<?php echo $comment->id;?>/report" title="<?=$words->getSilent('ReportCommentProblem') ?>" class="float-right gray align-self-center">
+                                           <i class="fa fa-flag" alt="<?=$words->getSilent('ReportCommentProblem') ?>"></i></a>
+                                   <?php } ?>
+                               </div>
                            </div>
-                    </div>
+                       </div>
 
-
-                   <?php } ?>
-
-                <?php
-                  } else {
-                      // hide comments from others when not logged in
-                      echo $this->getLoginLink('/members/' . $member->Username,'ProfileShowComments');
-                  } ?>
+                      <?php
+                      }
+                   }
+                 ?>
             </div>
-            <a href="members/<?=$member->Username?>/comments/" class="btn btn-block btn-sm btn-outline-primary"><?=$words->get('ShowAllComments')?></a>
+            <a href="members/<?=$member->Username?>/comments/" class="btn btn-block btn-sm btn-outline-primary"><?=$words->get('ShowAllComments')?>
+                <?php if ($shownPairs < $commentCount['all']) { ?>
+                    <span class="badge badge-primary"><?php echo $commentCount['all']; ?></span>
+                <?php } ?>
+            </a>
         </div>
-
 <?php }
 
 /**********************
  ** Profile Relations **
  **********************/
 
-$purifier = MOD_htmlpure::getBasicHtmlPurifier();
 $relations = $member->relations;
 if (count($relations) > 0) { ?>
 
@@ -129,20 +246,19 @@ if (count($relations) > 0) { ?>
                                 $comment = '';
                             }
 
-                            $rel->Comment = $purifier->purify($comment);
+                            $rel->Comment = $purifier->purify(stripslashes($comment));
                             ?>
-                            <div class="d-flex d-column w-100">
-                                <div>
+                            <div class="w-100">
+                                <div class="float-left mr-2">
                                     <a href="<?=PVars::getObj('env')->baseuri."members/".$rel->Username?>"  title="See profile <?=$rel->Username?>">
-                                        <img class="float-left profileimg avatar-48"  src="members/avatar/<?=$rel->Username?>/48" alt="Profile" />
+                                        <img class="profileimg avatar-48"  src="members/avatar/<?=$rel->Username?>/48" width="48" height="48" alt="Profile" />
                                     </a>
                                 </div>
-                                <div>
-                                    <a class="float-left" href="<?=PVars::getObj('env')->baseuri."members/".$rel->Username?>" ><?=$rel->Username?></a>
-                                    <br>
-                                    <?php echo $rel->Comment; ?>
-                                </div>
+                                <a href="<?=PVars::getObj('env')->baseuri."members/".$rel->Username?>" ><?=$rel->Username?></a>
+                                <br>
+                                <?php echo $rel->Comment; ?>
                             </div>
+                            <div class="clearfix"></div>
                         <?php } ?>
                 <?php } else {
                     echo $this->getLoginLink('/members/' . $member->Username,'ProfileShowRelations');

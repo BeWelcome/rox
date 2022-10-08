@@ -135,6 +135,23 @@
       font-weight: 400;
     }
 
+    /**
+     * Cut buttons
+     */
+    .o-button--cut-left {
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+      padding-left: 8px;
+      padding-right: 16px;
+    }
+
+    .o-button--cut-right {
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+      padding-right: 4px;
+    }
+
+
 
     /**
     * Transparent Button

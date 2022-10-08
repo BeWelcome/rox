@@ -10,7 +10,7 @@
         {{ 'mydata.forums.created'|trans({'posted':post.created}) }}{% if post.deleted == 'Deleted' %}<br>
         {{ 'mydata.forums.status'|trans }}: {{ 'mydata.post.deleted'|trans }}{% endif %}</p>
     <div class="post">
-        <small class="text-muted">{{ post.language.wordcode|lower|trans|raw }} ({{ post.language.shortcode }})</small><br>
+        <small class="text-muted">{{ post.language.wordcode|lower|trans|raw }} ({{ post.language.shortCode }})</small><br>
         {{ post.message | purify }}
     </div>
     {% if post.messageTranslations|length > 1 %}
@@ -18,7 +18,7 @@
         {% for locale, translation in post.messageTranslations %}
             {% if post.message != translation.message %}
             <div class="post">
-                <small class="text-muted">{{ translation.language.wordcode|lower|trans|raw }} ({{ translation.language.shortcode }})</small><br>
+                <small class="text-muted">{{ translation.language.wordcode|lower|trans|raw }} ({{ translation.language.shortCode }})</small><br>
                 {{ translation.message | purify }}
             </div>
             {% endif %}

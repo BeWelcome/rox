@@ -1,41 +1,45 @@
 {% block content %}
-    {% apply inky_to_html|inline_css(encore_entry_css_source('email')) %}
-    <wrapper class="header" bgcolor="#f37000">
-        <container>
-            <row class="collapse">
-                <columns small="6" valign="middle"><a href="{{ url('homepage') }}"><img
-                            src="{{ email.image('@images/logo_index_top.png') }}"></a>
-                </columns>
-                <columns small="6" valign="middle">
-                    <p class="text-right">BeWelcome</p>
-                </columns>
-            </row>
-        </container>
-    </wrapper>
+    {% apply inline_css %}
+        <style>
+            {{ encore_entry_css_source('email') }}
+        </style>
+        {% apply inky_to_html %}
+            <wrapper class="header" bgcolor="#f37000">
+                <container>
+                    <row class="collapse">
+                        <columns small="12" valign="middle">
+                            <a href="{{ url('homepage') }}"><img
+                                    src="{{ email.image('@images/logo_index_top.png') }}"><</a>
+                        </columns>
+                    </row>
+                </container>
+            </wrapper>
 
-    <container class="secondary">
+            <container class="secondary">
 
-        <spacer size="16"></spacer>
+                <spacer size="16"></spacer>
 
-        <row>
-            <columns small="12" large="7">
-                <h4>{{ 'email.greeting'|trans({ 'username': receiver.Username, 'gender': receiver.gender}) }}</h4>
-                {% block message %}{% endblock %}
-            </columns>
-            <columns small="12" large="5" class="sidebar">
-                <callout class="secondary">
-                    <h5>{{ 'request.details'|trans }}</h5>
-                    {% block request %}{% endblock %}
-                </callout>
-            </columns>
-        </row>
-        <row>
-            <columns>
-                <center>
-                        <p>{{ "now" | date("Y") }} - <a href="{{ url('homepage') }}" target="_blank">BeWelcome</a></p>
-                </center>
-            </columns>
-        </row>
-    </container>
+                <row>
+                    <columns small="12" large="7">
+                        <h4>{{ 'email.greeting'|trans({ 'username': receiver.Username, 'gender': receiver.gender}) }}</h4>
+                        {% block message %}{% endblock %}
+                    </columns>
+                    <columns small="12" large="5" class="sidebar">
+                        <callout class="secondary">
+                            <h5>{{ 'request.details'|trans }}</h5>
+                            {% block request %}{% endblock %}
+                        </callout>
+                    </columns>
+                </row>
+                {% include 'emails/_buttons.html.twig' with {'message': message} %}
+                <row>
+                    <columns>
+                        <center>
+                                <p>{{ "now" | date("Y") }} - <a href="{{ url('homepage') }}" target="_blank">BeWelcome</a></p>
+                        </center>
+                    </columns>
+                </row>
+            </container>
+        {% endapply %}
     {% endapply %}
 {% endblock content %}

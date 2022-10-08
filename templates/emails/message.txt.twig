@@ -1,7 +1,0 @@
-{% trans with {'%username%': receiver.Username} %}email.greeting{% endtrans %}
-
-{% trans with {'%username%': sender.Username} %}email.message{% endtrans %}
-
-{{ message.message|striptags }}
-
-[Reply]({{ url('conversation_reply', { 'id': message.id }) }})

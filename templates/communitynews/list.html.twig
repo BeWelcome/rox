@@ -1,35 +1,50 @@
 {% import 'macros.twig' as macros %}
 {% extends 'base.html.twig' %}
 
+{% block stylesheets %}
+    {{ encore_entry_link_tags('tailwind') }}
+{% endblock stylesheets %}
+
 {% block title %}
     {{ 'bewelcome_news.header.all' | trans }}
 {% endblock %}
 
 {% block content %}
     <h1>{{ 'bewelcome_news.header' | trans }}</h1>
-    <div class="row">
-        <div class="col-12 pull-right">{{ pagerfanta( communityNews, 'rox_default', { routeName: 'communitynews' }) }}</div>
-    </div>
-    <div class="row">
-        {% for news in communityNews %}
-        <div class="col-12 mb-3">
-            <div class="card o-card p-3">
-                <h1><a href="{{ url('communitynews_show', { id: news.id} ) }}">{{ news.title }}</a></h1>
-                <small>{{ 'bewelcome_news.writtenby' | trans }} {{ macros.avatar( news.createdBy.Username , 30, true) }}
-                    ({{ news.createdAt.DiffForHumans }})
-                    {% if news.createdAt != news.updatedAt %}
-                        {{ 'bewelcome_news.lastupdater' | trans }}
-                        {{ macros.avatar( news.updatedBy.Username , 30, true) }}
-                        ({{ news.updatedAt.DiffForHumans }})
-                    {% endif %}
-                </small>
-                {{ news.text | truncate(500) | raw }}
-                <p><a href="{{ url('communitynews_show', { id: news.id} ) }}">{{ 'label.read.more' | trans }}</a> (<span class="text-muted">{% trans with {'%commentsCount%': news.comments|length} %}bewelcome_news.nrcomments{% endtrans %}</span>)</p>
+        {% if communityNews.haveToPaginate %}
+            <div class="u-flex u-justify-end u-my-8">
+                {{ pagerfanta( communityNews, 'rounded_pagination', { routeName: 'communitynews' }) }}
             </div>
+             {% endif %}
+        {% for news in communityNews %}
+        <div class="u-bg-gray-5 u-p-16 u-rounded-8 u-my-16">
+            <div class="u-flex u-justify-start u-items-center">
+                <div class="o-avatar o-avatar--m u-mt-8 u-mr-16">
+                    {{ macros.roundedavatarstack( news.createdBy.Username, 72) }}
+                </div>
+                <div class="u-place-self-center u-w-full">
+                    <p class="u-text-20 md:u-text-28 u-font-700"><a href="{{ url('communitynews_show', { id: news.id} ) }}">{{ news.title }}</a></p>
+                    <small class="u-mb-8 u-text-gray-65">
+                        <i class="fa fa-fw fa-clock u-mr-2"></i>
+                        {{ news.createdAt.DiffForHumans }}
+                        {% if news.updatedBy and news.updatedBy.Username != news.createdBy.Username %}
+                            <br><i class="fa fa-fw fa-pen u-mr-2"></i>{{ 'bewelcome_news.lastupdater' | trans}}
+                            {{ macros.profilelink( news.updatedBy.Username ) }}
+                            {{ news.updatedAt.DiffForHumans }}
+                        {% endif %}
+                    </small>
+                </div>
+            </div>    
+            <div class="u-ml-8 u-my-16 u-mr-16">
+                {{ news.text | truncate(500) | raw }}
+            </div>        
+            <p class="u-ml-8 u-my-16 u-mr-16"><a href="{{ url('communitynews_show', { id: news.id} ) }}">{{ 'label.read.more' | trans }}</a> (<span class="text-muted">{% trans with {'%commentsCount%': news.comments|length} %}bewelcome_news.nrcomments{% endtrans %}</span>)
+            </p>
         </div>
         {% endfor %}
-    </div>
-    <div class="row">
-        <div class="col-12 pull-right">{{ pagerfanta( communityNews, 'rox_default', { routeName: 'communitynews' }) }}</div>
-    </div>
-{% endblock content %}
+        {% if communityNews.haveToPaginate %}
+            <div class="u-flex u-justify-end u-my-8">
+                {{ pagerfanta( communityNews, 'rounded_pagination', { routeName: 'communitynews' }) }}
+            </div>
+        {% endif %}
+{% endblock %}

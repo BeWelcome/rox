@@ -37,31 +37,7 @@ class StatisticsController extends AboutBaseController
      */
     public function showAboutStatistics(Request $request)
     {
-        $statistics = [
-            'members' => [
-                'headline' => 'members',
-                'route' => 'stats_members',
-            ],
-            'sent_messages' => [
-                'headline' => 'sent_messages',
-                'route' => 'stats_messages_sent',
-            ],
-            'read_messages' => [
-                'headline' => 'read_messages',
-                'route' => 'stats_messages_read',
-            ],
-            'sent_requests' => [
-                'headline' => 'sent_requests',
-                'route' => 'stats_requests_sent',
-            ],
-            'accepted_requests' => [
-                'headline' => 'accepted_requests',
-                'route' => 'stats_requests_accepted',
-            ],
-        ];
-
         return $this->render('about/statistics.html.twig', [
-            'statistics' => $statistics,
             'submenu' => [
                 'items' => $this->getSubMenuItems($request->getLocale()),
                 'active' => 'statistics',
@@ -155,6 +131,120 @@ class StatisticsController extends AboutBaseController
 
         $response = new JsonResponse();
         $response->setData($membersData);
+
+        return $response;
+    }
+
+    /**
+     * @Route("/stats/invitations/sent/{period}", name="stats_invitations_sent",
+     *     requirements = {"period" = "weekly|daily"})
+     *
+     * @param string $period timeframe for data
+     *
+     * @return JsonResponse
+     */
+    public function sentInvitationsData(string $period)
+    {
+        $membersData = $this->statisticsModel->getSentInvitationsData($period);
+
+        $response = new JsonResponse();
+        $response->setData($membersData);
+
+        return $response;
+    }
+
+    /**
+     * @Route("/stats/invitations/accepted/{period}", name="stats_invitations_accepted",
+     *     requirements = {"period" = "weekly|daily"})
+     *
+     * @param string $period timeframe for data
+     *
+     * @return JsonResponse
+     */
+    public function acceptedInvitationsData(string $period)
+    {
+        $membersData = $this->statisticsModel->getAcceptedInvitationsData($period);
+
+        $response = new JsonResponse();
+        $response->setData($membersData);
+
+        return $response;
+    }
+
+    /**
+     * @Route("/stats/legs/created/{period}", name="stats_legs_created",
+     *     requirements = {"period" = "weekly|daily"})
+     *
+     * @param string $period timeframe for data
+     *
+     * @return JsonResponse
+     */
+    public function legsCreatedData(string $period)
+    {
+        $membersData = $this->statisticsModel->getLegsCreatedData($period);
+
+        $response = new JsonResponse();
+        $response->setData($membersData);
+
+        return $response;
+    }
+
+    /**
+     * @Route("/stats/languages/spoken", name="stats_spoken_languages")
+     *
+     * @return JsonResponse
+     */
+    public function languagesData()
+    {
+        $languagesData = $this->statisticsModel->getLanguagesData();
+
+        $response = new JsonResponse();
+        $response->setData($languagesData);
+
+        return $response;
+    }
+
+    /**
+     * @Route("/stats/languages/preferred", name="stats_preferred_languages")
+     *
+     * @return JsonResponse
+     */
+    public function preferredLanguagesData()
+    {
+        $preferredLanguagesData = $this->statisticsModel->getPreferredLanguagesData();
+
+        $response = new JsonResponse();
+        $response->setData($preferredLanguagesData);
+
+        return $response;
+    }
+
+    /**
+     * @Route("/stats/members/logins", name="stats_members_logins")
+     *
+     * @return JsonResponse
+     */
+    public function loginsData()
+    {
+        $data = $this->statisticsModel->getMembersPerLoginData();
+
+        $response = new JsonResponse();
+        $response->setData($data);
+
+        return $response;
+    }
+
+    /**
+     * @Route("/stats/members/countries", name="stats_members_per_countries")
+     *
+     * @return JsonResponse
+     */
+    public function getMembersPerCountryData()
+    {
+        $data = $this->statisticsModel->getMembersPerCountryData();
+
+        $response = new JsonResponse();
+        $response->setData($data);
 
         return $response;
     }

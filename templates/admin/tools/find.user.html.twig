@@ -15,7 +15,7 @@
             <table class="table table-striped table-hover">
                 {% for member in members %}
                     <tr>
-                        <td>{{ macros.avatar(member.username) }}</td>
+                        <td>{{ macros.avatar(member.username, 48) }}</td>
                         <td>{{ macros.profilelink(member.username) }}</td>
                         <td>{{ member.email }}</td>
                     </tr>

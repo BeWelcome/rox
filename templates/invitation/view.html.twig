@@ -1,11 +1,7 @@
-{% extends 'base.html.twig' %}
+{% import 'macros.twig' as macros %}
+{% extends 'conversations/view.html.twig' %}
 
-{% block stylesheets %}
-    {{ encore_entry_link_tags('tailwind') }}
-{% endblock stylesheets %}
-
-{% block content %}
-    {% import 'macros.twig' as macros %}
+{% block additional %}
     {% set original = thread | last %}{% set invitation = (thread | first).request %}
     {% set myself = app.user %}
     {% set otherUser = (myself == original.Sender) ? original.Receiver : original.Sender %}
@@ -16,9 +12,5 @@
     {% endif %}
     {% set leg = invitation.inviteForLeg %}
 
-    {{ macros.messageheader(thread, {show_deleted: show_deleted, is_spam: is_spam}) }}
-
     {% include 'invitation/header.html.twig' %}
-
-    {% include 'message/thread.html.twig' %}
-{% endblock content %}
+{% endblock additional %}

@@ -132,6 +132,13 @@ class Message
     private $firstRead;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="CheckerComment", type="text", nullable=true)
+     */
+    private $checkerComment;
+
+    /**
      * @var Subject
      *
      * @ORM\ManyToOne(targetEntity="Subject", cascade={"persist"}, inversedBy="messages")
@@ -364,6 +371,19 @@ class Message
         }
 
         return Carbon::instance($this->firstRead);
+    }
+
+
+    public function getCheckerComment(): string
+    {
+        return $this->checkerComment ?? '';
+    }
+
+    public function setCheckerComment(?string $checkerComment): Message
+    {
+        $this->checkerComment = $checkerComment;
+
+        return $this;
     }
 
     public function getId(): int

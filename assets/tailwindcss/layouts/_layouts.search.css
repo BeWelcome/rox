@@ -1,0 +1,51 @@
+.l-search-result {
+  display: grid;
+  grid-template-areas:
+      "avatar member"
+      "avatar hosting"
+      "about_me about_me";
+  grid-template-columns: 100px 1fr;
+  column-gap: 16px;
+  padding: 4px;
+  margin-bottom: 4px;
+}
+
+.l-search-result__dark {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Small */
+@media (min-width: 576px) {
+  .l-search-result {
+    display: grid;
+    grid-template-areas:
+        "avatar member hosting"
+        "avatar member extra_info"
+        "about_me about_me about_me";
+    grid-template-columns: 100px 1fr 1fr;
+  }
+}
+
+/* Medium */
+@media (min-width: 768px) {
+  .l-search-result {
+    display: grid;
+    grid-template-areas:
+      "avatar member about_me"
+      "avatar hosting about_me"
+      "avatar extra_info about_me";
+    grid-template-columns: 100px 180px 1fr;
+  }
+}
+
+/* Large */
+@media (min-width: 992px)  {
+  .l-search-result {
+    display: grid;
+    grid-template-areas:
+      "avatar member about_me hosting"
+      "avatar memebr about_me extra_info";
+    grid-template-columns: 100px 180px 1fr min-content;
+  }
+}
+

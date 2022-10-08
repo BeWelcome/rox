@@ -1,0 +1,14 @@
+label.decline.no.message:
+    - 'Decline without message'
+    - Button label in case someone wants to decline a request/invitation without giving a reason
+request.error.duration:
+    - 'Please set a duration'
+    - Error message shown when no duration was selected in a request
+    - validators
+please.enter.a.message.text:
+    - 'Please enter a message text or use decline without message.'
+    - Error message shown when no message text was entered for a request
+    - validators
+flash.request.declined:
+    - 'You declined this request.'
+    - Flash shown when clicking the decline without message link in the request form

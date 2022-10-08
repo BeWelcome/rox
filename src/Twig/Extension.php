@@ -106,6 +106,16 @@ class Extension extends AbstractExtension implements GlobalsInterface
         return $carbon->diffForHumans();
     }
 
+    public function privacy(string $isoDate): string
+    {
+        $date = Carbon::createFromFormat('Y-m-d', $isoDate);
+        if ($date->diffInDays() <=  7) {
+            return $this->translator->trans('lastloginprivacy');
+        } else {
+            return $isoDate;
+        }
+    }
+
     public function getFilters(): array
     {
         return [
@@ -130,7 +140,14 @@ class Extension extends AbstractExtension implements GlobalsInterface
                     'is_safe' => ['html'],
                 ]
             ),
-        ];
+            new TwigFilter(
+                'privacy',
+                [$this, 'privacy'],
+                [
+                    'is_safe' => ['html'],
+                ]
+            )
+         ];
     }
 
     /**

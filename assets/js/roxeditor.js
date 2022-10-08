@@ -87,7 +87,9 @@ for (let i = 0; i < allEditors.length; ++i) {
         ],
         image: {
             toolbar: [
-                'imageTextAlternative'
+                'imageTextAlternative',
+                '|',
+                'toggleImageCaption'
             ]
         },
         language: document.documentElement.lang,

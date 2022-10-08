@@ -40,3 +40,15 @@ email.invitation.to.stay:
 or:
     - or
     - The text between the buttons in the email text for invitiations and requests
+email.suffix.declined:
+    - ' (declined)'
+    - suffix added to the notification email send for a request or invitation
+email.suffix.accepted:
+    - ' (accepted)'
+    - suffix added to the notification email send for a request or invitation
+email.suffix.cancelled:
+    - ' (cancelled)'
+    - suffix added to the notification email send for a request or invitation
+email.suffix.maybe:
+    - ' (maybe)'
+    - suffix added to the notification email send for a request or invitation

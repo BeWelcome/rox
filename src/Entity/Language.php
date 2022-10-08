@@ -50,7 +50,7 @@ class Language
      *
      * @Groups({"Member:Read"})
      */
-    private $shortcode;
+    private $shortCode;
 
     /**
      * @var string
@@ -183,13 +183,13 @@ class Language
     /**
      * Set shortcode.
      *
-     * @param string $shortcode
+     * @param string $shortCode
      *
      * @return Language
      */
-    public function setShortcode($shortcode)
+    public function setShortCode($shortCode)
     {
-        $this->shortcode = $shortcode;
+        $this->shortCode = $shortCode;
 
         return $this;
     }
@@ -199,9 +199,9 @@ class Language
      *
      * @return string
      */
-    public function getShortcode()
+    public function getShortCode()
     {
-        return $this->shortcode;
+        return $this->shortCode;
     }
 
     /**

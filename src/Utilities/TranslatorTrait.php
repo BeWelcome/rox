@@ -32,6 +32,6 @@ trait TranslatorTrait
     protected function setTranslatorLocale(Member $receiver)
     {
         $language = $receiver->getPreferredLanguage();
-        $this->translator->setLocale($language->getShortcode());
+        $this->translator->setLocale($language->getShortCode());
     }
 }

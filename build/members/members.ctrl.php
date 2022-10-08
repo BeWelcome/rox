@@ -333,6 +333,10 @@ class MembersController extends RoxControllerBase
                             } else {
                                 $page = new ProfilePage();
                                 $page->enableLightBox();
+                                if (isset($request[2]) && is_int($request[2])) {
+                                    $page->setMessage(intval($request[2]));
+                                }
+
                                 $this->model->set_profile_language($request[2]);
                                 $page->statuses = $this->model->getStatuses();
                             }

@@ -136,7 +136,7 @@
                         </span>
                         {{ 'marknospam' | trans }}</a>
                 {% else %}
-                    <a class="o-button--s md:o-button" href="{{ path('conversation_mark_spam', { id: current.id }) }}">
+                    <a class="o-button--s md:o-button js-modal-trigger" data-micromodal-trigger="report-modal">
                         <i class="fas fa-flag u-mr-8"></i>
                         {{ 'markspam' | trans }}</a>
                 {% endif %}
@@ -172,7 +172,7 @@
                 {% set languages %}
                 {% for level in receiver.languageLevels %}
                     {% apply spaceless %}
-                    {{ ('lang_' ~ level.language.shortcode) | lower | trans }}<span class="d-none d-md-inline">
+                    {{ ('lang_' ~ level.language.shortCode) | lower | trans }}<span class="d-none d-md-inline">
                         ({{ ('languagelevel_' ~ level.level) | lower | trans }})</span>
                     {%- if not loop.last -%}
                         ,

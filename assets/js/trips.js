@@ -30,6 +30,7 @@ function initializePicker(value) {
         format: "YYYY-MM-DD",
         position: 'top left',
         lang: document.documentElement.lang,
+        showTooltip: false,
         setup: (picker) => {
             picker.on('selected', (start, end) => {
                 lastEndDateSet = end.format('YYYY-MM-DD');

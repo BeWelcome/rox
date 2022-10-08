@@ -26,7 +26,7 @@
             {% for trip in trips %}
             <div class="c-trip-card">
                 <div class="c-trip-card__wrapper">
-                    <a class="u-text-white hover:u-text-gray-20 u-text-24 u-font-display u-font-700 u-col-span-full u-mb-8" href="{{ path('trip_show', { 'id': trip.id } ) }}">{{ trip.summary }}</a>
+                    <a class="u-text-white hover:u-text-gray-20 u-text-24 u-font-display u-font-700 u-col-span-full u-ellipsis u-mb-8" href="{{ path('trip_show', { 'id': trip.id } ) }}">{{ trip.summary }}</a>
                     <div>
                         <div class=" u-font-display u-italic u-text-white u-mb-8">{{ trip.description | nl2br | purify | truncate(200) }}</div>
                         <div class="u-text-white u-font-display u-mt-8 u-mb-16 md:u-m-0 u-flex u-flex-column">
@@ -60,10 +60,12 @@
                     </div>
                 </div>
                 <div class="u-flex u-justify-center md:u-justify-between u-items-center u-mt-16 md:u-m-0">
+                    {% if not trip.isExpired %}
                     <a class="o-rounded o-rounded--l u-text-18 u-mr-20 md:u-m-0"
                        href="{{ path('trip_edit', {'id': trip.id}) }}" aria-label="{{ 'trip.edit'|trans }}" title="{{ 'trip.edit'|trans }}">
                         <i class="far fa-edit"></i>
                     </a>
+                    {% endif %}
                     <a class="o-rounded o-rounded--l" data-micromodal-trigger="removeTrip-{{ trip.id }}">
                       <i class="fa fa-times"></i>
                     </a>
@@ -84,6 +86,9 @@
     {% else %}
         <p class="u-text-white u-font-display">{{ 'trip.no.trips'|trans }}</p>
     {% endif %}
+{% endblock content %}
+
+{% block modals %}
     {# add modal later for full screen overlay #}
     {% for trip in trips %}
         <div class="modal micromodal-slide" id="removeTrip-{{ trip.id }}" aria-hidden="true">
@@ -109,4 +114,4 @@
             </div>
         </div>
     {% endfor %}
-{% endblock content %}
+{% endblock modals %}

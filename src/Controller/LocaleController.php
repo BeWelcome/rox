@@ -14,7 +14,7 @@ class LocaleController extends AbstractController
 {
     /**
      * @Route("/rox/in/{locale}", name="language", requirements={"locale" = "[a-z]{2}(-[A-Za-z]{2,})?"})
-     * @ParamConverter("language", class="App\Entity\Language", options={"mapping": {"locale": "shortcode"}})
+     * @ParamConverter("language", class="App\Entity\Language", options={"mapping": {"locale": "shortCode"}})
      *
      * @return RedirectResponse
      */

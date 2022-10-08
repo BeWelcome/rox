@@ -1,0 +1,36 @@
+statistics.legs.created:
+    - 'Trips created'
+    - Headline for the statistics about created trips (actually shows legs but easier to translate)
+statistics.invitations.sent:
+    - 'Invitations sent'
+    - Headline for the statistics about invitations
+statistics.invitations.accepted:
+    - 'Invitations accepted'
+    - Headline for the statistics about invitations
+statistics.1day:
+    - '1 day'
+    - Legend for login statistics
+statistics.1week:
+    - '1 week'
+    - Legend for login statistics
+statistics.2weeks:
+    - '2 weeks'
+    - Legend for login statistics
+statistics.4weeks:
+    - '2-4 weeks'
+    - Legend for login statistics
+statistics.3months:
+    - '1-3 months'
+    - Legend for login statistics
+statistics.6months:
+    - '3-6 months'
+    - Legend for login statistics
+statistics.12months:
+    - '6-12 months'
+    - Legend for login statistics
+statistics.longer:
+    - 'longer'
+    - Legend for login statistics
+statistics.other:
+    - 'Other ({count})'
+    - Legend item for statistics that are aggregated (languages and country of members)

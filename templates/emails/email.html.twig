@@ -1,35 +1,40 @@
-{% apply inky_to_html | inline_css (encore_entry_css_source('email')) %}
-    <wrapper class="header">
-        <container>
-            <row class="collapse">
-                <columns small="12" valign="middle">
-                    <a href="{{ url('homepage') }}"><img
-                            src="{{ email.image('@images/logo_index_top.png') }}"></a>
-                </columns>
-            </row>
-        </container>
-    </wrapper>
-
-    <container class="secondary">
-
-        <spacer size="16"></spacer>
-
-        <row>
-            <columns>
-                <p>{{ 'email.greeting'|trans({ 'username': receiver.Username, 'gender': receiver.gender}) }}<br></p>
-
-                {%- block content -%}{%- endblock content -%}
-            </columns>
-        </row>
-
-        <wrapper>
-            <spacer size="16"></spacer>
-            <row>
-                <columns>
-                    <p>{{ "now" | date("Y") }} - <a href="{{ url('homepage') }}" target="_blank">BeWelcome</a></p>
-                </columns>
-            </row>
+{% apply inline_css %}
+    <style>
+        {{ encore_entry_css_source('email') }}
+    </style>
+    {% apply inky_to_html %}
+        <wrapper class="header">
+            <container>
+                <row class="collapse">
+                    <columns small="12" valign="middle">
+                        <a href="{{ url('homepage') }}"><img
+                                src="{{ email.image('@images/logo_index_top.png') }}"></a>
+                    </columns>
+                </row>
+            </container>
         </wrapper>
 
-    </container>
+        <container class="secondary">
+
+            <spacer size="16"></spacer>
+
+            <row>
+                <columns>
+                    <p>{{ 'email.greeting'|trans({ 'username': receiver.Username, 'gender': receiver.gender}) }}<br></p>
+
+                    {%- block content -%}{%- endblock content -%}
+                </columns>
+            </row>
+
+            <wrapper>
+                <spacer size="16"></spacer>
+                <row>
+                    <columns>
+                        <p>{{ "now" | date("Y") }} - <a href="{{ url('homepage') }}" target="_blank">BeWelcome</a></p>
+                    </columns>
+                </row>
+            </wrapper>
+
+        </container>
+    {% endapply %}
 {% endapply %}

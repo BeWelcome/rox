@@ -432,9 +432,6 @@
     "phpunit/php-file-iterator": {
         "version": "3.0.5"
     },
-    "phpunit/php-timer": {
-        "version": "5.0.3"
-    },
     "psr/cache": {
         "version": "1.0.1"
     },

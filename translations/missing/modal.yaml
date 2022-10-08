@@ -1,0 +1,6 @@
+modal.close:
+    - 'Close'
+    - Button label on any modal
+modal.continue:
+    - 'Continue'
+    - Button label on some modals

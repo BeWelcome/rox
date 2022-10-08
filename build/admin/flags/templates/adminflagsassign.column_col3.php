@@ -38,7 +38,7 @@ $callbackTags = $this->layoutkit->formkit->setPostCallback('AdminFlagsController
 
     <div class="type-text">
         <label for="username"><?php echo $this->words->get("AdminFlagsUserName")?></label>
-        <input type="text" class="member-autocomplete" id="username" name="username" value="<?= $this->vars['username'] ?>"
+        <input type="text" class="o-input" class="member-autocomplete" id="username" name="username" value="<?= $this->vars['username'] ?>"
             <?= ($this->member ? 'readonly="readonly"' : '') ?>
                />
     </div>
@@ -48,10 +48,10 @@ $callbackTags = $this->layoutkit->formkit->setPostCallback('AdminFlagsController
     </div>
     <div class="type-text">
         <label for="comment"><?php echo $this->words->get("AdminFlagsComment") ?></label>
-        <textarea id="comment" name="comment" rows="4" placeholder="Enter a comment, so that others know why the flag was assigned."><?=
+        <textarea class="o-input" id="comment" name="comment" rows="4" placeholder="Enter a comment, so that others know why the flag was assigned."><?=
         htmlentities($this->vars['comment'], ENT_COMPAT, 'utf-8') ?></textarea>
     </div>
     <div class="type-button">
-        <input type="submit" id="AdminFlagsSubmit" name="AdminFlagsSubmit" value="<?php echo $this->words->getSilent("AdminFlagsSubmit")?>" /><?php echo $words->flushBuffer(); ?>
+        <input type="submit" class="btn btn-primary" id="AdminFlagsSubmit" name="AdminFlagsSubmit" value="<?php echo $this->words->getSilent("AdminFlagsSubmit")?>" /><?php echo $words->flushBuffer(); ?>
     </div>
 </form>

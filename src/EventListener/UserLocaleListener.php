@@ -54,7 +54,7 @@ class UserLocaleListener implements EventSubscriberInterface
             $locale = $this->session->get('_locale', 'en');
             $languageRepository = $this->em->getRepository(Language::class);
             $language = $languageRepository->findOneBy([
-                'shortcode' => $locale,
+                'shortCode' => $locale,
             ]);
         }
         PVars::register('lang', $locale);

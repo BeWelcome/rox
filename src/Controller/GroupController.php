@@ -23,6 +23,8 @@ use App\Utilities\TranslatorTrait;
 use App\Utilities\UniqueFilenameTrait;
 use Exception;
 use Intervention\Image\ImageManager;
+use Pagerfanta\Adapter\ArrayAdapter;
+use Pagerfanta\Pagerfanta;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -413,11 +415,18 @@ class GroupController extends AbstractController
         $wikiRepository = $em->getRepository(Wiki::class);
 
         $wikiPage = $wikiRepository->getPageByName($pageName, 0);
-
+        $historyPagination = null;
         if (null === $wikiPage) {
             $output = null;
         } else {
             $output = $wikiModel->parseWikiMarkup($wikiPage->getContent());
+            // Create paginator for history
+            $history = $wikiModel->getHistory($wikiPage);
+
+            $adapter = new ArrayAdapter($history);
+            $historyPagination = new Pagerfanta($adapter);
+            $historyPagination->setMaxPerPage(1);
+            $historyPagination->setCurrentPage($historyPagination->getNbResults());
         }
 
         return $this->render('group/wiki.html.twig', [
@@ -427,7 +436,9 @@ class GroupController extends AbstractController
                 'items' => $this->getSubmenuItems($member, $group),
             ],
             'group' => $group,
-            'wikipage' => $output,
+            'content' => $output,
+            'wikipage' => $wikiPage,
+            'history' => $historyPagination,
         ]);
     }
 

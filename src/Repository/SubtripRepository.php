@@ -21,17 +21,22 @@ use Doctrine\ORM\QueryBuilder;
  */
 class SubtripRepository extends EntityRepository
 {
-    /*    public function queryTripsOfMember(Member $member): Query
-        {
-            return $this->createQueryBuilder('t')
-                ->where('t.created <= :now')
-                ->andWhere('t.creator = :creator')
-                ->setParameter(':now', new DateTime())
-                ->setParameter(':creator', $member)
-                ->orderBy('t.created', 'DESC')
-                ->getQuery();
-        }
-    */
+    public function getVisitorsCount(Member $member, int $distance = 20, int $duration = 3): int
+    {
+        $queryBuilder = $this->getLegsInAreaQueryBuilder($member, $distance, $duration);
+        $queryBuilder
+            ->select('count(s.id)')
+            ->andWhere('t.countOfTravellers <= :maxguest')
+            ->setParameter(':maxguest', $member->getMaxguest())
+        ;
+
+        return
+            $queryBuilder
+                ->getQuery()
+                ->getSingleScalarResult()
+            ;
+    }
+
     public function getLegsInAreaMaxGuests(Member $member, int $distance = 20, int $duration = 3): array
     {
         $queryBuilder = $this->getLegsInAreaQueryBuilder($member, $distance, $duration);
@@ -60,21 +65,23 @@ class SubtripRepository extends EntityRepository
     {
         $now = new CarbonImmutable();
         $durationMonthsAhead = $now->addMonths($duration);
+        $departureTwoWeeksAhead = $now->addWeeks(2);
 
         $qb = $this->createQueryBuilder('s');
         $qb
             ->join('s.location', 'l')
             ->join('s.trip', 't')
             ->join('t.creator', 'm')
-            ->where(
+            ->where($qb->expr()->notLike('s.options', $qb->expr()->literal('%' . SubtripOptionsType::PRIVATE . '%')))
+            ->andWhere(
                 $qb->expr()->orX(
                     $qb->expr()->isNull('s.invitedBy'),
                     $qb->expr()->eq('s.invitedBy', $member->getId()),
                     $qb->expr()->in('s.options', [SubtripOptionsType::MEET_LOCALS])
                 )
             )
-            ->andWhere($qb->expr()->notIn('s.options', [SubtripOptionsType::PRIVATE]))
-            ->andWhere('s.arrival >= :now')
+            ->andWhere('s.departure >= :now')
+            ->andWhere('s.departure <= :departureTwoWeeksAhead')
             ->andWhere('s.arrival <= :durationMonthsAhead')
             ->andWhere($qb->expr()->in('m.status', ['Active', 'OutOfRemind']))
             ->andWhere('t.creator <> :member')
@@ -93,6 +100,7 @@ class SubtripRepository extends EntityRepository
             ->setParameter(':longitude', $member->getLongitude())
             ->setParameter(':now', $now)
             ->setParameter(':durationMonthsAhead', $durationMonthsAhead)
+            ->setParameter(':departureTwoWeeksAhead', $departureTwoWeeksAhead)
             ->orderBy('s.arrival', 'ASC')
             ->addSelect('t')
         ;

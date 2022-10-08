@@ -21,6 +21,7 @@ Boston, MA  02111-1307, USA.
 */
 
 use App\Doctrine\AccommodationType;
+use App\Doctrine\MemberStatusType;
 
 /**
      * members base page
@@ -35,6 +36,8 @@ use App\Doctrine\AccommodationType;
      */
 class MemberPage extends PageWithActiveSkin
 {
+    protected $message = 0;
+
     protected function getPageTitle()
     {
         $member = $this->member;
@@ -49,9 +52,9 @@ class MemberPage extends PageWithActiveSkin
 
     protected function getSubmenuItems()
     {
-        $username = $this->member->Username;
-        $accommodation = $this->member->Accomodation;
         $member = $this->member;
+        $username = $member->Username;
+        $accommodation = $member->Accomodation;
         $lang = $this->model->get_profile_language();
         $profile_language_code = $lang->ShortCode;
         $words = $this->getWords();
@@ -84,7 +87,7 @@ class MemberPage extends PageWithActiveSkin
         if ($rights->HasRight('SafetyTeam') || $rights->HasRight('Admin') || $rights->HasRight('ForumModerator')) {
             $linkMembersForumPosts = true;
         }
-
+        $tt = [];
         $mynotes_count = $member->count_mynotes();
         if ($this->myself) {
             $tt=array(
@@ -128,28 +131,36 @@ class MemberPage extends PageWithActiveSkin
                 $mynotewordsname=$words->get('NoteAddToMyNotes') ;
                 $mynotelinkname= "members/$username/note/add" ;
             }
-            $tt= [
-                array('messagesadd', "new/message/$username", '<i class="fa fa-fw fa-envelope"></i> ' . $ww->ContactMember, 'messagesadd'),
-            ];
+            if (MemberStatusType::PASSED_AWAY !== $member->Status) {
+                $tt= [
+                    array('messagesadd', "new/message/$username", '<i class="fa fa-fw fa-envelope"></i> ' . $ww->ContactMember, 'messagesadd'),
+                ];
+            }
             if (0 < $conversations_with_count) {
                 $tt = array_merge($tt, [['allmessages', "conversations/with/$username", '<i class="fas fa-fw fa-mail-bulk"></i> ' . $words->getSilent('profile.all.messages.with') .
                     '<span class="badge badge-primary u-rounded-full u-w-20 u-h-20 u-inline-flex u-items-center u-justify-center pull-right">'.$conversations_with_count.'</span>', 'allmessages']]);
+            }
+            $feedbackUrl = "/feedback?IdCategory=2&username=" . $username;
+            if ($this->message !== 0) {
+                $feedbackUrl .= "&messageId=" . $this->message;
             }
             $tt = array_merge($tt, [
                 (isset($TCom[0])) ? array('commmentsadd', "members/$username/comments/edit", '<i class="fa fa-fw fa-comment"></i> ' . $ww->EditComments, 'commentsadd') : array('commmentsadd', "members/$username/comments/add", '<i class="fa fa-fw fa-comment"></i> ' . $ww->AddComments, 'commentsadd'),
                 array('relationsadd', "members/$username/relations/add", '<i class="fa fa-fw fa-handshake"></i> ' . $ww->addRelation, 'relationsadd'),
                 array('notes', $mynotelinkname, '<i class="fa fa-fw fa-pencil-alt"></i> ' . $mynotewordsname, 'mynotes'),
-                array('report', "/feedback?IdCategory=2&FeedbackQuestion=" . urlencode( $words->get('profile.report.text', $username)), '<i class="fas fa-fw fa-flag"></i> ' . $words->getSilent('profile.report')),
+                array('report', $feedbackUrl, '<i class="fas fa-fw fa-flag"></i> ' . $words->getSilent('profile.report')),
                 array('space', '', '', 'space'),
                 array('profile', "members/$username", '<i class="fa fa-fw fa-user"></i> '  . $ww->MemberPage),
                 array('comments', "members/$username/comments", '<i class="fa fa-fw fa-comments"></i> ' . $ww->ViewComments.' <span class="badge badge-primary u-rounded-full u-w-20 u-h-20 u-inline-flex u-items-center u-justify-center pull-right">'.$comments_count['all'].'</span>'),
                 array('gallery', "gallery/show/user/$username/pictures", '<i class="fa fa-fw fa-image"></i> ' . $ww->Gallery . ' <span class="badge badge-primary u-rounded-full u-w-20 u-h-20 u-inline-flex u-items-center u-justify-center pull-right">' . $galleryItemsCount . '</span>'),
             ]);
-            if ($this->leg) {
-                array_unshift($tt, array('sendinvite', "new/invitation/$this->leg", '<i class="fa fa-fw fa-bed"></i> ' . $words->get('profile.invite.guest'), 'sendinvite'));
-            } else if ($accommodation != AccommodationType::NO)
-            {
-                array_unshift($tt, array('sendrequest', "new/request/$username", '<i class="fa fa-fw fa-bed"></i> ' . $words->get('profile.request.hosting'), 'sendrequest'));
+            if (MemberStatusType::PASSED_AWAY !== $member->Status) {
+                if ($this->leg) {
+                    array_unshift($tt, array('sendinvite', "new/invitation/$this->leg", '<i class="fa fa-fw fa-bed"></i> ' . $words->get('profile.invite.guest'), 'sendinvite'));
+                } else if ($accommodation != AccommodationType::NO)
+                {
+                    array_unshift($tt, array('sendrequest', "new/request/$username", '<i class="fa fa-fw fa-bed"></i> ' . $words->get('profile.request.hosting'), 'sendrequest'));
+                }
             }
             if ($linkMembersForumPosts) {
                 $tt[] = array('forum', "forums/member/$username", '<i class="far fa-fw fa-comment"></i> ' . $viewForumPosts);

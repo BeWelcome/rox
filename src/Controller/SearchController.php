@@ -17,6 +17,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SearchController extends AbstractController
@@ -65,7 +66,7 @@ class SearchController extends AbstractController
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.StaticAccess)
      */
-    public function searchLocations(Request $request, TranslatorInterface $translator)
+    public function searchLocations(Request $request, TranslatorInterface $translator, SerializerInterface $serializer)
     {
         $pager = null;
         $results = null;
@@ -80,8 +81,17 @@ class SearchController extends AbstractController
         /** @var Preference $showOptionsPreference */
         $showOptionsPreference = $preferenceRepository->findOneBy(['codename' => Preference::SHOW_SEARCH_OPTIONS]);
         $showOptions = $member->getMemberPreferenceValue($showOptionsPreference);
+        /** @var Preference $storedSearchFilter */
+        $searchOptionsPreference = $preferenceRepository->findOneBy(['codename' => Preference::SEARCH_OPTIONS]);
+        $memberSearchOptionsPreference = $member->getMemberPreference($searchOptionsPreference);
+        $options = $memberSearchOptionsPreference->getValue();
 
-        $searchFormRequest = SearchFormRequest::fromRequest($request, $this->getDoctrine()->getManager());
+        if ("" !== $options) {
+            $searchFormRequest = unserialize($options);
+        } else {
+            $searchFormRequest = new SearchFormRequest($this->getDoctrine()->getManager());
+        }
+        $searchFormRequest->overrideFromRequest($request);
         $searchFormRequest->show_map = ('Yes' === $showMap);
         $searchFormRequest->show_options = ('Yes' === $showOptions);
 
@@ -92,6 +102,7 @@ class SearchController extends AbstractController
         $search = $formFactory->createNamed('search', SearchFormType::class, $searchFormRequest, [
             'groups' => $member->getGroups(),
             'languages' => $member->getLanguages(),
+            'search_options' => $options,
         ]);
 
         $request = $this->overrideRequestParameters($request, $searchFormRequest);
@@ -111,6 +122,7 @@ class SearchController extends AbstractController
 
         if ($tinyIsValid || $homeIsValid || $searchIsValid) {
             $data = null;
+            $em = $this->getDoctrine()->getManager();
             /* @var SearchFormRequest $data */
             if ($tinyIsValid) {
                 $data = $tiny->getData();
@@ -120,12 +132,22 @@ class SearchController extends AbstractController
             }
             if ($searchIsValid) {
                 $data = $search->getData();
+                if ($search->has('resetOptions') && $search->get('resetOptions')->isClicked()) {
+                    $memberSearchOptionsPreference->setValue('');
+                    $em->persist($memberSearchOptionsPreference);
+                    $em->flush();
+                    return $this->redirectToRoute('search_locations');
+                }
+
+                // serialize the search options and store them in the preference
+                $searchOptions = serialize($searchFormRequest);
+                $memberSearchOptionsPreference->setValue($searchOptions);
+                $em->persist($memberSearchOptionsPreference);
             }
             $memberShowMapPreference = $member->getMemberPreference($showMapPreference);
             $memberShowMapPreference->setValue($data->show_map ? 'Yes' : 'No');
             $memberShowOptionsPreference = $member->getMemberPreference($showOptionsPreference);
             $memberShowOptionsPreference->setValue($data->show_options ? 'Yes' : 'No');
-            $em = $this->getDoctrine()->getManager();
             $em->persist($memberShowMapPreference);
             $em->persist($memberShowOptionsPreference);
             $em->flush();

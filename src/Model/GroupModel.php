@@ -56,24 +56,24 @@ class GroupModel
         // We need a comment on the GroupMembership, so let's create one in English
         $languageRepository = $em->getRepository(Language::class);
         /** @var Language $language */
-        $language = $languageRepository->findOneBy(['shortcode' => 'en']);
+        $language = $languageRepository->findOneBy(['shortCode' => 'en']);
 
         $membership = new GroupMembership();
         $membership->setGroup($group);
         $membership->setMember($member);
 
         $translator = $this->getTranslator();
-        $translator->setLocale($member->getPreferredLanguage()->getShortcode());
+        $translator->setLocale($member->getPreferredLanguage()->getShortCode());
         $comment = (new MemberTranslation())
             ->setLanguage($language)
-            ->setSentence($translator->trans('group.got.invited.by'))
+            ->setSentence($translator->trans('group.got.invited.by', ['by' => $admin->getUsername()]))
             ->setOwner($member->getId())
             ->setTranslator($member->getId())
         ;
         $em->persist($comment);
         $em->flush();
 
-        $translator->setLocale($admin->getPreferredLanguage()->getShortcode());
+        $translator->setLocale($admin->getPreferredLanguage()->getShortCode());
 
         $membership->addComment($comment);
         $membership->setStatus(GroupMembershipStatusType::INVITED_INTO_GROUP);
@@ -82,15 +82,19 @@ class GroupModel
 
         // Send email to invitee
         $params = [
-            'subject' => 'group.invitation',
-            'receiver' => $member,
+            'subject' => [
+                'translationId' => 'group.invitation',
+                'parameters' => [
+                    'username' => $member->getUsername(),
+                    'group' => $group->getName(),
+                ],
+            ],            'receiver' => $member,
             'sender' => $admin,
             'group' => [
                 'name' => $group->getName(),
                 'id' => $group->getId(),
             ],
         ];
-        $this->createTemplateMessage($admin, $member, '_partials/group/invitation', $params);
         $this->mailer->sendGroupNotificationEmail($admin, $member, 'group/invitation', $params);
 
         $url = $this->urlGenerator->generate('group_start', ['group_id' => $group->getId()]);
@@ -177,7 +181,7 @@ class GroupModel
             $em = $this->getManager();
             $languageRepository = $em->getRepository(Language::class);
             /** @var Language $language */
-            $language = $languageRepository->findOneBy(['shortcode' => $locale]);
+            $language = $languageRepository->findOneBy(['shortCode' => $locale]);
 
             $comment = new MemberTranslation();
             $comment->setLanguage($language);
@@ -210,7 +214,6 @@ class GroupModel
                 ];
                 $admins = $group->getAdministrators();
                 foreach ($admins as $admin) {
-                    $this->createTemplateMessage($member, $admin, '_partials/group/wantin', $params);
                     $this->mailer->sendGroupNotificationEmail($member, $admin, 'group/wantin', $params);
                 }
             } else {
@@ -251,9 +254,9 @@ class GroupModel
         // We need the current locale for the MemberTranslation entity
         $languageRepository = $em->getRepository(Language::class);
         /** @var Language $language */
-        $language = $languageRepository->findOneBy(['shortcode' => $locale]);
+        $language = $languageRepository->findOneBy(['shortCode' => $locale]);
         /** @var Language $english */
-        $english = $languageRepository->findOneBy(['shortcode' => 'en']);
+        $english = $languageRepository->findOneBy(['shortCode' => 'en']);
 
         // We create the group entity and add the first member
         $group = new Group();
@@ -337,7 +340,13 @@ class GroupModel
 
         $this->updateMembership($group, $member, GroupMembershipStatusType::CURRENT_MEMBER);
         $this->mailer->sendGroupNotificationEmail($admin, $member, 'group/join.approved', [
-            'subject' => 'group.approved.join',
+            'subject' => [
+                'translationId' => 'group.approved.join',
+                'parameters' => [
+                    'username' => $member->getUsername(),
+                    'group' => $group->getName(),
+                ],
+            ],
             'group' => $group,
             'member' => $member,
             'admin' => $admin,
@@ -353,7 +362,13 @@ class GroupModel
         }
         $this->updateMembership($group, $member, GroupMembershipStatusType::KICKED_FROM_GROUP);
         $this->mailer->sendGroupNotificationEmail($admin, $member, 'group/join.declined', [
-            'subject' => 'group.declined.join',
+            'subject' => [
+                'translationId' => 'group.declined.join',
+                'parameters' => [
+                    'username' => $member->getUsername(),
+                    'group' => $group->getName(),
+                ],
+            ],
             'group' => $group,
             'member' => $member,
             'admin' => $admin,
@@ -369,7 +384,10 @@ class GroupModel
     {
         foreach ($admins as $admin) {
             $this->mailer->sendGroupEmail($admin, 'group/declined.invite', [
-                'subject' => 'group.invitation.declined',
+                'subject' => [
+                    'subject' => 'group.invitation.declined',
+                    'group' => $group,
+                ],
                 'group' => $group,
                 'invitee' => $member,
                 'admin' => $admin,
@@ -382,7 +400,10 @@ class GroupModel
         $admins = $group->getAdministrators();
         foreach ($admins as $admin) {
             $this->mailer->sendGroupEmail($admin, 'group/accepted.invite', [
-                'subject' => 'group.invitation.accepted',
+                'subject' => [
+                    'subject' => 'group.invitation.accepted',
+                    'group' => $group,
+                ],
                 'group' => $group,
                 'invitee' => $member,
                 'admin' => $admin,

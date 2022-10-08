@@ -80,8 +80,8 @@ class PaginationRepository extends EntityRepository
             ->where('cn.public = :public')
             ->setParameter(':public', true)
             ->orderBy('cn.createdAt', 'desc')
-            ->setMaxResults(1)
+            ->setMaxResults(4)
             ->getQuery()
-            ->getOneOrNullResult();
+            ->getResult();
     }
 }

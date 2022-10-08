@@ -26,10 +26,13 @@ class InvitationUtility
         $subject = Mockery::mock(Subject::class, [
             'getSubject' => 'Subject',
         ]);
+        $today = new Carbon();
+        $someDaysAhead = new Carbon();
+        $someDaysAhead->addDays($replies);
         $request = Mockery::mock(HostingRequest::class, [
             'getId' => 1,
-            'getArrival' => new Carbon(),
-            'getDeparture' => new Carbon(),
+            'getArrival' => $today,
+            'getDeparture' => $someDaysAhead,
             'getNumberOfTravellers' => 2,
             'getFlexible' => true,
             'getStatus' => $status,

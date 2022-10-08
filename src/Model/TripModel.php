@@ -141,22 +141,7 @@ class TripModel
 
     public function hasTripExpired(Trip $trip)
     {
-        $legs = $trip->getSubtrips();
-
-        if (0 === $legs->count()) {
-            throw new InvalidArgumentException('No trip legs');
-        }
-
-        $expired = true;
-        $now = new Carbon();
-
-        /** @var Subtrip $leg */
-        foreach ($legs->getIterator() as $leg) {
-            $departure = $leg->getDeparture();
-            $expired = $expired && ($departure < $now);
-        }
-
-        return $expired;
+        return $trip->isExpired();
     }
 
     public function copyTrip(Trip $trip)

@@ -15,18 +15,18 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program; if not, see <http://www.gnu.org/licenses/> or 
-write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+along with this program; if not, see <http://www.gnu.org/licenses/> or
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 */
-    /** 
+    /**
      * @author Micha
      * @author Globetrotter_tt
      */
 
-    /** 
+    /**
      * members base page
-     * 
+     *
      * @package    Apps
      * @subpackage Members
      * @author     Micha
@@ -46,31 +46,18 @@ class ProfilePage extends MemberPage
     {
         $this->useLightbox = true;
         $this->addLateLoadScriptFile('build/lightbox.js');
+        $this->addLateLoadScriptFile('build/readmore.js');
+        $this->addStylesheet('build/readmore.css');
+    }
+
+    public function setMessage(int $messageId)
+    {
+        $this->message = $messageId;
     }
 
     protected function getSubmenuActiveItem()
     {
         return 'profile';
-    }
-
-    /*
-     * Creates login link displayed to not loggedin users in stead of hidden content
-     *
-     * @param string $url Link to forward to after login
-     * @param string $code Wordcode to show after logintext
-     * @param Word $words Translation functionality
-     * @return string Text for login including link
-     */
-    public function getLoginLink($url,$code){
-
-    $loginUrlOpen = '<a href="login' . $url . '#login-widget">';
-    $loginUrlClose = '</a>';
-
-    return $this->words->get($code,
-                             $this->words->getSilent('ProfileShowLogin'),
-                             $loginUrlOpen,
-                             $loginUrlClose);
-    
     }
 }
 

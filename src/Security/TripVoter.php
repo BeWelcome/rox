@@ -39,24 +39,33 @@ class TripVoter extends Voter
 
         /** @var Trip */
         $trip = $subject;
-
-        switch ($attribute) {
-            case self::TRIP_VIEW:
-                // Currently everyone can view any trip as long as not all legs are private
-                $view = $this->canEdit($trip, $member);
-                foreach ($trip->getSubtrips() as $leg) {
-                    $view = $view || !in_array(SubtripOptionsType::PRIVATE, $leg->getOptions());
-                }
-                return $view;
-            case self::TRIP_EDIT:
-                return $this->canEdit($trip, $member);
+        if (null !== $trip->getDeleted()) {
+            // A deleted trip can't be viewed or edited.
+            return false;
         }
 
-        throw new LogicException('This code should not be reached!');
+        if (self::TRIP_VIEW === $attribute) {
+            // A trip can always been viewed by its creator
+            if ($member === $trip->getCreator()) {
+                return true;
+            }
+
+            // A trip that does not only consist of private legs can be viewed by everyone
+            $view = false;
+            foreach ($trip->getSubtrips() as $leg) {
+                $view = $view || !in_array(SubtripOptionsType::PRIVATE, $leg->getOptions());
+            }
+            // excepts if it is expired
+            $view = $view && !$trip->isExpired();
+
+            return $view;
+        }
+
+        return $this->canEdit($trip, $member);
     }
 
     private function canEdit(Trip $trip, Member $member): bool
     {
-        return $member === $trip->getCreator();
+        return ($member === $trip->getCreator() && !$trip->isExpired());
     }
 }

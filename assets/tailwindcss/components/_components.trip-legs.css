@@ -70,6 +70,10 @@
 	align-items: flex-start;
 }
 
+.c-trip-legs__text-wrapper {
+  overflow: hidden;
+}
+
 @media (max-width: 900px) {
   .c-trip-legs__icons-wrapper {
     justify-content: initial;

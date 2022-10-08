@@ -1,33 +1,36 @@
-{% apply inky_to_html|inline_css(encore_entry_css_source('email')) %}
-    <wrapper class="header">
-        <container>
-            <row class="collapse">
-                <columns small="12" valign="middle">
-                    <a href="{{ url('homepage') }}"><img
-                            src="{{ email.image('@images/logo_index_top.png') }}"><</a>
+{% apply inline_css %}
+    <style>
+        {{ encore_entry_css_source('email') }}
+    </style>
+    {% apply inky_to_html %}
+        <wrapper class="header">
+            <container>
+                <row class="collapse">
+                    <columns small="12" valign="middle">
+                        <a href="{{ url('homepage') }}"><img
+                                src="{{ email.image('@images/logo_index_top.png') }}"><</a>
+                    </columns>
+                </row>
+            </container>
+        </wrapper>
+
+        <container class="secondary">
+
+            <spacer size="16"></spacer>
+
+            <row>
+                <columns small="12">
+                    {%- block content -%}{%- endblock content -%}
                 </columns>
             </row>
-        </container>
-    </wrapper>
 
-    <container class="secondary">
-
-        <spacer size="16"></spacer>
-
-        <row>
-            <columns>
-                {%- block content -%}{%- endblock content -%}
-            </columns>
-        </row>
-
-        <wrapper>
             <spacer size="16"></spacer>
             <row>
-                <columns>
+                <columns small="12">
                     <p>{{ "now" | date("Y") }} - <a href="{{ url('homepage') }}" target="_blank">BeWelcome</a></p>
                 </columns>
             </row>
-        </wrapper>
 
-    </container>
+        </container>
+    {% endapply %}
 {% endapply %}

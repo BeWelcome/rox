@@ -5,22 +5,23 @@ namespace App\Controller;
 use App\Entity\HostingRequest;
 use App\Entity\Member;
 use App\Entity\Message;
-use App\Model\AbstractRequestModel;
+use App\Model\BaseRequestModel;
 use App\Model\ConversationModel;
 use App\Utilities\TranslatedFlashTrait;
+use App\Utilities\TranslatorTrait;
 use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Form;
-use Symfony\Component\HttpFoundation\Request;
 
 abstract class BaseRequestAndInvitationController extends AbstractController
 {
+    use TranslatorTrait;
     use TranslatedFlashTrait;
 
-    protected AbstractRequestModel $model;
+    protected BaseRequestModel $model;
     protected ConversationModel $conversationModel;
 
-    public function __construct(AbstractRequestModel $model)
+    public function __construct(BaseRequestModel $model)
     {
         $this->model = $model;
     }
@@ -91,29 +92,33 @@ abstract class BaseRequestAndInvitationController extends AbstractController
             $subject = 'Re: ' . $subject;
         }
 
-        if (HostingRequest::REQUEST_CANCELLED === $newRequest->getRequest()->getStatus()) {
-            $subject = $this->adjustSubject('(Cancelled)', $subject);
-        }
-
-        if (HostingRequest::REQUEST_DECLINED === $newRequest->getRequest()->getStatus()) {
-            $subject = $this->adjustSubject('(Declined)', $subject);
-        }
-
-        if (HostingRequest::REQUEST_ACCEPTED === $newRequest->getRequest()->getStatus()) {
-            $subject = $this->adjustSubject('(Accepted)', $subject);
-        }
-
-        if (HostingRequest::REQUEST_TENTATIVELY_ACCEPTED === $newRequest->getRequest()->getStatus()) {
-            $subject = $this->adjustSubject('(Tentatively accepted)', $subject);
-        }
-
-        return $subject;
+        return $this->adjustSubject($newRequest->getRequest()->getStatus(), $subject);
     }
 
-    private function adjustSubject(string $suffix, string $subject): string
+    private function adjustSubject(int $status, string $subject): string
     {
-        if (false === strpos($suffix, $subject)) {
-            $subject .= $suffix;
+        switch ($status) {
+            case HostingRequest::REQUEST_DECLINED:
+                $suffix = 'email.suffix.declined';
+                break;
+            case HostingRequest::REQUEST_CANCELLED:
+                $suffix = 'email.suffix.cancelled';
+                break;
+            case HostingRequest::REQUEST_ACCEPTED:
+                $suffix = 'email.suffix.accepted';
+                break;
+            case HostingRequest::REQUEST_TENTATIVELY_ACCEPTED:
+                $suffix = 'email.suffix.maybe';
+                break;
+            default:
+                $suffix = '';
+        }
+
+        if (!empty($suffix)) {
+            $suffix = $this->getTranslator()->trans($suffix);
+            if (false === strpos($suffix, $subject)) {
+                $subject .= ' ' . $suffix;
+            }
         }
 
         return $subject;

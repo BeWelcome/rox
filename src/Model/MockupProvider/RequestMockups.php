@@ -109,7 +109,7 @@ class RequestMockups implements MockupProviderInterface
         $host = $parameters['admin'];
         $guest = $parameters['user'];
 
-        $thread = $this->getThread($host, $guest, $parameters['status']);
+        $thread = $this->getThread($host, $guest, $parameters['status'], 1);
 
         $form = $this->formFactory->create(HostingRequestGuest::class, $thread[1]);
 
@@ -126,7 +126,7 @@ class RequestMockups implements MockupProviderInterface
         $host = $parameters['user'];
         $guest = $parameters['admin'];
 
-        $thread = $this->getThread($host, $guest, $parameters['status']);
+        $thread = $this->getThread($host, $guest, $parameters['status'], 2);
 
         $form = $this->formFactory->create(HostingRequestHost::class, $thread[1]);
 
@@ -143,7 +143,7 @@ class RequestMockups implements MockupProviderInterface
         $host = $parameters['user'];
         $guest = $parameters['admin'];
 
-        $thread = $this->getThread($host, $guest, $parameters['status']);
+        $thread = $this->getThread($host, $guest, $parameters['status'], 3);
 
         return [
             'host' => $host,
@@ -159,7 +159,7 @@ class RequestMockups implements MockupProviderInterface
         $host = $parameters['admin'];
         $guest = $parameters['user'];
 
-        $thread = $this->getThread($host, $guest, $parameters['status']);
+        $thread = $this->getThread($host, $guest, $parameters['status'], 4);
 
         return [
             'host' => $host,
@@ -170,7 +170,7 @@ class RequestMockups implements MockupProviderInterface
         ];
     }
 
-    private function getThread(Member $host, Member $guest, int $status): array
+    private function getThread(Member $host, Member $guest, int $status, int $numberOfNights): array
     {
         $mockSubject = Mockery::mock(Subject::class, [
             'getSubject' => 'Subject',
@@ -178,7 +178,7 @@ class RequestMockups implements MockupProviderInterface
         $mockRequest = Mockery::mock(HostingRequest::class, [
             'getId' => 1,
             'getArrival' => new Carbon(),
-            'getDeparture' => new Carbon(),
+            'getDeparture' => (new Carbon())->addDays($numberOfNights), // use number of replies to change number of nights
             'getNumberOfTravellers' => 2,
             'getFlexible' => true,
             'getStatus' => $status,

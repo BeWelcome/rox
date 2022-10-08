@@ -32,7 +32,7 @@ class ArchivedTranslationAdapter implements AdapterInterface
             FROM
                 words w
             WHERE
-                w.shortcode = 'en'
+                w.shortCode = 'en'
                 AND (w.isArchived = 1)
         ");
         $statement->execute();
@@ -50,13 +50,13 @@ class ArchivedTranslationAdapter implements AdapterInterface
             SELECT
                 code,
                 domain,
-                shortcode,
+                shortCode,
                 sentence,
                 created
             FROM
                 words w
             WHERE
-                w.shortcode = 'en'
+                w.shortCode = 'en'
                 AND (w.isArchived = 1)
             ORDER BY w.updated DESC
             LIMIT :offset, :limit

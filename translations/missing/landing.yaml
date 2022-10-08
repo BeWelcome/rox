@@ -1,0 +1,7 @@
+landing.tab.visitors:
+    - 'Visitors'
+    - Tab header for the list of visitors to your area on the landing page
+trip.posted.by:
+    - 'posted by {username}'
+    - shows who posted the trip as part of the item on the landing page. Make sure to keep the {username} part intact.
+

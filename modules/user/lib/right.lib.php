@@ -150,7 +150,7 @@ public function hasRight($Name, $_Scope = "", $OptionalIdMember = 0)
 		    $str = '
 SELECT SQL_CACHE Scope as Scope, Level
 FROM '.$this->nomtablevolunteer.', '.$this->nomtable.'
-WHERE IdMember=' . $IdMember . ' AND '.$this->nomtable.'.id='.$this->nomtablevolunteer.'.'.$this->IdName.' AND '.$this->nomtable.'.Name=\'' . $Name . '\'';
+WHERE IdMember=' . $IdMember . ' AND '.$this->nomtable.'.id='.$this->nomtablevolunteer.'.'.$this->IdName.' AND '.$this->nomtable.'.Name=\'' . $Name . '\' ORDER BY '.$this->nomtablevolunteer.'.created desc';
 
 		//$query = mysql_query($str) or bw_error("function HasRight");
 		//$row = mysql_fetch_object(mysql_query($str)); // LoadRow not possible because of recusivity

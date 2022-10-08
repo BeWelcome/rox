@@ -79,7 +79,7 @@ class AdminFlagsModel extends RoxModelBase {
      * get list of members with all assigned flags
      *
      * @access public
-     * @return list of members with flags
+     * @return array of members with flags
      */
     public function getMembersWithFlags($member = false, $includeLevelZero = false)
     {
@@ -126,7 +126,7 @@ class AdminFlagsModel extends RoxModelBase {
         $membersWithFlags = array();
         foreach ($result as $mwr) {
             if (!isset($membersWithFlags[$mwr->Username])) {
-                $memberDetails = new StdClass();
+                $memberDetails = new stdClass();
                 $memberDetails->id = $mwr->id;
                 $memberDetails->Status = $mwr->status;
                 $memberDetails->LastLogin = date('Y-m-d', strtotime($mwr->LastLogin));
@@ -135,7 +135,7 @@ class AdminFlagsModel extends RoxModelBase {
                 $memberDetails->Flags = array();
                 $membersWithFlags[$mwr->Username] = $memberDetails;
             }
-            $flagDetails = new StdClass();
+            $flagDetails = new stdClass();
             $flagDetails->level = $mwr->Level;
             $flagDetails->scope = $mwr->Scope;
             $flagDetails->comment = $mwr->Comment;

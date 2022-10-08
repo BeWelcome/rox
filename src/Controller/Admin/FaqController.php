@@ -143,7 +143,7 @@ class FaqController extends FaqBaseController
                 $author = $this->getUser();
                 $languageRepository = $em->getRepository(Language::class);
                 /** @var Language $english */
-                $english = $languageRepository->findOneBy(['shortcode' => 'en']);
+                $english = $languageRepository->findOneBy(['shortCode' => 'en']);
 
                 $question = new Word();
                 $question->setAuthor($author);

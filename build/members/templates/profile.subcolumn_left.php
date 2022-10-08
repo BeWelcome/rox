@@ -197,6 +197,9 @@
                                 $sites = explode(" ", str_replace(array("\r\n", "\r", "\n"), " ", $member->WebSite));
                                 echo '<dt class="h5">' . $words->get('Website') . '</dt>';
                                 foreach ($sites as $site) {
+                                    if (false === strpos($site, 'http://') &&  false === strpos($site, 'https://')) {
+                                        $site = 'https://' . $site;
+                                    }
                                     $schemeLessURI = str_replace(array('http://', 'https://'), '', $site);
                                     echo '<dd><a href="' . $site . '">' . $schemeLessURI . '</a></dd>';
                                 }

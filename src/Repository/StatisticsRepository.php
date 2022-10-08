@@ -73,6 +73,36 @@ class StatisticsRepository extends EntityRepository
         return $this->getStatisticsDataDaily('s.requestsAccepted');
     }
 
+    public function getSentInvitationsDataWeekly()
+    {
+        return $this->getTripsDataWeekly('s.invitationsSent');
+    }
+
+    public function getSentInvitationsDataDaily()
+    {
+        return $this->getStatisticsDataDaily('s.invitationsSent');
+    }
+
+    public function getAcceptedInvitationsDataWeekly()
+    {
+        return $this->getTripsDataWeekly('s.invitationsAccepted');
+    }
+
+    public function getAcceptedInvitationsDataDaily()
+    {
+        return $this->getStatisticsDataDaily('s.invitationsAccepted');
+    }
+
+    public function getCreatedLegsDataWeekly()
+    {
+        return $this->getTripsDataWeekly('s.legsCreated');
+    }
+
+    public function getCreatedLegsDataDaily()
+    {
+        return $this->getStatisticsDataDaily('s.legsCreated');
+    }
+
     private function getStatisticsDataWeekly($column)
     {
         $result = $this->createQueryBuilder('s')
@@ -107,6 +137,24 @@ class StatisticsRepository extends EntityRepository
             ->select('MAX(' . $column . ') AS count, YEARWEEK(s.created) AS week')
             ->where('s.created >= :firstRequest')
             ->setParameter('firstRequest', new DateTime('2019-04-23'))
+            ->groupBy('week')
+            ->getQuery()
+            ->getResult();
+
+        return $result;
+    }
+
+    /**
+     * Trips were added June, 2022 so data can only exist after that.
+     *
+     * @param mixed $column
+     */
+    private function getTripsDataWeekly($column)
+    {
+        $result = $this->createQueryBuilder('s')
+            ->select('MAX(' . $column . ') AS count, YEARWEEK(s.created) AS week')
+            ->where('s.created >= :firstRequest')
+            ->setParameter('firstRequest', new DateTime('2022-06-16'))
             ->groupBy('week')
             ->getQuery()
             ->getResult();

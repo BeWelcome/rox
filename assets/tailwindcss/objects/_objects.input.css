@@ -23,7 +23,6 @@ textarea.o-input {
   font-size: 16px;
   font-family: Signika;
   font-weight: 400;
-  overflow: hidden;
 }
 
 textarea.o-input::placeholder {

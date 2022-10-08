@@ -103,6 +103,10 @@ class ForumsView extends RoxAppView {
         if ($baseurl === false) {
             $baseurl = $this->uri;
         }
+        if (isset($post->IdGroup) && $post->IdGroup != 0)
+        {
+            $baseurl = 'group/' . $post->IdGroup . '/forum/';
+        }
         return $baseurl.'s'.$post->threadid.'-'.preg_replace('/[^A-Za-z0-9]/', '_',$this->words->fTrad($post->IdTitle) ) ;
     }
 

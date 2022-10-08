@@ -76,6 +76,27 @@ class Statistic
     /**
      * @var int
      *
+     * @ORM\Column(name="NbLegsCreated", type="integer", nullable=false)
+     */
+    private $legsCreated;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="NbInvitationsSent", type="integer", nullable=false)
+     */
+    private $invitationsSent;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="NbInvitationsAccepted", type="integer", nullable=false)
+     */
+    private $invitationsAccepted;
+
+    /**
+     * @var int
+     *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
@@ -201,6 +222,69 @@ class Statistic
     {
         return $this->requestsSent;
     }
+
+    /**
+     * @param int $legsCreated
+     *
+     * @return Statistic
+     */
+    public function setLegsCreated($legsCreated)
+    {
+        $this->legsCreated = $legsCreated;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getLegsCreated()
+    {
+        return $this->legsCreated;
+    }
+
+
+    /**
+     * @param int $invitationsSent
+     *
+     * @return Statistic
+     */
+    public function setInvitationsSent($invitationsSent)
+    {
+        $this->invitationsSent = $invitationsSent;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getInvitationsSent()
+    {
+        return $this->invitationsSent;
+    }
+
+
+    /**
+     * @param int $invitationsAccepted
+     *
+     * @return Statistic
+     */
+    public function setInvitationsAccepted($invitationsAccepted)
+    {
+        $this->invitationsAccepted = $invitationsAccepted;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getInvitationsAccepted()
+    {
+        return $this->invitationsAccepted;
+    }
+
 
     /**
      * Set number of requests which have been accepted.

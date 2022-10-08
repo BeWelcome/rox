@@ -77,7 +77,7 @@ class SearchModel extends RoxModelBase
 
     private const ORDER_BY = [
         self::ORDER_USERNAME => ['WordCode' => 'SearchOrderUsername', 'Column' => 'm.Username'],
-        self::ORDER_ACCOM => ['WordCode' => 'SearchOrderAccommodation', 'Column' => 'hosting_interest'],
+        self::ORDER_ACCOM => ['WordCode' => 'SearchOrderAccommodation', 'Column' => 'accomodation'],
         self::ORDER_DISTANCE => ['WordCode' => 'SearchOrderDistance', 'Column' => 'Distance'],
         self::ORDER_LOGIN => ['WordCode' => 'SearchOrderLogin', 'Column' => 'LastLogin'],
         self::ORDER_MEMBERSHIP => ['WordCode' => 'SearchOrderMembership', 'Column' => 'm.created'],
@@ -101,17 +101,19 @@ class SearchModel extends RoxModelBase
         $order = self::ORDER_BY[$orderType]['Column'] . " ASC";
         switch ($orderType) {
             case self::ORDER_ACCOM:
+                $order .= ', (IF(mp.photoCount IS NULL, 0, 1) + IF(m.ProfileSummary != 0, 2, 0)) ASC'
+                    . ', hosting_interest ASC, LastLogin DESC, Distance ASC';
+                break;
             case self::ORDER_COMMENTS:
-                $order .= ', LastLogin DESC, Distance ASC';
+                $order .= ', (IF(mp.photoCount IS NULL, 0, 1) + IF(m.ProfileSummary != 0, 2, 0)) ASC, LastLogin DESC, Distance ASC';
                 break;
             case self::ORDER_DISTANCE:
-                $order = $order.', hosting_interest DESC, LastLogin DESC';
+                $order .= ', hosting_interest DESC, LastLogin DESC';
                 break;
         }
 
         // if descending order is requested switch all ASC to DESC and vice versa
-        if (self::DIRECTION_DESCENDING === $direction)
-        {
+        if (self::DIRECTION_DESCENDING == $direction) {
             $order = str_replace('ASC', 'BSC', $order);
             $order = str_replace('DESC', 'ASC', $order);
             $order = str_replace('BSC', 'DESC', $order);
@@ -271,7 +273,7 @@ LIMIT 1
     {
         $profileSummaryCondition = "";
         if ($vars['search-has-about-me']) {
-            $profileSummaryCondition .= " AND IF(m.ProfileSummary != 0, 1, 0) = 1 ";
+            $profileSummaryCondition .= " AND IF(m.ProfileSummary != 0, 2, 0) = 2 ";
         }
 
         return $profileSummaryCondition;
@@ -614,7 +616,7 @@ LIMIT 1
                 m.LastName,
                 IF (m.accomodation = 'neverask', 0, m.hosting_interest) as hosting_interest,
                 date_format(m.LastLogin,'%Y-%m-%d') AS LastLogin,
-                IF(m.ProfileSummary != 0, 1, 0) AS HasProfileSummary,
+                IF(m.ProfileSummary != 0, 2, 0) AS HasProfileSummary,
                 IF(mp.photoCount IS NULL, 0, 1) AS HasProfilePhoto,
                 g.geonameId,
                 g.country,
@@ -622,9 +624,7 @@ LIMIT 1
                 g.longitude,
                 ((g.latitude - " . $vars['location-latitude'] . ") * (g.latitude - " . $vars['location-latitude'] . ") +
                         (g.longitude - " . $vars['location-longitude'] . ") * (g.longitude - " . $vars['location-longitude'] . "))  AS Distance,
-                IF(c.IdToMember IS NULL, 0, c.commentCount) AS CommentCount,
-                (hosting_interest * 5 + IF(mp.photoCount IS NULL, 0, 1) * 4 + IF(m.ProfileSummary != 0, 1, 0) * 3) as weighted,
-                ((hosting_interest * 6) / (DATEDIFF(NOW(), m.LastLogin) + 7) + IF(mp.photoCount IS NULL, 0, 1) * 4 + IF(m.ProfileSummary != 0, 1, 0) * 3) as weighted2
+                IF(c.IdToMember IS NULL, 0, c.commentCount) AS CommentCount
             *FROM*
                 " . $this->tables . "
             LEFT JOIN (

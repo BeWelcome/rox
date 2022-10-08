@@ -20,7 +20,7 @@ class FeedbackFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->setMethod('GET')
+            ->setMethod('POST')
             ->add('IdCategory', ChoiceType::class, [
                 'label' => 'feedbackchooseyourcategory',
                 'placeholder' => 'feedbackchooseyourcategory',

@@ -1,0 +1,5 @@
+massmail.correct.birth.date:
+    - 'Correct Birth Date Notification'
+    - Special type of newsletter. No need to translate.
+    - 'messages+intl-icu'
+    - 'yes'

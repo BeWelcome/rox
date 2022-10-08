@@ -64,6 +64,14 @@ class ActivityAttendee
     private $comment;
 
     /**
+     * @var int
+     *
+     * @ORM\Column(name="id", type="integer")
+     */
+    private $id;
+
+
+    /**
      * ActivityAttendee constructor.
      *
      * @param $status

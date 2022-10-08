@@ -1,8 +1,9 @@
-site_name: Rox
+site_name: 'BeWelcome Rox'
+dev_addr: '127.0.0.1:8080'
 docs_dir: doc/book
 site_dir: doc/html
 theme: readthedocs
-pages:
+nav:
     - index.md
     - Reference:
       - 'Project Structure': structure.md

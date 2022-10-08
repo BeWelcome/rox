@@ -24,44 +24,59 @@ use Doctrine\ORM\Mapping as ORM;
 class UploadedImage
 {
     /**
+     * @var string
+     *
      * @ORM\Column(name="filename", type="string", length=100, nullable=false)
      */
-    private string $filename;
+    private $filename;
 
     /**
+     * @var string
+     *
      * @ORM\Column(name="mimetype", type="string", length=100, nullable=false)
      */
-    private string $mimeType;
+    private $mimeType;
 
     /**
+     * @var int
+     *
      * @ORM\Column(name="size", type="integer", nullable=false)
      */
-    private int $size = 0;
+    private $size = 0;
 
     /**
+     * @var int
+     *
      * @ORM\Column(name="width", type="integer", nullable=false)
      */
-    private int $width = 0;
+    private $width = 0;
 
     /**
+     * @var int
+     *
      * @ORM\Column(name="height", type="integer", nullable=false)
      */
-    private int $height = 0;
+    private $height = 0;
 
     /**
+     * @var DateTime
      * @ORM\Column(name="created", type="datetime", nullable=false)
      */
-    private DateTime $created;
+    private $created;
 
     /**
+     * @var string
+     *
      * @ORM\Column(name="fileinfo", type="text", length=32, nullable=false)
      */
-    private string $fileInfo;
+    private $fileInfo;
 
     /**
+     * @var string
+     *
      * @ORM\Column(name="filehash", type="text", length=64, nullable=false)
      */
-    private string $fileHash;
+    private $fileHash;
 
     /**
      * @var int

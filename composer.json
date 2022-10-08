@@ -113,12 +113,6 @@
         "symfony/css-selector": "^5.3.0",
         "symfony/maker-bundle": "^1.8"
     },
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/theofidry/AliceBundle"
-        }
-    ],
     "autoload": {
         "psr-4": {
             "App\\": "src/",

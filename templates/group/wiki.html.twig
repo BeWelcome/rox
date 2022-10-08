@@ -6,9 +6,21 @@
     <h3>{{ 'wiki' }}: {{ title | title }}</h3>
 
     {% if wikipage %}
-        <div id="wiki">{{ wikipage | raw }}</div>
+        <div id="wiki" class="u-leading-24">{{ content | raw }}</div>
 
-        <a class="btn btn-primary mb-3 float-right" href="{{ url('group_wiki_page_edit', { 'id': group.id} ) }}">{{ 'wiki.page.edit' | trans }}</a>
+        <div class="row">
+            <div class="col-12 col-sm-6">
+                <a class="btn btn-primary mb-3" href="{{ url('group_wiki_page_edit', { 'id': group.id} ) }}">{{ 'wiki.page.edit' | trans }}</a>
+            </div>
+            <div class="col-12 col-sm-6 text-right">{{ 'version'| trans| capitalize }}: {{ wikipage.version }} -
+                {{ 'wiki.page.created.by.on'|trans({'by': wikipage.author, 'on': wikipage.created|date('U')|format_datetime('short', 'short')}) }}
+            </div>
+        </div>
+
+        <div class="u-flex u-justify-end u-my-8">
+            {{ pagerfanta( history, 'rounded_pagination', { 'routeName': 'wiki_page', 'pageParameter': '[version]', 'routeParams': {'pageTitle': title} }) }}
+        </div>
+
     {% else %}
         <div id="wiki">{{ 'group.wiki.no.wiki'|trans }}</div>
         <a class="btn btn-primary mb-3 float-right" href="{{ url('group_wiki_page_create', { 'id': group.id}) }}">{{ 'wiki.page.create' | trans }}</a>

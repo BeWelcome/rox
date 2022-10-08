@@ -1,4 +1,4 @@
-import moment from 'moment';
+import dayjs from 'dayjs';
 import Litepicker from 'litepicker';
 
 import '../scss/_daterangepicker.scss';
@@ -11,11 +11,11 @@ $(function () {
         const picker = new Litepicker({
             element: input,
             singleMode: false,
-            minDate: moment().add(1, 'day'),
+            minDate: dayjs(),
             numberOfMonths: 2,
             numberOfColumns: 2,
             lang: document.documentElement.lang,
-            tooltipNights: true,
+            showTooltip: false,
             setup: (picker) => {
                 picker.on('selected', (start, end) => {
                     const arrival = document.getElementById(parent + '_arrival');

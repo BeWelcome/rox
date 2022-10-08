@@ -27,7 +27,7 @@ class DoNotTranslateTranslationAdapter implements AdapterInterface
             FROM
                 words w
             WHERE
-                w.shortcode = 'en'
+                w.shortCode = 'en'
                 AND (w.donottranslate = 'Yes')
         ");
         $statement->execute();
@@ -45,13 +45,13 @@ class DoNotTranslateTranslationAdapter implements AdapterInterface
             SELECT
                 code,
                 domain,
-                shortcode,
+                shortCode,
                 sentence,
                 created
             FROM
                 words w
             WHERE
-                w.shortcode = 'en'
+                w.shortCode = 'en'
                 AND (w.donottranslate = 'Yes')
             ORDER BY w.updated DESC
             LIMIT :offset, :limit

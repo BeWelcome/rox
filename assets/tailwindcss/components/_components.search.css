@@ -1,0 +1,46 @@
+/**
+ Components to structure the search results grid
+ */
+.c-search-avatar {
+  grid-area: avatar;
+}
+
+.c-search-avatar .o-avatar {
+  grid-template-rows: 104px 1fr;
+  align-self: center;
+}
+
+.c-search-avatar .o-avatar__img-wrapper {
+  width: 100px;
+  height: 100px;
+}
+
+.c-search-avatar .o-avatar__name {
+  font-size: 1rem;
+}
+
+.c-search-member {
+  grid-area: member;
+}
+
+.c-search-about_me {
+  grid-area: about_me;
+}
+
+.c-search-hosting {
+  grid-area: hosting;
+}
+
+.c-search-extra_info {
+  display: none;
+  grid-area: extra_info;
+}
+
+/* Small+ */
+@media (min-width: 576px) {
+  .c-search-extra_info {
+    display: block;
+    grid-area: extra_info;
+  }
+}
+

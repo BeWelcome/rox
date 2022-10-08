@@ -45,7 +45,9 @@
             {% do form.request.setRendered %}
         </div>
         <div class="md:u-col-span-2 u-col-span-3">
-            {{ form_row(form.message) }}
+            {{ form_label(form.message) }}
+            {{ form_widget(form.message) }}
+            {{ form_errors(form.message) }}
             <div class="u-flex u-justify-end u-mt-8 u-mb-16">
                 {% if current.sender.Username == app.user.Username %}
                     {% set label = 'update' %}

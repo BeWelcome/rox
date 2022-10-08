@@ -4,6 +4,7 @@ namespace App\Controller\Admin;
 
 use App\Entity\Member;
 use App\Entity\Message;
+use App\Entity\UploadedImage;
 use App\Form\ChangeUsernameFormType;
 use App\Form\CustomDataClass\Tools\ChangeUsernameRequest;
 use App\Form\CustomDataClass\Tools\FindUserRequest;
@@ -14,7 +15,10 @@ use App\Model\FeedbackModel;
 use App\Repository\MemberRepository;
 use App\Repository\MessageRepository;
 use DateTime;
+use Doctrine\ORM\EntityManagerInterface;
 use Exception;
+use Pagerfanta\Doctrine\ORM\QueryAdapter;
+use Pagerfanta\Pagerfanta;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -39,6 +43,7 @@ class VolunteerToolController extends AbstractController
     private const CHECK_TOP_SPAMMER = 'admin.tools.check_spam_messages';
     private const DAMAGE_DONE = 'admin.tools.damage_done';
     private const AGE_BY_COUNTRY = 'admin.tools.age_by_country';
+    private const UPLOADED_IMAGES = 'admin.tools.uploaded_images';
 
     /** @var FeedbackModel */
     private $feedbackModel;
@@ -392,8 +397,8 @@ ORDER BY count(msg.id) DESC')->fetchAll();
                         'type' => $type,
                         'username' => $username,
                         'direction' => 0,
-                        'last_sent' => DateTime::createFromFormat('Y-m-d H:i:s', '1900-01-01 00:00:00'),
-                        'last_received' => DateTime::createFromFormat('Y-m-d H:i:s', '1900-01-01 00:00:00'),
+                        'last_sent' => null,
+                        'last_received' => null,
                     ];
                 }
                 $result = $results[$username];
@@ -404,7 +409,7 @@ ORDER BY count(msg.id) DESC')->fetchAll();
                         $result['last_received'] = $message->getCreated();
                     }
                 } else {
-                    $result['direction'] |= $result['direction'] | 2;
+                    $result['direction'] = $result['direction'] | 2;
                     if ($message->getCreated() > $result['last_sent']) {
                         $result['last_sent'] = $message->getCreated();
                     }
@@ -462,6 +467,37 @@ ORDER BY count(msg.id) DESC')->fetchAll();
             'admin/tools/age.country.html.twig',
             [
                 'results' => $results,
+                'submenu' => [
+                    'items' => $subMenuItems,
+                    'active' => self::AGE_BY_COUNTRY,
+                ],
+            ]
+        );
+    }
+
+
+    /**
+     * @Route("/admin/tools/uploaded_images/{page}", name="admin_tools_uploaded_images")
+     *
+     * @return Response
+     */
+    public function showUploadedImages(Request $request, EntityManagerInterface $entityManager, int $page = 1)
+    {
+        // check permissions
+        $subMenuItems = $this->checkPermissions($request, self::UPLOADED_IMAGES);
+
+        $repository = $entityManager->getRepository(UploadedImage::class);
+        $qb = $repository->createQueryBuilder('i');
+        $query = $qb->orderBy('i.created', 'desc');
+        $adapter = new QueryAdapter($query);
+        $pagerfanta = new Pagerfanta($adapter);
+        $pagerfanta->setMaxPerPage(100);
+        $pagerfanta->setCurrentPage($page);
+
+        return $this->render(
+            'admin/tools/uploaded.images.html.twig',
+            [
+                'results' => $pagerfanta,
                 'submenu' => [
                     'items' => $subMenuItems,
                     'active' => self::AGE_BY_COUNTRY,
@@ -548,6 +584,10 @@ ORDER BY count(msg.id) DESC')->fetchAll();
             $subMenu[self::AGE_BY_COUNTRY] = [
                 'key' => self::AGE_BY_COUNTRY,
                 'url' => $this->generateUrl('admin_tools_age_by_country'),
+            ];
+            $subMenu[self::UPLOADED_IMAGES] = [
+                'key' => self::UPLOADED_IMAGES,
+                'url' => $this->generateUrl('admin_tools_uploaded_images'),
             ];
         }
 

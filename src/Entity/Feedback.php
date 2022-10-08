@@ -40,7 +40,7 @@ class Feedback
     /**
      * @var Member
      *
-     * @ORM\OneToOne(targetEntity="Member")
+     * @ORM\ManyToOne(targetEntity="Member")
      * @ORM\JoinColumn(name="IdMember", referencedColumnName="id", nullable=true)
      */
     private $author;
@@ -55,7 +55,7 @@ class Feedback
     /**
      * @var Language
      *
-     * @ORM\OneToOne(targetEntity="Language")
+     * @ORM\ManyToOne(targetEntity="Language")
      * @ORM\JoinColumn(name="IdLanguage", referencedColumnName="id")
      */
     private $language;

@@ -1,0 +1,10 @@
+App\Entity\MemberTranslation:
+    summary:
+        Language: '@language_en'
+        Owner: '@member_*'
+        Translation: 1
+        Translator: '@member_*'
+        created: <dateTimeBetween("-200 days", "now")>
+        Sentence: '<sentence()>'
+        TableColumn: 'members.ProfileSummary'
+

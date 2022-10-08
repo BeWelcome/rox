@@ -54,7 +54,7 @@ class CommunityNews
     /**
      * @var Member
      *
-     * @ORM\OneToOne(targetEntity="\App\Entity\Member")
+     * @ORM\ManyToOne(targetEntity="\App\Entity\Member")
      * @ORM\JoinColumn(name="created_by", referencedColumnName="id")
      */
     private $createdBy;
@@ -69,7 +69,7 @@ class CommunityNews
     /**
      * @var Member
      *
-     * @ORM\OneToOne(targetEntity="\App\Entity\Member")
+     * @ORM\ManyToOne(targetEntity="\App\Entity\Member")
      * @ORM\JoinColumn(name="updated_by", referencedColumnName="id", nullable=true)
      */
     private $updatedBy;

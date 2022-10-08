@@ -59,20 +59,16 @@ class FamilyAndFriend implements ObjectManagerAware
     /**
      * @var Member
      *
-     * @ORM\OneToOne(targetEntity="Member")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="IdOwner", referencedColumnName="id")
-     * })
+     * @ORM\ManyToOne(targetEntity="Member")
+     * @ORM\JoinColumn(name="IdOwner", referencedColumnName="id")
      */
     private $owner;
 
     /**
      * @var Member
      *
-     * @ORM\OneToOne(targetEntity="Member")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="IdRelation", referencedColumnName="id")
-     * })
+     * @ORM\ManyToOne(targetEntity="Member")
+     * @ORM\JoinColumn(name="IdRelation", referencedColumnName="id")
      */
     private $relation;
 

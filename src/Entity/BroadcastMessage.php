@@ -17,10 +17,8 @@ use Doctrine\ORM\Mapping as ORM;
 class BroadcastMessage
 {
     /**
-     * @ORM\OneToOne(targetEntity="Member")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="IdEnqueuer", referencedColumnName="id")
-     * })
+     * @ORM\ManyToOne(targetEntity="Member")
+     * @ORM\JoinColumn(name="IdEnqueuer", referencedColumnName="id")
      */
     private Member $enqueuedBy;
 
@@ -40,20 +38,16 @@ class BroadcastMessage
     private ?string $unsubscribeKey;
 
     /**
-     * @ORM\OneToOne(targetEntity="Newsletter")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="IdBroadcast", referencedColumnName="id")
-     * })
+     * @ORM\ManyToOne(targetEntity="Newsletter")
+     * @ORM\JoinColumn(name="IdBroadcast", referencedColumnName="id")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="NONE")
      */
     private Newsletter $newsletter;
 
     /**
-     * @ORM\OneToOne(targetEntity="Member")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="IdReceiver", referencedColumnName="id")
-     * })
+     * @ORM\ManyToOne(targetEntity="Member")
+     * @ORM\JoinColumn(name="IdReceiver", referencedColumnName="id")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="NONE")
      */

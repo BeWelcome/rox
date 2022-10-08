@@ -1,0 +1,68 @@
+App\Entity\NewLocation:
+    NewCountryReferenceGermany:
+        name: 'Germany'
+        latitude: 51.5000000
+        longitude: 10.5000000
+        featureClass: A
+        featureCode: PCLI
+        admin1Id: '00'
+        population: 3426354
+        modificationDate: '<DateTime()>'
+        geonameId: 2921044
+        countryId: 'DE'
+    NewCountryReferenceIndonesia:
+        name: 'Indonesia'
+        latitude: 0.0
+        longitude: 0.0
+        geonameId: 1643084
+        featureClass: A
+        featureCode: PCLI
+        admin1Id: '00'
+        population: 3426354
+        modificationDate: '<DateTime()>'
+        countryId: 'ID'
+    NewAdmin1ReferenceLandBerlin:
+        geonameId: 2950157
+        name: 'Land Berlin'
+        featureClass: A
+        featureCode: ADM1
+        admin1Id: '16'
+        countryId: '@NewCountryReferenceGermany->countryId'
+        population: 12
+        modificationDate: '<DateTime()>'
+        country: '@NewCountryReferenceGermany'
+    NewAdmin1ReferenceProvinsiPapua:
+        geonameId: 1643012
+        name: 'Provinsi Papua'
+        featureClass: A
+        featureCode: ADM1
+        country: '@NewCountryReferenceIndonesia'
+        admin1Id: '36'
+        countryId: '@NewCountryReferenceIndonesia->countryId'
+        modificationDate: '<DateTime()>'
+    NewBerlin:
+        name: 'Berlin'
+        latitude: 52.5243700
+        longitude: 13.4105300
+        featureClass: P
+        featureCode: PPLC
+        admin1Id: '16'
+        countryId: 'DE'
+        population: 3426354
+        modificationDate: '<DateTime()>'
+        geonameId: 2950159
+        country: '@NewCountryReferenceGermany'
+        admin1: '@NewAdmin1ReferenceLandBerlin'
+    NewJayapura:
+        name: 'Jayapura'
+        latitude: -2.5428400
+        longitude: 140.7027600
+        featureClass: P
+        featureCode: PPLA
+        admin1Id: '@NewAdmin1ReferenceProvinsiPapua->admin1Id'
+        countryId: '@NewCountryReferenceIndonesia->countryId'
+        population: 134895
+        modificationDate: '<DateTime()>'
+        geonameId: 2082600
+        admin1: '@NewAdmin1ReferenceProvinsiPapua'
+        country: '@NewCountryReferenceIndonesia'

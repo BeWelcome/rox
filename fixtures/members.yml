@@ -10,9 +10,9 @@ App\Entity\Member:
         ExUserId: 0
         Status: 'Active'
         ChangedId: 0
-        city: '@Berlin'
-        Latitude: <latitude(@Berlin->Latitude,@Berlin->Latitude)>
-        Longitude: <longitude(@Berlin->Longitude,@Berlin->Longitude)>
+        city: '@NewBerlin'
+        Latitude: '@NewBerlin->Latitude'
+        Longitude: '@Berlin->Longitude'
         remindersWithoutLogin: 0
         HomePhoneNumber: 0
         CellPhoneNumber: 0
@@ -85,9 +85,9 @@ App\Entity\Member:
         ExUserId: 0
         Status: '<randomElement(["Active", "OutOfRemind"])>'
         ChangedId: 0
-        city: '@Berlin'
-        Latitude: <latitude(@Berlin->Latitude,@Berlin->Latitude)>
-        Longitude: <longitude(@Berlin->Longitude,@Berlin->Longitude)>
+        city: '@NewBerlin'
+        Latitude: '@NewBerlin->Latitude'
+        Longitude: '@NewBerlin->Longitude'
         remindersWithoutLogin: 0
         HomePhoneNumber: 0
         CellPhoneNumber: 0
@@ -115,7 +115,7 @@ App\Entity\Member:
         Byear: 1980
         SecurityFlag: 0
         Quality: 0
-        ProfileSummary: 0
+        ProfileSummary: 1
         Occupation: 0
         CounterGuests: 0
         CounterHosts: 0
@@ -161,9 +161,9 @@ App\Entity\Member:
         ExUserId: 0
         Status: 'Active'
         ChangedId: 0
-        city: '@Jayapura'
-        Latitude: <latitude(@Jayapura->Latitude,@Jayapura->Latitude)>
-        Longitude: <longitude(@Jayapura->Longitude,@Jayapura->Longitude)>
+        city: '@NewJayapura'
+        Latitude: '@NewJayapura->Latitude'
+        Longitude: '@NewJayapura->Longitude'
         remindersWithoutLogin: 0
         HomePhoneNumber: 0
         CellPhoneNumber: 0
@@ -236,9 +236,9 @@ App\Entity\Member:
         ExUserId: 0
         Status: 'Banned'
         ChangedId: 0
-        city: '@Jayapura'
-        Latitude: <latitude(@Jayapura->Latitude,@Jayapura->Latitude)>
-        Longitude: <longitude(@Jayapura->Longitude,@Jayapura->Longitude)>
+        city: '@NewJayapura'
+        Latitude: '@NewJayapura->Latitude'
+        Longitude: '@NewJayapura->Longitude'
         remindersWithoutLogin: 0
         HomePhoneNumber: 0
         CellPhoneNumber: 0
@@ -311,9 +311,9 @@ App\Entity\Member:
         ExUserId: 0
         Status: 'TakenOut'
         ChangedId: 0
-        city: '@Jayapura'
-        Latitude: <latitude(@Jayapura->Latitude,@Jayapura->Latitude)>
-        Longitude: <longitude(@Jayapura->Longitude,@Jayapura->Longitude)>
+        city: '@NewJayapura'
+        Latitude: '@Jayapura->Latitude'
+        Longitude: '@Jayapura->Longitude'
         remindersWithoutLogin: 0
         HomePhoneNumber: 0
         CellPhoneNumber: 0

@@ -31,9 +31,10 @@ use Doctrine\ORM\Mapping as ORM;
 class MemberTranslation
 {
     /**
-     * @var int
+     * @var Member
      *
-     * @ORM\Column(name="IdOwner", type="integer", nullable=false)
+     * @ORM\ManyToOne(targetEntity="Member", fetch="EAGER")
+     * @ORM\JoinColumn(name="IdOwner", referencedColumnName="id")
      */
     private $owner;
 
@@ -47,7 +48,8 @@ class MemberTranslation
     /**
      * @var Member
      *
-     * @ORM\Column(name="IdTranslator", type="integer", nullable=false)
+     * @ORM\ManyToOne(targetEntity="Member", fetch="LAZY")
+     * @ORM\JoinColumn(name="IdTranslator", nullable=false)
      */
     private $translator;
 
@@ -106,20 +108,18 @@ class MemberTranslation
      * @var Language
      *
      * @ORM\ManyToOne(targetEntity="Language")
-     * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="IdLanguage", referencedColumnName="id")
-     * })
      */
     private $language;
 
     /**
      * Set owner.
      *
-     * @param int $owner
+     * @param Member $owner
      *
      * @return MemberTranslation
      */
-    public function setOwner($owner)
+    public function setOwner(Member $owner):self
     {
         $this->owner = $owner;
 
@@ -129,9 +129,9 @@ class MemberTranslation
     /**
      * Get owner.
      *
-     * @return int
+     * @return Member
      */
-    public function getOwner()
+    public function getOwner():Member
     {
         return $this->owner;
     }
@@ -163,11 +163,11 @@ class MemberTranslation
     /**
      * Set translator.
      *
-     * @param int $translator
+     * @param Member $translator
      *
      * @return MemberTranslation
      */
-    public function setTranslator($translator)
+    public function setTranslator(Member $translator):self
     {
         $this->translator = $translator;
 
@@ -179,7 +179,7 @@ class MemberTranslation
      *
      * @return Member
      */
-    public function getTranslator()
+    public function getTranslator():Member
     {
         return $this->translator;
     }

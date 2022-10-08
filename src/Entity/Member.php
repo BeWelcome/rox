@@ -865,7 +865,7 @@ class Member implements UserInterface, \Serializable, PasswordHasherAwareInterfa
      *
      * @return Member
      */
-    public function setCity(Location $city)
+    public function setCity(NewLocation $city)
     {
         $this->city = $city;
 
@@ -875,7 +875,7 @@ class Member implements UserInterface, \Serializable, PasswordHasherAwareInterfa
     /**
      * Get city.
      *
-     * @return Location
+     * @return NewLocation
      */
     public function getCity()
     {

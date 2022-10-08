@@ -10,3 +10,11 @@ comment.read.more:
 comment.show.less:
     - '← show less'
     - Shown if truncated text of a comment is shown on a profile page
+profile.add.comment:
+    - 'Add comment about {username}'
+    - Button label on the comments page, if the current user hasn't left a comment yet. In case gender is important in your language you can use formatting like this
+      {gender, select,
+          female {... {username}}
+          male {... {username}}
+          other {... {username}}
+      }

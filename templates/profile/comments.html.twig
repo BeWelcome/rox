@@ -9,7 +9,7 @@
             <div class="card comment-bg-neutral u-p-32">
                 {% if member == app.user and comment['from'].toMember == app.user %}
                     <a href="members/{{ comment['from'].fromMember.Username }}/comments/add"
-                       class="btn btn-primary">{{ 'profile.add.comment'|trans({'comment': comment['from'].fromMember.Username}) }}</a>
+                       class="btn btn-primary">{{ 'profile.add.comment'|trans({'username': comment['from'].fromMember.Username, 'gender': comment['from'].fromMember.Gender}) }}</a>
                 {% else %}
                     <p class="text-center">{{ 'commentnocomment'|trans }}</p>
                 {% endif %}
@@ -21,7 +21,7 @@
             <div class="card comment-bg-neutral u-p-32">
                 {% if member != app.user and comment['to'].toMember == app.user %}
                     <a href="members/{{ comment['to'].fromMember.Username }}/comments/add"
-                       class="btn btn-primary">{{ 'profile.add.comment'|trans({'comment': comment['to'].fromMember.Username}) }}</a>
+                       class="btn btn-primary">{{ 'profile.add.comment'|trans({'username': comment['to'].fromMember.Username}, 'gender': comment['to'].fromMember.Gender}) }}</a>
                 {% else %}
                     <p class="text-center">{{ 'commentnocomment'|trans }}</p>
                 {% endif %}

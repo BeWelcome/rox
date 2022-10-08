@@ -1,0 +1,65 @@
+{% set loggedInMember = app.user %}
+{% if member == loggedInMember %}
+    {% if comment.toMember == loggedInMember %}
+        {% set other = comment.fromMember %}
+    {% else %}
+        {% set other = comment.toMember %}
+    {% endif %}
+{% endif %}
+{% set show = comment.showCondition(loggedInMember) %}
+{% set quality = comment.quality|lower %}
+<div class="card comment-bg-{{ quality }} u-p-16">
+    {% if (show > 1) %}<div>
+        <strong>{{ 'commenthiddenedit'|trans }}</strong>
+    </div>{% endif %}
+    <div class="d-flex flex-row justify-content-between">
+        {% if member == loggedInMember %}
+            <div>
+                {# \todo add route for comment reporting #}
+                <a href="/members/{{ other.Username }}/comment/{{ comment.id }}/report" title="{{ 'reportcommentproblem'|trans }}" class="gray"><i class="fa fa-flag"></i></a>
+            </div>
+        {% endif %}
+        {% if not member.Status == constant('\\App\\Doctrine\\MemberStatusType::PASSED_AWAY') %}
+            <div><p class="h4 m-0 ml-lg-5 {{ quality }}">{{ ('commentquality' ~ quality)|trans }}</p></div>
+        {% endif %}
+        <div><span title="{{ comment.created|format_datetime() }}" class="small float-right">{{ comment.created.diffForHumans }}</span></div>
+    </div>
+
+    <div class="d-flex flex-row justify-content-center">
+        <div class="mr-lg-3 text-center">
+            <a href="{{ url('members_profile', { username: comment.fromMember.Username }) }}">
+                <img class="profileimg avatar-48" src="{{ url('avatar', { username: comment.fromMember.Username, size: 48 }) }}" alt="Profile">
+                <p class="username m-0">{{ comment.fromMember.Username }}</p></a>
+        </div>
+        <div class="text-center">
+            <p class="text-mute p-3 m-0 font-italic">
+                {{ 'about'|trans }}
+            </p>
+            {% if comment.editCondition(loggedInMember) %}
+                <a class="btn btn-sm btn-primary" href="members/{{ member.Username }}/comments/edit" title="Edit">{{ 'edit'|trans }}</a>
+            {% endif %}
+        </div>
+        <div class="ml-lg-3 text-center">
+            <a href="{{ url('members_profile', { username: comment.toMember.Username }) }}">
+                <img class="profileimg avatar-48" src="{{ url('avatar', { username: comment.toMember.Username, size: 48 }) }}" alt="Profile">
+                <p class="username m-0">{{ comment.toMember.Username }}</p>
+            </a>
+        </div>
+    </div>
+
+    <div>
+        {% for relation in comment.relations|split(',') %}
+            <p class="small font-italic p-0 mb-1">{{  ('comment_' ~ relation)|lower|trans }}</p>
+        {% endfor %}
+
+        {{ comment.TextFree|nl2br|purify }}
+
+        {% if show == 2 %}
+            <a href="/admin/comment/{{ comment.id }}">{{ 'editcomment'|trans }}</a>
+        {% endif %}
+        {% if comment.created != comment.updated %}
+            <p class="small">{{ 'commentlastupdated'|trans }}: <span title="{{ comment.updated|format_datetime() }}">{{ comment.updated.diffForHumans }}</span></p>
+        {% endif %}
+
+    </div>
+</div>

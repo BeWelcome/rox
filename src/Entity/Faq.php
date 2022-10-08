@@ -61,9 +61,7 @@ class Faq
      * @var FaqCategory
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\FaqCategory", fetch="EAGER")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="IdCategory", referencedColumnName="id")
-     * })
+     * @ORM\JoinColumn(name="IdCategory", referencedColumnName="id")
      */
     private $category = '0';
 

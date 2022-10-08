@@ -52,12 +52,44 @@ class MemberStatusType extends EnumType
         self::PENDING . "'";
 
     public const MEMBER_COMMENTS = "'" .
-        self::ACTIVE . "', '" .
-        self::ACTIVE_HIDDEN . "', '" .
-        self::ASKED_TO_LEAVE . "', '" .
-        self::CHOICE_INACTIVE . "', '" .
-        self::OUT_OF_REMIND . "', '" .
-        self::PENDING . "'";
+    self::ACTIVE . "', '" .
+    self::ACTIVE_HIDDEN . "', '" .
+    self::ASKED_TO_LEAVE . "', '" .
+    self::CHOICE_INACTIVE . "', '" .
+    self::OUT_OF_REMIND . "', '" .
+    self::PENDING . "'";
+
+    public const MEMBER_COMMENTS_ARRAY = [
+        self::ACTIVE,
+        self::ACTIVE_HIDDEN,
+        self::ASKED_TO_LEAVE,
+        self::CHOICE_INACTIVE,
+        self::OUT_OF_REMIND,
+        self::PENDING,
+    ];
+
+    public const STATUSES_IN_USE = [
+        'Active',
+        'MailToConfirm',
+        'PassedAway',
+        'Pending',
+        'Banned',
+        'ChoiceInactive',
+        'OutOfRemind',
+        'ActiveHidden',
+        'SuspendedBeta',
+        'AskToLeave'
+    ];
+
+    public function getStatuses(): array
+    {
+        $translationIds = self::STATUSES_IN_USE;
+        array_walk($translationIds, function (&$item) {
+            $item = strtolower("MemberStatus" . $item);
+        });
+
+        return array_combine($translationIds, self::STATUSES_IN_USE);
+    }
 
     /** @var string */
     protected $name = 'member_status';

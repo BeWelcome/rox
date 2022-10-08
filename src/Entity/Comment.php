@@ -84,7 +84,7 @@ class Comment
      *
      * @ORM\Column(name="DisplayInPublic", type="boolean", nullable=false)
      */
-    private $displayinpublic = '1';
+    private $displayInPublic = '1';
 
     /**
      * @var bool
@@ -317,13 +317,13 @@ class Comment
     /**
      * Set displayinpublic.
      *
-     * @param bool $displayinpublic
+     * @param bool $displayInPublic
      *
      * @return Comment
      */
-    public function setDisplayinpublic($displayinpublic)
+    public function setDisplayInPublic($displayInPublic)
     {
-        $this->displayinpublic = $displayinpublic;
+        $this->displayInPublic = $displayInPublic;
 
         return $this;
     }
@@ -333,9 +333,9 @@ class Comment
      *
      * @return bool
      */
-    public function getDisplayinpublic()
+    public function getDisplayInPublic()
     {
-        return $this->displayinpublic;
+        return $this->displayInPublic;
     }
 
     /**
@@ -419,4 +419,33 @@ class Comment
     {
         return $this->fromMember;
     }
+
+    public function getShowCondition(Member $loggedInMember): int
+    {
+        // show comment when marked as display in public (default situation)
+        if ($this->displayInPublic) {
+            return 1;
+        }
+        // show comment to Safety team
+        if (in_array(Member::ROLE_ADMIN_COMMENTS, $loggedInMember->getRoles())) {
+            return 2;
+        }
+        // show comment to writer
+        if ($this->fromMember == $loggedInMember) return 3;
+        // do not show comment
+
+        return 0;
+    }
+
+    function getEditCondition(Member $loggedInMember){
+
+        // don't allow edit bad comment if not marked so
+        if ($this->quality == 'Bad' && $this->allowedit != 1) return false;
+        // don't allow edit is not logged in as writer
+        if ($this->fromMember != $loggedInMember) return false;
+
+        // allow edit
+        return true;
+    }
+
 }

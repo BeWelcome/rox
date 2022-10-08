@@ -116,7 +116,11 @@ App\Entity\Member:
         SecurityFlag: 0
         Quality: 0
         ProfileSummary: 1
+<<<<<<< HEAD
+        Occupation: 0
+=======
         Occupation: 1
+>>>>>>> 24af266b07765637d23ccb2af3a680625b582561
         CounterGuests: 0
         CounterHosts: 0
         CounterTrusts: 0

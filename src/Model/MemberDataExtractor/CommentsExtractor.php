@@ -17,7 +17,7 @@ final class CommentsExtractor extends AbstractExtractor implements ExtractorInte
         /** @var CommentRepository $commentRepository */
         $commentRepository = $this->getRepository(Comment::class);
         /** @var Comment[] $comments */
-        $commentsForMember = $commentRepository->getCommentsForMember($member);
+        $commentsForMember = $commentRepository->getVisibleCommentsForMember($member);
         $commentsFromMember = $commentRepository->getCommentsFromMember($member);
         $comments = [];
         /** @var Comment $comment */

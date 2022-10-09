@@ -105,7 +105,7 @@
                                    href="{{ menuItem.url }}">{% if menuItem.icon is defined %}<i
                                         class="fas fa-fw fa-{{ menuItem.icon }}"></i> {% endif %}{{ menuItem.key | lower | trans }}
                                     {% if menuItem.count is defined %} <span
-                                        class="badge {% if submenu.active == filter %}bg-white text-primary{% else %}badge-primary{% endif %} u-rounded-10 u-h-20 u-inline-flex u-items-center u-justify-center pull-right">{{ menuItem.count }}</span>{% endif %}
+                                        class="badge {% if submenu.active == filter %}bg-white text-primary{% else %}badge-primary{% endif %} u-rounded-10 u-min-w-20 u-px-8 u-h-20 u-inline-flex u-items-center u-justify-center pull-right">{{ menuItem.count }}</span>{% endif %}
                                 </a>
                             {% endif %}
                             {% endfor %}

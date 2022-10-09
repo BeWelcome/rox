@@ -217,7 +217,7 @@ class TripController extends AbstractController
     /**
      * Show all trip legs that are in the vicinity of a member.
      *
-     * @Route("/visitors",
+     * @Route("/visitors/{page}",
      *     requirements={"page"="\d+"},
      *     name="visitors")
      */

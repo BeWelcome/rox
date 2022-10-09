@@ -15,12 +15,6 @@ Encore
     .setOutputPath('public/build/')
     // public path used by the web server to access the output path
     .setPublicPath('/build')
-    .addPlugin(new CKEditorWebpackPlugin({
-        language: 'en',
-        additionalLanguages: 'all',
-        outputDirectory: 'cktranslations',
-        buildAllTranslationsToSeparateFiles: true
-    }))
     .splitEntryChunks()
     .enableSingleRuntimeChunk()
     .cleanupOutputBeforeBuild()
@@ -53,6 +47,13 @@ Encore
     .addEntry('conversations', './assets/js/conversations.js')
     .addEntry('bsfileselect', './assets/js/bsfileselect.js')
     .addEntry('email', './assets/scss/email.scss')
+    // CKEditor
+    .addPlugin(new CKEditorWebpackPlugin({
+        language: 'en',
+        additionalLanguages: 'all',
+        outputDirectory: 'cktranslations',
+        buildAllTranslationsToSeparateFiles: true
+    }))
     .addEntry('roxeditor', './assets/js/roxeditor.js')
     .addEntry('rangeslider', './assets/js/rangeslider.js')
     .addEntry('highlight', './assets/js/highlight.js')
@@ -73,6 +74,8 @@ Encore
     .enableSassLoader(options => {
         // Prefer using sass instead of node-sass to not depend on Python
         options.implementation = require('sass');
+    }, {
+        resolveUrlLoader: true
     })
     // allow legacy applications to use $/jQuery as a global variable, make popper visible for bootstrap
     .autoProvidejQuery()
@@ -105,10 +108,10 @@ Encore
         loader.exclude = /ckeditor5-[^/\\]+[/\\]theme[/\\]icons[/\\][^/\\]+\.svg$/;
     })
     .enablePostCssLoader((options) => {
+        // new option outlined here https://webpack.js.org/loaders/postcss-loader/
         options.postcssOptions = {
-            // directory where the postcss.config.js file is stored
-            config: './postcss.config.js'
-        };
+            config: './postcss.config.js',
+        }
     })
     // Configure PostCSS loader.
     .addLoader({

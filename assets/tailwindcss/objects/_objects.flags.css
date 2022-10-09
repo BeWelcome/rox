@@ -11,12 +11,9 @@ https://github.com/HatScripts/circle-flags
     overflow: hidden;
     width: 18px;
     height: 18px;
-    box-shadow: 0 0 5px 0px black;
+    box-shadow: 0 0 5px 0 black;
     background-size: contain;
 }
-
-
-
 
 .o-flag--CH {background-image:url("../../../node_modules/circle-flags/flags/ch.svg")}
 .o-flag--NP {background-image:url("../../../node_modules/circle-flags/flags/np.svg")}

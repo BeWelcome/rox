@@ -1,9 +1,8 @@
 module.exports = {
-  purge: [
+  content: [
       './templates/**/*.html.twig',
       './templates/jsx/trip/*.html.twig',
   ],
-  darkMode: false,
   prefix: 'u-',
   important: false,
   separator: ':',
@@ -332,6 +331,7 @@ module.exports = {
       '50': '50',
     },
   },
+/*
   variants: {
     accessibility: ['responsive', 'focus'],
     alignContent: ['responsive'],
@@ -400,7 +400,8 @@ module.exports = {
     wordBreak: ['responsive'],
     zIndex: ['responsive'],
   },
-  plugins: [
+*/
+    plugins: [
       require('@tailwindcss/line-clamp'),
   ],
     corePlugins: {

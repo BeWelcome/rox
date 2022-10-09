@@ -1,10 +1,10 @@
 @import "mixins";
 
-@import "~@fontsource/lato/index.css";
-@import "~@fontsource/signika/index.css";
-@import "~@fontsource/signika/300.css";
-@import "~@fontsource/signika/700.css";
-@import "~toastify-js/src/toastify.css";
+@import "@fontsource/lato";
+@import "@fontsource/signika";
+@import "@fontsource/signika/300.css";
+@import "@fontsource/signika/700.css";
+@import "toastify-js/src/toastify.css";
 
 // Core variables and mixins
 @import "custom";

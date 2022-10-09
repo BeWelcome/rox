@@ -181,8 +181,10 @@ class CommentRepository extends EntityRepository
 
     public function getCommentsMember(Member $member): array
     {
+        $comments = [];
         $commentsForMember = $this->getVisibleCommentsForMember($member);
         $commentsByMember = $this->getVisibleCommentsByMember($member);
+        
         /** @var Comment $value */
         foreach ($commentsForMember as $value) {
             $key = $value->getFromMember()->getUsername();
@@ -203,20 +205,22 @@ class CommentRepository extends EntityRepository
             }
         }
 
-        $farFuture = new DateTimeImmutable('01-01-3000');
-        usort(
-            $comments,
-            function ($a, $b) use ($farFuture) {
-                // get latest updates on to and from part of comments and order desc
-                $createdATo = isset($a['to']) ? $a['to']->getCreated() : $farFuture;
-                $createdAFrom = isset($a['from']) ? $a['from']->getCreated() : $farFuture;
-                $createdA = min($createdATo, $createdAFrom);
-                $createdBTo = isset($b['to']) ? $b['to']->getCreated() : $farFuture;
-                $createdBFrom = isset($b['from']) ? $b['from']->getCreated() : $farFuture;
-                $createdB = min($createdBTo, $createdBFrom);
-                return -1*($createdA <=> $createdB);
-            }
-        );
+        if (!empty($comments)) {
+            $farFuture = new DateTimeImmutable('01-01-3000');
+            usort(
+                $comments,
+                function ($a, $b) use ($farFuture) {
+                    // get latest updates on to and from part of comments and order desc
+                    $createdATo = isset($a['to']) ? $a['to']->getCreated() : $farFuture;
+                    $createdAFrom = isset($a['from']) ? $a['from']->getCreated() : $farFuture;
+                    $createdA = min($createdATo, $createdAFrom);
+                    $createdBTo = isset($b['to']) ? $b['to']->getCreated() : $farFuture;
+                    $createdBFrom = isset($b['from']) ? $b['from']->getCreated() : $farFuture;
+                    $createdB = min($createdBTo, $createdBFrom);
+                    return -1*($createdA <=> $createdB);
+                }
+            );
+        }
 
         return $comments;
     }

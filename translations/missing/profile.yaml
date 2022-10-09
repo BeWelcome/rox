@@ -18,3 +18,6 @@ profile.add.comment:
           male {... {username}}
           other {... {username}}
       }
+profile.no.comments:
+    - 'This member hasn\'t received any comments yet.'
+    - Shown on the comments page if there are no comments yet given to this member.

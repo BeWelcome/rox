@@ -1,6 +1,11 @@
 {% extends 'profile/profile.html.twig' %}
 
 {% block page_content %}
+    {% if comments.haveToPaginate %}
+        <div class="u-flex u-justify-end u-my-8">
+            {{ pagerfanta( comments, 'rounded_pagination') }}
+        </div>
+    {% endif %}
     {% for comment in comments %}
         <div class="u-grid u-grid-cols-1 md:u-grid-cols-2 u-mb-8">
         {% if comment['to'] is defined %}
@@ -21,12 +26,19 @@
             <div class="card comment-bg-neutral u-p-32">
                 {% if member != app.user and comment['to'].toMember == app.user %}
                     <a href="members/{{ comment['to'].fromMember.Username }}/comments/add"
-                       class="btn btn-primary">{{ 'profile.add.comment'|trans({'username': comment['to'].fromMember.Username}, 'gender': comment['to'].fromMember.Gender}) }}</a>
+                       class="btn btn-primary">{{ 'profile.add.comment'|trans({'username': comment['to'].fromMember.Username, 'gender': comment['to'].fromMember.Gender}) }}</a>
                 {% else %}
                     <p class="text-center">{{ 'commentnocomment'|trans }}</p>
                 {% endif %}
             </div>
         {% endif %}
         </div>
+    {% else %}
+        {{ 'profile.no.comments'|trans }}
     {% endfor %}
+    {% if comments.haveToPaginate %}
+        <div class="u-flex u-justify-end u-my-8">
+            {{ pagerfanta( comments, 'rounded_pagination') }}
+        </div>
+    {% endif %}
 {% endblock page_content %}

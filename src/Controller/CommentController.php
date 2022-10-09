@@ -13,6 +13,8 @@ use App\Service\Mailer;
 use App\Utilities\ProfileSubmenu;
 use App\Utilities\TranslatedFlashTrait;
 use Doctrine\ORM\EntityManagerInterface;
+use Pagerfanta\Adapter\ArrayAdapter;
+use Pagerfanta\Pagerfanta;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
@@ -142,21 +144,24 @@ class CommentController extends AbstractController
     }
 
     /**
-     * @Route("/members/{username}/comments/new", name="profile_comments",
+     * @Route("/members/{username}/comments/new/{page}", name="profile_comments",
      *     requirements={"username" = "(?i:[a-z](?!.*[-_.][-_.])[a-z0-9-._]{2,18}[a-z0-9])"}))
      */
     public function showCommentsForMember(
         Member $member,
         ProfileSubmenu $profileSubmenu,
         ProfileModel $profileModel,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+        int $page = 1
     ): Response {
         /** @var Member $loggedInMember */
         $loggedInMember = $this->getUser();
         $statusForm = $profileModel->getStatusForm($loggedInMember, $member);
 
         $commentRepository = $entityManager->getRepository(Comment::class);
-        $comments = $commentRepository->getCommentsMember($member);
+        $comments = new PagerFanta(new ArrayAdapter($commentRepository->getCommentsMember($member)));
+        $comments->setMaxPerPage(20);
+        $comments->setCurrentPage($page);
 
         return $this->render('profile/comments.html.twig', [
             'use_lightbox' => false,

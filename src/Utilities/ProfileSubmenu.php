@@ -45,7 +45,7 @@ class ProfileSubmenu
         } else {
             $this->addSubmenuItemsProfile($member, $parameters);
         }
-        $this->addGeneralItems($member, $parameters);
+        $this->addGeneralItems($member, $loggedInMember, $parameters);
         $this->addVolunteerEntries($member, $loggedInMember);
 
         return [
@@ -219,7 +219,7 @@ class ProfileSubmenu
         ]);
     }
 
-    private function addGeneralItems(Member $member, array $parameters)
+    private function addGeneralItems(Member $member, Member $loggedInMember, array $parameters)
     {
         $username = $member->getUsername();
         $this->addSubmenuItem('separator_two', []);
@@ -232,19 +232,31 @@ class ProfileSubmenu
             'key' => 'ViewComments',
             'icon' => 'comments',
             'count' => $parameters['comments_count'] ?? 0,
-            'url' => $this->routing->generate('add_comment', ['username' => $username]),
+            'url' => $this->routing->generate('profile_comments', ['username' => $username]),
         ]);
-        $this->addSubmenuItem('gallery', [
-            'key' => 'Gallery',
-            'icon' => 'image',
-            'count' => $parameters['images_count'] ?? 0,
-            'url' => $this->routing->generate('add_comment', ['username' => $username]),
-        ]);
+        if ($member === $loggedInMember) {
+            $this->addSubmenuItem('gallery', [
+                'key' => 'Gallery',
+                'icon' => 'image',
+                'count' => $parameters['images_count'] ?? 0,
+                'url' => '/gallery/manage',
+                // $this->routing->generate('add_comment', ['username' => $username]),
+            ]);
+        } else {
+            $this->addSubmenuItem('gallery', [
+                'key' => 'Gallery',
+                'icon' => 'image',
+                'count' => $parameters['images_count'] ?? 0,
+                'url' => '/gallery/show/user/' . $username . '/pictures',
+                // $this->routing->generate('add_comment', ['username' => $username]),
+            ]);
+        }
         $this->addSubmenuItem('forum_posts', [
             'key' => 'ViewForumPosts',
             'icon' => 'comment',
             'count' => $parameters['posts_count'] ?? 0,
-            'url' => $this->routing->generate('add_comment', ['username' => $username]),
+            'url' => '/forums/member/' . $username,
+                // $this->routing->generate('add_comment', ['username' => $username]),
         ]);
     }
 

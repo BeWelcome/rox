@@ -1,5 +1,6 @@
 @import '_components.dashboard';
 @import '_components.suggest';
+@import '_components.profile';
 @import '_components.trips';
 @import '_components.trip-card';
 @import '_components.trip-legs';

@@ -1,3 +1,5 @@
+{% import 'macros.twig' as macros %}
+
 {% set loggedInMember = app.user %}
 {% if member == loggedInMember %}
     {% if comment.toMember == loggedInMember %}
@@ -12,45 +14,50 @@
     {% if (show > 1) %}<div>
         <strong>{{ 'commenthiddenedit'|trans }}</strong>
     </div>{% endif %}
-    <div class="d-flex flex-row justify-content-between">
-        {% if member == loggedInMember %}
-            <div>
+    <div class="c-comment-header">
+        <div class="c-comment-header-left">
+            {%- if member == loggedInMember %}
                 {# \todo add route for comment reporting #}
                 <a href="/members/{{ other.Username }}/comment/{{ comment.id }}/report" title="{{ 'reportcommentproblem'|trans }}" class="gray"><i class="fa fa-flag"></i></a>
+            {% endif -%}
+        </div>
+            <div class="c-comment-header-quality {{ quality }}">
+                {%- if not member.Status != constant('\\App\\Doctrine\\MemberStatusType::PASSED_AWAY') -%}
+                    {{ ('commentquality_' ~ quality )|trans }}
+                {%- endif -%}
             </div>
-        {% endif %}
-        {% if not member.Status == constant('\\App\\Doctrine\\MemberStatusType::PASSED_AWAY') %}
-            <div><p class="h4 m-0 ml-lg-5 {{ quality }}">{{ ('commentquality' ~ quality)|trans }}</p></div>
-        {% endif %}
-        <div><span title="{{ comment.created|format_datetime() }}" class="small float-right">{{ comment.created.diffForHumans }}</span></div>
+        <div class="c-comment-header-right"><span title="{{ comment.created|format_datetime() }}" class="small">{{ comment.created.diffForHumans }}</span></div>
     </div>
 
-    <div class="d-flex flex-row justify-content-center">
-        <div class="mr-lg-3 text-center">
-            <a href="{{ url('members_profile', { username: comment.fromMember.Username }) }}">
-                <img class="profileimg avatar-48" src="{{ url('avatar', { username: comment.fromMember.Username, size: 48 }) }}" alt="Profile">
-                <p class="username m-0">{{ comment.fromMember.Username }}</p></a>
+    <div class="c-comment-avatars">
+        <div class="o-avatar o-avatar--m o-avatar--noname">
+            {{ macros.roundedavatarstack(comment.fromMember.Username, 72) }}
         </div>
-        <div class="text-center">
-            <p class="text-mute p-3 m-0 font-italic">
+        <div class="u-p-8 u-self-center">
+            <p class="text-center u-text-gray-80">
                 {{ 'about'|trans }}
             </p>
-            {% if comment.editCondition(loggedInMember) %}
-                <a class="btn btn-sm btn-primary" href="members/{{ member.Username }}/comments/edit" title="Edit">{{ 'edit'|trans }}</a>
-            {% endif %}
         </div>
-        <div class="ml-lg-3 text-center">
-            <a href="{{ url('members_profile', { username: comment.toMember.Username }) }}">
-                <img class="profileimg avatar-48" src="{{ url('avatar', { username: comment.toMember.Username, size: 48 }) }}" alt="Profile">
-                <p class="username m-0">{{ comment.toMember.Username }}</p>
-            </a>
+        <div class="o-avatar o-avatar--m o-avatar--noname">
+            {{ macros.roundedavatarstack(comment.toMember.Username, 72) }}
+        </div>
+        <div>
+            {{ macros.profilelink(comment.fromMember.Username) }}
+        </div>
+        <div>
+            {%- if comment.editCondition(loggedInMember) %}
+                <a class="o-button o-button--s" href="members/{{ member.Username }}/comments/edit" title="Edit">{{ 'edit'|trans }}</a>
+            {% endif -%}
+        </div>
+        <div>
+            {{ macros.profilelink(comment.toMember.Username) }}
         </div>
     </div>
 
     <div>
-        {% for relation in comment.relations|split(',') %}
-            <p class="small font-italic p-0 mb-1">{{  ('comment_' ~ relation)|lower|trans }}</p>
-        {% endfor %}
+        <p class="small u-italic u-p-0 u-mb-8">{% for relation in comment.relations|split(',') %}
+            {{  ('comment_' ~ relation)|lower|trans }}
+        {% endfor %}</p>
 
         {{ comment.TextFree|nl2br|purify }}
 

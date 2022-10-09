@@ -184,7 +184,7 @@ class CommentRepository extends EntityRepository
         $comments = [];
         $commentsForMember = $this->getVisibleCommentsForMember($member);
         $commentsByMember = $this->getVisibleCommentsByMember($member);
-        
+
         /** @var Comment $value */
         foreach ($commentsForMember as $value) {
             $key = $value->getFromMember()->getUsername();

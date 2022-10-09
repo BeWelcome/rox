@@ -1,0 +1,30 @@
+.c-comment-header {
+  display: table;
+  table-layout: fixed;
+  width: 100%;
+}
+
+.c-comment-header div {
+  display: table-cell;
+}
+
+.c-comment-header-left {
+  text-align: left;
+}
+.c-comment-header-right {
+  text-align: right;
+}
+.c-comment-header-quality {
+  text-align: center;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.c-comment-avatars {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 24px;
+  justify-items: center;
+  padding-top: 8px;
+  padding-bottom: 16px;
+}

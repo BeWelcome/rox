@@ -19,5 +19,8 @@ profile.add.comment:
           other {... {username}}
       }
 profile.no.comments:
-    - 'This member hasn\'t received any comments yet.'
+    - 'This member hasn''t received any comments yet.'
     - Shown on the comments page if there are no comments yet given to this member.
+profile.title:
+    - 'Profile of {username}'
+    - Title of the profile page.

@@ -6,6 +6,7 @@ use App\Entity\Language;
 use App\Entity\Member;
 use App\Entity\Word;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
@@ -13,6 +14,7 @@ use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Finder\Finder;
+use Symfony\Component\Routing\Loader\YamlFileLoader;
 use Symfony\Component\Yaml\Yaml;
 
 class TranslationsAddMissingCommand extends Command
@@ -62,19 +64,32 @@ class TranslationsAddMissingCommand extends Command
 
                 $translation = $translationRepository->findOneBy(['code' => $translationId]);
                 if (null === $translation) {
-                    ++$count;
-                    $io->note(sprintf('Adding %s: %s', $translationId, $sentence));
+                    if ($sentence[0] == '@') {
+                        $reusedTranslationId = substr($sentence, 1);
+                        $io->note(sprintf('Adding %s: Reusing %s', $translationId, $reusedTranslationId));
+                        $connection = $this->entityManager->getConnection();
+                        $statement = $connection->prepare('
+                            INSERT INTO words (code, domain, ShortCode, Sentence, updated, donottranslate, IdLanguage, Description, IdMember, created, TranslationPriority, isarchived, majorupdate)
+                            SELECT \'' . $translationId . '\', domain, ShortCode, Sentence, updated, donottranslate, IdLanguage, Description, IdMember, created, TranslationPriority, isarchived, majorupdate
+                            FROM words
+                            WHERE code = \'' . $reusedTranslationId . '\''
+                        );
+                        $statement->executeQuery();
+                    } else {
+                        ++$count;
+                        $io->note(sprintf('Adding %s: %s', $translationId, $sentence));
 
-                    $translation = new Word();
-                    $translation->setCode($translationId);
-                    $translation->setDescription($description);
-                    $translation->setSentence($sentence);
-                    $translation->setDomain($domain);
-                    $translation->setLanguage($english);
-                    $translation->setTranslationAllowed($allowTranslation);
-                    $translation->setAuthor($admin);
+                        $translation = new Word();
+                        $translation->setCode($translationId);
+                        $translation->setDescription($description);
+                        $translation->setSentence($sentence);
+                        $translation->setDomain($domain);
+                        $translation->setLanguage($english);
+                        $translation->setTranslationAllowed($allowTranslation);
+                        $translation->setAuthor($admin);
 
-                    $this->entityManager->persist($translation);
+                        $this->entityManager->persist($translation);
+                    }
                 } else {
                     $this->entityManager->detach($translation);
                 }

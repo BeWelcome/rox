@@ -24,3 +24,29 @@ profile.no.comments:
 profile.title:
     - 'Profile of {username}'
     - Title of the profile page.
+profile.comment.about:
+    - 'about {username}'
+    - Shown on the comments page. {username} will be replaced with the link to the profile.
+profile.comment.from:
+    - 'from {username}'
+    - Shown on the comments page. {username} will be replaced with the link to the profile.
+profile.comment.relation.hewasmyguest:
+    - '{username} was my guest.'
+    - Additional information given for a comment.
+profile.comment.relation.hehostedme:
+   - '{username} hosted me.'
+   - Additional information given for a comment.
+profile.comment.relation.onlyonce:
+    - '@comment_onlyonce'
+profile.comment.relation.heismyfamily:
+    - '{username} belongs to my family.'
+    - Additional information given for a comment.
+profile.comment.relation.hehismyoldclosefriend:
+    - '{username} is an old/close friend.'
+    - Additional information given for a comment.
+profile.comment.relation.travelledtogether:
+    - '@comment_travelledtogether'
+profile.comment.relation.wearefriends:
+    - '@comment_wearefriends'
+profile.comment.relation.communicatedonline:
+    - '@comment_communicatedonline'

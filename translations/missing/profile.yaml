@@ -50,3 +50,5 @@ profile.comment.relation.wearefriends:
     - '@comment_wearefriends'
 profile.comment.relation.communicatedonline:
     - '@comment_communicatedonline'
+profile.comment.relation.nevermetinreallife:
+    - '@comment_nevermetinreallife'

@@ -69,22 +69,27 @@
 
         {{ comment.TextFree|nl2br|purify }}
 
-        {% if show == 1 %}
-            <div class="u-flex u-self-center">
-                <a class="o-button o-button--s" href="{{ url('admin_comment', {commentId: comment.id}) }}">{{ 'editcomment'|trans }}</a>
-            </div>
+    <div class="u-flex u-self-center">
+        {% if comment.FromMember == loggedInMember %}
+            <a class="o-button o-button--s" href="members/{{ member.Username }}/comments/edit" title="Edit">{{ 'edit'|trans }}</a>
         {% endif %}
-        <div class="u-flex u-flex-row u-justify-between">
-            <div class="u-text-14 u-leading-20 u-self-center">
-                {% if comment.created != comment.updated %}
-                    {{ 'commentlastupdated'|trans }}: <span title="{{ comment.updated|format_datetime() }}">{{ comment.updated.diffForHumans }}</span>
-                {% endif %}
-            </div>
-            <div>{%- if from and member == loggedInMember %}
-                {# \todo add route for comment reporting #}
-                <a href="/members/{{ comment.fromMember.Username }}/comment/{{ comment.id }}/report" title="{{ 'reportcommentproblem'|trans }}" class="u-text-grey-80"><i class="fa fa-flag"></i></a>
-                {% endif -%}</div>
+
+        {% if is_granted(constant('\\App\\Entity\\Member::ROLE_ADMIN_COMMENTS')) %}
+            <a class="o-button o-button--s u-px-16" href="{{ url('admin_comment', {commentId: comment.id}) }}">{{ 'editcomment'|trans }}</a>
+        {% endif %}
+    </div>
+    <div class="u-flex u-flex-row u-justify-between">
+        <div class="u-text-14 u-leading-20 u-self-center">
+            {% if comment.created != comment.updated %}
+                {{ 'commentlastupdated'|trans }}: <span title="{{ comment.updated|format_datetime() }}">{{ comment.updated.diffForHumans }}</span>
+            {% endif %}
         </div>
+        <div>{%- if from and member == loggedInMember %}
+            {# \todo add route for comment reporting #}
+            <a href="/members/{{ comment.fromMember.Username }}/comment/{{ comment.id }}/report" title="{{ 'reportcommentproblem'|trans }}" class="u-text-grey-80"><i class="fa fa-flag"></i></a>
+            {% endif -%}
+        </div>
+    </div>
 </div>
 {% endmacro %}
 

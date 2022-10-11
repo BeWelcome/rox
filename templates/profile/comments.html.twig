@@ -1,19 +1,9 @@
 {% extends 'profile/profile.html.twig' %}
 
 {% block page_content %}
-    {% if comments.haveToPaginate %}
-        <div class="u-flex u-justify-end u-my-8">
-            {{ pagerfanta( comments, 'rounded_pagination') }}
-        </div>
-    {% endif %}
     {% for comment in comments %}
         {% include 'profile/comment.html.twig' with { comment: comment } %}
     {% else %}
         {{ 'profile.no.comments'|trans }}
     {% endfor %}
-    {% if comments.haveToPaginate %}
-        <div class="u-flex u-justify-end u-my-8">
-            {{ pagerfanta( comments, 'rounded_pagination') }}
-        </div>
-    {% endif %}
 {% endblock page_content %}

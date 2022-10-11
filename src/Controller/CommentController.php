@@ -157,18 +157,17 @@ class CommentController extends AbstractController
         /** @var Member $loggedInMember */
         $loggedInMember = $this->getUser();
         $statusForm = $profileModel->getStatusForm($loggedInMember, $member);
+        $statusFormView = (null === $statusForm) ? null : $statusForm->createView();
 
         $commentRepository = $entityManager->getRepository(Comment::class);
-        $comments = new PagerFanta(new ArrayAdapter($commentRepository->getCommentsMember($member)));
-        $comments->setMaxPerPage(20);
-        $comments->setCurrentPage($page);
+        $comments = $commentRepository->getCommentsMember($member);
 
         return $this->render('profile/comments.html.twig', [
             'use_lightbox' => false,
-            'status_form' => $statusForm->createView(),
+            'status_form' => $statusFormView,
             'member' => $member,
             'comments' => $comments,
-            'submenu' => $profileSubmenu->getSubmenu($member, $loggedInMember, [ 'active' => 'comments']),
+            'submenu' => $profileSubmenu->getSubmenu($member, $loggedInMember, ['active' => 'comments']),
         ]);
     }
 }

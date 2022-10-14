@@ -2243,7 +2243,7 @@ bootstrap4@0.0.1-security:
   resolved "https://registry.yarnpkg.com/bootstrap4/-/bootstrap4-0.0.1-security.tgz#598920d54afcb2ae3ad7351acabc57e3942d9c49"
   integrity sha512-ZahLXPrm/csSTx4Wk6k7ytPnMCW+9pLv7KskCQwYQFIDo292v8Zh9QVLXwFm4zFOAxryVKumuvPVECTbZdPLYw==
 
-bootstrap@^4.5.2, bootstrap@^4.6.0:
+bootstrap@^4.5.2, bootstrap@^4.6.2:
   version "4.6.2"
   resolved "https://registry.yarnpkg.com/bootstrap/-/bootstrap-4.6.2.tgz#8e0cd61611728a5bf65a3a2b8d6ff6c77d5d7479"
   integrity sha512-51Bbp/Uxr9aTuy6ca/8FbFloBUJZLHwnhTcnjIeRn2suQWsWzcuJhGjKDB5eppVte/8oCdOL3VuwxvZDUggwGQ==

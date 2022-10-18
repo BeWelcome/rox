@@ -1,0 +1,19 @@
+{% extends 'profile/profile.html.twig' %}
+{% import 'macros.twig' as macros %}
+
+{% block page_content %}
+    <h2>{{ 'commentheading'|trans|format(member.username) }}</h2>
+    <div class="alert alert-info">{{ 'followcommentguidelines'|trans|raw }}</div>
+    {{ form_start(form, { 'attr': { 'novalidate': 'novalidate' } }) }}
+    {{ form_row(form.quality) }}
+    {{ form_errors(form.quality) }}
+    {{ form_row(form.relations) }}
+    {{ form_errors(form.relations) }}
+    {{ form_row(form.textfree) }}
+    {{ form_errors(form.textfree) }}
+    {% if form.guidelines is defined %}
+        {{ form_row(form.guidelines) }}
+    {% endif %}
+    <button type="submit" class="o-button">{{ buttonLabel|trans }}</button>
+    {{ form_end(form) }}
+{% endblock page_content %}

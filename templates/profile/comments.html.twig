@@ -1,6 +1,9 @@
 {% extends 'profile/profile.html.twig' %}
 
 {% block page_content %}
+    {% if member.Status != constant('\\App\\Doctrine\\MemberStatusType::PASSED_AWAY') %}
+        <div class="u-w-full u-mb-8">{{ 'commentguidlineslink'|trans|raw }}</div>
+    {% endif %}
     {% for comment in comments %}
         {% include 'profile/comment.html.twig' with { comment: comment } %}
     {% else %}

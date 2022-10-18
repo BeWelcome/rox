@@ -10,13 +10,15 @@ namespace App\Entity;
 use App\Doctrine\CommentAdminActionType;
 use App\Doctrine\CommentQualityType;
 use Carbon\Carbon;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Comment.
  *
- * @ORM\Table(name="comments", indexes={@ORM\Index(name="IdToMember", columns={"IdToMember"}), @ORM\Index(name="comments_ibfk_1", columns={"IdFromMember"})})
+ * @ORM\Table(name="comments")
  * @ORM\Entity(repositoryClass="App\Repository\CommentRepository")
+ * @ORM\HasLifecycleCallbacks
  *
  * @SuppressWarnings(PHPMD)
  * Auto generated class do not check mess
@@ -49,21 +51,21 @@ class Comment
      *
      * @ORM\Column(name="TextWhere", type="text", length=65535, nullable=false)
      */
-    private $textwhere;
+    private $textwhere = '';
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(name="updated", type="datetime", nullable=true)
      */
     private $updated;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(name="created", type="datetime", nullable=false)
      */
-    private $created = '0000-00-00 00:00:00';
+    private $created;
 
     /**
      * @var string
@@ -291,30 +293,6 @@ class Comment
     }
 
     /**
-     * Set displayableincommentofthemonth.
-     *
-     * @param string $displayableincommentofthemonth
-     *
-     * @return Comment
-     */
-    public function setDisplayableincommentofthemonth($displayableincommentofthemonth)
-    {
-        $this->displayableincommentofthemonth = $displayableincommentofthemonth;
-
-        return $this;
-    }
-
-    /**
-     * Get displayableincommentofthemonth.
-     *
-     * @return string
-     */
-    public function getDisplayableincommentofthemonth()
-    {
-        return $this->displayableincommentofthemonth;
-    }
-
-    /**
      * Set displayinpublic.
      *
      * @param bool $displayInPublic
@@ -341,13 +319,13 @@ class Comment
     /**
      * Set allowedit.
      *
-     * @param bool $allowedit
+     * @param bool $editingAllowed
      *
      * @return Comment
      */
-    public function setAllowedit($allowedit)
+    public function setEditingAllowed($editingAllowed)
     {
-        $this->allowedit = $allowedit;
+        $this->allowedit = $editingAllowed;
 
         return $this;
     }
@@ -357,7 +335,7 @@ class Comment
      *
      * @return bool
      */
-    public function getAllowedit()
+    public function getEditingAllowed()
     {
         return $this->allowedit;
     }
@@ -426,26 +404,44 @@ class Comment
         if ($this->displayInPublic) {
             return 1;
         }
+
         // show comment to Safety team
         if (in_array(Member::ROLE_ADMIN_COMMENTS, $loggedInMember->getRoles())) {
             return 2;
         }
         // show comment to writer
-        if ($this->fromMember == $loggedInMember) return 3;
-        // do not show comment
+        if ($this->fromMember === $loggedInMember) {
+            return 3;
+        }
 
+        // do not show comment
         return 0;
     }
 
-    function getEditCondition(Member $loggedInMember){
-
+    public function getEditCondition(Member $loggedInMember)
+    {
         // don't allow edit bad comment if not marked so
-        if ($this->quality == 'Bad' && $this->allowedit != 1) return false;
+        if (CommentQualityType::NEGATIVE == $this->quality && 1 != $this->allowedit) {
+            return false;
+        }
+
         // don't allow edit is not logged in as writer
-        if ($this->fromMember != $loggedInMember) return false;
+        if ($this->fromMember !== $loggedInMember) {
+            return false;
+        }
 
         // allow edit
         return true;
     }
 
+    /**
+     * Triggered on insert.
+     *
+     * @ORM\PrePersist
+     */
+    public function onPrePersist()
+    {
+        $this->created = new DateTime('now');
+        $this->updated = null;
+    }
 }

@@ -8,7 +8,7 @@
             {% if comment.displayinpublic %}{{ 'Comment is visible to everyone.' }}{% else %}{{ 'Comment is currently hidden.' }}{% endif %}
         </div>
         <div class="col-12 mb-2">
-            {% if comment.allowedit %}{{ 'Comment can be edited.' }}{% else %}{{ 'Comment is currently locked.' }}{% endif %}
+            {% if comment.editingAllowed %}{{ 'Comment can be edited.' }}{% else %}{{ 'Comment is currently locked.' }}{% endif %}
         </div>
     </div>
     <div class="row">

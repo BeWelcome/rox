@@ -25,7 +25,7 @@
 <div class="row align-items-center">
     <div class="col-12 col-sm-6">
         <div class="text-center text-md-left">
-            {% if use_lightbox %}
+            {% if use_lightbox is defined %}
                 <a class="d-md-none" href="{{ url('avatar', { username: member.Username, size: 'original'}) }}" data-toggle="lightbox"
                    data-always-show-close="true" data-type="image"
                    data-title="{{ 'profile.picture.title'| trans }}">
@@ -48,7 +48,7 @@
                 {%- endif -%}
                 , <a href="{{ url('places_country', {countryname: city.country.name, countrycode: city.countryId}) }}">{{ city.country.name }}</a>
             </h5>
-            {% if status_form %}
+            {% if status_form is defined and not status_form is null %}
                 {{ form_start(status_form, {'attr': {'class': 'u-grid u-grid-cols-2 u-gap-8'}}) }}
                 {{ form_widget(status_form.status) }}
                 <button type="submit" class="o-button o-button--s u-self-center" value="{{ 'submit'|trans }}">{{ 'submit'|trans }}</button>

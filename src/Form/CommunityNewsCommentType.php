@@ -45,7 +45,6 @@ class CommunityNewsCommentType extends AbstractType
                 ],
             ])
             ->setAttribute('novalidate', 'novalidate')
-            ->setAttribute('test', 'otto')
         ;
     }
 }

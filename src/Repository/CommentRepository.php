@@ -6,7 +6,6 @@ use App\Doctrine\CommentAdminActionType;
 use App\Doctrine\MemberStatusType;
 use App\Entity\Comment;
 use App\Entity\Member;
-use DateTime;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityRepository;
@@ -169,7 +168,7 @@ class CommentRepository extends EntityRepository
     public function getReportedCommentsCount(): int
     {
         $q = $this->createQueryBuilder('c')
-            ->select('count(c.id)')
+            ->select('count(c.fromMember)')
             ->where('c.adminAction = :status')
             ->setParameter('status', CommentAdminActionType::ADMIN_CHECK)
             ->getQuery();
@@ -206,18 +205,19 @@ class CommentRepository extends EntityRepository
         }
 
         if (!empty($comments)) {
-            $farFuture = new DateTimeImmutable('01-01-3000');
+            $early20thCentury = new DateTimeImmutable('01-01-1900');
             usort(
                 $comments,
-                function ($a, $b) use ($farFuture) {
+                function ($a, $b) use ($early20thCentury) {
                     // get latest updates on to and from part of comments and order desc
-                    $createdATo = isset($a['to']) ? $a['to']->getCreated() : $farFuture;
-                    $createdAFrom = isset($a['from']) ? $a['from']->getCreated() : $farFuture;
-                    $createdA = min($createdATo, $createdAFrom);
-                    $createdBTo = isset($b['to']) ? $b['to']->getCreated() : $farFuture;
-                    $createdBFrom = isset($b['from']) ? $b['from']->getCreated() : $farFuture;
-                    $createdB = min($createdBTo, $createdBFrom);
-                    return -1*($createdA <=> $createdB);
+                    $updatedATo = isset($a['to']) ? $a['to']->getUpdated() : $early20thCentury;
+                    $updatedAFrom = isset($a['from']) ? $a['from']->getUpdated() : $early20thCentury;
+                    $updatedA = max($updatedATo, $updatedAFrom);
+                    $updatedBTo = isset($b['to']) ? $b['to']->getUpdated() : $early20thCentury;
+                    $updatedBFrom = isset($b['from']) ? $b['from']->getUpdated() : $early20thCentury;
+                    $updatedB = max($updatedBTo, $updatedBFrom);
+
+                    return -1 * ($updatedA <=> $updatedB);
                 }
             );
         }
@@ -228,7 +228,7 @@ class CommentRepository extends EntityRepository
     public function getVisibleCommentsForMemberCount(Member $member): int
     {
         return $this->getVisibleCommentsForMemberQueryBuilder($member)
-            ->select('count(c.id)')
+            ->select('count(c.fromMember)')
             ->getQuery()
             ->getSingleScalarResult()
             ;

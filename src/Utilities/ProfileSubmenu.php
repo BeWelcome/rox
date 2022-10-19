@@ -255,8 +255,7 @@ class ProfileSubmenu
             'key' => 'ViewForumPosts',
             'icon' => 'comment',
             'count' => $parameters['posts_count'] ?? 0,
-            'url' => '/forums/member/' . $username,
-                // $this->routing->generate('add_comment', ['username' => $username]),
+            'url' => $this->routing->generate('profile_forum_posts', ['username' => $username]),
         ]);
     }
 

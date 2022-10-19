@@ -121,7 +121,7 @@ class MemberPage extends PageWithActiveSkin
             } else {
                 $tt[] = array('gallery', "gallery/show/user/$username/pictures", '<i class="fa fa-fw fa-image"></i> ' . $ww->Gallery . ' <span class="badge badge-primary u-rounded-full u-w-20 u-h-20 u-inline-flex u-items-center u-justify-center pull-right">' . $galleryItemsCount . '</span>');
             }
-            $tt[] = array('forum', "forums/member/$username", '<i class="far fa-fw fa-comment"></i> ' . $viewForumPosts);
+            $tt[] = array('forum', "members/$username/posts", '<i class="far fa-fw fa-comment"></i> ' . $viewForumPosts);
         } else {
             if (isset($note)) {
                 $mynotewordsname=$words->get('NoteEditMyNotesOfMember') ;

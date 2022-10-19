@@ -2,10 +2,16 @@
 
 namespace App\Controller;
 
+use App\Entity\ForumPost;
+use App\Entity\Member;
 use App\Entity\MemberPreference;
 use App\Entity\Preference;
+use App\Repository\ForumPostRepository;
+use App\Utilities\ProfileSubmenu;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -17,10 +23,8 @@ class ForumsController extends AbstractController
 
     /**
      * @Route("/forums/more/group", name="forums_more_group_posts")
-     *
-     * @return RedirectResponse
      */
-    public function showMoreGroupPostsAction()
+    public function showMoreGroupPostsAction(): RedirectResponse
     {
         $member = $this->getUser();
 
@@ -41,10 +45,8 @@ class ForumsController extends AbstractController
 
     /**
      * @Route("/forums/less/group", name="forums_less_group_posts")
-     *
-     * @return RedirectResponse
      */
-    public function showLessGroupPostsAction()
+    public function showLessGroupPostsAction(): RedirectResponse
     {
         $member = $this->getUser();
 
@@ -65,10 +67,8 @@ class ForumsController extends AbstractController
 
     /**
      * @Route("/forums/more/agora", name="forums_more_agora_posts")
-     *
-     * @return RedirectResponse
      */
-    public function showMoreAgoraPostsAction()
+    public function showMoreAgoraPostsAction(): RedirectResponse
     {
         $member = $this->getUser();
 
@@ -89,10 +89,8 @@ class ForumsController extends AbstractController
 
     /**
      * @Route("/forums/less/agora", name="forums_less_agora_posts")
-     *
-     * @return RedirectResponse
      */
-    public function showLessAgoraPostsAction()
+    public function showLessAgoraPostsAction(): RedirectResponse
     {
         $member = $this->getUser();
 
@@ -113,10 +111,8 @@ class ForumsController extends AbstractController
 
     /**
      * @Route("/forums/show/groups/only-mine", name="forums_groups_only_mine")
-     *
-     * @return RedirectResponse
      */
-    public function showOnlyPostsInMyGroups(Request $request)
+    public function showOnlyPostsInMyGroups(Request $request): RedirectResponse
     {
         $member = $this->getUser();
 
@@ -136,10 +132,8 @@ class ForumsController extends AbstractController
 
     /**
      * @Route("/forums/show/groups/all", name="forums_groups_all")
-     *
-     * @return RedirectResponse
      */
-    public function showPostsInAllGroups(Request $request)
+    public function showPostsInAllGroups(Request $request): RedirectResponse
     {
         $member = $this->getUser();
 
@@ -156,5 +150,30 @@ class ForumsController extends AbstractController
         $referrer = $request->headers->get('referer');
 
         return $this->redirect($referrer);
+    }
+
+    /**
+     * @Route("/members/{username}/posts/{page}", name="profile_forum_posts")
+     *
+     * @return Response
+     */
+    public function showPostsByMember(
+        ProfileSubmenu $profileSubmenu,
+        Member $member,
+        EntityManagerInterface $entityManager,
+        int $page = 1
+    ): Response {
+        /** @var Member $loggedInMember */
+        $loggedInMember = $this->getUser();
+
+        /** @var ForumPostRepository $postsRepository */
+        $postsRepository = $entityManager->getRepository(ForumPost::class);
+        $posts = $postsRepository->getForumPostsByMember($member, $page);
+
+        return $this->render('profile/forum.posts.html.twig', [
+            'member' => $member,
+            'posts' => $posts,
+            'submenu' => $profileSubmenu->getSubmenu($member, $loggedInMember, ['active' => 'forum_posts']),
+        ]);
     }
 }

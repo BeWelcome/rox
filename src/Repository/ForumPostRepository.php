@@ -22,12 +22,19 @@ class ForumPostRepository extends EntityRepository
             ;
     }
 
-    public function getForumPostsByMember(Member $member): Collection
+    public function getForumPostsByMember(Member $member, int $page): PagerFanta
     {
-        return $this->getForumPostsByMemberQueryBuilder($member)
-            ->getQuery()
-            ->getResult()
-            ;
+        $queryBuilder = $this->getForumPostsByMemberQueryBuilder($member);
+        $queryBuilder->orderBy('fp.created', 'DESC');
+
+        $adapter = new QueryAdapter($queryBuilder);
+        $pagerfanta = new Pagerfanta($adapter);
+        $pagerfanta
+            ->setMaxPerPage(20)
+            ->setCurrentPage($page)
+        ;
+
+        return $pagerfanta;
     }
 
     private function getForumPostsByMemberQueryBuilder(Member $member): QueryBuilder

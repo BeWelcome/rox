@@ -52,7 +52,7 @@ class CommentController extends AbstractController
     {
         if (
             !$this->isGranted(Member::ROLE_ADMIN_COMMENTS)
-            || !$this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
+            && !$this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
         ) {
             throw $this->createAccessDeniedException('You need to have Comment right to access this.');
         }
@@ -83,7 +83,7 @@ class CommentController extends AbstractController
     public function adminSafetyTeamOverview(Request $request)
     {
         if (!$this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)) {
-            throw $this->createAccessDeniedException('You need to have Group right to access this.');
+            throw $this->createAccessDeniedException('You need to have SafetyTeam right to access this.');
         }
 
         $page = $request->query->get('page', 1);
@@ -113,7 +113,7 @@ class CommentController extends AbstractController
     {
         if (
             !$this->isGranted(Member::ROLE_ADMIN_COMMENTS)
-            || !$this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
+            && !$this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
         ) {
             throw $this->createAccessDeniedException('You need to have Group right to access this.');
         }
@@ -145,7 +145,7 @@ class CommentController extends AbstractController
     {
         if (
             !$this->isGranted(Member::ROLE_ADMIN_COMMENTS)
-            || !$this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
+            && !$this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
         ) {
             throw $this->createAccessDeniedException('You need to have Group right to access this.');
         }
@@ -176,7 +176,7 @@ class CommentController extends AbstractController
     {
         if (
             !$this->isGranted(Member::ROLE_ADMIN_COMMENTS)
-            || !$this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
+            && !$this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
         ) {
             throw $this->createAccessDeniedException('You need to have Group right to access this.');
         }
@@ -202,8 +202,8 @@ class CommentController extends AbstractController
      *
      * @throws AccessDeniedException
      *
-     * @ParamConverter("toMember", class="App\Entity\Member", options={"mapping": {"username": "to_member"}})
-     * @ParamConverter("fromMember", class="App\Entity\Member", options={"mapping": {"username": "from_member"}})
+     * @ParamConverter("toMember", class="App\Entity\Member", options={"mapping": {"to_member": "username"}})
+     * @ParamConverter("fromMember", class="App\Entity\Member", options={"mapping": {"from_member": "username"}})
      *
      * @return Response
      */
@@ -211,7 +211,7 @@ class CommentController extends AbstractController
     {
         if (
             !$this->isGranted(Member::ROLE_ADMIN_COMMENTS)
-            || !$this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
+            && !$this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
         ) {
             throw $this->createAccessDeniedException('error.access.comment');
         }
@@ -244,7 +244,8 @@ class CommentController extends AbstractController
 
             // Redirect to self to ensure buttons are correctly labeled after update
             return $this->redirectToRoute('admin_comment', [
-                'commentId' => $comment->getId(),
+                'to_member' => $toMember->getUsername(),
+                'from_member' => $fromMember->getUsername(),
             ]);
         }
 
@@ -256,25 +257,27 @@ class CommentController extends AbstractController
     }
 
     /**
-     * @Route("/admin/comment/{member1}/{member2}/safetyteam", name="admin_comment_assign_safetyteam")
+     * @Route("/admin/comment/{to_member}/{from_member}/safetyteam", name="admin_comment_assign_safetyteam")
      *
      * @throws AccessDeniedException
      *
+     * @ParamConverter("toMember", class="App\Entity\Member", options={"mapping": {"to_member": "username"}})
+     * @ParamConverter("fromMember", class="App\Entity\Member", options={"mapping": {"from_member": "username"}})
+     *
      * @return RedirectResponse
      */
-    public function adminCommentAssignSafetyTeamAction(Request $request, Member $member1, Member $member2)
+    public function adminCommentAssignSafetyTeamAction(Request $request, Member $toMember, Member $fromMember)
     {
         if (
-            !$this->isGranted(Member::ROLE_ADMIN_COMMENTS)
-            || !$this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
+            !$this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
         ) {
             throw $this->createAccessDeniedException('You need to have either Comments right or be a member of the Safety Team to access this.');
         }
 
         $commentRepository = $this->entityManager->getRepository(Comment::class);
         $comment = $commentRepository->findOneBy([
-            'toMember' => $member1,
-            'fromMember' => $member2,
+            'toMember' => $toMember,
+            'fromMember' => $fromMember,
         ]);
         $comment->setAdminAction(CommentAdminActionType::SAFETY_TEAM_CHECK);
         $this->entityManager->persist($comment);
@@ -286,25 +289,28 @@ class CommentController extends AbstractController
     }
 
     /**
-     * @Route("/admin/comment/{member1}/{member2}/checked", name="admin_comment_mark_checked")
+     * @Route("/admin/comment/{to_member}/{from_member}/checked", name="admin_comment_mark_checked")
      *
      * @throws AccessDeniedException
      *
+     * @ParamConverter("toMember", class="App\Entity\Member", options={"mapping": {"to_member": "username"}})
+     * @ParamConverter("fromMember", class="App\Entity\Member", options={"mapping": {"from_member": "username"}})
+     *
      * @return RedirectResponse
      */
-    public function adminCommentMarkChecked(Request $request, Member $member1, Member $member2)
+    public function adminCommentMarkChecked(Request $request, Member $toMember, Member $fromMember)
     {
         if (
             !$this->isGranted(Member::ROLE_ADMIN_COMMENTS)
-            || !$this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
+            && !$this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
         ) {
             throw $this->createAccessDeniedException('You need to have either Comments right or be a member of the Safety Team to access this.');
         }
 
         $commentRepository = $this->entityManager->getRepository(Comment::class);
         $comment = $commentRepository->findOneBy([
-            'toMember' => $member1,
-            'fromMember' => $member2,
+            'toMember' => $toMember,
+            'fromMember' => $fromMember,
         ]);
         $comment->setAdminAction(CommentAdminActionType::ADMIN_CHECKED);
         $this->entityManager->persist($comment);
@@ -316,25 +322,28 @@ class CommentController extends AbstractController
     }
 
     /**
-     * @Route("/admin/comment/{member1}/{member2}/hide", name="admin_comment_hide")
+     * @Route("/admin/comment/{to_member}/{from_member}/hide", name="admin_comment_hide")
      *
      * @throws AccessDeniedException
      *
+     * @ParamConverter("toMember", class="App\Entity\Member", options={"mapping": {"to_member": "username"}})
+     * @ParamConverter("fromMember", class="App\Entity\Member", options={"mapping": {"from_member": "username"}})
+     *
      * @return RedirectResponse
      */
-    public function adminCommentHide(Request $request, Member $member1, Member $member2)
+    public function adminCommentHide(Request $request, Member $toMember, Member $fromMember)
     {
         if (
             !$this->isGranted(Member::ROLE_ADMIN_COMMENTS)
-            || !$this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
+            && !$this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
         ) {
             throw $this->createAccessDeniedException('You need to have either Comments right or be a member of the Safety Team to access this.');
         }
 
         $commentRepository = $this->entityManager->getRepository(Comment::class);
         $comment = $commentRepository->findOneBy([
-            'toMember' => $member1,
-            'fromMember' => $member2,
+            'toMember' => $toMember,
+            'fromMember' => $fromMember,
         ]);
         $comment->setDisplayInPublic(false);
         $this->entityManager->persist($comment);
@@ -346,25 +355,28 @@ class CommentController extends AbstractController
     }
 
     /**
-     * @Route("/admin/comment/{member1}/{member2}/show", name="admin_comment_show")
+     * @Route("/admin/comment/{to_member}/{from_member}/show", name="admin_comment_show")
      *
      * @throws AccessDeniedException
      *
+     * @ParamConverter("toMember", class="App\Entity\Member", options={"mapping": {"to_member": "username"}})
+     * @ParamConverter("fromMember", class="App\Entity\Member", options={"mapping": {"from_member": "username"}})
+     *
      * @return RedirectResponse
      */
-    public function adminCommentShow(Request $request, Member $member1, Member $member2)
+    public function adminCommentShow(Request $request, Member $toMember, Member $fromMember)
     {
         if (
             !$this->isGranted(Member::ROLE_ADMIN_COMMENTS)
-            || !$this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
+            && !$this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
         ) {
             throw $this->createAccessDeniedException('You need to have either Comments right or be a member of the Safety Team to access this.');
         }
 
         $commentRepository = $this->entityManager->getRepository(Comment::class);
         $comment = $commentRepository->findOneBy([
-            'toMember' => $member1,
-            'fromMember' => $member2,
+            'toMember' => $toMember,
+            'fromMember' => $fromMember,
         ]);
         $comment->setDisplayInPublic(true);
         $this->entityManager->persist($comment);
@@ -386,7 +398,7 @@ class CommentController extends AbstractController
     {
         if (
             !$this->isGranted(Member::ROLE_ADMIN_COMMENTS)
-            || !$this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
+            && !$this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
         ) {
             throw $this->createAccessDeniedException('You need to have Group right to access this.');
         }
@@ -408,7 +420,7 @@ class CommentController extends AbstractController
     }
 
     /**
-     * @Route("/admin/comment/from/{username}", name="admin_comments_from_member")
+     * @Route("/admin/comment/from/{username}", name="admin_comments_from_member", priority=10)
      *
      * @throws AccessDeniedException
      *
@@ -418,7 +430,7 @@ class CommentController extends AbstractController
     {
         if (
             !$this->isGranted(Member::ROLE_ADMIN_COMMENTS)
-            || !$this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
+            && !$this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
         ) {
             throw $this->createAccessDeniedException('You need to have Group right to access this.');
         }
@@ -444,28 +456,42 @@ class CommentController extends AbstractController
      */
     private function getSubMenuItems()
     {
-        return [
-            'abusermustcheck' => [
+        $comments = $this->isGranted(Member::ROLE_ADMIN_COMMENTS);
+        $safetyTeam = $this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM);
+
+        $subMenu = [];
+        if ($safetyTeam) {
+            $subMenu['abusermustcheck'] = [
                 'key' => 'AdminAbuserMustCheck',
                 'url' => $this->generateUrl('admin_abuser_overview'),
-            ],
-            'reportedcomment' => [
+            ];
+        }
+        if ($comments || $safetyTeam) {
+            $subMenu['reportedcomment'] = [
                 'key' => 'AdminReportedComment',
                 'url' => $this->generateUrl('admin_comment_reported_overview'),
-            ],
-            'negativecomment' => [
+            ];
+        }
+        if ($safetyTeam) {
+            $subMenu['negativecomment'] = [
                 'key' => 'AdminNegativeComment',
                 'url' => $this->generateUrl('admin_negative_overview'),
-            ],
-            'checkedcomment' => [
+            ];
+        }
+        if ($comments || $safetyTeam) {
+            $subMenu['checkedcomment'] = [
                 'key' => 'AdminCheckedComment',
                 'url' => $this->generateUrl('admin_checked_overview'),
-            ],
-            'overview' => [
+            ];
+        }
+        if ($comments || $safetyTeam) {
+            $subMenu['overview'] = [
                 'key' => 'AdminComment',
                 'url' => $this->generateUrl('admin_comment_overview'),
-            ],
-        ];
+            ];
+        }
+
+        return $subMenu;
     }
 
     private function handleClickedButton($clickedButton, &$comment)

@@ -236,7 +236,7 @@ class CommentController extends AbstractController
     }
 
     /**
-     * @Route("/members/{username}/comments/new", name="profile_comments",
+     * @Route("/members/{username}/comments", name="profile_comments",
      *     requirements={"username" = "(?i:[a-z](?!.*[-_.][-_.])[a-z0-9-._]{2,18}[a-z0-9])"}))
      */
     public function showCommentsForMember(

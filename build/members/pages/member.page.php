@@ -163,7 +163,7 @@ class MemberPage extends PageWithActiveSkin
                 }
             }
             if ($linkMembersForumPosts) {
-                $tt[] = array('forum', "forums/member/$username", '<i class="far fa-fw fa-comment"></i> ' . $viewForumPosts);
+                $tt[] = array('forum', "members/$username/posts", '<i class="far fa-fw fa-comment"></i> ' . $viewForumPosts);
             }
         }
         if ($rights->HasRight('SafetyTeam') || $rights->HasRight('Admin'))

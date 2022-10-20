@@ -10,6 +10,8 @@ use App\Repository\ForumPostRepository;
 use App\Utilities\ProfileSubmenu;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -153,24 +155,52 @@ class ForumsController extends AbstractController
     }
 
     /**
-     * @Route("/members/{username}/posts/{page}", name="profile_forum_posts")
+     * @Route("/members/{username}/posts/{page}/{search}", name="profile_forum_posts_search")
+     * @Route("/members/{username}/posts/{page}", name="profile_forum_posts",
+     *     requirements={"page"="\d+"}
+     * )
      *
      * @return Response
      */
     public function showPostsByMember(
+        Request $request,
         ProfileSubmenu $profileSubmenu,
         Member $member,
         EntityManagerInterface $entityManager,
-        int $page = 1
+        int $page = 1,
+        string $search = ""
     ): Response {
         /** @var Member $loggedInMember */
         $loggedInMember = $this->getUser();
+        $searchForm = $this->createFormBuilder()
+            ->add('q', TextType::class, [
+                'label' => false,
+                'attr' => [
+                    'placeholder' => 'forum.search.term',
+                ],
+                'required' => false,
+            ])
+            ->setMethod('POST')
+            ->setData(['q' => $search])
+            ->getForm()
+        ;
+        $searchForm->handleRequest($request);
+        if ($searchForm->isSubmitted() && $searchForm->isValid()) {
+            $data = $searchForm->getData();
+
+            return $this->redirectToRoute('profile_forum_posts_search', [
+                'username' => $member->getUsername(),
+                'search' => $data['q']
+            ]);
+        }
 
         /** @var ForumPostRepository $postsRepository */
         $postsRepository = $entityManager->getRepository(ForumPost::class);
-        $posts = $postsRepository->getForumPostsByMember($member, $page);
+        $posts = $postsRepository->getForumPostsByMember($member, $search, $page);
 
         return $this->render('profile/forum.posts.html.twig', [
+            'search_form' => $searchForm->createView(),
+            'search' => $search,
             'member' => $member,
             'posts' => $posts,
             'submenu' => $profileSubmenu->getSubmenu($member, $loggedInMember, ['active' => 'forum_posts']),

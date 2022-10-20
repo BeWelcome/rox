@@ -22,9 +22,17 @@ class ForumPostRepository extends EntityRepository
             ;
     }
 
-    public function getForumPostsByMember(Member $member, int $page): PagerFanta
+    public function getForumPostsByMember(Member $member, string $search, int $page): PagerFanta
     {
         $queryBuilder = $this->getForumPostsByMemberQueryBuilder($member);
+        if (!empty($search)) {
+            $parts = explode(' ', $search);
+            foreach ($parts as $part) {
+                $queryBuilder->andWhere(
+                    $queryBuilder->expr()->like('fp.message', $queryBuilder->expr()->literal('%' . $part . '%'))
+                );
+            }
+        }
         $queryBuilder->orderBy('fp.created', 'DESC');
 
         $adapter = new QueryAdapter($queryBuilder);

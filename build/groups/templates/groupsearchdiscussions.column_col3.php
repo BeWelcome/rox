@@ -25,7 +25,7 @@
                 $url = "/group/" . $this->group->id . "/forum/s" . $post->IdThread . "/#post" . $post->id;
 
                     ?>
-        <div class="col-12 m-1 p-1" style="<?= $style ?>">
+        <div class="col-12 m-1 p-1 js-highlight" style="<?= $style ?>">
                                 <?php echo $words->get('Thread'); ?> <a href="<?php echo "/group/" . $this->group->id . "/forum/s" . $post->IdThread; ?>"><?= $post->title ?></a><br>
                                     <?php
                                     echo $purifier->purify(MOD_layoutbits::truncate_words($post->message, 70));

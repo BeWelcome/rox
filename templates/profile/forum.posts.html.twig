@@ -1,12 +1,28 @@
 {% extends 'profile/profile.html.twig' %}
 
+{% block javascripts %}
+    {{ encore_entry_script_tags('highlight') }}
+{% endblock javascripts %}
+
+{% block stylesheets %}
+    {{ encore_entry_link_tags('highlight') }}
+{% endblock stylesheets %}
+
 {% block page_content %}
+    <input type="hidden" id="keyword" name="keyword" value="{{ search }}">
+    <div class="u-flex u-justify-end">
+    {{ form_start(search_form) }}
+        <div class="u-flex u-flex-row">
+            {{ form_row(search_form.q) }}
+            <button type="submit" class="o-button">{{ 'search'|trans }}</button>
+        </div>
+    {{ form_end(search_form) }}
+    </div>
     {% if posts.haveToPaginate %}
         {{ pagerfanta( posts, 'rounded_pagination') }}
     {% endif %}
-
     {% for post in posts %}
-<div class="l-forum-single-post {% if loop.index is odd %}l-forum-single-post--dark{% endif %}">
+<div class="l-forum-single-post {% if loop.index is even %}l-forum-single-post--dark{% endif %}">
     <!-- left column -->
     <div class="c-single-post-user_info">
         <a id="post{{ post.id }}" style="position: relative; top:-50px;"></a>
@@ -29,8 +45,8 @@
 <div class="c-single-post-permalink"><a href="{% if post.thread.group %}/group/{{ post.thread.group.id }}/forum{% else %}/forums{% endif %}/s{{ post.thread.id }}/#post{{ post.id }}"><i class="fa fa-link"></i> Permalink</a></div>
 
 <!-- message -->
-<div class="c-single-post-content">
-    <div id="d{{ post.IdContent }}">
+<div class="c-single-post-content u-flex u-flex-col u-justify-between">
+    <div id="d{{ post.IdContent }}" class="js-highlight">
         {{ post.message|purify }}
     </div>
     <div class="d-flex justify-content-end">
@@ -50,7 +66,6 @@
     {% else %}
         {{ 'profile.forum.posts.none'|trans }}
     {% endfor %}
-
     {% if posts.haveToPaginate %}
         {{ pagerfanta( posts, 'rounded_pagination') }}
     {% endif %}

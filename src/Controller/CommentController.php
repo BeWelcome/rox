@@ -21,7 +21,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -204,6 +203,7 @@ class CommentController extends AbstractController
             return $this->redirectToRoute('members_profile', ['username' => $member->getUsername()]);
         }
 
+        $checkForExperience = false;
         $originalComment = clone $comment;
         $form = $this->createForm(
             CommentType::class,
@@ -211,6 +211,7 @@ class CommentController extends AbstractController
             [
                 'to_member' => $member,
                 'show_comment_guideline' => false,
+                'show_new_experience' => true,
             ]
         );
 
@@ -218,19 +219,26 @@ class CommentController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var Comment $comment */
             $comment = $form->getData();
-            $newExperience = $commentModel->checkIfNewExperience($originalComment, $comment);
+            $checkedExperience = '1' === $form['checked_experience']->getData();
+            $newExperience = $form['new_experience']->getData();
+            $checkForExperience = $commentModel->checkIfNewExperience($originalComment, $comment);
+
             if ($newExperience) {
                 $comment->setUpdated(new DateTime());
             }
-            $entityManager->persist($comment);
-            $entityManager->flush();
 
-            return $this->redirectToRoute('profile_comments', ['username' => $member->getUsername()]);
+            if (!$checkForExperience || $checkedExperience) {
+                $entityManager->persist($comment);
+                $entityManager->flush();
+
+                return $this->redirectToRoute('profile_comments', ['username' => $member->getUsername()]);
+            }
         }
 
         return $this->render('/profile/comment.edit.html.twig', [
             'form' => $form->createView(),
             'member' => $member,
+            'check_experience' => $checkForExperience,
             'submenu' => $profileSubmenu->getSubmenu($member, $loggedInMember, ['active' => 'comment']),
         ]);
     }

@@ -87,7 +87,10 @@ class CommentType extends AbstractType
             $builder
                 ->add('new_experience', CheckboxType::class, [
                     'label' => 'comment.new.experience',
-                    'label_html' => true,
+                    'mapped' => false,
+                    'required' => false,
+                ])
+                ->add('checked_experience', HiddenType::class, [
                     'mapped' => false,
                     'required' => false,
                 ])

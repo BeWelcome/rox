@@ -47,9 +47,18 @@
 <!-- message -->
 <div class="c-single-post-content u-flex u-flex-col u-justify-between">
     <div id="d{{ post.IdContent }}" class="js-highlight">
-        {{ post.message|purify }}
+        {% set translations = post.messageTranslations %}
+        {% for locale, translation in translations %}
+            <div class="post">
+                {% if translations|length > 1 %}
+                    {% if not loop.first %}<hr class="u-my-8" style="border-top:1px solid gray;">{% endif %}
+                    <small class="text-muted">{{ translation.language.wordcode|lower|trans|raw }} ({{ translation.language.shortCode }})</small><br>
+                {% endif %}
+                {{ translation.message | purify }}
+            </div>
+        {% endfor %}
     </div>
-    <div class="d-flex justify-content-end">
+    <div class="u-flex u-mt-8 u-justify-end">
         <small>
             {% if post.thread.group %}
             <span class="gray">{{ 'group'|trans }}:</span>

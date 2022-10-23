@@ -1,0 +1,8 @@
+comment.new.experience.please.check:
+    - 'It looks like you had a new experience. If you check below this comment will be shown according to the last update instead of its first creation.'
+    - 'Text shown if the member added loads of new text to the comment or changed the relations (added hosted me or was my guest).'
+comment.new.experience:
+    - 'This adds to my existing experience (update to show higher in comments)'
+    - Checkbox on the edit comment page.
+label.comment.text:
+    - '@commentscommenter'

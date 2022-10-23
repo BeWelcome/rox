@@ -141,7 +141,7 @@ function wasGuestOrHost(string $relations) {
                                <div class="w-100 py-2">
                                    <p class="js-read-more-received mb-1">
                                        <?php
-                                       echo htmlentities($comment->TextFree);
+                                       echo $purifier->purify(nl2br($comment->TextFree));
                                        ?>
                                    </p>
                                    <?php if (!$this->passedAway) { ?>
@@ -193,7 +193,7 @@ function wasGuestOrHost(string $relations) {
                                <div class="w-100 py-2">
                                    <p class="js-read-more-written mb-1">
                                        <?php
-                                       echo htmlentities($comment->TextFree);
+                                       echo $purifier->purify(nl2br($comment->TextFree));
                                        ?>
                                    </p>
                                    <?php if ($loggedIn === $comment->UsernameToMember) { ?>

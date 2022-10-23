@@ -250,7 +250,7 @@ class CommentRepository extends EntityRepository
             ;
     }
 
-    public function getCommentsFromMember(Member $member): Collection
+    public function getCommentsFromMember(Member $member): array
     {
         return $this->createQueryBuilder('c')
             ->where('c.fromMember = :member')

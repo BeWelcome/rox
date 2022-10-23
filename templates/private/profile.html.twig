@@ -20,10 +20,10 @@
                     </h2>
 
                     <h5>
-                        <strong><a href="{{ url('places_city', {'countryname': member.country.name, 'countrycode': member.country.country, 'regionname': member.region.name, 'regioncode': member.region.admin1,
+                        <strong><a href="{{ url('places_city', {'countryname': member.country.name, 'countrycode': member.country.geonameId, 'regionname': member.region.name, 'regioncode': member.region.geonameId,
                                 'cityname': member.city.name, 'citycode': member.city.geonameId }) }}">{{ member.city.name }}</a></strong>,
-                        <a href="{{ url('places_region', {'countryname': member.country.name, 'countrycode': member.country.country, 'regionname': member.region.name, 'regioncode': member.region.admin1 }) }}">{{ member.region.name }}</a>,
-                        <a href="{{ url('places_country', {'countryname': member.country.name, 'countrycode': member.country.country }) }}">{{ member.country.name }}</a>
+                        <a href="{{ url('places_region', {'countryname': member.country.name, 'countrycode': member.country.geonameId, 'regionname': member.region.name, 'regioncode': member.region.geonameId }) }}">{{ member.region.name }}</a>,
+                        <a href="{{ url('places_country', {'countryname': member.country.name, 'countrycode': member.country.countryId }) }}">{{ member.country.name }}</a>
                     </h5><!-- city -->
 
                     <div class="o-form-group form-inline small">{{ member.status|trans }}</div>

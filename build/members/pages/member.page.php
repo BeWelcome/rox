@@ -145,7 +145,7 @@ class MemberPage extends PageWithActiveSkin
                 $feedbackUrl .= "&messageId=" . $this->message;
             }
             $tt = array_merge($tt, [
-                (isset($TCom[0])) ? array('commmentsadd', "members/$username/comments/edit", '<i class="fa fa-fw fa-comment"></i> ' . $ww->EditComments, 'commentsadd') : array('commmentsadd', "members/$username/comments/add", '<i class="fa fa-fw fa-comment"></i> ' . $ww->AddComments, 'commentsadd'),
+                (isset($TCom[0])) ? array('commmentsadd', "members/$username/comment/edit", '<i class="fa fa-fw fa-comment"></i> ' . $ww->EditComments, 'commentsadd') : array('commmentsadd', "members/$username/comment/add", '<i class="fa fa-fw fa-comment"></i> ' . $ww->AddComments, 'commentsadd'),
                 array('relationsadd', "members/$username/relations/add", '<i class="fa fa-fw fa-handshake"></i> ' . $ww->addRelation, 'relationsadd'),
                 array('notes', $mynotelinkname, '<i class="fa fa-fw fa-pencil-alt"></i> ' . $mynotewordsname, 'mynotes'),
                 array('report', $feedbackUrl, '<i class="fas fa-fw fa-flag"></i> ' . $words->getSilent('profile.report')),

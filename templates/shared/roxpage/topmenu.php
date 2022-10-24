@@ -9,7 +9,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="/"><img src="images/logo_index_top.png" alt="Be Welcome" /></a>
+      <a class="navbar-brand" href="/"><img src="images/logo_index_top.svg" alt="Be Welcome" /></a>
       <?php if ($logged_in) { ?>
       <div class="navbar-brand navbar-username visible-xs-block">
           <p>

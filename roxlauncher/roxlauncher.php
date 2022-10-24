@@ -57,7 +57,7 @@ class RoxLauncher
                 <body style="width:100%; margin: 0; padding: 0; background: #f7f7f7 url(../images/bggrey.png) top left ">
                 <div style="background: #f37000; border-bottom: 1px solid white; height: 49px">
                 <div style="margin:0 auto; width:960px;">
-                <div style="margin:0 auto;"><img style="padding: 7px;" src="../images/logo_index_top.png" /></div>
+                <div style="margin:0 auto;"><img style="padding: 7px;" src="../images/logo_index_top.svg" /></div>
 </div>
 </div>
                 <div style="margin:0 auto; width:960px;"><h1>Well,</h1>

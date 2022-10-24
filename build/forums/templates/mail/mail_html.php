@@ -8,7 +8,7 @@
         <div style="width: 580px;margin: 0;padding: 2em 0 2em 0; background-color: #ffffff; background: #ffffff url(<?php echo PVars::getObj('env')->baseuri; ?>/images/misc/email_bg.gif) top left repeat-y;">
             <div>
                 <div style="padding: 5px 20px 5px 20px; margin: 10px;background-color: #f5f5f5;border-top: 1px solid #e5e5e5;border-bottom: 1px solid #e5e5e5; text-align: right;">
-                    <a href="<?php echo PVars::getObj('env')->baseuri; ?>"><img src="<?php echo PVars::getObj('env')->baseuri; ?>images/logo_index_top.png" alt="<?php echo PVars::getObj('env')->sitename; ?>" style="border:0"/></a>
+                    <a href="<?php echo PVars::getObj('env')->baseuri; ?>"><img src="<?php echo PVars::getObj('env')->baseuri; ?>images/logo_index_top.svg" alt="<?php echo PVars::getObj('env')->sitename; ?>" style="border:0"/></a>
                 </div>
                 <div style="margin: 60px; background-color: #ffffff;">
                     <h2 style="font-size: 22px; padding-bottom: 20px"><?=$subject?></h2>

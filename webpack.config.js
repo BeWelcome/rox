@@ -18,6 +18,10 @@ Encore
     .splitEntryChunks()
     .enableSingleRuntimeChunk()
     .cleanupOutputBeforeBuild()
+    .configureFontRule({
+        type: 'asset',
+        maxSize: 8*1024*1024,
+    })
     .addEntry('bewelcome', './assets/js/bewelcome.js')
     .addEntry('floating_labels', './assets/scss/floating_labels.scss')
     .addEntry('jquery_ui', './assets/js/jquery_ui.js')

@@ -14,12 +14,12 @@
     {% if form.guidelines is defined %}
         {{ form_row(form.guidelines) }}
     {% endif %}
-    {% if check_experience %}
+    {% if check_experience is defined and check_experience %}
     {{ 'comment.new.experience.please.check'|trans }}
     {% endif %}
     {% if form.new_experience is defined %}
         {{ form_row(form.new_experience) }}
-        <input type="hidden" name="{{ form.checked_experience.vars.full_name }}" value="{% if check_experience %}1{% else %}0{% endif %}">
+        <input type="hidden" name="{{ form.checked_experience.vars.full_name }}" value="{% if check_experience is defined and check_experience%}1{% else %}0{% endif %}">
         {% do form.checked_experience.setRendered %}
     {% endif %}
     <button type="submit" class="o-button">{{ buttonLabel|trans }}</button>

@@ -236,11 +236,13 @@ class Comment
 
     /**
      * Get updated.
-     *
-     * @return Carbon
      */
-    public function getUpdated()
+    public function getUpdated(): ?Carbon
     {
+        if (null === $this->updated) {
+            return null;
+        }
+
         return Carbon::instance($this->updated);
     }
 

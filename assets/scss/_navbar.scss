@@ -14,6 +14,7 @@
     background-color: rgba($navbar-dark-color, 0.2);
     color: $navbar-dark-hover-color;
     text-shadow: 0 0 0.1rem white;
+    border-radius: $border-radius;
   }
 
   z-index: 2000;

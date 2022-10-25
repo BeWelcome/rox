@@ -286,21 +286,28 @@ if ($statement) {
             <?php endif; ?>
         </h3>
 
-        <div class="p-2 d-flex flex-wrap justify-content-around">
+        <div class="p-2 d-flex flex-wrap justify-content-around"
+            style="overflow: scroll; max-height: 400px;">
 
-    <?php
-    // if the gallery is NOT empty, go show it
-    $p = PFunctions::paginate($statement, 1, $itemsPerPage = 8);
-    $statement = $p[0];
+            <?php
+            // if the gallery is NOT empty, go show it
+            $galleryImages = PFunctions::paginate($statement, 1, $itemsPerPage = 8)[0];
 
-    foreach ($statement as $d) {
-        echo '<div><a href="gallery/show/image/'.$d->id.'">' .
-           '<img src="gallery/thumbimg?id='.$d->id.'"' .
-               ' alt="image"' .
-               ' style="height: 50px; width: 50px; margin: 1rem;"/>' .
-           '</a></div>';
-    }
-    ?>
+            foreach ($galleryImages as $galleryImage) {?>
+                <a href="gallery/img?id=<?= $galleryImage->id ?>" 
+                    style="max-width: 40%; display: flex; align-items: center; margin-bottom: 1rem;"
+                    data-toggle="lightbox" 
+                    data-type="image" 
+                    data-title="<?= $galleryImage->title ?>">
+                    <img 
+                        src="gallery/thumbimg?id=<?= $galleryImage->id ?>&amp;t=1"
+                        class="img-fluid"
+                        alt="<?= $galleryImage->title ?>"
+                    />
+                </a>
+                <?php
+            }
+            ?>
         </div>
       <a class="btn btn-sm btn-block btn-outline-primary" href="gallery/show/user/<?php echo $member->Username;?>/images" title="<?php echo $words->getSilent('GalleryTitleLatest');?>">
           <?php echo $words->get('GalleryShowAll');?></a>

@@ -178,11 +178,120 @@ class CommentRepository extends EntityRepository
         return $results;
     }
 
+    public function getAllCommentsMember(Member $member): array
+    {
+        $commentsForMember = $this->getAllCommentsForMember($member);
+        $commentsByMember = $this->getAllCommentsByMember($member);
+
+        return $this->getCommentsAsArray($commentsForMember, $commentsByMember);
+    }
+
     public function getCommentsMember(Member $member): array
     {
-        $comments = [];
         $commentsForMember = $this->getVisibleCommentsForMember($member);
         $commentsByMember = $this->getVisibleCommentsByMember($member);
+
+        return $this->getCommentsAsArray($commentsForMember, $commentsByMember);
+    }
+
+    public function getVisibleCommentsForMemberCount(Member $member): int
+    {
+        return $this->getCommentsForMemberQueryBuilder($member)
+            ->select('count(c.fromMember)')
+            ->andWhere('c.displayInPublic = 1')
+            ->getQuery()
+            ->getSingleScalarResult()
+            ;
+    }
+
+    public function getVisibleCommentsByMemberCount(Member $member): int
+    {
+        return $this->getCommentsByMemberQueryBuilder($member)
+            ->select('count(c.fromMember)')
+            ->andWhere('c.displayInPublic = 1')
+            ->getQuery()
+            ->getSingleScalarResult()
+            ;
+    }
+
+    public function getVisibleCommentsForMember(Member $member): array
+    {
+        return $this->getCommentsForMemberQueryBuilder($member)
+            ->andWhere('c.displayInPublic = 1')
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
+    public function getVisibleCommentsByMember(Member $member): array
+    {
+        return $this->getCommentsByMemberQueryBuilder($member)
+            ->andWhere('c.displayInPublic = 1')
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
+    public function getAllCommentsForMember(Member $member): array
+    {
+        return $this->getCommentsForMemberQueryBuilder($member)
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
+    public function getAllCommentsByMember(Member $member): array
+    {
+        return $this->getCommentsByMemberQueryBuilder($member)
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
+    public function getCommentsFromMember(Member $member): array
+    {
+        return $this->createQueryBuilder('c')
+            ->where('c.fromMember = :member')
+            ->setParameter('member', $member)
+            ->orderBy('c.created', 'ASC')
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
+    private function getCommentsByMemberQueryBuilder(Member $member): QueryBuilder
+    {
+        $qb = $this->createQueryBuilder('c');
+        $qb
+            ->innerJoin('App:Member', 'm', 'WITH', $qb->expr()->andX(
+                $qb->expr()->eq('m.id', 'c.toMember'),
+                $qb->expr()->in('m.status', MemberStatusType::MEMBER_COMMENTS_ARRAY)
+            ))
+            ->where('c.fromMember = :member')
+            ->setParameter('member', $member)
+        ;
+
+        return $qb;
+    }
+
+    private function getCommentsForMemberQueryBuilder(Member $member): QueryBuilder
+    {
+        $qb = $this->createQueryBuilder('c');
+        $qb
+            ->innerJoin('App:Member', 'm', 'WITH', $qb->expr()->andX(
+                $qb->expr()->eq('m.id', 'c.fromMember'),
+                $qb->expr()->in('m.status', MemberStatusType::MEMBER_COMMENTS_ARRAY)
+            ))
+            ->where('c.toMember = :member')
+            ->setParameter('member', $member)
+        ;
+
+        return $qb;
+    }
+
+    private function getCommentsAsArray(array $commentsForMember, array $commentsByMember)
+    {
+        $comments = [];
 
         /** @var Comment $value */
         foreach ($commentsForMember as $value) {
@@ -223,73 +332,5 @@ class CommentRepository extends EntityRepository
         }
 
         return $comments;
-    }
-
-    public function getVisibleCommentsForMemberCount(Member $member): int
-    {
-        return $this->getVisibleCommentsForMemberQueryBuilder($member)
-            ->select('count(c.fromMember)')
-            ->getQuery()
-            ->getSingleScalarResult()
-            ;
-    }
-
-    public function getVisibleCommentsForMember(Member $member): array
-    {
-        return $this->getVisibleCommentsForMemberQueryBuilder($member)
-            ->getQuery()
-            ->getResult()
-            ;
-    }
-
-    public function getVisibleCommentsByMember(Member $member): array
-    {
-        return $this->getVisibleCommentsByMemberQueryBuilder($member)
-            ->getQuery()
-            ->getResult()
-            ;
-    }
-
-    public function getCommentsFromMember(Member $member): array
-    {
-        return $this->createQueryBuilder('c')
-            ->where('c.fromMember = :member')
-            ->setParameter('member', $member)
-            ->orderBy('c.created', 'ASC')
-            ->getQuery()
-            ->getResult()
-            ;
-    }
-
-    private function getVisibleCommentsByMemberQueryBuilder(Member $member): QueryBuilder
-    {
-        $qb = $this->createQueryBuilder('c');
-        $qb
-            ->innerJoin('App:Member', 'm', 'WITH', $qb->expr()->andX(
-                $qb->expr()->eq('m.id', 'c.toMember'),
-                $qb->expr()->in('m.status', MemberStatusType::MEMBER_COMMENTS_ARRAY)
-            ))
-            ->where('c.fromMember = :member')
-            ->andWhere('c.displayInPublic = 1')
-            ->setParameter('member', $member)
-        ;
-
-        return $qb;
-    }
-
-    private function getVisibleCommentsForMemberQueryBuilder(Member $member): QueryBuilder
-    {
-        $qb = $this->createQueryBuilder('c');
-        $qb
-            ->innerJoin('App:Member', 'm', 'WITH', $qb->expr()->andX(
-                $qb->expr()->eq('m.id', 'c.fromMember'),
-                $qb->expr()->in('m.status', MemberStatusType::MEMBER_COMMENTS_ARRAY)
-            ))
-            ->where('c.toMember = :member')
-            ->andWhere('c.displayInPublic = 1')
-            ->setParameter('member', $member)
-        ;
-
-        return $qb;
     }
 }

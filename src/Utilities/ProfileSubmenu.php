@@ -66,7 +66,8 @@ class ProfileSubmenu
         $memberInfo = [];
         /** @var CommentRepository $commentRepository */
         $commentRepository = $this->entityManager->getRepository(Comment::class);
-        $memberInfo['comments_count'] = $commentRepository->getVisibleCommentsForMemberCount($member);
+        $memberInfo['comments_for_count'] = $commentRepository->getVisibleCommentsForMemberCount($member);
+        $memberInfo['comments_by_count'] = $commentRepository->getVisibleCommentsByMemberCount($member);
 
         /** @var ForumPostRepository $postsRepository */
         $postsRepository = $this->entityManager->getRepository(ForumPost::class);
@@ -120,16 +121,16 @@ class ProfileSubmenu
             'icon' => 'sticky-note',
             'url' => '/mynotes',
         ]);
-        $this->addSubmenuItem('myvisitors', [
+        $this->addSubmenuItem('visitors', [
             'key' => 'myvisitors',
             'icon' => 'bed invisible',
-            'url' => '/myvisitors',
+            'url' => $this->routing->generate('profile_visitors', ['username' => $member->getUsername()]),
         ]);
         $this->addSubmenuItem('separator_two', []);
         $this->addSubmenuItem('profile', [
             'key' => 'profile',
             'icon' => 'user',
-            'url' => $this->routing->generate('members_profile', [ 'username' => $member->getUsername()]),
+            'url' => $this->routing->generate('members_profile', ['username' => $member->getUsername()]),
         ]);
     }
 
@@ -231,7 +232,7 @@ class ProfileSubmenu
         $this->addSubmenuItem('comments', [
             'key' => 'ViewComments',
             'icon' => 'comments',
-            'count' => $parameters['comments_count'] ?? 0,
+            'count' => ($parameters['comments_for_count'] ?? 0) . '/' . ($parameters['comments_by_count'] ?? 0),
             'url' => $this->routing->generate('profile_comments', ['username' => $username]),
         ]);
         if ($member === $loggedInMember) {

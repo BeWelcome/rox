@@ -1133,9 +1133,17 @@ class GroupsController extends RoxControllerBase
     public function newPost()
     {
         $group = $this->_getGroupFromRequest();
+
+        $member = $this->_model->getLoggedInMember();
+        if (!$group->isMember($member) || $group->approved != 1) {
+            return $this->redirectAbsolute('/');
+        };
+
         $page = new GroupNewPostPage($group);
+
         $page->vars = $this->args_vars;
         $this->_fillObject($page);
+
         return $page;
     }
 

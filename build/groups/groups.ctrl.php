@@ -1135,7 +1135,11 @@ class GroupsController extends RoxControllerBase
         $group = $this->_getGroupFromRequest();
 
         $member = $this->_model->getLoggedInMember();
-        if (!$group->isMember($member) || $group->approved != 1) {
+        $isGroupMember = $group->isMember($member);
+        $groupIsApproved = $group->approved == 1;
+        $rights = $member->getOldRights();
+        $isForumModerator = in_array("ForumModerator", array_keys($rights));
+        if (!$isForumModerator && !$isGroupMember && !$groupIsApproved) {
             return $this->redirectAbsolute('/');
         };
 

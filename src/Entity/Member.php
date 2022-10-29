@@ -470,7 +470,7 @@ class Member implements UserInterface, \Serializable, PasswordHasherAwareInterfa
      *
      * @ORM\Column(name="HideBirthDate", type="string", nullable=false)
      */
-    private $hidebirthdate = 'No';
+    private $hideBirthDate = 'No';
 
     /**
      * @var DateTime
@@ -1848,13 +1848,13 @@ class Member implements UserInterface, \Serializable, PasswordHasherAwareInterfa
     /**
      * Set hidebirthdate.
      *
-     * @param string $hidebirthdate
+     * @param string $hideBirthDate
      *
      * @return Member
      */
-    public function setHidebirthdate($hidebirthdate)
+    public function setHideBirthDate($hideBirthDate)
     {
-        $this->hidebirthdate = $hidebirthdate;
+        $this->hideBirthDate = $hideBirthDate;
 
         return $this;
     }
@@ -1864,9 +1864,9 @@ class Member implements UserInterface, \Serializable, PasswordHasherAwareInterfa
      *
      * @return string
      */
-    public function getHidebirthdate()
+    public function getHideBirthDate()
     {
-        return $this->hidebirthdate;
+        return $this->hideBirthDate;
     }
 
     /**

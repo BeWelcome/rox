@@ -9,9 +9,9 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Profilesvisits.
  *
- * @ORM\Table(name="profilesvisits", indexes={@ORM\Index(name="IdVisitor", columns={"IdVisitor"})})
+ * @ORM\Table(name="profilesvisits")
+ * @ORM\Entity(repositoryClass="App\Repository\ProfileVisitRepository")
  * @ORM\HasLifecycleCallbacks
- * @ORM\Entity
  *
  * @SuppressWarnings(PHPMD)
  * Auto generated class do not check mess
@@ -35,24 +35,22 @@ class ProfileVisit
     /**
      * @var Member
      *
-     * @ORM\OneToOne(targetEntity="Member")
+     * @ORM\Id
+     * @ORM\ManyToOne(targetEntity="Member")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="IdMember", referencedColumnName="id")
      * })
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="NONE")
      */
     private $member;
 
     /**
      * @var Member
      *
-     * @ORM\OneToOne(targetEntity="Member")
+     * @ORM\Id
+     * @ORM\ManyToOne(targetEntity="Member")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="IdVisitor", referencedColumnName="id")
      * })
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="NONE")
      */
     private $visitor;
 
@@ -60,10 +58,8 @@ class ProfileVisit
      * Set created.
      *
      * @param DateTime $created
-     *
-     * @return ProfileVisit
      */
-    public function setCreated($created)
+    public function setCreated($created): self
     {
         $this->created = $created;
 
@@ -100,6 +96,14 @@ class ProfileVisit
      * @return Carbon
      */
     public function getUpdated()
+    {
+        return Carbon::instance($this->updated);
+    }
+
+    /**
+     * Get visited.
+     */
+    public function getVisited(): Carbon
     {
         return Carbon::instance($this->updated);
     }

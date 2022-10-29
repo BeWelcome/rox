@@ -357,6 +357,22 @@ services:
         public: false
         tags: [ { name: pagerfanta.view, alias: rounded_pagination } ]
 
+    rounded_pagination_end.pagerfanta.view:
+        class: Pagerfanta\Twig\View\TwigView
+        arguments:
+            - '@twig'
+            - 'pagerfanta/rounded_pagination_end.html.twig'
+        public: false
+        tags: [ { name: pagerfanta.view } ]
+
+    rounded_pagination_end.pagerfanta:
+        class: Pagerfanta\View\OptionableView
+        arguments:
+            - '@rounded_pagination_end.pagerfanta.view'
+            - { proximity: 1 }
+        public: false
+        tags: [ { name: pagerfanta.view, alias: rounded_pagination_end } ]
+
     #  doctrine.filter.configurator:
     #    public: true
     #    class: App\Doctrine\Filter\Configurator

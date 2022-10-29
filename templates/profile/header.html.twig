@@ -63,12 +63,14 @@
 
         <p class="mb-2">
             {% if member.HideBirthDate == 'No' %}
-            <strong>{{ 'age'|trans }}: </strong> {{ member.age }},
+            <strong>{{ 'profile.age'|trans }} </strong> {{ member.age }}
             {% endif %}
+            {% if member.HideBirthDate == 'No' and member.HideGender == 'No' %}, {% endif %}
+            {% if member.HideBirthDate == 'Yes' and member.HideGender == 'No' %}{{ 'profile.gender'|trans }} {% endif %}
             {% if member.HideGender == 'No' %}
                 {{ member.gender|trans }}
             {% endif %}
-            <br><strong>{{ 'membersince'|trans }}: </strong>
+            <br><strong>{{ 'profile.joined'|trans }} </strong>
             {% set difference = date(member.created).diff(date()) %}
             {% if difference.days <= 7 %}
                 {{ 'lastloginprivacy'| trans }}

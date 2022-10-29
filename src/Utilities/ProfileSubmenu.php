@@ -232,7 +232,7 @@ class ProfileSubmenu
         $this->addSubmenuItem('comments', [
             'key' => 'ViewComments',
             'icon' => 'comments',
-            'count' => ($parameters['comments_for_count'] ?? 0) . '/' . ($parameters['comments_by_count'] ?? 0),
+            'count' => ($parameters['comments_for_count'] ?? 0) . ' / ' . ($parameters['comments_by_count'] ?? 0),
             'url' => $this->routing->generate('profile_comments', ['username' => $username]),
         ]);
         if ($member === $loggedInMember) {

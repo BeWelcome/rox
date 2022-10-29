@@ -110,7 +110,7 @@ class MemberPage extends PageWithActiveSkin
             $showVisitors = $member->getPreference('PreferenceShowProfileVisits',
                 'Yes');
             if ($showVisitors == 'Yes') {
-                $tt[] = array('myvisitors', "myvisitors", '<i class="fa fa-fw fa-comments invisible"></i> ' . $ww->MyVisitors, 'myvisitors');
+                $tt[] = array('myvisitors', "members/" . $username . "/visitors", '<i class="fa fa-fw fa-comments invisible"></i> ' . $ww->MyVisitors, 'myvisitors');
             }
             $tt[] = array('space', '', '', 'space');
 

@@ -167,7 +167,7 @@ class DataRetentionCommand extends Command
             ->setGender('other')
             ->setGenderofguest('other')
             ->setHideAttribute(255)
-            ->setHidebirthdate('hidden')
+            ->setHideBirthDate('hidden')
             ->setHidegender('hidden')
             ->setHobbies(0)
             ->setHomephonenumber(0)

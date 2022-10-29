@@ -92,10 +92,12 @@ abstract class BaseRequestAndInvitationController extends AbstractController
             $subject = 'Re: ' . $subject;
         }
 
-        return $this->adjustSubject($newRequest->getRequest()->getStatus(), $subject);
+        $locale = $newRequest->getReceiver()->getPreferredLanguage()->getShortCode();
+
+        return $this->adjustSubject($newRequest->getRequest()->getStatus(), $subject, $locale);
     }
 
-    private function adjustSubject(int $status, string $subject): string
+    private function adjustSubject(int $status, string $subject, string $locale): string
     {
         switch ($status) {
             case HostingRequest::REQUEST_DECLINED:
@@ -115,10 +117,14 @@ abstract class BaseRequestAndInvitationController extends AbstractController
         }
 
         if (!empty($suffix)) {
-            $suffix = $this->getTranslator()->trans($suffix);
+            $translator = $this->getTranslator();
+            $currentLocale = $translator->getLocale();
+            $translator->setLocale($locale);
+            $suffix = $translator->trans($suffix);
             if (false === strpos($suffix, $subject)) {
                 $subject .= ' ' . $suffix;
             }
+            $translator->setLocale($currentLocale);
         }
 
         return $subject;

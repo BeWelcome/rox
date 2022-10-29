@@ -6,6 +6,7 @@ use App\Entity\HostingRequest;
 use App\Form\InvitationGuest;
 use App\Form\InvitationHost;
 use App\Form\InvitationType;
+use App\Form\ReportSpamType;
 use Symfony\Component\Form\FormFactoryInterface;
 
 class InvitationMockups implements MockupProviderInterface
@@ -174,12 +175,14 @@ class InvitationMockups implements MockupProviderInterface
 
         $leg = $this->invitationUtility->getLeg($parameters);
         $thread = $this->invitationUtility->getThread($host, $guest, $leg, $parameters['status'], 4);
+        $form = $this->formFactory->create( ReportSpamType::class);
 
         return [
             'leg' => $leg,
             'host' => $host,
             'guest' => $guest,
             'thread' => $thread,
+            'form' => $form->createView(),
             'is_spam' => false,
             'show_deleted' => false,
         ];
@@ -192,12 +195,14 @@ class InvitationMockups implements MockupProviderInterface
 
         $leg = $this->invitationUtility->getLeg($parameters);
         $thread = $this->invitationUtility->getThread($host, $guest, $leg, $parameters['status'], 4);
+        $form = $this->formFactory->create( ReportSpamType::class);
 
         return [
             'leg' => $leg,
             'host' => $host,
             'guest' => $guest,
             'thread' => $thread,
+            'form' => $form->createView(),
             'is_spam' => false,
             'show_deleted' => false,
         ];

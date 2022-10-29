@@ -8,6 +8,7 @@ use App\Entity\Message;
 use App\Entity\Subject;
 use App\Form\HostingRequestGuest;
 use App\Form\HostingRequestHost;
+use App\Form\ReportSpamType;
 use Carbon\Carbon;
 use Mockery;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -144,11 +145,13 @@ class RequestMockups implements MockupProviderInterface
         $guest = $parameters['admin'];
 
         $thread = $this->getThread($host, $guest, $parameters['status'], 3);
+        $form = $this->formFactory->create( ReportSpamType::class);
 
         return [
             'host' => $host,
             'guest' => $guest,
             'thread' => $thread,
+            'form' => $form->createView(),
             'is_spam' => false,
             'show_deleted' => false,
         ];
@@ -161,10 +164,13 @@ class RequestMockups implements MockupProviderInterface
 
         $thread = $this->getThread($host, $guest, $parameters['status'], 4);
 
+        $form = $this->formFactory->create( ReportSpamType::class);
+
         return [
             'host' => $host,
             'guest' => $guest,
             'thread' => $thread,
+            'form' => $form->createView(),
             'is_spam' => false,
             'show_deleted' => false,
         ];

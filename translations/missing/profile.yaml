@@ -52,3 +52,15 @@ profile.comment.relation.communicatedonline:
     - '@comment_communicatedonline'
 profile.comment.relation.nevermetinreallife:
     - '@comment_nevermetinreallife'
+profile.age:
+    - '@age'
+profile.gender:
+    - '@gender'
+profile.visited:
+    - '@visited'
+profile.no.about.me:
+    - 'No about me given.'
+    - 'Shown if a member didn''t provide any information about themselves in about me.'
+profile.joined:
+    - 'Joined:'
+    - 'Used with the date a member created their profile. Like ""Joined: 10 years ago.""'

@@ -37,9 +37,7 @@ class ProfileVisit
      *
      * @ORM\Id
      * @ORM\ManyToOne(targetEntity="Member")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="IdMember", referencedColumnName="id")
-     * })
+     * @ORM\JoinColumn(name="IdMember", referencedColumnName="id")
      */
     private $member;
 
@@ -48,11 +46,15 @@ class ProfileVisit
      *
      * @ORM\Id
      * @ORM\ManyToOne(targetEntity="Member")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="IdVisitor", referencedColumnName="id")
-     * })
+     * @ORM\JoinColumn(name="IdVisitor", referencedColumnName="id")
      */
     private $visitor;
+
+    public function __construct(Member $member, Member $visitor)
+    {
+        $this->member = $member;
+        $this->visitor = $visitor;
+    }
 
     /**
      * Set created.

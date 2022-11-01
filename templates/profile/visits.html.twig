@@ -16,7 +16,7 @@
         {{ pagerfanta( visits, 'rounded_pagination_end') }}
     {% endif %}
 <div class="u-columns-1 sm:u-columns-2 md:u-columns-3">
-    {% for visit in visits %}
+     {% for visit in visits %}
         {% set visitor = visit.visitor %}
     <div class="u-bg-white u-break-inside-avoid-column u-p-8 u-mb-8">
         <div class="u-flex u-flex-col">
@@ -42,7 +42,7 @@
                     <br>{{ visitor.city.fullname }}
                 </div>
             </div>
-            <div class="u-mb-8">
+            <div class="u-mb-8 u-break-all u-break-words js-read-more">
             {% set fields = visitor.memberFields %}
                 {% if fields|length %}
                     {% if fields[app.request.locale] is defined %}
@@ -50,7 +50,7 @@
                     {% else %}
                         {% set profile_summary= (fields|first)['ProfileSummary'] %}
                     {% endif %}
-                    <p class="js-read-more">{{ profile_summary|purify }}</p>
+                    {{ profile_summary|purify }}
                 {% else %}
                     {{ 'profile.no.about.me'|trans }}
                 {% endif %}

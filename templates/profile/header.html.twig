@@ -62,14 +62,14 @@
         {% endif %}
 
         <p class="mb-2">
-            {% if member.HideBirthDate == 'No' %}
+            {%- if member.HideBirthDate == 'No' -%}
             <strong>{{ 'profile.age'|trans }} </strong> {{ member.age }}
-            {% endif %}
-            {% if member.HideBirthDate == 'No' and member.HideGender == 'No' %}, {% endif %}
-            {% if member.HideBirthDate == 'Yes' and member.HideGender == 'No' %}{{ 'profile.gender'|trans }} {% endif %}
+            {%- endif -%}
+            {%- if member.HideBirthDate == 'No' and member.HideGender == 'No' -%}, {%- endif %}
+            {%- if member.HideBirthDate == 'Yes' and member.HideGender == 'No' -%}{{ 'profile.gender'|trans }} {%- endif %}
             {% if member.HideGender == 'No' %}
                 {{ member.gender|trans }}
-            {% endif %}
+            {%- endif -%}
             <br><strong>{{ 'profile.joined'|trans }} </strong>
             {% set difference = date(member.created).diff(date()) %}
             {% if difference.days <= 7 %}
@@ -78,7 +78,7 @@
                 {{ member.created.diffForHumans }}
             {% endif %}
             {% if member.hasRight('SafetyTeam') %} ({{ member.created|format_datetime() }}){% endif %}
-            <br><strong>{{ 'lastlogin'|trans }}: </strong>
+            <br><strong>{{ 'profile.lastlogin'|trans }} </strong>
             {% set difference = date(member.lastLogin).diff(date()) %}
             {% if difference.days <= 7 %}
                 {{ 'lastloginprivacy'| trans }}

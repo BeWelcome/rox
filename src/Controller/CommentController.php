@@ -21,6 +21,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -36,8 +37,8 @@ class CommentController extends AbstractController
      * @Route("/members/{to_member}/comment/{from_member}/report", name="report_comment",
      *     requirements={"username" = "(?i:[a-z](?!.*[-_.][-_.])[a-z0-9-._]{2,18}[a-z0-9])"}))
      *
-     * @ParamConverter("member", class="App\Entity\Member", options={"mapping": {"to_member": "username"}})
-     * @ParamConverter("member", class="App\Entity\Member", options={"mapping": {"from_member": "username"}})
+     * @ParamConverter("toMember", class="App\Entity\Member", options={"mapping": {"to_member": "username"}})
+     * @ParamConverter("fromMember", class="App\Entity\Member", options={"mapping": {"from_member": "username"}})
      *
      * @return Response
      */
@@ -46,7 +47,6 @@ class CommentController extends AbstractController
         Member $toMember,
         Member $fromMember,
         EntityManagerInterface $entityManager,
-        TranslatorInterface $translator,
         Mailer $mailer
     ) {
         /** @var Member $member */
@@ -91,7 +91,7 @@ class CommentController extends AbstractController
                     $entityManager->persist($comment);
                     $entityManager->flush();
 
-                    $this->addFlash('notice', $translator->trans('flash.feedback.safetyteam'));
+                    $this->addTranslatedFlash('notice', 'flash.feedback.safetyteam');
 
                     return $this->redirectToRoute('profile_all_comments', ['username' => $member->getUsername()]);
                 }
@@ -219,19 +219,17 @@ class CommentController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var Comment $comment */
             $comment = $form->getData();
-            $checkedExperience = '1' === $form['checked_experience']->getData();
-            $newExperience = $form['new_experience']->getData();
             $checkForExperience = $commentModel->checkIfNewExperience($originalComment, $comment);
-
+            $newExperience = $form['new_experience']->getData();
             if ($newExperience) {
                 $comment->setUpdated(new DateTime());
             }
 
-            if (!$checkForExperience || $checkedExperience) {
-                $entityManager->persist($comment);
-                $entityManager->flush();
-
-                return $this->redirectToRoute('profile_comments', ['username' => $member->getUsername()]);
+            $entityManager->persist($comment);
+            $entityManager->flush();
+            
+            if ($newExperience) {
+                return $this->redirectToRoute('profile_comments', ['username' => $loggedInMember->getUsername()]);
             }
         }
 
@@ -241,6 +239,39 @@ class CommentController extends AbstractController
             'check_experience' => $checkForExperience,
             'submenu' => $profileSubmenu->getSubmenu($member, $loggedInMember, ['active' => 'comment']),
         ]);
+    }
+
+    /**
+     * @Route("/members/{from_member}/comment/{to_member}/new", name="comment_new_experience",
+     *     requirements={"username" = "(?i:[a-z](?!.*[-_.][-_.])[a-z0-9-._]{2,18}[a-z0-9])"}))
+     *
+     * @ParamConverter("toMember", class="App\Entity\Member", options={"mapping": {"to_member": "username"}})
+     * @ParamConverter("fromMember", class="App\Entity\Member", options={"mapping": {"from_member": "username"}})
+     */
+    public function setNewExperienceForComment(
+        Member $fromMember,
+        Member $toMember,
+        CommentModel $commentModel,
+        EntityManagerInterface $entityManager
+    ): RedirectResponse {
+        /** @var Member $loggedInMember */
+        $loggedInMember = $this->getUser();
+        if ($loggedInMember !== $fromMember) {
+            $this->redirectToRoute('members_profile', ['username' => $toMember->getUsername()]);
+        }
+
+        $comment = $commentModel->getCommentForMemberPair($toMember, $fromMember);
+        if (null === $comment) {
+            $this->redirectToRoute('members_profile', ['username' => $toMember->getUsername()]);
+        }
+
+        $comment->setUpdated(new DateTime());
+        $entityManager->persist($comment);
+        $entityManager->flush();
+
+        $this->addTranslatedFlash('notice', 'comment.set.new.experience');
+
+        return $this->redirectToRoute('profile_comments', ['username' => $fromMember->getUsername()]);
     }
 
     /**
@@ -259,7 +290,11 @@ class CommentController extends AbstractController
         $statusFormView = (null === $statusForm) ? null : $statusForm->createView();
 
         $commentRepository = $entityManager->getRepository(Comment::class);
-        $comments = $commentRepository->getCommentsMember($member);
+        if (in_array(Member::ROLE_ADMIN_SAFETYTEAM, $loggedInMember->getRoles())) {
+            $comments = $commentRepository->getAllCommentsMember($member);
+        } else {
+            $comments = $commentRepository->getCommentsMember($member);
+        }
 
         return $this->render('profile/comments.html.twig', [
             'use_lightbox' => false,

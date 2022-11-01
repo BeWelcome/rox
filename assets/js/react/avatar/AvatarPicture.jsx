@@ -15,8 +15,10 @@ const AvatarPicture = (props) => {
     };
 
     return (
-        <div className="avatar-box">
-            <a className="avatar-box-inside" href={pictureUrl} data-toggle="lightbox" data-type="image" title={pictureTitle} style={imageStyle} />
+        <div className="u-w-full u-relative u-pb-[100%]">
+            <a className="u-absolute u-left-0 u-top-0" href={pictureUrl} data-toggle="lightbox" data-type="image" title={pictureTitle}>
+                <img className="u-rounded-16 u-max-w-full" src={pictureUrl} alt={pictureTitle}/>
+            </a>
         </div>
     )
 }

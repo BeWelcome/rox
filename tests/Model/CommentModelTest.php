@@ -40,20 +40,6 @@ class CommentModelTest extends TestCase
         $this->assertTrue($this->commentModel->checkIfNewExperience($original, $updated));
     }
 
-    public function testNewExperienceDisjunctRelations()
-    {
-        $original = new Comment();
-        $original->setRelations($this->buildRelations([
-            CommentRelationsType::WAS_GUEST,
-        ]))->setTextFree('Lorem ipsum.');
-        $updated = clone $original;
-        $updated->setRelations($this->buildRelations([
-            CommentRelationsType::WAS_HOST,
-        ]))->setTextFree('Lorem ipsum.');
-
-        $this->assertFalse($this->commentModel->checkIfNewExperience($original, $updated));
-    }
-
     public function testNoNewExperienceRelation()
     {
         $original = new Comment();

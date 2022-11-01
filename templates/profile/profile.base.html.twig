@@ -86,14 +86,10 @@
                             class="mt-3 h3-canvas-color">{{ menuItem.key | lower | trans }}</h3>{% endif %}
                         <div class="list-group mb-2">
                             {% elseif 'profile_picture' in filter %}
-                                <div class="avatar-box">
-                                    <a class="avatar-box-inside profileimg"
-                                       href="{{ url('avatar', {username: menuItem.username, size: 'original'}) }}"
-                                       data-toggle="lightbox" data-type="image"
-                                       data-title="{{ 'profile.picture'|trans }}"
-                                       title="{{ 'profile.picture'|trans }}"
-                                       style="background-image: url(&quot;{{ url('avatar', {username: menuItem.username, size: 500}) }}&quot;);">
-                                    </a>
+                                <div class="u-w-full u-relative u-pb-[100%]">
+                                    <div class="u-absolute u-left-0 u-top-0">
+                                        <img class="u-rounded-full u-max-w-full" src="{{ url('avatar', {'username': menuItem.username, 'size': 500}) }}">
+                                    </div>
                                 </div>
                                 {% if menuItem.is_owner %}
                                     <button type="button" class="btn btn-info btn-block"
@@ -125,5 +121,6 @@
     {{ encore_entry_script_tags('offcanvas') }}
 {% endif %}
 {% block javascripts %}{% endblock javascripts %}
+{% block modals %}{% endblock %}
 </body>
 </html>

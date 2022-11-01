@@ -20,6 +20,7 @@ class PageWithRoxLayout extends PageWithHTML
     {
         $stylesheets = parent::getStylesheets();
         $stylesheets[] = 'build/bewelcome.css';
+        $stylesheets[] = 'build/tailwind.css';
         return $stylesheets;
     }
 

@@ -2,9 +2,9 @@
 
 namespace App\Model;
 
+use App\Doctrine\CommentRelationsType;
 use App\Entity\Comment;
 use App\Entity\Member;
-use App\Repository\CommentRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use GordonLesti\Levenshtein\Levenshtein;
 
@@ -29,17 +29,15 @@ class CommentModel
     {
         $originalRelations = explode(',', $original->getRelations());
         $updatedRelations = explode(',', $updated->getRelations());
-        $diff = array_diff($updatedRelations, $originalRelations);
-        $intersect = array_intersect($updatedRelations, $originalRelations);
 
-        // if no updated relations are in original relations it's not a new relation but an existing one was corrected
-        // But the text changes might still point to a new experience
-        if (0 == count($intersect)) {
-            return false;
-        } else {
-            if (count($intersect) == count($originalRelations) && 0 != count($diff)) {
-                return true;
-            }
+        // if a hosting experience was added we can assume that it is a new experience.
+        $diff = array_diff($updatedRelations, $originalRelations);
+
+        if (
+            in_array(CommentRelationsType::WAS_GUEST, $diff)
+            || in_array(CommentRelationsType::WAS_HOST, $diff)
+        ) {
+            return true;
         }
 
         $originalText = $original->getTextFree();

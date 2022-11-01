@@ -4,5 +4,14 @@ comment.new.experience.please.check:
 comment.new.experience:
     - 'This adds to my existing experience (update to show higher in comments)'
     - Checkbox on the edit comment page.
+comment.new.experience.modal:
+    - 'New Experience?'
+    - Title of the modal shown in case a member edits a comment and the code thinks it is a new experience
+comment.new.experience.no:
+    - '@no'
+    - Button label on the modal for new experience
+comment.new.experience.yes:
+    - '@yes'
+    - Button label on the modal for new experience
 label.comment.text:
     - '@commentscommenter'

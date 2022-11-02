@@ -64,6 +64,7 @@ profile.no.about.me:
 profile.joined:
     - 'Joined:'
     - 'Used with the date a member created their profile. Like ""Joined: 10 years ago.""'
-profile.lastlogin:
-    - '@lastlogin'
-    - 'Label for the last login part of the profile header'
+profile.last.activity:
+    - 'Last activity:'
+    - 'Shows the last time a user accessed the site (not the last time they logged in which might be remembered).'
+

@@ -46,7 +46,7 @@
                                     {% if not loop.first %}<hr class="u-my-8" style="border-top:1px solid gray;">{% endif %}
                                     <small class="text-muted">{{ translation.language.wordcode|lower|trans|raw }} ({{ translation.language.shortCode }})</small><br>
                                 {% endif %}
-                                {{ translation.message | purify }}
+                                {{ translation.message | purify | nl2br }}
                             </div>
                         {% endfor %}
                     </div>
@@ -55,7 +55,7 @@
                             {% if not post.thread is null %}
                                 {% if post.thread.group %}
                                     <span class="gray">{{ 'group'|trans }}:</span>
-                                    <a href="{{ path('group_start', {group_id: post.thread.group.id}) }}">{{ post.thread.group.name|striptags }}</a>
+                                    <a href="{{ url('group_start', {group_id: post.thread.group.id}) }}">{{ post.thread.group.name|striptags }}</a>
                                 {% endif %}
 
                                 <span class="gray">{{ 'search_topic_text'|trans }}</span>

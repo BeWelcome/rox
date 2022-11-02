@@ -227,7 +227,7 @@ class CommentController extends AbstractController
 
             $entityManager->persist($comment);
             $entityManager->flush();
-            
+
             if ($newExperience) {
                 return $this->redirectToRoute('profile_comments', ['username' => $loggedInMember->getUsername()]);
             }
@@ -260,9 +260,9 @@ class CommentController extends AbstractController
             $this->redirectToRoute('members_profile', ['username' => $toMember->getUsername()]);
         }
 
-        $comment = $commentModel->getCommentForMemberPair($toMember, $fromMember);
+        $comment = $commentModel->getCommentForMemberPair($fromMember, $toMember);
         if (null === $comment) {
-            $this->redirectToRoute('members_profile', ['username' => $toMember->getUsername()]);
+            return $this->redirectToRoute('members_profile', ['username' => $toMember->getUsername()]);
         }
 
         $comment->setUpdated(new DateTime());

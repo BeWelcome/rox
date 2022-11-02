@@ -40,6 +40,9 @@
     {% if form.guidelines is defined %}
         {{ form_row(form.guidelines) }}
     {% endif %}
+    {% if form.new_experience is defined %}
+        {{ form_row(form.new_experience) }}
+    {% endif %}
     <button type="submit" class="o-button">{{ buttonLabel|trans }}</button>
     {{ form_end(form) }}
 {% endblock page_content %}

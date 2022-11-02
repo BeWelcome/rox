@@ -20,7 +20,6 @@
         "ext-xsl": "*",
         "ext-zip": "*",
         "anthonymartin/geo-location": "^2.0",
-        "anyx/login-gate-bundle": "^2.0",
         "api-platform/core": "2.*",
         "babdev/pagerfanta-bundle": "3.*",
         "doctrine/doctrine-bundle": "^2.0",

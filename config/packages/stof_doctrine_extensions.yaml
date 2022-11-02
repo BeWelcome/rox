@@ -8,4 +8,4 @@ stof_doctrine_extensions:
     orm:
         default:
             translatable: true
-    persist_default_translation: true
+#    persist_default_translation: true

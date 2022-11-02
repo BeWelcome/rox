@@ -4,36 +4,31 @@ namespace App\EventListener;
 
 use App\Doctrine\MemberStatusType;
 use App\Entity\Member;
-use DateTime;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 
 /**
- * Listens for interactive login (ie. from the login form, when a password
- * has been typed) to validate that the stored password hash adheres to
- * current encoder rules (using PHP's password_needs_rehash() function.) If
- * the check fails, the password is re-encoded with the new encoder by
- * calling changePassword on MemberService.
+ * Listens for interactive login to set the member status to active in case the login was done from an OutOfRemind or
+ * other browsable state.
  */
 class AuthListener
 {
-    /** @var EntityManager */
-    private $em;
+    /** @var EntityManagerInterface */
+    private $entityManager;
 
-    public function __construct(EntityManager $em)
+    public function __construct(EntityManagerInterface $entityManager)
     {
-        $this->em = $em;
+        $this->entityManager = $entityManager;
     }
 
-    public function onAuthenticationSuccess(InteractiveLoginEvent $e)
+    public function onAuthenticationSuccess(InteractiveLoginEvent $event)
     {
-        /** @var Member $user */
-        $user = $e->getAuthenticationToken()->getUser();
-        if (MemberStatusType::ACTIVE !== $user->getStatus() && MemberStatusType::CHOICE_INACTIVE !== $user->getStatus()) {
-            $user->setStatus(MemberStatusType::ACTIVE);
+        /** @var Member $member */
+        $member = $event->getAuthenticationToken()->getUser();
+        if (MemberStatusType::ACTIVE !== $member->getStatus() && MemberStatusType::CHOICE_INACTIVE !== $member->getStatus()) {
+            $member->setStatus(MemberStatusType::ACTIVE);
         }
-        $user->setLastlogin(new DateTime());
-        $this->em->persist($user);
-        $this->em->flush();
+        $this->entityManager->persist($member);
+        $this->entityManager->flush();
     }
 }

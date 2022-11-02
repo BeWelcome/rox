@@ -78,7 +78,7 @@
                 {{ member.created.diffForHumans }}
             {% endif %}
             {% if member.hasRight('SafetyTeam') %} ({{ member.created|format_datetime() }}){% endif %}
-            <br><strong>{{ 'profile.lastlogin'|trans }} </strong>
+            <br><strong>{{ 'profile.last.activity'|trans }} </strong>
             {% set difference = date(member.lastLogin).diff(date()) %}
             {% if difference.days <= 7 %}
                 {{ 'lastloginprivacy'| trans }}

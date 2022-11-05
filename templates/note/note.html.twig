@@ -1,0 +1,12 @@
+{% import 'macros.twig' as macros %}
+
+<div class="u-flex u-flex-row u-bg-white u-rounded-8 u-p-8 u-mb-8 u-text-gray-90">
+    <div class="o-avatar">{{ macros.roundedavatarstack(note.member.username, 50) }}</div>
+    <div class="u-ml-8 u-grow grow" style="flex-grow: 1;">
+        <div class="u-flex u-flex-col u-grow grow u-h-full">
+            <div class="u-pb-8"><strong>{{ note.category|capitalize }}</strong></div>
+            <div class="u-pb-8" style="flex-grow: 1;">{{ note.comment|purify }}</div>
+            <div class="u-text-12 u-self-end u-align-end u-items-end">{{ note.updated|format_datetime() }}</div></div></div>
+    <div class="u-flex u-flex-col u-ml-8"><a href="{{ path('edit_note', {username: note.member.username}) }}" class="o-button u-mb-8"><i class="fa fa-fw fa-edit"></i></a>
+        <button class="o-button js-modal-trigger"><i class="fa fa-fw fa-trash-alt"></i></button></div>
+</div>

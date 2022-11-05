@@ -1,0 +1,7 @@
+{% block tomselect_widget %}
+    {% set tom_select_options = { options: choices, create: allow_create } %}
+    {% if multiple %}
+{% endif %}
+    <input type="hidden" id="{{ form.vars.id ~ '-tom-select-options' }}" value="{{ tom_select_options|json_encode }}">
+    <input type="text" {{ block('widget_attributes') }} {% if multiple %}multiple{% endif %} value="{{ value }}" >
+{% endblock %}

@@ -1,11 +1,19 @@
 import TomSelect from 'tom-select';
 
 document
-    .querySelectorAll('.tom-select')
+    .querySelectorAll('.js-tom-select')
     .forEach((element) => {
-        let settings = {
-            maxOptions: null,
-        };
-        new TomSelect(element, settings);
+        const optionsElement = document.getElementById(element.id + '-tom-select-options');
+        const tomSelectOptions = JSON.parse(optionsElement.value);
+        console.log(tomSelectOptions);
+
+        const maxOptions = null;
+        const create = true;
+        new TomSelect( element, {
+            create: tomSelectOptions.create,
+            options: tomSelectOptions.options,
+            maxOptions: tomSelectOptions.maxOptions,
+            plugins: ['remove_button'],
+        });
     })
 ;

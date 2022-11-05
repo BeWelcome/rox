@@ -5,6 +5,7 @@ twig:
   form_themes:
     - 'rox_form_theme.html.twig'
     - 'ckeditor/ckeditor.html.twig'
+    - 'tomselect/tomselect.html.twig'
 
   paths:
       '%kernel.project_dir%/build': 'build'

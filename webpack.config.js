@@ -65,6 +65,7 @@ Encore
     .addEntry('translations', './assets/js/admin/translations.js')
     .addEntry('readmore', './assets/js/readmore.js')
     .addEntry('tailwind', './assets/tailwindcss/tailwind.css')
+    .addEntry('tom-select', './assets/js/tom-select')
     // react
     .configureBabel(function(babelConfig) {
         babelConfig.presets = [ "@babel/preset-env", '@babel/preset-react' ]

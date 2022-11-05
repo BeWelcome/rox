@@ -1,0 +1,22 @@
+{% extends 'profile/profile.html.twig' %}
+{% import 'macros.twig' as macros %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('tom-select') }}
+{% endblock %}
+
+{% block page_content %}
+    <h2>{{ 'profile.note.about'|trans({'username': member.username}) }}</h2>
+
+    {{ form_start(form, { 'attr': { 'novalidate': 'novalidate' } }) }}
+    {{ form_row(form.category) }}
+    {{ form_errors(form.category) }}
+    {{ form_row(form.comment) }}
+    {{ form_errors(form.comment) }}
+
+    <div class="u-flex u-justify-end u-my-8">
+        <button type="submit" class="o-button">{{ buttonLabel|trans }}</button>
+    </div>
+
+    {{ form_end(form) }}
+{% endblock page_content %}

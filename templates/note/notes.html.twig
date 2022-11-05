@@ -1,0 +1,32 @@
+{% extends 'profile/profile.html.twig' %}
+
+{% block page_content %}
+    <h1>{{ 'profile.notes'|trans }}</h1>
+    {% for note in notes %}
+        {% include 'note/note.html.twig' with { note: note } %}
+    {% else %}
+        {{ 'profile.no.notes'|trans }}
+    {% endfor %}
+{% endblock page_content %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('micromodal') }}
+    <script type="application/javascript">
+        MicroModal.init('js-modal-trigger');
+    </script>
+{% endblock javascripts %}
+
+{% block modals %}
+{#
+    <div class="u-bg-gray-80 u-bg-opacity-50 u-flex u-justify-center u-items-center u-absolute u-inset-0 u-z-[2001]" id="comment-modal">
+            <div class="u-bg-white u-p-16 u-m-16 u-rounded-8 u-text-center u-min-w-50">
+                <p class="u-text-24 u-mb-4 u-font-700 u-text-gray-50">{{ 'profile.notes.modal'|trans }}</p>
+                <p class="u-text-16 u-mb-4">{{ 'profile.notes.delete'|trans }}</p>
+                <footer class="u-flex u-flex-row u-justify-between">
+                    <button class="o-button" data-dismiss="modal">{{ 'profile.notes.no'|trans|capitalize }}</button>
+                    <a href="{{ url('delete_note', {'username': app.user.username }) }}" class="o-button" data-dismiss="modal">{{ 'profile.notes.yes'|trans|capitalize }}</a>
+                </footer>
+            </div>
+        </div>
+#}
+{% endblock %}

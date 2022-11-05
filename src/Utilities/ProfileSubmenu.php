@@ -4,17 +4,18 @@ namespace App\Utilities;
 
 use App\Doctrine\AccommodationType;
 use App\Entity\Comment;
-use App\Entity\FamilyAndFriend;
+use App\Entity\Relation;
 use App\Entity\ForumPost;
 use App\Entity\GalleryImage;
 use App\Entity\Member;
 use App\Entity\Message;
 use App\Entity\ProfileNote;
 use App\Repository\CommentRepository;
-use App\Repository\FamilyAndFriendRepository;
+use App\Repository\RelationRepository;
 use App\Repository\ForumPostRepository;
 use App\Repository\GalleryImageRepository;
 use App\Repository\MessageRepository;
+use App\Repository\ProfileNoteRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\RouterInterface;
 
@@ -77,18 +78,26 @@ class ProfileSubmenu
         $imageRepository = $this->entityManager->getRepository(GalleryImage::class);
         $memberInfo['images_count'] = $imageRepository->getImagesByMemberCount($member);
 
+        /** @var ProfileNoteRepository $noteRepository */
+        $noteRepository = $this->entityManager->getRepository(ProfileNote::class);
+        $notesCount = $noteRepository->getProfileNotesCount($loggedInMember);
+        $memberInfo['notes_count'] = $notesCount;
+
+        /** @var RelationRepository $relationRepository
+        $relationRepository = $this->entityManager->getRepository(Relation::class);
+        $memberInfo['relations_count'] = $relationRepository->getRelationsCount($member); */
+
         if ($member !== $loggedInMember) {
             $comment = $commentRepository->findOneBy(['fromMember' => $loggedInMember, 'toMember' => $member]);
             $memberInfo['comment'] = null !== $comment;
 
-            $noteRepository = $this->entityManager->getRepository(ProfileNote::class);
             $note = $noteRepository->findOneBy(['owner' => $loggedInMember, 'member' => $member]);
             $memberInfo['note'] = null !== $note;
 
-            /** @var FamilyAndFriendRepository $relationRepository */
-            $relationRepository = $this->entityManager->getRepository(FamilyAndFriend::class);
+            /** @var RelationRepository $relationRepository
+            $relationRepository = $this->entityManager->getRepository(Relation::class);
             $relation = $relationRepository->findRelationBetween($loggedInMember, $member);
-            $memberInfo['family_or_friend'] = null !== $relation;
+            $memberInfo['family_or_friend'] = null !== $relation; */
 
             /** @var MessageRepository $messageRepository */
             $messageRepository = $this->entityManager->getRepository(Message::class);
@@ -99,7 +108,7 @@ class ProfileSubmenu
         return $memberInfo;
     }
 
-    private function addSubmenuItemsOwnProfile(Member $member)
+    private function addSubmenuItemsOwnProfile(Member $member, array $parameters)
     {
         $this->addSubmenuItem('edit_profile', [
             'key' => 'editmyprofile',
@@ -119,7 +128,8 @@ class ProfileSubmenu
         $this->addSubmenuItem('mynotes', [
             'key' => 'mynotes',
             'icon' => 'sticky-note',
-            'url' => '/mynotes',
+            'count' => $parameters['notes_count'],
+            'url' => $this->routing->generate('notes', ['username' => $member->getUsername()]),
         ]);
         $this->addSubmenuItem('visitors', [
             'key' => 'myvisitors',
@@ -185,27 +195,27 @@ class ProfileSubmenu
             $this->addSubmenuItem('family_or_friend', [
                 'key' => 'profile.relation.remove',
                 'icon' => 'handshake',
-                'url' => 'members/' . $username . '/relations/remove',
+                'url' => $this->routing->generate('remove_relation', ['username' => $username]),
             ]);
         } else {
             $this->addSubmenuItem('family_or_friend', [
                 'key' => 'addRelation',
                 'icon' => 'handshake',
-                'url' => 'members/' . $username . '/relations/add',
+                'url' => $this->routing->generate('add_relation', ['username' => $username]),
             ]);
         }
 
         if ($parameters['note']) {
-            $this->addSubmenuItem('note', [
+            $this->addSubmenuItem('edit_note', [
                 'key' => 'NoteEditMyNotesOfMember',
                 'icon' => 'pencil-alt',
-                'url' => 'members/' . $username . '/note/edit',
+                'url' => $this->routing->generate('edit_note', ['username' => $member->getUsername()]),
             ]);
         } else {
-            $this->addSubmenuItem('note', [
+            $this->addSubmenuItem('add_note', [
                 'key' => 'NoteAddToMyNotes',
                 'icon' => 'pencil-alt',
-                'url' => 'members/' . $username . '/note/add',
+                'url' => $this->routing->generate('add_note', ['username' => $member->getUsername()]),
             ]);
         }
 
@@ -235,6 +245,14 @@ class ProfileSubmenu
             'count' => ($parameters['comments_for_count'] ?? 0) . ' / ' . ($parameters['comments_by_count'] ?? 0),
             'url' => $this->routing->generate('profile_comments', ['username' => $username]),
         ]);
+        /*
+        $this->addSubmenuItem('relations', [
+            'key' => 'relations',
+            'icon' => 'users',
+            // 'count' => $parameters['relations_count'],
+            'url' => $this->routing->generate('relations', ['username' => $username]),
+        ]);
+        */
         if ($member === $loggedInMember) {
             $this->addSubmenuItem('gallery', [
                 'key' => 'Gallery',

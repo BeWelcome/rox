@@ -131,7 +131,7 @@ class CommentController extends AbstractController
             return $this->redirectToRoute('edit_comment', ['username' => $member->getUsername()]);
         }
 
-        $preferenceRepository = $this->getDoctrine()->getRepository(Preference::class);
+        $preferenceRepository = $entityManager->getRepository(Preference::class);
 
         /** @var Preference $preference */
         $preference = $preferenceRepository->findOneBy(['codename' => Preference::READ_COMMENT_GUIDELINES]);

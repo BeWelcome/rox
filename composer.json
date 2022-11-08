@@ -64,6 +64,7 @@
         "symfony/mailer": "^5.3.0",
         "symfony/monolog-bundle": "^3.3",
         "symfony/phpunit-bridge": "^5.3.0",
+        "symfony/runtime": "5.4.*",
         "symfony/security-bundle": "^5.3.0",
         "symfony/stopwatch": "5.3.*",
         "symfony/templating": "^5.3.0",
@@ -153,7 +154,8 @@
         "allow-plugins": {
             "infection/extension-installer": true,
             "phpstan/extension-installer": true,
-            "symfony/flex": true
+            "symfony/flex": true,
+            "symfony/runtime": true
         }
     },
     "extra": {

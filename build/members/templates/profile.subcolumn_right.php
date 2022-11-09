@@ -114,7 +114,7 @@ function wasGuestOrHost(string $relations) {
                            if ($comment->comQuality == "Bad") {
                                $quality = "bad";
                            }                            ?>
-                       <div class="comment-bg-<?=$quality?> p-2 mt-1 <?= (!isset($c['to'])) ? 'mb-2' : '' ?> clearfix">
+                       <div class="comment-bg-<?=$quality?> p-2 mt-1 <?= (!isset($c['to'])) ? 'mb-2' : '' ?> clearfix" style="margin-right: 10%; border-radius: 0.25rem;">
                            <div class="d-flex flex-column">
                                <div class="d-flex flex-row">
                                    <a class="mr-2" href="members/<?=$comment->UsernameFromMember?>">
@@ -153,6 +153,8 @@ function wasGuestOrHost(string $relations) {
                                </div>
                            </div>
                        </div>
+                       <?php } else { ?>
+                           <div class="p-2 mt-1" style="background-color: rgba(160, 160, 160, 0.1); margin-right: 10%; border-radius: 0.25rem;"><?= $words->get('profile.no.comment.yet') ?></div>
                        <?php }
 
                        if (isset($c['to'])) {
@@ -168,7 +170,7 @@ function wasGuestOrHost(string $relations) {
                                $quality = "bad";
                            }                           ?>
 
-                       <div class="comment-bg-<?=$quality?> p-2 mt-1 <?= !(isset($c['from'])) ? 'mt-1' : '' ?> clearfix">
+                       <div class="comment-bg-<?=$quality?> p-2 mt-1 <?= !(isset($c['from'])) ? 'mt-1' : '' ?> clearfix" style="margin-left: 10%; border-radius: 0.25rem;">
                            <div class="d-flex flex-column">
                                <div class="d-flex flex-row">
                                    <div class="mr-auto  align-self-center">
@@ -205,7 +207,9 @@ function wasGuestOrHost(string $relations) {
                        </div>
 
                       <?php
-                      }
+                           } else { ?>
+                           <div class="p-2 mt-1" style="background-color: rgba(160, 160, 160, 0.1); margin-left: 10%; border-radius: 0.25rem;"><?= $words->get('profile.no.comment.yet') ?></div>
+                       <?php }
                    }
                  ?>
             </div>
@@ -294,12 +298,12 @@ if ($statement) {
             $galleryImages = PFunctions::paginate($statement, 1, $itemsPerPage = 8)[0];
 
             foreach ($galleryImages as $galleryImage) {?>
-                <a href="gallery/img?id=<?= $galleryImage->id ?>" 
+                <a href="gallery/img?id=<?= $galleryImage->id ?>"
                     style="max-width: 40%; display: flex; align-items: center; margin-bottom: 1rem;"
-                    data-toggle="lightbox" 
-                    data-type="image" 
+                    data-toggle="lightbox"
+                    data-type="image"
                     data-title="<?= $galleryImage->title ?>">
-                    <img 
+                    <img
                         src="gallery/thumbimg?id=<?= $galleryImage->id ?>&amp;t=1"
                         class="img-fluid"
                         alt="<?= $galleryImage->title ?>"

@@ -67,8 +67,8 @@ class GroupModel
         $comment = (new MemberTranslation())
             ->setLanguage($language)
             ->setSentence($translator->trans('group.got.invited.by', ['by' => $admin->getUsername()]))
-            ->setOwner($member->getId())
-            ->setTranslator($member->getId())
+            ->setOwner($member)
+            ->setTranslator($member)
         ;
         $em->persist($comment);
         $em->flush();
@@ -186,8 +186,8 @@ class GroupModel
             $comment = new MemberTranslation();
             $comment->setLanguage($language);
             $comment->setSentence($reason);
-            $comment->setOwner($member->getId());
-            $comment->setTranslator($member->getId());
+            $comment->setOwner($member);
+            $comment->setTranslator($member);
 
             $em->persist($comment);
             $em->flush();
@@ -272,8 +272,8 @@ class GroupModel
         // Create the description as a member translation using the current language
         $description = new MemberTranslation();
         $description
-            ->setOwner($member->getId())
-            ->setTranslator($member->getId())
+            ->setOwner($member)
+            ->setTranslator($member)
             ->setSentence($data->description)
             ->setIdrecord($group->getId())
             ->setLanguage($language);
@@ -283,8 +283,8 @@ class GroupModel
         // Add a comment for the creator of the group in English
         $groupComment = new MemberTranslation();
         $groupComment
-            ->setOwner($member->getId())
-            ->setTranslator($member->getId())
+            ->setOwner($member)
+            ->setTranslator($member)
             ->setSentence('Group creator')
             ->setIdrecord($group->getId())
             ->setLanguage($english);
@@ -316,7 +316,11 @@ class GroupModel
         $groupController = $privilegeRepository->findOneBy(['controller' => Privilege::GROUP_CONTROLLER]);
 
         $privilegeScopeRepository = $em->getRepository(PrivilegeScope::class);
-        $privilege = $privilegeScopeRepository->findOneBy(['member' => $member, 'role' => $groupOwner, 'privilege' => $groupController]);
+        $privilege = $privilegeScopeRepository->findOneBy([
+            'member' => $member,
+            'role' => $groupOwner,
+            'privilege' => $groupController
+        ]);
 
         if (null === $privilege) {
             $privilege = new PrivilegeScope();
@@ -476,19 +480,4 @@ class GroupModel
 
         return $status === $membership->getStatus();
     }
-
-    /*    private function informGroupAdmins(Group $group, $member)
-        {
-            $admins = $group->getAdmins();
-
-            if (!empty($admins)) {
-                foreach ($admins as $admin) {
-                    $this->sendTemplateEmail('group@bewelcome.org', $admin, 'group.approve.join', [
-                        'subject' => 'group.approve.join',
-                        'member' => $member,
-                    ]);
-                }
-            }
-        }
-    */
 }

@@ -114,7 +114,7 @@ function wasGuestOrHost(string $relations) {
                            if ($comment->comQuality == "Bad") {
                                $quality = "bad";
                            }                            ?>
-                       <div class="comment-bg-<?=$quality?> p-2 mt-1 <?= (!isset($c['to'])) ? 'mb-2' : '' ?> clearfix" style="margin-right: 10%; border-radius: 0.25rem;">
+                       <div class="comment-bg-<?=$quality?> p-2 mt-1 <?= (!isset($c['to'])) ? 'mb-2' : '' ?> clearfix u-mr-24 u-rounded-8">
                            <div class="d-flex flex-column">
                                <div class="d-flex flex-row">
                                    <a class="mr-2" href="members/<?=$comment->UsernameFromMember?>">
@@ -154,7 +154,12 @@ function wasGuestOrHost(string $relations) {
                            </div>
                        </div>
                        <?php } else { ?>
-                           <div class="p-2 mt-1" style="background-color: rgba(160, 160, 160, 0.1); margin-right: 10%; border-radius: 0.25rem;"><?= $words->get('profile.no.comment.yet') ?></div>
+                           <div class="p-2 mt-1 u-mr-24 u-rounded-8 u-bg-black-o-10"><?php
+                               $noCommentYet = $words->get('profile.no.comment.yet');
+                               $noCommentYet = str_replace('{to}', $c['to']->UsernameFromMember, $noCommentYet);
+                               $noCommentYet = str_replace('{from}', $c['to']->UsernameToMember, $noCommentYet);
+                               echo $noCommentYet;
+                           ?></div>
                        <?php }
 
                        if (isset($c['to'])) {
@@ -170,7 +175,7 @@ function wasGuestOrHost(string $relations) {
                                $quality = "bad";
                            }                           ?>
 
-                       <div class="comment-bg-<?=$quality?> p-2 mt-1 <?= !(isset($c['from'])) ? 'mt-1' : '' ?> clearfix" style="margin-left: 10%; border-radius: 0.25rem;">
+                       <div class="comment-bg-<?=$quality?> p-2 mt-1 <?= !(isset($c['from'])) ? 'mt-1' : '' ?> clearfix u-ml-24 u-rounded-8">
                            <div class="d-flex flex-column">
                                <div class="d-flex flex-row">
                                    <div class="mr-auto  align-self-center">
@@ -207,9 +212,7 @@ function wasGuestOrHost(string $relations) {
                        </div>
 
                       <?php
-                           } else { ?>
-                           <div class="p-2 mt-1" style="background-color: rgba(160, 160, 160, 0.1); margin-left: 10%; border-radius: 0.25rem;"><?= $words->get('profile.no.comment.yet') ?></div>
-                       <?php }
+                   }
                    }
                  ?>
             </div>

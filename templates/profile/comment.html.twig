@@ -5,24 +5,24 @@
     {% if comment['from'] is defined %}
         {{ _self.comment(member, loggedInMember, comment['from'], true) }}
     {% else %}
-        <div class="card comment-bg-neutral u-p-32">
+        <div class="card u-bg-black-o-10 u-p-32">
             {% if member != app.user and comment['to'].toMember == app.user %}
                 <a href="{{ url('add_comment', { username: comment['to'].fromMember.Username}) }}"
                    class="btn btn-primary">{{ 'profile.add.comment'|trans({'username': comment['to'].fromMember.Username, 'gender': comment['to'].fromMember.Gender}) }}</a>
             {% else %}
-                <p class="text-center">{{ 'commentnocomment'|trans }}</p>
+            <p class="text-center">{{ 'profile.no.comment.yet'|trans({'to': comment['to'].toMember.Username, 'from': comment['to'].fromMember.Username}) }}</p>
             {% endif %}
         </div>
     {% endif %}
     {% if comment['to'] is defined %}
         {{ _self.comment(member, loggedInMember, comment['to'], false) }}
     {% else %}
-        <div class="card comment-bg-neutral u-p-32">
+        <div class="card u-bg-black-o-10 u-p-32">
             {% if member == app.user and comment['from'].toMember == app.user %}
                 <a href="{{ url('add_comment', { username: comment['from'].fromMember.Username}) }}"
                    class="o-button">{{ 'profile.add.comment'|trans({'username': comment['from'].fromMember.Username, 'gender': comment['from'].fromMember.Gender}) }}</a>
             {% else %}
-                <p class="text-center">{{ 'commentnocomment'|trans }}</p>
+                <p class="text-center">{{ 'profile.no.comment.yet'|trans({'to': comment['from'].toMember.Username, 'from': comment['from'].fromMember.Username}) }}</p>
             {% endif %}
         </div>
     {% endif %}
@@ -88,7 +88,6 @@
             {% endif %}
         </div>
         <div>{%- if from and member == loggedInMember %}
-            {# \todo add route for comment reporting #}
             <a href="{{ url('report_comment', {'to_member': comment.toMember.Username, 'from_member': comment.fromMember.Username}) }}" title="{{ 'reportcommentproblem'|trans }}" class="u-text-grey-80"><i class="fa fa-flag"></i></a>
             {% endif -%}
         </div>

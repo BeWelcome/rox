@@ -2,6 +2,7 @@ module.exports = {
   content: [
       './templates/**/*.html.twig',
       './assets/js/**/*.js',
+      './build/**/*.php',
   ],
   prefix: 'u-',
   important: false,
@@ -35,6 +36,7 @@ module.exports = {
       'gray-65':'#595959',
       'gray-70':'#454545',
       'gray-80':'#3F3F3F',
+      'black-o-10': 'rgba(0, 0, 0, 0.1)',
       'black-o-30': 'rgba(0, 0, 0, 0.3)'
     },
     spacing: {

@@ -67,4 +67,6 @@ profile.joined:
 profile.last.activity:
     - 'Last activity:'
     - 'Shows the last time a user accessed the site (not the last time they logged in which might be remembered).'
-
+profile.no.comment.yet:
+    - 'No comment for {to} by {from} yet.'
+    - Make sure to keep {to} and {from} in the translation.

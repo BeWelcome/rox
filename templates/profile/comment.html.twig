@@ -10,7 +10,7 @@
                 <a href="{{ url('add_comment', { username: comment['to'].fromMember.Username}) }}"
                    class="btn btn-primary">{{ 'profile.add.comment'|trans({'username': comment['to'].fromMember.Username, 'gender': comment['to'].fromMember.Gender}) }}</a>
             {% else %}
-            <p class="text-center">{{ 'profile.no.comment.yet'|trans({'to': comment['to'].toMember.Username, 'from': comment['to'].fromMember.Username}) }}</p>
+            <p class="text-center">{{ 'profile.no.comment.yet'|trans({'from': comment['to'].toMember.Username, 'to': comment['to'].fromMember.Username}) }}</p>
             {% endif %}
         </div>
     {% endif %}
@@ -22,7 +22,7 @@
                 <a href="{{ url('add_comment', { username: comment['from'].fromMember.Username}) }}"
                    class="o-button">{{ 'profile.add.comment'|trans({'username': comment['from'].fromMember.Username, 'gender': comment['from'].fromMember.Gender}) }}</a>
             {% else %}
-                <p class="text-center">{{ 'profile.no.comment.yet'|trans({'to': comment['from'].toMember.Username, 'from': comment['from'].fromMember.Username}) }}</p>
+                <p class="text-center">{{ 'profile.no.comment.yet'|trans({'from': comment['from'].toMember.Username, 'to': comment['from'].fromMember.Username}) }}</p>
             {% endif %}
         </div>
     {% endif %}

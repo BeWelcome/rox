@@ -1,11 +1,11 @@
 {% import 'macros.twig' as macros %}
 
 {% set loggedInMember = app.user %}
-<div class="u-grid u-grid-cols-1 md:u-grid-cols-2 u-mb-8">
+<div class="u-grid u-grid-cols-1 md:u-grid-cols-2 u-mb-16">
     {% if comment['from'] is defined %}
         {{ _self.comment(member, loggedInMember, comment['from'], true) }}
     {% else %}
-        <div class="card u-bg-black-o-10 u-p-32">
+        <div class="card u-bg-black-o-10 u-p-16 u-mr-24 u-mb-8 md:u-mb-0 md:u-mr-0">
             {% if member != app.user and comment['to'].toMember == app.user %}
                 <a href="{{ url('add_comment', { username: comment['to'].fromMember.Username}) }}"
                    class="btn btn-primary">{{ 'profile.add.comment'|trans({'username': comment['to'].fromMember.Username, 'gender': comment['to'].fromMember.Gender}) }}</a>
@@ -17,7 +17,7 @@
     {% if comment['to'] is defined %}
         {{ _self.comment(member, loggedInMember, comment['to'], false) }}
     {% else %}
-        <div class="card u-bg-black-o-10 u-p-32">
+        <div class="card u-bg-black-o-10 u-p-16 u-ml-24 md:u-ml-0">
             {% if member == app.user and comment['from'].toMember == app.user %}
                 <a href="{{ url('add_comment', { username: comment['from'].fromMember.Username}) }}"
                    class="o-button">{{ 'profile.add.comment'|trans({'username': comment['from'].fromMember.Username, 'gender': comment['from'].fromMember.Gender}) }}</a>
@@ -39,13 +39,13 @@
     {% set username = comment.toMember.Username %}
     {% set comment_direction %}{{ 'profile.comment.about'|trans({'username': '<a href="' ~ url('members_profile', {username: username}) ~ '">' ~ username ~ '</a>'})|raw }}{% endset %}
 {% endif %}
-<div class="card comment-bg-{{ quality }} u-p-16">
+<div class="card comment-bg-{{ quality }} u-p-16 u-mb-8 md:u-mb-0 {% if from %}u-mr-16 md:u-mr-0{% else %}u-ml-16 md:u-ml-0{% endif %}">
     {% if (show > 1) %}
         <div>
             <strong>{{ 'commenthiddenedit'|trans }}</strong>
         </div>
     {% endif %}
-    <div class="u-flex u-flex-row {% if not from %}flex-row-reverse{% endif %}">
+    <div class="u-flex u-flex-row {% if not from %}flex-row-reverse{% endif %} u-mb-8">
         <div class="o-avatar o-avatar--m">
             {{ macros.roundedavatarstack(username, 72, false) }}
         </div>
@@ -70,9 +70,9 @@
             {{  ('profile.comment.relation.' ~ relation)|lower|trans({username: comment.toMember.Username}) }}
         {% endfor %}</p>
 
-    {{ comment.TextFree|nl2br|purify }}
+    <div class="u-mb-8">{{ comment.TextFree|nl2br|purify }}</div>
 
-    <div class="u-flex u-self-center">
+    <div class="u-flex u-self-center u-mb-8">
         {% if edit %}
             <div class="u-px-8"><a class="o-button o-button--s" href="{{ url('edit_comment', { username: comment.toMember.Username}) }}" title="Edit">{{ 'edit'|trans }}</a></div>
         {% endif %}
@@ -81,6 +81,7 @@
                     to_member: comment.toMember.Username, from_member: comment.fromMember.Username }) }}">{{ 'editcomment'|trans }}</a></div>
         {% endif %}
     </div>
+
     <div class="u-flex u-flex-row u-justify-between">
         <div class="u-text-14 u-leading-20 u-self-center">
             {% if comment.updated != null and comment.created != comment.updated %}

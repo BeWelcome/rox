@@ -9,37 +9,32 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
-class ProfileNoteType extends AbstractType
+class ProfileNoteFilterType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $categories = array_merge(['' => ''], $options['categories']);
+
         $builder
-            ->add('category', TomSelectType::class, [
-                'label' => 'profile.note.category',
+            ->add('categories', TomSelectType::class, [
+                'label' => 'profile.note.categories',
                 'required' => false,
-                'allow_create' => true,
-                'choices' => $options['categories'],
+                'allow_create' => false,
+                'use_select' => true,
+                'multiple' => true,
+                'placeholder' => 'profile.note.select.category',
+                'choices' => $categories,
                 'constraints' => [
                     new NotBlank(),
                 ],
             ])
-            ->add('comment', CkEditorType::class, [
-                'label' => 'profile.note.comment',
-                'constraints' => [
-                    new NotBlank(),
-                ],
-            ])
-            ->setMethod('GET')
         ;
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver
-            ->setDefaults([
-                'data_class' => ProfileNote::class,
-                'categories' => [],
-            ])
+            ->setDefaults(['categories' => []])
         ;
     }
 }

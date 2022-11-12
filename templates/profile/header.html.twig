@@ -40,7 +40,6 @@
             {% endif %}
 
             {% if member.Name != ''%}<h3>{{ member.Name }}</h3>{% endif %}
-
             {% set city = member.city %}
             <h5><a href="{{ url('places_city', {countryname: city.country.name, countrycode: city.countryId, regionname: city.admin1.name, regioncode: city.admin1id, cityname: city.name, citycode: city.geonameId}) }}">{{ member.city.name }}</a>
                 {%- if city.admin1 != null -%}

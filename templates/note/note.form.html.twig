@@ -1,10 +1,6 @@
 {% extends 'profile/profile.html.twig' %}
 {% import 'macros.twig' as macros %}
 
-{% block javascripts %}
-    {{ encore_entry_script_tags('tom-select') }}
-{% endblock %}
-
 {% block page_content %}
     <h2>{{ 'profile.note.about'|trans({'username': member.username}) }}</h2>
 

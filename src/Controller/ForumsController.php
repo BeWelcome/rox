@@ -155,7 +155,7 @@ class ForumsController extends AbstractController
     }
 
     /**
-     * @Route("/members/{username}/posts/{page}/{search}", name="profile_forum_posts_search")
+     * @Route("/members/{username}/posts/{search}/{page}", name="profile_forum_posts_search")
      * @Route("/members/{username}/posts/{page}", name="profile_forum_posts",
      *     requirements={"page"="\d+"}
      * )

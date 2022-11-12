@@ -5,15 +5,26 @@ document
     .forEach((element) => {
         const optionsElement = document.getElementById(element.id + '-tom-select-options');
         const tomSelectOptions = JSON.parse(optionsElement.value);
-        console.log(tomSelectOptions);
 
-        const maxOptions = null;
-        const create = true;
-        new TomSelect( element, {
+        let settings = {
             create: tomSelectOptions.create,
-            options: tomSelectOptions.options,
-            maxOptions: tomSelectOptions.maxOptions,
             plugins: ['remove_button'],
-        });
+            render: {
+                option_create: function (data, escape) {
+                    return '<div class="create">' + tomSelectOptions.optionCreate + ' ' + escape(data.input) + '</strong>&hellip;</div>';
+                },
+                no_results: function (data, escape) {
+                    return '<div class="no-results">' + tomSelectOptions.noResults + '</div>';
+                },
+            }
+        }
+        if (tomSelectOptions.options !== undefined) {
+            settings.options = tomSelectOptions.options;
+        }
+        if (tomSelectOptions.maxItems !== undefined) {
+            settings.maxItems = tomSelectOptions.maxItems;
+        }
+
+        new TomSelect( element, settings);
     })
 ;

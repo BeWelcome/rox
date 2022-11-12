@@ -1,0 +1,6 @@
+select.option.create:
+    - 'Add'
+    - Text on the select drop down to indicate that the user can add a new item.
+select.no.results:
+    - 'No results'
+    - Text in the select drop down when you entered a search term and there are no results.

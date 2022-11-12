@@ -48,6 +48,7 @@ Encore
     .addEntry('updatecounters', './assets/js/updateCounters.js')
     .addEntry('lightbox', './assets/js/lightbox.js')
     .addEntry('gallery', './assets/js/gallery.js')
+    .addEntry('notes_filter', './assets/js/notes/filter.js')
     .addEntry('conversations', './assets/js/conversations.js')
     .addEntry('bsfileselect', './assets/js/bsfileselect.js')
     .addEntry('email', './assets/scss/email.scss')

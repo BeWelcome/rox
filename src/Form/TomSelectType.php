@@ -27,11 +27,15 @@ class TomSelectType extends AbstractType
                 'multiple' => false,
                 'allow_clear' => false,
                 'allow_create' => false,
+                'use_select' => false,
+                'placeholder' => '',
                 'choices' => [],
             ])
             ->addAllowedTypes('multiple', 'bool')
             ->addAllowedTypes('allow_clear', 'bool')
+            ->addAllowedTypes('use_select', 'bool')
             ->addAllowedTypes('allow_create', 'bool')
+            ->addAllowedTypes('placeholder', 'string')
             ->addAllowedTypes('choices', 'array')
         ;
     }
@@ -52,6 +56,11 @@ class TomSelectType extends AbstractType
         $view->vars['allow_create'] = $options['allow_create'];
         $view->vars['multiple'] = $options['multiple'];
         $view->vars['choices'] = $options['choices'];
+        $view->vars['use_select'] = $options['use_select'];
+        $view->vars['placeholder'] = $options['placeholder'];
+        if ($options['multiple']) {
+            $view->vars['full_name'] .= '[]';
+        }
     }
 
     public function getParent()

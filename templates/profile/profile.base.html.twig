@@ -114,6 +114,7 @@
         </div>
     </main>
 {% endblock main %}
+{% block modals %}{% endblock %}
 {% include 'footer.html.twig' %}
 {{ encore_entry_script_tags('bewelcome') }}
 {{ encore_entry_script_tags('updatecounters') }}
@@ -121,6 +122,5 @@
     {{ encore_entry_script_tags('offcanvas') }}
 {% endif %}
 {% block javascripts %}{% endblock javascripts %}
-{% block modals %}{% endblock %}
 </body>
 </html>

@@ -1,0 +1,30 @@
+profile.note.category:
+    - 'Category'
+    - 'Label for the category field on the add/edit note form'
+profile.note.categories:
+    - 'Categories'
+    - 'Label for the categories field on the notes filter form'
+profile.note.comment:
+    - 'Comment'
+    - 'Label for the comment field on the add/edit note form'
+profile.notes:
+    - 'Notes'
+    - 'Headline for the notes page of the profile'
+profile.notes.menu:
+    - '@mynotes'
+profile.notes.delete:
+    - 'Do you want to delete this note?'
+    - Text on the modal to delete a note
+profile.notes.modal:
+    - 'Delete Note?'
+    - Title of the modal to delete a note
+profile.notes.yes:
+    - '@yes'
+profile.notes.no:
+    - '@no'
+profile.note.about:
+    - 'Profile note about {username}'
+    - Headline for the add/edit form for profile notes
+profile.note.apply:
+    - 'Apply'
+    - Button label for the filter form

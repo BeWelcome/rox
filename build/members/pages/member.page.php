@@ -92,7 +92,7 @@ class MemberPage extends PageWithActiveSkin
         if ($this->myself) {
             $tt=array(
                 array('editmyprofile', 'editmyprofile/' . $profile_language_code, '<i class="fa fa-fw fa-edit"></i> ' . $ww->EditMyProfile, 'editmyprofile'),
-                array('mypreferences', 'mypreferences', '<i class="fa fa-fw fa-cogs"></i> ' . $ww->MyPreferences, 'mypreferences'),
+                array('profile.preferences.menu', "/members/$username/preferences", '<i class="fa fa-fw fa-cogs"></i> ' . $ww->MyPreferences, 'mypreferences'),
                 array('mydata', 'mydata', '<i class="fa fa-fw fa-database"></i> ' . $ww->MyData, 'mydata'),
                 array('mynotes', "/members/$username/notes", '<i class="fa fa-fw fa-sticky-note"></i> ' . $words->get('MyNotes', '<span class="badge badge-primary u-rounded-full u-w-20 u-h-20 u-inline-flex u-items-center u-justify-center pull-right">' . $mynotes_count . '</span>'), 'mynotes')
                 );

@@ -110,15 +110,17 @@ class ProfileSubmenu
 
     private function addSubmenuItemsOwnProfile(Member $member, array $parameters)
     {
+        $username = $member->getUsername();
+
         $this->addSubmenuItem('edit_profile', [
             'key' => 'editmyprofile',
             'icon' => 'edit',
             'url' => '/editmyprofile',
         ]);
         $this->addSubmenuItem('preferences', [
-            'key' => 'mypreferences',
+            'key' => 'profile.preferences.menu',
             'icon' => 'cogs',
-            'url' => '/mypreferences',
+            'url' => $this->routing->generate('preferences', ['username' => $username]),
         ]);
         $this->addSubmenuItem('mydata', [
             'key' => 'mydata',
@@ -129,18 +131,18 @@ class ProfileSubmenu
             'key' => 'mynotes',
             'icon' => 'sticky-note',
             'count' => $parameters['notes_count'],
-            'url' => $this->routing->generate('notes', ['username' => $member->getUsername()]),
+            'url' => $this->routing->generate('notes', ['username' => $username]),
         ]);
         $this->addSubmenuItem('visitors', [
             'key' => 'myvisitors',
             'icon' => 'bed invisible',
-            'url' => $this->routing->generate('profile_visitors', ['username' => $member->getUsername()]),
+            'url' => $this->routing->generate('profile_visitors', ['username' => $username]),
         ]);
         $this->addSubmenuItem('separator_two', []);
         $this->addSubmenuItem('profile', [
             'key' => 'profile',
             'icon' => 'user',
-            'url' => $this->routing->generate('members_profile', ['username' => $member->getUsername()]),
+            'url' => $this->routing->generate('members_profile', ['username' => $username]),
         ]);
     }
 

@@ -202,7 +202,7 @@
 {%- endblock radio_widget %}
 
 {% block choice_widget_expanded -%}
-    <div {{ block('widget_container_attributes') }}>
+    {# <div {{ block('widget_container_attributes') }}>  #}
         {%- for child in form %}
             {{- form_widget(child, {
                 parent_label_class: label_attr.class|default(''),
@@ -210,7 +210,7 @@
                 valid: valid,
             }) -}}
         {% endfor -%}
-    </div>
+    {# </div> #}
 {%- endblock choice_widget_expanded %}
 
 {# Labels #}

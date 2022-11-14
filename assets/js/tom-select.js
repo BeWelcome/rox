@@ -9,6 +9,7 @@ document
         let settings = {
             create: tomSelectOptions.create,
             plugins: ['remove_button'],
+            closeAfterSelect: tomSelectOptions.closeAfterSelect,
             render: {
                 option_create: function (data, escape) {
                     return '<div class="create">' + tomSelectOptions.optionCreate + ' ' + escape(data.input) + '</strong>&hellip;</div>';
@@ -24,7 +25,7 @@ document
         if (tomSelectOptions.maxItems !== undefined) {
             settings.maxItems = tomSelectOptions.maxItems;
         }
-
+console.log(settings);
         new TomSelect( element, settings);
     })
 ;

@@ -20,7 +20,9 @@ class Preference
     public const NEWSLETTERS_VIA_EMAIL = 'PreferenceAcceptNewsByMail';
     public const LOCAL_EVENT_NOTIFICATIONS = 'PreferenceLocalEvent';
     public const LOCALE = 'PreferenceLanguage';
+    public const TIMEZONE = 'PreferenceLocalTime';
     public const HTML_MAILS = 'PreferenceHtmlMails';
+    public const ITEMS_PER_PAGE = 'ItemsPerPage';
     public const NUMBER_FORUM_POSTS = 'ForumThreadsOnLandingPage';
     public const NUMBER_GROUPS_POSTS = 'GroupsThreadsOnLandingPage';
     public const SHOW_MY_GROUP_POSTS_ONLY = 'ShowMyGroupsTopicsOnly';

@@ -150,21 +150,30 @@ class NoteController extends AbstractController
             throw new AccessDeniedException();
         }
 
+        $order = ProfileNoteFilterType::ORDER_UPDATED;
         $categories = [];
         /** @var ProfileNoteRepository $noteRepository */
         $noteRepository = $this->entityManager->getRepository(ProfileNote::class);
         $selectableCategories = $noteRepository->getCategories($loggedInMember);
 
-        $filterForm = $this->createForm(ProfileNoteFilterType::class, ['categories' => $categories], [
-            'categories' => $selectableCategories,
-        ]);
+        $filterForm = $this->createForm(
+            ProfileNoteFilterType::class,
+            [
+                'categories' => $categories,
+                'order' => $order
+            ],
+            [
+                'categories' => $selectableCategories,
+            ]
+        );
         $filterForm->handleRequest($request);
 
         if ($filterForm->isSubmitted() && $filterForm->isValid()) {
             $data = $filterForm->getData();
             $categories = $data['categories'];
+            $order = (int) $data['order'];
         }
-        $notes = $noteRepository->getProfileNotes($member, $categories, $page);
+        $notes = $noteRepository->getProfileNotes($member, $categories, $order, $page, 20);
 
         return $this->render('note/notes.html.twig', [
             'member' => $member,

@@ -2,7 +2,6 @@ module.exports = {
   content: [
       './templates/**/*.html.twig',
       './assets/js/**/*.js',
-      './build/**/*.php',
   ],
   prefix: 'u-',
   important: false,
@@ -326,6 +325,7 @@ module.exports = {
     },
   },
   plugins: [
+      require('@tailwindcss/forms'),
       require('@tailwindcss/line-clamp'),
   ],
     corePlugins: {

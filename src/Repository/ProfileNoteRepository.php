@@ -26,19 +26,30 @@ class ProfileNoteRepository extends EntityRepository
     public function getProfileNotes(
         Member $member,
         array $categories = [],
+        int $order = 1,
         int $page = 1,
         int $itemsPerPage = 20
     ): Pagerfanta {
         $qb = $this->createQueryBuilder('n')
             ->where('n.owner = :member')
             ->setParameter('member', $member)
-            ->orderBy('n.updated', 'DESC')
         ;
 
         if (!empty($categories)) {
             $qb
                 ->andWhere($qb->expr()->in('n.category', $categories))
             ;
+        }
+
+        switch ($order) {
+            case 2:
+                $qb->orderBy('n.category', 'ASC');
+                $qb->addOrderBy('n.updated', 'DESC');
+                break;
+            case 1:
+            default:
+                $qb->orderBy('n.updated', 'DESC');
+                break;
         }
         $q = $qb->getQuery();
 

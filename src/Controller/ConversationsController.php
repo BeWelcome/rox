@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Member;
+use App\Entity\Preference;
 use App\Form\CustomDataClass\MessageIndexRequest;
 use App\Form\MessageIndexFormType;
 use App\Model\ConversationsModel;
@@ -33,10 +34,12 @@ class ConversationsController extends AbstractController
     use TranslatorTrait;
 
     protected ConversationsModel $conversationsModel;
+    private EntityManagerInterface $entityManager;
 
-    public function __construct(ConversationsModel $conversationsModel)
+    public function __construct(ConversationsModel $conversationsModel, EntityManagerInterface $entityManager)
     {
         $this->conversationsModel = $conversationsModel;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -69,13 +72,15 @@ class ConversationsController extends AbstractController
      *
      * @throws InvalidArgumentException
      */
-    public function allConversationsWithMember(Request $request, Member $other, EntityManagerInterface $entityManager): Response
-    {
+    public function allConversationsWithMember(
+        Request $request,
+        Member $other
+    ): Response {
         /** @var Member $member */
         $member = $this->getUser();
         $page = $request->query->get('page', '1');
 
-        $messages = new PagerFanta(new ConversationsWithAdapter($entityManager, $member, $other));
+        $messages = new PagerFanta(new ConversationsWithAdapter($this->entityManager, $member, $other));
         $messages->setMaxPerPage(15);
         $messages->setCurrentPage($page);
 
@@ -117,20 +122,24 @@ class ConversationsController extends AbstractController
         /** @var Member $member */
         $member = $this->getUser();
 
+        $preferenceRepository = $this->entityManager->getRepository(Preference::class);
+        $itemsPerPagePreference = $preferenceRepository->findOneBy(['codename' => Preference::ITEMS_PER_PAGE]);
+        $itemsPerPage = $member->getMemberPreference($itemsPerPagePreference)->getValue();
+
         $page = $request->query->get('page', '1');
         $unreadOnly = '1' === $request->query->get('unread_only', '0');
         $initiator = $request->query->get('initiator', '2');
 
         $adapter = $this->getAdapterFromConversationsType($active);
         $conversationsAdapter = new $adapter(
-            $this->getDoctrine()->getManager(),
+            $this->entityManager,
             $member,
             $initiator,
             $unreadOnly
         );
 
         $conversations = new Pagerfanta($conversationsAdapter);
-        $conversations->setMaxPerPage(15);
+        $conversations->setMaxPerPage($itemsPerPage);
         $conversations->setCurrentPage($page);
 
         $messageIds = [];

@@ -29,7 +29,6 @@ class ProfileNoteType extends AbstractType
                     new NotBlank(),
                 ],
             ])
-            ->setMethod('GET')
         ;
     }
 

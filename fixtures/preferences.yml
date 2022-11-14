@@ -8,6 +8,15 @@ App\Entity\Preference:
         PossibleValues: ''
         created: <DateTime()>
         Status: 'Normal'
+    TIMEZONE:
+        codename: 'PreferenceLocalTime'
+        position: 10
+        codeDescription: 'PreferenceLocalTimeDesc'
+        Description: 'This preference allows to choose a reference city for local time'
+        DefaultValue: 0
+        PossibleValues: ''
+        created: <DateTime()>
+        Status: 'Normal'
     FORUM_FILTER:
         codename: 'PreferenceForumFilter'
         position: 100
@@ -169,4 +178,13 @@ App\Entity\Preference:
         created: <DateTime()>
         DefaultValue: ''
         PossibleValues: ''
+        Status: 'Normal'
+    ITEMS_PER_PAGE:
+        position: 62
+        codename: 'ItemsPerPage'
+        codeDescription: 'PreferenceItemsPerPageDesc'
+        description: 'Number of items shown per page'
+        created: <DateTime()>
+        DefaultValue: 20
+        PossibleValues: '5,10,20,50,100'
         Status: 'Normal'

@@ -35,7 +35,13 @@ p {
      }
  }
 
-img {
+#message_thread img {
   max-width: 100%;
   height: auto;
 }
+
+.notes_card img {
+  max-width: 100%;
+  height: auto;
+}
+

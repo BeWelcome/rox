@@ -1,12 +1,13 @@
 {% block tomselect_widget %}
     {% set tom_select_options = {
         create: allow_create,
+        closeAfterSelect: true,
         optionCreate: 'select.option.create'|trans,
         noResults: 'select.no.results'|trans
         }
     %}
     {% if not multiple %}
-        {% set tom_select_options = tom_select_options | merge({ maxItems: 1, closeAfterSelect: true }) %}
+        {% set tom_select_options = tom_select_options | merge({ maxItems: 1 }) %}
     {% endif %}
     {% if use_select %}
         <select {% if multiple %}multiple{% endif %} {{ block('widget_attributes') }}>

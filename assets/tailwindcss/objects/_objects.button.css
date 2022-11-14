@@ -21,7 +21,6 @@
     align-items: center;
     cursor: pointer;
     height: 40px;
-    margin: 0;
   }
 
 
@@ -45,7 +44,6 @@
     align-items: center;
     cursor: pointer;
     height: 56px;
-    margin: 0;
   }
 
   /* Small version
@@ -68,7 +66,6 @@
     align-items: center;
     cursor: pointer;
     height: 32px;
-    margin: 0;
   }
 
 
@@ -92,7 +89,6 @@
     align-items: center;
     cursor: pointer;
     height: 20px;
-    margin: 0;
   }
 
   /**
@@ -241,5 +237,22 @@
     line-height: calc(20 * var(--width));
     height: calc(40 * var(--width));
     max-width: calc(192 * var(--width));
+  }
+
+  .o-show-more-btn {
+    margin: auto;
+    cursor: pointer;
+    background-color: theme('colors.bewelcome');
+    color: theme('colors.white');
+    border-radius: 8px;
+    white-space: nowrap;
+    transition: color 300ms ease-in-out;
+    border: 0;
+    font-size: 14px;
+  }
+
+  .o-show-more-btn:hover {
+    background-color: theme('colors.bewelcome-dark');
+    color: theme('colors.white');
   }
 }

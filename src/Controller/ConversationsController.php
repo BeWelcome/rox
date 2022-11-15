@@ -14,6 +14,7 @@ use App\Pagerfanta\InvitationsAdapter;
 use App\Pagerfanta\MessagesAdapter;
 use App\Pagerfanta\RequestsAdapter;
 use App\Pagerfanta\SpamAdapter;
+use App\Utilities\ItemsPerPageTraits;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
 use Doctrine\ORM\EntityManagerInterface;
@@ -32,6 +33,7 @@ class ConversationsController extends AbstractController
 {
     use TranslatedFlashTrait;
     use TranslatorTrait;
+    use ItemsPerPageTraits;
 
     protected ConversationsModel $conversationsModel;
     private EntityManagerInterface $entityManager;
@@ -122,10 +124,6 @@ class ConversationsController extends AbstractController
         /** @var Member $member */
         $member = $this->getUser();
 
-        $preferenceRepository = $this->entityManager->getRepository(Preference::class);
-        $itemsPerPagePreference = $preferenceRepository->findOneBy(['codename' => Preference::ITEMS_PER_PAGE]);
-        $itemsPerPage = $member->getMemberPreference($itemsPerPagePreference)->getValue();
-
         $page = $request->query->get('page', '1');
         $unreadOnly = '1' === $request->query->get('unread_only', '0');
         $initiator = $request->query->get('initiator', '2');
@@ -139,7 +137,7 @@ class ConversationsController extends AbstractController
         );
 
         $conversations = new Pagerfanta($conversationsAdapter);
-        $conversations->setMaxPerPage($itemsPerPage);
+        $conversations->setMaxPerPage($this->getItemsPerPage($member));
         $conversations->setCurrentPage($page);
 
         $messageIds = [];

@@ -1,0 +1,75 @@
+@layer components {
+
+  .notes-card {
+    display: grid;
+    grid-template-areas:
+      "avatar category"
+      "avatar note"
+      "avatar updated"
+      "avatar actions"
+    ;
+    grid-template-columns: 80px 1fr;
+    border: 1px solid #ccc;
+    @apply u-p-8 u-rounded-8 u-mb-8;
+    background-color: #fff;
+  }
+
+  .note-avatar {
+    grid-area: avatar;
+    display: flex;
+    width: 64px;
+    align-items: center;
+    flex-direction: column;
+  }
+
+  .note-category {
+    grid-area: category;
+    @apply u-font-700 u-mb-8;
+  }
+
+  .note-note {
+    grid-area: note;
+    @apply u-break-words u-mb-8;
+  }
+
+  .note-updated {
+    grid-area: updated;
+    @apply u-flex u-text-12 u-text-gray-50 u-mb-8 u-justify-end;
+  }
+
+  .note-actions {
+    grid-area: actions;
+    @apply u-flex u-flex-row u-gap-8 u-justify-end;
+  }
+
+  @screen sm {
+    .notes-card {
+      display: grid;
+      grid-template-areas:
+      "avatar category actions"
+      "avatar note actions"
+      "avatar updated actions"
+    ;
+      grid-template-columns: 80px 1fr 64px;
+      border: 1px solid #ccc;
+      @apply u-p-8 u-rounded-8 u-mb-8;
+      background-color: #fff;
+    }
+
+    .note-actions {
+      @apply u-flex u-flex-col u-gap-8 u-justify-start;
+    }
+
+    .note-category {
+      @apply u-mr-8;
+    }
+
+    .note-note {
+      @apply u-mr-8;
+    }
+
+    .note-updated {
+      @apply u-mr-8 u-self-end u-mb-0;
+    }
+  }
+}

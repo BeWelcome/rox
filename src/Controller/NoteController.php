@@ -7,6 +7,7 @@ use App\Entity\ProfileNote;
 use App\Form\ProfileNoteFilterType;
 use App\Form\ProfileNoteType;
 use App\Repository\ProfileNoteRepository;
+use App\Utilities\ItemsPerPageTraits;
 use App\Utilities\ProfileSubmenu;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
@@ -18,6 +19,8 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class NoteController extends AbstractController
 {
+    use ItemsPerPageTraits;
+
     private EntityManagerInterface $entityManager;
 
     public function __construct(EntityManagerInterface $entityManager)
@@ -173,7 +176,7 @@ class NoteController extends AbstractController
             $categories = $data['categories'];
             $order = (int) $data['order'];
         }
-        $notes = $noteRepository->getProfileNotes($member, $categories, $order, $page, 20);
+        $notes = $noteRepository->getProfileNotes($member, $categories, $order, $page, $this->getItemsPerPage($member));
 
         return $this->render('note/notes.html.twig', [
             'member' => $member,

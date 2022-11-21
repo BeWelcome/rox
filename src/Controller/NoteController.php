@@ -175,6 +175,12 @@ class NoteController extends AbstractController
             $data = $filterForm->getData();
             $categories = $data['categories'];
             $order = (int) $data['order'];
+
+            return $this->redirectToRoute('notes', [
+                'username' => $member->getUsername(),
+                'categories' => $categories,
+                'order' => $order
+            ]);
         }
         $notes = $noteRepository->getProfileNotes($member, $categories, $order, $page, $this->getItemsPerPage($member));
 

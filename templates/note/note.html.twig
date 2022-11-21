@@ -1,16 +1,12 @@
 {% import 'macros.twig' as macros %}
 
-<div class="u-flex u-flex-row u-bg-white u-rounded-8 u-p-8 u-mb-8 u-text-gray-90 notes_card">
-    <div class="o-avatar">{{ macros.roundedavatarstack(note.member.username, 50) }}</div>
-    <div class="u-ml-8 u-grow">
-        <div class="u-flex u-flex-col u-grow u-h-full">
-            <div class="u-pb-8"><strong>{{ note.category|capitalize }}</strong></div>
-            <div class="u-pb-8 u-grow js-read-more">{{ note.comment|purify }}</div>
-            <div class="u-text-12 u-self-end u-align-end u-items-end">{{ note.updated|format_datetime() }}</div>
-        </div>
-    </div>
-    <div class="u-flex u-flex-col u-ml-8">
-        <a href="{{ path('edit_note', {username: note.member.username}) }}" class="o-button u-mb-8"><i class="fa fa-fw fa-edit"></i></a>
+<div class="notes-card">
+    <div class="note-avatar"><div class="o-avatar o-avatar--m">{{ macros.roundedavatarstack(note.member.username, 48) }}</div></div>
+    <div class="note-category">{{ note.category|capitalize }}</div>
+    <div class="note-note js-read-more u-break-words">{{ note.comment|purify }}</div>
+    <div class="note-updated"><span class="u-text-12">{{ note.updated|format_datetime() }}</span></div>
+    <div class="note-actions">
+        <a href="{{ path('edit_note', {username: note.member.username}) }}" class="o-button"><i class="fa fa-fw fa-edit"></i></a>
         <button class="o-button" data-micromodal-trigger="note-delete-{{ note.id }}"><i class="fa fa-fw fa-trash-alt"></i></button>
     </div>
 </div>

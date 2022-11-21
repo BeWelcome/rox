@@ -22,7 +22,7 @@ class ForumPostRepository extends EntityRepository
             ;
     }
 
-    public function getForumPostsByMember(Member $member, string $search, int $page): PagerFanta
+    public function getForumPostsByMember(Member $member, string $search, int $page, int $itemsPerPage = 20): PagerFanta
     {
         $queryBuilder = $this->getForumPostsByMemberQueryBuilder($member);
         if (!empty($search)) {
@@ -38,7 +38,7 @@ class ForumPostRepository extends EntityRepository
         $adapter = new QueryAdapter($queryBuilder);
         $pagerfanta = new Pagerfanta($adapter);
         $pagerfanta
-            ->setMaxPerPage(20)
+            ->setMaxPerPage($itemsPerPage)
             ->setCurrentPage($page)
         ;
 

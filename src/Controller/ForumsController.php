@@ -7,6 +7,7 @@ use App\Entity\Member;
 use App\Entity\MemberPreference;
 use App\Entity\Preference;
 use App\Repository\ForumPostRepository;
+use App\Utilities\ItemsPerPageTraits;
 use App\Utilities\ProfileSubmenu;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -19,21 +20,29 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ForumsController extends AbstractController
 {
+    use ItemsPerPageTraits;
+
     private const POSTS_DIFF = 3;
     private const POSTS_MAX = 10;
     private const POSTS_MIN = 1;
+    private EntityManagerInterface $entityManager;
 
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
     /**
      * @Route("/forums/more/group", name="forums_more_group_posts")
      */
     public function showMoreGroupPostsAction(): RedirectResponse
     {
+        /** @var Member $member */
         $member = $this->getUser();
 
-        $preferenceRepository = $this->getDoctrine()->getRepository(Preference::class);
+        $preferenceRepository = $this->entityManager->getRepository(Preference::class);
         /** @var Preference $preference */
         $preference = $preferenceRepository->findOneBy(['codename' => Preference::NUMBER_GROUPS_POSTS]);
-        /** @var MemberPreference $memberPreference */
+
         $memberPreference = $member->getMemberPreference($preference);
         $value = (int) ($memberPreference->getValue());
         $value = min($value + self::POSTS_DIFF, self::POSTS_MAX);
@@ -50,12 +59,13 @@ class ForumsController extends AbstractController
      */
     public function showLessGroupPostsAction(): RedirectResponse
     {
+        /** @var Member $member */
         $member = $this->getUser();
 
-        $preferenceRepository = $this->getDoctrine()->getRepository(Preference::class);
+        $preferenceRepository = $this->entityManager->getRepository(Preference::class);
         /** @var Preference $preference */
         $preference = $preferenceRepository->findOneBy(['codename' => Preference::NUMBER_GROUPS_POSTS]);
-        /** @var MemberPreference $memberPreference */
+
         $memberPreference = $member->getMemberPreference($preference);
         $value = (int) ($memberPreference->getValue());
         $value = min($value - self::POSTS_DIFF, self::POSTS_MIN);
@@ -72,12 +82,13 @@ class ForumsController extends AbstractController
      */
     public function showMoreAgoraPostsAction(): RedirectResponse
     {
+        /** @var Member $member */
         $member = $this->getUser();
 
-        $preferenceRepository = $this->getDoctrine()->getRepository(Preference::class);
+        $preferenceRepository = $this->entityManager->getRepository(Preference::class);
         /** @var Preference $preference */
         $preference = $preferenceRepository->findOneBy(['codename' => Preference::NUMBER_FORUM_POSTS]);
-        /** @var MemberPreference $memberPreference */
+
         $memberPreference = $member->getMemberPreference($preference);
         $value = (int) ($memberPreference->getValue());
         $value = min($value + self::POSTS_DIFF, self::POSTS_MAX);
@@ -94,12 +105,13 @@ class ForumsController extends AbstractController
      */
     public function showLessAgoraPostsAction(): RedirectResponse
     {
+        /** @var Member $member */
         $member = $this->getUser();
 
-        $preferenceRepository = $this->getDoctrine()->getRepository(Preference::class);
+        $preferenceRepository = $this->entityManager->getRepository(Preference::class);
         /** @var Preference $preference */
         $preference = $preferenceRepository->findOneBy(['codename' => Preference::NUMBER_FORUM_POSTS]);
-        /** @var MemberPreference $memberPreference */
+
         $memberPreference = $member->getMemberPreference($preference);
         $value = (int) ($memberPreference->getValue());
         $value = min($value - self::POSTS_DIFF, self::POSTS_MIN);
@@ -116,12 +128,13 @@ class ForumsController extends AbstractController
      */
     public function showOnlyPostsInMyGroups(Request $request): RedirectResponse
     {
+        /** @var Member $member */
         $member = $this->getUser();
 
-        $preferenceRepository = $this->getDoctrine()->getRepository(Preference::class);
+        $preferenceRepository = $this->entityManager->getRepository(Preference::class);
         /** @var Preference $preference */
         $preference = $preferenceRepository->findOneBy(['codename' => Preference::SHOW_MY_GROUP_POSTS_ONLY]);
-        /** @var MemberPreference $memberPreference */
+
         $memberPreference = $member->getMemberPreference($preference);
         $memberPreference->setValue('Yes');
         $em = $this->getDoctrine()->getManager();
@@ -137,12 +150,13 @@ class ForumsController extends AbstractController
      */
     public function showPostsInAllGroups(Request $request): RedirectResponse
     {
+        /** @var Member $member */
         $member = $this->getUser();
 
-        $preferenceRepository = $this->getDoctrine()->getRepository(Preference::class);
+        $preferenceRepository = $this->entityManager->getRepository(Preference::class);
         /** @var Preference $preference */
         $preference = $preferenceRepository->findOneBy(['codename' => Preference::SHOW_MY_GROUP_POSTS_ONLY]);
-        /** @var MemberPreference $memberPreference */
+
         $memberPreference = $member->getMemberPreference($preference);
         $memberPreference->setValue('No');
         $em = $this->getDoctrine()->getManager();
@@ -155,18 +169,15 @@ class ForumsController extends AbstractController
     }
 
     /**
-     * @Route("/members/{username}/posts/{search}/{page}", name="profile_forum_posts_search")
+     * @Route("/members/{username}/posts/{page}/{search}", name="profile_forum_posts_search")
      * @Route("/members/{username}/posts/{page}", name="profile_forum_posts",
      *     requirements={"page"="\d+"}
      * )
-     *
-     * @return Response
      */
     public function showPostsByMember(
         Request $request,
         ProfileSubmenu $profileSubmenu,
         Member $member,
-        EntityManagerInterface $entityManager,
         int $page = 1,
         string $search = ""
     ): Response {
@@ -195,8 +206,10 @@ class ForumsController extends AbstractController
         }
 
         /** @var ForumPostRepository $postsRepository */
-        $postsRepository = $entityManager->getRepository(ForumPost::class);
-        $posts = $postsRepository->getForumPostsByMember($member, $search, $page);
+        $postsRepository = $this->entityManager->getRepository(ForumPost::class);
+
+        $itemsPerPage = $this->getItemsPerPage($member);
+        $posts = $postsRepository->getForumPostsByMember($member, $search, $page, $itemsPerPage);
 
         return $this->render('profile/forum.posts.html.twig', [
             'search_form' => $searchForm->createView(),

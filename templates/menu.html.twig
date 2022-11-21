@@ -135,6 +135,10 @@
                                               class="dropdown-item">{{ 'mygroups' | trans }}</a></li>
                     <li class="text-right"><a href="{{ path('trips') }}"
                                               class="dropdown-item">{{ 'trips.mytrips' | trans }}</a></li>
+                    <li><div class="dropdown-divider"></div></li>
+                    <li class="text-right">{# <a href="{{ path('change_password') }}"
+                                              class="dropdown-item">{{ 'change.password' | trans }}</a> #}<span class="dropdown-item">Change password</span></li>
+                    <li><div class="dropdown-divider"></div></li>
                     <li class="text-right"><a href="{{ url( 'security_logout' ) }}"
                                               class="dropdown-item">{{ 'logout' | trans }}</a></li>
                 </ul>

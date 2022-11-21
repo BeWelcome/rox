@@ -64,9 +64,6 @@
             "./config/packages/test/dama_doctrine_test_bundle.yaml"
         ]
     },
-    "deployer/dist": {
-        "version": "v6.8.0"
-    },
     "doctrine/annotations": {
         "version": "1.0",
         "recipe": {

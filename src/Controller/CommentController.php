@@ -221,7 +221,15 @@ class CommentController extends AbstractController
             $comment = $form->getData();
             $checkForExperience = $commentModel->checkIfNewExperience($originalComment, $comment);
             $newExperience = $form['new_experience']->getData();
-            if ($newExperience) {
+            $changedToNegative =
+                (CommentQualityType::NEGATIVE != $originalComment->getQuality()) &&
+                (CommentQualityType::NEGATIVE == $comment->getQuality())
+            ;
+            $changedToPositive =
+                (CommentQualityType::POSITIVE != $originalComment->getQuality()) &&
+                (CommentQualityType::POSITIVE == $comment->getQuality())
+            ;
+            if ($newExperience || $changedToNegative || $changedToPositive) {
                 $comment->setUpdated(new DateTime());
             }
 

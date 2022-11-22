@@ -236,7 +236,7 @@ class CommentController extends AbstractController
             $entityManager->persist($comment);
             $entityManager->flush();
 
-            if ($newExperience) {
+            if ($newExperience || $changedToNegative || $changedToPositive) {
                 return $this->redirectToRoute('profile_comments', ['username' => $loggedInMember->getUsername()]);
             }
         }

@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
  *     @ORM\Index(name="memberspreferences_members", columns={"IdMember", "IdPreference"}),
  *     @ORM\Index(name="memberspreferences_preferences", columns={"IdPreference"})
  * })
- * @ORM\Entity(repositoryClass="App\Repository\MemberPreferenceRepository")
+ * @ORM\Entity
  *
  * @ORM\HasLifecycleCallbacks
  */

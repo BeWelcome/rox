@@ -64,7 +64,14 @@ function wasGuestOrHost(string $relations) {
     );
 
     $username = $this->member->Username;
-    $loggedIn = $this->model->getLoggedInMember()->Username;
+    $loggedInMember = $this->model->getLoggedInMember();
+    $loggedIn = $loggedInMember->Username;
+    $rights = $loggedInMember->getOldRights();
+    $volunteer = in_array('SafetyTeam', array_keys($rights));
+    $showHiddenComments = false;
+    if ($volunteer) {
+        $showHiddenComments = $rights['SafetyTeam']['Level'] != '0';
+    }
 
     // \todo: do something here
     $layoutbits = new MOD_layoutbits();
@@ -92,11 +99,27 @@ function wasGuestOrHost(string $relations) {
                    $tt = array ();
                    $commentLoopCount = 0;
                    foreach ($comments as $key => $c) {
-                       $shownPairs++;
+
                        // stop looping when maximum has been reached
                        if ($commentLoopCount>=$max) {
                            break;
                        }
+
+                       // First check if anything is visible at all
+                       $commentFrom = $c['from'] ?? null;
+                       $commentTo = $c['to'] ?? null;
+
+                       $visible = false;
+                       if (null !== $commentFrom) {
+                           $visible |= ($commentFrom->DisplayInPublic != '0') || $showHiddenComments;
+                       }
+                       if (null !== $commentTo) {
+                           $visible |= ($commentTo->DisplayInPublic != '0') || $showHiddenComments;
+                       }
+                       if (!$visible) {
+                           continue;
+                       }
+
                        if ($commentLoopCount != 0) {
                            echo '<hr class="my-3" style="border-top:1px solid gray;">';
                        }
@@ -106,7 +129,7 @@ function wasGuestOrHost(string $relations) {
                            $commentLoopCount++;
                            $comment = $c['from'];
                            // skip items that are hidden for public
-                           if ($comment->DisplayInPublic == 0) {continue;}
+                           if ($comment->DisplayInPublic == 0 && !$showHiddenComments) {continue;}
                            $quality = "neutral";
                            if ($comment->comQuality == "Good") {
                                $quality = "good";
@@ -115,6 +138,9 @@ function wasGuestOrHost(string $relations) {
                                $quality = "bad";
                            }                            ?>
                        <div class="comment-bg-<?=$quality?> p-2 mt-1 <?= (!isset($c['to'])) ? 'mb-2' : '' ?> clearfix u-mr-24 u-rounded-8">
+                           <?php if ($comment->DisplayInPublic == '0') {
+                               echo '<div class="u-flex u-flex-col u-rounded-8 u-px-8 u-bg-black-o-30 u-mb-8">' . $words->get("commenthiddenedit") . '</div>';
+                           } ?>
                            <div class="d-flex flex-column">
                                <div class="d-flex flex-row">
                                    <a class="mr-2" href="members/<?=$comment->UsernameFromMember?>">
@@ -166,7 +192,7 @@ function wasGuestOrHost(string $relations) {
                            $commentLoopCount++;
                            $comment = $c['to'];
                            // skip items that are hidden for public
-                           if ($comment->DisplayInPublic == 0) {continue;}
+                           if ($comment->DisplayInPublic == 0 && !$showHiddenComments) {continue;}
                            $quality = "neutral";
                            if ($comment->comQuality == "Good") {
                                $quality = "good";
@@ -176,6 +202,9 @@ function wasGuestOrHost(string $relations) {
                            }                           ?>
 
                        <div class="comment-bg-<?=$quality?> p-2 mt-1 <?= !(isset($c['from'])) ? 'mt-1' : '' ?> clearfix u-ml-24 u-rounded-8">
+                           <?php if ($comment->DisplayInPublic == '0') {
+                               echo '<div class="u-flex u-flex-col u-rounded-8 u-px-8 u-bg-black-o-30 u-mb-8">' . $words->get("commenthiddenedit") . '</div>';
+                           } ?>
                            <div class="d-flex flex-column">
                                <div class="d-flex flex-row">
                                    <div class="mr-auto  align-self-center">
@@ -213,8 +242,8 @@ function wasGuestOrHost(string $relations) {
 
                       <?php
                    }
-                   }
-                 ?>
+                   $shownPairs++;
+            }     ?>
             </div>
             <a href="members/<?=$member->Username?>/comments/" class="btn btn-block btn-sm btn-outline-primary"><?=$words->get('ShowAllComments')?>
                 <?php if ($shownPairs < $commentCount['all']) { ?>

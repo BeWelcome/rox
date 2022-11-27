@@ -1139,9 +1139,13 @@ class GroupsController extends RoxControllerBase
         $groupIsApproved = $group->approved == 1;
         $rights = $member->getOldRights();
         $isForumModerator = in_array("ForumModerator", array_keys($rights));
-        if (!$isForumModerator && !$isGroupMember && !$groupIsApproved) {
+        if (!$isForumModerator && !$isGroupMember) {
             return $this->redirectAbsolute('/');
         };
+
+        if (!$isForumModerator && !$groupIsApproved) {
+            return $this->redirectAbsolute('/');
+        }
 
         $page = new GroupNewPostPage($group);
 

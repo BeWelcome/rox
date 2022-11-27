@@ -958,6 +958,7 @@ WHERE IdGroup=" . (int)$group->id . " AND IdMember=" . (int)$memberid;
                         `members` ON (`forums_posts`.`IdWriter` = `members`.`id`)
                     WHERE
                         `forums_posts`.`id` IN (" . implode(',', $postIds) . ")
+                        AND `forums_threads`.`IdGroup` = " . $group->getPKValue() . "
                     ORDER BY `created` DESC
                 ";
                 $query .= ' LIMIT ' . $items . ' OFFSET ' . ($page - 1) * $items;

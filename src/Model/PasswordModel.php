@@ -6,22 +6,29 @@ use App\Entity\Member;
 use App\Entity\PasswordReset;
 use App\Utilities\ManagerTrait;
 use App\Utilities\TranslatorTrait;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Exception as Exception;
+use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 class PasswordModel
 {
-    use ManagerTrait;
-    use TranslatorTrait;
+    private EntityManagerInterface $entityManager;
+    private PasswordHasherFactoryInterface $passwordHasherFactory;
 
-    /**
-     * @throws ORMException
-     * @throws OptimisticLockException
-     *
-     * @return string
-     */
-    public function generatePasswordResetToken(Member $member)
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        PasswordHasherFactoryInterface $passwordHasherFactory
+    ) {
+        $this->entityManager = $entityManager;
+        $this->passwordHasherFactory = $passwordHasherFactory;
+    }
+
+    public function generatePasswordResetToken(Member $member): string
     {
         try {
             $this->removePasswordResetTokens($member);
@@ -36,22 +43,40 @@ class PasswordModel
         $passwordReset
             ->setMember($member)
             ->setToken($token);
-        $this->getManager()->persist($passwordReset);
-        $this->getManager()->flush();
+        $this->entityManager->persist($passwordReset);
+        $this->entityManager->flush();
 
         return $token;
     }
 
-    public function removePasswordResetTokens(Member $member)
+    public function removePasswordResetTokens(Member $member): void
     {
-        $entityManager = $this->getManager();
-
-        $passwordResetTokenRepository = $entityManager->getRepository(PasswordReset::class);
+        $passwordResetTokenRepository = $this->entityManager->getRepository(PasswordReset::class);
         $tokens = $passwordResetTokenRepository->findBy(['member' => $member]);
 
         foreach ($tokens as $token) {
-            $entityManager->remove($token);
+            $this->entityManager->remove($token);
         }
-        $entityManager->flush();
+        $this->entityManager->flush();
+    }
+
+    public function checkPassword(Member $member, string $plaintextPassword): bool
+    {
+        $passwordHasher = $this->passwordHasherFactory->getPasswordHasher($member);
+        $hashedPassword = $passwordHasher->hash($plaintextPassword);
+
+        if ($passwordHasher->verify($hashedPassword, $plaintextPassword)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function getPasswordHash(string $plaintextPassword): string
+    {
+        $passwordHasher = $this->passwordHasherFactory->getPasswordHasher(PasswordAuthenticatedUserInterface::class);
+        $hashedPassword = $passwordHasher->hash($plaintextPassword);
+
+        return $hashedPassword;
     }
 }

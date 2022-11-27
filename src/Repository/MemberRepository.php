@@ -8,12 +8,24 @@ use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bridge\Doctrine\Security\User\UserLoaderInterface;
+use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-class MemberRepository extends ServiceEntityRepository implements UserLoaderInterface
+
+class MemberRepository extends ServiceEntityRepository implements UserLoaderInterface, PasswordUpgraderInterface
 {
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Member::class);
+    }
+
+    public function upgradePassword(UserInterface $user, string $newHashedPassword): void
+    {
+        /** @var Member $user */
+        // set the new hashed password on the User object
+        $user->setPassword($newHashedPassword);
+
+        // execute the queries on the database
+        $this->getEntityManager()->flush();
     }
 
     /**
@@ -53,9 +65,9 @@ class MemberRepository extends ServiceEntityRepository implements UserLoaderInte
             ->getOneOrNullResult();
     }
 
-    public function loadUserByUsername($usernameOrEmail)
+    public function loadUserByUsername(string $username)
     {
-        return $this->loadUserByIdentifier($usernameOrEmail);
+        return $this->loadUserByIdentifier($username);
     }
 
     public function findByProfileInfo($term)

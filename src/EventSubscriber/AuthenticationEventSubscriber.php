@@ -9,9 +9,17 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\PasswordHasher\PasswordHasherInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Symfony\Component\Security\Core\Event\AuthenticationSuccessEvent;
+use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
+use Symfony\Component\Security\Http\Authenticator\Passport\Badge\PasswordUpgradeBadge;
+use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
+use Symfony\Component\Security\Http\Authenticator\Passport\UserPassportInterface;
 use Symfony\Component\Security\Http\Event\CheckPassportEvent;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 use Symfony\Component\Security\Http\Event\LoginSuccessEvent;
@@ -36,10 +44,6 @@ class AuthenticationEventSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            // must be registered before (i.e. with a higher priority than) the default Locale listener
-            LoginSuccessEvent::class => 'onLoginSuccess',
-            AuthenticationSuccessEvent::class => 'onAuthenticationSuccess',
-            CheckPassportEvent::class => 'onCheckPassport',
             KernelEvents::RESPONSE => 'onKernelResponse',
         ];
     }
@@ -71,18 +75,5 @@ class AuthenticationEventSubscriber implements EventSubscriberInterface
                 $this->entityManager->flush();
             }
         }
-
-    }
-
-    public function onCheckPassport(CheckPassportEvent $event): void
-    {
-    }
-
-    public function onAuthenticationSuccess(AuthenticationSuccessEvent $event): void
-    {
-    }
-
-    public function onLoginSuccess(LoginSuccessEvent $event): void
-    {
     }
 }

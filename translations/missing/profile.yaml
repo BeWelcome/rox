@@ -70,3 +70,16 @@ profile.last.activity:
 profile.no.comment.yet:
     - 'No comment for {to} by {from} yet.'
     - Make sure to keep {to} and {from} in the translation.
+profile.change.password:
+    - 'Change password'
+    - Headline for the change password page
+profile.change.password.menu:
+    - '@profile.change.password'
+profile.change.password.label:
+    - '@profile.change.password'
+profile.current.password:
+    - 'Current Password'
+    - Label for the current password field on the change password page
+profile.new.password:
+    - 'New Password'
+    - Label for the new password field on the change password page

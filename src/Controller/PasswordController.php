@@ -4,12 +4,14 @@ namespace App\Controller;
 
 use App\Entity\Member;
 use App\Entity\PasswordReset;
+use App\Form\ChangePasswordFormType;
 use App\Form\ResetPasswordFormType;
 use App\Form\ResetPasswordRequestFormType;
 use App\Model\PasswordModel;
 use App\Repository\MemberRepository;
 use App\Service\Mailer;
 use App\Utilities\ManagerTrait;
+use App\Utilities\ProfileSubmenu;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
 use Doctrine\ORM\EntityManagerInterface;
@@ -54,10 +56,10 @@ class PasswordController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
             /** @var MemberRepository $memberRepository */
-            $memberRepository = $this->getDoctrine()->getRepository(Member::class);
+            $memberRepository = $this->entityManager->getRepository(Member::class);
             try {
                 /** @var Member $member */
-                $member = $memberRepository->loadUserByUsername($data['username']);
+                $member = $memberRepository->loadUserByIdentifier($data['username']);
             } catch (NonUniqueResultException $e) {
                 $member = null;
             }
@@ -102,14 +104,18 @@ class PasswordController extends AbstractController
      * @Route("/resetpassword/{username}/{token}", name="member_reset_password",
      *     requirements={"token": "[a-z0-9]{64}"})
      */
-    public function resetPassword(Request $request, Member $member, string $token): Response
-    {
+    public function resetPassword(
+        Request $request,
+        Member $member,
+        string $token,
+        PasswordModel $passwordModel
+    ): Response {
         // Someone obviously lost their way. No sense in resetting your password if you're currently logged in.
         if ($this->isGranted('ROLE_USER')) {
             return $this->redirectToRoute('landingpage');
         }
 
-        $repository = $this->getDoctrine()->getRepository(PasswordReset::class);
+        $repository = $this->entityManager->getRepository(PasswordReset::class);
         /** @var PasswordReset $passwordReset */
         $passwordReset = $repository->findOneBy(['member' => $member, 'token' => $token]);
 
@@ -131,11 +137,10 @@ class PasswordController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
-            $newPassword = $data['password'];
+            $newPassword = $passwordModel->getPasswordHash($data['password']);
             $member->setPassword($newPassword);
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($member);
-            $em->flush();
+            $this->entityManager->persist($member);
+            $this->entityManager->flush();
 
             $this->passwordModel->removePasswordResetTokens($member);
             $this->addTranslatedFlash('notice', 'flash.password.reset');
@@ -145,6 +150,46 @@ class PasswordController extends AbstractController
 
         return $this->render('member/reset.password.html.twig', [
             'form' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/members/{username}/password/change", name="change_password",
+     *     requirements={"token": "[a-z0-9]{64}"})
+     */
+    public function changePassword(
+        Request $request,
+        Member $member,
+        ProfileSubmenu $profileSubmenu,
+        PasswordModel $passwordModel
+    ): Response {
+        /** @var Member $loggedInMember */
+        $loggedInMember = $this->getUser();
+        if ($member !== $loggedInMember) {
+            return $this->redirectToRoute('members_profile', ['username' => $member->getUsername()]);
+        }
+
+        $form = $this->createForm(ChangePasswordFormType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
+            $currentPassword = $data['current'];
+            if ($passwordModel->checkPassword($member, $currentPassword)) {
+                $hashedPassword = $passwordModel->getPasswordHash($data['password']);
+                $member->setPassword($hashedPassword);
+
+                $this->entityManager->persist($member);
+                $this->entityManager->flush();
+
+                return $this->redirectToRoute('security_logout');
+            }
+        }
+
+        return $this->render('profile/change.password.html.twig', [
+            'member' => $member,
+            'form' => $form->createView(),
+            'submenu' => $profileSubmenu->getSubmenu($member, $loggedInMember),
         ]);
     }
 }

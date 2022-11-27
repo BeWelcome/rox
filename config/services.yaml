@@ -274,9 +274,9 @@ services:
         public: true
         arguments: [ '@twig', '@event_dispatcher', '@controller_resolver', '@request_stack', '@argument_resolver', '@service_container' ]
 
-    rox.legacy_password_encoder:
-        public: true
-        class: App\Encoder\LegacyPasswordEncoder
+#    rox.legacy_password_hasher:
+#        public: true
+#        class: App\Security\LegacyPasswordHasher
 
     rox.legacy_loader:
         public: true

@@ -1,48 +1,45 @@
 <?php
 
-namespace App\Encoder;
+namespace App\Security\PasswordHasher;
 
-use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
+use Symfony\Component\PasswordHasher\Exception\InvalidPasswordException;
+use Symfony\Component\PasswordHasher\Hasher\CheckPasswordLengthTrait;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\PasswordHasher\PasswordHasherInterface;
 
-class LegacyPasswordEncoder implements PasswordEncoderInterface
+class LegacyPasswordHasher implements PasswordHasherInterface
 {
-    /**
-     * Checks if password is valid.
-     *
-     * @param $encoded
-     * @param $raw
-     * @param $salt
-     *
-     * @return bool
-     */
-    public function isPasswordValid($encoded, $raw, $salt)
+    use CheckPasswordLengthTrait;
+
+    public function hash(string $plainPassword): string
     {
-        return hash_equals($encoded, $this->encodePassword($raw, $salt));
+        if ($this->isPasswordTooLong($plainPassword)) {
+            throw new InvalidPasswordException();
+        }
+
+        return $this->encodePassword($plainPassword);
     }
 
-    /**
-     * Encodes password according to old MYSQL scheme.
-     *
-     * @param string $raw
-     * @param string $salt
-     *
-     * @return string
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    public function encodePassword($raw, $salt)
+    public function verify(string $hashedPassword, string $plainPassword): bool
+    {
+        $encodedPassword = $this->encodePassword($plainPassword);
+
+        return hash_equals($hashedPassword, $encodedPassword);
+    }
+
+    private function encodePassword($plaintext): string
     {
         return '*' . strtoupper(
-            sha1(
-                sha1($raw, true)
-            )
-        );
+                sha1(
+                    sha1($plaintext, true)
+                )
+            );
     }
 
-    public function needsRehash(string $encoded): bool
+    public function needsRehash(string $hashedPassword): bool
     {
-        $isOldHash = 45 === \strlen($encoded) && false !== strpos($encoded, '*');
-
-        return $isOldHash;
+        // Always migrate passwords. As soon as that works :(
+        // see https://github.com/symfony/symfony/issues/48348
+        return true;
     }
 }

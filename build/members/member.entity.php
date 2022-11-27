@@ -1634,11 +1634,11 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
         }
         $rights = $this->getOldRights();
         if ($rights) {
-            $pw = password_hash($pw, PASSWORD_DEFAULT, [ 'cost' => 13]);
+            $pw = password_hash($pw, PASSWORD_DEFAULT, [ 'cost' => 14]);
         }
         else
         {
-            $pw = password_hash($pw, PASSWORD_DEFAULT, [ 'cost' => 12]);
+            $pw = password_hash($pw, PASSWORD_DEFAULT, [ 'cost' => 13]);
         }
         /** @var PDBStatement_mysqli $stmt */
         $stmt = $this->dao->prepare("UPDATE `members` SET `PassWord` = ? WHERE `id` = ?");

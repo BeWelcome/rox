@@ -15,7 +15,6 @@ use App\Doctrine\AccommodationType;
 use App\Doctrine\GroupMembershipStatusType;
 use App\Doctrine\LanguageLevelType;
 use App\Doctrine\MemberStatusType;
-use App\Encoder\LegacyPasswordEncoder;
 use Carbon\Carbon;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -26,8 +25,10 @@ use Doctrine\Persistence\Mapping\ClassMetadata;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Persistence\ObjectManagerAware;
 use Exception;
+use Symfony\Bridge\Doctrine\Security\User\UserLoaderInterface;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherAwareInterface;
 use Symfony\Component\Security\Core\Exception\RuntimeException;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -47,7 +48,13 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *     }
  * )
  */
-class Member implements UserInterface, \Serializable, PasswordHasherAwareInterface, ObjectManagerAware
+class Member
+    implements
+        \Serializable,
+        PasswordHasherAwareInterface,
+        ObjectManagerAware,
+        UserInterface,
+        PasswordAuthenticatedUserInterface
 {
     public const ROLE_ADMIN_ACCEPTER = 'ROLE_ADMIN_ACCEPTER';
     public const ROLE_ADMIN_ADMIN = 'ROLE_ADMIN_ADMIN';
@@ -1721,42 +1728,19 @@ class Member implements UserInterface, \Serializable, PasswordHasherAwareInterfa
         return $this->countertrusts;
     }
 
-    /**
-     * Set password.
-     *
-     * @param string $password
-     *
-     * @return Member
-     */
-    public function setPassword($password)
+    public function setPassword($hashedPassword): self
     {
-        $cost = 12;
-        if ($this->isPrivileged()) {
-            $cost = 13;
-        }
-        $this->password = password_hash($password, \PASSWORD_DEFAULT, ['cost' => $cost]);
+        $this->password = $hashedPassword;
 
         return $this;
     }
 
-    /**
-     * Get password.
-     *
-     * @return string
-     */
-    public function getPassword()
+    public function getPassword(): ?string
     {
         return $this->password;
     }
 
-    /**
-     * Set gender.
-     *
-     * @param string $gender
-     *
-     * @return Member
-     */
-    public function setGender($gender)
+    public function setGender($gender): self
     {
         $this->gender = $gender;
 
@@ -2574,24 +2558,18 @@ class Member implements UserInterface, \Serializable, PasswordHasherAwareInterfa
 
     /**
      * Gets the name of the encoder used to encode the password.
-     *
-     * @throws RuntimeException password not supported
      */
-    public function getPasswordHasherName(): string
+    public function getPasswordHasherName(): ?string
     {
         if (preg_match('/^\*[0-9A-F]{40}$/', $this->getPassWord())) {
-            return LegacyPasswordEncoder::class;
-        }
-
-        if (!preg_match('/^\$2y\$[0-9]{2}\$.{53}$/', $this->getPassWord())) {
-            throw RuntimeException('Password is neither bcrypt or legacy sha1.');
+            return 'legacy';
         }
 
         if ($this->isPrivileged()) {
             return 'harsh';
         }
 
-        return 'default';
+        return null;
     }
 
     public function isPrivileged()

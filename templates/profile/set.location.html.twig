@@ -1,0 +1,50 @@
+{% extends 'profile/profile.html.twig' %}
+
+{% block title %}
+    {{ 'profile.set.location' | trans }}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ encore_entry_link_tags('tailwind') }}
+    {{ encore_entry_link_tags('leaflet') }}
+{% endblock stylesheets %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('profile/setlocation') }}
+{% endblock javascripts %}
+
+{% block page_content %}
+    <h1>{{ 'profile.set.location' | trans }}</h1>
+    {{ form_start(form) }}
+    <div class="u-w-full u-mb-8 md:u-width-auto">
+        <div id="{{ form.vars.id ~ "_autocomplete" }}" class="js-location-picker autocomplete u-w-full u-z-[1001]">
+            <input id="{{ form.fullname.vars.id}}" name="{{ form.fullname.vars.full_name }}"
+                   class="o-input o-input--xl autocomplete-input"
+                   placeholder="{{ 'trip.leg.location'|trans }}"
+                   aria-label="{{ 'trip.leg.location'|trans }}"
+                   {% if form.fullname.vars.value %}value="{{ form.fullname.vars.value }}"{% endif %}
+            >
+            <ul class="autocomplete-result-list"></ul>
+            <ul id="no-results" class="autocomplete-result-list" visible="false">
+                <li class="autocomplete-result">
+                    {{ 'suggest.no.results'|trans }}
+                </li>
+            </ul>
+        </div>
+        <div class="u-block">{{ form_errors(form.fullname) }}{{ form_errors(form.geoname_id) }}</div>
+        {% do form.fullname.setRendered %}
+        {{ form_widget(form.geoname_id) }}
+        {{ form_widget(form.latitude) }}
+        {{ form_widget(form.longitude) }}
+        <input type="hidden" id="original_latitude" value="{{ member.city.latitude }}">
+        <input type="hidden" id="original_longitude" value="{{ member.city.longitude }}">
+    </div>
+    <input type="hidden" id="marker_label_text" value="{{ 'profile.setlocation.marker'|trans }}">
+    <div id="map" style="width: 100%; height: 440px; border: 1px solid rgb(170, 170, 170);">
+    </div>
+    <div class="u-flex u-justify-end u-mt-8">
+        <input type="submit" class="o-button" value="{{ 'save location'|trans }}">
+    </div>
+    {{ form_end(form) }}
+
+{% endblock %}

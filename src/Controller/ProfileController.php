@@ -3,8 +3,11 @@
 namespace App\Controller;
 
 use App\Entity\Member;
+use App\Entity\NewLocation;
 use App\Entity\ProfileVisit;
 use App\Form\ProfileStatusFormType;
+use App\Form\SearchLocationType;
+use App\Form\SetLocationType;
 use App\Repository\ProfileVisitRepository;
 use App\Utilities\ProfileSubmenu;
 use Doctrine\ORM\EntityManagerInterface;
@@ -101,6 +104,54 @@ class ProfileController extends AbstractController
             'submenu' => $profileSubmenu->getSubmenu($member, $loggedInMember, ['active' => 'visitors']),
             'member' => $member,
             'visits' => $visits,
+        ]);
+    }
+
+    /**
+     * @Route("/members/{username}/location", name="profile_set_location")
+     */
+    public function setLocation(
+        Request $request,
+        Member $member,
+        ProfileSubmenu $profileSubmenu,
+        EntityManagerInterface $entityManager
+    ): Response {
+        /** @var Member $loggedInMember */
+        $loggedInMember = $this->getUser();
+
+        if ($loggedInMember !== $member) {
+            return $this->redirectToRoute('members_profile', ['username' => $member->getusername()]);
+        }
+
+        $setLocationForm = $this->createForm(SetLocationType::class, [
+            'fullname' => $member->getCity()->getFullname(),
+            'name' => $member->getCity()->getName(),
+            'geoname_id' => $member->getCity()->getGeonameId(),
+            'latitude' => $member->getLatitude(),
+            'longitude' => $member->getLongitude(),
+        ]);
+        $setLocationForm->handleRequest($request);
+
+        if ($setLocationForm->isSubmitted() && $setLocationForm->isValid()) {
+            $data = $setLocationForm->getData();
+            $locationRepository = $entityManager->getRepository(NewLocation::class);
+            $location = $locationRepository->find($data['geoname_id']);
+            if (null !== $location) {
+                $member->setCity($location);
+                $member->setLatitude($data['latitude']);
+                $member->setLongitude($data['longitude']);
+                $entityManager->persist($member);
+                $entityManager->flush();
+
+                return $this->redirectToRoute('members_profile', ['username' => $member->getUsername()]);
+            }
+            // Some data was wrong (attack?)
+        }
+
+        return $this->render('profile/set.location.html.twig', [
+            'submenu' => $profileSubmenu->getSubmenu($member, $loggedInMember, ['active' => 'visitors']),
+            'member' => $member,
+            'form' => $setLocationForm->createView(),
         ]);
     }
 }

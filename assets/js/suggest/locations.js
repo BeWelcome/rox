@@ -1,9 +1,9 @@
 import Autocomplete from "@trevoreyre/autocomplete-js";
 const L = require('leaflet');
 
-export function initializeSingleAutoComplete(url, cssClass = "js-search-picker", identifier = "_name") {
+export function initializeSingleAutoComplete(url, cssClass = "js-search-picker", identifier = "_name", onChange = function(){}) {
     const locationSuggests = document.getElementsByClassName(cssClass);
-    new LocationSuggest(locationSuggests.item(0), url, identifier);
+    new LocationSuggest(locationSuggests.item(0), url, identifier, onChange);
 }
 
 export function initializeMultipleAutoCompletes(url, cssClass = "js-search-picker", identifier = "_name") {
@@ -101,8 +101,9 @@ function initializeAutoComplete(element, searchUrl) {
 }
 
 class LocationSuggest {
-    constructor(element, url, identifier) {
+    constructor(element, url, identifier, onChange) {
         this.id = element.id;
+        this.onChange = onChange;
         this.searchUrl = url;
         this.identifier = identifier;
         this.autoComplete = new Autocomplete(element, {
@@ -188,6 +189,7 @@ class LocationSuggest {
                 document.getElementById(id + "_geoname_id").value = result.id;
                 document.getElementById(id + "_latitude").value = result.latitude;
                 document.getElementById(id + "_longitude").value = result.longitude;
+                this.onChange(result);
                 destroySuggestionMaps()
             }
         })

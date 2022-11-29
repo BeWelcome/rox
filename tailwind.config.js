@@ -3,6 +3,9 @@ module.exports = {
       './templates/**/*.html.twig',
       './assets/js/**/*.js',
   ],
+  safelist: [
+    'suggest-map',
+  ],
   prefix: 'u-',
   important: false,
   separator: ':',

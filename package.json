@@ -42,7 +42,7 @@
     "@symfony/webpack-encore": "^1.0.0",
     "@tailwindcss/forms": "^0.5.3",
     "@tailwindcss/line-clamp": "^0.4.2",
-    "@trevoreyre/autocomplete-js": "^2.2.0",
+    "@trevoreyre/autocomplete-js": "^2.3.0",
     "@ttskch/select2-bootstrap4-theme": "^1.5.2",
     "add-to-homescreen": "^3.2.6",
     "autoprefixer": "^10.4.12",

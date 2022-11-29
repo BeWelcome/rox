@@ -194,9 +194,9 @@ class SearchFormRequest
         return self::fillObjectFromRequest($this, $request);
     }
 
-    public static function fromRequest(Request $request, EntityManagerInterface $em)
+    public static function fromRequest(Request $request)
     {
-        $searchFormRequest = new self($em);
+        $searchFormRequest = new self();
 
         return self::fillObjectFromRequest($searchFormRequest, $request);
     }

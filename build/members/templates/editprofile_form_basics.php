@@ -163,7 +163,7 @@
                             <br>
                             <?= $member->region ?>, <?= $member->country ?>
                         </div>
-                        <a href="setlocation"
+                        <a href="/members/<?= $member->Username ?>/location"
                            class="btn btn-outline-primary float-left"><?= $words->get('UpdateMyLocation') ?></a>
                     </div>
                 </div>

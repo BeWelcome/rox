@@ -64,9 +64,9 @@ class Address
     private $zip;
 
     /**
-     * @var Location
+     * @var NewLocation
      *
-     * @ORM\ManyToOne(targetEntity="Location")
+     * @ORM\ManyToOne(targetEntity="NewLocation")
      * @ORM\JoinColumn(name="IdCity", referencedColumnName="geonameId")
      *
      * @Groups({"Member:Read"})
@@ -214,26 +214,14 @@ class Address
         return $this->zip;
     }
 
-    /**
-     * Set location.
-     *
-     * @param Location $location
-     *
-     * @return Address
-     */
-    public function setLocation($location)
+    public function setLocation(NewLocation $location): self
     {
         $this->location = $location;
 
         return $this;
     }
 
-    /**
-     * Get location.
-     *
-     * @return Location
-     */
-    public function getLocation()
+    public function getLocation(): NewLocation
     {
         return $this->location;
     }

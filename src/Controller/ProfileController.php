@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Address;
 use App\Entity\Member;
 use App\Entity\NewLocation;
 use App\Entity\ProfileVisit;
@@ -135,11 +136,19 @@ class ProfileController extends AbstractController
         if ($setLocationForm->isSubmitted() && $setLocationForm->isValid()) {
             $data = $setLocationForm->getData();
             $locationRepository = $entityManager->getRepository(NewLocation::class);
+            /** @var NewLocation $location */
             $location = $locationRepository->find($data['geoname_id']);
             if (null !== $location) {
                 $member->setCity($location);
                 $member->setLatitude($data['latitude']);
                 $member->setLongitude($data['longitude']);
+
+                $addressRepository = $entityManager->getRepository(Address::class);
+                /** @var Address $address */
+                $address = $addressRepository->findOneBy(['member' => $member, 'rank' => '0']);
+                $address->setLocation($location);
+
+                $entityManager->persist($address);
                 $entityManager->persist($member);
                 $entityManager->flush();
 

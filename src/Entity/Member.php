@@ -51,9 +51,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
 class Member
     implements
         \Serializable,
-        PasswordHasherAwareInterface,
         ObjectManagerAware,
         UserInterface,
+        PasswordHasherAwareInterface,
         PasswordAuthenticatedUserInterface
 {
     public const ROLE_ADMIN_ACCEPTER = 'ROLE_ADMIN_ACCEPTER';
@@ -2556,22 +2556,6 @@ class Member
     {
     }
 
-    /**
-     * Gets the name of the encoder used to encode the password.
-     */
-    public function getPasswordHasherName(): ?string
-    {
-        if (preg_match('/^\*[0-9A-F]{40}$/', $this->getPassWord())) {
-            return 'legacy';
-        }
-
-        if ($this->isPrivileged()) {
-            return 'harsh';
-        }
-
-        return null;
-    }
-
     public function isPrivileged()
     {
         if (\in_array('ROLE_ADMIN', $this->getRoles(), true)) {
@@ -3346,5 +3330,19 @@ class Member
         }
 
         return $name;
+    }
+
+    public function getPasswordHasherName(): ?string
+    {
+        if (preg_match('/^\*[0-9A-F]{40}$/', $this->getPassWord())) {
+            // Use migrating password hasher in case of legacy password
+            return null;
+        }
+
+        if ($this->isPrivileged()) {
+            return 'harsh';
+        }
+
+        return null;
     }
 }

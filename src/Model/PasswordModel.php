@@ -72,9 +72,9 @@ class PasswordModel
         return false;
     }
 
-    public function getPasswordHash(string $plaintextPassword): string
+    public function getPasswordHash(Member $member, string $plaintextPassword): string
     {
-        $passwordHasher = $this->passwordHasherFactory->getPasswordHasher(PasswordAuthenticatedUserInterface::class);
+        $passwordHasher = $this->passwordHasherFactory->getPasswordHasher($member);
         $hashedPassword = $passwordHasher->hash($plaintextPassword);
 
         return $hashedPassword;

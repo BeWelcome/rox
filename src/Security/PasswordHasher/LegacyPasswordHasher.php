@@ -38,8 +38,7 @@ class LegacyPasswordHasher implements PasswordHasherInterface
 
     public function needsRehash(string $hashedPassword): bool
     {
-        // Always migrate passwords. As soon as that works :(
-        // see https://github.com/symfony/symfony/issues/48348
+        // Always migrate passwords.
         return true;
     }
 }

@@ -137,7 +137,7 @@ class PasswordController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
-            $newPassword = $passwordModel->getPasswordHash($data['password']);
+            $newPassword = $passwordModel->getPasswordHash($member, $data['password']);
             $member->setPassword($newPassword);
             $this->entityManager->persist($member);
             $this->entityManager->flush();
@@ -176,7 +176,7 @@ class PasswordController extends AbstractController
             $data = $form->getData();
             $currentPassword = $data['current'];
             if ($passwordModel->checkPassword($member, $currentPassword)) {
-                $hashedPassword = $passwordModel->getPasswordHash($data['password']);
+                $hashedPassword = $passwordModel->getPasswordHash($member, $data['password']);
                 $member->setPassword($hashedPassword);
 
                 $this->entityManager->persist($member);

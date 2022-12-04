@@ -29,6 +29,7 @@ class SearchFormType extends AbstractType
             ->add('location', TextType::class, [
                 'label' => 'landing.whereyougo',
                 'error_bubbling' => true,
+                'help' => 'search.locations.help',
             ])
             ->add('keywords', TextType::class, [
                 'label' => 'texttofind',
@@ -244,6 +245,8 @@ class SearchFormType extends AbstractType
     private function addHiddenFields(FormBuilderInterface $formBuilder)
     {
         $formBuilder
+            ->add('location_fullname', HiddenType::class)
+            ->add('location_name', HiddenType::class)
             ->add('location_geoname_id', HiddenType::class)
             ->add('location_latitude', HiddenType::class)
             ->add('location_longitude', HiddenType::class)

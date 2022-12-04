@@ -46,6 +46,7 @@ Encore
     .addEntry('offcanvas', './assets/js/offcanvas.js')
     .addEntry('profile/profile', './assets/js/profile/profile.js')
     .addEntry('profile/setlocation', './assets/js/profile/setlocation.js')
+    .addEntry('signup/setlocation', './assets/js/signup/setlocation.js')
     .addEntry('updatecounters', './assets/js/updateCounters.js')
     .addEntry('lightbox', './assets/js/lightbox.js')
     .addEntry('gallery', './assets/js/gallery.js')

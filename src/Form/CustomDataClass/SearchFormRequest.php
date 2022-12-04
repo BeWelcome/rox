@@ -28,6 +28,10 @@ class SearchFormRequest
      * @var int
      * @Assert\NotNull(message="search.location.dropdown", groups={"text-search"})
      */
+    public $location_fullname;
+
+    public $location_name;
+
     public $location_geoname_id;
 
     /**

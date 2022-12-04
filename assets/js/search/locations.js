@@ -1,8 +1,8 @@
-import SearchPicker from "./../search/searchpicker";
+import {initializeSingleAutoComplete} from '../suggest/locations';
 import 'leaflet.fullscreen';
 import 'leaflet.fullscreen/Control.FullScreen.css';
 
-const searchPicker = new SearchPicker( "/search/locations/all");
+initializeSingleAutoComplete("/suggest/locations/places", 'js-location-picker', '_autocomplete');
 
 function Map() {
     this.map = undefined;

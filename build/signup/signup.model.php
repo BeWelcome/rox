@@ -366,9 +366,9 @@ WHERE `ShortCode` = \'' . $this->session->get('lang') . '\'';
             ( ?, ?, ?, ?, ?, ?, NOW(), ?, ?, 1, ?, ?, ?, ?, ?, ?, ? );";
         $stmt = $this->dao->prepare($query);
         $stmt->bindParam(0, $vars['username']);
-        $stmt->bindParam(1, $vars['location-geoname-id']);
-        $stmt->bindParam(2, $vars['location-latitude']);
-        $stmt->bindParam(3, $vars['location-longitude']);
+        $stmt->bindParam(1, $vars['set_location_geoname_id']);
+        $stmt->bindParam(2, $vars['set_location_latitude']);
+        $stmt->bindParam(3, $vars['set_location_longitude']);
         $stmt->bindParam(4, $vars['gender']);
         $stmt->bindParam(5, $vars['genderhidden']);
         $stmt->bindParam(6, $vars['iso_date']);
@@ -438,7 +438,7 @@ INSERT INTO addresses
 VALUES
 (
 	' . $memberID . ',
-	' . $vars['location-geoname-id'] . ',
+	' . $vars['set_location_geoname_id'] . ',
     0,
 	0,
 	0,
@@ -594,21 +594,21 @@ VALUES
     {
         $errors = [];
         // geonameId
-        if (empty($vars['location-geoname-id'])) {
+        if (empty($vars['set_location_geoname_id'])) {
             $errors[] = 'SignupErrorProvideLocation';
-            unset($vars['location-geoname-id']);
+            unset($vars['set_location_geoname_id']);
         }
 
         // latitude
-        if (empty($vars['location-latitude'])) {
+        if (empty($vars['set_location_latitude'])) {
             $errors[] = 'SignupErrorProvideLocation';
-            unset($vars['location-latitude']);
+            unset($vars['set_location_latitude']);
         }
 
         // longitude
-        if (empty($vars['location-longitude'])) {
+        if (empty($vars['set_location_longitude'])) {
             $errors[] = 'SignupErrorProvideLocation';
-            unset($vars['location-longitude']);
+            unset($vars['set_location_longitude']);
         }
 
         return $errors;

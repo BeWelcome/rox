@@ -83,6 +83,7 @@ security:
         - { path: ^/media, roles: PUBLIC_ACCESS }
         - { path: ^/press-information, roles: PUBLIC_ACCESS }
         - { path: ^/signup, roles: PUBLIC_ACCESS }
+        - { path: ^/suggest, roles: PUBLIC_ACCESS }
         - { path: ^/newsletter, roles: PUBLIC_ACCESS }
         - { path: ^/unsubscribe, roles: PUBLIC_ACCESS }
         - { path: ^/faq, roles: PUBLIC_ACCESS }

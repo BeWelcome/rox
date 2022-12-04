@@ -19,7 +19,7 @@
     <div class="u-w-full u-mb-8 md:u-width-auto">
         <div id="{{ form.vars.id ~ "_autocomplete" }}" class="js-location-picker autocomplete u-w-full u-z-[1001]">
             <input id="{{ form.fullname.vars.id}}" name="{{ form.fullname.vars.full_name }}"
-                   class="o-input o-input--xl autocomplete-input"
+                   class="o-input autocomplete-input"
                    placeholder="{{ 'trip.leg.location'|trans }}"
                    aria-label="{{ 'trip.leg.location'|trans }}"
                    {% if form.fullname.vars.value %}value="{{ form.fullname.vars.value }}"{% endif %}

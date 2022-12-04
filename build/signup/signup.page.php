@@ -23,10 +23,9 @@ class SignupPage extends SignupBasePage
 //            $this->addLateLoadScriptFile('build/signup.js');
         }
         if ($step == 3) {
-            $this->addLateLoadScriptFile('build/jquery_ui.js');
             $this->addLateLoadScriptFile('build/leaflet.js');
-            $this->addLateLoadScriptFile('script/signup/createmap.js');
-            $this->addLateLoadScriptFile('script/search/searchlocation.js');
+//            $this->addLateLoadScriptFile('script/signup/createmap.js');
+            $this->addLateLoadScriptFile('build/profile/setlocation.js');
         }
     }
 
@@ -35,7 +34,8 @@ class SignupPage extends SignupBasePage
         $stylesheets = parent::getStylesheets();
         if ($this->_step == 3) {
             $stylesheets[] = 'build/leaflet.css';
-            $stylesheets[] = 'build/jquery_ui.css';
+//            $stylesheets[] = 'build/tailwind.css';
+            $stylesheets[] = 'build/profile/setlocation.css';
         }
         return $stylesheets;
     }

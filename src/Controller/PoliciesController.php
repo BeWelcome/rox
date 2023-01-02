@@ -34,6 +34,23 @@ class PoliciesController extends AbstractController
     }
 
     /**
+     * @Route("/terms/new/{locale}", name="terms_of_use")
+     */
+    public function showTermsOfUseUpdate(Request $request, string $locale = null): Response
+    {
+        $locale = $this->ensureLocaleAllowed($locale, $request);
+
+        if (null !== $locale && 'en' !== $locale && 'fr' !== $locale) {
+            return $this->render('policies/tou_translated.update.html.twig', [
+                'policy_french' => $this->generateUrl('terms_of_use', ['locale' => 'fr']),
+                'policy_english' => $this->generateUrl('terms_of_use', ['locale' => 'en']),
+            ]);
+        }
+
+        return $this->render('policies/terms.' . $locale . '.update.html.twig');
+    }
+
+    /**
      * @Route("/privacy/{locale}", name="privacy_policy")
      */
     public function showPrivacyPolicy(Request $request, string $locale = null): Response

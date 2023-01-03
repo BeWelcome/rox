@@ -17,7 +17,7 @@ class PoliciesController extends AbstractController
     }
 
     /**
-     * @Route("/terms/{locale}", name="terms_of_use")
+     * @Route("/terms/{locale}", name="terms_of_use", priority=100)
      */
     public function showTermsOfUse(Request $request, string $locale = null): Response
     {
@@ -27,6 +27,7 @@ class PoliciesController extends AbstractController
             return $this->render('policies/tou_translated.html.twig', [
                 'policy_french' => $this->generateUrl('terms_of_use', ['locale' => 'fr']),
                 'policy_english' => $this->generateUrl('terms_of_use', ['locale' => 'en']),
+                'locale' => $locale,
             ]);
         }
 
@@ -34,7 +35,7 @@ class PoliciesController extends AbstractController
     }
 
     /**
-     * @Route("/terms/new/{locale}", name="terms_of_use")
+     * @Route("/terms/new/{locale}", name="terms_of_use_update")
      */
     public function showTermsOfUseUpdate(Request $request, string $locale = null): Response
     {
@@ -44,6 +45,7 @@ class PoliciesController extends AbstractController
             return $this->render('policies/tou_translated.update.html.twig', [
                 'policy_french' => $this->generateUrl('terms_of_use', ['locale' => 'fr']),
                 'policy_english' => $this->generateUrl('terms_of_use', ['locale' => 'en']),
+                'locale' => $locale,
             ]);
         }
 

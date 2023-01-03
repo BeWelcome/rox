@@ -10,9 +10,9 @@ BeWelcome - {{ 'signup' | trans }}
         <div class="col-12 mb-3">
             <h1 class="m-0">{{ 'signup.resent.confirmation.link'|trans }}</h1>
             <p>{{ 'email.greeting'|trans({'username': username, 'gender': gender}) }}<br>
-                {{ 'signup.resent.sorry'|trans }}</p>
-            <p>{{ 'signup.resent.link'|trans }}</p>
-            <p>{{ 'signup.resent.spam'|trans }}</p>
+                {{ 'signup.resent.sorry'|trans|raw }}</p>
+            <p>{{ 'signup.resent.link'|trans|raw }}</p>
+            <p>{{ 'signup.resent.spam'|trans|raw }}</p>
             <p><a href="{{ url('feedback', { 'IdCategory':3}) }}">{{ 'signup.resent.contact.support'|trans }}</a></p>
         </div>
 

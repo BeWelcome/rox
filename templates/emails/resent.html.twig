@@ -4,5 +4,5 @@
     <p>{{ 'signup.resent.sorry'|trans }}<br>
        {{ 'signup.resent.reason'|trans }}</p>
     <p>{{ 'signup.confirm.link'|trans({'email_address': email_address}) }}<p>
-    <p><a href="{{ url('signup_confirm', { username: username, registrationKey: key }) }}"></a>{{ 'signup.confirm.email.address'|trans }}</p>
+    <p><a href="{{ url('signup_confirm', { username: username, registrationKey: key }) }}">{{ 'signup.confirm.email.address'|trans }}</a></p>
 {% endblock content %}

@@ -494,7 +494,7 @@ class CommentController extends AbstractController
         return $subMenu;
     }
 
-    private function handleClickedButton($clickedButton, &$comment)
+    private function handleClickedButton($clickedButton, Comment &$comment)
     {
         switch ($clickedButton) {
             case 'hideComment':
@@ -506,11 +506,11 @@ class CommentController extends AbstractController
                 $this->addTranslatedFlash('notice', 'flash.admin.comment.visible');
                 break;
             case 'allowEditing':
-                $comment->setAllowedit(true);
+                $comment->setEditingAllowed(true);
                 $this->addTranslatedFlash('notice', 'flash.admin.comment.editable');
                 break;
             case 'disableEditing':
-                $comment->setAllowedit(false);
+                $comment->setEditingAllowed(false);
                 $this->addTranslatedFlash('notice', 'flash.admin.comment.locked');
                 break;
         }

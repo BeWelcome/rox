@@ -17,7 +17,8 @@ class PoliciesController extends AbstractController
     }
 
     /**
-     * @Route("/terms/{locale}", name="terms_of_use", priority=100)
+     * @Route("/terms/{locale}", name="terms_of_use", priority=100,
+     *     requirements={"locale"="en|fr|es"})
      */
     public function showTermsOfUse(Request $request, string $locale = null): Response
     {
@@ -35,7 +36,9 @@ class PoliciesController extends AbstractController
     }
 
     /**
-     * @Route("/terms/new/{locale}", name="terms_of_use_update")
+     * @Route("/terms/new/{locale}", name="terms_of_use_update",
+     *     requirements={"locale"="en|fr|es"})
+     * )
      */
     public function showTermsOfUseUpdate(Request $request, string $locale = null): Response
     {

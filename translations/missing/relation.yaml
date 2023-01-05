@@ -1,0 +1,10 @@
+profile.relation.add:
+    - '@addRelation'
+profile.relation.edit:
+    - '@editRelation'
+relation.add:
+    - 'Add'
+    - Button label in the add relation (family and friends) form
+relation.edit:
+    - 'Edit'
+    - Button label in the add relation (family and friends) form

@@ -4,6 +4,7 @@ namespace App\Utilities;
 
 use App\Doctrine\AccommodationType;
 use App\Entity\Comment;
+use App\Entity\Preference;
 use App\Entity\Relation;
 use App\Entity\ForumPost;
 use App\Entity\GalleryImage;
@@ -65,6 +66,21 @@ class ProfileSubmenu
     private function getMemberInfo(Member $member, Member $loggedInMember): array
     {
         $memberInfo = [];
+        $ownProfile = $member === $loggedInMember;
+        $memberInfo['own_profile'] = $ownProfile;
+
+        $preferenceRepository = $this->entityManager->getRepository(Preference::class);
+
+        /** @var Preference $profileVisitorsPreference */
+        $profileVisitorsPreference = $preferenceRepository->findOneBy(['codename' => Preference::SHOW_PROFILE_VISITORS]);
+        $showProfileVisitors = ('Yes' === $member->getMemberPreferenceValue($profileVisitorsPreference));
+        $memberInfo['show_visitors'] = $showProfileVisitors && $ownProfile;
+
+        /** @var Preference $publicForumPostsPreference */
+        $publicForumPostsPreference = $preferenceRepository->findOneBy(['codename' => Preference::SHOW_FORUMS_POSTS]);
+        $showForumPosts = ('Yes' === $member->getMemberPreferenceValue($publicForumPostsPreference));
+        $memberInfo['show_forum_posts'] = $showForumPosts || $ownProfile;
+
         /** @var CommentRepository $commentRepository */
         $commentRepository = $this->entityManager->getRepository(Comment::class);
         $memberInfo['comments_for_count'] = $commentRepository->getVisibleCommentsForMemberCount($member);
@@ -83,21 +99,21 @@ class ProfileSubmenu
         $notesCount = $noteRepository->getProfileNotesCount($loggedInMember);
         $memberInfo['notes_count'] = $notesCount;
 
-        /** @var RelationRepository $relationRepository
+        /** @var RelationRepository $relationRepository */
         $relationRepository = $this->entityManager->getRepository(Relation::class);
-        $memberInfo['relations_count'] = $relationRepository->getRelationsCount($member); */
+        $memberInfo['relations_count'] = $relationRepository->getRelationsCount($member);
 
-        if ($member !== $loggedInMember) {
+        if (!$ownProfile) {
             $comment = $commentRepository->findOneBy(['fromMember' => $loggedInMember, 'toMember' => $member]);
             $memberInfo['comment'] = null !== $comment;
 
             $note = $noteRepository->findOneBy(['owner' => $loggedInMember, 'member' => $member]);
             $memberInfo['note'] = null !== $note;
 
-            /** @var RelationRepository $relationRepository
+            /** @var RelationRepository $relationRepository */
             $relationRepository = $this->entityManager->getRepository(Relation::class);
             $relation = $relationRepository->findRelationBetween($loggedInMember, $member);
-            $memberInfo['family_or_friend'] = null !== $relation; */
+            $memberInfo['family_or_friend'] = null !== $relation;
 
             /** @var MessageRepository $messageRepository */
             $messageRepository = $this->entityManager->getRepository(Message::class);
@@ -133,11 +149,13 @@ class ProfileSubmenu
             'count' => $parameters['notes_count'],
             'url' => $this->routing->generate('notes', ['username' => $username]),
         ]);
-        $this->addSubmenuItem('visitors', [
-            'key' => 'myvisitors',
-            'icon' => 'bed invisible',
-            'url' => $this->routing->generate('profile_visitors', ['username' => $username]),
-        ]);
+        if ($parameters['show_visitors']) {
+            $this->addSubmenuItem('visitors', [
+                'key' => 'myvisitors',
+                'icon' => 'bed invisible',
+                'url' => $this->routing->generate('profile_visitors', ['username' => $username]),
+            ]);
+        }
         $this->addSubmenuItem('separator_two', []);
         $this->addSubmenuItem('profile', [
             'key' => 'profile',
@@ -192,21 +210,21 @@ class ProfileSubmenu
                 'url' => $this->routing->generate('add_comment', ['username' => $username]),
             ]);
         }
-/*
+
         if ($parameters['family_or_friend']) {
             $this->addSubmenuItem('family_or_friend', [
                 'key' => 'profile.relation.remove',
                 'icon' => 'handshake',
-                'url' => $this->routing->generate('remove_relation', ['username' => $username]),
+                'url' => $this->routing->generate('edit_relation', ['username' => $username]),
             ]);
         } else {
             $this->addSubmenuItem('family_or_friend', [
-                'key' => 'addRelation',
+                'key' => 'profile.add.relation',
                 'icon' => 'handshake',
                 'url' => $this->routing->generate('add_relation', ['username' => $username]),
             ]);
         }
-*/
+
         if ($parameters['note']) {
             $this->addSubmenuItem('edit_note', [
                 'key' => 'NoteEditMyNotesOfMember',
@@ -247,14 +265,14 @@ class ProfileSubmenu
             'count' => ($parameters['comments_for_count'] ?? 0) . ' / ' . ($parameters['comments_by_count'] ?? 0),
             'url' => $this->routing->generate('profile_comments', ['username' => $username]),
         ]);
-        /*
+
         $this->addSubmenuItem('relations', [
             'key' => 'relations',
             'icon' => 'users',
-            // 'count' => $parameters['relations_count'],
+            'count' => $parameters['relations_count'],
             'url' => $this->routing->generate('relations', ['username' => $username]),
         ]);
-        */
+
         if ($member === $loggedInMember) {
             $this->addSubmenuItem('gallery', [
                 'key' => 'Gallery',
@@ -272,12 +290,14 @@ class ProfileSubmenu
                 // $this->routing->generate('add_comment', ['username' => $username]),
             ]);
         }
-        $this->addSubmenuItem('forum_posts', [
-            'key' => 'ViewForumPosts',
-            'icon' => 'comment',
-            'count' => $parameters['posts_count'] ?? 0,
-            'url' => $this->routing->generate('profile_forum_posts', ['username' => $username]),
-        ]);
+        if ($parameters['show_forum_posts']) {
+            $this->addSubmenuItem('forum_posts', [
+                'key' => 'ViewForumPosts',
+                'icon' => 'comment',
+                'count' => $parameters['posts_count'] ?? 0,
+                'url' => $this->routing->generate('profile_forum_posts', ['username' => $username]),
+            ]);
+        }
     }
 
     private function addVolunteerEntries(Member $member, Member $loggedInMember)

@@ -1,0 +1,11 @@
+{% import 'macros.twig' as macros %}
+
+<div class="relations-card">
+    <div class="relation-avatar"><div class="o-avatar o-avatar--m">{{ macros.roundedavatarstack(relation.relation.username, 48) }}</div></div>
+    <div class="relation-relation js-read-more u-break-words">{{ (relation.comments|first).Sentence }}</div>
+    <div class="relation-updated"><span class="u-text-12">{{ relation.updated|format_datetime() }}</span></div>
+    <div class="relation-actions">
+        <a href="{{ path('edit_relation', {username: relation.owner.username}) }}" class="o-button"><i class="fa fa-fw fa-edit"></i></a>
+        <button class="o-button" data-micromodal-trigger="relation-delete-{{ relation.id }}"><i class="fa fa-fw fa-trash-alt"></i></button>
+    </div>
+</div>

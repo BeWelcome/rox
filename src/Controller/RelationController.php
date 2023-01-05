@@ -6,8 +6,10 @@ use App\Entity\Member;
 use App\Entity\ProfileNote;
 use App\Entity\Relation;
 use App\Form\ProfileNoteType;
+use App\Form\RelationType;
 use App\Repository\ProfileNoteRepository;
 use App\Repository\RelationRepository;
+use App\Utilities\ItemsPerPageTraits;
 use App\Utilities\ProfileSubmenu;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -18,6 +20,8 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class RelationController extends AbstractController
 {
+    use ItemsPerPageTraits;
+
     private EntityManagerInterface $entityManager;
 
     public function __construct(EntityManagerInterface $entityManager)
@@ -36,35 +40,31 @@ class RelationController extends AbstractController
             return $this->redirectToRoute('members_profile', ['username' => $loggedInMember->getusername()]);
         }
 
-        /** @var ProfileNoteRepository $noteRepository */
-        $noteRepository = $this->entityManager->getRepository(ProfileNote::class);
+        /** @var RelationRepository $noteRepository */
+        $noteRepository = $this->entityManager->getRepository(Relation::class);
 
-        $note = $noteRepository->getNoteForMemberPair($loggedInMember, $member);
-        if (null !== $note) {
-            return $this->redirectToRoute('edit_note', ['username' => $member->getUsername()]);
+        $relation = $noteRepository->findRelationBetween($loggedInMember, $member);
+        if (null !== $relation) {
+            return $this->redirectToRoute('edit_relation', ['username' => $member->getUsername()]);
         }
 
-        $categories = $noteRepository->getCategories($loggedInMember);
-
-        $form = $this->createForm(ProfileNoteType::class, $note, [
-            'categories' => $categories,
-        ]);
+        $form = $this->createForm(RelationType::class, $relation);
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $note = $form->getData();
-            $note->setOwner($loggedInMember);
-            $note->setMember($member);
-            $this->entityManager->persist($note);
+            $relation = $form->getData();
+            $relation->setOwner($loggedInMember);
+            $relation->setMember($member);
+            $this->entityManager->persist($relation);
             $this->entityManager->flush();
 
-            return $this->redirectToRoute('notes', ['username' => $loggedInMember->getUsername()]);
+            return $this->redirectToRoute('relations', ['username' => $loggedInMember->getUsername()]);
         }
 
-        return $this->render('note/add.html.twig', [
+        return $this->render('relation/add.html.twig', [
             'form' => $form->createView(),
             'member' => $member,
-            'submenu' => $profileSubmenu->getSubmenu($member, $loggedInMember, ['active' => 'add_note']),
+            'submenu' => $profileSubmenu->getSubmenu($member, $loggedInMember, ['active' => 'add_relation']),
         ]);
     }
 
@@ -79,33 +79,30 @@ class RelationController extends AbstractController
             return $this->redirectToRoute('members_profile', ['username' => $loggedInMember->getusername()]);
         }
 
-        /** @var ProfileNoteRepository $noteRepository */
-        $noteRepository = $this->entityManager->getRepository(ProfileNote::class);
+        /** @var RelationRepository $relationRepository */
+        $relationRepository = $this->entityManager->getRepository(Relation::class);
 
-        $note = $noteRepository->getNoteForMemberPair($loggedInMember, $member);
-        if (null === $note) {
-            return $this->redirectToRoute('add_note', ['username' => $member->getUsername()]);
+        $relation = $relationRepository->findRelationBetween($loggedInMember, $member);
+        if (null === $relation) {
+            return $this->redirectToRoute('add_relation', ['username' => $member->getUsername()]);
         }
 
-        $categories = $noteRepository->getCategories($loggedInMember);
-
-        $form = $this->createForm(ProfileNoteType::class, $note, [
-            'categories' => $categories,
-        ]);
+        $form = $this->createForm(RelationType::class, $relation);
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $note = $form->getData();
-            $this->entityManager->persist($note);
+            $relation = $form->getData();
+
+            $this->entityManager->persist($relation);
             $this->entityManager->flush();
 
-            return $this->redirectToRoute('notes', ['username' => $loggedInMember->getUsername()]);
+            return $this->redirectToRoute('relations', ['username' => $loggedInMember->getUsername()]);
         }
 
-        return $this->render('note/edit.html.twig', [
+        return $this->render('relation/edit.html.twig', [
             'form' => $form->createView(),
             'member' => $member,
-            'submenu' => $profileSubmenu->getSubmenu($member, $loggedInMember, ['active' => 'edit_note']),
+            'submenu' => $profileSubmenu->getSubmenu($member, $loggedInMember, ['active' => 'edit_relation']),
         ]);
     }
 
@@ -114,29 +111,25 @@ class RelationController extends AbstractController
      */
     public function remove(): Response
     {
-        return $this->render('note/index.html.twig', [
-            'controller_name' => 'NoteController',
+        return $this->render('relation/index.html.twig', [
         ]);
     }
 
     /**
-     * @Route("/members/{username}/relations", name="relations")
+     * @Route("/members/{username}/relations/{page}", name="relations")
      */
-    public function relations(Member $member, ProfileSubmenu $profileSubmenu): Response
+    public function relations(Member $member, ProfileSubmenu $profileSubmenu, int $page = 1): Response
     {
         /** @var Member $loggedInMember */
         $loggedInMember = $this->getuser();
-        if ($member !== $loggedInMember) {
-            throw new AccessDeniedException();
-        }
 
-        /** @var RelationRepository $noteRepository */
-        $noteRepository = $this->entityManager->getRepository(Relation::class);
-        $notes = $noteRepository->getRelations($member);
+        /** @var RelationRepository $relationRepository */
+        $relationRepository = $this->entityManager->getRepository(Relation::class);
+        $relations = $relationRepository->getRelations($member, $page, $this->getItemsPerPage($member));
 
         return $this->render('relation/relations.html.twig', [
             'member' => $member,
-            'notes' => $notes,
+            'relations' => $relations,
             'submenu' => $profileSubmenu->getSubmenu($member, $loggedInMember, ['active' => 'relations']),
         ]);
     }

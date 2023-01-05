@@ -2,9 +2,9 @@
 
 namespace App\Model\MemberDataExtractor;
 
-use App\Entity\FamilyAndFriend;
+use App\Entity\Relation;
 use App\Entity\Member;
-use App\Repository\FamilyAndFriendRepository;
+use App\Repository\RelationRepository;
 
 final class SpecialRelationsExtractor extends AbstractExtractor implements ExtractorInterface
 {
@@ -14,12 +14,12 @@ final class SpecialRelationsExtractor extends AbstractExtractor implements Extra
     public function extract(Member $member, string $tempDir): string
     {
         $relations = [];
-        /** @var FamilyAndFriendRepository $relationsRepository */
-        $relationsRepository = $this->getRepository(FamilyAndFriend::class);
+        /** @var RelationRepository $relationsRepository */
+        $relationsRepository = $this->getRepository(Relation::class);
         $rawRelations = $relationsRepository->findRelationsFor($member);
         if (!empty($rawRelations)) {
             // build list of relations from raw data (list contains relations from both sides)
-            /** @var FamilyAndFriend $relation */
+            /** @var Relation $relation */
             foreach ($rawRelations as $relation) {
                 $author = $relation->getOwner();
                 $authorId = $author->getId();

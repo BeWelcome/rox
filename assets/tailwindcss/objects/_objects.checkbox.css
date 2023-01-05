@@ -1,79 +1,53 @@
 /* ==========================================================================
    #CHECKBOX
    ========================================================================== */
+@layer components {
 
-/**
- * Checkbox wrapper and styles
- */
+  /**
+   * Checkbox wrapper and styles
+   */
+  .o-checkbox {
+    display: flex;
+    align-items: center;
+  }
 
-.o-checkbox {
-  display: flex;
-  align-items: center;
+
+  .o-checkbox__input {
+    margin-right: 8px;
+    cursor: pointer;
+  }
+
+
+  .o-checkbox__label {
+    line-height: 24px;
+    margin: initial;
+    cursor: pointer;
+  }
+
+
+  /* Hovers
+     ========================================================================== */
+  .o-checkbox:hover .o-checkbox__label {
+    opacity: 0.7;
+  }
+
+
+  /* Color variation
+     ========================================================================== */
+  /**
+   * White. Set as sibling due to Simfony restriction passing classes
+   */
+  .o-checkbox--white ~ .o-checkbox__label {
+    color: theme('colors.white');
+  }
+
+
+  /* Font variation
+     ========================================================================== */
+  /**
+   * Display. Set as sibling due to Simfony restriction passing classes
+   */
+  .o-checkbox--display ~ .o-checkbox__label {
+    font-family: Signika;
+  }
 }
-
-
-
-
-.o-checkbox__input {
-  margin-right: 8px;
-  cursor: pointer;
-}
-
-
-
-
-.o-checkbox__label {
-  line-height: 24px;
-  margin: initial;
-  cursor: pointer;
-}
-
-
-
-
-
-
-
-
-
-/* Hovers
-   ========================================================================== */
-
-.o-checkbox:hover .o-checkbox__label {
-  opacity: 0.7;
-}
-
-
-
-
-
-/* Color variation
-   ========================================================================== */
-
-/**
- * White. Set as sibling due to Simfony restriction passing classes
- */
-
-   .o-checkbox--white ~ .o-checkbox__label {
-   	color: theme('colors.white');
-   }
-
-
-
-
-
-
-
-
-
-
-/* Font variation
-   ========================================================================== */
-
-/**
- * Display. Set as sibling due to Simfony restriction passing classes
- */
-
-   .o-checkbox--display ~ .o-checkbox__label {
-   	font-family: Signika;
-   }

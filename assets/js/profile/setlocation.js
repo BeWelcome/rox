@@ -52,7 +52,7 @@ function dragend(e) {
     locationLongitude.value = e.target._latlng.lng;
 }
 
-initializeSingleAutoComplete("/suggest/locations/places", 'js-location-picker', '_autocomplete', addMarkerAndMoveToNewLocation);
+initializeSingleAutoComplete("/suggest/locations/places/exact", 'js-location-picker', '_autocomplete', addMarkerAndMoveToNewLocation);
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap contributors</a>',

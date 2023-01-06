@@ -27,6 +27,16 @@ class SuggestLocationModel
         $this->sphinxQL = new SphinxQL($this->connection);
     }
 
+    public function getSuggestionsForPlaces(string $term): array
+    {
+        return $this->getPlaces($term, false);
+    }
+
+    public function getSuggestionsForExactPlaces(string $term): array
+    {
+        return $this->getPlaces($term, true);
+    }
+
     /**
      * Search term looks like this:.
      *
@@ -34,7 +44,7 @@ class SuggestLocationModel
      *
      * @SuppressWarnings(PHPMD.StaticAccess)
      */
-    public function getSuggestionsForPlaces(string $term): array
+    private function getPlaces(string $term, bool $preferExact): array
     {
         $term = trim($term, ' ,');
         list($place, $countryId, $adminId) = $this->getPlaceInformation($term);
@@ -43,7 +53,7 @@ class SuggestLocationModel
             return ['locations' => []];
         }
 
-        list($totalFound, $sphinxResult) = $this->searchForPlace($place, $countryId, $adminId);
+        list($totalFound, $sphinxResult) = $this->searchForPlace($place, $countryId, $adminId, $preferExact);
 
         if (0 === $totalFound) {
             return ['locations' => []];
@@ -192,16 +202,17 @@ class SuggestLocationModel
         return $totalFound;
     }
 
-    private function searchForPlace(string $place, ?string $countryId, ?string $adminId): array
+    private function searchForPlace(string $place, ?string $countryId, ?string $adminId, bool $preferExact): array
     {
         list(, $resultsForLocale) = $this->executeSphinxQLQuery(
             $place,
             $countryId,
             $adminId,
-            $this->translator->getLocale()
+            $this->translator->getLocale(),
+            $preferExact
         );
 
-        list($found, $results) = $this->executeSphinxQLQuery($place, $countryId, $adminId);
+        list($found, $results) = $this->executeSphinxQLQuery($place, $countryId, $adminId,  null, $preferExact);
 
         // remove duplicates and set $totalFound to the remaining hits.
         $geonameIds = [];
@@ -239,7 +250,8 @@ class SuggestLocationModel
         string $place,
         ?string $countryId,
         ?string $adminId,
-        ?string $locale = null
+        ?string $locale,
+        bool $preferExact
     ): array {
         $match = (new MatchBuilder($this->sphinxQL))
             ->exact(SphinxQL::expr($place))
@@ -251,12 +263,15 @@ class SuggestLocationModel
             ->from('geonames_sphinx')
             ->match($match)
             ->where('isPlace', '=', 1)
-            ->option(
-                'ranker',
-                SphinxQL::expr('expr(\'sum((min_hit_pos==1)*50+exact_hit*100)+membercount\')')
-            )
             ->limit(0, 20)
         ;
+
+        if ($preferExact) {
+            $ranker = 'expr(\'sum((min_hit_pos==1)*50+exact_hit*10000)\')';
+        } else {
+            $ranker =  'expr(\'sum((min_hit_pos==1)*50+exact_hit*100)+membercount\')';
+        }
+        $query->option('ranker', SphinxQL::expr($ranker));
 
         if (null !== $locale) {
             $query->where('language', '=', $locale);

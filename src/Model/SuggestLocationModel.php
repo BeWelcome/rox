@@ -212,7 +212,7 @@ class SuggestLocationModel
             $preferExact
         );
 
-        list($found, $results) = $this->executeSphinxQLQuery($place, $countryId, $adminId,  null, $preferExact);
+        list($found, $results) = $this->executeSphinxQLQuery($place, $countryId, $adminId, null, $preferExact);
 
         // remove duplicates and set $totalFound to the remaining hits.
         $geonameIds = [];
@@ -255,19 +255,25 @@ class SuggestLocationModel
     ): array {
         $match = (new MatchBuilder($this->sphinxQL))
             ->exact(SphinxQL::expr($place))
-            ->orMatch(SphinxQL::expr($place))
-            ->orMatch(SphinxQL::expr($place . '*'))
         ;
+        if (!$preferExact) {
+            $match
+                ->orMatch(SphinxQL::expr($place))
+                ->orMatch(SphinxQL::expr($place . '*'))
+            ;
+        }
 
-        $query = $this->sphinxQL->select('geonameid', 'admin1', 'country')
+        $query = $this->sphinxQL->select('geonameid', 'admin1', 'country', SphinxQL::expr('WEIGHT() As w'))
             ->from('geonames_sphinx')
             ->match($match)
             ->where('isPlace', '=', 1)
+            ->where('w', '>', 0)
+            ->orderBy('w', 'DESC')
             ->limit(0, 20)
         ;
 
         if ($preferExact) {
-            $ranker = 'expr(\'sum((min_hit_pos==1)*50+exact_hit*10000)\')';
+            $ranker = 'expr(\'sum(((min_hit_pos==1)+exact_hit)*100000+population)\')';
         } else {
             $ranker =  'expr(\'sum((min_hit_pos==1)*50+exact_hit*100)+membercount\')';
         }

@@ -17,8 +17,7 @@ class PoliciesController extends AbstractController
     }
 
     /**
-     * @Route("/terms/{locale}", name="terms_of_use", priority=100,
-     *     requirements={"locale"="en|fr|es"})
+     * @Route("/terms/{locale}", name="terms_of_use")
      */
     public function showTermsOfUse(Request $request, string $locale = null): Response
     {
@@ -33,26 +32,6 @@ class PoliciesController extends AbstractController
         }
 
         return $this->render('policies/terms.' . $locale . '.html.twig');
-    }
-
-    /**
-     * @Route("/terms/new/{locale}", name="terms_of_use_update",
-     *     requirements={"locale"="en|fr|es"})
-     * )
-     */
-    public function showTermsOfUseUpdate(Request $request, string $locale = null): Response
-    {
-        $locale = $this->ensureLocaleAllowed($locale, $request);
-
-        if (null !== $locale && 'en' !== $locale && 'fr' !== $locale) {
-            return $this->render('policies/tou_translated.update.html.twig', [
-                'policy_french' => $this->generateUrl('terms_of_use', ['locale' => 'fr']),
-                'policy_english' => $this->generateUrl('terms_of_use', ['locale' => 'en']),
-                'locale' => $locale,
-            ]);
-        }
-
-        return $this->render('policies/terms.' . $locale . '.update.html.twig');
     }
 
     /**

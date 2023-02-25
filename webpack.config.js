@@ -1,7 +1,7 @@
 let Encore = require('@symfony/webpack-encore');
 
-const CKEditorWebpackPlugin = require('@ckeditor/ckeditor5-dev-webpack-plugin');
-const {styles} = require('@ckeditor/ckeditor5-dev-utils');
+const { CKEditorTranslationsPlugin } = require( '@ckeditor/ckeditor5-dev-translations' );
+const { styles} = require('@ckeditor/ckeditor5-dev-utils');
 const path = require('path');
 
 // Manually configure the runtime environment if not already configured yet by the "encore" command.
@@ -55,7 +55,7 @@ Encore
     .addEntry('bsfileselect', './assets/js/bsfileselect.js')
     .addEntry('email', './assets/scss/email.scss')
     // CKEditor
-    .addPlugin(new CKEditorWebpackPlugin({
+    .addPlugin(new CKEditorTranslationsPlugin({
         language: 'en',
         additionalLanguages: 'all',
         outputDirectory: 'cktranslations',

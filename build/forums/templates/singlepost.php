@@ -26,6 +26,9 @@ JeanYves notes : every display of a forum post content  goes trhu this template
 
 */
 
+
+use App\Utilities\ForumUtilities;
+
 $words = new MOD_words();
 $styles = array('l-forum-single-post--dark', '');
 
@@ -134,19 +137,12 @@ if (($post->IdGroup > 0) && ($post->PostVisibility == "GroupOnly")) {
         <div id="d<?= $post->IdContent ?>">
 
             <?php
-            $Sentence = preg_replace(
-                '/href="http[s]?:\/\/[^\/]*?bewelcome\.org\//i',
-                'href="/',
-                $words->fTrad($post->IdContent)
-            );
-            $Sentence = preg_replace(
-                '/src="http[s]?:\/\/[^\/]*?bewelcome\.org\//i',
-                'src="/',
-                $words->fTrad($post->IdContent)
-            );
+            $forumUtilities = new ForumUtilities();
+            $postContent = $forumUtilities->RemoveFQDN($words->fTrad($post->IdContent));
+
 
             if (($post->PostDeleted == "Deleted")&&($this->BW_Right->HasRight("ForumModerator"))) {
-                echo "<s>", $Sentence, "</s>";
+                echo "<s>", $postContent, "</s>";
             }
 
             if ($post->PostDeleted != "Deleted") {
@@ -156,7 +152,7 @@ if (($post->IdGroup > 0) && ($post->PostVisibility == "GroupOnly")) {
                 if ($hideGroupOnlyPost && !($this->BW_Right->HasRight("ForumModerator"))) {
                     echo $this->words->get('GroupOnlyPostHidden');
                 } else {
-                    echo $Sentence;
+                    echo $postContent;
                 }
             }
             ?>

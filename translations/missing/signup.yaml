@@ -1,0 +1,3 @@
+signup.no.link:
+    - "No link shown or you can't click it? Copy the link below into your browser"
+    - Text shown in the signup confirmation email for mail programs that do not support clickable links.

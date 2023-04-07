@@ -5,12 +5,6 @@ import { registerRoute } from 'workbox-routing';
 import { ExpirationPlugin } from 'workbox-expiration';
 import { Workbox } from 'workbox-window';
 
-if ('serviceWorker' in navigator) {
-    const wb = new Workbox('/sw.js');
-
-    wb.register();
-}
-
 precacheAndRoute(self.__WB_MANIFEST);
 
 addEventListener('install', event => {

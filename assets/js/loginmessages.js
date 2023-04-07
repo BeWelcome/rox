@@ -3,7 +3,7 @@ import 'jquery';
 $('.close').on('click', function() {
     const id = $(this).data('alert');
     $.ajax({
-        url: '/close/' + id,
+        url: '/loginmessage/acknowledge/' + id,
         type: 'POST'
     });
 });

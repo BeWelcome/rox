@@ -31,4 +31,7 @@ flash.marked.purged:
 flash.recovered:
     - 'The conversations have been recovered and moved back in the regular folders.'
     - Flash message shown when the user decided to move deleted conversations back.
+conversation.with:
+    - 'Conversation with {username}'
+    - Subject used when the message is older than the introduction of subjects
 

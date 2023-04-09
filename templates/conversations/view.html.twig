@@ -22,5 +22,5 @@
 
     {% include 'message/thread.html.twig' %}
 
-    {% include 'conversations/report.html.twig' with {'message': thread|first} %}
+    {% include 'conversations/report.html.twig' with {'message': thread|first, 'myself': app.user} %}
 {% endblock content %}

@@ -200,7 +200,7 @@ class TripController extends AbstractController
      *     requirements={"id": "\d+"}
      * )
      *
-     * @IsGranted("TRIP_EDIT", subject="trip")
+     * @IsGranted("TRIP_COPY", subject="trip")
      */
     public function copy(Trip $trip): Response
     {

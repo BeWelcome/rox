@@ -13,6 +13,7 @@ class TripVoter extends Voter
 {
     public const TRIP_VIEW = 'TRIP_VIEW';
     public const TRIP_EDIT = 'TRIP_EDIT';
+    public const TRIP_COPY = 'TRIP_COPY';
     public const TRIP_REMOVE = 'TRIP_REMOVE';
 
     protected function supports(string $attribute, $subject): bool
@@ -62,7 +63,7 @@ class TripVoter extends Voter
             return $view;
         }
 
-        if (self::TRIP_REMOVE === $attribute) {
+        if (self::TRIP_REMOVE === $attribute || self::TRIP_COPY === $attribute) {
             return ($member === $trip->getCreator());
         }
 

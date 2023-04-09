@@ -13,10 +13,11 @@ class TripVoter extends Voter
 {
     public const TRIP_VIEW = 'TRIP_VIEW';
     public const TRIP_EDIT = 'TRIP_EDIT';
+    public const TRIP_REMOVE = 'TRIP_REMOVE';
 
     protected function supports(string $attribute, $subject): bool
     {
-        if (!\in_array($attribute, [self::TRIP_VIEW, self::TRIP_EDIT], true)) {
+        if (!\in_array($attribute, [self::TRIP_VIEW, self::TRIP_EDIT, self::TRIP_REMOVE], true)) {
             return false;
         }
 
@@ -37,7 +38,7 @@ class TripVoter extends Voter
             return false;
         }
 
-        /** @var Trip */
+        /** @var Trip $trip */
         $trip = $subject;
         if (null !== $trip->getDeleted()) {
             // A deleted trip can't be viewed or edited.
@@ -59,6 +60,10 @@ class TripVoter extends Voter
             $view = $view && !$trip->isExpired();
 
             return $view;
+        }
+
+        if (self::TRIP_REMOVE === $attribute) {
+            return ($member === $trip->getCreator());
         }
 
         return $this->canEdit($trip, $member);

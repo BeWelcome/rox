@@ -184,7 +184,7 @@ class TripController extends AbstractController
      *     requirements={"id": "\d+"}
      * )
      *
-     * @IsGranted("TRIP_EDIT", subject="trip")
+     * @IsGranted("TRIP_REMOVE", subject="trip")
      */
     public function remove(Trip $trip): RedirectResponse
     {

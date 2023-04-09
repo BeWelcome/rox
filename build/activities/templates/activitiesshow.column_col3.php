@@ -308,7 +308,6 @@ if (empty($vars)) {
             let zoom = $('#zoom').val();
             var map = L.map('map', {
                 center: [latitude, longitude],
-                minZoom: zoom,
                 zoom: zoom
             });
 

@@ -54,6 +54,13 @@ class MessageController extends AbstractController
     {
         /** @var Member $sender */
         $sender = $this->getUser();
+
+        if ($sender === $receiver) {
+            $this->addTranslatedFlash('notice', 'flash.message.self');
+
+            return $this->redirectToRoute('members_profile', ['username' => $sender->getUsername()]);
+        }
+
         if (!$receiver->isBrowseable()) {
             $this->addTranslatedFlash('error', 'flash.member.invalid');
             $referrer = $request->headers->get('referer');

@@ -2,11 +2,6 @@
 
 {# Widgets #}
 
-{% block choice_widget_collapsed -%}
-    {%- set attr = attr|merge({class: (attr.class|default('') ~ ' o-input')|trim}) -%}
-    {{- parent() -}}
-{%- endblock choice_widget_collapsed %}
-
 {% block money_widget -%}
     {%- set prepend = not (money_pattern starts with '{{') -%}
     {%- set append = not (money_pattern ends with '}}') -%}

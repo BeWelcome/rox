@@ -38,6 +38,7 @@ class VolunteerToolController extends AbstractController
     private const CHANGE_USERNAME = 'admin.tools.change_username';
     private const FIND_USER = 'admin.tools.find_user';
     private const MESSAGES_SENT = 'admin.tools.messages_sent';
+    private const REQUESTS_SENT = 'admin.tools.requests_sent';
     private const MESSAGES_BY_MEMBER = 'admin.tools.messages_by_member';
     private const CHECK_FEEDBACK = 'admin.tools.check_feedback';
     private const CHECK_TOP_SPAMMER = 'admin.tools.check_spam_messages';
@@ -347,6 +348,51 @@ ORDER BY count(msg.id) DESC')->fetchAll();
         );
     }
 
+
+    /**
+     * @Route("/admin/tools/requests/sent", name="admin_tools_requests_sent")
+     *
+     * @throws Exception
+     *
+     * @return Response
+     */
+    public function showRequestsLastTwoWeeks(Request $request)
+    {
+        // check permissions
+        $subMenuItems = $this->checkPermissions($request, self::REQUESTS_SENT);
+
+        $connection = $this->getDoctrine()->getConnection();
+        $results = $connection->executeQuery('
+        SELECT
+m.username AS Username,
+g.name AS City,
+g.country AS Country,
+count(msg.id) AS Count
+FROM
+messages msg,
+members m
+LEFT JOIN geonames g ON m.IdCity = g.geonameID
+WHERE
+m.id = msg.IdSender
+AND msg.request_id <> NULL
+AND (DATE_ADD(msg.created,
+    INTERVAL 14 DAY) > NOW())
+GROUP BY m.Username
+HAVING COUNT(msg.id) > 9
+ORDER BY count(msg.id) DESC')->fetchAll();
+
+        return $this->render(
+            'admin/tools/requests.sent.html.twig',
+            [
+                'results' => $results,
+                'submenu' => [
+                    'items' => $subMenuItems,
+                    'active' => self::REQUESTS_SENT,
+                ],
+            ]
+        );
+    }
+
     /**
      * @Route("/admin/tools/messages/member", name="admin_tools_messages_by_member")
      *
@@ -525,6 +571,10 @@ ORDER BY count(msg.id) DESC')->fetchAll();
                 'key' => self::MESSAGES_SENT,
                 'url' => $this->generateUrl('admin_tools_messages_sent'),
             ];
+            $subMenu[self::REQUESTS_SENT] = [
+                'key' => self::REQUESTS_SENT,
+                'url' => $this->generateUrl('admin_tools_requests_sent'),
+            ];
             $subMenu[self::MESSAGES_BY_MEMBER] = [
                 'key' => self::MESSAGES_BY_MEMBER,
                 'url' => $this->generateUrl('admin_tools_messages_by_member'),
@@ -543,6 +593,10 @@ ORDER BY count(msg.id) DESC')->fetchAll();
             $subMenu[self::MESSAGES_SENT] = [
                 'key' => self::MESSAGES_SENT,
                 'url' => $this->generateUrl('admin_tools_messages_sent'),
+            ];
+            $subMenu[self::REQUESTS_SENT] = [
+                'key' => self::REQUESTS_SENT,
+                'url' => $this->generateUrl('admin_tools_requests_sent'),
             ];
         }
 

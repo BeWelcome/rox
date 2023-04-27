@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+{% import 'macros.twig' as macros %}
+
+{% block title %}
+    {{ 'admin.tools.title' | trans }}
+{% endblock %}
+
+{% block content %}
+    <h1>{{ 'admin.tools.headline' | trans }}</h1>
+    <h2>{{ 'admin.tools.requests_last_week' | trans }}</h2>
+
+    {% if results|length %}
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <tr>
+                    <th colspan="2">Member</th>
+                    <th colspan="2">Location</th>
+                    <th># messages</th>
+                </tr>
+                {% for result in results %}
+                    <tr>
+                        <td>{{ macros.avatar(result.Username, 48) }}</td>
+                        <td>{{ macros.profilelink(result.Username) }}</td>
+                        <td>{{ result.City }}</td>
+                        <td>{{ result.Country }}</td>
+                        <td>{{ result.Count }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    {% else %}
+        {{ 'admin.tools.nothing' | trans }}
+    {% endif %}
+{% endblock content %}

@@ -35,7 +35,7 @@
     </select>
 {% endmacro %}
 
-{% macro avatar(username, size, linked = false, addimage = false, addlink = false, newpage = false) %}
+{% macro avatar(username, size = 48, linked = false, addimage = false, addlink = false, newpage = false) %}
     {% import _self as macros %}
     {% set imgclasses %}profileimg
     {% if addimage %}

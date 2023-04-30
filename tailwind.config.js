@@ -5,6 +5,7 @@ module.exports = {
   ],
   safelist: [
     'suggest-map',
+      'o-radio-button', 'o-radio-button__input', 'o-radio-button__label'
   ],
   prefix: 'u-',
   important: false,

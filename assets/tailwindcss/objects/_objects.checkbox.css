@@ -6,17 +6,25 @@
   /**
    * Checkbox wrapper and styles
    */
-  .o-checkbox {
+  .o-checkbox, .o-radio-button {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
+    justify-content: flex-start;
   }
-
 
   .o-checkbox__input {
     margin-right: 8px;
     cursor: pointer;
+    border: 1px solid black;
+    border-radius: 2px;
   }
 
+  .o-radio-button__input {
+    margin-right: 8px;
+    cursor: pointer;
+    border: 1px solid black;
+    border-radius: 100%;
+  }
 
   .o-checkbox__label {
     line-height: 24px;

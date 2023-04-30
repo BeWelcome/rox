@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Address;
 use App\Entity\Member;
 use App\Entity\NewLocation;
+use App\Entity\Preference;
 use App\Entity\ProfileVisit;
 use App\Form\ProfileStatusFormType;
 use App\Form\SearchLocationType;
@@ -95,6 +96,16 @@ class ProfileController extends AbstractController
 
         if ($loggedInMember !== $member) {
             return $this->redirectToRoute('members_profile', ['username' => $member->getusername()]);
+        }
+
+        $preferenceRepository = $entityManager->getRepository(Preference::class);
+
+        /** @var Preference $preference */
+        $preference = $preferenceRepository->findOneBy(['codename' => Preference::SHOW_PROFILE_VISITORS]);
+        $memberPreference = $loggedInMember->getMemberPreference($preference);
+
+        if ('No' === $memberPreference->getValue()) {
+            return $this->redirectToRoute('members_profile', ['username' => $member->getUsername()]);
         }
 
         /** @var ProfileVisitRepository $visitorRepository */

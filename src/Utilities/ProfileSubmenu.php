@@ -213,13 +213,13 @@ class ProfileSubmenu
 
         if ($parameters['family_or_friend']) {
             $this->addSubmenuItem('family_or_friend', [
-                'key' => 'profile.relation.remove',
+                'key' => 'profile.relation.edit',
                 'icon' => 'handshake',
                 'url' => $this->routing->generate('edit_relation', ['username' => $username]),
             ]);
         } else {
             $this->addSubmenuItem('family_or_friend', [
-                'key' => 'profile.add.relation',
+                'key' => 'profile.relation.add',
                 'icon' => 'handshake',
                 'url' => $this->routing->generate('add_relation', ['username' => $username]),
             ]);

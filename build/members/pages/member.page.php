@@ -24,16 +24,16 @@ use App\Doctrine\AccommodationType;
 use App\Doctrine\MemberStatusType;
 
 /**
-     * members base page
-     *
-     * @author Micha
-     * @author Globetrotter_tt
-     *
-     * @package    Apps
-     * @subpackage Members
-     * @author     Micha
-     * @author     Globetrotter_tt
-     */
+ * members base page
+ *
+ * @author Micha
+ * @author Globetrotter_tt
+ *
+ * @package    Apps
+ * @subpackage Members
+ * @author     Micha
+ * @author     Globetrotter_tt
+ */
 class MemberPage extends PageWithActiveSkin
 {
     protected $message = 0;
@@ -49,7 +49,6 @@ class MemberPage extends PageWithActiveSkin
         return 'profile';
     }
 
-
     protected function getSubmenuItems()
     {
         $member = $this->member;
@@ -61,21 +60,20 @@ class MemberPage extends PageWithActiveSkin
         $rights = MOD_Right::get();
 
         $ww = $this->ww;
-        $wwsilent = $this->wwsilent;
-        $comments_count = $member->count_comments();
         $conversations_with_count = 0;
         $comments_count = $member->count_comments();
+        $relations_count = $member->count_relations();
         $logged_user = $this->model->getLoggedInMember();
         if ($logged_user)
         {
             $TCom = $member->get_comments_commenter($logged_user->id);
             $note = $logged_user->getNote($member);
+            $relation = $logged_user->getRelation($member);
             $conversations_with_count = $member->count_conversations_with($logged_user);
         }
 
         $galleryItemsCount = $member->getGalleryItemsCount();
-
-        $viewForumPosts = $words->get("ViewForumPosts",'<span class="badge badge-primary u-rounded-full u-w-20 u-h-20 u-inline-flex u-items-center u-justify-center pull-right">' . $member->forums_posts_count() . '</span>');
+        $viewForumPosts = $words->get("ViewForumPosts", $this->getBadge($member->forums_posts_count()));
         $membersForumPostsPagePublic = $member->getPreference("MyForumPostsPagePublic", $default = "No");
         $linkMembersForumPosts = false;
         if ($membersForumPostsPagePublic == "Yes") {
@@ -94,7 +92,7 @@ class MemberPage extends PageWithActiveSkin
                 array('editmyprofile', 'editmyprofile/' . $profile_language_code, '<i class="fa fa-fw fa-edit"></i> ' . $ww->EditMyProfile, 'editmyprofile'),
                 array('profile.preferences.menu', "/members/$username/preferences", '<i class="fa fa-fw fa-cogs"></i> ' . $ww->MyPreferences, 'mypreferences'),
                 array('mydata', 'mydata', '<i class="fa fa-fw fa-database"></i> ' . $ww->MyData, 'mydata'),
-                array('mynotes', "/members/$username/notes", '<i class="fa fa-fw fa-sticky-note"></i> ' . $words->get('MyNotes', '<span class="badge badge-primary u-rounded-full u-w-20 u-h-20 u-inline-flex u-items-center u-justify-center pull-right">' . $mynotes_count . '</span>'), 'mynotes')
+                array('mynotes', "/members/$username/notes", '<i class="fa fa-fw fa-sticky-note"></i> ' . $words->get('MyNotes', $this->getBadge($mynotes_count), 'mynotes'))
                 );
 
             if ($this instanceof EditMyProfilePage)
@@ -112,14 +110,15 @@ class MemberPage extends PageWithActiveSkin
             if ($showVisitors == 'Yes') {
                 $tt[] = array('myvisitors', "members/" . $username . "/visitors", '<i class="fa fa-fw fa-comments invisible"></i> ' . $ww->MyVisitors, 'myvisitors');
             }
-            $tt[] = array('space', '', '', 'space');
+            $tt[] = array('separator-1', '', '', 'space');
 
             $tt[] = array('profile', "members/$username", '<i class="fa fa-fw fa-user"></i> ' . $ww->MemberPage);
-            $tt[] = array('comments', "members/$username/comments", '<i class="fa fa-fw fa-comments"></i> ' . $ww->ViewComments.' <span class="badge badge-primary u-rounded-full u-w-20 u-h-20 u-inline-flex u-items-center u-justify-center pull-right">'.$comments_count['all'].'</span>');
+            $tt[] = array('comments', "members/$username/comments", '<i class="fa fa-fw fa-comments"></i> ' . $ww->ViewComments.' '. $this->getBadge($comments_count['all']));
+            $tt[] = array('relations', "members/$username/relations", '<i class="fa fa-fw fa-users"></i> ' . $ww->relations.' ' . $this->getBadge($relations_count));
             if ($this->myself) {
-                $tt[] = array('gallery', "gallery/manage", '<i class="fa fa-fw fa-image"></i> ' . $ww->Gallery . ' <span class="badge badge-primary u-rounded-full u-w-20 u-h-20 u-inline-flex u-items-center u-justify-center pull-right">' . $galleryItemsCount . '</span>');
+                $tt[] = array('gallery', "gallery/manage", '<i class="fa fa-fw fa-image"></i> ' . $ww->Gallery . ' ' . $this->getBadge($galleryItemsCount));
             } else {
-                $tt[] = array('gallery', "gallery/show/user/$username/pictures", '<i class="fa fa-fw fa-image"></i> ' . $ww->Gallery . ' <span class="badge badge-primary u-rounded-full u-w-20 u-h-20 u-inline-flex u-items-center u-justify-center pull-right">' . $galleryItemsCount . '</span>');
+                $tt[] = array('gallery', "gallery/show/user/$username/pictures", '<i class="fa fa-fw fa-image"></i> ' . $ww->Gallery . ' ' . $this->getBadge($galleryItemsCount));
             }
             $tt[] = array('forum', "members/$username/posts", '<i class="far fa-fw fa-comment"></i> ' . $viewForumPosts);
         } else {
@@ -138,21 +137,25 @@ class MemberPage extends PageWithActiveSkin
             }
             if (0 < $conversations_with_count) {
                 $tt = array_merge($tt, [['allmessages', "conversations/with/$username", '<i class="fas fa-fw fa-mail-bulk"></i> ' . $words->getSilent('profile.all.messages.with') .
-                    '<span class="badge badge-primary u-rounded-full u-w-20 u-h-20 u-inline-flex u-items-center u-justify-center pull-right">'.$conversations_with_count.'</span>', 'allmessages']]);
+                    $this->getBadge($conversations_with_count), 'allmessages']]);
             }
             $feedbackUrl = "/feedback?IdCategory=2&username=" . $username;
             if ($this->message !== 0) {
                 $feedbackUrl .= "&messageId=" . $this->message;
             }
             $tt = array_merge($tt, [
-                (isset($TCom[0])) ? array('commmentsadd', "members/$username/comment/edit", '<i class="fa fa-fw fa-comment"></i> ' . $ww->EditComments, 'commentsadd') : array('commmentsadd', "members/$username/comment/add", '<i class="fa fa-fw fa-comment"></i> ' . $ww->AddComments, 'commentsadd'),
-                // array('relationsadd', "members/$username/relation/add", '<i class="fa fa-fw fa-handshake"></i> ' . $ww->addRelation, 'relationsadd'),
+                (isset($TCom[0]))
+                    ? array('commmentsadd', "members/$username/comment/edit", '<i class="fa fa-fw fa-comment"></i> ' . $ww->EditComments, 'commentsadd')
+                    : array('commmentsadd', "members/$username/comment/add", '<i class="fa fa-fw fa-comment"></i> ' . $ww->AddComments, 'commentsadd'),
+                (null === $relation)
+                    ? array('relationsadd', "members/$username/relation/add", '<i class="fa fa-fw fa-handshake"></i> ' . $words->get('profile.relation.add'), 'relationsadd')
+                    : array('relationsadd', "members/$username/relation/edit", '<i class="fa fa-fw fa-handshake"></i> ' . $words->get('profile.relation.edit'), 'relationsadd'),
                 array('notes', $mynotelinkname, '<i class="fa fa-fw fa-pencil-alt"></i> ' . $mynotewordsname, 'mynotes'),
                 array('report', $feedbackUrl, '<i class="fas fa-fw fa-flag"></i> ' . $words->getSilent('profile.report')),
-                array('space', '', '', 'space'),
+                array('separator-1', '', '', 'space'),
                 array('profile', "members/$username", '<i class="fa fa-fw fa-user"></i> '  . $ww->MemberPage),
-                array('comments', "members/$username/comments", '<i class="fa fa-fw fa-comments"></i> ' . $ww->ViewComments.' <span class="badge badge-primary u-rounded-full u-w-20 u-h-20 u-inline-flex u-items-center u-justify-center pull-right">'.$comments_count['all'].'</span>'),
-                array('gallery', "gallery/show/user/$username/pictures", '<i class="fa fa-fw fa-image"></i> ' . $ww->Gallery . ' <span class="badge badge-primary u-rounded-full u-w-20 u-h-20 u-inline-flex u-items-center u-justify-center pull-right">' . $galleryItemsCount . '</span>'),
+                array('comments', "members/$username/comments", '<i class="fa fa-fw fa-comments"></i> ' . $ww->ViewComments.' ' . $this->getBadge($comments_count['all'])),
+                array('gallery', "gallery/show/user/$username/pictures", '<i class="fa fa-fw fa-image"></i> ' . $ww->Gallery . ' ' . $this->getBadge($galleryItemsCount)),
             ]);
             if (MemberStatusType::PASSED_AWAY !== $member->Status) {
                 if ($this->leg) {
@@ -166,6 +169,7 @@ class MemberPage extends PageWithActiveSkin
                 $tt[] = array('forum', "members/$username/posts", '<i class="far fa-fw fa-comment"></i> ' . $viewForumPosts);
             }
         }
+        $tt[] = array('separator-2', '', '', 'space');
         if ($rights->HasRight('SafetyTeam') || $rights->HasRight('Admin'))
         {
             $tt[] = array('adminedit',"members/{$username}/adminedit", '<i class="fa fa-fw fa-bed invisible"></i> Admin: Edit Profile');
@@ -208,7 +212,7 @@ class MemberPage extends PageWithActiveSkin
                     <i class="fa fa-lg fa-times white" aria-hidden="true"></i>
                 </button>
             </div>
-        <div class="list-group mb-2">
+        <div class="list-group u-rounded-8 mb-2">
         <?php
         $member = $this->member;
         $words = $this->getWords();
@@ -234,18 +238,18 @@ class MemberPage extends PageWithActiveSkin
 
         <div id="react_mount" data-globals="<?=htmlspecialchars($globalsJs)?>" ></div>
 
-        <div class="list-group mt-2">
+        <div class="list-group u-rounded-8 mt-2">
             <?php
 
             $active_menu_item = $this->getSubmenuActiveItem();
             foreach ($this->getSubmenuItems() as $index => $item) {
                 $name = $item[0];
-                if ('space' === $name)
+                if (false !== strpos($name, 'separator'))
                 {
                     // Brutal hack to separate the two blocks in the menu visually
                     ?>
                     </div>
-                    <div class="list-group mt-2">
+                    <div class="list-group u-rounded-8 mt-2">
                     <?php
                     continue;
                 }
@@ -355,5 +359,19 @@ class MemberPage extends PageWithActiveSkin
         }
 
         return $lastLogin;
+    }
+
+    private function getBadge($count, $active = false): string
+    {
+        $badge = '<span class="badge ';
+        if ($active) {
+            $badge .= 'badge-white text-primary';
+        } else {
+            $badge .= 'badge-primary text-white';
+        }
+        $badge .= ' text-white u-rounded-8 u-min-w-20 u-px-8 u-h-20 u-inline-flex u-items-center u-justify-center pull-right">';
+        $badge .= $count . '<span>';
+
+        return $badge;
     }
 }

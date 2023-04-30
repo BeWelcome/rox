@@ -734,6 +734,26 @@ FROM
         return $commentCounters;
     }
 
+    public function count_relations() {
+        if (!$this->isLoaded()) {
+            return 0;
+        }
+
+        $id = intval($this->id);
+        $relations = $this->bulkLookup("
+            SELECT
+                COUNT(*) as count
+            FROM
+                specialrelations
+            WHERE
+                IdOwner = $id
+                AND Confirmed = 'Yes'
+            "
+        );
+
+        return $relations[0]->count;
+    }
+
     /**
      * Get number of gallery items
      *
@@ -1867,7 +1887,7 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
         $to = $this->Email;
 
         // Create HTML version via purifier (linkify and add paragraphs)
-        $purifier = MOD_htmlpure::getAdvancedHtmlPurifier();
+        $purifier = (new MOD_htmlpure())->getAdvancedHtmlPurifier();
         $bodyHTML = $purifier->purify($body);
 
         if ($this->getPreference('PreferenceHtmlMails', 'Yes') == 'No') {
@@ -2062,5 +2082,22 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
         }
         return $AllLanguages;
     }
+    public function getRelation($member)
+    {
+        if (!$this->isLoaded())
+        {
+            return null;
+        }
+        $relation = $this->bulkLookup("
+            SELECT * FROM specialrelations WHERE
+                IdOwner = {$this->getPKValue()} AND
+                IdRelation = {$member->getPKValue()}
+        ");
 
+        if (empty($relation)) {
+            return null;
+        }
+
+        return $relation[0];
+    }
 }

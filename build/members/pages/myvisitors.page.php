@@ -16,7 +16,7 @@ class MyVisitorsPage extends ProfilePage
     	$member = $this->member;
     	$visitor_count = $this->member->getVisitorCount() ;
         $layoutbits = new MOD_layoutbits();
-        $purifier = MOD_htmlpure::getBasicHtmlPurifier();
+        $purifier = (new MOD_htmlpure())->getBasicHtmlPurifier();
 
         if (!$visitor_count)
         {

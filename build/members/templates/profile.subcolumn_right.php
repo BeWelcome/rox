@@ -1,5 +1,5 @@
 <?php
-$purifier = MOD_htmlpure::getBasicHtmlPurifier();
+$purifier = (new MOD_htmlpure())->getBasicHtmlPurifier();
 
 function wasGuestOrHost(string $relations) {
     $hosted = strpos($relations, 'hewasmyguest') !== false;

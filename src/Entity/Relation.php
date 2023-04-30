@@ -4,6 +4,12 @@ namespace App\Entity;
 
 use Carbon\Carbon;
 use DateTime;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Event\PostLoadEventArgs;
+use Doctrine\ORM\Event\PostPersistEventArgs;
+use Doctrine\ORM\Event\PostUpdateEventArgs;
+use Doctrine\ORM\Event\PrePersistEventArgs;
+use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
 use Doctrine\Persistence\Mapping\ClassMetadata;
@@ -12,7 +18,10 @@ use Doctrine\Persistence\ObjectManager;
 /**
  * Specialrelations.
  *
- * @ORM\Table(name="specialrelations", uniqueConstraints={@ORM\UniqueConstraint(name="UniqueRelation", columns={"IdOwner", "IdRelation"})}, indexes={@ORM\Index(name="IdOwner", columns={"IdOwner"})})
+ * @ORM\Table(name="specialrelations",
+ *     uniqueConstraints={@ORM\UniqueConstraint(name="UniqueRelation", columns={"IdOwner", "IdRelation"})},
+ *     indexes={@ORM\Index(name="IdOwner", columns={"IdOwner"})}
+ * )
  * @ORM\HasLifecycleCallbacks
  * @ORM\Entity(repositoryClass="App\Repository\RelationRepository")
  *
@@ -22,130 +31,76 @@ use Doctrine\Persistence\ObjectManager;
 class Relation
 {
     /**
-     * @var string
-     *
-     * @ORM\Column(name="Type", type="string", nullable=false)
-     */
-    private $type;
-
-    /**
-     * Contains all comments for these relations (indexed by language).
-     */
-    private array $comments = [];
-
-    /**
-     * @var int
-     *
      * @ORM\Column(name="Comment", type="integer", nullable=false)
      */
-    private $comment;
+    private int $comment = 0;
+
+    private string $commentText = "";
 
     /**
-     * @var DateTime
-     *
      * @ORM\Column(name="created", type="datetime", nullable=false)
      */
-    private $created;
+    private DateTime $created;
 
     /**
-     * @var DateTime
-     *
      * @ORM\Column(name="updated", type="datetime", nullable=false)
      */
-    private $updated;
+    private DateTime $updated;
 
     /**
-     * @var Member
-     *
      * @ORM\ManyToOne(targetEntity="Member")
      * @ORM\JoinColumn(name="IdOwner", referencedColumnName="id")
      */
-    private $owner;
+    private Member $owner;
 
     /**
-     * @var Member
-     *
      * @ORM\ManyToOne(targetEntity="Member")
      * @ORM\JoinColumn(name="IdRelation", referencedColumnName="id")
      */
-    private $relation;
+    private Member $receiver;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="Confirmed", type="string", nullable=false)
      */
-    private $confirmed = 'No';
+    private string $confirmed = 'No';
 
     /**
-     * @var int
-     *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $id;
+    private int $id;
 
-    /**
-     * Set type.
-     *
-     * @param string $type
-     *
-     * @return Relation
-     */
-    public function setType($type)
+    public function setComment(int $comment): self
     {
-        $this->type = $type;
+        $this->comment = $comment;
 
         return $this;
     }
 
-    /**
-     * Get type.
-     *
-     * @return string
-     */
-    public function getType()
+    public function getComment(): int
     {
-        return $this->type;
+        return $this->comment;
     }
 
-    /**
-     * Get comments.
-     */
-    public function getComments(): array
-    {
-        return $this->comments;
-    }
-
-    /**
-     * Get created.
-     *
-     * @return Carbon
-     */
-    public function getCreated()
+    public function getCreated(): Carbon
     {
         return Carbon::instance($this->created);
     }
 
-    /**
-     * Get updated.
-     *
-     * @return Carbon
-     */
-    public function getUpdated()
+    public function getUpdated(): Carbon
     {
         return Carbon::instance($this->updated);
     }
 
-    /**
-     * Set owner.
-     *
-     * @param Member $owner
-     *
-     * @return Relation
-     */
-    public function setOwner($owner)
+    public function setUpdated(DateTime $updated): Relation
+    {
+        $this->updated = $updated;
+
+        return $this;
+    }
+
+    public function setOwner(Member $owner): Relation
     {
         $this->owner = $owner;
 
@@ -157,65 +112,36 @@ class Relation
      *
      * @return Member
      */
-    public function getOwner()
+    public function getOwner(): Member
     {
         return $this->owner;
     }
 
-    /**
-     * Set relation.
-     *
-     * @param Member $relation
-     *
-     * @return Relation
-     */
-    public function setRelation($relation)
+    public function setReceiver(Member $receiver): self
     {
-        $this->relation = $relation;
+        $this->receiver = $receiver;
 
         return $this;
     }
 
-    /**
-     * Get relation.
-     *
-     * @return Member
-     */
-    public function getRelation()
+    public function getReceiver(): Member
     {
-        return $this->relation;
+        return $this->receiver;
     }
 
-    /**
-     * Set confirmed.
-     *
-     * @param string $confirmed
-     *
-     * @return Relation
-     */
-    public function setConfirmed($confirmed)
+    public function setConfirmed(string $confirmed): self
     {
         $this->confirmed = $confirmed;
 
         return $this;
     }
 
-    /**
-     * Get confirmed.
-     *
-     * @return string
-     */
-    public function getConfirmed()
+    public function getConfirmed(): string
     {
         return $this->confirmed;
     }
 
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
@@ -225,19 +151,18 @@ class Relation
      *
      * @ORM\PostLoad
      */
-    public function onPostLoad(LifecycleEventArgs $args)
+    public function onPostLoad(PostLoadEventArgs $args): void
     {
         $objectManager = $args->getObjectManager();
         $memberTranslationRepository = $objectManager->getRepository(MemberTranslation::class);
-        $translatedComments = $memberTranslationRepository->findBy(['translation' => $this->comment]);
+        $translatedComment = $memberTranslationRepository->findOneBy([
+            'translation' => $this->comment,
+            'owner' => $this->owner,
+        ]);
 
-        // Index by language.
-        $comments = [];
-        foreach ($translatedComments as $comment) {
-            $comments[$comment->getLanguage()->getShortCode()] = $comment;
+        if (null !== $translatedComment) {
+            $this->commentText = $translatedComment->getSentence();
         }
-
-        $this->comments = $comments;
     }
 
     /**
@@ -245,19 +170,74 @@ class Relation
      *
      * @ORM\PrePersist
      */
-    public function onPrePersist()
+    public function onPrePersist(PrePersistEventArgs $args)
     {
         $this->created = new DateTime('now');
         $this->updated = $this->created;
+
+        $this->createRelationComment($args->getObjectManager());
     }
 
     /**
      * Triggered on update.
      *
-     * @ORM\PreUpdate
+     * @ORM\PostUpdate
      */
-    public function onPreUpdate()
+    public function onPostUpdate(PostUpdateEventArgs $args)
     {
-        $this->updated = new DateTime('now');
+        $objectManager = $args->getObjectManager();
+
+        $languageRepository = $objectManager->getRepository(Language::class);
+        $language = $languageRepository->findOneBy(['shortCode' => 'en']);
+        $memberTranslationRepository = $objectManager->getRepository(MemberTranslation::class);
+        $translatedComment = $memberTranslationRepository->findOneBy([
+            'translation' => $this->comment,
+            'owner' => $this->getOwner()
+        ]);
+
+        $translatedComment->setSentence($this->commentText);
+        $objectManager->persist($translatedComment);
+        $objectManager->flush();
+    }
+
+    private function createRelationComment(ObjectManager $objectManager)
+    {
+        $memberTranslationRepository = $objectManager->getRepository(MemberTranslation::class);
+        $translatedComment = $memberTranslationRepository->findOneBy([
+            'translation' => $this->comment,
+            'owner' => $this->getOwner()
+        ]);
+
+        if (null === $translatedComment) {
+            $languageRepository = $objectManager->getRepository(Language::class);
+            $language = $languageRepository->findOneBy(['shortCode' => 'en']);
+
+            $translatedComment = new MemberTranslation();
+            $translatedComment->setSentence($this->commentText);
+            $translatedComment->setOwner($this->getOwner());
+            $translatedComment->setTranslator($this->getOwner());
+            $translatedComment->setLanguage($language);
+            $translatedComment->setTablecolumn('specialrelations.comment');
+            $objectManager->persist($translatedComment);
+            $objectManager->flush();
+
+            //Set translation ID to own id
+            $translatedComment->setTranslation($translatedComment->getId());
+            $objectManager->persist($translatedComment);
+            $this->setComment($translatedComment->getId());
+            $objectManager->flush();
+        }
+    }
+
+    public function getCommentText(): string
+    {
+        return $this->commentText;
+    }
+
+    public function setCommentText(string $commentText): self
+    {
+        $this->commentText = $commentText;
+
+        return $this;
     }
 }

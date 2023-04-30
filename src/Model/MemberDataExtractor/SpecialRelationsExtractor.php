@@ -23,7 +23,7 @@ final class SpecialRelationsExtractor extends AbstractExtractor implements Extra
             foreach ($rawRelations as $relation) {
                 $author = $relation->getOwner();
                 $authorId = $author->getId();
-                $recipient = $relation->getRelation();
+                $recipient = $relation->getReceiver();
                 $recipientId = $recipient->getId();
                 if ($recipient !== $member) {
                     $relations[$recipientId] = [];

@@ -9,8 +9,12 @@ use App\Form\ProfileNoteType;
 use App\Form\RelationType;
 use App\Repository\ProfileNoteRepository;
 use App\Repository\RelationRepository;
+use App\Service\Mailer;
 use App\Utilities\ItemsPerPageTraits;
 use App\Utilities\ProfileSubmenu;
+use App\Utilities\TranslatedFlashTrait;
+use App\Utilities\TranslatorTrait;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,7 +24,9 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class RelationController extends AbstractController
 {
+    use TranslatorTrait;
     use ItemsPerPageTraits;
+    use TranslatedFlashTrait;
 
     private EntityManagerInterface $entityManager;
 
@@ -32,7 +38,7 @@ class RelationController extends AbstractController
     /**
      * @Route("/members/{username}/relation/add", name="add_relation")
      */
-    public function add(Request $request, Member $member, ProfileSubmenu $profileSubmenu): Response
+    public function add(Request $request, Member $member, ProfileSubmenu $profileSubmenu, Mailer $mailer): Response
     {
         /** @var Member $loggedInMember */
         $loggedInMember = $this->getUser();
@@ -40,10 +46,7 @@ class RelationController extends AbstractController
             return $this->redirectToRoute('members_profile', ['username' => $loggedInMember->getusername()]);
         }
 
-        /** @var RelationRepository $noteRepository */
-        $noteRepository = $this->entityManager->getRepository(Relation::class);
-
-        $relation = $noteRepository->findRelationBetween($loggedInMember, $member);
+        $relation = $this->findRelationBetween($loggedInMember, $member);
         if (null !== $relation) {
             return $this->redirectToRoute('edit_relation', ['username' => $member->getUsername()]);
         }
@@ -52,11 +55,15 @@ class RelationController extends AbstractController
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            /** @var Relation $relation */
             $relation = $form->getData();
             $relation->setOwner($loggedInMember);
-            $relation->setMember($member);
+            $relation->setReceiver($member);
+
             $this->entityManager->persist($relation);
             $this->entityManager->flush();
+
+            $mailer->sendRelationNotification($relation);
 
             return $this->redirectToRoute('relations', ['username' => $loggedInMember->getUsername()]);
         }
@@ -79,10 +86,7 @@ class RelationController extends AbstractController
             return $this->redirectToRoute('members_profile', ['username' => $loggedInMember->getusername()]);
         }
 
-        /** @var RelationRepository $relationRepository */
-        $relationRepository = $this->entityManager->getRepository(Relation::class);
-
-        $relation = $relationRepository->findRelationBetween($loggedInMember, $member);
+        $relation = $this->findRelationBetween($loggedInMember, $member);
         if (null === $relation) {
             return $this->redirectToRoute('add_relation', ['username' => $member->getUsername()]);
         }
@@ -92,8 +96,9 @@ class RelationController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $relation = $form->getData();
+            $relation->setUpdated(new DateTime());
 
-            $this->entityManager->persist($relation);
+            $this->entityManager->merge($relation);
             $this->entityManager->flush();
 
             return $this->redirectToRoute('relations', ['username' => $loggedInMember->getUsername()]);
@@ -107,12 +112,83 @@ class RelationController extends AbstractController
     }
 
     /**
-     * @Route("/members/{username}/relation/remove", name="remove_relation")
+     * @Route("/members/{username}/relation/delete", name="delete_relation")
      */
-    public function remove(): Response
+    public function remove(Member $member, EntityManagerInterface $entityManager): Response
     {
-        return $this->render('relation/index.html.twig', [
-        ]);
+        /** @var Member $loggedInMember */
+        $loggedInMember = $this->getUser();
+        if ($member === $loggedInMember) {
+            return $this->redirectToRoute('members_profile', ['username' => $loggedInMember->getusername()]);
+        }
+
+        /** @var RelationRepository $relationRepository */
+        $relationRepository = $this->entityManager->getRepository(Relation::class);
+
+        $relation = $relationRepository->findRelationBetween($loggedInMember, $member);
+        if (null === $relation) {
+            return $this->redirectToRoute('relations', ['username' => $member->getUsername()]);
+        }
+
+        $entityManager->remove($relation);
+        $entityManager->flush();
+
+        $this->addTranslatedFlash('notice', 'flash.relation.removed');
+
+        return $this->redirectToRoute('relations', ['username' => $member->getUsername()]);
+    }
+
+    /**
+     * @Route("/members/{username}/relation/confirm", name="confirm_relation")
+     */
+    public function confirm(Member $member, EntityManagerInterface $entityManager): Response
+    {
+        /** @var Member $loggedInMember */
+        $loggedInMember = $this->getUser();
+        if ($member === $loggedInMember) {
+            return $this->redirectToRoute('members_profile', ['username' => $loggedInMember->getusername()]);
+        }
+
+        /** @var RelationRepository $relationRepository */
+        $relationRepository = $this->entityManager->getRepository(Relation::class);
+
+        $relation = $relationRepository->findUnconfirmedRelationBetween($member, $loggedInMember);
+        if (null === $relation) {
+            return $this->redirectToRoute('relations', ['username' => $member->getUsername()]);
+        }
+
+        $relation->setConfirmed('Yes');
+        $entityManager->flush();
+
+        $this->addTranslatedFlash('notice', 'flash.relation.confirmed');
+
+        return $this->redirectToRoute('relations', ['username' => $member->getUsername()]);
+    }
+
+    /**
+     * @Route("/members/{username}/relation/dismiss", name="dismiss_relation")
+     */
+    public function dismiss(Member $member, EntityManagerInterface $entityManager): Response
+    {
+        /** @var Member $loggedInMember */
+        $loggedInMember = $this->getUser();
+        if ($member === $loggedInMember) {
+            return $this->redirectToRoute('members_profile', ['username' => $loggedInMember->getusername()]);
+        }
+
+        /** @var RelationRepository $relationRepository */
+        $relationRepository = $this->entityManager->getRepository(Relation::class);
+        $relation = $relationRepository->findUnconfirmedRelationBetween($member, $loggedInMember);
+        if (null === $relation) {
+            return $this->redirectToRoute('relations', ['username' => $member->getUsername()]);
+        }
+
+        $entityManager->remove($relation);
+        $entityManager->flush();
+
+        $this->addTranslatedFlash('notice', 'flash.relation.dismissed');
+
+        return $this->redirectToRoute('relations', ['username' => $member->getUsername()]);
     }
 
     /**
@@ -132,5 +208,13 @@ class RelationController extends AbstractController
             'relations' => $relations,
             'submenu' => $profileSubmenu->getSubmenu($member, $loggedInMember, ['active' => 'relations']),
         ]);
+    }
+
+    private function findRelationBetween(Member $loggedInMember, Member $member): ?Relation
+    {
+        /** @var RelationRepository $relationRepository */
+        $relationRepository = $this->entityManager->getRepository(Relation::class);
+
+        return $relationRepository->findRelationBetween($loggedInMember, $member);
     }
 }

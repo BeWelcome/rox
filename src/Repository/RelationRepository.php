@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Member;
+use App\Entity\Relation;
 use Doctrine\ORM\EntityRepository;
 use Pagerfanta\Doctrine\ORM\QueryAdapter;
 use Pagerfanta\Pagerfanta;
@@ -46,26 +47,42 @@ class RelationRepository extends EntityRepository
             )
             ->setParameter(':member', $member)
             ->setParameter(':confirmed', 'Yes')
-            ->orderBy('r.updated', 'ASC')
+            ->orderBy('r.updated', 'DESC')
             ->getQuery()
             ->getResult()
             ;
     }
 
-    public function findRelationBetween(Member $owner, Member $relation)
+    public function findRelationBetween(Member $owner, Member $receiver): ?Relation
     {
         return
             $this
                 ->createQueryBuilder('r')
                 ->where('r.owner = :member')
-                ->andWhere('r.relation = :relation')
+                ->andWhere('r.receiver = :receiver')
                 ->andWhere('r.confirmed = :confirmed')
                 ->setParameter(':member', $owner)
-                ->setParameter(':relation', $relation)
+                ->setParameter(':receiver', $receiver)
                 ->setParameter(':confirmed', 'Yes')
                 ->getQuery()
                 ->getOneOrNullResult()
-           ;
+            ;
+    }
+
+    public function findUnconfirmedRelationBetween(Member $owner, Member $receiver): ?Relation
+    {
+        return
+            $this
+                ->createQueryBuilder('r')
+                ->where('r.owner = :member')
+                ->andWhere('r.receiver = :receiver')
+                ->andWhere('r.confirmed = :confirmed')
+                ->setParameter(':member', $owner)
+                ->setParameter(':receiver', $receiver)
+                ->setParameter(':confirmed', 'No')
+                ->getQuery()
+                ->getOneOrNullResult()
+            ;
     }
 
     public function getRelations(Member $member, int $page, int $itemsPerPage): Pagerfanta
@@ -75,6 +92,7 @@ class RelationRepository extends EntityRepository
             ->andWhere('r.owner = :member')
             ->setParameter('member', $member)
             ->setParameter(':confirmed', 'Yes')
+            ->orderBy('r.updated', 'DESC')
         ;
 
         $notes = new Pagerfanta(new QueryAdapter($qb->getQuery()));

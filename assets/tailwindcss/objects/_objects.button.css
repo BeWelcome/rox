@@ -240,7 +240,7 @@
   }
 
   .o-show-more-btn {
-    margin: auto;
+    margin: 4px;
     cursor: pointer;
     background-color: theme('colors.bewelcome');
     color: theme('colors.white');

@@ -9,7 +9,7 @@
 
     <div class="p-2">
         <?php
-        $purifier = MOD_htmlpure::getAdvancedHtmlPurifier();
+        $purifier = (new MOD_htmlpure())->getAdvancedHtmlPurifier();
         echo $purifier->purify(stripslashes($member->get_trad("ProfileSummary", $profile_language, true)));
         ?>
     </div>

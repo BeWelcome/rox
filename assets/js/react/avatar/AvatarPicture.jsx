@@ -15,9 +15,9 @@ const AvatarPicture = (props) => {
     };
 
     return (
-        <div className="u-w-full u-relative u-pb-[100%]">
-            <a className="u-absolute u-left-0 u-top-0" href={pictureUrl} data-toggle="lightbox" data-type="image" title={pictureTitle}>
-                <img className="u-rounded-16 u-max-w-full" src={pictureUrl} alt={pictureTitle}/>
+        <div className="o-avatar-container">
+            <a href={pictureUrl} data-toggle="lightbox" data-type="image" title={pictureTitle}>
+                <img className="o-avatar-profile" src={pictureUrl} alt={pictureTitle}/>
             </a>
         </div>
     )

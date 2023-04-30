@@ -14,6 +14,7 @@ class RelationType extends AbstractType
         $builder
             ->add('comment', CkEditorType::class, [
                 'label' => 'profile.relation.comment',
+                'property_path' => 'commentText',
                 'constraints' => [
                     new NotBlank(),
                 ],

@@ -78,17 +78,17 @@
                                 <i class="fa fa-lg fa-times white" aria-hidden="true"></i>
                             </button>
                         </div>
-                        <div class="list-group mb-2">
+                        <div class="list-group u-rounded-8 mb-2">
                             {% for filter,menuItem in submenu.items %}
                             {% if 'separator' in filter %}
                         </div>
                         {% if menuItem.key is defined %}<h3
                             class="mt-3 h3-canvas-color">{{ menuItem.key | lower | trans }}</h3>{% endif %}
-                        <div class="list-group mb-2">
+                        <div class="list-group u-rounded-8 mb-2">
                             {% elseif 'profile_picture' in filter %}
                                 <div class="u-w-full u-relative u-pb-[100%]">
                                     <div class="u-absolute u-left-0 u-top-0">
-                                        <img class="u-rounded-full u-max-w-full" src="{{ url('avatar', {'username': menuItem.username, 'size': 500}) }}">
+                                        <img class="u-rounded-8 u-max-w-full" src="{{ url('avatar', {'username': menuItem.username, 'size': 500}) }}">
                                     </div>
                                 </div>
                                 {% if menuItem.is_owner %}
@@ -101,7 +101,7 @@
                                    href="{{ menuItem.url }}">{% if menuItem.icon is defined %}<i
                                         class="fas fa-fw fa-{{ menuItem.icon }}"></i> {% endif %}{{ menuItem.key | lower | trans }}
                                     {% if menuItem.count is defined %} <span
-                                        class="badge {% if submenu.active == filter %}bg-white text-primary{% else %}badge-primary{% endif %} u-rounded-10 u-min-w-20 u-px-8 u-h-20 u-inline-flex u-items-center u-justify-center pull-right">{{ menuItem.count }}</span>{% endif %}
+                                        class="badge {% if submenu.active == filter %}bg-white text-primary{% else %}badge-primary{% endif %} u-rounded-8 u-min-w-20 u-px-8 u-h-20 u-inline-flex u-items-center u-justify-center pull-right">{{ menuItem.count }}</span>{% endif %}
                                 </a>
                             {% endif %}
                             {% endfor %}

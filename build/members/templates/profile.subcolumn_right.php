@@ -31,6 +31,7 @@ function wasGuestOrHost(string $relations) {
 
     $commentCount = $this->member->count_comments();
 
+    $comments = [];
     foreach ($commentsReceived as $value) {
         $key = $value->UsernameFromMember;
         $comments[$key] = [
@@ -49,19 +50,24 @@ function wasGuestOrHost(string $relations) {
             ];
         }
     }
-    $farFuture = new DateTimeImmutable('01-01-3000');
-    usort($comments,
-        function ($a, $b) use ($farFuture) {
-            // get latest updates on to and from part of comments and order desc
-            $createdATo = isset($a['to']) ? new DateTime($a['to']->created) : $farFuture;
-            $createdAFrom = isset($a['from']) ? new DateTime($a['from']->created) : $farFuture;
-            $createdA = min($createdATo, $createdAFrom);
-            $createdBTo = isset($b['to']) ? new DateTime($b['to']->created) : $farFuture;
-            $createdBFrom = isset($b['from']) ? new DateTime($b['from']->created) : $farFuture;
-            $createdB = min($createdBTo, $createdBFrom);
-            return -1*($createdA <=> $createdB);
-        }
-    );
+
+    if (!empty($comments)) {
+        $early20thCentury = new DateTimeImmutable('01-01-1900');
+        usort(
+            $comments,
+            function ($a, $b) use ($early20thCentury) {
+                // get latest updates on to and from part of comments and order desc
+                $updatedATo = isset($a['to']) ? $a['to']->updated ?? $a['to']->created : $early20thCentury;
+                $updatedAFrom = isset($a['from']) ? $a['from']->updated ?? $a['from']->created : $early20thCentury;
+                $updatedA = max($updatedATo, $updatedAFrom);
+                $updatedBTo = isset($b['to']) ? $b['to']->updated ?? $b['to']->created : $early20thCentury;
+                $updatedBFrom = isset($b['from']) ? $b['from']->updated ?? $b['from']->created : $early20thCentury;
+                $updatedB = max($updatedBTo, $updatedBFrom);
+
+                return -1 * ($updatedA <=> $updatedB);
+            }
+        );
+    }
 
     $username = $this->member->Username;
     $loggedInMember = $this->model->getLoggedInMember();
@@ -123,11 +129,10 @@ function wasGuestOrHost(string $relations) {
                        if ($commentLoopCount != 0) {
                            echo '<hr class="my-3" style="border-top:1px solid gray;">';
                        }
-?>
 
-                       <?php if (isset($c['from'])) {
+                       if (null !== $commentFrom) {
                            $commentLoopCount++;
-                           $comment = $c['from'];
+                           $comment = $commentFrom;
                            // skip items that are hidden for public
                            if ($comment->DisplayInPublic == 0 && !$showHiddenComments) {continue;}
                            $quality = "neutral";
@@ -188,9 +193,9 @@ function wasGuestOrHost(string $relations) {
                            ?></div>
                        <?php }
 
-                       if (isset($c['to'])) {
+                       if (null !== $commentTo) {
                            $commentLoopCount++;
-                           $comment = $c['to'];
+                           $comment = $commentTo;
                            // skip items that are hidden for public
                            if ($comment->DisplayInPublic == 0 && !$showHiddenComments) {continue;}
                            $quality = "neutral";

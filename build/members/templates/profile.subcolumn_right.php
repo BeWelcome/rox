@@ -39,8 +39,6 @@ function wasGuestOrHost(string $relations) {
         ];
     }
 
-    file_put_contents('c:\\users\\bla\\comments_received.txt',var_export($comments, true));
-
     foreach ($commentsWritten as $value) {
         $key = $value->UsernameToMember;
         if (isset($comments[$key])) {
@@ -53,8 +51,6 @@ function wasGuestOrHost(string $relations) {
             ];
         }
     }
-
-    file_put_contents('c:\\users\\bla\\comments_received_and_written.txt',var_export($comments, true));
 
     if (!empty($comments)) {
         $early20thCentury = strtotime('01-01-1900');
@@ -72,8 +68,6 @@ function wasGuestOrHost(string $relations) {
                 return -1 * ($updatedA <=> $updatedB);
             }
         );
-
-        file_put_contents('c:\\users\\bla\\comments_received_and_written_sorted.txt',var_export($comments, true));
     }
 
     $username = $this->member->Username;
@@ -185,13 +179,27 @@ function wasGuestOrHost(string $relations) {
                                    <?php if (!$this->passedAway) { ?>
                                        <?php if ($loggedIn === $comment->UsernameToMember) { ?>
                                            <a href="/members/<?= $this->member->Username;?>/comment/<?php echo $comment->id;?>/report" title="<?=$words->getSilent('ReportCommentProblem') ?>"
-                                              class="float-right gray align-self-center"><i class="fa fa-flag" alt="<?=$words->getSilent('ReportCommentProblem') ?>"></i></a>
+                                              class="float-left gray align-self-center"><i class="fa fa-flag" alt="<?=$words->getSilent('ReportCommentProblem') ?>"></i></a>
+                                           <?php if (null === $commentTo) { ?>
+
+                                           <a href="/members/<?= $comment->UsernameFromMember;?>/comment/add" title="<?=$words->getSilent('profile.add.comment', $comment->UsernameFromMember) ?>"
+                                              class="float-right gray align-self-center"><i class="fa fa-reply" alt="<?=$words->getSilent('profile.add.comment', $comment->UsernameFromMember) ?>"></i></a>
+                                           <?php } ?>
                                        <?php } ?>
                                    <?php }?>
                                </div>
                            </div>
                        </div>
-                       <?php } else { ?>
+                       <?php } else {
+                           if ($loggedIn === $commentTo->UsernameToMember) {
+                               $addCommentTranslation = str_replace('{username}', $comment->UsernameFromMember, $words->getSilent('profile.add.comment'));
+                               ?>
+                               <div class="clearfix">
+                                   <a href="/members/<?= $comment->UsernameFromMember;?>/comment/add" title="<?= $addCommentTranslation ?>"
+                                      class="align-self-center"><button class="o-button"><?= $addCommentTranslation ?></button></a>
+                               </div>
+                           <?php } else { ?>
+
                            <div class="p-2 mt-1 u-mr-24 u-rounded-8 u-bg-black-o-10"><?php
                                $noCommentYet = $words->get('profile.no.comment.yet');
                                $noCommentYet = str_replace('{to}', $c['to']->UsernameFromMember, $noCommentYet);
@@ -199,6 +207,7 @@ function wasGuestOrHost(string $relations) {
                                echo $noCommentYet;
                            ?></div>
                        <?php }
+                       }
 
                        if (null !== $commentTo) {
                            $commentLoopCount++;
@@ -211,7 +220,8 @@ function wasGuestOrHost(string $relations) {
                            }
                            if ($comment->comQuality == "Bad") {
                                $quality = "bad";
-                           }                           ?>
+                           }
+                       ?>
 
                        <div class="comment-bg-<?=$quality?> p-2 mt-1 <?= !(isset($c['from'])) ? 'mt-1' : '' ?> clearfix u-ml-24 u-rounded-8">
                            <?php if ($comment->DisplayInPublic == '0') {
@@ -252,8 +262,16 @@ function wasGuestOrHost(string $relations) {
                            </div>
                        </div>
 
-                      <?php
-                   }
+                      <?php } else {
+                           if ($loggedIn === $comment->UsernameToMember) {
+                           $addCommentTranslation = str_replace('{username}', $comment->UsernameFromMember, $words->getSilent('profile.add.comment'));
+                           ?>
+                            <div class="clearfix">
+                           <a href="/members/<?= $comment->UsernameFromMember;?>/comment/add" title="<?= $addCommentTranslation ?>"
+                                              class="gray align-self-center"><button class="o-button"><?= $addCommentTranslation ?></button></a>
+                            </div>
+                      <?php }
+                      }
                    $shownPairs++;
             }     ?>
             </div>

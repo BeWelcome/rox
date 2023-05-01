@@ -1156,7 +1156,7 @@ WHERE
     comments.IdToMember = members2.Id
     AND members.Status IN (" . MemberStatusType::MEMBER_COMMENTS . ")
 ORDER BY
-    comments.created DESC
+    comments.created ASC
           ";
           if (0 !== $count) {
               $sql .= " LIMIT 0, " . $count;
@@ -1221,7 +1221,7 @@ WHERE
   comments.IdFromMember = members.Id AND
   comments.IdToMember = members2.Id
 ORDER BY
-    comments.created DESC        ";
+    comments.created ASC        ";
         if (0 !== $count) {
             $sql .= " LIMIT 0, " . $count;
         }

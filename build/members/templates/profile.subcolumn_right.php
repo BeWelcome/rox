@@ -38,6 +38,9 @@ function wasGuestOrHost(string $relations) {
             'from' => $value,
         ];
     }
+
+    file_put_contents('c:\\users\\bla\\comments_received.txt',var_export($comments, true));
+
     foreach ($commentsWritten as $value) {
         $key = $value->UsernameToMember;
         if (isset($comments[$key])) {
@@ -51,22 +54,26 @@ function wasGuestOrHost(string $relations) {
         }
     }
 
+    file_put_contents('c:\\users\\bla\\comments_received_and_written.txt',var_export($comments, true));
+
     if (!empty($comments)) {
-        $early20thCentury = new DateTimeImmutable('01-01-1900');
+        $early20thCentury = strtotime('01-01-1900');
         usort(
             $comments,
             function ($a, $b) use ($early20thCentury) {
                 // get latest updates on to and from part of comments and order desc
-                $updatedATo = isset($a['to']) ? $a['to']->updated ?? $a['to']->created : $early20thCentury;
-                $updatedAFrom = isset($a['from']) ? $a['from']->updated ?? $a['from']->created : $early20thCentury;
+                $updatedATo = isset($a['to']) ? $a['to']->unix_updated ?? $a['to']->unix_created : $early20thCentury;
+                $updatedAFrom = isset($a['from']) ? $a['from']->unix_updated ?? $a['from']->unix_created : $early20thCentury;
                 $updatedA = max($updatedATo, $updatedAFrom);
-                $updatedBTo = isset($b['to']) ? $b['to']->updated ?? $b['to']->created : $early20thCentury;
-                $updatedBFrom = isset($b['from']) ? $b['from']->updated ?? $b['from']->created : $early20thCentury;
+                $updatedBTo = isset($b['to']) ? $b['to']->unix_updated ?? $b['to']->unix_created : $early20thCentury;
+                $updatedBFrom = isset($b['from']) ? $b['from']->unix_updated ?? $b['from']->unix_created : $early20thCentury;
                 $updatedB = max($updatedBTo, $updatedBFrom);
 
                 return -1 * ($updatedA <=> $updatedB);
             }
         );
+
+        file_put_contents('c:\\users\\bla\\comments_received_and_written_sorted.txt',var_export($comments, true));
     }
 
     $username = $this->member->Username;

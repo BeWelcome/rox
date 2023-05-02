@@ -84,7 +84,6 @@ class ProfileSubmenu
         /** @var CommentRepository $commentRepository */
         $commentRepository = $this->entityManager->getRepository(Comment::class);
         $memberInfo['comments_for_count'] = $commentRepository->getVisibleCommentsForMemberCount($member);
-        $memberInfo['comments_by_count'] = $commentRepository->getVisibleCommentsByMemberCount($member);
 
         /** @var ForumPostRepository $postsRepository */
         $postsRepository = $this->entityManager->getRepository(ForumPost::class);
@@ -262,12 +261,12 @@ class ProfileSubmenu
         $this->addSubmenuItem('comments', [
             'key' => 'ViewComments',
             'icon' => 'comments',
-            'count' => ($parameters['comments_for_count'] ?? 0) . ' / ' . ($parameters['comments_by_count'] ?? 0),
+            'count' => ($parameters['comments_for_count'] ?? 0),
             'url' => $this->routing->generate('profile_comments', ['username' => $username]),
         ]);
 
         $this->addSubmenuItem('relations', [
-            'key' => 'relations',
+            'key' => 'profile.relations',
             'icon' => 'users',
             'count' => $parameters['relations_count'],
             'url' => $this->routing->generate('relations', ['username' => $username]),

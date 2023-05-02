@@ -21,6 +21,9 @@ profile.relation.delete.yes:
 profile.relation.with:
     - 'Relation with {username}'
     - Headline of the add/edit relation form
+profile.relations:
+    - 'Family and Friends'
+    - Submenu item label
 profile.relation.comment:
     - 'Comment for this relation (optional, deprecated, will be removed in the future):'
     - Label for the text field containing the comment for the relation

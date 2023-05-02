@@ -73,7 +73,9 @@ class MemberPage extends PageWithActiveSkin
         }
 
         $galleryItemsCount = $member->getGalleryItemsCount();
-        $viewForumPosts = $words->get("ViewForumPosts", $this->getBadge($member->forums_posts_count()));
+        $viewForumPostsTranslation = $words->get("ViewForumPosts", "");
+        $viewForumPosts = $viewForumPostsTranslation . $this->getBadge($member->forums_posts_count());
+
         $membersForumPostsPagePublic = $member->getPreference("MyForumPostsPagePublic", $default = "No");
         $linkMembersForumPosts = false;
         if ($membersForumPostsPagePublic == "Yes") {
@@ -92,7 +94,7 @@ class MemberPage extends PageWithActiveSkin
                 array('editmyprofile', 'editmyprofile/' . $profile_language_code, '<i class="fa fa-fw fa-edit"></i> ' . $ww->EditMyProfile, 'editmyprofile'),
                 array('profile.preferences.menu', "/members/$username/preferences", '<i class="fa fa-fw fa-cogs"></i> ' . $ww->MyPreferences, 'mypreferences'),
                 array('mydata', 'mydata', '<i class="fa fa-fw fa-database"></i> ' . $ww->MyData, 'mydata'),
-                array('mynotes', "/members/$username/notes", '<i class="fa fa-fw fa-sticky-note"></i> ' . $words->get('MyNotes', $this->getBadge($mynotes_count), 'mynotes'))
+                array('mynotes', "/members/$username/notes", '<i class="fa fa-fw fa-sticky-note"></i> ' . $words->get('MyNotes') . $this->getBadge($mynotes_count), 'mynotes'),
                 );
 
             if ($this instanceof EditMyProfilePage)
@@ -114,7 +116,7 @@ class MemberPage extends PageWithActiveSkin
 
             $tt[] = array('profile', "members/$username", '<i class="fa fa-fw fa-user"></i> ' . $ww->MemberPage);
             $tt[] = array('comments', "members/$username/comments", '<i class="fa fa-fw fa-comments"></i> ' . $ww->ViewComments.' '. $this->getBadge($comments_count['all']));
-            $tt[] = array('relations', "members/$username/relations", '<i class="fa fa-fw fa-users"></i> ' . $ww->relations.' ' . $this->getBadge($relations_count));
+            $tt[] = array('relations', "members/$username/relations", '<i class="fa fa-fw fa-users"></i> ' . $words->get('profile.relations').' ' . $this->getBadge($relations_count));
             if ($this->myself) {
                 $tt[] = array('gallery', "gallery/manage", '<i class="fa fa-fw fa-image"></i> ' . $ww->Gallery . ' ' . $this->getBadge($galleryItemsCount));
             } else {
@@ -155,6 +157,7 @@ class MemberPage extends PageWithActiveSkin
                 array('separator-1', '', '', 'space'),
                 array('profile', "members/$username", '<i class="fa fa-fw fa-user"></i> '  . $ww->MemberPage),
                 array('comments', "members/$username/comments", '<i class="fa fa-fw fa-comments"></i> ' . $ww->ViewComments.' ' . $this->getBadge($comments_count['all'])),
+                array('relations', "members/$username/relations", '<i class="fa fa-fw fa-users"></i> ' . $words->get('profile.relations').' ' . $this->getBadge($relations_count)),
                 array('gallery', "gallery/show/user/$username/pictures", '<i class="fa fa-fw fa-image"></i> ' . $ww->Gallery . ' ' . $this->getBadge($galleryItemsCount)),
             ]);
             if (MemberStatusType::PASSED_AWAY !== $member->Status) {

@@ -98,7 +98,13 @@ class SearchModel extends RoxModelBase
     private function getOrderBy($orderBy, $direction)
     {
         $orderType = $orderBy - ($orderBy % 2);
-        $order = self::ORDER_BY[$orderType]['Column'] . " ASC";
+        if (self::ORDER_MEMBERSHIP === $orderBy || self::ORDER_LOGIN === $orderBy )
+        {
+            $direction = ' DESC';
+        } else {
+            $direction = ' ASC';
+        }
+        $order = self::ORDER_BY[$orderType]['Column'] . $direction;
         switch ($orderType) {
             case self::ORDER_ACCOM:
                 $order .= ', (IF(mp.photoCount IS NULL, 0, 1) + IF(m.ProfileSummary != 0, 2, 0)) ASC'

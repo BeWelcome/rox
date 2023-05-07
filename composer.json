@@ -39,7 +39,7 @@
         "incenteev/composer-parameter-handler": "^2.0",
         "intervention/image": "^2.4",
         "judev/php-htmltruncator": "^1.2",
-        "laminas/laminas-code": "3.*",
+        "laminas/laminas-code": "4.7.1",
         "laminas/laminas-eventmanager": "3.*",
         "laminas/laminas-uri": "^2.7",
         "league/html-to-markdown": "^4.8",

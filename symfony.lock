@@ -290,9 +290,6 @@
     "laminas/laminas-validator": {
         "version": "2.15.0"
     },
-    "laminas/laminas-zendframework-bridge": {
-        "version": "1.4.0"
-    },
     "lcobucci/clock": {
         "version": "2.0.0"
     },

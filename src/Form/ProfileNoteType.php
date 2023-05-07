@@ -5,6 +5,8 @@ namespace App\Form;
 
 use App\Entity\ProfileNote;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -14,11 +16,13 @@ class ProfileNoteType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('category', TomSelectType::class, [
+            ->add('category', ChoiceType::class, [
                 'label' => 'profile.note.category',
                 'required' => false,
-                'allow_create' => true,
                 'choices' => $options['categories'],
+                'autocomplete' => true,
+                'allow_options_create' => true,
+                'max_items' => 1,
                 'constraints' => [
                     new NotBlank(),
                 ],

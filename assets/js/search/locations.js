@@ -2,7 +2,7 @@ import {initializeSingleAutoComplete} from '../suggest/locations';
 import 'leaflet.fullscreen';
 import 'leaflet.fullscreen/Control.FullScreen.css';
 
-initializeSingleAutoComplete("/suggest/locations/places", 'js-location-picker', '_autocomplete');
+initializeSingleAutoComplete("/suggest/locations/all", 'js-location-picker', '_autocomplete');
 
 function Map() {
     this.map = undefined;

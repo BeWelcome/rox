@@ -68,15 +68,15 @@ class ProfileNoteRepository extends EntityRepository
             ->setParameter('member', $member)
             ->orderBy('n.category', 'ASC')
             ->getQuery()
-            ->getArrayResult()
+            ->getSingleColumnResult()
         ;
-
+/*
         $categories = [];
-        foreach ($rawCategories as $rawCategory) {
-            $categories[] = $rawCategory['category'];
+        foreach ($rawCategories as $key => $rawCategory) {
+            $categories[$rawCategory['category']] = $key;
         }
-
-        return $categories;
+*/
+        return array_flip($rawCategories);
     }
 
     public function getNoteForMemberPair(Member $loggedInMember, Member $member): ?ProfileNote

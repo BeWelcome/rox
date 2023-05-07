@@ -9,6 +9,7 @@ use Symfony\Component\Form\Exception\AlreadySubmittedException;
 use Symfony\Component\Form\Exception\LogicException;
 use Symfony\Component\Form\Exception\UnexpectedTypeException;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -103,7 +104,7 @@ class SearchFormType extends AbstractType
             $choices = ['search.see_map' => -1] + $choices;
         }
         $form = $event->getForm();
-        $form->add('distance', Select2Type::class, [
+        $form->add('distance', ChoiceType::class, [
             'choices' => $choices,
             'label' => 'label.radius',
         ]);
@@ -126,18 +127,20 @@ class SearchFormType extends AbstractType
             }
         }
         $formBuilder
-            ->add('groups', Select2Type::class, [
+            ->add('groups', ChoiceType::class, [
                 'choices' => $groups,
                 'choice_translation_domain' => false,
                 'label' => 'groups',
                 'multiple' => true,
                 'required' => false,
+                'autocomplete' => true,
             ])
-            ->add('languages', Select2Type::class, [
+            ->add('languages', ChoiceType::class, [
                 'choices' => $languages,
                 'label' => 'languages',
                 'multiple' => true,
                 'required' => false,
+                'autocomplete' => true,
             ]);
     }
 
@@ -152,19 +155,19 @@ class SearchFormType extends AbstractType
             $maxAgeArray[$i] = $i;
         }
         $formBuilder
-            ->add('min_age', Select2Type::class, [
+            ->add('min_age', ChoiceType::class, [
                 'choices' => $minAgeArray,
                 'choice_translation_domain' => false,
                 'label' => 'findpeopleminimumage',
                 'translation_domain' => 'messages',
             ])
-            ->add('max_age', Select2Type::class, [
+            ->add('max_age', ChoiceType::class, [
                 'choices' => $maxAgeArray,
                 'choice_translation_domain' => false,
                 'label' => 'findpeoplemaximumage',
                 'translation_domain' => 'messages',
             ])
-            ->add('gender', Select2Type::class, [
+            ->add('gender', ChoiceType::class, [
                 'choices' => [
                     'any' => null,
                     'male' => 1,
@@ -180,7 +183,7 @@ class SearchFormType extends AbstractType
     protected function addSelects(FormBuilderInterface $formBuilder)
     {
         $formBuilder
-            ->add('can_host', Select2Type::class, [
+            ->add('can_host', ChoiceType::class, [
                 'choices' => [
                     0 => '0',
                     1 => '1',
@@ -195,7 +198,7 @@ class SearchFormType extends AbstractType
                 'label' => 'searchcanhostatleast',
                 'translation_domain' => 'messages',
             ])
-            ->add('last_login', Select2Type::class, [
+            ->add('last_login', ChoiceType::class, [
                 'label' => 'search.filter.last.login',
                 'choices' => [
                     'search.filter.last.login.1month' => 1,
@@ -208,7 +211,7 @@ class SearchFormType extends AbstractType
                 ],
                 'translation_domain' => 'messages',
             ])
-            ->add('order', Select2Type::class, [
+            ->add('order', ChoiceType::class, [
                 'label' => 'label.order',
                 'choices' => [
                     'search.order.accommodation' => SearchModel::ORDER_ACCOM,
@@ -220,14 +223,14 @@ class SearchFormType extends AbstractType
                 ],
                 'translation_domain' => 'messages',
             ])
-            ->add('direction', Select2Type::class, [
+            ->add('direction', ChoiceType::class, [
                 'label' => 'label.direction',
                 'choices' => [
                     'search.direction.descending' => SearchModel::DIRECTION_DESCENDING,
                     'search.direction.ascending' => SearchModel::DIRECTION_ASCENDING,
                 ],
             ])
-            ->add('items', Select2Type::class, [
+            ->add('items', ChoiceType::class, [
                 'label' => 'label.items',
                 'choices' => [
                     5 => 5,

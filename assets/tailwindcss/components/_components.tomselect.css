@@ -1,41 +1,39 @@
-@import '../../../node_modules/tom-select/dist/css/tom-select.css';
-
+/*
 @layer components {
 
-  .ts-wrapper {
-    @apply u-w-full !u-ml-0;
+  .ts-dropdown .create:hover, .ts-dropdown .option:hover {
+    @apply u-bg-bewelcome u-text-white;
   }
 
-  .ts-control {
-    @apply shadow-sm u-rounded-4 u-border-gray-30 u-bg-white
-    py-2
-    u-px-3
-    u-text-base;
+  .ts-dropdown .active {
+    @apply u-bg-bewelcome u-text-white;
+  }
 
-    /* Add caret https://github.com/orchidjs/tom-select/discussions/384 */
+  .ts-wrapper {
+    @apply u-w-full;
+  }
+
+  .ts-control > input {
+    height:40px;
+
     background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
     background-position: right 0.5rem center;
     background-repeat: no-repeat;
     background-size: 1.5em 1.5em;
+    @apply shadow-sm u-rounded-8 u-border-gray-30 u-bg-white u-py-2 u-px-3 u-text-base;
   }
 
   .ts-dropdown {
-    @apply u-rounded-16 border border-solid border-t u-border-gray-30 text-base;
+    @apply border border-solid border-t u-border-gray-30 u-text-base;
   }
 
-  .ts-dropdown [data-selectable].option:first-child {
-    @apply u-rounded-t-4;
-  }
-
-  .ts-dropdown [data-selectable].option:last-child {
-    @apply u-rounded-b-4;
-  }
-
-  .ts-dropdown .create:hover, .ts-dropdown .option:hover {
-    @apply u-bg-gray-30 u-text-gray-80;
-  }
-
-  .ts-dropdown .active {
-    @apply u-bg-gray-50 u-text-gray-80;
+  .ts-wrapper.multi .ts-control > div {
+    cursor: pointer;
+    margin: 0 3px 3px 0;
+    padding: 2px 6px;
+    background: #f37000;
+    color: #fff;
+    border: 1px solid #f37000;
   }
 }
+*/

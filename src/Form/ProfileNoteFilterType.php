@@ -6,6 +6,7 @@ namespace App\Form;
 use App\Entity\ProfileNote;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -20,14 +21,12 @@ class ProfileNoteFilterType extends AbstractType
         $categories = array_merge(['' => ''], $options['categories']);
 
         $builder
-            ->add('categories', TomSelectType::class, [
+            ->add('categories', TextType::class, [
                 'label' => 'profile.note.categories',
                 'required' => false,
-                'allow_create' => false,
-                'use_select' => true,
-                'multiple' => true,
                 'placeholder' => 'profile.note.select.category',
                 'choices' => $categories,
+                'autocomplete' => true,
                 'empty_data' => [],
             ])
             ->add('order', ChoiceType::class, [

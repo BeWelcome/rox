@@ -1,0 +1,17 @@
+@import "settings";
+@import "tom-select/src/scss/tom-select";
+
+.ts-control {
+  min-height: 40px !important;
+}
+
+.ts-control > input {
+  font-family: Signika;
+  padding-left: 16px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  background-color: #fff;
+  margin-bottom: 8px;
+}

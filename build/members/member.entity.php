@@ -1050,6 +1050,7 @@ WHERE
     specialrelations.IdOwner = $this->id  AND
     specialrelations.IdRelation = members.Id AND
     members.Status in (" . MemberStatusType::ACTIVE_ALL . ")
+ORDER BY members.Username ASC
           ";
           $s = $this->dao->query($sql);
           $Relations = array();

@@ -21,7 +21,7 @@ class ProfileNoteFilterType extends AbstractType
         $categories = array_merge(['' => ''], $options['categories']);
 
         $builder
-            ->add('categories', TextType::class, [
+            ->add('categories', ChoiceType::class, [
                 'label' => 'profile.note.categories',
                 'required' => false,
                 'placeholder' => 'profile.note.select.category',

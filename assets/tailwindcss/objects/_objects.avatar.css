@@ -32,7 +32,7 @@
   height: 32px;
   overflow: hidden;
   border-radius: 100%;
-  border: 1px solid theme('colors.white');
+  border: 1px solid theme('colors.gray-40');
   justify-self: center;
 }
 
@@ -67,7 +67,7 @@
     height: 48px;
     overflow: hidden;
     border-radius: 100%;
-    border: 2px solid theme('colors.white');
+    border: 2px solid theme('colors.gray-40');
     justify-self: center;
   }
 
@@ -105,7 +105,7 @@
     height: 72px;
     overflow: hidden;
     border-radius: 100%;
-    border: 3px solid theme('colors.white');
+    border: 2px solid theme('colors.gray-40');
     justify-self: center;
   }
 
@@ -142,7 +142,7 @@
     height: 96px;
     overflow: hidden;
     border-radius: 100%;
-    border: 4px solid theme('colors.white');
+    border: 2px solid theme('colors.gray-40');
     justify-self: center;
   }
 
@@ -301,11 +301,11 @@
 
 
 .o-avatar--noname .o-avatar__img-wrapper {
-  border: 5px solid theme('colors.white');
+  border: 2px solid theme('colors.gray-40');
 }
 
 .o-avatar--noname_s .o-avatar__img-wrapper {
-  border: 2px solid theme('colors.white');
+  border: 2px solid theme('colors.gray-40');
 }
 
 .o-avatar--shadow {

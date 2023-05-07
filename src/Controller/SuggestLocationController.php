@@ -46,4 +46,15 @@ class SuggestLocationController extends AbstractController
 
         return $response;
     }
+
+    /**
+     * @Route("/suggest/locations/all", name="suggest_locations_all")
+     *
+     * This differs from suggestPlaces in that way that it also allows to find regions and countries (used on the
+     * search locations page).
+     */
+    public function suggestLocations(Request $request, SuggestLocationModel $model): JsonResponse
+    {
+        return $this->suggestPlaces($request, $model);
+    }
 }

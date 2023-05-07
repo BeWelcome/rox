@@ -169,7 +169,7 @@ class ProfileController extends AbstractController
         }
 
         return $this->render('profile/set.location.html.twig', [
-            'submenu' => $profileSubmenu->getSubmenu($member, $loggedInMember, ['active' => 'visitors']),
+            'submenu' => $profileSubmenu->getSubmenu($member, $loggedInMember),
             'member' => $member,
             'form' => $setLocationForm->createView(),
         ]);

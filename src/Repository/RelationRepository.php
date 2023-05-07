@@ -88,11 +88,12 @@ class RelationRepository extends EntityRepository
     public function getRelations(Member $member, int $page, int $itemsPerPage): Pagerfanta
     {
         $qb = $this->createQueryBuilder('r')
+            ->leftJoin('r.receiver', 'm')
             ->where('r.confirmed = :confirmed')
             ->andWhere('r.owner = :member')
             ->setParameter('member', $member)
             ->setParameter(':confirmed', 'Yes')
-            ->orderBy('r.updated', 'DESC')
+            ->orderBy('m.username', 'ASC')
         ;
 
         $notes = new Pagerfanta(new QueryAdapter($qb->getQuery()));

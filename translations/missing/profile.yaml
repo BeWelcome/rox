@@ -83,3 +83,5 @@ profile.current.password:
 profile.new.password:
     - 'New Password'
     - Label for the new password field on the change password page
+profile.set.location:
+    - '@label_setlocation'

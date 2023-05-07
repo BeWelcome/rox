@@ -15,3 +15,12 @@ comment.new.experience.yes:
     - Button label on the modal for new experience
 label.comment.text:
     - '@commentscommenter'
+flash.comment.added:
+    - 'Comment for {username} has been added.'
+    - Flash message shown when a member provides a comment about another member. Keep {username} somewhere in the translation.
+comment.add:
+    - 'Add'
+    - Button label on the add comment form
+comment.edit:
+    - 'Edit'
+    - Button label on the edit comment form

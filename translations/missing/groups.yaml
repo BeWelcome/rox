@@ -16,3 +16,9 @@ group.invitation.declined:
 group.admin.approved:
     - 'Your request to join the {group} has been approved by {admin}.'
     - Text in the email notification if a request to join a group is accepted.
+flash.group.invite.withdrawn:
+    - 'You withdrew the invitation to this group.'
+    - Flash shown when an invitation to a group is removed.
+flash.group.invite.withdrawn.error:
+    - 'There was an error when trying to withdraw the invitation to this group. Please inform the dev team.'
+    - Error message shown as flash message.

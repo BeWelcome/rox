@@ -1,3 +1,6 @@
+error.greeting:
+    - 'Hi {username}!'
+    - Greeting shown on the error pages.
 error.page.access.denied:
     - 'Access denied'
     - Headline on the page that tells the user there has been an access issue with their request

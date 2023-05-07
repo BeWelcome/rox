@@ -1,7 +1,11 @@
+profile.no.relations:
+    - 'No members marked as family or friends yet.'
+    - Text shown if a member hasn''t marked any member as family or friend
 profile.relation.add:
     - '@addRelation'
 profile.relation.edit:
-    - '@editRelation'
+    - 'Edit friends entry'
+    - Menu entry if you already have a link to this member.
 relation.add:
     - 'Add'
     - Button label in the add relation (family and friends) form

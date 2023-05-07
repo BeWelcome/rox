@@ -23,8 +23,20 @@ profile.notes.yes:
 profile.notes.no:
     - '@no'
 profile.note.about:
-    - 'Profile note about {username}'
+    - 'Note about {username}'
     - Headline for the add/edit form for profile notes
 profile.note.apply:
     - 'Apply'
     - Button label for the filter form
+note.add:
+    - 'Add'
+    - Button label on the add note form
+note.edit:
+    - 'Edit'
+    - Button label on the edit note form
+profile.note.updated:
+    - 'Updated'
+    - Option in the filter dropdown on the notes page
+profile.note.order:
+    - 'Order by'
+    - Label in the filter form

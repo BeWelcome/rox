@@ -27,6 +27,7 @@ class ProfileNoteFilterType extends AbstractType
                 'placeholder' => 'profile.note.select.category',
                 'choices' => $categories,
                 'autocomplete' => true,
+                'multiple' => true,
                 'empty_data' => [],
             ])
             ->add('order', ChoiceType::class, [

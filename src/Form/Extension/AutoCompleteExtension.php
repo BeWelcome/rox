@@ -30,6 +30,7 @@ class AutoCompleteExtension extends AbstractTypeExtension
         // makes it legal for FileType fields to have an image_property option
         $resolver->setDefaults([
             'autocomplete' => false,
+            'autocomplete_choices' => [],
             'close_after_select' => true,
             'allow_options_create' => false,
             'allow_create_on_blur' => false,
@@ -86,6 +87,19 @@ class AutoCompleteExtension extends AbstractTypeExtension
 
         if ($options['max_options']) {
             $values['max-options'] = $options['max_options'];
+        }
+
+        if ($options['autocomplete_choices']) {
+            $id = 0;
+            $autocompleteChoices = [];
+            foreach($options['autocomplete_choices'] as $choice) {
+                $autocompleteChoice = new \stdClass();
+                $autocompleteChoice->title = $choice;
+                $autocompleteChoices[] = $autocompleteChoice;
+                $id++;
+            }
+
+            $values['autocomplete-choices'] = json_encode($autocompleteChoices);
         }
 
         $values['create-option-text'] = $this->trans($options['create_option_text']);

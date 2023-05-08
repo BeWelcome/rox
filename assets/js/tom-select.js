@@ -7,11 +7,10 @@ document
     .forEach((element) => {
         const tomSelectOptions = element.dataset;
         console.log(tomSelectOptions)
+        const autocompleteChoices = tomSelectOptions.autocompleteChoices !== undefined;
         let settings = {
-            create: tomSelectOptions.create !== undefined,
-            createOnBlur: tomSelectOptions.createOnBlur !== undefined,
+            sortField: { field: 'text' },
             plugins: ['remove_button'],
-            closeAfterSelect: tomSelectOptions.closeAfterSelect !== undefined,
             render: {
                 option_create: function (data, escape) {
                     return '<div class="create">' + tomSelectOptions.createOptionText + ' ' + escape(data.input) + '</strong>&hellip;</div>';
@@ -20,10 +19,31 @@ document
                     return '<div class="no-results">' + tomSelectOptions.noResultsText + '</div>';
                 },
             },
-            maxItems: (tomSelectOptions.maxItems === undefined) ? null : tomSelectOptions.maxItems,
-            maxOptions: (tomSelectOptions.maxItems === undefined) ? null : tomSelectOptions.maxOptions,
-            sortField: { field: 'text' },
-            preload: (tomSelectOptions.preload === undefined) ? false : tomSelectOptions.preload,
+        }
+        if (tomSelectOptions.create !== undefined) {
+            settings.create = true;
+        }
+        if (tomSelectOptions.createOnBlur !== undefined) {
+            settings.createOnBlur = true;
+        }
+        if (tomSelectOptions.closeAfterSelect !== undefined) {
+            settings.closeAfterSelect = true;
+        }
+        if (tomSelectOptions.maxItems !== undefined) {
+            settings.maxItems = tomSelectOptions.maxItems;
+        }
+        if (tomSelectOptions.maxOptions !== undefined) {
+            settings.maxOptions = tomSelectOptions.maxOptions;
+        }
+        if (tomSelectOptions.preload !== undefined) {
+            settings.preload = tomSelectOptions.preload;
+        }
+
+        if (autocompleteChoices) {
+            settings.valueField = 'title';
+            settings.labelField = 'title';
+            settings.searchField = 'title';
+            settings.options = JSON.parse(tomSelectOptions.autocompleteChoices);
         }
 
         console.log(settings);

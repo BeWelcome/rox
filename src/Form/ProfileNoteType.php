@@ -16,11 +16,11 @@ class ProfileNoteType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('category', ChoiceType::class, [
+            ->add('category', TextType::class, [
                 'label' => 'profile.note.category',
                 'required' => false,
-                'choices' => $options['categories'],
                 'autocomplete' => true,
+                'autocomplete_choices' => $options['categories'],
                 'allow_options_create' => true,
                 'max_items' => 1,
                 'constraints' => [

@@ -141,12 +141,8 @@ class NoteController extends AbstractController
     /**
      * @Route("/members/{username}/notes/{page}", name="notes")
      */
-    public function notes(
-        Request $request,
-        Member $member,
-        ProfileSubmenu $profileSubmenu,
-        int $page = 1
-    ): Response {
+    public function notes(Request $request, Member $member, ProfileSubmenu $profileSubmenu, int $page = 1): Response
+    {
         /** @var Member $loggedInMember */
         $loggedInMember = $this->getuser();
         if ($member !== $loggedInMember) {
@@ -162,7 +158,7 @@ class NoteController extends AbstractController
         $filterForm = $this->createForm(
             ProfileNoteFilterType::class,
             [
-                'categories' => $categories,
+                'choices' => $categories,
                 'order' => $order
             ],
             [
@@ -175,12 +171,6 @@ class NoteController extends AbstractController
             $data = $filterForm->getData();
             $categories = $data['categories'];
             $order = (int) $data['order'];
-
-            return $this->redirectToRoute('notes', [
-                'username' => $member->getUsername(),
-                'categories' => $categories,
-                'order' => $order
-            ]);
         }
         $notes = $noteRepository->getProfileNotes($member, $categories, $order, $page, $this->getItemsPerPage($member));
 

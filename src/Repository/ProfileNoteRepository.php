@@ -62,7 +62,7 @@ class ProfileNoteRepository extends EntityRepository
 
     public function getCategories(Member $member): array
     {
-        $rawCategories = $this->createQueryBuilder('n')
+        $categories = $this->createQueryBuilder('n')
             ->select('DISTINCT n.category')
             ->where('n.owner = :member')
             ->setParameter('member', $member)
@@ -70,13 +70,8 @@ class ProfileNoteRepository extends EntityRepository
             ->getQuery()
             ->getSingleColumnResult()
         ;
-/*
-        $categories = [];
-        foreach ($rawCategories as $key => $rawCategory) {
-            $categories[$rawCategory['category']] = $key;
-        }
-*/
-        return array_flip($rawCategories);
+
+        return array_combine($categories, $categories);
     }
 
     public function getNoteForMemberPair(Member $loggedInMember, Member $member): ?ProfileNote

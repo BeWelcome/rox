@@ -135,7 +135,9 @@
 
 {% block form_widget_simple -%}
     {% if type is not defined or type != 'hidden' %}
-        {%- set attr = attr|merge({class: (attr.class|default('') ~ (type|default('') == 'file' ? ' custom-file-input' : ' o-input'))|trim}) -%}
+        {% if not form.vars.uses_autocomplete %}
+            {%- set attr = attr|merge({class: (attr.class|default('') ~ (type|default('') == 'file' ? ' custom-file-input' : ' o-input'))|trim}) -%}
+        {% endif %}
     {% endif %}
     {%- if type is defined and (type == 'range' or type == 'color') %}
         {# Attribute "required" is not supported #}

@@ -180,11 +180,6 @@ function wasGuestOrHost(string $relations) {
                                        <?php if ($loggedIn === $comment->UsernameToMember) { ?>
                                            <a href="/members/<?= $this->member->Username;?>/comment/<?php echo $comment->id;?>/report" title="<?=$words->getSilent('ReportCommentProblem') ?>"
                                               class="float-left gray align-self-center"><i class="fa fa-flag" alt="<?=$words->getSilent('ReportCommentProblem') ?>"></i></a>
-                                           <?php if (null === $commentTo) { ?>
-
-                                           <a href="/members/<?= $comment->UsernameFromMember;?>/comment/add" title="<?=$words->getSilent('profile.add.comment', $comment->UsernameFromMember) ?>"
-                                              class="float-right gray align-self-center"><i class="fa fa-reply" alt="<?=$words->getSilent('profile.add.comment', $comment->UsernameFromMember) ?>"></i></a>
-                                           <?php } ?>
                                        <?php } ?>
                                    <?php }?>
                                </div>

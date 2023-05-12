@@ -7,7 +7,7 @@
     </div>
     <div id="collapse-travel" class="collapse" data-parent="#editProfile" aria-labelledby="heading-travel">
         <div class="card-body">
-            <div class="form-row">
+            <div class="o-form-group row  mb-2">
                 <label for="PastTrips" class="col-md-3 col-form-label">
                     <?= $words->get('ProfilePastTrips') ?>
                 </label>
@@ -16,7 +16,7 @@
                 </div>
             </div>
 
-            <div class="form-row mt-2">
+            <div class="o-form-group row mb-2">
                 <label for="PlannedTrips" class="col-md-3 col-form-label">
                     <?= $words->get('ProfilePlannedTrips') ?>
                 </label>

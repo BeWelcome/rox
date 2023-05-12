@@ -19,10 +19,13 @@
                                name="Street"
                                id="Street"
                                value="<?php echo htmlentities($vars['Street'], ENT_COMPAT, 'UTF-8'); ?>"/>
-                        <input type="checkbox" value="Yes" name="IsHidden_Address" id="IsHidden_Address"
+                        <div class="o-checkbox">
+                            <input type="checkbox" class="o-checkbox__input" value="Yes" name="IsHidden_Address" id="IsHidden_Address"
                             <?php if ($vars['IsHidden_Address'])
                                 echo 'checked="checked"';
-                            ?>><label for="IsHidden_Address"><?= $words->get('hidden') ?></label>
+                            ?>>
+                            <label class="o-checkbox__label" for="IsHidden_Address"><?= $words->get('hidden') ?></label>
+                        </div>
 
                         <?php if (isset($errorStreet)) { ?>
                             <div class="w-100 alert alert-danger"><?= $words->get('SignupErrorInvalidStreet') ?></div>
@@ -55,11 +58,12 @@
                         <input class="o-input<?php if (isset($errorZip)) { ?> error-input-text<?php } ?>" type="text"
                                name="Zip" id="Zip"
                                value="<?php echo htmlentities($vars['Zip'], ENT_COMPAT, 'UTF-8'); ?>" size="8"/>
-                        <input type="checkbox" value="Yes" name="IsHidden_Zip" id="IsHidden_Zip"
+                        <div class="o-checkbox">
+                        <input type="checkbox" class="o-checkbox__input" value="Yes" name="IsHidden_Zip" id="IsHidden_Zip"
                             <?php if ($vars['IsHidden_Zip'])
                                 echo 'checked="checked"';
                             ?> />
-                        <label for="IsHidden_Zip"><?= $words->get('hidden') ?></label>
+                            <label class="o-checkbox__label" for="IsHidden_Zip"><?= $words->get('hidden') ?></label></div>
                         <?php if (isset($errorZip)) { ?>
                             <div class="w-100 alert alert-danger"><?= $words->get('SignupErrorInvalidZip') ?></div>
                         <?php } ?>
@@ -74,11 +78,13 @@
                         </label>
                         <input type="text" id="HomePhoneNumber" name="HomePhoneNumber" class="o-input"
                                value="<?php echo htmlentities($vars['HomePhoneNumber'], ENT_COMPAT, 'UTF-8'); ?>"/>
-                        <input type="checkbox" value="Yes" id="IsHidden_HomePhoneNumber" name="IsHidden_HomePhoneNumber"
+
+                        <div class="o-checkbox">
+                        <input type="checkbox" class="o-checkbox__input" value="Yes" id="IsHidden_HomePhoneNumber" name="IsHidden_HomePhoneNumber"
                             <?php if ($vars['IsHidden_HomePhoneNumber'])
                                 echo 'checked="checked"';
                             ?> />
-                        <label for="IsHidden_HomePhoneNumber" class="m-0 ml-1"><?= $words->get('hidden') ?></label>
+                            <label for="IsHidden_HomePhoneNumber" class="m-0 ml-1 o-checkbox__label"><?= $words->get('hidden') ?></label></div>
                     </div>
 
                     <div class="o-form-group col-12 col-md-4">
@@ -87,11 +93,13 @@
                         </label>
                         <input type="text" id="CellPhoneNumber" name="CellPhoneNumber" class="o-input"
                                value="<?php echo htmlentities($vars['CellPhoneNumber'], ENT_COMPAT, 'UTF-8'); ?>"/>
-                        <input type="checkbox" value="Yes" id="IsHidden_CellPhoneNumber" name="IsHidden_CellPhoneNumber"
+                        <div class="o-checkbox">
+                        <input type="checkbox" class="o-checkbox__input" value="Yes" id="IsHidden_CellPhoneNumber" name="IsHidden_CellPhoneNumber"
                             <?php if ($vars['IsHidden_CellPhoneNumber'])
                                 echo 'checked="checked"';
                             ?> />
-                        <label for="IsHidden_CellPhoneNumber" class="m-0 ml-1"><?= $words->get('hidden') ?></label>
+                        <label for="IsHidden_CellPhoneNumber" class="m-0 ml-1 o-checkbox__label"><?= $words->get('hidden') ?></label>
+                        </div>
                     </div>
 
                     <div class="o-form-group col-12 col-md-4">
@@ -100,11 +108,13 @@
                         </label>
                         <input type="text" name="WorkPhoneNumber" class="o-input"
                                value="<?php echo htmlentities($vars['WorkPhoneNumber'], ENT_COMPAT, 'UTF-8'); ?>"/>
-                        <input type="checkbox" value="Yes" name="IsHidden_WorkPhoneNumber"
+                        <div class="o-checkbox">
+                        <input type="checkbox" class="o-checkbox__input" value="Yes" name="IsHidden_WorkPhoneNumber"
                             <?php if ($vars['IsHidden_WorkPhoneNumber'])
                                 echo 'checked="checked"';
                             ?> />
-                        <label for="IsHidden_WorkPhoneNumber" class="m-0 ml-1"><?= $words->get('hidden') ?></label>
+                        <label for="IsHidden_WorkPhoneNumber" class="m-0 ml-1 o-checkbox__label"><?= $words->get('hidden') ?></label>
+                        </div>
                     </div>
                 </div>
 

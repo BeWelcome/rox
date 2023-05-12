@@ -12,13 +12,13 @@
             for ($ii = 0; $ii < count($vars['languages_selected']); $ii++) {
                 $lang_ids[] = $vars['languages_selected'][$ii]->IdLanguage;
             } ?>
-            <div class="row">
+            <div class="row mb-2">
                 <label for="ProfileLanguagesSpoken" class="col-form-label">
                     <?= $words->get('ProfileLanguagesSpoken') ?>
                 </label>
             </div>
             <?php for ($ii = 0; $ii < count($vars['languages_selected']); $ii++) { ?>
-                <div id="lang_<?= $ii ?>_row" class="o-form-group row">
+                <div id="lang_<?= $ii ?>_row" class="o-form-group row mb-2">
                     <div class="col-2 col-md-1">
                         <button class="btn btn-outline-danger p-1 px-2 remove_lang" id="lang_<?= $ii ?>"
                                 title="<?= $words->get('RemoveLanguage') ?>"><i class="fa fa-times-circle" id="lang_<?= $ii ?>"></i><span
@@ -51,7 +51,7 @@
                 </div>
             <?php } ?>
             <!-- Language selection template -->
-            <div class="row langsel mt-2 d-none">
+            <div class="row langsel mt-2 d-none mb-2">
                 <div class="col-2 col-md-1">
                     <button class="btn btn-outline-danger p-1 px-2 remove_lang invisible"><i
                             class="fa fa-times-circle"></i><span
@@ -105,7 +105,7 @@
                     </select>
                 </div>
             </div>
-            <div class="row">
+            <div class="row mb-2">
                 <div class="col-10 offset-2 offset-md-1 mt-1">
                     <input type="button" id="langbutton" class="btn btn-outline-primary mt-1" name="addlang"
                            value="<?= $words->getSilent('AddLanguage') ?>"/>

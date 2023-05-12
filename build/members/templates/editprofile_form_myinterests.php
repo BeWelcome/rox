@@ -7,7 +7,7 @@
     </div>
     <div id="collapse-myinterests" class="collapse" data-parent="#editProfile" aria-labelledby="heading-myinterests">
         <div class="card-body">
-            <div class="o-form-group row">
+            <div class="o-form-group row mb-2">
                 <label for="Hobbies" class="col-md-2 col-form-label">
                     <?= $words->get('ProfileHobbies') ?>
                 </label>
@@ -16,7 +16,7 @@
                 </div>
             </div>
 
-            <div class="o-form-group row">
+            <div class="o-form-group row mb-2">
                 <label for="Books" class="col-md-2 col-form-label">
                     <?= $words->get('ProfileBooks') ?>
                 </label>
@@ -25,16 +25,16 @@
                 </div>
             </div>
 
-            <div class="o-form-group row">
+            <div class="o-form-group row mb-2">
                 <label for="Music" class="col-md-2 col-form-label">
                     <?= $words->get('ProfileMusic') ?>
                 </label>
-                <div class="col-12 col-md-10">
+                <div class="col-12 col-md-10 mb-2">
                     <textarea id="Music" name="Music" class="o-input" rows="3"><?= $vars['Music'] ?></textarea>
                 </div>
             </div>
 
-            <div class="o-form-group row">
+            <div class="o-form-group row mb-2">
                 <label for="Movies" class="col-md-2 col-form-label">
                     <?= $words->get('ProfileMovies') ?>
                 </label>
@@ -43,7 +43,7 @@
                 </div>
             </div>
 
-            <div class="o-form-group row">
+            <div class="o-form-group row mb-2">
                 <label for="Organizations" class="col-md-2 col-form-label">
                     <?= $words->get('ProfileOrganizations') ?>
                 </label>

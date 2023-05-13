@@ -100,11 +100,11 @@ class SearchModel extends RoxModelBase
         $orderType = $orderBy - ($orderBy % 2);
         if (self::ORDER_MEMBERSHIP === $orderBy || self::ORDER_LOGIN === $orderBy )
         {
-            $direction = ' DESC';
+            $directionType = ' DESC';
         } else {
-            $direction = ' ASC';
+            $directionType = ' ASC';
         }
-        $order = self::ORDER_BY[$orderType]['Column'] . $direction;
+        $order = self::ORDER_BY[$orderType]['Column'] . $directionType;
         switch ($orderType) {
             case self::ORDER_ACCOM:
                 $order .= ', (IF(mp.photoCount IS NULL, 0, 1) + IF(m.ProfileSummary != 0, 2, 0)) ASC'
@@ -745,6 +745,7 @@ LIMIT 1
                 g.geonameId IN ('" . $inGeonameIds . "')
             ORDER BY
                 geonameId, source, ispreferred DESC, isshort DESC";
+
         $rawNames = $this->bulkLookup($query);
         $names = array();
         foreach ($rawNames as $rawName) {

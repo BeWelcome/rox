@@ -156,18 +156,24 @@ class SearchFormType extends AbstractType
         }
         $formBuilder
             ->add('min_age', ChoiceType::class, [
+                'autocomplete' => true,
+                'plugins' => [],
                 'choices' => $minAgeArray,
                 'choice_translation_domain' => false,
                 'label' => 'findpeopleminimumage',
                 'translation_domain' => 'messages',
             ])
             ->add('max_age', ChoiceType::class, [
+                'autocomplete' => true,
+                'plugins' => [],
                 'choices' => $maxAgeArray,
                 'choice_translation_domain' => false,
                 'label' => 'findpeoplemaximumage',
                 'translation_domain' => 'messages',
             ])
             ->add('gender', ChoiceType::class, [
+                'autocomplete' => true,
+                'plugins' => [],
                 'choices' => [
                     'any' => null,
                     'male' => 1,
@@ -184,8 +190,10 @@ class SearchFormType extends AbstractType
     {
         $formBuilder
             ->add('can_host', ChoiceType::class, [
+                'label' => 'searchcanhostatleast',
+                'autocomplete' => true,
+                'plugins' => [],
                 'choices' => [
-                    0 => '0',
                     1 => '1',
                     2 => '2',
                     3 => '3',
@@ -195,11 +203,12 @@ class SearchFormType extends AbstractType
                     20 => '20',
                 ],
                 'choice_translation_domain' => false,
-                'label' => 'searchcanhostatleast',
                 'translation_domain' => 'messages',
             ])
             ->add('last_login', ChoiceType::class, [
                 'label' => 'search.filter.last.login',
+                'autocomplete' => true,
+                'plugins' => [],
                 'choices' => [
                     'search.filter.last.login.1month' => 1,
                     'search.filter.last.login.2months' => 2,
@@ -213,6 +222,8 @@ class SearchFormType extends AbstractType
             ])
             ->add('order', ChoiceType::class, [
                 'label' => 'label.order',
+                'autocomplete' => true,
+                'plugins' => [],
                 'choices' => [
                     'search.order.accommodation' => SearchModel::ORDER_ACCOM,
                     'search.order.distance' => SearchModel::ORDER_DISTANCE,
@@ -225,6 +236,8 @@ class SearchFormType extends AbstractType
             ])
             ->add('direction', ChoiceType::class, [
                 'label' => 'label.direction',
+                'autocomplete' => true,
+                'plugins' => [],
                 'choices' => [
                     'search.direction.descending' => SearchModel::DIRECTION_DESCENDING,
                     'search.direction.ascending' => SearchModel::DIRECTION_ASCENDING,
@@ -232,6 +245,8 @@ class SearchFormType extends AbstractType
             ])
             ->add('items', ChoiceType::class, [
                 'label' => 'label.items',
+                'autocomplete' => true,
+                'plugins' => [],
                 'choices' => [
                     5 => 5,
                     10 => 10,

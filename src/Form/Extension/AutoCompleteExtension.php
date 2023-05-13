@@ -39,6 +39,7 @@ class AutoCompleteExtension extends AbstractTypeExtension
             'max_options' => null,
             'max_items' => null,
             'preload' => 'focus',
+            'plugins' => 'remove_button',
             'options_as_html' => false,
         ]);
 
@@ -90,18 +91,19 @@ class AutoCompleteExtension extends AbstractTypeExtension
         }
 
         if ($options['autocomplete_choices']) {
-            $id = 0;
             $autocompleteChoices = [];
             foreach($options['autocomplete_choices'] as $choice) {
                 $autocompleteChoice = new \stdClass();
                 $autocompleteChoice->title = $choice;
                 $autocompleteChoices[] = $autocompleteChoice;
-                $id++;
             }
 
             $values['autocomplete-choices'] = json_encode($autocompleteChoices);
         }
 
+        if ($options['plugins']) {
+            $values['plugins'] = $options['plugins'];
+        }
         $values['create-option-text'] = $this->trans($options['create_option_text']);
         $values['no-results-text'] = $this->trans($options['no_results_text']);
         $values['preload'] = $options['preload'];

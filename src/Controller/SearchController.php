@@ -144,9 +144,9 @@ class SearchController extends AbstractController
             if ($searchIsValid) {
                 $data = $search->getData();
                 if ($search->has('resetOptions') && $search->get('resetOptions')->isClicked()) {
-                    $memberSearchOptionsPreference->setValue('');
-                    $em->persist($memberSearchOptionsPreference);
+                    $em->remove($memberSearchOptionsPreference);
                     $em->flush();
+
                     return $this->redirectToRoute('search_locations');
                 }
 

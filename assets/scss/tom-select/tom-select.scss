@@ -1,11 +1,32 @@
 @import "settings";
 @import "tom-select/src/scss/tom-select";
 
-.ts-control {
-  min-height: 40px !important;
+/* .ts-control {
   padding: 4px;
 }
+*/
+.ts-control, .ts-wrapper.single.input-active .ts-control {
+  min-height: 40px !important;
+  padding-left: 16px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: none;
+  background-color: #fff;
+  margin-bottom: 8px;
+  font-weight: 400;
 
+  /* Add caret https://github.com/orchidjs/tom-select/discussions/384 */
+  background-image: url("data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 fill=%27none%27 viewBox=%270 0 20 20%27%3e%3cpath stroke=%27%236b7280%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27 stroke-width=%271.5%27 d=%27M6 8l4 4 4-4%27/%3e%3c/svg%3e");
+  background-position: right 0.5rem center;
+  background-repeat: no-repeat;
+  background-size: 1.5em 1.5em;
+}
+
+.ts-control:hover, .ts-wrapper.single.input-active .ts-control:hover {
+  border: 1px solid black;
+}
+
+/*
 .ts-control > input {
   font-family: Signika;
   padding-left: 16px;
@@ -16,3 +37,4 @@
   background-color: #fff;
   margin-bottom: 8px;
 }
+*/

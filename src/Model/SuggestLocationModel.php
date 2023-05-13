@@ -264,7 +264,7 @@ class SuggestLocationModel
             $country->setTranslatableLocale($locale);
             $this->entityManager->refresh($country);
             $result[] = [
-                'type' => $type,
+                'type' => $this->translator->trans($type, [], 'messages'),
                 'id' => $location->getGeonameId(),
                 'name' => $location->getName(),
                 'latitude' => $location->getLatitude(),

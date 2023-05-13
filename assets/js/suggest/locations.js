@@ -46,7 +46,7 @@ function initializeAutoComplete(element, searchUrl) {
                 return `
                 <li class="suggest-group">${result.title}</li>
                     <li ${props}>
-                        <div class="wiki-title">
+                        <div class="suggest-title">
                             ${result.text}
                         </div>
                 </li>
@@ -104,10 +104,6 @@ class LocationSuggest {
         this.searchUrl = url;
         this.identifier = identifier;
         this.autoComplete = new Autocomplete(element, {
-            // Search function can return a promise
-            // which resolves with an array of
-            // results. In this case we're using
-            // the Wikipedia search API.
             search: input => {
                 const url = this.searchUrl + `?term=${encodeURI(input)}`
 
@@ -129,9 +125,6 @@ class LocationSuggest {
 
             debounceTime: 1000,
 
-            // Control the rendering of result items.
-            // Let's show the title and snippet
-            // from the Wikipedia results
             renderResult: (result, props) => {
                 let group = ''
                 if (result.type === "refine") {

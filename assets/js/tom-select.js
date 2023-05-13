@@ -9,8 +9,6 @@ document
 
         const autocompleteChoices = tomSelectOptions.autocompleteChoices !== undefined;
         let settings = {
-            sortField: { field: 'text' },
-            plugins: ['remove_button'],
             render: {
                 option_create: function (data, escape) {
                     return '<div class="create">' + tomSelectOptions.createOptionText + ' ' + escape(data.input) + '</strong>&hellip;</div>';
@@ -38,7 +36,10 @@ document
         if (tomSelectOptions.preload !== undefined) {
             settings.preload = tomSelectOptions.preload;
         }
-
+        if (tomSelectOptions.plugins !== undefined) {
+            settings.plugins = tomSelectOptions.plugins.split(",");
+            settings.sortField = { field: 'text' };
+        }
         if (autocompleteChoices) {
             settings.valueField = 'title';
             settings.labelField = 'title';

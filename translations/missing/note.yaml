@@ -10,6 +10,9 @@ profile.note.comment:
 profile.notes:
     - 'Notes'
     - 'Headline for the notes page of the profile'
+profile.no.notes:
+    - 'There are no notes about other members, yet.'
+    - Text shown if you didn't take a note about a profile.
 profile.notes.menu:
     - '@mynotes'
 profile.notes.delete:

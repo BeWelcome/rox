@@ -35,7 +35,7 @@ use AnthonyMartin\GeoLocation\GeoPoint;
 class SearchModel extends RoxModelBase
 {
     private const SPHINX_PLACES = 1;
-    private const SPHINX_ADMINUNITS = 2;
+    private const SPHINX_ADMIN_UNITS = 2;
     private const SPHINX_COUNTRIES = 4;
 
     // const ORDER_NOSORT = 0; // Not needed as this would be the same as for MEMBERSHIP
@@ -98,7 +98,7 @@ class SearchModel extends RoxModelBase
     private function getOrderBy($orderBy, $direction)
     {
         $orderType = $orderBy - ($orderBy % 2);
-        if (self::ORDER_MEMBERSHIP === $orderBy || self::ORDER_LOGIN === $orderBy )
+        if (self::ORDER_MEMBERSHIP === $orderBy)
         {
             $directionType = ' DESC';
         } else {
@@ -1441,7 +1441,7 @@ LIMIT 1
                     $query->where('isplace', '=', 1);
                     $query->limit(0, 5);
                     break;
-                case self::SPHINX_ADMINUNITS:
+                case self::SPHINX_ADMIN_UNITS:
                     $query->where('isadmin', '=', 1);
                     $query->limit(0, 3);
                     break;
@@ -1563,7 +1563,7 @@ LIMIT 1
         }
         if ('places' !== $type && null === $country) {
             // Get administrative units
-            $resAdminUnits = $this->sphinxSearch($location, self::SPHINX_ADMINUNITS);
+            $resAdminUnits = $this->sphinxSearch($location, self::SPHINX_ADMIN_UNITS);
             if ($resAdminUnits) {
                 $results = $resAdminUnits->fetchAllAssoc();
                 $ids = array();

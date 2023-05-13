@@ -191,7 +191,7 @@ function wasGuestOrHost(string $relations) {
                                ?>
                                <div class="clearfix">
                                    <a href="/members/<?= $comment->UsernameFromMember;?>/comment/add" title="<?= $addCommentTranslation ?>"
-                                      class="align-self-center"><button class="o-button"><?= $addCommentTranslation ?></button></a>
+                                      class="align-self-center float-right"><button class="o-button"><?= $addCommentTranslation ?></button></a>
                                </div>
                            <?php } else { ?>
 

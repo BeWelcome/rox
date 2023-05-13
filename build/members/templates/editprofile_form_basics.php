@@ -25,12 +25,13 @@
                                name="FirstName"
                                value="<?php echo htmlentities($vars['FirstName'], ENT_COMPAT, 'UTF-8'); ?>"/>
                     </div>
-                    <div class="col-4 col-md-2 o-checkbox">
+                    <div class="col-4 col-md-2 u-flex u-items-center"><div class="o-checkbox">
                         <input type="checkbox" value="Yes" name="IsHidden_FirstName"
                             <?php if ($vars['IsHidden_FirstName'] === 'Yes')
                                 echo 'checked="checked"';
-                            ?> />
-                        <label for="IsHidden_FirstName"><?= $words->get('hidden') ?></label>
+                            ?> class="o-checkbox__input"/>
+                        <label for="IsHidden_FirstName" class="o-checkbox__label"><?= $words->get('hidden') ?></label>
+                        </div>
                     </div>
                     <?php if (isset($errorFirstName)) { ?>
                         <div class="w-100 alert alert-danger"><?= $words->get('SignupErrorInvalidFirstName') ?></div>
@@ -42,12 +43,13 @@
                         <input type="text" name="SecondName" class="o-input"
                                value="<?php echo htmlentities($vars['SecondName'], ENT_COMPAT, 'UTF-8'); ?>"/>
                     </div>
-                    <div class="col-4 col-md-2 o-checkbox">
+                    <div class="col-4 col-md-2 u-flex u-items-center"><div class="o-checkbox">
                         <input type="checkbox" value="Yes" name="IsHidden_SecondName"
                             <?php if ($vars['IsHidden_SecondName'] === 'Yes')
                                 echo 'checked="checked"';
-                            ?> />
-                        <label for="IsHidden_SecondName"><?= $words->get('hidden') ?></label>
+                            ?> class="o-checkbox__input"/>
+                        <label for="IsHidden_SecondName" class="o-checkbox__label"><?= $words->get('hidden') ?></label>
+                        </div>
                     </div>
                 </div>
 
@@ -59,12 +61,13 @@
                                name="LastName"
                                value="<?php echo htmlentities($vars['LastName'], ENT_COMPAT, 'UTF-8'); ?>"/>
                     </div>
-                    <div class="col-4 col-md-2 o-checkbox">
+                    <div class="col-4 col-md-2 u-flex u-items-center"><div class="o-checkbox">
                         <input type="checkbox" value="Yes" name="IsHidden_LastName"
                             <?php if ($vars['IsHidden_LastName'] === 'Yes')
                                 echo 'checked="checked"';
-                            ?> />
-                        <label for="IsHidden_LastName"><?= $words->get('hidden') ?></label>
+                            ?> class="o-checkbox__input"/>
+                        <label for="IsHidden_LastName" class="o-checkbox__label"><?= $words->get('hidden') ?></label>
+                    </div>
                     </div>
                     <?php if (isset($errorLastName)) { ?>
                         <div class="w-100 alert alert-danger"><?= $words->get('SignupErrorInvalidLastName') ?></div>

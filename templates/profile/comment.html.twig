@@ -39,6 +39,11 @@
     {% set username = comment.toMember.Username %}
     {% set comment_direction %}{{ 'profile.comment.about'|trans({'username': '<a href="' ~ url('members_profile', {username: username}) ~ '">' ~ username ~ '</a>'})|raw }}{% endset %}
 {% endif %}
+{% if not comment.updated is null and comment.created != comment.updated %}
+    {% set comment_date = comment.updated %}
+{% else %}
+    {% set comment_date = comment.created %}
+{% endif %}
 <div class="card comment-bg-{{ quality }} u-p-16 u-mb-8 md:u-mb-0 {% if from %}u-mr-16 md:u-mr-0{% else %}u-ml-16 md:u-ml-0{% endif %}">
     {% if (show > 1) %}
         <div class="u-flex u-flex-col u-rounded-8 u-px-8 u-bg-black-o-30 u-mb-8">
@@ -55,7 +60,7 @@
                     <span class="commenttitle {{ quality }}">{{ ('commentquality_' ~ quality )|trans }}</span>
                 {% endif %}
                 <br>{{ comment_direction }}
-                <br><span class="u-text-14 u-leading-20" title="{{ comment.created|format_datetime() }}">{{ comment.created.diffForHumans }}
+                <br><span class="u-text-14 u-leading-20" title="{{ comment_date|format_datetime() }}">{{ comment_date.diffForHumans }}
                     </span>
             </p>
         </div>

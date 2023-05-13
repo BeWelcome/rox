@@ -1,6 +1,5 @@
-import Litepicker from 'litepicker';
+import Litepicker from 'litepicker/dist/nocss/litepicker.umd.js';
 import dayjs from 'dayjs';
-import '../scss/_daterangepicker.scss';
 
 $(function () {
     $('[data-toggle="popover"]').popover({ html : true });

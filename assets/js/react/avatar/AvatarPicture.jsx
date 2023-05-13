@@ -6,7 +6,7 @@ const AvatarPicture = (props) => {
 
     const useLightbox = config.avatarUseLightbox;
     const basePictureUrl = config.avatarUrl;
-    const pictureUrl = useLightbox ? `${basePictureUrl}/original` : `/members/${config.username}`;
+    const pictureUrl = useLightbox ? `${basePictureUrl}/original` : `/members/avatar/${config.username}/original`;
     const pictureTitle = getText('profile.picture.title');
 
     const imageStyle = {

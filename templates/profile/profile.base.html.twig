@@ -86,11 +86,15 @@
                             class="mt-3 h3-canvas-color">{{ menuItem.key | lower | trans }}</h3>{% endif %}
                         <div class="list-group u-rounded-8 mb-2">
                             {% elseif 'profile_picture' in filter %}
-                                <div class="u-w-full u-relative u-pb-[100%]">
-                                    <div class="u-absolute u-left-0 u-top-0">
-                                        <img class="u-rounded-8 u-max-w-full" src="{{ url('avatar', {'username': menuItem.username, 'size': 500}) }}">
+                                {% set username = menuItem.username %}
+                                <a href="{{ url('members_profile', {username: username}) }}">
+                                    <div class="u-w-full u-relative u-pb-[100%]">
+                                        <div class="u-absolute u-left-0 u-top-0">
+                                            <img class="u-rounded-8 u-max-w-full" src="{{ url('avatar', {username: username, size: 500}) }}"
+                                                alt="{{ 'profile.picture'|trans({username: username}) }}">
+                                        </div>
                                     </div>
-                                </div>
+                                </a>
                                 {% if menuItem.is_owner %}
                                     <button type="button" class="btn btn-info btn-block"
                                             style="cursor: pointer;">{{ 'profile.change.avatar'|trans }}</button>

@@ -85,3 +85,6 @@ profile.new.password:
     - Label for the new password field on the change password page
 profile.set.location:
     - '@label_setlocation'
+profile.picture:
+    - 'The profile picture of {username}'
+    - Alt text for the profile picture.

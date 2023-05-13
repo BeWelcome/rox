@@ -38,7 +38,9 @@ class JoinGroupType extends AbstractType
                     ]),
                 ],
             ])
-            ->add('join', SubmitType::class)
+            ->add('join', SubmitType::class, [
+                'label' => 'join',
+            ])
         ;
     }
 

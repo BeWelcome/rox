@@ -1,0 +1,3 @@
+login.password:
+    - 'Password'
+    - Label text for the password field on the login forms.

@@ -2,7 +2,6 @@
 
 namespace App\Model;
 
-use App\Entity\NewLocation;
 use Doctrine\ORM\EntityManagerInterface;
 use Foolz\SphinxQL\Drivers\Pdo\Connection;
 use Foolz\SphinxQL\Helper;
@@ -13,10 +12,13 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SuggestLocationModel
 {
-    private const PLACE = 'place';
-    private const ADMIN_UNIT = 'admin.unit';
-    private const COUNTRY = 'country';
+    private const PLACE = 'search.place';
+    private const ADMIN_UNIT = 'search.admin.unit';
+    private const COUNTRY = 'search.country';
 
+    private const TYPE_PLACE = 'isPlace';
+    private const TYPE_ADMIN_UNIT = 'isAdmin';
+    private const TYPE_COUNTRY = 'isCountry';
     private TranslatorInterface $translator;
     private EntityManagerInterface $entityManager;
     private SphinxQL $sphinxQL;
@@ -63,48 +65,13 @@ class SuggestLocationModel
             return ['locations' => []];
         }
 
-        list($totalFound, $sphinxResult) = $this->searchForPlace($place, $countryId, $adminId, $preferExact);
+        list($totalFound, $sphinxResult) = $this->getIdsForLocationType($place, self::TYPE_PLACE, $count, $countryId, $adminId, $preferExact);
 
         if (0 === $totalFound) {
             return ['locations' => []];
         }
 
-        $ids = $this->filterForUniqueIds($sphinxResult);
-
-        $locale = $this->translator->getLocale();
-        $result = [];
-        foreach ($ids as $id) {
-            $location = $this->getDetailsForId($id);
-            $admin1 = $location->getAdmin1();
-            if (null !== $admin1) {
-                $admin1->setTranslatableLocale($locale);
-                $this->entityManager->refresh($admin1);
-            }
-            $country = $location->getCountry();
-            $country->setTranslatableLocale($locale);
-            $this->entityManager->refresh($country);
-            $result[] = [
-                'type' => self::PLACE,
-                'id' => $location->getGeonameId(),
-                'name' => $location->getName(),
-                'latitude' => $location->getLatitude(),
-                'longitude' => $location->getLongitude(),
-                'admin1' => (null === $admin1) ? '' : $location->getAdmin1()->getName(),
-                'country' => $location->getCountry()->getName(),
-            ];
-        }
-
-        if ($totalFound > $count) {
-            $result[] = [
-                'type' => 'refine',
-                'title' => $this->translator->trans('suggest.refine'),
-                'text' => $this->translator->trans('suggest.more.results'),
-            ];
-        }
-
-        return [
-            'locations' => $result,
-        ];
+        return $this->getLocationDetails($sphinxResult, $totalFound, $count, self::PLACE);
     }
 
     /**
@@ -116,11 +83,21 @@ class SuggestLocationModel
      */
     private function getLocations(string $term): array
     {
+        $parts = explode(',', $term);
         $result = $this->getPlaces($term, false, 10);
 
-        $result['locations'][] = $this->getAdminUnits($term, 5);
+        // In case no optional part was given search for admin units and countries
+        if (1 == \count($parts)) {
+            $adminUnits = $this->findAdminUnits($term, 5);
+            if (!empty($adminUnits['locations'])) {
+                $result['locations'] = array_merge($result['locations'], $adminUnits['locations']);
+            }
 
-        $result['locations'][] = $this->getCountries($term, 2);
+            $countries = $this->findCountries($term, 2);
+            if (!empty($countries['locations'])) {
+                $result['locations'] = array_merge($result['locations'], $countries['locations']);
+            }
+        }
 
         return $result;
     }
@@ -146,7 +123,7 @@ class SuggestLocationModel
     /**
      * @SuppressWarnings(PHPMD.StaticAccess)
      */
-    private function findCountryIds(?string $country): array
+    private function findCountryIds(?string $country): ?array
     {
         if (null === $country) {
             return [];
@@ -169,8 +146,6 @@ class SuggestLocationModel
             ->where('isCountry', '=', 1)
             ->option('ranker', SphinxQL::expr('expr(\'sum(exact_hit*1000)\')'))
         ;
-
-        $sql = $query->compile()->getCompiled();
 
         $result = $query->execute()->fetchAssoc();
 
@@ -207,9 +182,6 @@ class SuggestLocationModel
         return $result;
     }
 
-    /**
-     * @SuppressWarnings(PHPMD.StaticAccess)
-     */
     private function findAdminUnitId(?string $countryId, ?string $adminUnit): ?string
     {
         if (null === $countryId || null === $adminUnit) {
@@ -251,9 +223,12 @@ class SuggestLocationModel
             ->from('geonames_sphinx')
             ->match($match)
             ->where('isadmin', '=', 1)
-            ->where('country', '=', $countryId)
             ->option('ranker', SphinxQL::expr('expr(\'sum(exact_hit*1000)\')'))
         ;
+
+        if (null !== $countryId) {
+            $query->where('country', '=', $countryId);
+        }
 
         $result = $query->execute()->fetchAssoc();
 
@@ -272,6 +247,46 @@ class SuggestLocationModel
         return $totalFound;
     }
 
+    public function getLocationDetails(array $sphinxResult, int $totalFound, int $count, string $type): array
+    {
+        $ids = $this->filterForUniqueIds($sphinxResult);
+
+        $locale = $this->translator->getLocale();
+        $result = [];
+        foreach ($ids as $id) {
+            $location = $this->getDetailsForId($id);
+            $admin1 = $location->getAdmin1();
+            if (null !== $admin1) {
+                $admin1->setTranslatableLocale($locale);
+                $this->entityManager->refresh($admin1);
+            }
+            $country = $location->getCountry();
+            $country->setTranslatableLocale($locale);
+            $this->entityManager->refresh($country);
+            $result[] = [
+                'type' => $type,
+                'id' => $location->getGeonameId(),
+                'name' => $location->getName(),
+                'latitude' => $location->getLatitude(),
+                'longitude' => $location->getLongitude(),
+                'admin1' => (null === $admin1 || $type === self::ADMIN_UNIT) ? '' : $location->getAdmin1()->getName(),
+                'country' => ($type === self::COUNTRY) ? '' : $location->getCountry()->getName(),
+            ];
+        }
+
+        if ($totalFound > $count) {
+            $result[] = [
+                'type' => 'refine',
+                'title' => $this->translator->trans('suggest.refine'),
+                'text' => $this->translator->trans('suggest.more.results'),
+            ];
+        }
+
+        return [
+            'locations' => $result,
+        ];
+    }
+
     private function searchForPlace(
         string $place,
         ?string $countryId,
@@ -281,6 +296,7 @@ class SuggestLocationModel
     ): array {
         list(, $resultsForLocale) = $this->executeSphinxQLQuery(
             $place,
+            'isPlace',
             $countryId,
             $adminId,
             $this->translator->getLocale(),
@@ -288,35 +304,9 @@ class SuggestLocationModel
             $count
         );
 
-        list($found, $results) = $this->executeSphinxQLQuery($place, $countryId, $adminId, null, $preferExact, $count);
+        list($found, $results) = $this->executeSphinxQLQuery($place, 'isPlace', $countryId, $adminId, null, $preferExact, $count);
 
-        // remove duplicates and set $totalFound to the remaining hits.
-        $geonameIds = [];
-        $places = [];
-        foreach ($resultsForLocale as $result) {
-            if (!\in_array($result['geonameid'], $geonameIds, true)) {
-                $geonameIds[] = $result['geonameid'];
-                $places[] = $result;
-            }
-        }
-
-        if (0 !== $found) {
-            foreach ($results as $result) {
-                if (!\in_array($result['geonameid'], $geonameIds, true)) {
-                    $geonameIds[] = $result['geonameid'];
-                    $places[] = $result;
-                }
-            }
-        }
-
-        // return the first $count
-        $found = \count($places);
-        $places = \array_slice($places, 0, $count);
-
-        return [
-            $found,
-            $places,
-        ];
+        return $this->removeDuplicates($resultsForLocale, $found, $results, $count);
     }
 
     /**
@@ -324,6 +314,7 @@ class SuggestLocationModel
      */
     private function executeSphinxQLQuery(
         string $place,
+        string $type,
         ?string $countryId,
         ?string $adminId,
         ?string $locale,
@@ -343,7 +334,7 @@ class SuggestLocationModel
         $query = $this->sphinxQL->select('geonameid', 'admin1', 'country', SphinxQL::expr('WEIGHT() As w'))
             ->from('geonames_sphinx')
             ->match($match)
-            ->where('isPlace', '=', 1)
+            ->where($type, '=', 1)
             ->where('w', '>', 0)
             ->orderBy('w', 'DESC')
             ->limit(0, $count)
@@ -439,11 +430,43 @@ class SuggestLocationModel
         return $query->getOneOrNullResult();
     }
 
-    private function getAdminUnits(string $term, int $count): array
+    /**
+     * @param     $resultsForLocale
+     * @param     $found
+     * @param     $results
+     * @param int $count
+     *
+     * @return array
+     */
+    public function removeDuplicates($resultsForLocale, $found, $results, int $count): array
     {
-        $result = [];
+        // remove duplicates and set $totalFound to the remaining hits.
+        $geonameIds = [];
+        $places = [];
+        foreach ($resultsForLocale as $result) {
+            if (!\in_array($result['geonameid'], $geonameIds, true)) {
+                $geonameIds[] = $result['geonameid'];
+                $places[] = $result;
+            }
+        }
 
-        return $result;
+        if (0 !== $found) {
+            foreach ($results as $result) {
+                if (!\in_array($result['geonameid'], $geonameIds, true)) {
+                    $geonameIds[] = $result['geonameid'];
+                    $places[] = $result;
+                }
+            }
+        }
+
+        // return the first $count
+        $found = \count($places);
+        $places = \array_slice($places, 0, $count);
+
+        return [
+            $found,
+            $places,
+        ];
     }
 
     private function getCountries(string $term, int $count): array
@@ -463,5 +486,49 @@ class SuggestLocationModel
         }
 
         return $ids;
+    }
+
+    private function findAdminUnits(string $term, int $count)
+    {
+        list($totalFound, $sphinxResult) = $this->getIdsForLocationType($term, self::TYPE_ADMIN_UNIT, $count);
+
+        return $this->getLocationDetails($sphinxResult, $totalFound, $count, self::ADMIN_UNIT);
+    }
+    private function findCountries(string $term, int $count)
+    {
+        list($totalFound, $sphinxResult) = $this->getIdsForLocationType($term, self::TYPE_COUNTRY, $count);
+
+        return $this->getLocationDetails($sphinxResult, $totalFound, $count, self::COUNTRY);
+    }
+
+    private function getIdsForLocationType(
+        string $term,
+        string $type,
+        int $count = 20,
+        ?string $countryId = null,
+        ?string $adminId = null,
+        bool $preferExact = true,
+    ): array {
+        list(, $resultsForLocale) = $this->executeSphinxQLQuery(
+            $term,
+            $type,
+            $countryId,
+            $adminId,
+            $this->translator->getLocale(),
+            $preferExact,
+            $count
+        );
+
+        list($found, $results) = $this->executeSphinxQLQuery(
+            $term,
+            $type,
+            $countryId,
+            $adminId,
+            null,
+            $preferExact,
+            $count
+        );
+
+        return $this->removeDuplicates($resultsForLocale, $found, $results, $count);
     }
 }

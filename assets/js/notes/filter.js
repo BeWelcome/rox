@@ -10,7 +10,6 @@ const popperInstance = createPopper(trigger, filter, {
 let open = false;
 
 function show() {
-    console.log('show');
     filter.setAttribute('data-show', '');
 
     open = true;
@@ -29,7 +28,6 @@ function show() {
 }
 
 function hide() {
-    console.log('hide');
     open = false;
 
     // Hide the tooltip
@@ -47,7 +45,6 @@ function hide() {
 
 window.addEventListener('click', function(e){
     if (trigger.contains(e.target)) {
-        console.log('Triggered: ' + open)
         if (open) {
             hide();
         } else {

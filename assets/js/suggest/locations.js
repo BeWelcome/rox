@@ -40,9 +40,6 @@ function initializeAutoComplete(element, searchUrl) {
 
         debounceTime: 1000,
 
-        // Control the rendering of result items.
-        // Let's show the title and snippet
-        // from the Wikipedia results
         renderResult: (result, props) => {
             let group = ''
             if (result.type === "refine") {
@@ -172,7 +169,16 @@ class LocationSuggest {
     `
             },
 
-            getResultValue: result => result.name + ', ' + (result.admin1 ? result.admin1 + ', ' : '') + result.country,
+            getResultValue: (result) => {
+                let name = result.name;
+                if (result.admin1 !== '') {
+                    name += ', ' + result.admin1;
+                }
+                if (result.country !== '') {
+                    name += ', ' + result.country;
+                }
+                return name;
+            },
 
             onUpdate: (results, selectedIndex) => {
                 if (results.length !== 0) {

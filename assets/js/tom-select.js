@@ -6,7 +6,7 @@ document
     .querySelectorAll('.js-tom-select')
     .forEach((element) => {
         const tomSelectOptions = element.dataset;
-        console.log(tomSelectOptions)
+
         const autocompleteChoices = tomSelectOptions.autocompleteChoices !== undefined;
         let settings = {
             sortField: { field: 'text' },
@@ -46,7 +46,6 @@ document
             settings.options = JSON.parse(tomSelectOptions.autocompleteChoices);
         }
 
-        console.log(settings);
         new TomSelect(element, settings);
     })
 ;

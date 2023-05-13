@@ -55,6 +55,12 @@ class SuggestLocationController extends AbstractController
      */
     public function suggestLocations(Request $request, SuggestLocationModel $model): JsonResponse
     {
-        return $this->suggestPlaces($request, $model);
+        $response = new JsonResponse();
+        $searchTerm = $request->query->get('term', '');
+
+        $result = $model->getSuggestionsForLocations($searchTerm);
+        $response->setData($result);
+
+        return $response;
     }
 }

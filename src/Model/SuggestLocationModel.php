@@ -507,7 +507,7 @@ class SuggestLocationModel
         int $count = 20,
         ?string $countryId = null,
         ?string $adminId = null,
-        bool $preferExact = true,
+        bool $preferExact = true
     ): array {
         list(, $resultsForLocale) = $this->executeSphinxQLQuery(
             $term,

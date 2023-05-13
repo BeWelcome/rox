@@ -18,17 +18,16 @@ Encore
     .splitEntryChunks()
     .enableSingleRuntimeChunk()
     .cleanupOutputBeforeBuild()
-    .configureFontRule({
-        type: 'asset',
-        maxSize: 8*1024*1024,
-    })
+//    .configureFontRule({
+//        type: 'asset',
+//        maxSize: 8*1024*1024,
+//    })
     .addEntry('bewelcome', './assets/js/bewelcome.js')
-    .addEntry('floating_labels', './assets/scss/floating_labels.scss')
+    .addEntry('home', './assets/js/home.js')
     .addEntry('jquery_ui', './assets/js/jquery_ui.js')
     .addEntry('signup/signup', './assets/js/signup.js')
     .addEntry('members/editmyprofile', './assets/js/editmyprofile.js')
     .addEntry('landing', './assets/js/landing/landing.js')
-    .addEntry('scrollmagic', './assets/js/scrollmagic.js')
     .addEntry('search/loadpicker', './assets/js/search/loadpicker.js')
     .addEntry('search/loadcontent', './assets/js/search/loadajax.js')
     .addEntry('search/locations', './assets/js/search/locations.js')
@@ -68,7 +67,7 @@ Encore
     .addEntry('translations', './assets/js/admin/translations.js')
     .addEntry('readmore', './assets/js/readmore.js')
     .addEntry('tailwind', './assets/tailwindcss/tailwind.css')
-    .addEntry('tom-select', './assets/js/tom-select')
+    // .addEntry('tom-select', './assets/js/tom-select')
     // react
     .configureBabel(function(babelConfig) {
         babelConfig.presets = [ "@babel/preset-env", '@babel/preset-react' ]

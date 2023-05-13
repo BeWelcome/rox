@@ -97,6 +97,7 @@
     "encoreWatch": "encore dev --watch"
   },
   "dependencies": {
+    "@easepick/core": "^1.2.1",
     "bootstrap-dropdown-hover": "^4.2.0",
     "dayjs": "^1.11.0",
     "micromodal": "^0.4.10",

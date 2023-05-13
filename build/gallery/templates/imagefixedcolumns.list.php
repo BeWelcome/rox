@@ -55,7 +55,9 @@ $statement = $p[0];
     $currentPage = $page;
     $request = $requestStr.'/=page%d';
     require 'pages.php';
+    ?>
+</div>
+</div>
+<?php
 }
 ?>
-</div>
-</div>

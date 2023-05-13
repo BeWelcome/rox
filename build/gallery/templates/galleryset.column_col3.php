@@ -4,7 +4,7 @@
 
 $g = $gallery;
 $g->user_handle = MOD_member::getUserHandle($g->user_id_foreign);
-$purifier = MOD_htmlpure::getPurifier();
+$purifier = (new MOD_htmlpure())->getPurifier();
 // Set variable own (if own gallery)
 $Own = false;
 if ($this->myself) {

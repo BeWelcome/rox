@@ -13,9 +13,8 @@
 
     {% include 'webpreview.html.twig' %}
 
-    {{ encore_entry_link_tags('bewelcome') }}
+    {{ encore_entry_link_tags('home') }}
     {{ encore_entry_link_tags('tailwind') }}
-    {{ encore_entry_link_tags('floating_labels') }}
     {{ encore_entry_link_tags('jquery_ui') }}
     <link rel='manifest' href='{{ asset('manifest.webmanifest') }}'>
     <script>
@@ -106,7 +105,7 @@
     </div>
     {# statistics #}
     <div id="statistics">
-        <div class="container-fluid my-5 py-5">
+        <div class="container my-5 py-5">
             <div class="row justify-content-center mb-5">
                 <div class="col-12">
                     <h3 class="parallax--h text-center">{{ 'home.header.statistics' | trans }}</h3>
@@ -152,7 +151,6 @@
                 </div>
                 <div class="col-12 col-md-6 col-lg-5">
                     {{ form_start(username) }}
-                    {# {{ postHandler.registerCallbackMethod('SignupController', 'signupFormCallback')|raw }} #}
                     <div class="o-form-group">
                         <p class="parallax--numsubh text-uppercase text-md-left">{{ 'indexpageword_share' | trans }}</p>
                     </div>
@@ -190,7 +188,7 @@
                                 <i class="fas fa-lg fa-map-marker-alt" aria-hidden="true"></i>
                             </span>
                         </div>
-                        {{ form_widget( search.location, { 'attr' : { 'class' : 'js-search-picker form-control' } } ) }}
+                        {{ form_widget( search.location, { 'attr' : { 'class' : 'js-search-picker o-input' } } ) }}
                         <span class="input-group-append p-0">
                             <button id="{{ search.updateMap.vars.id }}" name="updateMap" type="submit"
                                     class="btn btn-primary border-0">
@@ -208,7 +206,7 @@
         </div>
     </div>
 <div id="footer">
-    <div class="container-lg">
+    <div class="container">
         <div class="row">
             <div class="col-12 text-left">
                 <a href="{{ url('about') }}"><strong>{{ 'aboutuspage' | trans }}</strong></a> •
@@ -228,23 +226,10 @@
     </div>
 </div>
 </div>
-{{ encore_entry_script_tags('bewelcome') }}
+{{ encore_entry_script_tags('home') }}
 {{ encore_entry_script_tags('jquery_ui') }}
 {{ encore_entry_script_tags('search/loadpicker') }}
-{{ encore_entry_script_tags('scrollmagic') }}
-<script type="application/javascript">
-    $(".select2").select2({
-        theme: 'bootstrap4',
-        width: 'auto',
-        dropdownAutoWidth: true
-    });
-</script>
 <script>
-    $('[data-toggle="dropdown"]').bootstrapDropdownHover({
-        clickBehavior: 'sticky',
-        hideTimeout: 1000
-    });
-
     window.addEventListener("load", function () {
         let locale = document.getElementsByTagName('html')[0].getAttribute('lang');
         let privacyUrl = "/privacy";

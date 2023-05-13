@@ -1,11 +1,19 @@
-.floating-label {
+.form-label-group {
   position: relative;
+  margin-bottom: 1rem;
 }
 
-.floating-label > label {
+.form-label-group input,
+.form-label-group label {
+  height: 3.125rem;
+  padding: .75rem;
+}
+
+.form-label-group label {
   position: absolute;
+  top: 0;
+  left: 0;
   display: block;
-  left: .375rem;
   width: 100%;
   margin-bottom: 0; /* Override default `<label>` margin */
   line-height: 1.5;
@@ -17,59 +25,85 @@
   transition: all .1s ease-in-out;
 }
 
-.floating-label input::-webkit-input-placeholder {
+.form-label-group input::-webkit-input-placeholder {
   color: transparent;
 }
 
-.floating-label input:-ms-input-placeholder {
+.form-label-group input::-moz-placeholder {
   color: transparent;
 }
 
-.floating-label input::-ms-input-placeholder {
+.form-label-group input:-ms-input-placeholder {
   color: transparent;
 }
 
-.floating-label input::-moz-placeholder {
+.form-label-group input::-ms-input-placeholder {
   color: transparent;
 }
 
-.floating-label input::placeholder {
+.form-label-group input::placeholder {
   color: transparent;
 }
 
-.floating-label input:not(:placeholder-shown) {
-  padding-top: .375rem;
-  padding-bottom: .375rem;
-}
-
-.floating-label input:not(:placeholder-shown) ~ label {
-  padding-top: 0;
-  top: 0;
-  left: .375rem;
+.form-label-group input:not(:-moz-placeholder-shown) {
+  padding-top: 1.25rem;
   padding-bottom: .25rem;
-  font-weight: bold;
-  font-size: 9px;
-  color: #222;
+}
+
+.form-label-group input:not(:-ms-input-placeholder) {
+  padding-top: 1.25rem;
+  padding-bottom: .25rem;
+}
+
+.form-label-group input:not(:placeholder-shown) {
+  padding-top: 1.25rem;
+  padding-bottom: .25rem;
+}
+
+.form-label-group input:not(:-moz-placeholder-shown) ~ label {
+  padding-top: .25rem;
+  padding-bottom: .25rem;
+  font-size: 12px;
+  color: #777;
+}
+
+.form-label-group input:not(:-ms-input-placeholder) ~ label {
+  padding-top: .25rem;
+  padding-bottom: .25rem;
+  font-size: 12px;
+  color: #777;
+}
+
+.form-label-group input:not(:placeholder-shown) ~ label {
+  padding-top: .25rem;
+  padding-bottom: .25rem;
+  font-size: 12px;
+  color: #777;
+}
+
+.form-label-group input:-webkit-autofill ~ label {
+  padding-top: .25rem;
+  padding-bottom: .25rem;
+  font-size: 12px;
+  color: #777;
 }
 
 /* Fallback for Edge
 -------------------------------------------------- */
 @supports (-ms-ime-align: auto) {
-  .floating-label > label {
-    display: none;
+  .form-label-group {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-direction: column-reverse;
+    flex-direction: column-reverse;
   }
+
+  .form-label-group label {
+    position: static;
+  }
+
   .form-label-group input::-ms-input-placeholder {
     color: #777;
   }
 }
 
-/* Fallback for IE
--------------------------------------------------- */
-@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
-  .floating-label > label {
-    display: none;
-  }
-  .floating-label input:-ms-input-placeholder {
-    color: #777;
-  }
-}

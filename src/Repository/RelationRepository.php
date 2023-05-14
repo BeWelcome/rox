@@ -60,10 +60,8 @@ class RelationRepository extends EntityRepository
                 ->createQueryBuilder('r')
                 ->where('r.owner = :member')
                 ->andWhere('r.receiver = :receiver')
-                ->andWhere('r.confirmed = :confirmed')
                 ->setParameter(':member', $owner)
                 ->setParameter(':receiver', $receiver)
-                ->setParameter(':confirmed', 'Yes')
                 ->getQuery()
                 ->getOneOrNullResult()
             ;

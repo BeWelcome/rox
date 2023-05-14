@@ -62,10 +62,10 @@
 
         <p class="mb-2">
             {%- if member.HideBirthDate == 'No' -%}
-            <strong>{{ 'profile.age'|trans }} </strong> {{ member.age }}
+                <strong>{{ 'profile.age'|trans }} </strong> {{ member.age }}
             {%- endif -%}
             {%- if member.HideBirthDate == 'No' and member.HideGender == 'No' -%}, {%- endif %}
-            {%- if member.HideBirthDate == 'Yes' and member.HideGender == 'No' -%}{{ 'profile.gender'|trans }} {%- endif %}
+            {%- if member.HideBirthDate == 'Yes' and member.HideGender == 'No' -%}<strong>{{ 'profile.gender'|trans }}</strong> {%- endif %}
             {% if member.HideGender == 'No' %}
                 {{ member.gender|trans }}
             {%- endif -%}

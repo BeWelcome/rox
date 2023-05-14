@@ -262,8 +262,6 @@ class SearchFormRequest
             null !== $searchFormRequest->location_geoname_id
             && 1 !== $searchFormRequest->location_admin_unit
             && -1 !== $searchFormRequest->distance
-            && is_float($searchFormRequest->location_latitude)
-            && is_float($searchFormRequest->location_longitude)
         ) {
             list($neLat, $neLng, $swLat, $swLng) = self::calculateBoundingBox(
                 $searchFormRequest->location_latitude,

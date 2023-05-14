@@ -104,6 +104,8 @@ class SearchFormType extends AbstractType
             $choices = ['search.see_map' => -1] + $choices;
         }
         $form->add('distance', ChoiceType::class, [
+            'autocomplete' => true,
+            'plugins' => [],
             'choices' => $choices,
             'label' => 'label.radius',
         ]);

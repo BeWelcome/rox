@@ -49,7 +49,7 @@
                 <p class="u-text-24 u-mb-4 u-font-700 ">{{ 'profile.notes.modal'|trans }}</p>
                 <p class="u-text-16 u-mb-8">{{ 'profile.notes.delete'|trans }}</p>
                 <hr>
-                {{ note.comment|truncate(150) }}
+                {{ note.comment|purify|truncate(150) }}
                 <hr>
                 <footer class="u-flex u-flex-row u-justify-between">
                     <button class="o-button" data-micromodal-close>{{ 'profile.notes.no'|trans|capitalize }}</button>

@@ -31,6 +31,9 @@ profile.relations:
 profile.relation.comment:
     - 'Comment for this relation (optional, deprecated, will be removed in the future):'
     - Label for the text field containing the comment for the relation
+profile.relation.no.comment:
+    - 'No comment given.'
+    - Text shown on the modal to delete a relation when no comment was given.
 flash.relation.removed:
     - 'Relation has been deleted.'
     - Flash message shown to the user, when a relation has been deleted.

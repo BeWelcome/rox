@@ -9,12 +9,12 @@
     <row>
         <columns>
             <center>
-        <button class="rounded" href="{{ url('confirm_relation', { 'username': receiver.Username }) }}">{{ 'relation.confirm'|trans }}</button>
+        <button class="rounded" href="{{ url('confirm_relation', { 'username': owner.Username }) }}">{{ 'relation.confirm'|trans }}</button>
             </center>
         </columns>
         <columns>
             <center>
-            <button class="rounded" href="{{ url('delete_relation', { 'username': receiver.Username }) }}">{{ 'relation.dismiss'|trans }}</button>
+            <button class="rounded" href="{{ url('delete_relation', { 'username': owner.Username }) }}">{{ 'relation.dismiss'|trans }}</button>
         </center>
         </columns>
     </row>

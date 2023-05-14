@@ -1,3 +1,6 @@
 login.password:
     - 'Password'
     - Label text for the password field on the login forms.
+login.username.or.email:
+    - '@username'
+    - Label for the username (or email) field on the login page /login

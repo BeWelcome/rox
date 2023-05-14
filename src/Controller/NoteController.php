@@ -135,7 +135,7 @@ class NoteController extends AbstractController
         $this->entityManager->remove($note);
         $this->entityManager->flush();
 
-        return $this->redirectToRoute('notes', ['username' => $member->getUsername()]);
+        return $this->redirectToRoute('notes', ['username' => $loggedInMember->getUsername()]);
     }
 
     /**

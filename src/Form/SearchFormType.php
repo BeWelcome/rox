@@ -36,10 +36,8 @@ class SearchFormType extends AbstractType
                 'label' => 'texttofind',
                 'required' => false,
             ])
-            ->addEventListener(
-                FormEvents::PRE_SET_DATA,
-                [$this, 'onPostSetData']
-            )
+            ->addEventListener(FormEvents::PRE_SET_DATA, [$this, 'preSetData'])
+            ->addEventListener(FormEvents::PRE_SUBMIT, [$this, 'preSubmit'])
         ;
 
         $this->addHiddenFields($builder);
@@ -84,9 +82,11 @@ class SearchFormType extends AbstractType
      * @throws LogicException
      * @throws UnexpectedTypeException
      */
-    public function onPostSetData(FormEvent $event)
+    public function preSetData(FormEvent $event)
     {
         $data = $event->getData();
+        $form = $event->getForm();
+        $options = $form->getConfig()->getOptions();
         $choices = [
             'search.radius.exact' => 0,
             'search.radius.5km' => 5,
@@ -103,11 +103,35 @@ class SearchFormType extends AbstractType
         if (true === $showOnMap) {
             $choices = ['search.see_map' => -1] + $choices;
         }
-        $form = $event->getForm();
         $form->add('distance', ChoiceType::class, [
             'choices' => $choices,
             'label' => 'label.radius',
         ]);
+        if (null !== $options['search_options'] && '' !== $options['search_options']) {
+            $form
+                ->add('resetOptions', SubmitType::class, [
+                    'label' => 'search.options.reset',
+                    'attr' => [
+                        'class' => 'o-button o-button--outline mr-1',
+                    ]
+                ])
+            ;
+        }
+    }
+
+    public function preSubmit(FormEvent $event)
+    {
+        $form = $event->getForm();
+        if (!$form->has('resetOptions')) {
+            $form
+                ->add('resetOptions', SubmitType::class, [
+                    'label' => 'search.options.reset',
+                    'attr' => [
+                        'class' => 'o-button o-button--outline mr-1',
+                    ]
+                ])
+            ;
+        }
     }
 
     protected function addVariableSelects(FormBuilderInterface $formBuilder, array $options)
@@ -286,16 +310,6 @@ class SearchFormType extends AbstractType
                 ]
             ])
         ;
-        if (null !== $options['search_options'] && '' !== $options['search_options']) {
-            $formBuilder
-                ->add('resetOptions', SubmitType::class, [
-                    'label' => 'search.options.reset',
-                    'attr' => [
-                        'class' => 'o-button o-button--outline mr-1',
-                    ]
-                ])
-            ;
-        }
     }
 
     private function addCheckboxes(FormBuilderInterface $formBuilder)

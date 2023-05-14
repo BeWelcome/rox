@@ -14,6 +14,7 @@ use Pagerfanta\Pagerfanta;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -95,10 +96,10 @@ class SearchController extends AbstractController
         /** @var Preference $storedSearchFilter */
         $searchOptionsPreference = $preferenceRepository->findOneBy(['codename' => Preference::SEARCH_OPTIONS]);
         $memberSearchOptionsPreference = $member->getMemberPreference($searchOptionsPreference);
-        $options = $memberSearchOptionsPreference->getValue();
+        $searchOptions = $memberSearchOptionsPreference->getValue();
 
-        if ("" !== $options) {
-            $searchFormRequest = unserialize($options);
+        if ("" !== $searchOptions) {
+            $searchFormRequest = unserialize($searchOptions);
         } else {
             $searchFormRequest = new SearchFormRequest();
         }
@@ -110,10 +111,11 @@ class SearchController extends AbstractController
         $formFactory = $this->get('form.factory');
         $tiny = $formFactory->createNamed('tiny', SearchFormType::class, $searchFormRequest);
         $home = $formFactory->createNamed('home', SearchFormType::class, $searchFormRequest);
+        /** @var FormInterface $search */
         $search = $formFactory->createNamed('search', SearchFormType::class, $searchFormRequest, [
             'groups' => $member->getGroups(),
             'languages' => $member->getLanguages(),
-            'search_options' => $options,
+            'search_options' => $searchOptions,
         ]);
 
         $request = $this->overrideRequestParameters($request, $searchFormRequest);
@@ -207,7 +209,7 @@ class SearchController extends AbstractController
      *
      * @SuppressWarnings(PHPMD.StaticAccess)
      */
-    public function showMapAction(Request $request, TranslatorInterface $translator)
+    public function showMapAction(Request $request, TranslatorInterface $translator): Response
     {
         // do not allow access to this page when logged in, redirect to /search/locations
         if (null !== $this->getUser()) {
@@ -221,7 +223,7 @@ class SearchController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
-            $searchFormRequest = new SearchFormRequest($this->getDoctrine()->getManager());
+            $searchFormRequest = new SearchFormRequest();
             $searchFormRequest->page = 1;
             $searchFormRequest->location = $data['location'];
             $searchFormRequest->location_geoname_id = $data['location_geoname_id'];
@@ -273,7 +275,7 @@ class SearchController extends AbstractController
             return $this->redirectToRoute('search_locations', $request->query->all());
         }
 
-        $searchFormRequest = SearchFormRequest::fromRequest($request, $this->entityManager);
+        $searchFormRequest = SearchFormRequest::fromRequest($request);
 
         $searchAdapter = new SearchAdapter(
             $searchFormRequest,

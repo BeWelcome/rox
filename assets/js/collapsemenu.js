@@ -26,7 +26,7 @@ function registerOnClickEvent() {
 
 }
 
-const gapSize = 8;
+const gapSize = 4;
 
 var autocollapse_menu = function (resizing) {
     const hamburger = document.getElementById('hamburger');

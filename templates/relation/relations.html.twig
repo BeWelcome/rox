@@ -32,15 +32,14 @@
             <div class="modal__overlay u-bg-gray-80 u-bg-opacity-50 u-flex u-justify-center u-absolute u-inset-0 u-z-[2001]">
             <div class="u-bg-white u-p-16 u-m-16 u-rounded-8 u-w-[70%] sm:u-w-[30%] md:u-w-[20%]">
                 <p class="u-text-24 u-mb-4 u-font-700 ">{{ 'profile.relation.delete.modal'|trans }}</p>
-                <p class="u-text-16 u-mb-8">{{ 'profile.relations.delete'|trans }}</p>
+                <p class="u-text-16 u-mb-8">{{ 'profile.relation.delete'|trans }}</p>
                 <hr>
                     {% if relation.commentText is empty %}
                         {{ 'profile.relation.no.comment'|trans }}
                     {% else %}
-                        {{ relation.commentText }}
+                        {{ relation.commentText|purify|truncate(150) }}
                     {% endif %}
                 <hr>
-                {{ 'profile.relations.no.comment'|trans }}
                 <footer class="u-flex u-flex-row u-justify-between">
                     <button class="o-button" data-micromodal-close>{{ 'profile.relation.delete.no'|trans|capitalize }}</button>
                     <a href="{{ url('delete_relation', {'username': relation.receiver.username }) }}" class="o-button">{{ 'profile.relation.delete.yes'|trans|capitalize }}</a>

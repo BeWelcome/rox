@@ -6,7 +6,19 @@
       "avatar relation"
       "avatar updated"
       "avatar actions"
-    ;
+  ;
+    grid-template-columns: 80px 1fr;
+    border: 1px solid #ccc;
+    @apply u-p-8 u-rounded-8 u-mb-8;
+    background-color: #fff;
+  }
+
+  .relations-card-other {
+    display: grid;
+    grid-template-areas:
+      "avatar relation"
+      "avatar updated"
+  ;
     grid-template-columns: 80px 1fr;
     border: 1px solid #ccc;
     @apply u-p-8 u-rounded-8 u-mb-8;

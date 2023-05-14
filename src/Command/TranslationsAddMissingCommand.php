@@ -64,6 +64,7 @@ class TranslationsAddMissingCommand extends Command
 
                 $translation = $translationRepository->findOneBy(['code' => $translationId]);
                 if (null === $translation) {
+                    ++$count;
                     if ($sentence[0] == '@') {
                         $reusedTranslationId = substr($sentence, 1);
                         $io->note(sprintf('Adding %s: Reusing %s', $translationId, $reusedTranslationId));
@@ -76,7 +77,6 @@ class TranslationsAddMissingCommand extends Command
                         );
                         $statement->executeQuery();
                     } else {
-                        ++$count;
                         $io->note(sprintf('Adding %s: %s', $translationId, $sentence));
 
                         $translation = new Word();

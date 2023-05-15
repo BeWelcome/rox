@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
@@ -28,7 +29,7 @@ use Symfony\Component\Security\Http\SecurityEvents;
 class AuthenticationEventSubscriber implements EventSubscriberInterface
 {
     private EntityManagerInterface $entityManager;
-    private AuthorizationCheckerInterface $authorizationChecker;
+    private ?AuthorizationCheckerInterface $authorizationChecker;
     private ?TokenStorageInterface $tokenStorage;
 
     public function __construct(
@@ -41,10 +42,11 @@ class AuthenticationEventSubscriber implements EventSubscriberInterface
         $this->tokenStorage = $tokenStorage;
     }
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             KernelEvents::RESPONSE => 'onKernelResponse',
+            KernelEvents::REQUEST => 'onKernelRequest',
         ];
     }
 
@@ -74,6 +76,33 @@ class AuthenticationEventSubscriber implements EventSubscriberInterface
                 $this->entityManager->persist($member);
                 $this->entityManager->flush();
             }
+        }
+    }
+    public function onKernelRequest(RequestEvent $event)
+    {
+        if (!$event->isMainRequest()) {
+            return;
+        }
+
+        if (null === $this->authorizationChecker) {
+            return;
+        }
+
+        if (null === $this->tokenStorage) {
+            return;
+        }
+
+        /** @var Member $member */
+        $token = $this->tokenStorage->getToken();
+
+        if ($token === null) {
+            return;
+        }
+
+        $member = $token->getUser();
+        if ($member->isBrowsable() === false) {
+            $this->tokenStorage->setToken(null); // Force logout
+            $event->getRequest()->getSession()->invalidate();
         }
     }
 }

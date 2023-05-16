@@ -312,12 +312,12 @@ class VolunteerToolController extends AbstractController
      *
      * @return Response
      */
-    public function showMessagesLastWeekAction(Request $request)
+    public function showMessagesLastWeekAction(Request $request, EntityManagerInterface $entityManager)
     {
         // check permissions
         $subMenuItems = $this->checkPermissions($request, self::MESSAGES_SENT);
 
-        $connection = $this->getDoctrine()->getConnection();
+        $connection = $entityManager->getConnection();
         $results = $connection->executeQuery('
         SELECT
 m.username AS Username,
@@ -356,12 +356,12 @@ ORDER BY count(msg.id) DESC')->fetchAll();
      *
      * @return Response
      */
-    public function showRequestsLastTwoWeeks(Request $request)
+    public function showRequestsLastTwoWeeks(Request $request, EntityManagerInterface $entityManager)
     {
         // check permissions
         $subMenuItems = $this->checkPermissions($request, self::REQUESTS_SENT);
 
-        $connection = $this->getDoctrine()->getConnection();
+        $connection = $entityManager->getConnection();
         $results = $connection->executeQuery('
         SELECT
 m.username AS Username,
@@ -374,7 +374,7 @@ members m
 LEFT JOIN geonames g ON m.IdCity = g.geonameID
 WHERE
 m.id = msg.IdSender
-AND msg.request_id <> NULL
+AND NOT msg.request_id IS NULL
 AND (DATE_ADD(msg.created,
     INTERVAL 14 DAY) > NOW())
 GROUP BY m.Username

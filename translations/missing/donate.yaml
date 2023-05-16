@@ -1,0 +1,6 @@
+donate.money:
+    - 'Card/PayPal'
+    - Tab heading on the donation page
+donate.time:
+    - 'Volunteer'
+    - Tab heading on the donation page

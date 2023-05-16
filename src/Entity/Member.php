@@ -2876,7 +2876,7 @@ class Member
         return $scope;
     }
 
-    public function isBrowseable()
+    public function isBrowsable()
     {
         if (\in_array(
             $this->status,
@@ -2921,7 +2921,7 @@ class Member
      */
     public function isDeniedAccess(): bool
     {
-        return !$this->isBrowseable();
+        return !$this->isBrowsable();
     }
 
     public function isNotConfirmedYet(): bool

@@ -27,10 +27,10 @@ if ($error) {?>
                 </li>
 			-->
 			<li class="nav-item">
-				<a class="nav-link" data-toggle="tab" href="#paypal" role="tab">PayPal</a>
+				<a class="nav-link" data-toggle="tab" href="#paypal" role="tab"><?= $words->get('donate.money') ?></a>
 			</li>
 			<li class="nav-item">
-				<a class="nav-link" data-toggle="tab" href="#time" role="tab">Time</a>
+				<a class="nav-link" data-toggle="tab" href="#time" role="tab"><?= $words->get('donate.time') ?></a>
 			</li>
 		</ul>
 

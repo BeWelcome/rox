@@ -19,7 +19,7 @@ if ($error) {?>
 	<div class="col-12 col-lg-6">
 		<ul class="nav nav-tabs" role="tablist">
 			<li class="nav-item">
-				<a class="nav-link active" data-toggle="tab" href="#bank" role="tab">Bank</a>
+				<a class="nav-link active" data-toggle="tab" href="#bank" role="tab"><?= $words->get('donate.bank') ?></a>
 			</li>
 			<!--
                 <li class="nav-item">

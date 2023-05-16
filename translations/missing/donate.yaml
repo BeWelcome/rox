@@ -1,3 +1,6 @@
+donate.bank:
+    - 'Bank Account'
+    - Tab heading on the donation page
 donate.money:
     - 'Card/PayPal'
     - Tab heading on the donation page

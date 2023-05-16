@@ -61,7 +61,7 @@ class AvatarController extends AbstractController
     /**
      * @Route("/members/avatar/{username}/{size}", name="avatar",
      *     requirements={"size" : "\d+|original" },
-     *     defaults={"size": "50"})
+     *     defaults={"size": "48"})
      */
     public function showAvatar(string $username, string $size): BinaryFileResponse
     {
@@ -75,8 +75,8 @@ class AvatarController extends AbstractController
             return $this->emptyAvatar($size);
         }
 
-        $isBrowseable = $member->isBrowseable();
-        if (!$isBrowseable) {
+        $isBrowsable = $member->isBrowsable();
+        if (!$isBrowsable) {
             return $this->emptyAvatar($size);
         }
 

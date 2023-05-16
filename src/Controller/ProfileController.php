@@ -30,7 +30,7 @@ class ProfileController extends AbstractController
      */
     public function show(Member $member, ProfileSubmenu $profileSubmenu): Response
     {
-        if (!$member->isBrowseable()) {
+        if (!$member->isBrowsable()) {
             throw new AccessDeniedException();
         }
 

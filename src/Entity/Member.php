@@ -2916,9 +2916,6 @@ class Member
         return (MemberStatusType::BANNED === $this->status) ? true : false;
     }
 
-    /**
-     * This returns !isBrowseable.
-     */
     public function isDeniedAccess(): bool
     {
         return !$this->isBrowsable();

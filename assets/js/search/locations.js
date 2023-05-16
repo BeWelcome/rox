@@ -1,8 +1,8 @@
-import SearchPicker from "./../search/searchpicker";
+import {initializeSingleAutoComplete} from '../suggest/locations';
 import 'leaflet.fullscreen';
 import 'leaflet.fullscreen/Control.FullScreen.css';
 
-const searchPicker = new SearchPicker( "/search/locations/all");
+initializeSingleAutoComplete("/suggest/locations/all", 'js-location-picker', '_autocomplete');
 
 function Map() {
     this.map = undefined;
@@ -48,7 +48,7 @@ Map.prototype.showMap = function () {
                 this.map.fitBounds([[query["search[ne_latitude]"], query["search[ne_longitude]"]], [query["search[sw_latitude]"], query["search[sw_longitude]"]]]);
             } else {
                 const isAdminUnit = document.getElementById('search_location_admin_unit').value;
-
+console.log(isAdminUnit);
                 if ("1" === isAdminUnit) {
                     const bounds = this.markerClusterGroup.getBounds();
                     this.map.fitBounds(bounds, {zoomSnap: 0.25});
@@ -106,7 +106,7 @@ Map.prototype.centerMap = function () {
     }).addTo(this.map);
 
     this.map.fitBounds(bounds, {zoomSnap: 0.25});
-    this.map.flyTo([latitude, longitude]);
+    console.log(bounds);
 }
 
 Map.prototype.hideMap = function () {
@@ -266,9 +266,6 @@ Map.prototype.boundingBox = function(latitude, longitude, distance) {
 
 $(function () {
     var map = new Map({
-        center: [0, 0],
-        zoom: 0,
-        zoomSnap: 0.1,
         fullscreenControl: true,
         fullscreenControlOptions: {
             position: 'topleft'

@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\Entity\FeedbackCategory;
 use App\Entity\Member;
+use App\Entity\Relation;
 use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
@@ -15,6 +16,7 @@ use Twig\Environment;
 
 class Mailer
 {
+    private const NO_REPLY_EMAIL_ADDRESS = 'noreply@bewelcome.org';
     private const MESSAGE_EMAIL_ADDRESS = 'message@bewelcome.org';
     private const GROUP_EMAIL_ADDRESS = 'group@bewelcome.org';
     private const PASSWORD_EMAIL_ADDRESS = 'password@bewelcome.org';
@@ -43,7 +45,7 @@ class Mailer
         $this->entityManager = $entityManager;
     }
 
-    public function sendMessageNotificationEmail(Member $sender, Member $receiver, string $template, $parameters)
+    public function sendMessageNotificationEmail(Member $sender, Member $receiver, string $template, $parameters): bool
     {
         $parameters['sender'] = $sender;
 
@@ -55,7 +57,7 @@ class Mailer
         );
     }
 
-    public function sendGroupNotificationEmail(Member $sender, Member $receiver, string $template, $parameters)
+    public function sendGroupNotificationEmail(Member $sender, Member $receiver, string $template, $parameters): bool
     {
         $parameters['sender'] = $sender;
         $parameters['receiver'] = $receiver;
@@ -68,7 +70,7 @@ class Mailer
         );
     }
 
-    public function sendGroupEmail(Member $receiver, string $template, $parameters)
+    public function sendGroupEmail(Member $receiver, string $template, $parameters): bool
     {
         return $this->sendTemplateEmail(
             self::GROUP_EMAIL_ADDRESS,
@@ -78,7 +80,7 @@ class Mailer
         );
     }
 
-    public function sendCommentReportedFeedbackEmail(Member $member, $parameters)
+    public function sendCommentReportedFeedbackEmail(Member $member, $parameters): bool
     {
         $parameters['sender'] = $member;
         $parameters['receiver'] = $member;
@@ -93,7 +95,7 @@ class Mailer
         );
     }
 
-    public function sendPasswordResetLinkEmail(Member $receiver, $parameters)
+    public function sendPasswordResetLinkEmail(Member $receiver, $parameters): bool
     {
         return $this->sendTemplateEmail(
             self::PASSWORD_EMAIL_ADDRESS,
@@ -103,7 +105,7 @@ class Mailer
         );
     }
 
-    public function sendSignupEmail(Member $receiver, string $template, $parameters)
+    public function sendSignupEmail(Member $receiver, string $template, $parameters): bool
     {
         return $this->sendTemplateEmail(
             self::SIGNUP_EMAIL_ADDRESS,
@@ -113,7 +115,7 @@ class Mailer
         );
     }
 
-    public function sendNewsletterEmail(Address $sender, Member $receiver, $parameters)
+    public function sendNewsletterEmail(Address $sender, Member $receiver, $parameters): bool
     {
         return $this->sendTemplateEmail(
             $sender,
@@ -123,7 +125,7 @@ class Mailer
         );
     }
 
-    public function sendNotificationEmail(Address $sender, Member $receiver, $parameters)
+    public function sendNotificationEmail(Address $sender, Member $receiver, $parameters): bool
     {
         return $this->sendTemplateEmail(
             $sender,
@@ -135,14 +137,8 @@ class Mailer
 
     /**
      * This feeds the feedback given by a user into the OTRS queues.
-     *
-     * @param $sender
-     * @param string $receiver
-     * @param $parameters
-     *
-     * @return bool
      */
-    public function sendFeedbackEmail($sender, Address $receiver, $parameters)
+    public function sendFeedbackEmail($sender, Address $receiver, $parameters): bool
     {
         $parameters['subject'] = "Your feedback in '"
             . str_replace('_', ' ', ($parameters['IdCategory'])->getName()) . "'";
@@ -151,6 +147,29 @@ class Mailer
             $sender,
             $receiver,
             'feedback',
+            $parameters
+        );
+    }
+
+    /**
+     * Send notification for special relation (friends and family).
+     */
+    public function sendRelationNotification(Relation $relation): bool
+    {
+        $parameters['sender'] = $relation->getOwner();
+        $parameters['receiver'] = $relation->getReceiver();
+        $parameters['comment'] = $relation->getCommentText();
+        $parameters['subject'] = [
+            'translationId' => 'email.subject.relation',
+            'parameters' => [
+                'username' => $relation->getOwner()->getUsername(),
+            ],
+        ];
+
+        return $this->sendTemplateEmail(
+            $this->getBewelcomeAddress($relation->getOwner(), self::NO_REPLY_EMAIL_ADDRESS),
+            $relation->getReceiver(),
+            'relation.notification',
             $parameters
         );
     }

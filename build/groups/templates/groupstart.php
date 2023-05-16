@@ -14,7 +14,7 @@
 
         <div class="media bg-white p-1">
                 <?= ((strlen($this->group->Picture) > 0) ? "<img class=\"float-left mr-2 mb-2 img-thumbnail\" src='group/realimg/{$this->group->getPKValue()}' width=\"100px\" alt='Image for the group {$group_name_html}' />" : ''); ?>
-            <div class="media-body bg-groupheader p-1">
+            <div class="media-body bg-groupheader p-1 u-break-words u-break-all">
                 <?php echo $purifier->purify(nl2br($this->group->getDescription())) ?>
                 <?php if ($this->isGroupMember() || $this->isGroupAdmin()) { ?>
                     <a href="/group/<?= $this->group->id ?>/new"
@@ -138,10 +138,13 @@
 </div>
 
 </div>
+<?php
+$relatedgroups = $this->group->findRelatedGroups($group_id);
+
+if (count($relatedgroups) > 0 || $this->isGroupMember()) {
+?>
 <div class="mt-5 row">
 
-    <?php
-    $relatedgroups = $this->group->findRelatedGroups($group_id); ?>
     <div class="col-12 col-md-8 h3"><?php echo $words->getFormatted('RelatedGroupsTitle'); ?></div>
     <?php if ($this->isGroupMember()) { ?>
         <div class="col-12 col-md-4 float-md-right">
@@ -156,3 +159,5 @@
 
     endforeach; ?>
 </div>
+<?php
+}

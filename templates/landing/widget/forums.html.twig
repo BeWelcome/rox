@@ -32,7 +32,7 @@
             {% else %}
                 {% set lastpost = '' %}
             {% endif %}
-            <div class="u-ml-auto u-flex-shrink-0">
+            <div class="u-ml-auto u-shrink-0">
                 {% if thread.group %}
                     {% if page == 1 %}
                         <a href="{{ url('group_forum_thread', {'thread': thread.id, 'group_id': thread.group.id,  '_fragment': lastpost})  }}">

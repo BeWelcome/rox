@@ -1,0 +1,48 @@
+#filter {
+  background: white;
+  color: black;
+  padding: 16px;
+  font-size: 13px;
+  border-radius: 8px;
+  display: none;
+  min-width: 30%;
+  max-width: 50%;
+}
+
+#filter[data-show] {
+  display: block;
+}
+
+#arrow,
+#arrow::before {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: inherit;
+}
+
+#arrow {
+  visibility: hidden;
+}
+
+#arrow::before {
+  visibility: visible;
+  content: '';
+  transform: rotate(45deg);
+}
+
+#filter[data-popper-placement^='top'] > #arrow {
+  bottom: -4px;
+}
+
+#filter[data-popper-placement^='bottom'] > #arrow {
+  top: -4px;
+}
+
+#filter[data-popper-placement^='left'] > #arrow {
+  right: -4px;
+}
+
+#filter[data-popper-placement^='right'] > #arrow {
+  left: -4px;
+}

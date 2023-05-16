@@ -9,6 +9,7 @@ use App\Doctrine\MessageStatusType;
 use App\Doctrine\SpamInfoType;
 use App\Entity\Member;
 use App\Entity\Message;
+use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\Query\Expr\Join;
@@ -31,6 +32,36 @@ class MessageRepository extends EntityRepository
         $unread = $result->fetchOne();
 
         return (int) $unread;
+    }
+
+    public function getMessagesBetweenCount(Member $loggedInMember, Member $member): int
+    {
+        /** @var Connection $connection */
+        $connection = $this->getEntityManager()->getConnection();
+        $count = $connection->fetchOne('SELECT count(*) AS cnt FROM (SELECT `m`.*
+            FROM `messages` m
+            WHERE
+				NOT m.subject_id IS NULL
+				AND m.id IN (
+					SELECT max(m.id)
+					FROM messages m
+                    WHERE
+						((m.IdReceiver = :loggedIn AND m.IdSender = :member) OR
+						(m.IdReceiver = :member AND m.IdSender = :loggedIn))
+					GROUP BY m.subject_id
+				)
+			UNION
+            SELECT `m`.*
+            FROM `messages` m
+            WHERE
+				m.subject_id is null
+				AND	((m.IdReceiver = :loggedIn AND m.IdSender = :member) OR
+						(m.IdReceiver = :member AND m.IdSender = :loggedIn))) AS a', [
+                         'loggedIn' => $loggedInMember->getId(),
+                         'member' => $member->getId()]
+        );
+
+        return $count;
     }
 
     public function getConversations(Member $member, bool $unreadOnly, int $limit = 5)

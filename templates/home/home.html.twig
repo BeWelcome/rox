@@ -13,11 +13,21 @@
 
     {% include 'webpreview.html.twig' %}
 
-    {{ encore_entry_link_tags('bewelcome') }}
+    {{ encore_entry_link_tags('home') }}
     {{ encore_entry_link_tags('tailwind') }}
-    {{ encore_entry_link_tags('floating_labels') }}
     {{ encore_entry_link_tags('jquery_ui') }}
     <link rel='manifest' href='{{ asset('manifest.webmanifest') }}'>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js').then(registration => {
+                    console.log('SW registered: ', registration);
+                }).catch(registrationError => {
+                    console.log('SW registration failed: ', registrationError);
+                });
+            });
+        }
+    </script>
 </head>
 <body>
 {% block content %}
@@ -27,8 +37,8 @@
 <div id="parallax-home">
     <div class="parallax">
         <img class="parallax--img"
-            srcset="{{ asset('/images/homepicture-1200px_1-min.jpg') }} 1200w, {{ asset('/images/homepicture-576px_1-min.jpg') }} 576w"
-            src="{{ asset('/images/homepicture-1200px_1-min.jpg') }}"
+            srcset="{{ asset(images[1].high) }} 1200w, {{ asset(images[1].low) }} 576w"
+            src="{{ asset(images[1].high) }}"
             alt="{{ 'home.headline.bewelcome.cultural' | trans }}">
         <div class="parallax--shadow">
             <div id="trigger-fade-1"></div>
@@ -81,8 +91,8 @@
     {# end about #}
     <div class="parallax">
         <img class="parallax--img"
-            srcset="{{ asset('/images/homepicture-1200px_2-min.jpg') }} 1200w, {{ asset('/images/homepicture-576px_2-min.jpg') }} 576w"
-            src="{{ asset('/images/homepicture-1200px_2-min.jpg') }}"
+             srcset="{{ asset(images[2].high) }} 1200w, {{ asset(images[2].low) }} 576w"
+             src="{{ asset(images[2].high) }}"
             alt="{{ 'home.headline.find.hosts' | trans }}">
         <div class="parallax--shadow">
             <div id="trigger-fade-2"></div>
@@ -95,7 +105,7 @@
     </div>
     {# statistics #}
     <div id="statistics">
-        <div class="container-fluid my-5 py-5">
+        <div class="container my-5 py-5">
             <div class="row justify-content-center mb-5">
                 <div class="col-12">
                     <h3 class="parallax--h text-center">{{ 'home.header.statistics' | trans }}</h3>
@@ -129,8 +139,8 @@
     {# end statistics #}
     <div class="parallax">
         <img class="parallax--img"
-            srcset="{{ asset('/images/homepicture-1200px_3-min.jpg') }} 1200w, {{ asset('/images/homepicture-576px_3-min.jpg') }} 576w"
-            src="{{ asset('/images/homepicture-1200px_3-min.jpg') }}"
+             srcset="{{ asset(images[3].high) }} 1200w, {{ asset(images[3].low) }} 576w"
+             src="{{ asset(images[3].high) }}"
             alt="{{ 'home.title.onestep' | trans }}">
         <div class="parallax--shadow">
             <div id="trigger-fade-3"></div>
@@ -141,7 +151,6 @@
                 </div>
                 <div class="col-12 col-md-6 col-lg-5">
                     {{ form_start(username) }}
-                    {# {{ postHandler.registerCallbackMethod('SignupController', 'signupFormCallback')|raw }} #}
                     <div class="o-form-group">
                         <p class="parallax--numsubh text-uppercase text-md-left">{{ 'indexpageword_share' | trans }}</p>
                     </div>
@@ -179,7 +188,7 @@
                                 <i class="fas fa-lg fa-map-marker-alt" aria-hidden="true"></i>
                             </span>
                         </div>
-                        {{ form_widget( search.location, { 'attr' : { 'class' : 'js-search-picker form-control' } } ) }}
+                        {{ form_widget( search.location, { 'attr' : { 'class' : 'js-search-picker o-input' } } ) }}
                         <span class="input-group-append p-0">
                             <button id="{{ search.updateMap.vars.id }}" name="updateMap" type="submit"
                                     class="btn btn-primary border-0">
@@ -197,7 +206,7 @@
         </div>
     </div>
 <div id="footer">
-    <div class="container-lg">
+    <div class="container">
         <div class="row">
             <div class="col-12 text-left">
                 <a href="{{ url('about') }}"><strong>{{ 'aboutuspage' | trans }}</strong></a> •
@@ -217,23 +226,10 @@
     </div>
 </div>
 </div>
-{{ encore_entry_script_tags('bewelcome') }}
+{{ encore_entry_script_tags('home') }}
 {{ encore_entry_script_tags('jquery_ui') }}
 {{ encore_entry_script_tags('search/loadpicker') }}
-{{ encore_entry_script_tags('scrollmagic') }}
-<script type="application/javascript">
-    $(".select2").select2({
-        theme: 'bootstrap4',
-        width: 'auto',
-        dropdownAutoWidth: true
-    });
-</script>
 <script>
-    $('[data-toggle="dropdown"]').bootstrapDropdownHover({
-        clickBehavior: 'sticky',
-        hideTimeout: 1000
-    });
-
     window.addEventListener("load", function () {
         let locale = document.getElementsByTagName('html')[0].getAttribute('lang');
         let privacyUrl = "/privacy";

@@ -1,0 +1,20 @@
+{% extends 'profile/profile.html.twig' %}
+
+{% block page_content %}
+    <h1>{{ 'profile.preferences'|trans }}</h1>
+    {{ form_start(form) }}
+    {% for name, child in form.children %}
+        {% if not (name starts with '_') %}
+            <div class="u-mb-16">
+                <legend class="o-label" aria-label="{{ child.vars.label|trans }}">{{ child.vars.label|trans }}</legend>
+                <div class="u-grid u-grid-cols-1 {% if child.vars.choices|length == 2 %}sm:u-grid-cols-2{% endif %}">{{ form_widget(child) }}</div>
+                {{ form_help(child) }}
+            </div>
+        {% endif %}
+    {% endfor %}
+    {{ form_rest(form) }}
+    <div class="u-flex u-justify-end">
+        <button type="submit" class="o-button">{{ 'submit'|trans }}</button>
+    </div>
+    {{ form_end(form) }}
+{% endblock %}

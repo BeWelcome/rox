@@ -7,3 +7,12 @@ search.member.since:
 search.reset.options:
     - 'Reset Options'
     - Label on the button to reset the search options to default values
+search.place:
+    - 'Places'
+    - Section header for the search results of places people live in
+search.admin.unit:
+    - 'Administrative Units'
+    - Section header for the search results of administrative units found
+search.Countries:
+    - 'Countries'
+    - Section header for the search results of countries found

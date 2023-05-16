@@ -65,7 +65,7 @@ if (count($languages) > 1 || $myself) {
             ?><?php echo $words->flushBuffer(); ?></div>&nbsp;
             <?php if ($myself) { ?>
             <select class="o-input o-input--nofull my-1 select2-sm" id="add_language">
-                <option>- <?=$wwsilent->AddLanguage?> -</option>
+                <option>- <?=$this->wwsilent->AddLanguage?> -</option>
                   <?php
                   $ownLanguages = "";
                   foreach ($languages_spoken as $lang) {
@@ -75,11 +75,11 @@ if (count($languages) > 1 || $myself) {
                   }
 
                   if (!empty($ownLanguages)) { ?>
-                <optgroup label="<?=$wwsilent->YourLanguages?>">
+                <optgroup label="<?=$this->wwsilent->YourLanguages?>">
                 <?php echo $ownLanguages; ?>
                 </optgroup>
                 <?php } ?>
-                <optgroup label="<?=$wwsilent->AllLanguages?>">
+                <optgroup label="<?=$this->wwsilent->AllLanguages?>">
                   <?php
                   foreach ($all_written_languages as $lang) {
                   if (!in_array($lang->id,$languages))

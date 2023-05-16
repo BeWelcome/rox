@@ -3,3 +3,6 @@ massmail.correct.birth.date:
     - Special type of newsletter. No need to translate.
     - 'messages+intl-icu'
     - 'yes'
+newsletter.unsubscribe.local.confirmation:
+    - 'You have unsubcribed from local newsletters. If you decide to subscribe again, please set the according preference.'
+    - Information text when a member unsubscribes from local newsletters from the unsubscribe link in the newsletter email.

@@ -3,26 +3,70 @@
 {% block content %}
     <h1>{{ 'mydata.posts.headline'|trans }}</h1>
     <p>{{ 'mydata.posts.abstract'|trans }}</p>
-    {% if years|length == 0 %}
-    <p><strong>{{ 'mydata.posts.no.posts'|trans }}</strong></p>
+    {% if posts|length == 0 %}
+        <p><strong>{{ 'mydata.posts.no.posts'|trans }}</strong></p>
     {% else %}
-        <div class="row">
-            <div class="col-12">
-                <p>{{ 'mydata.posts.written'|trans({'written': posts_written}) }}</p>
-                <p>{{ 'mydata.threads.contributed'|trans({'contributed': threads_contributed}) }}</p>
-            </div>
-        </div>
-        <div class="card-columns">
-            {% for year in years %}
-                <div class="card o-card">
-                    <div class="card-header">{{ year }}</div>
-                    <div class="card-body">
-                        <p>{{ 'mydata.posts.threads.contributed'|trans({'contributed':threadsPerYear[year]|length}) }}</p>
-                        <p>{{ 'mydata.posts.posts.written'|trans({'written':postsPerYear[year]}) }}</p>
+        {% for post in posts %}
+            {% set threadLink %}
+                {%- if post.thread.group -%}
+                    {{ url('group_forum_thread', {group_id: post.thread.group.id, thread: post.thread.id}) }}
+                {%- else -%}
+                    {{ url('forum_thread', {threadId: post.thread.id}) }}
+                {%- endif -%}
+            {% endset %}
+            <div class="l-forum-single-post {% if loop.index is even %}l-forum-single-post--dark{% endif %}">
+                <!-- left column -->
+                <div class="c-single-post-user_info">
+                    <a id="post{{ post.id }}" style="position: relative; top:-50px;"></a>
+                    <div class="d-flex flex-row text-break">
+                        <img class="profileimg avatar-48 mr-1" width="48" height="48" src="{{ url('avatar', {username: post.author.Username, size: 48}) }}">
+                        <div class="small">
+                            <a href="{{ url('members_profile', {username: post.author.Username}) }}">{{ post.author.Username }}</a>
+                            <br>{{ post.author.city.name }}
+                            <br>{{ post.author.city.country.name }}
+                        </div>
                     </div>
-                    <div class="card-footer text-right">{{ 'mydata.posts.overview.year'|trans }} <a class="btn btn-primary" href="posts/posts-{{ year }}.html">{{ year }}</a></div>
                 </div>
-            {% endfor %}
-        </div>
+                <div class="c-single-post-post_info">
+                    <div class="d-flex flex-column flex-sm-row small">
+                        <div class="mr-1"><span><i class="fa fa-comment fa-w-16 mr-1" title="{{ 'posted'|trans }}"></i>{{ post.created|format_datetime() }}</span></div>
+                        <div class="mr-1"><i class="fa fa-eye fa-w-16 mr-1" title="{{ 'forum_label_visibility'|trans }})"></i>{{ ('forum_edit_vis_' ~ post.PostVisibility)|lower|trans }}</div>
+                    </div>
+                </div>
+                <div class="c-single-post-report"></div>
+                <div class="c-single-post-permalink">{% if not post.thread is null %}<a href="{{ threadLink }}/#post{{ post.id }}"><i class="fa fa-link"></i> Permalink</a>{% endif %}</div>
+
+                <!-- message -->
+                <div class="c-single-post-content u-flex u-flex-col u-justify-between">
+                    <div id="d{{ post.IdContent }}" class="js-highlight">
+                        {% set translations = post.messageTranslations %}
+                        {% for locale, translation in translations %}
+                            <div class="post">
+                                {% if translations|length > 1 %}
+                                    {% if not loop.first %}<hr class="u-my-8" style="border-top:1px solid gray;">{% endif %}
+                                    <small class="text-muted">{{ translation.language.wordcode|lower|trans|raw }} ({{ translation.language.shortCode }})</small><br>
+                                {% endif %}
+                                {{ translation.message | purify | nl2br }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <div class="u-flex u-mt-8 u-justify-end">
+                        <small>
+                            {% if not post.thread is null %}
+                                {% if post.thread.group %}
+                                    <span class="gray">{{ 'group'|trans }}:</span>
+                                    <a href="{{ url('group_start', {group_id: post.thread.group.id}) }}">{{ post.thread.group.name|striptags }}</a>
+                                {% endif %}
+
+                                <span class="gray">{{ 'search_topic_text'|trans }}</span>
+                                <a href="{{ threadLink }}">{{ post.thread.title|striptags }}</a>
+                            {% endif %}
+                        </small>
+                    </div>
+                </div>
+                <div class="c-single-post-edit"></div>
+                <!-- end message -->
+            </div>
+        {% endfor %}
     {% endif %}
 {% endblock %}

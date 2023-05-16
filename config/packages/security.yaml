@@ -1,24 +1,23 @@
 security:
-    encoders:
-        # For the legacy MySQL PASSWORD()
-        App\Encoder\LegacyPasswordEncoder:
-            id: rox.legacy_password_encoder
+    enable_authenticator_manager: true
+    password_hashers:
+        legacy:
+            id: 'App\Security\PasswordHasher\LegacyPasswordHasher'
 
-        # Default for all members
-        default:
-            algorithm: bcrypt
-            cost: 12
+        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface:
+            algorithm: 'auto'
+            migrate_from:
+                - legacy
 
-        # Stronger password cost for privileged members. See
-        # App\Factory\EncoderFactory
+        # Stronger password cost for privileged members.
         harsh:
-            algorithm: bcrypt
-            cost: 13
+            algorithm: 'auto'
+            cost: 14
 
     providers:
-        our_db_provider:
+        members:
             entity:
-                class: App:Member
+                class: App\Entity\Member
 
     firewalls:
         # disables authentication for assets and the profiler, adapt it according to your needs
@@ -33,7 +32,6 @@ security:
 
         api:
             pattern: ^/api
-            anonymous: true
             stateless: true
             user_checker: rox.user_checker
             json_login:
@@ -52,57 +50,55 @@ security:
                 secret: '%env(APP_SECRET)%'
                 lifetime: 31536000 # 1 year in seconds
                 path: /
-                token_provider: 'Symfony\Bridge\Doctrine\Security\RememberMe\DoctrineTokenProvider'
+                token_provider:
+                    doctrine: true
 
             user_checker: rox.user_checker
-            anonymous: ~
 
             form_login:
                 login_path: security_login
                 check_path: security_check
                 default_target_path: /
                 use_referer: true
-                csrf_token_generator: security.csrf.token_manager
+                enable_csrf: true
 
             logout:
                 path:   /logout
                 target: /
-            guard:
-                authenticators:
-                    - App\Security\LoginFormAuthenticator
 
 #            access_denied_handler: App\Security\AccessDeniedHandler
 
     access_control:
-        - { path: ^/$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/login, roles:  IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/about, roles:  IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/donate, roles:  IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/feedback, roles:  IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/impressum, roles:  IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/terms, roles:  IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/privacy, roles:  IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/datarights, roles:  IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/stats, roles:  IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/safety, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/media, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/press-information, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/signup, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/newsletter, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/unsubscribe, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/faq, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/bod, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/bv, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/resetpassword, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/rox/in, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/search/locations/places, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/search/locations/all, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/search/map, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/volunteer, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/communitynews, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/members/avatar/, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/$, roles: PUBLIC_ACCESS }
+        - { path: ^/login, roles:  PUBLIC_ACCESS }
+        - { path: ^/about, roles:  PUBLIC_ACCESS }
+        - { path: ^/donate, roles:  PUBLIC_ACCESS }
+        - { path: ^/feedback, roles:  PUBLIC_ACCESS }
+        - { path: ^/impressum, roles:  PUBLIC_ACCESS }
+        - { path: ^/terms, roles:  PUBLIC_ACCESS }
+        - { path: ^/privacy, roles:  PUBLIC_ACCESS }
+        - { path: ^/datarights, roles:  PUBLIC_ACCESS }
+        - { path: ^/stats, roles:  PUBLIC_ACCESS }
+        - { path: ^/safety, roles: PUBLIC_ACCESS }
+        - { path: ^/media, roles: PUBLIC_ACCESS }
+        - { path: ^/press-information, roles: PUBLIC_ACCESS }
+        - { path: ^/signup, roles: PUBLIC_ACCESS }
+        - { path: ^/suggest, roles: PUBLIC_ACCESS }
+        - { path: ^/newsletter, roles: PUBLIC_ACCESS }
+        - { path: ^/unsubscribe, roles: PUBLIC_ACCESS }
+        - { path: ^/faq, roles: PUBLIC_ACCESS }
+        - { path: ^/bod, roles: PUBLIC_ACCESS }
+        - { path: ^/bv, roles: PUBLIC_ACCESS }
+        - { path: ^/resetpassword, roles: PUBLIC_ACCESS }
+        - { path: ^/rox/in, roles: PUBLIC_ACCESS }
+        - { path: ^/search/locations/places, roles: PUBLIC_ACCESS }
+        - { path: ^/search/locations/all, roles: PUBLIC_ACCESS }
+        - { path: ^/search/map, roles: PUBLIC_ACCESS }
+        - { path: ^/volunteer, roles: PUBLIC_ACCESS }
+        - { path: ^/communitynews, roles: PUBLIC_ACCESS }
+        - { path: ^/members/avatar/, roles: PUBLIC_ACCESS }
         - { path: ^/admin, roles: ROLE_ADMIN }
-        - { path: ^/api, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api, roles: PUBLIC_ACCESS }
         - { path: ^/, roles: ROLE_USER }
 
 #    role_hierarchy:

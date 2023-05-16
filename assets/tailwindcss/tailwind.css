@@ -1,14 +1,16 @@
-@import 'tailwindcss/base';
+@import "tailwindcss/base";
 
-@import 'tailwindcss/components';
+@import "tailwindcss/components";
 
-@import 'tailwindcss/utilities';
+@import "tailwindcss/utilities";
 
+/* @import 'tailwind.layer.css'; */
 @import 'objects/objects';
 
 @import 'components/components';
 
 @import "layouts/layouts";
+
 
 p {
   margin-bottom: 0;
@@ -20,15 +22,20 @@ p {
      --width: 1px;
    }
  }
- 
+
  @media screen and (min-width: 601px) and (max-width: 1200px) {
     :root {
      --width: calc(100vw / 1440);
    }
  }
- 
+
  @media screen and (min-width: 1201px) {
      :root {
        --width: 1px;
      }
  }
+
+#message_thread img {
+  max-width: 100%;
+  height: auto;
+}

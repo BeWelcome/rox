@@ -1,7 +1,11 @@
+<!DOCTYPE html>
 <html lang="{{ app.request.locale }}">
 <head>
     <title>{{ 'mydata.page.title'|trans }}</title>
     {% for cssfile in  encore_entry_css_files('bewelcome')%}
+        <link rel="stylesheet" href="{% if isSubDir is defined %}../{% endif %}{{ cssfile|trim('/') }}">
+    {% endfor %}
+    {% for cssfile in  encore_entry_css_files('tailwind')%}
         <link rel="stylesheet" href="{% if isSubDir is defined %}../{% endif %}{{ cssfile|trim('/') }}">
     {% endfor %}
     {% block javascripts %}

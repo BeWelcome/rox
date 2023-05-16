@@ -53,44 +53,44 @@
                     ?>
                     <span class="col-12"><?php echo $words->get('signup.receive.newsletters'); ?></span>
                     <div class="col-12 form-inline">
-                        <div class="o-checkbox">
-                            <input class="o-checkbox__input" type="radio" name="newsletters" id="newsletters-yes"
+                        <div class="o-radio-button">
+                            <input class="o-radio-button__input" type="radio" name="newsletters" id="newsletters-yes"
                                    value="Yes"
                                    required>
-                            <label class="o-checkbox__label" for="newsletters-yes">
+                            <label class="o-radio-button__label" for="newsletters-yes">
                                 <?php echo $words->get('Yes'); ?>
                             </label>
                         </div>
-                        <div class="o-checkbox ml-md-2">
-                            <input class="o-checkbox__input" type="radio" name="newsletters" id="newsletters-no"
+                        <div class="o-radio-button ml-md-2">
+                            <input class="o-radio-button__input" type="radio" name="newsletters" id="newsletters-no"
                                    value="No"
                                    required>
-                            <label class="o-checkbox__label" for="newsletters-no">
+                            <label class="o-radio-button__label" for="newsletters-no">
                                 <?php echo $words->get('No'); ?>
                             </label>
                         </div>
                     </div>
                     <span class="col-12"><?php echo $words->get('signup.receive.local-info'); ?></span>
                     <div class="col-12 form-inline">
-                        <div class="o-checkbox">
-                            <input class="o-checkbox__input" type="radio" name="local-info" id="local-info-yes"
+                        <div class="o-radio-button">
+                            <input class="o-radio-button__input" type="radio" name="local-info" id="local-info-yes"
                                    value="Yes"
                                    required>
-                            <label class="o-checkbox__label" for="local-info-yes">
+                            <label class="o-radio-button__label" for="local-info-yes">
                                 <?php echo $words->get('Yes'); ?>
                             </label>
                         </div>
-                        <div class="o-checkbox ml-md-2">
-                            <input class="o-checkbox__input" type="radio" name="local-info" id="local-info-no" value="No"
+                        <div class="o-radio-button ml-md-2">
+                            <input class="o-radio-button__input" type="radio" name="local-info" id="local-info-no" value="No"
                                    required>
-                            <label class="o-checkbox__label" for="local-info-no">
+                            <label class="o-radio-button__label" for="local-info-no">
                                 <?php echo $words->get('No'); ?>
                             </label>
                         </div>
                     </div>
 
                     <button type="submit"
-                            class="o-input btn btn-primary"><?php echo $words->getSilent('signup.submit'); ?> <i
+                            class="o-button u-w-full"><?php echo $words->getSilent('signup.submit'); ?> <i
                                 class="fa fa-check-square"></i></button>
                     <?php echo $words->flushBuffer(); ?>
 
@@ -192,14 +192,14 @@
                                 </th>
                                 <td class="w-100 border-0">
                                     <?php
-                                    echo '<img src="images/icons/' . $vars['accommodation'] . '.png"> ' . $vars['location'];
+                                    echo '<img src="images/icons/' . $vars['accommodation'] . '.png"> ' . $vars['set_location'];
                                     ?>
                                 </td>
                             </tr>
                             </tbody>
                         </table>
                         <button type="submit"
-                                class="o-input btn btn-primary"><?php echo $words->getSilent('signup.submit'); ?>
+                                class="o-button u-w-full"><?php echo $words->getSilent('signup.submit'); ?>
                             <i
                                     class="fa fa-check-square"></i></button>
                         <?php echo $words->flushBuffer(); ?>

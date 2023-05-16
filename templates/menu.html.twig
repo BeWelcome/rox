@@ -127,14 +127,18 @@
                             class="dropdown-item">{{ 'profile' | trans }}</a></li>
                     <li class="text-right"><a href="{{ path('edit_my_profile') }}"
                                               class="dropdown-item">{{ 'editmyprofile' | trans }}</a></li>
-                    <li class="text-right"><a href="{{ path('my_preferences') }}"
-                                              class="dropdown-item">{{ 'mypreferences' | trans }}</a></li>
-                    <li class="text-right"><a href="{{ path('members_show_all_notes') }}"
-                                              class="dropdown-item">{{ 'mynotes' | trans }}</a></li>
+                    <li class="text-right"><a href="{{ path('preferences', {'username': member.username}) }}"
+                                              class="dropdown-item">{{ 'profile.preferences.menu' | trans }}</a></li>
+                    <li class="text-right"><a href="{{ path('notes', {'username': member.username}) }}"
+                                              class="dropdown-item">{{ 'profile.notes.menu' | trans }}</a></li>
                     <li class="text-right"><a href="{{ path('groups_mygroups') }}"
                                               class="dropdown-item">{{ 'mygroups' | trans }}</a></li>
                     <li class="text-right"><a href="{{ path('trips') }}"
                                               class="dropdown-item">{{ 'trips.mytrips' | trans }}</a></li>
+                    <li><div class="dropdown-divider"></div></li>
+                    <li class="text-right"><a href="{{ path('change_password', {'username': member.username}) }}"
+                                              class="dropdown-item">{{ 'profile.change.password.menu' | trans }}</a></li>
+                    <li><div class="dropdown-divider"></div></li>
                     <li class="text-right"><a href="{{ url( 'security_logout' ) }}"
                                               class="dropdown-item">{{ 'logout' | trans }}</a></li>
                 </ul>

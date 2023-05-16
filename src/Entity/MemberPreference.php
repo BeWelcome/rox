@@ -13,6 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
  *     @ORM\Index(name="memberspreferences_preferences", columns={"IdPreference"})
  * })
  * @ORM\Entity
+ *
  * @ORM\HasLifecycleCallbacks
  */
 class MemberPreference
@@ -28,7 +29,7 @@ class MemberPreference
     /**
      * @var Preference
      *
-     * @ORM\ManyToOne(targetEntity="Preference")
+     * @ORM\ManyToOne(targetEntity="Preference", fetch="EAGER")
      * @ORM\JoinColumn(name="IdPreference", referencedColumnName="id", nullable=false)
      */
     private $preference;

@@ -15,7 +15,6 @@ use App\Doctrine\AccommodationType;
 use App\Doctrine\GroupMembershipStatusType;
 use App\Doctrine\LanguageLevelType;
 use App\Doctrine\MemberStatusType;
-use App\Encoder\LegacyPasswordEncoder;
 use Carbon\Carbon;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -26,8 +25,10 @@ use Doctrine\Persistence\Mapping\ClassMetadata;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Persistence\ObjectManagerAware;
 use Exception;
+use Symfony\Bridge\Doctrine\Security\User\UserLoaderInterface;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherAwareInterface;
 use Symfony\Component\Security\Core\Exception\RuntimeException;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -47,7 +48,13 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *     }
  * )
  */
-class Member implements UserInterface, \Serializable, PasswordHasherAwareInterface, ObjectManagerAware
+class Member
+    implements
+        \Serializable,
+        ObjectManagerAware,
+        UserInterface,
+        PasswordHasherAwareInterface,
+        PasswordAuthenticatedUserInterface
 {
     public const ROLE_ADMIN_ACCEPTER = 'ROLE_ADMIN_ACCEPTER';
     public const ROLE_ADMIN_ADMIN = 'ROLE_ADMIN_ADMIN';
@@ -162,9 +169,9 @@ class Member implements UserInterface, \Serializable, PasswordHasherAwareInterfa
     private $changedid = 0;
 
     /**
-     * @var Location
+     * @var NewLocation
      *
-     * @ORM\ManyToOne(targetEntity="Location")
+     * @ORM\ManyToOne(targetEntity="NewLocation")
      * @ORM\JoinColumn(name="IdCity", referencedColumnName="geonameId")
      *
      * @Groups({"Member:Read"})
@@ -470,7 +477,7 @@ class Member implements UserInterface, \Serializable, PasswordHasherAwareInterfa
      *
      * @ORM\Column(name="HideBirthDate", type="string", nullable=false)
      */
-    private $hidebirthdate = 'No';
+    private $hideBirthDate = 'No';
 
     /**
      * @var DateTime
@@ -865,7 +872,7 @@ class Member implements UserInterface, \Serializable, PasswordHasherAwareInterfa
      *
      * @return Member
      */
-    public function setCity(Location $city)
+    public function setCity(NewLocation $city)
     {
         $this->city = $city;
 
@@ -875,7 +882,7 @@ class Member implements UserInterface, \Serializable, PasswordHasherAwareInterfa
     /**
      * Get city.
      *
-     * @return Location
+     * @return NewLocation
      */
     public function getCity()
     {
@@ -1516,14 +1523,13 @@ class Member implements UserInterface, \Serializable, PasswordHasherAwareInterfa
         return $this;
     }
 
-    /**
-     * Get created.
-     *
-     * @return DateTime
-     */
-    public function getCreated()
+    public function getCreated(): ?Carbon
     {
-        return $this->created;
+        if (null !== $this->created) {
+            return Carbon::instance($this->created);
+        }
+
+        return null;
     }
 
     /**
@@ -1722,42 +1728,19 @@ class Member implements UserInterface, \Serializable, PasswordHasherAwareInterfa
         return $this->countertrusts;
     }
 
-    /**
-     * Set password.
-     *
-     * @param string $password
-     *
-     * @return Member
-     */
-    public function setPassword($password)
+    public function setPassword($hashedPassword): self
     {
-        $cost = 12;
-        if ($this->isPrivileged()) {
-            $cost = 13;
-        }
-        $this->password = password_hash($password, \PASSWORD_DEFAULT, ['cost' => $cost]);
+        $this->password = $hashedPassword;
 
         return $this;
     }
 
-    /**
-     * Get password.
-     *
-     * @return string
-     */
-    public function getPassword()
+    public function getPassword(): ?string
     {
         return $this->password;
     }
 
-    /**
-     * Set gender.
-     *
-     * @param string $gender
-     *
-     * @return Member
-     */
-    public function setGender($gender)
+    public function setGender($gender): self
     {
         $this->gender = $gender;
 
@@ -1849,13 +1832,13 @@ class Member implements UserInterface, \Serializable, PasswordHasherAwareInterfa
     /**
      * Set hidebirthdate.
      *
-     * @param string $hidebirthdate
+     * @param string $hideBirthDate
      *
      * @return Member
      */
-    public function setHidebirthdate($hidebirthdate)
+    public function setHideBirthDate($hideBirthDate)
     {
-        $this->hidebirthdate = $hidebirthdate;
+        $this->hideBirthDate = $hideBirthDate;
 
         return $this;
     }
@@ -1865,9 +1848,9 @@ class Member implements UserInterface, \Serializable, PasswordHasherAwareInterfa
      *
      * @return string
      */
-    public function getHidebirthdate()
+    public function getHideBirthDate()
     {
-        return $this->hidebirthdate;
+        return $this->hideBirthDate;
     }
 
     /**
@@ -2573,28 +2556,6 @@ class Member implements UserInterface, \Serializable, PasswordHasherAwareInterfa
     {
     }
 
-    /**
-     * Gets the name of the encoder used to encode the password.
-     *
-     * @throws RuntimeException password not supported
-     */
-    public function getPasswordHasherName(): string
-    {
-        if (preg_match('/^\*[0-9A-F]{40}$/', $this->getPassWord())) {
-            return LegacyPasswordEncoder::class;
-        }
-
-        if (!preg_match('/^\$2y\$[0-9]{2}\$.{53}$/', $this->getPassWord())) {
-            throw RuntimeException('Password is neither bcrypt or legacy sha1.');
-        }
-
-        if ($this->isPrivileged()) {
-            return 'harsh';
-        }
-
-        return 'default';
-    }
-
     public function isPrivileged()
     {
         if (\in_array('ROLE_ADMIN', $this->getRoles(), true)) {
@@ -2825,6 +2786,25 @@ class Member implements UserInterface, \Serializable, PasswordHasherAwareInterfa
         return $this->hostingInterest;
     }
 
+    public function hasRight($rightName)
+    {
+        $hasRight = false;
+        $volunteerRights = $this->getVolunteerRights();
+        if (null !== $volunteerRights) {
+            $right = $this->em->getRepository(Right::class)->findOneBy(['name' => $rightName]);
+
+            /** @var RightVolunteer $volunteerRight */
+            foreach ($volunteerRights->getIterator() as $volunteerRight) {
+                if ($volunteerRight->getRight() === $right) {
+                   $hasRight = true;
+                   break;
+                }
+            }
+        }
+
+        return $hasRight;
+    }
+
     public function hasRightsForLocale($locale)
     {
         $hasRight = false;
@@ -2857,7 +2837,6 @@ class Member implements UserInterface, \Serializable, PasswordHasherAwareInterfa
         $level = false;
         $volunteerRights = $this->getVolunteerRights();
         if (null !== $volunteerRights) {
-            // first check if member has the word right
             $right = $this->em->getRepository(Right::class)->findOneBy(['name' => $rightName]);
 
             /** @var RightVolunteer $volunteerRight */
@@ -2897,7 +2876,7 @@ class Member implements UserInterface, \Serializable, PasswordHasherAwareInterfa
         return $scope;
     }
 
-    public function isBrowseable()
+    public function isBrowsable()
     {
         if (\in_array(
             $this->status,
@@ -2937,12 +2916,9 @@ class Member implements UserInterface, \Serializable, PasswordHasherAwareInterfa
         return (MemberStatusType::BANNED === $this->status) ? true : false;
     }
 
-    /**
-     * This returns !isBrowseable.
-     */
     public function isDeniedAccess(): bool
     {
-        return !$this->isBrowseable();
+        return !$this->isBrowsable();
     }
 
     public function isNotConfirmedYet(): bool
@@ -3306,21 +3282,12 @@ class Member implements UserInterface, \Serializable, PasswordHasherAwareInterfa
         return $this;
     }
 
-    public function getRegion(): AdminUnit
+    public function getRegion(): NewLocation
     {
-        /** @var $adminUnitRepository */
-        $adminUnitRepository = $this->em->getRepository(AdminUnit::class);
-
-        /** @var AdminUnit $adminUnit */
-        $adminUnit = $adminUnitRepository->findOneBy([
-            'admin1' => $this->city->getAdmin1(),
-            'country' => $this->city->getCountry(),
-        ]);
-
-        return $adminUnit;
+        return $this->city->getAdmin1();
     }
 
-    public function getCountry(): Country
+    public function getCountry(): NewLocation
     {
         return $this->city->getCountry();
     }
@@ -3341,5 +3308,38 @@ class Member implements UserInterface, \Serializable, PasswordHasherAwareInterfa
     public function getAvatar(): string
     {
         return '/members/avatar/' . $this->getUsername();
+    }
+
+    /**
+     * @Groups({"Member:Read"})
+     */
+    public function getName(): string
+    {
+        $name = '';
+        if (!($this->hideAttribute & self::MEMBER_FIRSTNAME_HIDDEN)) {
+            $name .= $this->firstName . ' ';
+        }
+        if (!($this->hideAttribute & self::MEMBER_SECONDNAME_HIDDEN)) {
+            $name .= $this->secondName. ' ';
+        }
+        if (!($this->hideAttribute & self::MEMBER_LASTNAME_HIDDEN)) {
+            $name .= $this->lastName;
+        }
+
+        return $name;
+    }
+
+    public function getPasswordHasherName(): ?string
+    {
+        if (preg_match('/^\*[0-9A-F]{40}$/', $this->getPassWord())) {
+            // Use migrating password hasher in case of legacy password
+            return null;
+        }
+
+        if ($this->isPrivileged()) {
+            return 'harsh';
+        }
+
+        return null;
     }
 }

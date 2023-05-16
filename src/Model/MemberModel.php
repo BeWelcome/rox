@@ -175,6 +175,13 @@ class MemberModel
             $filesystem->copy($source, $destination);
         }
 
+        $cssFiles = $this->entrypointLookup->getCssFiles('tailwind');
+        foreach ($cssFiles as $cssFile) {
+            $source = $projectDir . '/public' . $cssFile;
+            $destination = $this->tempDir . $cssFile;
+            $filesystem->copy($source, $destination);
+        }
+
         $jsFiles = $this->entrypointLookup->getJavaScriptFiles('gallery');
         foreach ($jsFiles as $jsFile) {
             $source = $projectDir . '/public' . $jsFile;

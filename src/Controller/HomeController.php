@@ -52,14 +52,46 @@ class HomeController extends AbstractController
             'SignupController',
         ]);
 
+        $images = $this->getHomeImagesRandomly();
+
         return $this->render('home/home.html.twig', [
             'postHandler' => $roxPostHandler,
             'form' => $loginForm->createView(),
             'search' => $searchForm->createView(),
+            'images' => $images,
             'username' => $usernameForm->createView(),
             'locale' => $this->getParameter('locale'),
             'title' => 'BeWelcome',
             'stats' => $statistics,
         ]);
+    }
+
+    private function getHomeImagesRandomly()
+    {
+        $images = [
+            1 => [
+                'high' => '/images/homepicture-1200px_1-min.jpg',
+                'low' => '/images/homepicture-576px_1-min.jpg',
+            ],
+            2 => [
+                'high' => '/images/homepicture-1200px_2-min.jpg',
+                'low' => '/images/homepicture-576px_2-min.jpg',
+            ],
+            3 => [
+                'high' => '/images/homepicture-1200px_3-min.jpg',
+                'low' => '/images/homepicture-576px_3-min.jpg',
+            ],
+        ];
+        $picked = [];
+        $imagesRandom = [];
+        while (count($picked) <> 3) {
+            $pick = random_int(1,3);
+            if (!in_array($pick, $picked)) {
+                $picked[] = $pick;
+                $imagesRandom[count($picked)] = $images[$pick];
+            }
+        }
+
+        return $imagesRandom;
     }
 }

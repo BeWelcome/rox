@@ -3,7 +3,10 @@
 namespace App\Repository;
 
 use App\Doctrine\CommentAdminActionType;
+use App\Doctrine\MemberStatusType;
+use App\Entity\Comment;
 use App\Entity\Member;
+use DateTimeImmutable;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
@@ -162,13 +165,10 @@ class CommentRepository extends EntityRepository
         return $qb;
     }
 
-    /**
-     * @return int
-     */
-    public function getReportedCommentsCount()
+    public function getReportedCommentsCount(): int
     {
         $q = $this->createQueryBuilder('c')
-            ->select('count(c.id)')
+            ->select('count(c.fromMember)')
             ->where('c.adminAction = :status')
             ->setParameter('status', CommentAdminActionType::ADMIN_CHECK)
             ->getQuery();
@@ -178,24 +178,77 @@ class CommentRepository extends EntityRepository
         return $results;
     }
 
-    /**
-     * @return Collection
-     */
-    public function getCommentsForMember(Member $member)
+    public function getAllCommentsMember(Member $member): array
     {
-        return $this->createQueryBuilder('c')
-            ->where('c.toMember = :member')
-            ->setParameter('member', $member)
-            ->orderBy('c.created', 'ASC')
+        $commentsForMember = $this->getAllCommentsForMember($member);
+        $commentsByMember = $this->getAllCommentsByMember($member);
+
+        return $this->getCommentsAsArray($commentsForMember, $commentsByMember);
+    }
+
+    public function getCommentsMember(Member $member): array
+    {
+        $commentsForMember = $this->getVisibleCommentsForMember($member);
+        $commentsByMember = $this->getVisibleCommentsByMember($member);
+
+        return $this->getCommentsAsArray($commentsForMember, $commentsByMember);
+    }
+
+    public function getVisibleCommentsForMemberCount(Member $member): int
+    {
+        return $this->getCommentsForMemberQueryBuilder($member)
+            ->select('count(c.fromMember)')
+            ->andWhere('c.displayInPublic = 1')
+            ->getQuery()
+            ->getSingleScalarResult()
+            ;
+    }
+
+    public function getVisibleCommentsByMemberCount(Member $member): int
+    {
+        return $this->getCommentsByMemberQueryBuilder($member)
+            ->select('count(c.fromMember)')
+            ->andWhere('c.displayInPublic = 1')
+            ->getQuery()
+            ->getSingleScalarResult()
+            ;
+    }
+
+    public function getVisibleCommentsForMember(Member $member): array
+    {
+        return $this->getCommentsForMemberQueryBuilder($member)
+            ->andWhere('c.displayInPublic = 1')
             ->getQuery()
             ->getResult()
             ;
     }
 
-    /**
-     * @return Collection
-     */
-    public function getCommentsFromMember(Member $member)
+    public function getVisibleCommentsByMember(Member $member): array
+    {
+        return $this->getCommentsByMemberQueryBuilder($member)
+            ->andWhere('c.displayInPublic = 1')
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
+    public function getAllCommentsForMember(Member $member): array
+    {
+        return $this->getCommentsForMemberQueryBuilder($member)
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
+    public function getAllCommentsByMember(Member $member): array
+    {
+        return $this->getCommentsByMemberQueryBuilder($member)
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
+    public function getCommentsFromMember(Member $member): array
     {
         return $this->createQueryBuilder('c')
             ->where('c.fromMember = :member')
@@ -204,5 +257,80 @@ class CommentRepository extends EntityRepository
             ->getQuery()
             ->getResult()
             ;
+    }
+
+    private function getCommentsByMemberQueryBuilder(Member $member): QueryBuilder
+    {
+        $qb = $this->createQueryBuilder('c');
+        $qb
+            ->innerJoin('App:Member', 'm', 'WITH', $qb->expr()->andX(
+                $qb->expr()->eq('m.id', 'c.toMember'),
+                $qb->expr()->in('m.status', MemberStatusType::MEMBER_COMMENTS_ARRAY)
+            ))
+            ->where('c.fromMember = :member')
+            ->setParameter('member', $member)
+        ;
+
+        return $qb;
+    }
+
+    private function getCommentsForMemberQueryBuilder(Member $member): QueryBuilder
+    {
+        $qb = $this->createQueryBuilder('c');
+        $qb
+            ->innerJoin('App:Member', 'm', 'WITH', $qb->expr()->andX(
+                $qb->expr()->eq('m.id', 'c.fromMember'),
+                $qb->expr()->in('m.status', MemberStatusType::MEMBER_COMMENTS_ARRAY)
+            ))
+            ->where('c.toMember = :member')
+            ->setParameter('member', $member)
+        ;
+
+        return $qb;
+    }
+
+    private function getCommentsAsArray(array $commentsForMember, array $commentsByMember)
+    {
+        $comments = [];
+
+        /** @var Comment $value */
+        foreach ($commentsForMember as $value) {
+            $key = $value->getFromMember()->getUsername();
+            $comments[$key] = [
+                'from' => $value,
+            ];
+        }
+        foreach ($commentsByMember as $value) {
+            $key = $value->getToMember()->getUsername();
+            if (isset($comments[$key])) {
+                $comments[$key] = array_merge($comments[$key], [
+                    'to' => $value,
+                ]);
+            } else {
+                $comments[$key] = [
+                    'to' => $value,
+                ];
+            }
+        }
+
+        if (!empty($comments)) {
+            $early20thCentury = new DateTimeImmutable('01-01-1900');
+            usort(
+                $comments,
+                function ($a, $b) use ($early20thCentury) {
+                    // get latest updates on to and from part of comments and order desc
+                    $updatedATo = isset($a['to']) ? $a['to']->getUpdated() ?? $a['to']->getCreated() : $early20thCentury;
+                    $updatedAFrom = isset($a['from']) ? $a['from']->getUpdated() ?? $a['from']->getCreated() : $early20thCentury;
+                    $updatedA = max($updatedATo, $updatedAFrom);
+                    $updatedBTo = isset($b['to']) ? $b['to']->getUpdated() ?? $b['to']->getCreated() : $early20thCentury;
+                    $updatedBFrom = isset($b['from']) ? $b['from']->getUpdated() ?? $b['from']->getCreated() : $early20thCentury;
+                    $updatedB = max($updatedBTo, $updatedBFrom);
+
+                    return -1 * ($updatedA <=> $updatedB);
+                }
+            );
+        }
+
+        return $comments;
     }
 }

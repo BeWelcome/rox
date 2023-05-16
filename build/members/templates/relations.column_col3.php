@@ -1,6 +1,6 @@
 <?php
 $words = new MOD_words();
-$purifier = MOD_htmlpure::getBasicHtmlPurifier();
+$purifier = (new MOD_htmlpure())->getBasicHtmlPurifier();
 $member = $this->member;
 $relations = $member->relations;
 $username = $member->Username;

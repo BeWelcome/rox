@@ -1,0 +1,57 @@
+profile.no.relations:
+    - 'No members marked as family or friends yet.'
+    - Text shown if a member hasn''t marked any member as family or friend
+profile.relation.add:
+    - '@addRelation'
+profile.relation.edit:
+    - 'Edit friends entry'
+    - Menu entry if you already have a link to this member.
+relation.add:
+    - 'Add'
+    - Button label in the add relation (family and friends) form
+relation.edit:
+    - 'Edit'
+    - Button label in the add relation (family and friends) form
+profile.relation.delete.modal:
+    - 'Delete relation?'
+    - Headline of modal shown if user wants to delete a relation
+profile.relation.delete:
+    - 'Do you want to delete this relation permanently?'
+    - Abstract on the modal to delete a relation between members
+profile.relation.delete.no:
+    - '@no'
+profile.relation.delete.yes:
+    - '@yes'
+profile.relation.with:
+    - 'Relation with {username}'
+    - Headline of the add/edit relation form
+profile.relations:
+    - 'Family and Friends'
+    - Submenu item label
+profile.relation.comment:
+    - 'Comment for this relation (optional, deprecated, will be removed in the future):'
+    - Label for the text field containing the comment for the relation
+profile.relation.no.comment:
+    - 'No comment given.'
+    - Text shown on the modal to delete a relation when no comment was given.
+flash.relation.removed:
+    - 'Relation has been deleted.'
+    - Flash message shown to the user, when a relation has been deleted.
+flash.relation.confirmed:
+    - 'Relation has been confirmed. You need to add your own if you want to show your relation with this member.'
+    - Flash message shown to the user, when a relation has been confirmed.
+relation.sender.says.exist:
+    - '{username} says you have a relation (friend or family).'
+    - Text in the notification email about a relation request
+relation.sender.added.comment:
+    - 'This is the comment they added for the relation:'
+    - Text in the notification email about a relation request (shown only when a comment exists)
+relation.confirm:
+    - 'Confirm'
+    - Button label in the relation request notification email
+relation.dismiss:
+    - 'Dismiss'
+    - Button label in the relation request notification email (saying that there is no relation)
+email.subject.relation:
+    - 'Do you have a relation to {username}?'
+    - Email subject for the request notification email

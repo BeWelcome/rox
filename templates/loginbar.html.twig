@@ -14,13 +14,15 @@
             {% include 'login_form_dropdown.html.twig' %}
             <li class="nav-item dropdown">
                 <button class="btn btn-primary border text-nowrap dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label="{{ 'menu.language.toggle'|trans }}">{{ language_name(app.request.locale) }}</button>
-                <ul id="language_dropdown" class="dropdown-menu dropdown-menu-right" style="max-height:100vh; overflow-y: auto; column-count: 2">
+                <div id="language_dropdown" class="dropdown-menu dropdown-menu-right u-w-150 md:u-w-300 u-max-h-screen u-overscroll-contain u-overflow-y-auto">
+                    <div class="u-grid u-grid-cols-1 md:u-gap-8 md:u-grid-cols-2 u-p-8">
                     {% for lang in locales %}
-                        <li><a class="dropdown-item {% if lang == app.request.locale %}bg-primary{% endif %} m-1" href="{{ path('language', { locale: lang }) }}">
+                        <a class="dropdown-item {% if lang == app.request.locale %}u-bg-bewelcome{% endif %} u-my-4 u-p-4" href="{{ path('language', { locale: lang }) }}">
                                 {{ language_name(lang) }}
-                            </a></li>
+                            </a>
                     {% endfor %}
-                </ul>
+                    </div>
+                </div>
             </li>
             <li class="nav-item">
                 <button class="border bg-primary mr-1 d-none" id="hamburger" type="button" data-toggle="collapse" data-target="#hamburger_collapse" aria-controls="hamburger_collapse" aria-expanded="false" aria-label="Toggle navigation">
@@ -30,7 +32,7 @@
         </ul>
     </div>
 </nav>
-<div class="collapse navbar-dark bg-primary" id="hamburger_collapse">{#  style="position:relative; top: 100%; right: 0" #}
+<div class="collapse navbar-dark bg-primary" id="hamburger_collapse">
     <div class="container-lg">
         <ul id="hamburger_menu" class="navbar-nav text-right"></ul>
     </div>

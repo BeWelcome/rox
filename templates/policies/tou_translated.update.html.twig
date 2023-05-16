@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+    <h1>BeWelcome {{ 'termsofuse'|trans({}, 'messages', locale) }} &mdash; 15/02/2023</h1>
+
+    <div class="o-text">
+        <div class="alert alert-notice">{{ 'policy_disclaimer'|trans({'policy_link_start': '<a href="' ~ policy_english ~ '">', 'policy_link_end': '</a>'}, 'messages', locale)|raw }}</div>
+
+        {{ 'terms.of.use.2023'|trans({}, 'messages', locale)|raw }}
+    </div>
+{% endblock content %}

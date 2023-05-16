@@ -72,7 +72,7 @@
                    data-toggle="tab">{{ 'landing.tab.messagesreceived' | trans }}
                     {% if conversationCount %}
                         <span
-                            class="badge badge-primary u-rounded-full u-w-20 u-h-20 u-inline-flex u-items-center u-justify-center">{{ conversationCount }}</span>
+                            class="badge badge-primary u-rounded-10 u-min-w-20 u-px-8 u-h-20 u-inline-flex u-items-center u-justify-center">{{ conversationCount }}</span>
                     {% endif %}
                 </a>
             </li>
@@ -80,7 +80,7 @@
                 <a class="nav-link" aria-controls="visitors" href="#visitors" role="tab"
                    data-toggle="tab">{{ 'landing.tab.visitors' | trans }}
                     {% if visitorsCount %}
-                        <span class="badge badge-primary u-rounded-full u-w-20 u-h-20 u-inline-flex u-items-center u-justify-center">{{ visitorsCount }}</span>
+                        <span class="badge badge-primary u-rounded-10 u-min-w-20 u-px-8 u-h-20 u-inline-flex u-items-center u-justify-center">{{ visitorsCount }}</span>
                     {% endif %}
                 </a>
             </li>
@@ -167,12 +167,12 @@
             <li class="nav-item">
                 <a href="#activities" class="nav-link" aria-controls="activities" role="tab"
                    data-toggle="tab">{{ 'landing.tab.activities' | trans }}{% if activityCount %} <span
-                        class="badge badge-primary u-rounded-full u-w-20 u-h-20 u-inline-flex u-items-center u-justify-center">{{ activityCount }}</span>{% endif %}</a>
+                        class="badge badge-primary u-rounded-10 u-min-w-20 u-px-8 u-h-20 u-inline-flex u-items-center u-justify-center">{{ activityCount }}</span>{% endif %}</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" aria-controls="notifications" href="#notifications" role="tab"
                    data-toggle="tab">{{ 'landing.tab.notifications' | trans }}{% if notificationCount %} <span
-                        class="badge badge-primary u-rounded-full u-w-20 u-h-20 u-inline-flex u-items-center u-justify-center">{{ notificationCount }}</span>{% endif %}</a>
+                        class="badge badge-primary u-rounded-10 u-min-w-20 u-px-8 u-h-20 u-inline-flex u-items-center u-justify-center">{{ notificationCount }}</span>{% endif %}</a>
             </li>
 		</ul>
 
@@ -345,7 +345,7 @@
         <a href="https://www.bevolunteer.org/reports/financial-reports/" target="_blank"
            class="o-button btn o-button text-truncate u-mb-8"><i
             class="fa u-mr-8 fa-money-bill-wave-alt mr-2"></i>{{ 'landing.beinformed.finances' | trans }}</a>
-        <a href="{{ url('terms_of_use', {'locale': app.request.locale }) }}"
+        <a href="{{ url('terms_of_use') }}"
            class="o-button btn o-button text-truncate u-mb-8"><i
             class="fa u-mr-8 fa-book mr-2"></i>{{ 'landing.beinformed.termsofuse' | trans }}</a>
         <a href="{{ url('privacy_policy') }}"

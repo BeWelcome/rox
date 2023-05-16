@@ -144,7 +144,9 @@
 {%- endblock dateinterval_widget -%}
 
 {% block choice_widget_collapsed -%}
-    {%- set attr = attr|merge({class: (attr.class|default('') ~ ' o-input')|trim}) -%}
+    {% if not form.vars.uses_autocomplete %}
+        {%- set attr = attr|merge({class: (attr.class|default('') ~ ' o-input')|trim}) -%}
+    {% endif %}
     {{- parent() -}}
 {%- endblock choice_widget_collapsed %}
 

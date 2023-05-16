@@ -22,6 +22,9 @@ abstract class EnumType extends Type
     /** @var array */
     protected $values = [];
 
+    /** @var string */
+    protected $translationPrefix = '';
+
     /**
      * @return string
      */
@@ -72,5 +75,15 @@ abstract class EnumType extends Type
     public function requiresSQLCommentHint(AbstractPlatform $platform)
     {
         return true;
+    }
+
+    public function getChoicesArray(): array
+    {
+        $translationIds = $this->values;
+        array_walk($translationIds, function (&$item) {
+            $item = strtolower($this->translationPrefix . $item);
+        });
+
+        return array_combine($translationIds, $this->values);
     }
 }

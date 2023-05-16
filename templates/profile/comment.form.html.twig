@@ -1,0 +1,48 @@
+{% extends 'profile/profile.html.twig' %}
+{% import 'macros.twig' as macros %}
+
+{% block javascripts %}
+    {% if check_experience is defined and check_experience %}
+        {{ encore_entry_script_tags('micromodal') }}
+        <script type="application/javascript">
+            {% if check_experience is defined and check_experience %}
+            MicroModal.show('comment-modal');
+            {% endif %}
+        </script>
+    {% endif %}
+{% endblock %}
+
+{% block modals %}
+    {% if check_experience is defined and check_experience %}
+        <div class="u-bg-gray-80 u-bg-opacity-50 u-flex u-justify-center u-items-center u-absolute u-inset-0 u-z-[2001]" id="comment-modal">
+            <div class="u-bg-white u-p-16 u-m-16 u-rounded-8 u-text-center u-min-w-50">
+                <p class="u-text-24 u-mb-4 u-font-700 u-text-gray-50">{{ 'comment.new.experience.modal'|trans }}</p>
+                <p class="u-text-16 u-mb-4">{{ 'comment.new.experience.please.check'|trans }}</p>
+                <footer class="u-flex u-flex-row u-justify-between">
+                    <a href="{{ url('profile_comments', {'username': app.user.username}) }}" class="o-button" data-dismiss="modal">{{ 'comment.new.experience.no'|trans|capitalize }}</a>
+                    <a href="{{ url('comment_new_experience', {'from_member': app.user.username, 'to_member': member.username }) }}" class="o-button" data-dismiss="modal">{{ 'comment.new.experience.yes'|trans|capitalize }}</a>
+                </footer>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block page_content %}
+    <h2>{{ 'commentheading'|trans|format(member.username) }}</h2>
+    <div class="alert alert-info">{{ 'followcommentguidelines'|trans|raw }}</div>
+    {{ form_start(form, { 'attr': { 'novalidate': 'novalidate' } }) }}
+    {{ form_row(form.quality) }}
+    {{ form_errors(form.quality) }}
+    {{ form_row(form.relations) }}
+    {{ form_errors(form.relations) }}
+    {{ form_row(form.textfree) }}
+    {{ form_errors(form.textfree) }}
+    {% if form.guidelines is defined %}
+        {{ form_row(form.guidelines) }}
+    {% endif %}
+    {% if form.new_experience is defined %}
+        {{ form_row(form.new_experience) }}
+    {% endif %}
+    <button type="submit" class="o-button">{{ buttonLabel|trans }}</button>
+    {{ form_end(form) }}
+{% endblock page_content %}

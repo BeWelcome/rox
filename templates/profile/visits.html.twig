@@ -1,0 +1,70 @@
+{% extends 'profile/profile.html.twig' %}
+{% import 'macros.twig' as macros %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('readmore') }}
+{% endblock javascripts %}
+
+{% block stylesheets %}
+    {{ encore_entry_link_tags('readmore') }}
+{% endblock stylesheets %}
+
+{% block page_content %}
+    <input type="hidden" id="read.more" value="{{ 'comment.read.more'|trans }}">
+    <input type="hidden" id="show.less" value="{{ 'comment.show.less'|trans }}">
+    {% if visits.haveToPaginate %}
+        {{ pagerfanta( visits, 'rounded_pagination_end') }}
+    {% endif %}
+<div class="u-columns-1 sm:u-columns-2 md:u-columns-3">
+     {% for visit in visits %}
+        {% set visitor = visit.visitor %}
+    <div class="u-bg-white u-break-inside-avoid-column u-p-8 u-mb-8">
+        <div class="u-flex u-flex-col">
+            <div class="u-flex u-flex-row u-mb-8">
+                <div class="o-avatar o-avatar--m o-avatar--noname">{{ macros.roundedavatarstack(visitor.Username, 48) }}</div>
+                <div class="u-text-14 u-ml-8">
+                    <strong>{{ macros.profilelink(visitor.Username) }}</strong>
+                    {%- if visitor.HideBirthDate == 'No' -%}
+                        <br>{{ 'profile.age'|trans }}  {{ visitor.age }}
+                    {%- endif -%}
+                    {%- if visitor.HideBirthDate == 'No' and visitor.HideGender == 'No' %}, {% endif -%}
+                    {%- if visitor.HideBirthDate == 'Yes' and visitor.HideGender == 'No' %}<br>{{ 'profile.gender'|trans }} {% endif -%}
+                    {% if visitor.HideGender == 'No' %}
+                        {{ visitor.gender|trans }}
+                    {% endif %}
+                    <br>{{ 'profile.joined'|trans }}
+                    {% set difference = date(visitor.created).diff(date()) %}
+                    {% if difference.days <= 7 %}
+                        {{ 'lastloginprivacy'| trans }}
+                    {% else %}
+                        {{ visitor.created.diffForHumans }}
+                    {% endif %}
+                    <br>{{ visitor.city.fullname }}
+                </div>
+            </div>
+            <div class="u-mb-8 u-break-all u-break-words js-read-more">
+            {% set fields = visitor.memberFields %}
+                {% if fields|length %}
+                    {% if fields[app.request.locale] is defined %}
+                        {% set profile_summary = fields[app.request.locale]['ProfileSummary'] %}
+                    {% else %}
+                        {% set profile_summary= (fields|first)['ProfileSummary'] %}
+                    {% endif %}
+                    {{ profile_summary|purify }}
+                {% else %}
+                    {{ 'profile.no.about.me'|trans }}
+                {% endif %}
+            </div>
+            <div class="u-text-12 u-self-end">
+                {{ 'profile.visited'|trans }} {{ visit.updated.diffForHumans }}
+            </div>
+        </div>
+    </div>
+    {% else %}
+        {{ 'profile.visitors.none.visible'|trans }}
+    {% endfor %}
+</div>
+    {% if visits.haveToPaginate %}
+        {{ pagerfanta( visits, 'rounded_pagination_end') }}
+    {% endif %}
+{% endblock page_content %}

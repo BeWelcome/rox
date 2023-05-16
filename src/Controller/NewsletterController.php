@@ -82,9 +82,11 @@ class NewsletterController extends AbstractController
     public function serveImage(string $id): BinaryFileResponse
     {
         $filepath = $this->getParameter('newsletter_image_directory') . '/' . $id;
+        $mimeType = mime_content_type($filepath);
 
         // Uploaded images aren't updated; set expiry to 1 year
         $response = new BinaryFileResponse($filepath);
+        $response->headers->set('Content-Type', $mimeType);
         $response->setSharedMaxAge(31536000);
 
         return $response;

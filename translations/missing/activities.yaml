@@ -20,3 +20,6 @@ activity.creation.checklist:
 activityendbeforestart:
     - 'The activity ends before it starts.'
     - Error message shown if the user selects an end date for an activity that lies before the start date.
+activities.upcoming:
+    - 'Upcoming'
+    - Label on the button that is shown if there are no activities near you.

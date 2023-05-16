@@ -1,0 +1,37 @@
+profile.preferences.menu:
+    - '@mypreferences'
+profile.preferences:
+    - 'Preferences'
+    - Headline on the preferences page
+itemsperpage:
+    - 'Items shown per page'
+    - 'Section header of the preferences that is used to allow users to have longer pages'
+preferenceitemsperpagedesc:
+    - 'The number you select here is used on all pages that offer pagination to reduce the amount of data loaded
+       by the server in a single go.'
+    - 'Help text for the preference ''Items shown per page'''
+itemsperpage5:
+    - '5'
+    - Used in the preference drop down for items per page
+    - messages+intl-icu
+    - yes
+itemsperpage10:
+    - '10'
+    - Used in the preference drop down for items per page
+    - messages+intl-icu
+    - yes
+itemsperpage20:
+    - '20'
+    - Used in the preference drop down for items per page
+    - messages+intl-icu
+    - yes
+itemsperpage50:
+    - '50'
+    - Used in the preference drop down for items per page
+    - messages+intl-icu
+    - yes
+itemsperpage100:
+    - '100'
+    - Used in the preference drop down for items per page
+    - messages+intl-icu
+    - yes

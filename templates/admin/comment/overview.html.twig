@@ -38,22 +38,22 @@
                             {{ comment.TextFree | nl2br }}<hr style="margin-top:0; margin-bottom:.25rem;">
                             <small class="text-muted">{{ 'comment.know' | trans }}</small><br>
                             {% set relations = comment.relations | split(',') %}
-                            {% for relation in relations %}{{ ('Comment_' ~ relation) | lower | trans }} {% endfor %}
+                            {% for relation in relations %}{{ ('profile.comment.relation.' ~ relation) | lower | trans({'username': comment.toMember.Username}) }} {% endfor %}
 
                         </td>
                         <td>{{ macros.avatarstack(comment.toMember.Username, 50) }}</td>
                         <td class="text-center">
-                            <a href="{{ path('admin_comment', { 'commentId' : comment.id }) }}"><i class="fa fa-edit" title="{{ 'admin.comment.edit' | trans }}"></i></a><br/>
+                            <a href="{{ path('admin_comment', { 'to_member' : comment.toMember.Username, 'from_member' : comment.fromMember.Username }) }}"><i class="fa fa-edit" title="{{ 'admin.comment.edit' | trans }}"></i></a><br/>
                             {% if comment.displayinpublic %}
-                                <a href="{{ path('admin_comment_hide', { 'commentId' : comment.id }) }}"><i class="fa fa-eye-slash" title="{{ 'admin.comment.hide' | trans }}"></i></a>
+                                <a href="{{ path('admin_comment_hide', { 'to_member' : comment.toMember.Username, 'from_member' : comment.fromMember.Username }) }}"><i class="fa fa-eye-slash" title="{{ 'admin.comment.hide' | trans }}"></i></a>
                             {% else %}
-                                <a href="{{ path('admin_comment_show', { 'commentId' : comment.id }) }}"><i class="fa fa-eye" title="{{ 'admin.comment.show' | trans }}"></i></a>
+                                <a href="{{ path('admin_comment_show', { 'to_member' : comment.toMember.Username, 'from_member' : comment.fromMember.Username }) }}"><i class="fa fa-eye" title="{{ 'admin.comment.show' | trans }}"></i></a>
                             {% endif %}<br>
                             {% if comment.adminaction != constant('App\\Doctrine\\CommentAdminActionType::SAFETY_TEAM_CHECK') %}
-                                <a href="{{ path('admin_comment_assign_safetyteam', { 'commentId' : comment.id }) }}"><i class="fa fa-arrow-right" title="{{ 'admin.comment.assign.safety' | trans }}"></i></a><br/>
+                                <a href="{{ path('admin_comment_assign_safetyteam', { 'to_member' : comment.toMember.Username, 'from_member' : comment.fromMember.Username }) }}"><i class="fa fa-arrow-right" title="{{ 'admin.comment.assign.safety' | trans }}"></i></a><br/>
                             {% endif %}
                             {% if comment.adminaction != constant('App\\Doctrine\\CommentAdminActionType::ADMIN_CHECKED') %}
-                                <a href="{{ path('admin_comment_mark_checked', { 'commentId' : comment.id }) }}"><i class="fa fa-check" title="{{ 'admin.comment.checked' | trans }}"></i></a>
+                                <a href="{{ path('admin_comment_mark_checked', { 'to_member' : comment.toMember.Username, 'from_member' : comment.fromMember.Username }) }}"><i class="fa fa-check" title="{{ 'admin.comment.checked' | trans }}"></i></a>
                             {% endif %}
                         </td>
                     </tr>

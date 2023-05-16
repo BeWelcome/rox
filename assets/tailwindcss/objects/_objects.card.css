@@ -39,6 +39,6 @@
  */
 
  .o-card--tabbed {
- 	border-radius: 0 8px 8px 8px;
+ 	border-radius: 0 16px 16px 16px;
  	min-height: 496px;
  }

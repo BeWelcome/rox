@@ -1,10 +1,12 @@
+@use 'sass:math';
+
 @import "mixins";
 
-@import "~@fontsource/lato/index.css";
-@import "~@fontsource/signika/index.css";
-@import "~@fontsource/signika/300.css";
-@import "~@fontsource/signika/700.css";
-@import "~toastify-js/src/toastify.css";
+@import "@fontsource/lato";
+@import "@fontsource/signika";
+@import "@fontsource/signika/300.css";
+@import "@fontsource/signika/700.css";
+@import "toastify-js/src/toastify.css";
 
 // Core variables and mixins
 @import "custom";
@@ -12,18 +14,11 @@ $font-family-bold: Signika;
 
 @import "~bootstrap";
 
-// @import "config";
-// @import "generic/generic";
-// @import "objects/objects";
-// @import "layouts/layouts";
-// @import "components/components";
-// @import "utilities/utilities";
-
 @import "general";
+@import "floating_labels";
 
 // include page styles
 @import "navbar";
-@import "home";
 @import "profile";
 @import "activities";
 @import "forumgroups";
@@ -34,7 +29,6 @@ $font-family-bold: Signika;
 
 // select2
 @import "~select2/src/scss/core";
-// @import "~select2-theme-bootstrap4/src/select2-bootstrap";
 
 @import "~@ttskch/select2-bootstrap4-theme/src/single";
 @import "~@ttskch/select2-bootstrap4-theme/src/multiple";
@@ -52,6 +46,7 @@ $font-family-bold: Signika;
 // tempus dominus date time picker
 @import "tempusdominus_bootstrap4";
 @import "footer";
+@import "daterangepicker.scss";
 
 .badge-warning {
     background-color: white;
@@ -256,8 +251,6 @@ a.active .metric .value {
   box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 1) !important;
 }
 
-@import "parallax";
-
 .alert-notice {
   @extend .alert-info;
 }
@@ -306,7 +299,7 @@ figure > figcaption {
 }
 
 @mixin make-td-col($size, $columns: $grid-columns) {
-  width: percentage($size / $columns);
+  width: percentage(math.div($size, $columns));
 }
 
 @each $breakpoint in map-keys($grid-breakpoints) {
@@ -573,115 +566,6 @@ $avatar-sizes: 30, 50, 75, 100, 150, 200, 500;
   max-width: 420px;
   padding: 15px;
   margin: auto;
-}
-
-.form-label-group {
-  position: relative;
-  margin-bottom: 1rem;
-}
-
-.form-label-group input,
-.form-label-group label {
-  height: 3.125rem;
-  padding: .75rem;
-}
-
-.form-label-group label {
-  position: absolute;
-  top: 0;
-  left: 0;
-  display: block;
-  width: 100%;
-  margin-bottom: 0; /* Override default `<label>` margin */
-  line-height: 1.5;
-  color: #495057;
-  pointer-events: none;
-  cursor: text; /* Match the input under the label */
-  border: 1px solid transparent;
-  border-radius: .25rem;
-  transition: all .1s ease-in-out;
-}
-
-.form-label-group input::-webkit-input-placeholder {
-  color: transparent;
-}
-
-.form-label-group input::-moz-placeholder {
-  color: transparent;
-}
-
-.form-label-group input:-ms-input-placeholder {
-  color: transparent;
-}
-
-.form-label-group input::-ms-input-placeholder {
-  color: transparent;
-}
-
-.form-label-group input::placeholder {
-  color: transparent;
-}
-
-.form-label-group input:not(:-moz-placeholder-shown) {
-  padding-top: 1.25rem;
-  padding-bottom: .25rem;
-}
-
-.form-label-group input:not(:-ms-input-placeholder) {
-  padding-top: 1.25rem;
-  padding-bottom: .25rem;
-}
-
-.form-label-group input:not(:placeholder-shown) {
-  padding-top: 1.25rem;
-  padding-bottom: .25rem;
-}
-
-.form-label-group input:not(:-moz-placeholder-shown) ~ label {
-  padding-top: .25rem;
-  padding-bottom: .25rem;
-  font-size: 12px;
-  color: #777;
-}
-
-.form-label-group input:not(:-ms-input-placeholder) ~ label {
-  padding-top: .25rem;
-  padding-bottom: .25rem;
-  font-size: 12px;
-  color: #777;
-}
-
-.form-label-group input:not(:placeholder-shown) ~ label {
-  padding-top: .25rem;
-  padding-bottom: .25rem;
-  font-size: 12px;
-  color: #777;
-}
-
-.form-label-group input:-webkit-autofill ~ label {
-  padding-top: .25rem;
-  padding-bottom: .25rem;
-  font-size: 12px;
-  color: #777;
-}
-
-/* Fallback for Edge
--------------------------------------------------- */
-@supports (-ms-ime-align: auto) {
-  .form-label-group {
-    display: -ms-flexbox;
-    display: flex;
-    -ms-flex-direction: column-reverse;
-    flex-direction: column-reverse;
-  }
-
-  .form-label-group label {
-    position: static;
-  }
-
-  .form-label-group input::-ms-input-placeholder {
-    color: #777;
-  }
 }
 
 #hamburger_collapse #login_signup

@@ -64,7 +64,7 @@ class InvitationController extends BaseRequestAndInvitationController
             return $this->redirectToRoute('homepage');
         }
 
-        if (!$guest->isBrowseable()) {
+        if (!$guest->isBrowsable()) {
             $this->addTranslatedFlash('note', 'flash.member.invalid');
         }
 

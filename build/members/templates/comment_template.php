@@ -25,7 +25,7 @@ Boston, MA  02111-1307, USA.
 
 use Carbon\Carbon;
 
-$purifier = MOD_htmlpure::getBasicHtmlPurifier();
+$purifier = (new MOD_htmlpure())->getBasicHtmlPurifier();
 $rights = new MOD_right;
 $rights->HasRight('Comments');
 

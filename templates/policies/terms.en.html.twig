@@ -1,12 +1,9 @@
 {% extends 'base.html.twig' %}
 
 {% block content %}
-<div class="o-text o-text--wrapper">
+<div class="o-text">
     <h1>BeWelcome Terms of Use</h1>
-{#    {%  if locale != 'en' %}
-        <p><strong>{{ 'terms.not.translated'|trans }}</strong></p>
-    {% endif %}
-#}    <p><em>(<a href="{{ url('terms_of_use', {'locale':'fr'}) }}">French version</a>)</em></p>
+    <p><em>(<a href="{{ url('terms_of_use', {'locale':'fr'}) }}">French version</a>)</em></p>
 
     <p>BeWelcome (<a href="https://www.bewelcome.org">www.bewelcome.org</a>) is a network that promotes the ideas of
         hospitality and cultural exchange. It is a project of the non-profit association BeVolunteer and run exclusively
@@ -98,7 +95,10 @@
         <li>use our services for any commercial purpose, especially for the distribution of commercial messages or
             advertisements;
         </li>
-        <li>use our services for the purpose of finding sexual partners;</li>
+        <li>use our services for the purpose of finding sexual partners. In particular this means that personal space
+            must be respected and that hosts must never impose a shared sleeping surface. Hosts must allow their guests
+            to sleep on a separate sleeping surface, which may simply be space on the floor if this is clearly agreed
+            at the time the hosting is agreed;</li>
         <li>post pornographic or sexually explicit content or images showing genitalia;</li>
         <li>post or publish any personal data about other users, including photos, without their permission;</li>
         <li>use our services for unsolicited messages with no connection to the purpose of BeWelcome or for unsolicited

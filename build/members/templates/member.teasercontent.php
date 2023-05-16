@@ -99,21 +99,21 @@
         <p class="mb-2">
             <?php
             echo $agestr;
-            $strGender = MOD_layoutbits::getGenderTranslated($member->Gender, $member->HideGender, true);
+            $strGender = MOD_layoutbits::getGenderTranslated($member->Gender, $member->HideGender, false);
             if (!empty($strGender)) {
                 echo ', ' . $strGender;
             }
             echo '<br>';
             ?>
             <?php if ($this->loggedInMember) : ?>
-                <?php echo '<span class="font-weight-bold">' . $words->get("MemberSince") . ': </span>';
+                <?php echo '<span class="font-weight-bold">' . $words->get('profile.joined') . ' </span>';
                 if (strtotime($member->created) > strtotime('-1 week')) {
                     echo $words->get("LastLoginPrivacy");
                 } else {
                     echo $layoutbits->ago(strtotime($member->created));
                 }
                 echo $this->memberSinceDate($member);
-                echo '<br><span class="font-weight-bold">' . $words->get("LastLogin") . ': </span>';
+                echo '<br><span class="font-weight-bold">' . $words->get('profile.last.activity') . ' </span>';
                 if (strtotime($member->LastLogin) > strtotime('-1 week')) {
                     echo $words->get("LastLoginPrivacy");
                 } else {

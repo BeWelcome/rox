@@ -1,7 +1,9 @@
 import Mark from 'mark.js';
 
-const context = document.getElementById("content");
 const keyword = document.getElementById("keyword").value;
-const instance = new Mark(context);
-instance.mark(keyword);
+const context = document.querySelector(".js-highlight");
 
+const  instance = new Mark(".js-highlight");
+instance.mark(keyword, {
+    "diacritics": false
+});

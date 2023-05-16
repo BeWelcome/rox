@@ -4,8 +4,8 @@ import { UploadAdapter } from '@ckeditor/ckeditor5-adapter-ckfinder/src/index';
 import { Bold, Underline, Italic } from '@ckeditor/ckeditor5-basic-styles/src/index';
 import { BlockQuote } from '@ckeditor/ckeditor5-block-quote/src/index';
 import { EasyImage } from '@ckeditor/ckeditor5-easy-image/src/index';
-import { Image, ImageCaption, ImageStyle, ImageToolbar, ImageUpload }  from '@ckeditor/ckeditor5-image/src/index';
-import { Link } from '@ckeditor/ckeditor5-link/src/index';
+import { Image, ImageCaption, ImageStyle, ImageToolbar, ImageUpload } from '@ckeditor/ckeditor5-image/src/index';
+import { Link, LinkImage } from '@ckeditor/ckeditor5-link/src/index';
 import { List } from '@ckeditor/ckeditor5-list/src/index';
 import { Mention } from '@ckeditor/ckeditor5-mention/src/index';
 import { Paragraph } from '@ckeditor/ckeditor5-paragraph/src/index';
@@ -48,6 +48,7 @@ for (let i = 0; i < allEditors.length; ++i) {
             HorizontalLine,
             BlockQuote,
             Image,
+            LinkImage,
             ImageCaption,
             ImageStyle,
             ImageToolbar,
@@ -89,7 +90,8 @@ for (let i = 0; i < allEditors.length; ++i) {
             toolbar: [
                 'imageTextAlternative',
                 '|',
-                'toggleImageCaption'
+                'toggleImageCaption',
+                'linkImage'
             ]
         },
         language: document.documentElement.lang,

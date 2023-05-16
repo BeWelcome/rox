@@ -5,18 +5,6 @@
     "anthonymartin/geo-location": {
         "version": "v2.0.1"
     },
-    "anyx/login-gate-bundle": {
-        "version": "1.0",
-        "recipe": {
-            "repo": "github.com/symfony/recipes-contrib",
-            "branch": "master",
-            "version": "1.0",
-            "ref": "49f0e34d3f1059f8985e8e56e4b5e2b08e5fc79b"
-        },
-        "files": [
-            "./config/packages/login_gate.yaml"
-        ]
-    },
     "api-platform/core": {
         "version": "2.5",
         "recipe": {
@@ -75,9 +63,6 @@
         "files": [
             "./config/packages/test/dama_doctrine_test_bundle.yaml"
         ]
-    },
-    "deployer/dist": {
-        "version": "v6.8.0"
     },
     "doctrine/annotations": {
         "version": "1.0",
@@ -185,9 +170,6 @@
     },
     "fakerphp/faker": {
         "version": "v1.16.0"
-    },
-    "fig/link-util": {
-        "version": "1.1.2"
     },
     "foolz/sphinxql-query-builder": {
         "version": "1.2.0"
@@ -307,9 +289,6 @@
     },
     "laminas/laminas-validator": {
         "version": "2.15.0"
-    },
-    "laminas/laminas-zendframework-bridge": {
-        "version": "1.4.0"
     },
     "lcobucci/clock": {
         "version": "2.0.0"
@@ -527,9 +506,6 @@
         "files": [
             "./phpcs.xml.dist"
         ]
-    },
-    "staffim/rest-client": {
-        "version": "2.0.4"
     },
     "stof/doctrine-extensions-bundle": {
         "version": "1.7",

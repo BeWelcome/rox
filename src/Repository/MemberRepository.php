@@ -8,13 +8,24 @@ use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bridge\Doctrine\Security\User\UserLoaderInterface;
+use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-class MemberRepository extends ServiceEntityRepository implements UserLoaderInterface
+class MemberRepository extends ServiceEntityRepository implements UserLoaderInterface, PasswordUpgraderInterface
 {
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Member::class);
+    }
+
+    public function upgradePassword(UserInterface $user, string $newHashedPassword): void
+    {
+        /** @var Member $user */
+        // set the new hashed password on the User object
+        $user->setPassword($newHashedPassword);
+
+        // execute the queries on the database
+        $this->getEntityManager()->flush();
     }
 
     /**
@@ -40,29 +51,23 @@ class MemberRepository extends ServiceEntityRepository implements UserLoaderInte
             ->getResult();
     }
 
-    /**
-     * Loads the user for the given username.
-     *
-     * This method must return null if the user is not found.
-     *
-     * @param string $username The username
-     *
-     * @throws \Doctrine\ORM\NonUniqueResultException
-     *
-     * @return UserInterface|null
-     */
-    public function loadUserByUsername($username)
+    public function loadUserByIdentifier(string $usernameOrEmail): ?Member
     {
-        if (empty($username)) {
+        if (empty($usernameOrEmail)) {
             return null;
         }
 
         return $this->createQueryBuilder('u')
             ->where('u.username = :username OR u.email = :email')
-            ->setParameter('username', $username)
-            ->setParameter('email', $username)
+            ->setParameter('username', $usernameOrEmail)
+            ->setParameter('email', $usernameOrEmail)
             ->getQuery()
             ->getOneOrNullResult();
+    }
+
+    public function loadUserByUsername(string $username)
+    {
+        return $this->loadUserByIdentifier($username);
     }
 
     public function findByProfileInfo($term)

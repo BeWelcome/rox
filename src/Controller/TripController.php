@@ -184,7 +184,7 @@ class TripController extends AbstractController
      *     requirements={"id": "\d+"}
      * )
      *
-     * @IsGranted("TRIP_EDIT", subject="trip")
+     * @IsGranted("TRIP_REMOVE", subject="trip")
      */
     public function remove(Trip $trip): RedirectResponse
     {
@@ -200,7 +200,7 @@ class TripController extends AbstractController
      *     requirements={"id": "\d+"}
      * )
      *
-     * @IsGranted("TRIP_EDIT", subject="trip")
+     * @IsGranted("TRIP_COPY", subject="trip")
      */
     public function copy(Trip $trip): Response
     {
@@ -217,7 +217,7 @@ class TripController extends AbstractController
     /**
      * Show all trip legs that are in the vicinity of a member.
      *
-     * @Route("/visitors",
+     * @Route("/visitors/{page}",
      *     requirements={"page"="\d+"},
      *     name="visitors")
      */

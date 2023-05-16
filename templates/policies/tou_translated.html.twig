@@ -1,11 +1,11 @@
 {% extends 'base.html.twig' %}
 
 {% block content %}
-    <h1>BeWelcome {{ 'termsofuse'|trans }}</h1>
+    <h1>BeWelcome {{ 'termsofuse'|trans({}, 'messages', locale) }}</h1>
 
-    <div class="alert alert-notice">{{ 'policy_disclaimer'|trans({'policy_link_start': '<a href="' ~ policy_english ~ '">', 'policy_link_end': '</a>'})|raw }}</div>
+    <div class="o-text">
+        <div class="alert alert-notice">{{ 'policy_disclaimer'|trans({'policy_link_start': '<a href="' ~ policy_english ~ '">', 'policy_link_end': '</a>'}, 'messages', locale)|raw }}</div>
 
-    <div class="mt-3">
-        {{ 'termsofuse.text'|trans|raw }}
+        {{ 'termsofuse.text'|trans({}, 'messages', locale)|raw }}
     </div>
 {% endblock content %}

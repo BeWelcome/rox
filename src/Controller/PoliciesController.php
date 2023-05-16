@@ -27,6 +27,7 @@ class PoliciesController extends AbstractController
             return $this->render('policies/tou_translated.html.twig', [
                 'policy_french' => $this->generateUrl('terms_of_use', ['locale' => 'fr']),
                 'policy_english' => $this->generateUrl('terms_of_use', ['locale' => 'en']),
+                'locale' => $locale,
             ]);
         }
 

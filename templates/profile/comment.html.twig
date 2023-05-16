@@ -1,0 +1,103 @@
+{% import 'macros.twig' as macros %}
+
+{% set loggedInMember = app.user %}
+<div class="u-grid u-grid-cols-1 md:u-grid-cols-2 u-mb-16">
+    {% if comment['from'] is defined %}
+        {{ _self.comment(member, loggedInMember, comment['from'], true) }}
+    {% else %}
+        <div class="card u-bg-black-o-10 u-p-16 u-mr-24 u-mb-8 md:u-mb-0 md:u-mr-0">
+            {% if member != app.user and comment['to'].toMember == app.user %}
+                <a href="{{ url('add_comment', { username: comment['to'].fromMember.Username}) }}"
+                   class="btn btn-primary">{{ 'profile.add.comment'|trans({'username': comment['to'].fromMember.Username, 'gender': comment['to'].fromMember.Gender}) }}</a>
+            {% else %}
+            <p class="text-center">{{ 'profile.no.comment.yet'|trans({'from': comment['to'].toMember.Username, 'to': comment['to'].fromMember.Username}) }}</p>
+            {% endif %}
+        </div>
+    {% endif %}
+    {% if comment['to'] is defined %}
+        {{ _self.comment(member, loggedInMember, comment['to'], false) }}
+    {% else %}
+        <div class="card u-bg-black-o-10 u-p-16 u-ml-24 md:u-ml-0">
+            {% if member == app.user and comment['from'].toMember == app.user %}
+                <a href="{{ url('add_comment', { username: comment['from'].fromMember.Username}) }}"
+                   class="o-button">{{ 'profile.add.comment'|trans({'username': comment['from'].fromMember.Username, 'gender': comment['from'].fromMember.Gender}) }}</a>
+            {% else %}
+                <p class="text-center">{{ 'profile.no.comment.yet'|trans({'from': comment['from'].toMember.Username, 'to': comment['from'].fromMember.Username}) }}</p>
+            {% endif %}
+        </div>
+    {% endif %}
+</div>
+
+{% macro comment(member, loggedInMember, comment, from) %}
+{% set show = comment.showCondition(loggedInMember) %}
+{% set edit = comment.editCondition(loggedInMember) %}
+{% set quality = comment.quality|lower %}
+{% if from %}
+    {% set username = comment.fromMember.Username %}
+    {% set comment_direction %}{{ 'profile.comment.from'|trans({'username': '<a href="' ~ url('members_profile', {username: username}) ~ '">' ~ username ~ '</a>'})|raw }}{% endset %}
+{% else %}
+    {% set username = comment.toMember.Username %}
+    {% set comment_direction %}{{ 'profile.comment.about'|trans({'username': '<a href="' ~ url('members_profile', {username: username}) ~ '">' ~ username ~ '</a>'})|raw }}{% endset %}
+{% endif %}
+{% if not comment.updated is null and comment.created != comment.updated %}
+    {% set comment_date = comment.updated %}
+{% else %}
+    {% set comment_date = comment.created %}
+{% endif %}
+<div class="card comment-bg-{{ quality }} u-p-16 u-mb-8 md:u-mb-0 {% if from %}u-mr-16 md:u-mr-0{% else %}u-ml-16 md:u-ml-0{% endif %}">
+    {% if (show > 1) %}
+        <div class="u-flex u-flex-col u-rounded-8 u-px-8 u-bg-black-o-30 u-mb-8">
+            <strong>{{ 'commenthiddenedit'|trans }}</strong>
+        </div>
+    {% endif %}
+    <div class="u-flex u-flex-row {% if not from %}flex-row-reverse{% endif %} u-mb-8">
+        <div class="o-avatar o-avatar--m">
+            {{ macros.roundedavatarstack(username, 72, false) }}
+        </div>
+        <div class="u-self-center u-px-8">
+            <p class="u-m-0 u-leading-20 {% if not from %}text-right{% endif %}">
+                {% if member.Status != constant('\\App\\Doctrine\\MemberStatusType::PASSED_AWAY') %}
+                    <span class="commenttitle {{ quality }}">{{ ('commentquality_' ~ quality )|trans }}</span>
+                {% endif %}
+                <br>{{ comment_direction }}
+                <br><span class="u-text-14 u-leading-20" title="{{ comment_date|format_datetime() }}">{{ comment_date.diffForHumans }}
+                    </span>
+            </p>
+        </div>
+        <div class="{% if from %}ml-auto{% else %}mr-auto{% endif%} u-self-center">
+            {% set wasGuestOrHost = 'hewasmyguest' in comment.relations or 'hehostedme' in comment.relations %}
+            {% if wasGuestOrHost %}
+                <i class="fas fa-2x fa-home"></i>
+            {% endif %}
+        </div>
+    </div>
+    <p class="u-text-sm u-italic u-p-0 u-mb-8">{% for relation in comment.relations|split(',') %}
+            {{  ('profile.comment.relation.' ~ relation)|lower|trans({username: comment.toMember.Username}) }}
+        {% endfor %}</p>
+
+    <div class="u-mb-8">{{ comment.TextFree|nl2br|purify }}</div>
+
+    <div class="u-flex u-self-center u-mb-8">
+        {% if edit %}
+            <div class="u-px-8"><a class="o-button o-button--s" href="{{ url('edit_comment', { username: comment.toMember.Username}) }}" title="Edit">{{ 'edit'|trans }}</a></div>
+        {% endif %}
+        {% if is_granted(constant('\\App\\Entity\\Member::ROLE_ADMIN_COMMENTS')) %}
+            <div class="u-px-8"><a class="o-button o-button--s u-px-16" href="{{ url('admin_comment', {
+                    to_member: comment.toMember.Username, from_member: comment.fromMember.Username }) }}">{{ 'editcomment'|trans }}</a></div>
+        {% endif %}
+    </div>
+
+    <div class="u-flex u-flex-row u-justify-between">
+        <div class="u-text-14 u-leading-20 u-self-center">
+            {% if comment.updated != null and comment.created != comment.updated %}
+                {{ 'commentlastupdated'|trans }}: <span title="{{ comment.updated|format_datetime() }}">{{ comment.updated.diffForHumans }}</span>
+            {% endif %}
+        </div>
+        <div>{%- if from and member == loggedInMember %}
+            <a href="{{ url('report_comment', {'to_member': comment.toMember.Username, 'from_member': comment.fromMember.Username}) }}" title="{{ 'reportcommentproblem'|trans }}" class="u-text-grey-80"><i class="fa fa-flag"></i></a>
+            {% endif -%}
+        </div>
+    </div>
+</div>
+{% endmacro %}
+

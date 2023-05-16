@@ -31,7 +31,8 @@ $radiusSelect .= '</select>';
 </div>
 <?php
 if (count($this->activities) == 0) {
-    echo '<div class="col-12 h4 mt-3">' . $words->get('ActivitiesNoActivitiesNearYou', $vars['activity-radius']) . '</div>';
+    echo '<div class="col-12 mt-3">' . $words->get('ActivitiesNoActivitiesNearYou', $vars['activity-radius']) . '</div>';
+    echo '<div class="col-12 mt-3"><a href="/activities/upcoming" class="btn btn-primary">' . $words->get('activities.upcoming') . '</a></div>';
 } else {
     require_once('activitieslist.php');
 }

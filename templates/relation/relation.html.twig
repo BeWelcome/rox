@@ -1,0 +1,13 @@
+{% import 'macros.twig' as macros %}
+{% set owned_relations = relation.owner == app.user %}
+<div class="{% if owned_relations %}relations-card{% else %}relations-card-other{% endif %}">
+    <div class="relation-avatar"><div class="o-avatar o-avatar--m">{{ macros.roundedavatarstack(relation.receiver.username, 48) }}</div></div>
+    <div class="relation-relation js-read-more u-break-words">{{ relation.commentText|purify }}</div>
+    <div class="relation-updated"><span class="u-text-12">{{ relation.updated|format_date('medium') }}</span></div>
+
+    {% if owned_relations %}<div class="relation-actions">
+        <a href="{{ path('edit_relation', {username: relation.receiver.username}) }}" class="o-button"><i class="fa fa-fw fa-edit"></i></a>
+        <button class="o-button" data-micromodal-trigger="relation-delete-{{ relation.id }}"><i class="fa fa-fw fa-trash-alt"></i></button>
+    </div>
+    {% endif %}
+</div>

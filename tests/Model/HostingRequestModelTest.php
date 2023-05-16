@@ -61,7 +61,7 @@ class HostingRequestModelTest extends TestCase
 
     public function testRequestDoesNotExpireToday()
     {
-        $arrival = new DateTime('yesterday');
+        $arrival = new DateTime('today');
         $departure = (new DateTime('today'))->setTime(23, 59);
 
         $request = new HostingRequest();
@@ -116,7 +116,13 @@ class HostingRequestModelTest extends TestCase
         $arrival = new DateTime();
         $departure = $arrival->add(new DateInterval('P2D'));
 
-        $hostingRequestMessage = $this->setupRequestMessage($arrival, $departure, false, 1, HostingRequest::REQUEST_OPEN);
+        $hostingRequestMessage = $this->setupRequestMessage(
+            $arrival,
+            $departure,
+            false,
+            1,
+            HostingRequest::REQUEST_OPEN
+        );
         $formRequestMessage = $this->setupRequestMessage($arrival, $departure, false, 1, HostingRequest::REQUEST_OPEN);
 
         $requestModel = new HostingRequestModel();
@@ -134,10 +140,22 @@ class HostingRequestModelTest extends TestCase
 
         // Check that all other properties didn't change. Arrival and departure checked for equality only as getArrival
         // and getDeparture return a new Carbon instance
-        $this->assertEquals($finalRequestMessage->getRequest()->getArrival(), $hostingRequestMessage->getRequest()->getArrival());
-        $this->assertEquals($finalRequestMessage->getRequest()->getDeparture(), $hostingRequestMessage->getRequest()->getDeparture());
-        $this->assertSame($finalRequestMessage->getRequest()->getFlexible(), $hostingRequestMessage->getRequest()->getFlexible());
-        $this->assertSame($finalRequestMessage->getRequest()->getNumberOfTravellers(), $hostingRequestMessage->getRequest()->getNumberOfTravellers());
+        $this->assertEquals(
+            $finalRequestMessage->getRequest()->getArrival(),
+            $hostingRequestMessage->getRequest()->getArrival()
+        );
+        $this->assertEquals(
+            $finalRequestMessage->getRequest()->getDeparture(),
+            $hostingRequestMessage->getRequest()->getDeparture()
+        );
+        $this->assertSame(
+            $finalRequestMessage->getRequest()->getFlexible(),
+            $hostingRequestMessage->getRequest()->getFlexible()
+        );
+        $this->assertSame(
+            $finalRequestMessage->getRequest()->getNumberOfTravellers(),
+            $hostingRequestMessage->getRequest()->getNumberOfTravellers()
+        );
     }
 
     public function testGetFinalRequestFlexibleChanged()

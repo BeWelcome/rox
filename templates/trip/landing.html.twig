@@ -19,7 +19,7 @@
         </p>
         <p class="u-font-300 u-text-14">{{ 'trip.posted.by'|trans({username: macros.profilelink(leg.trip.creator.username)})|raw }}</p>
     </div>
-    <div class="u-ml-auto u-flex-shrink-0">
+    <div class="u-ml-auto u-shrink-0">
         {% if constant('App\\Doctrine\\SubtripOptionsType::MEET_LOCALS') in leg.options %}
             <a class="o-rounded u-mx-4" href="{{ path('message_new', { 'username': leg.trip.creator.username }) }}" aria-label="{{ 'message.write_to' | trans | format(leg.trip.creator.username) }}" title="{{ 'message.write_to' | trans | format(leg.trip.creator.username) }}">
                 <i class="fa fa-fw fa-envelope"></i>

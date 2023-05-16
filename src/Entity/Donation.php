@@ -28,10 +28,8 @@ class Donation
     /**
      * @var Member
      *
-     * @ORM\OneToOne(targetEntity="Member")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="IdMember", referencedColumnName="id")
-     * })
+     * @ORM\ManyToOne(targetEntity="Member")
+     * @ORM\JoinColumn(name="IdMember", referencedColumnName="id")
      */
     private $donor;
 
@@ -73,10 +71,8 @@ class Donation
     /**
      * @var Country
      *
-     * @ORM\OneToOne(targetEntity="Country")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="IdCountry", referencedColumnName="country")
-     * })
+     * @ORM\ManyToOne(targetEntity="Country")
+     * @ORM\JoinColumn(name="IdCountry", referencedColumnName="country")
      */
     private $country;
 

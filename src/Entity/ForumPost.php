@@ -27,7 +27,7 @@ use Doctrine\Persistence\ObjectManagerAware;
  *     @ORM\Index(name="PostVisibility", columns={"PostVisibility"}),
  *     @ORM\Index(name="PostDeleted", columns={"PostDeleted"}),
  *     @ORM\Index(name="create_time", columns={"create_time"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\ForumPostRepository")
  *
  * @SuppressWarnings(PHPMD)
  * Auto generated class do not check mess

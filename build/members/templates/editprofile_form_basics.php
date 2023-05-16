@@ -7,7 +7,7 @@
     </div>
     <div id="collapse-home" class="show" data-parent="#editProfile" aria-labelledby="heading-basics">
         <div class="card-body">
-            <div class="form-row mb-1">
+            <div class="form-row mb-2">
                 <label for="SignupUsername" class="col-12 col-md-3"><?= $words->get('SignupUsername') ?></label>
                 <div class="col-12 col-md-9">
                     <p class="font-weight-bold"><?= $member->Username ?></p>
@@ -17,7 +17,7 @@
                 </div>
             </div>
             <?php if ($this->adminedit || !$CanTranslate) { // member translator is not allowed to update crypted data ?>
-                <div class="form-row mb-1">
+                <div class="form-row mb-2">
                     <label for="FirstName" class="col-md-3 col-form-label"><?= $words->get('FirstName') ?></label>
                     <div class="col-8 col-md-7">
                         <input class="o-input<?php if (isset($errorFirstName)) { ?> error-input-text<?php } ?>"
@@ -25,33 +25,35 @@
                                name="FirstName"
                                value="<?php echo htmlentities($vars['FirstName'], ENT_COMPAT, 'UTF-8'); ?>"/>
                     </div>
-                    <div class="col-4 col-md-2 o-checkbox">
+                    <div class="col-4 col-md-2 u-flex u-items-center"><div class="o-checkbox">
                         <input type="checkbox" value="Yes" name="IsHidden_FirstName"
                             <?php if ($vars['IsHidden_FirstName'] === 'Yes')
                                 echo 'checked="checked"';
-                            ?> />
-                        <label for="IsHidden_FirstName"><?= $words->get('hidden') ?></label>
+                            ?> class="o-checkbox__input"/>
+                        <label for="IsHidden_FirstName" class="o-checkbox__label"><?= $words->get('hidden') ?></label>
+                        </div>
                     </div>
                     <?php if (isset($errorFirstName)) { ?>
                         <div class="w-100 alert alert-danger"><?= $words->get('SignupErrorInvalidFirstName') ?></div>
                     <?php } ?>
                 </div>
-                <div class="form-row mb-1">
+                <div class="form-row mb-2">
                     <label for="SecondName" class="col-md-3 col-form-label"><?= $words->get('SecondName') ?></label>
                     <div class="col-8 col-md-7">
                         <input type="text" name="SecondName" class="o-input"
                                value="<?php echo htmlentities($vars['SecondName'], ENT_COMPAT, 'UTF-8'); ?>"/>
                     </div>
-                    <div class="col-4 col-md-2 o-checkbox">
+                    <div class="col-4 col-md-2 u-flex u-items-center"><div class="o-checkbox">
                         <input type="checkbox" value="Yes" name="IsHidden_SecondName"
                             <?php if ($vars['IsHidden_SecondName'] === 'Yes')
                                 echo 'checked="checked"';
-                            ?> />
-                        <label for="IsHidden_SecondName"><?= $words->get('hidden') ?></label>
+                            ?> class="o-checkbox__input"/>
+                        <label for="IsHidden_SecondName" class="o-checkbox__label"><?= $words->get('hidden') ?></label>
+                        </div>
                     </div>
                 </div>
 
-                <div class="form-row mb-1">
+                <div class="form-row mb-2">
                     <label for="LastName" class="col-md-3 col-form-label"><?= $words->get('LastName') ?></label>
                     <div class="col-8 col-md-7">
                         <input class="o-input <?php if (isset($errorLastName)) { ?>error-input-text<?php } ?>"
@@ -59,18 +61,19 @@
                                name="LastName"
                                value="<?php echo htmlentities($vars['LastName'], ENT_COMPAT, 'UTF-8'); ?>"/>
                     </div>
-                    <div class="col-4 col-md-2 o-checkbox">
+                    <div class="col-4 col-md-2 u-flex u-items-center"><div class="o-checkbox">
                         <input type="checkbox" value="Yes" name="IsHidden_LastName"
                             <?php if ($vars['IsHidden_LastName'] === 'Yes')
                                 echo 'checked="checked"';
-                            ?> />
-                        <label for="IsHidden_LastName"><?= $words->get('hidden') ?></label>
+                            ?> class="o-checkbox__input"/>
+                        <label for="IsHidden_LastName" class="o-checkbox__label"><?= $words->get('hidden') ?></label>
+                    </div>
                     </div>
                     <?php if (isset($errorLastName)) { ?>
                         <div class="w-100 alert alert-danger"><?= $words->get('SignupErrorInvalidLastName') ?></div>
                     <?php } ?>
                 </div>
-                <div class="form-row mt-2">
+                <div class="form-row mb-2">
                     <label for="SignupEmail"
                            class="col-12 col-md-3 col-form-label"><?= $words->get('SignupEmail') ?></label>
                     <div class="col-8 col-md-7">
@@ -86,7 +89,7 @@
                 </div>
             <?php } ?>
 
-            <div class="form-row">
+            <div class="form-row mb-2">
                 <label for="birth-date"
                        class="col-md-3 col-form-label pb-0"><?= $words->get('SignupBirthDate') ?></label>
                 <div class="col-8 col-md-7">
@@ -99,7 +102,7 @@
                 </div>
                 <div class="col-12 col-md-7 offset-md-3 small text-muted"><?= $words->get('EmailIsAlwayHidden') ?></div>
             </div>
-            <div class="form-row">
+            <div class="form-row mb-2">
                 <div class="col-12 col-md-3">
                     <label for="HideBirthDate" class="col-form-label"><?= $words->get('ShowAge'); ?></label>
                 </div>
@@ -112,7 +115,7 @@
                 </div>
             </div>
 
-            <div class="form-row">
+            <div class="form-row mb-2">
 
                 <label for="Gender" class="col-md-3 col-form-label"><?= $words->get('Gender'); ?></label>
 
@@ -144,7 +147,7 @@
                 }
                 ?>
             </div>
-            <div class="form-row">
+            <div class="form-row mb-2">
                 <div class="col-12 col-md-9 offset-md-3">
                     <div class="o-checkbox">
                         <input name="HideGender" value="Yes" type="checkbox" class="o-checkbox__input"
@@ -153,7 +156,7 @@
                     </div>
                 </div>
             </div>
-            <div class="form-row mt-1">
+            <div class="form-row mb-2">
                 <label for="Location" class="col-12 col-md-3 col-form-label"><?= $words->get('Location') ?></label>
 
                 <div class="col-12 col-md-9">
@@ -163,7 +166,7 @@
                             <br>
                             <?= $member->region ?>, <?= $member->country ?>
                         </div>
-                        <a href="setlocation"
+                        <a href="/members/<?= $member->Username ?>/location"
                            class="btn btn-outline-primary float-left"><?= $words->get('UpdateMyLocation') ?></a>
                     </div>
                 </div>

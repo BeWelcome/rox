@@ -9,10 +9,12 @@ use App\Form\MapSearchFormType;
 use App\Form\SearchFormType;
 use App\Pagerfanta\SearchAdapter;
 use App\Repository\MemberRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Pagerfanta\Pagerfanta;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,6 +24,13 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SearchController extends AbstractController
 {
+    private EntityManagerInterface $entityManager;
+
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
+
     /**
      * @Route("/search/members", name="search_members")
      *
@@ -48,7 +57,7 @@ class SearchController extends AbstractController
             $data = $memberSearch->getData();
             $username = $data['username'];
             /** @var MemberRepository $memberRepository */
-            $memberRepository = $this->getDoctrine()->getRepository(Member::class);
+            $memberRepository = $this->entityManager->getRepository(Member::class);
             $members = $memberRepository->findByProfileInfoStartsWith($username);
         }
 
@@ -74,22 +83,25 @@ class SearchController extends AbstractController
         /** @var Member $member */
         $member = $this->getUser();
 
-        $preferenceRepository = $this->getDoctrine()->getRepository(Preference::class);
+        $preferenceRepository = $this->entityManager->getRepository(Preference::class);
+
         /** @var Preference $showMapPreference */
         $showMapPreference = $preferenceRepository->findOneBy(['codename' => Preference::SHOW_MAP]);
         $showMap = $member->getMemberPreferenceValue($showMapPreference);
+
         /** @var Preference $showOptionsPreference */
         $showOptionsPreference = $preferenceRepository->findOneBy(['codename' => Preference::SHOW_SEARCH_OPTIONS]);
         $showOptions = $member->getMemberPreferenceValue($showOptionsPreference);
+
         /** @var Preference $storedSearchFilter */
         $searchOptionsPreference = $preferenceRepository->findOneBy(['codename' => Preference::SEARCH_OPTIONS]);
         $memberSearchOptionsPreference = $member->getMemberPreference($searchOptionsPreference);
-        $options = $memberSearchOptionsPreference->getValue();
+        $searchOptions = $memberSearchOptionsPreference->getValue();
 
-        if ("" !== $options) {
-            $searchFormRequest = unserialize($options);
+        if ("" !== $searchOptions) {
+            $searchFormRequest = unserialize($searchOptions);
         } else {
-            $searchFormRequest = new SearchFormRequest($this->getDoctrine()->getManager());
+            $searchFormRequest = new SearchFormRequest();
         }
         $searchFormRequest->overrideFromRequest($request);
         $searchFormRequest->show_map = ('Yes' === $showMap);
@@ -99,10 +111,11 @@ class SearchController extends AbstractController
         $formFactory = $this->get('form.factory');
         $tiny = $formFactory->createNamed('tiny', SearchFormType::class, $searchFormRequest);
         $home = $formFactory->createNamed('home', SearchFormType::class, $searchFormRequest);
+        /** @var FormInterface $search */
         $search = $formFactory->createNamed('search', SearchFormType::class, $searchFormRequest, [
             'groups' => $member->getGroups(),
             'languages' => $member->getLanguages(),
-            'search_options' => $options,
+            'search_options' => $searchOptions,
         ]);
 
         $request = $this->overrideRequestParameters($request, $searchFormRequest);
@@ -122,7 +135,7 @@ class SearchController extends AbstractController
 
         if ($tinyIsValid || $homeIsValid || $searchIsValid) {
             $data = null;
-            $em = $this->getDoctrine()->getManager();
+            $em = $this->entityManager;
             /* @var SearchFormRequest $data */
             if ($tinyIsValid) {
                 $data = $tiny->getData();
@@ -133,9 +146,9 @@ class SearchController extends AbstractController
             if ($searchIsValid) {
                 $data = $search->getData();
                 if ($search->has('resetOptions') && $search->get('resetOptions')->isClicked()) {
-                    $memberSearchOptionsPreference->setValue('');
-                    $em->persist($memberSearchOptionsPreference);
+                    $em->remove($memberSearchOptionsPreference);
                     $em->flush();
+
                     return $this->redirectToRoute('search_locations');
                 }
 
@@ -196,7 +209,7 @@ class SearchController extends AbstractController
      *
      * @SuppressWarnings(PHPMD.StaticAccess)
      */
-    public function showMapAction(Request $request, TranslatorInterface $translator)
+    public function showMapAction(Request $request, TranslatorInterface $translator): Response
     {
         // do not allow access to this page when logged in, redirect to /search/locations
         if (null !== $this->getUser()) {
@@ -210,7 +223,7 @@ class SearchController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
-            $searchFormRequest = new SearchFormRequest($this->getDoctrine()->getManager());
+            $searchFormRequest = new SearchFormRequest();
             $searchFormRequest->page = 1;
             $searchFormRequest->location = $data['location'];
             $searchFormRequest->location_geoname_id = $data['location_geoname_id'];
@@ -231,7 +244,7 @@ class SearchController extends AbstractController
                 $this->getParameter('database_name'),
                 $this->getParameter('database_user'),
                 $this->getParameter('database_password'),
-                $this->getDoctrine()->getManager(),
+                $this->entityManager,
                 $translator
             );
             $results = $searchAdapter->getMapResults();
@@ -262,7 +275,7 @@ class SearchController extends AbstractController
             return $this->redirectToRoute('search_locations', $request->query->all());
         }
 
-        $searchFormRequest = SearchFormRequest::fromRequest($request, $this->getDoctrine()->getManager());
+        $searchFormRequest = SearchFormRequest::fromRequest($request);
 
         $searchAdapter = new SearchAdapter(
             $searchFormRequest,
@@ -271,7 +284,7 @@ class SearchController extends AbstractController
             $this->getParameter('database_name'),
             $this->getParameter('database_user'),
             $this->getParameter('database_password'),
-            $this->getDoctrine()->getManager(),
+            $this->entityManager,
             $translator
         );
         $pager = new Pagerfanta($searchAdapter);

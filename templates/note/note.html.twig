@@ -1,0 +1,12 @@
+{% import 'macros.twig' as macros %}
+
+<div class="notes-card">
+    <div class="note-avatar"><div class="o-avatar o-avatar--m">{{ macros.roundedavatarstack(note.member.username, 48) }}</div></div>
+    <div class="note-category">{{ note.category|capitalize }}</div>
+    <div class="note-note js-read-more u-break-words">{{ note.comment|purify }}</div>
+    <div class="note-updated"><span class="u-text-12">{{ note.updated|format_datetime() }}</span></div>
+    <div class="note-actions">
+        <a href="{{ path('edit_note', {username: note.member.username}) }}" class="o-button"><i class="fa fa-fw fa-edit"></i></a>
+        <button class="o-button" data-micromodal-trigger="note-delete-{{ note.id }}"><i class="fa fa-fw fa-trash-alt"></i></button>
+    </div>
+</div>

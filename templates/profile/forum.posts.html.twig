@@ -1,0 +1,81 @@
+{% extends 'profile/profile.html.twig' %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('highlight') }}
+{% endblock javascripts %}
+
+{% block stylesheets %}
+    {{ encore_entry_link_tags('highlight') }}
+{% endblock stylesheets %}
+
+{% block page_content %}
+    <input type="hidden" id="keyword" name="keyword" value="{{ search }}">
+    <div class="u-flex u-justify-end">
+    {{ form_start(search_form) }}
+        <div class="u-flex u-flex-row">
+            {{ form_row(search_form.q) }}
+            <button type="submit" class="o-button">{{ 'search'|trans }}</button>
+        </div>
+    {{ form_end(search_form) }}
+    </div>
+    {% if posts.haveToPaginate %}
+        {{ pagerfanta( posts, 'rounded_pagination') }}
+    {% endif %}
+    {% for post in posts %}
+<div class="l-forum-single-post {% if loop.index is even %}l-forum-single-post--dark{% endif %}">
+    <!-- left column -->
+    <div class="c-single-post-user_info">
+        <a id="post{{ post.id }}" style="position: relative; top:-50px;"></a>
+        <div class="d-flex flex-row text-break">
+            <img class="profileimg avatar-48 mr-1" width="48" height="48" src="{{ url('avatar', {username: post.author.Username, size: 48}) }}">
+            <div class="small">
+                <a href="{{ url('members_profile', {username: post.author.Username}) }}">{{ post.author.Username }}</a>
+                <br>{{ post.author.city.name }}
+                <br>{{ post.author.city.country.name }}
+            </div>
+        </div>
+    </div>
+    <div class="c-single-post-post_info">
+        <div class="d-flex flex-column flex-sm-row small">
+            <div class="mr-1"><span><i class="fa fa-comment fa-w-16 mr-1" title="{{ 'posted'|trans }}"></i>{{ post.created|format_datetime() }}</span></div>
+            <div class="mr-1"><i class="fa fa-eye fa-w-16 mr-1" title="{{ 'forum_label_visibility'|trans }})"></i>{{ ('forum_edit_vis_' ~ post.PostVisibility)|lower|trans }}</div>
+        </div>
+    </div>
+    <div class="c-single-post-report"></div>
+<div class="c-single-post-permalink"><a href="{% if post.thread.group %}/group/{{ post.thread.group.id }}/forum{% else %}/forums{% endif %}/s{{ post.thread.id }}/#post{{ post.id }}"><i class="fa fa-link"></i> Permalink</a></div>
+
+<!-- message -->
+<div class="c-single-post-content u-flex u-flex-col u-justify-between">
+    <div id="d{{ post.IdContent }}" class="js-highlight">
+        {% set translations = post.messageTranslations %}
+        {% for locale, translation in translations %}
+            <div class="post">
+                {% if translations|length > 1 %}
+                    {% if not loop.first %}<hr class="u-my-8" style="border-top:1px solid gray;">{% endif %}
+                    <small class="text-muted">{{ translation.language.wordcode|lower|trans|raw }} ({{ translation.language.shortCode }})</small><br>
+                {% endif %}
+                {{ translation.message | purify | nl2br }}
+            </div>
+        {% endfor %}
+    </div>
+    <div class="u-flex u-mt-8 u-justify-end">
+        <small>
+            {% if post.thread.group %}
+            <span class="gray">{{ 'group'|trans }}:</span>
+            <a href="/group/{{ post.thread.group.id }}">{{ post.thread.group.name|striptags }}</a>
+            {% endif %}
+            <span class="gray">{{ 'search_topic_text'|trans }}</span>
+            <a href="{% if post.thread.group %}/group/{{ post.thread.group.id }}/forum{% else %}/forums{% endif %}/s{{ post.thread.id }}">{{ post.thread.title|striptags }}</a>
+        </small>
+    </div>
+</div>
+<div class="c-single-post-edit"></div>
+<!-- end message -->
+</div>
+    {% else %}
+        {{ 'profile.forum.posts.none'|trans }}
+    {% endfor %}
+    {% if posts.haveToPaginate %}
+        {{ pagerfanta( posts, 'rounded_pagination') }}
+    {% endif %}
+{% endblock page_content %}

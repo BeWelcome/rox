@@ -189,7 +189,7 @@
                         }
                         ?> ><?php echo $words->get('female'); ?>
                     </label>
-                    <label class="btn btn-outline-primary for="male" <?php
+                    <label class="btn btn-outline-primary" for="male" <?php
                     if (isset($vars['gender']) && $vars['gender'] == 'male') {
                         echo ' active"';
                     }
@@ -200,7 +200,7 @@
                         }
                         ?> ><?php echo $words->get('male'); ?>
                     </label>
-                    <label class="btn btn-outline-primary for="other" <?php
+                    <label class="btn btn-outline-primary" for="other" <?php
                     if (isset($vars['gender']) && $vars['gender'] == 'other') {
                         echo ' active"';
                     }
@@ -226,7 +226,7 @@
                     <div class="o-form-group pt-3">
                         <div class="d-flex">
                             <button type="submit"
-                                    class="o-input btn btn-primary"><?php echo $words->getSilent('NextStep'); ?> <i
+                                    class="o-button u-w-full"><?php echo $words->getSilent('NextStep'); ?> <i
                                         class="fa fa-angle-double-right"></i></button>
                             <?php echo $words->flushBuffer(); ?>
                         </div>
@@ -236,7 +236,7 @@
 
             <div class="col-12 col-md-3">
                 <!-- Information on data use -->
-                <button type="button" class="btn btn-sm btn-primary pull-right" data-toggle="modal"
+                <button type="button" class="o-button o-button--s pull-right" data-toggle="modal"
                         data-target="#SignupIntroduction">
                     <i class="fa fa-exclamation-circle"></i><?= $words->get('signup.data.visibility');?>
                 </button>

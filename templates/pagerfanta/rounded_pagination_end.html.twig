@@ -1,0 +1,7 @@
+{%- extends 'pagerfanta/rounded_pagination.html.twig' -%}
+
+{%- block pager_widget -%}
+    <div class="o-pagination u-justify-end u-py-8">
+        {{- block('pager') -}}
+    </div>
+{%- endblock pager_widget -%}

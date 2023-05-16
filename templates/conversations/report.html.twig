@@ -3,7 +3,12 @@
         <div id="modal-container" class="modal__container" role="dialog" aria-modal="true" aria-labelledby="modal-1-title">
             <header id="modal-header" class="modal__header">
                 <h2 class="modal__title">
+                    {% if message.subject %}
                     {{ message.subject.subject|truncate(50) }}
+                    {% else %}
+                        {% set correspondent = (message.sender == myself) ? message.receiver : message.sender %}
+                        {{ 'conversation.with'|trans({'username':message.Receiver.Username}) }}
+                    {% endif %}
                 </h2>
                 <button class="modal__close" aria-label="{{ 'conversation.report.close'|trans }}" data-micromodal-close></button>
             </header>

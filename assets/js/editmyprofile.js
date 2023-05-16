@@ -1,6 +1,5 @@
-import Litepicker from 'litepicker';
+import Litepicker from 'litepicker/dist/nocss/litepicker.umd.js';
 import dayjs from 'dayjs';
-import '../scss/_daterangepicker.scss';
 
 const birthdate = document.getElementById('birth-date');
 const maxDate = dayjs().subtract(18, "years");

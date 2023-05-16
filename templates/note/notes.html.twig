@@ -1,0 +1,63 @@
+{% extends 'profile/profile.html.twig' %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('micromodal') }}
+    {{ encore_entry_script_tags('notes_filter') }}
+    {{ encore_entry_script_tags('readmore') }}
+{% endblock javascripts %}
+
+{% block stylesheets %}
+    {{ encore_entry_link_tags('readmore') }}
+{% endblock stylesheets %}
+
+{% block page_content %}
+    <input type="hidden" id="read.more" value="{{ 'comment.read.more'|trans }}">
+    <input type="hidden" id="show.less" value="{{ 'comment.show.less'|trans }}">
+    <h1>{{ 'profile.notes'|trans }}
+        <div class="u-float-right">
+            <button class="o-button {% if not filtered %}o-button--outline{% endif %}" id="trigger" type="button" aria-expanded="false">
+                <i class="fa fa-filter text-16"></i>
+            </button>
+        </div>
+    </h1>
+    <div id="filter">
+        {{ form_start(form) }}
+        {{ form_row(form.categories) }}
+        {{ form_row(form.order) }}
+        <div class="u-flex u-justify-end"><button type="submit" class="o-button o-button--s u-my-8">{{ 'profile.note.apply'|trans }}</button></div>
+        {{ form_end(form) }}
+        <div id="arrow" data-popper-arrow></div>
+    </div>
+    {% if notes.haveToPaginate %}
+        {{ pagerfanta(notes, 'rounded_pagination_end') }}
+    {% endif %}
+    {% for note in notes %}
+        {% include 'note/note.html.twig' with {note: note} %}
+    {% else %}
+        {{ 'profile.no.notes'|trans }}
+    {% endfor %}
+    {% if notes.haveToPaginate %}
+        {{ pagerfanta(notes, 'rounded_pagination_end') }}
+    {% endif %}
+{% endblock page_content %}
+
+{% block modals %}
+    {% for note in notes %}
+        <div class="micromodal-slide" id="note-delete-{{ note.id }}">
+            <div class="modal__overlay u-bg-gray-80 u-bg-opacity-50 u-flex u-justify-center u-absolute u-inset-0 u-z-[2001]">
+            <div class="u-bg-white u-p-16 u-m-16 u-rounded-8 u-w-[70%] sm:u-w-[30%] md:u-w-[20%]">
+                <p class="u-text-24 u-mb-4 u-font-700 ">{{ 'profile.notes.modal'|trans }}</p>
+                <p class="u-text-16 u-mb-8">{{ 'profile.notes.delete'|trans }}</p>
+                <hr>
+                {{ note.comment|purify|truncate(150) }}
+                <hr>
+                <footer class="u-flex u-flex-row u-justify-between">
+                    <button class="o-button" data-micromodal-close>{{ 'profile.notes.no'|trans|capitalize }}</button>
+                    <a href="{{ url('delete_note', {'username': note.member.username }) }}" class="o-button">{{ 'profile.notes.yes'|trans|capitalize }}</a>
+                </footer>
+            </div>
+            </div>
+        </div>
+    {% else %}
+    {% endfor %}
+{% endblock %}

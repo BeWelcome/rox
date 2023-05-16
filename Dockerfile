@@ -75,7 +75,8 @@ RUN set -eux; \
 	echo "@edge http://nl.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories; \
 	apk add --no-cache yarn@edge
 
-COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+RUN export PATH="/usr/local/bin:$PATH"
 
 RUN ln -s $PHP_INI_DIR/php.ini-production $PHP_INI_DIR/php.ini
 COPY docker/php/conf.d/bewelcome.prod.ini $PHP_INI_DIR/conf.d/bewelcome.ini

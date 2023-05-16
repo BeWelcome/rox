@@ -192,14 +192,14 @@
                 </div>
                 <!-- Next button -->
                 <div class="o-form-group mt-3">
-                        <button type="submit" class="btn btn-primary w-100"><?php echo $words->getSilent('NextStep'); ?> <i class="fa fa-angle-double-right"></i></button>
+                        <button type="submit" class="o-button u-w-full"><?php echo $words->getSilent('NextStep'); ?> <i class="fa fa-angle-double-right"></i></button>
                         <?php echo $words->flushBuffer(); ?>
                     </div>
             </div>
 
             <div class="col-12 col-md-3">
                 <!-- Information on data use -->
-                <button type="button" class="btn btn-sm btn-primary pull-right" data-toggle="modal" data-target="#SignupIntroduction">
+                <button type="button" class="o-button o-button-s pull right" data-toggle="modal" data-target="#SignupIntroduction">
                     <i class="fa fa-exclamation-circle"></i> <?php // echo $words->get('SignupIntroductionTitle'); ?><?= $words->get('signup.data.visibility'); ?>
                 </button>
             </div>

@@ -4,7 +4,7 @@
 
 $g = $gallery;
 $g->user_handle = MOD_member::getUserHandle($g->user_id_foreign);
-$purifier = MOD_htmlpure::getPurifier();
+$purifier = (new MOD_htmlpure())->getPurifier();
 // Set variable own (if own gallery)
 $Own = false;
 if ($this->myself) {
@@ -24,7 +24,9 @@ foreach ($statement as $d) { ?>
             $callback_tag = $formkit->setPostCallback('GalleryController', 'updateGalleryCallback');
             ?>
             <form method="POST"><?= $callback_tag; ?>
-            <a href="gallery/img?id=<?= $d->id ?>" data-toggle="lightbox" data-type="image" data-title="<?= $d->title ?>"><img class="img-fluid d-block mx-auto mb-1" src="gallery/thumbimg?id=<?= $d->id ?>&amp;t=1" alt="<?= $d->title ?>"></a>
+            <a href="gallery/img?id=<?= $d->id ?>" data-toggle="lightbox" data-type="image" data-title="<?= $d->title ?>">
+                <img class="img-fluid d-block mx-auto mb-1" src="gallery/thumbimg?id=<?= $d->id ?>&amp;t=1" alt="<?= $d->title ?>">
+            </a>
             <?php if ($this->myself) { ?>
              <a href="gallery/img?id=<?= $d->id ?>" class="btn btn-sm btn-primary"><i class="fa fa-edit mr-1"></i><?= $words->get('Edit'); ?></a>
                 <input type="submit" class="btn btn-sm btn-danger" name="button" value="<?= $words->getBuffered('GalleryRemoveImagesFromPhotoset') ?>">

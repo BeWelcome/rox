@@ -1,4 +1,7 @@
 message.report:
     - Report as spam
     - Link text in the mail notifications sent for messages, requests and invitations
+flash.message.self:
+    - You can\'t send yourself a message.
+    - Flash shown to the user when they try to send themselves a message.
 

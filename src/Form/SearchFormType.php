@@ -9,6 +9,7 @@ use Symfony\Component\Form\Exception\AlreadySubmittedException;
 use Symfony\Component\Form\Exception\LogicException;
 use Symfony\Component\Form\Exception\UnexpectedTypeException;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -29,15 +30,14 @@ class SearchFormType extends AbstractType
             ->add('location', TextType::class, [
                 'label' => 'landing.whereyougo',
                 'error_bubbling' => true,
+                'help' => 'search.locations.help',
             ])
             ->add('keywords', TextType::class, [
                 'label' => 'texttofind',
                 'required' => false,
             ])
-            ->addEventListener(
-                FormEvents::PRE_SET_DATA,
-                [$this, 'onPostSetData']
-            )
+            ->addEventListener(FormEvents::PRE_SET_DATA, [$this, 'preSetData'])
+            ->addEventListener(FormEvents::PRE_SUBMIT, [$this, 'preSubmit'])
         ;
 
         $this->addHiddenFields($builder);
@@ -82,9 +82,11 @@ class SearchFormType extends AbstractType
      * @throws LogicException
      * @throws UnexpectedTypeException
      */
-    public function onPostSetData(FormEvent $event)
+    public function preSetData(FormEvent $event)
     {
         $data = $event->getData();
+        $form = $event->getForm();
+        $options = $form->getConfig()->getOptions();
         $choices = [
             'search.radius.exact' => 0,
             'search.radius.5km' => 5,
@@ -101,11 +103,37 @@ class SearchFormType extends AbstractType
         if (true === $showOnMap) {
             $choices = ['search.see_map' => -1] + $choices;
         }
-        $form = $event->getForm();
-        $form->add('distance', Select2Type::class, [
+        $form->add('distance', ChoiceType::class, [
+            'autocomplete' => true,
+            'plugins' => [],
             'choices' => $choices,
             'label' => 'label.radius',
         ]);
+        if (null !== $options['search_options'] && '' !== $options['search_options']) {
+            $form
+                ->add('resetOptions', SubmitType::class, [
+                    'label' => 'search.options.reset',
+                    'attr' => [
+                        'class' => 'o-button o-button--outline mr-1',
+                    ]
+                ])
+            ;
+        }
+    }
+
+    public function preSubmit(FormEvent $event)
+    {
+        $form = $event->getForm();
+        if (!$form->has('resetOptions')) {
+            $form
+                ->add('resetOptions', SubmitType::class, [
+                    'label' => 'search.options.reset',
+                    'attr' => [
+                        'class' => 'o-button o-button--outline mr-1',
+                    ]
+                ])
+            ;
+        }
     }
 
     protected function addVariableSelects(FormBuilderInterface $formBuilder, array $options)
@@ -125,18 +153,20 @@ class SearchFormType extends AbstractType
             }
         }
         $formBuilder
-            ->add('groups', Select2Type::class, [
+            ->add('groups', ChoiceType::class, [
                 'choices' => $groups,
                 'choice_translation_domain' => false,
                 'label' => 'groups',
                 'multiple' => true,
                 'required' => false,
+                'autocomplete' => true,
             ])
-            ->add('languages', Select2Type::class, [
+            ->add('languages', ChoiceType::class, [
                 'choices' => $languages,
                 'label' => 'languages',
                 'multiple' => true,
                 'required' => false,
+                'autocomplete' => true,
             ]);
     }
 
@@ -151,19 +181,25 @@ class SearchFormType extends AbstractType
             $maxAgeArray[$i] = $i;
         }
         $formBuilder
-            ->add('min_age', Select2Type::class, [
+            ->add('min_age', ChoiceType::class, [
+                'autocomplete' => true,
+                'plugins' => [],
                 'choices' => $minAgeArray,
                 'choice_translation_domain' => false,
                 'label' => 'findpeopleminimumage',
                 'translation_domain' => 'messages',
             ])
-            ->add('max_age', Select2Type::class, [
+            ->add('max_age', ChoiceType::class, [
+                'autocomplete' => true,
+                'plugins' => [],
                 'choices' => $maxAgeArray,
                 'choice_translation_domain' => false,
                 'label' => 'findpeoplemaximumage',
                 'translation_domain' => 'messages',
             ])
-            ->add('gender', Select2Type::class, [
+            ->add('gender', ChoiceType::class, [
+                'autocomplete' => true,
+                'plugins' => [],
                 'choices' => [
                     'any' => null,
                     'male' => 1,
@@ -179,9 +215,11 @@ class SearchFormType extends AbstractType
     protected function addSelects(FormBuilderInterface $formBuilder)
     {
         $formBuilder
-            ->add('can_host', Select2Type::class, [
+            ->add('can_host', ChoiceType::class, [
+                'label' => 'searchcanhostatleast',
+                'autocomplete' => true,
+                'plugins' => [],
                 'choices' => [
-                    0 => '0',
                     1 => '1',
                     2 => '2',
                     3 => '3',
@@ -191,11 +229,12 @@ class SearchFormType extends AbstractType
                     20 => '20',
                 ],
                 'choice_translation_domain' => false,
-                'label' => 'searchcanhostatleast',
                 'translation_domain' => 'messages',
             ])
-            ->add('last_login', Select2Type::class, [
+            ->add('last_login', ChoiceType::class, [
                 'label' => 'search.filter.last.login',
+                'autocomplete' => true,
+                'plugins' => [],
                 'choices' => [
                     'search.filter.last.login.1month' => 1,
                     'search.filter.last.login.2months' => 2,
@@ -207,8 +246,10 @@ class SearchFormType extends AbstractType
                 ],
                 'translation_domain' => 'messages',
             ])
-            ->add('order', Select2Type::class, [
+            ->add('order', ChoiceType::class, [
                 'label' => 'label.order',
+                'autocomplete' => true,
+                'plugins' => [],
                 'choices' => [
                     'search.order.accommodation' => SearchModel::ORDER_ACCOM,
                     'search.order.distance' => SearchModel::ORDER_DISTANCE,
@@ -219,15 +260,19 @@ class SearchFormType extends AbstractType
                 ],
                 'translation_domain' => 'messages',
             ])
-            ->add('direction', Select2Type::class, [
+            ->add('direction', ChoiceType::class, [
                 'label' => 'label.direction',
+                'autocomplete' => true,
+                'plugins' => [],
                 'choices' => [
                     'search.direction.descending' => SearchModel::DIRECTION_DESCENDING,
                     'search.direction.ascending' => SearchModel::DIRECTION_ASCENDING,
                 ],
             ])
-            ->add('items', Select2Type::class, [
+            ->add('items', ChoiceType::class, [
                 'label' => 'label.items',
+                'autocomplete' => true,
+                'plugins' => [],
                 'choices' => [
                     5 => 5,
                     10 => 10,
@@ -244,6 +289,8 @@ class SearchFormType extends AbstractType
     private function addHiddenFields(FormBuilderInterface $formBuilder)
     {
         $formBuilder
+            ->add('location_fullname', HiddenType::class)
+            ->add('location_name', HiddenType::class)
             ->add('location_geoname_id', HiddenType::class)
             ->add('location_latitude', HiddenType::class)
             ->add('location_longitude', HiddenType::class)
@@ -265,16 +312,6 @@ class SearchFormType extends AbstractType
                 ]
             ])
         ;
-        if (null !== $options['search_options'] && '' !== $options['search_options']) {
-            $formBuilder
-                ->add('resetOptions', SubmitType::class, [
-                    'label' => 'search.options.reset',
-                    'attr' => [
-                        'class' => 'o-button o-button--outline mr-1',
-                    ]
-                ])
-            ;
-        }
     }
 
     private function addCheckboxes(FormBuilderInterface $formBuilder)

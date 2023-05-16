@@ -112,7 +112,7 @@ class Extension extends AbstractExtension implements GlobalsInterface
         if ($date->diffInDays() <=  7) {
             return $this->translator->trans('lastloginprivacy');
         } else {
-            return $isoDate;
+            return $date->diffForHumans();
         }
     }
 

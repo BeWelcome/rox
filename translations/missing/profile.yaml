@@ -10,3 +10,81 @@ comment.read.more:
 comment.show.less:
     - '← show less'
     - Shown if truncated text of a comment is shown on a profile page
+profile.add.comment:
+    - 'Add comment about {username}'
+    - Button label on the comments page, if the current user hasn't left a comment yet. In case gender is important in your language you can use formatting like this
+      {gender, select,
+          female {... {username}}
+          male {... {username}}
+          other {... {username}}
+      }
+profile.no.comments:
+    - 'This member hasn''t received any comments yet.'
+    - Shown on the comments page if there are no comments yet given to this member.
+profile.title:
+    - 'Profile of {username}'
+    - Title of the profile page.
+profile.comment.about:
+    - 'about {username}'
+    - Shown on the comments page. {username} will be replaced with the link to the profile.
+profile.comment.from:
+    - 'from {username}'
+    - Shown on the comments page. {username} will be replaced with the link to the profile.
+profile.comment.relation.hewasmyguest:
+    - '{username} was my guest.'
+    - Additional information given for a comment.
+profile.comment.relation.hehostedme:
+   - '{username} hosted me.'
+   - Additional information given for a comment.
+profile.comment.relation.onlyonce:
+    - '@comment_onlyonce'
+profile.comment.relation.heismyfamily:
+    - '{username} belongs to my family.'
+    - Additional information given for a comment.
+profile.comment.relation.hehismyoldclosefriend:
+    - '{username} is an old/close friend.'
+    - Additional information given for a comment.
+profile.comment.relation.travelledtogether:
+    - '@comment_travelledtogether'
+profile.comment.relation.wearefriends:
+    - '@comment_wearefriends'
+profile.comment.relation.communicatedonline:
+    - '@comment_communicatedonline'
+profile.comment.relation.nevermetinreallife:
+    - '@comment_nevermetinreallife'
+profile.age:
+    - '@age'
+profile.gender:
+    - '@gender'
+profile.visited:
+    - '@visited'
+profile.no.about.me:
+    - 'No about me given.'
+    - 'Shown if a member didn''t provide any information about themselves in about me.'
+profile.joined:
+    - 'Joined:'
+    - 'Used with the date a member created their profile. Like ""Joined: 10 years ago.""'
+profile.last.activity:
+    - 'Last activity:'
+    - 'Shows the last time a user accessed the site (not the last time they logged in which might be remembered).'
+profile.no.comment.yet:
+    - 'No comment for {to} by {from} yet.'
+    - Make sure to keep {to} and {from} in the translation.
+profile.change.password:
+    - 'Change password'
+    - Headline for the change password page
+profile.change.password.menu:
+    - '@profile.change.password'
+profile.change.password.label:
+    - '@profile.change.password'
+profile.current.password:
+    - 'Current Password'
+    - Label for the current password field on the change password page
+profile.new.password:
+    - 'New Password'
+    - Label for the new password field on the change password page
+profile.set.location:
+    - '@label_setlocation'
+profile.picture:
+    - 'The profile picture of {username}'
+    - Alt text for the profile picture.

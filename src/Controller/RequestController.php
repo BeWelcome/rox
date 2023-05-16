@@ -109,7 +109,7 @@ class RequestController extends BaseRequestAndInvitationController
             return $this->redirectToRoute('members_profile', ['username' => $member->getUsername()]);
         }
 
-        if (!$host->isBrowseable()) {
+        if (!$host->isBrowsable()) {
             $this->addTranslatedFlash('note', 'flash.member.invalid');
         }
 

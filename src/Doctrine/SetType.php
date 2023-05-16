@@ -25,6 +25,9 @@ abstract class SetType extends Type
     /** @var array */
     protected $values = [];
 
+    /** @var string */
+    protected $translationPrefix = '';
+
     /**
      * @return string
      */
@@ -55,12 +58,17 @@ abstract class SetType extends Type
     public function convertToDatabaseValue($value, AbstractPlatform $platform)
     {
         if (null !== $value && !empty($value)) {
-            // Split given value
-            $values = explode(',', $value);
-            $valueCount = \count($values);
+            if (is_array($value)) {
+                $value = implode(',', $value);
+            };
+            if ($value) {
+                // Split given value
+                $values = explode(',', $value);
+                $valueCount = \count($values);
 
-            if (\count(array_intersect($values, $this->values)) !== $valueCount) {
-                throw new InvalidArgumentException("Invalid '" . $this->name . "' value: " . $value . '.');
+                if (\count(array_intersect($values, $this->values)) !== $valueCount) {
+                    throw new InvalidArgumentException("Invalid '" . $this->name . "' value: " . $value . '.');
+                }
             }
         } else {
             $value = '';
@@ -83,5 +91,15 @@ abstract class SetType extends Type
     public function requiresSQLCommentHint(AbstractPlatform $platform)
     {
         return true;
+    }
+
+    public function getChoicesArray(): array
+    {
+        $translationIds = $this->values;
+        array_walk($translationIds, function (&$item) {
+            $item = strtolower($this->translationPrefix . $item);
+        });
+
+        return array_combine($translationIds, $this->values);
     }
 }

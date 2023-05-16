@@ -1,0 +1,28 @@
+{% block tomselect_widget %}
+    {% set tom_select_options = {
+        create: allow_create,
+        closeAfterSelect: true,
+        optionCreate: 'select.option.create'|trans,
+        noResults: 'select.no.results'|trans
+        }
+    %}
+    {% if not multiple %}
+        {% set tom_select_options = tom_select_options | merge({ maxItems: 1 }) %}
+    {% endif %}
+    {% if use_select %}
+        <select {% if multiple %}multiple{% endif %} {{ block('widget_attributes') }}>
+        {% for choice in choices %}
+            <option value="{{ choice }}" {% if choice in form.vars.data %}selected="selected"{% endif %}>{{ choice }}</option>
+        {% endfor %}
+        </select>
+    {% else %}
+        {% set options = [] %}
+        {% for choice in choices %}{% set options = options|merge([{'value': choice, 'text': choice}]) %}{% endfor %}
+
+        {% set tom_select_options = tom_select_options | merge({'options': options}) %}
+
+        <input type="text" {{ block('widget_attributes') }} {% if multiple %}multiple{% endif %} value="{{ value }}">
+    {% endif %}
+    <input type="hidden" id="{{ form.vars.id ~ '-tom-select-options' }}" value="{{ tom_select_options|json_encode }}">
+    {{ encore_entry_script_tags('tom-select') }}
+{% endblock %}

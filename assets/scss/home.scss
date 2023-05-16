@@ -1,0 +1,27 @@
+@use 'sass:math';
+
+@import "mixins";
+
+@import "@fontsource/lato";
+@import "@fontsource/signika";
+@import "@fontsource/signika/300.css";
+@import "@fontsource/signika/700.css";
+@import "toastify-js/src/toastify.css";
+
+// Core variables and mixins
+@import "custom";
+$font-family-bold: Signika;
+
+@import "~bootstrap";
+
+// @import "home";
+@import "parallax";
+@import "floating_labels";
+
+// select2
+@import "~select2/src/scss/core";
+// @import "~select2-theme-bootstrap4/src/select2-bootstrap";
+
+@import "~@ttskch/select2-bootstrap4-theme/src/single";
+@import "~@ttskch/select2-bootstrap4-theme/src/multiple";
+

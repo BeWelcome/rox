@@ -734,6 +734,26 @@ FROM
         return $commentCounters;
     }
 
+    public function count_relations() {
+        if (!$this->isLoaded()) {
+            return 0;
+        }
+
+        $id = intval($this->id);
+        $relations = $this->bulkLookup("
+            SELECT
+                COUNT(*) as count
+            FROM
+                specialrelations
+            WHERE
+                IdOwner = $id
+                AND Confirmed = 'Yes'
+            "
+        );
+
+        return $relations[0]->count;
+    }
+
     /**
      * Get number of gallery items
      *
@@ -1030,6 +1050,7 @@ WHERE
     specialrelations.IdOwner = $this->id  AND
     specialrelations.IdRelation = members.Id AND
     members.Status in (" . MemberStatusType::ACTIVE_ALL . ")
+ORDER BY members.Username ASC
           ";
           $s = $this->dao->query($sql);
           $Relations = array();
@@ -1136,7 +1157,7 @@ WHERE
     comments.IdToMember = members2.Id
     AND members.Status IN (" . MemberStatusType::MEMBER_COMMENTS . ")
 ORDER BY
-    comments.created DESC
+    comments.created ASC
           ";
           if (0 !== $count) {
               $sql .= " LIMIT 0, " . $count;
@@ -1201,7 +1222,7 @@ WHERE
   comments.IdFromMember = members.Id AND
   comments.IdToMember = members2.Id
 ORDER BY
-    comments.created DESC        ";
+    comments.created ASC        ";
         if (0 !== $count) {
             $sql .= " LIMIT 0, " . $count;
         }
@@ -1634,11 +1655,11 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
         }
         $rights = $this->getOldRights();
         if ($rights) {
-            $pw = password_hash($pw, PASSWORD_DEFAULT, [ 'cost' => 13]);
+            $pw = password_hash($pw, PASSWORD_DEFAULT, [ 'cost' => 14]);
         }
         else
         {
-            $pw = password_hash($pw, PASSWORD_DEFAULT, [ 'cost' => 12]);
+            $pw = password_hash($pw, PASSWORD_DEFAULT, [ 'cost' => 13]);
         }
         /** @var PDBStatement_mysqli $stmt */
         $stmt = $this->dao->prepare("UPDATE `members` SET `PassWord` = ? WHERE `id` = ?");
@@ -1867,7 +1888,7 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
         $to = $this->Email;
 
         // Create HTML version via purifier (linkify and add paragraphs)
-        $purifier = MOD_htmlpure::getAdvancedHtmlPurifier();
+        $purifier = (new MOD_htmlpure())->getAdvancedHtmlPurifier();
         $bodyHTML = $purifier->purify($body);
 
         if ($this->getPreference('PreferenceHtmlMails', 'Yes') == 'No') {
@@ -2062,5 +2083,22 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
         }
         return $AllLanguages;
     }
+    public function getRelation($member)
+    {
+        if (!$this->isLoaded())
+        {
+            return null;
+        }
+        $relation = $this->bulkLookup("
+            SELECT * FROM specialrelations WHERE
+                IdOwner = {$this->getPKValue()} AND
+                IdRelation = {$member->getPKValue()}
+        ");
 
+        if (empty($relation)) {
+            return null;
+        }
+
+        return $relation[0];
+    }
 }

@@ -20,6 +20,9 @@ class MapSearchFormType extends AbstractType
             ->add('location', TextType::class, [
                 'label' => 'landing.whereyougo',
                 'error_bubbling' => true,
+                'attr' => [
+                    'placeholder' => 'home.find.location',
+                ],
             ])
             ->add('location_geoname_id', HiddenType::class)
             ->add('location_latitude', HiddenType::class)

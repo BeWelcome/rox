@@ -16,7 +16,7 @@ class AjaxAuthenticationListener
      */
     public function onCoreException(ExceptionEvent $event)
     {
-        $exception = $event->getException();
+        $exception = $event->getThrowable();
         $request = $event->getRequest();
 
         if ($request->isXmlHttpRequest()) {

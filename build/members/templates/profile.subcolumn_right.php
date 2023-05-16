@@ -1,5 +1,5 @@
 <?php
-$purifier = MOD_htmlpure::getBasicHtmlPurifier();
+$purifier = (new MOD_htmlpure())->getBasicHtmlPurifier();
 
 function wasGuestOrHost(string $relations) {
     $hosted = strpos($relations, 'hewasmyguest') !== false;
@@ -31,12 +31,14 @@ function wasGuestOrHost(string $relations) {
 
     $commentCount = $this->member->count_comments();
 
+    $comments = [];
     foreach ($commentsReceived as $value) {
         $key = $value->UsernameFromMember;
         $comments[$key] = [
             'from' => $value,
         ];
     }
+
     foreach ($commentsWritten as $value) {
         $key = $value->UsernameToMember;
         if (isset($comments[$key])) {
@@ -49,22 +51,34 @@ function wasGuestOrHost(string $relations) {
             ];
         }
     }
-    $farFuture = new DateTimeImmutable('01-01-3000');
-    usort($comments,
-        function ($a, $b) use ($farFuture) {
-            // get latest updates on to and from part of comments and order desc
-            $createdATo = isset($a['to']) ? new DateTime($a['to']->created) : $farFuture;
-            $createdAFrom = isset($a['from']) ? new DateTime($a['from']->created) : $farFuture;
-            $createdA = min($createdATo, $createdAFrom);
-            $createdBTo = isset($b['to']) ? new DateTime($b['to']->created) : $farFuture;
-            $createdBFrom = isset($b['from']) ? new DateTime($b['from']->created) : $farFuture;
-            $createdB = min($createdBTo, $createdBFrom);
-            return -1*($createdA <=> $createdB);
-        }
-    );
+
+    if (!empty($comments)) {
+        $early20thCentury = strtotime('01-01-1900');
+        usort(
+            $comments,
+            function ($a, $b) use ($early20thCentury) {
+                // get latest updates on to and from part of comments and order desc
+                $updatedATo = isset($a['to']) ? $a['to']->unix_updated ?? $a['to']->unix_created : $early20thCentury;
+                $updatedAFrom = isset($a['from']) ? $a['from']->unix_updated ?? $a['from']->unix_created : $early20thCentury;
+                $updatedA = max($updatedATo, $updatedAFrom);
+                $updatedBTo = isset($b['to']) ? $b['to']->unix_updated ?? $b['to']->unix_created : $early20thCentury;
+                $updatedBFrom = isset($b['from']) ? $b['from']->unix_updated ?? $b['from']->unix_created : $early20thCentury;
+                $updatedB = max($updatedBTo, $updatedBFrom);
+
+                return -1 * ($updatedA <=> $updatedB);
+            }
+        );
+    }
 
     $username = $this->member->Username;
-    $loggedIn = $this->model->getLoggedInMember()->Username;
+    $loggedInMember = $this->model->getLoggedInMember();
+    $loggedIn = $loggedInMember->Username;
+    $rights = $loggedInMember->getOldRights();
+    $volunteer = in_array('SafetyTeam', array_keys($rights));
+    $showHiddenComments = false;
+    if ($volunteer) {
+        $showHiddenComments = $rights['SafetyTeam']['Level'] != '0';
+    }
 
     // \todo: do something here
     $layoutbits = new MOD_layoutbits();
@@ -92,21 +106,36 @@ function wasGuestOrHost(string $relations) {
                    $tt = array ();
                    $commentLoopCount = 0;
                    foreach ($comments as $key => $c) {
-                       $shownPairs++;
+
                        // stop looping when maximum has been reached
                        if ($commentLoopCount>=$max) {
                            break;
                        }
+
+                       // First check if anything is visible at all
+                       $commentFrom = $c['from'] ?? null;
+                       $commentTo = $c['to'] ?? null;
+
+                       $visible = false;
+                       if (null !== $commentFrom) {
+                           $visible |= ($commentFrom->DisplayInPublic != '0') || $showHiddenComments;
+                       }
+                       if (null !== $commentTo) {
+                           $visible |= ($commentTo->DisplayInPublic != '0') || $showHiddenComments;
+                       }
+                       if (!$visible) {
+                           continue;
+                       }
+
                        if ($commentLoopCount != 0) {
                            echo '<hr class="my-3" style="border-top:1px solid gray;">';
                        }
-?>
 
-                       <?php if (isset($c['from'])) {
+                       if (null !== $commentFrom) {
                            $commentLoopCount++;
-                           $comment = $c['from'];
+                           $comment = $commentFrom;
                            // skip items that are hidden for public
-                           if ($comment->DisplayInPublic == 0) {continue;}
+                           if ($comment->DisplayInPublic == 0 && !$showHiddenComments) {continue;}
                            $quality = "neutral";
                            if ($comment->comQuality == "Good") {
                                $quality = "good";
@@ -114,7 +143,10 @@ function wasGuestOrHost(string $relations) {
                            if ($comment->comQuality == "Bad") {
                                $quality = "bad";
                            }                            ?>
-                       <div class="comment-bg-<?=$quality?> p-2 mt-1 <?= (!isset($c['to'])) ? 'mb-2' : '' ?> clearfix">
+                       <div class="comment-bg-<?=$quality?> p-2 mt-1 <?= (!isset($c['to'])) ? 'mb-2' : '' ?> clearfix u-mr-24 u-rounded-8">
+                           <?php if ($comment->DisplayInPublic == '0') {
+                               echo '<div class="u-flex u-flex-col u-rounded-8 u-px-8 u-bg-black-o-30 u-mb-8">' . $words->get("commenthiddenedit") . '</div>';
+                           } ?>
                            <div class="d-flex flex-column">
                                <div class="d-flex flex-row">
                                    <a class="mr-2" href="members/<?=$comment->UsernameFromMember?>">
@@ -141,34 +173,55 @@ function wasGuestOrHost(string $relations) {
                                <div class="w-100 py-2">
                                    <p class="js-read-more-received mb-1">
                                        <?php
-                                       echo htmlentities($comment->TextFree);
+                                       echo $purifier->purify(nl2br($comment->TextFree));
                                        ?>
                                    </p>
                                    <?php if (!$this->passedAway) { ?>
                                        <?php if ($loggedIn === $comment->UsernameToMember) { ?>
                                            <a href="/members/<?= $this->member->Username;?>/comment/<?php echo $comment->id;?>/report" title="<?=$words->getSilent('ReportCommentProblem') ?>"
-                                              class="float-right gray align-self-center"><i class="fa fa-flag" alt="<?=$words->getSilent('ReportCommentProblem') ?>"></i></a>
+                                              class="float-left gray align-self-center"><i class="fa fa-flag" alt="<?=$words->getSilent('ReportCommentProblem') ?>"></i></a>
                                        <?php } ?>
                                    <?php }?>
                                </div>
                            </div>
                        </div>
-                       <?php }
+                       <?php } else {
+                           if ($loggedIn === $commentTo->UsernameToMember) {
+                               $addCommentTranslation = str_replace('{username}', $comment->UsernameFromMember, $words->getSilent('profile.add.comment'));
+                               ?>
+                               <div class="clearfix">
+                                   <a href="/members/<?= $comment->UsernameFromMember;?>/comment/add" title="<?= $addCommentTranslation ?>"
+                                      class="align-self-center float-right"><button class="o-button"><?= $addCommentTranslation ?></button></a>
+                               </div>
+                           <?php } else { ?>
 
-                       if (isset($c['to'])) {
+                           <div class="p-2 mt-1 u-mr-24 u-rounded-8 u-bg-black-o-10"><?php
+                               $noCommentYet = $words->get('profile.no.comment.yet');
+                               $noCommentYet = str_replace('{to}', $c['to']->UsernameFromMember, $noCommentYet);
+                               $noCommentYet = str_replace('{from}', $c['to']->UsernameToMember, $noCommentYet);
+                               echo $noCommentYet;
+                           ?></div>
+                       <?php }
+                       }
+
+                       if (null !== $commentTo) {
                            $commentLoopCount++;
-                           $comment = $c['to'];
+                           $comment = $commentTo;
                            // skip items that are hidden for public
-                           if ($comment->DisplayInPublic == 0) {continue;}
+                           if ($comment->DisplayInPublic == 0 && !$showHiddenComments) {continue;}
                            $quality = "neutral";
                            if ($comment->comQuality == "Good") {
                                $quality = "good";
                            }
                            if ($comment->comQuality == "Bad") {
                                $quality = "bad";
-                           }                           ?>
+                           }
+                       ?>
 
-                       <div class="comment-bg-<?=$quality?> p-2 mt-1 <?= !(isset($c['from'])) ? 'mt-1' : '' ?> clearfix">
+                       <div class="comment-bg-<?=$quality?> p-2 mt-1 <?= !(isset($c['from'])) ? 'mt-1' : '' ?> clearfix u-ml-24 u-rounded-8">
+                           <?php if ($comment->DisplayInPublic == '0') {
+                               echo '<div class="u-flex u-flex-col u-rounded-8 u-px-8 u-bg-black-o-30 u-mb-8">' . $words->get("commenthiddenedit") . '</div>';
+                           } ?>
                            <div class="d-flex flex-column">
                                <div class="d-flex flex-row">
                                    <div class="mr-auto  align-self-center">
@@ -193,7 +246,7 @@ function wasGuestOrHost(string $relations) {
                                <div class="w-100 py-2">
                                    <p class="js-read-more-written mb-1">
                                        <?php
-                                       echo htmlentities($comment->TextFree);
+                                       echo $purifier->purify(nl2br($comment->TextFree));
                                        ?>
                                    </p>
                                    <?php if ($loggedIn === $comment->UsernameToMember) { ?>
@@ -204,10 +257,18 @@ function wasGuestOrHost(string $relations) {
                            </div>
                        </div>
 
-                      <?php
+                      <?php } else {
+                           if ($loggedIn === $comment->UsernameToMember) {
+                           $addCommentTranslation = str_replace('{username}', $comment->UsernameFromMember, $words->getSilent('profile.add.comment'));
+                           ?>
+                            <div class="clearfix">
+                           <a href="/members/<?= $comment->UsernameFromMember;?>/comment/add" title="<?= $addCommentTranslation ?>"
+                                              class="gray align-self-center"><button class="o-button"><?= $addCommentTranslation ?></button></a>
+                            </div>
+                      <?php }
                       }
-                   }
-                 ?>
+                   $shownPairs++;
+            }     ?>
             </div>
             <a href="members/<?=$member->Username?>/comments/" class="btn btn-block btn-sm btn-outline-primary"><?=$words->get('ShowAllComments')?>
                 <?php if ($shownPairs < $commentCount['all']) { ?>
@@ -286,21 +347,28 @@ if ($statement) {
             <?php endif; ?>
         </h3>
 
-        <div class="p-2 d-flex flex-wrap justify-content-around">
+        <div class="p-2 d-flex flex-wrap justify-content-around"
+            style="overflow: scroll; max-height: 400px;">
 
-    <?php
-    // if the gallery is NOT empty, go show it
-    $p = PFunctions::paginate($statement, 1, $itemsPerPage = 8);
-    $statement = $p[0];
+            <?php
+            // if the gallery is NOT empty, go show it
+            $galleryImages = PFunctions::paginate($statement, 1, $itemsPerPage = 8)[0];
 
-    foreach ($statement as $d) {
-        echo '<div><a href="gallery/show/image/'.$d->id.'">' .
-           '<img src="gallery/thumbimg?id='.$d->id.'"' .
-               ' alt="image"' .
-               ' style="height: 50px; width: 50px; margin: 1rem;"/>' .
-           '</a></div>';
-    }
-    ?>
+            foreach ($galleryImages as $galleryImage) {?>
+                <a href="gallery/img?id=<?= $galleryImage->id ?>"
+                    style="max-width: 40%; display: flex; align-items: center; margin-bottom: 1rem;"
+                    data-toggle="lightbox"
+                    data-type="image"
+                    data-title="<?= $galleryImage->title ?>">
+                    <img
+                        src="gallery/thumbimg?id=<?= $galleryImage->id ?>&amp;t=1"
+                        class="img-fluid"
+                        alt="<?= $galleryImage->title ?>"
+                    />
+                </a>
+                <?php
+            }
+            ?>
         </div>
       <a class="btn btn-sm btn-block btn-outline-primary" href="gallery/show/user/<?php echo $member->Username;?>/images" title="<?php echo $words->getSilent('GalleryTitleLatest');?>">
           <?php echo $words->get('GalleryShowAll');?></a>

@@ -26,17 +26,18 @@ framework:
     # Remove or comment this section to explicitly disable session support.
     session:
         handler_id: Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler
-        cookie_lifetime: 7200
+        cookie_lifetime: 14400
+        gc_probability: null
 
     fragments:       ~
     http_method_override: true
     assets:
         json_manifest_path: '%kernel.project_dir%/public/build/manifest.json'
     translator: { fallbacks: [en] }
-    cache:
+#    cache:
         # Put the unique name of your app here: the prefix seed
         # is used to compute stable namespaces for cache keys.
-        #prefix_seed: your_vendor_name/app_name
+        #prefix_seed: bevolunteer/rox
 
         # The app cache caches to the filesystem by default.
         # Other options include:

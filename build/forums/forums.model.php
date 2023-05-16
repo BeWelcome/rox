@@ -2828,7 +2828,12 @@ class Board implements Iterator {
 		$query .= "`first_member`.`Username` AS `first_author`,`last_member`.`Username` AS `last_author`" ;
 		$query .= "FROM `forums_threads` LEFT JOIN `forums_posts` AS `first` ON (`forums_threads`.`first_postid` = `first`.`id`)" ;
 		$query .= "LEFT JOIN `groups` ON (`groups`.`id` = `forums_threads`.`IdGroup`)" ;
-		$query .= "LEFT JOIN `forums_posts` AS `last` ON (`forums_threads`.`last_postid` = `last`.`id`)" ;
+		$query .= "LEFT JOIN `forums_posts` AS `last` ON last.id =
+		( SELECT    MAX(id)
+              FROM      forums_posts fp
+              WHERE fp.threadid = `forums_threads`.`id`
+              AND fp.PostDeleted = 'NotDeleted'
+              ) ";
 		$query .= "LEFT JOIN `members` AS `first_member` ON (`first`.`IdWriter` = `first_member`.`id`)" ;
 		$query .= "LEFT JOIN `members` AS `last_member` ON (`last`.`IdWriter` = `last_member`.`id`)" ;
 		$query .= " WHERE 1 ".$wherethread . $orderby . " LIMIT ".$from.", ".$this->THREADS_PER_PAGE ;

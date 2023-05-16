@@ -20,7 +20,9 @@ class Preference
     public const NEWSLETTERS_VIA_EMAIL = 'PreferenceAcceptNewsByMail';
     public const LOCAL_EVENT_NOTIFICATIONS = 'PreferenceLocalEvent';
     public const LOCALE = 'PreferenceLanguage';
+    public const TIMEZONE = 'PreferenceLocalTime';
     public const HTML_MAILS = 'PreferenceHtmlMails';
+    public const ITEMS_PER_PAGE = 'ItemsPerPage';
     public const NUMBER_FORUM_POSTS = 'ForumThreadsOnLandingPage';
     public const NUMBER_GROUPS_POSTS = 'GroupsThreadsOnLandingPage';
     public const SHOW_MY_GROUP_POSTS_ONLY = 'ShowMyGroupsTopicsOnly';
@@ -28,6 +30,8 @@ class Preference
     public const READ_COMMENT_GUIDELINES = 'ReadCommentGuidelines';
     public const FORUM_ORDER_LIST_ASC = 'PreferenceForumOrderListAsc';
     public const TRIPS_VICINITY_RADIUS = 'TripLegsVicinityRadius';
+    public const SHOW_PROFILE_VISITORS = 'PreferenceShowProfileVisits';
+    public const SHOW_FORUMS_POSTS = 'MyForumPostsPagePublic';
     public const SEARCH_OPTIONS = 'SearchOptions';
 
     /**

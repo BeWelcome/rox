@@ -21,7 +21,7 @@ $hostingInterest = [
     </div>
     <div id="collapse-accommodation" class="collapse" data-parent="#editProfile" aria-labelledby="heading-accommodation">
         <div class="card-body">
-            <div class="o-form-group row align-items-center mb-2">
+            <div class="o-form-group row mb-2 align-items-center mb-2">
             <label for="Accommodation" class="col-md-4 col-form-label"><?= $words->get('HostingStatus') ?></label>
             <div class="btn-group col-md-8 mt-2" data-toggle="buttons">
                 <label for="neverask"
@@ -100,7 +100,7 @@ $hostingInterest = [
             </div>
         </div>
 
-            <div class="o-form-group row">
+            <div class="o-form-group row mb-2">
             <label for="MaxLenghtOfStay"
                    class="col-md-4 col-form-label"><?= $words->get('ProfileMaxLenghtOfStay') ?></label>
             <div class="col-12 col-md-8">
@@ -109,7 +109,7 @@ $hostingInterest = [
             </div>
         </div>
 
-            <div class="o-form-group row">
+            <div class="o-form-group row mb-2">
             <label for="ILiveWith" class="col-md-4 col-form-label">
                 <?= $words->get('ProfileILiveWith') ?>
             </label>
@@ -118,7 +118,7 @@ $hostingInterest = [
             </div>
         </div>
 
-            <div class="o-form-group row">
+            <div class="o-form-group row mb-2">
             <label for="PleaseBring" class="col-md-4 col-form-label">
                 <?= $words->get('ProfilePleaseBring') ?>
             </label>
@@ -128,7 +128,7 @@ $hostingInterest = [
             </div>
         </div>
 
-            <div class="o-form-group row">
+            <div class="o-form-group row mb-2">
             <label for="OfferGuests" class="col-md-4 col-form-label">
                 <?= $words->get('ProfileOfferGuests') ?>
             </label>
@@ -138,7 +138,7 @@ $hostingInterest = [
             </div>
         </div>
 
-            <div class="o-form-group row">
+            <div class="o-form-group row mb-2">
             <label for="OfferHosts" class="col-md-4 col-form-label">
                 <?= $words->get('ProfileOfferHosts') ?>
             </label>
@@ -148,7 +148,7 @@ $hostingInterest = [
             </div>
         </div>
 
-            <div class="o-form-group row">
+            <div class="o-form-group row mb-2">
 
             <label for="ICanAlsoOffer" class="col-md-4 col-form-label">
                 <?= $words->get('ICanAlsoOffer') ?>
@@ -157,16 +157,17 @@ $hostingInterest = [
                 <?php
                 $max = count($vars['TabTypicOffer']);
                 for ($ii = 0; $ii < $max; $ii++) {
-                    echo '<input type="checkbox" name="check_' . $member->TabTypicOffer[$ii] . '" ';
+                    echo '<div class="o-checkbox">';
+                    echo '<input type="checkbox" class="o-checkbox__input" name="check_' . $member->TabTypicOffer[$ii] . '" ';
                     if (strpos($member->TypicOffer, $member->TabTypicOffer[$ii]) !== false)
                         echo 'checked="checked"';
-                    echo '><label class="m-0 ml-2" for="check_' . $member->TabTypicOffer[$ii] . '">' . $words->get("TypicOffer_" . $member->TabTypicOffer[$ii]) . '</label><br>';
+                    echo '><label class="m-0 ml-2" class="o-checkbox__label" for="check_' . $member->TabTypicOffer[$ii] . '">' . $words->get("TypicOffer_" . $member->TabTypicOffer[$ii]) . '</label></div>';
                 }
                 ?>
             </div>
         </div>
 
-            <div class="o-form-group row">
+            <div class="o-form-group row mb-2">
             <label for="PublicTransport" class="col-md-4 col-form-label">
                 <?= $words->get('ProfilePublicTransport') ?>
             </label>
@@ -177,7 +178,7 @@ $hostingInterest = [
 
         </div>
 
-            <div class="o-form-group row">
+            <div class="o-form-group row mb-2">
             <label for="ProfileRestrictionsForGuests" class="col-md-4 col-form-label">
                 <?= $words->get('ProfileRestrictionForGuest') ?>
             </label>
@@ -185,16 +186,18 @@ $hostingInterest = [
                 <?php
                 $max = count($member->TabRestrictions);
                 for ($ii = 0; $ii < $max; $ii++) {
-                    echo '<input type="checkbox" name="check_' . $member->TabRestrictions[$ii] . '" ';
+                    echo '<div class="o-checkbox">';
+                    echo '<input type="checkbox" class="o-checkbox__input" name="check_' . $member->TabRestrictions[$ii] . '" ';
                     if (strpos($member->Restrictions, $member->TabRestrictions[$ii]) !== false)
                         echo 'checked="checked"';
-                    echo '><label class="m-0 ml-2" for="check_' . $member->TabRestrictions[$ii] . '">' . $words->get("Restriction_" . $member->TabRestrictions[$ii]) . '</label><br>';
+                    echo '><label class="m-0 ml-2 o-checkbox__label" for="check_' . $member->TabRestrictions[$ii] . '">' . $words->get("Restriction_" . $member->TabRestrictions[$ii]) . '</label>';
+                    echo '</div>';
                 }
                 ?>
             </div>
         </div>
 
-            <div class="o-form-group row">
+            <div class="o-form-group row mb-2">
             <label for="OtherRestrictions" class="col-md-4 col-form-label">
                 <?= $words->get('ProfileHouseRules') ?>
             </label>
@@ -204,7 +207,7 @@ $hostingInterest = [
             </div>
         </div>
 
-            <div class="o-form-group row">
+            <div class="o-form-group row mb-2">
             <label for="AdditionalAccomodationInfo" class="col-md-4 col-form-label">
                 <?= $words->get('ProfileAdditionalAccomodationInfo') ?>
             </label>

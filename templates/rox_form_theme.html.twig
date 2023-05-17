@@ -191,8 +191,8 @@
             {{- form_label(form, null, { widget: parent() }) -}}
         </div>
     {%- else -%}
-        {%- set attr = attr|merge({class: (attr.class|default('') ~ ' o-checkbox__input')|trim}) -%}
-        <div class="o-checkbox{{ 'radio-inline' in parent_label_class ? ' form-check-inline' }}">
+        {%- set attr = attr|merge({class: (attr.class|default('') ~ ' o-radio-button__input')|trim}) -%}
+        <div class="o-radio-button{{ 'radio-inline' in parent_label_class ? ' form-check-inline' }}">
             {{- form_label(form, null, { widget: parent() }) -}}
         </div>
     {%- endif -%}

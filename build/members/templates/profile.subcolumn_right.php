@@ -60,10 +60,11 @@ function wasGuestOrHost(string $relations) {
                 // get latest updates on to and from part of comments and order desc
                 $updatedATo = isset($a['to']) ? $a['to']->unix_updated ?? $a['to']->unix_created : $early20thCentury;
                 $updatedAFrom = isset($a['from']) ? $a['from']->unix_updated ?? $a['from']->unix_created : $early20thCentury;
-                $updatedA = max($updatedATo, $updatedAFrom);
+                $updatedA = min($updatedATo, $updatedAFrom);
+
                 $updatedBTo = isset($b['to']) ? $b['to']->unix_updated ?? $b['to']->unix_created : $early20thCentury;
                 $updatedBFrom = isset($b['from']) ? $b['from']->unix_updated ?? $b['from']->unix_created : $early20thCentury;
-                $updatedB = max($updatedBTo, $updatedBFrom);
+                $updatedB = min($updatedBTo, $updatedBFrom);
 
                 return -1 * ($updatedA <=> $updatedB);
             }

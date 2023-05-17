@@ -321,10 +321,11 @@ class CommentRepository extends EntityRepository
                     // get latest updates on to and from part of comments and order desc
                     $updatedATo = isset($a['to']) ? $a['to']->getUpdated() ?? $a['to']->getCreated() : $early20thCentury;
                     $updatedAFrom = isset($a['from']) ? $a['from']->getUpdated() ?? $a['from']->getCreated() : $early20thCentury;
-                    $updatedA = max($updatedATo, $updatedAFrom);
+                    $updatedA = min($updatedATo, $updatedAFrom);
+
                     $updatedBTo = isset($b['to']) ? $b['to']->getUpdated() ?? $b['to']->getCreated() : $early20thCentury;
                     $updatedBFrom = isset($b['from']) ? $b['from']->getUpdated() ?? $b['from']->getCreated() : $early20thCentury;
-                    $updatedB = max($updatedBTo, $updatedBFrom);
+                    $updatedB = min($updatedBTo, $updatedBFrom);
 
                     return -1 * ($updatedA <=> $updatedB);
                 }

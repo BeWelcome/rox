@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function () {
         config: {
             type: "text",
             btnClass: "o-show-more-btn",
-            limit: 180,
+            limit: 300,
             more: document.getElementById('read.more').value,
             less: document.getElementById('show.less').value
         }

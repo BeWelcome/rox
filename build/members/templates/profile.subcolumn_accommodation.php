@@ -35,15 +35,15 @@
                     <div class="guests h5"><?=$words->get('ProfileNumberOfGuests');?>: <?php echo $member->MaxGuest ?></div>
                 <?php }
                 if ($member->get_trad("MaxLenghtOfStay", $profile_language,true) != "") { ?>
-                    <div class="stay h5 mb-0"><?=$words->get('ProfileMaxLenghtOfStay');?>:</div>
+                    <div class="stay h5 u-mt-8 u-mb-0"><?=$words->get('ProfileMaxLenghtOfStay');?>:</div>
                     <div><?php echo $purifier->purify($member->get_trad("MaxLenghtOfStay", $profile_language,true)); ?></div>
                 <?php }
                 if ($member->get_trad("ILiveWith", $profile_language,true) != "") { ?>
-                    <div class="h5 mb-0"><?=$words->get('ProfileILiveWith');?>:</div>
+                    <div class="h5 u-mt-8 u-mb-0"><?=$words->get('ProfileILiveWith');?>:</div>
                     <div><?php echo $purifier->purify($member->get_trad("ILiveWith", $profile_language,true)); ?></div>
                 <?php }
                 if ($member->get_trad("PleaseBring", $profile_language,true) != "") { ?>
-                    <div class="h5 mb-0"><?=$words->get('ProfilePleaseBring');?>:</div>
+                    <div class="h5 u-mt-8 u-mb-0"><?=$words->get('ProfilePleaseBring');?>:</div>
                     <div><?php echo $purifier->purify($member->get_trad("PleaseBring", $profile_language,true)); ?></div>
                 <?php }
 
@@ -70,16 +70,16 @@
                 }
                 if (!empty($offers)) { ?>
 
-                    <div class="h5 mb-0"><?=$words->get('ProfileOfferGuests');?>:</div>
+                    <div class="h5 u-mt-8 u-mb-0"><?=$words->get('ProfileOfferGuests');?>:</div>
                     <div><?php echo $offers;?></div>
                 <?php }
                 if ($member->get_trad("OfferHosts", $profile_language,true) != "") { ?>
-                    <div class="h5 mb-0"><?=$words->get('ProfileOfferHosts');?>:</div>
+                    <div class="h5 u-mt-8 u-mb-0"><?=$words->get('ProfileOfferHosts');?>:</div>
                     <div><?php echo $purifier->purify($member->get_trad("OfferHosts", $profile_language,true)); ?></div>
                 <?php }
                 if ($member->get_trad("AdditionalAccomodationInfo", $profile_language,true) != ""
                     or $member->get_trad("InformationToGuest", $profile_language,true) != "") { ?>
-                    <div class="h5 mb-0"><?=$words->get('OtherInfosForGuest');?>:</div>
+                    <div class="h5 u-mt-8 u-mb-0"><?=$words->get('OtherInfosForGuest');?>:</div>
                     <div>
                         <?php echo $purifier->purify($member->get_trad("AdditionalAccomodationInfo", $profile_language,true)); ?>
                         <?php echo $purifier->purify($member->get_trad("InformationToGuest", $profile_language,true)); ?>
@@ -87,7 +87,7 @@
                 <?php }
 
                 if ($member->get_trad("PublicTransport", $profile_language,true) != "") { ?>
-                    <div class="h5 mb-0"><?=$words->get('ProfilePublicTransport');?>:</div>
+                    <div class="h5 u-mt-8 u-mb-0"><?=$words->get('ProfilePublicTransport');?>:</div>
                     <div><?php echo $purifier->purify($member->get_trad("PublicTransport", $profile_language,true)); ?></div>
                 <?php }
 
@@ -114,7 +114,7 @@
                     $restrictions .= $purifier->purify($otherRestrictions);
                 }
                 if (!empty($restrictions)) { ?>
-                    <div class="h5 mb-0"><?=$words->get('ProfileHouseRules');?>:</div>
+                    <div class="h5 u-mt-8 u-mb-0"><?=$words->get('ProfileHouseRules');?>:</div>
                     <div><?php echo $restrictions; ?></div>
                 <?php } ?>
             </div>

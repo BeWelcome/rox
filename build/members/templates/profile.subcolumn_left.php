@@ -56,27 +56,27 @@
             <div class="p-2">
                     <?php
                     if ($member->get_trad("Hobbies", $profile_language, true) != "") {
-                        echo '<div class="h5 mb-0">' . $words->get('ProfileHobbies') . '</div>';
+                        echo '<div class="h5 u-mt-8 u-mb-0">' . $words->get('ProfileHobbies') . '</div>';
                         echo '<div>' . $purifier->purify($member->get_trad("Hobbies", $profile_language, true)) . '</div>';
                     }
 
                     if ($member->get_trad("Books", $profile_language, true) != "") {
-                        echo '<div class="h5 mb-0">' . $words->get('ProfileBooks') . '</div>';
+                        echo '<div class="h5 u-mt-8 u-mb-0">' . $words->get('ProfileBooks') . '</div>';
                         echo '<div>' . $purifier->purify($member->get_trad("Books", $profile_language, true)) . '</div>';
                     }
 
                     if ($member->get_trad("Music", $profile_language, true) != "") {
-                        echo '<div class="h5 mb-0">' . $words->get('ProfileMusic') . '</div>';
+                        echo '<div class="h5 u-mt-8 u-mb-0">' . $words->get('ProfileMusic') . '</div>';
                         echo '<div>' . $purifier->purify($member->get_trad("Music", $profile_language, true)) . '</div>';
                     }
 
                     if ($member->get_trad("Movies", $profile_language, true) != "") {
-                        echo '<div class="h5 mb-0">' . $words->get('ProfileMovies') . '</div>';
+                        echo '<div class="h5 u-mt-8 u-mb-0">' . $words->get('ProfileMovies') . '</div>';
                         echo '<div>' . $purifier->purify($member->get_trad("Movies", $profile_language, true)) . '</div>';
                     }
 
                     if ($member->get_trad("Organizations", $profile_language, true) != "") {
-                        echo '<div class="h5 mb-0">' . $words->get('ProfileOrganizations') . '</div>';
+                        echo '<div class="h5 u-mt-8 u-mb-0">' . $words->get('ProfileOrganizations') . '</div>';
                         echo '<div>' . $purifier->purify($member->get_trad("Organizations", $profile_language, true)) . '</div>';
                     }
                     ?>

@@ -23,7 +23,7 @@
                     {{ macros.avatar(member.username, 100, true) }}
                     <div class="ml-3 media-body">
                         <h5 class="mt-0">{{ member.username }}</h5>
-                        <p>{{ member.city.name }}, {{ member.country.name }}</p>
+                        <p>{{ member.city.name }}{% if not member.country is null %}, {{ member.country.name }}{% endif %}</p>
                         {% if fields|length %}
                             {% if fields[app.request.locale] is defined %}
                                 <p>{{ fields[app.request.locale]['ProfileSummary']|truncate(500) }}</p>

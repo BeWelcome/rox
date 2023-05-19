@@ -261,14 +261,14 @@ class NewLocation implements Translatable
         return $this->featureCode;
     }
 
-    public function setCountry(self $country): self
+    public function setCountry(?self $country): self
     {
         $this->country = $country;
 
         return $this;
     }
 
-    public function getCountry(): self
+    public function getCountry(): ?self
     {
         return $this->country;
     }

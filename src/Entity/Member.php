@@ -879,12 +879,7 @@ class Member
         return $this;
     }
 
-    /**
-     * Get city.
-     *
-     * @return NewLocation
-     */
-    public function getCity()
+    public function getCity(): ?NewLocation
     {
         return $this->city;
     }
@@ -3282,12 +3277,12 @@ class Member
         return $this;
     }
 
-    public function getRegion(): NewLocation
+    public function getRegion(): ?NewLocation
     {
         return $this->city->getAdmin1();
     }
 
-    public function getCountry(): NewLocation
+    public function getCountry(): ?NewLocation
     {
         return $this->city->getCountry();
     }

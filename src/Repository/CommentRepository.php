@@ -6,6 +6,7 @@ use App\Doctrine\CommentAdminActionType;
 use App\Doctrine\MemberStatusType;
 use App\Entity\Comment;
 use App\Entity\Member;
+use App\Utilities\CommentSorter;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityRepository;
@@ -314,22 +315,7 @@ class CommentRepository extends EntityRepository
         }
 
         if (!empty($comments)) {
-            $early20thCentury = new DateTimeImmutable('01-01-1900');
-            usort(
-                $comments,
-                function ($a, $b) use ($early20thCentury) {
-                    // get latest updates on to and from part of comments and order desc
-                    $updatedATo = isset($a['to']) ? $a['to']->getUpdated() ?? $a['to']->getCreated() : $early20thCentury;
-                    $updatedAFrom = isset($a['from']) ? $a['from']->getUpdated() ?? $a['from']->getCreated() : $early20thCentury;
-                    $updatedA = min($updatedATo, $updatedAFrom);
-
-                    $updatedBTo = isset($b['to']) ? $b['to']->getUpdated() ?? $b['to']->getCreated() : $early20thCentury;
-                    $updatedBFrom = isset($b['from']) ? $b['from']->getUpdated() ?? $b['from']->getCreated() : $early20thCentury;
-                    $updatedB = min($updatedBTo, $updatedBFrom);
-
-                    return -1 * ($updatedA <=> $updatedB);
-                }
-            );
+            $comments = (new CommentSorter())->sortComments($comments);
         }
 
         return $comments;

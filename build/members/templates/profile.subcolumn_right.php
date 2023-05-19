@@ -11,6 +11,7 @@ function wasGuestOrHost(string $relations) {
 <div class="d-lg-block d-none mb-sm-3 mb-lg-0">
     <?php
 
+    use App\Utilities\CommentSorterProfile;
     use Carbon\Carbon;
 
     if (!$this->passedAway){
@@ -53,22 +54,7 @@ function wasGuestOrHost(string $relations) {
     }
 
     if (!empty($comments)) {
-        $early20thCentury = strtotime('01-01-1900');
-        usort(
-            $comments,
-            function ($a, $b) use ($early20thCentury) {
-                // get latest updates on to and from part of comments and order desc
-                $updatedATo = isset($a['to']) ? $a['to']->unix_updated ?? $a['to']->unix_created : $early20thCentury;
-                $updatedAFrom = isset($a['from']) ? $a['from']->unix_updated ?? $a['from']->unix_created : $early20thCentury;
-                $updatedA = min($updatedATo, $updatedAFrom);
-
-                $updatedBTo = isset($b['to']) ? $b['to']->unix_updated ?? $b['to']->unix_created : $early20thCentury;
-                $updatedBFrom = isset($b['from']) ? $b['from']->unix_updated ?? $b['from']->unix_created : $early20thCentury;
-                $updatedB = min($updatedBTo, $updatedBFrom);
-
-                return -1 * ($updatedA <=> $updatedB);
-            }
-        );
+        $comments = (new CommentSorterProfile())->sortComments($comments);
     }
 
     $username = $this->member->Username;

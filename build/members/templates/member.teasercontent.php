@@ -114,13 +114,14 @@
                 }
                 echo $this->memberSinceDate($member);
                 echo '<br><span class="font-weight-bold">' . $words->get('profile.last.activity') . ' </span>';
-                if (strtotime($member->LastLogin) > strtotime('-1 week')) {
+                $lastLogin = (null == $member->LastLogin) ? $member->created: $member->LastLogin;
+                if (strtotime($lastLogin) > strtotime('-1 week')) {
                     echo $words->get("LastLoginPrivacy");
                 } else {
-                    echo $layoutbits->ago(strtotime($member->LastLogin));
+                    echo $layoutbits->ago(strtotime($lastLogin));
                 }
-                echo $this->lastLoginDate($member);
-                ?>
+                echo $this->lastLoginDate($lastLogin);
+?>
             <?php endif; ?>
         </p>
     </div>

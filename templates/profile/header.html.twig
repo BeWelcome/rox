@@ -78,13 +78,14 @@
             {% endif %}
             {% if member.hasRight('SafetyTeam') %} ({{ member.created|format_datetime() }}){% endif %}
             <br><strong>{{ 'profile.last.activity'|trans }} </strong>
-            {% set difference = date(member.lastLogin).diff(date()) %}
+            {% set lastLogin = (member.lastLogin == null) ? member.created : member.lastLogin %}
+            {% set difference = date(lastLogin).diff(date()) %}
             {% if difference.days <= 7 %}
                 {{ 'lastloginprivacy'| trans }}
             {% else %}
-                {{ member.lastLogin.diffForHumans }}
+                {{ lastLogin.diffForHumans }}
             {% endif %}
-            {% if member.hasRight('SafetyTeam') %} ({{ member.lastLogin|format_datetime() }}){% endif %}
+            {% if member.hasRight('SafetyTeam') %} ({{ lastLogin|format_datetime() }}){% endif %}
         </p>
     </div>
 </div>

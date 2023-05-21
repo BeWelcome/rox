@@ -349,7 +349,7 @@ class MemberPage extends PageWithActiveSkin
         return $dateSince;
     }
 
-    public function lastLoginDate($member)
+    public function lastLoginDate($lastLoginDate)
     {
         $lastLogin = '';
         $logged_member = $this->model->getLoggedInMember();
@@ -358,7 +358,7 @@ class MemberPage extends PageWithActiveSkin
                 array('SafetyTeam' => '')
             )
         ) {
-            $lastLogin = ' ('.$member->LastLogin.')';
+            $lastLogin = ' ('.$lastLoginDate.')';
         }
 
         return $lastLogin;

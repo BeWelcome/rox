@@ -44,7 +44,8 @@ class UpdateTranslationAdapter implements AdapterInterface
                 OR w1.isArchived IS NULL)
                 AND (w1.donottranslate = 'No')
                 AND w1.code = w2.code
-                AND w1.majorUpdate > w2.updated
+                AND (w1.majorUpdate > w2.updated
+                OR w1.updated > w2.updated)
             ORDER BY w1.updated DESC;");
         $statement->execute(['locale' => $this->locale]);
         $result = $statement->fetch(PDO::FETCH_OBJ);

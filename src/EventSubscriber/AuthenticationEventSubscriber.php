@@ -2,6 +2,7 @@
 
 namespace App\EventSubscriber;
 
+use App\Doctrine\MemberStatusType;
 use App\Entity\Member;
 use Carbon\Carbon;
 use DateTime;
@@ -73,6 +74,10 @@ class AuthenticationEventSubscriber implements EventSubscriberInterface
             $diff = (new Carbon())->diffInMinutes($lastLogin);
             if (null === $lastLogin || $diff > 5) {
                 $member->setLastLogin(new DateTime());
+                $status = $member->getStatus();
+                if (MemberStatusType::ACTIVE !== $status && MemberStatusType::CHOICE_INACTIVE !== $status) {
+                    $member->setStatus(MemberStatusType::ACTIVE);
+                }
                 $this->entityManager->persist($member);
                 $this->entityManager->flush();
             }

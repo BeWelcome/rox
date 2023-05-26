@@ -64,7 +64,8 @@ class UpdateTranslationAdapter implements AdapterInterface
                 w2.domain,
                 w2.shortcode,
                 w2.sentence,
-                w2.created
+                w2.created,
+                IF(w1.majorUpdate > w2.updated, 1, 0) as majorUpdate
             FROM
                 words w1,
                 words w2
@@ -75,8 +76,9 @@ class UpdateTranslationAdapter implements AdapterInterface
                 OR w1.isArchived IS NULL)
                 AND (w1.donottranslate = 'No')
                 AND w1.code = w2.code
-                AND w1.majorUpdate > w2.updated
-            ORDER BY w1.updated DESC
+                AND (w1.majorUpdate > w2.updated
+                OR w1.updated > w2.updated)
+            ORDER BY majorUpdate DESC, w1.updated DESC
             LIMIT :offset, :limit
         ");
         $statement->bindValue('locale', $this->locale, ParameterType::STRING);

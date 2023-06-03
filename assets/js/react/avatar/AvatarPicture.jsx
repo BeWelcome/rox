@@ -15,7 +15,7 @@ const AvatarPicture = (props) => {
     };
 
     return (
-        <div className="u-w-full u-relative u-pb-[100%]">
+        <div className="u-w-full u-relative u-pb-[100%] u-overflow-clip">
             <div className="u-absolute u-left-0 u-top-0">
                 <a href={pictureUrl} title={pictureTitle}  data-toggle="lightbox" data-type="image">
                     <img className="u-rounded-8 u-max-w-full"

@@ -75,7 +75,7 @@ class AuthenticationEventSubscriber implements EventSubscriberInterface
             if (null === $lastLogin || $diff > 5) {
                 $member->setLastLogin(new DateTime());
                 $status = $member->getStatus();
-                if (MemberStatusType::ACTIVE !== $status && MemberStatusType::CHOICE_INACTIVE !== $status) {
+                if (MemberStatusType::CHOICE_INACTIVE !== $status) {
                     $member->setStatus(MemberStatusType::ACTIVE);
                 }
                 $this->entityManager->persist($member);

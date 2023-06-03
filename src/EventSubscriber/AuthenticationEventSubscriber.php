@@ -73,6 +73,12 @@ class AuthenticationEventSubscriber implements EventSubscriberInterface
             $diff = (new Carbon())->diffInMinutes($lastLogin);
             if (null === $lastLogin || $diff > 5) {
                 $member->setLastLogin(new DateTime());
+
+                $status = $member->getStatus();
+                if (MemberStatusType::CHOICE_INACTIVE !== $status) {
+                    $member->setStatus(MemberStatusType::ACTIVE);
+                }
+
                 $this->entityManager->persist($member);
                 $this->entityManager->flush();
             }

@@ -3,8 +3,8 @@
 namespace App\Pagerfanta;
 
 use App\Doctrine\TypicalOfferType;
-use App\Entity\Location;
 use App\Entity\Member;
+use App\Entity\NewLocation;
 use App\Form\CustomDataClass\SearchFormRequest;
 use App\Utilities\SessionSingleton;
 use App\Utilities\TranslatorSingleton;
@@ -38,8 +38,16 @@ class SearchAdapter implements AdapterInterface
      *
      * @throws AccessDeniedException
      */
-    public function __construct($data, $session, $dbHost, $dbName, $dbUser, $dbPassword, EntityManagerInterface $em, TranslatorInterface $translator)
-    {
+    public function __construct(
+        $data,
+        $session,
+        $dbHost,
+        $dbName,
+        $dbUser,
+        $dbPassword,
+        EntityManagerInterface $em,
+        TranslatorInterface $translator
+    ) {
         // Kick-start the Symfony session. This replaces session_start() in the
         // old code, which is now turned off.
         $session->start();
@@ -73,14 +81,12 @@ class SearchAdapter implements AdapterInterface
             $dbPassword
         );
         $dbPassword = str_repeat('*', \strlen($dbPassword));
-        $this->model = new SearchModel();
+        $this->model = new SearchModel($em);
         $this->modelData = $this->prepareModelData($data);
 
         // Determine if we search for a country or an admin unit and call prepareQuery accordingly
-        $admin1 = false;
-        $country = false;
-        $repository = $em->getRepository(Location::class);
-        /** @var Location $location */
+        $repository = $em->getRepository(NewLocation::class);
+        /** @var NewLocation $location */
         $location = null;
         try {
             $location = $repository->find($data->location_geoname_id);
@@ -88,14 +94,18 @@ class SearchAdapter implements AdapterInterface
             // nothing found?
             $e->getCode();
         }
-        if (null !== $location && 'A' === $location->getFclass()) {
-            // check if found unit is a country
-            if (false === strstr($location->getFcode(), 'PCL')) {
-                $admin1 = $location->getAdmin1();
+        $adminUnits = [];
+        $country = false;
+        // Are we looking at an admin unit?
+        if (null !== $location && 'A' === $location->getFeatureClass()) {
+            $country = $location->getCountryId();
+            // Is it a country?
+            if (false === strstr($location->getFeatureCode(), 'PCL')) {
+                // find lowest admin unit in location and use it for search
+                $adminUnits = $this->getRankedAdminUnitIds($location);
             }
-            $country = $location->getCountry()->getCountry();
         }
-        $this->model->prepareQuery($this->modelData, $admin1, $country);
+        $this->model->prepareQuery($this->modelData, $adminUnits, $country);
     }
 
     /**
@@ -111,7 +121,7 @@ class SearchAdapter implements AdapterInterface
      */
     public function getFullResults(): array
     {
-        $results = $this->model->getResultsForLocation($this->modelData);
+        $results = $this->model->getResultsForLocation();
 
         return $results;
     }
@@ -121,9 +131,8 @@ class SearchAdapter implements AdapterInterface
      */
     public function getMapResults(): array
     {
-        $results = $this->model->getResultsForLocation($this->modelData);
+        $results = $this->model->getMapResultsForLocation();
 
-        $results['members'] = null;
         $results['map'] = array_map(function ($value) {
             $value->Username = '';
 
@@ -134,13 +143,13 @@ class SearchAdapter implements AdapterInterface
     }
 
     /**
-     * Returns an slice of the results.
+     * Returns a slice of the results.
      */
     public function getSlice(int $offset, int $length): iterable
     {
         $this->modelData['search-number-items'] = $length;
         $this->modelData['search-page'] = ($offset / $length) + 1;
-        $results = $this->model->getResultsForLocation($this->modelData);
+        $results = $this->model->getResultsForLocation();
 
         return $results['members'];
     }
@@ -217,5 +226,23 @@ class SearchAdapter implements AdapterInterface
         $vars['search-number-items'] = $data->items;
 
         return $vars;
+    }
+
+    private function getRankedAdminUnitIds(NewLocation $location): array
+    {
+        $adminUnits = [];
+        if (null != $location->getAdmin1Id()) {
+            $adminUnits[] = $location->getAdmin1Id();
+        }
+        if (null != $location->getAdmin2Id()) {
+            $adminUnits[] = $location->getAdmin2Id();
+        }
+        if (null != $location->getAdmin3Id()) {
+            $adminUnits[] = $location->getAdmin3Id();
+        }
+        if (null != $location->getAdmin4Id()) {
+            $adminUnits[] = $location->getAdmin4Id();
+        }
+        return $adminUnits;
     }
 }

@@ -9,6 +9,7 @@ use Foolz\SphinxQL\MatchBuilder;
 use Foolz\SphinxQL\SphinxQL;
 use Gedmo\Translatable\TranslatableListener;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use function count;
 
 class SuggestLocationModel
 {
@@ -65,7 +66,8 @@ class SuggestLocationModel
             return ['locations' => []];
         }
 
-        list($totalFound, $sphinxResult) = $this->getIdsForLocationType($place, self::TYPE_PLACE, $count, $countryId, $adminId, $preferExact);
+        list($totalFound, $sphinxResult) =
+            $this->getIdsForLocationType($place, self::TYPE_PLACE, $count, $countryId, $adminId, $preferExact);
 
         if (0 === $totalFound) {
             return ['locations' => []];
@@ -87,7 +89,7 @@ class SuggestLocationModel
         $result = $this->getPlaces($term, false, 10);
 
         // In case no optional part was given search for admin units and countries
-        if (1 == \count($parts)) {
+        if (1 == count($parts)) {
             $adminUnits = $this->findAdminUnits($term, 5);
             if (!empty($adminUnits['locations'])) {
                 $result['locations'] = array_merge($result['locations'], $adminUnits['locations']);
@@ -114,12 +116,13 @@ class SuggestLocationModel
 
         // Get First element of found ids
         $countryIds = $this->findCountryIds($country);
-        if (empty($countryIds)) {
+        if (empty($countryIds) || count($countryIds) > 1) {
             return null;
         }
 
-        return reset($countryIds);
+        return $countryIds[0]['country'];
     }
+
     /**
      * @SuppressWarnings(PHPMD.StaticAccess)
      */
@@ -135,56 +138,24 @@ class SuggestLocationModel
 
         $match = (new MatchBuilder($this->sphinxQL))
             ->exact(SphinxQL::expr($country))
-            ->orMatch(SphinxQL::expr($country))
-            ->orMatch(SphinxQL::expr($country . '*'))
         ;
 
         $query = $this->sphinxQL
             ->select('country')
             ->from('geonames_sphinx')
             ->match($match)
-            ->where('isCountry', '=', 1)
+            ->where(self::TYPE_COUNTRY, '=', 1)
             ->option('ranker', SphinxQL::expr('expr(\'sum(exact_hit*1000)\')'))
         ;
 
-        $result = $query->execute()->fetchAssoc();
-
-        return $result;
-    }
-
-    /**
-     * @SuppressWarnings(PHPMD.StaticAccess)
-     */
-    private function findCountryOrAdminIds(?string $countryOrAdmin): array
-    {
-        $countryId = $this->findCountryIds($countryOrAdmin);
-        if (null !== $countryId) {
-            return [$countryId, null];
-        }
-
-        $match = (new MatchBuilder($this->sphinxQL))
-            ->exact(SphinxQL::expr($countryOrAdmin))
-            ->orMatch(SphinxQL::expr($countryOrAdmin))
-            ->orMatch(SphinxQL::expr($countryOrAdmin . '*'))
-        ;
-
-        // Check if we find any match for the admin unit
-        $query = $this->sphinxQL
-            ->select('*')
-            ->from('geonames_sphinx')
-            ->match($match)
-            ->where('isAdmin', '=', 1)
-            ->option('ranker', SphinxQL::expr('expr(\'sum(exact_hit*1000)\')'))
-        ;
-
-        $result = $query->execute()->fetchAssoc();
+        $result = $query->execute()->fetchAllAssoc();
 
         return $result;
     }
 
     private function findAdminUnitId(?string $countryId, ?string $adminUnit): ?string
     {
-        if (null === $countryId || null === $adminUnit) {
+        if (null === $adminUnit) {
             return null;
         }
 
@@ -192,20 +163,20 @@ class SuggestLocationModel
             return null;
         }
 
-        $adminUnits = $this->findAdminUnitIds($countryId, $adminUnit);
-        if (null === $adminUnits) {
+        $adminUnits = $this->findAdminUnitIds($adminUnit, $countryId);
+        if (null === $adminUnits || count($adminUnits) > 1) {
             return null;
         }
 
-        return reset($adminUnits);
+        return $adminUnits[0];
     }
 
     /**
      * @SuppressWarnings(PHPMD.StaticAccess)
      */
-    private function findAdminUnitIds(?string $countryId, ?string $adminUnit): ?array
+    private function findAdminUnitIds(string $adminUnit, ?string $countryId = null): ?array
     {
-        if (null === $countryId || null === $adminUnit) {
+        if (null === $adminUnit) {
             return null;
         }
 
@@ -222,7 +193,7 @@ class SuggestLocationModel
             ->select('*')
             ->from('geonames_sphinx')
             ->match($match)
-            ->where('isadmin', '=', 1)
+            ->where(self::TYPE_ADMIN_UNIT, '=', 1)
             ->option('ranker', SphinxQL::expr('expr(\'sum(exact_hit*1000)\')'))
         ;
 
@@ -230,7 +201,7 @@ class SuggestLocationModel
             $query->where('country', '=', $countryId);
         }
 
-        $result = $query->execute()->fetchAssoc();
+        $result = $query->execute()->fetchAllAssoc();
 
         return $result;
     }
@@ -269,7 +240,7 @@ class SuggestLocationModel
                 'name' => $location->getName(),
                 'latitude' => $location->getLatitude(),
                 'longitude' => $location->getLongitude(),
-                'admin1' => (null === $admin1 || $type === self::ADMIN_UNIT) ? '' : $location->getAdmin1()->getName(),
+                'admin1' => (null === $admin1 || $location === $admin1) ? '' : $location->getAdmin1()->getName(),
                 'country' => ($type === self::COUNTRY) ? '' : $location->getCountry()->getName(),
             ];
         }
@@ -296,7 +267,7 @@ class SuggestLocationModel
     ): array {
         list(, $resultsForLocale) = $this->executeSphinxQLQuery(
             $place,
-            'isPlace',
+            self::TYPE_PLACE,
             $countryId,
             $adminId,
             $this->translator->getLocale(),
@@ -304,7 +275,7 @@ class SuggestLocationModel
             $count
         );
 
-        list($found, $results) = $this->executeSphinxQLQuery($place, 'isPlace', $countryId, $adminId, null, $preferExact, $count);
+        list($found, $results) = $this->executeSphinxQLQuery($place, self::TYPE_PLACE, $countryId, $adminId, null, $preferExact, $count);
 
         return $this->removeDuplicates($resultsForLocale, $found, $results, $count);
     }
@@ -378,19 +349,22 @@ class SuggestLocationModel
     private function getPlaceInformation(string $term): array
     {
         $placeAdminOrCountry = explode(',', $term);
-        if (\count($placeAdminOrCountry) > 3) {
+        if (count($placeAdminOrCountry) > 3) {
             return ['locations' => []];
         }
 
         $adminId = null;
         $countryId = null;
         $place = trim($placeAdminOrCountry[0]);
-        if (2 === \count($placeAdminOrCountry)) {
-            $countryOrAdmin = trim($placeAdminOrCountry[1]);
-            $possibleUnits = $this->findCountryOrAdminIds($countryOrAdmin);
+        if (2 === count($placeAdminOrCountry)) {
+            $countryOrAdminUnit = trim($placeAdminOrCountry[1]);
+            $countryId = $this->findCountryId($countryOrAdminUnit);
+            if (null === $countryId) {
+                $adminId = $this->findAdminUnitId(null, $countryOrAdminUnit);
+            }
         }
 
-        if (3 === \count($placeAdminOrCountry)) {
+        if (3 === count($placeAdminOrCountry)) {
             $admin = trim($placeAdminOrCountry[1]);
             $country = trim($placeAdminOrCountry[2]);
             $countryId = $this->findCountryId($country);
@@ -398,7 +372,7 @@ class SuggestLocationModel
         }
 
         return [
-            \count($placeAdminOrCountry) > 1 ? $place : $term,
+            count($placeAdminOrCountry) > 1 ? $place : $term,
             $countryId,
             $adminId,
         ];
@@ -460,7 +434,7 @@ class SuggestLocationModel
         }
 
         // return the first $count
-        $found = \count($places);
+        $found = count($places);
         $places = \array_slice($places, 0, $count);
 
         return [

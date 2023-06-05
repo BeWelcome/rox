@@ -174,11 +174,11 @@ function wasGuestOrHost(string $relations) {
                        </div>
                        <?php } else {
                            if ($loggedIn === $commentTo->UsernameToMember) {
-                               $addCommentTranslation = str_replace('{username}', $comment->UsernameFromMember, $words->getSilent('profile.add.comment'));
+                               $addCommentTranslation = str_replace('{username}', $commentTo->UsernameFromMember, $words->getSilent('profile.add.comment'));
                                ?>
                                <div class="clearfix">
-                                   <a href="/members/<?= $comment->UsernameFromMember;?>/comment/add" title="<?= $addCommentTranslation ?>"
-                                      class="align-self-center float-right"><button class="o-button"><?= $addCommentTranslation ?></button></a>
+                                   <a href="/members/<?= $commentTo->UsernameFromMember;?>/comment/add" title="<?= $addCommentTranslation ?>"
+                                      class="align-self-center float-left"><button class="o-button"><?= $addCommentTranslation ?></button></a>
                                </div>
                            <?php } else { ?>
 
@@ -250,7 +250,7 @@ function wasGuestOrHost(string $relations) {
                            ?>
                             <div class="clearfix">
                            <a href="/members/<?= $comment->UsernameFromMember;?>/comment/add" title="<?= $addCommentTranslation ?>"
-                                              class="gray align-self-center"><button class="o-button"><?= $addCommentTranslation ?></button></a>
+                                              class="gray align-self-center float-right"><button class="o-button"><?= $addCommentTranslation ?></button></a>
                             </div>
                       <?php }
                       }

@@ -24,3 +24,19 @@ comment.add:
 comment.edit:
     - 'Edit'
     - Button label on the edit comment form
+comment.notification.new.subject:
+    - '@Message_profile_comment_subject'
+comment.notification.new.body:
+    - '@CommentNotificationMessageNew'
+comment.notification.update.subject:
+    - '@Message_profile_comment_update_subject'
+comment.notification.update.body:
+    - '@CommentNotificationMessageUpdate'
+#    <p>Hi %1$s,</p>
+#    <p>%2$s has updated the comment about you. This is now a %3$s comment and says:</p>
+#    <p><i>"%4$s"</i></p>
+#    <p><a href="%5$s">Read more</a> about the comment.<br>
+#    <a href="%6$s">Write or update</a> your comment about %2$s</p>
+#    <p>Have a great time!<br />
+#    The BeWelcome Team</p>
+#    <p>PS. In case you have a problem with this comment please <a href="%7$s">contact us</a></p>

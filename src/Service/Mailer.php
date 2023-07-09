@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Entity\Comment;
 use App\Entity\FeedbackCategory;
 use App\Entity\Member;
 use App\Entity\Relation;
@@ -50,7 +51,7 @@ class Mailer
         $parameters['sender'] = $sender;
 
         return $this->sendTemplateEmail(
-            $this->getDirectBewelcomeAddress($sender, self::MESSAGE_EMAIL_ADDRESS),
+            $this->getBeWelcomeAddressWithUsername($sender),
             $receiver,
             $template,
             $parameters
@@ -63,7 +64,7 @@ class Mailer
         $parameters['receiver'] = $receiver;
 
         return $this->sendTemplateEmail(
-            $this->getBewelcomeAddress($sender, self::GROUP_EMAIL_ADDRESS),
+            $this->getBeWelcomeAddress($sender, self::GROUP_EMAIL_ADDRESS),
             $receiver,
             $template,
             $parameters
@@ -156,6 +157,7 @@ class Mailer
      */
     public function sendRelationNotification(Relation $relation): bool
     {
+        $parameters = [];
         $parameters['sender'] = $relation->getOwner();
         $parameters['receiver'] = $relation->getReceiver();
         $parameters['comment'] = $relation->getCommentText();
@@ -167,9 +169,55 @@ class Mailer
         ];
 
         return $this->sendTemplateEmail(
-            $this->getBewelcomeAddress($relation->getOwner(), self::NO_REPLY_EMAIL_ADDRESS),
+            $this->getBeWelcomeAddress($relation->getOwner(), self::NO_REPLY_EMAIL_ADDRESS),
             $relation->getReceiver(),
             'relation.notification',
+            $parameters
+        );
+    }
+
+    /**
+     * Send notification for new comment.
+     */
+    public function sendNewCommentNotification(Comment $comment): bool
+    {
+        $parameters = [];
+        $parameters['subject'] = [
+            'translationId' => 'comment.notification.new.subject',
+            'parameters' => [
+                'username' => $comment->getFromMember()->getUsername(),
+            ],
+        ];
+
+        return $this->sendCommentTemplateEmail($comment, 'comment.notification.new', $parameters);
+    }
+
+    /**
+     * Send notification for new comment.
+     */
+    public function sendCommentUpdateNotification(Comment $comment): bool
+    {
+        $parameters = [];
+        $parameters['subject'] = [
+            'translationId' => 'comment.notification.update.subject',
+            'parameters' => [
+                'username' => $comment->getFromMember()->getUsername(),
+            ],
+        ];
+
+        return $this->sendCommentTemplateEmail($comment, 'comment.notification.update', $parameters);
+    }
+
+    private function sendCommentTemplateEmail(Comment $comment, string $template, array $parameters): bool
+    {
+        $parameters['sender'] = $comment->getFromMember();
+        $parameters['receiver'] = $comment->getToMember();
+        $parameters['comment'] = $comment;
+
+        return $this->sendTemplateEmail(
+            $this->getBeWelcomeAddress($comment->getFromMember(), self::NO_REPLY_EMAIL_ADDRESS),
+            $comment->getToMember(),
+            $template,
             $parameters
         );
     }
@@ -178,9 +226,9 @@ class Mailer
      * Used for messages and requests notifications to allow recipients to distinguish between those
      * and other notifications.
      */
-    private function getDirectBewelcomeAddress(Member $sender, string $email): Address
+    private function getBeWelcomeAddressWithUsername(Member $sender): Address
     {
-        return new Address($email, $sender->getUsername() . ' [BeWelcome]');
+        return new Address(self::MESSAGE_EMAIL_ADDRESS, $sender->getUsername() . ' [BeWelcome]');
     }
 
     /**
@@ -189,19 +237,20 @@ class Mailer
      *
      * @param mixed $email
      */
-    private function getBewelcomeAddress(Member $sender, $email)
+    private function getBeWelcomeAddress(Member $sender, $email): Address
     {
-        return new Address($email, 'Bewelcome - ' . $sender->getUsername());
+        return new Address($email, 'BeWelcome - ' . $sender->getUsername());
     }
 
     /**
      * @param Member|Address|string $sender
      * @param Member|Address        $receiver
+     * @param string                $template
      * @param mixed                 $parameters
      *
      * @return bool
      */
-    private function sendTemplateEmail($sender, $receiver, string $template, $parameters)
+    private function sendTemplateEmail($sender, $receiver, string $template, array $parameters): bool
     {
         $currentLocale = $this->translator->getLocale();
         $success = true;
@@ -236,7 +285,7 @@ class Mailer
         }
 
         if (!\is_string($sender) && !$sender instanceof Address) {
-            $sender = $email->from($this->getDirectBewelcomeAddress($sender, self::MESSAGE_EMAIL_ADDRESS));
+            $sender = $email->from($this->getBeWelcomeAddressWithUsername($sender));
         }
         $email->from($sender);
 
@@ -251,7 +300,7 @@ class Mailer
     }
 
     /**
-     * Make sure to sent the email notification in the preferred language of the user.
+     * Make sure to send the email notification in the preferred language of the user.
      */
     private function setTranslatorLocale(Member $receiver)
     {

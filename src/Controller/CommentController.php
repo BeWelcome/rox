@@ -39,8 +39,6 @@ class CommentController extends AbstractController
      *
      * @ParamConverter("toMember", class="App\Entity\Member", options={"mapping": {"to_member": "username"}})
      * @ParamConverter("fromMember", class="App\Entity\Member", options={"mapping": {"from_member": "username"}})
-     *
-     * @return Response
      */
     public function reportCommentAction(
         Request $request,
@@ -48,11 +46,11 @@ class CommentController extends AbstractController
         Member $fromMember,
         EntityManagerInterface $entityManager,
         Mailer $mailer
-    ) {
+    ): Response {
         /** @var Member $member */
         $member = $this->getUser();
 
-        if ($member != $toMember) {
+        if ($member !== $toMember) {
             throw new AccessDeniedException();
         }
 
@@ -115,6 +113,7 @@ class CommentController extends AbstractController
         Request $request,
         Member $member,
         CommentModel $commentModel,
+        Mailer $mailer,
         ProfileSubmenu $profileSubmenu,
         EntityManagerInterface $entityManager
     ): Response {
@@ -156,6 +155,9 @@ class CommentController extends AbstractController
             $memberPreference->setValue('1');
             $entityManager->persist($memberPreference);
             $entityManager->flush();
+
+            $mailer->sendNewCommentNotification($comment);
+
             $this->addTranslatedFlash(
                 'notice',
                 'flash.comment.added',
@@ -183,6 +185,7 @@ class CommentController extends AbstractController
         Member $member,
         ProfileSubmenu $profileSubmenu,
         CommentModel $commentModel,
+        Mailer $mailer,
         EntityManagerInterface $entityManager
     ): Response {
         /** @var Member $loggedInMember */
@@ -235,6 +238,8 @@ class CommentController extends AbstractController
 
             $entityManager->persist($comment);
             $entityManager->flush();
+
+            $mailer->sendCommentUpdateNotification($comment);
 
             if ($newExperience || $changedToNegative || $changedToPositive) {
                 return $this->redirectToRoute('profile_comments', ['username' => $loggedInMember->getUsername()]);

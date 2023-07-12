@@ -149,6 +149,9 @@ class CommentController extends AbstractController
             $comment = $form->getData();
             $comment->setToMember($member);
             $comment->setFromMember($loggedInMember);
+            if (CommentQualityType::NEGATIVE === $comment->getQuality()) {
+                $comment->setAdminAction(CommentAdminActionType::ADMIN_CHECK);
+            }
             $entityManager->persist($comment);
 
             // Mark comment guidelines as read and hide the checkbox for the future
@@ -201,7 +204,7 @@ class CommentController extends AbstractController
         }
 
         if ($comment->getQuality() == CommentQualityType::NEGATIVE && !$comment->getEditingAllowed()) {
-            $this->addTranslatedFlash('comment.editing.not.allowed', []);
+            $this->addTranslatedFlash('notice', 'comment.editing.not.allowed', []);
 
             return $this->redirectToRoute('members_profile', ['username' => $member->getUsername()]);
         }
@@ -234,6 +237,10 @@ class CommentController extends AbstractController
             ;
             if ($newExperience || $changedToNegative || $changedToPositive) {
                 $comment->setUpdated(new DateTime());
+            }
+
+            if (CommentQualityType::NEGATIVE === $comment->getQuality()) {
+                $comment->setAdminAction(CommentAdminActionType::ADMIN_CHECK);
             }
 
             $entityManager->persist($comment);

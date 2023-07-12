@@ -168,7 +168,10 @@ function wasGuestOrHost(string $relations) {
                                            <a href="/members/<?= $this->member->Username;?>/comment/<?php echo $comment->id;?>/report" title="<?=$words->getSilent('ReportCommentProblem') ?>"
                                               class="float-left gray align-self-center"><i class="fa fa-flag" alt="<?=$words->getSilent('ReportCommentProblem') ?>"></i></a>
                                        <?php } ?>
-                                   <?php }?>
+                                   <?php }
+                           if (null !== $comment->updated && $comment->created !== $comment->updated){ ?>
+                           <p class="small"><?=$words->get('CommentLastUpdated')?>: <span title="<?= $comment->updated; ?>"><?= (new Carbon($comment->updated))->diffForHumans(); ?></span></p>
+                       <?php } ?>
                                </div>
                            </div>
                        </div>
@@ -239,6 +242,9 @@ function wasGuestOrHost(string $relations) {
                                    <?php if ($loggedIn === $comment->UsernameToMember) { ?>
                                        <a href="/members/<?= $this->member->Username;?>/comment/<?php echo $comment->id;?>/report" title="<?=$words->getSilent('ReportCommentProblem') ?>" class="float-right gray align-self-center">
                                            <i class="fa fa-flag" alt="<?=$words->getSilent('ReportCommentProblem') ?>"></i></a>
+                                   <?php }
+                                   if (null !== $comment->updated && $comment->created !== $comment->updated){ ?>
+                                       <p class="small"><?=$words->get('CommentLastUpdated')?>: <span title="<?= $comment->updated; ?>"><?= (new Carbon($comment->updated))->diffForHumans(); ?></span></p>
                                    <?php } ?>
                                </div>
                            </div>

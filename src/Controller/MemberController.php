@@ -23,6 +23,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Symfony\Component\Security\Core\Security;
+use Symfony\WebpackEncoreBundle\Asset\EntrypointLookupInterface;
 
 /**
  * Class MemberController.
@@ -44,6 +45,7 @@ class MemberController extends AbstractController
         Request $request,
         MemberModel $memberModel,
         Security $security,
+        EntrypointLookupInterface $entrypointLookup,
         EncoderFactoryInterface $encoderFactory
     ) {
         $passwordForm = $this->createForm(PasswordFormType::class);
@@ -64,6 +66,7 @@ class MemberController extends AbstractController
                     $zipFilename = $memberModel->collectPersonalData($member);
 
                     $request->getSession()->set('mydata_file', $zipFilename);
+                    $entrypointLookup->reset();
 
                     return $this->render('private/download.html.twig', [
                         'username' => $member->getUsername(),
@@ -95,6 +98,7 @@ class MemberController extends AbstractController
         Request $request,
         Member $member,
         Logger $logger,
+        EntrypointLookupInterface $entrypointLookup,
         MemberModel $memberModel
     ) {
         // Either the member themselves or a person from the safety or the admin can access
@@ -109,6 +113,8 @@ class MemberController extends AbstractController
         $zipFilename = $memberModel->collectPersonalData($member);
 
         $request->getSession()->set('mydata_file', $zipFilename);
+
+        $entrypointLookup->reset();
 
         return $this->render('private/download.html.twig', [
             'username' => $member->getUsername(),

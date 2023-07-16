@@ -6,6 +6,9 @@
 
 {% block content %}
     <h1>{{ 'mydata.headline.download'|trans }}</h1>
-    <p>{{ 'mydata.download.start'|trans }}</p>
-    <p><a class="btn btn-primary" href="{{ url('members_profile', {username: username}) }}">{{ 'Back to profile' }}</a></p>
+    <p>{{ 'mydata.download.start'|trans }}
+        <br>
+        <br>
+        <a class="btn btn-primary" href="{{ url('members_profile', {username: username}) }}">{{ 'Back to profile' }}</a>
+    </p>
 {% endblock content %}

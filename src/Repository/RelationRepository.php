@@ -42,7 +42,7 @@ class RelationRepository extends EntityRepository
                 $qb->expr()
                     ->orX(
                         $qb->expr()->eq('r.owner', ':member'),
-                        $qb->expr()->eq('r.relation', ':member'),
+                        $qb->expr()->eq('r.receiver', ':member'),
                     )
             )
             ->setParameter(':member', $member)

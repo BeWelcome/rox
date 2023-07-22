@@ -16,6 +16,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Persistence\Mapping\ClassMetadata;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Persistence\ObjectManagerAware;
+use Exception;
 
 /**
  * ForumsPost.
@@ -535,14 +536,24 @@ class ForumPost implements ObjectManagerAware
         return $this;
     }
 
-    /**
-     * Get thread.
-     *
-     * @return ForumThread
-     */
-    public function getThread()
+    public function getThread(): ?ForumThread
     {
-        return $this->thread;
+        if (null === $this->thread) {
+            return null;
+        }
+
+        // Database might still link to deleted thread row try to access thread title name and
+        // return null in case that triggers an exception
+        $thread = $this->thread;
+        try {
+            $threadTitle = $this->thread->getTitle();
+        }
+        catch (Exception $e)
+        {
+            $thread = null;
+        }
+
+        return $thread;
     }
 
     /**

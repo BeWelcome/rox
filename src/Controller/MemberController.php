@@ -19,9 +19,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Symfony\Component\Security\Core\Security;
 use Symfony\WebpackEncoreBundle\Asset\EntrypointLookupInterface;
 
@@ -46,7 +46,7 @@ class MemberController extends AbstractController
         MemberModel $memberModel,
         Security $security,
         EntrypointLookupInterface $entrypointLookup,
-        EncoderFactoryInterface $encoderFactory
+        PasswordHasherFactoryInterface $passwordHasherFactory
     ) {
         $passwordForm = $this->createForm(PasswordFormType::class);
         $passwordForm->handleRequest($request);
@@ -59,9 +59,9 @@ class MemberController extends AbstractController
             $token = $security->getToken();
 
             if ($token) {
-                $encoder = $encoderFactory->getEncoder($member);
+                $passwordHasher = $passwordHasherFactory->getPasswordHasher($member);
 
-                if ($encoder->isPasswordValid($member->getPassword(), $password, $member->getSalt())) {
+                if ($passwordHasher->verify($member->getPassword(), $password)) {
                     // Collect information and store in zip file
                     $zipFilename = $memberModel->collectPersonalData($member);
 
@@ -88,10 +88,6 @@ class MemberController extends AbstractController
 
     /**
      * @Route("/members/{username}/data", name="admin_personal_data")
-     *
-     * @throws Exception
-     *
-     * @return StreamedResponse|Response
      * @ParamConverter("member", class="App\Entity\Member", options={"mapping": {"username": "username"}})
      */
     public function getPersonalData(
@@ -100,7 +96,7 @@ class MemberController extends AbstractController
         Logger $logger,
         EntrypointLookupInterface $entrypointLookup,
         MemberModel $memberModel
-    ) {
+    ): Response {
         // Either the member themselves or a person from the safety or the admin can access
         $this->denyAccessUnlessGranted(
             Member::ROLE_ADMIN_ADMIN,

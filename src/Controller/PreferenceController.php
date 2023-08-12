@@ -7,17 +7,25 @@ use App\Entity\MemberPreference;
 use App\Entity\Preference;
 use App\Form\PreferencesType;
 use App\Model\PreferenceModel;
-use App\Repository\MemberPreferenceRepository;
 use App\Utilities\ProfileSubmenu;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class PreferenceController extends AbstractController
 {
+    /**
+     * @Route("/mypreferences", name="mypreferences_redirect")
+     */
+    public function redirectMyPreferences(): RedirectResponse
+    {
+        return $this->redirectToRoute('preferences', ['username' => $this->getUser()->getUsername()]);
+    }
+
     /**
      * @Route("/members/{username}/preferences", name="preferences")
      */
@@ -50,7 +58,9 @@ class PreferenceController extends AbstractController
         if ($preferenceForm->isSubmitted() && $preferenceForm->isValid()) {
             $data = $preferenceForm->getData();
 
-            foreach ($preferences as $preference) {
+            foreach ($memberPreferences as $memberPreference) {
+                $preference = $memberPreference->getPreference();
+
                 $memberPreference->setValue($data[$preference->getCodename()]);
                 $entityManager->persist($memberPreference);
             }

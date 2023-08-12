@@ -24,7 +24,7 @@ class PreferenceModel
         $preferences = $preferenceRepository->findBy(['status' => 'Normal'], ['position' => 'ASC']);
 
         return array_filter($preferences, function ($p) {
-            return (Preference::LOCALE != $p->getCodename());
+            return (Preference::LOCALE !== $p->getCodename());
         });
     }
 

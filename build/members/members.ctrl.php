@@ -65,9 +65,6 @@ class MembersController extends RoxControllerBase
                 $vars['location-longitude'] = $member_self->Longitude;
                 $page->vars = $vars;
                 break;
-            case 'mypreferences':
-                $page = new MyPreferencesPage();
-                break;
             case 'deleteprofile':
                 $page = new DeleteProfilePage();
                 break;

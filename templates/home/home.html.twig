@@ -15,7 +15,6 @@
 
     {{ encore_entry_link_tags('home') }}
     {{ encore_entry_link_tags('tailwind') }}
-    {{ encore_entry_link_tags('jquery_ui') }}
     <link rel='manifest' href='{{ asset('manifest.webmanifest') }}'>
     <script>
         if ('serviceWorker' in navigator) {
@@ -188,7 +187,21 @@
                                 <i class="fas fa-lg fa-map-marker-alt" aria-hidden="true"></i>
                             </span>
                         </div>
-                        {{ form_widget( search.location, { 'attr' : { 'class' : 'js-search-picker o-input' } } ) }}
+                        <div id="{{ search.location.vars.id ~ "_autocomplete" }}" class="js-location-picker autocomplete o-input u-z-[1001]">
+                            <input id="{{ search.location.vars.id}}" name="{{ search.location.vars.full_name }}"
+                                   class="autocomplete-input"
+                                   placeholder="{{ 'trip.leg.location'|trans }}"
+                                   aria-label="{{ 'trip.leg.location'|trans }}"
+                                   {% if search.location.vars.value %}value="{{ search.location.vars.value }}"{% endif %}
+                            >
+                            {% do search.location.setRendered %}
+                            <ul class="autocomplete-result-list"></ul>
+                            <ul id="no-results" class="autocomplete-result-list" visible="false">
+                                <li class="autocomplete-result">
+                                    {{ 'suggest.no.results'|trans }}
+                                </li>
+                            </ul>
+                        </div>
                         <span class="input-group-append p-0">
                             <button id="{{ search.updateMap.vars.id }}" name="updateMap" type="submit"
                                     class="btn btn-primary border-0">
@@ -199,7 +212,8 @@
                         </span>
                     </div>
                     <p class="text-white text-md-left">{{ 'home.searchplace.subheader' | trans }}</p>
-                    <div class="d-none invisible">{{ form_rest( search ) }}</div>
+                    {{ form_rest( search ) }}
+                    <div class="d-none invisible"></div>
                     {{ form_end( search ) }}
                 </div>
             </div>
@@ -228,7 +242,6 @@
 </div>
 {{ encore_entry_script_tags('home') }}
 {{ encore_entry_script_tags('jquery_ui') }}
-{{ encore_entry_script_tags('search/loadpicker') }}
 <script>
     window.addEventListener("load", function () {
         let locale = document.getElementsByTagName('html')[0].getAttribute('lang');

@@ -62,7 +62,9 @@
         <small>
             {% if post.thread.group %}
             <span class="gray">{{ 'group'|trans }}:</span>
+                {% if post.thread.group.name|default('[No name]') != '[No name]' %}
             <a href="/group/{{ post.thread.group.id }}">{{ post.thread.group.name|striptags }}</a>
+                    {% endif %}
             {% endif %}
             <span class="gray">{{ 'search_topic_text'|trans }}</span>
             <a href="{% if post.thread.group %}/group/{{ post.thread.group.id }}/forum{% else %}/forums{% endif %}/s{{ post.thread.id }}">{{ post.thread.title|striptags }}</a>

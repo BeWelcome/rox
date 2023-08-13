@@ -1,10 +1,7 @@
 {% extends 'emails/email.html.twig' %}
 
 {% block content%}
-    <p>Hi,<br />
-    The user {{ app.user.username }} provided feedback for a comment:</p>
+    <p>The user {{ comment.toMember.username }} provided feedback for a comment:</p>
     <p>{{ feedback }}</p>
-    <p>Please check the comment here: <a href="{{ url('admin_comment', { commentId: comment.id}) }}">{{ comment.id }}</a></p>
-    <p>Cheers,<br>
-    Your mailer daemon</p>
+    <p>Please check the comment here: <a href="{{ url('admin_comment', { to_member: comment.toMember.username, from_member: comment.fromMember.username}) }}">Comment from {{ comment.fromMember.username }}</a></p>
 {% endblock content %}

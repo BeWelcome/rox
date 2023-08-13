@@ -7,6 +7,7 @@ use App\Entity\ProfileNote;
 use App\Form\ProfileNoteFilterType;
 use App\Form\ProfileNoteType;
 use App\Repository\ProfileNoteRepository;
+use App\Utilities\ChangeProfilePictureGlobals;
 use App\Utilities\ItemsPerPageTraits;
 use App\Utilities\ProfileSubmenu;
 use DateTime;
@@ -22,10 +23,12 @@ class NoteController extends AbstractController
     use ItemsPerPageTraits;
 
     private EntityManagerInterface $entityManager;
+    private ChangeProfilePictureGlobals $globals;
 
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(EntityManagerInterface $entityManager, ChangeProfilePictureGlobals $globals)
     {
         $this->entityManager = $entityManager;
+        $this->globals = $globals;
     }
 
     /**
@@ -68,6 +71,7 @@ class NoteController extends AbstractController
         return $this->render('note/add.html.twig', [
             'form' => $form->createView(),
             'member' => $member,
+            'globals_js_json' => $this->globals->getGlobalsJsAsJson($member, $loggedInMember),
             'submenu' => $profileSubmenu->getSubmenu($member, $loggedInMember, ['active' => 'add_note']),
         ]);
     }
@@ -110,6 +114,7 @@ class NoteController extends AbstractController
         return $this->render('note/edit.html.twig', [
             'form' => $form->createView(),
             'member' => $member,
+            'globals_js_json' => $this->globals->getGlobalsJsAsJson($member, $loggedInMember),
             'submenu' => $profileSubmenu->getSubmenu($member, $loggedInMember, ['active' => 'edit_note']),
         ]);
     }
@@ -179,6 +184,7 @@ class NoteController extends AbstractController
             'form' => $filterForm->createView(),
             'notes' => $notes,
             'filtered' => !empty($categories),
+            'globals_js_json' => $this->globals->getGlobalsJsAsJson($member, $member),
             'submenu' => $profileSubmenu->getSubmenu($member, $loggedInMember, ['active' => 'notes']),
         ]);
     }

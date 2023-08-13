@@ -11,6 +11,7 @@ use App\Form\ProfileStatusFormType;
 use App\Form\SearchLocationType;
 use App\Form\SetLocationType;
 use App\Repository\ProfileVisitRepository;
+use App\Utilities\ChangeProfilePictureGlobals;
 use App\Utilities\ProfileSubmenu;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -20,15 +21,25 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ProfileController extends AbstractController
 {
+    private ProfileSubmenu $profileSubmenu;
+    private ChangeProfilePictureGlobals $globals;
+
+    public function __construct(ChangeProfilePictureGlobals $globals, ProfileSubmenu $profileSubmenu)
+    {
+        $this->globals = $globals;
+        $this->profileSubmenu = $profileSubmenu;
+    }
+
     /**
      * @Route("/members/{username}/new", name="members_profile_new")
      *
      * @ParamConverter("member", class="App\Entity\Member", options={"mapping": {"username": "username"}})
      */
-    public function show(Member $member, ProfileSubmenu $profileSubmenu): Response
+    public function show(Member $member): Response
     {
         if (!$member->isBrowsable()) {
             throw new AccessDeniedException();
@@ -37,23 +48,15 @@ class ProfileController extends AbstractController
         /** @var Member $loggedInMember */
         $loggedInMember = $this->getUser();
         if ($loggedInMember === $member) {
-            return $this->showOwnProfile($member, $profileSubmenu);
+            return $this->showOwnProfile($member);
         }
 
-        return $this->render('profile/show.html.twig', [
-            'own' => false,
-            'submenu' => $profileSubmenu->getSubmenu($member, $loggedInMember),
-            'member' => $member,
-        ]);
+        return $this->renderProfile(false, $member, $loggedInMember);
     }
 
-    public function showOwnProfile(Member $member, ProfileSubmenu $profileSubmenu): Response
+    public function showOwnProfile(Member $member): Response
     {
-        return $this->render('profile/show.html.twig', [
-            'own' => true,
-            'submenu' => $profileSubmenu->getSubmenu($member, $member),
-            'member' => $member,
-        ]);
+        return $this->renderProfile(true, $member, $member);
     }
 
     /**
@@ -113,9 +116,10 @@ class ProfileController extends AbstractController
         $visits = $visitorRepository->getProfileVisitorsMember($member, $page);
 
         return $this->render('profile/visits.html.twig', [
-            'submenu' => $profileSubmenu->getSubmenu($member, $loggedInMember, ['active' => 'visitors']),
             'member' => $member,
             'visits' => $visits,
+            'globals_js_json' => $this->globals->getGlobalsJsAsJson($member, $loggedInMember),
+            'submenu' => $profileSubmenu->getSubmenu($member, $loggedInMember, ['active' => 'visitors']),
         ]);
     }
 
@@ -169,9 +173,20 @@ class ProfileController extends AbstractController
         }
 
         return $this->render('profile/set.location.html.twig', [
-            'submenu' => $profileSubmenu->getSubmenu($member, $loggedInMember),
             'member' => $member,
             'form' => $setLocationForm->createView(),
+            'globals_js_json' => $this->globals->getGlobalsJsAsJson($member, $loggedInMember),
+            'submenu' => $this->profileSubmenu->getSubmenu($member, $loggedInMember),
+        ]);
+    }
+
+    private function renderProfile(bool $ownProfile, Member $member, Member $loggedInMember): Response
+    {
+        return $this->render('profile/show.html.twig', [
+            'member' => $member,
+            'own' => $ownProfile,
+            'globals_js_json' => $this->globals->getGlobalsJsAsJson($member, $loggedInMember),
+            'submenu' => $this->profileSubmenu->getSubmenu($member, $loggedInMember),
         ]);
     }
 }

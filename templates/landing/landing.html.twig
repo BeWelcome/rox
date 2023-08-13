@@ -4,12 +4,12 @@
 {% block stylesheets %}
   {{ encore_entry_link_tags('tailwind') }}
   {{ encore_entry_link_tags('jquery_ui') }}
+  {{ encore_entry_link_tags('leaflet') }}
 {% endblock stylesheets %}
 
 {% block javascripts %}
   {{ encore_entry_script_tags('landing') }}
   {{ encore_entry_script_tags('jquery_ui') }}
-  {{ encore_entry_script_tags('search/loadpicker') }}
 {% endblock javascripts %}
 
 {% block content %}
@@ -47,14 +47,28 @@
 
 			<label for="search_goto_location_form_search" class="sr-only">{{ 'landing.whereyougo' | trans }}</label>
 			<div class="input-group">
-				{{ form_widget( tinySearch.location, { 'attr' : { 'class' : 'js-search-picker form-control',
-            'placeholder': 'landing.whereyougo'|trans } } ) }}
-				<span class="input-group-append">
-					<button type="submit" id="tiny_updateMap" name="tiny[updateMap]" class="btn o-button">{{ 'go'|trans }}</button>
-					{% do tinySearch.updateMap.setRendered %}
+                <div id="{{ tinySearch.location.vars.id ~ "_autocomplete" }}" class="js-location-picker autocomplete form-control">
+                    <input id="{{ tinySearch.location.vars.id}}" name="{{ tinySearch.location.vars.name }}"
+                           class="o-input autocomplete-input"
+                           placeholder="{{ 'landing.whereyougo'|trans }}"
+                           aria-label="{{ 'landing.whereyougo'|trans }}"
+                           {% if tinySearch.location.vars.value %}value="{{ tinySearch.location.vars.value }}"{% endif %}
+                    >
+                    <ul class="autocomplete-result-list"></ul>
+                    <ul id="no-results" class="autocomplete-result-list" visible="false">
+                        <li class="autocomplete-result">
+                            {{ 'suggest.no.results'|trans }}
+                        </li>
+                    </ul>
+                </div>
+                <span class="input-group-append">
+					<button type="submit" id="tiny_updateMap" name="{{ tinySearch.updateMap.vars.name }}" class="btn o-button">{{ 'go'|trans }}</button>
 				</span>
 			</div>
-			<div class="d-none invisible">{{ form_rest( tinySearch ) }}</div>
+            <div class="u-block">{{ form_errors(tinySearch.location) }}</div>
+            {% do tinySearch.location.setRendered %}
+            {% do tinySearch.updateMap.setRendered %}
+			<div class="d-none" aria-hidden="true">{{ form_rest( tinySearch ) }}</div>
 			{{ form_end( tinySearch ) }}
 
 		</div>
@@ -72,7 +86,7 @@
                    data-toggle="tab">{{ 'landing.tab.messagesreceived' | trans }}
                     {% if conversationCount %}
                         <span
-                            class="badge badge-primary u-rounded-10 u-min-w-20 u-px-8 u-h-20 u-inline-flex u-items-center u-justify-center">{{ conversationCount }}</span>
+                            class="badge badge-primary u-rounded-8 u-min-w-20 u-px-8 u-h-20 u-inline-flex u-items-center u-justify-center">{{ conversationCount }}</span>
                     {% endif %}
                 </a>
             </li>
@@ -80,7 +94,7 @@
                 <a class="nav-link" aria-controls="visitors" href="#visitors" role="tab"
                    data-toggle="tab">{{ 'landing.tab.visitors' | trans }}
                     {% if visitorsCount %}
-                        <span class="badge badge-primary u-rounded-10 u-min-w-20 u-px-8 u-h-20 u-inline-flex u-items-center u-justify-center">{{ visitorsCount }}</span>
+                        <span class="badge badge-primary u-rounded-8 u-min-w-20 u-px-8 u-h-20 u-inline-flex u-items-center u-justify-center">{{ visitorsCount }}</span>
                     {% endif %}
                 </a>
             </li>
@@ -167,12 +181,12 @@
             <li class="nav-item">
                 <a href="#activities" class="nav-link" aria-controls="activities" role="tab"
                    data-toggle="tab">{{ 'landing.tab.activities' | trans }}{% if activityCount %} <span
-                        class="badge badge-primary u-rounded-10 u-min-w-20 u-px-8 u-h-20 u-inline-flex u-items-center u-justify-center">{{ activityCount }}</span>{% endif %}</a>
+                        class="badge badge-primary u-rounded-8 u-min-w-20 u-px-8 u-h-20 u-inline-flex u-items-center u-justify-center">{{ activityCount }}</span>{% endif %}</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" aria-controls="notifications" href="#notifications" role="tab"
                    data-toggle="tab">{{ 'landing.tab.notifications' | trans }}{% if notificationCount %} <span
-                        class="badge badge-primary u-rounded-10 u-min-w-20 u-px-8 u-h-20 u-inline-flex u-items-center u-justify-center">{{ notificationCount }}</span>{% endif %}</a>
+                        class="badge badge-primary u-rounded-8 u-min-w-20 u-px-8 u-h-20 u-inline-flex u-items-center u-justify-center">{{ notificationCount }}</span>{% endif %}</a>
             </li>
 		</ul>
 
@@ -389,7 +403,5 @@
 	</div>
 
 </div>
-
-
 {% endblock content %}
 

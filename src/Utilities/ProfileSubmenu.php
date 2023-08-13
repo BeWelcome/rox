@@ -140,7 +140,7 @@ class ProfileSubmenu
         $this->addSubmenuItem('mydata', [
             'key' => 'mydata',
             'icon' => 'database',
-            'url' => '/mydata',
+            'url' => $this->routing->generate('profile_personal_data', ['username' => $username]),
         ]);
         $this->addSubmenuItem('mynotes', [
             'key' => 'mynotes',

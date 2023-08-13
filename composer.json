@@ -44,6 +44,7 @@
         "laminas/laminas-uri": "^2.7",
         "league/html-to-markdown": "^4.8",
         "lexik/jwt-authentication-bundle": "^2.8",
+        "manticoresoftware/manticoresearch-php": "^3.0",
         "nelmio/cors-bundle": "^2.1",
         "nelmio/security-bundle": "^2.10",
         "nesbot/carbon": "^2.0",

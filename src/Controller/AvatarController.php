@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Member;
 use App\Entity\MembersPhoto;
+use App\Entity\RightVolunteer;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Intervention\Image\ImageManager;
@@ -47,7 +48,7 @@ class AvatarController extends AbstractController
             return new Response('File upload failed', Response::HTTP_UNAUTHORIZED);
         }
 
-        /** @var UploadedFile */
+        /** @var UploadedFile $avatarFile*/
         $avatarFile = $request->files->get('avatar');
         if (!$avatarFile) {
             return new Response('File upload failed', Response::HTTP_BAD_REQUEST);
@@ -63,20 +64,24 @@ class AvatarController extends AbstractController
      *     requirements={"size" : "\d+|original" },
      *     defaults={"size": "48"})
      */
-    public function showAvatar(string $username, string $size): BinaryFileResponse
+    public function showAvatar(string $username, string $size, EntityManagerInterface $entityManager): BinaryFileResponse
     {
         if (!$this->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             return $this->emptyAvatar($size);
         }
 
         /** @var Member $member */
-        $member = $this->getDoctrine()->getRepository(Member::class)->findOneBy(['username' => $username]);
+        $member = $entityManager->getRepository(Member::class)->findOneBy(['username' => $username]);
         if (!$member) {
             return $this->emptyAvatar($size);
         }
 
         $isBrowsable = $member->isBrowsable();
-        if (!$isBrowsable) {
+        $isAdministrativeProfile =
+            $this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
+            || $this->isGranted(Member::ROLE_ADMIN_PROFILE)
+        ;
+        if (!$isBrowsable && !$isAdministrativeProfile) {
             return $this->emptyAvatar($size);
         }
 
@@ -177,7 +182,7 @@ class AvatarController extends AbstractController
 
     private function createAvatarImage(Member $member, $size)
     {
-        // creates a thumb nail for the current image (if we have an original that is)
+        // creates a thumbnail for the current image (if we have an original that is)
         $original = self::AVATAR_PATH . $member->getId() . '_original';
         if (!file_exists($original)) {
             $message = 'No original avatar image exists for member ' . $member->getUsername();

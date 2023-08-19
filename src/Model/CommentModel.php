@@ -6,6 +6,7 @@ use App\Doctrine\CommentRelationsType;
 use App\Entity\Comment;
 use App\Entity\Member;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use GordonLesti\Levenshtein\Levenshtein;
 
 class CommentModel
@@ -56,11 +57,16 @@ class CommentModel
             }
         }
 
-        $levenshtein = new Levenshtein();
-        $levenshteinDistance = $levenshtein->levenshtein($updatedText, $originalText);
+        try {
+            $levenshtein = new Levenshtein();
+            $levenshteinDistance = $levenshtein->levenshtein($updatedText, $originalText);
 
-        if ($levenshteinDistance >= max($lenOriginalText, $lenUpdatedText) / 7) {
-            return true;
+            if ($levenshteinDistance >= max($lenOriginalText, $lenUpdatedText) / 7) {
+                return true;
+            }
+        } catch (Exception $e)
+        {
+            // ignore exception and just return false (likely consumed too much memory)
         }
 
         return false;

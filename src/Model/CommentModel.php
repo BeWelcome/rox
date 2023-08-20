@@ -6,8 +6,8 @@ use App\Doctrine\CommentRelationsType;
 use App\Entity\Comment;
 use App\Entity\Member;
 use Doctrine\ORM\EntityManagerInterface;
-use Exception;
-use GordonLesti\Levenshtein\Levenshtein;
+use Jfcherng\Diff\LevenshteinDistance;
+use Throwable;
 
 class CommentModel
 {
@@ -57,18 +57,31 @@ class CommentModel
             }
         }
 
+        $newExperience = false;
         try {
-            $levenshtein = new Levenshtein();
-            $levenshteinDistance = $levenshtein->levenshtein($updatedText, $originalText);
+            $maxlen = max(strlen($updatedText), strlen($originalText));
+            $calculator = new LevenshteinDistance(false, 0, 1000**2);
+            $iteration = 0;
+            $maxIteration = $maxlen / 1000;
+            while ($iteration < $maxIteration && !$newExperience) {
 
-            if ($levenshteinDistance >= max($lenOriginalText, $lenUpdatedText) / 7) {
-                return true;
+                $currentUpdatedText = substr($updatedText, $iteration * 1000, 1000);
+                $currentOriginalText = substr($originalText, $iteration * 1000, 1000);
+                $levenshteinDistance = ($calculator->calculate(
+                    $currentUpdatedText,
+                    $currentOriginalText)
+                )['distance'];
+
+                if ($levenshteinDistance >= max(strlen($currentUpdatedText), strlen($currentOriginalText)) / 7) {
+                    $newExperience = true;
+                }
+                $iteration++;
             }
-        } catch (Exception $e)
-        {
+        } catch(Throwable $e) {
             // ignore exception and just return false (likely consumed too much memory)
+            return $newExperience;
         }
 
-        return false;
+        return $newExperience;
     }
 }

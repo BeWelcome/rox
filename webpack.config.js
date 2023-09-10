@@ -34,6 +34,7 @@ Encore
     .addEntry('search/map', './assets/js/search/map.js')
     .addEntry('tempusdominus', './assets/js/tempusdominus.js')
     .addEntry('requests', './assets/js/requests.js')
+    .addEntry('message', './assets/js/message.js')
     .addEntry('trips', './assets/js/trips.js')
     .addEntry('micromodal', './assets/js/micromodal.js')
     .addEntry('treasurer', './assets/js/treasurer.js')
@@ -74,9 +75,6 @@ Encore
         babelConfig.plugins = [ '@babel/plugin-transform-runtime' ]
     })
     .addEntry('avatar', './assets/js/react/avatar/AvatarMount.jsx')
-
-    .autoProvidejQuery()
-    //    .addEntry('roxinlineeditor', './assets/js/roxinlineeditor.js')
 
     .enableSassLoader(options => {
         // Prefer using sass instead of node-sass to not depend on Python

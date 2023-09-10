@@ -1,6 +1,10 @@
 {% import 'macros.twig' as macros %}
 {% extends 'base.html.twig' %}
 
+{% block javascripts %}
+    {{ encore_entry_script_tags('message') }}
+{% endblock %}
+
 {% block stylesheets %}
     {{ encore_entry_link_tags('tailwind')  }}
     {{ encore_entry_link_tags('requests')  }}

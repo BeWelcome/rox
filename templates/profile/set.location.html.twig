@@ -17,19 +17,13 @@
     <h1>{{ 'profile.set.location' | trans }}</h1>
     {{ form_start(form) }}
     <div class="u-w-full u-mb-8 md:u-width-auto">
-        <div id="{{ form.vars.id ~ "_autocomplete" }}" class="js-location-picker autocomplete u-w-full u-z-[1001]">
-            <input id="{{ form.fullname.vars.id}}" name="{{ form.fullname.vars.full_name }}"
-                   class="o-input autocomplete-input"
+        <div class="auto-search-wrapper max-height loupe">
+            <input type="text" id="{{ form.fullname.vars.id}}" name="{{ form.fullname.vars.full_name }}"
+                   class="o-input js-location-picker" autocomplete="off"
                    placeholder="{{ 'trip.leg.location'|trans }}"
                    aria-label="{{ 'trip.leg.location'|trans }}"
                    {% if form.fullname.vars.value %}value="{{ form.fullname.vars.value }}"{% endif %}
             >
-            <ul class="autocomplete-result-list"></ul>
-            <ul id="no-results" class="autocomplete-result-list" visible="false">
-                <li class="autocomplete-result">
-                    {{ 'suggest.no.results'|trans }}
-                </li>
-            </ul>
         </div>
         <div class="u-block">{{ form_errors(form.fullname) }}{{ form_errors(form.geoname_id) }}</div>
         {% do form.fullname.setRendered %}

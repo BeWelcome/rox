@@ -1,230 +1,145 @@
-import Autocomplete from "@trevoreyre/autocomplete-js";
+import Autocomplete from '@tomickigrzegorz/autocomplete/sources/js/script';
 const L = require('leaflet');
 
-export function initializeSingleAutoComplete(url, cssClass = "js-search-picker", identifier = "_name", onChange = function(){}) {
+export function initializeSingleAutoComplete(url, cssClass = "js-location-picker", identifier = "_name", onChange = function(){}) {
     const locationSuggests = document.getElementsByClassName(cssClass);
     new LocationSuggest(locationSuggests.item(0), url, identifier, onChange);
 }
 
-export function initializeMultipleAutoCompletes(url, cssClass = "js-search-picker", identifier = "_name") {
+export function initializeMultipleAutoCompletes(url, cssClass = "js-location-picker", identifier = "_name") {
     Array.from(document.getElementsByClassName(cssClass)).forEach(
         (locationSuggest) => new LocationSuggest(locationSuggest, url, identifier)
     );
 }
 
 let lastGroup = '';
-function initializeAutoComplete(element, searchUrl) {
-    new Autocomplete(element, {
-        // Search function can return a promise
-        // which resolves with an array of
-        // results. In this case we're using
-        // the Wikipedia search API.
-        search: input => {
-            const url = searchUrl + `?term=${encodeURI(input)}`
-
-            return new Promise(resolve => {
-                if (input.length < 1) {
-                    return resolve([])
-                }
-
-                fetch(url)
-                    .then(response => response.json())
-                    .then(data => {
-                        const places = data.locations.map((result, index) => {
-                            return {...result, index}
-                        })
-                        resolve(places)
-                    })
-            })
-        },
-
-        debounceTime: 1000,
-
-        renderResult: (result, props) => {
-            let group = ''
-            if (result.type === "refine") {
-                return `
-                <li class="suggest-group">${result.title}</li>
-                    <li ${props}>
-                        <div class="suggest-title">
-                            ${result.text}
-                        </div>
-                </li>
-                `
-            }
-            if (result.type !== lastGroup) {
-                group = `<li class="suggest-group">${result.type}</li>`
-                lastGroup = result.type
-            }
-            return `
-      ${group}
-      <li ${props}>
-      <div class="u-flex u-flex-row u-justify-between align-items-center">
-        <div>
-            <div class="suggest-name">
-              ${result.name}
-            </div>
-            <div class="suggest-country">
-              ${result.admin1 ? result.admin1 + ', ' : ''}${result.country}
-            </div>
-            </div>
-        <div>
-            <div id="suggest-map-${result.id}" class="suggest-map"></div>
-            <input type="hidden" id="latitude-${result.id}" value="${result.latitude}"><input type="hidden" id="longitude-${result.id}" value="${result.longitude}">
-        </div>
-        </div>
-      </li>
-    `
-        },
-
-        getResultValue: result => result.title,
-
-        onUpdate: (results, selectedIndex) => {
-            if (results.length !== 0) {
-                initializeSuggestionMaps()
-            } else {
-
-            }
-        },
-
-        onSubmit: (result) => {
-            id = id.replace(this.identifier, '');
-            document.getElementById("new_suggest_geoname_id").value = result.id;
-            document.getElementById("new_suggest_latitude").value = result.latitude;
-            document.getElementById("new_suggest_longitude").value = result.longitude;
-            destroySuggestionMaps()
-        }
-    })
-}
 
 class LocationSuggest {
     constructor(element, url, identifier, onChange) {
-        this.id = element.id;
-        this.onChange = onChange;
-        this.searchUrl = url;
+        this.url = url;
+        this.element = element;
         this.identifier = identifier;
-        this.autoComplete = new Autocomplete(element, {
-            search: input => {
-                const url = this.searchUrl + `?term=${encodeURI(input)}`
+        this.onChange = onChange;
+        this.autoComplete = new Autocomplete(element.id, {
+            // The number of characters entered should start searching
+            howManyCharacters: 1,
+            classGroup: 'suggest-group',
+            onSearch: ({ currentValue, template }) => {
+                const api = this.url + `?term=${encodeURI(
+                    currentValue
+                )}`;
 
-                return new Promise(resolve => {
-                    if (input.length < 1) {
-                        return resolve([])
-                    }
-
-                    fetch(url)
-                        .then(response => response.json())
-                        .then(data => {
-                            const places = data.locations.map((result, index) => {
-                                return {...result, index}
-                            })
-                            resolve(places)
+                /**
+                 * Promise
+                 */
+                return new Promise((resolve) => {
+                    fetch(api)
+                        .then((response) => response.json())
+                        .then((data) => {
+                            resolve(data.locations);
                         })
-                })
+                        .catch((error) => {
+                            console.log(error);
+                            return template;
+                        });
+                });
             },
-
-            debounceTime: 1000,
-
-            renderResult: (result, props) => {
-                let group = ''
-                if (result.type === "refine") {
-                    return `
-                <li class="suggest-group">${result.type}</li>
-                    <li ${props}>
-                        <div class="wiki-title">
-                            ${result.text}
-                        </div>
-                </li>
-                `
-                }
-                if (result.type !== lastGroup) {
-                    group = `<li class="suggest-group">${result.type}</li>`
-                    lastGroup = result.type
-                }
-                return `
-      ${group}
-      <li ${props}>
-      <div class="u-flex u-flex-row u-justify-between align-items-center">
-        <div>
-            <div class="suggest-name">
-              ${result.name}
-            </div>
-            <div class="suggest-country">
-              ${result.admin1 ? result.admin1 + ', ' : ''}${result.country}
-            </div>
-            </div>
-        <div>
-            <div id="suggest-map-${result.id}" class="suggest-map"></div>
-            <input type="hidden" id="latitude-${result.id}" value="${result.latitude}"><input type="hidden" id="longitude-${result.id}" value="${result.longitude}">
-        </div>
-        </div>
-      </li>
-    `
+            onOpened: ({results}) => {
+                initializeSuggestionMaps();
+                return results;
             },
-
-            getResultValue: (result) => {
-                let name = result.name;
-                if (result.admin1 !== '') {
-                    name += ', ' + result.admin1;
-                }
-                if (result.country !== '') {
-                    name += ', ' + result.country;
-                }
-                return name;
+            onReset: () => {
+                destroySuggestionMaps();
             },
-
-            onUpdate: (results, selectedIndex) => {
-                if (results.length !== 0) {
-                    initializeSuggestionMaps()
-                } else {
-
-                }
+            onClose: () => {
+                destroySuggestionMaps();
             },
+            onResults: ({ currentValue, matches, template, classGroup }) => {
+                if (matches === 0) {
+                    return template;
+                }
 
-            onSubmit: (result) => {
-                const id = this.id.replace(this.identifier, '');
-                document.getElementById(id + "_fullname").value = result.name + ', ' + (result.admin1 ? result.admin1 + ', ' : '') + result.country;
-                document.getElementById(id + "_name").value = result.name + ', ' + (result.admin1 ? result.admin1 + ', ' : '') + result.country;
-                document.getElementById(id + "_geoname_id").value = result.id;
-                document.getElementById(id + "_latitude").value = result.latitude;
-                document.getElementById(id + "_longitude").value = result.longitude;
-                this.onChange(result);
-                destroySuggestionMaps()
-            }
-        })
+                return matches.map(
+                    (el, index, array) => {
+                            // we create an element of the group
+                        let group = "";
+                        if (undefined !== array[index - 1]?.type) {
+                            group =
+                                el.type !== array[index - 1]?.type
+                                    ? `<li class="${classGroup}">${el.type}</li>`
+                                    : "";
+                        }
+                        const parts = el.name.split('#');
+                        let adminUnitAndCountry = '';
+                        if (parts.length > 1) {
+                            adminUnitAndCountry = parts.slice(1).join(", ");
+                        }
+
+                        return `
+                            ${group}
+                            <li>
+                                <div class="u-flex u-flex-row u-justify-between align-items-center">
+                                    <div>
+                                        <div class="suggest-name">
+                                            ${parts[0]}
+                                        </div>
+                                        <div class="suggest-country">
+                                            ${adminUnitAndCountry}
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div id="suggest-map-${el.id}" class="suggest-map"></div>
+                                        <input type="hidden" id="latitude-${el.id}" value="${el.latitude}"><input type="hidden" id="longitude-${el.id}" value="${el.longitude}">
+                                    </div>
+                                </div>
+                            </li>
+                          `;
+                    }
+                ).join("");
+            },
+            // add text to the input field as you move through
+            // the results with the up/down cursors
+            insertToInput: true,
+            onSubmit: ({element, object}) => {
+                destroySuggestionMaps();
+                element.value = object.name.replaceAll("#", ", ");
+                this.onChange(object);
+            },
+            // the method presents no results element
+            noResults: ({ currentValue, template }) =>
+                template(`<li>No results found: "${currentValue}"</li>`),
+        });
     }
 }
-
 
 function initializeSuggestionMaps() {
-    const maps = document.querySelectorAll('[id^="suggest-map-"]');
+        const maps= document.querySelectorAll('[id^="suggest-map-"]');
 
-    maps.forEach(initializeMap);
+        maps.forEach(initializeMap);
 
-    function initializeMap(value) {
-        const geonameId = value.id.replace('suggest-map-', '');
-        const latitude = document.getElementById('latitude-' + geonameId).value;
-        const longitude = document.getElementById('longitude-' + geonameId).value;
-        const map = L.map(value.id, {
-            zoomControl: false,
-            boxZoom: false
-        }).setView([latitude, longitude], 10);
+        function initializeMap(value) {
+            const geonameId = value.id.replace('suggest-map-', '');
+            const latitude = document.getElementById('latitude-' + geonameId).value;
+            const longitude = document.getElementById('longitude-' + geonameId).value;
+            const map = L.map(value.id, {
+                zoomControl: false,
+                boxZoom: false
+            }).setView([latitude, longitude], 10);
 
-        map.attributionControl.setPrefix(false);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            subdomains: ['a', 'b', 'c']
-        }).addTo(map);
+            map.attributionControl.setPrefix(false);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                subdomains: ['a', 'b', 'c']
+            }).addTo(map);
+        }
     }
-}
 
-function destroySuggestionMaps() {
-    const maps = document.querySelectorAll('[id^="suggest-map-"]');
+    function destroySuggestionMaps() {
+        const maps = document.querySelectorAll('[id^="suggest-map-"]');
 
-    maps.forEach(destroyMap);
+        maps.forEach(destroyMap);
 
-    function destroyMap(value) {
-        let map = document.getElementById(value.id);
-        map.off();
-        map.remove();
+        function destroyMap(value) {
+            let map = document.getElementById(value.id);
+            map.remove();
+        }
     }
-}

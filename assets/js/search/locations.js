@@ -2,7 +2,22 @@ import {initializeSingleAutoComplete} from '../suggest/locations';
 import 'leaflet.fullscreen';
 import 'leaflet.fullscreen/Control.FullScreen.css';
 
-initializeSingleAutoComplete("/suggest/locations/all", 'js-location-picker', '_autocomplete');
+function onChange(result) {
+    const locationFullName = document.getElementById('search_location_fullname');
+    const locationName = document.getElementById('search_location_name');
+    const locationGeonameId = document.getElementById('search_location_geoname_id');
+    const locationLatitude = document.getElementById('search_location_latitude');
+    const locationLongitude = document.getElementById('search_location_longitude');
+    const locationIsAdminUnit = document.getElementById('search_location_admin_unit');
+    locationFullName.value = result.name.replaceAll("#", ", ");
+    locationName.value = result.name.split("#")[0];
+    locationIsAdminUnit.value = result.isAdminUnit;
+    locationGeonameId.value = result.id;
+    locationLatitude.value = result.latitude;
+    locationLongitude.value = result.longitude;
+}
+
+initializeSingleAutoComplete("/suggest/locations/all", 'js-location-picker', '', onChange);
 
 function Map() {
     this.map = undefined;

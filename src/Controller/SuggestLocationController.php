@@ -27,7 +27,7 @@ class SuggestLocationController extends AbstractController
         $response = new JsonResponse();
         $searchTerm = $request->query->get('term', '');
 
-        $result = $model->getSuggestionsForExactPlaces($searchTerm);
+        $result = $model->getSuggestionsForPlacesExact($searchTerm);
         $response->setData($result);
 
         return $response;

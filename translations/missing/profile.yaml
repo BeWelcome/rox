@@ -88,3 +88,6 @@ profile.set.location:
 profile.picture:
     - 'The profile picture of {username}'
     - Alt text for the profile picture.
+profile.never.logged.in:
+    - 'never'
+    - Text shown if a member activated their account but never logged in to use it

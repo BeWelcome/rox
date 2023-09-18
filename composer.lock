@@ -5192,16 +5192,16 @@
         },
         {
             "name": "manticoresoftware/manticoresearch-php",
-            "version": "3.0.1",
+            "version": "3.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/manticoresoftware/manticoresearch-php.git",
-                "reference": "16dd33d86204cfa606fdb17c5e819ac72fddd975"
+                "reference": "a04f9cd56a64aab6a4089f663c03d5400097daa4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/manticoresoftware/manticoresearch-php/zipball/16dd33d86204cfa606fdb17c5e819ac72fddd975",
-                "reference": "16dd33d86204cfa606fdb17c5e819ac72fddd975",
+                "url": "https://api.github.com/repos/manticoresoftware/manticoresearch-php/zipball/a04f9cd56a64aab6a4089f663c03d5400097daa4",
+                "reference": "a04f9cd56a64aab6a4089f663c03d5400097daa4",
                 "shasum": ""
             },
             "require": {
@@ -5255,7 +5255,7 @@
                 "issues": "https://github.com/manticoresoftware/manticoresearch-php/issues",
                 "source": "https://github.com/manticoresoftware/manticoresearch-php/"
             },
-            "time": "2023-05-24T06:52:59+00:00"
+            "time": "2023-09-15T10:43:57+00:00"
         },
         {
             "name": "masterminds/html5",

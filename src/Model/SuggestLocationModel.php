@@ -58,8 +58,8 @@ class SuggestLocationModel
 
     public function getSuggestionsForLocations(string $term): array
     {
-        $placesExact = $this->getPlacesExact($term, 20, self::PLACE);
-        $places = $this->getPlaces($term, 50);
+        $placesExact = $this->getPlacesExact($term, 10, self::EXACT_PLACE);
+        $places = $this->getPlaces($term, 20);
         $adminUnits = $this->getAdminUnits($term, 10);
         $countries = $this->getCountries($term, 5);
         $results = array_merge($placesExact, $places, $adminUnits, $countries);

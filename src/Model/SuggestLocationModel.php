@@ -293,7 +293,7 @@ class SuggestLocationModel
         foreach ($results as $location) {
             $locationEntity = $this->getDetailsForId($location['geoname_id']);
             if (null !== $locationEntity) {
-                $name = $locationEntity->getName();
+                $name = $locationEntity->getName() . " (" . $location['score'] . ")";
                 $admin1 = $locationEntity->getAdmin1();
                 if (null !== $admin1 && $locationEntity !== $admin1) {
                     $admin1->setTranslatableLocale($locale);
@@ -561,6 +561,7 @@ class SuggestLocationModel
             $data = $hit->getData();
             if ($hit->getScore() > 0 && !isset($manticoreResult[$data['geoname_id']])) {
                 $manticoreResult[$data['geoname_id']] = $data;
+                $manticoreResult[$data['geoname_id']]['score'] = $hit->getScore();
             }
             $results->next();
         }

@@ -114,7 +114,7 @@ class SuggestLocationModel
             ->option(
                 'ranker',
                 'expr(\'sum((min_hit_pos==1)*(exact_hit==1)*25 + (min_hit_pos==1) * 5 + (hit_count) * 3 + ' .
-                '(population / 1000000) + (member_count / 10000)) \')'
+                'log10(population) + log10(member_count)) \')'
             )
         ;
         if (!empty($countryId)) {
@@ -167,7 +167,7 @@ class SuggestLocationModel
             ->option(
                 'ranker',
                 'expr(\'sum((min_hit_pos==1)*(exact_hit==1)*25 + (min_hit_pos==1) * 5 + (hit_count) * 3 + ' .
-                        '(population / 1000000) + (member_count / 10000))\')'
+                        'log10(population) + log10(member_count))\')'
             )
         ;
         if (!empty($countryId)) {
@@ -549,7 +549,7 @@ class SuggestLocationModel
         return $manticoreResult;
     }
 
-    private function getManticoreResults(Search $query, int $limit): array
+    private function getManticoreResults(Search $query, int $limit = 1000): array
     {
         $query->limit($limit);
         $results = $query->get();

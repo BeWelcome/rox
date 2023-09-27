@@ -15,9 +15,17 @@ import 'select2/dist/js/select2.full.js';
 import '@fortawesome/fontawesome-free/js/all.js';
 import './scrollmagic.js';
 import './collapsemenu.js';
+import {initializeSingleAutoComplete} from './suggest/locations';
 
-$(".select2").select2({
-    theme: 'bootstrap4',
-    width: 'auto',
-    dropdownAutoWidth: true
-});
+function onChange(result) {
+    const locationFullName = document.getElementById('search_map_location');
+    const locationGeonameId = document.getElementById('search_map_location_geoname_id');
+    const locationLatitude = document.getElementById('search_map_location_latitude');
+    const locationLongitude = document.getElementById('search_map_location_longitude');
+    locationFullName.value = result.name.replaceAll("#", ", ");
+    locationGeonameId.value = result.id;
+    locationLatitude.value = result.latitude;
+    locationLongitude.value = result.longitude;
+}
+
+initializeSingleAutoComplete("/suggest/locations/all", 'js-location-picker', '', onChange);

@@ -1,6 +1,17 @@
-import SearchPicker from "./../search/searchpicker";
+import {initializeSingleAutoComplete} from '../suggest/locations';
 
-const searchPicker = new SearchPicker( "/search/locations/all");
+function onChange(result) {
+    const locationFullName = document.getElementById('tiny_location');
+    const locationGeonameId = document.getElementById('tiny_location_geoname_id');
+    const locationLatitude = document.getElementById('tiny_location_latitude');
+    const locationLongitude = document.getElementById('tiny_location_longitude');
+    locationFullName.value = result.name.replaceAll("#", ", ");
+    locationGeonameId.value = result.id;
+    locationLatitude.value = result.latitude;
+    locationLongitude.value = result.longitude;
+}
+
+initializeSingleAutoComplete("/suggest/locations/all", 'js-location-picker', '', onChange);
 
 $(document).ready(function() {
     if (!$('#conversationsdisplay').length) {

@@ -7,8 +7,8 @@ search.member.since:
 search.reset.options:
     - 'Reset Options'
     - Label on the button to reset the search options to default values
-search.exact.place:
-    - 'Exact match'
+search.place.exact:
+    - 'Exact matches'
     - Section header for the search results of places people live in if there is an exact match
 search.place:
     - 'Places'

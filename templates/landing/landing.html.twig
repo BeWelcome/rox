@@ -47,20 +47,16 @@
 
 			<label for="search_goto_location_form_search" class="sr-only">{{ 'landing.whereyougo' | trans }}</label>
 			<div class="input-group">
-                <div id="{{ tinySearch.location.vars.id ~ "_autocomplete" }}" class="js-location-picker autocomplete form-control">
-                    <input id="{{ tinySearch.location.vars.id}}" name="{{ tinySearch.location.vars.name }}"
-                           class="o-input autocomplete-input"
-                           placeholder="{{ 'landing.whereyougo'|trans }}"
-                           aria-label="{{ 'landing.whereyougo'|trans }}"
+                <div class="auto-search-wrapper max-height loupe">
+                    <input type="text" id="{{ tinySearch.location.vars.id}}" name="{{ tinySearch.location.vars.full_name }}"
+                           class="o-input js-location-picker" autocomplete="off"
+                           placeholder="{{ 'trip.leg.location'|trans }}"
+                           aria-label="{{ 'trip.leg.location'|trans }}"
                            {% if tinySearch.location.vars.value %}value="{{ tinySearch.location.vars.value }}"{% endif %}
                     >
-                    <ul class="autocomplete-result-list"></ul>
-                    <ul id="no-results" class="autocomplete-result-list" visible="false">
-                        <li class="autocomplete-result">
-                            {{ 'suggest.no.results'|trans }}
-                        </li>
-                    </ul>
                 </div>
+                <div class="u-block">{{ form_errors(tinySearch.location) }}</div>
+                {% do tinySearch.location.setRendered %}
                 <span class="input-group-append">
 					<button type="submit" id="tiny_updateMap" name="{{ tinySearch.updateMap.vars.name }}" class="btn o-button">{{ 'go'|trans }}</button>
 				</span>

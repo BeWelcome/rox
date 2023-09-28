@@ -25,17 +25,15 @@
     <div data-content="{{ name }}"
          class="c-trips__info u-items-start">
         <div class="u-w-full u-mb-8 md:u-width-auto md:u-mb-0">
-                <div class="auto-search-wrapper max-height loupe">
-                    <input type="text" id="{{ form.location.fullname.vars.id}}" name="{{ form.location.fullname.vars.full_name }}"
-                           class="o-input o-input--xl o-input--no-borders o-input--round-left o-input--translucid js-location-picker" autocomplete="off"
-                           placeholder="{{ 'trip.leg.location'|trans }}"
-                           aria-label="{{ 'trip.leg.location'|trans }}"
-                           {% if form.location.fullname.vars.value %}value="{{ form.location.fullname.vars.value }}"{% endif %}
-                    >
-                </div>
-
+            <div class="auto-search-wrapper max-height loupe">
+                <input type="text" id="{{ form.location.fullname.vars.id}}" name="{{ form.location.fullname.vars.full_name }}"
+                       class="o-input o-input--xl o-input--no-borders o-input--round-left o-input--translucid js-location-picker" autocomplete="off"
+                       placeholder="{{ 'trip.leg.location'|trans }}"
+                       aria-label="{{ 'trip.leg.location'|trans }}"
+                       {% if form.location.fullname.vars.value %}value="{{ form.location.fullname.vars.value }}"{% endif %}
+                >
+                <div class="u-block">{{ form_errors(form.location) }}{{ form_errors(form.location.fullname) }}{{ form_errors(form.location.geoname_id) }}</div>
             </div>
-            <div class="u-block">{{ form_errors(form.location) }}{{ form_errors(form.location.fullname) }}{{ form_errors(form.location.geoname_id) }}</div>
         </div>
         <div class="u-w-full md:u-width-auto">
             {% set attributes = {

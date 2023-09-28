@@ -3,7 +3,7 @@ import 'leaflet.fullscreen';
 import 'leaflet.fullscreen/Control.FullScreen.css';
 import {initializeSingleAutoComplete} from "../suggest/locations";
 
-function onChange(result) {
+function onChange(element, result) {
     const locationFullName = document.getElementById('search_map_location');
     const locationGeonameId = document.getElementById('search_map_location_geoname_id');
     const locationLatitude = document.getElementById('search_map_location_latitude');
@@ -14,7 +14,7 @@ function onChange(result) {
     locationLongitude.value = result.longitude;
 }
 
-initializeSingleAutoComplete("/suggest/locations/all", 'js-location-picker', '', onChange);
+initializeSingleAutoComplete("/suggest/locations/all", 'js-location-picker', onChange);
 
 function Map() {
     this.map = undefined;

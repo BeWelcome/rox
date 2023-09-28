@@ -11,7 +11,21 @@ import 'leaflet/dist/leaflet.css';
 require('leaflet-polylinedecorator');
 import {initializeMultipleAutoCompletes} from './suggest/locations';
 
-initializeMultipleAutoCompletes("/suggest/locations/places", 'js-search-picker', '_autocomplete');
+function onChange(element, result) {
+    const fullName = element;
+    const baseId = element.id.replace("_location_fullname", "_location_");
+    const name = document.getElementById(baseId + "name");
+    const geonameId = document.getElementById(baseId + "geoname_id");
+    const latitude = document.getElementById(baseId + "latitude");
+    const longitude = document.getElementById(baseId + "longitude");
+    fullName.value = result.name.replaceAll("#", ", ");
+    name.value = result.name.split("#")[0];
+    geonameId.value = result.id;
+    latitude.value = result.latitude;
+    longitude.value = result.longitude;
+}
+
+initializeMultipleAutoCompletes("/suggest/locations/places", 'js-location-picker', onChange);
 
 let pickers = document.querySelectorAll('*[id*="_duration"]');
 let lastEndDateSet = null;
@@ -67,7 +81,7 @@ $(document).on('click', '.js-btn-add[data-target]', function (event) {
     collectionHolder.append(form);
 
     /* enable a search picker on all location fields (including the newly added one */
-    initializeMultipleAutoCompletes( "/suggest/locations/places", 'js-search-picker', '_autocomplete');
+    initializeMultipleAutoCompletes( "/suggest/locations/places", 'js-location-picker', onChange);
 
     const duration = document.getElementById('trip_subtrips_' + counter + '_duration');
     if (lastEndDateSet != null) {

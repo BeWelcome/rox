@@ -1,24 +1,23 @@
 import Autocomplete from '@tomickigrzegorz/autocomplete/sources/js/script';
 const L = require('leaflet');
 
-export function initializeSingleAutoComplete(url, cssClass = "js-location-picker", identifier = "_name", onChange = function(){}) {
+export function initializeSingleAutoComplete(url, cssClass = "js-location-picker", onChange = function(){}) {
     const locationSuggests = document.getElementsByClassName(cssClass);
-    new LocationSuggest(locationSuggests.item(0), url, identifier, onChange);
+    new LocationSuggest(locationSuggests.item(0), url, onChange);
 }
 
-export function initializeMultipleAutoCompletes(url, cssClass = "js-location-picker", identifier = "_name") {
+export function initializeMultipleAutoCompletes(url, cssClass = "js-location-picker", onChange = function(){}) {
     Array.from(document.getElementsByClassName(cssClass)).forEach(
-        (locationSuggest) => new LocationSuggest(locationSuggest, url, identifier)
+        (locationSuggest) => new LocationSuggest(locationSuggest, url, onChange)
     );
 }
 
 let lastGroup = '';
 
 class LocationSuggest {
-    constructor(element, url, identifier, onChange) {
+    constructor(element, url, onChange) {
         this.url = url;
         this.element = element;
-        this.identifier = identifier;
         this.onChange = onChange;
         this.autoComplete = new Autocomplete(element.id, {
             // The number of characters entered should start searching
@@ -103,7 +102,7 @@ class LocationSuggest {
             onSubmit: ({element, object}) => {
                 destroySuggestionMaps();
                 element.value = object.name.replaceAll("#", ", ");
-                this.onChange(object);
+                this.onChange(element, object);
             },
             // the method presents no results element
             noResults: ({ currentValue, template }) =>

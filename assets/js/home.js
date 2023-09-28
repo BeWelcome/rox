@@ -17,15 +17,16 @@ import './scrollmagic.js';
 import './collapsemenu.js';
 import {initializeSingleAutoComplete} from './suggest/locations';
 
-function onChange(result) {
-    const locationFullName = document.getElementById('search_map_location');
-    const locationGeonameId = document.getElementById('search_map_location_geoname_id');
-    const locationLatitude = document.getElementById('search_map_location_latitude');
-    const locationLongitude = document.getElementById('search_map_location_longitude');
-    locationFullName.value = result.name.replaceAll("#", ", ");
-    locationGeonameId.value = result.id;
-    locationLatitude.value = result.latitude;
-    locationLongitude.value = result.longitude;
+function onChange(element, result) {
+    const fullName = element;
+    const baseId = element.id.replace("search_map_location", "_location_");
+    const geonameId = document.getElementById(baseId + "geoname_id");
+    const latitude = document.getElementById(baseId + "latitude");
+    const longitude = document.getElementById(baseId + "longitude");
+    fullName.value = result.name.replaceAll("#", ", ");
+    geonameId.value = result.id;
+    latitude.value = result.latitude;
+    longitude.value = result.longitude;
 }
 
-initializeSingleAutoComplete("/suggest/locations/all", 'js-location-picker', '', onChange);
+initializeSingleAutoComplete("/suggest/locations/all", 'js-location-picker', onChange);

@@ -45,7 +45,7 @@
 		<div class="u-flex u-items-center u-justify-center u-bg-gray-5 u-py-16 u-px-24 u-rounded-r-16">
 			{{ form_start( tinySearch, { 'action': path('search_locations'), 'attr': {'class': 'u-w-full'} } ) }}
 
-			<label for="search_goto_location_form_search" class="sr-only">{{ 'landing.whereyougo' | trans }}</label>
+			<label for="{{ tinySearch.location.vars.id}}" class="sr-only">{{ 'landing.whereyougo' | trans }}</label>
 			<div class="input-group">
                 <div class="auto-search-wrapper max-height loupe">
                     <input type="text" id="{{ tinySearch.location.vars.id}}" name="{{ tinySearch.location.vars.full_name }}"

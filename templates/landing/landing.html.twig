@@ -23,7 +23,7 @@
 	<div class="l-welcome-card">
 
 		<div class="u-flex u-flex-col u-justify-center u-py-16 u-px-24">
-        <p class="u-text-26 u-leading-32 u-font-400 u-font-display u-mb-8">{{ 'landing.welcomeback' | trans }}&nbsp;<span class="u-font-300">{{ macros.profilelink(app.user.Username) }}</span></p>
+        <p class="u-text-26 u-leading-32 u-font-400 u-font-display u-mb-8">{{ 'landing.welcomeback' | trans }}<span class="u-font-300">{{ macros.profilelink(app.user.Username) }}</span></p>
 			<div class="u-flex u-items-center">
 				{% include 'landing/widget/accommodation.html.twig' with {
             member: app.user
@@ -49,7 +49,7 @@
 			<div class="input-group">
                 <div class="auto-search-wrapper max-height loupe">
                     <input type="text" id="{{ tinySearch.location.vars.id}}" name="{{ tinySearch.location.vars.full_name }}"
-                           class="o-input js-location-picker" autocomplete="off"
+                           class="js-location-picker" autocomplete="off"
                            placeholder="{{ 'trip.leg.location'|trans }}"
                            aria-label="{{ 'trip.leg.location'|trans }}"
                            {% if tinySearch.location.vars.value %}value="{{ tinySearch.location.vars.value }}"{% endif %}

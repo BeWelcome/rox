@@ -6,7 +6,7 @@
         {
             '%1$s': receiver.username,
             '%2$s': sender.username,
-            '%3$s': trans('commentquality_' ~ comment.quality)|lower,
+            '%3$s': ()'commentquality_' ~ comment.quality)|trans|lower,
             '%4$s': comment.textfree,
             '%5$s': url('profile_comments', {username: receiver.username}),
             '%6$s': url('add_comment', {username: sender.username}),

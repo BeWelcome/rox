@@ -2,16 +2,17 @@
 
 {% block content %}
     {# reused the old comment wordcode; therefore replace the placeholders accordingly #}
+    {% set comment_quality = ('commentquality_' ~ comment.quality)|trans|lower %}
     {{ 'comment.notification.update.body'|trans(
         {
             '%1$s': receiver.username,
             '%2$s': sender.username,
-            '%3$s': ()'commentquality_' ~ comment.quality)|trans|lower,
+            '%3$s': comment_quality,
             '%4$s': comment.textfree,
             '%5$s': url('profile_comments', {username: receiver.username}),
             '%6$s': url('add_comment', {username: sender.username}),
             '%7$s': url('report_comment', {to_member: receiver.username, from_member: sender.username})
-            }
+        }
         )|purify
     }}
 {% endblock %}

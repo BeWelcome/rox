@@ -56,6 +56,8 @@ class Member
         PasswordHasherAwareInterface,
         PasswordAuthenticatedUserInterface
 {
+    public const USERNAME_REGEXP = '(?i:[a-z](?!.*[-_.][-_.])[a-z0-9-._]{2,18}[a-z0-9])';
+    
     public const ROLE_ADMIN_ACCEPTER = 'ROLE_ADMIN_ACCEPTER';
     public const ROLE_ADMIN_ADMIN = 'ROLE_ADMIN_ADMIN';
     public const ROLE_ADMIN_BETA = 'ROLE_ADMIN_BETA';
@@ -89,6 +91,7 @@ class Member
     public const ROLE_ADMIN_TREASURER = 'ROLE_ADMIN_TREASURER';
     public const ROLE_ADMIN_VERIFIER = 'ROLE_ADMIN_VERIFIER';
     public const ROLE_ADMIN_WORDS = 'ROLE_ADMIN_WORDS';
+
     public const MEMBER_FIRSTNAME_HIDDEN = 1;
     public const MEMBER_SECONDNAME_HIDDEN = 2;
     public const MEMBER_LASTNAME_HIDDEN = 4;

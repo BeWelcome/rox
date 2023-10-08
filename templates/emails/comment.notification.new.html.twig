@@ -2,7 +2,7 @@
 
 {% block content %}
     {# reused the old comment wordcode; therefore replace the placeholders accordingly #}
-    {% set comment_quality = ('commentquality_' ~ comment.quality)|trans|lower %}
+    {% set comment_quality = ('commentquality' ~ comment.quality|lower  ~ 'insentence')|trans|lower %}
     {{ 'comment.notification.new.body'|trans(
         {
             '%1$s': receiver.username,

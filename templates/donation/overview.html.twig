@@ -42,9 +42,9 @@
                     <p class="alert-primary p-2">{{ 'donate_account'|trans|raw|nl2br }}</p>
                 </div>
                 <div class="tab-pane card p-2" id="hello_asso" role="tabpanel">
-                    <h3>{{ 'donate.hello.asso'|trans }}<i class="fa fa3x fa-coins ml-2"></i></h3>
+                    <h3>{{ 'donate.hello.asso'|trans }}&nbsp;<i class="fa fa3x fa-coins ml-2"></i></h3>
+                    <p class="u-my-8">{{ 'donate.hello.asso.text'|trans }}</p>
                     <a href="{{ helloAssoLink }}" target="_blank" class="btn btn-primary btn-block"><i class="fa fa-coins mr-1"></i>{{ 'donate.hello.asso'|trans }}</a>
-                    <p>{{ 'donate.hello.asso.text'|trans }}</p>
                 </div>
                 <div class="tab-pane card p-2" id="paypal" role="tabpanel">
                     <h3>{{ 'donate_paypal_legend'|trans }}</h3>
@@ -54,8 +54,10 @@
                         <script src="https://www.paypalobjects.com/donate/sdk/donate-sdk.js" charset="UTF-8"></script>
                         <script>
                             PayPal.Donation.Button({
-                                env:'sandbox',
-                                hosted_button_id:'PJMPYVCUJUH44',
+                                env:'production',
+                                hosted_button_id:'58STYCEPBD79S',
+                                /* env:'sandbox',
+                                hosted_button_id:'PJMPYVCUJUH44', */
                                 image: {
                                     src:'https://www.paypalobjects.com/en_US/FR/i/btn/btn_donateCC_LG.gif',
                                     alt:'Donate with PayPal button',

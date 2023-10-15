@@ -88,7 +88,7 @@
                     <li><a href="{{ url('stats') }}" class="dropdown-item">{{ 'statspage' | trans }}</a></li>
                     <li><a href="{{ url('terms_of_use', {'locale': locale }) }}" class="dropdown-item">{{ 'termsofuse'  | trans }}</a></li>
                     <li><a href="{{ url('getactive') }}" class="dropdown-item">{{ 'about_getactive' | trans }}</a></li>
-                    <li><a href="{{ url('donate') }}" class="dropdown-item">{{ 'donatelink'  | trans }}</a></li>
+                    <li><a href="{{ url('donations') }}" class="dropdown-item">{{ 'donatelink'  | trans }}</a></li>
                 </ul>
             </li>
             {% if member and teams|length == 0 %}

@@ -594,3 +594,41 @@ $avatar-sizes: 30, 50, 75, 100, 150, 200, 500;
     padding: 3px;
   }
 }
+
+.wrapper-nav {
+  position:relative;
+  margin:0 auto;
+  overflow:hidden;
+  padding:5px;
+  height:36px;
+}
+
+.list {
+  position:absolute;
+  left:0px;
+  top:0px;
+  min-width:3500px;
+  margin-top:0px;
+}
+
+.list li{
+  display:table-cell;
+  position:relative;
+  text-align:center;
+  cursor:grab;
+  cursor:-webkit-grab;
+  color:#efefef;
+  vertical-align:middle;
+}
+
+.scroller {
+  text-align:center;
+  cursor:pointer;
+  display:none;
+  padding:5px;
+  white-space:no-wrap;
+  vertical-align:middle;
+  background-color:transparent;
+}
+
+.pointer {cursor: pointer;}

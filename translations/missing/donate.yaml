@@ -1,3 +1,6 @@
+donations:
+    - 'Donations'
+    - Headline on the donations pages
 donate.bank:
     - 'Bank Account'
     - Tab heading on the donation page
@@ -7,3 +10,21 @@ donate.money:
 donate.time:
     - 'Volunteer'
     - Tab heading on the donation page
+donate.hello.asso:
+    - 'HelloAsso'
+    - Tab heading on the donation page
+donate.hello.asso.text:
+    - HelloAsso is a non-profit offering payment services to other non-profits, they don't take any fees but ask you for a donation to themselves (it's optional, you can choose how you share your generosity).
+donate.process:
+    - '@donate_process'
+donate.why:
+    - '@donate_why'
+donate.why.text:
+    - '@donate_whytext'
+donations.recent:
+    - 'Recent donations'
+    - Headline on the donations page
+donations.recent.text:
+    - We provide a list recent donations.
+donations.recent.link:
+    - Recent donations

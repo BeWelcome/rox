@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}BeWelcome - Donate{% endblock %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('donation') }}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ encore_entry_link_tags('donation') }}
+{% endblock %}
+
+{% block content %}
+    <h1>{{ 'donations'|trans }}</h1>
+    <div class="row">
+        <div class="col-12">{{ 'donationpubliclistsummary'|trans }}</div>
+        <div class="col-12">
+        {% if donations.nbResults != 0 %}
+            {% if donations.haveToPaginate %}
+                {{ pagerfanta(donations, 'rounded_pagination_end') }}
+            {% endif %}
+            <table class="table table-striped table-responsive">
+            <tr>
+                <th>{{ 'datedonation'|trans }}</th>
+                <th>{{ 'amountdonation'|trans }}</th>
+                <th>{{ 'commentdonation'|trans }}</th>
+                <th>{{ 'placedonation'|trans }}</th>
+                {% if isTreasurer %}
+                    <th>For treasurer eyes only</th>
+                {% endif %}
+            </tr>
+            {% for donation in donations %}
+                <tr>
+                    <td>{{ donation.created|format_date('short') }}</td>
+                    <td>{{donation.money }} {{ donation.amount|format('%3.2f') }}</td>
+                    <td>{{ donation.systemComment }}</td>
+                    <td>{% if not donation.country is null %}{{ donation.country.name }}{% endif %}</td>
+                    {% if isTreasurer %}
+                        <td>{% if not donation.donor is null %}{{ donation.donor.username }}{% endif %}
+                            {% if not donation.referencePaypal is null %}{{ donation.referencePaypal }}{% endif %}</td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+            </table>
+            {% if donations.haveToPaginate %}
+                {{ pagerfanta(donations, 'rounded_pagination_end') }}
+            {% endif %}
+        {% else %}
+            {{ 'donations.none'|trans }}
+        {% endif %}
+        </div>
+    </div>
+{% endblock %}

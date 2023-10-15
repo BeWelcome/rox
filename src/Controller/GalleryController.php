@@ -90,6 +90,17 @@ class GalleryController extends AbstractController
         /** @var UploadedFile $image */
         $image = $request->files->get('file');
 
+        if (null === $image) {
+            $response->setData([
+                'success' => false,
+                'filename' => $this->getTranslator()->trans('upload.error.no_image'),
+                'error' => $this->getTranslator()->trans('upload.error.too_large'),
+            ]);
+            $response->setStatusCode(413);
+
+            return $response;
+        }
+
         $constraint = new Image([
             'maxSize' => UploadedFile::getMaxFilesize(),
             'mimeTypes' => ['image/jpeg', 'image/png', 'image/gif'],

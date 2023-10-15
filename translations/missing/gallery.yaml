@@ -1,3 +1,9 @@
 album:
     - 'Album: '
     - Shown on the gallery manage page in front of the album title.
+upload.error.no_image:
+    - 'Unknown file'
+    - Error shown to the user, when an error happens during image upload and the server can't return the filename
+upload.error.too_large:
+    - 'Uploaded file too large'
+    - Error shown, when the filename of the uploaded file isn't known as that is the most likeliest reason

@@ -10,4 +10,13 @@ namespace App\Repository;
  */
 class DonationRepository extends \Doctrine\ORM\EntityRepository
 {
+    public function getDonationListQuery()
+    {
+        $qb = $this->createQueryBuilder('d');
+        $query = $qb
+            ->orderBy('d.created', 'DESC')
+            ->getQuery();
+
+        return $query;
+    }
 }

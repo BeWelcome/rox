@@ -1,4 +1,3 @@
-@layer components {
   .max-height ul {
     max-height: 420px;
     overflow: auto;
@@ -31,7 +30,15 @@
   }
 
   .auto-search-wrapper input {
-    @apply o-input;
+    font-family: Signika;
+    width: 100%;
+    height: 40px;
+    padding-left: 16px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    background-color: #fff;
   }
 
   .input-group .auto-search-wrapper input {
@@ -46,9 +53,12 @@
   }
 
   .l-trips-wrapper .auto-search-wrapper input {
-    background-color: green;
-
-    @apply o-input--xl o-input--no-borders o-input--round-left o-input--translucid;
+    background-color: hsla(0,0%,100%,.9);
+    height: 56px;
+    border:none;
+    outline:none;
+    border-radius: 8px 0 0 8px;
+    border-right: 1px solid #ddd;
   }
 
   .auto-search-wrapper .auto-expanded {
@@ -233,4 +243,3 @@
     font-size: smaller;
     text-align: start;
   }
-}

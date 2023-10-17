@@ -120,7 +120,7 @@ class AvatarController extends AbstractController
         $height = $img->getHeight();
         $width = $img->getWidth();
         if ($height !== $width) {
-            $size = min($width, $height, 500);
+            $size = min($width, $height);
             $startX = (int) (($width - $size) / 2);
             $startY = (int) (($height - $size) / 2);
             $img->crop($size, $size, $startX, $startY);

@@ -91,3 +91,6 @@ profile.picture:
 profile.never.logged.in:
     - 'never'
     - Text shown if a member activated their account but never logged in to use it
+profile.picture.upload.failed:
+    - 'Image upload failed. File too big.'
+    - Message shown when upload of new profile picture fails.

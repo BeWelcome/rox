@@ -3,7 +3,6 @@ import { uploadTemporaryAvatar } from '../../api/avatar';
 import { getText } from '../../utils/texts';
 import { alertError, alertSuccess } from '../../utils/alerts';
 
-
 const AvatarChangeButton = (props) => {
     const [uploading, setUploading] = React.useState(false);
     const inputFile = React.useRef(null)
@@ -24,7 +23,7 @@ const AvatarChangeButton = (props) => {
                 props.onChange();
                 alertSuccess(getText('profile.change.avatar.success'));
             } else if (result?.status === 413) {
-                alertError(getText('profile.change.avatar.fail.file.to.big'));
+                alertError(getText('profile.change.avatar.fail.file.too.big'));
             } else {
                 alertError(getText('profile.change.avatar.fail'));
             }

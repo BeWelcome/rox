@@ -6,11 +6,11 @@ const AvatarPicture = (props) => {
 
     const useLightbox = config.avatarUseLightbox;
     const basePictureUrl = config.avatarUrl;
-    const pictureUrl = useLightbox ? `${basePictureUrl}/original` : `/members/avatar/${config.username}/original`;
+    const pictureUrl = useLightbox ? `${basePictureUrl}/original` : `/members/avatar/${config.username}/500`;
     const pictureTitle = getText('profile.picture.title');
 
     const imageStyle = {
-        // We are adding changeCount here to make browser skip it's cache and refetch the picture
+        // We are adding changeCount here to make browser skips its cache and re-fetches the picture
         backgroundImage: `url('${basePictureUrl}/500?${props.changeCount}')`,
     };
 

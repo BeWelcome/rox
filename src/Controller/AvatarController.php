@@ -117,15 +117,6 @@ class AvatarController extends AbstractController
             return false;
         }
 
-        $height = $img->getHeight();
-        $width = $img->getWidth();
-        if ($height !== $width) {
-            $size = min($width, $height);
-            $startX = (int) (($width - $size) / 2);
-            $startY = (int) (($height - $size) / 2);
-            $img->crop($size, $size, $startX, $startY);
-        }
-
         $this->removeAvatarFiles($member);
         $newFileName = self::AVATAR_PATH . $member->getId() . '_original';
         $img->save($newFileName);
@@ -191,7 +182,7 @@ class AvatarController extends AbstractController
         return file_exists($this->getAvatarImageFilename($member, $size));
     }
 
-    private function createAvatarImage(Member $member, $size)
+    private function createAvatarImage(Member $member, int $sizeOfAvatar)
     {
         // creates a thumbnail for the current image (if we have an original that is)
         $original = self::AVATAR_PATH . $member->getId() . '_original';
@@ -200,25 +191,37 @@ class AvatarController extends AbstractController
             throw new InvalidArgumentException($message);
         }
 
-        $filename = self::AVATAR_PATH . $member->getId() . '_' . $size . '_' . $size;
+        $filename = self::AVATAR_PATH . $member->getId() . '_' . $sizeOfAvatar . '_' . $sizeOfAvatar;
+
         $imageManager = new ImageManager();
         $img = $imageManager->make($original);
-        $img->resize($size, null, function ($constraint) {
+
+        $height = $img->getHeight();
+        $width = $img->getWidth();
+        if ($height !== $width) {
+            $size = min($width, $height);
+            $startX = (int) (($width - $size) / 2);
+            $startY = (int) (($height - $size) / 2);
+            $img->crop($size, $size, $startX, $startY);
+        }
+
+        $img->resize($sizeOfAvatar, null, function ($constraint) {
             $constraint->aspectRatio();
         });
+
         $img->save($filename);
     }
 
-    private function createEmptyAvatarImage($size): string
+    private function createEmptyAvatarImage($sizeOfAvatar): string
     {
         // creates a thumbnail of the empty avatar
         $original = self::EMPTY_AVATAR_PATH . 'empty_avatar_original.png';
 
         $imageManager = new ImageManager();
         $img = $imageManager->make($original);
-        if (is_int($size)) {
-            $filename = self::AVATAR_PATH . 'empty_avatar_' . $size . '_' . $size;
-            $img->resize($size, $size, function ($constraint) {
+        if (is_int($sizeOfAvatar)) {
+            $filename = self::AVATAR_PATH . 'empty_avatar_' . $sizeOfAvatar . '_' . $sizeOfAvatar;
+            $img->resize($sizeOfAvatar, $sizeOfAvatar, function ($constraint) {
                 $constraint->aspectRatio();
             });
             $img->save($filename);

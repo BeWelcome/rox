@@ -134,6 +134,7 @@ class GalleryUserPage extends GalleryBasePage
         $username = $this->member->Username;
         $galleries = $this->galleries;
         $itemsPerPage = 12;
+        echo '<div class="row no-gutters"><div class="col-12"><h3>'.$words->getFormatted('gallerytitlesets').'</h3></div></div>';
         require SCRIPT_BASE . 'build/gallery/templates/galleries_overview.php';
     }
 } ?>

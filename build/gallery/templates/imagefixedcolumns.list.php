@@ -58,6 +58,6 @@ $statement = $p[0];
     ?>
 </div>
 </div>
-<?php
-}
-?>
+<?php } else { ?>
+    <p><?= $words->get('gallery.no.latest.images'); ?></p>
+<?php } ?>

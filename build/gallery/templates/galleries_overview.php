@@ -1,4 +1,3 @@
-<div class="row">
 <?php
 $words = new MOD_words();
 $Gallery = new GalleryModel;
@@ -19,6 +18,7 @@ if ($galleries) {
     $galleriesonpage = $p[0];
 
     ?>
+<div class="row">
     <?php foreach ($galleriesonpage as $g) {
     	static $ii = 0;
         $d = $Gallery->getLatestGalleryItem($g->id);
@@ -42,6 +42,7 @@ if ($galleries) {
         }
     }
 ?>
+</div>
     <div class="w-100"></div>
     <div class="col-12 mt-3">
         <?php
@@ -53,5 +54,6 @@ if ($galleries) {
     $request = $requestStr.'/=page%d';
     require 'pages.php'; ?>
     </div>
+<?php } else { ?>
+    <p><?= $words->get('gallery.no.albums'); ?></p>
 <?php } ?>
-</div>

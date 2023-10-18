@@ -7,3 +7,9 @@ upload.error.no_image:
 upload.error.too_large:
     - 'Uploaded file too large'
     - Error shown, when the filename of the uploaded file isn't known as that is the most likeliest reason
+gallery.no.albums:
+    - This user has not created any albums yet.
+    - Shown if there are no albums.
+gallery.no.latest.images:
+    - This user hasn\'t uploaded any images yet.
+    - Shown if there are no images uploaded by the user.

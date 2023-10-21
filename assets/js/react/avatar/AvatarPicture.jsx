@@ -11,7 +11,7 @@ const AvatarPicture = (props) => {
 
     const imageStyle = {
         // We are adding changeCount here to make browser skips its cache and re-fetches the picture
-        backgroundImage: `url('${basePictureUrl}/500?${props.changeCount}')`,
+        backgroundImage: `url('${basePictureUrl}/original?${props.changeCount}')`,
     };
 
     return (

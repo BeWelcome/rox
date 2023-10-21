@@ -18,7 +18,11 @@ const Avatar = () => {
         */
         const miniAvatarObjectsElements = document.getElementsByClassName('js-profile-picture');
         for (let element of miniAvatarObjectsElements) {
-            element.src = `${element.src}?${changeCount}`;
+            if (element.href !== undefined) {
+                element.href = `${element.href}?${changeCount}`;
+            } else {
+                element.src = `${element.src}?${changeCount}`;
+            }
         }
     }
 

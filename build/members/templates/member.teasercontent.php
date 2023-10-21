@@ -39,7 +39,7 @@
         ?>
         <div class="text-center text-md-left">
             <?php if ($this->useLightbox) { ?>
-                <a class="d-md-none" href="<?= $picture_url . '/original' ?>" data-toggle="lightbox"
+                <a class="d-md-none js-profile-picture" href="<?= $picture_url . '/original' ?>" data-toggle="lightbox"
                    data-always-show-close="true" data-type="image"
                    data-title="<?= $words->getbuffered('profile.picture.title'); ?>">
                     <img class="profileimg avatar-320 d-md-none js-profile-picture" src="<?= $picture_url . '/320' ?>"

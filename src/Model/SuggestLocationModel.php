@@ -22,9 +22,9 @@ use function count;
 class SuggestLocationModel
 {
     private const EXACT_PLACE = 'search.place.exact';
-    private const PLACE = 'search.place';
-    private const ADMIN_UNIT = 'search.admin.unit';
-    private const COUNTRY = 'search.country';
+    private const PLACE = 'search.places';
+    private const ADMIN_UNIT = 'search.admin.units';
+    private const COUNTRY = 'search.countries';
 
     private const TYPE_PLACE = 'isplace';
     private const TYPE_ADMIN_UNIT = 'isadmin';

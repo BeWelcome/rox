@@ -31,29 +31,23 @@ class SuggestLocationModel
     private const TYPE_COUNTRY = 'iscountry';
     private TranslatorInterface $translator;
     private EntityManagerInterface $entityManager;
-    private SphinxQL $sphinxQL;
-    private Connection $connection;
 
     public function __construct(TranslatorInterface $translator, EntityManagerInterface $entityManager)
     {
         $this->translator = $translator;
         $this->entityManager = $entityManager;
-        $this->connection = new Connection();
-        $this->connection->setParams(['host' => 'localhost', 'port' => 9306]);
-
-        $this->sphinxQL = new SphinxQL($this->connection);
     }
 
     public function getSuggestionsForPlaces(string $term): array
     {
-        $places = $this->getPlaces($term, 'sum((min_hit_pos==1)*(exact_hit==1)*1000+population+member_count');
+        $places = $this->getPlaces($term, 25);
 
         return ['locations' => $places];
     }
 
     public function getSuggestionsForPlacesExact(string $term): array
     {
-        return ['locations' => $this->getPlacesExact($term, 100, '')];
+        return ['locations' => $this->getPlacesExact($term, 100)];
     }
 
     public function getSuggestionsForLocations(string $term): array
@@ -72,7 +66,7 @@ class SuggestLocationModel
      *
      * place[[, admin unit], country]
      */
-    private function getPlacesExact(string $term, int $limit, string $translationId): array
+    private function getPlacesExact(string $term, int $limit, ?string $translationId = null): array
     {
         $parts = array_map('trim', explode(',', $term));
 
@@ -288,7 +282,11 @@ class SuggestLocationModel
     public function getLocationDetails(array $results, string $typeTranslationId = null): array
     {
         $locale = $this->translator->getLocale();
-        $type = $typeTranslationId ?? $this->translator->trans($typeTranslationId);
+        $type = '';
+        if (null !== $typeTranslationId) {
+            $type = $this->translator->trans($typeTranslationId);
+        }
+
         $locations = [];
         foreach ($results as $location) {
             $locationEntity = $this->getDetailsForId($location['geoname_id']);

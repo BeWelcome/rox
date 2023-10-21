@@ -209,7 +209,7 @@ class AvatarController extends AbstractController
             $constraint->aspectRatio();
         });
 
-        $img->save($filename);
+        $img->save($filename, 100, 'jpg');
     }
 
     private function createEmptyAvatarImage($sizeOfAvatar): string

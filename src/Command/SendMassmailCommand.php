@@ -75,21 +75,33 @@ class SendMassmailCommand extends Command
         );
 
         $sent = 0;
+        $lastBroadcastId = 0;
         if (!empty($scheduledBroadcastMessages)) {
             /** @var BroadcastMessage $scheduled */
             foreach ($scheduledBroadcastMessages as $scheduled) {
+                $parameters = [];
+                if ($lastBroadcastId != $scheduled->getNewsletter()->getId()) {
+                    // Check if the current newsletter contains images and set the parameter
+                    $newsletterTranslations = $scheduled->getNewsletter()->getTranslations();
+                    $anyNewsletter = reset($newsletterTranslations);
+
+                    $hasImages = false !== strpos($anyNewsletter['body'], "<figure");
+                    if ($hasImages) {
+                        $parameters['has_images'] = true;
+                    }
+
+                    $lastBroadcastId = $scheduled->getNewsletter()->getId();
+                }
                 $sender = $this->determineSender($scheduled->getNewsletter()->getType());
                 $receiver = $scheduled->getReceiver();
                 try {
                     $unsubscribeKey = '';
                     $newsletterType = $scheduled->getNewsletter()->getType();
                     $newsletterName = $scheduled->getNewsletter()->getName();
-                    $parameters = [
-                        'receiver' => $receiver,
-                        'newsletter_type' => $newsletterType,
-                        'subject' => strtolower('Broadcast_Title_' . $newsletterName),
-                        'wordcode' => strtolower('Broadcast_Body_' . $newsletterName),
-                    ];
+                    $parameters['receiver'] = $receiver;
+                    $parameters['newsletter_type'] = $newsletterType;
+                    $parameters['subject'] = strtolower('Broadcast_Title_' . $newsletterName);
+                    $parameters['wordcode'] = strtolower('Broadcast_Body_' . $newsletterName);
                     if (
                         Newsletter::SPECIFIC_NEWSLETTER === $newsletterType
                         || Newsletter::REGULAR_NEWSLETTER === $newsletterType

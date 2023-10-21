@@ -29,9 +29,6 @@ if (!empty($action)) {
         case 'enqueueLoginReminder' :
             $activefieldset = 'reminder';
             break;
-        case 'enqueueSuggestionReminder' :
-            $activefieldset = 'suggestionsreminder';
-            break;
         case 'enqueueMailToConfirmReminder' :
             $activefieldset = 'mailtoconfirm';
             break;
@@ -40,6 +37,9 @@ if (!empty($action)) {
             break;
         case 'enqueueTermsOfUse' :
             $activefieldset = 'termsofuse';
+            break;
+        case 'enqueueSuspensionNotification' :
+            $activefieldset = 'suspension';
             break;
     }
 } else {
@@ -55,6 +55,8 @@ if (!empty($action)) {
         $defaultfieldset = 'termsofuse';
     } elseif ($this->canEnqueueCorrectBirthDate) {
         $defaultfieldset = 'correctbirthdate';
+    } elseif ($this->canEnqueueSuspensionNotification) {
+        $defaultfieldset = 'suspension';
     }
 }
 
@@ -114,10 +116,18 @@ $words = new MOD_words();
                     </a>
                 </li>
             <?php } ?>
+            <?php if ($this->type == 'SuspendAfter5Reminders' && $this->canEnqueueSuspensionNotification) { ?>
+                <li class="nav-item">
+                    <a class="nav-link" id="suspension-tab" data-toggle="tab" href="#suspension" role="tab"
+                       aria-controls="suspension" aria-selected="true">
+                        <?php echo $words->getBuffered('admin.massmail.enqueue.suspension.notification'); ?>
+                    </a>
+                </li>
+            <?php } ?>
             </ul>
-        <div class="tab-content" id="myTabContent">
+        <div class="o-card o-card--tabbed tab-content" id="myTabContent">
             <?php if ($this->canEnqueueMembers) { ?>
-            <div class="tab-pane fade show active mt-2" id="members" role="tabpanel" aria-labelledby="members-tab">
+            <div class="tab-pane fade show active mt-2 bg-white" id="members" role="tabpanel" aria-labelledby="members-tab">
                 <div class="o-checkbox">
                         <input class="o-checkbox__input" type="radio" id="allmembers" name="members-type" value="allmembers"
                                 <?php if (isset($vars['members-type']) && ($vars['members-type'] == 'allmembers')) {
@@ -126,13 +136,13 @@ $words = new MOD_words();
                                 ?>/>
                             <label class="o-checkbox__label"
                                 for="allmembers"><?php echo $words->get('AdminMassMailEnqueueAllMembers'); ?></label>
-                        <div class="o-form-group mt-2"><label for="maxmembers"><?php echo $words->get('AdminMassMailEnqueueMaxMessages'); ?>
-                                :</label>
-                        <input class="o-input" type="text" id="max-messages" name="max-messages" size="60"
-                                   value="<?php if (isset($vars['max-messages'])) {
-                                        echo $vars['max-messages'];
-                                   } ?>"/>
-                        </div>
+                </div>
+                <div class="o-form-group mt-2"><label for="maxmembers"><?php echo $words->get('AdminMassMailEnqueueMaxMessages'); ?>
+                        :</label>
+                <input class="o-input" type="text" id="max-messages" name="max-messages" size="60"
+                           value="<?php if (isset($vars['max-messages'])) {
+                                echo $vars['max-messages'];
+                           } ?>"/>
                 </div>
                 <div class="o-checkbox mt-2">
                 <input class="o-checkbox__input" type="radio" id="selectedmembers" name="members-type" value="usernames"
@@ -147,6 +157,7 @@ $words = new MOD_words();
                                 ?>/>
                 <label class="o-checkbox__label"
                     for="selectedmembers"><?php echo $words->get('AdminMassMailEnqueueSelectedMembers'); ?></label>
+                </div>
                 <div class="o-form-group mt-2">
                 <label for="Usernames"><?php echo $words->get('AdminMassMailEnqueueUsernames'); ?>:</label>
                 <input class="o-input" type="text" id="usernames" name="usernames" size="60"
@@ -154,7 +165,6 @@ $words = new MOD_words();
                                        echo $vars['usernames'];
                                    } ?>"/>
                             <small class="text-muted"><?php echo $words->get('AdminMassMailEnqueueUsernamesInfo'); ?></small>
-                </div>
                 </div>
                 <div><input class="mt-2 btn btn-primary float-right" type="submit" name="enqueuemembers"
                                                      value="<?php echo $words->getBuffered('AdminMassMailEnqueueSubmitMembers'); ?>"/><?php echo $words->flushBuffer(); ?>
@@ -212,7 +222,7 @@ $words = new MOD_words();
             </div>
         <?php } ?>
             <?php if ($this->type == 'RemindToLog' && $this->canEnqueueReminder) { ?>
-                <div  class="tab-pane fade show" role="tabpanel" aria-labelledby="reminder-tab" id="reminder">
+                <div class="tab-pane fade show" role="tabpanel" aria-labelledby="reminder-tab" id="reminder">
                     <div class="type-text">
                         <?php echo $words->get('AdminMassMailEnqueueReminderInfo'); ?>
                     </div>
@@ -258,6 +268,18 @@ $words = new MOD_words();
                 </div>
                 <div class="float_right"><br/><input class="mt-2 btn btn-primary pull-right" type="submit" name="enqueuetermsofuse"
                                                      value="<?php echo $words->getBuffered('AdminMassMailEnqueueSubmitTermsOfUse'); ?>"/><?php echo $words->flushBuffer(); ?>
+                </div>
+            </div>
+        <?php } ?>
+        <?php if ($this->type == 'SuspendAfter5Reminders' && $this->canEnqueueSuspensionNotification) { ?>
+            <div class="tab-pane fade show mt-2" role="tabpanel" aria-labelledby="suspension-tab" id="suspension">
+                <div class="type-text">
+                    <p><?php echo $words->get('admin.massmail.suspension.notification.info'); ?><br><br>
+                        Send notification that they were suspended to <?php echo $this->suspensionNotificationCount; ?> members.
+                    </p>
+                </div>
+                <div class="float_right"><br/><input class="mt-2 btn btn-primary pull-right" type="submit" name="enqueuesuspension"
+                                                     value="<?php echo $words->getBuffered('admin.massmail.suspension.notification.submit'); ?>"/><?php echo $words->flushBuffer(); ?>
                 </div>
             </div>
         <?php } ?>

@@ -423,14 +423,14 @@ class AdminMassmailModel extends RoxModelBase
             $action = 'enqueueGroup';
                 } elseif (array_key_exists('enqueuereminder', $vars)) {
             $action = 'enqueueReminder';
-        } elseif (array_key_exists('enqueuesuggestionsreminder', $vars)) {
-            $action = 'enqueueSuggestionsReminder';
         } elseif (array_key_exists('enqueuemailtoconfirmreminder', $vars)) {
             $action = 'enqueueMailToConfirmReminder';
         } elseif (array_key_exists('enqueuecorrectbday', $vars)) {
             $action = 'enqueueCorrectBirthDate';
         } elseif (array_key_exists('enqueuetermsofuse', $vars)) {
             $action = 'enqueueTermsOfUse';
+        } elseif (array_key_exists('enqueuesuspension', $vars)) {
+            $action = 'enqueueSuspensionNotification';
         }
         return $action;
     }
@@ -473,6 +473,7 @@ class AdminMassmailModel extends RoxModelBase
             case 'enqueueMailToConfirmReminder':
             case 'enqueueTermsOfUse':
             case 'enqueueCorrectBirthDate':
+            case 'enqueueSuspensionNotification':
                 break;
             default:
                 $errors[] = 'AdminMassMailEnqueueWrongAction';
@@ -612,31 +613,6 @@ class AdminMassmailModel extends RoxModelBase
         return $count;
     }
 
-    private function enqueueMassmailSuggestionsReminder($id) {
-        $pref_id = $this->getPreferenceIdForMassmail($id);
-        $IdEnqueuer = $this->getLoggedInMember()->id;
-        $query = "
-            REPLACE
-                broadcastmessages (IdBroadcast, IdReceiver, IdEnqueuer, Status, updated)
-            SELECT
-                " . $id . ", m.id, " . $IdEnqueuer . ", 'ToApprove', NOW()
-            FROM
-                members AS m
-            LEFT JOIN
-                memberspreferences AS mp
-                ON (m.id = mp.IdMember AND mp.IdPreference = " . $pref_id . ")
-            WHERE
-                m.Status = 'Active'
-                AND (mp.Value = 'Yes' OR mp.Value IS NULL)
-                AND DATEDIFF(NOW(), m.LastLogin) < 180
-            ORDER BY
-                RAND()
-            LIMIT 0," . $this->getSuggestionsReminderCount();
-        $r = $this->dao->query($query);
-        $count = $r->affectedRows();
-        return $count;
-    }
-
     private function enqueueMassmailMailToConfirmReminder($id) {
         $IdEnqueuer = $this->getLoggedInMember()->id;
         $query = "
@@ -668,6 +644,35 @@ class AdminMassmailModel extends RoxModelBase
                 AND BirthDate < '1922-06-22'";
         $r = $this->dao->query($query);
         $count = $r->affectedRows();
+        return $count;
+    }
+
+    private function enqueueSuspensionNotification($id) {
+        $IdEnqueuer = $this->getLoggedInMember()->id;
+        $query = "
+            REPLACE
+                broadcastmessages (IdBroadcast, IdReceiver, IdEnqueuer, Status, updated)
+            SELECT
+                " . $id . ", m.id, " . $IdEnqueuer . ", 'ToApprove', NOW()
+            FROM
+                members AS m
+            WHERE
+                m.Status IN ('OutOfRemind')
+                AND m.NbRemindWithoutLogingIn >= 5";
+        $r = $this->dao->query($query);
+        $count = $r->affectedRows();
+
+        // Now set all those members to suspended
+        $query = "
+                UPDATE
+                    members m
+                SET
+                    m.status = 'SuspendedBeta'
+                WHERE
+                    m.status = 'OutOfRemind' AND m.NbRemindWithoutLogingIn >= 5"
+                ;
+        $this->dao->query($query);
+
         return $count;
     }
 
@@ -725,14 +730,14 @@ class AdminMassmailModel extends RoxModelBase
             case 'enqueueReminder':
                 $count = $this->enqueueMassmailReminder($id);
                 break;
-            case 'enqueueSuggestionsReminder':
-                $count = $this->enqueueMassmailSuggestionsReminder($id);
-                break;
             case 'enqueueMailToConfirmReminder':
                 $count = $this->enqueueMassmailMailToConfirmReminder($id);
                 break;
             case 'enqueueCorrectBirthDate':
                 $count = $this->enqueueMassmailCorrectBirthDate($id);
+                break;
+            case 'enqueueSuspensionNotification':
+                $count = $this->enqueueSuspensionNotification($id);
                 break;
             case 'enqueueTermsOfUse':
                 $count = $this->enqueueMassmailTermsOfUse($id);
@@ -796,36 +801,6 @@ class AdminMassmailModel extends RoxModelBase
         return $r->affectedRows();
     }
 
-    /**
-     * Get the count of members to be invited randomly
-     *
-     * Maximum number of votes ever casted for one suggestion times three
-     */
-    public function getSuggestionsReminderCount() {
-        // fixed number of voters based on the number of members
-        // that voted for the decision making process
-        $votersCount = 763 * 3;
-        $query = "
-            SELECT
-                count(memberHash) as votersCount
-            FROM
-                suggestions_votes
-            GROUP BY
-                suggestionId,
-                optionId
-            ORDER BY
-                votersCount DESC
-                 ";
-        $r = $this->dao->query($query);
-        if (!$r) {
-            return $votersCount;
-        }
-        $row = $r->fetch(PDB::FETCH_OBJ);
-        if (!isset($row->votersCount)) {
-            return $votersCount;
-        }
-        return $row->votersCount * 3;
-    }
 
     /**
      * Get the count of members with status MailToConfirm between January, 1st 2015 and now - 1 week
@@ -873,5 +848,29 @@ class AdminMassmailModel extends RoxModelBase
             return 0;
         }
         return $row->incorrectBirthDateCount;
+    }
+
+    /**
+     * Get the count of members who will be suspended as they didn't react on 5 login reminders
+     */
+    public function getSuspensionNotificationCount() {
+        $query = "
+            SELECT
+                count(*) as suspensionNotificationCount
+            FROM
+                members
+            WHERE
+                status IN ('OutOfRemind')
+                AND NbRemindWithoutLogingIn >= 5
+                 ";
+        $r = $this->dao->query($query);
+        if (!$r) {
+            return 0;
+        }
+        $row = $r->fetch(PDB::FETCH_OBJ);
+        if (!isset($row->suspensionNotificationCount)) {
+            return 0;
+        }
+        return $row->suspensionNotificationCount;
     }
 }

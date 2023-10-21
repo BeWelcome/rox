@@ -14,12 +14,14 @@
 
         <spacer size="16"></spacer>
 
+        {% if has_images is defined %}
         <row>
             <columns small="12" valign="middle">
                 <a href="{{ url('newsletter_single', {'id': newsletter.id, 'language': language}) }}">{{ 'newsletter.images.not.shown'|trans }}</a>
             </columns>
         </row>
-
+        {% endif %}
+        
         <row>
             <columns>
                 {{ wordcode|trans({'gender': receiver.gender, 'username': receiver.username})|prepare_newsletter }}

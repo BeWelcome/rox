@@ -42,12 +42,12 @@
                 <a class="d-md-none js-profile-picture" href="<?= $picture_url . '/original' ?>" data-toggle="lightbox"
                    data-always-show-close="true" data-type="image"
                    data-title="<?= $words->getbuffered('profile.picture.title'); ?>">
-                    <img class="profileimg avatar-320 d-md-none js-profile-picture" src="<?= $picture_url . '/320' ?>"
+                    <img class="profileimg d-md-none js-profile-picture" src="<?= $picture_url . '/320' ?>"
                          alt="<?= $words->get('profile.picture.title'); ?>">
                 </a>
             <?php } else { ?>
                 <a href="members/<?= $member->Username; ?>">
-                    <img class="profileimg avatar-320 d-md-none js-profile-picture" src="<?= $picture_url . '/320' ?>"
+                    <img class="profileimg d-md-none js-profile-picture" src="<?= $picture_url . '/320' ?>"
                          alt="<?= $words->getbuffered('profile.picture.title'), $member->Username; ?>">
                 </a>
             <?php } ?>

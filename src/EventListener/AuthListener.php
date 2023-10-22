@@ -28,6 +28,8 @@ class AuthListener
         if (MemberStatusType::ACTIVE !== $member->getStatus() && MemberStatusType::CHOICE_INACTIVE !== $member->getStatus()) {
             $member->setStatus(MemberStatusType::ACTIVE);
         }
+        $member->setRemindersWithOutLogin(100);
+
         $this->entityManager->persist($member);
         $this->entityManager->flush();
     }

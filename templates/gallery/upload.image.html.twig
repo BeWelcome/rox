@@ -19,6 +19,9 @@
         let clients = [];
 
         function uploadFiles() {
+            if (progressBars.children.length !== 0) {
+                progressBars.replaceChildren();
+            }
             let files = document.getElementById("form_files").files;
 
             upload.disabled = true;
@@ -93,8 +96,10 @@
             client.upload.onprogress = function(e) {
                 let p = Math.round(100 / e.total * e.loaded);
                 const percent = document.getElementById('percent-' + index);
-                const filename = document.getElementById('filename-' + index);
                 percent.style.width = p + "%";
+                percent.setAttribute('aria-value-now', p);
+
+                const filename = document.getElementById('filename-' + index);
                 filename.innerText = file.name + " - " + p + "%";
                 console.log(file.name, percent, filename, " - " + p);
             };
@@ -144,10 +149,11 @@
         function getImageProgressUpload(index, file) {
             const imageProgress = imageProgressTemplate.cloneNode(true);
             imageProgress.id = 'image-progress-' + index;
-            const progress = imageProgress.children[1];
+            const flex = imageProgress.children[1];
+            const progress = flex.children[0];
             progress.id = 'progress-' + index;
             progress.children[0].id = 'percent-' + index;
-            progress.children[1].id = 'filename-' + index;
+            flex.children[1].id = 'filename-' + index;
 
             setImage(imageProgress, index, file);
             return imageProgress;
@@ -178,11 +184,13 @@
        <button id="upload" class="btn btn-primary u-mb-8 u-mr-8" type="button">{{ 'upload'|trans }}</button>
        <button id="abort" class="btn btn-danger u-mb-8" type="button" disabled="disabled" onclick="uploadAbort()">{{ 'abort'|trans }}</button>
 
-       <div id="image-progress" class="d-none u-flex u-flex-row u-items-center">
-           <div><img src="" style="max-height:100px; min-height: 40px; width: 100px; object-fit: fill; padding:8px;"></div>
-           <div class="progress position-relative">
-               <div class="progress-bar" role="progressbar" style="width: 0;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-               <small class="mt-2 justify-content-center d-flex position-absolute w-100">{filename}</small>
+       <div id="image-progress" class="d-none u-flex u-items-center">
+           <div><img src="" style="width: 100px; object-fit: fill; padding:8px;"></div>
+           <div class="u-flex u-flex-col u-w-full">
+               <div class="progress u-w-full">
+                   <div class="progress-bar u-h-16" role="progressbar" style="width: 0;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+               </div>
+               <small class="justify-content-center white d-flex position-absolute w-100">{filename}</small>
            </div>
        </div>
 
@@ -196,9 +204,8 @@
            <div class="alert-danger u-rounded-4 u-p-8"></div>
        </div>
 
-       <div class="u-mb-8" id="progressbars"></div>
+       <div id="progressbars"></div>
 
-       <div class="u-mb-8" id="images"></div>
        {% do form.files.setRendered %}
        {% do form.upload.setRendered %}
        {% do form.abort.setRendered %}

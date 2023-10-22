@@ -13,3 +13,12 @@ gallery.no.albums:
 gallery.no.latest.images:
     - This user hasn\'t uploaded any images yet.
     - Shown if there are no images uploaded by the user.
+gallery.upload.type.error:
+    - The file type is not supported.
+    - Shown as a note to the user when they try to upload a file that isn't an image on the gallery upload page.
+gallery.upload.size.error:
+    - The file is too large to be uploaded to the server.
+    - Shown as a note to the user when they try to upload a too large file on the gallery upload page.
+gallery.upload.successful:
+    - Image uploaded successfully.
+    - Shown to the user when a file was successfully transferred to the server.

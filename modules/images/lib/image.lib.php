@@ -171,7 +171,11 @@ class MOD_images_Image {
     private function imageCreateFromJpegExif($filename)
     {
         $img = imagecreatefromjpeg($filename);
-        $exif = exif_read_data($filename);
+        try {
+            $exif = exif_read_data($filename);
+        } catch (\Exception $e) {
+            $exif = false;
+        }
         if ($img && $exif && isset($exif['Orientation']))
         {
             $ort = $exif['Orientation'];

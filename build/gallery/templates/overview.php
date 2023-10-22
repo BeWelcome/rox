@@ -36,15 +36,14 @@ if ($statement) {
         $title_short = ((strlen($d->title) >= 26) ? substr($d->title,0,20).'...' : $d->title);
         $loggedmember = isset($this->model) ? $this->model->getLoggedInMember : $this->loggedInMember;
         $edit = ($loggedmember && $loggedmember->Username == $d->user_handle);
-        echo '<div class="card-body p-1"><h6 class="card-title text-truncate">';
+        echo '<div class="card-body p-1">';
         if ($edit) {
-            echo '<input type="checkbox" class="form-check-inline mr-0" name="imageId[]" value="' . $d->id . '"> ';
+            echo '<div class="o-checkbox u-m-4"><input type="checkbox" class="o-checkbox__input mr-0" name="imageId[]" value="' . $d->id . '"></div> ';
         }
-        echo '<a href="gallery/img?id='. $d->id .'" alt="'. $d->title .'">'. $title_short . '</a>';
+        echo '<h6 class="card-title text-truncate"></h6><a href="gallery/img?id='. $d->id .'" alt="'. $d->title .'">'. $title_short . '</a>';
         if (null !== $d->albumId) {
-            echo '<br>' . $words->getSilent('album') . '<a href="gallery/show/sets/' . $d->albumId . '" alt="' . $d->album . '">' . $d->album . '</a>';
+            echo $words->getSilent('album') . '<a href="gallery/show/sets/' . $d->albumId . '" alt="' . $d->album . '">' . $d->album . '</a>';
         }
-        echo '</h6>';
 
         if ($edit) {
             echo '<div class="card-text"><small class="text-muted">'.$layoutbits->ago(strtotime($d->created)).'</small>';

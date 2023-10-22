@@ -24,9 +24,9 @@ class GalleryModel extends RoxModelBase
             return false;
     	$query = '
 INSERT INTO `gallery`
-(`id`, `user_id_foreign`, `flags`, `title`, `text`)
+(`user_id_foreign`, `flags`, `title`, `text`)
 VALUES
-('.$this->dao->nextId('gallery').',
+(
 '.(int)$member->id.',
 0,
 \''.$this->dao->escape($title).'\',

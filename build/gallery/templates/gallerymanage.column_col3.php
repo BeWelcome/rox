@@ -23,7 +23,7 @@ $picture_url = 'members/avatar/'.$member->Username.'/96';
         </script>
         <div class="o-checkbox mb-2">
             <input type="checkbox" name="selectAllRadio" id="selectAllRadio" class="o-checkbox__input checker" onClick="toggle(this);">&nbsp;&nbsp;
-            <label class=form-label" for="selectAllRadio"><?= $words->get('SelectAll')?></label>
+            <label class=o-checkbox__label" for="selectAllRadio"><?= $words->get('SelectAll')?></label>
         </div>
         <?php
         if (isset($galleries) && $galleries) {
@@ -32,7 +32,7 @@ $picture_url = 'members/avatar/'.$member->Username.'/96';
             <div class="input-group mb-2">
                 <div class="input-group-prepend">
                     <div class="input-group-text">
-                        <input type="radio" id="oldGallery" name="new" value="0" aria-label="<?= $words->get('GalleryAddToPhotoset') ?>">
+                        <input type="radio" id="oldGallery" name="new" value="0" class="o-radiobutton__input" aria-label="<?= $words->get('GalleryAddToPhotoset') ?>">
                     </div>
                 </div>
                 <select name="gallery" size="1" onchange="$('oldGallery').checked = true;" class="o-input">
@@ -51,7 +51,7 @@ $picture_url = 'members/avatar/'.$member->Username.'/96';
         <div class="input-group mb-2">
             <div class="input-group-prepend">
                 <div class="input-group-text">
-                    <input type="radio" id="newGallery" name="new" value="1" aria-label="Create a new album">
+                    <input type="radio" id="newGallery" name="new" value="1" class="o-radiobutton__input" aria-label="Create a new album">
                 </div>
             </div>
             <input class="o-input" name="g-title" id="g-title" maxlength="30" aria-label="Enter the name of the new album" placeholder="<?= $words->get('GalleryCreateNewPhotoset') ?>" onclick="$('newGallery').checked = true;  $('#deleteOnly').val(0);">

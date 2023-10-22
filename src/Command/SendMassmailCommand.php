@@ -149,6 +149,9 @@ class SendMassmailCommand extends Command
             case 'TermsOfUse':
                 $sender = new Address('tou@bewelcome.org', 'BeWelcome');
                 break;
+            case Newsletter::SUSPENSION_NOTIFICATION:
+                $sender = new Address('message@bewelcome.org', 'BeWelcome');
+                break;
             default:
                 $sender = new Address('newsletter@bewelcome.org', 'BeWelcome');
         }

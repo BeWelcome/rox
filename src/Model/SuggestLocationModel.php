@@ -81,9 +81,13 @@ class SuggestLocationModel
 
         $query = $this->getQueryForGeonamesRt();
         $matchQuery = new MatchPhrase($parts[0], 'name');
+
+        $locale = $this->adaptLocale($this->translator->getLocale());
+
         $localeQuery = new BoolQuery();
         $localeQuery->should(new Equals('locale', '_geo'));
-        $localeQuery->should(new Equals('locale', $this->translator->getLocale()));
+
+        $localeQuery->should(new Equals('locale', $locale));
         $filterElements = ['country', 'admin1', 'admin2', 'admin3', 'admin4'];
         $adminUnitFilterQuery = new BoolQuery();
         foreach ($adminUnits as $adminUnit) {
@@ -578,5 +582,10 @@ class SuggestLocationModel
             ->orFilter('locale', 'equals', '_geo');
 
         return $query;
+    }
+
+    private function adaptLocale(string $locale)
+    {
+        return substr($locale, 0, 2);
     }
 }

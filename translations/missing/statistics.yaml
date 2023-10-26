@@ -34,3 +34,6 @@ statistics.longer:
 statistics.other:
     - 'Other ({count})'
     - Legend item for statistics that are aggregated (languages and country of members)
+statistics.member.info:
+    - From time to time we cleanup our members database which is visible as a (stern) drop in the statistics.
+    - Info text on the statistics page below the first row which shows the current member count.

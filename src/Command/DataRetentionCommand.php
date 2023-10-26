@@ -3,9 +3,9 @@
 namespace App\Command;
 
 use App\Doctrine\AccommodationType;
-use App\Entity\Location;
 use App\Entity\Member;
 use App\Entity\MemberTranslation;
+use App\Entity\NewLocation;
 use App\Logger\Logger;
 use App\Repository\MemberRepository;
 use DateTime;
@@ -133,7 +133,7 @@ class DataRetentionCommand extends Command
         $longAgo = new DateTime('1900-01-01');
 
         /** @var EntityRepository $locationRepository */
-        $locationRepository = $this->entityManager->getRepository(Location::class);
+        $locationRepository = $this->entityManager->getRepository(NewLocation::class);
         $location = $locationRepository->findOneBy([]);
 
         $member

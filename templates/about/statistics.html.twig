@@ -45,7 +45,7 @@
 {% block javascripts %}
     {{ encore_entry_script_tags('chartjs') }}
     <script type="application/javascript">
-        $(document).ready(function () {
+        document.addEventListener("DOMContentLoaded", async function() {
             function createLineChart(data, key, period) {
                 let ctx = document.getElementById(key + "-" + period).getContext('2d');
                 let barChartData = {
@@ -148,38 +148,77 @@
                     }
                 });
             }
+
             {% for key,current in statistics %}
-                $.post("{{ url(current.route, {'period': 'weekly'}) }}",
-                    function (data) {
-                        createLineChart(data, '{{ key }}', 'weekly');
+            await fetch('{{ url(current.route, {'period': 'weekly'}) }}')
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
                     }
-                );
-                $.post("{{ url(current.route, {'period': 'daily'}) }}",
-                    function (data) {
-                        createLineChart(data, '{{ key }}', 'daily');
+
+                    return response.json();
+                })
+                .then((data) => {
+                    console.log(data);
+                    createLineChart(data, '{{ key }}', 'weekly');
+                });
+            await fetch('{{ url(current.route, {'period': 'daily'}) }}')
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
                     }
-                );
+
+                    return response.json();
+                })
+                .then((data) => {
+                    console.log(data);
+                    createLineChart(data, '{{ key }}', 'daily');
+                });
             {% endfor %}
-            $.post("/stats/members/logins",
-                function (data) {
+            await fetch('/stats/members/logins')
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+
+                    return response.json();
+                })
+                .then((data) => {
                     createPieChart(data, 'logins');
-                }
-            );
-            $.post("/stats/members/countries",
-                function (data) {
+                });
+            await fetch('/stats/members/countries')
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+
+                    return response.json();
+                })
+                .then((data) => {
                     createPieChart(data, 'countries');
-                }
-            );
-            $.post("/stats/languages/spoken",
-                function (data) {
+                });
+            await fetch('/stats/languages/spoken')
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+
+                    return response.json();
+                })
+                .then((data) => {
                     createLanguageChart(data);
-                }
-            );
-            $.post("/stats/languages/preferred",
-                function (data) {
+                });
+            await fetch('/stats/languages/preferred')
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+
+                    return response.json();
+                })
+                .then((data) => {
                     createPieChart(data, 'preferred');
-                }
-            );
+                });
         });
     </script>
 {% endblock javascripts %}
@@ -201,6 +240,11 @@
                     <h3>{{ 'statsheadcol2'|trans }}</h3>
                     <canvas id="{{ key }}-daily"></canvas>
                 </div>
+                {% if key == "members" %}
+                <div class="u-col-span-1 md:u-col-span-2 u-mt-16">
+                    {{ 'statistics.members.info'|trans }}
+                </div>
+                {% endif %}
             {% endfor %}
             <div class="o-card">
                 <h3>{{ 'statslastlogin'|trans }}</h3>

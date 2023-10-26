@@ -2,7 +2,9 @@
 
 namespace App\Command;
 
+use App\Doctrine\MemberStatusType;
 use App\Entity\BroadcastMessage;
+use App\Entity\Member;
 use App\Entity\Newsletter;
 use App\Service\Mailer;
 use Doctrine\ORM\EntityManager;
@@ -92,34 +94,32 @@ class SendMassmailCommand extends Command
 
                     $lastBroadcastId = $scheduled->getNewsletter()->getId();
                 }
-                $sender = $this->determineSender($scheduled->getNewsletter()->getType());
                 $receiver = $scheduled->getReceiver();
+                $status = $receiver->getStatus();
+                if (
+                    (MemberStatusType::SUSPENDED === $status && $receiver->getRemindersWithOutLogin() !== 100)
+                    && MemberStatusType::ACTIVE !== $status
+                    && MemberStatusType::OUT_OF_REMIND !== $status
+                    && MemberStatusType::CHOICE_INACTIVE !== $status
+                ) {
+                    // Only send messages to members that are active or have just been suspended RemindersWithoutLogin
+                    // is set to 100 on suspension
+                    continue;
+                }
                 try {
-                    $unsubscribeKey = '';
-                    $newsletterType = $scheduled->getNewsletter()->getType();
-                    $newsletterName = $scheduled->getNewsletter()->getName();
-                    $parameters['receiver'] = $receiver;
-                    $parameters['newsletter_type'] = $newsletterType;
-                    $parameters['subject'] = strtolower('Broadcast_Title_' . $newsletterName);
-                    $parameters['wordcode'] = strtolower('Broadcast_Body_' . $newsletterName);
-                    if (
-                        Newsletter::SPECIFIC_NEWSLETTER === $newsletterType
-                        || Newsletter::REGULAR_NEWSLETTER === $newsletterType
-                    ) {
-                        try {
-                            $unsubscribeKey = random_bytes(32);
-                        } catch (Exception $e) {
-                            $unsubscribeKey = openssl_random_pseudo_bytes(32);
-                        }
+                    try {
+                        $unsubscribeKey = random_bytes(32);
+                    } catch (Exception $e) {
+                        $unsubscribeKey = openssl_random_pseudo_bytes(32);
                     }
-                    $parameters['newsletter'] = $scheduled->getNewsletter();
-                    $parameters['language'] = $receiver->getPreferredLanguage()->getShortCode();
-                    $parameters['unsubscribe_key'] = bin2hex($unsubscribeKey);
+
+                    $parameters['unsubscribe_key'] = $unsubscribeKey;
                     $this->mailer->sendNewsletterEmail(
-                        $sender,
+                        $scheduled->getNewsletter(),
                         $receiver,
                         $parameters
                     );
+
                     $scheduled
                         ->setStatus('Sent')
                         ->setUnsubscribeKey(bin2hex($unsubscribeKey))
@@ -144,13 +144,11 @@ class SendMassmailCommand extends Command
         switch ($type) {
             case 'RemindToLog':
             case 'MailToConfirmReminder':
+            case Newsletter::SUSPENSION_NOTIFICATION:
                 $sender = new Address('reminder@bewelcome.org', 'BeWelcome');
                 break;
-            case 'TermsOfUse':
+            case Newsletter::TERMS_OF_USE:
                 $sender = new Address('tou@bewelcome.org', 'BeWelcome');
-                break;
-            case Newsletter::SUSPENSION_NOTIFICATION:
-                $sender = new Address('message@bewelcome.org', 'BeWelcome');
                 break;
             default:
                 $sender = new Address('newsletter@bewelcome.org', 'BeWelcome');

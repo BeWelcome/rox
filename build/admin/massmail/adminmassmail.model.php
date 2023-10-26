@@ -587,7 +587,7 @@ class AdminMassmailModel extends RoxModelBase
         return $count;
     }
 
-    private function enqueueMassmailReminder($id) {
+    private function enqueueMassmailLoginReminder($id) {
         $IdEnqueuer = $this->getLoggedInMember()->id;
         // first set all members that didn't login for longer than a year to 'OutOfRemind'
         $query = "
@@ -599,6 +599,17 @@ class AdminMassmailModel extends RoxModelBase
                     (DATEDIFF(NOW(), m.LastLogin) > 365 OR m.LastLogin = '0000-00-00 00:00:00')
                     AND m.status = 'Active'";
         $r = $this->dao->query($query);
+
+        // then increase the counter for reminders without login for all members that are OutOfRemind
+        $query = "
+                UPDATE
+                    members m
+                SET
+                    m.NbRemindWithoutLogingIn = m.NbRemindWithoutLogingIn + 1
+                WHERE
+                    m.status = 'OutOfRemind'";
+        $r = $this->dao->query($query);
+
         $query = "
             REPLACE
                 broadcastmessages (IdBroadcast, IdReceiver, IdEnqueuer, Status, updated)
@@ -658,20 +669,20 @@ class AdminMassmailModel extends RoxModelBase
                 members AS m
             WHERE
                 m.Status IN ('OutOfRemind')
-                AND m.NbRemindWithoutLogingIn >= 5";
+                AND DATEDIFF(NOW(), m.LastLogin) > 365 * 5";
         $r = $this->dao->query($query);
-        $count = $r->affectedRows();
 
         // Now set all those members to suspended
         $query = "
                 UPDATE
                     members m
                 SET
-                    m.status = 'SuspendedBeta'
+                    m.status = 'SuspendedBeta', m.NbRemindWithoutLogingIn = 100
                 WHERE
-                    m.status = 'OutOfRemind' AND m.NbRemindWithoutLogingIn >= 5"
+                    m.status = 'OutOfRemind' AND DATEDIFF(NOW(), m.LastLogin) > 365 * 5"
                 ;
-        $this->dao->query($query);
+        $r = $this->dao->query($query);
+        $count = $r->affectedRows();
 
         return $count;
     }
@@ -728,7 +739,7 @@ class AdminMassmailModel extends RoxModelBase
                 $count = $this->enqueueMassmailGroup($id, $groupId);
                 break;
             case 'enqueueReminder':
-                $count = $this->enqueueMassmailReminder($id);
+                $count = $this->enqueueMassmailLoginReminder($id);
                 break;
             case 'enqueueMailToConfirmReminder':
                 $count = $this->enqueueMassmailMailToConfirmReminder($id);
@@ -858,10 +869,9 @@ class AdminMassmailModel extends RoxModelBase
             SELECT
                 count(*) as suspensionNotificationCount
             FROM
-                members
+                members m
             WHERE
-                status IN ('OutOfRemind')
-                AND NbRemindWithoutLogingIn >= 5
+                m.status = 'OutOfRemind' AND DATEDIFF(NOW(), m.LastLogin) > 365 * 5
                  ";
         $r = $this->dao->query($query);
         if (!$r) {

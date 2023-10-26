@@ -5,8 +5,10 @@ namespace App\Service;
 use App\Entity\Comment;
 use App\Entity\FeedbackCategory;
 use App\Entity\Member;
+use App\Entity\Newsletter;
 use App\Entity\Relation;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use InvalidArgumentException;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
@@ -116,10 +118,12 @@ class Mailer
         );
     }
 
-    public function sendNewsletterEmail(Address $sender, Member $receiver, $parameters): bool
+    public function sendNewsletterEmail(Newsletter $newsletter, Member $receiver, array $parameters): bool
     {
+        $parameters = array_merge($parameters, $this->prepareParametersForNewsletter($newsletter, $receiver));
+
         return $this->sendTemplateEmail(
-            $sender,
+            $parameters['sender'],
             $receiver,
             'newsletter',
             $parameters
@@ -307,4 +311,43 @@ class Mailer
         $language = $receiver->getPreferredLanguage();
         $this->translator->setLocale($language->getShortCode());
     }
+
+    private function prepareParametersForNewsletter(Newsletter $newsletter, Member $receiver)
+    {
+        $newsletterType = $newsletter->getType();
+        $newsletterName = $newsletter->getName();
+        $parameters['sender'] = $this->determineSenderForNewsletter($newsletterType);
+        $parameters['receiver'] = $receiver;
+        $parameters['newsletter_type'] = $newsletterType;
+        $parameters['subject'] = strtolower('Broadcast_Title_' . $newsletterName);
+        $parameters['wordcode'] = strtolower('Broadcast_Body_' . $newsletterName);
+        if (
+            Newsletter::SPECIFIC_NEWSLETTER === $newsletterType
+            || Newsletter::REGULAR_NEWSLETTER === $newsletterType
+        ) {
+        }
+        $parameters['newsletter'] = $newsletter;
+        $parameters['language'] = $receiver->getPreferredLanguage()->getShortCode();
+
+        return $parameters;
+    }
+
+    private function determineSenderForNewsletter($type): Address
+    {
+        switch ($type) {
+            case 'RemindToLog':
+            case 'MailToConfirmReminder':
+            case Newsletter::SUSPENSION_NOTIFICATION:
+                $sender = new Address('reminder@bewelcome.org', 'BeWelcome');
+                break;
+            case Newsletter::TERMS_OF_USE:
+                $sender = new Address('tou@bewelcome.org', 'BeWelcome');
+                break;
+            default:
+                $sender = new Address('newsletter@bewelcome.org', 'BeWelcome');
+        }
+
+        return $sender;
+    }
+
 }

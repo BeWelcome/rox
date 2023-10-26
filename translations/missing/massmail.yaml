@@ -21,4 +21,8 @@ admin.massmail.suspension.notification.submit:
     - Label for the button to enqueue the suspension notification
     - 'messages+intl-icu'
     - 'no'
-
+admin.massmail.test:
+    - Test
+    - Label for the button that allows to send a test massmail to selected members
+    - 'messages+intl-icu'
+    - 'no'

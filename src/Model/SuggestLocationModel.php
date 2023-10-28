@@ -79,7 +79,7 @@ class SuggestLocationModel
         $query = $this->getQueryForGeonamesRt();
         $matchQuery = new MatchPhrase($parts[0], 'name');
 
-        $locale = $this->adaptLocale($this->translator->getLocale());
+        $locale = $this->translator->getLocale();
 
         $localeQuery = new BoolQuery();
         $localeQuery->should(new Equals('locale', '_geo'));
@@ -188,9 +188,8 @@ class SuggestLocationModel
 
         $query = $this->getQueryForGeonamesRt();
         $matchQuery = new MatchQuery($parts[0] . '*', 'name');
-        $localeQuery = new BoolQuery();
-        $localeQuery->should(new Equals('locale', '_geo'));
-        $localeQuery->should(new Equals('locale', $this->translator->getLocale()));
+        $localeQuery = $this->getLocaleQuery();
+
         $filterElements = ['country', 'admin1', 'admin2', 'admin3', 'admin4'];
         $adminUnitFilterQuery = new BoolQuery();
         foreach ($adminUnits as $adminUnit) {
@@ -282,7 +281,7 @@ class SuggestLocationModel
 
     public function getLocationDetails(array $results, string $typeTranslationId = null): array
     {
-        $locale = $this->adaptLocale($this->translator->getLocale());
+        $locale = $this->translator->getLocale();
         $type = '';
         if (null !== $typeTranslationId) {
             $type = $this->translator->trans($typeTranslationId);
@@ -322,7 +321,7 @@ class SuggestLocationModel
 
     private function getDetailsForId($id)
     {
-        $locale = $this->adaptLocale($this->translator->getLocale());
+        $locale = $this->translator->getLocale();
         $qb = $this->entityManager->createQueryBuilder();
         $query = $qb
             ->select('l')
@@ -438,19 +437,27 @@ class SuggestLocationModel
 
     private function getQueryForGeonamesRt(): Search
     {
+        $locale = $this->translator->getLocale();
         $config = ['host' => '127.0.0.1','port' => 9412];
         $client = new Client($config);
         $query = new Search($client);
         $query
-            ->setIndex('geonames_rt')
-            ->orFilter('locale', 'equals', $this->translator->getLocale())
-            ->orFilter('locale', 'equals', '_geo');
+            ->setIndex('geonames_rt');
 
         return $query;
     }
 
-    private function adaptLocale(string $locale)
+    private function getLocaleQuery(): BoolQuery
     {
-        return substr($locale, 0, 2);
+        $locale = $this->translator->getLocale();
+        $localeQuery = new BoolQuery();
+        $localeQuery->should(new Equals('locale', '_geo'));
+        $localeQuery->should(new Equals('locale', $locale));
+
+        if (strlen($locale) > 2) {
+            $localeQuery->should(new Equals('locale', substr($locale, 0, 2)));
+        }
+
+        return $localeQuery;
     }
 }

@@ -254,7 +254,7 @@ class ManticoreIndicesCreateCommand extends Command
                 'isPlace' => $isPlace,
                 'isAdmin' => $isAdmin,
                 'isCountry' => $isCountry,
-                'locale' => $location['locale'],
+                'locale' => $this->adaptLocale($location['locale']),
                 'admin1' => $location['admin1'],
                 'admin2' => $location['admin2'],
                 'admin3' => $location['admin3'],
@@ -304,5 +304,22 @@ class ManticoreIndicesCreateCommand extends Command
         $progressBar->minSecondsBetweenRedraws(5);
 
         return $progressBar;
+    }
+
+    private function adaptLocale(string $locale)
+    {
+        switch ($locale) {
+            case "zh-TW":
+                $locale = "zh-hant";
+                break;
+            case "zh-CN":
+                $locale = "zh-hans";
+                break;
+            case "pt-BR":
+                $locale = "pt-br";
+                break;
+        }
+
+        return $locale;
     }
 }

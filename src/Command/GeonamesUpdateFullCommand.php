@@ -55,7 +55,7 @@ class GeonamesUpdateFullCommand extends Command
                 null,
                 InputOption::VALUE_NONE,
                 'Fetches all data; truncates the database tables and imports the data. Sets all options ' .
-                '(except --continue-on-errors and --country). Does download the files if not explicitly forbidden.'
+                '(except --continue-on-errors, --country, and --update). Does download the files if not explicitly forbidden.'
             )
             ->addOption(
                 'admin-units',
@@ -87,6 +87,12 @@ class GeonamesUpdateFullCommand extends Command
                 InputOption::VALUE_NONE,
                 'Continue importing the alternate names even if an error happened while importing geonames.'
             )
+            ->addOption(
+                'update',
+                null,
+                InputOption::VALUE_NONE,
+                'Update all rows instead of inserting new ones. If used with \'full\' will not truncate the tables.'
+            )
             ->setHelp('Downloads geonames or alternatenames data dump and imports them')
         ;
     }
@@ -112,6 +118,7 @@ class GeonamesUpdateFullCommand extends Command
             $alternateNames = true;
             $adminUnits = true;
         }
+        $update = $input->getOption('update');
 
         $this->output = $output;
 
@@ -549,7 +556,7 @@ class GeonamesUpdateFullCommand extends Command
         $connection->executeQuery('SET FOREIGN_KEY_CHECKS=0');
         // Build the query from scratch
         $query =
-            'INSERT IGNORE INTO geo__names (`geonameId`, `name`, `latitude`, `longitude`, `feature_class`, `feature_code`,'
+            'INSERT INTO geo__names (`geonameId`, `name`, `latitude`, `longitude`, `feature_class`, `feature_code`,'
             . '`country_id`, `admin_1_id`, `admin_2_id`, `admin_3_id`, `admin_4_id`, `population`, `moddate`) '
             . 'VALUES '
         ;
@@ -583,6 +590,7 @@ class GeonamesUpdateFullCommand extends Command
             }
         }
         $query = substr($query, 0, -2);
+        $query .= " ON DUPLICATE KEY UPDATE";
         $progressbar->setMessage('Executing query...', 'status');
         $connection->executeQuery($query);
         $connection->executeQuery('SET FOREIGN_KEY_CHECKS=1');
@@ -615,10 +623,10 @@ class GeonamesUpdateFullCommand extends Command
                 // always use lower case for locale
                 switch ($row[2]) {
                     case 'zh-TW':
-                        $row[2] = 'zh_hant';
+                        $row[2] = 'zh-hant';
                         break;
                     case 'zh-CN':
-                        $row[2] = 'zh_hans';
+                        $row[2] = 'zh-hans';
                         break;
                 }
 

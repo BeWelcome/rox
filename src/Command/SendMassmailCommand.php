@@ -138,22 +138,4 @@ class SendMassmailCommand extends Command
 
         return 0;
     }
-
-    private function determineSender($type): Address
-    {
-        switch ($type) {
-            case 'RemindToLog':
-            case 'MailToConfirmReminder':
-            case Newsletter::SUSPENSION_NOTIFICATION:
-                $sender = new Address('reminder@bewelcome.org', 'BeWelcome');
-                break;
-            case Newsletter::TERMS_OF_USE:
-                $sender = new Address('tou@bewelcome.org', 'BeWelcome');
-                break;
-            default:
-                $sender = new Address('newsletter@bewelcome.org', 'BeWelcome');
-        }
-
-        return $sender;
-    }
 }

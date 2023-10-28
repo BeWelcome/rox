@@ -70,7 +70,7 @@ class MemberController extends AbstractController
         Security $security,
         EntrypointLookupInterface $entrypointLookup,
         PasswordHasherFactoryInterface $passwordHasherFactory
-    ) {
+    ): Response {
         /** @var Member $member */
         $member = $this->getUser();
 
@@ -143,6 +143,7 @@ class MemberController extends AbstractController
 
         return $this->render('private/download.html.twig', [
             'username' => $member->getUsername(),
+            'member' => $member,
             'globals_js_json' => $this->globals->getGlobalsJsAsJson($member, $member),
             'submenu' => $this->profileSubmenu->getSubmenu($member, $member),
             'url' => $this->generateUrl(

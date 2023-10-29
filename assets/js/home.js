@@ -19,7 +19,7 @@ import {initializeSingleAutoComplete} from './suggest/locations';
 
 function onChange(element, result) {
     const fullName = element;
-    const baseId = element.id.replace("search_map_location", "_location_");
+    const baseId = element.id + "_";
     const geonameId = document.getElementById(baseId + "geoname_id");
     const latitude = document.getElementById(baseId + "latitude");
     const longitude = document.getElementById(baseId + "longitude");

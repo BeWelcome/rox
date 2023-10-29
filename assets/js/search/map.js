@@ -25,7 +25,7 @@ function Map() {
 
 Map.prototype.showMap = function () {
     if (this.map === undefined) {
-        this.mapBox.append('<div id="map" class="map p-2 framed w-100"></div>');
+        this.mapBox.append('<div id="map" class="map u-w-full"></div>');
         this.map = L.map('map', {
             center: [15, 0],
             zoomSnap: 0.25,

@@ -6,6 +6,6 @@
         {{ 'mydata.relations.confirmed'|trans }}: {{ relation.confirmed }}<br>
         {{ 'mydata.relations.comments'|trans }} <br>
     <br>
-    {{ relation.commentText }}<br>
+    {{ relation.commentText|purify }}<br>
     </div>
 </div>

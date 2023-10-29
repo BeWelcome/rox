@@ -244,7 +244,6 @@ class MyDataMockups implements MockupProviderInterface
             'polls_created',
             'polls_voted',
             'posts',
-            'posts_year',
             'privileges',
             'relations',
             'rights',
@@ -395,8 +394,6 @@ class MyDataMockups implements MockupProviderInterface
                 break;
             case 'posts':
                 return $this->postsData($parameters['count']);
-            case 'posts_year':
-                return $this->postsYearData($parameters['count']);
             case 'privileges':
                 $mockEntity = $this->getPrivilege();
                 break;

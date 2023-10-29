@@ -159,7 +159,6 @@
                     return response.json();
                 })
                 .then((data) => {
-                    console.log(data);
                     createLineChart(data, '{{ key }}', 'weekly');
                 });
             await fetch('{{ url(current.route, {'period': 'daily'}) }}')
@@ -171,7 +170,6 @@
                     return response.json();
                 })
                 .then((data) => {
-                    console.log(data);
                     createLineChart(data, '{{ key }}', 'daily');
                 });
             {% endfor %}

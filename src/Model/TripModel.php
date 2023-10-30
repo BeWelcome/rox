@@ -13,16 +13,19 @@ use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
 use Pagerfanta\Doctrine\ORM\QueryAdapter;
 use Pagerfanta\Pagerfanta;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class TripModel
 {
     private const ALLOWED_TRIPS_RADIUS = [0, 5, 10, 20, 50, 100];
 
     private EntityManagerInterface $entityManager;
+    private TranslatorInterface $translator;
 
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(EntityManagerInterface $entityManager, TranslatorInterface $translator)
     {
         $this->entityManager = $entityManager;
+        $this->translator = $translator;
     }
 
     public function paginateTripsOfMember(Member $member, int $page): PagerFanta
@@ -86,12 +89,12 @@ class TripModel
                     $errors[] = [
                         'leg' => $i,
                         'field' => 'duration',
-                        'error' => 'trip.error.date.overlap',
+                        'error' => $this->translator->trans('trip.error.date.overlap'),
                     ];
                     $errors[] = [
                         'leg' => $j,
                         'field' => 'duration',
-                        'error' => 'trip.error.date.overlap',
+                        'error' => $this->translator->trans('trip.error.date.overlap'),
                     ];
                 }
             }
@@ -100,7 +103,7 @@ class TripModel
                 $errors[] = [
                     'leg' => $i,
                     'field' => 'options',
-                    'error' => 'trip.error.no.options',
+                    'error' => $this->translator->trans('trip.error.no.options'),
                 ];
             }
         }

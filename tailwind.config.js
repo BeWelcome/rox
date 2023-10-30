@@ -1,7 +1,7 @@
 module.exports = {
   content: [
       './templates/**/*.html.twig',
-      './assets/js/**/*.js',
+      './assets/js/**/*.js*',
   ],
   safelist: [
     'suggest-map',

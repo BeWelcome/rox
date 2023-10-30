@@ -137,7 +137,7 @@ function wasGuestOrHost(string $relations) {
                            <div class="d-flex flex-column">
                                <div class="d-flex flex-row">
                                    <a class="mr-2" href="members/<?=$comment->UsernameFromMember?>">
-                                       <img class="profileimg avatar-48"  src="members/avatar/<?=$comment->UsernameFromMember?>/48" alt="<?=$comment->UsernameFromMember?>" />
+                                       <img class="profileimg avatar-48" width=48 height=48 src="members/avatar/<?=$comment->UsernameFromMember?>/48" width=48 height=48 alt="<?=$comment->UsernameFromMember?>" />
                                    </a>
                                    <div>
                                        <p class="m-0" style="line-height: 1.0;">
@@ -160,12 +160,12 @@ function wasGuestOrHost(string $relations) {
                                <div class="w-100 py-2">
                                    <p class="js-read-more-received mb-1">
                                        <?php
-                                       echo $purifier->purify(nl2br($comment->TextFree));
+                                       echo nl2br($comment->TextFree);
                                        ?>
                                    </p>
                                    <?php if (!$this->passedAway) { ?>
                                        <?php if ($loggedIn === $comment->UsernameToMember) { ?>
-                                           <a href="/members/<?= $this->member->Username;?>/comment/<?php echo $comment->id;?>/report" title="<?=$words->getSilent('ReportCommentProblem') ?>"
+                                           <a href="/members/<?php echo $comment->UsernameToMember;?>/comment/<?= $comment->UsernameFromMember;?>/report" title="<?=$words->getSilent('ReportCommentProblem') ?>"
                                               class="float-left gray align-self-center"><i class="fa fa-flag" alt="<?=$words->getSilent('ReportCommentProblem') ?>"></i></a>
                                        <?php } ?>
                                    <?php }
@@ -177,11 +177,11 @@ function wasGuestOrHost(string $relations) {
                        </div>
                        <?php } else {
                            if ($loggedIn === $commentTo->UsernameToMember) {
-                               $addCommentTranslation = str_replace('{username}', $comment->UsernameFromMember, $words->getSilent('profile.add.comment'));
+                               $addCommentTranslation = str_replace('{username}', $commentTo->UsernameFromMember, $words->getSilent('profile.add.comment'));
                                ?>
                                <div class="clearfix">
-                                   <a href="/members/<?= $comment->UsernameFromMember;?>/comment/add" title="<?= $addCommentTranslation ?>"
-                                      class="align-self-center float-right"><button class="o-button"><?= $addCommentTranslation ?></button></a>
+                                   <a href="/members/<?= $commentTo->UsernameFromMember;?>/comment/add" title="<?= $addCommentTranslation ?>"
+                                      class="align-self-center float-left"><button class="o-button"><?= $addCommentTranslation ?></button></a>
                                </div>
                            <?php } else { ?>
 
@@ -236,11 +236,11 @@ function wasGuestOrHost(string $relations) {
                                <div class="w-100 py-2">
                                    <p class="js-read-more-written mb-1">
                                        <?php
-                                       echo $purifier->purify(nl2br($comment->TextFree));
+                                       echo nl2br($comment->TextFree);
                                        ?>
                                    </p>
                                    <?php if ($loggedIn === $comment->UsernameToMember) { ?>
-                                       <a href="/members/<?= $this->member->Username;?>/comment/<?php echo $comment->id;?>/report" title="<?=$words->getSilent('ReportCommentProblem') ?>" class="float-right gray align-self-center">
+                                       <a href="/members/<?= $comment->UsernameToMember;?>/comment/<?php echo $comment->UsernameFromMember;?>/report" title="<?=$words->getSilent('ReportCommentProblem') ?>" class="float-right gray align-self-center">
                                            <i class="fa fa-flag" alt="<?=$words->getSilent('ReportCommentProblem') ?>"></i></a>
                                    <?php }
                                    if (null !== $comment->updated && $comment->created !== $comment->updated){ ?>
@@ -256,7 +256,7 @@ function wasGuestOrHost(string $relations) {
                            ?>
                             <div class="clearfix">
                            <a href="/members/<?= $comment->UsernameFromMember;?>/comment/add" title="<?= $addCommentTranslation ?>"
-                                              class="gray align-self-center"><button class="o-button"><?= $addCommentTranslation ?></button></a>
+                                              class="gray align-self-center float-right"><button class="o-button"><?= $addCommentTranslation ?></button></a>
                             </div>
                       <?php }
                       }

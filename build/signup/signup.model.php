@@ -450,7 +450,7 @@ VALUES
             return false;
         }
 
-		MOD_log::get()->writeIdMember($memberID,"member  <b>".$vars['username']."</b> is signuping with success in city [".$vars['location']. "]  using language (".$this->session->get("lang")." IdMember=#".$memberID." (With New Signup !)","Signup");
+		MOD_log::get()->writeIdMember($memberID,"member  <b>".$vars['username']."</b> is signuping with success in city [".$vars['set_location']. "]  using language (".$this->session->get("lang")." IdMember=#".$memberID." (With New Signup !)","Signup");
 
         return $memberID;
 

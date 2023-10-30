@@ -4,8 +4,8 @@
 {% block content %}
     <h1>{{ 'error.page.server.error'|trans }}</h1>
 
-    {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
-        <p>Hi {{ app.user.Username }}!<p>
+    {% if app.user %}
+        <p>{{ 'error.greeting'|trans(app.user.Username) }}<p>
         <p>{{ 'error.500'|trans }}</p>
     {% else %}
         <p>{{ 'error.500'|trans }}</p>

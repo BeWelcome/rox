@@ -81,25 +81,13 @@
                         <div class="list-group u-rounded-8 mb-2">
                             {% for filter,menuItem in submenu.items %}
                             {% if 'separator' in filter %}
-                        </div>
-                        {% if menuItem.key is defined %}<h3
-                            class="mt-3 h3-canvas-color">{{ menuItem.key | lower | trans }}</h3>{% endif %}
-                        <div class="list-group u-rounded-8 mb-2">
-                            {% elseif 'profile_picture' in filter %}
-                                {% set username = menuItem.username %}
-                                <a href="{{ url('members_profile', {username: username}) }}">
-                                    <div class="u-w-full u-relative u-pb-[100%]">
-                                        <div class="u-absolute u-left-0 u-top-0">
-                                            <img class="u-rounded-8 u-max-w-full" src="{{ url('avatar', {username: username, size: 500}) }}"
-                                                alt="{{ 'profile.picture'|trans({username: username}) }}">
-                                        </div>
-                                    </div>
-                                </a>
-                                {% if menuItem.is_owner %}
-                                    <button type="button" class="btn btn-info btn-block"
-                                            style="cursor: pointer;">{{ 'profile.change.avatar'|trans }}</button>
-                                {% else %}
+                                </div>
+                                {% if menuItem.key is defined %}<h3
+                                    class="mt-3 h3-canvas-color">{{ menuItem.key | lower | trans }}</h3>
                                 {% endif %}
+                                <div class="list-group u-rounded-8 mb-2">
+                            {% elseif 'profile_picture' in filter %}
+                                <div id="react_mount" data-globals="{{ globals_js_json }}"></div>
                             {% else %}
                                 <a class="list-group-item nav-link{% if submenu.active == filter %} active{% endif %}"
                                    href="{{ menuItem.url }}">{% if menuItem.icon is defined %}<i
@@ -122,6 +110,8 @@
 {% include 'footer.html.twig' %}
 {{ encore_entry_script_tags('bewelcome') }}
 {{ encore_entry_script_tags('updatecounters') }}
+{{ encore_entry_script_tags('avatar') }}
+{{ encore_entry_script_tags('lightbox') }}
 {% if sidebar %}
     {{ encore_entry_script_tags('offcanvas') }}
 {% endif %}

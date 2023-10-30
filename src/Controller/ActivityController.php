@@ -62,7 +62,7 @@ class ActivityController extends AbstractController
         $response->headers->set('Content-Type', 'text/calendar; charset=utf-8');
         $disposition = HeaderUtils::makeDisposition(
             HeaderUtils::DISPOSITION_ATTACHMENT,
-            'activity.ics'
+            'activity' . $activity->getId() . '.ics'
         );
 
         $response->headers->set('Content-Disposition', $disposition);

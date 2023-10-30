@@ -86,15 +86,14 @@
                     to_member: comment.toMember.Username, from_member: comment.fromMember.Username }) }}">{{ 'editcomment'|trans }}</a></div>
         {% endif %}
     </div>
-
     <div class="u-flex u-flex-row u-justify-between">
         <div class="u-text-14 u-leading-20 u-self-center">
             {% if comment.updated != null and comment.created != comment.updated %}
                 {{ 'commentlastupdated'|trans }}: <span title="{{ comment.updated|format_datetime() }}">{{ comment.updated.diffForHumans }}</span>
             {% endif %}
         </div>
-        <div>{%- if from and member == loggedInMember %}
-            <a href="{{ url('report_comment', {'to_member': comment.toMember.Username, 'from_member': comment.fromMember.Username}) }}" title="{{ 'reportcommentproblem'|trans }}" class="u-text-grey-80"><i class="fa fa-flag"></i></a>
+        <div>{%- if comment.toMember == loggedInMember %}
+                <a href="{{ url('report_comment', {'to_member': comment.toMember.Username, 'from_member': comment.fromMember.Username}) }}" title="{{ 'reportcommentproblem'|trans }}" class="u-text-grey-80"><i class="fa fa-flag"></i></a>
             {% endif -%}
         </div>
     </div>

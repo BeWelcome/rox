@@ -19,8 +19,11 @@ class SignupPage extends SignupBasePage
         parent::__construct();
         $this->model = new MembersModel();
         $this->_step = $step;
+        if ($step == 1) {
+            $this->addLateLoadScriptFile('build/rangeslider.js');
+        }
         if ($step == 2) {
-//            $this->addLateLoadScriptFile('build/signup.js');
+            $this->addLateLoadScriptFile('build/signup/signup.js');
         }
         if ($step == 3) {
             $this->addLateLoadScriptFile('build/leaflet.js');
@@ -32,9 +35,9 @@ class SignupPage extends SignupBasePage
     protected function getStylesheets()
     {
         $stylesheets = parent::getStylesheets();
+        $stylesheets[] = 'build/tailwind.css';
         if ($this->_step == 3) {
             $stylesheets[] = 'build/leaflet.css';
-//            $stylesheets[] = 'build/tailwind.css';
             $stylesheets[] = 'build/profile/setlocation.css';
         }
         return $stylesheets;

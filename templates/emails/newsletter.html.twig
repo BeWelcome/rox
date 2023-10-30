@@ -11,15 +11,15 @@
     </wrapper>
 
     <container class="secondary">
-
         <spacer size="16"></spacer>
-
+        {% if has_images is defined %}
         <row>
             <columns small="12" valign="middle">
                 <a href="{{ url('newsletter_single', {'id': newsletter.id, 'language': language}) }}">{{ 'newsletter.images.not.shown'|trans }}</a>
             </columns>
         </row>
 
+        {% endif %}
         <row>
             <columns>
                 {{ wordcode|trans({'gender': receiver.gender, 'username': receiver.username})|prepare_newsletter }}
@@ -30,23 +30,24 @@
             <spacer size="16"></spacer>
             <row>
                 <columns>
-                    <p>{{ 'newsletter.receive'|trans }}</p>
                     {% apply spaceless %}
-                        <p>
-                        {% if constant('\\App\\Entity\\Newsletter::SPECIFIC_NEWSLETTER') == newsletter.type  %}
-                            <a href="{{ url('local_newsletter_unsubscribe', {'username': receiver.username, 'unsubscribeKey': unsubscribe_key }) }}">{{ 'newsletter.local.unsubscribe'|trans }}</a>
-                        {% elseif constant('\\App\\Entity\\Newsletter::REGULAR_NEWSLETTER') == newsletter.type %}
-                            <a href="{{ url('regular_newsletter_unsubscribe', {'username': receiver.username, 'unsubscribeKey': unsubscribe_key }) }}">{{ 'newsletter.regular.unsubscribe'|trans }}</a>
-                        {% else %}
-                            {{ 'newsletter.no.unsubscribe'|trans }}
+                        {% if constant('\\App\\Entity\\Newsletter::SUSPENSION_NOTIFICATION') != newsletter.type %}
+                            <p>{{ 'newsletter.receive'|trans }}</p>
+                            <p>
+                            {% if constant('\\App\\Entity\\Newsletter::SPECIFIC_NEWSLETTER') == newsletter.type  %}
+                                <a href="{{ url('local_newsletter_unsubscribe', {'username': receiver.username, 'unsubscribeKey': unsubscribe_key }) }}">{{ 'newsletter.local.unsubscribe'|trans }}</a>
+                            {% elseif constant('\\App\\Entity\\Newsletter::REGULAR_NEWSLETTER') == newsletter.type %}
+                                <a href="{{ url('regular_newsletter_unsubscribe', {'username': receiver.username, 'unsubscribeKey': unsubscribe_key }) }}">{{ 'newsletter.regular.unsubscribe'|trans }}</a>
+                            {% else %}
+                                {{ 'newsletter.no.unsubscribe'|trans }}
+                            {% endif %}
+                            </p>
                         {% endif %}
-                        </p>
                     {% endapply %}
                     <p>{{ "now" | date("Y") }} - <a href="{{ url('homepage') }}" target="_blank">BeWelcome</a></p>
                 </columns>
             </row>
         </wrapper>
-
     </container>
 {% endapply %}
 {% endblock %}

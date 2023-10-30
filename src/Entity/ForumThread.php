@@ -14,6 +14,7 @@ use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Exception;
 
 /**
  * ForumThread.
@@ -700,28 +701,31 @@ class ForumThread
         return $this->deleted;
     }
 
-    /**
-     * Set group.
-     *
-     * @param Group $group
-     *
-     * @return ForumThread
-     */
-    public function setGroup(Group $group = null)
+    public function setGroup(?Group $group = null): self
     {
         $this->group = $group;
 
         return $this;
     }
 
-    /**
-     * Get group.
-     *
-     * @return Group
-     */
-    public function getGroup()
+    public function getGroup(): ?Group
     {
-        return $this->group;
+        if (null === $this->group) {
+            return null;
+        }
+        
+        // Database might still link to deleted group row try to access group name and
+        // return null in case that triggers an exception
+        $group = $this->group;
+        try {
+            $groupName = $this->group->getName();
+        }
+        catch (Exception $e)
+        {
+            $group = null;
+        }
+
+        return $group;
     }
 
     /**

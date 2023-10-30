@@ -26,15 +26,15 @@
     <div class="col-12 col-sm-6">
         <div class="text-center text-md-left">
             {% if use_lightbox is defined %}
-                <a class="d-md-none" href="{{ url('avatar', { username: member.Username, size: 'original'}) }}" data-toggle="lightbox"
+                <a class="d-md-none js-profile-picture" href="{{ url('avatar', { username: member.Username, size: 'original'}) }}" data-toggle="lightbox"
                    data-always-show-close="true" data-type="image"
                    data-title="{{ 'profile.picture.title'| trans }}">
-                    <img class="profileimg avatar-160 d-md-none" src="{{ url('avatar', { username: member.Username, size: 160}) }}"
+                    <img class="profileimg d-md-none js-profile-picture" src="{{ url('avatar', { username: member.Username, size: 320}) }}"
                          alt="{{ 'profile.picture.title'| trans }}">
                 </a>
             {% else %}
                 <a href="{{ url('members_profile', {username: member.username}) }}">
-                    <img class="profileimg avatar-160 d-md-none" src="{{ url('avatar', { username: member.Username, size: 160}) }}"
+                    <img class="profileimg d-md-none js-profile-picture" src="{{ url('avatar', { username: member.Username, size: 320}) }}"
                          alt="{{ 'profile.picture.title'| trans }}">
                 </a>
             {% endif %}

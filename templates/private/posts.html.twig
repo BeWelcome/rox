@@ -7,13 +7,15 @@
         <p><strong>{{ 'mydata.posts.no.posts'|trans }}</strong></p>
     {% else %}
         {% for post in posts %}
-            {% set threadLink %}
-                {%- if post.thread.group -%}
-                    {{ url('group_forum_thread', {group_id: post.thread.group.id, thread: post.thread.id}) }}
-                {%- else -%}
-                    {{ url('forum_thread', {threadId: post.thread.id}) }}
-                {%- endif -%}
-            {% endset %}
+            {% set threadLink -%}
+                {% if not post.thread is null %}
+                    {%- if post.thread.group is defined and not post.thread.group is null -%}
+                        {{ url('group_forum_thread', {group_id: post.thread.group.id, thread: post.thread.id}) }}
+                    {%- else -%}
+                        {{ url('forum_thread', {threadId: post.thread.id}) }}
+                    {%- endif -%}
+                {% endif %}
+            {%- endset %}
             <div class="l-forum-single-post {% if loop.index is even %}l-forum-single-post--dark{% endif %}">
                 <!-- left column -->
                 <div class="c-single-post-user_info">
@@ -34,7 +36,7 @@
                     </div>
                 </div>
                 <div class="c-single-post-report"></div>
-                <div class="c-single-post-permalink">{% if not post.thread is null %}<a href="{{ threadLink }}/#post{{ post.id }}"><i class="fa fa-link"></i> Permalink</a>{% endif %}</div>
+                <div class="c-single-post-permalink">{% if not threadLink is empty %}<a href="{{ threadLink }}/#post{{ post.id }}"><i class="fa fa-link"></i> Permalink</a>{% endif %}</div>
 
                 <!-- message -->
                 <div class="c-single-post-content u-flex u-flex-col u-justify-between">

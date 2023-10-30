@@ -106,7 +106,7 @@ foreach($comments as $comment) {
             </div>
             <div class="d-flex flex-row justify-content-between">
                 <?php if ($this->loggedInMember->Username === $c->UsernameToMember){ ?>
-                    <div><a href="/members/<?= $this->member->Username;?>/comment/<?php echo $c->id;?>/report" title="<?=$words->getSilent('ReportCommentProblem') ?>" class="gray"><i class="fa fa-flag" alt="<?=$words->getSilent('ReportCommentProblem') ?>"></i></a></div>
+                    <div><a href="/members/<?= $this->loggedInMember->Username ?>/comment/<?= $c->UsernameToMember ?>/report" title="<?=$words->getSilent('ReportCommentProblem') ?>" class="gray"><i class="fa fa-flag" alt="<?=$words->getSilent('ReportCommentProblem') ?>"></i></a></div>
                 <?php } ?>
                 <div><?php if (!$this->passedAway) { ?><p class="h4 m-0 ml-lg-5 <?=$quality?>"><?= $words->get('CommentQuality_'.$c->comQuality.''); ?></p><?php } ?></div>
             <div><span title="<?php echo $c->created; ?>" class="small float-right"><?php echo $layoutbits->ago($c->unix_created); ?></span></div>
@@ -190,7 +190,7 @@ foreach($comments as $comment) {
                 <div><?php if (!$this->passedAway) { ?><p class="h4 m-0 mr-lg-5 <?=$quality?>"><?= $words->get('CommentQuality_'.$cc->comQuality.''); ?></p><?php } ?></div>
 
                 <?php if ($this->loggedInMember->Usenrname === $cc->UsernameToMember) :?>
-                    <div><a href="members/<?php echo $cc->UsernameToMember;?>/comment/<?php echo $cc->id;?>/report" title="<?=$words->getSilent('ReportCommentProblem') ?>"><i class="fa fa-flag" title="<?=$words->getSilent('ReportCommentProblem') ?>"></i></a></div>
+                    <div><a href="members/<?= $this->loggedInMember->Usenrname ?>/comment/<?= $cc->UsernameToMember ?>/report" title="<?=$words->getSilent('ReportCommentProblem') ?>"><i class="fa fa-flag" title="<?=$words->getSilent('ReportCommentProblem') ?>"></i></a></div>
                 <?php endif;?>
             </div>
 

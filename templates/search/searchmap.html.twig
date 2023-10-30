@@ -12,77 +12,87 @@
     <meta name="keywords" content="{{ 'default_meta_keyword' | trans }}"/>
 
     {{ encore_entry_link_tags('bewelcome') }}
-    {{ encore_entry_link_tags('floating_labels') }}
-    {{ encore_entry_link_tags('jquery_ui') }}
+    {{ encore_entry_link_tags('tailwind') }}
     <link rel='manifest' href='{{ asset('manifest.webmanifest') }}'>
+    <style>
+        .Site {
+            display: flex;
+            min-height: 100vh;
+            flex-direction: column;
+        }
+
+        .Site-content {
+            flex: 1;
+        }
+    </style>
     {% block stylesheets %}
         {{ encore_entry_link_tags('leaflet') }}
-        {{ encore_entry_link_tags('jquery_ui') }}
     {% endblock stylesheets %}
 </head>
-<body id="parallax-home">
-    {% include 'loginbar.html.twig' %}
-
-    <div id="map-box" style="top:43px; bottom:0;left:0;right:0; position:absolute;"></div>
-<div class="container-lg" style="z-index:2000">
-        {{ form_start(form, {'attr': {'class': 'm-1 search_form', 'onkeypress': 'return event.keyCode != 13;'}}) }}
+<body class="Site">
+{% include 'loginbar.html.twig' %}
+<main class="site-content">
+    <div class="container" style="position: relative; z-index: 2000;">
+        {{ form_start(form, {'attr': {'class': 'u-mt-8 search_form', 'onkeypress': 'return event.keyCode != 13;'}}) }}
         {{ form_errors(form) }}
-        <div class="form-row mt-2 align-items-end" style="background-color:rgba(0,0,0,0.2); border-radius:.25rem;">
-            <div class="col-8 col-sm-10 mt-1">
-                {{ form_row(form.location, {'attr': {'class': 'js-search-picker'}, 'required': false }) }}
+        <div class="u-flex u-items-center u-p-8 u-rounded-8"
+             style="background-color:rgba(0,0,0,0.2); border-radius:.25rem;">
+            <div class="col-8 col-sm-10">
+                <div class="auto-search-wrapper max-height loupe">
+                    <input type="text" id="{{ form.location.vars.id }}" name="{{ form.location.vars.full_name }}"
+                           class="o-input js-location-picker" autocomplete="off"
+                           placeholder="{{ 'trip.leg.location'|trans }}"
+                           aria-label="{{ 'trip.leg.location'|trans }}"
+                           {% if form.location.vars.value %}value="{{ form.location.vars.value }}"{% endif %}
+                    >
+                </div>
+                <div class="u-block">{{ form_errors(form.location) }}</div>
+                {% do form.location.setRendered %}
             </div>
             <div class="col-4 col-sm-2">
-                {{ form_row(form.updateMap, {'attr': {'class': 'btn-block btn-primary'} }) }}
+                <button type="submit" id="{{ form.updateMap.vars.id }}" name="{{ form.updateMap.vars.full_name }}"
+                        class="o-button btn">{{ form.updateMap.vars.label|trans }}</button>
+                {% do form.updateMap.setRendered %}
             </div>
         </div>
         {{ form_rest(form) }}
         {{ form_end(form) }}
-
-        <script>
-
-            var mapMembers =
-                {% if results %}
-                    {{ results.map | json_encode | raw }};
-                {% else %}
-                    null;
-                {% endif %}
-        </script>
-</div>
-    <div id="footer">
-        <div class="container-lg">
-            <div class="row">
-                <div class="col-12 text-left">
-                    <a href="{{ url('about') }}"><strong>{{ 'aboutuspage' | trans }}</strong></a> •
-                    <a href="{{ url('safety') }}">{{ 'safety' | trans }}</a> •
-                    <a href="{{ url('terms_of_use') }}" target="new">{{ 'termsofuse' | trans }}</a> •
-                    <a href="{{ url('privacy_policy') }}" target="new">{{ 'privacy' | trans }}</a> •
-                    <a href="{{ url('data_rights') }}" target="new">{{ 'datarights' | trans }}</a> •
-                    <a href="{{ url('imprint') }}">{{ 'impressum' | trans }}</a> •
-                    <a href="{{ url('about_faq') }}">{{ 'faq' | trans }}</a> •
-                    <a href="{{ url('feedback') }}">{{ 'footer.contactus' | trans }}</a> •
-                    <a href="{{ url('feedback', {'IdCategory': 1, 'RequestUri': url('homepage')}) }}">{{ 'footer.reportbug' | trans }}</a><br>
-                    &copy;2007
-                    &mdash; {{ "now" | date("Y") }} {{ 'copyrightbybv' | trans | escape | replace({'%link_start%': '<a href="https://bevolunteer.org">', '%link_end%': '</a>'})| raw }}
-                    - {{ 'runningon' | trans }} BW Rox rev. {{ version }} ({{ version_dt }})
-                </div>
+    </div>
+    <div class="container-fluid" style="position: absolute; top:58px; bottom:0;">
+        <div id="map-box"></div>
+    </div>
+</main>
+<footer>
+    <div class="u-flex">
+        <div class="u-m-auto" style="z-index: 2000;">
+                <a href="{{ url('about') }}"><strong>{{ 'aboutuspage' | trans }}</strong></a> •
+                <a href="{{ url('safety') }}">{{ 'safety' | trans }}</a> •
+                <a href="{{ url('terms_of_use') }}" target="new">{{ 'termsofuse' | trans }}</a> •
+                <a href="{{ url('privacy_policy') }}" target="new">{{ 'privacy' | trans }}</a> •
+                <a href="{{ url('data_rights') }}" target="new">{{ 'datarights' | trans }}</a> •
+                <a href="{{ url('imprint') }}">{{ 'impressum' | trans }}</a> •
+                <a href="{{ url('about_faq') }}">{{ 'faq' | trans }}</a> •
+                <a href="{{ url('feedback') }}">{{ 'footer.contactus' | trans }}</a> •
+                <a href="{{ url('feedback', {'IdCategory': 1, 'RequestUri': url('homepage')}) }}">{{ 'footer.reportbug' | trans }}</a><br>
+                &copy;2007
+                &mdash; {{ "now" | date("Y") }} {{ 'copyrightbybv' | trans | escape | replace({'%link_start%': '<a href="https://bevolunteer.org">', '%link_end%': '</a>'})| raw }}
+                - {{ 'runningon' | trans }} BW Rox rev. {{ version }} ({{ version_dt }})
             </div>
         </div>
     </div>
-
-    {{ encore_entry_script_tags('bewelcome') }}
-    {{ encore_entry_script_tags('jquery_ui') }}
-    {{ encore_entry_script_tags('leaflet') }}
-    {{ encore_entry_script_tags('search/loadpicker') }}
-    {{ encore_entry_script_tags('search/loadcontent') }}
-    {{ encore_entry_script_tags('search/map') }}
-    <script type="application/javascript">
-        $(".select2").select2({
-            theme: 'bootstrap4',
-            width: 'auto',
-            dropdownAutoWidth: true
-        });
-        $(".toast").toast('show');
-
-    </script>
+</footer>
+<script>
+    var mapMembers =
+        {% if results %}
+        {{ results.map | json_encode | raw }};
+    {% else %}
+    null;
+    {% endif %}
+</script>
+{{ encore_entry_script_tags('bewelcome') }}
+{{ encore_entry_script_tags('leaflet') }}
+{{ encore_entry_script_tags('search/loadpicker') }}
+{{ encore_entry_script_tags('search/loadcontent') }}
+{{ encore_entry_script_tags('search/map') }}
 </body>
 </html>

@@ -19,6 +19,7 @@ parameters:
     forum_notification_batch_size: "%env(forum_notification_batch_size)%"
     locales: "%env(LOCALES)%"
     document_locales: "%env(DOCUMENT_LOCALES)%"
+    app.username.regexp: !php/const App\Entity\Member::USERNAME_REGEXP
 
 services:
     _defaults:
@@ -472,4 +473,8 @@ services:
 
     app.mockup_provider.passwords:
         class: App\Model\MockupProvider\PasswordMockups
+        tags: [ 'app.mockup_provider' ]
+
+    app.mockup_provider.comments:
+        class: App\Model\MockupProvider\CommentMockups
         tags: [ 'app.mockup_provider' ]

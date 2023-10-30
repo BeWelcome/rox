@@ -16,9 +16,13 @@ const Avatar = () => {
         We will also find other profile pictures outside of react and update their src
         with the new changeCount to fool browser cache and reload the image
         */
-        const miniAvatarObjectsElements = document.getElementsByClassName('profileimg');
+        const miniAvatarObjectsElements = document.getElementsByClassName('js-profile-picture');
         for (let element of miniAvatarObjectsElements) {
-            element.src = `${element.src}?${changeCount}`;
+            if (element.href !== undefined) {
+                element.href = `${element.href}?${changeCount}`;
+            } else {
+                element.src = `${element.src}?${changeCount}`;
+            }
         }
     }
 

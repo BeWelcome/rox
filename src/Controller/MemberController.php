@@ -6,7 +6,9 @@ use App\Entity\Member;
 use App\Form\PasswordFormType;
 use App\Logger\Logger;
 use App\Model\MemberModel;
+use App\Utilities\ChangeProfilePictureGlobals;
 use App\Utilities\ManagerTrait;
+use App\Utilities\ProfileSubmenu;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
 use Exception;
@@ -19,10 +21,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Symfony\Component\Security\Core\Security;
+use Symfony\WebpackEncoreBundle\Asset\EntrypointLookupInterface;
+use Twig\Profiler\Profile;
 
 /**
  * Class MemberController.
@@ -33,8 +37,28 @@ class MemberController extends AbstractController
     use TranslatedFlashTrait;
     use TranslatorTrait;
 
+    private ProfileSubmenu $profileSubmenu;
+    private ChangeProfilePictureGlobals $globals;
+
+    public function __construct(ProfileSubmenu $profileSubmenu, ChangeProfilePictureGlobals $globals)
+    {
+        $this->profileSubmenu = $profileSubmenu;
+        $this->globals = $globals;
+    }
+
     /**
-     * @Route("/mydata", name="member_personal_data")
+     * @Route("/mydata", name="profile_personal_data_redirect")
+     */
+    public function redirectMyData()
+    {
+        $username = $this->getUser()->getUsername();
+        return $this->redirectToRoute('profile_personal_data', [
+            'username' => $username,
+        ]);
+    }
+
+    /**
+     * @Route("/members/{username}/mydata", name="profile_personal_data")
      *
      * @throws Exception
      *
@@ -44,29 +68,35 @@ class MemberController extends AbstractController
         Request $request,
         MemberModel $memberModel,
         Security $security,
-        EncoderFactoryInterface $encoderFactory
-    ) {
+        EntrypointLookupInterface $entrypointLookup,
+        PasswordHasherFactoryInterface $passwordHasherFactory
+    ): Response {
+        /** @var Member $member */
+        $member = $this->getUser();
+
         $passwordForm = $this->createForm(PasswordFormType::class);
         $passwordForm->handleRequest($request);
 
         if ($passwordForm->isSubmitted() && $passwordForm->isValid()) {
-            /** @var Member $member */
-            $member = $this->getUser();
             $password = $passwordForm->get('password')->getData();
 
             $token = $security->getToken();
 
             if ($token) {
-                $encoder = $encoderFactory->getEncoder($member);
+                $passwordHasher = $passwordHasherFactory->getPasswordHasher($member);
 
-                if ($encoder->isPasswordValid($member->getPassword(), $password, $member->getSalt())) {
+                if ($passwordHasher->verify($member->getPassword(), $password)) {
                     // Collect information and store in zip file
                     $zipFilename = $memberModel->collectPersonalData($member);
 
                     $request->getSession()->set('mydata_file', $zipFilename);
+                    $entrypointLookup->reset();
 
                     return $this->render('private/download.html.twig', [
                         'username' => $member->getUsername(),
+                        'member' => $member,
+                        'globals_js_json' => $this->globals->getGlobalsJsAsJson($member, $member),
+                        'submenu' => $this->profileSubmenu->getSubmenu($member, $member),
                         'url' => $this->generateUrl(
                             'member_download_data',
                             ['username' => $member->getUsername()],
@@ -79,25 +109,25 @@ class MemberController extends AbstractController
         }
 
         return $this->render('private/password.html.twig', [
+            'member' => $member,
+            'globals_js_json' => $this->globals->getGlobalsJsAsJson($member, $member),
+            'submenu' => $this->profileSubmenu->getSubmenu($member, $member),
             'form' => $passwordForm->createView(),
         ]);
     }
 
     /**
      * @Route("/members/{username}/data", name="admin_personal_data")
-     *
-     * @throws Exception
-     *
-     * @return StreamedResponse|Response
      * @ParamConverter("member", class="App\Entity\Member", options={"mapping": {"username": "username"}})
      */
     public function getPersonalData(
         Request $request,
         Member $member,
         Logger $logger,
+        EntrypointLookupInterface $entrypointLookup,
         MemberModel $memberModel
-    ) {
-        // Either the member themselves or a person from the safety or the admin can access
+    ): Response {
+        // Only the admin can access this special page
         $this->denyAccessUnlessGranted(
             Member::ROLE_ADMIN_ADMIN,
             null,
@@ -110,8 +140,13 @@ class MemberController extends AbstractController
 
         $request->getSession()->set('mydata_file', $zipFilename);
 
+        $entrypointLookup->reset();
+
         return $this->render('private/download.html.twig', [
             'username' => $member->getUsername(),
+            'member' => $member,
+            'globals_js_json' => $this->globals->getGlobalsJsAsJson($member, $member),
+            'submenu' => $this->profileSubmenu->getSubmenu($member, $member),
             'url' => $this->generateUrl(
                 'member_download_data',
                 [

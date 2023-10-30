@@ -1,5 +1,20 @@
+import 'leaflet';
 import 'leaflet.fullscreen';
 import 'leaflet.fullscreen/Control.FullScreen.css';
+import {initializeSingleAutoComplete} from "../suggest/locations";
+
+function onChange(element, result) {
+    const locationFullName = document.getElementById('search_map_location');
+    const locationGeonameId = document.getElementById('search_map_location_geoname_id');
+    const locationLatitude = document.getElementById('search_map_location_latitude');
+    const locationLongitude = document.getElementById('search_map_location_longitude');
+    locationFullName.value = result.name.replaceAll("#", ", ");
+    locationGeonameId.value = result.id;
+    locationLatitude.value = result.latitude;
+    locationLongitude.value = result.longitude;
+}
+
+initializeSingleAutoComplete("/suggest/locations/all", 'js-location-picker', onChange);
 
 function Map() {
     this.map = undefined;
@@ -10,7 +25,7 @@ function Map() {
 
 Map.prototype.showMap = function () {
     if (this.map === undefined) {
-        this.mapBox.append('<div id="map" class="map p-2 framed w-100"></div>');
+        this.mapBox.append('<div id="map" class="map u-w-full"></div>');
         this.map = L.map('map', {
             center: [15, 0],
             zoomSnap: 0.25,

@@ -65,9 +65,9 @@ $this->pager->render();
 echo '<table class="table table-striped table-hover">';
 echo '<tr><th>' . $words->getBuffered('AdminMassMailName') . '</th>';
 if ($this->canTrigger) {
-    echo '<th colspan="5">' . $words->getBuffered('AdminMassMailActions') . '</th>';
+    echo '<th colspan="6">' . $words->getBuffered('AdminMassMailActions') . '</th>';
 } else {
-    echo '<th colspan="3">' . $words->getBuffered('AdminMassMailActions') . '</th>';
+    echo '<th colspan="4">' . $words->getBuffered('AdminMassMailActions') . '</th>';
 }
 echo '<th><img src="images/icons/tick.png" alt="' . $words->getBuffered('AdminMassMailEnqueued') . '"></th>'
     . '<th><img src="images/icons/exclamation.png" alt="' . $words->getBuffered('AdminMassMailTriggered') . '"></th>'
@@ -77,11 +77,18 @@ echo '<th><img src="images/icons/tick.png" alt="' . $words->getBuffered('AdminMa
     . '</tr>';
 
 foreach($this->pager->getActiveSubset($this->massmails) as $massmail) {
-    $enqueued = ($massmail->enqueuedCount != 0);
-    $triggered = ($massmail->triggeredCount != 0);
+    // A mass mailing that has been triggered obviously needs to have been enqueued as well
+    $sent = ($massmail->sentCount !== "0");
+    $failed = ($massmail->failedCount !== "0");
+    $triggered = ($massmail->Status === "Triggered") || $sent || $failed;
+    $enqueued = ($massmail->enqueuedCount !== "0") || $triggered;
+
     $edit = '<a href="admin/massmail/edit/' . $massmail->id . '">'
         . '<img src="images/icons/comment_edit.png" alt="edit" /></a><br><a href="admin/massmail/edit/'
         . $massmail->id . '">' . $words->getBuffered('AdminMassMailEdit') . '</a>';
+    $test = '<a href="admin/massmail/test/' . $massmail->id . '">'
+        . '<img src="images/icons/wand.png" alt="test" /></a><br><a href="admin/massmail/test/'
+        . $massmail->id . '">' . $words->getBuffered('admin.massmail.test') . '</a>';
     $enqueue = '<a href="admin/massmail/enqueue/' . $massmail->id . '">'
         . '<img src="images/icons/tick.png" alt="enqueue" /></a><br/><a href="admin/massmail/enqueue/'
         . $massmail->id . '">'. $words->getBuffered('AdminMassMailEnqueue') . '</a>';
@@ -99,25 +106,35 @@ foreach($this->pager->getActiveSubset($this->massmails) as $massmail) {
     } else {
         $str = '<tr class="highlight">';
     }
-    $str .= '<td class="left"><a href="admin/massmail/details/' . $massmail->id . '">' . $massmail->Name . '</a></td>';
+    $str .= '<td class="left"><a href="admin/massmail/details/' . $massmail->id . '">' . $massmail->Name . '</a>';
+/*    $str .= $enqueued ? "enqueued " : " ";
+    $str .= $triggered ? "triggered " : " ";
+    $str .= $sent ? "sent " : " ";
+    $str .= $failed ? "failed " : " "; */
+    $str .= '</td>';
     if (!$enqueued) {
         $str .= '<td>' . $edit . '</td>';
     } else {
         $str .= '<td><span style="visibility: hidden;">' . $edit . '<span></td>';
     }
-    $str .= '<td>' . $enqueue . '</td>';
-    if ($enqueued) {
+    $str .= '<td>' . $test . '</td>';
+    if (!$enqueued) {
+        $str .= '<td>' . $enqueue . '</td>';
+    } else {
+        $str .= '<td><span style="visibility: hidden;">' . $enqueue . '</span></td>';
+    }
+    if ($enqueued && !$triggered) {
         $str .= '<td>' . $unqueue . '</td>';
     } else {
         $str .= '<td><span style="visibility: hidden;">' . $unqueue . '</span></td>';
     }
     if ($this->canTrigger) {
-        if ($enqueued) {
+        if ($enqueued  && !$triggered) {
             $str .= '<td>' . $trigger . '</td>';
         } else {
             $str .= '<td><span style="visibility: hidden;">' . $trigger . '</span></td>';
         }
-        if ($triggered) {
+        if ($triggered && !$sent && !$failed) {
             $str .= '<td>' . $untrigger . '</td>';
         } else {
             $str .= '<td><span style="visibility: hidden;">' . $untrigger . '</span></td>';

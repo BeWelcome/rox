@@ -7,8 +7,6 @@
 
 namespace App\Entity;
 
-use App\Entity\Country as Country;
-use App\Entity\Member as Member;
 use Carbon\Carbon;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
@@ -45,7 +43,7 @@ class Donation
      *
      * @ORM\Column(name="StatusPrivate", type="string", nullable=false)
      */
-    private $statusprivate = 'showamountonly';
+    private $statusPrivate = 'showamountonly';
 
     /**
      * @var DateTime
@@ -69,10 +67,10 @@ class Donation
     private $money;
 
     /**
-     * @var Country
+     * @var NewLocation
      *
-     * @ORM\ManyToOne(targetEntity="Country")
-     * @ORM\JoinColumn(name="IdCountry", referencedColumnName="country")
+     * @ORM\ManyToOne(targetEntity="NewLocation")
+     * @ORM\JoinColumn(name="IdCountry", referencedColumnName="geonameId")
      */
     private $country;
 
@@ -81,28 +79,28 @@ class Donation
      *
      * @ORM\Column(name="namegiven", type="text", length=65535, nullable=false)
      */
-    private $namegiven;
+    private $nameGiven;
 
     /**
      * @var string
      *
      * @ORM\Column(name="referencepaypal", type="text", length=65535, nullable=false)
      */
-    private $referencepaypal;
+    private $referencePaypal;
 
     /**
      * @var string
      *
      * @ORM\Column(name="membercomment", type="text", length=65535, nullable=false)
      */
-    private $membercomment;
+    private $memberComment;
 
     /**
      * @var string
      *
      * @ORM\Column(name="SystemComment", type="text", length=65535, nullable=false)
      */
-    private $systemcomment;
+    private $systemComment;
 
     /**
      * @var int
@@ -113,276 +111,139 @@ class Donation
      */
     private $id;
 
-    /**
-     * Set donor.
-     *
-     * @param Member $donor
-     *
-     * @return Donation
-     */
-    public function setDonor($donor)
+    public function setDonor($donor): self
     {
         $this->donor = $donor;
 
         return $this;
     }
 
-    /**
-     * Get donor.
-     *
-     * @return Member
-     */
-    public function getDonor()
+    public function getDonor(): ?Member
     {
         return $this->donor;
     }
 
-    /**
-     * Set email.
-     *
-     * @param string $email
-     *
-     * @return Donation
-     */
-    public function setEmail($email)
+    public function setEmail($email): self
     {
         $this->email = $email;
 
         return $this;
     }
 
-    /**
-     * Get email.
-     *
-     * @return string
-     */
-    public function getEmail()
+    public function getEmail(): string
     {
         return $this->email;
     }
 
-    /**
-     * Set statusprivate.
-     *
-     * @param string $statusprivate
-     *
-     * @return Donation
-     */
-    public function setStatusprivate($statusprivate)
+    public function setStatusPrivate($statusPrivate): self
     {
-        $this->statusprivate = $statusprivate;
+        $this->statusPrivate = $statusPrivate;
 
         return $this;
     }
 
-    /**
-     * Get statusprivate.
-     *
-     * @return string
-     */
-    public function getStatusprivate()
+    public function getStatusPrivate(): string
     {
-        return $this->statusprivate;
+        return $this->statusPrivate;
     }
 
-    /**
-     * Set created.
-     *
-     * @param DateTime $created
-     *
-     * @return Donation
-     */
-    public function setCreated($created)
+    public function setCreated($created): self
     {
         $this->created = $created;
 
         return $this;
     }
 
-    /**
-     * Get created.
-     *
-     * @return Carbon
-     */
-    public function getCreated()
+    public function getCreated(): Carbon
     {
         return Carbon::instance($this->created);
     }
 
-    /**
-     * Set amount.
-     *
-     * @param string $amount
-     *
-     * @return Donation
-     */
-    public function setAmount($amount)
+    public function setAmount(string $amount): self
     {
         $this->amount = $amount;
 
         return $this;
     }
 
-    /**
-     * Get amount.
-     *
-     * @return string
-     */
-    public function getAmount()
+    public function getAmount(): string
     {
         return $this->amount;
     }
 
-    /**
-     * Set money.
-     *
-     * @param string $money
-     *
-     * @return Donation
-     */
-    public function setMoney($money)
+    public function setMoney(string $money): self
     {
         $this->money = $money;
 
         return $this;
     }
 
-    /**
-     * Get money.
-     *
-     * @return string
-     */
-    public function getMoney()
+    public function getMoney(): string
     {
         return $this->money;
     }
 
-    /**
-     * Set country.
-     *
-     * @param Country $country
-     *
-     * @return Donation
-     */
-    public function setCountry($country)
+    public function setCountry($country): self
     {
         $this->country = $country;
 
         return $this;
     }
 
-    /**
-     * Get country.
-     *
-     * @return Country
-     */
-    public function getCountry()
+    public function getCountry(): ?NewLocation
     {
         return $this->country;
     }
 
-    /**
-     * Set namegiven.
-     *
-     * @param string $namegiven
-     *
-     * @return Donation
-     */
-    public function setNamegiven($namegiven)
+    public function setNameGiven($nameGiven): self
     {
-        $this->namegiven = $namegiven;
+        $this->nameGiven = $nameGiven;
 
         return $this;
     }
 
-    /**
-     * Get namegiven.
-     *
-     * @return string
-     */
-    public function getNamegiven()
+    public function getNameGiven(): string
     {
-        return $this->namegiven;
+        return $this->nameGiven;
     }
 
-    /**
-     * Set referencepaypal.
-     *
-     * @param string $referencepaypal
-     *
-     * @return Donation
-     */
-    public function setReferencepaypal($referencepaypal)
+    public function setReferencePaypal($referencePaypal): self
     {
-        $this->referencepaypal = $referencepaypal;
+        $this->referencePaypal = $referencePaypal;
 
         return $this;
     }
 
-    /**
-     * Get referencepaypal.
-     *
-     * @return string
-     */
-    public function getReferencepaypal()
+    public function getReferencePaypal(): string
     {
-        return $this->referencepaypal;
+        return $this->referencePaypal;
     }
 
-    /**
-     * Set membercomment.
-     *
-     * @param string $membercomment
-     *
-     * @return Donation
-     */
-    public function setMembercomment($membercomment)
+    public function setMemberComment($memberComment): self
     {
-        $this->membercomment = $membercomment;
+        $this->memberComment = $memberComment;
 
         return $this;
     }
 
-    /**
-     * Get membercomment.
-     *
-     * @return string
-     */
-    public function getMembercomment()
+    public function getMemberComment(): string
     {
-        return $this->membercomment;
+        return $this->memberComment;
     }
 
-    /**
-     * Set systemcomment.
-     *
-     * @param string $systemcomment
-     *
-     * @return Donation
-     */
-    public function setSystemcomment($systemcomment)
+    public function setSystemComment($systemComment): self
     {
-        $this->systemcomment = $systemcomment;
+        $this->systemComment = $systemComment;
 
         return $this;
     }
 
-    /**
-     * Get systemcomment.
-     *
-     * @return string
-     */
-    public function getSystemcomment()
+    public function getSystemComment(): string
     {
-        return $this->systemcomment;
+        return $this->systemComment;
     }
 
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }

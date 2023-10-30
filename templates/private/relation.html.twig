@@ -2,12 +2,10 @@
     <div class="p-2 {{ background }} h-100">
         {{ 'mydata.relation.owned'|trans({'owned': relation.owner.username}) }}<br>
         {{ 'mydata.relation.received'|trans({'received': relation.receiver.username}) }}<br>
-    {{ 'mydata.relations.type' | trans }}: {% for current in relation.type|split(',') %}{{ ('relation_type_' ~ current)|lower|trans }}
-        {% if not loop.last %}, {% endif %}
-        {% endfor %}<br>
+    <br>
         {{ 'mydata.relations.confirmed'|trans }}: {{ relation.confirmed }}<br>
         {{ 'mydata.relations.comments'|trans }} <br>
     <br>
-    {{ relation.commentText }}<br>
+    {{ relation.commentText|purify }}<br>
     </div>
 </div>

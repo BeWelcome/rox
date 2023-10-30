@@ -1,5 +1,6 @@
 import dayjs from 'dayjs';
 import Litepicker from 'litepicker';
+import {disableButtonOnSubmit} from './submit_button_disable';
 
 import '../scss/_daterangepicker.scss';
 
@@ -39,3 +40,5 @@ $(function () {
         }
     }
 });
+
+disableButtonOnSubmit();

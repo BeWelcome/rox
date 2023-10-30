@@ -13,6 +13,7 @@ use App\Form\ReportCommentType;
 use App\Model\CommentModel;
 use App\Model\ProfileModel;
 use App\Service\Mailer;
+use App\Utilities\ChangeProfilePictureGlobals;
 use App\Utilities\ProfileSubmenu;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
@@ -32,6 +33,15 @@ class CommentController extends AbstractController
 {
     use TranslatorTrait;
     use TranslatedFlashTrait;
+
+    private ProfileSubmenu $profileSubmenu;
+    private ChangeProfilePictureGlobals $globals;
+
+    public function __construct(ProfileSubmenu $profileSubmenu, ChangeProfilePictureGlobals $globals)
+    {
+        $this->profileSubmenu = $profileSubmenu;
+        $this->globals = $globals;
+    }
 
     /**
      * @Route("/members/{to_member}/comment/{from_member}/report", name="report_comment",
@@ -114,7 +124,6 @@ class CommentController extends AbstractController
         Member $member,
         CommentModel $commentModel,
         Mailer $mailer,
-        ProfileSubmenu $profileSubmenu,
         EntityManagerInterface $entityManager
     ): Response {
         /** @var Member $loggedInMember */
@@ -175,7 +184,8 @@ class CommentController extends AbstractController
         return $this->render('/profile/comment.add.html.twig', [
             'form' => $form->createView(),
             'member' => $member,
-            'submenu' => $profileSubmenu->getSubmenu($member, $loggedInMember, ['active' => 'comment']),
+            'globals_js_json' => $this->globals->getGlobalsJsAsJson($member, $loggedInMember),
+            'submenu' => $this->profileSubmenu->getSubmenu($member, $loggedInMember, ['active' => 'comment']),
         ]);
     }
 
@@ -186,7 +196,6 @@ class CommentController extends AbstractController
     public function editComment(
         Request $request,
         Member $member,
-        ProfileSubmenu $profileSubmenu,
         CommentModel $commentModel,
         Mailer $mailer,
         EntityManagerInterface $entityManager
@@ -248,6 +257,8 @@ class CommentController extends AbstractController
 
             $mailer->sendCommentUpdateNotification($comment);
 
+            $mailer->sendCommentUpdateNotification($comment);
+
             if ($newExperience || $changedToNegative || $changedToPositive) {
                 return $this->redirectToRoute('profile_comments', ['username' => $loggedInMember->getUsername()]);
             }
@@ -257,7 +268,8 @@ class CommentController extends AbstractController
             'form' => $form->createView(),
             'member' => $member,
             'check_experience' => $checkForExperience,
-            'submenu' => $profileSubmenu->getSubmenu($member, $loggedInMember, ['active' => 'comment']),
+            'globals_js_json' => $this->globals->getGlobalsJsAsJson($member, $loggedInMember),
+            'submenu' => $this->profileSubmenu->getSubmenu($member, $loggedInMember, ['active' => 'comment']),
         ]);
     }
 
@@ -300,7 +312,6 @@ class CommentController extends AbstractController
      */
     public function showCommentsForMember(
         Member $member,
-        ProfileSubmenu $profileSubmenu,
         ProfileModel $profileModel,
         EntityManagerInterface $entityManager
     ): Response {
@@ -321,7 +332,8 @@ class CommentController extends AbstractController
             'status_form' => $statusFormView,
             'member' => $member,
             'comments' => $comments,
-            'submenu' => $profileSubmenu->getSubmenu($member, $loggedInMember, ['active' => 'comments']),
+            'globals_js_json' => $this->globals->getGlobalsJsAsJson($member, $loggedInMember),
+            'submenu' => $this->profileSubmenu->getSubmenu($member, $loggedInMember, ['active' => 'comments']),
         ]);
     }
 }

@@ -13,8 +13,8 @@ document.addEventListener('DOMContentLoaded', function () {
     new ShowMore('.js-read-more-received', {
         config: {
             type: "text",
-            limit: 120,
-            after: 120,
+            limit: 240,
+            after: 60,
             btnClass: "o-show-more-btn",
             more: document.getElementById('read.more').value,
             less: document.getElementById('show.less').value
@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function () {
         config: {
             type: "text",
             limit: 120,
-            after: 60,
+            after: 30,
             btnClass: "o-show-more-btn",
             more: document.getElementById('read.more').value,
             less: document.getElementById('show.less').value

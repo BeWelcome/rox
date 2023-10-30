@@ -4,12 +4,12 @@
 {% block stylesheets %}
   {{ encore_entry_link_tags('tailwind') }}
   {{ encore_entry_link_tags('jquery_ui') }}
+  {{ encore_entry_link_tags('leaflet') }}
 {% endblock stylesheets %}
 
 {% block javascripts %}
   {{ encore_entry_script_tags('landing') }}
   {{ encore_entry_script_tags('jquery_ui') }}
-  {{ encore_entry_script_tags('search/loadpicker') }}
 {% endblock javascripts %}
 
 {% block content %}
@@ -23,7 +23,7 @@
 	<div class="l-welcome-card">
 
 		<div class="u-flex u-flex-col u-justify-center u-py-16 u-px-24">
-        <p class="u-text-26 u-leading-32 u-font-400 u-font-display u-mb-8">{{ 'landing.welcomeback' | trans }}&nbsp;<span class="u-font-300">{{ macros.profilelink(app.user.Username) }}</span></p>
+        <p class="u-text-26 u-leading-32 u-font-400 u-font-display u-mb-8">{{ 'landing.welcomeback' | trans }}<span class="u-font-300">{{ macros.profilelink(app.user.Username) }}</span></p>
 			<div class="u-flex u-items-center">
 				{% include 'landing/widget/accommodation.html.twig' with {
             member: app.user
@@ -45,16 +45,26 @@
 		<div class="u-flex u-items-center u-justify-center u-bg-gray-5 u-py-16 u-px-24 u-rounded-r-16">
 			{{ form_start( tinySearch, { 'action': path('search_locations'), 'attr': {'class': 'u-w-full'} } ) }}
 
-			<label for="search_goto_location_form_search" class="sr-only">{{ 'landing.whereyougo' | trans }}</label>
+			<label for="{{ tinySearch.location.vars.id}}" class="sr-only">{{ 'landing.whereyougo' | trans }}</label>
 			<div class="input-group">
-				{{ form_widget( tinySearch.location, { 'attr' : { 'class' : 'js-search-picker form-control',
-            'placeholder': 'landing.whereyougo'|trans } } ) }}
-				<span class="input-group-append">
-					<button type="submit" id="tiny_updateMap" name="tiny[updateMap]" class="btn o-button">{{ 'go'|trans }}</button>
-					{% do tinySearch.updateMap.setRendered %}
+                <div class="auto-search-wrapper max-height loupe">
+                    <input type="text" id="{{ tinySearch.location.vars.id}}" name="{{ tinySearch.location.vars.full_name }}"
+                           class="js-location-picker" autocomplete="off"
+                           placeholder="{{ 'trip.leg.location'|trans }}"
+                           aria-label="{{ 'trip.leg.location'|trans }}"
+                           {% if tinySearch.location.vars.value %}value="{{ tinySearch.location.vars.value }}"{% endif %}
+                    >
+                </div>
+                <div class="u-block">{{ form_errors(tinySearch.location) }}</div>
+                {% do tinySearch.location.setRendered %}
+                <span class="input-group-append">
+					<button type="submit" id="tiny_updateMap" name="{{ tinySearch.updateMap.vars.name }}" class="btn o-button">{{ 'go'|trans }}</button>
 				</span>
 			</div>
-			<div class="d-none invisible">{{ form_rest( tinySearch ) }}</div>
+            <div class="u-block">{{ form_errors(tinySearch.location) }}</div>
+            {% do tinySearch.location.setRendered %}
+            {% do tinySearch.updateMap.setRendered %}
+			<div class="d-none" aria-hidden="true">{{ form_rest( tinySearch ) }}</div>
 			{{ form_end( tinySearch ) }}
 
 		</div>
@@ -72,7 +82,7 @@
                    data-toggle="tab">{{ 'landing.tab.messagesreceived' | trans }}
                     {% if conversationCount %}
                         <span
-                            class="badge badge-primary u-rounded-10 u-min-w-20 u-px-8 u-h-20 u-inline-flex u-items-center u-justify-center">{{ conversationCount }}</span>
+                            class="badge badge-primary u-rounded-8 u-min-w-20 u-px-8 u-h-20 u-inline-flex u-items-center u-justify-center">{{ conversationCount }}</span>
                     {% endif %}
                 </a>
             </li>
@@ -80,7 +90,7 @@
                 <a class="nav-link" aria-controls="visitors" href="#visitors" role="tab"
                    data-toggle="tab">{{ 'landing.tab.visitors' | trans }}
                     {% if visitorsCount %}
-                        <span class="badge badge-primary u-rounded-10 u-min-w-20 u-px-8 u-h-20 u-inline-flex u-items-center u-justify-center">{{ visitorsCount }}</span>
+                        <span class="badge badge-primary u-rounded-8 u-min-w-20 u-px-8 u-h-20 u-inline-flex u-items-center u-justify-center">{{ visitorsCount }}</span>
                     {% endif %}
                 </a>
             </li>
@@ -167,12 +177,12 @@
             <li class="nav-item">
                 <a href="#activities" class="nav-link" aria-controls="activities" role="tab"
                    data-toggle="tab">{{ 'landing.tab.activities' | trans }}{% if activityCount %} <span
-                        class="badge badge-primary u-rounded-10 u-min-w-20 u-px-8 u-h-20 u-inline-flex u-items-center u-justify-center">{{ activityCount }}</span>{% endif %}</a>
+                        class="badge badge-primary u-rounded-8 u-min-w-20 u-px-8 u-h-20 u-inline-flex u-items-center u-justify-center">{{ activityCount }}</span>{% endif %}</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" aria-controls="notifications" href="#notifications" role="tab"
                    data-toggle="tab">{{ 'landing.tab.notifications' | trans }}{% if notificationCount %} <span
-                        class="badge badge-primary u-rounded-10 u-min-w-20 u-px-8 u-h-20 u-inline-flex u-items-center u-justify-center">{{ notificationCount }}</span>{% endif %}</a>
+                        class="badge badge-primary u-rounded-8 u-min-w-20 u-px-8 u-h-20 u-inline-flex u-items-center u-justify-center">{{ notificationCount }}</span>{% endif %}</a>
             </li>
 		</ul>
 
@@ -306,7 +316,7 @@
 			{% if campaign.yearDonated >= campaign.yearNeeded %}
 				<p class="u-font-display u-font-300 u-my-16 u-text-center">{{ 'donation.thank.you'|trans({'amount':'€' ~ campaign.yearNeeded})|raw }}</p>
 			{% endif %}
-        <a href="{{ url('donate') }}"
+        <a href="{{ url('donations') }}"
             class="btn o-button {% if campaign.yearDonated < campaign.yearNeeded %}o-button--full{% else %}o-button--outline{% endif %} u-my-16"><i
               class="fa u-mr-8 fa-euro-sign"></i> {{ 'landing.beinvolved.pleasedonate' | trans }}</a>
 
@@ -389,7 +399,5 @@
 	</div>
 
 </div>
-
-
 {% endblock content %}
 

@@ -2,6 +2,7 @@
 
 namespace App\EventSubscriber;
 
+use App\Doctrine\MemberStatusType;
 use App\Entity\Member;
 use Carbon\Carbon;
 use DateTime;
@@ -79,11 +80,14 @@ class AuthenticationEventSubscriber implements EventSubscriberInterface
                     $member->setStatus(MemberStatusType::ACTIVE);
                 }
 
+                $member->setRemindersWithOutLogin(0);
+
                 $this->entityManager->persist($member);
                 $this->entityManager->flush();
             }
         }
     }
+
     public function onKernelRequest(RequestEvent $event)
     {
         if (!$event->isMainRequest()) {

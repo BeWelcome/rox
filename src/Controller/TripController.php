@@ -205,9 +205,6 @@ class TripController extends AbstractController
     public function copy(Trip $trip): Response
     {
         $member = $this->getUser();
-        if ($trip->getCreator() !== $member) {
-            throw new AccessDeniedException();
-        }
 
         $newTrip = $this->tripModel->copyTrip($trip);
 

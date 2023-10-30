@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+<h1>Massmail - Test mailing</h1>
+<div class="u-flex u-flex-col">
+    <div class="u-mb-8">
+        {{ form_start(form) }}
+        {{ form_row(form.members) }}
+        <button type="submit" class="o-button">Submit</button>
+        {{ form_end(form) }}
+    </div>
+
+    <div class="u-mb-8">
+        <p class="u-font-700">Newsletter (translated into current locale)</p>
+        <div class="u-border-2 u-border-bewelcome u-p-16">
+            {{ ('broadcast_body_' ~ newsletter.name)|lower|trans({'username': app.user.username}, null, app.request.locale)|prepare_newsletter(true) }}
+        </div>
+    </div>
+</div>
+{% endblock content %}

@@ -26,7 +26,7 @@ marker.addTo(map);
 map.setView([locationLatitude.value, locationLongitude.value], 12);
 
 // callback when a selection is done from the list of possible results
-const addMarkerAndMoveToNewLocation = function(result) {
+const addMarkerAndMoveToNewLocation = function(element, result) {
     locationGeonameId.value = result.id;
     locationLatitude.value = result.latitude;
     locationLongitude.value = result.longitude;
@@ -52,7 +52,7 @@ function dragend(e) {
     locationLongitude.value = e.target._latlng.lng;
 }
 
-initializeSingleAutoComplete("/suggest/locations/places/exact", 'js-location-picker', '_autocomplete', addMarkerAndMoveToNewLocation);
+initializeSingleAutoComplete("/suggest/locations/places/exact", 'js-location-picker', addMarkerAndMoveToNewLocation);
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap contributors</a>',

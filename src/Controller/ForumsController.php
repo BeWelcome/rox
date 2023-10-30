@@ -7,9 +7,11 @@ use App\Entity\Member;
 use App\Entity\MemberPreference;
 use App\Entity\Preference;
 use App\Repository\ForumPostRepository;
+use App\Utilities\ChangeProfilePictureGlobals;
 use App\Utilities\ItemsPerPageTraits;
 use App\Utilities\ProfileSubmenu;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Mapping\Entity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -178,11 +180,24 @@ class ForumsController extends AbstractController
         Request $request,
         ProfileSubmenu $profileSubmenu,
         Member $member,
+        EntityManagerInterface $entityManager,
+        ChangeProfilePictureGlobals $globals,
         int $page = 1,
         string $search = ""
     ): Response {
         /** @var Member $loggedInMember */
         $loggedInMember = $this->getUser();
+
+        $preferenceRepository = $entityManager->getRepository(Preference::class);
+
+        /** @var Preference $preference */
+        $preference = $preferenceRepository->findOneBy(['codename' => Preference::SHOW_FORUMS_POSTS]);
+        $memberPreference = $member->getMemberPreference($preference);
+
+        if ('No' === $memberPreference->getValue() && $member !== $loggedInMember) {
+            return $this->redirectToRoute('members_profile', ['username' => $member->getUsername()]);
+        }
+
         $searchForm = $this->createFormBuilder()
             ->add('q', TextType::class, [
                 'label' => false,
@@ -216,6 +231,7 @@ class ForumsController extends AbstractController
             'search' => $search,
             'member' => $member,
             'posts' => $posts,
+            'globals_js_json' => $globals->getGlobalsJsAsJson($member, $loggedInMember),
             'submenu' => $profileSubmenu->getSubmenu($member, $loggedInMember, ['active' => 'forum_posts']),
         ]);
     }

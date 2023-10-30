@@ -6,3 +6,23 @@ massmail.correct.birth.date:
 newsletter.unsubscribe.local.confirmation:
     - 'You have unsubcribed from local newsletters. If you decide to subscribe again, please set the according preference.'
     - Information text when a member unsubscribes from local newsletters from the unsubscribe link in the newsletter email.
+admin.massmail.suspension.notification.info:
+    - This will send a notification to all members that even after 5 times of receiving a login reminder did not login
+    - Short information for the person enqueueing a massmail of type SuspendAfter5Reminders
+    - 'messages+intl-icu'
+    - 'no'
+admin.massmail.enqueue.suspension.notification:
+    - Suspension Notification
+    - Label for the tab on the admin pages for massmail enqueueing
+    - 'messages+intl-icu'
+    - 'no'
+admin.massmail.suspension.notification.submit:
+    - Submit
+    - Label for the button to enqueue the suspension notification
+    - 'messages+intl-icu'
+    - 'no'
+admin.massmail.test:
+    - Test
+    - Label for the button that allows to send a test massmail to selected members
+    - 'messages+intl-icu'
+    - 'no'

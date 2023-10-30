@@ -7,7 +7,7 @@
         {% include 'member/comment.html.twig' with {'comment' : comment, 'mute': false } %}
         <div class="col-12 col-sm-6 o-card">
             {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
-            <div class="row"><div class="col-12 mb-4">{{ 'comment.report.help' }}</div></div>
+            <div class="row"><div class="col-12 mb-4">{{ 'comment.report.help'|trans }}</div></div>
             {{ form_widget(form) }}
             {{ form_end(form) }}
         </div>

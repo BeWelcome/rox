@@ -14,6 +14,7 @@ use App\Model\GalleryModel;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
 use App\Utilities\UniqueFilenameTrait;
+use Doctrine\ORM\EntityManagerInterface;
 use Hidehalo\Nanoid\Client;
 use Intervention\Image\ImageManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -34,7 +35,12 @@ class GalleryController extends AbstractController
     use TranslatorTrait;
     use UniqueFilenameTrait;
 
-    private const MAX_PIXELS = 16000000;
+    private EntityManagerInterface $entityManager;
+
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
 
     /**
      * @Route("/gallery/show/image/{id}/edit", name="gallery_edit_image",
@@ -57,9 +63,8 @@ class GalleryController extends AbstractController
             $data = $editImageForm->getData();
             $image->setTitle($data->title);
             $image->setDescription($data->description);
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($image);
-            $em->flush();
+            $this->entityManager->persist($image);
+            $this->entityManager->flush();
 
             $this->addTranslatedFlash('notice', 'flash.gallery.information.update');
 
@@ -90,11 +95,21 @@ class GalleryController extends AbstractController
         /** @var UploadedFile $image */
         $image = $request->files->get('file');
 
+        if (null === $image) {
+            $response->setData([
+                'success' => false,
+                'filename' => $this->getTranslator()->trans('upload.error.no_image'),
+                'error' => $this->getTranslator()->trans('upload.error.too_large'),
+            ]);
+            $response->setStatusCode(413);
+
+            return $response;
+        }
+
         $constraint = new Image([
             'maxSize' => UploadedFile::getMaxFilesize(),
             'mimeTypes' => ['image/jpeg', 'image/png', 'image/gif'],
             'mimeTypesMessage' => 'upload.error.not_supported',
-            'maxPixels' => self::MAX_PIXELS,
         ]);
 
         $violations = $validator->validate($image, $constraint);
@@ -117,13 +132,12 @@ class GalleryController extends AbstractController
         $fileName = $this->generateUniqueFileName() . '.' . $image->guessExtension();
 
         // moves the file to the directory where gallery images are stored
-        /** @var UploadedFile */
         $image = $image->move(
             $uploadDirectory,
             $fileName
         );
 
-        // creates a thumb nail for the current image
+        // creates a thumbnail for the current image
         $imageManager = new ImageManager();
         $img = $imageManager->make($image->getRealPath())->orientate();
         if ($width > 240 || $height > 240) {
@@ -133,21 +147,31 @@ class GalleryController extends AbstractController
         }
         $img->save($uploadDirectory . '/thumb' . $fileName);
 
-        $albumId = $request->get('album');
+        $album = $request->get('album');
 
         // Create doctrine entity for image and save to database
         $galleryImage = new GalleryImage();
-        if (0 !== $albumId) {
+        if ('' !== $album) {
             // Check if album exists
             // and if so check if the current member is owner of that album
-            $galleryRepository = $this->getDoctrine()->getRepository(Gallery::class);
+            $galleryRepository = $this->entityManager->getRepository(Gallery::class);
             /** @var Gallery $gallery */
-            $gallery = $galleryRepository->findOneBy(['id' => $albumId]);
-            if ($gallery && $gallery->getOwner() === $member) {
-                $galleryImage->addGallery($gallery);
-                $gallery->addImage($galleryImage);
+            $gallery = $galleryRepository->findOneBy(['title' => $album, 'owner' => $member]);
+            if (null === $gallery) {
+                $gallery = new Gallery();
+                $gallery->setTitle($album);
+                $gallery->setOwner($member);
+                $gallery->setFlags('');
+                $gallery->setDescription('');
+
+                $this->entityManager->persist($gallery);
+                $this->entityManager->flush();
             }
+
+            $galleryImage->addGallery($gallery);
+            $gallery->addImage($galleryImage);
         }
+
         $galleryImage->setFile($fileName);
         $galleryImage->setFlags('');
         $galleryImage->setOriginal($originalName);
@@ -157,9 +181,9 @@ class GalleryController extends AbstractController
         $galleryImage->setMimetype($image->getMimeType());
         $galleryImage->setTitle('');
         $galleryImage->setDescription('');
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($galleryImage);
-        $em->flush();
+
+        $this->entityManager->persist($galleryImage);
+        $this->entityManager->flush();
 
         $response->setData([
             'success' => true,
@@ -167,7 +191,6 @@ class GalleryController extends AbstractController
             'imageId' => $galleryImage->getId(),
             'constraints' => [
                 'size' => UploadedFile::getMaxFilesize(),
-                'pixels' => self::MAX_PIXELS,
             ],
         ]);
 
@@ -184,21 +207,21 @@ class GalleryController extends AbstractController
         /** @var Member $member */
         $member = $this->getUser();
 
-        $galleryRepository = $this->getDoctrine()->getRepository(Gallery::class);
+        $galleryRepository = $this->entityManager->getRepository(Gallery::class);
         $galleries = $galleryRepository->findBy(['owner' => $member]);
 
         $albumTitles = [];
         if ($galleries) {
-            $albumTitles[''] = 0;
+            $albumTitles[0] = '';
             foreach ($galleries as $gallery) {
-                $albumTitles[$gallery->getTitle()] = $gallery->getId();
+                $albumTitles[$gallery->getId()] = $gallery->getTitle();
             }
         }
         $uploadImageForm = $this->createForm(GalleryUploadForm::class, null, ['albums' => $albumTitles]);
         $uploadImageForm->handleRequest($request);
         if ($uploadImageForm->isSubmitted() && $uploadImageForm->isValid()) {
             // if this is called someone tries to hack the system as the Javascript on the upload page
-            // takes care of uploading the files so we return an 403
+            // takes care of uploading the files so we return a 403 error
             return new Response(403);
         }
 
@@ -210,7 +233,6 @@ class GalleryController extends AbstractController
             ],
             'constraints' => [
                 'size' => $this->getMaxUploadSizeInMegaBytes(),
-                'pixels' => self::MAX_PIXELS,
             ],
         ]);
     }
@@ -244,8 +266,7 @@ class GalleryController extends AbstractController
         // Check if an image with the same content already exists
         $hash = hash_file('sha256', $image->getPathname());
 
-        $em = $this->getDoctrine()->getManager();
-        $uploadedImageRepository = $em->getRepository(UploadedImage::class);
+        $uploadedImageRepository = $this->entityManager->getRepository(UploadedImage::class);
         $existingImages = $uploadedImageRepository->findBy(['fileHash' => $hash]);
 
         if (0 === \count($existingImages)) {
@@ -274,8 +295,9 @@ class GalleryController extends AbstractController
                 ->setFileInfo($fileInfo)
                 ->setFileHash($hash)
             ;
-            $em->persist($uploadedImage);
-            $em->flush();
+
+            $this->entityManager->persist($uploadedImage);
+            $this->entityManager->flush();
         } else {
             $uploadedImage = $existingImages[0];
         }
@@ -290,6 +312,8 @@ class GalleryController extends AbstractController
                 ],
                 UrlGeneratorInterface::ABSOLUTE_URL
             ),
+            'width' => 123,
+            'height' => 456,
         ]);
 
         return $response;
@@ -298,10 +322,8 @@ class GalleryController extends AbstractController
     /**
      * @Route("/gallery/show/uploaded/{id}", name="gallery_uploaded_ckeditor_old",
      *     requirements={"id":"\d+"})
-     *
-     * @return Response
      */
-    public function showUploadedImageOld(UploadedImage $image, Logger $logger)
+    public function showUploadedImageOld(UploadedImage $image, Logger $logger): Response
     {
         $logger->write('Image ' . $image->getId() . ' accessed using old URL', 'Image');
 
@@ -313,10 +335,8 @@ class GalleryController extends AbstractController
     /**
      * @Route("/gallery/show/uploaded/{id}/{fileInfo}", name="gallery_uploaded_ckeditor",
      *     requirements={"id":"\d+"})
-     *
-     * @return BinaryFileResponse
      */
-    public function showUploadedImage(UploadedImage $image, string $fileInfo)
+    public function showUploadedImage(UploadedImage $image, string $fileInfo): BinaryFileResponse
     {
         $uploadDirectory = $this->getParameter('upload_directory') . '/';
         if (!$this->isGranted('IS_AUTHENTICATED_REMEMBERED') || $image->getFileInfo() !== $fileInfo) {
@@ -355,7 +375,7 @@ class GalleryController extends AbstractController
                 'url' => $this->generateUrl('gallery_upload_multiple'),
             ],
             'albums' => [
-                'key' => 'GalleryMy',
+                'key' => 'GalleryTitleSets',
                 'url' => $this->generateUrl('gallery_show_user_albums', ['username' => $member->getUsername()]),
             ],
         ];

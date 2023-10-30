@@ -73,6 +73,7 @@ security:
         - { path: ^/login, roles:  PUBLIC_ACCESS }
         - { path: ^/about, roles:  PUBLIC_ACCESS }
         - { path: ^/donate, roles:  PUBLIC_ACCESS }
+        - { path: ^/donation, roles:  PUBLIC_ACCESS }
         - { path: ^/feedback, roles:  PUBLIC_ACCESS }
         - { path: ^/impressum, roles:  PUBLIC_ACCESS }
         - { path: ^/terms, roles:  PUBLIC_ACCESS }

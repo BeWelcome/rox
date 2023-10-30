@@ -6,8 +6,8 @@ class SignupBasePage extends PageWithRoxLayout
     public function __construct()
     {
         parent::__construct();
-        $this->addLateLoadScriptFile('build/rangeslider.js');
-        $this->addLateLoadScriptFile('build/signup/signup.js');
+//        $this->addLateLoadScriptFile('build/rangeslider.js');
+//        $this->addLateLoadScriptFile('build/signup/signup.js');
     }
 
     protected function getSubmenuItems()

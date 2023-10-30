@@ -63,6 +63,7 @@
                             <td class="w-75">
                                 <p class="m-0"><small class="text-muted">{{ translation.domain }}</small></p>
                                 <p class="m-0">{% if translation.shortcode == locale %}
+                                        {% if translation.majorUpdate is defined %}<i class="fas {% if translation.majorUpdate %}fa-arrow-up{% else %}fa-arrow-down{% endif %} fa-fw"></i>{% endif %}
                                     {{ translation.sentence | striptags | truncate(50) }}
                                 {% else %}
                                     {{ 'translations.missing' | trans }}

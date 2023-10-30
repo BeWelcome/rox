@@ -10,6 +10,7 @@ use App\Form\RelationType;
 use App\Repository\ProfileNoteRepository;
 use App\Repository\RelationRepository;
 use App\Service\Mailer;
+use App\Utilities\ChangeProfilePictureGlobals;
 use App\Utilities\ItemsPerPageTraits;
 use App\Utilities\ProfileSubmenu;
 use App\Utilities\TranslatedFlashTrait;
@@ -29,16 +30,23 @@ class RelationController extends AbstractController
     use TranslatedFlashTrait;
 
     private EntityManagerInterface $entityManager;
+    private ChangeProfilePictureGlobals $globals;
+    private ProfileSubmenu $profileSubmenu;
 
-    public function __construct(EntityManagerInterface $entityManager)
-    {
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        ProfileSubmenu $profileSubmenu,
+        ChangeProfilePictureGlobals $globals
+    ) {
         $this->entityManager = $entityManager;
+        $this->globals = $globals;
+        $this->profileSubmenu = $profileSubmenu;
     }
 
     /**
      * @Route("/members/{username}/relation/add", name="add_relation")
      */
-    public function add(Request $request, Member $member, ProfileSubmenu $profileSubmenu, Mailer $mailer): Response
+    public function add(Request $request, Member $member, Mailer $mailer): Response
     {
         /** @var Member $loggedInMember */
         $loggedInMember = $this->getUser();
@@ -71,14 +79,15 @@ class RelationController extends AbstractController
         return $this->render('relation/add.html.twig', [
             'form' => $form->createView(),
             'member' => $member,
-            'submenu' => $profileSubmenu->getSubmenu($member, $loggedInMember, ['active' => 'add_relation']),
+            'globals_js_json' => $this->globals->getGlobalsJsAsJson($member, $loggedInMember),
+            'submenu' => $this->profileSubmenu->getSubmenu($member, $loggedInMember, ['active' => 'add_relation']),
         ]);
     }
 
     /**
      * @Route("/members/{username}/relation/edit", name="edit_relation")
      */
-    public function edit(Request $request, Member $member, ProfileSubmenu $profileSubmenu): Response
+    public function edit(Request $request, Member $member): Response
     {
         /** @var Member $loggedInMember */
         $loggedInMember = $this->getUser();
@@ -107,7 +116,8 @@ class RelationController extends AbstractController
         return $this->render('relation/edit.html.twig', [
             'form' => $form->createView(),
             'member' => $member,
-            'submenu' => $profileSubmenu->getSubmenu($member, $loggedInMember, ['active' => 'edit_relation']),
+            'globals_js_json' => $this->globals->getGlobalsJsAsJson($member, $loggedInMember),
+            'submenu' => $this->profileSubmenu->getSubmenu($member, $loggedInMember, ['active' => 'edit_relation']),
         ]);
     }
 
@@ -194,7 +204,7 @@ class RelationController extends AbstractController
     /**
      * @Route("/members/{username}/relations/{page}", name="relations")
      */
-    public function relations(Member $member, ProfileSubmenu $profileSubmenu, int $page = 1): Response
+    public function relations(Member $member, int $page = 1): Response
     {
         /** @var Member $loggedInMember */
         $loggedInMember = $this->getuser();
@@ -206,7 +216,8 @@ class RelationController extends AbstractController
         return $this->render('relation/relations.html.twig', [
             'member' => $member,
             'relations' => $relations,
-            'submenu' => $profileSubmenu->getSubmenu($member, $loggedInMember, ['active' => 'relations']),
+            'globals_js_json' => $this->globals->getGlobalsJsAsJson($member, $loggedInMember),
+            'submenu' => $this->profileSubmenu->getSubmenu($member, $loggedInMember, ['active' => 'relations']),
         ]);
     }
 

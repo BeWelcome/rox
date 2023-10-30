@@ -59,7 +59,7 @@ if (!$this->detail) {
             echo '</strong>';
         }
     }
-    $purifier = MOD_htmlpure::getAdvancedHtmlPurifier();
+    $purifier = (new MOD_htmlpure())->getAdvancedHtmlPurifier();
     echo '<tr class="blank"><td class="left" colspan="5"><strong>' . $words->get('AdminMassMailSubject') . '</strong>: '
         . str_replace("%username%", "Username", $words->getAsIs('BroadCast_Title_' . $massmail->Name))
         . '</td></tr>';

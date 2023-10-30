@@ -1,4 +1,3 @@
-<div class="row">
 <?php
 $words = new MOD_words();
 $Gallery = new GalleryModel;
@@ -19,6 +18,7 @@ if ($galleries) {
     $galleriesonpage = $p[0];
 
     ?>
+<div class="row">
     <?php foreach ($galleriesonpage as $g) {
     	static $ii = 0;
         $d = $Gallery->getLatestGalleryItem($g->id);
@@ -30,9 +30,9 @@ if ($galleries) {
     	if ($d || $this->myself) {
     	?>
         <div class="col-12 col-sm-6 col-md-3">
-            <div class="gallery_container">
+            <div class="gallery_container d-block">
                 <a href="gallery/show/sets/<?=$g->id?>">
-                    <img class="mb-3 border-2" src="<?=($d) ? 'gallery/thumbimg?id='.$d : 'images/lightview/blank.gif'?>" alt="image"/>
+                    <img class="mb-3 border-2" src="<?=($d) ? 'gallery/thumbimg?id='.$d : 'images/lightview/blank.gif'?>" alt="image" style="width:100px; height:100px; margin: auto; object-fit: cover;"/>
                     <span class="alert alert-info p-1" style="position: absolute;"><i class="fa fa-image mr-1"></i><?=$num_rows?></span>
                 </a>
             <h4 class="mb-0"><a href="gallery/show/sets/<?=$g->id?>"><?= htmlspecialchars($g->title)?></a></h4>
@@ -42,6 +42,7 @@ if ($galleries) {
         }
     }
 ?>
+</div>
     <div class="w-100"></div>
     <div class="col-12 mt-3">
         <?php
@@ -53,5 +54,6 @@ if ($galleries) {
     $request = $requestStr.'/=page%d';
     require 'pages.php'; ?>
     </div>
+<?php } else { ?>
+    <p><?= $words->get('gallery.no.albums'); ?></p>
 <?php } ?>
-</div>

@@ -88,7 +88,7 @@
                     <li><a href="{{ url('stats') }}" class="dropdown-item">{{ 'statspage' | trans }}</a></li>
                     <li><a href="{{ url('terms_of_use', {'locale': locale }) }}" class="dropdown-item">{{ 'termsofuse'  | trans }}</a></li>
                     <li><a href="{{ url('getactive') }}" class="dropdown-item">{{ 'about_getactive' | trans }}</a></li>
-                    <li><a href="{{ url('donate') }}" class="dropdown-item">{{ 'donatelink'  | trans }}</a></li>
+                    <li><a href="{{ url('donations') }}" class="dropdown-item">{{ 'donatelink'  | trans }}</a></li>
                 </ul>
             </li>
             {% if member and teams|length == 0 %}
@@ -116,7 +116,7 @@
                 <a href="#member_menu" class="nav-link dropdown-toggle pl-0 pl-md-1"
                    data-target="member_menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label="{{ 'profile' | trans }}">
                     <span class="d-none d-md-inline">{{ member.Username }}&nbsp;</span>
-                    <img class="profileimg px-0" src="{{ url('avatar', { username: member.username, size: 36 })}}" width="36" height="36" alt="{{ 'profile.picture' }}">
+                    <img class="profileimg px-0 js-profile-picture" src="{{ url('avatar', { username: member.username, size: 36 })}}" width="36" height="36" alt="{{ 'profile.picture' }}">
                 </a>
                 <ul id="member_menu" class="dropdown-menu dropdown-menu-right" role="menu">
                     <li class="text-right"><a

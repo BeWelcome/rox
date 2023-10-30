@@ -55,14 +55,14 @@
             if ($this->loginReminder) {
                 $options["RemindToLog"] = $this->words->getSilent('AdminMassMailEditTypeLoginReminder');
             }
-            if ($this->suggestionsReminder) {
-                $options["SuggestionReminder"] = $this->words->getSilent('AdminMassMailEditTypeSuggestionsReminder');
-            }
             if ($this->termsOfUse) {
                 $options["TermsOfUse"] = $this->words->getSilent('AdminMassMailEditTypeTermsOfUse');
             }
             if ($this->correctBirthDate) {
                 $options["CorrectBirthDate"] = $this->words->getSilent('massmail.correct.birth.date');
+            }
+            if ($this->correctBirthDate) {
+                $options["SuspendAfter5Reminders"] = $this->words->getSilent('massmail.suspend.after.five.reminders');
             }
             if ($this->mailToConfirmReminder) {
                 $options["MailToConfirmReminder"] = $this->words->getSilent('AdminMassMailEditTypeMailToConfirmReminder');

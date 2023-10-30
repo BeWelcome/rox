@@ -209,7 +209,7 @@ class SearchController extends AbstractController
      *
      * @SuppressWarnings(PHPMD.StaticAccess)
      */
-    public function showMapAction(Request $request, TranslatorInterface $translator): Response
+    public function searchOnMap(Request $request, TranslatorInterface $translator): Response
     {
         // do not allow access to this page when logged in, redirect to /search/locations
         if (null !== $this->getUser()) {

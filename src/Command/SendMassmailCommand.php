@@ -2,7 +2,9 @@
 
 namespace App\Command;
 
+use App\Doctrine\MemberStatusType;
 use App\Entity\BroadcastMessage;
+use App\Entity\Member;
 use App\Entity\Newsletter;
 use App\Service\Mailer;
 use Doctrine\ORM\EntityManager;
@@ -75,39 +77,49 @@ class SendMassmailCommand extends Command
         );
 
         $sent = 0;
+        $lastBroadcastId = 0;
         if (!empty($scheduledBroadcastMessages)) {
             /** @var BroadcastMessage $scheduled */
             foreach ($scheduledBroadcastMessages as $scheduled) {
-                $sender = $this->determineSender($scheduled->getNewsletter()->getType());
-                $receiver = $scheduled->getReceiver();
-                try {
-                    $unsubscribeKey = '';
-                    $newsletterType = $scheduled->getNewsletter()->getType();
-                    $newsletterName = $scheduled->getNewsletter()->getName();
-                    $parameters = [
-                        'receiver' => $receiver,
-                        'newsletter_type' => $newsletterType,
-                        'subject' => strtolower('Broadcast_Title_' . $newsletterName),
-                        'wordcode' => strtolower('Broadcast_Body_' . $newsletterName),
-                    ];
-                    if (
-                        Newsletter::SPECIFIC_NEWSLETTER === $newsletterType
-                        || Newsletter::REGULAR_NEWSLETTER === $newsletterType
-                    ) {
-                        try {
-                            $unsubscribeKey = random_bytes(32);
-                        } catch (Exception $e) {
-                            $unsubscribeKey = openssl_random_pseudo_bytes(32);
-                        }
+                $parameters = [];
+                if ($lastBroadcastId != $scheduled->getNewsletter()->getId()) {
+                    // Check if the current newsletter contains images and set the parameter
+                    $newsletterTranslations = $scheduled->getNewsletter()->getTranslations();
+                    $anyNewsletter = reset($newsletterTranslations);
+
+                    $hasImages = false !== strpos($anyNewsletter['body'], "<figure");
+                    if ($hasImages) {
+                        $parameters['has_images'] = true;
                     }
-                    $parameters['newsletter'] = $scheduled->getNewsletter();
-                    $parameters['language'] = $receiver->getPreferredLanguage()->getShortCode();
-                    $parameters['unsubscribe_key'] = bin2hex($unsubscribeKey);
+
+                    $lastBroadcastId = $scheduled->getNewsletter()->getId();
+                }
+                $receiver = $scheduled->getReceiver();
+                $status = $receiver->getStatus();
+                if (
+                    (MemberStatusType::SUSPENDED === $status && $receiver->getRemindersWithOutLogin() !== 100)
+                    && MemberStatusType::ACTIVE !== $status
+                    && MemberStatusType::OUT_OF_REMIND !== $status
+                    && MemberStatusType::CHOICE_INACTIVE !== $status
+                ) {
+                    // Only send messages to members that are active or have just been suspended RemindersWithoutLogin
+                    // is set to 100 on suspension
+                    continue;
+                }
+                try {
+                    try {
+                        $unsubscribeKey = random_bytes(32);
+                    } catch (Exception $e) {
+                        $unsubscribeKey = openssl_random_pseudo_bytes(32);
+                    }
+
+                    $parameters['unsubscribe_key'] = $unsubscribeKey;
                     $this->mailer->sendNewsletterEmail(
-                        $sender,
+                        $scheduled->getNewsletter(),
                         $receiver,
                         $parameters
                     );
+
                     $scheduled
                         ->setStatus('Sent')
                         ->setUnsubscribeKey(bin2hex($unsubscribeKey))
@@ -125,22 +137,5 @@ class SendMassmailCommand extends Command
         $io->success(sprintf('Sent %d messages', $sent));
 
         return 0;
-    }
-
-    private function determineSender($type): Address
-    {
-        switch ($type) {
-            case 'RemindToLog':
-            case 'MailToConfirmReminder':
-                $sender = new Address('reminder@bewelcome.org', 'BeWelcome');
-                break;
-            case 'TermsOfUse':
-                $sender = new Address('tou@bewelcome.org', 'BeWelcome');
-                break;
-            default:
-                $sender = new Address('newsletter@bewelcome.org', 'BeWelcome');
-        }
-
-        return $sender;
     }
 }

@@ -4,8 +4,10 @@ namespace App\Controller;
 
 use App\Entity\Member;
 use App\Entity\MembersPhoto;
+use App\Entity\RightVolunteer;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Mapping\Entity;
 use Intervention\Image\ImageManager;
 use InvalidArgumentException;
 use Psr\Log\LoggerInterface;
@@ -16,6 +18,8 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
+use Throwable;
 
 /**
  * Class AvatarController.
@@ -30,32 +34,46 @@ class AvatarController extends AbstractController
 
     /** @var LoggerInterface */
     private $logger;
+    private EntityManagerInterface $entityManager;
+    private TranslatorInterface $translator;
 
     public function __construct(
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        EntityManagerInterface $entityManager,
+        TranslatorInterface $translator
     ) {
         $this->logger = $logger;
+        $this->entityManager = $entityManager;
+        $this->translator = $translator;
     }
 
     /**
      * @Route("/members/uploadavatar", methods={"POST"})
      */
-    public function uploadAvatar(Request $request, EntityManagerInterface $entityManager): Response
+    public function uploadAvatar(Request $request): Response
     {
+        $uploadFailedTranslation = $this->translator->trans('profile.picture.upload.failed');
+
+        /** @var Member $member */
         $member = $this->getUser();
         if (!$member || !$member->getId()) {
-            return new Response('File upload failed', Response::HTTP_UNAUTHORIZED);
+            return new Response($uploadFailedTranslation, Response::HTTP_UNAUTHORIZED);
         }
 
-        /** @var UploadedFile */
+        /** @var UploadedFile $avatarFile*/
         $avatarFile = $request->files->get('avatar');
-        if (!$avatarFile) {
-            return new Response('File upload failed', Response::HTTP_BAD_REQUEST);
+
+        if (null === $avatarFile) {
+            return new Response($uploadFailedTranslation, Response::HTTP_BAD_REQUEST);
         }
 
-        $this->storeAvatar($entityManager, $member, $avatarFile->getRealPath());
+        $success = $this->storeAvatar($member, $avatarFile);
 
-        return new Response('');
+        if ($success) {
+            return new Response('');
+        }
+
+        return new Response($uploadFailedTranslation, Response::HTTP_REQUEST_ENTITY_TOO_LARGE);
     }
 
     /**
@@ -63,20 +81,17 @@ class AvatarController extends AbstractController
      *     requirements={"size" : "\d+|original" },
      *     defaults={"size": "48"})
      */
-    public function showAvatar(string $username, string $size): BinaryFileResponse
-    {
+    public function showAvatar(Member $member, string $size): BinaryFileResponse {
         if (!$this->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             return $this->emptyAvatar($size);
         }
 
-        /** @var Member $member */
-        $member = $this->getDoctrine()->getRepository(Member::class)->findOneBy(['username' => $username]);
-        if (!$member) {
-            return $this->emptyAvatar($size);
-        }
-
         $isBrowsable = $member->isBrowsable();
-        if (!$isBrowsable) {
+        $isAdministrativeProfile =
+            $this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
+            || $this->isGranted(Member::ROLE_ADMIN_PROFILE)
+        ;
+        if (!$isBrowsable && !$isAdministrativeProfile) {
             return $this->emptyAvatar($size);
         }
 
@@ -93,29 +108,21 @@ class AvatarController extends AbstractController
         return $this->createCacheableResponse($filename);
     }
 
-    private function storeAvatar($entityManager, $member, $tmpFilePath)
+    private function storeAvatar(Member $member, UploadedFile $avatarFile): bool
     {
-        // TODO
-        // $this->writeMemberphoto($memberId);
-        $memberId = $member->getId();
-        $this->removeAvatarFile($memberId);
-
         $imageManager = new ImageManager();
-        $img = $imageManager->make($tmpFilePath)->orientate();
-        $height = $img->getHeight();
-        $width = $img->getWidth();
-        if ($height !== $width) {
-            $size = min($width, $height);
-            $startX = (int) (($width - $size) / 2);
-            $startY = (int) (($height - $size) / 2);
-            $img->crop($size, $size, $startX, $startY);
+        try {
+            $img = $imageManager->make($avatarFile->getRealPath())->orientate();
+        } catch (Throwable $e) {
+            return false;
         }
 
-        $newFileName = self::AVATAR_PATH . $memberId . '_original';
+        $this->removeAvatarFiles($member);
+        $newFileName = self::AVATAR_PATH . $member->getId() . '_original';
         $img->save($newFileName);
 
-        $memberPhotoRepository = $entityManager->getRepository(MembersPhoto::class);
-        $memberPhoto = $memberPhotoRepository->findOneBy(['member' => $memberId], ['created' => 'DESC']);
+        $memberPhotoRepository = $this->entityManager->getRepository(MembersPhoto::class);
+        $memberPhoto = $memberPhotoRepository->findOneBy(['member' => $member->getId()], ['created' => 'DESC']);
         if (null === $memberPhoto) {
             $memberPhoto = new MembersPhoto();
         }
@@ -124,18 +131,18 @@ class AvatarController extends AbstractController
         $memberPhoto->setCreated(new DateTime());
         $memberPhoto->setComment('Uploaded new avatar');
 
-        $entityManager->persist($memberPhoto);
-        $entityManager->flush();
+        $this->entityManager->persist($memberPhoto);
+        $this->entityManager->flush();
 
         $this->logger->info('New avatar picture was stored: ' . $newFileName);
 
         return true;
     }
 
-    private function removeAvatarFile($memberId)
+    private function removeAvatarFiles($member)
     {
         $finder = new Finder();
-        $finder->name($memberId . '_*');
+        $finder->name($member->getId() . '_*');
         foreach ($finder->files()->in(self::AVATAR_PATH) as $oldAvatarFile) {
             unlink($oldAvatarFile->getRealPath());
         }
@@ -175,34 +182,46 @@ class AvatarController extends AbstractController
         return file_exists($this->getAvatarImageFilename($member, $size));
     }
 
-    private function createAvatarImage(Member $member, $size)
+    private function createAvatarImage(Member $member, int $sizeOfAvatar)
     {
-        // creates a thumb nail for the current image (if we have an original that is)
+        // creates a thumbnail for the current image (if we have an original that is)
         $original = self::AVATAR_PATH . $member->getId() . '_original';
         if (!file_exists($original)) {
             $message = 'No original avatar image exists for member ' . $member->getUsername();
             throw new InvalidArgumentException($message);
         }
 
-        $filename = self::AVATAR_PATH . $member->getId() . '_' . $size . '_' . $size;
+        $filename = self::AVATAR_PATH . $member->getId() . '_' . $sizeOfAvatar . '_' . $sizeOfAvatar;
+
         $imageManager = new ImageManager();
         $img = $imageManager->make($original);
-        $img->resize($size, null, function ($constraint) {
+
+        $height = $img->getHeight();
+        $width = $img->getWidth();
+        if ($height !== $width) {
+            $size = min($width, $height);
+            $startX = (int) (($width - $size) / 2);
+            $startY = (int) (($height - $size) / 2);
+            $img->crop($size, $size, $startX, $startY);
+        }
+
+        $img->resize($sizeOfAvatar, null, function ($constraint) {
             $constraint->aspectRatio();
         });
-        $img->save($filename);
+
+        $img->save($filename, 100, 'jpg');
     }
 
-    private function createEmptyAvatarImage($size): string
+    private function createEmptyAvatarImage($sizeOfAvatar): string
     {
         // creates a thumbnail of the empty avatar
         $original = self::EMPTY_AVATAR_PATH . 'empty_avatar_original.png';
 
         $imageManager = new ImageManager();
         $img = $imageManager->make($original);
-        if (is_int($size)) {
-            $filename = self::AVATAR_PATH . 'empty_avatar_' . $size . '_' . $size;
-            $img->resize($size, $size, function ($constraint) {
+        if (is_int($sizeOfAvatar)) {
+            $filename = self::AVATAR_PATH . 'empty_avatar_' . $sizeOfAvatar . '_' . $sizeOfAvatar;
+            $img->resize($sizeOfAvatar, $sizeOfAvatar, function ($constraint) {
                 $constraint->aspectRatio();
             });
             $img->save($filename);

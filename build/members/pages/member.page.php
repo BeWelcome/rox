@@ -216,31 +216,30 @@ class MemberPage extends PageWithActiveSkin
                 </button>
             </div>
         <div class="list-group u-rounded-8 mb-2">
-        <?php
-        $member = $this->member;
-        $words = $this->getWords();
-        $picture_url = 'members/avatar/'.$member->Username;
-        $globalsJs = json_encode([
-            'baseUrl' => $this->getBaseUrl(),
-            'texts' => [
-                'profile.change.avatar' => $words->get('profile.change.avatar'),
-                'profile.change.avatar.success' => $words->get('profile.change.avatar.success'),
-                'profile.change.avatar.fail' => $words->get('profile.change.avatar.fail'),
-                'profile.change.avatar.fail.file.to.big' => $words->get('profile.change.avatar.fail.file.to.big'),
-                'profile.picture.title' => $words->get('profile.picture.title', $member->Username),
-                'uploading' => $words->get('uploading'),
-            ],
-            'config' => [
-                'isMyself' => $this->myself,
-                'avatarUseLightbox' => $this->useLightbox,
-                'avatarUrl' => $picture_url,
-                'username' => $member->Username,
-            ]
-            ]);
-        ?>
-
-        <div id="react_mount" data-globals="<?=htmlspecialchars($globalsJs)?>" ></div>
-
+            <?php
+            $member = $this->member;
+            $words = $this->getWords();
+            $picture_url = 'members/avatar/'.$member->Username;
+            $globalsJs = json_encode([
+                'baseUrl' => $this->getBaseUrl(),
+                'texts' => [
+                    'profile.change.avatar' => $words->get('profile.change.avatar'),
+                    'profile.change.avatar.success' => $words->get('profile.change.avatar.success'),
+                    'profile.change.avatar.fail' => $words->get('profile.change.avatar.fail'),
+                    'profile.change.avatar.fail.file.too.big' => $words->get('profile.change.avatar.fail.file.too.big'),
+                    'profile.picture.title' => $words->get('profile.picture.title', $member->Username),
+                    'uploading' => $words->get('uploading'),
+                ],
+                'config' => [
+                    'isMyself' => $this->myself,
+                    'avatarUseLightbox' => $this->useLightbox,
+                    'avatarUrl' => $picture_url,
+                    'username' => $member->Username,
+                ]
+                ]);
+            ?>
+            <div id="react_mount" data-globals="<?=htmlspecialchars($globalsJs)?>"></div>
+        </div>
         <div class="list-group u-rounded-8 mt-2">
             <?php
 
@@ -284,7 +283,7 @@ class MemberPage extends PageWithActiveSkin
         } else {
             $protocol = 'http';
         }
-        return $protocol . "://" . $_SERVER['HTTP_HOST'];
+        return $protocol . "://" . $_SERVER['HTTP_HOST'] . '/';
     }
 
     protected function getStylesheets() {

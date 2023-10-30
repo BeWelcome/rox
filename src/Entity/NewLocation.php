@@ -33,7 +33,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *     @ORM\Index(name="geonames_idx_admin3_id", columns={"admin_3_id"}),
  *     @ORM\Index(name="geonames_idx_admin4_id", columns={"admin_4_id"})
  * })
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\NewLocationRepository")
  * @Gedmo\TranslationEntity(class="App\Entity\Translation\NewLocationTranslation")
  *
  * @SuppressWarnings(PHPMD)
@@ -408,8 +408,9 @@ class NewLocation implements Translatable
     public function getFullname(): string
     {
         $nameOfAdmin1 = (null === $this->admin1) ? '' : ', ' . $this->getAdmin1()->getName();
+        $nameOfCountry = (null === $this->country) ? '' : ', ' . $this->getCountry()->getName();
 
-        return $this->getName() . $nameOfAdmin1 . ', ' . $this->getCountry()->getName();
+        return $this->getName() . $nameOfAdmin1 . (('' === $nameOfCountry) ? '' : ', ' . $this->getCountry()->getName());
     }
 
     public function getCountryId(): string

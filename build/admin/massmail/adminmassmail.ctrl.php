@@ -197,9 +197,9 @@ class AdminMassmailController extends AdminBaseController
         $id = $this->route_vars['id'];
         $massmail = $this->model->getMassmail($id);
         $page = new AdminMassmailEnqueuePage($this->model, $massmail);
-        $page->votersCount = $this->model->getSuggestionsReminderCount();
         $page->mailToConfirmCount = $this->model->getMailToConfirmCount();
         $page->incorrectBirthDateCount = $this->model->getIncorrectBirthDateCount();
+        $page->suspensionNotificationCount = $this->model->getSuspensionNotificationCount();
         return $page;
     }
 

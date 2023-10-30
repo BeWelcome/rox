@@ -157,7 +157,12 @@ class TranslationController extends AbstractController
 
                 $referrer = $request->getSession()->get('originalReferrer');
                 $request->getSession()->remove('originalReferrer');
-
+                if (null === $referrer) {
+                    return $this->redirectToRoute('translations_locale_code', [
+                        'locale' => $language->getShortCode(),
+                        'type' => 'all'
+                    ]);
+                }
                 return $this->redirect($referrer);
             }
             $editForm->get('translatedText')->addError(new FormError($invalidMessage));

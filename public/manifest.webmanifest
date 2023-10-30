@@ -48,11 +48,41 @@
       "sizes": "384x384",
       "type": "image/png"
     },
-    {
-      "src": "images/icon-512x512.png",
-      "sizes": "512x512",
-      "type": "image/png"
-    }
+     {
+       "src": "images/icon-512x512.png",
+       "sizes": "512x512",
+       "type": "image/png",
+       "purpose": "any"
+     },
+     {
+       "src": "images/icon-1024x1024.png",
+       "sizes": "512x512",
+       "type": "image/png",
+       "purpose": "maskable"
+     }
   ],
-  "screenshots": []
+  "screenshots": [
+    {
+        "screenshots" : [
+          {
+            "src": "images/screenshots/home.jpg",
+            "sizes": "1230x720",
+            "type": "image/jpg",
+            "platform": "wide",
+          },
+          {
+            "src": "images/screenshots/search.jpg",
+            "sizes": "1230x720",
+            "type": "image/jpg",
+            "platform": "wide",
+          },
+          {
+            "src": "images/screenshots/profile.jpg",
+            "sizes": "1230x720",
+            "type": "image/jpg",
+            "platform": "wide",
+          },
+        ]
+    }
+  ]
 }

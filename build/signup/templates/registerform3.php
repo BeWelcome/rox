@@ -35,22 +35,16 @@ $map_conf = PVars::getObj('map');
                     <div class="o-form-group">
                         <label for="location" class="o-input-label"><?= $words->getSilent('label_setlocation') ?></label>
                         <?php echo $words->flushBuffer(); ?>
-                        <div id="set_location_autocomplete" class="js-location-picker autocomplete u-w-full u-z-[1001]">
-                        <input id="set_location" name="set_location"
-                               class="o-input autocomplete-input"
-                               placeholder="<?= $words->get('label_setlocation') ?>"
-                               aria-label="<?= $words->get('label_setlocation') ?>"
-                            <?php
-                            echo isset($vars['location']) ? 'value="'. htmlentities($vars['location'],ENT_COMPAT, 'utf-8') . '" ' : '';
-                            ?>
-                        >
-                        <ul class="autocomplete-result-list"></ul>
-                        <ul id="no-results" class="autocomplete-result-list" visible="false">
-                            <li class="autocomplete-result">
-                                {{ 'suggest.no.results'|trans }}
-                            </li>
-                        </ul>
-                    </div>
+                        <div class="auto-search-wrapper max-height loupe">
+                            <input type="text" id="set_location" name="set_location"
+                                   class="o-input js-location-picker" autocomplete="off"
+                                   placeholder="<?= $words->get('label_setlocation') ?>"
+                                   aria-label="<?= $words->get('label_setlocation') ?>"
+                                   <?php
+                                    echo isset($vars['location']) ? 'value="'. htmlentities($vars['location'],ENT_COMPAT, 'utf-8') . '" ' : '';
+                                   ?>
+                            >
+                        </div>
 
                         <input type="hidden" name="set_location_fullname" id="set_location_fullname" value="<?= $vars['location-fullname'] ?? '' ?>"/>
                         <input type="hidden" name="set_location_name" id="set_location_name" value="<?= $vars['location-name'] ?? '' ?>"/>

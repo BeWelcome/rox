@@ -6,6 +6,7 @@
 
     <div class="card-columns">
         {% for current in extracted %}
+            {% set current = current|replace({'_': '.'}) %}
             <div class="card o-card">
                 <div class="card-header text-truncate">
                     {{ ('mydata.' ~ current ~ ".headline") | trans }}

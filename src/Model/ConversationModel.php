@@ -91,7 +91,7 @@ class ConversationModel
         $this->entityManager->flush();
     }
 
-    public function markConversationAsSpam(Member $member, array $conversation, ?string $comment): void
+    public function markConversationAsSpam(Member $member, array $conversation, ?string $comment = null): void
     {
         /** @var Message $message */
         foreach ($conversation as $message) {
@@ -153,6 +153,7 @@ class ConversationModel
                     messages
                 WHERE
                     messages.IdSender = :id
+                    AND messages.IdParent IS NULL
                     AND messages.request_id IS NULL
                     AND
                     (
@@ -170,6 +171,7 @@ class ConversationModel
                     messages
                 WHERE
                     messages.IdSender = :id
+                    AND messages.IdParent IS NULL
                     AND messages.request_id IS NULL
                     AND
                     (

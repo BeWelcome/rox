@@ -25,25 +25,19 @@
     <div data-content="{{ name }}"
          class="c-trips__info u-items-start">
         <div class="u-w-full u-mb-8 md:u-width-auto md:u-mb-0">
-            <div id="{{ form.location.vars.id ~ "_autocomplete" }}" class="js-search-picker autocomplete u-w-full">
-                <input id="{{ form.location.fullname.vars.id}}" name="{{ form.location.fullname.vars.full_name }}"
-                       class="o-input o-input--xl o-input--no-borders o-input--round-left o-input--translucid autocomplete-input"
+            <div class="auto-search-wrapper max-height loupe">
+                <input type="text" id="{{ form.location.fullname.vars.id}}" name="{{ form.location.fullname.vars.full_name }}"
+                       class="o-input o-input--xl o-input--no-borders o-input--round-left o-input--translucid js-location-picker" autocomplete="off"
                        placeholder="{{ 'trip.leg.location'|trans }}"
                        aria-label="{{ 'trip.leg.location'|trans }}"
                        {% if form.location.fullname.vars.value %}value="{{ form.location.fullname.vars.value }}"{% endif %}
                 >
-                <ul class="autocomplete-result-list"></ul>
-                <ul id="no-results" class="autocomplete-result-list" visible="false">
-                    <li class="autocomplete-result">
-                        {{ 'suggest.no.results'|trans }}
-                    </li>
-                </ul>
+                <div class="u-block">{{ form_errors(form.location) }}{{ form_errors(form.location.fullname) }}{{ form_errors(form.location.geoname_id) }}</div>
             </div>
-            <div class="u-block">{{ form_errors(form.location) }}{{ form_errors(form.location.fullname) }}{{ form_errors(form.location.geoname_id) }}</div>
         </div>
         <div class="u-w-full md:u-width-auto">
             {% set attributes = {
-                'class': 'o-input--xl o-input--no-borders o-input--round-right o-input--translucid duration js-duration',
+                'class': 'o-input--xl o-input--no-borders o-input--round-right o-input--translucid u-w-full duration js-duration',
                 'placeholder': 'trip.leg.duration'|trans,
                 'aria-label': 'trip.leg.duration'|trans,
             } %}
@@ -93,7 +87,7 @@
         {{ form_start(form, {'attr': {'autocomplete': 'off'} }) }}
         <div>
             <div class="u-mb-24 u-relative">
-                {{ form_widget(form.summary, {'attr': { 'class': 'o-input--white o-input--no-border-on-hover o-input--white-xl', 'aria-label':'Title'}}) }}
+                {{ form_widget(form.summary, {'attr': { 'class': 'o-input--white o-input--no-border-on-hover o-input--white-xl u-w-full', 'aria-label':'Title'}}) }}
                 <div class="u-block">{{ form_errors(form.summary) }}</div>
             </div>
             <div class="u-relative u-mb-8 md:u-mb-24">

@@ -48,6 +48,7 @@ class TranslationAdapter implements AdapterInterface
                 ";
         if (!empty($code)) {
             $this->query .= " WHERE (pi_lang.code LIKE '%" . $code . "%' OR pi_dflt.code LIKE '%" . $code . "%')";
+            $this->query .= " OR (pi_lang.Sentence LIKE '%" . $code . "%' OR pi_dflt.Sentence LIKE '%" . $code . "%')";
         }
         $this->query .= '
             ORDER BY created desc';

@@ -18,6 +18,7 @@ use App\Repository\WordRepository;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
 use DateTime;
+use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use MessageFormatter;
 use Pagerfanta\Pagerfanta;
@@ -31,6 +32,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class TranslationController.
@@ -44,11 +46,13 @@ class TranslationController extends AbstractController
 
     private TranslationModel $translationModel;
     private string $enabledLocales;
+    private EntityManagerInterface $entityManager;
 
-    public function __construct(TranslationModel $translationModel, string $locales)
+    public function __construct(TranslationModel $translationModel, EntityManagerInterface $entityManager, string $locales)
     {
         $this->translationModel = $translationModel;
         $this->enabledLocales = $locales;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -85,7 +89,7 @@ class TranslationController extends AbstractController
             $request->getSession()->set('originalReferrer', $request->headers->get('referer'));
         }
 
-        $translationRepository = $this->getDoctrine()->getRepository(Word::class);
+        $translationRepository = $this->entityManager->getRepository(Word::class);
         /** @var Word $original */
         $original = $translationRepository->findOneBy([
             'code' => $code,
@@ -120,7 +124,7 @@ class TranslationController extends AbstractController
             if ('' === $invalidMessage) {
                 $originalDomain = $translation->getDomain();
 
-                $em = $this->getDoctrine()->getManager();
+                $em = $this->entityManager;
                 // Make sure the ID of the translations match
                 $translation->setCode($original->getCode());
                 $translation->setDomain($data->domain);
@@ -246,7 +250,7 @@ class TranslationController extends AbstractController
         $createForm->handleRequest($request);
 
         if ($createForm->isSubmitted() && $createForm->isValid()) {
-            $em = $this->getDoctrine()->getManager();
+            $em = $this->entityManager;
             /** @var TranslationRequest $data */
             $data = $createForm->getData();
             $invalidMessage = $this->checkIfICUFormatIsValid($data, $data->englishText);
@@ -319,7 +323,7 @@ class TranslationController extends AbstractController
         $createForm->handleRequest($request);
 
         if ($createForm->isSubmitted() && $createForm->isValid()) {
-            $em = $this->getDoctrine()->getManager();
+            $em = $this->entityManager;
             /** @var TranslationRequest $data */
             $data = $createForm->getData();
             $invalidMessage = $this->checkIfICUFormatIsValid($data, $data->englishText);
@@ -417,7 +421,6 @@ class TranslationController extends AbstractController
             $data = $addForm->getData();
             $invalidMessage = $this->checkIfICUFormatIsValid($data, $data->translatedText);
             if ('' === $invalidMessage) {
-                $em = $this->getDoctrine()->getManager();
                 $translation->setDomain($original->getDomain());
                 $translation->setSentence($data->translatedText);
                 $translation->setLanguage($language);
@@ -425,8 +428,8 @@ class TranslationController extends AbstractController
                 $translation->setAuthor($translator);
                 // No need for a description as the English original has one
                 $translation->setDescription('');
-                $em->persist($translation);
-                $em->flush();
+                $this->entityManager->persist($translation);
+                $this->entityManager->flush();
                 $this->translationModel->refreshTranslationsCacheForLocale($language->getShortCode());
                 $this->addTranslatedFlash('notice', 'translation.add', [
                     'translationId' => $original->getCode(),
@@ -568,7 +571,7 @@ class TranslationController extends AbstractController
         $translations->setCurrentPage($page);
 
         /** @var WordRepository $translationRepository */
-        $translationRepository = $this->getDoctrine()->getRepository(Word::class);
+        $translationRepository = $this->entityManager->getRepository(Word::class);
         $countAll = $translationRepository->getTranslatableItemsCount('en');
         $countTranslated = $translationRepository->getTranslatableItemsCount($language->getShortCode());
 
@@ -597,10 +600,10 @@ class TranslationController extends AbstractController
      *
      * @return Response
      */
-    public function statistics(Request $request)
+    public function statistics(Request $request, EntityManagerInterface $entityManager)
     {
         /** @var WordRepository $translationRepository */
-        $translationRepository = $this->getDoctrine()->getRepository(Word::class);
+        $translationRepository = $entityManager->getRepository(Word::class);
         $countAll = $translationRepository->getTranslatableItemsCount('en');
         $translationDetails = $translationRepository->getTranslationDetails($this->enabledLocales);
 

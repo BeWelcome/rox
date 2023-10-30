@@ -226,7 +226,7 @@ class MemberPage extends PageWithActiveSkin
                     'profile.change.avatar' => $words->get('profile.change.avatar'),
                     'profile.change.avatar.success' => $words->get('profile.change.avatar.success'),
                     'profile.change.avatar.fail' => $words->get('profile.change.avatar.fail'),
-                    'profile.change.avatar.fail.file.to.big' => $words->get('profile.change.avatar.fail.file.to.big'),
+                    'profile.change.avatar.fail.file.too.big' => $words->get('profile.change.avatar.fail.file.too.big'),
                     'profile.picture.title' => $words->get('profile.picture.title', $member->Username),
                     'uploading' => $words->get('uploading'),
                 ],

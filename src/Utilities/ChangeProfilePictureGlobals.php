@@ -25,8 +25,8 @@ class ChangeProfilePictureGlobals
                 'profile.change.avatar' => $this->translator->trans('profile.change.avatar'),
                 'profile.change.avatar.success' => $this->translator->trans('profile.change.avatar.success'),
                 'profile.change.avatar.fail' => $this->translator->trans('profile.change.avatar.fail'),
-                'profile.change.avatar.fail.file.to.big' => $this->translator->trans(
-                    'profile.change.avatar.fail.file.to.big'
+                'profile.change.avatar.fail.file.too.big' => $this->translator->trans(
+                    'profile.change.avatar.fail.file.too.big'
                 ),
                 'profile.picture.title' => $this->translator->trans('profile.picture.title', [
                     'username' => $member->getUsername()

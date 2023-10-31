@@ -38,19 +38,21 @@
         $picture_url = 'members/avatar/' . $member->Username;
         ?>
         <div class="text-center text-md-left">
+            <div class="d-md-none u-w-full u-relative u-pb-[100%] u-max-w-[320px] u-m-auto">
+                <div class="u-absolute u-left-0 u-top-0 u-w-full u-h-full">
             <?php if ($this->useLightbox) { ?>
-                <a class="d-md-none js-profile-picture" href="<?= $picture_url . '/original' ?>" data-toggle="lightbox"
-                   data-always-show-close="true" data-type="image"
-                   data-title="<?= $words->getbuffered('profile.picture.title'); ?>">
-                    <img class="profileimg d-md-none js-profile-picture" src="<?= $picture_url . '/320' ?>"
-                         alt="<?= $words->get('profile.picture.title'); ?>">
-                </a>
+                        <a href="<?= $picture_url ?>/original" title="<?= $words->get('profile.picture.title'); ?>" class="js-profile-picture" data-toggle="lightbox" data-type="image">
+                            <img class="u-rounded-full u-w-full u-h-full u-object-cover js-profile-picture"
+                                 src="<?= $picture_url ?>/320" alt="<?= $words->get('profile.picture.title'); ?>"/>
+                        </a>
             <?php } else { ?>
-                <a href="members/<?= $member->Username; ?>">
-                    <img class="profileimg d-md-none js-profile-picture" src="<?= $picture_url . '/320' ?>"
-                         alt="<?= $words->getbuffered('profile.picture.title'), $member->Username; ?>">
-                </a>
+                        <a href="members/<?= $member->Username; ?>" title="<?= $words->get('profile.picture.title'); ?>">
+                            <img class="u-rounded-full u-w-full u-h-full u-object-cover js-profile-picture"
+                                 src="<?= $picture_url ?>/320" alt="<?= $words->get('profile.picture.title'); ?>">
+                        </a>
             <?php } ?>
+                </div>
+            </div>
 
             <?php if ($member->name() != '') {
                 echo "<h3>" . $member->name() . "</h3>";

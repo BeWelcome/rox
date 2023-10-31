@@ -24,20 +24,23 @@
 </div>
 <div class="row align-items-center">
     <div class="col-12 col-sm-6">
-        <div class="text-center text-md-left">
-            {% if use_lightbox is defined %}
-                <a class="d-md-none js-profile-picture" href="{{ url('avatar', { username: member.Username, size: 'original'}) }}" data-toggle="lightbox"
+        <div class="d-md-none u-w-full u-relative u-pb-[100%] u-m-auto u-max-w-[320px]">
+            <div class="u-absolute u-left-0 u-top-0 u-w-full u-h-full">
+                {% if use_lightbox is defined %}
+                <a class="js-profile-picture" href="{{ url('avatar', { username: member.Username, size: 'original'}) }}" data-toggle="lightbox"
                    data-always-show-close="true" data-type="image"
                    data-title="{{ 'profile.picture.title'| trans }}">
-                    <img class="profileimg d-md-none js-profile-picture" src="{{ url('avatar', { username: member.Username, size: 320}) }}"
+                    <img class="u-rounded-8 u-w-full u-h-full u-object-cover js-profile-picture" src="{{ url('avatar', { username: member.Username, size: 320}) }}"
                          alt="{{ 'profile.picture.title'| trans }}">
                 </a>
             {% else %}
                 <a href="{{ url('members_profile', {username: member.username}) }}">
-                    <img class="profileimg d-md-none js-profile-picture" src="{{ url('avatar', { username: member.Username, size: 320}) }}"
+                    <img class="u-rounded-8 u-w-full u-h-full u-object-cover js-profile-picture" src="{{ url('avatar', { username: member.Username, size: 320}) }}"
                          alt="{{ 'profile.picture.title'| trans }}">
                 </a>
             {% endif %}
+            </div>
+        </div>
 
             {% if member.Name != ''%}<h3>{{ member.Name }}</h3>{% endif %}
             {% set city = member.city %}

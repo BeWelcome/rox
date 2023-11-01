@@ -24,7 +24,7 @@
 </div>
 <div class="row align-items-center">
     <div class="col-12 col-sm-6">
-        <div class="d-md-none u-w-full u-relative u-pb-[100%] u-m-auto u-max-w-[320px]">
+        <div class="d-md-none u-w-full u-relative u-pb-[100%] u-m-auto">
             <div class="u-absolute u-left-0 u-top-0 u-w-full u-h-full">
                 {% if use_lightbox is defined %}
                 <a class="js-profile-picture" href="{{ url('avatar', { username: member.Username, size: 'original'}) }}" data-toggle="lightbox"
@@ -42,53 +42,52 @@
             </div>
         </div>
 
-            {% if member.Name != ''%}<h3>{{ member.Name }}</h3>{% endif %}
-            {% set city = member.city %}
-            <h5><a href="{{ url('places_city', {countryname: city.country.name, countrycode: city.countryId, regionname: city.admin1.name, regioncode: city.admin1id, cityname: city.name, citycode: city.geonameId}) }}">{{ member.city.name }}</a>
-                {%- if city.admin1 != null -%}
-                    , <a href="{{ url('places_region', {countryname: city.country.name, countrycode: city.countryId, regionname: city.admin1.name, regioncode: city.admin1id}) }}">{{ city.admin1.name }}</a>
-                {%- endif -%}
-                , <a href="{{ url('places_country', {countryname: city.country.name, countrycode: city.countryId}) }}">{{ city.country.name }}</a>
-            </h5>
-            {% if status_form is defined and not status_form is null %}
-                {{ form_start(status_form, {'attr': {'class': 'u-grid u-grid-cols-2 u-gap-8'}}) }}
-                {{ form_widget(status_form.status) }}
-                <button type="submit" class="o-button o-button--s u-self-center" value="{{ 'submit'|trans }}">{{ 'submit'|trans }}</button>
-                {{ form_end(status_form) }}
-            {% endif %}
-        </div>
-    </div>
-    <div class="col-12 col-sm-6 teaser-border text-center text-md-left">
-        {% if memberfields.Occupation is defined and memberfields.Occupation != null %}
-            <p class="h5">{{ memberfields.Occupation }}</p>
+        {% if member.Name != ''%}<h3>{{ member.Name }}</h3>{% endif %}
+        {% set city = member.city %}
+        <h5><a href="{{ url('places_city', {countryname: city.country.name, countrycode: city.countryId, regionname: city.admin1.name, regioncode: city.admin1id, cityname: city.name, citycode: city.geonameId}) }}">{{ member.city.name }}</a>
+            {%- if city.admin1 != null -%}
+                , <a href="{{ url('places_region', {countryname: city.country.name, countrycode: city.countryId, regionname: city.admin1.name, regioncode: city.admin1id}) }}">{{ city.admin1.name }}</a>
+            {%- endif -%}
+            , <a href="{{ url('places_country', {countryname: city.country.name, countrycode: city.countryId}) }}">{{ city.country.name }}</a>
+        </h5>
+        {% if status_form is defined and not status_form is null %}
+            {{ form_start(status_form, {'attr': {'class': 'u-grid u-grid-cols-2 u-gap-8'}}) }}
+            {{ form_widget(status_form.status) }}
+            <button type="submit" class="o-button o-button--s u-self-center" value="{{ 'submit'|trans }}">{{ 'submit'|trans }}</button>
+            {{ form_end(status_form) }}
         {% endif %}
-
-        <p class="mb-2">
-            {%- if member.HideBirthDate == 'No' -%}
-                <strong>{{ 'profile.age'|trans }} </strong> {{ member.age }}
-            {%- endif -%}
-            {%- if member.HideBirthDate == 'No' and member.HideGender == 'No' -%}, {%- endif %}
-            {%- if member.HideBirthDate == 'Yes' and member.HideGender == 'No' -%}<strong>{{ 'profile.gender'|trans }}</strong> {%- endif %}
-            {% if member.HideGender == 'No' %}
-                {{ member.gender|trans }}
-            {%- endif -%}
-            <br><strong>{{ 'profile.joined'|trans }} </strong>
-            {% set difference = date(member.created).diff(date()) %}
-            {% if difference.days <= 7 %}
-                {{ 'lastloginprivacy'| trans }}
-            {% else %}
-                {{ member.created.diffForHumans }}
-            {% endif %}
-            {% if member.hasRight('SafetyTeam') %} ({{ member.created|format_datetime() }}){% endif %}
-            <br><strong>{{ 'profile.last.activity'|trans }} </strong>
-            {% set lastLogin = (member.lastLogin == null) ? member.created : member.lastLogin %}
-            {% set difference = date(lastLogin).diff(date()) %}
-            {% if difference.days <= 7 %}
-                {{ 'lastloginprivacy'| trans }}
-            {% else %}
-                {{ lastLogin.diffForHumans }}
-            {% endif %}
-            {% if member.hasRight('SafetyTeam') %} ({{ lastLogin|format_datetime() }}){% endif %}
-        </p>
     </div>
+</div>
+<div class="col-12 col-sm-6 teaser-border text-center text-md-left">
+    {% if memberfields.Occupation is defined and memberfields.Occupation != null %}
+        <p class="h5">{{ memberfields.Occupation }}</p>
+    {% endif %}
+
+    <p class="mb-2">
+        {%- if member.HideBirthDate == 'No' -%}
+            <strong>{{ 'profile.age'|trans }} </strong> {{ member.age }}
+        {%- endif -%}
+        {%- if member.HideBirthDate == 'No' and member.HideGender == 'No' -%}, {%- endif %}
+        {%- if member.HideBirthDate == 'Yes' and member.HideGender == 'No' -%}<strong>{{ 'profile.gender'|trans }}</strong> {%- endif %}
+        {% if member.HideGender == 'No' %}
+            {{ member.gender|trans }}
+        {%- endif -%}
+        <br><strong>{{ 'profile.joined'|trans }} </strong>
+        {% set difference = date(member.created).diff(date()) %}
+        {% if difference.days <= 7 %}
+            {{ 'lastloginprivacy'| trans }}
+        {% else %}
+            {{ member.created.diffForHumans }}
+        {% endif %}
+        {% if member.hasRight('SafetyTeam') %} ({{ member.created|format_datetime() }}){% endif %}
+        <br><strong>{{ 'profile.last.activity'|trans }} </strong>
+        {% set lastLogin = (member.lastLogin == null) ? member.created : member.lastLogin %}
+        {% set difference = date(lastLogin).diff(date()) %}
+        {% if difference.days <= 7 %}
+            {{ 'lastloginprivacy'| trans }}
+        {% else %}
+            {{ lastLogin.diffForHumans }}
+        {% endif %}
+        {% if member.hasRight('SafetyTeam') %} ({{ lastLogin|format_datetime() }}){% endif %}
+    </p>
 </div>

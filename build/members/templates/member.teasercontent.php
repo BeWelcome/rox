@@ -38,7 +38,7 @@
         $picture_url = 'members/avatar/' . $member->Username;
         ?>
         <div class="text-center text-md-left">
-            <div class="d-md-none u-w-full u-relative u-pb-[100%] u-max-w-[320px] u-m-auto">
+            <div class="d-md-none u-w-full u-relative u-pb-[100%] u-m-auto">
                 <div class="u-absolute u-left-0 u-top-0 u-w-full u-h-full">
             <?php if ($this->useLightbox) { ?>
                         <a href="<?= $picture_url ?>/original" title="<?= $words->get('profile.picture.title'); ?>" class="js-profile-picture" data-toggle="lightbox" data-type="image">

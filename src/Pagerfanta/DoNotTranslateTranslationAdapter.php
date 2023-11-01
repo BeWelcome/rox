@@ -37,7 +37,7 @@ class DoNotTranslateTranslationAdapter implements AdapterInterface
     }
 
     /**
-     * Returns an slice of the results.
+     * Returns a slice of the results.
      */
     public function getSlice(int $offset, int $length): iterable
     {

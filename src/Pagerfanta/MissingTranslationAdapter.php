@@ -8,27 +8,18 @@ use PDO;
 
 class MissingTranslationAdapter implements AdapterInterface
 {
-    /** @var string */
-    private $query;
+    private string $query;
 
-    /** @var string */
-    private $code;
+    private string $term;
 
-    /** @var string */
-    private $locale;
+    private string $locale;
 
-    /** @var Connection */
-    private $connection;
+    private Connection $connection;
 
-    /**
-     * SearchAdapter constructor.
-     *
-     * @SuppressWarnings(PHPMD.StaticAccess)
-     */
-    public function __construct(Connection $connection, string $locale, string $code)
+    public function __construct(Connection $connection, string $locale, string $term)
     {
         $this->connection = $connection;
-        $this->code = $code;
+        $this->term = empty($term) ? $term : $connection->quote('%' . $term . '%');
         $this->locale = $locale;
 
         $this->query = "
@@ -45,8 +36,8 @@ class MissingTranslationAdapter implements AdapterInterface
                 AND (isArchived IS NULL OR isArchived = 0)
                 AND (donottranslate = 'No')
                 AND code NOT IN (SELECT code FROM words WHERE shortCode = '{$this->locale}')";
-        if (!empty($this->code)) {
-            $this->query .= " AND code LIKE '%" . $this->code . "%'";
+        if (!empty($this->term)) {
+            $this->query .= " AND code LIKE {$this->term}";
         }
         $this->query .= '
             ORDER BY created desc';
@@ -67,8 +58,8 @@ class MissingTranslationAdapter implements AdapterInterface
                 AND (isArchived IS NULL OR isArchived = 0)
                 AND (donottranslate = 'No')
                 AND code NOT IN (SELECT code FROM words WHERE shortCode = '{$this->locale}')";
-        if (!empty($this->code)) {
-            $query .= " AND code LIKE '%" . $this->code . "%'";
+        if (!empty($this->term)) {
+            $query .= " AND code LIKE {$this->term}";
         }
         $statement = $this->connection->query($query);
         $result = $statement->fetch(PDO::FETCH_OBJ);
@@ -77,7 +68,7 @@ class MissingTranslationAdapter implements AdapterInterface
     }
 
     /**
-     * Returns an slice of the results.
+     * Returns a slice of the results.
      */
     public function getSlice(int $offset, int $length): iterable
     {

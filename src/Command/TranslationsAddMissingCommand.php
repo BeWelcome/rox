@@ -70,12 +70,16 @@ class TranslationsAddMissingCommand extends Command
                         $io->note(sprintf('Adding %s: Reusing %s', $translationId, $reusedTranslationId));
                         $connection = $this->entityManager->getConnection();
                         $statement = $connection->prepare('
-                            INSERT INTO words (code, domain, ShortCode, Sentence, updated, donottranslate, IdLanguage, Description, IdMember, created, TranslationPriority, isarchived, majorupdate)
-                            SELECT \'' . $translationId . '\', domain, ShortCode, Sentence, updated, donottranslate, IdLanguage, Description, IdMember, created, TranslationPriority, isarchived, majorupdate
+                            INSERT INTO words (code, domain, ShortCode, Sentence, donottranslate, IdLanguage, Description, IdMember, updated, created, TranslationPriority, isarchived, majorupdate)
+                            SELECT :translationId, domain, ShortCode, Sentence, donottranslate, IdLanguage, Description, :admin, updated, created, TranslationPriority, isarchived, majorupdate
                             FROM words
-                            WHERE code = \'' . $reusedTranslationId . '\''
+                            WHERE code = :reusedTranslationId'
                         );
-                        $statement->executeQuery();
+                        $statement->executeQuery([
+                            ':admin' => $admin->getId(),
+                            ':translationId' => $translationId,
+                            ':reusedTranslationId' => $reusedTranslationId
+                        ]);
                     } else {
                         $io->note(sprintf('Adding %s: %s', $translationId, $sentence));
 

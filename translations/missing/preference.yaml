@@ -49,3 +49,9 @@ allowrequestsnoaboutmeno:
     - '@no'
 allowrequestsnoaboutmeyes:
     - '@yes'
+preference.allow.no.picture:
+    - If set to 'No' you will only get requests or invitations from members who've uploaded a profile picture.
+    - Description on the preference page
+preference.allow.no.about_me:
+    - If set to 'No' you will only get requests or invitations from members who've written something about themselves (in about me).
+    - Description on the preference page

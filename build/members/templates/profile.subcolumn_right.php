@@ -27,7 +27,7 @@ function wasGuestOrHost(string $relations) {
 
     // build array with combined comments
     $comments = [];
-    $commentsReceived = $this->member->get_comments();
+    $commentsReceived = $this->member->get_comments_received();
     $commentsWritten = $this->member->get_comments_written();
 
     $commentCount = $this->member->count_comments();
@@ -100,29 +100,34 @@ function wasGuestOrHost(string $relations) {
                        }
 
                        // First check if anything is visible at all
-                       $commentFrom = $c['from'] ?? null;
                        $commentTo = $c['to'] ?? null;
+                       $commentFrom = $c['from'] ?? null;
 
-                       $visible = false;
+                       $visibleTo = false;
+                       $visibleFrom = false;
+
                        if (null !== $commentFrom) {
-                           $visible |= ($commentFrom->DisplayInPublic != '0') || $showHiddenComments;
+                           $visibleFrom = ($commentFrom->DisplayInPublic != '0') || $showHiddenComments;
                        }
                        if (null !== $commentTo) {
-                           $visible |= ($commentTo->DisplayInPublic != '0') || $showHiddenComments;
+                           $visibleTo = ($commentTo->DisplayInPublic != '0') || $showHiddenComments;
                        }
-                       if (!$visible) {
+
+                       if (!$visibleTo && !$visibleFrom) {
                            continue;
                        }
 
-                       if ($commentLoopCount != 0) {
+                       if ($commentLoopCount != 0 && $shownPairs != 0) {
                            echo '<hr class="my-3" style="border-top:1px solid gray;">';
                        }
 
+                       // skip items that are hidden from public
                        if (null !== $commentFrom) {
+                           if ($visibleFrom) {
+
                            $commentLoopCount++;
                            $comment = $commentFrom;
-                           // skip items that are hidden for public
-                           if ($comment->DisplayInPublic == 0 && !$showHiddenComments) {continue;}
+
                            $quality = "neutral";
                            if ($comment->comQuality == "Good") {
                                $quality = "good";
@@ -176,7 +181,7 @@ function wasGuestOrHost(string $relations) {
                            </div>
                        </div>
                        <?php } else {
-                           if ($loggedIn === $commentTo->UsernameToMember) {
+                           if ($loggedIn === $commentTo->UsernameToMember && $commentFrom === null) {
                                $addCommentTranslation = str_replace('{username}', $commentTo->UsernameFromMember, $words->getSilent('profile.add.comment'));
                                ?>
                                <div class="clearfix">
@@ -192,13 +197,16 @@ function wasGuestOrHost(string $relations) {
                                echo $noCommentYet;
                            ?></div>
                        <?php }
+                           }
                        }
 
+                       // skip items that are hidden for public
                        if (null !== $commentTo) {
+                           if ($visibleTo) {
+
                            $commentLoopCount++;
                            $comment = $commentTo;
-                           // skip items that are hidden for public
-                           if ($comment->DisplayInPublic == 0 && !$showHiddenComments) {continue;}
+
                            $quality = "neutral";
                            if ($comment->comQuality == "Good") {
                                $quality = "good";
@@ -250,8 +258,9 @@ function wasGuestOrHost(string $relations) {
                            </div>
                        </div>
 
-                      <?php } else {
-                           if ($loggedIn === $comment->UsernameToMember) {
+                      <?php }
+                       } else {
+                           if ($loggedIn === $comment->UsernameToMember && $commentTo === null) {
                            $addCommentTranslation = str_replace('{username}', $comment->UsernameFromMember, $words->getSilent('profile.add.comment'));
                            ?>
                             <div class="clearfix">

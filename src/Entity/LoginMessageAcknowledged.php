@@ -17,36 +17,30 @@ use Doctrine\ORM\Mapping as ORM;
  * @SuppressWarnings(PHPMD)
  * Auto generated class do not check mess
  */
-class LoginMessagesAcknowledged
+class LoginMessageAcknowledged
 {
     /**
-     * @var bool
-     *
      * @ORM\Column(name="acknowledged", type="boolean", nullable=false)
      */
-    private $acknowledged;
+    private bool $acknowledged;
 
     /**
-     * @var LoginMessage
-     *
      * @ORM\OneToOne(targetEntity="\App\Entity\LoginMessage")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="messageid", referencedColumnName="id")
      * })
      * @ORM\Id
      */
-    private $message;
+    private LoginMessage $message;
 
     /**
-     * @var Member
-     *
      * @ORM\OneToOne(targetEntity="\App\Entity\Member")
      * @ORM\Id
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="memberid", referencedColumnName="id")
      * })
      */
-    private $member;
+    private Member $member;
 
     /**
      * Set acknowledged.

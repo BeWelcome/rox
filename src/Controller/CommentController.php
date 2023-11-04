@@ -160,6 +160,7 @@ class CommentController extends AbstractController
             $comment->setFromMember($loggedInMember);
             if (CommentQualityType::NEGATIVE === $comment->getQuality()) {
                 $comment->setAdminAction(CommentAdminActionType::ADMIN_CHECK);
+                $comment->setEditingAllowed(false);
             }
             $entityManager->persist($comment);
 
@@ -192,6 +193,8 @@ class CommentController extends AbstractController
     /**
      * @Route("/members/{username}/comment/edit", name="edit_comment",
      *     requirements={"username" = "(?i:[a-z](?!.*[-_.][-_.])[a-z0-9-._]{2,18}[a-z0-9])"}))
+     *
+     * @return Response|RedirectResponse
      */
     public function editComment(
         Request $request,
@@ -199,7 +202,7 @@ class CommentController extends AbstractController
         CommentModel $commentModel,
         Mailer $mailer,
         EntityManagerInterface $entityManager
-    ): Response {
+    ) {
         /** @var Member $loggedInMember */
         $loggedInMember = $this->getUser();
 
@@ -250,12 +253,15 @@ class CommentController extends AbstractController
 
             if (CommentQualityType::NEGATIVE === $comment->getQuality()) {
                 $comment->setAdminAction(CommentAdminActionType::ADMIN_CHECK);
+                $comment->setEditingAllowed(false);
             }
 
             $entityManager->persist($comment);
             $entityManager->flush();
 
-            $mailer->sendCommentUpdateNotification($comment);
+            if ($comment->getDisplayInPublic()) {
+                $mailer->sendCommentUpdateNotification($comment);
+            }
 
             if ($newExperience || $changedToNegative || $changedToPositive) {
                 return $this->redirectToRoute('profile_comments', ['username' => $loggedInMember->getUsername()]);
@@ -319,11 +325,7 @@ class CommentController extends AbstractController
         $statusFormView = (null === $statusForm) ? null : $statusForm->createView();
 
         $commentRepository = $entityManager->getRepository(Comment::class);
-        if (in_array(Member::ROLE_ADMIN_SAFETYTEAM, $loggedInMember->getRoles())) {
-            $comments = $commentRepository->getAllCommentsMember($member);
-        } else {
-            $comments = $commentRepository->getCommentsMember($member);
-        }
+        $comments = $commentRepository->getAllCommentsMember($member);
 
         return $this->render('profile/comments.html.twig', [
             'use_lightbox' => false,

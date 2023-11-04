@@ -1136,7 +1136,7 @@ ORDER BY members.Username ASC
         return $this->createEntity('ProfileVisit')->getVisitingMembersSubset($this, $pager);
     }
 
-      public function get_comments($count = 0) {
+      public function get_comments_received($count = 0) {
           $sql = "
 SELECT comments.*,
     comments.Quality AS comQuality,

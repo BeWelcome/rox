@@ -5,7 +5,11 @@
         <div class="u-w-full u-mb-8">{{ 'commentguidlineslink'|trans|raw }}</div>
     {% endif %}
     {% for comment in comments %}
-        {% include 'profile/comment.html.twig' with { comment: comment } %}
+        {% set commentToVisible = (comment['to'] is defined) ? (comment['to'].showCondition(app.user) > 0) : false %}
+        {% set commentFromVisible = (comment['from'] is defined) ? (comment['from'].showCondition(app.user) > 0) : false %}
+        {% if commentToVisible or commentFromVisible %}
+            {% include 'profile/comment.html.twig' with { comment: comment } %}
+        {% endif %}
     {% else %}
         {{ 'profile.no.comments'|trans }}
     {% endfor %}

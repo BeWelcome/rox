@@ -82,6 +82,17 @@ if (empty($vars)) {
                         } ?>
                     </textarea>
                     </div>
+                    <div class="o-form-group mb-1">
+                        <label for="activity-location"><?php echo $words->getBuffered('ActivitiesLocationSearch'); ?></label>
+                            <div class="auto-search-wrapper max-height loupe">
+                                <input type="text" id="activity-location" name="activity-location"
+                                       class="o-input js-location-picker" value="<?= $vars['activity-location'] ?? ''; ?>"
+                                       placeholder="<?php echo $words->get('ActivityLocation'); ?>*">
+                                <input type="hidden" id="activity-location_geoname_id" name="activity-location_geoname_id" value="<?= $vars['activity-location_geoname_id'] ?? '' ?>">
+                                <input type="hidden" id="activity-location_latitude" name="activity-location_latitude" value="<?= $vars['activity-location_latitude'] ?? '' ?>">
+                                <input type="hidden" id="activity-location_longitude" name="activity-location_longitude" value="<?= $vars['activity-location_longitude'] ?? '' ?>">
+                        </div>
+                    </div>
                     <div class="o-checkbox mb-1">
                         <input type="checkbox" class="o-checkbox__input" id="activity-public" name="activity-public" value="1"
                             <?php if (isset($vars['activity-public']) && $vars['activity-public']) { echo 'checked="checked"'; } ?>>
@@ -132,25 +143,10 @@ if (empty($vars)) {
                     </div>
 
                     <div class="o-form-group mb-1">
-                        <label for="activity-location"><?php echo $words->getBuffered('ActivitiesLocationSearch'); ?></label>
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text bg-primary white"><i class="fa fa-fw fa-globe"></i></span>
-                            </div>
-                            <input type="text" id="activity-location" name="activity-location"
-                                   class="o-input js-search-picker" value="<?= $vars['activity-location'] ?? ''; ?>"
-                                   placeholder="<?php echo $words->get('ActivityLocation'); ?>*">
-                        </div>
-                    </div>
-
-                    <div class="o-form-group mb-1">
                         <label for="activity-address" class="mb-0"><?php echo $words->get('ActivityAddress'); ?></label>
                         <textarea id="activity-address" name="activity-address" class="o-input"
-                                  rows="3"><?php echo $vars['activity-address']; ?></textarea>
+                                  rows="7"><?php echo $vars['activity-address']; ?></textarea>
                     </div>
-                    <input type="hidden" id="activity-location_geoname_id" name="activity-location_geoname_id" value="<?= $vars['activity-location_geoname_id'] ?? '' ?>">
-                    <input type="hidden" id="activity-location_latitude" name="activity-location_latitude" value="<?= $vars['activity-location_latitude'] ?? '' ?>">
-                    <input type="hidden" id="activity-location_longitude" name="activity-location_longitude" value="<?= $vars['activity-location_longitude'] ?? '' ?>">
                 </div>
 
                 <div class="col-12 mt-3">

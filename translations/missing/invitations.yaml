@@ -97,3 +97,9 @@ flash.invitation.declined:
 profile.summary.none:
     - 'No about me given.'
     - Shown in the trip summary section for an invitation
+invitation.not.without.profile.picture:
+    - 'To send an invitation to this member you need to add a profile picture.'
+    - Flash shown when trying to send an invitation to a member that has the preference "Allow requests without profile picture to 'No'"
+invitation.not.without.about_me:
+    - 'To send an invitation to this member you need to fill out the About Me section of your profile.'
+    - Flash shown when trying to send an invitation to a member that has the preference "Allow requests without about me to 'No'"

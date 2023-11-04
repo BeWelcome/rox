@@ -35,3 +35,17 @@ itemsperpage100:
     - Used in the preference drop down for items per page
     - messages+intl-icu
     - yes
+allowrequestsnopicture:
+    - Accept requests or invitations from members without a profile picture
+    - Description on the preference page
+allowrequestsnoaboutme:
+    - Accept requests or invitations from members without a 'About me' section filled in
+    - Description on the preference page
+allowrequestsnopictureno:
+    - '@no'
+allowrequestsnopictureyes:
+    - '@yes'
+allowrequestsnoaboutmeno:
+    - '@no'
+allowrequestsnoaboutmeyes:
+    - '@yes'

@@ -4,12 +4,15 @@ namespace App\Controller;
 
 use App\Entity\HostingRequest;
 use App\Entity\Member;
+use App\Entity\MembersPhoto;
 use App\Entity\Message;
+use App\Entity\Preference;
 use App\Model\BaseRequestModel;
 use App\Model\ConversationModel;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
 use DateTime;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Form;
 
@@ -20,10 +23,12 @@ abstract class BaseRequestAndInvitationController extends AbstractController
 
     protected BaseRequestModel $model;
     protected ConversationModel $conversationModel;
+    protected EntityManagerInterface $entityManager;
 
-    public function __construct(BaseRequestModel $model)
+    public function __construct(BaseRequestModel $model, EntityManagerInterface $entityManager)
     {
         $this->model = $model;
+        $this->entityManager = $entityManager;
     }
 
     abstract protected function addExpiredFlash(Member $receiver);
@@ -129,4 +134,33 @@ abstract class BaseRequestAndInvitationController extends AbstractController
 
         return $subject;
     }
+
+    protected function getAllowRequestsWithoutProfilePicture(Member $member): bool
+    {
+        $preferenceRepository = $this->entityManager->getRepository(Preference::class);
+        $itemsPerPagePreference = $preferenceRepository->findOneBy(['codename' => Preference::ALLOW_REQUEST_NO_PICTURE]);
+
+        $value = $member->getMemberPreference($itemsPerPagePreference)->getValue();
+
+        return ('Yes' === $value);
+    }
+
+    protected function getAllowRequestsWithoutAboutMe(Member $member): bool
+    {
+        $preferenceRepository = $this->entityManager->getRepository(Preference::class);
+        $itemsPerPagePreference = $preferenceRepository->findOneBy(['codename' => Preference::ALLOW_REQUEST_NO_ABOUT_ME]);
+
+        $value = $member->getMemberPreference($itemsPerPagePreference)->getValue();
+
+        return ('Yes' === $value);
+    }
+
+    protected function checkIfMemberHasProfilePicture(Member $member): bool
+    {
+        $profilePictureRepository = $this->entityManager->getRepository(MembersPhoto::class);
+        $profilePictures = $profilePictureRepository->findBy(['member' => $member]);
+
+        return (count($profilePictures) > 0);
+    }
+
 }

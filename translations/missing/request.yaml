@@ -12,3 +12,9 @@ please.enter.a.message.text:
 flash.request.declined:
     - 'You declined this request.'
     - Flash shown when clicking the decline without message link in the request form
+request.not.without.profile.picture:
+    - 'To send a request to this member you need to add a profile picture.'
+    - Flash shown when trying to send a request to a member that has the preference "Allow requests without profile picture to 'No'"
+request.not.without.about_me:
+    - 'To send a request to this member you need to fill out the About Me section of your profile.'
+    - Flash shown when trying to send a request to a member that has the preference "Allow requests without about me to 'No'"

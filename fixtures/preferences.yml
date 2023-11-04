@@ -114,7 +114,7 @@ App\Entity\Preference:
         Description: 'this preference which is by default set to True will allow the owner to receive the notification for local event in its area (City/Region or Country)'
         created: <DateTime()>
         DefaultValue: 'Yes'
-        PossibleValues: 'Yes:No'
+        PossibleValues: 'Yes;No'
         Status: 'Normal'
     GROUPS_THREADS_LANDING_PAGE:
         position: 55
@@ -123,8 +123,17 @@ App\Entity\Preference:
         Description: 'How many group threads on community landing'
         created: <DateTime()>
         DefaultValue: 5
-        PossibleValues: ''
+        PossibleValues: 'Yes;No'
         Status: 'Inactive'
+    SHOW_FORUMS_POSTS:
+        position: 23
+        codename: 'MyForumPostsPagePublic'
+        codeDescription: 'MyForumPostsPagePublicDes'
+        Description: 'This preference stores if the user decided to show their posts in the forum to everyone'
+        created: <DateTime()>
+        DefaultValue: 'No'
+        PossibleValues: 'Yes;No'
+        Status: 'Normal'
     SHOW_PROFILE_VISITS:
         position: 56
         codename: 'PreferenceShowProfileVisits'
@@ -188,3 +197,19 @@ App\Entity\Preference:
         DefaultValue: 20
         PossibleValues: '5,10,20,50,100'
         Status: 'Normal'
+    ALLOW_REQUEST_NO_PICTURE:
+        position: 63
+        codename: 'AllowRequestsNoPicture'
+        codeDescription: 'preference.allow.no.picture'
+        description: 'Allow to be contacted by members without a picture'
+        created: <DateTime()>
+        DefaultValue: Yes
+        PossibleValues: No,Yes
+    ALLOW_REQUEST_NO_ABOUT_ME:
+        position: 64
+        codename: 'AllowRequestsNoAboutMe'
+        codeDescription: 'preference.allow.no.about_me'
+        description: 'Allow to be contacted by members without an about me section'
+        created: <DateTime()>
+        DefaultValue: Yes
+        PossibleValues: No,Yes

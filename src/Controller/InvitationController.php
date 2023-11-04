@@ -30,8 +30,8 @@ class InvitationController extends BaseRequestAndInvitationController
     use TranslatorTrait;
 
     private Mailer $mailer;
-    private EntityManagerInterface $entityManager;
     private Logger $logger;
+    private InvitationModel $invitationModel;
 
     public function __construct(
         ConversationModel $conversationModel,
@@ -40,10 +40,9 @@ class InvitationController extends BaseRequestAndInvitationController
         Mailer $mailer,
         Logger $logger
     ) {
-        parent::__construct($invitationModel);
+        parent::__construct($invitationModel, $entityManager);
         $this->mailer = $mailer;
         $this->conversationModel = $conversationModel;
-        $this->entityManager = $entityManager;
         $this->invitationModel = $invitationModel;
         $this->logger = $logger;
     }
@@ -79,6 +78,21 @@ class InvitationController extends BaseRequestAndInvitationController
             $referrer = $request->headers->get('referer');
 
             return $this->redirect($referrer);
+        }
+
+        $hasProfilePicture = $this->checkIfMemberHasProfilePicture($host);
+        $allowWithoutProfilePicture = $this->getAllowRequestsWithoutProfilePicture($guest);
+        if (!$allowWithoutProfilePicture && !$hasProfilePicture) {
+            $this->addTranslatedFlash('notice', 'invitation.not.without.profile.picture');
+
+            return $this->redirectToRoute('members_profile', ['username' => $host->getUsername()]);
+        }
+
+        $allowWithoutAboutMe = $this->getAllowRequestsWithoutAboutMe($guest);
+        if (0 === $host->getProfileSummary() && !$allowWithoutAboutMe) {
+            $this->addTranslatedFlash('notice', 'invitation.not.without.about_me');
+
+            return $this->redirectToRoute('members_profile', ['username' => $host->getUsername()]);
         }
 
         $hostingRequest = new HostingRequest();

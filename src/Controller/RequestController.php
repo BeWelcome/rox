@@ -16,6 +16,7 @@ use App\Service\Mailer;
 use App\Utilities\ConversationThread;
 use App\Utilities\ManagerTrait;
 use App\Utilities\TranslatorTrait;
+use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
@@ -41,10 +42,11 @@ class RequestController extends BaseRequestAndInvitationController
     public function __construct(
         ConversationModel $conversationModel,
         HostingRequestModel $requestModel,
+        EntityManagerInterface $entityManager,
         Mailer $mailer,
         Logger $logger
     ) {
-        parent::__construct($requestModel);
+        parent::__construct($requestModel, $entityManager);
 
         $this->conversationModel = $conversationModel;
         $this->mailer = $mailer;
@@ -99,23 +101,25 @@ class RequestController extends BaseRequestAndInvitationController
      *
      * @throws Exception
      */
-    public function newHostingRequest(Request $request, Member $host): Response
+    public function newHostingRequest(Request $request, Member $host, EntityManagerInterface $entityManager): Response
     {
-        /** @var Member $member */
-        $member = $this->getUser();
-        if ($member === $host) {
+        /** @var Member $guest */
+        $guest = $this->getUser();
+        if ($guest === $host) {
             $this->addTranslatedFlash('notice', 'flash.request.self');
 
-            return $this->redirectToRoute('members_profile', ['username' => $member->getUsername()]);
+            return $this->redirectToRoute('members_profile', ['username' => $guest->getUsername()]);
         }
 
         if (!$host->isBrowsable()) {
             $this->addTranslatedFlash('note', 'flash.member.invalid');
+
+            return $this->redirectToRoute('members_profile', ['username' => $guest->getUsername()]);
         }
 
         if (
             $this->conversationModel->hasRequestLimitExceeded(
-                $member,
+                $guest,
                 $this->getParameter('new_members_requests_per_hour'),
                 $this->getParameter('new_members_requests_per_day')
             )
@@ -132,12 +136,27 @@ class RequestController extends BaseRequestAndInvitationController
             return $this->redirectToRoute('members_profile', ['username' => $host->getUsername()]);
         }
 
+        $hasProfilePicture = $this->checkIfMemberHasProfilePicture($guest);
+        $allowWithoutProfilePicture = $this->getAllowRequestsWithoutProfilePicture($host);
+        if (!$allowWithoutProfilePicture && !$hasProfilePicture) {
+            $this->addTranslatedFlash('notice', 'request.not.without.profile.picture');
+
+            return $this->redirectToRoute('members_profile', ['username' => $guest->getUsername()]);
+        }
+
+        $allowWithoutAboutMe = $this->getAllowRequestsWithoutAboutMe($host);
+        if (0 === $guest->getProfileSummary() && !$allowWithoutAboutMe) {
+            $this->addTranslatedFlash('notice', 'request.not.without.about_me');
+
+            return $this->redirectToRoute('members_profile', ['username' => $guest->getUsername()]);
+        }
+
         $requestForm = $this->createForm(HostingRequestGuest::class, null);
         $requestForm->handleRequest($request);
 
         if ($requestForm->isSubmitted() && $requestForm->isValid()) {
             // Write request to database after doing some checks
-            $hostingRequest = $this->getMessageFromData($requestForm->getData(), $member, $host);
+            $hostingRequest = $this->getMessageFromData($requestForm->getData(), $guest, $host);
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($hostingRequest);
@@ -145,7 +164,7 @@ class RequestController extends BaseRequestAndInvitationController
 
             $this->sendInitialRequestNotification(
                 $host,
-                $member,
+                $guest,
                 $hostingRequest
             );
             $this->addTranslatedFlash('notice', 'flash.request.sent');
@@ -154,7 +173,7 @@ class RequestController extends BaseRequestAndInvitationController
         }
 
         return $this->render('request/request.html.twig', [
-            'guest' => $member,
+            'guest' => $guest,
             'host' => $host,
             'form' => $requestForm->createView(),
         ]);

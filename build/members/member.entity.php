@@ -1146,7 +1146,9 @@ SELECT comments.*,
     UNIX_TIMESTAMP(comments.created) unix_created,
     UNIX_TIMESTAMP(comments.updated) unix_updated,
     members.username AS UsernameFromMember,
-    members2.username AS UsernameToMember
+    members.status As FromStatus,
+    members2.username AS UsernameToMember,
+    members2.status As ToStatus
 FROM
     comments,
     members,
@@ -1212,7 +1214,9 @@ SELECT
   UNIX_TIMESTAMP(comments.created) unix_created,
   UNIX_TIMESTAMP(comments.updated) unix_updated,
   members.username as UsernameFromMember,
-  members2.username as UsernameToMember
+  members.status As FromStatus,
+  members2.username AS UsernameToMember,
+  members2.status As ToStatus
 FROM
   comments,
   members,

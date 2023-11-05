@@ -68,7 +68,11 @@
 {% macro roundedavatarstack(username, size, displayname = true, link = false) %}
     {% import _self as macros %}
     {% set img %}<img class="o-avatar__img" src="{{ path( 'avatar', { 'username': username , 'size': size }) }}" title="{{ username }}" alt="{{ 'profile' | trans }}: {{ username }}">{% endset %}
-    {{ macros.profilelink(username, img, 'o-avatar__img-wrapper o-avatar--shadow-s') }}
+    {% if link %}
+        {{ macros.profilelink(username, img, 'o-avatar__img-wrapper o-avatar--shadow-s') }}
+    {% else %}
+        <div class="o-avatar__img-wrapper o-avatar--shadow-s">{{ img }}</div>
+    {% endif %}
     {% if displayname %}
         {{ macros.profilelink(username, username, 'o-avatar__name u-break-all') }}
     {% endif %}

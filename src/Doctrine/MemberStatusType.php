@@ -57,6 +57,7 @@ class MemberStatusType extends EnumType
     self::ASKED_TO_LEAVE . "', '" .
     self::CHOICE_INACTIVE . "', '" .
     self::OUT_OF_REMIND . "', '" .
+    self::SUSPENDED . "', '" .
     self::PENDING . "'";
 
     public const MEMBER_COMMENTS_ARRAY = [
@@ -64,6 +65,14 @@ class MemberStatusType extends EnumType
         self::ACTIVE_HIDDEN,
         self::ASKED_TO_LEAVE,
         self::CHOICE_INACTIVE,
+        self::OUT_OF_REMIND,
+        self::SUSPENDED,
+        self::PENDING,
+    ];
+
+    public const MEMBER_PROFILE_LINKED = [
+        self::ACTIVE,
+        self::ACTIVE_HIDDEN,
         self::OUT_OF_REMIND,
         self::PENDING,
     ];

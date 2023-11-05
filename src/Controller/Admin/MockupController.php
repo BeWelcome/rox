@@ -25,6 +25,7 @@ use App\Model\TranslationModel;
 use App\Twig\MockupExtension;
 use Carbon\Carbon;
 use DateTime;
+use Doctrine\ORM\EntityManagerInterface;
 use Mockery;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
@@ -43,9 +44,13 @@ class MockupController extends TranslationController
     /** @var iterable|MockupProviderInterface[] */
     private $providers;
 
-    public function __construct(TranslationModel $translationModel, string $locales, iterable $providers)
-    {
-        parent::__construct($translationModel, $locales);
+    public function __construct(
+        TranslationModel $translationModel,
+        EntityManagerInterface $entityManager,
+        string $locales,
+        iterable $providers
+    ) {
+        parent::__construct($translationModel, $entityManager, $locales);
 
         foreach ($providers as $provider) {
             $feature = $provider->getFeature();

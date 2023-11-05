@@ -2,6 +2,7 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\LoginMessage;
 use App\Entity\Member;
 use App\Entity\Message;
 use App\Entity\UploadedImage;
@@ -46,7 +47,8 @@ class VolunteerToolController extends AbstractController
     private const DAMAGE_DONE = 'admin.tools.damage_done';
     private const AGE_BY_COUNTRY = 'admin.tools.age_by_country';
     private const UPLOADED_IMAGES = 'admin.tools.uploaded_images';
-    private const LOGIN_MESSAGES = 'admin.tools.login_messages';
+    private const LOGIN_MESSAGES_SHOW = 'admin.tools.login_messages.show';
+    private const LOGIN_MESSAGE_ADD = 'admin.tools.login_message.add';
 
     private FeedbackModel $feedbackModel;
 
@@ -250,9 +252,9 @@ class VolunteerToolController extends AbstractController
                 OR members.Status = 'Rejected')
                 AND DATEDIFF(NOW(), members.Updated) < 91
             GROUP BY members.id
-            ORDER BY members.updated DESC
+            ORDER BY MAX(members.updated) DESC
             LIMIT 100;
-        ")->fetchAll();
+        ")->fetchAllAssociative();
 
         return $this->render(
             'admin/tools/top.spammer.html.twig',
@@ -538,12 +540,12 @@ ORDER BY count(msg.id) DESC')->fetchAll();
     }
 
     /**
-     * @Route("/admin/tools/login_message", name="admin_tools_login_message")
+     * @Route("/admin/tools/login_message/add", name="admin_tools_login_message_add")
      */
     public function addLoginMessage(Request $request, EntityManagerInterface $entityManager): Response
     {
         // check permissions
-        $subMenuItems = $this->checkPermissions($request, self::LOGIN_MESSAGES);
+        $subMenuItems = $this->checkPermissions($request, self::LOGIN_MESSAGE_ADD);
 
         $form = $this->createForm(LoginMessageType::class);
         $form->handleRequest($request);
@@ -562,10 +564,49 @@ ORDER BY count(msg.id) DESC')->fetchAll();
                 'form' => $form->createView(),
                 'submenu' => [
                     'items' => $subMenuItems,
-                    'active' => self::LOGIN_MESSAGES,
+                    'active' => self::LOGIN_MESSAGE_ADD,
                 ],
             ]
         );
+    }
+
+    /**
+     * @Route("/admin/tools/login_messages/show", name="admin_tools_login_messages_show")
+     */
+    public function showLoginMessages(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        // check permissions
+        $subMenuItems = $this->checkPermissions($request, self::LOGIN_MESSAGES_SHOW);
+
+        $loginMessageRepository = $entityManager->getRepository(LoginMessage::class);
+        $loginMessages = $loginMessageRepository->findBy([], ['expires' => 'DESC', 'id' => 'DESC']);
+
+        return $this->render(
+            'admin/tools/login.messages.show.html.twig',
+            [
+                'login_messages' => $loginMessages,
+                'submenu' => [
+                    'items' => $subMenuItems,
+                    'active' => self::LOGIN_MESSAGES_SHOW,
+                ],
+            ]
+        );
+    }
+
+    /**
+     * @Route("/admin/tools/login_message/{id}/expire", name="admin_tools_login_message_expire")
+     */
+    public function expireLoginMessage(LoginMessage $loginMessage, EntityManagerInterface $entityManager): Response
+    {
+        if (!$this->isGranted(Member::ROLE_ADMIN_ADMIN)) {
+            return $this->redirectToRoute('homepage');
+        }
+
+        $loginMessage->setExpires(new DateTime());
+        $entityManager->persist($loginMessage);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('admin_tools_login_messages_show');
     }
 
     /**
@@ -646,9 +687,13 @@ ORDER BY count(msg.id) DESC')->fetchAll();
                 'key' => self::UPLOADED_IMAGES,
                 'url' => $this->generateUrl('admin_tools_uploaded_images'),
             ];
-            $subMenu[self::LOGIN_MESSAGES] = [
-                'key' => self::LOGIN_MESSAGES,
-                'url' => $this->generateUrl('admin_tools_login_message'),
+            $subMenu[self::LOGIN_MESSAGES_SHOW] = [
+                'key' => self::LOGIN_MESSAGES_SHOW,
+                'url' => $this->generateUrl('admin_tools_login_messages_show'),
+            ];
+            $subMenu[self::LOGIN_MESSAGE_ADD] = [
+                'key' => self::LOGIN_MESSAGE_ADD,
+                'url' => $this->generateUrl('admin_tools_login_message_add'),
             ];
         }
 

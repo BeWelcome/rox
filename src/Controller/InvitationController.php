@@ -80,19 +80,22 @@ class InvitationController extends BaseRequestAndInvitationController
             return $this->redirect($referrer);
         }
 
+        $redirectOnNotAllowed = false;
         $hasProfilePicture = $this->checkIfMemberHasProfilePicture($host);
         $allowWithoutProfilePicture = $this->getAllowRequestsWithoutProfilePicture($guest);
         if (!$allowWithoutProfilePicture && !$hasProfilePicture) {
+            $redirectOnNotAllowed = true;
             $this->addTranslatedFlash('notice', 'invitation.not.without.profile.picture');
-
-            return $this->redirectToRoute('members_profile', ['username' => $host->getUsername()]);
         }
 
         $hasAboutMe = $this->checkIfMemberHasAboutMe($guest);
         $allowWithoutAboutMe = $this->getAllowRequestsWithoutAboutMe($guest);
         if (!$allowWithoutAboutMe && !$hasAboutMe) {
+            $redirectOnNotAllowed = true;
             $this->addTranslatedFlash('notice', 'invitation.not.without.about_me');
+        }
 
+        if ($redirectOnNotAllowed) {
             return $this->redirectToRoute('members_profile', ['username' => $host->getUsername()]);
         }
 

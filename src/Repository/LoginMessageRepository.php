@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Member;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\Query\ResultSetMapping;
 
 class LoginMessageRepository extends EntityRepository
@@ -15,26 +16,19 @@ class LoginMessageRepository extends EntityRepository
      */
     public function getLoginMessages(Member $member)
     {
-        $rsm = new ResultSetMapping();
-        $rsm->addEntityResult('App:LoginMessage', 'lm');
-        $rsm->addFieldResult('lm', 'id', 'id');
-        $rsm->addFieldResult('lm', 'text', 'text');
-        $rsm->addFieldResult('lm', 'created', 'created');
-        $query = $this->getEntityManager()
-            ->createNativeQuery('
-                SELECT lm.id, lm.text, lm.created FROM login_messages lm
-                LEFT JOIN `login_messages_acknowledged` lma ON lm.id = lma.messageId AND lma.memberId = :memberId
-                WHERE
-                    lma.messageId IS NULL
-                    AND (lm.created > (NOW() - INTERVAL 1 MONTH))
-                ORDER BY
-                    lm.created ASC
-            ', $rsm)
-            ->setParameter('memberId', $member->getId())
-            ;
-        $result = $query
-            ->getResult();
-
-        return $result;
+        $qb = $this->createQueryBuilder('lm');
+        $query = $qb
+            ->leftJoin(
+                'App:LoginMessageAcknowledged',
+                'lma',
+                Join::WITH,
+                'lma.message = lm AND lma.member = :member'
+            )
+            ->where($qb->expr()->isNull('lma.message'))
+            ->andWhere($qb->expr()->gt('lm.expires', $qb->expr()->literal('now()')))
+            ->setParameter(':member', $member->getId())
+            ->getQuery()
+        ;
+        return  $query->getResult();
     }
 }

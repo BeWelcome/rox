@@ -178,10 +178,10 @@
 {% endif %}
 <noscript><div class="container-lg"><div class="alert alert-danger"><p class="h5">You need to activate Javascript for bewelcome.org</p><small>Without it some function won't work.</small></div></div></noscript>
 {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
-<div class="container-lg">{% for message in loginmessages %}
+<div class="container-lg">{% for loginmessage in loginmessages %}
         <div class="alert alert-warning alert-dismissible fade show" role="alert">
-            {{ message.text|raw }}
-            <button data-alert="{{ message.id }}" class="close" data-dismiss="alert" aria-label="Close">
+            {{ loginmessage.message|raw }}
+            <button data-alert="{{ loginmessage.id }}" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>

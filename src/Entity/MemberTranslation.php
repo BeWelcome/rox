@@ -31,94 +31,65 @@ use Doctrine\ORM\Mapping as ORM;
 class MemberTranslation
 {
     /**
-     * @var Member
-     *
      * @ORM\ManyToOne(targetEntity="Member", fetch="EAGER")
      * @ORM\JoinColumn(name="IdOwner", referencedColumnName="id")
      */
-    private $owner;
+    private Member $owner;
 
     /**
-     * @var int
-     *
      * @ORM\Column(name="IdTrad", type="integer", nullable=false)
      */
-    private $translation;
+    private int $translation;
 
     /**
-     * @var Member
-     *
      * @ORM\ManyToOne(targetEntity="Member", fetch="LAZY")
      * @ORM\JoinColumn(name="IdTranslator", nullable=false)
      */
-    private $translator;
+    private Member $translator;
 
     /**
-     * @var DateTime
-     *
      * @ORM\Column(name="updated", type="datetime", nullable=true)
      */
-    private $updated;
+    private DateTime $updated;
 
     /**
-     * @var DateTime
-     *
      * @ORM\Column(name="created", type="datetime", nullable=false)
      */
-    private $created;
+    private DateTime $created;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="Type", type="string", nullable=false)
      */
-    private $type = 'member';
+    private string $type = 'member';
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="Sentence", type="text", length=65535, nullable=false)
      */
-    private $sentence;
+    private string $sentence;
 
     /**
-     * @var int
-     *
      * @ORM\Column(name="IdRecord", type="integer", nullable=false)
      */
-    private $idrecord = '-1';
+    private int $record = -1;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="TableColumn", type="string", length=200, nullable=false)
      */
-    private $tablecolumn = 'NotSet';
+    private string $tableColumn = 'NotSet';
 
     /**
-     * @var int
-     *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $id;
+    private int $id;
 
     /**
-     * @var Language
-     *
      * @ORM\ManyToOne(targetEntity="Language")
      *   @ORM\JoinColumn(name="IdLanguage", referencedColumnName="id")
      */
-    private $language;
+    private Language $language;
 
-    /**
-     * Set owner.
-     *
-     * @param Member $owner
-     *
-     * @return MemberTranslation
-     */
     public function setOwner(Member $owner):self
     {
         $this->owner = $owner;
@@ -126,238 +97,120 @@ class MemberTranslation
         return $this;
     }
 
-    /**
-     * Get owner.
-     *
-     * @return Member
-     */
     public function getOwner():Member
     {
         return $this->owner;
     }
 
-    /**
-     * Set translation.
-     *
-     * @param int $translation
-     *
-     * @return MemberTranslation
-     */
-    public function setTranslation($translation)
+    public function setTranslation(int $translation): self
     {
         $this->translation = $translation;
 
         return $this;
     }
 
-    /**
-     * Get translation.
-     *
-     * @return int
-     */
-    public function getTranslation()
+    public function getTranslation(): int
     {
         return $this->translation;
     }
 
-    /**
-     * Set translator.
-     *
-     * @param Member $translator
-     *
-     * @return MemberTranslation
-     */
-    public function setTranslator(Member $translator):self
+    public function setTranslator(Member $translator): self
     {
         $this->translator = $translator;
 
         return $this;
     }
 
-    /**
-     * Get translator.
-     *
-     * @return Member
-     */
-    public function getTranslator():Member
+    public function getTranslator(): Member
     {
         return $this->translator;
     }
 
-    /**
-     * Set updated.
-     *
-     * @param DateTime $updated
-     *
-     * @return MemberTranslation
-     */
-    public function setUpdated($updated)
+    public function setUpdated(DateTime $updated): self
     {
         $this->updated = $updated;
 
         return $this;
     }
 
-    /**
-     * Get updated.
-     *
-     * @return Carbon
-     */
-    public function getUpdated()
+    public function getUpdated(): Carbon
     {
         return Carbon::instance($this->updated);
     }
 
-    /**
-     * Set created.
-     *
-     * @param DateTime $created
-     *
-     * @return MemberTranslation
-     */
-    public function setCreated($created)
+    public function setCreated(DateTime $created): self
     {
         $this->created = $created;
 
         return $this;
     }
 
-    /**
-     * Get created.
-     *
-     * @return Carbon
-     */
-    public function getCreated()
+    public function getCreated(): Carbon
     {
         return Carbon::instance($this->created);
     }
 
-    /**
-     * Set type.
-     *
-     * @param string $type
-     *
-     * @return MemberTranslation
-     */
-    public function setType($type)
+    public function setType(string $type): self
     {
         $this->type = $type;
 
         return $this;
     }
 
-    /**
-     * Get type.
-     *
-     * @return string
-     */
-    public function getType()
+    public function getType(): string
     {
         return $this->type;
     }
 
-    /**
-     * Set sentence.
-     *
-     * @param string $sentence
-     *
-     * @return MemberTranslation
-     */
-    public function setSentence($sentence)
+    public function setSentence(string $sentence): self
     {
         $this->sentence = $sentence;
 
         return $this;
     }
 
-    /**
-     * Get sentence.
-     *
-     * @return string
-     */
-    public function getSentence()
+    public function getSentence(): string
     {
         return $this->sentence;
     }
 
-    /**
-     * Set idrecord.
-     *
-     * @param int $idrecord
-     *
-     * @return MemberTranslation
-     */
-    public function setIdrecord($idrecord)
+    public function setRecord(int $record): self
     {
-        $this->idrecord = $idrecord;
+        $this->record = $record;
 
         return $this;
     }
 
-    /**
-     * Get idrecord.
-     *
-     * @return int
-     */
-    public function getIdrecord()
+    public function getRecord(): int
     {
-        return $this->idrecord;
+        return $this->record;
     }
 
-    /**
-     * Set tablecolumn.
-     *
-     * @param string $tablecolumn
-     *
-     * @return MemberTranslation
-     */
-    public function setTablecolumn($tablecolumn)
+    public function setTableColumn($tableColumn): self
     {
-        $this->tablecolumn = $tablecolumn;
+        $this->tableColumn = $tableColumn;
 
         return $this;
     }
 
-    /**
-     * Get tablecolumn.
-     *
-     * @return string
-     */
-    public function getTablecolumn()
+    public function getTableColumn(): string
     {
-        return $this->tablecolumn;
+        return $this->tableColumn;
     }
 
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * Set language.
-     *
-     * @param Language $language
-     *
-     * @return MemberTranslation
-     */
-    public function setLanguage(Language $language = null)
+    public function setLanguage(?Language $language = null): self
     {
         $this->language = $language;
 
         return $this;
     }
 
-    /**
-     * Get idlanguage.
-     *
-     * @return Language
-     */
-    public function getLanguage()
+    public function getLanguage(): ?Language
     {
         return $this->language;
     }
@@ -375,7 +228,7 @@ class MemberTranslation
     }
 
     /**
-     * Triggered on insert.
+     * Triggered after insert.
      *
      * @ORM\PostPersist
      */

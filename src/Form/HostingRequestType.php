@@ -3,7 +3,7 @@
 namespace App\Form;
 
 use App\Entity\HostingRequest;
-use App\Form\DataTransformer\DateTimeTransformer;
+use App\Form\DataTransformer\DateTransformer;
 use App\Form\DataTransformer\LegTransformer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -20,12 +20,12 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 
 class HostingRequestType extends AbstractType
 {
-    private DateTimeTransformer $dateTimeTransformer;
+    private DateTransformer $dateTimeTransformer;
     private LegTransformer $legTransformer;
 
     public function __construct(
-        DateTimeTransformer $dateTimeTransformer,
-        LegTransformer $legTransformer
+        DateTransformer $dateTimeTransformer,
+        LegTransformer  $legTransformer
     ) {
         $this->dateTimeTransformer = $dateTimeTransformer;
         $this->legTransformer = $legTransformer;

@@ -4,7 +4,7 @@ namespace App\Form;
 
 use App\Doctrine\SubtripOptionsType;
 use App\Entity\Subtrip;
-use App\Form\DataTransformer\DateTimeTransformer;
+use App\Form\DataTransformer\DateTransformer;
 use DateTime;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -19,9 +19,9 @@ use Symfony\Component\Validator\Constraints\NotNull;
 
 class SubtripType extends AbstractType
 {
-    private DateTimeTransformer $transformer;
+    private DateTransformer $transformer;
 
-    public function __construct(DateTimeTransformer $transformer)
+    public function __construct(DateTransformer $transformer)
     {
         $this->transformer = $transformer;
     }

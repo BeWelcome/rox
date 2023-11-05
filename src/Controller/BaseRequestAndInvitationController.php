@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\HostingRequest;
 use App\Entity\Member;
 use App\Entity\MembersPhoto;
+use App\Entity\MemberTranslation;
 use App\Entity\Message;
 use App\Entity\Preference;
 use App\Model\BaseRequestModel;
@@ -163,4 +164,18 @@ abstract class BaseRequestAndInvitationController extends AbstractController
         return (count($profilePictures) > 0);
     }
 
+    protected function checkIfMemberHasAboutMe(Member $member): bool
+    {
+        $memberTranslationRepository = $this->entityManager->getRepository(MemberTranslation::class);
+        $memberTranslations = $memberTranslationRepository->findBy([
+            'owner' => $member,
+            'tableColumn' => 'members.ProfileSummary'
+        ]);
+
+        $hasAboutMe = array_reduce($memberTranslations, function ($hasAboutMe, $memberTranslation) {
+            return $hasAboutMe || !empty($memberTranslation->getSentence());
+        });
+
+        return (null === $hasAboutMe) ? false : $hasAboutMe;
+    }
 }

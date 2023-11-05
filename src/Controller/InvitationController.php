@@ -88,8 +88,9 @@ class InvitationController extends BaseRequestAndInvitationController
             return $this->redirectToRoute('members_profile', ['username' => $host->getUsername()]);
         }
 
+        $hasAboutMe = $this->checkIfMemberHasAboutMe($guest);
         $allowWithoutAboutMe = $this->getAllowRequestsWithoutAboutMe($guest);
-        if (0 === $host->getProfileSummary() && !$allowWithoutAboutMe) {
+        if (!$allowWithoutAboutMe && !$hasAboutMe) {
             $this->addTranslatedFlash('notice', 'invitation.not.without.about_me');
 
             return $this->redirectToRoute('members_profile', ['username' => $host->getUsername()]);

@@ -10,12 +10,10 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * LoginMessagesAcknowledged.
+ * LoginMessageAcknowledged.
  *
  * @ORM\Table(name="login_messages_acknowledged")
  * @ORM\Entity
- * @SuppressWarnings(PHPMD)
- * Auto generated class do not check mess
  */
 class LoginMessageAcknowledged
 {
@@ -42,75 +40,38 @@ class LoginMessageAcknowledged
      */
     private Member $member;
 
-    /**
-     * Set acknowledged.
-     *
-     * @param bool $acknowledged
-     *
-     * @return LoginMessagesAcknowledged
-     */
-    public function setAcknowledged($acknowledged)
+    public function setAcknowledged(): self
     {
-        $this->acknowledged = $acknowledged;
+        $this->acknowledged = true;
 
         return $this;
     }
 
-    /**
-     * Get acknowledged.
-     *
-     * @return bool
-     */
-    public function getAcknowledged()
+    public function getAcknowledged(): bool
     {
         return $this->acknowledged;
     }
 
-    /**
-     * Set message.
-     *
-     * @param LoginMessage
-     * @param mixed $message
-     *
-     * @return LoginMessagesAcknowledged
-     */
-    public function setMessage($message)
+    public function setMessage(LoginMessage $message): self
     {
         $this->message = $message;
 
         return $this;
     }
 
-    /**
-     * Get message.
-     *
-     * @return LoginMessage
-     */
-    public function getMessage()
+    public function getMessage(): LoginMessage
     {
         return $this->message;
     }
 
-    /**
-     * Set memberid.
-     *
-     * @param Member
-     *
-     * @return LoginMessagesAcknowledged
-     */
-    public function setMember(Member $member)
+    public function setMember(Member $member): self
     {
         $this->member = $member;
 
         return $this;
     }
 
-    /**
-     * Get member.
-     *
-     * @return Member
-     */
-    public function getMember()
+    public function getMember(): Member
     {
         return $this->member;
     }

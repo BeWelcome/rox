@@ -14,6 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
  * LoginMessages.
  *
  * @ORM\Table(name="login_messages")
+ * @ORM\HasLifecycleCallbacks
  * @ORM\Entity(repositoryClass="App\Repository\LoginMessageRepository")
  *
  * @SuppressWarnings(PHPMD)
@@ -22,83 +23,75 @@ use Doctrine\ORM\Mapping as ORM;
 class LoginMessage
 {
     /**
-     * @var string
-     *
      * @ORM\Column(name="text", type="string", length=255, nullable=false)
      */
-    private $text;
+    private string $message;
 
     /**
-     * @var DateTime
-     *
      * @ORM\Column(name="created", type="datetime", nullable=false)
      */
-    private $created = 'CURRENT_TIMESTAMP';
+    private DateTime $created;
 
     /**
-     * @var int
-     *
+     * @ORM\Column(name="expires", type="datetime", nullable=false)
+     */
+    private ?DateTime $expires;
+
+    /**
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $id;
+    private int $id;
 
-    /**
-     * Set text.
-     *
-     * @param string $text
-     *
-     * @return LoginMessage
-     */
-    public function setText($text)
+    public function setMessage(string $message): self
     {
-        $this->text = $text;
+        $this->message = $message;
 
         return $this;
     }
 
-    /**
-     * Get text.
-     *
-     * @return string
-     */
-    public function getText()
+    public function getMessage(): string
     {
-        return $this->text;
+        return $this->message;
     }
 
-    /**
-     * Set created.
-     *
-     * @param DateTime $created
-     *
-     * @return LoginMessage
-     */
-    public function setCreated($created)
+    public function setCreated(DateTime $created): self
     {
         $this->created = $created;
 
         return $this;
     }
 
-    /**
-     * Get created.
-     *
-     * @return DateTime
-     */
-    public function getCreated()
+    public function getCreated(): DateTime
     {
         return $this->created;
     }
 
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
+    public function setExpires(?DateTime $expires): self
+    {
+        $this->expires = $expires;
+
+        return $this;
+    }
+
+    public function getExpires(): ?DateTime
+    {
+        return $this->expires;
+    }
+
+    public function getId(): int
     {
         return $this->id;
+    }
+
+    /**
+     * Triggered on insert.
+     *
+     * @ORM\PrePersist
+     */
+    public function onPrePersist()
+    {
+        $this->created = new DateTime('now');
     }
 }

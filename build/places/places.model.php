@@ -99,7 +99,7 @@ class Places extends RoxModelBase {
                 members m,
                 geonames g
             WHERE
-                m.status = 'Active'
+                m.status IN ('Active', 'OutOfRemind')
                 AND m.MaxGuest >= 1
                 AND m.IdCity = g.geonameId
                 AND g.fClass = 'P'
@@ -120,7 +120,7 @@ class Places extends RoxModelBase {
                 members m,
                 geonames g
             WHERE
-                m.status = 'Active'
+                m.status IN ('Active', 'OutOfRemind')
                 AND m.MaxGuest >= 1
                 AND m.IdCity = g.geonameId
                 AND g.fClass = 'P'
@@ -141,7 +141,7 @@ class Places extends RoxModelBase {
             FROM
                 members m
             WHERE
-                m.status = 'Active'
+                m.status IN ('Active', 'OutOfRemind')
                 AND m.MaxGuest >= 1
                 AND m.IdCity = %s", $this->dao->escape($city));
 
@@ -168,13 +168,13 @@ class Places extends RoxModelBase {
                 geonames g,
                 members m
             WHERE
-                m.Status = 'Active'
+                m.status IN ('Active', 'OutOfRemind')
                 AND m.MaxGuest >= 1
                 AND g.geonameId = m.idCity
                 AND g.country = '%s'
                 AND g.fClass = 'P'
             ORDER BY
-                m.Accomodation ASC, HasProfileSummary DESC, m.LastLogin DESC",
+                m.Accomodation DESC, HasProfileSummary DESC, m.LastLogin DESC",
             $this->dao->escape($countrycode));
         list($count, $members) = $this->getMembersFiltered($query ." LIMIT "
             . ($pageNumber-1) * self::MEMBERS_PER_PAGE . ", " . self::MEMBERS_PER_PAGE);
@@ -195,14 +195,14 @@ class Places extends RoxModelBase {
                 geonames g,
                 members m
             WHERE
-                m.Status = 'Active'
+                m.status IN ('Active', 'OutOfRemind')
                 AND m.MaxGuest >= 1
                 AND m.idCity = g.geonameId
                 AND g.admin1 = '%2\$s'
                 AND g.country = '%1\$s'
                 AND g.fclass = 'P'
             ORDER BY
-                m.Accomodation ASC, HasProfileSummary DESC, m.LastLogin DESC",
+                m.Accomodation DESC, HasProfileSummary DESC, m.LastLogin DESC",
             $this->dao->escape($countrycode), $this->dao->escape($regioncode));
         list($count, $members) = $this->getMembersFiltered($query ." LIMIT "
             . ($pageNumber-1) * self::MEMBERS_PER_PAGE . ", " . self::MEMBERS_PER_PAGE);
@@ -223,13 +223,13 @@ class Places extends RoxModelBase {
                 geonames g,
                 members m
             WHERE
-                m.Status = 'Active'
+                m.status IN ('Active', 'OutOfRemind')
                 AND m.MaxGuest >= 1
                 AND m.IdCity = g.geonameId
                 AND g.geonameId = '%s'
                 AND g.fClass = 'P'
             ORDER BY
-                m.Accomodation ASC, HasProfileSummary DESC, m.LastLogin DESC",
+                m.Accomodation DESC, HasProfileSummary DESC, m.LastLogin DESC",
             $this->dao->escape($cityCode));
         list($count, $members) = $this->getMembersFiltered($query ." LIMIT "
             . ($pageNumber-1) * self::MEMBERS_PER_PAGE . ", " . self::MEMBERS_PER_PAGE);
@@ -269,7 +269,7 @@ class Places extends RoxModelBase {
                 geonames g,
                 members m
             WHERE
-                m.Status = 'Active'
+                m.status IN ('Active', 'OutOfRemind')
                 AND m.MaxGuest >= 1
                 AND m.IdCity = g.geonameId
                 AND g.fclass = 'P'
@@ -399,7 +399,7 @@ class Places extends RoxModelBase {
                 g.country = '%1\$s'
                 AND g.fclass = 'P'
                 AND g.geonameId = m.IdCity
-                AND m.Status = 'Active'
+                AND m.status IN ('Active', 'OutOfRemind')
                 AND m.MaxGuest >= 1
             GROUP BY
                 g.admin1", $this->dao->escape($countrycode));
@@ -474,7 +474,7 @@ class Places extends RoxModelBase {
             ) AByGid,
             members m
             WHERE m.idcity = AByGid.geonameId
-                AND m.status = 'Active'
+                AND m.status IN ('Active', 'OutOfRemind')
                 AND m.MaxGuest >= 1
             GROUP BY geonameId
             UNION SELECT
@@ -486,7 +486,7 @@ class Places extends RoxModelBase {
                 g.country = '%1\$s'
                 AND g.admin1 = '%2\$s'
                 AND g.geonameId = m.IdCity
-                AND m.status = 'Active'
+                AND m.status IN ('Active', 'OutOfRemind')
                 AND m.MaxGuest >= 1
             GROUP BY
                 geonameId
@@ -507,5 +507,3 @@ class Places extends RoxModelBase {
         return $cities;
     }
 }
-
-?>

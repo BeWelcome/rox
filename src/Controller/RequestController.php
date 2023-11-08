@@ -13,6 +13,7 @@ use App\Logger\Logger;
 use App\Model\ConversationModel;
 use App\Model\HostingRequestModel;
 use App\Service\Mailer;
+use App\Utilities\AllowContactCheck;
 use App\Utilities\ConversationThread;
 use App\Utilities\ManagerTrait;
 use App\Utilities\TranslatorTrait;
@@ -101,8 +102,11 @@ class RequestController extends BaseRequestAndInvitationController
      *
      * @throws Exception
      */
-    public function newHostingRequest(Request $request, Member $host, EntityManagerInterface $entityManager): Response
-    {
+    public function newHostingRequest(
+        Request $request,
+        Member $host,
+        AllowContactCheck $allowContactCheck
+    ): Response {
         /** @var Member $guest */
         $guest = $this->getUser();
         if ($guest === $host) {
@@ -137,29 +141,25 @@ class RequestController extends BaseRequestAndInvitationController
         }
 
         $redirectOnNotAllowed = false;
-        $hasAboutMe = $this->checkIfMemberHasAboutMe($guest);
-        $allowWithoutAboutMe = $this->getAllowRequestsWithoutAboutMe($host);
+        $hasAboutMe = $allowContactCheck->checkIfMemberHasAboutMe($guest);
+        $allowWithoutAboutMe = $allowContactCheck->getAllowRequestsWithoutAboutMe($host);
         if (!$allowWithoutAboutMe && !$hasAboutMe) {
             $redirectOnNotAllowed = true;
-            $this->addTranslatedFlash('notice', 'request.not.without.about_me');
+            $this->addTranslatedFlash('notice', 'contact.not.without.about_me', [
+                'username' => $host->getUsername(),
+            ]);
         }
 
-        $hasProfilePicture = $this->checkIfMemberHasProfilePicture($guest);
-        $allowWithoutProfilePicture = $this->getAllowRequestsWithoutProfilePicture($host);
+        $hasProfilePicture = $allowContactCheck->checkIfMemberHasProfilePicture($guest);
+        $allowWithoutProfilePicture = $allowContactCheck->getAllowRequestsWithoutProfilePicture($host);
         if (!$allowWithoutProfilePicture && !$hasProfilePicture) {
             $redirectOnNotAllowed = true;
-            $this->addTranslatedFlash('notice', 'request.not.without.profile.picture');
+            $this->addTranslatedFlash('notice', 'contact.not.without.profile.picture', [
+                'username' => $host->getUsername(),
+            ]);
         }
 
         if ($redirectOnNotAllowed) {
-            return $this->redirectToRoute('members_profile', ['username' => $guest->getUsername()]);
-        }
-
-        $hasAboutMe = $this->checkIfMemberHasAboutMe($guest);
-        $allowWithoutAboutMe = $this->getAllowRequestsWithoutAboutMe($host);
-        if (!$allowWithoutAboutMe && !$hasAboutMe) {
-            $this->addTranslatedFlash('notice', 'request.not.without.about_me');
-
             return $this->redirectToRoute('members_profile', ['username' => $guest->getUsername()]);
         }
 

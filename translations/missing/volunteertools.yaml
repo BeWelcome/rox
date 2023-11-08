@@ -1,0 +1,15 @@
+admin.tools.uploaded_images:
+    - 'Uploaded Images'
+    - Volunteer tool
+    - 'messages+intl-icu'
+    - yes
+admin.tools.login_messages.show:
+    - 'Login Messages'
+    - Volunteer tool
+    - 'messages+intl-icu'
+    - yes
+admin.tools.login_message.add:
+    - 'Add Login Message'
+    - Volunteer tool
+    - 'messages+intl-icu'
+    - yes

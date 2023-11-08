@@ -34,8 +34,8 @@ class Preference
     public const SHOW_FORUMS_POSTS = 'MyForumPostsPagePublic';
     public const SEARCH_OPTIONS = 'SearchOptions';
 
-    public const ALLOW_REQUEST_NO_PICTURE = 'AllowRequestsNoPicture';
-    public const ALLOW_REQUEST_NO_ABOUT_ME = 'AllowRequestsNoAboutMe';
+    public const ALLOW_CONTACT_WITHOUT_PICTURE = 'AllowContactWithoutPicture';
+    public const ALLOW_CONTACT_WITHOUT_ABOUT_ME = 'AllowContactWithoutAboutMe';
 
     /**
      * @var int

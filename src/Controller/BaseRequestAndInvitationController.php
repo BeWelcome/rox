@@ -135,47 +135,4 @@ abstract class BaseRequestAndInvitationController extends AbstractController
 
         return $subject;
     }
-
-    protected function getAllowRequestsWithoutProfilePicture(Member $member): bool
-    {
-        $preferenceRepository = $this->entityManager->getRepository(Preference::class);
-        $itemsPerPagePreference = $preferenceRepository->findOneBy(['codename' => Preference::ALLOW_REQUEST_NO_PICTURE]);
-
-        $value = $member->getMemberPreference($itemsPerPagePreference)->getValue();
-
-        return ('Yes' === $value);
-    }
-
-    protected function getAllowRequestsWithoutAboutMe(Member $member): bool
-    {
-        $preferenceRepository = $this->entityManager->getRepository(Preference::class);
-        $itemsPerPagePreference = $preferenceRepository->findOneBy(['codename' => Preference::ALLOW_REQUEST_NO_ABOUT_ME]);
-
-        $value = $member->getMemberPreference($itemsPerPagePreference)->getValue();
-
-        return ('Yes' === $value);
-    }
-
-    protected function checkIfMemberHasProfilePicture(Member $member): bool
-    {
-        $profilePictureRepository = $this->entityManager->getRepository(MembersPhoto::class);
-        $profilePictures = $profilePictureRepository->findBy(['member' => $member]);
-
-        return (count($profilePictures) > 0);
-    }
-
-    protected function checkIfMemberHasAboutMe(Member $member): bool
-    {
-        $memberTranslationRepository = $this->entityManager->getRepository(MemberTranslation::class);
-        $memberTranslations = $memberTranslationRepository->findBy([
-            'owner' => $member,
-            'tableColumn' => 'members.ProfileSummary'
-        ]);
-
-        $hasAboutMe = array_reduce($memberTranslations, function ($hasAboutMe, $memberTranslation) {
-            return $hasAboutMe || !empty($memberTranslation->getSentence());
-        });
-
-        return (null === $hasAboutMe) ? false : $hasAboutMe;
-    }
 }

@@ -14,6 +14,7 @@ use App\Logger\Logger;
 use App\Model\ConversationModel;
 use App\Model\InvitationModel;
 use App\Service\Mailer;
+use App\Utilities\AllowContactCheck;
 use App\Utilities\ConversationThread;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
@@ -52,8 +53,11 @@ class InvitationController extends BaseRequestAndInvitationController
      *
      * @throws Exception
      */
-    public function newInvitation(Request $request, Subtrip $leg): Response
-    {
+    public function newInvitation(
+        Request $request,
+        Subtrip $leg,
+        AllowContactCheck $allowContactCheck
+    ): Response {
         /** @var Member $host */
         $host = $this->getUser();
         $guest = $leg->getTrip()->getCreator();
@@ -81,18 +85,29 @@ class InvitationController extends BaseRequestAndInvitationController
         }
 
         $redirectOnNotAllowed = false;
-        $hasProfilePicture = $this->checkIfMemberHasProfilePicture($host);
-        $allowWithoutProfilePicture = $this->getAllowRequestsWithoutProfilePicture($guest);
+        $hasProfilePicture = $allowContactCheck->checkIfMemberHasProfilePicture($host);
+        $allowWithoutProfilePicture = $allowContactCheck->getAllowRequestsWithoutProfilePicture($guest);
         if (!$allowWithoutProfilePicture && !$hasProfilePicture) {
             $redirectOnNotAllowed = true;
-            $this->addTranslatedFlash('notice', 'invitation.not.without.profile.picture');
+            $this->addTranslatedFlash(
+                'notice',
+                'contact.not.without.profile.picture',
+                [
+                    'username' => $guest->getUsername(),
+                ]
+            );
         }
 
-        $hasAboutMe = $this->checkIfMemberHasAboutMe($guest);
-        $allowWithoutAboutMe = $this->getAllowRequestsWithoutAboutMe($guest);
+        $hasAboutMe = $allowContactCheck->checkIfMemberHasAboutMe($guest);
+        $allowWithoutAboutMe = $allowContactCheck->getAllowRequestsWithoutAboutMe($guest);
         if (!$allowWithoutAboutMe && !$hasAboutMe) {
             $redirectOnNotAllowed = true;
-            $this->addTranslatedFlash('notice', 'invitation.not.without.about_me');
+            $this->addTranslatedFlash(
+                'notice',
+                'contact.not.without.about_me',
+                [
+                    'username' => $guest->getUsername(),
+                ]);
         }
 
         if ($redirectOnNotAllowed) {

@@ -11,6 +11,7 @@ function wasGuestOrHost(string $relations) {
 <div class="d-lg-block d-none mb-sm-3 mb-lg-0">
     <?php
 
+    use App\Doctrine\MemberStatusType;
     use App\Utilities\CommentSorterProfile;
     use Carbon\Carbon;
 
@@ -27,7 +28,7 @@ function wasGuestOrHost(string $relations) {
 
     // build array with combined comments
     $comments = [];
-    $commentsReceived = $this->member->get_comments();
+    $commentsReceived = $this->member->get_comments_received();
     $commentsWritten = $this->member->get_comments_written();
 
     $commentCount = $this->member->count_comments();
@@ -100,51 +101,65 @@ function wasGuestOrHost(string $relations) {
                        }
 
                        // First check if anything is visible at all
-                       $commentFrom = $c['from'] ?? null;
                        $commentTo = $c['to'] ?? null;
+                       $commentFrom = $c['from'] ?? null;
 
-                       $visible = false;
+                       $visibleTo = false;
+                       $visibleFrom = false;
+
                        if (null !== $commentFrom) {
-                           $visible |= ($commentFrom->DisplayInPublic != '0') || $showHiddenComments;
+                           $visibleFrom = ($commentFrom->DisplayInPublic != '0') || $showHiddenComments;
                        }
                        if (null !== $commentTo) {
-                           $visible |= ($commentTo->DisplayInPublic != '0') || $showHiddenComments;
+                           $visibleTo = ($commentTo->DisplayInPublic != '0') || $showHiddenComments;
                        }
-                       if (!$visible) {
+
+                       if (!$visibleTo && !$visibleFrom) {
                            continue;
                        }
 
-                       if ($commentLoopCount != 0) {
+                       if ($commentLoopCount != 0 && $shownPairs != 0) {
                            echo '<hr class="my-3" style="border-top:1px solid gray;">';
                        }
 
+                       // skip items that are hidden from public
                        if (null !== $commentFrom) {
+                           if ($visibleFrom) {
+
                            $commentLoopCount++;
                            $comment = $commentFrom;
-                           // skip items that are hidden for public
-                           if ($comment->DisplayInPublic == 0 && !$showHiddenComments) {continue;}
+
                            $quality = "neutral";
                            if ($comment->comQuality == "Good") {
                                $quality = "good";
                            }
                            if ($comment->comQuality == "Bad") {
                                $quality = "bad";
-                           }                            ?>
+                           }
+                           $linkedFrom = in_array($comment->FromStatus, MemberStatusType::MEMBER_PROFILE_LINKED);
+                           ?>
                        <div class="comment-bg-<?=$quality?> p-2 mt-1 <?= (!isset($c['to'])) ? 'mb-2' : '' ?> clearfix u-mr-24 u-rounded-8">
-                           <?php if ($comment->DisplayInPublic == '0') {
-                               echo '<div class="u-flex u-flex-col u-rounded-8 u-px-8 u-bg-black-o-30 u-mb-8">' . $words->get("commenthiddenedit") . '</div>';
-                           } ?>
                            <div class="d-flex flex-column">
                                <div class="d-flex flex-row">
-                                   <a class="mr-2" href="members/<?=$comment->UsernameFromMember?>">
-                                       <img class="profileimg avatar-48" width=48 height=48 src="members/avatar/<?=$comment->UsernameFromMember?>/48" width=48 height=48 alt="<?=$comment->UsernameFromMember?>" />
-                                   </a>
+                                    <?php if ($linkedFrom) { ?>
+                                        <a href="members/<?=$comment->UsernameFromMember?>">
+                                    <?php } ?>
+                                        <img class="profileimg avatar-48 mr-2" width=48 height=48 src="members/avatar/<?=$comment->UsernameFromMember?>/48" width=48 height=48 alt="<?=$comment->UsernameFromMember?>" />
+                                    <?php if ($linkedFrom) { ?>
+                                    </a>
+                                    <?php } ?>
                                    <div>
                                        <p class="m-0" style="line-height: 1.0;">
                                            <?php if (!$this->passedAway) { ?>
                                                <span class="commenttitle <?=$quality?>"><?= $words->get('CommentQuality_'.$comment->comQuality.''); ?></span>
                                            <?php }?>
-                                           <br><small><?=$words->get('CommentFrom','<a href="members/'.$comment->UsernameFromMember.'">'.$comment->UsernameFromMember.'</a>')?></small>
+                                           <?php if ($linkedFrom) {
+                                               $linkOrUsername = '<a href="members/' . $comment->UsernameFromMember . '">' . $comment->UsernameFromMember . '</a>';
+                                           } else {
+                                               $linkOrUsername = $comment->UsernameFromMember;
+                                           } ?>
+
+                                           <br><small><?=$words->get('CommentFrom',$linkOrUsername)?></small>
                                            <br><small><span title="<?=$comment->created?>"><?php
                                                    $created = Carbon::createFromFormat('Y-m-d H:i:s', $comment->created);
                                                    echo $created->diffForHumans();
@@ -157,6 +172,9 @@ function wasGuestOrHost(string $relations) {
                                        <?php } ?>
                                    </div>
                                </div>
+                               <?php if ($comment->DisplayInPublic == '0') {
+                                   echo '<div class="u-flex u-flex-col u-rounded-8 u-p-8 u-bg-black-o-30 text-white u-my-4">' . $words->get("commenthiddenedit") . '</div>';
+                               } ?>
                                <div class="w-100 py-2">
                                    <p class="js-read-more-received mb-1">
                                        <?php
@@ -176,7 +194,7 @@ function wasGuestOrHost(string $relations) {
                            </div>
                        </div>
                        <?php } else {
-                           if ($loggedIn === $commentTo->UsernameToMember) {
+                           if ($loggedIn === $commentTo->UsernameToMember && $commentFrom === null) {
                                $addCommentTranslation = str_replace('{username}', $commentTo->UsernameFromMember, $words->getSilent('profile.add.comment'));
                                ?>
                                <div class="clearfix">
@@ -192,13 +210,16 @@ function wasGuestOrHost(string $relations) {
                                echo $noCommentYet;
                            ?></div>
                        <?php }
+                           }
                        }
 
+                       // skip items that are hidden for public
                        if (null !== $commentTo) {
+                           if ($visibleTo) {
+
                            $commentLoopCount++;
                            $comment = $commentTo;
-                           // skip items that are hidden for public
-                           if ($comment->DisplayInPublic == 0 && !$showHiddenComments) {continue;}
+
                            $quality = "neutral";
                            if ($comment->comQuality == "Good") {
                                $quality = "good";
@@ -206,12 +227,10 @@ function wasGuestOrHost(string $relations) {
                            if ($comment->comQuality == "Bad") {
                                $quality = "bad";
                            }
+                           $linkedTo = in_array($comment->ToStatus, MemberStatusType::MEMBER_PROFILE_LINKED);
                        ?>
 
                        <div class="comment-bg-<?=$quality?> p-2 mt-1 <?= !(isset($c['from'])) ? 'mt-1' : '' ?> clearfix u-ml-24 u-rounded-8">
-                           <?php if ($comment->DisplayInPublic == '0') {
-                               echo '<div class="u-flex u-flex-col u-rounded-8 u-px-8 u-bg-black-o-30 u-mb-8">' . $words->get("commenthiddenedit") . '</div>';
-                           } ?>
                            <div class="d-flex flex-column">
                                <div class="d-flex flex-row">
                                    <div class="mr-auto  align-self-center">
@@ -222,17 +241,29 @@ function wasGuestOrHost(string $relations) {
                                    <div>
                                        <p class="m-0 text-right" style="line-height: 1.0;">
                                            <span class="commenttitle <?=$quality?>"><?= $words->get('CommentQuality_'.$comment->comQuality.''); ?></span>
-                                           <br><small><?= $words->get('CommentTo'); ?> <a href="members/<?= $comment->UsernameToMember ?>"><?= $comment->UsernameToMember; ?></a></small>
+                                           <?php if ($linkedTo) {
+                                               $linkOrUsername = '<a href="members/' . $comment->UsernameToMember . '">' . $comment->UsernameToMember . '</a>';
+                                           } else {
+                                               $linkOrUsername = $comment->UsernameToMember;
+                                           } ?>
+                                           <br><small><?= $words->get('CommentTo'); ?> <?= $linkOrUsername; ?></small>
                                            <br><small><span title="<?=$comment->created?>"><?php
                                                    $created = Carbon::createFromFormat('Y-m-d H:i:s', $comment->created);
                                                    echo $created->diffForHumans();
                                                    ?></span></small>
                                        </p>
                                    </div>
-                                   <a class="ml-2" href="members/<?=$comment->UsernameToMember?>">
-                                        <img class="mr-2 profileimg avatar-48"  src="members/avatar/<?=$comment->UsernameToMember?>/48" alt="<?=$comment->UsernameToMember?>" />
+                                   <?php if ($linkedTo) { ?>
+                                   <a href="members/<?=$comment->UsernameToMember?>">
+                                       <?php } ?>
+                                        <img class="mx-2 profileimg avatar-48"  src="members/avatar/<?=$comment->UsernameToMember?>/48" alt="<?=$comment->UsernameToMember?>" />
+                                   <?php if ($linkedTo) { ?>
                                     </a>
+                                   <?php } ?>
                                </div>
+                               <?php if ($comment->DisplayInPublic == '0') {
+                                   echo '<div class="u-flex u-flex-col u-rounded-8 u-p-8 u-bg-black-o-30 text-white u-my-4">' . $words->get("commenthiddenedit") . '</div>';
+                               } ?>
                                <div class="w-100 py-2">
                                    <p class="js-read-more-written mb-1">
                                        <?php
@@ -250,8 +281,9 @@ function wasGuestOrHost(string $relations) {
                            </div>
                        </div>
 
-                      <?php } else {
-                           if ($loggedIn === $comment->UsernameToMember) {
+                      <?php }
+                       } else {
+                           if ($loggedIn === $comment->UsernameToMember && $commentTo === null) {
                            $addCommentTranslation = str_replace('{username}', $comment->UsernameFromMember, $words->getSilent('profile.add.comment'));
                            ?>
                             <div class="clearfix">

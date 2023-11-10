@@ -68,6 +68,7 @@ Encore
     .addEntry('faq', './assets/js/faq.js')
     .addEntry('translations', './assets/js/admin/translations.js')
     .addEntry('readmore', './assets/js/readmore.js')
+    .addEntry('admin/tools/login_message', './assets/js/admin/tools/login_message.js')
     .addEntry('tailwind', './assets/tailwindcss/tailwind.css')
     // .addEntry('tom-select', './assets/js/tom-select')
     // react

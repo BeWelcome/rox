@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+{% import 'macros.twig' as macros %}
+
+{% block title %}
+    {{ 'admin.tools.title' | trans }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('admin/tools/login_message') }}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ encore_entry_link_tags('admin/tools/login_message') }}
+{% endblock stylesheets %}
+
+{% block content %}
+    <h1>{{ 'admin.tools.headline' | trans }}</h1>
+    <h2>{{ 'admin.tools.login_message' | trans }}</h2>
+
+    {{ form(form) }}
+{% endblock content %}

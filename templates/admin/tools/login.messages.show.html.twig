@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+{% import 'macros.twig' as macros %}
+
+{% block title %}
+    {{ 'admin.tools.title' | trans }}
+{% endblock %}
+
+{% block content %}
+    <h1>{{ 'admin.tools.headline' | trans }}</h1>
+    <h2>{{ 'admin.tools.login_message' | trans }}</h2>
+
+    {% if login_messages|length > 0 %}
+        <table class="table table-striped">
+            <tr>
+                <th>Message</th>
+                <th>Action</th>
+            </tr>
+            {% for login_message in login_messages %}
+                <tr>
+                    <td class="u-p-8">{{ login_message.message|purify }}</td>
+                    <td class="u-align-top">{% if login_message.expires|date("U") > "now"|date("U") %}<a class="o-button" href="{{ url('admin_tools_login_message_expire', {'id': login_message.id}) }}"><i class="fas fa-times"></i></a>{% endif %}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>No login messages</p>
+    {% endif %}
+{% endblock content %}

@@ -26,217 +26,133 @@ use Doctrine\ORM\Mapping as ORM;
 class Comment
 {
     /**
-     * @var string
-     *
      * @ORM\Column(name="relations", type="comment_relations", nullable=false)
      */
-    private $relations;
+    private string $relations;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="Quality", type="comment_quality", nullable=false)
      */
-    private $quality = CommentQualityType::NEUTRAL;
+    private string $quality = CommentQualityType::NEUTRAL;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="TextFree", type="text", length=65535, nullable=false)
      */
-    private $textfree;
+    private string $textfree;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="TextWhere", type="text", length=65535, nullable=false)
      */
-    private $textwhere = '';
+    private string $textwhere = '';
 
     /**
-     * @var DateTime
-     *
      * @ORM\Column(name="updated", type="datetime", nullable=true)
      */
-    private $updated;
+    private ?DateTime $updated;
 
     /**
-     * @var DateTime
-     *
      * @ORM\Column(name="created", type="datetime", nullable=false)
      */
-    private $created;
+    private DateTime $created;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="AdminAction", type="comment_admin_action", nullable=false)
      */
-    private $adminAction = CommentAdminActionType::NOTHING_NEEDED;
+    private string $adminAction = CommentAdminActionType::NOTHING_NEEDED;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="DisplayableInCommentOfTheMonth", type="string", nullable=false)
      */
-    private $displayableincommentofthemonth = 'Yes';
+    private string $allowDisplayInCommentOfTheMonth = 'Yes';
 
     /**
-     * @var bool
-     *
      * @ORM\Column(name="DisplayInPublic", type="boolean", nullable=false)
      */
-    private $displayInPublic = '1';
+    private bool $displayInPublic = true;
 
     /**
-     * @var bool
-     *
      * @ORM\Column(name="AllowEdit", type="boolean", nullable=false)
      */
-    private $allowedit = '1';
+    private bool $editingAllowed = true;
 
     /**
-     * @var int
-     *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $id;
+    private int $id;
 
     /**
-     * @var Member
-     *
      * @ORM\ManyToOne(targetEntity="Member")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="IdToMember", referencedColumnName="id")
      * })
      */
-    private $toMember;
+    private Member $toMember;
 
     /**
-     * @var Member
-     *
      * @ORM\ManyToOne(targetEntity="Member")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="IdFromMember", referencedColumnName="id")
      * })
      */
-    private $fromMember;
+    private Member $fromMember;
 
-    /**
-     * Set relations.
-     *
-     * @param string $relations
-     *
-     * @return Comment
-     */
-    public function setRelations($relations)
+    public function setRelations(string $relations): self
     {
         $this->relations = $relations;
 
         return $this;
     }
 
-    /**
-     * Get relations.
-     *
-     * @return string
-     */
-    public function getRelations()
+    public function getRelations(): string
     {
         return $this->relations;
     }
 
-    /**
-     * Set quality.
-     *
-     * @param string $quality
-     *
-     * @return Comment
-     */
-    public function setQuality($quality)
+    public function setQuality(string $quality): self
     {
         $this->quality = $quality;
 
         return $this;
     }
 
-    /**
-     * Get quality.
-     *
-     * @return string
-     */
-    public function getQuality()
+    public function getQuality(): string
     {
         return $this->quality;
     }
 
-    /**
-     * Set textfree.
-     *
-     * @param string $textfree
-     *
-     * @return Comment
-     */
-    public function setTextfree($textfree)
+    public function setTextfree(string $textfree): self
     {
         $this->textfree = $textfree;
 
         return $this;
     }
 
-    /**
-     * Get textfree.
-     *
-     * @return string
-     */
-    public function getTextfree()
+    public function getTextfree(): string
     {
         return $this->textfree;
     }
 
-    /**
-     * Set textwhere.
-     *
-     * @param string $textwhere
-     *
-     * @return Comment
-     */
-    public function setTextwhere($textwhere)
+    public function setTextwhere($textwhere): self
     {
         $this->textwhere = $textwhere;
 
         return $this;
     }
 
-    /**
-     * Get textwhere.
-     *
-     * @return string
-     */
-    public function getTextwhere()
+    public function getTextwhere(): string
     {
         return $this->textwhere;
     }
 
-    /**
-     * Set updated.
-     *
-     * @param \DateTime $updated
-     *
-     * @return Comment
-     */
-    public function setUpdated($updated)
+    public function setUpdated(DateTime $updated): self
     {
         $this->updated = $updated;
 
         return $this;
     }
 
-    /**
-     * Get updated.
-     */
     public function getUpdated(): ?Carbon
     {
         if (null === $this->updated) {
@@ -246,156 +162,79 @@ class Comment
         return Carbon::instance($this->updated);
     }
 
-    /**
-     * Set created.
-     *
-     * @param \DateTime $created
-     *
-     * @return Comment
-     */
-    public function setCreated($created)
+    public function setCreated(DateTime $created): self
     {
         $this->created = $created;
 
         return $this;
     }
 
-    /**
-     * Get created.
-     *
-     * @return Carbon
-     */
-    public function getCreated()
+    public function getCreated(): Carbon
     {
         return Carbon::instance($this->created);
     }
 
-    /**
-     * Set adminaction.
-     *
-     * @param string $adminAction
-     *
-     * @return Comment
-     */
-    public function setAdminAction($adminAction)
+    public function setAdminAction(string $adminAction): self
     {
         $this->adminAction = $adminAction;
 
         return $this;
     }
 
-    /**
-     * Get adminaction.
-     *
-     * @return string
-     */
-    public function getAdminAction()
+    public function getAdminAction(): string
     {
         return $this->adminAction;
     }
 
-    /**
-     * Set displayinpublic.
-     *
-     * @param bool $displayInPublic
-     *
-     * @return Comment
-     */
-    public function setDisplayInPublic($displayInPublic)
+    public function setDisplayInPublic(bool $displayInPublic): self
     {
         $this->displayInPublic = $displayInPublic;
 
         return $this;
     }
 
-    /**
-     * Get displayinpublic.
-     *
-     * @return bool
-     */
-    public function getDisplayInPublic()
+    public function getDisplayInPublic(): bool
     {
         return $this->displayInPublic;
     }
 
-    /**
-     * Set allowedit.
-     *
-     * @param bool $editingAllowed
-     *
-     * @return Comment
-     */
-    public function setEditingAllowed($editingAllowed)
+    public function setEditingAllowed(bool $editingAllowed): self
     {
-        $this->allowedit = $editingAllowed;
+        $this->editingAllowed = $editingAllowed;
 
         return $this;
     }
 
-    /**
-     * Get allowedit.
-     *
-     * @return bool
-     */
-    public function getEditingAllowed()
+    public function getEditingAllowed(): bool
     {
-        return $this->allowedit;
+        return $this->editingAllowed;
     }
 
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * Set idtomember.
-     *
-     * @param Member $toMember
-     *
-     * @return Comment
-     */
-    public function setToMember(Member $toMember = null)
+    public function setToMember(Member $toMember = null): self
     {
         $this->toMember = $toMember;
 
         return $this;
     }
 
-    /**
-     * Get idtomember.
-     *
-     * @return Member
-     */
-    public function getToMember()
+    public function getToMember(): Member
     {
         return $this->toMember;
     }
 
-    /**
-     * Set idfrommember.
-     *
-     * @param Member $fromMember
-     *
-     * @return Comment
-     */
-    public function setFromMember(Member $fromMember = null)
+    public function setFromMember(Member $fromMember = null): self
     {
         $this->fromMember = $fromMember;
 
         return $this;
     }
 
-    /**
-     * Get idfrommember.
-     *
-     * @return Member
-     */
-    public function getFromMember()
+    public function getFromMember(): Member
     {
         return $this->fromMember;
     }
@@ -411,6 +250,7 @@ class Comment
         if (in_array(Member::ROLE_ADMIN_COMMENTS, $loggedInMember->getRoles())) {
             return 2;
         }
+
         // show comment to writer
         if ($this->fromMember === $loggedInMember) {
             return 3;
@@ -420,20 +260,15 @@ class Comment
         return 0;
     }
 
-    public function getEditCondition(Member $loggedInMember)
+    public function getEditCondition(Member $loggedInMember): bool
     {
-        // don't allow edit bad comment if not marked so
-        if (CommentQualityType::NEGATIVE == $this->quality && 1 != $this->allowedit) {
-            return false;
-        }
-
         // don't allow edit is not logged in as writer
         if ($this->fromMember !== $loggedInMember) {
             return false;
         }
 
-        // allow edit
-        return true;
+        // return state of comment in other cases (negative comments are locked by default).
+        return $this->getEditingAllowed();
     }
 
     /**

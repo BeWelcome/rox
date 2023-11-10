@@ -8,31 +8,27 @@ use PDO;
 
 class TranslationAdapter implements AdapterInterface
 {
-    /** @var string */
-    private $query;
+    private string $query;
 
-    /** @var string */
-    private $code;
+    private string $countQuery;
 
-    /** @var Connection */
-    private $connection;
+    private Connection $connection;
 
     /**
      * SearchAdapter constructor.
      *
      * @SuppressWarnings(PHPMD.StaticAccess)
      */
-    public function __construct(Connection $connection, string $locale, string $code)
+    public function __construct(Connection $connection, string $locale, string $term)
     {
         $this->connection = $connection;
-        $this->code = $code;
 
-        $this->query = "
-            SELECT distinct p.code
-                 , COALESCE(pi_lang.shortcode,pi_dflt.shortcode) AS shortcode
-                 , COALESCE(pi_lang.domain,pi_dflt.domain) AS domain
-                 , COALESCE(pi_lang.Sentence,pi_dflt.Sentence) AS sentence
-                 , COALESCE(pi_lang.created,pi_dflt.created) AS created
+        if (!empty($term)) {
+            $term = $connection->quote('%' . $term . '%');
+        }
+
+        $rawQuery = "
+            SELECT *select*
               FROM words AS p
             LEFT OUTER
               JOIN words AS pi_dflt
@@ -46,11 +42,18 @@ class TranslationAdapter implements AdapterInterface
                 AND pi_lang.shortcode = '{$locale}'
                 AND (pi_lang.isArchived IS NULL OR pi_lang.isArchived = 0)
                 ";
-        if (!empty($code)) {
-            $this->query .= " WHERE (pi_lang.code LIKE '%" . $code . "%' OR pi_dflt.code LIKE '%" . $code . "%')";
+        if (!empty($term)) {
+            $rawQuery .= " WHERE (pi_lang.code LIKE {$term} OR pi_dflt.code LIKE {$term})";
+            $rawQuery .= " OR (pi_lang.Sentence LIKE {$term} OR pi_dflt.Sentence LIKE {$term})";
         }
-        $this->query .= '
-            ORDER BY created desc';
+
+        $this->query = str_replace('*select*', 'distinct p.code
+                 , COALESCE(pi_lang.shortcode,pi_dflt.shortcode) AS shortcode
+                 , COALESCE(pi_lang.domain,pi_dflt.domain) AS domain
+                 , COALESCE(pi_lang.Sentence,pi_dflt.Sentence) AS sentence
+                 , COALESCE(pi_lang.created,pi_dflt.created) AS created', $rawQuery);
+
+        $this->countQuery = str_replace('*select*', 'COUNT(distinct p.code) AS cnt', $rawQuery);
     }
 
     /**
@@ -58,28 +61,14 @@ class TranslationAdapter implements AdapterInterface
      */
     public function getNbResults(): int
     {
-        $query = "
-            SELECT
-                count(*) as cnt
-            FROM
-                 words
-            WHERE
-                shortcode = 'en'
-                AND (isArchived IS NULL OR isArchived = 0)
-                AND (donottranslate = 'No')
-        ";
-        if (!empty($this->code)) {
-            $query .= " AND code LIKE '%" . $this->code . "%'";
-        }
-
-        $statement = $this->connection->query($query);
+        $statement = $this->connection->query($this->countQuery);
         $result = $statement->fetch(PDO::FETCH_OBJ);
 
         return $result->cnt;
     }
 
     /**
-     * Returns an slice of the results.
+     * Returns a slice of the results.
      */
     public function getSlice(int $offset, int $length): iterable
     {

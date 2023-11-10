@@ -14,6 +14,7 @@ use App\Logger\Logger;
 use App\Model\ConversationModel;
 use App\Model\InvitationModel;
 use App\Service\Mailer;
+use App\Utilities\AllowContactCheck;
 use App\Utilities\ConversationThread;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
@@ -30,8 +31,8 @@ class InvitationController extends BaseRequestAndInvitationController
     use TranslatorTrait;
 
     private Mailer $mailer;
-    private EntityManagerInterface $entityManager;
     private Logger $logger;
+    private InvitationModel $invitationModel;
 
     public function __construct(
         ConversationModel $conversationModel,
@@ -40,10 +41,9 @@ class InvitationController extends BaseRequestAndInvitationController
         Mailer $mailer,
         Logger $logger
     ) {
-        parent::__construct($invitationModel);
+        parent::__construct($invitationModel, $entityManager);
         $this->mailer = $mailer;
         $this->conversationModel = $conversationModel;
-        $this->entityManager = $entityManager;
         $this->invitationModel = $invitationModel;
         $this->logger = $logger;
     }
@@ -53,8 +53,11 @@ class InvitationController extends BaseRequestAndInvitationController
      *
      * @throws Exception
      */
-    public function newInvitation(Request $request, Subtrip $leg): Response
-    {
+    public function newInvitation(
+        Request $request,
+        Subtrip $leg,
+        AllowContactCheck $allowContactCheck
+    ): Response {
         /** @var Member $host */
         $host = $this->getUser();
         $guest = $leg->getTrip()->getCreator();
@@ -79,6 +82,36 @@ class InvitationController extends BaseRequestAndInvitationController
             $referrer = $request->headers->get('referer');
 
             return $this->redirect($referrer);
+        }
+
+        $redirectOnNotAllowed = false;
+        $hasProfilePicture = $allowContactCheck->checkIfMemberHasProfilePicture($host);
+        $allowWithoutProfilePicture = $allowContactCheck->getAllowRequestsWithoutProfilePicture($guest);
+        if (!$allowWithoutProfilePicture && !$hasProfilePicture) {
+            $redirectOnNotAllowed = true;
+            $this->addTranslatedFlash(
+                'notice',
+                'contact.not.without.profile.picture',
+                [
+                    'username' => $guest->getUsername(),
+                ]
+            );
+        }
+
+        $hasAboutMe = $allowContactCheck->checkIfMemberHasAboutMe($guest);
+        $allowWithoutAboutMe = $allowContactCheck->getAllowRequestsWithoutAboutMe($guest);
+        if (!$allowWithoutAboutMe && !$hasAboutMe) {
+            $redirectOnNotAllowed = true;
+            $this->addTranslatedFlash(
+                'notice',
+                'contact.not.without.about_me',
+                [
+                    'username' => $guest->getUsername(),
+                ]);
+        }
+
+        if ($redirectOnNotAllowed) {
+            return $this->redirectToRoute('members_profile', ['username' => $host->getUsername()]);
         }
 
         $hostingRequest = new HostingRequest();

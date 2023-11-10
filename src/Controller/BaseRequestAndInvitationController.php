@@ -4,12 +4,16 @@ namespace App\Controller;
 
 use App\Entity\HostingRequest;
 use App\Entity\Member;
+use App\Entity\MembersPhoto;
+use App\Entity\MemberTranslation;
 use App\Entity\Message;
+use App\Entity\Preference;
 use App\Model\BaseRequestModel;
 use App\Model\ConversationModel;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
 use DateTime;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Form;
 
@@ -20,10 +24,12 @@ abstract class BaseRequestAndInvitationController extends AbstractController
 
     protected BaseRequestModel $model;
     protected ConversationModel $conversationModel;
+    protected EntityManagerInterface $entityManager;
 
-    public function __construct(BaseRequestModel $model)
+    public function __construct(BaseRequestModel $model, EntityManagerInterface $entityManager)
     {
         $this->model = $model;
+        $this->entityManager = $entityManager;
     }
 
     abstract protected function addExpiredFlash(Member $receiver);

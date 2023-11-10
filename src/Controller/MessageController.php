@@ -8,6 +8,7 @@ use App\Entity\Subject;
 use App\Form\MessageToMemberType;
 use App\Model\ConversationModel;
 use App\Service\Mailer;
+use App\Utilities\AllowContactCheck;
 use App\Utilities\ConversationThread;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
@@ -50,7 +51,7 @@ class MessageController extends AbstractController
      *
      * @throws Exception
      */
-    public function newMessage(Request $request, Member $receiver): Response
+    public function newMessage(Request $request, Member $receiver, AllowContactCheck $allowContactCheck): Response
     {
         /** @var Member $sender */
         $sender = $this->getUser();
@@ -79,6 +80,29 @@ class MessageController extends AbstractController
             $referrer = $request->headers->get('referer');
 
             return $this->redirect($referrer);
+        }
+
+        $redirectOnNotAllowed = false;
+        $hasAboutMe = $allowContactCheck->checkIfMemberHasAboutMe($sender);
+        $allowWithoutAboutMe = $allowContactCheck->getAllowRequestsWithoutAboutMe($receiver);
+        if (!$allowWithoutAboutMe && !$hasAboutMe) {
+            $redirectOnNotAllowed = true;
+            $this->addTranslatedFlash('notice', 'contact.not.without.about_me', [
+                'username' => $receiver->getUsername(),
+            ]);
+        }
+
+        $hasProfilePicture = $allowContactCheck->checkIfMemberHasProfilePicture($sender);
+        $allowWithoutProfilePicture = $allowContactCheck->getAllowRequestsWithoutProfilePicture($receiver);
+        if (!$allowWithoutProfilePicture && !$hasProfilePicture) {
+            $redirectOnNotAllowed = true;
+            $this->addTranslatedFlash('notice', 'contact.not.without.profile.picture', [
+                'username' => $receiver->getUsername(),
+            ]);
+        }
+
+        if ($redirectOnNotAllowed) {
+            return $this->redirectToRoute('members_profile', ['username' => $sender->getUsername()]);
         }
 
         $messageForm = $this->createForm(MessageToMemberType::class);

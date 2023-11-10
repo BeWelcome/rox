@@ -81,7 +81,8 @@ class AvatarController extends AbstractController
      *     requirements={"size" : "\d+|original" },
      *     defaults={"size": "48"})
      */
-    public function showAvatar(Member $member, string $size): BinaryFileResponse {
+    public function showAvatar(Member $member, string $size): BinaryFileResponse
+    {
         if (!$this->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             return $this->emptyAvatar($size);
         }
@@ -177,12 +178,12 @@ class AvatarController extends AbstractController
         return $filename;
     }
 
-    private function avatarImageExists(Member $member, $size): bool
+    private function avatarImageExists(Member $member, string $size): bool
     {
         return file_exists($this->getAvatarImageFilename($member, $size));
     }
 
-    private function createAvatarImage(Member $member, int $sizeOfAvatar)
+    private function createAvatarImage(Member $member, string $sizeOfAvatar)
     {
         // creates a thumbnail for the current image (if we have an original that is)
         $original = self::AVATAR_PATH . $member->getId() . '_original';
@@ -212,21 +213,21 @@ class AvatarController extends AbstractController
         $img->save($filename, 100, 'jpg');
     }
 
-    private function createEmptyAvatarImage($sizeOfAvatar): string
+    private function createEmptyAvatarImage(string $sizeOfAvatar): string
     {
         // creates a thumbnail of the empty avatar
         $original = self::EMPTY_AVATAR_PATH . 'empty_avatar_original.png';
 
         $imageManager = new ImageManager();
         $img = $imageManager->make($original);
-        if (is_int($sizeOfAvatar)) {
+        if ('original' === $sizeOfAvatar) {
+            $filename = $original;
+        } else {
             $filename = self::AVATAR_PATH . 'empty_avatar_' . $sizeOfAvatar . '_' . $sizeOfAvatar;
             $img->resize($sizeOfAvatar, $sizeOfAvatar, function ($constraint) {
                 $constraint->aspectRatio();
             });
             $img->save($filename);
-        } else {
-            $filename = $original;
         }
 
         return $filename;

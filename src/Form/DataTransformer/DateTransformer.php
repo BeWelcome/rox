@@ -5,7 +5,7 @@ namespace App\Form\DataTransformer;
 use DateTime;
 use Symfony\Component\Form\DataTransformerInterface;
 
-class DateTimeTransformer implements DataTransformerInterface
+class DateTransformer implements DataTransformerInterface
 {
     public function transform($value): ?string
     {
@@ -13,7 +13,7 @@ class DateTimeTransformer implements DataTransformerInterface
             return null;
         }
 
-        return $value->format('Y-m-d H:i');
+        return $value->format('Y-m-d');
     }
 
     public function reverseTransform($value): ?DateTime
@@ -22,12 +22,15 @@ class DateTimeTransformer implements DataTransformerInterface
             return null;
         }
 
-        $setDateTime = DateTime::createFromFormat('Y-m-d H:i', $value);
+        $setDate = DateTime::createFromFormat('Y-m-d', $value);
 
-        if (false === $setDateTime) {
+        if (false === $setDate) {
             return null;
         }
 
-        return $setDateTime;
+        // Set time of day to a fixed value (instead of the current one) for comparison later on
+//        $setDate->setTime(0, 0, 1);
+
+        return $setDate;
     }
 }

@@ -9,6 +9,7 @@ use App\Pagerfanta\MissingTranslationAdapter;
 use App\Pagerfanta\TranslationAdapter;
 use App\Pagerfanta\UpdateTranslationAdapter;
 use App\Utilities\ManagerTrait;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpKernel\CacheWarmer\WarmableInterface;
@@ -16,8 +17,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class TranslationModel
 {
-    use ManagerTrait;
-
     /** @var TranslatorInterface */
     private $translator;
 
@@ -29,9 +28,11 @@ class TranslationModel
 
     /** @var string */
     private $locales;
+    private EntityManagerInterface $entityManager;
 
     public function __construct(
         TranslatorInterface $translator,
+        EntityManagerInterface $entityManager,
         Filesystem $filesystem,
         string $cacheDirectory,
         string $locales
@@ -40,6 +41,7 @@ class TranslationModel
         $this->cacheDirectory = $cacheDirectory;
         $this->filesystem = $filesystem;
         $this->locales = $locales;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -64,7 +66,7 @@ class TranslationModel
     public function getAdapter($type, $locale, $code)
     {
         $translationAdapter = null;
-        $connection = $this->getManager()->getConnection();
+        $connection = $this->entityManager->getConnection();
 
         switch ($type) {
             case 'missing':
@@ -89,15 +91,14 @@ class TranslationModel
 
     public function updateDomainOfTranslations(Word $updatedTranslation)
     {
-        $em = $this->getManager();
-        $translationRepository = $em->getRepository(Word::class);
+        $translationRepository = $this->entityManager->getRepository(Word::class);
         $translations = $translationRepository->findBy(['code' => $updatedTranslation->getCode()]);
 
         foreach ($translations as $translation) {
             $translation->setDomain($updatedTranslation->getDomain());
-            $em->persist($translation);
+            $this->entityManager->persist($translation);
         }
-        $em->flush();
+        $this->entityManager->flush();
     }
 
     private function removeAndWarmupCache(string $locale): void

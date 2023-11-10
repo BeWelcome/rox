@@ -3,7 +3,7 @@
 namespace App\Form;
 
 use App\Entity\Message;
-use App\Form\DataTransformer\DateTimeTransformer;
+use App\Form\DataTransformer\DateTransformer;
 use App\Form\DataTransformer\LegTransformer;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -15,12 +15,12 @@ use Symfony\Component\Validator\Constraints\NotNull;
 
 class InvitationGuest extends HostingRequestAbstractType
 {
-    private DateTimeTransformer $dateTimeTransformer;
+    private DateTransformer $dateTimeTransformer;
     private LegTransformer $legTransformer;
 
     public function __construct(
-        DateTimeTransformer $dateTimeTransformer,
-        LegTransformer $legTransformer
+        DateTransformer $dateTimeTransformer,
+        LegTransformer  $legTransformer
     ) {
         $this->dateTimeTransformer = $dateTimeTransformer;
         $this->legTransformer = $legTransformer;

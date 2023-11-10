@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\LoginMessage;
-use App\Entity\LoginMessagesAcknowledged;
+use App\Entity\LoginMessageAcknowledged;
 use App\Entity\Member;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -18,22 +18,22 @@ class LoginMessageController extends AbstractController
      *     requirements={"id": "\d+"},
      *     methods={"POST"}
      * )
-     *
-     * @return void
      */
     public function acknowledge(LoginMessage $loginMessage, EntityManagerInterface $entityManager): Response
     {
+        /** @var Member $member */
         $member = $this->getUser();
 
-        $loginMessageAcknowledgedRepository = $entityManager->getRepository(LoginMessagesAcknowledged::class);
-        $loginMessageAcknowledged = $loginMessageAcknowledgedRepository->findOneBy(['message' => $loginMessage, 'member' => $member]);
-        if (null == $loginMessageAcknowledged) {
-            $loginMessageAcknowledged  = new LoginMessagesAcknowledged();
+        $acknowledgedRepository = $entityManager->getRepository(LoginMessageAcknowledged::class);
+        $acknowledged = $acknowledgedRepository->findOneBy(['message' => $loginMessage, 'member' => $member]);
+        if (null == $acknowledged) {
+            $acknowledged = new LoginMessageAcknowledged();
         }
-        $loginMessageAcknowledged->setMessage($loginMessage);
-        $loginMessageAcknowledged->setMember($member);
-        $loginMessageAcknowledged->setAcknowledged(true);
-        $entityManager->persist($loginMessageAcknowledged);
+        $acknowledged
+            ->setMessage($loginMessage)
+            ->setMember($member)
+            ->setAcknowledged();
+        $entityManager->persist($acknowledged);
         $entityManager->flush();
 
         return new Response();

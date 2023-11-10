@@ -1,22 +1,12 @@
-require('../tempusdominus.js');
+import {initializeSingleAutoComplete} from '../suggest/locations';
 
-$(function () {
-    let activityStartDate = $('#activity-start-date');
-    let activityEndDate = $('#activity-end-date');
-    activityStartDate.datetimepicker({
-        format: 'YYYY-MM-DD HH:mm',
-        sideBySide: true
-    });
-    activityEndDate.datetimepicker({
-        format: 'YYYY-MM-DD HH:mm',
-        sideBySide: true,
-        useCurrent: false
-    });
+function onChange(element, result) {
+    const locationGeonameId = document.getElementById('activity-location_geoname_id');
+    const locationLatitude = document.getElementById('activity-location_latitude');
+    const locationLongitude = document.getElementById('activity-location_longitude');
+    locationGeonameId.value = result.id;
+    locationLatitude.value = result.latitude;
+    locationLongitude.value = result.longitude;
+}
 
-    activityStartDate.on("change.datetimepicker", function (e) {
-        activityEndDate.datetimepicker('minDate', e.date);
-    });
-    activityEndDate.on("change.datetimepicker", function (e) {
-        activityStartDate.datetimepicker('maxDate', e.date);
-    });
-});
+initializeSingleAutoComplete("/suggest/locations/places/exact", 'js-location-picker', onChange);

@@ -32,27 +32,53 @@
 {% set show = comment.showCondition(loggedInMember) %}
 {% set edit = comment.editCondition(loggedInMember) %}
 {% set quality = comment.quality|lower %}
+{% set linkedFrom = false %}
+{% set linkedTo = false %}
 {% if from %}
     {% set username = comment.fromMember.Username %}
-    {% set comment_direction %}{{ 'profile.comment.from'|trans({'username': '<a href="' ~ url('members_profile', {username: username}) ~ '">' ~ username ~ '</a>'})|raw }}{% endset %}
+    {% set linkedFrom = comment.fromMember.status in ['Active', 'OutOfRemind'] %}
+    {% if linkedFrom %}
+        {% set comment_direction %}{{ 'profile.comment.from'|trans({'username': '<a href="' ~ url('members_profile', {username: username}) ~ '">' ~ username ~ '</a>'})|raw }}{% endset %}
+    {% else %}
+        {% set comment_direction %}{{ 'profile.comment.from'|trans({'username': username}) }}{% endset %}
+    {% endif %}
 {% else %}
     {% set username = comment.toMember.Username %}
-    {% set comment_direction %}{{ 'profile.comment.about'|trans({'username': '<a href="' ~ url('members_profile', {username: username}) ~ '">' ~ username ~ '</a>'})|raw }}{% endset %}
+    {% set linkedTo = comment.toMember.status in ['Active', 'OutOfRemind'] %}
+    {% if linkedTo %}
+        {% set comment_direction %}{{ 'profile.comment.about'|trans({'username': '<a href="' ~ url('members_profile', {username: username}) ~ '">' ~ username ~ '</a>'})|raw }}{% endset %}
+    {% else %}
+        {% set comment_direction %}{{ 'profile.comment.about'|trans({'username': username}) }}{% endset %}
+    {% endif %}
 {% endif %}
 {% if not comment.updated is null and comment.created != comment.updated %}
     {% set comment_date = comment.updated %}
 {% else %}
     {% set comment_date = comment.created %}
 {% endif %}
+    {% if show == 0 %}
+        {% if from %}
+            <div class="card u-bg-black-o-10 u-p-16 u-mr-24 u-mb-8 md:u-mb-0 md:u-mr-0">
+                <p class="text-center">
+                    {{ 'profile.no.comment.yet'|trans({'from': comment.toMember.Username, 'to': comment.fromMember.Username}) }}
+                </p>
+            </div>
+        {% else %}
+            <div class="card u-bg-black-o-10 u-p-16 u-ml-24 md:u-ml-0">
+                <p class="text-center">
+                    {{ 'profile.no.comment.yet'|trans({'from': comment.toMember.Username, 'to': comment.fromMember.Username}) }}
+                </p>
+            </div>
+        {% endif %}
+    {% else %}
 <div class="card comment-bg-{{ quality }} u-p-16 u-mb-8 md:u-mb-0 {% if from %}u-mr-16 md:u-mr-0{% else %}u-ml-16 md:u-ml-0{% endif %}">
-    {% if (show > 1) %}
-        <div class="u-flex u-flex-col u-rounded-8 u-px-8 u-bg-black-o-30 u-mb-8">
-            <strong>{{ 'commenthiddenedit'|trans }}</strong>
-        </div>
-    {% endif %}
     <div class="u-flex u-flex-row {% if not from %}flex-row-reverse{% endif %} u-mb-8">
         <div class="o-avatar o-avatar--m">
-            {{ macros.roundedavatarstack(username, 72, false) }}
+            {% if from %}
+                {{ macros.roundedavatarstack(username, 72, false, linkedFrom) }}
+            {% else %}
+                {{ macros.roundedavatarstack(username, 72, false, linkedTo) }}
+            {% endif %}
         </div>
         <div class="u-self-center u-px-8">
             <p class="u-m-0 u-leading-20 {% if not from %}text-right{% endif %}">
@@ -71,9 +97,17 @@
             {% endif %}
         </div>
     </div>
-    <p class="u-text-sm u-italic u-p-0 u-mb-8">{% for relation in comment.relations|split(',') %}
+    {% if (show > 1) %}
+        <div class="u-flex u-flex-col u-rounded-8 u-p-8 u-bg-black-o-30 u-mb-8 u-text-white">
+            <strong>{{ 'commenthiddenedit'|trans }}</strong>
+        </div>
+    {% endif %}
+
+    <div class="u-text-sm u-italic u-p-0 u-mb-8">
+        {% for relation in comment.relations|split(',') %}
             {{  ('profile.comment.relation.' ~ relation)|lower|trans({username: comment.toMember.Username}) }}
-        {% endfor %}</p>
+        {% endfor %}
+    </div>
 
     <div class="u-mb-8">{{ comment.TextFree|nl2br|purify }}</div>
 
@@ -98,5 +132,6 @@
         </div>
     </div>
 </div>
+{% endif %}
 {% endmacro %}
 

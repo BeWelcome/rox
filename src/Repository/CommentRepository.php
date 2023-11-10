@@ -187,14 +187,6 @@ class CommentRepository extends EntityRepository
         return $this->getCommentsAsArray($commentsForMember, $commentsByMember);
     }
 
-    public function getCommentsMember(Member $member): array
-    {
-        $commentsForMember = $this->getVisibleCommentsForMember($member);
-        $commentsByMember = $this->getVisibleCommentsByMember($member);
-
-        return $this->getCommentsAsArray($commentsForMember, $commentsByMember);
-    }
-
     public function getVisibleCommentsForMemberCount(Member $member): int
     {
         return $this->getCommentsForMemberQueryBuilder($member)
@@ -205,28 +197,9 @@ class CommentRepository extends EntityRepository
             ;
     }
 
-    public function getVisibleCommentsByMemberCount(Member $member): int
-    {
-        return $this->getCommentsByMemberQueryBuilder($member)
-            ->select('count(c.fromMember)')
-            ->andWhere('c.displayInPublic = 1')
-            ->getQuery()
-            ->getSingleScalarResult()
-            ;
-    }
-
     public function getVisibleCommentsForMember(Member $member): array
     {
         return $this->getCommentsForMemberQueryBuilder($member)
-            ->andWhere('c.displayInPublic = 1')
-            ->getQuery()
-            ->getResult()
-            ;
-    }
-
-    public function getVisibleCommentsByMember(Member $member): array
-    {
-        return $this->getCommentsByMemberQueryBuilder($member)
             ->andWhere('c.displayInPublic = 1')
             ->getQuery()
             ->getResult()

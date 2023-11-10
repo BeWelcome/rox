@@ -9,11 +9,9 @@ use PDO;
 
 class UpdateTranslationAdapter implements AdapterInterface
 {
-    /** @var string */
-    private $locale;
+    private string $locale;
 
-    /** @var Connection */
-    private $connection;
+    private Connection $connection;
 
     /**
      * SearchAdapter constructor.
@@ -54,7 +52,7 @@ class UpdateTranslationAdapter implements AdapterInterface
     }
 
     /**
-     * Returns an slice of the results.
+     * Returns a slice of the results.
      */
     public function getSlice(int $offset, int $length): iterable
     {

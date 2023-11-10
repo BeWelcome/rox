@@ -32,16 +32,20 @@
 {% set show = comment.showCondition(loggedInMember) %}
 {% set edit = comment.editCondition(loggedInMember) %}
 {% set quality = comment.quality|lower %}
+{% set linkedFrom = false %}
+{% set linkedTo = false %}
 {% if from %}
     {% set username = comment.fromMember.Username %}
-    {% if comment.fromMember.status in ['Active', 'OutOfRemind'] %}
+    {% set linkedFrom = comment.fromMember.status in ['Active', 'OutOfRemind'] %}
+    {% if linkedFrom %}
         {% set comment_direction %}{{ 'profile.comment.from'|trans({'username': '<a href="' ~ url('members_profile', {username: username}) ~ '">' ~ username ~ '</a>'})|raw }}{% endset %}
     {% else %}
         {% set comment_direction %}{{ 'profile.comment.from'|trans({'username': username}) }}{% endset %}
     {% endif %}
 {% else %}
     {% set username = comment.toMember.Username %}
-    {% if comment.toMember.status in ['Active', 'OutOfRemind'] %}
+    {% set linkedTo = comment.toMember.status in ['Active', 'OutOfRemind'] %}
+    {% if linkedTo %}
         {% set comment_direction %}{{ 'profile.comment.about'|trans({'username': '<a href="' ~ url('members_profile', {username: username}) ~ '">' ~ username ~ '</a>'})|raw }}{% endset %}
     {% else %}
         {% set comment_direction %}{{ 'profile.comment.about'|trans({'username': username}) }}{% endset %}
@@ -70,7 +74,11 @@
 <div class="card comment-bg-{{ quality }} u-p-16 u-mb-8 md:u-mb-0 {% if from %}u-mr-16 md:u-mr-0{% else %}u-ml-16 md:u-ml-0{% endif %}">
     <div class="u-flex u-flex-row {% if not from %}flex-row-reverse{% endif %} u-mb-8">
         <div class="o-avatar o-avatar--m">
-            {{ macros.roundedavatarstack(username, 72, false) }}
+            {% if from %}
+                {{ macros.roundedavatarstack(username, 72, false, linkedFrom) }}
+            {% else %}
+                {{ macros.roundedavatarstack(username, 72, false, linkedTo) }}
+            {% endif %}
         </div>
         <div class="u-self-center u-px-8">
             <p class="u-m-0 u-leading-20 {% if not from %}text-right{% endif %}">

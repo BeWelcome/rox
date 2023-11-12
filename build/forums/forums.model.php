@@ -1350,7 +1350,7 @@ WHERE `id` = '$topicinfo->threadid'
             $postVisibility = $vars['PostVisibility'];
         } else {
             // Someone unchecked the box for group only posts
-            $postVisibility = 'MembersOnly';
+            $vars['ThreadVisibility'] = $vars['PostVisibility'] = $postVisibility = 'MembersOnly';
         }
 
         $this->dao->query("START TRANSACTION");

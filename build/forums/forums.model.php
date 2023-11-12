@@ -3,6 +3,12 @@
 use App\Doctrine\NotificationStatusType;
 use Foolz\SphinxQL\Drivers\Pdo\Connection;
 use Foolz\SphinxQL\SphinxQL;
+use Manticoresearch\Client;
+use Manticoresearch\Query\BoolQuery;
+use Manticoresearch\Query\Equals;
+use Manticoresearch\Query\In;
+use Manticoresearch\Query\MatchPhrase;
+use Manticoresearch\Search;
 
 /**
 * Forums model
@@ -1361,15 +1367,15 @@ VALUES ('%d', NOW(), '%s','%d',%d,'%s')
         $result = $this->dao->query($query);
 
 
-        $postid = $result->insertId();
+        $postId = $result->insertId();
 
 		 // Now create the text in forum_trads
- 		 $this->InsertInFTrad($this->dao->escape($this->cleanupText($vars['topic_text'])),"forums_posts.IdContent",$postid) ;
+ 		 $this->InsertInFTrad($this->dao->escape($this->cleanupText($vars['topic_text'])),"forums_posts.IdContent",$postId) ;
 
         $query =
             "
 UPDATE `forums_threads`
-SET `last_postid` = '$postid', `replies` = `replies` + 1
+SET `last_postid` = '$postId', `replies` = `replies` + 1
 WHERE `id` = '$this->threadid'
             "
         ;
@@ -1391,11 +1397,12 @@ WHERE `id` = '$this->threadid'
            }
         }
 
+        $this->addPostToManticoreIndex($vars, $postId, $this->threadid, $this->session->get("IdMember"), $this->GetLanguageChoosen());
 
-        MOD_log::get()->write("Replying new Post=#". $postid." in Thread=#".$this->threadid." NotifyMe=[".$vars['NotifyMe']."]", "Forum");
-        $this->prepare_notification($postid,"reply") ; // Prepare a notification
+        MOD_log::get()->write("Replying new Post=#". $postId." in Thread=#".$this->threadid." NotifyMe=[".$vars['NotifyMe']."]", "Forum");
+        $this->prepare_notification($postId,"reply") ; // Prepare a notification
 
-        return $postid;
+        return $postId;
     } // end of replyTopic
 
     /**
@@ -1420,6 +1427,7 @@ WHERE `id` = '$this->threadid'
             } else {
                 $ThreadVisibility = 'MembersOnly';
             }
+            $vars['ThreadVisibility'] = $ThreadVisibility;
         }
 
         /** @var PDBStatement_mysqli $statement */
@@ -1482,6 +1490,8 @@ WHERE `id` = '$this->threadid'
         else {
              $vars['NotifyMe']="Not Asked" ;
         }
+
+        $this->addPostToManticoreIndex($vars, $postId, $threadId, $memberId, $language);
 
         $this->prepare_notification($postId,"newthread") ; // Prepare a notification
         MOD_log::get()->write("New Thread new Tread=#".$threadId." Post=#". $postId." IdGroup=#".$IdGroup." NotifyMe=[".$vars['NotifyMe']."] initial Visibility=".$ThreadVisibility, "Forum");
@@ -2584,40 +2594,86 @@ public function NotAllowedForGroup($IdMember, $rPost) {
 	 * @return array
 	 */
 	public function searchForums($keywords) {
-        $sphinx = new MOD_sphinx();
+        $hasForumModeratorRights = $this->BW_Right->HasRight("ForumModerator");
 
-		$results = array( 'count' => 0);
+		$results = ['count' => 0];
 		$member = $this->getLoggedInMember();
-		if (!$member) {
-			$results['errors'][] = 'ForumSearchNotLoggedIn';
-		} else {
-			$groupEntities = $member->getGroups();
-			$groups = array( 0 );
-			foreach($groupEntities as $group) {
-				$groups[] = $group->id;
-			}
+        $groupEntities = $member->getGroups();
+        $groups = [0];
+        foreach ($groupEntities as $group) {
+            $groups[] = (int) $group->id;
+        }
 
-            $sphinxClient = $sphinx->getSphinxForums();
-            $sphinxClient->setSelect('*');
-			$sphinxClient->SetFilter('IdGroup', $groups);
-            $sphinxClient->SetSortMode(SPH_SORT_ATTR_DESC, 'created' );
-            $resultsThreads = $sphinxClient->Query($sphinxClient->EscapeString($keywords), 'forums');
+        $config = ['host' => '127.0.0.1','port' => 9412];
+        $client = new Client($config);
+        $query = new Search($client);
+        $query
+            ->setIndex('forum_rt')
+            ->limit(1000)
+            ->sort(['post_id' => 'DESC'])
+        ;
 
-			if ($resultsThreads) {
-				$results['count'] = $resultsThreads['total'];
-				if ($resultsThreads['total'] <> 0) {
-					$threadIds = array();
-					foreach ($resultsThreads['matches'] as $match) {
-						$threadIds[] = $match['id'];
-					}
-					$this->board->initThreads($this->getPage(), false, $threadIds);
-				} else {
-					$results['errors'][] = 'ForumSearchNoResults';
-				}
-			} else {
-				$results['errors'][] = 'ForumSearchNoSphinx';
-			}
-		}
+        $matchQuery = new MatchPhrase($keywords, 'content');
+
+        $boolQuery = new BoolQuery();
+        $boolQuery->must($matchQuery);
+
+        if (!$hasForumModeratorRights) {
+            $groupPosts = new BoolQuery();
+            $groupPosts
+                ->must(new In('group', $groups))
+                ->must(new Equals('post_visibility', 'GroupOnly'))
+            ;
+
+            $visibility = new BoolQuery();
+            $visibility
+                ->should(new Equals('post_visibility', 'NoRestriction'))
+                ->should(new Equals('post_visibility', 'MembersOnly'))
+                ->should($groupPosts)
+            ;
+
+            $publiclyVisiblePosts = new BoolQuery();
+            $publiclyVisiblePosts
+                ->mustNot(new Equals('post_deleted', 'Deleted'))
+                ->mustNot(new Equals('thread_deleted', 'Deleted'))
+                ->must($visibility)
+            ;
+
+            $limitQuery = new BoolQuery();
+            $limitQuery
+                ->must($publiclyVisiblePosts)
+            ;
+
+            $boolQuery->must($limitQuery);
+        }
+
+        $query->search($boolQuery);
+
+        $queryResult = $query->get();
+        $queryResult->rewind();
+
+        $manticoreResult = [];
+        while ($queryResult->valid()) {
+            $hit = $queryResult->current();
+            $data = $hit->getData();
+            if ($hit->getScore() > 0 && !isset($manticoreResult[$data['post_id']])) {
+                $manticoreResult[$data['post_id']] = $data;
+                $manticoreResult[$data['post_id']]['score'] = $hit->getScore();
+            }
+            $queryResult->next();
+        }
+
+        if (!empty($manticoreResult)) {
+            $results['count'] = count($manticoreResult);
+            $threadIds = array();
+            foreach ($manticoreResult as $match) {
+                $threadIds[] = $match['thread_id'];
+            }
+            $this->board->initThreads($this->getPage(), false, $threadIds);
+        } else {
+            $results['errors'][] = 'ForumSearchNoResults';
+        }
+
 		return $results;
 	}
 
@@ -2652,6 +2708,26 @@ public function NotAllowedForGroup($IdMember, $rPost) {
 		}
 		return false;
 	}
+
+    private function addPostToManticoreIndex($vars, $postId, $threadId, $memberId, $languageId)
+    {
+        $language = $this->createEntity('Language')->findByid($languageId);
+        $config = ['host' => '127.0.0.1','port' => 9412];
+        $client = new Client($config);
+        $index = $client->index('forum_rt');
+        $index->addDocument([
+            'post_id' => $postId,
+            'post_deleted' => 'NotDeleted',
+            'post_visibility' =>  $vars['PostVisibility'] ?? $vars['ThreadVisibility'],
+            'thread_id' =>  $threadId,
+            'thread_deleted' => 'NotDeleted',
+            'thread_visibility' => $vars['ThreadVisibility'],
+            'content' => $vars['topic_text'],
+            'group' => $vars['group'] ?? 0,
+            'author' => $memberId,
+            'locale' => $language->getShortCode(),
+        ]);
+    }
 } // end of class Forums
 
 

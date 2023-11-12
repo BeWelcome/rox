@@ -26,6 +26,13 @@ Boston, MA  02111-1307, USA.
 
 use App\Doctrine\GroupType;
 use App\Doctrine\MemberStatusType;
+use App\Entity\Member;
+use Manticoresearch\Client;
+use Manticoresearch\Query\BoolQuery;
+use Manticoresearch\Query\Equals;
+use Manticoresearch\Query\In;
+use Manticoresearch\Query\MatchPhrase;
+use Manticoresearch\Search;
 
 /**
      * the model of the groups mvc
@@ -916,60 +923,104 @@ WHERE IdGroup=" . (int)$group->id . " AND IdMember=" . (int)$memberid;
      * @return array
      */
     public function searchGroupDiscussions($group, $keywords, $page, $items) {
-        $sphinx = new MOD_sphinx();
+        $loggedInMember = $this->getLoggedInMember();
+        $isForumModerator = $loggedInMember->hasOldRight(['ForumModerator' => 10]);
+
+        $config = ['host' => '127.0.0.1','port' => 9412];
+        $client = new Client($config);
+        $query = new Search($client);
+        $query
+            ->setIndex('forum_rt')
+            ->limit(1000)
+            ->sort(['post_id' => 'DESC'])
+        ;
+
+        $matchQuery = new MatchPhrase($keywords, 'content');
+
+        $boolQuery = new BoolQuery();
+        $boolQuery
+            ->must($matchQuery)
+            ->must(new In('group', [(int)$group->getPKValue()]))
+        ;
+
+        if (!$isForumModerator) {
+            $visibility = new BoolQuery();
+            $visibility
+                ->should(new Equals('post_visibility', 'NoRestriction'))
+                ->should(new Equals('post_visibility', 'MembersOnly'))
+                ->should(new Equals('post_visibility', 'GroupOnly'))
+            ;
+
+            $publiclyVisiblePosts = new BoolQuery();
+            $publiclyVisiblePosts
+                ->mustNot(new Equals('post_deleted', 'Deleted'))
+                ->mustNot(new Equals('thread_deleted', 'Deleted'))
+                ->must($visibility)
+            ;
+
+            $boolQuery->must($publiclyVisiblePosts);
+        }
+
+        $query->search($boolQuery);
+
+        $queryResult = $query->get();
+        $queryResult->rewind();
+
+        $manticoreResult = [];
+        while ($queryResult->valid()) {
+            $hit = $queryResult->current();
+            $data = $hit->getData();
+            if ($hit->getScore() > 0 && !isset($manticoreResult[$data['post_id']])) {
+                $manticoreResult[$data['post_id']] = $data;
+                $manticoreResult[$data['post_id']]['score'] = $hit->getScore();
+            }
+            $queryResult->next();
+        }
 
         $results = [ 'count' => 0 ];
-        $sphinxClient = $sphinx->getSphinxForums();
-        $sphinxClient->SetFilter('IdGroup', [$group->getPKValue()]);
-        $sphinxClient->SetSortMode(SPH_SORT_ATTR_DESC, 'created' );
-        $resultsPosts = $sphinxClient->Query($sphinxClient->EscapeString($keywords), 'forums_posts');
-
-        if ($resultsPosts) {
+        if (!empty($manticoreResult)) {
             $languageId = $this->session->get('IdLanguage', 0);
-            $results['count'] = $resultsPosts['total'];
-            if ($resultsPosts['total'] <> 0) {
-                $postIds = [];
-                foreach ($resultsPosts['matches'] as $match) {
-                    $postIds[] = $match['id'];
-                }
-
-		        $query = "
-                    SELECT SQL_CALC_FOUND_ROWS
-                        `forums_posts`.`id`,
-                        `members`.`Username`,
-                        `forums_posts`.`message`,
-                        `forum_trads`.`Sentence`,
-                        `forums_threads`.`id` AS IdThread,
-                        `forums_threads`.`title`,
-                        `forums_threads`.`IdGroup`,
-                        `groups`.`Name` AS `GroupName`,
-                        `ThreadVisibility`,
-                        `ThreadDeleted`,
-                         UNIX_TIMESTAMP(`forums_posts`.`create_time`) AS `created`
-                    FROM
-                        `forums_posts`
-                            LEFT JOIN
-                        `forums_threads` ON (`forums_posts`.`threadid` = `forums_threads`.`id`)
-                            LEFT JOIN
-                        `groups` ON (`groups`.`id` = `forums_threads`.`IdGroup`)
-                            LEFT JOIN
-                        `forum_trads` ON (`forum_trads`.`IdTrad` = `forums_posts`.`IdContent` AND `forum_trads`.`IdLanguage` = " . $languageId . ")
-                            LEFT JOIN
-                        `members` ON (`forums_posts`.`IdWriter` = `members`.`id`)
-                    WHERE
-                        `forums_posts`.`id` IN (" . implode(',', $postIds) . ")
-                        AND `forums_threads`.`IdGroup` = " . $group->getPKValue() . "
-                    ORDER BY `created` DESC
-                ";
-                $query .= ' LIMIT ' . $items . ' OFFSET ' . ($page - 1) * $items;
-                $threads = $this->bulkLookup($query);
-                $results['posts'] = $threads;
-            } else {
-                $results['errors'][] = 'ForumSearchNoResults';
+            $results['count'] = count($manticoreResult);
+            $postIds = [];
+            foreach ($manticoreResult as $match) {
+                $postIds[] = $match['post_id'];
             }
+
+            $query = "
+                SELECT SQL_CALC_FOUND_ROWS
+                    `forums_posts`.`id`,
+                    `members`.`Username`,
+                    `forums_posts`.`message`,
+                    `forum_trads`.`Sentence`,
+                    `forums_threads`.`id` AS IdThread,
+                    `forums_threads`.`title`,
+                    `forums_threads`.`IdGroup`,
+                    `groups`.`Name` AS `GroupName`,
+                    `ThreadVisibility`,
+                    `ThreadDeleted`,
+                     UNIX_TIMESTAMP(`forums_posts`.`create_time`) AS `created`
+                FROM
+                    `forums_posts`
+                        LEFT JOIN
+                    `forums_threads` ON (`forums_posts`.`threadid` = `forums_threads`.`id`)
+                        LEFT JOIN
+                    `groups` ON (`groups`.`id` = `forums_threads`.`IdGroup`)
+                        LEFT JOIN
+                    `forum_trads` ON (`forum_trads`.`IdTrad` = `forums_posts`.`IdContent` AND `forum_trads`.`IdLanguage` = " . $languageId . ")
+                        LEFT JOIN
+                    `members` ON (`forums_posts`.`IdWriter` = `members`.`id`)
+                WHERE
+                    `forums_posts`.`id` IN (" . implode(',', $postIds) . ")
+                    AND `forums_threads`.`IdGroup` = " . $group->getPKValue() . "
+                ORDER BY `created` DESC
+            ";
+            $query .= ' LIMIT ' . $items . ' OFFSET ' . ($page - 1) * $items;
+            $threads = $this->bulkLookup($query);
+            $results['posts'] = $threads;
         } else {
             $results['errors'][] = 'ForumSearchNoSphinx';
         }
+
         return $results;
     }
 }

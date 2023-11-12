@@ -22,15 +22,14 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 use function count;
 
-class ManticoreIndicesCreateCommand extends Command
+class ManticoreIndicesGeonamesCommand extends Command
 {
     private const GEONAMES_INDEX = 'geonames_rt';
     private int $chunkSize = 250000;
 
-    protected static $defaultName = 'manticore:indices:create';
-    protected static $defaultDescription = 'Creates and updates the manticore search indices';
+    protected static $defaultName = 'manticore:indices:geonames';
+    protected static $defaultDescription = 'Creates the manticore indices for the location search';
     private EntityManagerInterface $entityManager;
-    private ResultSetMapping $rsm;
     private SymfonyStyle $io;
 
     public function __construct(EntityManagerInterface $entityManager)
@@ -43,14 +42,14 @@ class ManticoreIndicesCreateCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->io = new SymfonyStyle($input, $output);
-        $this->io->note('Creating manticore indices.');
+        $this->io->note('Creating manticore geonames real-time index.');
         $this->io->newLine();
 
         $index = $this->createGeonamesIndex();
         if (null !== $index) {
             $this->addGeonamesDocuments($index, $output);
 
-             $this->addAlternateNamesDocuments($index, $output);
+            $this->addAlternateNamesDocuments($index, $output);
 
             $this->io->newLine();
             $this->io->note('Created ' . self::GEONAMES_INDEX . '.');
@@ -59,9 +58,10 @@ class ManticoreIndicesCreateCommand extends Command
                 'Skipped creation of ' . self::GEONAMES_INDEX . ' index. ' .
                 'Try using manticore:indices:update --geonames instead'
             );
+            return Command::INVALID;
         }
 
-        $this->io->success('Created Manticore indices.');
+        $this->io->success('Created Manticore index.');
 
         return Command::SUCCESS;
     }
@@ -99,10 +99,10 @@ class ManticoreIndicesCreateCommand extends Command
                 ]
             );
         } catch (Exception $e) {
-            // $index = null;
+            $index = null;
 
             $this->io->error($e->getMessage());
-            $this->io->error('Index ' . self::GEONAMES_INDEX . ' geonames_rt\' already exists or another problem occureed.');
+            $this->io->error('Index ' . self::GEONAMES_INDEX . ' already exists or another problem occurred.');
         }
 
         return $index;

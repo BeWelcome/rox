@@ -47,13 +47,14 @@ class AllowContactCheck
     public function checkIfMemberHasAboutMe(Member $member): bool
     {
         $memberTranslationRepository = $this->entityManager->getRepository(MemberTranslation::class);
+        /** @var MemberTranslation[] $memberTranslations */
         $memberTranslations = $memberTranslationRepository->findBy([
             'owner' => $member,
             'tableColumn' => 'members.ProfileSummary'
         ]);
 
         $hasAboutMe = array_reduce($memberTranslations, function ($hasAboutMe, $memberTranslation) {
-            return $hasAboutMe || !empty($memberTranslation->getSentence());
+            return $hasAboutMe || (!empty($memberTranslation->getSentence() && $memberTranslation->getTranslation() > 0));
         });
 
         return (null === $hasAboutMe) ? false : $hasAboutMe;

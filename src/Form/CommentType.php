@@ -16,6 +16,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\NotNull;
 
 class CommentType extends AbstractType
 {
@@ -30,15 +31,17 @@ class CommentType extends AbstractType
     {
         $commentRelationsType = new CommentRelationsType();
         $commentQualityType = new CommentQualityType();
+        $commentChoices = array_merge(['comment.select.quality' => ''], $commentQualityType->getChoicesArray());
 
         $toMember = $options['to_member'];
         $builder
             ->add('quality', ChoiceType::class, [
                 'label' => 'commentquality',
+                'empty_data' => '',
                 'multiple' => false,
                 'expanded' => false,
                 'required' => false,
-                'choices' => $commentQualityType->getChoicesArray(),
+                'choices' => $commentChoices,
                 'constraints' => [
                     new NotBlank(),
                 ],

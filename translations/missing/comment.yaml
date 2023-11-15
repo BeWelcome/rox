@@ -35,3 +35,7 @@ comment.notification.update.body:
 comment.editing.not.allowed:
     - 'Comment is locked and can''t be edited.'
     - Flash message shown if a comment is negative and comment checkers did not remove the lock on it yet.
+comment.quality.select:
+    - Please select...
+    - Placeholder on the add comment page to tell the user they must select an experience quality
+

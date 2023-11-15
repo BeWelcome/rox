@@ -54,7 +54,8 @@ class AllowContactCheck
         ]);
 
         $hasAboutMe = array_reduce($memberTranslations, function ($hasAboutMe, $memberTranslation) {
-            return $hasAboutMe || (!empty($memberTranslation->getSentence() && $memberTranslation->getTranslation() > 0));
+            return $hasAboutMe
+                || (!empty($memberTranslation->getSentence() && $memberTranslation->getTranslation() > 0));
         });
 
         return (null === $hasAboutMe) ? false : $hasAboutMe;

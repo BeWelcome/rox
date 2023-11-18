@@ -17,7 +17,7 @@ $cnt = 0;
 foreach ($this->search_result as $post) {
 ?>
 
-<div class="l-forum-single-post <?php echo $styles[$cnt % 2]; ?>">
+<div class="l-forum-single-post <?php echo $styles[$cnt % 2]; ?> u-w-full">
     <!-- left column -->
     <div class="c-single-post-user_info">
         <a id="post<?php echo $post->id; ?>" style="position: relative; top:-50px;"></a>

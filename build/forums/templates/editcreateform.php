@@ -69,6 +69,8 @@ $vars =& PPostHandler::getVars($callbackId);
       id="forumsform">
     <div class="row no-gutters">
     <input type="hidden" name="<?php echo $callbackId; ?>" value="1"/>
+    <?php if (isset($vars['postid'])) { echo "<input type='hidden' name='IdPost' value='{$vars['postid']}'>"; } ?>
+    <?php if (isset($vars['threadid'])) { echo "<input type='hidden' name='IdThread' value='{$vars['threadid']}'>"; } ?>
     <input type="hidden" name="IdLanguage" id="IdLanguage" value="0">
 
     <?php

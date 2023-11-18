@@ -1,14 +1,12 @@
 <?php
 
 use App\Doctrine\NotificationStatusType;
-use Foolz\SphinxQL\Drivers\Pdo\Connection;
-use Foolz\SphinxQL\SphinxQL;
+use Manticoresearch\Search;
 use Manticoresearch\Client;
 use Manticoresearch\Query\BoolQuery;
 use Manticoresearch\Query\Equals;
 use Manticoresearch\Query\In;
 use Manticoresearch\Query\MatchPhrase;
-use Manticoresearch\Search;
 
 /**
 * Forums model
@@ -750,7 +748,7 @@ WHERE `forums_posts`.`id` = $this->messageId
         $this->dao->escape($this->cleanupText($vars['topic_text'])), $editorid, $this->messageId);
         $this->dao->query($query);
 		$this->ReplaceInFTrad($this->dao->escape($this->cleanupText($vars['topic_text'])), "forums_posts.IdContent", $rBefore->id, $rBefore->IdContent, $rBefore->IdWriter) ;
-
+        $this->updatePostInManticoreIndex($vars);
 		// case the update concerns the reference language of the posts
 		if ($rBefore->post_IdFirstLanguageUsed==$this->GetLanguageChoosen()) {
 		 	$query="update forums_posts set message='".$this->dao->escape($this->cleanupText($vars['topic_text']))."' where id=".$this->messageId ;
@@ -1133,6 +1131,7 @@ WHERE `id` = '%d' ",
 		 			$ss=$this->dao->escape($vars["NewTranslatedPost"])  ;
 					$this->InsertInFTrad($ss,"forums_posts.IdContent",$IdPost, $this->session->get("IdMember"), $vars["IdLanguage"],$vars["IdTrad"]) ;
        		MOD_log::get()->write("Updating Post=#".$IdPost." Adding translation for title in language=[".$vars["IdLanguage"]."]","ForumModerator");
+                $this->updatePostInManticoreIndex($vars);
 				}
 		 }
 
@@ -1159,19 +1158,25 @@ WHERE `id` = '%d' ",
                     LIMIT 1";
                 $s = $this->dao->query($query);
                 $row = $s->fetch(PDB::FETCH_OBJ);
-                $id = $row->id;
-                $update = "
+                if (null === $row) {
+                    // last post of thread was deleted
+                    $this->dao->query("update forums_threads set ThreadDeleted='Deleted' where id=".$IdThread);
+                } else {
+                    $id = $row->id;
+                    $update = "
                     UPDATE
                         forums_threads
                     SET
                         last_postid = " . $id . "
                     WHERE
                         id = " . $IdThread;
-                $this->dao->query($update);
+                    $this->dao->query($update);
+                }
 		}
 
  		if (isset($vars["IdForumTrads"])) { // if an effective update was chosen for a forum trads
-		 			$this->DofTradUpdate($vars["IdForumTrads"],$vars["Sentence"],$vars["IdLanguage"]) ; // update the corresponding translations
+		 	$this->DofTradUpdate($vars["IdForumTrads"],$vars["Sentence"],$vars["IdLanguage"]) ; // update the corresponding translations
+            $this->updatePostInManticoreIndex($vars);
 		 }
 
      PPostHandler::clearVars();
@@ -2727,6 +2732,33 @@ public function NotAllowedForGroup($IdMember, $rPost) {
             'author' => $memberId,
             'locale' => $language->getShortCode(),
         ]);
+    }
+
+    private function updatePostInManticoreIndex($vars)
+    {
+        $postId = (int)$vars['IdPost'];
+        $threadId = (int)$vars['IdThread'];
+        $config = ['host' => '127.0.0.1','port' => 9412];
+        $vars['Sentence'] = $vars['Sentence'] ?? $vars['topic_text'];
+
+        $client = new Client($config);
+        // Find document in index
+        $query = new Search($client);
+        $query
+            ->setIndex('forum_rt')
+            ->filter('post_id', 'equals', $postId)
+            ->filter('thread_id', 'equals', $threadId)
+        ;
+
+        $results = $query->get();
+        $results->rewind();
+        $hit = $results->current();
+        $data = $hit->getData();
+        $data['content'] = $vars['Sentence'];
+
+        // Then replace with new content
+        $index = $client->index('forum_rt');
+        $index->replaceDocument($data, $hit->getId());
     }
 } // end of class Forums
 

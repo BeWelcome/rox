@@ -8,6 +8,7 @@ null  :=
 SPACE := $(null) $(null)
 COMMA := ,
 SRC_DIR_COMMA := $(subst $(SPACE),$(COMMA),$(SRC_DIR))
+TIME_STAMP := $(shell git log -n 1 --format=%aI)
 
 all: phpci
 
@@ -98,3 +99,4 @@ phpmetrics:
 
 version:
 	git rev-parse --short HEAD > VERSION
+	touch -d $(TIME_STAMP) VERSION

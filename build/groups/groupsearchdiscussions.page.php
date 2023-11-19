@@ -25,6 +25,7 @@ class GroupSearchDiscussionsPage extends GroupsSubPage
     {
         parent::__construct($group);
         $this->addLateLoadScriptFile('build/highlight.js');
+        $this->addLateLoadScriptFile('build/readmore.js');
     }
 
     protected function getSubmenuActiveItem() {

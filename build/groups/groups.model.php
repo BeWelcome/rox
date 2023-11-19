@@ -998,17 +998,25 @@ WHERE IdGroup=" . (int)$group->id . " AND IdMember=" . (int)$memberid;
                     `groups`.`Name` AS `GroupName`,
                     `ThreadVisibility`,
                     `ThreadDeleted`,
-                     UNIX_TIMESTAMP(`forums_posts`.`create_time`) AS `created`
+                     UNIX_TIMESTAMP(`forums_posts`.`create_time`) AS `created`,
+                     `geonames`.`name` AS `city`,
+                     `geonamescountries`.`name` AS `country`
                 FROM
                     `forums_posts`
-                        LEFT JOIN
+                LEFT JOIN
                     `forums_threads` ON (`forums_posts`.`threadid` = `forums_threads`.`id`)
-                        LEFT JOIN
+                LEFT JOIN
                     `groups` ON (`groups`.`id` = `forums_threads`.`IdGroup`)
-                        LEFT JOIN
+                LEFT JOIN
                     `forum_trads` ON (`forum_trads`.`IdTrad` = `forums_posts`.`IdContent` AND `forum_trads`.`IdLanguage` = " . $languageId . ")
-                        LEFT JOIN
+                LEFT JOIN
                     `members` ON (`forums_posts`.`IdWriter` = `members`.`id`)
+                LEFT JOIN
+                    `addresses` ON `members`.`id` = `addresses`.`IdMember`
+                LEFT JOIN
+                    `geonames` ON `addresses`.IdCity = `geonames`.`geonameId`
+                LEFT JOIN
+                    `geonamescountries` ON `geonames`.`country` = `geonamescountries`.`country`
                 WHERE
                     `forums_posts`.`id` IN (" . implode(',', $postIds) . ")
                     AND `forums_threads`.`IdGroup` = " . $group->getPKValue() . "

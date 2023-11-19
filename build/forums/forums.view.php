@@ -455,26 +455,30 @@ class ForumsView extends RoxAppView {
     /**
      * @param string $keyword The term to be searched for
      */
-    public function showSearchResultPage($keyword) {
+    public function showSearchResultPage($keyword, $currentPage) {
         $this->page->addLateLoadScriptFile('build/highlight.js');
-        $result = $this->_model->searchForums($keyword);
+        $this->page->addLateLoadScriptFile('build/readmore.js');
+
+        $result = $this->_model->searchForums($keyword, $currentPage);
+        $loggedInMember = $this->_model->getLoggedInMember();
         if (isset($result['errors'])) {
             require 'templates/searcherror.php';
         } else {
-            $boards = $this->_model->getBoard();
+            $posts = $result['posts'];
             $request = PRequest::get()->request;
             $uri = implode('/', $request);
             $uri = rtrim($uri, '/') . '/';
-            $this->SetPageTitle($boards->getBoardName() . ' - BeWelcome ' . $this->words->getBuffered('Forum'));
+            $this->SetPageTitle($this->words->getBuffered('Forum') . ' - BeWelcome ');
 
             $noForumNewTopicButton = true;
 
-            $pages = $this->getBoardPageLinks();
-            $currentPage = $this->_model->getPage();
-            $max = $this->_model->getBoard()->getNumberOfThreads();
-            $maxPage = ceil($max / $this->_model->THREADS_PER_PAGE);
+            $params = new \stdClass();
+            $params->strategy = new FullPagePager('right');
+            $params->items_per_page = 30;
+            $params->items = $result['count'];
+            $pager = new PagerWidget($params);
 
-            require 'templates/board.php';
+            require 'templates/searchresultposts.php';
         }
     }
 

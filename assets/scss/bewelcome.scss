@@ -44,7 +44,8 @@ $font-family-bold: Signika;
 @import "offcanvas";
 
 // tempus dominus date time picker
-@import "tempusdominus_bootstrap4";
+@import "~@eonasdan/tempus-dominus/src/scss/_variables";
+@import "~@eonasdan/tempus-dominus/src/scss/tempus-dominus";
 @import "footer";
 @import "daterangepicker.scss";
 
@@ -633,3 +634,7 @@ $avatar-sizes: 30, 50, 75, 100, 150, 200, 500;
 }
 
 .pointer {cursor: pointer;}
+
+.o-form-group, .o-form-group-sm {
+  margin-bottom: 8px;
+}

@@ -2598,7 +2598,7 @@ public function NotAllowedForGroup($IdMember, $rPost) {
 	 * @param $keywords Keywords to search for in the Sphinx index
 	 * @return array
 	 */
-	public function searchForums($keywords) {
+	public function searchForums($keywords, $currentPage, $items = 30) {
         $hasForumModeratorRights = $this->BW_Right->HasRight("ForumModerator");
 
 		$results = ['count' => 0];
@@ -2669,12 +2669,55 @@ public function NotAllowedForGroup($IdMember, $rPost) {
         }
 
         if (!empty($manticoreResult)) {
-            $results['count'] = count($manticoreResult);
-            $threadIds = array();
+            $languageId = $this->session->get('IdLanguage', 0);
+            $postIds = [];
             foreach ($manticoreResult as $match) {
-                $threadIds[] = $match['thread_id'];
+                $postIds[] = $match['post_id'];
             }
-            $this->board->initThreads($this->getPage(), false, $threadIds);
+            $separatedPostIds = implode(',', $postIds);
+            $separatedGroupIds = implode(',', $groups);
+            $offset = ($currentPage - 1) * $items;
+            $query = "
+                SELECT SQL_CALC_FOUND_ROWS
+                    `forums_posts`.`id`,
+                    `members`.`Username`,
+                    `forums_posts`.`message`,
+                    `forum_trads`.`Sentence`,
+                    `forums_threads`.`id` AS `IdThread`,
+                    `forums_threads`.`title`,
+                    `forums_threads`.`IdGroup`,
+                    `groups`.`Name` AS `GroupName`,
+                    `forums_posts`.`PostVisibility`,
+                    `forums_threads`.`ThreadVisibility`,
+                    `forums_threads`.`ThreadDeleted`,
+                     UNIX_TIMESTAMP(`forums_posts`.`create_time`) AS `created`,
+                    geonames.name AS city,
+                    geonamescountries.name AS country
+                FROM
+                    `forums_posts`
+                LEFT JOIN
+                    `forums_threads` ON (`forums_posts`.`threadid` = `forums_threads`.`id`)
+                LEFT JOIN
+                    `groups` ON (`groups`.`id` = `forums_threads`.`IdGroup`)
+                LEFT JOIN
+                    `forum_trads` ON (`forum_trads`.`IdTrad` = `forums_posts`.`IdContent` AND `forum_trads`.`IdLanguage` = {$languageId})
+                LEFT JOIN
+                    `members` ON (`forums_posts`.`IdWriter` = `members`.`id`)
+                LEFT JOIN
+                    `addresses` ON `members`.`id` = `addresses`.`IdMember`
+                LEFT JOIN
+                    `geonames` ON `addresses`.IdCity = `geonames`.`geonameId`
+                LEFT JOIN
+                    `geonamescountries` ON `geonames`.`country` = `geonamescountries`.`country`
+                WHERE
+                    `forums_posts`.`id` IN ({$separatedPostIds})
+                    AND `forums_threads`.`IdGroup` IN ({$separatedGroupIds})
+                ORDER BY `created` DESC
+                LIMIT {$items} OFFSET {$offset}
+            ";
+            $posts = $this->bulkLookup($query);
+            $results['count'] = count($manticoreResult);
+            $results['posts'] = $posts;
         } else {
             $results['errors'][] = 'ForumSearchNoResults';
         }

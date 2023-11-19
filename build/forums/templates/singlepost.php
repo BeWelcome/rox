@@ -31,7 +31,10 @@ use App\Utilities\ForumUtilities;
 
 $words = new MOD_words();
 $styles = array('l-forum-single-post--dark', '');
-
+if (!isset($topic)) {
+    $topic = new stdClass();
+    $topic->WithDetail = false;
+}
 $hideGroupOnlyPost = false;
 
 if (($post->IdGroup > 0) && ($post->PostVisibility == "GroupOnly")) {
@@ -94,7 +97,7 @@ if (($post->IdGroup > 0) && ($post->PostVisibility == "GroupOnly")) {
                 }
             ?>
     </div>
-
+    <div class="c-single-post-thread_info"></div>
     <!-- message -->
     <div class="c-single-post-content">
         <?php

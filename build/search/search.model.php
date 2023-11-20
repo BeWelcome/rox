@@ -557,6 +557,7 @@ LIMIT 1
     private function getDetailsForMembers()
     {
         $langarr = explode('-', $this->session->get('lang'));
+        $commentStatuses = MemberStatusType::MEMBER_COMMENTS;
         $lang = $langarr[0];
         // First get current page and limits
         // *FROM* and *WHERE* will be replaced later on (don't change)
@@ -598,7 +599,7 @@ LIMIT 1
                     comments, members m2
                 WHERE
                     IdFromMember = m2.id
-                    AND m2.Status IN ('Active', 'OutOfRemind')
+                    AND m2.Status IN ({$commentStatuses})
                 GROUP BY
                     IdToMember
                 ) c ON c.IdToMember = m.id

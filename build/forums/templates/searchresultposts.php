@@ -81,7 +81,7 @@ use App\Utilities\ForumUtilities;
                     if (isset($post->IdGroup) && $post->IdGroup != 0) {
                         echo '<small><a href="group/' .$post->IdGroup . '/forum/s' . $post->IdThread . '/#post' . $post->id . '"><i class="fa fa-link"></i> ' . $words->get('ForumPermalink') . '</a></small>';
                     } else {
-                        echo '<small><a href="forums/s' . $post->IdTthread . '/#post' . $post->id . '"><i class="fa fa-link"></i> ' . $words->get('ForumPermalink') . '</a></small>';
+                        echo '<small><a href="forums/s' . $post->IdThread . '/#post' . $post->id . '"><i class="fa fa-link"></i> ' . $words->get('ForumPermalink') . '</a></small>';
                     }
                     ?>
                 </div>
@@ -93,19 +93,24 @@ use App\Utilities\ForumUtilities;
                     <div class="u-flex u-justify-end">
                         <small>
                             <?php
-                                echo $words->get('forum.thread');
+                                $title = strip_tags($post->title);
                                 if (isset($post->IdGroup) && $post->IdGroup != 0) {
-                                    echo '<a href="group/' .$post->IdGroup . '/forum/s' . $post->IdThread . '/#post' . $post->id . '">' . $post->title . '</a>';
+                                    echo $words->get('forum.group');
+                                    echo '<a href="group/' . $post->IdGroup . '">' . $post->GroupName . "</a> ";
+                                    $threadLink = '<a href="group/' .$post->IdGroup . '/forum/s' . $post->IdThread . '/#post' . $post->id . '">' . $title . '</a>';
                                 } else {
-                                    echo '<a href="forums/s' . $post->IdTthread . '/#post' . $post->id . '">' . $post->title . '</a>';
+                                    $threadLink = '<a href="forums/s' . $post->IdThread . '/#post' . $post->id . '">' . $title . '</a>';
                                 }
+                                echo $words->get('forum.thread');
+                                echo $threadLink;
                             ?>
                         </small>
                     </div>
                 </div>
             </div>
             <?php $cnt++;
-        } ?>
+        }
+        $pager->render();
+        ?>
     </div>
-<?php
-$pager->render();
+

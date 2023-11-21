@@ -1,6 +1,9 @@
 forum.thread:
     - 'Thread: '
     - Label for the thread link on the search result pages.
+forum.group:
+    - 'Group: '
+    - Label for the group link on the search result pages.
 forum.read.more:
     - '@comment.read.more'
 forum.read.less:

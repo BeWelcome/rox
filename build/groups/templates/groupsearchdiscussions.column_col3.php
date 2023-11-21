@@ -55,11 +55,12 @@ foreach ($this->search_result as $post) {
         ?>
     </div>
     <div class="c-search-thread_info js-highlight"><div class="u-flex u-justify-end"><small><?php
+                $title = strip_tags($post->title);
             echo $words->get('forum.thread');
         if (isset($post->IdGroup) && $post->IdGroup != 0) {
-            echo '<a href="group/' .$post->IdGroup . '/forum/s' . $post->IdThread . '/#post' . $post->id . '">' . $post->title . '</a>';
+            echo '<a href="group/' .$post->IdGroup . '/forum/s' . $post->IdThread . '/#post' . $post->id . '">' . $title . '</a>';
         } else {
-            echo '<a href="forums/s' . $post->IdTthread . '/#post' . $post->id . '">' . $post->title . '</a>';
+            echo '<a href="forums/s' . $post->IdTthread . '/#post' . $post->id . '">' . $title . '</a>';
         }
         ?></small></div></div>
 
@@ -68,7 +69,8 @@ foreach ($this->search_result as $post) {
     </div>
 </div>
 <?php $cnt++;
-} ?>
-</div>
-<?php
+}
 $this->pager->render();
+?>
+</div>
+

@@ -2711,13 +2711,25 @@ public function NotAllowedForGroup($IdMember, $rPost) {
                     `geonamescountries` ON `geonames`.`country` = `geonamescountries`.`country`
                 WHERE
                     `forums_posts`.`id` IN ({$separatedPostIds})
-                    AND `forums_threads`.`IdGroup` IN ({$separatedGroupIds})
+                    AND (`forums_threads`.`IdGroup` IN ({$separatedGroupIds}) OR `forums_threads`.`IdGroup` IS NULL)
                 ORDER BY `created` DESC
                 LIMIT {$items} OFFSET {$offset}
             ";
             $posts = $this->bulkLookup($query);
-            $results['count'] = count($manticoreResult);
             $results['posts'] = $posts;
+
+            $query = "
+                SELECT
+                    count(`forums_posts`.`id`) AS `count`
+                FROM
+                    `forums_posts`
+                LEFT JOIN `forums_threads` on `forums_posts`.`threadId` = `forums_threads`.`id`
+                WHERE
+                    `forums_posts`.`id` IN ({$separatedPostIds})
+                    AND (`forums_threads`.`IdGroup` IN ({$separatedGroupIds}) OR `forums_threads`.`IdGroup` IS NULL)
+            ";
+            $count = $this->singleLookup($query);
+            $results['count'] = $count->count;
         } else {
             $results['errors'][] = 'ForumSearchNoResults';
         }

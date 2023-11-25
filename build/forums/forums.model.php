@@ -2772,7 +2772,9 @@ public function NotAllowedForGroup($IdMember, $rPost) {
     private function addPostToManticoreIndex($vars, $postId, $threadId, $memberId, $languageId)
     {
         $language = $this->createEntity('Language')->findByid($languageId);
-        $config = ['host' => '127.0.0.1','port' => 9412];
+        $host = PVars::getObj('env')->manticore_host;
+        $port = PVars::getObj('env')->manticore_port;
+        $config = ['host' => $host, 'port' => $port];
         $client = new Client($config);
         $index = $client->index('forum_rt');
         $index->addDocument([

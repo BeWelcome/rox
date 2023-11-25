@@ -28,11 +28,19 @@ class SuggestLocationModel
 
     private TranslatorInterface $translator;
     private EntityManagerInterface $entityManager;
+    private string $manticoreHost;
+    private int $manticorePort;
 
-    public function __construct(TranslatorInterface $translator, EntityManagerInterface $entityManager)
-    {
+    public function __construct(
+        TranslatorInterface $translator,
+        EntityManagerInterface $entityManager,
+        string $manticoreHost,
+        int $manticorePort
+    ) {
         $this->translator = $translator;
         $this->entityManager = $entityManager;
+        $this->manticoreHost = $manticoreHost;
+        $this->manticorePort = $manticorePort;
     }
 
     public function getSuggestionsForPlaces(string $term): array
@@ -438,7 +446,7 @@ class SuggestLocationModel
     private function getQueryForGeonamesRt(): Search
     {
         $locale = $this->translator->getLocale();
-        $config = ['host' => '127.0.0.1','port' => 9412];
+        $config = ['host' => $this->manticoreHost,'port' => $this->manticorePort];
         $client = new Client($config);
         $query = new Search($client);
         $query

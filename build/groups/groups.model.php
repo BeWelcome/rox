@@ -926,7 +926,9 @@ WHERE IdGroup=" . (int)$group->id . " AND IdMember=" . (int)$memberid;
         $loggedInMember = $this->getLoggedInMember();
         $isForumModerator = $loggedInMember->hasOldRight(['ForumModerator' => 10]);
 
-        $config = ['host' => '127.0.0.1','port' => 9412];
+        $host = PVars::getObj('env')->manticore_host;
+        $port = PVars::getObj('env')->manticore_port;
+        $config = ['host' => $host, 'port' => $port];
         $client = new Client($config);
         $query = new Search($client);
         $query

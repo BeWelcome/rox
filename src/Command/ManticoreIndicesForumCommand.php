@@ -31,12 +31,16 @@ class ManticoreIndicesForumCommand extends Command
     protected static $defaultDescription = 'Creates the manticore indices for the forum search';
     private EntityManagerInterface $entityManager;
     private SymfonyStyle $io;
+    private string $manticoreHost;
+    private int $manticorePort;
 
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(EntityManagerInterface $entityManager, string $manticoreHost, int $manticorePort)
     {
         parent::__construct(self::$defaultName);
 
         $this->entityManager = $entityManager;
+        $this->manticoreHost = $manticoreHost;
+        $this->manticorePort = $manticorePort;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -66,7 +70,7 @@ class ManticoreIndicesForumCommand extends Command
 
     private function createForumIndex(): ?Index
     {
-        $client = new Client(['host' => '127.0.0.1','port' => 9412]);
+        $client = new Client(['host' => $this->manticoreHost, 'port' => $this->manticorePort]);
         $index = $client->index('forum_rt');
 
         try {

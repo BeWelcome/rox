@@ -20,6 +20,8 @@ parameters:
     locales: "%env(LOCALES)%"
     document_locales: "%env(DOCUMENT_LOCALES)%"
     app.username.regexp: !php/const App\Entity\Member::USERNAME_REGEXP
+    manticore.host: "%env(MANTICORE_HOST)%"
+    manticore.port: "%env(MANTICORE_PORT)%"
 
 services:
     _defaults:
@@ -72,6 +74,16 @@ services:
     App\Command\GeonamesUpdateFullCommand:
         arguments:
             $locales: "%locales%"
+
+    App\Command\ManticoreIndicesForumCommand:
+        arguments:
+            $manticoreHost: "%manticore.host%"
+            $manticorePort: "%manticore.port%"
+
+    App\Command\ManticoreIndicesGeonamesCommand:
+        arguments:
+            $manticoreHost: "%manticore.host%"
+            $manticorePort: "%manticore.port%"
 
     App\Serializer\MemberContextBuilder:
         decorates: api_platform.serializer.context_builder
@@ -251,6 +263,11 @@ services:
         arguments:
             $locales: '%locales%'
             $providers: !tagged_iterator app.mockup_provider
+
+    App\Model\SuggestLocationModel:
+        arguments:
+            $manticoreHost: '%manticore.host%'
+            $manticorePort: "%manticore.port%"
 
     app.user_locale_listener:
         public: true

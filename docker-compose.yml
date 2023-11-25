@@ -18,9 +18,10 @@ services:
       timeout: 3s
       retries: 3
       start_period: 30s
+      test: ["NONE"]
     depends_on:
       - db
-      - sphinx
+      - manticore
       - mailer
     volumes:
       - .:/srv/bewelcome:rw,cached
@@ -49,8 +50,26 @@ services:
     volumes:
       - db-data:/var/lib/mysql:rw
 
-  sphinx:
-    image: stefobark/sphinxdocker
+  manticore:
+    container_name: manticore
+    image: manticoresearch/manticore:5.0.2
+    environment:
+      - EXTRA=1
+    restart: always
+    ports:
+      - 127.0.0.1:9306:9306
+      - 127.0.0.1:9308:9308
+      - 127.0.0.1:9312:9312
+    ulimits:
+      nproc: 65535
+      nofile:
+        soft: 65535
+        hard: 65535
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - ./data:/var/lib/manticore
 
   mailer:
     image: tophfr/mailcatcher

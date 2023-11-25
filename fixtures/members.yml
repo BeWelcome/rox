@@ -64,7 +64,7 @@ App\Entity\Member:
         Books: 0
         Music: 0
         PastTrips: 0
-        Password: 'password'
+        Password: '*2470C0C06DEE42FD1618BB99005ADCA2EC9D1E19'
         PlannedTrips: 0
         PleaseBring: 0
         OfferGuests: 0
@@ -74,7 +74,7 @@ App\Entity\Member:
         ChatGoogle: 0
         bewelcomed: 0
         registration_key: ''
-    member_{2..5}:
+    member_{1..5}:
         Username: 'member-<current()>'
         BirthDate: <DateTime()>
         email: 'member-<current()>\@bewelcome.org'
@@ -140,7 +140,7 @@ App\Entity\Member:
         Books: 0
         Music: 0
         PastTrips: 0
-        Password: 'password'
+        Password: '*2470C0C06DEE42FD1618BB99005ADCA2EC9D1E19'
         PlannedTrips: 0
         PleaseBring: 0
         OfferGuests: 0
@@ -215,7 +215,7 @@ App\Entity\Member:
         Books: 0
         Music: 0
         PastTrips: 0
-        Password: 'password'
+        Password: '*2470C0C06DEE42FD1618BB99005ADCA2EC9D1E19'
         PlannedTrips: 0
         PleaseBring: 0
         OfferGuests: 0
@@ -290,7 +290,7 @@ App\Entity\Member:
         Books: 0
         Music: 0
         PastTrips: 0
-        Password: 'password'
+        Password: '*2470C0C06DEE42FD1618BB99005ADCA2EC9D1E19'
         PlannedTrips: 0
         PleaseBring: 0
         OfferGuests: 0
@@ -300,10 +300,10 @@ App\Entity\Member:
         ChatGoogle: 0
         bewelcomed: 0
         registration_key: ''
-    member_taken_out:
-        Username: 'member-taken-out'
+    member_suspended:
+        Username: 'member-suspended'
         BirthDate: <DateTime()>
-        email: 'member-taken-out\@bewelcome.org'
+        email: 'member-suspended\@bewelcome.org'
         created: <dateTimeBetween("-200 days", "now")>
         updated: <dateTimeBetween($created, "now")>
         LastLogin: <dateTimeBetween($created, "now")>
@@ -365,7 +365,7 @@ App\Entity\Member:
         Books: 0
         Music: 0
         PastTrips: 0
-        Password: 'password'
+        Password: '*2470C0C06DEE42FD1618BB99005ADCA2EC9D1E19'
         PlannedTrips: 0
         PleaseBring: 0
         OfferGuests: 0

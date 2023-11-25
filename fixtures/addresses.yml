@@ -7,7 +7,7 @@ App\Entity\Address:
     zip: 0
     explanation: 0
     gettingthere: 0
-    location: '@Berlin'
+    location: '@NewBerlin'
   address_{2..5}:
     member: "@member_<current()>"
     housenumber: 0
@@ -16,7 +16,7 @@ App\Entity\Address:
     zip: 0
     explanation: 0
     gettingthere: 0
-    location: '@Berlin'
+    location: '@NewBerlin'
   address_{6..10}:
     member: "@member_<current()>"
     housenumber: 0
@@ -25,4 +25,4 @@ App\Entity\Address:
     zip: 0
     explanation: 0
     gettingthere: 0
-    location: '@Jayapura'
+    location: '@NewJayapura'

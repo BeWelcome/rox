@@ -38,7 +38,7 @@ use App\Utilities\ForumUtilities;
 
 ?>
     <input type="hidden" id="read.more" value="<?php echo $words->get('forum.read.more'); ?>">
-    <input type="hidden" id="show.less" value="<?php echo $words->get('forum.read.less'); ?>">
+    <input type="hidden" id="show.less" value="<?php echo $words->get('forum.show.less'); ?>">
     <input type="hidden" id="keyword" name="keyword" value="<?php echo htmlspecialchars($keyword) ?>">
     <div class="row no-gutters">
         <div class="col-12">

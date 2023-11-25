@@ -6,5 +6,5 @@ forum.group:
     - Label for the group link on the search result pages.
 forum.read.more:
     - '@comment.read.more'
-forum.read.less:
-    - '@comment.read.less'
+forum.show.less:
+    - '@comment.show.less'

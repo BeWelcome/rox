@@ -5,7 +5,7 @@ $words = new MOD_words();
 
 ?>
 <input type="hidden" id="read.more" value="<?php echo $words->get('forum.read.more'); ?>">
-<input type="hidden" id="show.less" value="<?php echo $words->get('forum.read.less'); ?>">
+<input type="hidden" id="show.less" value="<?php echo $words->get('forum.show.less'); ?>">
 <input type="hidden" id="keyword" name="keyword" value="<?php echo htmlspecialchars($this->search_terms) ?>">
 <div class="row no-gutters">
         <div class="col-12">
@@ -44,7 +44,6 @@ foreach ($this->search_result as $post) {
             ?>
         </div>
     </div>
-    <div class="c-search-permalink">
     <div class="c-search-permalink">
         <?php
         if (isset($post->IdGroup) && $post->IdGroup != 0) {

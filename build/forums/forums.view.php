@@ -1,5 +1,6 @@
 <?php
 
+use App\Entity\Preference;
 use App\Utilities\SessionTrait;
 use Symfony\WebpackEncoreBundle\Asset\EntrypointLookup;
 
@@ -456,8 +457,7 @@ class ForumsView extends RoxAppView {
      * @param string $keyword The term to be searched for
      */
     public function showSearchResultPage($keyword, $currentPage) {
-        $this->page->addLateLoadScriptFile('build/highlight.js');
-        $this->page->addLateLoadScriptFile('build/readmore.js');
+        $this->page->addLateLoadScriptFile('build/searchresults.js');
 
         $result = $this->_model->searchForums($keyword, $currentPage);
         $loggedInMember = $this->_model->getLoggedInMember();
@@ -474,7 +474,7 @@ class ForumsView extends RoxAppView {
 
             $params = new \stdClass();
             $params->strategy = new FullPagePager('right');
-            $params->items_per_page = 30;
+            $params->items_per_page = $loggedInMember->getPreference(Preference::ITEMS_PER_PAGE, 20);
             $params->items = $result['count'];
             $pager = new PagerWidget($params);
 

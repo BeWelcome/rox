@@ -25,6 +25,7 @@ Boston, MA  02111-1307, USA.
 
 use App\Doctrine\GroupType;
 use App\Entity\Group;
+use App\Entity\Preference;
 
 /**
  * groups controller
@@ -115,9 +116,6 @@ class GroupsController extends RoxControllerBase
      * fetches group entity from route vars or redirects to a given route
      *
      * @param string $redirect url to redirect to
-     *
-     * @access private
-     * @return object
      */
     private function _getGroupFromRequest($redirect = null)
     {
@@ -230,11 +228,11 @@ class GroupsController extends RoxControllerBase
         $group = $this->_getGroupFromRequest();
         $terms = ($this->args_vars->get['fs-keyword']) ?? '';
         $currentPage = ($this->args_vars->get['page']) ?? 1;
-
+        $loggedInMember = $this->_model->getLoggedInMember();
 
         $params = new \stdClass();
         $params->strategy = new FullPagePager('right');
-        $params->items_per_page = 30;
+        $params->items_per_page = $loggedInMember->getPreference(Preference::ITEMS_PER_PAGE, 20);
         $results = $this->_model->searchGroupDiscussions($group, $terms, $currentPage, $params->items_per_page);
         $params->items = $results['count'];
         $pager = new PagerWidget($params);

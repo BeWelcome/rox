@@ -35,7 +35,7 @@ class Relation
      */
     private int $comment = 0;
 
-    private string $commentText = "";
+    private ?string $commentText = "";
 
     /**
      * @ORM\Column(name="created", type="datetime", nullable=false)
@@ -175,7 +175,9 @@ class Relation
         $this->created = new DateTime('now');
         $this->updated = $this->created;
 
-        $this->createRelationComment($args->getObjectManager());
+        if (null !== $this->commentText) {
+            $this->createRelationComment($args->getObjectManager());
+        }
     }
 
     /**
@@ -185,56 +187,51 @@ class Relation
      */
     public function onPostUpdate(PostUpdateEventArgs $args)
     {
-        $objectManager = $args->getObjectManager();
+        if (0 !== $this->comment) {
+            $objectManager = $args->getObjectManager();
 
-        $languageRepository = $objectManager->getRepository(Language::class);
-        $language = $languageRepository->findOneBy(['shortCode' => 'en']);
-        $memberTranslationRepository = $objectManager->getRepository(MemberTranslation::class);
-        $translatedComment = $memberTranslationRepository->findOneBy([
-            'translation' => $this->comment,
-            'owner' => $this->getOwner()
-        ]);
+            $memberTranslationRepository = $objectManager->getRepository(MemberTranslation::class);
+            $translatedComment = $memberTranslationRepository->findOneBy([
+                'translation' => $this->comment,
+                'owner' => $this->getOwner()
+            ]);
 
-        $translatedComment->setSentence($this->commentText);
-        $objectManager->persist($translatedComment);
-        $objectManager->flush();
-    }
-
-    private function createRelationComment(ObjectManager $objectManager)
-    {
-        $memberTranslationRepository = $objectManager->getRepository(MemberTranslation::class);
-        $translatedComment = $memberTranslationRepository->findOneBy([
-            'translation' => $this->comment,
-            'owner' => $this->getOwner()
-        ]);
-
-        if (null === $translatedComment) {
-            $languageRepository = $objectManager->getRepository(Language::class);
-            $language = $languageRepository->findOneBy(['shortCode' => 'en']);
-
-            $translatedComment = new MemberTranslation();
-            $translatedComment->setSentence($this->commentText);
-            $translatedComment->setOwner($this->getOwner());
-            $translatedComment->setTranslator($this->getOwner());
-            $translatedComment->setLanguage($language);
-            $translatedComment->setTablecolumn('specialrelations.comment');
+            $translatedComment->setSentence($this->commentText ?? '');
             $objectManager->persist($translatedComment);
             $objectManager->flush();
-
-            //Set translation ID to own id
-            $translatedComment->setTranslation($translatedComment->getId());
-            $objectManager->persist($translatedComment);
-            $this->setComment($translatedComment->getId());
-            $objectManager->flush();
+        } else {
+            $translatedComment = $this->createRelationComment($args->getObjectManager());
+            $this->comment = $translatedComment->getId();
         }
     }
 
-    public function getCommentText(): string
+    private function createRelationComment(ObjectManager $objectManager): MemberTranslation
+    {
+        $languageRepository = $objectManager->getRepository(Language::class);
+        $language = $languageRepository->findOneBy(['shortCode' => 'en']);
+
+        $translatedComment = new MemberTranslation();
+        $translatedComment->setSentence($this->commentText);
+        $translatedComment->setOwner($this->getOwner());
+        $translatedComment->setTranslator($this->getOwner());
+        $translatedComment->setLanguage($language);
+        $translatedComment->setTableColumn('specialrelations.comment');
+        $objectManager->persist($translatedComment);
+        $objectManager->flush();
+
+        $translatedComment->setTranslation($translatedComment->getId());
+        $objectManager->persist($translatedComment);
+        $objectManager->flush();
+
+        return $translatedComment;
+    }
+
+    public function getCommentText(): ?string
     {
         return $this->commentText;
     }
 
-    public function setCommentText(string $commentText): self
+    public function setCommentText(?string $commentText): self
     {
         $this->commentText = $commentText;
 

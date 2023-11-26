@@ -22,3 +22,22 @@ gallery.upload.size.error:
 gallery.upload.successful:
     - Image uploaded successfully.
     - Shown to the user when a file was successfully transferred to the server.
+gallery.select.all:
+    - 'Select all'
+    - Label for the checkbox on manage gallery page
+gallery.move.not.possible:
+    - Can't move without target. Neither album selected nor new name provided.
+    - Error message shown if someone tries to move images but did not select any of the radiobutton options
+gallery.no.album.selected:
+    - 'No album selected.'
+    - Error message shown if someone tries to move images and did not select an album (but selected the radiobutton to move into album)
+gallery.no.album.given:
+    - 'No name for album given.'
+    - Error message shown if someone tries to move images and did not give an album name (but selected the radiobutton for new album)
+gallery.no.images.selected:
+    - 'You need to select at least one image.'
+    - Error message shown if someone tries to move or delete images but didn't select any
+gallery.create.new.album:
+    - '@GalleryCreateNewPhotoset'
+gallery.use.existing.album:
+    - '@GalleryAddToPhotoset'

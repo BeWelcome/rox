@@ -161,27 +161,25 @@ WHERE `id` = ' . (int)$image->id);
     public function updateGalleryProcess($vars = null)
     {
         if (isset($vars)) {
-            if (isset ($vars['new']) && $vars['new'] == 1 && !$vars['deleteOnly']) {
-                if (isset($vars['g-title'])) {
-                        $vars['gallery'] = $this->createGallery($vars['g-title'], $desc = false);
+            if (isset ($vars['newOrExistingAlbum']) && $vars['newOrExistingAlbum'] === 'New' && $vars['deleteOrMove'] === 'Move') {
+                if (isset($vars['newAlbumTitle'])) {
+                    $vars['gallery'] = $this->createGallery($vars['newAlbumTitle'], '');
                 } else {
-                    $vars['errors'] = array('gallery');
+                    $vars['errors'] = ['gallery'];
                     return false;
                 }
             }
             if (array_key_exists('imageId', $vars)) {
                 $images = ($vars['imageId']);
                 if (!isset($images[0]) || !$images[0]) {
-                    $vars['errors'] = array('images');
+                    $vars['errors'] = ['images'];
                     return false;
                 }
-                if (!$member = $this->getLoggedInMember())
-                    return false;
-                if (isset($vars['deleteOnly']) && $vars['deleteOnly'])
+                if (isset($vars['deleteOrMove']) && $vars['deleteOrMove'] === 'Delete')
                     return $this->deleteMultiple($images);
                 foreach ($images as $d) {
                     $this->dao->exec("DELETE FROM `gallery_items_to_gallery` WHERE `item_id_foreign`= ".$d);
-                    if (!isset($vars['removeOnly']) || !$vars['removeOnly']) {
+                    if (!isset($vars['deleteOrMove']) || $vars['deleteOrMove'] === 'Move') {
                         $this->dao->exec("INSERT INTO `gallery_items_to_gallery` SET `gallery_id_foreign` = '".$this->dao->escape($vars['gallery'])."',`item_id_foreign`= ".$d);
                     }
                 }

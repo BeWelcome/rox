@@ -10,7 +10,7 @@
 {% endblock %}
 
 {% block content %}
-    <div class="u-bg-gray-5 u-p-16 u-rounded-8 u-my-16">
+    <div class="community-news-wrapper u-bg-gray-5 u-p-16 u-rounded-8 u-my-16">
         <div class="u-flex u-justify-start u-items-center">
             <div class="u-ml-auto u-shrink-0 u-mr-16">
                 <a href="{{ url( 'communitynews' ) }}">
@@ -92,7 +92,7 @@
                 {{ pagerfanta( comments, 'rounded_pagination') }}
             </div>
         {% endif %}
-        
+
     {% endif %}
 {% endblock content %}
 

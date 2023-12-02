@@ -20,34 +20,21 @@ use Symfony\Component\Mime\Address;
 
 class SendMassmailCommand extends Command
 {
-    /**
-     * @var string
-     */
     protected static $defaultName = 'send:massmail';
 
-    /**
-     * @var ParameterBagInterface
-     */
-    private $params;
-
-    /**
-     * @var EntityManager
-     */
-    private $entityManager;
-    /**
-     * @var Mailer
-     */
-    private $mailer;
+    private EntityManagerInterface $entityManager;
+    private Mailer $mailer;
+    private int $batchSize;
 
     public function __construct(
         EntityManagerInterface $entityManager,
-        ParameterBagInterface $params,
-        Mailer $mailer
+        Mailer $mailer,
+        int $batchSize
     ) {
         parent::__construct();
-        $this->params = $params;
         $this->entityManager = $entityManager;
         $this->mailer = $mailer;
+        $this->batchSize = $batchSize;
     }
 
     protected function configure()
@@ -64,7 +51,8 @@ class SendMassmailCommand extends Command
         $batchSize = $input->getArgument('batchSize');
 
         if (!$batchSize) {
-            $batchSize = $this->params->get('massmail_batch_size');
+            // use default from service configuration if not given as option on command call
+            $batchSize = $this->batchSize;
         }
 
         $massmailRepository = $this->entityManager->getRepository(BroadcastMessage::class);

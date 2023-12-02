@@ -25,28 +25,17 @@ class SearchAdapter implements AdapterInterface
     /** @var SearchModel */
     private $model;
 
-    /**
-     * SearchAdapter constructor.
-     *
-     * @param SearchFormRequest $data       The query parameters for the search
-     * @param SessionInterface  $session
-     * @param string            $dbHost
-     * @param string            $dbName
-     * @param string            $dbUser
-     * @param string            $dbPassword
-     * @SuppressWarnings(PHPMD.StaticAccess)
-     *
-     * @throws AccessDeniedException
-     */
     public function __construct(
-        $data,
-        $session,
-        $dbHost,
-        $dbName,
-        $dbUser,
-        $dbPassword,
+        SearchFormRequest $data,
+        SessionInterface $session,
         EntityManagerInterface $em,
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
+        string $dbHost,
+        string $dbName,
+        string $dbUser,
+        string $dbPassword,
+        string $manticoreHost,
+        int $manticorePort
     ) {
         // Kick-start the Symfony session. This replaces session_start() in the
         // old code, which is now turned off.
@@ -78,7 +67,9 @@ class SearchAdapter implements AdapterInterface
             $dbHost,
             $dbName,
             $dbUser,
-            $dbPassword
+            $dbPassword,
+            $manticoreHost,
+            $manticorePort
         );
         $dbPassword = str_repeat('*', \strlen($dbPassword));
         $this->model = new SearchModel($em);

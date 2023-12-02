@@ -32,7 +32,7 @@ class GeonamesUpdateFullCommand extends Command
     public function __construct(
         HttpClientInterface $httpClient,
         EntityManagerInterface $entityManager,
-        string $locales
+        array $locales
     ) {
         parent::__construct('geonames:update');
 
@@ -40,10 +40,9 @@ class GeonamesUpdateFullCommand extends Command
         $this->entityManager = $entityManager;
 
         // turn zh_hant into zh-TW, zh_hans into zh-CN
-        $locales = str_replace('zh_hant', 'zh-TW', $locales);
-        $locales = str_replace('zh_hans', 'zh-CN', $locales);
+        $locales = array_replace($locales, ['zh_hant' => 'zh-TW', 'zh_hans' => 'zh-CN']);
 
-        $this->allowedLocales = explode(',', $locales);
+        $this->allowedLocales = $locales;
     }
 
     protected function configure()

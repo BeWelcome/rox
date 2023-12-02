@@ -39,12 +39,12 @@ class Extension extends AbstractExtension implements GlobalsInterface
         TranslatorInterface $translator,
         EntrypointLookupInterface $entrypointLookup,
         LoggerInterface $logger,
-        string $locales,
+        array $locales,
         string $publicDirectory
     ) {
         $this->session = $session;
         $this->translator = $translator;
-        $this->locales = explode(',', $locales);
+        $this->locales = $locales;
         $this->entrypointLookup = $entrypointLookup;
         $this->publicDirectory = $publicDirectory;
         $this->logger = $logger;

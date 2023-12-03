@@ -5,7 +5,10 @@ conversations.none:
     - No conversations found.
     - Shown on the dashboard
 conversations.check.all:
-    - Select all conversations
+    - Select all
+    - Checkbox label on /conversations
+conversations.uncheck.all:
+    - Deselect all
     - Checkbox label on /conversations
 conversations.label.delete_or_spam:
     - Delete or mark messages as spam

@@ -6,12 +6,9 @@
 
 {% block javascripts %}
     {{ encore_entry_script_tags('micromodal') }}
-    <script type="application/javascript">
-        MicroModal.init('js-modal-trigger');
-        {% if show_report_modal %}
-            MicroModal.show('report-modal');
-        {% endif %}
-    </script>
+    {% if show_report_modal %}
+        {{ encore_entry_script_tags('report') }}
+    {% endif %}
 {% endblock javascripts %}
 
 {% block content %}

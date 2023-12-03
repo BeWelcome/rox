@@ -7,13 +7,6 @@
 
 {% block javascripts %}
     {{ encore_entry_script_tags('conversations') }}
-    <script>
-        $(window).on('load', function () {
-            $('#checkAll').click(function () {
-                $('input:checkbox.checkable').prop('checked', this.checked);
-            });
-        });
-    </script>
 {% endblock %}
 
 {% block content %}
@@ -62,6 +55,8 @@
                 <input class="u-sr-only" type="checkbox" id="checkAll">
                 <label for="checkAll" class="o-button o-button--outline">{{ 'conversations.check.all'|trans }}</label>
             </div>
+            <input type="hidden" id="checkAllLabelText" value="{{ 'conversations.check.all'|trans }}">
+            <input type="hidden" id="uncheckAllLabelText" value="{{ 'conversations.uncheck.all'|trans }}">
             {% if conversations.haveToPaginate %}
                 <div  class="u-order-1 md:u-order-2">
                     {{ pagerfanta( conversations, 'rounded_pagination') }}
@@ -82,8 +77,6 @@
         </div>
         {{ form_rest(form) }}
         {{ form_end(form) }}
-
-
     {% endif %}
 
 </div>

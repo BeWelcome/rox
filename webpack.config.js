@@ -52,6 +52,7 @@ Encore
     .addEntry('gallery', './assets/js/gallery.js')
     .addEntry('notes_filter', './assets/js/notes/filter.js')
     .addEntry('conversations', './assets/js/conversations.js')
+    .addEntry('report', './assets/js/conversations/report.js')
     .addEntry('bsfileselect', './assets/js/bsfileselect.js')
     .addEntry('scrollingtabs', './assets/js/scrollingtabs.js')
     .addEntry('email', './assets/scss/email.scss')

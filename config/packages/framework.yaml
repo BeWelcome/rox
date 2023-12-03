@@ -26,7 +26,8 @@ framework:
     # Remove or comment this section to explicitly disable session support.
     session:
         handler_id: Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler
-        cookie_lifetime: 14400
+        cookie_lifetime: 28800
+        cookie_samesite: 'strict'
         gc_probability: null
 
     fragments:       ~

@@ -49,6 +49,7 @@ security:
             remember_me:
                 secret: '%env(APP_SECRET)%'
                 lifetime: 31536000 # 1 year in seconds
+                samesite: 'strict'
                 path: /
                 token_provider:
                     doctrine: true

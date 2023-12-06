@@ -82,11 +82,10 @@ class WordRepository extends EntityRepository
         return $translatableItems;
     }
 
-    public function getTranslationDetails(string $enabledLocales): array
+    public function getTranslationDetails(array $enabledLocales): array
     {
         $translationDetails = [];
-        $locales = explode(',', $enabledLocales);
-        foreach ($locales as $locale) {
+        foreach ($enabledLocales as $locale) {
             $count = $this->getTranslatableItemsCount($locale);
             $change = $this->getLatestChange($locale);
             if (null === $change) {

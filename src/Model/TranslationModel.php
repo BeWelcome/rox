@@ -17,17 +17,13 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class TranslationModel
 {
-    /** @var TranslatorInterface */
-    private $translator;
+    private TranslatorInterface $translator;
 
-    /** @var Filesystem */
-    private $filesystem;
+    private Filesystem $filesystem;
 
-    /** @var string */
-    private $cacheDirectory;
+    private string $cacheDirectory;
 
-    /** @var string */
-    private $locales;
+    private array $locales;
     private EntityManagerInterface $entityManager;
 
     public function __construct(
@@ -35,7 +31,7 @@ class TranslationModel
         EntityManagerInterface $entityManager,
         Filesystem $filesystem,
         string $cacheDirectory,
-        string $locales
+        array $locales
     ) {
         $this->translator = $translator;
         $this->cacheDirectory = $cacheDirectory;
@@ -57,8 +53,7 @@ class TranslationModel
      */
     public function refreshTranslationsCache(): void
     {
-        $locales = explode(',', $this->locales);
-        foreach ($locales as $locale) {
+        foreach ($this->locales as $locale) {
             $this->removeAndWarmupCache($locale);
         }
     }

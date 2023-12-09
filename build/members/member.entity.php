@@ -1040,7 +1040,6 @@ SELECT
     specialrelations.Id AS id,
     specialrelations.IdRelation AS IdRelation,
     members.Username,
-    specialrelations.Type AS Type,
     specialrelations.Comment AS Comment,
     specialrelations.Confirmed AS Confirmed
 FROM

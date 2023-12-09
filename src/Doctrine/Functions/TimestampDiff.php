@@ -14,7 +14,7 @@ use Doctrine\ORM\Query\SqlWalker;
 class TimestampDiff extends FunctionNode
 {
     /**
-     * @var Node|null
+     * @var string|null
      */
     public $unit = null;
 

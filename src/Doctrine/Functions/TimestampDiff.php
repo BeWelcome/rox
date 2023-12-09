@@ -9,7 +9,8 @@ use Doctrine\ORM\Query\Parser;
 use Doctrine\ORM\Query\SqlWalker;
 
 /**
- * TimestampDiffFunction ::= "TIMESTAMPDIFF" "(" ArithmeticPrimary "," ArithmeticPrimary "," ArithmeticPrimary ")".
+ * TimestampDiffFunction ::= 
+ *     "TIMESTAMPDIFF" "(" ArithmeticPrimary Identifier "," ArithmeticPrimary "," ArithmeticPrimary ")".
  */
 class TimestampDiff extends FunctionNode
 {
@@ -33,12 +34,19 @@ class TimestampDiff extends FunctionNode
         $parser->match(Lexer::T_IDENTIFIER);
         $parser->match(Lexer::T_OPEN_PARENTHESIS);
         $parser->match(Lexer::T_IDENTIFIER);
+        
+        /** @var Lexer $lexer */
         $lexer = $parser->getLexer();
         $this->unit = $lexer->token['value'];
+
         $parser->match(Lexer::T_COMMA);
+
         $this->firstDatetimeExpression = $parser->ArithmeticPrimary();
+
         $parser->match(Lexer::T_COMMA);
+
         $this->secondDatetimeExpression = $parser->ArithmeticPrimary();
+
         $parser->match(Lexer::T_CLOSE_PARENTHESIS);
     }
 

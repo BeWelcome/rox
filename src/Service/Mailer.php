@@ -7,6 +7,7 @@ use App\Entity\FeedbackCategory;
 use App\Entity\Member;
 use App\Entity\Newsletter;
 use App\Entity\Relation;
+use App\Logger\Logger;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use InvalidArgumentException;
@@ -14,6 +15,8 @@ use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
+use Symfony\Component\Routing\Generator\UrlGenerator;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 
@@ -25,8 +28,6 @@ class Mailer
     private const PASSWORD_EMAIL_ADDRESS = 'password@bewelcome.org';
     private const SIGNUP_EMAIL_ADDRESS = 'signup@bewelcome.org';
 
-    /** @var Environment */
-    private $twig;
     /** @var MailerInterface */
     private $mailer;
     /** @var TranslatorInterface */
@@ -35,17 +36,21 @@ class Mailer
      * @var EntityManagerInterface
      */
     private $entityManager;
+    private Logger $logger;
+    private UrlGeneratorInterface $urlGenerator;
 
     public function __construct(
-        MailerInterface $mailer,
         EntityManagerInterface $entityManager,
-        Environment $twig,
-        TranslatorInterface $translator
+        UrlGeneratorInterface $urlGenerator,
+        TranslatorInterface $translator,
+        MailerInterface $mailer,
+        Logger $logger
     ) {
-        $this->mailer = $mailer;
-        $this->twig = $twig;
-        $this->translator = $translator;
         $this->entityManager = $entityManager;
+        $this->urlGenerator = $urlGenerator;
+        $this->translator = $translator;
+        $this->mailer = $mailer;
+        $this->logger = $logger;
     }
 
     public function sendMessageNotificationEmail(Member $sender, Member $receiver, string $template, $parameters): bool
@@ -212,6 +217,94 @@ class Mailer
         return $this->sendCommentTemplateEmail($comment, 'comment.notification.update', $parameters);
     }
 
+    public function sendCommentReminderToGuestAfterTwoDays(Member $guest, Member $host): bool
+    {
+        $parameters = [];
+        $parameters['guest'] = $guest->getUsername();
+        $parameters['host'] = $host->getUsername();
+        $parameters['subject'] = [
+            'translationId' => 'comment.reminder.guest.subject',
+            'parameters' => [
+                'host' => $host->getUsername(),
+            ],
+        ];
+        $addCommentUrl = $this->urlGenerator->generate(
+            'add_comment',
+            ['username' => $host->getUsername()],
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
+        $parameters['comment_start'] = sprintf('<a href="%s">', $addCommentUrl);
+        $parameters['comment_end'] = '</a>';
+        $profileUrl = $this->urlGenerator->generate(
+            'members_profile',
+            ['username' => $host->getUsername()],
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
+        $parameters['profile_start'] = sprintf('<a href="%s">', $profileUrl);
+        $parameters['profile_end'] = '</a>';
+
+        return $this->sendTemplateEmail(
+            self::NO_REPLY_EMAIL_ADDRESS,
+            $guest,
+            'comment.first.reminder.guest',
+            $parameters
+        );
+    }
+
+    public function sendCommentReminderToHostAfterThreeWeeks(Member $guest, Member $host): bool
+    {
+        $parameters = [];
+        $parameters['guest'] = $guest->getUsername();
+        $parameters['host'] = $host->getUsername();
+        $parameters['subject'] = [
+            'translationId' => 'comment.reminder.host.subject',
+            'parameters' => [
+                'guest' => $guest->getUsername(),
+            ],
+        ];
+        $addCommentUrl = $this->urlGenerator->generate(
+            'add_comment',
+            ['username' => $guest->getUsername()],
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
+        $parameters['comment_start'] = sprintf('<a href="%s">', $addCommentUrl);
+        $parameters['comment_end'] = '</a>';
+        $profileUrl = $this->urlGenerator->generate(
+            'members_profile',
+            ['username' => $guest->getUsername()],
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
+        $parameters['profile_start'] = sprintf('<a href="%s">', $profileUrl);
+        $parameters['profile_end'] = '</a>';
+
+        return $this->sendTemplateEmail(
+            self::NO_REPLY_EMAIL_ADDRESS,
+            $guest,
+            'comment.reminder.host',
+            $parameters
+        );
+    }
+
+    public function sendCommentReminderToGuestAfterTwoWeeks(Member $guest, Member $host): bool
+    {
+        $parameters = [];
+        $parameters['guest'] = $guest->getUsername();
+        $parameters['host'] = $host->getUsername();
+        $parameters['subject'] = [
+            'translationId' => 'comment.reminder.guest.subject',
+            'parameters' => [
+                'host' => $host->getUsername(),
+            ],
+        ];
+
+        return $this->sendTemplateEmail(
+            self::NO_REPLY_EMAIL_ADDRESS,
+            $guest,
+            'comment.second.reminder.guest',
+            $parameters
+        );
+    }
+
     private function sendCommentTemplateEmail(Comment $comment, string $template, array $parameters): bool
     {
         $parameters['sender'] = $comment->getFromMember();
@@ -349,5 +442,4 @@ class Mailer
 
         return $sender;
     }
-
 }

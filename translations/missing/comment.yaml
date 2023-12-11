@@ -38,4 +38,44 @@ comment.editing.not.allowed:
 comment.quality.select:
     - Please select...
     - Placeholder on the add comment page to tell the user they must select an experience quality
-
+comment.reminder.guest.subject:
+    - How was your stay with {host}?
+    - Subject of the comment reminder send two days after the requested stay ended.
+comment.first.reminder.guest.body:
+    - "<p>Hello {guest},<br>
+      <br>
+      we hope you had a great time staying with {host}.</p>
+      <p>Please share your experience with others to help them make informed decisions before interacting with {host}. To do so please write a {comment_start}comment{comment_end} which will appear on the profile of {host} and on yours.</p>
+      <p>By showing your appreciation for the hospitality which you received you motivate hosts to continue to host. Comments are also important for the safety of every member of the BeWelcome community.</p>
+      <p>We hope your experience was pleasant and enriching, and that your comment will help other members experience the same. But in case there were serious problems, please do share them, too. You can also share information confidentially with the Safety Team using the “Report profile” link on the profile of {profile_start}{host}{profile_end}.</p>
+      <p>Thanks again for keeping BeWelcome active and safe!<br>
+      <br>
+      The BeWelcome volunteers.</p>"
+    - Text of the first comment reminder send around two days after. Pay special attention to the start and end variables for the links.
+comment.second.reminder.guest.body:
+    - "<p>Hello {guest},<br>
+    <br>
+    You had requested to stay with {host} but have not yet shared your experience with the community in form of a hosting comment. We hope everything went well and you had a good time. If so, but also if it didn’t go so well, it would be good to write a comment about it.</p>
+    <p>Why write a comment?</p>
+    <ul>
+    <li>Many hosts consider a positive comment as a way of thanking them which encourages them to continue to host</li>
+    <li>Comments show that the BeWelcome community is active</li>
+    <li>Comments are an important safety feature in BeWelcome</li>
+    </ul>
+    <p>But if you did not write a comment because of a negative experience please contact the Safety Team!</p>
+    <p>
+    Thank you for keeping BeWelcome active and safe,<br>
+    <br>
+    The BeWelcome volunteers."
+    - Text of the second comment reminder send around two weeks after.
+comment.reminder.host.subject:
+    - Your experience with {guest}
+    - Subject of the comment reminder send to the host if the guest doesn't leave a comment (send three weeks after the end of the requested stay).
+comment.reminder.host.body:
+    - "<p>Hello {host},<br>
+      <br>
+      we hope you had a great time hosting {guest}. Thank you so much for making our community flourish by opening your home to other members. Hosts are the backbone of BeWelcome, and we appreciate every hosting offer.</p>
+      <p>Here is one more thing that you can do: share your experience with others to help them make informed decisions before interacting with {guest}. Please share your experience with others to help them make informed decisions before interacting with {host}. To do so please write a {comment_start}comment{comment_end} which will appear on the profile of {guest} and on yours.</p>
+      <p>We hope your experience was pleasant and enriching, and that your comment will help other members experience the same. But in case there were serious problems, please do share them, too. You can also share information confidentially with the Safety Team using the “Report profile” link on the profile of {profile_start}{host}{profile_end}.</p>
+      <p>The BeWelcome volunteers.</p>"
+    - Text of the comment reminder send to the host if the guest doesn't leave a comment (send three weeks after the end of the requested stay). Pay special attention to the start and end variables for the links.

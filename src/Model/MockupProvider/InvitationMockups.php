@@ -195,7 +195,7 @@ class InvitationMockups implements MockupProviderInterface
 
         $leg = $this->invitationUtility->getLeg($parameters);
         $thread = $this->invitationUtility->getThread($host, $guest, $leg, $parameters['status'], 4);
-        $form = $this->formFactory->create( ReportSpamType::class);
+        $form = $this->formFactory->create(ReportSpamType::class);
 
         return [
             'leg' => $leg,

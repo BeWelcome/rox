@@ -47,7 +47,7 @@ class MockupController extends TranslationController
     public function __construct(
         TranslationModel $translationModel,
         EntityManagerInterface $entityManager,
-        string $locales,
+        array $locales,
         iterable $providers
     ) {
         parent::__construct($translationModel, $entityManager, $locales);

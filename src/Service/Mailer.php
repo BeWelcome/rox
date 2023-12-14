@@ -279,7 +279,7 @@ class Mailer
 
         return $this->sendTemplateEmail(
             self::NO_REPLY_EMAIL_ADDRESS,
-            $guest,
+            $host,
             'comment.reminder.host',
             $parameters
         );

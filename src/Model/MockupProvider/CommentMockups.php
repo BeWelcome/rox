@@ -94,7 +94,7 @@ class CommentMockups implements MockupProviderInterface
             'guest' => 'guest',
             'comment_start' => '<a href="/members/host/comment/add">',
             'comment_end' => '</a>',
-            'profile_start' => '< a href="/members/host">',
+            'profile_start' => '<a href="/members/host">',
             'profile_end' => '</a>',
         ];
     }

@@ -221,6 +221,7 @@ class MessageRepository extends EntityRepository
         $qb = $this->createQueryBuilder('m');
 
         return $qb
+            ->join('m.request', 'r')
             ->where('NOT(m.deleteRequest LIKE :deleted)')
             ->setParameter('deleted', '%' . DeleteRequestType::SENDER_DELETED . '%')
             ->andWhere('NOT(m.deleteRequest LIKE :purged)')
@@ -229,7 +230,7 @@ class MessageRepository extends EntityRepository
             ->setParameter('member', $member)
             ->andWhere('m.folder = :folder')
             ->setParameter('folder', InFolderType::NORMAL)
-            ->join('m.request', 'r', Join::WITH, $qb->expr()->isNull('r.inviteForLeg'))
+            ->andWhere($qb->expr()->isNull('r.inviteForLeg'))
             ->orderBy('m.created', 'ASC')
             ->getQuery()
             ->getResult();
@@ -243,6 +244,7 @@ class MessageRepository extends EntityRepository
         $qb = $this->createQueryBuilder('m');
 
         return $qb
+            ->join('m.request', 'r')
             ->where('NOT(m.deleteRequest LIKE :deleted)')
             ->setParameter('deleted', '%' . DeleteRequestType::RECEIVER_DELETED . '%')
             ->andWhere('NOT(m.deleteRequest LIKE :purged)')
@@ -251,7 +253,7 @@ class MessageRepository extends EntityRepository
             ->setParameter('member', $member)
             ->andWhere('m.folder = :folder')
             ->setParameter('folder', InFolderType::NORMAL)
-            ->join('m.request', 'r', Join::WITH, $qb->expr()->isNull('r.inviteForLeg'))
+            ->andWhere($qb->expr()->isNull('r.inviteForLeg'))
             ->orderBy('m.created', 'ASC')
             ->getQuery()
             ->getResult();
@@ -265,6 +267,7 @@ class MessageRepository extends EntityRepository
         $qb = $this->createQueryBuilder('m');
 
         return $qb
+            ->join('m.request', 'r')
             ->where('NOT(m.deleteRequest LIKE :deleted)')
             ->setParameter('deleted', '%' . DeleteRequestType::SENDER_DELETED . '%')
             ->andWhere('NOT(m.deleteRequest LIKE :purged)')
@@ -273,7 +276,7 @@ class MessageRepository extends EntityRepository
             ->setParameter('member', $member)
             ->andWhere('m.folder = :folder')
             ->setParameter('folder', InFolderType::NORMAL)
-            ->join('m.request', 'r', Join::WITH, $qb->expr()->isNotNull('r.inviteForLeg'))
+            ->andWhere($qb->expr()->isNotNull('r.inviteForLeg'))
             ->orderBy('m.created', 'ASC')
             ->getQuery()
             ->getResult();
@@ -287,6 +290,7 @@ class MessageRepository extends EntityRepository
         $qb = $this->createQueryBuilder('m');
 
         return $qb
+            ->join('m.request', 'r')
             ->where('NOT(m.deleteRequest LIKE :deleted)')
             ->setParameter('deleted', '%' . DeleteRequestType::RECEIVER_DELETED . '%')
             ->andWhere('NOT(m.deleteRequest LIKE :purged)')
@@ -295,7 +299,7 @@ class MessageRepository extends EntityRepository
             ->setParameter('member', $member)
             ->andWhere('m.folder = :folder')
             ->setParameter('folder', InFolderType::NORMAL)
-            ->join('m.request', 'r', Join::WITH, $qb->expr()->isNotNull('r.inviteForLeg'))
+            ->andWhere($qb->expr()->isNotNull('r.inviteForLeg'))
             ->orderBy('m.created', 'ASC')
             ->getQuery()
             ->getResult();

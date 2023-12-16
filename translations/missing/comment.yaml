@@ -39,7 +39,7 @@ comment.quality.select:
     - Please select...
     - Placeholder on the add comment page to tell the user they must select an experience quality
 comment.reminder.guest.subject:
-    - How was your stay with {host}?
+    - How was your stay with {username}?
     - Subject of the comment reminder send two days after the requested stay ended.
 comment.first.reminder.guest.body:
     - "<p>Hello {guest},<br>
@@ -69,7 +69,7 @@ comment.second.reminder.guest.body:
     The BeWelcome volunteers."
     - Text of the second comment reminder send around two weeks after.
 comment.reminder.host.subject:
-    - Your experience with {guest}
+    - Your experience with {username}
     - Subject of the comment reminder send to the host if the guest doesn't leave a comment (send three weeks after the end of the requested stay).
 comment.reminder.host.body:
     - "<p>Hello {host},<br>

@@ -83,9 +83,16 @@ class SendCommentReminderCommand extends Command
     private function sendFirstGuestReminders(): int
     {
         $start  = '2 00:00:00';
-        $end= '1 00:00:00';
+        $end = '1 00:00:00';
 
-        return $this->sendGuestReminders($start, $end, "sendCommentReminderToGuestAfterTwoDays", true);
+        $mailer = $this->mailer;
+        return $this->sendGuestReminders(
+            $start,
+            $end,
+            function ($guest, $host) use ($mailer) {
+                $mailer->sendCommentReminderToGuest($guest, $host, 'comment.first.reminder.guest');
+            }
+        );
     }
 
     private function sendSecondGuestReminders(): int
@@ -93,23 +100,25 @@ class SendCommentReminderCommand extends Command
         $start = '15 00:00:00';
         $end = '14 00:00:00';
 
-        return $this->sendGuestReminders($start, $end, "sendCommentReminderToGuestAfterTwoWeeks", false);
+        $mailer = $this->mailer;
+        return $this->sendGuestReminders(
+            $start,
+            $end,
+            function ($guest, $host) use ($mailer) {
+                $mailer->sendCommentReminderToGuest($guest, $host, 'comment.second.reminder.guest');
+            }
+        );
     }
 
-    private function sendGuestReminders(string $start, string $end, string $method, bool $first): int
+    private function sendGuestReminders(string $start, string $end, callable $sendCommentReminder): int
     {
         $guestsAndHosts = $this->getGuestsAndHosts($start, $end);
 
         // Send reminder if no comment given yet
-        $sendReminders = $this->sendReminderIfNoCommentGivenYet($guestsAndHosts, $method);
+        $sendReminders = $this->sendReminderIfNoCommentGivenYet($guestsAndHosts, $sendCommentReminder);
 
-        if ($first) {
-            $this->io->note("Send {$sendReminders} guest reminder(s) after two days.");
-            $this->logger->info("Send {$sendReminders} guest reminder(s) after two days.");
-        } else {
-            $this->io->note("Send {$sendReminders} guest reminder(s) after two weeks.");
-            $this->logger->info("Send {$sendReminders} guest reminder(s) after two weeks.");
-        }
+        $this->io->note("Send {$sendReminders} guest reminder(s) after two days.");
+        $this->logger->info("Send {$sendReminders} guest reminder(s) after two days.");
 
         return Command::SUCCESS;
     }
@@ -119,7 +128,13 @@ class SendCommentReminderCommand extends Command
         $end = '21 00:00:00';
         $guestsAndHosts = $this->getGuestsAndHosts($start, $end);
 
-        $sendReminders = $this->sendReminderIfNoCommentGivenYet($guestsAndHosts, "sendCommentReminderToHostAfterThreeWeeks");
+        $mailer = $this->mailer;
+        $sendReminders = $this->sendReminderIfNoCommentGivenYet(
+            $guestsAndHosts,
+            function ($guest, $host) use ($mailer) {
+                $mailer->sendCommentReminderToHost($guest, $host);
+            }
+        );
 
         $this->io->note("Send {$sendReminders} host reminder(s).");
         $this->logger->info("Send {$sendReminders} host reminder(s) after three weeks.");
@@ -127,9 +142,8 @@ class SendCommentReminderCommand extends Command
         return Command::SUCCESS;
     }
 
-    private function sendReminderIfNoCommentGivenYet(array $guestsAndHosts, string $method): int
+    private function sendReminderIfNoCommentGivenYet(array $guestsAndHosts, callable $method): int
     {
-        $maxCount = 3;
         $sendReminders = 0;
         $commentRepository = $this->entityManager->getRepository(Comment::class);
         $memberRepository = $this->entityManager->getRepository(Member::class);
@@ -152,12 +166,9 @@ class SendCommentReminderCommand extends Command
                 // send reminder
                 $this->io->note("Sending reminder to {$guest->getUsername()} for {$host->getUsername()}");
                 $this->logger->info("Sending reminder to {$guest->getUsername()} for {$host->getUsername()}");
-                call_user_func_array([$this->mailer, $method], [$guest, $host]);
+                $method($guest, $host);
 
                 $sendReminders++;
-            }
-            if ($sendReminders === $maxCount) {
-                break;
             }
         }
 
@@ -180,10 +191,12 @@ class SendCommentReminderCommand extends Command
 	        INNER JOIN
 	            request r ON m.request_id = r.id AND r.Status = 8 AND r.invite_for_leg IS NULL
 	            AND date(r.departure) BETWEEN DATE_SUB(NOW(), INTERVAL ? DAY_SECOND) AND DATE_SUB(NOW(), INTERVAL ? DAY_SECOND)
+           /*
            INNER JOIN
-               membersgroups mgt ON m.IdSender = mgt.IdMember AND mgt.IdGroup = 72 AND mgt.`Status` = 'In'
+               membersgroups mgt ON m.IdSender = mgt.IdMember AND mgt.IdGroup = 62 AND mgt.`Status` = 'In'
            INNER JOIN
-               membersgroups mgf ON m.IdReceiver = mgf.IdMember AND mgf.IdGroup = 72 AND mgf.`Status` = 'In'
+               membersgroups mgf ON m.IdReceiver = mgf.IdMember AND mgf.IdGroup = 62 AND mgf.`Status` = 'In'
+            */
             WHERE
                 m.IdParent IS NULL AND NOT m.request_id IS NULL
             ", $rsm);

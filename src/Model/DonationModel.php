@@ -20,6 +20,8 @@ class DonationModel
 
     public function processDonation(?Member $member, array $parameters): bool
     {
+        $member = $member != 0 ? $member : null;
+
         $donation = new Donation();
         $donation->setAmount($parameters['amt'] ?? 0);
         $donation->setMoney($parameters['cc'] ?? 'EUR');

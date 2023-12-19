@@ -79,7 +79,12 @@ class ProfileSubmenu
         /** @var Preference $publicForumPostsPreference */
         $publicForumPostsPreference = $preferenceRepository->findOneBy(['codename' => Preference::SHOW_FORUMS_POSTS]);
         $showForumPosts = ('Yes' === $member->getMemberPreferenceValue($publicForumPostsPreference));
-        $memberInfo['show_forum_posts'] = $showForumPosts || $ownProfile;
+        $roles = $loggedInMember->getRoles();
+        $adminShowForumPosts = ($this->hasRole($roles, Member::ROLE_ADMIN_SAFETYTEAM)
+            || $this->hasRole($roles, Member::ROLE_ADMIN_ADMIN)
+            || $this->hasRole($roles, Member::ROLE_ADMIN_FORUMMODERATOR)
+        );
+        $memberInfo['show_forum_posts'] = $showForumPosts || $ownProfile || $adminShowForumPosts;
 
         /** @var CommentRepository $commentRepository */
         $commentRepository = $this->entityManager->getRepository(Comment::class);
@@ -278,7 +283,6 @@ class ProfileSubmenu
                 'icon' => 'image',
                 'count' => $parameters['images_count'] ?? 0,
                 'url' => '/gallery/manage',
-                // $this->routing->generate('add_comment', ['username' => $username]),
             ]);
         } else {
             $this->addSubmenuItem('gallery', [
@@ -286,7 +290,6 @@ class ProfileSubmenu
                 'icon' => 'image',
                 'count' => $parameters['images_count'] ?? 0,
                 'url' => '/gallery/show/user/' . $username . '/pictures',
-                // $this->routing->generate('add_comment', ['username' => $username]),
             ]);
         }
         if ($parameters['show_forum_posts']) {

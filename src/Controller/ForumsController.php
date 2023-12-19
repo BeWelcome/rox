@@ -187,6 +187,11 @@ class ForumsController extends AbstractController
     ): Response {
         /** @var Member $loggedInMember */
         $loggedInMember = $this->getUser();
+        $roles = $loggedInMember->getRoles();
+        $adminShowForumPosts = (in_array(Member::ROLE_ADMIN_SAFETYTEAM, $roles)
+            || in_array(Member::ROLE_ADMIN_ADMIN, $roles)
+            || in_array(Member::ROLE_ADMIN_FORUMMODERATOR, $roles)
+        );
 
         $preferenceRepository = $entityManager->getRepository(Preference::class);
 
@@ -194,7 +199,7 @@ class ForumsController extends AbstractController
         $preference = $preferenceRepository->findOneBy(['codename' => Preference::SHOW_FORUMS_POSTS]);
         $memberPreference = $member->getMemberPreference($preference);
 
-        if ('No' === $memberPreference->getValue() && $member !== $loggedInMember) {
+        if ('No' === $memberPreference->getValue() && $member !== $loggedInMember && !$adminShowForumPosts) {
             return $this->redirectToRoute('members_profile', ['username' => $member->getUsername()]);
         }
 

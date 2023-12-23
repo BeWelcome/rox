@@ -133,6 +133,10 @@ class CommentController extends AbstractController
             return $this->redirectToRoute('members_profile', ['username' => $member->getUsername()]);
         }
 
+        if (!$member->isBrowsable()) {
+            return $this->redirectToRoute('members_profile', ['username' => $member->getUsername()]);
+        }
+
         $comment = $commentModel->getCommentForMemberPair($loggedInMember, $member);
 
         if (null !== $comment) {
@@ -207,6 +211,10 @@ class CommentController extends AbstractController
         $loggedInMember = $this->getUser();
 
         if ($loggedInMember === $member) {
+            return $this->redirectToRoute('members_profile', ['username' => $member->getUsername()]);
+        }
+
+        if (!$member->isBrowsable()) {
             return $this->redirectToRoute('members_profile', ['username' => $member->getUsername()]);
         }
 

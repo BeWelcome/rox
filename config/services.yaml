@@ -215,15 +215,6 @@ services:
             $alias: translations
         tags: [ 'app.member_data_extractor' ]
 
-    app.member_data_extractor.gallery:
-        class: App\Model\MemberDataExtractor\GalleryItemsExtractor
-        factory: [ '@App\Model\MemberDataExtractor\DoctrineExtractorFactory', 'create' ]
-        arguments:
-            $className: 'App\Entity\MemberThreadSubscription'
-            $memberRelationName: subscriber
-            $alias: subscriptions
-        tags: [ 'app.member_data_extractor' ]
-
     app.member_data_extractor.trips:
         class: App\Model\MemberDataExtractor\DoctrineExtractor
         factory: [ '@App\Model\MemberDataExtractor\DoctrineExtractorFactory', 'create' ]

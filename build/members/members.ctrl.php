@@ -676,7 +676,7 @@ class MembersController extends RoxControllerBase
             // Set last login date into the past so that data retention is triggered immediately
             $date = new \DateTime();
             $date->sub(new \DateInterval('P366D'));
-            $member->LastLogin = $date->format('Y-m-d');
+            $member->LastLogin = $date->format('Y-m-d H:i:s');
             $flashNotice = "flash.delete.profile.data";
         }
         if (!empty($flashnotice)) {

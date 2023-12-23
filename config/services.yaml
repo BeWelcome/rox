@@ -78,10 +78,6 @@ services:
         arguments:
             $batchSize: '%massmail_batch_size%'
 
-    App\Command\SendCommentReminderCommand:
-        arguments:
-            $batchSize: '%massmail_batch_size%'
-
     App\Command\SendNotificationsCommand:
         arguments:
             $batchSize: '%forum_notification_batch_size%'

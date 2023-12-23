@@ -42,6 +42,7 @@ class FeedbackController extends AboutBaseController
         $category = (null !== $categoryId) ? $categories[$categoryId] : null;
         $messageId = $request->get('messageId', null);
         $username = $request->get('username', null);
+        $feedbackQuestion = '';
         if (null !== $username) {
             $feedbackQuestion = $translator->trans('profile.report.text');
             $feedbackQuestion = sprintf($feedbackQuestion, $username);

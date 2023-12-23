@@ -4,6 +4,7 @@ namespace App\Command;
 
 use App\Entity\Comment;
 use App\Entity\Member;
+use App\Logger\Logger;
 use App\Service\Mailer;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
@@ -24,20 +25,17 @@ class SendCommentReminderCommand extends Command
 
     private EntityManagerInterface $entityManager;
     private Mailer $mailer;
-    private int $batchSize;
     private SymfonyStyle $io;
     private LoggerInterface $logger;
 
     public function __construct(
         EntityManagerInterface $entityManager,
         LoggerInterface $logger,
-        Mailer $mailer,
-        int $batchSize
+        Mailer $mailer
     ) {
         parent::__construct();
         $this->entityManager = $entityManager;
         $this->mailer = $mailer;
-        $this->batchSize = $batchSize;
         $this->logger = $logger;
     }
 
@@ -45,8 +43,8 @@ class SendCommentReminderCommand extends Command
     {
         $this
             ->setDescription('Send a batch of comment reminders everytime the command is called')
-            ->addOption('first', null, InputOption::VALUE_NONE, 'Send the first comment reminder')
-            ->addOption('second', null, InputOption::VALUE_NONE, 'Send the second comment reminder')
+            ->addOption('first', null, InputOption::VALUE_NONE, 'Send the first comment reminder for guests')
+            ->addOption('second', null, InputOption::VALUE_NONE, 'Send the second comment reminder for guests')
             ->addOption('host', null, InputOption::VALUE_NONE, 'Send the host comment reminder')
         ;
     }
@@ -91,7 +89,8 @@ class SendCommentReminderCommand extends Command
             $end,
             function ($guest, $host) use ($mailer) {
                 $mailer->sendCommentReminderToGuest($guest, $host, 'comment.first.reminder.guest');
-            }
+            },
+            'two days'
         );
     }
 
@@ -106,19 +105,20 @@ class SendCommentReminderCommand extends Command
             $end,
             function ($guest, $host) use ($mailer) {
                 $mailer->sendCommentReminderToGuest($guest, $host, 'comment.second.reminder.guest');
-            }
+            },
+            'two weeks'
         );
     }
 
-    private function sendGuestReminders(string $start, string $end, callable $sendCommentReminder): int
+    private function sendGuestReminders(string $start, string $end, callable $sendCommentReminder, string $timestamp): int
     {
         $guestsAndHosts = $this->getGuestsAndHosts($start, $end);
 
         // Send reminder if no comment given yet
         $sendReminders = $this->sendReminderIfNoCommentGivenYet($guestsAndHosts, $sendCommentReminder);
 
-        $this->io->note("Send {$sendReminders} guest reminder(s) after two days.");
-        $this->logger->info("Send {$sendReminders} guest reminder(s) after two days.");
+        $this->io->note("Send {$sendReminders} guest reminder(s) after {$timestamp}.");
+        $this->logger->info("Send {$sendReminders} guest reminder(s) after {$timestamp}.");
 
         return Command::SUCCESS;
     }
@@ -164,8 +164,6 @@ class SendCommentReminderCommand extends Command
                 $host = $memberRepository->find($guestAndHost['host']);
 
                 // send reminder
-                $this->io->note("Sending reminder to {$guest->getUsername()} for {$host->getUsername()}");
-                $this->logger->info("Sending reminder to {$guest->getUsername()} for {$host->getUsername()}");
                 $method($guest, $host);
 
                 $sendReminders++;

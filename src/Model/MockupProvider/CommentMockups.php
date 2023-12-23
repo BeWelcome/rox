@@ -96,6 +96,8 @@ class CommentMockups implements MockupProviderInterface
             'comment_end' => '</a>',
             'profile_start' => '<a href="/members/host">',
             'profile_end' => '</a>',
+            'report_start' => '<a href="/feedback?IdCategory=2&username=host">',
+            'report_end' => '</a>',
         ];
     }
 }

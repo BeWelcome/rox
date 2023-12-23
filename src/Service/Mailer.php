@@ -403,6 +403,17 @@ class Mailer
         return sprintf('<a href="%s">', $url);
     }
 
+    private function getReportProfileATag(Member $member): string
+    {
+        $url = $this->urlGenerator->generate(
+            'feedback',
+            ['IdCategory' => 2, 'username' => $member->getUsername()],
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
+
+        return sprintf('<a href="%s">', $url);
+    }
+
     private function getParametersForCommentReminder(Member $guest, Member $host, string $subject, Member $for): array
     {
         $parameters = [];
@@ -420,6 +431,9 @@ class Mailer
 
         $parameters['profile_start'] = $this->getProfileATag($for);
         $parameters['profile_end'] = '</a>';
+
+        $parameters['report_start'] = $this->getReportProfileATag($for);
+        $parameters['report_end'] = '</a>';
 
         return $parameters;
     }

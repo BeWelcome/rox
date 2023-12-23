@@ -79,3 +79,6 @@ comment.reminder.host.body:
       <p>We hope your experience was pleasant and enriching, and that your comment will help other members experience the same. But in case there were serious problems, please do share them, too. You can also share information confidentially with the Safety Team using the “Report profile” link on the profile of {profile_start}{host}{profile_end}.</p>
       <p>The BeWelcome volunteers.</p>"
     - Text of the comment reminder send to the host if the guest doesn't leave a comment (send three weeks after the end of the requested stay). Pay special attention to the start and end variables for the links.
+flash.comment.report.only.own:
+    - Can't report comments of other members.
+    - Flash message shown if you followed a wrong link to report a comment.

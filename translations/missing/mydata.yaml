@@ -52,9 +52,15 @@ mydata.subscriptions.thread.name:
 mydata.subscriptions.subscription:
     - Subscriptions
     - Table header for the listed threads with their subscriptions
-mydata.subscriptions.abstract:
-    - 'This lists all subscriptions you have active.'
+mydata.subscriptions.threads.headline:
+    - Thread Subscriptions
+    - Headline for the list of subscribed threads
+mydata.subscriptions.threads.abstract:
+    - 'This lists all thread subscriptions you have active.'
     - Abstract for the subscription section (see /forums/subscriptions).
+mydata.subscriptions.threads.no.subscriptions:
+    - 'You did not subscribe to any posts or threads in the forum or to any group.'
+    - Text in the subscriptions section of the extracted data if no subscriptionss have been found.
 mydata.subscriptions.no.subscriptions:
     - 'You did not subscribe to any posts or threads in the forum or to any group.'
     - Text in the subscriptions section of the extracted data if no subscriptionss have been found.

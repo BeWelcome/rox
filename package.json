@@ -34,7 +34,6 @@
     "@ckeditor/ckeditor5-paragraph": "^40.0",
     "@ckeditor/ckeditor5-special-characters": "^40.0",
     "@ckeditor/ckeditor5-theme-lark": "^40.0",
-    "@eonasdan/tempus-dominus": "^6.7.16",
     "@fontsource/lato": "^4.5.0",
     "@fontsource/signika": "^4.5.0",
     "@fortawesome/fontawesome-free": "^5.15.4",
@@ -101,7 +100,6 @@
     "encoreWatch": "encore dev --watch"
   },
   "dependencies": {
-    "@easepick/core": "^1.2.1",
     "bootstrap-dropdown-hover": "^4.2.0",
     "dayjs": "^1.11.0",
     "flatpickr": "^4.6.13",
@@ -115,6 +113,7 @@
     "show-more": "^1.0.1",
     "show-more-read": "tomik23/show-more",
     "tom-select": "^2.1.0",
+    "vanilla-calendar-pro": "^2.9.2",
     "webpack": "^5.78.0"
   }
 }

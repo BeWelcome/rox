@@ -1362,23 +1362,6 @@
   resolved "https://registry.yarnpkg.com/@discoveryjs/json-ext/-/json-ext-0.5.7.tgz#1d572bfbbe14b7704e0ba0f39b74815b84870d70"
   integrity sha512-dBVuXR082gk3jsFp7Rd/JI4kytwGHecnCoTtXFb7DB6CNHp4rg5k1bhg0nWdLGLnOV71lmDzGQaLMy8iPLY0pw==
 
-"@easepick/core@^1.2.1":
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/@easepick/core/-/core-1.2.1.tgz#f7b23ee89129a4bc38968015d4300f79b5bd3eda"
-  integrity sha512-V/blEia/ykAq+0mnQ9djOU5wvMZ+iffL5iuQrKLObpMOw38kL/qo4inH4pCbB3wm7sDjrJTuDKf+6+FrgdFGsw==
-  dependencies:
-    "@easepick/datetime" "^1.1.0"
-
-"@easepick/datetime@^1.1.0":
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/@easepick/datetime/-/datetime-1.2.1.tgz#cefa39b7f18bb13bed5cb217b774eb21c279e564"
-  integrity sha512-KIUvWo/kEipwBqPTazjfUf6R7dKb2ztPizPoB/0ZMYz3HrWJptsLSZQma3R1nM/zkaexnk/e4L4nX+vDjwBtYA==
-
-"@eonasdan/tempus-dominus@^6.7.16":
-  version "6.7.19"
-  resolved "https://registry.yarnpkg.com/@eonasdan/tempus-dominus/-/tempus-dominus-6.7.19.tgz#d0241a2669362eac0c8002aa807d591489f7c411"
-  integrity sha512-rUHm1lTZLWdYUBAJJvic1p4Df/0h0rqV523r+DZtCkfty2ejf9NDsTYw3Vi0acSCt2kqwXom9R8jslzxxVcfOw==
-
 "@esbuild/android-arm64@0.17.19":
   version "0.17.19"
   resolved "https://registry.yarnpkg.com/@esbuild/android-arm64/-/android-arm64-0.17.19.tgz#bafb75234a5d3d1b690e7c2956a599345e84a2fd"
@@ -7398,6 +7381,11 @@ uuid@^8.3.2:
   version "8.3.2"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-8.3.2.tgz#80d5b5ced271bb9af6c445f21a1a04c606cefbe2"
   integrity sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==
+
+vanilla-calendar-pro@^2.9.2:
+  version "2.9.2"
+  resolved "https://registry.yarnpkg.com/vanilla-calendar-pro/-/vanilla-calendar-pro-2.9.2.tgz#fc6b0a45efef2bd7b252e18c8558ff5f89b8138d"
+  integrity sha512-ucWQU5+pWLEXi7Pbcp5kxeSn1IfoRES1PbLL+/GKMmZqeaQt7izNTTydVJ1H3bJU9t4X2LA93g5X8lQuIXEFPg==
 
 vanilla-colorful@0.7.2:
   version "0.7.2"

@@ -44,8 +44,7 @@ $font-family-bold: Signika;
 @import "offcanvas";
 
 // tempus dominus date time picker
-@import "~@eonasdan/tempus-dominus/src/scss/_variables";
-@import "~@eonasdan/tempus-dominus/src/scss/tempus-dominus";
+@import "tempusdominus_bootstrap4";
 @import "footer";
 @import "daterangepicker.scss";
 

@@ -93,12 +93,12 @@ class InvitationController extends BaseRequestAndInvitationController
                 'notice',
                 'contact.not.without.profile.picture',
                 [
-                    'username' => $guest->getUsername(),
+                'username' => $guest->getUsername(),
                 ]
             );
         }
 
-        $hasAboutMe = $allowContactCheck->checkIfMemberHasAboutMe($guest);
+        $hasAboutMe = $allowContactCheck->checkIfMemberHasAboutMe($host);
         $allowWithoutAboutMe = $allowContactCheck->getAllowRequestsWithoutAboutMe($guest);
         if (!$allowWithoutAboutMe && !$hasAboutMe) {
             $redirectOnNotAllowed = true;
@@ -107,7 +107,8 @@ class InvitationController extends BaseRequestAndInvitationController
                 'contact.not.without.about_me',
                 [
                     'username' => $guest->getUsername(),
-                ]);
+                ]
+            );
         }
 
         if ($redirectOnNotAllowed) {

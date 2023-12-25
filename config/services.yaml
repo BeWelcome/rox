@@ -197,7 +197,7 @@ services:
             $alias: shouts
         tags: [ 'app.member_data_extractor' ]
 
-    app.member_data_extractor.subscriptions:
+    app.member_data_extractor.subscriptions_threads:
         class: App\Model\MemberDataExtractor\DoctrineExtractor
         factory: [ '@App\Model\MemberDataExtractor\DoctrineExtractorFactory', 'create' ]
         arguments:

@@ -3,7 +3,7 @@
 {% block content %}
     <h1>{{ 'mydata.subscriptions.threads.headline'|trans }}</h1>
     <p>{{ 'mydata.subscriptions.threads.abstract'|trans }}</p>
-    {% if subscriptions_threads|length == 0 %}
+    {% if subscriptions|length == 0 %}
         <p><strong>{{ 'mydata.subscriptions.threads.no.subscriptions'|trans }}</strong></p>
     {% else %}
         <div class="row">
@@ -16,7 +16,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    {% for subscription in subscriptions_threads %}
+                    {% for subscription in subscriptions %}
                         <tr>
                             <td class="align-middle"><a
                                         href="{{ url('forum_thread', {'threadId': subscription.thread.id }) }}">{{ subscription.thread.title|purify }}</a><br>

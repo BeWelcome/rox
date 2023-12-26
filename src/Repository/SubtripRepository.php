@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use AnthonyMartin\GeoLocation\GeoLocation;
 use App\Doctrine\SubtripOptionsType;
 use App\Entity\Member;
 use Carbon\CarbonImmutable;
@@ -65,7 +66,6 @@ class SubtripRepository extends EntityRepository
     {
         $now = new CarbonImmutable();
         $durationMonthsAhead = $now->addMonths($duration);
-        $departureTwoWeeksAhead = $now->addWeeks(2);
 
         $qb = $this->createQueryBuilder('s');
         $qb
@@ -80,8 +80,7 @@ class SubtripRepository extends EntityRepository
                     $qb->expr()->in('s.options', [SubtripOptionsType::MEET_LOCALS])
                 )
             )
-            ->andWhere('s.departure >= :now')
-            ->andWhere('s.departure <= :departureTwoWeeksAhead')
+            ->andWhere('s.arrival >= :now')
             ->andWhere('s.arrival <= :durationMonthsAhead')
             ->andWhere($qb->expr()->in('m.status', ['Active', 'OutOfRemind']))
             ->andWhere('t.creator <> :member')
@@ -100,7 +99,6 @@ class SubtripRepository extends EntityRepository
             ->setParameter(':longitude', $member->getLongitude())
             ->setParameter(':now', $now)
             ->setParameter(':durationMonthsAhead', $durationMonthsAhead)
-            ->setParameter(':departureTwoWeeksAhead', $departureTwoWeeksAhead)
             ->orderBy('s.arrival', 'ASC')
             ->addSelect('t')
         ;

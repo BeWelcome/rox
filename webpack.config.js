@@ -70,7 +70,7 @@ Encore
     .addEntry('translations', './assets/js/admin/translations.js')
     .addEntry('readmore', './assets/js/readmore.js')
     .addEntry('searchresults', './assets/js/searchresults.js')
-    .addEntry('admin/tools/login_message', './assets/js/admin/tools/login_message.js')
+    .addEntry('admin/tools/login_message', './assets/js/admin/tools/login_message.ts')
     .addEntry('tailwind', './assets/tailwindcss/tailwind.css')
     // .addEntry('tom-select', './assets/js/tom-select')
     // react
@@ -79,7 +79,7 @@ Encore
         babelConfig.plugins = [ '@babel/plugin-transform-runtime' ]
     })
     .addEntry('avatar', './assets/js/react/avatar/AvatarMount.jsx')
-
+    .enableTypeScriptLoader()
     .enableSassLoader(options => {
         // Prefer using sass instead of node-sass to not depend on Python
         options.implementation = require('sass');

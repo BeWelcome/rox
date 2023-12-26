@@ -93,6 +93,8 @@
     "tempusdominus": "github:tonix-tuft/tempusdominus",
     "tempusdominus-bootstrap": "github:tonix-tuft/tempusdominus-bootstrap",
     "toastify-js": "^1.10.0",
+    "ts-loader": "^9.0.0",
+    "typescript": "^5.3.3",
     "webpack-cli": "^5.0.1",
     "workbox-webpack-plugin": "^6.1.5"
   },
@@ -102,7 +104,6 @@
   "dependencies": {
     "bootstrap-dropdown-hover": "^4.2.0",
     "dayjs": "^1.11.0",
-    "flatpickr": "^4.6.13",
     "micromodal": "^0.4.10",
     "moment": "^2.29.4",
     "moment-timezone": "^0.5.37",

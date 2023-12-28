@@ -61,7 +61,9 @@ class CommentController extends AbstractController
         $member = $this->getUser();
 
         if ($member !== $toMember) {
-            throw new AccessDeniedException();
+            $this->addTranslatedFlash('notice', 'flash.comment.report.only.own');
+
+            return $this->redirectToRoute('profile_comments', ['username' => $member->getUsername()]);
         }
 
         $commentRepository = $entityManager->getRepository(Comment::class);
@@ -130,6 +132,10 @@ class CommentController extends AbstractController
         $loggedInMember = $this->getUser();
 
         if ($loggedInMember === $member) {
+            return $this->redirectToRoute('members_profile', ['username' => $member->getUsername()]);
+        }
+
+        if (!$member->isBrowsable()) {
             return $this->redirectToRoute('members_profile', ['username' => $member->getUsername()]);
         }
 
@@ -207,6 +213,10 @@ class CommentController extends AbstractController
         $loggedInMember = $this->getUser();
 
         if ($loggedInMember === $member) {
+            return $this->redirectToRoute('members_profile', ['username' => $member->getUsername()]);
+        }
+
+        if (!$member->isBrowsable()) {
             return $this->redirectToRoute('members_profile', ['username' => $member->getUsername()]);
         }
 

@@ -18,6 +18,7 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -75,8 +76,11 @@ class SearchController extends AbstractController
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.StaticAccess)
      */
-    public function searchLocations(Request $request, TranslatorInterface $translator, SerializerInterface $serializer)
-    {
+    public function searchLocations(
+        Request $request,
+        SessionInterface $session,
+        TranslatorInterface $translator
+    ): Response {
         $pager = null;
         $results = null;
 
@@ -167,13 +171,15 @@ class SearchController extends AbstractController
 
             $searchAdapter = new SearchAdapter(
                 $data,
-                $this->get('session'),
+                $session,
+                $em,
+                $translator,
                 $this->getParameter('database_host'),
                 $this->getParameter('database_name'),
                 $this->getParameter('database_user'),
                 $this->getParameter('database_password'),
-                $em,
-                $translator
+                $this->getParameter('manticore.host'),
+                $this->getParameter('manticore.port')
             );
             $results = $searchAdapter->getFullResults();
             $pager = new Pagerfanta($searchAdapter);
@@ -209,7 +215,7 @@ class SearchController extends AbstractController
      *
      * @SuppressWarnings(PHPMD.StaticAccess)
      */
-    public function searchOnMap(Request $request, TranslatorInterface $translator): Response
+    public function searchOnMap(Request $request, SessionInterface $session, TranslatorInterface $translator): Response
     {
         // do not allow access to this page when logged in, redirect to /search/locations
         if (null !== $this->getUser()) {
@@ -239,13 +245,15 @@ class SearchController extends AbstractController
 
             $searchAdapter = new SearchAdapter(
                 $searchFormRequest,
-                $this->get('session'),
+                $session,
+                $this->entityManager,
+                $translator,
                 $this->getParameter('database_host'),
                 $this->getParameter('database_name'),
                 $this->getParameter('database_user'),
                 $this->getParameter('database_password'),
-                $this->entityManager,
-                $translator
+                $this->getParameter('manticore.host'),
+                $this->getParameter('manticore.port')
             );
             $results = $searchAdapter->getMapResults();
             $pager = new Pagerfanta($searchAdapter);
@@ -262,13 +270,12 @@ class SearchController extends AbstractController
 
     /**
      * @Route("/search/locations/ajax", name="search_members_ajax")
-     *
-     * @return Response
-     *
-     * @SuppressWarnings(PHPMD.StaticAccess)
      */
-    public function searchGetPageResultsAjax(Request $request, TranslatorInterface $translator)
-    {
+    public function searchGetPageResultsAjax(
+        Request $request,
+        SessionInterface $session,
+        TranslatorInterface $translator
+    ): Response {
         if ('POST' !== $request->getMethod()) {
             // JavaScript doesn't work on client
             // redirect to search members
@@ -279,13 +286,15 @@ class SearchController extends AbstractController
 
         $searchAdapter = new SearchAdapter(
             $searchFormRequest,
-            $this->get('session'),
+            $session,
+            $this->entityManager,
+            $translator,
             $this->getParameter('database_host'),
             $this->getParameter('database_name'),
             $this->getParameter('database_user'),
             $this->getParameter('database_password'),
-            $this->entityManager,
-            $translator
+            $this->getParameter('manticore.host'),
+            $this->getParameter('manticore.port')
         );
         $pager = new Pagerfanta($searchAdapter);
         $pager->setMaxPerPage($searchFormRequest->items);

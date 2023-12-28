@@ -1,0 +1,15 @@
+{% extends 'emails/email_no_greeting.html.twig' %}
+
+{% block content %}
+    {{ 'comment.first.reminder.guest.body'|trans(
+        {
+            'host': host,
+            'guest': guest,
+            'comment_start': comment_start,
+            'comment_end': comment_end,
+            'profile_start': profile_start,
+            'profile_end': profile_end,
+        }
+        )|purify
+    }}
+{% endblock %}

@@ -6,20 +6,22 @@
 parameters:
     router.request_context.host: '%env(web_host)%'
     router.request_context.scheme: 'https'
-    new_members_messages_per_hour: "%env(new_members_messages_per_hour)%"
-    new_members_messages_per_day: "%env(new_members_messages_per_day)%"
-    new_members_requests_per_hour: "%env(new_members_requests_per_hour)%"
-    new_members_requests_per_day: "%env(new_members_requests_per_day)%"
+    new_members_messages_per_hour: "%env(int:new_members_messages_per_hour)%"
+    new_members_messages_per_day: "%env(int:new_members_messages_per_day)%"
+    new_members_requests_per_hour: "%env(int:new_members_requests_per_hour)%"
+    new_members_requests_per_day: "%env(int:new_members_requests_per_day)%"
     data_directory: "%kernel.project_dir%/data"
     group_directory: "%kernel.project_dir%/%env(group_directory)%"
     gallery_directory: "%kernel.project_dir%/%env(gallery_directory)%"
     upload_directory: "%kernel.project_dir%/%env(upload_directory)%"
     newsletter_image_directory: "%kernel.project_dir%/%env(newsletter_image_directory)%"
-    massmail_batch_size: "%env(massmail_batch_size)%"
-    forum_notification_batch_size: "%env(forum_notification_batch_size)%"
-    locales: "%env(LOCALES)%"
+    massmail_batch_size: '%env(int:massmail_batch_size)%'
+    forum_notification_batch_size: '%env(int:forum_notification_batch_size)%'
+    locales: "%env(csv:LOCALES)%"
     document_locales: "%env(DOCUMENT_LOCALES)%"
     app.username.regexp: !php/const App\Entity\Member::USERNAME_REGEXP
+    manticore.host: '%env(MANTICORE_HOST)%'
+    manticore.port: '%env(int:MANTICORE_PORT)%'
 
 services:
     _defaults:
@@ -31,6 +33,9 @@ services:
         bind:
             $projectDir: '%kernel.project_dir%'
             $refreshTokenTtl: '%env(APP_REFRESH_TOKEN_TTL)%'
+            $manticoreHost: '%manticore.host%'
+            $manticorePort: '%manticore.port%'
+            $locales: '%locales%'
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
@@ -69,9 +74,13 @@ services:
         arguments:
             $dataDirectory: '%data_directory%'
 
-    App\Command\GeonamesUpdateFullCommand:
+    App\Command\SendMassmailCommand:
         arguments:
-            $locales: "%locales%"
+            $batchSize: '%massmail_batch_size%'
+
+    App\Command\SendNotificationsCommand:
+        arguments:
+            $batchSize: '%forum_notification_batch_size%'
 
     App\Serializer\MemberContextBuilder:
         decorates: api_platform.serializer.context_builder
@@ -188,7 +197,7 @@ services:
             $alias: shouts
         tags: [ 'app.member_data_extractor' ]
 
-    app.member_data_extractor.subscriptions:
+    app.member_data_extractor.subscriptions_threads:
         class: App\Model\MemberDataExtractor\DoctrineExtractor
         factory: [ '@App\Model\MemberDataExtractor\DoctrineExtractorFactory', 'create' ]
         arguments:
@@ -204,15 +213,6 @@ services:
             $className: 'App\Entity\Word'
             $memberRelationName: author
             $alias: translations
-        tags: [ 'app.member_data_extractor' ]
-
-    app.member_data_extractor.gallery:
-        class: App\Model\MemberDataExtractor\GalleryItemsExtractor
-        factory: [ '@App\Model\MemberDataExtractor\DoctrineExtractorFactory', 'create' ]
-        arguments:
-            $className: 'App\Entity\MemberThreadSubscription'
-            $memberRelationName: subscriber
-            $alias: subscriptions
         tags: [ 'app.member_data_extractor' ]
 
     app.member_data_extractor.trips:
@@ -231,26 +231,25 @@ services:
     translation.loader.db:
         public: true
         class: App\TranslationLoader\DatabaseLoader
-        arguments: [ '@doctrine.orm.entity_manager' ]
         tags:
             - { name: translation.loader, alias: db }
 
     App\EventListener\LocaleListener:
         public: true
-        arguments:
-            $em: '@doctrine.orm.entity_manager'
-            $locales: "%locales%"
         tags:
             - { name: kernel.event_subscriber }
 
     App\Controller\Admin\TranslationController:
         arguments:
-            $locales: '%locales%'
 
     App\Controller\Admin\MockupController:
         arguments:
-            $locales: '%locales%'
             $providers: !tagged_iterator app.mockup_provider
+
+    App\Model\SuggestLocationModel:
+        arguments:
+            $manticoreHost: '%manticore.host%'
+            $manticorePort: "%manticore.port%"
 
     app.user_locale_listener:
         public: true
@@ -295,7 +294,6 @@ services:
         public: true
         class: App\Twig\Extension
         arguments:
-            $locales: '%locales%'
             $publicDirectory: '%kernel.project_dir%/public'
         tags:
             - { name: 'twig.extension' }
@@ -405,7 +403,6 @@ services:
         public: true
         arguments:
             $cacheDirectory: '%kernel.cache_dir%'
-            $locales: '%locales%'
 
     Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler:
         arguments:

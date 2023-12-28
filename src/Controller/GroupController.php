@@ -511,7 +511,7 @@ class GroupController extends AbstractController
     /**
      * @return array
      */
-    private function getSubmenuItems(Member $member, Group $group)
+    private function getSubmenuItems(?Member $member, Group $group)
     {
         $groupId = $group->getId();
         $submenuItems = [

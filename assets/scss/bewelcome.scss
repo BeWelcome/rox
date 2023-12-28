@@ -259,6 +259,7 @@ a.active .metric .value {
   @extend .alert-danger;
 }
 
+.community-news-wrapper img,
 figure > img {
   max-width: 100%;
   height: auto;
@@ -633,3 +634,7 @@ $avatar-sizes: 30, 50, 75, 100, 150, 200, 500;
 }
 
 .pointer {cursor: pointer;}
+
+.o-form-group, .o-form-group-sm {
+  margin-bottom: 8px;
+}

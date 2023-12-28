@@ -1,4 +1,4 @@
-import MicroModal from 'micromodal/dist/micromodal.js';
+import MicroModal from 'micromodal';
 
 MicroModal.init({
     awaitCloseAnimation: true

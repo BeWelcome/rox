@@ -45,13 +45,16 @@ class TranslationController extends AbstractController
     use TranslatorTrait;
 
     private TranslationModel $translationModel;
-    private string $enabledLocales;
+    private array $locales;
     private EntityManagerInterface $entityManager;
 
-    public function __construct(TranslationModel $translationModel, EntityManagerInterface $entityManager, string $locales)
-    {
+    public function __construct(
+        TranslationModel $translationModel,
+        EntityManagerInterface $entityManager,
+        array $locales
+    ) {
         $this->translationModel = $translationModel;
-        $this->enabledLocales = $locales;
+        $this->locales = $locales;
         $this->entityManager = $entityManager;
     }
 
@@ -605,7 +608,7 @@ class TranslationController extends AbstractController
         /** @var WordRepository $translationRepository */
         $translationRepository = $entityManager->getRepository(Word::class);
         $countAll = $translationRepository->getTranslatableItemsCount('en');
-        $translationDetails = $translationRepository->getTranslationDetails($this->enabledLocales);
+        $translationDetails = $translationRepository->getTranslationDetails($this->locales);
 
         return $this->render('admin/translations/statistics.html.twig', [
                 'count_all' => $countAll,

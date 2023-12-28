@@ -2,41 +2,39 @@
 
 
 $member = $this->member;
-$picture_url = 'members/avatar/'.$member->Username.'/96';
+$picture_url = 'members/avatar/'.$member->Username.'/160';
 ?>
 
-<form method="POST" action="" class="mt-3">
+<form id="manage" method="POST" class="mt-3">
 <div class="row">
     <div class="col-12 order-sm-12 col-lg-3 order-lg-1 postleftcolumn">
-        <div class="w-100 d-none d-lg-block"><a href="members/<?=$member->Username?>"><img class="profileimg avatar-96" src="<?=$picture_url?>" alt="Picture of <?=$member->Username?>"/></a></div>
-        <a class="btn btn-primary btn-sm btn-block mb-2" href="members/<?=$member->Username ?>"><?=$member->Username ?></a>
+        <div class="u-w-full u-hidden u-p-8 d-lg-block">
+            <div class="o-avatar o-avatar--l o-avatar--shadow">
+                <div class="o-avatar__img-wrapper">
+                    <a href="members/<?=$member->Username?>"><img class="o-avatar__img" src="<?=$picture_url?>" alt="Picture of <?=$member->Username?>"/></a>
+                </div>
+                <a class="o-avatar__name u-break-all" href="members/<?=$member->Username ?>"><?=$member->Username ?></a>
+            </div>
+        </div>
+
 
         <?= $callback_tag; ?>
 
-        <script>
-            function askDelete() {
-                returny = confirm("<?= $words->getBuffered('confirmdeleteimages') ?>");
-                $('#deleteOnly').val(1);
-                if (returny) return true;
-                else return false;
-            }
-        </script>
         <div class="o-checkbox mb-2">
-            <input type="checkbox" name="selectAllRadio" id="selectAllRadio" class="o-checkbox__input checker" onClick="toggle(this);">&nbsp;&nbsp;
-            <label class=o-checkbox__label" for="selectAllRadio"><?= $words->get('SelectAll')?></label>
+            <input type="checkbox" name="selectAll" id="selectAll" class="o-checkbox__input checker">&nbsp;&nbsp;
+            <label class="o-checkbox__label" for="selectAll"><?= $words->get('gallery.select.all'); ?></label>
         </div>
         <?php
         if (isset($galleries) && $galleries) {
             ?>
-            <input name="removeOnly" type="hidden" value="0">
             <div class="input-group mb-2">
                 <div class="input-group-prepend">
                     <div class="input-group-text">
-                        <input type="radio" id="oldGallery" name="new" value="0" class="o-radiobutton__input" aria-label="<?= $words->get('GalleryAddToPhotoset') ?>">
+                        <input type="radio" id="existingAlbum" name="newOrExistingAlbum" value="Existing" class="o-radiobutton__input" aria-label="<?= $words->get('gallery.use.existing.album') ?>">
                     </div>
                 </div>
-                <select name="gallery" size="1" onchange="$('oldGallery').checked = true;" class="o-input">
-                    <option value="">- <?= $words->get('GalleryAddToPhotoset') ?> -</option>
+                <select id="albums" name="gallery" size="1" class="o-input">
+                    <option value="">- <?= $words->get('gallery.use.existing.album') ?> -</option>
                     <?php
                     foreach ($galleries as $d) {
                         echo '<option value="'.$d->id.'">'.$d->title.'</option>';
@@ -51,15 +49,15 @@ $picture_url = 'members/avatar/'.$member->Username.'/96';
         <div class="input-group mb-2">
             <div class="input-group-prepend">
                 <div class="input-group-text">
-                    <input type="radio" id="newGallery" name="new" value="1" class="o-radiobutton__input" aria-label="Create a new album">
+                    <input type="radio" id="newAlbum" name="newOrExistingAlbum" value="New" class="o-radiobutton__input" aria-label="<?= $words->get('gallery.create.new.album'); ?>">
                 </div>
             </div>
-            <input class="o-input" name="g-title" id="g-title" maxlength="30" aria-label="Enter the name of the new album" placeholder="<?= $words->get('GalleryCreateNewPhotoset') ?>" onclick="$('newGallery').checked = true;  $('#deleteOnly').val(0);">
+            <input class="o-input" id="newAlbumTitle" name="newAlbumTitle" maxlength="30" aria-label="<?= $words->get('gallery.create.new.album'); ?>" placeholder="<?= $words->get('gallery.create.new.album'); ?>">
         </div>
-        <input name="deleteOnly" id="deleteOnly" type="hidden" value="0">
+        <input name="deleteOrMove" id="deleteOrMove" type="hidden" value="Move">
         <input name="g-user" type="hidden" value="<?= $member->id ?>">
-        <input type="submit" class="btn btn-sm btn-primary btn-block mb-2" name="moveImages" value="<?= $words->getBuffered('Move images') ?>" id="button" onclick="$('#deleteOnly').val(0); return submitStuff();">
-        <input type="submit" class="btn btn-sm btn-danger btn-block mb-2" name="deleteImages" value="<?= $words->getBuffered('Delete images') ?>" onclick="return askDelete()" style="cursor:pointer">
+        <input type="submit" class="btn btn-sm btn-primary btn-block mb-2" id="moveImages" name="moveImages" value="<?= $words->getBuffered('Move images') ?>">
+        <input type="submit" class="btn btn-sm btn-danger btn-block mb-2" id="deleteImages" name="deleteImages" value="<?= $words->getBuffered('Delete images') ?>">
     </div>
     <div class="col-12 order-sm-1 col-lg-9 order-lg-12">
         <?php
@@ -69,14 +67,75 @@ $picture_url = 'members/avatar/'.$member->Username.'/96';
 </div>
 </form>
 <script type="text/javascript">
-    function submitStuff() {
-        let deleteOnly = $('#deleteOnly').val();
-        let newGallery = $('#newGallery').is(':checked') ;
-        let newName = $('#g-title').val().trim();
-        if ( deleteOnly === "0" &&  newGallery === true && newName !== "") {
-            return true;
-        } else {
-            return ((deleteOnly === "0") && (newGallery === false));
+    const manageForm = document.getElementById("manage");
+    const deleteImages = document.getElementById("deleteImages");
+    const moveImages = document.getElementById("moveImages");
+    const selectAll = document.getElementById("selectAll");
+    const checkboxes = document.getElementsByName("imageId[]");
+    const deleteOrMove = document.getElementById("deleteOrMove");
+    const newOrExistingAlbum = document.getElementsByName("newOrExistingAlbum");
+    const newAlbumTitle = document.getElementById("newAlbumTitle");
+
+    newAlbumTitle.addEventListener("change", () => {
+        newOrExistingAlbum[0].checked = false;
+        newOrExistingAlbum[1].checked = true;
+    });
+
+    deleteImages.addEventListener("click", (e) => {
+        e.preventDefault();
+
+        const atLeastOneImageSelected = checkIfAtLeastOneImageSelected();
+        if (!atLeastOneImageSelected) {
+            alert(<?php echo json_encode($words->get('gallery.no.images.selected')); ?>);
+            return;
         }
+
+        deleteOrMove.value = "Delete";
+        manageForm.submit();
+    });
+
+    moveImages.addEventListener("click", (e) => {
+        e.preventDefault();
+
+        const atLeastOneImageSelected = checkIfAtLeastOneImageSelected();
+        if (!atLeastOneImageSelected) {
+            alert(<?php echo json_encode($words->get('gallery.no.images.selected')); ?>);
+            return;
+        }
+
+        if (!newOrExistingAlbum[0].checked && !newOrExistingAlbum[1].checked) {
+            alert(<?php echo json_encode($words->get('gallery.move.not.possible')); ?>);
+            return;
+        }
+
+        const albums = document.getElementById("albums");
+        if (newOrExistingAlbum[0].checked && albums.value === "") {
+            alert(<?php echo json_encode($words->get('gallery.no.album.selected')); ?>);
+            return;
+        }
+
+        if (newOrExistingAlbum[1].checked && newAlbumTitle.value === "") {
+            alert(<?php echo json_encode($words->get('gallery.no.album.given')); ?>);
+            return;
+        }
+
+        deleteOrMove.value = "Move";
+        manageForm.submit();
+    });
+
+    selectAll.addEventListener("change", (e) => {
+        checkboxes.forEach((checkbox) => {
+            checkbox.checked = selectAll.checked;
+        });
+        e.preventDefault();
+    });
+
+    function checkIfAtLeastOneImageSelected() {
+        let imageSelected = false;
+        checkboxes.forEach((checkbox) => {
+            imageSelected ||= checkbox.checked;
+        });
+
+        return imageSelected;
     }
 </script>

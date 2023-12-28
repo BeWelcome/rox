@@ -379,7 +379,7 @@
 			<h5>
 				<a href="{{ url('communitynews_show', { id: news.id} ) }}">{{ news.title }}</a>
 			</h5>
-			<p class="u-font-display u-font-300 u-mb-8">{{ news.text | truncate(200) | raw }}</p>
+			<div class="community-news-wrapper u-font-display u-font-300 u-mb-8">{{ news.text | truncate(200) | raw }}</div>
 
 			<div class="u-flex u-flex-row u-justify-between">
 				<small>{{ news.createdAt.diffForHumans }}</small>

@@ -1,4 +1,4 @@
-<?php /** @noinspection ALL */
+<?php
 
 /**
 * forums controller
@@ -214,7 +214,7 @@ class ForumsController extends PAppController
             if (!$User) {
                 PRequest::home();
             }
-            if ((isset($request[2])) and ($request[2]{0}=='u')) {
+            if ((isset($request[2])) and ($request[2][0]=='u')) {
                  $IdGroup=substr($request[2],1) ;
             }
             else {
@@ -341,8 +341,9 @@ class ForumsController extends PAppController
             $this->_view->ModeditPost($callbackId);
             PPostHandler::clearVars($callbackId);
         } else if ($this->action == self::ACTION_SEARCH_FORUMS) {
+            $currentPage = ($this->args_vars->get['page']) ?? 1;
             $this->_view->keyword = $request[2];
-            $this->_view->showSearchResultPage($request[2]);
+            $this->_view->showSearchResultPage($request[2], $currentPage);
             PPostHandler::clearVars($searchCallbackId);
         } else if ($this->action == self::ACTION_SEARCH_USERPOSTS) {
             if (!isset($request[2])) {
@@ -882,7 +883,7 @@ class ForumsController extends PAppController
                 } else if ($r ==  'locationDropdowns') {
                     $this->action = self::ACTION_LOCATIONDROPDOWNS;
                 } else {
-                    $char = $r{0};
+                    $char = $r[0];
                     $dashpos = strpos($r, '-');
                     if ($dashpos === false) {
                         $dashpos = strlen($r) - 1;

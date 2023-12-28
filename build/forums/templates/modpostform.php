@@ -173,6 +173,7 @@ foreach ($DataPost->Thread->Title as $Title) { ?>
     <form method="post" action="forums/modeditpost/<?= $DataPost->Post->id ?>" id="modpostforum">
         <input type="hidden" name="<?= $callbackId ?>" value="1">
         <input type="hidden" name="IdPost" value="<?= $DataPost->Post->id ?>">
+        <input type="hidden" name="IdThread" value="<?= $DataPost->Thread->id ?>">
         <?php $ArrayLanguage = $this->_model->LanguageChoices($Title->IdLanguage); ?>
         <div class="o-form-group form-row">
             <label class="col-3 col-form-label" for="IdLanguage">Language</label>
@@ -231,6 +232,7 @@ foreach ($DataPost->Thread->Title as $Title) { ?>
 <form method="post" action="forums/modeditpost/<?= $DataPost->Post->id ?>" id="modpostforum">
     <input type="hidden" name="<?= $callbackId ?>" value="1">
     <input type="hidden" name="IdPost" value="<?= $DataPost->Post->id ?>">
+    <input type="hidden" name="IdThread" value="<?= $DataPost->Thread->id ?>">
     <div class="o-form-group form-row">
         <label class="col-3 col-form-label" for="OwnerCanStillEdit">Can Owner edit:</label>
         <select class="o-input col-9" id="OwnerCanStillEdit" name="OwnerCanStillEdit">
@@ -304,6 +306,7 @@ foreach ($DataPost->Post->Content as $Content) { ?>
     <form method="post" action="forums/modeditpost/<?= $DataPost->Post->id ?>" id="modpostforum">
         <input type="hidden" name="<?= $callbackId ?>" value="1">
         <input type="hidden" name="IdPost" value="<?= $DataPost->Post->id ?>">
+        <input type="hidden" name="IdThread" value="<?= $DataPost->Thread->id ?>">
         <?php $ArrayLanguage = $this->_model->LanguageChoices($Content->IdLanguage); ?>
         <div class="o-form-group form-row">
             <label class="col-3 col-form-label" for="IdLanguage">Language</label>
@@ -334,6 +337,7 @@ foreach ($DataPost->Post->Content as $Content) { ?>
 <form class="mb-2" method="post" action="forums/modeditpost/<?= $DataPost->Post->id ?>" id="modpostforum">
     <input type="hidden" name="<?= $callbackId ?>" value="1">
     <input type="hidden" name="IdPost" value="<?= $DataPost->Post->id ?>">
+    <input type="hidden" name="IdThread" value="<?= $DataPost->Thread->id ?>">
     <input type="hidden" name="IdTrad" value="<?= $DataPost->Post->IdContent ?>">
     <?php $ArrayLanguage = $this->_model->LanguageChoices(); ?>
     <div class="o-form-group form-row">

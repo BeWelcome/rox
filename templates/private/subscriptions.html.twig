@@ -1,10 +1,10 @@
 {% extends 'private/mydata.html.twig' %}
 
 {% block content %}
-    <h1>{{ 'mydata.subscriptions.headline'|trans }}</h1>
-    <p>{{ 'mydata.subscriptions.abstract'|trans }}</p>
+    <h1>{{ 'mydata.subscriptions.threads.headline'|trans }}</h1>
+    <p>{{ 'mydata.subscriptions.threads.abstract'|trans }}</p>
     {% if subscriptions|length == 0 %}
-        <p><strong>{{ 'mydata.subscriptions.no.subscriptions'|trans }}</strong></p>
+        <p><strong>{{ 'mydata.subscriptions.threads.no.subscriptions'|trans }}</strong></p>
     {% else %}
         <div class="row">
             <div class="col-12 table-responsive">

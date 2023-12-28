@@ -49,7 +49,9 @@ class LegacyController extends AbstractController
             $params->get('database_host'),
             $params->get('database_name'),
             $params->get('database_user'),
-            $params->get('database_password')
+            $params->get('database_password'),
+            $params->get('manticore.host'),
+            $params->get('manticore.port')
         );
 
         $pathInfo = $request->getPathInfo();

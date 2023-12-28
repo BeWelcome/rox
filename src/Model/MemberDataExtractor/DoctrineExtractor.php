@@ -13,8 +13,14 @@ final class DoctrineExtractor extends AbstractExtractor implements ExtractorInte
     private $memberRelationName;
     private $alias;
 
-    public function __construct(EntrypointLookupInterface $entrypointLookup, Environment $environment, ManagerRegistry $registry, string $className, string $memberRelationName, string $alias)
-    {
+    public function __construct(
+        EntrypointLookupInterface $entrypointLookup,
+        Environment $environment,
+        ManagerRegistry $registry,
+        string $className,
+        string $memberRelationName,
+        string $alias
+    ) {
         parent::__construct($entrypointLookup, $environment, $registry);
         $this->className = $className;
         $this->memberRelationName = $memberRelationName;

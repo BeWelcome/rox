@@ -72,7 +72,7 @@ class GroupMemberAdministrationPage extends GroupsSubPage
             </div>
 
             <?php
-            $purifier = MOD_htmlpure::getBasicHtmlPurifier();
+            $purifier = (new MOD_htmlpure())->getBasicHtmlPurifier();
             $count = 0;
             foreach ($this->pager_widget->getActiveSubset($this->group->getMembers('In', $this->pager_widget->getActiveStart(), $this->pager_widget->getActiveLength())) as $member) {
                 ?>

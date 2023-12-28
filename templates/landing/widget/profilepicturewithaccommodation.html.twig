@@ -1,7 +1,7 @@
 {% import 'macros.twig' as macros %}
 <div class="u-relative u-flex u-items-center" id="welcomeavatar">
     <div class="o-avatar o-avatar--l o-avatar--noname o-avatar--shadow">
-        {{ macros.roundedavatarstack( member.Username, 120) }}
+        {{ macros.roundedavatarstack( member.Username, 120, false, true) }}
         <div class="o-avatar__host-status {% if member.Accommodation == 'anytime' %}u-bg-green-dark{% elseif member.Accommodation == 'neverask' %}u-bg-bewelcome{% endif %}">
         	{% if member.Accommodation == 'anytime' %}
         	<svg class="o-avatar__host-img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18.400146 16.655001">

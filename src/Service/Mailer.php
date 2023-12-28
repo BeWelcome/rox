@@ -7,6 +7,7 @@ use App\Entity\FeedbackCategory;
 use App\Entity\Member;
 use App\Entity\Newsletter;
 use App\Entity\Relation;
+use App\Logger\Logger;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use InvalidArgumentException;
@@ -14,6 +15,8 @@ use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
+use Symfony\Component\Routing\Generator\UrlGenerator;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 
@@ -25,8 +28,6 @@ class Mailer
     private const PASSWORD_EMAIL_ADDRESS = 'password@bewelcome.org';
     private const SIGNUP_EMAIL_ADDRESS = 'signup@bewelcome.org';
 
-    /** @var Environment */
-    private $twig;
     /** @var MailerInterface */
     private $mailer;
     /** @var TranslatorInterface */
@@ -35,17 +36,21 @@ class Mailer
      * @var EntityManagerInterface
      */
     private $entityManager;
+    private Logger $logger;
+    private UrlGeneratorInterface $urlGenerator;
 
     public function __construct(
-        MailerInterface $mailer,
         EntityManagerInterface $entityManager,
-        Environment $twig,
-        TranslatorInterface $translator
+        UrlGeneratorInterface $urlGenerator,
+        TranslatorInterface $translator,
+        MailerInterface $mailer,
+        Logger $logger
     ) {
-        $this->mailer = $mailer;
-        $this->twig = $twig;
-        $this->translator = $translator;
         $this->entityManager = $entityManager;
+        $this->urlGenerator = $urlGenerator;
+        $this->translator = $translator;
+        $this->mailer = $mailer;
+        $this->logger = $logger;
     }
 
     public function sendMessageNotificationEmail(Member $sender, Member $receiver, string $template, $parameters): bool
@@ -212,6 +217,30 @@ class Mailer
         return $this->sendCommentTemplateEmail($comment, 'comment.notification.update', $parameters);
     }
 
+    public function sendCommentReminderToGuest(Member $guest, Member $host, string $template): bool
+    {
+        $parameters = $this->getParametersForCommentReminder($guest, $host, 'comment.reminder.guest.subject', $host);
+
+        return $this->sendTemplateEmail(
+            new Address(self::NO_REPLY_EMAIL_ADDRESS, 'BeWelcome'),
+            $guest,
+            $template,
+            $parameters
+        );
+    }
+
+    public function sendCommentReminderToHost(Member $guest, Member $host): bool
+    {
+        $parameters = $this->getParametersForCommentReminder($guest, $host, 'comment.reminder.host.subject', $guest);
+
+        return $this->sendTemplateEmail(
+            new Address(self::NO_REPLY_EMAIL_ADDRESS, 'BeWelcome'),
+            $host,
+            'comment.reminder.host',
+            $parameters
+        );
+    }
+
     private function sendCommentTemplateEmail(Comment $comment, string $template, array $parameters): bool
     {
         $parameters['sender'] = $comment->getFromMember();
@@ -312,10 +341,12 @@ class Mailer
         $this->translator->setLocale($language->getShortCode());
     }
 
-    private function prepareParametersForNewsletter(Newsletter $newsletter, Member $receiver)
+    private function prepareParametersForNewsletter(Newsletter $newsletter, Member $receiver): array
     {
         $newsletterType = $newsletter->getType();
         $newsletterName = $newsletter->getName();
+
+        $parameters = [];
         $parameters['sender'] = $this->determineSenderForNewsletter($newsletterType);
         $parameters['receiver'] = $receiver;
         $parameters['newsletter_type'] = $newsletterType;
@@ -350,4 +381,60 @@ class Mailer
         return $sender;
     }
 
+    private function getAddCommentATag(Member $member): string
+    {
+        $url = $this->urlGenerator->generate(
+            'add_comment',
+            ['username' => $member->getUsername()],
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
+
+        return sprintf('<a href="%s">', $url);
+    }
+
+    private function getProfileATag(Member $member): string
+    {
+        $url = $this->urlGenerator->generate(
+            'members_profile',
+            ['username' => $member->getUsername()],
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
+
+        return sprintf('<a href="%s">', $url);
+    }
+
+    private function getReportProfileATag(Member $member): string
+    {
+        $url = $this->urlGenerator->generate(
+            'feedback',
+            ['IdCategory' => 2, 'username' => $member->getUsername()],
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
+
+        return sprintf('<a href="%s">', $url);
+    }
+
+    private function getParametersForCommentReminder(Member $guest, Member $host, string $subject, Member $for): array
+    {
+        $parameters = [];
+        $parameters['guest'] = $guest->getUsername();
+        $parameters['host'] = $host->getUsername();
+        $parameters['subject'] = [
+            'translationId' => $subject,
+            'parameters' => [
+                'username' => $for->getUsername(),
+            ],
+        ];
+
+        $parameters['comment_start'] = $this->getAddCommentATag($for);
+        $parameters['comment_end'] = '</a>';
+
+        $parameters['profile_start'] = $this->getProfileATag($for);
+        $parameters['profile_end'] = '</a>';
+
+        $parameters['report_start'] = $this->getReportProfileATag($for);
+        $parameters['report_end'] = '</a>';
+
+        return $parameters;
+    }
 }

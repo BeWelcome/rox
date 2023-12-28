@@ -17,7 +17,7 @@
             </div>
              {% endif %}
         {% for news in communityNews %}
-        <div class="u-bg-gray-5 u-p-16 u-rounded-8 u-my-16">
+        <div class="community-news-wrapper u-bg-gray-5 u-p-16 u-rounded-8 u-my-16">
             <div class="u-flex u-justify-start u-items-center">
                 <div class="o-avatar o-avatar--m u-mt-8 u-mr-16">
                     {{ macros.roundedavatarstack( news.createdBy.Username, 72) }}
@@ -34,10 +34,10 @@
                         {% endif %}
                     </small>
                 </div>
-            </div>    
+            </div>
             <div class="u-ml-8 u-my-16 u-mr-16">
                 {{ news.text | truncate(500) | raw }}
-            </div>        
+            </div>
             <p class="u-ml-8 u-my-16 u-mr-16"><a href="{{ url('communitynews_show', { id: news.id} ) }}">{{ 'label.read.more' | trans }}</a> (<span class="text-muted">{% trans with {'%commentsCount%': news.comments|length} %}bewelcome_news.nrcomments{% endtrans %}</span>)
             </p>
         </div>

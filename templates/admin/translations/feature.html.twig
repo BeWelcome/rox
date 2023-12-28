@@ -11,7 +11,6 @@
 {% block content %}
     <h1>{{ 'translations.headline.feature.mockups' | trans }}</h1>
     <h2>{{ feature|humanize|capitalize }}</h2>
-    <div class="u-grid u-grid-cols-2 u-gap-8">
     {% set first = true %}
     {% set last_mockup_type = '' %}
     {% for name, mockup in provider.mockups %}
@@ -22,25 +21,24 @@
         {% endset %}
         {% set new_row = (last_mockup_type != mockup.type) %}
         {% if new_row %}
-            </div>{% if not loop.first %}<hr>{% endif %}<div class="u-grid u-grid-cols-2 u-gap-8">
+            {% if not loop.first %}<hr>{% endif %}<div class="u-grid u-grid-cols-2 u-gap-8">
             {% set last_mockup_type = mockup.type %}
         {% endif %}
         {% if mockup.with_parameters is defined and mockup.with_parameters == true %}
             {% set parameters = provider.mockupParameter(app.request.locale, name) %}
             {% for parameter_name, parameter in parameters %}
-                </div><hr><div class="u-grid u-grid-cols-2 u-gap-8">
                 {% for key, value in parameter %}
-                        <form class="form form-inline u-w-full" action="{{ url('translation_mockup_with_parameters', {feature: feature}) }}" method="post">
-                            <input type="hidden" name="name" value="{{ name }}">
-                            <input type="hidden" name="fullname" value="{{ name|capitalize }}: {{ parameter_name|capitalize }} - {{ key }}">
-                            <input type="hidden" name="{{ parameter_name }}" value="{{ value }}">
-                            <button type="submit" class="o-button u-w-full u-mr-4 u-mb-4">
-                                {{ icon }}&nbsp;{{ name|capitalize }}:&nbsp;{{ parameter_name|capitalize }}&nbsp;-&nbsp;{{ key }}
-                            </button>
-                        </form>
+                    <form class="form form-inline u-w-full" action="{{ url('translation_mockup_with_parameters', {feature: feature}) }}" method="post">
+                        <input type="hidden" name="name" value="{{ name }}">
+                        <input type="hidden" name="fullname" value="{{ name|capitalize }}: {{ parameter_name|capitalize }} - {{ key }}">
+                        <input type="hidden" name="{{ parameter_name }}" value="{{ value }}">
+                        <button type="submit" class="o-button u-w-full u-mr-4 u-mb-4">
+                            {{ icon }}&nbsp;{{ name|capitalize }}:&nbsp;{{ parameter_name|capitalize }}&nbsp;-&nbsp;{{ key }}
+                        </button>
+                    </form>
                 {% endfor %}
-                </div><div class="u-grid u-grid-cols-2 u-gap-8">
             {% endfor %}
+            </div>{% if not loop.last %}<hr>{% endif %}<div class="u-grid u-grid-cols-2 u-gap-8">
         {% else %}
             <a href="{{ url('translation_mockup', {feature: feature, name: name}) }}" class="o-button u-mr-4 u-mb-4">
                 {{ icon }}&nbsp;{{ name|capitalize }}

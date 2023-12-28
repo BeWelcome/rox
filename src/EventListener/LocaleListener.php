@@ -16,26 +16,17 @@ use Symfony\Component\HttpKernel\KernelEvents;
 
 class LocaleListener implements EventSubscriberInterface
 {
-    /** @var array */
-    private $locales;
+    private array $locales;
 
-    /**
-     * @var EntityManagerInterface
-     */
-    private $em;
+    private EntityManagerInterface $entityManager;
 
-    /**
-     * LocaleListener constructor.
-     *
-     * @param string $locales
-     */
-    public function __construct(EntityManagerInterface $em, $locales)
+    public function __construct(EntityManagerInterface $entityManager, array $locales)
     {
-        $this->em = $em;
-        $this->locales = explode(',', $locales);
+        $this->entityManager = $entityManager;
+        $this->locales = $locales;
     }
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             // must be registered before (i.e. with a higher priority than) the default Locale listener
@@ -81,7 +72,7 @@ class LocaleListener implements EventSubscriberInterface
         $request->setLocale($locale);
         Carbon::setLocale($locale);
 
-        $languageRepository = $this->em->getRepository(Language::class);
+        $languageRepository = $this->entityManager->getRepository(Language::class);
         /** @var Language $language */
         $language = $languageRepository->findOneBy([
             'shortCode' => $locale,

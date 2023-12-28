@@ -43,8 +43,7 @@ class TranslationAdapter implements AdapterInterface
                 AND (pi_lang.isArchived IS NULL OR pi_lang.isArchived = 0)
                 ";
         if (!empty($term)) {
-            $rawQuery .= " WHERE (pi_lang.code LIKE {$term} OR pi_dflt.code LIKE {$term})";
-            $rawQuery .= " OR (pi_lang.Sentence LIKE {$term} OR pi_dflt.Sentence LIKE {$term})";
+            $rawQuery .= " WHERE (p.code LIKE {$term} OR p.Sentence LIKE {$term})";
         }
 
         $this->query = str_replace('*select*', 'distinct p.code

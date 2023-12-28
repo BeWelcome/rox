@@ -34,6 +34,21 @@ class CommentMockups implements MockupProviderInterface
                 ],
             ],
         ],
+        'comment reminder_guest (first)' => [
+            'type' => 'email',
+            'template' => 'emails/comment.first.reminder.guest.html.twig',
+            'with_parameters' => false,
+        ],
+        'comment reminder_guest (second)' => [
+            'type' => 'email',
+            'template' => 'emails/comment.second.reminder.guest.html.twig',
+            'with_parameters' => false,
+        ],
+        'comment reminder_host' => [
+            'type' => 'email',
+            'template' => 'emails/comment.reminder.host.html.twig',
+            'with_parameters' => false,
+        ],
     ];
 
     public function getFeature(): string
@@ -66,11 +81,23 @@ class CommentMockups implements MockupProviderInterface
             'getUsername' => 'Sender',
         ]);
         $mockComment = Mockery::mock(Comment::class, [
-            'getQuality' => $parameters['quality'],
+            'getQuality' => $parameters['quality'] ?? CommentQualityType::NEUTRAL,
             'getTextWhere' => 'Somewhere over the rainbow',
             'getTextFree' => 'A comment.',
         ]);
 
-        return ['comment' => $mockComment, 'receiver' => $receiver, 'sender' => $sender];
+        return [
+            'comment' => $mockComment,
+            'receiver' => $receiver,
+            'sender' => $sender,
+            'host' => 'host',
+            'guest' => 'guest',
+            'comment_start' => '<a href="/members/host/comment/add">',
+            'comment_end' => '</a>',
+            'profile_start' => '<a href="/members/host">',
+            'profile_end' => '</a>',
+            'report_start' => '<a href="/feedback?IdCategory=2&username=host">',
+            'report_end' => '</a>',
+        ];
     }
 }

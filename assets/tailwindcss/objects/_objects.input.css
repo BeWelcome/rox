@@ -253,6 +253,7 @@ textarea.o-input::placeholder {
 
 .o-input--select {
   cursor: pointer;
+  padding-right: 32px;
 }
 
 .o-input--select-white {

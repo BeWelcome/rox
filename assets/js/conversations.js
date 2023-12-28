@@ -25,3 +25,18 @@ function updateConversations()
     parameters = parameters.replace('?&', '?');
     window.location.search = parameters;
 }
+
+const checkAll = document.getElementById('checkAll');
+const checkAllLabel = document.querySelector('label[for="checkAll"]');
+const checkAllLabelText = document.getElementById('checkAllLabelText').value;
+const uncheckAllLabelText = document.getElementById('uncheckAllLabelText').value;
+checkAll.addEventListener('click', (e) => {
+    const checkboxes = document.querySelectorAll('input[type=checkbox].checkable');
+    checkboxes.forEach((checkbox) => {checkbox.checked = checkAll.checked;
+    });
+    if (checkAll.checked) {
+        checkAllLabel.innerText = uncheckAllLabelText;
+    } else {
+        checkAllLabel.innerText = checkAllLabelText;
+    }
+})

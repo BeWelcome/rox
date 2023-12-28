@@ -262,7 +262,7 @@ SEARCH_FORM;
             $items[] = [
                 'allactivereports',
                 'forums/reporttomod/AllActiveReports',
-                'All pending reports <span class="badge badge-primary u-rounded-full u-w-20 u-h-20 u-inline-flex u-items-center u-justify-center">'
+                'All pending reports <span class="badge badge-primary u-rounded-8 u-min-w-20 u-h-20 u-inline-flex u-items-center u-justify-center">'
                 . $forumsModel->countReportList(0, "('Open','OnDiscussion')")
                 . '</span>'
             ];

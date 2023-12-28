@@ -24,7 +24,7 @@ class EnvironmentExplorer
         $this->setSession();
     }
 
-    public function initializeGlobalState($db_host, $db_name, $db_user, $db_password)
+    public function initializeGlobalState($db_host, $db_name, $db_user, $db_password, $manticore_host, $manticore_port)
     {
         if (!defined('SCRIPT_BASE')) {
             define('SCRIPT_BASE', getcwd() . '/../');
@@ -39,7 +39,7 @@ class EnvironmentExplorer
 
         $settings = $this->loadConfiguration();
 
-        $settings = $this->mergeNewConfig($settings, $dsn, $db_user, $db_password);
+        $settings = $this->mergeNewConfig($settings, $dsn, $db_user, $db_password, $manticore_host, $manticore_port);
 
         // No longer needed; session already started from Symfony code
         // $this->initSession($settings);
@@ -56,7 +56,7 @@ class EnvironmentExplorer
         // print_r($class_loader);
     }
 
-    protected function mergeNewConfig(array $settings, $dsn, $db_user, $db_password)
+    protected function mergeNewConfig(array $settings, $dsn, $db_user, $db_password, $manticore_host, $manticore_port)
     {
         $uri = (null === $this->urlGenerator) ?
             'http://localhost/' :
@@ -72,6 +72,8 @@ class EnvironmentExplorer
                 'baseuri' => $uri,
                 'baseuri_http' => str_replace('https://', 'http://', $uri),
                 'baseuri_https' => str_replace('http://', 'https://', $uri),
+                'manticore_host' => $manticore_host,
+                'manticore_port' => $manticore_port,
             ],
         ]);
     }

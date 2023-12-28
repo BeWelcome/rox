@@ -5,8 +5,8 @@
     <h2>{{ 'profile.relation.with'|trans({'username': member.username}) }}</h2>
 
     {{ form_start(form, { 'attr': { 'novalidate': 'novalidate' } }) }}
-    {{ form_row(form.comment) }}
-    {{ form_errors(form.comment) }}
+    {{ form_row(form.commentText) }}
+    {{ form_errors(form.commentText) }}
 
     <div class="u-flex u-justify-end u-my-8">
         <button type="submit" class="o-button">{{ buttonLabel|trans }}</button>

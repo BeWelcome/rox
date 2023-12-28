@@ -39,12 +39,12 @@ class SendNotificationsCommand extends Command
 
     public function __construct(
         EntityManagerInterface $entityManager,
-        ParameterBagInterface $params,
         LoggerInterface $logger,
-        Mailer $mailer
+        Mailer $mailer,
+        int $batchSize
     ) {
         parent::__construct();
-        $this->params = $params;
+        $this->batchSize = $batchSize;
         $this->logger = $logger;
         $this->entityManager = $entityManager;
         $this->mailer = $mailer;
@@ -66,7 +66,7 @@ class SendNotificationsCommand extends Command
         $batchSize = $input->getArgument('batchSize');
 
         if (!$batchSize) {
-            $batchSize = $this->params->get('forum_notification_batch_size');
+            $batchSize = $this->batchSize;
         }
 
         /** @var PostNotificationRepository $notificationQueue */

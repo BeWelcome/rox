@@ -275,7 +275,7 @@ class GroupModel
             ->setOwner($member)
             ->setTranslator($member)
             ->setSentence($data->description)
-            ->setIdrecord($group->getId())
+            ->setRecord($group->getId())
             ->setLanguage($language);
         $em->persist($description);
         $em->flush();
@@ -286,7 +286,7 @@ class GroupModel
             ->setOwner($member)
             ->setTranslator($member)
             ->setSentence('Group creator')
-            ->setIdrecord($group->getId())
+            ->setRecord($group->getId())
             ->setLanguage($english);
         $em->persist($groupComment);
         $em->flush();

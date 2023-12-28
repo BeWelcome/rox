@@ -13,3 +13,4 @@ if ($d) {
     <p class="small"><?=$words->get('by')?> <?=$member?></p>
     <p><?=$num_rows?> <?=$words->get('pictures')?></p>
 </div>
+<?php }

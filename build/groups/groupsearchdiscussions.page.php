@@ -19,30 +19,15 @@ along with this program; if not, see <http://www.gnu.org/licenses/> or
 write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 */
-
-
-    /**
-     * @author Fake51
-     */
-
-    /**
-     * This page asks if the user wants to leave the group
-     *
-     * @package Apps
-     * @subpackage Groups
-     */
 class GroupSearchDiscussionsPage extends GroupsSubPage
 {
     public function __construct($group)
     {
         parent::__construct($group);
-        $this->addLateLoadScriptFile('build/highlight.js');
+        $this->addLateLoadScriptFile('build/searchresults.js');
     }
 
     protected function getSubmenuActiveItem() {
         return 'search';
     }
 }
-
-
-?>

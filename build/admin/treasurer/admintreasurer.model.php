@@ -54,7 +54,7 @@ class AdminTreasurerModel extends RoxModelBase {
         if ($cc) {
             return $cc->geonameId;
         }
-        return 0;
+        return null;
     }
 
     public function getCountryCodeForGeonameId($geonameid) {
@@ -69,7 +69,7 @@ class AdminTreasurerModel extends RoxModelBase {
         if ($cc) {
             return $cc->fk_countrycode;
         }
-        return false;
+        return null;
     }
 
     public function createDonation($memberid, $donatedon, $amount, $comment, $countryid) {

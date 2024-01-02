@@ -469,9 +469,7 @@ A TERRIBLE EXCEPTION
             $page->layoutkit = $this->createLayoutkit();
         }
 
-        if (!method_exists($page, 'render')) {
-            // ok, don't render it.
-        } else  {
+        if (null !== $page  && method_exists($page, 'render')) {
             // do the rendering here
             // (this case is for backwards compatibility)
             $page->render();

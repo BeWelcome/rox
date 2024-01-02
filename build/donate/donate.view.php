@@ -8,7 +8,7 @@ class DonateView extends PAppView
      * @param void
      */
     private $_model;
-    
+
     public function __construct(DonateModel &$model) {
         $this->_model =& $model;
     }
@@ -27,7 +27,7 @@ class DonateView extends PAppView
             require 'templates/donate_list.php';
         } else require 'templates/donate.php';
     }
-    
+
     public function donateBar($TDonationArray = false)
     {
          $Stat=$this->_model->getStatForDonations() ;
@@ -36,6 +36,11 @@ class DonateView extends PAppView
 
     public function submenu($sub) {
         require 'templates/submenu_donate.php';
+    }
+
+    protected function addStyles()
+    {
+        return [];
     }
 }
 

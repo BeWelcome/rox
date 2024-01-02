@@ -840,7 +840,7 @@ class GroupsController extends RoxControllerBase
         $group = $this->_getGroupFromRequest();
         if (!$this->_model->canAccessGroupAdmin($group))
         {
-            $this->redirectAbsolute($this->router->url('groups_redirect'));
+            $this->redirectAbsolute('/groups');
             PPHP::PExit();
         }
 
@@ -850,7 +850,7 @@ class GroupsController extends RoxControllerBase
         {
             $this->_model->deleteGroup($group);
             $this->logWrite("Group #{$group->getPKValue()} was deleted by member #{$this->_model->getLoggedInMember()->getPKValue()}");
-            $this->redirectAbsolute($this->router->url('groups_redirect'));
+            $this->redirectAbsolute('/groups');
             PPHP::PExit();
         }
         else

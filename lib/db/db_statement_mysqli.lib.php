@@ -102,7 +102,7 @@ class PDBStatement_mysqli extends PDBStatement {
             $bstring = '';
             $args = array();
             foreach ($this->_bound as $val) {
-                $bstring .= is_int($val) ? 'i' : is_float($val) ? 'd' : 's';
+                $bstring .= is_int($val) ? 'i' : (is_float($val) ? 'd' : 's');
                 $args[] = $val;
             }
             $tmp = array();

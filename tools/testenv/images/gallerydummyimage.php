@@ -2,7 +2,7 @@
 class GalleryDummyImage extends DummyImage
 {
     const IMAGE_DIR = '../../../data/gallery';
-    
+
     protected $user; // userid for this galleryimage
 
     /**
@@ -60,7 +60,7 @@ class GalleryDummyImage extends DummyImage
      **/
     protected function setImageDir()
     {
-        $imgDir = STATIC::IMAGE_DIR . '/user' . $this->user;
+        $imgDir = STATIC::IMAGE_DIR . '/member' . $this->user;
         if (!is_dir($imgDir)) {
             mkdir($imgDir,'0777',true);
         }

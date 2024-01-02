@@ -138,7 +138,7 @@ public function hasRight($Name, $_Scope = "", $OptionalIdMember = 0)
 
 	$Scope = rtrim(ltrim($_Scope)); // ensure they are no extra spaces
 	if ($Scope != "") {
-		if ($Scope {0} != "\"")
+		if ($Scope[0] != "\"")
 		$Scope = "\"" . $Scope . "\""; // add the " " if they are missing
 	}
 
@@ -193,7 +193,7 @@ WHERE IdMember=' . $IdMember . ' AND '.$this->nomtable.'.id='.$this->nomtablevol
  * Checks, if the logged on member has any right by searching her
  * in the table $table.volunteers
  *
- * @return true, if the current user is logged on and
+ * @return is true if the current user is logged on and
  * exists in table $table.volunteers
  * Improvment by JeanYves : if the member has not any right,
  *  a $this->session->get("hasRightAny")="no" is set, this will allow
@@ -208,7 +208,7 @@ public function hasRightAny()
 	     ($this->session->has( 'hasRightAny' ) and
 		 ($this->session->get('hasRightAny')=='no'))) ){
 
-		 return(false) ;
+		 return false;
 	}
 
     $A = new MOD_bw_user_Auth();

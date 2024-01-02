@@ -15,17 +15,17 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program; if not, see <http://www.gnu.org/licenses/> or 
-write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+along with this program; if not, see <http://www.gnu.org/licenses/> or
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 */
-    /** 
+    /**
      * @author Tsjoek
      */
 
-    /** 
+    /**
      * words management base page
-     * 
+     *
      * @package Apps
      * @subpackage Admin
      */
@@ -34,12 +34,12 @@ class AdminWordBasePage extends PageWithActiveSkin
 {
     protected $purifier; // instance of html-purifier
     public $formdata = array(); // data collected from the form
-    
+
     public function __construct($model = false) {
         parent::__construct();
-        $this->purifier = MOD_htmlpure::getSuggestionsHtmlPurifier();
+        $this->purifier = (new MOD_htmlpure())->getSuggestionsHtmlPurifier();
     }
-    
+
     /*
      * default browsertab title
      *
@@ -64,8 +64,8 @@ class AdminWordBasePage extends PageWithActiveSkin
     protected function leftSidebar() {
         include '../build/admin/word/templates/adminword.leftsidebar.php';
     }
-    
-    protected function getStylesheets() 
+
+    protected function getStylesheets()
     {
        $stylesheets = parent::getStylesheets();
        $stylesheets[] = 'styles/css/minimal/screen/custom/adminword.css';

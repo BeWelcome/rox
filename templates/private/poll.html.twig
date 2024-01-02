@@ -1,4 +1,4 @@
-<p><strong>{{ 'mydata.polls.description' }}</strong><br>
+<p><strong>{{ 'mydata.polls.description'|trans }}</strong><br>
 {% if poll.descriptions|length %}
     {% for locale,description in poll.descriptions %}
         <small class="text-muted mt-0 pt-0">{{ locale }}</small><br>

@@ -2,6 +2,7 @@
 
 namespace App\Model\MockupProvider;
 
+use App\Doctrine\GroupMembershipStatusType;
 use App\Doctrine\SubtripOptionsType;
 use App\Doctrine\TripAdditionalInfoType;
 use App\Entity\Activity;
@@ -10,6 +11,7 @@ use App\Entity\Comment;
 use App\Entity\CommunityNews;
 use App\Entity\Donations;
 use App\Entity\Group;
+use App\Entity\GroupMembership;
 use App\Entity\HostingRequest;
 use App\Entity\Location;
 use App\Entity\Log;
@@ -97,6 +99,12 @@ class MyDataMockups implements MockupProviderInterface
             'template' => 'private/post.html.twig',
             'description' => 'Shows a single post to groups or forum',
         ],
+        'groups' => [
+            'type' => 'template',
+            'with_parameters' => true,
+            'template' => 'private/groups.html.twig',
+            'description' => 'Shows the groups of the member',
+        ],
     ];
     private InvitationUtility $invitationUtility;
 
@@ -178,6 +186,7 @@ class MyDataMockups implements MockupProviderInterface
             case 'logs':
             case 'newsletters':
             case 'pictures':
+            case 'groups':
             case 'polls_contributed':
             case 'polls_created':
             case 'polls_voted':
@@ -333,6 +342,8 @@ class MyDataMockups implements MockupProviderInterface
                 $key = 'hrefs';
                 $mockEntity = 'https://source.unsplash.com/random/300×300';
                 break;
+            case 'groups':
+                return ['groupmemberships' => $this->getGroupMemberships($parameters['count'])];
             case 'logs':
                 $mockEntity = Mockery::mock(Log::class, [
                     'getType' => 'log',
@@ -739,5 +750,38 @@ class MyDataMockups implements MockupProviderInterface
                 ],
             ],
         ];
+    }
+
+    private function getGroupMemberships(int $count): array
+    {
+        $groupMemberships = [];
+        for ($index = 0; $index < $count; $index++) {
+             $groupMemberships[] = Mockery::mock(GroupMembership::class, [
+                 'getGroup' => Mockery::mock(Group::class, [
+                     'getName' => 'group #' . ($index + 1),
+                     'getId' => ($index + 1),
+                 ]),
+                 'getCreated' => new DateTime(),
+                 'getStatus' => GroupMembershipStatusType::CURRENT_MEMBER,
+                 'getComments' => [
+                     [
+                        'code' => 'mydata.translations.headline',
+                        'Sentence' => 'Translations',
+                        'shortCode' => 'en',
+                        'Language' => ['WordCode' => 'lang_pt'],
+                        'created' => (new DateTime())->format('Y-m-d'),
+                    ],
+                    [
+                        'code' => 'mydata.translations.abstract',
+                        'Sentence' => 'Traducions',
+                        'shortCode' => 'en',
+                        'Language' => ['WordCode' => 'lang_es'],
+                        'created' => (new DateTime())->format('Y-m-d'),
+                    ],
+                 ],
+             ]);
+        }
+
+        return $groupMemberships;
     }
 }

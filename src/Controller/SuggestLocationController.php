@@ -9,14 +9,17 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SuggestLocationController extends AbstractController
 {
     private LoggerInterface $logger;
+    private TranslatorInterface $translator;
 
-    public function __construct(LoggerInterface $logger)
+    public function __construct(LoggerInterface $logger, TranslatorInterface $translator)
     {
         $this->logger = $logger;
+        $this->translator = $translator;
     }
 
     /**
@@ -27,7 +30,7 @@ class SuggestLocationController extends AbstractController
         $response = new JsonResponse();
         $searchTerm = $request->query->get('term', '');
 
-        $this->logger->alert("Search term: {$searchTerm}");
+        $this->logSearchInfo(__METHOD__, $searchTerm);
 
         $result = $model->getSuggestionsForPlacesExact($searchTerm);
         $response->setData($result);
@@ -43,7 +46,7 @@ class SuggestLocationController extends AbstractController
         $response = new JsonResponse();
         $searchTerm = $request->query->get('term', '');
 
-        $this->logger->alert("Search term: {$searchTerm}");
+        $this->logSearchInfo(__METHOD__, $searchTerm);
 
         $result = $model->getSuggestionsForPlaces($searchTerm);
         $response->setData($result);
@@ -62,11 +65,16 @@ class SuggestLocationController extends AbstractController
         $response = new JsonResponse();
         $searchTerm = $request->query->get('term', '');
 
-        $this->logger->alert("Search term: {$searchTerm}");
+        $this->logSearchInfo(__METHOD__, $searchTerm);
 
         $result = $model->getSuggestionsForLocations($searchTerm);
         $response->setData($result);
 
         return $response;
+    }
+
+    private function logSearchInfo(string $function, string $searchTerm)
+    {
+        $this->logger->alert($function, ['locale' => $this->translator->getLocale(), 'searchTerm' => $searchTerm]);
     }
 }

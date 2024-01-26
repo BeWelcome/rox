@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Model\SuggestLocationModel;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -11,12 +12,11 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class SuggestLocationController extends AbstractController
 {
-    /**
-     * @Route("/suggest/location", name="suggest_location")
-     */
-    public function index(): Response
+    private LoggerInterface $logger;
+
+    public function __construct(LoggerInterface $logger)
     {
-        return $this->render('suggest_location/index.html.twig');
+        $this->logger = $logger;
     }
 
     /**
@@ -26,6 +26,8 @@ class SuggestLocationController extends AbstractController
     {
         $response = new JsonResponse();
         $searchTerm = $request->query->get('term', '');
+
+        $this->logger->alert("Search term: {$searchTerm}");
 
         $result = $model->getSuggestionsForPlacesExact($searchTerm);
         $response->setData($result);
@@ -40,6 +42,8 @@ class SuggestLocationController extends AbstractController
     {
         $response = new JsonResponse();
         $searchTerm = $request->query->get('term', '');
+
+        $this->logger->alert("Search term: {$searchTerm}");
 
         $result = $model->getSuggestionsForPlaces($searchTerm);
         $response->setData($result);
@@ -57,6 +61,8 @@ class SuggestLocationController extends AbstractController
     {
         $response = new JsonResponse();
         $searchTerm = $request->query->get('term', '');
+
+        $this->logger->alert("Search term: {$searchTerm}");
 
         $result = $model->getSuggestionsForLocations($searchTerm);
         $response->setData($result);

@@ -28,11 +28,11 @@ class SuggestLocationController extends AbstractController
     public function suggestExactPlaces(Request $request, SuggestLocationModel $model): JsonResponse
     {
         $response = new JsonResponse();
-        $searchTerm = $request->query->get('term', '');
+        $searchTerms = $this->splitElements($request->query->get('term', ''));
 
-        $this->logSearchInfo(__METHOD__, $searchTerm);
+        $this->logSearchInfo(__METHOD__, $searchTerms);
 
-        $result = $model->getSuggestionsForPlacesExact($searchTerm);
+        $result = $model->getSuggestionsForPlacesExact($searchTerms);
         $response->setData($result);
 
         return $response;
@@ -44,11 +44,11 @@ class SuggestLocationController extends AbstractController
     public function suggestPlaces(Request $request, SuggestLocationModel $model): JsonResponse
     {
         $response = new JsonResponse();
-        $searchTerm = $request->query->get('term', '');
+        $searchTerms = $this->splitElements($request->query->get('term', ''));
 
-        $this->logSearchInfo(__METHOD__, $searchTerm);
+        $this->logSearchInfo(__METHOD__, $searchTerms);
 
-        $result = $model->getSuggestionsForPlaces($searchTerm);
+        $result = $model->getSuggestionsForPlaces($searchTerms);
         $response->setData($result);
 
         return $response;
@@ -63,18 +63,23 @@ class SuggestLocationController extends AbstractController
     public function suggestLocations(Request $request, SuggestLocationModel $model): JsonResponse
     {
         $response = new JsonResponse();
-        $searchTerm = $request->query->get('term', '');
+        $searchTerms = $this->splitElements($request->query->get('term', ''));
 
-        $this->logSearchInfo(__METHOD__, $searchTerm);
+        $this->logSearchInfo(__METHOD__, $searchTerms);
 
-        $result = $model->getSuggestionsForLocations($searchTerm);
+        $result = $model->getSuggestionsForLocations($searchTerms);
         $response->setData($result);
 
         return $response;
     }
 
-    private function logSearchInfo(string $function, string $searchTerm)
+    private function logSearchInfo(string $function, array $searchTerms)
     {
-        $this->logger->alert($function, ['locale' => $this->translator->getLocale(), 'searchTerm' => $searchTerm]);
+        $this->logger->alert($function, ['locale' => $this->translator->getLocale(), 'searchTerms' => $searchTerms]);
+    }
+
+    private function splitElements(string $searchTerm): array
+    {
+        return array_filter(array_map('trim', explode(',', $searchTerm)), 'strlen');
     }
 }

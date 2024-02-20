@@ -73,25 +73,29 @@ class AdminTreasurerModel extends RoxModelBase {
     }
 
     public function createDonation($memberid, $donatedon, $amount, $comment, $countryid) {
-        $query = "
+        $statement = $this->dao->prepare("
             INSERT INTO
                 donations
             SET
-                IdMember = " . $memberid . ",
+                IdMember = ?,
                 Email = '',
                 StatusPrivate = 'showamountonly',
-                created = '" .  $donatedon . "',
-                Amount = " . $amount . ",
+                created = ?,
+                Amount = ?,
                 Money = '',
-                IdCountry = " . $countryid . ",
+                IdCountry = ?,
                 namegiven = '',
                 referencepaypal = '',
                 membercomment = '',
-                SystemComment = '" . $this->dao->escape($comment) . "'";
-        $affected = $this->dao->exec($query);
-        if ($affected != 1) {
-            return false;
-        }
+                SystemComment = ?
+        ");
+        $statement->bindParam(1, $memberid);
+        $statement->bindParam(2, $donatedon);
+        $statement->bindParam(3, $amount);
+        $statement->bindParam(4, $countryid);
+        $statement->bindParam(5, $comment);
+        $statement->execute();
+
         return true;
     }
 

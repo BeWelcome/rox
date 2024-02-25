@@ -95,5 +95,6 @@ doctrine:
         dql:
             datetime_functions:
                 datediff: App\Doctrine\Functions\DateDiff
+                timestampdiff: App\Doctrine\Functions\TimestampDiff
                 yearweek: App\Doctrine\Functions\YearWeek
                 geodistance: App\Doctrine\Functions\GeoDistance

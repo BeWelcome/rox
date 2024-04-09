@@ -7,18 +7,22 @@ use App\Entity\Member;
 use App\Entity\NewLocation;
 use App\Entity\Preference;
 use App\Entity\ProfileVisit;
+use App\Form\DeleteProfileFormType;
 use App\Form\ProfileStatusFormType;
 use App\Form\SearchLocationType;
 use App\Form\SetLocationType;
+use App\Model\ProfileModel;
 use App\Repository\ProfileVisitRepository;
 use App\Utilities\ChangeProfilePictureGlobals;
 use App\Utilities\ProfileSubmenu;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -27,11 +31,16 @@ class ProfileController extends AbstractController
 {
     private ProfileSubmenu $profileSubmenu;
     private ChangeProfilePictureGlobals $globals;
+    private EntityManagerInterface $entityManager;
 
-    public function __construct(ChangeProfilePictureGlobals $globals, ProfileSubmenu $profileSubmenu)
-    {
+    public function __construct(
+        ChangeProfilePictureGlobals $globals,
+        ProfileSubmenu $profileSubmenu,
+        EntityManagerInterface $entityManager
+    ) {
         $this->globals = $globals;
         $this->profileSubmenu = $profileSubmenu;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -90,7 +99,6 @@ class ProfileController extends AbstractController
      */
     public function showMyVisitors(
         Member $member,
-        ProfileSubmenu $profileSubmenu,
         EntityManagerInterface $entityManager,
         int $page = 1
     ): Response {
@@ -119,7 +127,7 @@ class ProfileController extends AbstractController
             'member' => $member,
             'visits' => $visits,
             'globals_js_json' => $this->globals->getGlobalsJsAsJson($member, $loggedInMember),
-            'submenu' => $profileSubmenu->getSubmenu($member, $loggedInMember, ['active' => 'visitors']),
+            'submenu' => $this->profileSubmenu->getSubmenu($member, $loggedInMember, ['active' => 'visitors']),
         ]);
     }
 
@@ -137,7 +145,6 @@ class ProfileController extends AbstractController
     public function setLocation(
         Request $request,
         Member $member,
-        ProfileSubmenu $profileSubmenu,
         EntityManagerInterface $entityManager
     ): Response {
         /** @var Member $loggedInMember */
@@ -188,6 +195,90 @@ class ProfileController extends AbstractController
         ]);
     }
 
+    /**
+     * @Route("/deleteprofile", name="profile_delete_redirect")
+     */
+    public function deleteProfileNotLoggedIn(
+        Request $request,
+        ProfileModel $profileModel,
+        TranslatorInterface $translator,
+        PasswordHasherFactoryInterface $passwordHasherFactory
+    ): Response {
+        /** @var Member $member */
+        $member = $this->getUser();
+
+        if (null !== $member) {
+             return $this->redirectToRoute('profile_delete', ['username' => $member->getUsername()]);
+        }
+
+        $deleteProfileForm = $this->createForm(DeleteProfileFormType::class, null, [
+            'loggedIn' => false,
+        ]);
+        $deleteProfileForm->handleRequest($request);
+
+        if ($deleteProfileForm->isSubmitted() && $deleteProfileForm->isValid()) {
+            $data = $deleteProfileForm->getData();
+            $memberRepository = $this->entityManager->getRepository(Member::class);
+            $member = $memberRepository->find($data['username']);
+
+            $verified = false;
+            if (null === $member) {
+                $deleteProfileForm->addError(new FormError($translator->trans('profile.delete.credentials')));
+            } else {
+                $passwordHasher = $passwordHasherFactory->getPasswordHasher($member);
+                $verified = $passwordHasher->verify($member->getPassword(), $data['password']);
+
+                if (!$verified) {
+                    $deleteProfileForm->addError(new FormError($translator->trans('profile.delete.credentials')));
+                }
+            }
+
+            $success = false;
+            if ($verified) {
+                $success = $profileModel->retireProfile($member, $data);
+            }
+
+            if ($success) {
+                return $this->redirectToRoute('/logout');
+            }
+        }
+
+        return $this->render('profile/delete.not.logged.in.html.twig', [
+            'form' => $deleteProfileForm->createView()
+        ]);
+    }
+
+    /**
+     * @Route("/members/{username}/delete", name="profile_delete")
+     */
+    public function deleteProfile(Request $request, Member $member, ProfileModel $profileModel): Response
+    {
+        $loggedInMember = $this->getUser();
+        if ($member !== $loggedInMember) {
+            return $this->redirectToRoute('members_profile', ['username' => $member->getUsername()]);
+        }
+
+        $deleteProfileForm = $this->createForm(DeleteProfileFormType::class, null, [
+            'loggedIn' => true,
+        ]);
+        $deleteProfileForm->handleRequest($request);
+
+        if ($deleteProfileForm->isSubmitted() && $deleteProfileForm->isValid()) {
+            $success = $profileModel->retireProfile($member, $deleteProfileForm->getData());
+
+            if ($success) {
+                return $this->redirectToRoute('security_logout');
+            }
+        }
+
+        return $this->render('profile/delete.html.twig', [
+            'form' => $deleteProfileForm->createView(),
+            'member' => $member,
+            'globals_js_json' => $this->globals->getGlobalsJsAsJson($member, $member),
+            'submenu' => $this->profileSubmenu->getSubmenu($member, $member, ['active' => 'profile']),
+        ]);
+    }
+
     private function renderProfile(bool $ownProfile, Member $member, Member $loggedInMember): Response
     {
         return $this->render('profile/show.html.twig', [
@@ -196,5 +287,32 @@ class ProfileController extends AbstractController
             'globals_js_json' => $this->globals->getGlobalsJsAsJson($member, $loggedInMember),
             'submenu' => $this->profileSubmenu->getSubmenu($member, $loggedInMember),
         ]);
+    }
+
+    private function deleteProfileProcess(Request $request, bool $loggedIn): Response
+    {
+        $deleteProfileForm = $this->createForm(DeleteProfileFormType::class, null, [
+            'loggedIn' => $loggedIn,
+        ]);
+        $deleteProfileForm->handleRequest($request);
+
+        if ($deleteProfileForm->isSubmitted() && $deleteProfileForm->isValid()) {
+            $data = $deleteProfileForm->getData();
+            if (false === $loggedIn) {
+                // Check credentials
+            }
+
+            // handle delete profile form.
+
+            return $this->redirectToRoute('logout');
+        }
+
+        return $this->render('profile/delete.html.twig', [
+            'form' => $deleteProfileForm->createView(),
+            'member' => $member,
+            'globals_js_json' => $this->globals->getGlobalsJsAsJson($member, $member),
+            'submenu' => $profileSubmenu->getSubmenu($member, $member, ['active' => 'profile']),
+        ]);
+
     }
 }

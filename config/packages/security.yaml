@@ -99,6 +99,7 @@ security:
         - { path: ^/volunteer, roles: PUBLIC_ACCESS }
         - { path: ^/communitynews, roles: PUBLIC_ACCESS }
         - { path: ^/members/avatar/, roles: PUBLIC_ACCESS }
+        - { path: ^/deleteprofile, roles: PUBLIC_ACCESS }
         - { path: ^/admin, roles: ROLE_ADMIN }
         - { path: ^/api, roles: PUBLIC_ACCESS }
         - { path: ^/, roles: ROLE_USER }

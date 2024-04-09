@@ -27,6 +27,7 @@ class Mailer
     private const GROUP_EMAIL_ADDRESS = 'group@bewelcome.org';
     private const PASSWORD_EMAIL_ADDRESS = 'password@bewelcome.org';
     private const SIGNUP_EMAIL_ADDRESS = 'signup@bewelcome.org';
+    private const ACCOUNT_FEEDBACK_ADDRESS = 'account@bewelcome.org';
 
     /** @var MailerInterface */
     private $mailer;
@@ -238,6 +239,20 @@ class Mailer
             $host,
             'comment.reminder.host',
             $parameters
+        );
+    }
+
+    public function sendProfileDeletionFeedback(Member $retiree, string $body): bool
+    {
+        return $this->sendTemplateEmail(
+            $this->getBeWelcomeAddress($retiree, self::NO_REPLY_EMAIL_ADDRESS),
+            new Address(self::ACCOUNT_FEEDBACK_ADDRESS, 'BeWelcome'),
+            'profile.delete.feedback',
+            [
+                'subject' => 'profile.delete.feedback',
+                'member' => $retiree,
+                'body' => $body
+            ]
         );
     }
 

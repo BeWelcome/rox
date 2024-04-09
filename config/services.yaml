@@ -19,7 +19,7 @@ parameters:
     forum_notification_batch_size: '%env(int:forum_notification_batch_size)%'
     locales: "%env(csv:LOCALES)%"
     document_locales: "%env(DOCUMENT_LOCALES)%"
-    app.username.regexp: !php/const App\Entity\Member::USERNAME_REGEXP
+    username.pattern: "/[a-z](?!.*[-_.][-_.])[a-z0-9-._]{2,18}[a-z0-9]/i"
     manticore.host: '%env(MANTICORE_HOST)%'
     manticore.port: '%env(int:MANTICORE_PORT)%'
 
@@ -36,6 +36,7 @@ services:
             $manticoreHost: '%manticore.host%'
             $manticorePort: '%manticore.port%'
             $locales: '%locales%'
+            $formLoginAuthenticator: '@security.authenticator.form_login.main'
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
@@ -254,7 +255,6 @@ services:
     app.user_locale_listener:
         public: true
         class: App\EventListener\UserLocaleListener
-        arguments: [ '@session', '@doctrine.orm.entity_manager' ]
         tags:
             - { name: kernel.event_subscriber }
 
@@ -475,3 +475,12 @@ services:
     app.mockup_provider.comments:
         class: App\Model\MockupProvider\CommentMockups
         tags: [ 'app.mockup_provider' ]
+
+    app.mockup_provider.profile:
+        class: App\Model\MockupProvider\ProfileMockups
+        tags: [ 'app.mockup_provider' ]
+
+#    app.signup.form:
+#        class: App\Form\SignupFormType
+#        arguments:
+#            $usernamePattern: '%username.pattern%'

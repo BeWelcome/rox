@@ -30,14 +30,12 @@ class DeleteProfileFormType extends AbstractType
                 ->add('username', TextType::class, [
                     'required' => false,
                     'constraints' => [
-                        new NotNull(),
                         new NotBlank(),
                     ],
                 ])
                 ->add('password', PasswordType::class, [
                     'required' => false,
                     'constraints' => [
-                        new NotNull(),
                         new NotBlank(),
                     ],
                 ])

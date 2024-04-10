@@ -226,7 +226,7 @@ class ProfileController extends AbstractController
             }
 
             if ($success) {
-                return $this->redirectToRoute('homepage');
+                return $this->redirectToRoute('security_logout');
             }
         }
 

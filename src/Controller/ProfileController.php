@@ -219,7 +219,7 @@ class ProfileController extends AbstractController
         if ($deleteProfileForm->isSubmitted() && $deleteProfileForm->isValid()) {
             $data = $deleteProfileForm->getData();
             $memberRepository = $this->entityManager->getRepository(Member::class);
-            $member = $memberRepository->find($data['username']);
+            $member = $memberRepository->findOneBy(['username' => $data['username']]);
 
             $verified = false;
             if (null === $member) {
@@ -239,7 +239,7 @@ class ProfileController extends AbstractController
             }
 
             if ($success) {
-                return $this->redirectToRoute('/logout');
+                return $this->redirectToRoute('security_logout');
             }
         }
 

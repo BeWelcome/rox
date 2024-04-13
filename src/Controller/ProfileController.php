@@ -24,6 +24,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -222,7 +223,7 @@ class ProfileController extends AbstractController
             $member = $memberRepository->findOneBy(['username' => $data['username']]);
 
             $verified = false;
-            if (null === $member) {
+            if (null === $member || !$member->isBrowsable()) {
                 $deleteProfileForm->addError(new FormError($translator->trans('profile.delete.credentials')));
             } else {
                 $passwordHasher = $passwordHasherFactory->getPasswordHasher($member);
@@ -239,7 +240,7 @@ class ProfileController extends AbstractController
             }
 
             if ($success) {
-                return $this->redirectToRoute('security_logout');
+                return $this->redirectToRoute('homepage');
             }
         }
 
@@ -251,8 +252,12 @@ class ProfileController extends AbstractController
     /**
      * @Route("/members/{username}/delete", name="profile_delete")
      */
-    public function deleteProfile(Request $request, Member $member, ProfileModel $profileModel): Response
-    {
+    public function deleteProfile(
+        Request $request,
+        TokenStorageInterface $tokenStorage,
+        Member $member,
+        ProfileModel $profileModel
+    ): Response {
         $loggedInMember = $this->getUser();
         if ($member !== $loggedInMember) {
             return $this->redirectToRoute('members_profile', ['username' => $member->getUsername()]);
@@ -267,7 +272,10 @@ class ProfileController extends AbstractController
             $success = $profileModel->retireProfile($member, $deleteProfileForm->getData());
 
             if ($success) {
-                return $this->redirectToRoute('security_logout');
+                // force logout
+                $tokenStorage->setToken(null); // Force logout
+                $request->getSession()->invalidate();
+                return $this->redirectToRoute('homepage');
             }
         }
 

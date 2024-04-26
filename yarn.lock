@@ -1822,6 +1822,11 @@
     "@types/qs" "*"
     "@types/serve-static" "*"
 
+"@types/geojson@*", "@types/geojson@^7946.0.13":
+  version "7946.0.13"
+  resolved "https://registry.yarnpkg.com/@types/geojson/-/geojson-7946.0.13.tgz#e6e77ea9ecf36564980a861e24e62a095988775e"
+  integrity sha512-bmrNrgKMOhM3WsafmbGmC+6dsF2Z308vLFsQ3a/bT8X8Sv5clVYpPars/UPq+sAaJP+5OoLAYgwbkS5QEJdLUQ==
+
 "@types/glob@^7.1.1":
   version "7.2.0"
   resolved "https://registry.yarnpkg.com/@types/glob/-/glob-7.2.0.tgz#bc1b5bf3aa92f25bd5dd39f35c57361bdce5b2eb"
@@ -1865,6 +1870,20 @@
   version "7.0.15"
   resolved "https://registry.yarnpkg.com/@types/json-schema/-/json-schema-7.0.15.tgz#596a1747233694d50f6ad8a7869fcb6f56cf5841"
   integrity sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==
+
+"@types/leaflet-fullscreen@^1.0.9":
+  version "1.0.9"
+  resolved "https://registry.yarnpkg.com/@types/leaflet-fullscreen/-/leaflet-fullscreen-1.0.9.tgz#e24cd9987b45f70ce2ce964c5678cebc0ff1c399"
+  integrity sha512-fureyKU1+ye+xkGFh67layhTX/wO6ZuMrYuBhJBHkek6chdzlDgE8wZNG/jjioXrEnNHdHH+jiIo5oeuF5y2Hw==
+  dependencies:
+    "@types/leaflet" "*"
+
+"@types/leaflet@*", "@types/leaflet@^1.9.8":
+  version "1.9.8"
+  resolved "https://registry.yarnpkg.com/@types/leaflet/-/leaflet-1.9.8.tgz#32162a8eaf305c63267e99470b9603b5883e63e8"
+  integrity sha512-EXdsL4EhoUtGm2GC2ZYtXn+Fzc6pluVgagvo2VC1RHWToLGlTRwVYoDpqS/7QXa01rmDyBjJk3Catpf60VMkwg==
+  dependencies:
+    "@types/geojson" "*"
 
 "@types/mime@*":
   version "3.0.4"
@@ -6191,6 +6210,11 @@ range-parser@^1.2.1, range-parser@~1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/range-parser/-/range-parser-1.2.1.tgz#3cf37023d199e1c24d1a55b84800c2f3e6468031"
   integrity sha512-Hrgsx+orqoygnmhFbKaHE6c296J+HTAQXoxEF6gNupROmmGJRoyzfG3ccAveqCBrwr/2yxQ5BVd/GTl5agOwSg==
+
+rangeslider-pure@^0.4.11:
+  version "0.4.11"
+  resolved "https://registry.yarnpkg.com/rangeslider-pure/-/rangeslider-pure-0.4.11.tgz#e06ea857c47e24e6a01f6ef0bd31d2e31fb3de10"
+  integrity sha512-/dI1OFYj4chJuIUiUc3XlefSTDff8mAQyE0Yjke4Ozta+GsOtZaSV2U5AkUTFmE0ngMKYb23h5G1iAUJ5o8C8w==
 
 rangeslider.js@^2.3.3:
   version "2.3.3"

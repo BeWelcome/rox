@@ -1,0 +1,83 @@
+label.username:
+    - "@signupusername"
+help.username:
+    - '@subline_username'
+placeholder.username:
+    - Choose your username
+    - Placeholder on the signup page for the username field.
+label.name:
+    - Name
+    - Label for the name field (replaces first, second and last name)
+placeholder.name:
+    - Enter your name
+    - Placeholder on the signup page for the username field.
+help.name:
+    - Your name is hidden after signup but you can enable it to be shown in search results and on your profile.
+    - Help text for the name field.
+label.gender:
+    - Gender
+    - Label for the gender radio buttons
+help.gender:
+    - Your gender is hidden after signup but you can enable it to be shown in search results and on your profile.
+    - Help text for the gender field.
+label.birthdate:
+    - Date of birth
+    - Label for the date of birth field
+help.birthdate:
+    - Your date of birth is never shown to other members. You can choode to show your age on the profile and in search results, though.
+    - Help text for the birth date field.
+label.accommodation:
+    - Accommodation
+    - Label for the accommodation field.
+help.accommodation:
+    - Select if you're able to host other members. In case you are, you will then be able to set a hosting interest.
+    - Help text for the accommodation field.
+label.hosting_interest:
+    - Hosting Interest
+    - Label for the hosting interest slider.
+help.hosting_interest:
+    - You can set an interest in the range of 1 (very low) to 10 (can't wait). The higher the interest the higher you will show up in the search results of members looking for a host.
+    - Help text for the hosting interest slider.
+label.email:
+    - "@SignupEmail"
+placeholder.email:
+    - Your email address
+    - Placeholder on the signup page for the email address field.
+error.email.blank:
+    - You need to enter an email address.
+    - Error message in case the prospective new member doesn't enter any email address
+help.email:
+    - BeWelcome uses your email address to forward messages from members and to send other notifications. The address itself is not visible to other members.
+    - Help text for the email address field.
+label.password:
+    - "@SignupPassword"
+placeholder.password:
+    - Enter a password
+    - Placeholder on the signup page for the password field.
+error.password.blank:
+    - You need to enter a password.
+    - Error message shown in case the password field on signup and other places is empty.
+help.password:
+    - The password needs to be at least 6 characters long. But it is a good idea to choose a longer and complex password.
+    - Help text for the password field.
+label.trips_notifications:
+    - How often do you want to be informed about members visiting your area?
+    - Label for the drop down for trips notifications.
+trips.never:
+    - Never
+    - One of the options for trips notifications
+trips.immediately:
+    - Immediately
+    - One of the options for trips notifications
+trips.daily:
+    - Daily
+    - One of the options for trips notifications
+trips.weekly:
+    - Weekly
+    - Label of the options for trips notifications
+trips.biweekly:
+    - Every other week
+    - Label of the options for trips notifications
+trips.monthly:
+    - Monthly
+    - Label of the options for trips notifications

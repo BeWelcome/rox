@@ -1,0 +1,137 @@
+{% extends 'base-lite.html.twig' %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('signup/signup') }}
+    <script type="application/javascript">
+        const accommodation = "{{ finalize.accommodation.vars.full_name }}";
+        const markers = [
+            "{{ 'hosting.interest.select'|trans }}",
+            "{{ 'very low'|trans }}",
+            "{{ 'low'|trans }}",
+            "{{ 'lower'|trans }}",
+            "{{ 'low to medium'|trans }}",
+            "{{ 'medium'|trans }}",
+            "{{ 'medium to high'|trans }}",
+            "{{ 'high'|trans }}",
+            "{{ 'higher'|trans }}",
+            "{{ 'very high'|trans }}",
+            "{{ 'can\'t wait'|trans }}"
+        ];
+    </script>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ encore_entry_link_tags('signup/signup') }}
+{% endblock stylesheets %}
+
+{% block content %}
+    <h1>{{ 'signup.account.created'|trans }}</h1>
+    {{ 'signup.finalize'|trans|raw }}
+    {{ form_start(finalize, { 'attr': { autocomplete: 'off', class: 'u-mt-8' } }) }}
+    {{ form_row(finalize.name) }}
+    {{ form_row(finalize.birthdate) }}
+    <div class="o-form-group u-grid u-grid-cols-3">
+        <div class="u-col-span-3"><label>{{ 'label.gender'|trans }}</label></div>
+        <div class="u-col-span-3">{{ form_errors(finalize.gender) }}</div>
+        <div class="o-radio-button">
+            <input type="radio" id="{{ finalize.gender.children[0].vars.id }}" name="{{ finalize.gender.children[0].vars.full_name }}"
+                   class="o-radio-button__input" value="{{ finalize.gender.children[0].vars.value}}"
+                   {% if finalize.gender.vars.value == finalize.gender.children[0].vars.value %}checked="checked"{% endif %}
+            >
+            <label for="{{ finalize.gender.children[0].vars.id}}">{{ finalize.gender.children[0].vars.value}}</label>
+        </div>
+        <div class="o-radio-button">
+            <input type="radio"  id="{{ finalize.gender.children[1].vars.id}}" name="{{ finalize.gender.children[1].vars.full_name }}"
+                   class="o-radio-button__input" value="{{ finalize.gender.children[1].vars.value}}"
+                   {% if finalize.gender.vars.value == finalize.gender.children[1].vars.value %}checked="checked"{% endif %}
+            >
+            <label for="{{ finalize.gender.children[1].vars.id}}">{{ finalize.gender.children[1].vars.value}}</label>
+        </div>
+        <div class="o-radio-button">
+            <input type="radio"  id="{{ finalize.gender.children[2].vars.id}}" name="{{ finalize.gender.children[2].vars.full_name }}"
+                   class="o-radio-button__input" value="{{ finalize.gender.children[2].vars.value}}"
+                   {% if finalize.gender.vars.value == finalize.gender.children[2].vars.value %}checked="checked"{% endif %}
+            >
+            <label for="{{ finalize.gender.children[2].vars.id}}">{{ finalize.gender.children[2].vars.value}}</label>
+        </div>
+        <div class="u-col-span-3">
+            <small id="{{ finalize.gender.vars.id }}_help" class="form-text text-muted">{{ finalize.gender.vars.help|trans }}</small>
+        </div>
+    </div>
+    {% do finalize.gender.setRendered %}
+    <div class="o-form-group">
+    <label for="{{ finalize.location.fullname.vars.id}}">{{ finalize.location.vars.label}}</label>
+
+    <div class="auto-search-wrapper max-height loupe">
+        <input type="text" id="{{ finalize.location.fullname.vars.id}}" name="{{ finalize.location.fullname.vars.full_name }}"
+               class="o-input js-location-picker{% if finalize.location.fullname.vars.errors|length > 0 %} is-invalid{% endif %}" autocomplete="off"
+               placeholder="{{ 'trip.leg.location'|trans }}"
+               aria-label="{{ 'trip.leg.location'|trans }}"
+               {% if finalize.location.fullname.vars.value %}value="{{ finalize.location.fullname.vars.value }}"{% endif %}
+        >
+    </div>
+    {{ form_errors(finalize.location.fullname) }}
+    {{ form_help(finalize.location) }}
+    {% do finalize.location.setRendered %}
+    </div>
+
+    {{ form_widget(finalize.location.geoname_id) }}
+    {{ form_widget(finalize.location.latitude) }}
+    {{ form_widget(finalize.location.longitude) }}
+
+    <div class="o-form-group align-content-center mt-2">
+        <span class="o-input-label">Accommodation</span>
+        <div class="btn-group w-100 mt-2 " data-toggle="buttons">
+            <label for="{{ finalize.accommodation.children[0].vars.id }}" class="btn btn-light">
+                <input type="radio" id="{{ finalize.accommodation.children[0].vars.id }}"
+                       name="{{ finalize.accommodation.children[0].vars.full_name }}"
+                       value="{{ finalize.accommodation.children[0].vars.value }}"
+                       {% if finalize.accommodation.vars.value == finalize.accommodation.children[0].vars.value %}checked="checked"{% endif %}
+                       class="noradio">
+                <div class="d-block-inline"><img src="images/icons/neverask.png" alt="" title=""><br><small>
+                        {{ finalize.accommodation.children[0].vars.label|trans }}</small>
+                </div>
+            </label>
+            <label for="{{ finalize.accommodation.children[1].vars.id }}" class="btn btn-light">
+                <input type="radio" id="{{ finalize.accommodation.children[1].vars.id }}"
+                       name="{{ finalize.accommodation.children[1].vars.full_name }}"
+                       value="{{ finalize.accommodation.children[1].vars.value }}"
+                       {% if finalize.accommodation.vars.value == finalize.accommodation.children[1].vars.value %}checked="checked"{% endif %}
+                       class="noradio">
+                <div class="d-block-inline"><img src="images/icons/anytime.png" alt="" title=""><br><small>
+                        {{ finalize.accommodation.children[1].vars.label|trans }}</small>
+                </div>
+            </label>
+        </div>
+        {{ form_errors(finalize.accommodation) }}
+        {{ form_help(finalize.accommodation) }}
+    </div>
+    {% do finalize.accommodation.setRendered %}
+
+    <div id="hosting_interest" class="
+        {%- if finalize.accommodation.vars.value == finalize.accommodation.children[1].vars.value %}u-block{% else %}u-hidden{% endif -%}
+    ">
+    {{ form_label(finalize.hosting_interest) }}
+    {{ form_widget(finalize.hosting_interest) }}
+    <div class="range text-center u-mt-16">
+        <p class="rangeSlider__value-output">{{ 'hosting.interest.set'|trans }}</p>
+    </div>
+        {{ form_errors(finalize.hosting_interest) }}
+        {{ form_help(finalize.hosting_interest) }}
+    </div>
+    <div class="u-flex u-justify-end">
+        <input type="submit" class="o-button" value="{{ 'signup.activate'|trans }}">
+    </div>
+
+    <p class="u-text-18 u-mb-8">{{ 'signup.optional'|trans }}</p>
+    {{ form_row(finalize.newsletters) }}
+    {{ form_row(finalize.local_events) }}
+    {{ form_row(finalize.trips_notifications) }}
+
+    {{ form_rest(finalize) }}
+    <div class="u-flex u-justify-end">
+        <input type="submit" class="o-button o-button--outline" value="{{ 'signup.activate'|trans }}">
+    </div>
+
+    {{ form_end(finalize) }}
+{% endblock content %}

@@ -227,8 +227,14 @@ class MOD_words
 
         $word = $this->_lookup($code, $args);
         $translation = $this->_text_with_tr($word);
-        if (($translation == $code) && (!empty($args))) {
-            $translation .= " [" . implode($args, ",") . "]";
+        if ($translation == $code) {
+            if (is_array($args)) {
+                if (!empty($args)) {
+                    $translation .= " [" . implode(",", $args) . "]";
+                }
+            } elseif (is_string($args)) {
+                $translation .= " [" . $args . "]";
+            }
         }
         return $translation;
     }

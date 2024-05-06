@@ -102,11 +102,11 @@ class SearchModel extends RoxModelBase
         switch ($orderType) {
             case self::ORDER_ACCOM:
                 $order .= ', (IF(mp.photoCount IS NULL, 0, 1) + IF(m.ProfileSummary != 0, 2, 0)) ASC'
-                    . ', hosting_interest ASC, LastLogin DESC, Distance ASC';
+                    . ', hosting_interest ASC, LastLogin ASC, Distance ASC';
                 break;
             case self::ORDER_COMMENTS:
                 $order .= ', (IF(mp.photoCount IS NULL, 0, 1) + IF(m.ProfileSummary != 0, 2, 0)) ASC, '
-                        . 'LastLogin DESC, Distance ASC';
+                        . 'LastLogin ASC, Distance ASC';
                 break;
             case self::ORDER_DISTANCE:
                 $order .= ', hosting_interest DESC, LastLogin DESC';

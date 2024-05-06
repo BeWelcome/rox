@@ -1,0 +1,28 @@
+{% extends 'base-lite.html.twig' %}
+{% import 'macros.twig' as macros %}
+
+{% block title %}
+    BeWelcome - {{ 'signup' | trans }}
+{% endblock title %}
+
+{% block content %}
+    <h1>{{ 'signup'|trans }}</h1>
+    {{ form_start(signup, { 'attr': { autocomplete: 'off' } }) }}
+    {% if signup.username.vars.value is empty %}
+        {{ form_row(signup.username, {'attr': {autofocus: 'autofocus'}}) }}
+
+        {{ form_row(signup.email) }}
+    {% else %}
+        {{ form_row(signup.username) }}
+
+        {{ form_row(signup.email, {'attr': {autofocus: 'autofocus'}}) }}
+    {% endif %}
+
+    {{ form_row(signup.password) }}
+
+    {{ form_row(signup.terms_privacy) }}
+    <div class="u-flex u-justify-end">
+        <input type="submit" class="o-button" value="{{ 'signup.join'|trans }}">
+    </div>
+    {{ form_end(signup) }}
+{% endblock content %}

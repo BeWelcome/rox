@@ -28,7 +28,7 @@ class SubtripRepository extends EntityRepository
         $queryBuilder
             ->select('count(s.id)')
             ->andWhere('t.countOfTravellers <= :maxguest')
-            ->setParameter(':maxguest', $member->getMaxguest())
+            ->setParameter(':maxguest', $member->getMaxGuest())
         ;
 
         return
@@ -43,7 +43,7 @@ class SubtripRepository extends EntityRepository
         $queryBuilder = $this->getLegsInAreaQueryBuilder($member, $distance, $duration);
         $queryBuilder
             ->andWhere('t.countOfTravellers <= :maxguest')
-            ->setParameter(':maxguest', $member->getMaxguest())
+            ->setParameter(':maxguest', $member->getMaxGuest())
             ->setMaxResults(5)
         ;
 

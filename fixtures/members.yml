@@ -3,21 +3,13 @@ App\Entity\Member:
         Username: 'bwadmin'
         BirthDate: <dateTimeBetween('1970-01-01', '1970-01-01')>
         email: <email()>
-        created: <dateTimeBetween('1970-01-01', '1970-01-01')>
-        updated: <dateTimeBetween('1970-01-01', '1970-01-01')>
         LastLogin: <dateTimeBetween('1970-01-01', '1970-01-01')>
         LastSwitchToActive: null
-        ExUserId: 0
         Status: 'Active'
-        ChangedId: 0
         city: '@NewBerlin'
         Latitude: '@NewBerlin->Latitude'
         Longitude: '@Berlin->Longitude'
         remindersWithoutLogin: 0
-        HomePhoneNumber: 0
-        CellPhoneNumber: 0
-        WorkPhoneNumber: 0
-        SecEmail: 0
         HideAttribute: 8
         FirstName: 'BW'
         SecondName: ''
@@ -25,74 +17,40 @@ App\Entity\Member:
         Accommodation: 'neverask'
         AdditionalAccommodationInfo: 0
         ILiveWith: 0
-        IdentityCheckLevel: 0
-        InformationToGuest: 0
-        TypicOffer: null
+        TypicalOffer: ''
         Offer: 0
         MaxGuest: 1
-        MaxLenghtOfStay: 0
+        MaxLengthOfStay: 0
         Organizations: 0
         Restrictions: 0
         OtherRestrictions: 0
-        Bday: 1
-        Bmonth: 1
-        Byear: 1970
-        SecurityFlag: 0
-        Quality: 0
         ProfileSummary: 0
         Occupation: 0
-        CounterGuests: 0
-        CounterHosts: 0
-        CounterTrusts: 0
         Gender: 'other'
-        HideGender: <boolean(75)>
-        GenderOfGuest: ''
-        MotivationForHospitality: 0
-        HideBirthDate: <boolean(75)>
-        AdressHidden: <boolean(75)>
-        WebSite: 0
-        ChatSkype: 0
-        ChatICQ: 0
-        ChatAOL: 0
-        ChatMSN: 0
-        ChatYahoo: 0
-        ChatOthers: 0
-        FutureTrips: 0
-        OldTrips: 0
-        LogCount: 0
+        ShowGender: <boolean(75)>
+        ShowAge: <boolean(75)>
         Hobbies: 0
         Books: 0
         Music: 0
-        PastTrips: 0
         Password: '*2470C0C06DEE42FD1618BB99005ADCA2EC9D1E19'
-        PlannedTrips: 0
         PleaseBring: 0
         OfferGuests: 0
         OfferHosts: 0
         PublicTransport: 0
         Movies: 0
-        ChatGoogle: 0
         bewelcomed: 0
         registration_key: ''
     member_{1..5}:
         Username: 'member-<current()>'
-        BirthDate: <DateTime()>
+        BirthDate: <dateTimeBetween('1970-01-01', '2006-01-01')>
         email: 'member-<current()>\@bewelcome.org'
-        created: <dateTimeBetween("-200 days", "now")>
-        updated: <dateTimeBetween($created, "now")>
-        LastLogin: <dateTimeBetween($created, "now")>
+        LastLogin: <dateTime()>
         LastSwitchToActive: null
-        ExUserId: 0
         Status: '<randomElement(["Active", "OutOfRemind"])>'
-        ChangedId: 0
         city: '@NewBerlin'
         Latitude: '@NewBerlin->Latitude'
         Longitude: '@NewBerlin->Longitude'
         remindersWithoutLogin: 0
-        HomePhoneNumber: 0
-        CellPhoneNumber: 0
-        WorkPhoneNumber: 0
-        SecEmail: 0
         HideAttribute: 8
         FirstName: <firstName()>
         SecondName: '70%? <firstName()>'
@@ -100,75 +58,40 @@ App\Entity\Member:
         Accommodation: '<randomElement(["anytime", "neverask"])>'
         hostingInterest: '<numberBetween(1,10)>'
         AdditionalAccommodationInfo: 0
-        ILiveWith: 0
-        IdentityCheckLevel: 0
-        InformationToGuest: 0
-        TypicOffer: null
+        TypicalOffer: ''
         Offer: 0
         MaxGuest: 1
-        MaxLenghtOfStay: 2
+        MaxLengthOfStay: 2
         Organizations: 0
         Restrictions: 0
         OtherRestrictions: 0
-        Bday: 1
-        Bmonth: 1
-        Byear: 1980
-        SecurityFlag: 0
-        Quality: 0
         ProfileSummary: 1
         Occupation: 1
-        CounterGuests: 0
-        CounterHosts: 0
-        CounterTrusts: 0
         Gender: 'female'
-        HideGender: <boolean(75)>
-        GenderOfGuest: 'male'
-        MotivationForHospitality: 0
-        HideBirthDate: <boolean(75)>
-        AdressHidden: <boolean(75)>
-        WebSite: 1
-        ChatSkype: 1
-        ChatICQ: 1
-        ChatAOL: 1
-        ChatMSN: 0
-        ChatYahoo: 0
-        ChatOthers: 0
-        FutureTrips: 1
-        OldTrips: 1
-        LogCount: 0
-        Hobbies: 0
-        Books: 0
-        Music: 0
-        PastTrips: 0
+        ShowGender: <boolean(75)>
+        ShowAge: <boolean(75)>
+        Hobbies: 1
+        Books: 1
+        Music: 1
         Password: '*2470C0C06DEE42FD1618BB99005ADCA2EC9D1E19'
-        PlannedTrips: 0
         PleaseBring: 0
         OfferGuests: 0
         OfferHosts: 0
         PublicTransport: 0
         Movies: 0
-        ChatGoogle: 0
         bewelcomed: 0
         registration_key: ''
     member_{6..10}:
         Username: 'member-<current()>'
-        BirthDate: <DateTime()>
+        BirthDate: <dateTimeBetween('1970-01-01', '2006-01-01')>
         email: 'member-<current()>\@bewelcome.org'
-        created: <dateTimeBetween("-200 days", "now")>
-        updated: <dateTimeBetween($created, "now")>
-        LastLogin: <dateTimeBetween($created, "now")>
+        LastLogin: <dateTimeBetween('2023-01-01', '2024-05-01')>
         LastSwitchToActive: null
-        ExUserId: 0
         Status: 'Active'
-        ChangedId: 0
         city: '@NewJayapura'
         Latitude: '@NewJayapura->Latitude'
         Longitude: '@NewJayapura->Longitude'
         remindersWithoutLogin: 0
-        HomePhoneNumber: 0
-        CellPhoneNumber: 0
-        WorkPhoneNumber: 0
-        SecEmail: 0
         HideAttribute: 8
         FirstName: <firstName()>
         SecondName: '70%? <firstName()>'
@@ -176,74 +99,41 @@ App\Entity\Member:
         Accommodation: '<randomElement(["neverask", "anytime"])>'
         AdditionalAccommodationInfo: 0
         ILiveWith: 0
-        IdentityCheckLevel: 0
-        InformationToGuest: 0
-        TypicOffer: null
+        TypicalOffer: ''
         Offer: 0
         MaxGuest: 1
-        MaxLenghtOfStay: 2
+        MaxLengthOfStay: 2
         Organizations: 0
         Restrictions: 0
         OtherRestrictions: 0
-        Bday: 1
-        Bmonth: 1
-        Byear: 1980
-        SecurityFlag: 0
-        Quality: 0
         ProfileSummary: 0
         Occupation: 0
-        CounterGuests: 0
-        CounterHosts: 0
-        CounterTrusts: 0
         Gender: 'male'
-        HideGender: <boolean(75)>
-        GenderOfGuest: 'female'
-        MotivationForHospitality: 0
-        HideBirthDate: <boolean(75)>
+        ShowGender: <boolean(75)>
+        ShowAge: <boolean(75)>
         AdressHidden: <boolean(75)>
-        WebSite: 0
-        ChatSkype: 0
-        ChatICQ: 0
-        ChatAOL: 0
-        ChatMSN: 0
-        ChatYahoo: 0
-        ChatOthers: 0
-        FutureTrips: 0
-        OldTrips: 0
-        LogCount: 0
         Hobbies: 0
         Books: 0
         Music: 0
-        PastTrips: 0
         Password: '*2470C0C06DEE42FD1618BB99005ADCA2EC9D1E19'
-        PlannedTrips: 0
         PleaseBring: 0
         OfferGuests: 0
         OfferHosts: 0
         PublicTransport: 0
         Movies: 0
-        ChatGoogle: 0
         bewelcomed: 0
         registration_key: ''
     member_banned:
         Username: 'member-banned'
-        BirthDate: <DateTime()>
+        BirthDate: <dateTimeBetween('1970-01-01', '2006-01-01')>
         email: 'member-banned\@bewelcome.org'
-        created: <dateTimeBetween("-200 days", "now")>
-        updated: <dateTimeBetween($created, "now")>
-        LastLogin: <dateTimeBetween($created, "now")>
+        LastLogin: <dateTimeBetween('2023-01-01', '2024-05-01')>
         LastSwitchToActive: null
-        ExUserId: 0
         Status: 'Banned'
-        ChangedId: 0
         city: '@NewJayapura'
         Latitude: '@NewJayapura->Latitude'
         Longitude: '@NewJayapura->Longitude'
         remindersWithoutLogin: 0
-        HomePhoneNumber: 0
-        CellPhoneNumber: 0
-        WorkPhoneNumber: 0
-        SecEmail: 0
         HideAttribute: 8
         FirstName: <firstName()>
         SecondName: '70%? <firstName()>'
@@ -251,74 +141,41 @@ App\Entity\Member:
         Accommodation: '<randomElement(["neverask", "anytime"])>'
         AdditionalAccommodationInfo: 0
         ILiveWith: 0
-        IdentityCheckLevel: 0
-        InformationToGuest: 0
-        TypicOffer: null
+        TypicalOffer: ''
         Offer: 0
         MaxGuest: 1
-        MaxLenghtOfStay: 2
+        MaxLengthOfStay: 2
         Organizations: 0
         Restrictions: 0
         OtherRestrictions: 0
-        Bday: 1
-        Bmonth: 1
-        Byear: 1980
-        SecurityFlag: 0
-        Quality: 0
         ProfileSummary: 0
         Occupation: 0
-        CounterGuests: 0
-        CounterHosts: 0
-        CounterTrusts: 0
         Gender: 'male'
-        HideGender: <boolean(75)>
-        GenderOfGuest: 'female'
-        MotivationForHospitality: 0
-        HideBirthDate: <boolean(75)>
+        ShowGender: <boolean(75)>
+        ShowAge: <boolean(75)>
         AdressHidden: <boolean(75)>
-        WebSite: 0
-        ChatSkype: 0
-        ChatICQ: 0
-        ChatAOL: 0
-        ChatMSN: 0
-        ChatYahoo: 0
-        ChatOthers: 0
-        FutureTrips: 0
-        OldTrips: 0
-        LogCount: 0
         Hobbies: 0
         Books: 0
         Music: 0
-        PastTrips: 0
         Password: '*2470C0C06DEE42FD1618BB99005ADCA2EC9D1E19'
-        PlannedTrips: 0
         PleaseBring: 0
         OfferGuests: 0
         OfferHosts: 0
         PublicTransport: 0
         Movies: 0
-        ChatGoogle: 0
         bewelcomed: 0
         registration_key: ''
     member_suspended:
         Username: 'member-suspended'
-        BirthDate: <DateTime()>
+        BirthDate: <dateTimeBetween('1970-01-01', '2006-01-01')>
         email: 'member-suspended\@bewelcome.org'
-        created: <dateTimeBetween("-200 days", "now")>
-        updated: <dateTimeBetween($created, "now")>
-        LastLogin: <dateTimeBetween($created, "now")>
+        LastLogin: <dateTimeBetween('2023-01-01', '2024-05-01')>
         LastSwitchToActive: null
-        ExUserId: 0
         Status: 'TakenOut'
-        ChangedId: 0
         city: '@NewJayapura'
         Latitude: '@Jayapura->Latitude'
         Longitude: '@Jayapura->Longitude'
         remindersWithoutLogin: 0
-        HomePhoneNumber: 0
-        CellPhoneNumber: 0
-        WorkPhoneNumber: 0
-        SecEmail: 0
         HideAttribute: 8
         FirstName: <firstName()>
         SecondName: '70%? <firstName()>'
@@ -326,52 +183,27 @@ App\Entity\Member:
         Accommodation: '<randomElement(["neverask", "anytime"])>'
         AdditionalAccommodationInfo: 0
         ILiveWith: 0
-        IdentityCheckLevel: 0
-        InformationToGuest: 0
-        TypicOffer: null
+        TypicalOffer: ''
         Offer: 0
         MaxGuest: 1
-        MaxLenghtOfStay: 2
+        MaxLengthOfStay: 2
         Organizations: 0
         Restrictions: 0
         OtherRestrictions: 0
-        Bday: 1
-        Bmonth: 1
-        Byear: 1980
-        SecurityFlag: 0
-        Quality: 0
         ProfileSummary: 0
         Occupation: 0
-        CounterGuests: 0
-        CounterHosts: 0
-        CounterTrusts: 0
         Gender: 'male'
-        HideGender: <boolean(75)>
-        GenderOfGuest: 'female'
-        MotivationForHospitality: 0
-        HideBirthDate: <boolean(75)>
+        ShowGender: <boolean(75)>
+        ShowAge: <boolean(75)>
         AdressHidden: <boolean(75)>
-        WebSite: 0
-        ChatSkype: 0
-        ChatICQ: 0
-        ChatAOL: 0
-        ChatMSN: 0
-        ChatYahoo: 0
-        ChatOthers: 0
-        FutureTrips: 0
-        OldTrips: 0
-        LogCount: 0
         Hobbies: 0
         Books: 0
         Music: 0
-        PastTrips: 0
         Password: '*2470C0C06DEE42FD1618BB99005ADCA2EC9D1E19'
-        PlannedTrips: 0
         PleaseBring: 0
         OfferGuests: 0
         OfferHosts: 0
         PublicTransport: 0
         Movies: 0
-        ChatGoogle: 0
         bewelcomed: 0
         registration_key: ''

@@ -173,15 +173,9 @@ class Extension extends AbstractExtension implements GlobalsInterface
      */
     public function urlUpdate(string $text): string
     {
-        $text = preg_replace(
-            '/src="http[s]?:\/\/[^\/]*?bewelcome\.org\//i',
-            'src="/',
-            $text
-        );
-
         return preg_replace(
-            '/href="http[s]?:\/\/[^\/]*?bewelcome\.org\//i',
-            'href="/',
+            '/(src|href)="http[s]?:\/\/(www|beta)\.bewelcome\.org\//i',
+            '$1="/',
             $text
         );
     }

@@ -6,12 +6,14 @@ class MemberStatusType extends EnumType
 {
     // Possible member statuses
     public const AWAITING_MAIL_CONFIRMATION = 'MailToConfirm';
+    public const MAIL_CONFIRMED = 'MailConfirmed';
     public const PENDING = 'Pending';
     public const DUPLICATE_SIGNED = 'DuplicateSigned';
     public const NEED_MORE = 'NeedMore';
     public const REJECTED = 'Rejected';
     public const COMPLETED_PENDING = 'CompletedPending';
     public const ACTIVE = 'Active';
+    public const ACCOUNT_ACTIVATED = 'Activated';
     public const TAKEN_OUT = 'TakenOut';
     public const BANNED = 'Banned';
     public const SLEEPER = 'Sleeper';
@@ -124,5 +126,7 @@ class MemberStatusType extends EnumType
         self::STOP_BORING_ME,
         self::PASSED_AWAY,
         self::BUGGY,
+        self::ACCOUNT_ACTIVATED,
+        self::MAIL_CONFIRMED,
     ];
 }

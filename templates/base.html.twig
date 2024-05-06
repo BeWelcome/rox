@@ -1,6 +1,6 @@
 {% import 'macros.twig' as macros %}
 <!DOCTYPE html>
-<html lang="{{ app.request.locale }}">
+<html lang="{{ app.request.locale }}" dir="auto">
   <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -48,6 +48,14 @@
       <div id="toasts" class="position-fixed w-100 d-flex flex-column px-2" style="z-index:1000">
       </div>
       {% set contentBlock %}
+        {% set loggedInMember = app.user %}
+        {% if not loggedInMember is null and loggedInMember.status == constant('App\\Doctrine\\MemberStatusType::ACCOUNT_ACTIVATED')%}
+            <div class="row">
+                <div class="col-12">
+                    <div class="alert alert-notice">{{ 'member.mail.not.confirmed'|trans|raw }}</div>
+                </div>
+            </div>
+        {% endif %}
         {% for label, messages in app.flashes %}
           <div class="row">
             {% for message in messages %}

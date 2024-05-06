@@ -15,11 +15,14 @@ use App\Doctrine\AccommodationType;
 use App\Doctrine\GroupMembershipStatusType;
 use App\Doctrine\LanguageLevelType;
 use App\Doctrine\MemberStatusType;
+use App\Doctrine\TypicalOfferType;
 use Carbon\Carbon;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Event\PostLoadEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Persistence\Mapping\ClassMetadata;
 use Doctrine\Persistence\ObjectManager;
@@ -51,45 +54,29 @@ use Symfony\Component\Serializer\Annotation\Groups;
 class Member
     implements
         \Serializable,
-        ObjectManagerAware,
         UserInterface,
         PasswordHasherAwareInterface,
         PasswordAuthenticatedUserInterface
 {
-    public const USERNAME_REGEXP = '(?i:[a-z](?!.*[-_.][-_.])[a-z0-9-._]{2,18}[a-z0-9])';
-    
     public const ROLE_ADMIN_ACCEPTER = 'ROLE_ADMIN_ACCEPTER';
     public const ROLE_ADMIN_ADMIN = 'ROLE_ADMIN_ADMIN';
-    public const ROLE_ADMIN_BETA = 'ROLE_ADMIN_BETA';
-    public const ROLE_ADMIN_CHAT = 'ROLE_ADMIN_CHAT';
     public const ROLE_ADMIN_CHECKER = 'ROLE_ADMIN_CHECKER';
     public const ROLE_ADMIN_COMMENTS = 'ROLE_ADMIN_COMMENTS';
     public const ROLE_ADMIN_COMMUNITYNEWS = 'ROLE_ADMIN_COMMUNITYNEWS';
-    public const ROLE_ADMIN_CONTACTLOCATION = 'ROLE_ADMIN_CONTACTLOCATION';
-    public const ROLE_ADMIN_CRYPTATION = 'ROLE_ADMIN_CRYPTATION';
-    public const ROLE_ADMIN_DEBUG = 'ROLE_ADMIN_DEBUG';
     public const ROLE_ADMIN_FAQ = 'ROLE_ADMIN_FAQ';
     public const ROLE_ADMIN_FLAGS = 'ROLE_ADMIN_FLAGS';
     public const ROLE_ADMIN_FORUMMODERATOR = 'ROLE_ADMIN_FORUMMODERATOR';
-    public const ROLE_ADMIN_GREP = 'ROLE_ADMIN_GREP';
     public const ROLE_ADMIN_GROUP = 'ROLE_ADMIN_GROUP';
     public const ROLE_ADMIN_LOGS = 'ROLE_ADMIN_LOGS';
     public const ROLE_ADMIN_MANAGESUBSCRIPTIONS = 'ROLE_ADMIN_MANAGESUBSCRIPTIONS';
-    public const ROLE_ADMIN_MASSCONTACT = 'ROLE_ADMIN_MASSCONTACT';
     public const ROLE_ADMIN_MASSMAIL = 'ROLE_ADMIN_MASSMAIL';
     public const ROLE_ADMIN_NEWMEMBERSBEWELCOME = 'ROLE_ADMIN_NEWMEMBERSBEWELCOME';
-    public const ROLE_ADMIN_PANNEL = 'ROLE_ADMIN_PANNEL';
     public const ROLE_ADMIN_POLL = 'ROLE_ADMIN_POLL';
     public const ROLE_ADMIN_PROFILE = 'ROLE_ADMIN_PROFILE';
-    public const ROLE_ADMIN_RESPONSIBLE = 'ROLE_ADMIN_RESPONSIBLE';
     public const ROLE_ADMIN_RIGHTS = 'ROLE_ADMIN_RIGHTS';
-    public const ROLE_ADMIN_RUNBOT = 'ROLE_ADMIN_RUNBOT';
     public const ROLE_ADMIN_SAFETYTEAM = 'ROLE_ADMIN_SAFETYTEAM';
     public const ROLE_ADMIN_SQLFORVOLUNTEERS = 'ROLE_ADMIN_SQLFORVOLUNTEERS';
-    public const ROLE_ADMIN_SUGGESTIONS = 'ROLE_ADMIN_SUGGESTIONS';
-    public const ROLE_ADMIN_TEST = 'ROLE_ADMIN_TEST';
     public const ROLE_ADMIN_TREASURER = 'ROLE_ADMIN_TREASURER';
-    public const ROLE_ADMIN_VERIFIER = 'ROLE_ADMIN_VERIFIER';
     public const ROLE_ADMIN_WORDS = 'ROLE_ADMIN_WORDS';
 
     public const MEMBER_FIRSTNAME_HIDDEN = 1;
@@ -97,13 +84,6 @@ class Member
     public const MEMBER_LASTNAME_HIDDEN = 4;
 
     /**
-     * @var ObjectManager
-     */
-    protected $em;
-
-    /**
-     * @var string
-     *
      * @ORM\Column(name="Username", type="string", length=32, nullable=false)
      *
      * @Groups({"Member:Read"})
@@ -112,91 +92,61 @@ class Member
      *
      * @ApiFilter(SearchFilter::class, strategy="exact")
      */
-    protected $username;
+    protected string $username;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="Email", type="string", nullable=false)
      *
      * @Groups({"Member:Read:Owner"})
      */
-    protected $email;
+    protected string $email;
 
     /**
-     * @var DateTime
-     *
      * @ORM\Column(name="LastLogin", type="datetime", nullable=true)
      *
      * @Groups({"Member:Read"})
      */
-    protected $lastLogin = null;
+    protected ?DateTime $lastLogin = null;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="PassWord", type="string", length=100, nullable=true)
      */
-    protected $password;
+    protected ?string $password = null;
 
     /**
-     * @var int
-     *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      *
      * @ApiProperty(identifier=false)
      */
-    protected $id;
+    protected int $id;
 
     /**
-     * @var int
-     *
-     * @ORM\Column(name="ex_user_id", type="integer", nullable=false)
-     */
-    private $exUserId;
-
-    /**
-     * @var string
-     *
      * @ORM\Column(name="Status", type="member_status", nullable=false)
      */
-    private $status;
+    private string $status = "";
 
     /**
-     * @var int
-     *
-     * @ORM\Column(name="ChangedId", type="integer", nullable=false)
-     */
-    private $changedid = 0;
-
-    /**
-     * @var NewLocation
-     *
      * @ORM\ManyToOne(targetEntity="NewLocation")
-     * @ORM\JoinColumn(name="IdCity", referencedColumnName="geonameId")
+     * @ORM\JoinColumn(name="IdCity", referencedColumnName="geonameId", nullable=true)
      *
      * @Groups({"Member:Read"})
      *
      * @ApiFilter(SearchFilter::class, strategy="ipartial", properties={"city.name", "city.country.name"})
      * @ApiFilter(SearchFilter::class, strategy="exact", properties={"city.latitude", "city.longitude"})
      */
-    private $city;
+    private ?NewLocation $city = null;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="Latitude", type="decimal", precision=10, scale=7, nullable=true)
      */
-    private $latitude;
+    private ?string $latitude;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="Longitude", type="decimal", precision=10, scale=7, nullable=true)
      */
-    private $longitude;
+    private ?string $longitude;
 
     /**
      * @ORM\Column(name="NbRemindWithoutLogingIn", type="integer", nullable=false)
@@ -204,531 +154,319 @@ class Member
     private int $remindersWithOutLogin = 0;
 
     /**
-     * @var int
-     *
-     * @ORM\Column(name="HomePhoneNumber", type="integer", nullable=false)
-     */
-    private $homephonenumber;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="CellPhoneNumber", type="integer", nullable=false)
-     */
-    private $cellphonenumber;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="WorkPhoneNumber", type="integer", nullable=false)
-     */
-    private $workphonenumber;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="SecEmail", type="integer", nullable=false)
-     */
-    private $secemail;
-
-    /**
-     * @var int
-     *
      * @ORM\Column(name="FirstName", type="string", nullable=false)
      *
      * @Groups({"Member:Read"})
      */
-    private $firstName = '0';
+    private string $firstName = '';
 
     /**
-     * @var int
-     *
      * @ORM\Column(name="SecondName", type="string", nullable=true)
      *
      * @Groups({"Member:Read"})
      */
-    private $secondName = null;
+    private ?string $secondName = null;
 
     /**
-     * @var int
-     *
      * @ORM\Column(name="LastName", type="string", nullable=false)
      *
      * @Groups({"Member:Read"})
      */
-    private $lastName = '0';
+    private string $lastName = '';
 
     /**
-     * @var int
-     *
      * @ORM\Column(name="HideAttribute", type="integer", nullable=false)
      */
-    private $hideAttribute = self::MEMBER_FIRSTNAME_HIDDEN | self::MEMBER_SECONDNAME_HIDDEN | self::MEMBER_LASTNAME_HIDDEN;
+    private int $hideAttribute = self::MEMBER_FIRSTNAME_HIDDEN | self::MEMBER_SECONDNAME_HIDDEN | self::MEMBER_LASTNAME_HIDDEN;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="Accomodation", type="accommodation", nullable=false)
+     * @ORM\Column(name="Accomodation", type="accommodation", nullable=true)
      *
      * @Groups({"Member:Read"})
      *
      * @ApiFilter(SearchFilter::class, strategy="exact")
      */
-    private $accommodation = AccommodationType::MAYBE;
+    private ?string $accommodation = null;
 
     /**
-     * @var int
-     *
      * @ORM\Column(name="AdditionalAccomodationInfo", type="integer", nullable=false)
      */
-    private $additionalAccommodationInfo;
+    private int $additionalAccommodationInfo = 0;
 
     /**
-     * @var int
-     *
      * @ORM\Column(name="ILiveWith", type="integer", nullable=false)
      */
-    private $ilivewith;
+    private int $iLiveWith = 0;
 
     /**
-     * @var bool
-     *
-     * @ORM\Column(name="IdentityCheckLevel", type="boolean", nullable=false)
-     */
-    private $identitychecklevel = '000';
-
-    /**
-     * @var int
-     *
      * @ORM\Column(name="InformationToGuest", type="integer", nullable=false)
      */
-    private $informationtoguest;
+    private int $informationForGuest = 0;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="TypicOffer", type="typical_offer", nullable=false)
      *
      * @Groups({"Member:Read"})
      */
-    private $typicoffer;
+    private string $typicalOffer = '';
 
     /**
-     * @var int
-     *
      * @ORM\Column(name="Offer", type="integer", nullable=false)
      */
-    private $offer;
+    private int $offer = 0;
 
     /**
-     * @var int
-     *
      * @ORM\Column(name="MaxGuest", type="integer", nullable=false)
      *
      * @Groups({"Member:Read"})
      *
      * @ApiFilter(SearchFilter::class, strategy="exact")
      */
-    private $maxguest = '0';
+    private int $maxGuest = 1;
 
     /**
-     * @var int
-     *
      * @ORM\Column(name="MaxLenghtOfStay", type="integer", nullable=false)
      */
-    private $maxlenghtofstay = '0';
+    private int $maxLengthOfStay = 0;
 
     /**
-     * @var int
-     *
      * @ORM\Column(name="Organizations", type="integer", nullable=false)
      */
-    private $organizations;
+    private int $organizations = 0;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="Restrictions", type="string", nullable=false)
      *
      * @Groups({"Member:Read"})
      */
-    private $restrictions;
+    private string $restrictions = '';
 
     /**
-     * @var int
-     *
      * @ORM\Column(name="OtherRestrictions", type="integer", nullable=false)
      */
-    private $otherrestrictions;
+    private int $otherRestrictions = 0;
 
     /**
-     * @var int
-     *
-     * @ORM\Column(name="bday", type="integer", nullable=false)
-     */
-    private $bday;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="bmonth", type="integer", nullable=false)
-     */
-    private $bmonth;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="byear", type="integer", nullable=false)
-     */
-    private $byear;
-
-    /**
-     * @var DateTime
-     *
      * @ORM\Column(name="updated", type="datetime", nullable=false)
      */
-    private $updated;
+    private DateTime $updated;
 
     /**
-     * @var DateTime
-     *
      * @ORM\Column(name="created", type="datetime", nullable=false)
      *
      * @Groups({"Member:Read"})
      */
-    private $created;
+    private DateTime $created;
 
     /**
-     * @var int
-     *
-     * @ORM\Column(name="SecurityFlag", type="integer", nullable=false)
-     */
-    private $securityflag = '0';
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="Quality", type="string", nullable=false)
-     */
-    private $quality = 'NeverLog';
-
-    /**
-     * @var int
-     *
      * @ORM\Column(name="ProfileSummary", type="integer", nullable=false)
      */
-    private $profileSummary;
+    private int $profileSummary = 0;
 
     /**
-     * @var int
-     *
      * @ORM\Column(name="Occupation", type="integer", nullable=false)
      */
-    private $occupation;
+    private int $occupation = 0;
 
     /**
-     * @var int
-     *
-     * @ORM\Column(name="CounterGuests", type="integer", nullable=false)
-     */
-    private $counterguests = '0';
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="CounterHosts", type="integer", nullable=false)
-     */
-    private $counterhosts = '0';
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="CounterTrusts", type="integer", nullable=false)
-     */
-    private $countertrusts = '0';
-
-    /**
-     * @var string
-     *
      * @ORM\Column(name="Gender", type="string", nullable=false)
      */
-    private $gender = 'IDontTell';
+    private string $gender = 'IDontTell';
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="HideGender", type="string", nullable=false)
      */
-    private $hidegender = 'No';
+    private string $hideGender = 'No';
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="GenderOfGuest", type="string", nullable=false)
      */
-    private $genderofguest = 'any';
+    private string $genderOfGuest = 'any';
 
     /**
-     * @var int
-     *
-     * @ORM\Column(name="MotivationForHospitality", type="integer", nullable=true)
-     */
-    private $motivationforhospitality;
-
-    /**
-     * @var string
-     *
      * @ORM\Column(name="HideBirthDate", type="string", nullable=false)
      */
-    private $hideBirthDate = 'No';
+    private string $hideAge = 'No';
 
     /**
-     * @var DateTime
-     *
      * @ORM\Column(name="BirthDate", type="date", nullable=true)
      */
-    private $birthdate;
+    private ?DateTime $birthdate = null;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="AdressHidden", type="string", nullable=false)
      */
-    private $adresshidden = 'Yes';
+    private string $adressHidden = 'Yes';
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="WebSite", type="text", length=255, nullable=true)
      */
-    private $website;
+    private ?string $website = null;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="chat_SKYPE", type="text", length=255, nullable=true)
      */
-    private $chatSkype;
+    private ?string $chatSkype = null;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="chat_ICQ", type="text", length=255, nullable=true)
      */
-    private $chatIcq;
+    private ?string $chatIcq = null;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="chat_AOL", type="text", length=255, nullable=true)
      */
-    private $chatAol;
+    private ?string $chatAol = null;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="chat_MSN", type="text", length=255, nullable=true)
      */
-    private $chatMsn;
+    private ?string $chatMsn = null;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="chat_YAHOO", type="text", length=255, nullable=true)
      */
-    private $chatYahoo;
+    private ?string $chatYahoo = null;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="chat_Others", type="text", length=255, nullable=true)
      */
-    private $chatOthers;
+    private ?string $chatOthers = null;
 
     /**
-     * @var int
-     *
      * @ORM\Column(name="FutureTrips", type="integer", nullable=false)
      */
-    private $futuretrips = '0';
+    private int $futureTrips = 0;
 
     /**
-     * @var int
-     *
      * @ORM\Column(name="OldTrips", type="integer", nullable=false)
      */
-    private $oldtrips = '0';
+    private int $oldTrips = 0;
 
     /**
-     * @var int
-     *
      * @ORM\Column(name="LogCount", type="integer", nullable=false)
      */
-    private $logcount = '0';
+    private int $logcount = 0;
 
     /**
-     * @var int
-     *
      * @ORM\Column(name="Hobbies", type="integer", nullable=false)
      */
-    private $hobbies;
+    private int $hobbies = 0;
 
     /**
-     * @var int
-     *
      * @ORM\Column(name="Books", type="integer", nullable=false)
      */
-    private $books;
+    private int $books = 0;
 
     /**
-     * @var int
-     *
      * @ORM\Column(name="Music", type="integer", nullable=false)
      */
-    private $music;
+    private int $music = 0;
 
     /**
-     * @var int
-     *
      * @ORM\Column(name="PastTrips", type="integer", nullable=false)
      */
-    private $pasttrips;
+    private int $pastTrips = 0;
 
     /**
-     * @var int
-     *
      * @ORM\Column(name="PlannedTrips", type="integer", nullable=false)
      */
-    private $plannedtrips;
+    private int $plannedTrips = 0;
 
     /**
-     * @var int
-     *
      * @ORM\Column(name="PleaseBring", type="integer", nullable=false)
      */
-    private $pleasebring;
+    private int $pleaseBring = 0;
 
     /**
-     * @var int
-     *
      * @ORM\Column(name="OfferGuests", type="integer", nullable=false)
      */
-    private $offerguests;
+    private int $offerGuests = 0;
 
     /**
-     * @var int
-     *
      * @ORM\Column(name="OfferHosts", type="integer", nullable=false)
      */
-    private $offerhosts;
+    private int $offerHosts = 0;
 
     /**
-     * @var int
-     *
      * @ORM\Column(name="PublicTransport", type="integer", nullable=false)
      */
-    private $publictransport;
+    private int $publicTransport = 0;
 
     /**
-     * @var int
-     *
      * @ORM\Column(name="Movies", type="integer", nullable=false)
      */
-    private $movies;
+    private int $movies = 0;
 
     /**
-     * @var int
-     *
      * @ORM\Column(name="chat_GOOGLE", type="integer", nullable=false)
      */
-    private $chatGoogle;
+    private int $chatGoogle = 0;
 
     /**
-     * @var DateTime
-     *
      * @ORM\Column(name="LastSwitchToActive", type="datetime", nullable=true)
      */
-    private $lastswitchtoactive;
+    private ?DateTime $lastSwitchToActive = null;
 
     /**
-     * @var int
-     *
-     * @ORM\Column(name="bewelcomed", type="integer", nullable=false)
+     * @ORM\Column(name="bewelcomed", type="boolean", nullable=false)
      */
-    private $bewelcomed;
+    private bool $beWelcomed = false;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="registration_key", type="string", nullable=false)
+     * @ORM\Column(name="registration_key", type="string", nullable=true)
      */
-    private $registrationKey;
+    private ?string $registrationKey = null;
 
     /**
-     * @var int
-     *
      * @ORM\Column(name="hosting_interest", type="integer", nullable=true)
      */
-    private $hostingInterest;
+    private ?int $hostingInterest = null;
 
     /**
-     * @ORM\OneToMany(targetEntity="CryptedField", mappedBy="member", fetch="EAGER")
+     * @ORM\OneToMany(targetEntity="CryptedField", mappedBy="member")
      */
-    private $cryptedFields;
+    private Collection $fields;
 
     /**
-     * @var ArrayCollection
-     *
-     * @ORM\OneToMany(targetEntity="RightVolunteer", mappedBy="member", fetch="LAZY")
+     * @ORM\OneToMany(targetEntity="RightVolunteer", mappedBy="member", fetch="EXTRA_LAZY")
      */
-    private $volunteerRights;
+    private Collection $volunteerRights;
 
     /**
-     * @var ArrayCollection
-     *
      * @ORM\OneToMany(targetEntity="GroupMembership", mappedBy="member", cascade={"persist", "remove"}, orphanRemoval=true)
      */
-    private $groupMemberships;
+    private Collection $groupMemberships;
 
     /**
-     * @var ArrayCollection
-     *
      * @ORM\OneToMany(targetEntity="MembersLanguagesLevel", mappedBy="member")
      *
      * @Groups({"Member:Read"})
      *
      * @ApiFilter(SearchFilter::class, strategy="exact", properties={"languageLevels.level", "languageLevels.language.name", "languageLevels.language.englishname", "languageLevels.language.shortCode"})
      */
-    private $languageLevels;
+    private Collection $languageLevels;
+
+    private array $memberFields;
+
+    private Collection $comments;
 
     /**
-     * @var ArrayCollection
+     * @ORM\OneToMany(targetEntity="Relation", mappedBy="receiver", fetch="EXTRA_LAZY")
      */
-    private $memberFields = null;
+    private Collection $relations;
 
     /**
-     * @var ArrayCollection
-     */
-    private $comments;
-
-    /**
-     * @var ArrayCollection
-     */
-    private $relationships;
-
-    /**
-     * @var ArrayCollection
-     *
      * @ORM\OneToMany(targetEntity="MemberPreference", mappedBy="member")
      */
-    private $preferences;
+    private Collection $preferences;
 
     /**
-     * @var ArrayCollection
-     *
      * @ORM\OneToMany(targetEntity="Address", mappedBy="member")
      */
-    private $addresses;
+    private Collection $addresses;
+
+    private ?Language $preferredLanguage = null;
 
     public function __construct()
     {
@@ -742,140 +480,48 @@ class Member
         $this->preferences = new ArrayCollection();
     }
 
-    /**
-     * Set exUserId.
-     *
-     * @param int $exUserId
-     *
-     * @return Member
-     */
-    public function setExUserId($exUserId)
-    {
-        $this->exUserId = $exUserId;
-
-        return $this;
-    }
-
-    /**
-     * Get exUserId.
-     *
-     * @return int
-     */
-    public function getExUserId()
-    {
-        return $this->exUserId;
-    }
-
-    /**
-     * Set username.
-     *
-     * @param string $username
-     *
-     * @return Member
-     */
-    public function setUsername($username)
+    public function setUsername(string $username): self
     {
         $this->username = $username;
 
         return $this;
     }
 
-    /**
-     * Get username.
-     *
-     * @return string
-     */
-    public function getUsername()
+    public function getUsername(): string
     {
         return $this->username;
     }
 
-    /**
-     * @return string
-     */
-    public function getUserIdentifier()
+    public function getUserIdentifier(): string
     {
         return $this->username;
     }
 
-    /**
-     * Set status.
-     *
-     * @param string $status
-     *
-     * @return Member
-     */
-    public function setStatus($status)
+    public function setStatus(string $status): self
     {
         $this->status = $status;
 
         return $this;
     }
 
-    /**
-     * Get status.
-     *
-     * @return string
-     */
-    public function getStatus()
+    public function getStatus(): string
     {
         return $this->status;
     }
 
-    /**
-     * Set changedid.
-     *
-     * @param int $changedid
-     *
-     * @return Member
-     */
-    public function setChangedid($changedid)
-    {
-        $this->changedid = $changedid;
-
-        return $this;
-    }
-
-    /**
-     * Get changedid.
-     *
-     * @return int
-     */
-    public function getChangedid()
-    {
-        return $this->changedid;
-    }
-
-    /**
-     * Set email.
-     *
-     * @param string $email
-     *
-     * @return Member
-     */
-    public function setEmail($email)
+    public function setEmail(string $email): self
     {
         $this->email = $email;
 
         return $this;
     }
 
-    /**
-     * Get email.
-     *
-     * @return string
-     */
-    public function getEmail()
+    public function getEmail(): string
     {
         return $this->email;
     }
 
-    /**
-     * Set city.
-     *
-     * @return Member
-     */
-    public function setCity(NewLocation $city)
+    public function setCity(NewLocation $city): self
     {
         $this->city = $city;
 
@@ -887,638 +533,217 @@ class Member
         return $this->city;
     }
 
-    /**
-     * Set latitude.
-     *
-     * @param string $latitude
-     *
-     * @return Member
-     */
-    public function setLatitude($latitude)
+    public function setLatitude(?float $latitude): self
     {
         $this->latitude = $latitude;
 
         return $this;
     }
 
-    /**
-     * Get latitude.
-     *
-     * @return string
-     */
-    public function getLatitude()
+    public function getLatitude(): ?float
     {
         return $this->latitude;
     }
 
-    /**
-     * Set longitude.
-     *
-     * @param string $longitude
-     *
-     * @return Member
-     */
-    public function setLongitude($longitude)
+    public function setLongitude(?float $longitude): self
     {
         $this->longitude = $longitude;
 
         return $this;
     }
 
-    /**
-     * Get longitude.
-     *
-     * @return string
-     */
-    public function getLongitude()
+    public function getLongitude(): ?float
     {
         return $this->longitude;
     }
 
-    /**
-     * Set count of reminders without login.
-     *
-     * @param mixed $remindersWithOutLogin
-     */
-    public function setRemindersWithOutLogin($remindersWithOutLogin): self
+    public function setRemindersWithOutLogin(int $remindersWithOutLogin): self
     {
         $this->remindersWithOutLogin = $remindersWithOutLogin;
 
         return $this;
     }
 
-    /**
-     * Get count of reminders without login.
-     */
     public function getRemindersWithOutLogin(): int
     {
         return $this->remindersWithOutLogin;
     }
 
-    /**
-     * Set homephonenumber.
-     *
-     * @param int $homephonenumber
-     *
-     * @return Member
-     */
-    public function setHomephonenumber($homephonenumber)
-    {
-        $this->homephonenumber = $homephonenumber;
-
-        return $this;
-    }
-
-    /**
-     * Get homephonenumber.
-     *
-     * @return int
-     */
-    public function getHomephonenumber()
-    {
-        return $this->homephonenumber;
-    }
-
-    /**
-     * Set cellphonenumber.
-     *
-     * @param int $cellphonenumber
-     *
-     * @return Member
-     */
-    public function setCellphonenumber($cellphonenumber)
-    {
-        $this->cellphonenumber = $cellphonenumber;
-
-        return $this;
-    }
-
-    /**
-     * Get cellphonenumber.
-     *
-     * @return int
-     */
-    public function getCellphonenumber()
-    {
-        return $this->cellphonenumber;
-    }
-
-    /**
-     * Set workphonenumber.
-     *
-     * @param int $workphonenumber
-     *
-     * @return Member
-     */
-    public function setWorkphonenumber($workphonenumber)
-    {
-        $this->workphonenumber = $workphonenumber;
-
-        return $this;
-    }
-
-    /**
-     * Get workphonenumber.
-     *
-     * @return int
-     */
-    public function getWorkphonenumber()
-    {
-        return $this->workphonenumber;
-    }
-
-    /**
-     * Set secemail.
-     *
-     * @param int $secemail
-     *
-     * @return Member
-     */
-    public function setSecemail($secemail)
-    {
-        $this->secemail = $secemail;
-
-        return $this;
-    }
-
-    /**
-     * Get secemail.
-     *
-     * @return int
-     */
-    public function getSecemail()
-    {
-        return $this->secemail;
-    }
-
-    /**
-     * Set firstname.
-     *
-     * @param string $firstName
-     *
-     * @return Member
-     */
-    public function setFirstName($firstName)
+    public function setFirstName(string $firstName): self
     {
         $this->firstName = $firstName;
 
         return $this;
     }
 
-    /**
-     * Get firstname.
-     *
-     * @return string
-     */
-    public function getFirstName()
+    public function getFirstName(): string
     {
         return $this->firstName;
     }
 
-    /**
-     * Set secondname.
-     *
-     * @param string $secondName
-     *
-     * @return Member
-     */
-    public function setSecondName($secondName)
+    public function setSecondName(?string $secondName): self
     {
         $this->secondName = $secondName;
 
         return $this;
     }
 
-    /**
-     * Get secondname.
-     *
-     * @return string
-     */
-    public function getSecondName()
+    public function getSecondName(): ?string
     {
         return $this->secondName;
     }
 
-    /**
-     * Set lastname.
-     *
-     * @param string $lastName
-     *
-     * @return Member
-     */
-    public function setLastName($lastName)
+    public function setLastName(string $lastName): self
     {
         $this->lastName = $lastName;
 
         return $this;
     }
 
-    /**
-     * Get lastname.
-     *
-     * @return string
-     */
-    public function getLastName()
+    public function getLastName(): string
     {
         return $this->lastName;
     }
 
-    /**
-     * Set accommodation.
-     *
-     * @param string $accommodation
-     *
-     * @return Member
-     */
-    public function setAccommodation($accommodation)
+    public function setAccommodation(?string $accommodation): self
     {
         $this->accommodation = $accommodation;
 
         return $this;
     }
 
-    /**
-     * Get accommodation.
-     *
-     * @return string
-     */
-    public function getAccommodation()
+    public function getAccommodation(): ?string
     {
         return $this->accommodation;
     }
 
-    /**
-     * Set additionalaccommodationinfo.
-     *
-     * @param int $additionalAccommodationInfo
-     *
-     * @return Member
-     */
-    public function setAdditionalAccommodationinfo($additionalAccommodationInfo)
+    public function setAdditionalAccommodationinfo(int $additionalAccommodationInfo): self
     {
         $this->additionalAccommodationInfo = $additionalAccommodationInfo;
 
         return $this;
     }
 
-    /**
-     * Get additionalaccomodationinfo.
-     *
-     * @return int
-     */
-    public function getAdditionalAccommodationinfo()
+    public function getAdditionalAccommodationinfo(): int
     {
         return $this->additionalAccommodationInfo;
     }
 
-    /**
-     * Set ilivewith.
-     *
-     * @param int $ilivewith
-     *
-     * @return Member
-     */
-    public function setIlivewith($ilivewith)
+    public function setILiveWith(string $iLiveWith): self
     {
-        $this->ilivewith = $ilivewith;
+        $this->iLiveWith = $iLiveWith;
 
         return $this;
     }
 
-    /**
-     * Get ilivewith.
-     *
-     * @return int
-     */
-    public function getIlivewith()
+    public function getILiveWith(): string
     {
-        return $this->ilivewith;
+        return $this->iLiveWith;
     }
 
-    /**
-     * Set identitychecklevel.
-     *
-     * @param bool $identitychecklevel
-     *
-     * @return Member
-     */
-    public function setIdentitychecklevel($identitychecklevel)
+    public function setInformationForGuest(int $informationForGuest): self
     {
-        $this->identitychecklevel = $identitychecklevel;
+        $this->informationForGuest = $informationForGuest;
 
         return $this;
     }
 
-    /**
-     * Get identitychecklevel.
-     *
-     * @return bool
-     */
-    public function getIdentitychecklevel()
+    public function getInformationForGuest(): int
     {
-        return $this->identitychecklevel;
+        return $this->informationForGuest;
     }
 
-    /**
-     * Set informationtoguest.
-     *
-     * @param int $informationtoguest
-     *
-     * @return Member
-     */
-    public function setInformationtoguest($informationtoguest)
+    public function setTypicalOffer(string $typicalOffer): self
     {
-        $this->informationtoguest = $informationtoguest;
+        $this->typicalOffer = $typicalOffer;
 
         return $this;
     }
 
-    /**
-     * Get informationtoguest.
-     *
-     * @return int
-     */
-    public function getInformationtoguest()
+    public function getTypicalOffer(): string
     {
-        return $this->informationtoguest;
+        return $this->typicalOffer;
     }
 
-    /**
-     * Set typicoffer.
-     *
-     * @param string $typicoffer
-     *
-     * @return Member
-     */
-    public function setTypicoffer($typicoffer)
-    {
-        $this->typicoffer = $typicoffer;
-
-        return $this;
-    }
-
-    /**
-     * Get typicoffer.
-     *
-     * @return string
-     */
-    public function getTypicoffer()
-    {
-        return $this->typicoffer;
-    }
-
-    /**
-     * Set offer.
-     *
-     * @param int $offer
-     *
-     * @return Member
-     */
-    public function setOffer($offer)
+    public function setOffer(int $offer): self
     {
         $this->offer = $offer;
 
         return $this;
     }
 
-    /**
-     * Get offer.
-     *
-     * @return int
-     */
-    public function getOffer()
+    public function getOffer(): int
     {
         return $this->offer;
     }
 
-    /**
-     * Set maxguest.
-     *
-     * @param int $maxguest
-     *
-     * @return Member
-     */
-    public function setMaxguest($maxguest)
+    public function setMaxGuest(int $maxGuest): self
     {
-        $this->maxguest = $maxguest;
+        $this->maxGuest = $maxGuest;
 
         return $this;
     }
 
-    /**
-     * Get maxguest.
-     *
-     * @return int
-     */
-    public function getMaxguest()
+    public function getMaxGuest(): int
     {
-        return $this->maxguest;
+        return $this->maxGuest;
     }
 
-    /**
-     * Set maxlenghtofstay.
-     *
-     * @param int $maxlenghtofstay
-     *
-     * @return Member
-     */
-    public function setMaxlenghtofstay($maxlenghtofstay)
+    public function setMaxLengthOfStay(int $maxLengthOfStay): self
     {
-        $this->maxlenghtofstay = $maxlenghtofstay;
+        $this->maxLengthOfStay = $maxLengthOfStay;
 
         return $this;
     }
 
-    /**
-     * Get maxlenghtofstay.
-     *
-     * @return int
-     */
-    public function getMaxlenghtofstay()
+    public function getMaxLengthOfStay(): int
     {
-        return $this->maxlenghtofstay;
+        return $this->maxLengthOfStay;
     }
 
-    /**
-     * Set organizations.
-     *
-     * @param int $organizations
-     *
-     * @return Member
-     */
-    public function setOrganizations($organizations)
+    public function setOrganizations(int $organizations): self
     {
         $this->organizations = $organizations;
 
         return $this;
     }
 
-    /**
-     * Get organizations.
-     *
-     * @return int
-     */
-    public function getOrganizations()
+    public function getOrganizations(): int
     {
         return $this->organizations;
     }
 
-    /**
-     * Set restrictions.
-     *
-     * @param string $restrictions
-     *
-     * @return Member
-     */
-    public function setRestrictions($restrictions)
+    public function setRestrictions(string $restrictions): self
     {
         $this->restrictions = $restrictions;
 
         return $this;
     }
 
-    /**
-     * Get restrictions.
-     *
-     * @return string
-     */
-    public function getRestrictions()
+    public function getRestrictions(): string
     {
         return $this->restrictions;
     }
 
-    /**
-     * Set otherrestrictions.
-     *
-     * @param int $otherrestrictions
-     *
-     * @return Member
-     */
-    public function setOtherrestrictions($otherrestrictions)
+    public function setOtherRestrictions(int $otherRestrictions): self
     {
-        $this->otherrestrictions = $otherrestrictions;
+        $this->otherRestrictions = $otherRestrictions;
 
         return $this;
     }
 
-    /**
-     * Get otherrestrictions.
-     *
-     * @return int
-     */
-    public function getOtherrestrictions()
+    public function getOtherRestrictions(): int
     {
-        return $this->otherrestrictions;
+        return $this->otherRestrictions;
     }
 
-    /**
-     * Set bday.
-     *
-     * @param int $bday
-     *
-     * @return Member
-     */
-    public function setBday($bday)
+    public function getUpdated(): ?Carbon
     {
-        $this->bday = $bday;
+        if (null !== $this->updated) {
+            return Carbon::instance($this->updated);
+        }
 
-        return $this;
-    }
-
-    /**
-     * Get bday.
-     *
-     * @return int
-     */
-    public function getBday()
-    {
-        return $this->bday;
-    }
-
-    /**
-     * Set bmonth.
-     *
-     * @param int $bmonth
-     *
-     * @return Member
-     */
-    public function setBmonth($bmonth)
-    {
-        $this->bmonth = $bmonth;
-
-        return $this;
-    }
-
-    /**
-     * Get bmonth.
-     *
-     * @return int
-     */
-    public function getBmonth()
-    {
-        return $this->bmonth;
-    }
-
-    /**
-     * Set byear.
-     *
-     * @param int $byear
-     *
-     * @return Member
-     */
-    public function setByear($byear)
-    {
-        $this->byear = $byear;
-
-        return $this;
-    }
-
-    /**
-     * Get byear.
-     *
-     * @return int
-     */
-    public function getByear()
-    {
-        return $this->byear;
-    }
-
-    /**
-     * Set updated.
-     *
-     * @param DateTime $updated
-     *
-     * @return Member
-     */
-    public function setUpdated($updated)
-    {
-        $this->updated = $updated;
-
-        return $this;
-    }
-
-    /**
-     * Get updated.
-     *
-     * @return DateTime
-     */
-    public function getUpdated()
-    {
-        return $this->updated;
-    }
-
-    /**
-     * Set created.
-     *
-     * @param DateTime $created
-     *
-     * @return Member
-     */
-    public function setCreated($created)
-    {
-        $this->created = $created;
-
-        return $this;
+        return null;
     }
 
     public function getCreated(): ?Carbon
@@ -1530,25 +755,13 @@ class Member
         return null;
     }
 
-    /**
-     * Set last login.
-     *
-     * @param DateTime $lastLogin
-     *
-     * @return Member
-     */
-    public function setLastLogin(DateTime $lastLogin = null)
+    public function setLastLogin(?DateTime $lastLogin): self
     {
         $this->lastLogin = $lastLogin;
 
         return $this;
     }
 
-    /**
-     * Get last login.
-     *
-     * @return ?Carbon
-     */
     public function getLastLogin(): ?Carbon
     {
         if (null !== $this->lastLogin) {
@@ -1558,175 +771,31 @@ class Member
         return null;
     }
 
-    /**
-     * Set securityflag.
-     *
-     * @param int $securityflag
-     *
-     * @return Member
-     */
-    public function setSecurityflag($securityflag)
-    {
-        $this->securityflag = $securityflag;
-
-        return $this;
-    }
-
-    /**
-     * Get securityflag.
-     *
-     * @return int
-     */
-    public function getSecurityflag()
-    {
-        return $this->securityflag;
-    }
-
-    /**
-     * Set quality.
-     *
-     * @param string $quality
-     *
-     * @return Member
-     */
-    public function setQuality($quality)
-    {
-        $this->quality = $quality;
-
-        return $this;
-    }
-
-    /**
-     * Get quality.
-     *
-     * @return string
-     */
-    public function getQuality()
-    {
-        return $this->quality;
-    }
-
-    /**
-     * Set profileSummary.
-     *
-     * @param int $profileSummary
-     *
-     * @return Member
-     */
-    public function setProfileSummary($profileSummary)
+    public function setProfileSummary(int $profileSummary): self
     {
         $this->profileSummary = $profileSummary;
 
         return $this;
     }
 
-    /**
-     * Get profileSummary.
-     *
-     * @return int
-     */
-    public function getProfileSummary()
+    public function getProfileSummary(): int
     {
         return $this->profileSummary;
     }
 
-    /**
-     * Set occupation.
-     *
-     * @param int $occupation
-     *
-     * @return Member
-     */
-    public function setOccupation($occupation)
+    public function setOccupation(int $occupation): self
     {
         $this->occupation = $occupation;
 
         return $this;
     }
 
-    /**
-     * Get occupation.
-     *
-     * @return int
-     */
-    public function getOccupation()
+    public function getOccupation(): int
     {
         return $this->occupation;
     }
 
-    /**
-     * Set counterguests.
-     *
-     * @param int $counterguests
-     *
-     * @return Member
-     */
-    public function setCounterguests($counterguests)
-    {
-        $this->counterguests = $counterguests;
-
-        return $this;
-    }
-
-    /**
-     * Get counterguests.
-     *
-     * @return int
-     */
-    public function getCounterguests()
-    {
-        return $this->counterguests;
-    }
-
-    /**
-     * Set counterhosts.
-     *
-     * @param int $counterhosts
-     *
-     * @return Member
-     */
-    public function setCounterhosts($counterhosts)
-    {
-        $this->counterhosts = $counterhosts;
-
-        return $this;
-    }
-
-    /**
-     * Get counterhosts.
-     *
-     * @return int
-     */
-    public function getCounterhosts()
-    {
-        return $this->counterhosts;
-    }
-
-    /**
-     * Set countertrusts.
-     *
-     * @param int $countertrusts
-     *
-     * @return Member
-     */
-    public function setCountertrusts($countertrusts)
-    {
-        $this->countertrusts = $countertrusts;
-
-        return $this;
-    }
-
-    /**
-     * Get countertrusts.
-     *
-     * @return int
-     */
-    public function getCountertrusts()
-    {
-        return $this->countertrusts;
-    }
-
-    public function setPassword($hashedPassword): self
+    public function setPassword(?string $hashedPassword): self
     {
         $this->password = $hashedPassword;
 
@@ -1738,739 +807,216 @@ class Member
         return $this->password;
     }
 
-    public function setGender($gender): self
+    public function setGender(string $gender): self
     {
         $this->gender = $gender;
 
         return $this;
     }
 
-    /**
-     * Get gender.
-     *
-     * @return string
-     */
-    public function getGender()
+    public function getGender(): string
     {
         return $this->gender;
     }
 
-    /**
-     * Set hidegender.
-     *
-     * @param string $hidegender
-     *
-     * @return Member
-     */
-    public function setHidegender($hidegender)
+    public function setShowGender(bool $show): self
     {
-        $this->hidegender = $hidegender;
+        $this->hideGender = $show ? 'No' : 'Yes';
 
         return $this;
     }
 
-    /**
-     * Get hidegender.
-     *
-     * @return string
-     */
-    public function getHidegender()
+    public function getShowGender(): bool
     {
-        return $this->hidegender;
+        return $this->hideGender === 'No';
     }
 
-    /**
-     * Set genderofguest.
-     *
-     * @param string $genderofguest
-     *
-     * @return Member
-     */
-    public function setGenderofguest($genderofguest)
+    public function setShowAge(bool $show): self
     {
-        $this->genderofguest = $genderofguest;
+        $this->hideAge = $show ? 'No' : 'Yes';
 
         return $this;
     }
 
-    /**
-     * Get genderofguest.
-     *
-     * @return string
-     */
-    public function getGenderofguest()
+    public function getShowAge(): string
     {
-        return $this->genderofguest;
+        return $this->hideAge === 'No';
     }
 
-    /**
-     * Set motivationforhospitality.
-     *
-     * @param int $motivationforhospitality
-     *
-     * @return Member
-     */
-    public function setMotivationforhospitality($motivationforhospitality)
-    {
-        $this->motivationforhospitality = $motivationforhospitality;
-
-        return $this;
-    }
-
-    /**
-     * Get motivationforhospitality.
-     *
-     * @return int
-     */
-    public function getMotivationforhospitality()
-    {
-        return $this->motivationforhospitality;
-    }
-
-    /**
-     * Set hidebirthdate.
-     *
-     * @param string $hideBirthDate
-     *
-     * @return Member
-     */
-    public function setHideBirthDate($hideBirthDate)
-    {
-        $this->hideBirthDate = $hideBirthDate;
-
-        return $this;
-    }
-
-    /**
-     * Get hidebirthdate.
-     *
-     * @return string
-     */
-    public function getHideBirthDate()
-    {
-        return $this->hideBirthDate;
-    }
-
-    /**
-     * Set birthdate.
-     *
-     * @param DateTime $birthdate
-     *
-     * @return Member
-     */
-    public function setBirthdate($birthdate)
+    public function setBirthdate(DateTime $birthdate): self
     {
         $this->birthdate = $birthdate;
 
         return $this;
     }
 
-    /**
-     * Get birthdate.
-     *
-     * @return Carbon
-     */
-    public function getBirthdate()
+    public function getBirthdate(): Carbon
     {
         return Carbon::instance($this->birthdate);
     }
 
-    /**
-     * Set adresshidden.
-     *
-     * @param string $adresshidden
-     *
-     * @return Member
-     */
-    public function setAdresshidden($adresshidden)
+    public function setAdressHidden(string $adressHidden): self
     {
-        $this->adresshidden = $adresshidden;
+        $this->adressHidden = $adressHidden;
 
         return $this;
     }
 
-    /**
-     * Get adresshidden.
-     *
-     * @return string
-     */
-    public function getAdresshidden()
+    public function getAdressHidden(): string
     {
-        return $this->adresshidden;
+        return $this->adressHidden;
     }
 
-    /**
-     * Set website.
-     *
-     * @param string $website
-     *
-     * @return Member
-     */
-    public function setWebsite($website)
-    {
-        $this->website = $website;
-
-        return $this;
-    }
-
-    /**
-     * Get website.
-     *
-     * @return string
-     */
-    public function getWebsite()
-    {
-        return $this->website;
-    }
-
-    /**
-     * Set chatSkype.
-     *
-     * @param string $chatSkype
-     *
-     * @return Member
-     */
-    public function setChatSkype($chatSkype)
-    {
-        $this->chatSkype = $chatSkype;
-
-        return $this;
-    }
-
-    /**
-     * Get chatSkype.
-     *
-     * @return string
-     */
-    public function getChatSkype()
-    {
-        return $this->chatSkype;
-    }
-
-    /**
-     * Set chatIcq.
-     *
-     * @param string $chatIcq
-     *
-     * @return Member
-     */
-    public function setChatIcq($chatIcq)
-    {
-        $this->chatIcq = $chatIcq;
-
-        return $this;
-    }
-
-    /**
-     * Get chatIcq.
-     *
-     * @return string
-     */
-    public function getChatIcq()
-    {
-        return $this->chatIcq;
-    }
-
-    /**
-     * Set chatAol.
-     *
-     * @param string $chatAol
-     *
-     * @return Member
-     */
-    public function setChatAol($chatAol)
-    {
-        $this->chatAol = $chatAol;
-
-        return $this;
-    }
-
-    /**
-     * Get chatAol.
-     *
-     * @return string
-     */
-    public function getChatAol()
-    {
-        return $this->chatAol;
-    }
-
-    /**
-     * Set chatMsn.
-     *
-     * @param string $chatMsn
-     *
-     * @return Member
-     */
-    public function setChatMsn($chatMsn)
-    {
-        $this->chatMsn = $chatMsn;
-
-        return $this;
-    }
-
-    /**
-     * Get chatMsn.
-     *
-     * @return string
-     */
-    public function getChatMsn()
-    {
-        return $this->chatMsn;
-    }
-
-    /**
-     * Set chatYahoo.
-     *
-     * @param string $chatYahoo
-     *
-     * @return Member
-     */
-    public function setChatYahoo($chatYahoo)
-    {
-        $this->chatYahoo = $chatYahoo;
-
-        return $this;
-    }
-
-    /**
-     * Get chatYahoo.
-     *
-     * @return string
-     */
-    public function getChatYahoo()
-    {
-        return $this->chatYahoo;
-    }
-
-    /**
-     * Set chatOthers.
-     *
-     * @param string $chatOthers
-     *
-     * @return Member
-     */
-    public function setChatOthers($chatOthers)
-    {
-        $this->chatOthers = $chatOthers;
-
-        return $this;
-    }
-
-    /**
-     * Get chatOthers.
-     *
-     * @return string
-     */
-    public function getChatOthers()
-    {
-        return $this->chatOthers;
-    }
-
-    /**
-     * Set futuretrips.
-     *
-     * @param int $futuretrips
-     *
-     * @return Member
-     */
-    public function setFuturetrips($futuretrips)
-    {
-        $this->futuretrips = $futuretrips;
-
-        return $this;
-    }
-
-    /**
-     * Get futuretrips.
-     *
-     * @return int
-     */
-    public function getFuturetrips()
-    {
-        return $this->futuretrips;
-    }
-
-    /**
-     * Set oldtrips.
-     *
-     * @param int $oldtrips
-     *
-     * @return Member
-     */
-    public function setOldtrips($oldtrips)
-    {
-        $this->oldtrips = $oldtrips;
-
-        return $this;
-    }
-
-    /**
-     * Get oldtrips.
-     *
-     * @return int
-     */
-    public function getOldtrips()
-    {
-        return $this->oldtrips;
-    }
-
-    /**
-     * Set logcount.
-     *
-     * @param int $logcount
-     *
-     * @return Member
-     */
-    public function setLogcount($logcount)
-    {
-        $this->logcount = $logcount;
-
-        return $this;
-    }
-
-    /**
-     * Get logcount.
-     *
-     * @return int
-     */
-    public function getLogcount()
-    {
-        return $this->logcount;
-    }
-
-    /**
-     * Set hobbies.
-     *
-     * @param int $hobbies
-     *
-     * @return Member
-     */
-    public function setHobbies($hobbies)
+    public function setHobbies(int $hobbies): self
     {
         $this->hobbies = $hobbies;
 
         return $this;
     }
 
-    /**
-     * Get hobbies.
-     *
-     * @return int
-     */
-    public function getHobbies()
+    public function getHobbies(): int
     {
         return $this->hobbies;
     }
 
-    /**
-     * Set books.
-     *
-     * @param int $books
-     *
-     * @return Member
-     */
-    public function setBooks($books)
+    public function setBooks(int $books): self
     {
         $this->books = $books;
 
         return $this;
     }
 
-    /**
-     * Get books.
-     *
-     * @return int
-     */
-    public function getBooks()
+    public function getBooks(): int
     {
         return $this->books;
     }
 
-    /**
-     * Set music.
-     *
-     * @param int $music
-     *
-     * @return Member
-     */
-    public function setMusic($music)
+    public function setMusic(int $music): self
     {
         $this->music = $music;
 
         return $this;
     }
 
-    /**
-     * Get music.
-     *
-     * @return int
-     */
-    public function getMusic()
+    public function getMusic(): int
     {
         return $this->music;
     }
 
-    /**
-     * Set pasttrips.
-     *
-     * @param int $pasttrips
-     *
-     * @return Member
-     */
-    public function setPasttrips($pasttrips)
+    public function setPastTrips(int $pastTrips): self
     {
-        $this->pasttrips = $pasttrips;
+        $this->pastTrips = $pastTrips;
 
         return $this;
     }
 
-    /**
-     * Get pasttrips.
-     *
-     * @return int
-     */
-    public function getPasttrips()
+    public function getPastTrips(): int
     {
-        return $this->pasttrips;
+        return $this->pastTrips;
     }
 
-    /**
-     * Set plannedtrips.
-     *
-     * @param int $plannedtrips
-     *
-     * @return Member
-     */
-    public function setPlannedtrips($plannedtrips)
+    public function setPlannedTrips(int $plannedTrips): self
     {
-        $this->plannedtrips = $plannedtrips;
+        $this->plannedTrips = $plannedTrips;
 
         return $this;
     }
 
-    /**
-     * Get plannedtrips.
-     *
-     * @return int
-     */
-    public function getPlannedtrips()
+    public function getPlannedTrips(): int
     {
-        return $this->plannedtrips;
+        return $this->plannedTrips;
     }
 
-    /**
-     * Set pleasebring.
-     *
-     * @param int $pleasebring
-     *
-     * @return Member
-     */
-    public function setPleasebring($pleasebring)
+    public function setPleaseBring(int $pleaseBring): self
     {
-        $this->pleasebring = $pleasebring;
+        $this->pleaseBring = $pleaseBring;
 
         return $this;
     }
 
-    /**
-     * Get pleasebring.
-     *
-     * @return int
-     */
-    public function getPleasebring()
+    public function getPleaseBring(): int
     {
-        return $this->pleasebring;
+        return $this->pleaseBring;
     }
 
-    /**
-     * Set offerguests.
-     *
-     * @param int $offerguests
-     *
-     * @return Member
-     */
-    public function setOfferguests($offerguests)
+    public function setOfferGuests(int $offerGuests): self
     {
-        $this->offerguests = $offerguests;
+        $this->offerGuests = $offerGuests;
 
         return $this;
     }
 
-    /**
-     * Get offerguests.
-     *
-     * @return int
-     */
-    public function getOfferguests()
+    public function getOfferGuests(): int
     {
-        return $this->offerguests;
+        return $this->offerGuests;
     }
 
-    /**
-     * Set offerhosts.
-     *
-     * @param int $offerhosts
-     *
-     * @return Member
-     */
-    public function setOfferhosts($offerhosts)
+    public function setOfferHosts(int $offerHosts): self
     {
-        $this->offerhosts = $offerhosts;
+        $this->offerHosts = $offerHosts;
 
         return $this;
     }
 
-    /**
-     * Get offerhosts.
-     *
-     * @return int
-     */
-    public function getOfferhosts()
+    public function getOfferHosts(): int
     {
-        return $this->offerhosts;
+        return $this->offerHosts;
     }
 
-    /**
-     * Set publictransport.
-     *
-     * @param int $publictransport
-     *
-     * @return Member
-     */
-    public function setPublictransport($publictransport)
+    public function setPublicTransport(int $publicTransport): self
     {
-        $this->publictransport = $publictransport;
+        $this->publicTransport = $publicTransport;
 
         return $this;
     }
 
-    /**
-     * Get publictransport.
-     *
-     * @return int
-     */
-    public function getPublictransport()
+    public function getPublicTransport(): int
     {
-        return $this->publictransport;
+        return $this->publicTransport;
     }
 
-    /**
-     * Set movies.
-     *
-     * @param int $movies
-     *
-     * @return Member
-     */
-    public function setMovies($movies)
+    public function setMovies(int $movies): self
     {
         $this->movies = $movies;
 
         return $this;
     }
 
-    /**
-     * Get movies.
-     *
-     * @return int
-     */
-    public function getMovies()
+    public function getMovies(): int
     {
         return $this->movies;
     }
 
-    /**
-     * Set chatGoogle.
-     *
-     * @param int $chatGoogle
-     *
-     * @return Member
-     */
-    public function setChatGoogle($chatGoogle)
+    public function setLastSwitchToActive(?DateTime $lastSwitchToActive): self
     {
-        $this->chatGoogle = $chatGoogle;
+        $this->lastSwitchToActive = $lastSwitchToActive;
 
         return $this;
     }
 
-    /**
-     * Get chatGoogle.
-     *
-     * @return int
-     */
-    public function getChatGoogle()
+    public function getLastSwitchToActive(): ?DateTime
     {
-        return $this->chatGoogle;
+        return $this->lastSwitchToActive;
     }
 
-    /**
-     * Set lastswitchtoactive.
-     *
-     * @param DateTime $lastswitchtoactive
-     *
-     * @return Member
-     */
-    public function setLastswitchtoactive($lastswitchtoactive)
+    public function setBeWelcomed(bool $beWelcomed): self
     {
-        $this->lastswitchtoactive = $lastswitchtoactive;
+        $this->beWelcomed = $beWelcomed;
 
         return $this;
     }
 
-    /**
-     * Get lastswitchtoactive.
-     *
-     * @return DateTime
-     */
-    public function getLastswitchtoactive()
+    public function getBeWelcomed(): bool
     {
-        return $this->lastswitchtoactive;
+        return $this->beWelcomed;
     }
 
-    /**
-     * Set bewelcomed.
-     *
-     * @param int $bewelcomed
-     *
-     * @return Member
-     */
-    public function setBewelcomed($bewelcomed)
-    {
-        $this->bewelcomed = $bewelcomed;
-
-        return $this;
-    }
-
-    /**
-     * Get bewelcomed.
-     *
-     * @return int
-     */
-    public function getBewelcomed()
-    {
-        return $this->bewelcomed;
-    }
-
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * String representation of object.
-     *
-     * @see http://php.net/manual/en/serializable.serialize.php
-     *
-     * @return string the string representation of the object or null
-     *
-     * @since 5.1.0
-     */
-    public function serialize()
+    public function serialize(): string
     {
         return serialize([
             $this->id,
@@ -2481,34 +1027,16 @@ class Member
         ]);
     }
 
-    /**
-     * Constructs the object.
-     *
-     * @see http://php.net/manual/en/serializable.unserialize.php
-     *
-     * @param string $serialized <p>
-     *                           The string representation of the object.
-     *                           </p>
-     *
-     * @since 5.1.0
-     */
-    public function unserialize($serialized)
+    public function unserialize($serialized): void
     {
         list(
             $this->id,
             $this->username,
             $this->password,
-            // see section on salt below
-            // $this->salt
             ) = unserialize($serialized);
     }
 
-    /**
-     * Returns the roles granted to the user.
-     *
-     * @return array string[] The user roles
-     */
-    public function getRoles()
+    public function getRoles(): array
     {
         // Grant user role to everyone
         $roles = [
@@ -2532,29 +1060,16 @@ class Member
         return $roles;
     }
 
-    /**
-     * Returns the salt that was originally used to encode the password.
-     *
-     * Return null as we use BCrypt for password hashing
-     *
-     * @return ?string
-     */
-    public function getSalt()
+    public function getSalt(): ?string
     {
         return null;
     }
 
-    /**
-     * Removes sensitive data from the user.
-     *
-     * This is important if, at any given point, sensitive information like
-     * the plain-text password is stored on this object.
-     */
-    public function eraseCredentials()
+    public function eraseCredentials(): void
     {
     }
 
-    public function isPrivileged()
+    public function isPrivileged(): bool
     {
         if (\in_array('ROLE_ADMIN', $this->getRoles(), true)) {
             return true;
@@ -2563,35 +1078,14 @@ class Member
         return false;
     }
 
-    public function getLocale()
+    public function getLocale(): string
     {
         return 'en';
     }
 
-    public function getVolunteerRights()
+    public function getVolunteerRights(): Collection
     {
         return $this->volunteerRights;
-    }
-
-    public function getGroupMemberships()
-    {
-        return $this->groupMemberships;
-    }
-
-    public function addGroupMembership(GroupMembership $groupMembership)
-    {
-        $this->groupMemberships->add($groupMembership);
-
-        return $this;
-    }
-
-    public function removeGroupMembership(GroupMembership $groupMembership)
-    {
-        if ($this->groupMemberships->contains($groupMembership)) {
-            $this->groupMemberships->removeElement($groupMembership);
-            $groupMembership->setMember(null);
-        }
-        $this->groupMemberships->remove($groupMembership);
     }
 
     public function getGroups()
@@ -2611,82 +1105,48 @@ class Member
         );
     }
 
-    public function getComments()
+    public function getComments(): Collection
     {
         return $this->comments;
     }
 
-    public function getRelationships()
+    public function addField(CryptedField $field): self
     {
-        return $this->comments;
-    }
-
-    /**
-     * Add cryptedField.
-     *
-     * @return Member
-     */
-    public function addCryptedField(CryptedField $cryptedField)
-    {
-        $this->cryptedFields[] = $cryptedField;
+        $this->fields[] = $field;
 
         return $this;
     }
 
-    /**
-     * Remove cryptedField.
-     */
-    public function removeCryptedField(CryptedField $cryptedField)
+    public function removeField(CryptedField $field): void
     {
-        $this->cryptedFields->removeElement($cryptedField);
+        $this->fields->removeElement($field);
     }
 
-    /**
-     * Get cryptedFields.
-     *
-     * @return Collection
-     */
-    public function getCryptedFields()
+    public function getFields(): Collection
     {
-        return $this->cryptedFields;
+        return $this->fields;
     }
 
-    /**
-     * Add volunteerRight.
-     *
-     * @return Member
-     */
-    public function addVolunteerRight(RightVolunteer $volunteerRight)
+    public function addVolunteerRight(RightVolunteer $volunteerRight): self
     {
-        $this->volunteerRights[] = $volunteerRight;
+        if (!$this->volunteerRights->contains($volunteerRight)) {
+            $this->volunteerRights->add($volunteerRight);
+        }
 
         return $this;
     }
 
-    /**
-     * Remove volunteerRight.
-     */
-    public function removeVolunteerRight(RightVolunteer $volunteerRight)
+    public function removeVolunteerRight(RightVolunteer $volunteerRight): void
     {
         $this->volunteerRights->removeElement($volunteerRight);
     }
 
-    /**
-     * Get addresses.
-     *
-     * @return Collection
-     */
-    public function getAddresses()
+    public function getAddresses(): Collection
     {
         return $this->addresses;
     }
 
-    /**
-     * Add address.
-     *
-     * @return Member
-     */
-    public function addAddress(Address $address)
+    public function addAddress(Address $address): self
     {
         if (!$this->addresses->contains($address)) {
             $this->addresses[] = $address;
@@ -2695,107 +1155,100 @@ class Member
         return $this;
     }
 
-    /**
-     * Remove address.
-     */
-    public function removeAddress(Address $address)
+    public function removeAddress(Address $address): void
     {
         $this->addresses->removeElement($address);
     }
 
-    /**
-     * Add group.
-     *
-     * @return Member
-     */
-    public function addGroup(Group $group)
+    public function getGroupMemberships(): Collection
     {
-        $this->groupMemberships[] = $group;
+        return $this->groupMemberships;
+    }
+
+    public function addGroupMembership(GroupMembership $groupMembership): self
+    {
+        if (!$this->groupMemberships->contains($groupMembership)) {
+            $this->groupMemberships->add($groupMembership);
+        }
 
         return $this;
     }
 
-    /**
-     * Remove group.
-     */
-    public function removeGroup(Group $group)
+    public function removeGroupMembership(GroupMembership $groupMembership): void
     {
-        $this->groupMemberships->removeElement($group);
+        $this->groupMemberships->removeElement($groupMembership);
     }
 
-    /**
-     * @param string $fieldName The crypted field name
-     * @param bool   $decrypt   Should the value be decrypted?
-     * @param string $prefix    Criteria prefix
-     *
-     * @return string
-     */
-    public function getCryptedField($fieldName, bool $decrypt = true, string $prefix = 'members')
+    public function getField($fieldName, bool $decrypt = true, string $prefix = 'members')
     {
         $stripped = '';
         $criteria = Criteria::create()
             ->where(Criteria::expr()->eq('tablecolumn', $prefix . '.' . $fieldName));
-        $cryptedField = $this->cryptedFields->matching($criteria)->first();
-        if (false !== $cryptedField && true === $decrypt) {
-            $value = $cryptedField->getMemberCryptedValue();
+        $field = $this->fields->matching($criteria)->first();
+        if (false !== $field && true === $decrypt) {
+            $value = $field->getMemberCryptedValue();
             $stripped = strip_tags($value);
         }
 
         return $stripped;
     }
 
-    /**
-     * @param int $hideAttribute
-     *
-     * @return Member
-     */
-    public function setHideAttribute($hideAttribute)
+    public function setHideAttribute($hideAttribute): self
     {
         $this->hideAttribute = $hideAttribute;
 
         return $this;
     }
 
-    /**
-     * @return int
-     */
-    public function getHideAttribute()
+    public function getHideAttribute(): int
     {
         return $this->hideAttribute;
     }
 
-    /**
-     * @param int $hostingInterest
-     *
-     * @return Member
-     */
-    public function setHostingInterest($hostingInterest)
+    public function setHostingInterest(?int $hostingInterest): self
     {
         $this->hostingInterest = $hostingInterest;
 
         return $this;
     }
 
-    /**
-     * @return int
-     */
-    public function getHostingInterest()
+    public function getHostingInterest(): ?int
     {
         return $this->hostingInterest;
     }
 
-    public function hasRight($rightName)
+    public function hasRight(string $nameOfRight): bool
     {
         $hasRight = false;
         $volunteerRights = $this->getVolunteerRights();
-        if (null !== $volunteerRights) {
-            $right = $this->em->getRepository(Right::class)->findOneBy(['name' => $rightName]);
 
-            /** @var RightVolunteer $volunteerRight */
-            foreach ($volunteerRights->getIterator() as $volunteerRight) {
-                if ($volunteerRight->getRight() === $right) {
-                   $hasRight = true;
-                   break;
+        /** @var RightVolunteer $volunteerRight */
+        foreach ($volunteerRights->getIterator() as $volunteerRight) {
+            if ($volunteerRight->getRight()->getName() === $nameOfRight) {
+               $hasRight = true;
+               break;
+            }
+        }
+
+        return $hasRight;
+    }
+
+    public function hasRightsForLocale($locale): bool
+    {
+        $hasRight = false;
+        $volunteerRights = $this->getVolunteerRights();
+
+        /* \todo find way to define rights name */
+        /** @var RightVolunteer $volunteerRight */
+        foreach ($volunteerRights->getIterator() as $volunteerRight) {
+            if ($volunteerRight->getRight()->getName() === 'Words') {
+                $strScope = str_replace('"', '', str_replace(',', ';', $volunteerRight->getScope()));
+                $scope = explode(';', $strScope);
+                if (\in_array($locale, $scope, true)) {
+                    $hasRight = true;
+                }
+                if (\in_array('All', $scope, true)) {
+                    $hasRight = true;
                 }
             }
         }
@@ -2803,78 +1256,40 @@ class Member
         return $hasRight;
     }
 
-    public function hasRightsForLocale($locale)
+    public function getLevelForRight($nameOfRight): int
     {
-        $hasRight = false;
-        $volunteerRights = $this->getVolunteerRights();
-        if (null !== $volunteerRights) {
-            // first check if member has the word right
-            $word = $this->em->getRepository(Right::class)->findOneBy(['name' => 'Words']);
-
-            /** @var RightVolunteer $volunteerRight */
-            foreach ($volunteerRights->getIterator() as $volunteerRight) {
-                if ($volunteerRight->getRight() === $word) {
-                    $strScope = str_replace('"', '', str_replace(',', ';', $volunteerRight->getScope()));
-                    $scope = explode(';', $strScope);
-                    if (\in_array($locale, $scope, true)) {
-                        $hasRight = true;
-                    }
-                    if (\in_array('All', $scope, true)) {
-                        $hasRight = true;
-                    }
-                }
-            }
-        }
-
-        return $hasRight;
-    }
-
-    public function getLevelForRight($rightName)
-    {
-        $rightName = strtolower(str_replace('ROLE_ADMIN_', '', $rightName));
+        $nameOfRight = strtolower(str_replace('ROLE_ADMIN_', '', $nameOfRight));
         $level = false;
         $volunteerRights = $this->getVolunteerRights();
-        if (null !== $volunteerRights) {
-            $right = $this->em->getRepository(Right::class)->findOneBy(['name' => $rightName]);
 
-            /** @var RightVolunteer $volunteerRight */
-            foreach ($volunteerRights->getIterator() as $volunteerRight) {
-                if ($volunteerRight->getRight() === $right) {
-                    $level = $volunteerRight->getLevel();
-                }
+        /** @var RightVolunteer $volunteerRight */
+        foreach ($volunteerRights->getIterator() as $volunteerRight) {
+            if ($volunteerRight->getRight()->getName() === $nameOfRight) {
+                $level = $volunteerRight->getLevel();
             }
         }
 
         return $level;
     }
 
-    /**
-     * @param $rightName
-     *
-     * @return array
-     */
-    public function getScopeForRight($rightName)
+    public function getScopeForRight($nameOfRight): array
     {
-        $rightName = strtolower(str_replace('ROLE_ADMIN_', '', $rightName));
+        $nameOfRight = strtolower(str_replace('ROLE_ADMIN_', '', $nameOfRight));
         $scope = [];
         $volunteerRights = $this->getVolunteerRights();
-        if (null !== $volunteerRights) {
-            // first check if member has the word right
-            $right = $this->em->getRepository(Right::class)->findOneBy(['name' => $rightName]);
 
-            /** @var RightVolunteer $volunteerRight */
-            foreach ($volunteerRights->getIterator() as $volunteerRight) {
-                if ($volunteerRight->getRight() === $right) {
-                    $scopes = str_replace(';', ',', str_replace('"', '', $volunteerRight->getScope()));
-                    $scope = explode(',', $scopes);
-                }
+        /** @var RightVolunteer $volunteerRight */
+        foreach ($volunteerRights->getIterator() as $volunteerRight) {
+            if ($volunteerRight->getRight()->getName() === $nameOfRight) {
+                $scopes = str_replace(';', ',', str_replace('"', '', $volunteerRight->getScope()));
+                $scope = explode(',', $scopes);
             }
         }
 
         return $scope;
     }
 
-    public function isBrowsable()
+    public function isBrowsable(): bool
     {
         if (\in_array(
             $this->status,
@@ -2885,6 +1300,7 @@ class Member
                 MemberStatusType::BUGGY,
                 MemberStatusType::BANNED,
                 MemberStatusType::REJECTED,
+                MemberStatusType::PASSED_AWAY,
                 MemberStatusType::DUPLICATE_SIGNED,
             ],
             true
@@ -2911,7 +1327,7 @@ class Member
 
     public function isBanned(): bool
     {
-        return (MemberStatusType::BANNED === $this->status) ? true : false;
+        return MemberStatusType::BANNED === $this->status;
     }
 
     public function isDeniedAccess(): bool
@@ -2921,7 +1337,7 @@ class Member
 
     public function isNotConfirmedYet(): bool
     {
-        return (MemberStatusType::AWAITING_MAIL_CONFIRMATION === $this->status) ? true : false;
+        return MemberStatusType::AWAITING_MAIL_CONFIRMATION === $this->status;
     }
 
     public function isFirstnameShown(): bool
@@ -2938,10 +1354,7 @@ class Member
         return $this->username;
     }
 
-    /**
-     * @return array
-     */
-    public function getLanguageLevels()
+    public function getLanguageLevels(): array
     {
         return array_filter(
             $this->languageLevels->toArray(),
@@ -2958,10 +1371,7 @@ class Member
         );
     }
 
-    /**
-     * @return array
-     */
-    public function getSkilledLanguageLevels()
+    public function getSkilledLanguageLevels(): array
     {
         $criteria = Criteria::create()->where(Criteria::expr()->orX(
             Criteria::expr()->neq('level', LanguageLevelType::BEGINNER),
@@ -2972,10 +1382,7 @@ class Member
             ->toArray();
     }
 
-    /**
-     * @return $this
-     */
-    public function addLanguageLevel(MembersLanguagesLevel $level)
+    public function addLanguageLevel(MembersLanguagesLevel $level): self
     {
         if (!$this->languageLevels->contains($level)) {
             $this->languageLevels->add($level);
@@ -2985,10 +1392,7 @@ class Member
         return $this;
     }
 
-    /**
-     * @return $this
-     */
-    public function removeLanguageLevel(MembersLanguagesLevel $level)
+    public function removeLanguageLevel(MembersLanguagesLevel $level): self
     {
         if ($this->languageLevels->contains($level)) {
             $this->languageLevels->removeElement($level);
@@ -2998,10 +1402,7 @@ class Member
         return $this;
     }
 
-    /**
-     * @return array
-     */
-    public function getLanguages()
+    public function getLanguages(): array
     {
         return array_map(
             function ($level) {
@@ -3011,10 +1412,7 @@ class Member
         );
     }
 
-    /**
-     * @return MemberPreference
-     */
-    public function getMemberPreference(Preference $preference)
+    public function getMemberPreference(Preference $preference): MemberPreference
     {
         // Check if member has preference
         $criteria = Criteria::create()->where(Criteria::expr()->eq('preference', $preference));
@@ -3030,10 +1428,7 @@ class Member
         return $memberPreference;
     }
 
-    /**
-     * @return string
-     */
-    public function getMemberPreferenceValue(Preference $preference)
+    public function getMemberPreferenceValue(Preference $preference): string
     {
         $value = $preference->getDefaultValue();
 
@@ -3053,9 +1448,10 @@ class Member
      *
      * @ORM\PrePersist
      */
-    public function onPrePersist()
+    public function onPrePersist(): void
     {
         $this->created = new DateTime('now');
+        $this->updated = $this->created;
     }
 
     /**
@@ -3068,20 +1464,22 @@ class Member
         $this->updated = new DateTime('now');
     }
 
-    /**
-     * @return Language
-     */
-    public function getPreferredLanguage()
+    public function getPreferredLanguage(): ?Language
+    {
+        return $this->preferredLanguage;
+    }
+
+    public function initializePreferredLanguage(EntityManagerInterface $entityManager): void
     {
         // Get preference for locale
-        $preferenceRepository = $this->em->getRepository(Preference::class);
+        $preferenceRepository = $entityManager->getRepository(Preference::class);
         /** @var Preference $preference */
         $preference = $preferenceRepository->findOneBy([
             'codename' => Preference::LOCALE,
         ]);
         $languageId = $this->getMemberPreferenceValue($preference);
 
-        $languageRepository = $this->em->getRepository(Language::class);
+        $languageRepository = $entityManager->getRepository(Language::class);
         /** @var Language $language */
         $language = $languageRepository->findOneBy([
             'id' => $languageId,
@@ -3094,37 +1492,7 @@ class Member
             ]);
         }
 
-        return $language;
-    }
-
-    public function setPreferredLanguage(Language $language): self
-    {
-        // Get current preference if any
-        $preferenceRepository = $this->em->getRepository(Preference::class);
-        /** @var Preference $preference */
-        $preference = $preferenceRepository->findOneBy(['codename' => Preference::LOCALE]);
-        if (null === $preference) {
-            return $this;
-        }
-
-        $memberPreferenceRepository = $this->em->getRepository(MemberPreference::class);
-        /** @var MemberPreference $memberPreference */
-        $memberPreference = $memberPreferenceRepository->findOneBy(['preference' => $preference, 'member' => $this]);
-
-        if ($memberPreference) {
-            $memberPreference->setValue($language->getId());
-        } else {
-            $memberPreference = new MemberPreference();
-            $memberPreference
-                ->setMember($this)
-                ->setPreference($preference)
-                ->setValue($language->getId())
-                ;
-        }
-        $this->em->persist($memberPreference);
-        $this->em->flush();
-
-        return $this;
+        $this->preferredLanguage = $language;
     }
 
     /**
@@ -3159,110 +1527,81 @@ class Member
     }
 
     /**
-     * Provides an array collection of all translated items of a profile.
-     *
-     * Needs to be called explicitly
-     *
-     * @Groups({"Member:Read"})
+     * @ORM\PostLoad
      */
-    public function getMemberFields(): array
+    public function postLoad(PostLoadEventArgs $args)
     {
-        if (null === $this->memberFields) {
-            $memberTranslationRepository = $this->em->getRepository(MemberTranslation::class);
-            /** @var MemberTranslation[] $memberTranslations */
-            $memberTranslations = $memberTranslationRepository->findBy(['owner' => $this]);
+        $entityManager = $args->getObjectManager();
 
-            $memberFields = [];
-            foreach ($memberTranslations as $memberTranslation) {
-                $tableColumn = $memberTranslation->getTablecolumn();
-                if ('members.' !== substr($tableColumn, 0, 8)) {
-                    continue;
-                }
-                $tableColumn = str_ireplace('members.', '', $tableColumn);
+        $this->initializeMemberFields($entityManager);
 
-                $memberFields[$memberTranslation->getLanguage()->getShortCode()][$tableColumn] = $memberTranslation->getSentence();
+        $this->initializePreferredLanguage($entityManager);
+    }
+
+    /**
+     * Provides an array of all translated items of a profile.
+     *
+     * Is called when a member is loaded from the database (adds a penalty)
+     */
+    public function initializeMemberFields(EntityManagerInterface $entityManager): array
+    {
+        $memberTranslationRepository = $entityManager->getRepository(MemberTranslation::class);
+        /** @var MemberTranslation[] $memberTranslations */
+        $memberTranslations = $memberTranslationRepository->findBy(['owner' => $this]);
+
+        $memberFields = [];
+        foreach ($memberTranslations as $memberTranslation) {
+            $tableColumn = $memberTranslation->getTableColumn();
+            if ('members.' !== substr($tableColumn, 0, 8)) {
+                continue;
             }
+            $tableColumn = str_ireplace('members.', '', $tableColumn);
 
-            // Normalize array: make sure for all locales all fields are set, use first locale as fallback for the other
-            $fallback = array_key_first($memberFields);
-            $fields = [
-                'Occupation',
-                'ILiveWith',
-                'MaxLenghtOfStay',
-                'MotivationForHospitality',
-                'Offer',
-                'Organizations',
-                'AdditionalAccomodationInfo',
-                'OtherRestrictions',
-                'InformationToGuest',
-                'Hobbies',
-                'Books',
-                'Music',
-                'Movies',
-                'PleaseBring',
-                'OfferGuests',
-                'OfferHosts',
-                'PublicTransport',
-                'PastTrips',
-                'PlannedTrips',
-                'ProfileSummary',
-            ];
+            $memberFields[$memberTranslation->getLanguage()->getShortCode()][$tableColumn] = $memberTranslation->getSentence();
+        }
 
-            foreach (array_keys($memberFields) as $locale) {
-                foreach ($fields as $field) {
-                    if (!isset($memberFields[$locale][$field])) {
-                        // Check if field exists in fallback locale
-                        if (isset($memberFields[$fallback][$field])) {
-                            $memberFields[$locale][$field] = $memberFields[$fallback][$field];
-                        } else {
-                            // Hack. Set field to empty value and make sure it is also set for next next locale
-                            $memberFields[$fallback][$field] = '';
-                            $memberFields[$locale][$field] = '';
-                        }
+        // Normalize array: make sure for all locales all fields are set, use first locale as fallback for the other
+        $fallback = array_key_first($memberFields);
+        $fields = [
+            'Occupation',
+            'ILiveWith',
+            'MaxLenghtOfStay',
+            'MotivationForHospitality',
+            'Offer',
+            'Organizations',
+            'AdditionalAccomodationInfo',
+            'OtherRestrictions',
+            'InformationToGuest',
+            'Hobbies',
+            'Books',
+            'Music',
+            'Movies',
+            'PleaseBring',
+            'OfferGuests',
+            'OfferHosts',
+            'PublicTransport',
+            'PastTrips',
+            'PlannedTrips',
+            'ProfileSummary',
+        ];
+
+        foreach (array_keys($memberFields) as $locale) {
+            foreach ($fields as $field) {
+                if (!isset($memberFields[$locale][$field])) {
+                    // Check if field exists in fallback locale
+                    if (isset($memberFields[$fallback][$field])) {
+                        $memberFields[$locale][$field] = $memberFields[$fallback][$field];
+                    } else {
+                        // Hack. Set field to empty value and make sure it is also set for next next locale
+                        $memberFields[$fallback][$field] = '';
+                        $memberFields[$locale][$field] = '';
                     }
                 }
             }
-            $this->memberFields = $memberFields;
         }
+        $this->memberFields = $memberFields;
 
         return $this->memberFields;
-    }
-
-    public function getPhoneNumbers()
-    {
-        $phoneNumbers = [
-            'HomePhoneNumber' => $this->getCryptedField('HomePhoneNumber'),
-            'CellPhoneNumber' => $this->getCryptedField('CellPhoneNumber'),
-            'WorkPhoneNumber' => $this->getCryptedField('WorkPhoneNumber'),
-        ];
-
-        return $phoneNumbers;
-    }
-
-    /**
-     * @Groups({"Member:Read"})
-     */
-    public function getMessengers()
-    {
-        $messengers = [
-            'GOOGLE' => $this->getCryptedField('chat_GOOGLE'),
-            'SKYPE' => $this->getCryptedField('chat_SKYPE'),
-            'Others' => $this->getCryptedField('chat_Others'),
-        ];
-
-        return $messengers;
-    }
-
-    /**
-     * Injects responsible ObjectManager and the ClassMetadata into this persistent object.
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     *
-     * @return void
-     */
-    public function injectObjectManager(ObjectManager $objectManager, ClassMetadata $classMetadata)
-    {
-        $this->em = $objectManager;
     }
 
     public function getRegistrationKey(): string
@@ -3270,10 +1609,7 @@ class Member
         return $this->registrationKey;
     }
 
-    /**
-     * @return Member
-     */
-    public function setRegistrationKey(string $registrationKey): self
+    public function setRegistrationKey(?string $registrationKey): self
     {
         $this->registrationKey = $registrationKey;
 
@@ -3295,6 +1631,10 @@ class Member
      */
     public function getAge(): int
     {
+        if (null === $this->birthdate) {
+            return 0;
+        }
+
         $birthday = $this->getBirthdate();
 
         return $birthday->diffInYears();
@@ -3339,5 +1679,33 @@ class Member
         }
 
         return null;
+    }
+
+    public function getRelations(): Collection
+    {
+        return $this->relations;
+    }
+
+    public function addRelation(Relation $relation): self
+    {
+        if (!$this->relations->contains($relation)) {
+            $this->relations[] = $relation;
+            $relation->setOwner($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRelation(Relation $relation): self
+    {
+        if ($this->relations->contains($relation)) {
+            $this->relations->removeElement($relation);
+
+            if ($relation->getOwner() === $this) {
+                $relation->setOwner(null);
+            }
+        }
+
+        return $this;
     }
 }

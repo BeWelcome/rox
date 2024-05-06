@@ -7,7 +7,7 @@ import 'leaflet/dist/leaflet.css';
 import {initializeSingleAutoComplete} from './suggest/locations';
 import 'leaflet.fullscreen';
 import 'leaflet.fullscreen/Control.FullScreen.css';
-import { default as rangeslider } from 'rangeslider-pure';
+import { default as rangeSlider } from 'rangeslider-pure';
 
 const htmlTag = document.getElementsByTagName('html')[0];
 const lang = htmlTag.attributes['lang'].value;
@@ -84,7 +84,7 @@ function updateValueOutput(value) {
 }
 
 const initializeSlider = () => {
-    return rangeslider.create(slider, {
+    return rangeSlider.create(slider, {
         onInit: function() {
             updateValueOutput(0);
         },
@@ -101,7 +101,7 @@ const hostingInterest = document.getElementById('hosting_interest');
 const radioHandler = (event) => {
     if (event.target.type === 'radio') {
         console.log("Clicked: ", event.target.type, event.target.checked, event.target.value);
-        if (event.target.value === 'no') {
+        if (event.target.value === 'neverask') {
             hostingInterest.classList.remove('u-block');
             hostingInterest.classList.add('u-hidden');
         } else {

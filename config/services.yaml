@@ -19,7 +19,7 @@ parameters:
     forum_notification_batch_size: '%env(int:forum_notification_batch_size)%'
     locales: "%env(csv:LOCALES)%"
     document_locales: "%env(DOCUMENT_LOCALES)%"
-    username.pattern: "/[a-z](?!.*[-_.][-_.])[a-z0-9-._]{2,18}[a-z0-9]/i"
+    username.pattern: "/^[a-z](?!.*[-_.][-_.])[a-z0-9-._]{2,18}[a-z0-9]/i"
     manticore.host: '%env(MANTICORE_HOST)%'
     manticore.port: '%env(int:MANTICORE_PORT)%'
 
@@ -37,6 +37,7 @@ services:
             $manticorePort: '%manticore.port%'
             $locales: '%locales%'
             $formLoginAuthenticator: '@security.authenticator.form_login.main'
+            $usernamePattern: '%username.pattern%'
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
@@ -479,8 +480,3 @@ services:
     app.mockup_provider.profile:
         class: App\Model\MockupProvider\ProfileMockups
         tags: [ 'app.mockup_provider' ]
-
-#    app.signup.form:
-#        class: App\Form\SignupFormType
-#        arguments:
-#            $usernamePattern: '%username.pattern%'

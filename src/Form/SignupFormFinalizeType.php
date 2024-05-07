@@ -87,6 +87,7 @@ class SignupFormFinalizeType extends AbstractType
                 'attr' => [
                     'class' =>  'js-location-picker',
                 ],
+                'label' => 'profile.set.location',
                 'error_bubbling' => true,
                 'help' => 'help.location',
             ])

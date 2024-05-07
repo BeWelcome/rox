@@ -111,12 +111,11 @@
     <div id="hosting_interest" class="
         {%- if finalize.accommodation.vars.value == finalize.accommodation.children[1].vars.value %}u-block{% else %}u-hidden{% endif -%}
     ">
-    {{ form_label(finalize.hosting_interest) }}
-    {{ form_widget(finalize.hosting_interest) }}
-    <div class="range text-center u-mt-16">
-        <p class="rangeSlider__value-output">{{ 'hosting.interest.set'|trans }}</p>
-    </div>
-        {{ form_errors(finalize.hosting_interest) }}
+        {{ form_label(finalize.hosting_interest) }}
+        {{ form_widget(finalize.hosting_interest) }}
+        <div class="range text-center u-mt-16">
+            <p class="rangeSlider__value-output">{{ 'hosting.interest.set'|trans }}</p>
+        </div>
         {{ form_help(finalize.hosting_interest) }}
     </div>
     <div class="u-flex u-justify-end">

@@ -135,7 +135,7 @@
 
 {% block form_widget_simple -%}
     {% if type is not defined or type != 'hidden' %}
-        {% if not form.vars.uses_autocomplete %}
+        {% if form.vars.uses_autocomplete is defined and not form.vars.uses_autocomplete %}
             {%- set attr = attr|merge({class: (attr.class|default('') ~ (type|default('') == 'file' ? ' custom-file-input' : ' o-input'))|trim}) -%}
         {% endif %}
     {% endif %}
@@ -199,7 +199,7 @@
 {%- endblock radio_widget %}
 
 {% block choice_widget_expanded -%}
-    {# <div {{ block('widget_container_attributes') }}>  #}
+    <div {{ block('widget_container_attributes') }}>
         {%- for child in form %}
             {{- form_widget(child, {
                 parent_label_class: label_attr.class|default(''),
@@ -207,7 +207,7 @@
                 valid: valid,
             }) -}}
         {% endfor -%}
-    {# </div> #}
+    </div>
 {%- endblock choice_widget_expanded %}
 
 {# Labels #}
@@ -247,7 +247,7 @@
                 {{- label|trans(label_translation_parameters, translation_domain)|raw -}}
             {%- endif -%}
         {%- endif -%}
-        </{{ element|default('label') }}>
+        {% block form_label_errors %}{{- form_errors(form) -}}{% endblock form_label_errors %}</{{ element|default('label') }}>
     {%- else -%}
         {%- if errors|length > 0 -%}
             <div id="{{ id }}_errors" class="mb-2">

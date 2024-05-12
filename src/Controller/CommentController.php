@@ -152,7 +152,6 @@ class CommentController extends AbstractController
         $memberPreference = $loggedInMember->getMemberPreference($preference);
         $showCommentGuideline = ('0' === $memberPreference->getValue());
 
-        /** @var Member $loggedInMember */
         $form = $this->createForm(CommentType::class, null, [
             'to_member' => $member,
             'show_comment_guideline' => $showCommentGuideline,
@@ -162,30 +161,38 @@ class CommentController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var Comment $comment */
             $comment = $form->getData();
-            $comment->setToMember($member);
-            $comment->setFromMember($loggedInMember);
-            if (CommentQualityType::NEGATIVE === $comment->getQuality()) {
-                $comment->setAdminAction(CommentAdminActionType::ADMIN_CHECK);
-                $comment->setEditingAllowed(false);
+            if (
+                $commentModel->checkCommentSpam($loggedInMember, $comment)
+                || $commentModel->checkForEmailAddress($comment)
+            ) {
+                $form->addError(new FormError($this->translator->trans('commentsomethingwentwrong')));
+            } else {
+                $comment->setToMember($member);
+                $comment->setFromMember($loggedInMember);
+
+                if (CommentQualityType::NEGATIVE === $comment->getQuality()) {
+                    $comment->setAdminAction(CommentAdminActionType::ADMIN_CHECK);
+                    $comment->setEditingAllowed(false);
+                }
+                $entityManager->persist($comment);
+
+                // Mark comment guidelines as read and hide the checkbox for the future
+                $memberPreference->setValue('1');
+                $entityManager->persist($memberPreference);
+                $entityManager->flush();
+
+                $mailer->sendNewCommentNotification($comment);
+
+                $this->addTranslatedFlash(
+                    'notice',
+                    'flash.comment.added',
+                    [
+                        'username' => $member->getUsername(),
+                    ]
+                );
+
+                return $this->redirectToRoute('profile_comments', ['username' => $member->getUsername()]);
             }
-            $entityManager->persist($comment);
-
-            // Mark comment guidelines as read and hide the checkbox for the future
-            $memberPreference->setValue('1');
-            $entityManager->persist($memberPreference);
-            $entityManager->flush();
-
-            $mailer->sendNewCommentNotification($comment);
-
-            $this->addTranslatedFlash(
-                'notice',
-                'flash.comment.added',
-                [
-                    'username' => $member->getUsername(),
-                ]
-            );
-
-            return $this->redirectToRoute('profile_comments', ['username' => $member->getUsername()]);
         }
 
         return $this->render('/profile/comment.add.html.twig', [

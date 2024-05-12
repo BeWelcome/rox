@@ -60,16 +60,16 @@ class CommentModel
         $newExperience = false;
         try {
             $maxlen = max(strlen($updatedText), strlen($originalText));
-            $calculator = new LevenshteinDistance(false, 0, 1000**2);
+            $calculator = new LevenshteinDistance(false, 0, 1000 ** 2);
             $iteration = 0;
             $maxIteration = $maxlen / 1000;
             while ($iteration < $maxIteration && !$newExperience) {
-
                 $currentUpdatedText = substr($updatedText, $iteration * 1000, 1000);
                 $currentOriginalText = substr($originalText, $iteration * 1000, 1000);
                 $levenshteinDistance = ($calculator->calculate(
                     $currentUpdatedText,
-                    $currentOriginalText)
+                    $currentOriginalText
+                )
                 )['distance'];
 
                 if ($levenshteinDistance >= max(strlen($currentUpdatedText), strlen($currentOriginalText)) / 7) {
@@ -77,11 +77,110 @@ class CommentModel
                 }
                 $iteration++;
             }
-        } catch(Throwable $e) {
+        } catch (Throwable $e) {
             // ignore exception and just return false (likely consumed too much memory)
             return $newExperience;
         }
 
         return $newExperience;
+    }
+
+    public function checkCommentSpam(Member $loggedInMember, Comment $comment): bool
+    {
+        $spamCheckParams = [
+            ['duration' => '00:02:00', 'count' => 1],
+            ['duration' => '00:20:00', 'count' => 5],
+            ['duration' => '06:00:00', 'count' => 25],
+        ];
+
+        $check1 = $this->checkCommentsDuration($loggedInMember, $comment, $spamCheckParams[0]);
+        $check2 = $this->checkCommentsDuration($loggedInMember, $comment, $spamCheckParams[1]);
+        $check3 = $this->checkCommentsDuration($loggedInMember, $comment, $spamCheckParams[2]);
+
+        return $check1 || $check2 || $check3;
+    }
+
+    private function checkCommentsDuration(Member $member, Comment $comment, array $params): bool
+    {
+        $duration = $params['duration'];
+        $count = $params['count'];
+
+        $result = false;
+        $commentCount = $this->entityManager
+            ->getConnection()
+            ->executeQuery(
+                "
+                    SELECT
+                        COUNT(*) as cnt
+                    FROM
+                        comments c
+                    WHERE
+                        c.IdFromMember = :memberId
+                        AND TIMEDIFF(NOW(), created) < :duration
+                ",
+                [ ':memberId' => $member->getId(), ':duration' => $duration]
+            )
+            ->fetchOne()
+        ;
+
+        if ($commentCount >= $count) {
+            // Okay limit was hit, check for comment quality
+            // Get all comments written during the given duration
+            $comments = $this->entityManager
+                ->getConnection()
+                ->executeQuery(
+                    "
+                        SELECT
+                            c.TextFree
+                        FROM
+                            comments c
+                        WHERE
+                            c.IdFromMember = :memberId
+                            AND TIMEDIFF(NOW(), created) < :duration
+                    ",
+                    [ ':memberId' => $member->getId(), ':duration' => $duration]
+                )
+                ->fetchAllAssociative()
+            ;
+            $result = $this->checkCommentSimilarity($comments, $comment);
+        }
+
+        return $result;
+    }
+
+    private function checkCommentSimilarity(array $comments, Comment $comment): bool
+    {
+        $similar = 0;
+        $comments[count($comments)] = ['TextFree' => $comment->getTextfree()];
+        $count = count($comments);
+        for ($i = 0; $i < $count - 1; $i++) {
+            for ($j = $i + 1; $j < $count; $j++) {
+                similar_text(
+                    $comments[$i]['TextFree'],
+                    $comments[$j]['TextFree'],
+                    $percent
+                );
+                if ($percent > 95) {
+                    $similar++;
+                }
+            }
+        }
+        return $similar != $count * ($count - 1);
+    }
+
+    public function checkForEmailAddress(Comment $comment): bool
+    {
+        $commentText = $comment->getTextfree();
+        $atPos = strpos($commentText, '@');
+        $whiteSpaceBefore = strrpos(substr($commentText, 0, $atPos), ' ');
+        $whiteSpaceAfter = strpos($commentText, ' ', $atPos);
+        if (false === $whiteSpaceAfter) {
+            $whiteSpaceAfter = strlen($commentText);
+        }
+        $potentialEmailAddress =
+            substr($commentText, $whiteSpaceBefore + 1, $whiteSpaceAfter - $whiteSpaceBefore - 1);
+        $emailAddressFound = filter_var($potentialEmailAddress, FILTER_VALIDATE_EMAIL) !== false;
+
+        return $emailAddressFound;
     }
 }

@@ -31,6 +31,7 @@
     <h2>{{ 'commentheading'|trans|format(member.username) }}</h2>
     <div class="alert alert-info">{{ 'followcommentguidelines'|trans|raw }}</div>
     {{ form_start(form, { 'attr': { 'novalidate': 'novalidate' } }) }}
+    {{ form_errors(form) }}
     {{ form_row(form.quality) }}
     {{ form_errors(form.quality) }}
     {{ form_row(form.relations) }}

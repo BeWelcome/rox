@@ -171,16 +171,8 @@ class CommentModel
     public function checkForEmailAddress(Comment $comment): bool
     {
         $commentText = $comment->getTextfree();
-        $atPos = strpos($commentText, '@');
-        $whiteSpaceBefore = strrpos(substr($commentText, 0, $atPos), ' ');
-        $whiteSpaceAfter = strpos($commentText, ' ', $atPos);
-        if (false === $whiteSpaceAfter) {
-            $whiteSpaceAfter = strlen($commentText);
-        }
-        $potentialEmailAddress =
-            substr($commentText, $whiteSpaceBefore + 1, $whiteSpaceAfter - $whiteSpaceBefore - 1);
-        $emailAddressFound = filter_var($potentialEmailAddress, FILTER_VALIDATE_EMAIL) !== false;
+        $count = preg_match_all("/[\._a-zA-Z0-9-]+@[\._a-zA-Z0-9-]+/i", $commentText, $matches);
 
-        return $emailAddressFound;
+        return $count > 0;
     }
 }

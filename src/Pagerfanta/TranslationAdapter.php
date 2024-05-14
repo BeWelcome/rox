@@ -41,6 +41,7 @@ class TranslationAdapter implements AdapterInterface
                 ON pi_lang.code = p.code
                 AND pi_lang.shortcode = '{$locale}'
                 AND (pi_lang.isArchived IS NULL OR pi_lang.isArchived = 0)
+            ORDER BY p.created desc
                 ";
         if (!empty($term)) {
             $rawQuery .= " WHERE (p.code LIKE {$term} OR p.Sentence LIKE {$term})";

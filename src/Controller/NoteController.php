@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Doctrine\MemberStatusType;
 use App\Entity\Member;
 use App\Entity\ProfileNote;
 use App\Form\ProfileNoteFilterType;
@@ -10,6 +11,8 @@ use App\Repository\ProfileNoteRepository;
 use App\Utilities\ChangeProfilePictureGlobals;
 use App\Utilities\ItemsPerPageTraits;
 use App\Utilities\ProfileSubmenu;
+use App\Utilities\TranslatedFlashTrait;
+use App\Utilities\TranslatorTrait;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -20,6 +23,8 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class NoteController extends AbstractController
 {
+    use TranslatorTrait;
+    use TranslatedFlashTrait;
     use ItemsPerPageTraits;
 
     private EntityManagerInterface $entityManager;
@@ -41,6 +46,12 @@ class NoteController extends AbstractController
 
         if ($member === $loggedInMember) {
             return $this->redirectToRoute('members_profile', ['username' => $loggedInMember->getusername()]);
+        }
+
+        if (MemberStatusType::ACCOUNT_ACTIVATED === $loggedInMember->getStatus()) {
+            $this->addTranslatedFlash('notice', 'flash.note.not.active');
+
+            return $this->redirectToRoute('members_profile', ['username' => $loggedInMember->getUsername()]);
         }
 
         /** @var ProfileNoteRepository $noteRepository */

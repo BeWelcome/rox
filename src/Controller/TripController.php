@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Doctrine\MemberStatusType;
 use App\Entity\Member;
 use App\Entity\Subtrip;
 use App\Entity\Trip;
@@ -89,6 +90,12 @@ class TripController extends AbstractController
     {
         /** @var Member $member */
         $member = $this->getUser();
+
+        if (MemberStatusType::ACCOUNT_ACTIVATED !== $member->getStatus()) {
+            $this->addTranslatedFlash('notice', 'flash.trip.not.confirmed');
+
+            return $this->redirectToRoute('trips');
+        }
 
         $trip = new Trip();
         $trip->setCreator($member);

@@ -147,7 +147,7 @@ if ((!isset($topic->topicinfo->IdTitle)) && (!isset($topic->topicinfo->ThreadDel
     }
 
     if ($User) {
-        if (!$topic->topicinfo->IsClosed) {
+        if (!$topic->topicinfo->IsClosed && $topic->topicinfo->CanReply) {
             ?>
             <div class="row mb-2">
                 <div class="col-12 text-right">

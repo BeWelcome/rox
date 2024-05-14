@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Doctrine\CommentAdminActionType;
 use App\Doctrine\CommentQualityType;
+use App\Doctrine\MemberStatusType;
 use App\Entity\Comment;
 use App\Entity\Member;
 use App\Entity\Preference;
@@ -132,6 +133,12 @@ class CommentController extends AbstractController
         $loggedInMember = $this->getUser();
 
         if ($loggedInMember === $member) {
+            return $this->redirectToRoute('members_profile', ['username' => $member->getUsername()]);
+        }
+
+        if (MemberStatusType::ACCOUNT_ACTIVATED === $loggedInMember->getStatus()) {
+            $this->addTranslatedFlash('notice', 'flash.comment.not.active');
+
             return $this->redirectToRoute('members_profile', ['username' => $member->getUsername()]);
         }
 

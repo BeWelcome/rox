@@ -19,6 +19,7 @@ use App\Utilities\BewelcomeAddressTrait;
 use App\Utilities\ManagerTrait;
 use App\Utilities\MessageTrait;
 use Doctrine\DBAL\DBALException;
+use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Exception;
@@ -384,13 +385,16 @@ class GroupModel
     /**
      * @param Member[] $admins
      */
-    public function sendAdminNotificationDeclined(Group $group, Member $member, $admins)
+    public function sendAdminNotificationDeclined(Group $group, Member $member)
     {
+        $admins = $group->getAdministrators();
         foreach ($admins as $admin) {
             $this->mailer->sendGroupEmail($admin, 'group/declined.invite', [
                 'subject' => [
-                    'subject' => 'group.invitation.declined',
-                    'group' => $group,
+                    'translationId' => 'group.invitation.declined',
+                    'parameters' => [
+                        'group' => $group->getName(),
+                    ],
                 ],
                 'group' => $group,
                 'invitee' => $member,
@@ -405,8 +409,10 @@ class GroupModel
         foreach ($admins as $admin) {
             $this->mailer->sendGroupEmail($admin, 'group/accepted.invite', [
                 'subject' => [
-                    'subject' => 'group.invitation.accepted',
-                    'group' => $group,
+                    'translationId' => 'group.invitation.accepted',
+                    'parameters' => [
+                        'group' => $group->getName(),
+                    ],
                 ],
                 'group' => $group,
                 'invitee' => $member,
@@ -442,15 +448,11 @@ class GroupModel
         return $admins;
     }
 
-    /**
-     * @param $group
-     * @param $member
-     *
-     * @return object|null
-     */
-    private function getMembership($group, $member)
+    private function getMembership($group, $member): ?GroupMembership
     {
         $membershipRepository = $this->getManager()->getRepository(GroupMembership::class);
+
+        /** @var GroupMembership $membership */
         $membership = $membershipRepository->findOneBy([
             'group' => $group,
             'member' => $member,
@@ -467,8 +469,8 @@ class GroupModel
     {
         $membershipRepository = $this->getManager()->getRepository(GroupMembership::class);
         $membership = $membershipRepository->findOneBy(['group' => $group, 'member' => $member]);
-
         $membership->setStatus($status);
+
         $this->getManager()->persist($membership);
         $this->getManager()->flush();
     }

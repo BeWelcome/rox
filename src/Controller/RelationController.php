@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Doctrine\MemberStatusType;
 use App\Entity\Member;
 use App\Entity\ProfileNote;
 use App\Entity\Relation;
@@ -52,6 +53,12 @@ class RelationController extends AbstractController
         $loggedInMember = $this->getUser();
         if ($member === $loggedInMember) {
             return $this->redirectToRoute('members_profile', ['username' => $loggedInMember->getusername()]);
+        }
+
+        if (MemberStatusType::ACCOUNT_ACTIVATED === $loggedInMember->getStatus()) {
+            $this->addTranslatedFlash('notice', 'flash.relation.not.active');
+
+            return $this->redirectToRoute('members_profile', ['username' => $loggedInMember->getUsername()]);
         }
 
         $relation = $this->findRelationBetween($loggedInMember, $member);

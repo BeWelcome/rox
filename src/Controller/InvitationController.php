@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Doctrine\MemberStatusType;
 use App\Entity\HostingRequest;
 use App\Entity\Member;
 use App\Entity\Message;
@@ -65,6 +66,12 @@ class InvitationController extends BaseRequestAndInvitationController
             $this->addTranslatedFlash('notice', 'flash.request.invitation.self');
 
             return $this->redirectToRoute('homepage');
+        }
+
+        if (MemberStatusType::ACCOUNT_ACTIVATED === $host->getStatus()) {
+            $this->addTranslatedFlash('notice', 'flash.conversation.not.active');
+
+            return $this->redirectToRoute('members_profile', ['username' => $guest->getUsername()]);
         }
 
         if (!$guest->isBrowsable()) {

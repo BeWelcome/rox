@@ -4,7 +4,7 @@ import * as dayjs from 'dayjs'
 
 import 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import {initializeSingleAutoComplete} from './suggest/locations';
+import {initializeSingleAutoComplete} from '../suggest/locations';
 import 'leaflet.fullscreen';
 import 'leaflet.fullscreen/Control.FullScreen.css';
 import { default as rangeSlider } from 'rangeslider-pure';
@@ -114,16 +114,3 @@ const radioHandler = (event) => {
 for (let radio of accommodationRadiobuttons) {
     radio.addEventListener("click", radioHandler)
 }
-
-const showPasswordButton = document.getElementById("password_show_hide");
-
-const showHidePassword = (event) => {
-    console.log("clicked: ", event.target);
-    if (event.target.type === 'text') {
-        event.target.type = 'password';
-    } else {
-        event.target.type = 'text';
-    }
-}
-
-showPasswordButton.addEventListener("click", showHidePassword);

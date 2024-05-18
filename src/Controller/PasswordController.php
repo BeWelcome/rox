@@ -10,6 +10,7 @@ use App\Form\ResetPasswordRequestFormType;
 use App\Model\PasswordModel;
 use App\Repository\MemberRepository;
 use App\Service\Mailer;
+use App\Utilities\ChangeProfilePictureGlobals;
 use App\Utilities\ManagerTrait;
 use App\Utilities\ProfileSubmenu;
 use App\Utilities\TranslatedFlashTrait;
@@ -161,7 +162,8 @@ class PasswordController extends AbstractController
         Request $request,
         Member $member,
         ProfileSubmenu $profileSubmenu,
-        PasswordModel $passwordModel
+        PasswordModel $passwordModel,
+        ChangeProfilePictureGlobals $globals
     ): Response {
         /** @var Member $loggedInMember */
         $loggedInMember = $this->getUser();
@@ -189,6 +191,7 @@ class PasswordController extends AbstractController
         return $this->render('profile/change.password.html.twig', [
             'member' => $member,
             'form' => $form->createView(),
+            'globals_js_json' => $globals->getGlobalsJsAsJson($member, $loggedInMember),
             'submenu' => $profileSubmenu->getSubmenu($member, $loggedInMember),
         ]);
     }

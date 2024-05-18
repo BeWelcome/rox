@@ -1127,6 +1127,11 @@ class Member
         return $this->fields;
     }
 
+    public function getMemberFields(): array
+    {
+        return $this->memberFields;
+    }
+
     public function addVolunteerRight(RightVolunteer $volunteerRight): self
     {
         if (!$this->volunteerRights->contains($volunteerRight)) {
@@ -1332,12 +1337,27 @@ class Member
 
     public function isDeniedAccess(): bool
     {
-        return !$this->isBrowsable();
+        return !in_array(
+            $this->status,
+            [
+                MemberStatusType::ACTIVE,
+                MemberStatusType::OUT_OF_REMIND,
+                MemberStatusType::ACCOUNT_ACTIVATED,
+                MemberStatusType::MAIL_CONFIRMED,
+                MemberStatusType::AWAITING_MAIL_CONFIRMATION,
+            ],
+            true
+        );
     }
 
     public function isNotConfirmedYet(): bool
     {
         return MemberStatusType::AWAITING_MAIL_CONFIRMATION === $this->status;
+    }
+
+    public function didConfirmMailAddress(): bool
+    {
+        return MemberStatusType::MAIL_CONFIRMED === $this->status;
     }
 
     public function isFirstnameShown(): bool

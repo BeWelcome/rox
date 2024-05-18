@@ -115,4 +115,15 @@ for (let radio of accommodationRadiobuttons) {
     radio.addEventListener("click", radioHandler)
 }
 
-console.log(accommodationRadiobuttons)
+const showPasswordButton = document.getElementById("password_show_hide");
+
+const showHidePassword = (event) => {
+    console.log("clicked: ", event.target);
+    if (event.target.type === 'text') {
+        event.target.type = 'password';
+    } else {
+        event.target.type = 'text';
+    }
+}
+
+showPasswordButton.addEventListener("click", showHidePassword);

@@ -41,7 +41,6 @@ class TranslationAdapter implements AdapterInterface
                 ON pi_lang.code = p.code
                 AND pi_lang.shortcode = '{$locale}'
                 AND (pi_lang.isArchived IS NULL OR pi_lang.isArchived = 0)
-            ORDER BY p.created desc
                 ";
         if (!empty($term)) {
             $rawQuery .= " WHERE (p.code LIKE {$term} OR p.Sentence LIKE {$term})";
@@ -53,6 +52,7 @@ class TranslationAdapter implements AdapterInterface
                  , COALESCE(pi_lang.Sentence,pi_dflt.Sentence) AS sentence
                  , COALESCE(pi_lang.created,pi_dflt.created) AS created', $rawQuery);
 
+        $this->query .= "             ORDER BY created desc";
         $this->countQuery = str_replace('*select*', 'COUNT(distinct p.code) AS cnt', $rawQuery);
     }
 

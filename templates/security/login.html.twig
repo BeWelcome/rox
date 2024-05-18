@@ -128,7 +128,15 @@
                                 </div>
                                 <div class="o-form-group">
                                     <label for="login-p">{{ 'password' | trans }}</label>
-                                    <input type="password" id="login-p" name="_password" class="o-input">
+                                    <div class="u-relative">
+                                        <input type="password" id="login-p" name="_password" class="o-input">
+                                        <button type="button" id="password_show_hide" class="u-absolute u-text-gray-50 u-border-0 u-bg-white u-h-full u-top-0 u-end-0" style="height: 38px; margin: 1px; background-color: transparent">
+                                            <svg class="" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <path class="block" d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
+                                                <circle class="block" cx="12" cy="12" r="3"></circle>
+                                            </svg>
+                                        </button>
+                                    </div>
                                 </div>
                                 <div class="o-checkbox u-flex u-items-center u-my-8">
                                     <input type="checkbox"
@@ -190,5 +198,6 @@
 {% endblock content %}
 {% include 'footer.html.twig' %}
 {{ encore_entry_script_tags('bewelcome') }}
+{{ encore_entry_script_tags('password/showhide') }}
 </body>
 </html>

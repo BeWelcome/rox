@@ -1,7 +1,7 @@
 {% extends 'base-lite.html.twig' %}
 
 {% block javascripts %}
-    {{ encore_entry_script_tags('signup/signup') }}
+    {{ encore_entry_script_tags('signup/finalize') }}
     <script type="application/javascript">
         const accommodation = "{{ finalize.accommodation.vars.full_name }}";
         const markers = [
@@ -21,7 +21,7 @@
 {% endblock %}
 
 {% block stylesheets %}
-    {{ encore_entry_link_tags('signup/signup') }}
+    {{ encore_entry_link_tags('signup/finalize') }}
 {% endblock stylesheets %}
 
 {% block content %}
@@ -109,8 +109,7 @@
     {% do finalize.accommodation.setRendered %}
 
     <div id="hosting_interest" class="
-        {%- if finalize.accommodation.vars.value == finalize.accommodation.children[1].vars.value %}u-block{% else %}u-hidden{% endif -%}
-    ">
+        {%- if finalize.accommodation.vars.value == finalize.accommodation.children[1].vars.value %}u-block{% else %}u-hidden{% endif %} u-mt-8">
         {{ form_label(finalize.hosting_interest) }}
         {{ form_widget(finalize.hosting_interest) }}
         <div class="range text-center u-mt-16">
@@ -118,18 +117,14 @@
         </div>
         {{ form_help(finalize.hosting_interest) }}
     </div>
-    <div class="u-flex u-justify-end">
-        <input type="submit" class="o-button" value="{{ 'signup.activate'|trans }}">
+    <div class="u-mt-8">
+        <p class="u-text-18 u-mb-8 u-font-600">{{ 'signup.optional'|trans }}</p>
+        {{ form_row(finalize.newsletters) }}
+        {{ form_row(finalize.local_events) }}
+        {# {{ form_row(finalize.trips_notifications) }}  #}
     </div>
-
-    <p class="u-text-18 u-mb-8">{{ 'signup.optional'|trans }}</p>
-    {{ form_row(finalize.newsletters) }}
-    {{ form_row(finalize.local_events) }}
-    {{ form_row(finalize.trips_notifications) }}
-
-    {{ form_rest(finalize) }}
-    <div class="u-flex u-justify-end">
-        <input type="submit" class="o-button o-button--outline" value="{{ 'signup.activate'|trans }}">
+    <div class="u-flex u-justify-end u-mt-8">
+        <input type="submit" class="o-button" value="{{ 'signup.activate'|trans }}">
     </div>
 
     {{ form_end(finalize) }}

@@ -31,6 +31,7 @@ class UserChecker implements UserCheckerInterface
     /**
      * @throws AccountExpiredException
      * @throws AccountSuspendedException
+     * @throws AccountMailConfirmedException
      * @throws AccountMailNotConfirmedException
      */
     public function checkPostAuth(UserInterface $user)
@@ -48,6 +49,10 @@ class UserChecker implements UserCheckerInterface
         }
 
         if ($user->isNotConfirmedYet()) {
+            throw new AccountMailNotConfirmedException();
+        }
+
+        if ($user->didConfirmMailAddress()) {
             throw new AccountMailNotConfirmedException();
         }
     }

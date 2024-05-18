@@ -23,18 +23,20 @@ class SecurityController extends AbstractController
      * @Route("/login", name="login", defaults={"access_denied_redirect" = "/"}))
      * @Route("/login", name="security_login", defaults={"access_denied_redirect" = "/"}))
      * @Route("/login_check", name="security_check", defaults={"access_denied_redirect" = "/"}))
-     *
-     * @return Response
      */
-    public function loginAction(AuthenticationUtils $helper)
+    public function loginAction(AuthenticationUtils $helper): Response
     {
         $user = $this->getUser();
         if (null !== $user) {
             return $this->redirectToRoute('homepage');
         }
 
-        $error = $helper->getLastAuthenticationError();
         $lastUsername = $helper->getLastUsername();
+        $error = $helper->getLastAuthenticationError();
+
+        if ($error instanceof AccountMailNotConfirmedException || $error instanceof AccountMailConfirmedException) {
+            return $this->redirectToRoute('signup_finalize', ['username' => $lastUsername]);
+        }
 
 //        $showInvalidCredentialsHint = false;
 //        $showResendConfirmationLink = false;

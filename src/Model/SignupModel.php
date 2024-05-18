@@ -121,7 +121,7 @@ class SignupModel
             ->setExplanation(0)
             ->setGettingThere(0)
             ->setStreetName(0)
-            ->setRank(1)
+            ->setRank(0)
             ->setZip(0)
         ;
 

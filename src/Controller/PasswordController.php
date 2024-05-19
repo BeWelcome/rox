@@ -20,9 +20,11 @@ use Doctrine\ORM\NonUniqueResultException;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use ZxcvbnPhp\Zxcvbn;
 
 class PasswordController extends AbstractController
 {
@@ -194,5 +196,21 @@ class PasswordController extends AbstractController
             'globals_js_json' => $globals->getGlobalsJsAsJson($member, $loggedInMember),
             'submenu' => $profileSubmenu->getSubmenu($member, $loggedInMember),
         ]);
+    }
+
+    /**
+     * @Route("password/check/", name="check_password")
+     */
+    public function checkPassword(Request $request) : JsonResponse
+    {
+        $username = $request->get('username');
+        $email = $request->get('email');
+        $password = $request->get('password');
+        $zxcvbn = new Zxcvbn();
+        $result = $zxcvbn->passwordStrength($password, [ $username, $email, 'BeWelcome', 'bewelcome' ]);
+        $response = new JsonResponse();
+        $response->setData([ 'score' => $result['score']]);
+
+        return $response;
     }
 }

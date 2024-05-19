@@ -33,6 +33,7 @@ class SignupFormType extends AbstractType
             ->add('username', TextType::class, [
                 'label' => 'label.username',
                 'attr' => [
+                    'class' => 'js-username',
                     'placeholder' => 'placeholder.username',
                 ],
                 'help' => 'help.username',
@@ -48,6 +49,7 @@ class SignupFormType extends AbstractType
             ->add('email', EmailType::class, [
                 'label' => 'label.email',
                 'attr' => [
+                    'class' => 'js-email-address',
                     'placeholder' => 'placeholder.email',
                 ],
                 'help' => 'help.email',
@@ -62,15 +64,17 @@ class SignupFormType extends AbstractType
             ->add('password', PasswordType::class, [
                 'label' => 'label.password',
                 'attr' => [
+                    'class' => 'js-password-input',
                     'placeholder' => 'placeholder.password',
                 ],
+                'always_empty' => false,
                 'help' => 'help.password',
                 'required' => false,
                 'constraints' => [
                     new NotBlank([
                         'message' => 'signup.error.password.blank',
                     ]),
-                    new Length(['min' => 6]),
+                    new Length(['min' => 8]),
                 ],
             ])
             ->add('terms_privacy', CheckboxType::class, [

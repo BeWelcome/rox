@@ -1,5 +1,6 @@
-const passwordField = document.querySelector('input[type="password"]');
-const showHidePasswordButton = document.getElementById("password_show_hide");
+const passwordField = document.querySelector('.js-password-input');
+const showHidePasswordButton = document.querySelector('.js-password-show-hide');
+
 const showHidePassword = (event) => {
     if (passwordField.type === 'text') {
         passwordField.type = 'password';

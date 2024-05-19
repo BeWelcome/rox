@@ -587,3 +587,15 @@ $avatar-sizes: 30, 50, 75, 100, 150, 200, 500;
   color: white;
   background-color: #ffb474;
 }
+
+.js-password-input:placeholder-shown ~ .js-password-show-hide {
+  visibility: hidden;
+}
+
+.js-password-input:not(:placeholder-shown) ~ .js-password-show-hide {
+  visibility: visible;
+}
+
+.js-password-input.is-invalid ~ .js-password-show-hide {
+  right: 24px;
+}

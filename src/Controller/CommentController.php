@@ -239,7 +239,7 @@ class CommentController extends AbstractController
             return $this->redirectToRoute('add_comment', ['username' => $member->getUsername()]);
         }
 
-        if ($comment->getQuality() == CommentQualityType::NEGATIVE && !$comment->getEditingAllowed()) {
+        if (!$comment->getEditingAllowed()) {
             $this->addTranslatedFlash('notice', 'comment.editing.not.allowed', []);
 
             return $this->redirectToRoute('members_profile', ['username' => $member->getUsername()]);

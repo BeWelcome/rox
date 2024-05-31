@@ -76,7 +76,7 @@ class ActivityRepository extends EntityRepository
             ->join('App:ActivityAttendee', 'aa', Join::WITH, 'aa.activity = a and aa.organizer = 1')
             ->join('App:Member', 'm', Join::WITH, 'aa.attendee = m')
             ->where("m.status = 'Banned'")
-            ->orWhere('DATEDIFF(a.ends, a.starts) > 1')
+            ->orWhere('TIMESTAMPDIFF(MINUTE, a.starts, a.ends) >= 0')
             ->orderBy('a.id', 'desc')
             ->getQuery();
     }

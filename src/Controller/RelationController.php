@@ -235,4 +235,20 @@ class RelationController extends AbstractController
 
         return $relationRepository->findRelationBetween($loggedInMember, $member);
     }
+    
+     private function checkForEmailAddress(Relation $relation): bool
+    {
+        $relationText = $comment->getTextfree();
+        $count = preg_match_all("/[\._a-zA-Z0-9-]+@[\._a-zA-Z0-9-]+/i", $relationText, $matches);
+
+        return $count > 0;
+    }
+    
+    private function checkForPhoneNumber(Relation $relation): bool
+    {
+        $relationText = $comment->getTextfree();
+        $found = preg_match("/([0-9][\. \)-]*){8,}/", $relationText);
+
+        return $found > 0;
+    }
 }

@@ -72,15 +72,19 @@ class RelationController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var Relation $relation */
             $relation = $form->getData();
-            $relation->setOwner($loggedInMember);
-            $relation->setReceiver($member);
 
-            $this->entityManager->persist($relation);
-            $this->entityManager->flush();
-
-            $mailer->sendRelationNotification($relation);
-
-            return $this->redirectToRoute('relations', ['username' => $loggedInMember->getUsername()]);
+            if (!checkForEmailAddress($relation) && !checkForPhoneNumber($relation))
+            {
+                $relation->setOwner($loggedInMember);
+                $relation->setReceiver($member);
+    
+                $this->entityManager->persist($relation);
+                $this->entityManager->flush();
+    
+                $mailer->sendRelationNotification($relation);
+    
+                return $this->redirectToRoute('relations', ['username' => $loggedInMember->getUsername()]);
+            }
         }
 
         return $this->render('relation/add.html.twig', [
@@ -238,15 +242,15 @@ class RelationController extends AbstractController
     
      private function checkForEmailAddress(Relation $relation): bool
     {
-        $relationText = $comment->getTextfree();
-        $count = preg_match_all("/[\._a-zA-Z0-9-]+@[\._a-zA-Z0-9-]+/i", $relationText, $matches);
+        $relationText = $relation->getCommentText();
+        $found = preg_match("/[\._a-zA-Z0-9-]+@[\._a-zA-Z0-9-]+/i", $relationText);
 
-        return $count > 0;
+        return $found > 0;
     }
     
     private function checkForPhoneNumber(Relation $relation): bool
     {
-        $relationText = $comment->getTextfree();
+        $relationText = $relation->getCommentText();
         $found = preg_match("/([0-9][\. \)-]*){8,}/", $relationText);
 
         return $found > 0;

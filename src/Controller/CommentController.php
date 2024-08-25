@@ -171,6 +171,7 @@ class CommentController extends AbstractController
             if (
                 $commentModel->checkCommentSpam($loggedInMember, $comment)
                 || $commentModel->checkForEmailAddress($comment)
+                || $commentModel->checkForPhoneNumber($comment)
             ) {
                 $form->addError(new FormError($this->translator->trans('commentsomethingwentwrong')));
             } else {

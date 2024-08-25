@@ -73,7 +73,8 @@ class MemberRepository extends ServiceEntityRepository implements UserLoaderInte
     public function findByProfileInfo($term)
     {
         return $this->createQueryBuilder('u')
-            ->where('u.username like :term OR u.email like :term')
+            ->where('u.username like :term')
+            ->orWhere('u.email like :term')
             ->setParameter('term', '%' . $term . '%')
             ->setMaxResults(20)
             ->getQuery()

@@ -96,6 +96,10 @@ class ActivityRepository extends EntityRepository
      */
     public function findUpcomingAroundLocation(Member $member, $online, $limit = 5)
     {
+        if (null === $member->getCity()) {
+            return [];
+        }
+
         $qb = $this->getUpcomingAroundLocationQueryBuilder($member, $online);
 
         $query = $qb
@@ -113,6 +117,10 @@ class ActivityRepository extends EntityRepository
      */
     public function getUpcomingAroundLocationCount(Member $member, $online): int
     {
+        if (null === $member->getCity()) {
+            return 0;
+        }
+
         $qb = $this->getUpcomingAroundLocationQueryBuilder($member, $online);
         $qb
             ->select('count(a.id) AS cnt')
@@ -145,7 +153,7 @@ class ActivityRepository extends EntityRepository
      *
      * @return QueryBuilder
      */
-    private function getUpcomingAroundLocationQueryBuilder(Member $member, $online)
+    private function getUpcomingAroundLocationQueryBuilder(Member $member, $online): ?QueryBuilder
     {
         $location = $member->getCity();
         $distance = $this->getActivitiesRadius($member);

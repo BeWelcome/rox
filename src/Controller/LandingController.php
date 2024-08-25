@@ -307,12 +307,14 @@ class LandingController extends AbstractController
     {
         $searchHomeRequest = new SearchFormRequest($this->getDoctrine()->getManager());
         $geo = $member->getCity();
-        $searchHomeRequest->location = $geo->getName();
-        $searchHomeRequest->location_geoname_id = $geo->getGeonameId();
-        $searchHomeRequest->location_latitude = $member->getLatitude();
-        $searchHomeRequest->location_longitude = $member->getLongitude();
-        $searchHomeRequest->accommodation_anytime = true;
-        $searchHomeRequest->accommodation_neverask = true;
+        if (null !== $geo) {
+            $searchHomeRequest->location = $geo->getName();
+            $searchHomeRequest->location_geoname_id = $geo->getGeonameId();
+            $searchHomeRequest->location_latitude = $member->getLatitude();
+            $searchHomeRequest->location_longitude = $member->getLongitude();
+            $searchHomeRequest->accommodation_anytime = true;
+            $searchHomeRequest->accommodation_neverask = true;
+        }
 
         return $searchHomeRequest;
     }

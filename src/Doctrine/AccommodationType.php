@@ -16,5 +16,6 @@ class AccommodationType extends EnumType
         self::YES,
         self::MAYBE,
         self::NO,
+        null,
     ];
 }

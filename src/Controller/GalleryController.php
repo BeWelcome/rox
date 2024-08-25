@@ -341,15 +341,15 @@ class GalleryController extends AbstractController
         $uploadDirectory = $this->getParameter('upload_directory') . '/';
         if (!$this->isGranted('IS_AUTHENTICATED_REMEMBERED') || $image->getFileInfo() !== $fileInfo) {
             $filepath = sprintf($uploadDirectory . 'placeholder_%d_%d.png', $image->getWidth(), $image->getHeight());
-            if (!file_exists($filepath)) {
-                // create image!
-                $imageManager = new ImageManager();
-                $imageManager
-                    ->canvas($image->getWidth(), $image->getHeight(), '#ccc')
-                    ->save($filepath);
-            }
         } else {
             $filepath = $this->getParameter('upload_directory') . '/' . $image->getFilename();
+        }
+        if (!file_exists($filepath)) {
+            // create image!
+            $imageManager = new ImageManager();
+            $imageManager
+                ->canvas($image->getWidth(), $image->getHeight(), '#ccc')
+                ->save($filepath);
         }
 
         // Uploaded images aren't updated; set expiry to 1 year

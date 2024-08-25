@@ -92,6 +92,17 @@
   color: #777;
 }
 
+.form-label-group button {
+  position: absolute;
+  top: 12px;
+  cursor: pointer;
+  visibility: hidden;
+}
+
+.form-label-group input:not(:placeholder-shown) ~ button {
+  visibility: visible;
+}
+
 /* Fallback for Edge
 -------------------------------------------------- */
 @supports (-ms-ime-align: auto) {

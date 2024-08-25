@@ -49,7 +49,7 @@ security:
             remember_me:
                 secret: '%env(APP_SECRET)%'
                 lifetime: 31536000 # 1 year in seconds
-                samesite: 'strict'
+                samesite: lax
                 path: /
                 token_provider:
                     doctrine: true
@@ -99,6 +99,8 @@ security:
         - { path: ^/volunteer, roles: PUBLIC_ACCESS }
         - { path: ^/communitynews, roles: PUBLIC_ACCESS }
         - { path: ^/members/avatar/, roles: PUBLIC_ACCESS }
+        - { path: ^/deleteprofile, roles: PUBLIC_ACCESS }
+        - { path: ^/password/check, roles: PUBLIC_ACCESS }
         - { path: ^/admin, roles: ROLE_ADMIN }
         - { path: ^/api, roles: PUBLIC_ACCESS }
         - { path: ^/, roles: ROLE_USER }

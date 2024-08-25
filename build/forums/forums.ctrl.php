@@ -189,7 +189,7 @@ class ForumsController extends PAppController
         else if ($this->action == self::ACTION_VIEW_FORUM) {
             $groupsCallback = false;
             $member = $this->_model->getLoggedInMember();
-            if ($member && $member->Status != 'ChoiceInactive') {
+            if ($member && !($member->Status == 'ChoiceInactive' || $member->Status == 'Activated')) {
                 $noForumNewTopicButton = false;
             } else {
                 // Don't offer the new topic button to 'silent' members
@@ -646,7 +646,7 @@ class ForumsController extends PAppController
         $request = $this->request;
         $member = $this->_model->getLoggedInMember();
         $showForumNewTopicButton = true;
-        if ($member->Status == 'ChoiceInactive') {
+        if ($member->Status == 'ChoiceInactive' || $member->Status == 'Activated') {
             $showForumNewTopicButton = false;
         }
         $this->parseRequest();

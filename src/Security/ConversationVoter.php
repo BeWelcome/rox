@@ -61,7 +61,6 @@ class ConversationVoter extends Voter
 
     private function canReply(Message $message, Member $member): bool
     {
-        // this assumes that the Post object has a `getOwner()` method
         return $member === $message->getReceiver() || $member === $message->getSender();
     }
 }

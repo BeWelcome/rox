@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Doctrine\MemberStatusType;
 use App\Doctrine\SpamInfoType;
 use App\Entity\HostingRequest;
 use App\Entity\Member;
@@ -88,6 +89,14 @@ class ConversationController extends AbstractController
         if ($member !== $message->getSender() && $member !== $message->getReceiver()) {
             return $this->redirectToRoute('conversations', ['conversationsType' => 'conversations']);
         }
+
+        if (MemberStatusType::ACCOUNT_ACTIVATED === $member->getStatus()) {
+            $receiver = ($message->getReceiver() === $member) ? $message->getSender() : $message->getReceiver();
+            $this->addTranslatedFlash('notice', 'flash.conversation.not.active');
+
+            return $this->redirectToRoute('members_profile', ['username' => $receiver->getUsername()]);
+        }
+
         $controllerAndMethod = $this->getControllerAndMethod($message, 'reply');
 
         return $this->forward($controllerAndMethod, [

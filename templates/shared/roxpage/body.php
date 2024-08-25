@@ -18,16 +18,29 @@ use Symfony\Component\Asset\VersionStrategy\JsonManifestVersionStrategy;
     endif; */?>
 
 <div class="container-lg">
+    <?php
+    if ($this->session->has( 'IdMember' )) {
+        $status = $this->session->get('MemberStatus');
+        if ($status == 'Activated') {
+            $mailNotConfirmed = $this->getWords()->getSilent('member.mail.not.confirmed');
+        ?>
+        <div class="row">
+            <div class="col-12">
+                <div class="alert alert-notice" role="alert"><?= $mailNotConfirmed ?></div>
+            </div>
+        </div>
+    <?php }
+    } ?>
     <?php $flashError = $this->getFlashError(true);
     if (substr($flashError,0, 2) == 't.') {
         $flashError = $this->getWords()->getSilent($flashError);
     }
     if (strlen($flashError) != 0): ?>
-        <div class="row">
-            <div class="col-12">
-                <div class="alert alert-danger" role="alert"><?= $flashError ?></div>
-            </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="alert alert-danger" role="alert"><?= $flashError ?></div>
         </div>
+    </div>
     <?php endif; ?>
     <?php $flashNotice = $this->getFlashNotice(true);
     if (substr($flashNotice,0, 2) == 't.') {

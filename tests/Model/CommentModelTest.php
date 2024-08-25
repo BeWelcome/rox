@@ -269,6 +269,55 @@ class CommentModelTest extends TestCase
 
         $this->assertFalse($this->commentModel->checkIfNewExperience($original, $updated));
     }
+
+    public function testCommentWithEmailAddressInTextIsRecognized()
+    {
+        $comment = new Comment();
+        $comment->setTextfree('This is an@email.address in the middle of a text.');
+
+        $emailAddressFound = $this->commentModel->checkForEmailAddress($comment);
+
+        $this->assertTrue($emailAddressFound);
+    }
+    public function testCommentWithEmailAddressAtStartOfTextIsRecognized()
+    {
+        $comment = new Comment();
+        $comment->setTextfree('an@email.address at the start of a text.');
+
+        $emailAddressFound = $this->commentModel->checkForEmailAddress($comment);
+
+        $this->assertTrue($emailAddressFound);
+    }
+    public function testCommentWithEmailAddressAtTheEndOfTextIsRecognized()
+    {
+        $comment = new Comment();
+        $comment->setTextfree('At the end of this text, there is an@email.address');
+
+        $emailAddressFound = $this->commentModel->checkForEmailAddress($comment);
+
+        $this->assertTrue($emailAddressFound);
+    }
+
+    public function testCommentWithTwoEmailAddressesInTextIsRecognized()
+    {
+        $comment = new Comment();
+        $comment->setTextfree('This is an@email.address in the middle of a text. And another one at the end. another@email.net');
+
+        $emailAddressFound = $this->commentModel->checkForEmailAddress($comment);
+
+        $this->assertTrue($emailAddressFound);
+    }
+
+    public function testCommentWithoutEmailAddressInTextIsRecognized()
+    {
+        $comment = new Comment();
+        $comment->setTextfree('This is an @instagram username.');
+
+        $emailAddressFound = $this->commentModel->checkForEmailAddress($comment);
+
+        $this->assertFalse($emailAddressFound);
+    }
+
     private function buildRelations(array $relations): string
     {
         return implode(',', $relations);

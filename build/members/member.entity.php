@@ -384,7 +384,10 @@ FROM
     }
 
     public function get_homephonenumber() {
-        return $this->get_crypted($this->HomePhoneNumber, "");
+        if (isset($this->HomePhoneNumber)) {
+            return $this->get_crypted($this->HomePhoneNumber, "");
+        }
+        return "";
     }
 
     /**

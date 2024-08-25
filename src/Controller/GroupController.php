@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Doctrine\GroupMembershipStatusType;
 use App\Doctrine\GroupType as DoctrineGroupType;
+use App\Doctrine\MemberStatusType;
 use App\Entity\Group;
 use App\Entity\GroupMembership;
 use App\Entity\Member;
@@ -341,6 +342,13 @@ class GroupController extends AbstractController
     {
         /** @var Member $member */
         $member = $this->getUser();
+
+        if (MemberStatusType::ACCOUNT_ACTIVATED !== $member->getStatus()) {
+            $this->addTranslatedFlash('notice', 'flash.group.not.confirmed');
+
+            return $this->redirectToRoute('groups_mygroups');
+        }
+
         $groupRequest = new GroupRequest();
         $form = $this->createForm(GroupType::class, $groupRequest, [
             'allowInvitationOnly' => $member->getLevelForRight(Member::ROLE_ADMIN_GROUP),

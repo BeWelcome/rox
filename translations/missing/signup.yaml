@@ -1,3 +1,33 @@
 signup.no.link:
     - "No link shown or you can't click it? Copy the link below into your browser"
     - Text shown in the signup confirmation email for mail programs that do not support clickable links.
+signup.join:
+    - Join BeWelcome
+    - Button label on the first signup page
+signup.congratulations:
+    - Congratulations
+    - Headline on the signup finalization page (account was created but isn't fully functional yet).
+signup.finalize:
+    - <p>Your account has been created. You can already look around what the site has to offer, but to fully use it you
+      need to provide a few more information and confirm your email address.</p><p>If you do not confirm your email address
+      within the next 7 days the account will be automatically deleted. If you decide to delete your account after looking
+      around the submenu offers a link to the deletion page.</p>
+    - Abstract text on signup finalization page.
+signup.optional:
+    - Optional Settings
+    - Headline on the signup finalize page
+signup.optional.help:
+    - You can change any of the settings below on the preferences page or in your profile later on.
+    - Explanatory text on the finalize signup page.
+signup.label.terms:
+    - '@iagreewithterms'
+help.terms:
+    - You can only proceed if you agree to the terms of use and the privacy policy.
+    - Help text for the terms of use checkbox.
+signup.label.newsletters:
+    - '@signup.receive.newsletters'
+signup.label.local_events:
+    - '@signup.receive.local-info'
+help.trips_notifications:
+    - If you select a duration you will be notified if someone visits your area.
+    - Help text on the signup page.

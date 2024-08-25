@@ -76,7 +76,7 @@ class AuthenticationEventSubscriber implements EventSubscriberInterface
                 $member->setLastLogin(new DateTime());
 
                 $status = $member->getStatus();
-                if (MemberStatusType::CHOICE_INACTIVE !== $status) {
+                if (MemberStatusType::OUT_OF_REMIND === $status) {
                     $member->setStatus(MemberStatusType::ACTIVE);
                 }
 

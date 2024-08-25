@@ -139,7 +139,8 @@ class PageWithHTML extends AbstractBasePage
         $this->_stylesheets[] = $file;
     }
 
-    protected function getPageTitle() {
+    protected function getPageTitle()
+    {
         return 'BeWelcome';
     }
 
@@ -289,10 +290,10 @@ class PageWithHTML extends AbstractBasePage
             foreach($config as $key => $value) {
                 $pairs[] = $key . ": '" . $value . "'";
             }
-            $html[] = implode($pairs, ',');
+            $html[] = implode(',', $pairs);
             $html[] = '}';
             $html[] = '</script>';
-            echo implode($html, "\n");
+            echo implode("\n", $html);
         }
     }
 

@@ -94,3 +94,21 @@ profile.never.logged.in:
 profile.change.avatar.fail.file.too.big:
     - 'Image upload failed. File too big.'
     - Message shown when upload of new profile picture fails.
+profile.back:
+    - Back to profile
+    - Button label used on the personal data download page.
+profile.delete.headline:
+    - Delete Profile
+    - Headline used on the delete profile page (logged in and not logged in)
+profile.delete.feedback:
+    - '@retire_membercanexplain'
+profile.delete.credentials:
+    - 'The provided credentials are not correct.'
+    - Error message shown when either username or password is wrong on the delete profile form
+profile.delete:
+    - '@DeleteProfile'
+profile.delete.confirm:
+    - '@retire_WarningConfirmRetire'
+profile.delete.not.logged.in:
+    - 'Please enter your credentials to confirm that you want to delete your profile. Additionally you can leave feedback why you leave and ask to get your data removed within the next 24 hours.'
+    - Additional information on the delete profile page if the member isn't logged in.

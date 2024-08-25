@@ -33,9 +33,9 @@
                         <td>{{ macros.avatarstack(comment.fromMember.Username, 50) }}</td>
                         <td class="w-100">
                             <small class="text-muted">{{ 'comment.quality' | trans }}</small><br>
-                            {{ ('CommentQuality_' ~ comment.Quality) | lower | trans }} ({{ 'written' | trans }} {{ comment.created }}{% if comment.created != comment.updated %} &mdash; {{ 'updated' | trans }} {{ comment.updated }}{% endif %})<hr style="margin-top:0; margin-bottom:.25rem;">
+                            {{ ('CommentQuality_' ~ comment.Quality) | lower | trans }} ({{ 'written' | trans }} {{ comment.created }}{% if not comment.updated is null and comment.created != comment.updated %} &mdash; {{ 'updated' | trans }} {{ comment.updated }}{% endif %})<hr style="margin-top:.125rem; margin-bottom:.125rem;">
                             <small class="text-muted">{{ 'comment.text' | trans }}</small><br>
-                            {{ comment.TextFree | nl2br }}<hr style="margin-top:0; margin-bottom:.25rem;">
+                            {{ comment.TextFree | nl2br }}<hr style="margin-top:.125rem; margin-bottom:.125rem;">
                             <small class="text-muted">{{ 'comment.know' | trans }}</small><br>
                             {% set relations = comment.relations | split(',') %}
                             {% for relation in relations %}{{ ('profile.comment.relation.' ~ relation) | lower | trans({'username': comment.toMember.Username}) }} {% endfor %}

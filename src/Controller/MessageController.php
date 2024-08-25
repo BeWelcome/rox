@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Doctrine\MemberStatusType;
 use App\Entity\Member;
 use App\Entity\Message;
 use App\Entity\Subject;
@@ -62,11 +63,16 @@ class MessageController extends AbstractController
             return $this->redirectToRoute('members_profile', ['username' => $sender->getUsername()]);
         }
 
+        if (MemberStatusType::ACCOUNT_ACTIVATED === $sender->getStatus()) {
+            $this->addTranslatedFlash('notice', 'flash.conversation.not.active');
+
+            return $this->redirectToRoute('members_profile', ['username' => $receiver->getUsername()]);
+        }
+
         if (!$receiver->isBrowsable()) {
             $this->addTranslatedFlash('error', 'flash.member.invalid');
-            $referrer = $request->headers->get('referer');
 
-            return $this->redirect($referrer);
+            return $this->redirectToRoute('members_profile', ['username' => $sender->getUsername()]);
         }
 
         if (

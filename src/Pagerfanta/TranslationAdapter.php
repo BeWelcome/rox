@@ -52,6 +52,7 @@ class TranslationAdapter implements AdapterInterface
                  , COALESCE(pi_lang.Sentence,pi_dflt.Sentence) AS sentence
                  , COALESCE(pi_lang.created,pi_dflt.created) AS created', $rawQuery);
 
+        $this->query .= "             ORDER BY created desc";
         $this->countQuery = str_replace('*select*', 'COUNT(distinct p.code) AS cnt', $rawQuery);
     }
 

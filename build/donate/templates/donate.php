@@ -1,5 +1,9 @@
+<link href="build/scrollingtabs.19b6cca0.css" rel="stylesheet">
 <div class="row"><?php
 $words = new MOD_words();
+
+$lang = 'fr' === $this->session->get('lang') ? 'fr' : 'en';
+$helloAssoLink = 'https://www.helloasso.com/associations/bevolunteer/formulaires/1/' . $lang;
 ?>
 
 <?php if ($sub == 'done') {
@@ -17,22 +21,24 @@ if ($error) {?>
 <?php } ?>
 
 	<div class="col-12 col-lg-6">
-		<ul class="nav nav-tabs" role="tablist">
-			<li class="nav-item">
-				<a class="nav-link active" data-toggle="tab" href="#bank" role="tab"><?= $words->get('donate.bank') ?></a>
-			</li>
-			<!--
+        <div class="scroller scroller-left u-float-left mt-2"><i class="fa fa-caret-left"></i></div>
+        <div class="scroller scroller-right u-float-right mt-2"><i class="fa fa-caret-right"></i></div>
+        <div class="wrapper-nav">
+            <ul class="nav nav-tabs list" role="tablist">
                 <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#bitcoin" role="tab">Bitcoin</a>
+                    <a class="nav-item nav-link active" data-toggle="tab" href="#bank" role="tab"><?= $words->get('donate.bank') ?></a>
                 </li>
-			-->
-			<li class="nav-item">
-				<a class="nav-link" data-toggle="tab" href="#paypal" role="tab"><?= $words->get('donate.money') ?></a>
-			</li>
-			<li class="nav-item">
-				<a class="nav-link" data-toggle="tab" href="#time" role="tab"><?= $words->get('donate.time') ?></a>
-			</li>
-		</ul>
+                <li class="nav-item">
+                    <a class="nav-item nav-link" data-toggle="tab" href="#hello_asso" role="tab">HelloAsso</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-item nav-link" data-toggle="tab" href="#paypal" role="tab"><?= $words->get('donate.money') ?></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-item nav-link" data-toggle="tab" href="#time" role="tab"><?= $words->get('donate.time') ?></a>
+                </li>
+            </ul>
+        </div>
 
 		<!-- Tab panes -->
 		<div class="tab-content">
@@ -41,13 +47,11 @@ if ($error) {?>
 				<p><?=$words->get('Donate_Account2')?></p>
 				<p class="alert-primary p-2"><?=$words->get('Donate_Account')?></p>
 			</div>
-			<!--
-			    <div class="tab-pane card p-2" id="bitcoin" role="tabpanel">
-                    <h3><?php echo $words->get('Donate_Bitcoins');?><i class="fa fa3x fa-bitcoin ml-2"></i></h3>
-                    <a href="https://bitpay.com/528203/donate" target="_blank" class="btn btn-primary btn-block"><i class="fa fa-bitcoin mr-1"></i><?php echo $words->get('Donate_Bitcoins');?></a>
-                    <p><?php echo $words->get('Donate_Bitcoins_Text');?></p>
-                </div>
-            -->
+            <div class="tab-pane card p-2" id="hello_asso" role="tabpanel">
+                <h3><?php echo $words->get('donate.hello.asso');?><i class="fa fa3x fa-coins ml-2"></i></h3>
+                <a href="<?= $helloAssoLink ?>" target="_blank" class="btn btn-primary btn-block"><i class="fa fa-coins mr-1"></i><?php echo $words->get('donate.hello.asso');?></a>
+                <p><?php echo $words->get('donate.hello.asso.text');?></p>
+            </div>
 			<div class="tab-pane card p-2" id="paypal" role="tabpanel">
 				<form action="<?= $_ENV['PaypalUrl'] ?>" method="post">
 					<h3><?=$words->get('Donate_Paypal_Legend')?></h3>
@@ -144,3 +148,5 @@ function clearForm (Element) {
 document.getElementById(Element).value = '';
 }
 </script>
+
+<script type="text/javascript" src="build/scrollingtabs.b1531774.js"></script>

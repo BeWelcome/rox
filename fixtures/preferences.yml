@@ -199,7 +199,7 @@ App\Entity\Preference:
         Status: 'Normal'
     ALLOW_REQUEST_NO_PICTURE:
         position: 63
-        codename: 'AllowContactWithNoPicture'
+        codename: 'AllowContactWithoutPicture'
         codeDescription: 'contact.allow.no.picture'
         description: 'Allow to be contacted by members without a picture'
         created: <DateTime()>
@@ -207,7 +207,7 @@ App\Entity\Preference:
         PossibleValues: No,Yes
     ALLOW_REQUEST_NO_ABOUT_ME:
         position: 64
-        codename: 'AllowContactWithNoAboutMe'
+        codename: 'AllowContactWithoutAboutMe'
         codeDescription: 'contact.allow.no.about_me'
         description: 'Allow to be contacted by members without an about me section'
         created: <DateTime()>

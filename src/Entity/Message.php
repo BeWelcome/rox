@@ -69,7 +69,7 @@ class Message
      * @var Message
      *
      * @ORM\OneToOne(targetEntity="App\Entity\Message", fetch="LAZY")
-     * @ORM\JoinColumn(name="idParent", referencedColumnName="id", nullable=true)
+     * @ORM\JoinColumn(name="IdParent", referencedColumnName="id", nullable=true)
      */
     private $parent = null;
 
@@ -84,7 +84,7 @@ class Message
      * @var Member
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\Member", fetch="EAGER")
-     * @ORM\JoinColumn(name="idReceiver", referencedColumnName="id")
+     * @ORM\JoinColumn(name="IdReceiver", referencedColumnName="id")
      */
     private $receiver;
 
@@ -92,7 +92,7 @@ class Message
      * @var Member
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\Member", fetch="EAGER")
-     * @ORM\JoinColumn(name="idSender", referencedColumnName="id")
+     * @ORM\JoinColumn(name="IdSender", referencedColumnName="id")
      */
     private $sender;
 

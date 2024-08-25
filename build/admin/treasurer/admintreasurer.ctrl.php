@@ -78,7 +78,7 @@ class AdminTreasurerController extends AdminBaseController
         $id = $vars['id'];
         if ($id == 0) {
             $memberId = $vars['IdMember'] != 0 ? $vars['IdMember'] : null;
-            $success = $this->model->createDonation($vars['IdMember'], $vars['DonatedOn'],
+            $success = $this->model->createDonation($memberId, $vars['DonatedOn'],
                 $vars['donate-amount'], $vars['donate-comment'], $countryid);
         } else {
             $success = $this->model->updateDonation($id, $vars['IdMember'], $vars['DonatedOn'],

@@ -8,6 +8,7 @@ use App\Model\StatisticsModel;
 use RoxPostHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -19,7 +20,7 @@ class HomeController extends AbstractController
      *
      * @return Response
      */
-    public function show(StatisticsModel $statisticsModel)
+    public function show(Request $request, StatisticsModel $statisticsModel, array $locales)
     {
         $member = $this->getUser();
         if ($member) {
@@ -42,7 +43,7 @@ class HomeController extends AbstractController
                     new NotBlank(),
                 ],
             ])
-            ->setAction('/signup/1')
+            ->setAction('/signup')
             ->setMethod('POST')
             ->getForm();
 
@@ -60,7 +61,7 @@ class HomeController extends AbstractController
             'search' => $searchForm->createView(),
             'images' => $images,
             'username' => $usernameForm->createView(),
-            'locale' => $this->getParameter('locale'),
+            'locale' => $request->getPreferredLanguage($locales),
             'title' => 'BeWelcome',
             'stats' => $statistics,
         ]);

@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use App\Form\FeedbackFormType;
 use App\Model\AboutModel;
+use App\Utilities\TranslatedFlashTrait;
+use App\Utilities\TranslatorTrait;
 use Carbon\Carbon;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -14,20 +16,14 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class FeedbackController extends AboutBaseController
 {
+    use TranslatorTrait;
+    use TranslatedFlashTrait;
+
     /**
      * @Route("/about/feedback", name="contactus")
      * @Route("/contact")
      * @Route("/contactus")
      * @Route("/support")
-     *
-     * @return RedirectResponse
-     */
-    public function showAboutFeedback()
-    {
-        return $this->redirectToRoute('feedback');
-    }
-
-    /**
      * @Route("/feedback", name="feedback")
      *
      * @return Response|RedirectResponse
@@ -96,6 +92,8 @@ class FeedbackController extends AboutBaseController
                 $data['host'] = $request->headers->get('Host');
                 $aboutModel->sendFeedbackEmail($data);
                 $aboutModel->addFeedback($data);
+
+                $this->addTranslatedFlash('notice', 'feedback.thank.you');
 
                 return $this->redirectToRoute('feedback_received');
             }

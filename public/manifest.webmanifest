@@ -6,7 +6,7 @@
   "scope": "/",
   "display": "fullscreen",
   "start_url": "/login",
-  "background_color": "transparent",
+  "background_color": "#f37000",
   "theme_color": "#f37000",
   "description": "Hospitality exchange with BeWelcome free network for better intercultural understanding",
   "orientation": "any",
@@ -56,33 +56,32 @@
      },
      {
        "src": "images/icon-1024x1024.png",
-       "sizes": "512x512",
+       "sizes": "1024x1024",
        "type": "image/png",
        "purpose": "maskable"
      }
   ],
-  "screenshots": [
-    {
-        "screenshots" : [
-          {
-            "src": "images/screenshots/home.jpg",
-            "sizes": "1230x720",
-            "type": "image/jpg",
-            "platform": "wide",
-          },
-          {
-            "src": "images/screenshots/search.jpg",
-            "sizes": "1230x720",
-            "type": "image/jpg",
-            "platform": "wide",
-          },
-          {
-            "src": "images/screenshots/profile.jpg",
-            "sizes": "1230x720",
-            "type": "image/jpg",
-            "platform": "wide",
-          },
-        ]
-    }
+  "screenshots" : [
+      {
+        "src": "images/screenshots/home.jpg",
+        "sizes": "720x1230",
+        "type": "image/jpg",
+        "platform": "narrow",
+        "label": "Home screen of app"
+      },
+      {
+        "src": "images/screenshots/search.jpg",
+        "sizes": "720x1230",
+        "type": "image/jpg",
+        "platform": "narrow",
+        "label": "Search function of the app"
+      },
+      {
+        "src": "images/screenshots/profile.jpg",
+        "sizes": "720x1230",
+        "type": "image/jpg",
+        "platform": "narrow",
+        "label": "Profile section of the app"
+      }
   ]
 }

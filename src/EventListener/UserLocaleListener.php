@@ -8,6 +8,7 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use PVars;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\AcceptHeader;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
@@ -18,23 +19,16 @@ use Symfony\Component\Security\Http\SecurityEvents;
  */
 class UserLocaleListener implements EventSubscriberInterface
 {
-    /**
-     * @var Session
-     */
-    protected $session;
-
-    /**
-     * @var EntityManager
-     */
-    private $em;
+    private EntityManagerInterface $entityManager;
+    private array $locales;
 
     /**
      * UserLocaleListener constructor.
      */
-    public function __construct(SessionInterface $session, EntityManagerInterface $em)
+    public function __construct(EntityManagerInterface $entityManager, array $locales)
     {
-        $this->session = $session;
-        $this->em = $em;
+        $this->entityManager = $entityManager;
+        $this->locales = $locales;
     }
 
     /**
@@ -43,29 +37,34 @@ class UserLocaleListener implements EventSubscriberInterface
     public function onInteractiveLogin(InteractiveLoginEvent $event)
     {
         $request = $event->getRequest();
+        $session = $request->getSession();
 
         /** @var Member $user */
         $user = $event->getAuthenticationToken()->getUser();
 
         $language = $user->getPreferredLanguage();
-        if ($language) {
-            $locale = $language->getShortCode();
-        } else {
-            $locale = $this->session->get('_locale', 'en');
-            $languageRepository = $this->em->getRepository(Language::class);
+        if (null === $language) {
+            $language = $request->getPreferredLanguage($this->locales);
+
+            // \todo: Search for a matching language in the list of UI languages
+
+            $languageRepository = $this->entityManager->getRepository(Language::class);
             $language = $languageRepository->findOneBy([
-                'shortCode' => $locale,
+                'shortCode' => $language,
             ]);
+            $locale = (null === $language) ? 'en' : $language->getShortCode();
+        } else {
+            $locale = $language->getShortCode();
         }
         PVars::register('lang', $locale);
 
         $request->setLocale($locale);
-        $this->session->set('IdLanguage', $language->getId());
-        $this->session->set('_locale', $locale);
-        $this->session->set('lang', $locale);
+        $session->set('IdLanguage', $language->getId());
+        $session->set('_locale', $locale);
+        $session->set('lang', $locale);
     }
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             SecurityEvents::INTERACTIVE_LOGIN => 'onInteractiveLogin',

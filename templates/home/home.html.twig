@@ -1,6 +1,6 @@
 {% import 'macros.twig' as macros %}
 <!DOCTYPE html>
-<html lang="{{ app.request.locale }}">
+<html lang="{{ locale }}" dir="auto">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -237,6 +237,7 @@
 </div>
 {{ encore_entry_script_tags('home') }}
 {{ encore_entry_script_tags('jquery_ui') }}
+{{ encore_entry_script_tags('password/showhide') }}
 <script>
     window.addEventListener("load", function () {
         let locale = document.getElementsByTagName('html')[0].getAttribute('lang');

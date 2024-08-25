@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Doctrine\CommentAdminActionType;
 use App\Doctrine\CommentQualityType;
+use App\Doctrine\MemberStatusType;
 use App\Entity\Comment;
 use App\Entity\Member;
 use App\Entity\Preference;
@@ -135,6 +136,12 @@ class CommentController extends AbstractController
             return $this->redirectToRoute('members_profile', ['username' => $member->getUsername()]);
         }
 
+        if (MemberStatusType::ACCOUNT_ACTIVATED === $loggedInMember->getStatus()) {
+            $this->addTranslatedFlash('notice', 'flash.comment.not.active');
+
+            return $this->redirectToRoute('members_profile', ['username' => $member->getUsername()]);
+        }
+
         if (!$member->isBrowsable()) {
             return $this->redirectToRoute('members_profile', ['username' => $member->getUsername()]);
         }
@@ -152,7 +159,6 @@ class CommentController extends AbstractController
         $memberPreference = $loggedInMember->getMemberPreference($preference);
         $showCommentGuideline = ('0' === $memberPreference->getValue());
 
-        /** @var Member $loggedInMember */
         $form = $this->createForm(CommentType::class, null, [
             'to_member' => $member,
             'show_comment_guideline' => $showCommentGuideline,
@@ -162,30 +168,38 @@ class CommentController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var Comment $comment */
             $comment = $form->getData();
-            $comment->setToMember($member);
-            $comment->setFromMember($loggedInMember);
-            if (CommentQualityType::NEGATIVE === $comment->getQuality()) {
-                $comment->setAdminAction(CommentAdminActionType::ADMIN_CHECK);
-                $comment->setEditingAllowed(false);
+            if (
+                $commentModel->checkCommentSpam($loggedInMember, $comment)
+                || $commentModel->checkForEmailAddress($comment)
+            ) {
+                $form->addError(new FormError($this->translator->trans('commentsomethingwentwrong')));
+            } else {
+                $comment->setToMember($member);
+                $comment->setFromMember($loggedInMember);
+
+                if (CommentQualityType::NEGATIVE === $comment->getQuality()) {
+                    $comment->setAdminAction(CommentAdminActionType::ADMIN_CHECK);
+                    $comment->setEditingAllowed(false);
+                }
+                $entityManager->persist($comment);
+
+                // Mark comment guidelines as read and hide the checkbox for the future
+                $memberPreference->setValue('1');
+                $entityManager->persist($memberPreference);
+                $entityManager->flush();
+
+                $mailer->sendNewCommentNotification($comment);
+
+                $this->addTranslatedFlash(
+                    'notice',
+                    'flash.comment.added',
+                    [
+                        'username' => $member->getUsername(),
+                    ]
+                );
+
+                return $this->redirectToRoute('profile_comments', ['username' => $member->getUsername()]);
             }
-            $entityManager->persist($comment);
-
-            // Mark comment guidelines as read and hide the checkbox for the future
-            $memberPreference->setValue('1');
-            $entityManager->persist($memberPreference);
-            $entityManager->flush();
-
-            $mailer->sendNewCommentNotification($comment);
-
-            $this->addTranslatedFlash(
-                'notice',
-                'flash.comment.added',
-                [
-                    'username' => $member->getUsername(),
-                ]
-            );
-
-            return $this->redirectToRoute('profile_comments', ['username' => $member->getUsername()]);
         }
 
         return $this->render('/profile/comment.add.html.twig', [
@@ -225,7 +239,7 @@ class CommentController extends AbstractController
             return $this->redirectToRoute('add_comment', ['username' => $member->getUsername()]);
         }
 
-        if ($comment->getQuality() == CommentQualityType::NEGATIVE && !$comment->getEditingAllowed()) {
+        if (!$comment->getEditingAllowed()) {
             $this->addTranslatedFlash('notice', 'comment.editing.not.allowed', []);
 
             return $this->redirectToRoute('members_profile', ['username' => $member->getUsername()]);

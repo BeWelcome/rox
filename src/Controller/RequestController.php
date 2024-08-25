@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Doctrine\AccommodationType;
+use App\Doctrine\MemberStatusType;
 use App\Entity\HostingRequest;
 use App\Entity\Member;
 use App\Entity\Message;
@@ -113,6 +114,12 @@ class RequestController extends BaseRequestAndInvitationController
             $this->addTranslatedFlash('notice', 'flash.request.self');
 
             return $this->redirectToRoute('members_profile', ['username' => $guest->getUsername()]);
+        }
+
+        if (MemberStatusType::ACCOUNT_ACTIVATED === $guest->getStatus()) {
+            $this->addTranslatedFlash('notice', 'flash.conversation.not.active');
+
+            return $this->redirectToRoute('members_profile', ['username' => $host->getUsername()]);
         }
 
         if (!$host->isBrowsable()) {

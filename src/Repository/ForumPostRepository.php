@@ -22,7 +22,7 @@ class ForumPostRepository extends EntityRepository
             ;
     }
 
-    public function getForumPostsByMember(Member $member, string $search, int $page, int $itemsPerPage = 20): PagerFanta
+    public function getForumPostsByMember(Member $member, string $search, int $page, int $itemsPerPage): PagerFanta
     {
         $queryBuilder = $this->getForumPostsByMemberQueryBuilder($member);
         if (!empty($search)) {

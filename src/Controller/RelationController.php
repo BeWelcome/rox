@@ -72,15 +72,18 @@ class RelationController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var Relation $relation */
             $relation = $form->getData();
-            $relation->setOwner($loggedInMember);
-            $relation->setReceiver($member);
+            if (!checkForEmailAddress($relation) && !checkForPhoneNumber($relation))
+            {
+                $relation->setOwner($loggedInMember);
+                $relation->setReceiver($member);
 
-            $this->entityManager->persist($relation);
-            $this->entityManager->flush();
+                $this->entityManager->persist($relation);
+                $this->entityManager->flush();
 
-            $mailer->sendRelationNotification($relation);
+                $mailer->sendRelationNotification($relation);
 
-            return $this->redirectToRoute('relations', ['username' => $loggedInMember->getUsername()]);
+                return $this->redirectToRoute('relations', ['username' => $loggedInMember->getUsername()]);
+            }
         }
 
         return $this->render('relation/add.html.twig', [
@@ -234,5 +237,21 @@ class RelationController extends AbstractController
         $relationRepository = $this->entityManager->getRepository(Relation::class);
 
         return $relationRepository->findRelationBetween($loggedInMember, $member);
+    }
+
+    private function checkForEmailAddress(Relation $relation): bool
+    {
+        $relationText = $relation->getCommentText();
+        $found = preg_match("/[\._a-zA-Z0-9-]+@[\._a-zA-Z0-9-]+/i", $relationText);
+
+        return $found > 0;
+    }
+
+    private function checkForPhoneNumber(Relation $relation): bool
+    {
+        $relationText = $relation->getCommentText();
+        $found = preg_match("/([0-9][\. \)-]*){8,}/", $relationText);
+
+        return $found > 0;
     }
 }

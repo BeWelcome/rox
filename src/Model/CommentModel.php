@@ -175,4 +175,12 @@ class CommentModel
 
         return $count > 0;
     }
+
+    public function checkForPhoneNumber(Comment $comment): bool
+    {
+        $commentText = $comment->getTextfree();
+        $found = preg_match("/([0-9][\. \)-]*){8,}/", $commentText);
+
+        return $found > 0;
+    }
 }

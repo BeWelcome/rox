@@ -40,19 +40,21 @@ class RequestController extends BaseRequestAndInvitationController
 
     private Mailer $mailer;
     private Logger $logger;
+    private HostingRequestModel $hostingRequestModel;
 
     public function __construct(
-        ConversationModel $conversationModel,
-        HostingRequestModel $requestModel,
+        ConversationModel      $conversationModel,
+        HostingRequestModel    $requestModel,
         EntityManagerInterface $entityManager,
-        Mailer $mailer,
-        Logger $logger
+        Mailer                 $mailer,
+        Logger                 $logger, HostingRequestModel $hostingRequestModel
     ) {
         parent::__construct($requestModel, $entityManager);
 
         $this->conversationModel = $conversationModel;
         $this->mailer = $mailer;
         $this->logger = $logger;
+        $this->hostingRequestModel = $hostingRequestModel;
     }
 
     /**
@@ -325,7 +327,9 @@ class RequestController extends BaseRequestAndInvitationController
     {
         $subject = $request->getSubject()->getSubject();
 
-        $this->sendRequestNotification($guest, $host, $host, $request, $subject, 'request', false);
+        if ($this->hostingRequestModel->formatRequest($request)) {
+            $this->sendRequestNotification($guest, $host, $host, $request, $subject, 'request', false);
+        }
     }
 
     private function sendHostReplyNotification(

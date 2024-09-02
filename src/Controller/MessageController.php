@@ -184,12 +184,14 @@ class MessageController extends AbstractController
     ): Message {
         $em = $this->getDoctrine()->getManager();
         $message = new Message();
+        $message->setMessage($body);
         if (null === $parent) {
             $subject = new Subject();
             $subject->setSubject($subjectText);
             $request = null;
             $em->persist($subject);
             $em->flush();
+            $message = $this->conversationModel->formatConversation($message);
         } else {
             $subject = $parent->getSubject();
             $request = $parent->getRequest();
@@ -201,7 +203,6 @@ class MessageController extends AbstractController
         $message->setParent($parent);
         $message->setSender($sender);
         $message->setReceiver($receiver);
-        $message->setMessage($body);
         $message->setStatus('Sent');
         $em->persist($message);
         $em->flush();

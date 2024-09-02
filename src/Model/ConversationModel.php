@@ -285,6 +285,19 @@ class ConversationModel
         $em->flush();
     }
 
+    public function formatConversation(Message $message): Message
+    {
+        $messageText = $message->getMessage();
+        $found = preg_match("/@|at|.at.|-at-|\(at\)/i", $messageText);
+
+        if ($found != 0) {
+            $message->setSpamInfo(SpamInfoType::SPAM_BLOCKED_WORD);
+            $message->setMessage($messageText . '<p>This might be spam.</p>');
+        }
+
+        return $message;
+    }
+
     private function hasLimitExceeded(Member $member, string $sql, int $perHour, int $perDay): bool
     {
         $id = $member->getId();

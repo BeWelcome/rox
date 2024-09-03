@@ -14,18 +14,21 @@ use App\Utilities\ConversationThread;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ConversationModel
 {
     private Mailer $mailer;
     private EntityManagerInterface $entityManager;
     private ConversationThread $conversationThread;
+    private TranslatorInterface $translator;
 
-    public function __construct(Mailer $mailer, EntityManagerInterface $entityManager)
+    public function __construct(Mailer $mailer, EntityManagerInterface $entityManager, TranslatorInterface $translator)
     {
         $this->mailer = $mailer;
         $this->entityManager = $entityManager;
         $this->conversationThread = new ConversationThread($entityManager);
+        $this->translator = $translator;
     }
 
     /**
@@ -292,7 +295,7 @@ class ConversationModel
 
         if ($found != 0) {
             $message->setSpamInfo(SpamInfoType::SPAM_BLOCKED_WORD);
-            $message->setMessage($messageText . '<p>This might be spam.</p>');
+            $message->setMessage($messageText);
         }
 
         return $message;

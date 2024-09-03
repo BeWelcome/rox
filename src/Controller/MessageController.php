@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Doctrine\MemberStatusType;
+use App\Doctrine\SpamInfoType;
 use App\Entity\Member;
 use App\Entity\Message;
 use App\Entity\Subject;
@@ -207,11 +208,13 @@ class MessageController extends AbstractController
         $em->persist($message);
         $em->flush();
 
-        $this->mailer->sendMessageNotificationEmail($sender, $receiver, 'message', [
-            'message' => $message,
-            'subject' => $subjectText,
-            'body' => $body,
-        ]);
+        if (!strpos($message->getSpamInfo(), SpamInfoType::SPAM_BLOCKED_WORD)) {
+            $this->mailer->sendMessageNotificationEmail($sender, $receiver, 'message', [
+                'message' => $message,
+                'subject' => $subjectText,
+                'body' => $body,
+            ]);
+        }
 
         return $message;
     }

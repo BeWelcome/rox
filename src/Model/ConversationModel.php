@@ -295,6 +295,7 @@ class ConversationModel
 
         if ($found != 0) {
             $message->setSpamInfo(SpamInfoType::SPAM_BLOCKED_WORD);
+            $message->setStatus(MessageStatusType::CHECK);
             $message->setMessage($messageText);
         }
 

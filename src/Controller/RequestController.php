@@ -327,7 +327,7 @@ class RequestController extends BaseRequestAndInvitationController
     {
         $subject = $request->getSubject()->getSubject();
 
-        if (!strpos($request->getSpamInfo(), SpamInfoType::SPAM_BLOCKED_WORD)) {
+        if (strpos($request->getSpamInfo(), SpamInfoType::SPAM_BLOCKED_WORD) === false) {
             $this->sendRequestNotification($guest, $host, $host, $request, $subject, 'request', false);
         }
     }

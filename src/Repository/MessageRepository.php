@@ -120,6 +120,23 @@ class MessageRepository extends EntityRepository
         return $paginator;
     }
 
+    /**
+     * Returns a Pagerfanta object encapsulating the matching paginated processed reported messages.
+     *
+     * @param mixed $page
+     * @param mixed $items
+     */
+    public function findBlockWordsMessages($page = 1, $items = 10): Pagerfanta
+    {
+        $queryBuilder = $this->queryBlockWordsMessages();
+        $adapter = new QueryAdapter($queryBuilder);
+        $paginator = new Pagerfanta($adapter);
+        $paginator->setMaxPerPage($items);
+        $paginator->setCurrentPage($page);
+
+        return $paginator;
+    }
+
     public function getThread(Message $message)
     {
         $qb = $this->createNativeNamedQuery('get_thread')
@@ -327,6 +344,20 @@ class MessageRepository extends EntityRepository
             ->setParameter('status', MessageStatusType::CHECKED)
             ->andWhere('m.spamInfo LIKE :spamInfo')
             ->setParameter('spamInfo', '%' . SpamInfoType::CHECKER_SAYS_SPAM . '%')
+            ->orderBy('m.created', 'DESC')
+        ;
+
+        return $qb;
+    }
+
+    private function queryBlockWordsMessages(): QueryBuilder
+    {
+        $qb = $this->createQueryBuilder('m');
+        $qb
+            ->where('m.status = :status')
+            ->setParameter('status', MessageStatusType::CHECK)
+            ->andWhere('m.spamInfo LIKE :spamInfo')
+            ->setParameter('spamInfo', '%' . SpamInfoType::SPAM_BLOCKED_WORD . '%')
             ->orderBy('m.created', 'DESC')
         ;
 

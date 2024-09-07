@@ -186,6 +186,7 @@ class MessageController extends AbstractController
         $em = $this->getDoctrine()->getManager();
         $message = new Message();
         $message->setMessage($body);
+        $message->setStatus('Sent');
         if (null === $parent) {
             $subject = new Subject();
             $subject->setSubject($subjectText);
@@ -204,11 +205,10 @@ class MessageController extends AbstractController
         $message->setParent($parent);
         $message->setSender($sender);
         $message->setReceiver($receiver);
-        $message->setStatus('Sent');
         $em->persist($message);
         $em->flush();
 
-        if (!strpos($message->getSpamInfo(), SpamInfoType::SPAM_BLOCKED_WORD)) {
+        if (strpos($message->getSpamInfo(), SpamInfoType::SPAM_BLOCKED_WORD) === false) {
             $this->mailer->sendMessageNotificationEmail($sender, $receiver, 'message', [
                 'message' => $message,
                 'subject' => $subjectText,

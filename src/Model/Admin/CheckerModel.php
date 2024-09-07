@@ -74,4 +74,12 @@ class CheckerModel
 
         return $repository->findProcessedReportedMessages($page, $limit);
     }
+
+    public function getBlockWordsMessages(int $page = 1, int $limit = 10): Pagerfanta
+    {
+        /** @var MessageRepository $repository */
+        $repository = $this->entityManager->getRepository(Message::class);
+
+        return $repository->findBlockWordsMessages($page, $limit);
+    }
 }

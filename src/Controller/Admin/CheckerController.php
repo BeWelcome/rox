@@ -22,6 +22,7 @@ class CheckerController extends AbstractController
 {
     private const MESSAGES_REPORTED = 1;
     private const MESSAGES_PROCESSED = 2;
+    private const MESSAGES_BLOCK_WORDS = 3;
 
     private CheckerModel $checkerModel;
 
@@ -40,6 +41,18 @@ class CheckerController extends AbstractController
     public function showReportedMessages(Request $request)
     {
         return $this->handleMessages($request, self::MESSAGES_REPORTED);
+    }
+
+    /**
+     * @Route("/admin/spam/messages/blocked", name="admin_spam_messages_block_words")
+     *
+     * @throws AccessDeniedException
+     *
+     * @return Response
+     */
+    public function showBlockWordMessages(Request $request)
+    {
+        return $this->handleMessages($request, self::MESSAGES_BLOCK_WORDS);
     }
 
     /**
@@ -165,6 +178,10 @@ class CheckerController extends AbstractController
                 'key' => 'reported.messages',
                 'url' => $this->generateUrl('admin_spam_messages'),
             ],
+            'blockwords' => [
+                'key' => 'block.words.messages',
+                'url' => $this->generateUrl('admin_spam_messages_block_words'),
+            ],
             'processed_messages' => [
                 'key' => 'reported.messages.processed',
                 'url' => $this->generateUrl('admin_spam_messages_processed'),
@@ -200,6 +217,10 @@ class CheckerController extends AbstractController
             case self::MESSAGES_PROCESSED:
                 $active = 'processed_messages';
                 $messages = $this->checkerModel->getProcessedReportedMessages($page, $limit);
+                break;
+            case self::MESSAGES_BLOCK_WORDS:
+                $active = 'block.words.messages';
+                $messages = $this->checkerModel->getBlockWordsMessages($page, $limit);
                 break;
             default:
                 throw new InvalidArgumentException();

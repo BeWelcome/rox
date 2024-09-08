@@ -7,16 +7,19 @@ use App\Doctrine\MessageStatusType;
 use App\Doctrine\SpamInfoType;
 use App\Entity\Message;
 use App\Repository\MessageRepository;
+use App\Service\Mailer;
 use Doctrine\ORM\EntityManagerInterface;
 use Pagerfanta\Pagerfanta;
 
 class CheckerModel
 {
     private EntityManagerInterface $entityManager;
+    private Mailer $mailer;
 
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(EntityManagerInterface $entityManager, Mailer $mailer)
     {
         $this->entityManager = $entityManager;
+        $this->mailer = $mailer;
     }
 
     public function markAsSpamByChecker(array $messageIds): void
@@ -56,6 +59,7 @@ class CheckerModel
                 $message->setStatus(MessageStatusType::CHECKED);
                 if (strpos($message->getSpamInfo(), SpamInfoType::SPAM_BLOCKED_WORD) !== false) {
                     $message->setFolder(InFolderType::NORMAL);
+                    $this->sendNotification($message);
                 }
             }
             $this->entityManager->persist($message);
@@ -85,5 +89,38 @@ class CheckerModel
         $repository = $this->entityManager->getRepository(Message::class);
 
         return $repository->findBlockWordsMessages($page, $limit);
+    }
+
+    public function getProcessedBlockWordsMessages(int $page = 1, int $limit = 10): Pagerfanta
+    {
+        /** @var MessageRepository $repository */
+        $repository = $this->entityManager->getRepository(Message::class);
+
+        return $repository->findProcessedBlockWordsMessages($page, $limit);
+    }
+
+    private function sendNotification(Message $message): void
+    {
+        // Is this a message or a request?
+        if (null === $message->getRequest()) {
+            $this->mailer->sendMessageNotificationEmail(
+                $message->getSender(),
+                $message->getReceiver(),
+                'message',
+                [
+                    'message' => $message,
+                    'subject' => $message->getSubject()->getSubject(),
+                    'body' => $message->getMessage(),
+                ]
+            );
+        } else {
+            $this->mailer->sendMessageNotificationEmail($message->getSender(), $message->getReceiver(), 'request', [
+                'host' => $message->getReceiver(),
+                'subject' => $message->getSubject()->getSubject(),
+                'message' => $message,
+                'request' => $message->getRequest(),
+                'changed' => false,
+            ]);
+        }
     }
 }

@@ -27,6 +27,7 @@ class CheckerController extends AbstractController
     private const MESSAGES_REPORTED = 1;
     private const MESSAGES_PROCESSED = 2;
     private const MESSAGES_BLOCK_WORDS = 3;
+    private const MESSAGES_BLOCK_WORDS_PROCESSED = 4;
 
     private CheckerModel $checkerModel;
     private EntityManagerInterface $entityManager;
@@ -39,48 +40,40 @@ class CheckerController extends AbstractController
 
     /**
      * @Route("/admin/spam/messages", name="admin_spam_messages")
-     *
-     * @throws AccessDeniedException
-     *
-     * @return Response
      */
-    public function showReportedMessages(Request $request)
+    public function showReportedMessages(Request $request): Response
     {
         return $this->handleMessages($request, self::MESSAGES_REPORTED);
     }
 
     /**
-     * @Route("/admin/spam/messages/blocked", name="admin_spam_messages_block_words")
-     *
-     * @throws AccessDeniedException
-     *
-     * @return Response
-     */
-    public function showBlockWordMessages(Request $request)
-    {
-        return $this->handleMessages($request, self::MESSAGES_BLOCK_WORDS);
-    }
-
-    /**
      * @Route("/admin/spam/messages/processed", name="admin_spam_messages_processed")
-     *
-     * @throws AccessDeniedException
-     *
-     * @return Response
      */
-    public function showProcessedMessages(Request $request)
+    public function showProcessedMessages(Request $request): Response
     {
         return $this->handleMessages($request, self::MESSAGES_PROCESSED);
     }
 
     /**
-     * @Route("/admin/spam/activities", name="admin_spam_activities")
-     *
-     * @throws AccessDeniedException
-     *
-     * @return Response
+     * @Route("/admin/spam/messages/blocked", name="admin_spam_messages_block_words")
      */
-    public function showActivities(Request $request, ActivityModel $activitiesModel)
+    public function showBlockWordMessages(Request $request): Response
+    {
+        return $this->handleMessages($request, self::MESSAGES_BLOCK_WORDS);
+    }
+
+    /**
+     * @Route("/admin/spam/messages/blocked/processed", name="admin_spam_messages_block_words_processed")
+     */
+    public function showProcessedBlockWordMessages(Request $request): Response
+    {
+        return $this->handleMessages($request, self::MESSAGES_BLOCK_WORDS_PROCESSED);
+    }
+
+    /**
+     * @Route("/admin/spam/activities", name="admin_spam_activities")
+     */
+    public function showActivities(Request $request, ActivityModel $activitiesModel): Response
     {
         if (
             !$this->isGranted(Member::ROLE_ADMIN_CHECKER)
@@ -123,12 +116,8 @@ class CheckerController extends AbstractController
 
     /**
      * @Route("/admin/spam/communitynews", name="admin_spam_community_news")
-     *
-     * @throws AccessDeniedException
-     *
-     * @return Response
      */
-    public function showCommunityNewsComments(Request $request, CommunityNewsModel $communityNewsModel)
+    public function showCommunityNewsComments(Request $request, CommunityNewsModel $communityNewsModel): Response
     {
         if (
             !$this->isGranted(Member::ROLE_ADMIN_CHECKER)
@@ -172,25 +161,29 @@ class CheckerController extends AbstractController
     /**
      * @Route("/admin/spam", name="admin_spam")
      */
-    public function redirectToSpamMessages()
+    public function redirectToSpamMessages(): RedirectResponse
     {
         return new RedirectResponse($this->generateUrl('admin_spam_messages'));
     }
 
-    private function getSubmenuItems()
+    private function getSubmenuItems(): array
     {
         return [
             'messages' => [
                 'key' => 'reported.messages',
                 'url' => $this->generateUrl('admin_spam_messages'),
             ],
-            'blockwords' => [
-                'key' => 'block.words.messages',
-                'url' => $this->generateUrl('admin_spam_messages_block_words'),
-            ],
             'processed_messages' => [
                 'key' => 'reported.messages.processed',
                 'url' => $this->generateUrl('admin_spam_messages_processed'),
+            ],
+            'blocked_words' => [
+                'key' => 'block.words.messages',
+                'url' => $this->generateUrl('admin_spam_messages_block_words'),
+            ],
+            'processed_blocked_words' => [
+                'key' => 'block.words.processed',
+                'url' => $this->generateUrl('admin_spam_messages_block_words_processed'),
             ],
             'activities' => [
                 'key' => 'activities',
@@ -227,8 +220,12 @@ class CheckerController extends AbstractController
                 $messages = $this->checkerModel->getProcessedReportedMessages($page, $limit);
                 break;
             case self::MESSAGES_BLOCK_WORDS:
-                $active = 'block.words.messages';
+                $active = 'blocked_words';
                 $messages = $this->checkerModel->getBlockWordsMessages($page, $limit);
+                break;
+            case self::MESSAGES_BLOCK_WORDS_PROCESSED:
+                $active = 'processed_blocked_words';
+                $messages = $this->checkerModel->getProcessedBlockWordsMessages($page, $limit);
                 break;
             default:
                 throw new InvalidArgumentException();

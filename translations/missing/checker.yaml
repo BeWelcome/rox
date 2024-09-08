@@ -3,4 +3,9 @@ block.words.messages:
     - 'Menu item in Checker Volunteer tool. (Do not translate)'
     - 'messages+intl-icu'
     - 'no'
+block.words.processed:
+    - 'Processed Blocked Notifications'
+    - 'Menu item in Checker Volunteer tool. (Do not translate)'
+    - 'messages+intl-icu'
+    - 'no'
 

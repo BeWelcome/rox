@@ -58,7 +58,7 @@
             <tr>
                 <td>{{ macros.avatarstack(message.Sender.Username, 30) }}<br>
                     <small class="text-muted">{{ ('memberstatus' ~ message.Sender.Status)|lower|trans }}</small></td>
-                <td><strong>{{ message.subject.subject }}</strong><br>
+                <td><strong>{{ message.subject.subject }}</strong>&nbsp;{% if message.request is null %}<i class="fa fa-envelope"></i>{% else %}<i class="fa fa-bed"></i>{% endif %}<br>
                     {{ message.Message|purify }}</td>
                 <td>{{ macros.avatarstack(message.Receiver.Username, 30) }}<br>
                     <small class="text-muted">{{ ('memberstatus' ~ message.Receiver.Status)|lower|trans }}</small></td>

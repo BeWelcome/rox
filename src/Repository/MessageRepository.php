@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Doctrine\DeleteRequestType;
 use App\Doctrine\InFolderType;
+use App\Doctrine\MemberStatusType;
 use App\Doctrine\MessageResultSetMapping;
 use App\Doctrine\MessageStatusType;
 use App\Doctrine\SpamInfoType;
@@ -129,6 +130,23 @@ class MessageRepository extends EntityRepository
     public function findBlockWordsMessages($page = 1, $items = 10): Pagerfanta
     {
         $queryBuilder = $this->queryBlockWordsMessages();
+        $adapter = new QueryAdapter($queryBuilder);
+        $paginator = new Pagerfanta($adapter);
+        $paginator->setMaxPerPage($items);
+        $paginator->setCurrentPage($page);
+
+        return $paginator;
+    }
+
+    /**
+     * Returns a Pagerfanta object encapsulating the matching paginated processed reported messages.
+     *
+     * @param mixed $page
+     * @param mixed $items
+     */
+    public function findProcessedBlockWordsMessages($page = 1, $items = 10): Pagerfanta
+    {
+        $queryBuilder = $this->queryProcessedBlockWordsMessages();
         $adapter = new QueryAdapter($queryBuilder);
         $paginator = new Pagerfanta($adapter);
         $paginator->setMaxPerPage($items);
@@ -354,10 +372,34 @@ class MessageRepository extends EntityRepository
     {
         $qb = $this->createQueryBuilder('m');
         $qb
+            ->join('App:Member', 'mb', Join::WITH, 'm.sender = mb.id')
             ->where('m.status = :status')
             ->setParameter('status', MessageStatusType::CHECK)
             ->andWhere('m.spamInfo LIKE :spamInfo')
             ->setParameter('spamInfo', '%' . SpamInfoType::SPAM_BLOCKED_WORD . '%')
+            ->andWhere($qb->expr()->eq('mb.status', ':active'))
+            ->setParameter('active', MemberStatusType::ACTIVE)
+            ->orderBy('m.created', 'DESC')
+        ;
+
+        return $qb;
+    }
+
+    private function queryProcessedBlockWordsMessages(): QueryBuilder
+    {
+        $qb = $this->createQueryBuilder('m');
+        $qb
+            ->join('App:Member', 'mb', Join::WITH, 'm.sender = mb.id')
+            ->where('m.spamInfo LIKE :spamInfo')
+            ->setParameter('spamInfo', '%' . SpamInfoType::SPAM_BLOCKED_WORD . '%')
+            ->andWhere(
+                $qb->expr()->orX(
+                    $qb->expr()->eq('m.status', ':status'),
+                    $qb->expr()->eq('mb.status', ':banned'),
+                )
+            )
+            ->setParameter('status', MessageStatusType::CHECKED)
+            ->setParameter('banned', MemberStatusType::BANNED)
             ->orderBy('m.created', 'DESC')
         ;
 

@@ -9,6 +9,8 @@ use App\Form\SpamMessagesIndexFormType;
 use App\Model\ActivityModel;
 use App\Model\Admin\CheckerModel;
 use App\Model\CommunityNewsModel;
+use App\Utilities\ItemsPerPageTraits;
+use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
@@ -20,15 +22,19 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class CheckerController extends AbstractController
 {
+    use ItemsPerPageTraits;
+
     private const MESSAGES_REPORTED = 1;
     private const MESSAGES_PROCESSED = 2;
     private const MESSAGES_BLOCK_WORDS = 3;
 
     private CheckerModel $checkerModel;
+    private EntityManagerInterface $entityManager;
 
-    public function __construct(CheckerModel $checkerModel)
+    public function __construct(CheckerModel $checkerModel, EntityManagerInterface $entityManager)
     {
         $this->checkerModel = $checkerModel;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -197,7 +203,7 @@ class CheckerController extends AbstractController
         ];
     }
 
-    private function handleMessages(Request $request, int $type)
+    private function handleMessages(Request $request, int $type): Response
     {
         if (
             !$this->isGranted(Member::ROLE_ADMIN_CHECKER)
@@ -207,7 +213,9 @@ class CheckerController extends AbstractController
         }
 
         $page = $request->query->get('page', 1);
-        $limit = $request->query->get('limit', 10);
+        /** @var Member $member */
+        $member = $this->getUser();
+        $limit = $this->getItemsPerPage($member);
 
         switch ($type) {
             case self::MESSAGES_REPORTED:

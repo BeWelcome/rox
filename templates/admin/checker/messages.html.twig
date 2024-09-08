@@ -3,13 +3,26 @@
 
 {% block javascripts %}
 <script type="text/javascript">
-    $(window).on('load', function () {
-        $('#checkAllNoSpam').click(function () {
-            $('input:checkbox.checkableNoSpam').prop('checked', this.checked);
-        });
-        $('#checkAllSpam').click(function () {
-            $('input:checkbox.checkableSpam').prop('checked', this.checked);
-        });
+    const checkAllSpam = document.getElementById('checkAllSpam');
+    const checkAllNoSpam  = document.getElementById('checkAllNoSpam');
+    const spam = document.querySelectorAll('.checkableSpam');
+    const noSpam = document.querySelectorAll('.checkableNoSpam');
+    checkAllSpam.addEventListener('click', function() {
+        const status = checkAllSpam.checked;
+        spam.forEach((checkbox) => {checkbox.checked = status;});
+        if (status) {
+            checkAllNoSpam.checked = false;
+            noSpam.forEach((checkbox) => {checkbox.checked = false;});
+        }
+    });
+    checkAllNoSpam.addEventListener('click', function() {
+        console.log(checkAllNoSpam.checked);
+        const status = checkAllNoSpam.checked;
+        noSpam.forEach((checkbox) => {checkbox.checked = status;});
+        if (status) {
+            checkAllSpam.checked = false;
+            spam.forEach((checkbox) => {checkbox.checked = false;});
+        }
     });
 </script>
 {% endblock %}
@@ -33,13 +46,13 @@
                 <th>Receiver</th>
                 <th>Created</th>
                 <th>Comment</th>
-                <th>{{ 'ok' | trans }}</th>
-                <th>{{ 'spam' | trans }}</th>
+                <th style="writing-mode: vertical-lr">ok</th>
+                <th style="writing-mode: vertical-lr">spam</th>
             </tr>
             <tr>
-                <th colspan="5"></th>
-                <th><input type="checkbox" id="checkAllNoSpam"></th>
-                <th><input type="checkbox" id="checkAllSpam"></th>
+                <td colspan="5">&nbsp;</td>
+                <td><div class="o-checkbox"><input type="checkbox" id="checkAllNoSpam" class="o-checkbox__input"><label class="o-checkbox__label"></label></div></td>
+                <td><div class="o-checkbox"><input type="checkbox" id="checkAllSpam" class="o-checkbox__input"><label class="o-checkbox__label"></label></div></td>
             </tr>
         {% for message in reported.currentPageResults %}
             <tr>

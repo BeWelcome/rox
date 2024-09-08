@@ -2,6 +2,7 @@
 
 namespace App\Model\Admin;
 
+use App\Doctrine\InFolderType;
 use App\Doctrine\MessageStatusType;
 use App\Doctrine\SpamInfoType;
 use App\Entity\Message;
@@ -53,6 +54,9 @@ class CheckerModel
                 $message->setStatus(MessageStatusType::SEND);
             } else {
                 $message->setStatus(MessageStatusType::CHECKED);
+                if (strpos($message->getSpamInfo(), SpamInfoType::SPAM_BLOCKED_WORD) !== false) {
+                    $message->setFolder(InFolderType::NORMAL);
+                }
             }
             $this->entityManager->persist($message);
         }

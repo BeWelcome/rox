@@ -57,7 +57,10 @@ abstract class AbstractConversationsAdapter
      */
     public function getSlice(int $offset, int $length): iterable
     {
-        $sql = 'SELECT * FROM (' . $this->getConversationsQuery() . ') m';
+        $sql = 'SELECT *, i.id, r.id, s.id FROM (' . $this->getConversationsQuery() . ') m';
+        $sql .= ' JOIN members i ON m.initiator_id = i.id';
+        $sql .= ' JOIN members r ON m.IdReceiver = r.id';
+        $sql .= ' JOIN members s ON m.IdSender = s.id';
         $sql .= ' ORDER BY `m`.`created` DESC LIMIT ' . $length . ' OFFSET ' . $offset;
 
         $query = $this->entityManager->createNativeQuery($sql, new MessageResultSetMapping())
@@ -121,7 +124,7 @@ abstract class AbstractConversationsAdapter
 
     protected function getNotSpamCondition(): string
     {
-        return 'InFolder <> \'' . InFolderType::SPAM . '\'';
+        return '(m.initiator_id <> :memberId AND InFolder <> \'' . InFolderType::SPAM . '\')';
     }
 
     abstract protected function getConversationsQuery(): string;

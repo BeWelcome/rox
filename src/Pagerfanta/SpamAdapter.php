@@ -42,6 +42,6 @@ class SpamAdapter extends AbstractConversationsAdapter implements AdapterInterfa
 
     private function getSpamCondition(): string
     {
-        return '(SpamInfo LIKE \'%' . SpamInfoType::MEMBER_SAYS_SPAM . '%\'SpamInfo LIKE \'%' . SpamInfoType::SPAM_BLOCKED_WORD . '%\') OR AND InFolder = \'' . InFolderType::SPAM . '\'';
+        return '(SpamInfo LIKE \'%' . SpamInfoType::MEMBER_SAYS_SPAM . '%\' OR SpamInfo LIKE \'%' . SpamInfoType::SPAM_BLOCKED_WORD . '%\') AND InFolder = \'' . InFolderType::SPAM . '\'';
     }
 }

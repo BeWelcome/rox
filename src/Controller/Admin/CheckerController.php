@@ -253,6 +253,10 @@ class CheckerController extends AbstractController
                 $this->checkerModel->unmarkAsSpamByChecker($noSpamMessageIds);
                 $this->addFlash('notice', 'Set spam status');
 
+                if ($type === self::MESSAGES_BLOCK_WORDS_PROCESSED) {
+                    return $this->redirectToRoute('admin_spam_messages_block_words');
+                }
+
                 return $this->redirectToRoute('admin_spam_messages');
             }
         }

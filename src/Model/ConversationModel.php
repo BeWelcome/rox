@@ -265,7 +265,7 @@ class ConversationModel
     {
         // Check if there is already a newer message than the one used for the request
         // as there might be a clash of replies
-        /** @var MessageRepository */
+        /** @var MessageRepository $messageRepository */
         $messageRepository = $this->entityManager->getRepository(Message::class);
         /** @var Message[] $messages */
         $messages = $messageRepository->findBy(['subject' => $probableParent->getSubject()]);
@@ -273,7 +273,7 @@ class ConversationModel
         return $messages[\count($messages) - 1];
     }
 
-    public function markConversationAsRead(Member $member, array $thread)
+    public function markConversationAsRead(Member $member, array $thread): void
     {
         // Walk through the thread and mark all messages as read (for current member)
         $em = $this->entityManager;

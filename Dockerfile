@@ -4,12 +4,12 @@
 
 
 # https://docs.docker.com/engine/reference/builder/#understand-how-arg-and-from-interact
-ARG PHP_VERSION=7.4.28
-ARG NGINX_VERSION=1.17
+ARG PHP_VERSION=8.3
+ARG NGINX_VERSION=1.27.3
 
 
 # "php" stage
-FROM php:${PHP_VERSION}-fpm-alpine3.15 AS bewelcome_php
+FROM php:${PHP_VERSION}-fpm-alpine3.21 AS bewelcome_php
 
 # persistent / runtime deps
 RUN apk add --no-cache \
@@ -25,7 +25,7 @@ RUN apk add --no-cache \
 		python3 \
 	;
 
-ARG APCU_VERSION=5.1.18
+ARG APCU_VERSION=5.1.24
 RUN set -eux; \
 	apk add --no-cache --virtual .build-deps \
 		$PHPIZE_DEPS \
@@ -46,7 +46,6 @@ RUN set -eux; \
 		mysqli \
 		pcntl \
 		pdo_mysql \
-		xmlrpc \
 		xsl \
 		zip \
         exif \
@@ -126,7 +125,7 @@ RUN set -eux; \
 	composer clear-cache
 
 # prevent the reinstallation of node_modules at every changes in the source code
-COPY package.json yarn.lock webpack.config.js postcss.config.js tailwind.config.js ./
+COPY package.json yarn.lock webpack.config.js postcss.config.js tailwind.config.js tsconfig.json ./
 RUN set -eux; \
 	yarn install --frozen-lock; \
 	yarn encore production --mode=production

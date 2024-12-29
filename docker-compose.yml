@@ -1,5 +1,3 @@
-version: '3.4'
-
 x-cache-from:
   - &cache-from
     cache_from:
@@ -41,7 +39,7 @@ services:
       - ./public:/srv/bewelcome/public:ro
 
   db:
-    image: mariadb:10.1.41
+    image: mariadb:11.6.2
     environment:
       MYSQL_ROOT_PASSWORD: bewelcome_root_dev
       MYSQL_DATABASE: bewelcome
@@ -52,7 +50,7 @@ services:
 
   manticore:
     container_name: manticore
-    image: manticoresearch/manticore:5.0.2
+    image: manticoresearch/manticore:6.3.8
     environment:
       - EXTRA=1
     restart: always

@@ -333,17 +333,13 @@ class GroupController extends AbstractController
 
     /**
      * @Route("/new/group", name="new_group")
-     *
-     * @throws Exception
-     *
-     * @return Response
      */
-    public function createGroup(Request $request, Logger $logger)
+    public function createGroup(Request $request, Logger $logger): Response
     {
         /** @var Member $member */
         $member = $this->getUser();
 
-        if (MemberStatusType::ACCOUNT_ACTIVATED !== $member->getStatus()) {
+        if (MemberStatusType::ACCOUNT_ACTIVATED === $member->getStatus()) {
             $this->addTranslatedFlash('notice', 'flash.group.not.confirmed');
 
             return $this->redirectToRoute('groups_mygroups');

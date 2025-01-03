@@ -12,8 +12,8 @@ App\Entity\NewLocation:
         countryId: 'DE'
     NewCountryReferenceIndonesia:
         name: 'Indonesia'
-        latitude: 0.0
-        longitude: 0.0
+        latitude: -5.0
+        longitude: 120.0
         geonameId: 1643084
         featureClass: A
         featureCode: PCLI
@@ -31,6 +31,8 @@ App\Entity\NewLocation:
         population: 12
         modificationDate: '<DateTime()>'
         country: '@NewCountryReferenceGermany'
+        latitude: 52.5
+        longitude: 13.41667
     NewAdmin1ReferenceProvinsiPapua:
         geonameId: 1643012
         name: 'Provinsi Papua'
@@ -40,6 +42,8 @@ App\Entity\NewLocation:
         admin1Id: '36'
         countryId: '@NewCountryReferenceIndonesia->countryId'
         modificationDate: '<DateTime()>'
+        latitude: -2.59026
+        longitude: 139.41564
     NewBerlin:
         name: 'Berlin'
         latitude: 52.5243700

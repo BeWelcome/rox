@@ -1269,7 +1269,7 @@ class Member
 
         /** @var RightVolunteer $volunteerRight */
         foreach ($volunteerRights->getIterator() as $volunteerRight) {
-            if ($volunteerRight->getRight()->getName() === $nameOfRight) {
+            if (strtolower($volunteerRight->getRight()->getName()) === $nameOfRight) {
                 $level = $volunteerRight->getLevel();
             }
         }

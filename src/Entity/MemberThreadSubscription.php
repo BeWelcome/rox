@@ -48,7 +48,7 @@ class MemberThreadSubscription
     /**
      * @var string
      *
-     * @ORM\Column(name="UnSubscribeKey", type="string", length=20, nullable=false)
+     * @ORM\Column(name="UnSubscribeKey", type="string", length=32, nullable=false)
      */
     private $unsubscribeKey;
 

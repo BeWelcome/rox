@@ -54,9 +54,9 @@ class Translation
     /**
      * @var DateTime
      *
-     * @ORM\Column(name="updated", type="datetime", nullable=false)
+     * @ORM\Column(name="updated", type="datetime", nullable=true)
      */
-    private $updated;
+    private $updated = null;
 
     /**
      * @var DateTime

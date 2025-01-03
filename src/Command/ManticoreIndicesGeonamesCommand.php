@@ -127,13 +127,12 @@ class ManticoreIndicesGeonamesCommand extends Command
         ___SQL);
 
         $count = ($stmt->fetchNumeric())[0];
-        $this->io->note($count);
+        if ($count !== 0) {
+            $progressBar = $this->getProgressBar($output, $count);
 
-        $progressBar = $this->getProgressBar($output, $count);
-
-        $firstResult = 0;
-        do {
-            $query = $this->entityManager->createNativeQuery(<<<___SQL
+            $firstResult = 0;
+            do {
+                $query = $this->entityManager->createNativeQuery(<<<___SQL
                 SELECT
                     g.geonameid AS geonameid,
                     g.`name` AS name,
@@ -162,15 +161,16 @@ class ManticoreIndicesGeonamesCommand extends Command
                 ON (g.geonameid = membercounts.IdCity)
                 LIMIT {$firstResult}, {$this->chunkSize}
             ___SQL
-                , $this->getResultSetMappingForGeonamesIndex());
+                    , $this->getResultSetMappingForGeonamesIndex());
 
-            $addDocumentsCount = $this->addGeonamesDocumentsToIndex($index, $query, $progressBar);
+                $addDocumentsCount = $this->addGeonamesDocumentsToIndex($index, $query, $progressBar);
 
-            $firstResult += $this->chunkSize;
-        } while ($addDocumentsCount > 0);
+                $firstResult += $this->chunkSize;
+            } while ($addDocumentsCount > 0);
 
-        $progressBar->finish();
-        $this->io->newLine();
+            $progressBar->finish();
+            $this->io->newLine();
+        }
     }
 
     private function addAlternateNamesDocuments(Index $index, OutputInterface $output)
@@ -188,13 +188,13 @@ class ManticoreIndicesGeonamesCommand extends Command
         ___SQL);
 
         $count = ($stmt->fetchNumeric())[0];
+        if ($count !== 0) {
+            $progressBar = $this->getProgressBar($output, $count);
+            $progressBar->start();
 
-        $progressBar = $this->getProgressBar($output, $count);
-        $progressBar->start();
-
-        $firstResult = 0;
-        do {
-            $query = $this->entityManager->createNativeQuery(<<<___SQL
+            $firstResult = 0;
+            do {
+                $query = $this->entityManager->createNativeQuery(<<<___SQL
                 SELECT
                     g.geonameid,
                     gt.`content` AS name,
@@ -225,15 +225,16 @@ class ManticoreIndicesGeonamesCommand extends Command
                 ON (g.geonameid = membercounts.IdCity)
                 LIMIT {$firstResult}, {$this->chunkSize}
             ___SQL
-                , $this->getResultSetMappingForGeonamesIndex());
+                    , $this->getResultSetMappingForGeonamesIndex());
 
-            $addDocumentsCount = $this->addGeonamesDocumentsToIndex($index, $query, $progressBar);
+                $addDocumentsCount = $this->addGeonamesDocumentsToIndex($index, $query, $progressBar);
 
-            $firstResult += $this->chunkSize;
-        } while ($addDocumentsCount > 0);
+                $firstResult += $this->chunkSize;
+            } while ($addDocumentsCount > 0);
 
-        $progressBar->finish();
-        $this->io->newLine();
+            $progressBar->finish();
+            $this->io->newLine();
+        }
     }
 
     private function addGeonamesDocumentsToIndex(Index $index, NativeQuery $query, ProgressBar $progress): int
@@ -255,16 +256,16 @@ class ManticoreIndicesGeonamesCommand extends Command
             $documents[] = [
                 'geoname_id' => $location['geonameid'],
                 'name' => $location['name'],
-                'country' => $location['country'],
+                'country' => $location['country'] ?? 0,
                 'isPlace' => $isPlace,
                 'isAdmin' => $isAdmin,
                 'isCountry' => $isCountry,
                 'locale' => $this->adaptLocale($location['locale']),
-                'admin1' => $location['admin1'],
-                'admin2' => $location['admin2'],
-                'admin3' => $location['admin3'],
-                'admin4' => $location['admin4'],
-                'population' => $location['population'],
+                'admin1' => $location['admin1'] ?? 0,
+                'admin2' => $location['admin2'] ?? 0,
+                'admin3' => $location['admin3'] ?? 0,
+                'admin4' => $location['admin4'] ?? 0,
+                'population' => $location['population'] ?? 0,
                 'member_count' => $location['member_count'],
             ];
             $progress->advance();

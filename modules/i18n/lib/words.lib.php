@@ -906,8 +906,8 @@ WHERE
             }
         }
 
-        $str = "insert into memberstrads(TableColumn,IdRecord,IdLanguage,IdOwner,IdTrad,IdTranslator,Sentence,created) ";
-        $str .= "Values('".$TableColumn."',".$IdRecord.",". $IdLanguage . "," . $IdOwner . "," . $IdTrad . "," . $IdTranslator . ",\"" . $Sentence . "\",now())";
+        $str = "insert into memberstrads(TableColumn,IdRecord,IdLanguage,IdOwner,IdTrad,IdTranslator,Sentence,created,Type) ";
+        $str .= "Values('".$TableColumn."',".$IdRecord.",". $IdLanguage . "," . $IdOwner . "," . $IdTrad . "," . $IdTranslator . ",\"" . $Sentence . "\",now(),'Member')";
         $s = $this->_dao->query($str);
         if (!$s) {
             // Unlock table before throwing exception!
@@ -1053,8 +1053,8 @@ WHERE
         $IdOwner = $IdMember;
         $IdTranslator = $this->session->get('IdMember'); // the recorded translator will always be the current logged member
         $Sentence = $ss;
-        $str = "insert into translations(TableColumn,IdRecord,IdLanguage,IdOwner,IdTrad,IdTranslator,Sentence,created) ";
-        $str .= "Values('".$TableColumn."',".$IdRecord.",". $IdLanguage . "," . $IdOwner . "," . $IdTrad . "," . $IdTranslator . ",\"" . $Sentence . "\",now())";
+        $str = "insert into translations(TableColumn,IdRecord,IdLanguage,IdOwner,IdTrad,IdTranslator,Sentence,created,Type) ";
+        $str .= "Values('".$TableColumn."',".$IdRecord.",". $IdLanguage . "," . $IdOwner . "," . $IdTrad . "," . $IdTranslator . ",\"" . $Sentence . "\",now(),'Member')";
         $s = $this->_dao->query($str);
         if (!$s) {
             throw new PException('Failed in InsertInFTrad for inserting in translations!');

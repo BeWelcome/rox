@@ -67,10 +67,11 @@ services:
         soft: -1
         hard: -1
     volumes:
-      - ./data:/var/lib/manticore
+      - manticore-data:/var/lib/manticore:rw
 
   mailer:
     image: tophfr/mailcatcher
 
 volumes:
   db-data: {}
+  manticore-data: {}

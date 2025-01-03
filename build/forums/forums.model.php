@@ -1361,8 +1361,8 @@ WHERE `id` = '$topicinfo->threadid'
         $this->dao->query("START TRANSACTION");
         $query = sprintf(
             "
-INSERT INTO `forums_posts` ( `threadid`, `create_time`, `message`,`IdWriter`,`IdFirstLanguageUsed`,`PostVisibility`)
-VALUES ('%d', NOW(), '%s','%d',%d,'%s')
+INSERT INTO `forums_posts` ( `threadid`, `create_time`, `message`,`IdWriter`,`IdFirstLanguageUsed`,`PostVisibility`, `IdContent`,`edit_count`)
+VALUES ('%d', NOW(), '%s','%d',%d,'%s',0, 0)
             ",
             $this->threadid,
             $this->dao->escape($this->cleanupText($vars['topic_text'])),
@@ -1437,12 +1437,20 @@ WHERE `id` = '$this->threadid'
 
         /** @var PDBStatement_mysqli $statement */
         $statement = $this->dao->prepare("
-            INSERT INTO `forums_posts` (
-                `create_time`, `message`,`IdWriter`,`IdFirstLanguageUsed`,`PostVisibility`)
-            VALUES (NOW(), ?, ?, ?, ?)
+            INSERT INTO `forums_posts`
+                (
+                    `create_time`,
+                    `message`,
+                    `IdWriter`,
+                    `IdFirstLanguageUsed`,
+                     `PostVisibility`,
+                     `PostDeleted`,
+                     `IdContent`,
+                     `edit_count`
+                 )
+            VALUES (NOW(), ?, ?, ?, ?, 'NotDeleted', 0, 0)
             ");
         $text = $this->cleanupText($vars['topic_text']);
-        $userId = $User->getId();
         $memberId = $this->session->get("IdMember");
         $language = $this->GetLanguageChoosen();
         $statement->bindParam(1, $text);
@@ -1464,8 +1472,8 @@ WHERE `id` = '$this->threadid'
         $statement = $this->dao->prepare("
             INSERT INTO `forums_threads` (
                 `title`, `first_postid`, `last_postid`,
-                `IdFirstLanguageUsed`,`IdGroup`,`ThreadVisibility`)
-            VALUES (?, ?, ?, ?, ?, ?)
+                `IdFirstLanguageUsed`,`IdGroup`,`ThreadVisibility`, `IdTitle`, `replies`, `views`, `stickyvalue`)
+            VALUES (?, ?, ?, ?, ?, ?, 0, 0, 0, 0)
         ");
 
  		$title = strip_tags($vars['topic_title']);
@@ -2004,8 +2012,8 @@ AND IdThread=%d
         }
         $key=MD5(rand(100000,900000)) ;
         $query = "INSERT INTO
-                members_threads_subscribed(IdThread,IdSubscriber,UnSubscribeKey,notificationsEnabled)
-                VALUES(".$IdThread.",".$this->session->get("IdMember").",'".$this->dao->escape($key)."', 1)" ;
+                members_threads_subscribed(IdThread,IdSubscriber,UnSubscribeKey,notificationsEnabled,created)
+                VALUES(".$IdThread.",".$this->session->get("IdMember").",'".$this->dao->escape($key)."', 1,NOW())" ;
         $s = $this->dao->query($query);
         if (!$s) {
             throw new PException('Forum->SubscribeThread failed !');

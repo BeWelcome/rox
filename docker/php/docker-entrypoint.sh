@@ -7,7 +7,7 @@ if [ "${1#-}" != "$1" ]; then
 fi
 
 if [ "$1" = 'php-fpm' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ]; then
-	PHP_INI_RECOMMENDED="$PHP_INI_DIR/php.ini-production"
+ 	PHP_INI_RECOMMENDED="$PHP_INI_DIR/php.ini-production"
 	if [ "$APP_ENV" != 'prod' ]; then
 		PHP_INI_RECOMMENDED="$PHP_INI_DIR/php.ini-development"
 	fi
@@ -27,6 +27,7 @@ if [ "$1" = 'php-fpm' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ]; then
 	fi
 
 	if [ "$APP_ENV" != 'prod' ] && [ ! -f VERSION ]; then
+        git config --global --add safe.directory /srv/bewelcome
 		git rev-parse --short HEAD > VERSION
 	fi
 
@@ -89,6 +90,11 @@ if [ "$1" = 'php-fpm' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ]; then
         echo "yarn"
 		yarn encore dev --mode=development
 	fi
+
+	# create manticore indices
+	echo "Manticore"
+	bin/console manticore:indices:forum
+	bin/console manticore:indices:geonames
 fi
 echo "docker-php"
 

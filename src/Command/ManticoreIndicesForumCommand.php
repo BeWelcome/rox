@@ -132,12 +132,12 @@ class ManticoreIndicesForumCommand extends Command
         ___SQL);
 
         $count = ($stmt->fetchNumeric())[0];
+        if ($count !== 0) {
+            $progressBar = $this->getProgressBar($output, $count);
 
-        $progressBar = $this->getProgressBar($output, $count);
-
-        $firstResult = 0;
-        do {
-            $query = $this->entityManager->createNativeQuery(<<<___SQL
+            $firstResult = 0;
+            do {
+                $query = $this->entityManager->createNativeQuery(<<<___SQL
                 SELECT
                     fp.id as post_id,
                     fp.PostDeleted as post_deleted,
@@ -156,15 +156,16 @@ class ManticoreIndicesForumCommand extends Command
                 JOIN languages l ON ftr.IdLanguage = l.id
                 LIMIT {$firstResult}, {$this->chunkSize}
             ___SQL
-                , $this->getResultSetMappingForForumIndex());
+                    , $this->getResultSetMappingForForumIndex());
 
-            $addDocumentsCount = $this->addForumDocumentsToIndex($index, $query, $progressBar);
+                $addDocumentsCount = $this->addForumDocumentsToIndex($index, $query, $progressBar);
 
-            $firstResult += $this->chunkSize;
-        } while ($addDocumentsCount > 0);
+                $firstResult += $this->chunkSize;
+            } while ($addDocumentsCount > 0);
 
-        $progressBar->finish();
-        $this->io->newLine();
+            $progressBar->finish();
+            $this->io->newLine();
+        }
     }
 
     private function addForumDocumentsToIndex(Index $index, NativeQuery $query, ProgressBar $progress): int

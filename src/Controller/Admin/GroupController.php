@@ -55,11 +55,13 @@ class GroupController extends AbstractController
     public function approveGroups()
     {
         if (!$this->isGranted(Member::ROLE_ADMIN_GROUP)) {
-            throw $this->createAccessDeniedException('You need to have Group right to access this.');
+            throw $this->createAccessDeniedException('You need to have Group right to access this.1');
         }
 
         if (!$this->hasGroupRightLevel(10)) {
-            throw $this->createAccessDeniedException('You need to have Group right to access this.');
+            $admin = $this->getUser();
+            $level =  $admin->getLevelForRight(Member::ROLE_ADMIN_GROUP);
+            throw $this->createAccessDeniedException('You need to have level 10 to access this.' . $level);
         }
 
         // Fetch unapproved groups and decide on their fate

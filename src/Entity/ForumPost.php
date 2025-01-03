@@ -48,9 +48,9 @@ class ForumPost implements ObjectManagerAware
      * @var ForumThread
      *
      * @ORM\ManyToOne(targetEntity="ForumThread", inversedBy="posts")
-     * @ORM\JoinColumn(name="threadid", referencedColumnName="id")
+     * @ORM\JoinColumn(name="threadid", referencedColumnName="id", nullable=true)
      */
-    private $thread;
+    private $thread = null;
 
     /**
      * @var string

@@ -83,7 +83,7 @@ class InvitationMockups implements MockupProviderInterface
     }
 
     /**
-     * @SuppressWarnings(PHPMD)
+     * @SuppressWarnings("PHPMD")
      */
     public function getMockupParameter(?string $locale = null, ?string $feature = null): array
     {

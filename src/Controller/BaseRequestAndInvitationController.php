@@ -66,13 +66,12 @@ abstract class BaseRequestAndInvitationController extends AbstractController
         Member $receiver
     ): Message {
         $data = $requestForm->getData();
-        $em = $this->getDoctrine()->getManager();
         $clickedButton = $requestForm->getClickedButton()->getName();
 
         // handle changes in request and subject
         $newRequest = $this->model->getFinalRequest($sender, $receiver, $currentRequest, $data, $clickedButton);
-        $em->persist($newRequest);
-        $em->flush();
+        $this->entityManager->persist($newRequest);
+        $this->entityManager->flush();
 
         return $newRequest;
     }

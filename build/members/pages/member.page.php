@@ -158,7 +158,7 @@ class MemberPage extends PageWithActiveSkin
 /*                (null === $relation)
                     ? array('relationsadd', "members/$username/relation/add", '<i class="fa fa-fw fa-handshake"></i> ' . $words->get('profile.relation.add'), 'relationsadd')
                     : array('relationsadd', "members/$username/relation/edit", '<i class="fa fa-fw fa-handshake"></i> ' . $words->get('profile.relation.edit'), 'relationsadd'),                array('notes', $mynotelinkname, '<i class="fa fa-fw fa-pencil-alt"></i> ' . $mynotewordsname, 'mynotes'),
-                array('report', $feedbackUrl, '<i class="fas fa-fw fa-flag"></i> ' . $words->getSilent('profile.report')),
+*/                array('report', $feedbackUrl, '<i class="fas fa-fw fa-flag"></i> ' . $words->getSilent('profile.report')),
                 array('separator-1', '', '', 'space'),
                 array('profile', "members/$username", '<i class="fa fa-fw fa-user"></i> '  . $ww->MemberPage),
                 array('comments', "members/$username/comments", '<i class="fa fa-fw fa-comments"></i> ' . $ww->ViewComments.' ' . $this->getBadge($comments_count['all'])),

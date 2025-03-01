@@ -244,7 +244,7 @@ class GroupModel
      *
      * @return Group
      *
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings("PHPMD.ExcessiveMethodLength")
      * Because of the mix between old code and new code this method is way too long.
      */
     public function new($data, $locale, Member $member, $groupPicture)

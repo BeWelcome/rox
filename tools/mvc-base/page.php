@@ -1,6 +1,5 @@
 <?php
 
-use Symfony\Component\Templating\EngineInterface;
 use Twig\Environment;
 
 abstract class AbstractBasePage extends VisualComponent

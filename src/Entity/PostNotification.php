@@ -7,67 +7,59 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * PostNotification.
- *
- * @ORM\Table(name="posts_notificationqueue", indexes={
- *     @ORM\Index(name="posts_notificationqueue_status", columns={"Status"})
- * })
- * @ORM\Entity(repositoryClass="App\Repository\PostNotificationRepository")
- * @ORM\HasLifecycleCallbacks
  */
+#[ORM\Table(name: 'posts_notificationqueue')]
+#[ORM\Index(name: 'posts_notificationqueue_status', columns: ['Status'])]
+#[ORM\Entity(repositoryClass: \App\Repository\PostNotificationRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class PostNotification
 {
     use LifecycleCallbacksTrait;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="Status", type="string", nullable=false)
      */
+    #[ORM\Column(name: 'Status', type: 'string', nullable: false)]
     private $status = 'ToSend';
 
     /**
      * @var Member
-     * @ORM\ManyToOne(targetEntity="Member")
-     * @ORM\JoinColumn(name="IdMember", referencedColumnName="id")
      */
+    #[ORM\JoinColumn(name: 'IdMember', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: \Member::class)]
     private $receiver;
 
     /**
      * @var ForumPost
-     *
-     * @ORM\ManyToOne(targetEntity="ForumPost")
-     * @ORM\JoinColumn(name="IdPost", referencedColumnName="id")
      */
+    #[ORM\JoinColumn(name: 'IdPost', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: \ForumPost::class)]
     private $post;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="Type", type="string", nullable=false)
      */
+    #[ORM\Column(name: 'Type', type: 'string', nullable: false)]
     private $type = 'buggy';
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="IdSubscription", type="integer", nullable=false)
      */
+    #[ORM\Column(name: 'IdSubscription', type: 'integer', nullable: false)]
     private $subscription = 0;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="TableSubscription", type="string", length=64, nullable=false)
      */
+    #[ORM\Column(name: 'TableSubscription', type: 'string', length: 64, nullable: false)]
     private $tablesubscription = 'NotSet';
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     private $id;
 
     /**

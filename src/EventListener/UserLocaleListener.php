@@ -8,9 +8,6 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use PVars;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpFoundation\AcceptHeader;
-use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 use Symfony\Component\Security\Http\SecurityEvents;
 
@@ -32,7 +29,7 @@ class UserLocaleListener implements EventSubscriberInterface
     }
 
     /**
-     * @SuppressWarnings(PHPMD.StaticAccess)
+     * @SuppressWarnings("PHPMD.StaticAccess")
      */
     public function onInteractiveLogin(InteractiveLoginEvent $event)
     {

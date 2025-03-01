@@ -12,6 +12,7 @@ use Gedmo\Translatable\Entity\Repository\TranslationRepository;
 use Gedmo\Translatable\Entity\Translation;
 use Manticoresearch\Client;
 use Manticoresearch\Index;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputArgument;
@@ -22,13 +23,17 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 use function count;
 
+#[AsCommand(
+    name: 'manticore:indices:geonames',
+    description: 'Creates the manticore indices for the location search',
+    aliases: [],
+    hidden: false,
+)]
 class ManticoreIndicesGeonamesCommand extends Command
 {
-    private const GEONAMES_INDEX = 'geonames_rt';
+    private const string GEONAMES_INDEX = 'geonames_rt';
     private int $chunkSize = 250000;
 
-    protected static $defaultName = 'manticore:indices:geonames';
-    protected static $defaultDescription = 'Creates the manticore indices for the location search';
     private EntityManagerInterface $entityManager;
     private SymfonyStyle $io;
     private string $manticoreHost;

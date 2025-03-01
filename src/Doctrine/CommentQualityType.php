@@ -4,17 +4,16 @@ namespace App\Doctrine;
 
 class CommentQualityType extends EnumType
 {
-    public const POSITIVE = 'Good';
-    public const NEUTRAL = 'Neutral';
-    public const NEGATIVE = 'Bad';
+    public const string POSITIVE = 'Good';
+    public const string NEUTRAL = 'Neutral';
+    public const string NEGATIVE = 'Bad';
 
-    /** @var string */
-    protected $name = 'comment_quality';
+    protected string $name = 'comment_quality';
 
-    protected $translationPrefix = 'commentquality_';
+    protected string $translationPrefix = 'commentquality_';
 
     /** @var array */
-    protected $values = [
+    protected array $values = [
         self::POSITIVE,
         self::NEUTRAL,
         self::NEGATIVE,

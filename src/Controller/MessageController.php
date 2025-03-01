@@ -14,6 +14,7 @@ use App\Utilities\AllowContactCheck;
 use App\Utilities\ConversationThread;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
+use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,9 +26,9 @@ use Symfony\Component\Routing\Annotation\Route;
  *
  * Ignore complexity warning. \todo fix this.
  *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
- * @SuppressWarnings(PHPMD.CyclomaticComplexity)
- * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
+ * @SuppressWarnings("PHPMD.CouplingBetweenObjects")
+ * @SuppressWarnings("PHPMD.CyclomaticComplexity")
+ * @SuppressWarnings("PHPMD.ExcessiveClassComplexity")
  */
 class MessageController extends AbstractController
 {
@@ -37,22 +38,24 @@ class MessageController extends AbstractController
     private Mailer $mailer;
     private ConversationModel $conversationModel;
     private ConversationThread $conversationThread;
+    private EntityManagerInterface $entityManager;
 
     public function __construct(
         Mailer $mailer,
         ConversationModel $conversationModel,
-        ConversationThread $conversationThread
+        ConversationThread $conversationThread,
+        EntityManagerInterface $entityManager
     ) {
         $this->mailer = $mailer;
         $this->conversationModel = $conversationModel;
         $this->conversationThread = $conversationThread;
+        $this->entityManager = $entityManager;
     }
 
     /**
-     * @Route("/new/message/{username}", name="message_new")
-     *
      * @throws Exception
      */
+    #[Route(path: '/new/message/{username}', name: 'message_new')]
     public function newMessage(Request $request, Member $receiver, AllowContactCheck $allowContactCheck): Response
     {
         /** @var Member $sender */
@@ -183,7 +186,6 @@ class MessageController extends AbstractController
         string $subjectText,
         string $body
     ): Message {
-        $em = $this->getDoctrine()->getManager();
         $message = new Message();
         $message->setMessage($body);
         $message->setStatus('Sent');
@@ -191,8 +193,8 @@ class MessageController extends AbstractController
             $subject = new Subject();
             $subject->setSubject($subjectText);
             $request = null;
-            $em->persist($subject);
-            $em->flush();
+            $this->entityManager->persist($subject);
+            $this->entityManager->flush();
             $message = $this->conversationModel->formatConversation($message);
         } else {
             $subject = $parent->getSubject();
@@ -205,8 +207,8 @@ class MessageController extends AbstractController
         $message->setParent($parent);
         $message->setSender($sender);
         $message->setReceiver($receiver);
-        $em->persist($message);
-        $em->flush();
+        $this->entityManager->persist($message);
+        $this->entityManager->flush();
 
         if (strpos($message->getSpamInfo(), SpamInfoType::SPAM_BLOCKED_WORD) === false) {
             $this->mailer->sendMessageNotificationEmail($sender, $receiver, 'message', [

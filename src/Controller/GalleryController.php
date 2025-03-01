@@ -43,12 +43,9 @@ class GalleryController extends AbstractController
     }
 
     /**
-     * @Route("/gallery/show/image/{id}/edit", name="gallery_edit_image",
-     *     requirements = {"id": "\d+"}
-     * )
-     *
      * @throws AccessDeniedException
      */
+    #[Route(path: '/gallery/show/image/{id}/edit', name: 'gallery_edit_image', requirements: ['id' => '\d+'])]
     public function editImage(Request $request, GalleryImage $image): Response
     {
         $user = $this->getUser();
@@ -77,9 +74,7 @@ class GalleryController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/new/image/upload", name="gallery_upload_new")
-     */
+    #[Route(path: '/new/image/upload', name: 'gallery_upload_new')]
     public function handleImageUploadToGallery(Request $request, ValidatorInterface $validator): JsonResponse
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_REMEMBERED');
@@ -198,10 +193,9 @@ class GalleryController extends AbstractController
     }
 
     /**
-     * @Route("/gallery/upload_multiple", name="gallery_upload_multiple")
-     *
      * @return Response
      */
+    #[Route(path: '/gallery/upload_multiple', name: 'gallery_upload_multiple')]
     public function uploadImagesToGallery(Request $request)
     {
         /** @var Member $member */
@@ -238,12 +232,11 @@ class GalleryController extends AbstractController
     }
 
     /**
-     * @Route("/gallery/upload/image", name="gallery_upload_ckeditor")
      *
      * @throws AccessDeniedException
-     *
-     * @SuppressWarnings(PHPMD.StaticAccess)
+     * @SuppressWarnings("PHPMD.StaticAccess")
      */
+    #[Route(path: '/gallery/upload/image', name: 'gallery_upload_ckeditor')]
     public function uploadImageFromCKEditor5(Request $request, GalleryModel $galleryModel): JsonResponse
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_REMEMBERED');
@@ -319,10 +312,7 @@ class GalleryController extends AbstractController
         return $response;
     }
 
-    /**
-     * @Route("/gallery/show/uploaded/{id}", name="gallery_uploaded_ckeditor_old",
-     *     requirements={"id":"\d+"})
-     */
+    #[Route(path: '/gallery/show/uploaded/{id}', name: 'gallery_uploaded_ckeditor_old', requirements: ['id' => '\d+'])]
     public function showUploadedImageOld(UploadedImage $image, Logger $logger): Response
     {
         $logger->write('Image ' . $image->getId() . ' accessed using old URL', 'Image');
@@ -332,10 +322,7 @@ class GalleryController extends AbstractController
             'fileInfo' => '', ]);
     }
 
-    /**
-     * @Route("/gallery/show/uploaded/{id}/{fileInfo}", name="gallery_uploaded_ckeditor",
-     *     requirements={"id":"\d+"})
-     */
+    #[Route(path: '/gallery/show/uploaded/{id}/{fileInfo}', name: 'gallery_uploaded_ckeditor', requirements: ['id' => '\d+'])]
     public function showUploadedImage(UploadedImage $image, string $fileInfo): BinaryFileResponse
     {
         $uploadDirectory = $this->getParameter('upload_directory') . '/';

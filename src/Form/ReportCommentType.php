@@ -10,9 +10,9 @@ use Symfony\Component\Form\FormBuilderInterface;
 class ReportCommentType extends AbstractType
 {
     /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('feedback', TextareaType::class, [

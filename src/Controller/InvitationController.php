@@ -50,10 +50,9 @@ class InvitationController extends BaseRequestAndInvitationController
     }
 
     /**
-     * @Route("/new/invitation/{leg}", name="hosting_invitation")
-     *
      * @throws Exception
      */
+    #[Route(path: '/new/invitation/{leg}', name: 'hosting_invitation')]
     public function newInvitation(
         Request $request,
         Subtrip $leg,
@@ -140,9 +139,8 @@ class InvitationController extends BaseRequestAndInvitationController
             $invitation->getRequest()->setInviteForLeg($leg);
             $leg->addInvitation($invitation->getRequest());
 
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($invitation);
-            $em->flush();
+            $this->entityManager->persist($invitation);
+            $this->entityManager->flush();
 
             $this->sendInvitationNotification(
                 $host,
@@ -178,9 +176,9 @@ class InvitationController extends BaseRequestAndInvitationController
         $current = $conversation[0];
         $request = $current->getRequest();
         $request->setStatus(HostingRequest::REQUEST_DECLINED);
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($request);
-        $em->flush();
+
+        $this->entityManager->persist($request);
+        $this->entityManager->flush();
 
         $host = $message->getInitiator();
         $guest = $message->getReceiver() === $host ? $message->getSender() : $message->getReceiver();
@@ -441,7 +439,7 @@ class InvitationController extends BaseRequestAndInvitationController
     }
 
     /**
-     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
+     * @SuppressWarnings("PHPMD.BooleanArgumentFlag")
      *
      * @param mixed $subject
      */

@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\LoginMessageAcknowledged;
 use App\Entity\Member;
 use DateTime;
 use Doctrine\ORM\EntityRepository;
@@ -15,22 +16,22 @@ class LoginMessageRepository extends EntityRepository
      *
      * @return mixed
      */
-    public function getLoginMessages(Member $member)
+    public function getLoginMessages(Member $member): mixed
     {
         $qb = $this->createQueryBuilder('lm');
         $query = $qb
             ->leftJoin(
-                'App:LoginMessageAcknowledged',
+                LoginMessageAcknowledged::class,
                 'lma',
                 Join::WITH,
                 'lma.message = lm AND lma.member = :member'
             )
             ->where($qb->expr()->isNull('lma.message'))
             ->andWhere($qb->expr()->gt('lm.expires', ':now'))
-            ->setParameter(':now', new DateTime())
-            ->setParameter(':member', $member->getId())
+            ->setParameter('now', new DateTime())
+            ->setParameter('member', $member->getId())
             ->getQuery()
         ;
-        return  $query->getResult();
+        return $query->getResult();
     }
 }

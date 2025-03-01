@@ -43,9 +43,7 @@ class SignupController extends AbstractController
         $this->entityManager = $entityManager;
     }
 
-    /**
-     * @Route("/signup", name="signup", methods={"GET", "POST"})")
-     */
+    #[Route(path: '/signup', name: 'signup', methods: ['GET', 'POST'])]
     public function signup(
         Request $request,
         SignupModel $signupModel,
@@ -87,9 +85,7 @@ class SignupController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/signup/{username}/finalize", name="signup_finalize")
-     */
+    #[Route(path: '/signup/{username}/finalize', name: 'signup_finalize')]
     public function signupFinalize(
         Request $request,
         Member $member,
@@ -142,10 +138,8 @@ class SignupController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/signup/finish", name="signup_finish")
-     */
-    public function finishSignup(Request $request, Mailer $mailer): Response
+    #[Route(path: '/signup/finish', name: 'signup_finish')]
+    public function finishSignup(Request $request, Mailer $mailer, EntityManagerInterface $entityManager): Response
     {
         $signupVars = $request->getSession()->get('SignupBWVars');
 
@@ -155,7 +149,7 @@ class SignupController extends AbstractController
             $key = hash('sha256', strtolower($email) . ' - ' . strtolower($username));
 
             // Member isn't logged in at this time, so we need to find it in the database.
-            $memberRepository = $this->getDoctrine()->getRepository(Member::class);
+            $memberRepository = $entityManager->getRepository(Member::class);
             /** @var Member $member */
             $member = $memberRepository->findOneBy(['username' => $username]);
             if (!$member) {
@@ -191,17 +185,19 @@ class SignupController extends AbstractController
         return $this->render('signup/error.html.twig');
     }
 
-    /**
-     * @Route("/signup/resend/{username}", name="resend_confirmation_email")
-     */
-    public function resendConfirmationEmail(Member $member, AuthenticationUtils $helper, Mailer $mailer): Response
-    {
+    #[Route(path: '/signup/resend/{username}', name: 'resend_confirmation_email')]
+    public function resendConfirmationEmail(
+        Member $member,
+        AuthenticationUtils $helper,
+        Mailer $mailer,
+        EntityManagerInterface $entityManager
+    ): Response {
         $username = $member->getUsername();
         if ($helper->getLastUsername() !== $username) {
             throw $this->createAccessDeniedException();
         }
 
-        $memberRepository = $this->getDoctrine()->getRepository(Member::class);
+        $memberRepository = $entityManager->getRepository(Member::class);
         /** @var Member $member */
         $member = $memberRepository->findOneBy(['username' => $username]);
         if (!$member) {
@@ -226,9 +222,7 @@ class SignupController extends AbstractController
         return $this->render('signup/resent.html.twig', $parameters);
     }
 
-    /**
-     * @Route("/signup/confirm/{username}/{registrationKey}", name="signup_confirm")
-     */
+    #[Route(path: '/signup/confirm/{username}/{registrationKey}', name: 'signup_confirm')]
     public function confirmEmailAddress(Request $request, string $username, string $registrationKey): Response
     {
         $loggedInMember = $this->getUser();

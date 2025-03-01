@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Newsletter;
 use App\Entity\Word;
+use Doctrine\ORM\EntityManagerInterface;
 use Pagerfanta\Adapter\ArrayAdapter;
 use Pagerfanta\Pagerfanta;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -14,16 +15,13 @@ class NewsletterController extends AbstractController
 {
     /**
      * Show a page with all newsletters.
-     *
-     * @Route("/newsletters/{page}", name="newsletters")
-     *
-     * @param mixed $page
      */
-    public function showNewslettersOverview($page = 1)
+    #[Route(path: '/newsletters/{page}', name: 'newsletters')]
+    public function showNewslettersOverview(EntityManagerInterface $entityManager, int $page = 1)
     {
         $newsletters = [];
-        $newsletterRepository = $this->getDoctrine()->getRepository(Newsletter::class);
-        $translationRepository = $this->getDoctrine()->getRepository(Word::class);
+        $newsletterRepository = $entityManager->getRepository(Newsletter::class);
+        $translationRepository = $entityManager->getRepository(Word::class);
         $newslettersRaw = $newsletterRepository->findAllPublished();
 
         /** @var Newsletter $newsletter */
@@ -58,9 +56,8 @@ class NewsletterController extends AbstractController
 
     /**
      * Show a single newsletter translated.
-     *
-     * @Route("/newsletters/{id}/{language}", name="newsletter_single")
      */
+    #[Route(path: '/newsletters/{id}/{language}', name: 'newsletter_single')]
     public function showSingleNewsletter(Newsletter $newsletter, string $language)
     {
         $member = $this->getUser();
@@ -76,9 +73,8 @@ class NewsletterController extends AbstractController
 
     /**
      * This is used to define the route but never reached as the .htaccess loads files it finds directly.
-     *
-     * @Route("/images/newsletter/{id}", name="newsletter_uploaded_image")
      */
+    #[Route(path: '/images/newsletter/{id}', name: 'newsletter_uploaded_image')]
     public function serveImage(string $id): BinaryFileResponse
     {
         $filepath = $this->getParameter('newsletter_image_directory') . '/' . $id;

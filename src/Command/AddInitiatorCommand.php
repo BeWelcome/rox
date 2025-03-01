@@ -3,16 +3,21 @@
 namespace App\Command;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
+#[AsCommand(
+    name: 'database:add:initiator',
+    description: 'Set the initiator column for all messages',
+    aliases: [],
+    hidden: false,
+)]
 class AddInitiatorCommand extends Command
 {
-    protected static $defaultName = 'database:add:initiator';
-
     private array $initiators = [];
     private array $parents = [];
 
@@ -25,13 +30,6 @@ class AddInitiatorCommand extends Command
     {
         parent::__construct();
         $this->entityManager = $entityManager;
-    }
-
-    protected function configure()
-    {
-        $this
-            ->setDescription('Set the initiator column for all messages')
-        ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -52,7 +50,7 @@ class AddInitiatorCommand extends Command
 
         for ($i = 0; $i < $count; ++$i) {
             $progress->advance();
-            $row = $statement->fetch();
+            $row = $statement->fetchAssociative();
 
             $messageId = $row['id'];
             if ('30180' === $messageId) {

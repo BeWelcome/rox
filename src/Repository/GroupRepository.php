@@ -16,7 +16,7 @@ class GroupRepository extends EntityRepository
         $qb = $this->createQueryBuilder('g');
         for ($i = 0; $i < \count($nameParts); ++$i) {
             $qb->orWhere('g.name like :part' . $i)
-                ->setParameter(':part' . $i, '%' . $nameParts[$i] . '%');
+                ->setParameter('part' . $i, '%' . $nameParts[$i] . '%');
         }
         $qb->setMaxResults(12);
 

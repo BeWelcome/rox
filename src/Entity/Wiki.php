@@ -12,324 +12,104 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Ewiki.
  *
- * @ORM\Table(name="ewiki")
- * @ORM\Entity(repositoryClass="App\Repository\WikiRepository")
  *
- * @SuppressWarnings(PHPMD)
+ * @SuppressWarnings("PHPMD")
  * Auto generated class do not check mess
  */
+#[ORM\Table(name: 'ewiki')]
+#[ORM\Entity(repositoryClass: \App\Repository\WikiRepository::class)]
 class Wiki
 {
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="flags", type="integer", nullable=true)
-     */
-    private $flags = '0';
+    #[ORM\Column(name: 'content', type: 'text', length: 16777215, nullable: false)]
+    private string $content;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="content", type="text", length=16777215, nullable=true)
-     */
-    private $content;
+    #[ORM\Column(name: 'author', type: 'string', length: 100, nullable: false)]
+    private string $author = 'ewiki';
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="author", type="string", length=100, nullable=true)
-     */
-    private $author = 'ewiki';
+    #[ORM\Column(name: 'created', type: 'integer', nullable: true)]
+    private ?int $created = 1168175948;
 
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="created", type="integer", nullable=true)
-     */
-    private $created = '1168175948';
+    #[ORM\Column(name: 'lastmodified', type: 'integer', nullable: true)]
+    private ?int $lastmodified = null;
 
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="lastmodified", type="integer", nullable=true)
-     */
-    private $lastmodified = '0';
+    #[ORM\Column(name: 'pagename', type: 'string', length: 160)]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'NONE')]
+    private string $pagename;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="refs", type="text", length=16777215, nullable=true)
-     */
-    private $refs;
+    #[ORM\Column(name: 'version', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'NONE')]
+    private int $version;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="meta", type="text", length=16777215, nullable=true)
-     */
-    private $meta;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="hits", type="integer", nullable=true)
-     */
-    private $hits = '0';
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="pagename", type="string", length=160)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="NONE")
-     */
-    private $pagename;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="version", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="NONE")
-     */
-    private $version;
-
-    /**
-     * Set flags.
-     *
-     * @param int $flags
-     *
-     * @return Wiki
-     */
-    public function setFlags($flags)
-    {
-        $this->flags = $flags;
-
-        return $this;
-    }
-
-    /**
-     * Get flags.
-     *
-     * @return int
-     */
-    public function getFlags()
-    {
-        return $this->flags;
-    }
-
-    /**
-     * Set content.
-     *
-     * @param string $content
-     *
-     * @return Wiki
-     */
-    public function setContent($content)
+    public function setContent(string $content): self
     {
         $this->content = $content;
 
         return $this;
     }
 
-    /**
-     * Get content.
-     *
-     * @return string
-     */
-    public function getContent()
+    public function getContent(): string
     {
         return $this->content;
     }
 
-    /**
-     * Set author.
-     *
-     * @param string $author
-     *
-     * @return Wiki
-     */
-    public function setAuthor($author)
+    public function setAuthor(string $author): self
     {
         $this->author = $author;
 
         return $this;
     }
 
-    /**
-     * Get author.
-     *
-     * @return string
-     */
-    public function getAuthor()
+    public function getAuthor(): string
     {
         return $this->author;
     }
 
-    /**
-     * Set created.
-     *
-     * @param int $created
-     *
-     * @return Wiki
-     */
-    public function setCreated($created)
+    public function setCreated(int $created): self
     {
         $this->created = $created;
 
         return $this;
     }
 
-    /**
-     * Get created.
-     *
-     * @return int
-     */
-    public function getCreated()
+    public function getCreated(): int
     {
         return $this->created;
     }
 
-    /**
-     * Set lastmodified.
-     *
-     * @param int $lastmodified
-     *
-     * @return Wiki
-     */
-    public function setLastmodified($lastmodified)
+    public function setLastmodified(?int $lastmodified): self
     {
         $this->lastmodified = $lastmodified;
 
         return $this;
     }
 
-    /**
-     * Get lastmodified.
-     *
-     * @return int
-     */
-    public function getLastmodified()
+    public function getLastmodified(): ?int
     {
         return $this->lastmodified;
     }
 
-    /**
-     * Set refs.
-     *
-     * @param string $refs
-     *
-     * @return Wiki
-     */
-    public function setRefs($refs)
-    {
-        $this->refs = $refs;
-
-        return $this;
-    }
-
-    /**
-     * Get refs.
-     *
-     * @return string
-     */
-    public function getRefs()
-    {
-        return $this->refs;
-    }
-
-    /**
-     * Set meta.
-     *
-     * @param string $meta
-     *
-     * @return Wiki
-     */
-    public function setMeta($meta)
-    {
-        $this->meta = $meta;
-
-        return $this;
-    }
-
-    /**
-     * Get meta.
-     *
-     * @return string
-     */
-    public function getMeta()
-    {
-        return $this->meta;
-    }
-
-    /**
-     * Set hits.
-     *
-     * @param int $hits
-     *
-     * @return Wiki
-     */
-    public function setHits($hits)
-    {
-        $this->hits = $hits;
-
-        return $this;
-    }
-
-    /**
-     * Get hits.
-     *
-     * @return int
-     */
-    public function getHits()
-    {
-        return $this->hits;
-    }
-
-    /**
-     * Set pagename.
-     *
-     * @param string $pagename
-     *
-     * @return Wiki
-     */
-    public function setPagename($pagename)
+    public function setPagename(string $pagename): self
     {
         $this->pagename = $pagename;
 
         return $this;
     }
 
-    /**
-     * Get pagename.
-     *
-     * @return string
-     */
-    public function getPagename()
+    public function getPagename(): string
     {
         return $this->pagename;
     }
 
-    /**
-     * Set version.
-     *
-     * @param int $version
-     *
-     * @return Wiki
-     */
-    public function setVersion($version)
+    public function setVersion(int $version): self
     {
         $this->version = $version;
 
         return $this;
     }
 
-    /**
-     * Get version.
-     *
-     * @return int
-     */
-    public function getVersion()
+    public function getVersion(): int
     {
         return $this->version;
     }

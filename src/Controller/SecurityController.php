@@ -19,11 +19,9 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
  */
 class SecurityController extends AbstractController
 {
-    /**
-     * @Route("/login", name="login", defaults={"access_denied_redirect" = "/"}))
-     * @Route("/login", name="security_login", defaults={"access_denied_redirect" = "/"}))
-     * @Route("/login_check", name="security_check", defaults={"access_denied_redirect" = "/"}))
-     */
+    #[Route(path: '/login', name: 'login', defaults: ['access_denied_redirect' => '/'])]
+    #[Route(path: '/login', name: 'security_login', defaults: ['access_denied_redirect' => '/'])]
+    #[Route(path: '/login_check', name: 'security_check', defaults: ['access_denied_redirect' => '/'])]
     public function loginAction(AuthenticationUtils $helper): Response
     {
         $user = $this->getUser();
@@ -92,10 +90,10 @@ class SecurityController extends AbstractController
      * But, this will never be executed. Symfony will intercept this first
      * and handle the logout automatically. See logout in app/config/security.yml
      *
-     * @Route("/logout", name="security_logout")
      *
      * @throws Exception
      */
+    #[Route(path: '/logout', name: 'security_logout')]
     public function logoutAction()
     {
         throw new Exception('This should never be reached!');

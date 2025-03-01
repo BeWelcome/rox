@@ -4,58 +4,37 @@ namespace App\Utilities;
 
 use Carbon\Carbon;
 use DateTime;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Trait LifecycleCallbacksTrait.
  */
 trait LifecycleCallbacksTrait
 {
-    /**
-     * @var DateTime
-     *
-     * @ORM\Column(name="created", type="datetime", nullable=false)
-     */
-    private $created;
+    #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
+    private DateTime $created;
 
-    /**
-     * @var DateTime
-     *
-     * @ORM\Column(name="updated", type="datetime", nullable=true)
-     */
-    private $updated;
+    #[ORM\Column(name: 'updated', type: 'datetime', nullable: false)]
+    private DateTime $updated;
 
-    /**
-     * @return Carbon
-     */
-    public function getCreated()
+    public function getCreated(): Carbon
     {
         return Carbon::instance($this->created);
     }
 
-    /**
-     * @return Carbon
-     */
-    public function getUpdated()
+    public function getUpdated(): Carbon
     {
         return Carbon::instance($this->updated);
     }
 
-    /**
-     * Triggered on insert.
-     *
-     * @ORM\PrePersist
-     */
-    public function onPrePersist()
+    #[ORM\PrePersist()]
+    public function onPrePersist(): void
     {
         $this->created = new DateTime('now');
     }
 
-    /**
-     * Triggered on update.
-     *
-     * @ORM\PreUpdate
-     */
-    public function onPreUpdate()
+    #[ORM\PreUpdate()]
+    public function onPreUpdate(): void
     {
         $this->updated = new DateTime('now');
     }

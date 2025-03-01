@@ -7,17 +7,18 @@
 
 namespace App\Entity;
 
+use App\Repository\ActivityAttendeeRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * ActivityAttendee.
  *
- * @ORM\Table(name="activitiesattendees")
- * @ORM\Entity(repositoryClass="App\Repository\ActivityAttendeeRepository")
  *
- * @SuppressWarnings(PHPMD)
+ * @SuppressWarnings("PHPMD")
  * Auto generated class do not check mess
  */
+#[ORM\Table(name: 'activitiesattendees')]
+#[ORM\Entity(repositoryClass: ActivityAttendeeRepository::class)]
 class ActivityAttendee
 {
     public const ATTENDS_NO = 0;
@@ -26,48 +27,42 @@ class ActivityAttendee
 
     /**
      * @var Activity
-     *
-     * @ORM\Id
-     * @ORM\ManyToOne(targetEntity="\App\Entity\Activity", inversedBy="attendees")
-     * @ORM\JoinColumn(name="activityId", referencedColumnName="id")
      */
+    #[ORM\JoinColumn(name: 'activityId', referencedColumnName: 'id')]
+    #[ORM\Id]
+    #[ORM\ManyToOne(targetEntity: Activity::class, inversedBy: 'attendees')]
     private $activity;
 
     /**
      * @var Member
-     *
-     * @ORM\Id
-     * @ORM\ManyToOne(targetEntity="\App\Entity\Member")
-     * @ORM\JoinColumn(name="attendeeId", referencedColumnName="id")
      */
+    #[ORM\JoinColumn(name: 'attendeeId', referencedColumnName: 'id')]
+    #[ORM\Id]
+    #[ORM\ManyToOne(targetEntity: Member::class)]
     private $attendee;
 
     /**
      * @var bool
-     *
-     * @ORM\Column(name="organizer", type="smallint", nullable=false)
      */
+    #[ORM\Column(name: 'organizer', type: 'smallint', nullable: false)]
     private $organizer;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="status", type="smallint", nullable=false)
      */
+    #[ORM\Column(name: 'status', type: 'smallint', nullable: false)]
     private $status;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="comment", type="string", length=80, nullable=false)
      */
+    #[ORM\Column(name: 'comment', type: 'string', length: 80, nullable: false)]
     private $comment;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
     private $id;
 
 

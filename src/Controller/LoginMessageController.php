@@ -12,13 +12,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class LoginMessageController extends AbstractController
 {
-    /**
-     * @Route("/loginmessage/acknowledge/{id}",
-     *     name="acknowledge_login_message",
-     *     requirements={"id": "\d+"},
-     *     methods={"POST"}
-     * )
-     */
+    #[Route(path: '/loginmessage/acknowledge/{id}', name: 'acknowledge_login_message', requirements: ['id' => '\d+'], methods: ['POST'])]
     public function acknowledge(LoginMessage $loginMessage, EntityManagerInterface $entityManager): Response
     {
         /** @var Member $member */

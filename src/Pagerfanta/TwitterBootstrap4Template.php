@@ -7,8 +7,8 @@ use Pagerfanta\View\Template\TwitterBootstrap3Template;
 /**
  * TwitterBootstrap4Template.
  *
- * @SuppressWarnings(PHPMD.ExcessivePublicCount)
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ * @SuppressWarnings("PHPMD.ExcessivePublicCount")
+ * @SuppressWarnings("PHPMD.TooManyPublicMethods")
  */
 class TwitterBootstrap4Template extends TwitterBootstrap3Template
 {

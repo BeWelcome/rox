@@ -30,11 +30,11 @@ class StatisticsController extends AboutBaseController
     }
 
     /**
-     * @Route("/about/statistics", name="about_statistics")
-     * @Route("/about/stats", name="stats")
      *
      * @return Response
      */
+    #[Route(path: '/about/statistics', name: 'about_statistics')]
+    #[Route(path: '/about/stats', name: 'stats')]
     public function showAboutStatistics(Request $request)
     {
         return $this->render('about/statistics.html.twig', [
@@ -46,13 +46,11 @@ class StatisticsController extends AboutBaseController
     }
 
     /**
-     * @Route("/stats/members/{period}", name="stats_members",
-     *     requirements = {"period" = "weekly|daily"})
      *
      * @param string $period timeframe for data
-     *
      * @return JsonResponse
      */
+    #[Route(path: '/stats/members/{period}', name: 'stats_members', requirements: ['period' => 'weekly|daily'])]
     public function membersData(string $period)
     {
         $membersData = $this->statisticsModel->getMembersData($period);
@@ -64,13 +62,11 @@ class StatisticsController extends AboutBaseController
     }
 
     /**
-     * @Route("/stats/messages/sent/{period}", name="stats_messages_sent",
-     *     requirements = {"period" = "weekly|daily"})
      *
      * @param string $period timeframe for data
-     *
      * @return JsonResponse
      */
+    #[Route(path: '/stats/messages/sent/{period}', name: 'stats_messages_sent', requirements: ['period' => 'weekly|daily'])]
     public function sentMessagesData(string $period)
     {
         $membersData = $this->statisticsModel->getSentMessagesData($period);
@@ -82,13 +78,11 @@ class StatisticsController extends AboutBaseController
     }
 
     /**
-     * @Route("/stats/messages/read/{period}", name="stats_messages_read",
-     *     requirements = {"period" = "weekly|daily"})
      *
      * @param string $period timeframe for data
-     *
      * @return JsonResponse
      */
+    #[Route(path: '/stats/messages/read/{period}', name: 'stats_messages_read', requirements: ['period' => 'weekly|daily'])]
     public function readMessagesData(string $period)
     {
         $membersData = $this->statisticsModel->getReadMessagesData($period);
@@ -100,13 +94,11 @@ class StatisticsController extends AboutBaseController
     }
 
     /**
-     * @Route("/stats/requests/sent/{period}", name="stats_requests_sent",
-     *     requirements = {"period" = "weekly|daily"})
      *
      * @param string $period timeframe for data
-     *
      * @return JsonResponse
      */
+    #[Route(path: '/stats/requests/sent/{period}', name: 'stats_requests_sent', requirements: ['period' => 'weekly|daily'])]
     public function sentRequestsData(string $period)
     {
         $membersData = $this->statisticsModel->getSentRequestsData($period);
@@ -118,13 +110,11 @@ class StatisticsController extends AboutBaseController
     }
 
     /**
-     * @Route("/stats/requests/accepted/{period}", name="stats_requests_accepted",
-     *     requirements = {"period" = "weekly|daily"})
      *
      * @param string $period timeframe for data
-     *
      * @return JsonResponse
      */
+    #[Route(path: '/stats/requests/accepted/{period}', name: 'stats_requests_accepted', requirements: ['period' => 'weekly|daily'])]
     public function acceptedRequestsData(string $period)
     {
         $membersData = $this->statisticsModel->getAcceptedRequestsData($period);
@@ -136,13 +126,11 @@ class StatisticsController extends AboutBaseController
     }
 
     /**
-     * @Route("/stats/invitations/sent/{period}", name="stats_invitations_sent",
-     *     requirements = {"period" = "weekly|daily"})
      *
      * @param string $period timeframe for data
-     *
      * @return JsonResponse
      */
+    #[Route(path: '/stats/invitations/sent/{period}', name: 'stats_invitations_sent', requirements: ['period' => 'weekly|daily'])]
     public function sentInvitationsData(string $period)
     {
         $membersData = $this->statisticsModel->getSentInvitationsData($period);
@@ -154,13 +142,11 @@ class StatisticsController extends AboutBaseController
     }
 
     /**
-     * @Route("/stats/invitations/accepted/{period}", name="stats_invitations_accepted",
-     *     requirements = {"period" = "weekly|daily"})
      *
      * @param string $period timeframe for data
-     *
      * @return JsonResponse
      */
+    #[Route(path: '/stats/invitations/accepted/{period}', name: 'stats_invitations_accepted', requirements: ['period' => 'weekly|daily'])]
     public function acceptedInvitationsData(string $period)
     {
         $membersData = $this->statisticsModel->getAcceptedInvitationsData($period);
@@ -172,13 +158,11 @@ class StatisticsController extends AboutBaseController
     }
 
     /**
-     * @Route("/stats/legs/created/{period}", name="stats_legs_created",
-     *     requirements = {"period" = "weekly|daily"})
      *
      * @param string $period timeframe for data
-     *
      * @return JsonResponse
      */
+    #[Route(path: '/stats/legs/created/{period}', name: 'stats_legs_created', requirements: ['period' => 'weekly|daily'])]
     public function legsCreatedData(string $period)
     {
         $membersData = $this->statisticsModel->getLegsCreatedData($period);
@@ -190,10 +174,9 @@ class StatisticsController extends AboutBaseController
     }
 
     /**
-     * @Route("/stats/languages/spoken", name="stats_spoken_languages")
-     *
      * @return JsonResponse
      */
+    #[Route(path: '/stats/languages/spoken', name: 'stats_spoken_languages')]
     public function languagesData()
     {
         $languagesData = $this->statisticsModel->getLanguagesData();
@@ -205,10 +188,9 @@ class StatisticsController extends AboutBaseController
     }
 
     /**
-     * @Route("/stats/languages/preferred", name="stats_preferred_languages")
-     *
      * @return JsonResponse
      */
+    #[Route(path: '/stats/languages/preferred', name: 'stats_preferred_languages')]
     public function preferredLanguagesData()
     {
         $preferredLanguagesData = $this->statisticsModel->getPreferredLanguagesData();
@@ -220,10 +202,9 @@ class StatisticsController extends AboutBaseController
     }
 
     /**
-     * @Route("/stats/members/logins", name="stats_members_logins")
-     *
      * @return JsonResponse
      */
+    #[Route(path: '/stats/members/logins', name: 'stats_members_logins')]
     public function loginsData()
     {
         $data = $this->statisticsModel->getMembersPerLoginData();
@@ -235,10 +216,9 @@ class StatisticsController extends AboutBaseController
     }
 
     /**
-     * @Route("/stats/members/countries", name="stats_members_per_countries")
-     *
      * @return JsonResponse
      */
+    #[Route(path: '/stats/members/countries', name: 'stats_members_per_countries')]
     public function getMembersPerCountryData()
     {
         $data = $this->statisticsModel->getMembersPerCountryData();
@@ -250,14 +230,11 @@ class StatisticsController extends AboutBaseController
     }
 
     /**
-     * @Route("/stats/data/{type}", name="stats_data",
-     *     requirements = {"type" = "alltime|requests|last2month|other"},
-     *     defaults={"type": "alltime"})
      *
      * @param mixed $type
-     *
      * @return JsonResponse
      */
+    #[Route(path: '/stats/data/{type}', name: 'stats_data', requirements: ['type' => 'alltime|requests|last2month|other'], defaults: ['type' => 'alltime'])]
     public function data($type)
     {
         $data = [];
@@ -298,7 +275,7 @@ class StatisticsController extends AboutBaseController
     }
 
     /**
-     * @SuppressWarnings(PHPMD.StaticAccess)
+     * @SuppressWarnings("PHPMD.StaticAccess")
      */
     private function kickstartSession()
     {

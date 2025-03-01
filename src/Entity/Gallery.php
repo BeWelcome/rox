@@ -14,63 +14,55 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Gallery.
  *
- * @ORM\Table(name="gallery", indexes={
- *     @ORM\Index(name="gallery_user_id_foreign", columns={"user_id_foreign"})
- * })
- * @ORM\Entity
  *
- * @SuppressWarnings(PHPMD)
+ * @SuppressWarnings("PHPMD")
  * Auto generated class do not check mess
  */
+#[ORM\Table(name: 'gallery')]
+#[ORM\Index(name: 'gallery_user_id_foreign', columns: ['user_id_foreign'])]
+#[ORM\Entity]
 class Gallery
 {
     /**
      * @var Member
-     *
-     * @ORM\ManyToOne(targetEntity="Member", fetch="EAGER")
-     * @ORM\JoinColumn(name="user_id_foreign")
      */
+    #[ORM\JoinColumn(name: 'user_id_foreign')]
+    #[ORM\ManyToOne(targetEntity: \Member::class, fetch: 'EAGER')]
     private $owner;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="flags", type="blob", length=65535, nullable=false)
      */
+    #[ORM\Column(name: 'flags', type: 'blob', length: 65535, nullable: false)]
     private $flags;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="title", type="string", length=255, nullable=false)
      */
+    #[ORM\Column(name: 'title', type: 'string', length: 255, nullable: false)]
     private $title;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="text", type="text", length=16777215, nullable=false)
      */
+    #[ORM\Column(name: 'text', type: 'text', length: 16777215, nullable: false)]
     private $description;
 
     /**
      * @var ArrayCollection
-     *
-     * @ORM\ManyToMany(targetEntity="GalleryImage", inversedBy="galleries")
-     * @ORM\JoinTable(name="gallery_items_to_gallery",
-     *      joinColumns={@ORM\JoinColumn(name="gallery_id_foreign", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="item_id_foreign", referencedColumnName="id")}
-     *      )
      */
+    #[ORM\JoinTable(name: 'gallery_items_to_gallery')]
+    #[ORM\JoinColumn(name: 'gallery_id_foreign', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'item_id_foreign', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: \GalleryImage::class, inversedBy: 'galleries')]
     private $images;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     private $id;
 
     public function __construct()

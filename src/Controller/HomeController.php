@@ -16,11 +16,10 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 class HomeController extends AbstractController
 {
     /**
-     * @Route("/", name="homepage")
-     *
      * @return Response
      */
-    public function show(Request $request, StatisticsModel $statisticsModel, array $locales)
+    #[Route(path: '/', name: 'homepage')]
+    public function show(Request $request, StatisticsModel $statisticsModel, array $locales): Response
     {
         $member = $this->getUser();
         if ($member) {

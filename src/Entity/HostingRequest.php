@@ -7,9 +7,11 @@
 
 namespace App\Entity;
 
+use App\Repository\RequestRepository;
 use App\Utilities\LifecycleCallbacksTrait;
 use Carbon\Carbon;
 use DateTime;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Exception\InvalidArgumentException;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -17,90 +19,75 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * Request.
  *
- * @ORM\Table(name="request")
- * @ORM\Entity(repositoryClass="App\Repository\RequestRepository")
- * @ORM\HasLifecycleCallbacks
  *
- * @SuppressWarnings(PHPMD)
+ * @SuppressWarnings("PHPMD")
  * Auto generated class do not check mess
  */
+#[ORM\Table(name: 'request')]
+#[ORM\Entity(repositoryClass: RequestRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class HostingRequest
 {
     // Add created and updated
     use LifecycleCallbacksTrait;
 
-    public const REQUEST_OPEN = 0;
-    public const REQUEST_CANCELLED = 1;
-    public const REQUEST_DECLINED = 2;
-    public const REQUEST_TENTATIVELY_ACCEPTED = 4;
-    public const REQUEST_ACCEPTED = 8;
+    public const int REQUEST_OPEN = 0;
+    public const int REQUEST_CANCELLED = 1;
+    public const int REQUEST_DECLINED = 2;
+    public const int REQUEST_TENTATIVELY_ACCEPTED = 4;
+    public const int REQUEST_ACCEPTED = 8;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $id;
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
+    private int $id;
 
     /**
      * @var DateTime
      *
-     * @ORM\Column(name="arrival", type="datetime", nullable=false)
      *
-     * @Assert\NotBlank()
-     * @Assert\LessThanOrEqual(propertyPath="departure")
      */
-    private $arrival;
+    #[ORM\Column(name: 'arrival', type: 'datetime', nullable: false)]
+    #[Assert\NotBlank]
+    #[Assert\LessThanOrEqual(propertyPath: 'departure')]
+    private DateTime $arrival;
 
     /**
      * @var DateTime
      *
-     * @ORM\Column(name="departure", type="datetime", nullable=false)
      *
-     * @Assert\NotBlank()
-     * @Assert\GreaterThanOrEqual(propertyPath="arrival")
      */
-    private $departure;
+    #[ORM\Column(name: 'departure', type: 'datetime', nullable: false)]
+    #[Assert\NotBlank]
+    #[Assert\GreaterThanOrEqual(propertyPath: 'arrival')]
+    private DateTime $departure;
 
     /**
      * @var bool
-     *
-     * @ORM\Column(name="flexible", type="boolean", nullable=true)
      */
-    private $flexible = false;
+    #[ORM\Column(name: 'flexible', type: 'boolean', nullable: true)]
+    private bool $flexible = false;
 
     /**
      * @var int
      *
-     * @ORM\Column(name="number_of_travellers", type="integer")
-     *
-     * @Assert\Range(
-     *      min = 1,
-     *      max = 20,
-     *      minMessage = "At least one person must travel",
-     *      maxMessage = "Hosting more than 20 people is asking for too much"
-     * )     */
-    private $numberOfTravellers = 1;
+     *     */
+    #[ORM\Column(name: 'number_of_travellers', type: 'integer')]
+    #[Assert\Range(min: 1, max: 20, minMessage: 'At least one person must travel', maxMessage: 'Hosting more than 20 people is asking for too much')]
+    private int $numberOfTravellers = 1;
 
-    /**
-     * @ORM\Column(name="status", type="integer")
-     */
+    #[ORM\Column(name: 'status', type: 'integer')]
     private int $status = self::REQUEST_OPEN;
 
-    /**
-     * @var Subtrip
-     *
-     * @ORM\ManyToOne(targetEntity="Subtrip", inversedBy="invitations")
-     * @ORM\JoinColumn(name="invite_for_leg")
-     */
-    private $inviteForLeg = null;
+    #[ORM\JoinColumn(name: 'invite_for_leg', nullable: true)]
+    #[ORM\ManyToOne(targetEntity: Subtrip::class, inversedBy: 'invitations')]
+    private ?SubTrip $inviteForLeg = null;
 
-    /**
-     * @ORM\OneToMany(targetEntity="Message", mappedBy="request")
-     */
-    private $messages;
+    #[ORM\OneToMany(targetEntity: Message::class, mappedBy: 'request')]
+    private Collection $messages;
 
     /**
      * Get id.

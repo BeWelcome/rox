@@ -14,28 +14,28 @@ use Symfony\Component\Serializer\Annotation\Groups;
 /**
  * Language.
  *
- * @ORM\Table(name="languages", uniqueConstraints={@ORM\UniqueConstraint(name="ShortCode", columns={"ShortCode"})})
- * @ORM\Entity(repositoryClass="App\Repository\LanguageRepository")
  *
- * @SuppressWarnings(PHPMD)
+ * @SuppressWarnings("PHPMD")
  * Auto generated class do not check mess
  */
+#[ORM\Table(name: 'languages')]
+#[ORM\UniqueConstraint(name: 'ShortCode', columns: ['ShortCode'])]
+#[ORM\Entity(repositoryClass: \App\Repository\LanguageRepository::class)]
 class Language
 {
     /**
      * @var string
      *
-     * @ORM\Column(name="EnglishName", type="text", length=255, nullable=false)
      *
-     * @Groups({"Member:Read"})
      */
+    #[ORM\Column(name: 'EnglishName', type: 'text', length: 255, nullable: false)]
+    #[Groups(['Member:Read'])]
     private $englishname;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="Name", type="text", length=255, nullable=false)
      */
+    #[ORM\Column(name: 'Name', type: 'text', length: 255, nullable: false)]
     private $name;
 
     /**
@@ -46,61 +46,54 @@ class Language
     /**
      * @var string
      *
-     * @ORM\Column(name="ShortCode", type="string", length=16, nullable=false)
      *
-     * @Groups({"Member:Read"})
      */
+    #[ORM\Column(name: 'ShortCode', type: 'string', length: 16, nullable: false)]
+    #[Groups(['Member:Read'])]
     private $shortCode;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="WordCode", type="text", length=255, nullable=false)
      */
+    #[ORM\Column(name: 'WordCode', type: 'text', length: 255, nullable: false)]
     private $wordCode;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="FlagSortCriteria", type="integer", nullable=false)
      */
+    #[ORM\Column(name: 'FlagSortCriteria', type: 'integer', nullable: false)]
     private $flagsortcriteria = '0';
 
     /**
      * @var bool
-     *
-     * @ORM\Column(name="IsWrittenLanguage", type="boolean", nullable=false)
      */
+    #[ORM\Column(name: 'IsWrittenLanguage', type: 'boolean', nullable: false)]
     private $iswrittenlanguage = '0';
 
     /**
      * @var bool
-     *
-     * @ORM\Column(name="IsSpokenLanguage", type="boolean", nullable=false)
      */
+    #[ORM\Column(name: 'IsSpokenLanguage', type: 'boolean', nullable: false)]
     private $isspokenlanguage = '0';
 
     /**
      * @var bool
-     *
-     * @ORM\Column(name="IsSignLanguage", type="boolean", nullable=false)
      */
+    #[ORM\Column(name: 'IsSignLanguage', type: 'boolean', nullable: false)]
     private $issignlanguage = '0';
 
     /**
      * @var ArrayCollection
-     *
-     * @ORM\OneToMany(targetEntity="MembersLanguagesLevel", mappedBy="language")
      */
+    #[ORM\OneToMany(targetEntity: \MembersLanguagesLevel::class, mappedBy: 'language')]
     private $levels;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     private $id;
 
     public function __construct()

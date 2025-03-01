@@ -1,9 +1,7 @@
 <?php
 
 use App\Utilities\SessionTrait;
-use Symfony\Component\Templating\EngineInterface;
 use Twig\Environment;
-use Twig\Environmentment;
 
 class RoxFrontRouter
 {
@@ -469,7 +467,7 @@ A TERRIBLE EXCEPTION
             $page->layoutkit = $this->createLayoutkit();
         }
 
-        if (null !== $page  && method_exists($page, 'render')) {
+        if (null !== $page && $page !== false && method_exists($page, 'render')) {
             // do the rendering here
             // (this case is for backwards compatibility)
             $page->render();

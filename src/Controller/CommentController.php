@@ -20,7 +20,7 @@ use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -45,16 +45,19 @@ class CommentController extends AbstractController
     }
 
     /**
-     * @Route("/members/{to_member}/comment/{from_member}/report", name="report_comment",
-     *     requirements={"username" = "(?i:[a-z](?!.*[-_.][-_.])[a-z0-9-._]{2,18}[a-z0-9])"}))
      *
      * @ParamConverter("toMember", class="App\Entity\Member", options={"mapping": {"to_member": "username"}})
      * @ParamConverter("fromMember", class="App\Entity\Member", options={"mapping": {"from_member": "username"}})
      */
+    #[Route(
+        path: '/members/{to_member}/comment/{from_member}/report',
+        name: 'report_comment',
+        requirements: ['username' => '(?i:[a-z](?!.*[-_.][-_.])[a-z0-9-._]{2,18}[a-z0-9])']
+    )]
     public function reportCommentAction(
         Request $request,
-        Member $toMember,
-        Member $fromMember,
+        #[MapEntity(mapping: ['to_member' => 'username'])] Member $toMember,
+        #[MapEntity(mapping: ['from_member' => 'username'])] Member $fromMember,
         EntityManagerInterface $entityManager,
         Mailer $mailer
     ): Response {
@@ -118,10 +121,7 @@ class CommentController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/members/{username}/comment/add", name="add_comment",
-     *     requirements={"username" = "(?i:[a-z](?!.*[-_.][-_.])[a-z0-9-._]{2,18}[a-z0-9])"}))
-     */
+    #[Route(path: '/members/{username}/comment/add', name: 'add_comment', requirements: ['username' => '(?i:[a-z](?!.*[-_.][-_.])[a-z0-9-._]{2,18}[a-z0-9])'])]
     public function addComment(
         Request $request,
         Member $member,
@@ -212,11 +212,9 @@ class CommentController extends AbstractController
     }
 
     /**
-     * @Route("/members/{username}/comment/edit", name="edit_comment",
-     *     requirements={"username" = "(?i:[a-z](?!.*[-_.][-_.])[a-z0-9-._]{2,18}[a-z0-9])"}))
-     *
      * @return Response|RedirectResponse
      */
+    #[Route(path: '/members/{username}/comment/edit', name: 'edit_comment', requirements: ['username' => '(?i:[a-z](?!.*[-_.][-_.])[a-z0-9-._]{2,18}[a-z0-9])'])]
     public function editComment(
         Request $request,
         Member $member,
@@ -303,15 +301,14 @@ class CommentController extends AbstractController
     }
 
     /**
-     * @Route("/members/{from_member}/comment/{to_member}/new", name="comment_new_experience",
-     *     requirements={"username" = "(?i:[a-z](?!.*[-_.][-_.])[a-z0-9-._]{2,18}[a-z0-9])"}))
      *
      * @ParamConverter("toMember", class="App\Entity\Member", options={"mapping": {"to_member": "username"}})
      * @ParamConverter("fromMember", class="App\Entity\Member", options={"mapping": {"from_member": "username"}})
      */
+    #[Route(path: '/members/{from_member}/comment/{to_member}/new', name: 'comment_new_experience', requirements: ['username' => '(?i:[a-z](?!.*[-_.][-_.])[a-z0-9-._]{2,18}[a-z0-9])'])]
     public function setNewExperienceForComment(
-        Member $fromMember,
-        Member $toMember,
+        #[MapEntity(mapping: ['from_member' => 'username'])] Member $fromMember,
+        #[MapEntity(mapping: ['to_member' => 'username'])] Member $toMember,
         CommentModel $commentModel,
         EntityManagerInterface $entityManager
     ): RedirectResponse {
@@ -335,10 +332,7 @@ class CommentController extends AbstractController
         return $this->redirectToRoute('profile_comments', ['username' => $fromMember->getUsername()]);
     }
 
-    /**
-     * @Route("/members/{username}/comments", name="profile_comments",
-     *     requirements={"username" = "(?i:[a-z](?!.*[-_.][-_.])[a-z0-9-._]{2,18}[a-z0-9])"}))
-     */
+    #[Route(path: '/members/{username}/comments', name: 'profile_comments', requirements: ['username' => '(?i:[a-z](?!.*[-_.][-_.])[a-z0-9-._]{2,18}[a-z0-9])'])]
     public function showCommentsForMember(
         Member $member,
         ProfileModel $profileModel,

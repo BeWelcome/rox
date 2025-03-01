@@ -12,7 +12,7 @@ class LanguageFilter extends SQLFilter
     /** @var Reader */
     protected $reader;
 
-    public function addFilterConstraint(ClassMetadata $targetEntity, $targetTableAlias)
+    public function addFilterConstraint(ClassMetadata $targetEntity, $targetTableAlias): string
     {
         if (empty($this->reader)) {
             return '';

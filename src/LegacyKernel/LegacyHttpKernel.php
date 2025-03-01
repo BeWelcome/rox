@@ -2,17 +2,14 @@
 
 namespace App\LegacyKernel;
 
+use Psr\Container\ContainerInterface;
 use RoxFrontRouter;
 use SessionMemory;
-use Symfony\Component\DependencyInjection\Container;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface;
-use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
+use Symfony\Component\HttpKernel\Controller\ControllerResolver;
 use Symfony\Component\HttpKernel\HttpKernel;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Twig\Environment;
@@ -20,37 +17,18 @@ use Twig\Environment;
 /**
  * Fallback dispatcher for requests that Symfony couldn't match.
  *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings("PHPMD.CouplingBetweenObjects")
  */
 class LegacyHttpKernel extends HttpKernel
 {
-    /**
-     * @var Environment
-     */
-    protected $environment;
-
-    /**
-     * @var Container
-     */
-    private $container;
+    protected Environment $environment;
 
     public function __construct(
-        Environment $environment,
-        EventDispatcherInterface $dispatcher,
-        ControllerResolverInterface $resolver,
-        RequestStack $requestStack,
-        ArgumentResolverInterface $argumentResolver,
-        ContainerInterface $container
+        Environment $environment
     ) {
         $this->environment = $environment;
-        $this->container = $container;
 
-        parent::__construct($dispatcher, $resolver, $requestStack, $argumentResolver);
-    }
-
-    public function getContainer()
-    {
-        return $this->container;
+        parent::__construct(new EventDispatcher(), new ControllerResolver());
     }
 
     /**
@@ -59,13 +37,13 @@ class LegacyHttpKernel extends HttpKernel
      *
      * @return Response
      *
-     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings("PHPMD.BooleanArgumentFlag")
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      *
      * The next one is triggered by preg_match. PHP doc says everything's fine with that.
-     * @SuppressWarnings(PHPMD.UndefinedVariable)
+     * @SuppressWarnings("PHPMD.UndefinedVariable")
      */
-    public function handle(Request $request, $type = HttpKernelInterface::MASTER_REQUEST, $catch = true)
+    public function handle(Request $request, int $type = HttpKernelInterface::MAIN_REQUEST, bool $catch = true): Response
     {
         $router = new RoxFrontRouter($this->environment);
         // The only classname ever used

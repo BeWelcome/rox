@@ -10,9 +10,7 @@ trait ManagerTrait
     /** @var EntityManager */
     private $em;
 
-    /**
-     * @required
-     */
+    #[\Symfony\Contracts\Service\Attribute\Required]
     public function setManager(EntityManagerInterface $entityManager)
     {
         $this->em = $entityManager;

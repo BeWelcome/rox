@@ -7,6 +7,7 @@
 
 namespace App\Entity;
 
+use App\Repository\DonationRepository;
 use Carbon\Carbon;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
@@ -14,101 +15,89 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * DonationEntity.
  *
- * @ORM\Table(name="donations")
- * @ORM\Entity(repositoryClass="App\Repository\DonationRepository")
- * @ORM\HasLifecycleCallbacks
  *
- * @SuppressWarnings(PHPMD)
+ * @SuppressWarnings("PHPMD")
  * Auto generated class do not check mess
  */
+#[ORM\Table(name: 'donations')]
+#[ORM\Entity(repositoryClass: DonationRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Donation
 {
     /**
      * @var Member
-     *
-     * @ORM\ManyToOne(targetEntity="Member")
-     * @ORM\JoinColumn(name="IdMember", referencedColumnName="id")
      */
+    #[ORM\JoinColumn(name: 'IdMember', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: Member::class)]
     private $donor;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="Email", type="text", length=255, nullable=false)
      */
+    #[ORM\Column(name: 'Email', type: 'text', length: 255, nullable: false)]
     private $email;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="StatusPrivate", type="string", nullable=false)
      */
+    #[ORM\Column(name: 'StatusPrivate', type: 'string', nullable: false)]
     private $statusPrivate = 'showamountonly';
 
     /**
      * @var DateTime
-     *
-     * @ORM\Column(name="created", type="datetime", nullable=false)
      */
+    #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
     private $created;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="Amount", type="decimal", precision=10, scale=2, nullable=false)
      */
+    #[ORM\Column(name: 'Amount', type: 'decimal', precision: 10, scale: 2, nullable: false)]
     private $amount;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="Money", type="string", length=10, nullable=false)
      */
+    #[ORM\Column(name: 'Money', type: 'string', length: 10, nullable: false)]
     private $money;
 
     /**
      * @var NewLocation
-     *
-     * @ORM\ManyToOne(targetEntity="NewLocation")
-     * @ORM\JoinColumn(name="IdCountry", referencedColumnName="geonameId")
      */
+    #[ORM\JoinColumn(name: 'IdCountry', referencedColumnName: 'geonameId')]
+    #[ORM\ManyToOne(targetEntity: NewLocation::class)]
     private $country;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="namegiven", type="text", length=65535, nullable=false)
      */
+    #[ORM\Column(name: 'namegiven', type: 'text', length: 65535, nullable: false)]
     private $nameGiven;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="referencepaypal", type="text", length=65535, nullable=false)
      */
+    #[ORM\Column(name: 'referencepaypal', type: 'text', length: 65535, nullable: false)]
     private $referencePaypal;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="membercomment", type="text", length=65535, nullable=false)
      */
+    #[ORM\Column(name: 'membercomment', type: 'text', length: 65535, nullable: false)]
     private $memberComment;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="SystemComment", type="text", length=65535, nullable=false)
      */
+    #[ORM\Column(name: 'SystemComment', type: 'text', length: 65535, nullable: false)]
     private $systemComment;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     private $id;
 
     public function setDonor($donor): self
@@ -250,9 +239,8 @@ class Donation
 
     /**
      * Triggered on insert.
-     *
-     * @ORM\PrePersist
      */
+    #[ORM\PrePersist]
     public function onPrePersist()
     {
         $this->created = new DateTime('now');

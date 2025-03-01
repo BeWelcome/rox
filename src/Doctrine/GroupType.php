@@ -4,15 +4,13 @@ namespace App\Doctrine;
 
 class GroupType extends EnumType
 {
-    public const PUBLIC = 'Public';
-    public const NEED_ACCEPTANCE = 'NeedAcceptance';
-    public const INVITE_ONLY = 'NeedInvitation';
+    public const string PUBLIC = 'Public';
+    public const string NEED_ACCEPTANCE = 'NeedAcceptance';
+    public const string INVITE_ONLY = 'NeedInvitation';
 
-    /** @var string */
-    protected $name = 'group_type';
+    protected string $name = 'group_type';
 
-    /** @var array */
-    protected $values = [
+    protected array $values = [
         self::PUBLIC,
         self::NEED_ACCEPTANCE,
         self::INVITE_ONLY,

@@ -24,10 +24,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class MassmailController extends AbstractController
 {
-    /**
-     * @Route("/admin/massmail/test/{id}", name="admin_massmail_test",
-     *     requirements={"id"="\d+"})
-     */
+    #[Route(path: '/admin/massmail/test/{id}', name: 'admin_massmail_test', requirements: ['id' => '\d+'])]
     public function testMassmailSending(
         Request $request,
         Newsletter $newsletter,

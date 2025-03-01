@@ -25,7 +25,7 @@ class ConversationsModel
     /**
      * Mark a message as purged (can not be unmarked).
      *
-     * @SuppressWarnings(PHPMD.StaticAccess)
+     * @SuppressWarnings("PHPMD.StaticAccess")
      */
     public function markConversationsPurged(Member $member, array $conversationIds): void
     {

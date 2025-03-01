@@ -11,6 +11,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -19,10 +20,14 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
+#[AsCommand(
+    name: 'comments:send:reminder',
+    description: 'Send a batch of comment reminders everytime the command is called',
+    aliases: [],
+    hidden: false,
+)]
 class SendCommentReminderCommand extends Command
 {
-    protected static $defaultName = 'comments:send:reminder';
-
     private EntityManagerInterface $entityManager;
     private Mailer $mailer;
     private SymfonyStyle $io;
@@ -34,15 +39,15 @@ class SendCommentReminderCommand extends Command
         Mailer $mailer
     ) {
         parent::__construct();
+
         $this->entityManager = $entityManager;
         $this->mailer = $mailer;
         $this->logger = $logger;
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
-            ->setDescription('Send a batch of comment reminders everytime the command is called')
             ->addOption('first', null, InputOption::VALUE_NONE, 'Send the first comment reminder for guests')
             ->addOption('second', null, InputOption::VALUE_NONE, 'Send the second comment reminder for guests')
             ->addOption('host', null, InputOption::VALUE_NONE, 'Send the host comment reminder')

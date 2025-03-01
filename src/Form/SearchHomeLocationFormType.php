@@ -8,11 +8,12 @@ use Symfony\Component\Form\FormBuilderInterface;
 class SearchHomeLocationFormType extends MinimalSearchFormType
 {
     /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         parent::buildForm($builder, $options);
+
         $builder
             ->add('search', HiddenType::class);
     }

@@ -14,80 +14,56 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * MemberTranslation.
  *
- * @ORM\Table(name="memberstrads",
- *     uniqueConstraints={@ORM\UniqueConstraint(name="Unique_entry", columns={"IdTrad", "IdOwner", "IdLanguage"})},
- *     indexes={
- *         @ORM\Index(name="memberstrads_trads", columns={"IdTrad"}),
- *         @ORM\Index(name="memberstrads_language", columns={"IdLanguage"}),
- *         @ORM\Index(name="memberstrads_trad_language", columns={"IdLanguage", "IdTrad"})
- *      }
- *     )
- * @ORM\Entity
- * @ORM\HasLifecycleCallbacks
  *
- * @SuppressWarnings(PHPMD)
+ * @SuppressWarnings("PHPMD")
  * Auto generated class do not check mess
  */
+#[ORM\Table(name: 'memberstrads')]
+#[ORM\Index(name: 'memberstrads_trads', columns: ['IdTrad'])]
+#[ORM\Index(name: 'memberstrads_language', columns: ['IdLanguage'])]
+#[ORM\Index(name: 'memberstrads_trad_language', columns: ['IdLanguage', 'IdTrad'])]
+#[ORM\UniqueConstraint(name: 'Unique_entry', columns: ['IdTrad', 'IdOwner', 'IdLanguage'])]
+#[ORM\UniqueConstraint(name: 'Owner_TableColumn', columns: ['IdOwner', 'IdTrad', 'TableColumn', 'IdLanguage'])]
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class MemberTranslation
 {
-    /**
-     * @ORM\ManyToOne(targetEntity="Member", fetch="EAGER")
-     * @ORM\JoinColumn(name="IdOwner", referencedColumnName="id")
-     */
+    #[ORM\JoinColumn(name: 'IdOwner', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: \Member::class, inversedBy: 'translatedFields')]
     private Member $owner;
 
-    /**
-     * @ORM\Column(name="IdTrad", type="integer", nullable=false)
-     */
+    #[ORM\Column(name: 'IdTrad', type: 'integer', nullable: false)]
     private int $translation;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Member", fetch="LAZY")
-     * @ORM\JoinColumn(name="IdTranslator", nullable=false)
-     */
+    #[ORM\JoinColumn(name: 'IdTranslator', nullable: false)]
+    #[ORM\ManyToOne(targetEntity: \Member::class, fetch: 'LAZY')]
     private Member $translator;
 
-    /**
-     * @ORM\Column(name="updated", type="datetime", nullable=true)
-     */
+    #[ORM\Column(name: 'updated', type: 'datetime', nullable: true)]
     private DateTime $updated;
 
-    /**
-     * @ORM\Column(name="created", type="datetime", nullable=false)
-     */
+    #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
     private DateTime $created;
 
-    /**
-     * @ORM\Column(name="Type", type="string", nullable=false)
-     */
+    #[ORM\Column(name: 'Type', type: 'string', nullable: false)]
     private string $type = 'member';
 
-    /**
-     * @ORM\Column(name="Sentence", type="text", length=65535, nullable=false)
-     */
+    #[ORM\Column(name: 'Sentence', type: 'text', length: 65535, nullable: false)]
     private string $sentence;
 
-    /**
-     * @ORM\Column(name="IdRecord", type="integer", nullable=false)
-     */
+    #[ORM\Column(name: 'IdRecord', type: 'integer', nullable: false)]
     private int $record = -1;
 
-    /**
-     * @ORM\Column(name="TableColumn", type="string", length=200, nullable=false)
-     */
+    #[ORM\Column(name: 'TableColumn', type: 'string', length: 200, nullable: false)]
     private string $tableColumn = 'NotSet';
 
-    /**
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     private int $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Language")
-     *   @ORM\JoinColumn(name="IdLanguage", referencedColumnName="id")
-     */
+    #[ORM\JoinColumn(name: 'IdLanguage', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: \Language::class)]
     private Language $language;
 
     public function setOwner(Member $owner):self
@@ -217,9 +193,8 @@ class MemberTranslation
 
     /**
      * Triggered on insert.
-     *
-     * @ORM\PrePersist
      */
+    #[ORM\PrePersist]
     public function onPrePersist()
     {
         $this->created = new DateTime('now');
@@ -229,9 +204,8 @@ class MemberTranslation
 
     /**
      * Triggered after insert.
-     *
-     * @ORM\PostPersist
      */
+    #[ORM\PostPersist]
     public function onPostPersist()
     {
         $this->translation = $this->id;
@@ -239,9 +213,8 @@ class MemberTranslation
 
     /**
      * Triggered on update.
-     *
-     * @ORM\PreUpdate
      */
+    #[ORM\PreUpdate]
     public function onPreUpdate()
     {
         $this->updated = new DateTime('now');

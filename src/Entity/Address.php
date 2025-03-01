@@ -15,88 +15,60 @@ use Symfony\Component\Serializer\Annotation\Groups;
 /**
  * Addresses.
  *
- * @ORM\Table(name="addresses", indexes={
- *     @ORM\Index(name="address_member", columns={"IdMember"}),
- *     @ORM\Index(name="address_city", columns={"IdCity"}),
- *     @ORM\Index(name="CityAndRank", columns={"IdCity", "Rank"})
- * })
- * @ORM\HasLifecycleCallbacks
- * @ORM\Entity
  *
- * @SuppressWarnings(PHPMD)
+ * @SuppressWarnings("PHPMD")
  * Auto generated class do not check mess
  */
+#[ORM\Table(name: 'addresses')]
+#[ORM\Index(name: 'address_member', columns: ['IdMember'])]
+#[ORM\Index(name: 'address_city', columns: ['IdCity'])]
+#[ORM\Index(name: 'CityAndRank', columns: ['IdCity', 'Rank'])]
+#[ORM\HasLifecycleCallbacks]
+#[ORM\Entity]
 class Address
 {
-    /**
-     * @ORM\ManyToOne(targetEntity="Member", inversedBy="addresses")
-     * @ORM\JoinColumn(name="IdMember", referencedColumnName="id")
-     */
+    #[ORM\JoinColumn(name: 'IdMember', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: Member::class, inversedBy: 'addresses')]
     private Member $member;
 
-    /**
-     * @ORM\Column(name="HouseNumber", type="integer", nullable=false)
-     *
-     * @Groups({"Member:Read"})
-     */
+    #[ORM\Column(name: 'HouseNumber', type: 'integer', nullable: false)]
+    #[Groups(['Member:Read'])]
     private int $houseNumber;
 
-    /**
-     * @ORM\Column(name="StreetName", type="integer", nullable=false)
-     *
-     * @Groups({"Member:Read"})
-     */
+    #[ORM\Column(name: 'StreetName', type: 'integer', nullable: false)]
+    #[Groups(['Member:Read'])]
     private int $streetName;
 
-    /**
-     * @ORM\Column(name="Zip", type="integer", nullable=false)
-     *
-     * @Groups({"Member:Read"})
-     */
+    #[ORM\Column(name: 'Zip', type: 'integer', nullable: false)]
+    #[Groups(['Member:Read'])]
     private int $zip;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="NewLocation")
-     * @ORM\JoinColumn(name="IdCity", referencedColumnName="geonameId")
-     *
-     * @Groups({"Member:Read"})
-     */
+    #[ORM\JoinColumn(name: 'IdCity', referencedColumnName: 'geonameId')]
+    #[ORM\ManyToOne(targetEntity: NewLocation::class)]
+    #[Groups(['Member:Read'])]
     private NewLocation $location;
 
     private float $latitude;
     private float $longitude;
 
-    /**
-     * @ORM\Column(name="Explanation", type="integer", nullable=false)
-     */
+    #[ORM\Column(name: 'Explanation', type: 'integer', nullable: false)]
     private int $explanation;
 
-    /**
-     *
-     * @ORM\Column(name="Rank", type="integer", nullable=false)
-     */
+    #[ORM\Column(name: 'Rank', type: 'integer', nullable: false)]
     private int $rank = 0;
 
-    /**
-     * @ORM\Column(name="created", type="datetime", nullable=false)
-     */
+    #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
     private DateTime $created;
 
-    /**
-     * @ORM\Column(name="updated", type="datetime", nullable=false)
-     */
+    #[ORM\Column(name: 'updated', type: 'datetime', nullable: false)]
     private DateTime $updated;
 
-    /**
-     * @ORM\Column(name="IdGettingThere", type="integer", nullable=false)
-     */
+    #[ORM\Column(name: 'IdGettingThere', type: 'integer', nullable: false)]
     private int $gettingThere = 0;
 
-    /**
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     private int $id;
 
     public function setMember(Member $member): self
@@ -247,9 +219,8 @@ class Address
 
     /**
      * Triggered on insert.
-     *
-     * @ORM\PrePersist
      */
+    #[ORM\PrePersist]
     public function onPrePersist()
     {
         $this->created = new DateTime('now');
@@ -258,9 +229,8 @@ class Address
 
     /**
      * Triggered on update.
-     *
-     * @ORM\PreUpdate
      */
+    #[ORM\PreUpdate]
     public function onPreUpdate()
     {
         $this->updated = new DateTime('now');

@@ -14,13 +14,14 @@ use Pagerfanta\Pagerfanta;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SearchController extends AbstractController
@@ -33,10 +34,9 @@ class SearchController extends AbstractController
     }
 
     /**
-     * @Route("/search/members", name="search_members")
-     *
      * @return Response
      */
+    #[Route(path: '/search/members', name: 'search_members')]
     public function searchMembers(Request $request)
     {
         $members = null;
@@ -69,17 +69,17 @@ class SearchController extends AbstractController
     }
 
     /**
-     * @Route("/search/locations", name="search_locations")
      *
      * @return Response
      *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.StaticAccess)
+     * @SuppressWarnings("PHPMD.CyclomaticComplexity")
+     * @SuppressWarnings("PHPMD.StaticAccess")
      */
+    #[Route(path: '/search/locations', name: 'search_locations')]
     public function searchLocations(
         Request $request,
-        SessionInterface $session,
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
+        FormFactoryInterface $formFactory
     ): Response {
         $pager = null;
         $results = null;
@@ -112,7 +112,6 @@ class SearchController extends AbstractController
         $searchFormRequest->show_options = ('Yes' === $showOptions);
 
         // There are three different forms that might end up on this page
-        $formFactory = $this->get('form.factory');
         $tiny = $formFactory->createNamed('tiny', SearchFormType::class, $searchFormRequest);
         $home = $formFactory->createNamed('home', SearchFormType::class, $searchFormRequest);
         /** @var FormInterface $search */
@@ -171,7 +170,7 @@ class SearchController extends AbstractController
 
             $searchAdapter = new SearchAdapter(
                 $data,
-                $session,
+                $request->getSession(),
                 $em,
                 $translator,
                 $this->getParameter('database_host'),
@@ -209,13 +208,12 @@ class SearchController extends AbstractController
      * This method is used on the home screen to allow people interested in BeWelcome to check how many members are
      * available in a location.
      *
-     * @Route("/search/map", name="search_map")
      *
      * @return Response|RedirectResponse
-     *
-     * @SuppressWarnings(PHPMD.StaticAccess)
+     * @SuppressWarnings("PHPMD.StaticAccess")
      */
-    public function searchOnMap(Request $request, SessionInterface $session, TranslatorInterface $translator): Response
+    #[Route(path: '/search/map', name: 'search_map')]
+    public function searchOnMap(Request $request, TranslatorInterface $translator): Response
     {
         // do not allow access to this page when logged in, redirect to /search/locations
         if (null !== $this->getUser()) {
@@ -237,15 +235,15 @@ class SearchController extends AbstractController
             $searchFormRequest->location_longitude = $data['location_longitude'];
             $searchFormRequest->accommodation_anytime = true;
             $searchFormRequest->accommodation_neverask = true;
-            $searchFormRequest->profile_picture = false;
-            $searchFormRequest->about_me = false;
+            $searchFormRequest->has_profile_picture = false;
+            $searchFormRequest->has_about_me = false;
             $searchFormRequest->has_comments = false;
             $searchFormRequest->last_login = 2400;
             $searchFormRequest->distance = 100;
 
             $searchAdapter = new SearchAdapter(
                 $searchFormRequest,
-                $session,
+                $request->getSession(),
                 $this->entityManager,
                 $translator,
                 $this->getParameter('database_host'),
@@ -268,12 +266,9 @@ class SearchController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/search/locations/ajax", name="search_members_ajax")
-     */
+    #[Route(path: '/search/locations/ajax', name: 'search_members_ajax')]
     public function searchGetPageResultsAjax(
         Request $request,
-        SessionInterface $session,
         TranslatorInterface $translator
     ): Response {
         if ('POST' !== $request->getMethod()) {
@@ -286,7 +281,7 @@ class SearchController extends AbstractController
 
         $searchAdapter = new SearchAdapter(
             $searchFormRequest,
-            $session,
+            $request->getSession(),
             $this->entityManager,
             $translator,
             $this->getParameter('database_host'),
@@ -313,7 +308,7 @@ class SearchController extends AbstractController
         // if distance isn't set through Javascript on map.
         // This provides a bounding box to the JS code to zoom into the map for the results.
         if ($request->query->has('search')) {
-            $parameters = $request->query->get('search');
+            $parameters = $request->query->all('search');
             if ('-1' !== $parameters['distance']) {
                 $parameters['ne_latitude'] = $searchFormRequest->ne_latitude;
                 $parameters['ne_longitude'] = $searchFormRequest->ne_longitude;

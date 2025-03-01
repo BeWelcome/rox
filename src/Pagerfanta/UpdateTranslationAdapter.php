@@ -2,7 +2,7 @@
 
 namespace App\Pagerfanta;
 
-use Doctrine\DBAL\Driver\Connection;
+use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
 use Pagerfanta\Adapter\AdapterInterface;
 use PDO;
@@ -16,7 +16,7 @@ class UpdateTranslationAdapter implements AdapterInterface
     /**
      * SearchAdapter constructor.
      *
-     * @SuppressWarnings(PHPMD.StaticAccess)
+     * @SuppressWarnings("PHPMD.StaticAccess")
      */
     public function __construct(Connection $connection, string $locale)
     {
@@ -36,8 +36,8 @@ class UpdateTranslationAdapter implements AdapterInterface
                 words w1,
                 words w2
             WHERE
-                w1.shortcode = 'en'
-                AND w2.shortcode = :locale
+                w1.shortCode = 'en'
+                AND w2.shortCode = :locale
                 AND (w1.isarchived = 0
                 OR w1.isArchived IS NULL)
                 AND (w1.donottranslate = 'No')
@@ -45,10 +45,10 @@ class UpdateTranslationAdapter implements AdapterInterface
                 AND (w1.majorUpdate > w2.updated
                 OR w1.updated > w2.updated)
             ORDER BY w1.updated DESC;");
-        $statement->execute(['locale' => $this->locale]);
-        $result = $statement->fetch(PDO::FETCH_OBJ);
+        $result = $statement->executeQuery(['locale' => $this->locale]);
+        $count = $result->fetchOne();
 
-        return $result->cnt;
+        return $count;
     }
 
     /**
@@ -60,7 +60,7 @@ class UpdateTranslationAdapter implements AdapterInterface
             SELECT
                 w2.code,
                 w2.domain,
-                w2.shortcode,
+                w2.shortCode,
                 w2.sentence,
                 w2.created,
                 IF(w1.majorUpdate > w2.updated, 1, 0) as majorUpdate
@@ -68,8 +68,8 @@ class UpdateTranslationAdapter implements AdapterInterface
                 words w1,
                 words w2
             WHERE
-                w1.shortcode = 'en'
-                AND w2.shortcode = :locale
+                w1.shortCode = 'en'
+                AND w2.shortCode = :locale
                 AND (w1.isarchived = 0
                 OR w1.isArchived IS NULL)
                 AND (w1.donottranslate = 'No')
@@ -82,8 +82,8 @@ class UpdateTranslationAdapter implements AdapterInterface
         $statement->bindValue('locale', $this->locale, ParameterType::STRING);
         $statement->bindValue('limit', $length, ParameterType::INTEGER);
         $statement->bindValue('offset', $offset, ParameterType::INTEGER);
-        $statement->execute();
+        $result = $statement->executeQuery();
 
-        return $statement->fetchAll();
+        return $result->fetchAllAssociative();
     }
 }

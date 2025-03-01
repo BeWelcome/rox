@@ -7,6 +7,7 @@ use App\Entity\Member;
 use App\Entity\Word;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
@@ -17,11 +18,13 @@ use Symfony\Component\Finder\Finder;
 use Symfony\Component\Routing\Loader\YamlFileLoader;
 use Symfony\Component\Yaml\Yaml;
 
+#[AsCommand(
+    name: 'translations:add:missing',
+    aliases: [],
+    hidden: false,
+)]
 class TranslationsAddMissingCommand extends Command
 {
-    protected static $defaultName = 'translations:add:missing';
-    protected static $defaultDescription = 'Add a short description for your command';
-
     private EntityManagerInterface $entityManager;
 
     public function __construct(EntityManagerInterface $entityManager)
@@ -32,7 +35,7 @@ class TranslationsAddMissingCommand extends Command
     }
 
     /**
-     * @SuppressWarnings(PHPMD.StaticAccess)
+     * @SuppressWarnings("PHPMD.StaticAccess")
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {

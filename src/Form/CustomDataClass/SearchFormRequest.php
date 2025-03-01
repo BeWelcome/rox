@@ -3,165 +3,104 @@
 namespace App\Form\CustomDataClass;
 
 use AnthonyMartin\GeoLocation\GeoPoint;
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\PersistentCollection;
 use SearchModel;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Constraints\Choice;
+use Symfony\Component\Validator\Constraints\IsTrue;
+use Symfony\Component\Validator\Constraints\NotNull;
 
 /**
  * Class SearchFormRequest.
  *
- * @SuppressWarnings(PHPMD)
+ * @SuppressWarnings("PHPMD")
  */
 class SearchFormRequest
 {
-    /**
-     * @var string
-     * @Assert\NotNull(message="search.location.invalid", groups={"text-search"})
-     */
-    public $location;
+    #[NotNull(message: "search.location.invalid", groups: ["text-search"])]
+    public string $location;
 
-    /**
-     * @var int
-     * @Assert\NotNull(message="search.location.dropdown", groups={"text-search"})
-     */
-    public $location_fullname;
+    #[NotNull(message: "search.location.dropdown", groups: ["text-search"])]
+    public string $location_fullname;
 
-    public $location_name;
+    public string $location_name;
 
-    public $location_geoname_id;
+    public int $location_geoname_id;
 
-    /**
-     * @var float
-     */
-    public $location_latitude;
+    public float $location_latitude;
 
-    /**
-     * @var float
-     */
-    public $location_longitude;
+    public float $location_longitude;
 
-    /**
-     * @var bool
-     */
-    public $location_admin_unit;
+    public bool $location_admin_unit;
 
-    /**
-     * @var float
-     */
-    public $ne_latitude;
+    public float $ne_latitude;
 
-    /**
-     * @var float
-     */
-    public $ne_longitude;
+    public float $ne_longitude;
 
-    /**
-     * @var float
-     */
-    public $sw_latitude;
+    public float $sw_latitude;
 
-    /**
-     * @var float
-     */
-    public $sw_longitude;
+    public float $sw_longitude;
 
-    /** @var bool */
-    public $accommodation_anytime = true;
+    public bool $accommodation_anytime = true;
 
-    /** @var bool */
-    public $accommodation_neverask = true;
+    public bool $accommodation_neverask = true;
 
-    /** @var bool */
-    public $no_smoking = false;
+    public bool $no_smoking = false;
 
-    /** @var bool */
-    public $no_alcohol = false;
+    public bool $no_alcohol = false;
 
-    /** @var bool */
-    public $no_drugs = false;
+    public bool $no_drugs = false;
 
-    /** @var bool */
-    public $show_map = false;
+    public bool $show_map = false;
 
-    /** @var bool */
-    public $show_options = true;
+    public bool $show_options = true;
 
-    /**
-     * @var int
-     *
-     * @Assert\Choice({ -1, 0, 5, 10, 15, 20, 50, 100, 200})
-     */
-    public $distance = 20;
+    #[Choice([-1, 0, 5, 10, 15, 20, 50, 100, 200])]
+    public int $distance = 20;
 
-    /**
-     * @var int
-     */
-    public $showOnMap = false;
+    public ?bool $showOnMap = false;
 
-    /**
-     * @var bool
-     */
-    public $showOptions = false;
+    public ?bool $showOptions = false;
 
-    /** @var int */
-    public $can_host = 1;
+    public int $can_host = 1;
 
-    /** @var PersistentCollection */
-    public $groups;
+    public array $groups;
 
-    /** @var PersistentCollection */
-    public $languages;
+    public array $languages;
 
-    /** @var int */
-    public $min_age = 0;
+    public int $min_age = 0;
 
-    /** @var int */
-    public $max_age = 120;
+    public int $max_age = 120;
 
-    /** @var string */
-    public $gender;
+    public ?string $gender;
 
-    /** @var bool */
-    public $offerdinner;
+    public bool $offers_dinner;
 
-    /** @var bool */
-    public $offertour;
+    public bool $offers_tour;
 
-    /** @var bool */
-    public $accessible = false;
+    public bool $accessible = false;
 
-    /** @var bool */
-    public $profile_picture = false;
+    public bool $has_profile_picture = false;
 
-    /** @var bool */
-    public $about_me = false;
+    public bool $has_about_me = false;
 
-    /** @var bool */
-    public $has_comments;
+    public bool $has_comments;
 
-    /** @var string */
-    public $keywords;
+    public ?string $keywords = null;
 
-    /** @var int Last Login in months */
-    public $last_login = 24;
+    public int $last_login = 24;
 
-    /** @var int */
-    public $order = 6;
+    public int $order = 6;
 
-    /** @var int */
-    public $direction = SearchModel::DIRECTION_DESCENDING;
+    public int $direction = SearchModel::DIRECTION_DESCENDING;
 
-    /** @var int */
-    public $items = 20;
+    public int $items = 20;
 
-    /**
-     * @Assert\IsTrue(message="search.location.invalid", groups={"text-search"})
-     */
-    public function isLocationValid()
+    public int $page = 1;
+
+    #[IsTrue(message: "search.location.invalid", groups: ["text-search"])]
+    public function isLocationValid(): bool
     {
         // Check if the form was submitted through the map javascript
         $showOnMap = (bool) ($this->showOnMap);
@@ -185,10 +124,8 @@ class SearchFormRequest
         return false;
     }
 
-    /**
-     * @Assert\IsTrue(message="search.accommodation.invalid", groups={"text-search"})
-     */
-    public function isAccommodationValid()
+    #[IsTrue(message: "search.accommodation.invalid", groups: ["text-search"])]
+    public function isAccommodationValid(): bool
     {
         return $this->accommodation_anytime || $this->accommodation_neverask;
     }
@@ -209,16 +146,16 @@ class SearchFormRequest
     {
         $data = [];
         if ($request->query->has('tiny')) {
-            $data = $request->query->get('tiny');
+            $data = $request->query->all('tiny');
         }
         if ($request->query->has('home')) {
-            $data = $request->query->get('home');
+            $data = $request->query->all('home');
         }
         if ($request->query->has('search')) {
-            $data = $request->query->get('search');
+            $data = $request->query->all('search');
         }
         if ($request->query->has('map')) {
-            $data = $request->query->get('map');
+            $data = $request->query->all('map');
         }
         if (empty($data)) {
             // if no data was given return a default object
@@ -242,17 +179,17 @@ class SearchFormRequest
         $searchFormRequest->min_age = self::get($data, 'min_age', null);
         $searchFormRequest->max_age = self::get($data, 'max_age', null);
         $searchFormRequest->gender = self::get($data, 'gender', null);
-        $searchFormRequest->order = self::get($data, 'order', SearchModel::ORDER_ACCOM);
+        $searchFormRequest->order = self::get($data, 'order', SearchModel::ORDER_ACCOMMODATION);
         $searchFormRequest->direction = self::get($data, 'direction', SearchModel::DIRECTION_ASCENDING);
         $searchFormRequest->items = self::get($data, 'items', 10);
         $searchFormRequest->show_map = self::get($data, 'show_map', '0') ? true : false;
         $searchFormRequest->showOnMap = self::get($data, 'showOnMap', false);
         $searchFormRequest->showOptions = self::get($data, 'show_options', false);
-        $searchFormRequest->offerdinner = '1' === self::get($data, 'offerdinner', '0');
-        $searchFormRequest->offertour = '1' === self::get($data, 'offertour', '0');
+        $searchFormRequest->offers_dinner = '1' === self::get($data, 'offers_dinner', '0');
+        $searchFormRequest->offers_tour = '1' === self::get($data, 'offers_tour', '0');
         $searchFormRequest->accessible = '1' === self::get($data, 'accessible', '0');
-        $searchFormRequest->profile_picture = '1' === self::get($data, 'profile_picture', '0');
-        $searchFormRequest->about_me = '1' === self::get($data, 'about_me', '0');
+        $searchFormRequest->has_profile_picture = '1' === self::get($data, 'has_profile_picture', '0');
+        $searchFormRequest->has_about_me = '1' === self::get($data, 'has_about_me', '0');
         $searchFormRequest->no_smoking = '1' === self::get($data, 'no_smoking', '0');
         $searchFormRequest->no_alcohol = '1' === self::get($data, 'no_alcohol', '0');
         $searchFormRequest->no_drugs = '1' === self::get($data, 'no_drugs', '0');

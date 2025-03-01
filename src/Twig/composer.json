@@ -1,0 +1,14 @@
+{
+    "name": "vendor_name/Twig",
+    "description": "description",
+    "minimum-stability": "stable",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "bla",
+            "email": "email@example.com"
+        }
+    ],
+    "require": {
+    }
+}

@@ -10,15 +10,13 @@ use App\Repository\WordRepository;
 use App\TranslationLoader\DatabaseLoader;
 use DateTime;
 use Doctrine\ORM\EntityManager;
+use PHPMD\Rule\CleanCode\StaticAccess;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Translation\MessageCatalogue;
 
-/**
- * @SuppressWarnings(PHPMD.StaticAccess)
- */
 class DatabaseLoaderTest extends TestCase
 {
-    public function testEmptyResult()
+    public function testEmptyResult(): void
     {
         // Create a stub for the Word repository class.
         $repositoryStub = $this->createStub(WordRepository::class);
@@ -44,7 +42,7 @@ class DatabaseLoaderTest extends TestCase
         $this->assertSame('english', $translation);
     }
 
-    public function testCheckReturnedObjectTypeEnglish()
+    public function testCheckReturnedObjectTypeEnglish(): void
     {
         $english = new Word();
         $english->setCode('english');
@@ -73,7 +71,7 @@ class DatabaseLoaderTest extends TestCase
         $this->assertSame('English', $translation);
     }
 
-    public function testCheckReturnedObjectTypeGerman()
+    public function testCheckReturnedObjectTypeGerman(): void
     {
         $english = new Word();
         $english->setCode('deutsch');
@@ -99,7 +97,7 @@ class DatabaseLoaderTest extends TestCase
         $this->assertSame('de', $result->getLocale());
     }
 
-    public function testCheckMajorUpdate()
+    public function testCheckMajorUpdate(): void
     {
         $englishEn = (new Word())
             ->setCode('english')
@@ -137,7 +135,7 @@ class DatabaseLoaderTest extends TestCase
         $this->assertSame('English', $translation);
     }
 
-    public function testCheckNoMajorUpdate()
+    public function testCheckNoMajorUpdate(): void
     {
         $englishEn = (new Word())
             ->setCode('english')
@@ -174,7 +172,7 @@ class DatabaseLoaderTest extends TestCase
         $this->assertSame('Englisch', $translation);
     }
 
-    public function testCheckMajorUpdateComplex()
+    public function testCheckMajorUpdateComplex(): void
     {
         $englishEn = new Word();
         $englishEn->setCode('english');
@@ -224,7 +222,7 @@ class DatabaseLoaderTest extends TestCase
     }
 
 
-    public function testCheckTranslationAllowed()
+    public function testCheckTranslationAllowed(): void
     {
         $englishEn = (new Word())
             ->setCode('english')
@@ -261,7 +259,7 @@ class DatabaseLoaderTest extends TestCase
         $this->assertSame('Englisch', $translation);
     }
 
-    public function testCheckTranslationNotAllowed()
+    public function testCheckTranslationNotAllowed(): void
     {
         $englishEn = (new Word())
             ->setCode('english')

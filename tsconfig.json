@@ -1,5 +1,8 @@
 {
     "files": [
         "assets/js/admin/tools/login_message.ts"
-    ]
+    ],
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true
+  }
 }

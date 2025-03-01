@@ -24,7 +24,7 @@ use Throwable;
 /**
  * Class AvatarController.
  *
- * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+ * @SuppressWarnings("PHPMD.CyclomaticComplexity")
  */
 class AvatarController extends AbstractController
 {
@@ -47,9 +47,7 @@ class AvatarController extends AbstractController
         $this->translator = $translator;
     }
 
-    /**
-     * @Route("/members/uploadavatar", methods={"POST"})
-     */
+    #[Route(path: '/members/uploadavatar', methods: ['POST'])]
     public function uploadAvatar(Request $request): Response
     {
         $uploadFailedTranslation = $this->translator->trans('profile.picture.upload.failed');
@@ -76,11 +74,7 @@ class AvatarController extends AbstractController
         return new Response($uploadFailedTranslation, Response::HTTP_REQUEST_ENTITY_TOO_LARGE);
     }
 
-    /**
-     * @Route("/members/avatar/{username}/{size}", name="avatar",
-     *     requirements={"size" : "\d+|original" },
-     *     defaults={"size": "48"})
-     */
+    #[Route(path: '/members/avatar/{username}/{size}', name: 'avatar', requirements: ['size' => '\d+|original'], defaults: ['size' => '48'])]
     public function showAvatar(Member $member, string $size): BinaryFileResponse
     {
         if (!$this->isGranted('IS_AUTHENTICATED_REMEMBERED')) {

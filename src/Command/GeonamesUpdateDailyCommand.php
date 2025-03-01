@@ -6,30 +6,29 @@ use DateTime;
 use Doctrine\DBAL\ParameterType;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
-class GeonamesUpdateDailyCommand extends Command
+#[AsCommand(
+    name: 'geonames:update:daily',
+    description: 'Update the geonames data with the latest additions (no deletions!).',
+    aliases: [],
+    hidden: false,
+)]class GeonamesUpdateDailyCommand extends Command
 {
-    protected static $defaultName = 'geonames:update:daily';
+    private EntityManagerInterface $entityManager;
 
-    /** @var EntityManager */
-    private $entityManager;
-
-    /** @var ParameterBagInterface */
-    private $params;
-
-    public function __construct(EntityManagerInterface $entityManager, ParameterBagInterface $params)
+    public function __construct(EntityManagerInterface $entityManager)
     {
         parent::__construct();
-        $this->params = $params;
         $this->entityManager = $entityManager;
     }
 
-    public function fetchFile($url)
+    private function fetchFile($url): array
     {
         $content = [];
         $handle = fopen($url, 'r');
@@ -41,13 +40,6 @@ class GeonamesUpdateDailyCommand extends Command
         }
 
         return $content;
-    }
-
-    protected function configure()
-    {
-        $this
-            ->setDescription('Update the geonames data with the latest additions (no deletions!).')
-        ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -207,10 +199,8 @@ class GeonamesUpdateDailyCommand extends Command
 
     /**
      * get updates from geonames.
-     *
-     * @param mixed $io
      **/
-    private function updateGeonames($io)
+    private function updateGeonames($io): void
     {
         $this->updateGeonamesForDate((new DateTime())->modify('-1day'), $io); // Yesterday
         $this->updateGeonamesForDate((new DateTime())->modify('-2days'), $io); // the day before yesterday
@@ -219,7 +209,7 @@ class GeonamesUpdateDailyCommand extends Command
         }
     }
 
-    private function updateAlternatenames($io)
+    private function updateAlternatenames($io): int
     {
         $result = $this->updateAlternateNamesForDate((new DateTime())->modify('-1day'), $io); // Yesterday
         $result |= $this->updateAlternateNamesForDate((new DateTime())->modify('-2days'), $io); // the day before yesterday
@@ -227,7 +217,7 @@ class GeonamesUpdateDailyCommand extends Command
         return $result;
     }
 
-    private function handleDuplicates($removeGeonameId, $newGeonameId)
+    private function handleDuplicates($removeGeonameId, $newGeonameId): void
     {
         $connection = $this->entityManager->getConnection();
 

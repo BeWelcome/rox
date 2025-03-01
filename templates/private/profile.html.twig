@@ -48,8 +48,6 @@
                 </div>
             </div> {# end of header #}
             <div class="tab-content" id="profileTabContent">
-                {% set phones = member.phoneNumbers %}
-                {% set messengers = member.messengers %}
                 {% set fallback = fields|keys|first %}
                 {% for locale in fields|keys %}
                     <div  class="tab-pane fade {% if loop.first %}show active{% endif %}" role="tabpanel" aria-labelledby="{{ locale }}-tab" id="{{ locale }}">
@@ -119,7 +117,7 @@
                                     <div class="card-text m-0">
 
                                         <div id="quickinfo" class="float-right text-right">
-                                            {% if 'CanHostWeelChair' in member.typicOffer %}
+                                            {% if 'CanHostWeelChair' in member.typicalOffer %}
                                                 <img src="images/wheelchairblue.png" alt="{{ 'wheelchair'|trans({}, "messages", locale) }}"
                                                      title="{{ 'canhostwheelchairyes'|trans({}, "messages", locale) }}"/>
                                             {% endif %}
@@ -143,7 +141,7 @@
                                                 <div>{{ fields[locale]['PleaseBring']|purify }}</div>
                                             {% endif %}
 
-                                            {% set offers = member.TypicOffer|split(',') %}
+                                            {% set offers = member.TypicalOffer|split(',') %}
                                             {% if offers|length %}
                                                 <div class="h5 mb-0">{{ 'profileofferguests'|trans({}, "messages", locale) }}:</div>
 
@@ -189,29 +187,6 @@
                                             member.zip {{ member.city.name }}<br>
                                             {{ member.country.name }}
                                         </dd>
-
-                                        <dt class="h5">{{ 'profilephone'| trans({}, "messages", locale) }}</dt>
-                                        {% for phone in phones|keys %}
-                                            <dd>{{ ('profile' ~ phone)|lower|trans({}, "messages", locale) }}: {{ phones[phone] }}</dd>
-                                        {% else %}
-                                            {{ 'mydata.profile.no.phone' }}
-                                        {% endfor %}
-
-                                        <dt class="h5">{{ 'website'|trans({}, "messages", locale) }}</dt>
-                                        {% for website in member.webSite|split(',') %}
-                                            <dd><a href="{{ website }}">{{ website }}</a></dd>
-                                        {% endfor %}
-                                        <dt class="h5">{{ 'messenger'|trans({}, "messages", locale) }}:</dt>
-                                        {% if messengers.GOOGLE|length %}
-                                            Google: {{ messengers.GOOGLE }}
-                                        {% endif %}
-                                        {% if messengers.SKYPE|length %}
-                                            Skype: {{ messengers.SKYPE }}
-                                        {% endif %}
-                                        {% if messengers.Others|length %}
-                                            Others: {{ messengers.Others }}
-                                        {% endif %}
-                                        <dd>Messenger</dd>
                                     </dl>
                                 </div>
                             </div>

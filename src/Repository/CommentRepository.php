@@ -237,7 +237,7 @@ class CommentRepository extends EntityRepository
     {
         $qb = $this->createQueryBuilder('c');
         $qb
-            ->innerJoin('App:Member', 'm', 'WITH', $qb->expr()->andX(
+            ->innerJoin(Member::class, 'm', 'WITH', $qb->expr()->andX(
                 $qb->expr()->eq('m.id', 'c.toMember'),
                 $qb->expr()->in('m.status', MemberStatusType::MEMBER_COMMENTS_ARRAY)
             ))
@@ -252,7 +252,7 @@ class CommentRepository extends EntityRepository
     {
         $qb = $this->createQueryBuilder('c');
         $qb
-            ->innerJoin('App:Member', 'm', 'WITH', $qb->expr()->andX(
+            ->innerJoin(Member::class, 'm', 'WITH', $qb->expr()->andX(
                 $qb->expr()->eq('m.id', 'c.fromMember'),
                 $qb->expr()->in('m.status', MemberStatusType::MEMBER_COMMENTS_ARRAY)
             ))
@@ -263,7 +263,7 @@ class CommentRepository extends EntityRepository
         return $qb;
     }
 
-    private function getCommentsAsArray(array $commentsForMember, array $commentsByMember)
+    private function getCommentsAsArray(array $commentsForMember, array $commentsByMember): array
     {
         $comments = [];
 

@@ -14,71 +14,64 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Hosting Eagerness Slider.
  *
- * @ORM\Table(name="hosting_eagerness_slider")
- * @ORM\Entity
- * @ORM\HasLifecycleCallbacks
  *
- * @SuppressWarnings(PHPMD)
+ * @SuppressWarnings("PHPMD")
  * Auto generated class do not check mess
  */
+#[ORM\Table(name: 'hosting_eagerness_slider')]
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class HostingInterest
 {
     /**
      * @var DateTime
-     *
-     * @ORM\Column(name="updated", type="datetime", nullable=false)
      */
+    #[ORM\Column(name: 'updated', type: 'datetime', nullable: false)]
     private $updated;
 
     /**
      * @var DateTime
-     *
-     * @ORM\Column(name="created", type="datetime", nullable=false)
      */
+    #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
     private $initialized;
 
     /**
      * @var Member
-     *
-     * @ORM\ManyToOne(targetEntity="Member", inversedBy="groupMemberships")
-     * @ORM\JoinColumn(name="member_id", referencedColumnName="id", nullable=FALSE)
      */
+    #[ORM\JoinColumn(name: 'member_id', referencedColumnName: 'id', nullable: false)]
+    #[ORM\ManyToOne(targetEntity: \Member::class, inversedBy: 'groupMemberships')]
     private $member;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="current", type="integer", nullable=false)
      */
+    #[ORM\Column(name: 'current', type: 'integer', nullable: false)]
     private $step;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="step", type="integer", nullable=false)
      */
+    #[ORM\Column(name: 'step', type: 'integer', nullable: false)]
     private $current;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="remaining", type="integer", nullable=false)
      */
+    #[ORM\Column(name: 'remaining', type: 'integer', nullable: false)]
     private $remaining;
 
     /**
      * @var DateTime
-     * @ORM\Column(name="enddate", type="datetime", nullable=false)
      */
+    #[ORM\Column(name: 'enddate', type: 'datetime', nullable: false)]
     private $endDate;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     private $id;
 
     public function __construct()
@@ -87,9 +80,8 @@ class HostingInterest
 
     /**
      * Triggered on insert.
-     *
-     * @ORM\PrePersist
      */
+    #[ORM\PrePersist]
     public function onPrePersist()
     {
         $this->initialized = new DateTime('now');
@@ -97,9 +89,8 @@ class HostingInterest
 
     /**
      * Triggered on update.
-     *
-     * @ORM\PreUpdate
      */
+    #[ORM\PreUpdate]
     public function onPreUpdate()
     {
         $this->updated = new DateTime('now');

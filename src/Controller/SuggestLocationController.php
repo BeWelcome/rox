@@ -22,9 +22,7 @@ class SuggestLocationController extends AbstractController
         $this->translator = $translator;
     }
 
-    /**
-     * @Route("/suggest/locations/places/exact", name="suggest_locations_exact")
-     */
+    #[Route(path: '/suggest/locations/places/exact', name: 'suggest_locations_exact')]
     public function suggestExactPlaces(Request $request, SuggestLocationModel $model): JsonResponse
     {
         $response = new JsonResponse();
@@ -38,9 +36,7 @@ class SuggestLocationController extends AbstractController
         return $response;
     }
 
-    /**
-     * @Route("/suggest/locations/places", name="suggest_locations")
-     */
+    #[Route(path: '/suggest/locations/places', name: 'suggest_locations')]
     public function suggestPlaces(Request $request, SuggestLocationModel $model): JsonResponse
     {
         $response = new JsonResponse();
@@ -54,12 +50,7 @@ class SuggestLocationController extends AbstractController
         return $response;
     }
 
-    /**
-     * @Route("/suggest/locations/all", name="suggest_locations_all")
-     *
-     * This differs from suggestPlaces in that way that it also allows to find regions and countries (used on the
-     * search locations page).
-     */
+    #[Route(path: '/suggest/locations/all', name: 'suggest_locations_all')] // This differs from suggestPlaces in that way that it also allows to find regions and countries (used on the
     public function suggestLocations(Request $request, SuggestLocationModel $model): JsonResponse
     {
         $response = new JsonResponse();

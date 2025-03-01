@@ -8,6 +8,9 @@ use App\Model\CommentModel;
 use Doctrine\ORM\EntityManager;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @SuppressWarnings("PHPMD.TooManyPublicMethods")
+ */
 class CommentModelTest extends TestCase
 {
     private CommentModel $commentModel;
@@ -18,7 +21,7 @@ class CommentModelTest extends TestCase
         $this->commentModel = new CommentModel($em);
     }
 
-    public function testNewExperienceOneNewRelation()
+    public function testNewExperienceOneNewRelation(): void
     {
         $original = new Comment();
         $original
@@ -40,7 +43,7 @@ class CommentModelTest extends TestCase
         $this->assertTrue($this->commentModel->checkIfNewExperience($original, $updated));
     }
 
-    public function testNoNewExperienceRelation()
+    public function testNoNewExperienceRelation(): void
     {
         $original = new Comment();
         $original->setRelations($this->buildRelations([
@@ -51,7 +54,7 @@ class CommentModelTest extends TestCase
         $this->assertFalse($this->commentModel->checkIfNewExperience($original, $updated));
     }
 
-    public function testNewExperienceTextAdded()
+    public function testNewExperienceTextAdded(): void
     {
         $original = new Comment();
         $original->setTextFree('Lorem ipsum.');
@@ -61,7 +64,7 @@ class CommentModelTest extends TestCase
         $this->assertTrue($this->commentModel->checkIfNewExperience($original, $updated));
     }
 
-    public function testNoNewExperienceNoTextChanged()
+    public function testNoNewExperienceNoTextChanged(): void
     {
         $original = new Comment();
         $original->setTextFree('Lorem ipsum.');
@@ -71,7 +74,7 @@ class CommentModelTest extends TestCase
         $this->assertFalse($this->commentModel->checkIfNewExperience($original, $updated));
     }
 
-    public function testNoNewExperienceTypoFixed()
+    public function testNoNewExperienceTypoFixed(): void
     {
         $original = new Comment();
         $original->setTextFree('Lorem pisum. Lorem ipsum.');
@@ -81,7 +84,7 @@ class CommentModelTest extends TestCase
         $this->assertFalse($this->commentModel->checkIfNewExperience($original, $updated));
     }
 
-    public function testNoNewExperienceNegationFixed()
+    public function testNoNewExperienceNegationFixed(): void
     {
         $original = new Comment();
         $original->setTextFree('I can stand the rain.');
@@ -91,7 +94,7 @@ class CommentModelTest extends TestCase
         $this->assertFalse($this->commentModel->checkIfNewExperience($original, $updated));
     }
 
-    public function testNoNewExperienceRemovedLineBreaks()
+    public function testNoNewExperienceRemovedLineBreaks(): void
     {
         $original = new Comment();
         $original->setTextFree(
@@ -115,7 +118,7 @@ class CommentModelTest extends TestCase
         $this->assertFalse($this->commentModel->checkIfNewExperience($original, $updated));
     }
 
-    public function testNoNewExperienceAddedLineBreaks()
+    public function testNoNewExperienceAddedLineBreaks(): void
     {
         $original = new Comment();
         $original->setTextFree(
@@ -139,7 +142,7 @@ class CommentModelTest extends TestCase
         $this->assertFalse($this->commentModel->checkIfNewExperience($original, $updated));
     }
 
-    public function testNoNewExperienceSmallTextChanges()
+    public function testNoNewExperienceSmallTextChanges(): void
     {
         $original = new Comment();
         $original->setTextFree(
@@ -158,7 +161,7 @@ class CommentModelTest extends TestCase
         $this->assertFalse($this->commentModel->checkIfNewExperience($original, $updated));
     }
 
-    public function testNewExperienceTextChanges()
+    public function testNewExperienceTextChanges(): void
     {
         $original = new Comment();
         $original->setTextFree('I can stand the rain but not the snow.');
@@ -168,7 +171,7 @@ class CommentModelTest extends TestCase
         $this->assertTrue($this->commentModel->checkIfNewExperience($original, $updated));
     }
 
-    public function testLongTextWithLotsOfUpdatesIsANewExperience()
+    public function testLongTextWithLotsOfUpdatesIsANewExperience(): void
     {
         $original = new Comment();
         $original->setTextFree(<<<COMMENT
@@ -219,7 +222,7 @@ class CommentModelTest extends TestCase
         $this->assertTrue($this->commentModel->checkIfNewExperience($original, $updated));
     }
 
-    public function testLongTextWithLowNumberUpdatesIsNotANewExperience()
+    public function testLongTextWithLowNumberUpdatesIsNotANewExperience(): void
     {
         $original = new Comment();
         $original->setTextFree(<<<COMMENT
@@ -270,7 +273,7 @@ class CommentModelTest extends TestCase
         $this->assertFalse($this->commentModel->checkIfNewExperience($original, $updated));
     }
 
-    public function testCommentWithEmailAddressInTextIsRecognized()
+    public function testCommentWithEmailAddressInTextIsRecognized(): void
     {
         $comment = new Comment();
         $comment->setTextfree('This is an@email.address in the middle of a text.');
@@ -279,7 +282,7 @@ class CommentModelTest extends TestCase
 
         $this->assertTrue($emailAddressFound);
     }
-    public function testCommentWithEmailAddressAtStartOfTextIsRecognized()
+    public function testCommentWithEmailAddressAtStartOfTextIsRecognized(): void
     {
         $comment = new Comment();
         $comment->setTextfree('an@email.address at the start of a text.');
@@ -288,7 +291,7 @@ class CommentModelTest extends TestCase
 
         $this->assertTrue($emailAddressFound);
     }
-    public function testCommentWithEmailAddressAtTheEndOfTextIsRecognized()
+    public function testCommentWithEmailAddressAtTheEndOfTextIsRecognized(): void
     {
         $comment = new Comment();
         $comment->setTextfree('At the end of this text, there is an@email.address');
@@ -298,7 +301,7 @@ class CommentModelTest extends TestCase
         $this->assertTrue($emailAddressFound);
     }
 
-    public function testCommentWithTwoEmailAddressesInTextIsRecognized()
+    public function testCommentWithTwoEmailAddressesInTextIsRecognized(): void
     {
         $comment = new Comment();
         $comment->setTextfree('This is an@email.address in the middle of a text. And another one at the end. another@email.net');
@@ -308,7 +311,7 @@ class CommentModelTest extends TestCase
         $this->assertTrue($emailAddressFound);
     }
 
-    public function testCommentWithoutEmailAddressInTextIsRecognized()
+    public function testCommentWithoutEmailAddressInTextIsRecognized(): void
     {
         $comment = new Comment();
         $comment->setTextfree('This is an @instagram username.');
@@ -318,11 +321,17 @@ class CommentModelTest extends TestCase
         $this->assertFalse($emailAddressFound);
     }
 
+    /**
+     * @param string[] $relations
+     */
     private function buildRelations(array $relations): string
     {
         return implode(',', $relations);
     }
 
+    /**
+     * @param string[] $additionalRelations
+     */
     private function addRelations(string $relations, array $additionalRelations): string
     {
         // turn relations into array.

@@ -13,7 +13,7 @@ class MessageIndexFormType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $deleteButtonLabel = ('deleted' === $options['folder']) ? 'label.undelete' : 'label.delete';
         $spamButtonLabel = ('spam' === $options['folder']) ? 'label.marknospam' : 'label.markspam';
@@ -42,7 +42,7 @@ class MessageIndexFormType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'ids' => [],

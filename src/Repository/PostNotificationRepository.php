@@ -21,9 +21,9 @@ class PostNotificationRepository extends EntityRepository
 
         return $this->createQueryBuilder('n')
             ->where('n.status = :toSend')
-            ->setParameter(':toSend', NotificationStatusType::SCHEDULED)
+            ->setParameter('toSend', NotificationStatusType::SCHEDULED)
             ->andWhere('n.created < :date')
-            ->setParameter(':date', $date)
+            ->setParameter('date', $date)
             ->orderBy('n.created', 'asc')
             ->setMaxResults($batchSize)
             ->getQuery()

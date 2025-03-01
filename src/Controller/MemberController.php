@@ -12,8 +12,8 @@ use App\Utilities\ProfileSubmenu;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
 use Exception;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -24,7 +24,6 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Security\Core\Security;
 use Symfony\WebpackEncoreBundle\Asset\EntrypointLookupInterface;
 use Twig\Profiler\Profile;
 
@@ -46,9 +45,7 @@ class MemberController extends AbstractController
         $this->globals = $globals;
     }
 
-    /**
-     * @Route("/mydata", name="profile_personal_data_redirect")
-     */
+    #[Route(path: '/mydata', name: 'profile_personal_data_redirect')]
     public function redirectMyData()
     {
         $username = $this->getUser()->getUsername();
@@ -58,21 +55,25 @@ class MemberController extends AbstractController
     }
 
     /**
-     * @Route("/members/{username}/mydata", name="profile_personal_data")
      *
      * @throws Exception
-     *
      * @return StreamedResponse|Response
      */
+    #[Route(path: '/members/{username:member}/mydata', name: 'profile_personal_data')]
     public function getPersonalDataSelf(
         Request $request,
+        Member $member,
         MemberModel $memberModel,
         Security $security,
         EntrypointLookupInterface $entrypointLookup,
         PasswordHasherFactoryInterface $passwordHasherFactory
-    ): Response {
+    ): Response|RedirectResponse {
         /** @var Member $member */
-        $member = $this->getUser();
+        $loggedInMember = $this->getUser();
+
+        if ($member->getUsername() !== $loggedInMember->getUsername()) {
+            return $this->redirectToRoute('members_profile', ['username' => $loggedInMember->getUsername()]);
+        }
 
         $passwordForm = $this->createForm(PasswordFormType::class);
         $passwordForm->handleRequest($request);
@@ -117,9 +118,9 @@ class MemberController extends AbstractController
     }
 
     /**
-     * @Route("/members/{username}/data", name="admin_personal_data")
      * @ParamConverter("member", class="App\Entity\Member", options={"mapping": {"username": "username"}})
      */
+    #[Route(path: '/members/{username:member}/data', name: 'admin_personal_data')]
     public function getPersonalData(
         Request $request,
         Member $member,
@@ -158,13 +159,13 @@ class MemberController extends AbstractController
     }
 
     /**
-     * @Route("/mydata/{username}/download", name="member_download_data")
      *
      * @throws Exception
      *
      * @return BinaryFileResponse|RedirectResponse
      * @ParamConverter("member", class="App\Entity\Member", options={"mapping": {"username": "username"}})
      */
+    #[Route(path: '/mydata/{username:member}/download', name: 'member_download_data')]
     public function downloadPersonalData(Request $request, Member $member)
     {
         $zipFilename = $request->getSession()->get('mydata_file');

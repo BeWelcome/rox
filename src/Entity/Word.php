@@ -8,6 +8,7 @@
 namespace App\Entity;
 
 use App\Doctrine\TranslationAllowedType;
+use App\Repository\WordRepository;
 use Carbon\Carbon;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
@@ -15,216 +16,139 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Word.
  *
- * @ORM\Table(name="words", uniqueConstraints={@ORM\UniqueConstraint(name="code", columns={"code", "IdLanguage"}), @ORM\UniqueConstraint(name="code_2", columns={"code", "ShortCode"})})
- * @ORM\Entity(repositoryClass="App\Repository\WordRepository")
- * @ORM\HasLifecycleCallbacks
  *
- * @SuppressWarnings(PHPMD)
+ * @SuppressWarnings("PHPMD")
  * Auto generated class do not check mess
  */
+#[ORM\Table(name: 'words')]
+#[ORM\UniqueConstraint(name: 'code', columns: ['code', 'IdLanguage'])]
+#[ORM\UniqueConstraint(name: 'code_2', columns: ['code', 'ShortCode'])]
+#[ORM\Entity(repositoryClass: WordRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Word
 {
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="code", type="string", length=128, nullable=false)
-     */
-    private $code;
+    #[ORM\Column(name: 'code', type: 'string', length: 128, nullable: false)]
+    private string $code;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="domain", type="domain", length=16, nullable=false)
-     */
-    private $domain;
+    #[ORM\Column(name: 'domain', type: 'domain', length: 16, nullable: false)]
+    private string $domain;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="ShortCode", type="string", length=16, nullable=false)
-     */
-    private $shortCode = 'en';
+    #[ORM\Column(name: 'ShortCode', type: 'string', length: 16, nullable: false)]
+    private string $shortCode = 'en';
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="Sentence", type="text", length=65535, nullable=false)
-     */
-    private $sentence;
+    #[ORM\Column(name: 'Sentence', type: 'text', length: 65535, nullable: false)]
+    private string $sentence;
 
-    /**
-     * @var DateTime
-     *
-     * @ORM\Column(name="updated", type="datetime", nullable=false)
-     */
-    private $updated;
+    #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
+    private DateTime $created;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="donottranslate", type="translation_allowed", nullable=false)
-     */
-    private $translationAllowed = TranslationAllowedType::TRANSLATION_ALLOWED;
+    #[ORM\Column(name: 'updated', type: 'datetime', nullable: false)]
+    private DateTime $updated;
 
-    /**
-     * @var Member
-     *
-     * @ORM\ManyToOne(targetEntity="Member")
-     * @ORM\JoinColumn(name="IdMember", referencedColumnName="id")
-     */
-    private $author;
+    #[ORM\Column(name: 'majorupdate', type: 'datetime', nullable: true)]
+    private ?DateTime $majorUpdate  = null;
 
-    /**
-     * @var Language
-     *
-     * @ORM\ManyToOne(targetEntity="Language")
-     * @ORM\JoinColumn(name="IdLanguage", referencedColumnName="id")
-     */
-    private $language;
+    #[ORM\Column(name: 'donottranslate', type: 'translation_allowed', nullable: false)]
+    private string $translationAllowed = TranslationAllowedType::TRANSLATION_ALLOWED;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="Description", type="text", length=65535, nullable=false)
-     */
-    private $description;
+    #[ORM\JoinColumn(name: 'IdMember', referencedColumnName: 'id', nullable: false)]
+    #[ORM\ManyToOne(targetEntity: Member::class)]
+    private Member $author;
 
-    /**
-     * @var DateTime
-     *
-     * @ORM\Column(name="created", type="datetime", nullable=false)
-     */
-    private $created;
+    #[ORM\JoinColumn(name: 'IdLanguage', referencedColumnName: 'id', nullable: false)]
+    #[ORM\ManyToOne(targetEntity: Language::class)]
+    private Language $language;
 
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="TranslationPriority", type="integer", nullable=false)
-     */
-    private $translationPriority = '5';
+    #[ORM\Column(name: 'Description', type: 'text', length: 65535, nullable: false)]
+    private string $description;
 
-    /**
-     * @var bool
-     *
-     * @ORM\Column(name="isarchived", type="boolean", nullable=true)
-     */
-    private $isArchived = null;
+    #[ORM\Column(name: 'TranslationPriority', type: 'integer', nullable: false)]
+    private int $translationPriority = 5;
 
-    /**
-     * @var DateTime
-     *
-     * @ORM\Column(name="majorupdate", type="datetime", nullable=false)
-     */
-    private $majorUpdate;
+    #[ORM\Column(name: 'isarchived', type: 'boolean', nullable: true)]
+    private ?bool $isArchived = null;
 
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
-    private $id;
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
+    private int $id;
 
-    /**
-     * Set code.
-     *
-     * @param string $code
-     *
-     * @return Word
-     */
-    public function setCode($code)
+    public function setCode(string $code): self
     {
         $this->code = $code;
 
         return $this;
     }
 
-    /**
-     * Get code.
-     *
-     * @return string
-     */
-    public function getCode()
+    public function getCode(): string
     {
         return $this->code;
     }
 
-    /**
-     * Set shortCode.
-     *
-     * @param string $shortCode
-     *
-     * @return Word
-     */
-    public function setShortCode($shortCode)
+    public function setShortCode(string $shortCode): self
     {
         $this->shortCode = $shortCode;
 
         return $this;
     }
 
-    /**
-     * Get shortCode.
-     *
-     * @return string
-     */
-    public function getShortCode()
+    public function getShortCode(): string
     {
         return $this->shortCode;
     }
 
-    /**
-     * Set sentence.
-     *
-     * @param string $sentence
-     *
-     * @return Word
-     */
-    public function setSentence($sentence)
+    public function setSentence(string $sentence): self
     {
         $this->sentence = $sentence;
 
         return $this;
     }
 
-    /**
-     * Get sentence.
-     *
-     * @return string
-     */
-    public function getSentence()
+    public function getSentence(): string
     {
         return $this->sentence;
     }
 
-    /**
-     * Set updated.
-     *
-     * @param DateTime $updated
-     *
-     * @return Word
-     */
-    public function setUpdated($updated)
+    public function setCreated(DateTime $created): self
+    {
+        $this->created = $created;
+
+        return $this;
+    }
+
+    public function getCreated(): Carbon
+    {
+        return new Carbon($this->created);
+    }
+
+    public function setUpdated(DateTime $updated): self
     {
         $this->updated = $updated;
 
         return $this;
     }
 
-    /**
-     * Get updated.
-     *
-     * @return DateTime
-     */
-    public function getUpdated()
+    public function getUpdated(): Carbon
     {
-        return $this->updated;
+        return new Carbon($this->updated);
     }
 
-    /**
-     * Set translation allowed flag.
-     */
+    public function setMajorUpdate(?Carbon $majorUpdate): self
+    {
+        $this->majorUpdate = $majorUpdate;
+
+        return $this;
+    }
+
+    public function getMajorUpdate(): ?Carbon
+    {
+        if (null === $this->majorUpdate) {
+            return null;
+        }
+
+        return new Carbon($this->majorUpdate);
+    }
+
     public function setTranslationAllowed(string $translationAllowed): self
     {
         $this->translationAllowed = $translationAllowed;
@@ -232,17 +156,11 @@ class Word
         return $this;
     }
 
-    /**
-     * Get translation allowed flag.
-     */
     public function getTranslationAllowed(): string
     {
         return $this->translationAllowed;
     }
 
-    /**
-     * Sets the language of the translated item.
-     */
     public function setLanguage(Language $language): self
     {
         $this->language = $language;
@@ -251,165 +169,60 @@ class Word
         return $this;
     }
 
-    /**
-     * Get language of the translated item.
-     */
     public function getLanguage(): Language
     {
         return $this->language;
     }
 
-    /**
-     * Set description.
-     *
-     * @param string $description
-     *
-     * @return Word
-     */
-    public function setDescription($description)
+    public function setDescription(string $description): self
     {
         $this->description = $description;
 
         return $this;
     }
 
-    /**
-     * Get description.
-     *
-     * @return string
-     */
-    public function getDescription()
+    public function getDescription(): string
     {
         return $this->description;
     }
 
-    /**
-     * Set author.
-     *
-     * @param Member $author
-     *
-     * @return Word
-     */
-    public function setAuthor($author)
+    public function setAuthor(Member $author): self
     {
         $this->author = $author;
 
         return $this;
     }
 
-    /**
-     * Get author.
-     *
-     * @return Member
-     */
-    public function getAuthor()
+    public function getAuthor(): Member
     {
         return $this->author;
     }
 
-    /**
-     * Set created.
-     *
-     * @param DateTime $created
-     *
-     * @return Word
-     */
-    public function setCreated($created)
-    {
-        $this->created = $created;
-
-        return $this;
-    }
-
-    /**
-     * Get created.
-     *
-     * @return Carbon
-     */
-    public function getCreated()
-    {
-        return Carbon::instance($this->created);
-    }
-
-    /**
-     * Set translationpriority.
-     *
-     * @param int   $translationpriority
-     * @param mixed $translationPriority
-     *
-     * @return Word
-     */
-    public function setTranslationPriority($translationPriority)
+    public function setTranslationPriority(int $translationPriority): self
     {
         $this->translationPriority = $translationPriority;
 
         return $this;
     }
 
-    /**
-     * Get translationpriority.
-     *
-     * @return int
-     */
-    public function getTranslationPriority()
+    public function getTranslationPriority(): int
     {
         return $this->translationPriority;
     }
 
-    /**
-     * Set isarchived.
-     *
-     * @param bool $isArchived
-     *
-     * @return Word
-     */
-    public function setIsArchived($isArchived)
+    public function setIsArchived(bool $isArchived): self
     {
         $this->isArchived = $isArchived;
 
         return $this;
     }
 
-    /**
-     * Get isarchived.
-     *
-     * @return bool
-     */
-    public function getIsArchived()
+    public function getIsArchived(): bool
     {
         return $this->isArchived;
     }
 
-    /**
-     * Set majorupdate.
-     *
-     * @param DateTime $majorUpdate
-     *
-     * @return Word
-     */
-    public function setMajorUpdate($majorUpdate)
-    {
-        $this->majorUpdate = $majorUpdate;
-
-        return $this;
-    }
-
-    /**
-     * Get majorUpdate.
-     *
-     * @return DateTime
-     */
-    public function getMajorUpdate()
-    {
-        return $this->majorUpdate;
-    }
-
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
@@ -419,9 +232,6 @@ class Word
         return $this->domain;
     }
 
-    /**
-     * @return Word
-     */
     public function setDomain(string $domain): self
     {
         $this->domain = $domain;
@@ -429,25 +239,17 @@ class Word
         return $this;
     }
 
-    /**
-     * Triggered on insert.
-     *
-     * @ORM\PrePersist
-     */
-    public function onPrePersist()
+    #[ORM\PrePersist]
+    public function onPrePersist(): void
     {
-        $this->created = new DateTime('now');
+        $this->created = new Carbon('now');
         $this->updated = $this->created;
         $this->majorUpdate = $this->created;
     }
 
-    /**
-     * Triggered on update.
-     *
-     * @ORM\PreUpdate
-     */
+    #[ORM\PreUpdate]
     public function onPreUpdate()
     {
-        $this->updated = new DateTime('now');
+        $this->updated = new Carbon('now');
     }
 }

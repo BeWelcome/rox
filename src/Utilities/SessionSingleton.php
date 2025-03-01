@@ -60,7 +60,7 @@ class SessionSingleton
     /**
      * @return SessionInterface
      *
-     * @SuppressWarnings(PHPMD.StaticAccess)
+     * @SuppressWarnings("PHPMD.StaticAccess")
      */
     public static function getSession()
     {

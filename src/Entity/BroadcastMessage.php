@@ -10,47 +10,34 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Broadcastmessages.
- *
- * @ORM\Table(name="broadcastmessages")
- * @ORM\Entity
  */
+#[ORM\Table(name: 'broadcastmessages')]
+#[ORM\Entity]
 class BroadcastMessage
 {
-    /**
-     * @ORM\ManyToOne(targetEntity="Member")
-     * @ORM\JoinColumn(name="IdEnqueuer", referencedColumnName="id")
-     */
+    #[ORM\JoinColumn(name: 'IdEnqueuer', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: Member::class)]
     private Member $enqueuedBy;
 
-    /**
-     * @ORM\Column(name="Status", type="string", nullable=false)
-     */
+    #[ORM\Column(name: 'Status', type: 'string', nullable: false)]
     private string $status = 'ToApprove';
 
-    /**
-     * @ORM\Column(name="updated", type="datetime", nullable=false)
-     */
+    #[ORM\Column(name: 'updated', type: 'datetime', nullable: false)]
     private DateTime $updated;
 
-    /**
-     * @ORM\Column(name="unsubscribe_key", type="string", length=64, nullable=true)
-     */
+    #[ORM\Column(name: 'unsubscribe_key', type: 'string', length: 64, nullable: true)]
     private ?string $unsubscribeKey;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Newsletter")
-     * @ORM\JoinColumn(name="IdBroadcast", referencedColumnName="id")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="NONE")
-     */
+    #[ORM\JoinColumn(name: 'IdBroadcast', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: Newsletter::class)]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'NONE')]
     private Newsletter $newsletter;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Member")
-     * @ORM\JoinColumn(name="IdReceiver", referencedColumnName="id")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="NONE")
-     */
+    #[ORM\JoinColumn(name: 'IdReceiver', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: Member::class)]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'NONE')]
     private Member $receiver;
 
     public function setEnqueuedBy(Member $enqueuedBy): self

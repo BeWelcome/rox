@@ -36,15 +36,15 @@ use AnthonyMartin\GeoLocation\GeoPoint;
  */
 class SearchModel extends RoxModelBase
 {
-    const ORDER_USERNAME = 2;
-    const ORDER_ACCOM = 6;
-    const ORDER_LOGIN = 8;
-    const ORDER_MEMBERSHIP = 10;
-    const ORDER_COMMENTS = 12;
-    const ORDER_DISTANCE = 14;
+    public const int ORDER_USERNAME = 2;
+    public const int ORDER_ACCOMMODATION = 6;
+    public const int ORDER_LOGIN = 8;
+    public const int ORDER_MEMBERSHIP = 10;
+    public const int ORDER_COMMENTS = 12;
+    public const int ORDER_DISTANCE = 14;
 
-    const DIRECTION_ASCENDING = 1;
-    const DIRECTION_DESCENDING = 2;
+    public const int DIRECTION_ASCENDING = 1;
+    public const int DIRECTION_DESCENDING = 2;
 
     private $statusCondition = "";
     private $maxGuestCondition = "";
@@ -69,9 +69,9 @@ class SearchModel extends RoxModelBase
     private $tables = "";
     private $joins = "";
 
-    private const ORDER_BY = [
+    private const array ORDER_BY = [
         self::ORDER_USERNAME => ['WordCode' => 'SearchOrderUsername', 'Column' => 'm.Username'],
-        self::ORDER_ACCOM => ['WordCode' => 'SearchOrderAccommodation', 'Column' => 'accomodation'],
+        self::ORDER_ACCOMMODATION => ['WordCode' => 'SearchOrderAccommodation', 'Column' => 'accomodation'],
         self::ORDER_DISTANCE => ['WordCode' => 'SearchOrderDistance', 'Column' => 'Distance'],
         self::ORDER_LOGIN => ['WordCode' => 'SearchOrderLogin', 'Column' => 'LastLogin'],
         self::ORDER_MEMBERSHIP => ['WordCode' => 'SearchOrderMembership', 'Column' => 'm.created'],
@@ -100,7 +100,7 @@ class SearchModel extends RoxModelBase
         }
         $order = self::ORDER_BY[$orderType]['Column'] . $directionType;
         switch ($orderType) {
-            case self::ORDER_ACCOM:
+            case self::ORDER_ACCOMMODATION:
                 $order .= ', (IF(mp.photoCount IS NULL, 0, 1) + IF(m.ProfileSummary != 0, 2, 0)) ASC'
                     . ', hosting_interest ASC, LastLogin ASC, Distance ASC';
                 break;

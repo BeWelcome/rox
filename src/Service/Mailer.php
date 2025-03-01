@@ -8,17 +8,15 @@ use App\Entity\Member;
 use App\Entity\Newsletter;
 use App\Entity\Relation;
 use App\Logger\Logger;
+use Doctrine\Common\Proxy\Proxy;
 use Doctrine\ORM\EntityManagerInterface;
-use Exception;
 use InvalidArgumentException;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
-use Symfony\Component\Routing\Generator\UrlGenerator;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use Twig\Environment;
 
 class Mailer
 {
@@ -350,8 +348,13 @@ class Mailer
     /**
      * Make sure to send the email notification in the preferred language of the user.
      */
-    private function setTranslatorLocale(Member $receiver)
+    private function setTranslatorLocale(Member $receiver): void
     {
+        // make sure Member object is fully loaded
+        if ($receiver instanceof \Doctrine\Persistence\Proxy && !$receiver->__isInitialized()) {
+            $receiver->__load();
+        }
+
         $language = $receiver->getPreferredLanguage();
         $this->translator->setLocale($language->getShortCode());
     }

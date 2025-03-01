@@ -21,9 +21,9 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class SearchFormType extends AbstractType
 {
     /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->setMethod('GET')
@@ -51,7 +51,7 @@ class SearchFormType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'groups' => null,
@@ -69,7 +69,7 @@ class SearchFormType extends AbstractType
         ]);
     }
 
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return '';
     }
@@ -251,7 +251,7 @@ class SearchFormType extends AbstractType
                 'autocomplete' => true,
                 'plugins' => [],
                 'choices' => [
-                    'search.order.accommodation' => SearchModel::ORDER_ACCOM,
+                    'search.order.accommodation' => SearchModel::ORDER_ACCOMMODATION,
                     'search.order.distance' => SearchModel::ORDER_DISTANCE,
                     'search.order.login' => SearchModel::ORDER_LOGIN,
                     'search.order.comments' => SearchModel::ORDER_COMMENTS,
@@ -325,11 +325,11 @@ class SearchFormType extends AbstractType
                 'label' => 'search.accommodation.no',
                 'required' => false,
             ])
-            ->add('offerdinner', CheckboxType::class, [
+            ->add('offers_dinner', CheckboxType::class, [
                 'label' => 'search.offer.dinner',
                 'required' => false,
             ])
-            ->add('offertour', CheckboxType::class, [
+            ->add('offers_tour', CheckboxType::class, [
                 'label' => 'search.offer.guided.tour',
                 'required' => false,
             ])
@@ -337,11 +337,11 @@ class SearchFormType extends AbstractType
                 'label' => 'search.offer.accessible',
                 'required' => false,
             ])
-            ->add('profile_picture', CheckboxType::class, [
+            ->add('has_profile_picture', CheckboxType::class, [
                 'label' => 'search.has.profile.picture',
                 'required' => false,
             ])
-            ->add('about_me', CheckboxType::class, [
+            ->add('has_about_me', CheckboxType::class, [
                 'label' => 'search.has.about.me',
                 'required' => false,
             ])

@@ -4,24 +4,20 @@ namespace App\Doctrine;
 
 class CommentRelationsType extends SetType
 {
-    public const WAS_GUEST = 'hewasmyguest';
-    public const WAS_HOST = 'hehostedme';
-    public const ONLY_MET_ONCE = 'OnlyOnce';
-    public const IS_FAMILY = 'HeIsMyFamily';
-    public const IS_CLOSE_FRIEND = 'HeHisMyOldCloseFriend';
-    public const TRAVEL_BUDDY = 'TravelledTogether';
-    public const IS_FRIEND = 'WeAreFriends';
-    public const ONLINE_COMMUNICATION = 'CommunicatedOnline';
-    /** No longer used
-    public const ONLY_MET_ONLINE = 'NeverMetInRealLife';
-     */
+    public const string WAS_GUEST = 'hewasmyguest';
+    public const string WAS_HOST = 'hehostedme';
+    public const string ONLY_MET_ONCE = 'OnlyOnce';
+    public const string IS_FAMILY = 'HeIsMyFamily';
+    public const string IS_CLOSE_FRIEND = 'HeHisMyOldCloseFriend';
+    public const string TRAVEL_BUDDY = 'TravelledTogether';
+    public const string IS_FRIEND = 'WeAreFriends';
+    public const string ONLINE_COMMUNICATION = 'CommunicatedOnline';
 
-    protected $name = 'comment_relations';
+    protected string $name = 'comment_relations';
 
-    protected $translationPrefix = 'profile.comment.relation.';
+    protected string $translationPrefix = 'profile.comment.relation.';
 
-    /** @var array */
-    protected $values = [
+    protected array $values = [
         self::WAS_GUEST,
         self::WAS_HOST,
         self::ONLY_MET_ONCE,

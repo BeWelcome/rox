@@ -16,9 +16,7 @@ class PoliciesController extends AbstractController
         $this->documentLocales = explode(',', $locales);
     }
 
-    /**
-     * @Route("/terms/{locale}", name="terms_of_use")
-     */
+    #[Route(path: '/terms/{locale}', name: 'terms_of_use')]
     public function showTermsOfUse(Request $request, string $locale = null): Response
     {
         $locale = $this->ensureLocaleAllowed($locale, $request);
@@ -34,9 +32,7 @@ class PoliciesController extends AbstractController
         return $this->render('policies/terms.' . $locale . '.html.twig');
     }
 
-    /**
-     * @Route("/privacy/{locale}", name="privacy_policy")
-     */
+    #[Route(path: '/privacy/{locale}', name: 'privacy_policy')]
     public function showPrivacyPolicy(Request $request, string $locale = null): Response
     {
         $locale = $this->ensureLocaleAllowed($locale, $request);
@@ -51,9 +47,7 @@ class PoliciesController extends AbstractController
         return $this->render('policies/privacy.' . $locale . '.html.twig');
     }
 
-    /**
-     * @Route("/datarights/{locale}", name="data_rights")
-     */
+    #[Route(path: '/datarights/{locale}', name: 'data_rights')]
     public function showDataRights(Request $request, string $locale = null): Response
     {
         $locale = $this->ensureLocaleAllowed($locale, $request);

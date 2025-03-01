@@ -7,347 +7,189 @@
 
 namespace App\Entity;
 
+use App\Repository\ActivityRepository;
 use Carbon\Carbon;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Activity.
  *
- * @ORM\Table(name="activities")
- * @ORM\Entity(repositoryClass="App\Repository\ActivityRepository")
  *
- * @SuppressWarnings(PHPMD)
+ * @SuppressWarnings("PHPMD")
  * Auto generated class do not check mess
  */
+#[ORM\Table(name: 'activities')]
+#[ORM\Entity(repositoryClass: ActivityRepository::class)]
 class Activity
 {
-    /**
-     * @var Member
-     *
-     * @ORM\ManyToOne(targetEntity="\App\Entity\Member")
-     * @ORM\JoinColumn(name="creator", referencedColumnName="id")
-     */
-    private $createdBy;
+    #[ORM\JoinColumn(name: 'creator', referencedColumnName: 'id', nullable: false)]
+    #[ORM\ManyToOne(targetEntity: Member::class)]
+    private Member $createdBy;
+
+    #[ORM\Column(name: 'dateTimeStart', type: 'datetime', nullable: false)]
+    private DateTime $starts;
+
+    #[ORM\Column(name: 'dateTimeEnd', type: 'datetime', nullable: false)]
+    private DateTime $ends;
+
+    #[ORM\JoinColumn(name: 'locationId', referencedColumnName: 'geonameId', nullable: false)]
+    #[ORM\ManyToOne(targetEntity: Location::class)]
+    private Location $location;
+
+    #[ORM\Column(name: 'address', type: 'string', length: 320, nullable: true)]
+    private ?string $address;
+
+    #[ORM\Column(name: 'title', type: 'string', length: 80, nullable: false)]
+    private string $title;
+
+    #[ORM\Column(name: 'description', type: 'text', length: 16777215, nullable: false)]
+    private string $description;
+
+    #[ORM\Column(name: 'status', type: 'smallint', nullable: false)]
+    private int $status;
+
+    #[ORM\Column(name: 'public', type: 'smallint', nullable: true)]
+    private ?int $online ;
+
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
+    private int $id;
 
     /**
-     * @var DateTime
-     *
-     * @ORM\Column(name="dateTimeStart", type="datetime", nullable=false)
+     * @var Collection<ActivityAttendee>
      */
-    private $starts;
-
-    /**
-     * @var DateTime
-     *
-     * @ORM\Column(name="dateTimeEnd", type="datetime", nullable=true)
-     */
-    private $ends;
-
-    /**
-     * @var Location
-     *
-     * @ORM\ManyToOne(targetEntity="\App\Entity\Location")
-     * @ORM\JoinColumn(name="locationId", referencedColumnName="geonameId")
-     */
-    private $location;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="address", type="string", length=320, nullable=true)
-     */
-    private $address;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="title", type="string", length=80, nullable=false)
-     */
-    private $title;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="description", type="text", length=16777215, nullable=true)
-     */
-    private $description;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="status", type="smallint", nullable=false)
-     */
-    private $status;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="public", type="smallint", nullable=true)
-     */
-    private $online;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
-    private $id;
-
-    /**
-     * @var ArrayCollection
-     *
-     * @ORM\OneToMany(targetEntity="ActivityAttendee", mappedBy="activity")
-     */
-    private $attendees;
+    #[ORM\OneToMany(targetEntity: ActivityAttendee::class, mappedBy: 'activity')]
+    private Collection $attendees;
 
     public function __construct()
     {
         $this->attendees = new ArrayCollection();
     }
 
-    /**
-     * Set createdBy.
-     *
-     * @param Member $createdBy
-     *
-     * @return Activity
-     */
-    public function setCreatedBy(Member $createdBy = null)
+    public function setCreatedBy(Member $createdBy): self
     {
         $this->createdBy = $createdBy;
 
         return $this;
     }
 
-    /**
-     * Get createdBy.
-     *
-     * @return Member
-     */
-    public function getCreatedBy()
+    public function getCreatedBy(): Member
     {
         return $this->createdBy;
     }
 
-    /**
-     * Set starts.
-     *
-     * @param DateTime $starts
-     *
-     * @return Activity
-     */
-    public function setStarts($starts)
+    public function setStarts($starts): self
     {
         $this->starts = $starts;
 
         return $this;
     }
 
-    /**
-     * Get starts.
-     *
-     * @return Carbon
-     */
-    public function getStarts()
+    public function getStarts(): Carbon
     {
         return Carbon::instance($this->starts);
     }
 
-    /**
-     * Set ends.
-     *
-     * @param DateTime $ends
-     *
-     * @return Activity
-     */
-    public function setEnds($ends)
+    public function setEnds($ends): self
     {
         $this->ends = $ends;
 
         return $this;
     }
 
-    /**
-     * Get ends.
-     *
-     * @return Carbon
-     */
-    public function getEnds()
+    public function getEnds(): Carbon
     {
         return Carbon::instance($this->ends);
     }
 
-    /**
-     * Set locationid.
-     *
-     * @param Location $location
-     *
-     * @return Activity
-     */
-    public function setLocation($location)
+    public function setLocation(Location $location): self
     {
         $this->location = $location;
 
         return $this;
     }
 
-    /**
-     * Get location.
-     *
-     * @return Location
-     */
-    public function getLocation()
+    public function getLocation(): Location
     {
         return $this->location;
     }
 
-    /**
-     * Set address.
-     *
-     * @param string $address
-     *
-     * @return Activity
-     */
-    public function setAddress($address)
+    public function setAddress(string $address): self
     {
         $this->address = $address;
 
         return $this;
     }
 
-    /**
-     * Get address.
-     *
-     * @return string
-     */
-    public function getAddress()
+    public function getAddress(): ?string
     {
         return $this->address;
     }
 
-    /**
-     * Set title.
-     *
-     * @param string $title
-     *
-     * @return Activity
-     */
-    public function setTitle($title)
+    public function setTitle(string $title): self
     {
         $this->title = $title;
 
         return $this;
     }
 
-    /**
-     * Get title.
-     *
-     * @return string
-     */
-    public function getTitle()
+    public function getTitle(): string
     {
         return $this->title;
     }
 
-    /**
-     * Set description.
-     *
-     * @param string $description
-     *
-     * @return Activity
-     */
-    public function setDescription($description)
+    public function setDescription(string $description): self
     {
         $this->description = $description;
 
         return $this;
     }
 
-    /**
-     * Get description.
-     *
-     * @return string
-     */
-    public function getDescription()
+    public function getDescription(): string
     {
         return $this->description;
     }
 
-    /**
-     * Set status.
-     *
-     * @param int $status
-     *
-     * @return Activity
-     */
-    public function setStatus($status)
+    public function setStatus(int $status): self
     {
         $this->status = $status;
 
         return $this;
     }
 
-    /**
-     * Get status.
-     *
-     * @return int
-     */
-    public function getStatus()
+    public function getStatus(): int
     {
         return $this->status;
     }
 
-    /**
-     * Set public.
-     *
-     * @param int $online
-     *
-     * @return Activity
-     */
-    public function setOnline($online)
+    public function setOnline(int $online): self
     {
         $this->online = $online;
 
         return $this;
     }
 
-    /**
-     * Get public.
-     *
-     * @return int
-     */
-    public function getOnline()
+    public function getOnline(): ?int
     {
         return $this->online;
     }
 
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * @return ArrayCollection
-     */
-    public function getAttendees()
+    public function getAttendees(): Collection
     {
         return $this->attendees;
     }
 
-    /**
-     * @return ArrayCollection
-     */
-    public function getAttendeesYes()
+    public function getAttendeesYes(): iterable
     {
         $criteria = Criteria::create()
             ->where(Criteria::expr()->eq('status', ActivityAttendee::ATTENDS_YES))
@@ -358,10 +200,7 @@ class Activity
         return $attendeesYes;
     }
 
-    /**
-     * @return ArrayCollection
-     */
-    public function getAttendeesNo()
+    public function getAttendeesNo(): iterable
     {
         $criteria = Criteria::create()
             ->where(Criteria::expr()->eq('status', ActivityAttendee::ATTENDS_NO))
@@ -372,10 +211,7 @@ class Activity
         return $attendeesNo;
     }
 
-    /**
-     * @return ArrayCollection
-     */
-    public function getAttendeesMaybe()
+    public function getAttendeesMaybe(): iterable
     {
         $criteria = Criteria::create()
             ->where(Criteria::expr()->eq('status', ActivityAttendee::ATTENDS_MAYBE))
@@ -386,10 +222,7 @@ class Activity
         return $attendeesMaybe;
     }
 
-    /**
-     * @return ArrayCollection
-     */
-    public function getOrganizers()
+    public function getOrganizers(): iterable
     {
         $criteria = Criteria::create()
             ->where(Criteria::expr()->eq('organizer', '1'))
@@ -400,22 +233,14 @@ class Activity
         return $organizers;
     }
 
-    /**
-     * Add attendee.
-     *
-     * @return Activity
-     */
-    public function addAttendee(ActivityAttendee $attendee)
+    public function addAttendee(ActivityAttendee $attendee): self
     {
-        $this->attendees[] = $attendee;
+        $this->attendees->add($attendee);
 
         return $this;
     }
 
-    /**
-     * Remove attendee.
-     */
-    public function removeAttendee(ActivityAttendee $attendee)
+    public function removeAttendee(ActivityAttendee $attendee): void
     {
         $this->attendees->removeElement($attendee);
     }

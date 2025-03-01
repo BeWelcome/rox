@@ -31,8 +31,8 @@ use Symfony\Component\Routing\Annotation\Route;
  *
  * Ignore complexity warning. \todo fix this.
  *
- * @SuppressWarnings(PHPMD.CyclomaticComplexity)
- * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
+ * @SuppressWarnings("PHPMD.CyclomaticComplexity")
+ * @SuppressWarnings("PHPMD.ExcessiveClassComplexity")
  */
 class RequestController extends BaseRequestAndInvitationController
 {
@@ -66,9 +66,8 @@ class RequestController extends BaseRequestAndInvitationController
         $current = $conversation[0];
         $request = $current->getRequest();
         $request->setStatus(HostingRequest::REQUEST_DECLINED);
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($request);
-        $em->flush();
+        $this->entityManager->persist($request);
+        $this->entityManager->flush();
 
         $guest = $message->getInitiator();
         $host = $message->getReceiver() === $guest ? $message->getSender() : $message->getReceiver();
@@ -100,10 +99,9 @@ class RequestController extends BaseRequestAndInvitationController
     }
 
     /**
-     * @Route("/new/request/{username}", name="hosting_request")
-     *
      * @throws Exception
      */
+    #[Route(path: '/new/request/{username}', name: 'hosting_request')]
     public function newHostingRequest(
         Request $request,
         Member $host,
@@ -179,9 +177,8 @@ class RequestController extends BaseRequestAndInvitationController
             $hostingRequest = $this->getMessageFromData($requestForm->getData(), $guest, $host);
             $hostingRequest = $this->conversationModel->formatConversation($hostingRequest);
 
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($hostingRequest);
-            $em->flush();
+            $this->entityManager->persist($hostingRequest);
+            $this->entityManager->flush();
 
             $this->sendInitialRequestNotification(
                 $host,
@@ -370,7 +367,7 @@ class RequestController extends BaseRequestAndInvitationController
     /**
      * The requestChanged parameter triggers a PHPMD warning which is out of place in this case.
      *
-     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
+     * @SuppressWarnings("PHPMD.BooleanArgumentFlag")
      *
      * @param mixed $subject
      * @param mixed $template

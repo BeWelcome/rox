@@ -14,77 +14,69 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Image uploaded using CKEditor.
  *
- * @ORM\Table(name="uploaded_image")
- * @ORM\Entity
- * @ORM\HasLifecycleCallbacks
  *
- * @SuppressWarnings(PHPMD)
+ * @SuppressWarnings("PHPMD")
  * Auto generated class do not check mess
  */
+#[ORM\Table(name: 'uploaded_image')]
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class UploadedImage
 {
     /**
      * @var string
-     *
-     * @ORM\Column(name="filename", type="string", length=100, nullable=false)
      */
+    #[ORM\Column(name: 'filename', type: 'string', length: 100, nullable: false)]
     private $filename;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="mimetype", type="string", length=100, nullable=false)
      */
+    #[ORM\Column(name: 'mimetype', type: 'string', length: 100, nullable: false)]
     private $mimeType;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="size", type="integer", nullable=false)
      */
+    #[ORM\Column(name: 'size', type: 'integer', nullable: false)]
     private $size = 0;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="width", type="integer", nullable=false)
      */
+    #[ORM\Column(name: 'width', type: 'integer', nullable: false)]
     private $width = 0;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="height", type="integer", nullable=false)
      */
+    #[ORM\Column(name: 'height', type: 'integer', nullable: false)]
     private $height = 0;
 
     /**
      * @var DateTime
-     * @ORM\Column(name="created", type="datetime", nullable=false)
      */
+    #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
     private $created;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="fileinfo", type="text", length=32, nullable=false)
      */
+    #[ORM\Column(name: 'fileinfo', type: 'text', length: 32, nullable: false)]
     private $fileInfo;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="filehash", type="text", length=64, nullable=false)
      */
+    #[ORM\Column(name: 'filehash', type: 'text', length: 64, nullable: false)]
     private $fileHash;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     private $id;
 
     public function setFilename(string $filename): self
@@ -147,9 +139,8 @@ class UploadedImage
 
     /**
      * Triggered on insert.
-     *
-     * @ORM\PrePersist
      */
+    #[ORM\PrePersist]
     public function onPrePersist()
     {
         $this->created = new DateTime('now');

@@ -13,7 +13,7 @@ class UserChecker implements UserCheckerInterface
      * @throws AccountBannedException
      * @throws AccountDeniedLoginException
      */
-    public function checkPreAuth(UserInterface $user)
+    public function checkPreAuth(UserInterface $user): void
     {
         if (!$user instanceof Member) {
             return;
@@ -34,7 +34,7 @@ class UserChecker implements UserCheckerInterface
      * @throws AccountMailConfirmedException
      * @throws AccountMailNotConfirmedException
      */
-    public function checkPostAuth(UserInterface $user)
+    public function checkPostAuth(UserInterface $user): void
     {
         if (!$user instanceof Member) {
             return;

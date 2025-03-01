@@ -118,7 +118,7 @@ class CommentModel
                         c.IdFromMember = :memberId
                         AND TIMEDIFF(NOW(), created) < :duration
                 ",
-                [ ':memberId' => $member->getId(), ':duration' => $duration]
+                [ 'memberId' => $member->getId(), 'duration' => $duration]
             )
             ->fetchOne()
         ;
@@ -138,7 +138,7 @@ class CommentModel
                             c.IdFromMember = :memberId
                             AND TIMEDIFF(NOW(), created) < :duration
                     ",
-                    [ ':memberId' => $member->getId(), ':duration' => $duration]
+                    [ 'memberId' => $member->getId(), 'duration' => $duration]
                 )
                 ->fetchAllAssociative()
             ;

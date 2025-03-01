@@ -2,19 +2,17 @@
 
 namespace App\Doctrine;
 
-use Symfony\Component\Translation\MessageCatalogue;
+use Symfony\Component\Translation\MessageCatalogueInterface;
 
 class DomainType extends EnumType
 {
-    public const MESSAGES = 'messages';
-    public const ICU_MESSAGES = self::MESSAGES . MessageCatalogue::INTL_DOMAIN_SUFFIX;
-    public const VALIDATORS = 'validators';
+    public const string MESSAGES = 'messages';
+    public const string ICU_MESSAGES = self::MESSAGES . MessageCatalogueInterface::INTL_DOMAIN_SUFFIX;
+    public const string VALIDATORS = 'validators';
 
-    /** @var string */
-    protected $name = 'domain';
+    protected string $name = 'domain';
 
-    /** @var array */
-    protected $values = [
+    protected array $values = [
         self::MESSAGES,
         self::ICU_MESSAGES,
         self::VALIDATORS,

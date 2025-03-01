@@ -5,14 +5,12 @@ namespace App\Doctrine;
 class TranslationAllowedType extends EnumType
 {
     // This is reversed as the database uses a field named do_not_translate!
-    public const TRANSLATION_NOT_ALLOWED = 'yes';
-    public const TRANSLATION_ALLOWED = 'no';
+    public const string TRANSLATION_NOT_ALLOWED = 'yes';
+    public const string TRANSLATION_ALLOWED = 'no';
 
-    /** @var string */
-    protected $name = 'translation_allowed';
+    protected string $name = 'translation_allowed';
 
-    /** @var array */
-    protected $values = [
+    protected array $values = [
         self::TRANSLATION_NOT_ALLOWED,
         self::TRANSLATION_ALLOWED,
     ];

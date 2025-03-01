@@ -4,17 +4,15 @@ namespace App\Doctrine;
 
 class SpamInfoType extends SetType
 {
-    public const NO_SPAM = 'NotSpam';
-    public const MEMBER_SAYS_SPAM = 'SpamSayMember';
-    public const CHECKER_SAYS_SPAM = 'SpamSayChecker';
-    public const SPAM_BLOCKED_WORD = 'SpamBlkWord';
-    public const SPAM_MANAGER = 'ProcessedBySpamManager';
+    public const string NO_SPAM = 'NotSpam';
+    public const string MEMBER_SAYS_SPAM = 'SpamSayMember';
+    public const string CHECKER_SAYS_SPAM = 'SpamSayChecker';
+    public const string SPAM_BLOCKED_WORD = 'SpamBlkWord';
+    public const string SPAM_MANAGER = 'ProcessedBySpamManager';
 
-    /** @var string */
-    protected $name = 'spam_info';
+    protected string $name = 'spam_info';
 
-    /** @var array */
-    protected $values = [
+    protected array $values = [
         self::NO_SPAM,
         self::SPAM_BLOCKED_WORD,
         self::MEMBER_SAYS_SPAM,

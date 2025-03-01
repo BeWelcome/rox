@@ -19,7 +19,7 @@ use Mockery;
 class InvitationUtility
 {
     /**
-     * @SuppressWarnings(PHPMD.StaticAccess)
+     * @SuppressWarnings("PHPMD.StaticAccess")
      */
     public function getThread(Member $host, Member $guest, Subtrip $leg, int $status, int $replies): array
     {
@@ -68,7 +68,7 @@ class InvitationUtility
     }
 
     /**
-     * @SuppressWarnings(PHPMD.StaticAccess)
+     * @SuppressWarnings("PHPMD.StaticAccess")
      */
     public function getReply(
         Message $parent,
@@ -97,7 +97,7 @@ class InvitationUtility
     }
 
     /**
-     * @SuppressWarnings(PHPMD.StaticAccess)
+     * @SuppressWarnings("PHPMD.StaticAccess")
      *
      * @param mixed $host
      */

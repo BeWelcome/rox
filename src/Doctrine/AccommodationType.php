@@ -4,15 +4,13 @@ namespace App\Doctrine;
 
 class AccommodationType extends EnumType
 {
-    public const YES = 'anytime';
-    public const MAYBE = 'dependonrequest';
-    public const NO = 'neverask';
+    public const string YES = 'anytime';
+    public const string MAYBE = 'dependonrequest';
+    public const string NO = 'neverask';
 
-    /** @var string */
-    protected $name = 'accommodation';
+    protected string $name = 'accommodation';
 
-    /** @var array */
-    protected $values = [
+    protected array $values = [
         self::YES,
         self::MAYBE,
         self::NO,

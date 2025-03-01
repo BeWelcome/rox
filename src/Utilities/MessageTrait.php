@@ -19,9 +19,7 @@ trait MessageTrait
      */
     private $environment;
 
-    /**
-     * @Required
-     */
+    #[\Symfony\Contracts\Service\Attribute\Required]
     public function setTwigEnvironment(Environment $environment)
     {
         $this->environment = $environment;

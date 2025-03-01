@@ -15,11 +15,6 @@ class ConversationThread
         $this->entityManager = $entityManager;
     }
 
-    /**
-     * Returns the conversation that contains the given message.
-     *
-     * @return Message[]
-     */
     public function getThread(Message $conversation): array
     {
         $connection = $this->entityManager->getConnection();
@@ -59,7 +54,8 @@ class ConversationThread
                 JOIN messages hi ON hi.id = ho.id) q) q2
             ORDER BY level
         ');
-        $result = $stmt->executeQuery([':message_id' => $conversation->getId()]);
+        $stmt->bindValue('message_id', $conversation->getId());
+        $result = $stmt->executeQuery();
         $ids = $result->fetchAllNumeric();
         $ids = array_map(
             function ($value) {

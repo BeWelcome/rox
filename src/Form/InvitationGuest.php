@@ -26,7 +26,7 @@ class InvitationGuest extends HostingRequestAbstractType
         $this->legTransformer = $legTransformer;
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('message', CkEditorType::class, [
@@ -75,7 +75,7 @@ class InvitationGuest extends HostingRequestAbstractType
     /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver
             ->setDefaults([
@@ -88,7 +88,7 @@ class InvitationGuest extends HostingRequestAbstractType
     /**
      * {@inheritdoc}
      */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'invitation';
     }

@@ -26,8 +26,8 @@ class TripRepository extends EntityRepository
             ->where('t.created <= :now')
             ->andWhere('t.creator = :creator')
             ->andWhere('t.deleted IS NULL')
-            ->setParameter(':now', new DateTime())
-            ->setParameter(':creator', $member)
+            ->setParameter('now', new DateTime())
+            ->setParameter('creator', $member)
             ->orderBy('t.created', 'DESC')
             ->getQuery();
     }

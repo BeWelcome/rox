@@ -32,7 +32,7 @@ use Mockery;
  *
  * Rather complicated but understandable. No mess detection needed.
  *
- * @SuppressWarnings(PHPMD)
+ * @SuppressWarnings("PHPMD")
  */
 class MyDataMockups implements MockupProviderInterface
 {

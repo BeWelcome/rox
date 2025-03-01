@@ -62,7 +62,7 @@
                             </td>
                             <td class="w-75">
                                 <p class="m-0"><small class="text-muted">{{ translation.domain }}</small></p>
-                                <p class="m-0">{% if translation.shortcode == locale %}
+                                <p class="m-0">{% if translation.shortCode == locale %}
                                         {% if translation.majorUpdate is defined %}<i class="fas {% if translation.majorUpdate %}fa-arrow-up{% else %}fa-arrow-down{% endif %} fa-fw"></i>{% endif %}
                                     {{ translation.sentence | striptags | truncate(50) }}
                                 {% else %}
@@ -73,7 +73,7 @@
                             <td class="text-right">
                                 <p class="m-0"><small class="text-muted">{{ translation.created|format_date('medium') }}</small></p>
                                 <p class="m-0">
-                                {% if translation.shortcode == locale %}
+                                {% if translation.shortCode == locale %}
                                     <a href="{{ url('translation_edit', { code: translation.code, locale: locale }) }}"><i class="fa fa-edit"></i></a>
                                 {% else %}
                                     <a href="{{ url('translation_add', { code: translation.code, locale: locale }) }}"><i class="fa fa-plus"></i></a>

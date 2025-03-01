@@ -15,7 +15,7 @@ doctrine:
         password: "%env(DB_PASS)%"
 
         # IMPORTANT: You MUST configure your server version,
-        server_version: '10.1.41'
+        server_version: '10.9.1-MariaDB'
 
         schema_filter: ~^(?!rememberme_token)~
 
@@ -65,33 +65,30 @@ doctrine:
     orm:
         auto_generate_proxy_classes: '%kernel.debug%'
         naming_strategy: doctrine.orm.naming_strategy.underscore
-        auto_mapping: true
         mappings:
             App:
                 is_bundle: false
-                type: annotation
+                type: attribute
                 dir: '%kernel.project_dir%/src/Entity'
                 prefix: 'App\Entity'
-                alias: App
             gedmo_translatable:
-                type: annotation
+                type: attribute
                 prefix: Gedmo\Translatable\Entity
                 dir: "%kernel.project_dir%/vendor/gedmo/doctrine-extensions/src/Translatable/Entity"
                 alias: GedmoTranslatable # (optional) it will default to the name set for the mapping
                 is_bundle: false
             gedmo_translator:
-                type: annotation
+                type: attribute
                 prefix: Gedmo\Translator\Entity
                 dir: "%kernel.project_dir%/vendor/gedmo/doctrine-extensions/src/Translator/Entity"
                 alias: GedmoTranslator # (optional) it will default to the name set for the mapping
                 is_bundle: false
-
-        hydrators:
-            LanguageHydrator: App\Doctrine\Hydrator\LanguageHydrator
-        filters:
-            language_filter:
-                class:   App\Doctrine\Filter\LanguageFilter
-                enabled: true
+#        hydrators:
+#            LanguageHydrator: App\Doctrine\Hydrator\LanguageHydrator
+#        filters:
+#            language_filter:
+#                class:   App\Doctrine\Filter\LanguageFilter
+#                enabled: true
         dql:
             datetime_functions:
                 datediff: App\Doctrine\Functions\DateDiff

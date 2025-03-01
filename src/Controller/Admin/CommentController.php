@@ -11,7 +11,7 @@ use App\Model\Admin\CommentModel;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,7 +22,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 /**
  * Class CommentController.
  *
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ * @SuppressWarnings("PHPMD.TooManyPublicMethods")
  */
 class CommentController extends AbstractController
 {
@@ -42,12 +42,11 @@ class CommentController extends AbstractController
     }
 
     /**
-     * @Route("/admin/comment", name="admin_comment_overview")
      *
      * @throws AccessDeniedException
-     *
      * @return Response
      */
+    #[Route(path: '/admin/comment', name: 'admin_comment_overview')]
     public function adminCommentOverview(Request $request)
     {
         if (
@@ -74,12 +73,11 @@ class CommentController extends AbstractController
     }
 
     /**
-     * @Route("/admin/comment/safetyteam", name="admin_abuser_overview")
      *
      * @throws AccessDeniedException
-     *
      * @return Response
      */
+    #[Route(path: '/admin/comment/safetyteam', name: 'admin_abuser_overview')]
     public function adminSafetyTeamOverview(Request $request)
     {
         if (!$this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)) {
@@ -103,12 +101,11 @@ class CommentController extends AbstractController
     }
 
     /**
-     * @Route("/admin/comment/reported", name="admin_comment_reported_overview")
      *
      * @throws AccessDeniedException
-     *
      * @return Response
      */
+    #[Route(path: '/admin/comment/reported', name: 'admin_comment_reported_overview')]
     public function adminReportedOverview(Request $request)
     {
         if (
@@ -135,12 +132,11 @@ class CommentController extends AbstractController
     }
 
     /**
-     * @Route("/admin/comment/negative", name="admin_negative_overview")
      *
      * @throws AccessDeniedException
-     *
      * @return Response
      */
+    #[Route(path: '/admin/comment/negative', name: 'admin_negative_overview')]
     public function adminNegativeOverview(Request $request)
     {
         if (
@@ -166,12 +162,11 @@ class CommentController extends AbstractController
     }
 
     /**
-     * @Route("/admin/comment/checked", name="admin_checked_overview")
      *
      * @throws AccessDeniedException
-     *
      * @return Response
      */
+    #[Route(path: '/admin/comment/checked', name: 'admin_checked_overview')]
     public function adminCheckedOverview(Request $request)
     {
         if (
@@ -197,18 +192,12 @@ class CommentController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/admin/comment/{to_member}/{from_member}", name="admin_comment")
-     *
-     * @throws AccessDeniedException
-     *
-     * @ParamConverter("toMember", class="App\Entity\Member", options={"mapping": {"to_member": "username"}})
-     * @ParamConverter("fromMember", class="App\Entity\Member", options={"mapping": {"from_member": "username"}})
-     *
-     * @return Response
-     */
-    public function adminComment(Request $request, Member $toMember, Member $fromMember)
-    {
+    #[Route(path: '/admin/comment/{to_member}/{from_member}', name: 'admin_comment')]
+    public function adminComment(
+        Request $request,
+        #[MapEntity(mapping: ['to_member' => 'username'])] Member $toMember,
+        #[MapEntity(mapping: ['from_member' => 'username'])] Member $fromMember
+    ) : Response {
         if (
             !$this->isGranted(Member::ROLE_ADMIN_COMMENTS)
             && !$this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
@@ -256,21 +245,13 @@ class CommentController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/admin/comment/{to_member}/{from_member}/safetyteam", name="admin_comment_assign_safetyteam")
-     *
-     * @throws AccessDeniedException
-     *
-     * @ParamConverter("toMember", class="App\Entity\Member", options={"mapping": {"to_member": "username"}})
-     * @ParamConverter("fromMember", class="App\Entity\Member", options={"mapping": {"from_member": "username"}})
-     *
-     * @return RedirectResponse
-     */
-    public function adminCommentAssignSafetyTeamAction(Request $request, Member $toMember, Member $fromMember)
-    {
-        if (
-            !$this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
-        ) {
+    #[Route(path: '/admin/comment/{to_member}/{from_member}/safetyteam', name: 'admin_comment_assign_safetyteam')]
+    public function adminCommentAssignSafetyTeamAction(
+        Request $request,
+        #[MapEntity(mapping: ['to_member' => 'username'])] Member $toMember,
+        #[MapEntity(mapping: ['from_member' => 'username'])] Member $fromMember
+    ): Response {
+        if (!$this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)) {
             throw $this->createAccessDeniedException('You need to have either Comments right or be a member of the Safety Team to access this.');
         }
 
@@ -288,18 +269,12 @@ class CommentController extends AbstractController
         return $this->redirect($request->headers->get('referer'));
     }
 
-    /**
-     * @Route("/admin/comment/{to_member}/{from_member}/checked", name="admin_comment_mark_checked")
-     *
-     * @throws AccessDeniedException
-     *
-     * @ParamConverter("toMember", class="App\Entity\Member", options={"mapping": {"to_member": "username"}})
-     * @ParamConverter("fromMember", class="App\Entity\Member", options={"mapping": {"from_member": "username"}})
-     *
-     * @return RedirectResponse
-     */
-    public function adminCommentMarkChecked(Request $request, Member $toMember, Member $fromMember)
-    {
+    #[Route(path: '/admin/comment/{to_member}/{from_member}/checked', name: 'admin_comment_mark_checked')]
+    public function adminCommentMarkChecked(
+        Request $request,
+        #[MapEntity(mapping: ['to_member' => 'username'])] Member $toMember,
+        #[MapEntity(mapping: ['from_member' => 'username'])] Member $fromMember
+    ): Response {
         if (
             !$this->isGranted(Member::ROLE_ADMIN_COMMENTS)
             && !$this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
@@ -321,18 +296,12 @@ class CommentController extends AbstractController
         return $this->redirect($request->headers->get('referer'));
     }
 
-    /**
-     * @Route("/admin/comment/{to_member}/{from_member}/hide", name="admin_comment_hide")
-     *
-     * @throws AccessDeniedException
-     *
-     * @ParamConverter("toMember", class="App\Entity\Member", options={"mapping": {"to_member": "username"}})
-     * @ParamConverter("fromMember", class="App\Entity\Member", options={"mapping": {"from_member": "username"}})
-     *
-     * @return RedirectResponse
-     */
-    public function adminCommentHide(Request $request, Member $toMember, Member $fromMember)
-    {
+    #[Route(path: '/admin/comment/{to_member}/{from_member}/hide', name: 'admin_comment_hide')]
+    public function adminCommentHide(
+        Request $request,
+        #[MapEntity(mapping: ['to_member' => 'username'])] Member $toMember,
+        #[MapEntity(mapping: ['from_member' => 'username'])] Member $fromMember
+    ): Response {
         if (
             !$this->isGranted(Member::ROLE_ADMIN_COMMENTS)
             && !$this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
@@ -354,18 +323,12 @@ class CommentController extends AbstractController
         return $this->redirect($request->headers->get('referer'));
     }
 
-    /**
-     * @Route("/admin/comment/{to_member}/{from_member}/show", name="admin_comment_show")
-     *
-     * @throws AccessDeniedException
-     *
-     * @ParamConverter("toMember", class="App\Entity\Member", options={"mapping": {"to_member": "username"}})
-     * @ParamConverter("fromMember", class="App\Entity\Member", options={"mapping": {"from_member": "username"}})
-     *
-     * @return RedirectResponse
-     */
-    public function adminCommentShow(Request $request, Member $toMember, Member $fromMember)
-    {
+    #[Route(path: '/admin/comment/{to_member}/{from_member}/show', name: 'admin_comment_show')]
+    public function adminCommentShow(
+        Request $request,
+        #[MapEntity(mapping: ['to_member' => 'username'])] Member $toMember,
+        #[MapEntity(mapping: ['from_member' => 'username'])] Member $fromMember
+    ): Response {
         if (
             !$this->isGranted(Member::ROLE_ADMIN_COMMENTS)
             && !$this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
@@ -388,12 +351,11 @@ class CommentController extends AbstractController
     }
 
     /**
-     * @Route("/admin/comment/for/{username}", name="admin_comments_for_member", priority=10)
      *
      * @throws AccessDeniedException
-     *
      * @return Response
      */
+    #[Route(path: '/admin/comment/for/{username}', name: 'admin_comments_for_member', priority: 10)]
     public function showAllCommentsForMember(Request $request, Member $member)
     {
         if (
@@ -420,12 +382,11 @@ class CommentController extends AbstractController
     }
 
     /**
-     * @Route("/admin/comment/from/{username}", name="admin_comments_from_member", priority=10)
      *
      * @throws AccessDeniedException
-     *
      * @return Response
      */
+    #[Route(path: '/admin/comment/from/{username}', name: 'admin_comments_from_member', priority: 10)]
     public function showAllCommentsFromMember(Request $request, Member $member)
     {
         if (

@@ -20,14 +20,14 @@ class FeedbackController extends AboutBaseController
     use TranslatedFlashTrait;
 
     /**
-     * @Route("/about/feedback", name="contactus")
-     * @Route("/contact")
-     * @Route("/contactus")
-     * @Route("/support")
-     * @Route("/feedback", name="feedback")
      *
      * @return Response|RedirectResponse
      */
+    #[Route(path: '/about/feedback', name: 'contactus')]
+    #[Route(path: '/contact')]
+    #[Route(path: '/contactus')]
+    #[Route(path: '/support')]
+    #[Route(path: '/feedback', name: 'feedback')]
     public function feedback(Request $request, AboutModel $aboutModel, TranslatorInterface $translator)
     {
         $noModal = $request->query->get('no', false);
@@ -111,10 +111,9 @@ class FeedbackController extends AboutBaseController
     }
 
     /**
-     * @Route("/feedback/received", name="feedback_received")
-     *
      * @return Response
      */
+    #[Route(path: '/feedback/received', name: 'feedback_received')]
     public function feedbackReceived(Request $request)
     {
         return $this->render('about/feedback.received.html.twig', [

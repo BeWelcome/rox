@@ -11,11 +11,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class SubscriptionController extends AbstractController
 {
-    /**
-     * @Route( "/unsubscribe/newsletter/{username}/{unsubscribeKey}", name="regular_newsletter_unsubscribe",
-     *     requirements={"unsubscribeKey"="[a-z0-9]{64}"}
-     * )
-     */
+    #[Route(path: '/unsubscribe/newsletter/{username}/{unsubscribeKey}', name: 'regular_newsletter_unsubscribe', requirements: ['unsubscribeKey' => '[a-z0-9]{64}'])]
     public function unsubscribeNewsletter(
         Request $request,
         SubscriptionModel $subscriptionModel,
@@ -45,11 +41,7 @@ class SubscriptionController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route( "/unsubscribe/local/{username}/{unsubscribeKey}", name="local_newsletter_unsubscribe",
-     *     requirements={"unsubscribeKey"="[a-z0-9]{64}"}
-     * )
-     */
+    #[Route(path: '/unsubscribe/local/{username}/{unsubscribeKey}', name: 'local_newsletter_unsubscribe', requirements: ['unsubscribeKey' => '[a-z0-9]{64}'])]
     public function unsubscribeLocalEvents(
         Request $request,
         SubscriptionModel $subscriptionModel,

@@ -14,87 +14,77 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Notes.
  *
- * @ORM\Table(name="notes")
- * @ORM\Entity(repositoryClass="App\Repository\NotificationRepository")
- * @ORM\HasLifecycleCallbacks
  *
- * @SuppressWarnings(PHPMD)
+ * @SuppressWarnings("PHPMD")
  * Auto generated class do not check mess
  */
+#[ORM\Table(name: 'notes')]
+#[ORM\Entity(repositoryClass: \App\Repository\NotificationRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Notification
 {
     /**
      * @var Member
-     *
-     * @ORM\ManyToOne(targetEntity="\App\Entity\Member")
-     * @ORM\JoinColumn(name="IdMember", referencedColumnName="id")
      */
+    #[ORM\JoinColumn(name: 'IdMember', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: Member::class)]
     private $member;
 
     /**
      * @var Member
-     *
-     * @ORM\ManyToOne(targetEntity="\App\Entity\Member")
-     * @ORM\JoinColumn(name="IdRelMember", referencedColumnName="id")
      */
+    #[ORM\JoinColumn(name: 'IdRelMember', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: Member::class)]
     private $relMember;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="Type", type="string", nullable=false)
      */
+    #[ORM\Column(name: 'Type', type: 'string', nullable: false)]
     private $type;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="Link", type="string", length=300, nullable=false)
      */
+    #[ORM\Column(name: 'Link', type: 'string', length: 300, nullable: false)]
     private $link;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="WordCode", type="string", length=300, nullable=false)
      */
+    #[ORM\Column(name: 'WordCode', type: 'string', length: 300, nullable: false)]
     private $wordcode;
 
     /**
      * @var bool
-     *
-     * @ORM\Column(name="Checked", type="boolean", nullable=false)
      */
+    #[ORM\Column(name: 'Checked', type: 'boolean', nullable: false)]
     private $checked = '0';
 
     /**
      * @var bool
-     *
-     * @ORM\Column(name="SendMail", type="boolean", nullable=false)
      */
+    #[ORM\Column(name: 'SendMail', type: 'boolean', nullable: false)]
     private $sendmail = '0';
 
     /**
      * @var DateTime
-     *
-     * @ORM\Column(name="created", type="datetime", nullable=false)
      */
+    #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
     private $created;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="TranslationParams", type="text", length=65535, nullable=true)
      */
+    #[ORM\Column(name: 'TranslationParams', type: 'text', length: 65535, nullable: true)]
     private $translationparams;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     private $id;
 
     /**
@@ -339,9 +329,8 @@ class Notification
 
     /**
      * Triggered on insert.
-     *
-     * @ORM\PrePersist
      */
+    #[ORM\PrePersist]
     public function onPrePersist()
     {
         $this->created = new DateTime('now');

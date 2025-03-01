@@ -5,6 +5,7 @@ namespace App\Form\CustomDataClass;
 use App\Entity\FaqCategory;
 use App\Entity\Word;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class FaqCategoryRequest
@@ -17,18 +18,17 @@ class FaqCategoryRequest
     public $wordCode;
 
     /**
-     * @var string
-     * @Assert\NotBlank()
+     * #[NotBlank()]
      */
-    public $description;
+    public string $description;
 
-    public static function fromFaqCategory(EntityManager $em, FaqCategory $faqCategory): self
+    public static function fromFaqCategory(EntityManagerInterface $entityManager, FaqCategory $faqCategory): self
     {
         $faqCategoryRequest = new self();
         $faqCategoryRequest->wordCode = $faqCategory->getDescription();
 
         // Find matching entry in words table for locale 'en'
-        $wordRepository = $em->getRepository(Word::class);
+        $wordRepository = $entityManager->getRepository(Word::class);
         $description = $wordRepository->findOneBy(['code' => $faqCategoryRequest->wordCode, 'shortCode' => 'en']);
         $faqCategoryRequest->description = $description->getSentence();
 

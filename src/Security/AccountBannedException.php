@@ -16,7 +16,7 @@ class AccountBannedException extends AccountStatusException
     /**
      * {@inheritdoc}
      */
-    public function getMessageKey()
+    public function getMessageKey(): string
     {
         return 'Account has been banned.';
     }

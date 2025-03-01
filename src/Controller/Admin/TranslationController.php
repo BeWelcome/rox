@@ -22,7 +22,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use MessageFormatter;
 use Pagerfanta\Pagerfanta;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -37,7 +37,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 /**
  * Class TranslationController.
  *
- * @SuppressWarnings(PHPMD)
+ * @SuppressWarnings("PHPMD")
  */
 class TranslationController extends AbstractController
 {
@@ -46,7 +46,7 @@ class TranslationController extends AbstractController
 
     private TranslationModel $translationModel;
     private array $locales;
-    private EntityManagerInterface $entityManager;
+    protected EntityManagerInterface $entityManager;
 
     public function __construct(
         TranslationModel $translationModel,
@@ -58,24 +58,12 @@ class TranslationController extends AbstractController
         $this->entityManager = $entityManager;
     }
 
-    /**
-     * @Route("/admin/translations/edit/{locale}/{code}", name="translation_edit",
-     *     requirements={"code"=".+"}))
-     *
-     * Update an existing translation for the locale
-     *
-     * @param mixed $code
-     *
-     * @throws Exception
-     *
-     * @return Response
-     * @ParamConverter("language", class="App\Entity\Language", options={"mapping": {"locale": "shortCode"}})
-     */
+    #[Route(path: '/admin/translations/edit/{locale}/{code}', name: 'translation_edit', requirements: ['code' => '.+'])] // Update an existing translation for the locale
     public function editTranslation(
         Request $request,
-        Language $language,
-        $code
-    ) {
+        #[MapEntity(mapping: ['locale' => 'shortCode'])] Language $language,
+        string $code
+    ): Response {
         $this->denyAccessUnlessGranted(Member::ROLE_ADMIN_WORDS, null, 'Unable to access this page!');
 
         // Check that the volunteer has rights for this language
@@ -190,24 +178,12 @@ class TranslationController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/admin/translations/create/{locale}/{translationId}", name="translation_create",
-     *     requirements={"domain"="messages|message+intl-icu|validators", "translationId"=".+"}))
-     *
-     * Creates an English index and the matching translation (if locale != 'en')
-     *
-     * @param mixed $translationId
-     *
-     * @throws Exception
-     *
-     * @return Response
-     * @ParamConverter("language", class="App\Entity\Language", options={"mapping": {"locale": "shortCode"}})
-     */
+    #[Route(path: '/admin/translations/create/{locale}/{translationId}', name: 'translation_create', requirements: ['domain' => 'messages|message+intl-icu|validators', 'translationId' => '.+'])] // Creates an English index and the matching translation (if locale != 'en')
     public function createTranslationForId(
         Request $request,
-        Language $language,
-        $translationId
-    ) {
+        #[MapEntity(mapping: ['locale' => 'shortCode'])] Language $language,
+        string $translationId
+    ): Response {
         $this->denyAccessUnlessGranted(Member::ROLE_ADMIN_WORDS, null, 'Unable to access this page!');
 
         /** @var Member $translator */
@@ -222,7 +198,7 @@ class TranslationController extends AbstractController
         }
 
         // Check if an English entry already exists
-        $translationRepository = $this->getDoctrine()->getRepository(Word::class);
+        $translationRepository = $this->entityManager->getRepository(Word::class);
         /** @var Word $original */
         $englishTranslation = $translationRepository->findOneBy([
             'code' => $translationId,
@@ -238,7 +214,7 @@ class TranslationController extends AbstractController
         }
 
         /** @var LanguageRepository $languageRepository */
-        $languageRepository = $this->getDoctrine()->getRepository(Language::class);
+        $languageRepository = $this->entityManager->getRepository(Language::class);
         /** @var Language $english */
         $english = $languageRepository->findOneBy(['shortCode' => 'en']);
 
@@ -293,17 +269,13 @@ class TranslationController extends AbstractController
     }
 
     /**
-     * @Route("/admin/translations/create", name="translation_create_direct")
-     *
-     * Creates an new English index bypassing the translation interface
      *
      * @throws Exception
-     *
      * @return Response
      */
-    public function createTranslationDirect(
-        Request $request
-    ) {
+    #[Route(path: '/admin/translations/create', name: 'translation_create_direct')] // Creates an new English index bypassing the translation interface
+    public function createTranslationDirect(Request $request): Response
+    {
         $this->denyAccessUnlessGranted(Member::ROLE_ADMIN_WORDS, null, 'Unable to access this page!');
 
         // Volunteer needs rights for this language and for English
@@ -314,7 +286,7 @@ class TranslationController extends AbstractController
         }
 
         /** @var LanguageRepository $languageRepository */
-        $languageRepository = $this->getDoctrine()->getRepository(Language::class);
+        $languageRepository = $this->entityManager->getRepository(Language::class);
         /** @var Language $english */
         $english = $languageRepository->findOneBy(['shortCode' => 'en']);
 
@@ -351,21 +323,12 @@ class TranslationController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/admin/translations/add/{locale}/{code}", name="translation_add",
-     *     requirements={"code"=".+"}))
-     *
-     * Adds a missing translation for an existing english index
-     *
-     * @param mixed $code
-     *
-     * @throws Exception
-     *
-     * @return Response
-     * @ParamConverter("language", class="App\Entity\Language", options={"mapping": {"locale": "shortCode"}})
-     */
-    public function addTranslation(Request $request, Language $language, $code)
-    {
+    #[Route(path: '/admin/translations/add/{locale}/{code}', name: 'translation_add', requirements: ['code' => '.+'])] // Adds a missing translation for an existing english index
+    public function addTranslation(
+        Request $request,
+        #[MapEntity(mapping: ['locale' => 'shortCode'])] Language $language,
+        string $code
+    ): Response {
         $this->denyAccessUnlessGranted(Member::ROLE_ADMIN_WORDS, null, 'Unable to access this page!');
 
         /** @var Member $translator */
@@ -386,7 +349,7 @@ class TranslationController extends AbstractController
 
             return $this->redirectToRoute('translations');
         }
-        $translationRepository = $this->getDoctrine()->getRepository(Word::class);
+        $translationRepository = $this->entityManager->getRepository(Word::class);
 
         /** @var Word $original */
         $original = $translationRepository->findOneBy([
@@ -462,15 +425,12 @@ class TranslationController extends AbstractController
     }
 
     /**
-     * @Route("/admin/translations/mode/{mode}", name="translation_mode",
-     *     requirements={"mode": "on|off"}
-     * )
      *
      * @param $mode
-     *
      * @return RedirectResponse
      */
-    public function setTranslationMode(Request $request, $mode)
+    #[Route(path: '/admin/translations/mode/{mode}', name: 'translation_mode', requirements: ['mode' => 'on|off'])]
+    public function setTranslationMode(Request $request, string $mode)
     {
         if ('on' === $mode) {
             $flashId = 'flash.translation.enabled';
@@ -479,17 +439,16 @@ class TranslationController extends AbstractController
         }
         $this->addTranslatedFlash('notice', $flashId);
 
-        $this->get('session')->set('translation_mode', $mode);
+        $request->getSession()->set('translation_mode', $mode);
         $referrer = $request->headers->get('referer');
 
         return $this->redirect($referrer);
     }
 
     /**
-     * @Route("/admin/translation/no_permissions", name="translations_no_permissions")
-     *
      * @return Response
      */
+    #[Route(path: '/admin/translation/no_permissions', name: 'translations_no_permissions')]
     public function translationNoRights(Request $request)
     {
         $locale = $request->getLocale();
@@ -502,10 +461,9 @@ class TranslationController extends AbstractController
     }
 
     /**
-     * @Route("/admin/translations", name="translations")
-     *
      * @return RedirectResponse
      */
+    #[Route(path: '/admin/translations', name: 'translations')]
     public function translationSwitch(Request $request)
     {
         $this->denyAccessUnlessGranted(Member::ROLE_ADMIN_WORDS, null, 'Unable to access this page!');
@@ -518,19 +476,13 @@ class TranslationController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/admin/translations/{type}/{locale}/{code}", name="translations_locale_code",
-     *     defaults={"code":""},
-     *     requirements={"code"=".+", "type"="missing|update|all|archived|donottranslate"})
-     *
-     * @param $code
-     * @param mixed $type
-     * @ParamConverter("language", class="App\Entity\Language", options={"mapping": {"locale": "shortCode"}})
-     *
-     * @return RedirectResponse|Response
-     */
-    public function listTranslations(Request $request, Language $language, $type, $code)
-    {
+    #[Route(path: '/admin/translations/{type}/{locale}/{code}', name: 'translations_locale_code', defaults: ['code' => ''], requirements: ['code' => '.+', 'type' => 'missing|update|all|archived|donottranslate'])]
+    public function listTranslations(
+        Request $request,
+        #[MapEntity(mapping: ['locale' => 'shortCode'])] Language $language,
+        string $type,
+        string $code
+    ) : Response {
         $this->denyAccessUnlessGranted(Member::ROLE_ADMIN_WORDS, null, 'Unable to access this page!');
 
         /** @var Member $translator */
@@ -599,10 +551,9 @@ class TranslationController extends AbstractController
     }
 
     /**
-     * @Route("/admin/translate/statistics", name="translation_statistics")
-     *
      * @return Response
      */
+    #[Route(path: '/admin/translate/statistics', name: 'translation_statistics')]
     public function statistics(Request $request, EntityManagerInterface $entityManager)
     {
         /** @var WordRepository $translationRepository */
@@ -648,7 +599,7 @@ class TranslationController extends AbstractController
             ],
         ];
         if ('en' !== $locale) {
-            $submenuItems['needs_update'] = [
+            $submenuItems['update'] = [
                 'key' => 'label.translations.update_needed',
                 'url' => $this->generateUrl('translations_locale_code', [
                     'locale' => $locale,

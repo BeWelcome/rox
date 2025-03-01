@@ -19,129 +19,113 @@ use Exception;
 /**
  * ForumThread.
  *
- * @ORM\Table(name="forums_threads", indexes={
- *     @ORM\Index(name="first_postid", columns={"first_postid"}),
- *     @ORM\Index(name="last_postid", columns={"last_postid"}),
- *     @ORM\Index(name="IdGroup", columns={"IdGroup"}),
- *     @ORM\Index(name="ThreadVisibility", columns={"ThreadVisibility"}),
- *     @ORM\Index(name="ThreadDeleted", columns={"ThreadDeleted"})})
- * @ORM\Entity
- * @ORM\HasLifecycleCallbacks
  *
- * @SuppressWarnings(PHPMD)
+ * @SuppressWarnings("PHPMD")
  * Auto generated class do not check mess
  */
+#[ORM\Table(name: 'forums_threads')]
+#[ORM\Index(name: 'first_postid', columns: ['first_postid'])]
+#[ORM\Index(name: 'last_postid', columns: ['last_postid'])]
+#[ORM\Index(name: 'IdGroup', columns: ['IdGroup'])]
+#[ORM\Index(name: 'ThreadVisibility', columns: ['ThreadVisibility'])]
+#[ORM\Index(name: 'ThreadDeleted', columns: ['ThreadDeleted'])]
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class ForumThread
 {
     /**
      * @var int
-     *
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     * @ORM\Id
-     * @ORM\GeneratedValue
      */
+    #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
     private $id;
 
     /**
      * @var DateTime
-     *
-     * @ORM\Column(name="expiredate", type="datetime", nullable=true)
      */
+    #[ORM\Column(name: 'expiredate', type: 'datetime', nullable: true)]
     private $expiryDate = null;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="IdTitle", type="integer", nullable=false)
      */
+    #[ORM\Column(name: 'IdTitle', type: 'integer', nullable: false)]
     private $idTitle;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="title", type="string", length=255, nullable=false)
      */
+    #[ORM\Column(name: 'title', type: 'string', length: 255, nullable: false)]
     private $title;
 
     /**
      * @var ForumPost
-     *
-     * @ORM\OneToOne(targetEntity="ForumPost")
-     * @ORM\JoinColumn(name="first_postid", referencedColumnName="id", nullable=false)
      */
+    #[ORM\JoinColumn(name: 'first_postid', referencedColumnName: 'id', nullable: false)]
+    #[ORM\OneToOne(targetEntity: \ForumPost::class)]
     private $firstPost;
 
     /**
      * @var ForumPost
-     *
-     * @ORM\OneToOne(targetEntity="ForumPost")
-     * @ORM\JoinColumn(name="last_postid", referencedColumnName="id", nullable=false)
      */
+    #[ORM\JoinColumn(name: 'last_postid', referencedColumnName: 'id', nullable: false)]
+    #[ORM\OneToOne(targetEntity: \ForumPost::class)]
     private $lastPost;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="replies", type="integer", nullable=false)
      */
+    #[ORM\Column(name: 'replies', type: 'integer', nullable: false)]
     private $replies = 0;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="views", type="integer", nullable=false)
      */
+    #[ORM\Column(name: 'views', type: 'integer', nullable: false)]
     private $views = 0;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="stickyvalue", type="integer", nullable=false)
      */
+    #[ORM\Column(name: 'stickyvalue', type: 'integer', nullable: false)]
     private $stickyValue = 0;
 
     /**
      * @var Language
      *
      * Default English
-     *
-     * @ORM\ManyToOne(targetEntity="Language")
-     * @ORM\JoinColumn(name="IdFirstLanguageUsed", referencedColumnName="id", nullable=false)
      */
+    #[ORM\JoinColumn(name: 'IdFirstLanguageUsed', referencedColumnName: 'id', nullable: false)]
+    #[ORM\ManyToOne(targetEntity: \Language::class)]
     private $language = null;
 
     /**
      * @var Group
-     *
-     * @ORM\ManyToOne(targetEntity="Group")
-     * @ORM\JoinColumn(name="IdGroup", referencedColumnName="id", nullable=true)
      */
+    #[ORM\JoinColumn(name: 'IdGroup', referencedColumnName: 'id', nullable: true)]
+    #[ORM\ManyToOne(targetEntity: \Group::class)]
     private $group;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="ThreadVisibility", type="forum_visibility", nullable=false)
      */
+    #[ORM\Column(name: 'ThreadVisibility', type: 'forum_visibility', nullable: false)]
     private $visibility = ForumVisibilityType::MEMBERS_ONLY;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="WhoCanReply", type="thread_reply", nullable=false)
      */
+    #[ORM\Column(name: 'WhoCanReply', type: 'thread_reply', nullable: false)]
     private $whoCanReply = ThreadReplyType::MEMBERS_ONLY;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="ThreadDeleted", type="forum_delete_status", nullable=false)
      */
+    #[ORM\Column(name: 'ThreadDeleted', type: 'forum_delete_status', nullable: false)]
     private $deleted = ForumDeleteStatusType::NOT_DELETED;
 
-    /**
-     * @ORM\OneToMany(targetEntity="ForumPost", mappedBy="thread")
-     */
+    #[ORM\OneToMany(targetEntity: \ForumPost::class, mappedBy: 'thread')]
     private $posts;
 
     public function __construct()
@@ -713,7 +697,7 @@ class ForumThread
         if (null === $this->group) {
             return null;
         }
-        
+
         // Database might still link to deleted group row try to access group name and
         // return null in case that triggers an exception
         $group = $this->group;

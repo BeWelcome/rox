@@ -11,26 +11,24 @@ use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Exception;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Zend\Validator\Date;
 
+#[AsCommand(
+    name: 'statistics:update',
+    description: 'Updates the statistics for today',
+    aliases: [],
+    hidden: false,
+)]
 class UpdateStatistics extends Command
 {
-    /**
-     * @var string
-     *
-     * the name of the command (the part after "bin/console")
-     */
-    protected static $defaultName = 'statistics:update';
+    private LoggerInterface $logger;
 
-    /** @var LoggerInterface */
-    private $logger;
-
-    /** @var StatisticsModel */
-    private $statisticsModel;
+    private StatisticsModel $statisticsModel;
 
     public function __construct(StatisticsModel $statisticsModel, LoggerInterface $logger)
     {
@@ -40,10 +38,9 @@ class UpdateStatistics extends Command
         parent::__construct();
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
-            ->setDescription('Updates the statistics for today')
             ->addArgument('startDate', InputArgument::OPTIONAL, 'Start date')
             ->addArgument('endDate', InputArgument::OPTIONAL, 'Last date (included)')
             ->setHelp('This updates the stats table for the given period. Will overwrite existing values.')
@@ -57,9 +54,9 @@ class UpdateStatistics extends Command
      *
      * @return int
      *
-     * @SuppressWarnings(PHPMD.StaticAccess)
+     * @SuppressWarnings("PHPMD.StaticAccess")
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $output->writeln([
             'Updating statistics',

@@ -13,9 +13,10 @@ use App\Form\FaqFormType;
 use App\Model\FaqModel;
 use App\Model\TranslationModel;
 use DateTime;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Exception;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -27,42 +28,35 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 /**
  * Class FaqController.
  *
- * @SuppressWarnings(PHPMD.StaticAccess)
+ * @SuppressWarnings("PHPMD.StaticAccess")
  */
 class FaqController extends FaqBaseController
 {
-    /**
-     * @var FaqModel
-     */
-    private $faqModel;
+    private FaqModel $faqModel;
 
-    /**
-     * @var TranslationModel
-     */
-    private $translationModel;
+    private TranslationModel $translationModel;
 
-    public function __construct(FaqModel $faqModel, TranslationModel $translationModel)
-    {
+    public function __construct(
+        FaqModel $faqModel,
+        TranslationModel $translationModel,
+        EntityManagerInterface $entityManager
+    ) {
+        parent::__construct($entityManager);
+
         $this->faqModel = $faqModel;
         $this->translationModel = $translationModel;
     }
 
-    /**
-     * @Route(
-     *     "/admin/faqs/{categoryId}",
-     *     name="admin_faqs_overview",
-     *     defaults={"categoryId": "1"},
-     *     requirements={"categoryId": "\d+"}
-     * )
-     *
-     * @ParamConverter("faqCategory", class="App\Entity\FaqCategory", options={"id" = "categoryId"})
-     *
-     * @throws AccessDeniedException
-     *
-     * @return Response
-     */
-    public function showOverview(Request $request, FaqCategory $faqCategory)
-    {
+    #[Route(
+        path: '/admin/faqs/{categoryId}',
+        name: 'admin_faqs_overview',
+        requirements: ['categoryId' => '\d+'],
+        defaults: ['categoryId' => '1'],
+    )]
+    public function showOverview(
+        Request $request,
+        #[MapEntity(mapping: ['categoryId' => 'id'])] FaqCategory $category
+    ): Response {
         if (!$this->isGranted(Member::ROLE_ADMIN_FAQ)) {
             throw $this->createAccessDeniedException('You need to have Faq right to access this.');
         }
@@ -82,66 +76,61 @@ class FaqController extends FaqBaseController
                         $item = str_replace('faq=', '', $item);
                     }
                 );
-                $em = $this->getDoctrine()->getManager();
-                $faqRepository = $em->getRepository(Faq::class);
+                $faqRepository = $this->entityManager->getRepository(Faq::class);
                 foreach ($ids as $index => $id) {
                     $faq = $faqRepository->find($id);
                     $faq->setSortOrder($index);
-                    $em->persist($faq);
+                    $this->entityManager->persist($faq);
                 }
-                $em->flush();
+                $this->entityManager->flush();
             }
         }
 
-        $faqs = $this->faqModel->getFaqsForCategory($faqCategory);
+        $faqs = $this->faqModel->getFaqsForCategory($category);
         $faqCategories = $this->getSubMenuItems();
 
         return $this->render('admin/faqs/index.html.twig', [
             'form' => $form->createView(),
             'submenu' => [
                 'items' => $faqCategories,
-                'active' => $faqCategory->getId(),
+                'active' => $category->getId(),
             ],
-            'faqCategory' => $faqCategory,
+            'faqCategory' => $category,
             'faqs' => $faqs,
         ]);
     }
 
-    /**
-     * @Route("/admin/faqs/{categoryId}/create", name="admin_faqs_faq_create",
-     *     requirements={"categoryId": "\d+"})
-     *
-     * @ParamConverter("faqCategory", class="App\Entity\FaqCategory", options={"id" = "categoryId"})
-     *
-     * @throws Exception
-     *
-     * @return RedirectResponse|Response
-     */
-    public function createFaqInCategory(Request $request, FaqCategory $faqCategory)
-    {
+    #[Route(
+        path: '/admin/faqs/{categoryId}/create',
+        name: 'admin_faqs_faq_create',
+        requirements: ['categoryId' => '\d+']
+    )]
+    public function createFaqInCategory(
+        Request $request,
+        #[MapEntity(mapping: ['categoryId' => 'id'])] FaqCategory $category
+    ): Response {
         if (!$this->isGranted(Member::ROLE_ADMIN_FAQ)) {
             throw $this->createAccessDeniedException('You need to have Faq right to access this.');
         }
 
         $faqCategories = $this->getSubMenuItems();
 
-        $faqRequest = new FaqRequest($faqCategory);
+        $faqRequest = new FaqRequest($category);
         $faqForm = $this->createForm(FaqFormType::class, $faqRequest);
         $faqForm->handleRequest($request);
 
         if ($faqForm->isSubmitted() && $faqForm->isValid()) {
-            $em = $this->getDoctrine()->getManager();
             /** @var FaqRequest $data */
             $data = $faqForm->getData();
 
-            $wordRepository = $em->getRepository(Word::class);
+            $wordRepository = $this->entityManager->getRepository(Word::class);
             $checkQuestion = $wordRepository->findBy(['code' => 'faqq_' . $data->wordCode, 'shortCode' => 'en']);
             $checkAnswer = $wordRepository->findBy(['code' => 'faqa_' . $data->wordCode, 'shortCode' => 'en']);
             $valid = (empty($checkQuestion) && empty($checkAnswer));
             if ($valid) {
                 /** @var Member $author */
                 $author = $this->getUser();
-                $languageRepository = $em->getRepository(Language::class);
+                $languageRepository = $this->entityManager->getRepository(Language::class);
                 /** @var Language $english */
                 $english = $languageRepository->findOneBy(['shortCode' => 'en']);
 
@@ -153,7 +142,7 @@ class FaqController extends FaqBaseController
                 $question->setlanguage($english);
                 $question->setCreated(new DateTime());
                 $question->setDescription('FAQ Question');
-                $em->persist($question);
+                $this->entityManager->persist($question);
 
                 $answer = new Word();
                 $answer->setAuthor($author);
@@ -163,19 +152,19 @@ class FaqController extends FaqBaseController
                 $answer->setlanguage($english);
                 $answer->setCreated(new DateTime());
                 $answer->setDescription('FAQ Answer');
-                $em->persist($answer);
+                $this->entityManager->persist($answer);
 
                 $faq = new Faq();
                 $faq->setQAndA($data->wordCode);
-                $faq->setCategory($faqCategory);
+                $faq->setCategory($category);
                 $faq->setActive(($data->active) ? 'Active' : 'Not Active');
-                $em->persist($faq);
-                $em->flush();
+                $this->entityManager->persist($faq);
+                $this->entityManager->flush();
 
                 $this->addFlash('notice', "Faq '{$data->wordCode}' created.");
                 $this->translationModel->refreshTranslationsCache();
 
-                return $this->redirectToRoute('admin_faqs_overview', ['categoryId' => $faqCategory->getId()]);
+                return $this->redirectToRoute('admin_faqs_overview', ['categoryId' => $category->getId()]);
             }
             // Add form error so that user gets informed
             if (!empty($checkAnswer)) {
@@ -191,24 +180,17 @@ class FaqController extends FaqBaseController
             [
                 'submenu' => [
                     'items' => $faqCategories,
-                    'active' => $faqCategory->getId(),
+                    'active' => $category->getId(),
                 ],
-                'faqCategory' => $faqCategory,
+                'faqCategory' => $category,
                 'form' => $faqForm->createView(),
                 'edit' => false,
             ]
         );
     }
 
-    /**
-     * @Route("/admin/faqs/faq/{id}/edit", name="admin_faqs_faq_edit",
-     *     requirements={"id": "\d+"})
-     *
-     * @throws Exception
-     *
-     * @return Response
-     */
-    public function editFaq(Request $request, Faq $faq)
+    #[Route(path: '/admin/faqs/faq/{id}/edit', name: 'admin_faqs_faq_edit', requirements: ['id' => '\d+'])]
+    public function editFaq(Request $request, Faq $faq): Response
     {
         if (!$this->isGranted(Member::ROLE_ADMIN_FAQ)) {
             throw $this->createAccessDeniedException('You need to have Faq right to access this.');
@@ -216,8 +198,7 @@ class FaqController extends FaqBaseController
 
         $faqCategories = $this->getSubMenuItems();
 
-        $em = $this->getDoctrine()->getManager();
-        $faqRequest = FaqRequest::fromFaq($em, $faq);
+        $faqRequest = FaqRequest::fromFaq($this->entityManager, $faq);
 
         $faqForm = $this->createForm(FaqFormType::class, $faqRequest);
         $faqForm->handleRequest($request);
@@ -240,7 +221,7 @@ class FaqController extends FaqBaseController
 
             if ($faq->getCategory() !== $data->faqCategory) {
                 $faq->setCategory($data->faqCategory);
-                $em->persist($faq);
+                $this->entityManager->persist($faq);
             }
 
             if ($faq->getQAndA() !== $data->wordCode) {
@@ -253,23 +234,23 @@ class FaqController extends FaqBaseController
             $formActive = ($data->active) ? 'Active' : 'Not Active';
             if ($faq->getActive() !== $formActive) {
                 $faq->setActive($formActive);
-                $em->persist($faq);
+                $this->entityManager->persist($faq);
             }
 
             /** @var EntityRepository $wordRepository */
-            $wordRepository = $em->getRepository(Word::class);
+            $wordRepository = $this->entityManager->getRepository(Word::class);
             $question = $wordRepository->findOneBy(['code' => 'faqq_' . $data->wordCode, 'shortCode' => 'en']);
             $answer = $wordRepository->findOneBy(['code' => 'faqa_' . $data->wordCode, 'shortCode' => 'en']);
 
             $question
                 ->setSentence($data->question)
                 ->setMajorUpdate(new DateTime());
-            $em->persist($question);
+            $this->entityManager->persist($question);
             $answer
                 ->setSentence($data->answer)
                 ->setMajorUpdate(new DateTime());
-            $em->persist($answer);
-            $em->flush();
+            $this->entityManager->persist($answer);
+            $this->entityManager->flush();
 
             $this->addFlash('notice', 'Update FAQ ' . $faq->getQAndA());
             // $this->translationModel->refreshTranslationsCache();

@@ -5,111 +5,92 @@ namespace App\Entity;
 use Carbon\Carbon;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Event\PostLoadEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Persistence\Mapping\ClassMetadata;
-use Doctrine\Persistence\ObjectManager;
-use Doctrine\Persistence\ObjectManagerAware;
 
 /**
  * Polls.
  *
- * @ORM\Table(name="polls", indexes={@ORM\Index(name="IdCreator", columns={"IdCreator"})})
- * @ORM\HasLifecycleCallbacks
- * @ORM\Entity
  *
- * @SuppressWarnings(PHPMD)
+ * @SuppressWarnings("PHPMD")
  * Auto generated class do not check mess
  */
-class Poll implements ObjectManagerAware
+#[ORM\Table(name: 'polls')]
+#[ORM\Index(name: 'IdCreator', columns: ['IdCreator'])]
+#[ORM\HasLifecycleCallbacks]
+#[ORM\Entity]
+class Poll
 {
     /**
      * @var Member
-     *
-     * @ORM\OneToOne(targetEntity="Member")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="IdGroupCreator", referencedColumnName="id")
-     * })
      */
+    #[ORM\JoinColumn(name: 'IdGroupCreator', referencedColumnName: 'id')]
+    #[ORM\OneToOne(targetEntity: \Member::class)]
     private $groupCreator;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="Status", type="string", nullable=false)
      */
+    #[ORM\Column(name: 'Status', type: 'string', nullable: false)]
     private $status = 'Project';
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="ResultsVisibility", type="string", nullable=false)
      */
+    #[ORM\Column(name: 'ResultsVisibility', type: 'string', nullable: false)]
     private $resultsvisibility = 'VisibleAfterVisit';
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="Type", type="string", nullable=false)
      */
+    #[ORM\Column(name: 'Type', type: 'string', nullable: false)]
     private $type = 'MemberPoll';
 
     /**
      * @var DateTime
-     *
-     * @ORM\Column(name="updated", type="datetime", nullable=false)
      */
+    #[ORM\Column(name: 'updated', type: 'datetime', nullable: false)]
     private $updated;
 
     /**
      * @var DateTime
-     *
-     * @ORM\Column(name="Started", type="datetime", nullable=false)
      */
+    #[ORM\Column(name: 'Started', type: 'datetime', nullable: false)]
     private $started;
 
     /**
      * @var DateTime
-     *
-     * @ORM\Column(name="Ended", type="datetime", nullable=false)
      */
+    #[ORM\Column(name: 'Ended', type: 'datetime', nullable: false)]
     private $ended;
 
     /**
      * @var DateTime
-     *
-     * @ORM\Column(name="created", type="datetime", nullable=false)
      */
+    #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
     private $created;
 
     /**
      * @var PollChoice
-     *
-     * @ORM\OneToMany(targetEntity="PollChoice", mappedBy="poll" )
-     * @ORM\JoinTable(name="polls_choice",
-     *      joinColumns={@ORM\JoinColumn(name="IdPoll", referencedColumnName="id")},
-     *      )
-     *
-     * Collects all translated titles of the poll
      */
+    #[ORM\JoinTable(name: 'polls_choice')]
+    #[ORM\JoinColumn(name: 'IdPoll', referencedColumnName: 'id')]
+    #[ORM\OneToMany(targetEntity: PollChoice::class, mappedBy: 'poll')]
     private $choices;
 
     /**
      * @var PollContribution
-     *
-     * @ORM\OneToMany(targetEntity="PollContribution", mappedBy="poll" )
-     * @ORM\JoinTable(name="polls_contributions",
-     *      joinColumns={@ORM\JoinColumn(name="IdPoll", referencedColumnName="id")},
-     *      )
-     *
-     * Collects all translated titles of the poll
      */
+    #[ORM\JoinTable(name: 'polls_contributions')]
+    #[ORM\JoinColumn(name: 'IdPoll', referencedColumnName: 'id')]
+    #[ORM\OneToMany(targetEntity: PollContribution::class, mappedBy: 'poll')]
     private $contributions;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="title", type="integer", nullable=false)
      */
+    #[ORM\Column(name: 'title', type: 'integer', nullable: false)]
     private $title;
 
     /**
@@ -121,78 +102,65 @@ class Poll implements ObjectManagerAware
 
     /**
      * @var Group
-     *
-     * @ORM\ManyToMany(targetEntity="Group", fetch="EAGER")
-     * @ORM\JoinTable(name="polls_list_allowed_groups",
-     *      joinColumns={@ORM\JoinColumn(name="IdPoll", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="IdGroup", referencedColumnName="id")}
-     *      )
-     *
-     * Collects all groups associated with the poll
      */
+    #[ORM\JoinTable(name: 'polls_list_allowed_groups')]
+    #[ORM\JoinColumn(name: 'IdPoll', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'IdGroup', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: Group::class, fetch: 'EAGER')]
     private $groups;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="ForMembersOnly", type="string", nullable=false)
      */
+    #[ORM\Column(name: 'ForMembersOnly', type: 'string', nullable: false)]
     private $formembersonly = 'Yes';
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="IdLocationsList", type="integer", nullable=false)
      */
+    #[ORM\Column(name: 'IdLocationsList', type: 'integer', nullable: false)]
     private $idlocationslist = '0';
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="IdGroupsList", type="integer", nullable=false)
      */
+    #[ORM\Column(name: 'IdGroupsList', type: 'integer', nullable: false)]
     private $idgroupslist = '0';
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="IdCountriesList", type="integer", nullable=false)
      */
+    #[ORM\Column(name: 'IdCountriesList', type: 'integer', nullable: false)]
     private $idcountrieslist = '0';
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="OpenToSubGroups", type="string", nullable=false)
      */
+    #[ORM\Column(name: 'OpenToSubGroups', type: 'string', nullable: false)]
     private $opentosubgroups = 'Yes';
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="TypeOfChoice", type="string", nullable=false)
      */
+    #[ORM\Column(name: 'TypeOfChoice', type: 'string', nullable: false)]
     private $typeofchoice;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="CanChangeVote", type="string", nullable=false)
      */
+    #[ORM\Column(name: 'CanChangeVote', type: 'string', nullable: false)]
     private $canchangevote = 'No';
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="AllowComment", type="string", nullable=false)
      */
+    #[ORM\Column(name: 'AllowComment', type: 'string', nullable: false)]
     private $allowcomment = 'No';
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="Description", type="integer", nullable=false)
      */
+    #[ORM\Column(name: 'Description', type: 'integer', nullable: false)]
     private $description;
 
     /**
@@ -202,41 +170,30 @@ class Poll implements ObjectManagerAware
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="WhereToRestrictMember", type="text", length=65535, nullable=false)
      */
+    #[ORM\Column(name: 'WhereToRestrictMember', type: 'text', length: 65535, nullable: false)]
     private $wheretorestrictmember;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="Anonym", type="string", nullable=false)
      */
+    #[ORM\Column(name: 'Anonym', type: 'string', nullable: false)]
     private $anonym = 'Yes';
 
     /**
      * @var Member
-     *
-     * @ORM\OneToOne(targetEntity="Member")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="IdCreator", referencedColumnName="id")
-     * })
      */
+    #[ORM\JoinColumn(name: 'IdCreator', referencedColumnName: 'id')]
+    #[ORM\OneToOne(targetEntity: \Member::class)]
     private $creator;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     private $id;
-
-    /**
-     * @var ObjectManager
-     */
-    private $objectManager;
 
     public function __construct()
     {
@@ -785,9 +742,8 @@ class Poll implements ObjectManagerAware
 
     /**
      * Triggered on insert.
-     *
-     * @ORM\PrePersist
      */
+    #[ORM\PrePersist]
     public function onPrePersist()
     {
         $this->created = new DateTime('now');
@@ -796,9 +752,8 @@ class Poll implements ObjectManagerAware
 
     /**
      * Triggered on update.
-     *
-     * @ORM\PreUpdate
      */
+    #[ORM\PreUpdate]
     public function onPreUpdate()
     {
         $this->updated = new DateTime('now');
@@ -806,12 +761,11 @@ class Poll implements ObjectManagerAware
 
     /**
      * Triggered after load from database.
-     *
-     * @ORM\PostLoad
      */
-    public function onPostLoad()
+    #[ORM\PostLoad]
+    public function onPostLoad(PostLoadEventArgs $eventArgs): void
     {
-        $translationRepository = $this->objectManager->getRepository(Translation::class);
+        $translationRepository = $eventArgs->getObjectManager()->getRepository(Translation::class);
         $translatedTitles = $translationRepository->findBy(['idTrad' => $this->title]);
 
         $titles = [];
@@ -912,10 +866,5 @@ class Poll implements ObjectManagerAware
         }
 
         return $this;
-    }
-
-    public function injectObjectManager(ObjectManager $objectManager, ClassMetadata $classMetadata)
-    {
-        $this->objectManager = $objectManager;
     }
 }

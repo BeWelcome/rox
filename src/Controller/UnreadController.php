@@ -5,22 +5,21 @@ namespace App\Controller;
 use App\Entity\Member;
 use App\Entity\Message;
 use App\Repository\MessageRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
 class UnreadController extends AbstractController
 {
-    /**
-     * @Route("/count/conversations/unread", name="count_conversations_unread")
-     */
-    public function getUnreadConversationsCount(): JsonResponse
+    #[Route(path: '/count/conversations/unread', name: 'count_conversations_unread')]
+    public function getUnreadConversationsCount(EntityManagerInterface $entityManager): JsonResponse
     {
         /** @var Member $member */
         $member = $this->getUser();
 
         /** @var MessageRepository $messageRepository */
-        $messageRepository = $this->getDoctrine()->getRepository(Message::class);
+        $messageRepository = $entityManager->getRepository(Message::class);
         $unreadConversationCount = $messageRepository->getUnreadConversationsCount($member);
 
         $countWidget = $this->renderView('widgets/conversationcount.hml.twig', [

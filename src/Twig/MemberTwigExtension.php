@@ -11,11 +11,8 @@ use App\Repository\CommentRepository;
 use App\Repository\LoginMessageRepository;
 use App\Repository\MessageRepository;
 use App\Utilities\ManagerTrait;
-use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\Routing\Router;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Core\Security;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\GlobalsInterface;
 
@@ -101,35 +98,16 @@ class MemberTwigExtension extends AbstractExtension implements GlobalsInterface
         ],
     ];
 
-    /**
-     * @var Session
-     */
-    protected $session;
+    protected RouterInterface $router;
 
-    /**
-     * @var Router
-     */
-    protected $router;
+    protected Security $security;
 
-    /**
-     * @var Security
-     */
-    protected $security;
+    protected ?Member $member;
 
-    /**
-     * @var Member
-     */
-    protected $member;
-
-    /**
-     * MemberTwigExtension constructor.
-     */
     public function __construct(
-        SessionInterface $session,
         RouterInterface $router,
         Security $security
     ) {
-        $this->session = $session;
         $this->router = $router;
         $this->security = $security;
         $this->member = $this->security->getUser();

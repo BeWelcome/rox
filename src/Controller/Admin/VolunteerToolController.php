@@ -60,10 +60,10 @@ class VolunteerToolController extends AbstractController
     /**
      * This directly redirects to the first assigned tool if any otherwise it redirects to the referrer page.
      *
-     * @Route("/admin/tools", name="admin_volunteer_tools")
      *
      * @return Response
      */
+    #[Route(path: '/admin/tools', name: 'admin_volunteer_tools')]
     public function showOverview(Request $request)
     {
         $subMenuItems = $this->checkPermissions($request);
@@ -73,12 +73,11 @@ class VolunteerToolController extends AbstractController
     }
 
     /**
-     * @Route("/admin/tools/change", name="admin_tools_change_username")
      *
      * @throws Exception
-     *
      * @return Response|RedirectResponse
      */
+    #[Route(path: '/admin/tools/change', name: 'admin_tools_change_username')]
     public function changeUsername(
         Request $request,
         EntityManagerInterface $entityManager,
@@ -149,10 +148,9 @@ class VolunteerToolController extends AbstractController
     }
 
     /**
-     * @Route("/admin/tools/findmember", name="admin_tools_find_user")
-     *
      * @throws Exception
      */
+    #[Route(path: '/admin/tools/findmember', name: 'admin_tools_find_user')]
     public function findUser(Request $request, EntityManagerInterface $entityManager, Logger $logger): Response
     {
         // check permissions
@@ -185,9 +183,7 @@ class VolunteerToolController extends AbstractController
         );
     }
 
-    /**
-     * @Route("/admin/tools/check/feedback", name="admin_tools_check_feedback")
-     */
+    #[Route(path: '/admin/tools/check/feedback', name: 'admin_tools_check_feedback')]
     public function showSignupFeedback(Request $request): Response
     {
         // check permissions
@@ -195,7 +191,7 @@ class VolunteerToolController extends AbstractController
 
         $page = $request->query->get('page', 1);
         $limit = $request->query->get('limit', 20);
-        $types = $request->query->get('types', []);
+        $types = $request->query->get('types') ?? [];
 
         $categories = $this->feedbackModel->getCategories();
 
@@ -225,10 +221,9 @@ class VolunteerToolController extends AbstractController
     }
 
     /**
-     * @Route("/admin/tools/topspammer", name="admin_tools_top_spammer")
-     *
      * @throws Exception
      */
+    #[Route(path: '/admin/tools/topspammer', name: 'admin_tools_top_spammer')]
     public function showTopSpammer(Request $request, EntityManagerInterface $entityManager): Response
     {
         // check permissions
@@ -268,9 +263,7 @@ class VolunteerToolController extends AbstractController
         );
     }
 
-    /**
-     * @Route("/admin/tools/damagedone", name="admin_tools_damage_done")
-     */
+    #[Route(path: '/admin/tools/damagedone', name: 'admin_tools_damage_done')]
     public function showDamageDone(Request $request, EntityManagerInterface $entityManager): Response
     {
         // check permissions
@@ -311,9 +304,7 @@ class VolunteerToolController extends AbstractController
         );
     }
 
-    /**
-     * @Route("/admin/tools/messages/sent", name="admin_tools_messages_sent")
-     */
+    #[Route(path: '/admin/tools/messages/sent', name: 'admin_tools_messages_sent')]
     public function showMessagesLastWeekAction(Request $request, EntityManagerInterface $entityManager): Response
     {
         // check permissions
@@ -336,7 +327,7 @@ AND (DATE_ADD(msg.created,
     INTERVAL 7 DAY) > NOW())
 GROUP BY m.Username
 HAVING COUNT(msg.id) > 9
-ORDER BY count(msg.id) DESC')->fetchAll();
+ORDER BY count(msg.id) DESC')->fetchAllAssociative();
 
         return $this->render(
             'admin/tools/messages.sent.html.twig',
@@ -351,9 +342,7 @@ ORDER BY count(msg.id) DESC')->fetchAll();
     }
 
 
-    /**
-     * @Route("/admin/tools/requests/sent", name="admin_tools_requests_sent")
-     */
+    #[Route(path: '/admin/tools/requests/sent', name: 'admin_tools_requests_sent')]
     public function showRequestsLastTwoWeeks(Request $request, EntityManagerInterface $entityManager): Response
     {
         // check permissions
@@ -377,7 +366,7 @@ AND (DATE_ADD(msg.created,
     INTERVAL 14 DAY) > NOW())
 GROUP BY m.Username
 HAVING COUNT(msg.id) > 9
-ORDER BY count(msg.id) DESC')->fetchAll();
+ORDER BY count(msg.id) DESC')->fetchAllAssociative();
 
         return $this->render(
             'admin/tools/requests.sent.html.twig',
@@ -391,9 +380,7 @@ ORDER BY count(msg.id) DESC')->fetchAll();
         );
     }
 
-    /**
-     * @Route("/admin/tools/messages/member", name="admin_tools_messages_by_member")
-     */
+    #[Route(path: '/admin/tools/messages/member', name: 'admin_tools_messages_by_member')]
     public function showMessagesByMember(Request $request, EntityManagerInterface $entityManager): Response
     {
         $subMenuItems = $this->checkPermissions($request, self::MESSAGES_BY_MEMBER);
@@ -472,9 +459,7 @@ ORDER BY count(msg.id) DESC')->fetchAll();
         );
     }
 
-    /**
-     * @Route("/admin/tools/countryage", name="admin_tools_age_by_country")
-     */
+    #[Route(path: '/admin/tools/countryage', name: 'admin_tools_age_by_country')]
     public function showAverageAgePerCountryAction(Request $request, EntityManagerInterface $entityManager): Response
     {
         // check permissions
@@ -497,7 +482,7 @@ ORDER BY count(msg.id) DESC')->fetchAll();
                 AND g.country = gc.country
             GROUP BY g.country
             ORDER BY 2 DESC;
-        ")->fetchAll();
+        ")->fetchAllAssociative();
 
         return $this->render(
             'admin/tools/age.country.html.twig',
@@ -511,9 +496,7 @@ ORDER BY count(msg.id) DESC')->fetchAll();
         );
     }
 
-    /**
-     * @Route("/admin/tools/uploaded_images/{page}", name="admin_tools_uploaded_images")
-     */
+    #[Route(path: '/admin/tools/uploaded_images/{page}', name: 'admin_tools_uploaded_images')]
     public function showUploadedImages(Request $request, EntityManagerInterface $entityManager, int $page = 1): Response
     {
         // check permissions
@@ -539,9 +522,7 @@ ORDER BY count(msg.id) DESC')->fetchAll();
         );
     }
 
-    /**
-     * @Route("/admin/tools/login_message/add", name="admin_tools_login_message_add")
-     */
+    #[Route(path: '/admin/tools/login_message/add', name: 'admin_tools_login_message_add')]
     public function addLoginMessage(Request $request, EntityManagerInterface $entityManager): Response
     {
         // check permissions
@@ -570,9 +551,7 @@ ORDER BY count(msg.id) DESC')->fetchAll();
         );
     }
 
-    /**
-     * @Route("/admin/tools/login_messages/show", name="admin_tools_login_messages_show")
-     */
+    #[Route(path: '/admin/tools/login_messages/show', name: 'admin_tools_login_messages_show')]
     public function showLoginMessages(Request $request, EntityManagerInterface $entityManager): Response
     {
         // check permissions
@@ -593,9 +572,7 @@ ORDER BY count(msg.id) DESC')->fetchAll();
         );
     }
 
-    /**
-     * @Route("/admin/tools/login_message/{id}/expire", name="admin_tools_login_message_expire")
-     */
+    #[Route(path: '/admin/tools/login_message/{id}/expire', name: 'admin_tools_login_message_expire')]
     public function expireLoginMessage(LoginMessage $loginMessage, EntityManagerInterface $entityManager): Response
     {
         if (!$this->isGranted(Member::ROLE_ADMIN_ADMIN)) {

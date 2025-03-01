@@ -7,15 +7,12 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiFilter;
-use ApiPlatform\Core\Annotation\ApiProperty;
-use ApiPlatform\Core\Annotation\ApiResource;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use App\Doctrine\AccommodationType;
 use App\Doctrine\GroupMembershipStatusType;
 use App\Doctrine\LanguageLevelType;
 use App\Doctrine\MemberStatusType;
 use App\Doctrine\TypicalOfferType;
+use App\Repository\MemberRepository;
 use Carbon\Carbon;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -24,33 +21,17 @@ use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Event\PostLoadEventArgs;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Persistence\Mapping\ClassMetadata;
-use Doctrine\Persistence\ObjectManager;
-use Doctrine\Persistence\ObjectManagerAware;
 use Exception;
-use Symfony\Bridge\Doctrine\Security\User\UserLoaderInterface;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherAwareInterface;
-use Symfony\Component\Security\Core\Exception\RuntimeException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ORM\Table(name="members")
- * @ORM\Entity(repositoryClass="App\Repository\MemberRepository")
- * @ORM\HasLifecycleCallbacks
- *
- * @SuppressWarnings(PHPMD)
- *
- * @ApiResource(
- *     attributes={"identifiers"="username"},
- *     security="is_granted('ROLE_USER')",
- *     collectionOperations={},
- *     itemOperations={
- *          "get"={"normalization_context"={"groups"={"Member:Read"}}}
- *     }
- * )
+ * @SuppressWarnings("PHPMD")
  */
+#[ORM\Table(name: 'members')]
+#[ORM\Entity(repositoryClass: MemberRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Member
     implements
         \Serializable,
@@ -83,387 +64,215 @@ class Member
     public const MEMBER_SECONDNAME_HIDDEN = 2;
     public const MEMBER_LASTNAME_HIDDEN = 4;
 
-    /**
-     * @ORM\Column(name="Username", type="string", length=32, nullable=false)
-     *
-     * @Groups({"Member:Read"})
-     *
-     * @ApiProperty(identifier=true)
-     *
-     * @ApiFilter(SearchFilter::class, strategy="exact")
-     */
+    #[ORM\Column(name: 'Username', type: 'string', length: 32, nullable: false)]
     protected string $username;
 
-    /**
-     * @ORM\Column(name="Email", type="string", nullable=false)
-     *
-     * @Groups({"Member:Read:Owner"})
-     */
+    #[ORM\Column(name: 'Email', type: 'string', nullable: false)]
     protected string $email;
 
-    /**
-     * @ORM\Column(name="LastLogin", type="datetime", nullable=true)
-     *
-     * @Groups({"Member:Read"})
-     */
+    #[ORM\Column(name: 'LastLogin', type: 'datetime', nullable: true)]
     protected ?DateTime $lastLogin = null;
 
-    /**
-     * @ORM\Column(name="PassWord", type="string", length=100, nullable=true)
-     */
+    #[ORM\Column(name: 'PassWord', type: 'string', length: 100, nullable: true)]
     protected ?string $password = null;
 
-    /**
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     *
-     * @ApiProperty(identifier=false)
-     */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     protected int $id;
 
-    /**
-     * @ORM\Column(name="Status", type="member_status", nullable=false)
-     */
+    #[ORM\Column(name: 'Status', type: 'member_status', nullable: false)]
     private string $status = "";
 
-    /**
-     * @ORM\ManyToOne(targetEntity="NewLocation")
-     * @ORM\JoinColumn(name="IdCity", referencedColumnName="geonameId", nullable=true)
-     *
-     * @Groups({"Member:Read"})
-     *
-     * @ApiFilter(SearchFilter::class, strategy="ipartial", properties={"city.name", "city.country.name"})
-     * @ApiFilter(SearchFilter::class, strategy="exact", properties={"city.latitude", "city.longitude"})
-     */
+    #[ORM\JoinColumn(name: 'IdCity', referencedColumnName: 'geonameId', nullable: true)]
+    #[ORM\ManyToOne(targetEntity: \NewLocation::class)]
     private ?NewLocation $city = null;
 
-    /**
-     * @ORM\Column(name="Latitude", type="decimal", precision=10, scale=7, nullable=true)
-     */
+    #[ORM\Column(name: 'Latitude', type: 'decimal', precision: 10, scale: 7, nullable: true)]
     private ?string $latitude;
 
-    /**
-     * @ORM\Column(name="Longitude", type="decimal", precision=10, scale=7, nullable=true)
-     */
+    #[ORM\Column(name: 'Longitude', type: 'decimal', precision: 10, scale: 7, nullable: true)]
     private ?string $longitude;
 
-    /**
-     * @ORM\Column(name="NbRemindWithoutLogingIn", type="integer", nullable=false)
-     */
+    #[ORM\Column(name: 'NbRemindWithoutLogingIn', type: 'integer', nullable: false)]
     private int $remindersWithOutLogin = 0;
 
-    /**
-     * @ORM\Column(name="FirstName", type="string", nullable=false)
-     *
-     * @Groups({"Member:Read"})
-     */
+    #[ORM\Column(name: 'FirstName', type: 'string', nullable: false)]
     private string $firstName = '';
 
-    /**
-     * @ORM\Column(name="SecondName", type="string", nullable=true)
-     *
-     * @Groups({"Member:Read"})
-     */
+    #[ORM\Column(name: 'SecondName', type: 'string', nullable: true)]
     private ?string $secondName = null;
 
-    /**
-     * @ORM\Column(name="LastName", type="string", nullable=false)
-     *
-     * @Groups({"Member:Read"})
-     */
+    #[ORM\Column(name: 'LastName', type: 'string', nullable: false)]
     private string $lastName = '';
 
-    /**
-     * @ORM\Column(name="HideAttribute", type="integer", nullable=false)
-     */
+    #[ORM\Column(name: 'HideAttribute', type: 'integer', nullable: false)]
     private int $hideAttribute = self::MEMBER_FIRSTNAME_HIDDEN | self::MEMBER_SECONDNAME_HIDDEN | self::MEMBER_LASTNAME_HIDDEN;
 
-    /**
-     * @ORM\Column(name="Accomodation", type="accommodation", nullable=true)
-     *
-     * @Groups({"Member:Read"})
-     *
-     * @ApiFilter(SearchFilter::class, strategy="exact")
-     */
+    #[ORM\Column(name: 'Accomodation', type: 'accommodation', nullable: true)]
     private ?string $accommodation = null;
 
-    /**
-     * @ORM\Column(name="AdditionalAccomodationInfo", type="integer", nullable=false)
-     */
+    #[ORM\Column(name: 'AdditionalAccomodationInfo', type: 'integer', nullable: false)]
     private int $additionalAccommodationInfo = 0;
 
-    /**
-     * @ORM\Column(name="ILiveWith", type="integer", nullable=false)
-     */
+    #[ORM\Column(name: 'ILiveWith', type: 'integer', nullable: false)]
     private int $iLiveWith = 0;
 
-    /**
-     * @ORM\Column(name="InformationToGuest", type="integer", nullable=false)
-     */
+    #[ORM\Column(name: 'InformationToGuest', type: 'integer', nullable: false)]
     private int $informationForGuest = 0;
 
-    /**
-     * @ORM\Column(name="TypicOffer", type="typical_offer", nullable=false)
-     *
-     * @Groups({"Member:Read"})
-     */
+    #[ORM\Column(name: 'TypicOffer', type: 'typical_offer', nullable: false)]
     private string $typicalOffer = '';
 
-    /**
-     * @ORM\Column(name="Offer", type="integer", nullable=false)
-     */
+    #[ORM\Column(name: 'Offer', type: 'integer', nullable: false)]
     private int $offer = 0;
 
-    /**
-     * @ORM\Column(name="MaxGuest", type="integer", nullable=false)
-     *
-     * @Groups({"Member:Read"})
-     *
-     * @ApiFilter(SearchFilter::class, strategy="exact")
-     */
+    #[ORM\Column(name: 'MaxGuest', type: 'integer', nullable: false)]
     private int $maxGuest = 1;
 
-    /**
-     * @ORM\Column(name="MaxLenghtOfStay", type="integer", nullable=false)
-     */
+    #[ORM\Column(name: 'MaxLenghtOfStay', type: 'integer', nullable: false)]
     private int $maxLengthOfStay = 0;
 
-    /**
-     * @ORM\Column(name="Organizations", type="integer", nullable=false)
-     */
+    #[ORM\Column(name: 'Organizations', type: 'integer', nullable: false)]
     private int $organizations = 0;
 
-    /**
-     * @ORM\Column(name="Restrictions", type="string", nullable=false)
-     *
-     * @Groups({"Member:Read"})
-     */
+    #[ORM\Column(name: 'Restrictions', type: 'string', nullable: false)]
     private string $restrictions = '';
 
-    /**
-     * @ORM\Column(name="OtherRestrictions", type="integer", nullable=false)
-     */
+    #[ORM\Column(name: 'OtherRestrictions', type: 'integer', nullable: false)]
     private int $otherRestrictions = 0;
 
-    /**
-     * @ORM\Column(name="updated", type="datetime", nullable=false)
-     */
+    #[ORM\Column(name: 'updated', type: 'datetime', nullable: false)]
     private DateTime $updated;
 
-    /**
-     * @ORM\Column(name="created", type="datetime", nullable=false)
-     *
-     * @Groups({"Member:Read"})
-     */
+    #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
     private DateTime $created;
 
-    /**
-     * @ORM\Column(name="ProfileSummary", type="integer", nullable=false)
-     */
+    #[ORM\Column(name: 'ProfileSummary', type: 'integer', nullable: false)]
     private int $profileSummary = 0;
 
-    /**
-     * @ORM\Column(name="Occupation", type="integer", nullable=false)
-     */
+    #[ORM\Column(name: 'Occupation', type: 'integer', nullable: false)]
     private int $occupation = 0;
 
-    /**
-     * @ORM\Column(name="Gender", type="string", nullable=false)
-     */
+    #[ORM\Column(name: 'Gender', type: 'string', nullable: false)]
     private string $gender = 'IDontTell';
 
-    /**
-     * @ORM\Column(name="HideGender", type="string", nullable=false)
-     */
+    #[ORM\Column(name: 'HideGender', type: 'string', nullable: false)]
     private string $hideGender = 'No';
 
-    /**
-     * @ORM\Column(name="GenderOfGuest", type="string", nullable=false)
-     */
+    #[ORM\Column(name: 'GenderOfGuest', type: 'string', nullable: false)]
     private string $genderOfGuest = 'any';
 
-    /**
-     * @ORM\Column(name="HideBirthDate", type="string", nullable=false)
-     */
+    #[ORM\Column(name: 'HideBirthDate', type: 'string', nullable: false)]
     private string $hideAge = 'No';
 
-    /**
-     * @ORM\Column(name="BirthDate", type="date", nullable=true)
-     */
+    #[ORM\Column(name: 'BirthDate', type: 'date', nullable: true)]
     private ?DateTime $birthdate = null;
 
-    /**
-     * @ORM\Column(name="AdressHidden", type="string", nullable=false)
-     */
+    #[ORM\Column(name: 'AdressHidden', type: 'string', nullable: false)]
     private string $adressHidden = 'Yes';
 
-    /**
-     * @ORM\Column(name="WebSite", type="text", length=255, nullable=true)
-     */
+    #[ORM\Column(name: 'WebSite', type: 'text', length: 255, nullable: true)]
     private ?string $website = null;
 
-    /**
-     * @ORM\Column(name="chat_SKYPE", type="text", length=255, nullable=true)
-     */
+    #[ORM\Column(name: 'chat_SKYPE', type: 'text', length: 255, nullable: true)]
     private ?string $chatSkype = null;
 
-    /**
-     * @ORM\Column(name="chat_ICQ", type="text", length=255, nullable=true)
-     */
+    #[ORM\Column(name: 'chat_ICQ', type: 'text', length: 255, nullable: true)]
     private ?string $chatIcq = null;
 
-    /**
-     * @ORM\Column(name="chat_AOL", type="text", length=255, nullable=true)
-     */
+    #[ORM\Column(name: 'chat_AOL', type: 'text', length: 255, nullable: true)]
     private ?string $chatAol = null;
 
-    /**
-     * @ORM\Column(name="chat_MSN", type="text", length=255, nullable=true)
-     */
+    #[ORM\Column(name: 'chat_MSN', type: 'text', length: 255, nullable: true)]
     private ?string $chatMsn = null;
 
-    /**
-     * @ORM\Column(name="chat_YAHOO", type="text", length=255, nullable=true)
-     */
+    #[ORM\Column(name: 'chat_YAHOO', type: 'text', length: 255, nullable: true)]
     private ?string $chatYahoo = null;
 
-    /**
-     * @ORM\Column(name="chat_Others", type="text", length=255, nullable=true)
-     */
+    #[ORM\Column(name: 'chat_Others', type: 'text', length: 255, nullable: true)]
     private ?string $chatOthers = null;
 
-    /**
-     * @ORM\Column(name="FutureTrips", type="integer", nullable=false)
-     */
+    #[ORM\Column(name: 'FutureTrips', type: 'integer', nullable: false)]
     private int $futureTrips = 0;
 
-    /**
-     * @ORM\Column(name="OldTrips", type="integer", nullable=false)
-     */
+    #[ORM\Column(name: 'OldTrips', type: 'integer', nullable: false)]
     private int $oldTrips = 0;
 
-    /**
-     * @ORM\Column(name="LogCount", type="integer", nullable=false)
-     */
+    #[ORM\Column(name: 'LogCount', type: 'integer', nullable: false)]
     private int $logcount = 0;
 
-    /**
-     * @ORM\Column(name="Hobbies", type="integer", nullable=false)
-     */
+    #[ORM\Column(name: 'Hobbies', type: 'integer', nullable: false)]
     private int $hobbies = 0;
 
-    /**
-     * @ORM\Column(name="Books", type="integer", nullable=false)
-     */
+    #[ORM\Column(name: 'Books', type: 'integer', nullable: false)]
     private int $books = 0;
 
-    /**
-     * @ORM\Column(name="Music", type="integer", nullable=false)
-     */
+    #[ORM\Column(name: 'Music', type: 'integer', nullable: false)]
     private int $music = 0;
 
-    /**
-     * @ORM\Column(name="PastTrips", type="integer", nullable=false)
-     */
+    #[ORM\Column(name: 'PastTrips', type: 'integer', nullable: false)]
     private int $pastTrips = 0;
 
-    /**
-     * @ORM\Column(name="PlannedTrips", type="integer", nullable=false)
-     */
+    #[ORM\Column(name: 'PlannedTrips', type: 'integer', nullable: false)]
     private int $plannedTrips = 0;
 
-    /**
-     * @ORM\Column(name="PleaseBring", type="integer", nullable=false)
-     */
+    #[ORM\Column(name: 'PleaseBring', type: 'integer', nullable: false)]
     private int $pleaseBring = 0;
 
-    /**
-     * @ORM\Column(name="OfferGuests", type="integer", nullable=false)
-     */
+    #[ORM\Column(name: 'OfferGuests', type: 'integer', nullable: false)]
     private int $offerGuests = 0;
 
-    /**
-     * @ORM\Column(name="OfferHosts", type="integer", nullable=false)
-     */
+    #[ORM\Column(name: 'OfferHosts', type: 'integer', nullable: false)]
     private int $offerHosts = 0;
 
-    /**
-     * @ORM\Column(name="PublicTransport", type="integer", nullable=false)
-     */
+    #[ORM\Column(name: 'PublicTransport', type: 'integer', nullable: false)]
     private int $publicTransport = 0;
 
-    /**
-     * @ORM\Column(name="Movies", type="integer", nullable=false)
-     */
+    #[ORM\Column(name: 'Movies', type: 'integer', nullable: false)]
     private int $movies = 0;
 
-    /**
-     * @ORM\Column(name="chat_GOOGLE", type="integer", nullable=false)
-     */
+    #[ORM\Column(name: 'chat_GOOGLE', type: 'integer', nullable: false)]
     private int $chatGoogle = 0;
 
-    /**
-     * @ORM\Column(name="LastSwitchToActive", type="datetime", nullable=true)
-     */
+    #[ORM\Column(name: 'LastSwitchToActive', type: 'datetime', nullable: true)]
     private ?DateTime $lastSwitchToActive = null;
 
-    /**
-     * @ORM\Column(name="bewelcomed", type="boolean", nullable=false)
-     */
+    #[ORM\Column(name: 'bewelcomed', type: 'boolean', nullable: false)]
     private bool $beWelcomed = false;
 
-    /**
-     * @ORM\Column(name="registration_key", type="string", nullable=true)
-     */
+    #[ORM\Column(name: 'registration_key', type: 'string', nullable: true)]
     private ?string $registrationKey = null;
 
-    /**
-     * @ORM\Column(name="hosting_interest", type="integer", nullable=true)
-     */
+    #[ORM\Column(name: 'hosting_interest', type: 'integer', nullable: true)]
     private ?int $hostingInterest = null;
 
-    /**
-     * @ORM\OneToMany(targetEntity="CryptedField", mappedBy="member")
-     */
+    #[ORM\OneToMany(targetEntity: \CryptedField::class, mappedBy: 'member', fetch: 'EXTRA_LAZY')]
     private Collection $fields;
 
-    /**
-     * @ORM\OneToMany(targetEntity="RightVolunteer", mappedBy="member", fetch="EXTRA_LAZY")
-     */
+    #[ORM\OneToMany(targetEntity: \MemberTranslation::class, mappedBy: 'owner', indexBy: 'TableColumn', fetch: 'EAGER')]
+    private Collection $translatedFields;
+
+    #[ORM\OneToMany(targetEntity: \RightVolunteer::class, mappedBy: 'member', fetch: 'EXTRA_LAZY')]
     private Collection $volunteerRights;
 
-    /**
-     * @ORM\OneToMany(targetEntity="GroupMembership", mappedBy="member", cascade={"persist", "remove"}, orphanRemoval=true)
-     */
+    #[ORM\OneToMany(targetEntity: GroupMembership::class, mappedBy: 'member', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $groupMemberships;
 
-    /**
-     * @ORM\OneToMany(targetEntity="MembersLanguagesLevel", mappedBy="member")
-     *
-     * @Groups({"Member:Read"})
-     *
-     * @ApiFilter(SearchFilter::class, strategy="exact", properties={"languageLevels.level", "languageLevels.language.name", "languageLevels.language.englishname", "languageLevels.language.shortCode"})
-     */
+    #[ORM\OneToMany(targetEntity: MembersLanguagesLevel::class, mappedBy: 'member')]
     private Collection $languageLevels;
 
     private array $memberFields;
 
     private Collection $comments;
 
-    /**
-     * @ORM\OneToMany(targetEntity="Relation", mappedBy="receiver", fetch="EXTRA_LAZY")
-     */
+    #[ORM\OneToMany(targetEntity: Relation::class, mappedBy: 'receiver', fetch: 'EXTRA_LAZY')]
     private Collection $relations;
 
-    /**
-     * @ORM\OneToMany(targetEntity="MemberPreference", mappedBy="member")
-     */
+    #[ORM\OneToMany(targetEntity: MemberPreference::class, mappedBy: 'member')]
     private Collection $preferences;
 
-    /**
-     * @ORM\OneToMany(targetEntity="Address", mappedBy="member")
-     */
+    #[ORM\OneToMany(targetEntity: Address::class, mappedBy: 'member')]
     private Collection $addresses;
 
     private ?Language $preferredLanguage = null;
@@ -472,11 +281,12 @@ class Member
     {
         $this->addresses = new ArrayCollection();
         $this->volunteerRights = new ArrayCollection();
-        $this->cryptedFields = new ArrayCollection();
+        $this->fields = new ArrayCollection();
+        $this->translatedFields = new ArrayCollection();
         $this->groupMemberships = new ArrayCollection();
         $this->languageLevels = new ArrayCollection();
         $this->comments = new ArrayCollection();
-        $this->relationships = new ArrayCollection();
+        $this->relations = new ArrayCollection();
         $this->preferences = new ArrayCollection();
     }
 
@@ -1036,6 +846,23 @@ class Member
             ) = unserialize($serialized);
     }
 
+
+    public function __serialize(): array
+    {
+        return [
+            'id' => $this->id,
+            'username' => $this->username,
+            'password' => $this->password,
+        ];
+    }
+
+    public function __unserialize(array $data): void
+    {
+        $this->id = $data['id'];
+        $this->username = $data['username'];
+        $this->password = $data['password'];
+    }
+
     public function getRoles(): array
     {
         // Grant user role to everyone
@@ -1465,9 +1292,8 @@ class Member
 
     /**
      * Triggered on insert.
-     *
-     * @ORM\PrePersist
      */
+    #[ORM\PrePersist]
     public function onPrePersist(): void
     {
         $this->created = new DateTime('now');
@@ -1476,9 +1302,8 @@ class Member
 
     /**
      * Triggered on update.
-     *
-     * @ORM\PreUpdate
      */
+    #[ORM\PreUpdate]
     public function onPreUpdate()
     {
         $this->updated = new DateTime('now');
@@ -1546,10 +1371,8 @@ class Member
         return $this;
     }
 
-    /**
-     * @ORM\PostLoad
-     */
-    public function postLoad(PostLoadEventArgs $args)
+    #[ORM\PostLoad]
+    public function postLoad(PostLoadEventArgs $args): void
     {
         $entityManager = $args->getObjectManager();
 
@@ -1646,9 +1469,7 @@ class Member
         return $this->city->getCountry();
     }
 
-    /**
-     * @Groups({"Member:Read"})
-     */
+    #[Groups(['Member:Read'])]
     public function getAge(): int
     {
         if (null === $this->birthdate) {
@@ -1660,17 +1481,13 @@ class Member
         return $birthday->diffInYears();
     }
 
-    /**
-     * @Groups({"Member:Read"})
-     */
+    #[Groups(['Member:Read'])]
     public function getAvatar(): string
     {
         return '/members/avatar/' . $this->getUsername();
     }
 
-    /**
-     * @Groups({"Member:Read"})
-     */
+    #[Groups(['Member:Read'])]
     public function getName(): string
     {
         $name = '';
@@ -1727,5 +1544,10 @@ class Member
         }
 
         return $this;
+    }
+
+    public function getTranslatedFields(): Collection
+    {
+        return $this->translatedFields;
     }
 }

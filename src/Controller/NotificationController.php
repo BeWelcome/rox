@@ -9,10 +9,9 @@ use Symfony\Component\Routing\Annotation\Route;
 class NotificationController extends AbstractController
 {
     /**
-     * @Route("/notifications", name="notifications")
-     *
      * @return Response
      */
+    #[Route(path: '/notifications', name: 'notifications')]
     public function showNotificationsActions()
     {
         return new Response('Hallo');

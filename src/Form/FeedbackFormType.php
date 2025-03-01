@@ -17,7 +17,7 @@ use Symfony\Component\Validator\Constraints\NotNull;
 
 class FeedbackFormType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->setMethod('POST')
@@ -72,7 +72,7 @@ class FeedbackFormType extends AbstractType
         ;
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'categories' => [],
@@ -80,7 +80,7 @@ class FeedbackFormType extends AbstractType
         ]);
     }
 
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return '';
     }

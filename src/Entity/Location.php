@@ -14,103 +14,97 @@ use Symfony\Component\Serializer\Annotation\Groups;
 /**
  * Location.
  *
- * @ORM\Table(name="geonames", indexes={
- *     @ORM\Index(name="geonames_idx_name", columns={"name"}),
- *     @ORM\Index(name="geonames_idx_latitude", columns={"latitude"}),
- *     @ORM\Index(name="geonames_idx_longitude", columns={"longitude"}),
- *     @ORM\Index(name="geonames_idx_fclass", columns={"fclass"}),
- *     @ORM\Index(name="geonames_idx_fcode", columns={"fcode"}),
- *     @ORM\Index(name="geonames_idx_country", columns={"country"}),
- *     @ORM\Index(name="geonames_idx_admin1", columns={"admin1"})
- * })
- * @ORM\Entity(repositoryClass="App\Repository\LocationRepository")
  *
- * @SuppressWarnings(PHPMD)
+ * @SuppressWarnings("PHPMD")
  * Auto generated class do not check mess
  */
+#[ORM\Table(name: 'geonames')]
+#[ORM\Index(name: 'geonames_idx_name', columns: ['name'])]
+#[ORM\Index(name: 'geonames_idx_latitude', columns: ['latitude'])]
+#[ORM\Index(name: 'geonames_idx_longitude', columns: ['longitude'])]
+#[ORM\Index(name: 'geonames_idx_fclass', columns: ['fclass'])]
+#[ORM\Index(name: 'geonames_idx_fcode', columns: ['fcode'])]
+#[ORM\Index(name: 'geonames_idx_country', columns: ['country'])]
+#[ORM\Index(name: 'geonames_idx_admin1', columns: ['admin1'])]
+#[ORM\Entity(repositoryClass: \App\Repository\LocationRepository::class)]
 class Location
 {
     /**
      * @var string
      *
-     * @ORM\Column(name="name", type="string", length=200, nullable=true)
      *
-     * @Groups({"Member:Read"})
      */
+    #[ORM\Column(name: 'name', type: 'string', length: 200, nullable: true)]
+    #[Groups(['Member:Read'])]
     private $name;
 
     /**
      * @var float
      *
-     * @ORM\Column(name="latitude", type="decimal", precision=10, scale=7, nullable=true)
      *
-     * @Groups({"Member:Read"})
      */
+    #[ORM\Column(name: 'latitude', type: 'decimal', precision: 10, scale: 7, nullable: true)]
+    #[Groups(['Member:Read'])]
     private $latitude;
 
     /**
      * @var float
      *
-     * @ORM\Column(name="longitude", type="decimal", precision=10, scale=7, nullable=true)
      *
-     * @Groups({"Member:Read"})
      */
+    #[ORM\Column(name: 'longitude', type: 'decimal', precision: 10, scale: 7, nullable: true)]
+    #[Groups(['Member:Read'])]
     private $longitude;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="fclass", type="string", length=1, nullable=true)
      */
+    #[ORM\Column(name: 'fclass', type: 'string', length: 1, nullable: true)]
     private $fclass;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="fcode", type="string", length=10, nullable=true)
      */
+    #[ORM\Column(name: 'fcode', type: 'string', length: 10, nullable: true)]
     private $fcode;
 
     /**
      * @var Country
      *
-     * @ORM\ManyToOne(targetEntity="Country")
-     * @ORM\JoinColumn(name="country", referencedColumnName="country")
      *
-     * @Groups({"Member:Read"})
      */
+    #[ORM\JoinColumn(name: 'country', referencedColumnName: 'country')]
+    #[ORM\ManyToOne(targetEntity: \Country::class)]
+    #[Groups(['Member:Read'])]
     private $country;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="admin1", type="string", length=20, nullable=true)
      */
+    #[ORM\Column(name: 'admin1', type: 'string', length: 20, nullable: true)]
     private $admin1;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="population", type="integer", nullable=true)
      */
+    #[ORM\Column(name: 'population', type: 'integer', nullable: true)]
     private $population;
 
     /**
      * @var DateTime
-     *
-     * @ORM\Column(name="moddate", type="date", nullable=true)
      */
+    #[ORM\Column(name: 'moddate', type: 'date', nullable: true)]
     private $moddate;
 
     /**
      * @var int
      *
-     * @ORM\Column(name="geonameId", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
      *
-     * @Groups({"Member:Read"})
      */
+    #[ORM\Column(name: 'geonameId', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
+    #[Groups(['Member:Read'])]
     private $geonameId;
 
     /**

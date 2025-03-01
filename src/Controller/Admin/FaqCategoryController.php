@@ -12,6 +12,7 @@ use App\Form\FaqCategoryFormType;
 use App\Model\FaqModel;
 use App\Model\TranslationModel;
 use DateTime;
+use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,34 +24,27 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 /**
  * Class FaqController.
  *
- * @SuppressWarnings(PHPMD.StaticAccess)
+ * @SuppressWarnings("PHPMD.StaticAccess")
  */
 class FaqCategoryController extends FaqBaseController
 {
-    /**
-     * @var FaqModel
-     */
-    private $faqModel;
+    private FaqModel $faqModel;
 
-    /**
-     * @var TranslationModel
-     */
-    private $translationModel;
+    private TranslationModel $translationModel;
 
-    public function __construct(FaqModel $faqModel, TranslationModel $translationModel)
-    {
+    public function __construct(
+        FaqModel $faqModel,
+        TranslationModel $translationModel,
+        EntityManagerInterface $entityManager
+    ) {
+        parent::__construct($entityManager);
+
         $this->faqModel = $faqModel;
         $this->translationModel = $translationModel;
     }
 
-    /**
-     * @Route("/admin/faqs/category/create", name="admin_faqs_category_create")
-     *
-     * @throws Exception
-     *
-     * @return Response
-     */
-    public function createCategoryAction(Request $request)
+    #[Route(path: '/admin/faqs/category/create', name: 'admin_faqs_category_create')]
+    public function createCategoryAction(Request $request): Response
     {
         if (!$this->isGranted(Member::ROLE_ADMIN_FAQ)) {
             throw $this->createAccessDeniedException('You need to have Faq right to access this.');
@@ -63,17 +57,16 @@ class FaqCategoryController extends FaqBaseController
         $faqCategoryForm->handleRequest($request);
 
         if ($faqCategoryForm->isSubmitted() && $faqCategoryForm->isValid()) {
-            $em = $this->getDoctrine()->getManager();
             /** @var FaqCategoryRequest $data */
             $data = $faqCategoryForm->getData();
 
-            $wordRepository = $em->getRepository(Word::class);
+            $wordRepository = $this->entityManager->getRepository(Word::class);
             $check = $wordRepository->findBy(['code' => $data->wordCode, 'shortCode' => 'en']);
             $valid = empty($check);
             if ($valid) {
                 /** @var Member $author */
                 $author = $this->getUser();
-                $languageRepository = $em->getRepository(Language::class);
+                $languageRepository = $this->entityManager->getRepository(Language::class);
                 /** @var Language $english */
                 $english = $languageRepository->findOneBy(['shortCode' => 'en']);
 
@@ -85,12 +78,12 @@ class FaqCategoryController extends FaqBaseController
                 $word->setlanguage($english);
                 $word->setCreated(new DateTime());
                 $word->setDescription('FAQ category');
-                $em->persist($word);
+                $this->entityManager->persist($word);
 
                 $faqCategory = new FaqCategory();
                 $faqCategory->setDescription($data->wordCode);
-                $em->persist($faqCategory);
-                $em->flush();
+                $this->entityManager->persist($faqCategory);
+                $this->entityManager->flush();
 
                 $this->addFlash('notice', "Faq category '{$data->wordCode}' created.");
                 $this->translationModel->refreshTranslationsCache();
@@ -112,15 +105,8 @@ class FaqCategoryController extends FaqBaseController
         );
     }
 
-    /**
-     * @Route("/admin/faqs/category/{id}/edit", name="admin_faqs_category_edit",
-     *     requirements={"id": "\d+"})
-     *
-     * @throws AccessDeniedException
-     *
-     * @return Response
-     */
-    public function editCategoryAction(Request $request, FaqCategory $faqCategory)
+    #[Route(path: '/admin/faqs/category/{id}/edit', name: 'admin_faqs_category_edit', requirements: ['id' => '\d+'])]
+    public function editCategoryAction(Request $request, FaqCategory $faqCategory): Response
     {
         if (!$this->isGranted(Member::ROLE_ADMIN_FAQ)) {
             throw $this->createAccessDeniedException('You need to have Faq right to access this.');
@@ -128,20 +114,20 @@ class FaqCategoryController extends FaqBaseController
 
         $faqCategories = $this->getSubMenuItems($faqCategory);
 
-        $em = $this->getDoctrine()->getManager();
-        $faqCategoryRequest = FaqCategoryRequest::fromFaqCategory($em, $faqCategory);
+        $faqCategoryRequest = FaqCategoryRequest::fromFaqCategory($this->entityManager, $faqCategory);
         $faqCategoryForm = $this->createForm(FaqCategoryFormType::class, $faqCategoryRequest);
         $faqCategoryForm->handleRequest($request);
 
         if ($faqCategoryForm->isSubmitted() && $faqCategoryForm->isValid()) {
             // Update description accordingly
             $data = $faqCategoryForm->getData();
-            $wordRepository = $em->getRepository(Word::class);
+            $wordRepository = $this->entityManager->getRepository(Word::class);
             $description = $wordRepository->findOneBy(['code' => $faqCategoryRequest->wordCode, 'shortCode' => 'en']);
             $description->setSentence($data->description);
             $description->setMajorUpdate(new DateTime());
-            $em->persist($description);
-            $em->flush();
+            $this->entityManager->persist($description);
+            $this->entityManager->flush();
+
             $this->translationModel->refreshTranslationsCacheForLocale('en');
             if ('en' !== $request->getLocale()) {
                 $this->translationModel->refreshTranslationsCacheForLocale($request->getLocale());
@@ -164,14 +150,10 @@ class FaqCategoryController extends FaqBaseController
     }
 
     /**
-     * @Route("/admin/faqs/sort", name="admin_faqs_category_sort")
-     *
-     * @throws AccessDeniedException
-     *
-     * @return Response
-     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
+     * @SuppressWarnings("PHPMD.UnusedLocalVariable")
      */
-    public function sortFaqCategoriesAction(Request $request, TranslatorInterface $translator)
+    #[Route(path: '/admin/faqs/sort', name: 'admin_faqs_category_sort')]
+    public function sortFaqCategoriesAction(Request $request, TranslatorInterface $translator): Response
     {
         if (!$this->isGranted(Member::ROLE_ADMIN_FAQ)) {
             throw $this->createAccessDeniedException('You need to have Faq right to access this.');
@@ -192,14 +174,13 @@ class FaqCategoryController extends FaqBaseController
                         $item = str_replace('faq=', '', $item);
                     }
                 );
-                $em = $this->getDoctrine()->getManager();
-                $faqCategoryRepository = $em->getRepository(FaqCategory::class);
+                $faqCategoryRepository = $this->entityManager->getRepository(FaqCategory::class);
                 foreach ($ids as $index => $id) {
                     $faq = $faqCategoryRepository->find($id);
                     $faq->setSortOrder($index);
-                    $em->persist($faq);
+                    $this->entityManager->persist($faq);
                 }
-                $em->flush();
+                $this->entityManager->flush();
 
                 $this->addFlash('notice', $translator->trans('flash.admin.faq.sort.order.updated'));
                 $this->redirectToRoute('admin_faqs_category_sort');

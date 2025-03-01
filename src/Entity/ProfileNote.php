@@ -9,66 +9,59 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Notes left by members about other profiles.
  *
- * @ORM\Table(name="mycontacts")
- * @ORM\HasLifecycleCallbacks
- * @ORM\Entity(repositoryClass="App\Repository\ProfileNoteRepository")
  *
- * @SuppressWarnings(PHPMD)
+ * @SuppressWarnings("PHPMD")
  * Auto generated class do not check mess
  */
+#[ORM\Table(name: 'mycontacts')]
+#[ORM\HasLifecycleCallbacks]
+#[ORM\Entity(repositoryClass: \App\Repository\ProfileNoteRepository::class)]
 class ProfileNote
 {
     /**
      * @var Member
-     *
-     * @ORM\ManyToOne(targetEntity="Member")
-     * @ORM\JoinColumn(name="IdMember", referencedColumnName="id")
      */
+    #[ORM\JoinColumn(name: 'IdMember', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: \Member::class)]
     private $owner;
 
     /**
      * @var Member
-     *
-     * @ORM\ManyToOne(targetEntity="Member")
-     * @ORM\JoinColumn(name="IdContact", referencedColumnName="id")
      */
+    #[ORM\JoinColumn(name: 'IdContact', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: \Member::class)]
     private $member;
 
     /**
      * @var DateTime
-     *
-     * @ORM\Column(name="created", type="datetime", nullable=false)
      */
+    #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
     private $created;
 
     /**
      * @var DateTime
-     *
-     * @ORM\Column(name="updated", type="datetime", nullable=false)
      */
+    #[ORM\Column(name: 'updated', type: 'datetime', nullable: false)]
     private $updated;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="Category", type="string", length=255, nullable=false)
      */
+    #[ORM\Column(name: 'Category', type: 'string', length: 255, nullable: false)]
     private $category;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="Comment", type="text", nullable=false)
      */
+    #[ORM\Column(name: 'Comment', type: 'text', nullable: false)]
     private $comment;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     private $id;
 
     /**
@@ -227,9 +220,8 @@ class ProfileNote
 
     /**
      * Triggered on insert.
-     *
-     * @ORM\PrePersist
      */
+    #[ORM\PrePersist]
     public function onPrePersist()
     {
         $this->created = new DateTime('now');
@@ -238,9 +230,8 @@ class ProfileNote
 
     /**
      * Triggered on update.
-     *
-     * @ORM\PreUpdate
      */
+    #[ORM\PreUpdate]
     public function onPreUpdate()
     {
         $this->updated = new DateTime('now');

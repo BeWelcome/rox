@@ -8,9 +8,9 @@ use Symfony\Component\Form\FormBuilderInterface;
 class TripRadiusType extends AbstractType
 {
     /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('radius', Select2Type::class, [
@@ -31,7 +31,7 @@ class TripRadiusType extends AbstractType
         ;
     }
 
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'trips';
     }

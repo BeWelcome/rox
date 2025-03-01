@@ -18,152 +18,84 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * Message.
  *
- * @ORM\Table(name="messages",
- *     options={"collate":"utf8mb4_general_ci", "charset":"utf8mb4"},
- *     indexes={@ORM\Index(name="IdParent",
- *         columns={"IdParent", "IdReceiver", "IdSender"}),
- *         @ORM\Index(name="IdReceiver", columns={"IdReceiver"}),
- *         @ORM\Index(name="IdSender", columns={"IdSender"}),
- *         @ORM\Index(name="messages_by_spaminfo", columns={"SpamInfo"}),
- *         @ORM\Index(name="IdxStatus", columns={"Status"}),
- *         @ORM\Index(name="DeleteRequest", columns={"DeleteRequest"}),
- *         @ORM\Index(name="WhenFirstRead", columns={"WhenFirstRead"})})
- * @ORM\Entity(repositoryClass="App\Repository\MessageRepository")
- * @ORM\HasLifecycleCallbacks
  *
- * @SuppressWarnings(PHPMD)
+ * @SuppressWarnings("PHPMD")
  * Auto generated class do not check mess
  */
+#[ORM\Table(name: 'messages', options: ['collate' => 'utf8mb4_general_ci', 'charset' => 'utf8mb4'])]
+#[ORM\Index(name: 'IdParent', columns: ['IdParent', 'IdReceiver', 'IdSender'])]
+#[ORM\Index(name: 'IdReceiver', columns: ['IdReceiver'])]
+#[ORM\Index(name: 'IdSender', columns: ['IdSender'])]
+#[ORM\Index(name: 'messages_by_spaminfo', columns: ['SpamInfo'])]
+#[ORM\Index(name: 'IdxStatus', columns: ['Status'])]
+#[ORM\Index(name: 'DeleteRequest', columns: ['DeleteRequest'])]
+#[ORM\Index(name: 'WhenFirstRead', columns: ['WhenFirstRead'])]
+#[ORM\Entity(repositoryClass: \App\Repository\MessageRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Message
 {
-    /**
-     * @ORM\Column(name="MessageType", type="string", nullable=false)
-     */
+    #[ORM\Column(name: 'MessageType', type: 'string', nullable: false)]
     private string $messageType = 'MemberToMember';
 
-    /**
-     * @var DateTime
-     *
-     * @ORM\Column(name="updated", type="datetime", nullable=true)
-     */
-    private $updated;
+    #[ORM\Column(name: 'updated', type: 'datetime', nullable: true)]
+    private ?DateTime $updated = null;
 
-    /**
-     * @ORM\Column(name="created", type="datetime", nullable=false)
-     */
+    #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
     private DateTime $created;
 
-    /**
-     * @ORM\Column(name="DateSent", type="datetime", nullable=false)
-     */
+    #[ORM\Column(name: 'DateSent', type: 'datetime', nullable: false)]
     private DateTime $dateSent;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="DeleteRequest", type="delete_request", nullable=true)
-     */
-    private $deleteRequest;
+    #[ORM\Column(name: 'DeleteRequest', type: 'delete_request', nullable: true)]
+    private string $deleteRequest;
 
-    /**
-     * @var Message
-     *
-     * @ORM\OneToOne(targetEntity="App\Entity\Message", fetch="LAZY")
-     * @ORM\JoinColumn(name="IdParent", referencedColumnName="id", nullable=true)
-     */
-    private $parent = null;
+    #[ORM\JoinColumn(name: 'IdParent', referencedColumnName: 'id', nullable: true)]
+    #[ORM\OneToOne(targetEntity: Message::class, fetch: 'LAZY')]
+    private ?Message $parent = null;
 
-    /**
-     * @var Member
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Member", fetch="LAZY")
-     */
-    private $initiator;
+    #[ORM\JoinColumn(name: 'initiator_id', referencedColumnName: 'id', nullable: false)]
+    #[ORM\ManyToOne(targetEntity: Member::class, fetch: 'LAZY')]
+    private Member $initiator;
 
-    /**
-     * @var Member
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Member", fetch="EAGER")
-     * @ORM\JoinColumn(name="IdReceiver", referencedColumnName="id")
-     */
-    private $receiver;
+    #[ORM\JoinColumn(name: 'IdReceiver', referencedColumnName: 'id', nullable: false)]
+    #[ORM\ManyToOne(targetEntity: Member::class, fetch: 'EAGER')]
+    private Member $receiver;
 
-    /**
-     * @var Member
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Member", fetch="EAGER")
-     * @ORM\JoinColumn(name="IdSender", referencedColumnName="id")
-     */
-    private $sender;
+    #[ORM\JoinColumn(name: 'IdSender', referencedColumnName: 'id', nullable: false)]
+    #[ORM\ManyToOne(targetEntity: Member::class, fetch: 'EAGER')]
+    private Member $sender;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="SpamInfo", type="spam_info", nullable=false)
-     */
-    private $spamInfo = SpamInfoType::NO_SPAM;
+    #[ORM\Column(name: 'SpamInfo', type: 'spam_info', nullable: false)]
+    private string $spamInfo = SpamInfoType::NO_SPAM;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="Status", type="message_status", nullable=false)
-     */
-    private $status = 'ToSend';
+    #[ORM\Column(name: 'Status', type: 'message_status', nullable: false)]
+    private string $status = 'ToSend';
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="Message", type="text", length=65535, nullable=false)
-     */
-    private $message;
+    #[ORM\Column(name: 'Message', type: 'text', length: 65535, nullable: false)]
+    private string $message;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="InFolder", type="in_folder", nullable=false)
-     */
-    private $folder = InFolderType::NORMAL;
+    #[ORM\Column(name: 'InFolder', type: 'in_folder', nullable: false)]
+    private string $folder = InFolderType::NORMAL;
 
-    /**
-     * @var DateTime
-     *
-     * @ORM\Column(name="WhenFirstRead", type="datetime", nullable=true)
-     */
-    private $firstRead;
+    #[ORM\Column(name: 'WhenFirstRead', type: 'datetime', nullable: true)]
+    private ?DateTime $firstRead;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="CheckerComment", type="text", nullable=true)
-     */
-    private $checkerComment;
+    #[ORM\Column(name: 'CheckerComment', type: 'text', nullable: true)]
+    private ?string $checkerComment;
 
-    /**
-     * @var Subject
-     *
-     * @ORM\ManyToOne(targetEntity="Subject", cascade={"persist"}, inversedBy="messages")
-     * @ORM\JoinColumn(nullable=true)
-     *
-     * @Assert\NotBlank()
-     */
-    private $subject = null;
+    #[ORM\JoinColumn(nullable: true)]
+    #[ORM\ManyToOne(targetEntity: Subject::class, cascade: ['persist'])]
+    #[Assert\NotBlank]
+    private ?Subject $subject;
 
-    /**
-     * @var HostingRequest
-     *
-     * @ORM\ManyToOne(targetEntity="HostingRequest", cascade={"persist"}, fetch="EAGER", inversedBy="messages")
-     * @ORM\JoinColumn(nullable=true)
-     */
-    private $request = null;
+    #[ORM\JoinColumn(nullable: true)]
+    #[ORM\ManyToOne(targetEntity: HostingRequest::class, cascade: ['persist'], fetch: 'EAGER', inversedBy: 'messages')]
+    private ?HostingRequest $request = null;
 
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
-    private $id;
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
+    private int $id;
 
     public function getMessageType(): string
     {
@@ -374,9 +306,9 @@ class Message
     }
 
 
-    public function getCheckerComment(): string
+    public function getCheckerComment(): ?string
     {
-        return $this->checkerComment ?? '';
+        return $this->checkerComment;
     }
 
     public function setCheckerComment(?string $checkerComment): Message
@@ -471,10 +403,9 @@ class Message
 
     /**
      * Triggered on insert.
-     *
-     * @ORM\PrePersist
      */
-    public function onPrePersist()
+    #[ORM\PrePersist]
+    public function onPrePersist(): void
     {
         $this->created = new \DateTime('now');
         if (null === $this->parent) {
@@ -485,12 +416,8 @@ class Message
         $this->dateSent = $this->created;
     }
 
-    /**
-     * Triggered on update.
-     *
-     * @ORM\PreUpdate
-     */
-    public function onPreUpdate()
+    #[ORM\PreUpdate]
+    public function onPreUpdate(): void
     {
         $this->updated = new \DateTime('now');
     }
@@ -512,7 +439,7 @@ class Message
         return null !== $this->request && null === $this->request->getInviteForLeg();
     }
 
-    public function isInvitation()
+    public function isInvitation(): bool
     {
         return null !== $this->request && null !== $this->request->getInviteForLeg();
     }

@@ -8,7 +8,7 @@ use HTMLPurifier_HTML5Config;
 use HtmlTruncator\InvalidHtmlException;
 use HtmlTruncator\Truncator;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Translation\DataCollector\TranslationDataCollector;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\WebpackEncoreBundle\Asset\EntrypointLookupInterface;
@@ -19,8 +19,6 @@ use Twig\TwigFunction;
 
 class Extension extends AbstractExtension implements GlobalsInterface
 {
-    protected SessionInterface $session;
-
     protected TranslatorInterface $translator;
 
     private string $publicDirectory;
@@ -30,24 +28,25 @@ class Extension extends AbstractExtension implements GlobalsInterface
 
     /** @var false|string[] */
     private $locales;
+    private RequestStack $requestStack;
 
     /**
      * Extension constructor.
      */
     public function __construct(
-        SessionInterface $session,
+        RequestStack $requestStack,
         TranslatorInterface $translator,
         EntrypointLookupInterface $entrypointLookup,
         LoggerInterface $logger,
         array $locales,
         string $publicDirectory
     ) {
-        $this->session = $session;
         $this->translator = $translator;
         $this->locales = $locales;
         $this->entrypointLookup = $entrypointLookup;
         $this->publicDirectory = $publicDirectory;
         $this->logger = $logger;
+        $this->requestStack = $requestStack;
     }
 
     public function getFunctions(): array
@@ -209,8 +208,8 @@ class Extension extends AbstractExtension implements GlobalsInterface
     }
 
     /**
-     * @SuppressWarnings(PHPMD.StaticAccess)
-     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
+     * @SuppressWarnings("PHPMD.StaticAccess")
+     * @SuppressWarnings("PHPMD.BooleanArgumentFlag")
      */
     public function prepareNewsletter(string $text, bool $website = false): string
     {
@@ -291,9 +290,12 @@ class Extension extends AbstractExtension implements GlobalsInterface
     public function getGlobals(): array
     {
         $version = '';
+        $locale = 'en';
         $versionCreated = new Carbon();
 
-        $locale = $this->session->get('locale', 'en');
+        if (null !== $this->requestStack->getCurrentRequest()) {
+            $locale = $this->requestStack->getSession()->get('locale', 'en');
+        }
 
         if (file_exists('../VERSION')) {
             $version = trim(file_get_contents('../VERSION'));

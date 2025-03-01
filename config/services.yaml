@@ -43,34 +43,19 @@ services:
     # this creates a service per class whose id is the fully-qualified class name
     App\:
         resource: '../src/*'
-        exclude: '../src/{DependencyInjection,Entity,Migrations,Model/MemberDataExtractor/DoctrineExtractor.php,Twig,Tests,Kernel.php}'
+        exclude:
+            - '../src/DependencyInjection'
+            - '../src/Entity'
+            - '../src/Migrations'
+            - '../src/Model/MemberDataExtractor/DoctrineExtractor.php'
+            - '../src/Twig'
+            - '../src/Kernel.php'
 
     # controllers are imported separately to make sure services can be injected
     # as action arguments even if you don't extend any base controller class
     App\Controller\:
         resource: '../src/Controller'
         tags: [ 'controller.service_arguments' ]
-
-
-    App\ApiPlatform\JWTAuthorizationDecorator:
-        decorates: 'api_platform.openapi.factory'
-        arguments: ['@.inner']
-
-#    App\Swagger\SwaggerDecorator:
-#        decorates: 'api_platform.swagger.normalizer.documentation'
-#        arguments: ['@App\Swagger\SwaggerDecorator.inner']
-#        autoconfigure: false
-
-    App\Security\RefreshToken\RefreshTokenStorageInterface: '@App\Security\RefreshToken\DoctrineRefreshTokenStorage'
-
-    App\Security\RefreshToken\JWTTokenManager:
-        decorates: lexik_jwt_authentication.jwt_manager
-        arguments:
-            $decorated: '@App\Security\RefreshToken\JWTTokenManager.inner'
-
-    App\Command\RefreshTokensExpireCommand:
-        arguments:
-            $repository: '@App\Repository\MemberRepository'
 
     App\Command\DataRetentionCommand:
         arguments:
@@ -83,11 +68,6 @@ services:
     App\Command\SendNotificationsCommand:
         arguments:
             $batchSize: '%forum_notification_batch_size%'
-
-    App\Serializer\MemberContextBuilder:
-        decorates: api_platform.serializer.context_builder
-        arguments:
-            $decorated: '@App\Serializer\MemberContextBuilder.inner'
 
     app.member_data_extractor.activities:
         class: App\Model\MemberDataExtractor\ActivitiesExtractor
@@ -190,15 +170,6 @@ services:
             $alias: logs
         tags: [ 'app.member_data_extractor' ]
 
-    app.member_data_extractor.shouts:
-        class: App\Model\MemberDataExtractor\DoctrineExtractor
-        factory: [ '@App\Model\MemberDataExtractor\DoctrineExtractorFactory', 'create' ]
-        arguments:
-            $className: 'App\Entity\Shout'
-            $memberRelationName: member
-            $alias: shouts
-        tags: [ 'app.member_data_extractor' ]
-
     app.member_data_extractor.subscriptions_threads:
         class: App\Model\MemberDataExtractor\DoctrineExtractor
         factory: [ '@App\Model\MemberDataExtractor\DoctrineExtractorFactory', 'create' ]
@@ -270,10 +241,10 @@ services:
     #        tags:
     #            - { name: kernel.event_listener, event: kernel.exception, method: onKernelException, priority: 200000 }
 
-    rox.legacy_kernel:
-        class: App\LegacyKernel\LegacyHttpKernel
-        public: true
-        arguments: [ '@twig', '@event_dispatcher', '@controller_resolver', '@request_stack', '@argument_resolver', '@service_container' ]
+#    rox.legacy_kernel:
+#        class: App\LegacyKernel\LegacyHttpKernel
+#        public: true
+#        arguments: [ '@twig', '@service_container', '@request_stack' ]
 
 #    rox.legacy_password_hasher:
 #        public: true
@@ -302,7 +273,7 @@ services:
     rox.member_twig_extension:
         class: App\Twig\MemberTwigExtension
         public: true
-        arguments: [ '@session', '@router', '@security.helper' ]
+        arguments: [ '@router', '@security.helper' ]
         tags:
             - { name: twig.extension }
 
@@ -392,10 +363,6 @@ services:
     \HTMLPurifier:
         alias: rox.html_purifier
 
-    rox.words_extractor:
-        class: App\Utilities\WordsExtractor
-        tags: [ { name: translation.extractor, alias: words } ]
-
     #  rox.activator:
     #    class: App\Activator\RoleActivator
     #    arguments: ["@security.helper"]
@@ -407,8 +374,8 @@ services:
 
     Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler:
         arguments:
-            - !service { class: PDO, factory: [ '@database_connection', 'getWrappedConnection' ] }
-            - { lock_mode: LOCK_NONE }
+            - '%env(DATABASE_URL)%'
+            - { lock_mode: !php/const Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler::LOCK_NONE }
 
     Symfony\Bridge\Doctrine\Security\RememberMe\DoctrineTokenProvider: ~
 

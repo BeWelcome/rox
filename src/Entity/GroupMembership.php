@@ -11,48 +11,40 @@ use App\Doctrine\GroupMembershipStatusType;
 use Carbon\Carbon;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Event\PostLoadEventArgs;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Persistence\Mapping\ClassMetadata;
-use Doctrine\Persistence\ObjectManager;
-use Doctrine\Persistence\ObjectManagerAware;
 
 /**
  * Group Membership.
  *
- * @ORM\Table(name="membersgroups",
- *     uniqueConstraints={@ORM\UniqueConstraint(name="UniqueIdMemberIdGroup", columns={"IdMember", "IdGroup"})},
- *     indexes={
- *         @ORM\Index(name="membersgroups_groups", columns={"IdGroup"}),
- *         @ORM\Index(name="membersgroups_members", columns={"IdMember"})
- *     }
- * )
- * @ORM\Entity
- * @ORM\HasLifecycleCallbacks
  *
- * @SuppressWarnings(PHPMD)
+ * @SuppressWarnings("PHPMD")
  * Auto generated class do not check mess
  */
-class GroupMembership implements ObjectManagerAware
+#[ORM\Table(name: 'membersgroups')]
+#[ORM\Index(name: 'membersgroups_groups', columns: ['IdGroup'])]
+#[ORM\Index(name: 'membersgroups_members', columns: ['IdMember'])]
+#[ORM\UniqueConstraint(name: 'UniqueIdMemberIdGroup', columns: ['IdMember', 'IdGroup'])]
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
+class GroupMembership
 {
     /**
      * @var DateTime
-     *
-     * @ORM\Column(name="updated", type="datetime", nullable=false)
      */
+    #[ORM\Column(name: 'updated', type: 'datetime', nullable: false)]
     private $updated;
 
     /**
      * @var DateTime
-     *
-     * @ORM\Column(name="created", type="datetime", nullable=false)
      */
+    #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
     private $created;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="comment", type="integer", nullable=false)
      */
+    #[ORM\Column(name: 'comment', type: 'integer', nullable: false)]
     private $comment;
 
     /**
@@ -62,61 +54,49 @@ class GroupMembership implements ObjectManagerAware
 
     /**
      * @var Member
-     *
-     * @ORM\ManyToOne(targetEntity="Member", inversedBy="groupMemberships")
-     * @ORM\JoinColumn(name="IdMember", referencedColumnName="id", nullable=FALSE)
      */
+    #[ORM\JoinColumn(name: 'IdMember', referencedColumnName: 'id', nullable: false)]
+    #[ORM\ManyToOne(targetEntity: \Member::class, inversedBy: 'groupMemberships')]
     private $member;
 
     /**
      * @var Group
-     *
-     * @ORM\ManyToOne(targetEntity="Group", inversedBy="groupMemberships")
-     * @ORM\JoinColumn(name="IdGroup", referencedColumnName="id", nullable=FALSE)
      */
+    #[ORM\JoinColumn(name: 'IdGroup', referencedColumnName: 'id', nullable: false)]
+    #[ORM\ManyToOne(targetEntity: \Group::class, inversedBy: 'groupMemberships')]
     private $group;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="Status", type="group_membership_status", nullable=false)
      */
+    #[ORM\Column(name: 'Status', type: 'group_membership_status', nullable: false)]
     private $status = GroupMembershipStatusType::APPLIED_FOR_MEMBERSHIP;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="IacceptMassMailFromThisGroup", type="string", nullable=false)
      */
+    #[ORM\Column(name: 'IacceptMassMailFromThisGroup', type: 'string', nullable: false)]
     private $mailNotifications = 'no';
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="CanSendGroupMessage", type="string", nullable=false)
      */
+    #[ORM\Column(name: 'CanSendGroupMessage', type: 'string', nullable: false)]
     private $cansendgroupmessage = 'yes';
 
     /**
      * @var bool
-     *
-     * @ORM\Column(name="notificationsEnabled", type="boolean", nullable=false)
      */
+    #[ORM\Column(name: 'notificationsEnabled', type: 'boolean', nullable: false)]
     private $notificationsenabled = '1';
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     private $id;
-
-    /**
-     * @var ObjectManager
-     */
-    private $objectManager;
 
     public function __construct()
     {
@@ -356,21 +336,19 @@ class GroupMembership implements ObjectManagerAware
 
     /**
      * Triggered after load from database.
-     *
-     * @ORM\PostLoad
      */
-    public function onPostLoad()
+    #[ORM\PostLoad]
+    public function onPostLoad(PostLoadEventArgs $eventArgs): void
     {
-        $memberTranslationRepository = $this->objectManager->getRepository(MemberTranslation::class);
+        $memberTranslationRepository = $eventArgs->getObjectManager()->getRepository(MemberTranslation::class);
         $this->comments = $memberTranslationRepository->findBy(['translation' => $this->comment]);
     }
 
     /**
      * Triggered on insert.
-     *
-     * @ORM\PrePersist
      */
-    public function onPrePersist()
+    #[ORM\PrePersist]
+    public function onPrePersist(): void
     {
         $this->created = new DateTime('now');
         $this->updated = $this->created;
@@ -378,10 +356,9 @@ class GroupMembership implements ObjectManagerAware
 
     /**
      * Triggered on update.
-     *
-     * @ORM\PreUpdate
      */
-    public function onPreUpdate()
+    #[ORM\PreUpdate]
+    public function onPreUpdate(): void
     {
         $this->updated = new DateTime('now');
     }
@@ -397,11 +374,6 @@ class GroupMembership implements ObjectManagerAware
     public function getComment(): ?int
     {
         return $this->comment;
-    }
-
-    public function injectObjectManager(ObjectManager $objectManager, ClassMetadata $classMetadata)
-    {
-        $this->objectManager = $objectManager;
     }
 
     /**

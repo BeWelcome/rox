@@ -11,6 +11,7 @@ use App\Service\Mailer;
 use App\Utilities\TranslatorTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -20,22 +21,26 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\Mime\Address;
 
 /**
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings("PHPMD.CouplingBetweenObjects")
  * The execute method which does all the work is understandable. The high coupling stems in the framework.
  */
+#[AsCommand(
+    name: 'send:notifications',
+    description: 'Send a batch of notification email every time the command is called',
+    aliases: [],
+    hidden: false,
+)]
 class SendNotificationsCommand extends Command
 {
     use TranslatorTrait;
-
-    protected static $defaultName = 'send:notifications';
-
-    private ParameterBagInterface $params;
 
     private EntityManagerInterface $entityManager;
 
     private LoggerInterface $logger;
 
     private Mailer $mailer;
+
+    private int $batchSize;
 
     public function __construct(
         EntityManagerInterface $entityManager,
@@ -53,7 +58,6 @@ class SendNotificationsCommand extends Command
     protected function configure(): void
     {
         $this
-            ->setDescription('Send a batch of notification email every time the command is called')
             ->addArgument('batchSize', InputArgument::OPTIONAL, 'Count of mails send while the command is running')
         ;
     }

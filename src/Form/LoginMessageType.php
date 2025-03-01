@@ -22,9 +22,9 @@ class LoginMessageType extends AbstractType
         $this->dateTimeTransformer = $dateTimeTransformer;
     }
     /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('message', CkEditorType::class, [
@@ -51,7 +51,7 @@ class LoginMessageType extends AbstractType
             ->addModelTransformer($this->dateTimeTransformer);
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver
             ->setDefaults([

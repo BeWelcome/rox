@@ -8,184 +8,113 @@
 namespace App\Entity;
 
 use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Right.
  *
- * @ORM\Table(name="rights")
- * @ORM\Entity
- * @ORM\HasLifecycleCallbacks
  *
- * @SuppressWarnings(PHPMD)
+ * @SuppressWarnings("PHPMD")
  * Auto generated class do not check mess
  */
+#[ORM\Table(name: 'rights')]
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class Right
 {
-    /**
-     * @var DateTime
-     *
-     * @ORM\Column(name="created", type="datetime", nullable=false)
-     */
-    private $created;
+    #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
+    private DateTime $created;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="Name", type="text", length=255, nullable=false)
-     */
-    private $name;
+    #[ORM\Column(name: 'Name', type: 'text', length: 255, nullable: false)]
+    private string $name;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="Description", type="text", length=65535, nullable=false)
-     */
-    private $description;
+    #[ORM\Column(name: 'Description', type: 'text', length: 65535, nullable: false)]
+    private string $description;
 
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
-    private $id;
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
+    private int $id;
 
-    /**
-     * @ORM\OneToMany(targetEntity="RightVolunteer", mappedBy="right")
-     */
-    private $rightVolunteers;
+    #[ORM\OneToMany(targetEntity: RightVolunteer::class, mappedBy: 'right')]
+    private Collection $rightVolunteers;
 
     public function __construct()
     {
-        $this->rightVolunteers = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->rightVolunteers = new ArrayCollection();
     }
 
-    /**
-     * @return mixed
-     */
-    public function getRightVolunteers()
+    public function getRightVolunteers(): Collection
     {
         return $this->rightVolunteers;
     }
 
-    /**
-     * @param mixed $rightVolunteers
-     */
-    public function setRightVolunteers($rightVolunteers)
+    public function setRightVolunteers(Collection $rightVolunteers): self
     {
         $this->rightVolunteers = $rightVolunteers;
+
+        return $this;
     }
 
-    /**
-     * Set created.
-     *
-     * @param DateTime $created
-     *
-     * @return Right
-     */
-    public function setCreated($created)
+    public function setCreated(DateTime $created): self
     {
         $this->created = $created;
 
         return $this;
     }
 
-    /**
-     * Get created.
-     *
-     * @return DateTime
-     */
-    public function getCreated()
+    public function getCreated(): DateTime
     {
         return $this->created;
     }
 
-    /**
-     * Set name.
-     *
-     * @param string $name
-     *
-     * @return Right
-     */
-    public function setName($name)
+    public function setName(string $name): self
     {
         $this->name = $name;
 
         return $this;
     }
 
-    /**
-     * Get name.
-     *
-     * @return string
-     */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * Set description.
-     *
-     * @param string $description
-     *
-     * @return Right
-     */
-    public function setDescription($description)
+    public function setDescription(string $description): self
     {
         $this->description = $description;
 
         return $this;
     }
 
-    /**
-     * Get description.
-     *
-     * @return string
-     */
-    public function getDescription()
+    public function getDescription(): string
     {
         return $this->description;
     }
 
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * Add rightVolunteer.
-     *
-     * @return Right
-     */
-    public function addRightVolunteer(RightVolunteer $rightVolunteer)
+    public function addRightVolunteer(RightVolunteer $rightVolunteer): self
     {
         $this->rightVolunteers[] = $rightVolunteer;
 
         return $this;
     }
 
-    /**
-     * Remove rightVolunteer.
-     */
-    public function removeRightVolunteer(RightVolunteer $rightVolunteer)
+    public function removeRightVolunteer(RightVolunteer $rightVolunteer): self
     {
         $this->rightVolunteers->removeElement($rightVolunteer);
+
+        return $this;
     }
 
-    /**
-     * Triggered on insert.
-     *
-     * @ORM\PrePersist
-     */
-    public function onPrePersist()
+    #[ORM\PrePersist]
+    public function onPrePersist(): void
     {
         $this->created = new DateTime('now');
     }

@@ -7,6 +7,7 @@ use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query;
 use Exception;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
@@ -18,11 +19,17 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 use ZipArchive;
 
 /**
- * @SuppressWarnings(PHPMD)
+ * @SuppressWarnings("PHPMD")
  */
+#[AsCommand(
+    name: 'geonames:update',
+    description: 'Downloads geonames data dump and imports them',
+    aliases: [],
+    hidden: false,
+)]
 class GeonamesUpdateFullCommand extends Command
 {
-    private const ROWS_IN_A_BATCH = 10000;
+    private const int ROWS_IN_A_BATCH = 10000;
 
     private HttpClientInterface $httpClient;
     private EntityManagerInterface $entityManager;
@@ -34,7 +41,7 @@ class GeonamesUpdateFullCommand extends Command
         EntityManagerInterface $entityManager,
         array $locales
     ) {
-        parent::__construct('geonames:update');
+        parent::__construct();
 
         $this->httpClient = $httpClient;
         $this->entityManager = $entityManager;
@@ -45,10 +52,9 @@ class GeonamesUpdateFullCommand extends Command
         $this->allowedLocales = $locales;
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
-            ->setDescription('Downloads geonames data dump and imports them')
             ->addOption(
                 'full',
                 null,

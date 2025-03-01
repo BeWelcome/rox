@@ -5,8 +5,8 @@ namespace App\Pagerfanta;
 /**
  * TwitterBootstrap4Template.
  *
- * @SuppressWarnings(PHPMD.ExcessivePublicCount)
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ * @SuppressWarnings("PHPMD.ExcessivePublicCount")
+ * @SuppressWarnings("PHPMD.TooManyPublicMethods")
  */
 class TwitterBootstrap4AjaxTemplate extends TwitterBootstrap4Template
 {

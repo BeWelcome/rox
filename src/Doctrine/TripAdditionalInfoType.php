@@ -4,18 +4,16 @@ namespace App\Doctrine;
 
 class TripAdditionalInfoType extends EnumType
 {
-    public const NONE = 'none';
-    public const SINGLE = 'single';
-    public const COUPLE = 'couple';
-    public const FRIENDS_MIXED = 'friends_mixed';
-    public const FRIENDS_SAME = 'friends_same';
-    public const FAMILY = 'family';
+    public const string NONE = 'none';
+    public const string SINGLE = 'single';
+    public const string COUPLE = 'couple';
+    public const string FRIENDS_MIXED = 'friends_mixed';
+    public const string FRIENDS_SAME = 'friends_same';
+    public const string FAMILY = 'family';
 
-    /** @var string */
-    protected $name = 'trip_additional_info';
+    protected string $name = 'trip_additional_info';
 
-    /** @var array */
-    protected $values = [
+    protected array $values = [
         self::NONE,
         self::SINGLE,
         self::COUPLE,

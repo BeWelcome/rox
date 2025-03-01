@@ -10,89 +10,79 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * ReportToModerator.
- *
- * @ORM\Table(name="reports_to_moderators", indexes={@ORM\Index(name="IdReporter", columns={"IdReporter", "IdPost", "IdThread"})})
- * @ORM\HasLifecycleCallbacks
- * @ORM\Entity
  */
+#[ORM\Table(name: 'reports_to_moderators')]
+#[ORM\Index(name: 'IdReporter', columns: ['IdReporter', 'IdPost', 'IdThread'])]
+#[ORM\HasLifecycleCallbacks]
+#[ORM\Entity]
 class ReportToModerator
 {
     use LifecycleCallbacksTrait;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="PostComment", type="text", length=65535, nullable=false)
      */
+    #[ORM\Column(name: 'PostComment', type: 'text', length: 65535, nullable: false)]
     private $postComment;
 
     /**
      * @var Member
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Member")
-     * @ORM\JoinColumn(name="IdReporter", referencedColumnName="id")
      */
+    #[ORM\JoinColumn(name: 'IdReporter', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: \App\Entity\Member::class)]
     private $reporter;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="ModeratorComment", type="text", length=65535, nullable=false)
      */
+    #[ORM\Column(name: 'ModeratorComment', type: 'text', length: 65535, nullable: false)]
     private $moderatorComment;
 
     /**
      * @var Member
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Member")
-     * @ORM\JoinColumn(name="IdModerator", referencedColumnName="id")
      */
+    #[ORM\JoinColumn(name: 'IdModerator', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: \App\Entity\Member::class)]
     private $moderator;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="Status", type="report_status", nullable=false)
      */
+    #[ORM\Column(name: 'Status', type: 'report_status', nullable: false)]
     private $status = ReportStatusType::OPEN;
 
     /**
      * @var ForumPost
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\ForumPost")
-     * @ORM\Column(name="IdPost", type="integer", nullable=false)
      */
+    #[ORM\ManyToOne(targetEntity: \App\Entity\ForumPost::class)]
+    #[ORM\Column(name: 'IdPost', type: 'integer', nullable: false)]
     private $post;
 
     /**
      * @var ForumThread
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\ForumThread")
-     * @ORM\Column(name="IdThread", type="integer", nullable=false)
      */
+    #[ORM\ManyToOne(targetEntity: \App\Entity\ForumThread::class)]
+    #[ORM\Column(name: 'IdThread', type: 'integer', nullable: false)]
     private $thread;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="Type", type="report_type", nullable=false)
      */
+    #[ORM\Column(name: 'Type', type: 'report_type', nullable: false)]
     private $type = ReportTypeType::SEE_TEXT;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="LastWhoSpoke", type="who_spoke_last", nullable=false)
      */
+    #[ORM\Column(name: 'LastWhoSpoke', type: 'who_spoke_last', nullable: false)]
     private $lastWhoSpoke = WhoSpokeLastType::MEMBER;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     private $id;
 
     /**

@@ -12,268 +12,122 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Faq.
- *
- * @ORM\Table(name="faq", indexes={@ORM\Index(name="IdCategory", columns={"IdCategory"})})
- * @ORM\Entity(repositoryClass="App\Repository\FaqRepository")
- * @ORM\HasLifecycleCallbacks
- *
- * @SuppressWarnings(PHPMD)
- * Auto generated class do not check mess
  */
+#[ORM\Table(name: 'faq')]
+#[ORM\Index(name: 'IdCategory', columns: ['IdCategory'])]
+#[ORM\Entity(repositoryClass: \App\Repository\FaqRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Faq
 {
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="QandA", type="string", nullable=false)
-     */
-    private $qAndA;
+    #[ORM\Column(name: 'QandA', type: 'string', nullable: false)]
+    private string $qAndA;
 
-    /**
-     * @var DateTime
-     *
-     * @ORM\Column(name="updated", type="datetime", nullable=false)
-     */
-    private $updated;
+    #[ORM\Column(name: 'updated', type: 'datetime', nullable: true)]
+    private DateTime $updated;
 
-    /**
-     * @var DateTime
-     *
-     * @ORM\Column(name="created", type="datetime", nullable=false)
-     */
-    private $created;
+    #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
+    private DateTime $created;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="Active", type="string", nullable=false)
-     */
-    private $active = 'Active';
+    #[ORM\Column(name: 'Active', type: 'string', nullable: false)]
+    private string $active = 'Active';
 
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="SortOrder", type="integer", nullable=false)
-     */
-    private $sortorder = '0';
+    #[ORM\Column(name: 'SortOrder', type: 'integer', nullable: false)]
+    private int $sortOrder = 0;
 
-    /**
-     * @var FaqCategory
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\FaqCategory", fetch="EAGER")
-     * @ORM\JoinColumn(name="IdCategory", referencedColumnName="id")
-     */
-    private $category = '0';
+    #[ORM\JoinColumn(name: 'IdCategory', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: FaqCategory::class, fetch: 'EAGER')]
+    private FaqCategory $category;
 
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
-    private $id;
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
+    private int $id;
 
-    /**
-     * Set qanda.
-     *
-     * @param string $qAndA
-     *
-     * @return Faq
-     */
-    public function setQAndA($qAndA)
+    public function setQAndA(string $qAndA): self
     {
         $this->qAndA = $qAndA;
 
         return $this;
     }
 
-    /**
-     * Get qanda.
-     *
-     * @return string
-     */
-    public function getQAndA()
+    public function getQAndA(): string
     {
         return $this->qAndA;
     }
 
-    /**
-     * Set updated.
-     *
-     * @param DateTime $updated
-     *
-     * @return Faq
-     */
-    public function setUpdated($updated)
+    public function setUpdated(?DateTime $updated): self
     {
         $this->updated = $updated;
 
         return $this;
     }
 
-    /**
-     * Get updated.
-     *
-     * @return DateTime
-     */
-    public function getUpdated()
+    public function getUpdated(): ?DateTime
     {
         return $this->updated;
     }
 
-    /**
-     * Set created.
-     *
-     * @param DateTime $created
-     *
-     * @return Faq
-     */
-    public function setCreated($created)
+    public function setCreated(DateTime $created): self
     {
         $this->created = $created;
 
         return $this;
     }
 
-    /**
-     * Get created.
-     *
-     * @return DateTime
-     */
-    public function getCreated()
+    public function getCreated(): DateTime
     {
         return $this->created;
     }
 
-    /**
-     * Set active.
-     *
-     * @param string $active
-     *
-     * @return Faq
-     */
-    public function setActive($active)
+    public function setActive(string $active): self
     {
         $this->active = $active;
 
         return $this;
     }
 
-    /**
-     * Get active.
-     *
-     * @return string
-     */
-    public function getActive()
+    public function getActive(): string
     {
         return $this->active;
     }
 
-    /**
-     * Set sortorder.
-     *
-     * @param int $sortorder
-     *
-     * @return Faq
-     */
-    public function setSortorder($sortorder)
+    public function setSortOrder(int $sortOrder): self
     {
-        $this->sortorder = $sortorder;
+        $this->sortOrder = $sortOrder;
 
         return $this;
     }
 
-    /**
-     * Get sortorder.
-     *
-     * @return int
-     */
-    public function getSortorder()
+    public function getSortOrder(): int
     {
-        return $this->sortorder;
+        return $this->sortOrder;
     }
 
-    /**
-     * Set category.
-     *
-     * @param FaqCategory $category
-     *
-     * @return Faq
-     */
-    public function setCategory($category)
+    public function setCategory(FaqCategory $category): self
     {
         $this->category = $category;
 
         return $this;
     }
 
-    /**
-     * Get category.
-     *
-     * @return FaqCategory
-     */
-    public function getCategory()
+    public function getCategory(): FaqCategory
     {
         return $this->category;
     }
 
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function getAnswer()
-    {
-        return $this->answer;
-    }
-
-    /**
-     * @return Faq
-     */
-    public function setAnswer(string $answer)
-    {
-        $this->answer = $answer;
-
-        return $this;
-    }
-
-    public function getQuestion()
-    {
-        return $this->question;
-    }
-
-    /**
-     * @return Faq
-     */
-    public function setQuestion(string $question)
-    {
-        $this->question = $question;
-
-        return $this;
-    }
-
-    /**
-     * Triggered on insert.
-     *
-     * @ORM\PrePersist
-     */
-    public function onPrePersist()
+    #[ORM\PrePersist]
+    public function onPrePersist(): void
     {
         $this->created = new DateTime('now');
     }
 
-    /**
-     * Triggered on update.
-     *
-     * @ORM\PreUpdate
-     */
-    public function onPreUpdate()
+    #[ORM\PreUpdate]
+    public function onPreUpdate(): void
     {
         $this->updated = new DateTime('now');
     }

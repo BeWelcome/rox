@@ -10,16 +10,17 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class CkEditorType extends TextAreaType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         parent::buildForm($builder, $options);
+
         $builder->setAttribute('async', $options['async']);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver
             ->setDefaults([
@@ -34,7 +35,7 @@ class CkEditorType extends TextAreaType
             ->addAllowedTypes('async', 'bool');
     }
 
-    public function buildView(FormView $view, FormInterface $form, array $options)
+    public function buildView(FormView $view, FormInterface $form, array $options): void
     {
         parent::buildView($view, $form, $options);
         $view->vars['async'] = $form->getConfig()->getAttribute('async');
@@ -43,7 +44,7 @@ class CkEditorType extends TextAreaType
     /**
      * {@inheritdoc}
      */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'ckeditor';
     }

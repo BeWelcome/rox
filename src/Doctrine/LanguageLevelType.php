@@ -4,18 +4,16 @@ namespace App\Doctrine;
 
 class LanguageLevelType extends EnumType
 {
-    public const MOTHER_TONGUE = 'MotherLanguage';
-    public const EXPERT = 'Expert';
-    public const FLUENT = 'Fluent';
-    public const INTERMEDIATE = 'Intermediate';
-    public const BEGINNER = 'Beginner';
-    public const HELLO_ONLY = 'HelloOnly';
+    public const string MOTHER_TONGUE = 'MotherLanguage';
+    public const string EXPERT = 'Expert';
+    public const string FLUENT = 'Fluent';
+    public const string INTERMEDIATE = 'Intermediate';
+    public const string BEGINNER = 'Beginner';
+    public const string HELLO_ONLY = 'HelloOnly';
 
-    /** @var string */
-    protected $name = 'language_level';
+    protected string $name = 'language_level';
 
-    /** @var array */
-    protected $values = [
+    protected array $values = [
         self::MOTHER_TONGUE,
         self::EXPERT,
         self::FLUENT,

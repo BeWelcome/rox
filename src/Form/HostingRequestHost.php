@@ -16,7 +16,7 @@ class HostingRequestHost extends HostingRequestAbstractType
      *
      * Offers the possibility to change the dates and process the request (accept, cancel)
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('request', HostingRequestType::class, [

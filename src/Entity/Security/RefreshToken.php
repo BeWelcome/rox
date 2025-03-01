@@ -13,33 +13,23 @@ use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-/**
- * @ORM\Entity(repositoryClass=RefreshTokenRepository::class)
- */
+#[ORM\Entity(repositoryClass: RefreshTokenRepository::class)]
 class RefreshToken
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="CUSTOM")
-     * @ORM\CustomIdGenerator(class=UuidGenerator::class)
-     * @ORM\Column(type="uuid", unique=true)
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
+    #[ORM\CustomIdGenerator(class: UuidGenerator::class)]
+    #[ORM\Column(type: 'uuid', unique: true)]
     private $id;
 
-    /**
-     * @ORM\Column(type="datetime")
-     */
+    #[ORM\Column(type: 'datetime')]
     private $createdAt;
 
-    /**
-     * @ORM\Column(type="datetime")
-     */
+    #[ORM\Column(type: 'datetime')]
     private $expiresAt;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Member::class)
-     * @ORM\JoinColumn(nullable=false)
-     */
+    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\ManyToOne(targetEntity: Member::class)]
     private $user;
 
     public function getId(): ?UuidInterface
@@ -49,7 +39,7 @@ class RefreshToken
 
     /**
      * @param string|UuidInterface $id
-     * @SuppressWarnings(PHPMD.StaticAccess)
+     * @SuppressWarnings("PHPMD.StaticAccess")
      */
     public function setId($id): self
     {

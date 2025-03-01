@@ -8,64 +8,56 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * MembersThreadsSubscribed.
- *
- * @ORM\Table(name="members_threads_subscribed")
- * @ORM\Entity
- * @ORM\HasLifecycleCallbacks
  */
+#[ORM\Table(name: 'members_threads_subscribed')]
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class MemberThreadSubscription
 {
     /**
      * @var Member
-     *
-     * @ORM\ManyToOne(targetEntity="Member")
-     * @ORM\JoinColumn(name="IdSubscriber", referencedColumnName="id", nullable=false)
      */
+    #[ORM\JoinColumn(name: 'IdSubscriber', referencedColumnName: 'id', nullable: false)]
+    #[ORM\ManyToOne(targetEntity: \Member::class)]
     private $subscriber;
 
     /**
      * @var DateTime
-     *
-     * @ORM\Column(name="created", type="datetime", nullable=false)
      */
+    #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
     private $subscribed;
 
     /**
      * @var ForumThread
-     *
-     * @ORM\ManyToOne(targetEntity="ForumThread")
-     * @ORM\JoinColumn(name="IdThread", referencedColumnName="id", nullable=false)
      */
+    #[ORM\JoinColumn(name: 'IdThread', referencedColumnName: 'id', nullable: false)]
+    #[ORM\ManyToOne(targetEntity: \ForumThread::class)]
     private $thread;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="ActionToWatch", type="action_to_watch", nullable=false)
      */
+    #[ORM\Column(name: 'ActionToWatch', type: 'action_to_watch', nullable: false)]
     private $actionToWatch = ActionToWatchType::REPLIES;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="UnSubscribeKey", type="string", length=32, nullable=false)
      */
+    #[ORM\Column(name: 'UnSubscribeKey', type: 'string', length: 32, nullable: false)]
     private $unsubscribeKey;
 
     /**
      * @var bool
-     *
-     * @ORM\Column(name="notificationsEnabled", type="boolean", nullable=false)
      */
+    #[ORM\Column(name: 'notificationsEnabled', type: 'boolean', nullable: false)]
     private $notificationsEnabled = '1';
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
+    #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     private $id;
 
     /**
@@ -184,7 +176,7 @@ class MemberThreadSubscription
      * @return bool
      *
      * This triggered by the column name (NotificationsEnabled)
-     * @SuppressWarnings(PHPMD.BooleanGetMethodName)
+     * @SuppressWarnings("PHPMD.BooleanGetMethodName")
      */
     public function getNotificationsEnabled()
     {

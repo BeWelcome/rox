@@ -10,10 +10,9 @@ use Symfony\Component\Routing\Annotation\Route;
 class SafetyController extends AbstractController
 {
     /**
-     * @Route("/safety", name="safety")
-     *
      * @return Response
      */
+    #[Route(path: '/safety', name: 'safety')]
     public function showSafetyMain()
     {
         return $this->render('safety/safetymain.html.twig', [
@@ -25,10 +24,9 @@ class SafetyController extends AbstractController
     }
 
     /**
-     * @Route("/safety/basics", name="safety_basics")
-     *
      * @return Response
      */
+    #[Route(path: '/safety/basics', name: 'safety_basics')]
     public function showSafetyBasics()
     {
         return $this->render('safety/safetybasics.html.twig', [
@@ -40,10 +38,9 @@ class SafetyController extends AbstractController
     }
 
     /**
-     * @Route("/safety/whattodo", name="safety_what_to_do")
-     *
      * @return Response
      */
+    #[Route(path: '/safety/whattodo', name: 'safety_what_to_do')]
     public function showSafetyWhatToDo()
     {
         return $this->render('safety/safetywhattodo.html.twig', [
@@ -55,10 +52,9 @@ class SafetyController extends AbstractController
     }
 
     /**
-     * @Route("/safety/tips", name="safety_tips")
-     *
      * @return Response
      */
+    #[Route(path: '/safety/tips', name: 'safety_tips')]
     public function showSafetyTips()
     {
         return $this->render('safety/safetytips.html.twig', [
@@ -70,10 +66,9 @@ class SafetyController extends AbstractController
     }
 
     /**
-     * @Route("/safety/faq", name="safety_faq")
-     *
      * @return Response
      */
+    #[Route(path: '/safety/faq', name: 'safety_faq')]
     public function showSafetyFAQ()
     {
         return $this->render('safety/safetyfaq.html.twig', [
@@ -85,10 +80,9 @@ class SafetyController extends AbstractController
     }
 
     /**
-     * @Route("/safety/team", name="safety_team")
-     *
      * @return Response
      */
+    #[Route(path: '/safety/team', name: 'safety_team')]
     public function showSafetyTeam(SafetyModel $safetyModel)
     {
         $teamMembers = $safetyModel->getSafetyTeamMembers();
@@ -103,20 +97,18 @@ class SafetyController extends AbstractController
     }
 
     /**
-     * @Route("/feedback?IdCategory=2", name="safety_contact")
-     *
      * @return Response
      */
+    #[Route(path: '/feedback?IdCategory=2', name: 'safety_contact')]
     public function showSafetyContact()
     {
         return $this->redirectToRoute('feedback', ['IdCategory' => 2]);
     }
 
     /**
-     * @Route("/feedback?IdCategory=2&no", name="safety_contact_no_modal")
-     *
      * @return Response
      */
+    #[Route(path: '/feedback?IdCategory=2&no', name: 'safety_contact_no_modal')]
     public function showSafetyContactNoModal()
     {
         return $this->redirectToRoute('feedback', ['IdCategory' => 2, 'no' => 1]);

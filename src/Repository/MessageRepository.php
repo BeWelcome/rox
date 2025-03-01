@@ -27,7 +27,7 @@ class MessageRepository extends EntityRepository
         $sql = str_replace('SELECT * FROM (', 'SELECT count(*) AS count FROM (', $sql);
 
         $result = $this->getEntityManager()->getConnection()->executeQuery($sql, [
-            ':memberId' => $member->getId(),
+            'memberId' => $member->getId(),
         ]);
 
         $unread = $result->fetchOne();
@@ -72,7 +72,7 @@ class MessageRepository extends EntityRepository
         $sql .= ' ORDER BY `m`.`created` DESC LIMIT ' . $limit . ' OFFSET 0';
 
         $query = $this->getEntityManager()->createNativeQuery($sql, new MessageResultSetMapping())
-            ->setParameter(':memberId', $member->getId())
+            ->setParameter('memberId', $member->getId())
         ;
 
         return $query->getResult();
@@ -372,7 +372,7 @@ class MessageRepository extends EntityRepository
     {
         $qb = $this->createQueryBuilder('m');
         $qb
-            ->join('App:Member', 'mb', Join::WITH, 'm.sender = mb.id')
+            ->join(Member::class, 'mb', Join::WITH, 'm.sender = mb.id')
             ->where('m.status = :status')
             ->setParameter('status', MessageStatusType::CHECK)
             ->andWhere('m.spamInfo LIKE :spamInfo')
@@ -389,7 +389,7 @@ class MessageRepository extends EntityRepository
     {
         $qb = $this->createQueryBuilder('m');
         $qb
-            ->join('App:Member', 'mb', Join::WITH, 'm.sender = mb.id')
+            ->join(Member::class, 'mb', Join::WITH, 'm.sender = mb.id')
             ->where('m.spamInfo LIKE :spamInfo')
             ->setParameter('spamInfo', '%' . SpamInfoType::SPAM_BLOCKED_WORD . '%')
             ->andWhere(

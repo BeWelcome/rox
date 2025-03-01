@@ -6,6 +6,7 @@ use App\Entity\Member;
 use App\Form\LogFormType;
 use App\Model\LogModel;
 use App\Repository\MemberRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,14 +17,12 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 class LogController extends AbstractController
 {
     /**
-     * @Route("/admin/logs", name="admin_logs_overview")
      *
      * @throws NonUniqueResultException
      * @throws AccessDeniedException
-     *
-     * @return Response
      */
-    public function showOverview(Request $request, LogModel $logModel)
+    #[Route(path: '/admin/logs', name: 'admin_logs_overview')]
+    public function showOverview(Request $request, LogModel $logModel, EntityManagerInterface $entityManager): Response
     {
         if (!$this->isGranted(Member::ROLE_ADMIN_LOGS)) {
             throw $this->createAccessDeniedException('You need to have Logs right to access this.');
@@ -57,7 +56,7 @@ class LogController extends AbstractController
         }
         if (!empty($username)) {
             /** @var MemberRepository $memberRepository */
-            $memberRepository = $this->getDoctrine()->getRepository(Member::class);
+            $memberRepository = $entityManager->getRepository(Member::class);
             $member = $memberRepository->loadUserByUsername($username);
         }
 
@@ -70,12 +69,11 @@ class LogController extends AbstractController
     }
 
     /**
-     * @Route("/admin/logs/groups", name="admin_groups_logs")
      *
      * @throws AccessDeniedException
-     *
      * @return Response
      */
+    #[Route(path: '/admin/logs/groups', name: 'admin_groups_logs')]
     public function showGroupLogs(Request $request, LogModel $logModel)
     {
         if (!$this->isGranted(Member::ROLE_ADMIN_FORUMMODERATOR)) {

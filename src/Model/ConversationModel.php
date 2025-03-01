@@ -34,7 +34,7 @@ class ConversationModel
     /**
      * Mark a conversation as purged (can not be unmarked).
      *
-     * @SuppressWarnings(PHPMD.StaticAccess)
+     * @SuppressWarnings("PHPMD.StaticAccess")
      */
     public function markConversationPurged(Member $member, array $conversation): void
     {
@@ -56,7 +56,7 @@ class ConversationModel
     /**
      * Mark a conversation as deleted for this member.
      *
-     * @SuppressWarnings(PHPMD.StaticAccess)
+     * @SuppressWarnings("PHPMD.StaticAccess")
      */
     public function markConversationDeleted(Member $member, array $conversation): void
     {
@@ -76,7 +76,7 @@ class ConversationModel
     }
 
     /**
-     * @SuppressWarnings(PHPMD.StaticAccess)
+     * @SuppressWarnings("PHPMD.StaticAccess")
      */
     public function unmarkConversationDeleted(Member $member, array $conversation): void
     {

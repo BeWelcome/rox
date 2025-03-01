@@ -10,25 +10,15 @@ use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Type;
 use InvalidArgumentException;
 
-/**
- * @SuppressWarnings(PHPMD.UnusedFormalParameter)
- * @SuppressWarnings(PHPMD.NumberOfChildren)
- */
 abstract class EnumType extends Type
 {
-    /** @var string */
-    protected $name;
+    protected string $name;
 
-    /** @var array */
-    protected $values = [];
+    protected array $values = [];
 
-    /** @var string */
-    protected $translationPrefix = '';
+    protected string $translationPrefix = '';
 
-    /**
-     * @return string
-     */
-    public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
+    public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform): string
     {
         $values = array_map(function ($val) {
             return "'" . $val . "'";
@@ -37,22 +27,12 @@ abstract class EnumType extends Type
         return 'ENUM(' . implode(', ', $values) . ')';
     }
 
-    /**
-     * @param mixed $value
-     *
-     * @return mixed
-     */
-    public function convertToPHPValue($value, AbstractPlatform $platform)
+    public function convertToPHPValue(mixed $value, AbstractPlatform $platform): mixed
     {
         return $value;
     }
 
-    /**
-     * @param mixed $value
-     *
-     * @return mixed
-     */
-    public function convertToDatabaseValue($value, AbstractPlatform $platform)
+    public function convertToDatabaseValue(mixed $value, AbstractPlatform $platform): mixed
     {
         if (!\in_array($value, $this->values, true)) {
             throw new InvalidArgumentException("Invalid '" . $this->name . "' value: " . $value . '.');
@@ -61,18 +41,12 @@ abstract class EnumType extends Type
         return $value;
     }
 
-    /**
-     * @return string
-     */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * @return bool
-     */
-    public function requiresSQLCommentHint(AbstractPlatform $platform)
+    public function requiresSQLCommentHint(AbstractPlatform $platform): bool
     {
         return true;
     }

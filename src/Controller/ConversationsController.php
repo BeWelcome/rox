@@ -44,36 +44,28 @@ class ConversationsController extends AbstractController
         $this->entityManager = $entityManager;
     }
 
-    /**
-     * @Route("/conversations/spam/", name="conversations_spam")
-     */
+    #[Route(path: '/conversations/spam/', name: 'conversations_spam')]
     public function showSpamConversations(Request $request): Response
     {
         return $this->handleRequest($request, 'spam');
     }
 
-    /**
-     * @Route("/conversations/deleted/", name="conversations_deleted")
-     */
+    #[Route(path: '/conversations/deleted/', name: 'conversations_deleted')]
     public function showDeletedConversations(Request $request): Response
     {
         return $this->handleRequest($request, 'deleted');
     }
 
-    /**
-     * @Route("/{conversationsType}/", name="conversations",
-     *     requirements={"conversationsType":"conversations|messages|requests|invitations"})
-     */
+    #[Route(path: '/{conversationsType}/', name: 'conversations', requirements: ['conversationsType' => 'conversations|messages|requests|invitations'])]
     public function showConversations(Request $request, string $conversationsType): Response
     {
         return $this->handleRequest($request, $conversationsType);
     }
 
     /**
-     * @Route("/conversations/with/{username}", name="conversations_with")
-     *
      * @throws InvalidArgumentException
      */
+    #[Route(path: '/conversations/with/{username}', name: 'conversations_with')]
     public function allConversationsWithMember(
         Request $request,
         Member $other

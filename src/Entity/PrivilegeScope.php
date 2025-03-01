@@ -9,58 +9,53 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Privilege scopes.
  *
- * @ORM\Table(name="privilegescopes")
- * @ORM\Entity
- * @ORM\HasLifecycleCallbacks
  *
- * @SuppressWarnings(PHPMD)
+ * @SuppressWarnings("PHPMD")
  * Auto generated class do not check mess
  */
+#[ORM\Table(name: 'privilegescopes')]
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class PrivilegeScope
 {
     /**
      * @var DateTime
-     *
-     * @ORM\Column(name="updated", type="datetime", nullable=false)
      */
+    #[ORM\Column(name: 'updated', type: 'datetime', nullable: false)]
     private $updated;
 
     /**
      * @var Member
-     *
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="NONE")
-     * @ORM\OneToOne(targetEntity="Member")
-     * @ORM\JoinColumn(name="IdMember", referencedColumnName="id")
      */
+    #[ORM\JoinColumn(name: 'IdMember', referencedColumnName: 'id')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'NONE')]
+    #[ORM\OneToOne(targetEntity: \Member::class)]
     private $member;
 
     /**
      * @var Role
-     *
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="NONE")
-     * @ORM\OneToOne(targetEntity="Role")
-     * @ORM\JoinColumn(name="IdRole", referencedColumnName="id")
      */
+    #[ORM\JoinColumn(name: 'IdRole', referencedColumnName: 'id')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'NONE')]
+    #[ORM\OneToOne(targetEntity: \Role::class)]
     private $role;
 
     /**
      * @var Privilege
-     *
-     * @ORM\Id
-     * @ORM\OneToOne(targetEntity="Privilege")
-     * @ORM\JoinColumn(name="IdPrivilege", referencedColumnName="id")
      */
+    #[ORM\JoinColumn(name: 'IdPrivilege', referencedColumnName: 'id')]
+    #[ORM\Id]
+    #[ORM\OneToOne(targetEntity: \Privilege::class)]
     private $privilege;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="IdType", type="string", length=32)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="NONE")
      */
+    #[ORM\Column(name: 'IdType', type: 'string', length: 32)]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'NONE')]
     private $type;
 
     /**
@@ -185,9 +180,8 @@ class PrivilegeScope
 
     /**
      * Triggered on persist.
-     *
-     * @ORM\PrePersist
      */
+    #[ORM\PrePersist]
     public function onPrePersist()
     {
         $this->updated = new DateTime('now');
@@ -195,9 +189,8 @@ class PrivilegeScope
 
     /**
      * Triggered on update.
-     *
-     * @ORM\PreUpdate
      */
+    #[ORM\PreUpdate]
     public function onPreUpdate()
     {
         $this->updated = new DateTime('now');

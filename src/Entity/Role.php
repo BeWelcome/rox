@@ -7,12 +7,13 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Roles.
  *
- * @ORM\Table(name="roles", uniqueConstraints={@ORM\UniqueConstraint(name="name", columns={"name"})})
- * @ORM\Entity
  *
- * @SuppressWarnings(PHPMD)
+ * @SuppressWarnings("PHPMD")
  * Auto generated class do not check mess
  */
+#[ORM\Table(name: 'roles')]
+#[ORM\UniqueConstraint(name: 'name', columns: ['name'])]
+#[ORM\Entity]
 class Role
 {
     public const SYSADMIN = 'SysAdmin';
@@ -21,25 +22,22 @@ class Role
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="name", type="string", length=128, nullable=false)
      */
+    #[ORM\Column(name: 'name', type: 'string', length: 128, nullable: false)]
     private $name;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="description", type="string", length=256, nullable=false)
      */
+    #[ORM\Column(name: 'description', type: 'string', length: 256, nullable: false)]
     private $description;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     private $id;
 
     /**

@@ -23,7 +23,7 @@ class SearchLocationType extends AbstractType implements DataMapperInterface
         $this->transformer = $transformer;
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('fullname', TextType::class, [
@@ -106,7 +106,7 @@ class SearchLocationType extends AbstractType implements DataMapperInterface
         ]);
     }
 
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return '';
     }

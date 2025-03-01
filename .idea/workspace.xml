@@ -1,0 +1,1900 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="f3454381-8d21-4747-a1f8-abf6e8979cd6" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/INSTALL.md" beforeDir="false" afterPath="$PROJECT_DIR$/INSTALL.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Mike42/Wikitext/DefaultParserBackend.php" beforeDir="false" afterPath="$PROJECT_DIR$/Mike42/Wikitext/DefaultParserBackend.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Mike42/Wikitext/ParserInlineElement.php" beforeDir="false" afterPath="$PROJECT_DIR$/Mike42/Wikitext/ParserInlineElement.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Mike42/Wikitext/ParserLineBlockElement.php" beforeDir="false" afterPath="$PROJECT_DIR$/Mike42/Wikitext/ParserLineBlockElement.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Mike42/Wikitext/ParserTableElement.php" beforeDir="false" afterPath="$PROJECT_DIR$/Mike42/Wikitext/ParserTableElement.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Mike42/Wikitext/WikitextParser.php" beforeDir="false" afterPath="$PROJECT_DIR$/Mike42/Wikitext/WikitextParser.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/js/admin/tools/login_message.ts" beforeDir="false" afterPath="$PROJECT_DIR$/assets/js/admin/tools/login_message.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/members/pages/member.page.php" beforeDir="false" afterPath="$PROJECT_DIR$/build/members/pages/member.page.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/places/templates/countries.column_col3.php" beforeDir="false" afterPath="$PROJECT_DIR$/build/places/templates/countries.column_col3.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/search/search.model.php" beforeDir="false" afterPath="$PROJECT_DIR$/build/search/search.model.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/composer.json" beforeDir="false" afterPath="$PROJECT_DIR$/composer.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/composer.lock" beforeDir="false" afterPath="$PROJECT_DIR$/composer.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/bundles.php" beforeDir="false" afterPath="$PROJECT_DIR$/config/bundles.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/config.yml" beforeDir="false" afterPath="$PROJECT_DIR$/config/config.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/packages/api_platform.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/packages/dev/translations.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config/packages/dev/translations.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/packages/doctrine.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config/packages/doctrine.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/packages/doctrine_migrations.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config/packages/doctrine_migrations.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/packages/framework.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config/packages/framework.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/packages/security.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config/packages/security.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/packages/sensio_framework_extra.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/routes.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config/routes.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/routes/annotations.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/routes/api_platform.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/services.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config/services.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fixtures/countries.yml" beforeDir="false" afterPath="$PROJECT_DIR$/fixtures/countries.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fixtures/feedbackcategories.yml" beforeDir="false" afterPath="$PROJECT_DIR$/fixtures/feedbackcategories.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fixtures/memberstranslations.yml" beforeDir="false" afterPath="$PROJECT_DIR$/fixtures/memberstranslations.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/application/app_controller.lib.php" beforeDir="false" afterPath="$PROJECT_DIR$/lib/application/app_controller.lib.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ApiPlatform/Doctrine/Orm/Extension/MemberExtension.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ApiPlatform/JWTAuthorizationDecorator.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Command/AddInitiatorCommand.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Command/AddInitiatorCommand.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Command/CreateTestDatabase.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Command/CreateTestDatabase.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Command/DataRetentionCommand.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Command/DataRetentionCommand.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Command/GeonamesUpdateDailyCommand.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Command/GeonamesUpdateDailyCommand.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Command/GeonamesUpdateFullCommand.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Command/GeonamesUpdateFullCommand.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Command/ManticoreIndicesForumCommand.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Command/ManticoreIndicesForumCommand.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Command/ManticoreIndicesGeonamesCommand.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Command/ManticoreIndicesGeonamesCommand.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Command/RefreshTokensExpireCommand.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Command/SendCommentReminderCommand.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Command/SendCommentReminderCommand.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Command/SendMassmailCommand.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Command/SendMassmailCommand.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Command/SendNotificationsCommand.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Command/SendNotificationsCommand.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Command/TranslationsAddMissingCommand.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Command/TranslationsAddMissingCommand.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Command/UpdateStatistics.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Command/UpdateStatistics.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/AboutController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/AboutController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/ActivityController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/ActivityController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/Admin/CheckerController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/Admin/CheckerController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/Admin/CommentController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/Admin/CommentController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/Admin/CommunityNewsController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/Admin/CommunityNewsController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/Admin/FaqBaseController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/Admin/FaqBaseController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/Admin/FaqCategoryController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/Admin/FaqCategoryController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/Admin/FaqController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/Admin/FaqController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/Admin/GroupController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/Admin/GroupController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/Admin/LogController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/Admin/LogController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/Admin/MassmailController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/Admin/MassmailController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/Admin/MockupController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/Admin/MockupController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/Admin/NewsletterController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/Admin/NewsletterController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/Admin/TranslationController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/Admin/TranslationController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/Admin/VolunteerToolController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/Admin/VolunteerToolController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/AutoCompleteController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/AutoCompleteController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/AvatarController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/AvatarController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/BaseRequestAndInvitationController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/BaseRequestAndInvitationController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/CommentController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/CommentController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/CommunityController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/CommunityController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/CommunityNewsController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/CommunityNewsController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/ConversationController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/ConversationController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/ConversationsController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/ConversationsController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/DonationController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/DonationController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/FaqController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/FaqController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/FeedbackController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/FeedbackController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/ForumsController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/ForumsController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/GalleryController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/GalleryController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/GroupController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/GroupController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/HomeController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/HomeController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/InvitationController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/InvitationController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/LandingController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/LandingController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/LegacyController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/LegacyController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/LocaleController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/LocaleController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/LoginMessageController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/LoginMessageController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/MemberController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/MemberController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/MessageController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/MessageController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/NewsletterController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/NewsletterController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/NoteController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/NoteController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/NotificationController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/NotificationController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/PasswordController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/PasswordController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/PoliciesController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/PoliciesController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/PreferenceController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/PreferenceController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/ProfileController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/ProfileController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/RelationController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/RelationController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/RequestController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/RequestController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/SafetyController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/SafetyController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/SearchController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/SearchController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/SecurityController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/SecurityController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/SignupController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/SignupController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/StatisticsController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/StatisticsController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/SubscriptionController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/SubscriptionController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/SuggestLocationController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/SuggestLocationController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/TripController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/TripController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/UnreadController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/UnreadController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/WikiController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/WikiController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Doctrine/AccommodationType.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Doctrine/AccommodationType.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Doctrine/ActionToWatchType.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Doctrine/ActionToWatchType.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Doctrine/CommentAdminActionType.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Doctrine/CommentAdminActionType.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Doctrine/CommentQualityType.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Doctrine/CommentQualityType.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Doctrine/CommentRelationsType.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Doctrine/CommentRelationsType.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Doctrine/DeleteRequestType.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Doctrine/DeleteRequestType.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Doctrine/DomainType.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Doctrine/DomainType.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Doctrine/EnumType.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Doctrine/EnumType.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Doctrine/Filter/LanguageFilter.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Doctrine/Filter/LanguageFilter.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Doctrine/ForumDeleteStatusType.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Doctrine/ForumDeleteStatusType.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Doctrine/ForumVisibilityType.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Doctrine/ForumVisibilityType.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Doctrine/Functions/DateDiff.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Doctrine/Functions/DateDiff.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Doctrine/Functions/GeoDistance.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Doctrine/Functions/GeoDistance.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Doctrine/Functions/YearWeek.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Doctrine/Functions/YearWeek.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Doctrine/GroupMembershipStatusType.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Doctrine/GroupMembershipStatusType.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Doctrine/GroupType.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Doctrine/GroupType.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Doctrine/Hydrator/LanguageHydrator.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Doctrine/Hydrator/LanguageHydrator.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Doctrine/InFolderType.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Doctrine/InFolderType.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Doctrine/LanguageLevelType.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Doctrine/LanguageLevelType.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Doctrine/MemberStatusType.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Doctrine/MemberStatusType.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Doctrine/MessageResultSetMapping.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Doctrine/MessageResultSetMapping.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Doctrine/MessageStatusType.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Doctrine/MessageStatusType.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Doctrine/NotificationStatusType.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Doctrine/NotificationStatusType.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Doctrine/PostCanStillEditType.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Doctrine/PostCanStillEditType.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Doctrine/ReportStatusType.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Doctrine/ReportStatusType.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Doctrine/ReportTypeType.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Doctrine/ReportTypeType.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Doctrine/SetType.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Doctrine/SetType.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Doctrine/SpamInfoType.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Doctrine/SpamInfoType.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Doctrine/StatusType.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Doctrine/StatusType.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Doctrine/SubtripOptionsType.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Doctrine/SubtripOptionsType.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Doctrine/ThreadReplyType.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Doctrine/ThreadReplyType.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Doctrine/TranslationAllowedType.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Doctrine/TranslationAllowedType.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Doctrine/TripAdditionalInfoType.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Doctrine/TripAdditionalInfoType.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Doctrine/TypicalOfferType.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Doctrine/TypicalOfferType.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Doctrine/WhoSpokeLastType.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Doctrine/WhoSpokeLastType.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/Activity.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/Activity.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/ActivityAttendee.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/ActivityAttendee.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/Address.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/Address.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/AdminCode.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/AdminCode.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/AdminUnit.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/AdminUnit.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/AlternateLocation.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/AlternateLocation.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/BroadcastMessage.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/BroadcastMessage.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/Comment.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/Comment.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/CommunityNews.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/CommunityNews.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/CommunityNewsComment.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/CommunityNewsComment.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/Country.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/Country.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/CryptedField.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/CryptedField.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/Donation.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/Donation.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/Faq.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/Faq.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/FaqCategory.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/FaqCategory.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/Feedback.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/Feedback.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/FeedbackCategory.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/FeedbackCategory.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/Flag.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/Flag.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/FlagMember.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/FlagMember.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/ForumPost.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/ForumPost.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/ForumThread.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/ForumThread.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/Gallery.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/Gallery.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/GalleryComment.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/GalleryComment.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/GalleryImage.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/GalleryImage.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/Group.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/Group.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/GroupMembership.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/GroupMembership.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/HostingInterest.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/HostingInterest.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/HostingRequest.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/HostingRequest.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/Language.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/Language.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/Location.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/Location.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/Log.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/Log.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/LoginMessage.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/LoginMessage.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/LoginMessageAcknowledged.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/LoginMessageAcknowledged.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/Member.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/Member.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/MemberPreference.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/MemberPreference.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/MemberThreadSubscription.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/MemberThreadSubscription.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/MemberTranslation.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/MemberTranslation.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/MembersLanguagesLevel.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/MembersLanguagesLevel.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/MembersPhoto.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/MembersPhoto.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/Message.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/Message.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/NewLocation.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/NewLocation.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/Newsletter.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/Newsletter.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/Notification.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/Notification.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/Params.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/Params.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/PasswordReset.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/PasswordReset.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/Poll.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/Poll.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/PollChoice.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/PollChoice.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/PollContribution.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/PollContribution.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/PollRecordOfChoice.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/PollRecordOfChoice.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/PostNotification.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/PostNotification.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/Preference.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/Preference.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/Privilege.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/Privilege.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/PrivilegeScope.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/PrivilegeScope.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/ProfileNote.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/ProfileNote.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/ProfileVisit.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/ProfileVisit.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/Relation.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/Relation.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/ReportToModerator.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/ReportToModerator.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/Right.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/Right.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/RightVolunteer.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/RightVolunteer.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/Role.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/Role.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/Security/RefreshToken.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/Security/RefreshToken.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/Shout.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/Statistic.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/Statistic.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/Subject.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/Subject.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/Subtrip.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/Subtrip.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/Translation.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/Translation.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/Translation/NewLocationTranslation.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/Translation/NewLocationTranslation.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/Trip.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/Trip.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/UploadedImage.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/UploadedImage.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/User.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/Wiki.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/Wiki.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/Word.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/Word.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/EventListener/LegacyDispatchListener.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/EventListener/LegacyDispatchListener.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/EventListener/LocaleListener.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/EventListener/LocaleListener.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/EventListener/UserLocaleListener.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/EventListener/UserLocaleListener.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Factory/EncoderFactory.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Form/AdminCommentFormType.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Form/AdminCommentFormType.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Form/ChangePasswordFormType.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Form/ChangePasswordFormType.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Form/ChangeUsernameFormType.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Form/ChangeUsernameFormType.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Form/CkEditorType.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Form/CkEditorType.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Form/CommentType.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Form/CommentType.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Form/CommunityNewsCommentType.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Form/CommunityNewsCommentType.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Form/CommunityNewsType.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Form/CommunityNewsType.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Form/CustomDataClass/FaqCategoryRequest.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Form/CustomDataClass/FaqCategoryRequest.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Form/CustomDataClass/FaqRequest.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Form/CustomDataClass/FaqRequest.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Form/CustomDataClass/SearchFormRequest.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Form/CustomDataClass/SearchFormRequest.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Form/DataTransformer/SubtripOptionsTypeTransformer.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Form/DataTransformer/SubtripOptionsTypeTransformer.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Form/DeleteProfileFormType.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Form/DeleteProfileFormType.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Form/EditTranslationFormType.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Form/EditTranslationFormType.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Form/FaqCategoryFormType.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Form/FaqCategoryFormType.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Form/FaqFormType.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Form/FaqFormType.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Form/FeedbackFormType.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Form/FeedbackFormType.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Form/FindMemberFormType.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Form/FindMemberFormType.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Form/FindUserFormType.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Form/FindUserFormType.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Form/GalleryEditImageFormType.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Form/GalleryEditImageFormType.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Form/GalleryUploadForm.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Form/GalleryUploadForm.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Form/GroupType.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Form/GroupType.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Form/HostingRequestAbstractType.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Form/HostingRequestAbstractType.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Form/HostingRequestGuest.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Form/HostingRequestGuest.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Form/HostingRequestHost.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Form/HostingRequestHost.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Form/HostingRequestType.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Form/HostingRequestType.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Form/InvitationGuest.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Form/InvitationGuest.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Form/InvitationHost.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Form/InvitationHost.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Form/InvitationType.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Form/InvitationType.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Form/JoinGroupType.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Form/JoinGroupType.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Form/LogFormType.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Form/LogFormType.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Form/LoginFormType.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Form/LoginFormType.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Form/LoginMessageType.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Form/LoginMessageType.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Form/MapSearchFormType.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Form/MapSearchFormType.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Form/MessageIndexFormType.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Form/MessageIndexFormType.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Form/MessageToMemberType.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Form/MessageToMemberType.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Form/MinimalSearchFormType.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Form/MinimalSearchFormType.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Form/NewsletterUnsubscribeType.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Form/NewsletterUnsubscribeType.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Form/PasswordFormType.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Form/PasswordFormType.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Form/PreferencesType.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Form/PreferencesType.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Form/ProfileNoteFilterType.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Form/ProfileNoteFilterType.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Form/ProfileNoteType.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Form/ProfileNoteType.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Form/ProfileStatusFormType.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Form/ProfileStatusFormType.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Form/RelationType.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Form/RelationType.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Form/ReportCommentType.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Form/ReportCommentType.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Form/ReportSpamType.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Form/ReportSpamType.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Form/ResetPasswordFormType.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Form/ResetPasswordFormType.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Form/ResetPasswordRequestFormType.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Form/ResetPasswordRequestFormType.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Form/SearchFormType.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Form/SearchFormType.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Form/SearchGotoLocationFormType.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Form/SearchGotoLocationFormType.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Form/SearchHomeLocationFormType.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Form/SearchHomeLocationFormType.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Form/SearchLocationType.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Form/SearchLocationType.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Form/Select2Type.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Form/Select2Type.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Form/SetLocationType.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Form/SetLocationType.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Form/SignupFormFinalizeType.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Form/SignupFormFinalizeType.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Form/SignupFormType.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Form/SignupFormType.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Form/SpamActivitiesIndexFormType.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Form/SpamActivitiesIndexFormType.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Form/SpamCommunityNewsCommentsIndexFormType.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Form/SpamCommunityNewsCommentsIndexFormType.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Form/SpamMessagesIndexFormType.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Form/SpamMessagesIndexFormType.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Form/SubjectType.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Form/SubjectType.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Form/SubtripType.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Form/SubtripType.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Form/TomSelectType.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Form/TomSelectType.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Form/TranslationFormType.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Form/TranslationFormType.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Form/TripRadiusType.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Form/TripRadiusType.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Form/TripType.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Form/TripType.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Form/TripVicinityRadiusType.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Form/TripVicinityRadiusType.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Form/WikiCreateForm.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Form/WikiCreateForm.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Kernel.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Kernel.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/LegacyKernel/LegacyHttpKernel.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/LegacyKernel/LegacyHttpKernel.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Logger/Logger.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Logger/Logger.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Migrations/Version20200307133359.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Migrations/Version20200307133359.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Migrations/Version20200522172912.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Migrations/Version20200522172912.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Migrations/Version20200524104123.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Migrations/Version20200919061813.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Model/Admin/CommentModel.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/Admin/CommentModel.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Model/CommentModel.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/CommentModel.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Model/ConversationModel.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/ConversationModel.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Model/ConversationsModel.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/ConversationsModel.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Model/DonateModel.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/DonateModel.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Model/FaqModel.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/FaqModel.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Model/FeedbackModel.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/FeedbackModel.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Model/GroupModel.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/GroupModel.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Model/LandingModel.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/LandingModel.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Model/MessageModel.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/MessageModel.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Model/MockupProvider/InvitationMockups.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/MockupProvider/InvitationMockups.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Model/MockupProvider/InvitationUtility.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/MockupProvider/InvitationUtility.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Model/MockupProvider/MyDataMockups.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/MockupProvider/MyDataMockups.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Model/StatisticsModel.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/StatisticsModel.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Model/WikiModel.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/WikiModel.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pagerfanta/AbstractConversationsAdapter.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pagerfanta/AbstractConversationsAdapter.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pagerfanta/ArchivedTranslationAdapter.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pagerfanta/ArchivedTranslationAdapter.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pagerfanta/DoNotTranslateTranslationAdapter.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pagerfanta/DoNotTranslateTranslationAdapter.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pagerfanta/LogAdapter.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pagerfanta/LogAdapter.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pagerfanta/MissingTranslationAdapter.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pagerfanta/MissingTranslationAdapter.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pagerfanta/SearchAdapter.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pagerfanta/SearchAdapter.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pagerfanta/TranslationAdapter.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pagerfanta/TranslationAdapter.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pagerfanta/TwitterBootstrap4AjaxTemplate.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pagerfanta/TwitterBootstrap4AjaxTemplate.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pagerfanta/TwitterBootstrap4Template.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pagerfanta/TwitterBootstrap4Template.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pagerfanta/UpdateTranslationAdapter.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pagerfanta/UpdateTranslationAdapter.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Provider/UserProvider.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Provider/UserProvider.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Repository/ActivityAttendeeRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/ActivityAttendeeRepository.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Repository/ActivityRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/ActivityRepository.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Repository/CommentRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/CommentRepository.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Repository/DonationRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/DonationRepository.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Repository/GroupRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/GroupRepository.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Repository/LocationRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/LocationRepository.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Repository/LoginMessageRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/LoginMessageRepository.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Repository/MemberRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/MemberRepository.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Repository/MessageRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/MessageRepository.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Repository/NewLocationRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/NewLocationRepository.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Repository/NewsletterRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/NewsletterRepository.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Repository/PaginationRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/PaginationRepository.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Repository/PostNotificationRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/PostNotificationRepository.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Repository/ProfileVisitRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/ProfileVisitRepository.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Repository/RelationRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/RelationRepository.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Repository/SubtripRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/SubtripRepository.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Repository/TripRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/TripRepository.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Repository/WikiRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/WikiRepository.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Repository/WordRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/WordRepository.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Routing/LegacyLoader.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Routing/LegacyLoader.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Security/AccessDeniedHandler.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Security/AccountBannedException.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Security/AccountBannedException.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Security/AccountDeniedLoginException.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Security/AccountDeniedLoginException.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Security/AccountMailNotConfirmedException.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Security/AccountMailNotConfirmedException.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Security/AccountSuspendedException.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Security/AccountSuspendedException.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Security/RefreshToken/JWTTokenManager.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Security/RefreshToken/JWTTokenManager.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Security/UserChecker.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Security/UserChecker.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Security/UsernameResolver.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Serializer/MemberContextBuilder.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Serializer/Normalizer/AddressNormalizer.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Serializer/Normalizer/MemberNormalizer.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Service/Mailer.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Service/Mailer.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/TranslationLoader/DatabaseLoader.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/TranslationLoader/DatabaseLoader.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Twig/Extension.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Twig/Extension.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Twig/MemberTwigExtension.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Twig/MemberTwigExtension.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Utilities/ConversationThread.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Utilities/ConversationThread.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Utilities/LifecycleCallbacksTrait.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Utilities/LifecycleCallbacksTrait.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Utilities/ManagerTrait.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Utilities/ManagerTrait.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Utilities/MessageTrait.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Utilities/MessageTrait.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Utilities/PaypalIPN.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Utilities/PaypalIPN.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Utilities/RoxWikiParserBackend.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Utilities/RoxWikiParserBackend.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Utilities/SessionSingleton.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Utilities/SessionSingleton.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Utilities/SessionTrait.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Utilities/SessionTrait.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Utilities/TranslatorSingleton.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Utilities/TranslatorSingleton.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Utilities/TranslatorSingletonTrait.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Utilities/TranslatorSingletonTrait.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Utilities/TranslatorTrait.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Utilities/TranslatorTrait.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Utilities/WordsExtractor.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/symfony.lock" beforeDir="false" afterPath="$PROJECT_DIR$/symfony.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/admin/translations/list.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/admin/translations/list.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/member/comment.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/member/comment.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/private/profile.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/private/profile.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/profile/header.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/profile/header.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/profile/show.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/profile/show.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/search/searchlocations.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/search/searchlocations.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/trip/my.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/trip/my.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Behat/DatabaseContext.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Behat/RefreshTokenContext.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Behat/SecurityContext.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Behat/json/member/item/member-2.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Behat/json/member/item/member-3.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Entity/MessageTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Entity/MessageTest.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Model/CommentModelTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Model/CommentModelTest.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Model/HostingRequestModelTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Model/HostingRequestModelTest.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Model/TripModelTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Model/TripModelTest.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Model/TripModelTestTripExpired.php" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Model/TripModelTestTripExpired.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Security/TripVoterTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Security/TripVoterTest.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/TranslationLoader/DatabaseLoaderTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/tests/TranslationLoader/DatabaseLoaderTest.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tools/mvc-base/page.php" beforeDir="false" afterPath="$PROJECT_DIR$/tools/mvc-base/page.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tools/routing/requestrouter.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/tools/routing/requestrouter.class.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tools/routing/roxfrontrouter.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/tools/routing/roxfrontrouter.class.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/tsconfig.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/webpack.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/webpack.config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ComposerConfigs">
+    <option name="configs">
+      <option value="$PROJECT_DIR$/src/Twig/composer.json" />
+    </option>
+  </component>
+  <component name="ComposerSettings" synchronizationState="SYNCHRONIZE">
+    <pharConfigPath>$PROJECT_DIR$/composer.json</pharConfigPath>
+    <execution />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Doctrine Entity ServiceRepository" />
+        <option value="composer.json" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="PhpDebugGeneral" listening_started="true" />
+  <component name="PhpServers">
+    <servers>
+      <server host="localhost" id="1b10f411-33e4-4da7-b4eb-16d3024e8511" name="localhost" port="8000" />
+    </servers>
+  </component>
+  <component name="PhpWorkspaceProjectConfiguration" interpreter_name="PHP 7.4">
+    <include_path>
+      <path value="$PROJECT_DIR$/vendor/psr/container" />
+      <path value="$PROJECT_DIR$/vendor/psr/cache" />
+      <path value="$PROJECT_DIR$/vendor/psr/http-factory" />
+      <path value="$PROJECT_DIR$/vendor/psr/event-dispatcher" />
+      <path value="$PROJECT_DIR$/vendor/psr/link" />
+      <path value="$PROJECT_DIR$/vendor/psr/http-message" />
+      <path value="$PROJECT_DIR$/vendor/dama/doctrine-test-bundle" />
+      <path value="$PROJECT_DIR$/vendor/psr/log" />
+      <path value="$PROJECT_DIR$/vendor/twig/twig" />
+      <path value="$PROJECT_DIR$/vendor/tijsverkoyen/css-to-inline-styles" />
+      <path value="$PROJECT_DIR$/vendor/amphp/byte-stream" />
+      <path value="$PROJECT_DIR$/vendor/ramsey/collection" />
+      <path value="$PROJECT_DIR$/vendor/amphp/amp" />
+      <path value="$PROJECT_DIR$/vendor/jfcherng/php-levenshtein-distance" />
+      <path value="$PROJECT_DIR$/vendor/amphp/dns" />
+      <path value="$PROJECT_DIR$/vendor/ramsey/uuid-doctrine" />
+      <path value="$PROJECT_DIR$/vendor/amphp/cache" />
+      <path value="$PROJECT_DIR$/vendor/ramsey/uuid" />
+      <path value="$PROJECT_DIR$/vendor/amphp/http" />
+      <path value="$PROJECT_DIR$/vendor/carbonphp/carbon-doctrine-types" />
+      <path value="$PROJECT_DIR$/vendor/amphp/hpack" />
+      <path value="$PROJECT_DIR$/vendor/lexik/jwt-authentication-bundle" />
+      <path value="$PROJECT_DIR$/vendor/amphp/parser" />
+      <path value="$PROJECT_DIR$/vendor/monolog/monolog" />
+      <path value="$PROJECT_DIR$/vendor/amphp/http-client" />
+      <path value="$PROJECT_DIR$/vendor/gedmo/doctrine-extensions" />
+      <path value="$PROJECT_DIR$/vendor/amphp/serialization" />
+      <path value="$PROJECT_DIR$/vendor/mockery/mockery" />
+      <path value="$PROJECT_DIR$/vendor/amphp/process" />
+      <path value="$PROJECT_DIR$/vendor/xemlock/htmlpurifier-html5" />
+      <path value="$PROJECT_DIR$/vendor/amphp/sync" />
+      <path value="$PROJECT_DIR$/vendor/egulias/email-validator" />
+      <path value="$PROJECT_DIR$/vendor/amphp/socket" />
+      <path value="$PROJECT_DIR$/vendor/masterminds/html5" />
+      <path value="$PROJECT_DIR$/vendor/behat/behat" />
+      <path value="$PROJECT_DIR$/vendor/ua-parser/uap-php" />
+      <path value="$PROJECT_DIR$/vendor/amphp/windows-registry" />
+      <path value="$PROJECT_DIR$/vendor/behat/transliterator" />
+      <path value="$PROJECT_DIR$/vendor/manticoresoftware/manticoresearch-php" />
+      <path value="$PROJECT_DIR$/vendor/behat/gherkin" />
+      <path value="$PROJECT_DIR$/vendor/intervention/image" />
+      <path value="$PROJECT_DIR$/vendor/foolz/sphinxql-query-builder" />
+      <path value="$PROJECT_DIR$/vendor/guzzlehttp/psr7" />
+      <path value="$PROJECT_DIR$/vendor/brick/math" />
+      <path value="$PROJECT_DIR$/vendor/phploc/phploc" />
+      <path value="$PROJECT_DIR$/vendor/babdev/pagerfanta-bundle" />
+      <path value="$PROJECT_DIR$/vendor/nesbot/carbon" />
+      <path value="$PROJECT_DIR$/vendor/stof/doctrine-extensions-bundle" />
+      <path value="$PROJECT_DIR$/vendor/nikic/php-parser" />
+      <path value="$PROJECT_DIR$/vendor/ezyang/htmlpurifier" />
+      <path value="$PROJECT_DIR$/vendor/namshi/jose" />
+      <path value="$PROJECT_DIR$/vendor/phpmd/phpmd" />
+      <path value="$PROJECT_DIR$/vendor/eluceo/ical" />
+      <path value="$PROJECT_DIR$/vendor/league/uri-interfaces" />
+      <path value="$PROJECT_DIR$/vendor/lorenzo/pinky" />
+      <path value="$PROJECT_DIR$/vendor/judev/php-htmltruncator" />
+      <path value="$PROJECT_DIR$/vendor/league/uri" />
+      <path value="$PROJECT_DIR$/vendor/nelmio/alice" />
+      <path value="$PROJECT_DIR$/vendor/phpunit/php-timer" />
+      <path value="$PROJECT_DIR$/vendor/league/uri-parser" />
+      <path value="$PROJECT_DIR$/vendor/phpunit/php-file-iterator" />
+      <path value="$PROJECT_DIR$/vendor/sanmai/later" />
+      <path value="$PROJECT_DIR$/vendor/lcobucci/clock" />
+      <path value="$PROJECT_DIR$/vendor/ondram/ci-detector" />
+      <path value="$PROJECT_DIR$/vendor/hamcrest/hamcrest-php" />
+      <path value="$PROJECT_DIR$/vendor/sanmai/pipeline" />
+      <path value="$PROJECT_DIR$/vendor/lcobucci/jwt" />
+      <path value="$PROJECT_DIR$/vendor/gregwar/captcha-bundle" />
+      <path value="$PROJECT_DIR$/vendor/pdepend/pdepend" />
+      <path value="$PROJECT_DIR$/vendor/gregwar/captcha" />
+      <path value="$PROJECT_DIR$/vendor/laminas/laminas-code" />
+      <path value="$PROJECT_DIR$/vendor/league/html-to-markdown" />
+      <path value="$PROJECT_DIR$/vendor/kelunik/certificate" />
+      <path value="$PROJECT_DIR$/vendor/phpstan/extension-installer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mime" />
+      <path value="$PROJECT_DIR$/vendor/myclabs/deep-copy" />
+      <path value="$PROJECT_DIR$/vendor/symfony/security-bundle" />
+      <path value="$PROJECT_DIR$/vendor/symfony/browser-kit" />
+      <path value="$PROJECT_DIR$/vendor/phpstan/phpstan" />
+      <path value="$PROJECT_DIR$/vendor/symfony/validator" />
+      <path value="$PROJECT_DIR$/vendor/symfony/cache-contracts" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-client-contracts" />
+      <path value="$PROJECT_DIR$/vendor/symfony/console" />
+      <path value="$PROJECT_DIR$/vendor/symfony/webpack-encore-bundle" />
+      <path value="$PROJECT_DIR$/vendor/symfony/monolog-bundle" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mailer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/twig-bundle" />
+      <path value="$PROJECT_DIR$/vendor/symfony/css-selector" />
+      <path value="$PROJECT_DIR$/vendor/symfony/security-csrf" />
+      <path value="$PROJECT_DIR$/vendor/symfony/doctrine-bridge" />
+      <path value="$PROJECT_DIR$/vendor/symfony/phpunit-bridge" />
+      <path value="$PROJECT_DIR$/vendor/symfony/deprecation-contracts" />
+      <path value="$PROJECT_DIR$/vendor/symfony/maker-bundle" />
+      <path value="$PROJECT_DIR$/vendor/symfony/error-handler" />
+      <path value="$PROJECT_DIR$/vendor/symfony/dom-crawler" />
+      <path value="$PROJECT_DIR$/vendor/symfony/expression-language" />
+      <path value="$PROJECT_DIR$/vendor/symfony/security-http" />
+      <path value="$PROJECT_DIR$/vendor/symfony/event-dispatcher-contracts" />
+      <path value="$PROJECT_DIR$/vendor/symfony/security-core" />
+      <path value="$PROJECT_DIR$/vendor/symfony/event-dispatcher" />
+      <path value="$PROJECT_DIR$/vendor/symfony/finder" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-intl-idn" />
+      <path value="$PROJECT_DIR$/vendor/symfony/filesystem" />
+      <path value="$PROJECT_DIR$/vendor/symfony/web-profiler-bundle" />
+      <path value="$PROJECT_DIR$/vendor/symfony/form" />
+      <path value="$PROJECT_DIR$/vendor/symfony/apache-pack" />
+      <path value="$PROJECT_DIR$/vendor/symfony/flex" />
+      <path value="$PROJECT_DIR$/vendor/symfony/debug-bundle" />
+      <path value="$PROJECT_DIR$/vendor/symfony/intl" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-foundation" />
+      <path value="$PROJECT_DIR$/vendor/symfony/password-hasher" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-client" />
+      <path value="$PROJECT_DIR$/vendor/symfony/options-resolver" />
+      <path value="$PROJECT_DIR$/vendor/symfony/twig-bridge" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-intl-grapheme" />
+      <path value="$PROJECT_DIR$/vendor/symfony/dotenv" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-ctype" />
+      <path value="$PROJECT_DIR$/vendor/symfony/asset" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-intl-icu" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-mbstring" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-php80" />
+      <path value="$PROJECT_DIR$/vendor/symfony/process" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-php81" />
+      <path value="$PROJECT_DIR$/vendor/symfony/property-info" />
+      <path value="$PROJECT_DIR$/vendor/symfony/property-access" />
+      <path value="$PROJECT_DIR$/vendor/symfony/routing" />
+      <path value="$PROJECT_DIR$/vendor/symfony/stopwatch" />
+      <path value="$PROJECT_DIR$/vendor/symfony/translation" />
+      <path value="$PROJECT_DIR$/vendor/symfony/string" />
+      <path value="$PROJECT_DIR$/vendor/symfony/var-dumper" />
+      <path value="$PROJECT_DIR$/vendor/symfony/translation-contracts" />
+      <path value="$PROJECT_DIR$/vendor/symfony/var-exporter" />
+      <path value="$PROJECT_DIR$/vendor/beberlei/doctrineextensions" />
+      <path value="$PROJECT_DIR$/vendor/symfony/yaml" />
+      <path value="$PROJECT_DIR$/vendor/bjeavons/zxcvbn-php" />
+      <path value="$PROJECT_DIR$/vendor/twig/cssinliner-extra" />
+      <path value="$PROJECT_DIR$/vendor/twig/intl-extra" />
+      <path value="$PROJECT_DIR$/vendor/twig/extra-bundle" />
+      <path value="$PROJECT_DIR$/vendor/twig/markdown-extra" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/collections" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/data-fixtures" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/deprecations" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/dbal" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/doctrine-migrations-bundle" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/doctrine-bundle" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/inflector" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/lexer" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/instantiator" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/orm" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/migrations" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/sql-formatter" />
+      <path value="$PROJECT_DIR$/vendor/fakerphp/faker" />
+      <path value="$PROJECT_DIR$/vendor/exercise/htmlpurifier-bundle" />
+      <path value="$PROJECT_DIR$/vendor/hidehalo/nanoid-php" />
+      <path value="$PROJECT_DIR$/vendor/html2text/html2text" />
+      <path value="$PROJECT_DIR$/vendor/hautelook/alice-bundle" />
+      <path value="$PROJECT_DIR$/vendor/infection/abstract-testframework-adapter" />
+      <path value="$PROJECT_DIR$/vendor/incenteev/composer-parameter-handler" />
+      <path value="$PROJECT_DIR$/vendor/infection/include-interceptor" />
+      <path value="$PROJECT_DIR$/vendor/infection/extension-installer" />
+      <path value="$PROJECT_DIR$/vendor/nelmio/cors-bundle" />
+      <path value="$PROJECT_DIR$/vendor/paragonie/random_compat" />
+      <path value="$PROJECT_DIR$/vendor/psr/clock" />
+      <path value="$PROJECT_DIR$/vendor/infection/infection" />
+      <path value="$PROJECT_DIR$/vendor/phpstan/phpstan-symfony" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/comparator" />
+      <path value="$PROJECT_DIR$/vendor/nelmio/security-bundle" />
+      <path value="$PROJECT_DIR$/vendor/ralouphie/getallheaders" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/phpcpd" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/exporter" />
+      <path value="$PROJECT_DIR$/vendor/phpstan/phpstan-doctrine" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/diff" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/version" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/cli-parser" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/recursion-context" />
+      <path value="$PROJECT_DIR$/vendor/webmozart/assert" />
+      <path value="$PROJECT_DIR$/vendor/pagerfanta/pagerfanta" />
+      <path value="$PROJECT_DIR$/vendor/daverandom/libdns" />
+      <path value="$PROJECT_DIR$/vendor/friendsofphp/proxy-manager-lts" />
+      <path value="$PROJECT_DIR$/vendor/friendsofphp/php-cs-fixer" />
+      <path value="$PROJECT_DIR$/vendor/anthonymartin/geo-location" />
+      <path value="$PROJECT_DIR$/vendor/alexandresalome/mailcatcher" />
+      <path value="$PROJECT_DIR$/vendor/justinrainbow/json-schema" />
+      <path value="$PROJECT_DIR$/vendor/friends-of-behat/mink-browserkit-driver" />
+      <path value="$PROJECT_DIR$/vendor/friends-of-behat/mink" />
+      <path value="$PROJECT_DIR$/vendor/friends-of-behat/symfony-extension" />
+      <path value="$PROJECT_DIR$/vendor/friends-of-behat/mink-extension" />
+      <path value="$PROJECT_DIR$/vendor/composer" />
+      <path value="$PROJECT_DIR$/vendor/laminas/laminas-uri" />
+      <path value="$PROJECT_DIR$/vendor/laminas/laminas-stdlib" />
+      <path value="$PROJECT_DIR$/vendor/laminas/laminas-validator" />
+      <path value="$PROJECT_DIR$/vendor/laminas/laminas-servicemanager" />
+      <path value="$PROJECT_DIR$/vendor/laminas/laminas-eventmanager" />
+      <path value="$PROJECT_DIR$/vendor/laminas/laminas-escaper" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-intl-normalizer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/web-link" />
+      <path value="$PROJECT_DIR$/vendor/gedmo/doctrine-extensions" />
+      <path value="$PROJECT_DIR$/vendor/guzzlehttp/psr7" />
+      <path value="$PROJECT_DIR$/vendor/ezyang/htmlpurifier" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mime" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mailer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-client" />
+      <path value="$PROJECT_DIR$/vendor/twig/extra-bundle" />
+      <path value="$PROJECT_DIR$/vendor/html2text/html2text" />
+      <path value="$PROJECT_DIR$/vendor/gedmo/doctrine-extensions" />
+      <path value="$PROJECT_DIR$/vendor/guzzlehttp/psr7" />
+      <path value="$PROJECT_DIR$/vendor/ezyang/htmlpurifier" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mime" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mailer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-client" />
+      <path value="$PROJECT_DIR$/vendor/twig/extra-bundle" />
+      <path value="$PROJECT_DIR$/vendor/html2text/html2text" />
+      <path value="$PROJECT_DIR$/vendor/gedmo/doctrine-extensions" />
+      <path value="$PROJECT_DIR$/vendor/guzzlehttp/psr7" />
+      <path value="$PROJECT_DIR$/vendor/ezyang/htmlpurifier" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mime" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mailer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-client" />
+      <path value="$PROJECT_DIR$/vendor/twig/extra-bundle" />
+      <path value="$PROJECT_DIR$/vendor/html2text/html2text" />
+      <path value="$PROJECT_DIR$/vendor/gedmo/doctrine-extensions" />
+      <path value="$PROJECT_DIR$/vendor/guzzlehttp/psr7" />
+      <path value="$PROJECT_DIR$/vendor/ezyang/htmlpurifier" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mime" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mailer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-client" />
+      <path value="$PROJECT_DIR$/vendor/twig/extra-bundle" />
+      <path value="$PROJECT_DIR$/vendor/html2text/html2text" />
+      <path value="$PROJECT_DIR$/vendor/gedmo/doctrine-extensions" />
+      <path value="$PROJECT_DIR$/vendor/guzzlehttp/psr7" />
+      <path value="$PROJECT_DIR$/vendor/ezyang/htmlpurifier" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mime" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mailer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-client" />
+      <path value="$PROJECT_DIR$/vendor/twig/extra-bundle" />
+      <path value="$PROJECT_DIR$/vendor/html2text/html2text" />
+      <path value="$PROJECT_DIR$/vendor/gedmo/doctrine-extensions" />
+      <path value="$PROJECT_DIR$/vendor/guzzlehttp/psr7" />
+      <path value="$PROJECT_DIR$/vendor/ezyang/htmlpurifier" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mime" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mailer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-client" />
+      <path value="$PROJECT_DIR$/vendor/twig/extra-bundle" />
+      <path value="$PROJECT_DIR$/vendor/html2text/html2text" />
+      <path value="$PROJECT_DIR$/vendor/gedmo/doctrine-extensions" />
+      <path value="$PROJECT_DIR$/vendor/guzzlehttp/psr7" />
+      <path value="$PROJECT_DIR$/vendor/ezyang/htmlpurifier" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mime" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mailer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-client" />
+      <path value="$PROJECT_DIR$/vendor/twig/extra-bundle" />
+      <path value="$PROJECT_DIR$/vendor/html2text/html2text" />
+      <path value="$PROJECT_DIR$/vendor/gedmo/doctrine-extensions" />
+      <path value="$PROJECT_DIR$/vendor/guzzlehttp/psr7" />
+      <path value="$PROJECT_DIR$/vendor/ezyang/htmlpurifier" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mime" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mailer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-client" />
+      <path value="$PROJECT_DIR$/vendor/twig/extra-bundle" />
+      <path value="$PROJECT_DIR$/vendor/html2text/html2text" />
+      <path value="$PROJECT_DIR$/vendor/gedmo/doctrine-extensions" />
+      <path value="$PROJECT_DIR$/vendor/guzzlehttp/psr7" />
+      <path value="$PROJECT_DIR$/vendor/ezyang/htmlpurifier" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mime" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mailer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-client" />
+      <path value="$PROJECT_DIR$/vendor/twig/extra-bundle" />
+      <path value="$PROJECT_DIR$/vendor/html2text/html2text" />
+      <path value="$PROJECT_DIR$/vendor/gedmo/doctrine-extensions" />
+      <path value="$PROJECT_DIR$/vendor/guzzlehttp/psr7" />
+      <path value="$PROJECT_DIR$/vendor/ezyang/htmlpurifier" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mime" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mailer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-client" />
+      <path value="$PROJECT_DIR$/vendor/twig/extra-bundle" />
+      <path value="$PROJECT_DIR$/vendor/html2text/html2text" />
+      <path value="$PROJECT_DIR$/vendor/gedmo/doctrine-extensions" />
+      <path value="$PROJECT_DIR$/vendor/guzzlehttp/psr7" />
+      <path value="$PROJECT_DIR$/vendor/ezyang/htmlpurifier" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mime" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mailer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-client" />
+      <path value="$PROJECT_DIR$/vendor/twig/extra-bundle" />
+      <path value="$PROJECT_DIR$/vendor/html2text/html2text" />
+      <path value="$PROJECT_DIR$/vendor/gedmo/doctrine-extensions" />
+      <path value="$PROJECT_DIR$/vendor/guzzlehttp/psr7" />
+      <path value="$PROJECT_DIR$/vendor/ezyang/htmlpurifier" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mime" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mailer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-client" />
+      <path value="$PROJECT_DIR$/vendor/twig/extra-bundle" />
+      <path value="$PROJECT_DIR$/vendor/html2text/html2text" />
+      <path value="$PROJECT_DIR$/vendor/gedmo/doctrine-extensions" />
+      <path value="$PROJECT_DIR$/vendor/guzzlehttp/psr7" />
+      <path value="$PROJECT_DIR$/vendor/ezyang/htmlpurifier" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mime" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mailer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-client" />
+      <path value="$PROJECT_DIR$/vendor/twig/extra-bundle" />
+      <path value="$PROJECT_DIR$/vendor/html2text/html2text" />
+      <path value="$PROJECT_DIR$/vendor/gedmo/doctrine-extensions" />
+      <path value="$PROJECT_DIR$/vendor/guzzlehttp/psr7" />
+      <path value="$PROJECT_DIR$/vendor/ezyang/htmlpurifier" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mime" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mailer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-client" />
+      <path value="$PROJECT_DIR$/vendor/twig/extra-bundle" />
+      <path value="$PROJECT_DIR$/vendor/html2text/html2text" />
+      <path value="$PROJECT_DIR$/vendor/gedmo/doctrine-extensions" />
+      <path value="$PROJECT_DIR$/vendor/guzzlehttp/psr7" />
+      <path value="$PROJECT_DIR$/vendor/ezyang/htmlpurifier" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mime" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mailer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-client" />
+      <path value="$PROJECT_DIR$/vendor/twig/extra-bundle" />
+      <path value="$PROJECT_DIR$/vendor/html2text/html2text" />
+      <path value="$PROJECT_DIR$/vendor/gedmo/doctrine-extensions" />
+      <path value="$PROJECT_DIR$/vendor/guzzlehttp/psr7" />
+      <path value="$PROJECT_DIR$/vendor/ezyang/htmlpurifier" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mime" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mailer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-client" />
+      <path value="$PROJECT_DIR$/vendor/twig/extra-bundle" />
+      <path value="$PROJECT_DIR$/vendor/html2text/html2text" />
+      <path value="$PROJECT_DIR$/vendor/gedmo/doctrine-extensions" />
+      <path value="$PROJECT_DIR$/vendor/guzzlehttp/psr7" />
+      <path value="$PROJECT_DIR$/vendor/ezyang/htmlpurifier" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mime" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mailer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-client" />
+      <path value="$PROJECT_DIR$/vendor/twig/extra-bundle" />
+      <path value="$PROJECT_DIR$/vendor/html2text/html2text" />
+      <path value="$PROJECT_DIR$/vendor/gedmo/doctrine-extensions" />
+      <path value="$PROJECT_DIR$/vendor/guzzlehttp/psr7" />
+      <path value="$PROJECT_DIR$/vendor/ezyang/htmlpurifier" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mime" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mailer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-client" />
+      <path value="$PROJECT_DIR$/vendor/twig/extra-bundle" />
+      <path value="$PROJECT_DIR$/vendor/html2text/html2text" />
+      <path value="$PROJECT_DIR$/vendor/gedmo/doctrine-extensions" />
+      <path value="$PROJECT_DIR$/vendor/guzzlehttp/psr7" />
+      <path value="$PROJECT_DIR$/vendor/ezyang/htmlpurifier" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mime" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mailer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-client" />
+      <path value="$PROJECT_DIR$/vendor/twig/extra-bundle" />
+      <path value="$PROJECT_DIR$/vendor/html2text/html2text" />
+      <path value="$PROJECT_DIR$/vendor/gedmo/doctrine-extensions" />
+      <path value="$PROJECT_DIR$/vendor/guzzlehttp/psr7" />
+      <path value="$PROJECT_DIR$/vendor/ezyang/htmlpurifier" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mime" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mailer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-client" />
+      <path value="$PROJECT_DIR$/vendor/twig/extra-bundle" />
+      <path value="$PROJECT_DIR$/vendor/html2text/html2text" />
+      <path value="$PROJECT_DIR$/vendor/gedmo/doctrine-extensions" />
+      <path value="$PROJECT_DIR$/vendor/guzzlehttp/psr7" />
+      <path value="$PROJECT_DIR$/vendor/ezyang/htmlpurifier" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mime" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mailer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-client" />
+      <path value="$PROJECT_DIR$/vendor/twig/extra-bundle" />
+      <path value="$PROJECT_DIR$/vendor/html2text/html2text" />
+      <path value="$PROJECT_DIR$/vendor/gedmo/doctrine-extensions" />
+      <path value="$PROJECT_DIR$/vendor/guzzlehttp/psr7" />
+      <path value="$PROJECT_DIR$/vendor/ezyang/htmlpurifier" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mime" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mailer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-client" />
+      <path value="$PROJECT_DIR$/vendor/twig/extra-bundle" />
+      <path value="$PROJECT_DIR$/vendor/html2text/html2text" />
+      <path value="$PROJECT_DIR$/vendor/gedmo/doctrine-extensions" />
+      <path value="$PROJECT_DIR$/vendor/guzzlehttp/psr7" />
+      <path value="$PROJECT_DIR$/vendor/ezyang/htmlpurifier" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mime" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mailer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-client" />
+      <path value="$PROJECT_DIR$/vendor/twig/extra-bundle" />
+      <path value="$PROJECT_DIR$/vendor/html2text/html2text" />
+      <path value="$PROJECT_DIR$/vendor/gedmo/doctrine-extensions" />
+      <path value="$PROJECT_DIR$/vendor/guzzlehttp/psr7" />
+      <path value="$PROJECT_DIR$/vendor/ezyang/htmlpurifier" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mime" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mailer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-client" />
+      <path value="$PROJECT_DIR$/vendor/twig/extra-bundle" />
+      <path value="$PROJECT_DIR$/vendor/html2text/html2text" />
+      <path value="$PROJECT_DIR$/vendor/gedmo/doctrine-extensions" />
+      <path value="$PROJECT_DIR$/vendor/guzzlehttp/psr7" />
+      <path value="$PROJECT_DIR$/vendor/ezyang/htmlpurifier" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mime" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mailer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-client" />
+      <path value="$PROJECT_DIR$/vendor/twig/extra-bundle" />
+      <path value="$PROJECT_DIR$/vendor/html2text/html2text" />
+      <path value="$PROJECT_DIR$/vendor/gedmo/doctrine-extensions" />
+      <path value="$PROJECT_DIR$/vendor/guzzlehttp/psr7" />
+      <path value="$PROJECT_DIR$/vendor/ezyang/htmlpurifier" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mime" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mailer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-client" />
+      <path value="$PROJECT_DIR$/vendor/twig/extra-bundle" />
+      <path value="$PROJECT_DIR$/vendor/html2text/html2text" />
+      <path value="$PROJECT_DIR$/vendor/gedmo/doctrine-extensions" />
+      <path value="$PROJECT_DIR$/vendor/guzzlehttp/psr7" />
+      <path value="$PROJECT_DIR$/vendor/ezyang/htmlpurifier" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mime" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mailer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-client" />
+      <path value="$PROJECT_DIR$/vendor/twig/extra-bundle" />
+      <path value="$PROJECT_DIR$/vendor/html2text/html2text" />
+      <path value="$PROJECT_DIR$/vendor/gedmo/doctrine-extensions" />
+      <path value="$PROJECT_DIR$/vendor/guzzlehttp/psr7" />
+      <path value="$PROJECT_DIR$/vendor/ezyang/htmlpurifier" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mime" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mailer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-client" />
+      <path value="$PROJECT_DIR$/vendor/twig/extra-bundle" />
+      <path value="$PROJECT_DIR$/vendor/html2text/html2text" />
+      <path value="$PROJECT_DIR$/vendor/gedmo/doctrine-extensions" />
+      <path value="$PROJECT_DIR$/vendor/guzzlehttp/psr7" />
+      <path value="$PROJECT_DIR$/vendor/ezyang/htmlpurifier" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mime" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mailer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-client" />
+      <path value="$PROJECT_DIR$/vendor/twig/extra-bundle" />
+      <path value="$PROJECT_DIR$/vendor/html2text/html2text" />
+      <path value="$PROJECT_DIR$/vendor/gedmo/doctrine-extensions" />
+      <path value="$PROJECT_DIR$/vendor/guzzlehttp/psr7" />
+      <path value="$PROJECT_DIR$/vendor/ezyang/htmlpurifier" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mime" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mailer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-client" />
+      <path value="$PROJECT_DIR$/vendor/twig/extra-bundle" />
+      <path value="$PROJECT_DIR$/vendor/html2text/html2text" />
+      <path value="$PROJECT_DIR$/vendor/gedmo/doctrine-extensions" />
+      <path value="$PROJECT_DIR$/vendor/guzzlehttp/psr7" />
+      <path value="$PROJECT_DIR$/vendor/ezyang/htmlpurifier" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mime" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mailer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-client" />
+      <path value="$PROJECT_DIR$/vendor/twig/extra-bundle" />
+      <path value="$PROJECT_DIR$/vendor/html2text/html2text" />
+      <path value="$PROJECT_DIR$/vendor/gedmo/doctrine-extensions" />
+      <path value="$PROJECT_DIR$/vendor/guzzlehttp/psr7" />
+      <path value="$PROJECT_DIR$/vendor/ezyang/htmlpurifier" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mime" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mailer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-client" />
+      <path value="$PROJECT_DIR$/vendor/twig/extra-bundle" />
+      <path value="$PROJECT_DIR$/vendor/html2text/html2text" />
+      <path value="$PROJECT_DIR$/vendor/gedmo/doctrine-extensions" />
+      <path value="$PROJECT_DIR$/vendor/guzzlehttp/psr7" />
+      <path value="$PROJECT_DIR$/vendor/ezyang/htmlpurifier" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mime" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mailer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-client" />
+      <path value="$PROJECT_DIR$/vendor/twig/extra-bundle" />
+      <path value="$PROJECT_DIR$/vendor/html2text/html2text" />
+      <path value="$PROJECT_DIR$/vendor/gedmo/doctrine-extensions" />
+      <path value="$PROJECT_DIR$/vendor/guzzlehttp/psr7" />
+      <path value="$PROJECT_DIR$/vendor/ezyang/htmlpurifier" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mime" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mailer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-client" />
+      <path value="$PROJECT_DIR$/vendor/twig/extra-bundle" />
+      <path value="$PROJECT_DIR$/vendor/html2text/html2text" />
+      <path value="$PROJECT_DIR$/vendor/gedmo/doctrine-extensions" />
+      <path value="$PROJECT_DIR$/vendor/guzzlehttp/psr7" />
+      <path value="$PROJECT_DIR$/vendor/ezyang/htmlpurifier" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mime" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mailer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-client" />
+      <path value="$PROJECT_DIR$/vendor/twig/extra-bundle" />
+      <path value="$PROJECT_DIR$/vendor/html2text/html2text" />
+      <path value="$PROJECT_DIR$/vendor/gedmo/doctrine-extensions" />
+      <path value="$PROJECT_DIR$/vendor/guzzlehttp/psr7" />
+      <path value="$PROJECT_DIR$/vendor/ezyang/htmlpurifier" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mime" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mailer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-client" />
+      <path value="$PROJECT_DIR$/vendor/twig/extra-bundle" />
+      <path value="$PROJECT_DIR$/vendor/html2text/html2text" />
+      <path value="$PROJECT_DIR$/vendor/gedmo/doctrine-extensions" />
+      <path value="$PROJECT_DIR$/vendor/guzzlehttp/psr7" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mime" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mailer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-client" />
+      <path value="$PROJECT_DIR$/vendor/twig/extra-bundle" />
+      <path value="$PROJECT_DIR$/vendor/gedmo/doctrine-extensions" />
+      <path value="$PROJECT_DIR$/vendor/guzzlehttp/psr7" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mime" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mailer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-client" />
+      <path value="$PROJECT_DIR$/vendor/twig/extra-bundle" />
+      <path value="$PROJECT_DIR$/vendor/gedmo/doctrine-extensions" />
+      <path value="$PROJECT_DIR$/vendor/guzzlehttp/psr7" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mime" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mailer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-client" />
+      <path value="$PROJECT_DIR$/vendor/twig/extra-bundle" />
+      <path value="$PROJECT_DIR$/vendor/gedmo/doctrine-extensions" />
+      <path value="$PROJECT_DIR$/vendor/guzzlehttp/psr7" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mime" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mailer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-client" />
+      <path value="$PROJECT_DIR$/vendor/twig/extra-bundle" />
+      <path value="$PROJECT_DIR$/vendor/gedmo/doctrine-extensions" />
+      <path value="$PROJECT_DIR$/vendor/guzzlehttp/psr7" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mime" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mailer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-client" />
+      <path value="$PROJECT_DIR$/vendor/twig/extra-bundle" />
+      <path value="$PROJECT_DIR$/vendor/gedmo/doctrine-extensions" />
+      <path value="$PROJECT_DIR$/vendor/guzzlehttp/psr7" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mime" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mailer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-client" />
+      <path value="$PROJECT_DIR$/vendor/twig/extra-bundle" />
+      <path value="$PROJECT_DIR$/vendor/gedmo/doctrine-extensions" />
+      <path value="$PROJECT_DIR$/vendor/guzzlehttp/psr7" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mime" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mailer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-client" />
+      <path value="$PROJECT_DIR$/vendor/twig/extra-bundle" />
+      <path value="$PROJECT_DIR$/vendor/gedmo/doctrine-extensions" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mime" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mailer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-client" />
+      <path value="$PROJECT_DIR$/vendor/twig/extra-bundle" />
+      <path value="$PROJECT_DIR$/vendor/gedmo/doctrine-extensions" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mime" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mailer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-client" />
+      <path value="$PROJECT_DIR$/vendor/twig/extra-bundle" />
+      <path value="$PROJECT_DIR$/vendor/gedmo/doctrine-extensions" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mime" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mailer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-client" />
+      <path value="$PROJECT_DIR$/vendor/twig/extra-bundle" />
+      <path value="$PROJECT_DIR$/vendor/gedmo/doctrine-extensions" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mime" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mailer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-client" />
+      <path value="$PROJECT_DIR$/vendor/twig/extra-bundle" />
+      <path value="$PROJECT_DIR$/vendor/gedmo/doctrine-extensions" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mime" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mailer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-client" />
+      <path value="$PROJECT_DIR$/vendor/twig/extra-bundle" />
+      <path value="$PROJECT_DIR$/vendor/gedmo/doctrine-extensions" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mime" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mailer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-client" />
+      <path value="$PROJECT_DIR$/vendor/twig/extra-bundle" />
+      <path value="$PROJECT_DIR$/vendor/gedmo/doctrine-extensions" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mime" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mailer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-client" />
+      <path value="$PROJECT_DIR$/vendor/twig/extra-bundle" />
+      <path value="$PROJECT_DIR$/vendor/gedmo/doctrine-extensions" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mime" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mailer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-client" />
+      <path value="$PROJECT_DIR$/vendor/twig/extra-bundle" />
+      <path value="$PROJECT_DIR$/vendor/gedmo/doctrine-extensions" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mime" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mailer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-client" />
+      <path value="$PROJECT_DIR$/vendor/twig/extra-bundle" />
+      <path value="$PROJECT_DIR$/vendor/gedmo/doctrine-extensions" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mime" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mailer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-client" />
+      <path value="$PROJECT_DIR$/vendor/twig/extra-bundle" />
+      <path value="$PROJECT_DIR$/vendor/gedmo/doctrine-extensions" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mime" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mailer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-client" />
+      <path value="$PROJECT_DIR$/vendor/twig/extra-bundle" />
+      <path value="$PROJECT_DIR$/vendor/gedmo/doctrine-extensions" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mime" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mailer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-client" />
+      <path value="$PROJECT_DIR$/vendor/twig/extra-bundle" />
+      <path value="$PROJECT_DIR$/vendor/gedmo/doctrine-extensions" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mime" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mailer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-client" />
+      <path value="$PROJECT_DIR$/vendor/twig/extra-bundle" />
+      <path value="$PROJECT_DIR$/vendor/gedmo/doctrine-extensions" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mime" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mailer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-client" />
+      <path value="$PROJECT_DIR$/vendor/twig/extra-bundle" />
+      <path value="$PROJECT_DIR$/vendor/gedmo/doctrine-extensions" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mime" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mailer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-client" />
+      <path value="$PROJECT_DIR$/vendor/twig/extra-bundle" />
+      <path value="$PROJECT_DIR$/vendor/gedmo/doctrine-extensions" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mime" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mailer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-client" />
+      <path value="$PROJECT_DIR$/vendor/twig/extra-bundle" />
+      <path value="$PROJECT_DIR$/vendor/gedmo/doctrine-extensions" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mime" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mailer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-client" />
+      <path value="$PROJECT_DIR$/vendor/twig/extra-bundle" />
+      <path value="$PROJECT_DIR$/vendor/gedmo/doctrine-extensions" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mime" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mailer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-client" />
+      <path value="$PROJECT_DIR$/vendor/twig/extra-bundle" />
+      <path value="$PROJECT_DIR$/vendor/gedmo/doctrine-extensions" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mime" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mailer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-client" />
+      <path value="$PROJECT_DIR$/vendor/twig/extra-bundle" />
+      <path value="$PROJECT_DIR$/vendor/gedmo/doctrine-extensions" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mime" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mailer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-client" />
+      <path value="$PROJECT_DIR$/vendor/twig/extra-bundle" />
+      <path value="$PROJECT_DIR$/vendor/gedmo/doctrine-extensions" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mime" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mailer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-client" />
+      <path value="$PROJECT_DIR$/vendor/twig/extra-bundle" />
+      <path value="$PROJECT_DIR$/vendor/gedmo/doctrine-extensions" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mime" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mailer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-client" />
+      <path value="$PROJECT_DIR$/vendor/twig/extra-bundle" />
+      <path value="$PROJECT_DIR$/vendor/gedmo/doctrine-extensions" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mime" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mailer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-client" />
+      <path value="$PROJECT_DIR$/vendor/twig/extra-bundle" />
+      <path value="$PROJECT_DIR$/vendor/gedmo/doctrine-extensions" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mime" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mailer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-client" />
+      <path value="$PROJECT_DIR$/vendor/twig/extra-bundle" />
+      <path value="$PROJECT_DIR$/vendor/gedmo/doctrine-extensions" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mime" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mailer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-client" />
+      <path value="$PROJECT_DIR$/vendor/twig/extra-bundle" />
+      <path value="$PROJECT_DIR$/vendor/gedmo/doctrine-extensions" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mime" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mailer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-client" />
+      <path value="$PROJECT_DIR$/vendor/twig/extra-bundle" />
+      <path value="$PROJECT_DIR$/vendor/twig/extra-bundle" />
+      <path value="$PROJECT_DIR$/vendor/twig/extra-bundle" />
+      <path value="$PROJECT_DIR$/vendor/twig/extra-bundle" />
+      <path value="$PROJECT_DIR$/vendor/twig/extra-bundle" />
+      <path value="$PROJECT_DIR$/vendor/twig/extra-bundle" />
+      <path value="$PROJECT_DIR$/vendor/twig/extra-bundle" />
+      <path value="$PROJECT_DIR$/vendor/twig/extra-bundle" />
+      <path value="$PROJECT_DIR$/vendor/twig/extra-bundle" />
+      <path value="$PROJECT_DIR$/vendor/twig/extra-bundle" />
+      <path value="$PROJECT_DIR$/vendor/twig/extra-bundle" />
+      <path value="$PROJECT_DIR$/vendor/twig/extra-bundle" />
+      <path value="$PROJECT_DIR$/vendor/twig/extra-bundle" />
+      <path value="$PROJECT_DIR$/vendor/twig/extra-bundle" />
+      <path value="$PROJECT_DIR$/vendor/twig/extra-bundle" />
+      <path value="$PROJECT_DIR$/vendor/twig/extra-bundle" />
+      <path value="$PROJECT_DIR$/vendor/twig/extra-bundle" />
+      <path value="$PROJECT_DIR$/vendor/twig/extra-bundle" />
+      <path value="$PROJECT_DIR$/vendor/twig/inky-extra" />
+      <path value="$PROJECT_DIR$/vendor/symfony/config" />
+      <path value="$PROJECT_DIR$/vendor/twig/twig" />
+      <path value="$PROJECT_DIR$/vendor/twig/twig" />
+      <path value="$PROJECT_DIR$/vendor/twig/twig" />
+      <path value="$PROJECT_DIR$/vendor/twig/twig" />
+      <path value="$PROJECT_DIR$/vendor/twig/twig" />
+      <path value="$PROJECT_DIR$/vendor/twig/twig" />
+      <path value="$PROJECT_DIR$/vendor/twig/twig" />
+      <path value="$PROJECT_DIR$/vendor/twig/twig" />
+      <path value="$PROJECT_DIR$/vendor/twig/twig" />
+      <path value="$PROJECT_DIR$/vendor/squizlabs/php_codesniffer" />
+      <path value="$PROJECT_DIR$/vendor/php-http/discovery" />
+      <path value="$PROJECT_DIR$/vendor/psr/http-client" />
+      <path value="$PROJECT_DIR$/vendor/symfony/clock" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-php83" />
+      <path value="$PROJECT_DIR$/vendor/laminas/laminas-translator" />
+      <path value="$PROJECT_DIR$/vendor/brick/varexporter" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/event-manager" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/persistence" />
+      <path value="$PROJECT_DIR$/vendor/theofidry/alice-data-fixtures" />
+      <path value="$PROJECT_DIR$/vendor/react/cache" />
+      <path value="$PROJECT_DIR$/vendor/react/dns" />
+      <path value="$PROJECT_DIR$/vendor/react/child-process" />
+      <path value="$PROJECT_DIR$/vendor/react/promise" />
+      <path value="$PROJECT_DIR$/vendor/react/event-loop" />
+      <path value="$PROJECT_DIR$/vendor/react/stream" />
+      <path value="$PROJECT_DIR$/vendor/react/socket" />
+      <path value="$PROJECT_DIR$/vendor/colinodell/json5" />
+      <path value="$PROJECT_DIR$/vendor/clue/ndjson-react" />
+      <path value="$PROJECT_DIR$/vendor/evenement/evenement" />
+      <path value="$PROJECT_DIR$/vendor/fidry/cpu-core-counter" />
+      <path value="$PROJECT_DIR$/vendor/infection/mutator" />
+      <path value="$PROJECT_DIR$/vendor/rector/rector" />
+      <path value="$PROJECT_DIR$/vendor/willdurand/negotiation" />
+      <path value="$PROJECT_DIR$/vendor/soyuka/contexts" />
+      <path value="$PROJECT_DIR$/vendor/symfony/type-info" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-kernel" />
+      <path value="$PROJECT_DIR$/vendor/symfony/framework-bundle" />
+      <path value="$PROJECT_DIR$/vendor/symfony/dependency-injection" />
+      <path value="$PROJECT_DIR$/vendor/symfony/cache" />
+      <path value="$PROJECT_DIR$/vendor/symfony/monolog-bridge" />
+      <path value="$PROJECT_DIR$/vendor/bin/.phpunit" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/global-state" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/complexity" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/object-enumerator" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/object-reflector" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/lines-of-code" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/type" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/environment" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/code-unit" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/resource-operations" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/code-unit-reverse-lookup" />
+      <path value="$PROJECT_DIR$/vendor/phar-io/manifest" />
+      <path value="$PROJECT_DIR$/vendor/phar-io/version" />
+      <path value="$PROJECT_DIR$/vendor/phpunit/php-text-template" />
+      <path value="$PROJECT_DIR$/vendor/phpunit/php-invoker" />
+      <path value="$PROJECT_DIR$/vendor/phpunit/php-code-coverage" />
+      <path value="$PROJECT_DIR$/vendor/phpunit/phpunit" />
+      <path value="$PROJECT_DIR$/vendor/theseer/tokenizer" />
+      <path value="$PROJECT_DIR$/vendor/liuggio/statsd-php-client" />
+      <path value="$PROJECT_DIR$/vendor/wikimedia/scoped-callback" />
+      <path value="$PROJECT_DIR$/vendor/wikimedia/utfnormal" />
+      <path value="$PROJECT_DIR$/vendor/wikimedia/wikipeg" />
+      <path value="$PROJECT_DIR$/vendor/wikimedia/zest-css" />
+      <path value="$PROJECT_DIR$/vendor/wikimedia/assert" />
+      <path value="$PROJECT_DIR$/vendor/wikimedia/base-convert" />
+      <path value="$PROJECT_DIR$/vendor/wikimedia/bcp-47-code" />
+      <path value="$PROJECT_DIR$/vendor/wikimedia/idle-dom" />
+      <path value="$PROJECT_DIR$/vendor/wikimedia/ip-utils" />
+      <path value="$PROJECT_DIR$/vendor/wikimedia/json-codec" />
+      <path value="$PROJECT_DIR$/vendor/wikimedia/object-factory" />
+      <path value="$PROJECT_DIR$/vendor/wikimedia/parsoid" />
+      <path value="$PROJECT_DIR$/vendor/wikimedia/remex-html" />
+      <path value="$PROJECT_DIR$/vendor/symfony/runtime" />
+      <path value="$PROJECT_DIR$/vendor/thecodingmachine/safe" />
+      <path value="$PROJECT_DIR$/vendor/symfony/service-contracts" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/cache" />
+      <path value="$PROJECT_DIR$/vendor/phpstan/phpstan-mockery" />
+    </include_path>
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 3
+}</component>
+  <component name="ProjectId" id="2r7UUj5ThoghdPucSDjDXpr3K3t" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;PHP Script.send:massmail.executor&quot;: &quot;Debug&quot;,
+    &quot;PHPUnit.Main.executor&quot;: &quot;Run&quot;,
+    &quot;PHPUnit.MockParsoidTests.executor&quot;: &quot;Run&quot;,
+    &quot;PHPUnit.MockParsoidTests.testWt2Html.executor&quot;: &quot;Debug&quot;,
+    &quot;PHPUnit.ParsoidTests.executor&quot;: &quot;Run&quot;,
+    &quot;PHPUnit.ParsoidTests.testWt2Html.executor&quot;: &quot;Run&quot;,
+    &quot;PHPUnit.ParsoidTests.testWt2Lint.executor&quot;: &quot;Run&quot;,
+    &quot;PHPUnit.testWt2Html.executor&quot;: &quot;Debug&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;develop&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/bla/develop/src/wiki&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;yarn&quot;,
+    &quot;php.override.implement.member.chooser.php.doc&quot;: &quot;NONE&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;Errors&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;C:\\Users\\bla\\develop\\node_modules\\typescript\\lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="RunManager" selected="PHPUnit.MockParsoidTests.testWt2Html">
+    <configuration name="Main" type="PHPUnitRunConfigurationType" factoryName="PHPUnit">
+      <CommandLine>
+        <PhpTestInterpreterSettings>
+          <option name="interpreterName" value="PHP 8.3" />
+        </PhpTestInterpreterSettings>
+      </CommandLine>
+      <TestRunner configuration_file="$PROJECT_DIR$/phpunit.xml.dist" scope="XML" />
+      <method v="2" />
+    </configuration>
+    <configuration name="MockParsoidTests" type="PHPUnitRunConfigurationType" factoryName="PHPUnit" temporary="true">
+      <CommandLine>
+        <PhpTestInterpreterSettings>
+          <option name="interpreterName" value="PHP 8.3" />
+        </PhpTestInterpreterSettings>
+      </CommandLine>
+      <TestRunner class="App\Tests\Parsoid\MockParsoidTests" configuration_file="$PROJECT_DIR$/phpunit.xml.dist" file="$PROJECT_DIR$/tests/Parsoid/MockParsoidTests.php" scope="Class" />
+      <method v="2" />
+    </configuration>
+    <configuration name="MockParsoidTests.testWt2Html" type="PHPUnitRunConfigurationType" factoryName="PHPUnit" temporary="true">
+      <CommandLine>
+        <PhpTestInterpreterSettings>
+          <option name="interpreterName" value="PHP 8.3" />
+        </PhpTestInterpreterSettings>
+      </CommandLine>
+      <TestRunner class="App\Tests\Parsoid\MockParsoidTests" configuration_file="$PROJECT_DIR$/phpunit.xml.dist" file="$PROJECT_DIR$/tests/Parsoid/MockParsoidTests.php" method="testWt2Html" scope="Method" />
+      <method v="2" />
+    </configuration>
+    <configuration name="ParsoidTests" type="PHPUnitRunConfigurationType" factoryName="PHPUnit" temporary="true">
+      <CommandLine>
+        <PhpTestInterpreterSettings>
+          <option name="interpreterName" value="PHP 8.3" />
+        </PhpTestInterpreterSettings>
+      </CommandLine>
+      <TestRunner class="App\Tests\Parsoid\ParsoidTests" configuration_file="$PROJECT_DIR$/phpunit.xml.dist" file="$PROJECT_DIR$/tests/Parsoid/ParsoidTests.php" scope="Class" />
+      <method v="2" />
+    </configuration>
+    <configuration name="ParsoidTests.testWt2Html" type="PHPUnitRunConfigurationType" factoryName="PHPUnit" temporary="true">
+      <CommandLine>
+        <PhpTestInterpreterSettings>
+          <option name="interpreterName" value="PHP 8.3" />
+        </PhpTestInterpreterSettings>
+      </CommandLine>
+      <TestRunner class="App\Tests\Parsoid\ParsoidTests" configuration_file="$PROJECT_DIR$/phpunit.xml.dist" file="$PROJECT_DIR$/tests/Parsoid/ParsoidTests.php" method="testWt2Html" scope="Method" />
+      <method v="2" />
+    </configuration>
+    <configuration name="testWt2Html" type="PHPUnitRunConfigurationType" factoryName="PHPUnit" temporary="true">
+      <CommandLine>
+        <PhpTestInterpreterSettings>
+          <option name="interpreterName" value="PHP 8.3" />
+        </PhpTestInterpreterSettings>
+      </CommandLine>
+      <TestRunner class="App\Tests\Parsoid\ParsoidTests" configuration_file="$PROJECT_DIR$/phpunit.xml.dist" file="$PROJECT_DIR$/tests/Parsoid/ParsoidTests.php" method="testWt2Html" scope="Pattern">
+        <test_patterns>
+          <composite_test_pattern class_fqn="App\Tests\Parsoid\ParsoidTests" file_path="$PROJECT_DIR$/tests/Parsoid/ParsoidTests.php" dataset="#2" method_name="testWt2Html" />
+        </test_patterns>
+      </TestRunner>
+      <method v="2" />
+    </configuration>
+    <configuration name="Main" type="PhpBehatConfigurationType">
+      <BehatRunner configuration_file="$PROJECT_DIR$/behat.yml.dist" scenario="" scope="Yml" use_alternative_configuration_file="true" />
+      <method v="2" />
+    </configuration>
+    <configuration name="send:massmail" type="PhpLocalRunConfigurationType" factoryName="PHP Console" path="$PROJECT_DIR$/bin/console" scriptParameters="send:massmail">
+      <CommandLine>
+        <PhpTestInterpreterSettings>
+          <option name="interpreterName" value="PHP 8.3" />
+        </PhpTestInterpreterSettings>
+      </CommandLine>
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Behat.Main" />
+      <item itemvalue="PHP Script.send:massmail" />
+      <item itemvalue="PHPUnit.Main" />
+      <item itemvalue="PHPUnit.MockParsoidTests" />
+      <item itemvalue="PHPUnit.MockParsoidTests.testWt2Html" />
+      <item itemvalue="PHPUnit.ParsoidTests" />
+      <item itemvalue="PHPUnit.ParsoidTests.testWt2Html" />
+      <item itemvalue="PHPUnit.testWt2Html" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="PHPUnit.MockParsoidTests.testWt2Html" />
+        <item itemvalue="PHPUnit.MockParsoidTests" />
+        <item itemvalue="PHPUnit.ParsoidTests" />
+        <item itemvalue="PHPUnit.ParsoidTests.testWt2Html" />
+        <item itemvalue="PHPUnit.testWt2Html" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-d6986cc7102b-1632447f56bf-JavaScript-PS-243.25659.45" />
+        <option value="bundled-php-predefined-a98d8de5180a-1ec7b7818973-com.jetbrains.php.sharedIndexes-PS-243.25659.45" />
+        <option value="php-doctrine_orm-5543a6ebd44f-577e54b5" />
+        <option value="php-ramsey_uuid-5543a6ebd44f-65350a8c" />
+        <option value="php-symfony_flex-5543a6ebd44f-d9b3138a" />
+        <option value="php-symfony_flex-5543a6ebd44f-fd8131cc" />
+        <option value="php-symfony_intl-5543a6ebd44f-8e6a0a0c" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="StructureViewState">
+    <option name="selectedTab" value="Twig" />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="f3454381-8d21-4747-a1f8-abf6e8979cd6" name="Changes" comment="" />
+      <created>1735909627879</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1735909627879</updated>
+      <workItem from="1735909629737" duration="179000" />
+      <workItem from="1735909832614" duration="259000" />
+      <workItem from="1735910161367" duration="61000" />
+      <workItem from="1735910245422" duration="55000" />
+      <workItem from="1735910319516" duration="603000" />
+      <workItem from="1735929128132" duration="1371000" />
+      <workItem from="1735930542696" duration="15382000" />
+      <workItem from="1736070957097" duration="5792000" />
+      <workItem from="1736079501792" duration="974000" />
+      <workItem from="1736080589821" duration="30567000" />
+      <workItem from="1736161764706" duration="16629000" />
+      <workItem from="1736188805950" duration="27107000" />
+      <workItem from="1736667565664" duration="14977000" />
+      <workItem from="1736714113794" duration="3359000" />
+      <workItem from="1736874393282" duration="7751000" />
+      <workItem from="1736886664518" duration="9628000" />
+      <workItem from="1736973925367" duration="975000" />
+      <workItem from="1737482849130" duration="69000" />
+      <workItem from="1737484119781" duration="124000" />
+      <workItem from="1737484798889" duration="1087000" />
+      <workItem from="1737486023730" duration="1227000" />
+      <workItem from="1737487309726" duration="5608000" />
+      <workItem from="1737574204258" duration="1195000" />
+      <workItem from="1737793755579" duration="7729000" />
+      <workItem from="1737802327398" duration="6335000" />
+      <workItem from="1737830864560" duration="2446000" />
+      <workItem from="1737901962610" duration="5181000" />
+      <workItem from="1739611270721" duration="3509000" />
+      <workItem from="1739623346055" duration="3138000" />
+      <workItem from="1739635197935" duration="6384000" />
+      <workItem from="1739723218873" duration="100000" />
+      <workItem from="1740219804060" duration="3421000" />
+      <workItem from="1740224166669" duration="11896000" />
+      <workItem from="1740253374351" duration="3714000" />
+      <workItem from="1740840665798" duration="2424000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/src/Controller/LocaleController.php</url>
+          <line>26</line>
+          <option name="timeStamp" value="7" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/src/Controller/MemberController.php</url>
+          <line>50</line>
+          <option name="timeStamp" value="10" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/src/Controller/Admin/FaqCategoryController.php</url>
+          <line>58</line>
+          <option name="timeStamp" value="14" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/src/Command/SendMassmailCommand.php</url>
+          <line>61</line>
+          <option name="timeStamp" value="26" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/src/Command/SendMassmailCommand.php</url>
+          <line>110</line>
+          <option name="timeStamp" value="27" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/src/Wiki/RoxPageConfig.php</url>
+          <line>27</line>
+          <option name="timeStamp" value="45" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/src/Wiki/RoxLinkTarget.php</url>
+          <line>76</line>
+          <option name="timeStamp" value="49" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/src/Wiki/RoxLinkTarget.php</url>
+          <line>63</line>
+          <option name="timeStamp" value="50" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/src/Wiki/RoxLinkTarget.php</url>
+          <line>58</line>
+          <option name="timeStamp" value="51" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/src/Wiki/RoxLinkTarget.php</url>
+          <line>53</line>
+          <option name="timeStamp" value="52" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/src/Wiki/RoxLinkTarget.php</url>
+          <line>43</line>
+          <option name="timeStamp" value="53" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/src/Wiki/RoxLinkTarget.php</url>
+          <line>38</line>
+          <option name="timeStamp" value="54" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/src/Wiki/RoxLinkTarget.php</url>
+          <line>33</line>
+          <option name="timeStamp" value="55" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/src/Wiki/RoxLinkTarget.php</url>
+          <line>28</line>
+          <option name="timeStamp" value="56" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/src/Wiki/RoxLinkTarget.php</url>
+          <line>23</line>
+          <option name="timeStamp" value="57" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/src/Wiki/RoxLinkTarget.php</url>
+          <line>18</line>
+          <option name="timeStamp" value="58" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/src/Wiki/RoxDataAccess.php</url>
+          <line>15</line>
+          <option name="timeStamp" value="59" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/src/Wiki/RoxDataAccess.php</url>
+          <line>20</line>
+          <option name="timeStamp" value="60" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/src/Wiki/RoxDataAccess.php</url>
+          <line>25</line>
+          <option name="timeStamp" value="61" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/src/Wiki/RoxDataAccess.php</url>
+          <line>30</line>
+          <option name="timeStamp" value="62" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/src/Wiki/RoxDataAccess.php</url>
+          <line>35</line>
+          <option name="timeStamp" value="63" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/src/Wiki/RoxDataAccess.php</url>
+          <line>40</line>
+          <option name="timeStamp" value="64" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/src/Wiki/RoxDataAccess.php</url>
+          <line>45</line>
+          <option name="timeStamp" value="65" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/src/Wiki/RoxDataAccess.php</url>
+          <line>50</line>
+          <option name="timeStamp" value="66" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/src/Wiki/RoxDataAccess.php</url>
+          <line>55</line>
+          <option name="timeStamp" value="67" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/vendor/wikimedia/parsoid/src/Parsoid.php</url>
+          <line>247</line>
+          <option name="timeStamp" value="68" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/tests/Parsoid/ParsoidTests.php</url>
+          <line>31</line>
+          <option name="timeStamp" value="69" />
+        </line-breakpoint>
+        <line-breakpoint type="php">
+          <url>file://$PROJECT_DIR$/vendor/wikimedia/parsoid/src/Mocks/MockSiteConfig.php</url>
+          <line>100</line>
+          <option name="timeStamp" value="70" />
+        </line-breakpoint>
+        <line-breakpoint type="php">
+          <url>file://$PROJECT_DIR$/vendor/wikimedia/parsoid/src/Mocks/MockSiteConfig.php</url>
+          <line>96</line>
+          <option name="timeStamp" value="71" />
+        </line-breakpoint>
+        <line-breakpoint type="php">
+          <url>file://$PROJECT_DIR$/vendor/wikimedia/parsoid/src/Mocks/MockSiteConfig.php</url>
+          <line>92</line>
+          <option name="timeStamp" value="72" />
+        </line-breakpoint>
+        <line-breakpoint type="php">
+          <url>file://$PROJECT_DIR$/vendor/wikimedia/parsoid/src/Mocks/MockSiteConfig.php</url>
+          <line>113</line>
+          <option name="timeStamp" value="73" />
+        </line-breakpoint>
+        <line-breakpoint type="php">
+          <url>file://$PROJECT_DIR$/vendor/wikimedia/parsoid/src/Mocks/MockSiteConfig.php</url>
+          <line>130</line>
+          <option name="timeStamp" value="74" />
+        </line-breakpoint>
+        <line-breakpoint type="php">
+          <url>file://$PROJECT_DIR$/vendor/wikimedia/parsoid/src/Mocks/MockSiteConfig.php</url>
+          <line>134</line>
+          <option name="timeStamp" value="75" />
+        </line-breakpoint>
+        <line-breakpoint type="php">
+          <url>file://$PROJECT_DIR$/vendor/wikimedia/parsoid/src/Mocks/MockSiteConfig.php</url>
+          <line>138</line>
+          <option name="timeStamp" value="76" />
+        </line-breakpoint>
+        <line-breakpoint type="php">
+          <url>file://$PROJECT_DIR$/vendor/wikimedia/parsoid/src/Mocks/MockSiteConfig.php</url>
+          <line>148</line>
+          <option name="timeStamp" value="77" />
+        </line-breakpoint>
+        <line-breakpoint type="php">
+          <url>file://$PROJECT_DIR$/vendor/wikimedia/parsoid/src/Mocks/MockSiteConfig.php</url>
+          <line>153</line>
+          <option name="timeStamp" value="78" />
+        </line-breakpoint>
+        <line-breakpoint type="php">
+          <url>file://$PROJECT_DIR$/vendor/wikimedia/parsoid/src/Mocks/MockSiteConfig.php</url>
+          <line>159</line>
+          <option name="timeStamp" value="79" />
+        </line-breakpoint>
+        <line-breakpoint type="php">
+          <url>file://$PROJECT_DIR$/vendor/wikimedia/parsoid/src/Mocks/MockSiteConfig.php</url>
+          <line>171</line>
+          <option name="timeStamp" value="80" />
+        </line-breakpoint>
+        <line-breakpoint type="php">
+          <url>file://$PROJECT_DIR$/vendor/wikimedia/parsoid/src/Mocks/MockSiteConfig.php</url>
+          <line>176</line>
+          <option name="timeStamp" value="81" />
+        </line-breakpoint>
+        <line-breakpoint type="php">
+          <url>file://$PROJECT_DIR$/vendor/wikimedia/parsoid/src/Mocks/MockSiteConfig.php</url>
+          <line>181</line>
+          <option name="timeStamp" value="82" />
+        </line-breakpoint>
+        <line-breakpoint type="php">
+          <url>file://$PROJECT_DIR$/vendor/wikimedia/parsoid/src/Mocks/MockSiteConfig.php</url>
+          <line>185</line>
+          <option name="timeStamp" value="83" />
+        </line-breakpoint>
+        <line-breakpoint type="php">
+          <url>file://$PROJECT_DIR$/vendor/wikimedia/parsoid/src/Mocks/MockSiteConfig.php</url>
+          <line>189</line>
+          <option name="timeStamp" value="84" />
+        </line-breakpoint>
+        <line-breakpoint type="php">
+          <url>file://$PROJECT_DIR$/vendor/wikimedia/parsoid/src/Mocks/MockSiteConfig.php</url>
+          <line>193</line>
+          <option name="timeStamp" value="85" />
+        </line-breakpoint>
+        <line-breakpoint type="php">
+          <url>file://$PROJECT_DIR$/vendor/wikimedia/parsoid/src/Mocks/MockSiteConfig.php</url>
+          <line>197</line>
+          <option name="timeStamp" value="86" />
+        </line-breakpoint>
+        <line-breakpoint type="php">
+          <url>file://$PROJECT_DIR$/vendor/wikimedia/parsoid/src/Mocks/MockSiteConfig.php</url>
+          <line>201</line>
+          <option name="timeStamp" value="87" />
+        </line-breakpoint>
+        <line-breakpoint type="php">
+          <url>file://$PROJECT_DIR$/vendor/wikimedia/parsoid/src/Mocks/MockSiteConfig.php</url>
+          <line>205</line>
+          <option name="timeStamp" value="88" />
+        </line-breakpoint>
+        <line-breakpoint type="php">
+          <url>file://$PROJECT_DIR$/vendor/wikimedia/parsoid/src/Mocks/MockSiteConfig.php</url>
+          <line>210</line>
+          <option name="timeStamp" value="89" />
+        </line-breakpoint>
+        <line-breakpoint type="php">
+          <url>file://$PROJECT_DIR$/vendor/wikimedia/parsoid/src/Mocks/MockSiteConfig.php</url>
+          <line>215</line>
+          <option name="timeStamp" value="90" />
+        </line-breakpoint>
+        <line-breakpoint type="php">
+          <url>file://$PROJECT_DIR$/vendor/wikimedia/parsoid/src/Mocks/MockSiteConfig.php</url>
+          <line>219</line>
+          <option name="timeStamp" value="91" />
+        </line-breakpoint>
+        <line-breakpoint type="php">
+          <url>file://$PROJECT_DIR$/vendor/wikimedia/parsoid/src/Mocks/MockSiteConfig.php</url>
+          <line>223</line>
+          <option name="timeStamp" value="92" />
+        </line-breakpoint>
+        <line-breakpoint type="php">
+          <url>file://$PROJECT_DIR$/vendor/wikimedia/parsoid/src/Mocks/MockSiteConfig.php</url>
+          <line>228</line>
+          <option name="timeStamp" value="93" />
+        </line-breakpoint>
+        <line-breakpoint type="php">
+          <url>file://$PROJECT_DIR$/vendor/wikimedia/parsoid/src/Mocks/MockSiteConfig.php</url>
+          <line>239</line>
+          <option name="timeStamp" value="94" />
+        </line-breakpoint>
+        <line-breakpoint type="php">
+          <url>file://$PROJECT_DIR$/vendor/wikimedia/parsoid/src/Mocks/MockSiteConfig.php</url>
+          <line>244</line>
+          <option name="timeStamp" value="95" />
+        </line-breakpoint>
+        <line-breakpoint type="php">
+          <url>file://$PROJECT_DIR$/vendor/wikimedia/parsoid/src/Mocks/MockSiteConfig.php</url>
+          <line>248</line>
+          <option name="timeStamp" value="96" />
+        </line-breakpoint>
+        <line-breakpoint type="php">
+          <url>file://$PROJECT_DIR$/vendor/wikimedia/parsoid/src/Mocks/MockSiteConfig.php</url>
+          <line>252</line>
+          <option name="timeStamp" value="97" />
+        </line-breakpoint>
+        <line-breakpoint type="php">
+          <url>file://$PROJECT_DIR$/vendor/wikimedia/parsoid/src/Mocks/MockSiteConfig.php</url>
+          <line>256</line>
+          <option name="timeStamp" value="98" />
+        </line-breakpoint>
+        <line-breakpoint type="php">
+          <url>file://$PROJECT_DIR$/vendor/wikimedia/parsoid/src/Mocks/MockSiteConfig.php</url>
+          <line>260</line>
+          <option name="timeStamp" value="99" />
+        </line-breakpoint>
+        <line-breakpoint type="php">
+          <url>file://$PROJECT_DIR$/vendor/wikimedia/parsoid/src/Mocks/MockSiteConfig.php</url>
+          <line>265</line>
+          <option name="timeStamp" value="100" />
+        </line-breakpoint>
+        <line-breakpoint type="php">
+          <url>file://$PROJECT_DIR$/vendor/wikimedia/parsoid/src/Mocks/MockSiteConfig.php</url>
+          <line>293</line>
+          <option name="timeStamp" value="101" />
+        </line-breakpoint>
+        <line-breakpoint type="php">
+          <url>file://$PROJECT_DIR$/vendor/wikimedia/parsoid/src/Mocks/MockSiteConfig.php</url>
+          <line>298</line>
+          <option name="timeStamp" value="102" />
+        </line-breakpoint>
+        <line-breakpoint type="php">
+          <url>file://$PROJECT_DIR$/vendor/wikimedia/parsoid/src/Mocks/MockSiteConfig.php</url>
+          <line>303</line>
+          <option name="timeStamp" value="103" />
+        </line-breakpoint>
+        <line-breakpoint type="php">
+          <url>file://$PROJECT_DIR$/vendor/wikimedia/parsoid/src/Mocks/MockSiteConfig.php</url>
+          <line>309</line>
+          <option name="timeStamp" value="104" />
+        </line-breakpoint>
+        <line-breakpoint type="php">
+          <url>file://$PROJECT_DIR$/vendor/wikimedia/parsoid/src/Mocks/MockSiteConfig.php</url>
+          <line>313</line>
+          <option name="timeStamp" value="105" />
+        </line-breakpoint>
+        <line-breakpoint type="php">
+          <url>file://$PROJECT_DIR$/vendor/wikimedia/parsoid/src/Mocks/MockSiteConfig.php</url>
+          <line>333</line>
+          <option name="timeStamp" value="106" />
+        </line-breakpoint>
+        <line-breakpoint type="php">
+          <url>file://$PROJECT_DIR$/vendor/wikimedia/parsoid/src/Mocks/MockSiteConfig.php</url>
+          <line>342</line>
+          <option name="timeStamp" value="107" />
+        </line-breakpoint>
+        <line-breakpoint type="php">
+          <url>file://$PROJECT_DIR$/vendor/wikimedia/parsoid/src/Mocks/MockSiteConfig.php</url>
+          <line>384</line>
+          <option name="timeStamp" value="108" />
+        </line-breakpoint>
+        <line-breakpoint type="php">
+          <url>file://$PROJECT_DIR$/vendor/wikimedia/parsoid/src/Mocks/MockSiteConfig.php</url>
+          <line>407</line>
+          <option name="timeStamp" value="109" />
+        </line-breakpoint>
+        <line-breakpoint type="php">
+          <url>file://$PROJECT_DIR$/vendor/wikimedia/parsoid/src/Mocks/MockSiteConfig.php</url>
+          <line>412</line>
+          <option name="timeStamp" value="110" />
+        </line-breakpoint>
+        <line-breakpoint type="php">
+          <url>file://$PROJECT_DIR$/vendor/wikimedia/parsoid/src/Mocks/MockSiteConfig.php</url>
+          <line>421</line>
+          <option name="timeStamp" value="111" />
+        </line-breakpoint>
+        <line-breakpoint type="php">
+          <url>file://$PROJECT_DIR$/vendor/wikimedia/parsoid/src/Mocks/MockSiteConfig.php</url>
+          <line>426</line>
+          <option name="timeStamp" value="112" />
+        </line-breakpoint>
+        <line-breakpoint type="php">
+          <url>file://$PROJECT_DIR$/vendor/wikimedia/parsoid/src/Mocks/MockSiteConfig.php</url>
+          <line>430</line>
+          <option name="timeStamp" value="113" />
+        </line-breakpoint>
+        <line-breakpoint type="php">
+          <url>file://$PROJECT_DIR$/vendor/wikimedia/parsoid/src/Mocks/MockSiteConfig.php</url>
+          <line>438</line>
+          <option name="timeStamp" value="114" />
+        </line-breakpoint>
+        <line-breakpoint type="php">
+          <url>file://$PROJECT_DIR$/vendor/wikimedia/parsoid/src/Mocks/MockSiteConfig.php</url>
+          <line>446</line>
+          <option name="timeStamp" value="115" />
+        </line-breakpoint>
+        <line-breakpoint type="php">
+          <url>file://$PROJECT_DIR$/vendor/wikimedia/parsoid/src/Mocks/MockSiteConfig.php</url>
+          <line>450</line>
+          <option name="timeStamp" value="116" />
+        </line-breakpoint>
+        <line-breakpoint type="php">
+          <url>file://$PROJECT_DIR$/vendor/wikimedia/parsoid/src/Mocks/MockSiteConfig.php</url>
+          <line>455</line>
+          <option name="timeStamp" value="117" />
+        </line-breakpoint>
+        <line-breakpoint type="php">
+          <url>file://$PROJECT_DIR$/vendor/wikimedia/parsoid/src/Mocks/MockSiteConfig.php</url>
+          <line>464</line>
+          <option name="timeStamp" value="118" />
+        </line-breakpoint>
+        <line-breakpoint type="php">
+          <url>file://$PROJECT_DIR$/vendor/wikimedia/parsoid/src/Mocks/MockSiteConfig.php</url>
+          <line>472</line>
+          <option name="timeStamp" value="119" />
+        </line-breakpoint>
+        <line-breakpoint type="php">
+          <url>file://$PROJECT_DIR$/vendor/wikimedia/parsoid/src/Mocks/MockSiteConfig.php</url>
+          <line>487</line>
+          <option name="timeStamp" value="120" />
+        </line-breakpoint>
+        <line-breakpoint type="php">
+          <url>file://$PROJECT_DIR$/vendor/wikimedia/parsoid/src/Mocks/MockSiteConfig.php</url>
+          <line>499</line>
+          <option name="timeStamp" value="121" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/vendor/wikimedia/parsoid/src/Mocks/MockDataAccess.php</url>
+          <line>393</line>
+          <option name="timeStamp" value="124" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/vendor/wikimedia/parsoid/src/Mocks/MockDataAccess.php</url>
+          <line>412</line>
+          <option name="timeStamp" value="125" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/vendor/wikimedia/parsoid/src/Mocks/MockDataAccess.php</url>
+          <line>538</line>
+          <option name="timeStamp" value="126" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/vendor/wikimedia/parsoid/src/Mocks/MockDataAccess.php</url>
+          <line>568</line>
+          <option name="timeStamp" value="127" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/vendor/wikimedia/parsoid/src/Mocks/MockDataAccess.php</url>
+          <line>599</line>
+          <option name="timeStamp" value="128" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/vendor/wikimedia/parsoid/src/Mocks/MockDataAccess.php</url>
+          <line>614</line>
+          <option name="timeStamp" value="129" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/vendor/wikimedia/parsoid/src/Mocks/MockDataAccess.php</url>
+          <line>621</line>
+          <option name="timeStamp" value="130" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/vendor/wikimedia/parsoid/src/Mocks/MockDataAccess.php</url>
+          <line>640</line>
+          <option name="timeStamp" value="131" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/vendor/wikimedia/parsoid/src/Mocks/MockPageContent.php</url>
+          <line>34</line>
+          <option name="timeStamp" value="132" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/vendor/wikimedia/parsoid/src/Mocks/MockPageContent.php</url>
+          <line>39</line>
+          <option name="timeStamp" value="133" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/vendor/wikimedia/parsoid/src/Mocks/MockPageContent.php</url>
+          <line>43</line>
+          <option name="timeStamp" value="134" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/vendor/wikimedia/parsoid/src/Mocks/MockPageContent.php</url>
+          <line>50</line>
+          <option name="timeStamp" value="135" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/vendor/wikimedia/parsoid/src/Mocks/MockPageContent.php</url>
+          <line>56</line>
+          <option name="timeStamp" value="136" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/vendor/wikimedia/parsoid/src/Mocks/MockPageContent.php</url>
+          <line>62</line>
+          <option name="timeStamp" value="137" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/vendor/wikimedia/parsoid/src/Mocks/MockPageConfig.php</url>
+          <line>46</line>
+          <option name="timeStamp" value="138" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/vendor/wikimedia/parsoid/src/Mocks/MockPageConfig.php</url>
+          <line>51</line>
+          <option name="timeStamp" value="139" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/vendor/wikimedia/parsoid/src/Mocks/MockPageConfig.php</url>
+          <line>56</line>
+          <option name="timeStamp" value="140" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/vendor/wikimedia/parsoid/src/Mocks/MockPageConfig.php</url>
+          <line>61</line>
+          <option name="timeStamp" value="141" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/vendor/wikimedia/parsoid/src/Mocks/MockPageConfig.php</url>
+          <line>66</line>
+          <option name="timeStamp" value="142" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/vendor/wikimedia/parsoid/src/Mocks/MockPageConfig.php</url>
+          <line>71</line>
+          <option name="timeStamp" value="143" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/vendor/wikimedia/parsoid/src/Mocks/MockPageConfig.php</url>
+          <line>76</line>
+          <option name="timeStamp" value="144" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/vendor/wikimedia/parsoid/src/Mocks/MockPageConfig.php</url>
+          <line>81</line>
+          <option name="timeStamp" value="145" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/vendor/wikimedia/parsoid/src/Mocks/MockPageConfig.php</url>
+          <line>98</line>
+          <option name="timeStamp" value="148" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/vendor/wikimedia/parsoid/src/Mocks/MockPageConfig.php</url>
+          <line>109</line>
+          <option name="timeStamp" value="150" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
+  </component>
+</project>

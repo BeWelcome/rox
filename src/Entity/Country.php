@@ -13,47 +13,46 @@ use Symfony\Component\Serializer\Annotation\Groups;
 /**
  * Country.
  *
- * @ORM\Table(name="geonamescountries")
- * @ORM\Entity
  *
- * @SuppressWarnings(PHPMD)
+ * @SuppressWarnings("PHPMD")
  * Auto generated class do not check mess
  */
+#[ORM\Table(name: 'geonamescountries')]
+#[ORM\Entity]
 class Country
 {
     /**
      * @var int
      *
-     * @ORM\Column(name="geonameId", type="integer", nullable=true)
      *
-     * @Groups({"Member:Read"})
      */
+    #[ORM\Column(name: 'geonameId', type: 'integer', nullable: true)]
+    #[Groups(['Member:Read'])]
     private $geonameId;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="name", type="string", length=200, nullable=true)
      *
-     * @Groups({"Member:Read"})
      */
+    #[ORM\Column(name: 'name', type: 'string', length: 200, nullable: true)]
+    #[Groups(['Member:Read'])]
     private $name;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="continent", type="string", length=2, nullable=true)
      *
-     * @Groups({"Member:Read"})
      */
+    #[ORM\Column(name: 'continent', type: 'string', length: 2, nullable: true)]
+    #[Groups(['Member:Read'])]
     private $continent;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="country", type="string", length=2)
-     * @ORM\Id
      */
+    #[ORM\Column(name: 'country', type: 'string', length: 2)]
+    #[ORM\Id]
     private $country;
 
     /**

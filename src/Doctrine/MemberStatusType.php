@@ -5,36 +5,36 @@ namespace App\Doctrine;
 class MemberStatusType extends EnumType
 {
     // Possible member statuses
-    public const AWAITING_MAIL_CONFIRMATION = 'MailToConfirm';
-    public const MAIL_CONFIRMED = 'MailConfirmed';
-    public const PENDING = 'Pending';
-    public const DUPLICATE_SIGNED = 'DuplicateSigned';
-    public const NEED_MORE = 'NeedMore';
-    public const REJECTED = 'Rejected';
-    public const COMPLETED_PENDING = 'CompletedPending';
-    public const ACTIVE = 'Active';
-    public const ACCOUNT_ACTIVATED = 'Activated';
-    public const TAKEN_OUT = 'TakenOut';
-    public const BANNED = 'Banned';
-    public const SLEEPER = 'Sleeper';
-    public const CHOICE_INACTIVE = 'ChoiceInactive';
-    public const OUT_OF_REMIND = 'OutOfRemind';
-    public const RENAMED = 'Renamed';
-    public const ACTIVE_HIDDEN = 'ActiveHidden';
-    public const SUSPENDED = 'SuspendedBeta';
-    public const ASKED_TO_LEAVE = 'AskToLeave';
-    public const STOP_BORING_ME = 'StopBoringMe';
-    public const PASSED_AWAY = 'PassedAway';
-    public const BUGGY = 'Buggy';
+    public const string AWAITING_MAIL_CONFIRMATION = 'MailToConfirm';
+    public const string MAIL_CONFIRMED = 'MailConfirmed';
+    public const string PENDING = 'Pending';
+    public const string DUPLICATE_SIGNED = 'DuplicateSigned';
+    public const string NEED_MORE = 'NeedMore';
+    public const string REJECTED = 'Rejected';
+    public const string COMPLETED_PENDING = 'CompletedPending';
+    public const string ACTIVE = 'Active';
+    public const string ACCOUNT_ACTIVATED = 'Activated';
+    public const string TAKEN_OUT = 'TakenOut';
+    public const string BANNED = 'Banned';
+    public const string SLEEPER = 'Sleeper';
+    public const string CHOICE_INACTIVE = 'ChoiceInactive';
+    public const string OUT_OF_REMIND = 'OutOfRemind';
+    public const string RENAMED = 'Renamed';
+    public const string ACTIVE_HIDDEN = 'ActiveHidden';
+    public const string SUSPENDED = 'SuspendedBeta';
+    public const string ASKED_TO_LEAVE = 'AskToLeave';
+    public const string STOP_BORING_ME = 'StopBoringMe';
+    public const string PASSED_AWAY = 'PassedAway';
+    public const string BUGGY = 'Buggy';
 
-    public const ACTIVE_ALL = "'" .
+    public const string ACTIVE_ALL = "'" .
         self::ACTIVE . "', '" .
         self::ACTIVE_HIDDEN . "', '" .
         self::CHOICE_INACTIVE . "', '" .
         self::OUT_OF_REMIND . "', '" .
         self::PENDING . "'";
 
-    public const ACTIVE_ALL_ARRAY = [
+    public const array ACTIVE_ALL_ARRAY = [
         self::ACTIVE_HIDDEN,
         self::ACTIVE,
         self::CHOICE_INACTIVE,
@@ -42,27 +42,27 @@ class MemberStatusType extends EnumType
         self::PENDING,
     ];
 
-    public const ACTIVE_SEARCH = "'" .
+    public const string ACTIVE_SEARCH = "'" .
         self::ACTIVE . "', '" .
         self::ACTIVE_HIDDEN . "', '" .
         self::OUT_OF_REMIND . "', '" .
         self::PENDING . "'";
 
-    public const ACTIVE_WITH_MESSAGES = "'" .
+    public const string ACTIVE_WITH_MESSAGES = "'" .
         self::ACTIVE . "', '" .
         self::OUT_OF_REMIND . "', '" .
         self::PENDING . "'";
 
-    public const MEMBER_COMMENTS = "'" .
-    self::ACTIVE . "', '" .
-    self::ACTIVE_HIDDEN . "', '" .
-    self::ASKED_TO_LEAVE . "', '" .
-    self::CHOICE_INACTIVE . "', '" .
-    self::OUT_OF_REMIND . "', '" .
-    self::SUSPENDED . "', '" .
-    self::PENDING . "'";
+    public const string MEMBER_COMMENTS = "'" .
+        self::ACTIVE . "', '" .
+        self::ACTIVE_HIDDEN . "', '" .
+        self::ASKED_TO_LEAVE . "', '" .
+        self::CHOICE_INACTIVE . "', '" .
+        self::OUT_OF_REMIND . "', '" .
+        self::SUSPENDED . "', '" .
+        self::PENDING . "'";
 
-    public const MEMBER_COMMENTS_ARRAY = [
+    public const array MEMBER_COMMENTS_ARRAY = [
         self::ACTIVE,
         self::ACTIVE_HIDDEN,
         self::ASKED_TO_LEAVE,
@@ -72,14 +72,14 @@ class MemberStatusType extends EnumType
         self::PENDING,
     ];
 
-    public const MEMBER_PROFILE_LINKED = [
+    public const array MEMBER_PROFILE_LINKED = [
         self::ACTIVE,
         self::ACTIVE_HIDDEN,
         self::OUT_OF_REMIND,
         self::PENDING,
     ];
 
-    public const STATUSES_IN_USE = [
+    public const array STATUSES_IN_USE = [
         'Active',
         'MailToConfirm',
         'PassedAway',
@@ -102,11 +102,9 @@ class MemberStatusType extends EnumType
         return array_combine($translationIds, self::STATUSES_IN_USE);
     }
 
-    /** @var string */
-    protected $name = 'member_status';
+    protected string $name = 'member_status';
 
-    /** @var array */
-    protected $values = [
+    protected array $values = [
         self::AWAITING_MAIL_CONFIRMATION,
         self::PENDING,
         self::DUPLICATE_SIGNED,

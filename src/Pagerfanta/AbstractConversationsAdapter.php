@@ -41,7 +41,7 @@ abstract class AbstractConversationsAdapter
             $countQuery = 'SELECT count(*) FROM (' . $this->getConversationsQuery() . ') m';
             $result = $this->connection->executeQuery(
                 $countQuery,
-                [':memberId' => $this->member->getId()],
+                ['memberId' => $this->member->getId()],
                 [\PDO::PARAM_INT]
             );
             $count = $result->fetchOne();

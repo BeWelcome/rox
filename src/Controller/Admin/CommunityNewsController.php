@@ -7,6 +7,7 @@ use App\Entity\Member;
 use App\Form\CommunityNewsType;
 use App\Model\CommunityNewsModel;
 use DateTime;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,13 +17,18 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class CommunityNewsController extends AbstractController
 {
+    public function __construct(
+        private EntityManagerInterface $entityManager
+    ) {
+        $this->entityManager = $entityManager;
+    }
+
     /**
-     * @Route("/admin/communitynews", name="admin_communitynews_overview")
      *
      * @throws AccessDeniedException
-     *
      * @return Response
      */
+    #[Route(path: '/admin/communitynews', name: 'admin_communitynews_overview')]
     public function showOverviewAction(Request $request, CommunityNewsModel $communityNewsModel)
     {
         if (!$this->isGranted(Member::ROLE_ADMIN_COMMUNITYNEWS)) {
@@ -40,12 +46,11 @@ class CommunityNewsController extends AbstractController
     }
 
     /**
-     * @Route("/admin/communitynews/create", name="admin_communitynews_create")
      *
      * @throws AccessDeniedException
-     *
      * @return Response
      */
+    #[Route(path: '/admin/communitynews/create', name: 'admin_communitynews_create')]
     public function createAction(Request $request)
     {
         if (!$this->isGranted(Member::ROLE_ADMIN_COMMUNITYNEWS)) {
@@ -63,9 +68,9 @@ class CommunityNewsController extends AbstractController
             $data->setCreatedAt($now);
             $data->setUpdatedBy($this->getUser());
             $data->setUpdatedAt($now);
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($data);
-            $em->flush();
+
+            $this->entityManager->persist($data);
+            $this->entityManager->flush();
 
             return $this->redirectToRoute('admin_communitynews_overview');
         }
@@ -76,12 +81,11 @@ class CommunityNewsController extends AbstractController
     }
 
     /**
-     * @Route("/admin/communitynews/{id}/edit", name="admin_communitynews_edit")
      *
      * @throws AccessDeniedException
-     *
      * @return Response
      */
+    #[Route(path: '/admin/communitynews/{id}/edit', name: 'admin_communitynews_edit')]
     public function editAction(Request $request, CommunityNews $communityNews)
     {
         if (!$this->isGranted(Member::ROLE_ADMIN_COMMUNITYNEWS)) {
@@ -95,9 +99,9 @@ class CommunityNewsController extends AbstractController
             $data = $communityNewsForm->getData();
             $data->setUpdatedAt(new DateTime());
             $data->setUpdatedby($this->getUser());
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($data);
-            $em->flush();
+
+            $this->entityManager->persist($data);
+            $this->entityManager->flush();
 
             return $this->redirectToRoute('admin_communitynews_overview');
         }
@@ -108,12 +112,11 @@ class CommunityNewsController extends AbstractController
     }
 
     /**
-     * @Route("/admin/communitynews/{id}/hide", name="admin_communitynews_hide")
      *
      * @throws AccessDeniedException
-     *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
+    #[Route(path: '/admin/communitynews/{id}/hide', name: 'admin_communitynews_hide')]
     public function hideAction(CommunityNews $communityNews)
     {
         if (!$this->isGranted(Member::ROLE_ADMIN_COMMUNITYNEWS)) {
@@ -123,9 +126,9 @@ class CommunityNewsController extends AbstractController
         $communityNews->setPublic(false);
         $communityNews->setUpdatedAt(new DateTime());
         $communityNews->setUpdatedby($this->getUser());
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($communityNews);
-        $em->flush();
+
+        $this->entityManager->persist($communityNews);
+        $this->entityManager->flush();
 
         $this->addFlash('notice', 'Community News ' . $communityNews->getTitle() . ' is now hidden for all members');
 
@@ -133,12 +136,11 @@ class CommunityNewsController extends AbstractController
     }
 
     /**
-     * @Route("/admin/communitynews/{id}/show", name="admin_communitynews_unhide")
      *
      * @throws AccessDeniedException
-     *
      * @return Response
      */
+    #[Route(path: '/admin/communitynews/{id}/show', name: 'admin_communitynews_unhide')]
     public function unhideAction(CommunityNews $communityNews)
     {
         if (!$this->isGranted(Member::ROLE_ADMIN_COMMUNITYNEWS)) {
@@ -148,9 +150,9 @@ class CommunityNewsController extends AbstractController
         $communityNews->setPublic(true);
         $communityNews->setUpdatedAt(new DateTime());
         $communityNews->setUpdatedby($this->getUser());
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($communityNews);
-        $em->flush();
+
+        $this->entityManager->persist($communityNews);
+        $this->entityManager->flush();
 
         $this->addFlash('notice', 'Community News ' . $communityNews->getTitle() . ' is now visible for all members');
 

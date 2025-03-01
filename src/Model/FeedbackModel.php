@@ -2,6 +2,7 @@
 
 namespace App\Model;
 
+use App\Entity\Feedback;
 use App\Entity\FeedbackCategory;
 use App\Utilities\ManagerTrait;
 use Pagerfanta\Doctrine\ORM\QueryAdapter;
@@ -24,7 +25,7 @@ class FeedbackModel
         $qb = $this->getManager()->createQueryBuilder();
         $qb
             ->select('f')
-            ->from('App:Feedback', 'f');
+            ->from(Feedback::class, 'f');
         if (!empty($categories)) {
             $qb->where('f.category in (:categories)')
                 ->setParameter('categories', $categories);

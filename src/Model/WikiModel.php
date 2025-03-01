@@ -6,24 +6,31 @@ use App\Entity\Wiki;
 use App\Repository\WikiRepository;
 use App\Utilities\ManagerTrait;
 use App\Utilities\RoxWikiParserBackend;
+use Doctrine\ORM\EntityManagerInterface;
+use Mike42\Wikitext\DefaultParserBackend;
+use Mike42\Wikitext\HtmlRenderer;
 use Mike42\Wikitext\WikitextParser;
+use Symfony\Contracts\Service\Attribute\Required;
 
 class WikiModel
 {
     use ManagerTrait;
 
-    /** @var RoxWikiParserBackend */
-    private $roxWikiParserBackend;
+    private EntityManagerInterface $entityManager;
+    private HtmlRenderer $roxWikiParserBackend;
 
-    /**
-     * @required
-     */
-    public function setWikiParserBackend(RoxWikiParserBackend $wikiParserBackend)
+    public function __construct(EntityManagerInterface $entityManager)
     {
-        $this->roxWikiParserBackend = $wikiParserBackend;
+        $this->entityManager = $entityManager;
     }
 
-    public function getPage($pageTitle, $version = 0)
+    #[Required]
+    public function setWikiParserBackend(RoxWikiParserBackend $roxWikiParserBackend): void
+    {
+        $this->roxWikiParserBackend = $roxWikiParserBackend;
+    }
+
+    public function getPage($pageTitle, $version = 0): ?Wiki
     {
         $pageName = $this->getPagename($pageTitle);
 
@@ -35,13 +42,13 @@ class WikiModel
         return $wikiPage;
     }
 
-    public function getPagename($pageTitle)
+    public function getPagename($pageTitle): string
     {
-        if ('Group ' === substr($pageTitle, 0, 6)) {
+        if (str_starts_with($pageTitle, 'Group ')) {
             $pageTitle = str_replace('Group ', 'Group_', trim($pageTitle));
         }
 
-        if ('Group_' === substr($pageTitle, 0, 6)) {
+        if (str_starts_with($pageTitle, 'Group_')) {
             return str_replace(' ', '', trim($pageTitle));
         }
 
@@ -53,19 +60,16 @@ class WikiModel
      *
      * @return string
      *
-     * @SuppressWarnings(PHPMD.StaticAccess)
+     * @SuppressWarnings("PHPMD.StaticAccess")
      */
-    public function parseWikiMarkup($content)
+    public function parseWikiMarkup($content): ?string
     {
-        try {
-            // Initialise the Parser
-            WikitextParser::init();
-            WikitextParser::$backend = $this->roxWikiParserBackend;
-            $parser = new WikitextParser($content);
-            $result = $parser->result;
-        } catch (\Exception $e) {
-            $result = null;
-        }
+//         try {
+            $parser = new WikitextParser($this->roxWikiParserBackend);
+            $result = $parser->parse($content);
+//        } catch (\Exception $e) {
+//            $result = 'Wiki content could not be parsed: ' . $e->getMessage();
+//        }
 
         return $result;
     }

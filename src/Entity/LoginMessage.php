@@ -13,35 +13,27 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * LoginMessages.
  *
- * @ORM\Table(name="login_messages")
- * @ORM\HasLifecycleCallbacks
- * @ORM\Entity(repositoryClass="App\Repository\LoginMessageRepository")
  *
- * @SuppressWarnings(PHPMD)
+ * @SuppressWarnings("PHPMD")
  * Auto generated class do not check mess
  */
+#[ORM\Table(name: 'login_messages')]
+#[ORM\HasLifecycleCallbacks]
+#[ORM\Entity(repositoryClass: \App\Repository\LoginMessageRepository::class)]
 class LoginMessage
 {
-    /**
-     * @ORM\Column(name="text", type="string", length=255, nullable=false)
-     */
+    #[ORM\Column(name: 'text', type: 'string', length: 255, nullable: false)]
     private string $message;
 
-    /**
-     * @ORM\Column(name="created", type="datetime", nullable=false)
-     */
+    #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
     private DateTime $created;
 
-    /**
-     * @ORM\Column(name="expires", type="datetime", nullable=false)
-     */
+    #[ORM\Column(name: 'expires', type: 'datetime', nullable: false)]
     private ?DateTime $expires;
 
-    /**
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     private int $id;
 
     public function setMessage(string $message): self
@@ -87,9 +79,8 @@ class LoginMessage
 
     /**
      * Triggered on insert.
-     *
-     * @ORM\PrePersist
      */
+    #[ORM\PrePersist]
     public function onPrePersist()
     {
         $this->created = new DateTime('now');

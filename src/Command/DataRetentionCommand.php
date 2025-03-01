@@ -12,6 +12,7 @@ use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Hidehalo\Nanoid\Client;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -19,9 +20,14 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 
+#[AsCommand(
+    name: 'data:retention',
+    description: 'Cleans the database of retired users (should be run at least once each day)',
+    aliases: [],
+    hidden: false,
+)]
 class DataRetentionCommand extends Command
 {
-    protected static $defaultName = 'data:retention';
     private Logger $logger;
     private EntityManagerInterface $entityManager;
     private string $dataDirectory;
@@ -39,15 +45,8 @@ class DataRetentionCommand extends Command
         $this->dataDirectory = $dataDirectory;
     }
 
-    protected function configure()
-    {
-        $this
-            ->setDescription('Cleans the database of retired users (should be run at least once each day)')
-        ;
-    }
-
     /**
-     * @SuppressWarnings(PHPMD.StaticAccess)
+     * @SuppressWarnings("PHPMD.StaticAccess")
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
@@ -70,7 +69,7 @@ class DataRetentionCommand extends Command
         return Command::SUCCESS;
     }
 
-    private function removeMembers(SymfonyStyle $io)
+    private function removeMembers(SymfonyStyle $io): int
     {
         $entityManager = $this->entityManager;
 
@@ -212,7 +211,7 @@ class DataRetentionCommand extends Command
         return $member;
     }
 
-    private function removeUserInfo(Member $member)
+    private function removeUserInfo(Member $member): void
     {
         $connection = $this->entityManager->getConnection();
         $statement = $connection->prepare('
@@ -232,7 +231,7 @@ class DataRetentionCommand extends Command
         $statement->executeQuery();
     }
 
-    private function removeProfilePictures(Member $member)
+    private function removeProfilePictures(Member $member): void
     {
         $memberPath = $this->dataDirectory . '/user/avatars/';
 

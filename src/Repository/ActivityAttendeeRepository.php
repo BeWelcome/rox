@@ -12,14 +12,14 @@ class ActivityAttendeeRepository extends EntityRepository
      *
      * @return array
      *
-     * @SuppressWarnings(PHPMD.StaticAccess)
+     * @SuppressWarnings("PHPMD.StaticAccess")
      */
     public function findActivitiesOfMember(Member $member)
     {
         $qb = $this->createQueryBuilder('aa');
         $qb
             ->where('aa.attendee = :member')
-            ->setParameter(':member', $member);
+            ->setParameter('member', $member);
 
         return $qb
             ->getQuery()

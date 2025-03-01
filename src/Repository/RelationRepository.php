@@ -24,8 +24,8 @@ class RelationRepository extends EntityRepository
                 ->andWhere(
                     $qb->expr()->eq('r.owner', ':member'),
                 )
-                ->setParameter(':member', $member)
-                ->setParameter(':confirmed', 'Yes')
+                ->setParameter('member', $member)
+                ->setParameter('confirmed', 'Yes')
                 ->orderBy('r.updated', 'ASC')
                 ->getQuery()
                 ->getSingleScalarResult()
@@ -45,8 +45,8 @@ class RelationRepository extends EntityRepository
                         $qb->expr()->eq('r.receiver', ':member'),
                     )
             )
-            ->setParameter(':member', $member)
-            ->setParameter(':confirmed', 'Yes')
+            ->setParameter('member', $member)
+            ->setParameter('confirmed', 'Yes')
             ->orderBy('r.updated', 'DESC')
             ->getQuery()
             ->getResult()
@@ -60,8 +60,8 @@ class RelationRepository extends EntityRepository
                 ->createQueryBuilder('r')
                 ->where('r.owner = :member')
                 ->andWhere('r.receiver = :receiver')
-                ->setParameter(':member', $owner)
-                ->setParameter(':receiver', $receiver)
+                ->setParameter('member', $owner)
+                ->setParameter('receiver', $receiver)
                 ->getQuery()
                 ->getOneOrNullResult()
             ;
@@ -75,9 +75,9 @@ class RelationRepository extends EntityRepository
                 ->where('r.owner = :member')
                 ->andWhere('r.receiver = :receiver')
                 ->andWhere('r.confirmed = :confirmed')
-                ->setParameter(':member', $owner)
-                ->setParameter(':receiver', $receiver)
-                ->setParameter(':confirmed', 'No')
+                ->setParameter('member', $owner)
+                ->setParameter('receiver', $receiver)
+                ->setParameter('confirmed', 'No')
                 ->getQuery()
                 ->getOneOrNullResult()
             ;
@@ -90,7 +90,7 @@ class RelationRepository extends EntityRepository
             ->where('r.confirmed = :confirmed')
             ->andWhere('r.owner = :member')
             ->setParameter('member', $member)
-            ->setParameter(':confirmed', 'Yes')
+            ->setParameter('confirmed', 'Yes')
             ->orderBy('m.username', 'ASC')
         ;
 

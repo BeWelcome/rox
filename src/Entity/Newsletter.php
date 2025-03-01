@@ -6,17 +6,13 @@ use App\Entity\Member as Member;
 use Carbon\Carbon;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Persistence\Mapping\ClassMetadata;
-use Doctrine\Persistence\ObjectManager;
-use Doctrine\Persistence\ObjectManagerAware;
 
 /**
  * Broadcast.
- *
- * @ORM\Table(name="broadcast")
- * @ORM\Entity(repositoryClass="App\Repository\NewsletterRepository")
  */
-class Newsletter implements ObjectManagerAware
+#[ORM\Table(name: 'broadcast')]
+#[ORM\Entity(repositoryClass: \App\Repository\NewsletterRepository::class)]
+class Newsletter
 {
     public const REGULAR_NEWSLETTER = 'Normal';
     public const SPECIFIC_NEWSLETTER = 'Specific';
@@ -24,60 +20,48 @@ class Newsletter implements ObjectManagerAware
     public const SUSPENSION_NOTIFICATION = 'SuspendAfter5Reminders';
     /**
      * @var Member
-     *
-     * @ORM\ManyToOne(targetEntity="Member")
-     * @ORM\JoinColumn(name="IdCreator", referencedColumnName="id")
      */
+    #[ORM\JoinColumn(name: 'IdCreator', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: \Member::class)]
     private $createdBy;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="Name", type="text", length=65535, nullable=false)
      */
+    #[ORM\Column(name: 'Name', type: 'text', length: 65535, nullable: false)]
     private $name;
 
     /**
      * @var DateTime
-     *
-     * @ORM\Column(name="created", type="datetime", nullable=false)
      */
+    #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
     private $created;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="Status", type="string", nullable=false)
      */
+    #[ORM\Column(name: 'Status', type: 'string', nullable: false)]
     private $status = 'Created';
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="Type", type="string", nullable=true)
      */
+    #[ORM\Column(name: 'Type', type: 'string', nullable: true)]
     private $type;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="EmailFrom", type="text", length=65535, nullable=true)
      */
+    #[ORM\Column(name: 'EmailFrom', type: 'text', length: 65535, nullable: true)]
     private $emailFrom;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     private $id;
-
-    /**
-     * @var ObjectManager
-     */
-    private $objectManager;
 
     /**
      * Set createdBy.
@@ -231,45 +215,5 @@ class Newsletter implements ObjectManagerAware
     public function getId()
     {
         return $this->id;
-    }
-
-    /*
-     * Translated post content is only provided on explicit call to avoid long load times
-     */
-    public function getTranslations()
-    {
-        $translationRepository = $this->objectManager->getRepository(Word::class);
-        $translatedNews = $translationRepository->findBy([
-            'code' => [
-                'Broadcast_body_' . $this->name,
-                'Broadcast_title_' . $this->name,
-            ],
-        ]);
-
-        $newsletters = [];
-        /** @var Word $item */
-        foreach ($translatedNews as $item) {
-            if (!isset($newsletters[$item->getLanguage()->getShortCode()])) {
-                $newsletter = [];
-            } else {
-                $newsletter = $newsletters[$item->getLanguage()->getShortCode()];
-            }
-            // Determine if this is the title or the body of the newsletter (code is broadcast_title|body_$name)
-            $part = str_ireplace('Broadcast_', '', str_ireplace('_' . $this->getName(), '', $item->getCode()));
-            $newsletter[$part] = $item->getSentence();
-            $newsletter['author'] = $item->getAuthor();
-            $newsletter['locale'] = $item->getShortCode();
-            $newsletters[$item->getLanguage()->getShortCode()] = $newsletter;
-        }
-
-        return $newsletters;
-    }
-
-    /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    public function injectObjectManager(ObjectManager $objectManager, ClassMetadata $classMetadata)
-    {
-        $this->objectManager = $objectManager;
     }
 }

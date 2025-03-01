@@ -4,14 +4,12 @@ namespace App\Doctrine;
 
 class PostCanStillEditType extends EnumType
 {
-    public const CAN_STILL_EDIT = 'Yes';
-    public const EDIT_DISABLED = 'No';
+    public const string CAN_STILL_EDIT = 'Yes';
+    public const string EDIT_DISABLED = 'No';
 
-    /** @var string */
-    protected $name = 'can_still_edit';
+    protected string $name = 'can_still_edit';
 
-    /** @var array */
-    protected $values = [
+    protected array $values = [
         self::CAN_STILL_EDIT,
         self::EDIT_DISABLED,
     ];

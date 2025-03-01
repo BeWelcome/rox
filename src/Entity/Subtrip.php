@@ -7,6 +7,7 @@
 
 namespace App\Entity;
 
+use App\Repository\SubtripRepository;
 use Carbon\Carbon;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -17,74 +18,42 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * SubTrip.
  *
- * @ORM\Table(name="sub_trips")
- * @ORM\Entity(repositoryClass="App\Repository\SubtripRepository")
  *
- * @SuppressWarnings(PHPMD)
+ * @SuppressWarnings("PHPMD")
  * Auto generated class do not check mess
  */
+#[ORM\Table(name: 'sub_trips')]
+#[ORM\Entity(repositoryClass: SubtripRepository::class)]
 class Subtrip
 {
-    /**
-     * @var NewLocation
-     *
-     * @ORM\ManyToOne(targetEntity="NewLocation")
-     * @ORM\JoinColumn(name="location", referencedColumnName="geonameId", nullable=true)
-     */
-    private $location;
+    #[ORM\JoinColumn(name: 'location', referencedColumnName: 'geonameId', nullable: false)]
+    #[ORM\ManyToOne(targetEntity: NewLocation::class)]
+    private NewLocation $location;
 
-    /**
-     * @var DateTime
-     *
-     * @ORM\Column(name="arrival", type="date", nullable=true)
-     */
-    private $arrival;
+    #[ORM\Column(name: 'arrival', type: 'date', nullable: false)]
+    private DateTime $arrival;
 
-    /**
-     * @var DateTime
-     *
-     * @ORM\Column(name="departure", type="date", nullable=true)
-     */
-    private $departure;
+    #[ORM\Column(name: 'departure', type: 'date', nullable: false)]
+    private DateTime $departure;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="options", type="subtrip_options", nullable=true)
-     */
-    private $options;
+    #[ORM\Column(name: 'options', type: 'subtrip_options', nullable: true)]
+    private ?string $options;
 
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
-    private $id;
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
+    private int $id;
 
-    /**
-     * @var Member
-     *
-     * @ORM\OneToOne(targetEntity="\App\Entity\Member")
-     * @ORM\JoinColumn(name="invited_by", referencedColumnName="id", nullable=true)
-     */
-    private $invitedBy;
+    #[ORM\JoinColumn(name: 'invited_by', referencedColumnName: 'id', nullable: true)]
+    #[ORM\OneToOne(targetEntity: Member::class)]
+    private ?Member $invitedBy;
 
-    /**
-     * @var Trip
-     *
-     * @ORM\ManyToOne(targetEntity="Trip", inversedBy="subtrips", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(name="trip_id", referencedColumnName="id")
-     */
-    private $trip;
+    #[ORM\JoinColumn(name: 'trip_id', referencedColumnName: 'id', nullable: false)]
+    #[ORM\ManyToOne(targetEntity: Trip::class, cascade: ['persist', 'remove'], inversedBy: 'subtrips')]
+    private Trip $trip;
 
-    /**
-     * @var Collection
-     *
-     * @ORM\OneToMany(targetEntity="HostingRequest", mappedBy="inviteForLeg")
-     */
-    private $invitations;
+    #[ORM\OneToMany(targetEntity: HostingRequest::class, mappedBy: 'inviteForLeg')]
+    private Collection $invitations;
 
     public function __construct()
     {
@@ -103,35 +72,27 @@ class Subtrip
         return $this->location;
     }
 
-    public function setArrival(?DateTime $arrival): self
+    public function setArrival(DateTime $arrival): self
     {
         $this->arrival = $arrival;
 
         return $this;
     }
 
-    public function getArrival(): ?Carbon
+    public function getArrival(): Carbon
     {
-        if (null === $this->arrival) {
-            return null;
-        }
-
         return Carbon::instance($this->arrival);
     }
 
-    public function setDeparture(?DateTime $departure): self
+    public function setDeparture(DateTime $departure): self
     {
         $this->departure = $departure;
 
         return $this;
     }
 
-    public function getDeparture(): ?Carbon
+    public function getDeparture(): Carbon
     {
-        if (null === $this->departure) {
-            return null;
-        }
-
         return Carbon::instance($this->departure);
     }
 
@@ -156,7 +117,7 @@ class Subtrip
         return $this->id;
     }
 
-    public function setTrip(?Trip $trip): self
+    public function setTrip(Trip $trip): self
     {
         $this->trip = $trip;
 

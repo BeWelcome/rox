@@ -28,6 +28,7 @@ use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Mockery;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -36,17 +37,19 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 /**
  * Class TranslationController.
  *
- * @SuppressWarnings(PHPMD)
+ * @SuppressWarnings("PHPMD")
  */
 class MockupController extends TranslationController
 {
     private $mockups = [];
     /** @var iterable|MockupProviderInterface[] */
     private $providers;
+    private FormFactoryInterface $formFactory;
 
     public function __construct(
         TranslationModel $translationModel,
         EntityManagerInterface $entityManager,
+        FormFactoryInterface $formFactory,
         array $locales,
         iterable $providers
     ) {
@@ -57,11 +60,10 @@ class MockupController extends TranslationController
             $this->providers[$feature] = $provider;
             $this->mockups = array_merge([$feature => $provider->getMockups()], $this->mockups);
         }
+        $this->formFactory = $formFactory;
     }
 
-    /**
-     * @Route("/admin/translations/mockups", name="translations_mockups")
-     */
+    #[Route(path: '/admin/translations/mockups', name: 'translations_mockups')]
     public function selectMockup(Request $request): Response
     {
         $this->denyAccessUnlessGranted(Member::ROLE_ADMIN_WORDS, null, 'Unable to access this page!');
@@ -81,9 +83,7 @@ class MockupController extends TranslationController
         ]);
     }
 
-    /**
-     * @Route("/admin/translations/mockups/{feature}", name="translations_mockups_feature")
-     */
+    #[Route(path: '/admin/translations/mockups/{feature}', name: 'translations_mockups_feature')]
     public function selectMockupsFeature(Request $request, string $feature): Response
     {
         $this->denyAccessUnlessGranted(Member::ROLE_ADMIN_WORDS, null, 'Unable to access this page!');
@@ -109,11 +109,9 @@ class MockupController extends TranslationController
     }
 
     /**
-     * @Route("/admin/translate/mockup/{feature}/{name}", name="translation_mockup",
-     *     requirements={"template"=".+"})
-     *
      * @return Response
      */
+    #[Route(path: '/admin/translate/mockup/{feature}/{name}', name: 'translation_mockup', requirements: ['template' => '.+'])]
     public function translateMockup(Request $request, string $feature, string $name)
     {
         $this->denyAccessUnlessGranted(Member::ROLE_ADMIN_WORDS, null, 'Unable to access this page!');
@@ -122,13 +120,9 @@ class MockupController extends TranslationController
     }
 
     /**
-     * @Route("/admin/translate/mockup/{feature}/with_params", name="translation_mockup_with_parameters",
-     *     methods={"POST"},
-     *     priority=1
-     * )
-     *
      * @return Response
      */
+    #[Route(path: '/admin/translate/mockup/{feature}/with_params', name: 'translation_mockup_with_parameters', methods: ['POST'], priority: 1)]
     public function translateMockupWithParameters(Request $request, string $feature)
     {
         $this->denyAccessUnlessGranted(Member::ROLE_ADMIN_WORDS, null, 'Unable to access this page!');
@@ -195,11 +189,11 @@ class MockupController extends TranslationController
     private function getMockParams($template, $name = null): array
     {
         // Use the bwAdmin account as counter part for all of this
-        $memberRepository = $this->getDoctrine()->getRepository(Member::class);
+        $memberRepository = $this->entityManager->getRepository(Member::class);
         $bwAdmin = $memberRepository->find(1);
 
         // Use a public group like Berlin
-        $groupRepository = $this->getDoctrine()->getRepository(Group::class);
+        $groupRepository = $this->entityManager->getRepository(Group::class);
         $group = $groupRepository->find(70);
 
         $mockMessage = Mockery::mock(Message::class, [
@@ -231,15 +225,18 @@ class MockupController extends TranslationController
         ];
         switch ($template) {
             case 'home/home.html.twig':
-                $formFactory = $this->get('form.factory');
-                $searchFormRequest = new SearchFormRequest($this->getDoctrine()->getManager());
+                $searchFormRequest = new SearchFormRequest();
                 $searchFormRequest->show_map = true;
                 $searchFormRequest->accommodation_neverask = true;
-                $searchFormRequest->inactive = true;
                 $searchFormRequest->distance = 100;
-                $searchForm = $formFactory->createNamed('map', SearchFormType::class, $searchFormRequest, [
-                    'action' => '/search/map',
-                ]);
+                $searchForm = $this->formFactory->createNamed(
+                    'map',
+                    SearchFormType::class,
+                    $searchFormRequest,
+                    [
+                        'action' => '/search/map',
+                    ]
+                );
 
                 $usernameForm = $this->createFormBuilder()
                     ->add('username', TextType::class, [
@@ -408,7 +405,7 @@ class MockupController extends TranslationController
                 $type = Newsletter::TERMS_OF_USE;
         }
 
-        $newsletterRepository = $this->getDoctrine()->getRepository(Newsletter::class);
+        $newsletterRepository = $this->entityManager->getRepository(Newsletter::class);
         $newsletters = $newsletterRepository->findBy(['type' => $type], ['created' => 'DESC']);
 
         if (0 === \count($newsletters)) {
@@ -503,7 +500,7 @@ class MockupController extends TranslationController
     private function getGeneralMockupParameters(): array
     {
         // Use the bwAdmin account as counterpart
-        $memberRepository = $this->getDoctrine()->getRepository(Member::class);
+        $memberRepository = $this->entityManager->getRepository(Member::class);
         $bwAdmin = $memberRepository->find(1);
 
         return [

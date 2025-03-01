@@ -13,22 +13,21 @@ use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\Common\Collections\Expr\Comparison;
+use Doctrine\ORM\Event\PostLoadEventArgs;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Persistence\Mapping\ClassMetadata;
 use Doctrine\Persistence\ObjectManager;
-use Doctrine\Persistence\ObjectManagerAware;
 
 /**
  * Group.
  *
- * @ORM\Table(name="groups")
- * @ORM\Entity(repositoryClass="App\Repository\GroupRepository")
- * @ORM\HasLifecycleCallbacks
  *
- * @SuppressWarnings(PHPMD)
+ * @SuppressWarnings("PHPMD")
  * Auto generated class do not check mess
  */
-class Group implements ObjectManagerAware
+#[ORM\Table(name: 'groups')]
+#[ORM\Entity(repositoryClass: \App\Repository\GroupRepository::class)]
+#[ORM\HasLifecycleCallbacks]
+class Group
 {
     public const NOT_APPROVED = 0;
     public const APPROVED = 1;
@@ -52,89 +51,74 @@ class Group implements ObjectManagerAware
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="Name", type="string", length=40, nullable=false)
      */
+    #[ORM\Column(name: 'Name', type: 'string', length: 40, nullable: false)]
     private $name;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="Type", type="group_type", nullable=false)
      */
+    #[ORM\Column(name: 'Type', type: 'group_type', nullable: false)]
     private $type = GroupType::PUBLIC;
 
     /**
      * @var DateTime
-     *
-     * @ORM\Column(name="created", type="datetime", nullable=false)
      */
+    #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
     private $created;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="Picture", type="text", length=65535, nullable=false)
      */
+    #[ORM\Column(name: 'Picture', type: 'text', length: 65535, nullable: false)]
     private $picture;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="MoreInfo", type="text", length=65535, nullable=false)
      */
+    #[ORM\Column(name: 'MoreInfo', type: 'text', length: 65535, nullable: false)]
     private $moreInfo = '';
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="IdDescription", type="integer", nullable=false)
      */
+    #[ORM\Column(name: 'IdDescription', type: 'integer', nullable: false)]
     private $idDescription = 0;
 
     /** @var ArrayCollection
-     *
-     * @ORM\ManyToMany(targetEntity="MemberTranslation", fetch="LAZY")
-     * @ORM\JoinTable(name="groups_trads",
-     *      joinColumns={@ORM\JoinColumn(name="group_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="trad_id", referencedColumnName="id", unique=true)}
-     *      )
      */
+    #[ORM\JoinTable(name: 'groups_trads')]
+    #[ORM\JoinColumn(name: 'group_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'trad_id', referencedColumnName: 'id', unique: true)]
+    #[ORM\ManyToMany(targetEntity: \MemberTranslation::class, fetch: 'LAZY')]
     private $descriptions;
 
     /** @var ArrayCollection
-     *
-     * @ORM\OneToMany(targetEntity="GroupMembership", mappedBy="group", cascade={"persist", "remove"}, orphanRemoval=TRUE)
      */
+    #[ORM\OneToMany(targetEntity: \GroupMembership::class, mappedBy: 'group', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private $groupMemberships;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="VisiblePosts", type="string", nullable=false)
      */
+    #[ORM\Column(name: 'VisiblePosts', type: 'string', nullable: false)]
     private $visibleposts = 'yes';
 
     /**
      * @var bool
-     *
-     * @ORM\Column(name="approved", type="smallint", nullable = true)
      */
+    #[ORM\Column(name: 'approved', type: 'smallint', nullable: true)]
     private $approved = self::NOT_APPROVED;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     private $id;
 
-    /**
-     * @var ObjectManager
-     */
-    private $objectManager;
+    private ObjectManager $objectManager;
 
     public function __construct()
     {
@@ -447,23 +431,18 @@ class Group implements ObjectManagerAware
     }
 
     /**
-     * Injects responsible ObjectManager and the ClassMetadata into this persistent object.
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    public function injectObjectManager(ObjectManager $objectManager, ClassMetadata $classMetadata)
-    {
-        $this->objectManager = $objectManager;
-    }
-
-    /**
      * Triggered on insert.
-     *
-     * @ORM\PrePersist
      */
-    public function onPrePersist()
+    #[ORM\PrePersist]
+    public function onPrePersist(): void
     {
         $this->created = new DateTime('now');
+    }
+
+    #[ORM\PostLoad]
+    public function onPostLoad(PostLoadEventArgs $eventArgs): void
+    {
+        $this->objectManager = $eventArgs->getObjectManager();
     }
 
     public function getMoreInfo(): ?string

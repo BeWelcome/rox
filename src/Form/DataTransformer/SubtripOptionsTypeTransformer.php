@@ -14,7 +14,7 @@ class SubtripOptionsTypeTransformer implements DataTransformerInterface
      *
      * @return array
      */
-    public function transform($value)
+    public function transform(mixed $value): mixed
     {
         if (null === $value) {
             return null;
@@ -26,7 +26,7 @@ class SubtripOptionsTypeTransformer implements DataTransformerInterface
     /**
      * {@inheritDoc}
      */
-    public function reverseTransform($value)
+    public function reverseTransform(mixed $value): mixed
     {
         if (null === $value) {
             return '';

@@ -16,7 +16,7 @@ class AccountMailNotConfirmedException extends CustomUserMessageAccountStatusExc
     /**
      * {@inheritdoc}
      */
-    public function getMessageKey()
+    public function getMessageKey(): string
     {
         return 'login.mail.not_confirmed';
     }

@@ -28,7 +28,7 @@ class SubtripRepository extends EntityRepository
         $queryBuilder
             ->select('count(s.id)')
             ->andWhere('t.countOfTravellers <= :maxguest')
-            ->setParameter(':maxguest', $member->getMaxGuest())
+            ->setParameter('maxguest', $member->getMaxGuest())
         ;
 
         return
@@ -43,7 +43,7 @@ class SubtripRepository extends EntityRepository
         $queryBuilder = $this->getLegsInAreaQueryBuilder($member, $distance, $duration);
         $queryBuilder
             ->andWhere('t.countOfTravellers <= :maxguest')
-            ->setParameter(':maxguest', $member->getMaxGuest())
+            ->setParameter('maxguest', $member->getMaxGuest())
             ->setMaxResults(5)
         ;
 
@@ -92,13 +92,13 @@ class SubtripRepository extends EntityRepository
                     $qb->expr()->eq('s.location', ':city')
                 )
             )
-            ->setParameter(':distance', $distance)
-            ->setParameter(':member', $member)
-            ->setParameter(':city', $member->getCity())
-            ->setParameter(':latitude', $member->getLatitude())
-            ->setParameter(':longitude', $member->getLongitude())
-            ->setParameter(':now', $now)
-            ->setParameter(':durationMonthsAhead', $durationMonthsAhead)
+            ->setParameter('distance', $distance)
+            ->setParameter('member', $member)
+            ->setParameter('city', $member->getCity())
+            ->setParameter('latitude', $member->getLatitude())
+            ->setParameter('longitude', $member->getLongitude())
+            ->setParameter('now', $now)
+            ->setParameter('durationMonthsAhead', $durationMonthsAhead)
             ->orderBy('s.arrival', 'ASC')
             ->addSelect('t')
         ;

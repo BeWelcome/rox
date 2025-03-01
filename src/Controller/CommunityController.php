@@ -9,10 +9,9 @@ use Symfony\Component\Routing\Annotation\Route;
 class CommunityController extends AbstractController
 {
     /**
-     * @Route("/community", name="community")
-     *
      * @return Response
      */
+    #[Route(path: '/community', name: 'community')]
     public function showCommunity()
     {
         return $this->render('community/community.html.twig');

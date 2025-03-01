@@ -14,69 +14,60 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Feedback.
  *
- * @ORM\Table(name="feedbacks")
- * @ORM\Entity
- * @ORM\HasLifecycleCallbacks
  *
- * @SuppressWarnings(PHPMD)
+ * @SuppressWarnings("PHPMD")
  * Auto generated class do not check mess
  */
+#[ORM\Table(name: 'feedbacks')]
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class Feedback
 {
     /**
      * @var DateTime
-     *
-     * @ORM\Column(name="updated", type="datetime", nullable=false)
      */
+    #[ORM\Column(name: 'updated', type: 'datetime', nullable: false)]
     private $updated;
 
     /**
      * @var DateTime
-     *
-     * @ORM\Column(name="created", type="datetime", nullable=false)
      */
+    #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
     private $created;
 
     /**
      * @var Member
-     *
-     * @ORM\ManyToOne(targetEntity="Member")
-     * @ORM\JoinColumn(name="IdMember", referencedColumnName="id", nullable=true)
      */
+    #[ORM\JoinColumn(name: 'IdMember', referencedColumnName: 'id', nullable: true)]
+    #[ORM\ManyToOne(targetEntity: \Member::class)]
     private $author;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="Discussion", type="text", length=65535, nullable=false)
      */
+    #[ORM\Column(name: 'Discussion', type: 'text', length: 65535, nullable: false)]
     private $discussion;
 
     /**
      * @var Language
-     *
-     * @ORM\ManyToOne(targetEntity="Language")
-     * @ORM\JoinColumn(name="IdLanguage", referencedColumnName="id")
      */
+    #[ORM\JoinColumn(name: 'IdLanguage', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: \Language::class)]
     private $language;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     private $id;
 
     /**
      * @var FeedbackCategory
-     *
-     * @ORM\ManyToOne(targetEntity="FeedbackCategory")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="IdFeedbackCategory", referencedColumnName="id")
-     * })
      */
+    #[ORM\JoinColumn(name: 'IdFeedbackCategory', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: \FeedbackCategory::class)]
     private $category;
 
     /**
@@ -233,9 +224,8 @@ class Feedback
 
     /**
      * Triggered on insert.
-     *
-     * @ORM\PrePersist
      */
+    #[ORM\PrePersist]
     public function onPrePersist()
     {
         $this->created = new DateTime('now');
@@ -243,9 +233,8 @@ class Feedback
 
     /**
      * Triggered on update.
-     *
-     * @ORM\PreUpdate
      */
+    #[ORM\PreUpdate]
     public function onPreUpdate()
     {
         $this->updated = new DateTime('now');

@@ -12,131 +12,116 @@ use App\Doctrine\ForumVisibilityType;
 use App\Doctrine\PostCanStillEditType;
 use Carbon\Carbon;
 use DateTime;
+use Doctrine\ORM\Event\PostLoadEventArgs;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Persistence\Mapping\ClassMetadata;
 use Doctrine\Persistence\ObjectManager;
-use Doctrine\Persistence\ObjectManagerAware;
 use Exception;
 
 /**
  * ForumsPost.
  *
- * @ORM\Table(name="forums_posts", indexes={
- *     @ORM\Index(name="last_editorid", columns={"last_editorid"}),
- *     @ORM\Index(name="threadid", columns={"threadid"}),
- *     @ORM\Index(name="IdWriter", columns={"IdWriter"}),
- *     @ORM\Index(name="PostVisibility", columns={"PostVisibility"}),
- *     @ORM\Index(name="PostDeleted", columns={"PostDeleted"}),
- *     @ORM\Index(name="create_time", columns={"create_time"})})
- * @ORM\Entity(repositoryClass="App\Repository\ForumPostRepository")
  *
- * @SuppressWarnings(PHPMD)
+ * @SuppressWarnings("PHPMD")
  * Auto generated class do not check mess
  */
-class ForumPost implements ObjectManagerAware
+#[ORM\Table(name: 'forums_posts')]
+#[ORM\Index(name: 'last_editorid', columns: ['last_editorid'])]
+#[ORM\Index(name: 'threadid', columns: ['threadid'])]
+#[ORM\Index(name: 'IdWriter', columns: ['IdWriter'])]
+#[ORM\Index(name: 'PostVisibility', columns: ['PostVisibility'])]
+#[ORM\Index(name: 'PostDeleted', columns: ['PostDeleted'])]
+#[ORM\Index(name: 'create_time', columns: ['create_time'])]
+#[ORM\Entity(repositoryClass: \App\Repository\ForumPostRepository::class)]
+#[Orm\HasLifecycleCallbacks()]
+class ForumPost
 {
+    /** \todo fix this smell */
+    private ObjectManager $objectManager;
+
     /**
      * @var int
-     *
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     * @ORM\Id
-     * @ORM\GeneratedValue
      */
+    #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
     private $id;
 
     /**
      * @var ForumThread
-     *
-     * @ORM\ManyToOne(targetEntity="ForumThread", inversedBy="posts")
-     * @ORM\JoinColumn(name="threadid", referencedColumnName="id", nullable=true)
      */
+    #[ORM\JoinColumn(name: 'threadid', referencedColumnName: 'id', nullable: true)]
+    #[ORM\ManyToOne(targetEntity: ForumThread::class, inversedBy: 'posts')]
     private $thread = null;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="PostVisibility", type="forum_visibility", nullable=false)
      */
+    #[ORM\Column(name: 'PostVisibility', type: 'forum_visibility', nullable: false)]
     private $postvisibility = ForumVisibilityType::MEMBERS_ONLY;
 
     /**
      * @var Member
-     *
-     * @ORM\ManyToOne(targetEntity="Member")
-     * @ORM\JoinColumn(name="IdWriter", referencedColumnName="id")
      */
+    #[ORM\JoinColumn(name: 'IdWriter', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: Member::class)]
     private $author;
 
     /**
      * @var DateTime
-     *
-     * @ORM\Column(name="create_time", type="datetime", nullable=false)
      */
+    #[ORM\Column(name: 'create_time', type: 'datetime', nullable: false)]
     private $created;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="message", type="text", length=65535, nullable=false)
      */
+    #[ORM\Column(name: 'message', type: 'text', length: 65535, nullable: false)]
     private $message;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="IdContent", type="integer", nullable=false)
      */
+    #[ORM\Column(name: 'IdContent', type: 'integer', nullable: false)]
     private $idcontent = '0';
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="OwnerCanStillEdit", type="can_still_edit", nullable=false)
      */
+    #[ORM\Column(name: 'OwnerCanStillEdit', type: 'can_still_edit', nullable: false)]
     private $ownerCanStillEdit = PostCanStillEditType::CAN_STILL_EDIT;
 
     /**
      * @var DateTime
-     *
-     * @ORM\Column(name="last_edittime", type="datetime", nullable=true)
      */
+    #[ORM\Column(name: 'last_edittime', type: 'datetime', nullable: true)]
     private $updated;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="last_editorid", type="integer", nullable=true)
      */
+    #[ORM\Column(name: 'last_editorid', type: 'integer', nullable: true)]
     private $lastEditorid;
 
     /**
      * @var bool
-     *
-     * @ORM\Column(name="edit_count", type="boolean", nullable=false)
      */
+    #[ORM\Column(name: 'edit_count', type: 'boolean', nullable: false)]
     private $editCount = '0';
 
     /**
      * @var Language
      *
      * Default English
-     *
-     * @ORM\ManyToOne(targetEntity="Language")
-     * @ORM\JoinColumn(name="IdFirstLanguageUsed", referencedColumnName="id", nullable=false)
      */
+    #[ORM\JoinColumn(name: 'IdFirstLanguageUsed', referencedColumnName: 'id', nullable: false)]
+    #[ORM\ManyToOne(targetEntity: Language::class)]
     private $language = null;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="PostDeleted", type="forum_delete_status", nullable=false)
      */
+    #[ORM\Column(name: 'PostDeleted', type: 'forum_delete_status', nullable: false)]
     private $deleted = ForumDeleteStatusType::NOT_DELETED;
-
-    /**
-     * @var ObjectManager
-     */
-    private $objectManager;
 
     /**
      * Set id.
@@ -525,11 +510,9 @@ class ForumPost implements ObjectManagerAware
     /**
      * Set thread.
      *
-     * @param ForumThread $thread
-     *
      * @return ForumPost
      */
-    public function setThread(ForumThread $thread = null)
+    public function setThread(ForumThread $thread = null): self
     {
         $this->thread = $thread;
 
@@ -635,7 +618,7 @@ class ForumPost implements ObjectManagerAware
     /*
      * Translated post content is only provided on explicit call to avoid long load times
      */
-    public function getMessageTranslations()
+    public function getMessageTranslations(): array
     {
         $translationRepository = $this->objectManager->getRepository(Translation::class);
         $translatedMessages = $translationRepository->findBy(['idTrad' => $this->idcontent]);
@@ -652,8 +635,9 @@ class ForumPost implements ObjectManagerAware
         return $messages;
     }
 
-    public function injectObjectManager(ObjectManager $objectManager, ClassMetadata $classMetadata)
+    #[ORM\PostLoad]
+    public function onPostLoad(PostLoadEventArgs $eventArgs): void
     {
-        $this->objectManager = $objectManager;
+        $this->objectManager = $eventArgs->getObjectManager();
     }
 }

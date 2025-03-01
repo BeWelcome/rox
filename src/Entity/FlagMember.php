@@ -7,59 +7,51 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Flagsmembers.
- *
- * @ORM\Table(name="flagsmembers", indexes={
- *     @ORM\Index(name="flagsmembers_members", columns={"IdMember", "IdFlag"})
- * })
- * @ORM\Entity
- * @ORM\HasLifecycleCallbacks
  */
+#[ORM\Table(name: 'flagsmembers')]
+#[ORM\Index(name: 'flagsmembers_members', columns: ['IdMember', 'IdFlag'])]
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class FlagMember
 {
     use LifecycleCallbacksTrait;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="IdMember", type="integer", nullable=false)
      */
+    #[ORM\Column(name: 'IdMember', type: 'integer', nullable: false)]
     private $idmember;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="IdFlag", type="integer", nullable=false)
      */
+    #[ORM\Column(name: 'IdFlag', type: 'integer', nullable: false)]
     private $idflag;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="Level", type="integer", nullable=false)
      */
+    #[ORM\Column(name: 'Level', type: 'integer', nullable: false)]
     private $level = '0';
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="Scope", type="text", length=255, nullable=false)
      */
+    #[ORM\Column(name: 'Scope', type: 'text', length: 255, nullable: false)]
     private $scope;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="Comment", type="text", length=65535, nullable=false)
      */
+    #[ORM\Column(name: 'Comment', type: 'text', length: 65535, nullable: false)]
     private $comment;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     private $id;
 
     /**

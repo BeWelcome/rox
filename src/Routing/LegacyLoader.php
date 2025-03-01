@@ -10,7 +10,7 @@ use Symfony\Component\Routing\RouteCollection;
 /**
  * Class LegacyLoader.
  *
- * @SuppressWarnings(PHPMD)
+ * @SuppressWarnings("PHPMD")
  * Ignore warnings as class is only used as a bridge to the old code
  */
 class LegacyLoader extends Loader
@@ -29,7 +29,7 @@ class LegacyLoader extends Loader
      *
      * @return RouteCollection
      */
-    public function load($resource, string $type = null)
+    public function load(mixed $resource, ?string $type = null): mixed
     {
         if (true === $this->loaded) {
             throw new RuntimeException('Do not add the "legacy" loader twice');
@@ -172,12 +172,12 @@ class LegacyLoader extends Loader
      *
      * @return bool
      */
-    public function supports($resource, string $type = null)
+    public function supports(mixed $resource, ?string $type = null): bool
     {
         return 'legacy' === $type;
     }
 
-    private function addRouteDirectly($name, $path)
+    private function addRouteDirectly($name, $path): void
     {
         $path = preg_replace('^:(.*?):^', '{\1}', $path);
         $this->routes->add($name, new Route($path, [
@@ -185,7 +185,7 @@ class LegacyLoader extends Loader
         ], [], [], '', [], ['get', 'post']));
     }
 
-    private function addRoute($name, $path, $controller = '', $action = '')
+    private function addRoute($name, $path, $controller = '', $action = ''): void
     {
         $path = preg_replace('^:(.*?):^', '{\1}', $path);
         $this->routes->add($name, new Route($path, [

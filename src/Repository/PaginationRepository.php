@@ -78,7 +78,7 @@ class PaginationRepository extends EntityRepository
     {
         return $this->createQueryBuilder('cn')
             ->where('cn.public = :public')
-            ->setParameter(':public', true)
+            ->setParameter('public', true)
             ->orderBy('cn.createdAt', 'desc')
             ->setMaxResults(4)
             ->getQuery()

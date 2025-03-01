@@ -18,57 +18,42 @@ use Doctrine\Persistence\ObjectManager;
 /**
  * Specialrelations.
  *
- * @ORM\Table(name="specialrelations",
- *     uniqueConstraints={@ORM\UniqueConstraint(name="UniqueRelation", columns={"IdOwner", "IdRelation"})},
- *     indexes={@ORM\Index(name="IdOwner", columns={"IdOwner"})}
- * )
- * @ORM\HasLifecycleCallbacks
- * @ORM\Entity(repositoryClass="App\Repository\RelationRepository")
  *
- * @SuppressWarnings(PHPMD)
+ * @SuppressWarnings("PHPMD")
  * Auto generated class do not check mess
  */
+#[ORM\Table(name: 'specialrelations')]
+#[ORM\Index(name: 'IdOwner', columns: ['IdOwner'])]
+#[ORM\UniqueConstraint(name: 'UniqueRelation', columns: ['IdOwner', 'IdRelation'])]
+#[ORM\HasLifecycleCallbacks]
+#[ORM\Entity(repositoryClass: \App\Repository\RelationRepository::class)]
 class Relation
 {
-    /**
-     * @ORM\Column(name="Comment", type="integer", nullable=false)
-     */
+    #[ORM\Column(name: 'Comment', type: 'integer', nullable: false)]
     private int $comment = 0;
 
     private ?string $commentText = "";
 
-    /**
-     * @ORM\Column(name="created", type="datetime", nullable=false)
-     */
+    #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
     private DateTime $created;
 
-    /**
-     * @ORM\Column(name="updated", type="datetime", nullable=false)
-     */
+    #[ORM\Column(name: 'updated', type: 'datetime', nullable: false)]
     private DateTime $updated;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Member")
-     * @ORM\JoinColumn(name="IdOwner", referencedColumnName="id")
-     */
+    #[ORM\JoinColumn(name: 'IdOwner', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: \Member::class)]
     private Member $owner;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Member")
-     * @ORM\JoinColumn(name="IdRelation", referencedColumnName="id")
-     */
+    #[ORM\JoinColumn(name: 'IdRelation', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: \Member::class, inversedBy: 'relations')]
     private Member $receiver;
 
-    /**
-     * @ORM\Column(name="Confirmed", type="string", nullable=false)
-     */
+    #[ORM\Column(name: 'Confirmed', type: 'string', nullable: false)]
     private string $confirmed = 'No';
 
-    /**
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     private int $id;
 
     public function setComment(int $comment): self
@@ -148,9 +133,8 @@ class Relation
 
     /**
      * Triggered after load from database.
-     *
-     * @ORM\PostLoad
      */
+    #[ORM\PostLoad]
     public function onPostLoad(PostLoadEventArgs $args): void
     {
         $objectManager = $args->getObjectManager();
@@ -167,9 +151,8 @@ class Relation
 
     /**
      * Triggered on insert.
-     *
-     * @ORM\PrePersist
      */
+    #[ORM\PrePersist]
     public function onPrePersist(PrePersistEventArgs $args)
     {
         $this->created = new DateTime('now');
@@ -182,9 +165,8 @@ class Relation
 
     /**
      * Triggered on update.
-     *
-     * @ORM\PostUpdate
      */
+    #[ORM\PostUpdate]
     public function onPostUpdate(PostUpdateEventArgs $args)
     {
         if (0 !== $this->comment) {

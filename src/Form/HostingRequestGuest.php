@@ -12,7 +12,7 @@ class HostingRequestGuest extends HostingRequestAbstractType
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('request', HostingRequestType::class, [

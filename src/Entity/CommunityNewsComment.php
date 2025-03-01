@@ -7,6 +7,7 @@
 
 namespace App\Entity;
 
+use App\Repository\CommunityNewsCommentRepository;
 use Carbon\Carbon;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
@@ -14,60 +15,55 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Community News Comments.
  *
- * @ORM\Table(name="community_news_comment")
- * @ORM\Entity(repositoryClass="App\Repository\CommunityNewsCommentRepository")
- * @ORM\HasLifecycleCallbacks
- * @SuppressWarnings(PHPMD)
+ * @SuppressWarnings("PHPMD")
  * Auto generated class do not check mess
  */
+#[ORM\Table(name: 'community_news_comment')]
+#[ORM\Entity(repositoryClass: CommunityNewsCommentRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class CommunityNewsComment
 {
     /**
      * @var communityNews
      *
      * A news has many comments
-     * @ORM\ManyToOne(targetEntity="CommunityNews", inversedBy="comments")
      */
+    #[ORM\ManyToOne(targetEntity: CommunityNews::class, inversedBy: 'comments')]
     private $communityNews;
 
     /**
      * @var Member
      *
      * A comment has one author
-     *
-     * @ORM\ManyToOne(targetEntity="\App\Entity\Member")
-     * @ORM\JoinColumn(nullable=false)
      */
+    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\ManyToOne(targetEntity: Member::class)]
     private $author;
 
     /**
      * @var DateTime
-     *
-     * @ORM\Column(name="created", type="datetime", nullable=false)
      */
+    #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
     private $created;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="title", type="string", length=75, nullable=false)
      */
+    #[ORM\Column(name: 'title', type: 'string', length: 75, nullable: false)]
     private $title;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="text", type="text", nullable=false)
      */
+    #[ORM\Column(name: 'text', type: 'text', nullable: false)]
     private $text;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     private $id;
 
     /**
@@ -175,9 +171,8 @@ class CommunityNewsComment
 
     /**
      * Triggered on insert.
-     *
-     * @ORM\PrePersist
      */
+    #[ORM\PrePersist]
     public function onPrePersist()
     {
         $this->created = new DateTime('now');

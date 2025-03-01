@@ -12,7 +12,7 @@
             </strong>
 
             {% if member.status != 'PassedAway' %}
-                {% if 'CanHostWeelChair' in member.TypicOffer %}
+                {% if 'CanHostWeelChair' in member.TypicalOffer %}
                     <img src="images/icons/wheelchairblue.png" class="mb-2" alt="{{ 'wheelchair'|trans }}'
                         title="{{ 'canhostwheelchairyes'|trans }}" >
                 {% endif %}
@@ -65,12 +65,12 @@
         {% endif %}
 
         <p class="mb-2">
-            {%- if member.HideBirthDate == 'No' -%}
+            {%- if member.ShowAge -%}
                 <strong>{{ 'profile.age'|trans }} </strong> {{ member.age }}
             {%- endif -%}
-            {%- if member.HideBirthDate == 'No' and member.HideGender == 'No' -%}, {%- endif %}
-            {%- if member.HideBirthDate == 'Yes' and member.HideGender == 'No' -%}<strong>{{ 'profile.gender'|trans }}</strong> {%- endif %}
-            {% if member.HideGender == 'No' %}
+            {%- if member.showAge and member.showGender -%}, {%- endif %}
+            {%- if not member.showAge and member.showGender -%}<strong>{{ 'profile.gender'|trans }}</strong> {%- endif %}
+            {% if member.showGender %}
                 {{ member.gender|trans }}
             {%- endif -%}
             <br><strong>{{ 'profile.joined'|trans }} </strong>

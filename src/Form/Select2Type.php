@@ -11,7 +11,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class Select2Type extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         parent::buildForm($builder, $options);
     }
@@ -19,7 +19,7 @@ class Select2Type extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver
             ->setDefaults([
@@ -39,9 +39,10 @@ class Select2Type extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function buildView(FormView $view, FormInterface $form, array $options)
+    public function buildView(FormView $view, FormInterface $form, array $options): void
     {
         parent::buildView($view, $form, $options);
+
         $attr = $view->vars['attr'];
         $class = 'select2';
         if (true === $options['inline']) {
@@ -61,7 +62,7 @@ class Select2Type extends AbstractType
         $view->vars['attr'] = $attr;
     }
 
-    public function getParent()
+    public function getParent(): string
     {
         return ChoiceType::class;
     }

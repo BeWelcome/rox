@@ -18,8 +18,10 @@ use App\Model\TripModel;
 use App\Repository\ActivityRepository;
 use App\Repository\NotificationRepository;
 use App\Repository\SubtripRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -29,26 +31,23 @@ use Twig\Environment;
 
 class LandingController extends AbstractController
 {
-    /**
-     * @var LandingModel
-     */
-    private $landingModel;
+    private LandingModel $landingModel;
+    private EntityManagerInterface $entityManager;
 
-    public function __construct(LandingModel $landingModel)
+    public function __construct(LandingModel $landingModel, EntityManagerInterface $entityManager)
     {
         $this->landingModel = $landingModel;
+        $this->entityManager = $entityManager;
     }
 
-    /**
-     * @Route( "/widget/conversations", name="/widget/conversations")
-     */
+    #[Route(path: '/widget/conversations', name: '/widget/conversations')]
     public function getConversations(Request $request): Response
     {
         /** @var Member $member */
         $member = $this->getUser();
         $unread = $request->query->get('unread', '0');
 
-        $preferenceRepository = $this->getDoctrine()->getRepository(Preference::class);
+        $preferenceRepository = $this->entityManager->getRepository(Preference::class);
         /** @var Preference $preference */
         $preference = $preferenceRepository->findOneBy(['codename' => Preference::MESSAGE_AND_REQUEST_FILTER]);
         $memberPreference = $member->getMemberPreference($preference);
@@ -57,9 +56,9 @@ class LandingController extends AbstractController
         } else {
             $memberPreference->setValue('All');
         }
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($memberPreference);
-        $em->flush();
+
+        $this->entityManager->persist($memberPreference);
+        $this->entityManager->flush();
 
         $messages = $this->landingModel->getConversations($member, $unread, 5);
 
@@ -70,12 +69,8 @@ class LandingController extends AbstractController
         return $content;
     }
 
-    /**
-     * @Route( "/widget/notifications", name="/widget/notifications")
-     *
-     * @return Response
-     */
-    public function getNotifications()
+    #[Route(path: '/widget/notifications', name: '/widget/notifications')]
+    public function getNotifications(): Response
     {
         /** @var Member $member */
         $member = $this->getUser();
@@ -89,9 +84,7 @@ class LandingController extends AbstractController
         return $content;
     }
 
-    /**
-     * @Route( "/widget/visitors", name="/widget/visitors")
-     */
+    #[Route(path: '/widget/visitors', name: '/widget/visitors')]
     public function getVisitors(Request $request, TripModel $tripModel): Response
     {
         /** @var Member $member */
@@ -112,9 +105,7 @@ class LandingController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route( "/widget/threads", name="/widget/threads")
-     */
+    #[Route(path: '/widget/threads', name: '/widget/threads')]
     public function getThreads(Request $request): Response
     {
         $groups = $request->query->get('groups', '0');
@@ -123,7 +114,7 @@ class LandingController extends AbstractController
 
         /** @var Member $member */
         $member = $this->getUser();
-        $preferenceRepository = $this->getDoctrine()->getRepository(Preference::class);
+        $preferenceRepository = $this->entityManager->getRepository(Preference::class);
         /** @var Preference $preference */
         $preference = $preferenceRepository->findOneBy(['codename' => Preference::FORUM_FILTER]);
         $memberPreference = $member->getMemberPreference($preference);
@@ -138,9 +129,9 @@ class LandingController extends AbstractController
             $value .= 'Forums';
         }
         $memberPreference->setValue($value);
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($memberPreference);
-        $em->flush();
+
+        $this->entityManager->persist($memberPreference);
+        $this->entityManager->flush();
 
         $threads = $this->landingModel->getThreads($member, $groups, $forum, $following, 5);
 
@@ -155,12 +146,11 @@ class LandingController extends AbstractController
     }
 
     /**
-     * @Route( "/widget/activities", name="/widget/activities")
      *
      * @throws Exception
-     *
      * @return Response
      */
+    #[Route(path: '/widget/activities', name: '/widget/activities')]
     public function getActivities(Request $request)
     {
         /** @var Member $member */
@@ -176,10 +166,9 @@ class LandingController extends AbstractController
     }
 
     /**
-     * @Route( "/widget/accommodation", name="/widget/accommodation")
-     *
      * @return Response
      */
+    #[Route(path: '/widget/accommodation', name: '/widget/accommodation')]
     public function setAccommodationAction(Request $request, Environment $twig)
     {
         /** @var Member $member */
@@ -209,14 +198,16 @@ class LandingController extends AbstractController
     /**
      * Shows the landing page.
      *
-     * @Route("/", name="landingpage")
      *
      * @throws AccessDeniedException
      */
+    #[Route(path: '/', name: 'landingpage')]
     public function show(
         CommunityNewsModel $communityNewsModel,
+        EntityManagerInterface $entityManager,
         DonateModel $donateModel,
-        TripModel $tripModel
+        TripModel $tripModel,
+        FormFactoryInterface $formFactory
     ): Response {
         if (!$this->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             throw $this->createAccessDeniedException();
@@ -228,7 +219,6 @@ class LandingController extends AbstractController
 
         $latestNews = $communityNewsModel->getLatest();
 
-        $formFactory = $this->get('form.factory');
         // Prepare search form for home location link
         $searchHomeLocationRequest = $this->getSearchHomeLocationRequest($member);
         $searchHomeLocation = $formFactory->createNamed('home', SearchFormType::class, $searchHomeLocationRequest);
@@ -237,13 +227,13 @@ class LandingController extends AbstractController
         $searchGotoLocation = $formFactory->createNamed(
             'tiny',
             SearchFormType::class,
-            new SearchFormRequest($this->getDoctrine()->getManager())
+            new SearchFormRequest()
         );
 
         $radius = $tripModel->getTripsRadius($member);
         $radiusForm = $this->createForm(TripRadiusType::class, ['radius' => $radius]);
 
-        $preferenceRepository = $this->getDoctrine()->getRepository(Preference::class);
+        $preferenceRepository = $entityManager->getRepository(Preference::class);
         $preference = $preferenceRepository->findOneBy(['codename' => Preference::MESSAGE_AND_REQUEST_FILTER]);
         $messageFilter = $member->getMemberPreferenceValue($preference);
 
@@ -258,9 +248,9 @@ class LandingController extends AbstractController
             'searchLocation' => $searchHomeLocation->createView(),
             'tinySearch' => $searchGotoLocation->createView(),
             'campaign' => [
-                'year' => $campaignDetails->year,
-                'yearNeeded' => $campaignDetails->YearNeededAmount,
-                'yearDonated' => $campaignDetails->YearDonation,
+                'year' => $campaignDetails['year'],
+                'yearNeeded' => $campaignDetails['YearNeededAmount'],
+                'yearDonated' => $campaignDetails['YearDonation'],
             ],
             'radiusForm' => $radiusForm->createView(),
             'communityNews' => $latestNews,
@@ -278,7 +268,7 @@ class LandingController extends AbstractController
     protected function getUncheckedNotificationsCount(Member $member): int
     {
         /** @var NotificationRepository $notificationRepository */
-        $notificationRepository = $this->getDoctrine()->getRepository(Notification::class);
+        $notificationRepository = $this->entityManager->getRepository(Notification::class);
 
         return $notificationRepository->getUncheckedNotificationsCount($member);
     }
@@ -288,7 +278,7 @@ class LandingController extends AbstractController
         $radius = $tripModel->getTripsRadius($member);
 
         /** @var SubtripRepository $subtripRepository */
-        $subtripRepository = $this->getDoctrine()->getRepository(SubTrip::class);
+        $subtripRepository = $this->entityManager->getRepository(SubTrip::class);
 
         $visitorsCount = $subtripRepository->getVisitorsCount($member, $radius);
 
@@ -298,14 +288,14 @@ class LandingController extends AbstractController
     private function getUpcomingAroundLocationCount(Member $member, bool $showOnlineActivities): int
     {
         /** @var ActivityRepository $activityRepository */
-        $activityRepository = $this->getDoctrine()->getRepository(Activity::class);
+        $activityRepository = $this->entityManager->getRepository(Activity::class);
 
         return $activityRepository->getUpcomingAroundLocationCount($member, $showOnlineActivities);
     }
 
     private function getSearchHomeLocationRequest(Member $member): SearchFormRequest
     {
-        $searchHomeRequest = new SearchFormRequest($this->getDoctrine()->getManager());
+        $searchHomeRequest = new SearchFormRequest();
         $geo = $member->getCity();
         if (null !== $geo) {
             $searchHomeRequest->location = $geo->getName();

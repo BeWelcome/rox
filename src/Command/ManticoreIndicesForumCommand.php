@@ -12,6 +12,7 @@ use Gedmo\Translatable\Entity\Repository\TranslationRepository;
 use Gedmo\Translatable\Entity\Translation;
 use Manticoresearch\Client;
 use Manticoresearch\Index;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputArgument;
@@ -22,13 +23,17 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 use function count;
 
+#[AsCommand(
+    name: 'manticore:indices:forum',
+    description: 'Creates the manticore indices for the forum search',
+    aliases: [],
+    hidden: false,
+)]
 class ManticoreIndicesForumCommand extends Command
 {
-    private const FORUM_INDEX = 'forum_rt';
+    private const string FORUM_INDEX = 'forum_rt';
     private int $chunkSize = 2500;
 
-    protected static $defaultName = 'manticore:indices:forum';
-    protected static $defaultDescription = 'Creates the manticore indices for the forum search';
     private EntityManagerInterface $entityManager;
     private SymfonyStyle $io;
     private string $manticoreHost;
@@ -36,7 +41,7 @@ class ManticoreIndicesForumCommand extends Command
 
     public function __construct(EntityManagerInterface $entityManager, string $manticoreHost, int $manticorePort)
     {
-        parent::__construct(self::$defaultName);
+        parent::__construct();
 
         $this->entityManager = $entityManager;
         $this->manticoreHost = $manticoreHost;

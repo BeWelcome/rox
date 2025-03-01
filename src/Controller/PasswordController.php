@@ -41,9 +41,7 @@ class PasswordController extends AbstractController
         $this->entityManager = $entityManager;
     }
 
-    /**
-     * @Route("/resetpassword", name="member_request_reset_password")
-     */
+    #[Route(path: '/resetpassword', name: 'member_request_reset_password')]
     public function requestResetPassword(Request $request, Mailer $mailer): Response
     {
         // Someone obviously lost their way. No sense in resetting your password if you're currently logged in.
@@ -103,10 +101,7 @@ class PasswordController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/resetpassword/{username}/{token}", name="member_reset_password",
-     *     requirements={"token": "[a-z0-9]{64}"})
-     */
+    #[Route(path: '/resetpassword/{username}/{token}', name: 'member_reset_password', requirements: ['token' => '[a-z0-9]{64}'])]
     public function resetPassword(
         Request $request,
         Member $member,
@@ -156,10 +151,7 @@ class PasswordController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/members/{username}/password/change", name="change_password",
-     *     requirements={"token": "[a-z0-9]{64}"})
-     */
+    #[Route(path: '/members/{username}/password/change', name: 'change_password', requirements: ['token' => '[a-z0-9]{64}'])]
     public function changePassword(
         Request $request,
         Member $member,
@@ -198,9 +190,7 @@ class PasswordController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("password/check/", name="check_password")
-     */
+    #[Route(path: 'password/check/', name: 'check_password')]
     public function checkPassword(Request $request) : JsonResponse
     {
         $username = $request->get('username');

@@ -166,14 +166,14 @@ class SearchAdapter implements AdapterInterface
             $vars['search-accommodation'][] = 'neverask';
         }
 
-        $vars['search-has-profile-picture'] = $data->profile_picture;
-        $vars['search-has-about-me'] = $data->about_me;
+        $vars['search-has-profile-picture'] = $data->has_profile_picture;
+        $vars['search-has-about-me'] = $data->has_about_me;
         $vars['search-has-comments'] = $data->has_comments;
 
         foreach (
             [
-            'offerdinner' => TypicalOfferType::DINNER,
-            'offertour' => TypicalOfferType::GUIDED_TOUR,
+            'offers_dinner' => TypicalOfferType::DINNER,
+            'offers_tour' => TypicalOfferType::GUIDED_TOUR,
             'accessible' => TypicalOfferType::WHEELCHAIR_ACCESSIBLE,
             ] as $param => $value
         ) {

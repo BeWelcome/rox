@@ -12,9 +12,9 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 class CommunityNewsType extends AbstractType
 {
     /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('title', TextType::class, [

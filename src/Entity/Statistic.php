@@ -9,98 +9,87 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Stats.
  *
- * @ORM\Table(name="stats", indexes={@ORM\Index(name="created", columns={"created"})})
- * @ORM\Entity(repositoryClass="App\Repository\StatisticsRepository")
  *
- * @SuppressWarnings(PHPMD)
+ * @SuppressWarnings("PHPMD")
  * Auto generated class do not check mess
  */
+#[ORM\Table(name: 'stats')]
+#[ORM\Index(name: 'created', columns: ['created'])]
+#[ORM\Entity(repositoryClass: \App\Repository\StatisticsRepository::class)]
 class Statistic
 {
     /**
      * @var DateTime
-     *
-     * @ORM\Column(name="created", type="datetime", nullable=false)
      */
+    #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
     private $created;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="NbActiveMembers", type="integer", nullable=false)
      */
+    #[ORM\Column(name: 'NbActiveMembers', type: 'integer', nullable: false)]
     private $activeMembers;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="NbMessageSent", type="integer", nullable=false)
      */
+    #[ORM\Column(name: 'NbMessageSent', type: 'integer', nullable: false)]
     private $messagesSent;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="NbMessageRead", type="integer", nullable=false)
      */
+    #[ORM\Column(name: 'NbMessageRead', type: 'integer', nullable: false)]
     private $messagesRead;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="NbRequestsSent", type="integer", nullable=false)
      */
+    #[ORM\Column(name: 'NbRequestsSent', type: 'integer', nullable: false)]
     private $requestsSent;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="NbRequestsAccepted", type="integer", nullable=false)
      */
+    #[ORM\Column(name: 'NbRequestsAccepted', type: 'integer', nullable: false)]
     private $requestsAccepted;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="NbMemberWithOneTrust", type="integer", nullable=false)
      */
+    #[ORM\Column(name: 'NbMemberWithOneTrust', type: 'integer', nullable: false)]
     private $membersWithPositiveComment;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="NbMemberWhoLoggedToday", type="integer", nullable=false)
      */
+    #[ORM\Column(name: 'NbMemberWhoLoggedToday', type: 'integer', nullable: false)]
     private $membersWhoLoggedInToday;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="NbLegsCreated", type="integer", nullable=false)
      */
+    #[ORM\Column(name: 'NbLegsCreated', type: 'integer', nullable: false)]
     private $legsCreated;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="NbInvitationsSent", type="integer", nullable=false)
      */
+    #[ORM\Column(name: 'NbInvitationsSent', type: 'integer', nullable: false)]
     private $invitationsSent;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="NbInvitationsAccepted", type="integer", nullable=false)
      */
+    #[ORM\Column(name: 'NbInvitationsAccepted', type: 'integer', nullable: false)]
     private $invitationsAccepted;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     private $id;
 
     /**

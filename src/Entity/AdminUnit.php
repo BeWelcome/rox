@@ -13,63 +13,63 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * AdminUnit.
  *
- * @ORM\Table(name="geonamesadminunits", indexes={@ORM\Index(name="idx_name", columns={"name"}), @ORM\Index(name="idx_fclass", columns={"fclass"}), @ORM\Index(name="idx_fcode", columns={"fcode"}), @ORM\Index(name="idx_country", columns={"country"}), @ORM\Index(name="idx_admin1", columns={"admin1"})})
- * @ORM\Entity
  *
- * @SuppressWarnings(PHPMD)
+ * @SuppressWarnings("PHPMD")
  * Auto generated class do not check mess
  */
+#[ORM\Table(name: 'geonamesadminunits')]
+#[ORM\Index(name: 'idx_name', columns: ['name'])]
+#[ORM\Index(name: 'idx_fclass', columns: ['fclass'])]
+#[ORM\Index(name: 'idx_fcode', columns: ['fcode'])]
+#[ORM\Index(name: 'idx_country', columns: ['country'])]
+#[ORM\Index(name: 'idx_admin1', columns: ['admin1'])]
+#[ORM\Entity]
 class AdminUnit
 {
     /**
      * @var string
-     *
-     * @ORM\Column(name="name", type="string", length=200, nullable=true)
      */
+    #[ORM\Column(name: 'name', type: 'string', length: 200, nullable: true)]
     private $name;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="fclass", type="string", length=1, nullable=true)
      */
+    #[ORM\Column(name: 'fclass', type: 'string', length: 1, nullable: true)]
     private $fclass;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="fcode", type="string", length=10, nullable=true)
      */
+    #[ORM\Column(name: 'fcode', type: 'string', length: 10, nullable: true)]
     private $fcode;
 
     /**
      * @var string
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="NONE")
-     * @ORM\Column(name="country", type="string", length=2, nullable=false)
      */
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'NONE')]
+    #[ORM\Column(name: 'country', type: 'string', length: 2, nullable: false)]
     private $country;
 
     /**
      * @var string
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="NONE")
-     * @ORM\Column(name="admin1", type="string", length=20, nullable=false)
      */
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'NONE')]
+    #[ORM\Column(name: 'admin1', type: 'string', length: 20, nullable: false)]
     private $admin1;
 
     /**
      * @var DateTime
-     *
-     * @ORM\Column(name="moddate", type="date", nullable=true)
      */
+    #[ORM\Column(name: 'moddate', type: 'date', nullable: true)]
     private $moddate;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="geonameId", type="integer")
      */
+    #[ORM\Column(name: 'geonameId', type: 'integer')]
     private $geonameId;
 
     /**

@@ -40,36 +40,27 @@ class ConversationController extends AbstractController
     }
 
     /**
-     * @Route("/conversation/{id}", name="conversation_view",
-     *     requirements={"id": "\d+"}
-     * )
-     *
      * @IsGranted("CONVERSATION_VIEW", subject="message")
      */
+    #[Route(path: '/conversation/{id}', name: 'conversation_view', requirements: ['id' => '\d+'])]
     public function viewConversation(Request $request, Message $message, $openReportModal = false): Response
     {
         return $this->viewThread($request, $message, false, $openReportModal);
     }
 
     /**
-     * @Route("/conversation/{id}/deleted", name="conversation_view_with_deleted",
-     *     requirements={"id": "\d+"}
-     * )
-     *
      * @IsGranted("CONVERSATION_VIEW", subject="message")
      */
+    #[Route(path: '/conversation/{id}/deleted', name: 'conversation_view_with_deleted', requirements: ['id' => '\d+'])]
     public function viewConversationWithDeletedMessages(Request $request, Message $message): Response
     {
         return $this->viewThread($request, $message, true, false);
     }
 
     /**
-     * @Route("/conversation/{id}/reply", name="conversation_reply",
-     *     requirements={"id": "\d+"}
-     * )
-     *
      * @IsGranted("CONVERSATION_REPLY", subject="message")
      */
+    #[Route(path: '/conversation/{id}/reply', name: 'conversation_reply', requirements: ['id' => '\d+'])]
     public function reply(Message $message): Response
     {
         // Always reply to the last item in the thread
@@ -105,12 +96,9 @@ class ConversationController extends AbstractController
     }
 
     /**
-     * @Route("/conversation/{id}/delete", name="conversation_delete",
-     *     requirements={"id": "\d+"}
-     * )
-     *
      * @IsGranted("CONVERSATION_VIEW", subject="message")
      */
+    #[Route(path: '/conversation/{id}/delete', name: 'conversation_delete', requirements: ['id' => '\d+'])]
     public function deleteConversation(Message $message): Response
     {
         /** @var Member $member */
@@ -125,12 +113,9 @@ class ConversationController extends AbstractController
     }
 
     /**
-     * @Route("/conversation/{id}/purge", name="conversation_purge",
-     *     requirements={"id": "\d+"}
-     * )
-     *
      * @IsGranted("CONVERSATION_VIEW", subject="message")
      */
+    #[Route(path: '/conversation/{id}/purge', name: 'conversation_purge', requirements: ['id' => '\d+'])]
     public function purgeConversation(Message $message): Response
     {
         /** @var Member $member */
@@ -145,12 +130,9 @@ class ConversationController extends AbstractController
     }
 
     /**
-     * @Route("/conversation/{id}/recover", name="conversation_recover",
-     *     requirements={"id": "\d+"}
-     * )
-     *
      * @IsGranted("CONVERSATION_VIEW", subject="message")
      */
+    #[Route(path: '/conversation/{id}/recover', name: 'conversation_recover', requirements: ['id' => '\d+'])]
     public function recoverConversation(Message $message): Response
     {
         /** @var Member $member */
@@ -178,21 +160,16 @@ class ConversationController extends AbstractController
         return $this->redirectToRoute('conversation_view', ['id' => $message->getId()]);
     }
 
-    /**
-     * @Route("/conversation/{id}/report", name="conversation_report_spam")
-     */
+    #[Route(path: '/conversation/{id}/report', name: 'conversation_report_spam')]
     public function reportAsSpam(Request $request, Message $message): Response
     {
         return $this->viewThread($request, $message, false, true);
     }
 
     /**
-     * @Route("/conversation/{id}/decline", name="conversation_decline",
-     *     requirements={"id": "\d+"}
-     * )
-     *
      * @IsGranted("CONVERSATION_VIEW", subject="message")
      */
+    #[Route(path: '/conversation/{id}/decline', name: 'conversation_decline', requirements: ['id' => '\d+'])]
     public function decline(Message $message): Response
     {
         if ($message->isMessage()) {
@@ -206,9 +183,7 @@ class ConversationController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/conversation/{id}/nospam", name="conversation_mark_nospam")
-     */
+    #[Route(path: '/conversation/{id}/nospam', name: 'conversation_mark_nospam')]
     public function unmarkAsSpam(Message $message): Response
     {
         /** @var Member $member */

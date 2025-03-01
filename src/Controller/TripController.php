@@ -37,11 +37,7 @@ class TripController extends AbstractController
         $this->tripModel = $tripModel;
     }
 
-    /**
-     * @Route("/trips/{page}", name="trips",
-     *     requirements={"page": "\d+"})
-     *     )
-     */
+    #[Route(path: '/trips/{page}', name: 'trips', requirements: ['page' => '\d+'])]
     public function trips(int $page = 1): Response
     {
         /** @var Member $member */
@@ -59,11 +55,9 @@ class TripController extends AbstractController
     }
 
     /**
-     * @Route("/trip/{id}", name="trip_show",
-     *     requirements={"id": "\d+"})
-     *
      * @IsGranted("TRIP_VIEW", subject="trip")
      */
+    #[Route(path: '/trip/{id}', name: 'trip_show', requirements: ['id' => '\d+'])]
     public function show(Trip $trip, TripModel $tripModel): Response
     {
         /** @var Member $member */
@@ -83,15 +77,14 @@ class TripController extends AbstractController
 
     /**
      * Create a new trip.
-     *
-     * @Route("/new/trip", name="new_trip")
      */
-    public function create(Request $request): Response
+    #[Route(path: '/new/trip', name: 'new_trip')]
+    public function create(Request $request, EntityManagerInterface $entityManager): Response
     {
         /** @var Member $member */
         $member = $this->getUser();
 
-        if (MemberStatusType::ACCOUNT_ACTIVATED !== $member->getStatus()) {
+        if (MemberStatusType::ACCOUNT_ACTIVATED === $member->getStatus()) {
             $this->addTranslatedFlash('notice', 'flash.trip.not.confirmed');
 
             return $this->redirectToRoute('trips');
@@ -113,7 +106,6 @@ class TripController extends AbstractController
             if (empty($errors)) {
                 $this->tripModel->orderTripLegs($trip);
 
-                $entityManager = $this->getDoctrine()->getManager();
                 $entityManager->persist($trip);
                 $entityManager->flush();
 
@@ -138,12 +130,10 @@ class TripController extends AbstractController
     /**
      * Edit an existing trip.
      *
-     * @Route("/trip/{id}/edit", name="trip_edit",
-     *     requirements={"id": "\d+"}
-     * )
      *
      * @IsGranted("TRIP_EDIT", subject="trip")
      */
+    #[Route(path: '/trip/{id}/edit', name: 'trip_edit', requirements: ['id' => '\d+'])]
     public function edit(Request $request, Trip $trip, EntityManagerInterface $entityManager): Response
     {
         if ($this->tripModel->hasTripExpired($trip)) {
@@ -187,12 +177,10 @@ class TripController extends AbstractController
     /**
      * Remove an existing trip.
      *
-     * @Route("/trip/{id}/remove", name="trip_remove",
-     *     requirements={"id": "\d+"}
-     * )
      *
      * @IsGranted("TRIP_REMOVE", subject="trip")
      */
+    #[Route(path: '/trip/{id}/remove', name: 'trip_remove', requirements: ['id' => '\d+'])]
     public function remove(Trip $trip): RedirectResponse
     {
         $this->tripModel->hideTrip($trip);
@@ -203,12 +191,10 @@ class TripController extends AbstractController
     /**
      * Copies an existing trip (keeping all locations and sets dates in the future).
      *
-     * @Route("/trip/{id}/copy", name="trip_copy",
-     *     requirements={"id": "\d+"}
-     * )
      *
      * @IsGranted("TRIP_COPY", subject="trip")
      */
+    #[Route(path: '/trip/{id}/copy', name: 'trip_copy', requirements: ['id' => '\d+'])]
     public function copy(Trip $trip): Response
     {
         $member = $this->getUser();
@@ -220,11 +206,8 @@ class TripController extends AbstractController
 
     /**
      * Show all trip legs that are in the vicinity of a member.
-     *
-     * @Route("/visitors/{page}",
-     *     requirements={"page"="\d+"},
-     *     name="visitors")
      */
+    #[Route(path: '/visitors/{page}', requirements: ['page' => '\d+'], name: 'visitors')]
     public function tripsInArea(
         Request $request,
         EntityManagerInterface $entityManager,

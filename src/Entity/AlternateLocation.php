@@ -7,76 +7,76 @@
 
 namespace App\Entity;
 
+use App\Repository\AlternateLocationRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * AlternateLocation.
  *
- * @ORM\Table(name="geonamesalternatenames", indexes={@ORM\Index(name="idx_alternatename", columns={"alternatename"}), @ORM\Index(name="idx_isoLanguage", columns={"isolanguage"}), @ORM\Index(name="idx_ispreferred", columns={"ispreferred"}), @ORM\Index(name="idx_isshort", columns={"isshort"}), @ORM\Index(name="idx_iscolloquial", columns={"iscolloquial"}), @ORM\Index(name="idx_ishistoric", columns={"ishistoric"}), @ORM\Index(name="idx_geonameid", columns={"geonameId"})})
- * @ORM\Entity
  *
- * @SuppressWarnings(PHPMD)
+ * @SuppressWarnings("PHPMD")
  * Auto generated class do not check mess
  */
+#[ORM\Table(name: 'geonamesalternatenames')]
+#[ORM\Index(name: 'idx_alternatename', columns: ['alternatename'])]
+#[ORM\Index(name: 'idx_isoLanguage', columns: ['isolanguage'])]
+#[ORM\Index(name: 'idx_ispreferred', columns: ['ispreferred'])]
+#[ORM\Index(name: 'idx_isshort', columns: ['isshort'])]
+#[ORM\Index(name: 'idx_iscolloquial', columns: ['iscolloquial'])]
+#[ORM\Index(name: 'idx_ishistoric', columns: ['ishistoric'])]
+#[ORM\Index(name: 'idx_geonameid', columns: ['geonameId'])]
+#[ORM\Entity(repositoryClass: AlternateLocationRepository::class)]
 class AlternateLocation
 {
     /**
      * @var string
-     *
-     * @ORM\Column(name="isolanguage", type="string", length=7, nullable=true)
      */
+    #[ORM\Column(name: 'isolanguage', type: 'string', length: 7, nullable: true)]
     private $isolanguage;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="alternatename", type="string", length=200, nullable=true)
      */
+    #[ORM\Column(name: 'alternatename', type: 'string', length: 200, nullable: true)]
     private $alternatename;
 
     /**
      * @var bool
-     *
-     * @ORM\Column(name="ispreferred", type="boolean", nullable=true)
      */
+    #[ORM\Column(name: 'ispreferred', type: 'boolean', nullable: true)]
     private $ispreferred;
 
     /**
      * @var bool
-     *
-     * @ORM\Column(name="isshort", type="boolean", nullable=true)
      */
+    #[ORM\Column(name: 'isshort', type: 'boolean', nullable: true)]
     private $isshort;
 
     /**
      * @var bool
-     *
-     * @ORM\Column(name="iscolloquial", type="boolean", nullable=true)
      */
+    #[ORM\Column(name: 'iscolloquial', type: 'boolean', nullable: true)]
     private $iscolloquial;
 
     /**
      * @var bool
-     *
-     * @ORM\Column(name="ishistoric", type="boolean", nullable=true)
      */
+    #[ORM\Column(name: 'ishistoric', type: 'boolean', nullable: true)]
     private $ishistoric;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="alternatenameId", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
+    #[ORM\Column(name: 'alternatenameId', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     private $alternatenameId;
 
     /**
      * @var Location
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Location")
-     * @ORM\JoinColumn(name="geonameId", referencedColumnName="geonameId")
      */
+    #[ORM\JoinColumn(name: 'geonameId', referencedColumnName: 'geonameId')]
+    #[ORM\ManyToOne(targetEntity: Location::class)]
     private $geonameId;
 
     /**

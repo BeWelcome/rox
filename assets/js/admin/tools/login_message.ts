@@ -1,3 +1,4 @@
+// @ts-ignore
 import VanillaCalendar, { Options } from 'vanilla-calendar-pro';
 import 'vanilla-calendar-pro/build/vanilla-calendar.min.css';
 

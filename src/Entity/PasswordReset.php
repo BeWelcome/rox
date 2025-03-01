@@ -14,43 +14,39 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Community News Comments.
  *
- * @ORM\Table(name="passwordreset")
- * @ORM\Entity
- * @ORM\HasLifecycleCallbacks
  *
- * @SuppressWarnings(PHPMD)
+ * @SuppressWarnings("PHPMD")
  * Auto generated class do not check mess
  */
+#[ORM\Table(name: 'passwordreset')]
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class PasswordReset
 {
     /**
      * @var Member
-     *
-     * @ORM\OneToOne(targetEntity="Member")
      */
+    #[ORM\OneToOne(targetEntity: \Member::class)]
     private $member;
 
     /**
      * @var DateTime
-     *
-     * @ORM\Column(name="generated", type="datetime", nullable=false)
      */
+    #[ORM\Column(name: 'generated', type: 'datetime', nullable: false)]
     private $generated;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="token", type="string", length=64, nullable=false)
      */
+    #[ORM\Column(name: 'token', type: 'string', length: 64, nullable: false)]
     private $token;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     private $id;
 
     /**
@@ -114,9 +110,8 @@ class PasswordReset
 
     /**
      * Triggered on insert.
-     *
-     * @ORM\PrePersist
      */
+    #[ORM\PrePersist]
     public function onPrePersist()
     {
         $this->generated = new DateTime('now');

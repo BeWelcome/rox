@@ -4,63 +4,61 @@ namespace App\Doctrine;
 
 class DeleteRequestType extends SetType
 {
-    public const SENDER_DELETED = 'senderdeleted';
-    public const RECEIVER_DELETED = 'receiverdeleted';
-    public const SENDER_PURGED = 'senderpurged';
-    public const RECEIVER_PURGED = 'receiverpurged';
+    public const string SENDER_DELETED = 'senderdeleted';
+    public const string RECEIVER_DELETED = 'receiverdeleted';
+    public const string SENDER_PURGED = 'senderpurged';
+    public const string RECEIVER_PURGED = 'receiverpurged';
 
-    /** @var string */
-    protected $name = 'delete_request';
+    protected string $name = 'delete_request';
 
-    /** @var array */
-    protected $values = [
+    protected array $values = [
         self::SENDER_DELETED,
         self::RECEIVER_DELETED,
         self::SENDER_PURGED,
         self::RECEIVER_PURGED,
     ];
 
-    public static function addSenderDeleted($deleteRequest)
+    public static function addSenderDeleted($deleteRequest): string
     {
         return self::addRequest($deleteRequest, self::SENDER_DELETED);
     }
 
-    public static function addReceiverDeleted($deleteRequest)
+    public static function addReceiverDeleted($deleteRequest): string
     {
         return self::addRequest($deleteRequest, self::RECEIVER_DELETED);
     }
 
-    public static function removeSenderDeleted($deleteRequest)
+    public static function removeSenderDeleted($deleteRequest): string
     {
         return self::removeRequest($deleteRequest, self::SENDER_DELETED);
     }
 
-    public static function removeReceiverDeleted($deleteRequest)
+    public static function removeReceiverDeleted($deleteRequest): string
     {
         return self::removeRequest($deleteRequest, self::RECEIVER_DELETED);
     }
 
-    public static function addSenderPurged($deleteRequest)
+    public static function addSenderPurged($deleteRequest): string
     {
         return self::addRequest($deleteRequest, self::SENDER_PURGED);
     }
 
-    public static function addReceiverPurged($deleteRequest)
+    public static function addReceiverPurged($deleteRequest): string
     {
         return self::addRequest($deleteRequest, self::RECEIVER_PURGED);
     }
 
-    public static function removeSenderPurged($deleteRequest)
+    public static function removeSenderPurged($deleteRequest): string
     {
         return self::removeRequest($deleteRequest, self::SENDER_PURGED);
     }
 
-    public static function removeReceiverPurged($deleteRequest)
+    public static function removeReceiverPurged($deleteRequest): string
     {
         return self::removeRequest($deleteRequest, self::RECEIVER_PURGED);
     }
 
-    private static function addRequest($deleteRequest, $request)
+    private static function addRequest($deleteRequest, $request): string
     {
         $requests = array_filter(explode(',', $deleteRequest));
         $key = array_search($request, $requests, true);
@@ -71,15 +69,14 @@ class DeleteRequestType extends SetType
         return implode(',', $requests);
     }
 
-    private static function removeRequest($deleteRequest, $request)
+    private static function removeRequest($deleteRequest, $request): string
     {
         $requests = array_filter(explode(',', $deleteRequest));
         $key = array_search($request, $requests, true);
         if (false !== $key) {
             unset($requests[$key]);
         }
-        $requests = implode(',', $requests);
 
-        return $requests;
+        return implode(',', $requests);
     }
 }

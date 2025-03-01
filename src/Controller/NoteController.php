@@ -36,9 +36,7 @@ class NoteController extends AbstractController
         $this->globals = $globals;
     }
 
-    /**
-     * @Route("/members/{username}/note/add", name="add_note")
-     */
+    #[Route(path: '/members/{username}/note/add', name: 'add_note')]
     public function add(Request $request, Member $member, ProfileSubmenu $profileSubmenu): Response
     {
         /** @var Member $loggedInMember */
@@ -87,9 +85,7 @@ class NoteController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/members/{username}/note/edit", name="edit_note")
-     */
+    #[Route(path: '/members/{username}/note/edit', name: 'edit_note')]
     public function edit(Request $request, Member $member, ProfileSubmenu $profileSubmenu): Response
     {
         /** @var Member $loggedInMember */
@@ -130,9 +126,7 @@ class NoteController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/members/{username}/note/delete", name="delete_note")
-     */
+    #[Route(path: '/members/{username}/note/delete', name: 'delete_note')]
     public function delete(Member $member): Response
     {
         /** @var Member $loggedInMember */
@@ -154,9 +148,7 @@ class NoteController extends AbstractController
         return $this->redirectToRoute('notes', ['username' => $loggedInMember->getUsername()]);
     }
 
-    /**
-     * @Route("/members/{username}/notes/{page}", name="notes")
-     */
+    #[Route(path: '/members/{username}/notes/{page}', name: 'notes')]
     public function notes(Request $request, Member $member, ProfileSubmenu $profileSubmenu, int $page = 1): Response
     {
         /** @var Member $loggedInMember */

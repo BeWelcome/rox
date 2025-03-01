@@ -8,6 +8,7 @@
 namespace App\Entity;
 
 use App\Doctrine\TripAdditionalInfoType;
+use App\Repository\TripRepository;
 use Carbon\Carbon;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -19,97 +20,57 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * Trip.
  *
- * @ORM\Table(name="trips", uniqueConstraints={@ORM\UniqueConstraint(name="id_UNIQUE", columns={"id"})},
- *     indexes={@ORM\Index(name="memberId_idx", columns={"created_by"})})
- * @ORM\Entity(repositoryClass="App\Repository\TripRepository")
- * @ORM\HasLifecycleCallbacks
  *
- * @SuppressWarnings(PHPMD)
+ * @SuppressWarnings("PHPMD")
  * Auto generated class do not check mess
  */
+#[ORM\Table(name: 'trips')]
+#[ORM\Index(name: 'memberId_idx', columns: ['created_by'])]
+#[ORM\UniqueConstraint(name: 'id_UNIQUE', columns: ['id'])]
+#[ORM\Entity(repositoryClass: TripRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Trip
 {
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="summary", type="string", length=150, nullable=false)
-     */
-    private $summary;
+    #[ORM\Column(name: 'summary', type: 'string', length: 150, nullable: false)]
+    private string $summary;
+
+    #[ORM\Column(name: 'description', type: 'string', length: 4096, nullable: false)]
+    private string $description;
+
+    #[ORM\Column(name: 'countOfTravellers', type: 'integer', nullable: false)]
+    private int $countOfTravellers = 1;
+
+    #[ORM\Column(name: 'invitation_radius', type: 'integer', nullable: false)]
+    private int $invitationRadius = 20;
+
+    #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
+    private DateTime $created;
+
+    #[ORM\Column(name: 'updated', type: 'datetime', nullable: true)]
+    private ?DateTime $updated = null;
+
+    #[ORM\Column(name: 'deleted', type: 'datetime', nullable: true)]
+    private ?DateTime $deleted = null;
+
+    #[ORM\Column(name: 'additionalInfo', type: 'trip_additional_info', nullable: false)]
+    private string $additionalInfo = TripAdditionalInfoType::NONE;
+
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
+    private int $id;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="description", type="string", length=4096, nullable=false)
+     * @var Collection<Subtrip>
      */
-    private $description;
+    #[Assert\Count(min: 1)]
+    #[ORM\OneToMany(targetEntity: Subtrip::class, mappedBy: 'trip', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[ORM\OrderBy(['arrival' => 'ASC'])]
+    private Collection $subtrips;
 
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="countOfTravellers", type="integer")
-     */
-    private $countOfTravellers = 1;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="invitation_radius", type="integer")
-     */
-    private $invitationRadius = 20;
-
-    /**
-     * @var DateTime
-     *
-     * @ORM\Column(name="created", type="datetime")
-     */
-    private $created;
-
-    /**
-     * @var DateTime
-     *
-     * @ORM\Column(name="updated", type="datetime", nullable=true)
-     */
-    private $updated;
-
-    /**
-     * @var DateTime
-     *
-     * @ORM\Column(name="deleted", type="datetime", nullable=true)
-     */
-    private $deleted;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="additionalInfo", type="trip_additional_info", nullable=true)
-     */
-    private $additionalInfo = TripAdditionalInfoType::NONE;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
-    private $id;
-
-    /**
-     * @var Collection
-     * @Assert\Count(min=1)
-     *
-     * @ORM\OneToMany(targetEntity="Subtrip", mappedBy="trip", cascade={"persist", "remove"}, orphanRemoval=true)
-     * @ORM\OrderBy({"arrival" = "ASC"})
-     */
-    private $subtrips;
-
-    /**
-     * @var Member
-     *
-     * @ORM\ManyToOne(targetEntity="\App\Entity\Member")
-     * @ORM\JoinColumn(name="created_by", referencedColumnName="id")
-     */
-    private $creator;
+    #[ORM\JoinColumn(name: 'created_by', referencedColumnName: 'id', nullable: false)]
+    #[ORM\ManyToOne(targetEntity: Member::class)]
+    private Member $creator;
 
     public function __construct()
     {
@@ -273,9 +234,8 @@ class Trip
 
     /**
      * Triggered on insert.
-     *
-     * @ORM\PrePersist
      */
+    #[ORM\PrePersist]
     public function onPrePersist()
     {
         $this->created = new DateTime('now');
@@ -283,9 +243,8 @@ class Trip
 
     /**
      * Triggered on update.
-     *
-     * @ORM\PreUpdate
      */
+    #[ORM\PreUpdate]
     public function onPreUpdate()
     {
         $this->updated = new DateTime('now');

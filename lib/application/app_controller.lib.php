@@ -15,7 +15,6 @@
  */
 
 use App\Utilities\SessionTrait;
-use Symfony\Component\Templating\EngineInterface;
 use Twig\Environment;
 
 /**

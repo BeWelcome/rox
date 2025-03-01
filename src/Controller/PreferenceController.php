@@ -19,17 +19,13 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class PreferenceController extends AbstractController
 {
-    /**
-     * @Route("/mypreferences", name="mypreferences_redirect")
-     */
+    #[Route(path: '/mypreferences', name: 'mypreferences_redirect')]
     public function redirectMyPreferences(): RedirectResponse
     {
         return $this->redirectToRoute('preferences', ['username' => $this->getUser()->getUsername()]);
     }
 
-    /**
-     * @Route("/members/{username}/preferences", name="preferences")
-     */
+    #[Route(path: '/members/{username}/preferences', name: 'preferences')]
     public function preferences(
         Request $request,
         Member $member,

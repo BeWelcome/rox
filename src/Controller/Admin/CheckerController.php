@@ -38,41 +38,31 @@ class CheckerController extends AbstractController
         $this->entityManager = $entityManager;
     }
 
-    /**
-     * @Route("/admin/spam/messages", name="admin_spam_messages")
-     */
+    #[Route(path: '/admin/spam/messages', name: 'admin_spam_messages')]
     public function showReportedMessages(Request $request): Response
     {
         return $this->handleMessages($request, self::MESSAGES_REPORTED);
     }
 
-    /**
-     * @Route("/admin/spam/messages/processed", name="admin_spam_messages_processed")
-     */
+    #[Route(path: '/admin/spam/messages/processed', name: 'admin_spam_messages_processed')]
     public function showProcessedMessages(Request $request): Response
     {
         return $this->handleMessages($request, self::MESSAGES_PROCESSED);
     }
 
-    /**
-     * @Route("/admin/spam/messages/blocked", name="admin_spam_messages_block_words")
-     */
+    #[Route(path: '/admin/spam/messages/blocked', name: 'admin_spam_messages_block_words')]
     public function showBlockWordMessages(Request $request): Response
     {
         return $this->handleMessages($request, self::MESSAGES_BLOCK_WORDS);
     }
 
-    /**
-     * @Route("/admin/spam/messages/blocked/processed", name="admin_spam_messages_block_words_processed")
-     */
+    #[Route(path: '/admin/spam/messages/blocked/processed', name: 'admin_spam_messages_block_words_processed')]
     public function showProcessedBlockWordMessages(Request $request): Response
     {
         return $this->handleMessages($request, self::MESSAGES_BLOCK_WORDS_PROCESSED);
     }
 
-    /**
-     * @Route("/admin/spam/activities", name="admin_spam_activities")
-     */
+    #[Route(path: '/admin/spam/activities', name: 'admin_spam_activities')]
     public function showActivities(Request $request, ActivityModel $activitiesModel): Response
     {
         if (
@@ -114,9 +104,7 @@ class CheckerController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/admin/spam/communitynews", name="admin_spam_community_news")
-     */
+    #[Route(path: '/admin/spam/communitynews', name: 'admin_spam_community_news')]
     public function showCommunityNewsComments(Request $request, CommunityNewsModel $communityNewsModel): Response
     {
         if (
@@ -158,9 +146,7 @@ class CheckerController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/admin/spam", name="admin_spam")
-     */
+    #[Route(path: '/admin/spam', name: 'admin_spam')]
     public function redirectToSpamMessages(): RedirectResponse
     {
         return new RedirectResponse($this->generateUrl('admin_spam_messages'));

@@ -8,21 +8,21 @@ use PHPUnit\Framework\TestCase;
 
 class MessageTest extends TestCase
 {
-    public function testAddEmptySpamInfo()
+    public function testAddEmptySpamInfo(): void
     {
         $message = new Message();
         $message->addToSpamInfo('');
         $this->assertEquals('NotSpam', $message->getSpamInfo());
     }
 
-    public function testAddOneSpamInfo()
+    public function testAddOneSpamInfo(): void
     {
         $message = new Message();
         $message->addToSpamInfo(SpamInfoType::MEMBER_SAYS_SPAM);
         $this->assertEquals('SpamSayMember', $message->getSpamInfo());
     }
 
-    public function testAddSameSpamInfoTwice()
+    public function testAddSameSpamInfoTwice(): void
     {
         $message = new Message();
         $message->addToSpamInfo(SpamInfoType::MEMBER_SAYS_SPAM);
@@ -30,7 +30,7 @@ class MessageTest extends TestCase
         $this->assertEquals('SpamSayMember', $message->getSpamInfo());
     }
 
-    public function testAddDifferentSpamInfo()
+    public function testAddDifferentSpamInfo(): void
     {
         $message = new Message();
         $message->addToSpamInfo(SpamInfoType::MEMBER_SAYS_SPAM);
@@ -38,7 +38,7 @@ class MessageTest extends TestCase
         $this->assertEquals('SpamSayChecker,SpamSayMember', $message->getSpamInfo());
     }
 
-    public function testAddDifferentSpamInfoReverted()
+    public function testAddDifferentSpamInfoReverted(): void
     {
         $message = new Message();
         $message->addToSpamInfo(SpamInfoType::CHECKER_SAYS_SPAM);
@@ -46,7 +46,7 @@ class MessageTest extends TestCase
         $this->assertEquals('SpamSayChecker,SpamSayMember', $message->getSpamInfo());
     }
 
-    public function testRemoveOneSpamInfo()
+    public function testRemoveOneSpamInfo(): void
     {
         $message = new Message();
         $message->addToSpamInfo(SpamInfoType::MEMBER_SAYS_SPAM);
@@ -54,7 +54,7 @@ class MessageTest extends TestCase
         $this->assertEquals('NotSpam', $message->getSpamInfo());
     }
 
-    public function testRemoveSameSpamInfoTwice()
+    public function testRemoveSameSpamInfoTwice(): void
     {
         $message = new Message();
         $message->addToSpamInfo(SpamInfoType::MEMBER_SAYS_SPAM);
@@ -63,7 +63,7 @@ class MessageTest extends TestCase
         $this->assertEquals('NotSpam', $message->getSpamInfo());
     }
 
-    public function testAddTwoSpamInfoRemoveOne()
+    public function testAddTwoSpamInfoRemoveOne(): void
     {
         $message = new Message();
         $message->addToSpamInfo(SpamInfoType::MEMBER_SAYS_SPAM);
@@ -72,7 +72,7 @@ class MessageTest extends TestCase
         $this->assertEquals('ProcessedBySpamManager', $message->getSpamInfo());
     }
 
-    public function testRemoveNotAddedSpamInfo()
+    public function testRemoveNotAddedSpamInfo(): void
     {
         $message = new Message();
         $message->addToSpamInfo(SpamInfoType::MEMBER_SAYS_SPAM);

@@ -1,37 +1,20 @@
 <?php
 
-/**
- * Created by PhpStorm.
- * User: raymund
- * Date: 07.05.2017
- * Time: 14:30.
- */
-
 namespace App\Doctrine;
 
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Type;
 use InvalidArgumentException;
 
-/**
- * @SuppressWarnings(PHPMD.UnusedFormalParameter)
- * @SuppressWarnings(PHPMD.NumberOfChildren)
- */
 abstract class SetType extends Type
 {
-    /** @var string */
-    protected $name;
+    protected string $name;
 
-    /** @var array */
-    protected $values = [];
+    protected array $values = [];
 
-    /** @var string */
-    protected $translationPrefix = '';
+    protected string $translationPrefix = '';
 
-    /**
-     * @return string
-     */
-    public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
+    public function getSQLDeclaration(array $column, AbstractPlatform $platform): string
     {
         $values = array_map(function ($val) {
             return "'" . $val . "'";
@@ -40,22 +23,12 @@ abstract class SetType extends Type
         return 'SET(' . implode(', ', $values) . ')';
     }
 
-    /**
-     * @param mixed $value
-     *
-     * @return mixed
-     */
-    public function convertToPHPValue($value, AbstractPlatform $platform)
+    public function convertToPHPValue(mixed $value, AbstractPlatform $platform): mixed
     {
         return $value;
     }
 
-    /**
-     * @param mixed $value
-     *
-     * @return mixed
-     */
-    public function convertToDatabaseValue($value, AbstractPlatform $platform)
+    public function convertToDatabaseValue(mixed $value, AbstractPlatform $platform): mixed
     {
         if (null !== $value && !empty($value)) {
             if (is_array($value)) {
@@ -80,7 +53,7 @@ abstract class SetType extends Type
     /**
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -88,7 +61,7 @@ abstract class SetType extends Type
     /**
      * @return bool
      */
-    public function requiresSQLCommentHint(AbstractPlatform $platform)
+    public function requiresSQLCommentHint(AbstractPlatform $platform): bool
     {
         return true;
     }

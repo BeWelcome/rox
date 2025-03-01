@@ -24,8 +24,8 @@ class AccessDeniedHandler implements AccessDeniedHandlerInterface
     /**
      * @return Response
      *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
+     * @SuppressWarnings("PHPMD.UnusedLocalVariable")
      */
     public function handle(Request $request, AccessDeniedException $accessDeniedException)
     {

@@ -11,7 +11,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class TomSelectType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         parent::buildForm($builder, $options);
     }
@@ -19,7 +19,7 @@ class TomSelectType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver
             ->setDefaults([
@@ -43,9 +43,10 @@ class TomSelectType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function buildView(FormView $view, FormInterface $form, array $options)
+    public function buildView(FormView $view, FormInterface $form, array $options): void
     {
         parent::buildView($view, $form, $options);
+
         $attr = $view->vars['attr'];
         $class = 'js-tom-select';
 
@@ -63,7 +64,7 @@ class TomSelectType extends AbstractType
         }
     }
 
-    public function getParent()
+    public function getParent(): string
     {
         return TextType::class;
     }
@@ -71,7 +72,7 @@ class TomSelectType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'tomselect';
     }

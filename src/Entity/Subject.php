@@ -7,70 +7,41 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Subject.
  *
- * @ORM\Table(name="subject")
- * @ORM\Entity(repositoryClass="App\Repository\SubjectRepository")
  *
- * @SuppressWarnings(PHPMD)
+ * @SuppressWarnings("PHPMD")
  * Auto generated class do not check mess
  */
+#[ORM\Table(name: 'subject')]
+#[ORM\Entity(repositoryClass: \App\Repository\SubjectRepository::class)]
 class Subject
 {
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    private $id;
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
+    private int $id;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="subject", type="string", length=255)
-     */
-    private $subject;
+    #[ORM\Column(name: 'subject', type: 'string', length: 255)]
+    private string $subject;
 
-    /**
-     * @ORM\OneToMany(targetEntity="Message", mappedBy="subject")
-     */
-    private $messages;
-
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * Set subject.
-     *
-     * @param string $subject
-     *
-     * @return Subject
-     */
-    public function setSubject($subject)
+    public function setSubject(string $subject): self
     {
         $this->subject = $subject;
 
         return $this;
     }
 
-    /**
-     * Get subject.
-     *
-     * @return string
-     */
-    public function getSubject()
+    public function getSubject(): string
     {
         return $this->subject;
     }

@@ -10,6 +10,7 @@ use App\Service\Mailer;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -18,10 +19,14 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\Mime\Address;
 
+#[AsCommand(
+    name: 'send:massmail',
+    description: 'Send a batch of massmail email everytime the command is called',
+    aliases: [],
+    hidden: false,
+)]
 class SendMassmailCommand extends Command
 {
-    protected static $defaultName = 'send:massmail';
-
     private EntityManagerInterface $entityManager;
     private Mailer $mailer;
     private int $batchSize;
@@ -32,35 +37,22 @@ class SendMassmailCommand extends Command
         int $batchSize
     ) {
         parent::__construct();
+
         $this->entityManager = $entityManager;
         $this->mailer = $mailer;
         $this->batchSize = $batchSize;
     }
 
-    protected function configure()
-    {
-        $this
-            ->setDescription('Send a batch of massmail email everytime the command is called')
-            ->addArgument('batchSize', InputArgument::OPTIONAL, 'Count of mails send while the command is running')
-        ;
-    }
-
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
-        $batchSize = $input->getArgument('batchSize');
-
-        if (!$batchSize) {
-            // use default from service configuration if not given as option on command call
-            $batchSize = $this->batchSize;
-        }
 
         $massmailRepository = $this->entityManager->getRepository(BroadcastMessage::class);
         /** @var BroadcastMessage[] $scheduled */
         $scheduledBroadcastMessages = $massmailRepository->findBy(
             ['status' => 'ToSend'],
             ['updated' => 'ASC'],
-            $batchSize,
+            $this->batchSize,
             0
         );
 
@@ -72,10 +64,11 @@ class SendMassmailCommand extends Command
                 $parameters = [];
                 if ($lastBroadcastId != $scheduled->getNewsletter()->getId()) {
                     // Check if the current newsletter contains images and set the parameter
-                    $newsletterTranslations = $scheduled->getNewsletter()->getTranslations();
+                    $newsletterRepository = $this->entityManager->getRepository(Newsletter::class);
+                    $newsletterTranslations = $newsletterRepository->getTranslations($scheduled->getNewsletter());
                     $anyNewsletter = reset($newsletterTranslations);
 
-                    $hasImages = false !== strpos($anyNewsletter['body'], "<figure");
+                    $hasImages = str_contains($anyNewsletter['body'], "<figure");
                     if ($hasImages) {
                         $parameters['has_images'] = true;
                     }
@@ -101,7 +94,7 @@ class SendMassmailCommand extends Command
                         $unsubscribeKey = openssl_random_pseudo_bytes(32);
                     }
 
-                    $parameters['unsubscribe_key'] = $unsubscribeKey;
+                    $parameters['unsubscribe_key'] = bin2hex($unsubscribeKey);
                     $this->mailer->sendNewsletterEmail(
                         $scheduled->getNewsletter(),
                         $receiver,

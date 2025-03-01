@@ -2,7 +2,7 @@
 
 namespace App\Pagerfanta;
 
-use Doctrine\DBAL\Driver\Connection;
+use Doctrine\DBAL\Connection;
 use Pagerfanta\Adapter\AdapterInterface;
 use PDO;
 
@@ -26,7 +26,7 @@ class MissingTranslationAdapter implements AdapterInterface
             SELECT
                 code,
                 domain,
-                shortcode,
+                shortCode,
                 sentence,
                 created
             FROM
@@ -61,10 +61,10 @@ class MissingTranslationAdapter implements AdapterInterface
         if (!empty($this->term)) {
             $query .= " AND code LIKE {$this->term}";
         }
-        $statement = $this->connection->query($query);
-        $result = $statement->fetch(PDO::FETCH_OBJ);
+        $statement = $this->connection->executeQuery($query);
+        $count = $statement->fetchOne();
 
-        return $result->cnt;
+        return $count;
     }
 
     /**
@@ -73,8 +73,8 @@ class MissingTranslationAdapter implements AdapterInterface
     public function getSlice(int $offset, int $length): iterable
     {
         $query = $this->query . ' LIMIT ' . $offset . ', ' . $length;
-        $statement = $this->connection->query($query);
+        $statement = $this->connection->executeQuery($query);
 
-        return $statement->fetchAll();
+        return $statement->fetchAllAssociative();
     }
 }

@@ -11,9 +11,9 @@ class ParserTableElement
 
     public function __construct(string $lineStart, string $argsep, string $inlinesep, $limit)
     {
-        $this->lineStart = str_split($lineStart);
-        $this->argsep = str_split($argsep);
-        $this->inlinesep = str_split($inlinesep);
-        $this->limit = $limit;
+        $this -> lineStart = str_split($lineStart);
+        $this -> argsep = str_split($argsep);
+        $this -> inlinesep = str_split($inlinesep);
+        $this -> limit = $limit;
     }
 }

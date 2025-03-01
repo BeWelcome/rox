@@ -8,6 +8,7 @@ use App\Logger\Logger;
 use App\Service\Mailer;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Pagerfanta\Doctrine\ORM\QueryAdapter;
 use Pagerfanta\Pagerfanta;
@@ -26,32 +27,30 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 /**
  * Class GroupController.
  *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings("PHPMD.CouplingBetweenObjects")
  */
 class GroupController extends AbstractController
 {
     use TranslatedFlashTrait;
     use TranslatorTrait;
 
-    /**
-     * @var Mailer
-     */
-    private $mailer;
+    private Mailer $mailer;
+    private EntityManagerInterface $entityManager;
 
-    public function __construct(Mailer $mailer)
+    public function __construct(Mailer $mailer, EntityManagerInterface $entityManager)
     {
         $this->mailer = $mailer;
+        $this->entityManager = $entityManager;
     }
 
     /**
      * Allows to set a status for group creation requests.
      *
-     * @Route("/admin/groups/approval", name="admin_groups_approval")
      *
      * @throws AccessDeniedException
-     *
      * @return Response
      */
+    #[Route(path: '/admin/groups/approval', name: 'admin_groups_approval')]
     public function approveGroups()
     {
         if (!$this->isGranted(Member::ROLE_ADMIN_GROUP)) {
@@ -66,7 +65,7 @@ class GroupController extends AbstractController
 
         // Fetch unapproved groups and decide on their fate
         // no pagination as there shouldn't be too many
-        $groupsRepository = $this->getDoctrine()->getRepository(Group::class);
+        $groupsRepository = $this->entityManager->getRepository(Group::class);
         $groups = $groupsRepository->findBy([
             'approved' => [Group::NOT_APPROVED, Group::IN_DISCUSSION],
         ]);
@@ -83,12 +82,11 @@ class GroupController extends AbstractController
     /**
      * Allows to archive a group.
      *
-     * @Route("/admin/groups/archival", name="admin_groups_archival")
      *
      * @throws AccessDeniedException
-     *
      * @return Response
      */
+    #[Route(path: '/admin/groups/archival', name: 'admin_groups_archival')]
     public function archiveGroups(Request $request)
     {
         if (!$this->isGranted(Member::ROLE_ADMIN_GROUP)) {
@@ -100,9 +98,9 @@ class GroupController extends AbstractController
         }
 
         // Build Pagerfanta for groups
-        $queryBuilder = $this->getDoctrine()->getManager()->createQueryBuilder()
+        $queryBuilder = $this->entityManager->createQueryBuilder()
             ->select('g')
-            ->from('App:Group', 'g')
+            ->from(Group::class, 'g')
             ->where("g.name NOT LIKE '[Archived] %'")
         ;
         $adapter = new QueryAdapter($queryBuilder);
@@ -125,12 +123,11 @@ class GroupController extends AbstractController
     /**
      * Allows to unarchive a group.
      *
-     * @Route("/admin/groups/unarchival", name="admin_groups_unarchival")
      *
      * @throws AccessDeniedException
-     *
      * @return Response
      */
+    #[Route(path: '/admin/groups/unarchival', name: 'admin_groups_unarchival')]
     public function unarchiveGroups(Request $request)
     {
         if (!$this->isGranted(Member::ROLE_ADMIN_GROUP)) {
@@ -142,9 +139,9 @@ class GroupController extends AbstractController
         }
 
         // Build Pagerfanta for groups
-        $queryBuilder = $this->getDoctrine()->getManager()->createQueryBuilder()
+        $queryBuilder = $this->entityManager->createQueryBuilder()
             ->select('g')
-            ->from('App:Group', 'g')
+            ->from(Group::class, 'g')
             ->where("g.name LIKE '[Archived] %'")
         ;
         $adapter = new QueryAdapter($queryBuilder);
@@ -167,12 +164,11 @@ class GroupController extends AbstractController
     /**
      * Move a group creation requests to the discussion queue.
      *
-     * @Route("/admin/groups/{id}/discuss", name="admin_groups_discuss")
      *
      * @throws AccessDeniedException
-     *
      * @return RedirectResponse
      */
+    #[Route(path: '/admin/groups/{id}/discuss', name: 'admin_groups_discuss')]
     public function discussGroup(Request $request, Group $group, Logger $logger)
     {
         if (!$this->isGranted(Member::ROLE_ADMIN_GROUP)) {
@@ -184,9 +180,9 @@ class GroupController extends AbstractController
         }
 
         $group->setApproved(Group::IN_DISCUSSION);
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($group);
-        $em->flush();
+
+        $this->entityManager->persist($group);
+        $this->entityManager->flush();
 
         $this->addTranslatedFlash('notice', 'flash.group.moved.discussion', [
             '%name%' => $group->getName(),
@@ -208,12 +204,11 @@ class GroupController extends AbstractController
     /**
      * Dismiss a group creation requests.
      *
-     * @Route("/admin/groups/{id}/dismiss", name="admin_groups_dismiss")
      *
      * @throws AccessDeniedException
-     *
      * @return RedirectResponse
      */
+    #[Route(path: '/admin/groups/{id}/dismiss', name: 'admin_groups_dismiss')]
     public function dismissGroup(Request $request, Group $group, Logger $logger)
     {
         if (!$this->isGranted(Member::ROLE_ADMIN_GROUP)) {
@@ -225,9 +220,9 @@ class GroupController extends AbstractController
         }
 
         $group->setApproved(Group::DISMISSED);
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($group);
-        $em->flush();
+
+        $this->entityManager->persist($group);
+        $this->entityManager->flush();
 
         $this->addTranslatedFlash('notice', 'flash.group.dismissed', [
             '%name%' => $group->getName(),
@@ -243,12 +238,11 @@ class GroupController extends AbstractController
     /**
      * Approve a group creation requests.
      *
-     * @Route("/admin/groups/{id}/approve", name="admin_groups_approve")
      *
      * @throws AccessDeniedException
-     *
      * @return RedirectResponse
      */
+    #[Route(path: '/admin/groups/{id}/approve', name: 'admin_groups_approve')]
     public function approveGroup(Request $request, Group $group, Logger $logger)
     {
         if (!$this->isGranted(Member::ROLE_ADMIN_GROUP)) {
@@ -260,9 +254,9 @@ class GroupController extends AbstractController
         }
 
         $group->setApproved(Group::APPROVED);
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($group);
-        $em->flush();
+
+        $this->entityManager->persist($group);
+        $this->entityManager->flush();
 
         $this->addTranslatedFlash('notice', 'flash.group.approved', [
             '%name%' => $group->getName(),
@@ -280,12 +274,11 @@ class GroupController extends AbstractController
     /**
      * Archive a group .
      *
-     * @Route("/admin/groups/{id}/archive", name="admin_groups_archive")
      *
      * @throws AccessDeniedException
-     *
      * @return RedirectResponse
      */
+    #[Route(path: '/admin/groups/{id}/archive', name: 'admin_groups_archive')]
     public function archiveGroup(Request $request, Group $group, Logger $logger)
     {
         if (!$this->isGranted(Member::ROLE_ADMIN_GROUP)) {
@@ -297,9 +290,9 @@ class GroupController extends AbstractController
         }
 
         $group->setName('[Archived] ' . $group->getName());
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($group);
-        $em->flush();
+
+        $this->entityManager->persist($group);
+        $this->entityManager->flush();
 
         $this->addTranslatedFlash('notice', 'flash.group.archived', [
             '%name%' => $group->getName(),
@@ -315,12 +308,11 @@ class GroupController extends AbstractController
     /**
      * Un-archive a group .
      *
-     * @Route("/admin/groups/{id}/unarchive", name="admin_groups_unarchive")
      *
      * @throws AccessDeniedException
-     *
      * @return RedirectResponse
      */
+    #[Route(path: '/admin/groups/{id}/unarchive', name: 'admin_groups_unarchive')]
     public function unarchiveGroup(Request $request, Group $group, Logger $logger)
     {
         if (!$this->isGranted(Member::ROLE_ADMIN_GROUP)) {
@@ -332,9 +324,9 @@ class GroupController extends AbstractController
         }
 
         $group->setName(str_replace('[Archived] ', '', $group->getName()));
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($group);
-        $em->flush();
+
+        $this->entityManager->persist($group);
+        $this->entityManager->flush();
 
         $this->addTranslatedFlash('notice', 'flash.group.unarchived', [
             '%name%' => $group->getName(),
@@ -350,12 +342,11 @@ class GroupController extends AbstractController
     /**
      * Rename a group .
      *
-     * @Route("/admin/groups/rename", name="admin_groups_rename")
      *
      * @throws AccessDeniedException
-     *
      * @return Response|RedirectResponse
      */
+    #[Route(path: '/admin/groups/rename', name: 'admin_groups_rename')]
     public function renameGroup(Request $request, Logger $logger)
     {
         if (!$this->isGranted(Member::ROLE_ADMIN_GROUP)) {
@@ -395,7 +386,6 @@ class GroupController extends AbstractController
             ->getForm();
         $groupForm->handleRequest($request);
         if ($groupForm->isSubmitted() && $groupForm->isValid()) {
-            $em = $this->getDoctrine()->getManager();
             $data = $groupForm->getData();
             $group = $data['group'];
             if (null === $group) {
@@ -403,8 +393,10 @@ class GroupController extends AbstractController
             } else {
                 $oldName = $group->getName();
                 $group->setName($data['new_name']);
-                $em->persist($group);
-                $em->flush($group);
+
+                $this->entityManager->persist($group);
+                $this->entityManager->flush($group);
+
                 $this->addTranslatedFlash('notice', 'admin.group.renamed', [
                     'oldName' => $oldName,
                     'newName' => $data['new_name'],

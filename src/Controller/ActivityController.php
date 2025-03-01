@@ -17,10 +17,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ActivityController extends AbstractController
 {
-    /**
-     * @Route("/activity/{id}/created", name="activity_created",
-     *     requirements={"id": "\d+"})
-     */
+    #[Route(path: '/activity/{id}/created', name: 'activity_created', requirements: ['id' => '\d+'])]
     public function created(Activity $activity): Response
     {
         return $this->render('activity/created.html.twig', [
@@ -29,11 +26,9 @@ class ActivityController extends AbstractController
     }
 
     /**
-     * @Route("/activity/{id}/download", name="activity_download",
-     *     requirements={"id": "\d+"})
-     *
-     * @SuppressWarnings(PHPMD.StaticAccess)
+     * @SuppressWarnings("PHPMD.StaticAccess")
      */
+    #[Route(path: '/activity/{id}/download', name: 'activity_download', requirements: ['id' => '\d+'])]
     public function download(Activity $activity): Response
     {
         $start = new DateTime(DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $activity->getStarts()), false);

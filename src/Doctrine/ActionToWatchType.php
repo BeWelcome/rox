@@ -4,15 +4,12 @@ namespace App\Doctrine;
 
 class ActionToWatchType extends EnumType
 {
-    public const REPLIES = 'replies';
-    public const UPDATES = 'updates';
-    public const NO = 'neverask';
+    public const string REPLIES = 'replies';
+    public const string UPDATES = 'updates';
 
-    /** @var string */
-    protected $name = 'action_to_watch';
+    protected string $name = 'action_to_watch';
 
-    /** @var array */
-    protected $values = [
+    protected array $values = [
         self::REPLIES,
         self::UPDATES,
     ];

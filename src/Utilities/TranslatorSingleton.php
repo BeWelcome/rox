@@ -29,7 +29,7 @@ class TranslatorSingleton
      *
      * @return TranslatorSingleton the *session* instance
      *
-     * @SuppressWarnings(PHPMD.StaticAccess)
+     * @SuppressWarnings("PHPMD.StaticAccess")
      */
     public static function createInstance(TranslatorInterface $translator)
     {
@@ -59,7 +59,7 @@ class TranslatorSingleton
     /**
      * @return TranslatorInterface
      *
-     * @SuppressWarnings(PHPMD.StaticAccess)
+     * @SuppressWarnings("PHPMD.StaticAccess")
      */
     public static function getTranslator()
     {

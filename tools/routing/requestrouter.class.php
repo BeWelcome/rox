@@ -332,18 +332,12 @@ class RequestRouter implements UrlGeneratorInterface
      *
      * @param RequestContext $context The context
      */
-    public function setContext(
-        RequestContext $context
-    ) {
+    public function setContext(RequestContext $context): void
+    {
         $this->_context = $context;
     }
 
-    /**
-     * Gets the request context.
-     *
-     * @return RequestContext The context
-     */
-    public function getContext()
+    public function getContext(): RequestContext
     {
         return $this->_context;
     }
@@ -374,12 +368,9 @@ class RequestRouter implements UrlGeneratorInterface
      * @throws \Symfony\Component\Routing\Exception\InvalidParameterException           When a parameter value for a placeholder is not correct because
      *                                             it does not match the requirement
      */
-    public function generate(
-        $name,
-        $parameters = array(),
-        $referenceType = self::ABSOLUTE_PATH
-    ) {
-        $url = $this->url($name, $parameters, $referenceType == self::ABSOLUTE_PATH ? true : false);
+    public function generate(string $name,array $parameters = [], int $referenceType = self::ABSOLUTE_PATH): string
+    {
+        $url = $this->url($name, $parameters, $referenceType == self::ABSOLUTE_PATH);
         if (empty($url)) {
             $url = false;
         }

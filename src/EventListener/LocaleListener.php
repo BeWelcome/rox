@@ -37,7 +37,7 @@ class LocaleListener implements EventSubscriberInterface
     }
 
     /**
-     * @SuppressWarnings(PHPMD.StaticAccess)
+     * @SuppressWarnings("PHPMD.StaticAccess")
      */
     public function onKernelRequest(RequestEvent $event)
     {

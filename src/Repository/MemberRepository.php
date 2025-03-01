@@ -8,6 +8,7 @@ use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bridge\Doctrine\Security\User\UserLoaderInterface;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -18,7 +19,7 @@ class MemberRepository extends ServiceEntityRepository implements UserLoaderInte
         parent::__construct($registry, Member::class);
     }
 
-    public function upgradePassword(UserInterface $user, string $newHashedPassword): void
+    public function upgradePassword(PasswordAuthenticatedUserInterface $user, string $newHashedPassword): void
     {
         /** @var Member $user */
         // set the new hashed password on the User object
@@ -37,30 +38,30 @@ class MemberRepository extends ServiceEntityRepository implements UserLoaderInte
      *
      * @return UserInterface|null
      */
-    public function loadMembersByUsernamePart($username)
+    public function loadMembersByUsernamePart(string $username)
     {
         return $this->createQueryBuilder('u')
             ->select('u.username')
             ->where('u.username Like :username')
             ->setParameter('username', '%' . $username . '%')
             ->andWhere('u.status in (:status)')
-            ->setParameter(':status', MemberStatusType::ACTIVE_ALL_ARRAY)
+            ->setParameter('status', MemberStatusType::ACTIVE_ALL_ARRAY)
             ->setMaxResults(10)
             ->orderBy('u.username', 'DESC')
             ->getQuery()
             ->getResult();
     }
 
-    public function loadUserByIdentifier(string $usernameOrEmail): ?Member
+    public function loadUserByIdentifier(string $identifier): ?Member
     {
-        if (empty($usernameOrEmail)) {
+        if (empty($identifier)) {
             return null;
         }
 
         return $this->createQueryBuilder('u')
             ->where('u.username = :username OR u.email = :email')
-            ->setParameter('username', $usernameOrEmail)
-            ->setParameter('email', $usernameOrEmail)
+            ->setParameter('username', $identifier)
+            ->setParameter('email', $identifier)
             ->getQuery()
             ->getOneOrNullResult();
     }
@@ -87,7 +88,7 @@ class MemberRepository extends ServiceEntityRepository implements UserLoaderInte
             ->where('u.username like :term')
             ->setParameter('term', $term . '%')
             ->andWhere('u.status in (:status)')
-            ->setParameter(':status', MemberStatusType::ACTIVE_ALL_ARRAY)
+            ->setParameter('status', MemberStatusType::ACTIVE_ALL_ARRAY)
             ->setMaxResults(20)
             ->getQuery()
             ->getResult();
@@ -99,9 +100,9 @@ class MemberRepository extends ServiceEntityRepository implements UserLoaderInte
             ->where('m.status = :askToLeave')
             ->andWhere('m.username NOT LIKE :retired')
             ->andWhere('DATEDIFF(:now, m.lastLogin) > 365')
-            ->setParameter(':askToLeave', MemberStatusType::ASKED_TO_LEAVE)
-            ->setParameter(':retired', 'Retired\_%')
-            ->setParameter(':now', new DateTime())
+            ->setParameter('askToLeave', MemberStatusType::ASKED_TO_LEAVE)
+            ->setParameter('retired', 'Retired\_%')
+            ->setParameter('now', new DateTime())
             ->getQuery()
         ;
 

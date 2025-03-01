@@ -4,23 +4,29 @@ namespace App\Controller\Admin;
 
 use App\Entity\FaqCategory;
 use App\Entity\Member;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class FaqBaseController extends AbstractController
 {
+    protected EntityManagerInterface $entityManager;
+
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
+
     /**
      * @throws AccessDeniedException
-     *
-     * @return array
      */
-    protected function getSubMenuItems(FaqCategory $faqCategory = null)
+    protected function getSubMenuItems(?FaqCategory $faqCategory = null): array
     {
         if (!$this->isGranted(Member::ROLE_ADMIN_FAQ)) {
             throw $this->createAccessDeniedException('You need to have Faq right to access this.');
         }
 
-        $repository = $this->getDoctrine()->getRepository(FaqCategory::class);
+        $repository = $this->entityManager->getRepository(FaqCategory::class);
         $faqCategories = $repository->findBy([], ['sortOrder' => 'ASC']);
 
         $subMenu = [];

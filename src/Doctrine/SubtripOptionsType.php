@@ -4,15 +4,13 @@ namespace App\Doctrine;
 
 class SubtripOptionsType extends SetType
 {
-    public const PRIVATE = 'Private';
-    public const MEET_LOCALS = 'MeetLocals';
-    public const LOOKING_FOR_HOST = 'LookingForHosts';
+    public const string PRIVATE = 'Private';
+    public const string MEET_LOCALS = 'MeetLocals';
+    public const string LOOKING_FOR_HOST = 'LookingForHosts';
 
-    /** @var string */
-    protected $name = 'subtrip_options';
+    protected string $name = 'subtrip_options';
 
-    /** @var array */
-    protected $values = [
+    protected array $values = [
         self::PRIVATE,
         self::MEET_LOCALS,
         self::LOOKING_FOR_HOST,

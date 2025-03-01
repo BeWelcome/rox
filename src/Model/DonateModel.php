@@ -27,7 +27,7 @@ class DonateModel
                     created > '" . $campaignValue['campaignstartdate']->format('Y-m-d H:i:s') . "'
                 ";
             $connection = $this->getManager()->getConnection();
-            $rowYear = $connection->executeQuery($sql)->fetch();
+            $rowYear = $connection->executeQuery($sql)->fetchAssociative();
             switch ($rowYear['quarter']) {
                 case 1:
                     $start = $rowYear['yearnow'] . '-01-01';
@@ -58,13 +58,13 @@ class DonateModel
                     created < '$end'
                 ";
             $result = $connection->executeQuery($query);
-            $row = $result->fetch(\PDO::FETCH_OBJ);
-            $row->QuarterDonation = sprintf('%d', $row->Total);
-            $row->MonthNeededAmount = $requiredPerMonth;
-            $row->YearNeededAmount = $campaignValue['neededperyear'];
-            $row->QuarterNeededAmount = $requiredPerMonth * 3;
-            $row->YearDonation = $rowYear['YearDonation'];
-            $row->year = Carbon::instance($campaignValue['campaignstartdate'])->year;
+            $row = $result->fetchAssociative();
+            $row['QuarterDonation'] = sprintf('%d', $row['Total']);
+            $row['MonthNeededAmount'] = $requiredPerMonth;
+            $row['YearNeededAmount'] = $campaignValue['neededperyear'];
+            $row['QuarterNeededAmount'] = $requiredPerMonth * 3;
+            $row['YearDonation'] = $rowYear['YearDonation'];
+            $row['year'] = Carbon::instance($campaignValue['campaignstartdate'])->year;
 
             return $row;
         }

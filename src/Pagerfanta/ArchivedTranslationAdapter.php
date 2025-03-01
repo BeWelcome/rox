@@ -2,7 +2,7 @@
 
 namespace App\Pagerfanta;
 
-use Doctrine\DBAL\Driver\Connection;
+use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
 use Pagerfanta\Adapter\AdapterInterface;
 use PDO;
@@ -14,7 +14,7 @@ class ArchivedTranslationAdapter implements AdapterInterface
     /**
      * SearchAdapter constructor.
      *
-     * @SuppressWarnings(PHPMD.StaticAccess)
+     * @SuppressWarnings("PHPMD.StaticAccess")
      */
     public function __construct(Connection $connection)
     {
@@ -35,10 +35,10 @@ class ArchivedTranslationAdapter implements AdapterInterface
                 w.shortCode = 'en'
                 AND (w.isArchived = 1)
         ");
-        $statement->execute();
-        $result = $statement->fetch(PDO::FETCH_OBJ);
+        $result = $statement->executeQuery();
+        $count = $result->fetchOne();
 
-        return $result->cnt;
+        return $count;
     }
 
     /**
@@ -63,8 +63,8 @@ class ArchivedTranslationAdapter implements AdapterInterface
         ");
         $statement->bindValue('limit', $length, ParameterType::INTEGER);
         $statement->bindValue('offset', $offset, ParameterType::INTEGER);
-        $statement->execute();
+        $result = $statement->executeQuery();
 
-        return $statement->fetchAll();
+        return $result->fetchAllAssociative();
     }
 }

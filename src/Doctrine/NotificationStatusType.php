@@ -4,15 +4,13 @@ namespace App\Doctrine;
 
 class NotificationStatusType extends EnumType
 {
-    public const SCHEDULED = 'ToSend';
-    public const SENT = 'Sent';
-    public const FROZEN = 'Freeze';
+    public const string SCHEDULED = 'ToSend';
+    public const string SENT = 'Sent';
+    public const string FROZEN = 'Freeze';
 
-    /** @var string */
-    protected $name = 'message_status';
+    protected string $name = 'message_status';
 
-    /** @var array */
-    protected $values = [
+    protected array $values = [
         self::SCHEDULED,
         self::SENT,
         self::FROZEN,

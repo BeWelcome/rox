@@ -12,80 +12,70 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Cryptedfield.
  *
- * @ORM\Table(name="cryptedfields", indexes={
- *     @ORM\Index(name="cryptedfields_member", columns={"IdMember"})
- * })
- * @ORM\Entity
  *
- * @SuppressWarnings(PHPMD)
+ * @SuppressWarnings("PHPMD")
  * Auto generated class do not check mess
  */
+#[ORM\Table(name: 'cryptedfields')]
+#[ORM\Index(name: 'cryptedfields_member', columns: ['IdMember'])]
+#[ORM\Entity]
 class CryptedField
 {
     /**
      * @var string
-     *
-     * @ORM\Column(name="AdminCryptedValue", type="text", length=65535, nullable=false)
      */
+    #[ORM\Column(name: 'AdminCryptedValue', type: 'text', length: 65535, nullable: false)]
     private $adminCryptedValue;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="MemberCryptedValue", type="text", length=65535, nullable=false)
      */
+    #[ORM\Column(name: 'MemberCryptedValue', type: 'text', length: 65535, nullable: false)]
     private $memberCryptedValue;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="IsCrypted", type="string", nullable=false)
      */
+    #[ORM\Column(name: 'IsCrypted', type: 'string', nullable: false)]
     private $iscrypted = 'crypted';
 
     /**
      * @var Member
-     *
-     * @ORM\ManyToOne(targetEntity="Member", inversedBy="cryptedFields")
-     * @ORM\JoinColumn(name="IdMember", referencedColumnName="id")
      */
+    #[ORM\JoinColumn(name: 'IdMember', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: Member::class, inversedBy: 'fields')]
     private $member;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="ToDo", type="string", nullable=false)
      */
+    #[ORM\Column(name: 'ToDo', type: 'string', nullable: false)]
     private $todo = 'nothing';
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="temporary_uncrypted_buffer", type="text", length=65535, nullable=true)
      */
+    #[ORM\Column(name: 'temporary_uncrypted_buffer', type: 'text', length: 65535, nullable: true)]
     private $temporaryUncryptedBuffer;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="IdRecord", type="integer", nullable=false)
      */
+    #[ORM\Column(name: 'IdRecord', type: 'integer', nullable: false)]
     private $idrecord = '0';
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="TableColumn", type="string", length=200, nullable=false)
      */
+    #[ORM\Column(name: 'TableColumn', type: 'string', length: 200, nullable: false)]
     private $tablecolumn = 'NotSet';
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     private $id;
 
     /**

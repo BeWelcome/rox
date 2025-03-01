@@ -9,69 +9,61 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * GalleryComments.
  *
- * @ORM\Table(name="gallery_comments", indexes={
- *     @ORM\Index(name="gallery_comments_blog_id_foreign", columns={"gallery_items_id_foreign"}),
- *     @ORM\Index(name="gallery_comments_user_id_foreign", columns={"user_id_foreign"})
- * })
- * @ORM\HasLifecycleCallbacks
- * @ORM\Entity
  *
- * @SuppressWarnings(PHPMD)
+ * @SuppressWarnings("PHPMD")
  * Auto generated class do not check mess
  */
+#[ORM\Table(name: 'gallery_comments')]
+#[ORM\Index(name: 'gallery_comments_blog_id_foreign', columns: ['gallery_items_id_foreign'])]
+#[ORM\Index(name: 'gallery_comments_user_id_foreign', columns: ['user_id_foreign'])]
+#[ORM\HasLifecycleCallbacks]
+#[ORM\Entity]
 class GalleryComment
 {
     /**
      * @var int
-     *
-     * @ORM\Column(name="gallery_id_foreign", type="integer", nullable=false)
      */
+    #[ORM\Column(name: 'gallery_id_foreign', type: 'integer', nullable: false)]
     private $gallery = 0;
 
     /**
      * @var GalleryImage
-     *
-     * @ORM\OneToOne(targetEntity="GalleryImage", fetch="EAGER")
-     * @ORM\JoinColumn(name="gallery_items_id_foreign", referencedColumnName="id", nullable=false)
      */
+    #[ORM\JoinColumn(name: 'gallery_items_id_foreign', referencedColumnName: 'id', nullable: false)]
+    #[ORM\OneToOne(targetEntity: \GalleryImage::class, fetch: 'EAGER')]
     private $image;
 
     /**
      * @var Member
-     *
-     * @ORM\ManyToOne(targetEntity="Member", fetch="EAGER")
-     * @ORM\JoinColumn(name="user_id_foreign")
      */
+    #[ORM\JoinColumn(name: 'user_id_foreign')]
+    #[ORM\ManyToOne(targetEntity: \Member::class, fetch: 'EAGER')]
     private $member;
 
     /**
      * @var DateTime
-     *
-     * @ORM\Column(name="created", type="datetime", nullable=false)
      */
+    #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
     private $created;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="title", type="string", length=75, nullable=false)
      */
+    #[ORM\Column(name: 'title', type: 'string', length: 75, nullable: false)]
     private $title = '';
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="text", type="text", length=16777215, nullable=false)
      */
+    #[ORM\Column(name: 'text', type: 'text', length: 16777215, nullable: false)]
     private $text;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     private $id;
 
     /**
@@ -208,9 +200,8 @@ class GalleryComment
 
     /**
      * Triggered on insert.
-     *
-     * @ORM\PrePersist
      */
+    #[ORM\PrePersist]
     public function onPrePersist()
     {
         $this->created = new \DateTime('now');

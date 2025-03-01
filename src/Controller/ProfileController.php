@@ -16,7 +16,6 @@ use App\Repository\ProfileVisitRepository;
 use App\Utilities\ChangeProfilePictureGlobals;
 use App\Utilities\ProfileSubmenu;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -45,10 +44,9 @@ class ProfileController extends AbstractController
     }
 
     /**
-     * @Route("/members/{username}/new", name="members_profile_new")
-     *
      * @ParamConverter("member", class="App\Entity\Member", options={"mapping": {"username": "username"}})
      */
+    #[Route(path: '/members/{username:member}/new', name: 'members_profile_new')]
     public function show(Member $member): Response
     {
         if (!$member->isBrowsable()) {
@@ -69,11 +67,7 @@ class ProfileController extends AbstractController
         return $this->renderProfile(true, $member, $member);
     }
 
-    /**
-     * @Route("/members/status/set", name="profile_set_status",
-     *     methods={"POST"}
-     * )
-     */
+    #[Route(path: '/members/status/set', name: 'profile_set_status', methods: ['POST'])]
     public function setMemberStatus(Request $request, EntityManagerInterface $entityManager): Response
     {
         $statusForm = $this->createForm(ProfileStatusFormType::class);
@@ -95,9 +89,7 @@ class ProfileController extends AbstractController
         return new RedirectResponse($request->headers->get('referer'));
     }
 
-    /**
-     * @Route("/members/{username}/visitors/{page}", name="profile_visitors")
-     */
+    #[Route(path: '/members/{username}/visitors/{page}', name: 'profile_visitors')]
     public function showMyVisitors(
         Member $member,
         EntityManagerInterface $entityManager,
@@ -132,17 +124,13 @@ class ProfileController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/setlocation", name="profile_set_location_redirect")
-     */
+    #[Route(path: '/setlocation', name: 'profile_set_location_redirect')]
     public function redirectToSetLocation(): RedirectResponse
     {
         return $this->redirectToRoute('profile_set_location', ['username' => $this->getUser()->getUsername()]);
     }
 
-    /**
-     * @Route("/members/{username}/location", name="profile_set_location")
-     */
+    #[Route(path: '/members/{username}/location', name: 'profile_set_location')]
     public function setLocation(
         Request $request,
         Member $member,
@@ -196,9 +184,7 @@ class ProfileController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/deleteprofile", name="profile_delete_redirect")
-     */
+    #[Route(path: '/deleteprofile', name: 'profile_delete_redirect')]
     public function deleteProfileNotLoggedIn(
         Request $request,
         ProfileModel $profileModel,
@@ -249,9 +235,7 @@ class ProfileController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/members/{username}/delete", name="profile_delete")
-     */
+    #[Route(path: '/members/{username}/delete', name: 'profile_delete')]
     public function deleteProfile(
         Request $request,
         TokenStorageInterface $tokenStorage,

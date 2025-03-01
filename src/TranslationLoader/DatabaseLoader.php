@@ -27,7 +27,7 @@ class DatabaseLoader implements LoaderInterface
     }
 
     /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      *
      * @param mixed $resource
      * @param mixed $locale

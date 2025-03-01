@@ -6,4 +6,8 @@
     {% else %}
         {{ member.Username }}'s profile
     {% endif %}
+    {% dump(member) %}
+    {{ dump(member.translatedFields) }}
+    {{ dump(member.translatedFields.toArray) }}
+    {{ dump(member.fields) }}
 {% endblock %}

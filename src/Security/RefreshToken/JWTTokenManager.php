@@ -66,7 +66,7 @@ final class JWTTokenManager implements JWTTokenManagerInterface
 
             try {
                 /** @var User $user */
-                $user = $this->userProvider->loadUserByUsername($identity);
+                $user = $this->userProvider->loadUserByIdentifier($identity);
             } catch (UsernameNotFoundException $e) {
                 throw new UserNotFoundException($idClaim, $identity);
             }

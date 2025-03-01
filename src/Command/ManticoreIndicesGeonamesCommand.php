@@ -41,7 +41,7 @@ class ManticoreIndicesGeonamesCommand extends Command
 
     public function __construct(EntityManagerInterface $entityManager, string $manticoreHost, int $manticorePort)
     {
-        parent::__construct(self::$defaultName);
+        parent::__construct();
 
         $this->entityManager = $entityManager;
         $this->manticoreHost = $manticoreHost;

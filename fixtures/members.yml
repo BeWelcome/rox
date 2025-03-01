@@ -1,9 +1,9 @@
 App\Entity\Member:
     bwadmin:
         Username: 'bwadmin'
-        BirthDate: <dateTimeBetween('1970-01-01', '1970-01-01')>
+        BirthDate: <dateTime('1970-01-01')>
         email: <email()>
-        LastLogin: <dateTimeBetween('1970-01-01', '1970-01-01')>
+        LastLogin: <dateTime('now')>
         LastSwitchToActive: null
         Status: 'Active'
         city: '@NewBerlin'
@@ -42,9 +42,9 @@ App\Entity\Member:
         registration_key: ''
     member_{1..5}:
         Username: 'member-<current()>'
-        BirthDate: <dateTimeBetween('1970-01-01', '2006-01-01')>
+        BirthDate: <dateTimeBetween('-80years', '-18years')>
         email: 'member-<current()>\@bewelcome.org'
-        LastLogin: <dateTime()>
+        LastLogin: <dateTimeBetween('-12years', 'now')>
         LastSwitchToActive: null
         Status: '<randomElement(["Active", "OutOfRemind"])>'
         city: '@NewBerlin'
@@ -83,9 +83,9 @@ App\Entity\Member:
         registration_key: ''
     member_{6..10}:
         Username: 'member-<current()>'
-        BirthDate: <dateTimeBetween('1970-01-01', '2006-01-01')>
+        BirthDate: <dateTimeBetween('-80years', '-18years')>
         email: 'member-<current()>\@bewelcome.org'
-        LastLogin: <dateTimeBetween('2023-01-01', '2024-05-01')>
+        LastLogin: <dateTimeBetween('-12years', 'now')>
         LastSwitchToActive: null
         Status: 'Active'
         city: '@NewJayapura'
@@ -125,9 +125,9 @@ App\Entity\Member:
         registration_key: ''
     member_banned:
         Username: 'member-banned'
-        BirthDate: <dateTimeBetween('1970-01-01', '2006-01-01')>
+        BirthDate: <dateTimeBetween('-80years', '-18years')>
         email: 'member-banned\@bewelcome.org'
-        LastLogin: <dateTimeBetween('2023-01-01', '2024-05-01')>
+        LastLogin: <dateTimeBetween('-12years', 'now')>
         LastSwitchToActive: null
         Status: 'Banned'
         city: '@NewJayapura'
@@ -167,9 +167,9 @@ App\Entity\Member:
         registration_key: ''
     member_suspended:
         Username: 'member-suspended'
-        BirthDate: <dateTimeBetween('1970-01-01', '2006-01-01')>
+        BirthDate: <dateTimeBetween('-80years', '-18years')>
         email: 'member-suspended\@bewelcome.org'
-        LastLogin: <dateTimeBetween('2023-01-01', '2024-05-01')>
+        LastLogin: <dateTimeBetween('-12years', 'now')>
         LastSwitchToActive: null
         Status: 'TakenOut'
         city: '@NewJayapura'

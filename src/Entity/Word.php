@@ -133,7 +133,7 @@ class Word
         return new Carbon($this->updated);
     }
 
-    public function setMajorUpdate(?Carbon $majorUpdate): self
+    public function setMajorUpdate(?DateTime $majorUpdate): self
     {
         $this->majorUpdate = $majorUpdate;
 
@@ -210,14 +210,14 @@ class Word
         return $this->translationPriority;
     }
 
-    public function setIsArchived(bool $isArchived): self
+    public function setIsArchived(?bool $isArchived): self
     {
         $this->isArchived = $isArchived;
 
         return $this;
     }
 
-    public function getIsArchived(): bool
+    public function getIsArchived(): ?bool
     {
         return $this->isArchived;
     }
@@ -248,7 +248,7 @@ class Word
     }
 
     #[ORM\PreUpdate]
-    public function onPreUpdate()
+    public function onPreUpdate(): void
     {
         $this->updated = new Carbon('now');
     }

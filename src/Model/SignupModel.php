@@ -4,6 +4,7 @@ namespace App\Model;
 
 use App\Doctrine\MemberStatusType;
 use App\Entity\Address;
+use App\Entity\Language;
 use App\Entity\Member;
 use App\Entity\MemberPreference;
 use App\Entity\Message;
@@ -57,6 +58,15 @@ class SignupModel
         $this->entityManager->persist($member);
         $this->entityManager->flush();
 
+        // Matches English in the odd setup of the database
+        $localeId = 0;
+        if (null !== $locale) {
+            $language = $this->entityManager->getRepository(Language::class)->findOneBy(['shortCode' => $locale]);
+            if (null !== $language) {
+                $localeId = $language->getId();
+            }
+        }
+
         $preference = $this->entityManager->getRepository(Preference::class)->findOneBy([
             'codename' => Preference::LOCALE
         ]);
@@ -65,7 +75,7 @@ class SignupModel
         $memberPreference
             ->setMember($member)
             ->setPreference($preference)
-            ->setValue($locale)
+            ->setValue($localeId)
         ;
 
         $this->entityManager->persist($memberPreference);

@@ -336,7 +336,7 @@ class Notification
         $this->created = new DateTime('now');
     }
 
-    public function getTranslationparams(): ?string
+    public function getTranslationParams(): ?string
     {
         return $this->translationparams;
     }

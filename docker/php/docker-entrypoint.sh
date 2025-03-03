@@ -26,8 +26,8 @@ if [ "$1" = 'php-fpm' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ]; then
 		cp rox_docker.ini rox_local.ini
 	fi
 
+  git config --global --add safe.directory /srv/bewelcome
 	if [ "$APP_ENV" != 'prod' ] && [ ! -f VERSION ]; then
-        git config --global --add safe.directory /srv/bewelcome
 		git rev-parse --short HEAD > VERSION
 	fi
 

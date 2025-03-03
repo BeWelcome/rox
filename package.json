@@ -117,7 +117,7 @@
     "show-more": "^1.0.1",
     "show-more-read": "tomik23/show-more",
     "tom-select": "2.*",
-    "vanilla-calendar-pro": "^2.9.2",
+    "vanilla-calendar-pro": "^3.0",
     "webpack": "5.*"
   }
 }

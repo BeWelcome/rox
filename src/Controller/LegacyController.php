@@ -59,7 +59,7 @@ class LegacyController extends AbstractController
             (false === strpos($pathInfo, '/about')) ||
             (false === strpos($pathInfo, '/signup'));
         if (!$session->has('IdMember')) {
-            /** @var Member */
+            /** @var Member $member */
             $member = $securityHelper->getUser();
             $rememberMeToken = $securityHelper->getToken();
             if (null === $rememberMeToken && !$public) {
@@ -70,21 +70,6 @@ class LegacyController extends AbstractController
                     $session->set('IdMember', $member->getId());
                     $session->set('MemberStatus', $member->getStatus());
                     $session->set('Username', $member->getUsername());
-                    $connection = $entityManager->getConnection();
-
-                    $stmt = $connection->prepare('
-                        SELECT
-                            id
-                        FROM
-                            user
-                        WHERE
-                            handle = :username
-                    ');
-                    $stmt->bindValue('username', $member->getUsername());
-
-                    $result = $stmt->executeQuery();
-                    $id = $result->fetchOne();
-                    $session->set('APP_User_id', $id);
                 }
             }
         }

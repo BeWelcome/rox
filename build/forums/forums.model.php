@@ -722,7 +722,7 @@ WHERE `forums_posts`.`id` = $this->messageId
 		 $Sentence= $this->dao->escape($P_Sentence);
 
         MOD_log::get()->write("Updating data for IdForumTrads=#".$id." Before [".addslashes($rBefore->Sentence)."] IdLanguage=".$rBefore->IdLanguage." <br />\nAfter [".$Sentence."] IdLanguage=".$IdLanguage, "ForumModerator");
-		 $sUpdate="update forum_trads set Sentence='".$Sentence."',IdLanguage=".$IdLanguage.",IdTranslator=".$this->session->get("IdMember")." where id=".$id ;
+		 $sUpdate="update forum_trads set Sentence='".$Sentence."',IdLanguage=".$IdLanguage.",IdTranslator=".$this->session->get("IdMember").", updated=NOW() where id=".$id ;
         $s=$this->dao->query($sUpdate);
         if (!$s) {
             throw new PException('Failed for Update forum_trads.id=#'.$id);

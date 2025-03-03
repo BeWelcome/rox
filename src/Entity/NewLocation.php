@@ -138,7 +138,7 @@ class NewLocation implements Translatable
      *
      */
     #[ORM\JoinColumn(name: 'country', referencedColumnName: 'geonameId', nullable: true)]
-    #[ORM\ManyToOne(targetEntity: \NewLocation::class, fetch: 'EAGER')]
+    #[ORM\ManyToOne(targetEntity: NewLocation::class, fetch: 'EAGER')]
     #[Groups(['Member:Read'])]
     private $country;
 
@@ -146,28 +146,28 @@ class NewLocation implements Translatable
      * @var NewLocation
      */
     #[ORM\JoinColumn(name: 'admin1', referencedColumnName: 'geonameId', nullable: true)]
-    #[ORM\ManyToOne(targetEntity: \NewLocation::class, fetch: 'EAGER')]
+    #[ORM\ManyToOne(targetEntity: NewLocation::class, fetch: 'EAGER')]
     private $admin1;
 
     /**
      * @var NewLocation
      */
     #[ORM\JoinColumn(name: 'admin2', referencedColumnName: 'geonameId', nullable: true)]
-    #[ORM\ManyToOne(targetEntity: \NewLocation::class)]
+    #[ORM\ManyToOne(targetEntity: NewLocation::class)]
     private $admin2;
 
     /**
      * @var NewLocation
      */
     #[ORM\JoinColumn(name: 'admin3', referencedColumnName: 'geonameId', nullable: true)]
-    #[ORM\ManyToOne(targetEntity: \NewLocation::class)]
+    #[ORM\ManyToOne(targetEntity: NewLocation::class)]
     private $admin3;
 
     /**
      * @var NewLocation
      */
     #[ORM\JoinColumn(name: 'admin4', referencedColumnName: 'geonameId', nullable: true)]
-    #[ORM\ManyToOne(targetEntity: \NewLocation::class)]
+    #[ORM\ManyToOne(targetEntity: NewLocation::class)]
     private $admin4;
 
     /**
@@ -189,7 +189,6 @@ class NewLocation implements Translatable
      */
     #[ORM\Column(name: 'geonameId', type: 'integer')]
     #[ORM\Id]
-    #[Groups(['Member:Read'])]
     private $geonameId;
 
     public function setName(string $name): self

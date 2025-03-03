@@ -1,34 +1,25 @@
 // @ts-ignore
-import VanillaCalendar, { Options } from 'vanilla-calendar-pro';
-import 'vanilla-calendar-pro/build/vanilla-calendar.min.css';
+import { Calendar, type Options } from 'vanilla-calendar-pro';
+import 'vanilla-calendar-pro/styles/index.css';
 
 const options: Options = {
-    input: true,
+    inputMode: true,
     type: 'default',
-    actions: {
-        changeToInput(e, calendar, self) {
-            if (!self.HTMLInputElement) return;
-            if (self.selectedDates[0]) {
-                self.HTMLInputElement.value = self.selectedDates[0] + " " + self.selectedTime;
-            } else {
-                self.HTMLInputElement.value = '';
-            }
-        },
+    onChangeToInput(self) {
+        if (!self.context.inputElement) return;
+        if (self.context.selectedDates[0]) {
+            self.context.inputElement.value = self.context.selectedDates[0] + " " + self.context.selectedTime;
+            self.hide();
+        } else {
+            self.context.inputElement.value = '';
+        }
     },
-    settings: {
-        range: {
-            disablePast: true,
-        },
-        selection: {
-            time: 24,
-        },
-        visibility: {
-            positionToInput: 'center',
-            theme: 'light',
-        },
-    },
+    disableDatesPast: true,
+    selectionTimeMode: 24,
+    positionToInput: 'auto',
+    selectedTheme: 'light',
 };
 
 const expires = document.getElementById('login_message_expires');
-const calendar = new VanillaCalendar(expires, options);
+const calendar = new Calendar(expires, options);
 calendar.init();

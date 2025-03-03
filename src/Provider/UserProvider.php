@@ -12,10 +12,7 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 class UserProvider implements UserProviderInterface
 {
-    /**
-     * @var MemberRepository
-     */
-    protected $memberRepository;
+    protected MemberRepository $memberRepository;
 
     public function __construct(MemberRepository $memberRepository)
     {

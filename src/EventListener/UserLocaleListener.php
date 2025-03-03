@@ -31,13 +31,14 @@ class UserLocaleListener implements EventSubscriberInterface
     /**
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
-    public function onInteractiveLogin(InteractiveLoginEvent $event)
+    public function onInteractiveLogin(InteractiveLoginEvent $event): void
     {
         $request = $event->getRequest();
         $session = $request->getSession();
 
         /** @var Member $user */
         $user = $event->getAuthenticationToken()->getUser();
+        $user->initializePreferredLanguage($this->entityManager);
 
         $language = $user->getPreferredLanguage();
         if (null === $language) {

@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Repository\PostNotificationRepository;
 use App\Utilities\LifecycleCallbacksTrait;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -10,208 +11,110 @@ use Doctrine\ORM\Mapping as ORM;
  */
 #[ORM\Table(name: 'posts_notificationqueue')]
 #[ORM\Index(name: 'posts_notificationqueue_status', columns: ['Status'])]
-#[ORM\Entity(repositoryClass: \App\Repository\PostNotificationRepository::class)]
+#[ORM\Entity(repositoryClass: PostNotificationRepository::class)]
 #[ORM\HasLifecycleCallbacks]
 class PostNotification
 {
     use LifecycleCallbacksTrait;
 
-    /**
-     * @var string
-     */
     #[ORM\Column(name: 'Status', type: 'string', nullable: false)]
-    private $status = 'ToSend';
+    private string $status = 'ToSend';
 
-    /**
-     * @var Member
-     */
-    #[ORM\JoinColumn(name: 'IdMember', referencedColumnName: 'id')]
-    #[ORM\ManyToOne(targetEntity: \Member::class)]
-    private $receiver;
+    #[ORM\JoinColumn(name: 'IdMember', referencedColumnName: 'id', nullable: false)]
+    #[ORM\ManyToOne(targetEntity: Member::class)]
+    private Member $receiver;
 
-    /**
-     * @var ForumPost
-     */
-    #[ORM\JoinColumn(name: 'IdPost', referencedColumnName: 'id')]
-    #[ORM\ManyToOne(targetEntity: \ForumPost::class)]
-    private $post;
+    #[ORM\JoinColumn(name: 'IdPost', referencedColumnName: 'id', nullable: false)]
+    #[ORM\ManyToOne(targetEntity: ForumPost::class)]
+    private ForumPost $post;
 
-    /**
-     * @var string
-     */
     #[ORM\Column(name: 'Type', type: 'string', nullable: false)]
-    private $type = 'buggy';
+    private string $type = 'buggy';
 
-    /**
-     * @var int
-     */
     #[ORM\Column(name: 'IdSubscription', type: 'integer', nullable: false)]
-    private $subscription = 0;
+    private int $subscription = 0;
 
-    /**
-     * @var string
-     */
     #[ORM\Column(name: 'TableSubscription', type: 'string', length: 64, nullable: false)]
-    private $tablesubscription = 'NotSet';
+    private string $tableSubscription = 'NotSet';
 
-    /**
-     * @var int
-     */
     #[ORM\Column(name: 'id', type: 'integer')]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
-    private $id;
+    private int $id;
 
-    /**
-     * Set status.
-     *
-     * @param string $status
-     *
-     * @return PostNotification
-     */
-    public function setStatus($status)
+    public function setStatus(string $status): self
     {
         $this->status = $status;
 
         return $this;
     }
 
-    /**
-     * Get status.
-     *
-     * @return string
-     */
-    public function getStatus()
+    public function getStatus(): string
     {
         return $this->status;
     }
 
-    /**
-     * Set idmember.
-     *
-     * @param int $receiver
-     *
-     * @return PostNotification
-     */
-    public function setReceiver($receiver)
+    public function setReceiver(Member $receiver): self
     {
         $this->receiver = $receiver;
 
         return $this;
     }
 
-    /**
-     * Get member.
-     *
-     * @return Member
-     */
-    public function getReceiver()
+    public function getReceiver(): Member
     {
         return $this->receiver;
     }
 
-    /**
-     * Set post.
-     *
-     * @param ForumPost $post
-     *
-     * @return PostNotification
-     */
-    public function setPost($post)
+    public function setPost(ForumPost $post): self
     {
         $this->post = $post;
 
         return $this;
     }
 
-    /**
-     * Get post.
-     *
-     * @return ForumPost
-     */
-    public function getPost()
+    public function getPost(): ForumPost
     {
         return $this->post;
     }
 
-    /**
-     * Set type.
-     *
-     * @param string $type
-     *
-     * @return PostNotification
-     */
-    public function setType($type)
+    public function setType(string $type): self
     {
         $this->type = $type;
 
         return $this;
     }
 
-    /**
-     * Get type.
-     *
-     * @return string
-     */
-    public function getType()
+    public function getType(): string
     {
         return $this->type;
     }
 
-    /**
-     * Set idsubscription.
-     *
-     * @param int $subscription
-     *
-     * @return PostNotification
-     */
-    public function setSubscription($subscription)
+    public function setSubscription(int $subscription): self
     {
         $this->subscription = $subscription;
 
         return $this;
     }
 
-    /**
-     * Get idsubscription.
-     *
-     * @return int
-     */
-    public function getSubscription()
+    public function getSubscription(): int
     {
         return $this->subscription;
     }
 
-    /**
-     * Set tablesubscription.
-     *
-     * @param string $tablesubscription
-     *
-     * @return PostNotification
-     */
-    public function setTablesubscription($tablesubscription)
+    public function setTableSubscription(string $tableSubscription): self
     {
-        $this->tablesubscription = $tablesubscription;
+        $this->tableSubscription = $tableSubscription;
 
         return $this;
     }
 
-    /**
-     * Get tablesubscription.
-     *
-     * @return string
-     */
-    public function getTablesubscription()
+    public function getTableSubscription(): string
     {
-        return $this->tablesubscription;
+        return $this->tableSubscription;
     }
 
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }

@@ -1,5 +1,5 @@
-import VanillaCalendar from 'vanilla-calendar-pro';
-import 'vanilla-calendar-pro/build/vanilla-calendar.min.css';
+import { Calendar } from 'vanilla-calendar-pro';
+import 'vanilla-calendar-pro/styles/index.css';
 import * as dayjs from 'dayjs'
 
 import 'leaflet';
@@ -16,41 +16,28 @@ const minimumAge = dayjs().subtract(18, 'year');
 const maximumAge = minimumAge.subtract(122, 'year');
 
 const options = {
-    input: true,
+    inputMode: true,
     type: 'default',
-    date: {
-        max: minimumAge.format('YYYY-MM-DD'),
-        min: maximumAge.format('YYYY-MM-DD'),
-        today: minimumAge.toDate(),
+    onChangeToInput(self) {
+        if (!self.context.inputElement) return;
+        if (self.context.selectedDates[0]) {
+            self.context.inputElement.value = self.context.selectedDates[0];
+            self.hide();
+        } else {
+            self.context.inputElement.value = '';
+        }
     },
-    actions: {
-        changeToInput(e, calendar, self) {
-            if (!self.HTMLInputElement) return;
-            if (self.selectedDates[0]) {
-                self.HTMLInputElement.value = self.selectedDates[0];
-                calendar.hide();
-            } else {
-                self.HTMLInputElement.value = '';
-            }
-        },
-    },
-    settings: {
-        lang: lang,
-        range: {
-            max: minimumAge.format('YYYY-MM-DD'),
-            min: maximumAge.format('YYYY-MM-DD'),
-        },
-        visibility: {
-            positionToInput: 'center',
-            theme: 'light',
-            disabled: false,
-            weekend: false,
-            today: false,        },
-    },
+    lang: lang,
+    dateMin: maximumAge.format('YYYY-MM-DD'),
+    dateMax: minimumAge.format('YYYY-MM-DD'),
+    positionToInput: 'auto',
+    selectedTheme: 'light',
+    disabledDates: [],
+    dateToday: minimumAge.toDate(),
 };
 
 const birthDate = document.getElementById('signup_form_finalize_birthdate');
-const calendar = new VanillaCalendar(birthDate, options);
+const calendar = new Calendar(birthDate, options);
 calendar.init();
 
 const labelText = 'marker-label'; // document.getElementById('marker_label_text').value;

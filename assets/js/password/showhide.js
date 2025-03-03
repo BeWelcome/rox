@@ -1,7 +1,9 @@
-const passwordField = document.querySelector('.js-password-input');
-const showHidePasswordButton = document.querySelector('.js-password-show-hide');
+const showHidePasswordButtons = document.querySelectorAll('.js-password-show-hide');
 
 const showHidePassword = (event) => {
+    const showHidePasswordButton = event.target.closest('button');
+    const passwordField = showHidePasswordButton.parentNode.querySelector('input');
+
     if (passwordField.type === 'text') {
         passwordField.type = 'password';
         showHidePasswordButton.innerHTML="<svg class=\"\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n" +
@@ -19,4 +21,6 @@ const showHidePassword = (event) => {
     }
 }
 
-showHidePasswordButton.addEventListener("click", showHidePassword);
+showHidePasswordButtons.forEach((element) => {
+    element.addEventListener("click", showHidePassword);
+})

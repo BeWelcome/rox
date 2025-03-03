@@ -1131,7 +1131,7 @@ WHERE
         } else {
             if ($ss != addslashes($rr->Sentence)) { // Update only if sentence has changed
                 $this->MakeRevision($rr->id, "translations"); // create revision
-                $str = "UPDATE translations SET TableColumn='".$TableColumn."',IdRecord=".$IdRecord.",IdTranslator=" . $IdTranslator . ",Sentence='" . $ss . "' WHERE id=" . $rr->id;
+                $str = "UPDATE translations SET TableColumn='".$TableColumn."',IdRecord=".$IdRecord.",IdTranslator=" . $IdTranslator . ",Sentence='" . $ss . "', updated=NOW() WHERE id=" . $rr->id;
             $s = $this->_dao->query($str);
             if (!$s) {
                    throw new PException('Failed in ReplaceInFTrad for updating in translations!');

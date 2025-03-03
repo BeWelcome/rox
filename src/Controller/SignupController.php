@@ -17,18 +17,16 @@ use App\Utilities\TranslatorTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\Entity;
 use Exception;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
-use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
-use Symfony\Component\Security\Http\Authenticator\FormLoginAuthenticator;
-use Symfony\Component\Security\Http\Authenticator\Passport\Badge\RememberMeBadge;
+use Symfony\Component\Security\Http\SecurityRequestAttributes;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SignupController extends AbstractController
@@ -85,7 +83,7 @@ class SignupController extends AbstractController
         ]);
     }
 
-    #[Route(path: '/signup/{username}/finalize', name: 'signup_finalize')]
+    #[Route(path: '/signup/finalize/{username}', name: 'signup_finalize')]
     public function signupFinalize(
         Request $request,
         Member $member,
@@ -123,7 +121,7 @@ class SignupController extends AbstractController
                 ;
             } else {
                 $signupModel->updateMember($member, $finalizeForm->getData());
-                $request->getSession()->set(Security::LAST_USERNAME, $member->getUsername());
+                $request->getSession()->set(SecurityRequestAttributes::LAST_USERNAME, $member->getUsername());
                 return $this->redirectToRoute('editmyprofile');
             }
         }
@@ -185,7 +183,7 @@ class SignupController extends AbstractController
         return $this->render('signup/error.html.twig');
     }
 
-    #[Route(path: '/signup/resend/{username}', name: 'resend_confirmation_email')]
+    #[Route(path: '/signup/resend/{username:member}', name: 'resend_confirmation_email')]
     public function resendConfirmationEmail(
         Member $member,
         AuthenticationUtils $helper,
@@ -259,7 +257,7 @@ class SignupController extends AbstractController
             }
 
             if (null === $loggedInMember) {
-                $request->getSession()->set(Security::LAST_USERNAME, $username);
+                $request->getSession()->set(SecurityRequestAttributes::LAST_USERNAME, $username);
                 $this->addTranslatedFlash('notice', 'flash.signup.activated');
             }
 

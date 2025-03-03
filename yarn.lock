@@ -6575,10 +6575,10 @@ utila@~0.4:
   resolved "https://registry.yarnpkg.com/utila/-/utila-0.4.0.tgz#8a16a05d445657a3aea5eecc5b12a4fa5379772c"
   integrity sha512-Z0DbgELS9/L/75wZbro8xAnT50pBVFQZ+hUEueGDU5FN51YSCYM+jdxsfCiHjwNP/4LCDD0i/graKpeBnOXKRA==
 
-vanilla-calendar-pro@^2.9.2:
-  version "2.9.10"
-  resolved "https://registry.yarnpkg.com/vanilla-calendar-pro/-/vanilla-calendar-pro-2.9.10.tgz#a82e00ec8f92666c5609e1f3490429708e513d28"
-  integrity sha512-0yqWqlvitfQSRqjyVVr613whIgp62qC1JHgXyLalcJkNkMRZXRqEr+QQQvRdQavB2PBgB4HW+GM6VU4KU0K3Ng==
+vanilla-calendar-pro@^3.0:
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/vanilla-calendar-pro/-/vanilla-calendar-pro-3.0.3.tgz#fc0ea95561f0b320b8442134209902beb3233577"
+  integrity sha512-bfmeGFaDeakk/OrwgM+22qDiRvIx1Zu+GG3+E/sCPjaKwbJR7AsDyRBfJQzVHRw3eeavU8jQQTRSFt8EPIPOGw==
 
 vanilla-colorful@0.7.2:
   version "0.7.2"

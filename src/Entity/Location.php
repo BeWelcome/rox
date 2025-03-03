@@ -7,9 +7,10 @@
 
 namespace App\Entity;
 
+use App\Repository\LocationRepository;
+use Carbon\Carbon;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * Location.
@@ -26,321 +27,155 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ORM\Index(name: 'geonames_idx_fcode', columns: ['fcode'])]
 #[ORM\Index(name: 'geonames_idx_country', columns: ['country'])]
 #[ORM\Index(name: 'geonames_idx_admin1', columns: ['admin1'])]
-#[ORM\Entity(repositoryClass: \App\Repository\LocationRepository::class)]
+#[ORM\Entity(repositoryClass: LocationRepository::class)]
 class Location
 {
-    /**
-     * @var string
-     *
-     *
-     */
-    #[ORM\Column(name: 'name', type: 'string', length: 200, nullable: true)]
-    #[Groups(['Member:Read'])]
-    private $name;
+    #[ORM\Column(name: 'name', type: 'string', length: 200, nullable: false)]
+    private string $name;
 
-    /**
-     * @var float
-     *
-     *
-     */
-    #[ORM\Column(name: 'latitude', type: 'decimal', precision: 10, scale: 7, nullable: true)]
-    #[Groups(['Member:Read'])]
-    private $latitude;
+    #[ORM\Column(name: 'latitude', type: 'decimal', precision: 10, scale: 7, nullable: false)]
+    private float $latitude;
 
-    /**
-     * @var float
-     *
-     *
-     */
-    #[ORM\Column(name: 'longitude', type: 'decimal', precision: 10, scale: 7, nullable: true)]
-    #[Groups(['Member:Read'])]
-    private $longitude;
+    #[ORM\Column(name: 'longitude', type: 'decimal', precision: 10, scale: 7, nullable: false)]
+    private float $longitude;
 
-    /**
-     * @var string
-     */
-    #[ORM\Column(name: 'fclass', type: 'string', length: 1, nullable: true)]
-    private $fclass;
+    #[ORM\Column(name: 'fclass', type: 'string', length: 1, nullable: false)]
+    private string $fclass;
 
-    /**
-     * @var string
-     */
-    #[ORM\Column(name: 'fcode', type: 'string', length: 10, nullable: true)]
-    private $fcode;
+    #[ORM\Column(name: 'fcode', type: 'string', length: 10, nullable: false)]
+    private string $fcode;
 
-    /**
-     * @var Country
-     *
-     *
-     */
     #[ORM\JoinColumn(name: 'country', referencedColumnName: 'country')]
-    #[ORM\ManyToOne(targetEntity: \Country::class)]
-    #[Groups(['Member:Read'])]
-    private $country;
+    #[ORM\ManyToOne(targetEntity: Country::class)]
+    private Country $country;
 
-    /**
-     * @var string
-     */
     #[ORM\Column(name: 'admin1', type: 'string', length: 20, nullable: true)]
-    private $admin1;
+    private ?string $admin1;
 
-    /**
-     * @var int
-     */
-    #[ORM\Column(name: 'population', type: 'integer', nullable: true)]
-    private $population;
+    #[ORM\Column(name: 'population', type: 'integer', nullable: false)]
+    private int $population = 0;
 
-    /**
-     * @var DateTime
-     */
     #[ORM\Column(name: 'moddate', type: 'date', nullable: true)]
-    private $moddate;
+    private ?DateTime $moddate;
 
-    /**
-     * @var int
-     *
-     *
-     */
     #[ORM\Column(name: 'geonameId', type: 'integer')]
     #[ORM\Id]
-    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
-    #[Groups(['Member:Read'])]
-    private $geonameId;
+    private int $geonameId;
 
-    /**
-     * Set name.
-     *
-     * @param string $name
-     *
-     * @return Location
-     */
-    public function setName($name)
+    public function setName(string $name): self
     {
         $this->name = $name;
 
         return $this;
     }
 
-    /**
-     * Get name.
-     *
-     * @return string
-     */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * Set latitude.
-     *
-     * @param string $latitude
-     *
-     * @return Location
-     */
-    public function setLatitude($latitude)
+    public function setLatitude(float $latitude): self
     {
         $this->latitude = $latitude;
 
         return $this;
     }
 
-    /**
-     * Get latitude.
-     *
-     * @return string
-     */
-    public function getLatitude()
+    public function getLatitude(): float
     {
         return $this->latitude;
     }
 
-    /**
-     * Set longitude.
-     *
-     * @param float $longitude
-     *
-     * @return Location
-     */
-    public function setLongitude($longitude)
+    public function setLongitude(float $longitude): self
     {
         $this->longitude = $longitude;
 
         return $this;
     }
 
-    /**
-     * Get longitude.
-     *
-     * @return float
-     */
-    public function getLongitude()
+    public function getLongitude(): float
     {
         return $this->longitude;
     }
 
-    /**
-     * Set fclass.
-     *
-     * @param string $fclass
-     *
-     * @return Location
-     */
-    public function setFclass($fclass)
+    public function setFclass(string $fclass): self
     {
         $this->fclass = $fclass;
 
         return $this;
     }
 
-    /**
-     * Get fclass.
-     *
-     * @return string
-     */
-    public function getFclass()
+    public function getFclass(): string
     {
         return $this->fclass;
     }
 
-    /**
-     * Set fcode.
-     *
-     * @param string $fcode
-     *
-     * @return Location
-     */
-    public function setFcode($fcode)
+    public function setFcode(string $fcode): self
     {
         $this->fcode = $fcode;
 
         return $this;
     }
 
-    /**
-     * Get fcode.
-     *
-     * @return string
-     */
-    public function getFcode()
+    public function getFcode(): string
     {
         return $this->fcode;
     }
 
-    /**
-     * Set country.
-     *
-     * @param string $country
-     *
-     * @return Location
-     */
-    public function setCountry($country)
+    public function setCountry(Country $country): self
     {
         $this->country = $country;
 
         return $this;
     }
 
-    /**
-     * Get country.
-     *
-     * @return string
-     */
-    public function getCountry()
+    public function getCountry(): Country
     {
         return $this->country;
     }
 
-    /**
-     * Set admin1.
-     *
-     * @param string $admin1
-     *
-     * @return Location
-     */
-    public function setAdmin1($admin1)
+    public function setAdmin1(?string $admin1): self
     {
         $this->admin1 = $admin1;
 
         return $this;
     }
 
-    /**
-     * Get admin1.
-     *
-     * @return string
-     */
-    public function getAdmin1()
+    public function getAdmin1(): ?string
     {
         return $this->admin1;
     }
 
-    /**
-     * Set population.
-     *
-     * @param int $population
-     *
-     * @return Location
-     */
-    public function setPopulation($population)
+    public function setPopulation(int $population): self
     {
         $this->population = $population;
 
         return $this;
     }
 
-    /**
-     * Get population.
-     *
-     * @return int
-     */
-    public function getPopulation()
+    public function getPopulation(): int
     {
         return $this->population;
     }
 
-    /**
-     * Set moddate.
-     *
-     * @param DateTime $moddate
-     *
-     * @return Location
-     */
-    public function setModdate($moddate)
+    public function setModdate(DateTime $moddate): self
     {
         $this->moddate = $moddate;
 
         return $this;
     }
 
-    /**
-     * Get moddate.
-     *
-     * @return DateTime
-     */
-    public function getModdate()
+    public function getModdate(): ?Carbon
     {
-        return $this->moddate;
+        return Carbon::make($this->moddate);
     }
 
-    /**
-     * Get geonameId.
-     *
-     * @return int
-     */
-    public function getGeonameId()
+    public function getGeonameId(): int
     {
         return $this->geonameId;
     }
 
-    /**
-     * Set geonameId.
-     *
-     * @param int $geonameId
-     *
-     * @return Location
-     */
-    public function setGeonameId($geonameId)
+    public function setGeonameId(int $geonameId): self
     {
         $this->geonameId = $geonameId;
 

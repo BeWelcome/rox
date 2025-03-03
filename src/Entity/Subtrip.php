@@ -31,10 +31,10 @@ class Subtrip
     private NewLocation $location;
 
     #[ORM\Column(name: 'arrival', type: 'date', nullable: false)]
-    private DateTime $arrival;
+    private ?DateTime $arrival = null;
 
     #[ORM\Column(name: 'departure', type: 'date', nullable: false)]
-    private DateTime $departure;
+    private ?DateTime $departure = null;
 
     #[ORM\Column(name: 'options', type: 'subtrip_options', nullable: true)]
     private ?string $options;
@@ -50,7 +50,7 @@ class Subtrip
 
     #[ORM\JoinColumn(name: 'trip_id', referencedColumnName: 'id', nullable: false)]
     #[ORM\ManyToOne(targetEntity: Trip::class, cascade: ['persist', 'remove'], inversedBy: 'subtrips')]
-    private Trip $trip;
+    private ?Trip $trip = null;
 
     #[ORM\OneToMany(targetEntity: HostingRequest::class, mappedBy: 'inviteForLeg')]
     private Collection $invitations;
@@ -79,9 +79,9 @@ class Subtrip
         return $this;
     }
 
-    public function getArrival(): Carbon
+    public function getArrival(): ?Carbon
     {
-        return Carbon::instance($this->arrival);
+        return Carbon::make($this->arrival);
     }
 
     public function setDeparture(DateTime $departure): self
@@ -91,9 +91,9 @@ class Subtrip
         return $this;
     }
 
-    public function getDeparture(): Carbon
+    public function getDeparture(): ?Carbon
     {
-        return Carbon::instance($this->departure);
+        return Carbon::make($this->departure);
     }
 
     public function setOptions(array $options): self
@@ -117,14 +117,14 @@ class Subtrip
         return $this->id;
     }
 
-    public function setTrip(Trip $trip): self
+    public function setTrip(?Trip $trip): self
     {
         $this->trip = $trip;
 
         return $this;
     }
 
-    public function getTrip(): Trip
+    public function getTrip(): ?Trip
     {
         return $this->trip;
     }

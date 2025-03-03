@@ -14,17 +14,17 @@ trait LifecycleCallbacksTrait
     #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
     private DateTime $created;
 
-    #[ORM\Column(name: 'updated', type: 'datetime', nullable: false)]
-    private DateTime $updated;
+    #[ORM\Column(name: 'updated', type: 'datetime', nullable: true)]
+    private ?DateTime $updated = null;
 
     public function getCreated(): Carbon
     {
-        return Carbon::instance($this->created);
+        return Carbon::make($this->created);
     }
 
-    public function getUpdated(): Carbon
+    public function getUpdated(): ?Carbon
     {
-        return Carbon::instance($this->updated);
+        return Carbon::make($this->updated);
     }
 
     #[ORM\PrePersist()]

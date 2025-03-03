@@ -7,6 +7,7 @@ use App\Entity\Member;
 use App\Entity\MemberPreference;
 use App\Entity\Preference;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,10 +18,10 @@ class LocaleController extends AbstractController
     /**
      * @ParamConverter("language", class="App\Entity\Language", options={"mapping": {"locale": "shortCode"}})
      */
-    #[Route(path: '/rox/in/{locale:language}', name: 'language', requirements: ['locale' => '[a-z]{2}(-[A-Za-z]{2,})?'])]
+    #[Route(path: '/rox/in/{locale}', name: 'language', requirements: ['locale' => '[a-z]{2}(-[A-Za-z]{2,})?'])]
     public function selectLocaleAction(
         Request $request,
-        Language $language,
+        #[MapEntity(mapping: ['locale' => 'shortCode'])] Language $language,
         EntityManagerInterface $entityManager
     ): RedirectResponse {
         /** @var Member $member */

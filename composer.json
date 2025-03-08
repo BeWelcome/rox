@@ -18,7 +18,7 @@
         "ext-session": "*",
         "ext-xsl": "*",
         "ext-zip": "*",
-        "amphp/http-client": "^4.6",
+        "amphp/http-client": "^5.2",
         "anthonymartin/geo-location": "^2.0",
         "babdev/pagerfanta-bundle": "4.*",
         "beberlei/doctrineextensions": "^1.3",

@@ -65,11 +65,16 @@ class PasswordController extends AbstractController
                 $member = null;
             }
             if (null === $member) {
-                $form->addError(new FormError($this->getTranslator()->trans('resetpassworderror')));
-            } else {
+                $form->addError(new FormError($this->getTranslator()->trans('reset.password.error')));
+            }
+            if (!$this->passwordModel->checkTimeElapsedOnPasswordReset($member)) {
+                $form->addError(new FormError($this->getTranslator()->trans('reset.password.too.fast')));
+            }
+
+            if ($form->getErrors()->count() === 0) {
                 try {
                     $token = $this->passwordModel->generatePasswordResetToken($member);
-                } catch (Exception $e) {
+                } catch (Exception) {
                     $token = null;
                 }
                 if (null === $token) {

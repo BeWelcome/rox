@@ -238,7 +238,7 @@ class RelationController extends AbstractController
     private function checkForPhoneNumber(Relation $relation): bool
     {
         $relationText = $relation->getCommentText();
-        $found = preg_match("/([0-9][\. \)-]*){8,}/", $relationText);
+        $found = preg_match("/([0-9][\. \)-]*){9,}/", $relationText);
 
         return $found > 0;
     }

@@ -8,9 +8,6 @@ on:
   pull_request: ~
   # Run CI only on push on bootstrap4 branch
   push:
-    branches:
-      - bootstrap4
-      - feature/trips
   workflow_dispatch:
 
 jobs:

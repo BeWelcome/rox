@@ -11,6 +11,7 @@ on:
     branches:
       - bootstrap4
       - feature/trips
+  workflow_dispatch:
 
 jobs:
   phpcpd:

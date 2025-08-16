@@ -11,14 +11,12 @@ use App\Model\Admin\CheckerModel;
 use App\Model\CommunityNewsModel;
 use App\Utilities\ItemsPerPageTraits;
 use Doctrine\ORM\EntityManagerInterface;
-use InvalidArgumentException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class CheckerController extends AbstractController
 {
@@ -214,7 +212,7 @@ class CheckerController extends AbstractController
                 $messages = $this->checkerModel->getProcessedBlockWordsMessages($page, $limit);
                 break;
             default:
-                throw new InvalidArgumentException();
+                throw new \InvalidArgumentException();
         }
 
         $messageIds = [];
@@ -239,7 +237,7 @@ class CheckerController extends AbstractController
                 $this->checkerModel->unmarkAsSpamByChecker($noSpamMessageIds);
                 $this->addFlash('notice', 'Set spam status');
 
-                if ($type === self::MESSAGES_BLOCK_WORDS_PROCESSED) {
+                if (self::MESSAGES_BLOCK_WORDS_PROCESSED === $type) {
                     return $this->redirectToRoute('admin_spam_messages_block_words');
                 }
 

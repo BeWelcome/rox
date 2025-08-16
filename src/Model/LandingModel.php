@@ -15,7 +15,6 @@ use App\Repository\MessageRepository;
 use App\Repository\SubtripRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\Expr;
-use Exception;
 
 class LandingModel
 {
@@ -36,8 +35,6 @@ class LandingModel
      *   'user': 'Member-102',
      *   'time': '10 minutes ago',
      *   'read': true
-     *
-     * @param mixed $limit
      */
     public function getConversations(Member $member, bool $unread, $limit = 5): array
     {
@@ -56,8 +53,6 @@ class LandingModel
      *   'link': Depending on type of notification,
      *   'user': 'Member-102',
      *   'time': '10 minutes ago',.
-     *
-     * @param mixed $limit
      */
     public function getNotifications(Member $member, $limit = 0): array
     {
@@ -133,9 +128,7 @@ class LandingModel
     /**
      * Generates activities (near you) for display on home page.
      *
-     * @param mixed $online
-     *
-     * @throws Exception
+     * @throws \Exception
      *
      * @return array
      */

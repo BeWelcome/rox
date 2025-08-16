@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @codingStandardsIgnoreFile
  *
@@ -11,13 +12,11 @@ use App\Doctrine\DeleteRequestType;
 use App\Doctrine\InFolderType;
 use App\Doctrine\SpamInfoType;
 use Carbon\Carbon;
-use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Message.
- *
  *
  * @SuppressWarnings("PHPMD")
  * Auto generated class do not check mess
@@ -38,19 +37,19 @@ class Message
     private string $messageType = 'MemberToMember';
 
     #[ORM\Column(name: 'updated', type: 'datetime', nullable: true)]
-    private ?DateTime $updated = null;
+    private ?\DateTime $updated = null;
 
     #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
-    private DateTime $created;
+    private \DateTime $created;
 
     #[ORM\Column(name: 'DateSent', type: 'datetime', nullable: false)]
-    private DateTime $dateSent;
+    private \DateTime $dateSent;
 
     #[ORM\Column(name: 'DeleteRequest', type: 'delete_request', nullable: true)]
     private string $deleteRequest;
 
     #[ORM\JoinColumn(name: 'IdParent', referencedColumnName: 'id', nullable: true)]
-    #[ORM\OneToOne(targetEntity: Message::class, fetch: 'LAZY')]
+    #[ORM\OneToOne(targetEntity: self::class, fetch: 'LAZY')]
     private ?Message $parent = null;
 
     #[ORM\JoinColumn(name: 'initiator_id', referencedColumnName: 'id', nullable: false)]
@@ -78,7 +77,7 @@ class Message
     private string $folder = InFolderType::NORMAL;
 
     #[ORM\Column(name: 'WhenFirstRead', type: 'datetime', nullable: true)]
-    private ?DateTime $firstRead;
+    private ?\DateTime $firstRead;
 
     #[ORM\Column(name: 'CheckerComment', type: 'text', nullable: true)]
     private ?string $checkerComment;
@@ -130,7 +129,7 @@ class Message
         return Carbon::instance($this->created);
     }
 
-    public function setDateSent(DateTime $dateSent): self
+    public function setDateSent(\DateTime $dateSent): self
     {
         $this->dateSent = $dateSent;
 
@@ -289,7 +288,7 @@ class Message
         return $this->folder;
     }
 
-    public function setFirstRead(?DateTime $firstRead): self
+    public function setFirstRead(?\DateTime $firstRead): self
     {
         $this->firstRead = $firstRead;
 
@@ -305,13 +304,12 @@ class Message
         return Carbon::instance($this->firstRead);
     }
 
-
     public function getCheckerComment(): ?string
     {
         return $this->checkerComment;
     }
 
-    public function setCheckerComment(?string $checkerComment): Message
+    public function setCheckerComment(?string $checkerComment): self
     {
         $this->checkerComment = $checkerComment;
 
@@ -328,7 +326,7 @@ class Message
         return null === $this->firstRead;
     }
 
-    public function setSubject(Subject $subject = null): self
+    public function setSubject(?Subject $subject = null): self
     {
         $this->subject = $subject;
 
@@ -340,7 +338,7 @@ class Message
         return $this->subject;
     }
 
-    public function setRequest(HostingRequest $request = null): self
+    public function setRequest(?HostingRequest $request = null): self
     {
         $this->request = $request;
 

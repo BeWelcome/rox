@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @codingStandardsIgnoreFile
  *
@@ -7,7 +8,6 @@
 
 namespace App\Entity;
 
-use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -23,10 +23,10 @@ class Faq
     private string $qAndA;
 
     #[ORM\Column(name: 'updated', type: 'datetime', nullable: true)]
-    private DateTime $updated;
+    private \DateTime $updated;
 
     #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
-    private DateTime $created;
+    private \DateTime $created;
 
     #[ORM\Column(name: 'Active', type: 'string', nullable: false)]
     private string $active = 'Active';
@@ -55,26 +55,26 @@ class Faq
         return $this->qAndA;
     }
 
-    public function setUpdated(?DateTime $updated): self
+    public function setUpdated(?\DateTime $updated): self
     {
         $this->updated = $updated;
 
         return $this;
     }
 
-    public function getUpdated(): ?DateTime
+    public function getUpdated(): ?\DateTime
     {
         return $this->updated;
     }
 
-    public function setCreated(DateTime $created): self
+    public function setCreated(\DateTime $created): self
     {
         $this->created = $created;
 
         return $this;
     }
 
-    public function getCreated(): DateTime
+    public function getCreated(): \DateTime
     {
         return $this->created;
     }
@@ -123,12 +123,12 @@ class Faq
     #[ORM\PrePersist]
     public function onPrePersist(): void
     {
-        $this->created = new DateTime('now');
+        $this->created = new \DateTime('now');
     }
 
     #[ORM\PreUpdate]
     public function onPreUpdate(): void
     {
-        $this->updated = new DateTime('now');
+        $this->updated = new \DateTime('now');
     }
 }

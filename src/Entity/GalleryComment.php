@@ -3,12 +3,10 @@
 namespace App\Entity;
 
 use Carbon\Carbon;
-use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * GalleryComments.
- *
  *
  * @SuppressWarnings("PHPMD")
  * Auto generated class do not check mess
@@ -41,7 +39,7 @@ class GalleryComment
     private $member;
 
     /**
-     * @var DateTime
+     * @var \DateTime
      */
     #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
     private $created;

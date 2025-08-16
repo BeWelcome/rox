@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @codingStandardsIgnoreFile
  *
@@ -8,12 +9,10 @@
 namespace App\Entity;
 
 use Carbon\Carbon;
-use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Community News Comments.
- *
  *
  * @SuppressWarnings("PHPMD")
  * Auto generated class do not check mess
@@ -30,7 +29,7 @@ class PasswordReset
     private $member;
 
     /**
-     * @var DateTime
+     * @var \DateTime
      */
     #[ORM\Column(name: 'generated', type: 'datetime', nullable: false)]
     private $generated;
@@ -114,7 +113,7 @@ class PasswordReset
     #[ORM\PrePersist]
     public function onPrePersist()
     {
-        $this->generated = new DateTime('now');
+        $this->generated = new \DateTime('now');
     }
 
     public function setGenerated(\DateTimeInterface $generated): self

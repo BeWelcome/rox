@@ -42,7 +42,7 @@ class LanguageFilter extends SQLFilter
             return '';
         }
 
-        $query = sprintf('%s.%s = %s', $targetTableAlias, $fieldName, $language);
+        $query = \sprintf('%s.%s = %s', $targetTableAlias, $fieldName, $language);
 
         return $query;
     }

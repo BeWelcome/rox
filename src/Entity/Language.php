@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @codingStandardsIgnoreFile
  *
@@ -14,7 +15,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
 /**
  * Language.
  *
- *
  * @SuppressWarnings("PHPMD")
  * Auto generated class do not check mess
  */
@@ -25,8 +25,6 @@ class Language
 {
     /**
      * @var string
-     *
-     *
      */
     #[ORM\Column(name: 'EnglishName', type: 'text', length: 255, nullable: false)]
     #[Groups(['Member:Read'])]
@@ -45,8 +43,6 @@ class Language
 
     /**
      * @var string
-     *
-     *
      */
     #[ORM\Column(name: 'ShortCode', type: 'string', length: 16, nullable: false)]
     #[Groups(['Member:Read'])]

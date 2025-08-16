@@ -2,7 +2,6 @@
 
 namespace App\Utilities;
 
-use InvalidArgumentException;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
@@ -44,14 +43,14 @@ class SessionSingleton
     /**
      * Returns the *SessionSingleton* instance of this class.
      *
-     * @throws InvalidArgumentException
+     * @throws \InvalidArgumentException
      *
      * @return SessionSingleton the *session* instance
      */
     public static function getInstance()
     {
         if (null === static::$instance) {
-            throw new InvalidArgumentException('SessionSingleton::getInstance() called without a call to createInstance()');
+            throw new \InvalidArgumentException('SessionSingleton::getInstance() called without a call to createInstance()');
         }
 
         return static::$instance;

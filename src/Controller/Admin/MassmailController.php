@@ -4,23 +4,14 @@ namespace App\Controller\Admin;
 
 use App\Entity\Member;
 use App\Entity\Newsletter;
-use App\Model\GalleryModel;
-use App\Model\TranslationModel;
 use App\Repository\MemberRepository;
 use App\Service\Mailer;
 use Doctrine\ORM\EntityManagerInterface;
-use Exception;
-use Hidehalo\Nanoid\Client;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Mime\Address;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class MassmailController extends AbstractController
 {
@@ -29,7 +20,7 @@ class MassmailController extends AbstractController
         Request $request,
         Newsletter $newsletter,
         EntityManagerInterface $entityManager,
-        Mailer $mailer
+        Mailer $mailer,
     ): Response {
         if (!$this->isGranted(Member::ROLE_ADMIN_MASSMAIL)) {
             throw $this->createAccessDeniedException('You need to have Massmail right to access this.');
@@ -39,7 +30,7 @@ class MassmailController extends AbstractController
         $form = $formBuilder
             ->add('members', TextType::class, [
                 'help' => 'Use a list of usernames separated by commas. E. g. polyglot, gbenouville, shevek',
-                'required' => true
+                'required' => true,
             ])
             ->getForm();
         $form->handleRequest($request);
@@ -54,7 +45,7 @@ class MassmailController extends AbstractController
 
             foreach ($memberEntities as $member) {
                 $mailer->sendNewsletterEmail($newsletter, $member, [
-                    'unsubscribe_key' => 'ebe4add6264a01e54cb4f1bb774f36886bbf11d236f03444072760cf4ee3e2dd'
+                    'unsubscribe_key' => 'ebe4add6264a01e54cb4f1bb774f36886bbf11d236f03444072760cf4ee3e2dd',
                 ]);
             }
 

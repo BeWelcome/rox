@@ -3,12 +3,10 @@
 namespace App\Entity;
 
 use Carbon\Carbon;
-use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * PollsContributions.
- *
  *
  * @SuppressWarnings("PHPMD")
  * Auto generated class do not check mess
@@ -35,13 +33,13 @@ class PollContribution
     private $emailIsConfirmed = 'No';
 
     /**
-     * @var DateTime
+     * @var \DateTime
      */
     #[ORM\Column(name: 'updated', type: 'datetime', nullable: false)]
     private $updated;
 
     /**
-     * @var DateTime
+     * @var \DateTime
      */
     #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
     private $created;
@@ -125,7 +123,7 @@ class PollContribution
     /**
      * Set updated.
      *
-     * @param DateTime $updated
+     * @param \DateTime $updated
      *
      * @return PollContribution
      */
@@ -149,7 +147,7 @@ class PollContribution
     /**
      * Set created.
      *
-     * @param DateTime $created
+     * @param \DateTime $created
      *
      * @return PollContribution
      */
@@ -207,11 +205,9 @@ class PollContribution
     /**
      * Set idpoll.
      *
-     * @param Poll $poll
-     *
      * @return PollContribution
      */
-    public function setPoll(Poll $poll = null)
+    public function setPoll(?Poll $poll = null)
     {
         $this->poll = $poll;
 
@@ -231,11 +227,9 @@ class PollContribution
     /**
      * Set idmember.
      *
-     * @param Member $member
-     *
      * @return PollContribution
      */
-    public function setMember(Member $member = null)
+    public function setMember(?Member $member = null)
     {
         $this->member = $member;
 
@@ -258,8 +252,8 @@ class PollContribution
     #[ORM\PrePersist]
     public function onPrePersist()
     {
-        $this->created = new DateTime('now');
-        $this->updated = new DateTime('now');
+        $this->created = new \DateTime('now');
+        $this->updated = new \DateTime('now');
     }
 
     /**
@@ -268,6 +262,6 @@ class PollContribution
     #[ORM\PreUpdate]
     public function onPreUpdate()
     {
-        $this->updated = new DateTime('now');
+        $this->updated = new \DateTime('now');
     }
 }

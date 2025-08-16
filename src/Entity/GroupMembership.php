@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @codingStandardsIgnoreFile
  *
@@ -9,14 +10,12 @@ namespace App\Entity;
 
 use App\Doctrine\GroupMembershipStatusType;
 use Carbon\Carbon;
-use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Event\PostLoadEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Group Membership.
- *
  *
  * @SuppressWarnings("PHPMD")
  * Auto generated class do not check mess
@@ -30,13 +29,13 @@ use Doctrine\ORM\Mapping as ORM;
 class GroupMembership
 {
     /**
-     * @var DateTime
+     * @var \DateTime
      */
     #[ORM\Column(name: 'updated', type: 'datetime', nullable: false)]
     private $updated;
 
     /**
-     * @var DateTime
+     * @var \DateTime
      */
     #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
     private $created;
@@ -106,7 +105,7 @@ class GroupMembership
     /**
      * Set updated.
      *
-     * @param DateTime $updated
+     * @param \DateTime $updated
      *
      * @return GroupMembership
      */
@@ -120,7 +119,7 @@ class GroupMembership
     /**
      * Get updated.
      *
-     * @return DateTime
+     * @return \DateTime
      */
     public function getUpdated()
     {
@@ -130,7 +129,7 @@ class GroupMembership
     /**
      * Set created.
      *
-     * @param DateTime $created
+     * @param \DateTime $created
      *
      * @return GroupMembership
      */
@@ -350,7 +349,7 @@ class GroupMembership
     #[ORM\PrePersist]
     public function onPrePersist(): void
     {
-        $this->created = new DateTime('now');
+        $this->created = new \DateTime('now');
         $this->updated = $this->created;
     }
 
@@ -360,7 +359,7 @@ class GroupMembership
     #[ORM\PreUpdate]
     public function onPreUpdate(): void
     {
-        $this->updated = new DateTime('now');
+        $this->updated = new \DateTime('now');
     }
 
     /**
@@ -378,8 +377,6 @@ class GroupMembership
 
     /**
      * Sets the comment for the membership.
-     *
-     * @param mixed $commentId
      */
     private function setComment($commentId)
     {

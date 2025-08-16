@@ -13,9 +13,6 @@ use Symfony\Component\Security\Core\Exception\CustomUserMessageAccountStatusExce
 
 class AccountMailNotConfirmedException extends CustomUserMessageAccountStatusException
 {
-    /**
-     * {@inheritdoc}
-     */
     public function getMessageKey(): string
     {
         return 'login.mail.not_confirmed';

@@ -17,7 +17,6 @@ use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
-use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -69,7 +68,7 @@ class PasswordController extends AbstractController
             } else {
                 try {
                     $token = $this->passwordModel->generatePasswordResetToken($member);
-                } catch (Exception $e) {
+                } catch (\Exception $e) {
                     $token = null;
                 }
                 if (null === $token) {
@@ -106,7 +105,7 @@ class PasswordController extends AbstractController
         Request $request,
         Member $member,
         string $token,
-        PasswordModel $passwordModel
+        PasswordModel $passwordModel,
     ): Response {
         // Someone obviously lost their way. No sense in resetting your password if you're currently logged in.
         if ($this->isGranted('ROLE_USER')) {
@@ -157,7 +156,7 @@ class PasswordController extends AbstractController
         Member $member,
         ProfileSubmenu $profileSubmenu,
         PasswordModel $passwordModel,
-        ChangeProfilePictureGlobals $globals
+        ChangeProfilePictureGlobals $globals,
     ): Response {
         /** @var Member $loggedInMember */
         $loggedInMember = $this->getUser();
@@ -191,15 +190,15 @@ class PasswordController extends AbstractController
     }
 
     #[Route(path: 'password/check/', name: 'check_password')]
-    public function checkPassword(Request $request) : JsonResponse
+    public function checkPassword(Request $request): JsonResponse
     {
         $username = $request->get('username');
         $email = $request->get('email');
         $password = $request->get('password');
         $zxcvbn = new Zxcvbn();
-        $result = $zxcvbn->passwordStrength($password, [ $username, $email, 'BeWelcome', 'bewelcome' ]);
+        $result = $zxcvbn->passwordStrength($password, [$username, $email, 'BeWelcome', 'bewelcome']);
         $response = new JsonResponse();
-        $response->setData([ 'score' => $result['score']]);
+        $response->setData(['score' => $result['score']]);
 
         return $response;
     }

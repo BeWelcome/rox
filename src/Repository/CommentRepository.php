@@ -7,8 +7,6 @@ use App\Doctrine\MemberStatusType;
 use App\Entity\Comment;
 use App\Entity\Member;
 use App\Utilities\CommentSorter;
-use DateTimeImmutable;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Pagerfanta\Doctrine\ORM\QueryAdapter;
@@ -105,7 +103,6 @@ class CommentRepository extends EntityRepository
     /**
      * Returns a Pagerfanta object encapsulating the matching paginated activities.
      *
-     * @param $quality
      * @param int $page
      * @param int $items
      *
@@ -121,8 +118,6 @@ class CommentRepository extends EntityRepository
     }
 
     /**
-     * @param $quality
-     *
      * @return QueryBuilder
      */
     public function queryAllByQuality($quality)
@@ -137,7 +132,6 @@ class CommentRepository extends EntityRepository
     /**
      * Returns a Pagerfanta object encapsulating the matching paginated activities.
      *
-     * @param $action
      * @param int $page
      * @param int $items
      *
@@ -153,8 +147,6 @@ class CommentRepository extends EntityRepository
     }
 
     /**
-     * @param $action
-     *
      * @return QueryBuilder
      */
     public function queryAllByAdminAction($action)
@@ -194,7 +186,7 @@ class CommentRepository extends EntityRepository
             ->andWhere('c.displayInPublic = 1')
             ->getQuery()
             ->getSingleScalarResult()
-            ;
+        ;
     }
 
     public function getVisibleCommentsForMember(Member $member): array
@@ -203,7 +195,7 @@ class CommentRepository extends EntityRepository
             ->andWhere('c.displayInPublic = 1')
             ->getQuery()
             ->getResult()
-            ;
+        ;
     }
 
     public function getAllCommentsForMember(Member $member): array
@@ -211,7 +203,7 @@ class CommentRepository extends EntityRepository
         return $this->getCommentsForMemberQueryBuilder($member)
             ->getQuery()
             ->getResult()
-            ;
+        ;
     }
 
     public function getAllCommentsByMember(Member $member): array
@@ -219,7 +211,7 @@ class CommentRepository extends EntityRepository
         return $this->getCommentsByMemberQueryBuilder($member)
             ->getQuery()
             ->getResult()
-            ;
+        ;
     }
 
     public function getCommentsFromMember(Member $member): array
@@ -230,7 +222,7 @@ class CommentRepository extends EntityRepository
             ->orderBy('c.created', 'ASC')
             ->getQuery()
             ->getResult()
-            ;
+        ;
     }
 
     private function getCommentsByMemberQueryBuilder(Member $member): QueryBuilder

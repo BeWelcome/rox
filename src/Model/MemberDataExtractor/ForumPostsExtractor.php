@@ -7,9 +7,6 @@ use App\Entity\Member;
 
 final class ForumPostsExtractor extends AbstractExtractor implements ExtractorInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function extract(Member $member, string $tempDir): string
     {
         // now all posts to the forum or groups including status

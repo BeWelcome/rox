@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @codingStandardsIgnoreFile
  *
@@ -12,7 +13,6 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * AlternateLocation.
- *
  *
  * @SuppressWarnings("PHPMD")
  * Auto generated class do not check mess
@@ -236,11 +236,9 @@ class AlternateLocation
     /**
      * Set geonameId.
      *
-     * @param Location $geonameId
-     *
      * @return AlternateLocation
      */
-    public function setGeonameId(Location $geonameId = null)
+    public function setGeonameId(?Location $geonameId = null)
     {
         $this->geonameId = $geonameId;
 

@@ -18,9 +18,7 @@ use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -69,9 +67,6 @@ class SearchController extends AbstractController
     }
 
     /**
-     *
-     * @return Response
-     *
      * @SuppressWarnings("PHPMD.CyclomaticComplexity")
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
@@ -79,7 +74,7 @@ class SearchController extends AbstractController
     public function searchLocations(
         Request $request,
         TranslatorInterface $translator,
-        FormFactoryInterface $formFactory
+        FormFactoryInterface $formFactory,
     ): Response {
         $pager = null;
         $results = null;
@@ -102,7 +97,7 @@ class SearchController extends AbstractController
         $memberSearchOptionsPreference = $member->getMemberPreference($searchOptionsPreference);
         $searchOptions = $memberSearchOptionsPreference->getValue();
 
-        if ("" !== $searchOptions) {
+        if ('' !== $searchOptions) {
             $searchFormRequest = unserialize($searchOptions);
         } else {
             $searchFormRequest = new SearchFormRequest();
@@ -208,8 +203,8 @@ class SearchController extends AbstractController
      * This method is used on the home screen to allow people interested in BeWelcome to check how many members are
      * available in a location.
      *
-     *
      * @return Response|RedirectResponse
+     *
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
     #[Route(path: '/search/map', name: 'search_map')]
@@ -269,7 +264,7 @@ class SearchController extends AbstractController
     #[Route(path: '/search/locations/ajax', name: 'search_members_ajax')]
     public function searchGetPageResultsAjax(
         Request $request,
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
     ): Response {
         if ('POST' !== $request->getMethod()) {
             // JavaScript doesn't work on client

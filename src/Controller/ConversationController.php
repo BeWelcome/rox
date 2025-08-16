@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Doctrine\MemberStatusType;
 use App\Doctrine\SpamInfoType;
-use App\Entity\HostingRequest;
 use App\Entity\Member;
 use App\Entity\Message;
 use App\Form\ReportSpamType;
@@ -33,7 +32,7 @@ class ConversationController extends AbstractController
 
     public function __construct(
         ConversationModel $conversationModel,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
     ) {
         $this->conversationModel = $conversationModel;
         $this->entityManager = $entityManager;
@@ -146,20 +145,6 @@ class ConversationController extends AbstractController
         return $this->redirectToRoute('conversation_view', ['id' => $message->getId()]);
     }
 
-    private function markAsSpam(Message $message, ?string $comment): Response
-    {
-        /** @var Member $member */
-        $member = $this->getUser();
-
-        $conversationThread = new ConversationThread($this->entityManager);
-        $conversation = $conversationThread->getThread($message);
-        $this->conversationModel->markConversationAsSpam($member, $conversation, $comment);
-
-        $this->addTranslatedFlash('notice', 'flash.marked.spam');
-
-        return $this->redirectToRoute('conversation_view', ['id' => $message->getId()]);
-    }
-
     #[Route(path: '/conversation/{id}/report', name: 'conversation_report_spam')]
     public function reportAsSpam(Request $request, Message $message): Response
     {
@@ -173,7 +158,7 @@ class ConversationController extends AbstractController
     public function decline(Message $message): Response
     {
         if ($message->isMessage()) {
-            return $this->redirectToRoute('conversation_view', [ 'id' => $message->getId()]);
+            return $this->redirectToRoute('conversation_view', ['id' => $message->getId()]);
         }
 
         $controllerAndMethod = $this->getControllerAndMethod($message, 'decline');
@@ -193,6 +178,20 @@ class ConversationController extends AbstractController
         $this->conversationModel->unmarkConversationAsSpam($member, $conversation);
 
         $this->addTranslatedFlash('notice', 'flash.marked.nospam');
+
+        return $this->redirectToRoute('conversation_view', ['id' => $message->getId()]);
+    }
+
+    private function markAsSpam(Message $message, ?string $comment): Response
+    {
+        /** @var Member $member */
+        $member = $this->getUser();
+
+        $conversationThread = new ConversationThread($this->entityManager);
+        $conversation = $conversationThread->getThread($message);
+        $this->conversationModel->markConversationAsSpam($member, $conversation, $comment);
+
+        $this->addTranslatedFlash('notice', 'flash.marked.spam');
 
         return $this->redirectToRoute('conversation_view', ['id' => $message->getId()]);
     }
@@ -236,7 +235,7 @@ class ConversationController extends AbstractController
         Request $request,
         Message $message,
         bool $includeDeleted,
-        bool $openReportModal
+        bool $openReportModal,
     ): Response {
         $conversationThread = new ConversationThread($this->entityManager);
         $thread = $conversationThread->getThread($message);
@@ -263,6 +262,7 @@ class ConversationController extends AbstractController
         $reportForm->handleRequest($request);
         if ($reportForm->isSubmitted() && $reportForm->isValid()) {
             $data = $reportForm->getData();
+
             return $this->markAsSpam($message, $data['comment']);
         }
 
@@ -286,8 +286,8 @@ class ConversationController extends AbstractController
                 $nothingVisible = $nothingVisible && $threadMessage->isPurgedByMember($member);
             } else {
                 $nothingVisible = $nothingVisible && (
-                        $threadMessage->isPurgedByMember($member) || $threadMessage->isDeletedByMember($member)
-                    );
+                    $threadMessage->isPurgedByMember($member) || $threadMessage->isDeletedByMember($member)
+                );
             }
         }
 
@@ -299,7 +299,7 @@ class ConversationController extends AbstractController
         $spam = false;
         foreach ($thread as $threadMessage) {
             if ($threadMessage->getReceiver() === $member) {
-                $spam = $spam || (false !== strpos($threadMessage->getSpamInfo(), SpamInfoType::MEMBER_SAYS_SPAM));
+                $spam = $spam || str_contains($threadMessage->getSpamInfo(), SpamInfoType::MEMBER_SAYS_SPAM);
             }
         }
 

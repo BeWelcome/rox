@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @codingStandardsIgnoreFile
  *
@@ -12,7 +13,6 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Gallery images.
- *
  *
  * @SuppressWarnings("PHPMD")
  * Auto generated class do not check mess

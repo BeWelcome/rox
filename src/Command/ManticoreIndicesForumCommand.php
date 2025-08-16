@@ -2,26 +2,17 @@
 
 namespace App\Command;
 
-use App\Entity\NewLocation;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NativeQuery;
 use Doctrine\ORM\Query\ResultSetMapping;
-use Doctrine\ORM\Query\ResultSetMappingBuilder;
-use Exception;
-use Gedmo\Translatable\Entity\Repository\TranslationRepository;
-use Gedmo\Translatable\Entity\Translation;
 use Manticoresearch\Client;
 use Manticoresearch\Index;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-
-use function count;
 
 #[AsCommand(
     name: 'manticore:indices:forum',
@@ -62,9 +53,10 @@ class ManticoreIndicesForumCommand extends Command
             $this->io->note('Created ' . self::FORUM_INDEX . '.');
         } else {
             $this->io->note(
-                'Skipped creation of ' . self::FORUM_INDEX . ' index. ' . PHP_EOL .
+                'Skipped creation of ' . self::FORUM_INDEX . ' index. ' . \PHP_EOL .
                 'Index already exists.'
             );
+
             return Command::INVALID;
         }
 
@@ -102,7 +94,7 @@ class ManticoreIndicesForumCommand extends Command
                     'ngram_len' => '1',
                 ]
             );
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             // $index = null;
 
             $this->io->error($e->getMessage());
@@ -129,15 +121,15 @@ class ManticoreIndicesForumCommand extends Command
 
         $stmt = $this->entityManager
             ->getConnection()
-            ->executeQuery(<<<___SQL
+            ->executeQuery(<<<'___SQL'
             SELECT
                 count(*) as cnt
             FROM
                 forums_posts fp
         ___SQL);
 
-        $count = ($stmt->fetchNumeric())[0];
-        if ($count !== 0) {
+        $count = $stmt->fetchNumeric()[0];
+        if (0 !== $count) {
             $progressBar = $this->getProgressBar($output, $count);
 
             $firstResult = 0;
@@ -181,15 +173,15 @@ class ManticoreIndicesForumCommand extends Command
         foreach ($forumPosts as $forumPost) {
             $documents[] = [
                 'post_id' => $forumPost['post_id'],
-                'post_deleted' =>  $forumPost['post_deleted'],
-                'post_visibility' =>  $forumPost['post_visibility'],
-                'thread_id' =>  $forumPost['thread_id'],
-                'thread_deleted' =>  $forumPost['thread_deleted'],
-                'thread_visibility' =>  $forumPost['thread_visibility'],
-                'content' =>  $forumPost['content'],
-                'group' =>  $forumPost['group'] ?? 0,
-                'author' =>  $forumPost['author'],
-                'locale' =>  $forumPost['locale'],
+                'post_deleted' => $forumPost['post_deleted'],
+                'post_visibility' => $forumPost['post_visibility'],
+                'thread_id' => $forumPost['thread_id'],
+                'thread_deleted' => $forumPost['thread_deleted'],
+                'thread_visibility' => $forumPost['thread_visibility'],
+                'content' => $forumPost['content'],
+                'group' => $forumPost['group'] ?? 0,
+                'author' => $forumPost['author'],
+                'locale' => $forumPost['locale'],
             ];
             $progress->advance();
         }
@@ -220,8 +212,10 @@ class ManticoreIndicesForumCommand extends Command
             ->addScalarResult('locale', 'locale')
             ->addScalarResult('created', 'created')
         ;
+
         return $rsm;
     }
+
     private function getProgressBar(OutputInterface $output, $count): ProgressBar
     {
         $progressBar = new ProgressBar($output, $count);

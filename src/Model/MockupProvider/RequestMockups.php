@@ -10,7 +10,6 @@ use App\Form\HostingRequestGuest;
 use App\Form\HostingRequestHost;
 use App\Form\ReportSpamType;
 use Carbon\Carbon;
-use Mockery;
 use Symfony\Component\Form\FormFactoryInterface;
 
 class RequestMockups implements MockupProviderInterface
@@ -145,7 +144,7 @@ class RequestMockups implements MockupProviderInterface
         $guest = $parameters['admin'];
 
         $thread = $this->getThread($host, $guest, $parameters['status'], 3);
-        $form = $this->formFactory->create( ReportSpamType::class);
+        $form = $this->formFactory->create(ReportSpamType::class);
 
         return [
             'host' => $host,
@@ -164,7 +163,7 @@ class RequestMockups implements MockupProviderInterface
 
         $thread = $this->getThread($host, $guest, $parameters['status'], 4);
 
-        $form = $this->formFactory->create( ReportSpamType::class);
+        $form = $this->formFactory->create(ReportSpamType::class);
 
         return [
             'host' => $host,
@@ -178,10 +177,10 @@ class RequestMockups implements MockupProviderInterface
 
     private function getThread(Member $host, Member $guest, int $status, int $numberOfNights): array
     {
-        $mockSubject = Mockery::mock(Subject::class, [
+        $mockSubject = \Mockery::mock(Subject::class, [
             'getSubject' => 'Subject',
         ]);
-        $mockRequest = Mockery::mock(HostingRequest::class, [
+        $mockRequest = \Mockery::mock(HostingRequest::class, [
             'getId' => 1,
             'getArrival' => new Carbon(),
             'getDeparture' => (new Carbon())->addDays($numberOfNights), // use number of replies to change number of nights
@@ -191,7 +190,7 @@ class RequestMockups implements MockupProviderInterface
             'getInviteForLeg' => null,
         ]);
 
-        $mockMessageParent = Mockery::mock(Message::class, [
+        $mockMessageParent = \Mockery::mock(Message::class, [
             'getId' => 1,
             'getMessage' => 'Initial request',
         ]);
@@ -204,7 +203,7 @@ class RequestMockups implements MockupProviderInterface
         $mockMessageParent->shouldReceive('isDeletedByMember')->andReturn(false);
         $mockMessageParent->shouldReceive('isPurgedByMember')->andReturn(false);
 
-        $mockMessageReply = Mockery::mock(Message::class, [
+        $mockMessageReply = \Mockery::mock(Message::class, [
             'getId' => 1,
             'getMessage' => 'Reply',
             'getParent' => $mockMessageParent,

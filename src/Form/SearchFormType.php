@@ -3,7 +3,6 @@
 namespace App\Form;
 
 use App\Form\CustomDataClass\SearchFormRequest;
-use SearchModel;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Exception\AlreadySubmittedException;
 use Symfony\Component\Form\Exception\LogicException;
@@ -48,9 +47,6 @@ class SearchFormType extends AbstractType
         $this->addButtons($builder, $options);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
@@ -99,7 +95,7 @@ class SearchFormType extends AbstractType
             'search.radius.500km' => 500,
             'search.radius.1000km' => 1000,
         ];
-        $showOnMap = (bool) ($data->showOnMap);
+        $showOnMap = (bool) $data->showOnMap;
         if (true === $showOnMap) {
             $choices = ['search.see_map' => -1] + $choices;
         }
@@ -115,7 +111,7 @@ class SearchFormType extends AbstractType
                     'label' => 'search.options.reset',
                     'attr' => [
                         'class' => 'o-button o-button--outline mr-1',
-                    ]
+                    ],
                 ])
             ;
         }
@@ -130,7 +126,7 @@ class SearchFormType extends AbstractType
                     'label' => 'search.options.reset',
                     'attr' => [
                         'class' => 'o-button o-button--outline mr-1',
-                    ]
+                    ],
                 ])
             ;
         }
@@ -251,12 +247,12 @@ class SearchFormType extends AbstractType
                 'autocomplete' => true,
                 'plugins' => [],
                 'choices' => [
-                    'search.order.accommodation' => SearchModel::ORDER_ACCOMMODATION,
-                    'search.order.distance' => SearchModel::ORDER_DISTANCE,
-                    'search.order.login' => SearchModel::ORDER_LOGIN,
-                    'search.order.comments' => SearchModel::ORDER_COMMENTS,
-                    'search.order.membership' => SearchModel::ORDER_MEMBERSHIP,
-                    'search.order.username' => SearchModel::ORDER_USERNAME,
+                    'search.order.accommodation' => \SearchModel::ORDER_ACCOMMODATION,
+                    'search.order.distance' => \SearchModel::ORDER_DISTANCE,
+                    'search.order.login' => \SearchModel::ORDER_LOGIN,
+                    'search.order.comments' => \SearchModel::ORDER_COMMENTS,
+                    'search.order.membership' => \SearchModel::ORDER_MEMBERSHIP,
+                    'search.order.username' => \SearchModel::ORDER_USERNAME,
                 ],
                 'translation_domain' => 'messages',
             ])
@@ -265,8 +261,8 @@ class SearchFormType extends AbstractType
                 'autocomplete' => true,
                 'plugins' => [],
                 'choices' => [
-                    'search.direction.descending' => SearchModel::DIRECTION_DESCENDING,
-                    'search.direction.ascending' => SearchModel::DIRECTION_ASCENDING,
+                    'search.direction.descending' => \SearchModel::DIRECTION_DESCENDING,
+                    'search.direction.ascending' => \SearchModel::DIRECTION_ASCENDING,
                 ],
             ])
             ->add('items', ChoiceType::class, [
@@ -309,7 +305,7 @@ class SearchFormType extends AbstractType
                 'label' => 'search.find.members',
                 'attr' => [
                     'class' => 'o-button',
-                ]
+                ],
             ])
         ;
     }

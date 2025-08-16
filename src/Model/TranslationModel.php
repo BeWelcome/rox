@@ -8,7 +8,6 @@ use App\Pagerfanta\DoNotTranslateTranslationAdapter;
 use App\Pagerfanta\MissingTranslationAdapter;
 use App\Pagerfanta\TranslationAdapter;
 use App\Pagerfanta\UpdateTranslationAdapter;
-use App\Utilities\ManagerTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
@@ -31,7 +30,7 @@ class TranslationModel
         EntityManagerInterface $entityManager,
         Filesystem $filesystem,
         string $cacheDirectory,
-        array $locales
+        array $locales,
     ) {
         $this->translator = $translator;
         $this->cacheDirectory = $cacheDirectory;
@@ -98,7 +97,7 @@ class TranslationModel
 
     private function removeAndWarmupCache(string $locale): void
     {
-        $translationDir = sprintf('%s/translations', $this->cacheDirectory);
+        $translationDir = \sprintf('%s/translations', $this->cacheDirectory);
 
         $finder = new Finder();
 
@@ -111,7 +110,7 @@ class TranslationModel
             $this->filesystem->remove($file);
         }
 
-        $memoryLimit = ini_get('memory_limit');
+        $memoryLimit = \ini_get('memory_limit');
         ini_set('memory_limit', '1G');
 
         // Build them again

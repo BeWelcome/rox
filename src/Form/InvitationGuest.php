@@ -20,7 +20,7 @@ class InvitationGuest extends HostingRequestAbstractType
 
     public function __construct(
         DateTransformer $dateTimeTransformer,
-        LegTransformer  $legTransformer
+        LegTransformer $legTransformer,
     ) {
         $this->dateTimeTransformer = $dateTimeTransformer;
         $this->legTransformer = $legTransformer;
@@ -72,9 +72,6 @@ class InvitationGuest extends HostingRequestAbstractType
         });
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver
@@ -85,9 +82,6 @@ class InvitationGuest extends HostingRequestAbstractType
         ;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getBlockPrefix(): string
     {
         return 'invitation';

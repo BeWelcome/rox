@@ -9,8 +9,8 @@ use Doctrine\Persistence\ManagerRegistry;
 /**
  * @method AlternateLocation|null find($id, $lockMode = null, $lockVersion = null)
  * @method AlternateLocation|null findOneBy(array $criteria, array $orderBy = null)
- * @method AlternateLocation[] findAll()
- * @method AlternateLocation[] findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method AlternateLocation[]    findAll()
+ * @method AlternateLocation[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class AlternateLocationRepository extends ServiceEntityRepository
 {

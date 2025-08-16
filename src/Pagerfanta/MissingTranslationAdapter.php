@@ -4,7 +4,6 @@ namespace App\Pagerfanta;
 
 use Doctrine\DBAL\Connection;
 use Pagerfanta\Adapter\AdapterInterface;
-use PDO;
 
 class MissingTranslationAdapter implements AdapterInterface
 {

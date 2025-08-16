@@ -13,7 +13,6 @@ use App\Utilities\ItemsPerPageTraits;
 use App\Utilities\ProfileSubmenu;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
-use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,9 +22,9 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class NoteController extends AbstractController
 {
-    use TranslatorTrait;
-    use TranslatedFlashTrait;
     use ItemsPerPageTraits;
+    use TranslatedFlashTrait;
+    use TranslatorTrait;
 
     private EntityManagerInterface $entityManager;
     private ChangeProfilePictureGlobals $globals;
@@ -111,7 +110,7 @@ class NoteController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $note = $form->getData();
-            $note->setUpdated(new DateTime());
+            $note->setUpdated(new \DateTime());
             $this->entityManager->persist($note);
             $this->entityManager->flush();
 
@@ -167,7 +166,7 @@ class NoteController extends AbstractController
             ProfileNoteFilterType::class,
             [
                 'choices' => $categories,
-                'order' => $order
+                'order' => $order,
             ],
             [
                 'categories' => $selectableCategories,

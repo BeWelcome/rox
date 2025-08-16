@@ -19,7 +19,7 @@ final class DoctrineExtractor extends AbstractExtractor implements ExtractorInte
         ManagerRegistry $registry,
         string $className,
         string $memberRelationName,
-        string $alias
+        string $alias,
     ) {
         parent::__construct($entrypointLookup, $environment, $registry);
         $this->className = $className;
@@ -27,9 +27,6 @@ final class DoctrineExtractor extends AbstractExtractor implements ExtractorInte
         $this->alias = $alias;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function extract(Member $member, string $tempDir): string
     {
         $repository = $this->getRepository($this->className);

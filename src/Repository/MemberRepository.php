@@ -4,7 +4,6 @@ namespace App\Repository;
 
 use App\Doctrine\MemberStatusType;
 use App\Entity\Member;
-use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bridge\Doctrine\Security\User\UserLoaderInterface;
@@ -21,7 +20,7 @@ class MemberRepository extends ServiceEntityRepository implements UserLoaderInte
 
     public function upgradePassword(PasswordAuthenticatedUserInterface $user, string $newHashedPassword): void
     {
-        /** @var Member $user */
+        /* @var Member $user */
         // set the new hashed password on the User object
         $user->setPassword($newHashedPassword);
 
@@ -102,7 +101,7 @@ class MemberRepository extends ServiceEntityRepository implements UserLoaderInte
             ->andWhere('DATEDIFF(:now, m.lastLogin) > 365')
             ->setParameter('askToLeave', MemberStatusType::ASKED_TO_LEAVE)
             ->setParameter('retired', 'Retired\_%')
-            ->setParameter('now', new DateTime())
+            ->setParameter('now', new \DateTime())
             ->getQuery()
         ;
 

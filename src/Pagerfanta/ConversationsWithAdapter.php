@@ -19,7 +19,7 @@ class ConversationsWithAdapter implements AdapterInterface
     public function __construct(
         EntityManager $entityManager,
         Member $member,
-        Member $partner
+        Member $partner,
     ) {
         $this->entityManager = $entityManager;
         $this->connection = $entityManager->getConnection();

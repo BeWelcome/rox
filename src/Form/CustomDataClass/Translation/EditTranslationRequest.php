@@ -4,7 +4,6 @@ namespace App\Form\CustomDataClass\Translation;
 
 use App\Doctrine\TranslationAllowedType;
 use App\Entity\Word;
-use InvalidArgumentException;
 
 class EditTranslationRequest extends TranslationRequest
 {
@@ -24,14 +23,14 @@ class EditTranslationRequest extends TranslationRequest
     public $translationAllowed;
 
     /**
-     * @throws InvalidArgumentException
+     * @throws \InvalidArgumentException
      *
      * @return EditTranslationRequest
      */
     public static function fromTranslations(Word $original, Word $translation)
     {
         if (strtolower($original->getCode()) !== strtolower($translation->getCode())) {
-            throw new InvalidArgumentException();
+            throw new \InvalidArgumentException();
         }
 
         $editTranslationRequest = new self();

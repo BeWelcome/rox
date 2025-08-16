@@ -15,7 +15,6 @@ use App\Utilities\ConversationThread;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
 use Doctrine\ORM\EntityManagerInterface;
-use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -44,7 +43,7 @@ class MessageController extends AbstractController
         Mailer $mailer,
         ConversationModel $conversationModel,
         ConversationThread $conversationThread,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
     ) {
         $this->mailer = $mailer;
         $this->conversationModel = $conversationModel;
@@ -53,7 +52,7 @@ class MessageController extends AbstractController
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     #[Route(path: '/new/message/{username}', name: 'message_new')]
     public function newMessage(Request $request, Member $receiver, AllowContactCheck $allowContactCheck): Response
@@ -184,7 +183,7 @@ class MessageController extends AbstractController
         Member $receiver,
         ?Message $parent,
         string $subjectText,
-        string $body
+        string $body,
     ): Message {
         $message = new Message();
         $message->setMessage($body);
@@ -210,7 +209,7 @@ class MessageController extends AbstractController
         $this->entityManager->persist($message);
         $this->entityManager->flush();
 
-        if (strpos($message->getSpamInfo(), SpamInfoType::SPAM_BLOCKED_WORD) === false) {
+        if (!str_contains($message->getSpamInfo(), SpamInfoType::SPAM_BLOCKED_WORD)) {
             $this->mailer->sendMessageNotificationEmail($sender, $receiver, 'message', [
                 'message' => $message,
                 'subject' => $subjectText,

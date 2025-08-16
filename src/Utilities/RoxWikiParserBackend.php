@@ -33,13 +33,11 @@ class RoxWikiParserBackend extends HtmlRenderer
      * If it is an internal link check if it exists and set flag accordingly.
      *
      * @param array $info
-     *
-     * @return array
      */
     public function getInternalLinkInfo($info): array
     {
         // if we have an external link just return
-        if (false !== strpos($info['url'], '://')) {
+        if (str_contains($info['url'], '://')) {
             return $info;
         }
 

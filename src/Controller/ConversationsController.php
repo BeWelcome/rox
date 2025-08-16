@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\Member;
-use App\Entity\Preference;
 use App\Form\CustomDataClass\MessageIndexRequest;
 use App\Form\MessageIndexFormType;
 use App\Model\ConversationsModel;
@@ -18,7 +17,6 @@ use App\Utilities\ItemsPerPageTraits;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
 use Doctrine\ORM\EntityManagerInterface;
-use InvalidArgumentException;
 use Pagerfanta\Pagerfanta;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -31,9 +29,9 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class ConversationsController extends AbstractController
 {
+    use ItemsPerPageTraits;
     use TranslatedFlashTrait;
     use TranslatorTrait;
-    use ItemsPerPageTraits;
 
     protected ConversationsModel $conversationsModel;
     private EntityManagerInterface $entityManager;
@@ -63,18 +61,18 @@ class ConversationsController extends AbstractController
     }
 
     /**
-     * @throws InvalidArgumentException
+     * @throws \InvalidArgumentException
      */
     #[Route(path: '/conversations/with/{username}', name: 'conversations_with')]
     public function allConversationsWithMember(
         Request $request,
-        Member $other
+        Member $other,
     ): Response {
         /** @var Member $member */
         $member = $this->getUser();
         $page = $request->query->get('page', '1');
 
-        $messages = new PagerFanta(new ConversationsWithAdapter($this->entityManager, $member, $other));
+        $messages = new Pagerfanta(new ConversationsWithAdapter($this->entityManager, $member, $other));
         $messages->setMaxPerPage(15);
         $messages->setCurrentPage($page);
 
@@ -166,15 +164,12 @@ class ConversationsController extends AbstractController
         ]);
     }
 
-    /**
-     * @param mixed $data
-     */
     private function handleButtonClick(
         string $active,
         string $clickedButton,
         Member $member,
         Request $request,
-        $data
+        $data,
     ): ?RedirectResponse {
         $conversationIds = $data->getMessages();
         if ('purge' === $clickedButton) {

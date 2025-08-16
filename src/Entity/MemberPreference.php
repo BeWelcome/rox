@@ -2,13 +2,10 @@
 
 namespace App\Entity;
 
-use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Memberspreferences.
- *
- *
  */
 #[ORM\Table(name: 'memberspreferences')]
 #[ORM\Index(name: 'memberspreferences_members', columns: ['IdMember', 'IdPreference'])]
@@ -38,13 +35,13 @@ class MemberPreference
     private $value;
 
     /**
-     * @var DateTime
+     * @var \DateTime
      */
     #[ORM\Column(name: 'updated', type: 'datetime', nullable: false)]
     private $updated;
 
     /**
-     * @var DateTime
+     * @var \DateTime
      */
     #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
     private $created;
@@ -124,7 +121,7 @@ class MemberPreference
     }
 
     /**
-     * @param DateTime $updated
+     * @param \DateTime $updated
      *
      * @return MemberPreference
      */
@@ -138,7 +135,7 @@ class MemberPreference
     /**
      * Get updated.
      *
-     * @return DateTime
+     * @return \DateTime
      */
     public function getUpdated()
     {
@@ -148,7 +145,7 @@ class MemberPreference
     /**
      * Set created.
      *
-     * @param DateTime $created
+     * @param \DateTime $created
      *
      * @return MemberPreference
      */
@@ -162,7 +159,7 @@ class MemberPreference
     /**
      * Get created.
      *
-     * @return DateTime
+     * @return \DateTime
      */
     public function getCreated()
     {
@@ -185,8 +182,8 @@ class MemberPreference
     #[ORM\PrePersist]
     public function onPrePersist()
     {
-        $this->created = new DateTime('now');
-        $this->updated = new DateTime('now');
+        $this->created = new \DateTime('now');
+        $this->updated = new \DateTime('now');
     }
 
     /**
@@ -195,6 +192,6 @@ class MemberPreference
     #[ORM\PreUpdate]
     public function onPreUpdate()
     {
-        $this->updated = new DateTime('now');
+        $this->updated = new \DateTime('now');
     }
 }

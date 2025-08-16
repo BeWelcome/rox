@@ -4,11 +4,8 @@ namespace App\Controller;
 
 use App\Doctrine\MemberStatusType;
 use App\Entity\Member;
-use App\Entity\ProfileNote;
 use App\Entity\Relation;
-use App\Form\ProfileNoteType;
 use App\Form\RelationType;
-use App\Repository\ProfileNoteRepository;
 use App\Repository\RelationRepository;
 use App\Service\Mailer;
 use App\Utilities\ChangeProfilePictureGlobals;
@@ -16,19 +13,17 @@ use App\Utilities\ItemsPerPageTraits;
 use App\Utilities\ProfileSubmenu;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
-use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class RelationController extends AbstractController
 {
-    use TranslatorTrait;
     use ItemsPerPageTraits;
     use TranslatedFlashTrait;
+    use TranslatorTrait;
 
     private EntityManagerInterface $entityManager;
     private ChangeProfilePictureGlobals $globals;
@@ -37,7 +32,7 @@ class RelationController extends AbstractController
     public function __construct(
         EntityManagerInterface $entityManager,
         ProfileSubmenu $profileSubmenu,
-        ChangeProfilePictureGlobals $globals
+        ChangeProfilePictureGlobals $globals,
     ) {
         $this->entityManager = $entityManager;
         $this->globals = $globals;
@@ -70,8 +65,7 @@ class RelationController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var Relation $relation */
             $relation = $form->getData();
-            if (!checkForEmailAddress($relation) && !checkForPhoneNumber($relation))
-            {
+            if (!checkForEmailAddress($relation) && !checkForPhoneNumber($relation)) {
                 $relation->setOwner($loggedInMember);
                 $relation->setReceiver($member);
 
@@ -111,7 +105,7 @@ class RelationController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $relation = $form->getData();
-            $relation->setUpdated(new DateTime());
+            $relation->setUpdated(new \DateTime());
 
             $this->entityManager->merge($relation);
             $this->entityManager->flush();

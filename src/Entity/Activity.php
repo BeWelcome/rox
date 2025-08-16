@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @codingStandardsIgnoreFile
  *
@@ -9,7 +10,6 @@ namespace App\Entity;
 
 use App\Repository\ActivityRepository;
 use Carbon\Carbon;
-use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
@@ -17,7 +17,6 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Activity.
- *
  *
  * @SuppressWarnings("PHPMD")
  * Auto generated class do not check mess
@@ -31,10 +30,10 @@ class Activity
     private Member $createdBy;
 
     #[ORM\Column(name: 'dateTimeStart', type: 'datetime', nullable: false)]
-    private DateTime $starts;
+    private \DateTime $starts;
 
     #[ORM\Column(name: 'dateTimeEnd', type: 'datetime', nullable: false)]
-    private DateTime $ends;
+    private \DateTime $ends;
 
     #[ORM\JoinColumn(name: 'locationId', referencedColumnName: 'geonameId', nullable: false)]
     #[ORM\ManyToOne(targetEntity: Location::class)]
@@ -53,7 +52,7 @@ class Activity
     private int $status;
 
     #[ORM\Column(name: 'public', type: 'smallint', nullable: true)]
-    private ?int $online ;
+    private ?int $online;
 
     #[ORM\Column(name: 'id', type: 'integer')]
     #[ORM\Id]

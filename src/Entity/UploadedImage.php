@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @codingStandardsIgnoreFile
  *
@@ -8,12 +9,10 @@
 namespace App\Entity;
 
 use Carbon\Carbon;
-use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Image uploaded using CKEditor.
- *
  *
  * @SuppressWarnings("PHPMD")
  * Auto generated class do not check mess
@@ -54,7 +53,7 @@ class UploadedImage
     private $height = 0;
 
     /**
-     * @var DateTime
+     * @var \DateTime
      */
     #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
     private $created;
@@ -143,7 +142,7 @@ class UploadedImage
     #[ORM\PrePersist]
     public function onPrePersist()
     {
-        $this->created = new DateTime('now');
+        $this->created = new \DateTime('now');
     }
 
     public function setFileInfo(string $fileInfo): self

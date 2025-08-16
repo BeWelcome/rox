@@ -7,7 +7,6 @@ use App\Repository\WikiRepository;
 use App\Utilities\ManagerTrait;
 use App\Utilities\RoxWikiParserBackend;
 use Doctrine\ORM\EntityManagerInterface;
-use Mike42\Wikitext\DefaultParserBackend;
 use Mike42\Wikitext\HtmlRenderer;
 use Mike42\Wikitext\WikitextParser;
 use Symfony\Contracts\Service\Attribute\Required;
@@ -56,20 +55,16 @@ class WikiModel
     }
 
     /**
-     * @param $content
-     *
-     * @return string
-     *
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
     public function parseWikiMarkup($content): ?string
     {
-//         try {
-            $parser = new WikitextParser($this->roxWikiParserBackend);
-            $result = $parser->parse($content);
-//        } catch (\Exception $e) {
-//            $result = 'Wiki content could not be parsed: ' . $e->getMessage();
-//        }
+        //         try {
+        $parser = new WikitextParser($this->roxWikiParserBackend);
+        $result = $parser->parse($content);
+        //        } catch (\Exception $e) {
+        //            $result = 'Wiki content could not be parsed: ' . $e->getMessage();
+        //        }
 
         return $result;
     }

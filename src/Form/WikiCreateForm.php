@@ -15,7 +15,7 @@ class WikiCreateForm extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('wiki_markup', TextAreaType::class, [
+            ->add('wiki_markup', TextareaType::class, [
                 'attr' => [
                     'rows' => 20,
                 ],

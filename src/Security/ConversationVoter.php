@@ -4,7 +4,6 @@ namespace App\Security;
 
 use App\Entity\Member;
 use App\Entity\Message;
-use LogicException;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
@@ -46,7 +45,7 @@ class ConversationVoter extends Voter
                 return $this->canReply($message, $member);
         }
 
-        throw new LogicException('This code should not be reached!');
+        throw new \LogicException('This code should not be reached!');
     }
 
     private function canView(Message $message, Member $member): bool

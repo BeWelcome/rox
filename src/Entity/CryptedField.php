@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @codingStandardsIgnoreFile
  *
@@ -11,7 +12,6 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Cryptedfield.
- *
  *
  * @SuppressWarnings("PHPMD")
  * Auto generated class do not check mess
@@ -81,8 +81,6 @@ class CryptedField
     /**
      * Set admincryptedvalue.
      *
-     * @param $adminCryptedValue
-     *
      * @return CryptedField
      *
      * @internal param string $admincryptedvalue
@@ -106,8 +104,6 @@ class CryptedField
 
     /**
      * Set membercryptedvalue.
-     *
-     * @param mixed $memberCryptedValue
      *
      * @return Cryptedfield
      */

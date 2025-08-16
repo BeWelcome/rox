@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @codingStandardsIgnoreFile
  *
@@ -10,16 +11,13 @@ namespace App\Entity;
 use App\Doctrine\TripAdditionalInfoType;
 use App\Repository\TripRepository;
 use Carbon\Carbon;
-use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use InvalidArgumentException;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Trip.
- *
  *
  * @SuppressWarnings("PHPMD")
  * Auto generated class do not check mess
@@ -44,13 +42,13 @@ class Trip
     private int $invitationRadius = 20;
 
     #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
-    private DateTime $created;
+    private \DateTime $created;
 
     #[ORM\Column(name: 'updated', type: 'datetime', nullable: true)]
-    private ?DateTime $updated = null;
+    private ?\DateTime $updated = null;
 
     #[ORM\Column(name: 'deleted', type: 'datetime', nullable: true)]
-    private ?DateTime $deleted = null;
+    private ?\DateTime $deleted = null;
 
     #[ORM\Column(name: 'additionalInfo', type: 'trip_additional_info', nullable: false)]
     private string $additionalInfo = TripAdditionalInfoType::NONE;
@@ -113,7 +111,7 @@ class Trip
         return $this->countOfTravellers;
     }
 
-    public function setCreated(DateTime $created): self
+    public function setCreated(\DateTime $created): self
     {
         $this->created = $created;
 
@@ -125,7 +123,7 @@ class Trip
         return Carbon::instance($this->created);
     }
 
-    public function setUpdated(DateTime $updated): self
+    public function setUpdated(\DateTime $updated): self
     {
         $this->updated = $updated;
 
@@ -137,7 +135,7 @@ class Trip
         return Carbon::instance($this->updated);
     }
 
-    public function setDeleted(DateTime $deleted): self
+    public function setDeleted(\DateTime $deleted): self
     {
         $this->deleted = $deleted;
 
@@ -217,7 +215,7 @@ class Trip
         $legs = $this->getSubtrips();
 
         if (0 === $legs->count()) {
-            throw new InvalidArgumentException('No trip legs');
+            throw new \InvalidArgumentException('No trip legs');
         }
 
         $expired = true;
@@ -238,7 +236,7 @@ class Trip
     #[ORM\PrePersist]
     public function onPrePersist()
     {
-        $this->created = new DateTime('now');
+        $this->created = new \DateTime('now');
     }
 
     /**
@@ -247,7 +245,7 @@ class Trip
     #[ORM\PreUpdate]
     public function onPreUpdate()
     {
-        $this->updated = new DateTime('now');
+        $this->updated = new \DateTime('now');
     }
 
     public function getInvitationRadius(): int

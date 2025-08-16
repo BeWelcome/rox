@@ -22,17 +22,17 @@ class LocaleController extends AbstractController
     public function selectLocaleAction(
         Request $request,
         #[MapEntity(mapping: ['locale' => 'shortCode'])] Language $language,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
     ): RedirectResponse {
         /** @var Member $member */
         $member = $this->getUser();
         if ($member) {
             $preference = $entityManager->getRepository(Preference::class)->findOneBy([
-                'codename' => Preference::LOCALE
+                'codename' => Preference::LOCALE,
             ]);
             $memberPreference = $entityManager->getRepository(MemberPreference::class)->findOneBy([
                 'preference' => $preference,
-                'member' => $member
+                'member' => $member,
             ]);
             if (null === $memberPreference) {
                 $memberPreference = new MemberPreference();

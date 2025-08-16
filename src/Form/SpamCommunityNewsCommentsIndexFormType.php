@@ -9,9 +9,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class SpamCommunityNewsCommentsIndexFormType extends AbstractType
 {
-    /**
-     * {@inheritdoc}
-     */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $ids = $options['ids'];
@@ -23,12 +20,9 @@ class SpamCommunityNewsCommentsIndexFormType extends AbstractType
                 'multiple' => true,
                 'label' => 'label.spam.communitynews',
             ])
-            ;
+        ;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([

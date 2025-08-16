@@ -4,23 +4,19 @@ namespace App\Controller;
 
 use App\Entity\HostingRequest;
 use App\Entity\Member;
-use App\Entity\MembersPhoto;
-use App\Entity\MemberTranslation;
 use App\Entity\Message;
-use App\Entity\Preference;
 use App\Model\BaseRequestModel;
 use App\Model\ConversationModel;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
-use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Form;
 
 abstract class BaseRequestAndInvitationController extends AbstractController
 {
-    use TranslatorTrait;
     use TranslatedFlashTrait;
+    use TranslatorTrait;
 
     protected BaseRequestModel $model;
     protected ConversationModel $conversationModel;
@@ -63,7 +59,7 @@ abstract class BaseRequestAndInvitationController extends AbstractController
         Form $requestForm,
         $currentRequest,
         Member $sender,
-        Member $receiver
+        Member $receiver,
     ): Message {
         $data = $requestForm->getData();
         $clickedButton = $requestForm->getClickedButton()->getName();
@@ -85,7 +81,7 @@ abstract class BaseRequestAndInvitationController extends AbstractController
         $hostingRequest->setFirstRead(null);
         $hostingRequest->setStatus('Sent');
         $hostingRequest->setFolder('Normal');
-        $hostingRequest->setCreated(new DateTime());
+        $hostingRequest->setCreated(new \DateTime());
 
         return $hostingRequest;
     }
@@ -126,7 +122,7 @@ abstract class BaseRequestAndInvitationController extends AbstractController
             $currentLocale = $translator->getLocale();
             $translator->setLocale($locale);
             $suffix = $translator->trans($suffix);
-            if (false === strpos($suffix, $subject)) {
+            if (!str_contains($suffix, $subject)) {
                 $subject .= ' ' . $suffix;
             }
             $translator->setLocale($currentLocale);

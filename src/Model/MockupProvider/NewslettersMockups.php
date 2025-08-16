@@ -4,7 +4,6 @@ namespace App\Model\MockupProvider;
 
 use App\Entity\Newsletter;
 use Doctrine\ORM\EntityManagerInterface;
-use Exception;
 use Symfony\Component\Form\FormFactoryInterface;
 
 class NewslettersMockups implements MockupProviderInterface
@@ -44,7 +43,7 @@ class NewslettersMockups implements MockupProviderInterface
         $newsletters = $newsletterRepository->findBy(['type' => $parameters['type']], ['created' => 'DESC']);
 
         if (0 === \count($newsletters)) {
-            throw new Exception('Sorry, no newsletter of type ' . $parameters['type'] . ' found, please create one.');
+            throw new \Exception('Sorry, no newsletter of type ' . $parameters['type'] . ' found, please create one.');
         }
 
         return [

@@ -20,8 +20,6 @@ class LocationRequestToLocationTransformer implements DataTransformerInterface
 
     /**
      * Transforms a location to a location request.
-     *
-     * @param mixed $value
      */
     public function transform($value): ?LocationRequest
     {
@@ -62,7 +60,7 @@ class LocationRequestToLocationTransformer implements DataTransformerInterface
             // causes a validation error
             // this message is not shown to the user
             // see the invalid_message option
-            $message = sprintf(
+            $message = \sprintf(
                 'A location with geonameId "%d" for %s does not exist!',
                 $value->geonameId,
                 $value->name

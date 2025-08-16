@@ -2,9 +2,7 @@
 
 namespace App\Entity;
 
-use App\Entity\Member as Member;
 use Carbon\Carbon;
-use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -32,7 +30,7 @@ class Newsletter
     private $name;
 
     /**
-     * @var DateTime
+     * @var \DateTime
      */
     #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
     private $created;
@@ -114,7 +112,7 @@ class Newsletter
     /**
      * Set created.
      *
-     * @param DateTime $created
+     * @param \DateTime $created
      *
      * @return Newsletter
      */

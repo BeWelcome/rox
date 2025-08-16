@@ -13,16 +13,16 @@ use Hidehalo\Nanoid\Client;
 use Pagerfanta\Doctrine\ORM\QueryAdapter;
 use Pagerfanta\Pagerfanta;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class DonationController extends AbstractController
 {
-    use TranslatorTrait;
     use TranslatedFlashTrait;
+    use TranslatorTrait;
 
     private const PAYPAL_NONCE = 'paypal_nonce';
 
@@ -92,7 +92,7 @@ class DonationController extends AbstractController
         $isTreasurer = false;
         if (null !== $member) {
             $roles = $member->getRoles();
-            $isTreasurer = in_array(Member::ROLE_ADMIN_TREASURER, $roles);
+            $isTreasurer = \in_array(Member::ROLE_ADMIN_TREASURER, $roles, true);
         }
 
         return $this->render('donation/list.html.twig', [

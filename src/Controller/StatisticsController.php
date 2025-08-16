@@ -4,9 +4,6 @@ namespace App\Controller;
 
 use App\Model\StatisticsModel;
 use App\Utilities\SessionSingleton;
-use EnvironmentExplorer;
-use PException;
-use StatsModel;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -30,7 +27,6 @@ class StatisticsController extends AboutBaseController
     }
 
     /**
-     *
      * @return Response
      */
     #[Route(path: '/about/statistics', name: 'about_statistics')]
@@ -46,8 +42,8 @@ class StatisticsController extends AboutBaseController
     }
 
     /**
-     *
      * @param string $period timeframe for data
+     *
      * @return JsonResponse
      */
     #[Route(path: '/stats/members/{period}', name: 'stats_members', requirements: ['period' => 'weekly|daily'])]
@@ -62,8 +58,8 @@ class StatisticsController extends AboutBaseController
     }
 
     /**
-     *
      * @param string $period timeframe for data
+     *
      * @return JsonResponse
      */
     #[Route(path: '/stats/messages/sent/{period}', name: 'stats_messages_sent', requirements: ['period' => 'weekly|daily'])]
@@ -78,8 +74,8 @@ class StatisticsController extends AboutBaseController
     }
 
     /**
-     *
      * @param string $period timeframe for data
+     *
      * @return JsonResponse
      */
     #[Route(path: '/stats/messages/read/{period}', name: 'stats_messages_read', requirements: ['period' => 'weekly|daily'])]
@@ -94,8 +90,8 @@ class StatisticsController extends AboutBaseController
     }
 
     /**
-     *
      * @param string $period timeframe for data
+     *
      * @return JsonResponse
      */
     #[Route(path: '/stats/requests/sent/{period}', name: 'stats_requests_sent', requirements: ['period' => 'weekly|daily'])]
@@ -110,8 +106,8 @@ class StatisticsController extends AboutBaseController
     }
 
     /**
-     *
      * @param string $period timeframe for data
+     *
      * @return JsonResponse
      */
     #[Route(path: '/stats/requests/accepted/{period}', name: 'stats_requests_accepted', requirements: ['period' => 'weekly|daily'])]
@@ -126,8 +122,8 @@ class StatisticsController extends AboutBaseController
     }
 
     /**
-     *
      * @param string $period timeframe for data
+     *
      * @return JsonResponse
      */
     #[Route(path: '/stats/invitations/sent/{period}', name: 'stats_invitations_sent', requirements: ['period' => 'weekly|daily'])]
@@ -142,8 +138,8 @@ class StatisticsController extends AboutBaseController
     }
 
     /**
-     *
      * @param string $period timeframe for data
+     *
      * @return JsonResponse
      */
     #[Route(path: '/stats/invitations/accepted/{period}', name: 'stats_invitations_accepted', requirements: ['period' => 'weekly|daily'])]
@@ -158,8 +154,8 @@ class StatisticsController extends AboutBaseController
     }
 
     /**
-     *
      * @param string $period timeframe for data
+     *
      * @return JsonResponse
      */
     #[Route(path: '/stats/legs/created/{period}', name: 'stats_legs_created', requirements: ['period' => 'weekly|daily'])]
@@ -230,8 +226,6 @@ class StatisticsController extends AboutBaseController
     }
 
     /**
-     *
-     * @param mixed $type
      * @return JsonResponse
      */
     #[Route(path: '/stats/data/{type}', name: 'stats_data', requirements: ['type' => 'alltime|requests|last2month|other'], defaults: ['type' => 'alltime'])]
@@ -253,13 +247,13 @@ class StatisticsController extends AboutBaseController
     private function otherData()
     {
         $this->kickstartSession();
-        $statsModel = new StatsModel();
+        $statsModel = new \StatsModel();
         try {
             $languages = $statsModel->getLanguages();
             $preferredLanguages = $statsModel->getPreferredLanguages();
             $logins = $statsModel->getLastLoginRankGrouped();
             $countries = $statsModel->getMembersPerCountry();
-        } catch (PException $e) {
+        } catch (\PException $e) {
             $logins = [];
             $countries = [];
             $languages = [];
@@ -288,7 +282,7 @@ class StatisticsController extends AboutBaseController
         SessionSingleton::createInstance($session);
 
         // make sure everything's setup for the old code used below
-        $environmentExplorer = new EnvironmentExplorer($this->urlGenerator);
+        $environmentExplorer = new \EnvironmentExplorer($this->urlGenerator);
         $environmentExplorer->initializeGlobalState(
             $this->getParameter('database_host'),
             $this->getParameter('database_name'),

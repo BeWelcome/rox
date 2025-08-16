@@ -16,11 +16,10 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class FeedbackController extends AboutBaseController
 {
-    use TranslatorTrait;
     use TranslatedFlashTrait;
+    use TranslatorTrait;
 
     /**
-     *
      * @return Response|RedirectResponse
      */
     #[Route(path: '/about/feedback', name: 'contactus')]
@@ -41,7 +40,7 @@ class FeedbackController extends AboutBaseController
         $feedbackQuestion = '';
         if (null !== $username) {
             $feedbackQuestion = $translator->trans('profile.report.text');
-            $feedbackQuestion = sprintf($feedbackQuestion, $username);
+            $feedbackQuestion = \sprintf($feedbackQuestion, $username);
         }
         $form = $this->createForm(
             FeedbackFormType::class,
@@ -68,7 +67,7 @@ class FeedbackController extends AboutBaseController
                 );
             }
 
-            $reply = !($data['no_reply_needed']);
+            $reply = !$data['no_reply_needed'];
             if ($reply && null === $data['FeedbackEmail']) {
                 $form
                     ->addError(

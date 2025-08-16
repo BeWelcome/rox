@@ -24,9 +24,6 @@ class SignupFormFinalizeType extends AbstractType
         $this->translator = $translator;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
@@ -79,7 +76,7 @@ class SignupFormFinalizeType extends AbstractType
             ])
             ->add('location', SetLocationType::class, [
                 'attr' => [
-                    'class' =>  'js-location-picker',
+                    'class' => 'js-location-picker',
                 ],
                 'label' => 'profile.set.location',
                 'error_bubbling' => true,
@@ -112,11 +109,11 @@ class SignupFormFinalizeType extends AbstractType
             ])
             ->add('newsletters', CheckboxType::class, [
                 'label' => 'signup.label.newsletters',
-                'required' => false
+                'required' => false,
             ])
             ->add('local_events', CheckboxType::class, [
                 'label' => 'signup.label.local_events',
-                'required' => false
+                'required' => false,
             ])
 /*            ->add('trips_notifications', ChoiceType::class, [
                 'label' => 'label.trips_notifications',

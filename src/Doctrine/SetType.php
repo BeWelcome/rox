@@ -4,7 +4,6 @@ namespace App\Doctrine;
 
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Type;
-use InvalidArgumentException;
 
 abstract class SetType extends Type
 {
@@ -31,16 +30,16 @@ abstract class SetType extends Type
     public function convertToDatabaseValue(mixed $value, AbstractPlatform $platform): mixed
     {
         if (null !== $value && !empty($value)) {
-            if (is_array($value)) {
+            if (\is_array($value)) {
                 $value = implode(',', $value);
-            };
+            }
             if ($value) {
                 // Split given value
                 $values = explode(',', $value);
                 $valueCount = \count($values);
 
                 if (\count(array_intersect($values, $this->values)) !== $valueCount) {
-                    throw new InvalidArgumentException("Invalid '" . $this->name . "' value: " . $value . '.');
+                    throw new \InvalidArgumentException("Invalid '" . $this->name . "' value: " . $value . '.');
                 }
             }
         } else {
@@ -50,17 +49,11 @@ abstract class SetType extends Type
         return $value;
     }
 
-    /**
-     * @return string
-     */
     public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * @return bool
-     */
     public function requiresSQLCommentHint(AbstractPlatform $platform): bool
     {
         return true;

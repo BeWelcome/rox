@@ -12,13 +12,9 @@ use App\Entity\NewLocation;
 use App\Entity\Preference;
 use App\Entity\Subject;
 use App\Service\Mailer;
-use App\Utilities\ManagerTrait;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Hidehalo\Nanoid\Client;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
-use Symfony\Component\PasswordHasher\PasswordHasherInterface;
-use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SignupModel
@@ -32,7 +28,7 @@ class SignupModel
         EntityManagerInterface $entityManager,
         PasswordHasherFactoryInterface $passwordHasherFactory,
         TranslatorInterface $translator,
-        Mailer $mailer
+        Mailer $mailer,
     ) {
         $this->entityManager = $entityManager;
         $this->passwordHasherFactory = $passwordHasherFactory;
@@ -68,7 +64,7 @@ class SignupModel
         }
 
         $preference = $this->entityManager->getRepository(Preference::class)->findOneBy([
-            'codename' => Preference::LOCALE
+            'codename' => Preference::LOCALE,
         ]);
 
         $memberPreference = new MemberPreference();
@@ -98,7 +94,7 @@ class SignupModel
     public function updateMember(Member $member, array $data): void
     {
         $location = $this->entityManager->getRepository(NewLocation::class)->findOneBy([
-            'geonameId' => $data['location']['geoname_id']
+            'geonameId' => $data['location']['geoname_id'],
         ]);
 
         $member
@@ -158,7 +154,7 @@ class SignupModel
 
         $newsletterValue = $data['newsletters'] ? 'Yes' : 'No';
         $preference = $this->entityManager->getRepository(Preference::class)->findOneBy([
-            'codename' => Preference::NEWSLETTERS_VIA_EMAIL
+            'codename' => Preference::NEWSLETTERS_VIA_EMAIL,
         ]);
 
         $newsletterPreference = new MemberPreference();
@@ -171,7 +167,7 @@ class SignupModel
 
         $localeEventsValue = $data['local_events'] ? 'Yes' : 'No';
         $preference = $this->entityManager->getRepository(Preference::class)->findOneBy([
-            'codename' => Preference::LOCAL_EVENT_NOTIFICATIONS
+            'codename' => Preference::LOCAL_EVENT_NOTIFICATIONS,
         ]);
 
         $localEventsPreference = new MemberPreference();

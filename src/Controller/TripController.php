@@ -23,7 +23,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class TripController extends AbstractController
 {
@@ -130,7 +129,6 @@ class TripController extends AbstractController
     /**
      * Edit an existing trip.
      *
-     *
      * @IsGranted("TRIP_EDIT", subject="trip")
      */
     #[Route(path: '/trip/{id}/edit', name: 'trip_edit', requirements: ['id' => '\d+'])]
@@ -177,7 +175,6 @@ class TripController extends AbstractController
     /**
      * Remove an existing trip.
      *
-     *
      * @IsGranted("TRIP_REMOVE", subject="trip")
      */
     #[Route(path: '/trip/{id}/remove', name: 'trip_remove', requirements: ['id' => '\d+'])]
@@ -190,7 +187,6 @@ class TripController extends AbstractController
 
     /**
      * Copies an existing trip (keeping all locations and sets dates in the future).
-     *
      *
      * @IsGranted("TRIP_COPY", subject="trip")
      */
@@ -211,7 +207,7 @@ class TripController extends AbstractController
     public function tripsInArea(
         Request $request,
         EntityManagerInterface $entityManager,
-        int $page = 1
+        int $page = 1,
     ): Response {
         /** @var Member $host */
         $host = $this->getUser();

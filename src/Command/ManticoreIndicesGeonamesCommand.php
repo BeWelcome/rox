@@ -6,22 +6,14 @@ use App\Entity\NewLocation;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NativeQuery;
 use Doctrine\ORM\Query\ResultSetMapping;
-use Doctrine\ORM\Query\ResultSetMappingBuilder;
-use Exception;
-use Gedmo\Translatable\Entity\Repository\TranslationRepository;
-use Gedmo\Translatable\Entity\Translation;
 use Manticoresearch\Client;
 use Manticoresearch\Index;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-
-use function count;
 
 #[AsCommand(
     name: 'manticore:indices:geonames',
@@ -67,6 +59,7 @@ class ManticoreIndicesGeonamesCommand extends Command
                 'Skipped creation of ' . self::GEONAMES_INDEX . ' index. ' .
                 'Try using manticore:indices:update --geonames instead'
             );
+
             return Command::INVALID;
         }
 
@@ -77,7 +70,7 @@ class ManticoreIndicesGeonamesCommand extends Command
 
     private function createGeonamesIndex(): ?Index
     {
-        $client = new Client(['host' => $this->manticoreHost,'port' => $this->manticorePort]);
+        $client = new Client(['host' => $this->manticoreHost, 'port' => $this->manticorePort]);
         $index = $client->index('geonames_rt');
 
         try {
@@ -107,7 +100,7 @@ class ManticoreIndicesGeonamesCommand extends Command
                     'ngram_len' => '1',
                 ]
             );
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             // $index = null;
 
             $this->io->error($e->getMessage());
@@ -124,15 +117,15 @@ class ManticoreIndicesGeonamesCommand extends Command
 
         $stmt = $this->entityManager
             ->getConnection()
-            ->executeQuery(<<<___SQL
+            ->executeQuery(<<<'___SQL'
             SELECT
                 count(*) as cnt
             FROM
                 geo__names g
         ___SQL);
 
-        $count = ($stmt->fetchNumeric())[0];
-        if ($count !== 0) {
+        $count = $stmt->fetchNumeric()[0];
+        if (0 !== $count) {
             $progressBar = $this->getProgressBar($output, $count);
 
             $firstResult = 0;
@@ -185,15 +178,15 @@ class ManticoreIndicesGeonamesCommand extends Command
 
         $stmt = $this->entityManager
             ->getConnection()
-            ->executeQuery(<<<___SQL
+            ->executeQuery(<<<'___SQL'
             SELECT
                 count(*) as cnt
             FROM
                 geo__names_translations gt
         ___SQL);
 
-        $count = ($stmt->fetchNumeric())[0];
-        if ($count !== 0) {
+        $count = $stmt->fetchNumeric()[0];
+        if (0 !== $count) {
             $progressBar = $this->getProgressBar($output, $count);
             $progressBar->start();
 
@@ -249,14 +242,14 @@ class ManticoreIndicesGeonamesCommand extends Command
 
         /** @var NewLocation $location */
         foreach ($locations as $location) {
-            $isPlace = $location['feature_class'] === 'P' && substr($location['feature_code'], 0, 3) === 'PPL'
-                && $location['feature_code'] !== 'PPLH' && $location['feature_code'] !== 'PPLCH'
-                && $location['feature_code'] !== 'PPLX' && $location['feature_code'] !== 'PPLQ';
+            $isPlace = 'P' === $location['feature_class'] && 'PPL' === substr($location['feature_code'], 0, 3)
+                && 'PPLH' !== $location['feature_code'] && 'PPLCH' !== $location['feature_code']
+                && 'PPLX' !== $location['feature_code'] && 'PPLQ' !== $location['feature_code'];
             $isCountry =
-                ($location['feature_class'] === 'A' && substr($location['feature_code'], 0, 3) === 'PCL'
-                    && $location['feature_code'] !== 'PRSH' && $location['feature_code'] !== 'PCLH')
-                || ($location['feature_code'] === 'TERR');
-            $isAdmin = $location['feature_class'] === 'A' && !$isCountry;
+                ('A' === $location['feature_class'] && 'PCL' === substr($location['feature_code'], 0, 3)
+                    && 'PRSH' !== $location['feature_code'] && 'PCLH' !== $location['feature_code'])
+                || ('TERR' === $location['feature_code']);
+            $isAdmin = 'A' === $location['feature_class'] && !$isCountry;
 
             $documents[] = [
                 'geoname_id' => $location['geonameid'],
@@ -305,6 +298,7 @@ class ManticoreIndicesGeonamesCommand extends Command
 
         return $rsm;
     }
+
     private function getProgressBar(OutputInterface $output, $count): ProgressBar
     {
         $progressBar = new ProgressBar($output, $count);
@@ -320,14 +314,14 @@ class ManticoreIndicesGeonamesCommand extends Command
     private function adaptLocale(string $locale)
     {
         switch ($locale) {
-            case "zh-TW":
-                $locale = "zh-hant";
+            case 'zh-TW':
+                $locale = 'zh-hant';
                 break;
-            case "zh-CN":
-                $locale = "zh-hans";
+            case 'zh-CN':
+                $locale = 'zh-hans';
                 break;
-            case "pt-BR":
-                $locale = "pt-br";
+            case 'pt-BR':
+                $locale = 'pt-br';
                 break;
         }
 

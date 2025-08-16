@@ -3,7 +3,6 @@
 namespace App\Repository;
 
 use App\Doctrine\NotificationStatusType;
-use DateTime;
 use Doctrine\ORM\EntityRepository;
 
 /**
@@ -16,7 +15,7 @@ class PostNotificationRepository extends EntityRepository
      */
     public function getScheduledNotifications(int $batchSize)
     {
-        $date = new DateTime();
+        $date = new \DateTime();
         $date->modify('-5 minutes');
 
         return $this->createQueryBuilder('n')

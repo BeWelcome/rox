@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @codingStandardsIgnoreFile
  *
@@ -13,7 +14,6 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Logs.
  *
- *
  * @SuppressWarnings("PHPMD")
  * Auto generated class do not check mess
  */
@@ -23,10 +23,10 @@ use Doctrine\ORM\Mapping as ORM;
 class Log
 {
     /**
-     * @var \App\Entity\Member
+     * @var Member
      */
     #[ORM\JoinColumn(name: 'idMember', referencedColumnName: 'id')]
-    #[ORM\ManyToOne(targetEntity: \App\Entity\Member::class, fetch: 'EAGER')]
+    #[ORM\ManyToOne(targetEntity: Member::class, fetch: 'EAGER')]
     private $member;
 
     /**

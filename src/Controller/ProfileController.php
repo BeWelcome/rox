@@ -9,7 +9,6 @@ use App\Entity\Preference;
 use App\Entity\ProfileVisit;
 use App\Form\DeleteProfileFormType;
 use App\Form\ProfileStatusFormType;
-use App\Form\SearchLocationType;
 use App\Form\SetLocationType;
 use App\Model\ProfileModel;
 use App\Repository\ProfileVisitRepository;
@@ -36,7 +35,7 @@ class ProfileController extends AbstractController
     public function __construct(
         ChangeProfilePictureGlobals $globals,
         ProfileSubmenu $profileSubmenu,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
     ) {
         $this->globals = $globals;
         $this->profileSubmenu = $profileSubmenu;
@@ -93,7 +92,7 @@ class ProfileController extends AbstractController
     public function showMyVisitors(
         Member $member,
         EntityManagerInterface $entityManager,
-        int $page = 1
+        int $page = 1,
     ): Response {
         /** @var Member $loggedInMember */
         $loggedInMember = $this->getUser();
@@ -134,7 +133,7 @@ class ProfileController extends AbstractController
     public function setLocation(
         Request $request,
         Member $member,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
     ): Response {
         /** @var Member $loggedInMember */
         $loggedInMember = $this->getUser();
@@ -189,13 +188,13 @@ class ProfileController extends AbstractController
         Request $request,
         ProfileModel $profileModel,
         TranslatorInterface $translator,
-        PasswordHasherFactoryInterface $passwordHasherFactory
+        PasswordHasherFactoryInterface $passwordHasherFactory,
     ): Response {
         /** @var Member $member */
         $member = $this->getUser();
 
         if (null !== $member) {
-             return $this->redirectToRoute('profile_delete', ['username' => $member->getUsername()]);
+            return $this->redirectToRoute('profile_delete', ['username' => $member->getUsername()]);
         }
 
         $deleteProfileForm = $this->createForm(DeleteProfileFormType::class, null, [
@@ -231,7 +230,7 @@ class ProfileController extends AbstractController
         }
 
         return $this->render('profile/delete.not.logged.in.html.twig', [
-            'form' => $deleteProfileForm->createView()
+            'form' => $deleteProfileForm->createView(),
         ]);
     }
 
@@ -240,7 +239,7 @@ class ProfileController extends AbstractController
         Request $request,
         TokenStorageInterface $tokenStorage,
         Member $member,
-        ProfileModel $profileModel
+        ProfileModel $profileModel,
     ): Response {
         $loggedInMember = $this->getUser();
         if ($member !== $loggedInMember) {
@@ -259,6 +258,7 @@ class ProfileController extends AbstractController
                 // force logout
                 $tokenStorage->setToken(null); // Force logout
                 $request->getSession()->invalidate();
+
                 return $this->redirectToRoute('homepage');
             }
         }

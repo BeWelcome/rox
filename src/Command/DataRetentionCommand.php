@@ -8,7 +8,6 @@ use App\Entity\MemberTranslation;
 use App\Entity\NewLocation;
 use App\Logger\Logger;
 use App\Repository\MemberRepository;
-use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Hidehalo\Nanoid\Client;
@@ -37,7 +36,7 @@ class DataRetentionCommand extends Command
     public function __construct(
         Logger $logger,
         EntityManagerInterface $entityManager,
-        string $dataDirectory
+        string $dataDirectory,
     ) {
         parent::__construct();
         $this->logger = $logger;
@@ -64,7 +63,7 @@ class DataRetentionCommand extends Command
 
         $retired = $this->removeMembers($io);
 
-        $io->success(sprintf('Data of %d members has been deleted.', $retired));
+        $io->success(\sprintf('Data of %d members has been deleted.', $retired));
 
         return Command::SUCCESS;
     }
@@ -129,7 +128,7 @@ class DataRetentionCommand extends Command
     {
         // Used to set a random password (and forget it directly)
         $client = new Client();
-        $longAgo = new DateTime('1900-01-01');
+        $longAgo = new \DateTime('1900-01-01');
 
         /** @var EntityRepository $locationRepository */
         $locationRepository = $this->entityManager->getRepository(NewLocation::class);

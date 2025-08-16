@@ -2,8 +2,6 @@
 
 namespace App\Utilities;
 
-use DateTimeImmutable;
-
 /**
  * Sorts comment pairs after lowest created as long as updated is null.
  *
@@ -11,14 +9,15 @@ use DateTimeImmutable;
  */
 class CommentSorter
 {
-    private DateTimeImmutable $early20thCentury;
-    private DateTimeImmutable $farFuture;
+    private \DateTimeImmutable $early20thCentury;
+    private \DateTimeImmutable $farFuture;
 
     public function __construct()
     {
-        $this->early20thCentury = new DateTimeImmutable('01-01-1900');
-        $this->farFuture = new DateTimeImmutable('01-01-3000');
+        $this->early20thCentury = new \DateTimeImmutable('01-01-1900');
+        $this->farFuture = new \DateTimeImmutable('01-01-3000');
     }
+
     public function sortComments(array $comments): array
     {
         usort($comments, [$this, 'commentsCompare']);

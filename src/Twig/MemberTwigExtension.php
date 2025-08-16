@@ -106,7 +106,7 @@ class MemberTwigExtension extends AbstractExtension implements GlobalsInterface
 
     public function __construct(
         RouterInterface $router,
-        Security $security
+        Security $security,
     ) {
         $this->router = $router;
         $this->security = $security;
@@ -192,8 +192,8 @@ class MemberTwigExtension extends AbstractExtension implements GlobalsInterface
     {
         $reportedCommentsCount = null;
         if (
-            $this->security->isGranted(Member::ROLE_ADMIN_COMMENTS) ||
-            $this->security->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
+            $this->security->isGranted(Member::ROLE_ADMIN_COMMENTS)
+            || $this->security->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
         ) {
             /** @var CommentRepository $commentRepository */
             $commentRepository = $this->getManager()->getRepository(Comment::class);
@@ -207,8 +207,8 @@ class MemberTwigExtension extends AbstractExtension implements GlobalsInterface
     {
         $reportedMessagesCount = null;
         if (
-            $this->security->isGranted(Member::ROLE_ADMIN_CHECKER) ||
-            $this->security->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
+            $this->security->isGranted(Member::ROLE_ADMIN_CHECKER)
+            || $this->security->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
         ) {
             /** @var MessageRepository $messageRepository */
             $messageRepository = $this->getManager()->getRepository(Message::class);

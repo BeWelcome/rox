@@ -22,7 +22,7 @@ abstract class AbstractConversationsAdapter
         EntityManager $entityManager,
         Member $member,
         int $initiator,
-        bool $unreadOnly
+        bool $unreadOnly,
     ) {
         $this->connection = $entityManager->getConnection();
         $this->member = $member;

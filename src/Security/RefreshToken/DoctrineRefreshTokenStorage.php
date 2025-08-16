@@ -6,11 +6,9 @@ namespace App\Security\RefreshToken;
 
 use App\Entity\Security\RefreshToken;
 use App\Repository\RefreshTokenRepository;
-use DateTimeImmutable;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityNotFoundException;
 use Doctrine\Persistence\ManagerRegistry;
-use InvalidArgumentException;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 final class DoctrineRefreshTokenStorage implements RefreshTokenStorageInterface
@@ -28,7 +26,7 @@ final class DoctrineRefreshTokenStorage implements RefreshTokenStorageInterface
     {
         $repository = $this->getEntityManager()->getRepository(RefreshToken::class);
         if (!$repository instanceof RefreshTokenRepository) {
-            throw new InvalidArgumentException('RefreshToken entity repository must be instance of ' . RefreshTokenRepository::class);
+            throw new \InvalidArgumentException('RefreshToken entity repository must be instance of ' . RefreshTokenRepository::class);
         }
 
         return $repository->findOneByUser($user);
@@ -37,8 +35,8 @@ final class DoctrineRefreshTokenStorage implements RefreshTokenStorageInterface
     public function create(UserInterface $user): void
     {
         $refreshToken = new RefreshToken();
-        $refreshToken->setCreatedAt(new DateTimeImmutable());
-        $refreshToken->setExpiresAt(new DateTimeImmutable("$this->ttl seconds"));
+        $refreshToken->setCreatedAt(new \DateTimeImmutable());
+        $refreshToken->setExpiresAt(new \DateTimeImmutable("$this->ttl seconds"));
         $refreshToken->setUser($user);
 
         $em = $this->getEntityManager();
@@ -54,7 +52,7 @@ final class DoctrineRefreshTokenStorage implements RefreshTokenStorageInterface
         $refreshTokens = $user ? $repository->findBy(['user' => $user]) : $repository->findAll();
 
         foreach ($refreshTokens as $refreshToken) {
-            $refreshToken->setExpiresAt(new DateTimeImmutable());
+            $refreshToken->setExpiresAt(new \DateTimeImmutable());
             $em->persist($refreshToken);
         }
 

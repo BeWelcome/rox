@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @codingStandardsIgnoreFile
  *
@@ -10,7 +11,6 @@ namespace App\Entity;
 use App\Doctrine\ForumDeleteStatusType;
 use App\Doctrine\ForumVisibilityType;
 use App\Doctrine\ThreadReplyType;
-use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -18,7 +18,6 @@ use Exception;
 
 /**
  * ForumThread.
- *
  *
  * @SuppressWarnings("PHPMD")
  * Auto generated class do not check mess
@@ -42,10 +41,10 @@ class ForumThread
     private $id;
 
     /**
-     * @var DateTime
+     * @var \DateTime
      */
     #[ORM\Column(name: 'expiredate', type: 'datetime', nullable: true)]
-    private $expiryDate = null;
+    private $expiryDate;
 
     /**
      * @var int
@@ -98,7 +97,7 @@ class ForumThread
      */
     #[ORM\JoinColumn(name: 'IdFirstLanguageUsed', referencedColumnName: 'id', nullable: false)]
     #[ORM\ManyToOne(targetEntity: \Language::class)]
-    private $language = null;
+    private $language;
 
     /**
      * @var Group
@@ -160,7 +159,7 @@ class ForumThread
     /**
      * Set expiredate.
      *
-     * @param DateTime $expiryDate
+     * @param \DateTime $expiryDate
      *
      * @return ForumThread
      */
@@ -174,7 +173,7 @@ class ForumThread
     /**
      * Get expiredate.
      *
-     * @return DateTime
+     * @return \DateTime
      */
     public function getExpiryDate()
     {
@@ -703,9 +702,7 @@ class ForumThread
         $group = $this->group;
         try {
             $groupName = $this->group->getName();
-        }
-        catch (Exception $e)
-        {
+        } catch (\Exception $e) {
             $group = null;
         }
 

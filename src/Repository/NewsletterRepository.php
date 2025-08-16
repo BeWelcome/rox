@@ -22,7 +22,6 @@ class NewsletterRepository extends EntityRepository
         return $query->getResult();
     }
 
-
     /*
      * Translated post content is only provided on explicit call to avoid long load times
      */

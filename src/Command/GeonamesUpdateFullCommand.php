@@ -6,7 +6,6 @@ use App\Entity\Country;
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query;
-use Exception;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
@@ -16,7 +15,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
-use ZipArchive;
 
 /**
  * @SuppressWarnings("PHPMD")
@@ -39,7 +37,7 @@ class GeonamesUpdateFullCommand extends Command
     public function __construct(
         HttpClientInterface $httpClient,
         EntityManagerInterface $entityManager,
-        array $locales
+        array $locales,
     ) {
         parent::__construct();
 
@@ -110,7 +108,7 @@ class GeonamesUpdateFullCommand extends Command
 
         $returnCode = 0;
 
-        $downloadFiles = ($input->getOption('download'));
+        $downloadFiles = $input->getOption('download');
 
         $continueOnErrors = $input->getOption('continue-on-errors');
         $geonames = $input->getOption('geonames');
@@ -172,7 +170,7 @@ class GeonamesUpdateFullCommand extends Command
             return -1;
         }
 
-        $zip = new ZipArchive();
+        $zip = new \ZipArchive();
         $dir = sys_get_temp_dir() . '/allcountries';
         if (true === $zip->open($filename)) {
             $zip->extractTo($dir);
@@ -267,7 +265,7 @@ class GeonamesUpdateFullCommand extends Command
 
         $io->writeln('Extracting downloaded file.');
 
-        $zip = new ZipArchive();
+        $zip = new \ZipArchive();
         $dir = sys_get_temp_dir() . '/alternatenames';
         if (true === $zip->open($filename)) {
             $zip->extractTo($dir);
@@ -306,7 +304,7 @@ class GeonamesUpdateFullCommand extends Command
             if (
                 is_numeric($row[0])
                 && isset($geonameIds[$row[0]])
-//                && in_array(strtolower($row[2]), $this->allowedLocales)
+                //                && in_array(strtolower($row[2]), $this->allowedLocales)
             ) {
                 $rows[] = $row;
 
@@ -571,7 +569,7 @@ class GeonamesUpdateFullCommand extends Command
             }
 
             try {
-                $query .= sprintf(
+                $query .= \sprintf(
                     '(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s), ',
                     $connection->quote($row[0]),
                     $connection->quote($row[1]),
@@ -587,7 +585,7 @@ class GeonamesUpdateFullCommand extends Command
                     $connection->quote($row[14]),
                     $connection->quote($row[18])
                 );
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 $io->note(
                     'Skipped ' . $row[1] . ' (' . $row[8] . ', ' . $row[10] . ' - ' . $row[0]
                     . ') -- ' . $e->getMessage()
@@ -595,7 +593,7 @@ class GeonamesUpdateFullCommand extends Command
             }
         }
         $query = substr($query, 0, -2);
-        $query .= " ON DUPLICATE KEY UPDATE";
+        $query .= ' ON DUPLICATE KEY UPDATE';
         $progressbar->setMessage('Executing query...', 'status');
         $connection->executeQuery($query);
         $connection->executeQuery('SET FOREIGN_KEY_CHECKS=1');
@@ -635,7 +633,7 @@ class GeonamesUpdateFullCommand extends Command
                         break;
                 }
 
-                $query .= sprintf(
+                $query .= \sprintf(
                     '(%s, %s, %s, %s, %s, %s, %s, %s), ',
                     $connection->quote($row[0]),
                     $connection->quote($row[1]),
@@ -646,7 +644,7 @@ class GeonamesUpdateFullCommand extends Command
                     $connection->quote($row[6]),
                     $connection->quote($row[7])
                 );
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 $io->note(
                     'Skipped ' . $row[1] . ' (' . $row[8] . ', ' . $row[10] . ' - ' . $row[0] . ') -- ' . $e->getMessage()
                 );

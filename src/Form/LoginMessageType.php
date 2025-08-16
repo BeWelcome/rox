@@ -4,9 +4,7 @@ namespace App\Form;
 
 use App\Entity\LoginMessage;
 use App\Form\DataTransformer\DateTimeTransformer;
-use DateTime;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -21,6 +19,7 @@ class LoginMessageType extends AbstractType
     {
         $this->dateTimeTransformer = $dateTimeTransformer;
     }
+
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
@@ -32,7 +31,7 @@ class LoginMessageType extends AbstractType
                 'required' => false,
                 'constraints' => [
                     new NotBlank(),
-                ]
+                ],
             ])
             ->add('expires', TextType::class, [
                 'attr' => [
@@ -40,7 +39,7 @@ class LoginMessageType extends AbstractType
                 ],
                 'constraints' => [
                     new NotBlank(),
-                ]
+                ],
             ])
             ->add('submit', SubmitType::class, [
                 'label' => 'Submit',

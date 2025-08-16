@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @codingStandardsIgnoreFile
  *
@@ -9,7 +10,6 @@ namespace App\Entity;
 
 use App\Doctrine\GroupType;
 use App\Doctrine\MemberStatusType;
-use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\Common\Collections\Expr\Comparison;
@@ -19,7 +19,6 @@ use Doctrine\Persistence\ObjectManager;
 
 /**
  * Group.
- *
  *
  * @SuppressWarnings("PHPMD")
  * Auto generated class do not check mess
@@ -62,7 +61,7 @@ class Group
     private $type = GroupType::PUBLIC;
 
     /**
-     * @var DateTime
+     * @var \DateTime
      */
     #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
     private $created;
@@ -177,7 +176,7 @@ class Group
     /**
      * Set created.
      *
-     * @param DateTime $created
+     * @param \DateTime $created
      *
      * @return Group
      */
@@ -191,7 +190,7 @@ class Group
     /**
      * Get created.
      *
-     * @return DateTime
+     * @return \DateTime
      */
     public function getCreated()
     {
@@ -404,7 +403,7 @@ class Group
         $admins = [];
         foreach ($privilegeScopes as $privilegeScope) {
             $admin = $privilegeScope->getMember();
-            if (false !== strpos(MemberStatusType::ACTIVE_WITH_MESSAGES, $admin->getStatus())) {
+            if (str_contains(MemberStatusType::ACTIVE_WITH_MESSAGES, $admin->getStatus())) {
                 $admins[] = $admin;
             }
         }
@@ -436,7 +435,7 @@ class Group
     #[ORM\PrePersist]
     public function onPrePersist(): void
     {
-        $this->created = new DateTime('now');
+        $this->created = new \DateTime('now');
     }
 
     #[ORM\PostLoad]

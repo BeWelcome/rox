@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @codingStandardsIgnoreFile
  *
@@ -11,12 +12,10 @@ use App\Doctrine\CommentAdminActionType;
 use App\Doctrine\CommentQualityType;
 use App\Repository\CommentRepository;
 use Carbon\Carbon;
-use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Comment.
- *
  *
  * @SuppressWarnings("PHPMD")
  * Auto generated class do not check mess
@@ -39,10 +38,10 @@ class Comment
     private string $textwhere = '';
 
     #[ORM\Column(name: 'updated', type: 'datetime', nullable: true)]
-    private ?DateTime $updated;
+    private ?\DateTime $updated;
 
     #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
-    private DateTime $created;
+    private \DateTime $created;
 
     #[ORM\Column(name: 'AdminAction', type: 'comment_admin_action', nullable: false)]
     private string $adminAction = CommentAdminActionType::NOTHING_NEEDED;
@@ -117,7 +116,7 @@ class Comment
         return $this->textwhere;
     }
 
-    public function setUpdated(DateTime $updated): self
+    public function setUpdated(\DateTime $updated): self
     {
         $this->updated = $updated;
 
@@ -133,7 +132,7 @@ class Comment
         return Carbon::instance($this->updated);
     }
 
-    public function setCreated(DateTime $created): self
+    public function setCreated(\DateTime $created): self
     {
         $this->created = $created;
 
@@ -186,7 +185,7 @@ class Comment
         return $this->id;
     }
 
-    public function setToMember(Member $toMember = null): self
+    public function setToMember(?Member $toMember = null): self
     {
         $this->toMember = $toMember;
 
@@ -198,7 +197,7 @@ class Comment
         return $this->toMember;
     }
 
-    public function setFromMember(Member $fromMember = null): self
+    public function setFromMember(?Member $fromMember = null): self
     {
         $this->fromMember = $fromMember;
 
@@ -218,7 +217,7 @@ class Comment
         }
 
         // show comment to Safety team
-        if (in_array(Member::ROLE_ADMIN_COMMENTS, $loggedInMember->getRoles())) {
+        if (\in_array(Member::ROLE_ADMIN_COMMENTS, $loggedInMember->getRoles(), true)) {
             return 2;
         }
 
@@ -248,7 +247,7 @@ class Comment
     #[ORM\PrePersist]
     public function onPrePersist()
     {
-        $this->created = new DateTime('now');
+        $this->created = new \DateTime('now');
         $this->updated = null;
     }
 }

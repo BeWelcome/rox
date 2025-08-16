@@ -38,9 +38,6 @@ class AutoCompleteController extends AbstractController
         return $response;
     }
 
-    /**
-     * @return JsonResponse
-     */
     #[Route(path: '/member/autocomplete/start', name: 'members_autocomplete_starts_with')]
     public function autoCompleteStartsWith(Request $request, EntityManagerInterface $entityManager): JsonResponse
     {

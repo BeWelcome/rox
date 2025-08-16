@@ -17,7 +17,7 @@ class PoliciesController extends AbstractController
     }
 
     #[Route(path: '/terms/{locale}', name: 'terms_of_use')]
-    public function showTermsOfUse(Request $request, string $locale = null): Response
+    public function showTermsOfUse(Request $request, ?string $locale = null): Response
     {
         $locale = $this->ensureLocaleAllowed($locale, $request);
 
@@ -33,7 +33,7 @@ class PoliciesController extends AbstractController
     }
 
     #[Route(path: '/privacy/{locale}', name: 'privacy_policy')]
-    public function showPrivacyPolicy(Request $request, string $locale = null): Response
+    public function showPrivacyPolicy(Request $request, ?string $locale = null): Response
     {
         $locale = $this->ensureLocaleAllowed($locale, $request);
 
@@ -48,7 +48,7 @@ class PoliciesController extends AbstractController
     }
 
     #[Route(path: '/datarights/{locale}', name: 'data_rights')]
-    public function showDataRights(Request $request, string $locale = null): Response
+    public function showDataRights(Request $request, ?string $locale = null): Response
     {
         $locale = $this->ensureLocaleAllowed($locale, $request);
 

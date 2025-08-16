@@ -5,10 +5,8 @@ namespace App\Command;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
@@ -18,7 +16,7 @@ use Symfony\Component\Process\Process;
     description: 'Creates a database and seeds it so that it can be used for local development',
     aliases: [],
     hidden: false,
-)]class CreateTestDatabase extends Command
+)] class CreateTestDatabase extends Command
 {
     private EntityManagerInterface $entityManager;
 
@@ -60,11 +58,10 @@ use Symfony\Component\Process\Process;
         $phpBinaryFinder = new PhpExecutableFinder();
         $phpBinaryPath = $phpBinaryFinder->find();
 
-
         $output->writeln([
             'Creating test database',
             '======================',
-            ''
+            '',
         ]);
 
         $drop = $input->getOption('drop');

@@ -8,9 +8,6 @@ use App\Repository\CommentRepository;
 
 final class CommentsExtractor extends AbstractExtractor implements ExtractorInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function extract(Member $member, string $tempDir): string
     {
         // Comments the member left others

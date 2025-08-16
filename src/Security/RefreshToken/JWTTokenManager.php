@@ -29,8 +29,6 @@ final class JWTTokenManager implements JWTTokenManagerInterface
     }
 
     /**
-     * {@inheritdoc}
-     *
      * @param User $user
      */
     public function create(UserInterface $user): string
@@ -42,8 +40,6 @@ final class JWTTokenManager implements JWTTokenManagerInterface
     }
 
     /**
-     * {@inheritdoc}
-     *
      * @return string[]|false
      */
     public function decode(TokenInterface $token)
@@ -81,8 +77,6 @@ final class JWTTokenManager implements JWTTokenManagerInterface
     }
 
     /**
-     * {@inheritdoc}
-     *
      * @param string $field
      */
     public function setUserIdentityField($field): void
@@ -90,25 +84,16 @@ final class JWTTokenManager implements JWTTokenManagerInterface
         $this->decorated->setUserIdentityField($field);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getUserIdentityField(): string
     {
         return $this->decorated->getUserIdentityField();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getUserIdClaim(): string
     {
         return $this->decorated->getUserIdClaim();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function createFromPayload(UserInterface $user, array $payload): string
     {
         return $this->decorated->createFromPayload($user, $payload);

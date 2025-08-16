@@ -232,8 +232,8 @@ class GalleryController extends AbstractController
     }
 
     /**
-     *
      * @throws AccessDeniedException
+     *
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
     #[Route(path: '/gallery/upload/image', name: 'gallery_upload_ckeditor')]
@@ -327,7 +327,7 @@ class GalleryController extends AbstractController
     {
         $uploadDirectory = $this->getParameter('upload_directory') . '/';
         if (!$this->isGranted('IS_AUTHENTICATED_REMEMBERED') || $image->getFileInfo() !== $fileInfo) {
-            $filepath = sprintf($uploadDirectory . 'placeholder_%d_%d.png', $image->getWidth(), $image->getHeight());
+            $filepath = \sprintf($uploadDirectory . 'placeholder_%d_%d.png', $image->getWidth(), $image->getHeight());
         } else {
             $filepath = $this->getParameter('upload_directory') . '/' . $image->getFilename();
         }
@@ -372,6 +372,6 @@ class GalleryController extends AbstractController
 
     private function getMaxUploadSizeInMegaBytes()
     {
-        return (UploadedFile::getMaxFilesize()) / 1024 / 1024;
+        return UploadedFile::getMaxFilesize() / 1024 / 1024;
     }
 }

@@ -6,9 +6,6 @@ use App\Entity\Member;
 
 final class GroupInformationExtractor extends AbstractExtractor implements ExtractorInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function extract(Member $member, string $tempDir): string
     {
         // Groups the member is in and why

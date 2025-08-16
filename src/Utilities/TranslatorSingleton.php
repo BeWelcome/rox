@@ -2,7 +2,6 @@
 
 namespace App\Utilities;
 
-use InvalidArgumentException;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class TranslatorSingleton
@@ -43,7 +42,7 @@ class TranslatorSingleton
     /**
      * Returns the *TranslatorSingleton* instance of this class.
      *
-     * @throws InvalidArgumentException
+     * @throws \InvalidArgumentException
      *
      * @return TranslatorSingleton the *session* instance
      */

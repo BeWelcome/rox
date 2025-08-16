@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @codingStandardsIgnoreFile
  *
@@ -7,12 +8,10 @@
 
 namespace App\Entity;
 
-use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * MembersPhoto.
- *
  *
  * @SuppressWarnings("PHPMD")
  * Auto generated class do not check mess
@@ -43,13 +42,13 @@ class MembersPhoto
     private $sortOrder = '0';
 
     /**
-     * @var DateTime
+     * @var \DateTime
      */
     #[ORM\Column(name: 'updated', type: 'datetime', nullable: false)]
     private $updated;
 
     /**
-     * @var DateTime
+     * @var \DateTime
      */
     #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
     private $created;
@@ -143,7 +142,7 @@ class MembersPhoto
     /**
      * Set updated.
      *
-     * @param DateTime $updated
+     * @param \DateTime $updated
      *
      * @return MembersPhoto
      */
@@ -157,7 +156,7 @@ class MembersPhoto
     /**
      * Get updated.
      *
-     * @return DateTime
+     * @return \DateTime
      */
     public function getUpdated()
     {
@@ -167,7 +166,7 @@ class MembersPhoto
     /**
      * Set created.
      *
-     * @param DateTime $created
+     * @param \DateTime $created
      *
      * @return MembersPhoto
      */
@@ -181,7 +180,7 @@ class MembersPhoto
     /**
      * Get created.
      *
-     * @return DateTime
+     * @return \DateTime
      */
     public function getCreated()
     {
@@ -228,7 +227,7 @@ class MembersPhoto
     #[ORM\PrePersist]
     public function onPrePersist()
     {
-        $this->created = new DateTime('now');
+        $this->created = new \DateTime('now');
     }
 
     /**
@@ -237,6 +236,6 @@ class MembersPhoto
     #[ORM\PreUpdate]
     public function onPreUpdate()
     {
-        $this->updated = new DateTime('now');
+        $this->updated = new \DateTime('now');
     }
 }

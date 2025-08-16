@@ -3,8 +3,6 @@
 namespace App\Form\CustomDataClass;
 
 use AnthonyMartin\GeoLocation\GeoPoint;
-use Doctrine\ORM\PersistentCollection;
-use SearchModel;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\Choice;
@@ -18,10 +16,10 @@ use Symfony\Component\Validator\Constraints\NotNull;
  */
 class SearchFormRequest
 {
-    #[NotNull(message: "search.location.invalid", groups: ["text-search"])]
+    #[NotNull(message: 'search.location.invalid', groups: ['text-search'])]
     public string $location;
 
-    #[NotNull(message: "search.location.dropdown", groups: ["text-search"])]
+    #[NotNull(message: 'search.location.dropdown', groups: ['text-search'])]
     public string $location_fullname;
 
     public string $location_name;
@@ -93,17 +91,17 @@ class SearchFormRequest
 
     public int $order = 6;
 
-    public int $direction = SearchModel::DIRECTION_DESCENDING;
+    public int $direction = \SearchModel::DIRECTION_DESCENDING;
 
     public int $items = 20;
 
     public int $page = 1;
 
-    #[IsTrue(message: "search.location.invalid", groups: ["text-search"])]
+    #[IsTrue(message: 'search.location.invalid', groups: ['text-search'])]
     public function isLocationValid(): bool
     {
         // Check if the form was submitted through the map javascript
-        $showOnMap = (bool) ($this->showOnMap);
+        $showOnMap = (bool) $this->showOnMap;
         if (true === $showOnMap) {
             return true;
         }
@@ -124,7 +122,7 @@ class SearchFormRequest
         return false;
     }
 
-    #[IsTrue(message: "search.accommodation.invalid", groups: ["text-search"])]
+    #[IsTrue(message: 'search.accommodation.invalid', groups: ['text-search'])]
     public function isAccommodationValid(): bool
     {
         return $this->accommodation_anytime || $this->accommodation_neverask;
@@ -140,6 +138,17 @@ class SearchFormRequest
         $searchFormRequest = new self();
 
         return self::fillObjectFromRequest($searchFormRequest, $request);
+    }
+
+    public static function determineValidationGroups(FormInterface $form)
+    {
+        $data = $form->getData();
+        $showOnMap = (bool) $data->showOnMap;
+        if (true === $showOnMap) {
+            return ['map-search'];
+        }
+
+        return ['text-search'];
     }
 
     private static function fillObjectFromRequest(self $searchFormRequest, Request $request): self
@@ -179,8 +188,8 @@ class SearchFormRequest
         $searchFormRequest->min_age = self::get($data, 'min_age', null);
         $searchFormRequest->max_age = self::get($data, 'max_age', null);
         $searchFormRequest->gender = self::get($data, 'gender', null);
-        $searchFormRequest->order = self::get($data, 'order', SearchModel::ORDER_ACCOMMODATION);
-        $searchFormRequest->direction = self::get($data, 'direction', SearchModel::DIRECTION_ASCENDING);
+        $searchFormRequest->order = self::get($data, 'order', \SearchModel::ORDER_ACCOMMODATION);
+        $searchFormRequest->direction = self::get($data, 'direction', \SearchModel::DIRECTION_ASCENDING);
         $searchFormRequest->items = self::get($data, 'items', 10);
         $searchFormRequest->show_map = self::get($data, 'show_map', '0') ? true : false;
         $searchFormRequest->showOnMap = self::get($data, 'showOnMap', false);
@@ -217,17 +226,6 @@ class SearchFormRequest
         }
 
         return $searchFormRequest;
-    }
-
-    public static function determineValidationGroups(FormInterface $form)
-    {
-        $data = $form->getData();
-        $showOnMap = (bool) ($data->showOnMap);
-        if (true === $showOnMap) {
-            return ['map-search'];
-        }
-
-        return ['text-search'];
     }
 
     private static function calculateBoundingBox($latitude, $longitude, $distance): array

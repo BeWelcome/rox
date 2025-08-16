@@ -2,23 +2,20 @@
 
 namespace App\Command;
 
-use DateTime;
 use Doctrine\DBAL\ParameterType;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 #[AsCommand(
     name: 'geonames:update:daily',
     description: 'Update the geonames data with the latest additions (no deletions!).',
     aliases: [],
     hidden: false,
-)]class GeonamesUpdateDailyCommand extends Command
+)] class GeonamesUpdateDailyCommand extends Command
 {
     private EntityManagerInterface $entityManager;
 
@@ -26,6 +23,17 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
     {
         parent::__construct();
         $this->entityManager = $entityManager;
+    }
+
+    protected function execute(InputInterface $input, OutputInterface $output): int
+    {
+        $io = new SymfonyStyle($input, $output);
+        $this->updateGeonames($io);
+        $this->updateAlternatenames($io);
+        $io->success('Geonames data update successful.');
+
+        // always successful
+        return 0;
     }
 
     private function fetchFile($url): array
@@ -42,18 +50,7 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
         return $content;
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output): int
-    {
-        $io = new SymfonyStyle($input, $output);
-        $this->updateGeonames($io);
-        $this->updateAlternatenames($io);
-        $io->success('Geonames data update successful.');
-
-        // always successful
-        return 0;
-    }
-
-    private function updateGeonamesForDate(DateTime $date, SymfonyStyle $io): int
+    private function updateGeonamesForDate(\DateTime $date, SymfonyStyle $io): int
     {
         $io->note('Working on date ' . $date->format('Y-m-d'));
 
@@ -119,7 +116,7 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
         foreach ($deletes as $delete) {
             $removeGeonameId = $delete[0];
             // handle duplication
-            if (0 === strpos('duplicate ', $delete[2])) {
+            if (str_starts_with('duplicate ', $delete[2])) {
                 $newGeonameId = str_replace('duplicate ', '', $delete[2]);
                 $this->handleDuplicates($removeGeonameId, $newGeonameId);
             }
@@ -202,8 +199,8 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
      **/
     private function updateGeonames($io): void
     {
-        $this->updateGeonamesForDate((new DateTime())->modify('-1day'), $io); // Yesterday
-        $this->updateGeonamesForDate((new DateTime())->modify('-2days'), $io); // the day before yesterday
+        $this->updateGeonamesForDate((new \DateTime())->modify('-1day'), $io); // Yesterday
+        $this->updateGeonamesForDate((new \DateTime())->modify('-2days'), $io); // the day before yesterday
         if ('01' === date('d', time())) {
             // \todo: Update country list on the first day of a month
         }
@@ -211,8 +208,8 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
     private function updateAlternatenames($io): int
     {
-        $result = $this->updateAlternateNamesForDate((new DateTime())->modify('-1day'), $io); // Yesterday
-        $result |= $this->updateAlternateNamesForDate((new DateTime())->modify('-2days'), $io); // the day before yesterday
+        $result = $this->updateAlternateNamesForDate((new \DateTime())->modify('-1day'), $io); // Yesterday
+        $result |= $this->updateAlternateNamesForDate((new \DateTime())->modify('-2days'), $io); // the day before yesterday
 
         return $result;
     }

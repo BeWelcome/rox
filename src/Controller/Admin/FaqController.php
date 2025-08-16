@@ -12,18 +12,14 @@ use App\Form\CustomDataClass\FaqRequest;
 use App\Form\FaqFormType;
 use App\Model\FaqModel;
 use App\Model\TranslationModel;
-use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
-use Exception;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormError;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * Class FaqController.
@@ -39,7 +35,7 @@ class FaqController extends FaqBaseController
     public function __construct(
         FaqModel $faqModel,
         TranslationModel $translationModel,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
     ) {
         parent::__construct($entityManager);
 
@@ -55,7 +51,7 @@ class FaqController extends FaqBaseController
     )]
     public function showOverview(
         Request $request,
-        #[MapEntity(mapping: ['categoryId' => 'id'])] FaqCategory $category
+        #[MapEntity(mapping: ['categoryId' => 'id'])] FaqCategory $category,
     ): Response {
         if (!$this->isGranted(Member::ROLE_ADMIN_FAQ)) {
             throw $this->createAccessDeniedException('You need to have Faq right to access this.');
@@ -107,7 +103,7 @@ class FaqController extends FaqBaseController
     )]
     public function createFaqInCategory(
         Request $request,
-        #[MapEntity(mapping: ['categoryId' => 'id'])] FaqCategory $category
+        #[MapEntity(mapping: ['categoryId' => 'id'])] FaqCategory $category,
     ): Response {
         if (!$this->isGranted(Member::ROLE_ADMIN_FAQ)) {
             throw $this->createAccessDeniedException('You need to have Faq right to access this.');
@@ -140,7 +136,7 @@ class FaqController extends FaqBaseController
                 $question->setCode('faqq_' . $data->wordCode);
                 $question->setSentence($data->question);
                 $question->setlanguage($english);
-                $question->setCreated(new DateTime());
+                $question->setCreated(new \DateTime());
                 $question->setDescription('FAQ Question');
                 $this->entityManager->persist($question);
 
@@ -150,7 +146,7 @@ class FaqController extends FaqBaseController
                 $answer->setCode('faqa_' . $data->wordCode);
                 $answer->setSentence($data->answer);
                 $answer->setlanguage($english);
-                $answer->setCreated(new DateTime());
+                $answer->setCreated(new \DateTime());
                 $answer->setDescription('FAQ Answer');
                 $this->entityManager->persist($answer);
 
@@ -244,11 +240,11 @@ class FaqController extends FaqBaseController
 
             $question
                 ->setSentence($data->question)
-                ->setMajorUpdate(new DateTime());
+                ->setMajorUpdate(new \DateTime());
             $this->entityManager->persist($question);
             $answer
                 ->setSentence($data->answer)
-                ->setMajorUpdate(new DateTime());
+                ->setMajorUpdate(new \DateTime());
             $this->entityManager->persist($answer);
             $this->entityManager->flush();
 

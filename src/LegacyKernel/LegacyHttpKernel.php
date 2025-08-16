@@ -2,9 +2,7 @@
 
 namespace App\LegacyKernel;
 
-use Psr\Container\ContainerInterface;
 use RoxFrontRouter;
-use SessionMemory;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,7 +22,7 @@ class LegacyHttpKernel extends HttpKernel
     protected Environment $environment;
 
     public function __construct(
-        Environment $environment
+        Environment $environment,
     ) {
         $this->environment = $environment;
 
@@ -32,11 +30,6 @@ class LegacyHttpKernel extends HttpKernel
     }
 
     /**
-     * @param int  $type
-     * @param bool $catch
-     *
-     * @return Response
-     *
      * @SuppressWarnings("PHPMD.BooleanArgumentFlag")
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      *
@@ -45,11 +38,11 @@ class LegacyHttpKernel extends HttpKernel
      */
     public function handle(Request $request, int $type = HttpKernelInterface::MAIN_REQUEST, bool $catch = true): Response
     {
-        $router = new RoxFrontRouter($this->environment);
+        $router = new \RoxFrontRouter($this->environment);
         // The only classname ever used
         $router->classes = ['SignupController'];
 
-        $router->session_memory = new SessionMemory('SessionMemory');
+        $router->session_memory = new \SessionMemory('SessionMemory');
         $roxPostHandler = $router->session_memory->__get('posthandler');
         if ($roxPostHandler) {
             $roxPostHandler->setClasses([

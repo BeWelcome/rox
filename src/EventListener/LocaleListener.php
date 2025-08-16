@@ -9,7 +9,6 @@ use Carbon\Carbon;
 use Doctrine\ORM\EntityManagerInterface;
 use Negotiation\Exception\Exception;
 use Negotiation\LanguageNegotiator;
-use PVars;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -82,6 +81,6 @@ class LocaleListener implements EventSubscriberInterface
             $request->getSession()->set('lang', $language->getShortCode());
             $request->getSession()->set('IdLanguage', $language->getId());
         }
-        PVars::register('lang', $locale);
+        \PVars::register('lang', $locale);
     }
 }

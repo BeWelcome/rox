@@ -78,7 +78,7 @@ class ConversationsModel
         string $sort,
         string $sortDir,
         int $page = 1,
-        int $limit = 10
+        int $limit = 10,
     ): Pagerfanta {
         /** @var MessageRepository $repository */
         $repository = $this->entityManager->getRepository(Message::class);

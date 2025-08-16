@@ -8,7 +8,6 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class AutoCompleteExtension extends AbstractTypeExtension
@@ -51,6 +50,7 @@ class AutoCompleteExtension extends AbstractTypeExtension
             return $value;
         });
     }
+
     public function finishView(FormView $view, FormInterface $form, array $options): void
     {
         if (!$options['autocomplete']) {
@@ -92,7 +92,7 @@ class AutoCompleteExtension extends AbstractTypeExtension
 
         if ($options['autocomplete_choices']) {
             $autocompleteChoices = [];
-            foreach($options['autocomplete_choices'] as $choice) {
+            foreach ($options['autocomplete_choices'] as $choice) {
                 $autocompleteChoice = new \stdClass();
                 $autocompleteChoice->title = $choice;
                 $autocompleteChoices[] = $autocompleteChoice;

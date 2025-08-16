@@ -2,7 +2,6 @@
 
 namespace App\Form;
 
-use SignupModel;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -20,7 +19,7 @@ class ChangeUsernameFormType extends AbstractType
                 'attr' => [
                     'minlength' => 4,
                     'maxlength' => 20,
-                    'pattern' => SignupModel::PATTERN_USERNAME,
+                    'pattern' => \SignupModel::PATTERN_USERNAME,
                     'placeholder' => 'old.username',
                 ],
             ])
@@ -28,7 +27,7 @@ class ChangeUsernameFormType extends AbstractType
                 'attr' => [
                     'minlength' => 4,
                     'maxlength' => 20,
-                    'pattern' => SignupModel::PATTERN_USERNAME,
+                    'pattern' => \SignupModel::PATTERN_USERNAME,
                     'placeholder' => 'new.username',
                 ],
             ])

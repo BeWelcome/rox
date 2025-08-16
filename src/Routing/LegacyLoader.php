@@ -2,7 +2,6 @@
 
 namespace App\Routing;
 
-use RuntimeException;
 use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
@@ -22,9 +21,6 @@ class LegacyLoader extends Loader
     private $loaded = false;
 
     /**
-     * @param mixed  $resource
-     * @param string $type
-     *
      * @throws \RuntimeException
      *
      * @return RouteCollection
@@ -32,7 +28,7 @@ class LegacyLoader extends Loader
     public function load(mixed $resource, ?string $type = null): mixed
     {
         if (true === $this->loaded) {
-            throw new RuntimeException('Do not add the "legacy" loader twice');
+            throw new \RuntimeException('Do not add the "legacy" loader twice');
         }
 
         $this->routes = new RouteCollection();
@@ -44,7 +40,7 @@ class LegacyLoader extends Loader
         require_once $projectDir . '/routes.php';
 
         // Forum urls
-//        $this->addRouteDirectly('forums', '/forums/page{pageGroups}/page{pageForums}');
+        //        $this->addRouteDirectly('forums', '/forums/page{pageGroups}/page{pageForums}');
         $this->addRouteDirectly('forums', '/forums');
         $this->addRouteDirectly('forums_pages', '/forums/page{groupsPage}/page{bwforumsPage}/');
         $this->addRouteDirectly('forums_new', '/forums/new');
@@ -125,7 +121,7 @@ class LegacyLoader extends Loader
         $this->addRouteDirectly('comment_edit', '/members/{username}/comments/edit');
         $this->addRouteDirectly('mypreferences', '/mypreferences');
         $this->addRouteDirectly('myvisitors', '/myvisitors');
-        //$this->addRouteDirectly('profilecomments', '/about/commentguidelines');
+        // $this->addRouteDirectly('profilecomments', '/about/commentguidelines');
         $this->addRouteDirectly('profile_addtorelations', '/members/{username}/relations/add');
         $this->addRouteDirectly('editmyprofile_finish', '/editmyprofile/finish');
         $this->addRouteDirectly('editmyprofile_language_finish', '/editmyprofile/{language}/finish');
@@ -166,12 +162,6 @@ class LegacyLoader extends Loader
         return $this->routes;
     }
 
-    /**
-     * @param mixed  $resource
-     * @param string $type
-     *
-     * @return bool
-     */
     public function supports(mixed $resource, ?string $type = null): bool
     {
         return 'legacy' === $type;

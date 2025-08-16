@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @codingStandardsIgnoreFile
  *
@@ -8,13 +9,11 @@
 namespace App\Entity;
 
 use App\Doctrine\LanguageLevelType;
-use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * Memberslanguageslevel.
- *
  *
  * @SuppressWarnings("PHPMD")
  * Auto generated class do not check mess
@@ -32,21 +31,19 @@ class MembersLanguagesLevel
     protected $member;
 
     /**
-     * @var DateTime
+     * @var \DateTime
      */
     #[ORM\Column(name: 'updated', type: 'datetime', nullable: true)]
     private $updated;
 
     /**
-     * @var DateTime
+     * @var \DateTime
      */
     #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
     private $created;
 
     /**
      * @var Language
-     *
-     *
      */
     #[ORM\JoinColumn(name: 'IdLanguage', referencedColumnName: 'id', nullable: false)]
     #[ORM\ManyToOne(targetEntity: \Language::class, inversedBy: 'levels')]
@@ -55,8 +52,6 @@ class MembersLanguagesLevel
 
     /**
      * @var string
-     *
-     *
      */
     #[ORM\Column(name: 'Level', type: 'language_level', nullable: false)]
     #[Groups(['Member:Read'])]
@@ -72,13 +67,13 @@ class MembersLanguagesLevel
 
     public function __construct()
     {
-        $this->created = new DateTime();
+        $this->created = new \DateTime();
     }
 
     /**
      * Set updated.
      *
-     * @param DateTime $updated
+     * @param \DateTime $updated
      *
      * @return Memberslanguageslevel
      */
@@ -92,7 +87,7 @@ class MembersLanguagesLevel
     /**
      * Get updated.
      *
-     * @return DateTime
+     * @return \DateTime
      */
     public function getUpdated()
     {
@@ -102,7 +97,7 @@ class MembersLanguagesLevel
     /**
      * Set created.
      *
-     * @param DateTime $created
+     * @param \DateTime $created
      *
      * @return Memberslanguageslevel
      */
@@ -116,7 +111,7 @@ class MembersLanguagesLevel
     /**
      * Get created.
      *
-     * @return DateTime
+     * @return \DateTime
      */
     public function getCreated()
     {

@@ -25,15 +25,12 @@ class HostingRequestType extends AbstractType
 
     public function __construct(
         DateTransformer $dateTimeTransformer,
-        LegTransformer  $legTransformer
+        LegTransformer $legTransformer,
     ) {
         $this->dateTimeTransformer = $dateTimeTransformer;
         $this->legTransformer = $legTransformer;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
@@ -69,9 +66,6 @@ class HostingRequestType extends AbstractType
         });
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver
@@ -86,17 +80,11 @@ class HostingRequestType extends AbstractType
         ;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getBlockPrefix(): string
     {
         return 'request';
     }
 
-    /**
-     * @param mixed $data
-     */
     private function addFieldsForInvitation(FormInterface $form, array $options): void
     {
         if ($options['new']) {

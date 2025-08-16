@@ -4,12 +4,8 @@ namespace App\Controller;
 
 use App\Entity\Member;
 use App\Entity\MembersPhoto;
-use App\Entity\RightVolunteer;
-use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Mapping\Entity;
 use Intervention\Image\ImageManager;
-use InvalidArgumentException;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Finder\Finder;
@@ -19,7 +15,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use Throwable;
 
 /**
  * Class AvatarController.
@@ -40,7 +35,7 @@ class AvatarController extends AbstractController
     public function __construct(
         LoggerInterface $logger,
         EntityManagerInterface $entityManager,
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
     ) {
         $this->logger = $logger;
         $this->entityManager = $entityManager;
@@ -58,7 +53,7 @@ class AvatarController extends AbstractController
             return new Response($uploadFailedTranslation, Response::HTTP_UNAUTHORIZED);
         }
 
-        /** @var UploadedFile $avatarFile*/
+        /** @var UploadedFile $avatarFile */
         $avatarFile = $request->files->get('avatar');
 
         if (null === $avatarFile) {
@@ -93,7 +88,7 @@ class AvatarController extends AbstractController
         if (!$this->avatarImageExists($member, $size)) {
             try {
                 $this->createAvatarImage($member, $size);
-            } catch (InvalidArgumentException $e) {
+            } catch (\InvalidArgumentException $e) {
                 return $this->emptyAvatar($size);
             }
         }
@@ -108,7 +103,7 @@ class AvatarController extends AbstractController
         $imageManager = new ImageManager();
         try {
             $img = $imageManager->make($avatarFile->getRealPath())->orientate();
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
             return false;
         }
 
@@ -123,7 +118,7 @@ class AvatarController extends AbstractController
         }
         $memberPhoto->setMember($member);
         $memberPhoto->setFilepath($newFileName);
-        $memberPhoto->setCreated(new DateTime());
+        $memberPhoto->setCreated(new \DateTime());
         $memberPhoto->setComment('Uploaded new avatar');
 
         $this->entityManager->persist($memberPhoto);
@@ -183,7 +178,7 @@ class AvatarController extends AbstractController
         $original = self::AVATAR_PATH . $member->getId() . '_original';
         if (!file_exists($original)) {
             $message = 'No original avatar image exists for member ' . $member->getUsername();
-            throw new InvalidArgumentException($message);
+            throw new \InvalidArgumentException($message);
         }
 
         $filename = self::AVATAR_PATH . $member->getId() . '_' . $sizeOfAvatar . '_' . $sizeOfAvatar;

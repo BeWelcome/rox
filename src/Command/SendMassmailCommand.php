@@ -4,20 +4,14 @@ namespace App\Command;
 
 use App\Doctrine\MemberStatusType;
 use App\Entity\BroadcastMessage;
-use App\Entity\Member;
 use App\Entity\Newsletter;
 use App\Service\Mailer;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
-use Exception;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
-use Symfony\Component\Mime\Address;
 
 #[AsCommand(
     name: 'send:massmail',
@@ -34,7 +28,7 @@ class SendMassmailCommand extends Command
     public function __construct(
         EntityManagerInterface $entityManager,
         Mailer $mailer,
-        int $batchSize
+        int $batchSize,
     ) {
         parent::__construct();
 
@@ -62,13 +56,13 @@ class SendMassmailCommand extends Command
             /** @var BroadcastMessage $scheduled */
             foreach ($scheduledBroadcastMessages as $scheduled) {
                 $parameters = [];
-                if ($lastBroadcastId != $scheduled->getNewsletter()->getId()) {
+                if ($lastBroadcastId !== $scheduled->getNewsletter()->getId()) {
                     // Check if the current newsletter contains images and set the parameter
                     $newsletterRepository = $this->entityManager->getRepository(Newsletter::class);
                     $newsletterTranslations = $newsletterRepository->getTranslations($scheduled->getNewsletter());
                     $anyNewsletter = reset($newsletterTranslations);
 
-                    $hasImages = str_contains($anyNewsletter['body'], "<figure");
+                    $hasImages = str_contains($anyNewsletter['body'], '<figure');
                     if ($hasImages) {
                         $parameters['has_images'] = true;
                     }
@@ -78,7 +72,7 @@ class SendMassmailCommand extends Command
                 $receiver = $scheduled->getReceiver();
                 $status = $receiver->getStatus();
                 if (
-                    (MemberStatusType::SUSPENDED === $status && $receiver->getRemindersWithOutLogin() !== 100)
+                    (MemberStatusType::SUSPENDED === $status && 100 !== $receiver->getRemindersWithOutLogin())
                     && MemberStatusType::ACTIVE !== $status
                     && MemberStatusType::OUT_OF_REMIND !== $status
                     && MemberStatusType::CHOICE_INACTIVE !== $status
@@ -90,7 +84,7 @@ class SendMassmailCommand extends Command
                 try {
                     try {
                         $unsubscribeKey = random_bytes(32);
-                    } catch (Exception $e) {
+                    } catch (\Exception $e) {
                         $unsubscribeKey = openssl_random_pseudo_bytes(32);
                     }
 
@@ -106,7 +100,7 @@ class SendMassmailCommand extends Command
                         ->setUnsubscribeKey(bin2hex($unsubscribeKey))
                     ;
                     ++$sent;
-                } catch (Exception $e) {
+                } catch (\Exception $e) {
                     $io->error('Message Frozen: ' . $e->getMessage());
                     $scheduled->setStatus('Freeze');
                 }
@@ -115,7 +109,7 @@ class SendMassmailCommand extends Command
             $this->entityManager->flush();
         }
 
-        $io->success(sprintf('Sent %d messages', $sent));
+        $io->success(\sprintf('Sent %d messages', $sent));
 
         return 0;
     }

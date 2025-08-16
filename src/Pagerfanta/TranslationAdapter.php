@@ -4,7 +4,6 @@ namespace App\Pagerfanta;
 
 use Doctrine\DBAL\Connection;
 use Pagerfanta\Adapter\AdapterInterface;
-use PDO;
 
 class TranslationAdapter implements AdapterInterface
 {
@@ -52,7 +51,7 @@ class TranslationAdapter implements AdapterInterface
                  , COALESCE(pi_lang.Sentence,pi_dflt.Sentence) AS sentence
                  , COALESCE(pi_lang.created,pi_dflt.created) AS created', $rawQuery);
 
-        $this->query .= "             ORDER BY created desc";
+        $this->query .= '             ORDER BY created desc';
         $this->countQuery = str_replace('*select*', 'COUNT(distinct p.code) AS cnt', $rawQuery);
     }
 
@@ -62,7 +61,7 @@ class TranslationAdapter implements AdapterInterface
     public function getNbResults(): int
     {
         $statement = $this->connection->executeQuery($this->countQuery);
-        $count = $statement->fetchOne(PDO::FETCH_OBJ);
+        $count = $statement->fetchOne(\PDO::FETCH_OBJ);
 
         return $count;
     }

@@ -3,7 +3,6 @@
 namespace App\Utilities;
 
 use Carbon\Carbon;
-use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -12,10 +11,10 @@ use Doctrine\ORM\Mapping as ORM;
 trait LifecycleCallbacksTrait
 {
     #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
-    private DateTime $created;
+    private \DateTime $created;
 
     #[ORM\Column(name: 'updated', type: 'datetime', nullable: true)]
-    private ?DateTime $updated = null;
+    private ?\DateTime $updated = null;
 
     public function getCreated(): Carbon
     {
@@ -30,12 +29,12 @@ trait LifecycleCallbacksTrait
     #[ORM\PrePersist()]
     public function onPrePersist(): void
     {
-        $this->created = new DateTime('now');
+        $this->created = new \DateTime('now');
     }
 
     #[ORM\PreUpdate()]
     public function onPreUpdate(): void
     {
-        $this->updated = new DateTime('now');
+        $this->updated = new \DateTime('now');
     }
 }

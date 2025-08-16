@@ -34,10 +34,10 @@ class Location
     private string $name;
 
     #[ORM\Column(name: 'latitude', type: 'decimal', precision: 10, scale: 7, nullable: false)]
-    private float $latitude;
+    private string $latitude;
 
     #[ORM\Column(name: 'longitude', type: 'decimal', precision: 10, scale: 7, nullable: false)]
-    private float $longitude;
+    private string $longitude;
 
     #[ORM\Column(name: 'fclass', type: 'string', length: 1, nullable: false)]
     private string $fclass;

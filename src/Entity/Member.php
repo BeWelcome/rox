@@ -21,14 +21,13 @@ use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Event\PostLoadEventArgs;
 use Doctrine\ORM\Mapping as ORM;
-use Exception;
+use Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface;
+use Scheb\TwoFactorBundle\Model\Totp\TotpConfiguration;
+use Scheb\TwoFactorBundle\Model\Totp\TotpConfigurationInterface;
+use Scheb\TwoFactorBundle\Model\Totp\TwoFactorInterface;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherAwareInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Scheb\TwoFactorBundle\Model\Totp\TotpConfiguration;
-use Scheb\TwoFactorBundle\Model\Totp\TotpConfigurationInterface;
-use Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface;
-use Scheb\TwoFactorBundle\Model\Totp\TwoFactorInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
@@ -37,13 +36,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 #[ORM\Table(name: 'members')]
 #[ORM\Entity(repositoryClass: MemberRepository::class)]
 #[ORM\HasLifecycleCallbacks]
-class Member
-    implements
-        \Serializable,
-        UserInterface,
-        PasswordHasherAwareInterface,
-        PasswordAuthenticatedUserInterface,
-        TwoFactorInterface
+class Member implements \Serializable, UserInterface, PasswordHasherAwareInterface, PasswordAuthenticatedUserInterface, TwoFactorInterface
 {
     public const ROLE_ADMIN_ACCEPTER = 'ROLE_ADMIN_ACCEPTER';
     public const ROLE_ADMIN_ADMIN = 'ROLE_ADMIN_ADMIN';
@@ -1572,32 +1565,31 @@ class Member
         return $this->translatedFields;
     }
 
-
     /**
      * Check if it is a valid backup code.
      */
     public function isBackupCode(string $code): bool
     {
-        return in_array($code, $this->backupCodes);
+        return \in_array($code, $this->backupCodes, true);
     }
 
     /**
-     * Invalidate a backup code
+     * Invalidate a backup code.
      */
     public function invalidateBackupCode(string $code): void
     {
-        $key = array_search($code, $this->backupCodes);
-        if ($key !== false){
+        $key = array_search($code, $this->backupCodes, true);
+        if (false !== $key) {
             unset($this->backupCodes[$key]);
         }
     }
 
     /**
-     * Add a backup code
+     * Add a backup code.
      */
     public function addBackUpCode(string $backUpCode): void
     {
-        if (!in_array($backUpCode, $this->backupCodes)) {
+        if (!\in_array($backUpCode, $this->backupCodes, true)) {
             $this->backupCodes[] = $backUpCode;
         }
     }
@@ -1617,6 +1609,7 @@ class Member
         // You could persist the other configuration options in the user entity to make it individual per user.
         $period = 20;
         $digits = 6;
+
         return null !== $this->totpSecret ? new TotpConfiguration($this->totpSecret, TotpConfiguration::ALGORITHM_SHA1, $period, $digits) : null;
     }
 

@@ -12,7 +12,7 @@ class Kernel extends BaseKernel
     public function registerBundles()
     {
         $bundles = [
-             new HWI\Bundle\OAuthBundle\HWIOAuthBundle(),
+            new HWI\Bundle\OAuthBundle\HWIOAuthBundle(),
         ];
     }
 }

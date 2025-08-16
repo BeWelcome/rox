@@ -12,7 +12,7 @@ on:
 
 env:
   PHP_VERSION: 8.3
-  NODE_VERSION: 12
+  NODE_VERSION: 22
 
 permissions:
   contents: read

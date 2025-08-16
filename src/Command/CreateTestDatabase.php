@@ -81,7 +81,6 @@ use Symfony\Component\Process\Process;
                     'Failed dropping the database (trying to proceed).',
                     '',
                 ]);
-
             }
         }
 

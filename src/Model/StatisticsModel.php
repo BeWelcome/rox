@@ -423,7 +423,6 @@ class StatisticsModel
         }
 
         return $result;
-
     }
 
     /**

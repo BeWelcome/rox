@@ -74,8 +74,7 @@ class TranslationsAddMissingCommand extends Command
                             INSERT INTO words (code, domain, ShortCode, Sentence, donottranslate, IdLanguage, Description, IdMember, updated, created, TranslationPriority, isarchived, majorupdate)
                             SELECT :translationId, domain, ShortCode, Sentence, donottranslate, IdLanguage, Description, :admin, updated, created, TranslationPriority, isarchived, majorupdate
                             FROM words
-                            WHERE code = :reusedTranslationId'
-                        );
+                            WHERE code = :reusedTranslationId');
                         $statement->executeQuery([
                             ':admin' => $admin->getId(),
                             ':translationId' => $translationId,

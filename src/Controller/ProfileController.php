@@ -305,6 +305,5 @@ class ProfileController extends AbstractController
             'globals_js_json' => $this->globals->getGlobalsJsAsJson($member, $member),
             'submenu' => $profileSubmenu->getSubmenu($member, $member, ['active' => 'profile']),
         ]);
-
     }
 }

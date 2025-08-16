@@ -4,7 +4,7 @@ namespace App\Doctrine;
 
 class GroupType extends EnumType
 {
-    public const string PUBLIC = 'Public';
+    public const string public = 'Public';
     public const string NEED_ACCEPTANCE = 'NeedAcceptance';
     public const string INVITE_ONLY = 'NeedInvitation';
 

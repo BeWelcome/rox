@@ -39,6 +39,7 @@ class TranslationController extends AbstractController
 {
     use TranslatedFlashTrait;
     use TranslatorTrait;
+
     protected EntityManagerInterface $entityManager;
 
     private TranslationModel $translationModel;

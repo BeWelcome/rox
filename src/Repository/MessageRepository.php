@@ -59,8 +59,7 @@ class MessageRepository extends EntityRepository
 				AND	((m.IdReceiver = :loggedIn AND m.IdSender = :member) OR
 						(m.IdReceiver = :member AND m.IdSender = :loggedIn))) AS a', [
             'loggedIn' => $loggedInMember->getId(),
-            'member' => $member->getId()]
-        );
+            'member' => $member->getId()]);
 
         return $count;
     }

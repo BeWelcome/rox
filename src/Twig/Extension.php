@@ -111,7 +111,6 @@ class Extension extends AbstractExtension implements GlobalsInterface
         }
 
         return $date->diffForHumans();
-
     }
 
     public function getFilters(): array

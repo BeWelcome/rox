@@ -28,7 +28,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@ccf2c627fe61b1b4d924adfcbd19d661a18133a0  # tag=2.35.2
         with:
-          php-version: ${{ PHP_VERSION }}
+          php-version: ${{ env.PHP_VERSION }}
           extensions: curl, dom, gd, iconv, intl, json, libxml, mbstring, mysqli, pcntl, pdo_mysql, phar, tokenizer, xml, xmlwriter, xsl, zip
 
       - name: Get Composer Cache Directory
@@ -58,7 +58,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@ccf2c627fe61b1b4d924adfcbd19d661a18133a0  # tag=2.35.2
         with:
-          php-version: ${{ PHP_VERSION }}
+          php-version: ${{ env.PHP_VERSION }}
           extensions: curl, dom, gd, iconv, intl, json, libxml, mbstring, mysqli, pcntl, pdo_mysql, phar, tokenizer, xdebug, xml, xmlwriter, xsl, zip
 
       - name: Get Composer Cache Directory
@@ -119,13 +119,13 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@ccf2c627fe61b1b4d924adfcbd19d661a18133a0  # tag=2.35.2
         with:
-          php-version: ${{ PHP_VERSION }}
+          php-version: ${{ env.PHP_VERSION }}
           extensions: curl, dom, gd, iconv, intl, json, libxml, mbstring, mysqli, pcntl, pdo_mysql, phar, tokenizer, xml, xmlwriter, xsl, zip
 
       - name: Setup NODE
         uses: actions/setup-node@3235b876344d2a9aa001b8d1453c930bba69e610  # tag=v3.9.1
         with:
-          node-version: ${{ NODE_VERSION }}
+          node-version: ${{ env.NODE_VERSION }}
 
       - name: Get Composer Cache Directory
         id: composer-cache
@@ -163,7 +163,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@ccf2c627fe61b1b4d924adfcbd19d661a18133a0  # tag=2.35.2
         with:
-          php-version: ${{ PHP_VERSION }}
+          php-version: ${{ env.PHP_VERSION }}
           extensions: curl, dom, gd, iconv, intl, json, libxml, mbstring, mysqli, pcntl, pdo_mysql, phar, tokenizer, xml, xmlwriter, xsl, zip
 
       - name: Get Composer Cache Directory
@@ -193,7 +193,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@ccf2c627fe61b1b4d924adfcbd19d661a18133a0  # tag=2.35.2
         with:
-          php-version: ${{ PHP_VERSION }}
+          php-version: ${{ env.PHP_VERSION }}
           extensions: curl, dom, gd, iconv, intl, json, libxml, mbstring, mysqli, pcntl, pdo_mysql, phar, tokenizer, xml, xmlwriter, xsl, zip
 
       - name: Get Composer Cache Directory
@@ -223,7 +223,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@ccf2c627fe61b1b4d924adfcbd19d661a18133a0  # tag=2.35.2
         with:
-          php-version: ${{ PHP_VERSION }}
+          php-version: ${{ env.PHP_VERSION }}
           extensions: curl, dom, gd, iconv, intl, json, libxml, mbstring, mysqli, pcntl, pdo_mysql, phar, tokenizer, xml, xmlwriter, xsl, zip
 
       - name: Get Composer Cache Directory
@@ -253,7 +253,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@ccf2c627fe61b1b4d924adfcbd19d661a18133a0  # tag=2.35.2
         with:
-          php-version: ${{ PHP_VERSION }}
+          php-version: ${{ env.PHP_VERSION }}
           extensions: curl, dom, gd, iconv, intl, json, libxml, mbstring, mysqli, pcntl, pdo_mysql, phar, tokenizer, xml, xmlwriter, xsl, zip
 
       - name: Get Composer Cache Directory
@@ -283,7 +283,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@ccf2c627fe61b1b4d924adfcbd19d661a18133a0  # tag=2.35.2
         with:
-          php-version: ${{ PHP_VERSION }}
+          php-version: ${{ env.PHP_VERSION }}
           extensions: curl, dom, gd, iconv, intl, json, libxml, mbstring, mysqli, pcntl, pdo_mysql, phar, tokenizer, xml, xmlwriter, xsl, zip
 
       - name: Get Composer Cache Directory
@@ -313,7 +313,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@ccf2c627fe61b1b4d924adfcbd19d661a18133a0  # tag=2.35.2
         with:
-          php-version: ${{ PHP_VERSION }}
+          php-version: ${{ env.PHP_VERSION }}
           extensions: curl, dom, gd, iconv, intl, json, libxml, mbstring, mysqli, pcntl, pdo_mysql, phar, tokenizer, xml, xmlwriter, xsl, zip
 
       - name: Get Composer Cache Directory
@@ -343,7 +343,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@ccf2c627fe61b1b4d924adfcbd19d661a18133a0  # tag=2.35.2
         with:
-          php-version: ${{ PHP_VERSION }}
+          php-version: ${{ env.PHP_VERSION }}
           extensions: curl, dom, gd, iconv, intl, json, libxml, mbstring, mysqli, pcntl, pdo_mysql, phar, tokenizer, xml, xmlwriter, xsl, zip
 
       - name: Setup NODE
@@ -381,7 +381,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@ccf2c627fe61b1b4d924adfcbd19d661a18133a0  # tag=2.35.2
         with:
-          php-version: ${{ PHP_VERSION }}
+          php-version: ${{ env.PHP_VERSION }}
           extensions: curl, dom, gd, iconv, intl, json, libxml, mbstring, mysqli, pcntl, pdo_mysql, phar, tokenizer, xml, xmlwriter, xsl, zip
           tools: symfony
 

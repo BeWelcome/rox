@@ -447,3 +447,10 @@ services:
     app.mockup_provider.profile:
         class: App\Model\MockupProvider\ProfileMockups
         tags: [ 'app.mockup_provider' ]
+
+    hwi_oauth.user.provider.entity:
+        class: HWI\Bundle\OAuthBundle\Security\Core\User\EntityUserProvider
+        arguments:
+            $class: App\Entity\Member
+            $properties:
+                'github': 'github'

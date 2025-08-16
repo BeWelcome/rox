@@ -34,6 +34,7 @@
         "gregwar/captcha-bundle": "^2.1",
         "hidehalo/nanoid-php": "^1.1",
         "html2text/html2text": "*",
+        "hwi/oauth-bundle": "2.*",
         "incenteev/composer-parameter-handler": "^2.0",
         "intervention/image": "^2.4",
         "jfcherng/php-levenshtein-distance": "*",

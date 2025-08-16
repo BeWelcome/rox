@@ -66,9 +66,21 @@ security:
 
 #            access_denied_handler: App\Security\AccessDeniedHandler
 
+            pattern: ^/
+            oauth:
+                resource_owners:
+                    my_github:          "/login/check-github"
+                login_path:   /login
+                use_forward:  false
+                failure_path: /login
+
+                oauth_user_provider:
+                    service: my.oauth_aware.user_provider.service
+
     access_control:
         - { path: ^/$, roles: PUBLIC_ACCESS }
         - { path: ^/login, roles:  PUBLIC_ACCESS }
+        - { path: ^/connect, roles: PUBLIC_ACCESS }
         - { path: ^/about, roles:  PUBLIC_ACCESS }
         - { path: ^/donate, roles:  PUBLIC_ACCESS }
         - { path: ^/donation, roles:  PUBLIC_ACCESS }

@@ -180,6 +180,9 @@
                                         class="o-button o-button--full">{{ 'indexpageloginsubmit' | trans }}</button>
                             </div>
                         </form>
+                        <a href="{{ path('hwi_oauth_service_redirect', {'service': 'github' }) }}">
+                            <span>Login with SSO</span>
+                        </a>
                     </div>
                     <div class="card o-card">
                         <div class="card-body p-2">

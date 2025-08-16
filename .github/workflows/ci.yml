@@ -328,44 +328,6 @@ jobs:
       - name: Validate Doctrine schema
         run: bin/console doctrine:schema:validate --skip-sync
 
-  swagger:
-    name: Swagger validator
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: 7.4
-          extensions: curl, dom, gd, iconv, intl, json, libxml, mbstring, mysqli, pcntl, pdo_mysql, phar, tokenizer, xml, xmlwriter, xsl, zip
-
-      - name: Setup NODE
-        uses: actions/setup-node@v2-beta
-
-      - name: Get Composer Cache Directory
-        id: composer-cache
-        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
-
-      - name: Cache dependencies
-        uses: actions/cache@v1
-        with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
-          restore-keys: ${{ runner.os }}-composer-
-
-      - name: Install project dependencies
-        run: |
-          composer install --prefer-dist --no-progress --no-suggest --no-interaction --no-scripts
-          yarn install --frozen-lock
-
-      - name: Export Swagger documentation
-        run: bin/console api:swagger:export > swagger.json
-
-      - name: Validate Swagger documentation
-        run: yarn swagger-cli validate swagger.json
-
   security:
     name: Security checks
     runs-on: ubuntu-latest

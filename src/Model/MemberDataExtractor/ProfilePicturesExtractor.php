@@ -8,9 +8,6 @@ use Symfony\Component\Filesystem\Filesystem;
 
 final class ProfilePicturesExtractor extends AbstractExtractor implements ExtractorInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function extract(Member $member, string $tempDir): string
     {
         $pictures = [];

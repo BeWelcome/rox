@@ -11,9 +11,6 @@ use Symfony\Component\Validator\Constraints\NotNull;
 
 class HostingRequestAbstractType extends AbstractType
 {
-    /**
-     * {@inheritdoc}
-     */
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver
@@ -23,9 +20,6 @@ class HostingRequestAbstractType extends AbstractType
         ;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     #[\Override]
     public function getBlockPrefix(): string
     {

@@ -2,8 +2,6 @@
 
 namespace App\Utilities;
 
-use Exception;
-
 /**
  * @SuppressWarnings("PHPMD")
  * Class borrowed directly from github.com/paypal.
@@ -64,14 +62,14 @@ class PaypalIPN
      * Verification Function
      * Sends the incoming post data back to PayPal using the cURL library.
      *
-     * @throws Exception
+     * @throws \Exception
      *
      * @return bool
      */
     public function verifyIPN()
     {
         if (!\count($_POST)) {
-            throw new Exception('Missing POST Data');
+            throw new \Exception('Missing POST Data');
         }
 
         $raw_post_data = file_get_contents('php://input');
@@ -126,17 +124,17 @@ class PaypalIPN
             'Connection: Close',
         ]);
         $res = curl_exec($ch);
-        if (!($res)) {
+        if (!$res) {
             $errno = curl_errno($ch);
             $errstr = curl_error($ch);
             curl_close($ch);
-            throw new Exception("cURL error: [$errno] $errstr");
+            throw new \Exception("cURL error: [$errno] $errstr");
         }
 
         $info = curl_getinfo($ch);
         $http_code = $info['http_code'];
         if (200 !== $http_code) {
-            throw new Exception("PayPal responded with http code $http_code");
+            throw new \Exception("PayPal responded with http code $http_code");
         }
 
         curl_close($ch);

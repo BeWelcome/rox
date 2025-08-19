@@ -6,7 +6,6 @@ use App\Entity\CommunityNews;
 use App\Entity\Member;
 use App\Form\CommunityNewsType;
 use App\Model\CommunityNewsModel;
-use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -18,14 +17,14 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 class CommunityNewsController extends AbstractController
 {
     public function __construct(
-        private EntityManagerInterface $entityManager
+        private EntityManagerInterface $entityManager,
     ) {
         $this->entityManager = $entityManager;
     }
 
     /**
-     *
      * @throws AccessDeniedException
+     *
      * @return Response
      */
     #[Route(path: '/admin/communitynews', name: 'admin_communitynews_overview')]
@@ -46,8 +45,8 @@ class CommunityNewsController extends AbstractController
     }
 
     /**
-     *
      * @throws AccessDeniedException
+     *
      * @return Response
      */
     #[Route(path: '/admin/communitynews/create', name: 'admin_communitynews_create')]
@@ -63,7 +62,7 @@ class CommunityNewsController extends AbstractController
         $communityNewsForm->handleRequest($request);
         if ($communityNewsForm->isSubmitted() && $communityNewsForm->isValid()) {
             $data = $communityNewsForm->getData();
-            $now = new DateTime();
+            $now = new \DateTime();
             $data->setCreatedBy($this->getUser());
             $data->setCreatedAt($now);
             $data->setUpdatedBy($this->getUser());
@@ -77,12 +76,12 @@ class CommunityNewsController extends AbstractController
 
         return $this->render('admin/communitynews/editcreate.html.twig', [
             'form' => $communityNewsForm->createView(),
-            ]);
+        ]);
     }
 
     /**
-     *
      * @throws AccessDeniedException
+     *
      * @return Response
      */
     #[Route(path: '/admin/communitynews/{id}/edit', name: 'admin_communitynews_edit')]
@@ -97,7 +96,7 @@ class CommunityNewsController extends AbstractController
         $communityNewsForm->handleRequest($request);
         if ($communityNewsForm->isSubmitted() && $communityNewsForm->isValid()) {
             $data = $communityNewsForm->getData();
-            $data->setUpdatedAt(new DateTime());
+            $data->setUpdatedAt(new \DateTime());
             $data->setUpdatedby($this->getUser());
 
             $this->entityManager->persist($data);
@@ -112,9 +111,9 @@ class CommunityNewsController extends AbstractController
     }
 
     /**
-     *
      * @throws AccessDeniedException
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     *
+     * @return RedirectResponse
      */
     #[Route(path: '/admin/communitynews/{id}/hide', name: 'admin_communitynews_hide')]
     public function hideAction(CommunityNews $communityNews)
@@ -124,7 +123,7 @@ class CommunityNewsController extends AbstractController
         }
 
         $communityNews->setPublic(false);
-        $communityNews->setUpdatedAt(new DateTime());
+        $communityNews->setUpdatedAt(new \DateTime());
         $communityNews->setUpdatedby($this->getUser());
 
         $this->entityManager->persist($communityNews);
@@ -136,8 +135,8 @@ class CommunityNewsController extends AbstractController
     }
 
     /**
-     *
      * @throws AccessDeniedException
+     *
      * @return Response
      */
     #[Route(path: '/admin/communitynews/{id}/show', name: 'admin_communitynews_unhide')]
@@ -148,7 +147,7 @@ class CommunityNewsController extends AbstractController
         }
 
         $communityNews->setPublic(true);
-        $communityNews->setUpdatedAt(new DateTime());
+        $communityNews->setUpdatedAt(new \DateTime());
         $communityNews->setUpdatedby($this->getUser());
 
         $this->entityManager->persist($communityNews);

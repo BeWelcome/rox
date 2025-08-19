@@ -9,9 +9,6 @@ use Doctrine\ORM\NonUniqueResultException;
 class WikiRepository extends EntityRepository
 {
     /**
-     * @param $pagename
-     * @param mixed $version
-     *
      * @return Wiki|null
      */
     public function getPageByName($pagename, $version)

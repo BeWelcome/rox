@@ -10,7 +10,6 @@ use App\Entity\Member;
 use App\Entity\Message;
 use App\Form\HostingRequestGuest;
 use App\Form\HostingRequestHost;
-use App\Form\HostingRequestType;
 use App\Logger\Logger;
 use App\Model\ConversationModel;
 use App\Model\HostingRequestModel;
@@ -20,7 +19,6 @@ use App\Utilities\ConversationThread;
 use App\Utilities\ManagerTrait;
 use App\Utilities\TranslatorTrait;
 use Doctrine\ORM\EntityManagerInterface;
-use Exception;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -44,7 +42,7 @@ class RequestController extends BaseRequestAndInvitationController
         HostingRequestModel $requestModel,
         EntityManagerInterface $entityManager,
         private Mailer $mailer,
-        private Logger $logger
+        private Logger $logger,
     ) {
         parent::__construct($requestModel, $entityManager);
 
@@ -52,7 +50,7 @@ class RequestController extends BaseRequestAndInvitationController
     }
 
     /**
-     * Deals with declines
+     * Deals with declines.
      */
     public function decline(Message $message): Response
     {
@@ -102,7 +100,7 @@ class RequestController extends BaseRequestAndInvitationController
     public function newHostingRequest(
         Request $request,
         Member $host,
-        AllowContactCheck $allowContactCheck
+        AllowContactCheck $allowContactCheck,
     ): Response {
         /** @var Member $guest */
         $guest = $this->getUser();
@@ -198,8 +196,8 @@ class RequestController extends BaseRequestAndInvitationController
     {
         $this->addTranslatedFlash('notice', 'flash.request.expired', [
             '%link_start%' => '<a href="' . $this->generateUrl('message_new', [
-                    'username' => $receiver->getUsername(),
-                ]) . '" class="text-primary">',
+                'username' => $receiver->getUsername(),
+            ]) . '" class="text-primary">',
             '%link_end%' => '</a>',
         ]);
     }
@@ -235,7 +233,7 @@ class RequestController extends BaseRequestAndInvitationController
                 $guest,
                 $newRequest,
                 $subject,
-                ($newRequest->getRequest()->getId() !== $realParent->getRequest()->getId())
+                $newRequest->getRequest()->getId() !== $realParent->getRequest()->getId()
             );
             $this->addTranslatedFlash('notice', 'flash.notification.updated');
 
@@ -304,7 +302,7 @@ class RequestController extends BaseRequestAndInvitationController
         Member $guest,
         Message $request,
         string $subject,
-        bool $requestChanged
+        bool $requestChanged,
     ): void {
         $this->sendRequestNotification(
             $guest,
@@ -331,7 +329,7 @@ class RequestController extends BaseRequestAndInvitationController
         Member $guest,
         Message $request,
         string $subject,
-        bool $requestChanged
+        bool $requestChanged,
     ): void {
         $this->sendRequestNotification(
             $host,
@@ -348,7 +346,7 @@ class RequestController extends BaseRequestAndInvitationController
         Member $host,
         Member $guest,
         Message $request,
-        string $subject
+        string $subject,
     ): void {
         $this->sendRequestNotification(
             $host,
@@ -365,10 +363,6 @@ class RequestController extends BaseRequestAndInvitationController
      * The requestChanged parameter triggers a PHPMD warning which is out of place in this case.
      *
      * @SuppressWarnings("PHPMD.BooleanArgumentFlag")
-     *
-     * @param mixed $subject
-     * @param mixed $template
-     * @param mixed $requestChanged
      */
     private function sendRequestNotification(
         Member $sender,
@@ -377,7 +371,7 @@ class RequestController extends BaseRequestAndInvitationController
         Message $request,
         $subject,
         $template,
-        $requestChanged
+        $requestChanged,
     ) {
         // Send mail notification
         $this->mailer->sendMessageNotificationEmail($sender, $receiver, $template, [

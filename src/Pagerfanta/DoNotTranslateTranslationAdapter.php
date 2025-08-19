@@ -5,7 +5,6 @@ namespace App\Pagerfanta;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
 use Pagerfanta\Adapter\AdapterInterface;
-use PDO;
 
 class DoNotTranslateTranslationAdapter implements AdapterInterface
 {

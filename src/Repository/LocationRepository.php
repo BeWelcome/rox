@@ -8,8 +8,6 @@ class LocationRepository extends EntityRepository
 {
     /**
      * Gets admin unit 1 for a given admin1 and country.
-     *
-     * @return mixed
      */
     public function findAdminUnit(string $admin1, string $country)
     {

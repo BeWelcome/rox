@@ -3,7 +3,6 @@
 namespace App\Utilities;
 
 use Carbon\Carbon;
-use DateTimeImmutable;
 
 /**
  * Sorts comment pairs after lowest created as long as updated is null.
@@ -12,14 +11,15 @@ use DateTimeImmutable;
  */
 class CommentSorter
 {
-    private readonly DateTimeImmutable $early20thCentury;
-    private readonly DateTimeImmutable $farFuture;
+    private readonly \DateTimeImmutable $early20thCentury;
+    private readonly \DateTimeImmutable $farFuture;
 
     public function __construct()
     {
-        $this->early20thCentury = new DateTimeImmutable('01-01-1900');
-        $this->farFuture = new DateTimeImmutable('01-01-3000');
+        $this->early20thCentury = new \DateTimeImmutable('01-01-1900');
+        $this->farFuture = new \DateTimeImmutable('01-01-3000');
     }
+
     public function sortComments(array $comments): array
     {
         usort($comments, [$this, 'commentsCompare']);
@@ -48,7 +48,7 @@ class CommentSorter
         return min($createdTo, $createdFrom);
     }
 
-    private function getUpdatedCriterion(array $comment): DateTimeImmutable
+    private function getUpdatedCriterion(array $comment): \DateTimeImmutable
     {
         $updatedTo = isset($comment['to'])
             ? ($comment['to']->getUpdated() ?? $this->early20thCentury) : $this->early20thCentury;

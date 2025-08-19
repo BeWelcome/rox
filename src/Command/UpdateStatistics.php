@@ -3,13 +3,9 @@
 namespace App\Command;
 
 use App\Model\StatisticsModel;
-use DateInterval;
-use DatePeriod;
-use DateTime;
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
-use Exception;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -45,8 +41,6 @@ class UpdateStatistics extends Command
      * @throws ORMException
      * @throws OptimisticLockException
      *
-     * @return int
-     *
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -59,14 +53,14 @@ class UpdateStatistics extends Command
 
         $startDateGiven = $input->getArgument('startDate');
         if ($startDateGiven) {
-            $startDate = DateTime::createFromFormat('Y-m-d', $startDateGiven);
+            $startDate = \DateTime::createFromFormat('Y-m-d', $startDateGiven);
         } else {
-            $startDate = new DateTime();
+            $startDate = new \DateTime();
             $startDate->modify('-1 day');
         }
 
         // Check first to avoid false positives on end date if none given
-        $today = new DateTime();
+        $today = new \DateTime();
         $today->setTime(0, 0, 0, 0);
         if ($startDate >= $today) {
             $output->writeln([
@@ -78,9 +72,9 @@ class UpdateStatistics extends Command
 
         $endDateGiven = $input->getArgument('endDate');
         if ($endDateGiven) {
-            $endDate = DateTime::createFromFormat('Y-m-d', $endDateGiven);
+            $endDate = \DateTime::createFromFormat('Y-m-d', $endDateGiven);
         } else {
-            $endDate = new DateTime();
+            $endDate = new \DateTime();
         }
 
         if (!$startDate || !$endDate) {
@@ -108,15 +102,15 @@ class UpdateStatistics extends Command
             $endDate->modify('+1 day');
         }
 
-        $interval = new DateInterval('P1D');
-        $dates = new DatePeriod($startDate, $interval, $endDate);
+        $interval = new \DateInterval('P1D');
+        $dates = new \DatePeriod($startDate, $interval, $endDate);
 
         $this->logger->info('Updating statistics from ' . $startDate->format('Y-m-d') . ' to ' . $endDate->format('Y-m-d'));
 
         $returnCode = 1;
         try {
             $returnCode = $this->statisticsModel->updateStatistics($dates, $output);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $this->logger->error('Updating statistics failed: ' . $e->getMessage());
         }
 

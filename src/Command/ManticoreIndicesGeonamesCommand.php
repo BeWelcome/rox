@@ -6,22 +6,14 @@ use App\Entity\NewLocation;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NativeQuery;
 use Doctrine\ORM\Query\ResultSetMapping;
-use Doctrine\ORM\Query\ResultSetMappingBuilder;
-use Exception;
-use Gedmo\Translatable\Entity\Repository\TranslationRepository;
-use Gedmo\Translatable\Entity\Translation;
 use Manticoresearch\Client;
 use Manticoresearch\Table;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-
-use function count;
 
 #[AsCommand(
     name: 'manticore:indices:geonames',
@@ -38,7 +30,7 @@ class ManticoreIndicesGeonamesCommand extends Command
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly string $manticoreHost,
-        private readonly int $manticorePort
+        private readonly int $manticorePort,
     ) {
         parent::__construct();
     }
@@ -62,6 +54,7 @@ class ManticoreIndicesGeonamesCommand extends Command
                 'Skipped creation of ' . self::GEONAMES_INDEX . ' index. ' .
                 'Try using manticore:indices:update --geonames instead'
             );
+
             return Command::INVALID;
         }
 
@@ -72,7 +65,7 @@ class ManticoreIndicesGeonamesCommand extends Command
 
     private function createGeonamesIndex(): ?Table
     {
-        $client = new Client(['host' => $this->manticoreHost,'port' => $this->manticorePort]);
+        $client = new Client(['host' => $this->manticoreHost, 'port' => $this->manticorePort]);
         $index = $client->table('geonames_rt');
 
         try {
@@ -102,7 +95,7 @@ class ManticoreIndicesGeonamesCommand extends Command
                     'ngram_len' => '1',
                 ]
             );
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             // $index = null;
 
             $this->io->error($e->getMessage());
@@ -119,49 +112,48 @@ class ManticoreIndicesGeonamesCommand extends Command
 
         $stmt = $this->entityManager
             ->getConnection()
-            ->executeQuery(<<<___SQL
-            SELECT
-                count(*) as cnt
-            FROM
-                geo__names g
-        ___SQL);
+            ->executeQuery(<<<'___SQL'
+                    SELECT
+                        count(*) as cnt
+                    FROM
+                        geo__names g
+                ___SQL);
 
-        $count = ($stmt->fetchNumeric())[0];
-        if ($count !== 0) {
+        $count = $stmt->fetchNumeric()[0];
+        if (0 !== $count) {
             $progressBar = $this->getProgressBar($output, $count);
 
             $firstResult = 0;
             do {
                 $query = $this->entityManager->createNativeQuery(<<<___SQL
-                SELECT
-                    g.geonameid AS geonameid,
-                    g.`name` AS name,
-                    g.feature_class,
-                    g.feature_code,
-                    g.country_id,
-                    g.admin_1_id,
-                    g.admin_2_id,
-                    g.admin_3_id,
-                    g.admin_4_id,
-                    '_geo' AS locale,
-                    g.population,
-                    IFNULL(membercounts.total, 0) AS member_count
-                FROM
-                    geo__names g
-                LEFT JOIN (
-                    SELECT
-                        m.IdCity,
-                        COUNT(m.IdCity) total
-                    FROM
-                        members m
-                    WHERE m.status IN ('Active', 'OutOfRemind')
-                    GROUP BY
-                        m.IdCity
-                ) membercounts
-                ON (g.geonameid = membercounts.IdCity)
-                LIMIT {$firstResult}, {$this->chunkSize}
-            ___SQL
-                    , $this->getResultSetMappingForGeonamesIndex());
+                        SELECT
+                            g.geonameid AS geonameid,
+                            g.`name` AS name,
+                            g.feature_class,
+                            g.feature_code,
+                            g.country_id,
+                            g.admin_1_id,
+                            g.admin_2_id,
+                            g.admin_3_id,
+                            g.admin_4_id,
+                            '_geo' AS locale,
+                            g.population,
+                            IFNULL(membercounts.total, 0) AS member_count
+                        FROM
+                            geo__names g
+                        LEFT JOIN (
+                            SELECT
+                                m.IdCity,
+                                COUNT(m.IdCity) total
+                            FROM
+                                members m
+                            WHERE m.status IN ('Active', 'OutOfRemind')
+                            GROUP BY
+                                m.IdCity
+                        ) membercounts
+                        ON (g.geonameid = membercounts.IdCity)
+                        LIMIT {$firstResult}, {$this->chunkSize}
+                    ___SQL, $this->getResultSetMappingForGeonamesIndex());
 
                 $addDocumentsCount = $this->addGeonamesDocumentsToIndex($index, $query, $progressBar);
 
@@ -180,52 +172,51 @@ class ManticoreIndicesGeonamesCommand extends Command
 
         $stmt = $this->entityManager
             ->getConnection()
-            ->executeQuery(<<<___SQL
-            SELECT
-                count(*) as cnt
-            FROM
-                geo__names_translations gt
-        ___SQL);
+            ->executeQuery(<<<'___SQL'
+                    SELECT
+                        count(*) as cnt
+                    FROM
+                        geo__names_translations gt
+                ___SQL);
 
-        $count = ($stmt->fetchNumeric())[0];
-        if ($count !== 0) {
+        $count = $stmt->fetchNumeric()[0];
+        if (0 !== $count) {
             $progressBar = $this->getProgressBar($output, $count);
             $progressBar->start();
 
             $firstResult = 0;
             do {
                 $query = $this->entityManager->createNativeQuery(<<<___SQL
-                SELECT
-                    g.geonameid,
-                    gt.`content` AS name,
-                    g.feature_class,
-                    g.feature_code,
-                    g.country_id,
-                    g.admin_1_id,
-                    g.admin_2_id,
-                    g.admin_3_id,
-                    g.admin_4_id,
-                    gt.`locale` AS locale,
-                    g.population,
-                    IFNULL(membercounts.total, 0) AS member_count
-                FROM
-                    geo__names g
-                JOIN
-                    geo__names_translations gt ON g.geonameId = gt.foreign_key
-                LEFT JOIN (
-                    SELECT
-                        m.IdCity,
-                        COUNT(m.IdCity) total
-                    FROM
-                        members m
-                    WHERE m.status IN ('Active', 'OutOfRemind')
-                    GROUP BY
-                        m.IdCity
-                ) membercounts
-                ON (g.geonameid = membercounts.IdCity)
-                LIMIT {$firstResult}, {$this->chunkSize}
-            ___SQL
-                    , $this->getResultSetMappingForGeonamesIndex());
+                        SELECT
+                            g.geonameid,
+                            gt.`content` AS name,
+                            g.feature_class,
+                            g.feature_code,
+                            g.country_id,
+                            g.admin_1_id,
+                            g.admin_2_id,
+                            g.admin_3_id,
+                            g.admin_4_id,
+                            gt.`locale` AS locale,
+                            g.population,
+                            IFNULL(membercounts.total, 0) AS member_count
+                        FROM
+                            geo__names g
+                        JOIN
+                            geo__names_translations gt ON g.geonameId = gt.foreign_key
+                        LEFT JOIN (
+                            SELECT
+                                m.IdCity,
+                                COUNT(m.IdCity) total
+                            FROM
+                                members m
+                            WHERE m.status IN ('Active', 'OutOfRemind')
+                            GROUP BY
+                                m.IdCity
+                        ) membercounts
+                        ON (g.geonameid = membercounts.IdCity)
+                        LIMIT {$firstResult}, {$this->chunkSize}
+                    ___SQL, $this->getResultSetMappingForGeonamesIndex());
 
                 $addDocumentsCount = $this->addGeonamesDocumentsToIndex($index, $query, $progressBar);
 
@@ -249,14 +240,14 @@ class ManticoreIndicesGeonamesCommand extends Command
 
         /** @var NewLocation $location */
         foreach ($locations as $location) {
-            $isPlace = $location['feature_class'] === 'P' && str_starts_with((string) $location['feature_code'], 'PPL')
-                && $location['feature_code'] !== 'PPLH' && $location['feature_code'] !== 'PPLCH'
-                && $location['feature_code'] !== 'PPLX' && $location['feature_code'] !== 'PPLQ';
+            $isPlace = 'P' === $location['feature_class'] && str_starts_with((string) $location['feature_code'], 'PPL')
+                && 'PPLH' !== $location['feature_code'] && 'PPLCH' !== $location['feature_code']
+                && 'PPLX' !== $location['feature_code'] && 'PPLQ' !== $location['feature_code'];
             $isCountry =
-                ($location['feature_class'] === 'A' && str_starts_with((string) $location['feature_code'], 'PCL')
-                    && $location['feature_code'] !== 'PRSH' && $location['feature_code'] !== 'PCLH')
-                || ($location['feature_code'] === 'TERR');
-            $isAdmin = $location['feature_class'] === 'A' && !$isCountry;
+                ('A' === $location['feature_class'] && str_starts_with((string) $location['feature_code'], 'PCL')
+                    && 'PRSH' !== $location['feature_code'] && 'PCLH' !== $location['feature_code'])
+                || ('TERR' === $location['feature_code']);
+            $isAdmin = 'A' === $location['feature_class'] && !$isCountry;
 
             $documents[] = [
                 'geoname_id' => $location['geonameid'],
@@ -278,7 +269,7 @@ class ManticoreIndicesGeonamesCommand extends Command
         $count = \count($locations);
         unset($locations);
 
-        if ($count !== 0) {
+        if (0 !== $count) {
             $index->addDocuments($documents);
             $index->flush();
         }
@@ -308,6 +299,7 @@ class ManticoreIndicesGeonamesCommand extends Command
 
         return $rsm;
     }
+
     private function getProgressBar(OutputInterface $output, $count): ProgressBar
     {
         $progressBar = new ProgressBar($output, $count);
@@ -323,9 +315,9 @@ class ManticoreIndicesGeonamesCommand extends Command
     private function adaptLocale(string $locale): string
     {
         $locale = match ($locale) {
-            "zh-TW" => "zh-hant",
-            "zh-CN" => "zh-hans",
-            "pt-BR" => "pt-br",
+            'zh-TW' => 'zh-hant',
+            'zh-CN' => 'zh-hans',
+            'pt-BR' => 'pt-br',
             default => $locale,
         };
 

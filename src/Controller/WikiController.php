@@ -8,7 +8,6 @@ use App\Model\WikiModel;
 use App\Repository\WikiRepository;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
-use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Pagerfanta\Adapter\ArrayAdapter;
 use Pagerfanta\Pagerfanta;
@@ -28,6 +27,7 @@ class WikiController extends AbstractController
         private EntityManagerInterface $entityManager,
     ) {
     }
+
     /**
      * @return Response
      */
@@ -66,7 +66,7 @@ class WikiController extends AbstractController
     public function showWikiPage(
         string $pageTitle,
         WikiModel $wikiModel,
-        int $version
+        int $version,
     ): Response {
         $pageName = $wikiModel->getPageName($pageTitle);
 
@@ -83,8 +83,8 @@ class WikiController extends AbstractController
                 return $this->redirectToRoute('wiki_page_create', ['pageTitle' => $pageTitle]);
             }
 
-            // the given version of the wiki page doesn't exist. Just keep going
-            // (show appropriate message in the template)
+        // the given version of the wiki page doesn't exist. Just keep going
+        // (show appropriate message in the template)
         } else {
             $content = $wikiModel->parseWikiMarkup($wikiPage->getContent());
             if (null === $content) {
@@ -123,8 +123,6 @@ class WikiController extends AbstractController
     }
 
     /**
-     *
-     * @param $pageTitle
      * @return Response
      */
     #[Route(path: '/wiki/{pageTitle}/edit', name: 'wiki_page_edit')]
@@ -138,7 +136,7 @@ class WikiController extends AbstractController
         }
 
         $form = $this->createFormBuilder(['wiki_markup' => $wikiPage->getContent()])
-            ->add('wiki_markup', TextAreaType::class)
+            ->add('wiki_markup', TextareaType::class)
             ->add('submit', SubmitType::class, [
                 'label' => 'Update Page',
             ])
@@ -154,7 +152,7 @@ class WikiController extends AbstractController
             // \todo make this safe against multiple edits at the same time
             $newWikiPage->setVersion($wikiPage->getVersion() + 1);
             $newWikiPage->setAuthor($member->getUsername());
-            $newWikiPage->setCreated((new DateTime())->getTimestamp());
+            $newWikiPage->setCreated((new \DateTime())->getTimestamp());
 
             $this->entityManager->persist($newWikiPage);
             $this->entityManager->flush();
@@ -177,8 +175,6 @@ class WikiController extends AbstractController
     }
 
     /**
-     *
-     * @param $pageTitle
      * @return Response
      */
     #[Route(path: '/wiki/{pageTitle}/create', name: 'wiki_page_create')]
@@ -191,7 +187,7 @@ class WikiController extends AbstractController
         }
 
         $form = $this->createFormBuilder(['wiki_markup' => ''])
-            ->add('wiki_markup', TextAreaType::class)
+            ->add('wiki_markup', TextareaType::class)
             ->add('submit', SubmitType::class, [
                 'label' => 'Create Page',
             ])

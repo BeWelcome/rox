@@ -4,19 +4,19 @@ namespace App\Utilities;
 
 use App\Doctrine\AccommodationType;
 use App\Entity\Comment;
-use App\Entity\Preference;
-use App\Entity\Relation;
 use App\Entity\ForumPost;
 use App\Entity\GalleryImage;
 use App\Entity\Member;
 use App\Entity\Message;
+use App\Entity\Preference;
 use App\Entity\ProfileNote;
+use App\Entity\Relation;
 use App\Repository\CommentRepository;
-use App\Repository\RelationRepository;
 use App\Repository\ForumPostRepository;
 use App\Repository\GalleryImageRepository;
 use App\Repository\MessageRepository;
 use App\Repository\ProfileNoteRepository;
+use App\Repository\RelationRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\RouterInterface;
 
@@ -215,21 +215,21 @@ class ProfileSubmenu
             ]);
         }
 
-/*        if ($parameters['family_or_friend']) {
+        /*        if ($parameters['family_or_friend']) {
 
-            $this->addSubmenuItem('family_or_friend', [
-                'key' => 'profile.relation.edit',
-                'icon' => 'handshake',
-                'url' => $this->routing->generate('edit_relation', ['username' => $username]),
-            ]);
-        } else {
-            $this->addSubmenuItem('family_or_friend', [
-                'key' => 'profile.relation.add',
-                'icon' => 'handshake',
-                'url' => $this->routing->generate('add_relation', ['username' => $username]),
-            ]);
-        }
-*/
+                    $this->addSubmenuItem('family_or_friend', [
+                        'key' => 'profile.relation.edit',
+                        'icon' => 'handshake',
+                        'url' => $this->routing->generate('edit_relation', ['username' => $username]),
+                    ]);
+                } else {
+                    $this->addSubmenuItem('family_or_friend', [
+                        'key' => 'profile.relation.add',
+                        'icon' => 'handshake',
+                        'url' => $this->routing->generate('add_relation', ['username' => $username]),
+                    ]);
+                }
+        */
         if ($parameters['note']) {
             $this->addSubmenuItem('edit_note', [
                 'key' => 'NoteEditMyNotesOfMember',
@@ -244,9 +244,9 @@ class ProfileSubmenu
             ]);
         }
 
-        $feedbackUrl = "/feedback?IdCategory=2&username=" . $username;
+        $feedbackUrl = '/feedback?IdCategory=2&username=' . $username;
         if (isset($parameters['message'])) {
-            $feedbackUrl .= "&messageId=" . $parameters['message'];
+            $feedbackUrl .= '&messageId=' . $parameters['message'];
         }
         $this->addSubmenuItem('report', [
             'key' => 'profile.report',
@@ -351,7 +351,7 @@ class ProfileSubmenu
 
     private function hasRole(array $roles, string $role): bool
     {
-        return in_array($role, $roles);
+        return \in_array($role, $roles, true);
     }
 
     private function addSubmenuItem(string $key, array $value)

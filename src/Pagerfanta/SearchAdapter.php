@@ -10,10 +10,7 @@ use App\Utilities\SessionSingleton;
 use App\Utilities\TranslatorSingleton;
 use Doctrine\DBAL\Exception\InvalidArgumentException;
 use Doctrine\ORM\EntityManagerInterface;
-use EnvironmentExplorer;
-use Exception;
 use Pagerfanta\Adapter\AdapterInterface;
-use SearchModel;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -23,11 +20,12 @@ class SearchAdapter implements AdapterInterface
     /** @var array */
     private $modelData;
 
-    /** @var SearchModel */
+    /** @var \SearchModel */
     private $model;
 
     /**
-     * Length of parameter list due to legacy code
+     * Length of parameter list due to legacy code.
+     *
      * @SuppressWarnings("PHPMD.ExcessiveParameterList")
      *
      * Singletons needed for legay code
@@ -43,7 +41,7 @@ class SearchAdapter implements AdapterInterface
         string $dbUser,
         string $dbPassword,
         string $manticoreHost,
-        int $manticorePort
+        int $manticorePort,
     ) {
         // Kick-start the Symfony session. This replaces session_start() in the
         // old code, which is now turned off.
@@ -69,7 +67,7 @@ class SearchAdapter implements AdapterInterface
         TranslatorSingleton::createInstance($translator);
 
         // make sure everything's setup for the old code used below
-        $environmentExplorer = new EnvironmentExplorer();
+        $environmentExplorer = new \EnvironmentExplorer();
         $environmentExplorer->initializeGlobalState(
             $dbHost,
             $dbName,
@@ -79,7 +77,7 @@ class SearchAdapter implements AdapterInterface
             $manticorePort
         );
         $dbPassword = str_repeat('*', \strlen($dbPassword));
-        $this->model = new SearchModel($em);
+        $this->model = new \SearchModel($em);
         $this->modelData = $this->prepareModelData($data);
 
         // Determine if we search for a country or an admin unit and call prepareQuery accordingly
@@ -88,7 +86,7 @@ class SearchAdapter implements AdapterInterface
         $location = null;
         try {
             $location = $repository->find($data->location_geoname_id);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             throw new InvalidArgumentException($e->getMessage(), $e->getCode());
         }
 
@@ -179,9 +177,9 @@ class SearchAdapter implements AdapterInterface
 
         foreach (
             [
-            'offers_dinner' => TypicalOfferType::DINNER,
-            'offers_tour' => TypicalOfferType::GUIDED_TOUR,
-            'accessible' => TypicalOfferType::WHEELCHAIR_ACCESSIBLE,
+                'offers_dinner' => TypicalOfferType::DINNER,
+                'offers_tour' => TypicalOfferType::GUIDED_TOUR,
+                'accessible' => TypicalOfferType::WHEELCHAIR_ACCESSIBLE,
             ] as $param => $value
         ) {
             if ($data->$param) {
@@ -191,9 +189,9 @@ class SearchAdapter implements AdapterInterface
 
         foreach (
             [
-            'no_smoking' => 'NoSmoker',
-            'no_alcohol' => 'NoAlchool',
-            'no_drugs' => 'NoDrugs',
+                'no_smoking' => 'NoSmoker',
+                'no_alcohol' => 'NoAlchool',
+                'no_drugs' => 'NoDrugs',
             ] as $param => $value
         ) {
             if ($data->$param) {
@@ -229,18 +227,19 @@ class SearchAdapter implements AdapterInterface
     private function getRankedAdminUnitIds(NewLocation $location): array
     {
         $adminUnits = [];
-        if (null != $location->getAdmin1Id()) {
+        if (null !== $location->getAdmin1Id()) {
             $adminUnits[] = $location->getAdmin1Id();
         }
-        if (null != $location->getAdmin2Id()) {
+        if (null !== $location->getAdmin2Id()) {
             $adminUnits[] = $location->getAdmin2Id();
         }
-        if (null != $location->getAdmin3Id()) {
+        if (null !== $location->getAdmin3Id()) {
             $adminUnits[] = $location->getAdmin3Id();
         }
-        if (null != $location->getAdmin4Id()) {
+        if (null !== $location->getAdmin4Id()) {
             $adminUnits[] = $location->getAdmin4Id();
         }
+
         return $adminUnits;
     }
 }

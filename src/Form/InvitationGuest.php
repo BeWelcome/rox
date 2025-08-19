@@ -65,9 +65,6 @@ class InvitationGuest extends HostingRequestAbstractType
         });
     }
 
-    /**
-     * {@inheritdoc}
-     */
     #[\Override]
     public function configureOptions(OptionsResolver $resolver): void
     {
@@ -79,9 +76,6 @@ class InvitationGuest extends HostingRequestAbstractType
         ;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     #[\Override]
     public function getBlockPrefix(): string
     {

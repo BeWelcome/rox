@@ -19,7 +19,7 @@ abstract class AbstractConversationsAdapter
         EntityManager $entityManager,
         protected Member $member,
         protected int $initiator,
-        protected bool $unreadOnly
+        protected bool $unreadOnly,
     ) {
         $this->connection = $entityManager->getConnection();
         $this->entityManager = $entityManager;

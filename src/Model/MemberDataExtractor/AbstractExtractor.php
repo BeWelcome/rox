@@ -2,7 +2,6 @@
 
 namespace App\Model\MemberDataExtractor;
 
-use DateTime;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\ObjectRepository;
 use Symfony\WebpackEncoreBundle\Asset\EntrypointLookupInterface;
@@ -40,10 +39,10 @@ abstract class AbstractExtractor
     protected function writeRenderedTemplate($filename, $template, $parameters)
     {
         $this->entrypointLookup->reset();
-        $parameters = array_merge($parameters, ['date_generated' => new DateTime()]);
+        $parameters = array_merge($parameters, ['date_generated' => new \DateTime()]);
 
         $handle = fopen($filename, 'w');
-        fwrite($handle, (string) $this->environment->render(sprintf('private/%s.html.twig', $template), $parameters));
+        fwrite($handle, (string) $this->environment->render(\sprintf('private/%s.html.twig', $template), $parameters));
         fclose($handle);
     }
 
@@ -59,7 +58,7 @@ abstract class AbstractExtractor
             mkdir($subDirectory);
         }
 
-        $filename = $filename ?? $template;
+        $filename ??= $template;
 
         $parameters = array_merge($parameters, [
             'isSubDir' => true,

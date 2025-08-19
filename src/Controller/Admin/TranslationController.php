@@ -17,10 +17,7 @@ use App\Repository\LanguageRepository;
 use App\Repository\WordRepository;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
-use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
-use Exception;
-use MessageFormatter;
 use Pagerfanta\Pagerfanta;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -32,7 +29,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class TranslationController.
@@ -52,7 +48,7 @@ class TranslationController extends AbstractController
     public function editTranslation(
         Request $request,
         #[MapEntity(mapping: ['locale' => 'shortCode'])] Language $language,
-        string $code
+        string $code,
     ): Response {
         $this->denyAccessUnlessGranted(Member::ROLE_ADMIN_WORDS, null, 'Unable to access this page!');
 
@@ -80,8 +76,8 @@ class TranslationController extends AbstractController
         // Check that there is already a translation for this id/code
         /** @var Word $translation */
         $translation = $translationRepository->findOneBy([
-           'code' => $code,
-           'shortCode' => $language->getShortCode(),
+            'code' => $code,
+            'shortCode' => $language->getShortCode(),
         ]);
         if (null === $translation) {
             return $this->redirectToRoute('translation_add', [
@@ -110,7 +106,7 @@ class TranslationController extends AbstractController
                 $translation->setCode($original->getCode());
                 $translation->setDomain($data->domain);
                 $translation->setSentence($data->translatedText);
-                $translation->setUpdated(new DateTime());
+                $translation->setUpdated(new \DateTime());
                 $translation->setAuthor($translator);
                 if ('en' === $language->getShortCode()) {
                     $translation->setDescription($data->description);
@@ -145,9 +141,10 @@ class TranslationController extends AbstractController
                 if (null === $referrer) {
                     return $this->redirectToRoute('translations_locale_code', [
                         'locale' => $language->getShortCode(),
-                        'type' => 'all'
+                        'type' => 'all',
                     ]);
                 }
+
                 return $this->redirect($referrer);
             }
             $editForm->get('translatedText')->addError(new FormError($invalidMessage));
@@ -172,7 +169,7 @@ class TranslationController extends AbstractController
     public function createTranslationForId(
         Request $request,
         #[MapEntity(mapping: ['locale' => 'shortCode'])] Language $language,
-        string $translationId
+        string $translationId,
     ): Response {
         $this->denyAccessUnlessGranted(Member::ROLE_ADMIN_WORDS, null, 'Unable to access this page!');
 
@@ -259,9 +256,7 @@ class TranslationController extends AbstractController
     }
 
     /**
-     *
-     * @throws Exception
-     * @return Response
+     * @throws \Exception
      */
     #[Route(path: '/admin/translations/create', name: 'translation_create_direct')] // Creates an new English index bypassing the translation interface
     public function createTranslationDirect(Request $request): Response
@@ -317,7 +312,7 @@ class TranslationController extends AbstractController
     public function addTranslation(
         Request $request,
         #[MapEntity(mapping: ['locale' => 'shortCode'])] Language $language,
-        string $code
+        string $code,
     ): Response {
         $this->denyAccessUnlessGranted(Member::ROLE_ADMIN_WORDS, null, 'Unable to access this page!');
 
@@ -380,7 +375,7 @@ class TranslationController extends AbstractController
                 $translation->setDomain($original->getDomain());
                 $translation->setSentence($data->translatedText);
                 $translation->setLanguage($language);
-                $translation->setCreated(new DateTime());
+                $translation->setCreated(new \DateTime());
                 $translation->setAuthor($translator);
                 // No need for a description as the English original has one
                 $translation->setDescription('');
@@ -415,8 +410,6 @@ class TranslationController extends AbstractController
     }
 
     /**
-     *
-     * @param $mode
      * @return RedirectResponse
      */
     #[Route(path: '/admin/translations/mode/{mode}', name: 'translation_mode', requirements: ['mode' => 'on|off'])]
@@ -471,7 +464,7 @@ class TranslationController extends AbstractController
         Request $request,
         #[MapEntity(mapping: ['locale' => 'shortCode'])] Language $language,
         string $type,
-        string $code
+        string $code,
     ): Response {
         $this->denyAccessUnlessGranted(Member::ROLE_ADMIN_WORDS, null, 'Unable to access this page!');
 
@@ -552,17 +545,16 @@ class TranslationController extends AbstractController
         $translationDetails = $translationRepository->getTranslationDetails($this->locales);
 
         return $this->render('admin/translations/statistics.html.twig', [
-                'count_all' => $countAll,
-                'details' => $translationDetails,
-                'submenu' => [
-                    'active' => 'statistics',
-                    'items' => $this->getSubmenuItems($request->getLocale(), 'statistics'),
-                ],
-            ]);
+            'count_all' => $countAll,
+            'details' => $translationDetails,
+            'submenu' => [
+                'active' => 'statistics',
+                'items' => $this->getSubmenuItems($request->getLocale(), 'statistics'),
+            ],
+        ]);
     }
 
     /**
-     * @param $locale
      * @param mixed|null $action
      * @param mixed|null $code
      *
@@ -675,7 +667,7 @@ class TranslationController extends AbstractController
         $original->setDomain($data->domain);
         $original->setDescription($data->description);
         $original->setSentence($data->englishText);
-        $original->setCreated(new DateTime());
+        $original->setCreated(new \DateTime());
         $original->setAuthor($translator);
         $original->setLanguage($english);
 
@@ -687,8 +679,8 @@ class TranslationController extends AbstractController
         $invalidMessage = '';
         if (DomainType::ICU_MESSAGES === $data->domain) {
             try {
-                new MessageFormatter('en', $message);
-            } catch (Exception $exception) {
+                new \MessageFormatter('en', $message);
+            } catch (\Exception $exception) {
                 $invalidMessage = $exception->getMessage();
             }
         }

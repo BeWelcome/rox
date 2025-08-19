@@ -2,9 +2,7 @@
 
 namespace App\Model\MockupProvider;
 
-use App\Entity\Member;
 use App\Form\DeleteProfileFormType;
-use App\Form\InvitationType;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -26,7 +24,7 @@ class ProfileMockups implements MockupProviderInterface
 
     public function __construct(
         private readonly FormFactoryInterface $formFactory,
-        private readonly TranslatorInterface $translator
+        private readonly TranslatorInterface $translator,
     ) {
     }
 

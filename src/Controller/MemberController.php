@@ -11,7 +11,6 @@ use App\Utilities\ManagerTrait;
 use App\Utilities\ProfileSubmenu;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
-use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Form\FormError;
@@ -25,7 +24,6 @@ use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\WebpackEncoreBundle\Asset\EntrypointLookupInterface;
-use Twig\Profiler\Profile;
 
 /**
  * Class MemberController.
@@ -44,14 +42,15 @@ class MemberController extends AbstractController
     public function redirectMyData()
     {
         $username = $this->getUser()->getUsername();
+
         return $this->redirectToRoute('profile_personal_data', [
             'username' => $username,
         ]);
     }
 
     /**
+     * @throws \Exception
      *
-     * @throws Exception
      * @return StreamedResponse|Response
      */
     #[Route(path: '/members/{username:member}/mydata', name: 'profile_personal_data')]
@@ -61,7 +60,7 @@ class MemberController extends AbstractController
         MemberModel $memberModel,
         Security $security,
         EntrypointLookupInterface $entrypointLookup,
-        PasswordHasherFactoryInterface $passwordHasherFactory
+        PasswordHasherFactoryInterface $passwordHasherFactory,
     ): Response|RedirectResponse {
         /** @var Member $member */
         $loggedInMember = $this->getUser();
@@ -121,7 +120,7 @@ class MemberController extends AbstractController
         Member $member,
         Logger $logger,
         EntrypointLookupInterface $entrypointLookup,
-        MemberModel $memberModel
+        MemberModel $memberModel,
     ): Response {
         // Only the admin can access this special page
         $this->denyAccessUnlessGranted(
@@ -154,10 +153,10 @@ class MemberController extends AbstractController
     }
 
     /**
-     *
-     * @throws Exception
+     * @throws \Exception
      *
      * @return BinaryFileResponse|RedirectResponse
+     *
      * @ParamConverter("member", class="App\Entity\Member", options={"mapping": {"username": "username"}})
      */
     #[Route(path: '/mydata/{username:member}/download', name: 'member_download_data')]

@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @codingStandardsIgnoreFile
  *
@@ -11,7 +12,7 @@ use App\Repository\ActivityAttendeeRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Do not check entities with PHPMD
+ * Do not check entities with PHPMD.
  *
  * @SuppressWarnings("PHPMD")
  */
@@ -63,12 +64,9 @@ class ActivityAttendee
     #[ORM\Column(name: 'id', type: 'integer')]
     private $id;
 
-
     /**
      * ActivityAttendee constructor.
      *
-     * @param $status
-     * @param $comment
      * @param bool $isOrganizer
      */
     public function __construct(Activity $activity, Member $attendee, $status, $comment, $isOrganizer = false)
@@ -82,8 +80,6 @@ class ActivityAttendee
 
     /**
      * Set attendee.
-     *
-     * @param Member $attendee
      *
      * @return ActivityAttendee
      */
@@ -106,8 +102,6 @@ class ActivityAttendee
 
     /**
      * Set activity.
-     *
-     * @param Activity $activity
      *
      * @return ActivityAttendee
      */

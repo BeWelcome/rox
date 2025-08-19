@@ -2,15 +2,12 @@
 
 namespace App\Model\MemberDataExtractor;
 
-use App\Entity\Relation;
 use App\Entity\Member;
+use App\Entity\Relation;
 use App\Repository\RelationRepository;
 
 final class SpecialRelationsExtractor extends AbstractExtractor implements ExtractorInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function extract(Member $member, string $tempDir): string
     {
         $relations = [];

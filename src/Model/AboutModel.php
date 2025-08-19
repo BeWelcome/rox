@@ -26,7 +26,6 @@ class AboutModel
             ->indexBy('c', 'c.id')
         ;
 
-
         return $qb->getQuery()->getResult();
     }
 

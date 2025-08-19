@@ -2,14 +2,12 @@
 
 namespace App\Form\Extension;
 
-use stdClass;
 use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class AutoCompleteExtension extends AbstractTypeExtension
@@ -60,7 +58,6 @@ class AutoCompleteExtension extends AbstractTypeExtension
      * @SuppressWarnings("PHPMD.NPathComplexity")
      *
      * \todo check how to reduce complexity.
-     *
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      *
      * Parameter $options not used but signature is given by symfony.
@@ -107,7 +104,7 @@ class AutoCompleteExtension extends AbstractTypeExtension
         if ($options['autocomplete_choices']) {
             $autocompleteChoices = [];
             foreach ($options['autocomplete_choices'] as $choice) {
-                $autocompleteChoice = new stdClass();
+                $autocompleteChoice = new \stdClass();
                 $autocompleteChoice->title = $choice;
                 $autocompleteChoices[] = $autocompleteChoice;
             }

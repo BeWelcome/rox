@@ -4,16 +4,8 @@ namespace App\Model;
 
 use App\Entity\Member;
 use App\Entity\PasswordReset;
-use App\Utilities\ManagerTrait;
-use App\Utilities\TranslatorTrait;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
-use Exception as Exception;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use Symfony\Component\Security\Core\Security;
-use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 class PasswordModel
 {
@@ -35,7 +27,7 @@ class PasswordModel
     {
         try {
             $token = random_bytes(32);
-        } catch (Exception) {
+        } catch (\Exception) {
             $token = openssl_random_pseudo_bytes(32);
         }
         $token = bin2hex($token);
@@ -88,6 +80,7 @@ class PasswordModel
     private function getPasswordResetForMember(Member $member): ?PasswordReset
     {
         $passwordResetRepository = $this->entityManager->getRepository(PasswordReset::class);
+
         return $passwordResetRepository->findOneBy(['member' => $member]);
     }
 }

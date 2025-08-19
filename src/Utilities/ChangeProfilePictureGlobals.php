@@ -24,7 +24,7 @@ class ChangeProfilePictureGlobals
                     'profile.change.avatar.fail.file.too.big'
                 ),
                 'profile.picture.title' => $this->translator->trans('profile.picture.title', [
-                    'username' => $member->getUsername()
+                    'username' => $member->getUsername(),
                 ]),
                 'uploading' => $this->translator->trans('uploading'),
             ],
@@ -32,10 +32,10 @@ class ChangeProfilePictureGlobals
                 'isMyself' => ($member === $loggedInMember),
                 'avatarUseLightbox' => ($member !== $loggedInMember),
                 'avatarUrl' => $this->urlGenerator->generate('avatar', [
-                    'username' => $member->getUsername(), 'size' => 48
+                    'username' => $member->getUsername(), 'size' => 48,
                 ]),
                 'username' => $member->getUsername(),
-            ]
+            ],
         ]);
 
         return $globalsJs;

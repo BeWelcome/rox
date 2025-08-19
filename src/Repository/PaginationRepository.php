@@ -71,8 +71,6 @@ class PaginationRepository extends EntityRepository
      * Gets the latest community news (only visible to the public) if any.
      *
      * @throws NonUniqueResultException
-     *
-     * @return mixed
      */
     public function getLatest()
     {

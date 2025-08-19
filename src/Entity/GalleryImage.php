@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @codingStandardsIgnoreFile
  *
@@ -11,7 +12,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Do not check entities with PHPMD
+ * Do not check entities with PHPMD.
  *
  * @SuppressWarnings("PHPMD")
  */

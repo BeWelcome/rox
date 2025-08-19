@@ -8,9 +8,6 @@ use App\Entity\PrivilegeScope;
 
 final class PrivilegesExtractor extends AbstractExtractor implements ExtractorInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function extract(Member $member, string $tempDir): string
     {
         $privilegesCombined = [];

@@ -33,7 +33,7 @@ class CommentController extends AbstractController
      */
     public function __construct(
         private readonly CommentModel $commentModel,
-        private readonly EntityManagerInterface $entityManager
+        private readonly EntityManagerInterface $entityManager,
     ) {
     }
 
@@ -171,7 +171,7 @@ class CommentController extends AbstractController
     public function adminComment(
         Request $request,
         #[MapEntity(mapping: ['to_member' => 'username'])] Member $toMember,
-        #[MapEntity(mapping: ['from_member' => 'username'])] Member $fromMember
+        #[MapEntity(mapping: ['from_member' => 'username'])] Member $fromMember,
     ): Response {
         if (
             !$this->isGranted(Member::ROLE_ADMIN_COMMENTS)
@@ -224,7 +224,7 @@ class CommentController extends AbstractController
     public function adminCommentAssignSafetyTeamAction(
         Request $request,
         #[MapEntity(mapping: ['to_member' => 'username'])] Member $toMember,
-        #[MapEntity(mapping: ['from_member' => 'username'])] Member $fromMember
+        #[MapEntity(mapping: ['from_member' => 'username'])] Member $fromMember,
     ): Response {
         if (!$this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)) {
             throw $this->createAccessDeniedException('You need to have either Comments right or be a member of the Safety Team to access this.');
@@ -248,7 +248,7 @@ class CommentController extends AbstractController
     public function adminCommentMarkChecked(
         Request $request,
         #[MapEntity(mapping: ['to_member' => 'username'])] Member $toMember,
-        #[MapEntity(mapping: ['from_member' => 'username'])] Member $fromMember
+        #[MapEntity(mapping: ['from_member' => 'username'])] Member $fromMember,
     ): Response {
         if (
             !$this->isGranted(Member::ROLE_ADMIN_COMMENTS)
@@ -275,7 +275,7 @@ class CommentController extends AbstractController
     public function adminCommentHide(
         Request $request,
         #[MapEntity(mapping: ['to_member' => 'username'])] Member $toMember,
-        #[MapEntity(mapping: ['from_member' => 'username'])] Member $fromMember
+        #[MapEntity(mapping: ['from_member' => 'username'])] Member $fromMember,
     ): Response {
         if (
             !$this->isGranted(Member::ROLE_ADMIN_COMMENTS)
@@ -302,7 +302,7 @@ class CommentController extends AbstractController
     public function adminCommentShow(
         Request $request,
         #[MapEntity(mapping: ['to_member' => 'username'])] Member $toMember,
-        #[MapEntity(mapping: ['from_member' => 'username'])] Member $fromMember
+        #[MapEntity(mapping: ['from_member' => 'username'])] Member $fromMember,
     ): Response {
         if (
             !$this->isGranted(Member::ROLE_ADMIN_COMMENTS)
@@ -326,8 +326,8 @@ class CommentController extends AbstractController
     }
 
     /**
-     *
      * @throws AccessDeniedException
+     *
      * @return Response
      */
     #[Route(path: '/admin/comment/for/{username}', name: 'admin_comments_for_member', priority: 10)]
@@ -357,8 +357,8 @@ class CommentController extends AbstractController
     }
 
     /**
-     *
      * @throws AccessDeniedException
+     *
      * @return Response
      */
     #[Route(path: '/admin/comment/from/{username}', name: 'admin_comments_from_member', priority: 10)]
@@ -464,7 +464,7 @@ class CommentController extends AbstractController
             'overview' => [
                 'key' => 'AdminComment',
                 'url' => $this->generateUrl('admin_comment_overview'),
-            ]
+            ],
         ];
     }
 }

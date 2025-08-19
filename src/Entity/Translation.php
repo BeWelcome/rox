@@ -3,11 +3,11 @@
 namespace App\Entity;
 
 use Carbon\Carbon;
-use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Translations.
+ *
  * @SuppressWarning(PHPMD)
  */
 #[ORM\Table(name: 'translations')]
@@ -31,10 +31,10 @@ class Translation
     private ?Member $translator;
 
     #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
-    private DateTime $created;
+    private \DateTime $created;
 
     #[ORM\Column(name: 'updated', type: 'datetime', nullable: true)]
-    private ?DateTime $updated = null;
+    private ?\DateTime $updated = null;
 
     #[ORM\Column(name: 'Type', type: 'string', nullable: false)]
     private string $type;
@@ -171,12 +171,12 @@ class Translation
     #[ORM\PrePersist]
     public function onPrePersist(): void
     {
-        $this->created = new DateTime('now');
+        $this->created = new \DateTime('now');
     }
 
     #[ORM\PreUpdate]
     public function onPreUpdate(): void
     {
-        $this->updated = new DateTime('now');
+        $this->updated = new \DateTime('now');
     }
 }

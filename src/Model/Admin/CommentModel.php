@@ -61,7 +61,6 @@ class CommentModel
     }
 
     /**
-     * @param $quality
      * @param int $page
      * @param int $limit
      *
@@ -76,7 +75,6 @@ class CommentModel
     }
 
     /**
-     * @param $action
      * @param int $page
      * @param int $limit
      *

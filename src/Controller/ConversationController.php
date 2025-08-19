@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Doctrine\MemberStatusType;
 use App\Doctrine\SpamInfoType;
-use App\Entity\HostingRequest;
 use App\Entity\Member;
 use App\Entity\Message;
 use App\Form\ReportSpamType;
@@ -30,30 +29,31 @@ class ConversationController extends AbstractController
 
     public function __construct(
         protected ConversationModel $conversationModel,
-        private EntityManagerInterface $entityManager
+        private EntityManagerInterface $entityManager,
     ) {
     }
 
     /**
-     * \todo Check if this flag is needed (and used))
+     * \todo Check if this flag is needed (and used)).
+     *
      * @SuppressWarnings("PHPMD.BooleanArgumentFlag")
      */
     #[Route(path: '/conversation/{id}', name: 'conversation_view', requirements: ['id' => '\d+'])]
-    #[IsGranted('CONVERSATION_VIEW', subject:"message")]
+    #[IsGranted('CONVERSATION_VIEW', subject: 'message')]
     public function viewConversation(Request $request, Message $message, bool $openReportModal = false): Response
     {
         return $this->viewThread($request, $message, false, $openReportModal);
     }
 
     #[Route(path: '/conversation/{id}/deleted', name: 'conversation_view_with_deleted', requirements: ['id' => '\d+'])]
-    #[IsGranted('CONVERSATION_VIEW', subject:"message")]
+    #[IsGranted('CONVERSATION_VIEW', subject: 'message')]
     public function viewConversationWithDeletedMessages(Request $request, Message $message): Response
     {
         return $this->viewThread($request, $message, true, false);
     }
 
     #[Route(path: '/conversation/{id}/reply', name: 'conversation_reply', requirements: ['id' => '\d+'])]
-    #[IsGranted('CONVERSATION_VIEW', subject:"message")]
+    #[IsGranted('CONVERSATION_VIEW', subject: 'message')]
     public function reply(Message $message): Response
     {
         // Always reply to the last item in the thread
@@ -89,7 +89,7 @@ class ConversationController extends AbstractController
     }
 
     #[Route(path: '/conversation/{id}/delete', name: 'conversation_delete', requirements: ['id' => '\d+'])]
-    #[IsGranted('CONVERSATION_VIEW', subject:"message")]
+    #[IsGranted('CONVERSATION_VIEW', subject: 'message')]
     public function deleteConversation(Message $message): Response
     {
         /** @var Member $member */
@@ -104,7 +104,7 @@ class ConversationController extends AbstractController
     }
 
     #[Route(path: '/conversation/{id}/purge', name: 'conversation_purge', requirements: ['id' => '\d+'])]
-    #[IsGranted('CONVERSATION_VIEW', subject:"message")]
+    #[IsGranted('CONVERSATION_VIEW', subject: 'message')]
     public function purgeConversation(Message $message): Response
     {
         /** @var Member $member */
@@ -119,7 +119,7 @@ class ConversationController extends AbstractController
     }
 
     #[Route(path: '/conversation/{id}/recover', name: 'conversation_recover', requirements: ['id' => '\d+'])]
-    #[IsGranted('CONVERSATION_VIEW', subject:"message")]
+    #[IsGranted('CONVERSATION_VIEW', subject: 'message')]
     public function recoverConversation(Message $message): Response
     {
         /** @var Member $member */
@@ -133,20 +133,6 @@ class ConversationController extends AbstractController
         return $this->redirectToRoute('conversation_view', ['id' => $message->getId()]);
     }
 
-    private function markAsSpam(Message $message, ?string $comment): Response
-    {
-        /** @var Member $member */
-        $member = $this->getUser();
-
-        $conversationThread = new ConversationThread($this->entityManager);
-        $conversation = $conversationThread->getThread($message);
-        $this->conversationModel->markConversationAsSpam($member, $conversation, $comment);
-
-        $this->addTranslatedFlash('notice', 'flash.marked.spam');
-
-        return $this->redirectToRoute('conversation_view', ['id' => $message->getId()]);
-    }
-
     #[Route(path: '/conversation/{id}/report', name: 'conversation_report_spam')]
     public function reportAsSpam(Request $request, Message $message): Response
     {
@@ -154,11 +140,11 @@ class ConversationController extends AbstractController
     }
 
     #[Route(path: '/conversation/{id}/decline', name: 'conversation_decline', requirements: ['id' => '\d+'])]
-    #[IsGranted('CONVERSATION_VIEW', subject:"message")]
+    #[IsGranted('CONVERSATION_VIEW', subject: 'message')]
     public function decline(Message $message): Response
     {
         if ($message->isMessage()) {
-            return $this->redirectToRoute('conversation_view', [ 'id' => $message->getId()]);
+            return $this->redirectToRoute('conversation_view', ['id' => $message->getId()]);
         }
 
         $controllerAndMethod = $this->getControllerAndMethod($message, 'decline');
@@ -178,6 +164,20 @@ class ConversationController extends AbstractController
         $this->conversationModel->unmarkConversationAsSpam($member, $conversation);
 
         $this->addTranslatedFlash('notice', 'flash.marked.nospam');
+
+        return $this->redirectToRoute('conversation_view', ['id' => $message->getId()]);
+    }
+
+    private function markAsSpam(Message $message, ?string $comment): Response
+    {
+        /** @var Member $member */
+        $member = $this->getUser();
+
+        $conversationThread = new ConversationThread($this->entityManager);
+        $conversation = $conversationThread->getThread($message);
+        $this->conversationModel->markConversationAsSpam($member, $conversation, $comment);
+
+        $this->addTranslatedFlash('notice', 'flash.marked.spam');
 
         return $this->redirectToRoute('conversation_view', ['id' => $message->getId()]);
     }
@@ -221,7 +221,7 @@ class ConversationController extends AbstractController
         Request $request,
         Message $message,
         bool $includeDeleted,
-        bool $openReportModal
+        bool $openReportModal,
     ): Response {
         $conversationThread = new ConversationThread($this->entityManager);
         $thread = $conversationThread->getThread($message);
@@ -248,6 +248,7 @@ class ConversationController extends AbstractController
         $reportForm->handleRequest($request);
         if ($reportForm->isSubmitted() && $reportForm->isValid()) {
             $data = $reportForm->getData();
+
             return $this->markAsSpam($message, $data['comment']);
         }
 
@@ -271,8 +272,8 @@ class ConversationController extends AbstractController
                 $nothingVisible = $nothingVisible && $threadMessage->isPurgedByMember($member);
             } else {
                 $nothingVisible = $nothingVisible && (
-                        $threadMessage->isPurgedByMember($member) || $threadMessage->isDeletedByMember($member)
-                    );
+                    $threadMessage->isPurgedByMember($member) || $threadMessage->isDeletedByMember($member)
+                );
             }
         }
 
@@ -284,7 +285,7 @@ class ConversationController extends AbstractController
         $spam = false;
         foreach ($thread as $threadMessage) {
             if ($threadMessage->getReceiver() === $member) {
-                $spam = $spam || (str_contains((string) $threadMessage->getSpamInfo(), SpamInfoType::MEMBER_SAYS_SPAM));
+                $spam = $spam || str_contains((string) $threadMessage->getSpamInfo(), SpamInfoType::MEMBER_SAYS_SPAM);
             }
         }
 

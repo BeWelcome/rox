@@ -13,9 +13,6 @@ use Symfony\Component\Security\Core\Exception\AccountStatusException;
 
 class AccountBannedException extends AccountStatusException
 {
-    /**
-     * {@inheritdoc}
-     */
     #[\Override]
     public function getMessageKey(): string
     {

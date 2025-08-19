@@ -51,12 +51,12 @@ class FeedbackFormType extends AbstractType
         $member = $options['member'];
         if (null === $member) {
             $builder->add('FeedbackEmail', TextType::class, [
-                    'label' => 'feedbackemail',
-                    'required' => false,
-                    'constraints' => [
-                        new Email(),
-                    ],
-                ])
+                'label' => 'feedbackemail',
+                'required' => false,
+                'constraints' => [
+                    new Email(),
+                ],
+            ])
                 ->add('captcha', CaptchaType::class)
             ;
         } else {

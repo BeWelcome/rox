@@ -20,7 +20,6 @@ use App\Utilities\ConversationThread;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
 use Doctrine\ORM\EntityManagerInterface;
-use Exception;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -43,7 +42,7 @@ class InvitationController extends BaseRequestAndInvitationController
         InvitationModel $invitationModel,
         EntityManagerInterface $entityManager,
         private Mailer $mailer,
-        private Logger $logger
+        private Logger $logger,
     ) {
         parent::__construct($invitationModel, $entityManager);
         $this->conversationModel = $conversationModel;
@@ -61,7 +60,7 @@ class InvitationController extends BaseRequestAndInvitationController
     public function newInvitation(
         Request $request,
         Subtrip $leg,
-        AllowContactCheck $allowContactCheck
+        AllowContactCheck $allowContactCheck,
     ): Response {
         /** @var Member $host */
         $host = $this->getUser();
@@ -104,7 +103,7 @@ class InvitationController extends BaseRequestAndInvitationController
                 'notice',
                 'contact.not.without.profile.picture',
                 [
-                'username' => $guest->getUsername(),
+                    'username' => $guest->getUsername(),
                 ]
             );
         }
@@ -170,9 +169,8 @@ class InvitationController extends BaseRequestAndInvitationController
         ]);
     }
 
-
     /**
-     * Deals with declines
+     * Deals with declines.
      */
     public function decline(Request $request, Message $message): Response
     {
@@ -218,7 +216,7 @@ class InvitationController extends BaseRequestAndInvitationController
         Request $request,
         Message $invitation,
         Member $guest,
-        Member $host
+        Member $host,
     ): Response {
         if (
             $this->model->hasExpired($invitation)
@@ -362,8 +360,8 @@ class InvitationController extends BaseRequestAndInvitationController
     {
         $this->addTranslatedFlash('notice', 'flash.invitation.expired', [
             '%link_start%' => '<a href="' . $this->generateUrl('message_new', [
-                    'username' => $receiver->getUsername(),
-                ]) . '" class="text-primary">',
+                'username' => $receiver->getUsername(),
+            ]) . '" class="text-primary">',
             '%link_end%' => '</a>',
         ]);
     }
@@ -372,7 +370,7 @@ class InvitationController extends BaseRequestAndInvitationController
         Form $requestForm,
         Message $currentRequest,
         Member $sender,
-        Member $receiver
+        Member $receiver,
     ): Message {
         $data = $requestForm->getData();
 
@@ -390,7 +388,7 @@ class InvitationController extends BaseRequestAndInvitationController
         Message $request,
         string $subject,
         bool $requestChanged,
-        SubTrip $leg
+        Subtrip $leg,
     ): void {
         $this->sendInvitationNotification(
             $guest,
@@ -410,7 +408,7 @@ class InvitationController extends BaseRequestAndInvitationController
         Message $request,
         string $subject,
         bool $requestChanged,
-        SubTrip $leg
+        Subtrip $leg,
     ): void {
         $this->sendInvitationNotification(
             $host,
@@ -429,7 +427,7 @@ class InvitationController extends BaseRequestAndInvitationController
         Member $guest,
         Message $request,
         string $subject,
-        SubTrip $leg
+        Subtrip $leg,
     ): void {
         $this->sendInvitationNotification(
             $guest,
@@ -445,8 +443,6 @@ class InvitationController extends BaseRequestAndInvitationController
 
     /**
      * @SuppressWarnings("PHPMD.BooleanArgumentFlag")
-     *
-     * @param mixed $subject
      */
     private function sendInvitationNotification(
         Member $sender,
@@ -456,7 +452,7 @@ class InvitationController extends BaseRequestAndInvitationController
         $subject,
         string $template,
         bool $requestChanged,
-        ?Subtrip $leg
+        ?Subtrip $leg,
     ): bool {
         // Send mail notification
         $this->mailer->sendMessageNotificationEmail($sender, $receiver, $template, [
@@ -474,13 +470,13 @@ class InvitationController extends BaseRequestAndInvitationController
     private function handleAcceptOfInvitation(
         ?Subtrip $leg,
         Member $host,
-        Message $finalInvitation
+        Message $finalInvitation,
     ): void {
         $leg->setInvitedBy($host);
         $this->entityManager->persist($leg);
         if (
-            $leg->getArrival()->format('Y-m-d') != $finalInvitation->getRequest()->getArrival()->format('Y-m-d') ||
-            $leg->getDeparture()->format('Y-m-d') != $finalInvitation->getRequest()->getDeparture()->format('Y-m-d')
+            $leg->getArrival()->format('Y-m-d') !== $finalInvitation->getRequest()->getArrival()->format('Y-m-d')
+            || $leg->getDeparture()->format('Y-m-d') !== $finalInvitation->getRequest()->getDeparture()->format('Y-m-d')
         ) {
             $this->addTranslatedFlash('notice', 'trip.incomplete.leg', [
                 'location' => $leg->getLocation()->getFullname(),

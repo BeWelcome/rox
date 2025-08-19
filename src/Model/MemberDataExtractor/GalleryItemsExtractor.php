@@ -14,20 +14,17 @@ final class GalleryItemsExtractor extends AbstractExtractor implements Extractor
         EntrypointLookupInterface $entrypointLookup,
         Environment $environment,
         ManagerRegistry $registry,
-        private readonly string $projectDir
+        private readonly string $projectDir,
     ) {
         parent::__construct($entrypointLookup, $environment, $registry);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function extract(Member $member, string $tempDir): string
     {
         $memberId = $member->getId();
 
         $filesystem = new Filesystem();
-        $galleryPath = sprintf('%s/data/gallery/member%s/', $this->projectDir, $memberId);
+        $galleryPath = \sprintf('%s/data/gallery/member%s/', $this->projectDir, $memberId);
 
         $hrefs = [];
         if (is_dir($galleryPath)) {

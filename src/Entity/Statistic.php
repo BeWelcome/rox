@@ -3,12 +3,10 @@
 namespace App\Entity;
 
 use Carbon\Carbon;
-use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Stats.
- *
  *
  * @SuppressWarnings("PHPMD")
  * Auto generated class do not check mess
@@ -19,7 +17,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Statistic
 {
     /**
-     * @var DateTime
+     * @var \DateTime
      */
     #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
     private $created;
@@ -95,7 +93,7 @@ class Statistic
     /**
      * Set created.
      *
-     * @param DateTime $created
+     * @param \DateTime $created
      *
      * @return Statistic
      */
@@ -232,7 +230,6 @@ class Statistic
         return $this->legsCreated;
     }
 
-
     /**
      * @param int $invitationsSent
      *
@@ -253,7 +250,6 @@ class Statistic
         return $this->invitationsSent;
     }
 
-
     /**
      * @param int $invitationsAccepted
      *
@@ -273,7 +269,6 @@ class Statistic
     {
         return $this->invitationsAccepted;
     }
-
 
     /**
      * Set number of requests which have been accepted.

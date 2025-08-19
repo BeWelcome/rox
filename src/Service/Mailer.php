@@ -8,9 +8,7 @@ use App\Entity\Member;
 use App\Entity\Newsletter;
 use App\Entity\Relation;
 use App\Logger\Logger;
-use Doctrine\Common\Proxy\Proxy;
 use Doctrine\ORM\EntityManagerInterface;
-use InvalidArgumentException;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
@@ -134,7 +132,7 @@ class Mailer
     public function sendFeedbackEmail($sender, Address $receiver, $parameters): bool
     {
         $parameters['subject'] = "Your feedback in '"
-            . str_replace('_', ' ', ($parameters['IdCategory'])->getName()) . "'";
+            . str_replace('_', ' ', $parameters['IdCategory']->getName()) . "'";
 
         return $this->sendTemplateEmail(
             $sender,
@@ -233,7 +231,7 @@ class Mailer
             [
                 'subject' => 'profile.delete.feedback',
                 'member' => $retiree,
-                'body' => $body
+                'body' => $body,
             ]
         );
     }
@@ -264,8 +262,6 @@ class Mailer
     /**
      * Used for all notifications except messages and requests notifications to allow recipients to distinguish between
      * those notifications.
-     *
-     * @param mixed $email
      */
     private function getBeWelcomeAddress(Member $sender, $email): Address
     {
@@ -275,10 +271,7 @@ class Mailer
     /**
      * @param Member|Address|string $sender
      * @param Member|Address        $receiver
-     * @param string                $template
      * @param mixed                 $parameters
-     *
-     * @return bool
      */
     private function sendTemplateEmail($sender, $receiver, string $template, array $parameters): bool
     {
@@ -291,8 +284,8 @@ class Mailer
             $parameters['receiver'] = $receiver;
             $receiver = new Address($receiver->getEmail(), $receiver->getUsername());
         } elseif (!$receiver instanceof Address) {
-            $message = sprintf('$receiver must be an instance of %s or %s.', Member::class, Address::class);
-            throw new InvalidArgumentException($message);
+            $message = \sprintf('$receiver must be an instance of %s or %s.', Member::class, Address::class);
+            throw new \InvalidArgumentException($message);
         }
 
         $parameters['template'] = $template;
@@ -384,7 +377,7 @@ class Mailer
             UrlGeneratorInterface::ABSOLUTE_URL
         );
 
-        return sprintf('<a href="%s">', $url);
+        return \sprintf('<a href="%s">', $url);
     }
 
     private function getProfileATag(Member $member): string
@@ -395,7 +388,7 @@ class Mailer
             UrlGeneratorInterface::ABSOLUTE_URL
         );
 
-        return sprintf('<a href="%s">', $url);
+        return \sprintf('<a href="%s">', $url);
     }
 
     private function getReportProfileATag(Member $member): string
@@ -406,7 +399,7 @@ class Mailer
             UrlGeneratorInterface::ABSOLUTE_URL
         );
 
-        return sprintf('<a href="%s">', $url);
+        return \sprintf('<a href="%s">', $url);
     }
 
     private function getParametersForCommentReminder(Member $guest, Member $host, string $subject, Member $for): array

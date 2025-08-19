@@ -3,11 +3,10 @@
 namespace App\Entity;
 
 use App\Doctrine\ActionToWatchType;
-use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Do not check entities with PHPMD
+ * Do not check entities with PHPMD.
  *
  * @SuppressWarnings("PHPMD")
  */
@@ -24,7 +23,7 @@ class MemberThreadSubscription
     private $subscriber;
 
     /**
-     * @var DateTime
+     * @var \DateTime
      */
     #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
     private $subscribed;
@@ -178,6 +177,7 @@ class MemberThreadSubscription
      * @return bool
      *
      * This triggered by the column name (NotificationsEnabled)
+     *
      * @SuppressWarnings("PHPMD.BooleanGetMethodName")
      */
     public function getNotificationsEnabled()
@@ -190,12 +190,12 @@ class MemberThreadSubscription
         return $this->id;
     }
 
-    public function getSubscribed(): DateTime
+    public function getSubscribed(): \DateTime
     {
         return $this->subscribed;
     }
 
-    public function setSubscribed(DateTime $subscribed): void
+    public function setSubscribed(\DateTime $subscribed): void
     {
         $this->subscribed = $subscribed;
     }

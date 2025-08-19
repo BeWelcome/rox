@@ -11,9 +11,7 @@ use App\Entity\Message;
 use App\Repository\MessageRepository;
 use App\Service\Mailer;
 use App\Utilities\ConversationThread;
-use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
-use Exception;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ConversationModel
@@ -124,10 +122,6 @@ class ConversationModel
 
     /**
      * Tests if a member has exceeded their limit for sending messages.
-     *
-     * @param mixed $member
-     * @param mixed $perHour
-     * @param mixed $perDay
      */
     public function hasMessageLimitExceeded($member, $perHour, $perDay)
     {
@@ -186,10 +180,6 @@ class ConversationModel
 
     /**
      * Tests if a member has exceeded their limit for sending requests.
-     *
-     * @param mixed $member
-     * @param mixed $perHour
-     * @param mixed $perDay
      */
     public function hasRequestLimitExceeded($member, $perHour, $perDay): bool
     {
@@ -275,7 +265,7 @@ class ConversationModel
             if ($member === $item->getReceiver() && null === $item->getFirstRead()) {
                 // Only mark as read if it is a message and when the receiver reads the message,
                 // not when the message is presented to the Sender with url /messages/{id}/sent
-                $item->setFirstRead(new DateTime());
+                $item->setFirstRead(new \DateTime());
                 $em->persist($item);
             }
         }
@@ -287,7 +277,7 @@ class ConversationModel
         $messageText = $message->getMessage();
         $found = preg_match("/@|\.at\.|-at-|\(at\)/i", $messageText);
 
-        if ($found != 0) {
+        if (0 !== $found) {
             $message->setSpamInfo(SpamInfoType::SPAM_BLOCKED_WORD);
             $message->setFolder(InFolderType::SPAM);
             $message->setStatus(MessageStatusType::CHECK);
@@ -309,7 +299,7 @@ class ConversationModel
 
             $result = $statement->executeQuery();
             $row = $result->fetchAssociative();
-        } catch (Exception) {
+        } catch (\Exception) {
             return false;
         }
 

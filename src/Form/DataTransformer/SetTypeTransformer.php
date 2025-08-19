@@ -2,7 +2,6 @@
 
 namespace App\Form\DataTransformer;
 
-use DateTime;
 use Symfony\Component\Form\DataTransformerInterface;
 
 class SetTypeTransformer implements DataTransformerInterface

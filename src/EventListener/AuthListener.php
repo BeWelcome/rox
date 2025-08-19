@@ -6,7 +6,6 @@ use App\Doctrine\MemberStatusType;
 use App\Entity\Member;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Listens for interactive login to set the member status to active in case the login was done from an OutOfRemind or

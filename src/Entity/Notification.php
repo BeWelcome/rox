@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @codingStandardsIgnoreFile
  *
@@ -8,11 +9,10 @@
 namespace App\Entity;
 
 use Carbon\Carbon;
-use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Do not check entities with PHPMD
+ * Do not check entities with PHPMD.
  *
  * @SuppressWarnings("PHPMD")
  */
@@ -66,7 +66,7 @@ class Notification
     private $sendmail = '0';
 
     /**
-     * @var DateTime
+     * @var \DateTime
      */
     #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
     private $created;
@@ -252,7 +252,7 @@ class Notification
     /**
      * Set created.
      *
-     * @param DateTime $created
+     * @param \DateTime $created
      *
      * @return Notification
      */
@@ -331,7 +331,7 @@ class Notification
     #[ORM\PrePersist]
     public function onPrePersist()
     {
-        $this->created = new DateTime('now');
+        $this->created = new \DateTime('now');
     }
 
     public function getTranslationParams(): ?string

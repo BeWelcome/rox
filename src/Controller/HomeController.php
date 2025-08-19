@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Form\LoginFormType;
 use App\Form\MapSearchFormType;
 use App\Model\StatisticsModel;
-use RoxPostHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
@@ -44,7 +43,7 @@ class HomeController extends AbstractController
             ->getForm();
 
         $statistics = $statisticsModel->getStatisticsHomepage();
-        $roxPostHandler = new RoxPostHandler();
+        $roxPostHandler = new \RoxPostHandler();
         $roxPostHandler->setClasses([
             'SignupController',
         ]);
@@ -82,13 +81,13 @@ class HomeController extends AbstractController
         $picked = [];
         $pickedCount = 0;
         $imagesRandom = [];
-        while ($pickedCount <> 3) {
+        while (3 !== $pickedCount) {
             $pick = random_int(1, 3);
-            if (!in_array($pick, $picked)) {
+            if (!\in_array($pick, $picked, true)) {
                 $picked[] = $pick;
-                $imagesRandom[count($picked)] = $images[$pick];
+                $imagesRandom[\count($picked)] = $images[$pick];
             }
-            $pickedCount = count($picked);
+            $pickedCount = \count($picked);
         }
 
         return $imagesRandom;

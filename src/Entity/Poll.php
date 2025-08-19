@@ -3,14 +3,12 @@
 namespace App\Entity;
 
 use Carbon\Carbon;
-use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Event\PostLoadEventArgs;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Persistence\Mapping\ClassMetadata;
 
 /**
- * Do not check entities with PHPMD
+ * Do not check entities with PHPMD.
  *
  * @SuppressWarnings("PHPMD")
  */
@@ -46,25 +44,25 @@ class Poll
     private $type = 'MemberPoll';
 
     /**
-     * @var DateTime
+     * @var \DateTime
      */
     #[ORM\Column(name: 'updated', type: 'datetime', nullable: false)]
     private $updated;
 
     /**
-     * @var DateTime
+     * @var \DateTime
      */
     #[ORM\Column(name: 'Started', type: 'datetime', nullable: false)]
     private $started;
 
     /**
-     * @var DateTime
+     * @var \DateTime
      */
     #[ORM\Column(name: 'Ended', type: 'datetime', nullable: false)]
     private $ended;
 
     /**
-     * @var DateTime
+     * @var \DateTime
      */
     #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
     private $created;
@@ -299,7 +297,7 @@ class Poll
     /**
      * Set updated.
      *
-     * @param DateTime $updated
+     * @param \DateTime $updated
      *
      * @return Poll
      */
@@ -323,7 +321,7 @@ class Poll
     /**
      * Set started.
      *
-     * @param DateTime $started
+     * @param \DateTime $started
      *
      * @return Poll
      */
@@ -347,7 +345,7 @@ class Poll
     /**
      * Set ended.
      *
-     * @param DateTime $ended
+     * @param \DateTime $ended
      *
      * @return Poll
      */
@@ -371,7 +369,7 @@ class Poll
     /**
      * Set created.
      *
-     * @param DateTime $created
+     * @param \DateTime $created
      *
      * @return Poll
      */
@@ -744,8 +742,8 @@ class Poll
     #[ORM\PrePersist]
     public function onPrePersist()
     {
-        $this->created = new DateTime('now');
-        $this->updated = new DateTime('now');
+        $this->created = new \DateTime('now');
+        $this->updated = new \DateTime('now');
     }
 
     /**
@@ -754,7 +752,7 @@ class Poll
     #[ORM\PreUpdate]
     public function onPreUpdate()
     {
-        $this->updated = new DateTime('now');
+        $this->updated = new \DateTime('now');
     }
 
     /**

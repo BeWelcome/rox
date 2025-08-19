@@ -15,9 +15,6 @@ use Pagerfanta\View\TwitterBootstrapView;
  */
 class TwitterBootstrap4TranslatedView extends TwitterBootstrapView
 {
-    /**
-     * {@inheritdoc}
-     */
     #[\Override]
     public function getName(): string
     {

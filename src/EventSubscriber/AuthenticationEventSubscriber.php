@@ -5,27 +5,13 @@ namespace App\EventSubscriber;
 use App\Doctrine\MemberStatusType;
 use App\Entity\Member;
 use Carbon\Carbon;
-use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use Symfony\Component\PasswordHasher\PasswordHasherInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
-use Symfony\Component\Security\Core\Event\AuthenticationSuccessEvent;
-use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
-use Symfony\Component\Security\Http\Authenticator\Passport\Badge\PasswordUpgradeBadge;
-use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
-use Symfony\Component\Security\Http\Authenticator\Passport\UserPassportInterface;
-use Symfony\Component\Security\Http\Event\CheckPassportEvent;
-use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
-use Symfony\Component\Security\Http\Event\LoginSuccessEvent;
-use Symfony\Component\Security\Http\SecurityEvents;
 
 class AuthenticationEventSubscriber implements EventSubscriberInterface
 {
@@ -63,7 +49,7 @@ class AuthenticationEventSubscriber implements EventSubscriberInterface
             $lastLogin = $member->getLastLogin();
             $diff = (new Carbon())->diffInMinutes($lastLogin);
             if (null === $lastLogin || $diff > 5) {
-                $member->setLastLogin(new DateTime());
+                $member->setLastLogin(new \DateTime());
 
                 $status = $member->getStatus();
                 if (MemberStatusType::OUT_OF_REMIND === $status) {
@@ -95,12 +81,12 @@ class AuthenticationEventSubscriber implements EventSubscriberInterface
         /** @var Member $member */
         $token = $this->tokenStorage->getToken();
 
-        if ($token === null) {
+        if (null === $token) {
             return;
         }
 
         $member = $token->getUser();
-        if ($member->isBrowsable() === false) {
+        if (false === $member->isBrowsable()) {
             $this->tokenStorage->setToken(null); // Force logout
             $event->getRequest()->getSession()->invalidate();
         }

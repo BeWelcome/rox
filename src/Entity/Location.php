@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @codingStandardsIgnoreFile
  *
@@ -9,11 +10,10 @@ namespace App\Entity;
 
 use App\Repository\LocationRepository;
 use Carbon\Carbon;
-use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Do not check entities with PHPMD
+ * Do not check entities with PHPMD.
  *
  * @SuppressWarnings("PHPMD")
  */
@@ -54,7 +54,7 @@ class Location
     private int $population = 0;
 
     #[ORM\Column(name: 'moddate', type: 'date', nullable: true)]
-    private ?DateTime $moddate;
+    private ?\DateTime $moddate;
 
     #[ORM\Column(name: 'geonameId', type: 'integer')]
     #[ORM\Id]
@@ -156,7 +156,7 @@ class Location
         return $this->population;
     }
 
-    public function setModdate(DateTime $moddate): self
+    public function setModdate(\DateTime $moddate): self
     {
         $this->moddate = $moddate;
 

@@ -2,10 +2,7 @@
 
 namespace App\Repository;
 
-use App\Doctrine\CommentAdminActionType;
-use App\Doctrine\MemberStatusType;
 use App\Entity\Member;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Pagerfanta\Doctrine\ORM\QueryAdapter;
@@ -19,10 +16,10 @@ class ForumPostRepository extends EntityRepository
             ->select('count(fp.id)')
             ->getQuery()
             ->getSingleScalarResult()
-            ;
+        ;
     }
 
-    public function getForumPostsByMember(Member $member, string $search, int $page, int $itemsPerPage): PagerFanta
+    public function getForumPostsByMember(Member $member, string $search, int $page, int $itemsPerPage): Pagerfanta
     {
         $queryBuilder = $this->getForumPostsByMemberQueryBuilder($member);
         if (!empty($search)) {

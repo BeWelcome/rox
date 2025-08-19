@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @codingStandardsIgnoreFile
  *
@@ -11,7 +12,7 @@ use App\Repository\AlternateLocationRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Do not check entities with PHPMD
+ * Do not check entities with PHPMD.
  *
  * @SuppressWarnings("PHPMD")
  */
@@ -233,8 +234,6 @@ class AlternateLocation
 
     /**
      * Set geonameId.
-     *
-     * @param Location $geonameId
      *
      * @return AlternateLocation
      */

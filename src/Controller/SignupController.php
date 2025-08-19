@@ -5,34 +5,25 @@ namespace App\Controller;
 use App\Doctrine\AccommodationType;
 use App\Doctrine\MemberStatusType;
 use App\Entity\Member;
-use App\Entity\MemberPreference;
-use App\Entity\Preference;
 use App\Form\SignupFormFinalizeType;
 use App\Form\SignupFormType;
 use App\Model\SignupModel;
-use App\Repository\MemberRepository;
 use App\Service\Mailer;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Mapping\Entity;
-use Exception;
-use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Security\Http\SecurityRequestAttributes;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SignupController extends AbstractController
 {
-    use TranslatorTrait;
     use TranslatedFlashTrait;
+    use TranslatorTrait;
 
     public function __construct(private EntityManagerInterface $entityManager)
     {
@@ -42,11 +33,11 @@ class SignupController extends AbstractController
     public function signup(
         Request $request,
         SignupModel $signupModel,
-        array $locales
+        array $locales,
     ): Response {
         $signupFormData = [];
-        if ($request->isMethod("POST")) {
-            $signupFormData['username'] = $request->get("username");
+        if ($request->isMethod('POST')) {
+            $signupFormData['username'] = $request->get('username');
         }
 
         $loggedInMember = $this->getUser();
@@ -87,7 +78,7 @@ class SignupController extends AbstractController
     public function signupFinalize(
         Request $request,
         Member $member,
-        SignupModel $signupModel
+        SignupModel $signupModel,
     ): Response {
         /** @var Member $loggedInMember */
         $loggedInMember = $this->getUser();
@@ -97,9 +88,9 @@ class SignupController extends AbstractController
         }
 
         if (
-            !in_array(
+            !\in_array(
                 $member->getStatus(),
-                [MemberStatusType::AWAITING_MAIL_CONFIRMATION, MemberStatusType::MAIL_CONFIRMED]
+                [MemberStatusType::AWAITING_MAIL_CONFIRMATION, MemberStatusType::MAIL_CONFIRMED], true
             )
         ) {
             $this->addTranslatedFlash('notice', 'signup.activate.revisit');
@@ -113,7 +104,7 @@ class SignupController extends AbstractController
         if ($finalizeForm->isSubmitted() && $finalizeForm->isValid()) {
             if (
                 AccommodationType::YES === $finalizeForm->get('accommodation')->getData()
-                && "0" === $finalizeForm->get('hosting_interest')->getData()
+                && '0' === $finalizeForm->get('hosting_interest')->getData()
             ) {
                 $finalizeForm
                     ->get('hosting_interest')
@@ -122,6 +113,7 @@ class SignupController extends AbstractController
             } else {
                 $signupModel->updateMember($member, $finalizeForm->getData());
                 $request->getSession()->set(SecurityRequestAttributes::LAST_USERNAME, $member->getUsername());
+
                 return $this->redirectToRoute('editmyprofile');
             }
         }
@@ -151,7 +143,7 @@ class SignupController extends AbstractController
             /** @var Member $member */
             $member = $memberRepository->findOneBy(['username' => $username]);
             if (!$member) {
-                throw new Exception('No member found in database. Terminating.');
+                throw new \Exception('No member found in database. Terminating.');
             }
 
             $member->setRegistrationKey($key);
@@ -188,7 +180,7 @@ class SignupController extends AbstractController
         Member $member,
         AuthenticationUtils $helper,
         Mailer $mailer,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
     ): Response {
         $username = $member->getUsername();
         if ($helper->getLastUsername() !== $username) {

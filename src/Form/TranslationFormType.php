@@ -20,10 +20,10 @@ class TranslationFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('description', TextAreaType::class, [
+            ->add('description', TextareaType::class, [
                 'label' => 'translation.description',
             ])
-            ->add('englishText', TextAreaType::class, [
+            ->add('englishText', TextareaType::class, [
                 'label' => 'label.admin.translation.englishtext',
             ])
         ;
@@ -35,25 +35,25 @@ class TranslationFormType extends AbstractType
                     'attr' => [
                         'readonly' => true,
                     ],
-                        'label' => 'translation.locale',
-                    ])
-                    ->add('translatedText', TextAreaType::class, [
+                    'label' => 'translation.locale',
+                ])
+                    ->add('translatedText', TextareaType::class, [
                         'required' => false,
                     ])
                 ;
             }
             if (null === $translationRequest->wordCode) {
                 $form->add('wordCode', TextType::class, [
-                        'label' => 'translation.wordcode',
-                    ])
+                    'label' => 'translation.wordcode',
+                ])
                 ;
             } else {
                 $form->add('wordCode', TextType::class, [
-                        'attr' => [
-                            'readonly' => true,
-                        ],
-                        'label' => 'translation.wordcode',
-                    ])
+                    'attr' => [
+                        'readonly' => true,
+                    ],
+                    'label' => 'translation.wordcode',
+                ])
                 ;
             }
             if (null === $translationRequest->domain || 'en' === $translationRequest->locale) {

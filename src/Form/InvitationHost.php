@@ -11,9 +11,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class InvitationHost extends HostingRequestAbstractType
 {
-    /**
-     * {@inheritdoc}
-     */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
@@ -28,9 +25,6 @@ class InvitationHost extends HostingRequestAbstractType
         });
     }
 
-    /**
-     * {@inheritdoc}
-     */
     #[\Override]
     public function configureOptions(OptionsResolver $resolver): void
     {
@@ -41,9 +35,6 @@ class InvitationHost extends HostingRequestAbstractType
         ;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     #[\Override]
     public function getBlockPrefix(): string
     {

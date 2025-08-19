@@ -8,9 +8,6 @@ use App\Repository\MessageRepository;
 
 final class InvitationsExtractor extends MessagesExtractor
 {
-    /**
-     * {@inheritdoc}
-     */
     #[\Override]
     public function extract(Member $member, string $tempDir): string
     {

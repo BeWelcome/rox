@@ -16,9 +16,7 @@ use App\Logger\Logger;
 use App\Model\FeedbackModel;
 use App\Repository\MemberRepository;
 use App\Repository\MessageRepository;
-use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
-use Exception;
 use Pagerfanta\Doctrine\ORM\QueryAdapter;
 use Pagerfanta\Pagerfanta;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -71,7 +69,7 @@ class VolunteerToolController extends AbstractController
         Request $request,
         EntityManagerInterface $entityManager,
         TranslatorInterface $translator,
-        Logger $logger
+        Logger $logger,
     ): Response {
         // check permissions
         $subMenuItems = $this->checkPermissions($request, self::CHANGE_USERNAME);
@@ -137,7 +135,7 @@ class VolunteerToolController extends AbstractController
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     #[Route(path: '/admin/tools/findmember', name: 'admin_tools_find_user')]
     public function findUser(Request $request, EntityManagerInterface $entityManager, Logger $logger): Response
@@ -210,7 +208,7 @@ class VolunteerToolController extends AbstractController
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     #[Route(path: '/admin/tools/topspammer', name: 'admin_tools_top_spammer')]
     public function showTopSpammer(Request $request, EntityManagerInterface $entityManager): Response
@@ -330,7 +328,6 @@ ORDER BY count(msg.id) DESC')->fetchAllAssociative();
         );
     }
 
-
     #[Route(path: '/admin/tools/requests/sent', name: 'admin_tools_requests_sent')]
     public function showRequestsLastTwoWeeks(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -420,12 +417,12 @@ ORDER BY count(msg.id) DESC')->fetchAllAssociative();
                 $result = $results[$username];
                 $result['type'] |= $type;
                 if ($sender !== $member) {
-                    $result['direction'] = $result['direction'] | 1;
+                    $result['direction'] |= 1;
                     if ($message->getCreated() > $result['last_received']) {
                         $result['last_received'] = $message->getCreated();
                     }
                 } else {
-                    $result['direction'] = $result['direction'] | 2;
+                    $result['direction'] |= 2;
                     if ($message->getCreated() > $result['last_sent']) {
                         $result['last_sent'] = $message->getCreated();
                     }
@@ -568,16 +565,13 @@ ORDER BY count(msg.id) DESC')->fetchAllAssociative();
             return $this->redirectToRoute('homepage');
         }
 
-        $loginMessage->setExpires(new DateTime());
+        $loginMessage->setExpires(new \DateTime());
         $entityManager->persist($loginMessage);
         $entityManager->flush();
 
         return $this->redirectToRoute('admin_tools_login_messages_show');
     }
 
-    /**
-     * @return array
-     */
     private function getSubMenuItems(): array
     {
         $subMenu = [];
@@ -667,10 +661,6 @@ ORDER BY count(msg.id) DESC')->fetchAllAssociative();
     }
 
     /**
-     *
-     * @param Request     $request
-     * @param string|null $tool
-     *
      * @return RedirectResponse|array
      */
     private function checkPermissions(Request $request, ?string $tool = null)

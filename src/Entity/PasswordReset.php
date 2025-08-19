@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @codingStandardsIgnoreFile
  *
@@ -8,11 +9,10 @@
 namespace App\Entity;
 
 use Carbon\Carbon;
-use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Do not check entities with PHPMD
+ * Do not check entities with PHPMD.
  *
  * @SuppressWarnings("PHPMD")
  */
@@ -25,7 +25,7 @@ class PasswordReset
     private Member $member;
 
     #[ORM\Column(name: 'generated', type: 'datetime', nullable: false)]
-    private DateTime $generated;
+    private \DateTime $generated;
 
     #[ORM\Column(name: 'token', type: 'string', length: 64, nullable: false)]
     private string $token;
@@ -72,6 +72,6 @@ class PasswordReset
     #[ORM\PrePersist]
     public function onPrePersist(): void
     {
-        $this->generated = new DateTime('now');
+        $this->generated = new \DateTime('now');
     }
 }

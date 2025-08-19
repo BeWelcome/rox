@@ -28,7 +28,7 @@ class RelationType extends AbstractType
     {
         $resolver
             ->setDefaults([
-                'data_class' => Relation::class
+                'data_class' => Relation::class,
             ])
         ;
     }

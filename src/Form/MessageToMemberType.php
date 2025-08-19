@@ -12,9 +12,6 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 
 class MessageToMemberType extends AbstractType
 {
-    /**
-     * {@inheritdoc}
-     */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
@@ -43,19 +40,13 @@ class MessageToMemberType extends AbstractType
         });
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => \App\Entity\Message::class,
+            'data_class' => Message::class,
         ]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     #[\Override]
     public function getBlockPrefix(): string
     {

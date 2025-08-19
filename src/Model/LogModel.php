@@ -14,7 +14,6 @@ class LogModel
     /**
      * Returns a Pagerfanta object that contains the currently selected logs.
      *
-     * @param $member
      * @param int $page
      * @param int $limit
      *

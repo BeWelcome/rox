@@ -4,21 +4,16 @@ namespace App\Command;
 
 use App\Entity\Comment;
 use App\Entity\Member;
-use App\Logger\Logger;
 use App\Service\Mailer;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\ResultSetMapping;
-use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 #[AsCommand(
     name: 'comments:send:reminder',
@@ -33,7 +28,7 @@ class SendCommentReminderCommand extends Command
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly LoggerInterface $logger,
-        private readonly Mailer $mailer
+        private readonly Mailer $mailer,
     ) {
         parent::__construct();
     }
@@ -78,10 +73,11 @@ class SendCommentReminderCommand extends Command
 
     private function sendFirstGuestReminders(): int
     {
-        $start  = '2 00:00:00';
+        $start = '2 00:00:00';
         $end = '1 00:00:00';
 
         $mailer = $this->mailer;
+
         return $this->sendGuestReminders(
             $start,
             $end,
@@ -98,6 +94,7 @@ class SendCommentReminderCommand extends Command
         $end = '14 00:00:00';
 
         $mailer = $this->mailer;
+
         return $this->sendGuestReminders(
             $start,
             $end,
@@ -120,6 +117,7 @@ class SendCommentReminderCommand extends Command
 
         return Command::SUCCESS;
     }
+
     private function sendHostReminders(): int
     {
         $start = '22 00:00:00';
@@ -148,12 +146,12 @@ class SendCommentReminderCommand extends Command
         foreach ($guestsAndHosts as $guestAndHost) {
             $commentGuestHost = $commentRepository->findOneBy([
                 'fromMember' => $guestAndHost['guest'],
-                'toMember' => $guestAndHost['host']
+                'toMember' => $guestAndHost['host'],
             ]);
 
             $commentHostGuest = $commentRepository->findOneBy([
                 'fromMember' => $guestAndHost['host'],
-                'toMember' => $guestAndHost['guest']
+                'toMember' => $guestAndHost['guest'],
             ]);
 
             if (null === $commentGuestHost && null === $commentHostGuest) {
@@ -164,7 +162,7 @@ class SendCommentReminderCommand extends Command
                 // send reminder
                 $method($guest, $host);
 
-                $sendReminders++;
+                ++$sendReminders;
             }
         }
 

@@ -5,7 +5,6 @@ namespace App\Model\MockupProvider;
 use App\Doctrine\CommentQualityType;
 use App\Entity\Comment;
 use App\Entity\Member;
-use Mockery;
 
 class CommentMockups implements MockupProviderInterface
 {
@@ -74,13 +73,13 @@ class CommentMockups implements MockupProviderInterface
 
     public function getMockupVariables(array $parameters): array
     {
-        $receiver = Mockery::mock(Member::class, [
+        $receiver = \Mockery::mock(Member::class, [
             'getUsername' => 'Receiver',
         ]);
-        $sender = Mockery::mock(Member::class, [
+        $sender = \Mockery::mock(Member::class, [
             'getUsername' => 'Sender',
         ]);
-        $mockComment = Mockery::mock(Comment::class, [
+        $mockComment = \Mockery::mock(Comment::class, [
             'getQuality' => $parameters['quality'] ?? CommentQualityType::NEUTRAL,
             'getTextWhere' => 'Somewhere over the rainbow',
             'getTextFree' => 'A comment.',

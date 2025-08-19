@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @codingStandardsIgnoreFile
  *
@@ -7,14 +8,13 @@
 
 namespace App\Entity;
 
-use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\Translatable\Translatable;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * Do not check entities with PHPMD
+ * Do not check entities with PHPMD.
  *
  * @SuppressWarnings("PHPMD")
  */
@@ -41,7 +41,6 @@ class NewLocation implements Translatable
      * @var string
      *
      * @Gedmo\Translatable
-     *
      */
     #[ORM\Column(name: 'name', type: 'string', length: 200, nullable: true)]
     #[Groups(['Member:Read'])]
@@ -56,8 +55,6 @@ class NewLocation implements Translatable
 
     /**
      * @var float
-     *
-     *
      */
     #[ORM\Column(name: 'latitude', type: 'decimal', precision: 10, scale: 7, nullable: true)]
     #[Groups(['Member:Read'])]
@@ -65,8 +62,6 @@ class NewLocation implements Translatable
 
     /**
      * @var float
-     *
-     *
      */
     #[ORM\Column(name: 'longitude', type: 'decimal', precision: 10, scale: 7, nullable: true)]
     #[Groups(['Member:Read'])]
@@ -86,8 +81,6 @@ class NewLocation implements Translatable
 
     /**
      * @var string
-     *
-     *
      */
     #[ORM\Column(name: 'country_id', type: 'string', nullable: true)]
     #[Groups(['Member:Read'])]
@@ -95,8 +88,6 @@ class NewLocation implements Translatable
 
     /**
      * @var string
-     *
-     *
      */
     #[ORM\Column(name: 'admin_1_id', type: 'string', nullable: true)]
     #[Groups(['Member:Read'])]
@@ -104,8 +95,6 @@ class NewLocation implements Translatable
 
     /**
      * @var string
-     *
-     *
      */
     #[ORM\Column(name: 'admin_2_id', type: 'string', nullable: true)]
     #[Groups(['Member:Read'])]
@@ -113,8 +102,6 @@ class NewLocation implements Translatable
 
     /**
      * @var string
-     *
-     *
      */
     #[ORM\Column(name: 'admin_3_id', type: 'string', nullable: true)]
     #[Groups(['Member:Read'])]
@@ -122,8 +109,6 @@ class NewLocation implements Translatable
 
     /**
      * @var string
-     *
-     *
      */
     #[ORM\Column(name: 'admin_4_id', type: 'string', nullable: true)]
     #[Groups(['Member:Read'])]
@@ -131,11 +116,9 @@ class NewLocation implements Translatable
 
     /**
      * @var NewLocation
-     *
-     *
      */
     #[ORM\JoinColumn(name: 'country', referencedColumnName: 'geonameId', nullable: true)]
-    #[ORM\ManyToOne(targetEntity: NewLocation::class, fetch: 'EAGER')]
+    #[ORM\ManyToOne(targetEntity: self::class, fetch: 'EAGER')]
     #[Groups(['Member:Read'])]
     private $country;
 
@@ -143,28 +126,28 @@ class NewLocation implements Translatable
      * @var NewLocation
      */
     #[ORM\JoinColumn(name: 'admin1', referencedColumnName: 'geonameId', nullable: true)]
-    #[ORM\ManyToOne(targetEntity: NewLocation::class, fetch: 'EAGER')]
+    #[ORM\ManyToOne(targetEntity: self::class, fetch: 'EAGER')]
     private $admin1;
 
     /**
      * @var NewLocation
      */
     #[ORM\JoinColumn(name: 'admin2', referencedColumnName: 'geonameId', nullable: true)]
-    #[ORM\ManyToOne(targetEntity: NewLocation::class)]
+    #[ORM\ManyToOne(targetEntity: self::class)]
     private $admin2;
 
     /**
      * @var NewLocation
      */
     #[ORM\JoinColumn(name: 'admin3', referencedColumnName: 'geonameId', nullable: true)]
-    #[ORM\ManyToOne(targetEntity: NewLocation::class)]
+    #[ORM\ManyToOne(targetEntity: self::class)]
     private $admin3;
 
     /**
      * @var NewLocation
      */
     #[ORM\JoinColumn(name: 'admin4', referencedColumnName: 'geonameId', nullable: true)]
-    #[ORM\ManyToOne(targetEntity: NewLocation::class)]
+    #[ORM\ManyToOne(targetEntity: self::class)]
     private $admin4;
 
     /**
@@ -174,15 +157,13 @@ class NewLocation implements Translatable
     private $population;
 
     /**
-     * @var DateTime
+     * @var \DateTime
      */
     #[ORM\Column(name: 'moddate', type: 'date', nullable: true)]
     private $modificationDate;
 
     /**
      * @var int
-     *
-     *
      */
     #[ORM\Column(name: 'geonameId', type: 'integer')]
     #[ORM\Id]
@@ -272,14 +253,14 @@ class NewLocation implements Translatable
         return $this->population;
     }
 
-    public function setModificationDate(DateTime $modificationDate): self
+    public function setModificationDate(\DateTime $modificationDate): self
     {
         $this->modificationDate = $modificationDate;
 
         return $this;
     }
 
-    public function getModificationDate(): DateTime
+    public function getModificationDate(): \DateTime
     {
         return $this->modificationDate;
     }

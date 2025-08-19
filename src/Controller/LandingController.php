@@ -19,7 +19,6 @@ use App\Repository\ActivityRepository;
 use App\Repository\NotificationRepository;
 use App\Repository\SubtripRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -146,8 +145,8 @@ class LandingController extends AbstractController
     }
 
     /**
+     * @throws \Exception
      *
-     * @throws Exception
      * @return Response
      */
     #[Route(path: '/widget/activities', name: '/widget/activities')]
@@ -198,7 +197,6 @@ class LandingController extends AbstractController
     /**
      * Shows the landing page.
      *
-     *
      * @throws AccessDeniedException
      */
     #[Route(path: '/', name: 'landingpage')]
@@ -207,7 +205,7 @@ class LandingController extends AbstractController
         EntityManagerInterface $entityManager,
         DonateModel $donateModel,
         TripModel $tripModel,
-        FormFactoryInterface $formFactory
+        FormFactoryInterface $formFactory,
     ): Response {
         if (!$this->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             throw $this->createAccessDeniedException();
@@ -278,7 +276,7 @@ class LandingController extends AbstractController
         $radius = $tripModel->getTripsRadius($member);
 
         /** @var SubtripRepository $subtripRepository */
-        $subtripRepository = $this->entityManager->getRepository(SubTrip::class);
+        $subtripRepository = $this->entityManager->getRepository(Subtrip::class);
 
         $visitorsCount = $subtripRepository->getVisitorsCount($member, $radius);
 

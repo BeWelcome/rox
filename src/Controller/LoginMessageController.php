@@ -20,7 +20,7 @@ class LoginMessageController extends AbstractController
 
         $acknowledgedRepository = $entityManager->getRepository(LoginMessageAcknowledged::class);
         $acknowledged = $acknowledgedRepository->findOneBy(['message' => $loginMessage, 'member' => $member]);
-        if (null == $acknowledged) {
+        if (null === $acknowledged) {
             $acknowledged = new LoginMessageAcknowledged();
         }
         $acknowledged

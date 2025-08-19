@@ -11,7 +11,7 @@ class RoxWikiParserBackend extends HtmlRenderer
 {
     public function __construct(
         private readonly WikiModel $wikiModel,
-        private readonly EntityManagerInterface $entityManager
+        private readonly EntityManagerInterface $entityManager,
     ) {
         parent::__construct();
     }
@@ -25,8 +25,6 @@ class RoxWikiParserBackend extends HtmlRenderer
      * If it is an internal link check if it exists and set flag accordingly.
      *
      * @param array $info
-     *
-     * @return array
      */
     public function getInternalLinkInfo($info): array
     {
@@ -51,7 +49,7 @@ class RoxWikiParserBackend extends HtmlRenderer
     }
 
     /**
-     * Using images not supported in current wiki implementation
+     * Using images not supported in current wiki implementation.
      *
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */

@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @codingStandardsIgnoreFile
  *
@@ -11,7 +12,7 @@ use Carbon\Carbon;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Do not check entities with PHPMD
+ * Do not check entities with PHPMD.
  *
  * @SuppressWarnings("PHPMD")
  */
@@ -21,10 +22,10 @@ use Doctrine\ORM\Mapping as ORM;
 class Log
 {
     /**
-     * @var \App\Entity\Member
+     * @var Member
      */
     #[ORM\JoinColumn(name: 'idMember', referencedColumnName: 'id')]
-    #[ORM\ManyToOne(targetEntity: \App\Entity\Member::class, fetch: 'EAGER')]
+    #[ORM\ManyToOne(targetEntity: Member::class, fetch: 'EAGER')]
     private $member;
 
     /**

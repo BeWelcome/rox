@@ -8,7 +8,6 @@ use App\Entity\ForumThread;
 use App\Entity\Group;
 use App\Entity\Member;
 use Doctrine\ORM\EntityManagerInterface;
-use Mockery;
 
 class GroupMockups implements MockupProviderInterface
 {
@@ -75,13 +74,13 @@ class GroupMockups implements MockupProviderInterface
 
         /** @var Member $user */
         $user = $parameters['user'];
-        $mockThread = Mockery::mock(ForumThread::class, [
+        $mockThread = \Mockery::mock(ForumThread::class, [
             'getId' => 1,
             'getGroup' => $group,
             'getTitle' => 'Thread title',
         ]);
 
-        $mockPost = Mockery::mock(ForumPost::class, [
+        $mockPost = \Mockery::mock(ForumPost::class, [
             'getId' => 1,
             'getMessage' => 'Post text',
             'getThread' => $mockThread,

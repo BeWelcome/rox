@@ -17,7 +17,6 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\Mime\Address;
 
 /**
@@ -38,7 +37,7 @@ class SendNotificationsCommand extends Command
         private EntityManagerInterface $entityManager,
         private LoggerInterface $logger,
         private Mailer $mailer,
-        private int $batchSize
+        private int $batchSize,
     ) {
         parent::__construct();
     }
@@ -98,7 +97,7 @@ class SendNotificationsCommand extends Command
             }
             $this->entityManager->flush();
             $io->success(
-                sprintf(
+                \sprintf(
                     'Sent %d messages, skipped %d messages',
                     $sent,
                     \count($scheduledNotifications) - $sent
@@ -134,7 +133,7 @@ class SendNotificationsCommand extends Command
             case 'deletepost':
             case 'deletethread':
             case 'useredit':
-                    $prefix = $this->getTranslator()->trans('forummailboteditedpost');
+                $prefix = $this->getTranslator()->trans('forummailboteditedpost');
                 break;
             case 'buggy':
             default:

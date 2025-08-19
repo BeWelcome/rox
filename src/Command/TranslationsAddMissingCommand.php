@@ -6,7 +6,6 @@ use App\Entity\Language;
 use App\Entity\Member;
 use App\Entity\Word;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArrayInput;
@@ -15,7 +14,6 @@ use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Finder\Finder;
-use Symfony\Component\Routing\Loader\YamlFileLoader;
 use Symfony\Component\Yaml\Yaml;
 
 #[AsCommand(
@@ -41,7 +39,7 @@ class TranslationsAddMissingCommand extends Command
 
         $count = 0;
         foreach ($files as $file) {
-            $io->section(sprintf('Importing missing translations from file: %s', $file));
+            $io->section(\sprintf('Importing missing translations from file: %s', $file));
 
             $memberRepository = $this->entityManager->getRepository(Member::class);
             $admin = $memberRepository->find(1);
@@ -64,9 +62,9 @@ class TranslationsAddMissingCommand extends Command
                 $translation = $translationRepository->findOneBy(['code' => $translationId]);
                 if (null === $translation) {
                     ++$count;
-                    if ($sentence[0] == '@') {
+                    if ('@' === $sentence[0]) {
                         $reusedTranslationId = substr((string) $sentence, 1);
-                        $io->note(sprintf('Adding %s: Reusing %s', $translationId, $reusedTranslationId));
+                        $io->note(\sprintf('Adding %s: Reusing %s', $translationId, $reusedTranslationId));
                         $connection = $this->entityManager->getConnection();
                         $statement = $connection->prepare('
                             INSERT INTO words (code, domain, ShortCode, Sentence, donottranslate, IdLanguage, Description, IdMember, updated, created, TranslationPriority, isarchived, majorupdate)
@@ -76,7 +74,7 @@ class TranslationsAddMissingCommand extends Command
                         ');
                         $statement->executeQuery();
                     } else {
-                        $io->note(sprintf('Adding %s: %s', $translationId, $sentence));
+                        $io->note(\sprintf('Adding %s: %s', $translationId, $sentence));
 
                         $translation = new Word();
                         $translation->setCode($translationId);

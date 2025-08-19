@@ -17,7 +17,6 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 class LogController extends AbstractController
 {
     /**
-     *
      * @throws NonUniqueResultException
      * @throws AccessDeniedException
      */
@@ -69,8 +68,8 @@ class LogController extends AbstractController
     }
 
     /**
-     *
      * @throws AccessDeniedException
+     *
      * @return Response
      */
     #[Route(path: '/admin/logs/groups', name: 'admin_groups_logs')]

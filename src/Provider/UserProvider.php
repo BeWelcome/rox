@@ -19,7 +19,7 @@ class UserProvider implements UserProviderInterface
     public function refreshUser(UserInterface $user): UserInterface
     {
         if (!$user instanceof Member) {
-            throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', $user::class));
+            throw new UnsupportedUserException(\sprintf('Instances of "%s" are not supported.', $user::class));
         }
 
         return $this->loadUserByIdentifier($user->getUsername());
@@ -30,7 +30,7 @@ class UserProvider implements UserProviderInterface
         try {
             return $this->memberRepository->loadUserByUsername($identifier);
         } catch (NonUniqueResultException $e) {
-            throw new UserNotFoundException(sprintf('Username "%s" isn\'t unique.', $identifier), 0, $e);
+            throw new UserNotFoundException(\sprintf('Username "%s" isn\'t unique.', $identifier), 0, $e);
         }
     }
 

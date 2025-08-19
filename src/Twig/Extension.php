@@ -2,10 +2,7 @@
 
 namespace App\Twig;
 
-use App\Entity\MemberTranslation;
 use Carbon\Carbon;
-use HTMLPurifier;
-use HTMLPurifier_HTML5Config;
 use HtmlTruncator\InvalidHtmlException;
 use HtmlTruncator\Truncator;
 use Psr\Log\LoggerInterface;
@@ -46,7 +43,7 @@ class Extension extends AbstractExtension implements GlobalsInterface
         EntrypointLookupInterface $entrypointLookup,
         LoggerInterface $logger,
         array $locales,
-        string $publicDirectory
+        string $publicDirectory,
     ) {
         $this->translator = $translator;
         $this->locales = $locales;
@@ -144,11 +141,11 @@ class Extension extends AbstractExtension implements GlobalsInterface
     public function privacy(string $isoDate): string
     {
         $date = Carbon::createFromFormat('Y-m-d', $isoDate);
-        if ($date->diffInDays() <=  7) {
+        if ($date->diffInDays() <= 7) {
             return $this->translator->trans('lastloginprivacy');
-        } else {
-            return $date->diffForHumans();
         }
+
+        return $date->diffForHumans();
     }
 
     public function getFilters(): array
@@ -181,8 +178,8 @@ class Extension extends AbstractExtension implements GlobalsInterface
                 [
                     'is_safe' => ['html'],
                 ]
-            )
-         ];
+            ),
+        ];
     }
 
     /**
@@ -249,7 +246,7 @@ class Extension extends AbstractExtension implements GlobalsInterface
      */
     public function prepareNewsletter(string $text, bool $website = false): string
     {
-        $config = HTMLPurifier_HTML5Config::createDefault();
+        $config = \HTMLPurifier_HTML5Config::createDefault();
         $config->set(
             'HTML.Allowed',
             'p,b,a[href],br,hr,i,u,strong,em,ol,ul,li,dl,dt,dd,img[src|alt|width|height],blockquote,del,'
@@ -261,7 +258,7 @@ class Extension extends AbstractExtension implements GlobalsInterface
         $config->set('AutoFormat.AutoParagraph', true);
         $config->set('AutoFormat.Linkify', true);
 
-        $purifier = new HTMLPurifier($config);
+        $purifier = new \HTMLPurifier($config);
         $text = $purifier->purify($text);
 
         // now turn any figure/figcaption entries into <img>
@@ -308,7 +305,7 @@ class Extension extends AbstractExtension implements GlobalsInterface
     }
 
     /**
-     * signum of the given (float) number
+     * signum of the given (float) number.
      */
     public function sgn(float $number): int
     {

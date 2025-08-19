@@ -6,9 +6,6 @@ use Symfony\Component\Security\Core\Exception\CustomUserMessageAccountStatusExce
 
 class AccountSuspendedException extends CustomUserMessageAccountStatusException
 {
-    /**
-     * {@inheritdoc}
-     */
     #[\Override]
     public function getMessageKey(): string
     {

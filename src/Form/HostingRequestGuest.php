@@ -9,9 +9,6 @@ use Symfony\Component\Form\FormEvents;
 
 class HostingRequestGuest extends HostingRequestAbstractType
 {
-    /**
-     * {@inheritdoc}
-     */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder

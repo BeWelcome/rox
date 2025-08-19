@@ -7,9 +7,6 @@ use App\Entity\RightVolunteer;
 
 final class RightsExtractor extends AbstractExtractor implements ExtractorInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function extract(Member $member, string $tempDir): string
     {
         /** @var RightVolunteer[] $volunteerRights */

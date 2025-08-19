@@ -64,7 +64,7 @@ class PoliciesController extends AbstractController
 
     private function ensureLocaleAllowed(?string $locale, Request $request): string
     {
-        $locale = $locale ?? $request->getLocale();
+        $locale ??= $request->getLocale();
 
         if (!\in_array($locale, $this->documentLocales, true)) {
             $locale = 'en';

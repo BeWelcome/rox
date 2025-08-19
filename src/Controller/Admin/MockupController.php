@@ -24,9 +24,7 @@ use App\Model\MockupProvider\MockupProviderInterface;
 use App\Model\TranslationModel;
 use App\Twig\MockupExtension;
 use Carbon\Carbon;
-use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
-use Mockery;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -50,7 +48,7 @@ class MockupController extends TranslationController
         EntityManagerInterface $entityManager,
         private readonly FormFactoryInterface $formFactory,
         array $locales,
-        iterable $providers
+        iterable $providers,
     ) {
         parent::__construct($translationModel, $entityManager, $locales);
 
@@ -171,7 +169,7 @@ class MockupController extends TranslationController
         if (!str_contains((string) $name, 'some')) {
             $params['activities'] = [];
         } else {
-            $mockActivity = Mockery::mock(Activity::class, [
+            $mockActivity = \Mockery::mock(Activity::class, [
                 'getTitle' => 'Activity Title',
                 'getDescription' => 'Activity Description',
             ]);
@@ -194,14 +192,14 @@ class MockupController extends TranslationController
         $groupRepository = $this->entityManager->getRepository(Group::class);
         $group = $groupRepository->find(70);
 
-        $mockMessage = Mockery::mock(Message::class, [
+        $mockMessage = \Mockery::mock(Message::class, [
             'getId' => 1,
             'getMessage' => 'Message text',
         ]);
         $mockMessage->shouldReceive('getSender')->andReturn($this->getUser());
         $mockMessage->shouldReceive('getReceiver')->andReturn($bwAdmin);
 
-        $mockRequest = Mockery::mock(HostingRequest::class, [
+        $mockRequest = \Mockery::mock(HostingRequest::class, [
             'getId' => 1,
             'getArrival' => new Carbon(),
             'getDeparture' => new Carbon(),
@@ -294,25 +292,25 @@ class MockupController extends TranslationController
                 break;
             case 'emails/notifications.html.twig':
                 if (str_starts_with((string) $name, 'forum post')) {
-                    $mockThread = Mockery::mock(ForumThread::class, [
+                    $mockThread = \Mockery::mock(ForumThread::class, [
                         'getId' => 1,
                         'getGroup' => null,
                         'getTitle' => 'Thread title',
                     ]);
 
-                    $mockPost = Mockery::mock(ForumPost::class, [
+                    $mockPost = \Mockery::mock(ForumPost::class, [
                         'getId' => 1,
                         'getMessage' => 'Post text',
                         'getThread' => $mockThread,
                     ]);
                 } elseif (str_starts_with((string) $name, 'group post')) {
-                    $mockThread = Mockery::mock(ForumThread::class, [
+                    $mockThread = \Mockery::mock(ForumThread::class, [
                         'getId' => 1,
                         'getGroup' => $group,
                         'getTitle' => 'Thread title',
                     ]);
 
-                    $mockPost = Mockery::mock(ForumPost::class, [
+                    $mockPost = \Mockery::mock(ForumPost::class, [
                         'getId' => 1,
                         'getMessage' => 'Post text',
                         'getThread' => $mockThread,
@@ -415,7 +413,7 @@ class MockupController extends TranslationController
     private function getGeneratedDate(string $template, string $name)
     {
         return [
-            'date_generated' => new DateTime(),
+            'date_generated' => new \DateTime(),
         ];
     }
 
@@ -429,32 +427,32 @@ class MockupController extends TranslationController
 
     private function getTripsWidgetTwoLegs(string $template, string $name)
     {
-        $trip = Mockery::mock(Trip::class, [
+        $trip = \Mockery::mock(Trip::class, [
             'getId' => 1,
             'getCreator' => $this->getUser(),
             'getSummary' => 'Mocking Bird',
             'getDescription' => 'Mocking description',
             'getCountOfTravellers' => 2,
             'getAdditionalInfo' => TripAdditionalInfoType::NONE,
-            'getCreated' => new DateTime(),
+            'getCreated' => new \DateTime(),
         ]);
-        $location = Mockery::mock(Location::class, [
+        $location = \Mockery::mock(Location::class, [
             'getId' => 1,
             'getName' => 'Mock',
         ]);
-        $leg1 = Mockery::mock(SubTrip::class, [
+        $leg1 = \Mockery::mock(Subtrip::class, [
             'getId' => 1,
-            'getArrival' => Carbon::instance(new DateTime('2021-02-22')),
-            'getDeparture' => Carbon::instance(new DateTime('2021-02-24')),
+            'getArrival' => Carbon::instance(new \DateTime('2021-02-22')),
+            'getDeparture' => Carbon::instance(new \DateTime('2021-02-24')),
             'getOptions' => [SubtripOptionsType::MEET_LOCALS],
             'getLocation' => $location,
             'getTrip' => $trip,
             'getInvitedBy' => $this->getUser(),
         ]);
-        $leg2 = Mockery::mock(SubTrip::class, [
+        $leg2 = \Mockery::mock(Subtrip::class, [
             'getId' => 2,
-            'getArrival' => Carbon::instance(new DateTime('2021-03-23')),
-            'getDeparture' => Carbon::instance(new DateTime('2021-03-24')),
+            'getArrival' => Carbon::instance(new \DateTime('2021-03-23')),
+            'getDeparture' => Carbon::instance(new \DateTime('2021-03-24')),
             'getOptions' => [SubtripOptionsType::LOOKING_FOR_HOST],
             'getLocation' => $location,
             'getTrip' => $trip,

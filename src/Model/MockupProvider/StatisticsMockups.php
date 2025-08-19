@@ -2,8 +2,6 @@
 
 namespace App\Model\MockupProvider;
 
-use App\Entity\Member;
-
 class StatisticsMockups implements MockupProviderInterface
 {
     private const array MOCKUPS = [

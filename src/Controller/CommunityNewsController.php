@@ -45,7 +45,6 @@ class CommunityNewsController extends AbstractController
 
         $comments = $this->communityNewsModel->getCommentsPaginator($communityNews, $page, $limit);
 
-
         $communityNewsCommentRequest = new CommunityNewsCommentRequest();
         $form = $this->createForm(CommunityNewsCommentType::class, $communityNewsCommentRequest);
         $form->handleRequest($request);

@@ -11,14 +11,12 @@ use App\Model\Admin\CheckerModel;
 use App\Model\CommunityNewsModel;
 use App\Utilities\ItemsPerPageTraits;
 use Doctrine\ORM\EntityManagerInterface;
-use InvalidArgumentException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class CheckerController extends AbstractController
 {
@@ -31,7 +29,7 @@ class CheckerController extends AbstractController
 
     public function __construct(
         private readonly CheckerModel $checkerModel,
-        private readonly EntityManagerInterface $entityManager
+        private readonly EntityManagerInterface $entityManager,
     ) {
     }
 
@@ -149,6 +147,32 @@ class CheckerController extends AbstractController
         return new RedirectResponse($this->generateUrl('admin_spam_messages'));
     }
 
+    public function getActiveMenuAndMessages(int $type, int $page, int $limit): array
+    {
+        switch ($type) {
+            case self::MESSAGES_REPORTED:
+                $active = 'messages';
+                $messages = $this->checkerModel->getReportedMessages($page, $limit);
+                break;
+            case self::MESSAGES_PROCESSED:
+                $active = 'processed_messages';
+                $messages = $this->checkerModel->getProcessedReportedMessages($page, $limit);
+                break;
+            case self::MESSAGES_BLOCK_WORDS:
+                $active = 'blocked_words';
+                $messages = $this->checkerModel->getBlockWordsMessages($page, $limit);
+                break;
+            case self::MESSAGES_BLOCK_WORDS_PROCESSED:
+                $active = 'processed_blocked_words';
+                $messages = $this->checkerModel->getProcessedBlockWordsMessages($page, $limit);
+                break;
+            default:
+                throw new \InvalidArgumentException();
+        }
+
+        return [$active, $messages];
+    }
+
     private function getSubmenuItems(): array
     {
         return [
@@ -194,7 +218,7 @@ class CheckerController extends AbstractController
         $member = $this->getUser();
         $limit = $this->getItemsPerPage($member);
 
-        list($active, $messages) = $this->getActiveMenuAndMessages($type, $page, $limit);
+        [$active, $messages] = $this->getActiveMenuAndMessages($type, $page, $limit);
 
         $messageIds = [];
         foreach ($messages->getIterator() as $key => $val) {
@@ -218,7 +242,7 @@ class CheckerController extends AbstractController
                 $this->checkerModel->unmarkAsSpamByChecker($noSpamMessageIds);
                 $this->addFlash('notice', 'Set spam status');
 
-                if ($type === self::MESSAGES_BLOCK_WORDS_PROCESSED) {
+                if (self::MESSAGES_BLOCK_WORDS_PROCESSED === $type) {
                     return $this->redirectToRoute('admin_spam_messages_block_words');
                 }
 
@@ -234,31 +258,5 @@ class CheckerController extends AbstractController
                 'items' => $this->getSubmenuItems(),
             ],
         ]);
-    }
-
-    public function getActiveMenuAndMessages(int $type, int $page, int $limit): array
-    {
-        switch ($type) {
-            case self::MESSAGES_REPORTED:
-                $active = 'messages';
-                $messages = $this->checkerModel->getReportedMessages($page, $limit);
-                break;
-            case self::MESSAGES_PROCESSED:
-                $active = 'processed_messages';
-                $messages = $this->checkerModel->getProcessedReportedMessages($page, $limit);
-                break;
-            case self::MESSAGES_BLOCK_WORDS:
-                $active = 'blocked_words';
-                $messages = $this->checkerModel->getBlockWordsMessages($page, $limit);
-                break;
-            case self::MESSAGES_BLOCK_WORDS_PROCESSED:
-                $active = 'processed_blocked_words';
-                $messages = $this->checkerModel->getProcessedBlockWordsMessages($page, $limit);
-                break;
-            default:
-                throw new InvalidArgumentException();
-        }
-
-        return array($active, $messages);
     }
 }

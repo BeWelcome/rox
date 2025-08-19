@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @codingStandardsIgnoreFile
  *
@@ -11,14 +12,13 @@ use App\Doctrine\ForumDeleteStatusType;
 use App\Doctrine\ForumVisibilityType;
 use App\Doctrine\PostCanStillEditType;
 use Carbon\Carbon;
-use DateTime;
 use Doctrine\ORM\Event\PostLoadEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Persistence\ObjectManager;
 use Exception;
 
 /**
- * Do not check entities with PHPMD
+ * Do not check entities with PHPMD.
  *
  * @SuppressWarnings("PHPMD")
  */
@@ -30,7 +30,7 @@ use Exception;
 #[ORM\Index(name: 'PostDeleted', columns: ['PostDeleted'])]
 #[ORM\Index(name: 'create_time', columns: ['create_time'])]
 #[ORM\Entity(repositoryClass: \App\Repository\ForumPostRepository::class)]
-#[Orm\HasLifecycleCallbacks()]
+#[ORM\HasLifecycleCallbacks()]
 class ForumPost
 {
     /** \todo fix this smell */
@@ -49,7 +49,7 @@ class ForumPost
      */
     #[ORM\JoinColumn(name: 'threadid', referencedColumnName: 'id', nullable: true)]
     #[ORM\ManyToOne(targetEntity: ForumThread::class, inversedBy: 'posts')]
-    private $thread = null;
+    private $thread;
 
     /**
      * @var string
@@ -65,7 +65,7 @@ class ForumPost
     private $author;
 
     /**
-     * @var DateTime
+     * @var \DateTime
      */
     #[ORM\Column(name: 'create_time', type: 'datetime', nullable: false)]
     private $created;
@@ -89,7 +89,7 @@ class ForumPost
     private $ownerCanStillEdit = PostCanStillEditType::CAN_STILL_EDIT;
 
     /**
-     * @var DateTime
+     * @var \DateTime
      */
     #[ORM\Column(name: 'last_edittime', type: 'datetime', nullable: true)]
     private $updated;
@@ -113,7 +113,7 @@ class ForumPost
      */
     #[ORM\JoinColumn(name: 'IdFirstLanguageUsed', referencedColumnName: 'id', nullable: false)]
     #[ORM\ManyToOne(targetEntity: Language::class)]
-    private $language = null;
+    private $language;
 
     /**
      * @var string
@@ -292,7 +292,7 @@ class ForumPost
     /**
      * Set lastEdittime.
      *
-     * @param DateTime $lastEdittime
+     * @param \DateTime $lastEdittime
      *
      * @return ForumPost
      */
@@ -306,7 +306,7 @@ class ForumPost
     /**
      * Get lastEdittime.
      *
-     * @return DateTime
+     * @return \DateTime
      */
     public function getLastEdittime()
     {
@@ -507,8 +507,6 @@ class ForumPost
 
     /**
      * Set thread.
-     *
-     * @return ForumPost
      */
     public function setThread(?ForumThread $thread = null): self
     {
@@ -528,9 +526,7 @@ class ForumPost
         $thread = $this->thread;
         try {
             $threadTitle = $this->thread->getTitle();
-        }
-        catch (Exception)
-        {
+        } catch (\Exception) {
             $thread = null;
         }
 
@@ -539,8 +535,6 @@ class ForumPost
 
     /**
      * Set author.
-     *
-     * @param Member $author
      *
      * @return ForumPost
      */
@@ -564,7 +558,7 @@ class ForumPost
     /**
      * Set created.
      *
-     * @param DateTime $created
+     * @param \DateTime $created
      *
      * @return ForumPost
      */
@@ -588,7 +582,7 @@ class ForumPost
     /**
      * Set updated.
      *
-     * @param DateTime $updated
+     * @param \DateTime $updated
      *
      * @return ForumPost
      */

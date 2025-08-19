@@ -4,9 +4,9 @@ namespace App\Doctrine\Functions;
 
 use Doctrine\ORM\Query\AST\Functions\FunctionNode;
 use Doctrine\ORM\Query\AST\Node;
-use Doctrine\ORM\Query\TokenType;
 use Doctrine\ORM\Query\Parser;
 use Doctrine\ORM\Query\SqlWalker;
+use Doctrine\ORM\Query\TokenType;
 
 /**
  * YearWeekFunction ::= "YEARWEEK" "(" ArithmeticPrimary ")".
@@ -16,7 +16,7 @@ class YearWeek extends FunctionNode
     /**
      * @var Node|null
      */
-    public $firstDateExpression = null;
+    public $firstDateExpression;
 
     public function parse(Parser $parser): void
     {

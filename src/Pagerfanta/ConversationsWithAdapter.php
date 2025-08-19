@@ -16,7 +16,7 @@ class ConversationsWithAdapter implements AdapterInterface
     public function __construct(
         private readonly EntityManager $entityManager,
         private readonly Member $member,
-        private readonly Member $partner
+        private readonly Member $partner,
     ) {
         $this->connection = $this->entityManager->getConnection();
     }

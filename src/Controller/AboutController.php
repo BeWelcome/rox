@@ -38,7 +38,6 @@ class AboutController extends AboutBaseController
     }
 
     /**
-     *
      * @return Response
      */
     #[Route(path: '/about/getactive', name: 'getactive')]
@@ -68,7 +67,6 @@ class AboutController extends AboutBaseController
     }
 
     /**
-     *
      * @return Response
      */
     #[Route(path: '/press-information', name: 'about_press')]

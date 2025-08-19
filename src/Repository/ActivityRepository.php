@@ -7,12 +7,10 @@ use App\Entity\ActivityAttendee;
 use App\Entity\Location;
 use App\Entity\Member;
 use App\Entity\Preference;
-use DateTime;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
-use Exception;
 use Pagerfanta\Doctrine\ORM\QueryAdapter;
 use Pagerfanta\Pagerfanta;
 
@@ -68,9 +66,6 @@ class ActivityRepository extends EntityRepository
         return $paginator;
     }
 
-    /**
-     * @return Query
-     */
     public function queryProblematicActivities(): Query
     {
         return $this->createQueryBuilder('a')
@@ -85,11 +80,9 @@ class ActivityRepository extends EntityRepository
     /**
      * Get all activities around a given location.
      *
-     * @param int   $limit
-     * @param int   $distance
-     * @param mixed $online
+     * @param int $limit
      *
-     * @throws Exception
+     * @throws \Exception
      *
      * @return array
      *
@@ -113,8 +106,6 @@ class ActivityRepository extends EntityRepository
 
     /**
      * Get all activities around a given location.
-     *
-     * @param mixed $online
      */
     public function getUpcomingAroundLocationCount(Member $member, $online): int
     {
@@ -141,18 +132,14 @@ class ActivityRepository extends EntityRepository
 
         $distance = 20;
         if ($preference) {
-            $distance = (int) ($memberPreference->getValue());
+            $distance = (int) $memberPreference->getValue();
         }
 
         return $distance;
     }
 
     /**
-     * @param mixed $online
-     *
-     * @throws Exception
-     *
-     * @return QueryBuilder
+     * @throws \Exception
      */
     private function getUpcomingAroundLocationQueryBuilder(Member $member, $online): ?QueryBuilder
     {
@@ -180,8 +167,8 @@ class ActivityRepository extends EntityRepository
             ->setParameter('long_s', $coordinates[0]->getLongitudeInDegrees())
             ->setParameter('long_n', $coordinates[1]->getLongitudeInDegrees())
             ->where('(a.ends >= :now AND a.ends <= :three_months) OR (a.starts >= :now AND a.starts <= :three_months)')
-            ->setParameter('now', new DateTime())
-            ->setParameter('three_months', (new DateTime())->modify('+3 months'))
+            ->setParameter('now', new \DateTime())
+            ->setParameter('three_months', (new \DateTime())->modify('+3 months'))
             ->andWhere($qb->expr()->neq('a.status', 1)) // Do not show activities that were cancelled
             ->orderBy('a.starts', 'asc');
 

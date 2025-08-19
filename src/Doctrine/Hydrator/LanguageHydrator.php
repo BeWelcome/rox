@@ -3,14 +3,13 @@
 namespace App\Doctrine\Hydrator;
 
 use Doctrine\ORM\Internal\Hydration\AbstractHydrator;
-use PDO;
 
 class LanguageHydrator extends AbstractHydrator
 {
     protected function hydrateAllData(): mixed
     {
         $result = [];
-        foreach ($this->_stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
+        foreach ($this->_stmt->fetchAll(\PDO::FETCH_ASSOC) as $row) {
             $this->hydrateRowData($row, $result);
         }
 

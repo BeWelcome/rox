@@ -51,7 +51,7 @@ class TripController extends AbstractController
     }
 
     #[Route(path: '/trip/{id}', name: 'trip_show', requirements: ['id' => '\d+'])]
-    #[IsGranted('TRIP_VIEW', subject:'trip')]
+    #[IsGranted('TRIP_VIEW', subject: 'trip')]
     public function show(Trip $trip, TripModel $tripModel): Response
     {
         /** @var Member $member */
@@ -119,7 +119,7 @@ class TripController extends AbstractController
     }
 
     #[Route(path: '/trip/{id}/edit', name: 'trip_edit', requirements: ['id' => '\d+'])]
-    #[IsGranted('TRIP_EDIT', subject:'trip')]
+    #[IsGranted('TRIP_EDIT', subject: 'trip')]
     public function edit(Request $request, Trip $trip, EntityManagerInterface $entityManager): Response
     {
         if ($this->tripModel->hasTripExpired($trip)) {
@@ -161,7 +161,7 @@ class TripController extends AbstractController
     }
 
     #[Route(path: '/trip/{id}/remove', name: 'trip_remove', requirements: ['id' => '\d+'])]
-    #[IsGranted('TRIP_REMOVE', subject:'trip')]
+    #[IsGranted('TRIP_REMOVE', subject: 'trip')]
     public function remove(Trip $trip): RedirectResponse
     {
         $this->tripModel->hideTrip($trip);
@@ -170,7 +170,7 @@ class TripController extends AbstractController
     }
 
     #[Route(path: '/trip/{id}/copy', name: 'trip_copy', requirements: ['id' => '\d+'])]
-    #[IsGranted('TRIP_COPY', subject:'trip')]
+    #[IsGranted('TRIP_COPY', subject: 'trip')]
     public function copy(Trip $trip): Response
     {
         $newTrip = $this->tripModel->copyTrip($trip);
@@ -185,7 +185,7 @@ class TripController extends AbstractController
     public function tripsInArea(
         Request $request,
         EntityManagerInterface $entityManager,
-        int $page = 1
+        int $page = 1,
     ): Response {
         /** @var Member $host */
         $host = $this->getUser();

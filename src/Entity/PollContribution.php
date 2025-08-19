@@ -3,11 +3,10 @@
 namespace App\Entity;
 
 use Carbon\Carbon;
-use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Do not check entities with PHPMD
+ * Do not check entities with PHPMD.
  *
  * @SuppressWarnings("PHPMD")
  */
@@ -33,13 +32,13 @@ class PollContribution
     private $emailIsConfirmed = 'No';
 
     /**
-     * @var DateTime
+     * @var \DateTime
      */
     #[ORM\Column(name: 'updated', type: 'datetime', nullable: false)]
     private $updated;
 
     /**
-     * @var DateTime
+     * @var \DateTime
      */
     #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
     private $created;
@@ -123,7 +122,7 @@ class PollContribution
     /**
      * Set updated.
      *
-     * @param DateTime $updated
+     * @param \DateTime $updated
      *
      * @return PollContribution
      */
@@ -147,7 +146,7 @@ class PollContribution
     /**
      * Set created.
      *
-     * @param DateTime $created
+     * @param \DateTime $created
      *
      * @return PollContribution
      */
@@ -205,8 +204,6 @@ class PollContribution
     /**
      * Set idpoll.
      *
-     * @param Poll $poll
-     *
      * @return PollContribution
      */
     public function setPoll(?Poll $poll = null)
@@ -228,8 +225,6 @@ class PollContribution
 
     /**
      * Set idmember.
-     *
-     * @param Member $member
      *
      * @return PollContribution
      */
@@ -256,8 +251,8 @@ class PollContribution
     #[ORM\PrePersist]
     public function onPrePersist()
     {
-        $this->created = new DateTime('now');
-        $this->updated = new DateTime('now');
+        $this->created = new \DateTime('now');
+        $this->updated = new \DateTime('now');
     }
 
     /**
@@ -266,6 +261,6 @@ class PollContribution
     #[ORM\PreUpdate]
     public function onPreUpdate()
     {
-        $this->updated = new DateTime('now');
+        $this->updated = new \DateTime('now');
     }
 }

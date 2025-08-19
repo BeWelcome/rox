@@ -3,7 +3,6 @@
 namespace App\Model\MockupProvider;
 
 use App\Entity\Message;
-use Mockery;
 
 class MessageMockups implements MockupProviderInterface
 {
@@ -31,7 +30,7 @@ class MessageMockups implements MockupProviderInterface
 
     public function getMockupVariables(array $parameters): array
     {
-        $mockMessage = Mockery::mock(Message::class, [
+        $mockMessage = \Mockery::mock(Message::class, [
             'getId' => 1,
             'getMessage' => 'Message text',
         ]);

@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @codingStandardsIgnoreFile
  *
@@ -10,7 +11,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Do not check entities with PHPMD
+ * Do not check entities with PHPMD.
  *
  * @SuppressWarnings("PHPMD")
  */
@@ -79,8 +80,6 @@ class CryptedField
     /**
      * Set admincryptedvalue.
      *
-     * @param $adminCryptedValue
-     *
      * @return CryptedField
      *
      * @internal param string $admincryptedvalue
@@ -104,8 +103,6 @@ class CryptedField
 
     /**
      * Set membercryptedvalue.
-     *
-     * @param mixed $memberCryptedValue
      *
      * @return Cryptedfield
      */

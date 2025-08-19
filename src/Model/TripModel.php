@@ -4,13 +4,9 @@ namespace App\Model;
 
 use App\Entity\Member;
 use App\Entity\Preference;
-use App\Entity\Subtrip;
 use App\Entity\Trip;
 use App\Repository\TripRepository;
-use Carbon\Carbon;
-use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
-use InvalidArgumentException;
 use Pagerfanta\Doctrine\ORM\QueryAdapter;
 use Pagerfanta\Pagerfanta;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -23,7 +19,7 @@ class TripModel
     {
     }
 
-    public function paginateTripsOfMember(Member $member, int $page): PagerFanta
+    public function paginateTripsOfMember(Member $member, int $page): Pagerfanta
     {
         /** @var TripRepository $repository */
         $repository = $this->entityManager->getRepository(Trip::class);
@@ -66,7 +62,7 @@ class TripModel
         $preference = $preferenceRepository->findOneBy(['codename' => Preference::TRIPS_VICINITY_RADIUS]);
         $memberPreference = $member->getMemberPreference($preference);
 
-        return (int) ($memberPreference->getValue());
+        return (int) $memberPreference->getValue();
     }
 
     public function checkTripCreateOrEditData(Trip $data): array
@@ -131,7 +127,7 @@ class TripModel
 
     public function hideTrip(Trip $trip)
     {
-        $trip->setDeleted(new DateTIme());
+        $trip->setDeleted(new \DateTime());
 
         $this->entityManager->persist($trip);
         $this->entityManager->flush();
@@ -148,10 +144,10 @@ class TripModel
 
         $newTrip = clone $trip;
         $newTrip->setSummary($trip->getSummary() . ' - copy');
-        $newTrip->setUpdated(new DateTime());
+        $newTrip->setUpdated(new \DateTime());
 
         // Move legs arrival and departure consistently +1month
-        $nextMonth = (new DateTime())->modify('+1month');
+        $nextMonth = (new \DateTime())->modify('+1month');
         $firstArrival = $trip->getSubtrips()->first()->getArrival();
         $adjust = $firstArrival->diff($nextMonth);
 

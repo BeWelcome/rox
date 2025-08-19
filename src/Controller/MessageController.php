@@ -19,7 +19,7 @@ use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 /**
  * Class MessageController.
@@ -35,25 +35,14 @@ class MessageController extends AbstractController
     use TranslatedFlashTrait;
     use TranslatorTrait;
 
-    private Mailer $mailer;
-    private ConversationModel $conversationModel;
-    private ConversationThread $conversationThread;
-    private EntityManagerInterface $entityManager;
-
-    public function __construct(
-        Mailer $mailer,
-        ConversationModel $conversationModel,
-        ConversationThread $conversationThread,
-        EntityManagerInterface $entityManager
-    ) {
-        $this->mailer = $mailer;
-        $this->conversationModel = $conversationModel;
-        $this->conversationThread = $conversationThread;
-        $this->entityManager = $entityManager;
+    public function __construct(private Mailer $mailer, private ConversationModel $conversationModel, private ConversationThread $conversationThread, private EntityManagerInterface $entityManager)
+    {
     }
 
     /**
-     * @throws Exception
+     * @SuppressWarnings("PHPMD.NPathComplexity")
+     *
+     * \todo check how to get this reduced.
      */
     #[Route(path: '/new/message/{username}', name: 'message_new')]
     public function newMessage(Request $request, Member $receiver, AllowContactCheck $allowContactCheck): Response
@@ -156,7 +145,7 @@ class MessageController extends AbstractController
             /** @var Message $data */
             $data = $replyForm->getData();
             $replySubject = $data->getSubject()->getSubject();
-            if ('Re:' !== substr($replySubject, 0, 3)) {
+            if (!str_starts_with($replySubject, 'Re:')) {
                 $replySubject = 'Re: ' . $replySubject;
             }
 
@@ -210,7 +199,7 @@ class MessageController extends AbstractController
         $this->entityManager->persist($message);
         $this->entityManager->flush();
 
-        if (strpos($message->getSpamInfo(), SpamInfoType::SPAM_BLOCKED_WORD) === false) {
+        if (!str_contains($message->getSpamInfo(), SpamInfoType::SPAM_BLOCKED_WORD)) {
             $this->mailer->sendMessageNotificationEmail($sender, $receiver, 'message', [
                 'message' => $message,
                 'subject' => $subjectText,

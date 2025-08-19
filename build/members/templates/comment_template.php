@@ -97,8 +97,8 @@ foreach($comments as $comment) {
     if (isset($comment['from'])) {$c = $comment['from'];}
 //            echo $c->UsernameFromMember;
     if ($showfrom || $editfrom) {
-        $quality = strtolower($c->comQuality);
-        $tt = explode(',', $c->Relations); ?>
+        $quality = strtolower((string) $c->comQuality);
+        $tt = explode(',', (string) $c->Relations); ?>
 
         <div class="col-12 col-sm-6 card comment-bg-<?=$quality?> mb-3">
             <div>
@@ -148,7 +148,7 @@ foreach($comments as $comment) {
                         }
                         ?>
 
-                <?php echo $purifier->purify(nl2br($c->TextFree)); ?>
+                <?php echo $purifier->purify(nl2br((string) $c->TextFree)); ?>
 
                 <?php if (MOD_right::get()->HasRight('Comments'))  { ?>
                     <a href="/admin/comment/<?php echo $c->id; ?>"><?=$words->get('EditComment')?></a>
@@ -171,8 +171,8 @@ foreach($comments as $comment) {
 
      if ($showto || $editto){
          $cc = $comment['to'];
-         $quality = strtolower($cc->comQuality);
-         $tt = explode(',', $cc->Relations); ?>
+         $quality = strtolower((string) $cc->comQuality);
+         $tt = explode(',', (string) $cc->Relations); ?>
         <div class="col-12 col-sm-6 card comment-bg-<?=$quality?> mb-3">
 
             <div>
@@ -225,7 +225,7 @@ foreach($comments as $comment) {
                 echo '<p class="small font-italic p-0 mb-1">'.$words->get("Comment_" . $tt[$jj]).'</p>';
              }
 
-             echo $purifier->purify(nl2br($cc->TextFree));
+             echo $purifier->purify(nl2br((string) $cc->TextFree));
 
              if (MOD_right::get()->HasRight('Comments'))  { ?>
                 <a href="/admin/comment/<?php echo $cc->id; ?>"><?=$words->get('EditComment')?></a>

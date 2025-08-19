@@ -44,11 +44,11 @@ class ActivitiesFindPage extends ActivitiesBasePage
         echo '<th>Attendees</th>';
         echo '<th>Organizer</th>';
         echo '</tr>';
-        $Activities = array(
-            array('<img src="images/icons/maybe.png" width="16" height="16">', 'Lorem ipsum dolor', 'Jan, 10 2013<br> 11:00am - 1:00pm', 'Somewhere', '12', '<a href="members/someone">someone</a><br>Created Jan, 07 2013'),
-            array('<img src="images/icons/maybe.png" width="16" height="16">', 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren,', 'Jan, 10 2013<br> 11:00am - 1:00pm', 'over the', '1102', '<a href="members/someone">someone</a><br>Created Dec, 12 2012'),
-            array('<img src="images/icons/maybe.png" width="16" height="16">', 'Lorem ipsum dolor', 'Jan, 10 2013<br> 11:00am - 1:00pm', 'Rainbow', '3', '<a href="members/someone">someone</a><br>Created Jan, 01 2013')
-            );
+        $Activities = [
+            ['<img src="images/icons/maybe.png" width="16" height="16">', 'Lorem ipsum dolor', 'Jan, 10 2013<br> 11:00am - 1:00pm', 'Somewhere', '12', '<a href="members/someone">someone</a><br>Created Jan, 07 2013'],
+            ['<img src="images/icons/maybe.png" width="16" height="16">', 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren,', 'Jan, 10 2013<br> 11:00am - 1:00pm', 'over the', '1102', '<a href="members/someone">someone</a><br>Created Dec, 12 2012'],
+            ['<img src="images/icons/maybe.png" width="16" height="16">', 'Lorem ipsum dolor', 'Jan, 10 2013<br> 11:00am - 1:00pm', 'Rainbow', '3', '<a href="members/someone">someone</a><br>Created Jan, 01 2013']
+            ];
         for($ii = 0; $ii < 5; $ii++)
         {
             if ($ii % 2) {

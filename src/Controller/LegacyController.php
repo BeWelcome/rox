@@ -27,7 +27,6 @@ class LegacyController extends AbstractController
      */
     public function showLegacyPage(
         Request $request,
-        EntityManagerInterface $entityManager,
         LegacyHttpKernel $legacyHttpKernel,
         TranslatorInterface $translator,
         UrlGeneratorInterface $urlGenerator,
@@ -55,9 +54,9 @@ class LegacyController extends AbstractController
         );
 
         $pathInfo = $request->getPathInfo();
-        $public = (false === strpos($pathInfo, '/safety')) ||
-            (false === strpos($pathInfo, '/about')) ||
-            (false === strpos($pathInfo, '/signup'));
+        $public = (!str_contains($pathInfo, '/safety')) ||
+            (!str_contains($pathInfo, '/about')) ||
+            (!str_contains($pathInfo, '/signup'));
         if (!$session->has('IdMember')) {
             /** @var Member $member */
             $member = $securityHelper->getUser();

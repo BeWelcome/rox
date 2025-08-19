@@ -23,8 +23,6 @@ class PollsPage extends PageWithActiveSkin
 
     /** @var HTMLPurifier  */
     private $_purifier;
-    private $_error;
-    private $_action;
     private $_data; // Will receive the data to be used by the template
 
     /**
@@ -33,12 +31,10 @@ class PollsPage extends PageWithActiveSkin
      * data will be used by the template call in column_col3
      *
      */
-    public function __construct($error = "", $action = "", $Data = "")
+    public function __construct(private $_error = "", private $_action = "", $Data = "")
     {
         parent::__construct();
         $this->_purifier = MOD_htmlpure::get()->getAdvancedHtmlPurifier();
-        $this->_error = $error;
-        $this->_action = $action;
         if (!empty($Data)) {
             $this->_data = $Data;
         }
@@ -52,9 +48,10 @@ class PollsPage extends PageWithActiveSkin
         }
     }
 
+    #[\Override]
     protected function getColumnNames()
     {
-        return array('col3');
+        return ['col3'];
     }
 
     protected function column_col3()
@@ -133,6 +130,7 @@ class PollsPage extends PageWithActiveSkin
      * configure the page title (what appears in your browser's title bar)
      * @return string the page title
      */
+    #[\Override]
     protected function getPageTitle()
     {
         $words = $this->getWords();
@@ -151,21 +149,22 @@ class PollsPage extends PageWithActiveSkin
         return $this->_action;
     }
 
+    #[\Override]
     protected function getSubmenuItems()
     {
-        $items = array();
+        $items = [];
 
         $words = $this->getWords();
 
-        $items[] = array('wiki', '/wiki/how_pollsworks', 'Wiki Doc');
-        $items[] = array('listOpen', 'polls/list/open', $words->getSilent("polls_open"));
-        $items[] = array('list_contributed', 'polls/list/contributed', $words->getSilent("polls_contributed"));
+        $items[] = ['wiki', '/wiki/how_pollsworks', 'Wiki Doc'];
+        $items[] = ['listOpen', 'polls/list/open', $words->getSilent("polls_open")];
+        $items[] = ['list_contributed', 'polls/list/contributed', $words->getSilent("polls_contributed")];
         if (MOD_right::get()->HasRight("Poll", "create")) {
-            $items[] = array('create', 'polls/create', $words->getSilent("polls_createlink"));
-            $items[] = array('listProject', 'polls/list/new', $words->getSilent("polls_new"));
-            $items[] = array('listall', 'polls/list/all', $words->getSilent("polls_listlink"));
-            $items[] = array('listClosed', 'polls/list/closed', $words->getSilent("polls_closed"));
-            $items[] = array('update_status', 'polls/updatestatus', $words->getSilent("polls_update_status"));
+            $items[] = ['create', 'polls/create', $words->getSilent("polls_createlink")];
+            $items[] = ['listProject', 'polls/list/new', $words->getSilent("polls_new")];
+            $items[] = ['listall', 'polls/list/all', $words->getSilent("polls_listlink")];
+            $items[] = ['listClosed', 'polls/list/closed', $words->getSilent("polls_closed")];
+            $items[] = ['update_status', 'polls/updatestatus', $words->getSilent("polls_update_status")];
         }
 
         return $items;

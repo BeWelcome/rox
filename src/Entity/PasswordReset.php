@@ -12,83 +12,47 @@ use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Community News Comments.
- *
+ * Do not check entities with PHPMD
  *
  * @SuppressWarnings("PHPMD")
- * Auto generated class do not check mess
  */
 #[ORM\Table(name: 'passwordreset')]
 #[ORM\Entity]
 #[ORM\HasLifecycleCallbacks]
 class PasswordReset
 {
-    /**
-     * @var Member
-     */
-    #[ORM\OneToOne(targetEntity: \Member::class)]
-    private $member;
+    #[ORM\OneToOne(targetEntity: Member::class)]
+    private Member $member;
 
-    /**
-     * @var DateTime
-     */
     #[ORM\Column(name: 'generated', type: 'datetime', nullable: false)]
-    private $generated;
+    private DateTime $generated;
 
-    /**
-     * @var string
-     */
     #[ORM\Column(name: 'token', type: 'string', length: 64, nullable: false)]
-    private $token;
+    private string $token;
 
-    /**
-     * @var int
-     */
     #[ORM\Column(name: 'id', type: 'integer')]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
-    private $id;
+    private int $id;
 
-    /**
-     * Get generated.
-     *
-     * @return Carbon
-     */
-    public function getGenerated()
+    public function getGenerated(): Carbon
     {
         return Carbon::instance($this->generated);
     }
 
-    /**
-     * Set token.
-     *
-     * @param string $token
-     *
-     * @return PasswordReset
-     */
-    public function setToken($token)
+    public function setToken(string $token): self
     {
         $this->token = $token;
 
         return $this;
     }
 
-    /**
-     * Get token.
-     *
-     * @return string
-     */
-    public function getToken()
+    public function getToken(): string
     {
         return $this->token;
     }
 
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
@@ -98,29 +62,16 @@ class PasswordReset
         return $this->member;
     }
 
-    /**
-     * @return PasswordReset
-     */
-    public function setMember(Member $member)
+    public function setMember(Member $member): self
     {
         $this->member = $member;
 
         return $this;
     }
 
-    /**
-     * Triggered on insert.
-     */
     #[ORM\PrePersist]
-    public function onPrePersist()
+    public function onPrePersist(): void
     {
         $this->generated = new DateTime('now');
-    }
-
-    public function setGenerated(\DateTimeInterface $generated): self
-    {
-        $this->generated = $generated;
-
-        return $this;
     }
 }

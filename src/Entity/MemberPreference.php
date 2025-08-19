@@ -6,9 +6,9 @@ use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Memberspreferences.
+ * Do not check entities with PHPMD
  *
- *
+ * @SuppressWarnings("PHPMD")
  */
 #[ORM\Table(name: 'memberspreferences')]
 #[ORM\Index(name: 'memberspreferences_members', columns: ['IdMember', 'IdPreference'])]

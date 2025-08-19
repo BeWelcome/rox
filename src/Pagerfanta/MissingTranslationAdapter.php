@@ -10,17 +10,11 @@ class MissingTranslationAdapter implements AdapterInterface
 {
     private string $query;
 
-    private string $term;
+    private readonly string $term;
 
-    private string $locale;
-
-    private Connection $connection;
-
-    public function __construct(Connection $connection, string $locale, string $term)
+    public function __construct(private readonly Connection $connection, private readonly string $locale, string $term)
     {
-        $this->connection = $connection;
-        $this->term = empty($term) ? $term : $connection->quote('%' . $term . '%');
-        $this->locale = $locale;
+        $this->term = empty($term) ? $term : $this->connection->quote('%' . $term . '%');
 
         $this->query = "
             SELECT

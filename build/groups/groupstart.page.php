@@ -56,6 +56,7 @@ class GroupStartPage extends GroupsBasePage
 		}
     }
 
+    #[\Override]
     protected function getSubmenuActiveItem() {
         return 'start';
     }

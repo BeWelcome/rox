@@ -20,17 +20,17 @@ use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
+/**
+ * @SuppressWarnings("PHPMD.ExcessiveClassComplexity")
+ *
+ * \todo Move statistics of different aspects  into different models
+ */
 class StatisticsModel
 {
     use ManagerTrait;
 
-    private TranslatorInterface $translator;
-    private EntityManagerInterface $entityManager;
-
-    public function __construct(TranslatorInterface $translator, EntityManagerInterface $entityManager)
+    public function __construct(private TranslatorInterface $translator, private EntityManagerInterface $entityManager)
     {
-        $this->translator = $translator;
-        $this->entityManager = $entityManager;
     }
 
     public function getStatisticsHomepage(): array
@@ -104,8 +104,6 @@ class StatisticsModel
      * @throws DBALException
      * @throws ORMException
      * @throws OptimisticLockException
-     *
-     * @return int
      */
     public function updateStatistics(DatePeriod $dates, OutputInterface $output): int
     {
@@ -419,7 +417,8 @@ class StatisticsModel
         $other = $this->translator->trans('statistics.other', [ 'count' => count($resultSet) - $count + 1]);
         $result = array_slice($resultSet, 0, $count);
         $keys = array_keys($resultSet);
-        for ($i = $count; $i < count($keys); $i++) {
+        $keyCount = count($keys);
+        for ($i = $count; $i < $keyCount; $i++) {
            if (!isset($result[$other])) {
                $result[$other] = 0;
            }
@@ -716,8 +715,8 @@ class StatisticsModel
             // turn provided yearweek into a date (first day of the week)
             $preparedData['labels'][] = date(
                 'Y-m-d',
-                strtotime(substr($datum['week'], 0, 4)
-                    . '-W' . substr($datum['week'], 4, 2) . '-1')
+                strtotime(substr((string) $datum['week'], 0, 4)
+                    . '-W' . substr((string) $datum['week'], 4, 2) . '-1')
             );
             $preparedData['numbers'][] = $datum['count'];
         }
@@ -731,7 +730,7 @@ class StatisticsModel
         $qb = $this->entityManager->createQueryBuilder();
         $countriesQuery = $qb
             ->select('c')
-            ->from('App\Entity\NewLocation', 'c', 'c.countryId')
+            ->from(\App\Entity\NewLocation::class, 'c', 'c.countryId')
             ->where($qb->expr()->in('c.countryId ', $countryCodes))
             ->andWhere($qb->expr()->eq('c.featureClass', $qb->expr()->literal('A')))
             ->andWhere($qb->expr()->eq('c.featureCode', $qb->expr()->literal('PCLI')))
@@ -739,7 +738,7 @@ class StatisticsModel
         ;
         $countriesQuery->setHint(
             \Doctrine\ORM\Query::HINT_CUSTOM_OUTPUT_WALKER,
-            'Gedmo\\Translatable\\Query\\TreeWalker\\TranslationWalker'
+            \Gedmo\Translatable\Query\TreeWalker\TranslationWalker::class
         );
         $countriesQuery->setHint(
             TranslatableListener::HINT_TRANSLATABLE_LOCALE,

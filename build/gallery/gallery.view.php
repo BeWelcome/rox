@@ -9,12 +9,8 @@
  * @version $Id$
  */
 class GalleryView extends PAppView {
-    private $_model;
-
-
-    public function __construct(GalleryModel $model) 
+    public function __construct(private readonly GalleryModel $_model)
     {
-        $this->_model = $model;
     }
     public function loginWidget() 
     {
@@ -42,7 +38,7 @@ class GalleryView extends PAppView {
         $callbackId = $Gallery->updateGalleryProcess();
         $vars =& PPostHandler::getVars($callbackId);
         if (!isset($vars['errors']))
-            $vars['errors'] = array();
+            $vars['errors'] = [];
         $type = 'images';
         $galleries = $this->_model->getUserGalleries();
         echo '

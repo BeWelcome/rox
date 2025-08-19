@@ -55,13 +55,13 @@ class GroupMemberSettingsPage extends GroupsSubPage
         <?= $problemmsg; ?>
         <form action="" method="post">
         <?= $callbacktag; ?>
-            <h2><?= $words->get('GroupsMemberSettings') ;?><?= htmlspecialchars($this->group->Name, ENT_QUOTES) ?></h2>
+            <h2><?= $words->get('GroupsMemberSettings') ;?><?= htmlspecialchars((string) $this->group->Name, ENT_QUOTES) ?></h2>
             <input type='hidden' name='member_id' value='<?= $this->member->id ;?>' />
             <input type='hidden' name='group_id' value='<?= $membershipinfo->IdGroup ;?>' />
             <div class="row">
                 <div class="col-12 col-md-6">
                     <div class="o-form-group"><label for="comment"><?= $words->get('GroupsMemberComments') ;?></label><br>
-                    <textarea class="o-input" id="comment" name="membershipinfo_comment" cols="30" rows="3"><?= (($membershipinfo->Comment != '' ) ? htmlspecialchars($words->mTrad($membershipinfo->Comment)) : '' ); ?></textarea>
+                    <textarea class="o-input" id="comment" name="membershipinfo_comment" cols="30" rows="3"><?= (($membershipinfo->Comment != '' ) ? htmlspecialchars((string) $words->mTrad($membershipinfo->Comment)) : '' ); ?></textarea>
                     </div>
                 </div> <!-- row -->
                 <div class="col-12 col-md-6">
@@ -89,6 +89,7 @@ class GroupMemberSettingsPage extends GroupsSubPage
         <?php
     }
 
+    #[\Override]
     protected function getSubmenuActiveItem() {
         return 'membersettings';
     }

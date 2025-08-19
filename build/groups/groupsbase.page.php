@@ -65,7 +65,7 @@ class GroupsBasePage extends PageWithActiveSkin
     {
         if (!isset($this->_messages))
         {
-            $this->_messages = array();
+            $this->_messages = [];
         }
 
         $this->_messages[] = $message;
@@ -84,7 +84,7 @@ class GroupsBasePage extends PageWithActiveSkin
         }
         else
         {
-            return array();
+            return [];
         }
     }
 
@@ -96,11 +96,13 @@ class GroupsBasePage extends PageWithActiveSkin
         $this->teaserHeadline = $teaserHeadline;
     }
 
+    #[\Override]
     protected function getColumnNames ()
     {
-        return array('col3');
+        return ['col3'];
     }
 
+    #[\Override]
     protected function getPageTitle() {
         $words = $this->getWords();
         if (is_object($this->group)) {
@@ -184,6 +186,7 @@ class GroupsBasePage extends PageWithActiveSkin
         return $breadcrumbs;
     }
 
+    #[\Override]
     protected function teaserContent()
     {
         echo $this->breadcrumbs();
@@ -198,9 +201,10 @@ class GroupsBasePage extends PageWithActiveSkin
         return 'groups';
     }
 
+    #[\Override]
     protected function getSubmenuItems()
     {
-        $items = array();
+        $items = [];
         $isAdmin = false;
         $isOwner = false;
         if ($this->group) {
@@ -214,14 +218,14 @@ class GroupsBasePage extends PageWithActiveSkin
         if ($this->group)
         {
             $group_id = $this->group->id;
-            $items[] = array('start', 'group/'.$group_id, $words->getSilent('GroupOverview'));
-            $items[] = array('forum', 'group/'.$group_id.'/forum', $words->getSilent('GroupDiscussions'));
-            $items[] = array('wiki', 'group/'.$group_id.'/wiki', $words->getSilent('GroupWiki'));
-            $items[] = array('members', 'group/'.$group_id.'/members', $words->getSilent('GroupMembers'));
+            $items[] = ['start', 'group/'.$group_id, $words->getSilent('GroupOverview')];
+            $items[] = ['forum', 'group/'.$group_id.'/forum', $words->getSilent('GroupDiscussions')];
+            $items[] = ['wiki', 'group/'.$group_id.'/wiki', $words->getSilent('GroupWiki')];
+            $items[] = ['members', 'group/'.$group_id.'/members', $words->getSilent('GroupMembers')];
             if ($this->isGroupMember())
             {
-                $items[] = array('membersettings', 'group/'.$group_id.'/membersettings', $words->getSilent('GroupMembersettings'));
-                $items[] = array('relatedgroupsettings', 'group/'.$group_id.'/relatedgroupsettings', $words->getSilent('GroupRelatedGroups'));
+                $items[] = ['membersettings', 'group/'.$group_id.'/membersettings', $words->getSilent('GroupMembersettings')];
+                $items[] = ['relatedgroupsettings', 'group/'.$group_id.'/relatedgroupsettings', $words->getSilent('GroupRelatedGroups')];
 
                 $formkit = $this->layoutkit->formkit;
                 $searchTerms = ($this->search_terms) ?? '';
@@ -236,11 +240,11 @@ class GroupsBasePage extends PageWithActiveSkin
             </div>
         </form>
 SEARCH_FORM;
-                $items[] = array('search', '', $searchForm);
+                $items[] = ['search', '', $searchForm];
             }
             if ($isOwner || ($isAdmin && GroupType::INVITE_ONLY !== $this->group->Type))
             {
-                $items[] = array('admin', "group/{$this->group->getPKValue()}/groupsettings", $words->getSilent('GroupGroupsettings'));
+                $items[] = ['admin', "group/{$this->group->getPKValue()}/groupsettings", $words->getSilent('GroupGroupsettings')];
             }
         } else {
             $items[] = [ 'search', 'groups/search', $words->getSilent('GroupsSearchHeading') ];
@@ -285,6 +289,7 @@ SEARCH_FORM;
         return $items;
     }
 
+    #[\Override]
     protected function getStylesheets() {
        $stylesheets = parent::getStylesheets();
        $stylesheets[] = 'styles/css/minimal/screen/custom/groups.css?3';

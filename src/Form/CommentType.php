@@ -20,11 +20,8 @@ use Symfony\Component\Validator\Constraints\NotNull;
 
 class CommentType extends AbstractType
 {
-    private SetTypeTransformer $setTypeTransformer;
-
-    public function __construct(SetTypeTransformer $setTypeTransformer)
+    public function __construct(private readonly SetTypeTransformer $setTypeTransformer)
     {
-        $this->setTypeTransformer = $setTypeTransformer;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void

@@ -12,20 +12,14 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class Logger
 {
-    private EntityManagerInterface $entityManager;
-
-    private Security $security;
-
-    public function __construct(EntityManagerInterface $entityManager, Security $security)
+    public function __construct(private readonly EntityManagerInterface $entityManager, private readonly Security $security)
     {
-        $this->entityManager = $entityManager;
-        $this->security = $security;
     }
 
     /**
      * @throws Exception
      */
-    public function write(string $msg, string $type, UserInterface $member = null): void
+    public function write(string $msg, string $type, ?UserInterface $member = null): void
     {
         if (null === $member) {
             // Get member from the security context

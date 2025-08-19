@@ -59,15 +59,15 @@ if ($this->noScope){
     if (empty($this->formdata['EngCode'])){
 ?>
   <tr><td class="label"><label for="code">Code:</label> </td>
-  <td><input name="EngCode" id="code" value="<?= htmlspecialchars($this->formdata['EngCode']) ?>" size="56" /></tr>
+  <td><input name="EngCode" id="code" value="<?= htmlspecialchars((string) $this->formdata['EngCode']) ?>" size="56" /></tr>
 <?php
     } else {
-echo $words->getformatted(($this->status),htmlspecialchars($this->formdata['EngCode']));
+echo $words->getformatted(($this->status),htmlspecialchars((string) $this->formdata['EngCode']));
 ?>
-<input type=hidden name="Sentence" value="<?= htmlspecialchars($this->formdata['Sentence']) ?>" />
-<input type=hidden name="EngSent" value="<?= htmlspecialchars($this->formdata['EngSent']) ?>" />
-<input type=hidden name="EngCode" value="<?= htmlspecialchars($this->formdata['EngCode']) ?>" />
-<input type=hidden name="lang" value="<?= htmlspecialchars($this->formdata['lang']) ?>" />
+<input type=hidden name="Sentence" value="<?= htmlspecialchars((string) $this->formdata['Sentence']) ?>" />
+<input type=hidden name="EngSent" value="<?= htmlspecialchars((string) $this->formdata['EngSent']) ?>" />
+<input type=hidden name="EngCode" value="<?= htmlspecialchars((string) $this->formdata['EngCode']) ?>" />
+<input type=hidden name="lang" value="<?= htmlspecialchars((string) $this->formdata['lang']) ?>" />
 <?php
     }
 
@@ -76,8 +76,8 @@ echo $words->getformatted(($this->status),htmlspecialchars($this->formdata['EngC
         include 'adminword.codevarsform.php';
     } else {
 ?>
-    <input type=hidden name=EngDesc value="<?=htmlspecialchars($this->formdata['EngDesc'])?>" />
-    <input type=hidden name=EngPrio value="<?=htmlspecialchars($this->formdata['EngPrio'])?>" />
+    <input type=hidden name=EngDesc value="<?=htmlspecialchars((string) $this->formdata['EngDesc'])?>" />
+    <input type=hidden name=EngPrio value="<?=htmlspecialchars((string) $this->formdata['EngPrio'])?>" />
     <input type=hidden name=EngDnt value="<?=$this->formdata['EngDnt']?>" />
 <?php
     }

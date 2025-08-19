@@ -32,6 +32,7 @@ Boston, MA  02111-1307, USA.
  */
 class ActivitiesShowPage extends ActivitiesBasePage
 {
+    #[\Override]
     protected function getSubmenuItems()
     {
         $items = parent::getSubmenuItems();
@@ -39,11 +40,11 @@ class ActivitiesShowPage extends ActivitiesBasePage
         $layoutkit = $this->layoutkit;
         $words = $layoutkit->getWords();
         // add details item to end of normal list like search results
-        $items[] = array('activitiesdetails', 'activities/'. $activity_id, $words->getSilent('ActivitiesDetails'));
+        $items[] = ['activitiesdetails', 'activities/'. $activity_id, $words->getSilent('ActivitiesDetails')];
         $reportUrl = '/feedback?IdCategory=12&FeedbackQuestion=' . urlencode('Hi, I think the activity '
                 . $this->activity->title . ' (' . $this->activity->id
                 . ') isn\'t in line with the rules.');
-        $items[] = array('report', $reportUrl, '<i class=\'fa fa-flag\'></i> ' . $words->getSilent('activity.report'));
+        $items[] = ['report', $reportUrl, '<i class=\'fa fa-flag\'></i> ' . $words->getSilent('activity.report')];
         return $items;
     }
 

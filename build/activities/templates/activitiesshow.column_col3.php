@@ -1,6 +1,6 @@
 ﻿<div class="row">
 <?php
-$activityInTheFuture = (time() - 7 * 24 * 60 * 60 < strtotime($this->activity->dateTimeEnd));
+$activityInTheFuture = (time() - 7 * 24 * 60 * 60 < strtotime((string) $this->activity->dateTimeEnd));
 $formkit = $this->layoutkit->formkit;
 $callbackTagsJoinEdit = $formkit->setPostCallback('ActivitiesController', 'joinLeaveActivityCallback');
 $callbackTagsCancelUncancel = $formkit->setPostCallback('ActivitiesController', 'cancelUncancelActivityCallback');
@@ -10,7 +10,7 @@ $request = PRequest::get()->request;
 $login_url = 'login/' . htmlspecialchars(implode('/', $request), ENT_QUOTES);
 $purifierModule = new MOD_htmlpure();
 $purifier = $purifierModule->getActivitiesHtmlPurifier();
-$status = array();
+$status = [];
 if ($this->session->has('ActivityStatus')) {
     $status = $this->session->get('ActivityStatus');
     $this->session->remove('ActivityStatus');
@@ -150,7 +150,7 @@ if (empty($vars)) {
 
                         <input class="o-input mb-1" type="text" maxlength="80" id="activity-comment"
                                name="activity-comment"
-                               value="<?php echo htmlspecialchars($vars['activity-comment'], ENT_QUOTES); ?>"
+                               value="<?php echo htmlspecialchars((string) $vars['activity-comment'], ENT_QUOTES); ?>"
                                placeholder="<?php echo $words->get('ActivityYourComment'); ?>"/>
 
                         <?php
@@ -278,7 +278,7 @@ if (empty($vars)) {
                     </div>
                 </div>
                 <?php if ($attendee->comment) { ?>
-                    <div class="small gray"><i><?php echo htmlspecialchars($attendee->comment); ?></i></div>
+                    <div class="small gray"><i><?php echo htmlspecialchars((string) $attendee->comment); ?></i></div>
                 <?php } ?>
             </div>
             </div>

@@ -7,14 +7,14 @@
 class ActivitiesView extends RoxAppView
 {
     /**
-     * Declaring private variable.
-     */
-    private $_model;
-
-    /**
      * Constructor.
      */
-    public function __construct(ActivitiesModel $model) {
-        $this->_model = $model;
+    public function __construct(
+        /**
+         * Declaring private variable.
+         */
+        private readonly ActivitiesModel $_model
+    )
+    {
     }
 }

@@ -9,16 +9,13 @@ use PDO;
 
 class ArchivedTranslationAdapter implements AdapterInterface
 {
-    private Connection $connection;
-
     /**
      * SearchAdapter constructor.
      *
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
-    public function __construct(Connection $connection)
+    public function __construct(private readonly Connection $connection)
     {
-        $this->connection = $connection;
     }
 
     /**

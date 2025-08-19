@@ -21,7 +21,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class RelationController extends AbstractController
@@ -30,18 +30,8 @@ class RelationController extends AbstractController
     use ItemsPerPageTraits;
     use TranslatedFlashTrait;
 
-    private EntityManagerInterface $entityManager;
-    private ChangeProfilePictureGlobals $globals;
-    private ProfileSubmenu $profileSubmenu;
-
-    public function __construct(
-        EntityManagerInterface $entityManager,
-        ProfileSubmenu $profileSubmenu,
-        ChangeProfilePictureGlobals $globals
-    ) {
-        $this->entityManager = $entityManager;
-        $this->globals = $globals;
-        $this->profileSubmenu = $profileSubmenu;
+    public function __construct(private EntityManagerInterface $entityManager, private ProfileSubmenu $profileSubmenu, private ChangeProfilePictureGlobals $globals)
+    {
     }
 
     #[Route(path: '/members/{username}/relation/add', name: 'add_relation')]
@@ -225,21 +215,5 @@ class RelationController extends AbstractController
         $relationRepository = $this->entityManager->getRepository(Relation::class);
 
         return $relationRepository->findRelationBetween($loggedInMember, $member);
-    }
-
-    private function checkForEmailAddress(Relation $relation): bool
-    {
-        $relationText = $relation->getCommentText();
-        $found = preg_match("/[\._a-zA-Z0-9-]+@[\._a-zA-Z0-9-]+/i", $relationText);
-
-        return $found > 0;
-    }
-
-    private function checkForPhoneNumber(Relation $relation): bool
-    {
-        $relationText = $relation->getCommentText();
-        $found = preg_match("/([0-9][\. \)-]*){8,}/", $relationText);
-
-        return $found > 0;
     }
 }

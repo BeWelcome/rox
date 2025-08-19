@@ -10,14 +10,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 class HomeController extends AbstractController
 {
-    /**
-     * @return Response
-     */
     #[Route(path: '/', name: 'homepage')]
     public function show(Request $request, StatisticsModel $statisticsModel, array $locales): Response
     {
@@ -66,7 +63,7 @@ class HomeController extends AbstractController
         ]);
     }
 
-    private function getHomeImagesRandomly()
+    private function getHomeImagesRandomly(): array
     {
         $images = [
             1 => [
@@ -83,13 +80,15 @@ class HomeController extends AbstractController
             ],
         ];
         $picked = [];
+        $pickedCount = 0;
         $imagesRandom = [];
-        while (count($picked) <> 3) {
+        while ($pickedCount <> 3) {
             $pick = random_int(1,3);
             if (!in_array($pick, $picked)) {
                 $picked[] = $pick;
                 $imagesRandom[count($picked)] = $images[$pick];
             }
+            $pickedCount = count($picked);
         }
 
         return $imagesRandom;

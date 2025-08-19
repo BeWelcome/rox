@@ -35,13 +35,14 @@ class SubjectType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => 'App\Entity\Subject',
+            'data_class' => \App\Entity\Subject::class,
         ]);
     }
 
     /**
      * {@inheritdoc}
      */
+    #[\Override]
     public function getBlockPrefix(): string
     {
         return 'app_subject';

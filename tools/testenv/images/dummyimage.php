@@ -27,9 +27,9 @@ class DummyImage
         $div = bcadd(bcpow(256,3),bcmod($this->id,$divmod));
         $val = bcadd(bcpow($this->id,$pow1),bcpow($this->id + $add,$pow2));
         $mod = bcmod($val,$div);
-        $c1 = floor($mod / pow(256,2));
-        $c2 = floor($mod / 256 % 256);
-        $c3 = $mod % 256;
+        $c1 = floor(intval($mod) / pow(256,2));
+        $c2 = floor(intval($mod / 256) % 256);
+        $c3 = intval($mod) % 256;
         // get related color, based on the other color
         if (($c1+$c2+$c3)/3 < 128){
             $c4 = min(255,round($c1 * $factor));
@@ -125,7 +125,7 @@ class DummyImage
         echo "Processing image";
         foreach ($thumbData as $thname => $th){
             echo "... " . $thname;
-            $newImage = imagecreatetruecolor($th[4], $th[5]);
+            $newImage = imagecreatetruecolor(intval($th[4]), intval($th[5]));
             $newFile = $this->imgDir . '/' . $this->getFileName($thname);
             imagecopyresized($newImage, $this->blueprint,$th[0], $th[1],
                              $th[2], $th[3], $th[4], $th[5], $th[6], $th[7]);

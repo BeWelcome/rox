@@ -84,6 +84,7 @@ class GroupJoinPage extends GroupsBasePage
 HTML;
     }
 
+    #[\Override]
     protected function getSubmenuActiveItem() {
         return 'join';
     }

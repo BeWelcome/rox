@@ -10,7 +10,7 @@
     <div class="p-2">
         <?php
         $purifier = (new MOD_htmlpure())->getAdvancedHtmlPurifier();
-        echo $purifier->purify(stripslashes($member->get_trad("ProfileSummary", $profile_language, true)));
+        echo $purifier->purify(stripslashes((string) $member->get_trad("ProfileSummary", $profile_language, true)));
         ?>
     </div>
 </div>
@@ -126,12 +126,12 @@
                     <?php
                     // display my groups, if there are any
                     for ($i = 0; $i < count($my_groups) && $i < 5; $i++) :
-                        $group_img = ((strlen($my_groups[$i]->Picture) > 0) ? "group/thumbimg/{$my_groups[$i]->getPKValue()}" : 'images/icons/group.png');
+                        $group_img = ((strlen((string) $my_groups[$i]->Picture) > 0) ? "group/thumbimg/{$my_groups[$i]->getPKValue()}" : 'images/icons/group.png');
                         $group_id = $my_groups[$i]->id;
-                        $group_name = htmlspecialchars($my_groups[$i]->Name, ENT_QUOTES);
+                        $group_name = htmlspecialchars((string) $my_groups[$i]->Name, ENT_QUOTES);
                         $comment = '';
                         if ($member->getGroupMembership($my_groups[$i])) {
-                            $comment = strip_tags($purifier->purify($words->mInTrad($member->getGroupMembership($my_groups[$i])->Comment, $profile_language)));
+                            $comment = strip_tags((string) $purifier->purify($words->mInTrad($member->getGroupMembership($my_groups[$i])->Comment, $profile_language)));
                         }
                         ?>
                         <div class="mb-3 d-flex d-column">
@@ -189,18 +189,18 @@
                                     if ($value[0] === ' ') {
                                         echo '+';
                                     }
-                                    echo trim($value) . '</dd>';
+                                    echo trim((string) $value) . '</dd>';
                                 }
                             }
 
                             if (!empty($website)) {
-                                $sites = explode(" ", str_replace(array("\r\n", "\r", "\n"), " ", $member->WebSite));
+                                $sites = explode(" ", str_replace(["\r\n", "\r", "\n"], " ", $member->WebSite));
                                 echo '<dt class="h5">' . $words->get('Website') . '</dt>';
                                 foreach ($sites as $site) {
-                                    if (false === strpos($site, 'http://') &&  false === strpos($site, 'https://')) {
+                                    if (!str_contains($site, 'http://') &&  !str_contains($site, 'https://')) {
                                         $site = 'https://' . $site;
                                     }
-                                    $schemeLessURI = str_replace(array('http://', 'https://'), '', $site);
+                                    $schemeLessURI = str_replace(['http://', 'https://'], '', $site);
                                     echo '<dd><a href="' . $site . '">' . $schemeLessURI . '</a></dd>';
                                 }
                             }

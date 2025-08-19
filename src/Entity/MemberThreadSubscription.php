@@ -7,7 +7,9 @@ use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * MembersThreadsSubscribed.
+ * Do not check entities with PHPMD
+ *
+ * @SuppressWarnings("PHPMD")
  */
 #[ORM\Table(name: 'members_threads_subscribed')]
 #[ORM\Entity]

@@ -33,6 +33,7 @@ Boston, MA  02111-1307, USA.
 
 class GroupsFeaturedPage extends GroupsBasePage
 {
+    #[\Override]
     protected function teaserContent()
     {
         $words = $this->getWords();
@@ -45,6 +46,7 @@ class GroupsFeaturedPage extends GroupsBasePage
         <?php
     }
 
+    #[\Override]
     protected function getSubmenuActiveItem()
     {
         return 'featured';

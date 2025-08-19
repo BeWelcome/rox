@@ -17,28 +17,33 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 class PasswordModel
 {
-    private EntityManagerInterface $entityManager;
-    private PasswordHasherFactoryInterface $passwordHasherFactory;
+    public function __construct(private readonly EntityManagerInterface $entityManager, private readonly PasswordHasherFactoryInterface $passwordHasherFactory)
+    {
+    }
 
-    public function __construct(
-        EntityManagerInterface $entityManager,
-        PasswordHasherFactoryInterface $passwordHasherFactory
-    ) {
-        $this->entityManager = $entityManager;
-        $this->passwordHasherFactory = $passwordHasherFactory;
+    public function checkTimeElapsedOnPasswordReset(Member $member): bool
+    {
+        $passwordReset = $this->getPasswordResetForMember($member);
+        if ($passwordReset) {
+            return abs($passwordReset->getGenerated()->diffInDays()) > 5;
+        }
+
+        return true;
     }
 
     public function generatePasswordResetToken(Member $member): string
     {
         try {
-            $this->removePasswordResetTokens($member);
             $token = random_bytes(32);
-        } catch (Exception $e) {
+        } catch (Exception) {
             $token = openssl_random_pseudo_bytes(32);
         }
         $token = bin2hex($token);
 
-        // Persist token into password reset table
+        // Get rid of old password resets
+        $this->removePasswordResetTokens($member);
+
+        // Persist token into password reset table and generate new date
         $passwordReset = new PasswordReset();
         $passwordReset
             ->setMember($member)
@@ -78,5 +83,11 @@ class PasswordModel
         $hashedPassword = $passwordHasher->hash($plaintextPassword);
 
         return $hashedPassword;
+    }
+
+    private function getPasswordResetForMember(Member $member): ?PasswordReset
+    {
+        $passwordResetRepository = $this->entityManager->getRepository(PasswordReset::class);
+        return $passwordResetRepository->findOneBy(['member' => $member]);
     }
 }

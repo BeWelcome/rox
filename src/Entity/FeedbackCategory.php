@@ -11,11 +11,9 @@ use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Feedback category.
- *
+ * Do not check entities with PHPMD
  *
  * @SuppressWarnings("PHPMD")
- * Auto generated class do not check mess
  */
 #[ORM\Table(name: 'feedbackcategories')]
 #[ORM\Entity]

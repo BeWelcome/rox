@@ -27,13 +27,13 @@ This is the list pof pending reports
 $request = PRequest::get()->request;
 
 if (!isset($vars['errors']) || !is_array($vars['errors'])) {
-    $vars['errors'] = array();
+    $vars['errors'] = [];
 }
 
 $list=$DataPost ; // Retrieve the data to display (set by the controller)
 
 $words = new MOD_words();
-$styles = array( 'highlight', 'blank' ); // alternating background for table rows
+$styles = [ 'highlight', 'blank' ]; // alternating background for table rows
 $iiMax = count($list) ; // This retrieve the number of polls
 ?>
 

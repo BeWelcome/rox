@@ -96,7 +96,7 @@ class ForumsView extends RoxAppView {
         if ($baseurl === false) {
             $baseurl = $this->uri;
         }
-        return $baseurl.'s'.$thread->id.'-'.preg_replace('/[^A-Za-z0-9]/', '_',$this->words->fTrad($thread->IdTitle) ) ;
+        return $baseurl.'s'.$thread->id.'-'.preg_replace('/[^A-Za-z0-9]/', '_',(string) $this->words->fTrad($thread->IdTitle) ) ;
     }
 
     public  function postURL($post, $baseurl = false)
@@ -108,7 +108,7 @@ class ForumsView extends RoxAppView {
         {
             $baseurl = 'group/' . $post->IdGroup . '/forum/';
         }
-        return $baseurl.'s'.$post->threadid.'-'.preg_replace('/[^A-Za-z0-9]/', '_',$this->words->fTrad($post->IdTitle) ) ;
+        return $baseurl.'s'.$post->threadid.'-'.preg_replace('/[^A-Za-z0-9]/', '_',(string) $this->words->fTrad($post->IdTitle) ) ;
     }
 
     public  function groupURL($post, $baseurl = false)
@@ -246,7 +246,7 @@ class ForumsView extends RoxAppView {
         }
         if (empty($this->session->get('IdMember')))  {
             if (isset($topic->posts[0])) {
-                $this->page->SetMetaDescription(strip_tags($this->_model->words->fTrad(($topic->posts[0]->IdContent)))) ; ;
+                $this->page->SetMetaDescription(strip_tags((string) $this->_model->words->fTrad(($topic->posts[0]->IdContent)))) ; ;
             }
         }
 
@@ -518,7 +518,7 @@ class ForumsView extends RoxAppView {
         }
         $offs = ($currentPage - 1) * $itemsPerPage;
 
-        $pages = array();
+        $pages = [];
         $j = 0;
         for ($i = 1; $i <= $maxPage; $i++) {
             if ($i <= ($currentPage - 3) && $i != 1 && $i != 2) {
@@ -531,7 +531,7 @@ class ForumsView extends RoxAppView {
                 $pages[] = 'separator';
             }
             $j = $i;
-            $p = array('pageno' => $i);
+            $p = ['pageno' => $i];
             if ($i == $currentPage) {
                 $p['current'] = true;
             }

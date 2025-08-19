@@ -7,13 +7,13 @@
  */
 class AdminRightsBasePage extends AdminBasePage
 {
-    protected $sidebar = array(
+    protected $sidebar = [
         'AdminRightsAssign' => 'admin/rights',
         'AdminRightsOverview' => 'admin/rights/overview',
         'AdminRightsListMembers' => 'admin/rights/list/members',
         'AdminRightsListRights' => 'admin/rights/list/rights',
         'AdminRightsCreate' => 'admin/rights/create',
-    );
+    ];
 
     protected $current = false;
     protected $rights = false;
@@ -24,10 +24,11 @@ class AdminRightsBasePage extends AdminBasePage
         $member = $this->model->getLoggedInMember();
         $rights = $member->getOldRights();
         $scope = $rights['Rights']['Scope'];
-        $this->create = stripos($scope, '"create"') !== false;
-        $this->create |= stripos($scope, '"all"') !== false;
+        $this->create = stripos((string) $scope, '"create"') !== false;
+        $this->create |= stripos((string) $scope, '"all"') !== false;
     }
 
+    #[\Override]
     public function teaserHeadline()
     {
         $headline = parent::teaserHeadline();
@@ -41,6 +42,7 @@ class AdminRightsBasePage extends AdminBasePage
         $this->current = $current;
     }
 
+    #[\Override]
     protected function getStylesheets()
     {
         $stylesheets = parent::getStylesheets();
@@ -48,6 +50,7 @@ class AdminRightsBasePage extends AdminBasePage
         return $stylesheets;
     }
 
+    #[\Override]
     protected function getSubmenuItems()
     {
         $items = [];

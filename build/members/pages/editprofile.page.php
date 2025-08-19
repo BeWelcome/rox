@@ -18,9 +18,10 @@ class EditProfilePage extends ProfilePage
         if ($a == $b) {
             return 0;
         }
-        return (strtolower($a->TranslatedName) < strToLower($b->TranslatedName)) ? -1 : 1;
+        return (strtolower((string) $a->TranslatedName) < strToLower((string) $b->TranslatedName)) ? -1 : 1;
     }
 
+    #[\Override]
     protected function getSubmenuActiveItem()
     {
         return 'editmyprofile';
@@ -29,7 +30,7 @@ class EditProfilePage extends ProfilePage
     private function sortLanguages($languages)
     {
         $words = new MOD_words();
-        $langarr = array();
+        $langarr = [];
         foreach($languages as $language) {
             $lang = $language;
             $lang->TranslatedName = $words->getSilent($language->WordCode);
@@ -62,12 +63,12 @@ class EditProfilePage extends ProfilePage
         if ($this->adminedit) {
             $ReadCrypted = 'AdminReadCrypted';
         }
-        $vars = array();
+        $vars = [];
 
         // Prepare $vars
         $vars['ProfileSummary'] = ($member->ProfileSummary > 0) ? $member->get_trad('ProfileSummary', $profile_language) : '';
         $vars['BirthDate'] = $member->BirthDate;
-        list($vars['BirthYear'], $vars['BirthMonth'], $vars['BirthDay']) = explode('-', $member->BirthDate);
+        [$vars['BirthYear'], $vars['BirthMonth'], $vars['BirthDay']] = explode('-', (string) $member->BirthDate);
         $vars['HideBirthDate'] = $member->HideBirthDate;
         $vars['Occupation'] = ($member->Occupation > 0) ? $member->get_trad('Occupation', $profile_language) : '';
         $vars['Gender'] = $member->Gender;
@@ -154,13 +155,13 @@ class EditProfilePage extends ProfilePage
                 }
                 // update $vars for $languages
                 if (!isset($vars['languages_selected'])) {
-                    $vars['languages_selected'] = array();
+                    $vars['languages_selected'] = [];
                 }
                 $ii = 0;
                 $ii2 = 0;
-                $lang_used = array();
+                $lang_used = [];
                 foreach ($vars['memberslanguages'] as $lang) {
-                    if (ctype_digit($lang) and !in_array($lang, $lang_used)) { // check $lang is numeric, hence a legal IdLanguage
+                    if (ctype_digit((string) $lang) and !in_array($lang, $lang_used)) { // check $lang is numeric, hence a legal IdLanguage
                         $vars['languages_selected'][$ii]->IdLanguage = $lang;
                         $vars['languages_selected'][$ii]->Level = $vars['memberslanguageslevel'][$ii2];
                         array_push($lang_used, $vars['languages_selected'][$ii]->IdLanguage);

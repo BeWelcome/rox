@@ -22,7 +22,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\WebpackEncoreBundle\Asset\EntrypointLookupInterface;
 use Twig\Profiler\Profile;
@@ -36,13 +36,8 @@ class MemberController extends AbstractController
     use TranslatedFlashTrait;
     use TranslatorTrait;
 
-    private ProfileSubmenu $profileSubmenu;
-    private ChangeProfilePictureGlobals $globals;
-
-    public function __construct(ProfileSubmenu $profileSubmenu, ChangeProfilePictureGlobals $globals)
+    public function __construct(private ProfileSubmenu $profileSubmenu, private ChangeProfilePictureGlobals $globals)
     {
-        $this->profileSubmenu = $profileSubmenu;
-        $this->globals = $globals;
     }
 
     #[Route(path: '/mydata', name: 'profile_personal_data_redirect')]

@@ -11,20 +11,14 @@ use Pagerfanta\Adapter\AdapterInterface;
 
 class ConversationsWithAdapter implements AdapterInterface
 {
-    private Member $member;
-    private Member $partner;
-    private Connection $connection;
-    private EntityManager $entityManager;
+    private readonly Connection $connection;
 
     public function __construct(
-        EntityManager $entityManager,
-        Member $member,
-        Member $partner
+        private readonly EntityManager $entityManager,
+        private readonly Member $member,
+        private readonly Member $partner
     ) {
-        $this->entityManager = $entityManager;
-        $this->connection = $entityManager->getConnection();
-        $this->partner = $partner;
-        $this->member = $member;
+        $this->connection = $this->entityManager->getConnection();
     }
 
     public function getNbResults(): int
@@ -44,7 +38,7 @@ class ConversationsWithAdapter implements AdapterInterface
                 ]
             );
             $count = $result->fetchOne();
-        } catch (DBALException $e) {
+        } catch (DBALException) {
             // Return 0
         }
 

@@ -11,10 +11,10 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
 class TripVoter extends Voter
 {
-    public const TRIP_VIEW = 'TRIP_VIEW';
-    public const TRIP_EDIT = 'TRIP_EDIT';
-    public const TRIP_COPY = 'TRIP_COPY';
-    public const TRIP_REMOVE = 'TRIP_REMOVE';
+    public const string TRIP_VIEW = 'TRIP_VIEW';
+    public const string TRIP_EDIT = 'TRIP_EDIT';
+    public const string TRIP_COPY = 'TRIP_COPY';
+    public const string TRIP_REMOVE = 'TRIP_REMOVE';
 
     protected function supports(string $attribute, $subject): bool
     {
@@ -29,6 +29,11 @@ class TripVoter extends Voter
         return true;
     }
 
+    /**
+     * @SuppressWarnings("PHPMD.CyclomaticComplexity")
+     *
+     * \todo extract different votes into functions of their own
+     */
     protected function voteOnAttribute(string $attribute, $subject, TokenInterface $token): bool
     {
         /** @var Member $member */

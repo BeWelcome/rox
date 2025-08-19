@@ -15,15 +15,8 @@ use Symfony\Component\Validator\Constraints\NotNull;
 
 class InvitationGuest extends HostingRequestAbstractType
 {
-    private DateTransformer $dateTimeTransformer;
-    private LegTransformer $legTransformer;
-
-    public function __construct(
-        DateTransformer $dateTimeTransformer,
-        LegTransformer  $legTransformer
-    ) {
-        $this->dateTimeTransformer = $dateTimeTransformer;
-        $this->legTransformer = $legTransformer;
+    public function __construct(private readonly DateTransformer $dateTimeTransformer, private readonly LegTransformer  $legTransformer)
+    {
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -75,6 +68,7 @@ class InvitationGuest extends HostingRequestAbstractType
     /**
      * {@inheritdoc}
      */
+    #[\Override]
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver
@@ -88,6 +82,7 @@ class InvitationGuest extends HostingRequestAbstractType
     /**
      * {@inheritdoc}
      */
+    #[\Override]
     public function getBlockPrefix(): string
     {
         return 'invitation';

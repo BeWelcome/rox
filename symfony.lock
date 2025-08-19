@@ -50,9 +50,6 @@
             "./config/packages/test/dama_doctrine_test_bundle.yaml"
         ]
     },
-    "doctrine/cache": {
-        "version": "2.1.1"
-    },
     "doctrine/collections": {
         "version": "1.6.8"
     },
@@ -261,26 +258,8 @@
     "laminas/laminas-validator": {
         "version": "2.15.0"
     },
-    "lcobucci/clock": {
-        "version": "2.0.0"
-    },
-    "lcobucci/jwt": {
-        "version": "4.0.4"
-    },
     "league/html-to-markdown": {
         "version": "4.10.0"
-    },
-    "lexik/jwt-authentication-bundle": {
-        "version": "2.5",
-        "recipe": {
-            "repo": "github.com/symfony/recipes",
-            "branch": "master",
-            "version": "2.5",
-            "ref": "5b2157bcd5778166a5696e42f552ad36529a07a6"
-        },
-        "files": [
-            "./config/packages/lexik_jwt_authentication.yaml"
-        ]
     },
     "lorenzo/pinky": {
         "version": "1.0.5"
@@ -296,9 +275,6 @@
     },
     "myclabs/deep-copy": {
         "version": "1.10.2"
-    },
-    "namshi/jose": {
-        "version": "7.2.3"
     },
     "nelmio/alice": {
         "version": "3.2",
@@ -372,9 +348,6 @@
         "files": [
             "./config/packages/http_discovery.yaml"
         ]
-    },
-    "phploc/phploc": {
-        "version": "7.0.2"
     },
     "phpmd/phpmd": {
         "version": "2.8.2"
@@ -467,9 +440,6 @@
     },
     "sebastian/exporter": {
         "version": "4.0.3"
-    },
-    "sebastian/phpcpd": {
-        "version": "6.0.3"
     },
     "sebastian/recursion-context": {
         "version": "4.0.4"
@@ -691,21 +661,6 @@
     "symfony/password-hasher": {
         "version": "v5.3.0-rc1"
     },
-    "symfony/phpunit-bridge": {
-        "version": "5.3",
-        "recipe": {
-            "repo": "github.com/symfony/recipes",
-            "branch": "master",
-            "version": "5.3",
-            "ref": "97cb3dc7b0f39c7cfc4b7553504c9d7b7795de96"
-        },
-        "files": [
-            "./.env.test",
-            "./bin/phpunit",
-            "./phpunit.xml.dist",
-            "./tests/bootstrap.php"
-        ]
-    },
     "symfony/polyfill-ctype": {
         "version": "v1.23.0"
     },
@@ -726,9 +681,6 @@
     },
     "symfony/polyfill-mbstring": {
         "version": "v1.23.1"
-    },
-    "symfony/polyfill-php56": {
-        "version": "v1.20.0"
     },
     "symfony/polyfill-php72": {
         "version": "v1.23.0"

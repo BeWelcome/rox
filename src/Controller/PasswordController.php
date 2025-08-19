@@ -23,7 +23,7 @@ use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use ZxcvbnPhp\Zxcvbn;
 
 class PasswordController extends AbstractController
@@ -32,15 +32,15 @@ class PasswordController extends AbstractController
     use TranslatedFlashTrait;
     use TranslatorTrait;
 
-    private PasswordModel $passwordModel;
-    private EntityManagerInterface $entityManager;
-
-    public function __construct(PasswordModel $passwordModel, EntityManagerInterface $entityManager)
+    public function __construct(private PasswordModel $passwordModel, private EntityManagerInterface $entityManager)
     {
-        $this->passwordModel = $passwordModel;
-        $this->entityManager = $entityManager;
     }
 
+    /**
+     * @SuppressWarnings("PHPMD.CyclomaticComplexity")
+     *
+     * \todo try to reduce complexity (low prio as it is just meeting the threshold)
+     */
     #[Route(path: '/resetpassword', name: 'member_request_reset_password')]
     public function requestResetPassword(Request $request, Mailer $mailer): Response
     {
@@ -61,17 +61,19 @@ class PasswordController extends AbstractController
             try {
                 /** @var Member $member */
                 $member = $memberRepository->loadUserByIdentifier($data['username']);
-            } catch (NonUniqueResultException $e) {
+            } catch (NonUniqueResultException) {
                 $member = null;
             }
             if (null === $member) {
-                $form->addError(new FormError($this->getTranslator()->trans('resetpassworderror')));
-            } else {
-                try {
-                    $token = $this->passwordModel->generatePasswordResetToken($member);
-                } catch (Exception $e) {
-                    $token = null;
-                }
+                $form->addError(new FormError($this->getTranslator()->trans('reset.password.error')));
+            }
+            if (!$this->passwordModel->checkTimeElapsedOnPasswordReset($member)) {
+                $form->addError(new FormError($this->getTranslator()->trans('reset.password.too.fast')));
+            }
+
+            if ($form->getErrors()->count() === 0) {
+                $token = $this->passwordModel->generatePasswordResetToken($member);
+
                 if (null === $token) {
                     $this->addTranslatedFlash('error', 'flash.no.reset.password');
 

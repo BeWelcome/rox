@@ -75,7 +75,7 @@ class GeoModel extends RoxModelBase {
     */
     public function loadLocation($name)
     {
-		$result = array();
+		$result = [];
 		if (is_numeric($name))
         {
             if ($geo = $this->createEntity('Geo')->findById($name))
@@ -161,7 +161,7 @@ class GeoModel extends RoxModelBase {
 
     public function getGeonamesHierarchy($search,$style,$lang = 'en')
     {
-        if (strlen($search) <= 1) { // Ignore too small queries
+        if (strlen((string) $search) <= 1) { // Ignore too small queries
             return '';
         }
         $google_conf = PVars::getObj('config_google');
@@ -230,7 +230,7 @@ class GeoModel extends RoxModelBase {
 
 //        echo "<br>result <br> ";
 //        var_dump($result);
-        $storedGeonameIds = array();
+        $storedGeonameIds = [];
         foreach($result as $key => $value) {
             array_push($storedGeonameIds,$value->geonameId);
         }
@@ -359,7 +359,7 @@ class GeoModel extends RoxModelBase {
                     typeId = '".$usagetypeId."',
                     count = '1'
                 ");
-        } elseif ($inuse && type == 'remove') {
+        } elseif ($inuse && \TYPE == 'remove') {
             return $this->dao->query(
                 "
                 UPDATE geo_usage
@@ -404,7 +404,7 @@ class GeoModel extends RoxModelBase {
 
         //retireve all GeonameIds we already have in geonames_cache and only add new ones.
         $result = $this->getAllGeonameIds();
-        $storedGeonameIds = array();
+        $storedGeonameIds = [];
         foreach($result as $key => $value) {
             array_push($storedGeonameIds,$value->geonameId);
         }
@@ -559,12 +559,12 @@ class GeoModel extends RoxModelBase {
         //caluculate numbers for higher hirarchy levels
 
 
-        $harray=array() ;
+        $harray=[] ;
         foreach ($hierarchy as $value) {
             $harray[$value->geoId] = $value->parentId;
         }
 
-        $haddressCount = array();
+        $haddressCount = [];
         $haddressCount[$worldid] = $this->countHierarchy($harray,$addressCount,$haddressCount,$worldid);
 
         //flusha usage table
@@ -612,7 +612,7 @@ class GeoModel extends RoxModelBase {
     *
     **/
     public function RenewGeo() {
-        $error = array();
+        $error = [];
 
 
         //flush table

@@ -14,18 +14,8 @@ use Symfony\Component\Mailer\MailerInterface;
 
 class ProfileModel
 {
-    private FormFactoryInterface $formFactory;
-    private EntityManagerInterface $entityManager;
-    private Mailer $mailer;
-
-    public function __construct(
-        FormFactoryInterface $formFactory,
-        EntityManagerInterface $entityManager,
-        Mailer $mailer)
+    public function __construct(private readonly FormFactoryInterface $formFactory, private readonly EntityManagerInterface $entityManager, private readonly Mailer $mailer)
     {
-        $this->formFactory = $formFactory;
-        $this->entityManager = $entityManager;
-        $this->mailer = $mailer;
     }
 
     public function getStatusForm(Member $loggedInMember, Member $member): ?FormInterface

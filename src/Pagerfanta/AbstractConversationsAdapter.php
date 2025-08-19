@@ -12,23 +12,17 @@ use Doctrine\ORM\EntityManager;
 
 abstract class AbstractConversationsAdapter
 {
-    protected Member $member;
     protected Connection $connection;
     protected EntityManager $entityManager;
-    protected bool $unreadOnly;
-    protected int $initiator;
 
     public function __construct(
         EntityManager $entityManager,
-        Member $member,
-        int $initiator,
-        bool $unreadOnly
+        protected Member $member,
+        protected int $initiator,
+        protected bool $unreadOnly
     ) {
         $this->connection = $entityManager->getConnection();
-        $this->member = $member;
         $this->entityManager = $entityManager;
-        $this->unreadOnly = $unreadOnly;
-        $this->initiator = $initiator;
     }
 
     /**
@@ -45,7 +39,7 @@ abstract class AbstractConversationsAdapter
                 [\PDO::PARAM_INT]
             );
             $count = $result->fetchOne();
-        } catch (DBALException $e) {
+        } catch (DBALException) {
             // Return 0
         }
 

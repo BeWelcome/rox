@@ -44,11 +44,12 @@ class AdminTreasurerPage extends AdminTreasurerBasePage
         }
         // Check if a donation campaign is currently running
         $this->campaign = ($model->getDonationCampaignStatus() == 1);
-        list($amount, $date) = $this->model->getDonationCampaignValues();
+        [$amount, $date] = $this->model->getDonationCampaignValues();
         $this->neededPerYear = $amount;
         $this->campaignStartDate = $date;
     }
     
+    #[\Override]
     public function teaserHeadline()
     {
         return "<a href='admin'>{$this->words->get('AdminTools')}</a> &raquo; {$this->words->get('AdminTreasurer')}";

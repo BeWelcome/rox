@@ -32,20 +32,23 @@ Boston, MA  02111-1307, USA.
 
 class TempVolStartPage extends AdminBasePage
 {
+    #[\Override]
     protected function getPageTitle() 
     {
         return 'Volunteer Pages - BeWelcome';
     }
     
+    #[\Override]
     public function teaserHeadline()
     {
         return "<a href='admin'>{$this->words->get('VolunteerPage')}</a>";
     }
     
+        #[\Override]
         protected function getColumnNames()
     {
         // we don't need the other columns
-        return array('col3');
+        return ['col3'];
     }
     
     protected function column_col3() {

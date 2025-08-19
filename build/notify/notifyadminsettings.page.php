@@ -6,6 +6,7 @@
  */
 class NotifyAdminSettingsPage extends NotifyBasePage
 {
+    #[\Override]
     protected function teaserContent()
     {
         // &gt; or &raquo; ?

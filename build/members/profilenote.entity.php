@@ -56,12 +56,12 @@ class ProfileNote extends RoxEntityBase
     {
         if (!is_object($member) || !($member_id = $member->getPKValue()))
         {
-            return array();
+            return [];
         }
 
         $links = $this->findByWhereMany("IdMember = '{$member_id}'");
 
-        $notes = array();
+        $notes = [];
         foreach ($links as &$link)
         {
             $notes[] = $link->id;
@@ -70,7 +70,7 @@ class ProfileNote extends RoxEntityBase
         unset($links);
         if (empty($notes))
         {
-            return array();
+            return [];
         }
 
         $where = "id IN ('" . implode("','", $notes) . "') ORDER BY created DESC";
@@ -88,11 +88,11 @@ class ProfileNote extends RoxEntityBase
     {
         if (!is_object($from) || !($from_id = $from->getPKValue()))
         {
-            return array();
+            return [];
         }
         if (!is_object($for) || !($for_id = $for->getPKValue()))
         {
-            return array();
+            return [];
         }
         $where = "IdMember = {$from_id} AND IdContact = {$for_id}";
         return $this->createEntity('ProfileNote')->findByWhereMany($where);

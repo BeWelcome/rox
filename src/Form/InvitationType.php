@@ -8,6 +8,7 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 
 class InvitationType extends HostingRequestAbstractType
 {
+    #[\Override]
     public function getBlockPrefix(): string
     {
         return 'invitation';

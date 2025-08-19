@@ -92,12 +92,12 @@ foreach($this->activities as $activity) {
     <div class="d-flex flex-row justify-content-start align-items-center py-2 w-100">
 
         <div class="text-truncate w-100">
-            <h4 class="m-0 p-0 w-100 text-truncate"><?php echo '<a href="activities/' . $activity->id . '">' . htmlspecialchars($activity->title) . '</a>'; ?>
+            <h4 class="m-0 p-0 w-100 text-truncate"><?php echo '<a href="activities/' . $activity->id . '">' . htmlspecialchars((string) $activity->title) . '</a>'; ?>
 
                 <?php
-                echo '<p class="p-0 m-0 smaller text-black-50">' . date("d M Y", strtotime($activity->dateStart));
+                echo '<p class="p-0 m-0 smaller text-black-50">' . date("d M Y", strtotime((string) $activity->dateStart));
                 if ($activity->dateStart != $activity->dateEnd){
-                    echo ' - ' . date("d M Y", strtotime($activity->dateEnd));
+                    echo ' - ' . date("d M Y", strtotime((string) $activity->dateEnd));
                 }
                 echo '</p>'; ?>
             </h4>
@@ -105,7 +105,7 @@ foreach($this->activities as $activity) {
             <?php
             if ($activity->status == 0) {
 
-                $activityInTheFuture = (time()-24*60*60 < strtotime($activity->dateTimeEnd));
+                $activityInTheFuture = (time()-24*60*60 < strtotime((string) $activity->dateTimeEnd));
                 if ($this->member && in_array($this->member->id, array_keys($activity->organizers))
                     && $activityInTheFuture ) {
                     echo '<a href="activities/' . $activity->id . '/edit" class="btn btn-sm btn-primary float-right mt-2 mr-md-2">' . $words->getBuffered('ActivityEdit') . '</a>' . $words->flushBuffer();
@@ -120,9 +120,9 @@ foreach($this->activities as $activity) {
         <div class="flex-lg-row d-none d-lg-flex">
             <div class="text-right text-nowrap">
                 <?php if ($activity->location != null){
-                    $locationName = htmlspecialchars($activity->location->name);
+                    $locationName = htmlspecialchars((string) $activity->location->name);
                     if ($activity->location->getCountry() != null){
-                        $countryName = htmlspecialchars($activity->location->getCountry()->name);
+                        $countryName = htmlspecialchars((string) $activity->location->getCountry()->name);
                     } else {
                         $countryName = '';
                     }

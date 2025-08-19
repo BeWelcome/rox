@@ -22,6 +22,8 @@ class SearchFormType extends AbstractType
 {
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
+     *
+     * Parameter $options not used but signature is given by symfony.
      */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -36,8 +38,8 @@ class SearchFormType extends AbstractType
                 'label' => 'texttofind',
                 'required' => false,
             ])
-            ->addEventListener(FormEvents::PRE_SET_DATA, [$this, 'preSetData'])
-            ->addEventListener(FormEvents::PRE_SUBMIT, [$this, 'preSubmit'])
+            ->addEventListener(FormEvents::PRE_SET_DATA, $this->preSetData(...))
+            ->addEventListener(FormEvents::PRE_SUBMIT, $this->preSubmit(...))
         ;
 
         $this->addHiddenFields($builder);
@@ -45,11 +47,11 @@ class SearchFormType extends AbstractType
         $this->addVariableSelects($builder, $options);
         $this->addAgeAndGenderSelects($builder);
         $this->addSelects($builder);
-        $this->addButtons($builder, $options);
+        $this->addButtons($builder);
     }
 
     /**
-     * {@inheritdoc}
+     * @SuppressWarnings("PHPMD.StaticAccess")
      */
     public function configureOptions(OptionsResolver $resolver): void
     {
@@ -57,10 +59,7 @@ class SearchFormType extends AbstractType
             'groups' => null,
             'languages' => null,
             'search_options' => null,
-            'validation_groups' => [
-                SearchFormRequest::class,
-                'determineValidationGroups',
-            ],
+            'validation_groups' => SearchFormRequest::determineValidationGroups(...),
             'translation_domain' => 'messages',
             'allow_extra_fields' => true,
             'error_mapping' => [
@@ -69,6 +68,7 @@ class SearchFormType extends AbstractType
         ]);
     }
 
+    #[\Override]
     public function getBlockPrefix(): string
     {
         return '';
@@ -82,7 +82,7 @@ class SearchFormType extends AbstractType
      * @throws LogicException
      * @throws UnexpectedTypeException
      */
-    public function preSetData(FormEvent $event)
+    public function preSetData(FormEvent $event): void
     {
         $data = $event->getData();
         $form = $event->getForm();
@@ -121,7 +121,7 @@ class SearchFormType extends AbstractType
         }
     }
 
-    public function preSubmit(FormEvent $event)
+    public function preSubmit(FormEvent $event): void
     {
         $form = $event->getForm();
         if (!$form->has('resetOptions')) {
@@ -149,7 +149,7 @@ class SearchFormType extends AbstractType
         $languages = [];
         if (null !== $options['languages']) {
             foreach ($options['languages'] as $language) {
-                $languages['lang_' . strtolower($language->getShortCode())] = $language->getId();
+                $languages['lang_' . strtolower((string) $language->getShortCode())] = $language->getId();
             }
         }
         $formBuilder
@@ -302,7 +302,7 @@ class SearchFormType extends AbstractType
             ->add('sw_longitude', HiddenType::class);
     }
 
-    private function addButtons(FormBuilderInterface $formBuilder, array $options)
+    private function addButtons(FormBuilderInterface $formBuilder)
     {
         $formBuilder
             ->add('updateMap', SubmitType::class, [

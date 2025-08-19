@@ -25,10 +25,10 @@ Refactoried by JeanYvea after the first move to Rox
 */
 
 $words = new MOD_words();
-$styles = array( 'highlight', 'blank' ); // alternating background for table rows
+$styles = [ 'highlight', 'blank' ]; // alternating background for table rows
 
 
-echo $words->getFormatted("SearchResultsFor","<b>".htmlspecialchars($TReturn->searchtext, ENT_QUOTES)."</b>"),"<br />" ;
+echo $words->getFormatted("SearchResultsFor","<b>".htmlspecialchars((string) $TReturn->searchtext, ENT_QUOTES)."</b>"),"<br />" ;
 ?>
 
 <?php
@@ -134,5 +134,5 @@ echo $words->getFormatted("SearchResultsFor","<b>".htmlspecialchars($TReturn->se
     } // end of if they are forum tags found
     
     if (($iCountMemberFound<=0) and ($iCountPlacesFound<=0)  and ($iCountForumTags<=0)) {
-        echo $words->getFormatted("QuickSearchMembersNoResults",htmlspecialchars($TReturn->searchtext, ENT_QUOTES),"<a href=\"searchmembers\">".$words->getFormatted("MapSearch")."</a>") ;
+        echo $words->getFormatted("QuickSearchMembersNoResults",htmlspecialchars((string) $TReturn->searchtext, ENT_QUOTES),"<a href=\"searchmembers\">".$words->getFormatted("MapSearch")."</a>") ;
     }

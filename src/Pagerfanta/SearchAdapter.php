@@ -8,6 +8,7 @@ use App\Entity\NewLocation;
 use App\Form\CustomDataClass\SearchFormRequest;
 use App\Utilities\SessionSingleton;
 use App\Utilities\TranslatorSingleton;
+use Doctrine\DBAL\Exception\InvalidArgumentException;
 use Doctrine\ORM\EntityManagerInterface;
 use EnvironmentExplorer;
 use Exception;
@@ -25,6 +26,13 @@ class SearchAdapter implements AdapterInterface
     /** @var SearchModel */
     private $model;
 
+    /**
+     * Length of parameter list due to legacy code
+     * @SuppressWarnings("PHPMD.ExcessiveParameterList")
+     *
+     * Singletons needed for legay code
+     * @SuppressWarnings("PHPMD.StaticAccess")
+     */
     public function __construct(
         SearchFormRequest $data,
         SessionInterface $session,
@@ -81,16 +89,16 @@ class SearchAdapter implements AdapterInterface
         try {
             $location = $repository->find($data->location_geoname_id);
         } catch (Exception $e) {
-            // nothing found?
-            $e->getCode();
+            throw new InvalidArgumentException($e->getMessage(), $e->getCode());
         }
+
         $adminUnits = [];
         $country = false;
         // Are we looking at an admin unit?
         if (null !== $location && 'A' === $location->getFeatureClass()) {
             $country = $location->getCountryId();
             // Is it a country?
-            if (false === strstr($location->getFeatureCode(), 'PCL')) {
+            if (!str_contains($location->getFeatureCode(), 'PCL')) {
                 // find lowest admin unit in location and use it for search
                 $adminUnits = $this->getRankedAdminUnitIds($location);
             }

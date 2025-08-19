@@ -6,6 +6,9 @@ use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Type;
 use InvalidArgumentException;
 
+/**
+ * @SuppressWarnings("PHPMD.UnusedFormalParameter")
+ */
 abstract class SetType extends Type
 {
     protected string $name;
@@ -23,11 +26,13 @@ abstract class SetType extends Type
         return 'SET(' . implode(', ', $values) . ')';
     }
 
+    #[\Override]
     public function convertToPHPValue(mixed $value, AbstractPlatform $platform): mixed
     {
         return $value;
     }
 
+    #[\Override]
     public function convertToDatabaseValue(mixed $value, AbstractPlatform $platform): mixed
     {
         if (null !== $value && !empty($value)) {
@@ -36,7 +41,7 @@ abstract class SetType extends Type
             };
             if ($value) {
                 // Split given value
-                $values = explode(',', $value);
+                $values = explode(',', (string) $value);
                 $valueCount = \count($values);
 
                 if (\count(array_intersect($values, $this->values)) !== $valueCount) {

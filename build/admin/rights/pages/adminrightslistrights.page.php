@@ -13,12 +13,14 @@ class AdminRightsListRightsPage extends AdminRightsBasePage
         $this->setCurrent('AdminRightsListRights');
     }
 
+    #[\Override]
     public function teaserHeadline()
     {
         $headline = parent::teaserHeadline();
         return $headline . " &raquo; <a href='admin/rights/list/rights'>{$this->words->get('AdminRightsListRights')}</a>";
     }
 
+    #[\Override]
     public function getLateLoadScriptFiles() {
         $scripts = parent::getLateLoadScriptfiles();
         // $scripts[] = 'adminrightstooltip.js';

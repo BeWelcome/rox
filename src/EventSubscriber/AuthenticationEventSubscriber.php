@@ -29,18 +29,8 @@ use Symfony\Component\Security\Http\SecurityEvents;
 
 class AuthenticationEventSubscriber implements EventSubscriberInterface
 {
-    private EntityManagerInterface $entityManager;
-    private ?AuthorizationCheckerInterface $authorizationChecker;
-    private ?TokenStorageInterface $tokenStorage;
-
-    public function __construct(
-        EntityManagerInterface $entityManager,
-        TokenStorageInterface $tokenStorage = null,
-        AuthorizationCheckerInterface $authorizationChecker = null
-    ) {
-        $this->entityManager = $entityManager;
-        $this->authorizationChecker = $authorizationChecker;
-        $this->tokenStorage = $tokenStorage;
+    public function __construct(private readonly EntityManagerInterface $entityManager, private readonly ?TokenStorageInterface $tokenStorage = null, private readonly ?AuthorizationCheckerInterface $authorizationChecker = null)
+    {
     }
 
     public static function getSubscribedEvents(): array

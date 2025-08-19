@@ -34,7 +34,7 @@ class GeoUse extends RoxEntityBase
      */
     public function getUsageForGeoByType(Geo $geo)
     {
-        $result = array();
+        $result = [];
         if (!$geo->isLoaded())
         {
             return $result;

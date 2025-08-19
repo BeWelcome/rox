@@ -11,7 +11,7 @@ use Exception;
 use Gedmo\Translatable\Entity\Repository\TranslationRepository;
 use Gedmo\Translatable\Entity\Translation;
 use Manticoresearch\Client;
-use Manticoresearch\Index;
+use Manticoresearch\Table;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
@@ -33,19 +33,11 @@ class ManticoreIndicesForumCommand extends Command
 {
     private const string FORUM_INDEX = 'forum_rt';
     private int $chunkSize = 2500;
-
-    private EntityManagerInterface $entityManager;
     private SymfonyStyle $io;
-    private string $manticoreHost;
-    private int $manticorePort;
 
-    public function __construct(EntityManagerInterface $entityManager, string $manticoreHost, int $manticorePort)
+    public function __construct(private readonly EntityManagerInterface $entityManager, private readonly string $manticoreHost, private readonly int $manticorePort)
     {
         parent::__construct();
-
-        $this->entityManager = $entityManager;
-        $this->manticoreHost = $manticoreHost;
-        $this->manticorePort = $manticorePort;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -73,10 +65,10 @@ class ManticoreIndicesForumCommand extends Command
         return Command::SUCCESS;
     }
 
-    private function createForumIndex(): ?Index
+    private function createForumIndex(): ?Table
     {
         $client = new Client(['host' => $this->manticoreHost, 'port' => $this->manticorePort]);
-        $index = $client->index('forum_rt');
+        $index = $client->table('forum_rt');
 
         try {
             $index->create(
@@ -112,7 +104,7 @@ class ManticoreIndicesForumCommand extends Command
         return $index;
     }
 
-    private function addForumDocuments(Index $index, OutputInterface $output)
+    private function addForumDocuments(Table $index, OutputInterface $output)
     {
         /*
           SELECT ft.id AS threadid, sentence as text, IdGroup, \
@@ -173,7 +165,7 @@ class ManticoreIndicesForumCommand extends Command
         }
     }
 
-    private function addForumDocumentsToIndex(Index $index, NativeQuery $query, ProgressBar $progress): int
+    private function addForumDocumentsToIndex(Table $index, NativeQuery $query, ProgressBar $progress): int
     {
         $forumPosts = $query->getResult();
         $documents = [];
@@ -196,8 +188,10 @@ class ManticoreIndicesForumCommand extends Command
         $count = \count($forumPosts);
         unset($forumPosts);
 
-        $index->addDocuments($documents);
-        $index->flush();
+        if ($count !== 0) {
+            $index->addDocuments($documents);
+            $index->flush();
+        }
 
         gc_collect_cycles();
 

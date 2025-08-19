@@ -6,6 +6,7 @@ use App\Entity\Member;
 use App\Entity\Preference;
 use App\Entity\Trip;
 use App\Repository\TripRepository;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Pagerfanta\Doctrine\ORM\QueryAdapter;
 use Pagerfanta\Pagerfanta;
@@ -127,7 +128,7 @@ class TripModel
 
     public function hideTrip(Trip $trip)
     {
-        $trip->setDeleted(new \DateTime());
+        $trip->setDeleted(new DateTime());
 
         $this->entityManager->persist($trip);
         $this->entityManager->flush();
@@ -144,10 +145,10 @@ class TripModel
 
         $newTrip = clone $trip;
         $newTrip->setSummary($trip->getSummary() . ' - copy');
-        $newTrip->setUpdated(new \DateTime());
+        $newTrip->setUpdated(new DateTime());
 
         // Move legs arrival and departure consistently +1month
-        $nextMonth = (new \DateTime())->modify('+1month');
+        $nextMonth = (new DateTime())->modify('+1month');
         $firstArrival = $trip->getSubtrips()->first()->getArrival();
         $adjust = $firstArrival->diff($nextMonth);
 

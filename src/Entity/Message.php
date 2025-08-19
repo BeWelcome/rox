@@ -12,6 +12,7 @@ use App\Doctrine\DeleteRequestType;
 use App\Doctrine\InFolderType;
 use App\Doctrine\SpamInfoType;
 use Carbon\Carbon;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -36,13 +37,13 @@ class Message
     private string $messageType = 'MemberToMember';
 
     #[ORM\Column(name: 'updated', type: 'datetime', nullable: true)]
-    private ?\DateTime $updated = null;
+    private ?DateTime $updated = null;
 
     #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
-    private \DateTime $created;
+    private DateTime $created;
 
     #[ORM\Column(name: 'DateSent', type: 'datetime', nullable: false)]
-    private \DateTime $dateSent;
+    private DateTime $dateSent;
 
     #[ORM\Column(name: 'DeleteRequest', type: 'delete_request', nullable: true)]
     private string $deleteRequest;
@@ -76,7 +77,7 @@ class Message
     private string $folder = InFolderType::NORMAL;
 
     #[ORM\Column(name: 'WhenFirstRead', type: 'datetime', nullable: true)]
-    private ?\DateTime $firstRead;
+    private ?DateTime $firstRead;
 
     #[ORM\Column(name: 'CheckerComment', type: 'text', nullable: true)]
     private ?string $checkerComment;
@@ -128,7 +129,7 @@ class Message
         return Carbon::instance($this->created);
     }
 
-    public function setDateSent(\DateTime $dateSent): self
+    public function setDateSent(DateTime $dateSent): self
     {
         $this->dateSent = $dateSent;
 
@@ -287,7 +288,7 @@ class Message
         return $this->folder;
     }
 
-    public function setFirstRead(?\DateTime $firstRead): self
+    public function setFirstRead(?DateTime $firstRead): self
     {
         $this->firstRead = $firstRead;
 
@@ -404,7 +405,7 @@ class Message
     #[ORM\PrePersist]
     public function onPrePersist(): void
     {
-        $this->created = new \DateTime('now');
+        $this->created = new DateTime('now');
         if (null === $this->parent) {
             $this->initiator = $this->sender;
         } else {
@@ -416,7 +417,7 @@ class Message
     #[ORM\PreUpdate]
     public function onPreUpdate(): void
     {
-        $this->updated = new \DateTime('now');
+        $this->updated = new DateTime('now');
     }
 
     public function setMessageType(string $messageType): self

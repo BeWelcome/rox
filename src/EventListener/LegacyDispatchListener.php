@@ -3,6 +3,7 @@
 namespace App\EventListener;
 
 use App\LegacyKernel\LegacyHttpKernel;
+use EnvironmentExplorer;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -49,7 +50,7 @@ class LegacyDispatchListener
         }
 
         $container = $this->kernel->getContainer();
-        $environmentExplorer = new \EnvironmentExplorer();
+        $environmentExplorer = new EnvironmentExplorer();
         $environmentExplorer->initializeGlobalState(
             $container->getParameter('database_host'),
             $container->getParameter('database_name'),

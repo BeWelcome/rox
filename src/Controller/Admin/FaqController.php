@@ -12,6 +12,7 @@ use App\Form\CustomDataClass\FaqRequest;
 use App\Form\FaqFormType;
 use App\Model\FaqModel;
 use App\Model\TranslationModel;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
@@ -129,7 +130,7 @@ class FaqController extends FaqBaseController
                 $question->setCode('faqq_' . $data->wordCode);
                 $question->setSentence($data->question);
                 $question->setlanguage($english);
-                $question->setCreated(new \DateTime());
+                $question->setCreated(new DateTime());
                 $question->setDescription('FAQ Question');
                 $this->entityManager->persist($question);
 
@@ -139,7 +140,7 @@ class FaqController extends FaqBaseController
                 $answer->setCode('faqa_' . $data->wordCode);
                 $answer->setSentence($data->answer);
                 $answer->setlanguage($english);
-                $answer->setCreated(new \DateTime());
+                $answer->setCreated(new DateTime());
                 $answer->setDescription('FAQ Answer');
                 $this->entityManager->persist($answer);
 
@@ -233,11 +234,11 @@ class FaqController extends FaqBaseController
 
             $question
                 ->setSentence($data->question)
-                ->setMajorUpdate(new \DateTime());
+                ->setMajorUpdate(new DateTime());
             $this->entityManager->persist($question);
             $answer
                 ->setSentence($data->answer)
-                ->setMajorUpdate(new \DateTime());
+                ->setMajorUpdate(new DateTime());
             $this->entityManager->persist($answer);
             $this->entityManager->flush();
 

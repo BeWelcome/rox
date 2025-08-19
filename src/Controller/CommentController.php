@@ -18,7 +18,11 @@ use App\Utilities\ChangeProfilePictureGlobals;
 use App\Utilities\ProfileSubmenu;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+
+use const ENT_HTML5;
+
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
@@ -83,7 +87,7 @@ class CommentController extends AbstractController
                 str_replace(
                     "\xc2\xa0",
                     ' ',
-                    strip_tags(html_entity_decode((string) $data->feedback, \ENT_HTML5, 'UTF-8'))
+                    strip_tags(html_entity_decode((string) $data->feedback, ENT_HTML5, 'UTF-8'))
                 )
             );
             if (empty($feedback)) {
@@ -269,7 +273,7 @@ class CommentController extends AbstractController
                 && (CommentQualityType::POSITIVE === $comment->getQuality())
             ;
             if ($newExperience || $changedToNegative || $changedToPositive) {
-                $comment->setUpdated(new \DateTime());
+                $comment->setUpdated(new DateTime());
             }
 
             if (CommentQualityType::NEGATIVE === $comment->getQuality()) {
@@ -320,7 +324,7 @@ class CommentController extends AbstractController
             return $this->redirectToRoute('members_profile', ['username' => $toMember->getUsername()]);
         }
 
-        $comment->setUpdated(new \DateTime());
+        $comment->setUpdated(new DateTime());
         $entityManager->persist($comment);
         $entityManager->flush();
 

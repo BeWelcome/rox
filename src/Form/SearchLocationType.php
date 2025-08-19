@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Form\CustomDataClass\LocationRequest;
 use App\Form\DataTransformer\LocationRequestToLocationTransformer;
+use Override;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\DataMapperInterface;
 use Symfony\Component\Form\Exception\UnexpectedTypeException;
@@ -12,6 +13,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Traversable;
 
 class SearchLocationType extends AbstractType implements DataMapperInterface
 {
@@ -48,7 +50,7 @@ class SearchLocationType extends AbstractType implements DataMapperInterface
     }
 
     /** @param LocationRequest|null $viewData */
-    public function mapDataToForms($viewData, \Traversable $forms): void
+    public function mapDataToForms($viewData, Traversable $forms): void
     {
         // there is no data yet, so nothing to prepopulate
         if (null === $viewData) {
@@ -70,7 +72,7 @@ class SearchLocationType extends AbstractType implements DataMapperInterface
         $forms['longitude']->setData($viewData->longitude);
     }
 
-    public function mapFormsToData(\Traversable $forms, &$viewData): void
+    public function mapFormsToData(Traversable $forms, &$viewData): void
     {
         $forms = iterator_to_array($forms);
 
@@ -102,7 +104,7 @@ class SearchLocationType extends AbstractType implements DataMapperInterface
         ]);
     }
 
-    #[\Override]
+    #[Override]
     public function getBlockPrefix(): string
     {
         return '';

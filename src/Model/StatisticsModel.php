@@ -7,6 +7,8 @@ use App\Entity\HostingRequest;
 use App\Entity\Statistic;
 use App\Repository\StatisticsRepository;
 use App\Utilities\ManagerTrait;
+use DatePeriod;
+use DateTime;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManagerInterface;
@@ -102,7 +104,7 @@ class StatisticsModel
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function updateStatistics(\DatePeriod $dates, OutputInterface $output): int
+    public function updateStatistics(DatePeriod $dates, OutputInterface $output): int
     {
         $progressBar = null;
         $count = iterator_count($dates);
@@ -124,7 +126,7 @@ class StatisticsModel
         $em = $this->getManager();
         $connection = $em->getConnection();
         $statisticsRepository = $em->getRepository(Statistic::class);
-        /** @var \DateTime $day */
+        /** @var DateTime $day */
         foreach ($dates as $day) {
             if ($progressBar) {
                 // advances the progress bar 1 unit

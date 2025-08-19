@@ -11,6 +11,7 @@ use App\Utilities\ManagerTrait;
 use App\Utilities\ProfileSubmenu;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Form\FormError;
@@ -49,7 +50,7 @@ class MemberController extends AbstractController
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      *
      * @return StreamedResponse|Response
      */
@@ -153,7 +154,7 @@ class MemberController extends AbstractController
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      *
      * @return BinaryFileResponse|RedirectResponse
      *

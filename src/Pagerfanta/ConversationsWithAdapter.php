@@ -8,6 +8,7 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManager;
 use Pagerfanta\Adapter\AdapterInterface;
+use PDO;
 
 class ConversationsWithAdapter implements AdapterInterface
 {
@@ -33,8 +34,8 @@ class ConversationsWithAdapter implements AdapterInterface
                     ':partnerId' => $this->partner->getId(),
                 ],
                 [
-                    \PDO::PARAM_INT,
-                    \PDO::PARAM_INT,
+                    PDO::PARAM_INT,
+                    PDO::PARAM_INT,
                 ]
             );
             $count = $result->fetchOne();

@@ -3,6 +3,7 @@
 namespace App\Form\CustomDataClass;
 
 use AnthonyMartin\GeoLocation\GeoPoint;
+use SearchModel;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\Choice;
@@ -91,7 +92,7 @@ class SearchFormRequest
 
     public int $order = 6;
 
-    public int $direction = \SearchModel::DIRECTION_DESCENDING;
+    public int $direction = SearchModel::DIRECTION_DESCENDING;
 
     public int $items = 20;
 
@@ -188,8 +189,8 @@ class SearchFormRequest
         $searchFormRequest->min_age = self::get($data, 'min_age', null);
         $searchFormRequest->max_age = self::get($data, 'max_age', null);
         $searchFormRequest->gender = self::get($data, 'gender', null);
-        $searchFormRequest->order = self::get($data, 'order', \SearchModel::ORDER_ACCOMMODATION);
-        $searchFormRequest->direction = self::get($data, 'direction', \SearchModel::DIRECTION_ASCENDING);
+        $searchFormRequest->order = self::get($data, 'order', SearchModel::ORDER_ACCOMMODATION);
+        $searchFormRequest->direction = self::get($data, 'direction', SearchModel::DIRECTION_ASCENDING);
         $searchFormRequest->items = self::get($data, 'items', 10);
         $searchFormRequest->show_map = self::get($data, 'show_map', '0') ? true : false;
         $searchFormRequest->showOnMap = self::get($data, 'showOnMap', false);

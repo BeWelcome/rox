@@ -8,6 +8,7 @@
 
 namespace App\Entity;
 
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -24,7 +25,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Right
 {
     #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
-    private \DateTime $created;
+    private DateTime $created;
 
     #[ORM\Column(name: 'Name', type: 'text', length: 255, nullable: false)]
     private string $name;
@@ -57,14 +58,14 @@ class Right
         return $this;
     }
 
-    public function setCreated(\DateTime $created): self
+    public function setCreated(DateTime $created): self
     {
         $this->created = $created;
 
         return $this;
     }
 
-    public function getCreated(): \DateTime
+    public function getCreated(): DateTime
     {
         return $this->created;
     }
@@ -115,6 +116,6 @@ class Right
     #[ORM\PrePersist]
     public function onPrePersist(): void
     {
-        $this->created = new \DateTime('now');
+        $this->created = new DateTime('now');
     }
 }

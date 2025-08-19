@@ -8,6 +8,7 @@
 
 namespace App\Entity;
 
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\Translatable\Translatable;
@@ -157,7 +158,7 @@ class NewLocation implements Translatable
     private $population;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      */
     #[ORM\Column(name: 'moddate', type: 'date', nullable: true)]
     private $modificationDate;
@@ -253,14 +254,14 @@ class NewLocation implements Translatable
         return $this->population;
     }
 
-    public function setModificationDate(\DateTime $modificationDate): self
+    public function setModificationDate(DateTime $modificationDate): self
     {
         $this->modificationDate = $modificationDate;
 
         return $this;
     }
 
-    public function getModificationDate(): \DateTime
+    public function getModificationDate(): DateTime
     {
         return $this->modificationDate;
     }

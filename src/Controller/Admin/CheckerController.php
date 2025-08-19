@@ -11,6 +11,7 @@ use App\Model\Admin\CheckerModel;
 use App\Model\CommunityNewsModel;
 use App\Utilities\ItemsPerPageTraits;
 use Doctrine\ORM\EntityManagerInterface;
+use InvalidArgumentException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -167,7 +168,7 @@ class CheckerController extends AbstractController
                 $messages = $this->checkerModel->getProcessedBlockWordsMessages($page, $limit);
                 break;
             default:
-                throw new \InvalidArgumentException();
+                throw new InvalidArgumentException();
         }
 
         return [$active, $messages];

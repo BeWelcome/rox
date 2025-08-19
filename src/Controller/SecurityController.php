@@ -102,11 +102,11 @@ class SecurityController extends AbstractController
      * But, this will never be executed. Symfony will intercept this first
      * and handle the logout automatically. See logout in app/config/security.yml
      *
-     * @throws \Exception
+     * @throws Exception
      */
     #[Route(path: '/logout', name: 'security_logout')]
     public function logoutAction(): never
     {
-        throw new \Exception('This should never be reached!');
+        throw new Exception('This should never be reached!');
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use DateTime;
 use Doctrine\ORM\EntityRepository;
 
 /**
@@ -118,7 +119,7 @@ class StatisticsRepository extends EntityRepository
         $result = $this->createQueryBuilder('s')
             ->select($column . ' AS count, s.created AS day')
             ->where('s.created >= :two_months_ago')
-            ->setParameter('two_months_ago', (new \DateTime())->modify('-2months'))
+            ->setParameter('two_months_ago', (new DateTime())->modify('-2months'))
             ->getQuery()
             ->getResult();
 
@@ -133,7 +134,7 @@ class StatisticsRepository extends EntityRepository
         $result = $this->createQueryBuilder('s')
             ->select('MAX(' . $column . ') AS count, YEARWEEK(s.created) AS week')
             ->where('s.created >= :firstRequest')
-            ->setParameter('firstRequest', new \DateTime('2019-04-23'))
+            ->setParameter('firstRequest', new DateTime('2019-04-23'))
             ->groupBy('week')
             ->getQuery()
             ->getResult();
@@ -149,7 +150,7 @@ class StatisticsRepository extends EntityRepository
         $result = $this->createQueryBuilder('s')
             ->select('MAX(' . $column . ') AS count, YEARWEEK(s.created) AS week')
             ->where('s.created >= :firstRequest')
-            ->setParameter('firstRequest', new \DateTime('2022-06-16'))
+            ->setParameter('firstRequest', new DateTime('2022-06-16'))
             ->groupBy('week')
             ->getQuery()
             ->getResult();

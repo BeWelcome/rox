@@ -9,11 +9,12 @@
 
 namespace App\Security;
 
+use Override;
 use Symfony\Component\Security\Core\Exception\CustomUserMessageAccountStatusException;
 
 class AccountMailConfirmedException extends CustomUserMessageAccountStatusException
 {
-    #[\Override]
+    #[Override]
     public function getMessageKey(): string
     {
         return 'login.mail.confirmed';

@@ -6,6 +6,10 @@ use App\Entity\Member;
 use App\Model\MemberDataExtractor\ExtractorInterface;
 use App\Utilities\ManagerTrait;
 use App\Utilities\TranslatorTrait;
+use DateTime;
+use Exception;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
 use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\WebpackEncoreBundle\Asset\EntrypointLookupInterface;
@@ -13,6 +17,7 @@ use Twig\Environment;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
+use ZipArchive;
 
 class MemberModel
 {
@@ -32,7 +37,7 @@ class MemberModel
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      *
      * @return string
      */
@@ -56,16 +61,16 @@ class MemberModel
 
         if (1000 === $i) {
             // 1000 tries to create a temp directory failed, oh my
-            throw new \Exception('Can\'t generate temp dir');
+            throw new Exception('Can\'t generate temp dir');
         }
         $this->preparePersonalData($member, $dirname);
 
         $zipFilename = $dirname . 'bewelcome-' . $member->getUsername() . '-' . date('Y-m-d') . '.zip';
-        $zip = new \ZipArchive();
-        $zip->open($zipFilename, \ZipArchive::CREATE);
-        $files = new \RecursiveIteratorIterator(
-            new \RecursiveDirectoryIterator($dirname),
-            \RecursiveIteratorIterator::LEAVES_ONLY
+        $zip = new ZipArchive();
+        $zip->open($zipFilename, ZipArchive::CREATE);
+        $files = new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator($dirname),
+            RecursiveIteratorIterator::LEAVES_ONLY
         );
 
         $filesToDelete = [];
@@ -116,7 +121,7 @@ class MemberModel
     private function writeRenderedTemplate($filename, $template, $parameters)
     {
         $this->entrypointLookup->reset();
-        $parameters = array_merge($parameters, ['date_generated' => new \DateTime()]);
+        $parameters = array_merge($parameters, ['date_generated' => new DateTime()]);
 
         $handle = fopen($this->tempDir . $filename . '.html', 'w');
         fwrite($handle, $this->environment->render('private/' . $template . '.html.twig', $parameters));

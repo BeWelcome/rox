@@ -2,6 +2,7 @@
 
 namespace App\Form\Extension;
 
+use stdClass;
 use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -104,7 +105,7 @@ class AutoCompleteExtension extends AbstractTypeExtension
         if ($options['autocomplete_choices']) {
             $autocompleteChoices = [];
             foreach ($options['autocomplete_choices'] as $choice) {
-                $autocompleteChoice = new \stdClass();
+                $autocompleteChoice = new stdClass();
                 $autocompleteChoice->title = $choice;
                 $autocompleteChoices[] = $autocompleteChoice;
             }

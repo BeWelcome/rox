@@ -8,6 +8,8 @@ namespace App\Doctrine;
 
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Type;
+use InvalidArgumentException;
+use Override;
 
 /**
  * @SuppressWarnings("PHPMD.NumberOfChildren")
@@ -33,17 +35,17 @@ abstract class EnumType extends Type
         return 'ENUM(' . implode(', ', $values) . ')';
     }
 
-    #[\Override]
+    #[Override]
     public function convertToPHPValue(mixed $value, AbstractPlatform $platform): mixed
     {
         return $value;
     }
 
-    #[\Override]
+    #[Override]
     public function convertToDatabaseValue(mixed $value, AbstractPlatform $platform): mixed
     {
         if (!\in_array($value, $this->values, true)) {
-            throw new \InvalidArgumentException("Invalid '" . $this->name . "' value: " . $value . '.');
+            throw new InvalidArgumentException("Invalid '" . $this->name . "' value: " . $value . '.');
         }
 
         return $value;

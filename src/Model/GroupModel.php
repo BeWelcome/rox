@@ -21,6 +21,7 @@ use App\Utilities\MessageTrait;
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+use Exception;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class GroupModel
@@ -111,7 +112,7 @@ class GroupModel
                 $this->getManager()->flush();
                 $success = true;
             }
-        } catch (\Exception) {
+        } catch (Exception) {
             $success = false;
         }
 
@@ -132,7 +133,7 @@ class GroupModel
                 $this->getManager()->flush();
                 $success = true;
             }
-        } catch (\Exception) {
+        } catch (Exception) {
             $success = false;
         }
 
@@ -152,7 +153,7 @@ class GroupModel
                 $this->getManager()->flush();
                 $success = true;
             }
-        } catch (\Exception) {
+        } catch (Exception) {
             $success = false;
         }
 

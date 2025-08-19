@@ -4,6 +4,9 @@ namespace App\Controller;
 
 use App\Model\StatisticsModel;
 use App\Utilities\SessionSingleton;
+use EnvironmentExplorer;
+use PException;
+use StatsModel;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -191,13 +194,13 @@ class StatisticsController extends AboutBaseController
     private function otherData(): array
     {
         $this->kickstartSession();
-        $statsModel = new \StatsModel();
+        $statsModel = new StatsModel();
         try {
             $languages = $statsModel->getLanguages();
             $preferredLanguages = $statsModel->getPreferredLanguages();
             $logins = $statsModel->getLastLoginRankGrouped();
             $countries = $statsModel->getMembersPerCountry();
-        } catch (\PException) {
+        } catch (PException) {
             $logins = [];
             $countries = [];
             $languages = [];
@@ -226,7 +229,7 @@ class StatisticsController extends AboutBaseController
         SessionSingleton::createInstance($session);
 
         // make sure everything's setup for the old code used below
-        $environmentExplorer = new \EnvironmentExplorer($this->urlGenerator);
+        $environmentExplorer = new EnvironmentExplorer($this->urlGenerator);
         $environmentExplorer->initializeGlobalState(
             $this->getParameter('database_host'),
             $this->getParameter('database_name'),

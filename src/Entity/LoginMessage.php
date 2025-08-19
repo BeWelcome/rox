@@ -8,6 +8,7 @@
 
 namespace App\Entity;
 
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -24,10 +25,10 @@ class LoginMessage
     private string $message;
 
     #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
-    private \DateTime $created;
+    private DateTime $created;
 
     #[ORM\Column(name: 'expires', type: 'datetime', nullable: false)]
-    private ?\DateTime $expires;
+    private ?DateTime $expires;
 
     #[ORM\Column(name: 'id', type: 'integer')]
     #[ORM\Id]
@@ -46,26 +47,26 @@ class LoginMessage
         return $this->message;
     }
 
-    public function setCreated(\DateTime $created): self
+    public function setCreated(DateTime $created): self
     {
         $this->created = $created;
 
         return $this;
     }
 
-    public function getCreated(): \DateTime
+    public function getCreated(): DateTime
     {
         return $this->created;
     }
 
-    public function setExpires(?\DateTime $expires): self
+    public function setExpires(?DateTime $expires): self
     {
         $this->expires = $expires;
 
         return $this;
     }
 
-    public function getExpires(): ?\DateTime
+    public function getExpires(): ?DateTime
     {
         return $this->expires;
     }
@@ -81,6 +82,6 @@ class LoginMessage
     #[ORM\PrePersist]
     public function onPrePersist()
     {
-        $this->created = new \DateTime('now');
+        $this->created = new DateTime('now');
     }
 }

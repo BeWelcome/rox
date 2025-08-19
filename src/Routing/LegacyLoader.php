@@ -2,6 +2,7 @@
 
 namespace App\Routing;
 
+use RuntimeException;
 use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
@@ -21,14 +22,14 @@ class LegacyLoader extends Loader
     private $loaded = false;
 
     /**
-     * @throws \RuntimeException
+     * @throws RuntimeException
      *
      * @return RouteCollection
      */
     public function load(mixed $resource, ?string $type = null): mixed
     {
         if (true === $this->loaded) {
-            throw new \RuntimeException('Do not add the "legacy" loader twice');
+            throw new RuntimeException('Do not add the "legacy" loader twice');
         }
 
         $this->routes = new RouteCollection();

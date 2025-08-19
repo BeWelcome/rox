@@ -2,6 +2,7 @@
 
 namespace App\Pagerfanta;
 
+use Override;
 use Pagerfanta\View\Template\Template;
 use Pagerfanta\View\Template\TwitterBootstrap4Template;
 use Pagerfanta\View\TwitterBootstrapView;
@@ -15,13 +16,13 @@ use Pagerfanta\View\TwitterBootstrapView;
  */
 class TwitterBootstrap4TranslatedView extends TwitterBootstrapView
 {
-    #[\Override]
+    #[Override]
     public function getName(): string
     {
         return 'twitter_bootstrap4';
     }
 
-    #[\Override]
+    #[Override]
     protected function createDefaultTemplate(): Template
     {
         return new TwitterBootstrap4Template();

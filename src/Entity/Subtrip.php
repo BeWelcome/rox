@@ -10,6 +10,7 @@ namespace App\Entity;
 
 use App\Repository\SubtripRepository;
 use Carbon\Carbon;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
@@ -30,10 +31,10 @@ class Subtrip
     private NewLocation $location;
 
     #[ORM\Column(name: 'arrival', type: 'date', nullable: false)]
-    private ?\DateTime $arrival = null;
+    private ?DateTime $arrival = null;
 
     #[ORM\Column(name: 'departure', type: 'date', nullable: false)]
-    private ?\DateTime $departure = null;
+    private ?DateTime $departure = null;
 
     #[ORM\Column(name: 'options', type: 'subtrip_options', nullable: true)]
     private ?string $options = null;
@@ -71,7 +72,7 @@ class Subtrip
         return $this->location;
     }
 
-    public function setArrival(\DateTime $arrival): self
+    public function setArrival(DateTime $arrival): self
     {
         $this->arrival = $arrival;
 
@@ -83,7 +84,7 @@ class Subtrip
         return Carbon::make($this->arrival);
     }
 
-    public function setDeparture(\DateTime $departure): self
+    public function setDeparture(DateTime $departure): self
     {
         $this->departure = $departure;
 

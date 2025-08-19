@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use App\Entity\Security\RefreshToken;
+use DateTimeImmutable;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -26,7 +27,7 @@ class RefreshTokenRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('rt')
             ->andWhere('rt.user = :user')->setParameter('user', $user)
-            ->andWhere('rt.expiresAt > :now')->setParameter('now', new \DateTimeImmutable())
+            ->andWhere('rt.expiresAt > :now')->setParameter('now', new DateTimeImmutable())
             ->setMaxResults(1)
             ->getQuery()
             ->getOneOrNullResult();

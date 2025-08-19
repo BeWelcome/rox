@@ -5,8 +5,12 @@ namespace App\Command;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NativeQuery;
 use Doctrine\ORM\Query\ResultSetMapping;
+use Exception;
 use Manticoresearch\Client;
 use Manticoresearch\Table;
+
+use const PHP_EOL;
+
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
@@ -45,7 +49,7 @@ class ManticoreIndicesForumCommand extends Command
             $this->io->note('Created ' . self::FORUM_INDEX . '.');
         } else {
             $this->io->note(
-                'Skipped creation of ' . self::FORUM_INDEX . ' index. ' . \PHP_EOL .
+                'Skipped creation of ' . self::FORUM_INDEX . ' index. ' . PHP_EOL .
                 'Index already exists.'
             );
 
@@ -86,7 +90,7 @@ class ManticoreIndicesForumCommand extends Command
                     'ngram_len' => '1',
                 ]
             );
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             // $index = null;
 
             $this->io->error($e->getMessage());

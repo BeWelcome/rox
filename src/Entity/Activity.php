@@ -10,6 +10,7 @@ namespace App\Entity;
 
 use App\Repository\ActivityRepository;
 use Carbon\Carbon;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
@@ -29,10 +30,10 @@ class Activity
     private Member $createdBy;
 
     #[ORM\Column(name: 'dateTimeStart', type: 'datetime', nullable: false)]
-    private \DateTime $starts;
+    private DateTime $starts;
 
     #[ORM\Column(name: 'dateTimeEnd', type: 'datetime', nullable: false)]
-    private \DateTime $ends;
+    private DateTime $ends;
 
     #[ORM\JoinColumn(name: 'locationId', referencedColumnName: 'geonameId', nullable: false)]
     #[ORM\ManyToOne(targetEntity: Location::class)]

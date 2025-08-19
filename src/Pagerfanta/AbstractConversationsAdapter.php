@@ -9,6 +9,7 @@ use App\Entity\Member;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManager;
+use PDO;
 
 abstract class AbstractConversationsAdapter
 {
@@ -36,7 +37,7 @@ abstract class AbstractConversationsAdapter
             $result = $this->connection->executeQuery(
                 $countQuery,
                 ['memberId' => $this->member->getId()],
-                [\PDO::PARAM_INT]
+                [PDO::PARAM_INT]
             );
             $count = $result->fetchOne();
         } catch (DBALException) {

@@ -9,6 +9,7 @@
 namespace App\Entity;
 
 use Carbon\Carbon;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -22,13 +23,13 @@ use Doctrine\ORM\Mapping as ORM;
 class HostingInterest
 {
     /**
-     * @var \DateTime
+     * @var DateTime
      */
     #[ORM\Column(name: 'updated', type: 'datetime', nullable: false)]
     private $updated;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      */
     #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
     private $initialized;
@@ -59,7 +60,7 @@ class HostingInterest
     private $remaining;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      */
     #[ORM\Column(name: 'enddate', type: 'datetime', nullable: false)]
     private $endDate;
@@ -82,7 +83,7 @@ class HostingInterest
     #[ORM\PrePersist]
     public function onPrePersist()
     {
-        $this->initialized = new \DateTime('now');
+        $this->initialized = new DateTime('now');
     }
 
     /**
@@ -91,7 +92,7 @@ class HostingInterest
     #[ORM\PreUpdate]
     public function onPreUpdate()
     {
-        $this->updated = new \DateTime('now');
+        $this->updated = new DateTime('now');
     }
 
     public function getUpdated(): Carbon
@@ -145,7 +146,7 @@ class HostingInterest
         return Carbon::instance($this->endDate);
     }
 
-    public function setEndDate(\DateTime $endDate): self
+    public function setEndDate(DateTime $endDate): self
     {
         $this->endDate = $endDate;
 

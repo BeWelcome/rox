@@ -2,7 +2,9 @@
 
 namespace App\LegacyKernel;
 
+use Override;
 use RoxFrontRouter;
+use SessionMemory;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -32,14 +34,14 @@ class LegacyHttpKernel extends HttpKernel
      * The next one is triggered by preg_match. PHP doc says everything's fine with that.
      * @SuppressWarnings("PHPMD.UndefinedVariable")
      */
-    #[\Override]
+    #[Override]
     public function handle(Request $request, int $type = HttpKernelInterface::MAIN_REQUEST, bool $catch = true): Response
     {
-        $router = new \RoxFrontRouter($this->environment);
+        $router = new RoxFrontRouter($this->environment);
         // The only classname ever used
         $router->classes = ['SignupController'];
 
-        $router->session_memory = new \SessionMemory('SessionMemory');
+        $router->session_memory = new SessionMemory('SessionMemory');
         $roxPostHandler = $router->session_memory->__get('posthandler');
         if ($roxPostHandler) {
             $roxPostHandler->setClasses([

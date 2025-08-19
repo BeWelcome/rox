@@ -9,6 +9,7 @@
 namespace App\Entity;
 
 use Carbon\Carbon;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -41,7 +42,7 @@ class CommunityNews
     private $public = false;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      */
     #[ORM\Column(name: 'created_at', type: 'datetime', nullable: true)]
     private $createdAt;
@@ -54,7 +55,7 @@ class CommunityNews
     private $createdBy;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      */
     #[ORM\Column(name: 'updated_at', type: 'datetime', nullable: true)]
     private $updatedAt;
@@ -161,7 +162,7 @@ class CommunityNews
     /**
      * Set createdAt.
      *
-     * @param \DateTime $createdAt
+     * @param DateTime $createdAt
      *
      * @return CommunityNews
      */
@@ -207,7 +208,7 @@ class CommunityNews
     /**
      * Set updatedAt.
      *
-     * @param \DateTime $updatedAt
+     * @param DateTime $updatedAt
      *
      * @return CommunityNews
      */
@@ -276,7 +277,7 @@ class CommunityNews
     #[ORM\PrePersist]
     public function onPrePersist()
     {
-        $this->createdAt = new \DateTime('now');
+        $this->createdAt = new DateTime('now');
     }
 
     /**
@@ -285,7 +286,7 @@ class CommunityNews
     #[ORM\PreUpdate]
     public function onPreUpdate()
     {
-        $this->updatedAt = new \DateTime('now');
+        $this->updatedAt = new DateTime('now');
     }
 
     public function addComment(CommunityNewsComment $comment): self

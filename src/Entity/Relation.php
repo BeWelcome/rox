@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Carbon\Carbon;
+use DateTime;
 use Doctrine\ORM\Event\PostLoadEventArgs;
 use Doctrine\ORM\Event\PostUpdateEventArgs;
 use Doctrine\ORM\Event\PrePersistEventArgs;
@@ -27,10 +28,10 @@ class Relation
     private ?string $commentText = '';
 
     #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
-    private \DateTime $created;
+    private DateTime $created;
 
     #[ORM\Column(name: 'updated', type: 'datetime', nullable: false)]
-    private \DateTime $updated;
+    private DateTime $updated;
 
     #[ORM\JoinColumn(name: 'IdOwner', referencedColumnName: 'id')]
     #[ORM\ManyToOne(targetEntity: \Member::class)]
@@ -70,7 +71,7 @@ class Relation
         return Carbon::instance($this->updated);
     }
 
-    public function setUpdated(\DateTime $updated): self
+    public function setUpdated(DateTime $updated): self
     {
         $this->updated = $updated;
 
@@ -145,7 +146,7 @@ class Relation
     #[ORM\PrePersist]
     public function onPrePersist(PrePersistEventArgs $args)
     {
-        $this->created = new \DateTime('now');
+        $this->created = new DateTime('now');
         $this->updated = $this->created;
 
         if (null !== $this->commentText) {

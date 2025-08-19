@@ -9,6 +9,7 @@ use App\Entity\Newsletter;
 use App\Entity\Relation;
 use App\Logger\Logger;
 use Doctrine\ORM\EntityManagerInterface;
+use InvalidArgumentException;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
@@ -285,7 +286,7 @@ class Mailer
             $receiver = new Address($receiver->getEmail(), $receiver->getUsername());
         } elseif (!$receiver instanceof Address) {
             $message = \sprintf('$receiver must be an instance of %s or %s.', Member::class, Address::class);
-            throw new \InvalidArgumentException($message);
+            throw new InvalidArgumentException($message);
         }
 
         $parameters['template'] = $template;

@@ -3,6 +3,8 @@
 namespace App\Twig;
 
 use Carbon\Carbon;
+use HTMLPurifier;
+use HTMLPurifier_HTML5Config;
 use HtmlTruncator\InvalidHtmlException;
 use HtmlTruncator\Truncator;
 use Psr\Log\LoggerInterface;
@@ -246,7 +248,7 @@ class Extension extends AbstractExtension implements GlobalsInterface
      */
     public function prepareNewsletter(string $text, bool $website = false): string
     {
-        $config = \HTMLPurifier_HTML5Config::createDefault();
+        $config = HTMLPurifier_HTML5Config::createDefault();
         $config->set(
             'HTML.Allowed',
             'p,b,a[href],br,hr,i,u,strong,em,ol,ul,li,dl,dt,dd,img[src|alt|width|height],blockquote,del,'
@@ -258,7 +260,7 @@ class Extension extends AbstractExtension implements GlobalsInterface
         $config->set('AutoFormat.AutoParagraph', true);
         $config->set('AutoFormat.Linkify', true);
 
-        $purifier = new \HTMLPurifier($config);
+        $purifier = new HTMLPurifier($config);
         $text = $purifier->purify($text);
 
         // now turn any figure/figcaption entries into <img>

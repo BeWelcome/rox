@@ -5,6 +5,7 @@ namespace App\Model;
 use App\Entity\Member;
 use App\Entity\PasswordReset;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
 
 class PasswordModel
@@ -27,7 +28,7 @@ class PasswordModel
     {
         try {
             $token = random_bytes(32);
-        } catch (\Exception) {
+        } catch (Exception) {
             $token = openssl_random_pseudo_bytes(32);
         }
         $token = bin2hex($token);

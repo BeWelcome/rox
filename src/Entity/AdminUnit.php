@@ -8,6 +8,7 @@
 
 namespace App\Entity;
 
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -59,7 +60,7 @@ class AdminUnit
     private $admin1;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      */
     #[ORM\Column(name: 'moddate', type: 'date', nullable: true)]
     private $moddate;
@@ -193,7 +194,7 @@ class AdminUnit
     /**
      * Set moddate.
      *
-     * @param \DateTime $moddate
+     * @param DateTime $moddate
      *
      * @return AdminUnit
      */
@@ -207,7 +208,7 @@ class AdminUnit
     /**
      * Get moddate.
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getModdate()
     {

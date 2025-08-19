@@ -6,6 +6,7 @@ use App\Entity\Country;
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query;
+use Exception;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
@@ -15,6 +16,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
+use ZipArchive;
 
 /**
  * @SuppressWarnings("PHPMD")
@@ -164,7 +166,7 @@ class GeonamesUpdateFullCommand extends Command
             return -1;
         }
 
-        $zip = new \ZipArchive();
+        $zip = new ZipArchive();
         $dir = sys_get_temp_dir() . '/allcountries';
         if (true === $zip->open($filename)) {
             $zip->extractTo($dir);
@@ -259,7 +261,7 @@ class GeonamesUpdateFullCommand extends Command
 
         $io->writeln('Extracting downloaded file.');
 
-        $zip = new \ZipArchive();
+        $zip = new ZipArchive();
         $dir = sys_get_temp_dir() . '/alternatenames';
         if (true === $zip->open($filename)) {
             $zip->extractTo($dir);
@@ -579,7 +581,7 @@ class GeonamesUpdateFullCommand extends Command
                     $connection->quote($row[14]),
                     $connection->quote($row[18])
                 );
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 $io->note(
                     'Skipped ' . $row[1] . ' (' . $row[8] . ', ' . $row[10] . ' - ' . $row[0]
                     . ') -- ' . $e->getMessage()
@@ -638,7 +640,7 @@ class GeonamesUpdateFullCommand extends Command
                     $connection->quote($row[6]),
                     $connection->quote($row[7])
                 );
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 $io->note(
                     'Skipped ' . $row[1] . ' (' . $row[8] . ', ' . $row[10] . ' - ' . $row[0] . ') -- ' . $e->getMessage()
                 );

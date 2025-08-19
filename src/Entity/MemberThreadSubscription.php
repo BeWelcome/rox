@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Doctrine\ActionToWatchType;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -23,7 +24,7 @@ class MemberThreadSubscription
     private $subscriber;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      */
     #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
     private $subscribed;
@@ -190,12 +191,12 @@ class MemberThreadSubscription
         return $this->id;
     }
 
-    public function getSubscribed(): \DateTime
+    public function getSubscribed(): DateTime
     {
         return $this->subscribed;
     }
 
-    public function setSubscribed(\DateTime $subscribed): void
+    public function setSubscribed(DateTime $subscribed): void
     {
         $this->subscribed = $subscribed;
     }

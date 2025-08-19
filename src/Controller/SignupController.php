@@ -12,6 +12,7 @@ use App\Service\Mailer;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
@@ -143,7 +144,7 @@ class SignupController extends AbstractController
             /** @var Member $member */
             $member = $memberRepository->findOneBy(['username' => $username]);
             if (!$member) {
-                throw new \Exception('No member found in database. Terminating.');
+                throw new Exception('No member found in database. Terminating.');
             }
 
             $member->setRegistrationKey($key);

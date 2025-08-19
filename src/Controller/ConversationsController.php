@@ -17,6 +17,7 @@ use App\Utilities\ItemsPerPageTraits;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
 use Doctrine\ORM\EntityManagerInterface;
+use InvalidArgumentException;
 use Pagerfanta\Pagerfanta;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -56,7 +57,7 @@ class ConversationsController extends AbstractController
     }
 
     /**
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     #[Route(path: '/conversations/with/{username}', name: 'conversations_with')]
     public function allConversationsWithMember(

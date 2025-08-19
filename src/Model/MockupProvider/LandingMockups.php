@@ -9,6 +9,8 @@ use App\Entity\NewLocation;
 use App\Entity\Subtrip;
 use App\Entity\Trip;
 use Carbon\Carbon;
+use DateTime;
+use Mockery;
 
 class LandingMockups implements MockupProviderInterface
 {
@@ -57,18 +59,18 @@ class LandingMockups implements MockupProviderInterface
 
     private function getTripsWidgetTwoLegs(Member $user): array
     {
-        $trip = \Mockery::mock(Trip::class, [
+        $trip = Mockery::mock(Trip::class, [
             'getId' => 1,
             'getCreator' => $user,
             'getSummary' => 'Mocking Bird',
             'getDescription' => 'Mocking description',
             'getCountOfTravellers' => 2,
             'getAdditionalInfo' => TripAdditionalInfoType::NONE,
-            'getCreated' => new \DateTime(),
+            'getCreated' => new DateTime(),
         ]);
         $location = new NewLocation();
         $location->setName('Mock');
-        $leg1 = \Mockery::mock(Subtrip::class, [
+        $leg1 = Mockery::mock(Subtrip::class, [
             'getId' => 1,
             'getArrival' => new Carbon(),
             'getDeparture' => new Carbon(),
@@ -78,7 +80,7 @@ class LandingMockups implements MockupProviderInterface
             'getInvitedBy' => $user,
             'getInvitationBy' => null,
         ]);
-        $leg2 = \Mockery::mock(Subtrip::class, [
+        $leg2 = Mockery::mock(Subtrip::class, [
             'getId' => 2,
             'getArrival' => new Carbon(),
             'getDeparture' => new Carbon(),

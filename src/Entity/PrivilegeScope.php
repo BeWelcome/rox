@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Carbon\Carbon;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -16,7 +17,7 @@ use Doctrine\ORM\Mapping as ORM;
 class PrivilegeScope
 {
     /**
-     * @var \DateTime
+     * @var DateTime
      */
     #[ORM\Column(name: 'updated', type: 'datetime', nullable: false)]
     private $updated;
@@ -58,7 +59,7 @@ class PrivilegeScope
     /**
      * Set updated.
      *
-     * @param \DateTime $updated
+     * @param DateTime $updated
      *
      * @return PrivilegeScope
      */
@@ -181,7 +182,7 @@ class PrivilegeScope
     #[ORM\PrePersist]
     public function onPrePersist()
     {
-        $this->updated = new \DateTime('now');
+        $this->updated = new DateTime('now');
     }
 
     /**
@@ -190,6 +191,6 @@ class PrivilegeScope
     #[ORM\PreUpdate]
     public function onPreUpdate()
     {
-        $this->updated = new \DateTime('now');
+        $this->updated = new DateTime('now');
     }
 }

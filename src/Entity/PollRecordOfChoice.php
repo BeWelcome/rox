@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Carbon\Carbon;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -20,13 +21,13 @@ use Doctrine\ORM\Mapping as ORM;
 class PollRecordOfChoice
 {
     /**
-     * @var \DateTime
+     * @var DateTime
      */
     #[ORM\Column(name: 'updated', type: 'datetime', nullable: false)]
     private $updated;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      */
     #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
     private $created;
@@ -69,7 +70,7 @@ class PollRecordOfChoice
     /**
      * Set updated.
      *
-     * @param \DateTime $updated
+     * @param DateTime $updated
      *
      * @return PollRecordOfChoice
      */
@@ -93,7 +94,7 @@ class PollRecordOfChoice
     /**
      * Set created.
      *
-     * @param \DateTime $created
+     * @param DateTime $created
      *
      * @return PollRecordOfChoice
      */
@@ -222,8 +223,8 @@ class PollRecordOfChoice
     #[ORM\PrePersist]
     public function onPrePersist()
     {
-        $this->created = new \DateTime('now');
-        $this->updated = new \DateTime('now');
+        $this->created = new DateTime('now');
+        $this->updated = new DateTime('now');
     }
 
     /**
@@ -232,6 +233,6 @@ class PollRecordOfChoice
     #[ORM\PreUpdate]
     public function onPreUpdate()
     {
-        $this->updated = new \DateTime('now');
+        $this->updated = new DateTime('now');
     }
 }

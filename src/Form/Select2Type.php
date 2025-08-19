@@ -2,6 +2,7 @@
 
 namespace App\Form;
 
+use Override;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -56,7 +57,7 @@ class Select2Type extends AbstractType
         $view->vars['attr'] = $attr;
     }
 
-    #[\Override]
+    #[Override]
     public function getParent(): string
     {
         return ChoiceType::class;

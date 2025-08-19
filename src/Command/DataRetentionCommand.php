@@ -8,8 +8,10 @@ use App\Entity\MemberTranslation;
 use App\Entity\NewLocation;
 use App\Logger\Logger;
 use App\Repository\MemberRepository;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
+use Exception;
 use Hidehalo\Nanoid\Client;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -122,7 +124,7 @@ class DataRetentionCommand extends Command
     {
         // Used to set a random password (and forget it directly)
         $client = new Client();
-        $longAgo = new \DateTime('1900-01-01');
+        $longAgo = new DateTime('1900-01-01');
 
         /** @var EntityRepository $locationRepository */
         $locationRepository = $this->entityManager->getRepository(NewLocation::class);
@@ -236,7 +238,7 @@ class DataRetentionCommand extends Command
             foreach ($files as $file) {
                 $filesystem->remove($file);
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->logger->write(
                 'Problem during retention run: ' . $e->getMessage(),
                 'Data Retention',

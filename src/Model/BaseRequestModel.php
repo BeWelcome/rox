@@ -6,12 +6,14 @@ use App\Doctrine\MessageStatusType;
 use App\Entity\HostingRequest;
 use App\Entity\Member;
 use App\Entity\Message;
+use DateTime;
 use Doctrine\DBAL\Exception\InvalidArgumentException as DBALInvalidArgumentException;
+use InvalidArgumentException;
 
 class BaseRequestModel
 {
     /**
-     * @throws \InvalidArgumentException|DBALInvalidArgumentException
+     * @throws InvalidArgumentException|DBALInvalidArgumentException
      */
     public function getFinalRequest(
         Member $sender,
@@ -21,7 +23,7 @@ class BaseRequestModel
         string $clickedButton,
     ): Message {
         if (null === $hostingRequest->getRequest()->getDeparture() || null === $data->getRequest()->getDeparture()) {
-            throw new \InvalidArgumentException();
+            throw new InvalidArgumentException();
         }
 
         $finalRequest = new Message();
@@ -82,7 +84,7 @@ class BaseRequestModel
      */
     public function hasExpired(Message $message): bool
     {
-        $today = new \DateTime('today');
+        $today = new DateTime('today');
         $arrival = $message->getRequest()->getArrival();
 
         return $today > $arrival;

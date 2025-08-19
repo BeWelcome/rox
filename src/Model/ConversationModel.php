@@ -11,7 +11,9 @@ use App\Entity\Message;
 use App\Repository\MessageRepository;
 use App\Service\Mailer;
 use App\Utilities\ConversationThread;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ConversationModel
@@ -265,7 +267,7 @@ class ConversationModel
             if ($member === $item->getReceiver() && null === $item->getFirstRead()) {
                 // Only mark as read if it is a message and when the receiver reads the message,
                 // not when the message is presented to the Sender with url /messages/{id}/sent
-                $item->setFirstRead(new \DateTime());
+                $item->setFirstRead(new DateTime());
                 $em->persist($item);
             }
         }
@@ -299,7 +301,7 @@ class ConversationModel
 
             $result = $statement->executeQuery();
             $row = $result->fetchAssociative();
-        } catch (\Exception) {
+        } catch (Exception) {
             return false;
         }
 

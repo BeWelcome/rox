@@ -11,6 +11,7 @@ namespace App\Entity;
 use App\Repository\RequestRepository;
 use App\Utilities\LifecycleCallbacksTrait;
 use Carbon\Carbon;
+use DateTime;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Exception\InvalidArgumentException;
 use Doctrine\ORM\Mapping as ORM;
@@ -43,12 +44,12 @@ class HostingRequest
     #[ORM\Column(name: 'arrival', type: 'datetime', nullable: false)]
     #[Assert\NotBlank]
     #[Assert\LessThanOrEqual(propertyPath: 'departure')]
-    private \DateTime $arrival;
+    private DateTime $arrival;
 
     #[ORM\Column(name: 'departure', type: 'datetime', nullable: false)]
     #[Assert\NotBlank]
     #[Assert\GreaterThanOrEqual(propertyPath: 'arrival')]
-    private \DateTime $departure;
+    private DateTime $departure;
 
     #[ORM\Column(name: 'flexible', type: 'boolean', nullable: true)]
     private bool $flexible = false;
@@ -78,7 +79,7 @@ class HostingRequest
     /**
      * Set arrival.
      */
-    public function setArrival(\DateTime $arrival): self
+    public function setArrival(DateTime $arrival): self
     {
         $this->arrival = $arrival;
 
@@ -94,7 +95,7 @@ class HostingRequest
         return Carbon::instance($this->arrival);
     }
 
-    public function setDeparture(\DateTime $departure): self
+    public function setDeparture(DateTime $departure): self
     {
         $this->departure = $departure;
 

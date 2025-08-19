@@ -4,7 +4,9 @@ namespace App\Pagerfanta;
 
 use App\Entity\Member;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Pagerfanta\Adapter\AdapterInterface;
+use PDO;
 
 class LogAdapter implements AdapterInterface
 {
@@ -25,7 +27,7 @@ class LogAdapter implements AdapterInterface
             [$sql, $params, $paramTypes] = $this->getSqlAndParameters(true);
             $stmt = $this->entityManager->getConnection()->executeQuery($sql, $params, $paramTypes);
             $count = $stmt->fetchOne();
-        } catch (\Exception) {
+        } catch (Exception) {
             // Return 0
         }
 
@@ -43,7 +45,7 @@ class LogAdapter implements AdapterInterface
             $sql .= ' ORDER BY `l`.`created` DESC LIMIT ' . $length . ' OFFSET ' . $offset;
             $stmt = $this->entityManager->getConnection()->executeQuery($sql, $params, $paramTypes);
             $results = $stmt->fetchAllAssociative();
-        } catch (\Exception) {
+        } catch (Exception) {
             // We return an empty array in this case
         }
 
@@ -75,7 +77,7 @@ class LogAdapter implements AdapterInterface
         if (null !== $this->member) {
             $sql .= ' `l`.`IdMember` = :memberId';
             $params[':memberId'] = $this->member->getId();
-            $paramTypes[':memberId'] = \PDO::PARAM_INT;
+            $paramTypes[':memberId'] = PDO::PARAM_INT;
         }
 
         return [$sql, $params, $paramTypes];

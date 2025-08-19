@@ -4,6 +4,8 @@ namespace App\Doctrine;
 
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Type;
+use InvalidArgumentException;
+use Override;
 
 /**
  * @SuppressWarnings("PHPMD.UnusedFormalParameter")
@@ -25,13 +27,13 @@ abstract class SetType extends Type
         return 'SET(' . implode(', ', $values) . ')';
     }
 
-    #[\Override]
+    #[Override]
     public function convertToPHPValue(mixed $value, AbstractPlatform $platform): mixed
     {
         return $value;
     }
 
-    #[\Override]
+    #[Override]
     public function convertToDatabaseValue(mixed $value, AbstractPlatform $platform): mixed
     {
         if (null !== $value && !empty($value)) {
@@ -44,7 +46,7 @@ abstract class SetType extends Type
                 $valueCount = \count($values);
 
                 if (\count(array_intersect($values, $this->values)) !== $valueCount) {
-                    throw new \InvalidArgumentException("Invalid '" . $this->name . "' value: " . $value . '.');
+                    throw new InvalidArgumentException("Invalid '" . $this->name . "' value: " . $value . '.');
                 }
             }
         } else {

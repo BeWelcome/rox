@@ -2,6 +2,7 @@
 
 namespace App\Form;
 
+use Override;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -10,6 +11,9 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 
 class SubjectType extends AbstractType
 {
+    /**
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
+     */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->add('subject', TextType::class, [
@@ -33,7 +37,7 @@ class SubjectType extends AbstractType
         ]);
     }
 
-    #[\Override]
+    #[Override]
     public function getBlockPrefix(): string
     {
         return 'app_subject';

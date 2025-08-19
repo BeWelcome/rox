@@ -16,7 +16,9 @@ use App\Logger\Logger;
 use App\Model\FeedbackModel;
 use App\Repository\MemberRepository;
 use App\Repository\MessageRepository;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Pagerfanta\Doctrine\ORM\QueryAdapter;
 use Pagerfanta\Pagerfanta;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -135,7 +137,7 @@ class VolunteerToolController extends AbstractController
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     #[Route(path: '/admin/tools/findmember', name: 'admin_tools_find_user')]
     public function findUser(Request $request, EntityManagerInterface $entityManager, Logger $logger): Response
@@ -208,7 +210,7 @@ class VolunteerToolController extends AbstractController
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     #[Route(path: '/admin/tools/topspammer', name: 'admin_tools_top_spammer')]
     public function showTopSpammer(Request $request, EntityManagerInterface $entityManager): Response
@@ -565,7 +567,7 @@ ORDER BY count(msg.id) DESC')->fetchAllAssociative();
             return $this->redirectToRoute('homepage');
         }
 
-        $loginMessage->setExpires(new \DateTime());
+        $loginMessage->setExpires(new DateTime());
         $entityManager->persist($loginMessage);
         $entityManager->flush();
 

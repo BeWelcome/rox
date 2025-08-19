@@ -8,6 +8,7 @@
 
 namespace App\Entity;
 
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -21,7 +22,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Params
 {
     /**
-     * @var \DateTime
+     * @var DateTime
      */
     #[ORM\Column(name: 'updated', type: 'datetime', nullable: false)]
     private $updated;
@@ -51,7 +52,7 @@ class Params
     private $neededperyear = 1260;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      */
     #[ORM\Column(name: 'campaignstartdate', type: 'date', nullable: false)]
     private $campaignstartdate = '2012-10-11';
@@ -175,7 +176,7 @@ class Params
     /**
      * Set updated.
      *
-     * @param \DateTime $updated
+     * @param DateTime $updated
      *
      * @return Params
      */
@@ -189,7 +190,7 @@ class Params
     /**
      * Get updated.
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getUpdated()
     {
@@ -295,7 +296,7 @@ class Params
     /**
      * Set campaignstartdate.
      *
-     * @param \DateTime $campaignstartdate
+     * @param DateTime $campaignstartdate
      *
      * @return Params
      */
@@ -309,7 +310,7 @@ class Params
     /**
      * Get campaignstartdate.
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getCampaignstartdate()
     {
@@ -764,6 +765,6 @@ class Params
     #[ORM\PreUpdate]
     public function onPreUpdate()
     {
-        $this->updated = new \DateTime('now');
+        $this->updated = new DateTime('now');
     }
 }

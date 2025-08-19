@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Activity;
+use DateTimeImmutable;
 use Eluceo\iCal\Domain\Entity\Calendar;
 use Eluceo\iCal\Domain\Entity\Event;
 use Eluceo\iCal\Domain\ValueObject\DateTime;
@@ -30,8 +31,8 @@ class ActivityController extends AbstractController
     #[Route(path: '/activity/{id}/download', name: 'activity_download', requirements: ['id' => '\d+'])]
     public function download(Activity $activity): Response
     {
-        $start = new DateTime(\DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $activity->getStarts()), false);
-        $end = new DateTime(\DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $activity->getEnds()), false);
+        $start = new DateTime(DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $activity->getStarts()), false);
+        $end = new DateTime(DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $activity->getEnds()), false);
         $occurrence = new TimeSpan($start, $end);
         $location = new Location($activity->getAddress());
         $strippedDescription = strip_tags(str_replace('<br>', "\r\n", $activity->getDescription()));

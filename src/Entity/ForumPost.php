@@ -12,6 +12,7 @@ use App\Doctrine\ForumDeleteStatusType;
 use App\Doctrine\ForumVisibilityType;
 use App\Doctrine\PostCanStillEditType;
 use Carbon\Carbon;
+use DateTime;
 use Doctrine\ORM\Event\PostLoadEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Persistence\ObjectManager;
@@ -65,7 +66,7 @@ class ForumPost
     private $author;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      */
     #[ORM\Column(name: 'create_time', type: 'datetime', nullable: false)]
     private $created;
@@ -89,7 +90,7 @@ class ForumPost
     private $ownerCanStillEdit = PostCanStillEditType::CAN_STILL_EDIT;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      */
     #[ORM\Column(name: 'last_edittime', type: 'datetime', nullable: true)]
     private $updated;
@@ -292,7 +293,7 @@ class ForumPost
     /**
      * Set lastEdittime.
      *
-     * @param \DateTime $lastEdittime
+     * @param DateTime $lastEdittime
      *
      * @return ForumPost
      */
@@ -306,7 +307,7 @@ class ForumPost
     /**
      * Get lastEdittime.
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getLastEdittime()
     {
@@ -526,7 +527,7 @@ class ForumPost
         $thread = $this->thread;
         try {
             $threadTitle = $this->thread->getTitle();
-        } catch (\Exception) {
+        } catch (Exception) {
             $thread = null;
         }
 
@@ -558,7 +559,7 @@ class ForumPost
     /**
      * Set created.
      *
-     * @param \DateTime $created
+     * @param DateTime $created
      *
      * @return ForumPost
      */
@@ -582,7 +583,7 @@ class ForumPost
     /**
      * Set updated.
      *
-     * @param \DateTime $updated
+     * @param DateTime $updated
      *
      * @return ForumPost
      */

@@ -2,6 +2,7 @@
 
 namespace App\Command;
 
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -51,7 +52,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
         return $content;
     }
 
-    private function updateGeonamesForDate(\DateTime $date, SymfonyStyle $io): int
+    private function updateGeonamesForDate(DateTime $date, SymfonyStyle $io): int
     {
         $io->note('Working on date ' . $date->format('Y-m-d'));
 
@@ -170,8 +171,8 @@ use Symfony\Component\Console\Style\SymfonyStyle;
      **/
     private function updateGeonames($io): void
     {
-        $this->updateGeonamesForDate((new \DateTime())->modify('-1day'), $io); // Yesterday
-        $this->updateGeonamesForDate((new \DateTime())->modify('-2days'), $io); // the day before yesterday
+        $this->updateGeonamesForDate((new DateTime())->modify('-1day'), $io); // Yesterday
+        $this->updateGeonamesForDate((new DateTime())->modify('-2days'), $io); // the day before yesterday
         if ('01' === date('d', time())) {
             // \todo: Update country list on the first day of a month
         }
@@ -179,8 +180,8 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
     private function updateAlternatenames($io): int
     {
-        $result = $this->updateAlternateNamesForDate((new \DateTime())->modify('-1day'), $io); // Yesterday
-        $result |= $this->updateAlternateNamesForDate((new \DateTime())->modify('-2days'), $io); // the day before yesterday
+        $result = $this->updateAlternateNamesForDate((new DateTime())->modify('-1day'), $io); // Yesterday
+        $result |= $this->updateAlternateNamesForDate((new DateTime())->modify('-2days'), $io); // the day before yesterday
 
         return $result;
     }

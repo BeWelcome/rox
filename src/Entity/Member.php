@@ -13,12 +13,15 @@ use App\Doctrine\LanguageLevelType;
 use App\Doctrine\MemberStatusType;
 use App\Repository\MemberRepository;
 use Carbon\Carbon;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Event\PostLoadEventArgs;
 use Doctrine\ORM\Mapping as ORM;
+use Exception;
+use Serializable;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherAwareInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -31,7 +34,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 #[ORM\Table(name: 'members')]
 #[ORM\Entity(repositoryClass: MemberRepository::class)]
 #[ORM\HasLifecycleCallbacks]
-class Member implements \Serializable, UserInterface, PasswordHasherAwareInterface, PasswordAuthenticatedUserInterface
+class Member implements Serializable, UserInterface, PasswordHasherAwareInterface, PasswordAuthenticatedUserInterface
 {
     public const ROLE_ADMIN_ACCEPTER = 'ROLE_ADMIN_ACCEPTER';
     public const ROLE_ADMIN_ADMIN = 'ROLE_ADMIN_ADMIN';
@@ -65,7 +68,7 @@ class Member implements \Serializable, UserInterface, PasswordHasherAwareInterfa
     protected string $email;
 
     #[ORM\Column(name: 'LastLogin', type: 'datetime', nullable: true)]
-    protected ?\DateTime $lastLogin = null;
+    protected ?DateTime $lastLogin = null;
 
     #[ORM\Column(name: 'PassWord', type: 'string', length: 100, nullable: true)]
     protected ?string $password = null;
@@ -137,10 +140,10 @@ class Member implements \Serializable, UserInterface, PasswordHasherAwareInterfa
     private int $otherRestrictions = 0;
 
     #[ORM\Column(name: 'updated', type: 'datetime', nullable: false)]
-    private \DateTime $updated;
+    private DateTime $updated;
 
     #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
-    private \DateTime $created;
+    private DateTime $created;
 
     #[ORM\Column(name: 'ProfileSummary', type: 'integer', nullable: false)]
     private int $profileSummary = 0;
@@ -161,7 +164,7 @@ class Member implements \Serializable, UserInterface, PasswordHasherAwareInterfa
     private string $hideAge = 'No';
 
     #[ORM\Column(name: 'BirthDate', type: 'date', nullable: true)]
-    private ?\DateTime $birthdate = null;
+    private ?DateTime $birthdate = null;
 
     #[ORM\Column(name: 'AdressHidden', type: 'string', nullable: false)]
     private string $addressHidden = 'Yes';
@@ -230,7 +233,7 @@ class Member implements \Serializable, UserInterface, PasswordHasherAwareInterfa
     private int $chatGoogle = 0;
 
     #[ORM\Column(name: 'LastSwitchToActive', type: 'datetime', nullable: true)]
-    private ?\DateTime $lastSwitchToActive = null;
+    private ?DateTime $lastSwitchToActive = null;
 
     #[ORM\Column(name: 'bewelcomed', type: 'boolean', nullable: false)]
     private bool $beWelcomed = false;
@@ -572,7 +575,7 @@ class Member implements \Serializable, UserInterface, PasswordHasherAwareInterfa
         return null;
     }
 
-    public function setLastLogin(?\DateTime $lastLogin): self
+    public function setLastLogin(?DateTime $lastLogin): self
     {
         $this->lastLogin = $lastLogin;
 
@@ -660,7 +663,7 @@ class Member implements \Serializable, UserInterface, PasswordHasherAwareInterfa
         return 'No' === $this->hideAge;
     }
 
-    public function setBirthdate(\DateTime $birthdate): self
+    public function setBirthdate(DateTime $birthdate): self
     {
         $this->birthdate = $birthdate;
 
@@ -804,14 +807,14 @@ class Member implements \Serializable, UserInterface, PasswordHasherAwareInterfa
         return $this->movies;
     }
 
-    public function setLastSwitchToActive(?\DateTime $lastSwitchToActive): self
+    public function setLastSwitchToActive(?DateTime $lastSwitchToActive): self
     {
         $this->lastSwitchToActive = $lastSwitchToActive;
 
         return $this;
     }
 
-    public function getLastSwitchToActive(): ?\DateTime
+    public function getLastSwitchToActive(): ?DateTime
     {
         return $this->lastSwitchToActive;
     }
@@ -911,7 +914,7 @@ class Member implements \Serializable, UserInterface, PasswordHasherAwareInterfa
             function ($groupMembership) {
                 try {
                     return $groupMembership->getGroup();
-                } catch (\Exception) {
+                } catch (Exception) {
                 }
             },
             $this->groupMemberships->matching($criteria)->toArray()
@@ -1191,7 +1194,7 @@ class Member implements \Serializable, UserInterface, PasswordHasherAwareInterfa
                     // Make sure language exists in database
                     $language = $k->getLanguage();
                     $language->getName();
-                } catch (\Exception) {
+                } catch (Exception) {
                     return false;
                 }
 
@@ -1278,7 +1281,7 @@ class Member implements \Serializable, UserInterface, PasswordHasherAwareInterfa
     #[ORM\PrePersist]
     public function onPrePersist(): void
     {
-        $this->created = new \DateTime('now');
+        $this->created = new DateTime('now');
         $this->updated = $this->created;
     }
 
@@ -1288,7 +1291,7 @@ class Member implements \Serializable, UserInterface, PasswordHasherAwareInterfa
     #[ORM\PreUpdate]
     public function onPreUpdate()
     {
-        $this->updated = new \DateTime('now');
+        $this->updated = new DateTime('now');
     }
 
     public function getPreferredLanguage(): ?Language

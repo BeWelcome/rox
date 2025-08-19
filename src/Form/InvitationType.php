@@ -2,13 +2,14 @@
 
 namespace App\Form;
 
+use Override;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 class InvitationType extends HostingRequestAbstractType
 {
-    #[\Override]
+    #[Override]
     public function getBlockPrefix(): string
     {
         return 'invitation';

@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Utilities\LifecycleCallbacksTrait;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -46,7 +47,7 @@ class Flag
     /**
      * Set created.
      *
-     * @param \DateTime $created
+     * @param DateTime $created
      *
      * @return Flag
      */

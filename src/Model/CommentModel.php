@@ -7,6 +7,7 @@ use App\Entity\Comment;
 use App\Entity\Member;
 use Doctrine\ORM\EntityManagerInterface;
 use Jfcherng\Diff\LevenshteinDistance;
+use Throwable;
 
 class CommentModel
 {
@@ -77,7 +78,7 @@ class CommentModel
                 }
                 ++$iteration;
             }
-        } catch (\Throwable) {
+        } catch (Throwable) {
             // ignore exception and just return false (likely consumed too much memory)
             return $newExperience;
         }

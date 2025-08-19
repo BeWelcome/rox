@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\LoginMessageAcknowledged;
 use App\Entity\Member;
+use DateTime;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query\Expr\Join;
 
@@ -24,7 +25,7 @@ class LoginMessageRepository extends EntityRepository
             )
             ->where($qb->expr()->isNull('lma.message'))
             ->andWhere($qb->expr()->gt('lm.expires', ':now'))
-            ->setParameter('now', new \DateTime())
+            ->setParameter('now', new DateTime())
             ->setParameter('member', $member->getId())
             ->getQuery()
         ;

@@ -2,6 +2,7 @@
 
 namespace App\Form;
 
+use Override;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -44,7 +45,7 @@ class JoinGroupType extends AbstractType
         ;
     }
 
-    #[\Override]
+    #[Override]
     public function getBlockPrefix(): string
     {
         return '';

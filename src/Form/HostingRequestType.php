@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\HostingRequest;
 use App\Form\DataTransformer\DateTransformer;
 use App\Form\DataTransformer\LegTransformer;
+use Override;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -73,7 +74,7 @@ class HostingRequestType extends AbstractType
         ;
     }
 
-    #[\Override]
+    #[Override]
     public function getBlockPrefix(): string
     {
         return 'request';

@@ -6,6 +6,7 @@ use App\Entity\Member;
 use App\LegacyKernel\LegacyHttpKernel;
 use App\Utilities\SessionSingleton;
 use App\Utilities\TranslatorSingleton;
+use EnvironmentExplorer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
@@ -39,7 +40,7 @@ class LegacyController extends AbstractController
         SessionSingleton::createInstance($session);
         TranslatorSingleton::createInstance($translator);
 
-        $environmentExplorer = new \EnvironmentExplorer($urlGenerator);
+        $environmentExplorer = new EnvironmentExplorer($urlGenerator);
         $environmentExplorer->initializeGlobalState(
             $params->get('database_host'),
             $params->get('database_name'),

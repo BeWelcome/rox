@@ -3,6 +3,8 @@
 namespace App\Form;
 
 use App\Form\CustomDataClass\SearchFormRequest;
+use Override;
+use SearchModel;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Exception\AlreadySubmittedException;
 use Symfony\Component\Form\Exception\LogicException;
@@ -67,7 +69,7 @@ class SearchFormType extends AbstractType
         ]);
     }
 
-    #[\Override]
+    #[Override]
     public function getBlockPrefix(): string
     {
         return '';
@@ -250,12 +252,12 @@ class SearchFormType extends AbstractType
                 'autocomplete' => true,
                 'plugins' => [],
                 'choices' => [
-                    'search.order.accommodation' => \SearchModel::ORDER_ACCOMMODATION,
-                    'search.order.distance' => \SearchModel::ORDER_DISTANCE,
-                    'search.order.login' => \SearchModel::ORDER_LOGIN,
-                    'search.order.comments' => \SearchModel::ORDER_COMMENTS,
-                    'search.order.membership' => \SearchModel::ORDER_MEMBERSHIP,
-                    'search.order.username' => \SearchModel::ORDER_USERNAME,
+                    'search.order.accommodation' => SearchModel::ORDER_ACCOMMODATION,
+                    'search.order.distance' => SearchModel::ORDER_DISTANCE,
+                    'search.order.login' => SearchModel::ORDER_LOGIN,
+                    'search.order.comments' => SearchModel::ORDER_COMMENTS,
+                    'search.order.membership' => SearchModel::ORDER_MEMBERSHIP,
+                    'search.order.username' => SearchModel::ORDER_USERNAME,
                 ],
                 'translation_domain' => 'messages',
             ])
@@ -264,8 +266,8 @@ class SearchFormType extends AbstractType
                 'autocomplete' => true,
                 'plugins' => [],
                 'choices' => [
-                    'search.direction.descending' => \SearchModel::DIRECTION_DESCENDING,
-                    'search.direction.ascending' => \SearchModel::DIRECTION_ASCENDING,
+                    'search.direction.descending' => SearchModel::DIRECTION_DESCENDING,
+                    'search.direction.ascending' => SearchModel::DIRECTION_ASCENDING,
                 ],
             ])
             ->add('items', ChoiceType::class, [

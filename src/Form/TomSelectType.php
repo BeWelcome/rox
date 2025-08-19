@@ -2,6 +2,7 @@
 
 namespace App\Form;
 
+use Override;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -58,13 +59,13 @@ class TomSelectType extends AbstractType
         }
     }
 
-    #[\Override]
+    #[Override]
     public function getParent(): string
     {
         return TextType::class;
     }
 
-    #[\Override]
+    #[Override]
     public function getBlockPrefix(): string
     {
         return 'tomselect';

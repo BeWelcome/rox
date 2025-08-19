@@ -6,6 +6,7 @@ use App\Doctrine\TranslationAllowedType;
 use App\Entity\Word;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
+use Exception;
 use Pagerfanta\Doctrine\ORM\QueryAdapter;
 use Pagerfanta\Pagerfanta;
 
@@ -136,7 +137,7 @@ class WordRepository extends EntityRepository
         $date = $details->getUpdated();
         try {
             $translator = $details->getAuthor();
-        } catch (\Exception) {
+        } catch (Exception) {
             $translator = null;
         }
 

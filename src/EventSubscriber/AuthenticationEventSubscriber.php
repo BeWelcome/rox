@@ -5,6 +5,7 @@ namespace App\EventSubscriber;
 use App\Doctrine\MemberStatusType;
 use App\Entity\Member;
 use Carbon\Carbon;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
@@ -49,7 +50,7 @@ class AuthenticationEventSubscriber implements EventSubscriberInterface
             $lastLogin = $member->getLastLogin();
             $diff = (new Carbon())->diffInMinutes($lastLogin);
             if (null === $lastLogin || $diff > 5) {
-                $member->setLastLogin(new \DateTime());
+                $member->setLastLogin(new DateTime());
 
                 $status = $member->getStatus();
                 if (MemberStatusType::OUT_OF_REMIND === $status) {

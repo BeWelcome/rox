@@ -3,6 +3,7 @@
 namespace App\Model\MemberDataExtractor;
 
 use App\Entity\Member;
+use Exception;
 
 final class GroupInformationExtractor extends AbstractExtractor implements ExtractorInterface
 {
@@ -18,7 +19,7 @@ final class GroupInformationExtractor extends AbstractExtractor implements Extra
                     if ($groupMembership->getGroup()->getName()) {
                         $memberships[] = $groupMembership;
                     }
-                } catch (\Exception) {
+                } catch (Exception) {
                     // Deleted Group
                 }
             }

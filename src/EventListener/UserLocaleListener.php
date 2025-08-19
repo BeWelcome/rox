@@ -5,6 +5,7 @@ namespace App\EventListener;
 use App\Entity\Language;
 use App\Entity\Member;
 use Doctrine\ORM\EntityManagerInterface;
+use PVars;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 use Symfony\Component\Security\Http\SecurityEvents;
@@ -47,7 +48,7 @@ class UserLocaleListener implements EventSubscriberInterface
         } else {
             $locale = $language->getShortCode();
         }
-        \PVars::register('lang', $locale);
+        PVars::register('lang', $locale);
 
         $request->setLocale($locale);
         $session->set('IdLanguage', $language->getId());

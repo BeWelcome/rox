@@ -9,6 +9,7 @@
 namespace App\Entity;
 
 use Carbon\Carbon;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -56,10 +57,10 @@ class Address
     private int $rank = 0;
 
     #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
-    private \DateTime $created;
+    private DateTime $created;
 
     #[ORM\Column(name: 'updated', type: 'datetime', nullable: false)]
-    private \DateTime $updated;
+    private DateTime $updated;
 
     #[ORM\Column(name: 'IdGettingThere', type: 'integer', nullable: false)]
     private int $gettingThere = 0;
@@ -173,7 +174,7 @@ class Address
         return $this->rank;
     }
 
-    public function setCreated(\DateTime $created): self
+    public function setCreated(DateTime $created): self
     {
         $this->created = $created;
 
@@ -185,7 +186,7 @@ class Address
         return Carbon::instance($this->created);
     }
 
-    public function setUpdated(\DateTime $updated): self
+    public function setUpdated(DateTime $updated): self
     {
         $this->updated = $updated;
 
@@ -220,7 +221,7 @@ class Address
     #[ORM\PrePersist]
     public function onPrePersist()
     {
-        $this->created = new \DateTime('now');
+        $this->created = new DateTime('now');
         $this->updated = $this->created;
     }
 
@@ -230,6 +231,6 @@ class Address
     #[ORM\PreUpdate]
     public function onPreUpdate()
     {
-        $this->updated = new \DateTime('now');
+        $this->updated = new DateTime('now');
     }
 }

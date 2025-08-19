@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Utilities\LifecycleCallbacksTrait;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -179,7 +180,7 @@ class FlagMember
     /**
      * Set updated.
      *
-     * @param \DateTime $updated
+     * @param DateTime $updated
      *
      * @return FlagMember
      */
@@ -193,7 +194,7 @@ class FlagMember
     /**
      * Get updated.
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getUpdated()
     {
@@ -203,7 +204,7 @@ class FlagMember
     /**
      * Set created.
      *
-     * @param \DateTime $created
+     * @param DateTime $created
      *
      * @return FlagMember
      */
@@ -217,7 +218,7 @@ class FlagMember
     /**
      * Get created.
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getCreated()
     {

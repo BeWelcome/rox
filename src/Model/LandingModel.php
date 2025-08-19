@@ -15,6 +15,7 @@ use App\Repository\MessageRepository;
 use App\Repository\SubtripRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\Expr;
+use Exception;
 
 class LandingModel
 {
@@ -125,7 +126,7 @@ class LandingModel
     /**
      * Generates activities (near you) for display on home page.
      *
-     * @throws \Exception
+     * @throws Exception
      *
      * @return array
      */

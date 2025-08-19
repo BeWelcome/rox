@@ -6,6 +6,7 @@ namespace App\Migrations;
 
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\AbstractMigration;
+use Override;
 
 /**
  * Auto-generated Migration: Please modify to your needs!
@@ -14,7 +15,7 @@ use Doctrine\Migrations\AbstractMigration;
  */
 final class Version20200522172912 extends AbstractMigration
 {
-    #[\Override]
+    #[Override]
     public function getDescription(): string
     {
         return 'Add forum_trads view';
@@ -44,7 +45,7 @@ final class Version20200522172912 extends AbstractMigration
         ');
     }
 
-    #[\Override]
+    #[Override]
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs

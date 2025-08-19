@@ -6,6 +6,7 @@ use App\Doctrine\Annotation\LanguageAware;
 use Doctrine\Common\Annotations\Reader;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Query\Filter\SQLFilter;
+use InvalidArgumentException;
 
 class LanguageFilter extends SQLFilter
 {
@@ -33,7 +34,7 @@ class LanguageFilter extends SQLFilter
         try {
             // Don't worry, getParameter automatically quotes parameters
             $language = $this->getParameter('language');
-        } catch (\InvalidArgumentException) {
+        } catch (InvalidArgumentException) {
             // No language has been defined
             return '';
         }

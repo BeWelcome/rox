@@ -2,6 +2,21 @@
 
 namespace App\Utilities;
 
+use const CURL_HTTP_VERSION_1_1;
+use const CURLOPT_CAINFO;
+use const CURLOPT_CONNECTTIMEOUT;
+use const CURLOPT_FORBID_REUSE;
+use const CURLOPT_HTTP_VERSION;
+use const CURLOPT_HTTPHEADER;
+use const CURLOPT_POST;
+use const CURLOPT_POSTFIELDS;
+use const CURLOPT_RETURNTRANSFER;
+use const CURLOPT_SSL_VERIFYHOST;
+use const CURLOPT_SSL_VERIFYPEER;
+use const CURLOPT_SSLVERSION;
+
+use Exception;
+
 /**
  * @SuppressWarnings("PHPMD")
  * Class borrowed directly from github.com/paypal.
@@ -62,14 +77,14 @@ class PaypalIPN
      * Verification Function
      * Sends the incoming post data back to PayPal using the cURL library.
      *
-     * @throws \Exception
+     * @throws Exception
      *
      * @return bool
      */
     public function verifyIPN()
     {
         if (!\count($_POST)) {
-            throw new \Exception('Missing POST Data');
+            throw new Exception('Missing POST Data');
         }
 
         $raw_post_data = file_get_contents('php://input');
@@ -105,21 +120,21 @@ class PaypalIPN
 
         // Post the data back to PayPal, using curl. Throw exceptions if errors occur.
         $ch = curl_init($this->getPaypalUri());
-        curl_setopt($ch, \CURLOPT_HTTP_VERSION, \CURL_HTTP_VERSION_1_1);
-        curl_setopt($ch, \CURLOPT_POST, 1);
-        curl_setopt($ch, \CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, \CURLOPT_POSTFIELDS, $req);
-        curl_setopt($ch, \CURLOPT_SSLVERSION, 6);
-        curl_setopt($ch, \CURLOPT_SSL_VERIFYPEER, 1);
-        curl_setopt($ch, \CURLOPT_SSL_VERIFYHOST, 2);
+        curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $req);
+        curl_setopt($ch, CURLOPT_SSLVERSION, 6);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
 
         // This is often required if the server is missing a global cert bundle, or is using an outdated one.
         if ($this->use_local_certs) {
-            curl_setopt($ch, \CURLOPT_CAINFO, __DIR__ . '/cert/cacert.pem');
+            curl_setopt($ch, CURLOPT_CAINFO, __DIR__ . '/cert/cacert.pem');
         }
-        curl_setopt($ch, \CURLOPT_FORBID_REUSE, 1);
-        curl_setopt($ch, \CURLOPT_CONNECTTIMEOUT, 30);
-        curl_setopt($ch, \CURLOPT_HTTPHEADER, [
+        curl_setopt($ch, CURLOPT_FORBID_REUSE, 1);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
             'User-Agent: PHP-IPN-Verification-Script',
             'Connection: Close',
         ]);
@@ -128,13 +143,13 @@ class PaypalIPN
             $errno = curl_errno($ch);
             $errstr = curl_error($ch);
             curl_close($ch);
-            throw new \Exception("cURL error: [$errno] $errstr");
+            throw new Exception("cURL error: [$errno] $errstr");
         }
 
         $info = curl_getinfo($ch);
         $http_code = $info['http_code'];
         if (200 !== $http_code) {
-            throw new \Exception("PayPal responded with http code $http_code");
+            throw new Exception("PayPal responded with http code $http_code");
         }
 
         curl_close($ch);

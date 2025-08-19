@@ -6,6 +6,7 @@ use App\Entity\CommunityNews;
 use App\Entity\Member;
 use App\Form\CommunityNewsType;
 use App\Model\CommunityNewsModel;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -62,7 +63,7 @@ class CommunityNewsController extends AbstractController
         $communityNewsForm->handleRequest($request);
         if ($communityNewsForm->isSubmitted() && $communityNewsForm->isValid()) {
             $data = $communityNewsForm->getData();
-            $now = new \DateTime();
+            $now = new DateTime();
             $data->setCreatedBy($this->getUser());
             $data->setCreatedAt($now);
             $data->setUpdatedBy($this->getUser());
@@ -96,7 +97,7 @@ class CommunityNewsController extends AbstractController
         $communityNewsForm->handleRequest($request);
         if ($communityNewsForm->isSubmitted() && $communityNewsForm->isValid()) {
             $data = $communityNewsForm->getData();
-            $data->setUpdatedAt(new \DateTime());
+            $data->setUpdatedAt(new DateTime());
             $data->setUpdatedby($this->getUser());
 
             $this->entityManager->persist($data);
@@ -123,7 +124,7 @@ class CommunityNewsController extends AbstractController
         }
 
         $communityNews->setPublic(false);
-        $communityNews->setUpdatedAt(new \DateTime());
+        $communityNews->setUpdatedAt(new DateTime());
         $communityNews->setUpdatedby($this->getUser());
 
         $this->entityManager->persist($communityNews);
@@ -147,7 +148,7 @@ class CommunityNewsController extends AbstractController
         }
 
         $communityNews->setPublic(true);
-        $communityNews->setUpdatedAt(new \DateTime());
+        $communityNews->setUpdatedAt(new DateTime());
         $communityNews->setUpdatedby($this->getUser());
 
         $this->entityManager->persist($communityNews);

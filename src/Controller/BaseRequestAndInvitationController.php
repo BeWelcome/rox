@@ -9,6 +9,7 @@ use App\Model\BaseRequestModel;
 use App\Model\ConversationModel;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Form;
@@ -77,7 +78,7 @@ abstract class BaseRequestAndInvitationController extends AbstractController
         $hostingRequest->setFirstRead(null);
         $hostingRequest->setStatus('Sent');
         $hostingRequest->setFolder('Normal');
-        $hostingRequest->setCreated(new \DateTime());
+        $hostingRequest->setCreated(new DateTime());
 
         return $hostingRequest;
     }

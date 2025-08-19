@@ -11,6 +11,7 @@ use App\Form\CustomDataClass\FaqCategoryRequest;
 use App\Form\FaqCategoryFormType;
 use App\Model\FaqModel;
 use App\Model\TranslationModel;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\HttpFoundation\Request;
@@ -66,7 +67,7 @@ class FaqCategoryController extends FaqBaseController
                 $word->setSentence($data->description);
                 $word->setDomain(DomainType::MESSAGES);
                 $word->setlanguage($english);
-                $word->setCreated(new \DateTime());
+                $word->setCreated(new DateTime());
                 $word->setDescription('FAQ category');
                 $this->entityManager->persist($word);
 
@@ -114,7 +115,7 @@ class FaqCategoryController extends FaqBaseController
             $wordRepository = $this->entityManager->getRepository(Word::class);
             $description = $wordRepository->findOneBy(['code' => $faqCategoryRequest->wordCode, 'shortCode' => 'en']);
             $description->setSentence($data->description);
-            $description->setMajorUpdate(new \DateTime());
+            $description->setMajorUpdate(new DateTime());
             $this->entityManager->persist($description);
             $this->entityManager->flush();
 

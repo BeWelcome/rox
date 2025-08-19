@@ -5,10 +5,11 @@ namespace App\Model\MemberDataExtractor;
 use App\Entity\Member;
 use App\Entity\Message;
 use App\Repository\MessageRepository;
+use Override;
 
 final class RequestsExtractor extends MessagesExtractor
 {
-    #[\Override]
+    #[Override]
     public function extract(Member $member, string $tempDir): string
     {
         /** @var MessageRepository $messageRepository */

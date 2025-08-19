@@ -8,6 +8,7 @@ use App\Entity\Member;
 use App\Entity\Newsletter;
 use App\Service\Mailer;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -96,7 +97,7 @@ class SendMassmailCommand extends Command
                     ->setStatus('Sent')
                     ->setUnsubscribeKey($unsubscribeKey);
                 ++$sent;
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 $io->error('Message Frozen: ' . $e->getMessage());
                 $scheduled->setStatus('Freeze');
             }

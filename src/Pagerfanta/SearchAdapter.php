@@ -10,7 +10,10 @@ use App\Utilities\SessionSingleton;
 use App\Utilities\TranslatorSingleton;
 use Doctrine\DBAL\Exception\InvalidArgumentException;
 use Doctrine\ORM\EntityManagerInterface;
+use EnvironmentExplorer;
+use Exception;
 use Pagerfanta\Adapter\AdapterInterface;
+use SearchModel;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -20,7 +23,7 @@ class SearchAdapter implements AdapterInterface
     /** @var array */
     private $modelData;
 
-    /** @var \SearchModel */
+    /** @var SearchModel */
     private $model;
 
     /**
@@ -67,7 +70,7 @@ class SearchAdapter implements AdapterInterface
         TranslatorSingleton::createInstance($translator);
 
         // make sure everything's setup for the old code used below
-        $environmentExplorer = new \EnvironmentExplorer();
+        $environmentExplorer = new EnvironmentExplorer();
         $environmentExplorer->initializeGlobalState(
             $dbHost,
             $dbName,
@@ -77,7 +80,7 @@ class SearchAdapter implements AdapterInterface
             $manticorePort
         );
         $dbPassword = str_repeat('*', \strlen($dbPassword));
-        $this->model = new \SearchModel($em);
+        $this->model = new SearchModel($em);
         $this->modelData = $this->prepareModelData($data);
 
         // Determine if we search for a country or an admin unit and call prepareQuery accordingly
@@ -86,7 +89,7 @@ class SearchAdapter implements AdapterInterface
         $location = null;
         try {
             $location = $repository->find($data->location_geoname_id);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw new InvalidArgumentException($e->getMessage(), $e->getCode());
         }
 

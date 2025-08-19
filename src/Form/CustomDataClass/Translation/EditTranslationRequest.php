@@ -4,33 +4,20 @@ namespace App\Form\CustomDataClass\Translation;
 
 use App\Doctrine\TranslationAllowedType;
 use App\Entity\Word;
+use InvalidArgumentException;
 
 class EditTranslationRequest extends TranslationRequest
 {
-    /**
-     * @var bool
-     */
-    public $isMajorUpdate;
+    public bool $isMajorUpdate;
 
-    /**
-     * @var bool
-     */
-    public $isArchived;
+    public bool $isArchived;
 
-    /**
-     * @var bool
-     */
-    public $translationAllowed;
+    public bool $translationAllowed;
 
-    /**
-     * @throws \InvalidArgumentException
-     *
-     * @return EditTranslationRequest
-     */
-    public static function fromTranslations(Word $original, Word $translation)
+    public static function fromTranslations(Word $original, Word $translation): self
     {
         if (strtolower($original->getCode()) !== strtolower($translation->getCode())) {
-            throw new \InvalidArgumentException();
+            throw new InvalidArgumentException();
         }
 
         $editTranslationRequest = new self();

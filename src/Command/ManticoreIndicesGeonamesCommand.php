@@ -6,6 +6,7 @@ use App\Entity\NewLocation;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NativeQuery;
 use Doctrine\ORM\Query\ResultSetMapping;
+use Exception;
 use Manticoresearch\Client;
 use Manticoresearch\Table;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -95,7 +96,7 @@ class ManticoreIndicesGeonamesCommand extends Command
                     'ngram_len' => '1',
                 ]
             );
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             // $index = null;
 
             $this->io->error($e->getMessage());

@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\FeedbackCategory;
 use Gregwar\CaptchaBundle\Type\CaptchaType;
+use Override;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -80,7 +81,7 @@ class FeedbackFormType extends AbstractType
         ]);
     }
 
-    #[\Override]
+    #[Override]
     public function getBlockPrefix(): string
     {
         return '';

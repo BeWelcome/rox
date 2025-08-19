@@ -4,6 +4,7 @@ namespace App\Model\MockupProvider;
 
 use App\Entity\ForumPost;
 use App\Entity\ForumThread;
+use Mockery;
 
 class ForumMockups implements MockupProviderInterface
 {
@@ -30,13 +31,13 @@ class ForumMockups implements MockupProviderInterface
 
     public function getMockupVariables(array $parameters): array
     {
-        $mockThread = \Mockery::mock(ForumThread::class, [
+        $mockThread = Mockery::mock(ForumThread::class, [
             'getId' => 1,
             'getGroup' => null,
             'getTitle' => 'Thread title',
         ]);
 
-        $mockPost = \Mockery::mock(ForumPost::class, [
+        $mockPost = Mockery::mock(ForumPost::class, [
             'getId' => 1,
             'getMessage' => 'Post text',
             'getThread' => $mockThread,

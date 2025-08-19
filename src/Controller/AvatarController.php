@@ -4,8 +4,10 @@ namespace App\Controller;
 
 use App\Entity\Member;
 use App\Entity\MembersPhoto;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Intervention\Image\ImageManager;
+use InvalidArgumentException;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Finder\Finder;
@@ -15,6 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Throwable;
 
 /**
  * Class AvatarController.
@@ -77,7 +80,7 @@ class AvatarController extends AbstractController
         if (!$this->avatarImageExists($member, $size)) {
             try {
                 $this->createAvatarImage($member, $size);
-            } catch (\InvalidArgumentException) {
+            } catch (InvalidArgumentException) {
                 return $this->emptyAvatar($size);
             }
         }
@@ -92,7 +95,7 @@ class AvatarController extends AbstractController
         $imageManager = new ImageManager();
         try {
             $img = $imageManager->make($avatarFile->getRealPath())->orientate();
-        } catch (\Throwable) {
+        } catch (Throwable) {
             return false;
         }
 
@@ -107,7 +110,7 @@ class AvatarController extends AbstractController
         }
         $memberPhoto->setMember($member);
         $memberPhoto->setFilepath($newFileName);
-        $memberPhoto->setCreated(new \DateTime());
+        $memberPhoto->setCreated(new DateTime());
         $memberPhoto->setComment('Uploaded new avatar');
 
         $this->entityManager->persist($memberPhoto);
@@ -167,7 +170,7 @@ class AvatarController extends AbstractController
         $original = self::AVATAR_PATH . $member->getId() . '_original';
         if (!file_exists($original)) {
             $message = 'No original avatar image exists for member ' . $member->getUsername();
-            throw new \InvalidArgumentException($message);
+            throw new InvalidArgumentException($message);
         }
 
         $filename = self::AVATAR_PATH . $member->getId() . '_' . $sizeOfAvatar . '_' . $sizeOfAvatar;

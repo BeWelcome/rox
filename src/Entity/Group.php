@@ -10,6 +10,7 @@ namespace App\Entity;
 
 use App\Doctrine\GroupType;
 use App\Doctrine\MemberStatusType;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
@@ -55,7 +56,7 @@ class Group
     private string $type = GroupType::PUBLIC;
 
     #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
-    private \DateTime $created;
+    private DateTime $created;
 
     #[ORM\Column(name: 'Picture', type: 'text', length: 65535, nullable: false)]
     private string $picture;
@@ -133,7 +134,7 @@ class Group
     /**
      * Set created.
      *
-     * @param \DateTime $created
+     * @param DateTime $created
      *
      * @return Group
      */
@@ -147,7 +148,7 @@ class Group
     /**
      * Get created.
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getCreated()
     {
@@ -400,7 +401,7 @@ class Group
     #[ORM\PrePersist]
     public function onPrePersist(): void
     {
-        $this->created = new \DateTime('now');
+        $this->created = new DateTime('now');
     }
 
     #[ORM\PostLoad]

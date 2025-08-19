@@ -10,6 +10,7 @@ use App\Repository\PostNotificationRepository;
 use App\Service\Mailer;
 use App\Utilities\TranslatorTrait;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -88,7 +89,7 @@ class SendNotificationsCommand extends Command
                         );
                         $notificationStatus = NotificationStatusType::SENT;
                         ++$sent;
-                    } catch (\Exception $e) {
+                    } catch (Exception $e) {
                         $io->error($e->getMessage());
                     }
                 }

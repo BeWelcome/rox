@@ -9,7 +9,9 @@
 namespace App\Entity;
 
 use Carbon\Carbon;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use Right;
 
 /**
  * Rightsvolunteers.
@@ -36,7 +38,7 @@ class RightVolunteer
     private $member;
 
     #[ORM\JoinColumn(name: 'IdRight', referencedColumnName: 'id')]
-    #[ORM\ManyToOne(targetEntity: \Right::class, inversedBy: 'rightVolunteers')]
+    #[ORM\ManyToOne(targetEntity: Right::class, inversedBy: 'rightVolunteers')]
     private $right;
 
     /**
@@ -58,13 +60,13 @@ class RightVolunteer
     private $comment;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      */
     #[ORM\Column(name: 'updated', type: 'datetime', nullable: false)]
     private $updated;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      */
     #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
     private $created;
@@ -170,7 +172,7 @@ class RightVolunteer
     /**
      * Set updated.
      *
-     * @param \DateTime $updated
+     * @param DateTime $updated
      *
      * @return RightVolunteer
      */
@@ -184,7 +186,7 @@ class RightVolunteer
     /**
      * Get updated.
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getUpdated()
     {
@@ -194,7 +196,7 @@ class RightVolunteer
     /**
      * Set created.
      *
-     * @param \DateTime $created
+     * @param DateTime $created
      *
      * @return RightVolunteer
      */
@@ -231,7 +233,7 @@ class RightVolunteer
     #[ORM\PrePersist]
     public function onPrePersist()
     {
-        $this->created = new \DateTime('now');
+        $this->created = new DateTime('now');
     }
 
     /**
@@ -240,6 +242,6 @@ class RightVolunteer
     #[ORM\PreUpdate]
     public function onPreUpdate()
     {
-        $this->updated = new \DateTime('now');
+        $this->updated = new DateTime('now');
     }
 }

@@ -17,7 +17,10 @@ use App\Repository\LanguageRepository;
 use App\Repository\WordRepository;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
+use MessageFormatter;
 use Pagerfanta\Pagerfanta;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -106,7 +109,7 @@ class TranslationController extends AbstractController
                 $translation->setCode($original->getCode());
                 $translation->setDomain($data->domain);
                 $translation->setSentence($data->translatedText);
-                $translation->setUpdated(new \DateTime());
+                $translation->setUpdated(new DateTime());
                 $translation->setAuthor($translator);
                 if ('en' === $language->getShortCode()) {
                     $translation->setDescription($data->description);
@@ -256,7 +259,7 @@ class TranslationController extends AbstractController
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     #[Route(path: '/admin/translations/create', name: 'translation_create_direct')] // Creates an new English index bypassing the translation interface
     public function createTranslationDirect(Request $request): Response
@@ -375,7 +378,7 @@ class TranslationController extends AbstractController
                 $translation->setDomain($original->getDomain());
                 $translation->setSentence($data->translatedText);
                 $translation->setLanguage($language);
-                $translation->setCreated(new \DateTime());
+                $translation->setCreated(new DateTime());
                 $translation->setAuthor($translator);
                 // No need for a description as the English original has one
                 $translation->setDescription('');
@@ -667,7 +670,7 @@ class TranslationController extends AbstractController
         $original->setDomain($data->domain);
         $original->setDescription($data->description);
         $original->setSentence($data->englishText);
-        $original->setCreated(new \DateTime());
+        $original->setCreated(new DateTime());
         $original->setAuthor($translator);
         $original->setLanguage($english);
 
@@ -679,8 +682,8 @@ class TranslationController extends AbstractController
         $invalidMessage = '';
         if (DomainType::ICU_MESSAGES === $data->domain) {
             try {
-                new \MessageFormatter('en', $message);
-            } catch (\Exception $exception) {
+                new MessageFormatter('en', $message);
+            } catch (Exception $exception) {
                 $invalidMessage = $exception->getMessage();
             }
         }

@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use App\Entity\Message;
+use Override;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
@@ -11,6 +12,9 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class InvitationHost extends HostingRequestAbstractType
 {
+    /**
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
+     */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
@@ -25,7 +29,7 @@ class InvitationHost extends HostingRequestAbstractType
         });
     }
 
-    #[\Override]
+    #[Override]
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver
@@ -35,7 +39,7 @@ class InvitationHost extends HostingRequestAbstractType
         ;
     }
 
-    #[\Override]
+    #[Override]
     public function getBlockPrefix(): string
     {
         return 'invitation';

@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Carbon\Carbon;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -22,7 +23,7 @@ class BroadcastMessage
     private string $status = 'ToApprove';
 
     #[ORM\Column(name: 'updated', type: 'datetime', nullable: false)]
-    private \DateTime $updated;
+    private DateTime $updated;
 
     #[ORM\Column(name: 'unsubscribe_key', type: 'string', length: 64, nullable: true)]
     private ?string $unsubscribeKey;
@@ -63,7 +64,7 @@ class BroadcastMessage
         return $this->status;
     }
 
-    public function setUpdated(\DateTime $updated): self
+    public function setUpdated(DateTime $updated): self
     {
         $this->updated = $updated;
 

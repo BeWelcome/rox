@@ -13,6 +13,7 @@ use App\Utilities\ItemsPerPageTraits;
 use App\Utilities\ProfileSubmenu;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -95,7 +96,7 @@ class RelationController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $relation = $form->getData();
-            $relation->setUpdated(new \DateTime());
+            $relation->setUpdated(new DateTime());
 
             $this->entityManager->merge($relation);
             $this->entityManager->flush();

@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Member;
+use DateTime;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
 
@@ -25,7 +26,7 @@ class TripRepository extends EntityRepository
             ->where('t.created <= :now')
             ->andWhere('t.creator = :creator')
             ->andWhere('t.deleted IS NULL')
-            ->setParameter('now', new \DateTime())
+            ->setParameter('now', new DateTime())
             ->setParameter('creator', $member)
             ->orderBy('t.created', 'DESC')
             ->getQuery();

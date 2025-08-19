@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Carbon\Carbon;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -16,13 +17,13 @@ use Doctrine\ORM\Mapping as ORM;
 class ProfileVisit
 {
     /**
-     * @var \DateTime
+     * @var DateTime
      */
     #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
     private $created;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      */
     #[ORM\Column(name: 'updated', type: 'datetime', nullable: false)]
     private $updated;
@@ -42,7 +43,7 @@ class ProfileVisit
     /**
      * Set created.
      *
-     * @param \DateTime $created
+     * @param DateTime $created
      */
     public function setCreated($created): self
     {
@@ -64,7 +65,7 @@ class ProfileVisit
     /**
      * Set updated.
      *
-     * @param \DateTime $updated
+     * @param DateTime $updated
      *
      * @return ProfileVisit
      */
@@ -147,7 +148,7 @@ class ProfileVisit
     #[ORM\PrePersist]
     public function onPrePersist()
     {
-        $this->created = new \DateTime('now');
+        $this->created = new DateTime('now');
         $this->updated = $this->created;
     }
 
@@ -157,6 +158,6 @@ class ProfileVisit
     #[ORM\PreUpdate]
     public function onPreUpdate()
     {
-        $this->updated = new \DateTime('now');
+        $this->updated = new DateTime('now');
     }
 }

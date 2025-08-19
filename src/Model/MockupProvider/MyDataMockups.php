@@ -23,7 +23,9 @@ use App\Entity\Shout;
 use App\Entity\Subtrip;
 use App\Entity\Trip;
 use Carbon\Carbon;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
+use Mockery;
 
 /**
  * Utility class for the translation interface mockup section.
@@ -155,7 +157,7 @@ class MyDataMockups implements MockupProviderInterface
         return [
             'extracted' => $extracted,
             'member' => $member,
-            'date_generated' => new \DateTime(),
+            'date_generated' => new DateTime(),
             'profilepicture' => '/members/avatar/' . $member->getUsername() . '/48',
             'messagesSent' => 2,
             'messagesReceived' => 3,
@@ -236,18 +238,18 @@ class MyDataMockups implements MockupProviderInterface
         $count = $parameters['count'] ?? -1;
         switch ($key) {
             case 'activities':
-                $mockEntity = \Mockery::mock(Activity::class, [
+                $mockEntity = Mockery::mock(Activity::class, [
                     'getTitle' => 'Activity Title',
                     'getDescription' => 'Activity description',
                 ]);
                 break;
             case 'broadcasts':
-                $mockNewsletter = \Mockery::mock(Newsletter::class, [
+                $mockNewsletter = Mockery::mock(Newsletter::class, [
                     'getTitle' => 'Newsletter Title',
                     'getText' => 'Newsletter text',
                     'getTranslations' => ['en', 'de', 'zh-hant'],
                 ]);
-                $mockEntity = \Mockery::mock(BroadcastMessage::class, [
+                $mockEntity = Mockery::mock(BroadcastMessage::class, [
                     'getNewsletter' => $mockNewsletter,
                     'getTitle' => 'Broadcast Title',
                     'getDescription' => 'Broadcast description',
@@ -255,7 +257,7 @@ class MyDataMockups implements MockupProviderInterface
                 ]);
                 break;
             case 'comments':
-                $mockComment = \Mockery::mock(Comment::class, [
+                $mockComment = Mockery::mock(Comment::class, [
                     'getToMember' => $parameters['user'],
                     'getFromMember' => $parameters['admin'],
                     'getQuality' => 'good',
@@ -270,7 +272,7 @@ class MyDataMockups implements MockupProviderInterface
                 ];
                 break;
             case 'communitynews':
-                $mockEntity = \Mockery::mock(CommunityNews::class, [
+                $mockEntity = Mockery::mock(CommunityNews::class, [
                     'getId' => 1,
                     'getTitle' => 'Community News',
                     'getText' => 'Community News text',
@@ -278,7 +280,7 @@ class MyDataMockups implements MockupProviderInterface
                 break;
             case 'communitynews_comments':
                 $key = 'newsAndComments';
-                $news = \Mockery::mock(CommunityNews::class, [
+                $news = Mockery::mock(CommunityNews::class, [
                     'getId' => 1,
                     'getTitle' => 'Community News',
                     'getText' => 'Community News text',
@@ -294,7 +296,7 @@ class MyDataMockups implements MockupProviderInterface
                 ];
                 break;
             case 'donations':
-                $mockEntity = \Mockery::mock(Donations::class, [
+                $mockEntity = Mockery::mock(Donations::class, [
                     'money' => '€',
                     'amount' => 100.00,
                     'namegiven' => 'donor',
@@ -311,14 +313,14 @@ class MyDataMockups implements MockupProviderInterface
             case 'groups':
                 return ['groupmemberships' => $this->getGroupMemberships($parameters['count'])];
             case 'logs':
-                $mockEntity = \Mockery::mock(Log::class, [
+                $mockEntity = Mockery::mock(Log::class, [
                     'getType' => 'log',
                     'getLogMessage' => 'logged message',
                     'getCreated' => new Carbon(),
                 ]);
                 break;
             case 'newsletters':
-                $mockEntity = \Mockery::mock(Newsletter::class, [
+                $mockEntity = Mockery::mock(Newsletter::class, [
                     'getTitle' => 'Newsletter Title',
                     'getText' => 'Newsletter text',
                     'getId' => 1,
@@ -380,7 +382,7 @@ class MyDataMockups implements MockupProviderInterface
             case 'rights':
                 // overwrite key as index is different
                 $key = 'volunteerrights';
-                $mockEntity = \Mockery::mock(Right::class, [
+                $mockEntity = Mockery::mock(Right::class, [
                     'right' => [
                         'name' => 'distinct right',
                     ],
@@ -414,29 +416,29 @@ class MyDataMockups implements MockupProviderInterface
 
     private function getTrip($host): Trip
     {
-        $mockTrip = \Mockery::mock(Trip::class, [
+        $mockTrip = Mockery::mock(Trip::class, [
             'getId' => 1,
             'getCreator' => $host,
             'getSummary' => 'Mocking Bird',
             'getDescription' => 'Mocking description',
             'getCountOfTravellers' => 2,
             'getAdditionalInfo' => TripAdditionalInfoType::NONE,
-            'getCreated' => new \DateTime(),
+            'getCreated' => new DateTime(),
         ]);
-        $country = \Mockery::mock(Location::class, [
+        $country = Mockery::mock(Location::class, [
             'getId' => 1,
             'getName' => 'Mocking Republic',
         ]);
-        $location = \Mockery::mock(Location::class, [
+        $location = Mockery::mock(Location::class, [
             'getId' => 1,
             'getName' => 'Mock',
             'getCountry' => $country,
         ]);
 
-        $leg = \Mockery::mock(Subtrip::class, [
+        $leg = Mockery::mock(Subtrip::class, [
             'getId' => 1,
-            'getArrival' => Carbon::instance(new \DateTime('2021-02-22')),
-            'getDeparture' => Carbon::instance(new \DateTime('2021-02-24')),
+            'getArrival' => Carbon::instance(new DateTime('2021-02-22')),
+            'getDeparture' => Carbon::instance(new DateTime('2021-02-24')),
             'getOptions' => [SubtripOptionsType::MEET_LOCALS],
             'getLocation' => $location,
             'getTrip' => $mockTrip,
@@ -456,7 +458,7 @@ class MyDataMockups implements MockupProviderInterface
 
     private function getPoll(): Poll
     {
-        return \Mockery::mock(Poll::class, [
+        return Mockery::mock(Poll::class, [
             'getId' => 1,
             'getTitles' => ['title'],
             'getDescriptions' => [
@@ -464,12 +466,12 @@ class MyDataMockups implements MockupProviderInterface
                 'fr' => 'description',
             ],
             'getGroups' => [
-                \Mockery::mock(Group::class, [
+                Mockery::mock(Group::class, [
                     'getName' => 'group',
                 ]),
             ],
             'getChoices' => [
-                \Mockery::mock(PollChoice::class, [
+                Mockery::mock(PollChoice::class, [
                     'getTexts' => [
                         'en' => 'English',
                         'fr' => 'French',
@@ -520,7 +522,7 @@ class MyDataMockups implements MockupProviderInterface
         }
 
         return [
-            'year' => (new \DateTime())->format('Y'),
+            'year' => (new DateTime())->format('Y'),
             'post_count' => $count,
             'threads' => $threads,
         ];
@@ -600,7 +602,7 @@ class MyDataMockups implements MockupProviderInterface
             'privilege' => 'Very big privilege',
             'scope' => 'All',
             'role' => 'Role',
-            'assigned' => new \DateTime(),
+            'assigned' => new DateTime(),
         ];
     }
 
@@ -675,7 +677,7 @@ class MyDataMockups implements MockupProviderInterface
                         'id' => 1,
                         'title' => 'Thread title',
                     ],
-                    'subscribed' => new \DateTime(),
+                    'subscribed' => new DateTime(),
                     'notificationsEnabled' => true,
                 ],
                 [
@@ -683,7 +685,7 @@ class MyDataMockups implements MockupProviderInterface
                         'id' => 2,
                         'title' => 'Thread title',
                     ],
-                    'subscribed' => new \DateTime(),
+                    'subscribed' => new DateTime(),
                     'notificationsEnabled' => false,
                 ],
             ],
@@ -703,14 +705,14 @@ class MyDataMockups implements MockupProviderInterface
                     'sentence' => 'Translations',
                     'shortCode' => 'en',
                     'language' => ['wordCode' => 'lang_pt'],
-                    'created' => (new \DateTime())->format('Y-m-d'),
+                    'created' => (new DateTime())->format('Y-m-d'),
                 ],
                 [
                     'code' => 'mydata.translations.abstract',
                     'sentence' => 'Traducions',
                     'shortCode' => 'en',
                     'language' => ['wordCode' => 'lang_es'],
-                    'created' => (new \DateTime())->format('Y-m-d'),
+                    'created' => (new DateTime())->format('Y-m-d'),
                 ],
             ],
         ];
@@ -720,12 +722,12 @@ class MyDataMockups implements MockupProviderInterface
     {
         $groupMemberships = [];
         for ($index = 0; $index < $count; ++$index) {
-            $groupMemberships[] = \Mockery::mock(GroupMembership::class, [
-                'getGroup' => \Mockery::mock(Group::class, [
+            $groupMemberships[] = Mockery::mock(GroupMembership::class, [
+                'getGroup' => Mockery::mock(Group::class, [
                     'getName' => 'group #' . ($index + 1),
                     'getId' => ($index + 1),
                 ]),
-                'getCreated' => new \DateTime(),
+                'getCreated' => new DateTime(),
                 'getStatus' => GroupMembershipStatusType::CURRENT_MEMBER,
                 'getComments' => [
                     [
@@ -733,14 +735,14 @@ class MyDataMockups implements MockupProviderInterface
                         'Sentence' => 'Translations',
                         'shortCode' => 'en',
                         'Language' => ['WordCode' => 'lang_pt'],
-                        'created' => (new \DateTime())->format('Y-m-d'),
+                        'created' => (new DateTime())->format('Y-m-d'),
                     ],
                     [
                         'code' => 'mydata.translations.abstract',
                         'Sentence' => 'Traducions',
                         'shortCode' => 'en',
                         'Language' => ['WordCode' => 'lang_es'],
-                        'created' => (new \DateTime())->format('Y-m-d'),
+                        'created' => (new DateTime())->format('Y-m-d'),
                     ],
                 ],
             ]);

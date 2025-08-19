@@ -9,6 +9,7 @@
 namespace App\Entity;
 
 use Carbon\Carbon;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -39,10 +40,10 @@ class MemberTranslation
     private Member $translator;
 
     #[ORM\Column(name: 'updated', type: 'datetime', nullable: true)]
-    private \DateTime $updated;
+    private DateTime $updated;
 
     #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
-    private \DateTime $created;
+    private DateTime $created;
 
     #[ORM\Column(name: 'Type', type: 'string', nullable: false)]
     private string $type = 'member';
@@ -101,7 +102,7 @@ class MemberTranslation
         return $this->translator;
     }
 
-    public function setUpdated(\DateTime $updated): self
+    public function setUpdated(DateTime $updated): self
     {
         $this->updated = $updated;
 
@@ -113,7 +114,7 @@ class MemberTranslation
         return Carbon::instance($this->updated);
     }
 
-    public function setCreated(\DateTime $created): self
+    public function setCreated(DateTime $created): self
     {
         $this->created = $created;
 
@@ -196,7 +197,7 @@ class MemberTranslation
     #[ORM\PrePersist]
     public function onPrePersist()
     {
-        $this->created = new \DateTime('now');
+        $this->created = new DateTime('now');
         $this->updated = $this->created;
         $this->translation = random_int(0, 24500000);
     }
@@ -216,6 +217,6 @@ class MemberTranslation
     #[ORM\PreUpdate]
     public function onPreUpdate()
     {
-        $this->updated = new \DateTime('now');
+        $this->updated = new DateTime('now');
     }
 }

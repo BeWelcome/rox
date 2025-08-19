@@ -2,6 +2,7 @@
 
 namespace App\Pagerfanta;
 
+use Override;
 use Pagerfanta\View\Template\TwitterBootstrap3Template;
 
 /**
@@ -28,7 +29,7 @@ class TwitterBootstrap4Template extends TwitterBootstrap3Template
         'rel_next' => 'next',
     ];
 
-    #[\Override]
+    #[Override]
     protected function linkLi($class, $href, $text, $rel = null): string
     {
         $liClass = implode(' ', array_filter(['page-item', $class]));
@@ -37,7 +38,7 @@ class TwitterBootstrap4Template extends TwitterBootstrap3Template
         return \sprintf('<li class="%s"><a class="page-link" href="%s"%s>%s</a></li>', $liClass, $href, $rel, $text);
     }
 
-    #[\Override]
+    #[Override]
     protected function spanLi($class, $text): string
     {
         $liClass = implode(' ', array_filter(['page-item', $class]));

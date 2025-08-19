@@ -12,6 +12,7 @@ use App\Doctrine\CommentAdminActionType;
 use App\Doctrine\CommentQualityType;
 use App\Repository\CommentRepository;
 use Carbon\Carbon;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -37,10 +38,10 @@ class Comment
     private string $textwhere = '';
 
     #[ORM\Column(name: 'updated', type: 'datetime', nullable: true)]
-    private ?\DateTime $updated;
+    private ?DateTime $updated;
 
     #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
-    private \DateTime $created;
+    private DateTime $created;
 
     #[ORM\Column(name: 'AdminAction', type: 'comment_admin_action', nullable: false)]
     private string $adminAction = CommentAdminActionType::NOTHING_NEEDED;
@@ -115,7 +116,7 @@ class Comment
         return $this->textwhere;
     }
 
-    public function setUpdated(\DateTime $updated): self
+    public function setUpdated(DateTime $updated): self
     {
         $this->updated = $updated;
 
@@ -131,7 +132,7 @@ class Comment
         return Carbon::instance($this->updated);
     }
 
-    public function setCreated(\DateTime $created): self
+    public function setCreated(DateTime $created): self
     {
         $this->created = $created;
 
@@ -246,7 +247,7 @@ class Comment
     #[ORM\PrePersist]
     public function onPrePersist()
     {
-        $this->created = new \DateTime('now');
+        $this->created = new DateTime('now');
         $this->updated = null;
     }
 }

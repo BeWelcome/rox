@@ -13,6 +13,7 @@ use App\Utilities\ItemsPerPageTraits;
 use App\Utilities\ProfileSubmenu;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -105,7 +106,7 @@ class NoteController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $note = $form->getData();
-            $note->setUpdated(new \DateTime());
+            $note->setUpdated(new DateTime());
             $this->entityManager->persist($note);
             $this->entityManager->flush();
 

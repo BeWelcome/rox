@@ -11,6 +11,7 @@ namespace App\Entity;
 use App\Doctrine\TranslationAllowedType;
 use App\Repository\WordRepository;
 use Carbon\Carbon;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -39,13 +40,13 @@ class Word
     private string $sentence;
 
     #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
-    private \DateTime $created;
+    private DateTime $created;
 
     #[ORM\Column(name: 'updated', type: 'datetime', nullable: true)]
-    private ?\DateTime $updated = null;
+    private ?DateTime $updated = null;
 
     #[ORM\Column(name: 'majorupdate', type: 'datetime', nullable: true)]
-    private ?\DateTime $majorUpdate = null;
+    private ?DateTime $majorUpdate = null;
 
     #[ORM\Column(name: 'donottranslate', type: 'translation_allowed', nullable: false)]
     private string $translationAllowed = TranslationAllowedType::TRANSLATION_ALLOWED;
@@ -108,7 +109,7 @@ class Word
         return $this->sentence;
     }
 
-    public function setCreated(\DateTime $created): self
+    public function setCreated(DateTime $created): self
     {
         $this->created = $created;
 
@@ -120,7 +121,7 @@ class Word
         return new Carbon($this->created);
     }
 
-    public function setUpdated(\DateTime $updated): self
+    public function setUpdated(DateTime $updated): self
     {
         $this->updated = $updated;
 
@@ -132,7 +133,7 @@ class Word
         return new Carbon($this->updated);
     }
 
-    public function setMajorUpdate(?\DateTime $majorUpdate): self
+    public function setMajorUpdate(?DateTime $majorUpdate): self
     {
         $this->majorUpdate = $majorUpdate;
 

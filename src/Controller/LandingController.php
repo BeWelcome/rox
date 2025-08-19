@@ -19,6 +19,7 @@ use App\Repository\ActivityRepository;
 use App\Repository\NotificationRepository;
 use App\Repository\SubtripRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -145,7 +146,7 @@ class LandingController extends AbstractController
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      *
      * @return Response
      */

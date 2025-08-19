@@ -10,8 +10,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class FaqRequest
 {
-    public FaqCategory $faqCategory;
-
     /**
      * @Assert\NotBlank()
      */
@@ -29,9 +27,8 @@ class FaqRequest
 
     public bool $active = true;
 
-    public function __construct(FaqCategory $faqCategory)
+    public function __construct(public FaqCategory $faqCategory)
     {
-        $this->faqCategory = $faqCategory;
     }
 
     public static function fromFaq(EntityManagerInterface $em, Faq $faq): self

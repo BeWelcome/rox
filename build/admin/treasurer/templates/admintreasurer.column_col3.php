@@ -86,7 +86,7 @@ foreach($this->donations as $donation) {
         echo '<tr class="blank">';
     }
 ?>
-<td><?php echo date("Y-m-d", strtotime($donation->created)); ?></td>
+<td><?php echo date("Y-m-d", strtotime((string) $donation->created)); ?></td>
 <td>€ <?php printf("%3.2f",$donation->Amount); ?></td>
 <td><?php echo $donation->SystemComment; ?></td>
 <td><?php echo $donation->CountryName; ?></td>

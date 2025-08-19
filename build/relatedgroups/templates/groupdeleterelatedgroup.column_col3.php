@@ -36,9 +36,9 @@ Boston, MA  02111-1307, USA.
 
         <?php // display my groups, if there are any
         if (!empty($relatedgroups)) {
-            echo '<div class="col-12"><h3>' . $words->get('TitleDeleteRelatedGroupFromGroup') . ' ' . htmlspecialchars($group->Name, ENT_QUOTES) . '</h3></div>';
+            echo '<div class="col-12"><h3>' . $words->get('TitleDeleteRelatedGroupFromGroup') . ' ' . htmlspecialchars((string) $group->Name, ENT_QUOTES) . '</h3></div>';
             foreach($relatedgroups as $relatedgroup) :
-                if (strlen($relatedgroup->Picture) > 0) {
+                if (strlen((string) $relatedgroup->Picture) > 0) {
                     $img_link = "group/thumbimg/{$relatedgroup->getPKValue()}";
                 } else {
                     $img_link = "images/icons/group.png";
@@ -49,7 +49,7 @@ Boston, MA  02111-1307, USA.
                             <img class="framed float_left"  width="60px" height="60px" alt="Group" src="<?php echo $img_link; ?>"/>
                         </a>
                         <div class="groupinfo">
-                            <h4><a href="group/<?php echo $relatedgroup->getPKValue(); ?>"><?php echo htmlspecialchars($relatedgroup->Name, ENT_QUOTES); ?></a></h4>
+                            <h4><a href="group/<?php echo $relatedgroup->getPKValue(); ?>"><?php echo htmlspecialchars((string) $relatedgroup->Name, ENT_QUOTES); ?></a></h4>
                             <a class="btn btn-primary" role="button" href="group/<?php echo $group->getPKValue(); ?>/deleterelatedgroup/<?php echo $relatedgroup->id; ?>"><span><?php echo $words->get('GroupsRemoveFromGroup'); ?></span></a>
                         </div> <!-- groupinfo -->
                 </div>

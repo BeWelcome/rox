@@ -8,7 +8,7 @@ use Mockery;
 
 class ForumMockups implements MockupProviderInterface
 {
-    private const MOCKUPS = [
+    private const array MOCKUPS = [
         'forum post (subscribed)' => [
             'type' => 'email',
             'template' => 'emails/notifications.html.twig',

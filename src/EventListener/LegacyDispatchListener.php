@@ -75,7 +75,7 @@ class LegacyDispatchListener
         }
         try {
             $response = $this->kernel->handle($event->getRequest(), $event->getRequestType());
-        } catch (ResourceNotFoundException $e) {
+        } catch (ResourceNotFoundException) {
             // If the legacy kernel also failed to route the request, let the
             // original error bubble back up to the new Symfony error handler.
             return;

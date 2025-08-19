@@ -8,10 +8,9 @@ use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
 use Carbon\Carbon;
 use Symfony\Component\Form\FormError;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class FeedbackController extends AboutBaseController
@@ -20,15 +19,16 @@ class FeedbackController extends AboutBaseController
     use TranslatedFlashTrait;
 
     /**
+     * @SuppressWarnings("PHPMD.CyclomaticComplexity")
      *
-     * @return Response|RedirectResponse
+     * \todo Fix complexity
      */
     #[Route(path: '/about/feedback', name: 'contactus')]
     #[Route(path: '/contact')]
     #[Route(path: '/contactus')]
     #[Route(path: '/support')]
     #[Route(path: '/feedback', name: 'feedback')]
-    public function feedback(Request $request, AboutModel $aboutModel, TranslatorInterface $translator)
+    public function feedback(Request $request, AboutModel $aboutModel, TranslatorInterface $translator): Response
     {
         $noModal = $request->query->get('no', false);
 

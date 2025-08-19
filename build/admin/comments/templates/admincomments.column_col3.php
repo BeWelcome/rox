@@ -64,7 +64,7 @@ foreach ($this->pager->getActiveSubset($this->comments) as $comment)
                 <a href="members/{$from}">
                     <img class="profileimg avatar-96" src="members/avatar/{$from}/96" alt="Profile" />
                 </a><br>
-                <a href="{$this->router->url('admin_comments_list_from', array('id' => $comment->getFromMember()->id))}">my comments</a><br>
+                <a href="{$this->router->url('admin_comments_list_from', ['id' => $comment->getFromMember()->id])}">my comments</a><br>
                 <a href="messages/compose/{$from}">contact me</a>
             </div>
 
@@ -73,7 +73,7 @@ foreach ($this->pager->getActiveSubset($this->comments) as $comment)
                 <a href="members/{$to}">
                     <img class="profileimg avatar-96"  src="members/avatar/{$to}/96" alt="Profile" />
                 </a><br>
-                <a href="{$this->router->url('admin_comments_list_to', array('id' => $comment->getToMember()->id))}">comments about me</a><br>
+                <a href="{$this->router->url('admin_comments_list_to', ['id' => $comment->getToMember()->id])}">comments about me</a><br>
                 <a href="messages/compose/{$to}">contact me</a>
             </div>
         </div>
@@ -104,7 +104,7 @@ foreach ($this->pager->getActiveSubset($this->comments) as $comment)
 HTML;
     if($comment->AdminAction != "Checked" && $comment->AdminAction != "NothingNeeded")
     {
-        $url = $this->router->url('admin_comments_list_single', array('id' => $comment->id));
+        $url = $this->router->url('admin_comments_list_single', ['id' => $comment->id]);
         ?>
         <a href="<?php echo $url; ?>?toggleAllowEdit=<?=$comment->id ?>&nameFrom=<?= $comment->getFromMember()->Username ?>&nameTo=<?= $comment->getToMember()->Username ?>" class="button">
             <?= $allowEdit ?>

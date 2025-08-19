@@ -1,6 +1,6 @@
 <?php
 
-$columns = array();
+$columns = [];
 $lastcontinent = "";
 ?>
 <div class="row">
@@ -18,11 +18,11 @@ $lastcontinent = "";
                             if (isset($this->countries[$continent])) {
                                 foreach ($this->countries[$continent] as $country) {
 
-                                    echo '<div class="col-12"><i class="famfamfam-flag-' . strtolower($country->country) . ' mt-2 mr-1"></i>';
+                                    echo '<div class="col-12"><i class="famfamfam-flag-' . strtolower((string) $country->country) . ' mt-2 mr-1"></i>';
                                     if ($country->number) {
-                                        echo '<a href="/places/' . htmlspecialchars($country->name) . '/' . $country->country . '">';
+                                        echo '<a href="/places/' . htmlspecialchars((string) $country->name) . '/' . $country->country . '">';
                                     }
-                                    echo htmlspecialchars($country->name);;
+                                    echo htmlspecialchars((string) $country->name);;
                                     if ($country->number) {
                                         echo '</a><span class="small ml-1 badge badge-primary">' . $country->number . '</span>';
                                     }

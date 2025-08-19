@@ -80,6 +80,7 @@ class FeedbackFormType extends AbstractType
         ]);
     }
 
+    #[\Override]
     public function getBlockPrefix(): string
     {
         return '';

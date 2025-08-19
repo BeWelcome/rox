@@ -32,12 +32,12 @@ $scope = $userRights->RightScope('Comments');
 
 <h3><?php echo $words->get('Action'); ?></h3>
 <ul class="linklist">
-    <li><a href="<?php echo $this->router->url('admin_comments_list_subset', array('subset' => 'negative')); ?>">Negative comments</a></li>
+    <li><a href="<?php echo $this->router->url('admin_comments_list_subset', ['subset' => 'negative']); ?>">Negative comments</a></li>
     <?php
         if ($scope=="AdminAbuser" || $scope=='"All"')
         {
     ?>
-        <li><a href="<?php echo $this->router->url('admin_comments_list_subset', array('subset' => 'abusive')); ?>">Abusive comments</a></li>
+        <li><a href="<?php echo $this->router->url('admin_comments_list_subset', ['subset' => 'abusive']); ?>">Abusive comments</a></li>
     <?php } ?>
-    <li><a href="<?php echo $this->router->url('admin_comments_list_subset', array('subset' => 'all')); ?>">All comments</a></li>
+    <li><a href="<?php echo $this->router->url('admin_comments_list_subset', ['subset' => 'all']); ?>">All comments</a></li>
 </ul>

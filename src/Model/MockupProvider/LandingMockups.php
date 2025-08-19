@@ -15,7 +15,7 @@ use Mockery;
 
 class LandingMockups implements MockupProviderInterface
 {
-    private const MOCKUPS = [
+    private const array MOCKUPS = [
         'be visited|none' => [
             'type' => 'template',
             'template' => 'landing/widget/triplegs.html.twig',
@@ -38,14 +38,11 @@ class LandingMockups implements MockupProviderInterface
 
     public function getMockupVariables(array $parameters): array
     {
-        switch ($parameters['name']) {
-            case 'be visited|none':
-                return $this->getTripsWidgetEmpty();
-            case 'be visited|two legs':
-                return $this->getTripsWidgetTwoLegs($parameters['user']);
-            default:
-                return [];
-        }
+        return match ($parameters['name']) {
+            'be visited|none' => $this->getTripsWidgetEmpty(),
+            'be visited|two legs' => $this->getTripsWidgetTwoLegs($parameters['user']),
+            default => [],
+        };
     }
 
     public function getMockupParameter(?string $locale = null, ?string $feature = null): array

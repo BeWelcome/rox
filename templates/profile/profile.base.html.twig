@@ -23,6 +23,7 @@
 
     {{ encore_entry_link_tags('bewelcome') }}
     {{ encore_entry_link_tags('tailwind') }}
+    {{ encore_entry_link_tags('profile/profile') }}
 
     {% block stylesheets %}{% endblock %}
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}"/>
@@ -111,7 +112,7 @@
 {{ encore_entry_script_tags('bewelcome') }}
 {{ encore_entry_script_tags('updatecounters') }}
 {{ encore_entry_script_tags('avatar') }}
-{{ encore_entry_script_tags('lightbox') }}
+{{ encore_entry_script_tags('profile/profile') }}
 {% if sidebar %}
     {{ encore_entry_script_tags('offcanvas') }}
 {% endif %}

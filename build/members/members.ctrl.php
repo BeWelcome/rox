@@ -50,7 +50,7 @@ class MembersController extends RoxControllerBase
             $adminMember = true;
         }
 
-        switch (isset($request[0]) ? $request[0] : false) {
+        switch ($request[0] ?? false) {
             case 'setlocation':
                 $page = new SetLocationPage();
                 $geo = new Geo($member_self->IdCity);
@@ -102,7 +102,7 @@ class MembersController extends RoxControllerBase
                 $page->enableLightBox();
                 break;
             case 'my':
-                switch (isset($request[1]) ? $request[1] : false) {
+                switch ($request[1] ?? false) {
                     case 'preferences':
                         $page = new MyPreferencesPage();
                         break;
@@ -171,7 +171,7 @@ class MembersController extends RoxControllerBase
 
                         // Prepare feedback data
                         $baseUri = PVars::getObj('env')->baseuri;
-                        $data = array();
+                        $data = [];
                         $data['Admin comment'] = $baseUri
                             . 'bw/admin/admincomments.php?IdComment='
                             . $commentId . '&action=All';
@@ -214,7 +214,7 @@ class MembersController extends RoxControllerBase
                             $member->recordVisit($logged_member);
                         }
                     }
-                    switch (isset($request[2]) ? $request[2] : false) {
+                    switch ($request[2] ?? false) {
                         case 'relations':
                             if (isset($request[3])) {
                                 if ($request[3] == 'add') {
@@ -391,7 +391,7 @@ class MembersController extends RoxControllerBase
                 $vars[$key] = $value;
             }
 
-            $errors = array();
+            $errors = [];
             // geonameId
             if (empty($vars['location-geoname-id'])) {
                 $errors[] = 'SignupErrorProvideLocation';
@@ -417,7 +417,7 @@ class MembersController extends RoxControllerBase
         }
     }
 
-    public function updateMandatoryCallback($args, $action, $mem_redirect, $mem_resend)
+    public function updateMandatoryCallback($args, $action, $mem_redirect, $mem_resend): never
     {
         throw new Exception('This should not be used - mandatory details are taken care of in edit my profile');
     }
@@ -462,7 +462,7 @@ class MembersController extends RoxControllerBase
         if (isset($vars['passwordnew']) && strlen($vars['passwordnew']) > 0) {
             $m = $this->model->getMemberWithId($vars['memberid']);
             if (!$m->setPassword($vars['passwordnew'])){
-                $mem_redirect->problems = array(0 => 'ChangePasswordNotUpdated');
+                $mem_redirect->problems = [0 => 'ChangePasswordNotUpdated'];
             }
             $this->setFlashNotice($this->getWords()->get('PasswordSetFlashNotice'));
         }
@@ -515,7 +515,7 @@ class MembersController extends RoxControllerBase
         $member = $this->getMember($request[1]);
         $TCom = $member->get_comments_commenter($this->model->getLoggedInMember()->id);
         // add the comment!
-        if (!$this->model->addComment(isset($TCom[0]) ? $TCom[0] : false,$vars)) return false;
+        if (!$this->model->addComment($TCom[0] ?? false,$vars)) return false;
 
         return 'members/'.$request[1].'/comments';
     }
@@ -552,7 +552,7 @@ class MembersController extends RoxControllerBase
 				}
 			}
 
-            $vars['errors'] = array();
+            $vars['errors'] = [];
             if (count($errors) > 0) {
                 $vars['errors'] = $errors;
 
@@ -574,7 +574,7 @@ class MembersController extends RoxControllerBase
             $vars['member'] = $this->getMember($vars['memberid']);
             $vars = $this->model->polishProfileFormValues($vars);
             $success = $this->model->updateProfile($vars);
-            if (!$success) $mem_redirect->problems = array('Could not update profile');
+            if (!$success) $mem_redirect->problems = ['Could not update profile'];
 
             // Redirect to a nice location like editmyprofile/finish
             $str = implode('/',$request);
@@ -592,7 +592,7 @@ class MembersController extends RoxControllerBase
                 if (!isset($vars['profile_language'])) return false;
                 $member = $this->getMember($vars['memberid']);
                 $fields = $member->get_trads_fields();
-                $trad_ids = array();
+                $trad_ids = [];
                 foreach ($fields as $field)
                     $trad_ids[] = $member->$field;
                 $this->model->delete_translation_multiple($trad_ids,$vars['memberid'],$vars['profile_language']);
@@ -780,7 +780,7 @@ class MembersController extends RoxControllerBase
                 // set to inactive only allowed in intervals of two weeks time
                 $minimumTimeBetweenSwitches = 14 * 24 * 60 * 60;
                 $page = new SetProfileInactivePage();
-                $timeSinceLastSwitchToActive = time() - strtotime($member->LastSwitchToActive);
+                $timeSinceLastSwitchToActive = time() - strtotime((string) $member->LastSwitchToActive);
                 if ($timeSinceLastSwitchToActive < $minimumTimeBetweenSwitches) {
                     $page->switchNotAllowed = true;
                 } else {
@@ -810,7 +810,7 @@ class MembersController extends RoxControllerBase
         $post = $args->post;
         if (empty($post['UsernameOrEmail']))
         {
-            $mem_redirect->errors = array('ResetPasswordEmpty');
+            $mem_redirect->errors = ['ResetPasswordEmpty'];
             return false;
         }
         $member = $this->model->getMemberWithUsername($post['UsernameOrEmail']);
@@ -818,7 +818,7 @@ class MembersController extends RoxControllerBase
             $member = $this->model->getMemberFromEmail($post['UsernameOrEmail']);
         }
         if (!$member) {
-            $mem_redirect->errors = array('ResetPasswordError');
+            $mem_redirect->errors = ['ResetPasswordError'];
             return false;
         }
         if ($member->canLogIn()) {
@@ -827,10 +827,10 @@ class MembersController extends RoxControllerBase
             // Generate random password (copied from bw)
             $totalChar = 8; // number of chars in the password
             $salt = "abcdefghijklmnpqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ123456789";  // salt to select chars from
-            srand((double)microtime()*1000000); // start the random generator
+            mt_srand((double)microtime()*1000000); // start the random generator
             $password=""; // set the inital variable
             for ($i=0;$i<$totalChar;$i++) {  // loop and create password
-                $password = $password . substr ($salt, rand() % strlen($salt), 1);
+                $password = $password . substr ($salt, random_int(0, mt_getrandmax()) % strlen($salt), 1);
             }
 
             // Alternate version using md5
@@ -840,9 +840,9 @@ class MembersController extends RoxControllerBase
             $body = $this->getWords()->get("ResetPasswordBody", $password, $member->Username);
             $member->sendMail($subject, $body);
             $this->setFlashNotice($this->getWords()->get('ResetPasswordFlashNotice'));
-            return $this->router->url('members_reset_password_finish', array(), false);
+            return $this->router->url('members_reset_password_finish', [], false);
         } else {
-            $mem_redirect->errors = array('ResetPasswordNoLogin');
+            $mem_redirect->errors = ['ResetPasswordNoLogin'];
             return false;
         }
     }
@@ -900,12 +900,12 @@ class MembersController extends RoxControllerBase
     {
         $vars = $args->post;
         $category="";
-        $catselect = trim($vars['ProfileNoteCategory']);
-        $catfree = trim($vars['ProfileNoteCategoryFree']);
+        $catselect = trim((string) $vars['ProfileNoteCategory']);
+        $catfree = trim((string) $vars['ProfileNoteCategoryFree']);
         $request = $args->request;
         if (!empty($catselect) && !empty($catfree)) {
             if (($catselect != "new")&&($catselect != $catfree)) {
-                $vars['errors'] = array('ProfileNoteCategoryUnclear');
+                $vars['errors'] = ['ProfileNoteCategoryUnclear'];
                 $mem_redirect->post = $vars;
                 return false;
             }
@@ -916,7 +916,7 @@ class MembersController extends RoxControllerBase
             $category = $catfree;
         }
         if (empty($category)) {
-            $vars['errors'] = array('ProfileNoteCategoryNotSet');
+            $vars['errors'] = ['ProfileNoteCategoryNotSet'];
             $mem_redirect->post = $vars;
             return false;
         }
@@ -959,7 +959,7 @@ class MembersController extends RoxControllerBase
     {
         $vars = $args->post;
         $this->model->deleteNoteForMember($vars['IdMember']);
-        return $this->router->url('members_show_all_notes', array(), false);
+        return $this->router->url('members_show_all_notes', [], false);
     }
 
     /**

@@ -27,20 +27,12 @@ use Symfony\Component\Mime\Address;
 )]
 class SendMassmailCommand extends Command
 {
-    private EntityManagerInterface $entityManager;
-    private Mailer $mailer;
-    private int $batchSize;
-
     public function __construct(
-        EntityManagerInterface $entityManager,
-        Mailer $mailer,
-        int $batchSize
+        private readonly EntityManagerInterface $entityManager,
+        private readonly Mailer $mailer,
+        private readonly int $batchSize
     ) {
         parent::__construct();
-
-        $this->entityManager = $entityManager;
-        $this->mailer = $mailer;
-        $this->batchSize = $batchSize;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -57,66 +49,76 @@ class SendMassmailCommand extends Command
         );
 
         $sent = 0;
-        $lastBroadcastId = 0;
         if (!empty($scheduledBroadcastMessages)) {
-            /** @var BroadcastMessage $scheduled */
-            foreach ($scheduledBroadcastMessages as $scheduled) {
-                $parameters = [];
-                if ($lastBroadcastId != $scheduled->getNewsletter()->getId()) {
-                    // Check if the current newsletter contains images and set the parameter
-                    $newsletterRepository = $this->entityManager->getRepository(Newsletter::class);
-                    $newsletterTranslations = $newsletterRepository->getTranslations($scheduled->getNewsletter());
-                    $anyNewsletter = reset($newsletterTranslations);
-
-                    $hasImages = str_contains($anyNewsletter['body'], "<figure");
-                    if ($hasImages) {
-                        $parameters['has_images'] = true;
-                    }
-
-                    $lastBroadcastId = $scheduled->getNewsletter()->getId();
-                }
-                $receiver = $scheduled->getReceiver();
-                $status = $receiver->getStatus();
-                if (
-                    (MemberStatusType::SUSPENDED === $status && $receiver->getRemindersWithOutLogin() !== 100)
-                    && MemberStatusType::ACTIVE !== $status
-                    && MemberStatusType::OUT_OF_REMIND !== $status
-                    && MemberStatusType::CHOICE_INACTIVE !== $status
-                ) {
-                    // Only send messages to members that are active or have just been suspended RemindersWithoutLogin
-                    // is set to 100 on suspension
-                    continue;
-                }
-                try {
-                    try {
-                        $unsubscribeKey = random_bytes(32);
-                    } catch (Exception $e) {
-                        $unsubscribeKey = openssl_random_pseudo_bytes(32);
-                    }
-
-                    $parameters['unsubscribe_key'] = bin2hex($unsubscribeKey);
-                    $this->mailer->sendNewsletterEmail(
-                        $scheduled->getNewsletter(),
-                        $receiver,
-                        $parameters
-                    );
-
-                    $scheduled
-                        ->setStatus('Sent')
-                        ->setUnsubscribeKey(bin2hex($unsubscribeKey))
-                    ;
-                    ++$sent;
-                } catch (Exception $e) {
-                    $io->error('Message Frozen: ' . $e->getMessage());
-                    $scheduled->setStatus('Freeze');
-                }
-                $this->entityManager->persist($scheduled);
-            }
-            $this->entityManager->flush();
+            $sent = $this->sendMassmail($scheduledBroadcastMessages, $io);
         }
 
         $io->success(sprintf('Sent %d messages', $sent));
 
         return 0;
+    }
+
+    private function sendMassmail(array $scheduledBroadcastMessages, SymfonyStyle $io): int
+    {
+        $sent = 0;
+        $lastBroadcastId = 0;
+
+        /** @var BroadcastMessage $scheduled */
+        foreach ($scheduledBroadcastMessages as $scheduled) {
+            $parameters = [];
+            if ($lastBroadcastId != $scheduled->getNewsletter()->getId()) {
+                // Check if the current newsletter contains images and set the parameter
+                $newsletterRepository = $this->entityManager->getRepository(Newsletter::class);
+                $newsletterTranslations = $newsletterRepository->getTranslations($scheduled->getNewsletter());
+                $anyNewsletter = reset($newsletterTranslations);
+
+                $hasImages = str_contains((string)$anyNewsletter['body'], "<figure");
+                if ($hasImages) {
+                    $parameters['has_images'] = true;
+                }
+
+                $lastBroadcastId = $scheduled->getNewsletter()->getId();
+            }
+            $receiver = $scheduled->getReceiver();
+            $status = $receiver->getStatus();
+
+            // Only send messages to members that are active or have just been suspended RemindersWithoutLogin
+            // is set to 100 on suspension
+            if (!$this->sentToThisMember($receiver, $status)) {
+                continue;
+            }
+
+            try {
+                $unsubscribeKey = bin2hex(random_bytes(32));
+                $parameters['unsubscribe_key'] = $unsubscribeKey;
+                $this->mailer->sendNewsletterEmail(
+                    $scheduled->getNewsletter(),
+                    $receiver,
+                    $parameters
+                );
+
+                $scheduled
+                    ->setStatus('Sent')
+                    ->setUnsubscribeKey($unsubscribeKey);
+                ++$sent;
+            } catch (Exception $e) {
+                $io->error('Message Frozen: ' . $e->getMessage());
+                $scheduled->setStatus('Freeze');
+            }
+            $this->entityManager->persist($scheduled);
+        }
+        $this->entityManager->flush();
+
+        return $sent;
+    }
+
+    private function sentToThisMember(Member $receiver, string $status): bool
+    {
+        return !(
+            (MemberStatusType::SUSPENDED === $status && $receiver->getRemindersWithOutLogin() !== 100)
+            && MemberStatusType::ACTIVE !== $status
+            && MemberStatusType::OUT_OF_REMIND !== $status
+            && MemberStatusType::CHOICE_INACTIVE !== $status
+        );
     }
 }

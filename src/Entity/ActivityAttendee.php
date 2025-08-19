@@ -11,11 +11,9 @@ use App\Repository\ActivityAttendeeRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * ActivityAttendee.
- *
+ * Do not check entities with PHPMD
  *
  * @SuppressWarnings("PHPMD")
- * Auto generated class do not check mess
  */
 #[ORM\Table(name: 'activitiesattendees')]
 #[ORM\Entity(repositoryClass: ActivityAttendeeRepository::class)]
@@ -89,7 +87,7 @@ class ActivityAttendee
      *
      * @return ActivityAttendee
      */
-    public function setAttendee(Member $attendee = null)
+    public function setAttendee(?Member $attendee = null)
     {
         $this->attendee = $attendee;
 
@@ -113,7 +111,7 @@ class ActivityAttendee
      *
      * @return ActivityAttendee
      */
-    public function setActivity(Activity $activity = null)
+    public function setActivity(?Activity $activity = null)
     {
         $this->activity = $activity;
 

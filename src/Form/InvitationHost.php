@@ -31,6 +31,7 @@ class InvitationHost extends HostingRequestAbstractType
     /**
      * {@inheritdoc}
      */
+    #[\Override]
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver
@@ -43,6 +44,7 @@ class InvitationHost extends HostingRequestAbstractType
     /**
      * {@inheritdoc}
      */
+    #[\Override]
     public function getBlockPrefix(): string
     {
         return 'invitation';

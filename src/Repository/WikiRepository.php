@@ -30,7 +30,7 @@ class WikiRepository extends EntityRepository
             }
             $query = $qb->getQuery();
             $wikiPage = $query->getOneOrNullResult();
-        } catch (NonUniqueResultException $e) {
+        } catch (NonUniqueResultException) {
             $wikiPage = null;
         }
 

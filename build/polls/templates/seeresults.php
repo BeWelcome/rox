@@ -27,7 +27,7 @@ $request = PRequest::get()->request;
 $words = new MOD_words();
 
 if (!isset($vars['errors']) || !is_array($vars['errors'])) {
-    $vars['errors'] = array();
+    $vars['errors'] = [];
 }
 
 $Data=$this->_data ; // Retrieve the data to display (set by the controller)
@@ -38,7 +38,7 @@ $list=$Data->Choices ; // Retrieve the possible choices
 <p><?=$words->fTrad($Data->rPoll->Description);?></p>
 <p><?=$words->getFormatted("polls_peoplehavecontributed",$Data->rPoll->Started,$Data->rPoll->Ended,$Data->TotContrib);?></p>
 <?php
-$styles = array( 'highlight', 'blank' ); // alternating background for table rows
+$styles = [ 'highlight', 'blank' ]; // alternating background for table rows
 $iiMax = count($list) ; // This retrieve the number of polls
 $IdPoll=$Data->rPoll->id ;
 ?>

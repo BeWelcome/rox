@@ -42,6 +42,7 @@ class AdminSubscriptionsController extends AdminBaseController
         $this->model = new AdminSubscriptionsModel();
     }
 
+    #[\Override]
     public function __destruct() {
         unset($this->model);
     }
@@ -71,9 +72,9 @@ class AdminSubscriptionsController extends AdminBaseController
     public function manage() {
         $this->checkRights('ManageSubscriptions');
         $page = new AdminSubscriptionsManagePage();
-        $page->vars = array(
+        $page->vars = [
             'username' => ''
-        );
+        ];
         return $page;
     }
 }

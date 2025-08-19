@@ -37,27 +37,27 @@ function changeSortOrder (SortOrder) {
 
 // other stuff
 var varSortOrder = '';
-var searchInDivText = decodeURIComponent('<?php echo rawurlencode($words->getBuffered('FindPeopleSubmitMapSearch')); ?>');
-var searchHelp = decodeURIComponent('<?php echo rawurlencode($words->getBuffered('searchHelp')); ?>');
-var fieldHelpAddress = decodeURIComponent('<?php echo rawurlencode($words->getBuffered('FindPeopleHelpAddress')); ?>');
-var fieldHelpUsername = decodeURIComponent('<?php echo rawurlencode($words->getBuffered('FindPeopleHelpUsername')); ?>');
-var fieldHelpTextToFind = decodeURIComponent('<?php echo rawurlencode($words->getBuffered('FindPeopleHelpTextToFind')); ?>');
-var fieldHelpMapBoundaries = decodeURIComponent('<?php echo rawurlencode($words->getBuffered('FindPeopleHelpMapBoundaries')); ?>');
+var searchInDivText = decodeURIComponent('<?php echo rawurlencode((string) $words->getBuffered('FindPeopleSubmitMapSearch')); ?>');
+var searchHelp = decodeURIComponent('<?php echo rawurlencode((string) $words->getBuffered('searchHelp')); ?>');
+var fieldHelpAddress = decodeURIComponent('<?php echo rawurlencode((string) $words->getBuffered('FindPeopleHelpAddress')); ?>');
+var fieldHelpUsername = decodeURIComponent('<?php echo rawurlencode((string) $words->getBuffered('FindPeopleHelpUsername')); ?>');
+var fieldHelpTextToFind = decodeURIComponent('<?php echo rawurlencode((string) $words->getBuffered('FindPeopleHelpTextToFind')); ?>');
+var fieldHelpMapBoundaries = decodeURIComponent('<?php echo rawurlencode((string) $words->getBuffered('FindPeopleHelpMapBoundaries')); ?>');
 var mapoff = <?php echo ($mapstyle == "mapoff") ? 'true' : 'false'; ?>;
 var varsOnLoad = '<?php echo $varsOnLoad ? '/varsonload' : ''; ?>';
-var varsGet = '<?php echo isset($_GET['vars']) ? $_GET['vars'] : ''; ?>';
+var varsGet = '<?php echo $_GET['vars'] ?? ''; ?>';
 var queries = '<?php echo $queries ? '/queries' : ''; ?>';
-var hideShowMap = decodeURIComponent('<?php echo rawurlencode($words->getBuffered('FindPeopleHideShowMap')); ?>');
-var loading = decodeURIComponent('<?=rawurlencode('<img src="images/misc/loading.gif" alt="Loading" />')?> ') + decodeURIComponent('<?php echo rawurlencode($words->getBuffered('FindPeopleIndicateLoading')); ?>');
-var addressNotFound = decodeURIComponent('<?php echo rawurlencode($words->getBuffered('FindPeopleIndicateAddressNotFound')); ?>');
-var membersDisplayed = decodeURIComponent('<?php echo rawurlencode($words->getBuffered('FindPeopleMembersDisplayed')); ?>');
-var noMembersFound = decodeURIComponent('<?php echo rawurlencode($words->getBuffered('FindPeopleNoMembersFound')); ?>');
-var wordOf = decodeURIComponent('<?php echo rawurlencode($words->getBuffered('wordOf')); ?>');
-var wordFound = decodeURIComponent('<?php echo rawurlencode($words->getBuffered('wordFound')); ?>');
-var searchShowMore = decodeURIComponent('<?php echo rawurlencode($words->getBuffered('SearchShowMore', $words->getSilent('SearchShowMoreLogin'), '<a href="/login/search#login-widget">', '</a>')); ?>');
-//var logIn = decodeURIComponent('<?php echo rawurlencode($words->getBuffered('logSpaceIn')); ?>');
-//var toSee = decodeURIComponent('<?php echo rawurlencode($words->getBuffered('toSee')); ?>');
-//var more = decodeURIComponent('<?php echo rawurlencode($words->getBuffered('moreResults')); ?>');
+var hideShowMap = decodeURIComponent('<?php echo rawurlencode((string) $words->getBuffered('FindPeopleHideShowMap')); ?>');
+var loading = decodeURIComponent('<?=rawurlencode('<img src="images/misc/loading.gif" alt="Loading" />')?> ') + decodeURIComponent('<?php echo rawurlencode((string) $words->getBuffered('FindPeopleIndicateLoading')); ?>');
+var addressNotFound = decodeURIComponent('<?php echo rawurlencode((string) $words->getBuffered('FindPeopleIndicateAddressNotFound')); ?>');
+var membersDisplayed = decodeURIComponent('<?php echo rawurlencode((string) $words->getBuffered('FindPeopleMembersDisplayed')); ?>');
+var noMembersFound = decodeURIComponent('<?php echo rawurlencode((string) $words->getBuffered('FindPeopleNoMembersFound')); ?>');
+var wordOf = decodeURIComponent('<?php echo rawurlencode((string) $words->getBuffered('wordOf')); ?>');
+var wordFound = decodeURIComponent('<?php echo rawurlencode((string) $words->getBuffered('wordFound')); ?>');
+var searchShowMore = decodeURIComponent('<?php echo rawurlencode((string) $words->getBuffered('SearchShowMore', $words->getSilent('SearchShowMoreLogin'), '<a href="/login/search#login-widget">', '</a>')); ?>');
+//var logIn = decodeURIComponent('<?php echo rawurlencode((string) $words->getBuffered('logSpaceIn')); ?>');
+//var toSee = decodeURIComponent('<?php echo rawurlencode((string) $words->getBuffered('toSee')); ?>');
+//var more = decodeURIComponent('<?php echo rawurlencode((string) $words->getBuffered('moreResults')); ?>');
 
 function addTips() {
 // prototip tips

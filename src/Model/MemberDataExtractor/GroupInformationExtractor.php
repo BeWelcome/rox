@@ -21,7 +21,7 @@ final class GroupInformationExtractor extends AbstractExtractor implements Extra
                     if ($groupMembership->getGroup()->getName()) {
                         $memberships[] = $groupMembership;
                     }
-                } catch (\Exception $e) {
+                } catch (\Exception) {
                     // Deleted Group
                 }
             }

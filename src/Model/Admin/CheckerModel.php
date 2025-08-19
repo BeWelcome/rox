@@ -13,13 +13,8 @@ use Pagerfanta\Pagerfanta;
 
 class CheckerModel
 {
-    private EntityManagerInterface $entityManager;
-    private Mailer $mailer;
-
-    public function __construct(EntityManagerInterface $entityManager, Mailer $mailer)
+    public function __construct(private readonly EntityManagerInterface $entityManager, private readonly Mailer $mailer)
     {
-        $this->entityManager = $entityManager;
-        $this->mailer = $mailer;
     }
 
     public function markAsSpamByChecker(array $messageIds): void
@@ -57,7 +52,7 @@ class CheckerModel
                 $message->setStatus(MessageStatusType::SEND);
             } else {
                 $message->setStatus(MessageStatusType::CHECKED);
-                if (strpos($message->getSpamInfo(), SpamInfoType::SPAM_BLOCKED_WORD) !== false) {
+                if (str_contains($message->getSpamInfo(), SpamInfoType::SPAM_BLOCKED_WORD)) {
                     $message->setFolder(InFolderType::NORMAL);
                     $this->sendNotification($message);
                 }

@@ -41,6 +41,8 @@ phploc.xml
 /swagger.json
 /build/logs/
 
+.idea/
+
 # geonames files (created by geonames:update command)
 admin1CodesASCII.txt
 countryInfo.txt
@@ -57,13 +59,6 @@ allCountries.zip
 /var/
 /vendor/
 ###< symfony/framework-bundle ###
-
-###> symfony/phpunit-bridge ###
-.phpunit
-/phpunit.xml
-.phpunit.result.cache
-###< symfony/phpunit-bridge ###
-
 ###> symfony/webpack-encore-bundle ###
 /node_modules/
 /public/build/
@@ -77,12 +72,6 @@ yarn-error.log
 /.phpcs-cache
 /phpcs.xml
 ###< squizlabs/php_codesniffer ###
-
-###> lexik/jwt-authentication-bundle ###
-/config/jwt/*.pem
-!/config/jwt/*-test.pem
-###< lexik/jwt-authentication-bundle ###
-
 ###> friends-of-behat/symfony-extension ###
 /behat.yml
 ###< friends-of-behat/symfony-extension ###
@@ -96,5 +85,5 @@ yarn-error.log
 
 ###> phpunit/phpunit ###
 /phpunit.xml
-.phpunit.result.cache
+.phpunit.cache
 ###< phpunit/phpunit ###

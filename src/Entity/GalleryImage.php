@@ -11,11 +11,9 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Gallery images.
- *
+ * Do not check entities with PHPMD
  *
  * @SuppressWarnings("PHPMD")
- * Auto generated class do not check mess
  */
 #[ORM\Table(name: 'gallery_items')]
 #[ORM\Index(name: 'gallery_items_file', columns: ['file'])]

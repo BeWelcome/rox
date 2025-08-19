@@ -17,6 +17,7 @@ class AdminNewMembersBasePage extends AdminBasePage
         $this->_statuses = $this->model->getStatuses();
     }
 
+    #[\Override]
     public function teaserHeadline()
     {
         $headline = parent::teaserHeadline();
@@ -30,6 +31,7 @@ class AdminNewMembersBasePage extends AdminBasePage
         $this->_current = $current;
     }
 
+    #[\Override]
     protected function getStylesheets()
     {
         $stylesheets = parent::getStylesheets();

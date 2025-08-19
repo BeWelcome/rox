@@ -4,12 +4,12 @@
 
 
 # https://docs.docker.com/engine/reference/builder/#understand-how-arg-and-from-interact
-ARG PHP_VERSION=8.3
-ARG NGINX_VERSION=1.27.3
+ARG PHP_VERSION=8.4
+ARG NGINX_VERSION=1.29
 
 
 # "php" stage
-FROM php:${PHP_VERSION}-fpm-alpine3.21 AS bewelcome_php
+FROM php:${PHP_VERSION}-fpm-alpine3.22 AS bewelcome_php
 
 # persistent / runtime deps
 RUN apk add --no-cache \
@@ -163,7 +163,6 @@ COPY docker/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf
 WORKDIR /srv/bewelcome/public
 
 COPY --from=bewelcome_php /srv/bewelcome/public ./
-
 
 # "php" dev stage
 # depends on the "php" stage above

@@ -9,11 +9,9 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Persistence\Mapping\ClassMetadata;
 
 /**
- * PollChoice.
- *
+ * Do not check entities with PHPMD
  *
  * @SuppressWarnings("PHPMD")
- * Auto generated class do not check mess
  */
 #[ORM\Table(name: 'polls_choices')]
 #[ORM\Index(name: 'IdPoll', columns: ['IdPoll'])]
@@ -180,7 +178,7 @@ class PollChoice
      *
      * @return PollChoice
      */
-    public function setPoll(Poll $poll = null)
+    public function setPoll(?Poll $poll = null)
     {
         $this->poll = $poll;
 

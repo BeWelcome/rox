@@ -11,13 +11,13 @@ $syshcvol = PVars::getObj('syshcvol');
 $ttc = $syshcvol->CommentRelations;
 $max = count($ttc);
 $comments = $member->get_comments_commenter($this->loggedInMember->id);
-$TCom = (isset($comments[0])) ? $comments[0] : false;
+$TCom = $comments[0] ?? false;
 $edit_mode = $TCom;
 
 // values from previous form submit
 if (!$mem_redirect = $this->layoutkit->formkit->getMemFromRedirect()) {
     // this is a fresh form
-    $ttRelation = ($TCom) ? explode(',',$TCom->Relations) : array();
+    $ttRelation = ($TCom) ? explode(',',(string) $TCom->Relations) : [];
     if ($this->commentGuidelinesRead) {
         $vars["CommentGuidelines"] = 'checked';
     }
@@ -26,7 +26,7 @@ if (!$mem_redirect = $this->layoutkit->formkit->getMemFromRedirect()) {
     // recover old form input.
     $vars = $mem_redirect->post;
     $TCom = new stdClass();
-    $ttRelation = array();
+    $ttRelation = [];
     for ($ii = 0; $ii < $max; $ii++) {
         $chkName = "Comment_" . $ttc[$ii];
         if (isset($vars[$chkName])) {
@@ -49,20 +49,20 @@ if (!$mem_redirect = $this->layoutkit->formkit->getMemFromRedirect()) {
 
 // Remove injected tags from old comments, so users don't have to edit HTML
 // that they didn't write
-$replacePatterns = array(
+$replacePatterns = [
     '/<hr>/',
     '/<hr \/>/',
     '/<br>/',
     '/<br \/>/',
     '/<font color=gray><font size=1>(comment date .*)<\/font><\/font>/'
-);
-$replacements = array(
+];
+$replacements = [
     "\n\n",
     "\n\n",
     "\n",
     "\n",
     '$1'
-);
+];
 if (isset($TCom->TextFree)) {
     $textFreeWashed = preg_replace($replacePatterns, $replacements,
         $TCom->TextFree);
@@ -81,7 +81,7 @@ $mem_redirect = $this->layoutkit->formkit->getMemFromRedirect();
 $page_url = PVars::getObj('env')->baseuri . implode('/', PRequest::get()->request);
 
 $formkit = $this->layoutkit->formkit;
-$random =  rand(1, 3);
+$random =  random_int(1, 3);
 $callbackFunction = "commentCallback";
 $callbackFunction .= $random;
 $callback_tag = $formkit->setPostCallback('MembersController', $callbackFunction);

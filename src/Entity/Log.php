@@ -11,11 +11,9 @@ use Carbon\Carbon;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Logs.
- *
+ * Do not check entities with PHPMD
  *
  * @SuppressWarnings("PHPMD")
- * Auto generated class do not check mess
  */
 #[ORM\Table(name: 'logs')]
 #[ORM\Entity]

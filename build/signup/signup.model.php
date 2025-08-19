@@ -126,7 +126,7 @@ WHERE `Email` = \'' . $this->dao->escape($this->normalizeEmail($email)).'\'';
 
     public function find($str)
     {
-    	if (!preg_match(self::HANDLE_PREGEXP, $str))
+    	if (!preg_match(self::HANDLE_PREGEXP, (string) $str))
             return 'format';
         $query = '
 SELECT
@@ -260,10 +260,10 @@ FROM `user` WHERE
             $View = new SignupView($this);
             // TODO: BW 2007-08-19: $_SYSHCVOL['EmailDomainName']
             define('DOMAIN_MESSAGE_ID', 'bewelcome.org');    // TODO: config
-            $View->registerMail($vars, $id,$idTB);
+            $View->registerMail($vars, $id);
             return PVars::getObj('env')->baseuri.'signup/register/finish';
         } else {
-            PPostHandler::setCallback($c, __CLASS__, __FUNCTION__);
+            PPostHandler::setCallback($c, self::class, __FUNCTION__);
             return $c;
         }
     }
@@ -446,7 +446,7 @@ VALUES
 	0)';
         $s = $this->dao->query($query);
         if( !$s->insertId()) {
-            $vars['errors'] = array('inserror');
+            $vars['errors'] = ['inserror'];
             return false;
         }
 
@@ -478,8 +478,8 @@ VALUES
         $vars['email'] = $this->normalizeEmail($vars['email']);
         $vars['emailcheck'] = $this->normalizeEmail($vars['emailcheck']);
 
-        $escapeList = array('username', 'email', 'gender',
-                            'feedback', 'housenumber', 'street','FirstName','SecondName','LastName', 'zip');
+        $escapeList = ['username', 'email', 'gender',
+                            'feedback', 'housenumber', 'street','FirstName','SecondName','LastName', 'zip'];
         foreach($escapeList as $formfield) {
             if(!empty($vars[$formfield])) {  // e.g. feedback...
                 $vars[$formfield] = $this->dao->escape($vars[$formfield]);
@@ -493,18 +493,18 @@ VALUES
 
     private function checkStepOne(&$vars)
     {
-        $errors = array();
+        $errors = [];
 
         // username
         try {
             if (!isset($vars['username']) ||
                 !preg_match(self::HANDLE_PREGEXP, $vars['username']) ||
-                strpos($vars['username'], 'xn--') !== false) {
+                str_contains($vars['username'], 'xn--')) {
                 $errors[] = 'SignupErrorWrongUsername';
             } elseif ($this->UsernameInUse($vars['username'])) {
                 $errors[] = 'SignupErrorUsernameAlreadyTaken';
             }
-        } catch (PException $e) {
+        } catch (PException) {
             $errors[] = 'SignupErrorUsernameAlreadyTaken';
         }
 
@@ -513,7 +513,7 @@ VALUES
             $errors[] = 'SignupErrorInvalidEmail';
         }
 
-        if (!isset($vars['emailcheck']) || strcmp($vars['email'], $vars['emailcheck']) != 0) {
+        if (!isset($vars['emailcheck']) || strcmp((string) $vars['email'], $vars['emailcheck']) != 0) {
             $errors[] = 'SignupErrorEmailCheck';
         }
 
@@ -643,21 +643,13 @@ VALUES
 	public function checkRegistrationForm(&$vars, $step)
     {
         $errors = [];
-        switch($step)
-        {
-            case 1:
-                $errors = $this->checkStepOne($vars);
-                break;
-            case 2:
-                $errors = $this->checkStepTwo($vars);
-                break;
-            case 3:
-                $errors = $this->checkStepThree($vars);
-                break;
-            case 4:
-                $errors = $this->checkStepFour($vars);
-                break;
-        }
+        $errors = match ($step) {
+            1 => $this->checkStepOne($vars),
+            2 => $this->checkStepTwo($vars),
+            3 => $this->checkStepThree($vars),
+            4 => $this->checkStepFour($vars),
+            default => $errors,
+        };
         return $errors;
     }
 
@@ -669,7 +661,7 @@ VALUES
 	 */
 	public function ageValue($dd)
 	{
-		$iDate = strtotime($dd);
+		$iDate = strtotime((string) $dd);
         if ($iDate) {
             $age = (time() - $iDate) / (365 * 24 * 60 * 60);
         } else {
@@ -697,7 +689,7 @@ VALUES
      */
 	public function resendConfirmationMail($username) {
         // fetch ID for member $username
-        $vars = array();
+        $vars = [];
         $MembersModel = new MembersModel();
         $member = $MembersModel->getMemberWithUsername($username);
         if ($member) {
@@ -713,7 +705,7 @@ VALUES
                 } else {
                     $View = new SignupView($this);
                     define('DOMAIN_MESSAGE_ID', 'bewelcome.org');    // TODO: config
-                    $View->registerMail($vars, $member->id, $userId);
+                    $View->registerMail($vars, $member->id);
                 }
             } else {
                 return 'NoMailToConfirm';
@@ -726,9 +718,9 @@ VALUES
 
 	private function normalizeEmail($email)
     {
-        $pos = strrpos($email, '@');
-        $domain = strtolower(substr($email, $pos - strlen($email)));
-        $local = substr($email, 0, $pos);
+        $pos = strrpos((string) $email, '@');
+        $domain = strtolower(substr((string) $email, $pos - strlen((string) $email)));
+        $local = substr((string) $email, 0, $pos);
         return $local . $domain;
     }
 }

@@ -11,11 +11,9 @@ use App\Repository\AlternateLocationRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * AlternateLocation.
- *
+ * Do not check entities with PHPMD
  *
  * @SuppressWarnings("PHPMD")
- * Auto generated class do not check mess
  */
 #[ORM\Table(name: 'geonamesalternatenames')]
 #[ORM\Index(name: 'idx_alternatename', columns: ['alternatename'])]
@@ -240,7 +238,7 @@ class AlternateLocation
      *
      * @return AlternateLocation
      */
-    public function setGeonameId(Location $geonameId = null)
+    public function setGeonameId(?Location $geonameId = null)
     {
         $this->geonameId = $geonameId;
 

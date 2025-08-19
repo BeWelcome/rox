@@ -14,12 +14,9 @@ use Gedmo\Translatable\Translatable;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * NewLocation.
- *
- * @Gedmo\TranslationEntity(class="App\Entity\Translation\NewLocationTranslation")
+ * Do not check entities with PHPMD
  *
  * @SuppressWarnings("PHPMD")
- * Auto generated class do not check mess
  */
 #[ORM\Table(name: 'geo__names')]
 #[ORM\Index(name: 'geonames_idx_name', columns: ['name'])]

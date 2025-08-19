@@ -26,22 +26,24 @@ use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
+/**
+ * @SuppressWarnings("PHPMD.CyclomaticComplexity")
+ * @SuppressWarnings("PHPMD.CouplingBetweenObjects")
+ * @SuppressWarnings("PHPMD.NPathComplexity")
+ *
+ * \todo Fix complexity
+ */
 class CommentController extends AbstractController
 {
     use TranslatorTrait;
     use TranslatedFlashTrait;
 
-    private ProfileSubmenu $profileSubmenu;
-    private ChangeProfilePictureGlobals $globals;
-
-    public function __construct(ProfileSubmenu $profileSubmenu, ChangeProfilePictureGlobals $globals)
+    public function __construct(private ProfileSubmenu $profileSubmenu, private ChangeProfilePictureGlobals $globals)
     {
-        $this->profileSubmenu = $profileSubmenu;
-        $this->globals = $globals;
     }
 
     /**
@@ -85,7 +87,7 @@ class CommentController extends AbstractController
                 str_replace(
                     "\xc2\xa0",
                     ' ',
-                    strip_tags(html_entity_decode($data->feedback, \ENT_HTML5, 'UTF-8'))
+                    strip_tags(html_entity_decode((string) $data->feedback, \ENT_HTML5, 'UTF-8'))
                 )
             );
             if (empty($feedback)) {

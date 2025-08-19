@@ -8,8 +8,8 @@ use App\Doctrine\MemberStatusType;
 class AdminFlagsModel extends RoxModelBase {
 
     public function checkScopeWellFormed($scope) {
-        $countQuotes = substr_count($scope, '"');
-        $countSemiColons = substr_count($scope, ';');
+        $countQuotes = substr_count((string) $scope, '"');
+        $countSemiColons = substr_count((string) $scope, ';');
         if ($countQuotes % 2 == 1) {
             return false;
         }
@@ -24,7 +24,7 @@ class AdminFlagsModel extends RoxModelBase {
      * @return array
      */
     public function checkAssignVarsOk($vars) {
-        $errors = array();
+        $errors = [];
         if (empty($vars['username'])) {
             $errors[] = 'AdminFlagsUsernameEmpty';
         } else {
@@ -123,16 +123,16 @@ class AdminFlagsModel extends RoxModelBase {
             ';
         $result = $this->bulkLookup($query);
 
-        $membersWithFlags = array();
+        $membersWithFlags = [];
         foreach ($result as $mwr) {
             if (!isset($membersWithFlags[$mwr->Username])) {
                 $memberDetails = new stdClass();
                 $memberDetails->id = $mwr->id;
                 $memberDetails->Status = $mwr->status;
-                $memberDetails->LastLogin = date('Y-m-d', strtotime($mwr->LastLogin));
+                $memberDetails->LastLogin = date('Y-m-d', strtotime((string) $mwr->LastLogin));
                 $memberDetails->PlaceName = $mwr->PlaceName;
                 $memberDetails->CountryName = $mwr->CountryName;
-                $memberDetails->Flags = array();
+                $memberDetails->Flags = [];
                 $membersWithFlags[$mwr->Username] = $memberDetails;
             }
             $flagDetails = new stdClass();
@@ -193,16 +193,16 @@ class AdminFlagsModel extends RoxModelBase {
             ';
         $result = $this->bulkLookup($query);
 
-        $flagsWithMembers = array();
+        $flagsWithMembers = [];
         foreach ($result as $rwm) {
             if (!isset($flagsWithMembers[$rwm->flagId])) {
                 $flagDetails = new StdClass();
-                $flagDetails->Members = array();
+                $flagDetails->Members = [];
                 $flagsWithMembers[$rwm->flagId] = $flagDetails;
             }
             $memberDetails = new StdClass();
             $memberDetails->Status = $rwm->status;
-            $memberDetails->LastLogin = date('Y-m-d', strtotime($rwm->LastLogin));
+            $memberDetails->LastLogin = date('Y-m-d', strtotime((string) $rwm->LastLogin));
             $memberDetails->Username = $rwm->Username;
             $memberDetails->PlaceName = $rwm->PlaceName;
             $memberDetails->CountryName = $rwm->CountryName;
@@ -235,11 +235,11 @@ class AdminFlagsModel extends RoxModelBase {
                 f.Relevance DESC,
                 f.Name
             ";
-        $memberFlags = array();
+        $memberFlags = [];
         if ($member) {
             $memberFlags = $member->getOldFlags();
         }
-        $result = $this->bulkLookup($query, array('id'));
+        $result = $this->bulkLookup($query, ['id']);
 
         foreach($memberFlags as $flag) {
             if (isset($result[$flag['id']])) {
@@ -250,7 +250,7 @@ class AdminFlagsModel extends RoxModelBase {
     }
 
     public function checkEditVarsOk($vars) {
-        $errors = array();
+        $errors = [];
         if (empty($vars['comment'])) {
             $errors[] = 'AdminFlagsCommentEmpty';
         }
@@ -307,7 +307,7 @@ class AdminFlagsModel extends RoxModelBase {
     }
 
     public function checkCreateVarsOk($vars) {
-        $errors = array();
+        $errors = [];
         if (empty($vars['name'])) {
             $errors[] = 'AdminFlagsNameEmpty';
         } else {

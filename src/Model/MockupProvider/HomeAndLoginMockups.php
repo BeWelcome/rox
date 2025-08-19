@@ -11,7 +11,7 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 
 class HomeAndLoginMockups implements MockupProviderInterface
 {
-    private const MOCKUPS = [
+    private const array MOCKUPS = [
         'homepage' => [
             'type' => 'page',
             'url' => '/',
@@ -26,13 +26,8 @@ class HomeAndLoginMockups implements MockupProviderInterface
         ],
     ];
 
-    private FormFactoryInterface $formFactory;
-    private EntityManagerInterface $entityManager;
-
-    public function __construct(FormFactoryInterface $formFactory, EntityManagerInterface $entityManager)
+    public function __construct(private readonly FormFactoryInterface $formFactory, private readonly EntityManagerInterface $entityManager)
     {
-        $this->formFactory = $formFactory;
-        $this->entityManager = $entityManager;
     }
 
     public function getFeature(): string

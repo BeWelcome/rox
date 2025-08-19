@@ -15,11 +15,8 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 
 class LoginMessageType extends AbstractType
 {
-    private DateTimeTransformer $dateTimeTransformer;
-
-    public function __construct(DateTimeTransformer $dateTimeTransformer)
+    public function __construct(private readonly DateTimeTransformer $dateTimeTransformer)
     {
-        $this->dateTimeTransformer = $dateTimeTransformer;
     }
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")

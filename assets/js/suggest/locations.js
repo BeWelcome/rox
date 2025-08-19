@@ -1,4 +1,4 @@
-import Autocomplete from '@tomickigrzegorz/autocomplete/sources/js/script';
+import Autocomplete from '@tomickigrzegorz/autocomplete';
 const L = require('leaflet');
 
 export function initializeSingleAutoComplete(url, cssClass = "js-location-picker", onChange = function(){}) {

@@ -4,7 +4,7 @@
                 <img src="gallery/img?id=<?= $d->id ?>"
                      class="card-img-top" alt="<?= $d->title ?>">
             </a>
-            <?php $title_short = ((strlen($d->title) >= 26) ? substr($d->title, 0, 20) . '...' : $d->title); ?>
+            <?php $title_short = ((strlen((string) $d->title) >= 26) ? substr((string) $d->title, 0, 20) . '...' : $d->title); ?>
             <div class="card-body"
             <h6 class="card-title">
                 <a href="gallery/img?id=<?= $d->id ?>" title="<?= $d->title ?>" data-toggle="lightbox"

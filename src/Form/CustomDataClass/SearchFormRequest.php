@@ -200,7 +200,7 @@ class SearchFormRequest
             && 1 !== $searchFormRequest->location_admin_unit
             && -1 !== $searchFormRequest->distance
         ) {
-            list($neLat, $neLng, $swLat, $swLng) = self::calculateBoundingBox(
+            [$neLat, $neLng, $swLat, $swLng] = self::calculateBoundingBox(
                 $searchFormRequest->location_latitude,
                 $searchFormRequest->location_longitude,
                 $searchFormRequest->distance
@@ -250,6 +250,6 @@ class SearchFormRequest
 
     private static function get($data, $index, $default)
     {
-        return (isset($data[$index])) ? $data[$index] : $default;
+        return $data[$index] ?? $default;
     }
 }

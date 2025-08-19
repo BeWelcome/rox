@@ -31,11 +31,16 @@ class LegacyPasswordHasher implements PasswordHasherInterface
     {
         return '*' . strtoupper(
                 sha1(
-                    sha1($plaintext, true)
+                    sha1((string) $plaintext, true)
                 )
             );
     }
 
+    /**
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
+     *
+     * Parameter not needed but signature is given by symfony.
+     */
     public function needsRehash(string $hashedPassword): bool
     {
         // Always migrate passwords.

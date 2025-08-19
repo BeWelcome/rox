@@ -6,7 +6,9 @@ use App\Utilities\LifecycleCallbacksTrait;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Flagsmembers.
+ * Do not check entities with PHPMD
+ *
+ * @SuppressWarnings("PHPMD")
  */
 #[ORM\Table(name: 'flagsmembers')]
 #[ORM\Index(name: 'flagsmembers_members', columns: ['IdMember', 'IdFlag'])]

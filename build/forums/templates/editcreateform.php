@@ -57,7 +57,7 @@ $vars =& PPostHandler::getVars($callbackId);
             echo $words->getFormatted("forum_edit_post");
         } else {
             $backUrl = str_replace('/reply', '', $uri);
-            echo $words->getFormatted("forum_reply_title") . ' &quot;<i><a href="' . $backUrl . '">' . strip_tags($topic->topicinfo->title) . '</a></i>&quot;';
+            echo $words->getFormatted("forum_reply_title") . ' &quot;<i><a href="' . $backUrl . '">' . strip_tags((string) $topic->topicinfo->title) . '</a></i>&quot;';
         }
     }
     echo '</h3>';
@@ -109,7 +109,7 @@ $vars =& PPostHandler::getVars($callbackId);
                     ?>
 
                     <input type="text" class="o-input" name="topic_title" maxlength="200" id="topic_title"
-                           value="<?php echo htmlspecialchars($topic_titletrad); ?>" aria-describedby="forumaddtitle">
+                           value="<?php echo htmlspecialchars((string) $topic_titletrad); ?>" aria-describedby="forumaddtitle">
             </div>
 
         <?php } ?>
@@ -122,7 +122,7 @@ $vars =& PPostHandler::getVars($callbackId);
                 if (isset($void_string)) {
                     echo $void_string;
                 } else {
-                    echo isset($vars['topic_text']) ? $vars['topic_text'] : '';
+                    echo $vars['topic_text'] ?? '';
                 }
                 ?></textarea>
 

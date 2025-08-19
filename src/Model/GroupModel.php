@@ -32,20 +32,8 @@ class GroupModel
     use ManagerTrait;
     use MessageTrait;
 
-    /**
-     * @var UrlGenerator
-     */
-    private $urlGenerator;
-
-    /**
-     * @var Mailer
-     */
-    private $mailer;
-
-    public function __construct(UrlGeneratorInterface $urlGenerator, Mailer $mailer)
+    public function __construct(private UrlGeneratorInterface $urlGenerator, private Mailer $mailer)
     {
-        $this->urlGenerator = $urlGenerator;
-        $this->mailer = $mailer;
     }
 
     /**
@@ -126,7 +114,7 @@ class GroupModel
                 $this->getManager()->flush();
                 $success = true;
             }
-        } catch (Exception $e) {
+        } catch (Exception) {
             $success = false;
         }
 
@@ -147,7 +135,7 @@ class GroupModel
                 $this->getManager()->flush();
                 $success = true;
             }
-        } catch (Exception $e) {
+        } catch (Exception) {
             $success = false;
         }
 
@@ -167,7 +155,7 @@ class GroupModel
                 $this->getManager()->flush();
                 $success = true;
             }
-        } catch (Exception $e) {
+        } catch (Exception) {
             $success = false;
         }
 
@@ -224,9 +212,7 @@ class GroupModel
             $em->persist($membership);
             $em->flush();
             $success = true;
-        } catch (OptimisticLockException $e) {
-            $success = false;
-        } catch (ORMException $e) {
+        } catch (OptimisticLockException|ORMException) {
             $success = false;
         }
 
@@ -440,7 +426,7 @@ class GroupModel
         foreach ($privilegeScopes as $privilegeScope) {
             /** @var Member $admin */
             $admin = $privilegeScope->getMember();
-            if (false !== strpos(MemberStatusType::ACTIVE_WITH_MESSAGES, $admin->getStatus())) {
+            if (str_contains(MemberStatusType::ACTIVE_WITH_MESSAGES, $admin->getStatus())) {
                 $admins[] = $admin;
             }
         }

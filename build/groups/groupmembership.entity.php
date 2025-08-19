@@ -86,7 +86,7 @@ class GroupMembership extends RoxEntityBase
     {
         if (!is_object($group) || !($group_id = $group->getPKValue()))
         {
-            return array();
+            return [];
         }
 
         $sql = "SELECT COUNT(*) AS count FROM members AS m, " . $this->getTableName()
@@ -115,7 +115,7 @@ class GroupMembership extends RoxEntityBase
     {
         if (!is_object($group) || !($group_id = $group->getPKValue()))
         {
-            return array();
+            return [];
         }
 
         $notLoggedIn = true;
@@ -131,7 +131,7 @@ class GroupMembership extends RoxEntityBase
 
         $links = $this->findByWhereMany($where_clause);
 
-        $members = array();
+        $members = [];
         foreach ($links as &$link)
         {
             $members[] = $link->IdMember;
@@ -182,13 +182,13 @@ class GroupMembership extends RoxEntityBase
     {
         if (!is_object($member) || !($member_id = $member->getPKValue()))
         {
-            return array();
+            return [];
         }
 
         $this->sql_order = 'updated desc';
         $links = $this->findByWhereMany("IdMember = '{$member_id}'" . ((!empty($status)) ? " AND Status = '" . $this->dao->escape($status) . "'" : ''));
 
-        $groups = array();
+        $groups = [];
         $current = 0;
         foreach ($links as &$link)
         {
@@ -202,7 +202,7 @@ class GroupMembership extends RoxEntityBase
         unset($links);
         if (empty($groups))
         {
-            return array();
+            return [];
         }
 
         $where = "id IN ('" . implode("','", $groups) . "') AND NOT (Name LIKE '[Archived] %') AND Approved = 1";

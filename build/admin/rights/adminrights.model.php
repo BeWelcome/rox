@@ -8,8 +8,8 @@ use App\Doctrine\MemberStatusType;
 class AdminRightsModel extends RoxModelBase {
 
     public function checkScopeWellFormed($scope) {
-        $countQuotes = substr_count($scope, '"');
-        $countSemiColons = substr_count($scope, ';');
+        $countQuotes = substr_count((string) $scope, '"');
+        $countSemiColons = substr_count((string) $scope, ';');
         if ($countQuotes % 2 == 1) {
             return false;
         }
@@ -24,7 +24,7 @@ class AdminRightsModel extends RoxModelBase {
      * @return array
      */
     public function checkAssignVarsOk($vars) {
-        $errors = array();
+        $errors = [];
         if (empty($vars['username'])) {
             $errors[] = 'AdminRightsUsernameEmpty';
         } else {
@@ -132,16 +132,16 @@ class AdminRightsModel extends RoxModelBase {
             ';
         $result = $this->bulkLookup($query);
 
-        $membersWithRights = array();
+        $membersWithRights = [];
         foreach ($result as $mwr) {
             if (!isset($membersWithRights[$mwr->Username])) {
                 $memberDetails = new stdClass();
                 $memberDetails->id = $mwr->id;
                 $memberDetails->Status = $mwr->status;
-                $memberDetails->LastLogin = date('Y-m-d', strtotime($mwr->LastLogin));
+                $memberDetails->LastLogin = date('Y-m-d', strtotime((string) $mwr->LastLogin));
                 $memberDetails->PlaceName = $mwr->PlaceName;
                 $memberDetails->CountryName = $mwr->CountryName;
-                $memberDetails->Rights = array();
+                $memberDetails->Rights = [];
                 $membersWithRights[$mwr->Username] = $memberDetails;
             }
             $rightDetails = new stdClass();
@@ -205,16 +205,16 @@ class AdminRightsModel extends RoxModelBase {
             ';
         $result = $this->bulkLookup($query);
 
-        $rightsWithMembers = array();
+        $rightsWithMembers = [];
         foreach ($result as $rwm) {
             if (!isset($rightsWithMembers[$rwm->rightId])) {
                 $rightDetails = new StdClass();
-                $rightDetails->Members = array();
+                $rightDetails->Members = [];
                 $rightsWithMembers[$rwm->rightId] = $rightDetails;
             }
             $memberDetails = new StdClass();
             $memberDetails->Status = $rwm->status;
-            $memberDetails->LastLogin = date('Y-m-d', strtotime($rwm->LastLogin));
+            $memberDetails->LastLogin = date('Y-m-d', strtotime((string) $rwm->LastLogin));
             $memberDetails->Username = $rwm->Username;
             $memberDetails->PlaceName = $rwm->PlaceName;
             $memberDetails->CountryName = $rwm->CountryName;
@@ -229,11 +229,11 @@ class AdminRightsModel extends RoxModelBase {
 	private function getAllowedRights() {
 		$member = $this->getLoggedInMember();
 		if (!$member) {
-			return array('None');
+			return ['None'];
 		}
 		$memberRights = $member->getOldRights();
 		$scope= str_replace('"', '', $memberRights['Rights']['Scope']);
-		$rights = array();
+		$rights = [];
 		if (stripos($scope, 'All') === false) {
 			$rights = explode(',', $scope);
 		}
@@ -264,11 +264,11 @@ class AdminRightsModel extends RoxModelBase {
 			ORDER BY
                 Name
             ";
-        $memberRights = array();
+        $memberRights = [];
         if ($member) {
             $memberRights = $member->getOldRights();
         }
-        $result = $this->bulkLookup($query, array('id'));
+        $result = $this->bulkLookup($query, ['id']);
 
         foreach($memberRights as $right) {
             if (isset($result[$right['id']])) {
@@ -279,7 +279,7 @@ class AdminRightsModel extends RoxModelBase {
     }
 
     public function checkEditVarsOk($vars) {
-        $errors = array();
+        $errors = [];
         if (empty($vars['scope'])) {
             $errors[] = 'AdminRightsScopeEmpty';
         } else {
@@ -344,7 +344,7 @@ class AdminRightsModel extends RoxModelBase {
     }
 
     public function checkCreateVarsOk($vars) {
-        $errors = array();
+        $errors = [];
         if (empty($vars['name'])) {
             $errors[] = 'AdminRightsNameEmpty';
         } else {

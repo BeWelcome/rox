@@ -18,14 +18,11 @@ use Symfony\Component\Process\Process;
     description: 'Creates a database and seeds it so that it can be used for local development',
     aliases: [],
     hidden: false,
-)]class CreateTestDatabase extends Command
+)]
+class CreateTestDatabase extends Command
 {
-    private EntityManagerInterface $entityManager;
-
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(private readonly EntityManagerInterface $entityManager)
     {
-        $this->entityManager = $entityManager;
-
         parent::__construct();
     }
 
@@ -53,13 +50,15 @@ use Symfony\Component\Process\Process;
         ;
     }
 
+    /**
+     * @SuppressWarnings("PHPMD.ExcessiveMethodLength")
+     *
+     * \todo think about a better way to call the external commands one after another.
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $returnCode = Command::SUCCESS;
-
         $phpBinaryFinder = new PhpExecutableFinder();
         $phpBinaryPath = $phpBinaryFinder->find();
-
 
         $output->writeln([
             'Creating test database',
@@ -76,16 +75,8 @@ use Symfony\Component\Process\Process;
                 '',
             ]);
 
-            $process = new Process([$phpBinaryPath, 'bin/console', 'doctrine:database:drop', '--force', '--no-interaction']);
+            $process = new Process([$phpBinaryPath, 'bin/console', 'doctrine:database:create', '--if-not-exists', '--no-interaction']);
             $process->run();
-
-            if (!$process->isSuccessful()) {
-                $output->writeln([
-                    'Failed dropping the database (trying to proceed).',
-                    '',
-                ]);
-
-            }
         }
 
         $output->writeln([
@@ -97,8 +88,10 @@ use Symfony\Component\Process\Process;
 
         if (!$process->isSuccessful()) {
             $output->writeln([
-                'Failed creating the database (see output above for reasons).',
+                'Failed creating the database (see output below for reasons).',
                 '',
+                $process->getOutput(),
+                $process->getErrorOutput(),
             ]);
 
             return Command::FAILURE;
@@ -114,8 +107,10 @@ use Symfony\Component\Process\Process;
 
         if (!$process->isSuccessful()) {
             $output->writeln([
-                'Failed creating the schema (see output above for reasons).',
+                'Failed creating the schema (see output below for reasons).',
                 '',
+                $process->getOutput(),
+                $process->getErrorOutput(),
             ]);
 
             return Command::FAILURE;
@@ -131,8 +126,10 @@ use Symfony\Component\Process\Process;
 
         if (!$process->isSuccessful()) {
             $output->writeln([
-                'Failed adding functions (see above for reasons).',
+                'Failed adding functions (see below for reasons).',
                 '',
+                $process->getOutput(),
+                $process->getErrorOutput(),
             ]);
 
             return Command::FAILURE;
@@ -150,6 +147,8 @@ use Symfony\Component\Process\Process;
             $output->writeln([
                 'Failed seeding the database.',
                 '',
+                $process->getOutput(),
+                $process->getErrorOutput(),
             ]);
 
             return 1;

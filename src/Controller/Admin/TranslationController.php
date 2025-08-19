@@ -30,7 +30,7 @@ use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -44,18 +44,8 @@ class TranslationController extends AbstractController
     use TranslatedFlashTrait;
     use TranslatorTrait;
 
-    private TranslationModel $translationModel;
-    private array $locales;
-    protected EntityManagerInterface $entityManager;
-
-    public function __construct(
-        TranslationModel $translationModel,
-        EntityManagerInterface $entityManager,
-        array $locales
-    ) {
-        $this->translationModel = $translationModel;
-        $this->locales = $locales;
-        $this->entityManager = $entityManager;
+    public function __construct(private TranslationModel $translationModel, protected EntityManagerInterface $entityManager, private array $locales)
+    {
     }
 
     #[Route(path: '/admin/translations/edit/{locale}/{code}', name: 'translation_edit', requirements: ['code' => '.+'])] // Update an existing translation for the locale

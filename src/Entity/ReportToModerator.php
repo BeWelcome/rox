@@ -9,7 +9,9 @@ use App\Utilities\LifecycleCallbacksTrait;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * ReportToModerator.
+ * Do not check entities with PHPMD
+ *
+ * @SuppressWarnings("PHPMD")
  */
 #[ORM\Table(name: 'reports_to_moderators')]
 #[ORM\Index(name: 'IdReporter', columns: ['IdReporter', 'IdPost', 'IdThread'])]

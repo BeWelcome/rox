@@ -31,3 +31,6 @@ signup.label.local_events:
 help.trips_notifications:
     - If you select a duration you will be notified if someone visits your area.
     - Help text on the signup page.
+signup.error.not.unique:
+    - Unfortunately either username or email are already in use by someone else.
+    - Error message shown on the signup page.

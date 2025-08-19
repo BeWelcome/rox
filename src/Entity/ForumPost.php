@@ -18,11 +18,9 @@ use Doctrine\Persistence\ObjectManager;
 use Exception;
 
 /**
- * ForumsPost.
- *
+ * Do not check entities with PHPMD
  *
  * @SuppressWarnings("PHPMD")
- * Auto generated class do not check mess
  */
 #[ORM\Table(name: 'forums_posts')]
 #[ORM\Index(name: 'last_editorid', columns: ['last_editorid'])]
@@ -512,7 +510,7 @@ class ForumPost
      *
      * @return ForumPost
      */
-    public function setThread(ForumThread $thread = null): self
+    public function setThread(?ForumThread $thread = null): self
     {
         $this->thread = $thread;
 
@@ -531,7 +529,7 @@ class ForumPost
         try {
             $threadTitle = $this->thread->getTitle();
         }
-        catch (Exception $e)
+        catch (Exception)
         {
             $thread = null;
         }
@@ -546,7 +544,7 @@ class ForumPost
      *
      * @return ForumPost
      */
-    public function setAuthor(Member $author = null)
+    public function setAuthor(?Member $author = null)
     {
         $this->author = $author;
 

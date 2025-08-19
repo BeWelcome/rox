@@ -7,17 +7,12 @@ use App\Model\FaqModel;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 class FaqController extends AbstractController
 {
-    private FaqModel $faqModel;
-    private EntityManagerInterface $entityManager;
-
-    public function __construct(FaqModel $faqModel, EntityManagerInterface $entityManager)
+    public function __construct(private readonly FaqModel $faqModel, private readonly EntityManagerInterface $entityManager)
     {
-        $this->faqModel = $faqModel;
-        $this->entityManager = $entityManager;
     }
 
     #[Route(path: '/about/faq', name: 'about_faq')]

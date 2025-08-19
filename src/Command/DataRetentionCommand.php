@@ -28,21 +28,15 @@ use Symfony\Component\Finder\Finder;
 )]
 class DataRetentionCommand extends Command
 {
-    private Logger $logger;
-    private EntityManagerInterface $entityManager;
-    private string $dataDirectory;
     private Member $bwAdmin;
     private MemberRepository $memberRepository;
 
     public function __construct(
-        Logger $logger,
-        EntityManagerInterface $entityManager,
-        string $dataDirectory
+        private readonly Logger $logger,
+        private readonly EntityManagerInterface $entityManager,
+        private readonly string $dataDirectory
     ) {
         parent::__construct();
-        $this->logger = $logger;
-        $this->entityManager = $entityManager;
-        $this->dataDirectory = $dataDirectory;
     }
 
     /**
@@ -138,7 +132,7 @@ class DataRetentionCommand extends Command
         $member
             ->setAccommodation(AccommodationType::NO)
             ->setAdditionalAccommodationinfo(0)
-            ->setAdresshidden('')
+            ->setAddressHidden('')
             ->setBday(0)
             ->setBewelcomed(0)
             ->setBirthdate($longAgo)

@@ -32,14 +32,14 @@ Boston, MA  02111-1307, USA.
 
 class AdminCommentsPage extends AdminBasePage
 {
-    private $_subset2Teaser = array(
+    private $_subset2Teaser = [
         "all" => "All Comments",
         "abusive" => "Abusive Comments",
         "negative" => "Negative Comments",
         "from" => "User Comments",
         "to" => "User Comments",
         "single" => "Edit Comment"
-    );
+    ];
     
     private $teaser = "";
 
@@ -69,6 +69,7 @@ class AdminCommentsPage extends AdminBasePage
         $this->subset = $subset;
     }
 
+    #[\Override]
     public function teaserHeadline()
     {
         return "<a href='admin'>{$this->words->get('AdminTools')}</a> &raquo; <a href='admin'>{$this->teaser}</a>";
@@ -86,7 +87,7 @@ class AdminCommentsPage extends AdminBasePage
 
     protected function getProximityBlock($sel)
     {
-        $selected = explode(",", $sel);
+        $selected = explode(",", (string) $sel);
         $proximityBlock = "";
         $syshcvol = PVars::getObj('syshcvol');
         foreach ($syshcvol->LenghtComments as $proximity)

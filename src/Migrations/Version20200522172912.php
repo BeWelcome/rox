@@ -14,6 +14,7 @@ use Doctrine\Migrations\AbstractMigration;
  */
 final class Version20200522172912 extends AbstractMigration
 {
+    #[\Override]
     public function getDescription(): string
     {
         return 'Add forum_trads view';
@@ -43,6 +44,7 @@ final class Version20200522172912 extends AbstractMigration
         ');
     }
 
+    #[\Override]
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs

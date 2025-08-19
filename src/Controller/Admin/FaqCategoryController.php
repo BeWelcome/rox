@@ -17,7 +17,7 @@ use Exception;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -28,19 +28,12 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class FaqCategoryController extends FaqBaseController
 {
-    private FaqModel $faqModel;
-
-    private TranslationModel $translationModel;
-
     public function __construct(
-        FaqModel $faqModel,
-        TranslationModel $translationModel,
+        private readonly FaqModel $faqModel,
+        private readonly TranslationModel $translationModel,
         EntityManagerInterface $entityManager
     ) {
         parent::__construct($entityManager);
-
-        $this->faqModel = $faqModel;
-        $this->translationModel = $translationModel;
     }
 
     #[Route(path: '/admin/faqs/category/create', name: 'admin_faqs_category_create')]
@@ -167,7 +160,7 @@ class FaqCategoryController extends FaqBaseController
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
             if (!empty($data['sortOrder'])) {
-                $ids = explode('&', $data['sortOrder']);
+                $ids = explode('&', (string) $data['sortOrder']);
                 array_walk(
                     $ids,
                     function (&$item) {

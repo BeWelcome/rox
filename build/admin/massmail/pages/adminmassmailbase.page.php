@@ -32,10 +32,10 @@ Boston, MA  02111-1307, USA.
 
 class AdminMassmailBasePage extends AdminBasePage
 {
-    protected $sidebar = array(
+    protected $sidebar = [
         'AdminMassMail' => 'admin/massmail',
         'AdminMassMailCreate' => 'admin/massmail/create',
-    );
+    ];
 
     protected $current = '';
 
@@ -53,16 +53,16 @@ class AdminMassmailBasePage extends AdminBasePage
         $this->member = $this->model->getLoggedInMember();
         $this->rights = $this->member->getOldRights();
         $scope = $this->rights["MassMail"]["Scope"];
-        $this->canChangeType = (stripos($scope, '"changetype"') !== false);
+        $this->canChangeType = (stripos((string) $scope, '"changetype"') !== false);
 
         // newsletter types
-        $this->newsletterSpecific = (stripos($scope, '"specific"') !== false);
-        $this->newsletterGeneral = (stripos($scope, '"general"') !== false);
-        $this->loginReminder = (stripos($scope, '"remindtologin"') !== false);
-        $this->mailToConfirmReminder = (stripos($scope, '"mailtoconfirmreminder"') !== false);
-        $this->correctBirthDate = (stripos($scope, '"correctbirthdate"') !== false);
-        $this->termsOfUse = (stripos($scope, '"termsofuse"') !== false);
-        $this->suspendAfter5Reminders = (stripos($scope, '"suspendafter5reminders"') !== false);
+        $this->newsletterSpecific = (stripos((string) $scope, '"specific"') !== false);
+        $this->newsletterGeneral = (stripos((string) $scope, '"general"') !== false);
+        $this->loginReminder = (stripos((string) $scope, '"remindtologin"') !== false);
+        $this->mailToConfirmReminder = (stripos((string) $scope, '"mailtoconfirmreminder"') !== false);
+        $this->correctBirthDate = (stripos((string) $scope, '"correctbirthdate"') !== false);
+        $this->termsOfUse = (stripos((string) $scope, '"termsofuse"') !== false);
+        $this->suspendAfter5Reminders = (stripos((string) $scope, '"suspendafter5reminders"') !== false);
 
         // if no type is set assume all
         if (!($this->newsletterSpecific || $this->newsletterGeneral || $this->loginReminder
@@ -76,38 +76,38 @@ class AdminMassmailBasePage extends AdminBasePage
             $this->termsOfUse = true;
             $this->suspendAfter5Reminders = true;
         }
-        $this->enqueueGroups = array();
-        $this->enqueueCountries = array();
-        $this->canEnqueueMembers = (stripos($scope, '"members"') !== false);
-        $this->canEnqueueLocation = (stripos($scope, '"location"') !== false)
-            || (stripos($scope, '"location:') !== false);
+        $this->enqueueGroups = [];
+        $this->enqueueCountries = [];
+        $this->canEnqueueMembers = (stripos((string) $scope, '"members"') !== false);
+        $this->canEnqueueLocation = (stripos((string) $scope, '"location"') !== false)
+            || (stripos((string) $scope, '"location:') !== false);
         if ($this->canEnqueueLocation) {
-            $startpos = stripos($scope, '"location:') + 10;
+            $startpos = stripos((string) $scope, '"location:') + 10;
             if ($startpos !== false) {
-                $endpos = strpos($scope, '"', $startpos);
+                $endpos = strpos((string) $scope, '"', $startpos);
                 if ($endpos === false) {
-                    $endpos = strlen($scope);
+                    $endpos = strlen((string) $scope);
                 }
-                $countries = substr($scope, $startpos, $endpos - $startpos);
+                $countries = substr((string) $scope, $startpos, $endpos - $startpos);
                 $this->enqueueCountries = explode(",", trim($countries));
             }
         }
-        $this->canEnqueueGroup = (stripos($scope, "group") !== false)
-            || (stripos($scope, "group:") !== false);
+        $this->canEnqueueGroup = (stripos((string) $scope, "group") !== false)
+            || (stripos((string) $scope, "group:") !== false);
         if ($this->canEnqueueGroup) {
-            $startpos = stripos($scope, '"group:') + 7;
+            $startpos = stripos((string) $scope, '"group:') + 7;
             if ($startpos !== false) {
-                $endpos = strpos($scope, '"', $startpos);
+                $endpos = strpos((string) $scope, '"', $startpos);
                 if ($endpos === false) {
-                    $endpos = strlen($scope);
+                    $endpos = strlen((string) $scope);
                 }
-                $groups = substr($scope, $startpos, $endpos - $startpos);
+                $groups = substr((string) $scope, $startpos, $endpos - $startpos);
                 $this->enqueueGroups = explode(",", trim($groups));
             }
         }
-        $this->canEnqueueReminder = (stripos($scope, "reminder") !== false);
-        $this->canEnqueueMailToConfirmReminder = (stripos($scope, "mailtoconfirmreminder") !== false);
-        $this->canEnqueueTermsOfUse = (stripos($scope, "termsofuse") !== false);
+        $this->canEnqueueReminder = (stripos((string) $scope, "reminder") !== false);
+        $this->canEnqueueMailToConfirmReminder = (stripos((string) $scope, "mailtoconfirmreminder") !== false);
+        $this->canEnqueueTermsOfUse = (stripos((string) $scope, "termsofuse") !== false);
 
         // if no scope was given for enqueueing assume full scope
         $enqueueAny = $this->canEnqueueMembers || $this->canEnqueueLocation || $this->canEnqueueGroup
@@ -133,7 +133,7 @@ class AdminMassmailBasePage extends AdminBasePage
             $this->canTrigger = true;
         }
 
-        if ((stripos($scope, "All") !== false)) {
+        if ((stripos((string) $scope, "All") !== false)) {
             $this->canEnqueueMembers = true;
             $this->canEnqueueLocation = true;
             $this->canEnqueueGroup = true;
@@ -153,6 +153,7 @@ class AdminMassmailBasePage extends AdminBasePage
         }
     }
 
+    #[\Override]
     protected function getSubmenuItems()
     {
         $items = [];

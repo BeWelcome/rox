@@ -12,11 +12,9 @@ use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Hosting Eagerness Slider.
- *
+ * Do not check entities with PHPMD
  *
  * @SuppressWarnings("PHPMD")
- * Auto generated class do not check mess
  */
 #[ORM\Table(name: 'hosting_eagerness_slider')]
 #[ORM\Entity]

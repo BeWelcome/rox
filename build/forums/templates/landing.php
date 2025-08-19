@@ -95,7 +95,7 @@ if ($threads = $groups->getThreads()) {
 <div class="col-12 col-md-6">
 <?php
 
-    $multipages = array($currentForumPage, $groupspages);
+    $multipages = [$currentForumPage, $groupspages];
     $currentPage = $currentGroupsPage;
     $maxPage = $groupsMaxPage;
 
@@ -146,7 +146,7 @@ if ($threads = $forum->getThreads()) {
     echo $words->flushBuffer();
     }
 
-    $multipages = array($forumpages, $currentGroupsPage);
+    $multipages = [$forumpages, $currentGroupsPage];
     $currentPage = $currentForumPage;
     $maxPage = $forumMaxPage;
 

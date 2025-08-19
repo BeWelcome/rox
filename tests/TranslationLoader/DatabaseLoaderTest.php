@@ -119,7 +119,8 @@ class DatabaseLoaderTest extends TestCase
         $repositoryStub = $this->createStub(WordRepository::class);
         $repositoryStub
             ->method('getTranslationsForLocale')
-            ->will($this->onConsecutiveCalls([$englishEn], [$englishDe]));
+            ->willReturn([$englishEn], [$englishDe])
+        ;
 
         $entityManagerStub = $this->createStub(EntityManager::class);
         $entityManagerStub
@@ -156,7 +157,8 @@ class DatabaseLoaderTest extends TestCase
         $repositoryStub = $this->createStub(WordRepository::class);
         $repositoryStub
             ->method('getTranslationsForLocale')
-            ->will($this->onConsecutiveCalls([$englishEn], [$englishDe]));
+            ->willReturn([$englishEn], [$englishDe])
+        ;
 
         $entityManagerStub = $this->createStub(EntityManager::class);
         $entityManagerStub
@@ -202,7 +204,8 @@ class DatabaseLoaderTest extends TestCase
         $repositoryStub = $this->createStub(WordRepository::class);
         $repositoryStub
             ->method('getTranslationsForLocale')
-            ->will($this->onConsecutiveCalls([$englishEn, $germanEn], [$englishDe, $germanDe]));
+            ->willReturn([$englishEn, $germanEn], [$englishDe, $germanDe])
+        ;
 
         $entityManagerStub = $this->createStub(EntityManager::class);
         $entityManagerStub
@@ -243,7 +246,8 @@ class DatabaseLoaderTest extends TestCase
         $repositoryStub = $this->createStub(WordRepository::class);
         $repositoryStub
             ->method('getTranslationsForLocale')
-            ->will($this->onConsecutiveCalls([$englishEn], [$englishDe]));
+            ->willReturn([$englishEn], [$englishDe])
+        ;
 
         $entityManagerStub = $this->createStub(EntityManager::class);
         $entityManagerStub
@@ -280,7 +284,8 @@ class DatabaseLoaderTest extends TestCase
         $repositoryStub = $this->createStub(WordRepository::class);
         $repositoryStub
             ->method('getTranslationsForLocale')
-            ->will($this->onConsecutiveCalls([$englishEn], [$englishDe]));
+            ->willReturn([$englishEn], [$englishDe])
+        ;
 
         $entityManagerStub = $this->createStub(EntityManager::class);
         $entityManagerStub

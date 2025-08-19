@@ -42,8 +42,8 @@ class Word
     #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
     private DateTime $created;
 
-    #[ORM\Column(name: 'updated', type: 'datetime', nullable: false)]
-    private DateTime $updated;
+    #[ORM\Column(name: 'updated', type: 'datetime', nullable: true)]
+    private ?DateTime $updated = null;
 
     #[ORM\Column(name: 'majorupdate', type: 'datetime', nullable: true)]
     private ?DateTime $majorUpdate  = null;

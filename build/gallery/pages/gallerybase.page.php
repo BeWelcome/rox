@@ -10,6 +10,7 @@
 
 class GalleryBasePage extends PageWithActiveSkin
 {
+    #[\Override]
     protected function init()
     {
         $this->page_title = 'Gallery | BeWelcome';
@@ -17,6 +18,7 @@ class GalleryBasePage extends PageWithActiveSkin
         $this->addLateLoadScriptFile('build/lightbox.js');
     }
 
+    #[\Override]
     protected function teaser() {
         ?>
         <div class="">
@@ -47,6 +49,7 @@ class GalleryBasePage extends PageWithActiveSkin
         return 'overview';
     }
 
+    #[\Override]
     protected function getStylesheets() {
         $stylesheets = parent::getStylesheets();
         $stylesheets[] = 'build/lightbox.css';
@@ -63,11 +66,13 @@ class GalleryBasePage extends PageWithActiveSkin
     *
     */
 
+    #[\Override]
     protected function getSubmenuItems()
     {
-        return array();
+        return [];
     }
 
+    #[\Override]
     protected function submenu() {
         $active_menu_item = $this->getSubmenuActiveItem();
         echo '<div class="col-md-3 offcanvas-collapse mb-2" id="sidebar">';
@@ -81,7 +86,7 @@ class GalleryBasePage extends PageWithActiveSkin
             $name = $item[0];
             $url = $item[1];
             $label = $item[2];
-            $class = isset($item[3]) ? $item[3] : '';
+            $class = $item[3] ?? '';
             if ($name === $active_menu_item) {
                 $attributes = ' active';
             } else {
@@ -100,7 +105,7 @@ class GalleryBasePage extends PageWithActiveSkin
             $name = $item[0];
             $url = $item[1];
             $label = $item[2];
-            $class = isset($item[3]) ? $item[3] : '';
+            $class = $item[3] ?? '';
             if ($name === $active_menu_item) {
                 $attributes = ' active';
             } else {
@@ -130,10 +135,10 @@ class GalleryBasePage extends PageWithActiveSkin
         if ($member = $this->loggedInMember) {
             $words = $this->words;
             $ww = $this->ww;
-            $items = array();
-            $items[] = array('user', 'gallery/manage', $ww->GalleryManage, 'bigbuttongrey');
-            $items[] = array('user', 'gallery/show/user/'.$member->Username, $ww->GalleryMy, 'bigbuttongrey');
-            $items[] = array('upload', 'gallery/upload_multiple', $ww->GalleryUpload, 'bigbuttongrey');
+            $items = [];
+            $items[] = ['user', 'gallery/manage', $ww->GalleryManage, 'bigbuttongrey'];
+            $items[] = ['user', 'gallery/show/user/'.$member->Username, $ww->GalleryMy, 'bigbuttongrey'];
+            $items[] = ['upload', 'gallery/upload_multiple', $ww->GalleryUpload, 'bigbuttongrey'];
             return $items;
         }
     }

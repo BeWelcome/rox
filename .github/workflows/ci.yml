@@ -62,7 +62,6 @@ jobs:
           extensions: curl, dom, gd, iconv, intl, json, libxml, mbstring, mysqli, pcntl, pdo_mysql, phar, tokenizer, xdebug, xml, xmlwriter, xsl, zip
           coverage: xdebug
 
-
       - name: Get Composer Cache Directory
         id: composer-cache
         run: echo "::set-output name=dir::$(composer config cache-files-dir)"

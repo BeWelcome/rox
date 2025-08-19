@@ -80,7 +80,7 @@ jobs:
         run: bin/phpunit --coverage-text --coverage-xml=build/logs/phpunit/coverage-xml --coverage-clover=build/logs/phpunit/clover.xml --log-junit=build/logs/phpunit/junit.xml --colors=never
 
       - name: Run Infection tests
-        run: vendor/bin/infection --only-covered --coverage=build/logs/phpunit --min-covered-msi=85 --threads=30
+        run: vendor/bin/infection --coverage=build/logs/phpunit --min-covered-msi=85 --threads=30
 
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02  # tag=v4.6.2
         if: ${{ always() }}

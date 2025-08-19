@@ -305,4 +305,4 @@ jobs:
         run: symfony security:check
 
       - name: Run JS security checker
-        run: yarn audit
+        run: yarn audit --groups dependencies

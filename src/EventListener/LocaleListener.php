@@ -16,14 +16,8 @@ use Symfony\Component\HttpKernel\KernelEvents;
 
 class LocaleListener implements EventSubscriberInterface
 {
-    private array $locales;
-
-    private EntityManagerInterface $entityManager;
-
-    public function __construct(EntityManagerInterface $entityManager, array $locales)
+    public function __construct(private readonly EntityManagerInterface $entityManager, private readonly array $locales)
     {
-        $this->entityManager = $entityManager;
-        $this->locales = $locales;
     }
 
     public static function getSubscribedEvents(): array
@@ -63,7 +57,7 @@ class LocaleListener implements EventSubscriberInterface
                     if (null !== $bestLanguage) {
                         $locale = $bestLanguage->getType();
                     }
-                } catch (Exception $exception) {
+                } catch (Exception) {
                     $locale = 'en';
                 }
             }

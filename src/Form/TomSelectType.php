@@ -64,6 +64,7 @@ class TomSelectType extends AbstractType
         }
     }
 
+    #[\Override]
     public function getParent(): string
     {
         return TextType::class;
@@ -72,6 +73,7 @@ class TomSelectType extends AbstractType
     /**
      * {@inheritdoc}
      */
+    #[\Override]
     public function getBlockPrefix(): string
     {
         return 'tomselect';

@@ -41,6 +41,7 @@ class GroupSettingsPage extends GroupsSubPage
         $this->addStylesheet('build/roxeditor.css');
     }
 
+    #[\Override]
     protected function getSubmenuActiveItem()
     {
         return 'admin';
@@ -74,15 +75,15 @@ class GroupSettingsPage extends GroupsSubPage
             $Type = ((!empty($redirected->post['Type'])) ? $redirected->post['Type']: 'Public');
             $VisiblePosts = ((!empty($redirected->post['VisiblePosts'])) ? $redirected->post['VisiblePosts'] : 'yes');
             $DisplayedOnProfile = ((!empty($redirected->post['DisplayedOnProfile'])) ? $redirected->post['DisplayedOnProfile'] : 'Yes');
-            $problems = ((is_array($redirected->problems)) ? $redirected->problems : array());
+            $problems = ((is_array($redirected->problems)) ? $redirected->problems : []);
         }
         else
         {
-            $GroupDesc_ = str_replace(array('<br>','<br/>', '<br />'), "\n", $this->group->getDescription());
+            $GroupDesc_ = str_replace(['<br>','<br/>', '<br />'], "\n", $this->group->getDescription());
             $Type = $this->group->Type;
             $VisiblePosts = (($this->group->VisiblePosts == 'no') ? 'no' : 'yes');
             $DisplayedOnProfile = (($this->group->DisplayedOnProfile == 'No') ? 'No' : 'Yes');
-            $problems = array();
+            $problems = [];
         }
 ?>
     <form method="post" action="" enctype='multipart/form-data'>
@@ -128,7 +129,7 @@ class GroupSettingsPage extends GroupsSubPage
         <div class="col-12">
             <div class="o-form-group my-3">
                 <label for="description" class="h5 m-0"><?= $words->get('Description');?></label>
-                <textarea  id="description" name="GroupDesc_" aria-describedby="newgroupdescription" rows="5" class="o-input editor p-2"><?=htmlspecialchars($GroupDesc_, ENT_QUOTES)?></textarea>
+                <textarea  id="description" name="GroupDesc_" aria-describedby="newgroupdescription" rows="5" class="o-input editor p-2"><?=htmlspecialchars((string) $GroupDesc_, ENT_QUOTES)?></textarea>
             </div>
         </div>
 

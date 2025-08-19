@@ -5,7 +5,9 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Preference.
+ * Do not check entities with PHPMD
+ *
+ * @SuppressWarnings("PHPMD")
  */
 #[ORM\Table(name: 'preferences')]
 #[ORM\UniqueConstraint(name: 'codeName', columns: ['codeName'])]

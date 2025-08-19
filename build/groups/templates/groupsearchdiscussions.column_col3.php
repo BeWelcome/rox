@@ -6,15 +6,15 @@ $words = new MOD_words();
 ?>
 <input type="hidden" id="read.more" value="<?php echo $words->get('forum.read.more'); ?>">
 <input type="hidden" id="show.less" value="<?php echo $words->get('forum.show.less'); ?>">
-<input type="hidden" id="keyword" name="keyword" value="<?php echo htmlspecialchars($this->search_terms) ?>">
+<input type="hidden" id="keyword" name="keyword" value="<?php echo htmlspecialchars((string) $this->search_terms) ?>">
 <div class="row no-gutters">
         <div class="col-12">
-            <h3><?= $words->get('GroupsSearchDiscussionsGroup', htmlspecialchars($this->search_terms, ENT_QUOTES)); ?></h3>
+            <h3><?= $words->get('GroupsSearchDiscussionsGroup', htmlspecialchars((string) $this->search_terms, ENT_QUOTES)); ?></h3>
         </div>
 <?php $this->pager->render();
 $loggedInMember = $this->member;
 
-$styles = array('l-search-post--dark', '');
+$styles = ['l-search-post--dark', ''];
 
 $cnt = 0;
 foreach ($this->search_result as $post) {
@@ -54,7 +54,7 @@ foreach ($this->search_result as $post) {
         ?>
     </div>
     <div class="c-search-thread_info js-highlight"><div class="u-flex u-justify-end"><small><?php
-                $title = strip_tags($post->title);
+                $title = strip_tags((string) $post->title);
             echo $words->get('forum.thread');
         if (isset($post->IdGroup) && $post->IdGroup != 0) {
             echo '<a href="group/' .$post->IdGroup . '/forum/s' . $post->IdThread . '/#post' . $post->id . '">' . $title . '</a>';

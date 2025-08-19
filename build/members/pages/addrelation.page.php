@@ -3,6 +3,7 @@
 
 class AddRelationPage extends RelationsPage
 {
+    #[\Override]
     protected function getSubmenuActiveItem()
     {
         return 'relationsadd';
@@ -48,7 +49,7 @@ class AddRelationPage extends RelationsPage
                 $max=count($tt);
                 for ($ii = 0; $ii < $max; $ii++) {
                     echo "<input type=checkbox name=\"Type_" . $tt[$ii] . "\"";
-                    if (isset($relation['myself']) && is_object($relation['myself']) > 0 && strpos(" ".$relation['myself']->Type,$tt[$ii] )!=0)
+                    if (isset($relation['myself']) && is_object($relation['myself']) > 0 && !str_starts_with(" ".$relation['myself']->Type, (string) $tt[$ii]))
                     echo " checked ";
                     echo "> ".$words->get("Relation_Type_" . $tt[$ii])."<br />";
                 }

@@ -11,8 +11,8 @@ use DateTimeImmutable;
  */
 class CommentSorter
 {
-    private DateTimeImmutable $early20thCentury;
-    private DateTimeImmutable $farFuture;
+    private readonly DateTimeImmutable $early20thCentury;
+    private readonly DateTimeImmutable $farFuture;
 
     public function __construct()
     {
@@ -26,7 +26,12 @@ class CommentSorter
         return $comments;
     }
 
-    private function commentsCompare($a, $b)
+    /**
+     * PHPMD doesn't see the usort call above.
+     *
+     * @SuppressWarnings("PHPMD.UnusedPrivateMethod")
+     */
+    private function commentsCompare(array $a, array $b): int
     {
         $aCriterionDate = max($this->getCreatedCriterion($a), $this->getUpdatedCriterion($a));
         $bCriterionDate = max($this->getCreatedCriterion($b), $this->getUpdatedCriterion($b));
@@ -34,7 +39,7 @@ class CommentSorter
         return (-1) * ($aCriterionDate <=> $bCriterionDate);
     }
 
-    private function getCreatedCriterion($comment)
+    private function getCreatedCriterion(array $comment): int
     {
         $createdTo = isset($comment['to']) ? $comment['to']->getCreated() : $this->farFuture;
         $createdFrom = isset($comment['from']) ? $comment['from']->getCreated() : $this->farFuture;
@@ -42,10 +47,12 @@ class CommentSorter
         return min($createdTo, $createdFrom);
     }
 
-    private function getUpdatedCriterion($comment)
+    private function getUpdatedCriterion(array $comment): int
     {
-        $updatedTo = isset($comment['to']) ? ($comment['to']->getUpdated() ?? $this->early20thCentury) : $this->early20thCentury;
-        $updatedFrom = isset($comment['from']) ? ($comment['from']->getUpdated() ?? $this->early20thCentury) : $this->early20thCentury;
+        $updatedTo = isset($comment['to'])
+            ? ($comment['to']->getUpdated() ?? $this->early20thCentury) : $this->early20thCentury;
+        $updatedFrom = isset($comment['from'])
+            ? ($comment['from']->getUpdated() ?? $this->early20thCentury) : $this->early20thCentury;
 
         return max($updatedTo, $updatedFrom);
     }

@@ -38,6 +38,7 @@ class MemberPage extends PageWithActiveSkin
 {
     protected $message = 0;
 
+    #[\Override]
     protected function getPageTitle()
     {
         $member = $this->member;
@@ -49,6 +50,7 @@ class MemberPage extends PageWithActiveSkin
         return 'profile';
     }
 
+    #[\Override]
     protected function getSubmenuItems()
     {
         $member = $this->member;
@@ -90,39 +92,39 @@ class MemberPage extends PageWithActiveSkin
         $tt = [];
         $mynotes_count = $member->count_mynotes();
         if ($this->myself) {
-            $tt=array(
-                array('editmyprofile', 'editmyprofile/' . $profile_language_code, '<i class="fa fa-fw fa-edit"></i> ' . $ww->EditMyProfile, 'editmyprofile'),
-                array('profile.preferences.menu', "/members/$username/preferences", '<i class="fa fa-fw fa-cogs"></i> ' . $ww->MyPreferences, 'mypreferences'),
-                array('mydata', 'mydata', '<i class="fa fa-fw fa-database"></i> ' . $ww->MyData, 'mydata'),
-                array('mynotes', "/members/$username/notes", '<i class="fa fa-fw fa-sticky-note"></i> ' . $words->get('MyNotes') . $this->getBadge($mynotes_count), 'mynotes'),
-                );
+            $tt=[
+                ['editmyprofile', 'editmyprofile/' . $profile_language_code, '<i class="fa fa-fw fa-edit"></i> ' . $ww->EditMyProfile, 'editmyprofile'],
+                ['profile.preferences.menu', "/members/$username/preferences", '<i class="fa fa-fw fa-cogs"></i> ' . $ww->MyPreferences, 'mypreferences'],
+                ['mydata', 'mydata', '<i class="fa fa-fw fa-database"></i> ' . $ww->MyData, 'mydata'],
+                ['mynotes', "/members/$username/notes", '<i class="fa fa-fw fa-sticky-note"></i> ' . $words->get('MyNotes') . $this->getBadge($mynotes_count), 'mynotes'],
+                ];
 
             if ($this instanceof EditMyProfilePage)
             {
                 if ($member->Status <> 'ChoiceInactive') {
-                    $tt[] = array('setprofileinactive', 'setprofileinactive', '<i class="fa fa-fw fa-edit"></i> ' . $ww->SetProfileInactive, 'setprofileinactive');
+                    $tt[] = ['setprofileinactive', 'setprofileinactive', '<i class="fa fa-fw fa-edit"></i> ' . $ww->SetProfileInactive, 'setprofileinactive'];
                 } else {
-                    $tt[] = array('setprofileactive', 'setprofileactive', '<i class="fa fa-fw fa-edit"></i> ' . $ww->SetProfileActive);
+                    $tt[] = ['setprofileactive', 'setprofileactive', '<i class="fa fa-fw fa-edit"></i> ' . $ww->SetProfileActive];
                 }
-                $tt[] = array('deleteprofile', 'deleteprofile', '<i class="fa fa-fw fa-times"></i> ' . $ww->DeleteProfile, 'deleteprofile');
+                $tt[] = ['deleteprofile', 'deleteprofile', '<i class="fa fa-fw fa-times"></i> ' . $ww->DeleteProfile, 'deleteprofile'];
             }
 
             $showVisitors = $member->getPreference('PreferenceShowProfileVisits',
                 'Yes');
             if ($showVisitors == 'Yes') {
-                $tt[] = array('myvisitors', "members/" . $username . "/visitors", '<i class="fa fa-fw fa-comments invisible"></i> ' . $ww->MyVisitors, 'myvisitors');
+                $tt[] = ['myvisitors', "members/" . $username . "/visitors", '<i class="fa fa-fw fa-comments invisible"></i> ' . $ww->MyVisitors, 'myvisitors'];
             }
-            $tt[] = array('separator-1', '', '', 'space');
+            $tt[] = ['separator-1', '', '', 'space'];
 
-            $tt[] = array('profile', "members/$username", '<i class="fa fa-fw fa-user"></i> ' . $ww->MemberPage);
-            $tt[] = array('comments', "members/$username/comments", '<i class="fa fa-fw fa-comments"></i> ' . $ww->ViewComments.' '. $this->getBadge($comments_count['all']));
-            $tt[] = array('relations', "members/$username/relations", '<i class="fa fa-fw fa-users"></i> ' . $words->get('profile.relations').' ' . $this->getBadge($relations_count));
+            $tt[] = ['profile', "members/$username", '<i class="fa fa-fw fa-user"></i> ' . $ww->MemberPage];
+            $tt[] = ['comments', "members/$username/comments", '<i class="fa fa-fw fa-comments"></i> ' . $ww->ViewComments.' '. $this->getBadge($comments_count['all'])];
+            $tt[] = ['relations', "members/$username/relations", '<i class="fa fa-fw fa-users"></i> ' . $words->get('profile.relations').' ' . $this->getBadge($relations_count)];
             if ($this->myself) {
-                $tt[] = array('gallery', "gallery/manage", '<i class="fa fa-fw fa-image"></i> ' . $ww->Gallery . ' ' . $this->getBadge($galleryItemsCount));
+                $tt[] = ['gallery', "gallery/manage", '<i class="fa fa-fw fa-image"></i> ' . $ww->Gallery . ' ' . $this->getBadge($galleryItemsCount)];
             } else {
-                $tt[] = array('gallery', "gallery/show/user/$username/pictures", '<i class="fa fa-fw fa-image"></i> ' . $ww->Gallery . ' ' . $this->getBadge($galleryItemsCount));
+                $tt[] = ['gallery', "gallery/show/user/$username/pictures", '<i class="fa fa-fw fa-image"></i> ' . $ww->Gallery . ' ' . $this->getBadge($galleryItemsCount)];
             }
-            $tt[] = array('forum', "members/$username/posts", '<i class="far fa-fw fa-comment"></i> ' . $viewForumPosts);
+            $tt[] = ['forum', "members/$username/posts", '<i class="far fa-fw fa-comment"></i> ' . $viewForumPosts];
         } else {
             if (isset($note)) {
                 $mynotewordsname=$words->get('NoteEditMyNotesOfMember') ;
@@ -134,7 +136,7 @@ class MemberPage extends PageWithActiveSkin
             }
             if (MemberStatusType::PASSED_AWAY !== $member->Status) {
                 $tt= [
-                    array('messagesadd', "new/message/$username", '<i class="fa fa-fw fa-envelope"></i> ' . $ww->ContactMember, 'messagesadd'),
+                    ['messagesadd', "new/message/$username", '<i class="fa fa-fw fa-envelope"></i> ' . $ww->ContactMember, 'messagesadd'],
                 ];
             }
             if (0 < $conversations_with_count) {
@@ -158,60 +160,63 @@ class MemberPage extends PageWithActiveSkin
 /*                (null === $relation)
                     ? array('relationsadd', "members/$username/relation/add", '<i class="fa fa-fw fa-handshake"></i> ' . $words->get('profile.relation.add'), 'relationsadd')
                     : array('relationsadd', "members/$username/relation/edit", '<i class="fa fa-fw fa-handshake"></i> ' . $words->get('profile.relation.edit'), 'relationsadd'),                array('notes', $mynotelinkname, '<i class="fa fa-fw fa-pencil-alt"></i> ' . $mynotewordsname, 'mynotes'),
-*/                array('report', $feedbackUrl, '<i class="fas fa-fw fa-flag"></i> ' . $words->getSilent('profile.report')),
-                array('separator-1', '', '', 'space'),
-                array('profile', "members/$username", '<i class="fa fa-fw fa-user"></i> '  . $ww->MemberPage),
-                array('comments', "members/$username/comments", '<i class="fa fa-fw fa-comments"></i> ' . $ww->ViewComments.' ' . $this->getBadge($comments_count['all'])),
-                array('relations', "members/$username/relations", '<i class="fa fa-fw fa-users"></i> ' . $words->get('profile.relations').' ' . $this->getBadge($relations_count)),
-                array('gallery', "gallery/show/user/$username/pictures", '<i class="fa fa-fw fa-image"></i> ' . $ww->Gallery . ' ' . $this->getBadge($galleryItemsCount)),
+*/                ['report', $feedbackUrl, '<i class="fas fa-fw fa-flag"></i> ' . $words->getSilent('profile.report')],
+                ['separator-1', '', '', 'space'],
+                ['profile', "members/$username", '<i class="fa fa-fw fa-user"></i> '  . $ww->MemberPage],
+                ['comments', "members/$username/comments", '<i class="fa fa-fw fa-comments"></i> ' . $ww->ViewComments.' ' . $this->getBadge($comments_count['all'])],
+                ['relations', "members/$username/relations", '<i class="fa fa-fw fa-users"></i> ' . $words->get('profile.relations').' ' . $this->getBadge($relations_count)],
+                ['gallery', "gallery/show/user/$username/pictures", '<i class="fa fa-fw fa-image"></i> ' . $ww->Gallery . ' ' . $this->getBadge($galleryItemsCount)],
             ]);
             if (MemberStatusType::PASSED_AWAY !== $member->Status) {
                 if ($this->leg) {
-                    array_unshift($tt, array('sendinvite', "new/invitation/$this->leg", '<i class="fa fa-fw fa-bed"></i> ' . $words->get('profile.invite.guest'), 'sendinvite'));
+                    array_unshift($tt, ['sendinvite', "new/invitation/$this->leg", '<i class="fa fa-fw fa-bed"></i> ' . $words->get('profile.invite.guest'), 'sendinvite']);
                 } else if ($accommodation != AccommodationType::NO)
                 {
-                    array_unshift($tt, array('sendrequest', "new/request/$username", '<i class="fa fa-fw fa-bed"></i> ' . $words->get('profile.request.hosting'), 'sendrequest'));
+                    array_unshift($tt, ['sendrequest', "new/request/$username", '<i class="fa fa-fw fa-bed"></i> ' . $words->get('profile.request.hosting'), 'sendrequest']);
                 }
             }
             if ($linkMembersForumPosts) {
-                $tt[] = array('forum', "members/$username/posts", '<i class="far fa-fw fa-comment"></i> ' . $viewForumPosts);
+                $tt[] = ['forum', "members/$username/posts", '<i class="far fa-fw fa-comment"></i> ' . $viewForumPosts];
             }
         }
-        $tt[] = array('separator-2', '', '', 'space');
+        $tt[] = ['separator-2', '', '', 'space'];
         if ($rights->HasRight('SafetyTeam') || $rights->HasRight('Admin'))
         {
-            $tt[] = array('adminedit',"members/{$username}/adminedit", '<i class="fa fa-fw fa-bed invisible"></i> Admin: Edit Profile');
+            $tt[] = ['adminedit',"members/{$username}/adminedit", '<i class="fa fa-fw fa-bed invisible"></i> Admin: Edit Profile'];
         }
         if ($rights->HasRight('Admin')) {
-            $tt[] = array('mydata', 'members/'.$username.'/data', '<i class="fa fa-fw fa-database"></i> ' . $ww->PersonalData, 'personaldata');
+            $tt[] = ['mydata', 'members/'.$username.'/data', '<i class="fa fa-fw fa-database"></i> ' . $ww->PersonalData, 'personaldata'];
         }
         if ($rights->HasRight('Rights')) {
-            array_push($tt,array('adminrights','admin/rights/list/member/'.$username, '<i class="fa fa-fw fa-bed invisible"></i> ' .  $ww->AdminRights) ) ;
+            array_push($tt,['adminrights','admin/rights/list/member/'.$username, '<i class="fa fa-fw fa-bed invisible"></i> ' .  $ww->AdminRights] ) ;
         }
         if ($rights->HasRight('Flags')) {
-            array_push($tt,array('adminflags', 'admin/flags/list/member/'. $username, '<i class="fa fa-fw fa-flag"></i> ' .  $ww->AdminFlags) ) ;
+            array_push($tt,['adminflags', 'admin/flags/list/member/'. $username, '<i class="fa fa-fw fa-flag"></i> ' .  $ww->AdminFlags] ) ;
         }
         if ($rights->HasRight('Logs')) {
-            array_push($tt,array('admin','admin/logs?log[username='.$username.']','<i class="fa fa-fw fa-bed invisible"></i> ' .  $ww->AdminLogs) ) ;
+            array_push($tt,['admin','admin/logs?log[username='.$username.']','<i class="fa fa-fw fa-bed invisible"></i> ' .  $ww->AdminLogs] ) ;
         }
         return($tt) ;
     }
 
+    #[\Override]
     protected function getColumnNames()
     {
         // we don't need the other columns
-        return array('col3');
+        return ['col3'];
     }
 
     protected function leftsidebar() {
     }
 
+    #[\Override]
     protected function teaserContent()
     {
-        $this->__call('teaserContent', array());
+        $this->__call('teaserContent', []);
         //parent::submenu();
     }
 
+    #[\Override]
     protected function submenu() {
         ?>
         <div class="col-md-3 offcanvas-collapse mb-2" id="sidebar">
@@ -251,7 +256,7 @@ class MemberPage extends PageWithActiveSkin
             $active_menu_item = $this->getSubmenuActiveItem();
             foreach ($this->getSubmenuItems() as $index => $item) {
                 $name = $item[0];
-                if (false !== strpos($name, 'separator'))
+                if (str_contains((string) $name, 'separator'))
                 {
                     // Brutal hack to separate the two blocks in the menu visually
                     ?>
@@ -291,12 +296,14 @@ class MemberPage extends PageWithActiveSkin
         return $protocol . "://" . $_SERVER['HTTP_HOST'] . '/';
     }
 
+    #[\Override]
     protected function getStylesheets() {
         $stylesheets = parent::getStylesheets();
         $stylesheets[] = 'build/lightbox.css';
         return $stylesheets;
     }
 
+    #[\Override]
     protected function getLateLoadScriptfiles()
     {
         $scripts = parent::getLateLoadScriptfiles();
@@ -315,7 +322,7 @@ class MemberPage extends PageWithActiveSkin
             $formkit = $layoutkit->formkit;
             $callbackTags = $formkit->setPostCallback('MembersController', 'setStatusCallback');
             $logged_member = $this->model->getLoggedInMember();
-            if ($logged_member && $logged_member->hasOldRight(array('Admin' => '', 'SafetyTeam' => '', 'Accepter' => '', 'Profile' => ''))) {
+            if ($logged_member && $logged_member->hasOldRight(['Admin' => '', 'SafetyTeam' => '', 'Accepter' => '', 'Profile' => ''])) {
                 $form .= '<div><form method="post" name="member-status" id="member-status" class="form-inline">' . $callbackTags;
                 $form .= '<input type="hidden" name="member-id" value="' . $member->id . '">';
                 $form .= '<select name="new-status" class="o-input select2-sm" data-minimum-results-for-search="-1">';
@@ -344,7 +351,7 @@ class MemberPage extends PageWithActiveSkin
         $logged_member = $this->model->getLoggedInMember();
         if ($logged_member
             && $logged_member->hasOldRight(
-                array('SafetyTeam' => '')
+                ['SafetyTeam' => '']
             )
         ) {
             $dateSince = ' ('.$member->created.')';
@@ -359,7 +366,7 @@ class MemberPage extends PageWithActiveSkin
         $logged_member = $this->model->getLoggedInMember();
         if ($logged_member
             && $logged_member->hasOldRight(
-                array('SafetyTeam' => '')
+                ['SafetyTeam' => '']
             )
         ) {
             $lastLogin = ' ('.$lastLoginDate.')';

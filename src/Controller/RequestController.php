@@ -24,7 +24,7 @@ use Exception;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 /**
  * Class HostingRequestController.
@@ -39,21 +39,16 @@ class RequestController extends BaseRequestAndInvitationController
     use ManagerTrait;
     use TranslatorTrait;
 
-    private Mailer $mailer;
-    private Logger $logger;
-
     public function __construct(
         ConversationModel      $conversationModel,
         HostingRequestModel    $requestModel,
         EntityManagerInterface $entityManager,
-        Mailer                 $mailer,
-        Logger                 $logger
+        private Mailer                 $mailer,
+        private Logger                 $logger
     ) {
         parent::__construct($requestModel, $entityManager);
 
         $this->conversationModel = $conversationModel;
-        $this->mailer = $mailer;
-        $this->logger = $logger;
     }
 
     /**
@@ -99,7 +94,9 @@ class RequestController extends BaseRequestAndInvitationController
     }
 
     /**
-     * @throws Exception
+     * @SuppressWarnings("PHPMD.NPathComplexity")
+     *
+     * \todo Reduce complexity (seems all new/ conversations have a problem here)
      */
     #[Route(path: '/new/request/{username}', name: 'hosting_request')]
     public function newHostingRequest(
@@ -215,7 +212,7 @@ class RequestController extends BaseRequestAndInvitationController
             return $this->forward(MessageController::class . '::reply', ['message' => $hostingRequest]);
         }
 
-        list($thread) = $this->conversationModel->getThreadInformationForMessage($hostingRequest);
+        [$thread] = $this->conversationModel->getThreadInformationForMessage($hostingRequest);
 
         // keep all information from current hosting request except the message text
         $hostingRequest = $this->getMessageAndRequestClone($hostingRequest);
@@ -261,7 +258,7 @@ class RequestController extends BaseRequestAndInvitationController
             return $this->forward(MessageController::class . '::reply', ['message' => $hostingRequest]);
         }
 
-        list($thread) = $this->conversationModel->getThreadInformationForMessage($hostingRequest);
+        [$thread] = $this->conversationModel->getThreadInformationForMessage($hostingRequest);
 
         // keep all information from current hosting request except the message text
         $hostingRequest = $this->getMessageClone($hostingRequest);
@@ -324,7 +321,7 @@ class RequestController extends BaseRequestAndInvitationController
     {
         $subject = $request->getSubject()->getSubject();
 
-        if (strpos($request->getSpamInfo(), SpamInfoType::SPAM_BLOCKED_WORD) === false) {
+        if (!str_contains($request->getSpamInfo(), SpamInfoType::SPAM_BLOCKED_WORD)) {
             $this->sendRequestNotification($guest, $host, $host, $request, $subject, 'request', false);
         }
     }

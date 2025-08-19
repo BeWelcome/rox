@@ -35,11 +35,11 @@ $callbackTags = $this->layoutkit->formkit->setPostCallback('AdminFlagsController
     <?= $callbackTags ?>
     <div class="type-text">
         <label for="name"><?php echo $this->words->get("AdminFlagsName")?></label>
-        <input type="text" id="name" name="name" value="<?= htmlentities($this->vars['name'], ENT_COMPAT, 'utf-8') ?>"/>
+        <input type="text" id="name" name="name" value="<?= htmlentities((string) $this->vars['name'], ENT_COMPAT, 'utf-8') ?>"/>
     </div>
     <div class="type-text">
         <label for="description"><?php echo $this->words->get("AdminFlagsDescription") ?></label>
-        <textarea id="description" name="description" rows="5"><?= htmlentities($this->vars['description'], ENT_COMPAT, 'utf-8') ?></textarea>
+        <textarea id="description" name="description" rows="5"><?= htmlentities((string) $this->vars['description'], ENT_COMPAT, 'utf-8') ?></textarea>
     </div>
     <div class="type-button">
         <input type="submit" id="AdminFlagsSubmit" name="AdminFlagsSubmit" value="<?php echo $this->words->getSilent("AdminFlagsCreate")?>" /><?php echo $words->flushBuffer(); ?>

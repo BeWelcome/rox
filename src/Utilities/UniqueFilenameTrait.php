@@ -9,6 +9,6 @@ trait UniqueFilenameTrait
      */
     private function generateUniqueFileName()
     {
-        return sha1(uniqid(rand(), true));
+        return sha1(uniqid(random_int(0, mt_getrandmax()), true));
     }
 }

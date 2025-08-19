@@ -9,6 +9,7 @@ class NotifyMemberWidget extends ItemlistWithPagination
 {
     private $_note;
 
+    #[\Override]
     public function render() {
         parent::render();
     }
@@ -24,6 +25,7 @@ class NotifyMemberWidget extends ItemlistWithPagination
     }
 
 
+    #[\Override]
     protected function showItems()
     {
         $words = new MOD_words();
@@ -72,17 +74,18 @@ class NotifyMemberWidget extends ItemlistWithPagination
         <?php
     }
 
+    #[\Override]
     protected function showListItem($item, $i_row)
     {
         $words = new MOD_words();
         $member = $this->createEntity('Member')->findById($item->IdRelMember);
         if ($item->WordCode == '' && ($text_params = unserialize($item->TranslationParams)) !== false) {
-           $text = call_user_func_array(array($words, 'getSilent'), $text_params);
+           $text = call_user_func_array($words->getSilent(...), $text_params);
         } else {
             $text = $words->getSilent($item->WordCode,$member->Username);
         }
-        $text_params = isset($text_params) ? $text_params : false;
-        $created = MOD_layoutbits::ago(strtotime($item->created));
+        $text_params = $text_params ?? false;
+        $created = (new MOD_layoutbits())->ago(strtotime((string) $item->created));
         echo <<<HTML
         <div class="clearfix">
             <a target="notify-{$item->id}" class="dynamic float-right" href="notify/{$item->id}/check" title="Remove">
@@ -112,11 +115,13 @@ HTML;
     }
 
 
+    #[\Override]
     protected function showBetweenListItems($prev_item, $item, $i_row)
     {
         echo '<hr />';
     }
 
+    #[\Override]
     protected function showItems_list()
     {
         // table rows with items
@@ -167,6 +172,7 @@ HTML;
 
 class NotifyAdminWidget extends ItemlistWithPagination
 {
+    #[\Override]
     public function render() {
         parent::render();
     }
@@ -187,6 +193,7 @@ class NotifyAdminWidget extends ItemlistWithPagination
         return $notes;
     }
 
+    #[\Override]
     protected function getItems()
     {
         $this->prepare();
@@ -207,7 +214,7 @@ class NotifyAdminWidget extends ItemlistWithPagination
     {
         foreach ($this->createEntity('Note')->getColumns() as $col)
         {
-            $result[strtolower($col)] = $col;
+            $result[strtolower((string) $col)] = $col;
         }
         return $result;
     }
@@ -264,7 +271,7 @@ class NotifyAdminWidget extends ItemlistWithPagination
         if ($params = unserialize($note->TranslationParams))
         {
             $words = new MOD_words;
-            echo call_user_func_array(array($words, 'get'), $params);
+            echo call_user_func_array($words->get(...), $params);
         }
         else
         {

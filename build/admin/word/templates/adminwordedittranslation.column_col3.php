@@ -59,7 +59,7 @@ if ($this->noScope){
 <table class="admin" border="0">
   <tr>
     <td class="label"><label for="code">Code:</label> </td>
-    <td><input name="EngCode" id="code" value="<?= htmlspecialchars($this->formdata['EngCode']) ?>" size="56" />
+    <td><input name="EngCode" id="code" value="<?= htmlspecialchars((string) $this->formdata['EngCode']) ?>" size="56" />
 <?php
     if ($this->formdata['EngDnt'] == "yes") {
         echo '<span class="awdntwarning">Do not translate</span>';
@@ -67,24 +67,24 @@ if ($this->noScope){
 ?>
 </td></tr>
 <tr><td class="label">Description:</td><td>
-<em><?= htmlspecialchars($this->formdata['EngDesc']) ?></em>
+<em><?= htmlspecialchars((string) $this->formdata['EngDesc']) ?></em>
 </td></tr>
     
 <tr><td class="label" >English source: </td>
 <?php
-$tagold = array("&lt;", "&gt;");
-$tagnew = array("<font color=\"#ff8800\">&lt;", "&gt;</font>");
+$tagold = ["&lt;", "&gt;"];
+$tagnew = ["<font color=\"#ff8800\">&lt;", "&gt;</font>"];
 echo '<td>'. str_replace("\n","<br />",
                 str_replace($tagold,$tagnew,
-                    htmlentities($this->formdata['EngSent'], ENT_COMPAT, 'UTF-8'))).'</td>';
+                    htmlentities((string) $this->formdata['EngSent'], ENT_COMPAT, 'UTF-8'))).'</td>';
 ?>
 </tr>
 <tr>
 <td class="label"><label for="Sentence">Translation:</label> </td>
 <td><textarea id="Sentence" name="Sentence" class="long" cols="60"
 <?php
-$NbRows = ceil(3 + strlen($this->formdata['Sentence'])/75);
-echo ' rows="'.$NbRows.'">'. htmlspecialchars($this->formdata['Sentence']) .'</textarea></td>';
+$NbRows = ceil(3 + strlen((string) $this->formdata['Sentence'])/75);
+echo ' rows="'.$NbRows.'">'. htmlspecialchars((string) $this->formdata['Sentence']) .'</textarea></td>';
 ?>
   </tr>
   <tr>
@@ -94,17 +94,17 @@ echo ' rows="'.$NbRows.'">'. htmlspecialchars($this->formdata['Sentence']) .'</t
     <select id="lang" name="lang"><option value=""></option>
 <?php
     foreach($this->langarr as $language) {
-        echo '<option value="' . htmlspecialchars($language->ShortCode) . '"';
+        echo '<option value="' . htmlspecialchars((string) $language->ShortCode) . '"';
         if ($this->formdata['lang'] == $language->ShortCode) {
             echo ' selected="selected"';
         }
-        echo '>' . htmlspecialchars(trim($language->EnglishName)) . ' (' . htmlspecialchars($language->ShortCode) . ')</option>';
+        echo '>' . htmlspecialchars(trim((string) $language->EnglishName)) . ' (' . htmlspecialchars((string) $language->ShortCode) . ')</option>';
     }
 ?>
 </select></td></tr>
   <tr><td>
-    <input type="hidden" name="EngDesc" value="<?=htmlspecialchars($this->formdata['EngDesc'])?>" />
-    <input type="hidden" name="EngSent" value="<?=htmlspecialchars($this->formdata['EngSent']);?>" />
+    <input type="hidden" name="EngDesc" value="<?=htmlspecialchars((string) $this->formdata['EngDesc'])?>" />
+    <input type="hidden" name="EngSent" value="<?=htmlspecialchars((string) $this->formdata['EngSent']);?>" />
     <input type="hidden" name="EngDnt" value="<?=$this->formdata['EngDnt']?>" />
     </td><td>
       <input class="button" type="submit" name="findBtn" value="Find code" />&nbsp;&nbsp;&nbsp;&nbsp;

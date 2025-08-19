@@ -16,16 +16,11 @@ use Symfony\Component\Security\Http\SecurityEvents;
  */
 class UserLocaleListener implements EventSubscriberInterface
 {
-    private EntityManagerInterface $entityManager;
-    private array $locales;
-
     /**
      * UserLocaleListener constructor.
      */
-    public function __construct(EntityManagerInterface $entityManager, array $locales)
+    public function __construct(private readonly EntityManagerInterface $entityManager, private readonly array $locales)
     {
-        $this->entityManager = $entityManager;
-        $this->locales = $locales;
     }
 
     /**

@@ -14,14 +14,14 @@
         $Group_ = ((!empty($redirected->post['Group_'])) ? $redirected->post['Group_'] : '');
         $GroupDesc_ = ((!empty($redirected->post['GroupDesc_'])) ? $redirected->post['GroupDesc_'] : '');
         $Type = ((!empty($redirected->post['Type'])) ? $redirected->post['Type']: false);
-        $problems = ((is_array($redirected->problems)) ? $redirected->problems : array());
+        $problems = ((is_array($redirected->problems)) ? $redirected->problems : []);
     }
     else
     {
         $Group_ = '';
         $GroupDesc_ = '';
         $Type = false;
-        $problems = array();
+        $problems = [];
     }
 
 ?>

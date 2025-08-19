@@ -64,7 +64,7 @@
                     <div id="MyPreferences3" data-parent="#MyPreferences" class="collapse editprofilebox" role="tabpanel">
 
                             <?php
-                            $doNotShow = array('PreferenceLanguage');
+                            $doNotShow = ['PreferenceLanguage'];
                             foreach ($p as $rr) {
                             if (!in_array($rr->codeName, $doNotShow)) {
                             ?>
@@ -78,7 +78,7 @@
                             }
                             ?>
 
-                            <?php $PossibleValueArray = explode((strpos($rr->PossibleValues,',') ? ',' : ';'),$rr->PossibleValues); ?>
+                            <?php $PossibleValueArray = explode((strpos((string) $rr->PossibleValues,',') ? ',' : ';'),(string) $rr->PossibleValues); ?>
                             <?php if ($rr->codeName == 'PreferenceLocalTime') { ?>
                                 <div class="col-12 col-md-7 order-3 order-md-2"><select name="PreferenceLocalTime" class="prefsel select2">
                                     <?php
@@ -111,7 +111,7 @@
                                 <?php } ?>
 
                                 <div class="col-2 col-md-1 small order-2 order-md-3">
-                                    <a tabindex="0" class="btn btn-primary btn-sm ml-1 py-0" data-container="body" data-toggle="popover" data-placement="right" data-trigger="focus" data-html="true" data-content="<?= htmlentities($words->get($rr->codeDescription)) ?>">
+                                    <a tabindex="0" class="btn btn-primary btn-sm ml-1 py-0" data-container="body" data-toggle="popover" data-placement="right" data-trigger="focus" data-html="true" data-content="<?= htmlentities((string) $words->get($rr->codeDescription)) ?>">
                                         <i class="fa fa-question white"></i>
                                     </a>
                                 </div>

@@ -19,7 +19,7 @@ if ($member->age == "hidden") {
     $agestr .= $ww->AgeHidden;
 } else {
     if ($this->passedAway) {
-        $agestr= $ww->AgeEqualX($layoutbits->fage_value($member->BirthDate, substr($member->updated, 0, 10)));
+        $agestr= $ww->AgeEqualX($layoutbits->fage_value($member->BirthDate, substr((string) $member->updated, 0, 10)));
     } else {
         $agestr= $ww->AgeEqualX($layoutbits->fage_value($member->BirthDate));
     }

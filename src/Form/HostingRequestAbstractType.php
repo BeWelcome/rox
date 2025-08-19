@@ -26,6 +26,7 @@ class HostingRequestAbstractType extends AbstractType
     /**
      * {@inheritdoc}
      */
+    #[\Override]
     public function getBlockPrefix(): string
     {
         return 'app_message';

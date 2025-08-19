@@ -33,7 +33,7 @@ class LanguageFilter extends SQLFilter
         try {
             // Don't worry, getParameter automatically quotes parameters
             $language = $this->getParameter('language');
-        } catch (\InvalidArgumentException $e) {
+        } catch (\InvalidArgumentException) {
             // No language has been defined
             return '';
         }

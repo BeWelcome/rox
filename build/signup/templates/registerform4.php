@@ -111,7 +111,7 @@
                                     <?php echo $words->get('SignupUsername'); ?>
                                 </th>
                                 <td class="w-100 border-0"><?php
-                                    echo htmlentities($vars['username'], ENT_COMPAT, 'utf-8');
+                                    echo htmlentities((string) $vars['username'], ENT_COMPAT, 'utf-8');
                                     ?></td>
                             </tr>
                             <tr>
@@ -126,7 +126,7 @@
                                 </th>
                                 <td class="border-0">
                                     <?php
-                                    echo htmlentities($vars['email']);
+                                    echo htmlentities((string) $vars['email']);
                                     ?>
                                 </td>
                             </tr>
@@ -144,11 +144,11 @@
                                 <th scope="row" class="float-right border-0 text-nowrap"><?= $words->get('signup.fullname'); ?></th>
                                 <td class="w-100 border-0">
                                     <?php
-                                    echo htmlentities(strip_tags($vars['firstname']));
+                                    echo htmlentities(strip_tags((string) $vars['firstname']));
                                     if (isset($vars['secondname'])) {
                                         echo " " . htmlentities(strip_tags($vars['secondname']));
                                     }
-                                    echo " " . htmlentities(strip_tags($vars['lastname']));
+                                    echo " " . htmlentities(strip_tags((string) $vars['lastname']));
                                     ?>
                                 </td>
                             </tr>

@@ -67,7 +67,7 @@ class AdminCommentsModel extends RoxModelBase {
     public function getSingle($id)
     {
         $result = $this->createEntity('Comment')->findById($id);
-        $a = array();
+        $a = [];
         $a[] = $result;
         return $a;
     }
@@ -76,7 +76,7 @@ class AdminCommentsModel extends RoxModelBase {
     // @see MembersModel.checkCommentForm()
     public function checkUpdate(&$vars)
     {
-        $errors = array();
+        $errors = [];
 //        if (!isset($vars['TextFree'])) {
 //            $errors[] = 'Comment_NoCommentLengthSelected';
 //        }

@@ -74,7 +74,7 @@ class ProfileVisit extends RoxEntityBase
     {
         if (!$member->isLoaded())
         {
-            return array();
+            return [];
         }
         return $this->findByWhereMany("IdMember = {$member->getPKValue()} ORDER BY updated DESC");
     }
@@ -92,9 +92,9 @@ class ProfileVisit extends RoxEntityBase
     {
         if (!$member->isLoaded())
         {
-            return array();
+            return [];
         }
-        $return = array();
+        $return = [];
         if ($result = $this->dao->query(<<<SQL
             SELECT 
                 m.*, 

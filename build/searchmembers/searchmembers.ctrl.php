@@ -50,6 +50,7 @@ class SearchmembersController extends PAppController {
         } 
     }
     
+    #[\Override]
     public function __destruct() {
         unset($this->_model);
         unset($this->_view);
@@ -78,14 +79,10 @@ class SearchmembersController extends PAppController {
         if ($request[0] == 'quicksearch') {
             $error = false;
             // static pages
-            switch($request[1]) {
-                case '':
-                    $searchtext = isset($_GET["vars"]) ? $_GET['vars'] : ''; // Because of old way to use the QuickSearch with a get
-                    break;
-                default:
-                    $searchtext = $request[1] ;
-                    break;
-            }
+            $searchtext = match ($request[1]) {
+                '' => isset($_GET["vars"]) ? $_GET['vars'] : '',
+                default => $request[1],
+            };
         
             $TReturn=$this->_model->quicksearch($searchtext) ;
             if ((count($TReturn->TMembers)==1) and  (count($TReturn->TPlaces)==0)  and  (count($TReturn->TForumTags)==0)) {
@@ -127,12 +124,12 @@ class SearchmembersController extends PAppController {
             switch ($request[1]) {
                 case 'mapoff': {
                     $mapstyle = "mapoff"; 
-                    $_SESSION['SearchMembersTList'] = array();
+                    $_SESSION['SearchMembersTList'] = [];
                     break;
                 }
                 case 'mapon': {
                     $mapstyle = "mapon";
-                    $_SESSION['SearchMembersTList'] = array();
+                    $_SESSION['SearchMembersTList'] = [];
                     break;
                 }
                 case 'queries': {
@@ -177,7 +174,7 @@ class SearchmembersController extends PAppController {
                 }
                 else
                 {
-                    $vars = isset($_GET) ? $_GET : array();
+                    $vars = $_GET ?? [];
                     if(isset($request[2]) && $request[2] == "queries") $vars['queries'] = true;
                     if (!isset($TList)) $TList = $this->_model->search($vars);
                 }

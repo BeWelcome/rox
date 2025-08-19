@@ -9,6 +9,7 @@ class AccountSuspendedException extends CustomUserMessageAccountStatusException
     /**
      * {@inheritdoc}
      */
+    #[\Override]
     public function getMessageKey(): string
     {
         return 'loginerrorsuspended';

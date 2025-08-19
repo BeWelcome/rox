@@ -10,6 +10,7 @@ class SearchHomeLocationFormType extends MinimalSearchFormType
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
+    #[\Override]
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         parent::buildForm($builder, $options);

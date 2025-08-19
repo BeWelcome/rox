@@ -96,7 +96,7 @@ class MembersModel extends RoxModelBase
          */
         global $_SYSHCVOL;
         $email = $this->dao->escape($email);
-        $db_version = "<admincrypted>" . strtr($email, array('@' => '%40')) . "</admincrypted>";
+        $db_version = "<admincrypted>" . strtr($email, ['@' => '%40']) . "</admincrypted>";
         $result = $this->singleLookup(<<<SQL
 SELECT
     IdMember
@@ -172,8 +172,8 @@ SQL
           $member = $this->getMemberWithId($IdMember_rel);
           $words = $this->getWords();
           $all_relations = $member->all_relations();
-          $relation = array();
-          $relation['member'] = array();
+          $relation = [];
+          $relation['member'] = [];
           if (count($all_relations) > 0) {
               foreach ($all_relations as $rel) {
                 if ($rel->IdRelation == $myself->id)
@@ -181,7 +181,7 @@ SQL
               }
           }
           $all_relations_myself = $myself->all_relations();
-          $relation['myself'] = array();
+          $relation['myself'] = [];
           if (count($all_relations_myself) > 0) {
               foreach ($all_relations_myself as $rel) {
                 if ($rel->IdRelation == $member->id)
@@ -203,7 +203,7 @@ SQL
         $geonameid = 0;
         $latitude = null;
         $longitude = null;
-        $errors = array();
+        $errors = [];
         if (!isset($vars['location-geoname-id'])) {
             $errors['Geonameid'] = 'Geoname not set';
         } else {
@@ -250,9 +250,9 @@ SQL
             $this->logWrite($logMessage,"Members");
         }
 
-        return array(
+        return [
             'errors' => $errors,
-        );
+        ];
     }
 
 
@@ -330,7 +330,7 @@ WHERE
     /**
      * Delete a profile translation for a member
      */
-    public function delete_translation_multiple($trad_ids = array(),$IdOwner, $lang_id)
+    public function delete_translation_multiple($IdOwner, $lang_id, $trad_ids = [])
     {
         $words = new MOD_words();
         $count=0 ;
@@ -347,7 +347,7 @@ WHERE
         for($i = 0;$i < $count - 1; $i++) {
             for ($j = $i + 1; $j < $count; $j++) {
                 similar_text(
-                    $comments[$i]->TextFree, $comments[$j]->TextFree, $percent
+                    (string) $comments[$i]->TextFree, (string) $comments[$j]->TextFree, $percent
                 );
                 if ($percent > $weight) {
                     $similar++;
@@ -396,7 +396,7 @@ WHERE
     // checkCommentForm
     public function checkCommentForm(&$vars)
     {
-        $errors = array();
+        $errors = [];
         $member = $this->getLoggedInMember();
         $syshcvol = PVars::getObj('syshcvol');
         $max = count($syshcvol->CommentRelations);
@@ -524,7 +524,7 @@ WHERE
         if ($return != false) {
             // Create a note (member-notification) for this action
             $c_add = ($vars['Quality'] == "Bad") ? '_bad' : '';
-            $note = array(
+            $note = [
                 'IdMember' => $vars['IdMember'],
                 'IdRelMember' => $this->session->get('IdMember'),
                 'Type' => 'profile_comment' . $c_add,
@@ -534,7 +534,7 @@ WHERE
                 'replyLink'   => 'members/' . $commentSender->Username . '/comments/add',
                 'reportLink'  => 'members/' . $commentRecipient->Username . '/comment/' . $commentId . '/report',
                 'WordCode' => $noteWordCode
-            );
+            ];
 
             if (!$TCom || $TCom->DisplayInPublic == 1) {
                 $this->sendCommentNotification($note, $messageWordCode, $messageSubjectWordCode);
@@ -568,7 +568,7 @@ INSERT INTO
     values (
         ".$this->session->get("IdMember").",
         ".$vars['IdRelation'].",
-        '".stripslashes($vars['stype'])."',
+        '".stripslashes((string) $vars['stype'])."',
         ".$words->InsertInMTrad($this->dao->escape($vars['Comment']),"specialrelations.Comment",0).",
         now()
     )"
@@ -579,7 +579,7 @@ INSERT INTO
         } else $return = false;
         if ($return != false) {
             // Create a note (member-notification) for this action
-            $note = array('IdMember' => $vars['IdRelation'], 'IdRelMember' => $this->session->get('IdMember'), 'Type' => 'relation', 'Link' => 'members/'.$vars['IdOwner'].'/relations/add','WordCode' => 'Notify_relation_new');
+            $note = ['IdMember' => $vars['IdRelation'], 'IdRelMember' => $this->session->get('IdMember'), 'Type' => 'relation', 'Link' => 'members/'.$vars['IdOwner'].'/relations/add','WordCode' => 'Notify_relation_new'];
             $noteEntity = $this->createEntity('Note');
             $noteEntity->createNote($note);
         }
@@ -598,7 +598,7 @@ INSERT INTO
 UPDATE
     specialrelations
 SET
-    Type = '".stripslashes($vars['stype'])."',
+    Type = '".stripslashes((string) $vars['stype'])."',
     Comment = ".$words->InsertInMTrad($this->dao->escape($vars['Comment']),"specialrelations.Comment",0)."
 WHERE
     IdOwner = ".$this->session->get("IdMember")." AND
@@ -610,7 +610,7 @@ WHERE
         } else $return = false;
         if ($return != false) {
             // Create a note (member-notification) for this action
-            $note = array('IdMember' => $vars['IdRelation'], 'IdRelMember' => $this->session->get('IdMember'), 'Type' => 'relation', 'Link' => 'members/'.$vars['IdOwner'].'/relations/add','WordCode' => 'Notify_relation_update');
+            $note = ['IdMember' => $vars['IdRelation'], 'IdRelMember' => $this->session->get('IdMember'), 'Type' => 'relation', 'Link' => 'members/'.$vars['IdOwner'].'/relations/add','WordCode' => 'Notify_relation_update'];
             $noteEntity = $this->createEntity('Note');
             $noteEntity->createNote($note);
         }
@@ -622,7 +622,7 @@ WHERE
     {
         $return = true;
         $words = $this->getWords();
-        $TData = array();
+        $TData = [];
         $TData[1]= $this->singleLookup("select * from specialrelations where IdOwner=".$vars['IdOwner']." AND IdRelation=".$vars['IdRelation']);
         $TData[2]= $this->singleLookup("select * from specialrelations where IdOwner=".$vars['IdRelation']." AND IdRelation=".$vars['IdOwner']);
         if (isset($TData) && isset($TData[1]) && isset($TData[2]) > 0 && isset($vars['confirm'])) {
@@ -642,7 +642,7 @@ WHERE
                 if(!$qry) $return = false;
                 if ($return != false) {
                     // Create a note (member-notification) for this action
-                    $note = array('IdMember' => $IdRelation, 'IdRelMember' => $IdOwner, 'Type' => 'relation', 'Link' => 'members/'.$IdOwner.'/relations/add','WordCode' => 'Notify_relation_confirm_'.$vars['confirm']);
+                    $note = ['IdMember' => $IdRelation, 'IdRelMember' => $IdOwner, 'Type' => 'relation', 'Link' => 'members/'.$IdOwner.'/relations/add','WordCode' => 'Notify_relation_confirm_'.$vars['confirm']];
                     $noteEntity = $this->createEntity('Note');
                     $noteEntity->createNote($note);
                 }
@@ -721,14 +721,14 @@ WHERE
                 $member = $this->getMemberWithId(
                     $relation->IdOwner
                 );
-                $note = array(
+                $note = [
                     'IdMember' => $partnerRelation->IdOwner,
                     'IdRelMember' => $relation->IdOwner,
                     'Type' => 'relation',
                     'Link' => 'members/' . $member->Username
                         . '/relations/',
                     'WordCode' => 'Notify_relation_delete'
-                );
+                ];
                 $noteEntity = $this->createEntity('Note');
                 $noteEntity->createNote($note);
             }
@@ -758,7 +758,7 @@ WHERE
             $mysqlHash = $rr['mysql'];
 
             $mysqlCorrect = ($password === $mysqlHash);
-            $bcryptCorrect = password_verify( $vars['passwordold'], $password);
+            $bcryptCorrect = password_verify( (string) $vars['passwordold'], (string) $password);
 
             if (!( $mysqlCorrect | $bcryptCorrect )) {
                 $errors[] = 'ChangePasswordInvalidPasswordError';
@@ -855,7 +855,7 @@ ORDER BY
      */
     public function checkProfileForm(&$vars)
     {
-        $errors = array();
+        $errors = [];
 
         if (empty($vars['birth-date'])) {
             $errors[] = 'SignupErrorInvalidBirthDate';
@@ -873,7 +873,7 @@ ORDER BY
                 $errors[] = 'MembersErrorTooOld';
             }
         }
-        if (empty($vars['gender']) || !in_array($vars['gender'], array('male','female','other'))) {
+        if (empty($vars['gender']) || !in_array($vars['gender'], ['male','female','other'])) {
             $errors[] = 'SignupErrorInvalidGender';
         }
 
@@ -897,15 +897,10 @@ ORDER BY
         }
 
         if (!empty($_FILES['profile_picture']['name']) && ($_FILES['profile_picture']['error'] != UPLOAD_ERR_OK)) {
-        	switch ($_FILES['profile_picture']['error']) {
-        		case UPLOAD_ERR_INI_SIZE:
-        		case UPLOAD_ERR_FORM_SIZE:
-        			$errors[] = 'UploadedProfileImageTooBig';
-        			break;
-        		default:
-        			$errors[] = 'ProfileImageUploadFailed';
-        			break;
-        	}
+        	$errors[] = match ($_FILES['profile_picture']['error']) {
+                UPLOAD_ERR_INI_SIZE, UPLOAD_ERR_FORM_SIZE => 'UploadedProfileImageTooBig',
+                default => 'ProfileImageUploadFailed',
+            };
         }
         return $errors;
     }
@@ -933,7 +928,7 @@ ORDER BY
 
     public function validateBirthdate($birthdate)
     {
-        $birthdate = str_replace(array('/','.'),'-',$birthdate);
+        $birthdate = str_replace(['/','.'],'-',$birthdate);
         if (preg_match('/^([1-2]\d\d\d)-([0-1]?[0-9])-([0-3]?[0-9])$/', $birthdate, $matches) || preg_match('/^([0-3]?[0-9])-([0-1]?[0-9])-([1-2]\d\d\d)$/', $birthdate, $matches))
         {
             if (strlen($matches[1]) == 4)
@@ -1038,17 +1033,17 @@ ORDER BY
         $m->HideBirthDate = $vars['HideBirthDate'];
         $m->HideGender = $vars['HideGender'];
         $m->ProfileSummary = $words->ReplaceInMTrad($vars['ProfileSummary'],"members.ProfileSummary", $IdMember, $m->ProfileSummary, $IdMember);
-        $m->WebSite = strip_tags($vars['WebSite']);
+        $m->WebSite = strip_tags((string) $vars['WebSite']);
         $m->Accomodation = $vars['Accomodation'];
         $m->hosting_interest = $vars['hosting_interest'];
         $m->Organizations = $words->ReplaceInMTrad($vars['Organizations'],"members.Organizations", $IdMember, $m->Organizations, $IdMember);
-        $m->Occupation = $words->ReplaceInMTrad(strip_tags($vars['Occupation']),"members.Occupation", $IdMember, $m->Occupation, $IdMember);
+        $m->Occupation = $words->ReplaceInMTrad(strip_tags((string) $vars['Occupation']),"members.Occupation", $IdMember, $m->Occupation, $IdMember);
         $m->ILiveWith = $words->ReplaceInMTrad($vars['ILiveWith'],"members.ILiveWith", $IdMember, $m->ILiveWith, $IdMember);
-        $m->MaxGuest = strip_tags($vars['MaxGuest']);
+        $m->MaxGuest = strip_tags((string) $vars['MaxGuest']);
         $m->MaxLenghtOfStay = $words->ReplaceInMTrad($vars['MaxLenghtOfStay'],"members.MaxLenghtOfStay", $IdMember, $m->MaxLenghtOfStay, $IdMember);
         $m->AdditionalAccomodationInfo = $words->ReplaceInMTrad($vars['AdditionalAccomodationInfo'],"members.AdditionalAccomodationInfo", $IdMember, $m->AdditionalAccomodationInfo, $IdMember);
-        $m->TypicOffer = strip_tags($vars['TypicOffer']);
-        $m->Restrictions = strip_tags($vars['Restrictions']);
+        $m->TypicOffer = strip_tags((string) $vars['TypicOffer']);
+        $m->Restrictions = strip_tags((string) $vars['Restrictions']);
         $m->OtherRestrictions = $words->ReplaceInMTrad($vars['OtherRestrictions'],"members.OtherRestrictions", $IdMember, $m->OtherRestrictions, $IdMember);
         $m->Hobbies = $words->ReplaceInMTrad($vars['Hobbies'],"members.Hobbies", $IdMember, $m->Hobbies, $IdMember);
         $m->Books = $words->ReplaceInMTrad($vars['Books'],"members.Books", $IdMember, $m->Books, $IdMember);
@@ -1073,18 +1068,18 @@ ORDER BY
 
         $cryptModule = new MOD_crypt();
         if ($vars["HomePhoneNumber"]!="cryptedhidden") {
-			$m->HomePhoneNumber = $cryptModule->NewReplaceInCrypted(addslashes(strip_tags($vars['HomePhoneNumber'])),"members.HomePhoneNumber",$IdMember, $m->HomePhoneNumber, $IdMember, $this->ShallICrypt($vars,"HomePhoneNumber"));
+			$m->HomePhoneNumber = $cryptModule->NewReplaceInCrypted(addslashes(strip_tags((string) $vars['HomePhoneNumber'])),"members.HomePhoneNumber",$IdMember, $m->HomePhoneNumber, $IdMember, $this->ShallICrypt($vars,"HomePhoneNumber"));
 		}
 		if ($vars["CellPhoneNumber"]!="cryptedhidden") {
-			$m->CellPhoneNumber = $cryptModule->NewReplaceInCrypted(addslashes(strip_tags($vars['CellPhoneNumber'])),"members.CellPhoneNumber",$IdMember, $m->CellPhoneNumber, $IdMember, $this->ShallICrypt($vars,"CellPhoneNumber"));
+			$m->CellPhoneNumber = $cryptModule->NewReplaceInCrypted(addslashes(strip_tags((string) $vars['CellPhoneNumber'])),"members.CellPhoneNumber",$IdMember, $m->CellPhoneNumber, $IdMember, $this->ShallICrypt($vars,"CellPhoneNumber"));
 		}
 		if ($vars["WorkPhoneNumber"]!="cryptedhidden") {
-			$m->WorkPhoneNumber = $cryptModule->NewReplaceInCrypted(addslashes(strip_tags($vars['WorkPhoneNumber'])),"members.WorkPhoneNumber",$IdMember, $m->WorkPhoneNumber, $IdMember, $this->ShallICrypt($vars,"WorkPhoneNumber"));
+			$m->WorkPhoneNumber = $cryptModule->NewReplaceInCrypted(addslashes(strip_tags((string) $vars['WorkPhoneNumber'])),"members.WorkPhoneNumber",$IdMember, $m->WorkPhoneNumber, $IdMember, $this->ShallICrypt($vars,"WorkPhoneNumber"));
 		}
 
         if ($vars["Zip"] != "cryptedhidden") {
             $this->logWrite("in members.model updateprofile() Before Zip update addresss.Zip=" . $m->address->Zip, "Debug");
-            $cryptId = $cryptModule->NewReplaceInCrypted($this->dao->escape(strip_tags($vars['Zip'])), "addresses.Zip", $m->IdAddress, $m->address->Zip, $IdMember, $this->ShallICrypt($vars, "Zip"));
+            $cryptId = $cryptModule->NewReplaceInCrypted($this->dao->escape(strip_tags((string) $vars['Zip'])), "addresses.Zip", $m->IdAddress, $m->address->Zip, $IdMember, $this->ShallICrypt($vars, "Zip"));
 
             // Update addresses table if a new crypted zip value was added
             if ($cryptId != $m->address->Zip) {
@@ -1094,7 +1089,7 @@ ORDER BY
             $this->logWrite("in members.model updateprofile() After Zip update addresss.Zip=". $m->address->Zip . " \$cryptId=" . $cryptId, "Debug");
         }
         if ($vars["HouseNumber"] != "cryptedhidden") {
-            $cryptId = $cryptModule->NewReplaceInCrypted($this->dao->escape(strip_tags($vars['HouseNumber'])), "addresses.HouseNumber", $m->IdAddress, $m->address->HouseNumber, $IdMember, $this->ShallICrypt($vars, "Address"));
+            $cryptId = $cryptModule->NewReplaceInCrypted($this->dao->escape(strip_tags((string) $vars['HouseNumber'])), "addresses.HouseNumber", $m->IdAddress, $m->address->HouseNumber, $IdMember, $this->ShallICrypt($vars, "Address"));
 
             // Update addresses table if a new crypted HouseNumber value was added
             if ($cryptId != $m->address->HouseNumber) {
@@ -1102,7 +1097,7 @@ ORDER BY
             }
         }
 		if ($vars["Street"]!="cryptedhidden") {
-			$cryptId = $cryptModule->NewReplaceInCrypted($this->dao->escape(strip_tags($vars['Street'])),"addresses.StreetName",$m->IdAddress,$m->address->StreetName,$IdMember,$this->ShallICrypt($vars, "Address"));
+			$cryptId = $cryptModule->NewReplaceInCrypted($this->dao->escape(strip_tags((string) $vars['Street'])),"addresses.StreetName",$m->IdAddress,$m->address->StreetName,$IdMember,$this->ShallICrypt($vars, "Address"));
             // Update addresses table if a new crypted StreetName value was added
             if ($cryptId != $m->address->StreetName) {
                 $m->setCryptedStreetName($cryptId);
@@ -1114,7 +1109,7 @@ ORDER BY
         foreach($Relations as $Relation) {
             if (($words->mInTrad($Relation->Comment,$vars['profile_language'])!=$vars["RelationComment_".$Relation->id])
                 and (!empty($vars["RelationComment_".$Relation->id])))  {
-                $IdTrad = $words->ReplaceInMTrad(strip_tags($vars["RelationComment_".$Relation->id]),"specialrelations.Comment", $Relation->id, $Relation->Comment, $IdMember);
+                $IdTrad = $words->ReplaceInMTrad(strip_tags((string) $vars["RelationComment_".$Relation->id]),"specialrelations.Comment", $Relation->id, $Relation->Comment, $IdMember);
                 // Empty comments have trad id 0. Causing ReplaceInMTrad to create
                 // a new trad id and returning the new number.
                 if ($IdTrad != $Relation->id) {
@@ -1126,13 +1121,13 @@ ORDER BY
 
         $cryptModule = new MOD_crypt();
         if ($vars["chat_SKYPE"]!="cryptedhidden") {
-            $m->chat_SKYPE = $cryptModule->NewReplaceInCrypted(addslashes(strip_tags($vars['chat_SKYPE'])),"members.chat_SKYPE",$IdMember, $m->chat_SKYPE, $IdMember, $this->ShallICrypt($vars,"chat_SKYPE"));
+            $m->chat_SKYPE = $cryptModule->NewReplaceInCrypted(addslashes(strip_tags((string) $vars['chat_SKYPE'])),"members.chat_SKYPE",$IdMember, $m->chat_SKYPE, $IdMember, $this->ShallICrypt($vars,"chat_SKYPE"));
         }
         if ($vars["chat_Others"]!="cryptedhidden") {
-            $m->chat_Others = $cryptModule->NewReplaceInCrypted(addslashes(strip_tags($vars['chat_Others'])),"members.chat_Others",$IdMember, $m->chat_Others, $IdMember, $this->ShallICrypt($vars,"chat_Others"));
+            $m->chat_Others = $cryptModule->NewReplaceInCrypted(addslashes(strip_tags((string) $vars['chat_Others'])),"members.chat_Others",$IdMember, $m->chat_Others, $IdMember, $this->ShallICrypt($vars,"chat_Others"));
         }
         if ($vars["chat_GOOGLE"]!="cryptedhidden") {
-            $m->chat_GOOGLE = $cryptModule->NewReplaceInCrypted(addslashes(strip_tags($vars['chat_GOOGLE'])),"members.chat_GOOGLE",$IdMember,$m->chat_GOOGLE, $IdMember, $this->ShallICrypt($vars,"chat_GOOGLE"));
+            $m->chat_GOOGLE = $cryptModule->NewReplaceInCrypted(addslashes(strip_tags((string) $vars['chat_GOOGLE'])),"members.chat_GOOGLE",$IdMember,$m->chat_GOOGLE, $IdMember, $this->ShallICrypt($vars,"chat_GOOGLE"));
         }
 
         if ($IdMember == $this->session->get('IdMember'))
@@ -1161,21 +1156,21 @@ ORDER BY
 
         $birthDate = $vars['birth-date'];
 
-        $vars['BirthYear'] = substr($birthDate, 0,4);
-        $vars['BirthMonth'] = substr($birthDate, 5,2);
-        $vars['BirthDay'] = substr($birthDate, 8, 2);
+        $vars['BirthYear'] = substr((string) $birthDate, 0,4);
+        $vars['BirthMonth'] = substr((string) $birthDate, 5,2);
+        $vars['BirthDay'] = substr((string) $birthDate, 8, 2);
         $vars['BirthDate'] = $birthDate;
         if (!isset($vars['HideBirthDate'])) $vars['HideBirthDate'] = 'No';
 
         // update $vars for $languages
         if(!isset($vars['languages_selected'])) {
-            $vars['languages_selected'] = array();
+            $vars['languages_selected'] = [];
         }
         $ii = 0;
         $ii2 = 0;
-        $lang_used = array();
+        $lang_used = [];
         foreach($vars['memberslanguages'] as $lang) {
-            if (ctype_digit($lang) and !in_array($lang,$lang_used)) { // check $lang is numeric, hence a legal IdLanguage
+            if (ctype_digit((string) $lang) and !in_array($lang,$lang_used)) { // check $lang is numeric, hence a legal IdLanguage
                 $vars['languages_selected'][$ii] = new \stdClass;
                 $vars['languages_selected'][$ii]->IdLanguage = $lang;
                 $vars['languages_selected'][$ii]->Level = $vars['memberslanguageslevel'][$ii2];
@@ -1249,17 +1244,17 @@ ORDER BY
             $languageCode = $toMember->getLanguagePreference();
 
             // Prepare email content
-            $subject = $words->getRaw($subjectWordCode, array(), $languageCode);
+            $subject = $words->getRaw($subjectWordCode, [], $languageCode);
             $quality = $words->getRaw('CommentQuality'.$note['Quality'].'InSentence', [], $languageCode);
 
            $body = $words->getRaw($messageWordCode,
-                                   array($toMember->Username,
+                                   [$toMember->Username,
                                          $fromMember->Username,
                                          $quality,
                                          $note['commentText'],
                                          $commentsUrl,
                                          $replyUrl,
-                                         $reportUrl),
+                                         $reportUrl],
                                    $languageCode);
             // TODO: Error handling
             $toMember->sendMail($subject, $body);
@@ -1285,10 +1280,10 @@ ORDER BY
         if (!empty($feedback))
         {
             $feedback_model = new FeedbackModel($this->session);
-            $feedback_model->sendRetiringFeedback(array(
+            $feedback_model->sendRetiringFeedback([
                 "IdCategory"       => FeedbackModel::DELETE_PROFILE,
                 "FeedbackQuestion" => $feedback,
-            ));
+            ]);
         }
     }
 
@@ -1373,10 +1368,10 @@ ORDER BY
                 addresses
             WHERE
                 IdMember = :memberId
-            ", array(':memberId' => $member->id)
+            ", [':memberId' => $member->id]
         );
         if (count($rows) != 0) {
-            $cryptedFields = array();
+            $cryptedFields = [];
             foreach ($rows as $row) {
                 $cryptedFields[] = $row->HouseNumber;
                 $cryptedFields[] = $row->StreetName;
@@ -1397,7 +1392,7 @@ ORDER BY
             WHERE
                 IdMember = :memberId
             ");
-            $query->execute(array('memberId' => $member->id));
+            $query->execute(['memberId' => $member->id]);
         }
 
         // Now remove link between members table and addresses
@@ -1413,10 +1408,10 @@ ORDER BY
                 members
             WHERE
                 id = :memberId
-            ", array('memberId' => $member->id)
+            ", ['memberId' => $member->id]
         );
         if (count($rows) != 0) {
-            $cryptedIds = array();
+            $cryptedIds = [];
             foreach ($rows as $row) {
                 foreach ($row as $key => $value) {
                     // Collect original value
@@ -1453,11 +1448,11 @@ ORDER BY
                 members
             WHERE
                 id = :memberId
-            ", array(
+            ", [
                 'memberId' => $member->id
-            )
+            ]
         );
-        $tradIds = array();
+        $tradIds = [];
         foreach($rows as $row) {
             foreach($row as $key => $value) {
                 // Collect original value
@@ -1474,9 +1469,9 @@ ORDER BY
                 AND IdTrad IN ( '" . implode("', '", $tradIds) . "' )
                 ");
         $query->execute(
-            array(
+            [
                 ':memberId' => $member->id
-            )
+            ]
         );
         return $member;
     }
@@ -1534,9 +1529,9 @@ ORDER BY
                 IdMember = :memberId
         ");
         $query->execute(
-            array(
+            [
                 ':memberId' => $member->id
-            )
+            ]
         );
         return $member;
     }
@@ -1576,7 +1571,7 @@ ORDER BY
     private function _removeProfilePictures(Member $member)
     {
         $memberPath = $this->avatarDir->dirName() . '/' . $member->id;
-        $suffixes = array("_xs", "_30_30", "_150", "_200", "_500", "_original", "");
+        $suffixes = ["_xs", "_30_30", "_150", "_200", "_500", "_original", ""];
         foreach($suffixes as $suffix) {
             $filename =  $memberPath . $suffix;
             if (file_exists($filename)) {
@@ -1607,13 +1602,13 @@ ORDER BY
         $cryptedFields = $entity->get_crypted_fields();
 
         $remainingColumns = array_diff($columns, $tradIdFields, $cryptedFields,
-            array(
+            [
                 'id',
                 'Status',
                 'Username',
                 'password',
                 'Accomodation'
-            )
+            ]
         );
 
         $rawMembers = $this->pdoBulkLookup("
@@ -1705,7 +1700,7 @@ ORDER BY
      * Get all languages with given condition
      */
     private function get_all_languages_where($where) {
-        $AllLanguages = array();
+        $AllLanguages = [];
         $str = "
             SELECT SQL_CACHE
                 l.Name AS Name,

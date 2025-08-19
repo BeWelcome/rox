@@ -15,13 +15,10 @@ use Symfony\Contracts\Service\Attribute\Required;
 class WikiModel
 {
     use ManagerTrait;
-
-    private EntityManagerInterface $entityManager;
     private HtmlRenderer $roxWikiParserBackend;
 
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(private EntityManagerInterface $entityManager)
     {
-        $this->entityManager = $entityManager;
     }
 
     #[Required]
@@ -44,15 +41,15 @@ class WikiModel
 
     public function getPagename($pageTitle): string
     {
-        if (str_starts_with($pageTitle, 'Group ')) {
-            $pageTitle = str_replace('Group ', 'Group_', trim($pageTitle));
+        if (str_starts_with((string) $pageTitle, 'Group ')) {
+            $pageTitle = str_replace('Group ', 'Group_', trim((string) $pageTitle));
         }
 
-        if (str_starts_with($pageTitle, 'Group_')) {
-            return str_replace(' ', '', trim($pageTitle));
+        if (str_starts_with((string) $pageTitle, 'Group_')) {
+            return str_replace(' ', '', trim((string) $pageTitle));
         }
 
-        return str_replace(' ', '_', trim($pageTitle));
+        return str_replace(' ', '_', trim((string) $pageTitle));
     }
 
     /**

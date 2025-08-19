@@ -22,16 +22,16 @@ $callback_tag = $this->layoutkit->formkit->setPostCallback('MembersController', 
 $member = $this->member;
 $modCrypt = new MOD_crypt();
 $m = new \stdClass();
-$m->firstname = $modCrypt->MemberReadCrypted($member->FirstName,'');
-$m->secondname = $modCrypt->MemberReadCrypted($member->SecondName,'');
-$m->lastname = $modCrypt->MemberReadCrypted($member->LastName,'');
+$m->firstname = $modCrypt->MemberReadCrypted($member->FirstName);
+$m->secondname = $modCrypt->MemberReadCrypted($member->SecondName);
+$m->lastname = $modCrypt->MemberReadCrypted($member->LastName);
 $m->geonameId = $member->IdCity;
 $m->street = $modCrypt->MemberReadCrypted($member->address->StreetName);
 $m->housenumber = $modCrypt->MemberReadCrypted($member->address->HouseNumber);
 $m->zip = $modCrypt->MemberReadCrypted($member->address->Zip);
-$m->birthday = date("d",strtotime($member->BirthDate));
-$m->birthmonth = date("m",strtotime($member->BirthDate));
-$selYear = date("Y",strtotime($member->BirthDate));
+$m->birthday = date("d",strtotime((string) $member->BirthDate));
+$m->birthmonth = date("m",strtotime((string) $member->BirthDate));
+$selYear = date("Y",strtotime((string) $member->BirthDate));
 $birthYearOptions = buildBirthYearOptions($selYear);
 $m->gender = $member->Gender;
 
@@ -46,7 +46,7 @@ if (!$mem_redirect = $this->layoutkit->formkit->getMemFromRedirect()) {
         $vars['geonamename'] = $Geo->getDataById($vars['geonameId'])->name;
         $vars['geonamecountry'] = '';
     if (!isset($vars['errors']))
-        $vars['errors'] = array();
+        $vars['errors'] = [];
 } else {
     $vars = $mem_redirect->post;
 }

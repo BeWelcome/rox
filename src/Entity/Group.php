@@ -11,6 +11,7 @@ use App\Doctrine\GroupType;
 use App\Doctrine\MemberStatusType;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\Common\Collections\Expr\Comparison;
 use Doctrine\ORM\Event\PostLoadEventArgs;
@@ -18,105 +19,72 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Persistence\ObjectManager;
 
 /**
- * Group.
- *
+ * Do not check entities with PHPMD
  *
  * @SuppressWarnings("PHPMD")
- * Auto generated class do not check mess
  */
 #[ORM\Table(name: 'groups')]
 #[ORM\Entity(repositoryClass: \App\Repository\GroupRepository::class)]
 #[ORM\HasLifecycleCallbacks]
 class Group
 {
-    public const NOT_APPROVED = 0;
-    public const APPROVED = 1;
-    public const DISMISSED = 2;
-    public const IN_DISCUSSION = 3;
-    public const APPROVED_CLOSED = 4;
-    public const DISMISSED_CLOSED = 5;
-    public const IN_DISCUSSION_CLOSED = 6;
+    public const int NOT_APPROVED = 0;
+    public const int APPROVED = 1;
+    public const int DISMISSED = 2;
+    public const int IN_DISCUSSION = 3;
+    public const int APPROVED_CLOSED = 4;
+    public const int DISMISSED_CLOSED = 5;
+    public const int IN_DISCUSSION_CLOSED = 6;
 
-    public const OPEN = [
+    public const array OPEN = [
         self::NOT_APPROVED, self::IN_DISCUSSION,
     ];
 
-    public const HANDLED = [
+    public const array HANDLED = [
         self::APPROVED, self::DISMISSED,
     ];
 
-    public const CLOSED = [
+    public const array CLOSED = [
         self::APPROVED_CLOSED, self::DISMISSED_CLOSED, self::IN_DISCUSSION_CLOSED,
     ];
 
-    /**
-     * @var string
-     */
     #[ORM\Column(name: 'Name', type: 'string', length: 40, nullable: false)]
-    private $name;
+    private string $name;
 
-    /**
-     * @var string
-     */
     #[ORM\Column(name: 'Type', type: 'group_type', nullable: false)]
-    private $type = GroupType::PUBLIC;
+    private string $type = GroupType::PUBLIC;
 
-    /**
-     * @var DateTime
-     */
     #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
-    private $created;
+    private DateTime $created;
 
-    /**
-     * @var string
-     */
     #[ORM\Column(name: 'Picture', type: 'text', length: 65535, nullable: false)]
-    private $picture;
+    private string $picture;
 
-    /**
-     * @var string
-     */
     #[ORM\Column(name: 'MoreInfo', type: 'text', length: 65535, nullable: false)]
-    private $moreInfo = '';
+    private string $moreInfo = '';
 
-    /**
-     * @var int
-     */
     #[ORM\Column(name: 'IdDescription', type: 'integer', nullable: false)]
-    private $idDescription = 0;
+    private int $idDescription = 0;
 
-    /** @var ArrayCollection
-     */
     #[ORM\JoinTable(name: 'groups_trads')]
     #[ORM\JoinColumn(name: 'group_id', referencedColumnName: 'id')]
     #[ORM\InverseJoinColumn(name: 'trad_id', referencedColumnName: 'id', unique: true)]
-    #[ORM\ManyToMany(targetEntity: \MemberTranslation::class, fetch: 'LAZY')]
-    private $descriptions;
+    #[ORM\ManyToMany(targetEntity: MemberTranslation::class, fetch: 'LAZY')]
+    private Collection $descriptions;
 
-    /** @var ArrayCollection
-     */
-    #[ORM\OneToMany(targetEntity: \GroupMembership::class, mappedBy: 'group', cascade: ['persist', 'remove'], orphanRemoval: true)]
-    private $groupMemberships;
+    #[ORM\OneToMany(targetEntity: GroupMembership::class, mappedBy: 'group', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    private Collection $groupMemberships;
 
-    /**
-     * @var string
-     */
     #[ORM\Column(name: 'VisiblePosts', type: 'string', nullable: false)]
-    private $visibleposts = 'yes';
+    private string $visibleposts = 'yes';
 
-    /**
-     * @var bool
-     */
     #[ORM\Column(name: 'approved', type: 'smallint', nullable: true)]
-    private $approved = self::NOT_APPROVED;
+    private int $approved = self::NOT_APPROVED;
 
-    /**
-     * @var int
-     */
     #[ORM\Column(name: 'id', type: 'integer')]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
-    private $id;
+    private int $id;
 
     private ObjectManager $objectManager;
 
@@ -126,26 +94,14 @@ class Group
         $this->groupMemberships = new ArrayCollection();
     }
 
-    /**
-     * Set name.
-     *
-     * @param string $name
-     *
-     * @return Group
-     */
-    public function setName($name)
+    public function setName(string $name): self
     {
         $this->name = $name;
 
         return $this;
     }
 
-    /**
-     * Get name.
-     *
-     * @return string
-     */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -380,6 +336,13 @@ class Group
         return \in_array($member, $members, true);
     }
 
+    public function getMembership(Member $member): ?GroupMembership
+    {
+        $criterion = new Criteria();
+        $criterion->where(Criteria::expr()->eq('member', $member));
+
+        return $this->groupMemberships->matching($criterion)->first();
+    }
     /**
      * This function returns the actual admins of the group.
      *
@@ -404,7 +367,7 @@ class Group
         $admins = [];
         foreach ($privilegeScopes as $privilegeScope) {
             $admin = $privilegeScope->getMember();
-            if (false !== strpos(MemberStatusType::ACTIVE_WITH_MESSAGES, $admin->getStatus())) {
+            if (str_contains(MemberStatusType::ACTIVE_WITH_MESSAGES, $admin->getStatus())) {
                 $admins[] = $admin;
             }
         }
@@ -425,7 +388,7 @@ class Group
         );
     }
 
-    public function isPublic()
+    public function isPublic(): bool
     {
         return GroupType::PUBLIC === $this->type;
     }

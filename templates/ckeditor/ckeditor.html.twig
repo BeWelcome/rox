@@ -7,7 +7,6 @@
 {% endblock %}
 
 {% block _ckeditor_javascript %}
-    <script src="{{ asset('build/cktranslations/' ~ app.request.locale ~ '.js') }}"></script>
     {{ encore_entry_script_tags('roxeditor') }}
 {% endblock %}
 

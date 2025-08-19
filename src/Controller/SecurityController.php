@@ -2,14 +2,17 @@
 
 namespace App\Controller;
 
+use App\Entity\Member;
 use App\Security\AccountBannedException;
 use App\Security\AccountDeniedLoginException;
+use App\Security\AccountMailConfirmedException;
 use App\Security\AccountMailNotConfirmedException;
 use App\Security\AccountSuspendedException;
+use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Exception\AccountExpiredException;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
@@ -19,6 +22,12 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
  */
 class SecurityController extends AbstractController
 {
+    public function __construct(
+        public EntityManagerInterface $entityManager
+    )
+    {
+    }
+
     #[Route(path: '/login', name: 'login', defaults: ['access_denied_redirect' => '/'])]
     #[Route(path: '/login', name: 'security_login', defaults: ['access_denied_redirect' => '/'])]
     #[Route(path: '/login_check', name: 'security_check', defaults: ['access_denied_redirect' => '/'])]
@@ -33,7 +42,11 @@ class SecurityController extends AbstractController
         $error = $helper->getLastAuthenticationError();
 
         if ($error instanceof AccountMailNotConfirmedException || $error instanceof AccountMailConfirmedException) {
-            return $this->redirectToRoute('signup_finalize', ['username' => $lastUsername]);
+            $memberRepository = $this->entityManager->getRepository(Member::class);
+            $member = $memberRepository->loadUserByIdentifier($lastUsername);
+
+            // We can assume we found a member as the exception is only thrown if we had a member.
+            return $this->redirectToRoute('signup_finalize', ['username' => $member->getUsername()]);
         }
 
 //        $showInvalidCredentialsHint = false;
@@ -94,7 +107,7 @@ class SecurityController extends AbstractController
      * @throws Exception
      */
     #[Route(path: '/logout', name: 'security_logout')]
-    public function logoutAction()
+    public function logoutAction(): never
     {
         throw new Exception('This should never be reached!');
     }

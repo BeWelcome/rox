@@ -17,11 +17,9 @@ use Doctrine\ORM\Mapping as ORM;
 use Exception;
 
 /**
- * ForumThread.
- *
+ * Do not check entities with PHPMD
  *
  * @SuppressWarnings("PHPMD")
- * Auto generated class do not check mess
  */
 #[ORM\Table(name: 'forums_threads')]
 #[ORM\Index(name: 'first_postid', columns: ['first_postid'])]
@@ -704,7 +702,7 @@ class ForumThread
         try {
             $groupName = $this->group->getName();
         }
-        catch (Exception $e)
+        catch (Exception)
         {
             $group = null;
         }

@@ -9,11 +9,8 @@ use PDO;
 
 class DoNotTranslateTranslationAdapter implements AdapterInterface
 {
-    private Connection $connection;
-
-    public function __construct(Connection $connection)
+    public function __construct(private readonly Connection $connection)
     {
-        $this->connection = $connection;
     }
 
     /**

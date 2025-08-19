@@ -16,11 +16,9 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * Message.
- *
+ * Do not check entities with PHPMD
  *
  * @SuppressWarnings("PHPMD")
- * Auto generated class do not check mess
  */
 #[ORM\Table(name: 'messages', options: ['collate' => 'utf8mb4_general_ci', 'charset' => 'utf8mb4'])]
 #[ORM\Index(name: 'IdParent', columns: ['IdParent', 'IdReceiver', 'IdSender'])]
@@ -328,7 +326,7 @@ class Message
         return null === $this->firstRead;
     }
 
-    public function setSubject(Subject $subject = null): self
+    public function setSubject(?Subject $subject = null): self
     {
         $this->subject = $subject;
 
@@ -340,7 +338,7 @@ class Message
         return $this->subject;
     }
 
-    public function setRequest(HostingRequest $request = null): self
+    public function setRequest(?HostingRequest $request = null): self
     {
         $this->request = $request;
 
@@ -354,7 +352,7 @@ class Message
 
     public function isDeletedByMember(Member $member): bool
     {
-        $deleteRequests = array_filter(explode(',', $this->getDeleteRequest()));
+        $deleteRequests = array_filter(explode(',', (string) $this->getDeleteRequest()));
 
         if ($member === $this->getReceiver()) {
             $key = array_search(DeleteRequestType::RECEIVER_DELETED, $deleteRequests, true);
@@ -383,7 +381,7 @@ class Message
 
     public function isPurgedByMember(Member $member): bool
     {
-        $deleteRequests = array_filter(explode(',', $this->getDeleteRequest()));
+        $deleteRequests = array_filter(explode(',', (string) $this->getDeleteRequest()));
         if ($member === $this->getReceiver()) {
             $key = array_search(DeleteRequestType::RECEIVER_PURGED, $deleteRequests, true);
             if (false !== $key) {

@@ -52,6 +52,7 @@ class GroupNewPostPage extends GroupsSubPage
         $this->visibilityCheckbox = $forumsView->getVisibilityCheckbox('GroupOnly', $threadVisibility, $group->id, true);
     }
 
+    #[\Override]
     protected function getSubmenuActiveItem() {
         return 'forum';
     }

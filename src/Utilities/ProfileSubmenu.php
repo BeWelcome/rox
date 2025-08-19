@@ -23,13 +23,9 @@ use Symfony\Component\Routing\RouterInterface;
 class ProfileSubmenu
 {
     private array $submenuItems = [];
-    private RouterInterface $routing;
-    private EntityManagerInterface $entityManager;
 
-    public function __construct(RouterInterface $routing, EntityManagerInterface $entityManager)
+    public function __construct(private readonly RouterInterface $routing, private readonly EntityManagerInterface $entityManager)
     {
-        $this->routing = $routing;
-        $this->entityManager = $entityManager;
     }
 
     public function getSubmenu(Member $member, Member $loggedInMember, array $parameters = []): array

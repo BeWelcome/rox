@@ -18,11 +18,13 @@ class TwitterBootstrap4TranslatedView extends TwitterBootstrapView
     /**
      * {@inheritdoc}
      */
+    #[\Override]
     public function getName(): string
     {
         return 'twitter_bootstrap4';
     }
 
+    #[\Override]
     protected function createDefaultTemplate(): Template
     {
         return new TwitterBootstrap4Template();

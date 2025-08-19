@@ -30,7 +30,7 @@ JeanYves notes : every display of a forum post content  goes trhu this template
 use App\Utilities\ForumUtilities;
 
 $words = new MOD_words();
-$styles = array('l-forum-single-post--dark', '');
+$styles = ['l-forum-single-post--dark', ''];
 if (!isset($topic)) {
     $topic = new stdClass();
     $topic->WithDetail = false;
@@ -123,7 +123,7 @@ if (($post->IdGroup > 0) && ($post->PostVisibility == "GroupOnly")) {
 
 // Todo : the title for translations pops up when the mouse goes on the link but the html inside it is strips, the todo is to popup something which also displays the html result
 
-                        $ssSentence = str_replace("\"", "&quot;", addslashes(strip_tags($Trad->Sentence, "<p><br /><br><strong><ul><li><a><img>")));
+                        $ssSentence = str_replace("\"", "&quot;", addslashes(strip_tags((string) $Trad->Sentence, "<p><br /><br><strong><ul><li><a><img>")));
                         $ssSentence = str_replace("\n", "", $ssSentence); // If we dont remove teh extraline breaks, javascript with on mosover for translation doesn't work
 //                      $ssTitle=addslashes(strip_tags(str_replace("<p>"," ",$Trad->Sentence))) ;
                         if ($jj == 0) {
@@ -143,7 +143,7 @@ if (($post->IdGroup > 0) && ($post->PostVisibility == "GroupOnly")) {
 
             <?php
             $forumUtilities = new ForumUtilities();
-            $postContent = $forumUtilities->RemoveFQDN($words->fTrad($post->IdContent));
+            $postContent = $forumUtilities->removeFqdn($words->fTrad($post->IdContent));
 
 
             if (($post->PostDeleted == "Deleted")&&($this->BW_Right->HasRight("ForumModerator"))) {

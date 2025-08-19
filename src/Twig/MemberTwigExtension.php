@@ -13,14 +13,17 @@ use App\Repository\MessageRepository;
 use App\Utilities\ManagerTrait;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Routing\RouterInterface;
+use Twig\Attribute\AsTwigFunction;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\GlobalsInterface;
+use Twig\TwigFunction;
+use Twig\TwigTest;
 
 class MemberTwigExtension extends AbstractExtension implements GlobalsInterface
 {
     use ManagerTrait;
 
-    private const ALL_TEAMS = [
+    private const array ALL_TEAMS = [
         'communitynews' => [
             'trans' => 'AdminCommunityNews',
             'rights' => [Member::ROLE_ADMIN_COMMUNITYNEWS],
@@ -98,18 +101,12 @@ class MemberTwigExtension extends AbstractExtension implements GlobalsInterface
         ],
     ];
 
-    protected RouterInterface $router;
-
-    protected Security $security;
-
     protected ?Member $member;
 
     public function __construct(
-        RouterInterface $router,
-        Security $security
+        protected RouterInterface $router,
+        protected Security $security
     ) {
-        $this->router = $router;
-        $this->security = $security;
         $this->member = $this->security->getUser();
     }
 
@@ -134,6 +131,49 @@ class MemberTwigExtension extends AbstractExtension implements GlobalsInterface
     public function getName()
     {
         return self::class;
+    }
+
+    #[AsTwigFunction('profile_element')]
+    protected function profileElement(array $profileLanguages, string $locale, string $element): array
+    {
+        $element = 'members.' . $element;
+        if ($locale !== 'en' && isset($profileLanguages[$locale][$element])) {
+            if (
+                isset($profileLanguages['en'][$element]) &&
+                $profileLanguages[$locale][$element]->getSentence() !== $profileLanguages['en'][$element]->getSentence()
+            ) {
+                return [
+                    'locale' => $locale,
+                    'text' => $profileLanguages[$locale][$element]->getSentence(),
+                ];
+            }
+        }
+        if (isset($profileLanguages['en'][$element])) {
+            return [
+                'locale' => 'en',
+                'text' => $profileLanguages['en'][$element]->getSentence(),
+            ];
+        }
+
+        $firstLanguage = array_pop($profileLanguages);
+        if (isset($firstLanguage[$element])) {
+            return [
+                'locale' => $firstLanguage[$element]->getLanguage()->getShortCode(),
+                'text' => $firstLanguage[$element]->getSentence(),
+            ];
+        }
+
+        return [];
+    }
+
+    protected function profileElementExists(array $profileLanguages, string $locale, string $element): bool
+    {
+        $element = 'members.' . $element;
+        if (isset($profileLanguages[$locale][$element])) {
+            return true;
+        }
+
+        return false;
     }
 
     /**

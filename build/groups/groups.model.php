@@ -101,14 +101,14 @@ class GroupsModel extends  RoxModelBase
     {
         if (strlen($name) < 2)
         {
-            return array();
+            return [];
         }
         $term = ((strlen($name) < 3) ? $this->dao->escape($name) : '%' . $this->dao->escape($name) . '%');
         $memberEntity = $this->createEntity('Member');
         $memberEntity->sql_order = 'CHAR_LENGTH(username) ASC';
         $members = $memberEntity->findByWhereMany("Status IN ('Active', 'OutOfRemind') AND Username like '{$term}'", 0, 12);
 
-        $result = array();
+        $result = [];
         foreach ($members as $member)
         {
             if (!$member->getGroupMembership($group))
@@ -133,7 +133,7 @@ class GroupsModel extends  RoxModelBase
         {
             return $group->countAll();
         }
-        $strings = array();
+        $strings = [];
 
         foreach ($terms as $term)
         {
@@ -155,37 +155,17 @@ class GroupsModel extends  RoxModelBase
     {
         if (!empty($order))
         {
-            switch ($order)
-            {
-                case "nameasc":
-                    $order = 'Name ASC';
-                    break;
-                case "namedesc":
-                    $order = 'Name DESC';
-                    break;
-                case "membersasc":
-                    $order = "(SELECT COUNT(*) FROM membersgroups AS mg, members as m WHERE mg.IdGroup = g.id AND mg.Status = 'In' AND m.id = mg.idmember AND m.status IN (" . MemberStatusType::ACTIVE_ALL . ")) ASC, Name ASC";
-                    break;
-                case "membersdesc":
-                    $order = "(SELECT COUNT(*) FROM membersgroups AS mg, members as m WHERE mg.IdGroup = g.id AND mg.Status = 'In' AND m.id = mg.idmember AND m.status IN (" . MemberStatusType::ACTIVE_ALL . ")) DESC, Name ASC";
-                    break;
-                case "actasc":
-                    $order = "(SELECT MAX(forums_posts.create_time) FROM forums_threads, forums_posts WHERE g.id = forums_threads.IdGroup AND forums_posts.id = forums_threads.last_postid) ASC, Name ASC";
-                    break;
-                case "actdesc":
-                    $order = "(SELECT MAX(forums_posts.create_time) FROM forums_threads, forums_posts WHERE g.id = forums_threads.IdGroup AND forums_posts.id = forums_threads.last_postid) DESC, Name ASC";
-                    break;
-                case "createdasc":
-                    $order = 'created ASC, Name ASC';
-                    break;
-                case "createddesc":
-                    $order = 'created DESC, Name ASC';
-                    break;
-                case "category":
-                default:
-                    $order = 'created DESC, Name ASC';
-                    break;
-            }
+            $order = match ($order) {
+                "nameasc" => 'Name ASC',
+                "namedesc" => 'Name DESC',
+                "membersasc" => "(SELECT COUNT(*) FROM membersgroups AS mg, members as m WHERE mg.IdGroup = g.id AND mg.Status = 'In' AND m.id = mg.idmember AND m.status IN (" . MemberStatusType::ACTIVE_ALL . ")) ASC, Name ASC",
+                "membersdesc" => "(SELECT COUNT(*) FROM membersgroups AS mg, members as m WHERE mg.IdGroup = g.id AND mg.Status = 'In' AND m.id = mg.idmember AND m.status IN (" . MemberStatusType::ACTIVE_ALL . ")) DESC, Name ASC",
+                "actasc" => "(SELECT MAX(forums_posts.create_time) FROM forums_threads, forums_posts WHERE g.id = forums_threads.IdGroup AND forums_posts.id = forums_threads.last_postid) ASC, Name ASC",
+                "actdesc" => "(SELECT MAX(forums_posts.create_time) FROM forums_threads, forums_posts WHERE g.id = forums_threads.IdGroup AND forums_posts.id = forums_threads.last_postid) DESC, Name ASC",
+                "createdasc" => 'created ASC, Name ASC',
+                "createddesc" => 'created DESC, Name ASC',
+                default => 'created DESC, Name ASC',
+            };
         }
         else
         {
@@ -260,7 +240,7 @@ WHERE IdGroup=" . (int)$group->id . " AND IdMember=" . (int)$memberid;
     {
         if (!$this->session->has( 'IdMember' ))
         {
-            return array();
+            return [];
         }
         else
         {
@@ -299,7 +279,7 @@ WHERE IdGroup=" . (int)$group->id . " AND IdMember=" . (int)$memberid;
             (!$group_visits = unserialize($this->session->get('my_group_visits'))) ||
             (!is_array($group_visits))
         )) {
-            $group_visits = array();
+            $group_visits = [];
         }
         $group_visits[$groupId] = microtime(true);
 
@@ -316,9 +296,9 @@ WHERE IdGroup=" . (int)$group->id . " AND IdMember=" . (int)$memberid;
             (!$group_visits = unserialize($this->session->get('my_group_visits'))) ||
             (!is_array($group_visits))
         )) {
-            return array();
+            return [];
         } else {
-            $groups = array();
+            $groups = [];
             foreach($group_visits as $id => $time) {
                 $groups[] = $this->findGroup($id);
             }
@@ -337,7 +317,7 @@ WHERE IdGroup=" . (int)$group->id . " AND IdMember=" . (int)$memberid;
     {
         // check fields
 
-        $problems = array();
+        $problems = [];
 
         if (empty($input['Group_']))
         {
@@ -408,10 +388,10 @@ WHERE IdGroup=" . (int)$group->id . " AND IdMember=" . (int)$memberid;
             }
         }
 
-        return array(
+        return [
             'problems' => $problems,
             'group_id' => $groupId
-        );
+        ];
     }
 
     /**
@@ -568,24 +548,22 @@ WHERE IdGroup=" . (int)$group->id . " AND IdMember=" . (int)$memberid;
     {
         if (!is_object($group) || !$group->isLoaded())
         {
-            return array('General' => true);
+            return ['General' => true];
         }
         $picture = '';
         if (!empty($_FILES['group_image']) && $_FILES['group_image']['error'] !== 4){
             // when a temporary file exists
             if (!empty($_FILES['group_image']['tmp_name'])){
                 if (!$picture = $this->handleImageUpload()){
-                    return array('ImageUpload' => true);
+                    return ['ImageUpload' => true];
                 }
             } else {
                 // when the upload returned an error
                 if (!empty($_FILES['group_image']['error']) && $_FILES['group_image']['error']>0){
-                    switch ($_FILES['group_image']['error']){
-                        case 1:
-                            return array('ImageUploadTooBig' => true);
-                        default:
-                            return array('ImageUpload' => true);
-                    }
+                    return match ($_FILES['group_image']['error']) {
+                        1 => ['ImageUploadTooBig' => true],
+                        default => ['ImageUpload' => true],
+                    };
 
                 }
             }
@@ -789,7 +767,7 @@ WHERE IdGroup=" . (int)$group->id . " AND IdMember=" . (int)$memberid;
             $param['Type'] = 'message';
             $param['Link'] = "/group/{$group->getPKValue()}";
             $param['WordCode'] = '';
-            $param['TranslationParams'] = array('GroupsAcceptedIntoGroup', $group->Name);
+            $param['TranslationParams'] = ['GroupsAcceptedIntoGroup', $group->Name];
             $note = $this->createEntity('Note')->createNote($param);
             return $membership->updateStatus('In');
         }
@@ -831,7 +809,7 @@ WHERE IdGroup=" . (int)$group->id . " AND IdMember=" . (int)$memberid;
             $param['Type'] = 'message';
             $param['Link'] = "/group/{$group->getPKValue()}";
             $param['WordCode'] = '';
-            $param['TranslationParams'] = array('GroupsInvitedNote', $group->Name);
+            $param['TranslationParams'] = ['GroupsInvitedNote', $group->Name];
             $note = $this->createEntity('Note')->createNote($param);
         }
     }
@@ -932,7 +910,7 @@ WHERE IdGroup=" . (int)$group->id . " AND IdMember=" . (int)$memberid;
         $client = new Client($config);
         $query = new Search($client);
         $query
-            ->setIndex('forum_rt')
+            ->setTable('forum_rt')
             ->limit(1000)
             ->sort(['post_id' => 'DESC'])
         ;

@@ -16,11 +16,9 @@ use Doctrine\Persistence\Mapping\ClassMetadata;
 use Doctrine\Persistence\ObjectManager;
 
 /**
- * Specialrelations.
- *
+ * Do not check entities with PHPMD
  *
  * @SuppressWarnings("PHPMD")
- * Auto generated class do not check mess
  */
 #[ORM\Table(name: 'specialrelations')]
 #[ORM\Index(name: 'IdOwner', columns: ['IdOwner'])]

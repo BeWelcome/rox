@@ -28,21 +28,14 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 )]
 class SendCommentReminderCommand extends Command
 {
-    private EntityManagerInterface $entityManager;
-    private Mailer $mailer;
     private SymfonyStyle $io;
-    private LoggerInterface $logger;
 
     public function __construct(
-        EntityManagerInterface $entityManager,
-        LoggerInterface $logger,
-        Mailer $mailer
+        private readonly EntityManagerInterface $entityManager,
+        private readonly LoggerInterface $logger,
+        private readonly Mailer $mailer
     ) {
         parent::__construct();
-
-        $this->entityManager = $entityManager;
-        $this->mailer = $mailer;
-        $this->logger = $logger;
     }
 
     protected function configure(): void

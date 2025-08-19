@@ -34,25 +34,13 @@ class SendNotificationsCommand extends Command
 {
     use TranslatorTrait;
 
-    private EntityManagerInterface $entityManager;
-
-    private LoggerInterface $logger;
-
-    private Mailer $mailer;
-
-    private int $batchSize;
-
     public function __construct(
-        EntityManagerInterface $entityManager,
-        LoggerInterface $logger,
-        Mailer $mailer,
-        int $batchSize
+        private EntityManagerInterface $entityManager,
+        private LoggerInterface $logger,
+        private Mailer $mailer,
+        private int $batchSize
     ) {
         parent::__construct();
-        $this->batchSize = $batchSize;
-        $this->logger = $logger;
-        $this->entityManager = $entityManager;
-        $this->mailer = $mailer;
     }
 
     protected function configure(): void

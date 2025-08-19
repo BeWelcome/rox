@@ -32,6 +32,7 @@ Boston, MA  02111-1307, USA.
      */
 class GroupInvitePage extends GroupsBasePage
 {
+    #[\Override]
     protected function teaserContent()
     {
         // &gt; or &raquo; ?
@@ -43,6 +44,7 @@ class GroupInvitePage extends GroupsBasePage
         <?php
     }
 
+    #[\Override]
     protected function getSubmenuActiveItem()
     {
         return 'members';

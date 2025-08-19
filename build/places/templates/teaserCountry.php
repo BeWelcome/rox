@@ -22,10 +22,10 @@ Boston, MA  02111-1307, USA.
 
 */
 $words = new MOD_words();
-$countrycode = htmlspecialchars($countrycode);
-$region = htmlspecialchars($region);
+$countrycode = htmlspecialchars((string) $countrycode);
+$region = htmlspecialchars((string) $region);
 if (isset($country->name)){$country->name = htmlspecialchars($country->name);}
-$city = htmlspecialchars($city);
+$city = htmlspecialchars((string) $city);
 ?>
 
 <div id="teaser" class="page-teaser clearfix">

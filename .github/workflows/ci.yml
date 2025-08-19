@@ -6,7 +6,7 @@ on:
     - cron: 0 2 * * *
   # Run CI on every Pull Request
   pull_request: ~
-  # Run CI only on push on bootstrap4 branch
+  # Run CI only on push on develop branch
   push:
   workflow_dispatch:
 

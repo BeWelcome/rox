@@ -27,6 +27,8 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
+ * Do not check entities with PHPMD
+ *
  * @SuppressWarnings("PHPMD")
  */
 #[ORM\Table(name: 'members')]
@@ -85,7 +87,7 @@ class Member
     private string $status = "";
 
     #[ORM\JoinColumn(name: 'IdCity', referencedColumnName: 'geonameId', nullable: true)]
-    #[ORM\ManyToOne(targetEntity: \NewLocation::class)]
+    #[ORM\ManyToOne(targetEntity: NewLocation::class)]
     private ?NewLocation $city = null;
 
     #[ORM\Column(name: 'Latitude', type: 'decimal', precision: 10, scale: 7, nullable: true)]
@@ -103,7 +105,7 @@ class Member
     #[ORM\Column(name: 'SecondName', type: 'string', nullable: true)]
     private ?string $secondName = null;
 
-    #[ORM\Column(name: 'LastName', type: 'string', nullable: false)]
+    #[ORM\Column(name: 'LastName', type: 'string', nullable: true)]
     private string $lastName = '';
 
     #[ORM\Column(name: 'HideAttribute', type: 'integer', nullable: false)]
@@ -170,7 +172,7 @@ class Member
     private ?DateTime $birthdate = null;
 
     #[ORM\Column(name: 'AdressHidden', type: 'string', nullable: false)]
-    private string $adressHidden = 'Yes';
+    private string $addressHidden = 'Yes';
 
     #[ORM\Column(name: 'WebSite', type: 'text', length: 255, nullable: true)]
     private ?string $website = null;
@@ -247,13 +249,13 @@ class Member
     #[ORM\Column(name: 'hosting_interest', type: 'integer', nullable: true)]
     private ?int $hostingInterest = null;
 
-    #[ORM\OneToMany(targetEntity: \CryptedField::class, mappedBy: 'member', fetch: 'EXTRA_LAZY')]
+    #[ORM\OneToMany(targetEntity: CryptedField::class, mappedBy: 'member')]
     private Collection $fields;
 
-    #[ORM\OneToMany(targetEntity: \MemberTranslation::class, mappedBy: 'owner', indexBy: 'TableColumn', fetch: 'EAGER')]
+    #[ORM\OneToMany(targetEntity: MemberTranslation::class, mappedBy: 'owner')]
     private Collection $translatedFields;
 
-    #[ORM\OneToMany(targetEntity: \RightVolunteer::class, mappedBy: 'member', fetch: 'EXTRA_LAZY')]
+    #[ORM\OneToMany(targetEntity: RightVolunteer::class, mappedBy: 'member', fetch: 'EXTRA_LAZY')]
     private Collection $volunteerRights;
 
     #[ORM\OneToMany(targetEntity: GroupMembership::class, mappedBy: 'member', cascade: ['persist', 'remove'], orphanRemoval: true)]
@@ -264,9 +266,7 @@ class Member
 
     private array $memberFields;
 
-    private Collection $comments;
-
-    #[ORM\OneToMany(targetEntity: Relation::class, mappedBy: 'receiver', fetch: 'EXTRA_LAZY')]
+    #[ORM\OneToMany(targetEntity: Relation::class, mappedBy: 'receiver')]
     private Collection $relations;
 
     #[ORM\OneToMany(targetEntity: MemberPreference::class, mappedBy: 'member')]
@@ -285,7 +285,6 @@ class Member
         $this->translatedFields = new ArrayCollection();
         $this->groupMemberships = new ArrayCollection();
         $this->languageLevels = new ArrayCollection();
-        $this->comments = new ArrayCollection();
         $this->relations = new ArrayCollection();
         $this->preferences = new ArrayCollection();
     }
@@ -665,16 +664,16 @@ class Member
         return Carbon::instance($this->birthdate);
     }
 
-    public function setAdressHidden(string $adressHidden): self
+    public function setAddressHidden(string $addressHidden): self
     {
-        $this->adressHidden = $adressHidden;
+        $this->addressHidden = $addressHidden;
 
         return $this;
     }
 
-    public function getAdressHidden(): string
+    public function getAddressHidden(): string
     {
-        return $this->adressHidden;
+        return $this->addressHidden;
     }
 
     public function setHobbies(int $hobbies): self
@@ -839,11 +838,7 @@ class Member
 
     public function unserialize($serialized): void
     {
-        list(
-            $this->id,
-            $this->username,
-            $this->password,
-            ) = unserialize($serialized);
+        [$this->id, $this->username, $this->password, ] = unserialize($serialized);
     }
 
 
@@ -874,7 +869,7 @@ class Member
         if (null !== $volunteerRights) {
             foreach ($volunteerRights->getIterator() as $volunteerRight) {
                 if (0 !== $volunteerRight->getLevel()) {
-                    $roles[] = 'ROLE_ADMIN_' . strtoupper($volunteerRight->getRight()->getName());
+                    $roles[] = 'ROLE_ADMIN_' . strtoupper((string) $volunteerRight->getRight()->getName());
                 }
             }
 
@@ -925,16 +920,11 @@ class Member
             function ($groupMembership) {
                 try {
                     return $groupMembership->getGroup();
-                } catch (\Exception $e) {
+                } catch (\Exception) {
                 }
             },
             $this->groupMemberships->matching($criteria)->toArray()
         );
-    }
-
-    public function getComments(): Collection
-    {
-        return $this->comments;
     }
 
     public function addField(CryptedField $field): self
@@ -1019,7 +1009,7 @@ class Member
         $field = $this->fields->matching($criteria)->first();
         if (false !== $field && true === $decrypt) {
             $value = $field->getMemberCryptedValue();
-            $stripped = strip_tags($value);
+            $stripped = strip_tags((string) $value);
         }
 
         return $stripped;
@@ -1096,7 +1086,7 @@ class Member
 
         /** @var RightVolunteer $volunteerRight */
         foreach ($volunteerRights->getIterator() as $volunteerRight) {
-            if (strtolower($volunteerRight->getRight()->getName()) === $nameOfRight) {
+            if (strtolower((string) $volunteerRight->getRight()->getName()) === $nameOfRight) {
                 $level = $volunteerRight->getLevel();
             }
         }
@@ -1210,7 +1200,7 @@ class Member
                     // Make sure language exists in database
                     $language = $k->getLanguage();
                     $language->getName();
-                } catch(Exception $e) {
+                } catch(Exception) {
                     return false;
                 }
                 return true;
@@ -1395,7 +1385,7 @@ class Member
         $memberFields = [];
         foreach ($memberTranslations as $memberTranslation) {
             $tableColumn = $memberTranslation->getTableColumn();
-            if ('members.' !== substr($tableColumn, 0, 8)) {
+            if (!str_starts_with($tableColumn, 'members.')) {
                 continue;
             }
             $tableColumn = str_ireplace('members.', '', $tableColumn);
@@ -1506,7 +1496,7 @@ class Member
 
     public function getPasswordHasherName(): ?string
     {
-        if (preg_match('/^\*[0-9A-F]{40}$/', $this->getPassWord())) {
+        if (preg_match('/^\*[0-9A-F]{40}$/', (string) $this->getPassWord())) {
             // Use migrating password hasher in case of legacy password
             return null;
         }
@@ -1548,6 +1538,27 @@ class Member
 
     public function getTranslatedFields(): Collection
     {
-        return $this->translatedFields;
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->startsWith('tableColumn', 'members.'))
+            ->andWhere(Criteria::expr()->gt('translation', 0))
+        ;
+
+        return $this->translatedFields->matching($criteria);
+    }
+
+    public function getTranslatedFieldsIndexed(): array
+    {
+        $fields = [];
+        foreach($this->getTranslatedFields() as $field) {
+            $locale = $field->getLanguage()->getShortCode();
+            if ("" != trim((string) $field->getSentence())) {
+                if (!isset($fields[$locale])) {
+                    $fields[$locale] = [];
+                }
+                $fields[$locale][$field->getTableColumn()] = $field;
+            }
+        }
+
+        return $fields;
     }
 }

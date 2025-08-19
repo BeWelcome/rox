@@ -11,7 +11,7 @@ use Exception;
 use Gedmo\Translatable\Entity\Repository\TranslationRepository;
 use Gedmo\Translatable\Entity\Translation;
 use Manticoresearch\Client;
-use Manticoresearch\Index;
+use Manticoresearch\Table;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
@@ -33,19 +33,14 @@ class ManticoreIndicesGeonamesCommand extends Command
 {
     private const string GEONAMES_INDEX = 'geonames_rt';
     private int $chunkSize = 250000;
-
-    private EntityManagerInterface $entityManager;
     private SymfonyStyle $io;
-    private string $manticoreHost;
-    private int $manticorePort;
 
-    public function __construct(EntityManagerInterface $entityManager, string $manticoreHost, int $manticorePort)
-    {
+    public function __construct(
+        private readonly EntityManagerInterface $entityManager,
+        private readonly string $manticoreHost,
+        private readonly int $manticorePort
+    ) {
         parent::__construct();
-
-        $this->entityManager = $entityManager;
-        $this->manticoreHost = $manticoreHost;
-        $this->manticorePort = $manticorePort;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -75,10 +70,10 @@ class ManticoreIndicesGeonamesCommand extends Command
         return Command::SUCCESS;
     }
 
-    private function createGeonamesIndex(): ?Index
+    private function createGeonamesIndex(): ?Table
     {
         $client = new Client(['host' => $this->manticoreHost,'port' => $this->manticorePort]);
-        $index = $client->index('geonames_rt');
+        $index = $client->table('geonames_rt');
 
         try {
             $index->create(
@@ -117,7 +112,7 @@ class ManticoreIndicesGeonamesCommand extends Command
         return $index;
     }
 
-    private function addGeonamesDocuments(Index $index, OutputInterface $output)
+    private function addGeonamesDocuments(Table $index, OutputInterface $output): void
     {
         $this->io->note('Adding documents to geonames_rt from geo__names table.');
         $this->io->newLine();
@@ -178,7 +173,7 @@ class ManticoreIndicesGeonamesCommand extends Command
         }
     }
 
-    private function addAlternateNamesDocuments(Index $index, OutputInterface $output)
+    private function addAlternateNamesDocuments(Table $index, OutputInterface $output): void
     {
         $this->io->note('Adding documents to geonames_rt from geo__names_translations table.');
         $this->io->newLine();
@@ -242,18 +237,23 @@ class ManticoreIndicesGeonamesCommand extends Command
         }
     }
 
-    private function addGeonamesDocumentsToIndex(Index $index, NativeQuery $query, ProgressBar $progress): int
+    /**
+     * @SuppressWarnings("PHPMD.CyclomaticComplexity")
+     *
+     * Complexity is due to handling of Geonames (different feature codes) not because code is difficult to understand.
+     */
+    private function addGeonamesDocumentsToIndex(Table $index, NativeQuery $query, ProgressBar $progress): int
     {
         $locations = $query->getResult();
         $documents = [];
 
         /** @var NewLocation $location */
         foreach ($locations as $location) {
-            $isPlace = $location['feature_class'] === 'P' && substr($location['feature_code'], 0, 3) === 'PPL'
+            $isPlace = $location['feature_class'] === 'P' && str_starts_with((string) $location['feature_code'], 'PPL')
                 && $location['feature_code'] !== 'PPLH' && $location['feature_code'] !== 'PPLCH'
                 && $location['feature_code'] !== 'PPLX' && $location['feature_code'] !== 'PPLQ';
             $isCountry =
-                ($location['feature_class'] === 'A' && substr($location['feature_code'], 0, 3) === 'PCL'
+                ($location['feature_class'] === 'A' && str_starts_with((string) $location['feature_code'], 'PCL')
                     && $location['feature_code'] !== 'PRSH' && $location['feature_code'] !== 'PCLH')
                 || ($location['feature_code'] === 'TERR');
             $isAdmin = $location['feature_class'] === 'A' && !$isCountry;
@@ -277,8 +277,11 @@ class ManticoreIndicesGeonamesCommand extends Command
         }
         $count = \count($locations);
         unset($locations);
-        $index->addDocuments($documents);
-        $index->flush();
+
+        if ($count !== 0) {
+            $index->addDocuments($documents);
+            $index->flush();
+        }
 
         gc_collect_cycles();
 
@@ -317,19 +320,14 @@ class ManticoreIndicesGeonamesCommand extends Command
         return $progressBar;
     }
 
-    private function adaptLocale(string $locale)
+    private function adaptLocale(string $locale): string
     {
-        switch ($locale) {
-            case "zh-TW":
-                $locale = "zh-hant";
-                break;
-            case "zh-CN":
-                $locale = "zh-hans";
-                break;
-            case "pt-BR":
-                $locale = "pt-br";
-                break;
-        }
+        $locale = match ($locale) {
+            "zh-TW" => "zh-hant",
+            "zh-CN" => "zh-hans",
+            "pt-BR" => "pt-br",
+            default => $locale,
+        };
 
         return $locale;
     }

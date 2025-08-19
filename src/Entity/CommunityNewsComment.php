@@ -13,10 +13,9 @@ use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Community News Comments.
+ * Do not check entities with PHPMD
  *
  * @SuppressWarnings("PHPMD")
- * Auto generated class do not check mess
  */
 #[ORM\Table(name: 'community_news_comment')]
 #[ORM\Entity(repositoryClass: CommunityNewsCommentRepository::class)]

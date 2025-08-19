@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Throwable;
 
@@ -29,22 +29,11 @@ use Throwable;
 class AvatarController extends AbstractController
 {
     private const EXPIRY = 60 * 60 * 24; // One day
-    private const AVATAR_PATH = '../data/user/avatars/';
-    private const EMPTY_AVATAR_PATH = 'images/';
+    private const string AVATAR_PATH = '../data/user/avatars/';
+    private const string EMPTY_AVATAR_PATH = 'images/';
 
-    /** @var LoggerInterface */
-    private $logger;
-    private EntityManagerInterface $entityManager;
-    private TranslatorInterface $translator;
-
-    public function __construct(
-        LoggerInterface $logger,
-        EntityManagerInterface $entityManager,
-        TranslatorInterface $translator
-    ) {
-        $this->logger = $logger;
-        $this->entityManager = $entityManager;
-        $this->translator = $translator;
+    public function __construct(private readonly LoggerInterface $logger, private readonly EntityManagerInterface $entityManager, private readonly TranslatorInterface $translator)
+    {
     }
 
     #[Route(path: '/members/uploadavatar', methods: ['POST'])]
@@ -93,7 +82,7 @@ class AvatarController extends AbstractController
         if (!$this->avatarImageExists($member, $size)) {
             try {
                 $this->createAvatarImage($member, $size);
-            } catch (InvalidArgumentException $e) {
+            } catch (InvalidArgumentException) {
                 return $this->emptyAvatar($size);
             }
         }
@@ -108,7 +97,7 @@ class AvatarController extends AbstractController
         $imageManager = new ImageManager();
         try {
             $img = $imageManager->make($avatarFile->getRealPath())->orientate();
-        } catch (Throwable $e) {
+        } catch (Throwable) {
             return false;
         }
 

@@ -11,11 +11,8 @@ use Symfony\Component\Form\Exception\TransformationFailedException;
 
 class LocationRequestToLocationTransformer implements DataTransformerInterface
 {
-    private EntityManagerInterface $entityManager;
-
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(private readonly EntityManagerInterface $entityManager)
     {
-        $this->entityManager = $entityManager;
     }
 
     /**

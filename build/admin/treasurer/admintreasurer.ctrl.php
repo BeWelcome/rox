@@ -40,6 +40,7 @@ class AdminTreasurerController extends AdminBaseController
         $this->model = new AdminTreasurerModel();
     }
 
+    #[\Override]
     public function __destruct() {
         unset($this->model);
     }
@@ -52,7 +53,7 @@ class AdminTreasurerController extends AdminBaseController
      */
     public function treasurerOverview()
     {
-        list($member, $rights) = $this->checkRights('Treasurer');
+        [$member, $rights] = $this->checkRights('Treasurer');
         $page = new AdminTreasurerPage($this->model);
         return $page;
     }
@@ -86,10 +87,10 @@ class AdminTreasurerController extends AdminBaseController
         }
         if (!$success) {
             $mem_redirect->vars = $vars;
-            $mem_redirect->errors = array('AdminTreasurerDbUpdateFailed');
+            $mem_redirect->errors = ['AdminTreasurerDbUpdateFailed'];
             return false;
         }
-        return $this->router->url('admin_treasurer_overview', array(), false);
+        return $this->router->url('admin_treasurer_overview', [], false);
     }
 
     /**
@@ -100,7 +101,7 @@ class AdminTreasurerController extends AdminBaseController
      */
     public function treasurerEditCreateDonation()
     {
-        list($member, $rights) = $this->checkRights('Treasurer');
+        [$member, $rights] = $this->checkRights('Treasurer');
         $id = 0;
         if (isset($this->route_vars['id'])) {
             $id = $this->route_vars['id'];
@@ -129,11 +130,11 @@ class AdminTreasurerController extends AdminBaseController
         $success = $this->model->startDonationCampaign($vars);
         if (!$success) {
             $mem_redirect->vars = $vars;
-            $mem_redirect->errors = array('AdminTreasurerDbUpdateFailed');
+            $mem_redirect->errors = ['AdminTreasurerDbUpdateFailed'];
             return false;
         }
         $this->session->set( 'AdminTreasurerStatus', 'StartSuccess' );
-        return $this->router->url('admin_treasurer_overview', array(), false);
+        return $this->router->url('admin_treasurer_overview', [], false);
     }
 
     /**
@@ -144,7 +145,7 @@ class AdminTreasurerController extends AdminBaseController
      */
     public function treasurerStartDonationCampaign()
     {
-        list($member, $rights) = $this->checkRights('Treasurer');
+        [$member, $rights] = $this->checkRights('Treasurer');
         $page = new AdminTreasurerStartDonationCampaignPage($this->model);
         return $page;
     }
@@ -157,7 +158,7 @@ class AdminTreasurerController extends AdminBaseController
      */
     public function treasurerStopDonationCampaign()
     {
-        list($member, $rights) = $this->checkRights('Treasurer');
+        [$member, $rights] = $this->checkRights('Treasurer');
         $success = $this->model->stopDonationCampaign();
         if ($success) {
             $this->session->set( 'AdminTreasurerStatus', 'StopSuccess' );

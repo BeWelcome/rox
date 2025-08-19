@@ -12,7 +12,6 @@ class Thread extends RoxEntityBase
 
     public function __construct($thread_id = false)
     {
-        parent::__construct();
         if (intval($thread_id))
         {
             $this->findByThreadId(intval($thread_id));

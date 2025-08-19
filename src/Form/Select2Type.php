@@ -62,6 +62,7 @@ class Select2Type extends AbstractType
         $view->vars['attr'] = $attr;
     }
 
+    #[\Override]
     public function getParent(): string
     {
         return ChoiceType::class;

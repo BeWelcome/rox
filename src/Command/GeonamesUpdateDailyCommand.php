@@ -13,6 +13,11 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
+/**
+ * @SuppressWarnings("PHPMD.UnusedFormalParameter")
+ *
+ * \todo Command currently not used. Update to allow to use it.
+ */
 #[AsCommand(
     name: 'geonames:update:daily',
     description: 'Update the geonames data with the latest additions (no deletions!).',
@@ -20,12 +25,9 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
     hidden: false,
 )]class GeonamesUpdateDailyCommand extends Command
 {
-    private EntityManagerInterface $entityManager;
-
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(private readonly EntityManagerInterface $entityManager)
     {
         parent::__construct();
-        $this->entityManager = $entityManager;
     }
 
     private function fetchFile($url): array
@@ -35,7 +37,7 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
         if (!$handle) {
             return $content;
         }
-        while (false !== ($data = fgetcsv($handle, 0, "\t"))) {
+        while (false !== ($data = fgetcsv($handle, 0, "\t", escape: '\\'))) {
             $content[] = $data;
         }
 
@@ -78,15 +80,7 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
                         admin1 = :admin1,
                         moddate = :mod_date
                 ');
-                $statement->execute([
-                    ':geoname_id' => $change[0],
-                    ':name' => $connection->quote($change[1], ParameterType::STRING),
-                    ':fclass' => $change[6],
-                    ':fcode' => $change[7],
-                    ':country' => $change[8],
-                    ':admin1' => $change[10],
-                    ':mod_date' => $change[18],
-                ]);
+                $statement->execute();
                 if ('A' === $change[6]) {
                     // update geonamesadminunits accordingly
                     $statement = $connection->prepare('
@@ -101,15 +95,7 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
                             admin1 = :admin1,
                             moddate = :mod_date
     				');
-                    $statement->execute([
-                        ':geoname_id' => $change[0],
-                        ':name' => $connection->quote($change[1], ParameterType::STRING),
-                        ':fclass' => $change[6],
-                        ':fcode' => $change[7],
-                        ':country' => $change[8],
-                        ':admin1' => $change[10],
-                        ':mod_date' => $change[18],
-                    ]);
+                    $statement->execute();
                 }
             }
         }
@@ -119,7 +105,7 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
         foreach ($deletes as $delete) {
             $removeGeonameId = $delete[0];
             // handle duplication
-            if (0 === strpos('duplicate ', $delete[2])) {
+            if (str_starts_with('duplicate ', (string) $delete[2])) {
                 $newGeonameId = str_replace('duplicate ', '', $delete[2]);
                 $this->handleDuplicates($removeGeonameId, $newGeonameId);
             }
@@ -130,9 +116,7 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
                 WHERE
                     geonameid = :geoname_id
             ');
-            $statement->execute([
-                ':geoname_id' => $removeGeonameId,
-            ]);
+            $statement->execute();
         }
 
         return $count;
@@ -163,16 +147,7 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
                         iscolloquial = :iscolloquial,
                         ishistoric = :ishistoric
                 ');
-                $statement->execute([
-                    ':alternate_id' => $change[0],
-                    ':geoname_id' => $change[1],
-                    ':isolanguage' => $change[2],
-                    ':alternatename' => $connection->quote($change[3], ParameterType::STRING),
-                    ':ispreferred' => $change[4],
-                    ':isshort' => $change[5],
-                    ':iscolloquial' => $change[6],
-                    ':ishistoric' => $change[7],
-                ]);
+                $statement->execute();
             }
         }
 
@@ -187,10 +162,7 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
     				    alternatenameid = :alternate_id
     				    AND geonameid = :geoname_id
     		    ');
-                $statement->execute([
-                    ':alternate_id' => $delete[0],
-                    ':geoname_id' => $delete[1],
-                ]);
+                $statement->execute();
             }
         }
 
@@ -230,10 +202,7 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
                 WHERE
                     IdCity = :old_geoname_id
             ');
-        $statement->execute([
-            ':old_geoname_id' => $removeGeonameId,
-            ':new_geoname_id' => $newGeonameId,
-        ]);
+        $statement->execute();
 
         // Second update addresses table
         $statement = $connection->prepare('
@@ -244,10 +213,7 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
                 WHERE
                     IdCity = :old_geoname_id
             ');
-        $statement->execute([
-            ':old_geoname_id' => $removeGeonameId,
-            ':new_geoname_id' => $newGeonameId,
-        ]);
+        $statement->execute();
 
         // Third update activities table
         $statement = $connection->prepare('
@@ -259,10 +225,7 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
                     locationId = :old_geoname_id
             ');
 
-        $statement->execute([
-            ':old_geoname_id' => $removeGeonameId,
-            ':new_geoname_id' => $newGeonameId,
-        ]);
+        $statement->execute();
 
         $statement = $connection->prepare('
                 UPDATE
@@ -272,9 +235,6 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
                 WHERE
                     geonameid = :old_geoname_id
             ');
-        $statement->execute([
-            ':old_geoname_id' => $removeGeonameId,
-            ':new_geoname_id' => $newGeonameId,
-        ]);
+        $statement->execute();
     }
 }

@@ -21,15 +21,12 @@ class AddInitiatorCommand extends Command
     private array $initiators = [];
     private array $parents = [];
 
-    private EntityManagerInterface $entityManager;
-
     /**
      * TestAddinitiatorCommand constructor.
      */
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(private readonly EntityManagerInterface $entityManager)
     {
         parent::__construct();
-        $this->entityManager = $entityManager;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

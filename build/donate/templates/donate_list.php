@@ -33,14 +33,14 @@ $i18n = new MOD_i18n('date.php');
     $max=count($TDonationArray) ;
 
     for ($ii=0;$ii<$max;$ii++) {
-    $info_styles = array(0 => "class=\"blank\"", 1 => "class=\"highlight\"");
+    $info_styles = [0 => "class=\"blank\"", 1 => "class=\"highlight\""];
         static $iii = 0;
         $T=$TDonationArray[$ii] ;
         $string = $info_styles[($iii++%2)]; // this displays the <tr>
     if ($this->session->has( "IdMember" ) and ($T->IdMember==$this->session->get("IdMember"))) {
         $string .= "bgcolor=\"yellow\"";
     }
-        echo "<tr ",$string," align=left><td>",date("y/m/d",strtotime($T->created)),"</td>" ;
+        echo "<tr ",$string," align=left><td>",date("y/m/d",strtotime((string) $T->created)),"</td>" ;
         echo "<td>" ;
         printf ("%s %3.2f",$T->Money,$T->Amount) ;
         echo "</td>" ;

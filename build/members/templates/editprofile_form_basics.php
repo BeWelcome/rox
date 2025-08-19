@@ -23,7 +23,7 @@
                         <input class="o-input<?php if (isset($errorFirstName)) { ?> error-input-text<?php } ?>"
                                type="text"
                                name="FirstName"
-                               value="<?php echo htmlentities($vars['FirstName'], ENT_COMPAT, 'UTF-8'); ?>"/>
+                               value="<?php echo htmlentities((string) $vars['FirstName'], ENT_COMPAT, 'UTF-8'); ?>"/>
                     </div>
                     <div class="col-4 col-md-2 u-flex u-items-center"><div class="o-checkbox">
                         <input type="checkbox" value="Yes" name="IsHidden_FirstName"
@@ -41,7 +41,7 @@
                     <label for="SecondName" class="col-md-3 col-form-label"><?= $words->get('SecondName') ?></label>
                     <div class="col-8 col-md-7">
                         <input type="text" name="SecondName" class="o-input"
-                               value="<?php echo htmlentities($vars['SecondName'], ENT_COMPAT, 'UTF-8'); ?>"/>
+                               value="<?php echo htmlentities((string) $vars['SecondName'], ENT_COMPAT, 'UTF-8'); ?>"/>
                     </div>
                     <div class="col-4 col-md-2 u-flex u-items-center"><div class="o-checkbox">
                         <input type="checkbox" value="Yes" name="IsHidden_SecondName"
@@ -59,7 +59,7 @@
                         <input class="o-input <?php if (isset($errorLastName)) { ?>error-input-text<?php } ?>"
                                type="text"
                                name="LastName"
-                               value="<?php echo htmlentities($vars['LastName'], ENT_COMPAT, 'UTF-8'); ?>"/>
+                               value="<?php echo htmlentities((string) $vars['LastName'], ENT_COMPAT, 'UTF-8'); ?>"/>
                     </div>
                     <div class="col-4 col-md-2 u-flex u-items-center"><div class="o-checkbox">
                         <input type="checkbox" value="Yes" name="IsHidden_LastName"

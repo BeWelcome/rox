@@ -18,9 +18,7 @@ use App\Service\Mailer;
 use App\Utilities\BewelcomeAddressTrait;
 use App\Utilities\ManagerTrait;
 use App\Utilities\MessageTrait;
-use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
 use Exception;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -210,7 +208,7 @@ class GroupModel
             $em->persist($membership);
             $em->flush();
             $success = true;
-        } catch (OptimisticLockException|ORMException) {
+        } catch (Exception) {
             $success = false;
         }
 

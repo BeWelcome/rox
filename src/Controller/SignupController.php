@@ -91,7 +91,8 @@ class SignupController extends AbstractController
         if (
             !\in_array(
                 $member->getStatus(),
-                [MemberStatusType::AWAITING_MAIL_CONFIRMATION, MemberStatusType::MAIL_CONFIRMED], true
+                [MemberStatusType::AWAITING_MAIL_CONFIRMATION, MemberStatusType::MAIL_CONFIRMED],
+                true
             )
         ) {
             $this->addTranslatedFlash('notice', 'signup.activate.revisit');

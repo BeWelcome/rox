@@ -20,9 +20,6 @@ use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
-
-use const ENT_HTML5;
-
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
@@ -87,7 +84,7 @@ class CommentController extends AbstractController
                 str_replace(
                     "\xc2\xa0",
                     ' ',
-                    strip_tags(html_entity_decode((string) $data->feedback, ENT_HTML5, 'UTF-8'))
+                    strip_tags(html_entity_decode((string) $data->feedback, \ENT_HTML5, 'UTF-8'))
                 )
             );
             if (empty($feedback)) {

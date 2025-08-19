@@ -4,9 +4,6 @@ namespace App\Model\MemberDataExtractor;
 
 use App\Entity\Member;
 use Doctrine\Persistence\ManagerRegistry;
-
-use const PATHINFO_FILENAME;
-
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\WebpackEncoreBundle\Asset\EntrypointLookupInterface;
 use Twig\Environment;
@@ -39,10 +36,10 @@ final class GalleryItemsExtractor extends AbstractExtractor implements Extractor
                 while (false !== ($file = readdir($directoryHandle))) {
                     if (!is_dir($file)) {
                         $ext = $this->imageExtension($galleryPath . $file);
-                        $destination = $galleryDir . pathinfo($file, PATHINFO_FILENAME) . $ext;
+                        $destination = $galleryDir . pathinfo($file, \PATHINFO_FILENAME) . $ext;
                         $filesystem->copy(
                             $galleryPath . $file,
-                            $galleryDir . pathinfo($file, PATHINFO_FILENAME) . $ext
+                            $galleryDir . pathinfo($file, \PATHINFO_FILENAME) . $ext
                         );
                         $hrefs[] = str_replace($tempDir, '', $destination);
                     }

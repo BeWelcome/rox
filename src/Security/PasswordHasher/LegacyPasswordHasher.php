@@ -30,10 +30,10 @@ class LegacyPasswordHasher implements PasswordHasherInterface
     private function encodePassword($plaintext): string
     {
         return '*' . strtoupper(
-                sha1(
-                    sha1((string) $plaintext, true)
-                )
-            );
+            sha1(
+                sha1((string) $plaintext, true)
+            )
+        );
     }
 
     /**

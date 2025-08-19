@@ -472,7 +472,7 @@ class TranslationController extends AbstractController
         #[MapEntity(mapping: ['locale' => 'shortCode'])] Language $language,
         string $type,
         string $code
-    ) : Response {
+    ): Response {
         $this->denyAccessUnlessGranted(Member::ROLE_ADMIN_WORDS, null, 'Unable to access this page!');
 
         /** @var Member $translator */

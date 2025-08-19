@@ -60,8 +60,7 @@ class RelationController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var Relation $relation */
             $relation = $form->getData();
-            if (!checkForEmailAddress($relation) && !checkForPhoneNumber($relation))
-            {
+            if (!checkForEmailAddress($relation) && !checkForPhoneNumber($relation)) {
                 $relation->setOwner($loggedInMember);
                 $relation->setReceiver($member);
 

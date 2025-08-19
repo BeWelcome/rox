@@ -39,7 +39,8 @@ class MessageRepository extends EntityRepository
     {
         /** @var Connection $connection */
         $connection = $this->getEntityManager()->getConnection();
-        $count = $connection->fetchOne('SELECT count(*) AS cnt FROM (SELECT `m`.*
+        $count = $connection->fetchOne(
+            'SELECT count(*) AS cnt FROM (SELECT `m`.*
             FROM `messages` m
             WHERE
 				NOT m.subject_id IS NULL
@@ -57,9 +58,11 @@ class MessageRepository extends EntityRepository
             WHERE
 				m.subject_id is null
 				AND	((m.IdReceiver = :loggedIn AND m.IdSender = :member) OR
-						(m.IdReceiver = :member AND m.IdSender = :loggedIn))) AS a', [
-                         'loggedIn' => $loggedInMember->getId(),
-                         'member' => $member->getId()]
+						(m.IdReceiver = :member AND m.IdSender = :loggedIn))) AS a',
+            [
+                'loggedIn' => $loggedInMember->getId(),
+                'member' => $member->getId()
+            ]
         );
 
         return $count;

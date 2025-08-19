@@ -21,6 +21,7 @@ abstract class BaseRequestAndInvitationController extends AbstractController
 {
     use TranslatorTrait;
     use TranslatedFlashTrait;
+
     protected ConversationModel $conversationModel;
 
     public function __construct(protected BaseRequestModel $model, protected EntityManagerInterface $entityManager)

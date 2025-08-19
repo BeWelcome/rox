@@ -83,7 +83,7 @@ class HomeController extends AbstractController
         $pickedCount = 0;
         $imagesRandom = [];
         while ($pickedCount <> 3) {
-            $pick = random_int(1,3);
+            $pick = random_int(1, 3);
             if (!in_array($pick, $picked)) {
                 $picked[] = $pick;
                 $imagesRandom[count($picked)] = $images[$pick];

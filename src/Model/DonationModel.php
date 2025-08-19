@@ -50,7 +50,7 @@ class DonationModel
         return true;
     }
 
-    public function getListOfDonations() : array
+    public function getListOfDonations(): array
     {
         return [];
     }

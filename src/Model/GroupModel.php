@@ -212,7 +212,7 @@ class GroupModel
             $em->persist($membership);
             $em->flush();
             $success = true;
-        } catch (OptimisticLockException|ORMException) {
+        } catch (OptimisticLockException | ORMException) {
             $success = false;
         }
 

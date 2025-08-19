@@ -414,19 +414,18 @@ class StatisticsModel
 
     private function reduceResultSet(int $count, array $resultSet): array
     {
-        $other = $this->translator->trans('statistics.other', [ 'count' => count($resultSet) - $count + 1]);
+        $other = $this->translator->trans('statistics.other', ['count' => count($resultSet) - $count + 1]);
         $result = array_slice($resultSet, 0, $count);
         $keys = array_keys($resultSet);
         $keyCount = count($keys);
         for ($i = $count; $i < $keyCount; $i++) {
-           if (!isset($result[$other])) {
-               $result[$other] = 0;
-           }
-           $result[$other] += $resultSet[$keys[$i]];
+            if (!isset($result[$other])) {
+                $result[$other] = 0;
+            }
+            $result[$other] += $resultSet[$keys[$i]];
         }
 
         return $result;
-
     }
 
     /**
@@ -715,8 +714,8 @@ class StatisticsModel
             // turn provided yearweek into a date (first day of the week)
             $preparedData['labels'][] = date(
                 'Y-m-d',
-                strtotime(substr((string) $datum['week'], 0, 4)
-                    . '-W' . substr((string) $datum['week'], 4, 2) . '-1')
+                strtotime(substr((string)$datum['week'], 0, 4)
+                    . '-W' . substr((string)$datum['week'], 4, 2) . '-1')
             );
             $preparedData['numbers'][] = $datum['count'];
         }
@@ -734,8 +733,7 @@ class StatisticsModel
             ->where($qb->expr()->in('c.countryId ', $countryCodes))
             ->andWhere($qb->expr()->eq('c.featureClass', $qb->expr()->literal('A')))
             ->andWhere($qb->expr()->eq('c.featureCode', $qb->expr()->literal('PCLI')))
-            ->getQuery()
-        ;
+            ->getQuery();
         $countriesQuery->setHint(
             \Doctrine\ORM\Query::HINT_CUSTOM_OUTPUT_WALKER,
             \Gedmo\Translatable\Query\TreeWalker\TranslationWalker::class

@@ -18,8 +18,8 @@ class CommunityNewsCommentType extends AbstractType
         $builder
             ->add('title', TextType::class, [
                 'label' => 'label.commnunitynews.comment.title',
-                'label_attr'=> [
-                    'class'=> 'u-hidden',
+                'label_attr' => [
+                    'class' => 'u-hidden',
                 ],
                 'attr' => [
                     'class' => 'u-mt-32',
@@ -29,8 +29,8 @@ class CommunityNewsCommentType extends AbstractType
             ])
             ->add('text', CkEditorType::class, [
                 'label' => 'label.communitynews.comment.text',
-                'label_attr'=> [
-                    'class'=> 'u-hidden',
+                'label_attr' => [
+                    'class' => 'u-hidden',
                 ],
                 'attr' => [
                     'class' => 'editor form-control',

@@ -40,11 +40,11 @@ class RequestController extends BaseRequestAndInvitationController
     use TranslatorTrait;
 
     public function __construct(
-        ConversationModel      $conversationModel,
-        HostingRequestModel    $requestModel,
+        ConversationModel $conversationModel,
+        HostingRequestModel $requestModel,
         EntityManagerInterface $entityManager,
-        private Mailer                 $mailer,
-        private Logger                 $logger
+        private Mailer $mailer,
+        private Logger $logger
     ) {
         parent::__construct($requestModel, $entityManager);
 

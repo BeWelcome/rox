@@ -27,7 +27,6 @@ class WikiController extends AbstractController
     public function __construct(
         private EntityManagerInterface $entityManager,
     ) {
-
     }
     /**
      * @return Response

@@ -37,8 +37,7 @@ class ProfileVisit
         #[ORM\Id]
         #[ORM\ManyToOne(targetEntity: \Member::class)]
         private Member $visitor
-    )
-    {
+    ) {
     }
 
     /**

@@ -15,9 +15,10 @@ use Symfony\Contracts\Service\Attribute\Required;
 class WikiModel
 {
     use ManagerTrait;
+
     private HtmlRenderer $roxWikiParserBackend;
 
-    public function __construct(private EntityManagerInterface $entityManager)
+    public function __construct(private readonly EntityManagerInterface $entityManager)
     {
     }
 

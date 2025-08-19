@@ -34,8 +34,7 @@ class MemberModel
         private ContainerBagInterface $params,
         /** @var iterable|ExtractorInterface[] */
         private iterable $extractors
-    )
-    {
+    ) {
     }
 
     /**

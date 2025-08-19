@@ -15,7 +15,7 @@ use Symfony\Component\Validator\Constraints\NotNull;
 
 class InvitationGuest extends HostingRequestAbstractType
 {
-    public function __construct(private readonly DateTransformer $dateTimeTransformer, private readonly LegTransformer  $legTransformer)
+    public function __construct(private readonly DateTransformer $dateTimeTransformer, private readonly LegTransformer $legTransformer)
     {
     }
 

@@ -24,8 +24,7 @@ class SecurityController extends AbstractController
 {
     public function __construct(
         public EntityManagerInterface $entityManager
-    )
-    {
+    ) {
     }
 
     #[Route(path: '/login', name: 'login', defaults: ['access_denied_redirect' => '/'])]

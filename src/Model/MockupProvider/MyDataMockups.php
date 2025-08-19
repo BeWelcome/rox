@@ -447,13 +447,11 @@ class MyDataMockups implements MockupProviderInterface
         $mockTrip->shouldReceive('addSubtrip')
             ->once()
             ->with($leg)
-            ->andReturn($mockTrip)
-        ;
+            ->andReturn($mockTrip);
         $mockTrip->addSubtrip($leg);
         $mockTrip
             ->shouldReceive('getSubtrips')
-            ->andReturn(new ArrayCollection([$leg]))
-        ;
+            ->andReturn(new ArrayCollection([$leg]));
 
         return $mockTrip;
     }
@@ -724,15 +722,15 @@ class MyDataMockups implements MockupProviderInterface
     {
         $groupMemberships = [];
         for ($index = 0; $index < $count; $index++) {
-             $groupMemberships[] = Mockery::mock(GroupMembership::class, [
-                 'getGroup' => Mockery::mock(Group::class, [
-                     'getName' => 'group #' . ($index + 1),
-                     'getId' => ($index + 1),
-                 ]),
-                 'getCreated' => new DateTime(),
-                 'getStatus' => GroupMembershipStatusType::CURRENT_MEMBER,
-                 'getComments' => [
-                     [
+            $groupMemberships[] = Mockery::mock(GroupMembership::class, [
+                'getGroup' => Mockery::mock(Group::class, [
+                    'getName' => 'group #' . ($index + 1),
+                    'getId' => ($index + 1),
+                ]),
+                'getCreated' => new DateTime(),
+                'getStatus' => GroupMembershipStatusType::CURRENT_MEMBER,
+                'getComments' => [
+                    [
                         'code' => 'mydata.translations.headline',
                         'Sentence' => 'Translations',
                         'shortCode' => 'en',
@@ -746,8 +744,8 @@ class MyDataMockups implements MockupProviderInterface
                         'Language' => ['WordCode' => 'lang_es'],
                         'created' => (new DateTime())->format('Y-m-d'),
                     ],
-                 ],
-             ]);
+                ],
+            ]);
         }
 
         return $groupMemberships;

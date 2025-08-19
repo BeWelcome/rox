@@ -20,7 +20,7 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 
 class HostingRequestType extends AbstractType
 {
-    public function __construct(private readonly DateTransformer $dateTimeTransformer, private readonly LegTransformer  $legTransformer)
+    public function __construct(private readonly DateTransformer $dateTimeTransformer, private readonly LegTransformer $legTransformer)
     {
     }
 

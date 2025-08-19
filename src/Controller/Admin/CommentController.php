@@ -172,7 +172,7 @@ class CommentController extends AbstractController
         Request $request,
         #[MapEntity(mapping: ['to_member' => 'username'])] Member $toMember,
         #[MapEntity(mapping: ['from_member' => 'username'])] Member $fromMember
-    ) : Response {
+    ): Response {
         if (
             !$this->isGranted(Member::ROLE_ADMIN_COMMENTS)
             && !$this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)

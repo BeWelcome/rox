@@ -60,7 +60,7 @@ class DeleteRequestType extends SetType
 
     private static function addRequest($deleteRequest, $request): string
     {
-        $requests = array_filter(explode(',', $deleteRequest));
+        $requests = array_filter(explode(',', (string) $deleteRequest));
         $key = array_search($request, $requests, true);
         if (false === $key) {
             $requests[] = $request;
@@ -71,7 +71,7 @@ class DeleteRequestType extends SetType
 
     private static function removeRequest($deleteRequest, $request): string
     {
-        $requests = array_filter(explode(',', $deleteRequest));
+        $requests = array_filter(explode(',', (string) $deleteRequest));
         $key = array_search($request, $requests, true);
         if (false !== $key) {
             unset($requests[$key]);

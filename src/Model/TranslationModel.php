@@ -17,27 +17,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class TranslationModel
 {
-    private TranslatorInterface $translator;
-
-    private Filesystem $filesystem;
-
-    private string $cacheDirectory;
-
-    private array $locales;
-    private EntityManagerInterface $entityManager;
-
-    public function __construct(
-        TranslatorInterface $translator,
-        EntityManagerInterface $entityManager,
-        Filesystem $filesystem,
-        string $cacheDirectory,
-        array $locales
-    ) {
-        $this->translator = $translator;
-        $this->cacheDirectory = $cacheDirectory;
-        $this->filesystem = $filesystem;
-        $this->locales = $locales;
-        $this->entityManager = $entityManager;
+    public function __construct(private readonly TranslatorInterface $translator, private readonly EntityManagerInterface $entityManager, private readonly Filesystem $filesystem, private readonly string $cacheDirectory, private readonly array $locales)
+    {
     }
 
     /**
@@ -63,23 +44,14 @@ class TranslationModel
         $translationAdapter = null;
         $connection = $this->entityManager->getConnection();
 
-        switch ($type) {
-            case 'missing':
-                $translationAdapter = new MissingTranslationAdapter($connection, $locale, $code);
-                break;
-            case 'update':
-                $translationAdapter = new UpdateTranslationAdapter($connection, $locale);
-                break;
-            case 'all':
-                $translationAdapter = new TranslationAdapter($connection, $locale, $code);
-                break;
-            case 'archived':
-                $translationAdapter = new ArchivedTranslationAdapter($connection);
-                break;
-            case 'donottranslate':
-                $translationAdapter = new DoNotTranslateTranslationAdapter($connection);
-                break;
-        }
+        $translationAdapter = match ($type) {
+            'missing' => new MissingTranslationAdapter($connection, $locale, $code),
+            'update' => new UpdateTranslationAdapter($connection, $locale),
+            'all' => new TranslationAdapter($connection, $locale, $code),
+            'archived' => new ArchivedTranslationAdapter($connection),
+            'donottranslate' => new DoNotTranslateTranslationAdapter($connection),
+            default => $translationAdapter,
+        };
 
         return $translationAdapter;
     }

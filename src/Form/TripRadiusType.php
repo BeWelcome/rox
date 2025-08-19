@@ -31,6 +31,7 @@ class TripRadiusType extends AbstractType
         ;
     }
 
+    #[\Override]
     public function getBlockPrefix(): string
     {
         return 'trips';

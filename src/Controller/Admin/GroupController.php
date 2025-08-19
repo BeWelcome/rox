@@ -20,7 +20,7 @@ use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
@@ -34,13 +34,8 @@ class GroupController extends AbstractController
     use TranslatedFlashTrait;
     use TranslatorTrait;
 
-    private Mailer $mailer;
-    private EntityManagerInterface $entityManager;
-
-    public function __construct(Mailer $mailer, EntityManagerInterface $entityManager)
+    public function __construct(private Mailer $mailer, private EntityManagerInterface $entityManager)
     {
-        $this->mailer = $mailer;
-        $this->entityManager = $entityManager;
     }
 
     /**

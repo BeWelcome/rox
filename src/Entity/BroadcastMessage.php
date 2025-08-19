@@ -9,7 +9,9 @@ use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Broadcastmessages.
+ * Do not check entities with PHPMD
+ *
+ * @SuppressWarnings("PHPMD")
  */
 #[ORM\Table(name: 'broadcastmessages')]
 #[ORM\Entity]

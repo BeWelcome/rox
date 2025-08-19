@@ -36,7 +36,7 @@ use Mockery;
  */
 class MyDataMockups implements MockupProviderInterface
 {
-    private const MOCKUPS = [
+    private const array MOCKUPS = [
         'start page' => [
             'type' => 'template',
             'template' => 'private/index.html.twig',
@@ -106,7 +106,7 @@ class MyDataMockups implements MockupProviderInterface
             'description' => 'Shows the groups of the member',
         ],
     ];
-    private InvitationUtility $invitationUtility;
+    private readonly InvitationUtility $invitationUtility;
 
     public function __construct()
     {
@@ -173,67 +173,35 @@ class MyDataMockups implements MockupProviderInterface
      */
     public function getMockupParameter(?string $locale = null, ?string $feature = null): array
     {
-        switch ($feature) {
-            case 'post (thread)':
-            case 'post (group)':
-                return ['deleted' => ['yes' => 'yes', 'no' => 'no']];
-            case 'broadcasts':
-            case 'comments':
-            case 'communitynews':
-            case 'communitynews_comments':
-            case 'donations':
-            case 'gallery':
-            case 'logs':
-            case 'newsletters':
-            case 'pictures':
-            case 'groups':
-            case 'polls_contributed':
-            case 'polls_created':
-            case 'polls_voted':
-            case 'relations':
-            case 'rights':
-            case 'privileges':
-            case 'trips':
-            case 'shouts':
-            case 'subscriptions':
-            case 'translations':
-                return ['count' => ['none' => '0', 'some' => '2']];
-        }
-
-        switch ($locale) {
-            case 'en':
-            case 'de':
-            case 'fr':
-            case 'es':
-            case 'pt':
-            case 'pt-br':
-            case 'gl':
-                return [
+        return match ($feature) {
+            'post (thread)', 'post (group)' => ['deleted' => ['yes' => 'yes', 'no' => 'no']],
+            'broadcasts', 'comments', 'communitynews', 'communitynews_comments', 'donations', 'gallery', 'logs', 'newsletters', 'pictures', 'groups', 'polls_contributed', 'polls_created', 'polls_voted', 'relations', 'rights', 'privileges', 'trips', 'shouts', 'subscriptions', 'translations' => ['count' => ['none' => '0', 'some' => '2']],
+            default => match ($locale) {
+                'en', 'de', 'fr', 'es', 'pt', 'pt-br', 'gl' => [
                     'count' => [
                         'none' => 0,
                         'one' => 1,
                         'some' => 3,
                     ],
-                ];
-            case 'pl':
-                return [
+                ],
+                'pl' => [
                     'count' => [
                         'none' => 0,
                         'one' => 1,
                         'few' => 2,
                         'other' => 5,
                     ],
-                ];
-        }
-
-        return [
-            'count' => [
-                'none' => 0,
-                'one' => 1,
-                'few' => 2,
-                'other' => 5,
-            ],
-        ];
+                ],
+                default => [
+                    'count' => [
+                        'none' => 0,
+                        'one' => 1,
+                        'few' => 2,
+                        'other' => 5,
+                    ],
+                ],
+            },
+        };
     }
 
     private function getExtractedEntities(): array

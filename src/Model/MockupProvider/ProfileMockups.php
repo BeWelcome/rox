@@ -11,7 +11,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ProfileMockups implements MockupProviderInterface
 {
-    private const MOCKUPS = [
+    private const array MOCKUPS = [
         'delete profile' => [
             'type' => 'template',
             'template' => 'profile/delete.not.logged.in.html.twig',
@@ -23,13 +23,11 @@ class ProfileMockups implements MockupProviderInterface
             'description' => 'The delete profile page when not logged in',
         ],
     ];
-    private FormFactoryInterface $formFactory;
-    private TranslatorInterface $translator;
 
-    public function __construct(FormFactoryInterface $formFactory, TranslatorInterface $translator)
-    {
-        $this->formFactory = $formFactory;
-        $this->translator = $translator;
+    public function __construct(
+        private readonly FormFactoryInterface $formFactory,
+        private readonly TranslatorInterface $translator
+    ) {
     }
 
     public function getFeature(): string
@@ -44,14 +42,11 @@ class ProfileMockups implements MockupProviderInterface
 
     public function getMockupVariables(array $parameters): array
     {
-        switch ($parameters['name']) {
-            case 'delete profile':
-                return $this->getVariablesForDeleteProfile($parameters);
-            case 'delete profile (wrong credentials)':
-                return $this->getVariablesForDeleteProfileCredentialsError($parameters);
-            default:
-                return [];
-        }
+        return match ($parameters['name']) {
+            'delete profile' => $this->getVariablesForDeleteProfile($parameters),
+            'delete profile (wrong credentials)' => $this->getVariablesForDeleteProfileCredentialsError($parameters),
+            default => [],
+        };
     }
 
     public function getMockupParameter(?string $locale = null, ?string $feature = null): array
@@ -59,6 +54,11 @@ class ProfileMockups implements MockupProviderInterface
         return [];
     }
 
+    /**
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
+     *
+     * Not all mockups need parameters.
+     */
     private function getVariablesForDeleteProfile(array $parameters): array
     {
         $form = $this->formFactory->create(DeleteProfileFormType::class);
@@ -68,6 +68,11 @@ class ProfileMockups implements MockupProviderInterface
         ];
     }
 
+    /**
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
+     *
+     * Not all mockups need parameters.
+     */
     private function getVariablesForDeleteProfileCredentialsError(array $parameters): array
     {
         $form = $this->formFactory->create(DeleteProfileFormType::class);

@@ -9,11 +9,8 @@ use Symfony\Component\Form\Exception\TransformationFailedException;
 
 class LegTransformer implements DataTransformerInterface
 {
-    private EntityManagerInterface $entityManager;
-
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(private readonly EntityManagerInterface $entityManager)
     {
-        $this->entityManager = $entityManager;
     }
 
     public function transform($value): ?string

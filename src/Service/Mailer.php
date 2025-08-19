@@ -18,38 +18,22 @@ use Symfony\Component\Mime\Address;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
+/**
+ * @SuppressWarnings("PHPMD.TooManyPublicMethods")
+ *
+ * \todo split into different responsibilities instead of clubbing all into the same mailer service.
+ */
 class Mailer
 {
-    private const NO_REPLY_EMAIL_ADDRESS = 'noreply@bewelcome.org';
-    private const MESSAGE_EMAIL_ADDRESS = 'message@bewelcome.org';
-    private const GROUP_EMAIL_ADDRESS = 'group@bewelcome.org';
-    private const PASSWORD_EMAIL_ADDRESS = 'password@bewelcome.org';
-    private const SIGNUP_EMAIL_ADDRESS = 'signup@bewelcome.org';
-    private const ACCOUNT_FEEDBACK_ADDRESS = 'account@bewelcome.org';
+    private const string NO_REPLY_EMAIL_ADDRESS = 'noreply@bewelcome.org';
+    private const string MESSAGE_EMAIL_ADDRESS = 'message@bewelcome.org';
+    private const string GROUP_EMAIL_ADDRESS = 'group@bewelcome.org';
+    private const string PASSWORD_EMAIL_ADDRESS = 'password@bewelcome.org';
+    private const string SIGNUP_EMAIL_ADDRESS = 'signup@bewelcome.org';
+    private const string ACCOUNT_FEEDBACK_ADDRESS = 'account@bewelcome.org';
 
-    /** @var MailerInterface */
-    private $mailer;
-    /** @var TranslatorInterface */
-    private $translator;
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
-    private Logger $logger;
-    private UrlGeneratorInterface $urlGenerator;
-
-    public function __construct(
-        EntityManagerInterface $entityManager,
-        UrlGeneratorInterface $urlGenerator,
-        TranslatorInterface $translator,
-        MailerInterface $mailer,
-        Logger $logger
-    ) {
-        $this->entityManager = $entityManager;
-        $this->urlGenerator = $urlGenerator;
-        $this->translator = $translator;
-        $this->mailer = $mailer;
-        $this->logger = $logger;
+    public function __construct(private readonly EntityManagerInterface $entityManager, private readonly UrlGeneratorInterface $urlGenerator, private readonly TranslatorInterface $translator, private readonly MailerInterface $mailer, private readonly Logger $logger)
+    {
     }
 
     public function sendMessageNotificationEmail(Member $sender, Member $receiver, string $template, $parameters): bool
@@ -337,7 +321,7 @@ class Mailer
 
         try {
             $this->mailer->send($email);
-        } catch (TransportExceptionInterface $e) {
+        } catch (TransportExceptionInterface) {
             $success = false;
         }
         $this->translator->setLocale($currentLocale);
@@ -383,18 +367,11 @@ class Mailer
 
     private function determineSenderForNewsletter($type): Address
     {
-        switch ($type) {
-            case 'RemindToLog':
-            case 'MailToConfirmReminder':
-            case Newsletter::SUSPENSION_NOTIFICATION:
-                $sender = new Address('reminder@bewelcome.org', 'BeWelcome');
-                break;
-            case Newsletter::TERMS_OF_USE:
-                $sender = new Address('tou@bewelcome.org', 'BeWelcome');
-                break;
-            default:
-                $sender = new Address('newsletter@bewelcome.org', 'BeWelcome');
-        }
+        $sender = match ($type) {
+            'RemindToLog', 'MailToConfirmReminder', Newsletter::SUSPENSION_NOTIFICATION => new Address('reminder@bewelcome.org', 'BeWelcome'),
+            Newsletter::TERMS_OF_USE => new Address('tou@bewelcome.org', 'BeWelcome'),
+            default => new Address('newsletter@bewelcome.org', 'BeWelcome'),
+        };
 
         return $sender;
     }

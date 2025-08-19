@@ -1,6 +1,6 @@
 <div class="row">
     <?php
-    $vars = array();
+    $vars = [];
     $words = $this->words;
     $layoutbits = new MOD_layoutbits();
 

@@ -11,11 +11,9 @@ use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * AdminUnit.
- *
+ * Do not check entities with PHPMD
  *
  * @SuppressWarnings("PHPMD")
- * Auto generated class do not check mess
  */
 #[ORM\Table(name: 'geonamesadminunits')]
 #[ORM\Index(name: 'idx_name', columns: ['name'])]

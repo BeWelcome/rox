@@ -33,7 +33,6 @@ Boston, MA  02111-1307, USA.
 class AdminMassmailDetailsPage extends AdminMassmailBasePage
 {
     protected $ROWSPERPAGE = 20;
-    protected $id;
     protected $model;
     protected $massmail;
     protected $type;
@@ -41,20 +40,20 @@ class AdminMassmailDetailsPage extends AdminMassmailBasePage
     protected $count;
     protected $details;
     
-    public function __construct($model, $id, $detail = false, $pageno = false) {
+    public function __construct($model, protected $id, $detail = false, $pageno = false) {
         parent::__construct($model);
-        $this->id = $id;
         $this->model = $model;
-        $this->massmail = $model->getMassMail($id);
+        $this->massmail = $model->getMassMail($this->id);
         $this->detail = $detail;
         if ($detail) {
-            $this->count = $this->model->getMassmailRecipientsCount( $id, $detail); 
-            $this->details = $this->model->getMassmailRecipientsInfo( $id, $detail, 
+            $this->count = $this->model->getMassmailRecipientsCount( $this->id, $detail); 
+            $this->details = $this->model->getMassmailRecipientsInfo( $this->id, $detail, 
                 ($pageno -1 ) * $this->ROWSPERPAGE, $this->ROWSPERPAGE);
         }
         $this->setCurrent('AdminMassMailDetails');
     }
     
+    #[\Override]
     public function teaserHeadline() {
         return '<a href="admin">' . $this->words->get('AdminTools') . "</a> "
             . ' &raquo; <a href="admin/massmail">' . $this->words->get('AdminMassMail') . "</a>"

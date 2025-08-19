@@ -33,7 +33,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
@@ -41,6 +41,9 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
  *
  * @SuppressWarnings("PHPMD.CouplingBetweenObjects")
  * @SuppressWarnings("PHPMD.TooManyPublicMethods")
+ * @SuppressWarnings("PHPMD.ExcessiveClassComplexity")
+ *
+ * \todo Move membership handling into own controller.
  */
 class GroupController extends AbstractController
 {
@@ -49,14 +52,8 @@ class GroupController extends AbstractController
     use TranslatorTrait;
     use UniqueFilenameTrait;
 
-    /**
-     * @var GroupModel
-     */
-    private $groupModel;
-
-    public function __construct(GroupModel $groupModel)
+    public function __construct(private GroupModel $groupModel)
     {
-        $this->groupModel = $groupModel;
     }
 
     /**
@@ -79,7 +76,7 @@ class GroupController extends AbstractController
      * @return RedirectResponse
      */
     #[Route(path: '/groups/{groupId:group}/{path}', name: 'groups_redirect_path', requirements: ['groupId' => '\d+', 'path' => '.+'])]
-    public function groupsRedirectPath(Request $request, Group $group)
+    public function groupsRedirectPath(Request $request)
     {
         // We only need the request
         return $this->redirectGroup($request);
@@ -90,7 +87,7 @@ class GroupController extends AbstractController
      * @return RedirectResponse
      */
     #[Route(path: '/groups/{groupId:group}', name: 'groups_redirect_group', requirements: ['groupId' => '\d+'])]
-    public function groupsRedirect(Request $request, Group $group)
+    public function groupsRedirect(Request $request)
     {
         return $this->redirectGroup($request);
     }

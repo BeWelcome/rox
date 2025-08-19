@@ -19,28 +19,24 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 use function count;
 
+/**
+ * @SuppressWarnings("PHPMD.ExcessiveClassComplexity")
+ *
+ * \todo Check if complexity is too high (I assume it is)
+ */
 class SuggestLocationModel
 {
-    private const EXACT_PLACE = 'search.place.exact';
-    private const PLACE = 'search.places';
-    private const ADMIN_UNIT = 'search.admin.units';
-    private const COUNTRY = 'search.countries';
-
-    private TranslatorInterface $translator;
-    private EntityManagerInterface $entityManager;
-    private string $manticoreHost;
-    private int $manticorePort;
+    private const string EXACT_PLACE = 'search.place.exact';
+    private const string PLACE = 'search.places';
+    private const string ADMIN_UNIT = 'search.admin.units';
+    private const string COUNTRY = 'search.countries';
 
     public function __construct(
-        TranslatorInterface $translator,
-        EntityManagerInterface $entityManager,
-        string $manticoreHost,
-        int $manticorePort
+        private readonly TranslatorInterface $translator,
+        private readonly EntityManagerInterface $entityManager,
+        private readonly string $manticoreHost,
+        private readonly int $manticorePort
     ) {
-        $this->translator = $translator;
-        $this->entityManager = $entityManager;
-        $this->manticoreHost = $manticoreHost;
-        $this->manticorePort = $manticorePort;
     }
 
     public function getSuggestionsForPlaces(array $terms): array
@@ -279,7 +275,7 @@ class SuggestLocationModel
         return $country['country'];
     }
 
-    public function getLocationDetails(array $results, string $typeTranslationId = null): array
+    public function getLocationDetails(array $results, ?string $typeTranslationId = null): array
     {
         $locale = $this->translator->getLocale();
         $type = '';
@@ -325,13 +321,13 @@ class SuggestLocationModel
         $qb = $this->entityManager->createQueryBuilder();
         $query = $qb
             ->select('l')
-            ->from('App\Entity\NewLocation', 'l')
+            ->from(\App\Entity\NewLocation::class, 'l')
             ->where($qb->expr()->eq('l.geonameId', $id))
             ->getQuery()
         ;
         $query->setHint(
             \Doctrine\ORM\Query::HINT_CUSTOM_OUTPUT_WALKER,
-            'Gedmo\\Translatable\\Query\\TreeWalker\\TranslationWalker'
+            \Gedmo\Translatable\Query\TreeWalker\TranslationWalker::class
         );
         $query->setHint(
             TranslatableListener::HINT_TRANSLATABLE_LOCALE,
@@ -362,6 +358,11 @@ class SuggestLocationModel
         return $places;
     }
 
+    /**
+     * @SuppressWarnings("PHPMD.CyclomaticComplexity")
+     *
+     * \todo reduce complexity.
+     */
     private function searchAdminUnits(array $adminUnits, ?string $countryId): array
     {
         if (null !== $countryId) {
@@ -441,7 +442,7 @@ class SuggestLocationModel
         $client = new Client($config);
         $query = new Search($client);
         $query
-            ->setIndex('geonames_rt');
+            ->setTable('geonames_rt');
 
         return $query;
     }

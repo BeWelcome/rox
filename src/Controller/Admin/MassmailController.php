@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mime\Address;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class MassmailController extends AbstractController
@@ -46,7 +46,7 @@ class MassmailController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
-            $members = array_map('trim', explode(',', $data['members']));
+            $members = array_map('trim', explode(',', (string) $data['members']));
 
             /** @var MemberRepository $memberRepository */
             $memberRepository = $entityManager->getRepository(Member::class);

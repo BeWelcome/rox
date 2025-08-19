@@ -33,10 +33,11 @@ Boston, MA  02111-1307, USA.
  */
 class SearchMembersTextPage extends SearchMembersBasePage
 {
-    public $errors = array();
-    public $vars = array();
-    public $results = array();
+    public $errors = [];
+    public $vars = [];
+    public $results = [];
 
+    #[\Override]
     protected function getStylesheets() {
        $stylesheets = parent::getStylesheets();
        $stylesheets[] = 'styles/css/minimal/screen/custom/jquery-ui/smoothness/jquery.ui.all.css';

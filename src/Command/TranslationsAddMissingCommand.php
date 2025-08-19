@@ -25,13 +25,9 @@ use Symfony\Component\Yaml\Yaml;
 )]
 class TranslationsAddMissingCommand extends Command
 {
-    private EntityManagerInterface $entityManager;
-
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(private readonly EntityManagerInterface $entityManager)
     {
         parent::__construct();
-
-        $this->entityManager = $entityManager;
     }
 
     /**
@@ -69,7 +65,7 @@ class TranslationsAddMissingCommand extends Command
                 if (null === $translation) {
                     ++$count;
                     if ($sentence[0] == '@') {
-                        $reusedTranslationId = substr($sentence, 1);
+                        $reusedTranslationId = substr((string) $sentence, 1);
                         $io->note(sprintf('Adding %s: Reusing %s', $translationId, $reusedTranslationId));
                         $connection = $this->entityManager->getConnection();
                         $statement = $connection->prepare('
@@ -78,11 +74,7 @@ class TranslationsAddMissingCommand extends Command
                             FROM words
                             WHERE code = :reusedTranslationId'
                         );
-                        $statement->executeQuery([
-                            ':admin' => $admin->getId(),
-                            ':translationId' => $translationId,
-                            ':reusedTranslationId' => $reusedTranslationId
-                        ]);
+                        $statement->executeQuery();
                     } else {
                         $io->note(sprintf('Adding %s: %s', $translationId, $sentence));
 

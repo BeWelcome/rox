@@ -21,16 +21,13 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SearchController extends AbstractController
 {
-    private EntityManagerInterface $entityManager;
-
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(private readonly EntityManagerInterface $entityManager)
     {
-        $this->entityManager = $entityManager;
     }
 
     /**
@@ -69,11 +66,12 @@ class SearchController extends AbstractController
     }
 
     /**
-     *
-     * @return Response
-     *
      * @SuppressWarnings("PHPMD.CyclomaticComplexity")
+     * @SuppressWarnings("PHPMD.NPathComplexity")
+     * @SuppressWarnings("PHPMD.ExcessiveMethodLength")
      * @SuppressWarnings("PHPMD.StaticAccess")
+     *
+     * \todo Find a better way to handle the different location search fields
      */
     #[Route(path: '/search/locations', name: 'search_locations')]
     public function searchLocations(
@@ -266,6 +264,9 @@ class SearchController extends AbstractController
         ]);
     }
 
+    /**
+     * @SuppressWarnings("PHPMD.StaticAccess")
+     */
     #[Route(path: '/search/locations/ajax', name: 'search_members_ajax')]
     public function searchGetPageResultsAjax(
         Request $request,

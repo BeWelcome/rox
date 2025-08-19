@@ -43,9 +43,9 @@
                 <label class="input-group-text" for="Type">Type</label>
             </div>
             <?php
-            $options = array(
+            $options = [
                 "None" => $this->words->getSilent('AdminMassMailEditSelectType')
-            );
+            ];
             if ($this->newsletterSpecific) {
                 $options["Specific"] = $this->words->getSilent('AdminMassMailEditTypeSpecific');
             }

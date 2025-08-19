@@ -8,6 +8,7 @@
 
 class AdminRightsRemovePage extends AdminRightsBasePage
 {
+    #[\Override]
     public function teaserHeadline()
     {
         $headline = parent::teaserHeadline();

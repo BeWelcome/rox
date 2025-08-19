@@ -37,6 +37,7 @@ class AdminWordEditCodePage extends AdminWordBasePage
      * @access public
      * @return string
      */
+    #[\Override]
     public function teaserHeadline(){
         $string = 'AdminWord';
         $string .= ' » '.$this->nav['currentLanguage'];

@@ -20,15 +20,8 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 
 class HostingRequestType extends AbstractType
 {
-    private DateTransformer $dateTimeTransformer;
-    private LegTransformer $legTransformer;
-
-    public function __construct(
-        DateTransformer $dateTimeTransformer,
-        LegTransformer  $legTransformer
-    ) {
-        $this->dateTimeTransformer = $dateTimeTransformer;
-        $this->legTransformer = $legTransformer;
+    public function __construct(private readonly DateTransformer $dateTimeTransformer, private readonly LegTransformer  $legTransformer)
+    {
     }
 
     /**
@@ -89,6 +82,7 @@ class HostingRequestType extends AbstractType
     /**
      * {@inheritdoc}
      */
+    #[\Override]
     public function getBlockPrefix(): string
     {
         return 'request';

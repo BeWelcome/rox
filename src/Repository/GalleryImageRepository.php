@@ -22,7 +22,7 @@ class GalleryImageRepository extends EntityRepository
             ;
     }
 
-    public function getImagesByMember(Member $member): Collection
+    public function getImagesForMember(Member $member): array
     {
         return $this->getImagesByMemberQueryBuilder($member)
             ->getQuery()
@@ -39,5 +39,15 @@ class GalleryImageRepository extends EntityRepository
         ;
 
         return $qb;
+    }
+
+    public function getLatestImagesFor(Member $member, int $count = 10): array
+    {
+        return $this->getImagesByMemberQueryBuilder($member)
+            ->orderBy('i.created', 'DESC')
+            ->setMaxResults($count)
+            ->getQuery()
+            ->getResult()
+            ;
     }
 }

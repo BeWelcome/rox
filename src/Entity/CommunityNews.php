@@ -12,11 +12,9 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * CommunityNews.
- *
+ * Do not check entities with PHPMD
  *
  * @SuppressWarnings("PHPMD")
- * Auto generated class do not check mess
  */
 #[ORM\Table(name: 'community_news')]
 #[ORM\Entity(repositoryClass: \App\Repository\CommunityNewsRepository::class)]

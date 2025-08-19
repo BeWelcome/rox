@@ -12,16 +12,12 @@ class TranslatorSingleton
      */
     private static $instance;
 
-    /** @var TranslatorInterface */
-    private $translator;
-
     /**
      * Protected constructor to prevent creating a new instance of the
      * *Singleton* via the `new` operator from outside of this class.
      */
-    protected function __construct(TranslatorInterface $translator)
+    protected function __construct(private readonly TranslatorInterface $translator)
     {
-        $this->translator = $translator;
     }
 
     /**

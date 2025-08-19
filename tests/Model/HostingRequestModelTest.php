@@ -13,13 +13,16 @@ use App\Service\Mailer;
 use DateInterval;
 use DateTime;
 use Doctrine\ORM\EntityManager;
+use Generator;
 use InvalidArgumentException;
 use Mockery;
 use PHPMD\Rule\Design\TooManyPublicMethods;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 /**
  * @SuppressWarnings("PHPMD.StaticAccess")
+ * @SuppressWarnings("PHPMD.TooManyPublicMethods")
  */
 class HostingRequestModelTest extends TestCase
 {
@@ -75,9 +78,9 @@ class HostingRequestModelTest extends TestCase
         $this->assertFalse($expired);
     }
 
-    public function testRequestExpiresTomorrow(): void
+    public function testRequestForTomorrowHasntExpiredYet(): void
     {
-        $arrival = new DateTime('yesterday');
+        $arrival = new DateTime('tomorrow');
         $departure = (new DateTime('tomorrow'))->setTime(23, 59);
 
         $request = new HostingRequest();
@@ -93,23 +96,16 @@ class HostingRequestModelTest extends TestCase
         $this->assertFalse($expired);
     }
 
-    /**
-     * @return array<int, list<int|string>>
-     */
-    public function stateDataProvider(): array
+    public static function stateDataProvider(): Generator
     {
-        return [
-            ['cancel', HostingRequest::REQUEST_CANCELLED],
-            ['accept', HostingRequest::REQUEST_ACCEPTED],
-            ['tentatively', HostingRequest::REQUEST_TENTATIVELY_ACCEPTED],
-            ['decline', HostingRequest::REQUEST_DECLINED],
-        ];
+        yield ['cancel', HostingRequest::REQUEST_CANCELLED];
+        yield ['accept', HostingRequest::REQUEST_ACCEPTED];
+        yield ['tentatively', HostingRequest::REQUEST_TENTATIVELY_ACCEPTED];
+        yield ['decline', HostingRequest::REQUEST_DECLINED];
     }
 
-    /**
-     * @dataProvider stateDataProvider
-     */
-    public function testGetFinalRequestStateChange(string $clickedButton, string $expected): void
+    #[DataProvider('stateDataProvider')]
+    public function testGetFinalRequestStateChange(string $clickedButton, int $expected): void
     {
         $arrival = new DateTime();
         $departure = $arrival->add(new DateInterval('P2D'));
@@ -202,24 +198,17 @@ class HostingRequestModelTest extends TestCase
         $this->assertSame($finalRequestMessage->getRequest()->getNumberOfTravellers(), $hostingRequestMessage->getRequest()->getNumberOfTravellers());
     }
 
-    /**
-     * @return array<int, array<int, DateTime>>
-     */
-    public function arrivalDataProvider(): array
+    public static function arrivalDataProvider(): Generator
     {
-        return [
-            [new DateTime('2020-10-10'), new DateTime('2019-10-10')],
-            [new DateTime('2020-10-10'), new DateTime('2020-09-10')],
-            [new DateTime('2020-10-10'), new DateTime('2019-10-09')],
-            [new DateTime('2020-10-10'), new DateTime('2021-10-10')],
-            [new DateTime('2020-10-10'), new DateTime('2020-11-10')],
-            [new DateTime('2020-10-10'), new DateTime('2010-10-11')],
-        ];
+        yield [new DateTime('2020-10-10'), new DateTime('2019-10-10')];
+        yield [new DateTime('2020-10-10'), new DateTime('2020-09-10')];
+        yield [new DateTime('2020-10-10'), new DateTime('2019-10-09')];
+        yield [new DateTime('2020-10-10'), new DateTime('2021-10-10')];
+        yield [new DateTime('2020-10-10'), new DateTime('2020-11-10')];
+        yield [new DateTime('2020-10-10'), new DateTime('2010-10-11')];
     }
 
-    /**
-     * @dataProvider arrivalDataProvider
-     */
+    #[DataProvider('arrivalDataProvider')]
     public function testGetFinalRequestArrivalChanged(DateTime $arrival, DateTime $departure): void
     {
         $hostingRequestMessage = $this->setupRequestMessage($arrival, $departure, true, 1, HostingRequest::REQUEST_OPEN);
@@ -244,9 +233,7 @@ class HostingRequestModelTest extends TestCase
         $this->assertSame($finalRequestMessage->getRequest()->getNumberOfTravellers(), $hostingRequestMessage->getRequest()->getNumberOfTravellers());
     }
 
-    /**
-     * @dataProvider arrivalDataProvider
-     */
+    #[DataProvider('arrivalDataProvider')]
     public function testGetFinalRequestDepartureChanged(DateTime $departure, DateTime $newDeparture): void
     {
         $arrival = new DateTime();

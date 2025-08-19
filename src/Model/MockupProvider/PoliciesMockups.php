@@ -4,7 +4,7 @@ namespace App\Model\MockupProvider;
 
 class PoliciesMockups implements MockupProviderInterface
 {
-    private const MOCKUPS = [
+    private const array MOCKUPS = [
         'Terms of Use' => [
             'type' => 'page',
             'url' => 'terms',
@@ -37,19 +37,12 @@ class PoliciesMockups implements MockupProviderInterface
 
     public function getMockupVariables(array $parameters): array
     {
-        switch ($parameters['name']) {
-            case 'Terms of Use':
-                $policyEnglish = 'terms';
-                break;
-            case 'Privacy Policy':
-                $policyEnglish = 'privacy';
-                break;
-            case 'Data Privacy':
-                $policyEnglish = 'datarights';
-                break;
-            default:
-                $policyEnglish = '';
-        }
+        $policyEnglish = match ($parameters['name']) {
+            'Terms of Use' => 'terms',
+            'Privacy Policy' => 'privacy',
+            'Data Privacy' => 'datarights',
+            default => '',
+        };
 
         return [
             'policy_english' => $policyEnglish,

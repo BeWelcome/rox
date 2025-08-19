@@ -18,17 +18,11 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ConversationModel
 {
-    private Mailer $mailer;
-    private EntityManagerInterface $entityManager;
-    private ConversationThread $conversationThread;
-    private TranslatorInterface $translator;
+    private readonly ConversationThread $conversationThread;
 
-    public function __construct(Mailer $mailer, EntityManagerInterface $entityManager, TranslatorInterface $translator)
+    public function __construct(private readonly Mailer $mailer, private readonly EntityManagerInterface $entityManager, private readonly TranslatorInterface $translator)
     {
-        $this->mailer = $mailer;
-        $this->entityManager = $entityManager;
-        $this->conversationThread = new ConversationThread($entityManager);
-        $this->translator = $translator;
+        $this->conversationThread = new ConversationThread($this->entityManager);
     }
 
     /**
@@ -291,7 +285,7 @@ class ConversationModel
     public function formatConversation(Message $message): Message
     {
         $messageText = $message->getMessage();
-        $found = preg_match("/@|.at.|-at-|\(at\)/i", $messageText);
+        $found = preg_match("/@|\.at\.|-at-|\(at\)/i", $messageText);
 
         if ($found != 0) {
             $message->setSpamInfo(SpamInfoType::SPAM_BLOCKED_WORD);
@@ -315,7 +309,7 @@ class ConversationModel
 
             $result = $statement->executeQuery();
             $row = $result->fetchAssociative();
-        } catch (Exception $e) {
+        } catch (Exception) {
             return false;
         }
 

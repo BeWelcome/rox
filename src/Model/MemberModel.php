@@ -25,31 +25,17 @@ class MemberModel
     use ManagerTrait;
     use TranslatorTrait;
 
-    /** @var EntrypointLookup */
-    private $entrypointLookup;
-
-    /** @var Environment */
-    private $environment;
-
     /** @var string */
     private $tempDir;
 
-    /** @var ContainerBagInterface */
-    private $params;
-
-    /** @var iterable|ExtractorInterface[] */
-    private $extractors;
-
     public function __construct(
-        Environment $environment,
-        EntrypointLookupInterface $entrypointLookup,
-        ContainerBagInterface $params,
-        iterable $extractors
-    ) {
-        $this->environment = $environment;
-        $this->entrypointLookup = $entrypointLookup;
-        $this->params = $params;
-        $this->extractors = $extractors;
+        private Environment $environment,
+        private EntrypointLookupInterface $entrypointLookup,
+        private ContainerBagInterface $params,
+        /** @var iterable|ExtractorInterface[] */
+        private iterable $extractors
+    )
+    {
     }
 
     /**
@@ -95,7 +81,7 @@ class MemberModel
             if (!$file->isDir()) {
                 // Get real and relative path for current file
                 $filePath = $file->getRealPath();
-                $relativePath = substr($filePath, \strlen($dirname));
+                $relativePath = substr((string) $filePath, \strlen($dirname));
 
                 // Add current file to archive
                 $zip->addFile($filePath, $relativePath);

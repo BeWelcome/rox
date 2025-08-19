@@ -24,7 +24,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 /**
  * This controller handles all requests regarding lists of conversations (messages, hosting requests and invitations).
@@ -35,13 +35,8 @@ class ConversationsController extends AbstractController
     use TranslatorTrait;
     use ItemsPerPageTraits;
 
-    protected ConversationsModel $conversationsModel;
-    private EntityManagerInterface $entityManager;
-
-    public function __construct(ConversationsModel $conversationsModel, EntityManagerInterface $entityManager)
+    public function __construct(protected ConversationsModel $conversationsModel, private EntityManagerInterface $entityManager)
     {
-        $this->conversationsModel = $conversationsModel;
-        $this->entityManager = $entityManager;
     }
 
     #[Route(path: '/conversations/spam/', name: 'conversations_spam')]
@@ -87,26 +82,15 @@ class ConversationsController extends AbstractController
     private function getAdapterFromConversationsType(string $conversationsType): string
     {
         $conversationsAdapter = '';
-        switch ($conversationsType) {
-            case 'conversations':
-                $conversationsAdapter = ConversationsAdapter::class;
-                break;
-            case 'messages':
-                $conversationsAdapter = MessagesAdapter::class;
-                break;
-            case 'requests':
-                $conversationsAdapter = RequestsAdapter::class;
-                break;
-            case 'invitations':
-                $conversationsAdapter = InvitationsAdapter::class;
-                break;
-            case 'spam':
-                $conversationsAdapter = SpamAdapter::class;
-                break;
-            case 'deleted':
-                $conversationsAdapter = DeletedAdapter::class;
-                break;
-        }
+        $conversationsAdapter = match ($conversationsType) {
+            'conversations' => ConversationsAdapter::class,
+            'messages' => MessagesAdapter::class,
+            'requests' => RequestsAdapter::class,
+            'invitations' => InvitationsAdapter::class,
+            'spam' => SpamAdapter::class,
+            'deleted' => DeletedAdapter::class,
+            default => $conversationsAdapter,
+        };
 
         return $conversationsAdapter;
     }

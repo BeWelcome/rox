@@ -18,20 +18,18 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 class ForumsController extends AbstractController
 {
     use ItemsPerPageTraits;
 
-    private const POSTS_DIFF = 3;
-    private const POSTS_MAX = 10;
-    private const POSTS_MIN = 1;
-    private EntityManagerInterface $entityManager;
+    private const int POSTS_DIFF = 3;
+    private const int POSTS_MAX = 10;
+    private const int POSTS_MIN = 1;
 
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(private EntityManagerInterface $entityManager)
     {
-        $this->entityManager = $entityManager;
     }
     #[Route(path: '/forums/more/group', name: 'forums_more_group_posts')]
     public function showMoreGroupPostsAction(): RedirectResponse

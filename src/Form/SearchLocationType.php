@@ -16,11 +16,8 @@ use Traversable;
 
 class SearchLocationType extends AbstractType implements DataMapperInterface
 {
-    private LocationRequestToLocationTransformer $transformer;
-
-    public function __construct(LocationRequestToLocationTransformer $transformer)
+    public function __construct(private readonly LocationRequestToLocationTransformer $transformer)
     {
-        $this->transformer = $transformer;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -106,6 +103,7 @@ class SearchLocationType extends AbstractType implements DataMapperInterface
         ]);
     }
 
+    #[\Override]
     public function getBlockPrefix(): string
     {
         return '';

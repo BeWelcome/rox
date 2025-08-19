@@ -447,3 +447,7 @@ services:
     app.mockup_provider.profile:
         class: App\Model\MockupProvider\ProfileMockups
         tags: [ 'app.mockup_provider' ]
+
+    App\Form\DataTransformer\LocationRequestToLocationTransformer: ~
+    App\Form\DataTransformer\DateTransformer: ~
+

@@ -17,11 +17,8 @@ use Symfony\Component\Validator\Constraints\Regex;
 
 class SignupFormType extends AbstractType
 {
-    private string $usernamePattern;
-
-    public function __construct(string $usernamePattern)
+    public function __construct(private readonly string $usernamePattern)
     {
-        $this->usernamePattern = $usernamePattern;
     }
 
     /**
@@ -34,7 +31,6 @@ class SignupFormType extends AbstractType
                 'label' => 'label.username',
                 'attr' => [
                     'class' => 'js-username',
-                    'placeholder' => 'placeholder.username',
                 ],
                 'help' => 'help.username',
                 'help_html' => true,
@@ -50,7 +46,6 @@ class SignupFormType extends AbstractType
                 'label' => 'label.email',
                 'attr' => [
                     'class' => 'js-email-address',
-                    'placeholder' => 'placeholder.email',
                 ],
                 'help' => 'help.email',
                 'required' => false,
@@ -65,7 +60,6 @@ class SignupFormType extends AbstractType
                 'label' => 'label.password',
                 'attr' => [
                     'class' => 'js-password-input',
-                    'placeholder' => 'placeholder.password',
                 ],
                 'always_empty' => false,
                 'help' => 'help.password',

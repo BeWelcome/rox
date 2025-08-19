@@ -44,6 +44,7 @@ class JoinGroupType extends AbstractType
         ;
     }
 
+    #[\Override]
     public function getBlockPrefix(): string
     {
         return '';

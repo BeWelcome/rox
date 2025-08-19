@@ -10,16 +10,13 @@ use Twig\Environment;
 
 final class GalleryItemsExtractor extends AbstractExtractor implements ExtractorInterface
 {
-    private string $projectDir;
-
     public function __construct(
         EntrypointLookupInterface $entrypointLookup,
         Environment $environment,
         ManagerRegistry $registry,
-        string $projectDir
+        private readonly string $projectDir
     ) {
         parent::__construct($entrypointLookup, $environment, $registry);
-        $this->projectDir = $projectDir;
     }
 
     /**

@@ -5,11 +5,9 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Privileges.
- *
+ * Do not check entities with PHPMD
  *
  * @SuppressWarnings("PHPMD")
- * Auto generated class do not check mess
  */
 #[ORM\Table(name: 'privileges')]
 #[ORM\UniqueConstraint(name: 'controller', columns: ['controller', 'method', 'type'])]

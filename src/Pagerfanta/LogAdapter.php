@@ -12,17 +12,11 @@ use PDO;
 
 class LogAdapter implements AdapterInterface
 {
-    private EntityManagerInterface $entityManager;
-
-    private array $types;
-
-    private Member $member;
-
-    public function __construct(EntityManagerInterface $entityManager, array $types = [], Member $member = null)
-    {
-        $this->entityManager = $entityManager;
-        $this->types = $types;
-        $this->member = $member;
+    public function __construct(
+        private readonly EntityManagerInterface $entityManager,
+        private readonly array $types = [],
+        private readonly ?Member $member = null
+    ) {
     }
 
     /**
@@ -32,10 +26,10 @@ class LogAdapter implements AdapterInterface
     {
         $count = 0;
         try {
-            list($sql, $params, $paramTypes) = $this->getSqlAndParameters(true);
+            [$sql, $params, $paramTypes] = $this->getSqlAndParameters(true);
             $stmt = $this->entityManager->getConnection()->executeQuery($sql, $params, $paramTypes);
             $count = $stmt->fetchOne();
-        } catch (Exception $e) {
+        } catch (Exception) {
             // Return 0
         }
 
@@ -49,11 +43,11 @@ class LogAdapter implements AdapterInterface
     {
         $results = [];
         try {
-            list($sql, $params, $paramTypes) = $this->getSqlAndParameters(false);
+            [$sql, $params, $paramTypes] = $this->getSqlAndParameters(false);
             $sql .= ' ORDER BY `l`.`created` DESC LIMIT ' . $length . ' OFFSET ' . $offset;
             $stmt = $this->entityManager->getConnection()->executeQuery($sql, $params, $paramTypes);
             $results = $stmt->fetchAllAssociative();
-        } catch (Exception $e) {
+        } catch (Exception) {
             // We return an empty array in this case
         }
 

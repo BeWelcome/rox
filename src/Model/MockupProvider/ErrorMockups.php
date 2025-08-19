@@ -6,7 +6,7 @@ use App\Entity\Member;
 
 class ErrorMockups implements MockupProviderInterface
 {
-    private const MOCKUPS = [
+    private const array MOCKUPS = [
         'error 403' => [
             'type' => 'page',
             'template' => 'bundles/TwigBundle/Exception/error403.html.twig',

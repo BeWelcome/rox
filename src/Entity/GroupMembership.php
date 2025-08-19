@@ -15,11 +15,9 @@ use Doctrine\ORM\Event\PostLoadEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Group Membership.
- *
+ * Do not check entities with PHPMD
  *
  * @SuppressWarnings("PHPMD")
- * Auto generated class do not check mess
  */
 #[ORM\Table(name: 'membersgroups')]
 #[ORM\Index(name: 'membersgroups_groups', columns: ['IdGroup'])]

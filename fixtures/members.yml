@@ -111,7 +111,7 @@ App\Entity\Member:
         Gender: 'male'
         ShowGender: <boolean(75)>
         ShowAge: <boolean(75)>
-        AdressHidden: <boolean(75)>
+        AddressHidden: <boolean(75)>
         Hobbies: 0
         Books: 0
         Music: 0
@@ -153,7 +153,7 @@ App\Entity\Member:
         Gender: 'male'
         ShowGender: <boolean(75)>
         ShowAge: <boolean(75)>
-        AdressHidden: <boolean(75)>
+        AddressHidden: <boolean(75)>
         Hobbies: 0
         Books: 0
         Music: 0
@@ -195,7 +195,7 @@ App\Entity\Member:
         Gender: 'male'
         ShowGender: <boolean(75)>
         ShowAge: <boolean(75)>
-        AdressHidden: <boolean(75)>
+        AddressHidden: <boolean(75)>
         Hobbies: 0
         Books: 0
         Music: 0

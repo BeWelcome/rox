@@ -35,6 +35,7 @@ class CkEditorType extends TextAreaType
             ->addAllowedTypes('async', 'bool');
     }
 
+    #[\Override]
     public function buildView(FormView $view, FormInterface $form, array $options): void
     {
         parent::buildView($view, $form, $options);
@@ -44,6 +45,7 @@ class CkEditorType extends TextAreaType
     /**
      * {@inheritdoc}
      */
+    #[\Override]
     public function getBlockPrefix(): string
     {
         return 'ckeditor';

@@ -8,13 +8,13 @@
 
 class AdminFlagsBasePage extends AdminBasePage
 {
-    protected $sidebar = array(
+    protected $sidebar = [
         'AdminFlagsAssign' => 'admin/flags/assign',
         'AdminFlagsOverview' => 'admin/flags/overview',
         'AdminFlagsListMembers' => 'admin/flags/list/members',
         'AdminFlagsListFlags' => 'admin/flags/list/flags',
         'AdminFlagsCreate' => 'admin/flags/create',
-    );
+    ];
 
     protected $current = false;
     protected $flags = false;
@@ -25,10 +25,11 @@ class AdminFlagsBasePage extends AdminBasePage
         $member = $this->model->getLoggedInMember();
         $flags = $member->getOldFlags();
         $scope = $flags['Flags']['Scope'] ?? null;
-        $this->create = stripos($scope, '"create"') !== false;
-        $this->create |= stripos($scope, '"all"') !== false;
+        $this->create = stripos((string) $scope, '"create"') !== false;
+        $this->create |= stripos((string) $scope, '"all"') !== false;
     }
 
+    #[\Override]
     public function teaserHeadline()
     {
         $headline = parent::teaserHeadline();
@@ -42,6 +43,7 @@ class AdminFlagsBasePage extends AdminBasePage
         $this->current = $current;
     }
 
+    #[\Override]
     protected function getStylesheets()
     {
         $stylesheets = parent::getStylesheets();
@@ -49,6 +51,7 @@ class AdminFlagsBasePage extends AdminBasePage
         return $stylesheets;
     }
 
+    #[\Override]
     protected function getSubmenuItems()
     {
         $items = [];

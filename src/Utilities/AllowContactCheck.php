@@ -10,11 +10,8 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class AllowContactCheck
 {
-    private EntityManagerInterface $entityManager;
-
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(private readonly EntityManagerInterface $entityManager)
     {
-        $this->entityManager = $entityManager;
     }
     public function getAllowRequestsWithoutProfilePicture(Member $member): bool
     {
@@ -58,6 +55,6 @@ class AllowContactCheck
                 || (!empty($memberTranslation->getSentence() && $memberTranslation->getTranslation() > 0));
         });
 
-        return (null === $hasAboutMe) ? false : $hasAboutMe;
+        return $hasAboutMe ?? false;
     }
 }

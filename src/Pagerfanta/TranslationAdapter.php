@@ -10,21 +10,17 @@ class TranslationAdapter implements AdapterInterface
 {
     private string $query;
 
-    private string $countQuery;
-
-    private Connection $connection;
+    private readonly string $countQuery;
 
     /**
      * SearchAdapter constructor.
      *
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
-    public function __construct(Connection $connection, string $locale, string $term)
+    public function __construct(private readonly Connection $connection, string $locale, string $term)
     {
-        $this->connection = $connection;
-
         if (!empty($term)) {
-            $term = $connection->quote('%' . $term . '%');
+            $term = $this->connection->quote('%' . $term . '%');
         }
 
         $rawQuery = "
@@ -62,7 +58,7 @@ class TranslationAdapter implements AdapterInterface
     public function getNbResults(): int
     {
         $statement = $this->connection->executeQuery($this->countQuery);
-        $count = $statement->fetchOne(PDO::FETCH_OBJ);
+        $count = $statement->fetchOne();
 
         return $count;
     }

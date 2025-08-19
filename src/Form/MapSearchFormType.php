@@ -47,6 +47,7 @@ class MapSearchFormType extends AbstractType
         ]);
     }
 
+    #[\Override]
     public function getBlockPrefix(): string
     {
         return 'search_map';

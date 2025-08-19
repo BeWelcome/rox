@@ -27,6 +27,7 @@ class GroupSearchDiscussionsPage extends GroupsSubPage
         $this->addLateLoadScriptFile('build/searchresults.js');
     }
 
+    #[\Override]
     protected function getSubmenuActiveItem() {
         return 'search';
     }

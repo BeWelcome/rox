@@ -6,7 +6,7 @@
 class AdminTreasurerModel extends RoxModelBase {
 
     public function treasurerEditCreateDonationVarsOk(&$vars) {
-        $errors = array();
+        $errors = [];
         if (empty($vars['donate-username'])) {
             $errors[] = 'AdminTreasurerDonorEmpty';
         } else {
@@ -28,12 +28,12 @@ class AdminTreasurerModel extends RoxModelBase {
             $errors[] = 'AdminTreasurerDonatedOnEmpty';
         } else {
             $date = $vars['donate-date'];
-            if ((strlen($date) < 8) || (strlen($date) > 10)) {
+            if ((strlen((string) $date) < 8) || (strlen((string) $date) > 10)) {
                  $errors[] = 'AdminTreasurerDonatedOnInvalid';
             } else {
-                list($day, $month, $year) = preg_split('/[\/.-]/', $date);
-                if (substr($month,0,1) == '0') $month = substr($month,1,2);
-                if (substr($day,0,1) == '0') $day = substr($day,1,2);
+                [$day, $month, $year] = preg_split('/[\/.-]/', (string) $date);
+                if (str_starts_with($month, '0')) $month = substr($month,1,2);
+                if (str_starts_with($day, '0')) $day = substr($day,1,2);
                 $start = mktime(0, 0, 0, (int)$month, (int)$day, (int)$year);
                 $vars['DonatedOn'] = date('YmdHis', $start);
             }
@@ -164,7 +164,7 @@ class AdminTreasurerModel extends RoxModelBase {
     }
 
     public function treasurerStartDonationCampaignVarsOk(&$vars) {
-        $errors = array();
+        $errors = [];
         if (!is_numeric($vars['donate-needed-per-year'])) {
             $errors[] = 'AdminTreasurerNeededAmountInvalid';
         }
@@ -172,12 +172,12 @@ class AdminTreasurerModel extends RoxModelBase {
             $errors[] = 'AdminTreasurerStartDateEmpty';
         } else {
             $date = $vars['donate-start-date'];
-            if ((strlen($date) < 8) || (strlen($date) > 10)) {
+            if ((strlen((string) $date) < 8) || (strlen((string) $date) > 10)) {
                  $errors[] = 'AdminTreasurerStartDateInvalid';
             } else {
-                list($day, $month, $year) = preg_split('/[\/.-]/', $date);
-                if (substr($month,0,1) == '0') $month = substr($month,1,2);
-                if (substr($day,0,1) == '0') $day = substr($day,1,2);
+                [$day, $month, $year] = preg_split('/[\/.-]/', (string) $date);
+                if (str_starts_with($month, '0')) $month = substr($month,1,2);
+                if (str_starts_with($day, '0')) $day = substr($day,1,2);
                 $start = mktime(0, 0, 0, (int)$month, (int)$day, (int)$year);
                 $vars['StartDate'] = date('Y-m-d', $start);
             }

@@ -124,13 +124,13 @@ class RelatedGroupsController extends RoxControllerBase
             $page->member = $member;
             $page->isGroupAdmin = $isGroupAdmin;
             $page->logs = $this->_model->showRelatedGroupsLog($group->getPKValue());
-            $this->setFlashNotice($this->getWords()->getFormatted("SuccessfullyAddedRelatedGroup", htmlspecialchars($relatedgroup->Name, ENT_QUOTES)));
+            $this->setFlashNotice($this->getWords()->getFormatted("SuccessfullyAddedRelatedGroup", htmlspecialchars((string) $relatedgroup->Name, ENT_QUOTES)));
          } else {
             $page = new GroupRelatedGroupLogPage($group);
             $page->member = $member;
             $page->isGroupAdmin = $isGroupAdmin;
             $page->logs = $this->_model->showRelatedGroupsLog($group->getPKValue());
-            $this->setFlashError($this->getWords()->getFormatted("ErrorWhileAddingRelatedGroup", htmlspecialchars($relatedgroup->Name, ENT_QUOTES)));
+            $this->setFlashError($this->getWords()->getFormatted("ErrorWhileAddingRelatedGroup", htmlspecialchars((string) $relatedgroup->Name, ENT_QUOTES)));
          }
          return $page;
      }
@@ -176,14 +176,14 @@ class RelatedGroupsController extends RoxControllerBase
             $page->member = $member;
             $page->isGroupAdmin = $isGroupAdmin;
             $page->logs = $this->_model->showRelatedGroupsLog($group->getPKValue());
-            $this->setFlashNotice($this->getWords()->getFormatted('SuccessfullyRemovedRelatedGroup', htmlspecialchars($relatedgroup->Name, ENT_QUOTES)));
+            $this->setFlashNotice($this->getWords()->getFormatted('SuccessfullyRemovedRelatedGroup', htmlspecialchars((string) $relatedgroup->Name, ENT_QUOTES)));
             return $page;
          } else {
             $page = new GroupRelatedGroupLogPage($group);
             $page->member = $member;
             $page->isGroupAdmin = $isGroupAdmin;
             $page->logs = $this->_model->showRelatedGroupsLog($group->getPKValue());
-            $this->setFlashError($this->getWords()->getFormatted('ErrorWhileRemoveRelatedGroup', htmlspecialchars($relatedgroup->Name, ENT_QUOTES)));
+            $this->setFlashError($this->getWords()->getFormatted('ErrorWhileRemoveRelatedGroup', htmlspecialchars((string) $relatedgroup->Name, ENT_QUOTES)));
             return $page;
          }
      }

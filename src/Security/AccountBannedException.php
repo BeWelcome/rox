@@ -16,6 +16,7 @@ class AccountBannedException extends AccountStatusException
     /**
      * {@inheritdoc}
      */
+    #[\Override]
     public function getMessageKey(): string
     {
         return 'Account has been banned.';

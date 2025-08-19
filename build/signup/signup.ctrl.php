@@ -67,7 +67,7 @@ class SignupController extends RoxControllerBase {
             } else {
                 $this->redirect('members/'.$this->session->get('Username'));
             }
-        } else switch (isset($request[1]) ? $request[1] : '') {
+        } else switch ($request[1] ?? '') {
 
             // copied from TB:
             // checks e-mail address for validity and availability
@@ -76,11 +76,11 @@ class SignupController extends RoxControllerBase {
                 PRequest::ignoreCurrentRequest();
                 if ((!isset($_REQUEST['field']) || (!isset($_REQUEST['value'])))) {
                     echo json_encode(
-                        array(
+                        [
                             "value" => '',
                             "valid" => false,
                             "message" => "Interesting an attack :-)"
-                        ));
+                        ]);
                     PPHP::PExit();
                 }
                 // check if email address is valid
@@ -91,11 +91,11 @@ class SignupController extends RoxControllerBase {
                 }
                 if ($count == 0) {
                     echo json_encode(
-                        array(
+                        [
                             "value" => $_REQUEST['value'],
                             "valid" => true,
                             "message" => "Email address is unique."
-                        ));
+                        ]);
                 } else {
                     echo json_encode(
                         [
@@ -115,31 +115,31 @@ class SignupController extends RoxControllerBase {
                 PRequest::ignoreCurrentRequest();
                 if ((!isset($_REQUEST['field']) || (!isset($_REQUEST['value'])))) {
                     echo json_encode(
-                        array(
+                        [
                             "value" => '',
                             "valid" => false,
                             "message" => "Interesting an attack :-)"
-                        ));
+                        ]);
                     PPHP::PExit();
                 }
                 $words = $model->getWords();
-                $usernameValid = preg_match(SignupModel::HANDLE_PREGEXP, $_REQUEST['value']);
+                $usernameValid = preg_match(SignupModel::HANDLE_PREGEXP, (string) $_REQUEST['value']);
                 if (!$usernameValid) {
                     echo json_encode(
-                        array(
+                        [
                             "value" => $_REQUEST["value"],
                             "valid" => $usernameValid,
                             "message" => $words->getSilent('SignupErrorWrongUsername')
-                        ));
+                        ]);
                     PPHP::PExit();
                 }
                 $valid = !$model->UsernameInUse($_REQUEST['value']);
                 echo json_encode(
-                    array(
+                    [
                         "value" => $_REQUEST["value"],
                         "valid" => $valid,
                         "message" => $words->getFormatted('SignupErrorUsernameAlreadyTaken', $_REQUEST['value'])
-                    ));
+                    ]);
                 PPHP::PExit();
                 break;
 

@@ -3,7 +3,7 @@
 class Geo extends RoxEntityBase
 {
     protected $_table_name = 'geonames';
-    protected $alt_names = array();
+    protected $alt_names = [];
 
     public function __construct($location_id = false)
     {
@@ -51,7 +51,7 @@ class Geo extends RoxEntityBase
      */
     public function getAncestorLine()
     {
-        $result = array();
+        $result = [];
         if (!$this->isLoaded())
         {
             return $result;
@@ -100,12 +100,12 @@ class Geo extends RoxEntityBase
     {
         if (!$this->isLoaded())
         {
-            return array();
+            return [];
         }
         if (!$this->children)
         {
             $children = $this->createEntity('GeoHierarchy')->getAllChildren($this);
-            $ids = array();
+            $ids = [];
             foreach ($children as $child)
             {
                 $ids[] = $child->geoId;
@@ -126,12 +126,12 @@ class Geo extends RoxEntityBase
     {
         if (!$this->isLoaded())
         {
-            return array();
+            return [];
         }
         if (!$this->all_parents)
         {
             $parents = $this->createEntity('GeoHierarchy')->getAllParents($this);
-            $ids = array();
+            $ids = [];
             foreach ($parents as $parent)
             {
                 $ids[] = $parent->geoId;
@@ -230,7 +230,7 @@ class Geo extends RoxEntityBase
     {
         if (!$this->isLoaded())
         {
-            return array();
+            return [];
         }
         $names = $this->createEntity('GeoAlternateName')->findByWhereMany("geonameId = '{$this->getPKValue()}");
         foreach ($names as $name)
@@ -250,7 +250,7 @@ class Geo extends RoxEntityBase
     {
         if (!$this->isLoaded())
         {
-            return array();
+            return [];
         }
         if (!$this->usage_by_type)
         {
@@ -396,7 +396,7 @@ class Geo extends RoxEntityBase
     {
         if (!($place_name = $this->dao->escape($name)))
         {
-            return array();
+            return [];
         }
         $query = <<<SQL
 SELECT
@@ -415,14 +415,14 @@ WHERE
 SQL;
         if (!($result = $this->dao->query($query)))
         {
-            return array();
+            return [];
         }
-        $ids = array();
+        $ids = [];
         while ($row = $result->fetch(PDB::FETCH_OBJ))
         {
             $ids[] = $row->geonameId;
         }
-        if (empty($ids)) return array();
+        if (empty($ids)) return [];
         return $this->findByWhereMany("geonameId IN (" . implode(',', $ids) . ")");
     }
 
@@ -441,7 +441,7 @@ SQL;
         {
             throw new Exception("Bad input for Geo::findLocationsByCoordinates. Expected array, got " . gettype($coordinates));
         }
-        $result = array();
+        $result = [];
         $bound = 0.02;
         while (empty($result))
         {

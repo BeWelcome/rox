@@ -187,6 +187,14 @@ class CommentRepository extends EntityRepository
         return $this->getCommentsAsArray($commentsForMember, $commentsByMember);
     }
 
+    public function getLatestCommentsMember(Member $member, int $count = 5): array
+    {
+        $commentsForMember = $this->getLatestCommentsForMember($member, $count);
+        $commentsByMember = $this->getLatestCommentsByMember($member, $count);
+
+        return $this->getCommentsAsArray($commentsForMember, $commentsByMember);
+    }
+
     public function getVisibleCommentsForMemberCount(Member $member): int
     {
         return $this->getCommentsForMemberQueryBuilder($member)
@@ -217,6 +225,26 @@ class CommentRepository extends EntityRepository
     public function getAllCommentsByMember(Member $member): array
     {
         return $this->getCommentsByMemberQueryBuilder($member)
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
+    public function getLatestCommentsForMember(Member $member, int $count): array
+    {
+        return $this->getCommentsForMemberQueryBuilder($member)
+            ->orderBy('c.created', 'DESC')
+            ->setMaxResults($count)
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
+    public function getLatestCommentsByMember(Member $member, int $count): array
+    {
+        return $this->getCommentsByMemberQueryBuilder($member)
+            ->orderBy('c.created', 'DESC')
+            ->setMaxResults($count)
             ->getQuery()
             ->getResult()
             ;

@@ -8,6 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Translations.
+ * @SuppressWarning(PHPMD)
  */
 #[ORM\Table(name: 'translations')]
 #[ORM\HasLifecycleCallbacks]

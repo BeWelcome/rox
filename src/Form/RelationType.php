@@ -9,6 +9,11 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class RelationType extends AbstractType
 {
+    /**
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
+     *
+     * Parameter $options not used but signature is given by symfony.
+     */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder

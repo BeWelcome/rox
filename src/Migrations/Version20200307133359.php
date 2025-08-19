@@ -14,6 +14,7 @@ use Doctrine\Migrations\AbstractMigration;
  */
 final class Version20200307133359 extends AbstractMigration
 {
+    #[\Override]
     public function getDescription(): string
     {
         return 'Add the functions needed for message threads';
@@ -116,6 +117,7 @@ final class Version20200307133359 extends AbstractMigration
         ');
     }
 
+    #[\Override]
     public function down(Schema $schema): void
     {
         $this->addSql('

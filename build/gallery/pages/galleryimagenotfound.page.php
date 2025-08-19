@@ -10,11 +10,13 @@
 class GalleryImageNotFoundPage extends GalleryImagePage
 {
 
+    #[\Override]
     protected function getSubmenuActiveItem()
     {
         return 'overview';
     }
 
+    #[\Override]
     protected function teaserHeadline() {
         return '<a href="gallery">'.parent::teaserHeadline() . '</a> &raquo; '. $this->getWords()->getBuffered('GalleryImageNotFound');
     }
@@ -26,6 +28,7 @@ class GalleryImageNotFoundPage extends GalleryImagePage
         <?php
     }
     
+    #[\Override]
     public function leftSidebar()
     {
     }

@@ -13,12 +13,14 @@ class AdminNewMembersListMembersPage extends AdminNewMembersBasePage
         $this->setCurrent('AdminFlagsListMembers');
     }
 
+    #[\Override]
     public function getLateLoadScriptFiles() {
         $scripts = parent::getLateLoadScriptfiles();
 //        $scripts[] = 'adminflagstooltip.js';
         return $scripts;
     }
 
+    #[\Override]
     protected function getStylesheets() {
         $stylesheets = parent::getStylesheets();
         $stylesheets[] = 'styles/css/minimal/screen/basemod_minimal_col3.css';
@@ -36,7 +38,7 @@ class AdminNewMembersListMembersPage extends AdminNewMembersBasePage
             $layoutkit = $this->layoutkit;
             $formkit = $layoutkit->formkit;
             $callbackTags = $formkit->setPostCallback('AdminNewMembersController', 'setStatusCallback');
-            if (($logged_member = $this->model->getLoggedInMember()) && $logged_member->hasOldRight(array('Admin' => '', 'SafetyTeam' => '', 'Accepter' => '', 'Profile' => ''))) {
+            if (($logged_member = $this->model->getLoggedInMember()) && $logged_member->hasOldRight(['Admin' => '', 'SafetyTeam' => '', 'Accepter' => '', 'Profile' => ''])) {
                 $form .= '<div><form method="post" name="member-status" id="member-status" action="' . $this->url . '">' . $callbackTags;
                 $form .= '<input type="hidden" name="member-id" value="' . $memberId . '">';
                 $form .= '<select name="new-status">';

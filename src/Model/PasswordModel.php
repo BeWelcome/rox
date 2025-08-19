@@ -17,15 +17,8 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 class PasswordModel
 {
-    private EntityManagerInterface $entityManager;
-    private PasswordHasherFactoryInterface $passwordHasherFactory;
-
-    public function __construct(
-        EntityManagerInterface $entityManager,
-        PasswordHasherFactoryInterface $passwordHasherFactory
-    ) {
-        $this->entityManager = $entityManager;
-        $this->passwordHasherFactory = $passwordHasherFactory;
+    public function __construct(private readonly EntityManagerInterface $entityManager, private readonly PasswordHasherFactoryInterface $passwordHasherFactory)
+    {
     }
 
     public function checkTimeElapsedOnPasswordReset(Member $member): bool
@@ -42,7 +35,7 @@ class PasswordModel
     {
         try {
             $token = random_bytes(32);
-        } catch (Exception $e) {
+        } catch (Exception) {
             $token = openssl_random_pseudo_bytes(32);
         }
         $token = bin2hex($token);

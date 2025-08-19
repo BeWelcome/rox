@@ -52,7 +52,7 @@ if (isset($Data->rPoll->id)) { // Form for update
         <div class="o-form-group">
             <label for="Status">Polls Status:</label>
             <?php
-            $sChoice = array("Project", "Open", "Closed");
+            $sChoice = ["Project", "Open", "Closed"];
             if (empty($rr->Status)) $rr->Status = "Project"; // By default a poll will be at Project Status
             echo "<select class='o-input select2' data-minimum-results-for-search=\"Infinity\" id=\"Status\" name=\"Status\">\n";
             for ($ii = 0; $ii < count($sChoice); $ii++) {
@@ -68,7 +68,7 @@ if (isset($Data->rPoll->id)) { // Form for update
         <div class="o-form-group">
             <label for="TypeOfChoice">Type of choice:</label>
             <?php
-            $sChoice = array('Exclusive', 'Inclusive', 'Ordered');
+            $sChoice = ['Exclusive', 'Inclusive', 'Ordered'];
             if (empty($rr->TypeOfChoice)) $rr->TypeOfChoice = "Exclusive"; // By default a poll will be Exclusive
             echo "<select class='o-input select2' data-minimum-results-for-search=\"Infinity\" id=\"TypeOfChoice\" name=\"TypeOfChoice\">\n";
             for ($ii = 0; $ii < count($sChoice); $ii++) {
@@ -105,7 +105,7 @@ if (isset($Data->rPoll->id)) { // Form for update
             <label for="Allow Comment">Allow Comments</label>
             <?php
             if (empty($rr->AllowComment)) $rr->AllowComment = "No"; // By default a poll is not aimed to collect comments
-            $sChoice = array("Yes", "No");
+            $sChoice = ["Yes", "No"];
             echo "<select class='o-input select2' data-minimum-results-for-search=\"Infinity\" id=\"AllowComment\" name=\"AllowComment\">";
             for ($ii = 0; $ii < count($sChoice); $ii++) {
                 echo "<option value=\"" . $sChoice[$ii] . "\"";
@@ -121,7 +121,7 @@ if (isset($Data->rPoll->id)) { // Form for update
             <label for="Anonym">Anonymous Poll</label>
             <?php
             if (empty($rr->Anonym)) $rr->Anonym = "No"; // By default a poll is not aimed to collect comments
-            $sChoice = array("Yes", "No");
+            $sChoice = ["Yes", "No"];
             echo "<select class='o-input select2' data-minimum-results-for-search=\"Infinity\" id=\"Anonym\"name=\"Anonym\">";
             for ($ii = 0; $ii < count($sChoice); $ii++) {
                 echo "<option value=\"" . $sChoice[$ii] . "\"";
@@ -137,7 +137,7 @@ if (isset($Data->rPoll->id)) { // Form for update
             <label for="ResultVisibility">Result visibility:</label>
             <?php
             if ($rr->ResultsVisibility == "") $rr->ResultsVisibility = "No"; // By default a poll is not aimed to collect comments
-            $sChoice = array("Not Visible", "Visible", "VisibleAfterVisit");
+            $sChoice = ["Not Visible", "Visible", "VisibleAfterVisit"];
             echo "<select class='o-input select2' data-minimum-results-for-search=\"Infinity\" id=\"ResultVisibiliyt\" name=\"ResultsVisibility\">";
             for ($ii = 0; $ii < count($sChoice); $ii++) {
                 echo "<option value=\"" . $sChoice[$ii] . "\"";

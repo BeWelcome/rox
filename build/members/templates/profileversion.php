@@ -5,11 +5,11 @@ function cmpProfileLang($a, $b)
     if ($a == $b) {
         return 0;
     }
-    return (strtolower($a->TranslatedName) < strToLower($b->TranslatedName)) ? -1 : 1;
+    return (strtolower((string) $a->TranslatedName) < strToLower((string) $b->TranslatedName)) ? -1 : 1;
 }
 
 function indexedLanguages($languages) {
-    $langarr = array();
+    $langarr = [];
     foreach($languages as $language) {
         $lang = $language;
         if (isset($lang->id)) {

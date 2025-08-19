@@ -49,13 +49,14 @@ class MessageToMemberType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => 'App\Entity\Message',
+            'data_class' => \App\Entity\Message::class,
         ]);
     }
 
     /**
      * {@inheritdoc}
      */
+    #[\Override]
     public function getBlockPrefix(): string
     {
         return 'app_message';

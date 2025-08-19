@@ -267,15 +267,14 @@ services:
         class: App\Twig\Extension
         arguments:
             $publicDirectory: '%kernel.project_dir%/public'
-        tags:
-            - { name: 'twig.extension' }
+        tags: [twig.extension]
+
 
     rox.member_twig_extension:
         class: App\Twig\MemberTwigExtension
         public: true
         arguments: [ '@router', '@security.helper' ]
-        tags:
-            - { name: twig.extension }
+        tags: [twig.extension]
 
     pagerfanta.bootstrap4.ajax.template:
         public: true

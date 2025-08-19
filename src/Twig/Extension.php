@@ -2,6 +2,7 @@
 
 namespace App\Twig;
 
+use App\Entity\MemberTranslation;
 use Carbon\Carbon;
 use HTMLPurifier;
 use HTMLPurifier_HTML5Config;
@@ -12,8 +13,6 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Translation\DataCollector\TranslationDataCollector;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\WebpackEncoreBundle\Asset\EntrypointLookupInterface;
-use Twig\Attribute\AsTwigFilter;
-use Twig\Attribute\AsTwigFunction;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\GlobalsInterface;
 use Twig\TwigFilter;
@@ -21,75 +20,121 @@ use Twig\TwigFunction;
 
 class Extension extends AbstractExtension implements GlobalsInterface
 {
+    protected TranslatorInterface $translator;
+
+    private string $publicDirectory;
+
+    private EntrypointLookupInterface $entrypointLookup;
+    private LoggerInterface $logger;
+
+    /** @var false|string[] */
+    private $locales;
+    private RequestStack $requestStack;
+
     /**
      * Extension constructor.
      */
     public function __construct(
-        private readonly RequestStack $requestStack,
-        protected TranslatorInterface $translator,
-        private readonly EntrypointLookupInterface $entrypointLookup,
-        private readonly LoggerInterface $logger,
-        /** @var false|string[] */
-        private readonly array $locales,
-        private readonly string $publicDirectory
+        RequestStack $requestStack,
+        TranslatorInterface $translator,
+        EntrypointLookupInterface $entrypointLookup,
+        LoggerInterface $logger,
+        array $locales,
+        string $publicDirectory
     ) {
+        $this->translator = $translator;
+        $this->locales = $locales;
+        $this->entrypointLookup = $entrypointLookup;
+        $this->publicDirectory = $publicDirectory;
+        $this->logger = $logger;
+        $this->requestStack = $requestStack;
     }
 
-    #[AsTwigFunction('language_name', isSafe: ['html'])]
+    public function getFunctions(): array
+    {
+        return [
+            new TwigFunction('ago', [$this, 'ago']),
+            new TwigFunction('getTranslations', [$this, 'getTranslations']),
+            new TwigFunction(
+                'dump_it',
+                [
+                    $this,
+                    'dumpIt',
+                ],
+                [
+                    'is_safe' => ['html'],
+                ]
+            ),
+            new TwigFunction(
+                'language_name',
+                [
+                    $this,
+                    'languageName',
+                ],
+                [
+                    'is_safe' => ['html'],
+                ]
+            ),
+            new TwigFunction(
+                'language_name_translated',
+                [
+                    $this,
+                    'languageNameTranslated',
+                ],
+                [
+                    'is_safe' => ['html'],
+                ]
+            ),
+            new TwigFunction('encore_entry_css_source', [$this, 'getEncoreEntryCssSource']),
+            new TwigFunction('distance', [$this, 'distance']),
+            new TwigFunction('profile_element', [$this, 'profileElement']),
+            new TwigFunction('sgn', [$this, 'sgn']),
+        ];
+    }
+
+    public function profileElement(array $fields, $locale, string $element): array
+    {
+        $profileElement = [];
+        // If element exists in this language return that.
+        if (isset($fields[$locale]['members.' . $element])) {
+            $profileElement['locale'] = $locale;
+            $translation = $fields[$locale]['members.' . $element];
+            $profileElement['text'] = $translation->getSentence();
+        }
+
+        // Check if element exists in English
+        if (empty($profileElement) && isset($fields['en']['members.' . $element])) {
+            $profileElement['locale'] = 'en';
+            $translation = $fields['en']['members.' . $element];
+            $profileElement['text'] = $translation->getSentence();
+        }
+
+        // Check if element exists in first provided locale
+        $first = array_key_first($fields);
+        if (empty($profileElement) && isset($fields[$first]['members.' . $element])) {
+            $profileElement['locale'] = $first;
+            $translation = $fields[$first]['members.' . $element];
+            $profileElement['text'] = $translation->getSentence();
+        }
+
+        return $profileElement;
+    }
+
     public function languageName(string $locale): string
     {
         return $this->translator->trans(strtolower('lang_' . $locale), [], null, $locale);
     }
 
-    #[AsTwigFunction('language_name_translated', isSafe: ['html'],)]
     public function languageNameTranslated(string $locale, string $display): string
     {
         return $this->translator->trans(strtolower('lang_' . $locale), [], null, $display);
     }
 
-    #[AsTwigFunction('ago')]
     public function ago(Carbon $carbon): string
     {
         return $carbon->diffForHumans();
     }
 
-    #[AsTwigFunction('encore_entry_css_source')]
-    public function getEncoreEntryCssSource(string $entryName): string
-    {
-        $this->entrypointLookup->reset();
-        $files = $this->entrypointLookup
-            ->getCssFiles($entryName);
-        $source = '';
-        foreach ($files as $file) {
-            $source .= file_get_contents($this->publicDirectory . '/' . $file);
-        }
-
-        return $source;
-    }
-
-    #[AsTwigFunction('get_translations')]
-    public function getTranslations(): array
-    {
-        $collector = new TranslationDataCollector($this->translator);
-        $collector->lateCollect();
-
-        return [
-            'collector' => $collector,
-        ];
-    }
-
-    #[AsTwigFunction('distance')]
-    public function distance(float $lat1, float $lng1, float $lat2, float $lng2): float
-    {
-        $radiantLat = deg2rad($lat2 - $lat1);
-        $radiantLng = deg2rad($lng2 - $lng1);
-
-        $a = sin($radiantLat / 2) ** 2 + cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * sin($radiantLng / 2) ** 2;
-
-        return 12742 * asin(sqrt($a));
-    }
-
-    #[AsTwigFilter('privacy', isSafe: ['html'])]
     public function privacy(string $isoDate): string
     {
         $date = Carbon::createFromFormat('Y-m-d', $isoDate);
@@ -100,12 +145,45 @@ class Extension extends AbstractExtension implements GlobalsInterface
         }
     }
 
+    public function getFilters(): array
+    {
+        return [
+            new TwigFilter(
+                'truncate',
+                [$this, 'truncate'],
+                [
+                    'is_safe' => ['html'],
+                ]
+            ),
+            new TwigFilter(
+                'url_update',
+                [$this, 'urlUpdate'],
+                [
+                    'is_safe' => ['html'],
+                ]
+            ),
+            new TwigFilter(
+                'prepare_newsletter',
+                [$this, 'prepareNewsletter'],
+                [
+                    'is_safe' => ['html'],
+                ]
+            ),
+            new TwigFilter(
+                'privacy',
+                [$this, 'privacy'],
+                [
+                    'is_safe' => ['html'],
+                ]
+            )
+         ];
+    }
+
     /**
      * Truncates a string up to a number of characters while preserving whole words and HTML tags.
      *
      * @throws InvalidHtmlException
      */
-    #[AsTwigFilter('truncate', isSafe: ['html'])]
     public function truncate(string $text, int $length = 100, string $ellipsis = '&#8230;'): string
     {
         $truncator = new Truncator();
@@ -119,8 +197,9 @@ class Extension extends AbstractExtension implements GlobalsInterface
 
     /**
      * Removes domain name from all bewelcome links (www|beta|api) so that links work on all sub domains.
+     *
+     * @param string $text string to update
      */
-    #[AsTwigFilter('url_update', isSafe: ['html'])]
     public function urlUpdate(string $text): string
     {
         return preg_replace(
@@ -130,12 +209,38 @@ class Extension extends AbstractExtension implements GlobalsInterface
         );
     }
 
+    public function dumpIt($variable): string
+    {
+        return highlight_string(var_export($variable, true), true);
+    }
+
+    public function getEncoreEntryCssSource(string $entryName): string
+    {
+        $this->entrypointLookup->reset();
+        $files = $this->entrypointLookup
+            ->getCssFiles($entryName);
+        $source = '';
+        foreach ($files as $file) {
+            $source .= file_get_contents($this->publicDirectory . '/' . $file);
+        }
+
+        return $source;
+    }
+
+    public function getTranslations(): array
+    {
+        $collector = new TranslationDataCollector($this->translator);
+        $collector->lateCollect();
+
+        return [
+            'collector' => $collector,
+        ];
+    }
 
     /**
      * @SuppressWarnings("PHPMD.StaticAccess")
      * @SuppressWarnings("PHPMD.BooleanArgumentFlag")
      */
-    #[AsTwigFilter('prepare_newsletter', isSafe: ['html'])]
     public function prepareNewsletter(string $text, bool $website = false): string
     {
         $config = HTMLPurifier_HTML5Config::createDefault();
@@ -174,7 +279,7 @@ class Extension extends AbstractExtension implements GlobalsInterface
         $result = preg_replace(
             '%<figure.*?><img.*?src="(.*?)".*?>%',
             $centerOpen . '<img src="\1" alt="' . htmlentities($embeddedImage) . '"' . $style . '>' . $centerClose,
-            (string) $result
+            $result
         );
 
         $this->logger->info($text);
@@ -183,6 +288,30 @@ class Extension extends AbstractExtension implements GlobalsInterface
         return $result;
     }
 
+    /**
+     * Distance between two points on the earth.
+     */
+    public function distance(float $lat1, float $lng1, float $lat2, float $lng2): float
+    {
+        $radiantLat = deg2rad($lat2 - $lat1);
+        $radiantLng = deg2rad($lng2 - $lng1);
+
+        $a = sin($radiantLat / 2) ** 2 + cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * sin($radiantLng / 2) ** 2;
+
+        return 12742 * asin(sqrt($a));
+    }
+
+    /**
+     * signum of the given (float) number
+     */
+    public function sgn(float $number): int
+    {
+        return ($number > 0) ? 1 : (($number < 0) ? -1 : 0);
+    }
+
+    /**
+     * Name of this extension.
+     */
     public function getName(): string
     {
         return 'LayoutKit';

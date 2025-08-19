@@ -2,6 +2,7 @@
 
 namespace App\Utilities;
 
+use Carbon\Carbon;
 use DateTimeImmutable;
 
 /**
@@ -39,7 +40,7 @@ class CommentSorter
         return (-1) * ($aCriterionDate <=> $bCriterionDate);
     }
 
-    private function getCreatedCriterion(array $comment): int
+    private function getCreatedCriterion(array $comment): Carbon
     {
         $createdTo = isset($comment['to']) ? $comment['to']->getCreated() : $this->farFuture;
         $createdFrom = isset($comment['from']) ? $comment['from']->getCreated() : $this->farFuture;
@@ -47,7 +48,7 @@ class CommentSorter
         return min($createdTo, $createdFrom);
     }
 
-    private function getUpdatedCriterion(array $comment): int
+    private function getUpdatedCriterion(array $comment): DateTimeImmutable
     {
         $updatedTo = isset($comment['to'])
             ? ($comment['to']->getUpdated() ?? $this->early20thCentury) : $this->early20thCentury;

@@ -18,6 +18,12 @@ use Twig\Extension\GlobalsInterface;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
 
+/**
+ * @SuppressWarnings("PHPMD.TooManyPublicMethods")
+ *
+ * \todo Move to attributes as soon as getGlobals works in that setup. Alternatively split into runtime and template
+ * and check if we really need two extensions (see MemberExtension).
+ */
 class Extension extends AbstractExtension implements GlobalsInterface
 {
     protected TranslatorInterface $translator;

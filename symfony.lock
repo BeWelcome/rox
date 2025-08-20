@@ -590,7 +590,16 @@
         ]
     },
     "symfony/form": {
-        "version": "v5.3.8"
+        "version": "7.3",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "7.2",
+            "ref": "7d86a6723f4a623f59e2bf966b6aad2fc461d36b"
+        },
+        "files": [
+            "./config/packages/csrf.yaml"
+        ]
     },
     "symfony/framework-bundle": {
         "version": "7.3",
@@ -628,15 +637,15 @@
         "version": "v5.3.8"
     },
     "symfony/mailer": {
-        "version": "4.3",
+        "version": "7.3",
         "recipe": {
             "repo": "github.com/symfony/recipes",
-            "branch": "master",
+            "branch": "main",
             "version": "4.3",
-            "ref": "bbfc7e27257d3a3f12a6fb0a42540a42d9623a37"
+            "ref": "09051cfde49476e3c12cd3a0e44289ace1c75a4f"
         },
         "files": [
-            "./config/packages/mailer.yaml"
+            "config/packages/mailer.yaml"
         ]
     },
     "symfony/maker-bundle": {

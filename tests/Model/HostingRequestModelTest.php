@@ -7,15 +7,10 @@ use App\Entity\HostingRequest;
 use App\Entity\Member;
 use App\Entity\Message;
 use App\Entity\Subject;
-use App\Model\ConversationModel;
 use App\Model\HostingRequestModel;
-use App\Service\Mailer;
 use DateInterval;
 use DateTime;
-use Doctrine\ORM\EntityManager;
 use Generator;
-use InvalidArgumentException;
-use Mockery;
 use PHPMD\Rule\Design\TooManyPublicMethods;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
@@ -31,7 +26,7 @@ class HostingRequestModelTest extends TestCase
     private Message $parent;
     private Subject $subject;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->sender = new Member();
         $this->receiver = new Member();
@@ -413,7 +408,7 @@ class HostingRequestModelTest extends TestCase
         bool $flexible,
         int $numberOfTravellers,
         int $state,
-        string $messageText = ''
+        string $messageText = '',
     ): Message {
         $message = new Message();
         $message->setParent($this->parent);

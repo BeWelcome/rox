@@ -38,7 +38,7 @@ services:
       - ./public:/srv/bewelcome/public:ro
 
   db:
-    image: mariadb:11.6.2
+    image: mariadb:12.0.2
     environment:
       MYSQL_ROOT_PASSWORD: bewelcome_root_dev
       MYSQL_DATABASE: bewelcome
@@ -48,7 +48,6 @@ services:
       - db-data:/var/lib/mysql:rw
 
   manticore:
-    container_name: manticore
     image: manticoresearch/manticore
     restart: always
     ports:
@@ -64,7 +63,7 @@ services:
         hard: -1
     volumes:
       - ./data:/var/lib/manticore
-      - ./docker/manticore/manticore.conf:/etc/manticoresearch/manticore.conf
+#      - ./docker/manticore/manticore.conf:/etc/manticoresearch/manticore.conf
 
   mailer:
     image: tophfr/mailcatcher

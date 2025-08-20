@@ -12,6 +12,7 @@ if [ "$1" = 'php-fpm' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ]; then
 		PHP_INI_RECOMMENDED="$PHP_INI_DIR/php.ini-development"
 	fi
 	ln -sf "$PHP_INI_RECOMMENDED" "$PHP_INI_DIR/php.ini"
+    sed -i -e "s/^ *memory_limit.*/memory_limit = 4G/g" "$PHP_INI_DIR/php.ini"
 
 	mkdir -p var/cache var/log data/user/avatars data/gallery/member upload/images
 	setfacl -R -m u:www-data:rwX -m u:"$(whoami)":rwX var build data upload
@@ -31,21 +32,9 @@ if [ "$1" = 'php-fpm' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ]; then
 		git rev-parse --short HEAD > VERSION
 	fi
 
-	if [ "$APP_ENV" != 'prod' ] && [ ! -f config/jwt/private.pem ]; then
-		jwt_passphrase=$(grep '^JWT_PASSPHRASE=' .env | cut -f 2 -d '=')
-		if ! echo "$jwt_passphrase" | openssl pkey -in config/jwt/private.pem -passin stdin -noout > /dev/null 2>&1; then
-			echo "Generating public / private keys for JWT"
-			mkdir -p config/jwt
-			echo "$jwt_passphrase" | openssl genpkey -out config/jwt/private.pem -pass stdin -aes256 -algorithm rsa -pkeyopt rsa_keygen_bits:4096
-			echo "$jwt_passphrase" | openssl pkey -in config/jwt/private.pem -passin stdin -out config/jwt/public.pem -pubout
-			setfacl -R -m u:www-data:rX -m u:"$(whoami)":rwX config/jwt
-			setfacl -dR -m u:www-data:rX -m u:"$(whoami)":rwX config/jwt
-		fi
-	fi
-
 	if [ "$APP_ENV" != 'prod' ]; then
 		yarn install --frozen-lock
-		composer install --prefer-dist --no-progress --no-suggest --no-interaction --no-scripts
+		composer install --prefer-dist --no-progress --no-interaction --no-scripts
 	fi
 
 	echo "Waiting for db to be ready..."
@@ -77,25 +66,19 @@ if [ "$1" = 'php-fpm' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ]; then
 		if [ -f docker/db/geonamesadminunits.sql ]; then
 			mariadb $database_name -u $database_user -p$database_password -h $database_host < docker/db/geonamesadminunits.sql
 		fi
-		echo "Database updated!"
 	elif ls -A src/Migrations/*.php > /dev/null 2>&1; then
-	    echo "migration"
 		bin/console doctrine:migrations:migrate --no-interaction
 	fi
-    echo "warmup"
 	# WarmUp translations now database is up to date
 	composer run-script --no-dev post-install-cmd
 
 	if [ "$APP_ENV" != 'prod' ]; then
-        echo "yarn"
 		yarn encore dev --mode=development
 	fi
 
 	# create manticore indices
-	echo "Manticore"
 	bin/console manticore:indices:forum
 	bin/console manticore:indices:geonames
 fi
-echo "docker-php"
 
 exec docker-php-entrypoint "$@"

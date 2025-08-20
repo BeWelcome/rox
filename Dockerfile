@@ -9,7 +9,7 @@ ARG NGINX_VERSION=1.29
 
 
 # "php" stage
-FROM php:${PHP_VERSION}-fpm-alpine3.22 AS bewelcome_php
+FROM php:${PHP_VERSION}-fpm-alpine AS bewelcome_php
 
 # persistent / runtime deps
 RUN apk add --no-cache \
@@ -88,6 +88,7 @@ RUN set -eux; \
 
 # https://getcomposer.org/doc/03-cli.md#composer-allow-superuser
 ENV COMPOSER_ALLOW_SUPERUSER=1
+
 # install Symfony Flex globally to speed up download of Composer packages (parallelized prefetching)
 RUN set -eux; \
     composer global config --no-plugins allow-plugins.symfony/flex true; \

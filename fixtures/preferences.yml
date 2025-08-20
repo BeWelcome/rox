@@ -203,7 +203,7 @@ App\Entity\Preference:
         codeDescription: 'contact.allow.no.picture'
         description: 'Allow to be contacted by members without a picture'
         created: <DateTime()>
-        DefaultValue: Yes
+        DefaultValue: No
         PossibleValues: No,Yes
     ALLOW_REQUEST_NO_ABOUT_ME:
         position: 64
@@ -211,5 +211,5 @@ App\Entity\Preference:
         codeDescription: 'contact.allow.no.about_me'
         description: 'Allow to be contacted by members without an about me section'
         created: <DateTime()>
-        DefaultValue: Yes
+        DefaultValue: No
         PossibleValues: No,Yes

@@ -9,6 +9,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Intervention\Image\ImageManager;
 use InvalidArgumentException;
 use Psr\Log\LoggerInterface;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -61,7 +62,7 @@ class AvatarController extends AbstractController
         return new Response($uploadFailedTranslation, Response::HTTP_REQUEST_ENTITY_TOO_LARGE);
     }
 
-    #[Route(path: '/members/avatar/{username}/{size}', name: 'avatar', requirements: ['size' => '\d+|original'], defaults: ['size' => '48'])]
+    #[Route(path: '/members/avatar/{username:member}/{size}', name: 'avatar', requirements: ['size' => '\d+|original'], defaults: ['size' => '48'])]
     public function showAvatar(Member $member, string $size): BinaryFileResponse
     {
         if (!$this->isGranted('IS_AUTHENTICATED_REMEMBERED')) {

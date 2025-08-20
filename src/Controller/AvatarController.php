@@ -9,7 +9,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use Intervention\Image\ImageManager;
 use InvalidArgumentException;
 use Psr\Log\LoggerInterface;
-use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;

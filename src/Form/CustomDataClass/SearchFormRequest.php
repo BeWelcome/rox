@@ -33,13 +33,13 @@ class SearchFormRequest
 
     public bool $location_admin_unit;
 
-    public float $ne_latitude;
+    public ?float $ne_latitude = null;
 
-    public float $ne_longitude;
+    public ?float $ne_longitude = null;
 
-    public float $sw_latitude;
+    public ?float $sw_latitude = null;
 
-    public float $sw_longitude;
+    public ?float $sw_longitude = null;
 
     public bool $accommodation_anytime = true;
 
@@ -64,19 +64,19 @@ class SearchFormRequest
 
     public int $can_host = 1;
 
-    public array $groups;
+    public array $groups = [];
 
-    public array $languages;
+    public array $languages = [];
 
     public int $min_age = 0;
 
     public int $max_age = 120;
 
-    public ?string $gender;
+    public ?string $gender = null;
 
-    public bool $offers_dinner;
+    public bool $offers_dinner = false;
 
-    public bool $offers_tour;
+    public bool $offers_tour = false;
 
     public bool $accessible = false;
 
@@ -84,7 +84,7 @@ class SearchFormRequest
 
     public bool $has_about_me = false;
 
-    public bool $has_comments;
+    public bool $has_comments = false;
 
     public ?string $keywords = null;
 

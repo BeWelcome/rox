@@ -1,3 +1,10 @@
+parameters:
+    database_host:     "%env(DB_HOST)%"
+    database_port:     "%env(DB_PORT)%"
+    database_name:     "%env(DB_NAME)%"
+    database_user:     "%env(DB_USER)%"
+    database_password: "%env(DB_PASS)%"
+
 doctrine:
     dbal:
         url: '%env(resolve:DATABASE_URL)%'

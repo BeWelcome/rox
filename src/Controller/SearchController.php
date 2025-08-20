@@ -21,6 +21,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use TypeError;
 
 class SearchController extends AbstractController
 {
@@ -98,10 +99,13 @@ class SearchController extends AbstractController
         $memberSearchOptionsPreference = $member->getMemberPreference($searchOptionsPreference);
         $searchOptions = $memberSearchOptionsPreference->getValue();
 
+        $searchFormRequest = new SearchFormRequest();
         if ('' !== $searchOptions) {
-            $searchFormRequest = unserialize($searchOptions);
-        } else {
-            $searchFormRequest = new SearchFormRequest();
+            try {
+                $searchFormRequest = unserialize($searchOptions);
+            } catch (TypeError) {
+                // In case the format is corrupted just reset form. Next successful search will write the correct format
+            }
         }
         $searchFormRequest->overrideFromRequest($request);
         $searchFormRequest->show_map = ('Yes' === $showMap);

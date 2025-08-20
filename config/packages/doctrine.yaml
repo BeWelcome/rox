@@ -1,22 +1,13 @@
-parameters:
-    database_host:     "%env(DB_HOST)%"
-    database_port:     "%env(DB_PORT)%"
-    database_name:     "%env(DB_NAME)%"
-    database_user:     "%env(DB_USER)%"
-    database_password: "%env(DB_PASS)%"
-
 doctrine:
     dbal:
-        driver: pdo_mysql
-        host:     "%env(DB_HOST)%"
-        port:     "%env(DB_PORT)%"
-        dbname:   "%env(DB_NAME)%"
-        user:     "%env(DB_USER)%"
-        password: "%env(DB_PASS)%"
+        url: '%env(resolve:DATABASE_URL)%'
 
         # IMPORTANT: You MUST configure your server version,
-        server_version: '10.9.1-MariaDB'
+        # either here or in the DATABASE_URL env var (see .env file)
+        #server_version: '16'
 
+        profiling_collect_backtrace: '%kernel.debug%'
+        use_savepoints: true
         schema_filter: ~^(?!rememberme_token)~
 
         charset: utf8mb4
@@ -63,14 +54,21 @@ doctrine:
             set:        string
 
     orm:
-        auto_generate_proxy_classes: '%kernel.debug%'
+        auto_generate_proxy_classes: true
+        enable_lazy_ghost_objects: true
+        report_fields_where_declared: true
+        validate_xml_mapping: true
         naming_strategy: doctrine.orm.naming_strategy.underscore
+        identity_generation_preferences:
+            Doctrine\DBAL\Platforms\PostgreSQLPlatform: identity
+        auto_mapping: true
         mappings:
             App:
-                is_bundle: false
                 type: attribute
+                is_bundle: false
                 dir: '%kernel.project_dir%/src/Entity'
                 prefix: 'App\Entity'
+                alias: App
             gedmo_translatable:
                 type: attribute
                 prefix: Gedmo\Translatable\Entity
@@ -83,14 +81,37 @@ doctrine:
                 dir: "%kernel.project_dir%/vendor/gedmo/doctrine-extensions/src/Translator/Entity"
                 alias: GedmoTranslator # (optional) it will default to the name set for the mapping
                 is_bundle: false
-#        hydrators:
-#            LanguageHydrator: App\Doctrine\Hydrator\LanguageHydrator
-#        filters:
-#            language_filter:
-#                class:   App\Doctrine\Filter\LanguageFilter
-#                enabled: true
+        controller_resolver:
+            auto_mapping: false
+
         dql:
             datetime_functions:
                 datediff: App\Doctrine\Functions\DateDiff
                 yearweek: App\Doctrine\Functions\YearWeek
                 geodistance: App\Doctrine\Functions\GeoDistance
+
+when@test:
+    doctrine:
+        dbal:
+            # "TEST_TOKEN" is typically set by ParaTest
+            dbname_suffix: '_test%env(default::TEST_TOKEN)%'
+
+when@prod:
+    doctrine:
+        orm:
+            auto_generate_proxy_classes: false
+            proxy_dir: '%kernel.build_dir%/doctrine/orm/Proxies'
+            query_cache_driver:
+                type: pool
+                pool: doctrine.system_cache_pool
+            result_cache_driver:
+                type: pool
+                pool: doctrine.result_cache_pool
+
+    framework:
+        cache:
+            pools:
+                doctrine.result_cache_pool:
+                    adapter: cache.app
+                doctrine.system_cache_pool:
+                    adapter: cache.system

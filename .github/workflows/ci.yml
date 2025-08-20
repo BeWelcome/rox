@@ -115,8 +115,40 @@ jobs:
       - name: Install project dependencies
         run: composer install --prefer-dist --no-progress --no-suggest --no-interaction --no-scripts
 
-      - name: Run phploc tests
+      - name: Run phploc
         run: vendor/bin/phploc --log-xml=phploc.xml src tests
+
+
+  phpstan:
+    name: PHPStan (experimental)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # tag=v4.2.2
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@ccf2c627fe61b1b4d924adfcbd19d661a18133a0  # tag=2.35.2
+        with:
+          php-version: ${{ env.PHP_VERSION }}
+          extensions: curl, dom, gd, iconv, intl, json, libxml, mbstring, mysqli, pcntl, pdo_mysql, phar, tokenizer, xml, xmlwriter, xsl, zip
+
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+      - name: Cache dependencies
+        uses: actions/cache@0400d5f644dc74513175e3cd8d07132dd4860809  # tag=v4.2.4
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
+          restore-keys: ${{ runner.os }}-composer-
+
+      - name: Install project dependencies
+        run: composer install --prefer-dist --no-progress --no-interaction --no-scripts
+
+      - name: Run phpstan
+        continue-on-error: true
+        run: vendor/bin/phpstan
 
   phpmd:
     name: PHPMD

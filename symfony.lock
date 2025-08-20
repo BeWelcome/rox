@@ -39,15 +39,15 @@
         "version": "1.2.0"
     },
     "dama/doctrine-test-bundle": {
-        "version": "4.0",
+        "version": "8.2",
         "recipe": {
             "repo": "github.com/symfony/recipes-contrib",
-            "branch": "master",
-            "version": "4.0",
-            "ref": "56eaa387b5e48ebcc7c95a893b47dfa1ad51449c"
+            "branch": "main",
+            "version": "7.2",
+            "ref": "896306d79d4ee143af9eadf9b09fd34a8c391b70"
         },
         "files": [
-            "./config/packages/test/dama_doctrine_test_bundle.yaml"
+            "config/packages/dama_doctrine_test_bundle.yaml"
         ]
     },
     "doctrine/collections": {

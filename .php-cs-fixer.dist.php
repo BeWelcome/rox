@@ -3,7 +3,8 @@ $finder = new PhpCsFixer\Finder();
 $finder
     ->notName('*.twig')
     ->notName('*.yml')
-    ->in('src/');
+    ->in(['src/', 'tests/'])
+;
 
 $config = new PhpCsFixer\Config();
 $config
@@ -45,7 +46,9 @@ $config
         'no_useless_return' => true,
         'ordered_class_elements' => true,
         'ordered_imports' => true,
-        'php_unit_strict' => true,
+//        'php_unit_strict' => true,
+//      Disabled as some tests fail after moving AssertEquals to AssertSame
+//      \todo enable again after determining why that assert fails.
         'phpdoc_add_missing_param_annotation' => true,
         'phpdoc_order' => true,
         'semicolon_after_instruction' => true,

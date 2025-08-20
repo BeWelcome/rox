@@ -5,12 +5,10 @@ namespace App\Tests\TranslationLoader;
 use App\Doctrine\TranslationAllowedType;
 use App\Entity\Language;
 use App\Entity\Word;
-use App\Logger\Logger;
 use App\Repository\WordRepository;
 use App\TranslationLoader\DatabaseLoader;
 use DateTime;
 use Doctrine\ORM\EntityManager;
-use PHPMD\Rule\CleanCode\StaticAccess;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Translation\MessageCatalogue;
 
@@ -223,7 +221,6 @@ class DatabaseLoaderTest extends TestCase
         $translation = $result->get('german');
         $this->assertSame('German', $translation);
     }
-
 
     public function testCheckTranslationAllowed(): void
     {

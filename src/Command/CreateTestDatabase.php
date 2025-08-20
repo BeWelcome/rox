@@ -73,8 +73,14 @@ class CreateTestDatabase extends Command
                 '',
             ]);
 
-            $process = new Process([$phpBinaryPath, 'bin/console', 'doctrine:database:create', '--if-not-exists', '--no-interaction']);
+            $process = new Process([$phpBinaryPath, 'bin/console', 'doctrine:database:drop', '--force', '--no-interaction']);
             $process->run();
+            if (!$process->isSuccessful()) {
+                $output->writeln([
+                    'Dropping the database failed (continuing anyway).',
+                    '',
+                ]);
+            }
         }
 
         $output->writeln([
@@ -98,6 +104,15 @@ class CreateTestDatabase extends Command
         $output->writeln([
             'Creating the schema',
             '',
+        ]);
+
+        $process = new Process([$phpBinaryPath, 'bin/console', 'doctrine:schema:create', '--dump-sql', '--no-interaction']);
+        $process->run();
+        $output->writeln([
+            'Creating the schema (see output below for SQL).',
+            '',
+            $process->getOutput(),
+            $process->getErrorOutput(),
         ]);
 
         $process = new Process([$phpBinaryPath, 'bin/console', 'doctrine:schema:create', '--no-interaction']);

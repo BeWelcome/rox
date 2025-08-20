@@ -85,5 +85,5 @@ yarn-error.log
 
 ###> phpunit/phpunit ###
 /phpunit.xml
-.phpunit.cache
+/.phpunit.cache/
 ###< phpunit/phpunit ###

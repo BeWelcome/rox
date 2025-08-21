@@ -34,8 +34,12 @@ class MessageController extends AbstractController
     use TranslatedFlashTrait;
     use TranslatorTrait;
 
-    public function __construct(private Mailer $mailer, private ConversationModel $conversationModel, private ConversationThread $conversationThread, private EntityManagerInterface $entityManager)
-    {
+    public function __construct(
+        private readonly Mailer $mailer,
+        private readonly ConversationModel $conversationModel,
+        private readonly ConversationThread $conversationThread,
+        private readonly EntityManagerInterface $entityManager,
+    ) {
     }
 
     /**
@@ -43,7 +47,7 @@ class MessageController extends AbstractController
      *
      * \todo check how to get this reduced.
      */
-    #[Route(path: '/new/message/{username}', name: 'message_new')]
+    #[Route(path: '/new/message/{username:receiver}', name: 'message_new')]
     public function newMessage(Request $request, Member $receiver, AllowContactCheck $allowContactCheck): Response
     {
         /** @var Member $sender */

@@ -96,7 +96,7 @@ class RequestController extends BaseRequestAndInvitationController
      *
      * \todo Reduce complexity (seems all new/ conversations have a problem here)
      */
-    #[Route(path: '/new/request/{username}', name: 'hosting_request')]
+    #[Route(path: '/new/request/{username:host}', name: 'hosting_request')]
     public function newHostingRequest(
         Request $request,
         Member $host,

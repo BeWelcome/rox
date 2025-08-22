@@ -20,12 +20,12 @@ use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Event\PostLoadEventArgs;
 use Doctrine\ORM\Mapping as ORM;
+use Exception;
 use Scheb\TwoFactorBundle\Model\BackupCodeInterface;
 use Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface as GoogleTwoFactorInterface;
 use Scheb\TwoFactorBundle\Model\Totp\TotpConfiguration;
 use Scheb\TwoFactorBundle\Model\Totp\TotpConfigurationInterface;
 use Scheb\TwoFactorBundle\Model\Totp\TwoFactorInterface as TotpTwoFactorInterface;
-use Exception;
 use Serializable;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherAwareInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -39,7 +39,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 #[ORM\Table(name: 'members')]
 #[ORM\Entity(repositoryClass: MemberRepository::class)]
 #[ORM\HasLifecycleCallbacks]
-class Member implements \Serializable, UserInterface, PasswordHasherAwareInterface, PasswordAuthenticatedUserInterface, GoogleTwoFactorInterface, TotpTwoFactorInterface, BackupCodeInterface
+class Member implements Serializable, UserInterface, PasswordHasherAwareInterface, PasswordAuthenticatedUserInterface, GoogleTwoFactorInterface, TotpTwoFactorInterface, BackupCodeInterface
 {
     public const ROLE_ADMIN_ACCEPTER = 'ROLE_ADMIN_ACCEPTER';
     public const ROLE_ADMIN_ADMIN = 'ROLE_ADMIN_ADMIN';
